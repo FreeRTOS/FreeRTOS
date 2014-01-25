@@ -107,10 +107,10 @@ struct freertos_sockaddr
 #if ipconfigBYTE_ORDER == FREERTOS_LITTLE_ENDIAN
 
 	#define FreeRTOS_inet_addr_quick( ucOctet0, ucOctet1, ucOctet2, ucOctet3 )				\
-										( ( ( uint32_t ) ( ucOctet3 ) ) << 24UL ) |			\
-										( ( ( uint32_t ) ( ucOctet2 ) ) << 16UL ) |			\
-										( ( ( uint32_t ) ( ucOctet1 ) ) <<  8UL ) |			\
-										( ( uint32_t ) ( ucOctet0 ) )
+										( ( ( ( uint32_t ) ( ucOctet3 ) ) << 24UL ) |		\
+										  ( ( ( uint32_t ) ( ucOctet2 ) ) << 16UL ) |		\
+										  ( ( ( uint32_t ) ( ucOctet1 ) ) <<  8UL ) |		\
+										  ( ( uint32_t ) ( ucOctet0 ) ) )
 
 	#define FreeRTOS_inet_ntoa( ulIPAddress, pucBuffer )									\
 										sprintf( ( char * ) ( pucBuffer ), "%d.%d.%d.%d",	\
@@ -122,17 +122,17 @@ struct freertos_sockaddr
 #else /* ipconfigBYTE_ORDER */
 
 	#define FreeRTOS_inet_addr_quick( ucOctet0, ucOctet1, ucOctet2, ucOctet3 )				\
-										( ( ( uint32_t ) ( ucOctet0 ) ) << 24UL ) |			\
-										( ( ( uint32_t ) ( ucOctet1 ) ) << 16UL ) |			\
-										( ( ( uint32_t ) ( ucOctet2 ) ) <<  8UL ) |			\
-										( ( uint32_t ) ( ucOctet3 ) )
+										( ( ( ( uint32_t ) ( ucOctet0 ) ) << 24UL ) |		\
+										  ( ( ( uint32_t ) ( ucOctet1 ) ) << 16UL ) |		\
+										  ( ( ( uint32_t ) ( ucOctet2 ) ) <<  8UL ) |		\
+										  ( ( uint32_t ) ( ucOctet3 ) ) )
 
 	#define FreeRTOS_inet_ntoa( ulIPAddress, pucBuffer )									\
 										sprintf( ( char * ) ( pucBuffer ), "%d.%d.%d.%d",	\
-											( ( ( ulIPAddress ) >> 24UL ) & 0xffUL ) ),		\
+											( ( ( ulIPAddress ) >> 24UL ) & 0xffUL ),		\
 											( ( ( ulIPAddress ) >> 16UL ) & 0xffUL ),		\
 											( ( ( ulIPAddress ) >> 8UL ) & 0xffUL ),		\
-											( ( ulIPAddress ) & 0xffUL )
+											( ( ulIPAddress ) & 0xffUL ) )
 
 #endif /* ipconfigBYTE_ORDER */
 

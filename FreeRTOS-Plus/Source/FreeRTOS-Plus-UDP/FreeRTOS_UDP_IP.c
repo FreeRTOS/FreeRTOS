@@ -5,11 +5,11 @@
  * This file is part of the FreeRTOS+UDP distribution.  The FreeRTOS+UDP license
  * terms are different to the FreeRTOS license terms.
  *
- * FreeRTOS+UDP uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.  
+ * FreeRTOS+UDP uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+UDP is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
  *
  * - Open source licensing -
@@ -21,9 +21,9 @@
  *
  * - Commercial licensing -
  * Businesses and individuals that for commercial or other reasons cannot comply
- * with the terms of the GPL V2 license must obtain a commercial license before 
- * incorporating FreeRTOS+UDP into proprietary software for distribution in any 
- * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp 
+ * with the terms of the GPL V2 license must obtain a commercial license before
+ * incorporating FreeRTOS+UDP into proprietary software for distribution in any
+ * form.  Commercial licenses can be purchased from http://shop.freertos.org/udp
  * and do not require any source files to be changed.
  *
  * FreeRTOS+UDP is distributed in the hope that it will be useful.  You cannot
@@ -582,8 +582,8 @@ static portBASE_TYPE xReturn = pdFALSE;
 				#else
 				{
 					*ipLOCAL_IP_ADDRESS_POINTER = xNetworkAddressing.ulDefaultIPAddress;
-					
-					/* Ensure the gateway is on the same subnet as the IP 
+
+					/* Ensure the gateway is on the same subnet as the IP
 					address. */
 					configASSERT( ( ( *ipLOCAL_IP_ADDRESS_POINTER ) & xNetworkAddressing.ulNetMask ) == ( xNetworkAddressing.ulGatewayAddress & xNetworkAddressing.ulNetMask ) );
 				}
@@ -724,7 +724,7 @@ eIPEvent_t eMessage;
 	/* This time can be used to send more than one type of message to the IP
 	task.  The message ID is stored in the ID of the timer.  The strange
 	casting is to avoid compiler warnings. */
-	eMessage = ( eIPEvent_t ) ( ( int ) pvTimerGetTimerID( xTimer ) );
+	eMessage = ( eIPEvent_t ) ( ( portBASE_TYPE ) pvTimerGetTimerID( xTimer ) );
 
 	prvSendEventToIPTask( eMessage );
 }
@@ -1298,7 +1298,7 @@ xARPPacket_t *pxARPPacket;
 
 	pxNetworkBuffer->xDataLength = sizeof( xARPPacket_t );
 
-	iptraceCREATING_ARP_REQUEST( ulIPAddress );
+	iptraceCREATING_ARP_REQUEST( pxNetworkBuffer->ulIPAddress );
 }
 /*-----------------------------------------------------------*/
 
@@ -1403,7 +1403,7 @@ static void prvProcessNetworkDownEvent( void )
 			/* Static configuration is being used, so the network is now up. */
 			#if ipconfigFREERTOS_PLUS_NABTO == 1
 			{
-				/* Return value is used in configASSERT() inside the 
+				/* Return value is used in configASSERT() inside the
 				function. */
 				( void ) xStartNabtoTask();
 			}
@@ -1594,7 +1594,7 @@ uint16_t usLength, usReturn;
 	}
 	else
 	{
-		/* The hardware will check the checksum.  Returning 0 allows this 
+		/* The hardware will check the checksum.  Returning 0 allows this
 		function to be used to both check an incoming checksum and set an
 		outgoing checksum in this case. */
 		usReturn = 0;
@@ -1660,10 +1660,10 @@ uint16_t usLength, usReturn;
 	xICMPHeader_t *pxICMPHeader;
 	xIPHeader_t *pxIPHeader;
 
-		iptraceSENDING_PING_REPLY( pxIPHeader->ulSourceIPAddress );
-
 		pxICMPHeader = &( pxICMPPacket->xICMPHeader );
 		pxIPHeader = &( pxICMPPacket->xIPHeader );
+
+		iptraceSENDING_PING_REPLY( pxIPHeader->ulSourceIPAddress );
 
 		/* The checksum can be checked here - but a ping reply should be
 		returned even if the checksum is incorrect so the other end can
@@ -1763,7 +1763,7 @@ uint16_t us, usDataLength16BitWords, *pusNextData, usReturn;
 		{
 			ulChecksum = ( ulChecksum & 0xffffUL ) + ( ulChecksum >> 16UL );
 		}
-		
+
 		usReturn = ~( ( uint16_t ) ulChecksum );
 	}
 	else

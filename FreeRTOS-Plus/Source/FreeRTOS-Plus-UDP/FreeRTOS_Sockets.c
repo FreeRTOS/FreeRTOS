@@ -70,7 +70,7 @@ port number. */
 
 /* xWaitingPacketSemaphore is not created until the socket is bound, so can be
 tested to see if bind() has been called. */
-#define socketSOCKET_IS_BOUND( pxSocket ) ( ( uint32_t ) pxSocket->xWaitingPacketSemaphore )
+#define socketSOCKET_IS_BOUND( pxSocket ) ( ( portBASE_TYPE ) pxSocket->xWaitingPacketSemaphore )
 
 /* If FreeRTOS_sendto() is called on a socket that is not bound to a port
 number then, depending on the FreeRTOSIPConfig.h settings, it might be that a

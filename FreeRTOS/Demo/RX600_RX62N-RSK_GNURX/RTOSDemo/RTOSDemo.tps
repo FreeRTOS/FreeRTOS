@@ -11,7 +11,7 @@
 "Debug_RX600_E1_E20_SYSTEM" 
 "Debug_with_optimisation" 
 [CURRENT_CONFIGURATION]
-"Debug" 
+"Blinky" 
 [CURRENT_SESSION]
 "SessionRX600_E1_E20_SYSTEM" 
 [GENERAL_DATA_PROJECT]

@@ -167,7 +167,7 @@ typedef struct QueueDefinition
 	more user friendly. */
 	typedef struct QUEUE_REGISTRY_ITEM
 	{
-		char *pcQueueName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+		const char *pcQueueName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 		QueueHandle_t xHandle;
 	} QueueRegistryItem_t;
 
@@ -2143,7 +2143,7 @@ BaseType_t xReturn;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	void vQueueAddToRegistry( QueueHandle_t xQueue, char *pcQueueName ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	void vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcQueueName ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	UBaseType_t ux;
 

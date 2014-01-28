@@ -664,6 +664,7 @@ TickType_t xTimeNow;
 					break;
 
 				case tmrCOMMAND_CHANGE_PERIOD :
+				case tmrCOMMAND_CHANGE_PERIOD_FROM_ISR :
 					pxTimer->xTimerPeriodInTicks = xMessage.u.xTimerParameters.xMessageValue;
 					configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
 

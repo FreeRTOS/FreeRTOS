@@ -352,12 +352,16 @@ uint32_t ulAPSR;
 
 		if( ( portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS ) <= portMAX_BINARY_POINT_VALUE )
 		{
-			/* Start the timer that generates the tick ISR.  Interrupts are
-			turned off in the CPU itself to ensure the tick does not execute
-			while the scheduler is being started.  Interrupts are automatically
-			turned back on in the CPU when the first task starts executing. */
+			/* Interrupts are turned off in the CPU itself to ensure tick does
+			not execute	while the scheduler is being started.  Interrupts are
+			automatically turned back on in the CPU when the first task starts
+			executing. */
 			portCPU_IRQ_DISABLE();
+
+			/* Start the timer that generates the tick ISR. */
 			configSETUP_TICK_INTERRUPT();
+
+			/* Start the first task executing. */
 			vPortRestoreTaskContext();
 		}
 	}

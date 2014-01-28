@@ -1514,7 +1514,7 @@ BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION
  * preferably in ROM/Flash), not on the stack.
  */
 #if configQUEUE_REGISTRY_SIZE > 0
-	void vQueueAddToRegistry( QueueHandle_t xQueue, char *pcName ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	void vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcName ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 #endif
 
 /*

@@ -102,6 +102,7 @@ or interrupt version of the queue send function should be used. */
 #define tmrCOMMAND_START_FROM_ISR				( ( BaseType_t ) 6 )
 #define tmrCOMMAND_RESET_FROM_ISR				( ( BaseType_t ) 7 )
 #define tmrCOMMAND_STOP_FROM_ISR				( ( BaseType_t ) 8 )
+#define tmrCOMMAND_CHANGE_PERIOD_FROM_ISR		( ( BaseType_t ) 9 )
 
 
 /**
@@ -662,7 +663,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 
 /**
  * BaseType_t xTimerStartFromISR( 	TimerHandle_t xTimer,
- *										BaseType_t *pxHigherPriorityTaskWoken );
+ *									BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerStart() that can be called from an interrupt service
  * routine.
@@ -748,7 +749,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 
 /**
  * BaseType_t xTimerStopFromISR( 	TimerHandle_t xTimer,
- *										BaseType_t *pxHigherPriorityTaskWoken );
+ *									BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerStop() that can be called from an interrupt service
  * routine.
@@ -811,8 +812,8 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
 
 /**
  * BaseType_t xTimerChangePeriodFromISR( TimerHandle_t xTimer,
- *											TickType_t xNewPeriod,
- *											BaseType_t *pxHigherPriorityTaskWoken );
+ *										 TickType_t xNewPeriod,
+ *										 BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerChangePeriod() that can be called from an interrupt
  * service routine.
@@ -880,11 +881,11 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void );
  * }
  * @endverbatim
  */
-#define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD, ( xNewPeriod ), ( pxHigherPriorityTaskWoken ), 0U )
+#define xTimerChangePeriodFromISR( xTimer, xNewPeriod, pxHigherPriorityTaskWoken ) xTimerGenericCommand( ( xTimer ), tmrCOMMAND_CHANGE_PERIOD_FROM_ISR, ( xNewPeriod ), ( pxHigherPriorityTaskWoken ), 0U )
 
 /**
  * BaseType_t xTimerResetFromISR( 	TimerHandle_t xTimer,
- *										BaseType_t *pxHigherPriorityTaskWoken );
+ *									BaseType_t *pxHigherPriorityTaskWoken );
  *
  * A version of xTimerReset() that can be called from an interrupt service
  * routine.

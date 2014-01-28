@@ -128,6 +128,8 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
+XScuGic xInterruptController;
+
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -155,7 +157,6 @@ static void prvSetupHardware( void )
 {
 BaseType_t xStatus;
 XScuGic_Config *pxGICConfig;
-XScuGic xInterruptController;
 
 	/* Ensure no interrupts execute while the scheduler is in an inconsistent
 	state.  Interrupts are automatically enabled when the scheduler is

@@ -25,6 +25,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>src/FreeRTOS-Plus-CLI</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI</locationURI>
+		</link>
+		<link>
 			<name>src/FreeRTOS_Source</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
@@ -33,6 +38,11 @@
 			<name>src/Standard_Demo_Tasks</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common</locationURI>
+		</link>
+		<link>
+			<name>src/UARTCommandConsole.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/UARTCommandConsole.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>

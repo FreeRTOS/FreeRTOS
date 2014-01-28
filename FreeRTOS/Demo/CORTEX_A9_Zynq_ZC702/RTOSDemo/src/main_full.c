@@ -228,6 +228,11 @@ extern void vRegTest2Implementation( void );
 extern void vRegisterSampleCLICommands( void );
 extern void vRegisterFileSystemCLICommands( void );
 
+/*
+ * The task that manages the FreeRTOS+CLI input and output.
+ */
+extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
+
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
@@ -240,10 +245,6 @@ volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 void main_full( void )
 {
-	/* The baud rate setting here has no effect, hence it is set to 0 to
-	make that obvious. */
-//	xSerialPortInitMinimal( 0, mainUART_QUEUE_LENGTHS );
-
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
@@ -260,7 +261,7 @@ void main_full( void )
 
 	/* Start the tasks that implements the command console on the UART, as
 	described above. */
-//	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
+	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
 
 	/* Register the standard CLI commands. */
 //	vRegisterSampleCLICommands();
@@ -294,7 +295,7 @@ void main_full( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-#error Fails when the tick hook is used
+
 static void prvCheckTask( void *pvParameters )
 {
 portTickType xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;

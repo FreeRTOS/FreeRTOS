@@ -226,7 +226,6 @@ extern void vRegTest2Implementation( void );
  * defined in CLI-Commands.c and File-Related-CLI-Command.c respectively.
  */
 extern void vRegisterSampleCLICommands( void );
-extern void vRegisterFileSystemCLICommands( void );
 
 /*
  * The task that manages the FreeRTOS+CLI input and output.
@@ -264,7 +263,7 @@ void main_full( void )
 	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
 
 	/* Register the standard CLI commands. */
-//	vRegisterSampleCLICommands();
+	vRegisterSampleCLICommands();
 
 
 	/* Create the register check tasks, as described at the top of this

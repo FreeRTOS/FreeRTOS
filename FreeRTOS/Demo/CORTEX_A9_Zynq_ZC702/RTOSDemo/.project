@@ -35,6 +35,11 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
 		<link>
+			<name>src/Sample-CLI-commands.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/Sample-CLI-commands.c</locationURI>
+		</link>
+		<link>
 			<name>src/Standard_Demo_Tasks</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common</locationURI>

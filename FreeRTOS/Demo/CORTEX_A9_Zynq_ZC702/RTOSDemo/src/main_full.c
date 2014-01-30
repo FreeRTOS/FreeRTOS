@@ -144,6 +144,7 @@
 #include "serial.h"
 #include "TimerDemo.h"
 #include "QueueOverwrite.h"
+#include "IntQueue.h"
 
 /* FreeRTOS+CLI and FreeRTOS+FAT SL includes. */
 //#include "UARTCommandConsole.h"
@@ -247,6 +248,7 @@ void main_full( void )
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
+	vStartInterruptQueueTasks();
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();

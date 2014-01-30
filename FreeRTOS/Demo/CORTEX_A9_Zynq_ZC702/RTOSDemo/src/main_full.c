@@ -324,6 +324,11 @@ unsigned long ulErrorFound = pdFALSE;
 
 		/* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
+		if( xAreIntQueueTasksStillRunning() != pdTRUE )
+		{
+			ulErrorFound = pdTRUE;
+		}
+
 		if( xAreMathsTaskStillRunning() != pdTRUE )
 		{
 			ulErrorFound = pdTRUE;

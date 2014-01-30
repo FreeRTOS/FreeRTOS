@@ -132,14 +132,14 @@
 #define configUSE_QUEUE_SETS					1
 
 /* Co-routine definitions. */
-#define configUSE_CO_ROUTINES 			0
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#define configUSE_CO_ROUTINES 					0
+#define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
 
 /* Software timer definitions. */
-#define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH		5
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
+#define configUSE_TIMERS						1
+#define configTIMER_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH				5
+#define configTIMER_TASK_STACK_DEPTH			( configMINIMAL_STACK_SIZE * 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
@@ -165,13 +165,14 @@ Zynq MPU. */
 #define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ( -0xf00 )
 #define configUNIQUE_INTERRUPT_PRIORITIES				32
 
-/* Run time stats gathering definitions. */
-unsigned long ulGetRunTimeCounterValue( void );
-void vInitialiseRunTimeStats( void );
-
+/* portCONFIGURE_TIMER_FOR_RUN_TIME_STATS is not required because the time base
+comes from the ulHighFrequencyTimerCounts variable which is incremented in a
+high frequency timer that is already being started as part of the interrupt
+nesting test. */
 #define configGENERATE_RUN_TIME_STATS	1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vInitialiseRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
+extern volatile uint32_t ulHighFrequencyTimerCounts;
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
+#define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTimerCounts
 
 /* The size of the global output buffer that is available for use when there
 are multiple command interpreters running at once (for example, one on a UART

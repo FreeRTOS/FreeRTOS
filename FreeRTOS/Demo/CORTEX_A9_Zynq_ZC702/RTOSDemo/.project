@@ -49,6 +49,11 @@
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/UARTCommandConsole.c</locationURI>
 		</link>
+		<link>
+			<name>src/Standard_Demo_Tasks/IntQueue.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/IntQueue.c</locationURI>
+		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>

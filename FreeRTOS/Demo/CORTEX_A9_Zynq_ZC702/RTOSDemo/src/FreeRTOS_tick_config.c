@@ -88,6 +88,7 @@ BaseType_t xStatus;
 extern void FreeRTOS_Tick_Handler( void );
 XScuTimer_Config *pxTimerConfig;
 XScuGic_Config *pxGICConfig;
+const uint8_t ucRisingEdge = 3;
 
 	/* This function is called with the IRQ interrupt disabled, and the IRQ
 	interrupt should be left disabled.  It is enabled automatically when the
@@ -99,8 +100,11 @@ XScuGic_Config *pxGICConfig;
 	xStatus = XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
 	configASSERT( xStatus == XST_SUCCESS );
 
+	/* The priority must be the lowest possible. */
+	XScuGic_SetPriorityTriggerType( &xInterruptController, XPAR_SCUTIMER_INTR, portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT, ucRisingEdge );
+
 	/* Install the FreeRTOS tick handler. */
-	xStatus = XScuGic_Connect(&xInterruptController, XPAR_SCUTIMER_INTR, (Xil_ExceptionHandler) FreeRTOS_Tick_Handler, (void *)&xTimer);
+	xStatus = XScuGic_Connect( &xInterruptController, XPAR_SCUTIMER_INTR, (Xil_ExceptionHandler) FreeRTOS_Tick_Handler, ( void * ) &xTimer );
 	configASSERT( xStatus == XST_SUCCESS );
 
 	/* Initialise the timer. */
@@ -124,21 +128,6 @@ XScuGic_Config *pxGICConfig;
 	/* Enable the interrupt in the xTimer itself. */
 	vClearTickInterrupt();
 	XScuTimer_EnableInterrupt( &xTimer );
-}
-/*-----------------------------------------------------------*/
-
-/*
- * Crude implementation of a run time counter used to measure how much time
- * each task spends in the Running state.
- */
-unsigned long ulGetRunTimeCounterValue( void )
-{
-	return 0;
-}
-/*-----------------------------------------------------------*/
-
-void vInitialiseRunTimeStats( void )
-{
 }
 /*-----------------------------------------------------------*/
 

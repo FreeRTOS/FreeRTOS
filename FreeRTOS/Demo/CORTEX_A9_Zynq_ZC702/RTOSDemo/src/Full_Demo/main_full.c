@@ -74,6 +74,13 @@
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware, are defined in main.c.
  *
+ * NOTE 3:  The full demo includes a test that checks the floating point context
+ * is maintained correctly across task switches.  The standard GCC libraries can
+ * use floating point registers and made this test fail (unless the tasks that
+ * use the library are given a floating point context as described on the
+ * documentation page for this demo).  printf-stdarg.c is included in this
+ * project to prevent the standard GCC libraries being linked into the project.
+ *
  ******************************************************************************
  *
  * main_full() creates all the demo application tasks and software timers, then
@@ -84,22 +91,13 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * FreeRTOS+CLI command console.  The command console is access through UART2
- * using 115200 baud if mainINCLUDE_FAT_SL_DEMO is set to 1.  For reasons of
- * robustness testing the UART driver is deliberately written to be inefficient
- * and should not be used as a template for a production driver.  Type "help" to
- * see a list of registered commands.  The FreeRTOS+CLI license is different to
- * the FreeRTOS license, see http://www.FreeRTOS.org/cli for license and usage
- * details.
- *
- * FreeRTOS+FAT SL.  FreeRTOS+FAT SL is demonstrated using a RAM disk if
- * mainINCLUDE_FAT_SL_DEMO is set to 1.  [At the time of writing] The
- * functionality of the file system demo is identical to the functionality of
- * the FreeRTOS Win32 simulator file system demo, with the command console being
- * accessed via the UART (as described above) instead of a network terminal.
- * The FreeRTOS+FAT SL license is different to the FreeRTOS license, see
- * http://www.FreeRTOS.org/fat_sl for license and usage details, and a
- * description of the file system demo functionality.
+ * FreeRTOS+CLI command console.  The command console is access through the
+ * UART to USB connector on the ZC702 Zynq development board (marked J2).  For
+ * reasons of robustness testing the UART driver is deliberately written to be
+ * inefficient and should not be used as a template for a production driver.
+ * Type "help" to see a list of registered commands.  The FreeRTOS+CLI license
+ * is different to the FreeRTOS license, see http://www.FreeRTOS.org/cli for
+ * license and usage details.  The default baud rate is 115200.
  *
  * "Reg test" tasks - These fill both the core and floating point registers with
  * known values, then check that each register maintains its expected value for
@@ -146,9 +144,6 @@
 #include "QueueOverwrite.h"
 #include "IntQueue.h"
 
-/* FreeRTOS+CLI and FreeRTOS+FAT SL includes. */
-//#include "UARTCommandConsole.h"
-
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -168,20 +163,15 @@
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
 
-/* In this example the baud rate is hard coded and there is no LED for use by
-the COM test tasks, so just set both to invalid values. */
-#define mainCOM_TEST_LED					( 100 )
-#define mainBAUD_RATE						( 0 )
-
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainNO_ERROR_CHECK_TASK_PERIOD		( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TASK_PERIOD 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TASK_PERIOD 		( 200UL / portTICK_PERIOD_MS )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -190,12 +180,6 @@ purpose of ensuring parameters are passed into tasks correctly. */
 
 /* The base period used by the timer test tasks. */
 #define mainTIMER_TEST_PERIOD				( 50 )
-
-/* The length of queues used to pass characters into and out of the UART
-interrupt.  Note the comments above about the UART driver being implemented in
-this way to test the kernel robustness rather than to provide a template for an
-efficient production driver. */
-#define mainUART_QUEUE_LENGTHS	10
 
 /*-----------------------------------------------------------*/
 
@@ -236,16 +220,16 @@ extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriori
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
-register check tasks to the check software timer.  If the variables keep
-incrementing, then the register check tasks has not discovered any errors.  If
-a variable stops incrementing, then an error has been found. */
+register check tasks to the check task.  If the variables keep incrementing,
+then the register check tasks has not discovered any errors.  If a variable
+stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-	/* Start all the other standard demo/test tasks.  The have not particular
+	/* Start all the other standard demo/test tasks.  They have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
 	vStartInterruptQueueTasks();
@@ -267,9 +251,7 @@ void main_full( void )
 	/* Register the standard CLI commands. */
 	vRegisterSampleCLICommands();
 
-
-	/* Create the register check tasks, as described at the top of this
-	file */
+	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 

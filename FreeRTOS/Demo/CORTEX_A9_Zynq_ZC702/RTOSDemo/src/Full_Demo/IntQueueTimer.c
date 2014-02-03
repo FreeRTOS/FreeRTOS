@@ -139,7 +139,8 @@ static const UBaseType_t uxInterruptPriorities[ tmrTIMERS_USED ] =
 	configMAX_API_CALL_INTERRUPT_PRIORITY + 1,
 	configMAX_API_CALL_INTERRUPT_PRIORITY,
 	configMAX_API_CALL_INTERRUPT_PRIORITY - 1
-}
+};
+
 static XTtcPs xTimerInstances[ tmrTIMERS_USED ];
 
 /* Used to provide a means of ensuring the intended interrupt nesting depth is

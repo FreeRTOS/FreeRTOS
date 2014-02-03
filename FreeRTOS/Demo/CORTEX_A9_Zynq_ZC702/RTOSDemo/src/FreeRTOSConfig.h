@@ -115,7 +115,7 @@
 #define configUSE_PREEMPTION					1
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
-#define configMAX_PRIORITIES					( 5 )
+#define configMAX_PRIORITIES					( 7 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 160 )
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 51200 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
@@ -151,7 +151,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil					1
 #define INCLUDE_vTaskDelay						1
 #define INCLUDE_eTaskGetState					1
-#define INCLUDE_xTimerPendFunctionCall	1
+#define INCLUDE_xTimerPendFunctionCall			1
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human

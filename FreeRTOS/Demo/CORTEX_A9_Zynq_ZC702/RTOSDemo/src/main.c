@@ -74,6 +74,13 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
+ * NOTE:  The full demo includes a test that checks the floating point context
+ * is maintained correctly across task switches.  The standard GCC libraries can
+ * use floating point registers and made this test fail (unless the tasks that
+ * use the library are given a floating point context as described on the
+ * documentation page for this demo).  printf-stdarg.c is included in this
+ * project to prevent the standard GCC libraries being linked into the project.
+ *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
@@ -128,6 +135,10 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
+/*-----------------------------------------------------------*/
+
+/* The interrupt controller is initialised in this file, and made available to
+other modules. */
 XScuGic xInterruptController;
 
 /*-----------------------------------------------------------*/
@@ -149,6 +160,7 @@ int main( void )
 	}
 	#endif
 
+	/* Don't expect to reach here. */
 	return 0;
 }
 /*-----------------------------------------------------------*/

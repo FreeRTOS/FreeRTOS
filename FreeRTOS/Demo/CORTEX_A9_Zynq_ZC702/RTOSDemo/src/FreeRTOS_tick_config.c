@@ -150,11 +150,12 @@ const XScuGic_VectorTableEntry *pxVectorEntry;
 	/* The ID of the interrupt is obtained by bitwise anding the ICCIAR value
 	with 0x3FF. */
 	ulInterruptID = ulICCIAR & 0x3FFUL;
-	configASSERT( ulInterruptID < XSCUGIC_MAX_NUM_INTR_INPUTS );
-
-	/* Call the function installed in the array of installed handler functions. */
-	pxVectorEntry = &( pxVectorTable[ ulInterruptID ] );
-	pxVectorEntry->Handler( pxVectorEntry->CallBackRef );
+	if( ulInterruptID < XSCUGIC_MAX_NUM_INTR_INPUTS )
+	{
+		/* Call the function installed in the array of installed handler functions. */
+		pxVectorEntry = &( pxVectorTable[ ulInterruptID ] );
+		pxVectorEntry->Handler( pxVectorEntry->CallBackRef );
+	}
 }
 
 

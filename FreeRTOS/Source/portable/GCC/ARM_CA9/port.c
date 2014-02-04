@@ -110,10 +110,6 @@
 	#error configMAX_API_CALL_INTERRUPT_PRIORITY must be greater than ( configUNIQUE_INTERRUPT_PRIORITIES / 2 )
 #endif
 
-#ifndef configINSTALL_FREERTOS_VECTOR_TABLE
-	#warning configINSTALL_FREERTOS_VECTOR_TABLE was undefined.  Defaulting configINSTALL_FREERTOS_VECTOR_TABLE to 0.
-#endif
-
 #ifndef configCLEAR_TICK_INTERRUPT
 	#define configCLEAR_TICK_INTERRUPT()
 #endif
@@ -134,8 +130,7 @@ context. */
 #define portNO_FLOATING_POINT_CONTEXT	( ( StackType_t ) 0 )
 
 /* Constants required to setup the initial task context. */
-#warning FIQ is disabled
-#define portINITIAL_SPSR				( ( StackType_t ) 0x5f ) /* System mode, ARM mode, IRQ enabled FIQ disabled.  1f is required to enable FIQ. */
+#define portINITIAL_SPSR				( ( StackType_t ) 0x1f ) /* System mode, ARM mode, IRQ enabled FIQ enabled. */
 #define portTHUMB_MODE_BIT				( ( StackType_t ) 0x20 )
 #define portINTERRUPT_ENABLE_BIT		( 0x80UL )
 #define portTHUMB_MODE_ADDRESS			( 0x01UL )
@@ -333,15 +328,6 @@ uint32_t ulAPSR;
 	__asm volatile ( "MRS %0, APSR" : "=r" ( ulAPSR ) );
 	ulAPSR &= portAPSR_MODE_BITS_MASK;
 	configASSERT( ulAPSR != portAPSR_USER_MODE );
-
-	#if configINSTALL_FREERTOS_VECTOR_TABLE == 1
-	{
-		extern void vPortInstallFreeRTOSVectorTable( void );
-
-		vPortInstallFreeRTOSVectorTable();
-	}
-	#endif
-
 
 	if( ulAPSR != portAPSR_USER_MODE )
 	{

@@ -53,6 +53,7 @@
 */
 
 	.text
+	.arm
 
 	.set SYS_MODE,	0x1f
 	.set SVC_MODE,	0x13
@@ -70,6 +71,7 @@
 	.extern vTaskSwitchContext
 	.extern vApplicationIRQHandler
 	.extern ulPortInterruptNesting
+	.extern ulPortTaskHasFPUContext
 
 	.global FreeRTOS_IRQ_Handler
 	.global FreeRTOS_SWI_Handler
@@ -168,15 +170,20 @@
 /******************************************************************************
  * SVC handler is used to start the scheduler and yield a task.
  *****************************************************************************/
+.align 4
+.type FreeRTOS_SWI_Handler, %function
 FreeRTOS_SWI_Handler:
 	/* Save the context of the current task and select a new task to run. */
 	portSAVE_CONTEXT
 	LDR R0, vTaskSwitchContextConst
 	BLX	R0
 
+.type vPortRestoreTaskContext, %function
 vPortRestoreTaskContext:
 	portRESTORE_CONTEXT
 
+.align 4
+.type FreeRTOS_IRQ_Handler, %function
 FreeRTOS_IRQ_Handler:
 	/* Return to the interrupted instruction. */
 	SUB		lr, lr, #4
@@ -278,14 +285,6 @@ switch_before_exit:
 	/* Restore the context of, and branch to, the task selected to execute
 	next. */
 	portRESTORE_CONTEXT
-
-vPortInstallFreeRTOSVectorTable:
-	/* Set VBAR to the vector table that contains the FreeRTOS handlers. */
-	ldr	r0, =_freertos_vector_table
-	mcr	p15, 0, r0, c12, c0, 0
-	dsb
-	isb
-	bx lr
 
 ulICCIARConst:	.word ulICCIAR
 ulICCEOIRConst:	.word ulICCEOIR

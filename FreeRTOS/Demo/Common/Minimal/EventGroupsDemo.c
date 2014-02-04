@@ -326,6 +326,9 @@ EventBits_t uxSynchronisationBit, uxReturned;
 		case. */
 		configASSERT( ( uxReturned & ebALL_SYNC_BITS ) == ebALL_SYNC_BITS );
 
+		/* Remove compiler warning if configASSERT() is not defined. */
+		( void ) uxReturned;
+
 		/* Wait until the 'test master' task unsuspends this task again. */
 		vTaskSuspend( NULL );
 

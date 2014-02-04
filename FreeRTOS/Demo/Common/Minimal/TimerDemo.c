@@ -245,9 +245,9 @@ static portTickType xIterationsWithoutCounterIncrement = ( portTickType ) 0, xLa
 	necessary because the tests in this file block for extended periods, and the
 	block period might be longer than the time between calls to this function. */
 	xMaxBlockTimeUsedByTheseTests = ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
-	xLoopCounterIncrementTimeMax = xMaxBlockTimeUsedByTheseTests / xCycleFrequency;
+	xLoopCounterIncrementTimeMax = ( xMaxBlockTimeUsedByTheseTests / xCycleFrequency ) + 1;
 
-	/* If the demo task is still running then we expect the loopcounter to
+	/* If the demo task is still running then the loop counter is expected to
 	have incremented every xLoopCounterIncrementTimeMax calls. */
 	if( ulLastLoopCounter == ulLoopCounter )
 	{
@@ -717,11 +717,6 @@ void vTimerPeriodicISRTests( void )
 {
 static portTickType uxTick = ( portTickType ) -1;
 
-/* The xHigherPriorityTaskWoken parameter is not used in this case as this
-function is called from the tick hook anyway.  However the API required it
-to be present. */
-signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-
 #if( configTIMER_TASK_PRIORITY != ( configMAX_PRIORITIES - 1 ) )
 	/* The timer service task is not the highest priority task, so it cannot
 	be assumed that timings will be exact.  Timers should never call their
@@ -731,30 +726,15 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	is the highest priority task in the system. */
 	const portTickType xMargin = 5;
 #else
-
-	const portTickType xMargin = 1;
+	const portTickType xMargin = 2;
 #endif
 
-	/* This test is called from the tick ISR even when the scheduler is suspended.
-	Therefore, it is possible for the xTickCount to be temporarily less than the
-	uxTicks count maintained in this function.  That can result in calculated
-	unblock times being too short, as this function is not called as missed ticks
-	(ticks that occur while the scheduler is suspended) are unwound to reinstate
-	the real tick value.  Therefore, if this happens, just abandon the test
-	and start again. */
-	if( xTaskGetSchedulerState() != taskSCHEDULER_RUNNING )
-	{
-		uxTick = ( portTickType ) -1;
-	}
-	else
-	{
-		uxTick++;
-	}
+	uxTick++;
 
-	if( uxTick == ( xBasePeriod >> 1 ) )
+	if( uxTick == 0 )
 	{
-		/* The timers will have been created, but not started.  Start them
-		now by setting their period. */
+		/* The timers will have been created, but not started.  Start them now 
+		by setting their period. */
 		ucISRAutoReloadTimerCounter = 0;
 		ucISROneShotTimerCounter = 0;
 
@@ -762,15 +742,22 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		timer queue.  If the timers cannot be started then reset uxTick so
 		another attempt is made later. */
 		uxTick = ( portTickType ) -1;
-		if( xTimerChangePeriodFromISR( xISRAutoReloadTimer, xBasePeriod, &xHigherPriorityTaskWoken ) == pdPASS )
+
+		/* Try starting first timer. */
+		if( xTimerChangePeriodFromISR( xISRAutoReloadTimer, xBasePeriod, NULL ) == pdPASS )
 		{
-			if( xTimerChangePeriodFromISR( xISROneShotTimer, xBasePeriod, &xHigherPriorityTaskWoken ) == pdPASS )
+			/* First timer was started, try starting the second timer. */
+			if( xTimerChangePeriodFromISR( xISROneShotTimer, xBasePeriod, NULL ) == pdPASS )
 			{
+				/* Both timers were started, so set the uxTick back to its 
+				proper value. */
 				uxTick = 0;
 			}
 			else
 			{
-				xTimerStopFromISR( xISRAutoReloadTimer, &xHigherPriorityTaskWoken );
+				/* Second timer could not be started, so stop the first one
+				again. */
+				xTimerStopFromISR( xISRAutoReloadTimer, NULL );
 			}
 		}
 	}
@@ -841,7 +828,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	else if( uxTick == ( 3 * xBasePeriod ) )
 	{
 		/* Start the one shot timer again. */
-		xTimerStartFromISR( xISROneShotTimer, &xHigherPriorityTaskWoken );
+		xTimerStartFromISR( xISROneShotTimer, NULL );
 	}
 	else if( uxTick == ( ( 3 * xBasePeriod ) + xMargin ) )
 	{
@@ -862,7 +849,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		
 		/* Now stop the auto reload timer.  The one shot timer was started
 		a few ticks ago. */
-		xTimerStopFromISR( xISRAutoReloadTimer, &xHigherPriorityTaskWoken );
+		xTimerStopFromISR( xISRAutoReloadTimer, NULL );
 	}	
 	else if( uxTick == ( 4 * xBasePeriod ) )
 	{
@@ -916,7 +903,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		}
 		
 		/* Now reset the one shot timer. */
-		xTimerResetFromISR( xISROneShotTimer, &xHigherPriorityTaskWoken );
+		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}	
 	else if( uxTick == ( 9 * xBasePeriod ) )
 	{
@@ -935,7 +922,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			configASSERT( xTestStatus );
 		}
 		
-		xTimerResetFromISR( xISROneShotTimer, &xHigherPriorityTaskWoken );
+		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}	
 	else if( uxTick == ( 10 * xBasePeriod ) )
 	{
@@ -954,7 +941,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			configASSERT( xTestStatus );
 		}
 		
-		xTimerResetFromISR( xISROneShotTimer, &xHigherPriorityTaskWoken );
+		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}
 	else if( uxTick == ( 11 * xBasePeriod ) )
 	{
@@ -973,7 +960,7 @@ signed portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			configASSERT( xTestStatus );
 		}
 		
-		xTimerResetFromISR( xISROneShotTimer, &xHigherPriorityTaskWoken );
+		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}	
 	else if( uxTick == ( ( 12 * xBasePeriod ) + xMargin ) )
 	{

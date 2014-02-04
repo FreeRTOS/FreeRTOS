@@ -150,6 +150,7 @@ XUartPs_Config *pxConfig;
 	/* Initialise the driver. */
 	xStatus = XUartPs_CfgInitialize( &xUARTInstance, pxConfig, XPAR_PS7_UART_1_BASEADDR );
 	configASSERT( xStatus == XST_SUCCESS );
+	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
 	/* Misc. parameter configuration. */
 	XUartPs_SetBaudRate( &xUARTInstance, ulWantedBaud );
@@ -159,6 +160,7 @@ XUartPs_Config *pxConfig;
 	file. */
 	xStatus = XScuGic_Connect( &xInterruptController, XPAR_XUARTPS_1_INTR,  (Xil_ExceptionHandler) prvUART_Handler, (void *) &xUARTInstance );
 	configASSERT( xStatus == XST_SUCCESS );
+	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
 	/* Ensure interrupts start clear. */
 	XUartPs_WriteReg( XPAR_PS7_UART_1_BASEADDR, XUARTPS_ISR_OFFSET, XUARTPS_IXR_MASK );
@@ -242,6 +244,9 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 char cChar;
 
 	configASSERT( pvNotUsed == &xUARTInstance );
+
+	/* Remove compile warnings if configASSERT() is not defined. */
+	( void ) pvNotUsed;
 
 	/* Read the interrupt ID register to see which interrupt is active. */
 	ulActiveInterrupts = XUartPs_ReadReg(XPAR_PS7_UART_1_BASEADDR,  XUARTPS_IMR_OFFSET);

@@ -159,12 +159,6 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
-/* The following constant describe the hardware, and are correct for the
-Zynq MPU. */
-#define configINTERRUPT_CONTROLLER_BASE_ADDRESS 		( XPAR_PS7_SCUGIC_0_DIST_BASEADDR )
-#define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ( -0xf00 )
-#define configUNIQUE_INTERRUPT_PRIORITIES				32
-
 /* portCONFIGURE_TIMER_FOR_RUN_TIME_STATS is not required because the time base
 comes from the ulHighFrequencyTimerCounts variable which is incremented in a
 high frequency timer that is already being started as part of the interrupt
@@ -200,10 +194,14 @@ void vAssertCalled( const char * pcFile, unsigned long ulLine );
 void vConfigureTickInterrupt( void );
 #define configSETUP_TICK_INTERRUPT() vConfigureTickInterrupt()
 
-#define configINSTALL_FREERTOS_VECTOR_TABLE 1
-
 void vClearTickInterrupt( void );
 #define configCLEAR_TICK_INTERRUPT() vClearTickInterrupt()
+
+/* The following constant describe the hardware, and are correct for the
+Zynq MPU. */
+#define configINTERRUPT_CONTROLLER_BASE_ADDRESS 		( XPAR_PS7_SCUGIC_0_DIST_BASEADDR )
+#define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ( -0xf00 )
+#define configUNIQUE_INTERRUPT_PRIORITIES				32
 
 #endif /* FREERTOS_CONFIG_H */
 

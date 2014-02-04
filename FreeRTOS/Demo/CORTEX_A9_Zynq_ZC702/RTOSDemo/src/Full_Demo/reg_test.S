@@ -81,6 +81,7 @@
 	.arm
 
 	/* This function is explained in the comments at the top of main-full.c. */
+.type vRegTest1Implementation, %function
 vRegTest1Implementation:
 
 	/* Fill each general purpose register with a known value. */
@@ -370,6 +371,7 @@ reg1_error_loop:
 
 /*-----------------------------------------------------------*/
 
+.type vRegTest2Implementation, %function
 vRegTest2Implementation:
 
 	/* Put a known value in each register. */

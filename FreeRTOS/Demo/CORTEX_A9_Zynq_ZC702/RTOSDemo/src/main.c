@@ -109,7 +109,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -127,6 +127,14 @@ static void prvSetupHardware( void );
 #else
 	extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
+
+/*
+ * The Xilinx projects use a BSP that do not allow the start up code to be
+ * altered easily.  Therefore the vector table used by FreeRTOS is defined in
+ * FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
+ * FreeRTOS vector table.
+ */
+extern void vPortInstallFreeRTOSVectorTable( void );
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */
@@ -187,9 +195,16 @@ XScuGic_Config *pxGICConfig;
 	/* Install a default handler for each GIC interrupt. */
 	xStatus = XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
 	configASSERT( xStatus == XST_SUCCESS );
+	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
 	/* Initialise the LED port. */
 	vParTestInitialise();
+
+	/* The Xilinx projects use a BSP that do not allow the start up code to be
+	altered easily.  Therefore the vector table used by FreeRTOS is defined in
+	FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
+	FreeRTOS vector table. */
+	vPortInstallFreeRTOSVectorTable();
 }
 /*-----------------------------------------------------------*/
 

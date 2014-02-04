@@ -25,7 +25,7 @@
 								<inputType id="xilinx.gnu.assembler.input.401366857" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.arm.c.toolchain.compiler.debug.399974114" name="ARM gcc compiler" superClass="xilinx.gnu.arm.c.toolchain.compiler.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.117590421" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
+								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.117590421" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.option.debugging.level.1790313049" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.2019787450" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemo_bsp/ps7_cortexa9_0/include"/>
@@ -79,6 +79,18 @@
 							<tool id="xilinx.gnu.arm.size.debug.484243311" name="ARM Print Size" superClass="xilinx.gnu.arm.size.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="xilinx.gnu.arm.exe.debug.2107277346.2099160792" name="portASM.S" rcbsApplicability="disable" resourcePath="src/FreeRTOS_Source/portable/GCC/ARM_CA9/portASM.S" toolsToInvoke="xilinx.gnu.arm.c.toolchain.compiler.debug.399974114.1026417292">
+						<tool id="xilinx.gnu.arm.c.toolchain.compiler.debug.399974114.1026417292" name="ARM gcc compiler" superClass="xilinx.gnu.arm.c.toolchain.compiler.debug.399974114">
+							<option id="xilinx.gnu.compiler.misc.other.767287753" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -Wextra -mthumb" valueType="string"/>
+							<inputType id="xilinx.gnu.arm.c.compiler.input.1501099958" name="C source files" superClass="xilinx.gnu.arm.c.compiler.input"/>
+						</tool>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.251123203" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1170511444" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.386600654" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

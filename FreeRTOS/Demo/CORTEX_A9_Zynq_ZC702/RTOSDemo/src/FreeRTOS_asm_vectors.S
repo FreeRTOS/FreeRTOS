@@ -63,10 +63,9 @@
 
 #include "xil_errata.h"
 
-#define __ARM_NEON__ 1
-
 .org 0
 .text
+.arm
 
 .global _boot
 .global _freertos_vector_table
@@ -74,6 +73,7 @@
 .global FIQInterrupt
 .global DataAbortInterrupt
 .global PrefetchAbortInterrupt
+.global vPortInstallFreeRTOSVectorTable
 
 .extern FreeRTOS_IRQ_Handler
 .extern FreeRTOS_SWI_Handler
@@ -93,66 +93,48 @@ _irq:   .word FreeRTOS_IRQ_Handler
 _swi:   .word FreeRTOS_SWI_Handler
 
 
-
-FreeRTOS_FIQHandler:					/* FIQ vector handler */
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
-#ifdef __ARM_NEON__
-	vpush {d0-d7}
-	vpush {d16-d31}
-	vmrs r1, FPSCR
-	push {r1}
-	vmrs r1, FPEXC
-	push {r1}
-#endif
-
+.align 4
+FreeRTOS_FIQHandler:			/* FIQ vector handler */
+	stmdb	sp!,{r0-r3,r12,lr}	/* state save from compiled code */
 FIQLoop:
-	bl	FIQInterrupt			/* FIQ vector */
-
-#ifdef __ARM_NEON__
-	pop 	{r1}
-	vmsr    FPEXC, r1
-	pop 	{r1}
-	vmsr    FPSCR, r1
-	vpop    {d16-d31}
-	vpop    {d0-d7}
-#endif
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
+	blx	FIQInterrupt			/* FIQ vector */
+	ldmia	sp!,{r0-r3,r12,lr}	/* state restore from compiled code */
 	subs	pc, lr, #4			/* adjust return */
 
+.align 4
+FreeRTOS_Undefined:				/* Undefined handler */
+	b		.
 
-FreeRTOS_Undefined:					/* Undefined handler */
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
-
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-
-	b	_prestart			
-
-	movs	pc, lr
-
-
-FreeRTOS_DataAbortHandler:				/* Data Abort handler */
+.align 4
+FreeRTOS_DataAbortHandler:		/* Data Abort handler */
 #ifdef CONFIG_ARM_ERRATA_775420
 	dsb
 #endif
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
-
-	bl	DataAbortInterrupt		/*DataAbortInterrupt :call C function here */
-
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-
+	stmdb	sp!,{r0-r3,r12,lr}	/* state save from compiled code */
+	blx	DataAbortInterrupt		/*DataAbortInterrupt :call C function here */
+	ldmia	sp!,{r0-r3,r12,lr}	/* state restore from compiled code */
 	subs	pc, lr, #4			/* adjust return */
 
-FreeRTOS_PrefetchAbortHandler:				/* Prefetch Abort handler */
+.align 4
+FreeRTOS_PrefetchAbortHandler:	/* Prefetch Abort handler */
 #ifdef CONFIG_ARM_ERRATA_775420
 	dsb
 #endif
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
-
-	bl	PrefetchAbortInterrupt		/* PrefetchAbortInterrupt: call C function here */
-
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-
+	stmdb	sp!,{r0-r3,r12,lr}	/* state save from compiled code */
+	blx	PrefetchAbortInterrupt	/* PrefetchAbortInterrupt: call C function here */
+	ldmia	sp!,{r0-r3,r12,lr}	/* state restore from compiled code */
 	subs	pc, lr, #4			/* adjust return */
+
+.align 4
+.type vPortInstallFreeRTOSVectorTable, %function
+vPortInstallFreeRTOSVectorTable:
+
+	/* Set VBAR to the vector table that contains the FreeRTOS handlers. */
+	ldr	r0, =_freertos_vector_table
+	mcr	p15, 0, r0, c12, c0, 0
+	dsb
+	isb
+	bx lr
 
 
 .end

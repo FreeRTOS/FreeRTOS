@@ -82,6 +82,9 @@ extern "C" {
  *----------------------------------------------------------*/
 
 #define tskKERNEL_VERSION_NUMBER "V8.0.0 release candidate 1"
+#define tskKERNEL_VERSION_MAJOR 8
+#define tskKERNEL_VERSION_MINOR 0
+#define tskKERNEL_VERSION_BUILD 0
 
 /**
  * task. h

@@ -1678,7 +1678,9 @@ UBaseType_t uxSavedInterruptStatus;
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
-	xReturn = xTickCount;
+	{
+		xReturn = xTickCount;
+	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 	return xReturn;

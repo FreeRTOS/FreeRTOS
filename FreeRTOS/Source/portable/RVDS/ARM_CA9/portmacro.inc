@@ -120,7 +120,7 @@ IRQ_MODE			EQU		0x12
 	CMP		R1, #0
 
 	; Restore the floating point context, if any
-	LDMFDNE SP!, {R0}
+	POPNE	{R0}
 	VPOPNE	{D16-D31}
 	VPOPNE	{D0-D15}
 	VMSRNE  FPSCR, R0

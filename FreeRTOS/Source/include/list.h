@@ -218,7 +218,7 @@ typedef struct xLIST
 /*
  * Return the list item at the head of the list.
  *
- * \page listGET_HEAD_ENTRY listGET_HEAD_ENTRY
+ * \page listGET_NEXT listGET_NEXT
  * \ingroup LinkedList
  */
 #define listGET_NEXT( pxListItem )	( ( pxListItem )->pxNext )

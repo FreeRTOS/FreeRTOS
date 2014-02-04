@@ -113,6 +113,10 @@
 	#error configMAX_API_CALL_INTERRUPT_PRIORITY must be greater than ( configUNIQUE_INTERRUPT_PRIORITIES / 2 )
 #endif
 
+#ifndef configCLEAR_TICK_INTERRUPT
+	#define configCLEAR_TICK_INTERRUPT()
+#endif
+
 /* A critical section is exited when the critical section nesting count reaches
 this value. */
 #define portNO_CRITICAL_NESTING			( ( uint32_t ) 0 )
@@ -131,7 +135,6 @@ context. */
 /* Constants required to setup the initial task context. */
 #define portINITIAL_SPSR				( ( StackType_t ) 0x1f ) /* System mode, ARM mode, interrupts enabled. */
 #define portTHUMB_MODE_BIT				( ( StackType_t ) 0x20 )
-#define portINTERRUPT_ENABLE_BIT		( 0x80UL )
 #define portTHUMB_MODE_ADDRESS			( 0x01UL )
 
 /* Used by portASSERT_IF_INTERRUPT_PRIORITY_INVALID() when ensuring the binary
@@ -354,6 +357,7 @@ void FreeRTOS_Tick_Handler( void )
 
 	/* Ensure all interrupt priorities are active again. */
 	portCLEAR_INTERRUPT_MASK();
+	configCLEAR_TICK_INTERRUPT();
 }
 /*-----------------------------------------------------------*/
 

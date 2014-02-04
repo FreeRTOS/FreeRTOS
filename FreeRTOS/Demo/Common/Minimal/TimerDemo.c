@@ -723,11 +723,25 @@ static portTickType uxTick = ( portTickType ) -1;
 	callback before their expiry time, but a margin is permissible for calling
 	their callback after their expiry time.  If exact timing is required then
 	configTIMER_TASK_PRIORITY must be set to ensure the timer service task
-	is the highest priority task in the system. */
+	is the highest priority task in the system.
+
+	This function is called from the tick hook.  The tick hook is called
+	even when the scheduler is suspended.  Therefore it is possible that the
+	uxTick count maintained in this function is temporarily ahead of the tick
+	count maintained by the kernel.  When this is the case a message posted from
+	this function will assume a time stamp in advance of the real time stamp,
+	which can result in a timer being processed before this function expects it
+	to.  For example, if the kernel's tick count was 100, and uxTick was 102,
+	then this function will not expect the timer to have expired until the
+	kernel's tick count is (102 + xBasePeriod), whereas in reality the timer
+	will expire when the kernel's tick count is (100 + xBasePeriod).  For this
+	reason xMargin is used as an allowable margin for premature timer expiries
+	as well as late timer expiries. */
 	const portTickType xMargin = 5;
 #else
 	const portTickType xMargin = 2;
 #endif
+
 
 	uxTick++;
 
@@ -761,7 +775,7 @@ static portTickType uxTick = ( portTickType ) -1;
 			}
 		}
 	}
-	else if( uxTick == xBasePeriod )
+	else if( uxTick == ( xBasePeriod - xMargin ) )
 	{
 		/* Neither timer should have expired yet. */
 		if( ( ucISRAutoReloadTimerCounter != 0 ) || ( ucISROneShotTimerCounter != 0 ) )
@@ -780,7 +794,7 @@ static portTickType uxTick = ( portTickType ) -1;
 			configASSERT( xTestStatus );
 		}
 	}
-	else if( uxTick == ( 2 * xBasePeriod ) )
+	else if( uxTick == ( ( 2 * xBasePeriod ) - xMargin ) )
 	{
 		/* The auto reload timer will still be active, but the one shot timer
 		should now have stopped - however, at this time neither of the timers
@@ -851,7 +865,7 @@ static portTickType uxTick = ( portTickType ) -1;
 		a few ticks ago. */
 		xTimerStopFromISR( xISRAutoReloadTimer, NULL );
 	}	
-	else if( uxTick == ( 4 * xBasePeriod ) )
+	else if( uxTick == ( 4 * ( xBasePeriod - xMargin ) ) )
 	{
 		/* The auto reload timer is now stopped, and the one shot timer is
 		active, but at this time neither timer should have expired since the
@@ -885,7 +899,7 @@ static portTickType uxTick = ( portTickType ) -1;
 			configASSERT( xTestStatus );
 		}
 	}	
-	else if( uxTick == ( ( 8 * xBasePeriod ) + xMargin ) )
+	else if( uxTick == ( 8 * xBasePeriod ) )
 	{
 		/* The auto reload timer is now stopped, and the one shot timer has
 		already expired and then stopped itself.  Both callback counters should
@@ -905,7 +919,7 @@ static portTickType uxTick = ( portTickType ) -1;
 		/* Now reset the one shot timer. */
 		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}	
-	else if( uxTick == ( 9 * xBasePeriod ) )
+	else if( uxTick == ( ( 9 * xBasePeriod ) - xMargin ) )
 	{
 		/* Only the one shot timer should be running, but it should not have
 		expired since the last test.  Check the callback counters have not
@@ -924,7 +938,7 @@ static portTickType uxTick = ( portTickType ) -1;
 		
 		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}	
-	else if( uxTick == ( 10 * xBasePeriod ) )
+	else if( uxTick == ( ( 10 * xBasePeriod ) - ( 2 * xMargin ) ) )
 	{
 		/* Only the one shot timer should be running, but it should not have
 		expired since the last test.  Check the callback counters have not
@@ -943,7 +957,7 @@ static portTickType uxTick = ( portTickType ) -1;
 		
 		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}
-	else if( uxTick == ( 11 * xBasePeriod ) )
+	else if( uxTick == ( ( 11 * xBasePeriod ) - ( 3 * xMargin ) ) )
 	{
 		/* Only the one shot timer should be running, but it should not have
 		expired since the last test.  Check the callback counters have not
@@ -962,7 +976,7 @@ static portTickType uxTick = ( portTickType ) -1;
 		
 		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}	
-	else if( uxTick == ( ( 12 * xBasePeriod ) + xMargin ) )
+	else if( uxTick == ( ( 12 * xBasePeriod ) - ( 2 * xMargin ) ) )
 	{
 		/* Only the one shot timer should have been running and this time it
 		should have	expired.  Check its callback count has been incremented.

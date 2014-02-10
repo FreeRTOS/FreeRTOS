@@ -69,21 +69,21 @@
  * application.  It is provided as a convenient development and demonstration
  * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
- * Windows will not be running the FreeRTOS simulator threads continuously, so 
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.  
- * See the documentation page for the Windows simulator for an explanation of 
+ * Windows will not be running the FreeRTOS simulator threads continuously, so
+ * the timing information in the FreeRTOS+Trace logs have no meaningful units.
+ * See the documentation page for the Windows simulator for an explanation of
  * the slow timing:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select 
- * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY 
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
+ * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
  * in main.c.  This file implements the simply blinky style version.
  *
  * NOTE 3:  This file only contains the source code that is specific to the
- * basic demo.  Generic functions, such FreeRTOS hook functions, are defined 
+ * basic demo.  Generic functions, such FreeRTOS hook functions, are defined
  * in main.c.
  ******************************************************************************
  *
@@ -94,9 +94,9 @@
  * The queue send task is implemented by the prvQueueSendTask() function in
  * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
  * block for 200 (simulated as far as the scheduler is concerned, but in
- * reality much longer - see notes above) milliseconds, before sending the 
- * value 100 to the queue that was created within main_blinky().  Once the 
- * value is sent, the task loops back around to block for another 200 
+ * reality much longer - see notes above) milliseconds, before sending the
+ * value 100 to the queue that was created within main_blinky().  Once the
+ * value is sent, the task loops back around to block for another 200
  * (simulated) milliseconds.
  *
  * The Queue Receive Task:
@@ -104,13 +104,13 @@
  * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
  * blocks on attempts to read data from the queue that was created within
  * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, outputs a message.  The 
- * 'block time' parameter passed to the queue receive function specifies that 
- * the task should be held in the Blocked state indefinitely to wait for data 
+ * data, and if the value equals the expected 100, outputs a message.  The
+ * 'block time' parameter passed to the queue receive function specifies that
+ * the task should be held in the Blocked state indefinitely to wait for data
  * to be available on the queue.  The queue receive task will only leave the
  * Blocked state when the queue send task writes to the queue.  As the queue
- * send task writes to the queue every 200 (simulated - see notes above) 
- * milliseconds, the queue receive task leaves the Blocked state every 200 
+ * send task writes to the queue every 200 (simulated - see notes above)
+ * milliseconds, the queue receive task leaves the Blocked state every 200
  * milliseconds, and therefore outputs a message every 200 milliseconds.
  */
 
@@ -191,7 +191,7 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* Remove compiler warning in the case that configASSERT() is not 
+	/* Remove compiler warning in the case that configASSERT() is not
 	defined. */
 	( void ) pvParameters;
 
@@ -222,7 +222,7 @@ static void prvQueueReceiveTask( void *pvParameters )
 {
 unsigned long ulReceivedValue;
 
-	/* Remove compiler warning in the case that configASSERT() is not 
+	/* Remove compiler warning in the case that configASSERT() is not
 	defined. */
 	( void ) pvParameters;
 

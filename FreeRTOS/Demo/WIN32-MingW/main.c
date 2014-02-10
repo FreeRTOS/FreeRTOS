@@ -200,16 +200,20 @@ void vApplicationIdleHook( void )
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
-	/* The trace can be stopped with any key press. */
-	if( _kbhit() != pdFALSE )
-	{
-		if( xTraceRunning == pdTRUE )
+	/* Uncomment the following code to allow the trace to be stopped with any 
+	key press.  The code is commented out by default as the kbhit() function
+	interferes with the run time behaviour. */
+	/* 
+		if( _kbhit() != pdFALSE )
 		{
-			vTraceStop();
-			prvSaveTraceFile();
-			xTraceRunning = pdFALSE;
+			if( xTraceRunning == pdTRUE )
+			{
+				vTraceStop();
+				prvSaveTraceFile();
+				xTraceRunning = pdFALSE;
+			}
 		}
-	}
+	*/
 
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
 	{

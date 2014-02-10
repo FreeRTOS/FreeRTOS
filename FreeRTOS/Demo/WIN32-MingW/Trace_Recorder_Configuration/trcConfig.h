@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.4.1 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -42,8 +42,6 @@
 
 #ifndef TRCCONFIG_H
 #define TRCCONFIG_H
-
-#include <stdint.h>
 
 /*******************************************************************************
  * CONFIGURATION RELATED TO CAPACITY AND ALLOCATION 
@@ -93,9 +91,15 @@
  * stores User Events labels and names of deleted tasks, queues, or other kernel
  * objects. Note that the names of active objects not stored here but in the 
  * Object Table. Thus, if you don't use User Events or delete any kernel 
- * objects you set this to zero (0) to minimize RAM usage.
+ * objects you set this to a very low value, e.g. 4, but not zero (0) since 
+ * this causes a declaration of a zero-sized array, for which the C compiler
+ * behavior is not standardized and may cause misaligned data.
  ******************************************************************************/
 #define SYMBOL_TABLE_SIZE 5000
+
+#if (SYMBOL_TABLE_SIZE == 0)
+#error "SYMBOL_TABLE_SIZE may not be zero!"
+#endif
 
 /*******************************************************************************
  * USE_SEPARATE_USER_EVENT_BUFFER
@@ -158,10 +162,9 @@
  * check the actual usage in Tracealyzer. This is shown by selecting
  * View -> Trace Details -> Resource Usage -> Object Table
  * 
- * NOTE 2: Remember to account for all tasks created by the kernel, such as the 
- * IDLE task, timer task, and any tasks created by other 3rd party 
- * software components, such as communication stacks. The recorder also has an 
- * optional monitor task to account for, if this is used.
+ * NOTE 2: Remember to account for all tasks and other objects created by 
+ * the kernel, such as the IDLE task, any timer tasks, and any tasks created 
+ * by other 3rd party software components, such as communication stacks.
  * Moreover, one task slot is used to indicate "(startup)", i.e., a fictive 
  * task that represent the time before the scheduler starts. 
  * NTask should thus be at least 2-3 slots larger than your application task count.
@@ -172,6 +175,8 @@
 #define NQueue            60
 #define NSemaphore        60
 #define NMutex            60
+#define NTimer            200
+#define NEventGroup       60
 
 /* Maximum object name length for each class (includes zero termination) */
 #define NameLenTask       15
@@ -179,6 +184,8 @@
 #define NameLenQueue      15
 #define NameLenSemaphore  15
 #define NameLenMutex      15
+#define NameLenTimer      15
+#define NameLenEventGroup 15
 
 /******************************************************************************
  * TRACE_DESCRIPTION
@@ -267,8 +274,7 @@
  * much faster than a printf and can therefore be used in timing critical code.
  * See vTraceUserEvent() and vTracePrintF() in trcUser.h
  * 
- * Note that Tracealyzer Standard Edition or Professional Edition is required
- * for User Events, they are not displayed in Tracealyzer Free Edition.
+ * Note that User Events are not displayed in FreeRTOS+Trace Free Edition.
  *****************************************************************************/
 #define INCLUDE_USER_EVENTS 1
 
@@ -320,7 +326,7 @@
  * traced kernel objects are deleted at runtime. If no deletes are made, this 
  * can be set to 0 in order to exclude the delete-handling code.
  *****************************************************************************/
-#define INCLUDE_OBJECT_DELETE 0
+#define INCLUDE_OBJECT_DELETE 1
 
 /******************************************************************************
  * CONFIGURATION RELATED TO BEHAVIOR
@@ -497,14 +503,77 @@
     #define TRACE_PROGRESS_MONITOR_TASK_PERIOD 1000
 #endif
 
+
 /******************************************************************************
- * TEAM_LICENSE_CODE
+ * USE_16BIT_OBJECT_HANDLES
  *
- * Macro which defines a string - the team license code.
- * If no team license is available, this should be an empty string "".
- * This should be maximum 32 chars, including zero-termination.
+ * Macro which should be defined as either zero (0) or one (1).
+ * Default is 0.
+ *
+ * If set to 0 (zero), the recorder uses 8-bit handles to identify kernel 
+ * objects such as tasks and queues. This limits the supported number of
+ * concurrently active objects to 255 of each type (object class).
+ *
+ * If set to 1 (one), the recorder uses 16-bit handles to identify kernel 
+ * objects such as tasks and queues. This limits the supported number of
+ * concurrent objects to 65535 of each type (object class). However, since the
+ * object property table is limited to 64 KB, the practical limit is about
+ * 3000 objects in total. 
+ * 
+ * NOTE: An object with a high ID (> 255) will generate an extra event 
+ * (= 4 byte) in the event buffer. 
+ * 
+ * NOTE: Some internal tables in the recorder gets larger when using 16-bit 
+ * handles. The additional RAM usage is 5-10 byte plus 1 byte per kernel object
+ *, i.e., task, queue, semaphore, mutex, etc.
  *****************************************************************************/
-#define TEAM_LICENSE_CODE ""
+#define USE_16BIT_OBJECT_HANDLES 0
+
+/****** Port Name ******************** Code ** Official ** OS Platform ******
+* PORT_APPLICATION_DEFINED               -2     -           -                 
+* PORT_NOT_SET                           -1     -           -                 
+* PORT_HWIndependent                     0      Yes         Any               
+* PORT_Win32                             1      Yes         FreeRTOS Win32
+* PORT_Atmel_AT91SAM7                    2      No          Any               
+* PORT_Atmel_UC3A0                       3      No          Any               
+* PORT_ARM_CortexM                       4      Yes         Any               
+* PORT_Renesas_RX600                     5      Yes         Any               
+* PORT_Microchip_dsPIC_AND_PIC24         6      Yes         Any               
+* PORT_TEXAS_INSTRUMENTS_TMS570          7      No          Any               
+* PORT_TEXAS_INSTRUMENTS_MSP430          8      No          Any               
+* PORT_MICROCHIP_PIC32                   9      No          Any               
+* PORT_XILINX_PPC405                     10     No          FreeRTOS          
+* PORT_XILINX_PPC440                     11     No          FreeRTOS          
+* PORT_XILINX_MICROBLAZE                 12     No          Any               
+* PORT_NXP_LPC210X                       13     No          Any               
+*****************************************************************************/
+#define SELECTED_PORT PORT_Win32
+
+#if (SELECTED_PORT == PORT_NOT_SET)
+#error "You need to define SELECTED_PORT here!"
+#endif
+
+/******************************************************************************
+* USE_PRIMASK_CS (for Cortex M devices only)
+*
+* An integer constant that selects between two options for the critical
+* sections of the recorder library.
+ *
+*   0: The default FreeRTOS critical section (BASEPRI) - default setting
+*   1: Always disable ALL interrupts (using PRIMASK)
+ *
+* Option 0 uses the standard FreeRTOS macros for critical sections.
+* However, on Cortex-M devices they only disable interrupts with priorities 
+* below a certain configurable level, while higher priority ISRs remain active.
+* Such high-priority ISRs may not use the recorder functions in this mode.
+*
+* Option 1 allows you to safely call the recorder from any ISR, independent of 
+* the interrupt priority. This mode may however cause higher IRQ latencies
+* (some microseconds) since ALL configurable interrupts are disabled during 
+* the recorder's critical sections in this mode, using the PRIMASK register.
+ ******************************************************************************/
+#define USE_PRIMASK_CS 0
+
 
 #endif
 

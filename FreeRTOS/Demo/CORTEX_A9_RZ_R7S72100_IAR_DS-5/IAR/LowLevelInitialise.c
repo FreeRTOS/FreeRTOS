@@ -14,7 +14,6 @@
  */
 
 /** include files **/
-#include <Renesas/ior7s721000.h>
 #include <intrinsics.h>
 #include <stdint.h>
 #include "armv7a_cp15_drv.h"

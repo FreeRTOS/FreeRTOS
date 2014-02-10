@@ -737,9 +737,9 @@ static portTickType uxTick = ( portTickType ) -1;
 	will expire when the kernel's tick count is (100 + xBasePeriod).  For this
 	reason xMargin is used as an allowable margin for premature timer expiries
 	as well as late timer expiries. */
-	const portTickType xMargin = 5;
+	const portTickType xMargin = 6;
 #else
-	const portTickType xMargin = 2;
+	const portTickType xMargin = 3;
 #endif
 
 

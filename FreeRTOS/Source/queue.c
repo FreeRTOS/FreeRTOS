@@ -86,7 +86,7 @@ privileged Vs unprivileged linkage and placement. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
 
 
-/* Constants used with the cRxLock and xTxLock structure members. */
+/* Constants used with the xRxLock and xTxLock structure members. */
 #define queueUNLOCKED					( ( BaseType_t ) -1 )
 #define queueLOCKED_UNMODIFIED			( ( BaseType_t ) 0 )
 
@@ -1038,11 +1038,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-	/* Similar to xQueueGenericSend, except we don't block if there is no room
-	in the queue.  Also we don't directly wake a task that was blocked on a
-	queue read, instead we return a flag to say whether a context switch is
-	required or not (i.e. has a task with a higher priority than us been woken
-	by this	post). */
+	/* Similar to xQueueGenericSend, except without blocking if there is no room
+	in the queue.  Also don't directly wake a task that was blocked on a queue
+	read, instead return a flag to say whether a context switch is required or 
+	not (i.e. has a task with a higher priority than us been woken by this 
+	post). */
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
@@ -1051,7 +1051,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 			prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
-			/* If the queue is locked we do not alter the event list.  This will
+			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
 			if( pxQueue->xTxLock == queueUNLOCKED )
 			{
@@ -2349,6 +2349,8 @@ BaseType_t xReturn;
 	Queue_t *pxQueueSetContainer = pxQueue->pxQueueSetContainer;
 	BaseType_t xReturn = pdFALSE;
 
+		/* This function must be called form a critical section. */
+	
 		configASSERT( pxQueueSetContainer );
 		configASSERT( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength );
 

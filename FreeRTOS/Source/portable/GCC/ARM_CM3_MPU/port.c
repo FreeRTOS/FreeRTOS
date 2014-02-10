@@ -179,7 +179,6 @@ UBaseType_t MPU_uxTaskPriorityGet( TaskHandle_t pxTask );
 void MPU_vTaskPrioritySet( TaskHandle_t pxTask, UBaseType_t uxNewPriority );
 eTaskState MPU_eTaskGetState( TaskHandle_t pxTask );
 void MPU_vTaskSuspend( TaskHandle_t pxTaskToSuspend );
-BaseType_t MPU_xTaskIsTaskSuspended( TaskHandle_t xTask );
 void MPU_vTaskResume( TaskHandle_t pxTaskToResume );
 void MPU_vTaskSuspendAll( void );
 BaseType_t MPU_xTaskResumeAll( void );
@@ -783,19 +782,6 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		vTaskSuspend( pxTaskToSuspend );
         portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskSuspend == 1 )
-	BaseType_t MPU_xTaskIsTaskSuspended( TaskHandle_t xTask )
-	{
-	BaseType_t xReturn;
-    BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskIsTaskSuspended( xTask );
-        portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
 	}
 #endif
 /*-----------------------------------------------------------*/

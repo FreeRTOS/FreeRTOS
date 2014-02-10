@@ -214,12 +214,21 @@ PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseTyp
 PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) 0U;
 PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
 PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
-PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t ) pdFALSE;
 PRIVILEGED_DATA static volatile UBaseType_t uxPendedTicks 			= ( UBaseType_t ) 0U;
 PRIVILEGED_DATA static volatile BaseType_t xYieldPending 			= pdFALSE;
 PRIVILEGED_DATA static volatile BaseType_t xNumOfOverflows 			= ( BaseType_t ) 0;
 PRIVILEGED_DATA static UBaseType_t uxTaskNumber 					= ( UBaseType_t ) 0U;
 PRIVILEGED_DATA static volatile TickType_t xNextTaskUnblockTime		= portMAX_DELAY;
+
+/* Context switches are held pending while the scheduler is suspended.  Also,
+interrupts must not manipulate the xStateListItem of a TCB, or any of the
+lists the xStateListItem can be referenced from, if the scheduler is suspended.
+If an interrupt needs to unblock a task while the scheduler is suspended then it
+moves the task's event list item into the xPendingReadyList, ready for the
+kernel to move the task from the pending ready list into the real ready list
+when the scheduler is unsuspended.  The pending ready list itself can only be
+accessed from a critical section. */
+PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t ) pdFALSE;
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
@@ -392,6 +401,13 @@ to its original value when it is released. */
  * into the TCB structure.
  */
 static void prvInitialiseTCBVariables( TCB_t * const pxTCB, const char * const pcName, UBaseType_t uxPriority, const MemoryRegion_t * const xRegions, const uint16_t usStackDepth ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
+/**
+ * Utility task that simply returns pdTRUE if the task referenced by xTask is
+ * currently in the Suspended state, or pdFALSE if the task referenced by xTask
+ * is in any other state.
+ */
+static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
@@ -806,9 +822,8 @@ TCB_t * pxNewTCB;
 			{
 				traceTASK_DELAY_UNTIL();
 
-				/* We must remove ourselves from the ready list before adding
-				ourselves to the blocked list as the same list item is used for
-				both lists. */
+				/* Remove the task from the ready list before adding it to the
+				blocked list as the same list item is used for both lists. */
 				if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
 				{
 					/* The current task must be in a ready list, so there is
@@ -1254,25 +1269,25 @@ TCB_t * pxNewTCB;
 
 #if ( INCLUDE_vTaskSuspend == 1 )
 
-	BaseType_t xTaskIsTaskSuspended( const TaskHandle_t xTask )
+	static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask )
 	{
 	BaseType_t xReturn = pdFALSE;
 	const TCB_t * const pxTCB = ( TCB_t * ) xTask;
 
+		/* Accesses xPendingReadyList so must be called from a critical
+		section. */
+
 		/* It does not make sense to check if the calling task is suspended. */
 		configASSERT( xTask );
 
-		/* Is the task we are attempting to resume actually in the
-		suspended list? */
+		/* Is the task being resumed actually in the suspended list? */
 		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
 		{
 			/* Has the task already been resumed from within an ISR? */
 			if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) == pdFALSE )
 			{
-				/* Is it in the suspended list because it is in the
-				Suspended state?  It is possible to be in the suspended
-				list because it is blocked on a task with no timeout
-				specified. */
+				/* Is it in the suspended list because it is in the	Suspended 
+				state, or because is is blocked with no timeout? */
 				if( listIS_CONTAINED_WITHIN( NULL, &( pxTCB->xEventListItem ) ) != pdFALSE )
 				{
 					xReturn = pdTRUE;
@@ -1313,7 +1328,7 @@ TCB_t * pxNewTCB;
 		{
 			taskENTER_CRITICAL();
 			{
-				if( xTaskIsTaskSuspended( pxTCB ) == pdTRUE )
+				if( prvTaskIsTaskSuspended( pxTCB ) == pdTRUE )
 				{
 					traceTASK_RESUME( pxTCB );
 
@@ -1382,12 +1397,15 @@ TCB_t * pxNewTCB;
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
-			if( xTaskIsTaskSuspended( pxTCB ) == pdTRUE )
+			if( prvTaskIsTaskSuspended( pxTCB ) == pdTRUE )
 			{
 				traceTASK_RESUME_FROM_ISR( pxTCB );
 
+				/* Check the ready lists can be accessed. */
 				if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
 				{
+					/* Ready lists can be accessed so move the task from the
+					suspended list to the ready list directly. */
 					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
 					{
 						xYieldRequired = pdTRUE;
@@ -1402,9 +1420,9 @@ TCB_t * pxNewTCB;
 				}
 				else
 				{
-					/* We cannot access the delayed or ready lists, so will hold this
-					task pending until the scheduler is resumed, at which point a
-					yield will be performed if necessary. */
+					/* The delayed or ready lists cannot be accessed so the task
+					is held in the pending ready list until the scheduler is
+					unsuspended. */
 					vListInsertEnd( &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
 				}
 			}
@@ -2144,17 +2162,18 @@ TickType_t xTimeToWake;
 
 	configASSERT( pxEventList );
 
-	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
-	SCHEDULER SUSPENDED. */
+	/* THIS FUNCTION MUST BE CALLED WITH EITHER INTERRUPTS DISABLED OR THE
+	SCHEDULER SUSPENDED AND THE QUEUE BEING ACCESSED LOCKED. */
 
 	/* Place the event list item of the TCB in the appropriate event list.
 	This is placed in the list in priority order so the highest priority task
-	is the first to be woken by the event. */
+	is the first to be woken by the event.  The queue that contains the event
+	list is locked, preventing simultaneous access from interrupts. */
 	vListInsert( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 
-	/* We must remove ourselves from the ready list before adding ourselves
-	to the blocked list as the same list item is used for both lists.  We have
-	exclusive access to the ready lists as the scheduler is locked. */
+	/* The task must be removed from from the ready list before it is added to
+	the blocked list as the same list item is used for both lists.  Exclusive
+	access to the ready lists guaranteed because the scheduler is locked. */
 	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
 	{
 		/* The current task must be in a ready list, so there is no need to
@@ -2170,15 +2189,16 @@ TickType_t xTimeToWake;
 	{
 		if( xTicksToWait == portMAX_DELAY )
 		{
-			/* Add ourselves to the suspended task list instead of a delayed task
-			list to ensure we are not woken by a timing event.  We will block
-			indefinitely. */
+			/* Add the task to the suspended task list instead of a delayed task
+			list to ensure the task is not woken by a timing event.  It will
+			block indefinitely. */
 			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
 		}
 		else
 		{
-			/* Calculate the time at which the task should be woken if the event does
-			not occur.  This may overflow but this doesn't matter. */
+			/* Calculate the time at which the task should be woken if the event
+			does not occur.  This may overflow but this doesn't matter, the
+			scheduler will handle it. */
 			xTimeToWake = xTickCount + xTicksToWait;
 			prvAddCurrentTaskToDelayedList( xTimeToWake );
 		}
@@ -2186,7 +2206,8 @@ TickType_t xTimeToWake;
 	#else /* INCLUDE_vTaskSuspend */
 	{
 			/* Calculate the time at which the task should be woken if the event does
-			not occur.  This may overflow but this doesn't matter. */
+			not occur.  This may overflow but this doesn't matter, the scheduler
+			will handle it. */
 			xTimeToWake = xTickCount + xTicksToWait;
 			prvAddCurrentTaskToDelayedList( xTimeToWake );
 	}
@@ -2200,14 +2221,20 @@ TickType_t xTimeToWake;
 
 	configASSERT( pxEventList );
 
-	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
-	SCHEDULER SUSPENDED. */
+	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED.  It is used by
+	the event groups implementation. */
+	configASSERT( uxSchedulerSuspended != 0 );
 
-	/* Store the item value in the event list item. */
+	/* Store the item value in the event list item.  It is safe to access the
+	event list item here as interrupts won't access the event list item of a
+	task that is not in the Blocked state. */
 	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xEventListItem ), xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
 
 	/* Place the event list item of the TCB at the end of the appropriate event
-	list. */
+	list.  It is safe to access the event list here because it is part of an
+	event group implementation - and interrupts don't access event groups
+	directly (instead they access them indirectly by pending function calls to
+	the task level). */
 	vListInsertEnd( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 
 	/* The task must be removed from the ready list before it is added to the
@@ -2235,8 +2262,9 @@ TickType_t xTimeToWake;
 		}
 		else
 		{
-			/* Calculate the time at which the task should be woken if the event does
-			not occur.  This may overflow but this doesn't matter. */
+			/* Calculate the time at which the task should be woken if the event
+			does not occur.  This may overflow but this doesn't matter, the
+			kernel will manage it correctly. */
 			xTimeToWake = xTickCount + xTicksToWait;
 			prvAddCurrentTaskToDelayedList( xTimeToWake );
 		}
@@ -2244,7 +2272,8 @@ TickType_t xTimeToWake;
 	#else /* INCLUDE_vTaskSuspend */
 	{
 			/* Calculate the time at which the task should be woken if the event does
-			not occur.  This may overflow but this doesn't matter. */
+			not occur.  This may overflow but this doesn't matter, the kernel
+			will manage it correctly. */
 			xTimeToWake = xTickCount + xTicksToWait;
 			prvAddCurrentTaskToDelayedList( xTimeToWake );
 	}
@@ -2302,16 +2331,16 @@ BaseType_t xTaskRemoveFromEventList( const List_t * const pxEventList )
 TCB_t *pxUnblockedTCB;
 BaseType_t xReturn;
 
-	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
-	SCHEDULER SUSPENDED.  It can also be called from within an ISR. */
+	/* THIS FUNCTION MUST BE CALLED FROM A CRITICAL SECTION.  It can also be
+	called from a critical section within an ISR. */
 
-	/* The event list is sorted in priority order, so we can remove the
-	first in the list, remove the TCB from the delayed list, and add
-	it to the ready list.
+	/* The event list is sorted in priority order, so the first in the list can
+	be removed as it is known to be the highest priority.  Remove the TCB from 
+	the delayed list, and add it to the ready list.
 
 	If an event is for a queue that is locked then this function will never
 	get called - the lock count on the queue will get modified instead.  This
-	means we can always expect exclusive access to the event list here.
+	means exclusive access to the event list is guaranteed here.
 
 	This function assumes that a check has already been made to ensure that
 	pxEventList is not empty. */
@@ -2333,10 +2362,9 @@ BaseType_t xReturn;
 
 	if( pxUnblockedTCB->uxPriority > pxCurrentTCB->uxPriority )
 	{
-		/* Return true if the task removed from the event list has
-		a higher priority than the calling task.  This allows
-		the calling task to know if it should force a context
-		switch now. */
+		/* Return true if the task removed from the event list has a higher
+		priority than the calling task.  This allows the calling task to know if
+		it should force a context switch now. */
 		xReturn = pdTRUE;
 
 		/* Mark that a yield is pending in case the user is not using the
@@ -2357,29 +2385,24 @@ BaseType_t xTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem, cons
 TCB_t *pxUnblockedTCB;
 BaseType_t xReturn;
 
-	/* THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED OR THE
-	SCHEDULER SUSPENDED.  It can also be called from within an ISR. */
+	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED.  It is used by
+	the event flags implementation. */
+	configASSERT( uxSchedulerSuspended != pdFALSE );
 
 	/* Store the new item value in the event list. */
 	listSET_LIST_ITEM_VALUE( pxEventListItem, xItemValue | taskEVENT_LIST_ITEM_VALUE_IN_USE );
 
-	/* Remove the TCB from the delayed list, and add it to the ready list. */
-
+	/* Remove the event list form the event flag.  Interrupts do not access
+	event flags. */
 	pxUnblockedTCB = ( TCB_t * ) listGET_LIST_ITEM_OWNER( pxEventListItem );
 	configASSERT( pxUnblockedTCB );
 	( void ) uxListRemove( pxEventListItem );
 
-	if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
-	{
-		( void ) uxListRemove( &( pxUnblockedTCB->xGenericListItem ) );
-		prvAddTaskToReadyList( pxUnblockedTCB );
-	}
-	else
-	{
-		/* Cannot access the delayed or ready lists, so will hold this task
-		pending until the scheduler is resumed. */
-		vListInsertEnd( &( xPendingReadyList ), pxEventListItem );
-	}
+	/* Remove the task from the delayed list and add it to the ready list.  The
+	scheduler is suspended so interrupts will not be accessing the ready
+	lists. */
+	( void ) uxListRemove( &( pxUnblockedTCB->xGenericListItem ) );
+	prvAddTaskToReadyList( pxUnblockedTCB );
 
 	if( pxUnblockedTCB->uxPriority > pxCurrentTCB->uxPriority )
 	{
@@ -2812,7 +2835,9 @@ static void prvCheckTasksWaitingTermination( void )
 		while( uxTasksDeleted > ( UBaseType_t ) 0U )
 		{
 			vTaskSuspendAll();
+			{
 				xListIsEmpty = listLIST_IS_EMPTY( &xTasksWaitingTermination );
+			}
 			( void ) xTaskResumeAll();
 
 			if( xListIsEmpty == pdFALSE )
@@ -2931,6 +2956,21 @@ TCB_t *pxNewTCB;
 				pxTaskStatusArray[ uxTask ].xTaskNumber = pxNextTCB->uxTCBNumber;
 				pxTaskStatusArray[ uxTask ].eCurrentState = eState;
 				pxTaskStatusArray[ uxTask ].uxCurrentPriority = pxNextTCB->uxPriority;
+
+				#if ( INCLUDE_vTaskSuspend == 1 )
+				{
+					/* If the task is in the suspended list then there is a chance
+					it is actually just blocked indefinitely - so really it should
+					be reported as being in the Blocked state. */
+					if( eState == eSuspended )
+					{
+						if( listLIST_ITEM_CONTAINER( &( pxNextTCB->xEventListItem ) ) != NULL )
+						{
+							pxTaskStatusArray[ uxTask ].eCurrentState = eBlocked;
+						}
+					}
+				}
+				#endif /* INCLUDE_vTaskSuspend */
 
 				#if ( configUSE_MUTEXES == 1 )
 				{

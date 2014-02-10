@@ -1028,17 +1028,6 @@ void vTaskSuspendAll( void ) PRIVILEGED_FUNCTION;
  */
 BaseType_t xTaskResumeAll( void ) PRIVILEGED_FUNCTION;
 
-/**
- * task. h
- * <pre>BaseType_t xTaskIsTaskSuspended( const TaskHandle_t xTask );</pre>
- *
- * Utility task that simply returns pdTRUE if the task referenced by xTask is
- * currently in the Suspended state, or pdFALSE if the task referenced by xTask
- * is in any other state.
- *
- */
-BaseType_t xTaskIsTaskSuspended( const TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
-
 /*-----------------------------------------------------------
  * TASK UTILITIES
  *----------------------------------------------------------*/

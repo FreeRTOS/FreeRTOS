@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1618849359
+Checksum=-225007159
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -8,10 +8,10 @@ Enabled=_ 0
 [CodeCoverage]
 Enabled=_ 0
 [E1]
-Map0=0,0,65535,65536
-Map1=1,1044224,1048319,4096
+Map0=0,0,32767,32768
+Map1=1,1042688,1048319,5632
 MapEntries=2
-HWsettings=2,0,1,2,4,0,1,0,17,17,0
+HWsettings=2,0,1,2,4,0,1,0,16,1,0
 HWsettingsCube=2,4294967295,2,4294967295,0,1,0,0
 HWsettingsRsuid=00000000000000000000
 EventEntries=0
@@ -59,7 +59,7 @@ TraceSettings=128,0,0,0,0,0,8192
 TimerSettings=0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 CoverSettings=1048192,1048207,0
 Version=1,trace.txt
-LastDevFile=DR5F10ELE.DVF
+LastDevFile=DR5F10JGC.DVF
 EmulType=64
 BreakToggle=0
 EventLimits=0,1,1,0,0,0,1
@@ -147,31 +147,6 @@ ByteLimit=50
 ShowArgs=0
 [Disassembly]
 MixedMode=1
-[DataSample]
-LogEnabled=0
-GraphEnabled=0
-ShowTimeLog=1
-ShowTimeSum=1
-[TraceHelper]
-Enabled=0
-ShowSource=1
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[CallStackLog]
-Enabled=0
-[DriverProfiling]
-Enabled=0
-Mode=1
-Graph=0
-Symbiont=0
-Exclusions=
-[Breakpoints]
-Count=0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -186,7 +161,8 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 [Breakpoints2]
-Count=0
+Bp0=_ 0 "STD_CODE2" "{$PROJ_DIR$\RegTest.s87}.172.1" 0 0 1 "" 0 ""
+Count=1
 [Interrupts]
 Enabled=1
 [MemoryMap]
@@ -196,10 +172,35 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
+[Trace1]
+Enabled=0
+ShowSource=1
+[DataSample]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[TraceHelper]
+Enabled=0
+ShowSource=1
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=0
+Graph=0
+Symbiont=0
+Exclusions=
+[Breakpoints]
+Count=0
 [Aliases]
 A0=_ "C:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87" "E:\Data\RL78_STICK\FreeRTOSV6.1.1\Source\portable\IAR\RL78\portasm.s87"
 Count=1
 SuppressDialog=1
-[Trace1]
-Enabled=0
-ShowSource=1

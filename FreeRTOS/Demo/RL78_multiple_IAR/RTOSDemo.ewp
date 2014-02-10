@@ -918,12 +918,12 @@
         <option>
           <name>GenCodeModel</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenDataModel</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenNearConstLocation</name>
@@ -970,11 +970,11 @@
         </option>
         <option>
           <name>GenRTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nn2n.h</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78ff2n.h</state>
         </option>
         <option>
           <name>GenRTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\dlrl78nn2n.r87</state>
+          <state>$TOOLKIT_DIR$\LIB\dlrl78ff2n.r87</state>
         </option>
         <option>
           <name>GenHwSupport</name>
@@ -1379,7 +1379,7 @@
         <option>
           <name>AsmDefines</name>
           <state>YRDKRL78G14</state>
-          <state>__NEAR_DATA_MODEL__</state>
+          <state>__FAR_DATA_MODEL__</state>
         </option>
         <option>
           <name>AsmPreprocOutput</name>
@@ -1879,7 +1879,7 @@
         </option>
         <option>
           <name>GenLibInFormatterDescription</name>
-          <state>No specifier n, no float, no scan set, no assignment suppressing.</state>
+          <state>No specifier n, no float or long long, no scan set, no assignment suppressing.</state>
         </option>
         <option>
           <name>GenLibOutFormatter</name>
@@ -1888,7 +1888,7 @@
         </option>
         <option>
           <name>GenLibOutFormatterDescription</name>
-          <state>No specifier a or A, no specifier n, no float, no flags.</state>
+          <state>No specifier a or A, no specifier n, no float or long long, no flags.</state>
         </option>
         <option>
           <name>GenStackSize</name>

@@ -110,7 +110,7 @@ loop1:
 
 	; Compare with the expected value.
 	CMPW	AX, #0x1122
-	BZ		+5
+	SKZ
 
 	; Jump over the branch to vRegTestError() if the register contained the
 	; expected value - otherwise flag an error by executing vRegTestError().
@@ -119,19 +119,19 @@ loop1:
 	; Repeat for all the registers.
 	MOVW	AX, BC
 	CMPW	AX, #0x3344
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOVW	AX, DE
 	CMPW	AX, #0x5566
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOVW	AX, HL
 	CMPW	AX, #0x7788
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOV		A, CS
 	CMP		A, #0x01
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 
 #if __DATA_MODEL__ == __DATA_MODEL_FAR__
@@ -140,7 +140,7 @@ loop1:
 	; test it when using the far model.
 	MOV		A, ES
 	CMP		A, #0x02
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 
 #endif
@@ -181,30 +181,30 @@ vRegTest2Task:
 
 loop2:
 	CMPW	AX, #0x99aa
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOVW	AX, BC
 	CMPW	AX, #0xbbcc
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOVW	AX, DE
 	CMPW	AX, #0xddee
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOVW	AX, HL
 	CMPW	AX, #0xff12
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 	MOV		A, CS
 	CMP		A, #0x03
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 
 #if __DATA_MODEL__ == __DATA_MODEL_FAR__
 
 	MOV		A, ES
 	CMP		A, #0x04
-	BZ		+5
+	SKZ
 	BR		vRegTestError
 
 #endif

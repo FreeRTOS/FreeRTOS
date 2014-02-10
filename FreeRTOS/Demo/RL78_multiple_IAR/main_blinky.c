@@ -125,7 +125,14 @@ will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
-
+/* Used to check the task parameter passing in both supported memory models. */
+#if __DATA_MODEL__ == __DATA_MODEL_FAR__
+	#define mainQUEUE_SEND_PARAMETER	( ( void * ) 0x12345678UL )
+	#define mainQUEUE_RECEIVE_PARAMETER	( ( void * ) 0x11223344UL )
+#else
+	#define mainQUEUE_SEND_PARAMETER	( ( void * ) 0x1234U )
+	#define mainQUEUE_RECEIVE_PARAMETER	( ( void * ) 0x1122U )
+#endif
 /*-----------------------------------------------------------*/
 
 /*
@@ -156,14 +163,14 @@ void main_blinky( void )
 	{
 		/* Start the two tasks as described in the comments at the top of this
 		file. */
-		xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
-					"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-					configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task. */
-					NULL, 								/* The parameter passed to the task - not used in this case. */
-					mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
-					NULL );								/* The task handle is not required, so NULL is passed. */
+		xTaskCreate( prvQueueReceiveTask,			/* The function that implements the task. */
+					"Rx", 							/* The text name assigned to the task - for debug only as it is not used by the kernel. */
+					configMINIMAL_STACK_SIZE, 		/* The size of the stack to allocate to the task. */
+					mainQUEUE_RECEIVE_PARAMETER,	/* The parameter passed to the task - just used to check the port in this case. */
+					mainQUEUE_RECEIVE_TASK_PRIORITY,/* The priority assigned to the task. */
+					NULL );							/* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -183,8 +190,8 @@ static void prvQueueSendTask( void *pvParameters )
 portTickType xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+	/* Check the parameter was passed in correctly. */
+	configASSERT( pvParameters == mainQUEUE_SEND_PARAMETER )
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -208,8 +215,8 @@ static void prvQueueReceiveTask( void *pvParameters )
 unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
+	/* Check the parameter was passed in correctly. */
+	configASSERT( pvParameters == mainQUEUE_RECEIVE_PARAMETER )
 
 	for( ;; )
 	{

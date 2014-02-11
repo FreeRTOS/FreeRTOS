@@ -83,7 +83,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 
 Changes from V2.1.1
 
@@ -108,7 +108,7 @@ Changes from V2.1.1
 typedef struct LED_PARAMETERS
 {
 	unsigned portBASE_TYPE uxLED;		/*< The output the task should use. */
-	portTickType xFlashRate;	/*< The rate at which the LED should flash. */
+	TickType_t xFlashRate;	/*< The rate at which the LED should flash. */
 } xLEDParameters;
 
 /* The task that is created eight times - each time with a different xLEDParaemtes 
@@ -125,7 +125,7 @@ void vStartLEDFlashTasks( unsigned portBASE_TYPE uxPriority )
 unsigned portBASE_TYPE uxLEDTask;
 xLEDParameters *pxLEDParameters;
 const unsigned portBASE_TYPE uxNumOfLEDs = 8;
-const portTickType xFlashRate = 125;
+const TickType_t xFlashRate = 125;
 
 	/* Create the eight tasks. */
 	for( uxLEDTask = 0; uxLEDTask < uxNumOfLEDs; ++uxLEDTask )
@@ -134,11 +134,11 @@ const portTickType xFlashRate = 125;
 		created task. */
 		pxLEDParameters = ( xLEDParameters * ) pvPortMalloc( sizeof( xLEDParameters ) );
 		pxLEDParameters->uxLED = uxLEDTask;
-		pxLEDParameters->xFlashRate = ( xFlashRate + ( xFlashRate * ( portTickType ) uxLEDTask ) );
-		pxLEDParameters->xFlashRate /= portTICK_RATE_MS;
+		pxLEDParameters->xFlashRate = ( xFlashRate + ( xFlashRate * ( TickType_t ) uxLEDTask ) );
+		pxLEDParameters->xFlashRate /= portTICK_PERIOD_MS;
 
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, ( void * ) pxLEDParameters, uxPriority, ( xTaskHandle * ) NULL );
+		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, ( void * ) pxLEDParameters, uxPriority, ( TaskHandle_t * ) NULL );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -155,11 +155,11 @@ xLEDParameters *pxParameters;
 	for(;;)
 	{
 		/* Delay for half the flash period then turn the LED on. */
-		vTaskDelay( pxParameters->xFlashRate / ( portTickType ) 2 );
+		vTaskDelay( pxParameters->xFlashRate / ( TickType_t ) 2 );
 		vParTestToggleLED( pxParameters->uxLED );
 
 		/* Delay for half the flash period then turn the LED off. */
-		vTaskDelay( pxParameters->xFlashRate / ( portTickType ) 2 );
+		vTaskDelay( pxParameters->xFlashRate / ( TickType_t ) 2 );
 		vParTestToggleLED( pxParameters->uxLED );
 	}
 }

@@ -126,8 +126,8 @@
 
 /* The time between cycles of the 'check' task - which depends on whether the
 check task has detected an error or not. */
-#define mainCHECK_DELAY_NO_ERROR			( ( portTickType ) 5000 / portTICK_RATE_MS )
-#define mainCHECK_DELAY_ERROR				( ( portTickType ) 500 / portTICK_RATE_MS )
+#define mainCHECK_DELAY_NO_ERROR			( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
+#define mainCHECK_DELAY_ERROR				( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* The LED controlled by the 'check' task. */
 #define mainCHECK_LED						( 3 )
@@ -198,7 +198,7 @@ int main( void )
 /* Described at the top of this file. */
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 unsigned long ulTicksToWait = mainCHECK_DELAY_NO_ERROR;
 
 	/* Just to remove the compiler warning about the unused parameter. */
@@ -351,7 +351,7 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This function will get called if a task overflows its stack.   If the
 	parameters are corrupt then inspect pxCurrentTCB to find which was the

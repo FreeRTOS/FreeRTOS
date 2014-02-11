@@ -131,10 +131,10 @@ static volatile portBASE_TYPE uxDelay = 250;
 
 /* The queue used to communicate between the I2C interrupt and the I2C 
 co-routine. */
-static xQueueHandle xADCQueue;
+static QueueHandle_t xADCQueue;
 
 /* The queue used to synchronise the flash co-routines. */
-static xQueueHandle xDelayQueue;
+static QueueHandle_t xDelayQueue;
 
 /*
  * Sets up the PLL, I2C and GPIO used by the demo.
@@ -156,7 +156,7 @@ unsigned portBASE_TYPE uxCoRoutine;
 
 	/* Create the queue used to communicate between the ISR and I2C co-routine.
 	This can only ever contain one value. */
-	xADCQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( portTickType ) );
+	xADCQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( TickType_t ) );
 
 	/* Create the queue used to synchronise the flash co-routines.  The queue
 	is used to trigger three tasks, but is for synchronisation only and does
@@ -207,7 +207,7 @@ static void prvSetupHardware( void )
 
 static void vI2CCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
-portTickType xADCResult;
+TickType_t xADCResult;
 static portBASE_TYPE xResult = 0, xMilliSecs, xLED;
 
 	crSTART( xHandle );
@@ -225,7 +225,7 @@ static portBASE_TYPE xResult = 0, xMilliSecs, xLED;
 		/* Scale the result to give a useful range of values for a visual 
 		demo. */
 		xADCResult >>= 2;
-		xMilliSecs = xADCResult / portTICK_RATE_MS;
+		xMilliSecs = xADCResult / portTICK_PERIOD_MS;
 
 		/* The delay is split between the four co-routines so they remain in
 		synch. */
@@ -275,7 +275,7 @@ portBASE_TYPE xResult, xNothing;
 
 void vI2C_ISR(void)
 {
-static portTickType xReading;
+static TickType_t xReading;
 
 	/* Clear the interrupt. */
 	I2CMasterIntClear( I2C_MASTER_BASE );

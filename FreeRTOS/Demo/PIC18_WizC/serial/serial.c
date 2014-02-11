@@ -94,8 +94,8 @@ Changes from V3.0.1
 /*-----------------------------------------------------------*/
 
 /* Queues to interface between comms API and interrupt routines. */
-xQueueHandle xRxedChars; 
-xQueueHandle xCharsForTx;
+QueueHandle_t xRxedChars; 
+QueueHandle_t xCharsForTx;
 portBASE_TYPE xHigherPriorityTaskWoken;
 
 /*-----------------------------------------------------------*/
@@ -174,7 +174,7 @@ xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWant
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -187,7 +187,7 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickT
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime )
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, TickType_t xBlockTime )
 {
 	/* Return false if after the block time there is no room on the Tx queue. */
 	if( xQueueSend( xCharsForTx, ( const void * ) &cOutChar, xBlockTime ) != ( char ) pdPASS )

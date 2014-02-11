@@ -213,10 +213,10 @@ void vButtonInterrupt( void )  __attribute__((interrupt));
 /*-----------------------------------------------------------*/
 
 /* The queue to pass data from the Tx task to the Rx task. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /* The semaphore that is 'given' by interrupts generated from button pushes. */
-static xSemaphoreHandle xSemaphore = NULL;
+static SemaphoreHandle_t xSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -257,7 +257,7 @@ void main_low_power( void )
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xDelay;
+TickType_t xDelay;
 const unsigned long ulValueToSend = mainQUEUED_VALUE;
 
 	/* Remove compiler warning about unused parameter. */
@@ -267,7 +267,7 @@ const unsigned long ulValueToSend = mainQUEUED_VALUE;
 	{
 		/* The delay period between successive sends to the queue is set by
 		the potentiometer reading. */
-		xDelay = ( portTickType ) prvReadPOT();
+		xDelay = ( TickType_t ) prvReadPOT();
 
 		/* If the block time is greater than 3000 milliseconds then block
 		indefinitely waiting for a button push. */
@@ -280,7 +280,7 @@ const unsigned long ulValueToSend = mainQUEUED_VALUE;
 		else
 		{
 			/* Convert a time in milliseconds to a time in ticks. */
-			xDelay /= portTICK_RATE_MS;
+			xDelay /= portTICK_PERIOD_MS;
 
 			/* Place this task in the blocked state until it is time to run
 			again.  As this is not an indefinite sleep the kernel will place

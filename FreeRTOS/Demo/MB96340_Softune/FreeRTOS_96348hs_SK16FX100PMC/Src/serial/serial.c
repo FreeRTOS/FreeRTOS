@@ -80,10 +80,10 @@
 #include "serial.h"
 
 /* The queue used to hold received characters. */
-static xQueueHandle			xRxedChars;
+static QueueHandle_t			xRxedChars;
 
 /* The queue used to hold characters waiting transmission. */
-static xQueueHandle			xCharsForTx;
+static QueueHandle_t			xCharsForTx;
 
 static volatile short	sTHREEmpty;
 
@@ -129,7 +129,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -144,7 +144,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 signed portBASE_TYPE	xReturn;
 

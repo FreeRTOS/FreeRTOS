@@ -178,7 +178,7 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;
@@ -209,8 +209,8 @@ void vApplicationTickHook( void )
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
 	{
 	static unsigned long ulLastGiveTime = 0UL;
-	const unsigned long ulRate = 50UL / portTICK_RATE_MS;
-	extern xSemaphoreHandle xLEDSemaphore;
+	const unsigned long ulRate = 50UL / portTICK_PERIOD_MS;
+	extern SemaphoreHandle_t xLEDSemaphore;
 
 		configASSERT( xLEDSemaphore );
 

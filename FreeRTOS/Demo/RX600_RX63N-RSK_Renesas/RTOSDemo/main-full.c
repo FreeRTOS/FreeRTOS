@@ -200,12 +200,12 @@ stack than most of the other tasks. */
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error.  Controlled by the check timer as described at the top of this
 file. */
-#define mainNO_ERROR_CHECK_TIMER_PERIOD_MS	( 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_TIMER_PERIOD_MS	( 5000 / portTICK_PERIOD_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task.  Controlled by the check timer as described at the top of
 this file. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS		( 200 / portTICK_RATE_MS )
+#define mainERROR_CHECK_TIMER_PERIOD_MS		( 200 / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK	( 0UL )
@@ -244,7 +244,7 @@ void vApplicationIdleHook( void );
  * it is possible that the stack overflow will have corrupted these - in which
  * case pxCurrentTCB can be inspected to find the same information.
  */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
 /*
  * The reg test tasks as described at the top of this file.
@@ -262,7 +262,7 @@ static void prvRegTest2Implementation( void );
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Contains the implementation of the WEB server.
@@ -286,7 +286,7 @@ const char *pcStatusMessage = "All tasks executing without error.";
 
 void main(void)
 {
-xTimerHandle xCheckTimer;
+TimerHandle_t xCheckTimer;
 extern void HardwareSetup( void );
 
 	/* Turn all LEDs off. */
@@ -346,7 +346,7 @@ extern void HardwareSetup( void );
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 static unsigned long ulLastRegTest1CycleCount = 0, ulLastRegTest2CycleCount = 0;
@@ -495,7 +495,7 @@ void vApplicationMallocFailedHook( void )
 
 /* This function is explained by the comments above its prototype at the top
 of this file. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

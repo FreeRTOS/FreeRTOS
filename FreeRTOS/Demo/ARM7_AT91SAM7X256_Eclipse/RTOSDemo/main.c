@@ -203,11 +203,11 @@ static unsigned long ulCallCount = 0, ulErrorFound = pdFALSE;
 
 /* The rate at which LED D4 will toggle if an error has been found in one or 
 more of the standard demo tasks. */
-const unsigned long ulErrorFlashRate = 500 / portTICK_RATE_MS;
+const unsigned long ulErrorFlashRate = 500 / portTICK_PERIOD_MS;
 
 /* The rate at which LED D4 will toggle if no errors have been found in any
 of the standard demo tasks. */
-const unsigned long ulNoErrorCheckRate = 5000 / portTICK_RATE_MS;
+const unsigned long ulNoErrorCheckRate = 5000 / portTICK_PERIOD_MS;
 
 	ulCallCount++;
 

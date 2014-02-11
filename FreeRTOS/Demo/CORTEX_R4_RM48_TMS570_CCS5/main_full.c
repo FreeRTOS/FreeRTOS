@@ -146,10 +146,10 @@
 #define mainDONT_BLOCK						( 0UL )
 
 /* The period after which the check timer will expire, converted to ticks. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period after which the LED timer will expire, converted to ticks. */
-#define mainLED_TIMER_PERIOD_MS				( 75UL / portTICK_RATE_MS )
+#define mainLED_TIMER_PERIOD_MS				( 75UL / portTICK_PERIOD_MS )
 
 /* Constants for the ComTest tasks. */
 #define mainCOM_TEST_BAUD_RATE				( ( unsigned long ) 19200 )
@@ -160,12 +160,12 @@
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The LED timer callback function, as described at the top of this file.
  */
-static void prvLEDTimerCallback( xTimerHandle xTimer );
+static void prvLEDTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The reg test tasks, as described at the top of this file.
@@ -185,7 +185,7 @@ volatile unsigned long ulRegTest1Counter = 0, ulRegTest2Counter = 0;
 
 void main_full( void )
 {
-xTimerHandle xTimer = NULL;
+TimerHandle_t xTimer = NULL;
 
 	/* Start all the standard demo/test tasks.  These have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API, and test the
@@ -252,7 +252,7 @@ xTimerHandle xTimer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangeToRedLEDsAlready = pdFALSE;
 static unsigned long ulLastRegTest1Counter = 0, ulLastRegTest2Counter = 0;
@@ -359,7 +359,7 @@ const unsigned long ulRedLED1 = 6, ulRedLED2 = 9;
 }
 /*-----------------------------------------------------------*/
 
-static void prvLEDTimerCallback( xTimerHandle xTimer )
+static void prvLEDTimerCallback( TimerHandle_t xTimer )
 {
 const unsigned long ulNumWhiteLEDs = 6;
 static unsigned long ulLit1 = 2, ulLit2 = 1;

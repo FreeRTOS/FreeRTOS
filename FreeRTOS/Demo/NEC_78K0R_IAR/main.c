@@ -117,8 +117,8 @@
 #define mainGEN_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
 /* The period between executions of the check task. */
-#define mainNO_ERROR_TOGGLE_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_TOGGLE_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainNO_ERROR_TOGGLE_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_TOGGLE_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
 /* The LED toggled by the check task. */
 #define mainLED_0   P7_bit.no6
@@ -217,7 +217,7 @@ short main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
+TickType_t xToggleRate = mainNO_ERROR_TOGGLE_PERIOD, xLastWakeTime;
 
 	/* Ensure the parameter was passed in as expected.  This is just a test of
 	the kernel port, the parameter is not actually used for anything.  The

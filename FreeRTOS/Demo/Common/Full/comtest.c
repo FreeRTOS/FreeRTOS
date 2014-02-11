@@ -120,7 +120,7 @@ Changed from V1.2.5
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 	+ Slight modification to task priorities.
 
 */
@@ -139,8 +139,8 @@ Changes from V2.0.0
 
 /* The Tx task will transmit the sequence of characters at a pseudo random
 interval.  This is the maximum and minimum block time between sends. */
-#define comTX_MAX_BLOCK_TIME		( ( portTickType ) 0x15e )
-#define comTX_MIN_BLOCK_TIME		( ( portTickType ) 0xc8 )
+#define comTX_MAX_BLOCK_TIME		( ( TickType_t ) 0x15e )
+#define comTX_MIN_BLOCK_TIME		( ( TickType_t ) 0xc8 )
 
 #define comMAX_CONSECUTIVE_ERRORS	( 2 )
 
@@ -169,7 +169,7 @@ check that both tasks are still executing. */
 volatile short sTxCount = 0, sRxCount = 0, sSemCount = 0;
 
 /* The handle to the semaphore test task. */
-static xTaskHandle xSemTestTaskHandle = NULL;
+static TaskHandle_t xSemTestTaskHandle = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -188,7 +188,7 @@ const unsigned portBASE_TYPE uxBufferLength = 255;
 static void vComTxTask( void *pvParameters )
 {
 const char * const pcTaskStartMsg = "COM Tx task started.\r\n";
-portTickType xTimeToWait;
+TickType_t xTimeToWait;
 
 	/* Stop warnings. */
 	( void ) pvParameters;
@@ -228,7 +228,7 @@ const char * const pcTaskStartMsg = "COM Rx task started.\r\n";
 const char * const pcTaskErrorMsg = "COM read error\r\n";
 const char * const pcTaskRestartMsg = "COM resynced\r\n";
 const char * const pcTaskTimeoutMsg = "COM Rx timed out\r\n";
-const portTickType xBlockTime = ( portTickType ) 0xffff / portTICK_RATE_MS;
+const TickType_t xBlockTime = ( TickType_t ) 0xffff / portTICK_PERIOD_MS;
 const char *pcExpectedChar;
 portBASE_TYPE xGotChar;
 char cRxedChar;

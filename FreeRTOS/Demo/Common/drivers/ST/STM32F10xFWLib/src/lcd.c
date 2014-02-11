@@ -439,7 +439,7 @@ void LCD_Init(void)
   LCD_WriteReg(R1, 0x10);
   LCD_WriteReg(R0, 0xA0);
   LCD_WriteReg(R3, 0x01);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
   LCD_WriteReg(R3, 0x00);
   LCD_WriteReg(R43, 0x04);
 
@@ -453,18 +453,18 @@ void LCD_Init(void)
   LCD_WriteReg(R36, 0x74);
   LCD_WriteReg(R30, 0x01);
   LCD_WriteReg(R24, 0xC1);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
   LCD_WriteReg(R24, 0xE1);
   LCD_WriteReg(R24, 0xF1);
-  vTaskDelay( 60 / portTICK_RATE_MS ); /* Delay 60 ms */
+  vTaskDelay( 60 / portTICK_PERIOD_MS ); /* Delay 60 ms */
   LCD_WriteReg(R24, 0xF5);
-  vTaskDelay( 60 / portTICK_RATE_MS ); /* Delay 60 ms */
+  vTaskDelay( 60 / portTICK_PERIOD_MS ); /* Delay 60 ms */
   LCD_WriteReg(R27, 0x09);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
   LCD_WriteReg(R31, 0x11);
   LCD_WriteReg(R32, 0x0E);
   LCD_WriteReg(R30, 0x81);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
 
 /* Chip Set ------------------------------------------------------------------*/
   LCD_WriteReg(R157, 0x00);
@@ -539,7 +539,7 @@ void LCD_Init(void)
 
   LCD_WriteReg(R0, 0x80);
   LCD_WriteReg(R59, 0x01);
-  vTaskDelay( 40 / portTICK_RATE_MS );  /* Delay 40 ms */
+  vTaskDelay( 40 / portTICK_PERIOD_MS );  /* Delay 40 ms */
   LCD_WriteReg(R0, 0x20);
 }
 
@@ -808,7 +808,7 @@ void LCD_ScrollText(u8 Line, u8 *ptr)
       /* Increment the character counter */
       i++;
     }
-    vTaskDelay( 100 / portTICK_RATE_MS );
+    vTaskDelay( 100 / portTICK_PERIOD_MS );
     i = 0;
     //LCD_ClearLine(Line);
     ptr -= length;
@@ -1153,18 +1153,18 @@ void LCD_PowerOn(void)
   LCD_WriteReg(R36, 0x74);
   LCD_WriteReg(R30, 0x01);
   LCD_WriteReg(R24, 0xC1);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
   LCD_WriteReg(R24, 0xE1);
   LCD_WriteReg(R24, 0xF1);
-  vTaskDelay( 60 / portTICK_RATE_MS ); /* Delay 60 ms */
+  vTaskDelay( 60 / portTICK_PERIOD_MS ); /* Delay 60 ms */
   LCD_WriteReg(R24, 0xF5);
-  vTaskDelay( 60 / portTICK_RATE_MS ); /* Delay 60 ms */
+  vTaskDelay( 60 / portTICK_PERIOD_MS ); /* Delay 60 ms */
   LCD_WriteReg(R27, 0x09);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
   LCD_WriteReg(R31, 0x11);
   LCD_WriteReg(R32, 0x0E);
   LCD_WriteReg(R30, 0x81);
-  vTaskDelay( 10 / portTICK_RATE_MS ); /* Delay 10 ms */
+  vTaskDelay( 10 / portTICK_PERIOD_MS ); /* Delay 10 ms */
 }
 
 /*******************************************************************************
@@ -1182,7 +1182,7 @@ void LCD_DisplayOn(void)
   /* Display On */
   LCD_WriteReg(R0, 0x80);
   LCD_WriteReg(R59, 0x01);
-  vTaskDelay( 40 / portTICK_RATE_MS );                 /* Delay 40 ms */
+  vTaskDelay( 40 / portTICK_PERIOD_MS );                 /* Delay 40 ms */
   LCD_WriteReg(R0, 0x20);
 }
 
@@ -1197,7 +1197,7 @@ void LCD_DisplayOff(void)
 {
   /* Display Off */
   LCD_WriteReg(R0, 0xA0);
-  vTaskDelay( 40 / portTICK_RATE_MS );                 /* Delay 40 ms */
+  vTaskDelay( 40 / portTICK_PERIOD_MS );                 /* Delay 40 ms */
   LCD_WriteReg(R59, 0x00);
 }
 

@@ -130,8 +130,8 @@ remain on until a full five seconds pass without the button being pressed.
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
-converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+converted to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -155,17 +155,17 @@ static void prvQueueSendTask( void *pvParameters );
  * The LED timer callback function.  This does nothing but switch the red LED
  * off.
  */
-static void vLEDTimerCallback( xTimerHandle xTimer );
+static void vLEDTimerCallback( TimerHandle_t xTimer );
 
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /* The LED software timer.  This uses vLEDTimerCallback() as its callback
  * function.
  */
-static xTimerHandle xLEDTimer = NULL;
+static TimerHandle_t xLEDTimer = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -188,7 +188,7 @@ int main(void)
 		if the button is not pushed within 5000ms, as described at the top of
 		this file. */
 		xLEDTimer = xTimerCreate( 	"LEDTimer", 				/* A text name, purely to help debugging. */
-									( 5000 / portTICK_RATE_MS ),/* The timer period, in this case 5000ms (5s). */
+									( 5000 / portTICK_PERIOD_MS ),/* The timer period, in this case 5000ms (5s). */
 									pdFALSE,					/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
 									( void * ) 0,				/* The ID is not used, so can be set to anything. */
 									vLEDTimerCallback			/* The callback function that switches the LED off. */
@@ -207,7 +207,7 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
-static void vLEDTimerCallback( xTimerHandle xTimer )
+static void vLEDTimerCallback( TimerHandle_t xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
 	five seconds - turn the LED off.  NOTE - accessing the LED port should use
@@ -247,7 +247,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
@@ -323,7 +323,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

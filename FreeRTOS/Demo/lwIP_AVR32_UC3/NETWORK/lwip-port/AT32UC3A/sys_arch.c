@@ -67,7 +67,7 @@
 struct timeoutlist
 {
   struct sys_timeouts timeouts;
-  xTaskHandle pid;
+  TaskHandle_t pid;
 };
 
 static struct timeoutlist timeoutlist[SYS_THREAD_MAX];
@@ -81,7 +81,7 @@ extern void ethernetif_input( void * pvParameters );
 sys_mbox_t
 sys_mbox_new(void)
 {
-  xQueueHandle mbox;
+  QueueHandle_t mbox;
 
   mbox = xQueueCreate( archMESG_QUEUE_LENGTH, sizeof( void * ) );
 
@@ -111,7 +111,7 @@ sys_mbox_free(sys_mbox_t mbox)
 void
 sys_mbox_post(sys_mbox_t mbox, void *data)
 {
-  xQueueSend( mbox, &data, ( portTickType ) ( archPOST_BLOCK_TIME_MS / portTICK_RATE_MS ) );
+  xQueueSend( mbox, &data, ( TickType_t ) ( archPOST_BLOCK_TIME_MS / portTICK_PERIOD_MS ) );
 }
 
 
@@ -134,7 +134,7 @@ sys_mbox_post(sys_mbox_t mbox, void *data)
 u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout)
 {
 void *dummyptr;
-portTickType StartTime, EndTime, Elapsed;
+TickType_t StartTime, EndTime, Elapsed;
 
   StartTime = xTaskGetTickCount();
 
@@ -183,7 +183,7 @@ portTickType StartTime, EndTime, Elapsed;
 sys_sem_t
 sys_sem_new(u8_t count)
 {
-  xSemaphoreHandle  xSemaphore = NULL;
+  SemaphoreHandle_t  xSemaphore = NULL;
 
   portENTER_CRITICAL();
   vSemaphoreCreateBinary( xSemaphore );
@@ -219,7 +219,7 @@ sys_sem_new(u8_t count)
 u32_t
 sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
 {
-portTickType StartTime, EndTime, Elapsed;
+TickType_t StartTime, EndTime, Elapsed;
 
   StartTime = xTaskGetTickCount();
 
@@ -310,7 +310,7 @@ struct sys_timeouts *
 sys_arch_timeouts(void)
 {
 int i;
-xTaskHandle pid;
+TaskHandle_t pid;
 struct timeoutlist *tl;
 
   pid = xTaskGetCurrentTaskHandle( );
@@ -348,7 +348,7 @@ struct timeoutlist *tl;
 */
 sys_thread_t sys_thread_new(void (* thread)(void *arg), void *arg, int prio)
 {
-xTaskHandle CreatedTask;
+TaskHandle_t CreatedTask;
 int result = pdFAIL;
 static int iCall = 0;
 

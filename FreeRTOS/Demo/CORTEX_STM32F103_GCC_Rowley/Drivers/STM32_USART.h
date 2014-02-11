@@ -84,7 +84,7 @@ long lCOMPortInit( unsigned long ulPort, unsigned long ulWantedBaud );
  * waiting in the Blocked state for up to xBlockTime ticks), otherwise pdFAIL 
  * will be returned.
  */
-signed long xSerialPutChar( long lPort, signed char cOutChar, portTickType xBlockTime );
+signed long xSerialPutChar( long lPort, signed char cOutChar, TickType_t xBlockTime );
 
 /*
  * Retrieve a character from the queue of received characters.  As supplied 2 
@@ -96,7 +96,7 @@ signed long xSerialPutChar( long lPort, signed char cOutChar, portTickType xBloc
  * character is successfully returned (possible after waiting in the Blocked 
  * state for up to xBlockTime ticks), otherwise pdFAIL will be returned.
  */
-signed long xSerialGetChar( long lPort, signed char *pcRxedChar, portTickType xBlockTime );
+signed long xSerialGetChar( long lPort, signed char *pcRxedChar, TickType_t xBlockTime );
 
 /*
  * Send a string of characters to a COM port.  As supplied 2 COM ports are 

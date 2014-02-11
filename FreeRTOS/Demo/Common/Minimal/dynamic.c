@@ -144,17 +144,17 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
 #define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
-#define priSLEEP_TIME				( ( portTickType ) 128 / portTICK_RATE_MS )
+#define priSLEEP_TIME				( ( TickType_t ) 128 / portTICK_PERIOD_MS )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( unsigned long ) 0xff )
-#define priNO_BLOCK					( ( portTickType ) 0 )
+#define priNO_BLOCK					( ( TickType_t ) 0 )
 #define priSUSPENDED_QUEUE_LENGTH	( 1 )
 
 /*-----------------------------------------------------------*/
 
 /* Handles to the two counter tasks.  These could be passed in as parameters
 to the controller task to prevent them having to be file scope. */
-static xTaskHandle xContinuousIncrementHandle, xLimitedIncrementHandle;
+static TaskHandle_t xContinuousIncrementHandle, xLimitedIncrementHandle;
 
 /* The shared counter variable.  This is passed in as a parameter to the two
 counter variables for demonstration purposes. */
@@ -169,7 +169,7 @@ static volatile portBASE_TYPE xSuspendedQueueSendError = pdFALSE;
 static volatile portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
 
 /* Queue used by the second test. */
-xQueueHandle xSuspendedTestQueue;
+QueueHandle_t xSuspendedTestQueue;
 
 /* The value the queue receive task expects to receive next.  This is file
 scope so xAreDynamicPriorityTasksStillRunning() can ensure it is still

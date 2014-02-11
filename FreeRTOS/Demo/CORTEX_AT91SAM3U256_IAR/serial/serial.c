@@ -91,17 +91,17 @@
 #define vInterruptOff()					BOARD_USART_BASE->US_IDR = AT91C_US_TXRDY
 
 /* Misc constants. */
-#define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
+#define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
 #define serHANDLE						( ( xComPortHandle ) 1 )
-#define serNO_BLOCK						( ( portTickType ) 0 )
+#define serNO_BLOCK						( ( TickType_t ) 0 )
 #define serNO_TIMEGUARD					( ( unsigned long ) 0 )
 #define serNO_PERIPHERAL_B_SETUP		( ( unsigned long ) 0 )
 
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -161,7 +161,7 @@ const Pin xUSART_Pins[] = { BOARD_PIN_USART_RXD, BOARD_PIN_USART_TXD };
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -203,7 +203,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	/* Place the character in the queue of characters to be transmitted. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )

@@ -97,7 +97,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 /* Scheduler include files. */
@@ -119,7 +119,7 @@ priority. */
 /* Constants required for the communications.  Only one character is ever
 transmitted. */
 #define mainCOMMS_QUEUE_LENGTH			( ( unsigned portBASE_TYPE ) 5 )
-#define mainNO_BLOCK					( ( portTickType ) 0 )
+#define mainNO_BLOCK					( ( TickType_t ) 0 )
 #define mainBAUD_RATE					( ( unsigned long ) 9600 )
 
 /*

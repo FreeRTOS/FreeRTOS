@@ -49,7 +49,7 @@ static  vu16 TextColor = 0x0000, BackColor = 0xFFFF;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-#define timerDly( x )	vTaskDelay( ( x * 10 ) / portTICK_RATE_MS );
+#define timerDly( x )	vTaskDelay( ( x * 10 ) / portTICK_PERIOD_MS );
 #define vBlockToWait( x )
 
 /*******************************************************************************

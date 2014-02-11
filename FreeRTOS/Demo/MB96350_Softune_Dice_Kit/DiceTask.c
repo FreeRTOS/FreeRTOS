@@ -75,10 +75,10 @@
 #include "semphr.h"
 
 /* Delays used within the dice functionality.  All delays are defined in milliseconds. */
-#define diceDELAY_BETWEEN_RANDOM_NUMBERS_ms		( 20 / portTICK_RATE_MS )
-#define diceSHAKE_TIME							( ( 2000 / portTICK_RATE_MS ) / diceDELAY_BETWEEN_RANDOM_NUMBERS_ms )
-#define diceSHORT_PAUSE_BEFORE_SHAKE			( 250 / portTICK_RATE_MS )
-#define diceDELAY_WHILE_DISPLAYING_RESULT		( 5000 / portTICK_RATE_MS )
+#define diceDELAY_BETWEEN_RANDOM_NUMBERS_ms		( 20 / portTICK_PERIOD_MS )
+#define diceSHAKE_TIME							( ( 2000 / portTICK_PERIOD_MS ) / diceDELAY_BETWEEN_RANDOM_NUMBERS_ms )
+#define diceSHORT_PAUSE_BEFORE_SHAKE			( 250 / portTICK_PERIOD_MS )
+#define diceDELAY_WHILE_DISPLAYING_RESULT		( 5000 / portTICK_PERIOD_MS )
 
 /* Macro to access the display ports. */
 #define dice7SEG_Value( x )		( *( pucDisplayOutput[ x ] ) )
@@ -98,7 +98,7 @@ static const char cDisplaySegments[ 2 ][ 11 ] =
 /* The semaphores used to communicate button push events between the button
 input interrupt handlers and the dice tasks.  Two dice tasks are created so two
 semaphores are required. */
-static xSemaphoreHandle xSemaphores[ 2 ] = { 0 };
+static SemaphoreHandle_t xSemaphores[ 2 ] = { 0 };
 
 /* Defines the ports used to write to the display.  This variable is defined in
 partest.c, which contains the LED set/clear/toggle functions. */

@@ -135,7 +135,7 @@ static volatile unsigned long ulFlop1CycleCount = 0, ulFlop2CycleCount = 0;
 
 void vStartFlopRegTests( void )
 {
-xTaskHandle xTaskJustCreated;
+TaskHandle_t xTaskJustCreated;
 unsigned portBASE_TYPE x, y;
 portDOUBLE z = flopSTART_VALUE;
 

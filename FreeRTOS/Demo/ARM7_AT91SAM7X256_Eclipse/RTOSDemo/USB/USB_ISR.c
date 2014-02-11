@@ -109,7 +109,7 @@ void vUSB_ISR_Handler( void ) __attribute__((noinline));
 static xISRStatus xISRMessages[ usbQUEUE_LENGTH + 1 ];
 
 /* Queue used to pass messages between the ISR and the task. */
-extern xQueueHandle xUSBInterruptQueue; 
+extern QueueHandle_t xUSBInterruptQueue; 
 
 /*-----------------------------------------------------------*/
 

@@ -105,7 +105,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 /* Scheduler include files. */
@@ -126,11 +126,11 @@ priority. */
 /* The period between executions of the check task before and after an error
 has been discovered.  If an error has been discovered the check task runs
 more frequently - increasing the LED flash rate. */
-#define mainNO_ERROR_CHECK_PERIOD		( ( portTickType ) 1000 / portTICK_RATE_MS )
-#define mainERROR_CHECK_PERIOD			( ( portTickType ) 100 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_PERIOD		( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_PERIOD			( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* The period for which mainRESET_LED remain on every reset. */
-#define mainRESET_LED_PERIOD			( ( portTickType ) 500 / portTICK_RATE_MS )
+#define mainRESET_LED_PERIOD			( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* The LED that is toggled whenever a character is transmitted.
 mainCOMM_TX_RX_LED + 1 will be toggled every time a character is received. */
@@ -182,7 +182,7 @@ void main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayTime = mainNO_ERROR_CHECK_PERIOD;
+TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
 volatile unsigned long ulDummy = 3UL;
 
 	/* Toggle the LED so we can see when a reset occurs. */

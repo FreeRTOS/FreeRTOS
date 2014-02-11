@@ -121,8 +121,8 @@
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -135,8 +135,8 @@ functionality. */
 #define mainQUEUE_RECEIVE_PARAMETER			( 0x22UL )
 
 /* The period of the blinky software timer.  The period is specified in ms and
-converted to ticks using the portTICK_RATE_MS constant. */
-#define mainBLINKY_TIMER_PERIOD				( 50 / portTICK_RATE_MS )
+converted to ticks using the portTICK_PERIOD_MS constant. */
+#define mainBLINKY_TIMER_PERIOD				( 50 / portTICK_PERIOD_MS )
 
 /* The LED used by the communicating tasks and the blinky timer respectively. */
 #define mainTASKS_LED						( 0 )
@@ -157,7 +157,7 @@ static void prvQueueSendTask( void *pvParameters );
  * The callback function for the blinky software timer, as described at the top
  * of this file.
  */
-static void prvBlinkyTimerCallback( xTimerHandle xTimer );
+static void prvBlinkyTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Called by main() to create the simply blinky style application if
@@ -168,13 +168,13 @@ void main_blinky( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
 void main_blinky( void )
 {
-xTimerHandle xTimer;
+TimerHandle_t xTimer;
 
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
@@ -221,7 +221,7 @@ xTimerHandle xTimer;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Check the task parameter is as expected. */
@@ -272,7 +272,7 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
-static void prvBlinkyTimerCallback( xTimerHandle xTimer )
+static void prvBlinkyTimerCallback( TimerHandle_t xTimer )
 {
 	/* This function is called when the blinky software time expires.  All the
 	function does is toggle the LED.  LED mainTIMER_LED should therefore toggle

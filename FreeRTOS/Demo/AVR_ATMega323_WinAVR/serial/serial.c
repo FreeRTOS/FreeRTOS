@@ -73,7 +73,7 @@ Changes from V1.2.3
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 	+ xQueueReceiveFromISR() used in place of xQueueReceive() within the ISR.
 
 Changes from V2.6.0
@@ -105,8 +105,8 @@ Changes from V2.6.0
 #define serUCSRC_SELECT					( ( unsigned char ) 0x80 )
 #define serEIGHT_DATA_BITS				( ( unsigned char ) 0x06 )
 
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 #define vInterruptOn()										\
 {															\
@@ -167,7 +167,7 @@ unsigned char ucByte;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;
@@ -185,7 +185,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;

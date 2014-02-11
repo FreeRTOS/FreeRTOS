@@ -68,7 +68,7 @@
 
 void vPrintInitialise( void );
 void vPrintDisplayMessage( const char * const * pcMessageToSend );
-const char *pcPrintGetNextMessage( portTickType xPrintRate );
+const char *pcPrintGetNextMessage( TickType_t xPrintRate );
 
 #endif
 

@@ -95,7 +95,7 @@ static portBASE_TYPE xISRTestStatus = pdPASS;
 
 /* The queue that is accessed from the ISR.  The queue accessed by the task is
 created inside the task itself. */
-static xQueueHandle xISRQueue = NULL;
+static QueueHandle_t xISRQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -109,13 +109,13 @@ const unsigned portBASE_TYPE uxQueueLength = 1;
 
 	/* Create the test task.  The queue used by the test task is created inside
 	the task itself. */
-	xTaskCreate( prvQueueOverwriteTask, "QOver", configMINIMAL_STACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( prvQueueOverwriteTask, "QOver", configMINIMAL_STACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 static void prvQueueOverwriteTask( void *pvParameters )
 {
-xQueueHandle xTaskQueue;
+QueueHandle_t xTaskQueue;
 const unsigned portBASE_TYPE uxQueueLength = 1;
 unsigned long ulValue, ulStatus = pdPASS, x;
 

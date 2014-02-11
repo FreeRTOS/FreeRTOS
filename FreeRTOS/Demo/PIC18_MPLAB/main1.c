@@ -101,7 +101,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 /* Scheduler include files. */
@@ -117,8 +117,8 @@ Changes from V2.0.0
 /* The period between executions of the check task before and after an error
 has been discovered.  If an error has been discovered the check task runs
 more frequently - increasing the LED flash rate. */
-#define mainNO_ERROR_CHECK_PERIOD		( ( portTickType ) 1000 / portTICK_RATE_MS )
-#define mainERROR_CHECK_PERIOD			( ( portTickType ) 100 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_PERIOD		( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_PERIOD			( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* Priority definitions for some of the tasks.  Other tasks just use the idle
 priority. */
@@ -131,7 +131,7 @@ priority. */
 /* Constants required for the communications.  Only one character is ever
 transmitted. */
 #define mainCOMMS_QUEUE_LENGTH			( 5 )
-#define mainNO_BLOCK					( ( portTickType ) 0 )
+#define mainNO_BLOCK					( ( TickType_t ) 0 )
 #define mainBAUD_RATE					( ( unsigned long ) 9600 )
 
 /*
@@ -172,7 +172,7 @@ void main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayTime = mainNO_ERROR_CHECK_PERIOD;
+TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
 portBASE_TYPE xErrorOccurred;
 
 	/* Cycle for ever, delaying then checking all the other tasks are still

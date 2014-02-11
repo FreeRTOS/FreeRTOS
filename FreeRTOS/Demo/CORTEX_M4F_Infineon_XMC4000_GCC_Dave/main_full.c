@@ -133,20 +133,20 @@
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Register check tasks, and the tasks used to write over and check the contents
@@ -168,7 +168,7 @@ volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 void main_full( void )
 {
-xTimerHandle xCheckTimer = NULL;
+TimerHandle_t xCheckTimer = NULL;
 
 	/* Start all the other standard demo/test tasks.  The have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
@@ -212,7 +212,7 @@ xTimerHandle xCheckTimer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;

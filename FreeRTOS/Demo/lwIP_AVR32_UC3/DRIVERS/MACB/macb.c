@@ -179,7 +179,7 @@ static void vWriteMDIO(volatile avr32_macb_t * macb, unsigned short usAddress, u
 
 #ifdef FREERTOS_USED
 /* The semaphore used by the MACB ISR to wake the MACB task. */
-static xSemaphoreHandle xSemaphore = NULL;
+static SemaphoreHandle_t xSemaphore = NULL;
 #else
 static volatile Bool DataToRead = FALSE;
 #endif

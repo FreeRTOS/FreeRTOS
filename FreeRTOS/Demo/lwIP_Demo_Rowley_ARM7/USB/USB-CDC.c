@@ -90,7 +90,7 @@
 #include "USB-CDC.h"
 #include "descriptors.h"
 
-#define usbNO_BLOCK ( ( portTickType ) 0 )
+#define usbNO_BLOCK ( ( TickType_t ) 0 )
 
 /* Reset all endpoints */
 static void prvResetEndPoints( void );
@@ -143,12 +143,12 @@ static xCONTROL_MESSAGE pxControlTx;
 static xCONTROL_MESSAGE pxControlRx;
 
 /* Queue holding pointers to pending messages */
-xQueueHandle xUSBInterruptQueue; 
+QueueHandle_t xUSBInterruptQueue; 
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted.  Rx queue must be larger than FIFO size. */
-static xQueueHandle xRxCDC; 
-static xQueueHandle xTxCDC; 
+static QueueHandle_t xRxCDC; 
+static QueueHandle_t xTxCDC; 
 
 /* Line coding - 115,200 baud, N-8-1 */
 static const unsigned char pxLineCoding[] = { 0x00, 0xC2, 0x01, 0x00, 0x00, 0x00, 0x08 };
@@ -176,7 +176,7 @@ portBASE_TYPE xByte;
 		 vDetachUSBInterface();
 	portEXIT_CRITICAL();
 	
-	vTaskDelay( portTICK_RATE_MS * 60 );
+	vTaskDelay( portTICK_PERIOD_MS * 60 );
 
 	/* Init USB interface */
 	portENTER_CRITICAL();

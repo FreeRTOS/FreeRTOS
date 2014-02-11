@@ -259,7 +259,7 @@
  <func Header="printi" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="79"/>
  <func Header="print" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="122"/>
  <func Header="sprintf" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\CORTEX_STM32F103_Primer_GCC\printf-stdarg.c" DeclLine="194"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <type Header="xSemaphoreHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\semphr.h" DeclLine="61" Pointer="No"/>
@@ -281,9 +281,9 @@
  <variable Header="ulLoopCounter" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" DeclLine="118" Pointer="No"/>
  <variable Header="ulLoopCounter2" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" DeclLine="119" Pointer="No"/>
  <variable Header="ulGuardedVariable" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" DeclLine="122" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <variable Header="xHighPriorityMutexTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" DeclLine="126" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <variable Header="xMediumPriorityMutexTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" DeclLine="126" Pointer="No"/>
  <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="83" Pointer="No"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
@@ -296,7 +296,7 @@
  <variable Header="sBlockingConsumerCount" Icon="2" Type="variable" Desc=":   int[3]" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\BlockQ.c" DeclLine="116" Pointer="No"/>
  <variable Header="sBlockingProducerCount" Icon="2" Type="variable" Desc=":   int[3]" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\BlockQ.c" DeclLine="120" Pointer="No"/>
  <type Header="portTickType" Icon="1" Type="type" Desc=": unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\portable\GCC\ARM_CM3\portmacro.h" DeclLine="83" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <func Header="xAreBlockTimeTestTasksStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="466"/>
  <func Header="vCreateBlockTimeTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="106"/>
@@ -304,13 +304,13 @@
  <func Header="vPrimaryBlockTimeTestTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="125"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <variable Header="xTestQueue" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="85" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <variable Header="xSecondary" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="89" Pointer="No"/>
  <variable Header="xPrimaryCycles" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="92" Pointer="No"/>
  <variable Header="xSecondaryCycles" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="92" Pointer="No"/>
  <variable Header="xErrorOccurred" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="93" Pointer="No"/>
  <variable Header="xRunIndicator" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" DeclLine="97" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <func Header="xAreQueuePeekTasksStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="427"/>
  <func Header="vStartQueuePeekTasks" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="106"/>
@@ -325,11 +325,11 @@
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <variable Header="xErrorDetected" Icon="2" Type="variable" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="95" Pointer="No"/>
  <variable Header="ulLoopCounter" Icon="2" Type="variable" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="99" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <variable Header="xMediumPriorityTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="102" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <variable Header="xHighPriorityTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="102" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <variable Header="xHighestPriorityTask" Icon="2" Type="variable" Desc=":    " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" DeclLine="102" Pointer="No"/>
  <type Header="xQueueHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\queue.h" DeclLine="65" Pointer="No"/>
  <func Header="xArePollingQueuesStillRunning" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\PollQ.c" DeclLine="220"/>
@@ -372,43 +372,43 @@
  <type Header="xListItem" Icon="1" Type="type" Desc=": struct xLIST_ITEM" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\list.h" DeclLine="104" Pointer="No"/>
  <type Header="xMiniListItem" Icon="1" Type="type" Desc=": struct xMINI_LIST_ITEM" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\list.h" DeclLine="112" Pointer="No"/>
  <type Header="xList" Icon="1" Type="type" Desc=": struct xLIST" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\list.h" DeclLine="122" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <type Header="xTimeOutType" Icon="1" Type="type" Desc=": struct xTIME_OUT" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="94" Pointer="No"/>
  <type Header="tskTCB" Icon="1" Type="type" Desc=": struct tskTaskControlBlock" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="103" Pointer="No"/>
  <func Header="xTaskIsTaskSuspended" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="872"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskSuspendAll" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1037"/>
  <func Header="vTaskSwitchContext" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1516"/>
  <func Header="vTaskSetTimeOutState" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1677"/>
  <func Header="vTaskMissedYield" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1727"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="xTaskGetCurrentTaskHandle" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="2096"/>
  <func Header="vTaskPriorityDisinherit" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="2170"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskPriorityInherit" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="2138"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="xTaskRemoveFromEventList" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1630"/>
  <func Header="xTaskCheckForTimeOut" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1684"/>
  <func Header="xTaskGetTickCount" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1127"/>
  <func Header="uxTaskPriorityGet" Icon="3" Type="func" Desc=":   unsigned long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="702"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskPlaceOnEventList" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1560"/>
  <func Header="vTaskIncrementTick" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1320"/>
  <func Header="xTaskResumeAll" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1045"/>
  <func Header="vTaskResume" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="903"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskSuspend" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="829"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskPrioritySet" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="724"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskDelay" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="641"/>
  <func Header="vTaskDelayUntil" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="564"/>
  <func Header="prvIdleTask" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="1743"/>
  <func Header="xTaskCreate" Icon="3" Type="func" Desc=":   long" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="373"/>
  <type Header="pdTASK_CODE" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\projdefs.h" DeclLine="56" Pointer="No"/>
- <type Header="xTaskHandle" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
+ <type Header="TaskHandle_t" Icon="1" Type="type" Desc=":  " DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\include\task.h" DeclLine="85" Pointer="No"/>
  <func Header="vTaskStartScheduler" Icon="3" Type="func" Desc=":   void" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="984"/>
  <variable Header="pxReadyTasksLists" Icon="2" Type="variable" Desc=":   struct xLIST[5]" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="119" Pointer="No"/>
  <variable Header="xDelayedTaskList1" Icon="2" Type="variable" Desc=":   struct xLIST" DeclFile="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" DeclLine="120" Pointer="No"/>

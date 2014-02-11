@@ -118,8 +118,8 @@
 #define mainUSB_PRIORITY			( tskIDLE_PRIORITY + 2 )
 
 /* Constants required by the 'Check' task. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 #define mainCHECK_TASK_LED			( 3 )
 
 /* Constants for the ComTest tasks. */
@@ -212,7 +212,7 @@ static void prvSetupHardware( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 
 	/* The parameters are not used in this task. */
 	( void ) pvParameters;

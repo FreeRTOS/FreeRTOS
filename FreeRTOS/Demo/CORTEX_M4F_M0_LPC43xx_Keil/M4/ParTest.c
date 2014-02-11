@@ -109,7 +109,7 @@ static void prvI2CGateKeeperTask( void *pvParameters );
 
 /* The queue used to communicate toggle commands with the I2C gatekeeper
 task. */
-static xQueueHandle xI2CCommandQueue = NULL;
+static QueueHandle_t xI2CCommandQueue = NULL;
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )

@@ -108,7 +108,7 @@
 #define configCPU_CLOCK_HZ						100000000UL
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_TICKLESS_IDLE					0
-#define configTICK_RATE_HZ						( ( portTickType ) 1000 )
+#define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
 #define configPERIPHERAL_CLOCK_HZ  				( 33333000UL )
 #define configUSE_PREEMPTION					1
 #define configUSE_IDLE_HOOK						1

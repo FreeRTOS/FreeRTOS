@@ -94,11 +94,11 @@ demo, or 0 to run the more comprehensive test and demo application. */
 /* A few settings are dependent on the configCREATE_LOW_POWER_DEMO setting. */
 #if configCREATE_LOW_POWER_DEMO == 1
 	#define configTICK_RATE_HZ						( 100 )
-	#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 	( 20 + 1 ) /* ( ( 200 / portTICK_RATE_MS ) + 1 ) written out pre-processed to enable #error statements to check its value. */
+	#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 	( 20 + 1 ) /* ( ( 200 / portTICK_PERIOD_MS ) + 1 ) written out pre-processed to enable #error statements to check its value. */
 	#define configUSE_TIMERS						0
 #else
 	#define configSYSTICK_CLOCK_HZ					( SystemCoreClock >> 3UL ) /* Systick clock is one eighth the system clock. */
-	#define configTICK_RATE_HZ						( ( portTickType ) 1000 )
+	#define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
 	#define configUSE_TIMERS						1
 #endif /* configCREATE_LOW_POWER_DEMO */
 

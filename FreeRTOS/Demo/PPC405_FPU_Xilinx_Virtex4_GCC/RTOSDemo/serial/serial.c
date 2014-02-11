@@ -85,8 +85,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /* Structure that maintains information on the UART being used. */
 static XUartLite xUART;
@@ -133,7 +133,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one UART. */
 	( void ) pxPort;
@@ -151,7 +151,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 portBASE_TYPE xReturn = pdTRUE;
 

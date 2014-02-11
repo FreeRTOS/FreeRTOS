@@ -91,7 +91,7 @@
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				0
 #define configCPU_CLOCK_HZ				( XPAR_MICROBLAZE_CORE_CLOCK_FREQ_HZ ) /* Not actually used in this demo as the timer is set up in main() and uses the peripheral clock, not the CPU clock. */
-#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
+#define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 7 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 64 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 10 )

@@ -65,10 +65,10 @@ void vuIP_TASK( void *pvParameters )
 {
 /* The semaphore used by the EMAC ISR to indicate that an Rx frame is ready
 for processing. */
-xSemaphoreHandle xSemaphore = NULL;
+SemaphoreHandle_t xSemaphore = NULL;
 portBASE_TYPE xARPTimer;
 unsigned portBASE_TYPE uxPriority;
-static volatile portTickType xStartTime, xCurrentTime;
+static volatile TickType_t xStartTime, xCurrentTime;
 
 	/* Initialize the uIP TCP/IP stack. */
 	uip_init();

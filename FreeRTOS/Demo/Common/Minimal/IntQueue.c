@@ -178,7 +178,7 @@ an interrupt. */
 /*-----------------------------------------------------------*/
 
 /* The two queues used by the test. */
-static xQueueHandle xNormallyEmptyQueue, xNormallyFullQueue;
+static QueueHandle_t xNormallyEmptyQueue, xNormallyFullQueue;
 
 /* Variables used to detect a stall in one of the tasks. */
 static unsigned portBASE_TYPE uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0, uxLowPriorityLoops1 = 0, uxLowPriorityLoops2 = 0;
@@ -196,7 +196,7 @@ time to each queue. */
 volatile unsigned portBASE_TYPE uxValueForNormallyEmptyQueue = 0, uxValueForNormallyFullQueue = 0;
 
 /* A handle to some of the tasks is required so they can be suspended/resumed. */
-xTaskHandle xHighPriorityNormallyEmptyTask1, xHighPriorityNormallyEmptyTask2, xHighPriorityNormallyFullTask1, xHighPriorityNormallyFullTask2;
+TaskHandle_t xHighPriorityNormallyEmptyTask1, xHighPriorityNormallyEmptyTask2, xHighPriorityNormallyFullTask1, xHighPriorityNormallyFullTask2;
 
 /* When a value is received in a queue the value is ticked off in the array
 the array position of the value is set to a the identifier of the task or

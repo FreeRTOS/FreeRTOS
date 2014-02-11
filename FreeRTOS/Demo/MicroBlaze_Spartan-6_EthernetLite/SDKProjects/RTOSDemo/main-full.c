@@ -169,15 +169,15 @@
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error.  See the description of the check timer in the comments at the
 top of this file. */
-#define mainNO_ERROR_CHECK_TIMER_PERIOD		( 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_TIMER_PERIOD		( 5000 / portTICK_PERIOD_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task.  See the description of the check timer in the comments at
 the top of this file. */
-#define mainERROR_CHECK_TIMER_PERIOD		( 200 / portTICK_RATE_MS )
+#define mainERROR_CHECK_TIMER_PERIOD		( 200 / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( ( portTickType ) 0 )
+#define mainDONT_BLOCK						( ( TickType_t ) 0 )
 
 /* The LED used by the comtest tasks. See the comtest_strings.c file for more
 information.  In this case an invalid LED number is provided as all four
@@ -208,7 +208,7 @@ extern void vRegisterTest2( void *pvParameters );
  * Defines the 'check' timer functionality as described at the top of this file.
  * This function is the callback function associated with the 'check' timer.
  */
-static void vCheckTimerCallback( xTimerHandle xTimer );
+static void vCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Configure the interrupt controller, LED outputs and button inputs.
@@ -230,7 +230,7 @@ only the timer/counter is used directly within this file. */
 static XTmrCtr xTimer0Instance;
 
 /* The 'check' timer, as described at the top of this file. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /* Used in the run time stats calculations. */
 static unsigned long ulClocksPer10thOfAMilliSecond = 0UL;
@@ -309,12 +309,12 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void vCheckTimerCallback( xTimerHandle xTimer )
+static void vCheckTimerCallback( TimerHandle_t xTimer )
 {
 extern unsigned long ulRegTest1CycleCount, ulRegTest2CycleCount;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 static long lErrorAlreadyLatched = pdFALSE;
-portTickType xExecutionRate = mainNO_ERROR_CHECK_TIMER_PERIOD;
+TickType_t xExecutionRate = mainNO_ERROR_CHECK_TIMER_PERIOD;
 
 	/* This is the callback function used by the 'check' timer, as described
 	in the comments at the top of this file. */
@@ -511,7 +511,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

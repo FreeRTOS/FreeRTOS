@@ -126,7 +126,7 @@ void __attribute__( (interrupt(ipl3), vector(_TIMER_5_VECTOR))) vT5InterruptWrap
 
 /* The semaphore given by the T5 interrupt to unblock the task implemented by
  the prvISRTriggeredTask() function. */
-static xSemaphoreHandle xBlockSemaphore = NULL;
+static SemaphoreHandle_t xBlockSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
 void vStartISRTriggeredTask( void )

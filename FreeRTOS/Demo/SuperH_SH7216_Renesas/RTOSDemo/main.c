@@ -175,11 +175,11 @@ stack than most of the other tasks. */
 
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error. */
-#define mainNO_ERROR_CYCLE_TIME				( 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CYCLE_TIME				( 5000 / portTICK_PERIOD_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task. */
-#define mainERROR_CYCLE_TIME				( 200 / portTICK_RATE_MS )
+#define mainERROR_CYCLE_TIME				( 200 / portTICK_PERIOD_MS )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -254,7 +254,7 @@ unsigned long ulRunTime = 0UL;
  */
 void main(void)
 {
-xTaskHandle xCreatedTask;
+TaskHandle_t xCreatedTask;
 
 	prvSetupHardware();
 
@@ -301,7 +301,7 @@ xTaskHandle xCreatedTask;
 
 static void prvCheckTask( void *pvParameter )
 {
-portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
+TickType_t xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
 
 	/* Just to remove compiler warning. */
@@ -413,7 +413,7 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* Just to remove compiler warnings.  This function will only actually
 	get called if configCHECK_FOR_STACK_OVERFLOW is set to a non zero value.

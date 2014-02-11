@@ -132,7 +132,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 	+ Added a second, simple test that uses the functions 
 	  vQueueReceiveWhenSuspendedTask() and vQueueSendWhenSuspendedTask().
 
@@ -177,17 +177,17 @@ static void prvChangePriorityHelperTask( void *pvParameters );
 
 /* Demo task specific constants. */
 #define priSTACK_SIZE				( ( unsigned short ) configMINIMAL_STACK_SIZE )
-#define priSLEEP_TIME				( ( portTickType ) 50 )
+#define priSLEEP_TIME				( ( TickType_t ) 50 )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( unsigned long ) 0xff )
-#define priNO_BLOCK					( ( portTickType ) 0 )
+#define priNO_BLOCK					( ( TickType_t ) 0 )
 #define priSUSPENDED_QUEUE_LENGTH	( 1 )
 
 /*-----------------------------------------------------------*/
 
 /* Handles to the two counter tasks.  These could be passed in as parameters
 to the controller task to prevent them having to be file scope. */
-static xTaskHandle xContinuousIncrementHandle, xLimitedIncrementHandle, xChangePriorityWhenSuspendedHandle;
+static TaskHandle_t xContinuousIncrementHandle, xLimitedIncrementHandle, xChangePriorityWhenSuspendedHandle;
 
 /* The shared counter variable.  This is passed in as a parameter to the two 
 counter variables for demonstration purposes. */
@@ -207,7 +207,7 @@ static portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
 static portBASE_TYPE xPriorityRaiseWhenSuspendedError = pdFALSE;
 
 /* Queue used by the second test. */
-xQueueHandle xSuspendedTestQueue;
+QueueHandle_t xSuspendedTestQueue;
 
 /*-----------------------------------------------------------*/
 /*

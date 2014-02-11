@@ -135,13 +135,12 @@
 #include "EventGroupsDemo.h"
 
 /* Priorities at which the tasks are created. */
-#define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 1 )
+#define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
 #define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainSEM_TEST_PRIORITY			( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainCREATOR_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
 #define mainFLASH_TASK_PRIORITY			( tskIDLE_PRIORITY + 1 )
-#define mainuIP_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainINTEGER_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define mainFLOP_TASK_PRIORITY			( tskIDLE_PRIORITY )
@@ -163,6 +162,18 @@ static void prvTestTask( void *pvParameters );
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 
 /*
+ * Called from the idle task hook function to demonstrate the use of 
+ * xTimerPendFunctionCall() as xTimerPendFunctionCall() is not demonstrated by
+ * any of the standard demo tasks.
+ */
+static void prvDemonstratePendingFunctionCall( void );
+
+/*
+ * The function that is pended by prvDemonstratePendingFunctionCall().
+ */
+static void prvPendedFunction( void *pvParameter1, uint32_t ulParameter2 );
+
+/*
  * A task to demonstrate the use of the xQueueSpacesAvailable() function.
  */
 static void prvDemoQueueSpaceFunctions( void *pvParameters );
@@ -174,7 +185,7 @@ static char *pcStatusMessage = "OK";
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
 semaphore tracing API functions.  It has no other purpose. */
-static xSemaphoreHandle xMutexToDelete = NULL;
+static SemaphoreHandle_t xMutexToDelete = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -227,8 +238,8 @@ int main_full( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
-const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
+TickType_t xNextWakeTime;
+const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -343,11 +354,11 @@ void *pvAllocated;
 
 /* These three functions are only meant for use by trace code, and not for
 direct use from application code, hence their prototypes are not in queue.h. */
-extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned portBASE_TYPE uxQueueNumber );
-extern unsigned portBASE_TYPE uxQueueGetQueueNumber( xQueueHandle pxQueue );
-extern uint8_t ucQueueGetQueueType( xQueueHandle pxQueue );
-extern void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
-extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
+extern void vQueueSetQueueNumber( QueueHandle_t pxQueue, unsigned portBASE_TYPE uxQueueNumber );
+extern unsigned portBASE_TYPE uxQueueGetQueueNumber( QueueHandle_t pxQueue );
+extern uint8_t ucQueueGetQueueType( QueueHandle_t pxQueue );
+extern void vTaskSetTaskNumber( TaskHandle_t xTask, unsigned portBASE_TYPE uxHandle );
+extern unsigned portBASE_TYPE uxTaskGetTaskNumber( TaskHandle_t xTask );
 
 	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
 	tasks waiting to be terminated by the idle task. */
@@ -356,6 +367,10 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
 	/* Demonstrate a few utility functions that are not demonstrated by any of
 	the standard demo tasks. */
 	prvDemonstrateTaskStateAndHandleGetFunctions();
+
+	/* Demonstrate the use of xTimerPendFunctionCall(), which is not
+	demonstrated by any of the standard demo tasks. */
+	prvDemonstratePendingFunctionCall();
 
 	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the
@@ -408,13 +423,45 @@ void vFullDemoTickHookFunction( void )
 }
 /*-----------------------------------------------------------*/
 
+static void prvPendedFunction( void *pvParameter1, uint32_t ulParameter2 )
+{
+static uint32_t ulLastParameter1 = 1000UL, ulLastParameter2 = 0UL;
+uint32_t ulParameter1;
+
+	ulParameter1 = ( uint32_t ) pvParameter1;
+
+	/* Ensure the parameters are as expected. */
+	configASSERT( ulParameter1 == ( ulLastParameter1 + 1 ) );
+	configASSERT( ulParameter2 == ( ulLastParameter2 + 1 ) );
+
+	/* Remember the parameters for the next time the function is called. */
+	ulLastParameter1 = ulParameter1;
+	ulLastParameter2 = ulParameter2;
+}
+/*-----------------------------------------------------------*/
+
+static void prvDemonstratePendingFunctionCall( void )
+{
+static uint32_t ulParameter1 = 1000UL, ulParameter2 = 0UL;
+const TickType_t xDontBlock = 0; /* This is called from the idle task so must *not* attempt to block. */
+
+	/* prvPendedFunction() just expects the parameters to be incremented by one
+	each time it is called. */
+	ulParameter1++;
+	ulParameter2++;
+
+	/* Pend the function call, sending the parameters. */
+	xTimerPendFunctionCall( prvPendedFunction, ( void * ) ulParameter1, ulParameter2, xDontBlock );
+}
+/*-----------------------------------------------------------*/
+
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
 {
-xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
+TaskHandle_t xIdleTaskHandle, xTimerTaskHandle;
 const unsigned char ucConstTaskNumber = 0x55U;
-signed char *pcTaskName;
+char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
-xTaskHandle xTestTask;
+TaskHandle_t xTestTask;
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -487,7 +534,7 @@ xTaskHandle xTestTask;
 
 static void prvDemoQueueSpaceFunctions( void *pvParameters )
 {
-xQueueHandle xQueue = NULL;
+QueueHandle_t xQueue = NULL;
 const unsigned portBASE_TYPE uxQueueLength = 10;
 unsigned portBASE_TYPE uxReturn, x;
 

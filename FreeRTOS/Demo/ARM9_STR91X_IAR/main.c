@@ -143,9 +143,9 @@
 #define mainGENERIC_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
 /* Delays used by the various tasks defined in this file. */
-#define mainCHECK_PERIOD			( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainSTRING_WRITE_DELAY		( 500 / portTICK_RATE_MS )
-#define mainLCD_DELAY				( 20 / portTICK_RATE_MS )
+#define mainCHECK_PERIOD			( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainSTRING_WRITE_DELAY		( 500 / portTICK_PERIOD_MS )
+#define mainLCD_DELAY				( 20 / portTICK_PERIOD_MS )
 
 /* Constants for the ComTest tasks. */
 #define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
@@ -205,7 +205,7 @@ static void prvLCDMessageTask( void * pvParameters );
 /*-----------------------------------------------------------*/
 
 /* The queue used to pass messages to the LCD task. */
-static xQueueHandle xLCDQueue;
+static QueueHandle_t xLCDQueue;
 
 /* Error status flag. */
 static unsigned long ulErrorFlags = 0;
@@ -314,7 +314,7 @@ static void vErrorChecks( void *pvParameters )
 static char cCheckVal[ mainMAX_FLAG_STRING_LEN ];
 char *pcFlagString;
 xLCDMessage xMessageToSend;
-portTickType xLastWakeTime;
+TickType_t xLastWakeTime;
 char *pcStringsToDisplay[] = {										
 									"Check status flag"
 								 };
@@ -406,7 +406,7 @@ static void prvCheckOtherTasksAreStillRunning( void )
 
 static void prvLCDMessageTask( void * pvParameters )
 {
-xQueueHandle *pxLCDQueue;	
+QueueHandle_t *pxLCDQueue;	
 xLCDMessage xMessageToSend;
 portBASE_TYPE xIndex = 0;
 
@@ -423,7 +423,7 @@ char *pcStringsToDisplay[] = {
 	/* To test the parameter passing mechanism, the queue on which messages are
 	posted is passed in as a parameter even though it is available as a file
 	scope variable anyway. */
-	pxLCDQueue = ( xQueueHandle * ) pvParameters;
+	pxLCDQueue = ( QueueHandle_t * ) pvParameters;
 
 	for( ;; )
 	{
@@ -452,14 +452,14 @@ char *pcStringsToDisplay[] = {
 
 void prvLCDTask( void * pvParameters )
 {
-xQueueHandle *pxLCDQueue;
+QueueHandle_t *pxLCDQueue;
 xLCDMessage xReceivedMessage;
 char *pcString;
 
 	/* To test the parameter passing mechanism, the queue on which messages are
 	received is passed in as a parameter even though it is available as a file
 	scope variable anyway. */
-	pxLCDQueue = ( xQueueHandle * ) pvParameters;
+	pxLCDQueue = ( QueueHandle_t * ) pvParameters;
 
 	LCD_Init();
 

@@ -107,7 +107,7 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook). */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -267,7 +267,7 @@ void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This function will get called if a task overflows its stack. */
 

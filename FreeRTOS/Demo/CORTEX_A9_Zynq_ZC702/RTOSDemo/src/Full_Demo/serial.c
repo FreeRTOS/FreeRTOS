@@ -178,7 +178,7 @@ XUartPs_Config *pxConfig;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+BaseType_t xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 BaseType_t xReturn;
 
@@ -213,7 +213,7 @@ const TickType_t xMaxWait = 200UL / portTICK_PERIOD_MS;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	/* Only a single port is supported. */
 	( void ) pxPort;

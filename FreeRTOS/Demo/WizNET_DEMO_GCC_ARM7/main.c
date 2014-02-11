@@ -303,7 +303,7 @@ unsigned long ulState;
 
 static void prvErrorChecks( void *pvParameters )
 {
-portTickType xDelay = mainNO_ERROR_DELAY;
+TickType_t xDelay = mainNO_ERROR_DELAY;
 
 	/* The parameters are not used. */
 	( void ) pvParameters;

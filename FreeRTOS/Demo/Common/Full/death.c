@@ -86,7 +86,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -119,7 +119,7 @@ static const unsigned portBASE_TYPE uxMaxNumberOfExtraTasksRunning = 5;
 
 /* Used to store a handle to the tasks that should be killed by a suicidal task, 
 before it kills itself. */
-xTaskHandle xCreatedTask1, xCreatedTask2;
+TaskHandle_t xCreatedTask1, xCreatedTask2;
 
 /*-----------------------------------------------------------*/
 
@@ -143,15 +143,15 @@ unsigned portBASE_TYPE *puxPriority;
 static void vSuicidalTask( void *pvParameters )
 {
 portDOUBLE d1, d2;
-xTaskHandle xTaskToKill;
-const portTickType xDelay = ( portTickType ) 500 / portTICK_RATE_MS;
+TaskHandle_t xTaskToKill;
+const TickType_t xDelay = ( TickType_t ) 500 / portTICK_PERIOD_MS;
 
 	if( pvParameters != NULL )
 	{
 		/* This task is periodically created four times.  Tow created tasks are 
 		passed a handle to the other task so it can kill it before killing itself.  
 		The other task is passed in null. */
-		xTaskToKill = *( xTaskHandle* )pvParameters;
+		xTaskToKill = *( TaskHandle_t* )pvParameters;
 	}
 	else
 	{
@@ -169,7 +169,7 @@ const portTickType xDelay = ( portTickType ) 500 / portTICK_RATE_MS;
 		if( xTaskToKill != NULL )
 		{
 			/* Make sure the other task has a go before we delete it. */
-			vTaskDelay( ( portTickType ) 0 );
+			vTaskDelay( ( TickType_t ) 0 );
 			/* Kill the other task that was created by vCreateTasks(). */
 			vTaskDelete( xTaskToKill );
 			/* Kill ourselves. */
@@ -181,7 +181,7 @@ const portTickType xDelay = ( portTickType ) 500 / portTICK_RATE_MS;
 
 static void vCreateTasks( void *pvParameters )
 {
-const portTickType xDelay = ( portTickType ) 1000 / portTICK_RATE_MS;
+const TickType_t xDelay = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
 unsigned portBASE_TYPE uxPriority;
 const char * const pcTaskStartMsg = "Create task started.\r\n";
 

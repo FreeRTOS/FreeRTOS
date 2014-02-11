@@ -74,8 +74,8 @@ static void     prvSerialISR( void );
 typedef struct
 {
     portBASE_TYPE xInitialized;
-    xQueueHandle xRXChars;
-    xQueueHandle xTXChars;
+    QueueHandle_t xRXChars;
+    QueueHandle_t xTXChars;
 } xComPortIF_t;
 
 static xComPortIF_t xComPortIF[ COM_NIFACE ];
@@ -145,7 +145,7 @@ xSerialPortInitMinimal( unsigned long ulWantedBaud,
 
 signed          portBASE_TYPE
 xSerialGetChar( xComPortHandle pxPort, signed char * pcRxedChar,
-                portTickType xBlockTime )
+                TickType_t xBlockTime )
 {
     int i;
     portBASE_TYPE xResult = pdFALSE;
@@ -189,7 +189,7 @@ vSerialPutString( xComPortHandle pxPort, const signed char *
 
 signed          portBASE_TYPE
 xSerialPutChar( xComPortHandle pxPort, signed char cOutChar,
-                portTickType xBlockTime )
+                TickType_t xBlockTime )
 {
     int i;
     portBASE_TYPE xResult = pdFALSE;

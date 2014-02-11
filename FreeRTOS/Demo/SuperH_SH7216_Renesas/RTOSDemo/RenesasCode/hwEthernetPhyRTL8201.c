@@ -128,7 +128,7 @@ int phyReset(void)
     {
         USHORT  usData;
 		
-		vTaskDelay( 2 / portTICK_RATE_MS );
+		vTaskDelay( 2 / portTICK_PERIOD_MS );
 		
 		/* Read the status of the PHY */
         usData = phyReadReg(PHY_BASIC_MODE_CONTROL);
@@ -141,7 +141,7 @@ int phyReset(void)
             phyWriteReg(PHY_BASIC_MODE_CONTROL, PHY_AN_ENABLE);
 
             /* Auto negotiation will now take place wait for two seconds */
-            vTaskDelay( 2000 / portTICK_RATE_MS );
+            vTaskDelay( 2000 / portTICK_PERIOD_MS );
 
 			/* Success */
             return 0;

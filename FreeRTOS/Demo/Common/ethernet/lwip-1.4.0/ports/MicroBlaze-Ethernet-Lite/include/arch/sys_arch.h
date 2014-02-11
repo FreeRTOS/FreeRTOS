@@ -37,14 +37,14 @@
 #include "queue.h"
 #include "semphr.h"
 
-#define SYS_MBOX_NULL					( ( xQueueHandle ) NULL )
-#define SYS_SEM_NULL					( ( xSemaphoreHandle ) NULL )
+#define SYS_MBOX_NULL					( ( QueueHandle_t ) NULL )
+#define SYS_SEM_NULL					( ( SemaphoreHandle_t ) NULL )
 #define SYS_DEFAULT_THREAD_STACK_DEPTH	configMINIMAL_STACK_SIZE
 
-typedef xSemaphoreHandle sys_sem_t;
-typedef xSemaphoreHandle sys_mutex_t;
-typedef xQueueHandle sys_mbox_t;
-typedef xTaskHandle sys_thread_t;
+typedef SemaphoreHandle_t sys_sem_t;
+typedef SemaphoreHandle_t sys_mutex_t;
+typedef QueueHandle_t sys_mbox_t;
+typedef TaskHandle_t sys_thread_t;
 
 #define sys_mbox_valid( x ) ( ( ( *x ) == NULL) ? pdFALSE : pdTRUE )
 #define sys_mbox_set_invalid( x ) ( ( *x ) = NULL )

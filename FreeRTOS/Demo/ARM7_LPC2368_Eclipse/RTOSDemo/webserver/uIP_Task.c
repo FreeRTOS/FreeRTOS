@@ -127,7 +127,7 @@ clock_time_t clock_time( void );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used by the ISR to wake the uIP task. */
-extern xSemaphoreHandle xEMACSemaphore;
+extern SemaphoreHandle_t xEMACSemaphore;
 
 /*-----------------------------------------------------------*/
 
@@ -285,7 +285,7 @@ void vApplicationProcessFormInput( char *pcInputString, portBASE_TYPE xInputLeng
 {
 char *c, *pcText;
 static char cMessageForDisplay[ 32 ];
-extern xQueueHandle xLCDQueue;
+extern QueueHandle_t xLCDQueue;
 xLCDMessage xLCDMessage;
 
 	/* Process the form input sent by the IO page of the served HTML. */

@@ -96,7 +96,7 @@ Changes from V3.0.1
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define mainBLINK_LED_INTERVAL	( ( portTickType ) 100 / ( portTICK_RATE_MS ) )
+#define mainBLINK_LED_INTERVAL	( ( TickType_t ) 100 / ( portTICK_PERIOD_MS ) )
 
 /* The LED that is flashed by the B0 task. */
 #define mainBLINK_LED0_PORT		LATD
@@ -150,7 +150,7 @@ typedef struct {
 	unsigned char *port;
 	unsigned char *tris;
 	unsigned char pin;
-	portTickType  interval;
+	TickType_t  interval;
 } SBLINK;
 
 const SBLINK sled0 = {&mainBLINK_LED0_PORT, &mainBLINK_LED0_TRIS, mainBLINK_LED0_PIN, mainBLINK_LED0_INTERVAL};
@@ -202,9 +202,9 @@ static portTASK_FUNCTION(vBlink, pvParameters)
 	unsigned char	*Port		= ((SBLINK *)pvParameters)->port;
 	unsigned char	*Tris		= ((SBLINK *)pvParameters)->tris;
 	unsigned char	Pin			= ((SBLINK *)pvParameters)->pin;
-	portTickType	Interval	= ((SBLINK *)pvParameters)->interval;
+	TickType_t	Interval	= ((SBLINK *)pvParameters)->interval;
 	
-	portTickType	xLastWakeTime;
+	TickType_t	xLastWakeTime;
 
 	/*
 	 * Initialize the hardware

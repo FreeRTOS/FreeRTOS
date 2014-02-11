@@ -28,8 +28,8 @@ void InitWatchdog(void)
 #if WATCHDOG == WTC_IN_TASK
 static void prvWatchdogTask	( void *pvParameters )
 {
- 	const portTickType xFrequency = WTC_CLR_PER;
-	portTickType xLastWakeTime;
+ 	const TickType_t xFrequency = WTC_CLR_PER;
+	TickType_t xLastWakeTime;
 
 	/* Get currrent tick count */
 	xLastWakeTime = xTaskGetTickCount();
@@ -51,6 +51,6 @@ static void prvWatchdogTask	( void *pvParameters )
 #if WATCHDOG == WTC_IN_TASK
 void vStartWatchdogTask( unsigned short uxPriority )
 {
-	xTaskCreate( prvWatchdogTask , "KickWTC",   portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( prvWatchdogTask , "KickWTC",   portMINIMAL_STACK_SIZE, ( void * ) NULL, uxPriority, ( TaskHandle_t * ) NULL );
 }
 #endif

@@ -143,13 +143,13 @@
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* The priorities of the various demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
@@ -180,7 +180,7 @@ occur. */
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * It is important to ensure the high frequency timer test does not start before
@@ -189,7 +189,7 @@ static void prvCheckTimerCallback( xTimerHandle xTimer );
  * executing.  A one-shot timer is used, so the callback function will only
  * execute once (unless it is manually reset/restarted).
  */
-static void prvSetupHighFrequencyTimerTest( xTimerHandle xTimer );
+static void prvSetupHighFrequencyTimerTest( TimerHandle_t xTimer );
 
 /*
  * Tasks that test the context switch mechanism by filling the processor
@@ -221,7 +221,7 @@ volatile unsigned long ulRegTest1Cycles = 0, ulRegTest2Cycles = 0;
  */
 int main_full( void )
 {
-xTimerHandle xTimer = NULL;
+TimerHandle_t xTimer = NULL;
 
 	/* Create all the other standard demo tasks. */
 	vStartLEDFlashTimers( mainNUM_FLASH_TIMER_LEDS );
@@ -313,7 +313,7 @@ extern void vRegTest2( volatile unsigned long * );
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0, ulLastHighFrequencyTimerInterrupts = 0;
@@ -415,7 +415,7 @@ extern unsigned long ulHighFrequencyTimerInterrupts;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSetupHighFrequencyTimerTest( xTimerHandle xTimer )
+static void prvSetupHighFrequencyTimerTest( TimerHandle_t xTimer )
 {
 void vSetupTimerTest( unsigned short usFrequencyHz );
 

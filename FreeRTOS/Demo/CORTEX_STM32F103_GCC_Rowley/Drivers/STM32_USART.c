@@ -103,7 +103,7 @@ contained in such a queue. */
 there to be space to post each character to the queue of characters waiting
 transmission.  NOTE!  This is the time to wait per character - not the time to
 wait for the entire string. */
-#define serPUT_STRING_CHAR_DELAY		( 5 / portTICK_RATE_MS )
+#define serPUT_STRING_CHAR_DELAY		( 5 / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 
@@ -111,10 +111,10 @@ wait for the entire string. */
 static USART_TypeDef * const xUARTS[ serNUM_COM_PORTS ] = { ( ( USART_TypeDef * ) USART1_BASE ), ( ( USART_TypeDef * ) USART2_BASE ) };
 
 /* Queues used to hold characters waiting to be transmitted - one queue per port. */
-static xQueueHandle xCharsForTx[ serNUM_COM_PORTS ] = { 0 };
+static QueueHandle_t xCharsForTx[ serNUM_COM_PORTS ] = { 0 };
 
 /* Queues holding received characters - one queue per port. */
-static xQueueHandle xRxedChars[ serNUM_COM_PORTS ] = { 0 };
+static QueueHandle_t xRxedChars[ serNUM_COM_PORTS ] = { 0 };
 
 /*-----------------------------------------------------------*/
 
@@ -229,7 +229,7 @@ GPIO_InitTypeDef GPIO_InitStructure;
 }
 /*-----------------------------------------------------------*/
 
-signed long xSerialGetChar( long lPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed long xSerialGetChar( long lPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 long lReturn = pdFAIL;
 
@@ -279,7 +279,7 @@ unsigned long ul;
 }
 /*-----------------------------------------------------------*/
 
-signed long xSerialPutChar( long lPort, signed char cOutChar, portTickType xBlockTime )
+signed long xSerialPutChar( long lPort, signed char cOutChar, TickType_t xBlockTime )
 {
 long lReturn;
 

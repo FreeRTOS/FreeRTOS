@@ -116,8 +116,8 @@ NOTE:  This is not intended to be an example of an efficient interrupt handler,
 but instead to load the kernel and interrupt mechanisms in order to test the
 FreeRTOS port.  Using a FIFO, DMA, circular buffer, etc. architecture will
 to improve efficiency. */
-static xQueueHandle xSerialTransmitQueue = NULL;
-static xQueueHandle xSerialReceiveQueue = NULL;
+static QueueHandle_t xSerialTransmitQueue = NULL;
+static QueueHandle_t xSerialReceiveQueue = NULL;
 static volatile portBASE_TYPE xTransmitStatus = 0UL;
 
 /*-----------------------------------------------------------*/
@@ -190,7 +190,7 @@ unsigned short usChar;
 }
 /*---------------------------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Just to remove compiler warnings about unused parameters. */
 	( void )pxPort;
@@ -199,7 +199,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*---------------------------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 portBASE_TYPE xReturn = pdPASS;
 

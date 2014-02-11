@@ -106,7 +106,7 @@ driver to the uIP stack. */
 #define uipDONT_BLOCK				0UL
 
 /* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT    ( 100 / portTICK_RATE_MS )
+#define uipINIT_WAIT    ( 100 / portTICK_PERIOD_MS )
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
@@ -136,7 +136,7 @@ static void prvEMACEventListener( unsigned long ulISREvents );
  * The callback function that is assigned to both the periodic timer and the
  * ARP timer.
  */
-static void prvUIPTimerCallback( xTimerHandle xTimer );
+static void prvUIPTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Initialise the MAC hardware.
@@ -158,7 +158,7 @@ clock_time_t clock_time( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send TCP/IP events to the uIP stack. */
-xQueueHandle xEMACEventQueue = NULL;
+QueueHandle_t xEMACEventQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -286,7 +286,7 @@ struct uip_eth_addr xAddr;
 static void prvInitialise_uIP( void )
 {
 uip_ipaddr_t xIPAddr;
-xTimerHandle xARPTimer, xPeriodicTimer;
+TimerHandle_t xARPTimer, xPeriodicTimer;
 
 	uip_init();
 	uip_ipaddr( &xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
@@ -301,14 +301,14 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 
 	/* Create and start the uIP timers. */
 	xARPTimer = xTimerCreate( 	"ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
-								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
+								( 10000UL / portTICK_PERIOD_MS ), /* Timer period. */
 								pdTRUE, /* Autor-reload. */
 								( void * ) uipARP_TIMER,
 								prvUIPTimerCallback
 							);
 
 	xPeriodicTimer = xTimerCreate( 	"PeriodicTimer",
-									( 500UL / portTICK_RATE_MS ),
+									( 500UL / portTICK_PERIOD_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,
 									prvUIPTimerCallback
@@ -370,7 +370,7 @@ void vEMACWrite( void )
 {
 const long lMaxAttempts = 10;
 long lAttempt;
-const portTickType xShortDelay = ( 5 / portTICK_RATE_MS );
+const TickType_t xShortDelay = ( 5 / portTICK_PERIOD_MS );
 
 	/* Try to send data to the Ethernet.  Keep trying for a while if data cannot
 	be sent immediately.  Note that this will actually cause the data to be sent
@@ -390,7 +390,7 @@ const portTickType xShortDelay = ( 5 / portTICK_RATE_MS );
 }
 /*-----------------------------------------------------------*/
 
-static void prvUIPTimerCallback( xTimerHandle xTimer )
+static void prvUIPTimerCallback( TimerHandle_t xTimer )
 {
 static const unsigned long ulARPTimerExpired = uipARP_TIMER_EVENT;
 static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;

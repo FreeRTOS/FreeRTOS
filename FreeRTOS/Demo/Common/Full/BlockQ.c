@@ -99,7 +99,7 @@ Changes from V1.00:
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 
 Changes from V4.0.2
 
@@ -125,8 +125,8 @@ Changes from V4.0.2
 /* Structure used to pass parameters to the blocking queue tasks. */
 typedef struct BLOCKING_QUEUE_PARAMETERS
 {
-	xQueueHandle xQueue;					/*< The queue to be used by the task. */
-	portTickType xBlockTime;			/*< The block time to use on queue reads/writes. */
+	QueueHandle_t xQueue;					/*< The queue to be used by the task. */
+	TickType_t xBlockTime;			/*< The block time to use on queue reads/writes. */
 	volatile short *psCheckVariable;	/*< Incremented on each successful cycle to check the task is still running. */
 } xBlockingQueueParameters;
 
@@ -154,8 +154,8 @@ xBlockingQueueParameters *pxQueueParameters1, *pxQueueParameters2;
 xBlockingQueueParameters *pxQueueParameters3, *pxQueueParameters4;
 xBlockingQueueParameters *pxQueueParameters5, *pxQueueParameters6;
 const unsigned portBASE_TYPE uxQueueSize1 = 1, uxQueueSize5 = 5;
-const portTickType xBlockTime = ( portTickType ) 1000 / portTICK_RATE_MS;
-const portTickType xDontBlock = ( portTickType ) 0;
+const TickType_t xBlockTime = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
+const TickType_t xDontBlock = ( TickType_t ) 0;
 
 	/* Create the first two tasks as described at the top of the file. */ 
 	

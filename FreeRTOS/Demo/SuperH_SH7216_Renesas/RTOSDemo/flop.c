@@ -109,7 +109,7 @@ static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned
 
 void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 {
-xTaskHandle xCreatedTask;
+TaskHandle_t xCreatedTask;
 
 	/* Create one of the floating point tasks... */
 	xTaskCreate( vCompetingMathTask1, "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, &xCreatedTask );

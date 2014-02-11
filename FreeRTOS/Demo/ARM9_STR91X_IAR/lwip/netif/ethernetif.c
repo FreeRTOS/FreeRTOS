@@ -58,7 +58,7 @@
 #define IFNAME1 'm'
 
 /* The time to block waiting for input. */
-#define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( portTickType ) 100 )
+#define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( TickType_t ) 100 )
 
 /* Interrupt status bit definition. */
 #define DMI_RX_CURRENT_DONE 0x8000
@@ -68,7 +68,7 @@ extern u8 TxBuff[1520];
 static u8_t s_rxBuff[1520];
 
 /* The semaphore used by the ISR to wake the lwIP task. */
-static xSemaphoreHandle s_xSemaphore = NULL;
+static SemaphoreHandle_t s_xSemaphore = NULL;
 
 struct ethernetif {
   struct eth_addr *ethaddr;
@@ -146,7 +146,7 @@ static void low_level_init(struct netif *netif)
 
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
-  static xSemaphoreHandle xTxSemaphore = NULL;
+  static SemaphoreHandle_t xTxSemaphore = NULL;
   struct pbuf *q;
   u32_t l = 0;
 
@@ -199,7 +199,7 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 static struct pbuf *
 low_level_input(struct netif *netif)
 {
-  static xSemaphoreHandle xRxSemaphore = NULL;
+  static SemaphoreHandle_t xRxSemaphore = NULL;
   struct pbuf *p, *q;
   u16_t len, l;
 

@@ -74,11 +74,11 @@ void vEMACISR_Wrapper( void ) __attribute__((naked));
 function to ensure the stack frame is correctly set up. */
 void vEMACISR_Handler( void ) __attribute__((noinline));
 
-static xSemaphoreHandle xEMACSemaphore;
+static SemaphoreHandle_t xEMACSemaphore;
 
 /*-----------------------------------------------------------*/
 
-void vPassEMACSemaphore( xSemaphoreHandle xSemaphore )
+void vPassEMACSemaphore( SemaphoreHandle_t xSemaphore )
 {
 	xEMACSemaphore = xSemaphore;
 }

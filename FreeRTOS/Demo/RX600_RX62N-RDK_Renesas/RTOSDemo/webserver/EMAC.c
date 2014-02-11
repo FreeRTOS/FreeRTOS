@@ -78,7 +78,7 @@
 #include "net/uip.h"
 
 /* The time to wait between attempts to obtain a free buffer. */
-#define emacBUFFER_WAIT_DELAY_ms		( 3 / portTICK_RATE_MS )
+#define emacBUFFER_WAIT_DELAY_ms		( 3 / portTICK_PERIOD_MS )
 
 /* The number of times emacBUFFER_WAIT_DELAY_ms should be waited before giving
 up on attempting to obtain a free buffer all together. */
@@ -95,7 +95,7 @@ more than two. */
 #define emacNUM_BUFFERS		( emacNUM_RX_DESCRIPTORS + emacNUM_TX_BUFFERS )
 
 /* The time to wait for the Tx descriptor to become free. */
-#define emacTX_WAIT_DELAY_ms ( 10 / portTICK_RATE_MS )
+#define emacTX_WAIT_DELAY_ms ( 10 / portTICK_PERIOD_MS )
 
 /* The total number of times to wait emacTX_WAIT_DELAY_ms for the Tx descriptor to
 become free. */
@@ -503,12 +503,12 @@ static void prvResetMAC( void )
 {
 	/* Ensure the EtherC and EDMAC are enabled. */
 	SYSTEM.MSTPCRB.BIT.MSTPB15 = 0;
-	vTaskDelay( 100 / portTICK_RATE_MS );
+	vTaskDelay( 100 / portTICK_PERIOD_MS );
 	
 	EDMAC.EDMR.BIT.SWR = 1;	
 	
 	/* Crude wait for reset to complete. */
-	vTaskDelay( 500 / portTICK_RATE_MS );	
+	vTaskDelay( 500 / portTICK_PERIOD_MS );	
 }
 /*-----------------------------------------------------------*/
 
@@ -550,7 +550,7 @@ void vEMAC_ISR_Handler( void )
 {
 unsigned long ul = EDMAC.EESR.LONG;
 long lHigherPriorityTaskWoken = pdFALSE;
-extern xQueueHandle xEMACEventQueue;
+extern QueueHandle_t xEMACEventQueue;
 const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 
 	/* Has a Tx end occurred? */

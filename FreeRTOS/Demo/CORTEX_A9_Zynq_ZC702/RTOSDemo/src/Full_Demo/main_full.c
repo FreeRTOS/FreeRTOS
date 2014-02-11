@@ -293,8 +293,8 @@ void main_full( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
-portTickType xLastExecutionTime;
+TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
+TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 unsigned long ulErrorFound = pdFALSE;
 
@@ -363,7 +363,7 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound = pdTRUE;
 		}
 
-		if( xAreTimerDemoTasksStillRunning( ( portTickType ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
+		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
 		{
 			ulErrorFound = pdTRUE;
 		}

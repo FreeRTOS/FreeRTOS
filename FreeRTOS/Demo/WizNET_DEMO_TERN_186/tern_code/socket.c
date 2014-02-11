@@ -79,7 +79,7 @@ Function Implementation Section
 portBASE_TYPE prvProcessISR( void )
 {
 unsigned char status;
-extern xSemaphoreHandle xTCPSemaphore;
+extern SemaphoreHandle_t xTCPSemaphore;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 #ifdef I2CHIP_WINDOW

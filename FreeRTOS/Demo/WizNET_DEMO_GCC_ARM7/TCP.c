@@ -127,12 +127,12 @@ device. */
 #define tcpEINT0_VIC_ENABLE				( ( unsigned long ) 0x0020 )
 
 /* Various delays used in the driver. */
-#define tcpRESET_DELAY					( ( portTickType ) 16 / portTICK_RATE_MS )
-#define tcpINIT_DELAY					( ( portTickType ) 500 / portTICK_RATE_MS  )
-#define tcpLONG_DELAY					( ( portTickType ) 500 / portTICK_RATE_MS  )
-#define tcpSHORT_DELAY					( ( portTickType ) 5 / portTICK_RATE_MS )
-#define tcpCONNECTION_WAIT_DELAY		( ( portTickType ) 100 / portTICK_RATE_MS )
-#define tcpNO_DELAY						( ( portTickType ) 0 )
+#define tcpRESET_DELAY					( ( TickType_t ) 16 / portTICK_PERIOD_MS )
+#define tcpINIT_DELAY					( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
+#define tcpLONG_DELAY					( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
+#define tcpSHORT_DELAY					( ( TickType_t ) 5 / portTICK_PERIOD_MS )
+#define tcpCONNECTION_WAIT_DELAY		( ( TickType_t ) 100 / portTICK_PERIOD_MS )
+#define tcpNO_DELAY						( ( TickType_t ) 0 )
 
 /* Length of the data to read for various register reads. */
 #define tcpSTATUS_READ_LEN				( ( unsigned long ) 1 )
@@ -212,8 +212,8 @@ const unsigned char const ucDataEnableISR[]			= { i2cCHANNEL_0_ISR_ENABLE };
 const unsigned char const ucDataDisableISR[]		= { i2cCHANNEL_0_ISR_DISABLE };
 const unsigned char const ucDataClearInterrupt[]	= { i2cCLEAR_ALL_INTERRUPTS };
 
-static xSemaphoreHandle xMessageComplete = NULL;
-xQueueHandle xTCPISRQueue = NULL;
+static SemaphoreHandle_t xMessageComplete = NULL;
+QueueHandle_t xTCPISRQueue = NULL;
 
 /* Dynamically generate and send an html page. */
 static void prvSendSamplePage( void );

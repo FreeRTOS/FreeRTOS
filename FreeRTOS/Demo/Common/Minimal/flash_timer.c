@@ -77,10 +77,10 @@
 #include "flash_timer.h"
 
 /* The toggle rates are all a multple of ledFLASH_RATE_BASE. */
-#define ledFLASH_RATE_BASE	( ( ( portTickType ) 333 ) / portTICK_RATE_MS )
+#define ledFLASH_RATE_BASE	( ( ( TickType_t ) 333 ) / portTICK_PERIOD_MS )
 
 /* A block time of zero simple means "don't block". */
-#define ledDONT_BLOCK		( ( portTickType ) 0 )
+#define ledDONT_BLOCK		( ( TickType_t ) 0 )
 
 /*-----------------------------------------------------------*/
 
@@ -89,14 +89,14 @@
  * this function, and the timer ID is used within the function to determine
  * which timer has actually expired.
  */
-static void prvLEDTimerCallback( xTimerHandle xTimer );
+static void prvLEDTimerCallback( TimerHandle_t xTimer );
 
 /*-----------------------------------------------------------*/
 
 void vStartLEDFlashTimers( unsigned portBASE_TYPE uxNumberOfLEDs )
 {
 unsigned portBASE_TYPE uxLEDTimer;
-xTimerHandle xTimer;
+TimerHandle_t xTimer;
 
 	/* Create and start the requested number of timers. */
 	for( uxLEDTimer = 0; uxLEDTimer < uxNumberOfLEDs; ++uxLEDTimer )
@@ -122,7 +122,7 @@ xTimerHandle xTimer;
 }
 /*-----------------------------------------------------------*/
 
-static void prvLEDTimerCallback( xTimerHandle xTimer )
+static void prvLEDTimerCallback( TimerHandle_t xTimer )
 {
 portBASE_TYPE xTimerID;
 

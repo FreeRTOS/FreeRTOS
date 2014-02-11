@@ -39,16 +39,16 @@
 #include "semphr.h"
 
 /* ------------------------ Defines --------------------------------------- */
-#define SYS_MBOX_NULL           ( xQueueHandle )0
+#define SYS_MBOX_NULL           ( QueueHandle_t )0
 #define SYS_THREAD_NULL         NULL
-#define SYS_SEM_NULL            ( xSemaphoreHandle )0
+#define SYS_SEM_NULL            ( SemaphoreHandle_t )0
 #define SIO_FD_NULL             ( sio_fd_t )NULL
 
 /* ------------------------ Type definitions ------------------------------ */
 
 
-typedef xSemaphoreHandle sys_sem_t;
-typedef xQueueHandle sys_mbox_t;
+typedef SemaphoreHandle_t sys_sem_t;
+typedef QueueHandle_t sys_mbox_t;
 typedef void   *sys_thread_t;
 
 /* ------------------------ Prototypes ------------------------------------ */

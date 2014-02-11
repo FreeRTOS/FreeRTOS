@@ -168,9 +168,9 @@ little odd. */
 #define usbMAX_TX_MESSAGE_SIZE				( 128 )
 #define usbRX_COUNT_MASK					( ( unsigned long ) 0x7ff )
 #define AT91C_UDP_STALLSENT					AT91C_UDP_ISOERROR
-#define usbSHORTEST_DELAY					( ( portTickType ) 1 )
-#define usbINIT_DELAY						( ( portTickType ) 500 / portTICK_RATE_MS )
-#define usbSHORT_DELAY						( ( portTickType ) 50 / portTICK_RATE_MS )
+#define usbSHORTEST_DELAY					( ( TickType_t ) 1 )
+#define usbINIT_DELAY						( ( TickType_t ) 500 / portTICK_PERIOD_MS )
+#define usbSHORT_DELAY						( ( TickType_t ) 50 / portTICK_PERIOD_MS )
 #define usbEND_POINT_RESET_MASK				( ( unsigned long ) 0x0f )
 #define usbDATA_INC							( ( char ) 5 )
 #define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned long ) 8 )
@@ -542,7 +542,7 @@ static xISRStatus xISRMessages[ usbQUEUE_LENGTH + 1 ];
 static xTX_MESSAGE pxCharsForTx;
 
 /* Queue used to pass messages between the ISR and the task. */
-static xQueueHandle xUSBInterruptQueue;
+static QueueHandle_t xUSBInterruptQueue;
 
 /* ISR entry has to be written in the asm file as we want a context switch
 to occur from within the ISR.  See the port documentation on the FreeRTOS.org

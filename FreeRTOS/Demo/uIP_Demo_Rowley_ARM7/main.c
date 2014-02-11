@@ -135,8 +135,8 @@
 
 /* The rate at which the on board LED will toggle when there is/is not an 
 error. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 #define mainON_BOARD_LED_BIT		( ( unsigned long ) 0x80 )
 #define mainYELLOW_LED				( 1 << 11 )
 
@@ -212,7 +212,7 @@ int main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error.  If an error is detected then the delay period

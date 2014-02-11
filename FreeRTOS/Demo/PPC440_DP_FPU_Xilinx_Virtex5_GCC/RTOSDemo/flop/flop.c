@@ -114,7 +114,7 @@ static portDOUBLE dFlopRegisters[ mathNUMBER_OF_TASKS ][ portNO_FLOP_REGISTERS_T
 
 void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 {
-xTaskHandle xTaskJustCreated;
+TaskHandle_t xTaskJustCreated;
 portBASE_TYPE x, y;
 
 	/* Place known values into the buffers into which the flop registers are 

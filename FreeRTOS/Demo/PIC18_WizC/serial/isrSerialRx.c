@@ -91,7 +91,7 @@ Changes from V3.0.1
 		/*
 		 * Queue to interface between comms API and interrupt routine.
 		*/
-		extern xQueueHandle xRxedChars;
+		extern QueueHandle_t xRxedChars;
 		
 		/*
 		 * Because we are not allowed to use local variables here,

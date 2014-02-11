@@ -91,7 +91,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -103,7 +103,7 @@ Changes from V2.0.0
 /* Demo program include files. */
 #include "print.h"
 
-static xQueueHandle xPrintQueue;
+static QueueHandle_t xPrintQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -119,7 +119,7 @@ const unsigned portBASE_TYPE uxQueueSize = 20;
 void vPrintDisplayMessage( const char * const * ppcMessageToSend )
 {
 	#ifdef USE_STDIO
-		xQueueSend( xPrintQueue, ( void * ) ppcMessageToSend, ( portTickType ) 0 );
+		xQueueSend( xPrintQueue, ( void * ) ppcMessageToSend, ( TickType_t ) 0 );
 	#else
     	/* Stop warnings. */
 		( void ) ppcMessageToSend;
@@ -127,7 +127,7 @@ void vPrintDisplayMessage( const char * const * ppcMessageToSend )
 }
 /*-----------------------------------------------------------*/
 
-const char *pcPrintGetNextMessage( portTickType xPrintRate )
+const char *pcPrintGetNextMessage( TickType_t xPrintRate )
 {
 char *pcMessage;
 

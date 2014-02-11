@@ -36,7 +36,7 @@
 
 #include "FreeRTOS.h"
 
-typedef portTickType clock_time_t;
+typedef TickType_t clock_time_t;
 #define CLOCK_CONF_SECOND configTICK_RATE_HZ
 
 #endif /* __CLOCK_ARCH_H__ */

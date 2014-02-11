@@ -86,8 +86,8 @@ an example of an efficient driver. */
 #define serSET_FLAG						( 1 )
 
 /* The queues used to communicate between tasks and ISR's. */
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /* Flag used to indicate the tx status. */
 static volatile portBASE_TYPE xTxHasEnded;
@@ -122,7 +122,7 @@ unsigned short usBRG;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Only one port is supported. */
 	( void ) pxPort;
@@ -140,7 +140,7 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 

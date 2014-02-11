@@ -85,8 +85,8 @@ static signed char seg7_digits[4];
 
 void vStart7SegTasks( unsigned portBASE_TYPE uxPriority )
 {
-	xTaskCreate( prvRefreshTask, "7SegRefresh", x7segSTACK_SIZE, NULL, uxPriority, ( xTaskHandle *) NULL );
-	xTaskCreate( prvCountTask, "7SegCount",	x7segSTACK_SIZE, NULL, uxPriority, ( xTaskHandle *) NULL );
+	xTaskCreate( prvRefreshTask, "7SegRefresh", x7segSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t *) NULL );
+	xTaskCreate( prvCountTask, "7SegCount",	x7segSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t *) NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -121,7 +121,7 @@ const unsigned char apsx[4] =
 	0x08  /* A */
 };
 
-portTickType xRefreshRate, xLastRefreshTime;
+TickType_t xRefreshRate, xLastRefreshTime;
 
 /* Digit to scan */
 static int d = 0;
@@ -158,7 +158,7 @@ static int d = 0;
 
 static void prvCountTask( void *pvParameters )
 {
-portTickType xCountRate, xLastCountTime;
+TickType_t xCountRate, xLastCountTime;
 
 	/* Approximately 20HZ */
 	xCountRate = configTICK_RATE_HZ / 20;

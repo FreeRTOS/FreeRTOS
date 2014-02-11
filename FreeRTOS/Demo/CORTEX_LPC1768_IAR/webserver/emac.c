@@ -74,7 +74,7 @@
 #include "EthDev_LPC17xx.h"
 
 /* Time to wait between each inspection of the link status. */
-#define emacWAIT_FOR_LINK_TO_ESTABLISH ( 500 / portTICK_RATE_MS )
+#define emacWAIT_FOR_LINK_TO_ESTABLISH ( 500 / portTICK_PERIOD_MS )
 
 /* Short delay used in several places during the initialisation process. */
 #define emacSHORT_DELAY				   ( 2 )
@@ -87,7 +87,7 @@
 #define emacDIV_44					( 0x28 )
 
 /* If no buffers are available, then wait this long before looking again.... */
-#define emacBUFFER_WAIT_DELAY	( 3 / portTICK_RATE_MS )
+#define emacBUFFER_WAIT_DELAY	( 3 / portTICK_PERIOD_MS )
 
 /* ...and don't look more than this many times. */
 #define emacBUFFER_WAIT_ATTEMPTS	( 30 )
@@ -144,7 +144,7 @@ static unsigned short prvReadPHY( unsigned char ucPhyReg, long *plStatus );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used to wake the uIP task when data arrives. */
-extern xSemaphoreHandle xEMACSemaphore;
+extern SemaphoreHandle_t xEMACSemaphore;
 
 /* Each ucBufferInUse index corresponds to a position in the pool of buffers.
 If the index contains a 1 then the buffer within pool is in use, if it

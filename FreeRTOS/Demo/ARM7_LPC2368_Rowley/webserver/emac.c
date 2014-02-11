@@ -23,7 +23,7 @@
 #include "emac.h"
 
 /* The semaphore used to wake the uIP task when data arives. */
-xSemaphoreHandle xEMACSemaphore = NULL;
+SemaphoreHandle_t xEMACSemaphore = NULL;
 
 static unsigned short *rptr;
 static unsigned short *tptr;

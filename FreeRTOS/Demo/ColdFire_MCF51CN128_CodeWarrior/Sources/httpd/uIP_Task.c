@@ -98,7 +98,7 @@ clock_time_t clock_time( void );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used by the ISR to wake the uIP task. */
-extern xSemaphoreHandle xFECSemaphore;
+extern SemaphoreHandle_t xFECSemaphore;
 
 /*-----------------------------------------------------------*/
 

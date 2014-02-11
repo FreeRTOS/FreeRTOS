@@ -144,8 +144,8 @@
 
 /* Toggle rate for the on board LED - which is dependent on whether or not
 an error has been detected. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 5000 )
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 250 )
+#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 5000 )
+#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 250 )
 
 /* Baud rate used by the serial port tasks. */
 #define mainCOM_TEST_BAUD_RATE		( ( unsigned long ) 115200 )
@@ -241,13 +241,13 @@ void main( void )
 	must not be used with the co-operative scheduler. */
 	#if configUSE_PREEMPTION == 1
 	{
-		xTaskCreate( vRegisterCheck, "RegChck", configMINIMAL_STACK_SIZE, mainDUMMY_POINTER, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
-		xTaskCreate( vFLOPCheck1, "FLOP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
-		xTaskCreate( vFLOPCheck2, "FLOP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, ( xTaskHandle * ) NULL );
+		xTaskCreate( vRegisterCheck, "RegChck", configMINIMAL_STACK_SIZE, mainDUMMY_POINTER, tskIDLE_PRIORITY, ( TaskHandle_t * ) NULL );
+		xTaskCreate( vFLOPCheck1, "FLOP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, ( TaskHandle_t * ) NULL );
+		xTaskCreate( vFLOPCheck2, "FLOP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, ( TaskHandle_t * ) NULL );
 	}
 	#endif 
 
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, ( xTaskHandle * ) NULL );
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, ( TaskHandle_t * ) NULL );
 
 	/* Finally kick off the scheduler.  This function should never return. */
 	vTaskStartScheduler();

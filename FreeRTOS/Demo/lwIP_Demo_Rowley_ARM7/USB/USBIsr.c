@@ -88,7 +88,7 @@
 
 /* Messages and queue used to communicate between the ISR and the USB task. */
 static xISRStatus xISRMessages[ usbQUEUE_LENGTH + 1 ];
-extern xQueueHandle xUSBInterruptQueue;
+extern QueueHandle_t xUSBInterruptQueue;
 /*-----------------------------------------------------------*/
 
 /* The ISR can cause a context switch so is declared naked. */

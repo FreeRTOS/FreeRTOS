@@ -148,11 +148,11 @@
 #define mainERROR_LED             ( 7 )
 
 //! The period between executions of the check task.
-#define mainCHECK_PERIOD          ( ( portTickType ) 3000 / portTICK_RATE_MS  )
+#define mainCHECK_PERIOD          ( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
 
 //! If an error is detected in a task, the vErrorChecks task will enter in an
 //! infinite loop flashing the LED at this rate.
-#define mainERROR_FLASH_RATE      ( (portTickType) 500 / portTICK_RATE_MS )
+#define mainERROR_FLASH_RATE      ( (TickType_t) 500 / portTICK_PERIOD_MS )
 
 /*! \name Constants used by the vMemCheckTask() task.
  */
@@ -246,7 +246,7 @@ static void vErrorChecks( void *pvParameters )
 {
 static volatile unsigned long ulDummyVariable = 3UL;
 unsigned long ulMemCheckTaskRunningCount;
-xTaskHandle xCreatedTask;
+TaskHandle_t xCreatedTask;
 portBASE_TYPE bSuicidalTask = 0;
 
 	/* The parameters are not used.  Prevent compiler warnings. */

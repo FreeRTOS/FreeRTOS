@@ -201,7 +201,7 @@ information.  */
 
 /* The frequency at which the check timer (described in the comments at the top
 of this file) will call its callback function. */
-#define mainCHECK_TIMER_PERIOD			( 5000UL / ( unsigned long ) portTICK_RATE_MS )
+#define mainCHECK_TIMER_PERIOD			( 5000UL / ( unsigned long ) portTICK_PERIOD_MS )
 
 /* Misc. */
 #define mainDONT_BLOCK					( 0 )
@@ -239,7 +239,7 @@ static void prvGenerateStatusMessage( char *pcBuffer, unsigned long ulStatusValu
 /*
  * Defines the 'check' functionality as described at the top of this file.  This
  * function is the callback function for the 'check' timer. */
-static void vCheckTimerCallback( xTimerHandle xTimer );
+static void vCheckTimerCallback( TimerHandle_t xTimer );
 
 /*-----------------------------------------------------------*/
 
@@ -251,10 +251,10 @@ volatile unsigned short usRegTest1Counter = 0, usRegTest2Counter = 0;
 
 /* The handle of the queue used to send messages from tasks and interrupts to
 the LCD task. */
-static xQueueHandle xLCDQueue = NULL;
+static QueueHandle_t xLCDQueue = NULL;
 
 /* The 'check' timer, as described at the top of this file. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /* The definition of each message sent from tasks and interrupts to the LCD
 task. */
@@ -471,12 +471,12 @@ xQueueMessage xMessage;
 		
 		/* Block for 10 milliseconds so this task does not utilise all the CPU
 		time and debouncing of the button is not necessary. */
-		vTaskDelay( 10 / portTICK_RATE_MS );
+		vTaskDelay( 10 / portTICK_PERIOD_MS );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void vCheckTimerCallback( xTimerHandle xTimer )
+static void vCheckTimerCallback( TimerHandle_t xTimer )
 {
 static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 
@@ -513,7 +513,7 @@ static xQueueMessage xStatusMessage = { mainMESSAGE_STATUS, pdPASS };
 		xStatusMessage.ulMessageValue = mainERROR_COUNT_SEM_TEST;
 	}
 	
-	if( xAreTimerDemoTasksStillRunning( ( portTickType ) mainCHECK_TIMER_PERIOD ) != pdPASS )
+	if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainCHECK_TIMER_PERIOD ) != pdPASS )
 	{
 		xStatusMessage.ulMessageValue = mainERROR_TIMER_TEST;
 	}
@@ -666,7 +666,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pxTask;
 	( void ) pcTaskName;

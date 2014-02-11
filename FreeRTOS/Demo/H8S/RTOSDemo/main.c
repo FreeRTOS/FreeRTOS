@@ -128,8 +128,8 @@ that all the other tasks are operating without error.  If no errors are found
 the LED is toggled with mainCHECK_PERIOD frequency.  If an error is found
 the the toggle rate increases to mainERROR_CHECK_PERIOD. */
 #define mainCHECK_TASK_LED				( 5 )
-#define mainCHECK_PERIOD				( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_CHECK_PERIOD			( ( portTickType ) 500 / portTICK_RATE_MS )
+#define mainCHECK_PERIOD				( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_CHECK_PERIOD			( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* Constants used by the vMemCheckTask() task. */
 #define mainCOUNT_INITIAL_VALUE		( ( unsigned long ) 0 )
@@ -205,10 +205,10 @@ int main( void )
  */
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainCHECK_PERIOD;
+TickType_t xDelayPeriod = mainCHECK_PERIOD;
 volatile unsigned long ulMemCheckTaskRunningCount;
-xTaskHandle xCreatedTask;
-portTickType xLastWakeTime;
+TaskHandle_t xCreatedTask;
+TickType_t xLastWakeTime;
 
 	/* Initialise xLastWakeTime to ensure the first call to vTaskDelayUntil()
 	functions correctly. */

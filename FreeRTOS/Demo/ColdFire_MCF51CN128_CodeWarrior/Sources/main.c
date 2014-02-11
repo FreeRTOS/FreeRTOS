@@ -196,7 +196,7 @@ extern void vBasicWEBServer( void *pv );
 void vApplicationTickHook( void )
 {
 static unsigned long ulExecutionCount = 0, ulLastRegTest1Count = 0, ulLastRegTest2Count = 0;
-const unsigned long ulExecutionRate = 5000 / portTICK_RATE_MS;
+const unsigned long ulExecutionRate = 5000 / portTICK_PERIOD_MS;
 
     /* Increment the count of how many times the tick hook has been called. */
     ulExecutionCount++;
@@ -299,7 +299,7 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This will get called if a stack overflow is detected during the context
 	switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack

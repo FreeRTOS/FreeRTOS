@@ -96,12 +96,12 @@ void vMACHandleTask( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used to wake the uIP task when data arrives. */
-xSemaphoreHandle xEMACSemaphore = NULL;
+SemaphoreHandle_t xEMACSemaphore = NULL;
 
 /* The semaphore used to wake the interrupt handler task.  The peripheral
 is processed at the task level to prevent the need to read the entire FIFO from
 within the ISR itself. */
-xSemaphoreHandle xMACInterruptSemaphore = NULL;
+SemaphoreHandle_t xMACInterruptSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers. */

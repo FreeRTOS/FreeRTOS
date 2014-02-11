@@ -221,7 +221,7 @@ unsigned long ulTIM6_OverflowCount = 0UL;
 
 /* The handle of the queue used to send messages from tasks and interrupts to
 the LCD task. */
-static xQueueHandle xLCDQueue = NULL;
+static QueueHandle_t xLCDQueue = NULL;
 
 /* The definition of each message sent from tasks and interrupts to the LCD
 task. */
@@ -411,7 +411,7 @@ long lHigherPriorityTaskWoken = pdFALSE;
 void vApplicationTickHook( void )
 {
 static unsigned long ulCounter = 0;
-static const unsigned long ulCheckFrequency = 5000UL / portTICK_RATE_MS;
+static const unsigned long ulCheckFrequency = 5000UL / portTICK_PERIOD_MS;
 long lHigherPriorityTaskWoken = pdFALSE;
 
 /* Define the status message that is sent to the LCD task.  By default the
@@ -475,7 +475,7 @@ xQueueMessage xMessage;
 
 		/* Block for 10 milliseconds so this task does not utilise all the CPU
 		time and debouncing of the button is not necessary. */
-		vTaskDelay( 10 / portTICK_RATE_MS );
+		vTaskDelay( 10 / portTICK_PERIOD_MS );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -578,7 +578,7 @@ void TIM6_IRQHandler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

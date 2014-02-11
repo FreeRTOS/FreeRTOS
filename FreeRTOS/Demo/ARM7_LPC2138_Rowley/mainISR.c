@@ -79,7 +79,7 @@ void vButtonHandler( void ) __attribute__ ((noinline));
 
 void vButtonHandler( void )
 {
-extern xSemaphoreHandle xButtonSemaphore;
+extern SemaphoreHandle_t xButtonSemaphore;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	xSemaphoreGiveFromISR( xButtonSemaphore, &xHigherPriorityTaskWoken );

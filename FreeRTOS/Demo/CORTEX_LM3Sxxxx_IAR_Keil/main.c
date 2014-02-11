@@ -155,7 +155,7 @@ and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* Size of the stack allocated to the uIP task. */
 #define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 3 )
@@ -221,14 +221,14 @@ extern void vSetupHighFrequencyTimer( void );
 /*
  * Hook functions that can get called by the kernel.
  */
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
 
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the OLED task. */
-xQueueHandle xOLEDQueue;
+QueueHandle_t xOLEDQueue;
 
 /* The welcome text. */
 const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
@@ -468,7 +468,7 @@ void ( *vOLEDClear )( void ) = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle *pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName )
 {
 	( void ) pxTask;
 	( void ) pcTaskName;

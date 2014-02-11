@@ -59,23 +59,23 @@
 
 /* Constants to setup and access the USART. */
 #define serINVALID_COMPORT_HANDLER        ( ( xComPortHandle ) 0 )
-#define serINVALID_QUEUE                  ( ( xQueueHandle ) 0 )
+#define serINVALID_QUEUE                  ( ( QueueHandle_t ) 0 )
 #define serHANDLE                         ( ( xComPortHandle ) 1 )
-#define serNO_BLOCK                       ( ( portTickType ) 0 )
+#define serNO_BLOCK                       ( ( TickType_t ) 0 )
 
 /*-----------------------------------------------------------*/
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
 /* Forward declaration. */
 static void vprvSerialCreateQueues( unsigned portBASE_TYPE uxQueueLength,
-									xQueueHandle *pxRxedChars,
-									xQueueHandle *pxCharsForTx );
+									QueueHandle_t *pxRxedChars,
+									QueueHandle_t *pxCharsForTx );
 
 /*-----------------------------------------------------------*/
 
@@ -290,7 +290,7 @@ int cd; /* USART Clock Divider. */
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports UART0. */
 	( void ) pxPort;
@@ -328,7 +328,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 volatile avr32_usart_t  *usart = serialPORT_USART;
 
@@ -359,7 +359,7 @@ void vSerialClose( xComPortHandle xPort )
 /*
  * Create the rx and tx queues.
  */
-static void vprvSerialCreateQueues(  unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx )
+static void vprvSerialCreateQueues(  unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx )
 {
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );

@@ -119,7 +119,7 @@
 #include "BlockQ.h"
 
 /* Delay between cycles of the 'check' task. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* UART configuration - note this does not use the FIFO so is not very 
 efficient. */
@@ -137,8 +137,8 @@ efficient. */
 
 /* Misc. */
 #define mainQUEUE_SIZE				( 3 )
-#define mainDEBOUNCE_DELAY			( ( portTickType ) 150 / portTICK_RATE_MS )
-#define mainNO_DELAY				( ( portTickType ) 0 )
+#define mainDEBOUNCE_DELAY			( ( TickType_t ) 150 / portTICK_PERIOD_MS )
+#define mainNO_DELAY				( ( TickType_t ) 0 )
 /*
  * Configure the processor and peripherals for this demo. 
  */
@@ -166,10 +166,10 @@ static volatile char *pcNextChar;
 
 /* The semaphore used to wake the button handler task from within the GPIO
 interrupt handler. */
-xSemaphoreHandle xButtonSemaphore;
+SemaphoreHandle_t xButtonSemaphore;
 
 /* The queue used to send strings to the print task for display on the LCD. */
-xQueueHandle xPrintQueue;
+QueueHandle_t xPrintQueue;
 
 /* Newer library version. */
 extern void UARTConfigSetExpClk(unsigned long ulBase, unsigned long ulUARTClk, unsigned long ulBaud, unsigned long ulConfig);
@@ -212,7 +212,7 @@ int main( void )
 static void vCheckTask( void *pvParameters )
 {
 portBASE_TYPE xErrorOccurred = pdFALSE;
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 const char *pcPassMessage = "PASS";
 const char *pcFailMessage = "FAIL";
 

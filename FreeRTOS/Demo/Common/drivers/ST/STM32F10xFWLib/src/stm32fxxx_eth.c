@@ -64,8 +64,8 @@ ETH_DMADESCTypeDef  *DMAPTPRxDescToGet;
 #define  ETH_ERROR              ((u32)0)
 #define  ETH_SUCCESS            ((u32)1)
 
-#define ethFIVE_SECONDS			( 5000 / portTICK_RATE_MS )
-#define ethHUNDRED_MS			( 100 / portTICK_RATE_MS )
+#define ethFIVE_SECONDS			( 5000 / portTICK_PERIOD_MS )
+#define ethHUNDRED_MS			( 100 / portTICK_PERIOD_MS )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -191,7 +191,7 @@ u32 ETH_Init(ETH_InitTypeDef* ETH_InitStruct, u16 PHYAddress)
   }
 
   /* Delay to assure PHY reset */
-  vTaskDelay( 250 / portTICK_RATE_MS );
+  vTaskDelay( 250 / portTICK_PERIOD_MS );
 
   if(ETH_InitStruct->ETH_AutoNegotiation != ETH_AutoNegotiation_Disable)
   {
@@ -277,7 +277,7 @@ u32 ETH_Init(ETH_InitTypeDef* ETH_InitStruct, u16 PHYAddress)
       return ETH_ERROR;
     }
 
-    vTaskDelay( 250 / portTICK_RATE_MS );
+    vTaskDelay( 250 / portTICK_PERIOD_MS );
   }
 
 /*------------------------- ETHERNET MACCR Configuration ---------------------*/

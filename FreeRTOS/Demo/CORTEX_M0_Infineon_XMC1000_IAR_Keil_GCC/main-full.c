@@ -131,20 +131,20 @@
 
 /* The period after which the check timer will expire provided no errors have
 been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
 
 /* The base toggle rate used by the flash timers.  Each toggle rate is a
 multiple of this. */
-#define mainFLASH_TIMER_BASE_RATE			( 200UL / portTICK_RATE_MS )
+#define mainFLASH_TIMER_BASE_RATE			( 200UL / portTICK_PERIOD_MS )
 
 /* The LED toggle by the check timer. */
 #define mainCHECK_LED						( 4 )
@@ -170,13 +170,13 @@ extern void vMainToggleLED( void );
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The flash timer callback function, as described at the top of this file.
  * This callback function is assigned to three separate software timers.
  */
-static void prvFlashTimerCallback( xTimerHandle xTimer );
+static void prvFlashTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The task that toggles an LED each time the semaphore 'given' by the tick
@@ -201,12 +201,12 @@ volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 /* The semaphore that is given by the tick hook function (defined in main.c)
 and taken by the task implemented by the prvSemaphoreTakeTask() function.  The
 task toggles LED mainSEMAPHORE_LED each time the semaphore is taken. */
-xSemaphoreHandle xLEDSemaphore = NULL;
+SemaphoreHandle_t xLEDSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
-xTimerHandle xTimer = NULL;
+TimerHandle_t xTimer = NULL;
 unsigned long ulTimer;
 const unsigned long ulTimersToCreate = 3L;
 /* The register test tasks are asm functions that don't use a stack.  The
@@ -297,7 +297,7 @@ const size_t xRegTestStackSize = 25U;
 /*-----------------------------------------------------------*/
 
 /* See the description at the top of this file. */
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
@@ -387,7 +387,7 @@ static void prvSemaphoreTakeTask( void *pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static void prvFlashTimerCallback( xTimerHandle xTimer )
+static void prvFlashTimerCallback( TimerHandle_t xTimer )
 {
 unsigned long ulLED;
 

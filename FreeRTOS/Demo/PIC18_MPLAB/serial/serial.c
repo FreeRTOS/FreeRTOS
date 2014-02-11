@@ -71,7 +71,7 @@ Changes from V1.2.5
 
 Changes from V2.0.0
 
-	+ Use portTickType in place of unsigned pdLONG for delay periods.
+	+ Use TickType_t in place of unsigned pdLONG for delay periods.
 	+ cQueueReieveFromISR() used in place of xQueueReceive() in ISR.
 */
 
@@ -112,8 +112,8 @@ void vSerialRxISR( void );
 /*-----------------------------------------------------------*/
 
 /* Queues to interface between comms API and interrupt routines. */
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -177,7 +177,7 @@ xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWant
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -192,7 +192,7 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, po
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	/* Return false if after the block time there is no room on the Tx queue. */
 	if( xQueueSend( xCharsForTx, ( const void * ) &cOutChar, xBlockTime ) != pdPASS )

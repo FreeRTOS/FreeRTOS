@@ -181,13 +181,13 @@ The tasks check that the values are passed in correctly. */
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 5000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 5000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* A block time of zero simple means "Don't Block". */
 #define mainDONT_BLOCK				( 0UL )
@@ -222,7 +222,7 @@ void vApplicationIdleHook( void );
  * it is possible that the stack overflow will have corrupted these - in which
  * case pxCurrentTCB can be inspected to find the same information.
  */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
 /*
  * The reg test tasks as described at the top of this file.
@@ -240,7 +240,7 @@ static void prvRegTest2Implementation( void );
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 
 /*-----------------------------------------------------------*/
@@ -253,7 +253,7 @@ unsigned long ulRegTest1CycleCount = 0UL, ulRegTest2CycleCount = 0UL;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -317,7 +317,7 @@ extern void HardwareSetup( void );
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE, lErrorStatus = pdPASS;
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
@@ -437,7 +437,7 @@ void vApplicationMallocFailedHook( void )
 
 /* This function is explained by the comments above its prototype at the top
 of this file. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

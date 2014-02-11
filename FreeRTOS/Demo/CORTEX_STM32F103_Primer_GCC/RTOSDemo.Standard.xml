@@ -1039,7 +1039,7 @@
    <type Family="Base" Name="long unsigned int" ID="19834"/>
    <type Family="Base" Name="char" ID="19841"/>
    <type Family="Pointer" TI="19832" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="19853" toTI="19832"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="19853" toTI="19832"/>
    <type Family="Pointer" TI="19832" toTI="0"/>
    <type Family="typedef" Name="xQueueHandle" Line="65" ID="19864" toTI="19832"/>
    <type Family="Pointer" TI="19832" toTI="0"/>
@@ -1090,10 +1090,10 @@
    <variable Name="ulLoopCounter2" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" Line="119" Addr="0x20000684" TI="19848"/>
    <variable Name="ulGuardedVariable" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" Line="122" Addr="0x20000694" TI="19848"/>
    <type Family="Pointer" TI="19832" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="19853" toTI="19832"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="19853" toTI="19832"/>
    <variable Name="xHighPriorityMutexTask" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" Line="126" Addr="0x20000690" TI="19853"/>
    <type Family="Pointer" TI="19832" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="19853" toTI="19832"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="19853" toTI="19832"/>
    <variable Name="xMediumPriorityMutexTask" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\GenQTest.c" Line="126" Addr="0x2000068C" TI="19853"/>
   </module>
   <module Name="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\BlockQ.c" >
@@ -1162,7 +1162,7 @@
    <type Family="Base" Name="unsigned char" ID="21168"/>
    <type Family="typedef" Name="portTickType" Line="83" ID="21183" toTI="21154"/>
    <type Family="Pointer" TI="21126" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="21194" toTI="21126"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="21194" toTI="21126"/>
    <type Family="Pointer" TI="21126" toTI="0"/>
    <type Family="typedef" Name="xQueueHandle" Line="65" ID="21205" toTI="21126"/>
    <function Name="xAreBlockTimeTestTasksStillRunning" TI="21128" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" Line="466">
@@ -1192,7 +1192,7 @@
    <type Family="typedef" Name="xQueueHandle" Line="65" ID="21205" toTI="21126"/>
    <variable Name="xTestQueue" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" Line="85" Addr="0x200006C4" TI="21205"/>
    <type Family="Pointer" TI="21126" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="21194" toTI="21126"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="21194" toTI="21126"/>
    <variable Name="xSecondary" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" Line="89" Addr="0x200006C8" TI="21194"/>
    <variable Name="xPrimaryCycles" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" Line="92" Addr="0x200006B0" TI="21149"/>
    <variable Name="xSecondaryCycles" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\blocktim.c" Line="92" Addr="0x200006B8" TI="21149"/>
@@ -1213,7 +1213,7 @@
    <type Family="Base" Name="long unsigned int" ID="21727"/>
    <type Family="Base" Name="char" ID="21734"/>
    <type Family="Pointer" TI="21725" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="21751" toTI="21725"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="21751" toTI="21725"/>
    <type Family="Pointer" TI="21725" toTI="0"/>
    <type Family="typedef" Name="xQueueHandle" Line="65" ID="21762" toTI="21725"/>
    <function Name="xAreQueuePeekTasksStillRunning" TI="21715" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" Line="427">
@@ -1255,13 +1255,13 @@
    <variable Name="xErrorDetected" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" Line="95" Addr="0x200006D8" TI="21741"/>
    <variable Name="ulLoopCounter" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" Line="99" Addr="0x200006D0" TI="21746"/>
    <type Family="Pointer" TI="21725" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="21751" toTI="21725"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="21751" toTI="21725"/>
    <variable Name="xMediumPriorityTask" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" Line="102" Addr="0x20004D20" TI="21751"/>
    <type Family="Pointer" TI="21725" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="21751" toTI="21725"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="21751" toTI="21725"/>
    <variable Name="xHighPriorityTask" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" Line="102" Addr="0x20004D1C" TI="21751"/>
    <type Family="Pointer" TI="21725" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="21751" toTI="21725"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="21751" toTI="21725"/>
    <variable Name="xHighestPriorityTask" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\QPeek.c" Line="102" Addr="0x20004D24" TI="21751"/>
   </module>
   <module Name="C:\E\temp\rc\5\FreeRTOSV5.3.1\Demo\Common\Minimal\PollQ.c" >
@@ -1606,7 +1606,7 @@
    </type>
    <type Family="typedef" Name="xList" Line="122" ID="26206" toTI="26135"/>
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <type Family="ComponentList" Name="xTIME_OUT" Line="91" ID="26228">
     <Component Name="xOverflowCount" TI="26240" Line="92" Offs="0"/>
     <Component Name="xTimeOnEntering" TI="26254" Line="93" Offs="4"/>
@@ -1627,7 +1627,7 @@
    <type Family="typedef" Name="tskTCB" Line="103" ID="26419" toTI="26280"/>
    <function Name="xTaskIsTaskSuspended" TI="25881" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="872">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
     <parameter Name="xTask" TI="26217" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="872" Addr="0x0" Param="Yes"/>
     <variable Name="xReturn" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="873" Addr="0x0" TI="25881"/>
    <type Family="Pointer" TI="26512" toTI="26518"/>
@@ -1646,26 +1646,26 @@
    <function Name="vTaskMissedYield" TI="0" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="1727">
    </function >
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <function Name="xTaskGetCurrentTaskHandle" TI="26217" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2096">
    </function >
    <function Name="vTaskPriorityDisinherit" TI="0" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2170">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <type Family="Pointer" TI="26785" toTI="26217"/>
     <parameter Name="pxMutexHolder" TI="26780" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2170" Addr="0x0" Param="Yes"/>
    <type Family="Pointer" TI="26796" toTI="26419"/>
     <variable Name="pxTCB" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2171" Addr="0x4" TI="26791"/>
    </function >
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <type Family="Pointer" TI="26785" toTI="26217"/>
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <type Family="Pointer" TI="26785" toTI="26217"/>
    <function Name="vTaskPriorityInherit" TI="0" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2138">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <type Family="Pointer" TI="26785" toTI="26217"/>
     <parameter Name="pxMutexHolder" TI="26780" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2138" Addr="0x0" Param="Yes"/>
     <variable Name="pxTCB" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="2139" Addr="0x4" TI="26791"/>
@@ -1686,7 +1686,7 @@
    </function >
    <function Name="uxTaskPriorityGet" TI="25891" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="702">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
     <parameter Name="pxTask" TI="26217" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="702" Addr="0x0" Param="Yes"/>
     <variable Name="pxTCB" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="703" Addr="0x0" TI="26796"/>
     <variable Name="uxReturn" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="704" Addr="0x4" TI="25891"/>
@@ -1707,19 +1707,19 @@
    </function >
    <function Name="vTaskResume" TI="0" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="903">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
     <parameter Name="pxTaskToResume" TI="26217" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="903" Addr="0x0" Param="Yes"/>
     <variable Name="pxTCB" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="904" Addr="0x5" TI="26796"/>
    </function >
    <function Name="vTaskSuspend" TI="0" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="829">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
     <parameter Name="pxTaskToSuspend" TI="26217" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="829" Addr="0x0" Param="Yes"/>
     <variable Name="pxTCB" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="830" Addr="0x4" TI="26796"/>
    </function >
    <function Name="vTaskPrioritySet" TI="0" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="724">
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
     <parameter Name="pxTask" TI="26217" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="724" Addr="0x0" Param="Yes"/>
     <parameter Name="uxNewPriority" TI="25891" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="724" Addr="0x1" Param="Yes"/>
     <variable Name="pxTCB" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="725" Addr="0x4" TI="26796"/>
@@ -1751,7 +1751,7 @@
     <parameter Name="pvParameters" TI="25830" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x3" Param="Yes"/>
     <parameter Name="uxPriority" TI="25891" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x34000028" Param="Yes"/>
    <type Family="Pointer" TI="25830" toTI="0"/>
-   <type Family="typedef" Name="xTaskHandle" Line="85" ID="26217" toTI="25830"/>
+   <type Family="typedef" Name="TaskHandle_t" Line="85" ID="26217" toTI="25830"/>
    <type Family="Pointer" TI="26785" toTI="26217"/>
     <parameter Name="pxCreatedTask" TI="26785" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="373" Addr="0x3400002C" Param="Yes"/>
     <variable Name="xReturn" FileName="C:\E\temp\rc\5\FreeRTOSV5.3.1\Source\tasks.c" Line="374" Addr="0x0" TI="25881"/>

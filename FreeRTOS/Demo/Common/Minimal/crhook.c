@@ -130,12 +130,12 @@ void vApplicationTickHook( void );
 /* Queues used to send data FROM a co-routine TO the tick hook function.
 The hook functions received (Rx's) on these queues.  One queue per
 'hook' co-routine. */
-static xQueueHandle xHookRxQueues[ hookNUM_HOOK_CO_ROUTINES ];
+static QueueHandle_t xHookRxQueues[ hookNUM_HOOK_CO_ROUTINES ];
 
 /* Queues used to send data FROM the tick hook TO a co-routine function.
 The hood function transmits (Tx's) on these queues.  One queue per
 'hook' co-routine. */
-static xQueueHandle xHookTxQueues[ hookNUM_HOOK_CO_ROUTINES ];
+static QueueHandle_t xHookTxQueues[ hookNUM_HOOK_CO_ROUTINES ];
 
 /* Set to true if an error is detected at any time. */
 static portBASE_TYPE xCoRoutineErrorDetected = pdFALSE;

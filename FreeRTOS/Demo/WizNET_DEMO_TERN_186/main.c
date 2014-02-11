@@ -91,7 +91,7 @@
 #include "comtest.h"
 
 /* How often should the "check" task execute? */
-#define mainCHECK_DELAY		( 3000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY		( 3000 / portTICK_PERIOD_MS )
 
 /* Priorities allocated to the various tasks. */
 #define mainQUEUE_POLL_PRIORITY		( tskIDLE_PRIORITY + 2 )

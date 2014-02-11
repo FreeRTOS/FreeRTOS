@@ -147,7 +147,7 @@ time. */
 #define mainMAX_MSG_LEN						25
 
 /* The time between cycles of the 'check' task. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* The number of nano seconds between each processor clock. */
 #define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
@@ -205,7 +205,7 @@ extern void vSetupTimerTest( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -272,7 +272,7 @@ xLCDMessage xMessage;
 
 static void vCheckTask( void *pvParameters )
 {
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 xLCDMessage xMessage;
 static signed char cPassMessage[ mainMAX_MSG_LEN ];
 extern unsigned short usMaxJitter;

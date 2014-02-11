@@ -253,7 +253,7 @@ void _general_exception_handler( unsigned long ulCause, unsigned long ulStatus )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xLastExecutionTime, ulTicksToWait = mainNO_ERROR_PERIOD;
+TickType_t xLastExecutionTime, ulTicksToWait = mainNO_ERROR_PERIOD;
 unsigned long ulLastRegTest1 = 0UL, ulLastRegTest2 = 0UL;
 const char * pcMessage;
 

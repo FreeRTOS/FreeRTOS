@@ -151,13 +151,13 @@
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* The standard demo flash timers can be used to flash any number of LEDs.  In
 this case, because only three LEDs are available, and one is in use by the
@@ -178,7 +178,7 @@ task. */
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Register commands that can be used with FreeRTOS+CLI.  The commands are
@@ -203,7 +203,7 @@ extern void vCreateAndVerifySampleFiles( void );
 
 void main_full( void )
 {
-xTimerHandle xCheckTimer = NULL;
+TimerHandle_t xCheckTimer = NULL;
 
 	/* Prepare to run the full demo: Configure the IO, register the CLI
 	commands, and depending on configuration, generate a set of sample files on
@@ -259,7 +259,7 @@ xTimerHandle xCheckTimer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 unsigned long ulErrorFound = pdFALSE;

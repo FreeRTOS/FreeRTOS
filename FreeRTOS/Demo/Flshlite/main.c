@@ -114,7 +114,7 @@ Changes from V1.2.5
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -153,7 +153,7 @@ Changes from V2.0.0
 
 /* If an error is detected in a task then the vErrorChecks() task will enter
 an infinite loop flashing the LED at this rate. */
-#define mainERROR_FLASH_RATE		( ( portTickType ) 100 / portTICK_RATE_MS )
+#define mainERROR_FLASH_RATE		( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* Task function for the "Print" task as described at the top of the file. */
 static void vErrorChecks( void *pvParameters );
@@ -207,10 +207,10 @@ short main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xExpectedWakeTime;
-const portTickType xPrintRate = ( portTickType ) 5000 / portTICK_RATE_MS;
+TickType_t xExpectedWakeTime;
+const TickType_t xPrintRate = ( TickType_t ) 5000 / portTICK_PERIOD_MS;
 const long lMaxAllowableTimeDifference = ( long ) 0;
-portTickType xWakeTime;
+TickType_t xWakeTime;
 long lTimeDifference;
 const char *pcReceivedMessage;
 const char * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";

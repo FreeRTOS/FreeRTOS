@@ -123,7 +123,7 @@
 #define mainCHECK_TAKS_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2 )
 
 /* The execution period of the check task. */
-#define mainCHECK_TASK_PERIOD				( ( portTickType ) 3000 / portTICK_RATE_MS )
+#define mainCHECK_TASK_PERIOD				( ( TickType_t ) 3000 / portTICK_PERIOD_MS )
 
 /* The number of flash co-routines to create. */
 #define mainNUM_FLASH_COROUTINES			( 5 )
@@ -164,7 +164,7 @@ static void prvSetupHardware( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-static xQueueHandle xLCDQueue;
+static QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -211,7 +211,7 @@ static void prvSetupHardware( void )
 static void vCheckTask( void *pvParameters )
 {
 /* Used to wake the task at the correct frequency. */
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 
 /* The maximum jitter time measured by the fast interrupt test. */
 extern unsigned short usMaxJitter ;

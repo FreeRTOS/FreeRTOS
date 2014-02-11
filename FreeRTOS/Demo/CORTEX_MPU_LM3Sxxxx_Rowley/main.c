@@ -176,7 +176,7 @@ static void prvDeleteMe( void ) __attribute__((noinline));
  * If a reg test task detects an error it will delete itself, and in so doing
  * prevent itself from sending any more 'I'm Alive' messages to the check task.
  */
-static void prvSendImAlive( xQueueHandle xHandle, unsigned long ulTaskNumber );
+static void prvSendImAlive( QueueHandle_t xHandle, unsigned long ulTaskNumber );
 
 /*
  * The check task is created with access to three memory regions (plus its
@@ -195,7 +195,7 @@ and interrupts.  Note that this is a file scope variable that falls outside of
 any MPU region.  As such other techniques have to be used to allow the tasks
 to gain access to the queue.  See the comments in the tasks themselves for
 further information. */
-static xQueueHandle xFileScopeCheckQueue = NULL;
+static QueueHandle_t xFileScopeCheckQueue = NULL;
 
 
 /*-----------------------------------------------------------*/
@@ -214,7 +214,7 @@ stack size is defined in words, not bytes. */
 static portSTACK_TYPE xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainCHECK_TASK_STACK_ALIGNMENT );
 
 /* Declare three arrays - an MPU region will be created for each array
-using the xTaskParameters structure below.  THIS IS JUST TO DEMONSTRATE THE
+using the TaskParameters_t structure below.  THIS IS JUST TO DEMONSTRATE THE
 MPU FUNCTIONALITY, the data is not used by the check tasks primary function
 of monitoring the reg test tasks and printing out status information.
 
@@ -234,9 +234,9 @@ char cReadOnlyArray[ mainREAD_ONLY_ARRAY_SIZE ] mainALIGN_TO( mainREAD_ONLY_ALIG
 #define mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE 128
 char cPrivilegedOnlyAccessArray[ mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE ] mainALIGN_TO( mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE );
 
-/* Fill in a xTaskParameters structure to define the check task - this is the
+/* Fill in a TaskParameters_t structure to define the check task - this is the
 structure passed to the xTaskCreateRestricted() function. */
-static const xTaskParameters xCheckTaskParameters =
+static const TaskParameters_t xCheckTaskParameters =
 {
 	prvCheckTask,								/* pvTaskCode - the function that implements the task. */
 	"Check",									/* pcName			*/
@@ -276,8 +276,8 @@ aligned to ( 128 * 4 ) bytes. */
 static portSTACK_TYPE xRegTest1Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_TO( mainREG_TEST_STACK_ALIGNMENT );
 static portSTACK_TYPE xRegTest2Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_TO( mainREG_TEST_STACK_ALIGNMENT );
 
-/* Fill in a xTaskParameters structure per reg test task to define the tasks. */
-static const xTaskParameters xRegTest1Parameters =
+/* Fill in a TaskParameters_t structure per reg test task to define the tasks. */
+static const TaskParameters_t xRegTest1Parameters =
 {
 	prvRegTest1Task,						/* pvTaskCode - the function that implements the task. */
 	"RegTest1",								/* pcName			*/
@@ -294,7 +294,7 @@ static const xTaskParameters xRegTest1Parameters =
 };
 /*-----------------------------------------------------------*/
 
-static xTaskParameters xRegTest2Parameters =
+static TaskParameters_t xRegTest2Parameters =
 {
 	prvRegTest2Task,				/* pvTaskCode - the function that implements the task. */
 	"RegTest2",						/* pcName			*/
@@ -365,7 +365,7 @@ static void prvCheckTask( void *pvParameters )
 queue variable.  Take a stack copy of this before the task is set into user
 mode.  Once that task is in user mode the file scope queue variable will no
 longer be accessible but the stack copy will. */
-xQueueHandle xQueue = xFileScopeCheckQueue;
+QueueHandle_t xQueue = xFileScopeCheckQueue;
 long lMessage;
 unsigned long ulStillAliveCounts[ 2 ] = { 0 };
 const char *pcStatusMessage = "PASS\r\n";
@@ -510,7 +510,7 @@ static void prvRegTest1Task( void *pvParameters )
 queue variable.  Take a stack copy of this before the task is set into user
 mode.  Once this task is in user mode the file scope queue variable will no
 longer be accessible but the stack copy will. */
-xQueueHandle xQueue = xFileScopeCheckQueue;
+QueueHandle_t xQueue = xFileScopeCheckQueue;
 
 	/* Now the queue handle has been obtained the task can switch to user
 	mode.  This is just one method of passing a handle into a protected
@@ -589,7 +589,7 @@ static void prvRegTest2Task( void *pvParameters )
 /* The queue handle is passed in as the task parameter.  This is one method of
 passing data into a protected task, the other reg test task uses a different
 method. */
-xQueueHandle xQueue = ( xQueueHandle ) pvParameters;
+QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
 
 	for( ;; )
 	{
@@ -828,7 +828,7 @@ static void prvDeleteMe( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvSendImAlive( xQueueHandle xHandle, unsigned long ulTaskNumber )
+static void prvSendImAlive( QueueHandle_t xHandle, unsigned long ulTaskNumber )
 {
 	if( xHandle != NULL )
 	{
@@ -854,7 +854,7 @@ static void prvSetupHardware( void )
 void vApplicationTickHook( void )
 {
 static unsigned long ulCallCount;
-const unsigned long ulCallsBetweenSends = 5000 / portTICK_RATE_MS;
+const unsigned long ulCallsBetweenSends = 5000 / portTICK_PERIOD_MS;
 const unsigned long ulMessage = mainPRINT_SYSTEM_STATUS;
 portBASE_TYPE xDummy;
 
@@ -880,7 +880,7 @@ portBASE_TYPE xDummy;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* If configCHECK_FOR_STACK_OVERFLOW is set to either 1 or 2 then this
 	function will automatically get called if a task overflows its stack. */

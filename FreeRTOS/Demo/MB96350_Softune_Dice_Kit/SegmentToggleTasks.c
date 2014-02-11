@@ -85,7 +85,7 @@
 #define ledNUM_OF_LED_TASKS	( 7 )
 
 /* Each task toggles at a frequency that is a multiple of 333ms. */
-#define ledFLASH_RATE_BASE	( ( portTickType ) 333 )
+#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
 
 /* One co-routine per segment of the right hand display. */
 #define ledNUM_OF_LED_CO_ROUTINES	7
@@ -106,11 +106,11 @@ static void vLEDCoRoutineControlTask( void *pvParameters );
 
 /* Handles to each of the 7 tasks.  Used so the tasks can be suspended
 and resumed. */
-static xTaskHandle xFlashTaskHandles[ ledNUM_OF_LED_TASKS ] = { 0 };
+static TaskHandle_t xFlashTaskHandles[ ledNUM_OF_LED_TASKS ] = { 0 };
 
 /* Handle to the task in which the co-routines run.  Used so the
 co-routines can be suspended and resumed. */
-static xTaskHandle xCoroutineTask;
+static TaskHandle_t xCoroutineTask;
 
 /*-----------------------------------------------------------*/
 
@@ -176,19 +176,19 @@ short sLEDTask;
 
 static void vLEDFlashTask( void * pvParameters )
 {
-portTickType xFlashRate, xLastFlashTime;
+TickType_t xFlashRate, xLastFlashTime;
 unsigned short usLED;
 
 	/* The LED to flash is passed in as the task parameter. */
 	usLED = ( unsigned short ) pvParameters;
 
 	/* Calculate the rate at which this task is going to toggle its LED. */
-	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( portTickType ) usLED );
-	xFlashRate /= portTICK_RATE_MS;
+	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( TickType_t ) usLED );
+	xFlashRate /= portTICK_PERIOD_MS;
 
 	/* We will turn the LED on and off again in the delay period, so each
 	delay is only half the total period. */
-	xFlashRate /= ( portTickType ) 2;
+	xFlashRate /= ( TickType_t ) 2;
 
 	/* We need to initialise xLastFlashTime prior to the first call to
 	vTaskDelayUntil(). */
@@ -232,13 +232,13 @@ static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, unsigned short us
 {
 /* The usIndex parameter of the co-routine function is used as an index into
 the xFlashRates array to obtain the delay period to use. */
-static const portTickType xFlashRates[ ledNUM_OF_LED_CO_ROUTINES ] = { 150 / portTICK_RATE_MS,
-																300 / portTICK_RATE_MS,
-																450 / portTICK_RATE_MS,
-																600 / portTICK_RATE_MS,
-																750 / portTICK_RATE_MS,
-																900 / portTICK_RATE_MS,
-																1050 / portTICK_RATE_MS };
+static const TickType_t xFlashRates[ ledNUM_OF_LED_CO_ROUTINES ] = { 150 / portTICK_PERIOD_MS,
+																300 / portTICK_PERIOD_MS,
+																450 / portTICK_PERIOD_MS,
+																600 / portTICK_PERIOD_MS,
+																750 / portTICK_PERIOD_MS,
+																900 / portTICK_PERIOD_MS,
+																1050 / portTICK_PERIOD_MS };
 
 	/* Co-routines MUST start with a call to crSTART. */
 	crSTART( xHandle );

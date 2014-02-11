@@ -103,8 +103,8 @@ static void prvLCDClear( void );
 
 /* Brief delay to permit the LCD to catch up with commands. */
 #define lcdVERY_SHORT_DELAY	( 1 )
-#define lcdSHORT_DELAY		( 4 / portTICK_RATE_MS )
-#define lcdLONG_DELAY		( 15 / portTICK_RATE_MS )
+#define lcdSHORT_DELAY		( 4 / portTICK_PERIOD_MS )
+#define lcdLONG_DELAY		( 15 / portTICK_PERIOD_MS )
 
 /* LCD commands. */
 #define lcdCLEAR			( 0x01 )
@@ -140,14 +140,14 @@ static void prvLCDClear( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 static void prvLCDCommand( char cCommand );
 static void prvLCDData( char cChar );
 
 /*-----------------------------------------------------------*/
 
-xQueueHandle xStartLCDTask( void )
+QueueHandle_t xStartLCDTask( void )
 {
 	/* Create the queue used by the LCD task.  Messages for display on the LCD
 	are received via this queue. */

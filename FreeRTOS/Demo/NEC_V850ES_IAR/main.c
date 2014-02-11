@@ -123,8 +123,8 @@ mechanism is working correctly. */
 #define mainCHECK_PARAMETER					( ( void * ) 0x12345678 )
 
 /* The period between executions of the check task. */
-#define mainNO_ERROR_DELAY		( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_DELAY			( ( portTickType ) 500 / portTICK_RATE_MS )
+#define mainNO_ERROR_DELAY		( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_DELAY			( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* There are no spare LEDs for the comtest tasks, so this is just set to an
 invalid number. */
@@ -200,7 +200,7 @@ void main( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
+TickType_t xDelayPeriod = mainNO_ERROR_DELAY, xLastWakeTime;
 unsigned portBASE_TYPE uxLEDToUse = 0;
 
 	/* Ensure parameter is passed in correctly. */

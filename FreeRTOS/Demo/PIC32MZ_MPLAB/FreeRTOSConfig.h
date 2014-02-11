@@ -85,7 +85,7 @@
 #define configUSE_QUEUE_SETS					1
 #define configUSE_IDLE_HOOK						0
 #define configUSE_TICK_HOOK						1
-#define configTICK_RATE_HZ						( ( portTickType ) 1000 )
+#define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
 #define configCPU_CLOCK_HZ						( 200000000UL )
 #define configPERIPHERAL_CLOCK_HZ				( 40000000UL )
 #define configMAX_PRIORITIES					( 5UL )

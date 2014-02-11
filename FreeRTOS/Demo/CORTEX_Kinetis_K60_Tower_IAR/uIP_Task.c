@@ -122,7 +122,7 @@ static void prvInitialise_uIP( void );
  * The callback function that is assigned to both the periodic timer and the
  * ARP timer.
  */
-static void prvUIPTimerCallback( xTimerHandle xTimer );
+static void prvUIPTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Port functions required by the uIP stack.
@@ -132,7 +132,7 @@ clock_time_t clock_time( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send TCP/IP events to the uIP stack. */
-xQueueHandle xEMACEventQueue = NULL;
+QueueHandle_t xEMACEventQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -259,7 +259,7 @@ struct uip_eth_addr xAddr;
 static void prvInitialise_uIP( void )
 {
 uip_ipaddr_t xIPAddr;
-xTimerHandle xARPTimer, xPeriodicTimer;
+TimerHandle_t xARPTimer, xPeriodicTimer;
 
 	uip_init();
 	uip_ipaddr( &xIPAddr, configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
@@ -274,14 +274,14 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 
 	/* Create and start the uIP timers. */
 	xARPTimer = xTimerCreate( 	"ARPTimer", /* Just a name that is helpful for debugging, not used by the kernel. */
-								( 10000UL / portTICK_RATE_MS ), /* Timer period. */
+								( 10000UL / portTICK_PERIOD_MS ), /* Timer period. */
 								pdTRUE, /* Autor-reload. */
 								( void * ) uipARP_TIMER,
 								prvUIPTimerCallback
 							);
 
 	xPeriodicTimer = xTimerCreate( 	"PeriodicTimer",
-									( 500UL / portTICK_RATE_MS ),
+									( 500UL / portTICK_PERIOD_MS ),
 									pdTRUE, /* Autor-reload. */
 									( void * ) uipPERIODIC_TIMER,
 									prvUIPTimerCallback
@@ -299,7 +299,7 @@ xTimerHandle xARPTimer, xPeriodicTimer;
 }
 /*-----------------------------------------------------------*/
 
-static void prvUIPTimerCallback( xTimerHandle xTimer )
+static void prvUIPTimerCallback( TimerHandle_t xTimer )
 {
 static const unsigned long ulARPTimerExpired = uipARP_TIMER_EVENT;
 static const unsigned long ulPeriodicTimerExpired = uipPERIODIC_TIMER_EVENT;

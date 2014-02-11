@@ -70,7 +70,7 @@
 /* Demo app includes. */
 #include "ledtest.h"
 
-#define lLEDOnE_SECOND		( 1000UL / portTICK_RATE_MS )
+#define lLEDOnE_SECOND		( 1000UL / portTICK_PERIOD_MS )
 
 void vLEDTask( void *pvParameters )
 {

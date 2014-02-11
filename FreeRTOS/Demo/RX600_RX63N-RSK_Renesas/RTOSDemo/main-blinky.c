@@ -101,10 +101,10 @@
 #define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds. */
-#define mainQUEUE_SEND_PERIOD_MS			( 500 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_PERIOD_MS			( 500 / portTICK_PERIOD_MS )
 
 /* The period of the software timer, specified in milliseconds. */
-#define mainSOFTWARE_TIMER_PERIOD_MS		( 150 / portTICK_RATE_MS )
+#define mainSOFTWARE_TIMER_PERIOD_MS		( 150 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added so the send task should always find the
@@ -124,10 +124,10 @@ static void prvQueueSendTask( void *pvParameters );
 /*
  * The callback function used by the software timer.
  */
-static void prvBlinkyTimerCallback( xTimerHandle xTimer );
+static void prvBlinkyTimerCallback( TimerHandle_t xTimer );
 
 /* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /* This variable is not used by this simple Blinky example.  It is defined 
 purely to allow the project to link as it is used by the full project. */
@@ -136,7 +136,7 @@ volatile unsigned long ulHighFrequencyTickCount = 0UL;
 
 void main(void)
 {
-xTimerHandle xTimer;
+TimerHandle_t xTimer;
 
 	/* Turn all LEDs off. */
 	vParTestInitialise();
@@ -185,7 +185,7 @@ xTimerHandle xTimer;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
@@ -227,7 +227,7 @@ unsigned long ulReceivedValue;
 }
 /*-----------------------------------------------------------*/
 
-static void prvBlinkyTimerCallback( xTimerHandle xTimer )
+static void prvBlinkyTimerCallback( TimerHandle_t xTimer )
 {
 	/* The software timer does nothing but toggle an LED. */
 	vParTestToggleLED( mainTIMER_LED );
@@ -269,7 +269,7 @@ void vApplicationMallocFailedHook( void )
 
 /* This function is explained by the comments above its prototype at the top
 of this file. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

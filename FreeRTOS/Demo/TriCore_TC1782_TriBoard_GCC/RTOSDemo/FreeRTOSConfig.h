@@ -94,7 +94,7 @@
 peripheral clock. */
 #define configCPU_CLOCK_HZ					( ( unsigned long ) 150000000UL )
 #define configPERIPHERAL_CLOCK_HZ			( ( unsigned long ) configCPU_CLOCK_HZ / 2UL )
-#define configTICK_RATE_HZ					( ( portTickType ) 1000UL )
+#define configTICK_RATE_HZ					( ( TickType_t ) 1000UL )
 #define configMAX_PRIORITIES				( 6 )
 #define configMINIMAL_STACK_SIZE			( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE				( ( size_t ) ( 35U * 1024U ) )

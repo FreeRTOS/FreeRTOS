@@ -38,7 +38,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-xTaskHandle xEthIntTask;
+TaskHandle_t xEthIntTask;
 
 /* lwIP includes. */
 #include "lwip/def.h"
@@ -55,10 +55,10 @@ xTaskHandle xEthIntTask;
 /* Delay to wait for a DMA buffer to become available if one is not already
 available. */
 #define netifBUFFER_WAIT_ATTEMPTS					10
-#define netifBUFFER_WAIT_DELAY						(10 / portTICK_RATE_MS)
+#define netifBUFFER_WAIT_DELAY						(10 / portTICK_PERIOD_MS)
 
 /* Delay between polling the PHY to see if a link has been established. */
-#define netifLINK_DELAY								( 500 / portTICK_RATE_MS )
+#define netifLINK_DELAY								( 500 / portTICK_PERIOD_MS )
 
 /* Delay between looking for incoming packets.  In ideal world this would be
 infinite. */
@@ -85,7 +85,7 @@ static unsigned char ucFECRxBuffers[ ( configNUM_FEC_RX_BUFFERS * configFEC_BUFF
 static unsigned portBASE_TYPE uxNextRxBuffer = 0, uxNextTxBuffer = 0;
 
 /* Semaphore used by the FEC interrupt handler to wake the handler task. */
-static xSemaphoreHandle xFecSemaphore;
+static SemaphoreHandle_t xFecSemaphore;
 
 #pragma options align= packed
 struct ethernetif

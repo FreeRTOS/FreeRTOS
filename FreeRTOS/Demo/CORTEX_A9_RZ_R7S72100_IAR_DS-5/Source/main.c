@@ -119,7 +119,7 @@ static void prvSetupHardware( void );
 within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*
@@ -175,7 +175,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

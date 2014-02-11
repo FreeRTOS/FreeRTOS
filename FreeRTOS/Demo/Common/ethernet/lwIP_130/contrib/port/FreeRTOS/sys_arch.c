@@ -40,7 +40,7 @@
 struct timeoutlist
 {
 	struct sys_timeouts timeouts;
-	xTaskHandle pid;
+	TaskHandle_t pid;
 };
 
 /* This is the number of threads that can be started with sys_thread_new() */
@@ -54,7 +54,7 @@ static u16_t s_nextthread = 0;
 //  Creates an empty mailbox.
 sys_mbox_t sys_mbox_new(int size)
 {
-	xQueueHandle mbox;
+	QueueHandle_t mbox;
 
 	( void ) size;
 
@@ -146,7 +146,7 @@ err_t result;
 u32_t sys_arch_mbox_fetch(sys_mbox_t mbox, void **msg, u32_t timeout)
 {
 void *dummyptr;
-portTickType StartTime, EndTime, Elapsed;
+TickType_t StartTime, EndTime, Elapsed;
 
 	StartTime = xTaskGetTickCount();
 
@@ -157,10 +157,10 @@ portTickType StartTime, EndTime, Elapsed;
 
 	if ( timeout != 0 )
 	{
-		if ( pdTRUE == xQueueReceive( mbox, &(*msg), timeout / portTICK_RATE_MS ) )
+		if ( pdTRUE == xQueueReceive( mbox, &(*msg), timeout / portTICK_PERIOD_MS ) )
 		{
 			EndTime = xTaskGetTickCount();
-			Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
+			Elapsed = (EndTime - StartTime) * portTICK_PERIOD_MS;
 
 			return ( Elapsed );
 		}
@@ -175,7 +175,7 @@ portTickType StartTime, EndTime, Elapsed;
 	{
 		while( pdTRUE != xQueueReceive( mbox, &(*msg), portMAX_DELAY ) ){} // time is arbitrary
 		EndTime = xTaskGetTickCount();
-		Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
+		Elapsed = (EndTime - StartTime) * portTICK_PERIOD_MS;
 
 		return ( Elapsed ); // return time blocked TODO test
 	}
@@ -210,7 +210,7 @@ void *dummyptr;
 //  the initial state of the semaphore.
 sys_sem_t sys_sem_new(u8_t count)
 {
-	xSemaphoreHandle  xSemaphore;
+	SemaphoreHandle_t  xSemaphore;
 
 	vSemaphoreCreateBinary( xSemaphore );
 
@@ -257,16 +257,16 @@ sys_sem_t sys_sem_new(u8_t count)
 */
 u32_t sys_arch_sem_wait(sys_sem_t sem, u32_t timeout)
 {
-portTickType StartTime, EndTime, Elapsed;
+TickType_t StartTime, EndTime, Elapsed;
 
 	StartTime = xTaskGetTickCount();
 
 	if(	timeout != 0)
 	{
-		if( xSemaphoreTake( sem, timeout / portTICK_RATE_MS ) == pdTRUE )
+		if( xSemaphoreTake( sem, timeout / portTICK_PERIOD_MS ) == pdTRUE )
 		{
 			EndTime = xTaskGetTickCount();
-			Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
+			Elapsed = (EndTime - StartTime) * portTICK_PERIOD_MS;
 
 			return (Elapsed); // return time blocked TODO test
 		}
@@ -279,7 +279,7 @@ portTickType StartTime, EndTime, Elapsed;
 	{
 		while( xSemaphoreTake( sem, portMAX_DELAY ) != pdTRUE ){}
 		EndTime = xTaskGetTickCount();
-		Elapsed = (EndTime - StartTime) * portTICK_RATE_MS;
+		Elapsed = (EndTime - StartTime) * portTICK_PERIOD_MS;
 
 		return ( Elapsed ); // return time blocked
 
@@ -337,7 +337,7 @@ void sys_init(void)
 struct sys_timeouts *sys_arch_timeouts(void)
 {
 int i;
-xTaskHandle pid;
+TaskHandle_t pid;
 struct timeoutlist *tl;
 
 	pid = xTaskGetCurrentTaskHandle( );
@@ -367,7 +367,7 @@ struct timeoutlist *tl;
 */
 sys_thread_t sys_thread_new(char *name, void (* thread)(void *arg), void *arg, int stacksize, int prio)
 {
-xTaskHandle CreatedTask;
+TaskHandle_t CreatedTask;
 int result;
 
    if ( s_nextthread < SYS_THREAD_MAX )

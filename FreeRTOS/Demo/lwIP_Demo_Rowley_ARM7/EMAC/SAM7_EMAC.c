@@ -136,7 +136,7 @@ one not be immediately available when trying to transmit a frame. */
 #define emacMAX_WAIT_CYCLES			( ( portBASE_TYPE ) ( configTICK_RATE_HZ / 40 ) )
 
 /* The time to block waiting for input. */
-#define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( portTickType ) 100 )
+#define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( TickType_t ) 100 )
 
 /* Peripheral setup for the EMAC. */
 #define emacPERIPHERAL_A_SETUP 		( ( unsigned long ) AT91C_PB2_ETX0			) | \
@@ -162,7 +162,7 @@ one not be immediately available when trying to transmit a frame. */
 #define emacINTERRUPT_LEVEL			( 5 )
 #define emacNO_DELAY				( 0 )
 #define emacTOTAL_FRAME_HEADER_SIZE	( 54 )
-#define emacPHY_INIT_DELAY			( 5000 / portTICK_RATE_MS )
+#define emacPHY_INIT_DELAY			( 5000 / portTICK_PERIOD_MS )
 #define emacRESET_KEY				( ( unsigned long ) 0xA5000000 )
 #define emacRESET_LENGTH			( ( unsigned long ) ( 0x01 << 8 ) )
 
@@ -224,7 +224,7 @@ static portBASE_TYPE prvProbePHY( void );
 
 
 /* The semaphore used by the EMAC ISR to wake the EMAC task. */
-static xSemaphoreHandle xSemaphore = NULL;
+static SemaphoreHandle_t xSemaphore = NULL;
 
 /* Holds the index to the next buffer from which data will be read. */
 static volatile unsigned long ulNextRxBuffer = 0;
@@ -485,7 +485,7 @@ register unsigned long ulBytesRemainingInBuffer, ulRemainingSectionBytes;
 /*-----------------------------------------------------------*/
 
 /* See the header file for descriptions of public functions. */
-xSemaphoreHandle xEMACInit( void )
+SemaphoreHandle_t xEMACInit( void )
 {
 	/* Code supplied by Atmel -------------------------------*/
 

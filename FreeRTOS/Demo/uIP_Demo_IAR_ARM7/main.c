@@ -115,8 +115,8 @@
 
 /* The rate at which the on board LED will toggle when there is/is not an
 error. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
 /* The LED used by the check task to indicate the system status. */
 #define mainCHECK_LED 				( 3 )
@@ -204,8 +204,8 @@ static void prvSetupHardware( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
-portTickType xLastWakeTime;
+TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+TickType_t xLastWakeTime;
 
 	/* Initialise xLastWakeTime to ensure the first call to vTaskDelayUntil()
 	functions correctly. */

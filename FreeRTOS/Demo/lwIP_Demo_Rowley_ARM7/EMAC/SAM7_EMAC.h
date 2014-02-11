@@ -105,7 +105,7 @@ Changes from V3.2.4
  * is used by the EMAC ISR to indicate that Rx packets have been received.
  * If the initialisation fails then NULL is returned.
  */
-xSemaphoreHandle xEMACInit( void );
+SemaphoreHandle_t xEMACInit( void );
 
 /*
  * Send ulLength bytes from pcFrom.  This copies the buffer to one of the
@@ -129,7 +129,7 @@ void vEMACRead( char *pcTo, unsigned long ulSectionLength, unsigned long ulTotal
  * files as the driver is compiled to THUMB, and the ISR to ARM.  This function
  * simply passes the semaphore used to communicate between the two.
  */
-void vPassEMACSemaphore( xSemaphoreHandle xCreatedSemaphore );
+void vPassEMACSemaphore( SemaphoreHandle_t xCreatedSemaphore );
 
 /* 
  * Called by the Tx interrupt, this function traverses the buffers used to

@@ -220,8 +220,8 @@ typedef struct xCOM_PORT
 	unsigned char ucInterruptEnableMast;
 
 	/* Read/Write buffers. */
-	xQueueHandle xRxedChars; 
-	xQueueHandle xCharsForTx;
+	QueueHandle_t xRxedChars; 
+	QueueHandle_t xCharsForTx;
 
 	/* This lot are set up to minimise CPU time where accessing the comm
 	* port's registers.
@@ -243,7 +243,7 @@ typedef struct xCOM_PORT
 
 	/* This semaphore does nothing useful except test a feature of the
 	scheduler. */
-	xSemaphoreHandle xTestSem;
+	SemaphoreHandle_t xTestSem;
 
 } xComPort;
 
@@ -258,8 +258,8 @@ xComPort *xPortStatus[ serMAX_IRQs ] = { NULL, NULL, NULL, NULL, NULL, NULL, NUL
 /* These prototypes are repeated here so we don't have to include the serial header.  This allows
 the xComPortHandle structure details to be private to this file. */
 xComPortHandle xSerialPortInit( eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits, unsigned portBASE_TYPE uxBufferLength );
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime );
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime );
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, TickType_t xBlockTime );
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, TickType_t xBlockTime );
 portBASE_TYPE xSerialWaitForSemaphore( xComPortHandle xPort );
 
 static void prvSetupPortHardware( xComPort *pxPort, eCOMPort ePort, eBaud eWantedBaud, eParity eWantedParity, eDataBits eWantedDataBits, eStopBits eWantedStopBits );
@@ -607,7 +607,7 @@ extern void vComTestUnsuspendTask( void );
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Get the next character from the buffer, note that this routine is only 
 	called having checked that the is (at least) one to get */
@@ -622,7 +622,7 @@ portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, char *pcRxedChar, portTickT
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType xBlockTime )
+portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, TickType_t xBlockTime )
 {
 	if( xQueueSend( pxPort->xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
 	{
@@ -638,7 +638,7 @@ portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, char cOutChar, portTickType
 void vSerialPutString( xComPortHandle pxPort, const char * const pcString, unsigned short usStringLength )
 {
 char * pcNextChar;
-const portTickType xNoBlock = ( portTickType ) 0;
+const TickType_t xNoBlock = ( TickType_t ) 0;
 
 	/* Stop warnings. */
 	( void ) usStringLength;
@@ -654,7 +654,7 @@ const portTickType xNoBlock = ( portTickType ) 0;
 
 portBASE_TYPE xSerialWaitForSemaphore( xComPortHandle xPort )
 {
-const portTickType xBlockTime = ( portTickType ) 0xffff;
+const TickType_t xBlockTime = ( TickType_t ) 0xffff;
 
 	/* This function does nothing interesting, but test the 
 	semaphore from ISR mechanism. */

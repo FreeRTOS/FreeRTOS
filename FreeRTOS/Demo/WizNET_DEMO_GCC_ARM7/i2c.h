@@ -75,7 +75,7 @@ typedef struct AN_I2C_MESSAGE
 	unsigned char ucSlaveAddress;			/*< The slave address of the WIZnet on the I2C bus. */
 	unsigned char ucBufferAddressLowByte;	/*< The address within the WIZnet device to which data should be read from / written to. */
 	unsigned char ucBufferAddressHighByte;	/*< As above, high byte. */
-	xSemaphoreHandle xMessageCompleteSemaphore;	/*< Contains a reference to a semaphore if the application tasks wants notifying when the message has been transacted. */
+	SemaphoreHandle_t xMessageCompleteSemaphore;	/*< Contains a reference to a semaphore if the application tasks wants notifying when the message has been transacted. */
 	unsigned char *pucBuffer;				/*< Pointer to the buffer from where data will be read for transmission, or into which received data will be placed. */
 } xI2CMessage;
 
@@ -113,7 +113,7 @@ void i2cInit( void );
  *						 become available should one not be available 
  *						 immediately.
  */
-void i2cMessage( const unsigned char * const pucMessage, long lMessageLength, unsigned char ucSlaveAddress, unsigned short usBufferAddress, unsigned long ulDirection, xSemaphoreHandle xMessageCompleteSemaphore, portTickType xBlockTime );
+void i2cMessage( const unsigned char * const pucMessage, long lMessageLength, unsigned char ucSlaveAddress, unsigned short usBufferAddress, unsigned long ulDirection, SemaphoreHandle_t xMessageCompleteSemaphore, TickType_t xBlockTime );
 
 #endif
 

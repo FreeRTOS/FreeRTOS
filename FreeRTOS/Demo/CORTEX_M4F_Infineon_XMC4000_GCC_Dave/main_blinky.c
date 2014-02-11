@@ -113,8 +113,8 @@
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -143,7 +143,7 @@ void main_blinky( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -180,7 +180,7 @@ void main_blinky( void )
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Check the task parameter is as expected. */

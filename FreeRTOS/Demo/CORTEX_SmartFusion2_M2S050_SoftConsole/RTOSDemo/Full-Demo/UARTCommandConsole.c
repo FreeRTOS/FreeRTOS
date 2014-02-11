@@ -83,7 +83,7 @@
 #define cmdMAX_INPUT_SIZE		50
 
 /* The maximum time in ticks to wait for the UART access mutex. */
-#define cmdMAX_MUTEX_WAIT		( 200 / portTICK_RATE_MS )
+#define cmdMAX_MUTEX_WAIT		( 200 / portTICK_PERIOD_MS )
 
 /* Characters are only ever received slowly on the CLI so it is ok to pass
 received characters from the UART interrupt to the task on a queue.  This sets
@@ -129,7 +129,7 @@ static const char * const pcNewLine = "\r\n";
 /* Because characters are received slowly (at the speed somebody can type) then
 it is ok to pass received characters from the Rx interrupt to the task on a
 queue.  This is the queue used for that purpose. */
-static xQueueHandle xRxedChars = NULL;
+static QueueHandle_t xRxedChars = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -251,7 +251,7 @@ portBASE_TYPE xReturned;
 
 static void prvSendBuffer( const char * pcBuffer, size_t xBufferLength )
 {
-const portTickType xVeryShortDelay = 2UL;
+const TickType_t xVeryShortDelay = 2UL;
 
 	if( xBufferLength > 0 )
 	{

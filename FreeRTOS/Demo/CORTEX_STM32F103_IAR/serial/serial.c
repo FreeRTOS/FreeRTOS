@@ -80,15 +80,15 @@
 /*-----------------------------------------------------------*/
 
 /* Misc defines. */
-#define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
-#define serNO_BLOCK						( ( portTickType ) 0 )
-#define serTX_BLOCK_TIME				( 40 / portTICK_RATE_MS )
+#define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
+#define serNO_BLOCK						( ( TickType_t ) 0 )
+#define serTX_BLOCK_TIME				( 40 / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 
 /* The queue used to hold received characters. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -163,7 +163,7 @@ GPIO_InitTypeDef GPIO_InitStructure;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -205,7 +205,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 

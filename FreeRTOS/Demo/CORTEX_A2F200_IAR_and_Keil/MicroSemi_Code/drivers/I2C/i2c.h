@@ -331,7 +331,7 @@ typedef struct mss_i2c_instance
 	mss_i2c_slave_wr_handler_t slave_write_handler;
 	
 	/* Used to get access to and wait for completion of an I2C transaction. */
-	xSemaphoreHandle xI2CCompleteSemaphore;
+	SemaphoreHandle_t xI2CCompleteSemaphore;
 	
 } mss_i2c_instance_t;
 

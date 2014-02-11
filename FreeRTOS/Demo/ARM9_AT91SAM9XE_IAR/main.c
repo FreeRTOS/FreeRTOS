@@ -111,8 +111,8 @@
 #define mainGENERIC_QUEUE_PRIORITY	( tskIDLE_PRIORITY )
 
 /* The period of the check task both in and out of the presense of an error. */
-#define mainNO_ERROR_PERIOD			( 5000 / portTICK_RATE_MS )
-#define mainERROR_PERIOD			( 500 / portTICK_RATE_MS );
+#define mainNO_ERROR_PERIOD			( 5000 / portTICK_PERIOD_MS )
+#define mainERROR_PERIOD			( 500 / portTICK_PERIOD_MS );
 
 /* Constants used by the ComTest task. */
 #define mainCOM_TEST_BAUD_RATE		( 38400 )
@@ -167,7 +167,7 @@ int main()
 
 static void prvCheckTask( void * pvParameters )
 {
-portTickType xNextWakeTime, xPeriod = mainNO_ERROR_PERIOD;
+TickType_t xNextWakeTime, xPeriod = mainNO_ERROR_PERIOD;
 static volatile unsigned long ulErrorCode = 0UL;
 
 	/* Just to remove the compiler warning. */

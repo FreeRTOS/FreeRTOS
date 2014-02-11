@@ -85,7 +85,7 @@
 #define mainBLOCK_Q_PRIORITY        ( tskIDLE_PRIORITY + 2 )
 
 /* Interval in which tasks are checked. */
-#define mainCHECK_PERIOD            ( ( portTickType ) 2000 / portTICK_RATE_MS  )
+#define mainCHECK_PERIOD            ( ( TickType_t ) 2000 / portTICK_PERIOD_MS  )
 
 /* Constants used by the vMemCheckTask() task. */
 #define mainCOUNT_INITIAL_VALUE     ( ( unsigned long ) 0 )
@@ -138,7 +138,7 @@ static
 portTASK_FUNCTION( vErrorChecks, pvParameters )
 {
     unsigned long ulMemCheckTaskRunningCount;
-    xTaskHandle     xCreatedTask;
+    TaskHandle_t     xCreatedTask;
 
     /* The parameters are not used in this function. */
     ( void )pvParameters;

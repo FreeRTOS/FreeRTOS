@@ -119,9 +119,9 @@
 /* The Tx timer transmits the sequence of characters at a pseudo random
 interval that is capped between comTX_MAX_BLOCK_TIME and
 comTX_MIN_BLOCK_TIME. */
-#define comTX_MAX_BLOCK_TIME		( ( portTickType ) 0x96 )
-#define comTX_MIN_BLOCK_TIME		( ( portTickType ) 0x32 )
-#define comOFFSET_TIME				( ( portTickType ) 3 )
+#define comTX_MAX_BLOCK_TIME		( ( TickType_t ) 0x96 )
+#define comTX_MIN_BLOCK_TIME		( ( TickType_t ) 0x32 )
+#define comOFFSET_TIME				( ( TickType_t ) 3 )
 
 /* States for the simple state machine implemented in the Rx task. */
 #define comtstWAITING_START_OF_STRING 	0
@@ -132,20 +132,20 @@ a bit so more than one character can be processed at a time.  This is relative
 to comTX_MIN_BLOCK_TIME to ensure it is never longer than the shortest gap
 between transmissions.  It could be worked out more scientifically from the
 baud rate being used. */
-#define comSHORT_DELAY				( comTX_MIN_BLOCK_TIME >> ( portTickType ) 2 )
+#define comSHORT_DELAY				( comTX_MIN_BLOCK_TIME >> ( TickType_t ) 2 )
 
 /* The string that is transmitted and received. */
 #define comTRANSACTED_STRING		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
 /* A block time of 0 simply means "don't block". */
-#define comtstDONT_BLOCK			( portTickType ) 0
+#define comtstDONT_BLOCK			( TickType_t ) 0
 
 /* Handle to the com port used by both tasks. */
 static xComPortHandle xPort = NULL;
 
 /* The callback function allocated to the transmit timer, as described in the
 comments at the top of this file. */
-static void prvComTxTimerCallback( xTimerHandle xTimer );
+static void prvComTxTimerCallback( TimerHandle_t xTimer );
 
 /* The receive task as described in the comments at the top of this file. */
 static void vComRxTask( void *pvParameters );
@@ -161,7 +161,7 @@ static volatile unsigned portBASE_TYPE uxRxLoops = 0UL;
 
 /* The timer used to periodically transmit the string.  This is the timer that
 has prvComTxTimerCallback allocated to it as its callback function. */
-static xTimerHandle xTxTimer = NULL;
+static TimerHandle_t xTxTimer = NULL;
 
 /* The string length is held at file scope so the Tx timer does not need to
 calculate it each time it executes. */
@@ -188,15 +188,15 @@ void vStartComTestStringsTasks( unsigned portBASE_TYPE uxPriority, unsigned long
 
 	/* Create the Rx task and the Tx timer.  The timer is started from the
 	Rx task. */
-	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
 	xTxTimer = xTimerCreate( "TxTimer", comTX_MIN_BLOCK_TIME, pdFALSE, NULL, prvComTxTimerCallback );
 	configASSERT( xTxTimer );
 }
 /*-----------------------------------------------------------*/
 
-static void prvComTxTimerCallback( xTimerHandle xTimer )
+static void prvComTxTimerCallback( TimerHandle_t xTimer )
 {
-portTickType xTimeToWait;
+TickType_t xTimeToWait;
 
 	/* The parameter is not used in this case. */
 	( void ) xTimer;

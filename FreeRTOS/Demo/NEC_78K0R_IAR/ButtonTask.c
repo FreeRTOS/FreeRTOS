@@ -77,10 +77,10 @@
 #define butLED1   P7_bit.no7
 
 /* A short delay used for button debouncing. */
-#define butDEBOUNCE_DELAY	( 200 / portTICK_RATE_MS )
+#define butDEBOUNCE_DELAY	( 200 / portTICK_PERIOD_MS )
 
 /* The semaphore used to synchronise the button push task with the interrupt. */
-static xSemaphoreHandle xButtonSemaphore;
+static SemaphoreHandle_t xButtonSemaphore;
 
 /*
  * The definition of the button task itself.  See the comments at the top of

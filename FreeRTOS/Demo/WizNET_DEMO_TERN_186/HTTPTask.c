@@ -147,7 +147,7 @@ unsigned char ucSocketBuffer[ httpSOCKET_BUFFER_SIZE ];
 
 /* The semaphore used by the Ethernet ISR to signal that the task should wake
 and process whatever caused the interrupt. */
-xSemaphoreHandle xTCPSemaphore = NULL;
+SemaphoreHandle_t xTCPSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 void vHTTPTask( void * pvParameters )

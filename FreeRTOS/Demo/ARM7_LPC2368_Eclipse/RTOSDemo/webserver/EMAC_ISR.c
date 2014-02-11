@@ -8,7 +8,7 @@ void vEMAC_ISR_Wrapper( void ) __attribute__((naked));
 /* The handler that does the actual work. */
 void vEMAC_ISR_Handler( void ) __attribute__((noinline));
 
-extern xSemaphoreHandle xEMACSemaphore;
+extern SemaphoreHandle_t xEMACSemaphore;
 
 
 void vEMAC_ISR_Handler( void )

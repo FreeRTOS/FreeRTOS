@@ -78,7 +78,7 @@
 #include "net/uip.h"
 
 /* The time to wait between attempts to obtain a free buffer. */
-#define emacBUFFER_WAIT_DELAY_ms		( 3 / portTICK_RATE_MS )
+#define emacBUFFER_WAIT_DELAY_ms		( 3 / portTICK_PERIOD_MS )
 
 /* The number of times emacBUFFER_WAIT_DELAY_ms should be waited before giving
 up on attempting to obtain a free buffer all together. */
@@ -95,7 +95,7 @@ more than two. */
 #define emacNUM_BUFFERS					( emacNUM_RX_DESCRIPTORS + emacNUM_TX_BUFFERS )
 
 /* The time to wait for the Tx descriptor to become free. */
-#define emacTX_WAIT_DELAY_ms 			( 10 / portTICK_RATE_MS )
+#define emacTX_WAIT_DELAY_ms 			( 10 / portTICK_PERIOD_MS )
 
 /* The total number of times to wait emacTX_WAIT_DELAY_ms for the Tx descriptor to
 become free. */
@@ -105,7 +105,7 @@ become free. */
 #define emacTX_INTERRUPT_NO			( 76 )
 #define emacRX_INTERRUPT_NO			( 77 )
 #define emacERROR_INTERRUPT_NO		( 78 )
-#define emacLINK_DELAY				( 500 / portTICK_RATE_MS )
+#define emacLINK_DELAY				( 500 / portTICK_PERIOD_MS )
 #define emacPHY_STATUS				( 0x1F )
 #define emacPHY_DUPLEX_STATUS		( 4 << 2 )
 #define emacPHY_SPEED_STATUS		( 1 << 2 )
@@ -555,7 +555,7 @@ void vEMAC_RxISRHandler( void )
 {
 const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 long lHigherPriorityTaskWoken = pdFALSE;
-extern xQueueHandle xEMACEventQueue;
+extern QueueHandle_t xEMACEventQueue;
 
 	/* Clear the interrupt. */
 	ENET_EIR = ENET_EIR_RXF_MASK;

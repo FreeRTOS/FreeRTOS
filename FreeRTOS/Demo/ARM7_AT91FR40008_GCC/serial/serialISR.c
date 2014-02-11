@@ -100,8 +100,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /*-----------------------------------------------------------*/
 
@@ -114,7 +114,7 @@ from the wrapper to ensure the correct stack frame is set up. */
 void vUART_ISR_Handler( void ) __attribute__ ((noinline));
 
 /*-----------------------------------------------------------*/
-void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx )
+void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx )
 {
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );

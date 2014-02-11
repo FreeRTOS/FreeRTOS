@@ -133,8 +133,8 @@ indicate whether an error has been detected or not.  If the LED toggles every
 3 seconds then no errors have been detected.  If the rate increases to 500ms
 then an error has been detected in at least one of the demo application tasks. */
 #define mainCHECK_LED				( 7 )
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
 /*-----------------------------------------------------------*/
 
@@ -201,7 +201,7 @@ int main( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
 
 	/* Parameters are not used. */
 	( void ) pvParameters;

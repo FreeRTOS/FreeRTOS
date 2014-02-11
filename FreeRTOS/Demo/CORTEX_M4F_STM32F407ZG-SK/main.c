@@ -183,13 +183,13 @@
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 1 to create a simple demo.
 Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0 to create a much more
@@ -208,7 +208,7 @@ static void prvSetupHardware( void );
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Configure the interrupts used to test the interrupt nesting depth as
@@ -261,7 +261,7 @@ volatile unsigned long ulFPUInterruptNesting = 0UL, ulMaxFPUInterruptNesting = 0
 
 /* The semaphore used to demonstrate a task being synchronised with an
 interrupt. */
-static xSemaphoreHandle xTestSemaphore = NULL;
+static SemaphoreHandle_t xTestSemaphore = NULL;
 
 /* The variable that is incremented by the task synchronised with the button
 interrupt. */
@@ -298,7 +298,7 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
@@ -537,7 +537,7 @@ static void prvOptionallyCreateComprehensveTestApplication( void )
 {
 	#if ( mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY == 0 )
 	{
-	xTimerHandle xCheckTimer = NULL;
+	TimerHandle_t xCheckTimer = NULL;
 
 		/* Configure the interrupts used to test FPU registers being used from
 		nested interrupts. */
@@ -654,7 +654,7 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

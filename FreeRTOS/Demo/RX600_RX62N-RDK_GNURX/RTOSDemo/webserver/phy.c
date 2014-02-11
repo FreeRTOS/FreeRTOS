@@ -98,7 +98,7 @@ short  phy_init( void )
 
   do
   {
-	  vTaskDelay( 2 / portTICK_RATE_MS );
+	  vTaskDelay( 2 / portTICK_PERIOD_MS );
       reg = _phy_read(BASIC_MODE_CONTROL_REG);
 	  count++;
   } while (reg & 0x8000 && count < PHY_RESET_WAIT);
@@ -159,7 +159,7 @@ short phy_set_autonegotiate( void )
   {
       reg = _phy_read(BASIC_MODE_STATUS_REG);
       count++;
-	  vTaskDelay( 100 / portTICK_RATE_MS );
+	  vTaskDelay( 100 / portTICK_PERIOD_MS );
 	
 	  /* Make sure we don't break out if reg just contains 0xffff. */
 	  if( reg == 0xffff )

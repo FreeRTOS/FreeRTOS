@@ -196,22 +196,22 @@ stack than most of the other tasks. */
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* The LED that is turned on by pressing SW2 remains on until the button has not
 been pushed for a full 5000ms. */
-#define mainBUTTON_LED_TIMER_PERIOD_MS		( 5000UL / portTICK_RATE_MS )
+#define mainBUTTON_LED_TIMER_PERIOD_MS		( 5000UL / portTICK_PERIOD_MS )
 
 /* The period at which the two simple LED flash timers will execute their
 callback functions. */
-#define mainLED1_TIMER_PERIOD_MS			( 200UL / portTICK_RATE_MS )
-#define mainLED2_TIMER_PERIOD_MS			( 600UL / portTICK_RATE_MS )
+#define mainLED1_TIMER_PERIOD_MS			( 200UL / portTICK_PERIOD_MS )
+#define mainLED2_TIMER_PERIOD_MS			( 600UL / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -237,19 +237,19 @@ static void prvCreateDemoSpecificTimers( void );
  * The LED/button timer callback function.  This does nothing but switch an LED
  * off.
  */
-static void prvButtonLEDTimerCallback( xTimerHandle xTimer );
+static void prvButtonLEDTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The callback function used by both simple LED flash timers.  Both timers use
  * the same callback, so the function parameter is used to determine which LED
  * should be flashed (effectively to determine which timer has expired).
  */
-static void prvLEDTimerCallback( xTimerHandle xTimer );
+static void prvLEDTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Contains the implementation of the web server.
@@ -260,15 +260,15 @@ extern void vuIP_Task( void *pvParameters );
 
 /* The LED/Button software timer.  This uses prvButtonLEDTimerCallback() as it's
 callback function. */
-static xTimerHandle xLEDButtonTimer = NULL;
+static TimerHandle_t xLEDButtonTimer = NULL;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /* LED timers - these simply flash LEDs, each using a different frequency.  Both
 use the same prvLEDTimerCallback() callback function. */
-static xTimerHandle xLED1Timer = NULL, xLED2Timer = NULL;
+static TimerHandle_t xLED1Timer = NULL, xLED2Timer = NULL;
 
 /* If an error is detected in a standard demo task, then pcStatusMessage will
 be set to point to a string that identifies the offending task.  This is just
@@ -324,7 +324,7 @@ void main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 
@@ -411,7 +411,7 @@ static long lChangedTimerPeriodAlready = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static void prvButtonLEDTimerCallback( xTimerHandle xTimer )
+static void prvButtonLEDTimerCallback( TimerHandle_t xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
 	five seconds - turn the LED off. */
@@ -419,7 +419,7 @@ static void prvButtonLEDTimerCallback( xTimerHandle xTimer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvLEDTimerCallback( xTimerHandle xTimer )
+static void prvLEDTimerCallback( TimerHandle_t xTimer )
 {
 unsigned long ulLED;
 
@@ -535,7 +535,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

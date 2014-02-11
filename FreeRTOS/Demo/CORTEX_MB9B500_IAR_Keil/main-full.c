@@ -175,8 +175,8 @@
 #include "dynamic.h"
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
-converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS	( 200 / portTICK_RATE_MS )
+converted to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS	( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -225,21 +225,21 @@ FreeRTOS.org web site to see which LEDs this relates to. */
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 500UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 500UL / portTICK_PERIOD_MS )
 
 /* The period at which the digit counter timer will expire, in ms, and converted
-to ticks using the portTICK_RATE_MS constant. */
-#define mainDIGIT_COUNTER_TIMER_PERIOD_MS 	( 250UL / portTICK_RATE_MS )
+to ticks using the portTICK_PERIOD_MS constant. */
+#define mainDIGIT_COUNTER_TIMER_PERIOD_MS 	( 250UL / portTICK_PERIOD_MS )
 
 /* The LED will remain on until the button has not been pushed for a full
 5000ms. */
-#define mainLED_TIMER_PERIOD_MS				( 5000UL / portTICK_RATE_MS )
+#define mainLED_TIMER_PERIOD_MS				( 5000UL / portTICK_PERIOD_MS )
 
 /* A zero block time. */
 #define mainDONT_BLOCK						( 0UL )
@@ -264,17 +264,17 @@ static void prvQueueSendTask( void *pvParameters );
 /*
  * The LED timer callback function.  This does nothing but switch an LED off.
  */
-static void prvLEDTimerCallback( xTimerHandle xTimer );
+static void prvLEDTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The digit counter callback function, as described at the top of this file.
  */
-static void prvDigitCounterTimerCallback( xTimerHandle xTimer );
+static void prvDigitCounterTimerCallback( TimerHandle_t xTimer );
 
 /*
  * This is not a 'standard' partest function, so the prototype is not in
@@ -285,19 +285,19 @@ void vParTestSetLEDFromISR( unsigned portBASE_TYPE uxLED, signed portBASE_TYPE x
 /*-----------------------------------------------------------*/
 
 /* The queue used by both application specific demo tasks defined in this file. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /* The LED software timer.  This uses prvLEDTimerCallback() as it's callback
 function. */
-static xTimerHandle xLEDTimer = NULL;
+static TimerHandle_t xLEDTimer = NULL;
 
 /* The digit counter software timer.  This displays a counting digit on one half
 of the seven segment displays. */
-static xTimerHandle xDigitCounterTimer = NULL;
+static TimerHandle_t xDigitCounterTimer = NULL;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /* If an error is detected in a standard demo task, then pcStatusMessage will
 be set to point to a string that identifies the offending task.  This is just
@@ -384,7 +384,7 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 	/* Check the standard demo tasks are running without error.   Latch the
 	latest reported error in the pcStatusMessage character pointer. */
@@ -467,7 +467,7 @@ static void prvCheckTimerCallback( xTimerHandle xTimer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvLEDTimerCallback( xTimerHandle xTimer )
+static void prvLEDTimerCallback( TimerHandle_t xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
 	five seconds - turn the LED off. */
@@ -475,7 +475,7 @@ static void prvLEDTimerCallback( xTimerHandle xTimer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvDigitCounterTimerCallback( xTimerHandle xTimer )
+static void prvDigitCounterTimerCallback( TimerHandle_t xTimer )
 {
 /* Define the bit patterns that display numbers on the seven segment display. */
 static const unsigned short usNumbersPatterns[] = { 0xC000U, 0xF900U, 0xA400U, 0xB000U, 0x9900U, 0x9200U, 0x8200U, 0xF800U, 0x8000U, 0x9000U };
@@ -526,7 +526,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* The timer command queue will have been filled when the timer test tasks
@@ -622,7 +622,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

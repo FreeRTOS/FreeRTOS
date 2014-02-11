@@ -58,7 +58,7 @@
 
 #include "LPC17xx.h"
 
-#define usbMAX_SEND_BLOCK		( 20 / portTICK_RATE_MS )
+#define usbMAX_SEND_BLOCK		( 20 / portTICK_PERIOD_MS )
 #define usbBUFFER_LEN			( 20 )
 
 #define INCREMENT_ECHO_BY 1
@@ -92,7 +92,7 @@ static TLineCoding LineCoding = {115200, 0, 0, 8};
 static unsigned char abBulkBuf[64];
 static unsigned char abClassReqData[8];
 
-static xQueueHandle xRxedChars = NULL, xCharsForTx = NULL;
+static QueueHandle_t xRxedChars = NULL, xCharsForTx = NULL;
 
 // forward declaration of interrupt handler
 void USBIntHandler(void);

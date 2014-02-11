@@ -143,7 +143,7 @@ extra code. */
 #define mainBITMAP_X						( 18 )
 #define mainURL_Y							( 8 )
 #define mainURL_X							( 78 )
-#define mainSPLASH_SCREEN_DELAY		( 2000 / portTICK_RATE_MS )
+#define mainSPLASH_SCREEN_DELAY		( 2000 / portTICK_PERIOD_MS )
 
 /* Text drawing related constants. */
 #define mainLCD_CHAR_HEIGHT			( 13 )
@@ -164,13 +164,13 @@ these can require a larger stack. */
 #define mainMAX_MSG_LEN						25
 
 /* The time between cycles of the 'check' task. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* The period at which the MEMS input should be updated. */
-#define mainMEMS_DELAY						( ( portTickType ) 100 / portTICK_RATE_MS )
+#define mainMEMS_DELAY						( ( TickType_t ) 100 / portTICK_PERIOD_MS )
 
 /* The rate at which the flash task toggles the LED. */
-#define mainFLASH_DELAY						( ( portTickType ) 1000 / portTICK_RATE_MS )
+#define mainFLASH_DELAY						( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
 
 /* The number of nano seconds between each processor clock. */
 #define mainNS_PER_CLOCK ( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
@@ -236,7 +236,7 @@ static void prvFlashTask( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -328,7 +328,7 @@ const char * const pcBlankLine = "                  ";
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 xLCDMessage xMessage;
 static signed char cPassMessage[ mainMAX_MSG_LEN ];
 extern unsigned short usMaxJitter;
@@ -472,7 +472,7 @@ static void prvSetupHardware( void )
 
 static void prvFlashTask( void *pvParameters )
 {
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 
 	/* Initialise the xLastExecutionTime variable on task entry. */
 	xLastExecutionTime = xTaskGetTickCount();
@@ -489,7 +489,7 @@ portTickType xLastExecutionTime;
 
 void starting_delay( unsigned long ul )
 {
-	vTaskDelay( ( portTickType ) ul );
+	vTaskDelay( ( TickType_t ) ul );
 }
 
 

@@ -72,7 +72,7 @@
 #define cmdMAX_INPUT_SIZE		50
 
 /* The maximum time in ticks to wait for the UART access mutex. */
-#define cmdMAX_MUTEX_WAIT		( 200 / portTICK_RATE_MS )
+#define cmdMAX_MUTEX_WAIT		( 200 / portTICK_PERIOD_MS )
 
 /*-----------------------------------------------------------*/
 

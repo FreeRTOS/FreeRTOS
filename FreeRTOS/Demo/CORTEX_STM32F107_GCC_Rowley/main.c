@@ -136,7 +136,7 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -191,7 +191,7 @@ extern void vSetupHighFrequencyTimer( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -347,7 +347,7 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This function will get called if a task overflows its stack.   If the
 	parameters are corrupt then inspect pxCurrentTCB to find which was the

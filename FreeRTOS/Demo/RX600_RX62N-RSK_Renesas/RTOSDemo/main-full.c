@@ -181,12 +181,12 @@ stack than most of the other tasks. */
 /* The rate at which mainCHECK_LED will toggle when all the tasks are running
 without error.  Controlled by the check task as described at the top of this
 file. */
-#define mainNO_ERROR_CYCLE_TIME		( 5000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CYCLE_TIME		( 5000 / portTICK_PERIOD_MS )
 
 /* The rate at which mainCHECK_LED will toggle when an error has been reported
 by at least one task.  Controlled by the check task as described at the top of
 this file. */
-#define mainERROR_CYCLE_TIME		( 200 / portTICK_RATE_MS )
+#define mainERROR_CYCLE_TIME		( 200 / portTICK_PERIOD_MS )
 
 /*
  * vApplicationMallocFailedHook() will only be called if
@@ -218,7 +218,7 @@ void vApplicationIdleHook( void );
  * it is possible that the stack overflow will have corrupted these - in which
  * case pxCurrentTCB can be inspected to find the same information.
  */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
 /*
  * The reg test tasks as described at the top of this file.
@@ -310,7 +310,7 @@ extern void HardwareSetup( void );
 static void prvCheckTask( void *pvParameters )
 {
 static volatile unsigned long ulLastRegTest1CycleCount = 0UL, ulLastRegTest2CycleCount = 0UL;
-portTickType xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
+TickType_t xNextWakeTime, xCycleFrequency = mainNO_ERROR_CYCLE_TIME;
 extern void vSetupHighFrequencyTimer( void );
 
 	/* If this is being executed then the kernel has been started.  Start the high
@@ -451,7 +451,7 @@ void vApplicationMallocFailedHook( void )
 
 /* This function is explained by the comments above its prototype at the top
 of this file. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

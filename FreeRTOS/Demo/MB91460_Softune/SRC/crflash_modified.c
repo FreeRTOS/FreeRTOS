@@ -132,7 +132,7 @@ static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE
 
 /* The queue used to pass data between the 'fixed delay' co-routines and the
 'flash' co-routine. */
-static xQueueHandle xFlashQueue;
+static QueueHandle_t xFlashQueue;
 
 /* This will be set to pdFALSE if we detect an error. */
 static unsigned portBASE_TYPE uxCoRoutineFlashStatus = pdPASS;
@@ -175,14 +175,14 @@ static as we do not need it to maintain its state between blocks. */
 signed portBASE_TYPE xResult;
 /* The uxIndex parameter of the co-routine function is used as an index into
 the xFlashRates array to obtain the delay period to use. */
-static const portTickType xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_RATE_MS,
-																200 / portTICK_RATE_MS,
-																250 / portTICK_RATE_MS,
-																300 / portTICK_RATE_MS,
-																350 / portTICK_RATE_MS,
-																400 / portTICK_RATE_MS,
-																450 / portTICK_RATE_MS,
-																500  / portTICK_RATE_MS };
+static const TickType_t xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_PERIOD_MS,
+																200 / portTICK_PERIOD_MS,
+																250 / portTICK_PERIOD_MS,
+																300 / portTICK_PERIOD_MS,
+																350 / portTICK_PERIOD_MS,
+																400 / portTICK_PERIOD_MS,
+																450 / portTICK_PERIOD_MS,
+																500  / portTICK_PERIOD_MS };
 
 	/* Co-routines MUST start with a call to crSTART. */
 	crSTART( xHandle );

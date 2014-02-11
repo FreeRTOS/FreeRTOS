@@ -133,11 +133,11 @@
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* Check timer callback function. */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /* Defined in lwIPApps.c. */
 extern void lwIPAppsInit( void *pvArguments );
@@ -158,7 +158,7 @@ long long llInitialRunTimeCounterValue = 0LL, llRunTimeStatsDivisor = 0LL;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /* Structure that defines the "run-time-stats" command line command. */
 static const xCommandLineInput xRunTimeStats =
@@ -223,7 +223,7 @@ const unsigned long ulLongTime_ms = 1000UL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 	/* The parameter is not used in this case. */
 	( void ) xTimer;

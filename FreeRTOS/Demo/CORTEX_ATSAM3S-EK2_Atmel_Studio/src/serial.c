@@ -90,8 +90,8 @@
 /*-----------------------------------------------------------*/
 
 /* Misc defines. */
-#define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
-#define serNO_BLOCK						( ( portTickType ) 0 )
+#define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
+#define serNO_BLOCK						( ( TickType_t ) 0 )
 #define serPMC_USART_ID					( BOARD_ID_USART )
 
 /* The USART supported by this file. */
@@ -104,8 +104,8 @@
 /*-----------------------------------------------------------*/
 
 /* The queue used to hold received characters. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -169,7 +169,7 @@ const sam_usart_opt_t xUSARTSettings =
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -211,7 +211,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 signed portBASE_TYPE xReturn;
 

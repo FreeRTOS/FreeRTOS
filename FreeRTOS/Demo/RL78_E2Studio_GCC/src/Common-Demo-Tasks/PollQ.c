@@ -99,7 +99,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  portTickType rather than unsigned long.
+	  TickType_t rather than unsigned long.
 */
 
 #include <stdlib.h>
@@ -114,9 +114,9 @@ Changes from V2.0.0
 
 #define pollqSTACK_SIZE			configMINIMAL_STACK_SIZE
 #define pollqQUEUE_SIZE			( 10 )
-#define pollqPRODUCER_DELAY		( ( portTickType ) 200 / portTICK_RATE_MS )
-#define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( portTickType ) ( 20 / portTICK_RATE_MS ) )
-#define pollqNO_DELAY			( ( portTickType ) 0 )
+#define pollqPRODUCER_DELAY		( ( TickType_t ) 200 / portTICK_PERIOD_MS )
+#define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( TickType_t ) ( 20 / portTICK_PERIOD_MS ) )
+#define pollqNO_DELAY			( ( TickType_t ) 0 )
 #define pollqVALUES_TO_PRODUCE	( ( signed portBASE_TYPE ) 3 )
 #define pollqINITIAL_VALUE		( ( signed portBASE_TYPE ) 0 )
 
@@ -134,7 +134,7 @@ static volatile signed portBASE_TYPE xPollingConsumerCount = pollqINITIAL_VALUE,
 
 void vStartPolledQueueTasks( unsigned portBASE_TYPE uxPriority )
 {
-static xQueueHandle xPolledQueue;
+static QueueHandle_t xPolledQueue;
 
 	/* Create the queue used by the producer and consumer. */
 	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
@@ -148,8 +148,8 @@ static xQueueHandle xPolledQueue;
 	vQueueAddToRegistry( xPolledQueue, ( signed char * ) "Poll_Test_Queue" );
 
 	/* Spawn the producer and consumer. */
-	xTaskCreate( vPolledQueueConsumer, ( signed char * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
-	xTaskCreate( vPolledQueueProducer, ( signed char * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vPolledQueueConsumer, ( signed char * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( TaskHandle_t * ) NULL );
+	xTaskCreate( vPolledQueueProducer, ( signed char * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( TaskHandle_t * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -163,7 +163,7 @@ signed portBASE_TYPE xError = pdFALSE, xLoop;
 		for( xLoop = 0; xLoop < pollqVALUES_TO_PRODUCE; xLoop++ )
 		{
 			/* Send an incrementing number on the queue without blocking. */
-			if( xQueueSend( *( ( xQueueHandle * ) pvParameters ), ( void * ) &usValue, pollqNO_DELAY ) != pdPASS )
+			if( xQueueSend( *( ( QueueHandle_t * ) pvParameters ), ( void * ) &usValue, pollqNO_DELAY ) != pdPASS )
 			{
 				/* We should never find the queue full so if we get here there
 				has been an error. */
@@ -200,9 +200,9 @@ signed portBASE_TYPE xError = pdFALSE;
 	for( ;; )
 	{		
 		/* Loop until the queue is empty. */
-		while( uxQueueMessagesWaiting( *( ( xQueueHandle * ) pvParameters ) ) )
+		while( uxQueueMessagesWaiting( *( ( QueueHandle_t * ) pvParameters ) ) )
 		{
-			if( xQueueReceive( *( ( xQueueHandle * ) pvParameters ), &usData, pollqNO_DELAY ) == pdPASS )
+			if( xQueueReceive( *( ( QueueHandle_t * ) pvParameters ), &usData, pollqNO_DELAY ) == pdPASS )
 			{
 				if( usData != usExpectedValue )
 				{

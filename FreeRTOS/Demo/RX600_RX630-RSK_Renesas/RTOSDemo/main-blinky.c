@@ -87,7 +87,7 @@
 #define	configQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 500 / portTICK_RATE_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			( 500 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added so the send task should always find the
@@ -101,7 +101,7 @@ static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
 /* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /* This variable is not used by this simple Blinky example.  It is defined 
 purely to allow the project to link as it is used by the full build 
@@ -142,7 +142,7 @@ extern void HardwareSetup( void );
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
@@ -229,7 +229,7 @@ void vApplicationMallocFailedHook( void )
 FreeRTOSConfig.h, then this function will be called if a task overflows its 
 stack space.  See 
 http://www.freertos.org/Stacks-and-stack-overflow-checking.html. */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

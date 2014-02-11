@@ -137,11 +137,11 @@
 
 /* The rate at which the on board LED will toggle when there is/is not an
 error. */
-#define mainNO_ERROR_FLASH_PERIOD	( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_FLASH_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS  )
+#define mainNO_ERROR_FLASH_PERIOD	( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_FLASH_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS  )
 
 /* The rate at which the idle hook sends data to the USB port. */
-#define mainUSB_TX_FREQUENCY		( 100 / portTICK_RATE_MS )
+#define mainUSB_TX_FREQUENCY		( 100 / portTICK_PERIOD_MS )
 
 /* The string that is transmitted down the USB port. */
 #define mainFIRST_TX_CHAR			'a'
@@ -246,8 +246,8 @@ static void prvSetupHardware( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
-portTickType xLastWakeTime;
+TickType_t xDelayPeriod = mainNO_ERROR_FLASH_PERIOD;
+TickType_t xLastWakeTime;
 
 	/* The parameters are not used. */
 	( void ) pvParameters;
@@ -313,7 +313,7 @@ long lReturn = ( long ) pdPASS;
 
 void vApplicationIdleHook( void )
 {
-static portTickType xLastTx = 0;
+static TickType_t xLastTx = 0;
 char cTxByte;
 
 	/* The idle hook simply sends a string of characters to the USB port.

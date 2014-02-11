@@ -121,7 +121,7 @@ static const uint32_t ulAlarmValueForOneTick = ( configSYSTICK_CLOCK_HZ / config
 /* Holds the maximum number of ticks that can be suppressed - which is
 basically how far into the future an interrupt can be generated. Set
 during initialisation. */
-static portTickType xMaximumPossibleSuppressedTicks = 0;
+static TickType_t xMaximumPossibleSuppressedTicks = 0;
 
 /* Flag set from the tick interrupt to allow the sleep processing to know if
 sleep mode was exited because of an AST interrupt or a different interrupt. */
@@ -250,11 +250,11 @@ static void prvEnableAST( void )
 defined in the FreeRTOS Cortex-M3 port layer with a version that manages the
 asynchronous timer (AST), as the tick is generated from the low power AST and
 not the SysTick as would normally be the case on a Cortex-M. */
-void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
+void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 {
 uint32_t ulAlarmValue, ulCompleteTickPeriods, ulInterruptStatus;
 eSleepModeStatus eSleepAction;
-portTickType xModifiableIdleTime;
+TickType_t xModifiableIdleTime;
 enum sleepmgr_mode xSleepMode;
 
 	/* THIS FUNCTION IS CALLED WITH THE SCHEDULER SUSPENDED. */

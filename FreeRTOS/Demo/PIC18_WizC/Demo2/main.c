@@ -113,8 +113,8 @@ Changes from V3.0.1
 /* The period between executions of the check task before and after an error
 has been discovered.  If an error has been discovered the check task runs
 more frequently - increasing the LED flash rate. */
-#define mainNO_ERROR_CHECK_PERIOD	( ( portTickType ) 10000 / portTICK_RATE_MS )
-#define mainERROR_CHECK_PERIOD		( ( portTickType )  1000 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_PERIOD	( ( TickType_t ) 10000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_PERIOD		( ( TickType_t )  1000 / portTICK_PERIOD_MS )
 #define mainCHECK_TASK_LED			( ( unsigned char ) 3 )
 
 /* Priority definitions for some of the tasks.  Other tasks just use the idle
@@ -128,7 +128,7 @@ priority. */
 /* Constants required for the communications.  Only one character is ever
 transmitted. */
 #define mainCOMMS_QUEUE_LENGTH		( ( unsigned char ) 5 )
-#define mainNO_BLOCK				( ( portTickType ) 0 )
+#define mainNO_BLOCK				( ( TickType_t ) 0 )
 #define mainBAUD_RATE				( ( unsigned long ) 57600 )
 
 /*
@@ -174,8 +174,8 @@ void main( void )
 
 static portTASK_FUNCTION( vErrorChecks, pvParameters )
 {
-portTickType xLastCheckTime;
-portTickType xDelayTime = mainNO_ERROR_CHECK_PERIOD;
+TickType_t xLastCheckTime;
+TickType_t xDelayTime = mainNO_ERROR_CHECK_PERIOD;
 char cErrorOccurred;
 
 	/* We need to initialise xLastCheckTime prior to the first call to

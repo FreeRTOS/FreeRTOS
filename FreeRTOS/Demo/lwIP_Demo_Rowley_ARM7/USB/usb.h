@@ -126,9 +126,9 @@
 #define usbMAX_CONTROL_MESSAGE_SIZE			( 128 )
 #define usbRX_COUNT_MASK					( ( unsigned long ) 0x7ff )
 #define AT91C_UDP_STALLSENT					AT91C_UDP_ISOERROR
-#define usbSHORTEST_DELAY					( ( portTickType ) 1 )
-#define usbINIT_DELAY						( ( portTickType ) 1000 / portTICK_RATE_MS )
-#define usbSHORT_DELAY						( ( portTickType ) 50 / portTICK_RATE_MS )
+#define usbSHORTEST_DELAY					( ( TickType_t ) 1 )
+#define usbINIT_DELAY						( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define usbSHORT_DELAY						( ( TickType_t ) 50 / portTICK_PERIOD_MS )
 #define usbEND_POINT_RESET_MASK				( ( unsigned long ) 0x0f )
 #define usbDATA_INC							( ( char ) 5 )
 #define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned long ) 8 )

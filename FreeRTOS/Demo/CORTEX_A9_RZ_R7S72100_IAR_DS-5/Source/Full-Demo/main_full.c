@@ -189,13 +189,13 @@ the COM test tasks, so just set both to invalid values. */
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainNO_ERROR_CHECK_TASK_PERIOD			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TASK_PERIOD 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TASK_PERIOD 	( 200UL / portTICK_PERIOD_MS )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -346,8 +346,8 @@ void main_full( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
-portTickType xLastExecutionTime;
+TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
+TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 unsigned long ulErrorFound = pdFALSE;
 
@@ -411,7 +411,7 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound = pdTRUE;
 		}
 
-		if( xAreTimerDemoTasksStillRunning( ( portTickType ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
+		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
 		{
 			ulErrorFound = pdTRUE;
 		}

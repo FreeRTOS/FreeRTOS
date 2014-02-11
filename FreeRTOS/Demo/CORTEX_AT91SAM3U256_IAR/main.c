@@ -123,7 +123,7 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook). */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* The LCD task uses the sprintf function so requires a little more stack too. */
 #define mainLCD_TASK_STACK_SIZE				( configMINIMAL_STACK_SIZE * 2 )
@@ -163,7 +163,7 @@ static void prvLCDTask( void *pvParameters );
  * Hook functions that can get called by the kernel.  The 'check' functionality
  * is implemented within the tick hook.
  */
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
 /*
  * The tick hook function as described in the comments at the top of this file.
@@ -177,7 +177,7 @@ void vApplicationTickHook( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-static xQueueHandle xLCDQueue;
+static QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -280,7 +280,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pxTask;
 	( void ) pcTaskName;

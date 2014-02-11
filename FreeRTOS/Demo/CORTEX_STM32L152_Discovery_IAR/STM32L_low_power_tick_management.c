@@ -109,7 +109,7 @@ static const uint32_t ulReloadValueForOneTick = ( ( lpCLOCK_INPUT_FREQUENCY / co
 /* Holds the maximum number of ticks that can be suppressed - which is
 basically how far into the future an interrupt can be generated. Set during
 initialisation. */
-static portTickType xMaximumPossibleSuppressedTicks = 0;
+static TickType_t xMaximumPossibleSuppressedTicks = 0;
 
 /* Flag set from the tick interrupt to allow the sleep processing to know if
 sleep mode was exited because of an tick interrupt or a different interrupt. */
@@ -195,12 +195,12 @@ TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 /* Override the default definition of vPortSuppressTicksAndSleep() that is
 weakly defined in the FreeRTOS Cortex-M3 port layer with a version that manages
 the TIM2 interrupt, as the tick is generated from TIM2 compare matches events. */
-void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime )
+void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 {
 uint32_t ulCounterValue, ulCompleteTickPeriods;
 eSleepModeStatus eSleepAction;
-portTickType xModifiableIdleTime;
-const portTickType xRegulatorOffIdleTime = 30;
+TickType_t xModifiableIdleTime;
+const TickType_t xRegulatorOffIdleTime = 30;
 
 	/* THIS FUNCTION IS CALLED WITH THE SCHEDULER SUSPENDED. */
 

@@ -138,13 +138,13 @@
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_RATE_MS constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+in ticks using the portTICK_PERIOD_MS constant. */
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* The priorities of the various demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
@@ -194,7 +194,7 @@ FreeRTOSConfig.h. */
 /*
  * The check timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Creates a set of sample files on a RAM disk.  http://www.FreeRTOS.org/fat_sl
@@ -243,7 +243,7 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 int main_full( void )
 {
-xTimerHandle xTimer = NULL;
+TimerHandle_t xTimer = NULL;
 
 	/* Usage instructions on http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html */
 
@@ -319,7 +319,7 @@ xTimerHandle xTimer = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
 unsigned long ulErrorOccurred = pdFALSE;

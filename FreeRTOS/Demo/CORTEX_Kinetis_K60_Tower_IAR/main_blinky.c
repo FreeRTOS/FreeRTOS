@@ -128,12 +128,12 @@
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue, specified in milliseconds, and
-converted to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+converted to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
 
 /* The LED will remain on until the button has not been pushed for a full
 5000ms. */
-#define mainBUTTON_LED_TIMER_PERIOD_MS		( 5000UL / portTICK_RATE_MS )
+#define mainBUTTON_LED_TIMER_PERIOD_MS		( 5000UL / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -171,16 +171,16 @@ static void prvQueueSendTask( void *pvParameters );
  * The LED timer callback function.  This does nothing but switch off the
  * LED defined by the mainTIMER_CONTROLLED_LED constant.
  */
-static void prvButtonLEDTimerCallback( xTimerHandle xTimer );
+static void prvButtonLEDTimerCallback( TimerHandle_t xTimer );
 
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
-static xQueueHandle xQueue = NULL;
+static QueueHandle_t xQueue = NULL;
 
 /* The LED software timer.  This uses prvButtonLEDTimerCallback() as its callback
 function. */
-static xTimerHandle xButtonLEDTimer = NULL;
+static TimerHandle_t xButtonLEDTimer = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -222,7 +222,7 @@ void main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvButtonLEDTimerCallback( xTimerHandle xTimer )
+static void prvButtonLEDTimerCallback( TimerHandle_t xTimer )
 {
 	/* The timer has expired - so no button pushes have occurred in the last
 	five seconds - turn the LED off. */
@@ -259,7 +259,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
@@ -340,7 +340,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

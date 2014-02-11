@@ -118,12 +118,12 @@ static void prvLCDClear( void );
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 
 /*-----------------------------------------------------------*/
 
-xQueueHandle xStartLCDTask( void )
+QueueHandle_t xStartLCDTask( void )
 {
 	/* Create the queue used by the LCD task.  Messages for display on the LCD
 	are received via this queue. */

@@ -158,7 +158,7 @@ typedef volatile unsigned short REG16;
 // External delay 1 ms function
 #include "FreeRTOS.h"
 #include "task.h"
-#define Delay(ms) vTaskDelay(ms/portTICK_RATE_MS)
+#define Delay(ms) vTaskDelay(ms/portTICK_PERIOD_MS)
 
 //------------------------------------------------------------------------------
 //         Global functions

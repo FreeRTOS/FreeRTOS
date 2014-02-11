@@ -101,7 +101,7 @@ the ComTest tasks will be included in place of the trace task. */
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 180 ) /* This can be greatly reduced when using the small or medium memory model. */
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 56000000 )	/* Clock setup from start.asm in the demo application. */
 #define configCLKP1_CLOCK_HZ			( ( unsigned long ) 56000000 )	/* Clock setup from start.asm in the demo application. */
-#define configTICK_RATE_HZ				( (portTickType) 1000 )
+#define configTICK_RATE_HZ				( (TickType_t) 1000 )
 #define configMAX_PRIORITIES			( 6 )
 #define configTOTAL_HEAP_SIZE			( (size_t) (5000) )
 #define configMAX_TASK_NAME_LEN			( 20 )

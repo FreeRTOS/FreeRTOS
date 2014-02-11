@@ -54,12 +54,12 @@
 #define netifINTERFACE_TASK_STACK_SIZE		( 350 )
 #define netifINTERFACE_TASK_PRIORITY			( configMAX_PRIORITIES - 1 )
 #define netifBUFFER_WAIT_ATTEMPTS					10
-#define netifBUFFER_WAIT_DELAY						(10 / portTICK_RATE_MS)
+#define netifBUFFER_WAIT_DELAY						(10 / portTICK_PERIOD_MS)
 #define IFNAME0 'e'
 #define IFNAME1 'n'
 
 /* The time to block waiting for input. */
-#define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( portTickType ) 100 )
+#define emacBLOCK_TIME_WAITING_FOR_INPUT	( ( TickType_t ) 100 )
 
 /* Interrupt status bit definition. */
 #define DMI_RX_CURRENT_DONE 0x8000
@@ -67,7 +67,7 @@
 static u8_t s_rxBuff[1520];
 
 /* The semaphore used by the ISR to wake the lwIP task. */
-static xSemaphoreHandle s_xSemaphore = NULL;
+static SemaphoreHandle_t s_xSemaphore = NULL;
 
 struct ethernetif {
   struct eth_addr *ethaddr;

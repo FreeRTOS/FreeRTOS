@@ -105,7 +105,7 @@
 
 /* Demo application definitions. */
 #define mainQUEUE_SIZE						( 3 )
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 #define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 6 )
 
 /* Task priorities. */
@@ -152,7 +152,7 @@ static void vLCDTask( void *pvParameters );
 static void prvSetupHardware( void );
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 

@@ -107,10 +107,10 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook). */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* The toggle rate for the LED. */
-#define mainLED_TOGGLE_RATE					( ( portTickType ) 1000 / portTICK_RATE_MS )
+#define mainLED_TOGGLE_RATE					( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
 
 /* Task priorities. */
 #define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
@@ -253,7 +253,7 @@ static unsigned long ulTicksSinceLastDisplay = 0;
 
 static void prvFlashTask( void *pvParameters )
 {
-portTickType xLastFlashTime;
+TickType_t xLastFlashTime;
 
 	/* We need to initialise xLastFlashTime prior to the first call to
 	vTaskDelayUntil(). */
@@ -372,7 +372,7 @@ void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This function will get called if a task overflows its stack. */
 

@@ -24,9 +24,9 @@ static void vUART0Task( void *pvParameters );
 /*********************@GLOBAL_VARIABLES_START*******************/
 const char	ASCII[] = "0123456789ABCDEF";
 
-xTaskHandle UART_TaskHandle;
+TaskHandle_t UART_TaskHandle;
 
-static xQueueHandle xQueue;
+static QueueHandle_t xQueue;
 void InitUart0( void )
 {
 	/* Initialize UART asynchronous mode */
@@ -184,7 +184,7 @@ static void vUART0Task( void *pvParameters )
 			case '2':
 				vTaskStartTrace( (signed char *) buff, sizeof( buff ) );
 				Puts0( "\n\rThe trace started!!" );
-				vTaskDelay( (portTickType) 500 );
+				vTaskDelay( (TickType_t) 500 );
 				trace_len = ulTaskEndTrace();
 				Puts0( "\n\rThe trace ended!!" );
 				Puts0( "\n\rThe trace is as follows...." );

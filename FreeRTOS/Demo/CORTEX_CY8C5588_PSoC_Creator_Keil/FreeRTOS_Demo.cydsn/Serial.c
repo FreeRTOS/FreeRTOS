@@ -77,8 +77,8 @@ CY_ISR_PROTO( vUartRxISR );
 CY_ISR_PROTO( vUartTxISR );
 /*---------------------------------------------------------------------------*/
 
-static xQueueHandle xSerialTxQueue = NULL;
-static xQueueHandle xSerialRxQueue = NULL;
+static QueueHandle_t xSerialTxQueue = NULL;
+static QueueHandle_t xSerialRxQueue = NULL;
 /*---------------------------------------------------------------------------*/
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
@@ -122,7 +122,7 @@ unsigned short usIndex = 0;
 }
 /*---------------------------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 portBASE_TYPE xReturn = pdFALSE;
 
@@ -135,7 +135,7 @@ portBASE_TYPE xReturn = pdFALSE;
 }
 /*---------------------------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 portBASE_TYPE xReturn = pdFALSE;
 

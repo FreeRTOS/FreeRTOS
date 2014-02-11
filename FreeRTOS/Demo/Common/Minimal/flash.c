@@ -89,7 +89,7 @@
 
 #define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
 #define ledNUMBER_OF_LEDS	( 3 )
-#define ledFLASH_RATE_BASE	( ( portTickType ) 333 )
+#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
 
 /* Variable used by the created tasks to calculate the LED number to use, and
 the rate at which they should flash the LED. */
@@ -108,14 +108,14 @@ signed portBASE_TYPE xLEDTask;
 	for( xLEDTask = 0; xLEDTask < ledNUMBER_OF_LEDS; ++xLEDTask )
 	{
 		/* Spawn the task. */
-		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+		xTaskCreate( vLEDFlashTask, "LEDx", ledSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
 	}
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vLEDFlashTask, pvParameters )
 {
-portTickType xFlashRate, xLastFlashTime;
+TickType_t xFlashRate, xLastFlashTime;
 unsigned portBASE_TYPE uxLED;
 
 	/* The parameters are not used. */
@@ -132,12 +132,12 @@ unsigned portBASE_TYPE uxLED;
 	}
 	portEXIT_CRITICAL();
 
-	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( portTickType ) uxLED );
-	xFlashRate /= portTICK_RATE_MS;
+	xFlashRate = ledFLASH_RATE_BASE + ( ledFLASH_RATE_BASE * ( TickType_t ) uxLED );
+	xFlashRate /= portTICK_PERIOD_MS;
 
 	/* We will turn the LED on and off again in the delay period, so each
 	delay is only half the total period. */
-	xFlashRate /= ( portTickType ) 2;
+	xFlashRate /= ( TickType_t ) 2;
 
 	/* We need to initialise xLastFlashTime prior to the first call to 
 	vTaskDelayUntil(). */

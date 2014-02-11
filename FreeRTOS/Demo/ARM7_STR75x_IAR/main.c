@@ -168,7 +168,7 @@ static void vPrintTask( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* The queue used to communicate with the LCD print task. */
-static xQueueHandle xLCDQueue;
+static QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -205,7 +205,7 @@ void main( void )
 static void vCheckTask( void *pvParameters )
 {
 static unsigned long ulErrorDetected = pdFALSE;
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 unsigned char *cErrorMessage = "              FAIL";
 unsigned char *cSuccessMessage = "              PASS";
 unsigned portBASE_TYPE uxColumn = mainMAX_WRITE_COLUMN;

@@ -118,14 +118,14 @@ int __low_level_init(void);
 within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
 /* This variable is not actually used, but provided to allow an example of how
 to write an ISR to be included in this file. */
-static xSemaphoreHandle xSemaphore = NULL;
+static SemaphoreHandle_t xSemaphore = NULL;
 
 /* RL78 Option Byte Definition. Watchdog disabled, LVI enabled, OCD interface
 enabled. */
@@ -230,7 +230,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

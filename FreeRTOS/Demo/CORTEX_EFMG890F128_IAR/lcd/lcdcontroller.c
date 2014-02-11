@@ -535,7 +535,7 @@ void LCD_ScrollText(LCD_TypeDef *lcd, char *scrolltext)
   {
     memcpy(buffer, scrolltext + i, 7);
     LCD_Write(lcd, buffer);
-    vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(100/portTICK_PERIOD_MS);
   }
 }
 

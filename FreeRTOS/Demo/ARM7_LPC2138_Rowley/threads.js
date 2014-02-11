@@ -49,7 +49,7 @@ function add_list(list, state)
 
     for (i = 0; i < list.uxNumberOfItems; i++)
     {
-      item = Debug.evaluate("*(xListItem *)" + index);
+      item = Debug.evaluate("*(ListItem_t *)" + index);
 
       task = item ? item.pvOwner : 0;
 

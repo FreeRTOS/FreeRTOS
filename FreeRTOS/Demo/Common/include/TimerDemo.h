@@ -66,8 +66,8 @@
 #ifndef TIMER_DEMO_H
 #define TIMER_DEMO_H
 
-void vStartTimerDemoTask( portTickType xBaseFrequencyIn );
-portBASE_TYPE xAreTimerDemoTasksStillRunning( portTickType xCycleFrequency );
+void vStartTimerDemoTask( TickType_t xBaseFrequencyIn );
+portBASE_TYPE xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency );
 void vTimerPeriodicISRTests( void );
 
 #endif /* TIMER_DEMO_H */

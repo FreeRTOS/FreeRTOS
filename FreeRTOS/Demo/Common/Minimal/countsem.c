@@ -111,13 +111,13 @@ static void prvCountingSemaphoreTask( void *pvParameters );
  * Utility function to increment the semaphore count value up from zero to
  * countMAX_COUNT_VALUE.
  */
-static void prvIncrementSemaphoreCount( xSemaphoreHandle xSemaphore, unsigned portBASE_TYPE *puxLoopCounter );
+static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter );
 
 /*
  * Utility function to decrement the semaphore count value up from 
  * countMAX_COUNT_VALUE to zero.
  */
-static void prvDecrementSemaphoreCount( xSemaphoreHandle xSemaphore, unsigned portBASE_TYPE *puxLoopCounter );
+static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter );
 
 /*-----------------------------------------------------------*/
 
@@ -125,7 +125,7 @@ static void prvDecrementSemaphoreCount( xSemaphoreHandle xSemaphore, unsigned po
 typedef struct COUNT_SEM_STRUCT
 {
 	/* The semaphore to be used for the demo. */
-	xSemaphoreHandle xSemaphore;
+	SemaphoreHandle_t xSemaphore;
 
 	/* Set to countSTART_AT_MAX_COUNT if the semaphore should be created with
 	its count value set to its max count value, or countSTART_AT_ZERO if it
@@ -161,8 +161,8 @@ void vStartCountingSemaphoreTasks( void )
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
 	defined to be less than 1. */
-	vQueueAddToRegistry( ( xQueueHandle ) xParameters[ 0 ].xSemaphore, "Counting_Sem_1" );
-	vQueueAddToRegistry( ( xQueueHandle ) xParameters[ 1 ].xSemaphore, "Counting_Sem_2" );
+	vQueueAddToRegistry( ( QueueHandle_t ) xParameters[ 0 ].xSemaphore, "Counting_Sem_1" );
+	vQueueAddToRegistry( ( QueueHandle_t ) xParameters[ 1 ].xSemaphore, "Counting_Sem_2" );
 
 
 	/* Were the semaphores created? */
@@ -175,7 +175,7 @@ void vStartCountingSemaphoreTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvDecrementSemaphoreCount( xSemaphoreHandle xSemaphore, unsigned portBASE_TYPE *puxLoopCounter )
+static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter )
 {
 unsigned portBASE_TYPE ux;
 
@@ -211,7 +211,7 @@ unsigned portBASE_TYPE ux;
 }
 /*-----------------------------------------------------------*/
 
-static void prvIncrementSemaphoreCount( xSemaphoreHandle xSemaphore, unsigned portBASE_TYPE *puxLoopCounter )
+static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter )
 {
 unsigned portBASE_TYPE ux;
 

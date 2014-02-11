@@ -108,9 +108,9 @@ can be generated. */
 
 /* The time between transmissions of the string on UART 0.   This is pseudo
 random in order to generate a bit or randomness to when the interrupts occur.*/
-#define commsMIN_TX_DELAY			( 40 / portTICK_RATE_MS )
-#define commsMAX_TX_DELAY			( ( portTickType ) 0x7f )
-#define commsOFFSET_TIME			( ( portTickType ) 3 )
+#define commsMIN_TX_DELAY			( 40 / portTICK_PERIOD_MS )
+#define commsMAX_TX_DELAY			( ( TickType_t ) 0x7f )
+#define commsOFFSET_TIME			( ( TickType_t ) 3 )
 
 /* The time the Comms Rx task should wait to receive a character.  This should
 be slightly longer than the time between transmissions.  If we do not receive
@@ -122,7 +122,7 @@ the timing of the transmission. */
 static unsigned portBASE_TYPE uxCommsErrorStatus = pdPASS;
 
 /* The queue used to pass characters out of the ISR. */
-static xQueueHandle xCommsQueue;
+static QueueHandle_t xCommsQueue;
 
 /* The next character to transmit. */
 static char cNextChar;
@@ -158,7 +158,7 @@ void vSerialInit( void )
 
 void vSerialTxCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
 {
-portTickType xDelayPeriod;
+TickType_t xDelayPeriod;
 static unsigned long *pulRandomBytes = commsFIRST_PROGRAM_BYTES;
 
 	/* Co-routine MUST start with a call to crSTART. */

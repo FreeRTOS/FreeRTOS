@@ -400,12 +400,12 @@ void ENET_Init ()
   ENET_MIIWriteReg(0x0,MAC_MII_REG_XCR, 0x8000);
 
   /* Delay to assure PHY reset */
-  vTaskDelay( 3000 / portTICK_RATE_MS );
+  vTaskDelay( 3000 / portTICK_PERIOD_MS );
 
   /* initialize the opearting mode */
   while( ENET_SetOperatingMode() == pdFAIL )
   {
-  		vTaskDelay( 3000 / portTICK_RATE_MS );
+  		vTaskDelay( 3000 / portTICK_PERIOD_MS );
   }
 	
   /*set MAC physical*/

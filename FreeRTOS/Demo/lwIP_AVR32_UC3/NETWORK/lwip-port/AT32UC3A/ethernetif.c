@@ -118,7 +118,7 @@ static err_t
 low_level_output(struct netif *netif, struct pbuf *p)
 {
 struct pbuf *q;
-static xSemaphoreHandle xTxSemaphore = NULL;
+static SemaphoreHandle_t xTxSemaphore = NULL;
 err_t xReturn = ERR_OK;
 
   /* Parameter not used. */
@@ -175,7 +175,7 @@ low_level_input(struct netif *netif) {
 struct pbuf         *p = NULL;
 struct pbuf         *q;
 u16_t               len = 0;
-static xSemaphoreHandle xRxSemaphore = NULL;
+static SemaphoreHandle_t xRxSemaphore = NULL;
 
   /* Parameter not used. */
   ( void ) netif;

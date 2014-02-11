@@ -95,8 +95,8 @@ static void prvRxHandler( void ) __attribute__((noinline));
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 /*-----------------------------------------------------------*/
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
@@ -119,7 +119,7 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned port
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports uart1. */
 	(void) pxPort;
@@ -152,7 +152,7 @@ void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	( void ) pxPort;
 

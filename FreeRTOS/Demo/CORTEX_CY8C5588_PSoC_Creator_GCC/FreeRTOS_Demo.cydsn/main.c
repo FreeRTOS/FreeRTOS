@@ -94,7 +94,7 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 #define mainCOM_LED							( 3 )
 
 /* The number of nano seconds between each processor clock. */
@@ -221,7 +221,7 @@ extern cyisraddress CyRamVectors[];
 void vCheckTask( void *pvParameters )
 {
 unsigned long ulRow = 0;
-portTickType xDelay = 0;
+TickType_t xDelay = 0;
 unsigned short usErrorCode = 0;
 unsigned long ulIteration = 0;
 extern unsigned short usMaxJitter;
@@ -325,7 +325,7 @@ extern unsigned short usMaxJitter;
 }
 /*---------------------------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* The stack space has been execeeded for a task, considering allocating more. */
 	taskDISABLE_INTERRUPTS();

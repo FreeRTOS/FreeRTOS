@@ -92,7 +92,7 @@ display. */
 
 /* Defines the minimum time that must pass between consecutive button presses
 to accept a button press as a unique press rather than just a bounce. */
-#define lcdMIN_TIME_BETWEEN_INTERRUPTS_MS ( 125UL / portTICK_RATE_MS )
+#define lcdMIN_TIME_BETWEEN_INTERRUPTS_MS ( 125UL / portTICK_PERIOD_MS )
 
 /* Button interrupt handlers. */
 #pragma interrupt ( prvIRQ1_Handler( vect = 65, enable ) )
@@ -144,17 +144,17 @@ static void prvDisplayNextString( unsigned char ucLine, char *pcString );
  * lcdMIN_TIME_BETWEEN_INTERRUPTS_MS milliseconds have passed since the button
  * was last pushed (for debouncing). 
  */
-static portBASE_TYPE prvSendCommandOnDebouncedInput( portTickType *pxTimeLastInterrupt, unsigned char ucCommand );
+static portBASE_TYPE prvSendCommandOnDebouncedInput( TickType_t *pxTimeLastInterrupt, unsigned char ucCommand );
 
 /*-----------------------------------------------------------*/
 
 /* The queue used to pass commands from the button interrupt handlers to the
 prvLCDTaskLine2() task. */
-static xQueueHandle xButtonCommandQueue = NULL;
+static QueueHandle_t xButtonCommandQueue = NULL;
 
 /* The mutex used to ensure only one task writes to the display at any one
 time. */
-static xSemaphoreHandle xLCDMutex = NULL;
+static SemaphoreHandle_t xLCDMutex = NULL;
 
 /* The string that is scrolled up and down the first line of the display. */
 static const char cDataString1[] = "        http://www.FreeRTOS.org        ";
@@ -206,7 +206,7 @@ unsigned char ucDirection = lcdRIGHT_TO_LEFT;
 	
 	for( ;; )
 	{
-		vTaskDelay( pxLCDParamaters->Speed / portTICK_RATE_MS );		
+		vTaskDelay( pxLCDParamaters->Speed / portTICK_PERIOD_MS );		
 
 		/* Write the string. */
 		prvDisplayNextString( pxLCDParamaters->Line, &( pxLCDParamaters->ptr_str[ usPosition ] ) );
@@ -223,7 +223,7 @@ static void prvLCDTaskLine2( void *pvParameters )
 struct _LCD_Params *pxLCDParamaters = ( struct _LCD_Params * ) pvParameters;
 unsigned short usPosition = 0U;
 unsigned char ucDirection = lcdRIGHT_TO_LEFT, ucStatus = lcdRUNNING, ucQueueData;
-portTickType xDelayTicks = ( pxLCDParamaters->Speed / portTICK_RATE_MS );
+TickType_t xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 	
 	for(;;)
 	{
@@ -251,7 +251,7 @@ portTickType xDelayTicks = ( pxLCDParamaters->Speed / portTICK_RATE_MS );
 					
 					if( ucStatus == lcdRUNNING )
 					{
-						xDelayTicks = ( pxLCDParamaters->Speed / portTICK_RATE_MS );
+						xDelayTicks = ( pxLCDParamaters->Speed / portTICK_PERIOD_MS );
 					}
 					else
 					{
@@ -372,10 +372,10 @@ static char cSingleLine[ lcdSTRING_LEN + 1 ];
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvSendCommandOnDebouncedInput( portTickType *pxTimeLastInterrupt, unsigned char ucCommand )
+static portBASE_TYPE prvSendCommandOnDebouncedInput( TickType_t *pxTimeLastInterrupt, unsigned char ucCommand )
 {
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-portTickType xCurrentTickCount;
+TickType_t xCurrentTickCount;
 	
 	/* Check the time now for debouncing purposes. */
 	xCurrentTickCount = xTaskGetTickCountFromISR();
@@ -397,7 +397,7 @@ portTickType xCurrentTickCount;
 
 static void prvIRQ1_Handler( void )
 {
-static portTickType xTimeLastInterrupt = 0UL;
+static TickType_t xTimeLastInterrupt = 0UL;
 static const unsigned char ucCommand = lcdSHIFT_BACK_COMMAND;
 portBASE_TYPE xHigherPriorityTaskWoken;
 
@@ -408,7 +408,7 @@ portBASE_TYPE xHigherPriorityTaskWoken;
 
 static void prvIRQ3_Handler(void)
 {
-static portTickType xTimeLastInterrupt = 0UL;
+static TickType_t xTimeLastInterrupt = 0UL;
 static const unsigned char ucCommand = lcdSTART_STOP_COMMAND;
 portBASE_TYPE xHigherPriorityTaskWoken;
 
@@ -419,7 +419,7 @@ portBASE_TYPE xHigherPriorityTaskWoken;
 
 static void prvIRQ4_Handler(void)
 {
-static portTickType xTimeLastInterrupt = 0UL;
+static TickType_t xTimeLastInterrupt = 0UL;
 static const unsigned char ucCommand = lcdSHIFT_FORWARD_COMMAND;
 portBASE_TYPE xHigherPriorityTaskWoken;
 

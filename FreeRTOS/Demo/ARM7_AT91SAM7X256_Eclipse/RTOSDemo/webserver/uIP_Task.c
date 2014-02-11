@@ -54,13 +54,13 @@
 #include "partest.h"
 
 /* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT    ( 100 / portTICK_RATE_MS )
+#define uipINIT_WAIT    ( 100 / portTICK_PERIOD_MS )
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
 
 /* The semaphore used by the ISR to wake the uIP task. */
-static xSemaphoreHandle xEMACSemaphore;
+static SemaphoreHandle_t xEMACSemaphore;
 
 /*-----------------------------------------------------------*/
 

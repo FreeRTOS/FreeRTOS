@@ -85,7 +85,7 @@
 
 /* Demo application definitions. */
 #define mainQUEUE_SIZE						( 3 )
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 #define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 2 )
 
 /* Task priorities. */
@@ -124,7 +124,7 @@ extern void vuIP_Task( void *pvParameters );
 static void vLCDTask( void *pvParameters );
 
 /* The queue used to send messages to the LCD task. */
-xQueueHandle xLCDQueue;
+QueueHandle_t xLCDQueue;
 
 /*-----------------------------------------------------------*/
 
@@ -170,7 +170,7 @@ int main (void)
 static void vCheckTask( void *pvParameters )
 {
 portBASE_TYPE xErrorOccurred = pdFALSE;
-portTickType xLastExecutionTime;
+TickType_t xLastExecutionTime;
 unsigned portBASE_TYPE uxColumn = 0;
 xLCDMessage xMessage;
 

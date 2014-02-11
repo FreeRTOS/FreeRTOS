@@ -126,7 +126,7 @@ static const unsigned long ulInterruptsPer10ms = tmrtestHIGH_FREQUENCY_TIMER_TES
 static const unsigned long ulSemaphoreGiveRate_ms = 10UL;
 
 /* The semaphore used to synchronise the interrupt with the task. */
-static xSemaphoreHandle xHighFrequencyTimerSemaphore = NULL;
+static SemaphoreHandle_t xHighFrequencyTimerSemaphore = NULL;
 
 /* Holds the count of the number of times the task is unblocked by the timer. */
 static volatile unsigned long ulHighFrequencyTaskIterations = 0UL;

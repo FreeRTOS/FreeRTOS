@@ -77,7 +77,7 @@
 #define webHTTP_PORT		( 80 )
 
 /* Delay on close error. */
-#define webSHORT_DELAY		( 10 / portTICK_RATE_MS )
+#define webSHORT_DELAY		( 10 / portTICK_PERIOD_MS )
 
 /* The IP address being used. */
 #define emacIPADDR0			172

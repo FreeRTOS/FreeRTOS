@@ -91,7 +91,7 @@ This is used by the Xilinx peripheral driver API functions. */
 static XUartLite xUartLiteInstance;
 
 /* The queue used to hold received characters. */
-static xQueueHandle xRxedChars;
+static QueueHandle_t xRxedChars;
 
 /*-----------------------------------------------------------*/
 
@@ -148,7 +148,7 @@ portBASE_TYPE xStatus;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;

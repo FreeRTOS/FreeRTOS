@@ -185,7 +185,7 @@ static char *pcStatusMessage = "OK";
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
 semaphore tracing API functions.  It has no other purpose. */
-static xSemaphoreHandle xMutexToDelete = NULL;
+static SemaphoreHandle_t xMutexToDelete = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -238,8 +238,8 @@ int main_full( void )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
-const portTickType xCycleFrequency = 2500 / portTICK_RATE_MS;
+TickType_t xNextWakeTime;
+const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -355,11 +355,11 @@ void *pvAllocated;
 
 /* These three functions are only meant for use by trace code, and not for
 direct use from application code, hence their prototypes are not in queue.h. */
-extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned portBASE_TYPE uxQueueNumber );
-extern unsigned portBASE_TYPE uxQueueGetQueueNumber( xQueueHandle pxQueue );
-extern uint8_t ucQueueGetQueueType( xQueueHandle pxQueue );
-extern void vTaskSetTaskNumber( xTaskHandle xTask, unsigned portBASE_TYPE uxHandle );
-extern unsigned portBASE_TYPE uxTaskGetTaskNumber( xTaskHandle xTask );
+extern void vQueueSetQueueNumber( QueueHandle_t pxQueue, unsigned portBASE_TYPE uxQueueNumber );
+extern unsigned portBASE_TYPE uxQueueGetQueueNumber( QueueHandle_t pxQueue );
+extern uint8_t ucQueueGetQueueType( QueueHandle_t pxQueue );
+extern void vTaskSetTaskNumber( TaskHandle_t xTask, unsigned portBASE_TYPE uxHandle );
+extern unsigned portBASE_TYPE uxTaskGetTaskNumber( TaskHandle_t xTask );
 
 	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
 	tasks waiting to be terminated by the idle task. */
@@ -458,11 +458,11 @@ const TickType_t xDontBlock = 0; /* This is called from the idle task so must *n
 
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
 {
-xTaskHandle xIdleTaskHandle, xTimerTaskHandle;
+TaskHandle_t xIdleTaskHandle, xTimerTaskHandle;
 const unsigned char ucConstTaskNumber = 0x55U;
 char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
-xTaskHandle xTestTask;
+TaskHandle_t xTestTask;
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -535,7 +535,7 @@ xTaskHandle xTestTask;
 
 static void prvDemoQueueSpaceFunctions( void *pvParameters )
 {
-xQueueHandle xQueue = NULL;
+QueueHandle_t xQueue = NULL;
 const unsigned portBASE_TYPE uxQueueLength = 10;
 unsigned portBASE_TYPE uxReturn, x;
 

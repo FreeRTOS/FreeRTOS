@@ -7,7 +7,7 @@
  * is used by the EMAC ISR to indicate that Rx packets have been received.
  * If the initialisation fails then NULL is returned.
  */
-xSemaphoreHandle xEMACInit( void );
+SemaphoreHandle_t xEMACInit( void );
 
 /*
  * Send the current uIP buffer.  This copies the uIP buffer to one of the

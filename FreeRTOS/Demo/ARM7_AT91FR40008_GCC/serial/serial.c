@@ -91,16 +91,16 @@
 /* Constants to setup and access the UART. */
 #define portUSART0_AIC_CHANNEL	( ( unsigned long ) 2 )
 
-#define serINVALID_QUEUE		( ( xQueueHandle ) 0 )
+#define serINVALID_QUEUE		( ( QueueHandle_t ) 0 )
 #define serHANDLE				( ( xComPortHandle ) 1 )
-#define serNO_BLOCK				( ( portTickType ) 0 )
+#define serNO_BLOCK				( ( TickType_t ) 0 )
 
 /*-----------------------------------------------------------*/
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 
 /*-----------------------------------------------------------*/
 
@@ -108,7 +108,7 @@ static xQueueHandle xCharsForTx;
  * The queues are created in serialISR.c as they are used from the ISR.
  * Obtain references to the queues and THRE Empty flag. 
  */
-extern void vSerialISRCreateQueues(  unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx );
+extern void vSerialISRCreateQueues(  unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx );
 
 /*-----------------------------------------------------------*/
 
@@ -197,7 +197,7 @@ extern void ( vUART_ISR_Wrapper )( void );
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports UART0. */
 	( void ) pxPort;
@@ -236,7 +236,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	( void ) pxPort;
 

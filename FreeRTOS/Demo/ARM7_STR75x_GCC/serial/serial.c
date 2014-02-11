@@ -89,15 +89,15 @@
 /* Demo application includes. */
 #include "serial.h"
 
-#define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
-#define serNO_BLOCK						( ( portTickType ) 0 )
+#define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
+#define serNO_BLOCK						( ( TickType_t ) 0 )
 
 /*-----------------------------------------------------------*/
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 static volatile portBASE_TYPE xQueueEmpty = pdTRUE;
 
@@ -105,7 +105,7 @@ static volatile portBASE_TYPE xQueueEmpty = pdTRUE;
 
 /* The interrupt service routine - called from the assembly entry point. */
 void vSerialISR( void );
-void vConfigureQueues( xQueueHandle xQForRx, xQueueHandle xQForTx, volatile portBASE_TYPE *pxEmptyFlag );
+void vConfigureQueues( QueueHandle_t xQForRx, QueueHandle_t xQForTx, volatile portBASE_TYPE *pxEmptyFlag );
 
 /*-----------------------------------------------------------*/
 
@@ -181,7 +181,7 @@ EIC_IRQInitTypeDef  EIC_IRQInitStructure;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -223,7 +223,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 portBASE_TYPE xReturn;
 

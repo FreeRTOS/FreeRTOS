@@ -89,11 +89,11 @@
 #define PHY_DUPLEX_STATUS					( 4 )
 
 /* Delay between polling the PHY to see if a link has been established. */
-#define fecLINK_DELAY						( 500 / portTICK_RATE_MS )
+#define fecLINK_DELAY						( 500 / portTICK_PERIOD_MS )
 
 /* Very short delay to use when waiting for the Tx to finish with a buffer if
 we run out of Rx buffers. */
-#define fecMINIMAL_DELAY					( 3 / portTICK_RATE_MS )
+#define fecMINIMAL_DELAY					( 3 / portTICK_PERIOD_MS )
 
 /* Don't block to wait for a buffer more than this many times. */
 #define uipBUFFER_WAIT_ATTEMPTS	( 30 )
@@ -119,7 +119,7 @@ static unsigned char *prvGetFreeBuffer( void );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used to wake the uIP task when data arrives. */
-xSemaphoreHandle xFECSemaphore = NULL;
+SemaphoreHandle_t xFECSemaphore = NULL;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers to avoid having to copy the Rx buffer into

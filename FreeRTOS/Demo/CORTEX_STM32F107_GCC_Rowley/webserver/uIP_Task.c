@@ -85,7 +85,7 @@
 /*-----------------------------------------------------------*/
 
 /* How long to wait before attempting to connect the MAC again. */
-#define uipINIT_WAIT				( 100 / portTICK_RATE_MS )
+#define uipINIT_WAIT				( 100 / portTICK_PERIOD_MS )
 
 /* Shortcut to the header within the Rx buffer. */
 #define xHeader ((struct uip_eth_hdr *) &uip_buf[ 0 ])
@@ -110,7 +110,7 @@ clock_time_t clock_time( void );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used by the ISR to wake the uIP task. */
-xSemaphoreHandle xEMACSemaphore;
+SemaphoreHandle_t xEMACSemaphore;
 
 /* The buffer used by the uIP stack.  In this case the pointer is used to
 point to one of the Rx buffers. */
@@ -253,7 +253,7 @@ void vApplicationProcessFormInput( char *pcInputString )
 char *c, *pcText;
 static char cMessageForDisplay[ 32 ];
 static const char *pcMessage = cMessageForDisplay;
-extern xQueueHandle xLCDQueue;
+extern QueueHandle_t xLCDQueue;
 
 	/* Process the form input sent by the IO page of the served HTML. */
 

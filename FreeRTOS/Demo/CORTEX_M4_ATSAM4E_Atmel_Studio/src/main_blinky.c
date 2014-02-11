@@ -108,8 +108,8 @@
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the portTICK_RATE_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_RATE_MS )
+to ticks using the portTICK_PERIOD_MS constant. */
+#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -117,8 +117,8 @@ the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
 /* The period of the blinky software timer.  The period is specified in ms and
-converted to ticks using the portTICK_RATE_MS constant. */
-#define mainBLINKY_TIMER_PERIOD				( 50 / portTICK_RATE_MS )
+converted to ticks using the portTICK_PERIOD_MS constant. */
+#define mainBLINKY_TIMER_PERIOD				( 50 / portTICK_PERIOD_MS )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0 )
@@ -139,7 +139,7 @@ static void prvQueueSendTask( void *pvParameters );
  * The callback function for the blinky software timer, as described at the top
  * of this file.
  */
-static void prvBlinkyTimerCallback( xTimerHandle xTimer );
+static void prvBlinkyTimerCallback( TimerHandle_t xTimer );
 
 /*
  * Called by main() to create the simply blinky style application if
@@ -151,8 +151,8 @@ void main_blinky( void );
 
 void main_blinky( void )
 {
-xTimerHandle xTimer;
-xQueueHandle xQueue;
+TimerHandle_t xTimer;
+QueueHandle_t xQueue;
 
 	/* Create the queue. */
 	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
@@ -200,12 +200,12 @@ xQueueHandle xQueue;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
-xQueueHandle xQueue;
+QueueHandle_t xQueue;
 
 	/* The handle of the queue is passed in using the task's parameter. */
-	xQueue = ( xQueueHandle ) pvParameters;
+	xQueue = ( QueueHandle_t ) pvParameters;
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -230,10 +230,10 @@ xQueueHandle xQueue;
 static void prvQueueReceiveTask( void *pvParameters )
 {
 unsigned long ulReceivedValue;
-xQueueHandle xQueue;
+QueueHandle_t xQueue;
 
 	/* The queue is passed in as the task's parameter. */
-	xQueue = ( xQueueHandle ) pvParameters;
+	xQueue = ( QueueHandle_t ) pvParameters;
 
 	for( ;; )
 	{
@@ -253,7 +253,7 @@ xQueueHandle xQueue;
 }
 /*-----------------------------------------------------------*/
 
-static void prvBlinkyTimerCallback( xTimerHandle xTimer )
+static void prvBlinkyTimerCallback( TimerHandle_t xTimer )
 {
 	/* Avoid compiler warnings. */
 	( void ) xTimer;

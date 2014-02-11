@@ -112,16 +112,16 @@
 
 /* The Tx task will transmit the sequence of characters at a pseudo random
 interval.  This is the maximum and minimum block time between sends. */
-#define comTX_MAX_BLOCK_TIME		( ( portTickType ) 0x96 )
-#define comTX_MIN_BLOCK_TIME		( ( portTickType ) 0x32 )
-#define comOFFSET_TIME				( ( portTickType ) 3 )
+#define comTX_MAX_BLOCK_TIME		( ( TickType_t ) 0x96 )
+#define comTX_MIN_BLOCK_TIME		( ( TickType_t ) 0x32 )
+#define comOFFSET_TIME				( ( TickType_t ) 3 )
 
 /* We should find that each character can be queued for Tx immediately and we
 don't have to block to send. */
-#define comNO_BLOCK					( ( portTickType ) 0 )
+#define comNO_BLOCK					( ( TickType_t ) 0 )
 
 /* The Rx task will block on the Rx queue for a long period. */
-#define comRX_BLOCK_TIME			( ( portTickType ) 0xffff )
+#define comRX_BLOCK_TIME			( ( TickType_t ) 0xffff )
 
 /* The sequence transmitted is from comFIRST_BYTE to and including comLAST_BYTE. */
 #define comFIRST_BYTE				( 'A' )
@@ -158,15 +158,15 @@ void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulB
 	xSerialPortInitMinimal( ulBaudRate, comBUFFER_LEN );
 
 	/* The Tx task is spawned with a lower priority than the Rx task. */
-	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( xTaskHandle * ) NULL );
-	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority, ( xTaskHandle * ) NULL );
+	xTaskCreate( vComTxTask, "COMTx", comSTACK_SIZE, NULL, uxPriority - 1, ( TaskHandle_t * ) NULL );
+	xTaskCreate( vComRxTask, "COMRx", comSTACK_SIZE, NULL, uxPriority, ( TaskHandle_t * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
 static portTASK_FUNCTION( vComTxTask, pvParameters )
 {
 char cByteToSend;
-portTickType xTimeToWait;
+TickType_t xTimeToWait;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;

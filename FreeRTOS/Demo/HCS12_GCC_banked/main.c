@@ -127,8 +127,8 @@ that all the other tasks are operating without error.  If no errors are found
 the LED is toggled with mainCHECK_PERIOD frequency.  If an error is found 
 then the toggle rate increases to mainERROR_CHECK_PERIOD. */
 #define mainCHECK_TASK_LED			( 7 )
-#define mainCHECK_PERIOD			( ( portTickType ) 3000 / portTICK_RATE_MS  )
-#define mainERROR_CHECK_PERIOD		( ( portTickType ) 500 / portTICK_RATE_MS )
+#define mainCHECK_PERIOD			( ( TickType_t ) 3000 / portTICK_PERIOD_MS  )
+#define mainERROR_CHECK_PERIOD		( ( TickType_t ) 500 / portTICK_PERIOD_MS )
 
 /* The constants used in the idle task calculation. */
 #define intgCONST1				( ( long ) 123 )
@@ -216,8 +216,8 @@ int ATTR_BANK0 main ( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainCHECK_PERIOD;
-portTickType xLastWakeTime;
+TickType_t xDelayPeriod = mainCHECK_PERIOD;
+TickType_t xLastWakeTime;
 
 	/* Initialise xLastWakeTime to ensure the first call to vTaskDelayUntil()
 	functions correctly. */

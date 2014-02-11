@@ -151,9 +151,9 @@ little odd. */
 #define usbYDOWN							( 4 )
 #define usbMAX_COORD						( 120 )
 #define usbMAX_TX_MESSAGE_SIZE				( 128 )
-#define usbSHORTEST_DELAY					( ( portTickType ) 1 )
-#define usbINIT_DELAY						( ( portTickType ) 1000 / portTICK_RATE_MS )
-#define usbSHORT_DELAY						( ( portTickType ) 50 / portTICK_RATE_MS )
+#define usbSHORTEST_DELAY					( ( TickType_t ) 1 )
+#define usbINIT_DELAY						( ( TickType_t ) 1000 / portTICK_PERIOD_MS )
+#define usbSHORT_DELAY						( ( TickType_t ) 50 / portTICK_PERIOD_MS )
 #define usbEND_POINT_RESET_MASK				( ( unsigned long ) 0x0f )
 #define usbDATA_INC							( ( char ) 5 )
 #define usbEXPECTED_NUMBER_OF_BYTES			( ( unsigned long ) 8 )
@@ -522,7 +522,7 @@ static eDRIVER_STATE eDriverState = eNOTHING;
 static xTX_MESSAGE pxCharsForTx;
 
 /* Queue used to pass messages between the ISR and the task. */
-xQueueHandle xUSBInterruptQueue; 
+QueueHandle_t xUSBInterruptQueue; 
 
 /*-----------------------------------------------------------*/
 

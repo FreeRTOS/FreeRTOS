@@ -19,7 +19,7 @@ const char			ASCII[] = "0123456789ABCDEF";
 void				vInitUart5( void );
 
 
-static xQueueHandle xQueue;
+static QueueHandle_t xQueue;
 
 void vInitUart5( void )
 {
@@ -176,7 +176,7 @@ static void vUART5Task( void *pvParameters )
 			case '2':
 				vTaskStartTrace( (signed char *) buff, sizeof( buff ) );
 				Puts5( "\n\rThe trace started!!" );
-				vTaskDelay( (portTickType) 450 );
+				vTaskDelay( (TickType_t) 450 );
 				trace_len = ulTaskEndTrace();
 				Puts5( "\n\rThe trace ended!!" );
 				Puts5( "\n\rThe trace is as follows...." );

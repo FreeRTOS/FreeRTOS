@@ -96,7 +96,7 @@
 /* In this case configCPU_CLOCK_HZ is actually set to the pclk frequency, not
 the CPU frequency. */
 #define configCPU_CLOCK_HZ				( 58982400UL )	/* =14.7456MHz xtal multiplied by 4 using the PLL. */
-#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
+#define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 6 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 128 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 18 * 1024 ) )

@@ -125,7 +125,7 @@ void vFullDemoIdleFunction( void );
 within this file. */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*
@@ -199,16 +199,20 @@ void vApplicationIdleHook( void )
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
-	/* The trace can be stopped with any key press. */
-	if( _kbhit() != pdFALSE )
-	{
-		if( xTraceRunning == pdTRUE )
+	/* Uncomment the following code to allow the trace to be stopped with any 
+	key press.  The code is commented out by default as the kbhit() function
+	interferes with the run time behaviour. */
+	/* 
+		if( _kbhit() != pdFALSE )
 		{
-			vTraceStop();
-			prvSaveTraceFile();
-			xTraceRunning = pdFALSE;
+			if( xTraceRunning == pdTRUE )
+			{
+				vTraceStop();
+				prvSaveTraceFile();
+				xTraceRunning = pdFALSE;
+			}
 		}
-	}
+	*/
 
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
 	{
@@ -220,7 +224,7 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;
@@ -258,24 +262,35 @@ void vApplicationTickHook( void )
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
 static portBASE_TYPE xPrinted = pdFALSE;
+volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
 	/* Parameters are not used. */
 	( void ) ulLine;
 	( void ) pcFileName;
 
-	taskDISABLE_INTERRUPTS();
-
-	/* Stop the trace recording. */
-	if( xPrinted == pdFALSE )
+	taskENTER_CRITICAL();
 	{
-		xPrinted = pdTRUE;
-		if( xTraceRunning == pdTRUE )
+		/* Stop the trace recording. */
+		if( xPrinted == pdFALSE )
 		{
-		vTraceStop();
-		prvSaveTraceFile();
+			xPrinted = pdTRUE;
+			if( xTraceRunning == pdTRUE )
+			{
+				vTraceStop();
+				prvSaveTraceFile();
+			}
+		}
+
+		/* You can step out of this function to debug the assertion by using
+		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+		value. */
+		while( ulSetToNonZeroInDebuggerToContinue == 0 )
+		{
+			__asm{ NOP };
+			__asm{ NOP };
 		}
 	}
-	for( ;; );
+	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 

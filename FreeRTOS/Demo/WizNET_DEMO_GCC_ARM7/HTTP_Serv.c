@@ -75,8 +75,8 @@
 #include "tcp.h"
 
 /* Misc constants. */
-#define tcpPOLL_DELAY					( ( portTickType ) 12 / portTICK_RATE_MS )
-#define tcpCONNECTION_DELAY				( ( portTickType ) 8 / portTICK_RATE_MS )
+#define tcpPOLL_DELAY					( ( TickType_t ) 12 / portTICK_PERIOD_MS )
+#define tcpCONNECTION_DELAY				( ( TickType_t ) 8 / portTICK_PERIOD_MS )
 /*-----------------------------------------------------------*/
 
 /*

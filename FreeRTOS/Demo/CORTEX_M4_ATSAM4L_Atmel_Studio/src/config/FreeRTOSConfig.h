@@ -88,11 +88,11 @@ or 0 to run the more comprehensive test and demo application. */
 	#define configCPU_CLOCK_HZ				16384
 	#define configSYSTICK_CLOCK_HZ			16384
 	#define configUSE_TICKLESS_IDLE			1
-	#define configTICK_RATE_HZ				( ( portTickType ) 128 )
+	#define configTICK_RATE_HZ				( ( TickType_t ) 128 )
 #else
 	#define configCPU_CLOCK_HZ				sysclk_get_cpu_hz()
 	#define configUSE_TICKLESS_IDLE			0
-	#define configTICK_RATE_HZ				( ( portTickType ) 1000 )
+	#define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #endif /* configCREATE_LOW_POWER_DEMO */
 
 #define configUSE_PREEMPTION			1

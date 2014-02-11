@@ -101,8 +101,8 @@ all the network buffers are in use and the tasks that process (and subsequently
 free) the network buffers are themselves blocked waiting for a network buffer.
 ipconfigMAX_SEND_BLOCK_TIME_TICKS is specified in RTOS ticks.  A time in
 milliseconds can be converted to a time in ticks by dividing the time in
-milliseconds by portTICK_RATE_MS. */
-#define ipconfigMAX_SEND_BLOCK_TIME_TICKS ( 20 / portTICK_RATE_MS )
+milliseconds by portTICK_PERIOD_MS. */
+#define ipconfigMAX_SEND_BLOCK_TIME_TICKS ( 20 / portTICK_PERIOD_MS )
 
 /* If ipconfigUSE_DHCP is 1 then FreeRTOS+UDP will attempt to retrieve an IP
 address, netmask, DNS server address and gateway address from a DHCP server.  If
@@ -120,7 +120,7 @@ ipconfigMAXIMUM_DISCOVER_TX_PERIOD.  The IP stack will revert to using the
 static IP address passed as a parameter to FreeRTOS_IPInit() if the
 re-transmission time interval reaches ipconfigMAXIMUM_DISCOVER_TX_PERIOD without
 a DHCP reply being received. */
-#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( 999 / portTICK_RATE_MS )
+#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( 999 / portTICK_PERIOD_MS )
 
 /* The ARP cache is a table that maps IP addresses to MAC addresses.  The IP
 stack can only send a UDP message to a remove IP address if it knowns the MAC
@@ -280,7 +280,7 @@ or one lower than ipconfigUDP_TASK_PRIORITY, depending on the application. */
 /* The windows simulator cannot really simulate MAC interrupts, and needs to
 block occasionally to allow other tasks to run. */
 #ifdef _WINDOWS_
-	#define configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY ( 3 / portTICK_RATE_MS )
+	#define configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY ( 3 / portTICK_PERIOD_MS )
 #endif
 
 /* The example IP trace macros are included here so the definitions are

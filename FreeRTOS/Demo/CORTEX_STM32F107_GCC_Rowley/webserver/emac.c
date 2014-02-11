@@ -103,7 +103,7 @@ hold the send count.  This is just #defined to a meaningful name. */
 #define SendCount Buffer2NextDescAddr
 
 /* If no buffers are available, then wait this long before looking again.... */
-#define uipBUFFER_WAIT_DELAY	( 3 / portTICK_RATE_MS )
+#define uipBUFFER_WAIT_DELAY	( 3 / portTICK_PERIOD_MS )
 
 /* ...and don't look more than this many times. */
 #define uipBUFFER_WAIT_ATTEMPTS	( 30 )
@@ -479,7 +479,7 @@ unsigned long ul;
 void vMAC_ISR( void )
 {
 unsigned long ulStatus;
-extern xSemaphoreHandle xEMACSemaphore;
+extern SemaphoreHandle_t xEMACSemaphore;
 long xHigherPriorityTaskWoken = pdFALSE;
 
 	/* What caused the interrupt? */

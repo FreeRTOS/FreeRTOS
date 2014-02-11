@@ -109,7 +109,7 @@ one not be immediately available when trying to transmit a frame. */
 #define emacINTERRUPT_LEVEL			( 5 )
 #define emacNO_DELAY				( 0 )
 #define emacTOTAL_FRAME_HEADER_SIZE	( 54 )
-#define emacPHY_INIT_DELAY			( 5000 / portTICK_RATE_MS )
+#define emacPHY_INIT_DELAY			( 5000 / portTICK_PERIOD_MS )
 #define emacRESET_KEY				( ( unsigned long ) 0xA5000000 )
 #define emacRESET_LENGTH			( ( unsigned long ) ( 0x01 << 8 ) )
 
@@ -191,11 +191,11 @@ const char cMACAddress[ 6 ] = { uipMAC_ADDR0, uipMAC_ADDR1, uipMAC_ADDR2, uipMAC
 const unsigned char ucIPAddress[ 4 ]  = { uipIP_ADDR0, uipIP_ADDR1, uipIP_ADDR2, uipIP_ADDR3 };
 
 /* The semaphore used by the EMAC ISR to wake the EMAC task. */
-static xSemaphoreHandle xSemaphore = NULL;
+static SemaphoreHandle_t xSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
-xSemaphoreHandle xEMACInit( void )
+SemaphoreHandle_t xEMACInit( void )
 {
 	/* Code supplied by Atmel -------------------------------*/
 

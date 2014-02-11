@@ -78,11 +78,11 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 static portBASE_TYPE volatile *pxQueueEmpty;
 
-void vConfigureQueues( xQueueHandle xQForRx, xQueueHandle xQForTx, portBASE_TYPE volatile *pxEmptyFlag )
+void vConfigureQueues( QueueHandle_t xQForRx, QueueHandle_t xQForTx, portBASE_TYPE volatile *pxEmptyFlag )
 {
 	xRxedChars = xQForRx;
 	xCharsForTx = xQForTx;

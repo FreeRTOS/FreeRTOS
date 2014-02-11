@@ -251,10 +251,10 @@ void vMainQueueSendPassed( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xExpectedWakeTime;
-const portTickType xPrintRate = ( portTickType ) 5000 / portTICK_RATE_MS;
+TickType_t xExpectedWakeTime;
+const TickType_t xPrintRate = ( TickType_t ) 5000 / portTICK_PERIOD_MS;
 const long lMaxAllowableTimeDifference = ( long ) 0;
-portTickType xWakeTime;
+TickType_t xWakeTime;
 long lTimeDifference;
 const char *pcReceivedMessage;
 const char * const pcTaskBlockedTooLongMsg = "Print task blocked too long!\r\n";

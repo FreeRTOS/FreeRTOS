@@ -85,19 +85,19 @@
 
 /* Task behaviour. */
 #define bktQUEUE_LENGTH				( 5 )
-#define bktSHORT_WAIT				( ( ( portTickType ) 20 ) / portTICK_RATE_MS )
+#define bktSHORT_WAIT				( ( ( TickType_t ) 20 ) / portTICK_PERIOD_MS )
 #define bktPRIMARY_BLOCK_TIME		( 10 )
 #define bktALLOWABLE_MARGIN			( 12 )
 #define bktTIME_TO_BLOCK			( 175 )
-#define bktDONT_BLOCK				( ( portTickType ) 0 )
+#define bktDONT_BLOCK				( ( TickType_t ) 0 )
 #define bktRUN_INDICATOR			( ( unsigned portBASE_TYPE ) 0x55 )
 
 /* The queue on which the tasks block. */
-static xQueueHandle xTestQueue;
+static QueueHandle_t xTestQueue;
 
 /* Handle to the secondary task is required by the primary task for calls
 to vTaskSuspend/Resume(). */
-static xTaskHandle xSecondary;
+static TaskHandle_t xSecondary;
 
 /* Used to ensure that tasks are still executing without error. */
 static portBASE_TYPE xPrimaryCycles = 0, xSecondaryCycles = 0;
@@ -136,8 +136,8 @@ void vCreateAltBlockTimeTasks( void )
 static void vPrimaryBlockTimeTestTask( void *pvParameters )
 {
 portBASE_TYPE xItem, xData;
-portTickType xTimeWhenBlocking;
-portTickType xTimeToBlock, xBlockedTime;
+TickType_t xTimeWhenBlocking;
+TickType_t xTimeToBlock, xBlockedTime;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
@@ -415,7 +415,7 @@ portTickType xTimeToBlock, xBlockedTime;
 
 static void vSecondaryBlockTimeTestTask( void *pvParameters )
 {
-portTickType xTimeWhenBlocking, xBlockedTime;
+TickType_t xTimeWhenBlocking, xBlockedTime;
 portBASE_TYPE xData;
 
 	#ifdef USE_STDIO

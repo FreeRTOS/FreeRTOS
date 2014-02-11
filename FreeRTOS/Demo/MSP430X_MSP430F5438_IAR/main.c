@@ -239,7 +239,7 @@ volatile unsigned short usRegTest1Counter = 0, usRegTest2Counter = 0;
 
 /* The handle of the queue used to send messages from tasks and interrupts to
 the LCD task. */
-static xQueueHandle xLCDQueue = NULL;
+static QueueHandle_t xLCDQueue = NULL;
 
 /* The definition of each message sent from tasks and interrupts to the LCD
 task. */
@@ -448,7 +448,7 @@ xQueueMessage xMessage;
 
 		/* Block for 10 milliseconds so this task does not utilise all the CPU
 		time and debouncing of the button is not necessary. */
-		vTaskDelay( 10 / portTICK_RATE_MS );
+		vTaskDelay( 10 / portTICK_PERIOD_MS );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -481,7 +481,7 @@ void vApplicationTickHook( void )
 {
 static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 static unsigned long ulCounter = 0;
-static const unsigned long ulCheckFrequency = 5000UL / portTICK_RATE_MS;
+static const unsigned long ulCheckFrequency = 5000UL / portTICK_PERIOD_MS;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 /* Define the status message that is sent to the LCD task.  By default the
@@ -626,7 +626,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pxTask;
 	( void ) pcTaskName;

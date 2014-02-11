@@ -335,7 +335,7 @@ static void prvInterruptSimulator( void *pvParameters )
 {
 static struct pcap_pkthdr *pxHeader;
 const unsigned char *pucPacketData;
-extern xQueueHandle xEMACEventQueue;
+extern QueueHandle_t xEMACEventQueue;
 const unsigned long ulRxEvent = uipETHERNET_RX_EVENT;
 long lResult;
 

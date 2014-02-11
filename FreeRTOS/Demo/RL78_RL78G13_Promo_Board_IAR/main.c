@@ -136,14 +136,14 @@
 
 /* The period at which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_RATE_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_RATE_MS )
+equivalent in ticks using the portTICK_PERIOD_MS constant. */
+#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks, the check tasks, or the demo timer.
-ms are converted to the equivalent in ticks using the portTICK_RATE_MS
+ms are converted to the equivalent in ticks using the portTICK_PERIOD_MS
 constant. */
-#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_RATE_MS )
+#define mainERROR_CHECK_TIMER_PERIOD_MS 	( 200UL / portTICK_PERIOD_MS )
 
 /* These two definitions are used to set the period of the demo timer.  The demo
 timer period is always relative to the check timer period, so the check timer
@@ -163,12 +163,12 @@ its own executions. */
 /*
  * The 'check' timer callback function, as described at the top of this file.
  */
-static void prvCheckTimerCallback( xTimerHandle xTimer );
+static void prvCheckTimerCallback( TimerHandle_t xTimer );
 
 /*
  * The 'demo' timer callback function, as described at the top of this file.
  */
-static void prvDemoTimerCallback( xTimerHandle xTimer );
+static void prvDemoTimerCallback( TimerHandle_t xTimer );
 
 /*
  * This function is called from the C startup routine to setup the processor -
@@ -192,10 +192,10 @@ static short sRegTestStatus = pdPASS;
 
 /* The check timer.  This uses prvCheckTimerCallback() as its callback
 function. */
-static xTimerHandle xCheckTimer = NULL;
+static TimerHandle_t xCheckTimer = NULL;
 
 /* The demo timer.  This uses prvDemoTimerCallback() as its callback function. */
-static xTimerHandle xDemoTimer = NULL;
+static TimerHandle_t xDemoTimer = NULL;
 
 /* This variable is incremented each time the demo timer expires. */
 static volatile unsigned long ulDemoSoftwareTimerCounter = 0UL;
@@ -262,7 +262,7 @@ short main( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvDemoTimerCallback( xTimerHandle xTimer )
+static void prvDemoTimerCallback( TimerHandle_t xTimer )
 {
 	/* The demo timer has expired.  All it does is increment a variable.  The
 	period of the demo timer is relative to that of the check timer, so the
@@ -272,7 +272,7 @@ static void prvDemoTimerCallback( xTimerHandle xTimer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckTimerCallback( xTimerHandle xTimer )
+static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static portBASE_TYPE xChangedTimerPeriodAlready = pdFALSE, xErrorStatus = pdPASS;
 
@@ -433,7 +433,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pcTaskName;
 	( void ) pxTask;

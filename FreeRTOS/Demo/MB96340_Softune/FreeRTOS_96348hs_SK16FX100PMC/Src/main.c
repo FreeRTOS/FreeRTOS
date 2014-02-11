@@ -134,8 +134,8 @@ top of the page.  When the system is operating error free the 'Check' task
 toggles an LED every three seconds.  If an error is discovered in any task the
 rate is increased to 500 milliseconds.  [in this case the '*' characters on the
 LCD represent LED's] */
-#define mainNO_ERROR_CHECK_DELAY	( (portTickType) 3000 / portTICK_RATE_MS )
-#define mainERROR_CHECK_DELAY		( (portTickType) 500 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_DELAY	( (TickType_t) 3000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_DELAY		( (TickType_t) 500 / portTICK_PERIOD_MS )
 
 /* LED assignments for the demo tasks. */
 #define mainNUM_FLASH_CO_ROUTINES	8
@@ -224,7 +224,7 @@ static void prvSetupHardware( void )
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
+TickType_t xDelayPeriod = mainNO_ERROR_CHECK_DELAY;
 
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;

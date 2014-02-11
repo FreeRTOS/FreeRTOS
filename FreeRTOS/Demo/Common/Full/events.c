@@ -126,11 +126,11 @@ static portBASE_TYPE xExpectedTaskCounters[ evtNUM_TASKS ] = { 0, 0, 0, 0 };
 
 /* Handles to the four event tasks.  These are required to suspend and resume
 the tasks. */
-static xTaskHandle xCreatedTasks[ evtNUM_TASKS ];
+static TaskHandle_t xCreatedTasks[ evtNUM_TASKS ];
 
 /* The single queue onto which the controlling task posts, and the four event
 tasks block. */
-static xQueueHandle xQueue;
+static QueueHandle_t xQueue;
 
 /* Flag used to indicate whether or not an error has occurred at any time.
 An error is either the queue being full when not expected, or an unexpected

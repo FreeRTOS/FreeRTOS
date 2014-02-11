@@ -122,12 +122,12 @@
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
 
 /* A period of two seconds, adjusted to use the tick frequency. */
-#define mainTWO_SECONDS					( 2000 / portTICK_RATE_MS )
+#define mainTWO_SECONDS					( 2000 / portTICK_PERIOD_MS )
 
 /* The length of the delay between each cycle of the check task when an error
 has / has not been detected. */
-#define mainNO_ERROR_CHECK_FREQUENCY	( 5000 / portTICK_RATE_MS )
-#define mainERROR_CHECK_FREQUENCY		( 200 / portTICK_RATE_MS )
+#define mainNO_ERROR_CHECK_FREQUENCY	( 5000 / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_FREQUENCY		( 200 / portTICK_PERIOD_MS )
 
 /* The LED that is toggled by the check task.  The rate of the toggle indicates
 whether or not an error has been found, as defined by the
@@ -194,7 +194,7 @@ void vApplicationIdleHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This function will be called if a task overflows its stack, if
 	configCHECK_FOR_STACK_OVERFLOW != 0.  It might be that the function
@@ -207,7 +207,7 @@ void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
 
 static void prvCheckTask( void *pvParameters )
 {
-portTickType xLastExecutionTime, xFrequency = mainNO_ERROR_CHECK_FREQUENCY;
+TickType_t xLastExecutionTime, xFrequency = mainNO_ERROR_CHECK_FREQUENCY;
 long lCount;
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()

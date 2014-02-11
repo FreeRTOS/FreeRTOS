@@ -84,8 +84,8 @@
 	#error configTIMER_TASK_PRIORITY must be set to at least 1 for this test/demo to function correctly.
 #endif
 
-#define tmrdemoDONT_BLOCK				( ( portTickType ) 0 )
-#define tmrdemoONE_SHOT_TIMER_PERIOD	( xBasePeriod * ( portTickType ) 3 )
+#define tmrdemoDONT_BLOCK				( ( TickType_t ) 0 )
+#define tmrdemoONE_SHOT_TIMER_PERIOD	( xBasePeriod * ( TickType_t ) 3 )
 #define trmdemoNUM_TIMER_RESETS			( ( unsigned char ) 10 )
 
 /*-----------------------------------------------------------*/
@@ -97,11 +97,11 @@ prvAutoReloadTimerCallback() callback function, and use the ID of the
 pxExpiredTimer parameter passed into that function to know which counter to
 increment.  The other timers all have their own unique callback function and
 simply increment their counters without using the callback function parameter. */
-static void prvAutoReloadTimerCallback( xTimerHandle pxExpiredTimer );
-static void prvOneShotTimerCallback( xTimerHandle pxExpiredTimer );
+static void prvAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer );
+static void prvOneShotTimerCallback( TimerHandle_t pxExpiredTimer );
 static void prvTimerTestTask( void *pvParameters );
-static void prvISRAutoReloadTimerCallback( xTimerHandle pxExpiredTimer );
-static void prvISROneShotTimerCallback( xTimerHandle pxExpiredTimer );
+static void prvISRAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer );
+static void prvISROneShotTimerCallback( TimerHandle_t pxExpiredTimer );
 
 /* The test functions used by the timer test task.  These manipulate the auto
 reload and one shot timers in various ways, then delay, then inspect the timers
@@ -128,33 +128,33 @@ static volatile unsigned long ulLoopCounter = 0;
 The callback function uses the timer ID to index into, and then increment, a
 counter in the ucAutoReloadTimerCounters[] array.  The auto reload timers
 referenced from xAutoReloadTimers[] are used by the prvTimerTestTask task. */
-static xTimerHandle xAutoReloadTimers[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
+static TimerHandle_t xAutoReloadTimers[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
 static unsigned char ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
 
 /* The one shot timer is configured to use a callback function that increments
 ucOneShotTimerCounter each time it gets called. */
-static xTimerHandle xOneShotTimer = NULL;
+static TimerHandle_t xOneShotTimer = NULL;
 static unsigned char ucOneShotTimerCounter = ( unsigned char ) 0;
 
 /* The ISR reload timer is controlled from the tick hook to exercise the timer
 API functions that can be used from an ISR.  It is configured to increment
 ucISRReloadTimerCounter each time its callback function is executed. */
-static xTimerHandle xISRAutoReloadTimer = NULL;
+static TimerHandle_t xISRAutoReloadTimer = NULL;
 static unsigned char ucISRAutoReloadTimerCounter = ( unsigned char ) 0;
 
 /* The ISR one shot timer is controlled from the tick hook to exercise the timer
 API functions that can be used from an ISR.  It is configured to increment
 ucISRReloadTimerCounter each time its callback function is executed. */
-static xTimerHandle xISROneShotTimer = NULL;
+static TimerHandle_t xISROneShotTimer = NULL;
 static unsigned char ucISROneShotTimerCounter = ( unsigned char ) 0;
 
 /* The period of all the timers are a multiple of the base period.  The base
 period is configured by the parameter to vStartTimerDemoTask(). */
-static portTickType xBasePeriod = 0;
+static TickType_t xBasePeriod = 0;
 
 /*-----------------------------------------------------------*/
 
-void vStartTimerDemoTask( portTickType xBasePeriodIn )
+void vStartTimerDemoTask( TickType_t xBasePeriodIn )
 {
 	/* Start with the timer and counter arrays clear - this is only necessary
 	where the compiler does not clear them automatically on start up. */
@@ -226,17 +226,17 @@ static void prvTimerTestTask( void *pvParameters )
 
 /* This is called to check that the created task is still running and has not
 detected any errors. */
-portBASE_TYPE xAreTimerDemoTasksStillRunning( portTickType xCycleFrequency )
+portBASE_TYPE xAreTimerDemoTasksStillRunning( TickType_t xCycleFrequency )
 {
 static unsigned long ulLastLoopCounter = 0UL;
-portTickType xMaxBlockTimeUsedByTheseTests, xLoopCounterIncrementTimeMax;
-static portTickType xIterationsWithoutCounterIncrement = ( portTickType ) 0, xLastCycleFrequency;
+TickType_t xMaxBlockTimeUsedByTheseTests, xLoopCounterIncrementTimeMax;
+static TickType_t xIterationsWithoutCounterIncrement = ( TickType_t ) 0, xLastCycleFrequency;
 
 	if( xLastCycleFrequency != xCycleFrequency )
 	{
 		/* The cycle frequency has probably become much faster due to an error
 		elsewhere.  Start counting Iterations again. */
-		xIterationsWithoutCounterIncrement = ( portTickType ) 0;
+		xIterationsWithoutCounterIncrement = ( TickType_t ) 0;
 		xLastCycleFrequency = xCycleFrequency;
 	}		
 
@@ -244,7 +244,7 @@ static portTickType xIterationsWithoutCounterIncrement = ( portTickType ) 0, xLa
 	function to be called without ulLoopCounter being incremented.  This is
 	necessary because the tests in this file block for extended periods, and the
 	block period might be longer than the time between calls to this function. */
-	xMaxBlockTimeUsedByTheseTests = ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
+	xMaxBlockTimeUsedByTheseTests = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
 	xLoopCounterIncrementTimeMax = ( xMaxBlockTimeUsedByTheseTests / xCycleFrequency ) + 1;
 
 	/* If the demo task is still running then the loop counter is expected to
@@ -263,7 +263,7 @@ static portTickType xIterationsWithoutCounterIncrement = ( portTickType ) 0, xLa
 	{
 		/* ulLoopCounter changed, so the count of times this function was called
 		without a change can be reset to zero. */
-		xIterationsWithoutCounterIncrement = ( portTickType ) 0;
+		xIterationsWithoutCounterIncrement = ( TickType_t ) 0;
 	}
 
 	ulLastLoopCounter = ulLoopCounter;
@@ -286,7 +286,7 @@ unsigned portBASE_TYPE xTimer;
 		been started, so their block times should get set to zero within the timer
 		API itself. */
 		xAutoReloadTimers[ xTimer ] = xTimerCreate( "FR Timer",							/* Text name to facilitate debugging.  The kernel does not use this itself. */
-													( ( xTimer + ( portTickType ) 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
+													( ( xTimer + ( TickType_t ) 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
 													pdTRUE,								/* Auto-reload is set to true. */
 													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
 													prvAutoReloadTimerCallback );		/* The callback to be called when the timer expires. */
@@ -388,14 +388,14 @@ unsigned char ucTimer;
 static void	prvTest3_CheckAutoReloadExpireRates( void )
 {
 unsigned char ucMaxAllowableValue, ucMinAllowableValue, ucTimer;
-portTickType xBlockPeriod, xTimerPeriod, xExpectedNumber;
+TickType_t xBlockPeriod, xTimerPeriod, xExpectedNumber;
 
 	/* Check the auto reload timers expire at the expected rates. */
 
 	
 	/* Delaying for configTIMER_QUEUE_LENGTH * xBasePeriod ticks should allow
 	all the auto reload timers to expire at least once. */
-	xBlockPeriod = ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
+	xBlockPeriod = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
 	vTaskDelay( xBlockPeriod );
 
 	/* Check that all the auto reload timers have called their callback	
@@ -404,7 +404,7 @@ portTickType xBlockPeriod, xTimerPeriod, xExpectedNumber;
 	{
 		/* The expected number of expiries is equal to the block period divided
 		by the timer period. */
-		xTimerPeriod = ( ( ( portTickType ) ucTimer + ( portTickType ) 1 ) * xBasePeriod );
+		xTimerPeriod = ( ( ( TickType_t ) ucTimer + ( TickType_t ) 1 ) * xBasePeriod );
 		xExpectedNumber = xBlockPeriod / xTimerPeriod;
 		
 		ucMaxAllowableValue = ( ( unsigned char ) xExpectedNumber ) ;
@@ -477,7 +477,7 @@ unsigned char ucTimer;
 
 	/* The timers are now all inactive, so this time, after delaying, none
 	of the callback counters should have incremented. */
-	vTaskDelay( ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
+	vTaskDelay( ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
 	for( ucTimer = 0; ucTimer < ( unsigned char ) configTIMER_QUEUE_LENGTH; ucTimer++ )
 	{
 		if( ucAutoReloadTimerCounters[ ucTimer ] != ( unsigned char ) 0 )
@@ -525,7 +525,7 @@ static void prvTest5_CheckBasicOneShotTimerBehaviour( void )
 	/* Delay for three times as long as the one shot timer period, then check
 	to ensure it has only called its callback once, and is now not in the
 	active state. */
-	vTaskDelay( tmrdemoONE_SHOT_TIMER_PERIOD * ( portTickType ) 3 );
+	vTaskDelay( tmrdemoONE_SHOT_TIMER_PERIOD * ( TickType_t ) 3 );
 
 	if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
 	{
@@ -622,7 +622,7 @@ unsigned char ucTimer;
 	}
 
 	/* Finally delay long enough for both running timers to expire. */
-	vTaskDelay( ( ( portTickType ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
+	vTaskDelay( ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod );
 
 	/* The timers were not reset during the above delay period so should now
 	both have called their callback functions. */
@@ -715,7 +715,7 @@ unsigned char ucTimer;
 
 void vTimerPeriodicISRTests( void )
 {
-static portTickType uxTick = ( portTickType ) -1;
+static TickType_t uxTick = ( TickType_t ) -1;
 
 #if( configTIMER_TASK_PRIORITY != ( configMAX_PRIORITIES - 1 ) )
 	/* The timer service task is not the highest priority task, so it cannot
@@ -737,9 +737,9 @@ static portTickType uxTick = ( portTickType ) -1;
 	will expire when the kernel's tick count is (100 + xBasePeriod).  For this
 	reason xMargin is used as an allowable margin for premature timer expiries
 	as well as late timer expiries. */
-	const portTickType xMargin = 6;
+	const TickType_t xMargin = 6;
 #else
-	const portTickType xMargin = 3;
+	const TickType_t xMargin = 3;
 #endif
 
 
@@ -755,7 +755,7 @@ static portTickType uxTick = ( portTickType ) -1;
 		/* It is possible that the timer task has not yet made room in the
 		timer queue.  If the timers cannot be started then reset uxTick so
 		another attempt is made later. */
-		uxTick = ( portTickType ) -1;
+		uxTick = ( TickType_t ) -1;
 
 		/* Try starting first timer. */
 		if( xTimerChangePeriodFromISR( xISRAutoReloadTimer, xBasePeriod, NULL ) == pdPASS )
@@ -822,7 +822,7 @@ static portTickType uxTick = ( portTickType ) -1;
 			configASSERT( xTestStatus );
 		}
 	}
-	else if( uxTick == ( ( 2 * xBasePeriod ) + ( xBasePeriod >> ( portTickType ) 2U ) ) )
+	else if( uxTick == ( ( 2 * xBasePeriod ) + ( xBasePeriod >> ( TickType_t ) 2U ) ) )
 	{
 		/* The auto reload timer will still be active, but the one shot timer
 		should now have stopped.  Again though, at this time, neither timer call
@@ -1012,14 +1012,14 @@ static portTickType uxTick = ( portTickType ) -1;
 			configASSERT( xTestStatus );
 		}
 		
-		uxTick = ( portTickType ) -1;
+		uxTick = ( TickType_t ) -1;
 	}	
 }
 /*-----------------------------------------------------------*/
 
 /*** Timer callback functions are defined below here. ***/
 
-static void prvAutoReloadTimerCallback( xTimerHandle pxExpiredTimer )
+static void prvAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer )
 {
 unsigned long ulTimerID;
 
@@ -1037,7 +1037,7 @@ unsigned long ulTimerID;
 }
 /*-----------------------------------------------------------*/
 
-static void prvOneShotTimerCallback( xTimerHandle pxExpiredTimer )
+static void prvOneShotTimerCallback( TimerHandle_t pxExpiredTimer )
 {
 	/* The parameter is not used in this case as only one timer uses this
 	callback function. */
@@ -1047,7 +1047,7 @@ static void prvOneShotTimerCallback( xTimerHandle pxExpiredTimer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvISRAutoReloadTimerCallback( xTimerHandle pxExpiredTimer )
+static void prvISRAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer )
 {
 	/* The parameter is not used in this case as only one timer uses this
 	callback function. */
@@ -1057,7 +1057,7 @@ static void prvISRAutoReloadTimerCallback( xTimerHandle pxExpiredTimer )
 }
 /*-----------------------------------------------------------*/
 
-static void prvISROneShotTimerCallback( xTimerHandle pxExpiredTimer )
+static void prvISROneShotTimerCallback( TimerHandle_t pxExpiredTimer )
 {
 	/* The parameter is not used in this case as only one timer uses this
 	callback function. */

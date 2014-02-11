@@ -63,7 +63,7 @@
 								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.318290481" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.misc26.759636132" name="Ignore 'inline' keyword(-fno-inline)" superClass="com.renesas.cdt.core.Compiler.option.misc26" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.misc48.181042602" name="List macro definitions but omit arguments and contents(-dN)" superClass="com.renesas.cdt.core.Compiler.option.misc48" value="false" valueType="boolean"/>
-								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.2146764026" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions" valueType="stringList"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.2146764026" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions"/>
 								<option id="com.renesas.cdt.core.Compiler.option.misc2.1429263328" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1290374987" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.1815429899" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
@@ -159,7 +159,7 @@
 									<listOptionValue builtIn="false" value="RSKRL78G1C"/>
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.992185200" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
-								<option id="com.renesas.cdt.core.Compiler.option.misc2.23981720" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc2.23981720" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1356266742" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.1207636487" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>
@@ -255,7 +255,8 @@
 									<listOptionValue builtIn="false" value="RSKRL78L13"/>
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.1827952485" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
-								<option id="com.renesas.cdt.core.Compiler.option.misc2.1309529749" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc2.1309529749" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.1713741321" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions" valueType="stringList"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1471081059" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.1237074300" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>
@@ -350,7 +351,7 @@
 									<listOptionValue builtIn="false" value="RL78_G1A_TB"/>
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.702595527" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
-								<option id="com.renesas.cdt.core.Compiler.option.misc2.713693207" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc2.713693207" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1185371592" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.763886474" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>

@@ -82,8 +82,8 @@
 #define UART0_Rx_Pin 					( 0x0001<< 8 )
 #define UART0_Tx_Pin 					( 0x0001<< 9 )
 
-#define serINVALID_QUEUE				( ( xQueueHandle ) 0 )
-#define serNO_BLOCK						( ( portTickType ) 0 )
+#define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
+#define serNO_BLOCK						( ( TickType_t ) 0 )
 
 /* Macros to turn on and off the Tx empty interrupt. */
 #define serINTERRUPT_ON()				UART0->IER |= UART_TxHalfEmpty
@@ -93,8 +93,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars;
-static xQueueHandle xCharsForTx;
+static QueueHandle_t xRxedChars;
+static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
@@ -155,7 +155,7 @@ xComPortHandle xReturn;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
@@ -197,7 +197,7 @@ signed char *pxNext;
 }
 /*-----------------------------------------------------------*/
 
-signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, portTickType xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 	/* Place the character in the queue of characters to be transmitted. */
 	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )

@@ -98,8 +98,8 @@
 
 /* Queues used to hold received characters, and characters waiting to be
 transmitted. */
-static xQueueHandle xRxedChars; 
-static xQueueHandle xCharsForTx; 
+static QueueHandle_t xRxedChars; 
+static QueueHandle_t xCharsForTx; 
 static volatile long lTHREEmpty;
 
 /*-----------------------------------------------------------*/
@@ -108,7 +108,7 @@ static volatile long lTHREEmpty;
  * The queues are created in serialISR.c as they are used from the ISR.
  * Obtain references to the queues and THRE Empty flag. 
  */
-void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, xQueueHandle *pxCharsForTx, long volatile **pplTHREEmptyFlag );
+void vSerialISRCreateQueues( unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, QueueHandle_t *pxCharsForTx, long volatile **pplTHREEmptyFlag );
 
 /* UART0 interrupt service routine entry point. */
 void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
@@ -117,8 +117,8 @@ void vUART_ISR_Wrapper( void ) __attribute__ ((naked));
 void vUART_ISR_Handler( void ) __attribute__ ((noinline));
 
 /*-----------------------------------------------------------*/
-void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, xQueueHandle *pxRxedChars, 
-								xQueueHandle *pxCharsForTx, long volatile **pplTHREEmptyFlag )
+void vSerialISRCreateQueues(	unsigned portBASE_TYPE uxQueueLength, QueueHandle_t *pxRxedChars, 
+								QueueHandle_t *pxCharsForTx, long volatile **pplTHREEmptyFlag )
 {
 	/* Create the queues used to hold Rx and Tx characters. */
 	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );

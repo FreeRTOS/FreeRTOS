@@ -149,7 +149,7 @@
 
 /* The time between cycles of the 'check' functionality (defined within the
 tick hook. */
-#define mainCHECK_DELAY						( ( portTickType ) 5000 / portTICK_RATE_MS )
+#define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
 /* Size of the stack allocated to the uIP task. */
 #define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 3 )
@@ -220,7 +220,7 @@ void vApplicationIdleHook( void ) __attribute__((naked));
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the OLED task. */
-xQueueHandle xOLEDQueue;
+QueueHandle_t xOLEDQueue;
 
 /* The welcome text. */
 const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
@@ -459,7 +459,7 @@ void ( *vOLEDClear )( void ) = NULL;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	for( ;; );
 }

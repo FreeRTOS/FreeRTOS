@@ -587,7 +587,7 @@ static void prvInterruptSimulator( void *pvParameters )
 {
 static struct pcap_pkthdr *pxHeader;
 const unsigned char *pucPacketData;
-extern xQueueHandle xEMACEventQueue;
+extern QueueHandle_t xEMACEventQueue;
 long lResult;
 
 	/* Just to kill the compiler warning. */

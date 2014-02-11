@@ -84,7 +84,7 @@
 #define cmdMAX_INPUT_SIZE		50
 
 /* The maximum time in ticks to wait for the UART access mutex. */
-#define cmdMAX_MUTEX_WAIT		( 200 / portTICK_RATE_MS )
+#define cmdMAX_MUTEX_WAIT		( 200 / portTICK_PERIOD_MS )
 
 /* Characters are only ever received slowly on the CLI so it is ok to pass
 received characters from the UART interrupt to the task on a queue.  This sets
@@ -135,11 +135,11 @@ static const char * const pcNewLine = "\r\n";
 
 /* This semaphore is used to allow the task to wait for a Tx to complete
 without wasting any CPU time. */
-static xSemaphoreHandle xTxCompleteSemaphore = NULL;
+static SemaphoreHandle_t xTxCompleteSemaphore = NULL;
 
 /* This semaphore is sued to allow the task to wait for an Rx to complete
 without wasting any CPU time. */
-static xSemaphoreHandle xRxCompleteSemaphore = NULL;
+static SemaphoreHandle_t xRxCompleteSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -266,7 +266,7 @@ static struct usart_module xCDCUsart; /* Static so it doesn't take up too much s
 
 static void prvSendBuffer( struct usart_module *pxCDCUsart, const char * pcBuffer, size_t xBufferLength )
 {
-const portTickType xBlockMax100ms = 100UL / portTICK_RATE_MS;
+const TickType_t xBlockMax100ms = 100UL / portTICK_PERIOD_MS;
 
 	if( xBufferLength > 0 )
 	{

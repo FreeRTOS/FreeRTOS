@@ -81,7 +81,7 @@
 #define configUSE_PREEMPTION		1
 #define configUSE_IDLE_HOOK			1
 #define configUSE_TICK_HOOK			0
-#define configTICK_RATE_HZ			( ( portTickType ) 1000 )
+#define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
 #define configCPU_CLOCK_HZ			( ( unsigned long ) 64000000 )  /* Clock setup from start91460.asm in the demo application. */
 #define configPER_CLOCK_HZ			( ( unsigned long ) 16000000 )  /* Clock setup from start91460.asm in the demo application. */
 #define configMAX_PRIORITIES		( 6 )

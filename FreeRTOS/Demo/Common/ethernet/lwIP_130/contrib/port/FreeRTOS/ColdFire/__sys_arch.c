@@ -56,16 +56,16 @@
 /* This is the number of threads that can be started with sys_thead_new() */
 #define SYS_MBOX_SIZE               ( 16 )
 #define MS_TO_TICKS( ms )           \
-    ( portTickType )( ( portTickType ) ( ms ) / portTICK_RATE_MS )
+    ( TickType_t )( ( TickType_t ) ( ms ) / portTICK_PERIOD_MS )
 #define TICKS_TO_MS( ticks )        \
-    ( unsigned long )( ( portTickType ) ( ticks ) * portTICK_RATE_MS )
+    ( unsigned long )( ( TickType_t ) ( ticks ) * portTICK_PERIOD_MS )
 #define THREAD_STACK_SIZE           ( 256 /*FSL:1024*/ )
 #define THREAD_NAME                 "lwIP"
 
 #define THREAD_INIT( tcb ) \
     do { \
         tcb->next = NULL; \
-        tcb->pid = ( xTaskHandle )0; \
+        tcb->pid = ( TaskHandle_t )0; \
         tcb->timeouts.next = NULL; \
     } while( 0 )
 
@@ -74,7 +74,7 @@ typedef struct sys_tcb
 {
     struct sys_tcb *next;
     struct sys_timeouts timeouts;
-    xTaskHandle     pid;
+    TaskHandle_t     pid;
 } sys_tcb_t;
 
 /* ------------------------ Prototypes ------------------------------------ */
@@ -223,7 +223,7 @@ sys_arch_thread_remove( sys_thread_t hdl )
 {
     sys_tcb_t      *current = tasks, *prev;
     sys_tcb_t      *toremove = hdl;
-    xTaskHandle     pid = ( xTaskHandle ) 0;
+    TaskHandle_t     pid = ( TaskHandle_t ) 0;
 
     LWIP_ASSERT( "sys_arch_thread_remove: assertion hdl != NULL failed!", hdl != NULL );
 
@@ -261,7 +261,7 @@ sys_arch_thread_remove( sys_thread_t hdl )
      * resources.
      */
     vPortExitCritical(  );
-    if( pid != ( xTaskHandle ) 0 )
+    if( pid != ( TaskHandle_t ) 0 )
     {
         vTaskDelete( pid );
         /* not reached. */
@@ -276,7 +276,7 @@ sys_thread_t
 sys_arch_thread_current( void )
 {
     sys_tcb_t      *p = tasks;
-    xTaskHandle     pid = xTaskGetCurrentTaskHandle(  );
+    TaskHandle_t     pid = xTaskGetCurrentTaskHandle(  );
 
     vPortEnterCritical(  );
     while( ( p != NULL ) && ( p->pid != pid ) )
@@ -316,7 +316,7 @@ sys_arch_timeouts( void )
 sys_sem_t
 sys_sem_new( u8_t count )
 {
-    xSemaphoreHandle xSemaphore;
+    SemaphoreHandle_t xSemaphore;
 
     vSemaphoreCreateBinary( xSemaphore );
     if( xSemaphore != SYS_SEM_NULL )
@@ -386,7 +386,7 @@ u32_t
 sys_arch_sem_wait( sys_sem_t sem, u32_t timeout )
 {
     portBASE_TYPE   xStatus;
-    portTickType    xTicksStart, xTicksEnd, xTicksElapsed;
+    TickType_t    xTicksStart, xTicksEnd, xTicksElapsed;
     u32_t           timespent;
 
     LWIP_ASSERT( "sys_arch_sem_wait: sem != SYS_SEM_NULL", sem != SYS_SEM_NULL );
@@ -425,7 +425,7 @@ sys_arch_sem_wait( sys_sem_t sem, u32_t timeout )
 sys_mbox_t
 sys_mbox_new( /*paolo:void*/int size )
 {
-    xQueueHandle    mbox;
+    QueueHandle_t    mbox;
 
     mbox = xQueueCreate( SYS_MBOX_SIZE/*size*/, sizeof( void * ) );
     if( mbox != SYS_MBOX_NULL )
@@ -523,7 +523,7 @@ sys_arch_mbox_fetch( sys_mbox_t mbox, void **msg, u32_t timeout )
 {
     void           *ret_msg;
     portBASE_TYPE   xStatus;
-    portTickType    xTicksStart, xTicksEnd, xTicksElapsed;
+    TickType_t    xTicksStart, xTicksEnd, xTicksElapsed;
     u32_t           timespent;
 
     LWIP_ASSERT( "sys_arch_mbox_fetch: mbox != SYS_MBOX_NULL", mbox != SYS_MBOX_NULL );
@@ -565,7 +565,7 @@ sys_arch_mbox_fetch( sys_mbox_t mbox, void **msg, u32_t timeout )
 u32_t
 sys_jiffies( void )
 {
-    portTickType    xTicks = xTaskGetTickCount(  );
+    TickType_t    xTicks = xTaskGetTickCount(  );
 
     return ( u32_t )TICKS_TO_MS( xTicks );
 }

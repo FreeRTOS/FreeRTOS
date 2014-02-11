@@ -91,7 +91,7 @@ static long lDummyVariable;
  */
 void vEINT0_ISR_Handler( void )
 {
-extern xQueueHandle xTCPISRQueue;
+extern QueueHandle_t xTCPISRQueue;
 portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Just wake the TCP task so it knows an ISR has occurred. */

@@ -91,7 +91,7 @@
  * milliseconds.  It will do this a maximum of netifMAX_TX_ATTEMPTS before
  * giving up.
  */
-#define netifTX_BUFFER_FREE_WAIT	( ( portTickType ) 2UL / portTICK_RATE_MS )
+#define netifTX_BUFFER_FREE_WAIT	( ( TickType_t ) 2UL / portTICK_PERIOD_MS )
 #define netifMAX_TX_ATTEMPTS		( 5 )
 
 #define netifMAX_MTU 1500

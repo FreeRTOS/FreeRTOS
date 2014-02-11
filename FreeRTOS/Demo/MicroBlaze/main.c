@@ -211,7 +211,7 @@ int main (void)
 
 static void vErrorChecks( void *pvParameters )
 {
-portTickType xDelayPeriod = mainNO_ERROR_CHECK_PERIOD;
+TickType_t xDelayPeriod = mainNO_ERROR_CHECK_PERIOD;
 
 	/* The parameters are not used. */
 	( void ) pvParameters;

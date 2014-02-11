@@ -50,13 +50,13 @@
 static const struct uip_eth_addr ethaddr = {{0x00,0x00,0xe2,0x58,0xb6,0x6b}};
 
 #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
-#define uipSHORT_DELAY		( ( portTickType ) 2 / portTICK_RATE_MS )
+#define uipSHORT_DELAY		( ( TickType_t ) 2 / portTICK_PERIOD_MS )
 
 #ifndef NULL
 #define NULL (void *)0
 #endif /* NULL */
 
-static volatile portTickType start, current;
+static volatile TickType_t start, current;
 
 #define RT_CLOCK_SECOND ( configTICK_RATE_HZ / 2 )
 

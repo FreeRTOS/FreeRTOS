@@ -9,7 +9,7 @@ void vEMAC_ISR_Wrapper( void ) __attribute__((naked));
 separate to the wrapper to ensure the correct stack frame is set up. */
 void vEMAC_ISR_Handler( void ) __attribute__((noinline));
 
-extern xSemaphoreHandle xEMACSemaphore;
+extern SemaphoreHandle_t xEMACSemaphore;
 
 void vEMAC_ISR_Handler( void )
 {

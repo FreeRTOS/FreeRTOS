@@ -424,9 +424,9 @@ unsigned portBASE_TYPE uxValue, uxRxed;
 	{
 		if( xQueueReceive( xNormallyEmptyQueue, &uxRxed, intqONE_TICK_DELAY ) != errQUEUE_EMPTY )
 		{
-			/* We should only obtain a value when the high priority task is
+			/* A value should only be obtained when the high priority task is
 			suspended. */
-			if( xTaskIsTaskSuspended( xHighPriorityNormallyEmptyTask1 ) == pdFALSE )
+			if( eTaskGetState( xHighPriorityNormallyEmptyTask1 ) != eSuspended )
 			{
 				prvQueueAccessLogError( __LINE__ );
 			}
@@ -621,9 +621,8 @@ unsigned portBASE_TYPE uxValue, uxTxed = 9999;
 	{
 		if( xQueueSend( xNormallyFullQueue, &uxTxed, intqONE_TICK_DELAY ) != errQUEUE_FULL )
 		{
-			/* We would only expect to succeed when the higher priority task
-			is suspended. */
-			if( xTaskIsTaskSuspended( xHighPriorityNormallyFullTask1 ) == pdFALSE )
+			/* Should only succeed when the higher priority task is suspended */
+			if( eTaskGetState( xHighPriorityNormallyFullTask1 ) != eSuspended )
 			{
 				prvQueueAccessLogError( __LINE__ );
 			}

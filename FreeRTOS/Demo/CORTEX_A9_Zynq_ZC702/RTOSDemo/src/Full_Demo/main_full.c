@@ -143,6 +143,7 @@
 #include "TimerDemo.h"
 #include "QueueOverwrite.h"
 #include "IntQueue.h"
+#include "EventGroupsDemo.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -243,6 +244,7 @@ void main_full( void )
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
+	vStartEventGroupTasks();
 
 	/* Start the tasks that implements the command console on the UART, as
 	described above. */
@@ -362,6 +364,11 @@ unsigned long ulErrorFound = pdFALSE;
 		}
 
 		if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
+		{
+			ulErrorFound = pdTRUE;
+		}
+
+		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
 			ulErrorFound = pdTRUE;
 		}

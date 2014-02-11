@@ -74,12 +74,15 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
- * NOTE:  The full demo includes a test that checks the floating point context
- * is maintained correctly across task switches.  The standard GCC libraries can
- * use floating point registers and made this test fail (unless the tasks that
- * use the library are given a floating point context as described on the
- * documentation page for this demo).  printf-stdarg.c is included in this
- * project to prevent the standard GCC libraries being linked into the project.
+ * !!! IMPORTANT NOTE !!!
+ * The GCC libraries that ship with the Xilinx SDK make use of the floating
+ * point registers.  To avoid this causing corruption it is necessary to avoid
+ * their use.  For this reason main.c contains very basic C implementations of
+ * the standard C library functions memset(), memcpy() and memcmp(), which are
+ * are used by FreeRTOS itself.  Defining these functions in the project 
+ * prevents the linker pulling them in from the library.  Any other standard C
+ * library functions that are used by the application must likewise be defined
+ * in C.
  *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
@@ -99,6 +102,7 @@
 #include "partest.h"
 #include "TimerDemo.h"
 #include "QueueOverwrite.h"
+#include "EventGroupsDemo.h"
 
 /* Xilinx includes. */
 #include "platform.h"
@@ -109,7 +113,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
@@ -158,7 +162,7 @@ int main( void )
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
-	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
 	{
 		main_blinky();
 	}
@@ -281,6 +285,59 @@ void vApplicationTickHook( void )
 
 		/* Call the periodic queue overwrite from ISR demo. */
 		vQueueOverwritePeriodicISRDemo();
+
+		/* Call the periodic event group from ISR demo. */
+		vPeriodicEventGroupsProcessing();
 	}
 	#endif
 }
+/*-----------------------------------------------------------*/
+
+void *memcpy( void *pvDest, const void *pvSource, size_t ulBytes )
+{
+unsigned char *pcDest = ( unsigned char * ) pvDest, *pcSource = ( unsigned char * ) pvSource;
+size_t x;
+
+	for( x = 0; x < ulBytes; x++ )
+	{
+		*pcDest = *pcSource;
+		pcDest++;
+		pcSource++;
+	}
+
+	return pvDest;
+}
+/*-----------------------------------------------------------*/
+
+void *memset( void *pvDest, int iValue, size_t ulBytes )
+{
+unsigned char *pcDest = ( unsigned char * ) pvDest;
+size_t x;
+
+	for( x = 0; x < ulBytes; x++ )
+	{
+		*pcDest = ( unsigned char ) c;
+		pcDest++;
+	}
+
+	return pvDest;
+}
+/*-----------------------------------------------------------*/
+
+int memcmp( const void *pvMem1, const void *pvMem2 ,size_t ulBytes )
+{
+const unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
+size_t x;
+
+    for( x = 0; x < ulBytes; x++ )
+    {
+        if( pucMem1[ x ] != pucMem2[ x ] )
+        {
+            break;
+        }
+    }
+
+    return n - x;
+}
+
+

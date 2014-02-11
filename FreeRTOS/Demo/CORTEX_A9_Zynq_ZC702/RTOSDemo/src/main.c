@@ -316,7 +316,7 @@ size_t x;
 
 	for( x = 0; x < ulBytes; x++ )
 	{
-		*pcDest = ( unsigned char ) c;
+		*pcDest = ( unsigned char ) iValue;
 		pcDest++;
 	}
 
@@ -324,7 +324,7 @@ size_t x;
 }
 /*-----------------------------------------------------------*/
 
-int memcmp( const void *pvMem1, const void *pvMem2 ,size_t ulBytes )
+int memcmp( const void *pvMem1, const void *pvMem2, size_t ulBytes )
 {
 const unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
 size_t x;
@@ -337,7 +337,7 @@ size_t x;
         }
     }
 
-    return n - x;
+    return ulBytes - x;
 }
 
 

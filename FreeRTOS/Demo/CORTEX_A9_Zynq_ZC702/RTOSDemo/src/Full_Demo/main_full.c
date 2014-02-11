@@ -218,6 +218,13 @@ extern void vRegisterSampleCLICommands( void );
  */
 extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
 
+/*
+ * A high priority task that does nothing other than execute at a pseudo random
+ * time to ensure the other test tasks don't just execute in a repeating
+ * pattern.
+ */
+static void prvPseudoRandomiser( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
@@ -256,6 +263,9 @@ void main_full( void )
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvRegTestTaskEntry2, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+
+	/* Create the task that just adds a little random behaviour. */
+	xTaskCreate( prvPseudoRandomiser, "Rnd", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
 	/* Create the task that performs the 'check' functionality,	as described at
 	the top of this file. */
@@ -449,6 +459,40 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
+
+static void prvPseudoRandomiser( void *pvParameters )
+{
+const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL, ulMinDelay = ( 35 / portTICK_PERIOD_MS );
+volatile uint32_t ulNextRand = ( uint32_t ) &pvParameters, ulValue;
+
+	/* This task does nothing other than ensure there is a little bit of
+	disruption in the scheduling pattern of the other tasks.  Normally this is
+	done by generating interrupts at pseudo random times. */
+	for( ;; )
+	{
+		ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
+		ulValue = ( ulNextRand >> 16UL ) & 0xffUL;
+
+		if( ulValue < ulMinDelay )
+		{
+			ulValue = ulMinDelay;
+		}
+
+		vTaskDelay( ulValue );
+
+		while( ulValue > 0 )
+		{
+			__asm volatile( "NOP" );
+			__asm volatile( "NOP" );
+			__asm volatile( "NOP" );
+			__asm volatile( "NOP" );
+
+			ulValue--;
+		}
+	}
+}
+
+
 
 
 

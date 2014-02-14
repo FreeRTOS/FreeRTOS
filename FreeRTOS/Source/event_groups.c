@@ -621,6 +621,19 @@ BaseType_t xWaitConditionMet = pdFALSE;
 /*-----------------------------------------------------------*/
 
 #if (configUSE_TRACE_FACILITY == 1)
+	BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
+	{
+	BaseType_t xReturn;
+
+		traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet ); 
+		xReturn = xTimerPendFunctionCallFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
+
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if (configUSE_TRACE_FACILITY == 1)
 	UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
 	{
 	UBaseType_t xReturn;

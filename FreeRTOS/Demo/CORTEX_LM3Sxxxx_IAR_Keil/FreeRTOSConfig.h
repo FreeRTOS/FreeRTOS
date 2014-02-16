@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -102,7 +102,7 @@
 #define configQUEUE_REGISTRY_SIZE		10
 
 /* Timer related defines. */
-#define configUSE_TIMERS				0
+#define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		2
 #define configTIMER_QUEUE_LENGTH		20
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
@@ -124,10 +124,12 @@ to exclude the API function. */
 #define INCLUDE_pcTaskGetTaskName				1
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
+#define INCLUDE_eTaskGetState					1
+#define INCLUDE_xTimerPendFunctionCall			1
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 

@@ -150,6 +150,7 @@ and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
 #include "recmutex.h"
 #include "IntQueue.h"
 #include "QueueSet.h"
+#include "EventGroupsDemo.h"
 
 /*-----------------------------------------------------------*/
 
@@ -260,6 +261,7 @@ int main( void )
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartQueueSetTasks();
+	vStartEventGroupTasks();
 
 	/* Exclude some tasks if using the kickstart version to ensure we stay within
 	the 32K code size limit. */
@@ -378,6 +380,10 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		{
 			xMessage.pcMessage = "ERROR IN Q SET";
 		}
+		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+		{
+			xMessage.pcMessage = "ERROR IN EVNT GRP";
+		}
 
 		configASSERT( strcmp( ( const char * ) xMessage.pcMessage, "PASS" ) == 0 );
 
@@ -389,6 +395,9 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	/* Write to a queue that is in use as part of the queue set demo to
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();
+
+	/* Call the event group ISR tests. */
+	vPeriodicEventGroupsProcessing();
 }
 /*-----------------------------------------------------------*/
 

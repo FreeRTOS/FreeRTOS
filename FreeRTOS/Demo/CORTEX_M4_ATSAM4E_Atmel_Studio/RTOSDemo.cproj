@@ -557,6 +557,10 @@
       <SubType>compile</SubType>
       <Link>src\FreeRTOS+\FreeRTOS+FAT SL\PSP\Target\RTC\psp_rtc.c</Link>
     </Compile>
+    <Compile Include="..\..\Source\event_groups.c">
+      <SubType>compile</SubType>
+      <Link>src\FreeRTOS\event_groups.c</Link>
+    </Compile>
     <Compile Include="..\Common\Minimal\blocktim.c">
       <SubType>compile</SubType>
       <Link>src\Common Demo Tasks\blocktim.c</Link>
@@ -568,6 +572,10 @@
     <Compile Include="..\Common\Minimal\dynamic.c">
       <SubType>compile</SubType>
       <Link>src\Common Demo Tasks\dynamic.c</Link>
+    </Compile>
+    <Compile Include="..\Common\Minimal\EventGroupsDemo.c">
+      <SubType>compile</SubType>
+      <Link>src\Common Demo Tasks\EventGroupsDemo.c</Link>
     </Compile>
     <Compile Include="..\Common\Minimal\flash_timer.c">
       <SubType>compile</SubType>

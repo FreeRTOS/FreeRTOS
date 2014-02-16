@@ -135,6 +135,7 @@
 #include "QueueOverwrite.h"
 #include "QueueSet.h"
 #include "recmutex.h"
+#include "EventGroupsDemo.h"
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
@@ -178,10 +179,11 @@ http://www.FreeRTOS.org/udp */
 #define mainCONNECTED_IP_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define mainDISCONNECTED_IP_TASK_PRIORITY	( tskIDLE_PRIORITY )
 
-/* UDP command server task parameters. */
+/* UDP command server and echo task parameters. */
 #define mainUDP_CLI_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainUDP_CLI_PORT_NUMBER				( 5001UL )
 #define mainUDP_CLI_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2U )
+#define mainECHO_CLIENT_STACK_SIZE			( configMINIMAL_STACK_SIZE + 30 )
 
 /* Set to 1 to include the UDP echo client tasks in the build.  The echo clients
 require the IP address of the echo server to be defined using the
@@ -293,6 +295,7 @@ TimerHandle_t xTimer = NULL;
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_TASK_PRIORITY );
 	vStartQueueSetTasks();
 	vStartRecursiveMutexTasks();
+	vStartEventGroupTasks();
 
 	/* Create the software timer that performs the 'check' functionality, as
 	described at the top of this file. */
@@ -365,6 +368,10 @@ unsigned long ulErrorOccurred = pdFALSE;
 	{
 		ulErrorOccurred |= ( 0x01UL << 12UL );
 	}
+	else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 13UL );
+	}
 
 	if( ulErrorOccurred != pdFALSE )
 	{
@@ -422,7 +429,7 @@ char cIPAddress[ 20 ];
 				address of the echo server to be defined using the
 				configECHO_SERVER_ADDR0 to configECHO_SERVER_ADDR3 constants in
 				FreeRTOSConfig.h. */
-				vStartEchoClientTasks( configMINIMAL_STACK_SIZE, tskIDLE_PRIORITY );
+				vStartEchoClientTasks( mainECHO_CLIENT_STACK_SIZE, tskIDLE_PRIORITY );
 			}
 			#endif
 		}
@@ -487,6 +494,9 @@ void vFullDemoTickHook( void )
 
 	/* Call the periodic queue set ISR test function. */
 	vQueueSetAccessQueueSetFromISR();
+	
+	/* Call the event group ISR tests. */
+	vPeriodicEventGroupsProcessing();
 }
 /*-----------------------------------------------------------*/
 

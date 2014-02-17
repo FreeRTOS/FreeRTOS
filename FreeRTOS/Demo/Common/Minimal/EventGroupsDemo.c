@@ -84,6 +84,10 @@
 /* Demo app includes. */
 #include "EventGroupsDemo.h"
 
+#if( INCLUDE_eTaskGetState != 1 )
+	#error INCLUDE_eTaskGetState must be set to 1 in FreeRTOSConfig.h to use this demo file.
+#endif
+
 /* Priorities used by the tasks. */
 #define ebSET_BIT_TASK_PRIORITY		( tskIDLE_PRIORITY )
 #define ebWAIT_BIT_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )

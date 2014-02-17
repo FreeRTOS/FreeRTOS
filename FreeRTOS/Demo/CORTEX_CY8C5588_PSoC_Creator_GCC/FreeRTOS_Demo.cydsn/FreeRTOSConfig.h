@@ -114,6 +114,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil				1
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
+#define INCLUDE_eTaskGetState				1
 
 /**
  * Configure the number of priority bits. This is normally

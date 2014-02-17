@@ -329,6 +329,17 @@
 #define INCLUDE_OBJECT_DELETE 1
 
 /******************************************************************************
+ * INCLUDE_MEMMANG_EVENTS
+ * 
+ * Macro which should be defined as either zero (0) or one (1). 
+ * Default is 1.
+ *
+ * This controls if malloc and free calls should be traced. Set this to zero to
+ * exclude malloc/free calls from the tracing.
+ *****************************************************************************/
+#define INCLUDE_MEMMANG_EVENTS 1
+
+/******************************************************************************
  * CONFIGURATION RELATED TO BEHAVIOR
  *****************************************************************************/
 
@@ -434,75 +445,6 @@
  *****************************************************************************/
 #define USE_IMPLICIT_IFE_RULES 1
 
-/******************************************************************************
- * INCLUDE_SAVE_TO_FILE
- *
- * Macro which should be defined as either zero (0) or one (1).
- * Default is 0.
- *
- * If enabled (1), the recorder will include code for saving the trace
- * to a local file system.
- ******************************************************************************/
-#ifdef WIN32
-    #define INCLUDE_SAVE_TO_FILE 1
-#else
-    #define INCLUDE_SAVE_TO_FILE 0
-#endif
-
-/******************************************************************************
- * TRACE_PROGRESS_MONITOR_TASK_PRIORITY
- *
- * Macro which sets the priority of the "recorder status monitor" task.
- *
- * This task, vTraceMonitorTask in trcUser.c, periodically writes
- * the recorder status using the vTraceConsoleMessage macro, which is to
- * be mapped to your console "printf" routine. The task is named TraceMon but 
- * is intentionally excluded from the demo trace.
- *
- * Default is tskIDLE_PRIORITY + 1
- * Note that if your system constantly has a high CPU load from high-priority 
- * tasks, this might not be get a chance to execute.
- * 
- * See vTraceMonitorTask in trcUser.c
- *****************************************************************************/
-#define TRACE_PROGRESS_MONITOR_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
-
-/******************************************************************************
- * TRACE_PROGRESS_MONITOR_TASK_STACKSIZE
- *
- * Macro which sets the stack size of the "recorder status monitor" task.
- *
- * This task, vTraceMonitorTask in trcUser.c, periodically writes
- * the recorder status using the vTraceConsoleMessage macro, which is to
- * be mapped to your console "printf" routine. The task is intentionally 
- * excluded from the demo trace.
- *
- * See vTraceMonitorTask in trcUser.c
- *****************************************************************************/
-#define TRACE_PROGRESS_MONITOR_TASK_STACKSIZE 500
-
-/******************************************************************************
- * TRACE_PROGRESS_MONITOR_TASK_PERIOD
- *
- * Macro which sets the period of the "recorder status monitor" task.
- *
- * This task, vTraceMonitorTask in trcUser.c, periodically writes
- * the recorder status using the vTraceConsoleMessage macro, which is to
- * be mapped to your console "printf" routine. The task is named TraceMon but 
- * is intentionally excluded from the demo trace.
- *
- * Default is 1000 ticks (typically 1 second). On the Windows port, a lower 
- * value is suggested since the Windows port runs very slowly, often 20-40
- * times slower than the simulated time.
- *
- * See vTraceMonitorTask in trcUser.c
- *****************************************************************************/
-#ifdef WIN32
-    #define TRACE_PROGRESS_MONITOR_TASK_PERIOD 100
-#else
-    #define TRACE_PROGRESS_MONITOR_TASK_PERIOD 1000
-#endif
-
 
 /******************************************************************************
  * USE_16BIT_OBJECT_HANDLES
@@ -574,6 +516,15 @@
  ******************************************************************************/
 #define USE_PRIMASK_CS 0
 
+/******************************************************************************
+* HEAP_SIZE_BELOW_16M
+*
+* An integer constant that can be used to reduce the buffer usage of memory
+* allocation events (malloc/free). This value should be 1 if the heap size is 
+* below 16 MB (2^24 byte), and you can live with addresses truncated to the 
+* lower 24 bit. Otherwise set it to 0 to get the full 32-bit addresses.
+******************************************************************************/
+#define HEAP_SIZE_BELOW_16M 0
 
 #endif
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,10 +67,10 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/* 
+/*
  * The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within the IDE!  Once it has been executed, re-open or refresh 
+ * executed prior to this project being built.  The batch file *cannot* be
+ * executed from within the IDE!  Once it has been executed, re-open or refresh
  * the Eclipse project and remove the #error line below.
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
@@ -130,6 +130,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskSuspend			1
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
+#define INCLUDE_eTaskGetState			1
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */

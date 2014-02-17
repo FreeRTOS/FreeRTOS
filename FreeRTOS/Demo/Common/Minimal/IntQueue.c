@@ -90,6 +90,10 @@
 #include "IntQueue.h"
 #include "IntQueueTimer.h"
 
+#if( INCLUDE_eTaskGetState != 1 )
+	#error INCLUDE_eTaskGetState must be set to 1 in FreeRTOSConfig.h to use this demo file.
+#endif
+
 /* Priorities used by test tasks. */
 #ifndef intqHIGHER_PRIORITY
 	#define intqHIGHER_PRIORITY		( configMAX_PRIORITIES - 2 )

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.0:rc1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -137,8 +137,9 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
+#define INCLUDE_eTaskGetState				1
 
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 extern volatile unsigned long ulHighFrequencyTickCount;
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() nop() /* Run time stats use the same timer as the high frequency timer test. */
 #define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTickCount

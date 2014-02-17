@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcUser.c
@@ -34,6 +34,8 @@
  * Copyright Percepio AB, 2013.
  * www.percepio.com
  ******************************************************************************/
+#include "FreeRTOS.h"
+#include "task.h"
 
 #include "trcUser.h"
 
@@ -47,7 +49,7 @@ TRACE_STOP_HOOK vTraceStopHookPtr = (TRACE_STOP_HOOK)0;
 
 extern uint8_t inExcludedTask;
 extern uint8_t nISRactive;
-extern uint8_t handle_of_last_logged_task;
+extern objectHandleType handle_of_last_logged_task;
 extern uint32_t dts_min;
 extern uint32_t hwtc_count_max_after_tick;
 extern uint32_t hwtc_count_sum_after_tick;
@@ -99,12 +101,15 @@ void vTraceSetRecorderData(void* pRecorderData)
  ******************************************************************************/
 void vTraceClear(void)
 {
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
     trcCRITICAL_SECTION_BEGIN();
 
     RecorderDataPtr->absTimeLastEvent = 0;
     RecorderDataPtr->nextFreeIndex = 0;
     RecorderDataPtr->numEvents = 0;
     RecorderDataPtr->bufferIsFull = 0;
+	traceErrorMessage = NULL;
+	RecorderDataPtr->internalErrorOccured = 0;
 
     trcCRITICAL_SECTION_END();
 
@@ -125,7 +130,10 @@ void vTraceClear(void)
 
 uint32_t uiTraceStart(void)
 {
-	objectHandleType handle = 0;
+	objectHandleType handle;
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
+
+	handle = 0;
 
 	if (RecorderDataPtr == NULL)
 	{
@@ -300,6 +308,103 @@ void vTraceSetISRProperties(objectHandleType handle, const char* name, char prio
     vTraceSetPriorityProperty(TRACE_CLASS_ISR, handle, priority);
 }
 
+#if (SELECTED_PORT == PORT_ARM_CortexM)
+/******************************************************************************
+ * (Advanced...)
+ *
+ * ISR_TAILCHAINING_THRESHOLD (For Cortex-M devices only)
+ *
+ * ARM Cortex-M devices may execute ISRs back-to-back (tail-chained) without 
+ * resuming the previous context in between. Since this is decided in 
+ * hardware, we can only detect this indirectly, in the following manner:
+ *
+ * When entering vTraceStoreISRBegin, we check the number of CPU cycles since 
+ * the last return of vTraceStoreISREnd. If less or equal to the constant
+ * ISR_TAILCHAINING_THRESHOLD it is assumed that the ISRs executed back-to-back
+ * (tail-chained). In that case, the previously stored RESUME event 
+ * (pointed to by ptrLastISRExitEvent) is then deleted to avoid showing a 
+ * fragment of the previous context in between the ISR events. The delete is
+ * made by replacing the event code with a XTS16L event, that serves to keep
+ * the differential timestamp from the earlier event.
+ *
+ * The value of ISR_TAILCHAINING_THRESHOLD depends on the interrupt latency of 
+ * the processor, on the compiler and on the compiler settings, but should be 
+ * around 70 cycles. The default value is 66 cycles, which should be correct when 
+ * using GCC with optimizations disabled (-O0) and Cortex-M3/M4.
+ *
+ * To measure this value, see MEASURE_ISR_TAILCHAINING_THRESHOLD below.
+ *
+ * If this value set too low, tail-chained ISRs will incorrectly be shown 
+ * separated, with a short fragment of the previous task or ISR in between.
+ * If this value is set too high, you get the opposite effect - separate ISRs 
+ * will appear to execute tail-chained and will appear to have higher execution 
+ * time and response time (maximum ISR_TAILCHAINING_THRESHOLD cycles more).
+ *****************************************************************************/
+#define ISR_TAILCHAINING_THRESHOLD 66
+
+uint8_t* ptrLastISRExitEvent = NULL;
+uint32_t DWTCycleCountAtLastISRExit = 0;
+
+/******************************************************************************
+ * (Advanced...)
+ *
+ * MEASURE_ISR_TAILCHAINING_THRESHOLD (For Cortex-M devices only)
+ *
+ * Allows for measuring the value of ISR_TAILCHAINING_THRESHOLD (see above).
+ *
+ * This is intended to measure the minimum number of clock cycles from the end
+ * of vTraceStoreISREnd to the beginning of the following vTraceStoreISRBegin.
+ * For this purpose, we assume a test setup using the SysTick interrupt, which 
+ * is available on most Cortex-M devices and typically used by the RTOS kernel. 
+ * To do the measurement, follow these steps:
+ * 
+ * 1. Make sure MEASURE_ISR_TAILCHAINING_THRESHOLD is enabled (defined as 1)
+ *
+ * 2. Temporarily replace your SysTick handler with the following:
+ *    
+ *    void xPortSysTickHandler( void )
+ *    {
+ *       vTraceStoreISRBegin(1); 
+ *       vTraceStoreISREnd();
+ *    }
+ *
+ * 3. To make sure that the ISRs execute back-to-back, increase the OS tick 
+ *    frequency to a very high level so that the OS tick interrupt execute 
+ *    continuously with no application tasks in between. A tick frequency of 
+ *    1 MHz (1.000.000) should be sufficient.
+ *
+ * 4. Put a breakpoint in the highest priority task and make sure it is not 
+ *    reached. This means that the SysTick handler is executing at maximum rate
+ *    and thereby tail-chained, where the interrupt latency is 6 cycles.
+ *
+ * 5. Let the system run without breakpoints and inspect the value of 
+ *    threshold_low_watermark. This is the minimum total latency observed. 
+ *    The hardware latency is 6 clock cycles due to the tail-chaining, so the 
+ *    software latency (SL) is then SL = threshold_low_watermark - 6.
+ * 
+ * The threshold value ISR_TAILCHAINING_THRESHOLD should be SL + 2 * HL, where 
+ * HL is the normal hardware interrupt latency, i.e., the number of CPU 
+ * cycles to enter or exit the exception handler for an exception in task 
+ * context. The HL value is 12-16 depending on core, as shown below.
+ * 
+ * Values for ISR_TAILCHAINING_THRESHOLD, assuming SL = 42
+ *   Cortex-M3 and M4 (HL = 12):	66 cycles
+ *   Cortex-M0 (HL = 16):			74 cycles
+ *   Cortex-M0+ (HL = 15):          72 cycles
+ *
+ * If the ISR_TAILCHAINING_THRESHOLD value is set too low, some tail-chained
+ * ISRs be shown separated, with a short fragment of the previous actor. If 
+ * the value is set too high, separate ISRs will appear to execute tail-chained
+ * and for too long time.
+ *****************************************************************************/
+#define MEASURE_ISR_TAILCHAINING_THRESHOLD 1
+
+#if (MEASURE_ISR_TAILCHAINING_THRESHOLD == 1)
+volatile uint32_t threshold_low_watermark = 2000000000;
+#endif
+
+#endif
+
 /*******************************************************************************
  * vTraceStoreISRBegin
  *
@@ -318,34 +423,64 @@ void vTraceSetISRProperties(objectHandleType handle, const char* name, char prio
  *         vTraceStoreISREnd();
  *     }
  *
- * NOTE: You need to make sure that any traced interrupts actually are
- * disabled by trcCRITICAL_SECTION_BEGIN().
- * If an invalid call to vTraceStoreISRBegin is detected (i.e., that preempted
- * a critical section of the recorder) this will generate a recorder error
- * using vTraceError.
  ******************************************************************************/
 void vTraceStoreISRBegin(objectHandleType handle)
 {
     uint16_t dts4;
-    TSEvent* ts = NULL;
+	#if (SELECTED_PORT == PORT_ARM_CortexM)
+	uint32_t CPUCyclesSinceLastISRExit = DWT_CYCLE_COUNTER - DWTCycleCountAtLastISRExit;
+	#endif	
+    TSEvent* ts;
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
 
-    TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceStoreISRBegin: Invalid value for handle", );
+	ts = NULL;
 
+#if (SELECTED_PORT == PORT_ARM_CortexM)
+	if (DWTCycleCountAtLastISRExit > 0)	
+	{
+		#if (MEASURE_ISR_TAILCHAINING_THRESHOLD == 1) 		
+		/* Allows for verifying the value of ISR_TAILCHAINING_THRESHOLD */
+		if (CPUCyclesSinceLastISRExit < threshold_low_watermark)
+		{
+			threshold_low_watermark = CPUCyclesSinceLastISRExit;
+		}
+		#endif
+		
+		if (CPUCyclesSinceLastISRExit <= ISR_TAILCHAINING_THRESHOLD)		
+		{			
+			/* This is judged to be a case of ISR tail-chaining since the 
+			number of cycles since the last vTraceStoreISREnd is shorter or equal to
+			the threshold (ISR_TAILCHAINING_THRESHOLD) */
+			
+			if (ptrLastISRExitEvent != NULL)
+			{				
+				/* Overwrite the last ISR exit event with a "neutral" event that only
+                   accounts for the time passed */
+				*ptrLastISRExitEvent = XTS16L;							
+			}			
+		}
+		
+	}
+#endif
+	
     if (recorder_busy)
     {
       vTraceError("Illegal call to vTraceStoreISRBegin, recorder busy!");
       return;
     }
+	trcCRITICAL_SECTION_BEGIN();
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
     {
-        trcCRITICAL_SECTION_BEGIN();
+
+	    TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceStoreISRBegin: Invalid value for handle", );
+
         dts4 = (uint16_t)prvTraceGetDTS(0xFFFF);
 
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
         {
-
             if (nISRactive < MAX_ISR_NESTING)
             {
+				uint8_t hnd8 = prvTraceGet8BitHandle(handle);
                 isrstack[nISRactive] = handle;
                 nISRactive++;
                 ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
@@ -353,7 +488,7 @@ void vTraceStoreISRBegin(objectHandleType handle)
                 {
                     ts->type = TS_ISR_BEGIN;
                     ts->dts = dts4;
-                    ts->objHandle = handle;
+                    ts->objHandle = hnd8;
                     prvTraceUpdateCounters();
                 }
             }
@@ -362,39 +497,10 @@ void vTraceStoreISRBegin(objectHandleType handle)
                 /* This should not occur unless something is very wrong */
                 vTraceError("Too many nested interrupts!");
             }
-        }
-        trcCRITICAL_SECTION_END();
+        }        
     }
+	trcCRITICAL_SECTION_END();
 }
-
-
-#if (SELECTED_PORT == PORT_ARM_CortexM)
-
-static int tailchain_irq_pending(void);
-
-/*******************************************************************************
- * tailchain_irq_pending
- *
- * For Cortex-M chips only. Returns 1 if an interrupt is pending, by checking
- * the 8 NVIC IRQ pend registers at 0xE000E200 to 0xE000E21C. Returns 0 if no
- * interrupt is pending. This is used to predict tailchaining of ISRs.
- ******************************************************************************/
-static int tailchain_irq_pending(void)
-{
-  uint32_t* pend_reg = ((uint32_t*)0xE000E200);
-  int i;
-
-  for (i=0; i<8; i++)
-  {
-    if (pend_reg[i] != 0)
-    {
-      return 1;
-    }
-  }
-  return 0;
-}
-
-#endif
 
 /*******************************************************************************
  * vTraceStoreISREnd
@@ -414,63 +520,61 @@ static int tailchain_irq_pending(void)
  *         vTraceStoreISREnd();
  *     }
  *
- * NOTE: You need to make sure that any traced interrupts actually are
- * disabled by trcCRITICAL_SECTION_BEGIN().
- * If an invalid call to vTraceStoreISREnd is detected (i.e., that preempted
- * a critical section of the recorder) this will generate a recorder error
- * using vTraceError.
  ******************************************************************************/
 void vTraceStoreISREnd(void)
 {
-    TSEvent* ts;
-    uint16_t dts5;
+	TSEvent* ts;
+	uint16_t dts5;
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
 
-    if (recorder_busy)
-    {
-      vTraceError("Illegal call to vTraceStoreISREnd, recorder busy!");
-      return;
-    }
+	if (recorder_busy)
+	{
+		vTraceError("Illegal call to vTraceStoreISREnd, recorder busy!");
+		return;
+	}
 
-    if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
-    {
-        #if (SELECTED_PORT == PORT_ARM_CortexM)
-        if (tailchain_irq_pending() > 0)
-        {
-            nISRactive--; /* If an IRQ strikes exactly here, the resulting
-            ISR tailchaining is not detected. The trace instead shows a very
-            short fragment of the earlier preempted task/ISR, and then the new
-            ISR begins. */
-            return;
-        }
-        #endif
+	trcCRITICAL_SECTION_BEGIN();
+	if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
+	{		
+		dts5 = (uint16_t)prvTraceGetDTS(0xFFFF);
 
-        trcCRITICAL_SECTION_BEGIN();
-        dts5 = (uint16_t)prvTraceGetDTS(0xFFFF);
+		if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
+		{
+			uint8_t hnd8, type;
 
-        if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
-        {
-            ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
-            if (ts != NULL)
-            {
-                if (nISRactive > 1)
-                {
-                    /* return to another isr */
-                    ts->type = TS_ISR_RESUME;
-                    ts->objHandle = isrstack[nISRactive];
-                }
-                else
-                {
-                    /* return to task */
-                    ts->type = TS_TASK_RESUME;
-                    ts->objHandle = handle_of_last_logged_task;
-                }
-                ts->dts = dts5;
-                nISRactive--;
-                prvTraceUpdateCounters();
-            }
-        }
-        trcCRITICAL_SECTION_END();
-    }
+			if (nISRactive > 1)
+			{
+				/* return to another isr */
+				type = TS_ISR_RESUME;
+				hnd8 = prvTraceGet8BitHandle(isrstack[nISRactive]);
+			}
+			else
+			{
+				/* return to task */
+				type = TS_TASK_RESUME;
+				hnd8 = prvTraceGet8BitHandle(handle_of_last_logged_task);
+			}
+
+			ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
+
+			if (ts != NULL)
+			{
+				ts->type = type;
+				ts->objHandle = hnd8;
+				ts->dts = dts5;
+				nISRactive--;
+				prvTraceUpdateCounters();
+			}
+						
+		}
+		
+		#if (SELECTED_PORT == PORT_ARM_CortexM)
+		/* Remember the last ISR exit event, as the event needs to be modified in case of a following ISR entry (if tail-chained ISRs) */
+		ptrLastISRExitEvent = (uint8_t*)ts;
+		DWTCycleCountAtLastISRExit = DWT_CYCLE_COUNTER;
+		#endif	
+	}
+	trcCRITICAL_SECTION_END();
 }
 
 #else
@@ -605,7 +709,7 @@ static uint8_t writeDouble(void * buffer, uint8_t i, double value)
 {
 	TRACE_ASSERT(buffer != NULL, "writeDouble: buffer == NULL", 0);
 
-    uint32_t * dest = buffer;
+    uint32_t * dest; 
     uint32_t * src = (void*)&value;
     /* The double is written as two 32 bit values, and should begin at an even
     4-byte address (to avoid having to align with 8 byte) */
@@ -624,9 +728,11 @@ static uint8_t writeDouble(void * buffer, uint8_t i, double value)
     {
         return 255;
     }
+	
+	dest = &(((uint32_t *)buffer)[i]);
 
-    dest[i/4+0] = src[0];
-    dest[i/4+1] = src[1];
+    dest[0] = src[0];
+    dest[1] = src[1];
 
     return i + 8;
 }
@@ -1049,6 +1155,7 @@ void vTracePrintF_Helper(traceLabel eventLabel, const char* formatStr, va_list v
 	uint32_t noOfSlots;
     UserEvent* ue1;
     uint32_t tempDataBuffer[(3 + MAX_ARG_SIZE) / 4];
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
 
     /**************************************************************************
     * The array tempDataBuffer is a local buffer used in a two-phase commit of
@@ -1063,108 +1170,102 @@ void vTracePrintF_Helper(traceLabel eventLabel, const char* formatStr, va_list v
 
 	TRACE_ASSERT(formatStr != NULL, "vTracePrintF: formatStr == NULL", );
 
+	trcCRITICAL_SECTION_BEGIN();
+	
     if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive) && handle_of_last_logged_task)
     {
         /* First, write the "primary" user event entry in the local buffer, but
         let the event type be "EVENT_BEING_WRITTEN" for now...*/
 
         ue1 = (UserEvent*)(&tempDataBuffer[0]);
+		
         ue1->type = EVENT_BEING_WRITTEN;      /* Update this as the last step */
 
         noOfSlots = prvTraceUserEventFormat(formatStr, vl, (uint8_t*)tempDataBuffer, 4);
 
         /* Store the format string, with a reference to the channel symbol */
-        ue1->payload = prvTraceOpenSymbol(formatStr, eventLabel);
-
-        trcCRITICAL_SECTION_BEGIN();
+        ue1->payload = prvTraceOpenSymbol(formatStr, eventLabel);       		
 
         ue1->dts = (uint8_t)prvTraceGetDTS(0xFF);
-        if (! RecorderDataPtr->recorderActive)
+		
+		 /* prvTraceGetDTS might stop the recorder in some cases... */
+        if (RecorderDataPtr->recorderActive)
         {
 
-            /* Abort, since an XTS event (created by prvTraceGetDTS) filled the
-            buffer, and the recorder stopped since not circular buffer. */
-            trcCRITICAL_SECTION_END();
+			/* If the data does not fit in the remaining main buffer, wrap around to
+			0 if allowed, otherwise stop the recorder and quit). */
+			if (RecorderDataPtr->nextFreeIndex + noOfSlots > RecorderDataPtr->maxEvents)
+			{
+				#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
+				(void)memset(& RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4],
+					   0,
+					   (RecorderDataPtr->maxEvents - RecorderDataPtr->nextFreeIndex)*4);
+				RecorderDataPtr->nextFreeIndex = 0;
+				RecorderDataPtr->bufferIsFull = 1;
+				#else
+				
+				/* Stop recorder, since the event data will not fit in the
+				buffer and not circular buffer in this case... */				
+				vTraceStop();				
+				#endif
+			}
+			
+			/* Check if recorder has been stopped (i.e., vTraceStop above) */
+			if (RecorderDataPtr->recorderActive)
+			{				
+				/* Check that the buffer to be overwritten does not contain any user
+				events that would be partially overwritten. If so, they must be "killed"
+				by replacing the user event and following data with NULL events (i.e.,
+				using a memset to zero).*/
+				#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
+				prvCheckDataToBeOverwrittenForMultiEntryEvents((uint8_t)noOfSlots);
+				#endif
+				/* Copy the local buffer to the main buffer */
+				(void)memcpy(& RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4],
+					   tempDataBuffer,
+					   noOfSlots * 4);
 
-            return;
-        }
+				/* Update the event type, i.e., number of data entries following the
+				main USER_EVENT entry (Note: important that this is after the memcpy,
+				but within the critical section!)*/
+				RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4] =
+				  (uint8_t) ( USER_EVENT + noOfSlots - 1 );
 
-        /* If the data does not fit in the remaining main buffer, wrap around to
-        0 if allowed, otherwise stop the recorder and quit). */
-        if (RecorderDataPtr->nextFreeIndex + noOfSlots > RecorderDataPtr->maxEvents)
-        {
-#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
-            (void)memset(& RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4],
-                   0,
-                   (RecorderDataPtr->maxEvents - RecorderDataPtr->nextFreeIndex)*4);
-            RecorderDataPtr->nextFreeIndex = 0;
-            RecorderDataPtr->bufferIsFull = 1;
-#else
-            /* Abort and stop recorder, since the event data will not fit in the
-            buffer and not circular buffer in this case... */
-            trcCRITICAL_SECTION_END();
-            vTraceStop();
+				/* Update the main buffer event index (already checked that it fits in
+				the buffer, so no need to check for wrapping)*/
 
+				RecorderDataPtr->nextFreeIndex += noOfSlots;
+				RecorderDataPtr->numEvents += noOfSlots;
 
-            return;
-#endif
-        }
-
-#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
-        /* Check that the buffer to be overwritten does not contain any user
-        events that would be partially overwritten. If so, they must be "killed"
-        by replacing the user event and following data with NULL events (i.e.,
-        using a memset to zero).*/
-        prvCheckDataToBeOverwrittenForMultiEntryEvents((uint8_t)noOfSlots);
-#endif
-        /* Copy the local buffer to the main buffer */
-        (void)memcpy(& RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4],
-               tempDataBuffer,
-               noOfSlots * 4);
-
-        /* Update the event type, i.e., number of data entries following the
-        main USER_EVENT entry (Note: important that this is after the memcpy,
-        but within the critical section!)*/
-        RecorderDataPtr->eventData[RecorderDataPtr->nextFreeIndex * 4] =
-          (uint8_t) ( USER_EVENT + noOfSlots - 1 );
-
-        /* Update the main buffer event index (already checked that it fits in
-        the buffer, so no need to check for wrapping)*/
-
-        RecorderDataPtr->nextFreeIndex += noOfSlots;
-        RecorderDataPtr->numEvents += noOfSlots;
-
-
-
-		if (RecorderDataPtr->nextFreeIndex >= EVENT_BUFFER_SIZE)
-		{
-#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
-			/* We have reached the end, but this is a ring buffer. Start from the beginning again. */
-			RecorderDataPtr->bufferIsFull = 1;
-			RecorderDataPtr->nextFreeIndex = 0;
-#else
-			/* We have reached the end so we stop. */
-			vTraceStop();
-#endif
+				if (RecorderDataPtr->nextFreeIndex >= EVENT_BUFFER_SIZE)
+				{
+					#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
+					/* We have reached the end, but this is a ring buffer. Start from the beginning again. */
+					RecorderDataPtr->bufferIsFull = 1;
+					RecorderDataPtr->nextFreeIndex = 0;
+					#else
+					/* We have reached the end so we stop. */
+					vTraceStop();
+					#endif
+				}
+				
+				#if (STOP_AFTER_N_EVENTS > -1)
+				/* Check if we have reached the desired number of events */
+				if (RecorderDataPtr->numEvents >= STOP_AFTER_N_EVENTS)
+				{
+					vTraceStop();
+				}
+				#endif        
+			}
+			
+			#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
+			/* Make sure the next entry is cleared correctly */
+			prvCheckDataToBeOverwrittenForMultiEntryEvents(1);
+			#endif
+	
 		}
-
-#if (TRACE_RECORDER_STORE_MODE == TRACE_STORE_MODE_RING_BUFFER)
-		/* Make sure the next entry is cleared correctly */
-		prvCheckDataToBeOverwrittenForMultiEntryEvents(1);
-#endif
-
-#ifdef STOP_AFTER_N_EVENTS
-#if (STOP_AFTER_N_EVENTS > -1)
-		/* Check if we have reached the desired number of events */
-		if (RecorderDataPtr->numEvents >= STOP_AFTER_N_EVENTS)
-		{
-			vTraceStop();
-		}
-#endif
-#endif
-
-        trcCRITICAL_SECTION_END();
-    }
+	}
+	trcCRITICAL_SECTION_END();
 
 #elif (USE_SEPARATE_USER_EVENT_BUFFER == 1)
 	/* Use the separate user event buffer */
@@ -1195,13 +1296,13 @@ void vTraceUserEvent(traceLabel eventLabel)
 #if (USE_SEPARATE_USER_EVENT_BUFFER == 0)
     UserEvent* ue;
     uint8_t dts1;
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
 
 	TRACE_ASSERT(eventLabel > 0, "vTraceUserEvent: Invalid value for eventLabel", );
 
+	trcCRITICAL_SECTION_BEGIN();	
     if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive) && handle_of_last_logged_task)
-    {
-        trcCRITICAL_SECTION_BEGIN();
-
+    {    
         dts1 = (uint8_t)prvTraceGetDTS(0xFF);
 
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
@@ -1214,14 +1315,14 @@ void vTraceUserEvent(traceLabel eventLabel)
                 ue->payload = eventLabel;
                 prvTraceUpdateCounters();
             }
-        }
-        trcCRITICAL_SECTION_END();
+        }        
     }
+	trcCRITICAL_SECTION_END();
+	
 #elif (USE_SEPARATE_USER_EVENT_BUFFER == 1)
 	UserEventChannel channel;
 	uint32_t noOfSlots = 1;
-	uint32_t tempDataBuffer[(3 + MAX_ARG_SIZE) / 4];
-
+	uint32_t tempDataBuffer[(3 + MAX_ARG_SIZE) / 4];	
 	if (RecorderDataPtr->recorderActive && (! inExcludedTask || nISRactive) && handle_of_last_logged_task)
 	{
 		channel = xTraceRegisterChannelFormat(0, eventLabel);
@@ -1235,7 +1336,7 @@ void vTraceUserEvent(traceLabel eventLabel)
 		}
 
 		prvTraceUserEventHelper2(channel, tempDataBuffer, noOfSlots);
-	}
+	}	
 #endif
 }
 

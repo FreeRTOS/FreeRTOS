@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.h
@@ -58,17 +58,17 @@ void vTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode,
                                                uint32_t param);
 
 void vTraceStoreKernelCallWithParam(uint32_t evtcode, traceObjectClass objectClass,
-                                    uint32_t objectNumber, uint8_t param);
+                                    uint32_t objectNumber, uint32_t param);
 
 void vTraceSetTaskInstanceFinished(objectHandleType handle);
 
-void vTraceSetPriorityProperty(uint8_t objectclass, uint8_t id, uint8_t value);
+void vTraceSetPriorityProperty(uint8_t objectclass, objectHandleType id, uint8_t value);
 
-uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, uint8_t id);
+uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, objectHandleType id);
 
-void vTraceSetObjectState(uint8_t objectclass, uint8_t id, uint8_t value);
+void vTraceSetObjectState(uint8_t objectclass, objectHandleType id, uint8_t value);
 
-uint8_t uiTraceGetObjectState(uint8_t objectclass, uint8_t id);
+uint8_t uiTraceGetObjectState(uint8_t objectclass, objectHandleType id);
 
 #if (INCLUDE_OBJECT_DELETE == 1)
 

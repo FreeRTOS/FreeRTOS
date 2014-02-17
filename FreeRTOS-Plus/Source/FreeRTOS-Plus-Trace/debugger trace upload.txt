@@ -1,7 +1,7 @@
 
 Tracealyzer - Uploading the trace data
 -----------------------------------------
-Percepio AB, Nov. 8, 2012
+Percepio AB, Jan. 23, 2014
 
 This document decribes how to upload the trace data from the target system to
 Tracealyzer. 
@@ -11,15 +11,6 @@ chip RAM. This is a plain RAM dump, that is done whenever you want to look at
 the trace buffer contents. This means it works with essentially with any debug 
 probe on the market.
 
-If the device has a file system and some possibility of accessing this file 
-system from the development PC, it is also possible to write the recorder data
-to a file, using vTraceGetTraceBuffer() and uiTraceGetTraceBufferSize() 
-found in trcUser.h/.c.
-
-Note that hardware-generated trace is not required (or used by) Tracealyzer. 
-We however plan to add support for that in future versions of Tracealyzer 
-and other Tracealyzer products.
-
 Built-in support for Segger J-Link/J-Trace and Atmel SAM-ICE
 ------------------------------------------------------------
 Tracealyzer v2.3 supports Segger J-Link and J-Link compatible debuggers 
@@ -27,9 +18,8 @@ directly, without any debugger IDE involved. Using other debug probes is
 also possible, but requires some extra steps, described below.
 
 If you have a Segger J-Link/J-Trace debug probe or another J-Link compatible 
-debug probe, just select 
-
-    "File" menu -> "Upload from <debug probe name>". 
+debug probe, just select "Read Trace" in the "J-Link" menu. Note that this 
+menu is only available if a compatible debug probe is found.
 
 This opens a dialog where you get to enter the memory region where
 the recorder data structure is located. Normally you select the entire 
@@ -37,23 +27,17 @@ internal RAM according to the datasheet of your MCU, but the exact address
 can be found can by inspecting the "RecorderData" struct or the 
 "RecorderDataPtr" pointer with your debugger.
 
-Typical values are 0x0, 0x10000000 or 0x20000000 as start address
-and 0x10000 or 0x20000 as size (64 KB or 128 KB).
-
-This makes Tracealyzer reads the chip RAM and locate the trace data. 
-Note that this option is only available if a compatible debug probe is found.
-
 J-Link compatible debug probes also include Atmel SAM-ICE and many built-in 
 debug interfaces on demonstration/evaluation boards (where there is a USB 
 connection directly to the board). Look for a Segger J-Link label on the board.
 
 MemoryLogger extension in Atmel Studio 6
 ----------------------------------------
-Atmel's new MemoryLogger extension provides a superb integration with
-Tracealyzer. Look for "MemoryLogger" in Atmel Gallery, available in 
-Atmel Studio and at the Atmel website.
+Atmel's MemoryLogger extension provides a superb integration with FreeRTOS+Trace. 
+Look for "MemoryLogger" in Atmel Gallery, available in Atmel Studio and at the 
+Atmel website (http://gallery.atmel.com).
 
-This extension automatically detects the path to Tracealyzer, if 
+This extension automatically detects the path to FreeRTOS+Trace, if 
 installed, and gives you a single-click upload/refresh. You can use it 
 while debugging and optionally get an automatic refresh eash time the 
 MCU is halted, e.g., on each breakpoint.

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.c
@@ -58,6 +58,7 @@ void vTraceStoreTaskReady(objectHandleType handle)
 {
     uint16_t dts3;
     TREvent* tr;
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
 	
 	TRACE_ASSERT(handle > 0 && handle <= NTask, "vTraceStoreTaskReady: Invalid value for handle", );
 
@@ -73,6 +74,7 @@ void vTraceStoreTaskReady(objectHandleType handle)
       return;
     }
 
+	trcCRITICAL_SECTION_BEGIN();
     if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
 	{
 		if (!TRACE_GET_TASK_FLAG_ISEXCLUDED(handle))
@@ -80,19 +82,22 @@ void vTraceStoreTaskReady(objectHandleType handle)
 			dts3 = (uint16_t)prvTraceGetDTS(0xFFFF);
 			if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
 			{
+				uint8_t hnd8 = prvTraceGet8BitHandle(handle);
+
 				tr = (TREvent*)xTraceNextFreeEventBufferSlot();
 
 				if (tr != NULL)
 				{
 					tr->type = DIV_TASK_READY;
 					tr->dts = dts3;
-					tr->objHandle = handle;
+					tr->objHandle = hnd8;
 
 					prvTraceUpdateCounters();
 				}
 			}
 		}
 	}
+	trcCRITICAL_SECTION_END();
 }
 #endif
 
@@ -105,6 +110,7 @@ void vTraceStoreLowPower(uint32_t flag)
 {
     uint16_t dts;
     LPEvent* lp;
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
 	
 	TRACE_ASSERT(flag <= 1, "vTraceStoreLowPower: Invalid flag value", );
 
@@ -119,7 +125,8 @@ void vTraceStoreLowPower(uint32_t flag)
 		vTraceError("Recorder busy - high priority ISR using syscall? (1)");
 		return;
     }
-
+	
+	trcCRITICAL_SECTION_BEGIN();
     if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
 	{
 		dts = (uint16_t)prvTraceGetDTS(0xFFFF);
@@ -135,7 +142,71 @@ void vTraceStoreLowPower(uint32_t flag)
 			}
 		}
 	}
+	trcCRITICAL_SECTION_END();
 }
+
+/*******************************************************************************
+ * vTraceStoreMemMangEvent
+ *
+ * This function stores malloc and free events. Each call requires two records,
+ * for size and address respectively. The event code parameter (ecode) is applied 
+ * to the first record (size) and the following address record gets event 
+ * code "ecode + 1", so make sure this is respected in the event code table.
+ ******************************************************************************/
+#if (INCLUDE_MEMMANG_EVENTS == 1)
+void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, uint32_t size)
+{
+	uint8_t dts1;
+	MemEventSize * ms;
+	MemEventAddr * ma;
+	uint16_t size_low;
+	uint16_t addr_low;
+	uint8_t addr_high;
+	
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
+
+	trcCRITICAL_SECTION_BEGIN();
+	if (RecorderDataPtr->recorderActive)
+	{
+		/* If it is an ISR or NOT an excluded task, this kernel call will be stored in the trace */
+		if (nISRactive || !inExcludedTask)
+		{
+			dts1 = (uint8_t)prvTraceGetDTS(0xFF);
+			
+			size_low = (uint16_t)prvTraceGetParam(0xFFFF, size);
+			
+			ms = (MemEventSize *)xTraceNextFreeEventBufferSlot();
+			if (ms != NULL)
+			{
+				ms->dts = dts1;
+				ms->type = (uint8_t)ecode;
+				ms->size = size_low;
+				prvTraceUpdateCounters();
+				
+				/* Storing a second record with address (signals "failed" if null) */
+				#if (HEAP_SIZE_BELOW_16M)
+					addr_low = address & 0xFFFF;
+					addr_high = (address >> 16) & 0xFF;
+				#else
+					addr_low = (uint16_t)prvTraceGetParam(0xFFFF, address);
+					addr_high = 0;
+				#endif
+				
+				ma = (MemEventAddr *) xTraceNextFreeEventBufferSlot();
+				
+				if (ma != NULL)
+				{
+					ma->addr_low = addr_low;
+					ma->addr_high = addr_high;
+					ma->type = ( ( uint8_t) ecode ) + 1;  /* Note this! */
+					prvTraceUpdateCounters();				
+				}
+			}
+		}
+	}
+	trcCRITICAL_SECTION_END();	
+}
+#endif
 
 /*******************************************************************************
  * vTraceStoreKernelCall
@@ -147,7 +218,8 @@ void vTraceStoreKernelCall(uint32_t ecode, traceObjectClass objectClass, uint32_
 {
     KernelCall * kse;
     uint16_t dts1;
-	
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
+
     TRACE_ASSERT(ecode < 0xFF, "vTraceStoreKernelCall: ecode >= 0xFF", );
     TRACE_ASSERT(objectClass < TRACE_NCLASSES, "vTraceStoreKernelCall: objectClass >= TRACE_NCLASSES", );
     TRACE_ASSERT(objectNumber <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectClass], "vTraceStoreKernelCall: Invalid value for objectNumber", );
@@ -170,96 +242,106 @@ void vTraceStoreKernelCall(uint32_t ecode, traceObjectClass objectClass, uint32_
         return;
     }
 
+	trcCRITICAL_SECTION_BEGIN();
     if (RecorderDataPtr->recorderActive)
     {
-
         /* If it is an ISR or NOT an excluded task, this kernel call will be stored in the trace */
         if (nISRactive || !inExcludedTask)
         {
             /* Check if the referenced object or the event code is excluded */
             if (!uiTraceIsObjectExcluded(objectClass, (objectHandleType)objectNumber) && !TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(ecode))
-            {
-                trcCRITICAL_SECTION_BEGIN();
+            {                
                 dts1 = (uint16_t)prvTraceGetDTS(0xFFFF);
 
                 if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
                 {
+					uint8_t hnd8 = prvTraceGet8BitHandle(objectNumber);
+
                     kse = (KernelCall*) xTraceNextFreeEventBufferSlot();
                     if (kse != NULL)
                     {
                         kse->dts = dts1;
                         kse->type = (uint8_t)ecode;
-                        kse->objHandle = (uint8_t)objectNumber;
+                        kse->objHandle = hnd8;
                         prvTraceUpdateCounters();
                     }
-                }
-                trcCRITICAL_SECTION_END();
+                }                
             }
         }
     }
+	trcCRITICAL_SECTION_END();
 }
 
 /*******************************************************************************
  * vTraceStoreKernelCallWithParam
  *
- * Used for storing kernel calls with a handle and a numeric parameter. This is
- * only used for traceTASK_PRIORITY_SET at the moment.
+ * Used for storing kernel calls with a handle and a numeric parameter. If the 
+ * numeric parameter does not fit in one byte, and extra XPS event is inserted
+ * before the kernel call event containing the three upper bytes.
  ******************************************************************************/
 void vTraceStoreKernelCallWithParam(uint32_t evtcode,
                                     traceObjectClass objectClass,
                                     uint32_t objectNumber,
-                                    uint8_t param)
+                                    uint32_t param)
 {
     KernelCallWithParamAndHandle * kse;
-    uint8_t dts2;
+    uint8_t dts2;	
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
 
 	TRACE_ASSERT(evtcode < 0xFF, "vTraceStoreKernelCall: evtcode >= 0xFF", );
 	TRACE_ASSERT(objectClass < TRACE_NCLASSES, "vTraceStoreKernelCallWithParam: objectClass >= TRACE_NCLASSES", );
 	TRACE_ASSERT(objectNumber <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectClass], "vTraceStoreKernelCallWithParam: Invalid value for objectNumber", );
 
+	if (recorder_busy)
+    {
+        /*************************************************************************
+        * This may occur if a high-priority ISR is illegally using a system call,
+        * or creates a user event.
+        * Only ISRs that are disabled by TRACE_ENTER_CRITICAL_SECTION may use system calls
+        * or user events (see TRACE_MAX_SYSCALL_INTERRUPT_PRIORITY).
+        *************************************************************************/
+
+        vTraceError("Recorder busy - high priority ISR using syscall? (3)");
+        return;
+    }
+
+	trcCRITICAL_SECTION_BEGIN();
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task &&
         (! inExcludedTask || nISRactive))
     {
-        if (recorder_busy)
-        {
-            /*************************************************************************
-            * This may occur if a high-priority ISR is illegally using a system call,
-            * or creates a user event.
-            * Only ISRs that are disabled by TRACE_ENTER_CRITICAL_SECTION may use system calls
-        	* or user events (see TRACE_MAX_SYSCALL_INTERRUPT_PRIORITY).
-            *************************************************************************/
-
-            vTraceError("Recorder busy - high priority ISR using syscall? (3)");
-            return;
-        }
-
+        
         /* Check if the referenced object or the event code is excluded */
         if (!uiTraceIsObjectExcluded(objectClass, (objectHandleType)objectNumber) && !TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(evtcode))
-        {
-            trcCRITICAL_SECTION_BEGIN();
+        {            
             dts2 = (uint8_t)prvTraceGetDTS(0xFF);
 
             if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
             {
+				uint8_t p8 = (uint8_t) prvTraceGetParam(0xFF, param);
+				
+				uint8_t hnd8 = prvTraceGet8BitHandle((objectHandleType)objectNumber);
+
                 kse = (KernelCallWithParamAndHandle*) xTraceNextFreeEventBufferSlot();
                 if (kse != NULL)
                 {
                     kse->dts = dts2;
                     kse->type = (uint8_t)evtcode;
-                    kse->objHandle = (uint8_t)objectNumber;
-                    kse->param = param;
+                    kse->objHandle = hnd8; 
+                    kse->param = p8;
                     prvTraceUpdateCounters();
                 }
-            }
-            trcCRITICAL_SECTION_END();
+            }            
         }
     }
+	trcCRITICAL_SECTION_END();
 }
 
 /*******************************************************************************
  * prvTraceGetParam
  *
  * Used for storing extra bytes for kernel calls with numeric parameters.
+ *
+ * May only be called within a critical section!
  ******************************************************************************/
 static uint32_t prvTraceGetParam(uint32_t param_max, uint32_t param)
 {
@@ -296,30 +378,33 @@ void vTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode, uint32_t param)
 {
     KernelCallWithParam16 * kse;
     uint8_t dts6;
-	uint16_t restParam = 0;
+	uint16_t restParam;
+    TRACE_SR_ALLOC_CRITICAL_SECTION();
+
+	restParam = 0;
 
 	TRACE_ASSERT(evtcode < 0xFF, "vTraceStoreKernelCallWithNumericParamOnly: Invalid value for evtcode", );
 	
+	if (recorder_busy)
+    {
+        /*************************************************************************
+        * This may occur if a high-priority ISR is illegally using a system call,
+        * or creates a user event.
+        * Only ISRs that are disabled by TRACE_ENTER_CRITICAL_SECTION may use system calls
+        * or user events (see TRACE_MAX_SYSCALL_INTERRUPT_PRIORITY).
+        *************************************************************************/
+
+        vTraceError("Recorder busy - high priority ISR using syscall? (4)");
+        return;
+    }
+	
+	trcCRITICAL_SECTION_BEGIN();
     if (RecorderDataPtr->recorderActive && handle_of_last_logged_task
         && (! inExcludedTask || nISRactive))
     {
         /* Check if the event code is excluded */
         if (!TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(evtcode))
-        {
-            if (recorder_busy)
-            {
-                /*************************************************************************
-                * This may occur if a high-priority ISR is illegally using a system call,
-                * or creates a user event.
-                * Only ISRs that are disabled by TRACE_ENTER_CRITICAL_SECTION may use system calls
-                * or user events (see TRACE_MAX_SYSCALL_INTERRUPT_PRIORITY).
-                *************************************************************************/
-
-                vTraceError("Recorder busy - high priority ISR using syscall? (4)");
-                return;
-            }
-
-            trcCRITICAL_SECTION_BEGIN();
+        {            
             dts6 = (uint8_t)prvTraceGetDTS(0xFF);
 
             if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
@@ -337,10 +422,10 @@ void vTraceStoreKernelCallWithNumericParamOnly(uint32_t evtcode, uint32_t param)
 						prvTraceUpdateCounters();
 					}
 				}
-            }
-            trcCRITICAL_SECTION_END();
+            }            
         }
     }
+	trcCRITICAL_SECTION_END();
 }
 
 /*******************************************************************************
@@ -352,7 +437,10 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
 {
     uint16_t dts3;
     TSEvent* ts;
-    int8_t skipEvent = 0;
+    int8_t skipEvent;
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
+		
+	skipEvent = 0;
 
 	TRACE_ASSERT(task_handle <= NTask, "vTraceStoreTaskswitch: Invalid value for task_handle", );
 	
@@ -370,8 +458,7 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
     function since critical sections should not be used in the context switch
     event...)
     ***************************************************************************/
-    recorder_busy++;
-
+    
     /* Skip the event if the task has been excluded, using vTraceExcludeTask */
     if (TRACE_GET_TASK_FLAG_ISEXCLUDED(task_handle))
     {
@@ -383,13 +470,14 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
         inExcludedTask = 0;
 	}
 
+	trcCRITICAL_SECTION_BEGIN_ON_CORTEX_M_ONLY();
+
 	/* Skip the event if the same task is scheduled */
 	if (task_handle == handle_of_last_logged_task)
 	{
 		skipEvent = 1;
 	}
-
-
+	
     if (!RecorderDataPtr->recorderActive)
     {
         skipEvent = 1;
@@ -402,7 +490,10 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
 
         if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
         {
+			uint8_t hnd8;
             handle_of_last_logged_task = task_handle;
+			hnd8 = prvTraceGet8BitHandle(handle_of_last_logged_task);
+
             ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
 
             if (ts != NULL)
@@ -418,7 +509,7 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
                 }
 
                 ts->dts = dts3;
-                ts->objHandle = handle_of_last_logged_task;
+                ts->objHandle = hnd8;
 
                 vTraceSetObjectState(TRACE_CLASS_TASK,
                                      handle_of_last_logged_task,
@@ -429,8 +520,7 @@ void vTraceStoreTaskswitch(objectHandleType task_handle)
         }
     }
 
-    /* See comment on recorder_busy++ above. */
-    recorder_busy--;
+	trcCRITICAL_SECTION_END_ON_CORTEX_M_ONLY();
 }
 
 /*******************************************************************************
@@ -454,6 +544,8 @@ void vTraceStoreObjectNameOnCloseEvent(objectHandleType handle,
 
     if (RecorderDataPtr->recorderActive)
 	{
+		uint8_t hnd8 = prvTraceGet8BitHandle(handle);
+
 		name = TRACE_PROPERTY_NAME_GET(objectclass, handle);
 
 		idx = prvTraceOpenSymbol(name, 0);
@@ -463,7 +555,7 @@ void vTraceStoreObjectNameOnCloseEvent(objectHandleType handle,
 		if (ce != NULL)
 		{
 			ce->type = EVENTGROUP_OBJCLOSE_NAME + objectclass;
-			ce->objHandle = handle;
+			ce->objHandle = hnd8; 
 			ce->symbolIndex = idx;
 			prvTraceUpdateCounters();
 		}
@@ -499,7 +591,7 @@ void vTraceStoreObjectPropertiesOnCloseEvent(objectHandleType handle,
 }
 #endif
 
-void vTraceSetPriorityProperty(uint8_t objectclass, uint8_t id, uint8_t value)
+void vTraceSetPriorityProperty(uint8_t objectclass, objectHandleType id, uint8_t value)
 {
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceSetPriorityProperty: objectclass >= TRACE_NCLASSES", );
 	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceSetPriorityProperty: Invalid value for id", );
@@ -507,7 +599,7 @@ void vTraceSetPriorityProperty(uint8_t objectclass, uint8_t id, uint8_t value)
     TRACE_PROPERTY_ACTOR_PRIORITY(objectclass, id) = value;
 }
 
-uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, uint8_t id)
+uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, objectHandleType id)
 {
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "uiTraceGetPriorityProperty: objectclass >= TRACE_NCLASSES", 0);
 	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "uiTraceGetPriorityProperty: Invalid value for id", 0);
@@ -515,7 +607,7 @@ uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, uint8_t id)
     return TRACE_PROPERTY_ACTOR_PRIORITY(objectclass, id);
 }
 
-void vTraceSetObjectState(uint8_t objectclass, uint8_t id, uint8_t value)
+void vTraceSetObjectState(uint8_t objectclass, objectHandleType id, uint8_t value)
 {
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "vTraceSetObjectState: objectclass >= TRACE_NCLASSES", );
 	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "vTraceSetObjectState: Invalid value for id", );
@@ -523,7 +615,7 @@ void vTraceSetObjectState(uint8_t objectclass, uint8_t id, uint8_t value)
     TRACE_PROPERTY_OBJECT_STATE(objectclass, id) = value;
 }
 
-uint8_t uiTraceGetObjectState(uint8_t objectclass, uint8_t id)
+uint8_t uiTraceGetObjectState(uint8_t objectclass, objectHandleType id)
 {
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "uiTraceGetObjectState: objectclass >= TRACE_NCLASSES", 0);
 	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "uiTraceGetObjectState: Invalid value for id", 0);

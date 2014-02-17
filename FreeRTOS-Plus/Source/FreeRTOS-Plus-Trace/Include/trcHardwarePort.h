@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -38,8 +38,7 @@
 
 #ifndef TRCPORT_H
 #define TRCPORT_H
-
-#include "trcKernelPort.h"
+#include <stdint.h>
 
 /* If Win32 port */
 #ifdef WIN32
@@ -76,60 +75,41 @@
  * typically 1 KHz. This means that a task or ISR that executes in less than 
  * 1 ms get an execution time of zero.
  *
+ * PORT_APPLICATION_DEFINED
+ * Allows for defining the port macros in other source code files.
+ *
  * PORT_Win32
- * "Accurate" timestamping based on the Windows performance counter for Win32 builds.
- * Note that this gives the host machine time, not the kernel time.
+ * "Accurate" timestamping based on the Windows performance counter for Win32 
+ * builds. Note that this gives the host machine time, not the kernel time.
  *
- * Officially supported hardware timer ports:
- * - PORT_Atmel_AT91SAM7
- * - PORT_Atmel_UC3A0
- * - PORT_ARM_CortexM 
- * - PORT_Renesas_RX600
- * - PORT_Microchip_dsPIC_AND_PIC24
- *
- * We also provide several "unofficial" hardware-specific ports. There have 
- * been developed by external contributors, and have not yet been verified 
- * by Percepio AB. Let us know if you have problems getting these to work.
- * 
- * Unofficial hardware specific ports provided are:
- * - PORT_TEXAS_INSTRUMENTS_TMS570
- * - PORT_TEXAS_INSTRUMENTS_MSP430
- * - PORT_MICROCHIP_PIC32
- * - PORT_XILINX_PPC405
- * - PORT_XILINX_PPC440
- * - PORT_XILINX_MICROBLAZE
- * - PORT_NXP_LPC210X
- *
+ * Hardware specific ports
+ * To get accurate timestamping, a hardware timer is necessary. Below are the 
+ * available ports. Some of these are "unofficial", meaning that 
+ * they have not yet been verified by Percepio but have been contributed by 
+ * external developers. They should work, otherwise let us know by emailing 
+ * support@percepio.com. Some work on any OS platform, while other are specific 
+ * to a certain operating system.
  *****************************************************************************/
 
-#define PORT_NOT_SET                          -1
-#define PORT_APPLICATION_DEFINED			  -2
+/****** Port Name ******************** Code ** Official ** OS Platform *******/
+#define PORT_APPLICATION_DEFINED       -2   /* -           -                 */
+#define PORT_NOT_SET                   -1   /* -           -                 */
+#define PORT_HWIndependent             0    /* Yes         Any               */
+#define PORT_Win32                     1    /* Yes         Windows (FreeRTOS)*/
+#define PORT_Atmel_AT91SAM7            2    /* No          Any               */
+#define PORT_Atmel_UC3A0               3    /* No          Any               */
+#define PORT_ARM_CortexM               4    /* Yes         Any               */
+#define PORT_Renesas_RX600             5    /* Yes         Any               */
+#define PORT_Microchip_dsPIC_AND_PIC24 6    /* Yes         Any               */
+#define PORT_TEXAS_INSTRUMENTS_TMS570  7    /* No          Any               */
+#define PORT_TEXAS_INSTRUMENTS_MSP430  8    /* No          Any               */
+#define PORT_MICROCHIP_PIC32           9    /* No          Any               */
+#define PORT_XILINX_PPC405             10   /* No          FreeRTOS          */
+#define PORT_XILINX_PPC440             11   /* No          FreeRTOS          */
+#define PORT_XILINX_MICROBLAZE         12   /* No          Any               */
+#define PORT_NXP_LPC210X               13   /* No          Any               */
 
-/*** Officially supported hardware timer ports *******************************/
-#define PORT_HWIndependent                     0
-#define PORT_Win32                             1
-#define PORT_Atmel_AT91SAM7                    2
-#define PORT_Atmel_UC3A0                       3
-#define PORT_ARM_CortexM                       4
-#define PORT_Renesas_RX600                     5
-#define PORT_Microchip_dsPIC_AND_PIC24         6
-
-/*** Unofficial ports, provided by external developers, not yet verified *****/
-#define PORT_TEXAS_INSTRUMENTS_TMS570          7
-#define PORT_TEXAS_INSTRUMENTS_MSP430          8
-#define PORT_MICROCHIP_PIC32                   9
-#define PORT_XILINX_PPC405                    10
-#define PORT_XILINX_PPC440                    11
-#define PORT_XILINX_MICROBLAZE                12
-#define PORT_NXP_LPC210X                      13
-
-/*** Select your port here! **************************************************/
-#define SELECTED_PORT PORT_NOT_SET
-/*****************************************************************************/
-
-#if (SELECTED_PORT == PORT_NOT_SET) 
-#error "You need to define SELECTED_PORT here!"
-#endif
+#include "trcConfig.h" // Where SELECTED_PORT is defined
 
 /*******************************************************************************
  * IRQ_PRIORITY_ORDER
@@ -143,25 +123,6 @@
  * This setting is not critical. It is used only to sort and colorize the 
  * interrupts in priority order, in case you record interrupts using
  * the vTraceStoreISRBegin and vTraceStoreISREnd routines.
- *
- * We provide this setting for some hardware architectures below:
- * - ARM Cortex M:       0 (lower IRQ priority values are more significant)
- * - Atmel AT91SAM7x:    1 (higher IRQ priority values are more significant)
- * - Atmel AVR32:        1 (higher IRQ priority values are more significant)
- * - Renesas RX600:      1 (higher IRQ priority values are more significant)
- * - Microchip PIC24:    0 (lower IRQ priority values are more significant)
- * - Microchip dsPIC:    0 (lower IRQ priority values are more significant)
- * - TI TMS570:          0 (lower IRQ priority values are more significant)
- * - Freescale HCS08:    0 (lower IRQ priority values are more significant)
- * - Freescale HCS12:    0 (lower IRQ priority values are more significant)
- * - PowerPC 405:        0 (lower IRQ priority values are more significant)
- * - PowerPC 440:        0 (lower IRQ priority values are more significant)
- * - Freescale ColdFire: 1 (higher IRQ priority values are more significant)
- * - NXP LPC210x:        0 (lower IRQ priority values are more significant)
- * - MicroBlaze:        0  (lower IRQ priority values are more significant)
- *
- * If your chip is not on the above list, and you perhaps know this detail by 
- * heart, please inform us by e-mail to support@percepio.com.
  *
  ******************************************************************************
  *
@@ -187,9 +148,11 @@
  *   interrupt is signaled.
  *
  * HWTC_PERIOD: The number of increments or decrements of HWTC_COUNT between
- * two tick interrupts. This should preferably be mapped to the reload
+ * two OS tick interrupts. This should preferably be mapped to the reload
  * register of the hardware timer, to make it more portable between chips in the 
  * same family. The macro should in most cases be (reload register + 1).
+ * For FreeRTOS, this can in most cases be defined as 
+ * #define HWTC_PERIOD (configCPU_CLOCK_HZ / configTICK_RATE_HZ)
  *
  * HWTC_DIVISOR: If the timer frequency is very high, like on the Cortex M chips
  * (where the SysTick runs at the core clock frequency), the "differential 
@@ -209,56 +172,47 @@
  ******************************************************************************/
 
 #if (SELECTED_PORT == PORT_Win32)
-    
+    // This can be used as a template for any free-running 32-bit counter
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT (ulGetRunTimeCounterValue())
     #define HWTC_PERIOD 0
     #define HWTC_DIVISOR 1
-    
-    #define IRQ_PRIORITY_ORDER 1  // Please update according to your hardware...
 
-#elif (SELECTED_PORT == PORT_HWIndependent)
+    // Please update according to your system...
+    #define IRQ_PRIORITY_ORDER 1  
     
+#elif (SELECTED_PORT == PORT_HWIndependent) 
+	// OS Tick only (typically 1 ms resolution)    
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT 0
     #define HWTC_PERIOD 1
     #define HWTC_DIVISOR 1
-
-    #define IRQ_PRIORITY_ORDER 1  // Please update according to your hardware...
-
-#elif (SELECTED_PORT == PORT_Atmel_AT91SAM7)
-#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
-
-    /* HWTC_PERIOD is hardcoded for AT91SAM7X256-EK Board (48 MHz)
-    A more generic solution is to get the period from pxPIT->PITC_PIMR */
     
-    #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
-    #define HWTC_COUNT (AT91C_BASE_PITC->PITC_PIIR & 0xFFFFF)
-    #define HWTC_PERIOD (AT91C_BASE_PITC->PITC_PIMR + 1)
-    #define HWTC_DIVISOR 1
+	// Please update according to your system...
+    #define IRQ_PRIORITY_ORDER NOT_SET  
 
-    #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
-
-#elif (SELECTED_PORT == PORT_Atmel_UC3A0)
-#error HWTC_PERIOD must point to the reload register! Not yet updated for this hardware port!
-  
-    /* For Atmel AVR32 (AT32UC3A) */
-    #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
-    #define HWTC_COUNT sysreg_read(AVR32_COUNT)
-    #define HWTC_PERIOD 
-    #define HWTC_DIVISOR 1    
-
-    #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_ARM_CortexM)
 
-    /* For all chips using ARM Cortex M cores */
+	void prvTraceSetIRQMask(uint32_t priMask);
+	uint32_t prvTraceGetIRQMask(void);
+	
+	void prvTraceEnableIRQ(void);
+	void prvTraceDisableIRQ(void);
+	    
+	void prvTraceInitCortexM(void);
+		
+	#define PORT_SPECIFIC_INIT() prvTraceInitCortexM()	
+		
+	extern uint32_t DWT_CYCLES_ADDED;		
+	#define DWT_CTRL_REG (*((uint32_t*)0xE0001000))
+	#define DWT_CYCLE_COUNTER (*((uint32_t*)0xE0001004))
+	
+    #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
+    #define HWTC_COUNT (DWT_CYCLE_COUNTER + DWT_CYCLES_ADDED)
+    #define HWTC_PERIOD 0
+    #define HWTC_DIVISOR 4
 
-    #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
-    #define HWTC_COUNT (*((uint32_t*)0xE000E018))
-    #define HWTC_PERIOD ((*(uint32_t*)0xE000E014) + 1)
-    #define HWTC_DIVISOR 2
-    
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_Renesas_RX600)    
@@ -269,15 +223,14 @@
     #define HWTC_COUNT (CMT0.CMCNT)
     #define HWTC_PERIOD (CMT0.CMCOR + 1)
     #define HWTC_DIVISOR 1
-
     #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_Microchip_dsPIC_AND_PIC24)
 
     /* For Microchip PIC24 and dsPIC (16 bit) */
 
-    /* Note: The trace library was originally designed for 32-bit MCUs, and is slower
-       than intended on 16-bit MCUs. Storing an event on a PIC24 takes about 70 µs. 
+    /* Note: The trace library is designed for 32-bit MCUs and is slower than 
+       intended on 16-bit MCUs. Storing an event on a PIC24 takes about 70 usec. 
        In comparison, 32-bit MCUs are often 10-20 times faster. If recording overhead 
        becomes a problem on PIC24, use the filters to exclude less interesting tasks 
        or system calls. */
@@ -286,24 +239,42 @@
     #define HWTC_COUNT (TMR1)
     #define HWTC_PERIOD (PR1+1)
     #define HWTC_DIVISOR 1
-
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
-#elif (SELECTED_PORT == PORT_NXP_LPC210X)
-#error HWTC_PERIOD must point to the reload register! Not yet updated for this hardware port!
+#elif (SELECTED_PORT == PORT_Atmel_AT91SAM7)
+
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
-    
+    	
+    #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
+    #define HWTC_COUNT ((uint32_t)(AT91C_BASE_PITC->PITC_PIIR & 0xFFFFF))
+    #define HWTC_PERIOD ((uint32_t)(AT91C_BASE_PITC->PITC_PIMR + 1))
+    #define HWTC_DIVISOR 1
+    #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
+
+#elif (SELECTED_PORT == PORT_Atmel_UC3A0)
+
+    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
+    /* For Atmel AVR32 (AT32UC3A).*/
+	
+    #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
+    #define HWTC_COUNT ((uint32_t)sysreg_read(AVR32_COUNT))
+    #define HWTC_PERIOD ((uint32_t)(sysreg_read(AVR32_COMPARE) + 1))
+    #define HWTC_DIVISOR 1
+    #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
+
+#elif (SELECTED_PORT == PORT_NXP_LPC210X)
+
+    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */   
     /* Tested with LPC2106, but should work with most LPC21XX chips. */
-      
+    	
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT  *((uint32_t *)0xE0004008 )
-    #define HWTC_PERIOD 
+    #define HWTC_PERIOD *((uint32_t *)0xE0004018 )
     #define HWTC_DIVISOR 1    
-
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_TEXAS_INSTRUMENTS_TMS570)
-#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
+ 
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define RTIFRC0 *((uint32_t *)0xFFFFFC10)
@@ -317,52 +288,60 @@
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_TEXAS_INSTRUMENTS_MSP430)
-#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
+
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT (TA0R)
-    #define HWTC_PERIOD TRACE_CPU_CLOCKS_PER_TICK      
+    #define HWTC_PERIOD (((uint16_t)TACCR0)+1)
     #define HWTC_DIVISOR 1
-
     #define IRQ_PRIORITY_ORDER 1  // higher IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_MICROCHIP_PIC32)
+
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
     #define HWTC_COUNT (ReadTimer1())     /* Should be available in BSP */
     #define HWTC_PERIOD (ReadPeriod1()+1) /* Should be available in BSP */
     #define HWTC_DIVISOR 1
-
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_XILINX_PPC405)
-#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
+    
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
-    #define HWTC_COUNT  mfspr( 0x3db)
-    #define HWTC_PERIOD 
+    #define HWTC_COUNT  mfspr(0x3db)	
+	#if (defined configCPU_CLOCK_HZ && defined configTICK_RATE_HZ) // Check if FreeRTOS
+	    /* For FreeRTOS only - found no generic OS independent solution for the PPC405 architecture. */
+	    #define HWTC_PERIOD ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) // Same as in port.c for PPC405
+	#else
+	    /* Not defined for other operating systems yet */
+	    #error HWTC_PERIOD must be defined to give the number of hardware timer ticks per OS tick.
+	#endif	
     #define HWTC_DIVISOR 1
-
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_XILINX_PPC440)
-#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
-    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
-
-    /* This should work with most PowerPC chips */
     
-    #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
-    #define HWTC_COUNT  mfspr( 0x016 )
-    #define HWTC_PERIOD 
+	/* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
+    /* This should work with most PowerPC chips */    
+    
+	#define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
+    #define HWTC_COUNT  mfspr(0x016)
+	#if (defined configCPU_CLOCK_HZ && defined configTICK_RATE_HZ) // Check if FreeRTOS
+		/* For FreeRTOS only - found no generic OS independent solution for the PPC440 architecture. */
+		#define HWTC_PERIOD ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) // Same as in port.c for PPC440
+	#else
+		/* Not defined for other operating systems yet */
+		#error HWTC_PERIOD must be defined to give the number of hardware timer ticks per OS tick.
+	#endif
     #define HWTC_DIVISOR 1    
-
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
     
 #elif (SELECTED_PORT == PORT_XILINX_MICROBLAZE)
-#error HWTC_PERIOD must point to the reload register! Not verified for this hardware port!
+
     /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
     /* This should work with most Microblaze configurations.
@@ -373,9 +352,8 @@
 
     #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
     #define HWTC_COUNT XTmrCtr_GetTimerCounterReg( XPAR_TMRCTR_0_BASEADDR, 0 )
-    #define HWTC_PERIOD 
+  	#define HWTC_PERIOD (XTmrCtr_mGetLoadReg( XPAR_TMRCTR_0_BASEADDR,  0) + 1)
     #define HWTC_DIVISOR 16
-
     #define IRQ_PRIORITY_ORDER 0  // lower IRQ priority values are more significant
 
 #elif (SELECTED_PORT == PORT_APPLICATION_DEFINED)
@@ -383,7 +361,6 @@
 	#if !( defined (HWTC_COUNT_DIRECTION) && defined (HWTC_COUNT) && defined (HWTC_PERIOD) && defined (HWTC_DIVISOR) && defined (IRQ_PRIORITY_ORDER) )
 		#error SELECTED_PORT is PORT_APPLICATION_DEFINED but not all of the necessary constants have been defined.
 	#endif
-
 
 #elif (SELECTED_PORT != PORT_NOT_SET)
 
@@ -419,7 +396,7 @@
     #if (HWTC_DIVISOR < 1)
     #error "HWTC_DIVISOR must be a non-zero positive value!"
     #endif 
-
+	
 #endif
 /*******************************************************************************
  * vTraceConsoleMessage
@@ -428,11 +405,6 @@
  * This needs to be correctly defined to see status reports from the trace 
  * status monitor task (this is defined in trcUser.c).
  ******************************************************************************/         
-#if (SELECTED_PORT == PORT_Atmel_AT91SAM7)
-/* Port specific includes */
-#include "console.h"
-#endif
-
 #define vTraceConsoleMessage(x)
 
 /*******************************************************************************

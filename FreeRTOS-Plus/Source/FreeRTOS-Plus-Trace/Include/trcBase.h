@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.5.0 Recorder Library
+ * Tracealyzer v2.6.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcBase.h
@@ -38,7 +38,7 @@
 #ifndef TRCBASE_H
 #define TRCBASE_H
 
-#define TRACE_MINOR_VERSION 2
+#define TRACE_MINOR_VERSION 4
 #define TRACE_STORE_MODE_STOP_WHEN_FULL 1
 #define TRACE_STORE_MODE_RING_BUFFER 2
 #define TRACE_DATA_ALLOCATION_STATIC 1
@@ -54,6 +54,10 @@
 
 #ifndef USE_SEPARATE_USER_EVENT_BUFFER
 #define USE_SEPARATE_USER_EVENT_BUFFER 0
+#endif
+
+#ifndef TRACE_SR_ALLOC_CRITICAL_SECTION
+#define TRACE_SR_ALLOC_CRITICAL_SECTION()
 #endif
 
 /* Max number of event codes supported */
@@ -96,16 +100,16 @@ extern uint8_t excludedEventCodes[NEventCodes / 8 + 1];
 typedef struct
 {
     /* For each object class, the index of the next handle to allocate */
-    int16_t indexOfNextAvailableHandle[ TRACE_NCLASSES ];
+    uint16_t indexOfNextAvailableHandle[ TRACE_NCLASSES ];
 
     /* The lowest index of this class (constant) */
-    int16_t lowestIndexOfClass[ TRACE_NCLASSES ];
+    uint16_t lowestIndexOfClass[ TRACE_NCLASSES ];
 
     /* The highest index of this class (constant) */
-    int16_t highestIndexOfClass[ TRACE_NCLASSES ];
+    uint16_t highestIndexOfClass[ TRACE_NCLASSES ];
 
     /* The highest use count for this class (for statistics) */
-    int16_t handleCountWaterMarksOfClass[ TRACE_NCLASSES ];
+    uint16_t handleCountWaterMarksOfClass[ TRACE_NCLASSES ];
 
     /* The free object handles - a set of stacks within this array */
     objectHandleType objectHandles[ TRACE_KERNEL_OBJECT_COUNT ];
@@ -139,7 +143,11 @@ typedef struct
 
     /* This is used to calculate the index in the dynamic object table
     (handle - 1 - nofStaticObjects = index)*/
-    uint8_t NumberOfObjectsPerClass[ 4*((TRACE_NCLASSES+3)/4)];
+#if (USE_16BIT_OBJECT_HANDLES == 1)	
+    objectHandleType NumberOfObjectsPerClass[2*((TRACE_NCLASSES+1)/2)];
+#else
+	objectHandleType NumberOfObjectsPerClass[4*((TRACE_NCLASSES+3)/4)];
+#endif
 
     /* Allocation size rounded up to the closest multiple of 4 */
     uint8_t NameLengthPerClass[ 4*((TRACE_NCLASSES+3)/4) ];
@@ -179,7 +187,7 @@ typedef struct
 typedef struct
 {
     uint8_t type;
-    objectHandleType objHandle;
+    uint8_t objHandle;
     uint16_t dts;    /* differential timestamp - time since last event */
 } TSEvent, TREvent;
 
@@ -200,7 +208,7 @@ typedef struct
 typedef struct
 {
     uint8_t type;
-    objectHandleType objHandle;
+    uint8_t objHandle;
     uint8_t param;
     uint8_t dts;    /* differential timestamp - time since last event */
 } KernelCallWithParamAndHandle;
@@ -215,7 +223,7 @@ typedef struct
 typedef struct
 {
     uint8_t type;
-    objectHandleType objHandle;    /* the handle of the closed object */
+    uint8_t objHandle;    /* the handle of the closed object */
     uint16_t symbolIndex;          /* the name of the closed object */
 } ObjCloseNameEvent;
 
@@ -253,6 +261,18 @@ typedef struct
 	uint8_t xps_8;
 	uint16_t xps_16;
 } XPSEvent;
+
+typedef struct{
+	uint8_t type;
+	uint8_t dts;
+	uint16_t size;
+} MemEventSize;
+
+typedef struct{
+	uint8_t type;
+	uint8_t addr_high;
+	uint16_t addr_low;
+} MemEventAddr;
 
 /*******************************************************************************
  * The separate user event buffer structure. Can be enabled in trcConfig.h.
@@ -305,7 +325,7 @@ typedef struct
     /* Used to determine Kernel and Endianess */
     uint16_t version;
 
-    /* Currently 1 for v2.2.2 (0 earlier)*/
+    /* Currently 3, since v2.6.0 */
     uint8_t minor_version;
 
     /* This should be 0 if lower IRQ priority values implies higher priority
@@ -342,11 +362,17 @@ typedef struct
     This is a 32 bit variable due to alignment issues. */
     uint32_t recorderActive;
 
-    /* For storing a Team License key */
-    uint8_t teamLicenceKey[32];
+    /* Not used, remains for compatibility and future use */
+    uint8_t notused[28];
+
+	/* The amount of heap memory remaining at the last malloc or free event */ 
+	uint32_t heapMemUsage;
 
     /* 0xF0F0F0F0 - for control only */
     int32_t debugMarker0;
+
+	/* Set to value of USE_16BIT_OBJECT_HANDLES */
+	uint32_t isUsing16bitHandles;
 
     /* The Object Property Table holds information about currently active
     tasks, queues, and other recorded objects. This is updated on each
@@ -444,9 +470,15 @@ void vTraceSetObjectName(traceObjectClass objectclass,
 
 void* xTraceNextFreeEventBufferSlot(void);
 
+#if (USE_16BIT_OBJECT_HANDLES == 1)
+unsigned char prvTraceGet8BitHandle(objectHandleType handle);
+#else
+#define prvTraceGet8BitHandle(x) ((unsigned char)x)
+#endif
+
+
 uint16_t uiIndexOfObject(objectHandleType objecthandle,
                          uint8_t objectclass);
-
 
 /*******************************************************************************
  * vTraceError
@@ -486,6 +518,9 @@ RecorderDataPtr->ObjectPropertyTable.objbytes[uiIndexOfObject(handle, objectclas
 #define TRACE_SET_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) TRACE_SET_FLAG_ISEXCLUDED(excludedEventCodes, eventCode)
 #define TRACE_CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) TRACE_CLEAR_FLAG_ISEXCLUDED(excludedEventCodes, eventCode)
 #define TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) TRACE_GET_FLAG_ISEXCLUDED(excludedEventCodes, eventCode)
+
+#define TRACE_UPDATE_HEAP_USAGE_POSITIVE(change) {if (RecorderDataPtr != NULL) RecorderDataPtr->heapMemUsage += change;}
+#define TRACE_UPDATE_HEAP_USAGE_NEGATIVE(change) {if (RecorderDataPtr != NULL) RecorderDataPtr->heapMemUsage -= change;}
 
 /* DEBUG ASSERTS */
 #if defined USE_TRACE_ASSERT && USE_TRACE_ASSERT != 0

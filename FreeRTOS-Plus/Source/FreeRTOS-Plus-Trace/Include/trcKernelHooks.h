@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Tracealyzer v2.5.0 Recorder Library
+* Tracealyzer v2.6.0 Recorder Library
 * Percepio AB, www.percepio.com
 *
 * trcKernelHooks.h
@@ -97,7 +97,7 @@
 
 /* This macro will create a task in the object table */
 #undef trcKERNEL_HOOKS_TASK_CREATE
-#define trcKERNEL_HOOKS_TASK_CREATE(SERVICE, pxTCB) \
+#define trcKERNEL_HOOKS_TASK_CREATE(SERVICE, CLASS, pxTCB) \
 	TRACE_SET_TASK_NUMBER(pxTCB) \
 	vTraceSetObjectName(TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxTCB), TRACE_GET_TASK_NAME(pxTCB)); \
 	vTraceSetPriorityProperty(TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxTCB), TRACE_GET_TASK_PRIORITY(pxTCB)); \
@@ -105,8 +105,8 @@
 
 /* This macro will create a failed create call to create a task */
 #undef trcKERNEL_HOOKS_TASK_CREATE_FAILED
-#define trcKERNEL_HOOKS_TASK_CREATE_FAILED(SERVICE) \
-	vTraceStoreKernelCall(TRACE_GET_TASK_EVENT_CODE(SERVICE, FAILED, CLASS, pxTCB), TRACE_CLASS_TASK, 0);
+#define trcKERNEL_HOOKS_TASK_CREATE_FAILED(SERVICE, CLASS) \
+	vTraceStoreKernelCall(TRACE_GET_TASK_EVENT_CODE(SERVICE, FAILED, CLASS, 0), TRACE_CLASS_TASK, 0);
 
 /* This macro will setup a task in the object table */
 #undef trcKERNEL_HOOKS_OBJECT_CREATE
@@ -132,7 +132,7 @@
 
 /* This macro will flag a certain task as a finished instance */
 #undef trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED
-#define trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED(CLASS, pxObject) \
+#define trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED() \
 	vTraceSetTaskInstanceFinished(TRACE_GET_TASK_NUMBER(TRACE_GET_CURRENT_TASK()));
 
 #if INCLUDE_READY_EVENTS == 1
@@ -187,7 +187,24 @@
 #undef trcKERNEL_HOOKS_TASK_RESUME
 #define trcKERNEL_HOOKS_TASK_RESUME(SERVICE, pxTCB) \
 	vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxTCB));
+	
+#undef trcKERNEL_HOOKS_TIMER_EVENT
+#define trcKERNEL_HOOKS_TIMER_EVENT(SERVICE, pxTimer) \
+	vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer));
 
+/* This macro will create a timer in the object table and assign the timer a trace handle (timer number).*/
+#undef trcKERNEL_HOOKS_TIMER_CREATE
+#define trcKERNEL_HOOKS_TIMER_CREATE(SERVICE, pxTimer) \
+TRACE_SET_TIMER_NUMBER(pxTimer); \
+vTraceSetObjectName(TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer), TRACE_GET_TIMER_NAME(pxTimer)); \
+vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer));
 #endif
+
+#undef trcKERNEL_HOOKS_TIMER_DELETE
+#define trcKERNEL_HOOKS_TIMER_DELETE(SERVICE, pxTimer) \
+vTraceStoreKernelCall(SERVICE, TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer)); \
+vTraceStoreObjectNameOnCloseEvent(TRACE_GET_TIMER_NUMBER(pxTimer), TRACE_CLASS_TIMER); \
+vTraceStoreObjectPropertiesOnCloseEvent(TRACE_GET_TIMER_NUMBER(pxTimer), TRACE_CLASS_TIMER); \
+vTraceFreeObjectHandle(TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer));
 
 #endif /* TRCKERNELHOOKS_H */

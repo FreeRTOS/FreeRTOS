@@ -350,16 +350,7 @@ const unsigned long ulMSToSleep = 5;
 void vFullDemoIdleFunction( void )
 {
 const unsigned long ulMSToSleep = 15;
-const unsigned portBASE_TYPE uxConstQueueNumber = 0xaaU;
 void *pvAllocated;
-
-/* These three functions are only meant for use by trace code, and not for
-direct use from application code, hence their prototypes are not in queue.h. */
-extern void vQueueSetQueueNumber( QueueHandle_t pxQueue, unsigned portBASE_TYPE uxQueueNumber );
-extern unsigned portBASE_TYPE uxQueueGetQueueNumber( QueueHandle_t pxQueue );
-extern uint8_t ucQueueGetQueueType( QueueHandle_t pxQueue );
-extern void vTaskSetTaskNumber( TaskHandle_t xTask, unsigned portBASE_TYPE uxHandle );
-extern unsigned portBASE_TYPE uxTaskGetTaskNumber( TaskHandle_t xTask );
 
 	/* Sleep to reduce CPU load, but don't sleep indefinitely in case there are
 	tasks waiting to be terminated by the idle task. */
@@ -379,16 +370,6 @@ extern unsigned portBASE_TYPE uxTaskGetTaskNumber( TaskHandle_t xTask );
 	that has tasks blocked on it. */
 	if( xMutexToDelete != NULL )
 	{
-		/* Before deleting the semaphore, test the function used to set its
-		number.  This would normally only be done from trace software, rather
-		than application code. */
-		vQueueSetQueueNumber( xMutexToDelete, uxConstQueueNumber );
-
-		/* Before deleting the semaphore, test the functions used to get its
-		type and number.  Again, these would normally only be done from trace
-		software, rather than application code. */
-		configASSERT( uxQueueGetQueueNumber( xMutexToDelete ) == uxConstQueueNumber );
-		configASSERT( ucQueueGetQueueType( xMutexToDelete ) == queueQUEUE_TYPE_MUTEX );
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;
 	}
@@ -459,7 +440,6 @@ const TickType_t xDontBlock = 0; /* This is called from the idle task so must *n
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void )
 {
 TaskHandle_t xIdleTaskHandle, xTimerTaskHandle;
-const unsigned char ucConstTaskNumber = 0x55U;
 char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
@@ -469,8 +449,6 @@ TaskHandle_t xTestTask;
 	the task number. */
 	xIdleTaskHandle = xTaskGetIdleTaskHandle();
 	xTimerTaskHandle = xTimerGetTimerDaemonTaskHandle();
-	vTaskSetTaskNumber( xIdleTaskHandle, ( unsigned long ) ucConstTaskNumber );
-	configASSERT( uxTaskGetTaskNumber( xIdleTaskHandle ) == ucConstTaskNumber );
 
 	/* This is the idle hook, so the current task handle should equal the
 	returned idle task handle. */

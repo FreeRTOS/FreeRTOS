@@ -746,11 +746,11 @@ else \
 extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, uint32_t size);
 
 #undef traceMALLOC
-#define traceMALLOC( pvAddress, uiSize ) {vTraceStoreMemMangEvent(MEM_MALLOC_SIZE, ( uint32_t ) pvAddress, uiSize); TRACE_UPDATE_HEAP_USAGE_POSITIVE(uiSize);}
+#define traceMALLOC( pvAddress, uiSize ) {vTraceStoreMemMangEvent(MEM_MALLOC_SIZE, ( uint32_t ) pvAddress, uiSize); TRACE_INCR_HEAP_USAGE(uiSize);}
 
 	
 #undef traceFREE
-#define traceFREE( pvAddress, uiSize ) {vTraceStoreMemMangEvent(MEM_FREE_SIZE, ( uint32_t ) pvAddress, uiSize); TRACE_UPDATE_HEAP_USAGE_NEGATIVE(uiSize);}
+#define traceFREE( pvAddress, uiSize ) {vTraceStoreMemMangEvent(MEM_FREE_SIZE, ( uint32_t ) pvAddress, uiSize); TRACE_DECR_HEAP_USAGE(uiSize);}
 
 #endif
 

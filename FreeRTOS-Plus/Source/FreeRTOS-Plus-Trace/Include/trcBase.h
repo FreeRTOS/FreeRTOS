@@ -519,8 +519,8 @@ RecorderDataPtr->ObjectPropertyTable.objbytes[uiIndexOfObject(handle, objectclas
 #define TRACE_CLEAR_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) TRACE_CLEAR_FLAG_ISEXCLUDED(excludedEventCodes, eventCode)
 #define TRACE_GET_EVENT_CODE_FLAG_ISEXCLUDED(eventCode) TRACE_GET_FLAG_ISEXCLUDED(excludedEventCodes, eventCode)
 
-#define TRACE_UPDATE_HEAP_USAGE_POSITIVE(change) {if (RecorderDataPtr != NULL) RecorderDataPtr->heapMemUsage += change;}
-#define TRACE_UPDATE_HEAP_USAGE_NEGATIVE(change) {if (RecorderDataPtr != NULL) RecorderDataPtr->heapMemUsage -= change;}
+#define TRACE_INCR_HEAP_USAGE(change) {if (RecorderDataPtr != NULL) RecorderDataPtr->heapMemUsage += change;}
+#define TRACE_DECR_HEAP_USAGE(change) {if (RecorderDataPtr != NULL) RecorderDataPtr->heapMemUsage -= change;}
 
 /* DEBUG ASSERTS */
 #if defined USE_TRACE_ASSERT && USE_TRACE_ASSERT != 0

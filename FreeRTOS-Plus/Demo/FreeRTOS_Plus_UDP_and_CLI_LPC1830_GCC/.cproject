@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="com.crt.advproject.config.exe.debug.56486929">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.56486929" moduleId="org.eclipse.cdt.core.settings" name="Debug">
@@ -87,22 +85,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.2106668528" name="/" resourcePath="ThirdParty/USB_CDC">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1865989435" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
-							<tool id="com.crt.advproject.cpp.exe.debug.1158267972" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1784372430" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.369260631" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
-								<inputType id="com.crt.advproject.compiler.input.466388069" superClass="com.crt.advproject.compiler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.gas.exe.debug.401476199" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1255426283" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-								<inputType id="com.crt.advproject.assembler.input.882456885" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.2009352548" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
-							<tool id="com.crt.advproject.link.exe.debug.1734116997" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
-						</toolChain>
-					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.1781697322" name="/" resourcePath="ThirdParty/CMSISv2p10_LPC18xx_DriverLib">
 						<toolChain id="com.crt.advproject.toolchain.exe.debug.222538953" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
@@ -117,6 +99,22 @@
 							</tool>
 							<tool id="com.crt.advproject.link.cpp.exe.debug.1715304950" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
 							<tool id="com.crt.advproject.link.exe.debug.536813209" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.2106668528" name="/" resourcePath="ThirdParty/USB_CDC">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1865989435" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
+							<tool id="com.crt.advproject.cpp.exe.debug.1158267972" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1784372430" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
+								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.369260631" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
+								<inputType id="com.crt.advproject.compiler.input.466388069" superClass="com.crt.advproject.compiler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.gas.exe.debug.401476199" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1255426283" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="com.crt.advproject.assembler.input.882456885" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.2009352548" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
+							<tool id="com.crt.advproject.link.exe.debug.1734116997" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
 						</toolChain>
 					</folderInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.56486929.src/cr_startup_lpc18xx.cpp" name="cr_startup_lpc18xx.cpp" rcbsApplicability="disable" resourcePath="src/cr_startup_lpc18xx.cpp" toolsToInvoke=""/>
@@ -135,8 +133,8 @@
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
-&lt;Properties property_0="" property_2="LPC1850A_4350A_SPIFI.cfx" property_3="NXP" property_4="LPC1830" property_count="5" version="1"/&gt;&#13;
-&lt;infoList vendor="NXP"&gt;&lt;info chip="LPC1830" match_id="0x0" name="LPC1830" stub="crt_emu_lpc18_43_nxp"&gt;&lt;chip&gt;&lt;name&gt;LPC1830&lt;/name&gt;&#13;
+&lt;Properties property_0="" property_2="LPC1850A_4350A_SPIFI.cfx" property_3="NXP" property_4="LPC1830" property_count="5" version="60000"/&gt;&#13;
+&lt;infoList vendor="NXP"&gt;&lt;info chip="LPC1830" match_id="0x0" name="LPC1830" resetscript="LPC18LPC43ExternalFLASHBootResetscript.scp" stub="crt_emu_lpc18_43_nxp"&gt;&lt;chip&gt;&lt;name&gt;LPC1830&lt;/name&gt;&#13;
 &lt;family&gt;LPC18xx&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP (formerly Philips)&lt;/vendor&gt;&#13;
 &lt;reset board="None" core="Real" sys="Real"/&gt;&#13;
@@ -200,6 +198,7 @@
 &lt;peripheralInstance derived_from="ADC0" id="ADC0" location="0x400e3000"/&gt;&#13;
 &lt;peripheralInstance derived_from="ADC1" id="ADC1" location="0x400e4000"/&gt;&#13;
 &lt;peripheralInstance derived_from="GPIO-PORT" id="GPIO-PORT" location="0x400f4000"/&gt;&#13;
+&lt;peripheralInstance derived_from="EEPROM" id="EEPROM" location="0x4000e000"/&gt;&#13;
 &lt;/chip&gt;&#13;
 &lt;processor&gt;&lt;name gcc_name="cortex-m3"&gt;Cortex-M3&lt;/name&gt;&#13;
 &lt;family&gt;Cortex-M&lt;/family&gt;&#13;

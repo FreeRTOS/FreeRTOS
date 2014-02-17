@@ -321,8 +321,8 @@ BlockLink_t *pxLink;
 				{
 					/* Add this block to the list of free blocks. */
 					xFreeBytesRemaining += pxLink->xBlockSize;
-					prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
 					traceFREE( pv, pxLink->xBlockSize );
+					prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );					
 				}
 				xTaskResumeAll();
 			}

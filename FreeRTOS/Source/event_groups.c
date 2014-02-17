@@ -106,7 +106,7 @@ taskEVENT_LIST_ITEM_VALUE_IN_USE definition. */
 	#define eventEVENT_BITS_CONTROL_BYTES	0xff000000UL
 #endif
 
-typedef struct EVENT_GROUP_DEFINITION
+typedef struct xEventGroupDefinition
 {
 	EventBits_t uxEventBits;
 	List_t xTasksWaitingForBits;		/*< List of tasks waiting for a bit to be set. */
@@ -568,7 +568,7 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 			/* Unblock the task, returning 0 as the event list is being deleted
 			and	cannot therefore have any bits set. */
 			configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( ListItem_t * ) &( pxTasksWaitingForBits->xListEnd ) );
-			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, ( TickType_t ) eventUNBLOCKED_DUE_TO_BIT_SET );
+			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
 		}
 
 		vPortFree( pxEventBits );
@@ -620,12 +620,12 @@ BaseType_t xWaitConditionMet = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-#if (configUSE_TRACE_FACILITY == 1)
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
 	BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	BaseType_t xReturn;
 
-		traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet ); 
+		traceEVENT_GROUP_SET_BITS_FROM_ISR( xEventGroup, uxBitsToSet );
 		xReturn = xTimerPendFunctionCallFromISR( vEventGroupSetBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToSet, pxHigherPriorityTaskWoken );
 
 		return xReturn;

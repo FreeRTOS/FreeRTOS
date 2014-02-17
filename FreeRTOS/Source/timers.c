@@ -599,7 +599,7 @@ TickType_t xTimeNow;
 
 		/* Commands that are positive are timer commands rather than pended
 		function calls. */
-		if( xMessage.xMessageID >= 0 )
+		if( xMessage.xMessageID >= ( BaseType_t ) 0 )
 		{
 			/* The messages uses the xTimerParameters member to work on a
 			software timer. */
@@ -805,7 +805,7 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 	taskEXIT_CRITICAL();
 
 	return xTimerIsInActiveList;
-}
+} /*lint !e818 Can't be pointer to const due to the typedef. */
 /*-----------------------------------------------------------*/
 
 void *pvTimerGetTimerID( const TimerHandle_t xTimer )

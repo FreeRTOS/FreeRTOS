@@ -160,22 +160,6 @@ task stack, not the ISR stack). */
 /*-----------------------------------------------------------*/
 
 /*
- * Place the prototype here to ensure the interrupt vector is correctly installed.
- * Note that because the interrupt is written in assembly, the IPL setting in the
- * following line of code has no effect.  The interrupt priority is set by the
- * call to ConfigIntTimer1() in vApplicationSetupTickTimerInterrupt().
- */
-extern void __attribute__( (interrupt(ipl1), vector( configTICK_INTERRUPT_VECTOR ))) vPortTickInterruptHandler( void );
-
-/*
- * The software interrupt handler that performs the yield.  Note that, because
- * the interrupt is written in assembly, the IPL setting in the following line of
- * code has no effect.  The interrupt priority is set by the call to
- * mConfigIntCoreSW0() in xPortStartScheduler().
- */
-void __attribute__( (interrupt(ipl1), vector(_CORE_SOFTWARE_0_VECTOR))) vPortYieldISR( void );
-
-/*
  * Used to catch tasks that attempt to return from their implementing function.
  */
 static void prvTaskExitError( void );

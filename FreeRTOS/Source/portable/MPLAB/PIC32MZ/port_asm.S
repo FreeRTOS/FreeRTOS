@@ -65,26 +65,79 @@
 
 #include <xc.h>
 #include <sys/asm.h>
+#include "FreeRTOSConfig.h"
 #include "ISR_Support.h"
 
 
-	.set	nomips16
- 	.set 	noreorder
-
- 	.extern pxCurrentTCB
- 	.extern vTaskSwitchContext
- 	.extern vPortIncrementTick
+	.extern pxCurrentTCB
+	.extern vTaskSwitchContext
+	.extern vPortIncrementTick
 	.extern xISRStackTop
 
- 	.global vPortStartFirstTask
+	.global vPortStartFirstTask
 	.global vPortYieldISR
 	.global vPortTickInterruptHandler
 
 
 /******************************************************************/
 
-	.set		noreorder
-	.set 		noat
+	.set  nomips16
+	.set  nomicromips
+	.set  noreorder
+	.set  noat
+
+	/***************************************************************
+	*  The following is needed to locate the
+	*  vPortTickInterruptHandler function into the correct vector
+	***************************************************************/
+	#ifdef configTICK_INTERRUPT_VECTOR
+		#if (configTICK_INTERRUPT_VECTOR == _CORE_TIMER_VECTOR)
+			.equ     __vector_dispatch_0, vPortTickInterruptHandler
+			.global  __vector_dispatch_0
+			.section .vector_0, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_1_VECTOR)
+			.equ     __vector_dispatch_4, vPortTickInterruptHandler
+			.global  __vector_dispatch_4
+			.section .vector_4, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_2_VECTOR)
+			.equ     __vector_dispatch_9, vPortTickInterruptHandler
+			.global  __vector_dispatch_9
+			.section .vector_9, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_3_VECTOR)
+			.equ     __vector_dispatch_14, vPortTickInterruptHandler
+			.global  __vector_dispatch_14
+			.section .vector_14, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_4_VECTOR)
+			.equ     __vector_dispatch_19, vPortTickInterruptHandler
+			.global  __vector_dispatch_19
+			.section .vector_19, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_5_VECTOR)
+			.equ     __vector_dispatch_24, vPortTickInterruptHandler
+			.global  __vector_dispatch_24
+			.section .vector_24, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_6_VECTOR)
+			.equ     __vector_dispatch_28, vPortTickInterruptHandler
+			.global  __vector_dispatch_28
+			.section .vector_28, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_7_VECTOR)
+			.equ     __vector_dispatch_32, vPortTickInterruptHandler
+			.global  __vector_dispatch_32
+			.section .vector_32, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_8_VECTOR)
+			.equ     __vector_dispatch_36, vPortTickInterruptHandler
+			.global  __vector_dispatch_36
+			.section .vector_36, code, keep
+		#elif (configTICK_INTERRUPT_VECTOR == _TIMER_9_VECTOR)
+			.equ     __vector_dispatch_40, vPortTickInterruptHandler
+			.global  __vector_dispatch_40
+			.section .vector_40, code, keep
+		#endif
+	#else
+		.equ     __vector_dispatch_4, vPortTickInterruptHandler
+		.global  __vector_dispatch_4
+		.section .vector_4, code, keep
+	#endif
+
 	.ent		vPortTickInterruptHandler
 
 vPortTickInterruptHandler:
@@ -102,6 +155,7 @@ vPortTickInterruptHandler:
 
 	.set		noreorder
 	.set 		noat
+	.section .text, code
 	.ent		vPortStartFirstTask
 
 vPortStartFirstTask:
@@ -116,10 +170,19 @@ vPortStartFirstTask:
 
 /*******************************************************************/
 
-	.set		noreorder
-	.set 		noat
-	.ent		vPortYieldISR
+	.set  nomips16
+	.set  nomicromips
+	.set  noreorder
+	.set  noat
+	/***************************************************************
+	*  The following is needed to locate the vPortYieldISR function
+	*  into the correct vector
+	***************************************************************/
+	.equ     __vector_dispatch_1, vPortYieldISR
+	.global  __vector_dispatch_1
+	.section .vector_1, code
 
+	.ent  vPortYieldISR
 vPortYieldISR:
 
 	/* Make room for the context. First save the current status so it can be

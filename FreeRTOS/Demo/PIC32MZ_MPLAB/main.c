@@ -83,6 +83,7 @@
 #include "partest.h"
 #include "QueueOverwrite.h"
 #include "QueueSet.h"
+#include "EventGroupsDemo.h"
 
 /* Hardware specific includes. */
 #include "ConfigPerformance.h"
@@ -222,6 +223,9 @@ void vApplicationTickHook( void )
 
 		/* Call the queue set ISR test function. */
 		vQueueSetAccessQueueSetFromISR();
+
+		/* Exercise event groups from interrupts. */
+		vPeriodicEventGroupsProcessing();
 	}
 	#endif
 }

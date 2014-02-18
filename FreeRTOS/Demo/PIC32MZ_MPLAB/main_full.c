@@ -138,6 +138,7 @@
 #include "QueueOverwrite.h"
 #include "QueueSet.h"
 #include "recmutex.h"
+#include "EventGroupsDemo.h"
 
 /*-----------------------------------------------------------*/
 
@@ -236,6 +237,7 @@ TimerHandle_t xTimer = NULL;
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_TASK_PRIORITY );
 	vStartQueueSetTasks();
 	vStartRecursiveMutexTasks();
+	vStartEventGroupTasks();
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( prvRegTestTask1,			/* The function that implements the task. */
@@ -383,13 +385,17 @@ extern unsigned long ulHighFrequencyTimerInterrupts;
 	{
 		ulErrorOccurred |= ( 0x01UL << 12UL );
 	}
+	else if( xAreEventGroupTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 13UL );
+	}
 
 	/* Ensure the expected number of high frequency interrupts have occurred. */
 	if( ulLastHighFrequencyTimerInterrupts != 0 )
 	{
 		if( ( ulHighFrequencyTimerInterrupts - ulLastHighFrequencyTimerInterrupts ) < ulExpectedHighFrequencyInterrupts )
 		{
-			ulErrorOccurred |= ( 0x01UL << 13UL );
+			ulErrorOccurred |= ( 0x01UL << 14UL );
 		}
 	}
 	ulLastHighFrequencyTimerInterrupts = ulHighFrequencyTimerInterrupts;

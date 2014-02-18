@@ -37,6 +37,7 @@
         <itemPath>../../Common/Minimal/countsem.c</itemPath>
         <itemPath>../../Common/Minimal/dynamic.c</itemPath>
         <itemPath>../../Common/Minimal/recmutex.c</itemPath>
+        <itemPath>../../Common/Minimal/EventGroupsDemo.c</itemPath>
       </logicalFolder>
       <logicalFolder name="FreeRTOS Source"
                      displayName="FreeRTOS Source"
@@ -48,6 +49,7 @@
         <itemPath>../../../Source/portable/MPLAB/PIC32MZ/port.c</itemPath>
         <itemPath>../../../Source/portable/MPLAB/PIC32MZ/port_asm.S</itemPath>
         <itemPath>../../../Source/portable/MemMang/heap_4.c</itemPath>
+        <itemPath>../../../Source/event_groups.c</itemPath>
       </logicalFolder>
       <itemPath>../main.c</itemPath>
       <itemPath>../ParTest/ParTest.c</itemPath>
@@ -70,21 +72,20 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>../</Elem>
-    <Elem>../../../Source/portable/MPLAB/PIC32MZ</Elem>
     <Elem>../../Common/Minimal</Elem>
-    <Elem>../../../Source/portable/MemMang</Elem>
+    <Elem>../../../Source</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="PIC32MZ2048_SK" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC32MZ2048ECH144</targetDevice>
+        <targetDevice>PIC32MZ2048ECM144</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.30</languageToolchainVersion>
+        <languageToolchainVersion>1.31</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -116,6 +117,7 @@
         <property key="extra-include-directories"
                   value="../../../Source/include;../../../Source/portable/MPLAB/PIC32MZ;../../Common/include;../"/>
         <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
         <property key="optimization-level" value=""/>
@@ -157,6 +159,7 @@
         <property key="extra-lib-directories" value=""/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
         <property key="heap-size" value="0"/>
         <property key="input-libraries" value=""/>
         <property key="linker-symbols" value=""/>
@@ -184,6 +187,7 @@
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories" value=""/>
         <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
         <property key="optimization-level" value=""/>
@@ -208,6 +212,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="memories.configurationmemory" value="false"/>
         <property key="memories.eeprom" value="false"/>
         <property key="memories.id" value="false"/>

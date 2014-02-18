@@ -4,8 +4,8 @@
   <defaultConf>0</defaultConf>
   <confs>
     <conf name="PIC32MZ2048_SK" type="2">
-      <platformToolSN>:=MPLABCommUSB:=04D8:=8107:=0002:=Microchip Technology Incorporated:=PIC32MZ EC Family:=MTI132990155:=x:=h:=en</platformToolSN>
-      <languageToolchainDir>C:\devtools\Microchip\xc32\v1.30-TC9\bin</languageToolchainDir>
+      <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>8107:=&lt;rev>0002:=&lt;man>Microchip Technology Incorporated:=&lt;prod>PIC32MZ EC Family:=&lt;sn>MTI133990794:=&lt;drv>x:=&lt;xpt>h:=end</platformToolSN>
+      <languageToolchainDir>C:\devtools\Microchip\xc32\v1.31\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>

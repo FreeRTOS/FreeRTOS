@@ -1290,7 +1290,7 @@ TCB_t * pxNewTCB;
 			/* Has the task already been resumed from within an ISR? */
 			if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) == pdFALSE )
 			{
-				/* Is it in the suspended list because it is in the	Suspended 
+				/* Is it in the suspended list because it is in the	Suspended
 				state, or because is is blocked with no timeout? */
 				if( listIS_CONTAINED_WITHIN( NULL, &( pxTCB->xEventListItem ) ) != pdFALSE )
 				{
@@ -2339,7 +2339,7 @@ BaseType_t xReturn;
 	called from a critical section within an ISR. */
 
 	/* The event list is sorted in priority order, so the first in the list can
-	be removed as it is known to be the highest priority.  Remove the TCB from 
+	be removed as it is known to be the highest priority.  Remove the TCB from
 	the delayed list, and add it to the ready list.
 
 	If an event is for a queue that is locked then this function will never
@@ -3418,6 +3418,12 @@ TCB_t *pxTCB;
 	TaskStatus_t *pxTaskStatusArray;
 	volatile UBaseType_t uxArraySize, x;
 	uint32_t ulTotalTime, ulStatsAsPercentage;
+
+		#if( configUSE_TRACE_FACILITY != 1 )
+		{
+			#error configUSE_TRACE_FACILITY must also be set to 1 in FreeRTOSConfig.h to use vTaskGetRunTimeStats().
+		}
+		#endif
 
 		/*
 		 * PLEASE NOTE:

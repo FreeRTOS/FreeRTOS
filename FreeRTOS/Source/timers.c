@@ -108,7 +108,11 @@ typedef struct tmrTimerControl
 	#if( configUSE_TRACE_FACILITY == 1 )
 		UBaseType_t			uxTimerNumber;		/*<< An ID assigned by trace tools such as FreeRTOS+Trace */
 	#endif
-} Timer_t;
+} xTIMER;
+
+/* The old xTIMER name is maintained above then typedefed to the new Timer_t
+name below to enable the use of older kernel aware debuggers. */
+typedef xTIMER Timer_t;
 
 /* The definition of messages that can be sent and received on the timer queue.
 Two types of message can be queued - messages that manipulate a software timer,

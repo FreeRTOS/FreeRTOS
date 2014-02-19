@@ -167,7 +167,11 @@ typedef struct tskTaskControlBlock
 		struct 	_reent xNewLib_reent;
 	#endif
 
-} TCB_t;
+} tskTCB;
+
+/* The old tskTCB name is maintained above then typedefed to the new TCB_t name
+below to enable the use of older kernel aware debuggers. */
+typedef tskTCB TCB_t;
 
 /*
  * Some kernel aware debuggers require the data the debugger needs access to to

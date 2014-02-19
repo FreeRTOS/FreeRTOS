@@ -153,7 +153,12 @@ typedef struct QueueDefinition
 		struct QueueDefinition *pxQueueSetContainer;
 	#endif
 
-} Queue_t;
+} xQUEUE;
+
+/* The old xQUEUE name is maintained above then typedefed to the new Queue_t
+name below to enable the use of older kernel aware debuggers. */
+typedef xQUEUE Queue_t;
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -169,7 +174,12 @@ typedef struct QueueDefinition
 	{
 		const char *pcQueueName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 		QueueHandle_t xHandle;
-	} QueueRegistryItem_t;
+	} xQueueRegistryItem;
+
+	/* The old xQueueRegistryItem name is maintained above then typedefed to the
+	new xQueueRegistryItem name below to enable the use of older kernel aware
+	debuggers. */
+	typedef xQueueRegistryItem QueueRegistryItem_t;
 
 	/* The queue registry is simply an array of QueueRegistryItem_t structures.
 	The pcQueueName member of a structure being NULL is indicative of the
@@ -1040,8 +1050,8 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	/* Similar to xQueueGenericSend, except without blocking if there is no room
 	in the queue.  Also don't directly wake a task that was blocked on a queue
-	read, instead return a flag to say whether a context switch is required or 
-	not (i.e. has a task with a higher priority than us been woken by this 
+	read, instead return a flag to say whether a context switch is required or
+	not (i.e. has a task with a higher priority than us been woken by this
 	post). */
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
@@ -2350,7 +2360,7 @@ BaseType_t xReturn;
 	BaseType_t xReturn = pdFALSE;
 
 		/* This function must be called form a critical section. */
-	
+
 		configASSERT( pxQueueSetContainer );
 		configASSERT( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength );
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -71,7 +71,7 @@
  * This file can only be used if the linker is configured to to generate
  * a heap memory area.
  *
- * See heap_1.c, heap_2.c and heap_4.c for alternative implementations, and the 
+ * See heap_1.c, heap_2.c and heap_4.c for alternative implementations, and the
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 
@@ -98,7 +98,7 @@ void *pvReturn;
 		pvReturn = malloc( xWantedSize );
 		traceMALLOC( pvReturn, xWantedSize );
 	}
-	xTaskResumeAll();
+	( void ) xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
@@ -109,7 +109,7 @@ void *pvReturn;
 		}
 	}
 	#endif
-	
+
 	return pvReturn;
 }
 /*-----------------------------------------------------------*/
@@ -123,7 +123,7 @@ void vPortFree( void *pv )
 			free( pv );
 			traceFREE( pv, 0 );
 		}
-		xTaskResumeAll();
+		( void ) xTaskResumeAll();
 	}
 }
 

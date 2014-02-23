@@ -271,7 +271,7 @@ void *pvReturn = NULL;
 
 		traceMALLOC( pvReturn, xWantedSize );
 	}
-	xTaskResumeAll();
+	( void ) xTaskResumeAll();
 
 	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
 	{
@@ -322,9 +322,9 @@ BlockLink_t *pxLink;
 					/* Add this block to the list of free blocks. */
 					xFreeBytesRemaining += pxLink->xBlockSize;
 					traceFREE( pv, pxLink->xBlockSize );
-					prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );					
+					prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
 				}
-				xTaskResumeAll();
+				( void ) xTaskResumeAll();
 			}
 			else
 			{

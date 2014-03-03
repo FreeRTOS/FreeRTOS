@@ -1,0 +1,8 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+export INC_RX=C:\Devtools\Renesas\Hew\Tools\Renesas\RX\1_2_1\include
+export RXC_LIB=C:\Devtools\Renesas\Hew\Tools\Renesas\RX\1_2_1\bin
+export BIN_RX=C:\Devtools\Renesas\Hew\Tools\Renesas\RX\1_2_1\bin
+PATH := $(PATH):C:\Devtools\Renesas\Hew\Tools\Renesas\RX\1_2_1\bin

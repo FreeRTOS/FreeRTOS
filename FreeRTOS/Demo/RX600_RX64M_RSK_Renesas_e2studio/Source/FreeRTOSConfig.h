@@ -83,7 +83,7 @@
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				0
+#define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( 120000000UL ) /*_RB_ guess*/
 #define configPERIPHERAL_CLOCK_HZ		( 60000000UL ) /*_RB_ guess*/
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
@@ -101,13 +101,14 @@
 #define configQUEUE_REGISTRY_SIZE		0
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
-
+#define configUSE_QUEUE_SETS			1
+#define configUSE_COUNTING_SEMAPHORES	1
 #define configMAX_PRIORITIES			( 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 3 )
+#define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH		5
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
 
@@ -138,6 +139,7 @@ to exclude the API function. */
 #define INCLUDE_uxTaskGetStackHighWaterMark	1
 #define INCLUDE_xTaskGetSchedulerState		1
 #define INCLUDE_eTaskGetState				1
+#define INCLUDE_xTimerPendFunctionCall		1
 
 void vAssertCalled( void );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()

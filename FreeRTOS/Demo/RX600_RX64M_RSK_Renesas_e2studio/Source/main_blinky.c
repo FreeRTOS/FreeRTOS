@@ -182,7 +182,7 @@ void main_blinky( void )
 static void prvQueueSendTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
+const uint32_t ulValueToSend = 100UL;
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -204,10 +204,12 @@ const unsigned long ulValueToSend = 100UL;
 }
 /*-----------------------------------------------------------*/
 
+volatile uint32_t ulRxEvents = 0;
+
 static void prvQueueReceiveTask( void *pvParameters )
 {
-unsigned long ulReceivedValue;
-const unsigned long ulExpectedValue = 100UL;
+uint32_t ulReceivedValue;
+const uint32_t ulExpectedValue = 100UL;
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -225,6 +227,7 @@ const unsigned long ulExpectedValue = 100UL;
 		{
 			vParTestToggleLED( mainTASK_LED );
 			ulReceivedValue = 0U;
+			ulRxEvents++;
 		}
 	}
 }

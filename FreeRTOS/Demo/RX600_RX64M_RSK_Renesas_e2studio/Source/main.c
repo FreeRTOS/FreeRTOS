@@ -86,16 +86,13 @@
 #include "semphr.h"
 
 /* Standard demo includes. */
-//#include "partest.h"
-//#include "TimerDemo.h"
-//#include "QueueOverwrite.h"
-//#include "EventGroupsDemo.h"
+#include "partest.h"
+#include "TimerDemo.h"
+#include "QueueOverwrite.h"
+#include "EventGroupsDemo.h"
 
 /* Renesas includes. */
 #include "r_cg_macrodriver.h"
-//#include "r_cg_cgc.h"
-//#include "r_cg_cmt.h"
-//#include "r_cg_userdefine.h"
 
 /* Set option bytes */
 #pragma address OFS0_location = 0xFFFFFF8CUL
@@ -106,7 +103,7 @@ volatile const uint32_t OFS1_location = 0xFFFFFFFFUL;
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
@@ -251,6 +248,11 @@ volatile unsigned long ul = 0;
 This allows the application to choose the tick interrupt source. */
 void vApplicationSetupTimerInterrupt( void )
 {
+const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500UL;
+
+    /* Disable register write protection. */
+    SYSTEM.PRCR.WORD = ulEnableRegisterWrite;
+
 	/* Enable compare match timer 0. */
 	MSTP( CMT0 ) = 0;
 
@@ -271,5 +273,8 @@ void vApplicationSetupTimerInterrupt( void )
 
 	/* Start the timer. */
 	CMT.CMSTR0.BIT.STR0 = 1;
+
+    /* Reneable register protection. */
+    SYSTEM.PRCR.WORD = ulDisableRegisterWrite;
 }
 /*-----------------------------------------------------------*/

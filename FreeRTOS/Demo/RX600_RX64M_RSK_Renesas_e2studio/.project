@@ -36,6 +36,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Source/Common_Demo_Source/Minimal</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
 			<name>Source/Common_Demo_Source/include</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
@@ -77,6 +82,51 @@
 		</link>
 	</linkedResources>
 	<filteredResources>
+		<filter>
+			<id>1394031827230</id>
+			<name>Source/Common_Demo_Source/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-alt*.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1394031827245</id>
+			<name>Source/Common_Demo_Source/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-com*.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1394031827261</id>
+			<name>Source/Common_Demo_Source/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-cr*.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1394031827261</id>
+			<name>Source/Common_Demo_Source/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IntQueue.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1394031827276</id>
+			<name>Source/Common_Demo_Source/Minimal</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-sp_flop.c</arguments>
+			</matcher>
+		</filter>
 		<filter>
 			<id>1393853702360</id>
 			<name>Source/FreeRTOS_Source/portable</name>

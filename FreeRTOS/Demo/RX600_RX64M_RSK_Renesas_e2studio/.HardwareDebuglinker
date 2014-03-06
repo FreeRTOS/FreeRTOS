@@ -10,11 +10,8 @@
   <sections name="R"/>
   <sections name="SU"/>
   <sections name="SI"/>
-  <sections name="PResetPRG">
-    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294934528"/>
-  </sections>
   <sections name="C_1">
-    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294934784"/>
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4290772992"/>
   </sections>
   <sections name="C_2"/>
   <sections name="C"/>
@@ -32,6 +29,9 @@
   <sections name="W_2"/>
   <sections name="W"/>
   <sections name="L"/>
+  <sections name="PResetPRG">
+    <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294934528"/>
+  </sections>
   <sections name="FIXEDVECT">
     <sectionAddress xsi:type="com.renesas.linkersection.model:FixedAddress" fixedAddress="4294967248"/>
   </sections>

@@ -204,7 +204,7 @@
 								<option id="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.endian.402722613" name="Data Endian" superClass="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.endian" value="Little-endian data" valueType="enumerated"/>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.address.2030989684" name="Address" superClass="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.address" value="00000000" valueType="string"/>
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.libConfiguration.365502198" name="Library configuration" superClass="com.renesas.cdt.renesas.StandardLibrary.option.libConfiguration" value="C(C89)" valueType="enumerated"/>
-								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mathc89.1961101149" name="math.h (C89/C99): Mathematical/trigonometric operations (double-precision)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mathc89" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mathc89.1961101149" name="math.h (C89/C99): Mathematical/trigonometric operations (double-precision)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mathc89" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdioc89.219852317" name="stdio.h (C89/C99): Input/Output" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdioc89" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdlibc89.603288235" name="stdlib.h (C89/C99): General purpose library features" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdlibc89" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stringc89.298274803" name="string.h (C89/C99): String handling operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stringc89" value="true" valueType="boolean"/>
@@ -213,6 +213,21 @@
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.userSpecifiedLibrary.1612193964" name="User-specified library file" superClass="com.renesas.cdt.renesas.StandardLibrary.option.userSpecifiedLibrary" value="C:\E\Dev\FreeRTOS\WORKIN~1\FreeRTOS\Demo\RX2097~1\HARDWA~2\RTOSDemo.lib" valueType="string"/>
 							</tool>
 							<tool command="optlnk" id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.1803349405" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="com.renesas.cdt.rxc.hardwaredebug.win32.configuration.Id.534038930.435561194" name="/" resourcePath="Source/Common_Demo_Source/Minimal">
+						<toolChain id="com.renesas.cdt.rxc.hardwaredebug.win32.toolChain.Id.1875847603" name="Renesas RXC Toolchain" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.toolChain.Id" unusedChildren="">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.rxc.hardwaredebug.win32.targetPlatform.Id" isAbstract="false" osList="win32" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.targetPlatform.Id"/>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.compiler.Id.509729027" name="Compiler" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.compiler.Id.244125284">
+								<inputType id="%Base.Compiler.Shc.C.Input.Id.1020678920" name="C Input" superClass="%Base.Compiler.Shc.C.Input.Id"/>
+								<inputType id="%Base.Compiler.Shc.C.Input1.Id.1857995866" name="C++ Input" superClass="%Base.Compiler.Shc.C.Input1.Id"/>
+							</tool>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.assembler.Id.1587336802" name="Assembler" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.assembler.Id.1919439319">
+								<inputType id="%Base.Assembler.shcInputType.Id.62843888" name="Assembler InputType" superClass="%Base.Assembler.shcInputType.Id"/>
+							</tool>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.629169293" name="Linker" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.1242574850"/>
+							<tool id="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.1105527095" name="Standard Library" superClass="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.1405860605"/>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.794872766" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.1803349405"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

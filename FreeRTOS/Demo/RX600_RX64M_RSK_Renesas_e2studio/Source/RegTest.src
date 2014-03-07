@@ -75,6 +75,12 @@
 ;/* This function is explained in the comments at the top of main.c. */
 _vRegTest1Implementation:
 
+	;/* Put a known value in the guard byte of the accumulators. */
+	MOV.L	#10, R1
+	MVTACGU R1, A0
+	MOV.L	#20, R1
+	MVTACGU R1, A1
+
 	;/* Put a known value in each register. */
 	MOV.L	#1, R1
 	MOV.L	#2, R2
@@ -92,6 +98,12 @@ _vRegTest1Implementation:
 	MOV.L	#14, R14
 	MOV.L	#15, R15
 	
+	;/* Put a known value in the hi and low of the accumulators. */
+	MVTACHI R1, A0
+	MVTACLO R2, A0
+	MVTACHI R3, A1
+	MVTACLO R4, A1
+
 	;/* Loop, checking each itteration that each register still contains the
 	;expected value. */
 TestLoop1:								
@@ -112,6 +124,26 @@ TestLoop1:
 	NOP								
 	NOP								
 	
+	;/* Check accumulators. */
+	MVFACHI	#0, A0, R15
+	CMP #1, R15
+	BNE RegTest1Error
+	MVFACLO	#0, A0, R15
+	CMP #2, R15
+	BNE RegTest1Error
+	MVFACGU	#0, A0, R15
+	CMP #10, R15
+	BNE RegTest1Error
+	MVFACHI	#0, A1, R15
+	CMP #3, R15
+	BNE RegTest1Error
+	MVFACLO	#0, A1, R15
+	CMP #4, R15
+	BNE RegTest1Error
+	MVFACGU	#0, A1, R15
+	CMP #20, R15
+	BNE RegTest1Error
+
 	;/* Restore the clobbered registers. */
 	POPM	R14-R15						
 	
@@ -160,7 +192,13 @@ RegTest1Error:
 ;/* This function is explained in the comments at the top of main.c. */
 _vRegTest2Implementation:
 
-	;/* Put a known value in each register. */
+	;/* Put a known value in the guard byte of the accumulators. */
+	MOV.L	#1H, R1
+	MVTACGU R1, A0
+	MOV.L	#2H, R1
+	MVTACGU R1, A1
+
+	;/* Put a known value in each general purpose register. */
 	MOV.L	#10H, R1
 	MOV.L	#20H, R2
 	MOV.L	#30H, R3
@@ -176,7 +214,13 @@ _vRegTest2Implementation:
 	MOV.L	#130H, R13
 	MOV.L	#140H, R14
 	MOV.L	#150H, R15
-	
+
+	;/* Put a known value in the hi and low of the accumulators. */
+	MVTACHI R1, A0
+	MVTACLO R2, A0
+	MVTACHI R3, A1
+	MVTACLO R4, A1
+
 	;/* Loop, checking each itteration that each register still contains the
 	;expected value. */
 TestLoop2:								
@@ -190,6 +234,26 @@ TestLoop2:
 	ADD	#1, R15						
 	MOV.L	R15, [ R14 ]
 	
+	;/* Check accumulators. */
+	MVFACHI	#0, A0, R15
+	CMP #10H, R15
+	BNE RegTest1Error
+	MVFACLO	#0, A0, R15
+	CMP #20H, R15
+	BNE RegTest1Error
+	MVFACGU	#0, A0, R15
+	CMP #1H, R15
+	BNE RegTest1Error
+	MVFACHI	#0, A1, R15
+	CMP #30H, R15
+	BNE RegTest1Error
+	MVFACLO	#0, A1, R15
+	CMP #40H, R15
+	BNE RegTest1Error
+	MVFACGU	#0, A1, R15
+	CMP #2H, R15
+	BNE RegTest1Error
+
 	;/* Restore the clobbered registers. */
 	POPM	R14-R15						
 	

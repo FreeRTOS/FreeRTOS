@@ -386,7 +386,7 @@ unsigned long ulErrorFound = pdFALSE;
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-//			ulErrorFound = pdTRUE;
+			ulErrorFound = pdTRUE;
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
@@ -414,11 +414,6 @@ static void prvRegTestTaskEntry1( void *pvParameters )
 	in correctly. */
 	if( pvParameters == mainREG_TEST_TASK_1_PARAMETER )
 	{
-		/* The reg test task also tests the floating point registers.  Tasks
-		that use the floating point unit must call vPortTaskUsesFPU() before
-		any floating point instructions are executed. */
-//		vPortTaskUsesFPU();
-
 		/* Start the part of the test that is written in assembler. */
 		vRegTest1Implementation();
 	}
@@ -437,11 +432,6 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 	in correctly. */
 	if( pvParameters == mainREG_TEST_TASK_2_PARAMETER )
 	{
-		/* The reg test task also tests the floating point registers.  Tasks
-		that use the floating point unit must call vPortTaskUsesFPU() before
-		any floating point instructions are executed. */
-//		vPortTaskUsesFPU();
-
 		/* Start the part of the test that is written in assembler. */
 		vRegTest2Implementation();
 	}

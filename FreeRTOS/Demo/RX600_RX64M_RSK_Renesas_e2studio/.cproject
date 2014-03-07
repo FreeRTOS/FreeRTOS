@@ -156,6 +156,7 @@
 								</option>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.cpu.1044477391" name="CPU" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.cpu" value="RX64M" valueType="string"/>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.826566403" name="Optimize level" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.0" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa.1008597307" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa.rxv2" valueType="enumerated"/>
 								<inputType id="%Base.Compiler.Shc.C.Input.Id.1890187174" name="C Input" superClass="%Base.Compiler.Shc.C.Input.Id"/>
 								<inputType id="%Base.Compiler.Shc.C.Input1.Id.396506632" name="C++ Input" superClass="%Base.Compiler.Shc.C.Input1.Id"/>
 							</tool>
@@ -164,12 +165,11 @@
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Assembler.option.address.1626852461" name="Address" superClass="com.renesas.cdt.rxc.HardwareDebug.Assembler.option.address" value="00000000" valueType="string"/>
 								<option id="com.renesas.cdt.renesas.Assembler.option.userDefine.879789928" name="User-defined options" superClass="com.renesas.cdt.renesas.Assembler.option.userDefine" valueType="stringList">
 									<listOptionValue builtIn="false" value="-nologo"/>
-									<listOptionValue builtIn="false" value=""/>
-									<listOptionValue builtIn="false" value=""/>
 								</option>
+								<option id="com.renesas.cdt.rxc.HardwareDebug.Assembler.option.isa.232270741" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.HardwareDebug.Assembler.option.isa" value="RXv2 architecture" valueType="enumerated"/>
 								<inputType id="%Base.Assembler.shcInputType.Id.1753262605" name="Assembler InputType" superClass="%Base.Assembler.shcInputType.Id"/>
 							</tool>
-							<tool command="optlnk" id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.1242574850" name="Linker" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id">
+							<tool command="rlink" id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.1242574850" name="Linker" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id">
 								<option id="com.renesas.cdt.renesas.Linker.option.rom.1225547808" name="ROM to RAM mapped section" superClass="com.renesas.cdt.renesas.Linker.option.rom" valueType="stringList">
 									<listOptionValue builtIn="false" value="D=R"/>
 									<listOptionValue builtIn="false" value="D_1=R_1"/>
@@ -198,7 +198,11 @@
 									<listOptionValue builtIn="false" value="&quot;.\RTOSDemo.lib&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.renesas.Linker.option.typeOfOutputFileOption.2104356968" name="Type of output file:" superClass="com.renesas.cdt.renesas.Linker.option.typeOfOutputFileOption" value="Stype via absolute" valueType="enumerated"/>
-								<option id="com.renesas.cdt.renesas.Linker.option.linkOrder.1520767120" name="%option.name.179" superClass="com.renesas.cdt.renesas.Linker.option.linkOrder" valueType="stringList"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.linkOrder.1520767120" name="%option.name.179" superClass="com.renesas.cdt.renesas.Linker.option.linkOrder"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.userDefined.1074366648" name="User-defined options" superClass="com.renesas.cdt.renesas.Linker.option.userDefined" valueType="stringList">
+									<listOptionValue builtIn="false" value="-nomessage"/>
+									<listOptionValue builtIn="false" value="-nologo"/>
+								</option>
 							</tool>
 							<tool command="lbgrx" id="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.1405860605" name="Standard Library" superClass="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id">
 								<option id="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.endian.402722613" name="Data Endian" superClass="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.endian" value="Little-endian data" valueType="enumerated"/>
@@ -211,8 +215,9 @@
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.rxcnewCPP.207113089" name="new (EC++): Memory allocation and deallocation routines" superClass="com.renesas.cdt.renesas.StandardLibrary.option.rxcnewCPP" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mode.1359818153" name="Mode" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mode" value="com.renesas.cdt.renesas.StandardLibrary.option.mode.buildOnlyWhenOptionsChanged" valueType="enumerated"/>
 								<option id="com.renesas.cdt.renesas.StandardLibrary.option.userSpecifiedLibrary.1612193964" name="User-specified library file" superClass="com.renesas.cdt.renesas.StandardLibrary.option.userSpecifiedLibrary" value="C:\E\Dev\FreeRTOS\WORKIN~1\FreeRTOS\Demo\RX2097~1\HARDWA~2\RTOSDemo.lib" valueType="string"/>
+								<option id="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.isa.328950611" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.isa" value="RXv2 architecture" valueType="enumerated"/>
 							</tool>
-							<tool command="optlnk" id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.1803349405" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id"/>
+							<tool command="rlink" id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.1803349405" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.renesas.cdt.rxc.hardwaredebug.win32.configuration.Id.534038930.435561194" name="/" resourcePath="Source/Common_Demo_Source/Minimal">

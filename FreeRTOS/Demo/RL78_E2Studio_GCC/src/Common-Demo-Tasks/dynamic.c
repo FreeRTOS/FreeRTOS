@@ -197,11 +197,11 @@ void vStartDynamicPriorityTasks( void )
 	defined to be less than 1. */
 	vQueueAddToRegistry( xSuspendedTestQueue, ( signed char * ) "Suspended_Test_Queue" );
 
-	xTaskCreate( vContinuousIncrementTask, ( signed char * ) "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinousIncrementHandle );
-	xTaskCreate( vLimitedIncrementTask, ( signed char * ) "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
-	xTaskCreate( vCounterControlTask, ( signed char * ) "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vQueueSendWhenSuspendedTask, ( signed char * ) "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vQueueReceiveWhenSuspendedTask, ( signed char * ) "SUSP_RX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vContinuousIncrementTask, "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinousIncrementHandle );
+	xTaskCreate( vLimitedIncrementTask, "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
+	xTaskCreate( vCounterControlTask, "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vQueueSendWhenSuspendedTask, "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 }
 /*-----------------------------------------------------------*/
 

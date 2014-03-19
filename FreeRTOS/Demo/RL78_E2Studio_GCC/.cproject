@@ -256,7 +256,7 @@
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.1827952485" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.misc2.1309529749" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
-								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.1713741321" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions" valueType="stringList"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.1713741321" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1471081059" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.1237074300" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>
@@ -378,6 +378,105 @@
 								<option command="-stats" id="com.renesas.cdt.core.Linker.option.misc8.1687098122" name="Compute and display statistics about the operation of the linker(-stats)" superClass="com.renesas.cdt.core.Linker.option.misc8" value="true" valueType="boolean"/>
 							</tool>
 							<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id.708363548" name="Objcopy" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+		</cconfiguration>
+		<cconfiguration id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.661607105">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.661607105" moduleId="org.eclipse.cdt.core.settings" name="RSKRL78L1C">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="mot" artifactName="RTOSDemo" buildArtefactType="com.renesas.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=com.renesas.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf *.lst *.lis *.lpp *.map" description="" id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.661607105" name="RSKRL78L1C" parent="com.renesas.cdt.RL78.configuration.hardwaredebug">
+					<folderInfo id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.661607105." name="/" resourcePath="">
+						<toolChain id="com.renesas.cdt.RL78.toolChain.hardwaredebugConf.1925187785" name="KPIT GNURL78-ELF Toolchain" superClass="com.renesas.cdt.RL78.toolChain.hardwaredebugConf">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.rl78.hardwaredebug.win32.targetPlatform.464468283" osList="win32" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.targetPlatform"/>
+							<builder buildPath="${workspace_loc:/RTOSDemo/HardwareDebug}" id="com.renesas.cdt.rl78.hardwaredebug.win32.builder.Id.991079889" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU Make Builder" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.builder.Id"/>
+							<tool command="rl78-elf-libgen" id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.libgen.Id.150253841" name="Library Generator" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.libgen.Id">
+								<option id="com.renesas.cdt.core.LibraryGenerator.option.stdio.1939771009" name="stdio.h : Performs input/output handling" superClass="com.renesas.cdt.core.LibraryGenerator.option.stdio" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.LibraryGenerator.option.stdlib.200300486" name="stdlib.h : Performs C program standard processing such as storage area management" superClass="com.renesas.cdt.core.LibraryGenerator.option.stdlib" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.LibraryGenerator.option.string.1968503186" name="string.h : Performs string comparison, copying " superClass="com.renesas.cdt.core.LibraryGenerator.option.string" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.LibraryGenerator.option.selectLibrary.689655144" name="Select library" superClass="com.renesas.cdt.core.LibraryGenerator.option.selectLibrary" value="Optimized" valueType="enumerated"/>
+								<option id="com.renesas.cdt.core.LibraryGenerator.option.libraryType.2132503809" name="Library type" superClass="com.renesas.cdt.core.LibraryGenerator.option.libraryType" value="Project-Built" valueType="enumerated"/>
+							</tool>
+							<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.compiler.Id.437851717" name="Compiler" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.compiler.Id">
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.cpuType.2100632987" name="CPU Type" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.cpuType" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.cpuType.l1c" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.mmul.1101181582" name="Multiplication code Generation Option" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.mmul" value="None" valueType="enumerated"/>
+								<option id="com.renesas.cdt.core.Compiler.option.includeFileDir.820363941" name="Include file directories" superClass="com.renesas.cdt.core.Compiler.option.includeFileDir" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/rl78-elf/optlibinc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Common-Demo-Tasks/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/portable/GCC/RL78}&quot;"/>
+								</option>
+								<option id="com.renesas.cdt.core.Compiler.option.CPUSeries.823867201" name="Cpu Series" superClass="com.renesas.cdt.core.Compiler.option.CPUSeries" value="R5F10JBC" valueType="string"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning14.1288237182" name="Print extra warning messages(-Wextra)" superClass="com.renesas.cdt.core.Compiler.option.warning14" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.stdWarnings.1684617262" name="Standard Warnings" superClass="com.renesas.cdt.core.Compiler.option.stdWarnings" value="com.renesas.cdt.core.Compiler.option.stdWarnings.enableAll" valueType="enumerated"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning1.806299273" name="Issue Warning if an array subscript has type char(-Wchar-subscripts)" superClass="com.renesas.cdt.core.Compiler.option.warning1" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning2.1901581096" name="Issue Warning if comment appears within comment(-Wcomment)" superClass="com.renesas.cdt.core.Compiler.option.warning2" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning3.1541543076" name="Issue Warning if string functions format is incorrect(-Wformat)" superClass="com.renesas.cdt.core.Compiler.option.warning3" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning4.1161378198" name="Issue Warning if a function or parameter is implicitly declared(-Wimplicit)" superClass="com.renesas.cdt.core.Compiler.option.warning4" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning5.1789292050" name="Disable Warning about the use of #import(-Wno-import)" superClass="com.renesas.cdt.core.Compiler.option.warning5" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning6.84501834" name="Issue Warning if parentheses are omitted in certain contexts(-Wparentheses)" superClass="com.renesas.cdt.core.Compiler.option.warning6" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning7.1338708112" name="Issue Warning of possible return type problems(-Wreturn-type)" superClass="com.renesas.cdt.core.Compiler.option.warning7" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning8.374855392" name="Issue Warning of possible switch statement problems(-Wswitch)" superClass="com.renesas.cdt.core.Compiler.option.warning8" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning9.1983388469" name="Issue Warning if any trigraphs are encountered(-Wtrigraphs)" superClass="com.renesas.cdt.core.Compiler.option.warning9" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning10.983060895" name="Issue Warning if a variable is unused aside from its declaration(-Wunused)" superClass="com.renesas.cdt.core.Compiler.option.warning10" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning11.923794925" name="Issue Warning if an uninitialised automatic variable is used(-Wuninitialized)" superClass="com.renesas.cdt.core.Compiler.option.warning11" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning12.1620427209" name="Issue Warning of member initialisation mismatch(-Wreorder)" superClass="com.renesas.cdt.core.Compiler.option.warning12" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.warning13.1082135198" name="Issue Warning of bad sign comparisions(-Wsign-compare)" superClass="com.renesas.cdt.core.Compiler.option.warning13" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat.549479064" name="Debug format" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat.dwarf" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.452759366" name="Optimization level" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.none" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.macroDefines.1552305025" name="Macro Defines" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.macroDefines" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="RSKRL78L1C"/>
+								</option>
+								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.330377434" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc26.685469544" name="Ignore 'inline' keyword(-fno-inline)" superClass="com.renesas.cdt.core.Compiler.option.misc26" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc48.1598779240" name="List macro definitions but omit arguments and contents(-dN)" superClass="com.renesas.cdt.core.Compiler.option.misc48" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.965893190" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc2.1239011445" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
+								<inputType id="%Base.Compiler.C.InputType.Id.1475424543" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
+								<inputType id="Base.Compiler.CPP.InputType.Id.13063581" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
+							</tool>
+							<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.assembler.Id.1767021126" name="Assembler" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.assembler.Id">
+								<option id="com.renesas.cdt.core.Assembler.option.includeFileDirectories.584727211" name="Include file directories" superClass="com.renesas.cdt.core.Assembler.option.includeFileDirectories" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}/src&quot;"/>
+								</option>
+								<option id="com.renesas.cdt.core.Assembler.option.includeSymbolTable.1481239232" name="Include Symbol Table(-as)" superClass="com.renesas.cdt.core.Assembler.option.includeSymbolTable" value="true" valueType="boolean"/>
+								<inputType id="%Base.Assembler.inputType.Id.1995981014" name="Assembler InputType" superClass="%Base.Assembler.inputType.Id"/>
+							</tool>
+							<tool command="rl78-elf-ld" commandLinePattern="${COMMAND} ${OUTPUT_FLAG}${OUTPUT_PREFIX} ${OUTPUT}${INPUTS} ${FLAGS}" id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.linker.Id.1983403774" name="Linker" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.linker.Id">
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveSearchDirectories.1610499591" name="Archive search directories" superClass="com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveSearchDirectories" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${CONFIGDIR}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/lib/gcc/rl78-elf//${GCC_VERSION}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/lib/gcc/rl78-elf//${GCC_VERSION}&quot;"/>
+								</option>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveLibraryFiles.26850450" name="Archive (library) files" superClass="com.renesas.cdt.rl78.HardwareDebug.Linker.option.archiveLibraryFiles" valueType="stringList">
+									<listOptionValue builtIn="false" value="${ProjName}"/>
+									<listOptionValue builtIn="false" value="gcc"/>
+								</option>
+								<option id="com.renesas.cdt.core.Linker.option.userDefinedOptions.490918053" name="User defined options" superClass="com.renesas.cdt.core.Linker.option.userDefinedOptions" valueType="stringList">
+									<listOptionValue builtIn="false" value="-e_PowerON_Reset"/>
+								</option>
+								<option command="-stats" id="com.renesas.cdt.core.Linker.option.misc8.1365322726" name="Compute and display statistics about the operation of the linker(-stats)" superClass="com.renesas.cdt.core.Linker.option.misc8" value="true" valueType="boolean"/>
+							</tool>
+							<tool id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id.529097714" name="Objcopy" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

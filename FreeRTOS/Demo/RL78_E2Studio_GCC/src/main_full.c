@@ -228,7 +228,11 @@ void main_full( void )
 	is provided on the FreeRTOS.org WEB site. */
 	vStartDynamicPriorityTasks();
 	vStartPolledQueueTasks( tskIDLE_PRIORITY );
-	vCreateBlockTimeTasks();
+
+	/* Additional tasks can be added by un-commenting the line below on devices
+	with sufficient RAM for a larger heap (see configTOTAL_HEAP_SIZE in
+	FreeRTOSConfig.h). */
+	/*vCreateBlockTimeTasks();*/
 
 	/* Create the RegTest tasks as described at the top of this file. */
 	xTaskCreate( prvRegTest1Entry,			/* The function that implements the task. */
@@ -308,7 +312,9 @@ static unsigned short usLastRegTest1Counter = 0, usLastRegTest2Counter = 0;
 
 	if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 	{
-		xErrorStatus = pdFAIL;
+		/* Un-comment this line if the block time tasks are included in the
+		demo. */
+		/* xErrorStatus = pdFAIL; */
 	}
 
 	/* Indicate an error if either of the reg test loop counters have not

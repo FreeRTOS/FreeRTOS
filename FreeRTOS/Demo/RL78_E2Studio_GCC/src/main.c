@@ -111,8 +111,11 @@ or 0 to run the more comprehensive test and demo application. */
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
-extern void main_blinky( void );
-extern void main_full( void );
+#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	extern void main_blinky( void );
+#else
+    extern void main_full( void );
+#endif
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */

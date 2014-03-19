@@ -56,19 +56,19 @@
     ***************************************************************************
 
 
-    http://www.FreeRTOS.org - Documentation, books, training, latest versions, 
+    http://www.FreeRTOS.org - Documentation, books, training, latest versions,
     license and Real Time Engineers Ltd. contact details.
 
     http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
     including FreeRTOS+Trace - an indispensable productivity tool, and our new
     fully thread aware and reentrant UDP/IP stack.
 
-    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High 
-    Integrity Systems, who sell the code with commercial support, 
+    http://www.OpenRTOS.com - Real Time Engineers ltd license FreeRTOS to High
+    Integrity Systems, who sell the code with commercial support,
     indemnification and middleware, under the OpenRTOS brand.
-    
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety 
-    engineered and independently SIL3 certified version for use in safety and 
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
     mission critical applications that require provable dependability.
 */
 
@@ -140,16 +140,16 @@ static QueueHandle_t xPolledQueue;
 	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware 
+	in use.  The queue registry is provided as a means for kernel aware
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( xPolledQueue, ( signed char * ) "Poll_Test_Queue" );
 
 	/* Spawn the producer and consumer. */
-	xTaskCreate( vPolledQueueConsumer, ( signed char * ) "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( TaskHandle_t * ) NULL );
-	xTaskCreate( vPolledQueueProducer, ( signed char * ) "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( TaskHandle_t * ) NULL );
+	xTaskCreate( vPolledQueueConsumer, "QConsNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( TaskHandle_t * ) NULL );
+	xTaskCreate( vPolledQueueProducer, "QProdNB", pollqSTACK_SIZE, ( void * ) &xPolledQueue, uxPriority, ( TaskHandle_t * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -159,7 +159,7 @@ unsigned short usValue = ( unsigned short ) 0;
 signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 	for( ;; )
-	{		
+	{
 		for( xLoop = 0; xLoop < pollqVALUES_TO_PRODUCE; xLoop++ )
 		{
 			/* Send an incrementing number on the queue without blocking. */
@@ -198,7 +198,7 @@ unsigned short usData, usExpectedValue = ( unsigned short ) 0;
 signed portBASE_TYPE xError = pdFALSE;
 
 	for( ;; )
-	{		
+	{
 		/* Loop until the queue is empty. */
 		while( uxQueueMessagesWaiting( *( ( QueueHandle_t * ) pvParameters ) ) )
 		{

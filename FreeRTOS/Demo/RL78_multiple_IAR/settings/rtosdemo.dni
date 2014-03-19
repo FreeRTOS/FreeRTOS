@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-225007159
+Checksum=1325488880
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -8,10 +8,10 @@ Enabled=_ 0
 [CodeCoverage]
 Enabled=_ 0
 [E1]
-Map0=0,0,32767,32768
-Map1=1,1042688,1048319,5632
+Map0=0,0,262143,262144
+Map1=1,1031936,1048319,16384
 MapEntries=2
-HWsettings=2,0,1,2,4,0,1,0,16,1,0
+HWsettings=3,0,1,2,4,0,1,0,16,1,0
 HWsettingsCube=2,4294967295,2,4294967295,0,1,0,0
 HWsettingsRsuid=00000000000000000000
 EventEntries=0
@@ -59,10 +59,10 @@ TraceSettings=128,0,0,0,0,0,8192
 TimerSettings=0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 CoverSettings=1048192,1048207,0
 Version=1,trace.txt
-LastDevFile=DR5F10JGC.DVF
+LastDevFile=DR5F110PJ.DVF
 EmulType=64
 BreakToggle=0
-EventLimits=0,1,1,0,0,0,1
+EventLimits=0,2,2,0,0,0,2
 LastSetupFailed=0
 ForceHwSetup=0
 [StackPlugin]

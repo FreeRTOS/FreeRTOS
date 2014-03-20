@@ -1,0 +1,5 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+PATH := $(PATH):C:\PROGRA~1\KPIT\GNURXV~1.01-\rx-ELF\rx-ELF\bin;C:\PROGRA~1\KPIT\GNURXV~1.01-\rx-ELF\rx-ELF\libexec\gcc\rx-elf\4.7-GNURX_v14.01

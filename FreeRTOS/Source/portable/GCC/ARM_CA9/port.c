@@ -120,7 +120,7 @@ this value. */
 
 /* In all GICs 255 can be written to the priority mask register to unmask all
 (but the lowest) interrupt priority. */
-#define portUNMASK_VALUE				( 0xFF )
+#define portUNMASK_VALUE				( 0xFFUL )
 
 /* Tasks are not created with a floating point context, but can be given a
 floating point context after they have been created.  A variable is stored as
@@ -407,7 +407,7 @@ void FreeRTOS_Tick_Handler( void )
 	necessary to turn off interrupts in the CPU itself while the ICCPMR is being
 	updated. */
 	portCPU_IRQ_DISABLE();
-	portICCPMR_PRIORITY_MASK_REGISTER = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
+	portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 	__asm(	"dsb		\n"
 			"isb		\n" );
 	portCPU_IRQ_ENABLE();
@@ -453,7 +453,7 @@ uint32_t ulReturn;
 	/* Interrupt in the CPU must be turned off while the ICCPMR is being
 	updated. */
 	portCPU_IRQ_DISABLE();
-	if( portICCPMR_PRIORITY_MASK_REGISTER == ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) )
+	if( portICCPMR_PRIORITY_MASK_REGISTER == ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) )
 	{
 		/* Interrupts were already masked. */
 		ulReturn = pdTRUE;
@@ -461,7 +461,7 @@ uint32_t ulReturn;
 	else
 	{
 		ulReturn = pdFALSE;
-		portICCPMR_PRIORITY_MASK_REGISTER = ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
+		portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 		__asm(	"dsb		\n"
 				"isb		\n" );
 	}
@@ -493,7 +493,7 @@ uint32_t ulReturn;
 		The following links provide detailed information:
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html
 		http://www.freertos.org/FAQHelp.html */
-		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER >= ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
+		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER >= ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
 
 		/* Priority grouping:  The interrupt controller (GIC) allows the bits
 		that define each interrupt's priority to be split between bits that

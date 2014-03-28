@@ -64,7 +64,7 @@
 */
 
 /*
- * This file contains the non-portable and therefore RX62N specific parts of
+ * This file contains the non-portable and therefore RX64M specific parts of
  * the IntQueue standard demo task - namely the configuration of the timers
  * that generate the interrupts and the interrupt entry points.
  */
@@ -79,16 +79,18 @@
 
 /* Renesas includes. */
 #include "r_cg_macrodriver.h"
+#include "RegisterWriteProtect.h"
 
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
 #define tmrTIMER_2_3_FREQUENCY	( 2001UL )
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-#if 0
 	/* Ensure interrupts do not start until full configuration is complete. */
 	portENTER_CRITICAL();
 	{
+		EnablePRCR( PRC1_BIT );
+
 		/* Cascade two 8bit timer channels to generate the interrupts. 
 		8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
 		utilised for this test. */
@@ -120,41 +122,41 @@ void vInitialiseTimerForIntQueueTest( void )
 		/* Divide PCLK by 8. */
 		TMR1.TCCR.BIT.CKS = 2;
 		TMR3.TCCR.BIT.CKS = 2;
-#warning Need to enable and configure interrupts here.
+
 		/* Enable TMR 0, 2 interrupts. */
-//		IEN( TMR0, CMIA0 ) = 1;
-//		IEN( TMR2, CMIA2 ) = 1;
-// CMT		_IEN( _CMT0_CMI0 ) = 1;
+		TMR0.TCR.BIT.CMIEA = 1;
+		TMR2.TCR.BIT.CMIEA = 1;
 
-		/* ...and set its priority to the application defined kernel priority. */
-// CMT		_IPR( _CMT0_CMI0 ) = configKERNEL_INTERRUPT_PRIORITY;
+		/* Map TMR0 CMIA0 interrupt to vector slot B number 128 and set
+		priority above the kernel's priority, but below the max syscall
+		priority. */
+	    ICU.SLIBXR128.BYTE = 3; /* Three is TMR0 compare match A. */
+	    IPR( PERIB, INTB128 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
+		IEN( PERIB, INTB128 ) = 1;
 
+		/* Ensure that the flag is set to 0, otherwise the interrupt will not be
+		accepted. */
+		IR( PERIB, INTB128 ) = 0;
 
-
-		/* Set the timer interrupts to be above the kernel.  The interrupts are
-		assigned different priorities so they nest with each other. */
-//		IPR( TMR0, CMIA0 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
-//		IPR( TMR2, CMIA2 ) = ( configMAX_SYSCALL_INTERRUPT_PRIORITY - 2 );
+		/* Do the same for TMR2, but to vector 129. */
+	    ICU.SLIBXR129.BYTE = 9; /* Nine is TMR2 compare match A. */
+	    IPR( PERIB, INTB129 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 2;
+		IEN( PERIB, INTB129 ) = 1;
+		IR( PERIB, INTB129 ) = 0;
 	}
 	portEXIT_CRITICAL();
-	
-	/* Ensure the interrupts are clear as they are edge detected. */
-//	IR( TMR0, CMIA0 ) = 0;
-//	IR( TMR2, CMIA2 ) = 0;
-#endif
 }
 /*-----------------------------------------------------------*/
 
-//#pragma interrupt ( vT0_1InterruptHandler( vect = VECT_TMR0_CMIA0, enable ) )
-// CMT#pragma interrupt (vT0_1InterruptHandler( vect = _VECT( _CMT0_CMI0 ), enable ) )
-void vT0_1InterruptHandler( void )
+#pragma interrupt ( Excep_PERIB_INTB128( vect = 128 ) )
+void Excep_PERIB_INTB128( void )
 {
 	portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
-//#pragma interrupt ( vT2_3InterruptHandler( vect = VECT_TMR2_CMIA2, enable ) )
-void vT2_3InterruptHandler( void )
+#pragma interrupt ( Excep_PERIB_INTB129( vect = 129 ) )
+void Excep_PERIB_INTB129( void )
 {
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }

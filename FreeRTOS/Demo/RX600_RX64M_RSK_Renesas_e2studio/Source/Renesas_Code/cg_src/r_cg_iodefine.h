@@ -1,19 +1,15 @@
-/********************************************************************************
-*
-* Device     : RX/RX600/RX64M
-*
-* File Name  : iodefine.h
-*
-* Abstract   : Definition of I/O Register
-*
-* History    : 0.20 (2013-05-30)  [Hardware Manual Revision : 0.40]
-*
-* Note       : This is a typical example.
-*
-* Copyright (C) 2013 Renesas Electronics Corporation and
-* Renesas Solutions Corp. All rights reserved.
-*
-*********************************************************************************/
+/********************************************************************************/
+/*                                                                              */
+/* Device     : RX/RX600/RX64M                                                  */
+/* File Name  : iodefine.h                                                      */
+/* Abstract   : Definition of I/O Register.                                     */
+/* History    : V0.8A  (2014-02-18)  [Hardware Manual Revision : 0.80]          */
+/* Note       : This is a typical example.                                      */
+/*                                                                              */
+/*  Copyright(c) 2014 Renesas Electronics Corp.                                 */
+/*                  And Renesas Solutions Corp. ,All Rights Reserved.           */
+/*                                                                              */
+/********************************************************************************/
 /*                                                                              */
 /*  DESCRIPTION : Definition of ICU Register                                    */
 /*  CPU TYPE    : RX64M                                                         */
@@ -44,10 +40,12 @@
 /*     The bit access operation is "MSTP(name)".                                */
 /*     The name that can be used is a macro name defined with "iodefine.h".     */
 /*     for example :                                                            */
-/*       MSTP(TMR2) = 0;    // TMR2,TMR3                          expands to :  */
+/*       MSTP(TMR2) = 0;    // TMR2,TMR3,TMR23                    expands to :  */
 /*         SYSTEM.MSTPCRA.BIT.MSTPA4  = 0;                                      */
 /*       MSTP(SCI0) = 0;    // SCI0,SMCI0                         expands to :  */
 /*         SYSTEM.MSTPCRB.BIT.MSTPB31 = 0;                                      */
+/*       MSTP(MTU4) = 0;    // MTU,MTU0,MTU1,MTU2,MTU3,MTU4,...   expands to :  */
+/*         SYSTEM.MSTPCRA.BIT.MSTPA9  = 0;                                      */
 /*       MSTP(TPU4) = 0;    // TPU0,TPU1,TPU2,TPU3,TPU4,TPU5      expands to :  */
 /*         SYSTEM.MSTPCRA.BIT.MSTPA13 = 0;                                      */
 /*       MSTP(CMT3) = 0;    // CMT2,CMT3                          expands to :  */
@@ -889,9 +887,9 @@ struct st_can {
 				unsigned long EID:18;
 			} BIT;
 		} ID;
-		unsigned short DLC;		
+		unsigned short DLC;
 		unsigned char  DATA[8];
-		unsigned short TS;		
+		unsigned short TS;
 	} MB[32];
 	union {
 		unsigned long LONG;
@@ -1278,7 +1276,7 @@ struct st_cmtw {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned short CLLR:3;
+			unsigned short CCLR:3;
 			unsigned short :3;
 			unsigned short CMS:1;
 			unsigned short :1;
@@ -1286,7 +1284,7 @@ struct st_cmtw {
 			unsigned short OC0IE:1;
 			unsigned short IC1IE:1;
 			unsigned short IC0IE:1;
-			unsigned short CM2IE:1;
+			unsigned short CMWIE:1;
 			unsigned short :1;
 			unsigned short CKS:2;
 		} BIT;
@@ -1295,7 +1293,7 @@ struct st_cmtw {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned short CM2E:1;
+			unsigned short CMWE:1;
 			unsigned short :1;
 			unsigned short OC1E:1;
 			unsigned short OC0E:1;
@@ -1332,44 +1330,8 @@ struct st_crc {
 };
 
 struct st_da {
-//	union {
-//		unsigned short WORD;
-//		struct {
-//			unsigned short :4;
-//			unsigned short B11:1;
-//			unsigned short B10:1;
-//			unsigned short B9:1;
-//			unsigned short B8:1;
-//			unsigned short B7:1;
-//			unsigned short B6:1;
-//			unsigned short B5:1;
-//			unsigned short B4:1;
-//			unsigned short B3:1;
-//			unsigned short B2:1;
-//			unsigned short B1:1;
-//			unsigned short B0:1;
-//		} BIT;
-//	} DADR0;
-//	union {
-//		unsigned short WORD;
-//		struct {
-//			unsigned short :4;
-//			unsigned short B11:1;
-//			unsigned short B10:1;
-//			unsigned short B9:1;
-//			unsigned short B8:1;
-//			unsigned short B7:1;
-//			unsigned short B6:1;
-//			unsigned short B5:1;
-//			unsigned short B4:1;
-//			unsigned short B3:1;
-//			unsigned short B2:1;
-//			unsigned short B1:1;
-//			unsigned short B0:1;
-//		} BIT;
-//	} DADR1;
 	unsigned short DADR0;
-	unsigned short DADR1;	
+	unsigned short DADR1;
 	union {
 		unsigned char BYTE;
 		struct {
@@ -1398,6 +1360,14 @@ struct st_da {
 			unsigned char DAAMP0:1;
 		} BIT;
 	} DAAMPCR;
+	char           wk1[17783];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :6;
+			unsigned char AMADSEL1:1;
+		} BIT;
+	} DAADUSR;
 };
 
 struct st_dmac {
@@ -1421,10 +1391,8 @@ struct st_dmac {
 };
 
 struct st_dmac0 {
-//	unsigned long  DMSAR;
-//	unsigned long  DMDAR;
 	void          *DMSAR;
-	void          *DMDAR;	
+	void          *DMDAR;
 	unsigned long  DMCRA;
 	unsigned short DMCRB;
 	char           wk0[2];
@@ -1499,11 +1467,9 @@ struct st_dmac0 {
 	} DMCSL;
 };
 
-struct st_dmac1 {	
-//	unsigned long  DMSAR;
-//	unsigned long  DMDAR;
+struct st_dmac1 {
 	void          *DMSAR;
-	void          *DMDAR;	
+	void          *DMDAR;
 	unsigned long  DMCRA;
 	unsigned short DMCRB;
 	char           wk0[2];
@@ -1604,8 +1570,7 @@ struct st_dtc {
 		} BIT;
 	} DTCCR;
 	char           wk0[3];
-//	unsigned long  DTCVBR;
-	void          *DTCVBR;	
+	void          *DTCVBR;
 	union {
 		unsigned char BYTE;
 		struct {
@@ -1644,34 +1609,55 @@ struct st_eccram {
 		unsigned char BYTE;
 		struct {
 			unsigned char :7;
-			unsigned char RAMERR:1;
+			unsigned char ECC2ERR:1;
 		} BIT;
-	} ECCRAMSTS;
-	char           wk0[2];
+	} ECCRAM2STS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char KW:7;
-			unsigned char RAMPRCR:1;
+			unsigned char :7;
+			unsigned char ECC1STSEN:1;
 		} BIT;
-	} ECCRAMPRCR;
-	char           wk1[3];
+	} ECCRAM1STSEN;
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :7;
+			unsigned char ECC1ERR:1;
+		} BIT;
+	} ECCRAM1STS;
+//	union {
+//		unsigned char BYTE;
+//		struct {
+//			unsigned char KW:7;
+//			unsigned char PRCR:1;
+//		} BIT;
+//	} ECCRAMPRCR;
+	unsigned char ECCRAMPRCR;
+	char           wk0[3];
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :13;
-			unsigned long READ:16;
+			unsigned long :17;
+			unsigned long ECC2EAD:12;
 		} BIT;
-	} ECCRAMECAD;
-	char           wk2[4];
+	} ECCRAM2ECAD;
 	union {
-		unsigned char BYTE;
+		unsigned long LONG;
 		struct {
-			unsigned char KW2:7;
-			unsigned char RAMPRCR2:1;
+			unsigned long :17;
+			unsigned long ECC1EAD:12;
 		} BIT;
-	} ECCRAMPRCR2;
-	char           wk3[3];
+	} ECCRAM1ECAD;
+//	union {
+//		unsigned char BYTE;
+//		struct {
+//			unsigned char KW2:7;
+//			unsigned char PRCR2:1;
+//		} BIT;
+//	} ECCRAMPRCR2;
+	unsigned char ECCRAMPRCR2;
+	char           wk1[3];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -1709,10 +1695,8 @@ struct st_edmac {
 		} BIT;
 	} EDRRR;
 	char           wk2[4];
-//	unsigned long  TDLAR;
 	void          *TDLAR;
 	char           wk3[4];
-//	unsigned long  RDLAR;
 	void          *RDLAR;
 	char           wk4[4];
 	union {
@@ -1782,18 +1766,8 @@ struct st_edmac {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :20;
-			unsigned long CNDCE:1;
-			unsigned long DLCCE:1;
-			unsigned long CDCE:1;
-			unsigned long TROCE:1;
+			unsigned long :24;
 			unsigned long RMAFCE:1;
-			unsigned long :2;
-			unsigned long RRFCE:1;
-			unsigned long RTLFCE:1;
-			unsigned long RTSFCE:1;
-			unsigned long PRECE:1;
-			unsigned long CERFCE:1;
 		} BIT;
 	} TRSCER;
 	char           wk7[4];
@@ -1826,8 +1800,7 @@ struct st_edmac {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :30;
-			unsigned long RNC:1;
+			unsigned long :31;
 			unsigned long RNR:1;
 		} BIT;
 	} RMCR;
@@ -1882,197 +1855,11 @@ struct st_edmac {
 		} BIT;
 	} TRIMD;
 	char           wk13[72];
-//	unsigned long  RBWAR;
 	void          *RBWAR;
-//	unsigned long  RDFAR;
 	void          *RDFAR;
 	char           wk14[4];
-//	unsigned long  TBRAR;
-	void          *TBRAR;	
-//	unsigned long  TDFAR;
-	void          *TDFAR;	
-};
-
-struct st_edmacp {
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :25;
-			unsigned long DE:1;
-			unsigned long DL:2;
-			unsigned long :3;
-			unsigned long SWR:1;
-		} BIT;
-	} EDMR;
-	char           wk0[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :31;
-			unsigned long TR:1;
-		} BIT;
-	} EDTRR;
-	char           wk1[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :31;
-			unsigned long RR:1;
-		} BIT;
-	} EDRRR;
-	char           wk2[4];
-	unsigned long  TDLAR;
-	char           wk3[4];
-	unsigned long  RDLAR;
-	char           wk4[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :1;
-			unsigned long TWB:1;
-			unsigned long :3;
-			unsigned long TABT:1;
-			unsigned long RABT:1;
-			unsigned long RFCOF:1;
-			unsigned long ADE:1;
-			unsigned long ECI:1;
-			unsigned long TC:1;
-			unsigned long TDE:1;
-			unsigned long TFUF:1;
-			unsigned long FR:1;
-			unsigned long RDE:1;
-			unsigned long RFOF:1;
-		} BIT;
-	} EESR;
-	char           wk5[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :1;
-			unsigned long TWBIP:1;
-			unsigned long :3;
-			unsigned long TABTIP:1;
-			unsigned long RABTIP:1;
-			unsigned long RFCOFIP:1;
-			unsigned long ADEIP:1;
-			unsigned long ECIIP:1;
-			unsigned long TCIP:1;
-			unsigned long TDEIP:1;
-			unsigned long TFUFIP:1;
-			unsigned long FRIP:1;
-			unsigned long RDEIP:1;
-			unsigned long RFOFIP:1;
-		} BIT;
-	} EESIPR;
-	char           wk6[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :20;
-			unsigned long CNDCE:1;
-			unsigned long DLCCE:1;
-			unsigned long CDCE:1;
-			unsigned long TROCE:1;
-			unsigned long RMAFCE:1;
-			unsigned long :2;
-			unsigned long RRFCE:1;
-			unsigned long RTLFCE:1;
-			unsigned long RTSFCE:1;
-			unsigned long PRECE:1;
-			unsigned long CERFCE:1;
-		} BIT;
-	} TRSCER;
-	char           wk7[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :16;
-			unsigned long MFC:16;
-		} BIT;
-	} RMFCR;
-	char           wk8[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :21;
-			unsigned long TFT:11;
-		} BIT;
-	} TFTR;
-	char           wk9[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :19;
-			unsigned long TFD:5;
-			unsigned long :3;
-			unsigned long RFD:5;
-		} BIT;
-	} FDR;
-	char           wk10[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :30;
-			unsigned long RNC:1;
-			unsigned long RNR:1;
-		} BIT;
-	} RMCR;
-	char           wk11[8];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :16;
-			unsigned long UNDER:16;
-		} BIT;
-	} TFUCR;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :16;
-			unsigned long OVER:16;
-		} BIT;
-	} RFOCR;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :31;
-			unsigned long ELB:1;
-		} BIT;
-	} IOSR;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :13;
-			unsigned long RFFO:3;
-			unsigned long :13;
-			unsigned long RFDO:3;
-		} BIT;
-	} FCFTR;
-	char           wk12[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :14;
-			unsigned long PADS:2;
-			unsigned long :10;
-			unsigned long PADR:6;
-		} BIT;
-	} RPADIR;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :27;
-			unsigned long TIM:1;
-			unsigned long :3;
-			unsigned long TIS:1;
-		} BIT;
-	} TRIMD;
-	char           wk13[72];
-	unsigned long  RBWAR;
-	unsigned long  RDFAR;
-	char           wk14[4];
-	unsigned long  TBRAR;
-	unsigned long  TDFAR;
+	void          *TBRAR;
+	void          *TDFAR;
 };
 
 struct st_elc {
@@ -2355,12 +2142,12 @@ struct st_elc {
 	} PEL3;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char WI:1;
-			unsigned char WE:1;
-			unsigned char :5;
-			unsigned char SEG:1;
-		} BIT;
+//		struct {
+//			unsigned char WI:1;
+//			unsigned char WE:1;
+//			unsigned char :5;
+//			unsigned char SEG:1;
+//		} BIT;
 	} ELSEGR;
 	char           wk6[3];
 	union {
@@ -2481,23 +2268,24 @@ struct st_eptpc {
 		} BIT;
 	} STCSELR;
 	char           wk0[15096];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :10;
-			unsigned long CYC5:1;
-			unsigned long CYC4:1;
-			unsigned long CYC3:1;
-			unsigned long CYC2:1;
-			unsigned long CYC1:1;
-			unsigned long CYC0:1;
-			unsigned long :12;
-			unsigned long PRC:1;
-			unsigned long SY1:1;
-			unsigned long SY0:1;
-			unsigned long ST:1;
-		} BIT;
-	} MIESR;
+//	union {
+//	unsigned long LONG;
+//		struct {
+//			unsigned long :10;
+//			unsigned long CYC5:1;
+//			unsigned long CYC4:1;
+//			unsigned long CYC3:1;
+//			unsigned long CYC2:1;
+//			unsigned long CYC1:1;
+//			unsigned long CYC0:1;
+//			unsigned long :12;
+//			unsigned long PRC:1;
+//			unsigned long SY1:1;
+//			unsigned long SY0:1;
+//			unsigned long ST:1;
+//		} BIT;
+//	} MIESR;
+	unsigned long MIESR;
 	union {
 		unsigned long LONG;
 		struct {
@@ -2515,14 +2303,7 @@ struct st_eptpc {
 			unsigned long ST:1;
 		} BIT;
 	} MIEIPR;
-	char           wk1[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long VER:16;
-			unsigned long REV:16;
-		} BIT;
-	} PTVRR;
+	char           wk1[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2570,17 +2351,18 @@ struct st_eptpc {
 		} BIT;
 	} ELIPACR;
 	char           wk2[40];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :27;
-			unsigned long W10D:1;
-			unsigned long SYNTOUT:1;
-			unsigned long :1;
-			unsigned long SYNCOUT:1;
-			unsigned long SYNC:1;
-		} BIT;
-	} STSR;
+//	union {
+//		unsigned long LONG;
+//		struct {
+//			unsigned long :27;
+//			unsigned long W10D:1;
+//			unsigned long SYNTOUT:1;
+//			unsigned long :1;
+//			unsigned long SYNCOUT:1;
+//			unsigned long SYNC:1;
+//		} BIT;
+//	} STSR;
+	unsigned long STSR;
 	union {
 		unsigned long LONG;
 		struct {
@@ -2592,14 +2374,7 @@ struct st_eptpc {
 			unsigned long SYNC:1;
 		} BIT;
 	} STIPR;
-	char           wk3[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long VER:16;
-			unsigned long REV:16;
-		} BIT;
-	} STVRR;
+	char           wk3[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2860,52 +2635,29 @@ struct st_eptpc {
 		} BIT;
 	} TMSTARTR;
 	char           wk14[128];
+//	union {
+//		unsigned long LONG;
+//		struct {
+//			unsigned long :2;
+//			unsigned long URE1:1;
+//			unsigned long URE0:1;
+//			unsigned long :19;
+//			unsigned long MACE:1;
+//			unsigned long :4;
+//			unsigned long OVRE3:1;
+//			unsigned long OVRE2:1;
+//			unsigned long OVRE1:1;
+//			unsigned long OVRE0:1;
+//		} BIT;
+//	} PRSR;
+	unsigned long PRSR;
 	union {
 		unsigned long LONG;
 		struct {
 			unsigned long :2;
 			unsigned long URE1:1;
 			unsigned long URE0:1;
-			unsigned long PRTE13:1;
-			unsigned long PRTE12:1;
-			unsigned long PRTE11:1;
-			unsigned long PRTE10:1;
-			unsigned long PRTE03:1;
-			unsigned long PRTE02:1;
-			unsigned long PRTE01:1;
-			unsigned long PRTE00:1;
-			unsigned long PRRE3:1;
-			unsigned long PRRE2:1;
-			unsigned long PRRE1:1;
-			unsigned long PRRE0:1;
-			unsigned long :7;
-			unsigned long MACE:1;
-			unsigned long :4;
-			unsigned long OVRE3:1;
-			unsigned long OVRE2:1;
-			unsigned long OVRE1:1;
-			unsigned long OVRE0:1;
-		} BIT;
-	} PRSR;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :2;
-			unsigned long URE1:1;
-			unsigned long URE0:1;
-			unsigned long PRTE13:1;
-			unsigned long PRTE12:1;
-			unsigned long PRTE11:1;
-			unsigned long PRTE10:1;
-			unsigned long PRTE03:1;
-			unsigned long PRTE02:1;
-			unsigned long PRTE01:1;
-			unsigned long PRTE00:1;
-			unsigned long PRRE3:1;
-			unsigned long PRRE2:1;
-			unsigned long PRRE1:1;
-			unsigned long PRRE0:1;
-			unsigned long :7;
+			unsigned long :19;
 			unsigned long MACE:1;
 			unsigned long :4;
 			unsigned long OVRE3:1;
@@ -2914,14 +2666,7 @@ struct st_eptpc {
 			unsigned long OVRE0:1;
 		} BIT;
 	} PRIPR;
-	char           wk15[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long VER:16;
-			unsigned long REV:16;
-		} BIT;
-	} PRVRR;
+	char           wk15[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2961,7 +2706,10 @@ struct st_eptpc {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :31;
+			unsigned long :22;
+			unsigned long FWD1:1;
+			unsigned long FWD0:1;
+			unsigned long :7;
 			unsigned long MOD:1;
 		} BIT;
 	} TRNMR;
@@ -2974,43 +2722,34 @@ struct st_eptpc {
 	} TRNCTTDR;
 };
 
-struct st_eptpcs {
+struct st_eptpc0 {
+//	union {
+//		unsigned long LONG;
+//		struct {
+//			unsigned long :14;
+//			unsigned long GENDN:1;
+//			unsigned long RESDN:1;
+//			unsigned long :1;
+//			unsigned long INFABT:1;
+//			unsigned long SRTABT:1;
+//			unsigned long RECLP:1;
+//			unsigned long :2;
+//			unsigned long PDRPMR:1;
+//			unsigned long :2;
+//			unsigned long DRQOVR:1;
+//			unsigned long INTDEV:1;
+//			unsigned long DRPTO:1;
+//			unsigned long :1;
+//			unsigned long MPDUD:1;
+//			unsigned long INTCHG:1;
+//			unsigned long OFMUD:1;
+//		} BIT;
+//	} SYSR;
+	unsigned long SYSR;
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :8;
-			unsigned long PRE3:1;
-			unsigned long PRE2:1;
-			unsigned long PRE1:1;
-			unsigned long PRE0:1;
-			unsigned long :2;
-			unsigned long GENDN:1;
-			unsigned long RESDN:1;
-			unsigned long :1;
-			unsigned long INFABT:1;
-			unsigned long SRTABT:1;
-			unsigned long RECLP:1;
-			unsigned long :2;
-			unsigned long PDRPMR:1;
-			unsigned long :2;
-			unsigned long DRQOVR:1;
-			unsigned long INTDEV:1;
-			unsigned long DRPTO:1;
-			unsigned long :1;
-			unsigned long MPDUD:1;
-			unsigned long INTCHG:1;
-			unsigned long OFMUD:1;
-		} BIT;
-	} SYSR;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :8;
-			unsigned long PRE3:1;
-			unsigned long PRE2:1;
-			unsigned long PRE1:1;
-			unsigned long PRE0:1;
-			unsigned long :2;
+			unsigned long :14;
 			unsigned long GENDN:1;
 			unsigned long RESDN:1;
 			unsigned long :1;
@@ -3029,14 +2768,7 @@ struct st_eptpcs {
 			unsigned long OFMUD:1;
 		} BIT;
 	} SYIPR;
-	char           wk0[4];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long VER:16;
-			unsigned long REV:16;
-		} BIT;
-	} SYVRR;
+	char           wk0[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3051,14 +2783,8 @@ struct st_eptpcs {
 			unsigned long MACL:24;
 		} BIT;
 	} SYMACRL;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :24;
-			unsigned long LLC:8;
-		} BIT;
-	} SYLLCCTLR;
-	unsigned long  SYIPR2;
+	char           wk0a[1];
+	unsigned long  SYIPADDRR;
 	char           wk1[32];
 	union {
 		unsigned long LONG;
@@ -3080,88 +2806,88 @@ struct st_eptpcs {
 		unsigned long LONG;
 		struct {
 			unsigned long :16;
-			unsigned long FLG15:1;
-			unsigned long FLG14:1;
-			unsigned long FLG13:1;
-			unsigned long FLG12:1;
-			unsigned long FLG11:1;
-			unsigned long FLG10:1;
-			unsigned long FLG9:1;
-			unsigned long FLG8:1;
-			unsigned long FLG7:1;
-			unsigned long FLG6:1;
-			unsigned long FLG5:1;
-			unsigned long FLG4:1;
-			unsigned long FLG3:1;
-			unsigned long FLG2:1;
-			unsigned long FLG1:1;
-			unsigned long FLG0:1;
+			unsigned long FLAG15:1;
+			unsigned long FLAG14:1;
+			unsigned long FLAG13:1;
+			unsigned long FLAG12:1;
+			unsigned long FLAG11:1;
+			unsigned long FLAG10:1;
+			unsigned long FLAG9:1;
+			unsigned long FLAG8:1;
+			unsigned long FLAG7:1;
+			unsigned long FLAG6:1;
+			unsigned long FLAG5:1;
+			unsigned long FLAG4:1;
+			unsigned long FLAG3:1;
+			unsigned long FLAG2:1;
+			unsigned long FLAG1:1;
+			unsigned long FLAG0:1;
 		} BIT;
 	} ANFR;
 	union {
 		unsigned long LONG;
 		struct {
 			unsigned long :16;
-			unsigned long FLG15:1;
-			unsigned long FLG14:1;
-			unsigned long FLG13:1;
-			unsigned long FLG12:1;
-			unsigned long FLG11:1;
-			unsigned long FLG10:1;
-			unsigned long FLG9:1;
-			unsigned long FLG8:1;
-			unsigned long FLG7:1;
-			unsigned long FLG6:1;
-			unsigned long FLG5:1;
-			unsigned long FLG4:1;
-			unsigned long FLG3:1;
-			unsigned long FLG2:1;
-			unsigned long FLG1:1;
-			unsigned long FLG0:1;
+			unsigned long FLAG15:1;
+			unsigned long FLAG14:1;
+			unsigned long FLAG13:1;
+			unsigned long FLAG12:1;
+			unsigned long FLAG11:1;
+			unsigned long FLAG10:1;
+			unsigned long FLAG9:1;
+			unsigned long FLAG8:1;
+			unsigned long FLAG7:1;
+			unsigned long FLAG6:1;
+			unsigned long FLAG5:1;
+			unsigned long FLAG4:1;
+			unsigned long FLAG3:1;
+			unsigned long FLAG2:1;
+			unsigned long FLAG1:1;
+			unsigned long FLAG0:1;
 		} BIT;
 	} SYNFR;
 	union {
 		unsigned long LONG;
 		struct {
 			unsigned long :16;
-			unsigned long FLG15:1;
-			unsigned long FLG14:1;
-			unsigned long FLG13:1;
-			unsigned long FLG12:1;
-			unsigned long FLG11:1;
-			unsigned long FLG10:1;
-			unsigned long FLG9:1;
-			unsigned long FLG8:1;
-			unsigned long FLG7:1;
-			unsigned long FLG6:1;
-			unsigned long FLG5:1;
-			unsigned long FLG4:1;
-			unsigned long FLG3:1;
-			unsigned long FLG2:1;
-			unsigned long FLG1:1;
-			unsigned long FLG0:1;
+			unsigned long FLAG15:1;
+			unsigned long FLAG14:1;
+			unsigned long FLAG13:1;
+			unsigned long FLAG12:1;
+			unsigned long FLAG11:1;
+			unsigned long FLAG10:1;
+			unsigned long FLAG9:1;
+			unsigned long FLAG8:1;
+			unsigned long FLAG7:1;
+			unsigned long FLAG6:1;
+			unsigned long FLAG5:1;
+			unsigned long FLAG4:1;
+			unsigned long FLAG3:1;
+			unsigned long FLAG2:1;
+			unsigned long FLAG1:1;
+			unsigned long FLAG0:1;
 		} BIT;
 	} DYRQFR;
 	union {
 		unsigned long LONG;
 		struct {
 			unsigned long :16;
-			unsigned long FLG15:1;
-			unsigned long FLG14:1;
-			unsigned long FLG13:1;
-			unsigned long FLG12:1;
-			unsigned long FLG11:1;
-			unsigned long FLG10:1;
-			unsigned long FLG9:1;
-			unsigned long FLG8:1;
-			unsigned long FLG7:1;
-			unsigned long FLG6:1;
-			unsigned long FLG5:1;
-			unsigned long FLG4:1;
-			unsigned long FLG3:1;
-			unsigned long FLG2:1;
-			unsigned long FLG1:1;
-			unsigned long FLG0:1;
+			unsigned long FLAG15:1;
+			unsigned long FLAG14:1;
+			unsigned long FLAG13:1;
+			unsigned long FLAG12:1;
+			unsigned long FLAG11:1;
+			unsigned long FLAG10:1;
+			unsigned long FLAG9:1;
+			unsigned long FLAG8:1;
+			unsigned long FLAG7:1;
+			unsigned long FLAG6:1;
+			unsigned long FLAG5:1;
+			unsigned long FLAG4:1;
+			unsigned long FLAG3:1;
+			unsigned long FLAG2:1;
+			unsigned long FLAG1:1;
+			unsigned long FLAG0:1;
 		} BIT;
 	} DYRPFR;
 	unsigned long  SYCIDRU;
@@ -3188,50 +2914,32 @@ struct st_eptpcs {
 		unsigned long LONG;
 		struct {
 			unsigned long :1;
-			unsigned long PDFUP2:1;
-			unsigned long PDFUP1:1;
-			unsigned long PDFUP0:1;
+			unsigned long PDFUP:3;
 			unsigned long :1;
-			unsigned long PDRP2:1;
-			unsigned long PDRP1:1;
-			unsigned long PDRP0:1;
+			unsigned long PDRP:3;
 			unsigned long :1;
-			unsigned long PDRQ2:1;
-			unsigned long PDRQ1:1;
-			unsigned long PDRQ0:1;
+			unsigned long PDRQ:3;
 			unsigned long :1;
-			unsigned long DRP2:1;
-			unsigned long DRP1:1;
-			unsigned long DRP0:1;
+			unsigned long DRP:3;
 			unsigned long :1;
-			unsigned long DRQ2:1;
-			unsigned long DRQ1:1;
-			unsigned long DRQ0:1;
+			unsigned long DRQ:3;
 			unsigned long :1;
-			unsigned long FUP2:1;
-			unsigned long FUP1:1;
-			unsigned long FUP0:1;
+			unsigned long FUP:3;
 			unsigned long :1;
-			unsigned long SYNC2:1;
-			unsigned long SYNC1:1;
-			unsigned long SYNC0:1;
+			unsigned long SYNC:3;
 			unsigned long :2;
-			unsigned long ANCE1:1;
-			unsigned long ANCE0:1;
+			unsigned long ANCE:2;
 		} BIT;
 	} SYRFL1R;
 	union {
 		unsigned long LONG;
 		struct {
 			unsigned long :2;
-			unsigned long ILL1:1;
-			unsigned long ILL0:1;
+			unsigned long ILL:2;
 			unsigned long :22;
-			unsigned long SIG1:1;
-			unsigned long SIG0:1;
+			unsigned long SIG:2;
 			unsigned long :2;
-			unsigned long MAN1:1;
-			unsigned long MAN0:1;
+			unsigned long MAN:2;
 		} BIT;
 	} SYRFL2R;
 	union {
@@ -3262,7 +2970,7 @@ struct st_eptpcs {
 		unsigned long LONG;
 		struct {
 			unsigned long :8;
-			unsigned long DRQ:8;
+			unsigned long DREQ:8;
 			unsigned long SYNC:8;
 			unsigned long ANCE:8;
 		} BIT;
@@ -3271,7 +2979,7 @@ struct st_eptpcs {
 		unsigned long LONG;
 		struct {
 			unsigned long :8;
-			unsigned long DRP:8;
+			unsigned long DRESP:8;
 			unsigned long SYNC:8;
 			unsigned long ANCE:8;
 		} BIT;
@@ -3392,7 +3100,9 @@ struct st_eptpcs {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :29;
+			unsigned long :15;
+			unsigned long EXTPRM:1;
+			unsigned long :13;
 			unsigned long ENB:1;
 			unsigned long PRT:1;
 			unsigned long SEL:1;
@@ -3446,9 +3156,7 @@ struct st_eptpcs {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :7;
-			unsigned long TRAN:1;
-			unsigned long :3;
+			unsigned long :11;
 			unsigned long TCMOD:1;
 			unsigned long :3;
 			unsigned long FILDIS:1;
@@ -3649,10 +3357,8 @@ struct st_exdmac {
 };
 
 struct st_exdmac0 {
-//	unsigned long  EDMSAR;
-//	unsigned long  EDMDAR;
 	void          *EDMSAR;
-	void          *EDMDAR;	
+	void          *EDMDAR;
 	unsigned long  EDMCRA;
 	unsigned short EDMCRB;
 	char           wk0[2];
@@ -3754,10 +3460,8 @@ struct st_exdmac0 {
 };
 
 struct st_exdmac1 {
-//	unsigned long  EDMSAR;
-//	unsigned long  EDMDAR;
 	void          *EDMSAR;
-	void          *EDMDAR;	
+	void          *EDMDAR;
 	unsigned long  EDMCRA;
 	unsigned short EDMCRB;
 	char           wk0[2];
@@ -3858,20 +3562,191 @@ struct st_exdmac1 {
 	} EDMPRF;
 };
 
+struct st_flash {
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :6;
+			unsigned char FLWE:2;
+		} BIT;
+	} FWEPROR;
+	char           wk0[7806329];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char CFAE:1;
+			unsigned char :2;
+			unsigned char CMDLK:1;
+			unsigned char DFAE:1;
+			unsigned char :2;
+			unsigned char ECRCT:1;
+		} BIT;
+	} FASTAT;
+	char           wk1[3];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char CFAEIE:1;
+			unsigned char :2;
+			unsigned char CMDLKIE:1;
+			unsigned char DFAEIE:1;
+			unsigned char :2;
+			unsigned char ECRCTIE:1;
+		} BIT;
+	} FAEINT;
+	char           wk2[3];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :7;
+			unsigned char FRDYIE:1;
+		} BIT;
+	} FRDYIE;
+	char           wk3[23];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long FSADDR:32;
+		} BIT;
+	} FSADDR;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long FEADDR:32;
+		} BIT;
+	} FEADDR;
+	char           wk4[28];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short KEY:8;
+			unsigned short :6;
+			unsigned short FRAMTRAN:1;
+			unsigned short FCRME:1;
+		} BIT;
+	} FCURAME;
+	char           wk5[42];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :16;
+			unsigned long FRDY:1;
+			unsigned long ILGLERR:1;
+			unsigned long ERSERR:1;
+			unsigned long PRGERR:1;
+			unsigned long SUSRDY:1;
+			unsigned long DBFULL:1;
+			unsigned long ERSSPD:1;
+			unsigned long PRGSPD:1;
+			unsigned long FCUERR:1;
+			unsigned long FLWEERR:1;
+			unsigned long :4;
+			unsigned long FRDTCT:1;
+			unsigned long FRCRCT:1;
+		} BIT;
+	} FSTATR;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short KEY:8;
+			unsigned short FENTRYD:1;
+			unsigned short :6;
+			unsigned short FENTRYC:1;
+		} BIT;
+	} FENTRYR;
+	char           wk6[2];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short KEY:8;
+			unsigned short :7;
+			unsigned short FPROTCN:1;
+		} BIT;
+	} FPROTR;
+	char           wk7[2];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short KEY:8;
+			unsigned short :7;
+			unsigned short SUINIT:1;
+		} BIT;
+	} FSUINITR;
+	char           wk8[2];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :7;
+			unsigned char FLOCKST:1;
+		} BIT;
+	} FLKSTAT;
+	char           wk9[15];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short CMDR:8;
+			unsigned short PCMDR:8;
+		} BIT;
+	} FCMDR;
+	char           wk10[30];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short :8;
+			unsigned short PEERRST:8;
+		} BIT;
+	} FPESTAT;
+	char           wk11[14];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :7;
+			unsigned char BCDIR:1;
+		} BIT;
+	} FBCCNT;
+	char           wk12[3];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :7;
+			unsigned char BCST:1;
+		} BIT;
+	} FBCSTAT;
+	char           wk13[3];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :13;
+			unsigned long PSADR:19;
+		} BIT;
+	} FPSADDR;
+	char           wk14[4];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short :15;
+			unsigned short ESUSPMD:1;
+		} BIT;
+	} FCPSR;
+	char           wk15[2];
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short KEY:8;
+			unsigned short PCKA:8;
+		} BIT;
+	} FPCKAR;
+};
+
 struct st_gpt {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :8;
-			unsigned char :4;
-			unsigned char CST3:1;
-			unsigned char CST2:1;
-			unsigned char CST1:1;
-			unsigned char CST0:1;
+			unsigned short :12;
+			unsigned short CST3:1;
+			unsigned short CST2:1;
+			unsigned short CST1:1;
+			unsigned short CST0:1;
 		} BIT;
 	} GTSTR;
 	union {
@@ -3894,153 +3769,112 @@ struct st_gpt {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char CPHW3:2;
-			unsigned char CPHW2:2;
-			unsigned char CPHW1:2;
-			unsigned char CPHW0:2;
-			unsigned char CSHW3:2;
-			unsigned char CSHW2:2;
-			unsigned char CSHW1:2;
-			unsigned char CSHW0:2;
+			unsigned short CPHW3:2;
+			unsigned short CPHW2:2;
+			unsigned short CPHW1:2;
+			unsigned short CPHW0:2;
+			unsigned short CSHW3:2;
+			unsigned short CSHW2:2;
+			unsigned short CSHW1:2;
+			unsigned short CSHW0:2;
 		} BIT;
 	} GTHSCR;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :4;
-			unsigned char CCSW3:1;
-			unsigned char CCSW2:1;
-			unsigned char CCSW1:1;
-			unsigned char CCSW0:1;
-			unsigned char CCHW3:2;
-			unsigned char CCHW2:2;
-			unsigned char CCHW1:2;
-			unsigned char CCHW0:2;
+			unsigned short :4;
+			unsigned short CCSW3:1;
+			unsigned short CCSW2:1;
+			unsigned short CCSW1:1;
+			unsigned short CCSW0:1;
+			unsigned short CCHW3:2;
+			unsigned short CCHW2:2;
+			unsigned short CCHW1:2;
+			unsigned short CCHW0:2;
 		} BIT;
 	} GTHCCR;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char CSHSL3:4;
-			unsigned char CSHSL2:4;
-			unsigned char CSHSL1:4;
-			unsigned char CSHSL0:4;
+			unsigned short CSHSL3:4;
+			unsigned short CSHSL2:4;
+			unsigned short CSHSL1:4;
+			unsigned short CSHSL0:4;
 		} BIT;
 	} GTHSSR;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char CSHPL3:4;
-			unsigned char CSHPL2:4;
-			unsigned char CSHPL1:4;
-			unsigned char CSHPL0:4;
+			unsigned short CSHPL3:4;
+			unsigned short CSHPL2:4;
+			unsigned short CSHPL1:4;
+			unsigned short CSHPL0:4;
 		} BIT;
 	} GTHPSR;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :8;
-			unsigned char :4;
-			unsigned char WP3:1;
-			unsigned char WP2:1;
-			unsigned char WP1:1;
-			unsigned char WP0:1;
+			unsigned short :12;
+			unsigned short WP3:1;
+			unsigned short WP2:1;
+			unsigned short WP1:1;
+			unsigned short WP0:1;
 		} BIT;
 	} GTWP;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char SYNC3:2;
-			unsigned char :2;
-			unsigned char SYNC2:2;
-			unsigned char :2;
-			unsigned char SYNC1:2;
-			unsigned char :2;
-			unsigned char SYNC0:2;
+			unsigned short :2;
+			unsigned short SYNC3:2;
+			unsigned short :2;
+			unsigned short SYNC2:2;
+			unsigned short :2;
+			unsigned short SYNC1:2;
+			unsigned short :2;
+			unsigned short SYNC0:2;
 		} BIT;
 	} GTSYNC;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char GTETRGEN:1;
-			unsigned char GTENFCS:2;
-			unsigned char :3;
-			unsigned char ETINF:1;
-			unsigned char ETIPF:1;
-			unsigned char :6;
-			unsigned char ETINEN:1;
-			unsigned char ETIPEN:1;
+			unsigned short GTETRGEN:1;
+			unsigned short GTENFCS:2;
+			unsigned short :11;
+			unsigned short ETINEN:1;
+			unsigned short ETIPEN:1;
 		} BIT;
 	} GTETINT;
 	char           wk0[2];
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char BD33:1;
-			unsigned char BD32:1;
-			unsigned char BD31:1;
-			unsigned char BD30:1;
-			unsigned char BD23:1;
-			unsigned char BD22:1;
-			unsigned char BD21:1;
-			unsigned char BD20:1;
-			unsigned char BD13:1;
-			unsigned char BD12:1;
-			unsigned char BD11:1;
-			unsigned char BD10:1;
-			unsigned char BD03:1;
-			unsigned char BD02:1;
-			unsigned char BD01:1;
-			unsigned char BD00:1;
+			unsigned short BD33:1;
+			unsigned short BD32:1;
+			unsigned short BD31:1;
+			unsigned short BD30:1;
+			unsigned short BD23:1;
+			unsigned short BD22:1;
+			unsigned short BD21:1;
+			unsigned short BD20:1;
+			unsigned short BD13:1;
+			unsigned short BD12:1;
+			unsigned short BD11:1;
+			unsigned short BD10:1;
+			unsigned short BD03:1;
+			unsigned short BD02:1;
+			unsigned short BD01:1;
+			unsigned short BD00:1;
 		} BIT;
 	} GTBDR;
 	char           wk1[2];
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :8;
-			unsigned char :4;
-			unsigned char SWP3:1;
-			unsigned char SWP2:1;
-			unsigned char SWP1:1;
-			unsigned char SWP0:1;
+			unsigned short :12;
+			unsigned short SWP3:1;
+			unsigned short SWP2:1;
+			unsigned short SWP1:1;
+			unsigned short SWP0:1;
 		} BIT;
 	} GTSWP;
 };
@@ -4049,129 +3883,92 @@ struct st_gpt0 {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char OBHLD:1;
-			unsigned char OBDFLT:1;
-			unsigned char GTIOB:6;
-			unsigned char OAHLD:1;
-			unsigned char OADFLT:1;
-			unsigned char GTIOA:6;
+			unsigned short OBHLD:1;
+			unsigned short OBDFLT:1;
+			unsigned short GTIOB:6;
+			unsigned short OAHLD:1;
+			unsigned short OADFLT:1;
+			unsigned short GTIOA:6;
 		} BIT;
 	} GTIOR;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char ADTRBDEN:1;
-			unsigned char ADTRBUEN:1;
-			unsigned char ADTRADEN:1;
-			unsigned char ADTRAUEN:1;
-			unsigned char EINT:1;
-			unsigned char :3;
-			unsigned char GTINTPR:2;
-			unsigned char GTINTF:1;
-			unsigned char GTINTE:1;
-			unsigned char GTINTD:1;
-			unsigned char GTINTC:1;
-			unsigned char GTINTB:1;
-			unsigned char GTINTA:1;
+			unsigned short ADTRBDEN:1;
+			unsigned short ADTRBUEN:1;
+			unsigned short ADTRADEN:1;
+			unsigned short ADTRAUEN:1;
+			unsigned short EINT:1;
+			unsigned short :3;
+			unsigned short GTINTPR:2;
+			unsigned short GTINTF:1;
+			unsigned short GTINTE:1;
+			unsigned short GTINTD:1;
+			unsigned short GTINTC:1;
+			unsigned short GTINTB:1;
+			unsigned short GTINTA:1;
 		} BIT;
 	} GTINTAD;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char CCLR:2;
-			unsigned char :2;
-			unsigned char TPCS:2;
-			unsigned char :5;
-			unsigned char MD:3;
+			unsigned short :2;
+			unsigned short CCLR:2;
+			unsigned short :2;
+			unsigned short TPCS:2;
+			unsigned short :5;
+			unsigned short MD:3;
 		} BIT;
 	} GTCR;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char ADTDB:1;
-			unsigned char ADTTB:2;
-			unsigned char :1;
-			unsigned char ADTDA:1;
-			unsigned char ADTTA:2;
-			unsigned char :1;
-			unsigned char CCRSWT:1;
-			unsigned char PR:2;
-			unsigned char CCRB:2;
-			unsigned char CCRA:2;
+			unsigned short :1;
+			unsigned short ADTDB:1;
+			unsigned short ADTTB:2;
+			unsigned short :1;
+			unsigned short ADTDA:1;
+			unsigned short ADTTA:2;
+			unsigned short :1;
+			unsigned short CCRSWT:1;
+			unsigned short PR:2;
+			unsigned short CCRB:2;
+			unsigned short CCRA:2;
 		} BIT;
 	} GTBER;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :8;
-			unsigned char :6;
-			unsigned char UDF:1;
-			unsigned char UD:1;
+			unsigned short :14;
+			unsigned short UDF:1;
+			unsigned short UD:1;
 		} BIT;
 	} GTUDC;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char ADTBL:1;
-			unsigned char :1;
-			unsigned char ADTAL:1;
-			unsigned char :1;
-			unsigned char IVTT:3;
-			unsigned char IVTC:2;
-			unsigned char ITLF:1;
-			unsigned char ITLE:1;
-			unsigned char ITLD:1;
-			unsigned char ITLC:1;
-			unsigned char ITLB:1;
-			unsigned char ITLA:1;
+			unsigned short :1;
+			unsigned short ADTBL:1;
+			unsigned short :1;
+			unsigned short ADTAL:1;
+			unsigned short :1;
+			unsigned short IVTT:3;
+			unsigned short IVTC:2;
+			unsigned short ITLF:1;
+			unsigned short ITLE:1;
+			unsigned short ITLD:1;
+			unsigned short ITLC:1;
+			unsigned short ITLB:1;
+			unsigned short ITLA:1;
 		} BIT;
 	} GTITC;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char TUCF:1;
-			unsigned char :3;
-			unsigned char DTEF:1;
-			unsigned char ITCNT:3;
-			unsigned char TCFPU:1;
-			unsigned char TCFPO:1;
-			unsigned char TCFF:1;
-			unsigned char TCFE:1;
-			unsigned char TCFD:1;
-			unsigned char TCFC:1;
-			unsigned char TCFB:1;
-			unsigned char TCFA:1;
+			unsigned short TUCF:1;
+			unsigned short :3;
+			unsigned short DTEF:1;
+			unsigned short ITCNT:3;
 		} BIT;
 	} GTST;
 	unsigned short GTCNT;
@@ -4317,62 +4114,6 @@ struct st_icu {
 	char           wk9[3];
 	unsigned char  DMRSR7;
 	char           wk10[227];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR0;
-//	char           wk3[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR1;
-//	char           wk4[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR2;
-//	char           wk5[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR3;
-//	char           wk6[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR4;
-//	char           wk7[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR5;
-//	char           wk8[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR6;
-//	char           wk9[3];
-//	union {
-//		unsigned char BYTE;
-//		struct {
-//			unsigned char DMRS:8;
-//		} BIT;
-//	} DMRSR7;
-//	char           wk10[227];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -4464,8 +4205,7 @@ struct st_icu {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ECCRAMCLR:1;
+			unsigned char :2;
 			unsigned char LVD2CLR:1;
 			unsigned char LVD1CLR:1;
 			unsigned char IWDTCLR:1;
@@ -4535,44 +4275,7 @@ struct st_icu {
 			unsigned long IS0:1;
 		} BIT;
 	} GRPBE0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long IS31:1;
-			unsigned long IS30:1;
-			unsigned long IS29:1;
-			unsigned long IS28:1;
-			unsigned long IS27:1;
-			unsigned long IS26:1;
-			unsigned long IS25:1;
-			unsigned long IS24:1;
-			unsigned long IS23:1;
-			unsigned long IS22:1;
-			unsigned long IS21:1;
-			unsigned long IS20:1;
-			unsigned long IS19:1;
-			unsigned long IS18:1;
-			unsigned long IS17:1;
-			unsigned long IS16:1;
-			unsigned long IS15:1;
-			unsigned long IS14:1;
-			unsigned long IS13:1;
-			unsigned long IS12:1;
-			unsigned long IS11:1;
-			unsigned long IS10:1;
-			unsigned long IS9:1;
-			unsigned long IS8:1;
-			unsigned long IS7:1;
-			unsigned long IS6:1;
-			unsigned long IS5:1;
-			unsigned long IS4:1;
-			unsigned long IS3:1;
-			unsigned long IS2:1;
-			unsigned long IS1:1;
-			unsigned long IS0:1;
-		} BIT;
-	} GRPBE1;
-	char           wk17[40];
+	char           wk17[44];
 	union {
 		unsigned long LONG;
 		struct {
@@ -4685,44 +4388,7 @@ struct st_icu {
 			unsigned long EN0:1;
 		} BIT;
 	} GENBE0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long EN31:1;
-			unsigned long EN30:1;
-			unsigned long EN29:1;
-			unsigned long EN28:1;
-			unsigned long EN27:1;
-			unsigned long EN26:1;
-			unsigned long EN25:1;
-			unsigned long EN24:1;
-			unsigned long EN23:1;
-			unsigned long EN22:1;
-			unsigned long EN21:1;
-			unsigned long EN20:1;
-			unsigned long EN19:1;
-			unsigned long EN18:1;
-			unsigned long EN17:1;
-			unsigned long EN16:1;
-			unsigned long EN15:1;
-			unsigned long EN14:1;
-			unsigned long EN13:1;
-			unsigned long EN12:1;
-			unsigned long EN11:1;
-			unsigned long EN10:1;
-			unsigned long EN9:1;
-			unsigned long EN8:1;
-			unsigned long EN7:1;
-			unsigned long EN6:1;
-			unsigned long EN5:1;
-			unsigned long EN4:1;
-			unsigned long EN3:1;
-			unsigned long EN2:1;
-			unsigned long EN1:1;
-			unsigned long EN0:1;
-		} BIT;
-	} GENBE1;
-	char           wk19[40];
+	char           wk19[44];
 	union {
 		unsigned long LONG;
 		struct {
@@ -4834,187 +4500,150 @@ struct st_icu {
 			unsigned long CLR1:1;
 			unsigned long CLR0:1;
 		} BIT;
-	} GCREBE0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long CLR31:1;
-			unsigned long CLR30:1;
-			unsigned long CLR29:1;
-			unsigned long CLR28:1;
-			unsigned long CLR27:1;
-			unsigned long CLR26:1;
-			unsigned long CLR25:1;
-			unsigned long CLR24:1;
-			unsigned long CLR23:1;
-			unsigned long CLR22:1;
-			unsigned long CLR21:1;
-			unsigned long CLR20:1;
-			unsigned long CLR19:1;
-			unsigned long CLR18:1;
-			unsigned long CLR17:1;
-			unsigned long CLR16:1;
-			unsigned long CLR15:1;
-			unsigned long CLR14:1;
-			unsigned long CLR13:1;
-			unsigned long CLR12:1;
-			unsigned long CLR11:1;
-			unsigned long CLR10:1;
-			unsigned long CLR9:1;
-			unsigned long CLR8:1;
-			unsigned long CLR7:1;
-			unsigned long CLR6:1;
-			unsigned long CLR5:1;
-			unsigned long CLR4:1;
-			unsigned long CLR3:1;
-			unsigned long CLR2:1;
-			unsigned long CLR1:1;
-			unsigned long CLR0:1;
-		} BIT;
-	} GCREBE1;
-	char           wk21[120];
+	} GCRBE0;
+	char           wk21[124];
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR0;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR1;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR2;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR3;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR4;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR5;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR6;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR7;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR8;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBR9;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIBRA;
 	char           wk22[117];
 	union {
@@ -5497,82 +5126,7 @@ struct st_icu {
 			unsigned char SLI:8;
 		} BIT;
 	} SLIBR207;
-	char           wk23[48];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long IS31:1;
-			unsigned long IS30:1;
-			unsigned long IS29:1;
-			unsigned long IS28:1;
-			unsigned long IS27:1;
-			unsigned long IS26:1;
-			unsigned long IS25:1;
-			unsigned long IS24:1;
-			unsigned long IS23:1;
-			unsigned long IS22:1;
-			unsigned long IS21:1;
-			unsigned long IS20:1;
-			unsigned long IS19:1;
-			unsigned long IS18:1;
-			unsigned long IS17:1;
-			unsigned long IS16:1;
-			unsigned long IS15:1;
-			unsigned long IS14:1;
-			unsigned long IS13:1;
-			unsigned long IS12:1;
-			unsigned long IS11:1;
-			unsigned long IS10:1;
-			unsigned long IS9:1;
-			unsigned long IS8:1;
-			unsigned long IS7:1;
-			unsigned long IS6:1;
-			unsigned long IS5:1;
-			unsigned long IS4:1;
-			unsigned long IS3:1;
-			unsigned long IS2:1;
-			unsigned long IS1:1;
-			unsigned long IS0:1;
-		} BIT;
-	} GRPAE0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long IS31:1;
-			unsigned long IS30:1;
-			unsigned long IS29:1;
-			unsigned long IS28:1;
-			unsigned long IS27:1;
-			unsigned long IS26:1;
-			unsigned long IS25:1;
-			unsigned long IS24:1;
-			unsigned long IS23:1;
-			unsigned long IS22:1;
-			unsigned long IS21:1;
-			unsigned long IS20:1;
-			unsigned long IS19:1;
-			unsigned long IS18:1;
-			unsigned long IS17:1;
-			unsigned long IS16:1;
-			unsigned long IS15:1;
-			unsigned long IS14:1;
-			unsigned long IS13:1;
-			unsigned long IS12:1;
-			unsigned long IS11:1;
-			unsigned long IS10:1;
-			unsigned long IS9:1;
-			unsigned long IS8:1;
-			unsigned long IS7:1;
-			unsigned long IS6:1;
-			unsigned long IS5:1;
-			unsigned long IS4:1;
-			unsigned long IS3:1;
-			unsigned long IS2:1;
-			unsigned long IS1:1;
-			unsigned long IS0:1;
-		} BIT;
-	} GRPAE1;
-	char           wk24[40];
+	char           wk23[96];
 	union {
 		unsigned long LONG;
 		struct {
@@ -5647,82 +5201,7 @@ struct st_icu {
 			unsigned long IS0:1;
 		} BIT;
 	} GRPAL1;
-	char           wk25[8];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long EN31:1;
-			unsigned long EN30:1;
-			unsigned long EN29:1;
-			unsigned long EN28:1;
-			unsigned long EN27:1;
-			unsigned long EN26:1;
-			unsigned long EN25:1;
-			unsigned long EN24:1;
-			unsigned long EN23:1;
-			unsigned long EN22:1;
-			unsigned long EN21:1;
-			unsigned long EN20:1;
-			unsigned long EN19:1;
-			unsigned long EN18:1;
-			unsigned long EN17:1;
-			unsigned long EN16:1;
-			unsigned long EN15:1;
-			unsigned long EN14:1;
-			unsigned long EN13:1;
-			unsigned long EN12:1;
-			unsigned long EN11:1;
-			unsigned long EN10:1;
-			unsigned long EN9:1;
-			unsigned long EN8:1;
-			unsigned long EN7:1;
-			unsigned long EN6:1;
-			unsigned long EN5:1;
-			unsigned long EN4:1;
-			unsigned long EN3:1;
-			unsigned long EN2:1;
-			unsigned long EN1:1;
-			unsigned long EN0:1;
-		} BIT;
-	} GENAE0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long EN31:1;
-			unsigned long EN30:1;
-			unsigned long EN29:1;
-			unsigned long EN28:1;
-			unsigned long EN27:1;
-			unsigned long EN26:1;
-			unsigned long EN25:1;
-			unsigned long EN24:1;
-			unsigned long EN23:1;
-			unsigned long EN22:1;
-			unsigned long EN21:1;
-			unsigned long EN20:1;
-			unsigned long EN19:1;
-			unsigned long EN18:1;
-			unsigned long EN17:1;
-			unsigned long EN16:1;
-			unsigned long EN15:1;
-			unsigned long EN14:1;
-			unsigned long EN13:1;
-			unsigned long EN12:1;
-			unsigned long EN11:1;
-			unsigned long EN10:1;
-			unsigned long EN9:1;
-			unsigned long EN8:1;
-			unsigned long EN7:1;
-			unsigned long EN6:1;
-			unsigned long EN5:1;
-			unsigned long EN4:1;
-			unsigned long EN3:1;
-			unsigned long EN2:1;
-			unsigned long EN1:1;
-			unsigned long EN0:1;
-		} BIT;
-	} GENAE1;
-	char           wk26[40];
+	char           wk24[56];
 	union {
 		unsigned long LONG;
 		struct {
@@ -5797,239 +5276,164 @@ struct st_icu {
 			unsigned long EN0:1;
 		} BIT;
 	} GENAL1;
-	char           wk27[8];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long CLR31:1;
-			unsigned long CLR30:1;
-			unsigned long CLR29:1;
-			unsigned long CLR28:1;
-			unsigned long CLR27:1;
-			unsigned long CLR26:1;
-			unsigned long CLR25:1;
-			unsigned long CLR24:1;
-			unsigned long CLR23:1;
-			unsigned long CLR22:1;
-			unsigned long CLR21:1;
-			unsigned long CLR20:1;
-			unsigned long CLR19:1;
-			unsigned long CLR18:1;
-			unsigned long CLR17:1;
-			unsigned long CLR16:1;
-			unsigned long CLR15:1;
-			unsigned long CLR14:1;
-			unsigned long CLR13:1;
-			unsigned long CLR12:1;
-			unsigned long CLR11:1;
-			unsigned long CLR10:1;
-			unsigned long CLR9:1;
-			unsigned long CLR8:1;
-			unsigned long CLR7:1;
-			unsigned long CLR6:1;
-			unsigned long CLR5:1;
-			unsigned long CLR4:1;
-			unsigned long CLR3:1;
-			unsigned long CLR2:1;
-			unsigned long CLR1:1;
-			unsigned long CLR0:1;
-		} BIT;
-	} GCREAE0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long CLR31:1;
-			unsigned long CLR30:1;
-			unsigned long CLR29:1;
-			unsigned long CLR28:1;
-			unsigned long CLR27:1;
-			unsigned long CLR26:1;
-			unsigned long CLR25:1;
-			unsigned long CLR24:1;
-			unsigned long CLR23:1;
-			unsigned long CLR22:1;
-			unsigned long CLR21:1;
-			unsigned long CLR20:1;
-			unsigned long CLR19:1;
-			unsigned long CLR18:1;
-			unsigned long CLR17:1;
-			unsigned long CLR16:1;
-			unsigned long CLR15:1;
-			unsigned long CLR14:1;
-			unsigned long CLR13:1;
-			unsigned long CLR12:1;
-			unsigned long CLR11:1;
-			unsigned long CLR10:1;
-			unsigned long CLR9:1;
-			unsigned long CLR8:1;
-			unsigned long CLR7:1;
-			unsigned long CLR6:1;
-			unsigned long CLR5:1;
-			unsigned long CLR4:1;
-			unsigned long CLR3:1;
-			unsigned long CLR2:1;
-			unsigned long CLR1:1;
-			unsigned long CLR0:1;
-		} BIT;
-	} GCREAE1;
-	char           wk28[120];
+	char           wk25[136];
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR0;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR1;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR2;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR3;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR4;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR5;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR6;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR7;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR8;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIAR9;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIARA;
 	union {
 		unsigned char BYTE;
-		struct {
-			unsigned char PIR7:1;
-			unsigned char PIR6:1;
-			unsigned char PIR5:1;
-			unsigned char PIR4:1;
-			unsigned char PIR3:1;
-			unsigned char PIR2:1;
-			unsigned char PIR1:1;
-			unsigned char PIR0:1;
-		} BIT;
+//		struct {
+//			unsigned char PIR7:1;
+//			unsigned char PIR6:1;
+//			unsigned char PIR5:1;
+//			unsigned char PIR4:1;
+//			unsigned char PIR3:1;
+//			unsigned char PIR2:1;
+//			unsigned char PIR1:1;
+//			unsigned char PIR0:1;
+//		} BIT;
 	} PIARB;
-	char           wk29[196];
+	char           wk26[196];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -6373,7 +5777,7 @@ struct st_iwdt {
 	} IWDTCSTPR;
 };
 
-struct st_mmc {
+struct st_mmcif {
 	union {
 		unsigned long LONG;
 		struct {
@@ -6425,7 +5829,7 @@ struct st_mmc {
 		unsigned long LONG;
 		struct {
 			unsigned long BLKCNT:16;
-			unsigned long BLKSZ:16;
+			unsigned long BLKSIZ:16;
 		} BIT;
 	} CEBLOCKSET;
 	union {
@@ -6437,7 +5841,7 @@ struct st_mmc {
 			unsigned long :4;
 			unsigned long CLKDIV:4;
 			unsigned long :2;
-			unsigned long SRSTPO:2;
+			unsigned long SRSPTO:2;
 			unsigned long SRBSYTO:4;
 			unsigned long SRWDTO:4;
 		} BIT;
@@ -6475,39 +5879,40 @@ struct st_mmc {
 		struct {
 			unsigned long SBTCLKDIV:4;
 			unsigned long SBTACKTO:4;
-			unsigned long S1STBTDATTO:4;
+			unsigned long SFSTBTDATTO:4;
 			unsigned long SBTDATTO:4;
 		} BIT;
 	} CEBOOT;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :5;
-			unsigned long CMD12DRE:1;
-			unsigned long CMD12RBE:1;
-			unsigned long CMD12CRE:1;
-			unsigned long DTRANE:1;
-			unsigned long BUFRE:1;
-			unsigned long BUFWEN:1;
-			unsigned long BUFREN:1;
-			unsigned long :2;
-			unsigned long RBSYE:1;
-			unsigned long CRSPE:1;
-			unsigned long CMDVIO:1;
-			unsigned long BUFVIO:1;
-			unsigned long :2;
-			unsigned long WDATERR:1;
-			unsigned long RDATERR:1;
-			unsigned long RIDXERR:1;
-			unsigned long RSPERR:1;
-			unsigned long :3;
-			unsigned long CRCSTO:1;
-			unsigned long WDATTO:1;
-			unsigned long RDATTO:1;
-			unsigned long RBSYTO:1;
-			unsigned long RSPTO:1;
-		} BIT;
-	} CEINT;
+//	union {
+//		unsigned long LONG;
+//		struct {
+//			unsigned long :5;
+//			unsigned long CMD12DRE:1;
+//			unsigned long CMD12RBE:1;
+//			unsigned long CMD12CRE:1;
+//			unsigned long DTRANE:1;
+//			unsigned long BUFRE:1;
+//			unsigned long BUFWEN:1;
+//			unsigned long BUFREN:1;
+//			unsigned long :2;
+//			unsigned long RBSYE:1;
+//			unsigned long CRSPE:1;
+//			unsigned long CMDVIO:1;
+//			unsigned long BUFVIO:1;
+//			unsigned long :2;
+//			unsigned long WDATERR:1;
+//			unsigned long RDATERR:1;
+//			unsigned long RIDXERR:1;
+//			unsigned long RSPERR:1;
+//			unsigned long :3;
+//			unsigned long CRCSTO:1;
+//			unsigned long WDATTO:1;
+//			unsigned long RDATTO:1;
+//			unsigned long RBSYTO:1;
+//			unsigned long RSPTO:1;
+//		} BIT;
+//	} CEINT;
+		unsigned long CEINT;
 	union {
 		unsigned long LONG;
 		struct {
@@ -6573,7 +5978,7 @@ struct st_mmc {
 			unsigned long AC12RSPTO:1;
 			unsigned long STRSPTO:1;
 			unsigned long BTACKTO:1;
-			unsigned long STBTDATTO:1;
+			unsigned long FSTBTDATTO:1;
 			unsigned long BTDATTO:1;
 		} BIT;
 	} CEHOSTSTS2;
@@ -6678,7 +6083,7 @@ struct st_mpc {
 			unsigned char DH32E:1;
 			unsigned char DHE:1;
 			unsigned char BCLKO:1;
-			unsigned char :1;
+			unsigned char ADRHMS2:1;
 			unsigned char ADRHMS:1;
 			unsigned char ADRLE:1;
 		} BIT;
@@ -6742,7 +6147,6 @@ struct st_mpc {
 		struct {
 			unsigned char ASEL:1;
 			unsigned char ISEL:1;
-			unsigned char PSEL:6;
 		} BIT;
 	} P03PFS;
 	char           wk4[1];
@@ -6751,14 +6155,13 @@ struct st_mpc {
 		struct {
 			unsigned char ASEL:1;
 			unsigned char ISEL:1;
-			unsigned char PSEL:6;
 		} BIT;
 	} P05PFS;
 	char           wk5[1];
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char ASEL:1;
+			unsigned char :1;
 			unsigned char ISEL:1;
 			unsigned char PSEL:6;
 		} BIT;
@@ -6846,48 +6249,42 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P22PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P23PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P24PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P25PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P26PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P27PFS;
@@ -6991,24 +6388,21 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P50PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P51PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P52PFS;
@@ -7016,8 +6410,7 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P54PFS;
@@ -7032,8 +6425,7 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P56PFS;
@@ -7041,25 +6433,15 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P60PFS;
+	char           wk9[5];
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
-			unsigned char PSEL:6;
-		} BIT;
-	} P61PFS;
-	char           wk9[4];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} P66PFS;
@@ -7071,13 +6453,7 @@ struct st_mpc {
 			unsigned char PSEL:6;
 		} BIT;
 	} P67PFS;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char PSEL:6;
-		} BIT;
-	} P70PFS;
+	char           wk10[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -7155,7 +6531,7 @@ struct st_mpc {
 			unsigned char PSEL:6;
 		} BIT;
 	} P83PFS;
-	char           wk10[2];
+	char           wk11[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -7237,8 +6613,7 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PA0PFS;
@@ -7253,8 +6628,7 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PA2PFS;
@@ -7277,24 +6651,21 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PA5PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PA6PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PA7PFS;
@@ -7317,48 +6688,42 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PB2PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PB3PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PB4PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PB5PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PB6PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PB7PFS;
@@ -7381,32 +6746,28 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PC2PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PC3PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PC4PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PC5PFS;
@@ -7494,7 +6855,7 @@ struct st_mpc {
 		unsigned char BYTE;
 		struct {
 			unsigned char ASEL:1;
-			unsigned char ISEL:1;
+			unsigned char :1;
 			unsigned char PSEL:6;
 		} BIT;
 	} PE0PFS;
@@ -7502,7 +6863,7 @@ struct st_mpc {
 		unsigned char BYTE;
 		struct {
 			unsigned char ASEL:1;
-			unsigned char ISEL:1;
+			unsigned char :1;
 			unsigned char PSEL:6;
 		} BIT;
 	} PE1PFS;
@@ -7518,7 +6879,7 @@ struct st_mpc {
 		unsigned char BYTE;
 		struct {
 			unsigned char ASEL:1;
-			unsigned char ISEL:1;
+			unsigned char :1;
 			unsigned char PSEL:6;
 		} BIT;
 	} PE3PFS;
@@ -7526,7 +6887,7 @@ struct st_mpc {
 		unsigned char BYTE;
 		struct {
 			unsigned char ASEL:1;
-			unsigned char ISEL:1;
+			unsigned char :1;
 			unsigned char PSEL:6;
 		} BIT;
 	} PE4PFS;
@@ -7557,37 +6918,33 @@ struct st_mpc {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PF0PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PF1PFS;
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PF2PFS;
-	char           wk11[2];
+	char           wk12[2];
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :1;
-			unsigned char ISEL:1;
+			unsigned char :2;
 			unsigned char PSEL:6;
 		} BIT;
 	} PF5PFS;
-	char           wk12[2];
+	char           wk13[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -7644,7 +7001,7 @@ struct st_mpc {
 			unsigned char PSEL:6;
 		} BIT;
 	} PG7PFS;
-	char           wk13[11];
+	char           wk14[11];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -7652,7 +7009,7 @@ struct st_mpc {
 			unsigned char PSEL:6;
 		} BIT;
 	} PJ3PFS;
-	char           wk14[1];
+	char           wk15[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -7802,8 +7159,8 @@ struct st_mpu {
 		struct {
 			unsigned long :29;
 			unsigned long DRW:1;
-			unsigned long DA:1;
-			unsigned long IA:1;
+			unsigned long DMPER:1;
+			unsigned long IMPER:1;
 		} BIT;
 	} MPESTS;
 	char           wk1[4];
@@ -8268,23 +7625,13 @@ struct st_mtu0 {
 			unsigned char TGIEA:1;
 		} BIT;
 	} TIER;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
-		} BIT;
-	} TSR;
+	char           wk2[1];
 	unsigned short TCNT;
 	unsigned short TGRA;
 	unsigned short TGRB;
 	unsigned short TGRC;
 	unsigned short TGRD;
-	char           wk2[16];
+	char           wk3[16];
 	unsigned short TGRE;
 	unsigned short TGRF;
 	union {
@@ -8296,14 +7643,7 @@ struct st_mtu0 {
 			unsigned char TGIEE:1;
 		} BIT;
 	} TIER2;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :6;
-			unsigned char TGFF:1;
-			unsigned char TGFE:1;
-		} BIT;
-	} TSR2;
+	char           wk4[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8313,7 +7653,7 @@ struct st_mtu0 {
 			unsigned char TTSA:1;
 		} BIT;
 	} TBTM;
-	char           wk3[1];
+	char           wk5[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8377,12 +7717,6 @@ struct st_mtu1 {
 		unsigned char BYTE;
 		struct {
 			unsigned char TCFD:1;
-			unsigned char :1;
-			unsigned char TCFU:1;
-			unsigned char TCFV:1;
-			unsigned char :2;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
 		} BIT;
 	} TSR;
 	unsigned short TCNT;
@@ -8475,12 +7809,6 @@ struct st_mtu2 {
 		unsigned char BYTE;
 		struct {
 			unsigned char TCFD:1;
-			unsigned char :1;
-			unsigned char TCFU:1;
-			unsigned char TCFV:1;
-			unsigned char :2;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
 		} BIT;
 	} TSR;
 	unsigned short TCNT;
@@ -8556,12 +7884,6 @@ struct st_mtu3 {
 		unsigned char BYTE;
 		struct {
 			unsigned char TCFD:1;
-			unsigned char :2;
-			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
 		} BIT;
 	} TSR;
 	char           wk7[11];
@@ -8659,12 +7981,6 @@ struct st_mtu4 {
 		unsigned char BYTE;
 		struct {
 			unsigned char TCFD:1;
-			unsigned char :2;
-			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
 		} BIT;
 	} TSR;
 	char           wk8[11];
@@ -8735,7 +8051,7 @@ struct st_mtu5 {
 			unsigned char NFUEN:1;
 		} BIT;
 	} NFCR5;
-	char           wk1[2538];
+	char           wk1[490];
 	unsigned short TCNTU;
 	unsigned short TGRU;
 	union {
@@ -8810,17 +8126,7 @@ struct st_mtu5 {
 			unsigned char IOC:5;
 		} BIT;
 	} TIORW;
-	char           wk4[9];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :5;
-			unsigned char CMFU5:1;
-			unsigned char CMFV5:1;
-			unsigned char CMFW5:1;
-		} BIT;
-	} TSR;
-	char           wk5[1];
+	char           wk4[11];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8830,7 +8136,7 @@ struct st_mtu5 {
 			unsigned char TGIE5W:1;
 		} BIT;
 	} TIER;
-	char           wk6[1];
+	char           wk5[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8840,7 +8146,7 @@ struct st_mtu5 {
 			unsigned char CSTW5:1;
 		} BIT;
 	} TSTR;
-	char           wk7[1];
+	char           wk6[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8853,19 +8159,6 @@ struct st_mtu5 {
 };
 
 struct st_mtu6 {
-	char           wk0[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char NFCS:2;
-			unsigned char NFDEN:1;
-			unsigned char NFCEN:1;
-			unsigned char NFBEN:1;
-			unsigned char NFAEN:1;
-		} BIT;
-	} NFCR6;
-	char           wk1[1884];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8874,7 +8167,7 @@ struct st_mtu6 {
 			unsigned char TPSC:3;
 		} BIT;
 	} TCR;
-	char           wk2[1];
+	char           wk0[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8884,7 +8177,7 @@ struct st_mtu6 {
 			unsigned char MD:4;
 		} BIT;
 	} TMDR1;
-	char           wk3[1];
+	char           wk1[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8899,7 +8192,7 @@ struct st_mtu6 {
 			unsigned char IOC:4;
 		} BIT;
 	} TIORL;
-	char           wk4[2];
+	char           wk2[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8912,28 +8205,22 @@ struct st_mtu6 {
 			unsigned char TGIEA:1;
 		} BIT;
 	} TIER;
-	char           wk5[7];
+	char           wk3[7];
 	unsigned short TCNT;
-	char           wk6[6];
+	char           wk4[6];
 	unsigned short TGRA;
 	unsigned short TGRB;
-	char           wk7[8];
+	char           wk5[8];
 	unsigned short TGRC;
 	unsigned short TGRD;
-	char           wk8[4];
+	char           wk6[4];
 	union {
 		unsigned char BYTE;
 		struct {
 			unsigned char TCFD:1;
-			unsigned char :2;
-			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
 		} BIT;
 	} TSR;
-	char           wk9[11];
+	char           wk7[11];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8942,7 +8229,7 @@ struct st_mtu6 {
 			unsigned char TTSA:1;
 		} BIT;
 	} TBTM;
-	char           wk10[19];
+	char           wk8[19];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8950,7 +8237,7 @@ struct st_mtu6 {
 			unsigned char TPSC2:3;
 		} BIT;
 	} TCR2;
-	char           wk11[3];
+	char           wk9[3];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8964,11 +8251,9 @@ struct st_mtu6 {
 			unsigned char CE2B:1;
 		} BIT;
 	} TSYCR;
-	char           wk12[33];
+	char           wk10[33];
 	unsigned short TGRE;
-};
-
-struct st_mtu7 {
+	char           wk11[31];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -8979,8 +8264,11 @@ struct st_mtu7 {
 			unsigned char NFBEN:1;
 			unsigned char NFAEN:1;
 		} BIT;
-	} NFCR7;
-	char           wk0[1884];
+	} NFCR6;
+};
+
+struct st_mtu7 {
+	char           wk0[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -9041,12 +8329,6 @@ struct st_mtu7 {
 		unsigned char BYTE;
 		struct {
 			unsigned char TCFD:1;
-			unsigned char :2;
-			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
 		} BIT;
 	} TSR;
 	char           wk8[11];
@@ -9090,6 +8372,18 @@ struct st_mtu7 {
 	char           wk12[38];
 	unsigned short TGRE;
 	unsigned short TGRF;
+	char           wk13[28];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :2;
+			unsigned char NFCS:2;
+			unsigned char NFDEN:1;
+			unsigned char NFCEN:1;
+			unsigned char NFBEN:1;
+			unsigned char NFAEN:1;
+		} BIT;
+	} NFCR7;
 };
 
 struct st_mtu8 {
@@ -9139,8 +8433,7 @@ struct st_mtu8 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :2;
-			unsigned char TCIEU:1;
+			unsigned char :3;
 			unsigned char TCIEV:1;
 			unsigned char TGIED:1;
 			unsigned char TGIEC:1;
@@ -9148,26 +8441,15 @@ struct st_mtu8 {
 			unsigned char TGIEA:1;
 		} BIT;
 	} TIER;
+	char           wk1[1];
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char :3;
-			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
-			unsigned char TGFB:1;
-			unsigned char TGFA:1;
-		} BIT;
-	} TSR;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char PCB:2;
+			unsigned char :5;
 			unsigned char TPSC2:3;
 		} BIT;
 	} TCR2;
-	char           wk1[1];
+	char           wk2[1];
 	unsigned long  TCNT;
 	unsigned long  TGRA;
 	unsigned long  TGRB;
@@ -9225,40 +8507,6 @@ struct st_pdc {
 	} PCMONR;
 	union {
 		unsigned long LONG;
-		struct {
-			unsigned long B31:1;
-			unsigned long B30:1;
-			unsigned long B29:1;
-			unsigned long B28:1;
-			unsigned long B27:1;
-			unsigned long B26:1;
-			unsigned long B25:1;
-			unsigned long B24:1;
-			unsigned long B23:1;
-			unsigned long B22:1;
-			unsigned long B21:1;
-			unsigned long B20:1;
-			unsigned long B19:1;
-			unsigned long B18:1;
-			unsigned long B17:1;
-			unsigned long B16:1;
-			unsigned long B15:1;
-			unsigned long B14:1;
-			unsigned long B13:1;
-			unsigned long B12:1;
-			unsigned long B11:1;
-			unsigned long B10:1;
-			unsigned long B9:1;
-			unsigned long B8:1;
-			unsigned long B7:1;
-			unsigned long B6:1;
-			unsigned long B5:1;
-			unsigned long B4:1;
-			unsigned long B3:1;
-			unsigned long B2:1;
-			unsigned long B1:1;
-			unsigned long B0:1;
-		} BIT;
 	} PCDR;
 	union {
 		unsigned long LONG;
@@ -9284,73 +8532,53 @@ struct st_poe {
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char POE0F:1;
-			unsigned char :3;
-			unsigned char PIE1:1;
-			unsigned char :6;
-			unsigned char POE0M:2;
+			unsigned short :3;
+			unsigned short POE0F:1;
+			unsigned short :3;
+			unsigned short PIE1:1;
+			unsigned short :6;
+			unsigned short POE0M:2;
 		} BIT;
 	} ICSR1;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char OSF1:1;
-			unsigned char :5;
-			unsigned char OCE1:1;
-			unsigned char OIE1:1;
+			unsigned short OSF1:1;
+			unsigned short :5;
+			unsigned short OCE1:1;
+			unsigned short OIE1:1;
 		} BIT;
 	} OCSR1;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char POE4F:1;
-			unsigned char :3;
-			unsigned char PIE2:1;
-			unsigned char :6;
-			unsigned char POE4M:2;
+			unsigned short :3;
+			unsigned short POE4F:1;
+			unsigned short :3;
+			unsigned short PIE2:1;
+			unsigned short :6;
+			unsigned short POE4M:2;
 		} BIT;
 	} ICSR2;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char OSF2:1;
-			unsigned char :5;
-			unsigned char OCE2:1;
-			unsigned char OIE2:1;
+			unsigned short OSF2:1;
+			unsigned short :5;
+			unsigned short OCE2:1;
+			unsigned short OIE2:1;
 		} BIT;
 	} OCSR2;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char POE8F:1;
-			unsigned char :2;
-			unsigned char POE8E:1;
-			unsigned char PIE3:1;
-			unsigned char :6;
-			unsigned char POE8M:2;
+			unsigned short :3;
+			unsigned short POE8F:1;
+			unsigned short :2;
+			unsigned short POE8E:1;
+			unsigned short PIE3:1;
+			unsigned short :6;
+			unsigned short POE8M:2;
 		} BIT;
 	} ICSR3;
 	union {
@@ -9431,77 +8659,61 @@ struct st_poe {
 			unsigned short :3;
 			unsigned short IC4ADDGPT23ZE:1;
 			unsigned short IC3ADDGPT23ZE:1;
-			unsigned short IC2ADDGPT23Z:1;
+			unsigned short IC2ADDGPT23ZE:1;
 			unsigned short IC1ADDGPT23ZE:1;
 			unsigned short :3;
 			unsigned short IC5ADDGPT01ZE:1;
 			unsigned short :1;
 			unsigned short IC3ADDGPT01ZE:1;
-			unsigned short IC2ADDGPT01Z:1;
+			unsigned short IC2ADDGPT01ZE:1;
 			unsigned short IC1ADDGPT01ZE:1;
 		} BIT;
 	} POECR6;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char POE10F:1;
-			unsigned char :2;
-			unsigned char POE10E:1;
-			unsigned char PIE4:1;
-			unsigned char :6;
-			unsigned char POE10M:2;
+			unsigned short :3;
+			unsigned short POE10F:1;
+			unsigned short :2;
+			unsigned short POE10E:1;
+			unsigned short PIE4:1;
+			unsigned short :6;
+			unsigned short POE10M:2;
 		} BIT;
 	} ICSR4;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char POE11F:1;
-			unsigned char :2;
-			unsigned char POE11E:1;
-			unsigned char PIE5:1;
-			unsigned char :6;
-			unsigned char POE11M:2;
+			unsigned short :3;
+			unsigned short POE11F:1;
+			unsigned short :2;
+			unsigned short POE11E:1;
+			unsigned short PIE5:1;
+			unsigned short :6;
+			unsigned short POE11M:2;
 		} BIT;
 	} ICSR5;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :8;
-			unsigned char OLSEN:1;
-			unsigned char :1;
-			unsigned char OLSG2B:1;
-			unsigned char OLSG2A:1;
-			unsigned char OLSG1B:1;
-			unsigned char OLSG1A:1;
-			unsigned char OLSG0B:1;
-			unsigned char OLSG0A:1;
+			unsigned short :8;
+			unsigned short OLSEN:1;
+			unsigned short :1;
+			unsigned short OLSG2B:1;
+			unsigned short OLSG2A:1;
+			unsigned short OLSG1B:1;
+			unsigned short OLSG1A:1;
+			unsigned short OLSG0B:1;
+			unsigned short OLSG0A:1;
 		} BIT;
 	} ALR1;
 	union {
 		unsigned short WORD;
 		struct {
-			unsigned char H;
-			unsigned char L;
-		} BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char OSTSTF:1;
-			unsigned char :2;
-			unsigned char OSTSTE:1;
+			unsigned short :3;
+			unsigned short OSTSTF:1;
+			unsigned short :2;
+			unsigned short OSTSTE:1;
 		} BIT;
 	} ICSR6;
 	char           wk0[2];
@@ -9574,7 +8786,7 @@ struct st_poe {
 			unsigned char :5;
 			unsigned char M4G2SEL:1;
 			unsigned char M4G1SEL:1;
-			unsigned char M4G0SEL:1;
+			unsigned char M3G0SEL:1;
 		} BIT;
 	} MGSELR;
 };
@@ -9937,7 +9149,7 @@ struct st_port3 {
 		struct {
 			unsigned char B7:1;
 			unsigned char B6:1;
-			unsigned char B5:1;
+			unsigned char :1;
 			unsigned char B4:1;
 			unsigned char B3:1;
 			unsigned char B2:1;
@@ -9966,9 +9178,7 @@ struct st_port3 {
 			unsigned char B6:1;
 			unsigned char :1;
 			unsigned char B4:1;
-			unsigned char :1;
-			unsigned char B2:1;
-			unsigned char :1;
+			unsigned char :3;
 			unsigned char B0:1;
 		} BIT;
 	} ODR1;
@@ -9978,7 +9188,7 @@ struct st_port3 {
 		struct {
 			unsigned char B7:1;
 			unsigned char B6:1;
-			unsigned char B5:1;
+			unsigned char :1;
 			unsigned char B4:1;
 			unsigned char B3:1;
 			unsigned char B2:1;
@@ -10469,10 +9679,6 @@ struct st_port8 {
 			unsigned char B6:1;
 			unsigned char :1;
 			unsigned char B4:1;
-			unsigned char :1;
-			unsigned char B2:1;
-			unsigned char :1;
-			unsigned char B0:1;
 		} BIT;
 	} ODR1;
 	char           wk4[54];
@@ -11687,6 +10893,191 @@ struct st_ppg1 {
 	} NDRL2;
 };
 
+struct st_ptpedmac {
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :25;
+			unsigned long DE:1;
+			unsigned long DL:2;
+			unsigned long :3;
+			unsigned long SWR:1;
+		} BIT;
+	} EDMR;
+	char           wk0[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :31;
+			unsigned long TR:1;
+		} BIT;
+	} EDTRR;
+	char           wk1[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :31;
+			unsigned long RR:1;
+		} BIT;
+	} EDRRR;
+	char           wk2[4];
+	unsigned long  TDLAR;
+	char           wk3[4];
+	unsigned long  RDLAR;
+	char           wk4[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :1;
+			unsigned long TWB:1;
+			unsigned long :3;
+			unsigned long TABT:1;
+			unsigned long :1;
+			unsigned long RFCOF:1;
+			unsigned long ADE:1;
+			unsigned long :1;
+			unsigned long TC:1;
+			unsigned long TDE:1;
+			unsigned long TFUF:1;
+			unsigned long FR:1;
+			unsigned long RDE:1;
+			unsigned long RFOF:1;
+			unsigned long :7;
+			unsigned long MACE:1;
+			unsigned long RPORT:1;
+			unsigned long :2;
+			unsigned long PVER:1;
+			unsigned long TYPE:4;
+		} BIT;
+	} EESR;
+	char           wk5[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :1;
+			unsigned long TWBIP:1;
+			unsigned long :3;
+			unsigned long TABTIP:1;
+			unsigned long :1;
+			unsigned long RFCOFIP:1;
+			unsigned long ADEIP:1;
+			unsigned long :1;
+			unsigned long TCIP:1;
+			unsigned long TDEIP:1;
+			unsigned long TFUFIP:1;
+			unsigned long FRIP:1;
+			unsigned long RDEIP:1;
+			unsigned long RFOFIP:1;
+			unsigned long :7;
+			unsigned long MACEIP:1;
+			unsigned long RPORTIP:1;
+			unsigned long :2;
+			unsigned long PVERIP:1;
+		} BIT;
+	} EESIPR;
+	char           wk6[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :24;
+			unsigned long RPORTCE:1;
+			unsigned long :2;
+			unsigned long PVERCE:1;
+			unsigned long TYPECE:4;
+		} BIT;
+	} TRSCER;
+	char           wk7[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :16;
+			unsigned long MFC:16;
+		} BIT;
+	} RMFCR;
+	char           wk8[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :21;
+			unsigned long TFT:11;
+		} BIT;
+	} TFTR;
+	char           wk9[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :19;
+			unsigned long TFD:5;
+			unsigned long :3;
+			unsigned long RFD:5;
+		} BIT;
+	} FDR;
+	char           wk10[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :31;
+			unsigned long RNR:1;
+		} BIT;
+	} RMCR;
+	char           wk11[8];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :16;
+			unsigned long UNDER:16;
+		} BIT;
+	} TFUCR;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :16;
+			unsigned long OVER:16;
+		} BIT;
+	} RFOCR;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :31;
+			unsigned long ELB:1;
+		} BIT;
+	} IOSR;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :13;
+			unsigned long RFFO:3;
+			unsigned long :13;
+			unsigned long RFDO:3;
+		} BIT;
+	} FCFTR;
+	char           wk12[4];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :14;
+			unsigned long PADS:2;
+			unsigned long :10;
+			unsigned long PADR:6;
+		} BIT;
+	} RPADIR;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned long :27;
+			unsigned long TIM:1;
+			unsigned long :3;
+			unsigned long TIS:1;
+		} BIT;
+	} TRIMD;
+	char           wk13[72];
+	unsigned long  RBWAR;
+	unsigned long  RDFAR;
+	char           wk14[4];
+	unsigned long  TBRAR;
+	unsigned long  TDFAR;
+};
+
 struct st_qspi {
 	union {
 		unsigned char BYTE;
@@ -11694,7 +11085,9 @@ struct st_qspi {
 			unsigned char SPRIE:1;
 			unsigned char SPE:1;
 			unsigned char SPTIE:1;
-			unsigned char :3;
+			unsigned char :1;
+			unsigned char SPMST:1;
+			unsigned char :1;
 			unsigned char SPSSLIE:1;
 		} BIT;
 	} SPCR;
@@ -11729,39 +11122,11 @@ struct st_qspi {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long SPD31:1;
-			unsigned long SPD30:1;
-			unsigned long SPD29:1;
-			unsigned long SPD28:1;
-			unsigned long SPD27:1;
-			unsigned long SPD26:1;
-			unsigned long SPD25:1;
-			unsigned long SPD24:1;
-			unsigned long SPD23:1;
-			unsigned long SPD22:1;
-			unsigned long SPD21:1;
-			unsigned long SPD20:1;
-			unsigned long SPD19:1;
-			unsigned long SPD18:1;
-			unsigned long SPD17:1;
-			unsigned long SPD16:1;
-			unsigned long SPD15:1;
-			unsigned long SPD14:1;
-			unsigned long SPD13:1;
-			unsigned long SPD12:1;
-			unsigned long SPD11:1;
-			unsigned long SPD10:1;
-			unsigned long SPD9:1;
-			unsigned long SPD8:1;
-			unsigned long SPD7:1;
-			unsigned long SPD6:1;
-			unsigned long SPD5:1;
-			unsigned long SPD4:1;
-			unsigned long SPD3:1;
-			unsigned long SPD2:1;
-			unsigned long SPD1:1;
-			unsigned long SPD0:1;
-		} BIT;
+			unsigned short H;
+		} WORD;
+		struct {
+			unsigned char HH;
+		} BYTE;
 	} SPDR;
 	union {
 		unsigned char BYTE;
@@ -11902,21 +11267,13 @@ struct st_qspi {
 			unsigned short RXBC:6;
 		} BIT;
 	} SPBDCR;
-	union {
-		unsigned long LONG;
-	} SPBMUL0;
-	union {
-		unsigned long LONG;
-	} SPBMUL1;
-	union {
-		unsigned long LONG;
-	} SPBMUL2;
-	union {
-		unsigned long LONG;
-	} SPBMUL3;
+	unsigned long SPBMUL0;
+	unsigned long SPBMUL1;
+	unsigned long SPBMUL2;
+	unsigned long SPBMUL3;
 };
 
-struct st_riic0 {
+struct st_riic {
 	union {
 		unsigned char BYTE;
 		struct {
@@ -12102,193 +11459,7 @@ struct st_riic0 {
 	unsigned char  ICDRR;
 };
 
-struct st_riic2 {
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ICE:1;
-			unsigned char IICRST:1;
-			unsigned char CLO:1;
-			unsigned char SOWP:1;
-			unsigned char SCLO:1;
-			unsigned char SDAO:1;
-			unsigned char SCLI:1;
-			unsigned char SDAI:1;
-		} BIT;
-	} ICCR1;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BBSY:1;
-			unsigned char MST:1;
-			unsigned char TRS:1;
-			unsigned char :1;
-			unsigned char SP:1;
-			unsigned char RS:1;
-			unsigned char ST:1;
-		} BIT;
-	} ICCR2;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char MTWP:1;
-			unsigned char CKS:3;
-			unsigned char BCWP:1;
-			unsigned char BC:3;
-		} BIT;
-	} ICMR1;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char DLCS:1;
-			unsigned char SDDL:3;
-			unsigned char :1;
-			unsigned char TMOH:1;
-			unsigned char TMOL:1;
-			unsigned char TMOS:1;
-		} BIT;
-	} ICMR2;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char SMBS:1;
-			unsigned char WAIT:1;
-			unsigned char RDRFS:1;
-			unsigned char ACKWP:1;
-			unsigned char ACKBT:1;
-			unsigned char ACKBR:1;
-			unsigned char NF:2;
-		} BIT;
-	} ICMR3;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char SCLE:1;
-			unsigned char NFE:1;
-			unsigned char NACKE:1;
-			unsigned char SALE:1;
-			unsigned char NALE:1;
-			unsigned char MALE:1;
-			unsigned char TMOE:1;
-		} BIT;
-	} ICFER;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char HOAE:1;
-			unsigned char :1;
-			unsigned char DIDE:1;
-			unsigned char :1;
-			unsigned char GCAE:1;
-			unsigned char SAR2E:1;
-			unsigned char SAR1E:1;
-			unsigned char SAR0E:1;
-		} BIT;
-	} ICSER;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char TIE:1;
-			unsigned char TEIE:1;
-			unsigned char RIE:1;
-			unsigned char NAKIE:1;
-			unsigned char SPIE:1;
-			unsigned char STIE:1;
-			unsigned char ALIE:1;
-			unsigned char TMOIE:1;
-		} BIT;
-	} ICIER;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char HOA:1;
-			unsigned char :1;
-			unsigned char DID:1;
-			unsigned char :1;
-			unsigned char GCA:1;
-			unsigned char AAS2:1;
-			unsigned char AAS1:1;
-			unsigned char AAS0:1;
-		} BIT;
-	} ICSR1;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char TDRE:1;
-			unsigned char TEND:1;
-			unsigned char RDRF:1;
-			unsigned char NACKF:1;
-			unsigned char STOP:1;
-			unsigned char START:1;
-			unsigned char AL:1;
-			unsigned char TMOF:1;
-		} BIT;
-	} ICSR2;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char SVA:7;
-			unsigned char SVA0:1;
-		} BIT;
-	} SARL0;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :5;
-			unsigned char SVA:2;
-			unsigned char FS:1;
-		} BIT;
-	} SARU0;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char SVA:7;
-			unsigned char SVA0:1;
-		} BIT;
-	} SARL1;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :5;
-			unsigned char SVA:2;
-			unsigned char FS:1;
-		} BIT;
-	} SARU1;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char SVA:7;
-			unsigned char SVA0:1;
-		} BIT;
-	} SARL2;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :5;
-			unsigned char SVA:2;
-			unsigned char FS:1;
-		} BIT;
-	} SARU2;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char BRL:5;
-		} BIT;
-	} ICBRL;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :3;
-			unsigned char BRH:5;
-		} BIT;
-	} ICBRH;
-	unsigned char  ICDRT;
-	unsigned char  ICDRR;
-};
-
-struct st_rspi0 {
+struct st_rspi {
 	union {
 		unsigned char BYTE;
 		struct {
@@ -12390,7 +11561,7 @@ struct st_rspi0 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char SPTDDL:3;
+			unsigned char :3;
 			unsigned char SCKASE:1;
 			unsigned char PTE:1;
 			unsigned char SPIIE:1;
@@ -12536,40 +11707,72 @@ struct st_rtc {
 	} R64CNT;
 	char           wk0[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char SEC10:3;
-			unsigned char SEC1:4;
-		} BIT;
-	} RSECCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char SEC10:3;
+				unsigned char SEC1:4;
+			} BIT;
+		} RSECCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNT:8;
+			} BIT;
+		} BCNT0;
+	};
 	char           wk1[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char MIN10:3;
-			unsigned char MIN1:4;
-		} BIT;
-	} RMINCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char MIN10:3;
+				unsigned char MIN1:4;
+			} BIT;
+		} RMINCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNT:8;
+			} BIT;
+		} BCNT1;
+	};
 	char           wk2[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char PM:1;
-			unsigned char HR10:2;
-			unsigned char HR1:4;
-		} BIT;
-	} RHRCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char PM:1;
+				unsigned char HR10:2;
+				unsigned char HR1:4;
+			} BIT;
+		} RHRCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNT:8;
+			} BIT;
+		} BCNT2;
+	};
 	char           wk3[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :5;
-			unsigned char DAYW:3;
-		} BIT;
-	} RWKCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :5;
+				unsigned char DAYW:3;
+			} BIT;
+		} RWKCNT;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNT:8;
+			} BIT;
+		} BCNT3;
+	};
 	char           wk4[1];
 	union {
 		unsigned char BYTE;
@@ -12598,76 +11801,141 @@ struct st_rtc {
 		} BIT;
 	} RYRCNT;
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-			unsigned char SEC10:3;
-			unsigned char SEC1:4;
-		} BIT;
-	} RSECAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+				unsigned char SEC10:3;
+				unsigned char SEC1:4;
+			} BIT;
+		} RSECAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNTAR:8;
+			} BIT;
+		} BCNT0AR;
+	};
 	char           wk7[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-			unsigned char MIN10:3;
-			unsigned char MIN1:4;
-		} BIT;
-	} RMINAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+				unsigned char MIN10:3;
+				unsigned char MIN1:4;
+			} BIT;
+		} RMINAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNTAR:8;
+			} BIT;
+		} BCNT1AR;
+	};
 	char           wk8[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-			unsigned char PM:1;
-			unsigned char HR10:2;
-			unsigned char HR1:4;
-		} BIT;
-	} RHRAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+				unsigned char PM:1;
+				unsigned char HR10:2;
+				unsigned char HR1:4;
+			} BIT;
+		} RHRAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNTAR:8;
+			} BIT;
+		} BCNT2AR;
+	};
 	char           wk9[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-			unsigned char :4;
-			unsigned char DAYW:3;
-		} BIT;
-	} RWKAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+				unsigned char :4;
+				unsigned char DAYW:3;
+			} BIT;
+		} RWKAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNTAR:8;
+			} BIT;
+		} BCNT3AR;
+	};
 	char           wk10[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-			unsigned char :1;
-			unsigned char DATE10:2;
-			unsigned char DATE1:4;
-		} BIT;
-	} RDAYAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+				unsigned char :1;
+				unsigned char DATE10:2;
+				unsigned char DATE1:4;
+			} BIT;
+		} RDAYAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:8;
+			} BIT;
+		} BCNT0AER;
+	};
 	char           wk11[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-			unsigned char :2;
-			unsigned char MON10:1;
-			unsigned char MON1:4;
-		} BIT;
-	} RMONAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+				unsigned char :2;
+				unsigned char MON10:1;
+				unsigned char MON1:4;
+			} BIT;
+		} RMONAR;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:8;
+			} BIT;
+		} BCNT1AER;
+	};
 	char           wk12[1];
 	union {
-		unsigned short WORD;
-		struct {
-			unsigned short :8;
-			unsigned short YR10:4;
-			unsigned short YR1:4;
-		} BIT;
-	} RYRAR;
+		union {
+			unsigned short WORD;
+			struct {
+				unsigned short :8;
+				unsigned short YR10:4;
+				unsigned short YR1:4;
+			} BIT;
+		} RYRAR;
+		union {
+			unsigned short WORD;
+			struct {
+				unsigned short :8;
+				unsigned short ENB:8;
+			} BIT;
+		} BCNT2AER;
+	};
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:1;
-		} BIT;
-	} RYRAREN;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:1;
+			} BIT;
+		} RYRAREN;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char ENB:8;
+			} BIT;
+		} BCNT3AER;
+	};
 	char           wk13[3];
 	union {
 		unsigned char BYTE;
@@ -12769,41 +12037,73 @@ struct st_rtc {
 	} RTCCR2;
 	char           wk21[13];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char SEC10:3;
-			unsigned char SEC1:4;
-		} BIT;
-	} RSECCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char SEC10:3;
+				unsigned char SEC1:4;
+			} BIT;
+		} RSECCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP0:8;
+			} BIT;
+		} BCNT0CP0;
+	};
 	char           wk22[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char MIN10:3;
-			unsigned char MIN1:4;
-		} BIT;
-	} RMINCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char MIN10:3;
+				unsigned char MIN1:4;
+			} BIT;
+		} RMINCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP0:8;
+			} BIT;
+		} BCNT1CP0;
+	};
 	char           wk23[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char PM:1;
-			unsigned char HR10:2;
-			unsigned char HR1:4;
-		} BIT;
-	} RHRCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char PM:1;
+				unsigned char HR10:2;
+				unsigned char HR1:4;
+			} BIT;
+		} RHRCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP0:8;
+			} BIT;
+		} BCNT2CP0;
+	};
 	char           wk24[3];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char DATE10:2;
-			unsigned char DATE1:4;
-		} BIT;
-	} RDAYCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :2;
+				unsigned char DATE10:2;
+				unsigned char DATE1:4;
+			} BIT;
+		} RDAYCP0;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP0:8;
+			} BIT;
+		} BCNT3CP0;
+	};
 	char           wk25[1];
 	union {
 		unsigned char BYTE;
@@ -12815,41 +12115,73 @@ struct st_rtc {
 	} RMONCP0;
 	char           wk26[5];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char SEC10:3;
-			unsigned char SEC1:4;
-		} BIT;
-	} RSECCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char SEC10:3;
+				unsigned char SEC1:4;
+			} BIT;
+		} RSECCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP1:8;
+			} BIT;
+		} BCNT0CP1;
+	};
 	char           wk27[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char MIN10:3;
-			unsigned char MIN1:4;
-		} BIT;
-	} RMINCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char MIN10:3;
+				unsigned char MIN1:4;
+			} BIT;
+		} RMINCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP1:8;
+			} BIT;
+		} BCNT1CP1;
+	};
 	char           wk28[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char PM:1;
-			unsigned char HR10:2;
-			unsigned char HR1:4;
-		} BIT;
-	} RHRCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char PM:1;
+				unsigned char HR10:2;
+				unsigned char HR1:4;
+			} BIT;
+		} RHRCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP1:8;
+			} BIT;
+		} BCNT2CP1;
+	};
 	char           wk29[3];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char DATE10:2;
-			unsigned char DATE1:4;
-		} BIT;
-	} RDAYCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :2;
+				unsigned char DATE10:2;
+				unsigned char DATE1:4;
+			} BIT;
+		} RDAYCP1;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP1:8;
+			} BIT;
+		} BCNT3CP1;
+	};
 	char           wk30[1];
 	union {
 		unsigned char BYTE;
@@ -12861,41 +12193,73 @@ struct st_rtc {
 	} RMONCP1;
 	char           wk31[5];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char SEC10:3;
-			unsigned char SEC1:4;
-		} BIT;
-	} RSECCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char SEC10:3;
+				unsigned char SEC1:4;
+			} BIT;
+		} RSECCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP2:8;
+			} BIT;
+		} BCNT0CP2;
+	};
 	char           wk32[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char MIN10:3;
-			unsigned char MIN1:4;
-		} BIT;
-	} RMINCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char MIN10:3;
+				unsigned char MIN1:4;
+			} BIT;
+		} RMINCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP2:8;
+			} BIT;
+		} BCNT1CP2;
+	};
 	char           wk33[1];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :1;
-			unsigned char PM:1;
-			unsigned char HR10:2;
-			unsigned char HR1:4;
-		} BIT;
-	} RHRCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :1;
+				unsigned char PM:1;
+				unsigned char HR10:2;
+				unsigned char HR1:4;
+			} BIT;
+		} RHRCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP2:8;
+			} BIT;
+		} BCNT2CP2;
+	};
 	char           wk34[3];
 	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char DATE10:2;
-			unsigned char DATE1:4;
-		} BIT;
-	} RDAYCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char :2;
+				unsigned char DATE10:2;
+				unsigned char DATE1:4;
+			} BIT;
+		} RDAYCP2;
+		union {
+			unsigned char BYTE;
+			struct {
+				unsigned char BCNCP2:8;
+			} BIT;
+		} BCNT3CP2;
+	};
 	char           wk35[1];
 	union {
 		unsigned char BYTE;
@@ -12905,190 +12269,6 @@ struct st_rtc {
 			unsigned char MON1:4;
 		} BIT;
 	} RMONCP2;
-};
-
-struct st_rtcb {
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNT:8;
-		} BIT;
-	} BCNT0;
-	char           wk0[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNT:8;
-		} BIT;
-	} BCNT1;
-	char           wk1[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNT:8;
-		} BIT;
-	} BCNT2;
-	char           wk2[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNT:8;
-		} BIT;
-	} BCNT3;
-	char           wk3[7];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNTAR:8;
-		} BIT;
-	} BCNT0AR;
-	char           wk4[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNTAR:8;
-		} BIT;
-	} BCNT1AR;
-	char           wk5[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNTAR:8;
-		} BIT;
-	} BCNT2AR;
-	char           wk6[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNTAR:8;
-		} BIT;
-	} BCNT3AR;
-	char           wk7[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:8;
-		} BIT;
-	} BCNT0AER;
-	char           wk8[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:8;
-		} BIT;
-	} BCNT1AER;
-	char           wk9[1];
-	union {
-		unsigned short WORD;
-		struct {
-			unsigned short :8;
-			unsigned short ENB:8;
-		} BIT;
-	} BCNT2AER;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char ENB:8;
-		} BIT;
-	} BCNT3AER;
-	char           wk10[5];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char CNTMD:1;
-			unsigned char :1;
-			unsigned char AADJP:1;
-			unsigned char AADJE:1;
-			unsigned char RTCOE:1;
-			unsigned char :1;
-			unsigned char RESET:1;
-			unsigned char START:1;
-		} BIT;
-	} BRCR2;
-	char           wk11[45];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP0:8;
-		} BIT;
-	} BCNT0CP0;
-	char           wk12[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP0:8;
-		} BIT;
-	} BCNT1CP0;
-	char           wk13[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP0:8;
-		} BIT;
-	} BCNT2CP0;
-	char           wk14[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP0:8;
-		} BIT;
-	} BCNT3CP0;
-	char           wk15[7];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP1:8;
-		} BIT;
-	} BCNT0CP1;
-	char           wk16[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP1:8;
-		} BIT;
-	} BCNT1CP1;
-	char           wk17[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP1:8;
-		} BIT;
-	} BCNT2CP1;
-	char           wk18[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP1:8;
-		} BIT;
-	} BCNT3CP1;
-	char           wk19[7];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP2:8;
-		} BIT;
-	} BCNT0CP2;
-	char           wk20[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP2:8;
-		} BIT;
-	} BCNT1CP2;
-	char           wk21[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP2:8;
-		} BIT;
-	} BCNT2CP2;
-	char           wk22[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCNCP2:8;
-		} BIT;
-	} BCNT3CP2;
 };
 
 struct st_s12ad {
@@ -13154,26 +12334,14 @@ struct st_s12ad {
 			unsigned short TRSB:6;
 		} BIT;
 	} ADSTRGR;
-	union {
-		unsigned short WORD;
-		struct {
-			unsigned short EXOEN:1;
-			unsigned short EXSEL:2;
-			unsigned short :3;
-			unsigned short OCS:1;
-			unsigned short TSS:1;
-			unsigned short :6;
-			unsigned short OCSAD:1;
-			unsigned short TSSAD:1;
-		} BIT;
-	} ADEXICR;
+	char           wk4[2];
 	union {
 		unsigned short WORD;
 		struct {
 			unsigned short ANSB0:16;
 		} BIT;
 	} ADANSB0;
-	char           wk4[2];
+	char           wk5[2];
 	union {
 		unsigned short WORD;
 		struct {
@@ -13181,7 +12349,7 @@ struct st_s12ad {
 			unsigned short AD:12;
 		} BIT;
 	} ADDBLDR;
-	char           wk5[4];
+	char           wk6[4];
 	union {
 		unsigned short WORD;
 		union {
@@ -13205,10 +12373,10 @@ struct st_s12ad {
 	unsigned short ADDR5;
 	unsigned short ADDR6;
 	unsigned short ADDR7;
-	char           wk6[48];
+	char           wk7[48];
 	unsigned char  ADSSTR0;
 	unsigned char  ADSSTRL;
-	char           wk7[4];
+	char           wk8[4];
 	union {
 		unsigned short WORD;
 		struct {
@@ -13217,7 +12385,7 @@ struct st_s12ad {
 			unsigned short SSTSH:8;
 		} BIT;
 	} ADSHCR;
-	char           wk8[11];
+	char           wk9[11];
 	unsigned char  ADSSTR1;
 	unsigned char  ADSSTR2;
 	unsigned char  ADSSTR3;
@@ -13232,7 +12400,7 @@ struct st_s12ad {
 			unsigned char ADNDIS:5;
 		} BIT;
 	} ADDISCR;
-	char           wk9[5];
+	char           wk10[5];
 	union {
 		unsigned short WORD;
 		struct {
@@ -13242,10 +12410,10 @@ struct st_s12ad {
 			unsigned short PGS:1;
 		} BIT;
 	} ADGSPCR;
-	char           wk10[2];
+	char           wk11[2];
 	unsigned short ADDBLDRA;
 	unsigned short ADDBLDRB;
-	char           wk11[8];
+	char           wk12[8];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -13253,21 +12421,21 @@ struct st_s12ad {
 			unsigned char WCMPE:1;
 		} BIT;
 	} ADCMPCR;
-	char           wk12[3];
+	char           wk13[3];
 	union {
 		unsigned short WORD;
 		struct {
 			unsigned short CMPS0:16;
 		} BIT;
 	} ADCMPANSR0;
-	char           wk13[2];
+	char           wk14[2];
 	union {
 		unsigned short WORD;
 		struct {
 			unsigned short CMPL0:16;
 		} BIT;
 	} ADCMPLR0;
-	char           wk14[2];
+	char           wk15[2];
 	unsigned short ADCMPDR0;
 	unsigned short ADCMPDR1;
 	union {
@@ -13279,6 +12447,22 @@ struct st_s12ad {
 };
 
 struct st_s12ad1 {
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned short ADST:1;
+			unsigned short ADCS:2;
+			unsigned short ADIE:1;
+			unsigned short :2;
+			unsigned short TRGE:1;
+			unsigned short EXTRG:1;
+			unsigned short DBLE:1;
+			unsigned short GBADIE:1;
+			unsigned short :1;
+			unsigned short DBLANS:5;
+		} BIT;
+	} ADCSR;
+	char           wk0[2];
 	union {
 		unsigned short WORD;
 		struct {
@@ -13313,7 +12497,7 @@ struct st_s12ad1 {
 			unsigned char ADC:2;
 		} BIT;
 	} ADADC;
-	char           wk0[1];
+	char           wk1[1];
 	union {
 		unsigned short WORD;
 		struct {
@@ -13342,9 +12526,11 @@ struct st_s12ad1 {
 		struct {
 			unsigned short EXOEN:1;
 			unsigned short EXSEL:2;
-			unsigned short :3;
-			unsigned short OCS:1;
-			unsigned short TSS:1;
+			unsigned short :1;
+			unsigned short OCSB:1;
+			unsigned short TSSB:1;
+			unsigned short OCSA:1;
+			unsigned short TSSA:1;
 			unsigned short :6;
 			unsigned short OCSAD:1;
 			unsigned short TSSAD:1;
@@ -13402,13 +12588,13 @@ struct st_s12ad1 {
 	unsigned short ADDR18;
 	unsigned short ADDR19;
 	unsigned short ADDR20;
-	char           wk1[22];
+	char           wk2[22];
 	unsigned char  ADSSTR0;
 	unsigned char  ADSSTRL;
-	char           wk2[14];
+	char           wk3[14];
 	unsigned char  ADSSTRT;
 	unsigned char  ADSSTRO;
-	char           wk3[1];
+	char           wk4[1];
 	unsigned char  ADSSTR1;
 	unsigned char  ADSSTR2;
 	unsigned char  ADSSTR3;
@@ -13423,7 +12609,7 @@ struct st_s12ad1 {
 			unsigned char ADNDIS:5;
 		} BIT;
 	} ADDISCR;
-	char           wk4[5];
+	char           wk5[5];
 	union {
 		unsigned short WORD;
 		struct {
@@ -13433,10 +12619,10 @@ struct st_s12ad1 {
 			unsigned short PGS:1;
 		} BIT;
 	} ADGSPCR;
-	char           wk5[2];
+	char           wk6[2];
 	unsigned short ADDBLDRA;
 	unsigned short ADDBLDRB;
-	char           wk6[8];
+	char           wk7[8];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -13444,7 +12630,7 @@ struct st_s12ad1 {
 			unsigned char WCMPE:1;
 		} BIT;
 	} ADCMPCR;
-	char           wk7[1];
+	char           wk8[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -13633,10 +12819,20 @@ struct st_sci0 {
 			unsigned char SSE:1;
 		} BIT;
 	} SPMR;
-	unsigned char  TDRH;
-	unsigned char  TDRL;
-	unsigned char  RDRH;
-	unsigned char  RDRL;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char TDRH;
+			unsigned char TDRL;
+		} BYTE;
+	} TDRHL;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char RDRH;
+			unsigned char RDRL;
+		} BYTE;
+	} RDRHL;
 	unsigned char  MDDR;
 };
 
@@ -13761,10 +12957,20 @@ struct st_sci12 {
 			unsigned char SSE:1;
 		} BIT;
 	} SPMR;
-	unsigned char  TDRH;
-	unsigned char  TDRL;
-	unsigned char  RDRH;
-	unsigned char  RDRL;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char TDRH;
+			unsigned char TDRL;
+		} BYTE;
+	} TDRHL;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char RDRH;
+			unsigned char RDRL;
+		} BYTE;
+	} RDRHL;
 	unsigned char  MDDR;
 	char           wk0[13];
 	union {
@@ -13907,11 +13113,7 @@ struct st_sci12 {
 	unsigned char  TCNT;
 };
 
-//struct st_scia {
-//	unsigned char  MDDR;
-//};
-
-struct st_scif {
+struct st_scifa {
 	union {
 		unsigned short WORD;
 		struct {
@@ -13928,7 +13130,7 @@ struct st_scif {
 //	unsigned char  BRR;
 	union {
 		unsigned char  BRR;
-		unsigned char  MDDR;	
+		unsigned char  MDDR;
 	};
 	char           wk0[1];
 	union {
@@ -14013,7 +13215,7 @@ struct st_scif {
 		unsigned char BYTE;
 		struct {
 			unsigned char BGDM:1;
-			unsigned char ACS0:1;
+			unsigned char :1;
 			unsigned char BRME:1;
 			unsigned char MDDRS:1;
 			unsigned char DIR:1;
@@ -14034,83 +13236,6 @@ struct st_scif {
 			unsigned short TFTC:5;
 		} BIT;
 	} FTCR;
-};
-
-struct st_smci {
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char GM:1;
-			unsigned char BLK:1;
-			unsigned char PE:1;
-			unsigned char PM:1;
-			unsigned char BCP:2;
-			unsigned char CKS:2;
-		} BIT;
-	} SMR;
-	char           wk0[3];
-//	unsigned char  BRR;
-	union {
-		unsigned char  BRR;
-		unsigned char  MDDR;	
-	};
-	char           wk1[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char TIE:1;
-			unsigned char RIE:1;
-			unsigned char TE:1;
-			unsigned char RE:1;
-			unsigned char MPIE:1;
-			unsigned char TEIE:1;
-			unsigned char CKE:2;
-		} BIT;
-	} SCR;
-	char           wk2[3];
-	unsigned char  TDR;
-	char           wk3[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :2;
-			unsigned char ORER:1;
-			unsigned char ERS:1;
-			unsigned char PER:1;
-			unsigned char TEND:1;
-			unsigned char MPB:1;
-			unsigned char MPBT:1;
-		} BIT;
-	} SSR;
-	char           wk4[3];
-	unsigned char  RDR;
-	char           wk5[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BCP2:1;
-			unsigned char :2;
-			unsigned char CHR1:1;
-			unsigned char SDIR:1;
-			unsigned char SINV:1;
-			unsigned char :1;
-			unsigned char SMIF:1;
-		} BIT;
-	} SCMR;
-	char           wk6[3];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char BRME:1;
-			unsigned char MDDRS:1;
-			unsigned char :1;
-			unsigned char ABCS:1;
-			unsigned char :1;
-			unsigned char RSDMOS:1;
-			unsigned char :1;
-			unsigned char ACS0:1;
-		} BIT;
-	} SEMR;
 };
 
 struct st_smci0 {
@@ -14169,85 +13294,13 @@ struct st_smci0 {
 struct st_src {
 	union {
 		unsigned long LONG;
-		struct {
-			unsigned long :10;
-			unsigned long SRCFCTR:22;
-		} BIT;
 	} SRCFCTR[5552];
 	char           wk0[2352];
 	union {
 		unsigned long LONG;
-		struct {
-			unsigned long B31:1;
-			unsigned long B30:1;
-			unsigned long B29:1;
-			unsigned long B28:1;
-			unsigned long B27:1;
-			unsigned long B26:1;
-			unsigned long B25:1;
-			unsigned long B24:1;
-			unsigned long B23:1;
-			unsigned long B22:1;
-			unsigned long B21:1;
-			unsigned long B20:1;
-			unsigned long B19:1;
-			unsigned long B18:1;
-			unsigned long B17:1;
-			unsigned long B16:1;
-			unsigned long B15:1;
-			unsigned long B14:1;
-			unsigned long B13:1;
-			unsigned long B12:1;
-			unsigned long B11:1;
-			unsigned long B10:1;
-			unsigned long B9:1;
-			unsigned long B8:1;
-			unsigned long B7:1;
-			unsigned long B6:1;
-			unsigned long B5:1;
-			unsigned long B4:1;
-			unsigned long B3:1;
-			unsigned long B2:1;
-			unsigned long B1:1;
-			unsigned long B0:1;
-		} BIT;
 	} SRCID;
 	union {
 		unsigned long LONG;
-		struct {
-			unsigned long B31:1;
-			unsigned long B30:1;
-			unsigned long B29:1;
-			unsigned long B28:1;
-			unsigned long B27:1;
-			unsigned long B26:1;
-			unsigned long B25:1;
-			unsigned long B24:1;
-			unsigned long B23:1;
-			unsigned long B22:1;
-			unsigned long B21:1;
-			unsigned long B20:1;
-			unsigned long B19:1;
-			unsigned long B18:1;
-			unsigned long B17:1;
-			unsigned long B16:1;
-			unsigned long B15:1;
-			unsigned long B14:1;
-			unsigned long B13:1;
-			unsigned long B12:1;
-			unsigned long B11:1;
-			unsigned long B10:1;
-			unsigned long B9:1;
-			unsigned long B8:1;
-			unsigned long B7:1;
-			unsigned long B6:1;
-			unsigned long B5:1;
-			unsigned long B4:1;
-			unsigned long B3:1;
-			unsigned long B2:1;
-			unsigned long B1:1;
-			unsigned long B0:1;
-		} BIT;
 	} SRCOD;
 	union {
 		unsigned short WORD;
@@ -14290,13 +13343,13 @@ struct st_src {
 		unsigned short WORD;
 		struct {
 			unsigned short OFDN:5;
-			unsigned short IFDN:3;
-			unsigned short :2;
+			unsigned short IFDN:4;
+			unsigned short :1;
 			unsigned short CEF:1;
 			unsigned short FLF:1;
 			unsigned short UDF:1;
 			unsigned short OVF:1;
-			unsigned short IINIT:1;
+			unsigned short IINT:1;
 			unsigned short OINT:1;
 		} BIT;
 	} SRCSTAT;
@@ -14357,7 +13410,7 @@ struct st_ssi {
 			unsigned long :23;
 			unsigned long TTRG:2;
 			unsigned long RTRG:2;
-			unsigned long TUE:1;
+			unsigned long TIE:1;
 			unsigned long RIE:1;
 			unsigned long TFRST:1;
 			unsigned long RFRST:1;
@@ -14439,7 +13492,9 @@ struct st_system {
 			unsigned long MSTPA29:1;
 			unsigned long MSTPA28:1;
 			unsigned long MSTPA27:1;
-			unsigned long :7;
+			unsigned long :2;
+			unsigned long MSTPA24:1;
+			unsigned long :4;
 			unsigned long MSTPA19:1;
 			unsigned long :1;
 			unsigned long MSTPA17:1;
@@ -14512,9 +13567,8 @@ struct st_system {
 			unsigned long MSTPC17:1;
 			unsigned long :9;
 			unsigned long MSTPC7:1;
-			unsigned long :4;
-			unsigned long MSTPC2:1;
-			unsigned long :1;
+			unsigned long MSTPC6:1;
+			unsigned long :5;
 			unsigned long MSTPC0:1;
 		} BIT;
 	} MSTPCRC;
@@ -14534,6 +13588,15 @@ struct st_system {
 			unsigned long :3;
 			unsigned long MSTPD15:1;
 			unsigned long MSTPD14:1;
+			unsigned long :6;
+			unsigned long MSTPD7:1;
+			unsigned long MSTPD6:1;
+			unsigned long MSTPD5:1;
+			unsigned long MSTPD4:1;
+			unsigned long MSTPD3:1;
+			unsigned long MSTPD2:1;
+			unsigned long MSTPD1:1;
+			unsigned long MSTPD0:1;
 		} BIT;
 	} MSTPCRD;
 	union {
@@ -14634,7 +13697,7 @@ struct st_system {
 			unsigned char HCFRQ:2;
 		} BIT;
 	} HOCOCR2;
-	char           wk6[4];
+	char           wk5[4];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14646,7 +13709,7 @@ struct st_system {
 			unsigned char MOOVF:1;
 		} BIT;
 	} OSCOVFSR;
-	char           wk7[3];
+	char           wk6[3];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14662,7 +13725,7 @@ struct st_system {
 			unsigned char OSTDF:1;
 		} BIT;
 	} OSTDSR;
-	char           wk8[94];
+	char           wk7[94];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14692,19 +13755,19 @@ struct st_system {
 			unsigned char SSTS:8;
 		} BIT;
 	} SOSCWTCR;
-	char           wk9[28];
+	char           wk8[28];
 	union {
 		unsigned char BYTE;
 		struct {
 			unsigned char :5;
 			unsigned char SWRF:1;
 			unsigned char WDTRF:1;
-			unsigned char IWTDRF:1;
+			unsigned char IWDTRF:1;
 		} BIT;
 	} RSTSR2;
-	char           wk10[1];
+	char           wk9[1];
 	unsigned short SWRR;
-	char           wk11[28];
+	char           wk10[28];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14737,7 +13800,7 @@ struct st_system {
 			unsigned char LVD2DET:1;
 		} BIT;
 	} LVD2SR;
-	char           wk12[794];
+	char           wk11[794];
 	union {
 		unsigned short WORD;
 		struct {
@@ -14749,7 +13812,7 @@ struct st_system {
 			unsigned short PRC0:1;
 		} BIT;
 	} PRCR;
-	char           wk13[48768];
+	char           wk12[48768];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14759,7 +13822,7 @@ struct st_system {
 			unsigned char DEEPCUT:2;
 		} BIT;
 	} DPSBYCR;
-	char           wk14[1];
+	char           wk13[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14897,7 +13960,7 @@ struct st_system {
 			unsigned char DCANIEG:1;
 		} BIT;
 	} DPSIEGR3;
-	char           wk15[2];
+	char           wk14[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14916,14 +13979,14 @@ struct st_system {
 			unsigned char CWSF:1;
 		} BIT;
 	} RSTSR1;
-	char           wk16[1];
+	char           wk15[1];
 	union {
 		unsigned char BYTE;
 		struct {
 			unsigned char :1;
 			unsigned char MOSEL:1;
 			unsigned char MODRV2:2;
-			unsigned char MODRV:3;
+			unsigned char :3;
 			unsigned char MOFXIN:1;
 		} BIT;
 	} MOFCR;
@@ -14934,7 +13997,7 @@ struct st_system {
 			unsigned char HOCOPCNT:1;
 		} BIT;
 	} HOCOPCR;
-	char           wk17[2];
+	char           wk16[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14950,7 +14013,7 @@ struct st_system {
 			unsigned char LVD1LVL:4;
 		} BIT;
 	} LVDLVLR;
-	char           wk18[1];
+	char           wk17[1];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -14975,62 +14038,8 @@ struct st_system {
 			unsigned char LVD2RIE:1;
 		} BIT;
 	} LVD2CR0;
-	char           wk19[1];
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :7;
-			unsigned char VBATTMNSEL:1;
-		} BIT;
-	} VBATTMNSELR;
-	union {
-		unsigned char BYTE;
-		struct {
-			unsigned char :7;
-			unsigned char VBATTMON:1;
-		} BIT;
-	} VBATTMONR;
-	char           wk20[1];
+	char           wk18[4];
 	unsigned char  DPSBKR[32];
-	char           wk21[7794020];
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :29;
-			unsigned long MDE:3;
-		} BIT;
-	} MDE;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :3;
-			unsigned long WDTRSTIRQS:1;
-			unsigned long WDTRPSS:2;
-			unsigned long WDTRPES:2;
-			unsigned long WDTCKS:4;
-			unsigned long WDTTOPS:2;
-			unsigned long WDTSTRT:1;
-			unsigned long :2;
-			unsigned long IWDTSLCSTP:1;
-			unsigned long :1;
-			unsigned long IWDTRSTIRQS:1;
-			unsigned long IWDTRPSS:2;
-			unsigned long IWDTRPES:2;
-			unsigned long IWDTCKS:4;
-			unsigned long IWDTTOPS:2;
-			unsigned long IWDTSTRT:1;
-		} BIT;
-	} OFS0;
-	union {
-		unsigned long LONG;
-		struct {
-			unsigned long :23;
-			unsigned long HOCOEN:1;
-			unsigned long :5;
-			unsigned long LVDAS:1;
-			unsigned long VDSEL:2;
-		} BIT;
-	} OFS1;
 };
 
 struct st_temps {
@@ -15125,6 +14134,14 @@ struct st_tmr1 {
 			unsigned char CKS:3;
 		} BIT;
 	} TCCR;
+	char           wk5[1];
+	union {
+		unsigned char BYTE;
+		struct {
+			unsigned char :7;
+			unsigned char TCS:1;
+		} BIT;
+	} TCSTR;
 };
 
 struct st_tmr01 {
@@ -15194,9 +14211,7 @@ struct st_tpu0 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char TCFD:1;
-			unsigned char :1;
-			unsigned char TCFU:1;
+			unsigned char :3;
 			unsigned char TCFV:1;
 			unsigned char TGFD:1;
 			unsigned char TGFC:1;
@@ -15218,8 +14233,7 @@ struct st_tpu1 {
 		struct {
 			unsigned char :2;
 			unsigned char NFCS:2;
-			unsigned char NFDEN:1;
-			unsigned char NFCEN:1;
+			unsigned char :2;
 			unsigned char NFBEN:1;
 			unsigned char NFAEN:1;
 		} BIT;
@@ -15228,7 +14242,8 @@ struct st_tpu1 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char CCLR:3;
+			unsigned char :1;
+			unsigned char CCLR:2;
 			unsigned char CKEG:2;
 			unsigned char TPSC:3;
 		} BIT;
@@ -15236,10 +14251,9 @@ struct st_tpu1 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char ICSELD:1;
+			unsigned char :1;
 			unsigned char ICSELB:1;
-			unsigned char BFB:1;
-			unsigned char BFA:1;
+			unsigned char :2;
 			unsigned char MD:4;
 		} BIT;
 	} TMDR;
@@ -15258,8 +14272,7 @@ struct st_tpu1 {
 			unsigned char :1;
 			unsigned char TCIEU:1;
 			unsigned char TCIEV:1;
-			unsigned char TGIED:1;
-			unsigned char TGIEC:1;
+			unsigned char :2;
 			unsigned char TGIEB:1;
 			unsigned char TGIEA:1;
 		} BIT;
@@ -15271,8 +14284,7 @@ struct st_tpu1 {
 			unsigned char :1;
 			unsigned char TCFU:1;
 			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
+			unsigned char :2;
 			unsigned char TGFB:1;
 			unsigned char TGFA:1;
 		} BIT;
@@ -15288,8 +14300,7 @@ struct st_tpu2 {
 		struct {
 			unsigned char :2;
 			unsigned char NFCS:2;
-			unsigned char NFDEN:1;
-			unsigned char NFCEN:1;
+			unsigned char :2;
 			unsigned char NFBEN:1;
 			unsigned char NFAEN:1;
 		} BIT;
@@ -15298,7 +14309,8 @@ struct st_tpu2 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char CCLR:3;
+			unsigned char :1;
+			unsigned char CCLR:2;
 			unsigned char CKEG:2;
 			unsigned char TPSC:3;
 		} BIT;
@@ -15306,10 +14318,9 @@ struct st_tpu2 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char ICSELD:1;
+			unsigned char :1;
 			unsigned char ICSELB:1;
-			unsigned char BFB:1;
-			unsigned char BFA:1;
+			unsigned char :2;
 			unsigned char MD:4;
 		} BIT;
 	} TMDR;
@@ -15328,8 +14339,7 @@ struct st_tpu2 {
 			unsigned char :1;
 			unsigned char TCIEU:1;
 			unsigned char TCIEV:1;
-			unsigned char TGIED:1;
-			unsigned char TGIEC:1;
+			unsigned char :2;
 			unsigned char TGIEB:1;
 			unsigned char TGIEA:1;
 		} BIT;
@@ -15341,8 +14351,7 @@ struct st_tpu2 {
 			unsigned char :1;
 			unsigned char TCFU:1;
 			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
+			unsigned char :2;
 			unsigned char TGFB:1;
 			unsigned char TGFA:1;
 		} BIT;
@@ -15402,8 +14411,7 @@ struct st_tpu3 {
 		unsigned char BYTE;
 		struct {
 			unsigned char TTGE:1;
-			unsigned char :1;
-			unsigned char TCIEU:1;
+			unsigned char :2;
 			unsigned char TCIEV:1;
 			unsigned char TGIED:1;
 			unsigned char TGIEC:1;
@@ -15414,9 +14422,7 @@ struct st_tpu3 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char TCFD:1;
-			unsigned char :1;
-			unsigned char TCFU:1;
+			unsigned char :3;
 			unsigned char TCFV:1;
 			unsigned char TGFD:1;
 			unsigned char TGFC:1;
@@ -15437,8 +14443,7 @@ struct st_tpu4 {
 		struct {
 			unsigned char :2;
 			unsigned char NFCS:2;
-			unsigned char NFDEN:1;
-			unsigned char NFCEN:1;
+			unsigned char :2;
 			unsigned char NFBEN:1;
 			unsigned char NFAEN:1;
 		} BIT;
@@ -15447,7 +14452,8 @@ struct st_tpu4 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char CCLR:3;
+			unsigned char :1;
+			unsigned char CCLR:2;
 			unsigned char CKEG:2;
 			unsigned char TPSC:3;
 		} BIT;
@@ -15455,10 +14461,9 @@ struct st_tpu4 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char ICSELD:1;
+			unsigned char :1;
 			unsigned char ICSELB:1;
-			unsigned char BFB:1;
-			unsigned char BFA:1;
+			unsigned char :2;
 			unsigned char MD:4;
 		} BIT;
 	} TMDR;
@@ -15477,8 +14482,7 @@ struct st_tpu4 {
 			unsigned char :1;
 			unsigned char TCIEU:1;
 			unsigned char TCIEV:1;
-			unsigned char TGIED:1;
-			unsigned char TGIEC:1;
+			unsigned char :2;
 			unsigned char TGIEB:1;
 			unsigned char TGIEA:1;
 		} BIT;
@@ -15490,8 +14494,7 @@ struct st_tpu4 {
 			unsigned char :1;
 			unsigned char TCFU:1;
 			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
+			unsigned char :2;
 			unsigned char TGFB:1;
 			unsigned char TGFA:1;
 		} BIT;
@@ -15508,8 +14511,7 @@ struct st_tpu5 {
 		struct {
 			unsigned char :2;
 			unsigned char NFCS:2;
-			unsigned char NFDEN:1;
-			unsigned char NFCEN:1;
+			unsigned char :2;
 			unsigned char NFBEN:1;
 			unsigned char NFAEN:1;
 		} BIT;
@@ -15518,7 +14520,8 @@ struct st_tpu5 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char CCLR:3;
+			unsigned char :1;
+			unsigned char CCLR:2;
 			unsigned char CKEG:2;
 			unsigned char TPSC:3;
 		} BIT;
@@ -15526,10 +14529,9 @@ struct st_tpu5 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char ICSELD:1;
+			unsigned char :1;
 			unsigned char ICSELB:1;
-			unsigned char BFB:1;
-			unsigned char BFA:1;
+			unsigned char :2;
 			unsigned char MD:4;
 		} BIT;
 	} TMDR;
@@ -15544,12 +14546,10 @@ struct st_tpu5 {
 	union {
 		unsigned char BYTE;
 		struct {
-			unsigned char TTGE:1;
-			unsigned char :1;
+			unsigned char :2;
 			unsigned char TCIEU:1;
 			unsigned char TCIEV:1;
-			unsigned char TGIED:1;
-			unsigned char TGIEC:1;
+			unsigned char :2;
 			unsigned char TGIEB:1;
 			unsigned char TGIEA:1;
 		} BIT;
@@ -15561,8 +14561,7 @@ struct st_tpu5 {
 			unsigned char :1;
 			unsigned char TCFU:1;
 			unsigned char TCFV:1;
-			unsigned char TGFD:1;
-			unsigned char TGFC:1;
+			unsigned char :2;
 			unsigned char TGFB:1;
 			unsigned char TGFA:1;
 		} BIT;
@@ -15663,7 +14662,8 @@ struct st_usb0 {
 			unsigned short OVCMON:2;
 			unsigned short :7;
 			unsigned short HTACT:1;
-			unsigned short :3;
+			unsigned short SOFEA:1;
+			unsigned short :2;
 			unsigned short IDMON:1;
 			unsigned short LNST:2;
 		} BIT;
@@ -15686,11 +14686,29 @@ struct st_usb0 {
 		} BIT;
 	} DVSTCTR0;
 	char           wk2[10];
-	unsigned short CFIFO;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char L;
+			unsigned char H;
+		} BYTE;
+	} CFIFO;
 	char           wk3[2];
-	unsigned short D0FIFO;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char L;
+			unsigned char H;
+		} BYTE;
+	} D0FIFO;
 	char           wk4[2];
-	unsigned short D1FIFO;
+	union {
+		unsigned short WORD;
+		struct {
+			unsigned char L;
+			unsigned char H;
+		} BYTE;
+	} D1FIFO;
 	char           wk5[2];
 	union {
 		unsigned short WORD;
@@ -16275,37 +15293,35 @@ struct st_usb0 {
 	union {
 		unsigned long LONG;
 		struct {
-			unsigned long :24;
-			unsigned long USBSPD:2;
-			unsigned long :2;
+			unsigned long :28;
 			unsigned long SLEWF01:1;
 			unsigned long SLEWF00:1;
 			unsigned long SLEWR01:1;
 			unsigned long SLEWR00:1;
 		} BIT;
-	} DPUSR2R;
+	} PHYSLEW;
 };
 
-struct st_usbhs {
+struct st_usba {
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :7;
-			unsigned short CNEN:1;
-			unsigned short HSE:1;
-			unsigned short DCFM:1;
-			unsigned short DRPD:1;
-			unsigned short DPRPU:1;
-			unsigned short :3;
-			unsigned short USBE:1;
-		} BIT;
+//		struct {
+//			unsigned short :7;
+//			unsigned short CNEN:1;
+//			unsigned short HSE:1;
+//			unsigned short DCFM:1;
+//			unsigned short DRPD:1;
+//			unsigned short DPRPU:1;
+//			unsigned short :3;
+//			unsigned short USBE:1;
+//		} BIT;
 	} SYSCFG;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :12;
-			unsigned short BWAIT:4;
-		} BIT;
+//		struct {
+//			unsigned short :12;
+//			unsigned short BWAIT:4;
+//		} BIT;
 	} BUSWAIT;
 	union {
 		unsigned short WORD;
@@ -16313,7 +15329,8 @@ struct st_usbhs {
 			unsigned short OVCMON:2;
 			unsigned short :7;
 			unsigned short HTACT:1;
-			unsigned short :3;
+			unsigned short SOFEA:1;
+			unsigned short :2;
 			unsigned short IDMON:1;
 			unsigned short LNST:2;
 		} BIT;
@@ -16327,158 +15344,173 @@ struct st_usbhs {
 	} PLLSTA;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :4;
-			unsigned short HNPBTOA:1;
-			unsigned short EXICEN:1;
-			unsigned short VBUSEN:1;
-			unsigned short WKUP:1;
-			unsigned short RWUPE:1;
-			unsigned short USBRST:1;
-			unsigned short RESUME:1;
-			unsigned short UACT:1;
-			unsigned short :1;
-			unsigned short RHST:3;
-		} BIT;
+//		struct {
+//			unsigned short :4;
+//			unsigned short HNPBTOA:1;
+//			unsigned short EXICEN:1;
+//			unsigned short VBUSEN:1;
+//			unsigned short WKUP:1;
+//			unsigned short RWUPE:1;
+//			unsigned short USBRST:1;
+//			unsigned short RESUME:1;
+//			unsigned short UACT:1;
+//			unsigned short :1;
+//			unsigned short RHST:3;
+//		} BIT;
 	} DVSTCTR0;
 	char           wk0[2];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :12;
-			unsigned short UTST:4;
-		} BIT;
+//		struct {
+//			unsigned short :12;
+//			unsigned short UTST:4;
+//		} BIT;
 	} TESTMODE;
-	char           wk1[2];
+	char           wk1[6];
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned short L;
+			unsigned short H;
+		} WORD;
+		struct {
+			unsigned char LL;
+			unsigned char LH;
+			unsigned char HL;
+			unsigned char HH;
+		} BYTE;
+	} CFIFO;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned short L;
+			unsigned short H;
+		} WORD;
+		struct {
+			unsigned char LL;
+			unsigned char LH;
+			unsigned char HL;
+			unsigned char HH;
+		} BYTE;
+	} D0FIFO;
+	union {
+		unsigned long LONG;
+		struct {
+			unsigned short L;
+			unsigned short H;
+		} WORD;
+		struct {
+			unsigned char LL;
+			unsigned char LH;
+			unsigned char HL;
+			unsigned char HH;
+		} BYTE;
+	} D1FIFO;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :2;
-			unsigned short DFACC:2;
-			unsigned short :7;
-			unsigned short TENDE:1;
-		} BIT;
-	} D0FBCFG;
-	union {
-		unsigned short WORD;
-		struct {
-			unsigned short :2;
-			unsigned short DFACC:2;
-			unsigned short :7;
-			unsigned short TENDE:1;
-		} BIT;
-	} D1FBCFG;
-	unsigned short CFIFO;
-	unsigned short CFIFO1;
-	unsigned short D0FIFO;
-	unsigned short D0FIFO1;
-	unsigned short D1FIFO;
-	unsigned short D1FIFO1;
-	union {
-		unsigned short WORD;
-		struct {
-			unsigned short RCNT:1;
-			unsigned short REW:1;
-			unsigned short :2;
-			unsigned short MBW:2;
-			unsigned short :1;
-			unsigned short BIGEND:1;
-			unsigned short :2;
-			unsigned short ISEL:1;
-			unsigned short :1;
-			unsigned short CURPIPE:4;
-		} BIT;
+//		struct {
+//			unsigned short RCNT:1;
+//			unsigned short REW:1;
+//			unsigned short :2;
+//			unsigned short MBW:2;
+//			unsigned short :1;
+//			unsigned short BIGEND:1;
+//			unsigned short :2;
+//			unsigned short ISEL:1;
+//			unsigned short :1;
+//			unsigned short CURPIPE:4;
+//		} BIT;
 	} CFIFOSEL;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BVAL:1;
-			unsigned short BCLR:1;
-			unsigned short FRDY:1;
-			unsigned short :1;
-			unsigned short DTLN:12;
-		} BIT;
+//		struct {
+//			unsigned short BVAL:1;
+//			unsigned short BCLR:1;
+//			unsigned short FRDY:1;
+//			unsigned short :1;
+//			unsigned short DTLN:12;
+//		} BIT;
 	} CFIFOCTR;
 	char           wk2[4];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short RCNT:1;
-			unsigned short REW:1;
-			unsigned short DCLRM:1;
-			unsigned short DREQE:1;
-			unsigned short MBW:2;
-			unsigned short :1;
-			unsigned short BIGEND:1;
-			unsigned short :4;
-			unsigned short CURPIPE:4;
-		} BIT;
+//		struct {
+//			unsigned short RCNT:1;
+//			unsigned short REW:1;
+//			unsigned short DCLRM:1;
+//			unsigned short DREQE:1;
+//			unsigned short MBW:2;
+//			unsigned short :1;
+//			unsigned short BIGEND:1;
+//			unsigned short :4;
+//			unsigned short CURPIPE:4;
+//		} BIT;
 	} D0FIFOSEL;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BVAL:1;
-			unsigned short BCLR:1;
-			unsigned short FRDY:1;
-			unsigned short :1;
-			unsigned short DTLN:12;
-		} BIT;
+//		struct {
+//			unsigned short BVAL:1;
+//			unsigned short BCLR:1;
+//			unsigned short FRDY:1;
+//			unsigned short :1;
+//			unsigned short DTLN:12;
+//		} BIT;
 	} D0FIFOCTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short RCNT:1;
-			unsigned short REW:1;
-			unsigned short DCLRM:1;
-			unsigned short DREQE:1;
-			unsigned short MBW:2;
-			unsigned short :1;
-			unsigned short BIGEND:1;
-			unsigned short :4;
-			unsigned short CURPIPE:4;
-		} BIT;
+//		struct {
+//			unsigned short RCNT:1;
+//			unsigned short REW:1;
+//			unsigned short DCLRM:1;
+//			unsigned short DREQE:1;
+//			unsigned short MBW:2;
+//			unsigned short :1;
+//			unsigned short BIGEND:1;
+//			unsigned short :4;
+//			unsigned short CURPIPE:4;
+//		} BIT;
 	} D1FIFOSEL;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BVAL:1;
-			unsigned short BCLR:1;
-			unsigned short FRDY:1;
-			unsigned short :1;
-			unsigned short DTLN:12;
-		} BIT;
+//		struct {
+//			unsigned short BVAL:1;
+//			unsigned short BCLR:1;
+//			unsigned short FRDY:1;
+//			unsigned short :1;
+//			unsigned short DTLN:12;
+//		} BIT;
 	} D1FIFOCTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short VBSE:1;
-			unsigned short RSME:1;
-			unsigned short SOFE:1;
-			unsigned short DVSE:1;
-			unsigned short CTRE:1;
-			unsigned short BEMPE:1;
-			unsigned short NRDYE:1;
-			unsigned short BRDYE:1;
-		} BIT;
+//		struct {
+//			unsigned short VBSE:1;
+//			unsigned short RSME:1;
+//			unsigned short SOFE:1;
+//			unsigned short DVSE:1;
+//			unsigned short CTRE:1;
+//			unsigned short BEMPE:1;
+//			unsigned short NRDYE:1;
+//			unsigned short BRDYE:1;
+//		} BIT;
 	} INTENB0;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short OVRCRE:1;
-			unsigned short BCHGE:1;
-			unsigned short :1;
-			unsigned short DTCHE:1;
-			unsigned short ATTCHE:1;
-			unsigned short :1;
-			unsigned short L1RSMENDE:1;
-			unsigned short LPMENDE:1;
-			unsigned short :1;
-			unsigned short EOFERRE:1;
-			unsigned short SIGNE:1;
-			unsigned short SACKE:1;
-			unsigned short :3;
-			unsigned short PDDETINTE:1;
-		} BIT;
+//		struct {
+//			unsigned short OVRCRE:1;
+//			unsigned short BCHGE:1;
+//			unsigned short :1;
+//			unsigned short DTCHE:1;
+//			unsigned short ATTCHE:1;
+//			unsigned short :1;
+//			unsigned short L1RSMENDE:1;
+//			unsigned short LPMENDE:1;
+//			unsigned short :1;
+//			unsigned short EOFERRE:1;
+//			unsigned short SIGNE:1;
+//			unsigned short SACKE:1;
+//			unsigned short :3;
+//			unsigned short PDDETINTE:1;
+//		} BIT;
 	} INTENB1;
 	char           wk3[2];
 	union {
@@ -16531,127 +15563,97 @@ struct st_usbhs {
 	} BEMPENB;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :7;
-			unsigned short TRNENSEL:1;
-			unsigned short :1;
-			unsigned short BRDYM:1;
-			unsigned short INTL:1;
-			unsigned short EDGESTS:1;
-			unsigned short SOFM:2;
-		} BIT;
+//		struct {
+//			unsigned short :7;
+//			unsigned short TRNENSEL:1;
+//			unsigned short :1;
+//			unsigned short BRDYM:1;
+//			unsigned short INTL:1;
+//			unsigned short EDGESTS:1;
+//		} BIT;
 	} SOFCFG;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short HSEB:1;
-			unsigned short :3;
-			unsigned short repstart:1;
-			unsigned short :1;
-			unsigned short repsel1:1;
-			unsigned short repsel0:1;
-			unsigned short :2;
-			unsigned short clksel1:1;
-			unsigned short clksel0:1;
-			unsigned short cdpen:1;
-			unsigned short :1;
-			unsigned short pllreset:1;
-			unsigned short dirpd:1;
-		} BIT;
+//		struct {
+//			unsigned short HSEB:1;
+//			unsigned short :3;
+//			unsigned short REPSTART:1;
+//			unsigned short :1;
+//			unsigned short REPSEL:2;
+//			unsigned short :2;
+//			unsigned short CLKSEL:2;
+//			unsigned short CDPEN:1;
+//			unsigned short :1;
+//			unsigned short PLLRESET:1;
+//			unsigned short DIRPD:1;
+//		} BIT;
 	} PHYSET;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short VBINT:1;
-			unsigned short RESM:1;
-			unsigned short SOFR:1;
-			unsigned short DVST:1;
-			unsigned short CTRT:1;
-			unsigned short BEMP:1;
-			unsigned short NRDY:1;
-			unsigned short BRDY:1;
-			unsigned short VBSTS:1;
-			unsigned short DVSQ:3;
-			unsigned short VALID:1;
-			unsigned short CTSQ:3;
-		} BIT;
+//		struct {
+//			unsigned short VBINT:1;
+//			unsigned short RESM:1;
+//			unsigned short SOFR:1;
+//			unsigned short DVST:1;
+//			unsigned short CTRT:1;
+//			unsigned short BEMP:1;
+//			unsigned short NRDY:1;
+//			unsigned short BRDY:1;
+//			unsigned short VBSTS:1;
+//			unsigned short DVSQ:3;
+//			unsigned short VALID:1;
+//			unsigned short CTSQ:3;
+//		} BIT;
 	} INTSTS0;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short OVRCR:1;
-			unsigned short BCHG:1;
-			unsigned short :1;
-			unsigned short DTCH:1;
-			unsigned short ATTCH:1;
-			unsigned short :1;
-			unsigned short L1RSMEND:1;
-			unsigned short LPMEND:1;
-			unsigned short :1;
-			unsigned short EOFERR:1;
-			unsigned short SIGN:1;
-			unsigned short SACK:1;
-			unsigned short :3;
-			unsigned short PDDETINT:1;
-		} BIT;
+//		struct {
+//			unsigned short OVRCR:1;
+//			unsigned short BCHG:1;
+//			unsigned short :1;
+//			unsigned short DTCH:1;
+//			unsigned short ATTCH:1;
+//			unsigned short :1;
+//			unsigned short L1RSMEND:1;
+//			unsigned short LPMEND:1;
+//			unsigned short :1;
+//			unsigned short EOFERR:1;
+//			unsigned short SIGN:1;
+//			unsigned short SACK:1;
+//			unsigned short :3;
+//			unsigned short PDDETINT:1;
+//		} BIT;
 	} INTSTS1;
 	char           wk4[2];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short PIPE9BRDY:1;
-			unsigned short PIPE8BRDY:1;
-			unsigned short PIPE7BRDY:1;
-			unsigned short PIPE6BRDY:1;
-			unsigned short PIPE5BRDY:1;
-			unsigned short PIPE4BRDY:1;
-			unsigned short PIPE3BRDY:1;
-			unsigned short PIPE2BRDY:1;
-			unsigned short PIPE1BRDY:1;
-			unsigned short PIPE0BRDY:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short PIPEBRDY:10;
+//		} BIT;
 	} BRDYSTS;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short PIPE9NRDYE:1;
-			unsigned short PIPE8NRDYE:1;
-			unsigned short PIPE7NRDYE:1;
-			unsigned short PIPE6NRDYE:1;
-			unsigned short PIPE5NRDYE:1;
-			unsigned short PIPE4NRDYE:1;
-			unsigned short PIPE3NRDYE:1;
-			unsigned short PIPE2NRDYE:1;
-			unsigned short PIPE1NRDYE:1;
-			unsigned short PIPE0NRDYE:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short PIPENRDY:10;
+//		} BIT;
 	} NRDYSTS;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short PIPE9BEMPE:1;
-			unsigned short PIPE8BEMPE:1;
-			unsigned short PIPE7BENP:1;
-			unsigned short PIPE6BENP:1;
-			unsigned short PIPE5BENP:1;
-			unsigned short PIPE4BENP:1;
-			unsigned short PIPE3BENP:1;
-			unsigned short PIPE2BENP:1;
-			unsigned short PIPE1BENP:1;
-			unsigned short PIPE0BENP:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short PIPEBEMP:10;
+//		} BIT;
 	} BEMPSTS;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short OVRN:1;
-			unsigned short CRCE:1;
-			unsigned short :3;
-			unsigned short FRNM:11;
-		} BIT;
+//		struct {
+//			unsigned short OVRN:1;
+//			unsigned short CRCE:1;
+//			unsigned short :3;
+//			unsigned short FRNM:11;
+//		} BIT;
 	} FRMNUM;
 	union {
 		unsigned short WORD;
@@ -16680,257 +15682,260 @@ struct st_usbhs {
 	unsigned short USBLENG;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :11;
-			unsigned short DIR:1;
-		} BIT;
+//		struct {
+//			unsigned short :7;
+//			unsigned short CNTMD:1;
+//			unsigned short SHTNAK:1;
+//			unsigned short :2;
+//			unsigned short DIR:1;
+//		} BIT;
 	} DCPCFG;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short DEVSEL:4;
-			unsigned short :5;
-			unsigned short MXPS:7;
-		} BIT;
+//		struct {
+//			unsigned short DEVSEL:4;
+//			unsigned short :5;
+//			unsigned short MXPS:7;
+//		} BIT;
 	} DCPMAXP;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short SUREQ:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short SUREQCLR:1;
-			unsigned short :2;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short PINGE:1;
-			unsigned short :1;
-			unsigned short CCPL:1;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short SUREQ:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short SUREQCLR:1;
+//			unsigned short :2;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short PINGE:1;
+//			unsigned short :1;
+//			unsigned short CCPL:1;
+//			unsigned short PID:2;
+//		} BIT;
 	} DCPCTR;
 	char           wk6[2];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :12;
-			unsigned short PIPESEL:4;
-		} BIT;
+//		struct {
+//			unsigned short :12;
+//			unsigned short PIPESEL:4;
+//		} BIT;
 	} PIPESEL;
 	char           wk7[2];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short TYPE:2;
-			unsigned short :3;
-			unsigned short BFRE:1;
-			unsigned short DBLB:1;
-			unsigned short CNTMD:1;
-			unsigned short SHTNAK:1;
-			unsigned short :2;
-			unsigned short DIR:1;
-			unsigned short EPNUM:4;
-		} BIT;
+//		struct {
+//			unsigned short TYPE:2;
+//			unsigned short :3;
+//			unsigned short BFRE:1;
+//			unsigned short DBLB:1;
+//			unsigned short CNTMD:1;
+//			unsigned short SHTNAK:1;
+//			unsigned short :2;
+//			unsigned short DIR:1;
+//			unsigned short EPNUM:4;
+//		} BIT;
 	} PIPECFG;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short BUFSIZE:5;
-			unsigned short :2;
-			unsigned short BUFNMB:8;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short BUFSIZE:5;
+//			unsigned short :2;
+//			unsigned short BUFNMB:8;
+//		} BIT;
 	} PIPEBUF;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short DEVSEL:4;
-			unsigned short :1;
-			unsigned short MXPS:11;
-		} BIT;
+//		struct {
+//			unsigned short DEVSEL:4;
+//			unsigned short :1;
+//			unsigned short MXPS:11;
+//		} BIT;
 	} PIPEMAXP;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :3;
-			unsigned short IFIS:1;
-			unsigned short :9;
-			unsigned short IITV:3;
-		} BIT;
+//		struct {
+//			unsigned short :3;
+//			unsigned short IFIS:1;
+//			unsigned short :9;
+//			unsigned short IITV:3;
+//		} BIT;
 	} PIPEPERI;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE1CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE2CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE3CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE4CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE5CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE6CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE7CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE8CTR;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short BSTS:1;
-			unsigned short INBUFM:1;
-			unsigned short CSCLR:1;
-			unsigned short CSSTS:1;
-			unsigned short :1;
-			unsigned short ATREPM:1;
-			unsigned short ACLRM:1;
-			unsigned short SQCLR:1;
-			unsigned short SQSET:1;
-			unsigned short SQMON:1;
-			unsigned short PBUSY:1;
-			unsigned short :3;
-			unsigned short PID:2;
-		} BIT;
+//		struct {
+//			unsigned short BSTS:1;
+//			unsigned short INBUFM:1;
+//			unsigned short CSCLR:1;
+//			unsigned short CSSTS:1;
+//			unsigned short :1;
+//			unsigned short ATREPM:1;
+//			unsigned short ACLRM:1;
+//			unsigned short SQCLR:1;
+//			unsigned short SQSET:1;
+//			unsigned short SQMON:1;
+//			unsigned short PBUSY:1;
+//			unsigned short :3;
+//			unsigned short PID:2;
+//		} BIT;
 	} PIPE9CTR;
 	char           wk8[14];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short TRENB:1;
-			unsigned short TRCLR:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short TRENB:1;
+//			unsigned short TRCLR:1;
+//		} BIT;
 	} PIPE1TRE;
 	union {
 		unsigned short WORD;
@@ -16940,11 +15945,11 @@ struct st_usbhs {
 	} PIPE1TRN;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short TRENB:1;
-			unsigned short TRCLR:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short TRENB:1;
+//			unsigned short TRCLR:1;
+//		} BIT;
 	} PIPE2TRE;
 	union {
 		unsigned short WORD;
@@ -16954,11 +15959,11 @@ struct st_usbhs {
 	} PIPE2TRN;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short TRENB:1;
-			unsigned short TRCLR:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short TRENB:1;
+//			unsigned short TRCLR:1;
+//		} BIT;
 	} PIPE3TRE;
 	union {
 		unsigned short WORD;
@@ -16968,11 +15973,11 @@ struct st_usbhs {
 	} PIPE3TRN;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short TRENB:1;
-			unsigned short TRCLR:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short TRENB:1;
+//			unsigned short TRCLR:1;
+//		} BIT;
 	} PIPE4TRE;
 	union {
 		unsigned short WORD;
@@ -16982,11 +15987,11 @@ struct st_usbhs {
 	} PIPE4TRN;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short TRENB:1;
-			unsigned short TRCLR:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short TRENB:1;
+//			unsigned short TRCLR:1;
+//		} BIT;
 	} PIPE5TRE;
 	union {
 		unsigned short WORD;
@@ -16997,185 +16002,155 @@ struct st_usbhs {
 	char           wk9[44];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short UPPHUB:4;
-			unsigned short HUBPORT:3;
-			unsigned short USBSPD:2;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short UPPHUB:4;
+//			unsigned short HUBPORT:3;
+//			unsigned short USBSPD:2;
+//		} BIT;
 	} DEVADD0;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short UPPHUB:4;
-			unsigned short HUBPORT:3;
-			unsigned short USBSPD:2;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short UPPHUB:4;
+//			unsigned short HUBPORT:3;
+//			unsigned short USBSPD:2;
+//		} BIT;
 	} DEVADD1;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short UPPHUB:4;
-			unsigned short HUBPORT:3;
-			unsigned short USBSPD:2;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short UPPHUB:4;
+//			unsigned short HUBPORT:3;
+//			unsigned short USBSPD:2;
+//		} BIT;
 	} DEVADD2;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short UPPHUB:4;
-			unsigned short HUBPORT:3;
-			unsigned short USBSPD:2;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short UPPHUB:4;
+//			unsigned short HUBPORT:3;
+//			unsigned short USBSPD:2;
+//		} BIT;
 	} DEVADD3;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short UPPHUB:4;
-			unsigned short HUBPORT:3;
-			unsigned short USBSPD:2;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short UPPHUB:4;
+//			unsigned short HUBPORT:3;
+//			unsigned short USBSPD:2;
+//		} BIT;
 	} DEVADD4;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short UPPHUB:4;
-			unsigned short HUBPORT:3;
-			unsigned short USBSPD:2;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short UPPHUB:4;
+//			unsigned short HUBPORT:3;
+//			unsigned short USBSPD:2;
+//		} BIT;
 	} DEVADD5;
 	char           wk10[36];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :8;
-			unsigned short HWLPM:1;
-		} BIT;
+//		struct {
+//			unsigned short :8;
+//			unsigned short HWUPM:1;
+//		} BIT;
 	} LPCTRL;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short SUSPENDM:1;
-		} BIT;
+//		struct {
+//			unsigned short :1;
+//			unsigned short SUSPENDM:1;
+//		} BIT;
 	} LPSTS;
+	char           wk11[60];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short SUSMON:1;
-			unsigned short :1;
-			unsigned short OPMODE:2;
-			unsigned short TERMSEL:1;
-			unsigned short XCVRSEL:2;
-		} BIT;
-	} PHYFUNCTR;
-	char           wk11[4];
-	union {
-		unsigned short WORD;
-		struct {
-			unsigned short :5;
-			unsigned short DMPUDWN:1;
-			unsigned short DPPUDWN:1;
-		} BIT;
-	} PHYOTGCTR;
-	char           wk12[52];
-	union {
-		unsigned short WORD;
-		struct {
-			unsigned short :6;
-			unsigned short PDDETSTS:1;
-			unsigned short CHGDETSTS:1;
-			unsigned short :2;
-			unsigned short DCPMODE:1;
-			unsigned short VDMSRCE:1;
-			unsigned short IDPSINKE:1;
-			unsigned short VDPSRCE:1;
-			unsigned short IDMSINKE:1;
-			unsigned short IDPSRCE:1;
-		} BIT;
+//		struct {
+//			unsigned short :6;
+//			unsigned short PDDETSTS:1;
+//			unsigned short CHGDETSTS:1;
+//			unsigned short :2;
+//			unsigned short DCPMODE:1;
+//			unsigned short VDMSRCE:1;
+//			unsigned short IDPSINKE:1;
+//			unsigned short VDPSRCE:1;
+//			unsigned short IDMSINKE:1;
+//			unsigned short IDPSRCE:1;
+//		} BIT;
 	} BCCTRL;
-	char           wk13[14];
+	char           wk12[2];
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short impoffset2:1;
-			unsigned short impoffset1:1;
-			unsigned short impoffset0:1;
-			unsigned short hsiup3:1;
-			unsigned short hsiup2:1;
-			unsigned short hsiup1:1;
-			unsigned short hsiup0:1;
-			unsigned short pcompenb:1;
-			unsigned short :3;
-			unsigned short dfall1:1;
-			unsigned short dfall0:1;
-			unsigned short drise1:1;
-			unsigned short drise0:1;
-		} BIT;
-	} PHYTRIM1;
+//		struct {
+//			unsigned short :1;
+//			unsigned short L1EXTMD:1;
+//			unsigned short :2;
+//			unsigned short HIRDTHR:4;
+//			unsigned short DVSQ:4;
+//			unsigned short L1NEGOMD:1;
+//			unsigned short L1RESPMD:2;
+//			unsigned short L1RESPEN:1;
+//		} BIT;
+	} PL1CTRL1;
 	union {
 		unsigned short WORD;
-		struct {
-			unsigned short :1;
-			unsigned short dis2:1;
-			unsigned short dis1:1;
-			unsigned short dis0:1;
-			unsigned short :2;
-			unsigned short prd1:1;
-			unsigned short prd0:1;
-			unsigned short hsrxenmode:1;
-			unsigned short :3;
-			unsigned short squ3:1;
-			unsigned short squ2:1;
-			unsigned short squ1:1;
-			unsigned short squ0:1;
-		} BIT;
-	} PHYTRIM2;
-	char           wk14[12];
+//		struct {
+//			unsigned short :3;
+//			unsigned short RWEMON:1;
+//			unsigned short HIRDMON:4;
+//		} BIT;
+	} PL1CTRL2;
+	union {
+		unsigned short WORD;
+//		struct {
+//			unsigned short :13;
+//			unsigned short L1STATUS:2;
+//			unsigned short L1REQ:1;
+//		} BIT;
+	} HL1CTRL1;
+	union {
+		unsigned short WORD;
+//		struct {
+//			unsigned short BESL:1;
+//			unsigned short :2;
+//			unsigned short L1RWE:1;
+//			unsigned short HIRD:4;
+//			unsigned short :4;
+//			unsigned short L1ADDR:4;
+//		} BIT;
+	} HL1CTRL2;
+	char           wk13[20];
 	union {
 		unsigned long LONG;
-		struct {
-			unsigned long :8;
-			unsigned long DVBSTS:1;
-			unsigned long :1;
-			unsigned long DOVCB:1;
-			unsigned long DOVCA:1;
-			unsigned long :2;
-			unsigned long DM:1;
-			unsigned long DP:1;
-			unsigned long :11;
-			unsigned long FIXPHY:1;
-			unsigned long :3;
-			unsigned long SRPC:1;
-		} BIT;
+//		struct {
+//			unsigned long :8;
+//			unsigned long DVBSTSHM:1;
+//			unsigned long :1;
+//			unsigned long DOVCBHM:1;
+//			unsigned long DOVCAHM:1;
+//		} BIT;
 	} DPUSR0R;
 	union {
 		unsigned long LONG;
-		struct {
-			unsigned long :8;
-			unsigned long DVBINT:1;
-			unsigned long :1;
-			unsigned long DOVRCRB:1;
-			unsigned long DOVRCRA:1;
-			unsigned long :2;
-			unsigned long DMINT:1;
-			unsigned long DPINT:1;
-			unsigned long :8;
-			unsigned long DVBSE:1;
-			unsigned long :1;
-			unsigned long DOVRCRBE:1;
-			unsigned long DOVRCRAE:1;
-			unsigned long :2;
-			unsigned long DMINTE:1;
-			unsigned long DPINTE:1;
-		} BIT;
+//		struct {
+//			unsigned long :8;
+//			unsigned long DVBSTSH:1;
+//			unsigned long :1;
+//			unsigned long DOVCBH:1;
+//			unsigned long DOVCAH:1;
+//			unsigned long :12;
+//			unsigned long DVBSTSHE:1;
+//			unsigned long :1;
+//			unsigned long DOVCBHE:1;
+//			unsigned long DOVCAHE:1;
+//		} BIT;
 	} DPUSR1R;
 };
 
@@ -17217,171 +16192,71 @@ IR_ICU_SWINT2=26,IR_ICU_SWINT,
 IR_CMT0_CMI0,
 IR_CMT1_CMI1,
 IR_CMTW0_CMWI0,
-IR_CMTW_CMWI1,
-IR_USBHS_D0FIFO2,IR_USBHS_D1FIFO2,
+IR_CMTW1_CMWI1,
+IR_USBA_D0FIFO2,IR_USBA_D1FIFO2,
 IR_USB0_D0FIFO0,IR_USB0_D1FIFO0,
 IR_RSPI0_SPRI0=38,IR_RSPI0_SPTI0,
 IR_QSPI_SPRI=42,IR_QSPI_SPTI,
 IR_SDHI_SBFAI,
-IR_MMC_MBFAI,
+IR_MMCIF_MBFAI,
 IR_SSI0_SSITXI0,IR_SSI0_SSIRXI0,
 IR_SSI1_SSIRTI1,
-IR_SRC0_IDEI0=50,IR_SRC0_ODFI0,
+IR_SRC_IDEI=50,IR_SRC_ODFI,
 IR_RIIC0_RXI0,IR_RIIC0_TXI0,
 IR_RIIC2_RXI2,IR_RIIC2_TXI2,
 IR_SCI0_RXI0=58,IR_SCI0_TXI0,
 IR_SCI1_RXI1,IR_SCI1_TXI1,
 IR_SCI2_RXI2,IR_SCI2_TXI2,
-IR_ICU_IRQ0,IR_ICU_IRQ1,IR_ICU_IRQ2,IR_ICU_IRQ3,IR_ICU_IRQ4,IR_ICU_IRQ5,IR_ICU_IRQ6,IR_ICU_IRQ7,IR_ICU_IRQ8,IR_ICU_IRQ9,IR_ICU_IRQ10,IR_ICU_IRQ11,IR_ICU_IRQ12,IR_ICU_IRQ13,IR_ICU_IRQ14,IR_ICU_IRQ15,
+IR_ICU_IRQ0,IR_ICU_IRQ1,IR_ICU_IRQ2,IR_ICU_IRQ3,IR_ICU_IRQ4,IR_ICU_IRQ5,IR_ICU_IRQ6,IR_ICU_IRQ7,
+IR_ICU_IRQ8,IR_ICU_IRQ9,IR_ICU_IRQ10,IR_ICU_IRQ11,IR_ICU_IRQ12,IR_ICU_IRQ13,IR_ICU_IRQ14,IR_ICU_IRQ15,
 IR_SCI3_RXI3,IR_SCI3_TXI3,
 IR_SCI4_RXI4,IR_SCI4_TXI4,
 IR_SCI5_RXI5,IR_SCI5_TXI5,
 IR_SCI6_RXI6,IR_SCI6_TXI6,
-IR_LVD1_COMPA1,
-IR_LVD2_COMPA2,
+IR_LVD1_LVD1,
+IR_LVD2_LVD2,
 IR_USB0_USBR0,
-IR_RTC_ALARM,IR_RTC_PRD,
-IR_USBHS_HSUSBR,
+IR_RTC_ALM=92,IR_RTC_PRD,
+IR_USBA_USBAR,
 IR_IWDT_IWUNI,
 IR_WDT_WUNI,
+IR_PDC_PCDFI,
 IR_SCI7_RXI7,IR_SCI7_TXI7,
-IR_SCIF8_RXIF8,IR_SCIF8_TXIF8,
-IR_SCIF9_RXIF9,IR_SCIF9_TXIF9,
-IR_SCIF10_RXIF10,IR_SCIF10_TXIF10,
-IR_ICU_GROUPBE0,IR_ICU_GROUPBE1,IR_ICU_GROUPAE0,IR_ICU_GROUPAE1,IR_ICU_GROUPBL0,IR_ICU_GROUPBL1,IR_ICU_GROUPAL0,IR_ICU_GROUPAL1,
-IR_SCIF11_RXIF11,IR_SCIF11_TXIF11,
+IR_SCIFA8_RXIF8,IR_SCIFA8_TXIF8,
+IR_SCIFA9_RXIF9,IR_SCIFA9_TXIF9,
+IR_SCIFA10_RXIF10,IR_SCIFA10_TXIF10,
+IR_ICU_GROUPBE0,IR_ICU_GROUPBL0=110,IR_ICU_GROUPBL1,IR_ICU_GROUPAL0,IR_ICU_GROUPAL1,
+IR_SCIFA11_RXIF11,IR_SCIFA11_TXIF11,
 IR_SCI12_RXI12,IR_SCI12_TXI12,
 IR_DMAC_DMAC0I=120,IR_DMAC_DMAC1I,IR_DMAC_DMAC2I,IR_DMAC_DMAC3I,IR_DMAC_DMAC74I,
-IR_ICU_OST,
+IR_OST_OST,
 IR_EXDMAC_EXDMAC0I,IR_EXDMAC_EXDMAC1I,
-IR_PERIB128_INTB128,
-IR_PERIB129_INTB129,
-IR_PERIB130_INTB130,
-IR_PERIB131_INTB131,
-IR_PERIB132_INTB132,
-IR_PERIB133_INTB133,
-IR_PERIB134_INTB134,
-IR_PERIB135_INTB135,
-IR_PERIB136_INTB136,
-IR_PERIB137_INTB137,
-IR_PERIB138_INTB138,
-IR_PERIB139_INTB139,
-IR_PERIB140_INTB140,
-IR_PERIB141_INTB141,
-IR_PERIB142_INTB142,
-IR_PERIB143_INTB143,
-IR_PERIB144_INTB144,
-IR_PERIB145_INTB145,
-IR_PERIB146_INTB146,
-IR_PERIB147_INTB147,
-IR_PERIB148_INTB148,
-IR_PERIB149_INTB149,
-IR_PERIB150_INTB150,
-IR_PERIB151_INTB151,
-IR_PERIB152_INTB152,
-IR_PERIB153_INTB153,
-IR_PERIB154_INTB154,
-IR_PERIB155_INTB155,
-IR_PERIB156_INTB156,
-IR_PERIB157_INTB157,
-IR_PERIB158_INTB158,
-IR_PERIB159_INTB159,
-IR_PERIB160_INTB160,
-IR_PERIB161_INTB161,
-IR_PERIB162_INTB162,
-IR_PERIB163_INTB163,
-IR_PERIB164_INTB164,
-IR_PERIB165_INTB165,
-IR_PERIB166_INTB166,
-IR_PERIB167_INTB167,
-IR_PERIB168_INTB168,
-IR_PERIB169_INTB169,
-IR_PERIB170_INTB170,
-IR_PERIB171_INTB171,
-IR_PERIB172_INTB172,
-IR_PERIB173_INTB173,
-IR_PERIB174_INTB174,
-IR_PERIB175_INTB175,
-IR_PERIB176_INTB176,
-IR_PERIB177_INTB177,
-IR_PERIB178_INTB178,
-IR_PERIB179_INTB179,
-IR_PERIB180_INTB180,
-IR_PERIB181_INTB181,
-IR_PERIB182_INTB182,
-IR_PERIB183_INTB183,
-IR_PERIB184_INTB184,
-IR_PERIB185_INTB185,
-IR_PERIB186_INTB186,
-IR_PERIB187_INTB187,
-IR_PERIB188_INTB188,
-IR_PERIB189_INTB189,
-IR_PERIB190_INTB190,
-IR_PERIB191_INTB191,
-IR_PERIB192_INTB192,
-IR_PERIB193_INTB193,
-IR_PERIB194_INTB194,
-IR_PERIB195_INTB195,
-IR_PERIB196_INTB196,
-IR_PERIB197_INTB197,
-IR_PERIB198_INTB198,
-IR_PERIB199_INTB199,
-IR_PERIB200_INTB200,
-IR_PERIB201_INTB201,
-IR_PERIB202_INTB202,
-IR_PERIB203_INTB203,
-IR_PERIB204_INTB204,
-IR_PERIB205_INTB205,
-IR_PERIB206_INTB206,
-IR_PERIB207_INTB207,
-IR_PERIA208_INTA208,
-IR_PERIA209_INTA209,
-IR_PERIA210_INTA210,
-IR_PERIA211_INTA211,
-IR_PERIA212_INTA212,
-IR_PERIA213_INTA213,
-IR_PERIA214_INTA214,
-IR_PERIA215_INTA215,
-IR_PERIA216_INTA216,
-IR_PERIA217_INTA217,
-IR_PERIA218_INTA218,
-IR_PERIA219_INTA219,
-IR_PERIA220_INTA220,
-IR_PERIA221_INTA221,
-IR_PERIA222_INTA222,
-IR_PERIA223_INTA223,
-IR_PERIA224_INTA224,
-IR_PERIA225_INTA225,
-IR_PERIA226_INTA226,
-IR_PERIA227_INTA227,
-IR_PERIA228_INTA228,
-IR_PERIA229_INTA229,
-IR_PERIA230_INTA230,
-IR_PERIA231_INTA231,
-IR_PERIA232_INTA232,
-IR_PERIA233_INTA233,
-IR_PERIA234_INTA234,
-IR_PERIA235_INTA235,
-IR_PERIA236_INTA236,
-IR_PERIA237_INTA237,
-IR_PERIA238_INTA238,
-IR_PERIA239_INTA239,
-IR_PERIA240_INTA240,
-IR_PERIA241_INTA241,
-IR_PERIA242_INTA242,
-IR_PERIA243_INTA243,
-IR_PERIA244_INTA244,
-IR_PERIA245_INTA245,
-IR_PERIA246_INTA246,
-IR_PERIA247_INTA247,
-IR_PERIA248_INTA248,
-IR_PERIA249_INTA249,
-IR_PERIA250_INTA250,
-IR_PERIA251_INTA251,
-IR_PERIA252_INTA252,
-IR_PERIA253_INTA253,
-IR_PERIA254_INTA254,
-IR_PERIA255_INTA255
+IR_PERIB_INTB128,IR_PERIB_INTB129,IR_PERIB_INTB130,IR_PERIB_INTB131,IR_PERIB_INTB132,
+IR_PERIB_INTB133,IR_PERIB_INTB134,IR_PERIB_INTB135,IR_PERIB_INTB136,IR_PERIB_INTB137,
+IR_PERIB_INTB138,IR_PERIB_INTB139,IR_PERIB_INTB140,IR_PERIB_INTB141,IR_PERIB_INTB142,
+IR_PERIB_INTB143,IR_PERIB_INTB144,IR_PERIB_INTB145,IR_PERIB_INTB146,IR_PERIB_INTB147,
+IR_PERIB_INTB148,IR_PERIB_INTB149,IR_PERIB_INTB150,IR_PERIB_INTB151,IR_PERIB_INTB152,
+IR_PERIB_INTB153,IR_PERIB_INTB154,IR_PERIB_INTB155,IR_PERIB_INTB156,IR_PERIB_INTB157,
+IR_PERIB_INTB158,IR_PERIB_INTB159,IR_PERIB_INTB160,IR_PERIB_INTB161,IR_PERIB_INTB162,
+IR_PERIB_INTB163,IR_PERIB_INTB164,IR_PERIB_INTB165,IR_PERIB_INTB166,IR_PERIB_INTB167,
+IR_PERIB_INTB168,IR_PERIB_INTB169,IR_PERIB_INTB170,IR_PERIB_INTB171,IR_PERIB_INTB172,
+IR_PERIB_INTB173,IR_PERIB_INTB174,IR_PERIB_INTB175,IR_PERIB_INTB176,IR_PERIB_INTB177,
+IR_PERIB_INTB178,IR_PERIB_INTB179,IR_PERIB_INTB180,IR_PERIB_INTB181,IR_PERIB_INTB182,
+IR_PERIB_INTB183,IR_PERIB_INTB184,IR_PERIB_INTB185,IR_PERIB_INTB186,IR_PERIB_INTB187,
+IR_PERIB_INTB188,IR_PERIB_INTB189,IR_PERIB_INTB190,IR_PERIB_INTB191,IR_PERIB_INTB192,
+IR_PERIB_INTB193,IR_PERIB_INTB194,IR_PERIB_INTB195,IR_PERIB_INTB196,IR_PERIB_INTB197,
+IR_PERIB_INTB198,IR_PERIB_INTB199,IR_PERIB_INTB200,IR_PERIB_INTB201,IR_PERIB_INTB202,
+IR_PERIB_INTB203,IR_PERIB_INTB204,IR_PERIB_INTB205,IR_PERIB_INTB206,IR_PERIB_INTB207,
+IR_PERIA_INTA208,IR_PERIA_INTA209,IR_PERIA_INTA210,IR_PERIA_INTA211,IR_PERIA_INTA212,
+IR_PERIA_INTA213,IR_PERIA_INTA214,IR_PERIA_INTA215,IR_PERIA_INTA216,IR_PERIA_INTA217,
+IR_PERIA_INTA218,IR_PERIA_INTA219,IR_PERIA_INTA220,IR_PERIA_INTA221,IR_PERIA_INTA222,
+IR_PERIA_INTA223,IR_PERIA_INTA224,IR_PERIA_INTA225,IR_PERIA_INTA226,IR_PERIA_INTA227,
+IR_PERIA_INTA228,IR_PERIA_INTA229,IR_PERIA_INTA230,IR_PERIA_INTA231,IR_PERIA_INTA232,
+IR_PERIA_INTA233,IR_PERIA_INTA234,IR_PERIA_INTA235,IR_PERIA_INTA236,IR_PERIA_INTA237,
+IR_PERIA_INTA238,IR_PERIA_INTA239,IR_PERIA_INTA240,IR_PERIA_INTA241,IR_PERIA_INTA242,
+IR_PERIA_INTA243,IR_PERIA_INTA244,IR_PERIA_INTA245,IR_PERIA_INTA246,IR_PERIA_INTA247,
+IR_PERIA_INTA248,IR_PERIA_INTA249,IR_PERIA_INTA250,IR_PERIA_INTA251,IR_PERIA_INTA252,
+IR_PERIA_INTA253,IR_PERIA_INTA254,IR_PERIA_INTA255
 };
 
 enum enum_dtce {
@@ -17389,163 +16264,62 @@ DTCE_ICU_SWINT2=26,DTCE_ICU_SWINT,
 DTCE_CMT0_CMI0,
 DTCE_CMT1_CMI1,
 DTCE_CMTW0_CMWI0,
-DTCE_CMTW_CMWI1,
-DTCE_USBHS_D0FIFO2,DTCE_USBHS_D1FIFO2,
+DTCE_CMTW1_CMWI1,
+DTCE_USBA_D0FIFO2,DTCE_USBA_D1FIFO2,
 DTCE_USB0_D0FIFO0,DTCE_USB0_D1FIFO0,
 DTCE_RSPI0_SPRI0=38,DTCE_RSPI0_SPTI0,
 DTCE_QSPI_SPRI=42,DTCE_QSPI_SPTI,
 DTCE_SDHI_SBFAI,
-DTCE_MMC_MBFAI,
+DTCE_MMCIF_MBFAI,
 DTCE_SSI0_SSITXI0,DTCE_SSI0_SSIRXI0,
 DTCE_SSI1_SSIRTI1,
-DTCE_SRC0_IDEI0=50,DTCE_SRC0_ODFI0,
+DTCE_SRC_IDEI=50,DTCE_SRC_ODFI,
 DTCE_RIIC0_RXI0,DTCE_RIIC0_TXI0,
 DTCE_RIIC2_RXI2,DTCE_RIIC2_TXI2,
 DTCE_SCI0_RXI0=58,DTCE_SCI0_TXI0,
 DTCE_SCI1_RXI1,DTCE_SCI1_TXI1,
 DTCE_SCI2_RXI2,DTCE_SCI2_TXI2,
-DTCE_ICU_IRQ0,DTCE_ICU_IRQ1,DTCE_ICU_IRQ2,DTCE_ICU_IRQ3,DTCE_ICU_IRQ4,DTCE_ICU_IRQ5,DTCE_ICU_IRQ6,DTCE_ICU_IRQ7,DTCE_ICU_IRQ8,DTCE_ICU_IRQ9,DTCE_ICU_IRQ10,DTCE_ICU_IRQ11,DTCE_ICU_IRQ12,DTCE_ICU_IRQ13,DTCE_ICU_IRQ14,DTCE_ICU_IRQ15,
+DTCE_ICU_IRQ0,DTCE_ICU_IRQ1,DTCE_ICU_IRQ2,DTCE_ICU_IRQ3,DTCE_ICU_IRQ4,DTCE_ICU_IRQ5,DTCE_ICU_IRQ6,DTCE_ICU_IRQ7,
+DTCE_ICU_IRQ8,DTCE_ICU_IRQ9,DTCE_ICU_IRQ10,DTCE_ICU_IRQ11,DTCE_ICU_IRQ12,DTCE_ICU_IRQ13,DTCE_ICU_IRQ14,DTCE_ICU_IRQ15,
 DTCE_SCI3_RXI3,DTCE_SCI3_TXI3,
 DTCE_SCI4_RXI4,DTCE_SCI4_TXI4,
 DTCE_SCI5_RXI5,DTCE_SCI5_TXI5,
 DTCE_SCI6_RXI6,DTCE_SCI6_TXI6,
 DTCE_PDC_PCDFI=97,
 DTCE_SCI7_RXI7,DTCE_SCI7_TXI7,
-DTCE_SCIF8_RXIF8,DTCE_SCIF8_TXIF8,
-DTCE_SCIF9_RXIF9,DTCE_SCIF9_TXIF9,
-DTCE_SCIF10_RXIF10,DTCE_SCIF10_TXIF10,
-DTCE_SCIF11_RXIF11=114,DTCE_SCIF11_TXIF11,
+DTCE_SCIFA8_RXIF8,DTCE_SCIFA8_TXIF8,
+DTCE_SCIFA9_RXIF9,DTCE_SCIFA9_TXIF9,
+DTCE_SCIFA10_RXIF10,DTCE_SCIFA10_TXIF10,
+DTCE_SCIFA11_RXIF11=114,DTCE_SCIFA11_TXIF11,
 DTCE_SCI12_RXI12,DTCE_SCI12_TXI12,
 DTCE_DMAC_DMAC0I=120,DTCE_DMAC_DMAC1I,DTCE_DMAC_DMAC2I,DTCE_DMAC_DMAC3I,
 DTCE_EXDMAC_EXDMAC0I=126,DTCE_EXDMAC_EXDMAC1I,
-DTCE_PERIB128_INTB128,
-DTCE_PERIB129_INTB129,
-DTCE_PERIB130_INTB130,
-DTCE_PERIB131_INTB131,
-DTCE_PERIB132_INTB132,
-DTCE_PERIB133_INTB133,
-DTCE_PERIB134_INTB134,
-DTCE_PERIB135_INTB135,
-DTCE_PERIB136_INTB136,
-DTCE_PERIB137_INTB137,
-DTCE_PERIB138_INTB138,
-DTCE_PERIB139_INTB139,
-DTCE_PERIB140_INTB140,
-DTCE_PERIB141_INTB141,
-DTCE_PERIB142_INTB142,
-DTCE_PERIB143_INTB143,
-DTCE_PERIB144_INTB144,
-DTCE_PERIB145_INTB145,
-DTCE_PERIB146_INTB146,
-DTCE_PERIB147_INTB147,
-DTCE_PERIB148_INTB148,
-DTCE_PERIB149_INTB149,
-DTCE_PERIB150_INTB150,
-DTCE_PERIB151_INTB151,
-DTCE_PERIB152_INTB152,
-DTCE_PERIB153_INTB153,
-DTCE_PERIB154_INTB154,
-DTCE_PERIB155_INTB155,
-DTCE_PERIB156_INTB156,
-DTCE_PERIB157_INTB157,
-DTCE_PERIB158_INTB158,
-DTCE_PERIB159_INTB159,
-DTCE_PERIB160_INTB160,
-DTCE_PERIB161_INTB161,
-DTCE_PERIB162_INTB162,
-DTCE_PERIB163_INTB163,
-DTCE_PERIB164_INTB164,
-DTCE_PERIB165_INTB165,
-DTCE_PERIB166_INTB166,
-DTCE_PERIB167_INTB167,
-DTCE_PERIB168_INTB168,
-DTCE_PERIB169_INTB169,
-DTCE_PERIB170_INTB170,
-DTCE_PERIB171_INTB171,
-DTCE_PERIB172_INTB172,
-DTCE_PERIB173_INTB173,
-DTCE_PERIB174_INTB174,
-DTCE_PERIB175_INTB175,
-DTCE_PERIB176_INTB176,
-DTCE_PERIB177_INTB177,
-DTCE_PERIB178_INTB178,
-DTCE_PERIB179_INTB179,
-DTCE_PERIB180_INTB180,
-DTCE_PERIB181_INTB181,
-DTCE_PERIB182_INTB182,
-DTCE_PERIB183_INTB183,
-DTCE_PERIB184_INTB184,
-DTCE_PERIB185_INTB185,
-DTCE_PERIB186_INTB186,
-DTCE_PERIB187_INTB187,
-DTCE_PERIB188_INTB188,
-DTCE_PERIB189_INTB189,
-DTCE_PERIB190_INTB190,
-DTCE_PERIB191_INTB191,
-DTCE_PERIB192_INTB192,
-DTCE_PERIB193_INTB193,
-DTCE_PERIB194_INTB194,
-DTCE_PERIB195_INTB195,
-DTCE_PERIB196_INTB196,
-DTCE_PERIB197_INTB197,
-DTCE_PERIB198_INTB198,
-DTCE_PERIB199_INTB199,
-DTCE_PERIB200_INTB200,
-DTCE_PERIB201_INTB201,
-DTCE_PERIB202_INTB202,
-DTCE_PERIB203_INTB203,
-DTCE_PERIB204_INTB204,
-DTCE_PERIB205_INTB205,
-DTCE_PERIB206_INTB206,
-DTCE_PERIB207_INTB207,
-DTCE_PERIA208_INTA208,
-DTCE_PERIA209_INTA209,
-DTCE_PERIA210_INTA210,
-DTCE_PERIA211_INTA211,
-DTCE_PERIA212_INTA212,
-DTCE_PERIA213_INTA213,
-DTCE_PERIA214_INTA214,
-DTCE_PERIA215_INTA215,
-DTCE_PERIA216_INTA216,
-DTCE_PERIA217_INTA217,
-DTCE_PERIA218_INTA218,
-DTCE_PERIA219_INTA219,
-DTCE_PERIA220_INTA220,
-DTCE_PERIA221_INTA221,
-DTCE_PERIA222_INTA222,
-DTCE_PERIA223_INTA223,
-DTCE_PERIA224_INTA224,
-DTCE_PERIA225_INTA225,
-DTCE_PERIA226_INTA226,
-DTCE_PERIA227_INTA227,
-DTCE_PERIA228_INTA228,
-DTCE_PERIA229_INTA229,
-DTCE_PERIA230_INTA230,
-DTCE_PERIA231_INTA231,
-DTCE_PERIA232_INTA232,
-DTCE_PERIA233_INTA233,
-DTCE_PERIA234_INTA234,
-DTCE_PERIA235_INTA235,
-DTCE_PERIA236_INTA236,
-DTCE_PERIA237_INTA237,
-DTCE_PERIA238_INTA238,
-DTCE_PERIA239_INTA239,
-DTCE_PERIA240_INTA240,
-DTCE_PERIA241_INTA241,
-DTCE_PERIA242_INTA242,
-DTCE_PERIA243_INTA243,
-DTCE_PERIA244_INTA244,
-DTCE_PERIA245_INTA245,
-DTCE_PERIA246_INTA246,
-DTCE_PERIA247_INTA247,
-DTCE_PERIA248_INTA248,
-DTCE_PERIA249_INTA249,
-DTCE_PERIA250_INTA250,
-DTCE_PERIA251_INTA251,
-DTCE_PERIA252_INTA252,
-DTCE_PERIA253_INTA253,
-DTCE_PERIA254_INTA254,
-DTCE_PERIA255_INTA255
+DTCE_PERIB_INTB128,DTCE_PERIB_INTB129,DTCE_PERIB_INTB130,DTCE_PERIB_INTB131,DTCE_PERIB_INTB132,
+DTCE_PERIB_INTB133,DTCE_PERIB_INTB134,DTCE_PERIB_INTB135,DTCE_PERIB_INTB136,DTCE_PERIB_INTB137,
+DTCE_PERIB_INTB138,DTCE_PERIB_INTB139,DTCE_PERIB_INTB140,DTCE_PERIB_INTB141,DTCE_PERIB_INTB142,
+DTCE_PERIB_INTB143,DTCE_PERIB_INTB144,DTCE_PERIB_INTB145,DTCE_PERIB_INTB146,DTCE_PERIB_INTB147,
+DTCE_PERIB_INTB148,DTCE_PERIB_INTB149,DTCE_PERIB_INTB150,DTCE_PERIB_INTB151,DTCE_PERIB_INTB152,
+DTCE_PERIB_INTB153,DTCE_PERIB_INTB154,DTCE_PERIB_INTB155,DTCE_PERIB_INTB156,DTCE_PERIB_INTB157,
+DTCE_PERIB_INTB158,DTCE_PERIB_INTB159,DTCE_PERIB_INTB160,DTCE_PERIB_INTB161,DTCE_PERIB_INTB162,
+DTCE_PERIB_INTB163,DTCE_PERIB_INTB164,DTCE_PERIB_INTB165,DTCE_PERIB_INTB166,DTCE_PERIB_INTB167,
+DTCE_PERIB_INTB168,DTCE_PERIB_INTB169,DTCE_PERIB_INTB170,DTCE_PERIB_INTB171,DTCE_PERIB_INTB172,
+DTCE_PERIB_INTB173,DTCE_PERIB_INTB174,DTCE_PERIB_INTB175,DTCE_PERIB_INTB176,DTCE_PERIB_INTB177,
+DTCE_PERIB_INTB178,DTCE_PERIB_INTB179,DTCE_PERIB_INTB180,DTCE_PERIB_INTB181,DTCE_PERIB_INTB182,
+DTCE_PERIB_INTB183,DTCE_PERIB_INTB184,DTCE_PERIB_INTB185,DTCE_PERIB_INTB186,DTCE_PERIB_INTB187,
+DTCE_PERIB_INTB188,DTCE_PERIB_INTB189,DTCE_PERIB_INTB190,DTCE_PERIB_INTB191,DTCE_PERIB_INTB192,
+DTCE_PERIB_INTB193,DTCE_PERIB_INTB194,DTCE_PERIB_INTB195,DTCE_PERIB_INTB196,DTCE_PERIB_INTB197,
+DTCE_PERIB_INTB198,DTCE_PERIB_INTB199,DTCE_PERIB_INTB200,DTCE_PERIB_INTB201,DTCE_PERIB_INTB202,
+DTCE_PERIB_INTB203,DTCE_PERIB_INTB204,DTCE_PERIB_INTB205,DTCE_PERIB_INTB206,DTCE_PERIB_INTB207,
+DTCE_PERIA_INTA208,DTCE_PERIA_INTA209,DTCE_PERIA_INTA210,DTCE_PERIA_INTA211,DTCE_PERIA_INTA212,
+DTCE_PERIA_INTA213,DTCE_PERIA_INTA214,DTCE_PERIA_INTA215,DTCE_PERIA_INTA216,DTCE_PERIA_INTA217,
+DTCE_PERIA_INTA218,DTCE_PERIA_INTA219,DTCE_PERIA_INTA220,DTCE_PERIA_INTA221,DTCE_PERIA_INTA222,
+DTCE_PERIA_INTA223,DTCE_PERIA_INTA224,DTCE_PERIA_INTA225,DTCE_PERIA_INTA226,DTCE_PERIA_INTA227,
+DTCE_PERIA_INTA228,DTCE_PERIA_INTA229,DTCE_PERIA_INTA230,DTCE_PERIA_INTA231,DTCE_PERIA_INTA232,
+DTCE_PERIA_INTA233,DTCE_PERIA_INTA234,DTCE_PERIA_INTA235,DTCE_PERIA_INTA236,DTCE_PERIA_INTA237,
+DTCE_PERIA_INTA238,DTCE_PERIA_INTA239,DTCE_PERIA_INTA240,DTCE_PERIA_INTA241,DTCE_PERIA_INTA242,
+DTCE_PERIA_INTA243,DTCE_PERIA_INTA244,DTCE_PERIA_INTA245,DTCE_PERIA_INTA246,DTCE_PERIA_INTA247,
+DTCE_PERIA_INTA248,DTCE_PERIA_INTA249,DTCE_PERIA_INTA250,DTCE_PERIA_INTA251,DTCE_PERIA_INTA252,
+DTCE_PERIA_INTA253,DTCE_PERIA_INTA254,DTCE_PERIA_INTA255
 };
 
 enum enum_ier {
@@ -17556,172 +16330,71 @@ IER_ICU_SWINT2=0x03,IER_ICU_SWINT=0x03,
 IER_CMT0_CMI0=0x03,
 IER_CMT1_CMI1=0x03,
 IER_CMTW0_CMWI0=0x03,
-IER_CMTW_CMWI1=0x03,
-IER_USBHS_D0FIFO2=0x04,IER_USBHS_D1FIFO2=0x04,
+IER_CMTW1_CMWI1=0x03,
+IER_USBA_D0FIFO2=0x04,IER_USBA_D1FIFO2=0x04,
 IER_USB0_D0FIFO0=0x04,IER_USB0_D1FIFO0=0x04,
 IER_RSPI0_SPRI0=0x04,IER_RSPI0_SPTI0=0x04,
 IER_QSPI_SPRI=0x05,IER_QSPI_SPTI=0x05,
 IER_SDHI_SBFAI=0x05,
-IER_MMC_MBFAI=0x05,
+IER_MMCIF_MBFAI=0x05,
 IER_SSI0_SSITXI0=0x05,IER_SSI0_SSIRXI0=0x05,
 IER_SSI1_SSIRTI1=0x06,
-IER_SRC0_IDEI0=0x06,IER_SRC0_ODFI0=0x06,
+IER_SRC_IDEI=0x06,IER_SRC_ODFI=0x06,
 IER_RIIC0_RXI0=0x06,IER_RIIC0_TXI0=0x06,
 IER_RIIC2_RXI2=0x06,IER_RIIC2_TXI2=0x06,
 IER_SCI0_RXI0=0x07,IER_SCI0_TXI0=0x07,
 IER_SCI1_RXI1=0x07,IER_SCI1_TXI1=0x07,
 IER_SCI2_RXI2=0x07,IER_SCI2_TXI2=0x07,
-IER_ICU_IRQ0=0x08,IER_ICU_IRQ1=0x08,IER_ICU_IRQ2=0x08,IER_ICU_IRQ3=0x08,IER_ICU_IRQ4=0x08,IER_ICU_IRQ5=0x08,IER_ICU_IRQ6=0x08,IER_ICU_IRQ7=0x08,IER_ICU_IRQ8=0x09,IER_ICU_IRQ9=0x09,IER_ICU_IRQ10=0x09,IER_ICU_IRQ11=0x09,IER_ICU_IRQ12=0x09,IER_ICU_IRQ13=0x09,IER_ICU_IRQ14=0x09,IER_ICU_IRQ15=0x09,
+IER_ICU_IRQ0=0x08,IER_ICU_IRQ1=0x08,IER_ICU_IRQ2=0x08,IER_ICU_IRQ3=0x08,IER_ICU_IRQ4=0x08,IER_ICU_IRQ5=0x08,IER_ICU_IRQ6=0x08,IER_ICU_IRQ7=0x08,
+IER_ICU_IRQ8=0x09,IER_ICU_IRQ9=0x09,IER_ICU_IRQ10=0x09,IER_ICU_IRQ11=0x09,IER_ICU_IRQ12=0x09,IER_ICU_IRQ13=0x09,IER_ICU_IRQ14=0x09,IER_ICU_IRQ15=0x09,
 IER_SCI3_RXI3=0x0A,IER_SCI3_TXI3=0x0A,
 IER_SCI4_RXI4=0x0A,IER_SCI4_TXI4=0x0A,
 IER_SCI5_RXI5=0x0A,IER_SCI5_TXI5=0x0A,
 IER_SCI6_RXI6=0x0A,IER_SCI6_TXI6=0x0A,
-IER_LVD1_COMPA1=0x0B,
-IER_LVD2_COMPA2=0x0B,
+IER_LVD1_LVD1=0x0B,
+IER_LVD2_LVD2=0x0B,
 IER_USB0_USBR0=0x0B,
-IER_RTC_ALARM=0x0B,IER_RTC_PRD=0x0B,
-IER_USBHS_HSUSBR=0x0B,
+IER_RTC_ALM=0x0B,IER_RTC_PRD=0x0B,
+IER_USBA_USBAR=0x0B,
 IER_IWDT_IWUNI=0x0B,
 IER_WDT_WUNI=0x0C,
 IER_PDC_PCDFI=0x0C,
 IER_SCI7_RXI7=0x0C,IER_SCI7_TXI7=0x0C,
-IER_SCIF8_RXIF8=0x0C,IER_SCIF8_TXIF8=0x0C,
-IER_SCIF9_RXIF9=0x0C,IER_SCIF9_TXIF9=0x0C,
-IER_SCIF10_RXIF10=0x0D,IER_SCIF10_TXIF10=0x0D,
-IER_ICU_GROUPBE0=0x0D,IER_ICU_GROUPBE1=0x0D,IER_ICU_GROUPAE0=0x0D,IER_ICU_GROUPAE1=0x0D,IER_ICU_GROUPBL0=0x0D,IER_ICU_GROUPBL1=0x0D,IER_ICU_GROUPAL0=0x0E,IER_ICU_GROUPAL1=0x0E,
-IER_SCIF11_RXIF11=0x0E,IER_SCIF11_TXIF11=0x0E,
+IER_SCIFA8_RXIF8=0x0C,IER_SCIFA8_TXIF8=0x0C,
+IER_SCIFA9_RXIF9=0x0C,IER_SCIFA9_TXIF9=0x0C,
+IER_SCIFA10_RXIF10=0x0D,IER_SCIFA10_TXIF10=0x0D,
+IER_ICU_GROUPBE0=0x0D,IER_ICU_GROUPBL0=0x0D,IER_ICU_GROUPBL1=0x0D,IER_ICU_GROUPAL0=0x0E,IER_ICU_GROUPAL1=0x0E,
+IER_SCIFA11_RXIF11=0x0E,IER_SCIFA11_TXIF11=0x0E,
 IER_SCI12_RXI12=0x0E,IER_SCI12_TXI12=0x0E,
 IER_DMAC_DMAC0I=0x0F,IER_DMAC_DMAC1I=0x0F,IER_DMAC_DMAC2I=0x0F,IER_DMAC_DMAC3I=0x0F,IER_DMAC_DMAC74I=0x0F,
-IER_ICU_OST=0x0F,
+IER_OST_OST=0x0F,
 IER_EXDMAC_EXDMAC0I=0x0F,IER_EXDMAC_EXDMAC1I=0x0F,
-IER_PERIB128_INTB128=0x10,
-IER_PERIB129_INTB129=0x10,
-IER_PERIB130_INTB130=0x10,
-IER_PERIB131_INTB131=0x10,
-IER_PERIB132_INTB132=0x10,
-IER_PERIB133_INTB133=0x10,
-IER_PERIB134_INTB134=0x10,
-IER_PERIB135_INTB135=0x10,
-IER_PERIB136_INTB136=0x11,
-IER_PERIB137_INTB137=0x11,
-IER_PERIB138_INTB138=0x11,
-IER_PERIB139_INTB139=0x11,
-IER_PERIB140_INTB140=0x11,
-IER_PERIB141_INTB141=0x11,
-IER_PERIB142_INTB142=0x11,
-IER_PERIB143_INTB143=0x11,
-IER_PERIB144_INTB144=0x12,
-IER_PERIB145_INTB145=0x12,
-IER_PERIB146_INTB146=0x12,
-IER_PERIB147_INTB147=0x12,
-IER_PERIB148_INTB148=0x12,
-IER_PERIB149_INTB149=0x12,
-IER_PERIB150_INTB150=0x12,
-IER_PERIB151_INTB151=0x12,
-IER_PERIB152_INTB152=0x13,
-IER_PERIB153_INTB153=0x13,
-IER_PERIB154_INTB154=0x13,
-IER_PERIB155_INTB155=0x13,
-IER_PERIB156_INTB156=0x13,
-IER_PERIB157_INTB157=0x13,
-IER_PERIB158_INTB158=0x13,
-IER_PERIB159_INTB159=0x13,
-IER_PERIB160_INTB160=0x14,
-IER_PERIB161_INTB161=0x14,
-IER_PERIB162_INTB162=0x14,
-IER_PERIB163_INTB163=0x14,
-IER_PERIB164_INTB164=0x14,
-IER_PERIB165_INTB165=0x14,
-IER_PERIB166_INTB166=0x14,
-IER_PERIB167_INTB167=0x14,
-IER_PERIB168_INTB168=0x15,
-IER_PERIB169_INTB169=0x15,
-IER_PERIB170_INTB170=0x15,
-IER_PERIB171_INTB171=0x15,
-IER_PERIB172_INTB172=0x15,
-IER_PERIB173_INTB173=0x15,
-IER_PERIB174_INTB174=0x15,
-IER_PERIB175_INTB175=0x15,
-IER_PERIB176_INTB176=0x16,
-IER_PERIB177_INTB177=0x16,
-IER_PERIB178_INTB178=0x16,
-IER_PERIB179_INTB179=0x16,
-IER_PERIB180_INTB180=0x16,
-IER_PERIB181_INTB181=0x16,
-IER_PERIB182_INTB182=0x16,
-IER_PERIB183_INTB183=0x16,
-IER_PERIB184_INTB184=0x17,
-IER_PERIB185_INTB185=0x17,
-IER_PERIB186_INTB186=0x17,
-IER_PERIB187_INTB187=0x17,
-IER_PERIB188_INTB188=0x17,
-IER_PERIB189_INTB189=0x17,
-IER_PERIB190_INTB190=0x17,
-IER_PERIB191_INTB191=0x17,
-IER_PERIB192_INTB192=0x18,
-IER_PERIB193_INTB193=0x18,
-IER_PERIB194_INTB194=0x18,
-IER_PERIB195_INTB195=0x18,
-IER_PERIB196_INTB196=0x18,
-IER_PERIB197_INTB197=0x18,
-IER_PERIB198_INTB198=0x18,
-IER_PERIB199_INTB199=0x18,
-IER_PERIB200_INTB200=0x19,
-IER_PERIB201_INTB201=0x19,
-IER_PERIB202_INTB202=0x19,
-IER_PERIB203_INTB203=0x19,
-IER_PERIB204_INTB204=0x19,
-IER_PERIB205_INTB205=0x19,
-IER_PERIB206_INTB206=0x19,
-IER_PERIB207_INTB207=0x19,
-IER_PERIA208_INTA208=0x1A,
-IER_PERIA209_INTA209=0x1A,
-IER_PERIA210_INTA210=0x1A,
-IER_PERIA211_INTA211=0x1A,
-IER_PERIA212_INTA212=0x1A,
-IER_PERIA213_INTA213=0x1A,
-IER_PERIA214_INTA214=0x1A,
-IER_PERIA215_INTA215=0x1A,
-IER_PERIA216_INTA216=0x1B,
-IER_PERIA217_INTA217=0x1B,
-IER_PERIA218_INTA218=0x1B,
-IER_PERIA219_INTA219=0x1B,
-IER_PERIA220_INTA220=0x1B,
-IER_PERIA221_INTA221=0x1B,
-IER_PERIA222_INTA222=0x1B,
-IER_PERIA223_INTA223=0x1B,
-IER_PERIA224_INTA224=0x1C,
-IER_PERIA225_INTA225=0x1C,
-IER_PERIA226_INTA226=0x1C,
-IER_PERIA227_INTA227=0x1C,
-IER_PERIA228_INTA228=0x1C,
-IER_PERIA229_INTA229=0x1C,
-IER_PERIA230_INTA230=0x1C,
-IER_PERIA231_INTA231=0x1C,
-IER_PERIA232_INTA232=0x1D,
-IER_PERIA233_INTA233=0x1D,
-IER_PERIA234_INTA234=0x1D,
-IER_PERIA235_INTA235=0x1D,
-IER_PERIA236_INTA236=0x1D,
-IER_PERIA237_INTA237=0x1D,
-IER_PERIA238_INTA238=0x1D,
-IER_PERIA239_INTA239=0x1D,
-IER_PERIA240_INTA240=0x1E,
-IER_PERIA241_INTA241=0x1E,
-IER_PERIA242_INTA242=0x1E,
-IER_PERIA243_INTA243=0x1E,
-IER_PERIA244_INTA244=0x1E,
-IER_PERIA245_INTA245=0x1E,
-IER_PERIA246_INTA246=0x1E,
-IER_PERIA247_INTA247=0x1E,
-IER_PERIA248_INTA248=0x1F,
-IER_PERIA249_INTA249=0x1F,
-IER_PERIA250_INTA250=0x1F,
-IER_PERIA251_INTA251=0x1F,
-IER_PERIA252_INTA252=0x1F,
-IER_PERIA253_INTA253=0x1F,
-IER_PERIA254_INTA254=0x1F,
-IER_PERIA255_INTA255=0x1F
+IER_PERIB_INTB128=0x10,IER_PERIB_INTB129=0x10,IER_PERIB_INTB130=0x10,IER_PERIB_INTB131=0x10,IER_PERIB_INTB132=0x10,
+IER_PERIB_INTB133=0x10,IER_PERIB_INTB134=0x10,IER_PERIB_INTB135=0x10,IER_PERIB_INTB136=0x11,IER_PERIB_INTB137=0x11,
+IER_PERIB_INTB138=0x11,IER_PERIB_INTB139=0x11,IER_PERIB_INTB140=0x11,IER_PERIB_INTB141=0x11,IER_PERIB_INTB142=0x11,
+IER_PERIB_INTB143=0x11,IER_PERIB_INTB144=0x12,IER_PERIB_INTB145=0x12,IER_PERIB_INTB146=0x12,IER_PERIB_INTB147=0x12,
+IER_PERIB_INTB148=0x12,IER_PERIB_INTB149=0x12,IER_PERIB_INTB150=0x12,IER_PERIB_INTB151=0x12,IER_PERIB_INTB152=0x13,
+IER_PERIB_INTB153=0x13,IER_PERIB_INTB154=0x13,IER_PERIB_INTB155=0x13,IER_PERIB_INTB156=0x13,IER_PERIB_INTB157=0x13,
+IER_PERIB_INTB158=0x13,IER_PERIB_INTB159=0x13,IER_PERIB_INTB160=0x14,IER_PERIB_INTB161=0x14,IER_PERIB_INTB162=0x14,
+IER_PERIB_INTB163=0x14,IER_PERIB_INTB164=0x14,IER_PERIB_INTB165=0x14,IER_PERIB_INTB166=0x14,IER_PERIB_INTB167=0x14,
+IER_PERIB_INTB168=0x15,IER_PERIB_INTB169=0x15,IER_PERIB_INTB170=0x15,IER_PERIB_INTB171=0x15,IER_PERIB_INTB172=0x15,
+IER_PERIB_INTB173=0x15,IER_PERIB_INTB174=0x15,IER_PERIB_INTB175=0x15,IER_PERIB_INTB176=0x16,IER_PERIB_INTB177=0x16,
+IER_PERIB_INTB178=0x16,IER_PERIB_INTB179=0x16,IER_PERIB_INTB180=0x16,IER_PERIB_INTB181=0x16,IER_PERIB_INTB182=0x16,
+IER_PERIB_INTB183=0x16,IER_PERIB_INTB184=0x17,IER_PERIB_INTB185=0x17,IER_PERIB_INTB186=0x17,IER_PERIB_INTB187=0x17,
+IER_PERIB_INTB188=0x17,IER_PERIB_INTB189=0x17,IER_PERIB_INTB190=0x17,IER_PERIB_INTB191=0x17,IER_PERIB_INTB192=0x18,
+IER_PERIB_INTB193=0x18,IER_PERIB_INTB194=0x18,IER_PERIB_INTB195=0x18,IER_PERIB_INTB196=0x18,IER_PERIB_INTB197=0x18,
+IER_PERIB_INTB198=0x18,IER_PERIB_INTB199=0x18,IER_PERIB_INTB200=0x19,IER_PERIB_INTB201=0x19,IER_PERIB_INTB202=0x19,
+IER_PERIB_INTB203=0x19,IER_PERIB_INTB204=0x19,IER_PERIB_INTB205=0x19,IER_PERIB_INTB206=0x19,IER_PERIB_INTB207=0x19,
+IER_PERIA_INTA208=0x1A,IER_PERIA_INTA209=0x1A,IER_PERIA_INTA210=0x1A,IER_PERIA_INTA211=0x1A,IER_PERIA_INTA212=0x1A,
+IER_PERIA_INTA213=0x1A,IER_PERIA_INTA214=0x1A,IER_PERIA_INTA215=0x1A,IER_PERIA_INTA216=0x1B,IER_PERIA_INTA217=0x1B,
+IER_PERIA_INTA218=0x1B,IER_PERIA_INTA219=0x1B,IER_PERIA_INTA220=0x1B,IER_PERIA_INTA221=0x1B,IER_PERIA_INTA222=0x1B,
+IER_PERIA_INTA223=0x1B,IER_PERIA_INTA224=0x1C,IER_PERIA_INTA225=0x1C,IER_PERIA_INTA226=0x1C,IER_PERIA_INTA227=0x1C,
+IER_PERIA_INTA228=0x1C,IER_PERIA_INTA229=0x1C,IER_PERIA_INTA230=0x1C,IER_PERIA_INTA231=0x1C,IER_PERIA_INTA232=0x1D,
+IER_PERIA_INTA233=0x1D,IER_PERIA_INTA234=0x1D,IER_PERIA_INTA235=0x1D,IER_PERIA_INTA236=0x1D,IER_PERIA_INTA237=0x1D,
+IER_PERIA_INTA238=0x1D,IER_PERIA_INTA239=0x1D,IER_PERIA_INTA240=0x1E,IER_PERIA_INTA241=0x1E,IER_PERIA_INTA242=0x1E,
+IER_PERIA_INTA243=0x1E,IER_PERIA_INTA244=0x1E,IER_PERIA_INTA245=0x1E,IER_PERIA_INTA246=0x1E,IER_PERIA_INTA247=0x1E,
+IER_PERIA_INTA248=0x1F,IER_PERIA_INTA249=0x1F,IER_PERIA_INTA250=0x1F,IER_PERIA_INTA251=0x1F,IER_PERIA_INTA252=0x1F,
+IER_PERIA_INTA253=0x1F,IER_PERIA_INTA254=0x1F,IER_PERIA_INTA255=0x1F
 };
 
 enum enum_ipr {
@@ -17732,16 +16405,16 @@ IPR_ICU_SWINT2=3,IPR_ICU_SWINT=3,
 IPR_CMT0_CMI0=4,
 IPR_CMT1_CMI1=5,
 IPR_CMTW0_CMWI0=6,
-IPR_CMTW_CMWI1=7,
-IPR_USBHS_D0FIFO2=32,IPR_USBHS_D1FIFO2=33,
+IPR_CMTW1_CMWI1=7,
+IPR_USBA_D0FIFO2=32,IPR_USBA_D1FIFO2=33,
 IPR_USB0_D0FIFO0=34,IPR_USB0_D1FIFO0=35,
 IPR_RSPI0_SPRI0=38,IPR_RSPI0_SPTI0=39,
 IPR_QSPI_SPRI=42,IPR_QSPI_SPTI=43,
 IPR_SDHI_SBFAI=44,
-IPR_MMC_MBFAI=45,
+IPR_MMCIF_MBFAI=45,
 IPR_SSI0_SSITXI0=46,IPR_SSI0_SSIRXI0=47,
 IPR_SSI1_SSIRTI1=48,
-IPR_SRC0_IDEI0=50,IPR_SRC0_ODFI0=51,
+IPR_SRC_IDEI=50,IPR_SRC_ODFI=51,
 IPR_RIIC0_RXI0=52,IPR_RIIC0_TXI0=53,
 IPR_RIIC2_RXI2=54,IPR_RIIC2_TXI2=55,
 IPR_SCI0_RXI0=58,IPR_SCI0_TXI0=59,
@@ -17752,152 +16425,50 @@ IPR_SCI3_RXI3=80,IPR_SCI3_TXI3=81,
 IPR_SCI4_RXI4=82,IPR_SCI4_TXI4=83,
 IPR_SCI5_RXI5=84,IPR_SCI5_TXI5=85,
 IPR_SCI6_RXI6=86,IPR_SCI6_TXI6=87,
-IPR_LVD1_COMPA1=88,
-IPR_LVD2_COMPA2=89,
+IPR_LVD1_LVD1=88,
+IPR_LVD2_LVD2=89,
 IPR_USB0_USBR0=90,
-IPR_RTC_ALARM=92,IPR_RTC_PRD=93,
-IPR_USBHS_HSUSBR=94,
+IPR_RTC_ALM=92,IPR_RTC_PRD=93,
+IPR_USBA_USBAR=94,
 IPR_IWDT_IWUNI=95,
 IPR_WDT_WUNI=96,
 IPR_PDC_PCDFI=97,
 IPR_SCI7_RXI7=98,IPR_SCI7_TXI7=99,
-IPR_SCIF8_RXIF8=100,IPR_SCIF8_TXIF8=101,
-IPR_SCIF9_RXIF9=102,IPR_SCIF9_TXIF9=103,
-IPR_SCIF10_RXIF10=104,IPR_SCIF10_TXIF10=105,
-IPR_ICU_GROUPBE0=106,IPR_ICU_GROUPBE1=107,IPR_ICU_GROUPAE0=108,IPR_ICU_GROUPAE1=109,IPR_ICU_GROUPBL0=110,IPR_ICU_GROUPBL1=111,IPR_ICU_GROUPAL0=112,IPR_ICU_GROUPAL1=113,
-IPR_SCIF11_RXIF11=114,IPR_SCIF11_TXIF11=115,
+IPR_SCIFA8_RXIF8=100,IPR_SCIFA8_TXIF8=101,
+IPR_SCIFA9_RXIF9=102,IPR_SCIFA9_TXIF9=103,
+IPR_SCIFA10_RXIF10=104,IPR_SCIFA10_TXIF10=105,
+IPR_ICU_GROUPBE0=106,IPR_ICU_GROUPBL0=110,IPR_ICU_GROUPBL1=111,IPR_ICU_GROUPAL0=112,IPR_ICU_GROUPAL1=113,
+IPR_SCIFA11_RXIF11=114,IPR_SCIFA11_TXIF11=115,
 IPR_SCI12_RXI12=116,IPR_SCI12_TXI12=117,
 IPR_DMAC_DMAC0I=120,IPR_DMAC_DMAC1I=121,IPR_DMAC_DMAC2I=122,IPR_DMAC_DMAC3I=123,IPR_DMAC_DMAC74I=124,
-IPR_ICU_OST=125,
+IPR_OST_OST=125,
 IPR_EXDMAC_EXDMAC0I=126,IPR_EXDMAC_EXDMAC1I=127,
-IPR_PERIB128_INTB128=128,
-IPR_PERIB129_INTB129=129,
-IPR_PERIB130_INTB130=130,
-IPR_PERIB131_INTB131=131,
-IPR_PERIB132_INTB132=132,
-IPR_PERIB133_INTB133=133,
-IPR_PERIB134_INTB134=134,
-IPR_PERIB135_INTB135=135,
-IPR_PERIB136_INTB136=136,
-IPR_PERIB137_INTB137=137,
-IPR_PERIB138_INTB138=138,
-IPR_PERIB139_INTB139=139,
-IPR_PERIB140_INTB140=140,
-IPR_PERIB141_INTB141=141,
-IPR_PERIB142_INTB142=142,
-IPR_PERIB143_INTB143=143,
-IPR_PERIB144_INTB144=144,
-IPR_PERIB145_INTB145=145,
-IPR_PERIB146_INTB146=146,
-IPR_PERIB147_INTB147=147,
-IPR_PERIB148_INTB148=148,
-IPR_PERIB149_INTB149=149,
-IPR_PERIB150_INTB150=150,
-IPR_PERIB151_INTB151=151,
-IPR_PERIB152_INTB152=152,
-IPR_PERIB153_INTB153=153,
-IPR_PERIB154_INTB154=154,
-IPR_PERIB155_INTB155=155,
-IPR_PERIB156_INTB156=156,
-IPR_PERIB157_INTB157=157,
-IPR_PERIB158_INTB158=158,
-IPR_PERIB159_INTB159=159,
-IPR_PERIB160_INTB160=160,
-IPR_PERIB161_INTB161=161,
-IPR_PERIB162_INTB162=162,
-IPR_PERIB163_INTB163=163,
-IPR_PERIB164_INTB164=164,
-IPR_PERIB165_INTB165=165,
-IPR_PERIB166_INTB166=166,
-IPR_PERIB167_INTB167=167,
-IPR_PERIB168_INTB168=168,
-IPR_PERIB169_INTB169=169,
-IPR_PERIB170_INTB170=170,
-IPR_PERIB171_INTB171=171,
-IPR_PERIB172_INTB172=172,
-IPR_PERIB173_INTB173=173,
-IPR_PERIB174_INTB174=174,
-IPR_PERIB175_INTB175=175,
-IPR_PERIB176_INTB176=176,
-IPR_PERIB177_INTB177=177,
-IPR_PERIB178_INTB178=178,
-IPR_PERIB179_INTB179=179,
-IPR_PERIB180_INTB180=180,
-IPR_PERIB181_INTB181=181,
-IPR_PERIB182_INTB182=182,
-IPR_PERIB183_INTB183=183,
-IPR_PERIB184_INTB184=184,
-IPR_PERIB185_INTB185=185,
-IPR_PERIB186_INTB186=186,
-IPR_PERIB187_INTB187=187,
-IPR_PERIB188_INTB188=188,
-IPR_PERIB189_INTB189=189,
-IPR_PERIB190_INTB190=190,
-IPR_PERIB191_INTB191=191,
-IPR_PERIB192_INTB192=192,
-IPR_PERIB193_INTB193=193,
-IPR_PERIB194_INTB194=194,
-IPR_PERIB195_INTB195=195,
-IPR_PERIB196_INTB196=196,
-IPR_PERIB197_INTB197=197,
-IPR_PERIB198_INTB198=198,
-IPR_PERIB199_INTB199=199,
-IPR_PERIB200_INTB200=200,
-IPR_PERIB201_INTB201=201,
-IPR_PERIB202_INTB202=202,
-IPR_PERIB203_INTB203=203,
-IPR_PERIB204_INTB204=204,
-IPR_PERIB205_INTB205=205,
-IPR_PERIB206_INTB206=206,
-IPR_PERIB207_INTB207=207,
-IPR_PERIA208_INTA208=208,
-IPR_PERIA209_INTA209=209,
-IPR_PERIA210_INTA210=210,
-IPR_PERIA211_INTA211=211,
-IPR_PERIA212_INTA212=212,
-IPR_PERIA213_INTA213=213,
-IPR_PERIA214_INTA214=214,
-IPR_PERIA215_INTA215=215,
-IPR_PERIA216_INTA216=216,
-IPR_PERIA217_INTA217=217,
-IPR_PERIA218_INTA218=218,
-IPR_PERIA219_INTA219=219,
-IPR_PERIA220_INTA220=220,
-IPR_PERIA221_INTA221=221,
-IPR_PERIA222_INTA222=222,
-IPR_PERIA223_INTA223=223,
-IPR_PERIA224_INTA224=224,
-IPR_PERIA225_INTA225=225,
-IPR_PERIA226_INTA226=226,
-IPR_PERIA227_INTA227=227,
-IPR_PERIA228_INTA228=228,
-IPR_PERIA229_INTA229=229,
-IPR_PERIA230_INTA230=230,
-IPR_PERIA231_INTA231=231,
-IPR_PERIA232_INTA232=232,
-IPR_PERIA233_INTA233=233,
-IPR_PERIA234_INTA234=234,
-IPR_PERIA235_INTA235=235,
-IPR_PERIA236_INTA236=236,
-IPR_PERIA237_INTA237=237,
-IPR_PERIA238_INTA238=238,
-IPR_PERIA239_INTA239=239,
-IPR_PERIA240_INTA240=240,
-IPR_PERIA241_INTA241=241,
-IPR_PERIA242_INTA242=242,
-IPR_PERIA243_INTA243=243,
-IPR_PERIA244_INTA244=244,
-IPR_PERIA245_INTA245=245,
-IPR_PERIA246_INTA246=246,
-IPR_PERIA247_INTA247=247,
-IPR_PERIA248_INTA248=248,
-IPR_PERIA249_INTA249=249,
-IPR_PERIA250_INTA250=250,
-IPR_PERIA251_INTA251=251,
-IPR_PERIA252_INTA252=252,
-IPR_PERIA253_INTA253=253,
-IPR_PERIA254_INTA254=254,
-IPR_PERIA255_INTA255=255
+IPR_PERIB_INTB128=128,IPR_PERIB_INTB129=129,IPR_PERIB_INTB130=130,IPR_PERIB_INTB131=131,IPR_PERIB_INTB132=132,
+IPR_PERIB_INTB133=133,IPR_PERIB_INTB134=134,IPR_PERIB_INTB135=135,IPR_PERIB_INTB136=136,IPR_PERIB_INTB137=137,
+IPR_PERIB_INTB138=138,IPR_PERIB_INTB139=139,IPR_PERIB_INTB140=140,IPR_PERIB_INTB141=141,IPR_PERIB_INTB142=142,
+IPR_PERIB_INTB143=143,IPR_PERIB_INTB144=144,IPR_PERIB_INTB145=145,IPR_PERIB_INTB146=146,IPR_PERIB_INTB147=147,
+IPR_PERIB_INTB148=148,IPR_PERIB_INTB149=149,IPR_PERIB_INTB150=150,IPR_PERIB_INTB151=151,IPR_PERIB_INTB152=152,
+IPR_PERIB_INTB153=153,IPR_PERIB_INTB154=154,IPR_PERIB_INTB155=155,IPR_PERIB_INTB156=156,IPR_PERIB_INTB157=157,
+IPR_PERIB_INTB158=158,IPR_PERIB_INTB159=159,IPR_PERIB_INTB160=160,IPR_PERIB_INTB161=161,IPR_PERIB_INTB162=162,
+IPR_PERIB_INTB163=163,IPR_PERIB_INTB164=164,IPR_PERIB_INTB165=165,IPR_PERIB_INTB166=166,IPR_PERIB_INTB167=167,
+IPR_PERIB_INTB168=168,IPR_PERIB_INTB169=169,IPR_PERIB_INTB170=170,IPR_PERIB_INTB171=171,IPR_PERIB_INTB172=172,
+IPR_PERIB_INTB173=173,IPR_PERIB_INTB174=174,IPR_PERIB_INTB175=175,IPR_PERIB_INTB176=176,IPR_PERIB_INTB177=177,
+IPR_PERIB_INTB178=178,IPR_PERIB_INTB179=179,IPR_PERIB_INTB180=180,IPR_PERIB_INTB181=181,IPR_PERIB_INTB182=182,
+IPR_PERIB_INTB183=183,IPR_PERIB_INTB184=184,IPR_PERIB_INTB185=185,IPR_PERIB_INTB186=186,IPR_PERIB_INTB187=187,
+IPR_PERIB_INTB188=188,IPR_PERIB_INTB189=189,IPR_PERIB_INTB190=190,IPR_PERIB_INTB191=191,IPR_PERIB_INTB192=192,
+IPR_PERIB_INTB193=193,IPR_PERIB_INTB194=194,IPR_PERIB_INTB195=195,IPR_PERIB_INTB196=196,IPR_PERIB_INTB197=197,
+IPR_PERIB_INTB198=198,IPR_PERIB_INTB199=199,IPR_PERIB_INTB200=200,IPR_PERIB_INTB201=201,IPR_PERIB_INTB202=202,
+IPR_PERIB_INTB203=203,IPR_PERIB_INTB204=204,IPR_PERIB_INTB205=205,IPR_PERIB_INTB206=206,IPR_PERIB_INTB207=207,
+IPR_PERIA_INTA208=208,IPR_PERIA_INTA209=209,IPR_PERIA_INTA210=210,IPR_PERIA_INTA211=211,IPR_PERIA_INTA212=212,
+IPR_PERIA_INTA213=213,IPR_PERIA_INTA214=214,IPR_PERIA_INTA215=215,IPR_PERIA_INTA216=216,IPR_PERIA_INTA217=217,
+IPR_PERIA_INTA218=218,IPR_PERIA_INTA219=219,IPR_PERIA_INTA220=220,IPR_PERIA_INTA221=221,IPR_PERIA_INTA222=222,
+IPR_PERIA_INTA223=223,IPR_PERIA_INTA224=224,IPR_PERIA_INTA225=225,IPR_PERIA_INTA226=226,IPR_PERIA_INTA227=227,
+IPR_PERIA_INTA228=228,IPR_PERIA_INTA229=229,IPR_PERIA_INTA230=230,IPR_PERIA_INTA231=231,IPR_PERIA_INTA232=232,
+IPR_PERIA_INTA233=233,IPR_PERIA_INTA234=234,IPR_PERIA_INTA235=235,IPR_PERIA_INTA236=236,IPR_PERIA_INTA237=237,
+IPR_PERIA_INTA238=238,IPR_PERIA_INTA239=239,IPR_PERIA_INTA240=240,IPR_PERIA_INTA241=241,IPR_PERIA_INTA242=242,
+IPR_PERIA_INTA243=243,IPR_PERIA_INTA244=244,IPR_PERIA_INTA245=245,IPR_PERIA_INTA246=246,IPR_PERIA_INTA247=247,
+IPR_PERIA_INTA248=248,IPR_PERIA_INTA249=249,IPR_PERIA_INTA250=250,IPR_PERIA_INTA251=251,IPR_PERIA_INTA252=252,
+IPR_PERIA_INTA253=253,IPR_PERIA_INTA254=254,IPR_PERIA_INTA255=255
 };
 
 #define	IEN_BSC_BUSERR		IEN0
@@ -17909,9 +16480,9 @@ IPR_PERIA255_INTA255=255
 #define	IEN_CMT0_CMI0		IEN4
 #define	IEN_CMT1_CMI1		IEN5
 #define	IEN_CMTW0_CMWI0		IEN6
-#define	IEN_CMTW_CMWI1		IEN7
-#define	IEN_USBHS_D0FIFO2	IEN0
-#define	IEN_USBHS_D1FIFO2	IEN1
+#define	IEN_CMTW1_CMWI1		IEN7
+#define	IEN_USBA_D0FIFO2	IEN0
+#define	IEN_USBA_D1FIFO2	IEN1
 #define	IEN_USB0_D0FIFO0	IEN2
 #define	IEN_USB0_D1FIFO0	IEN3
 #define	IEN_RSPI0_SPRI0		IEN6
@@ -17919,12 +16490,12 @@ IPR_PERIA255_INTA255=255
 #define	IEN_QSPI_SPRI		IEN2
 #define	IEN_QSPI_SPTI		IEN3
 #define	IEN_SDHI_SBFAI		IEN4
-#define	IEN_MMC_MBFAI		IEN5
+#define	IEN_MMCIF_MBFAI		IEN5
 #define	IEN_SSI0_SSITXI0	IEN6
 #define	IEN_SSI0_SSIRXI0	IEN7
 #define	IEN_SSI1_SSIRTI1	IEN0
-#define	IEN_SRC0_IDEI0		IEN2
-#define	IEN_SRC0_ODFI0		IEN3
+#define	IEN_SRC_IDEI		IEN2
+#define	IEN_SRC_ODFI		IEN3
 #define	IEN_RIIC0_RXI0		IEN4
 #define	IEN_RIIC0_TXI0		IEN5
 #define	IEN_RIIC2_RXI2		IEN6
@@ -17959,33 +16530,30 @@ IPR_PERIA255_INTA255=255
 #define	IEN_SCI5_TXI5		IEN5
 #define	IEN_SCI6_RXI6		IEN6
 #define	IEN_SCI6_TXI6		IEN7
-#define	IEN_LVD1_COMPA1		IEN0
-#define	IEN_LVD2_COMPA2		IEN1
+#define	IEN_LVD1_LVD1		IEN0
+#define	IEN_LVD2_LVD2		IEN1
 #define	IEN_USB0_USBR0		IEN2
-#define	IEN_RTC_ALARM		IEN4
+#define	IEN_RTC_ALM			IEN4
 #define	IEN_RTC_PRD			IEN5
-#define	IEN_USBHS_HSUSBR	IEN6
+#define	IEN_USBA_USBAR	IEN6
 #define	IEN_IWDT_IWUNI		IEN7
 #define	IEN_WDT_WUNI		IEN0
 #define	IEN_PDC_PCDFI		IEN1
 #define	IEN_SCI7_RXI7		IEN2
 #define	IEN_SCI7_TXI7		IEN3
-#define	IEN_SCIF8_RXIF8		IEN4
-#define	IEN_SCIF8_TXIF8		IEN5
-#define	IEN_SCIF9_RXIF9		IEN6
-#define	IEN_SCIF9_TXIF9		IEN7
-#define	IEN_SCIF10_RXIF10	IEN0
-#define	IEN_SCIF10_TXIF10	IEN1
+#define	IEN_SCIFA8_RXIF8	IEN4
+#define	IEN_SCIFA8_TXIF8	IEN5
+#define	IEN_SCIFA9_RXIF9	IEN6
+#define	IEN_SCIFA9_TXIF9	IEN7
+#define	IEN_SCIFA10_RXIF10	IEN0
+#define	IEN_SCIFA10_TXIF10	IEN1
 #define	IEN_ICU_GROUPBE0	IEN2
-#define	IEN_ICU_GROUPBE1	IEN3
-#define	IEN_ICU_GROUPAE0	IEN4
-#define	IEN_ICU_GROUPAE1	IEN5
 #define	IEN_ICU_GROUPBL0	IEN6
 #define	IEN_ICU_GROUPBL1	IEN7
 #define	IEN_ICU_GROUPAL0	IEN0
 #define	IEN_ICU_GROUPAL1	IEN1
-#define	IEN_SCIF11_RXIF11	IEN2
-#define	IEN_SCIF11_TXIF11	IEN3
+#define	IEN_SCIFA11_RXIF11	IEN2
+#define	IEN_SCIFA11_TXIF11	IEN3
 #define	IEN_SCI12_RXI12		IEN4
 #define	IEN_SCI12_TXI12		IEN5
 #define	IEN_DMAC_DMAC0I		IEN0
@@ -17993,137 +16561,137 @@ IPR_PERIA255_INTA255=255
 #define	IEN_DMAC_DMAC2I		IEN2
 #define	IEN_DMAC_DMAC3I		IEN3
 #define	IEN_DMAC_DMAC74I	IEN4
-#define	IEN_ICU_OST			IEN5
+#define	IEN_OST_OST			IEN5
 #define	IEN_EXDMAC_EXDMAC0I	IEN6
 #define	IEN_EXDMAC_EXDMAC1I	IEN7
-#define	IEN_PERIB128_INTB128	IEN0
-#define	IEN_PERIB129_INTB129	IEN1
-#define	IEN_PERIB130_INTB130	IEN2
-#define	IEN_PERIB131_INTB131	IEN3
-#define	IEN_PERIB132_INTB132	IEN4
-#define	IEN_PERIB133_INTB133	IEN5
-#define	IEN_PERIB134_INTB134	IEN6
-#define	IEN_PERIB135_INTB135	IEN7
-#define	IEN_PERIB136_INTB136	IEN0
-#define	IEN_PERIB137_INTB137	IEN1
-#define	IEN_PERIB138_INTB138	IEN2
-#define	IEN_PERIB139_INTB139	IEN3
-#define	IEN_PERIB140_INTB140	IEN4
-#define	IEN_PERIB141_INTB141	IEN5
-#define	IEN_PERIB142_INTB142	IEN6
-#define	IEN_PERIB143_INTB143	IEN7
-#define	IEN_PERIB144_INTB144	IEN0
-#define	IEN_PERIB145_INTB145	IEN1
-#define	IEN_PERIB146_INTB146	IEN2
-#define	IEN_PERIB147_INTB147	IEN3
-#define	IEN_PERIB148_INTB148	IEN4
-#define	IEN_PERIB149_INTB149	IEN5
-#define	IEN_PERIB150_INTB150	IEN6
-#define	IEN_PERIB151_INTB151	IEN7
-#define	IEN_PERIB152_INTB152	IEN0
-#define	IEN_PERIB153_INTB153	IEN1
-#define	IEN_PERIB154_INTB154	IEN2
-#define	IEN_PERIB155_INTB155	IEN3
-#define	IEN_PERIB156_INTB156	IEN4
-#define	IEN_PERIB157_INTB157	IEN5
-#define	IEN_PERIB158_INTB158	IEN6
-#define	IEN_PERIB159_INTB159	IEN7
-#define	IEN_PERIB160_INTB160	IEN0
-#define	IEN_PERIB161_INTB161	IEN1
-#define	IEN_PERIB162_INTB162	IEN2
-#define	IEN_PERIB163_INTB163	IEN3
-#define	IEN_PERIB164_INTB164	IEN4
-#define	IEN_PERIB165_INTB165	IEN5
-#define	IEN_PERIB166_INTB166	IEN6
-#define	IEN_PERIB167_INTB167	IEN7
-#define	IEN_PERIB168_INTB168	IEN0
-#define	IEN_PERIB169_INTB169	IEN1
-#define	IEN_PERIB170_INTB170	IEN2
-#define	IEN_PERIB171_INTB171	IEN3
-#define	IEN_PERIB172_INTB172	IEN4
-#define	IEN_PERIB173_INTB173	IEN5
-#define	IEN_PERIB174_INTB174	IEN6
-#define	IEN_PERIB175_INTB175	IEN7
-#define	IEN_PERIB176_INTB176	IEN0
-#define	IEN_PERIB177_INTB177	IEN1
-#define	IEN_PERIB178_INTB178	IEN2
-#define	IEN_PERIB179_INTB179	IEN3
-#define	IEN_PERIB180_INTB180	IEN4
-#define	IEN_PERIB181_INTB181	IEN5
-#define	IEN_PERIB182_INTB182	IEN6
-#define	IEN_PERIB183_INTB183	IEN7
-#define	IEN_PERIB184_INTB184	IEN0
-#define	IEN_PERIB185_INTB185	IEN1
-#define	IEN_PERIB186_INTB186	IEN2
-#define	IEN_PERIB187_INTB187	IEN3
-#define	IEN_PERIB188_INTB188	IEN4
-#define	IEN_PERIB189_INTB189	IEN5
-#define	IEN_PERIB190_INTB190	IEN6
-#define	IEN_PERIB191_INTB191	IEN7
-#define	IEN_PERIB192_INTB192	IEN0
-#define	IEN_PERIB193_INTB193	IEN1
-#define	IEN_PERIB194_INTB194	IEN2
-#define	IEN_PERIB195_INTB195	IEN3
-#define	IEN_PERIB196_INTB196	IEN4
-#define	IEN_PERIB197_INTB197	IEN5
-#define	IEN_PERIB198_INTB198	IEN6
-#define	IEN_PERIB199_INTB199	IEN7
-#define	IEN_PERIB200_INTB200	IEN0
-#define	IEN_PERIB201_INTB201	IEN1
-#define	IEN_PERIB202_INTB202	IEN2
-#define	IEN_PERIB203_INTB203	IEN3
-#define	IEN_PERIB204_INTB204	IEN4
-#define	IEN_PERIB205_INTB205	IEN5
-#define	IEN_PERIB206_INTB206	IEN6
-#define	IEN_PERIB207_INTB207	IEN7
-#define	IEN_PERIA208_INTA208	IEN0
-#define	IEN_PERIA209_INTA209	IEN1
-#define	IEN_PERIA210_INTA210	IEN2
-#define	IEN_PERIA211_INTA211	IEN3
-#define	IEN_PERIA212_INTA212	IEN4
-#define	IEN_PERIA213_INTA213	IEN5
-#define	IEN_PERIA214_INTA214	IEN6
-#define	IEN_PERIA215_INTA215	IEN7
-#define	IEN_PERIA216_INTA216	IEN0
-#define	IEN_PERIA217_INTA217	IEN1
-#define	IEN_PERIA218_INTA218	IEN2
-#define	IEN_PERIA219_INTA219	IEN3
-#define	IEN_PERIA220_INTA220	IEN4
-#define	IEN_PERIA221_INTA221	IEN5
-#define	IEN_PERIA222_INTA222	IEN6
-#define	IEN_PERIA223_INTA223	IEN7
-#define	IEN_PERIA224_INTA224	IEN0
-#define	IEN_PERIA225_INTA225	IEN1
-#define	IEN_PERIA226_INTA226	IEN2
-#define	IEN_PERIA227_INTA227	IEN3
-#define	IEN_PERIA228_INTA228	IEN4
-#define	IEN_PERIA229_INTA229	IEN5
-#define	IEN_PERIA230_INTA230	IEN6
-#define	IEN_PERIA231_INTA231	IEN7
-#define	IEN_PERIA232_INTA232	IEN0
-#define	IEN_PERIA233_INTA233	IEN1
-#define	IEN_PERIA234_INTA234	IEN2
-#define	IEN_PERIA235_INTA235	IEN3
-#define	IEN_PERIA236_INTA236	IEN4
-#define	IEN_PERIA237_INTA237	IEN5
-#define	IEN_PERIA238_INTA238	IEN6
-#define	IEN_PERIA239_INTA239	IEN7
-#define	IEN_PERIA240_INTA240	IEN0
-#define	IEN_PERIA241_INTA241	IEN1
-#define	IEN_PERIA242_INTA242	IEN2
-#define	IEN_PERIA243_INTA243	IEN3
-#define	IEN_PERIA244_INTA244	IEN4
-#define	IEN_PERIA245_INTA245	IEN5
-#define	IEN_PERIA246_INTA246	IEN6
-#define	IEN_PERIA247_INTA247	IEN7
-#define	IEN_PERIA248_INTA248	IEN0
-#define	IEN_PERIA249_INTA249	IEN1
-#define	IEN_PERIA250_INTA250	IEN2
-#define	IEN_PERIA251_INTA251	IEN3
-#define	IEN_PERIA252_INTA252	IEN4
-#define	IEN_PERIA253_INTA253	IEN5
-#define	IEN_PERIA254_INTA254	IEN6
-#define	IEN_PERIA255_INTA255	IEN7
+#define	IEN_PERIB_INTB128	IEN0
+#define	IEN_PERIB_INTB129	IEN1
+#define	IEN_PERIB_INTB130	IEN2
+#define	IEN_PERIB_INTB131	IEN3
+#define	IEN_PERIB_INTB132	IEN4
+#define	IEN_PERIB_INTB133	IEN5
+#define	IEN_PERIB_INTB134	IEN6
+#define	IEN_PERIB_INTB135	IEN7
+#define	IEN_PERIB_INTB136	IEN0
+#define	IEN_PERIB_INTB137	IEN1
+#define	IEN_PERIB_INTB138	IEN2
+#define	IEN_PERIB_INTB139	IEN3
+#define	IEN_PERIB_INTB140	IEN4
+#define	IEN_PERIB_INTB141	IEN5
+#define	IEN_PERIB_INTB142	IEN6
+#define	IEN_PERIB_INTB143	IEN7
+#define	IEN_PERIB_INTB144	IEN0
+#define	IEN_PERIB_INTB145	IEN1
+#define	IEN_PERIB_INTB146	IEN2
+#define	IEN_PERIB_INTB147	IEN3
+#define	IEN_PERIB_INTB148	IEN4
+#define	IEN_PERIB_INTB149	IEN5
+#define	IEN_PERIB_INTB150	IEN6
+#define	IEN_PERIB_INTB151	IEN7
+#define	IEN_PERIB_INTB152	IEN0
+#define	IEN_PERIB_INTB153	IEN1
+#define	IEN_PERIB_INTB154	IEN2
+#define	IEN_PERIB_INTB155	IEN3
+#define	IEN_PERIB_INTB156	IEN4
+#define	IEN_PERIB_INTB157	IEN5
+#define	IEN_PERIB_INTB158	IEN6
+#define	IEN_PERIB_INTB159	IEN7
+#define	IEN_PERIB_INTB160	IEN0
+#define	IEN_PERIB_INTB161	IEN1
+#define	IEN_PERIB_INTB162	IEN2
+#define	IEN_PERIB_INTB163	IEN3
+#define	IEN_PERIB_INTB164	IEN4
+#define	IEN_PERIB_INTB165	IEN5
+#define	IEN_PERIB_INTB166	IEN6
+#define	IEN_PERIB_INTB167	IEN7
+#define	IEN_PERIB_INTB168	IEN0
+#define	IEN_PERIB_INTB169	IEN1
+#define	IEN_PERIB_INTB170	IEN2
+#define	IEN_PERIB_INTB171	IEN3
+#define	IEN_PERIB_INTB172	IEN4
+#define	IEN_PERIB_INTB173	IEN5
+#define	IEN_PERIB_INTB174	IEN6
+#define	IEN_PERIB_INTB175	IEN7
+#define	IEN_PERIB_INTB176	IEN0
+#define	IEN_PERIB_INTB177	IEN1
+#define	IEN_PERIB_INTB178	IEN2
+#define	IEN_PERIB_INTB179	IEN3
+#define	IEN_PERIB_INTB180	IEN4
+#define	IEN_PERIB_INTB181	IEN5
+#define	IEN_PERIB_INTB182	IEN6
+#define	IEN_PERIB_INTB183	IEN7
+#define	IEN_PERIB_INTB184	IEN0
+#define	IEN_PERIB_INTB185	IEN1
+#define	IEN_PERIB_INTB186	IEN2
+#define	IEN_PERIB_INTB187	IEN3
+#define	IEN_PERIB_INTB188	IEN4
+#define	IEN_PERIB_INTB189	IEN5
+#define	IEN_PERIB_INTB190	IEN6
+#define	IEN_PERIB_INTB191	IEN7
+#define	IEN_PERIB_INTB192	IEN0
+#define	IEN_PERIB_INTB193	IEN1
+#define	IEN_PERIB_INTB194	IEN2
+#define	IEN_PERIB_INTB195	IEN3
+#define	IEN_PERIB_INTB196	IEN4
+#define	IEN_PERIB_INTB197	IEN5
+#define	IEN_PERIB_INTB198	IEN6
+#define	IEN_PERIB_INTB199	IEN7
+#define	IEN_PERIB_INTB200	IEN0
+#define	IEN_PERIB_INTB201	IEN1
+#define	IEN_PERIB_INTB202	IEN2
+#define	IEN_PERIB_INTB203	IEN3
+#define	IEN_PERIB_INTB204	IEN4
+#define	IEN_PERIB_INTB205	IEN5
+#define	IEN_PERIB_INTB206	IEN6
+#define	IEN_PERIB_INTB207	IEN7
+#define	IEN_PERIA_INTA208	IEN0
+#define	IEN_PERIA_INTA209	IEN1
+#define	IEN_PERIA_INTA210	IEN2
+#define	IEN_PERIA_INTA211	IEN3
+#define	IEN_PERIA_INTA212	IEN4
+#define	IEN_PERIA_INTA213	IEN5
+#define	IEN_PERIA_INTA214	IEN6
+#define	IEN_PERIA_INTA215	IEN7
+#define	IEN_PERIA_INTA216	IEN0
+#define	IEN_PERIA_INTA217	IEN1
+#define	IEN_PERIA_INTA218	IEN2
+#define	IEN_PERIA_INTA219	IEN3
+#define	IEN_PERIA_INTA220	IEN4
+#define	IEN_PERIA_INTA221	IEN5
+#define	IEN_PERIA_INTA222	IEN6
+#define	IEN_PERIA_INTA223	IEN7
+#define	IEN_PERIA_INTA224	IEN0
+#define	IEN_PERIA_INTA225	IEN1
+#define	IEN_PERIA_INTA226	IEN2
+#define	IEN_PERIA_INTA227	IEN3
+#define	IEN_PERIA_INTA228	IEN4
+#define	IEN_PERIA_INTA229	IEN5
+#define	IEN_PERIA_INTA230	IEN6
+#define	IEN_PERIA_INTA231	IEN7
+#define	IEN_PERIA_INTA232	IEN0
+#define	IEN_PERIA_INTA233	IEN1
+#define	IEN_PERIA_INTA234	IEN2
+#define	IEN_PERIA_INTA235	IEN3
+#define	IEN_PERIA_INTA236	IEN4
+#define	IEN_PERIA_INTA237	IEN5
+#define	IEN_PERIA_INTA238	IEN6
+#define	IEN_PERIA_INTA239	IEN7
+#define	IEN_PERIA_INTA240	IEN0
+#define	IEN_PERIA_INTA241	IEN1
+#define	IEN_PERIA_INTA242	IEN2
+#define	IEN_PERIA_INTA243	IEN3
+#define	IEN_PERIA_INTA244	IEN4
+#define	IEN_PERIA_INTA245	IEN5
+#define	IEN_PERIA_INTA246	IEN6
+#define	IEN_PERIA_INTA247	IEN7
+#define	IEN_PERIA_INTA248	IEN0
+#define	IEN_PERIA_INTA249	IEN1
+#define	IEN_PERIA_INTA250	IEN2
+#define	IEN_PERIA_INTA251	IEN3
+#define	IEN_PERIA_INTA252	IEN4
+#define	IEN_PERIA_INTA253	IEN5
+#define	IEN_PERIA_INTA254	IEN6
+#define	IEN_PERIA_INTA255	IEN7
 
 #define	VECT_BSC_BUSERR		16
 #define	VECT_RAM_RAMERR		18
@@ -18134,9 +16702,9 @@ IPR_PERIA255_INTA255=255
 #define	VECT_CMT0_CMI0		28
 #define	VECT_CMT1_CMI1		29
 #define	VECT_CMTW0_CMWI0	30
-#define	VECT_CMTW_CMWI1		31
-#define	VECT_USBHS_D0FIFO2	32
-#define	VECT_USBHS_D1FIFO2	33
+#define	VECT_CMTW1_CMWI1	31
+#define	VECT_USBA_D0FIFO2	32
+#define	VECT_USBA_D1FIFO2	33
 #define	VECT_USB0_D0FIFO0	34
 #define	VECT_USB0_D1FIFO0	35
 #define	VECT_RSPI0_SPRI0	38
@@ -18144,12 +16712,12 @@ IPR_PERIA255_INTA255=255
 #define	VECT_QSPI_SPRI		42
 #define	VECT_QSPI_SPTI		43
 #define	VECT_SDHI_SBFAI		44
-#define	VECT_MMC_MBFAI		45
+#define	VECT_MMCIF_MBFAI	45
 #define	VECT_SSI0_SSITXI0	46
 #define	VECT_SSI0_SSIRXI0	47
 #define	VECT_SSI1_SSIRTI1	48
-#define	VECT_SRC0_IDEI0		50
-#define	VECT_SRC0_ODFI0		51
+#define	VECT_SRC_IDEI		50
+#define	VECT_SRC_ODFI		51
 #define	VECT_RIIC0_RXI0		52
 #define	VECT_RIIC0_TXI0		53
 #define	VECT_RIIC2_RXI2		54
@@ -18184,33 +16752,30 @@ IPR_PERIA255_INTA255=255
 #define	VECT_SCI5_TXI5		85
 #define	VECT_SCI6_RXI6		86
 #define	VECT_SCI6_TXI6		87
-#define	VECT_LVD1_COMPA1	88
-#define	VECT_LVD2_COMPA2	89
+#define	VECT_LVD1_LVD1		88
+#define	VECT_LVD2_LVD2		89
 #define	VECT_USB0_USBR0		90
-#define	VECT_RTC_ALARM		92
+#define	VECT_RTC_ALM		92
 #define	VECT_RTC_PRD		93
-#define	VECT_USBHS_HSUSBR	94
+#define	VECT_USBA_USBAR		94
 #define	VECT_IWDT_IWUNI		95
 #define	VECT_WDT_WUNI		96
 #define	VECT_PDC_PCDFI		97
 #define	VECT_SCI7_RXI7		98
 #define	VECT_SCI7_TXI7		99
-#define	VECT_SCIF8_RXIF8	100
-#define	VECT_SCIF8_TXIF8	101
-#define	VECT_SCIF9_RXIF9	102
-#define	VECT_SCIF9_TXIF9	103
-#define	VECT_SCIF10_RXIF10	104
-#define	VECT_SCIF10_TXIF10	105
+#define	VECT_SCIFA8_RXIF8	100
+#define	VECT_SCIFA8_TXIF8	101
+#define	VECT_SCIFA9_RXIF9	102
+#define	VECT_SCIFA9_TXIF9	103
+#define	VECT_SCIFA10_RXIF10	104
+#define	VECT_SCIFA10_TXIF10	105
 #define	VECT_ICU_GROUPBE0	106
-#define	VECT_ICU_GROUPBE1	107
-#define	VECT_ICU_GROUPAE0	108
-#define	VECT_ICU_GROUPAE1	109
 #define	VECT_ICU_GROUPBL0	110
 #define	VECT_ICU_GROUPBL1	111
 #define	VECT_ICU_GROUPAL0	112
 #define	VECT_ICU_GROUPAL1	113
-#define	VECT_SCIF11_RXIF11	114
-#define	VECT_SCIF11_TXIF11	115
+#define	VECT_SCIFA11_RXIF11	114
+#define	VECT_SCIFA11_TXIF11	115
 #define	VECT_SCI12_RXI12	116
 #define	VECT_SCI12_TXI12	117
 #define	VECT_DMAC_DMAC0I	120
@@ -18218,229 +16783,552 @@ IPR_PERIA255_INTA255=255
 #define	VECT_DMAC_DMAC2I	122
 #define	VECT_DMAC_DMAC3I	123
 #define	VECT_DMAC_DMAC74I	124
-#define	VECT_ICU_OST		125
+#define	VECT_OST_OST		125
 #define	VECT_EXDMAC_EXDMAC0I	126
 #define	VECT_EXDMAC_EXDMAC1I	127
-#define	VECT_PERIB128_INTB128	128
-#define	VECT_PERIB129_INTB129	129
-#define	VECT_PERIB130_INTB130	130
-#define	VECT_PERIB131_INTB131	131
-#define	VECT_PERIB132_INTB132	132
-#define	VECT_PERIB133_INTB133	133
-#define	VECT_PERIB134_INTB134	134
-#define	VECT_PERIB135_INTB135	135
-#define	VECT_PERIB136_INTB136	136
-#define	VECT_PERIB137_INTB137	137
-#define	VECT_PERIB138_INTB138	138
-#define	VECT_PERIB139_INTB139	139
-#define	VECT_PERIB140_INTB140	140
-#define	VECT_PERIB141_INTB141	141
-#define	VECT_PERIB142_INTB142	142
-#define	VECT_PERIB143_INTB143	143
-#define	VECT_PERIB144_INTB144	144
-#define	VECT_PERIB145_INTB145	145
-#define	VECT_PERIB146_INTB146	146
-#define	VECT_PERIB147_INTB147	147
-#define	VECT_PERIB148_INTB148	148
-#define	VECT_PERIB149_INTB149	149
-#define	VECT_PERIB150_INTB150	150
-#define	VECT_PERIB151_INTB151	151
-#define	VECT_PERIB152_INTB152	152
-#define	VECT_PERIB153_INTB153	153
-#define	VECT_PERIB154_INTB154	154
-#define	VECT_PERIB155_INTB155	155
-#define	VECT_PERIB156_INTB156	156
-#define	VECT_PERIB157_INTB157	157
-#define	VECT_PERIB158_INTB158	158
-#define	VECT_PERIB159_INTB159	159
-#define	VECT_PERIB160_INTB160	160
-#define	VECT_PERIB161_INTB161	161
-#define	VECT_PERIB162_INTB162	162
-#define	VECT_PERIB163_INTB163	163
-#define	VECT_PERIB164_INTB164	164
-#define	VECT_PERIB165_INTB165	165
-#define	VECT_PERIB166_INTB166	166
-#define	VECT_PERIB167_INTB167	167
-#define	VECT_PERIB168_INTB168	168
-#define	VECT_PERIB169_INTB169	169
-#define	VECT_PERIB170_INTB170	170
-#define	VECT_PERIB171_INTB171	171
-#define	VECT_PERIB172_INTB172	172
-#define	VECT_PERIB173_INTB173	173
-#define	VECT_PERIB174_INTB174	174
-#define	VECT_PERIB175_INTB175	175
-#define	VECT_PERIB176_INTB176	176
-#define	VECT_PERIB177_INTB177	177
-#define	VECT_PERIB178_INTB178	178
-#define	VECT_PERIB179_INTB179	179
-#define	VECT_PERIB180_INTB180	180
-#define	VECT_PERIB181_INTB181	181
-#define	VECT_PERIB182_INTB182	182
-#define	VECT_PERIB183_INTB183	183
-#define	VECT_PERIB184_INTB184	184
-#define	VECT_PERIB185_INTB185	185
-#define	VECT_PERIB186_INTB186	186
-#define	VECT_PERIB187_INTB187	187
-#define	VECT_PERIB188_INTB188	188
-#define	VECT_PERIB189_INTB189	189
-#define	VECT_PERIB190_INTB190	190
-#define	VECT_PERIB191_INTB191	191
-#define	VECT_PERIB192_INTB192	192
-#define	VECT_PERIB193_INTB193	193
-#define	VECT_PERIB194_INTB194	194
-#define	VECT_PERIB195_INTB195	195
-#define	VECT_PERIB196_INTB196	196
-#define	VECT_PERIB197_INTB197	197
-#define	VECT_PERIB198_INTB198	198
-#define	VECT_PERIB199_INTB199	199
-#define	VECT_PERIB200_INTB200	200
-#define	VECT_PERIB201_INTB201	201
-#define	VECT_PERIB202_INTB202	202
-#define	VECT_PERIB203_INTB203	203
-#define	VECT_PERIB204_INTB204	204
-#define	VECT_PERIB205_INTB205	205
-#define	VECT_PERIB206_INTB206	206
-#define	VECT_PERIB207_INTB207	207
-#define	VECT_PERIA208_INTA208	208
-#define	VECT_PERIA209_INTA209	209
-#define	VECT_PERIA210_INTA210	210
-#define	VECT_PERIA211_INTA211	211
-#define	VECT_PERIA212_INTA212	212
-#define	VECT_PERIA213_INTA213	213
-#define	VECT_PERIA214_INTA214	214
-#define	VECT_PERIA215_INTA215	215
-#define	VECT_PERIA216_INTA216	216
-#define	VECT_PERIA217_INTA217	217
-#define	VECT_PERIA218_INTA218	218
-#define	VECT_PERIA219_INTA219	219
-#define	VECT_PERIA220_INTA220	220
-#define	VECT_PERIA221_INTA221	221
-#define	VECT_PERIA222_INTA222	222
-#define	VECT_PERIA223_INTA223	223
-#define	VECT_PERIA224_INTA224	224
-#define	VECT_PERIA225_INTA225	225
-#define	VECT_PERIA226_INTA226	226
-#define	VECT_PERIA227_INTA227	227
-#define	VECT_PERIA228_INTA228	228
-#define	VECT_PERIA229_INTA229	229
-#define	VECT_PERIA230_INTA230	230
-#define	VECT_PERIA231_INTA231	231
-#define	VECT_PERIA232_INTA232	232
-#define	VECT_PERIA233_INTA233	233
-#define	VECT_PERIA234_INTA234	234
-#define	VECT_PERIA235_INTA235	235
-#define	VECT_PERIA236_INTA236	236
-#define	VECT_PERIA237_INTA237	237
-#define	VECT_PERIA238_INTA238	238
-#define	VECT_PERIA239_INTA239	239
-#define	VECT_PERIA240_INTA240	240
-#define	VECT_PERIA241_INTA241	241
-#define	VECT_PERIA242_INTA242	242
-#define	VECT_PERIA243_INTA243	243
-#define	VECT_PERIA244_INTA244	244
-#define	VECT_PERIA245_INTA245	245
-#define	VECT_PERIA246_INTA246	246
-#define	VECT_PERIA247_INTA247	247
-#define	VECT_PERIA248_INTA248	248
-#define	VECT_PERIA249_INTA249	249
-#define	VECT_PERIA250_INTA250	250
-#define	VECT_PERIA251_INTA251	251
-#define	VECT_PERIA252_INTA252	252
-#define	VECT_PERIA253_INTA253	253
-#define	VECT_PERIA254_INTA254	254
-#define	VECT_PERIA255_INTA255	255
+#define	VECT_PERIB_INTB128	128
+#define	VECT_PERIB_INTB129	129
+#define	VECT_PERIB_INTB130	130
+#define	VECT_PERIB_INTB131	131
+#define	VECT_PERIB_INTB132	132
+#define	VECT_PERIB_INTB133	133
+#define	VECT_PERIB_INTB134	134
+#define	VECT_PERIB_INTB135	135
+#define	VECT_PERIB_INTB136	136
+#define	VECT_PERIB_INTB137	137
+#define	VECT_PERIB_INTB138	138
+#define	VECT_PERIB_INTB139	139
+#define	VECT_PERIB_INTB140	140
+#define	VECT_PERIB_INTB141	141
+#define	VECT_PERIB_INTB142	142
+#define	VECT_PERIB_INTB143	143
+#define	VECT_PERIB_INTB144	144
+#define	VECT_PERIB_INTB145	145
+#define	VECT_PERIB_INTB146	146
+#define	VECT_PERIB_INTB147	147
+#define	VECT_PERIB_INTB148	148
+#define	VECT_PERIB_INTB149	149
+#define	VECT_PERIB_INTB150	150
+#define	VECT_PERIB_INTB151	151
+#define	VECT_PERIB_INTB152	152
+#define	VECT_PERIB_INTB153	153
+#define	VECT_PERIB_INTB154	154
+#define	VECT_PERIB_INTB155	155
+#define	VECT_PERIB_INTB156	156
+#define	VECT_PERIB_INTB157	157
+#define	VECT_PERIB_INTB158	158
+#define	VECT_PERIB_INTB159	159
+#define	VECT_PERIB_INTB160	160
+#define	VECT_PERIB_INTB161	161
+#define	VECT_PERIB_INTB162	162
+#define	VECT_PERIB_INTB163	163
+#define	VECT_PERIB_INTB164	164
+#define	VECT_PERIB_INTB165	165
+#define	VECT_PERIB_INTB166	166
+#define	VECT_PERIB_INTB167	167
+#define	VECT_PERIB_INTB168	168
+#define	VECT_PERIB_INTB169	169
+#define	VECT_PERIB_INTB170	170
+#define	VECT_PERIB_INTB171	171
+#define	VECT_PERIB_INTB172	172
+#define	VECT_PERIB_INTB173	173
+#define	VECT_PERIB_INTB174	174
+#define	VECT_PERIB_INTB175	175
+#define	VECT_PERIB_INTB176	176
+#define	VECT_PERIB_INTB177	177
+#define	VECT_PERIB_INTB178	178
+#define	VECT_PERIB_INTB179	179
+#define	VECT_PERIB_INTB180	180
+#define	VECT_PERIB_INTB181	181
+#define	VECT_PERIB_INTB182	182
+#define	VECT_PERIB_INTB183	183
+#define	VECT_PERIB_INTB184	184
+#define	VECT_PERIB_INTB185	185
+#define	VECT_PERIB_INTB186	186
+#define	VECT_PERIB_INTB187	187
+#define	VECT_PERIB_INTB188	188
+#define	VECT_PERIB_INTB189	189
+#define	VECT_PERIB_INTB190	190
+#define	VECT_PERIB_INTB191	191
+#define	VECT_PERIB_INTB192	192
+#define	VECT_PERIB_INTB193	193
+#define	VECT_PERIB_INTB194	194
+#define	VECT_PERIB_INTB195	195
+#define	VECT_PERIB_INTB196	196
+#define	VECT_PERIB_INTB197	197
+#define	VECT_PERIB_INTB198	198
+#define	VECT_PERIB_INTB199	199
+#define	VECT_PERIB_INTB200	200
+#define	VECT_PERIB_INTB201	201
+#define	VECT_PERIB_INTB202	202
+#define	VECT_PERIB_INTB203	203
+#define	VECT_PERIB_INTB204	204
+#define	VECT_PERIB_INTB205	205
+#define	VECT_PERIB_INTB206	206
+#define	VECT_PERIB_INTB207	207
+#define	VECT_PERIA_INTA208	208
+#define	VECT_PERIA_INTA209	209
+#define	VECT_PERIA_INTA210	210
+#define	VECT_PERIA_INTA211	211
+#define	VECT_PERIA_INTA212	212
+#define	VECT_PERIA_INTA213	213
+#define	VECT_PERIA_INTA214	214
+#define	VECT_PERIA_INTA215	215
+#define	VECT_PERIA_INTA216	216
+#define	VECT_PERIA_INTA217	217
+#define	VECT_PERIA_INTA218	218
+#define	VECT_PERIA_INTA219	219
+#define	VECT_PERIA_INTA220	220
+#define	VECT_PERIA_INTA221	221
+#define	VECT_PERIA_INTA222	222
+#define	VECT_PERIA_INTA223	223
+#define	VECT_PERIA_INTA224	224
+#define	VECT_PERIA_INTA225	225
+#define	VECT_PERIA_INTA226	226
+#define	VECT_PERIA_INTA227	227
+#define	VECT_PERIA_INTA228	228
+#define	VECT_PERIA_INTA229	229
+#define	VECT_PERIA_INTA230	230
+#define	VECT_PERIA_INTA231	231
+#define	VECT_PERIA_INTA232	232
+#define	VECT_PERIA_INTA233	233
+#define	VECT_PERIA_INTA234	234
+#define	VECT_PERIA_INTA235	235
+#define	VECT_PERIA_INTA236	236
+#define	VECT_PERIA_INTA237	237
+#define	VECT_PERIA_INTA238	238
+#define	VECT_PERIA_INTA239	239
+#define	VECT_PERIA_INTA240	240
+#define	VECT_PERIA_INTA241	241
+#define	VECT_PERIA_INTA242	242
+#define	VECT_PERIA_INTA243	243
+#define	VECT_PERIA_INTA244	244
+#define	VECT_PERIA_INTA245	245
+#define	VECT_PERIA_INTA246	246
+#define	VECT_PERIA_INTA247	247
+#define	VECT_PERIA_INTA248	248
+#define	VECT_PERIA_INTA249	249
+#define	VECT_PERIA_INTA250	250
+#define	VECT_PERIA_INTA251	251
+#define	VECT_PERIA_INTA252	252
+#define	VECT_PERIA_INTA253	253
+#define	VECT_PERIA_INTA254	254
+#define	VECT_PERIA_INTA255	255
 
-#define	MSTP_EXDMAC	SYSTEM.MSTPCRA.BIT.MSTPA29
+#define	MSTP_EXDMAC		SYSTEM.MSTPCRA.BIT.MSTPA29
 #define	MSTP_EXDMAC0	SYSTEM.MSTPCRA.BIT.MSTPA29
 #define	MSTP_EXDMAC1	SYSTEM.MSTPCRA.BIT.MSTPA29
-#define	MSTP_DTC	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC0	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC1	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC2	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC3	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC4	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC5	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC6	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DMAC7	SYSTEM.MSTPCRA.BIT.MSTPA28
-#define	MSTP_DA		SYSTEM.MSTPCRA.BIT.MSTPA19
-#define	MSTP_S12ADC0	SYSTEM.MSTPCRA.BIT.MSTPA17
-#define	MSTP_S12ADC1	SYSTEM.MSTPCRA.BIT.MSTPA16
-#define	MSTP_CMT0	SYSTEM.MSTPCRA.BIT.MSTPA15
-#define	MSTP_CMT1	SYSTEM.MSTPCRA.BIT.MSTPA15
-#define	MSTP_CMT2	SYSTEM.MSTPCRA.BIT.MSTPA14
-#define	MSTP_CMT3	SYSTEM.MSTPCRA.BIT.MSTPA14
-#define	MSTP_TPU0	SYSTEM.MSTPCRA.BIT.MSTPA13
-#define	MSTP_TPU1	SYSTEM.MSTPCRA.BIT.MSTPA13
-#define	MSTP_TPU2	SYSTEM.MSTPCRA.BIT.MSTPA13
-#define	MSTP_TPU3	SYSTEM.MSTPCRA.BIT.MSTPA13
-#define	MSTP_TPU4	SYSTEM.MSTPCRA.BIT.MSTPA13
-#define	MSTP_TPU5	SYSTEM.MSTPCRA.BIT.MSTPA13
-#define	MSTP_PPG0	SYSTEM.MSTPCRA.BIT.MSTPA11
-#define	MSTP_PPG1	SYSTEM.MSTPCRA.BIT.MSTPA10
-#define	MSTP_MTU3	SYSTEM.MSTPCRA.BIT.MSTPA9
-#define	MSTP_GPT	SYSTEM.MSTPCRA.BIT.MSTPA7
-#define	MSTP_GPT0	SYSTEM.MSTPCRA.BIT.MSTPA7
-#define	MSTP_GPT1	SYSTEM.MSTPCRA.BIT.MSTPA7
-#define	MSTP_GPT2	SYSTEM.MSTPCRA.BIT.MSTPA7
-#define	MSTP_GPT3	SYSTEM.MSTPCRA.BIT.MSTPA7
-#define	MSTP_TMR0	SYSTEM.MSTPCRA.BIT.MSTPA5
-#define	MSTP_TMR1	SYSTEM.MSTPCRA.BIT.MSTPA5
-#define	MSTP_TMR2	SYSTEM.MSTPCRA.BIT.MSTPA4
-#define	MSTP_TMR3	SYSTEM.MSTPCRA.BIT.MSTPA4
-#define	MSTP_CMTW1	SYSTEM.MSTPCRA.BIT.MSTPA1
-#define	MSTP_CMTW0	SYSTEM.MSTPCRA.BIT.MSTPA0
-#define	MSTP_SCI0	SYSTEM.MSTPCRB.BIT.MSTPB31
-#define	MSTP_SMCI0	SYSTEM.MSTPCRB.BIT.MSTPB31
-#define	MSTP_SCI1	SYSTEM.MSTPCRB.BIT.MSTPB30
-#define	MSTP_SMCI1	SYSTEM.MSTPCRB.BIT.MSTPB30
-#define	MSTP_SCI2	SYSTEM.MSTPCRB.BIT.MSTPB29
-#define	MSTP_SMCI2	SYSTEM.MSTPCRB.BIT.MSTPB29
-#define	MSTP_SCI3	SYSTEM.MSTPCRB.BIT.MSTPB28
-#define	MSTP_SMCI3	SYSTEM.MSTPCRB.BIT.MSTPB28
-#define	MSTP_SCI4	SYSTEM.MSTPCRB.BIT.MSTPB27
-#define	MSTP_SMCI4	SYSTEM.MSTPCRB.BIT.MSTPB27
-#define	MSTP_SCI5	SYSTEM.MSTPCRB.BIT.MSTPB26
-#define	MSTP_SMCI5	SYSTEM.MSTPCRB.BIT.MSTPB26
-#define	MSTP_SCI6	SYSTEM.MSTPCRB.BIT.MSTPB25
-#define	MSTP_SMCI6	SYSTEM.MSTPCRB.BIT.MSTPB25
-#define	MSTP_SCI7	SYSTEM.MSTPCRB.BIT.MSTPB24
-#define	MSTP_SMCI7	SYSTEM.MSTPCRB.BIT.MSTPB24
-#define	MSTP_CRC	SYSTEM.MSTPCRB.BIT.MSTPB23
-#define	MSTP_DCU	SYSTEM.MSTPCRB.BIT.MSTPB22
-#define	MSTP_RIIC0	SYSTEM.MSTPCRB.BIT.MSTPB21
-#define	MSTP_USB0	SYSTEM.MSTPCRB.BIT.MSTPB19
-#define	MSTP_RSPI0	SYSTEM.MSTPCRB.BIT.MSTPB17
-#define	MSTP_EDMAC0	SYSTEM.MSTPCRB.BIT.MSTPB15
-#define	MSTP_EDMAC1	SYSTEM.MSTPCRB.BIT.MSTPB14
-#define	MSTP_USBHS	SYSTEM.MSTPCRB.BIT.MSTPB12
-#define	MSTP_ELC	SYSTEM.MSTPCRB.BIT.MSTPB9
-#define	MSTP_TEMPS	SYSTEM.MSTPCRB.BIT.MSTPB8
-#define	MSTP_DOC	SYSTEM.MSTPCRB.BIT.MSTPB6
-#define	MSTP_SCI12	SYSTEM.MSTPCRB.BIT.MSTPB4
-#define	MSTP_SMCI12	SYSTEM.MSTPCRB.BIT.MSTPB4
-#define	MSTP_CAN2	SYSTEM.MSTPCRB.BIT.MSTPB2
-#define	MSTP_CAN1	SYSTEM.MSTPCRB.BIT.MSTPB1
-#define	MSTP_CAN0	SYSTEM.MSTPCRB.BIT.MSTPB0
-#define	MSTP_SCIF8	SYSTEM.MSTPCRC.BIT.MSTPC27
-#define	MSTP_SCIF9	SYSTEM.MSTPCRC.BIT.MSTPC26
-#define	MSTP_SCIF10	SYSTEM.MSTPCRC.BIT.MSTPC25
-#define	MSTP_SCIF11	SYSTEM.MSTPCRC.BIT.MSTPC24
-#define	MSTP_QSPI	SYSTEM.MSTPCRC.BIT.MSTPC23
-#define	MSTP_CAC	SYSTEM.MSTPCRC.BIT.MSTPC19
-#define	MSTP_RIIC2	SYSTEM.MSTPCRC.BIT.MSTPC17
+#define	MSTP_DMAC		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC0		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC1		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC2		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC3		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC4		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC5		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC6		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DMAC7		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DTC		SYSTEM.MSTPCRA.BIT.MSTPA28
+#define	MSTP_DA			SYSTEM.MSTPCRA.BIT.MSTPA19
+#define	MSTP_S12AD		SYSTEM.MSTPCRA.BIT.MSTPA17
+#define	MSTP_S12AD1		SYSTEM.MSTPCRA.BIT.MSTPA16
+#define	MSTP_CMT0		SYSTEM.MSTPCRA.BIT.MSTPA15
+#define	MSTP_CMT1		SYSTEM.MSTPCRA.BIT.MSTPA15
+#define	MSTP_CMT2		SYSTEM.MSTPCRA.BIT.MSTPA14
+#define	MSTP_CMT3		SYSTEM.MSTPCRA.BIT.MSTPA14
+#define	MSTP_TPU0		SYSTEM.MSTPCRA.BIT.MSTPA13
+#define	MSTP_TPU1		SYSTEM.MSTPCRA.BIT.MSTPA13
+#define	MSTP_TPU2		SYSTEM.MSTPCRA.BIT.MSTPA13
+#define	MSTP_TPU3		SYSTEM.MSTPCRA.BIT.MSTPA13
+#define	MSTP_TPU4		SYSTEM.MSTPCRA.BIT.MSTPA13
+#define	MSTP_TPU5		SYSTEM.MSTPCRA.BIT.MSTPA13
+#define	MSTP_PPG0		SYSTEM.MSTPCRA.BIT.MSTPA11
+#define	MSTP_PPG1		SYSTEM.MSTPCRA.BIT.MSTPA10
+#define	MSTP_MTU		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU0		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU1		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU2		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU3		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU4		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU5		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU6		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU7		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_MTU8		SYSTEM.MSTPCRA.BIT.MSTPA9
+#define	MSTP_GPT		SYSTEM.MSTPCRA.BIT.MSTPA7
+#define	MSTP_GPT0		SYSTEM.MSTPCRA.BIT.MSTPA7
+#define	MSTP_GPT1		SYSTEM.MSTPCRA.BIT.MSTPA7
+#define	MSTP_GPT2		SYSTEM.MSTPCRA.BIT.MSTPA7
+#define	MSTP_GPT3		SYSTEM.MSTPCRA.BIT.MSTPA7
+#define	MSTP_TMR0		SYSTEM.MSTPCRA.BIT.MSTPA5
+#define	MSTP_TMR1		SYSTEM.MSTPCRA.BIT.MSTPA5
+#define	MSTP_TMR01		SYSTEM.MSTPCRA.BIT.MSTPA5
+#define	MSTP_TMR2		SYSTEM.MSTPCRA.BIT.MSTPA4
+#define	MSTP_TMR3		SYSTEM.MSTPCRA.BIT.MSTPA4
+#define	MSTP_TMR23		SYSTEM.MSTPCRA.BIT.MSTPA4
+#define	MSTP_CMTW0		SYSTEM.MSTPCRA.BIT.MSTPA1
+#define	MSTP_CMTW1		SYSTEM.MSTPCRA.BIT.MSTPA0
+#define	MSTP_SCI0		SYSTEM.MSTPCRB.BIT.MSTPB31
+#define	MSTP_SMCI0		SYSTEM.MSTPCRB.BIT.MSTPB31
+#define	MSTP_SCI1		SYSTEM.MSTPCRB.BIT.MSTPB30
+#define	MSTP_SMCI1		SYSTEM.MSTPCRB.BIT.MSTPB30
+#define	MSTP_SCI2		SYSTEM.MSTPCRB.BIT.MSTPB29
+#define	MSTP_SMCI2		SYSTEM.MSTPCRB.BIT.MSTPB29
+#define	MSTP_SCI3		SYSTEM.MSTPCRB.BIT.MSTPB28
+#define	MSTP_SMCI3		SYSTEM.MSTPCRB.BIT.MSTPB28
+#define	MSTP_SCI4		SYSTEM.MSTPCRB.BIT.MSTPB27
+#define	MSTP_SMCI4		SYSTEM.MSTPCRB.BIT.MSTPB27
+#define	MSTP_SCI5		SYSTEM.MSTPCRB.BIT.MSTPB26
+#define	MSTP_SMCI5		SYSTEM.MSTPCRB.BIT.MSTPB26
+#define	MSTP_SCI6		SYSTEM.MSTPCRB.BIT.MSTPB25
+#define	MSTP_SMCI6		SYSTEM.MSTPCRB.BIT.MSTPB25
+#define	MSTP_SCI7		SYSTEM.MSTPCRB.BIT.MSTPB24
+#define	MSTP_SMCI7		SYSTEM.MSTPCRB.BIT.MSTPB24
+#define	MSTP_CRC		SYSTEM.MSTPCRB.BIT.MSTPB23
+#define	MSTP_PDC		SYSTEM.MSTPCRB.BIT.MSTPB22
+#define	MSTP_RIIC0		SYSTEM.MSTPCRB.BIT.MSTPB21
+#define	MSTP_USB0		SYSTEM.MSTPCRB.BIT.MSTPB19
+#define	MSTP_RSPI0		SYSTEM.MSTPCRB.BIT.MSTPB17
+#define	MSTP_EDMAC0		SYSTEM.MSTPCRB.BIT.MSTPB15
+#define	MSTP_EDMAC1		SYSTEM.MSTPCRB.BIT.MSTPB14
+#define	MSTP_USBA		SYSTEM.MSTPCRB.BIT.MSTPB12
+#define	MSTP_ELC		SYSTEM.MSTPCRB.BIT.MSTPB9
+#define	MSTP_TEMPS		SYSTEM.MSTPCRB.BIT.MSTPB8
+#define	MSTP_DOC		SYSTEM.MSTPCRB.BIT.MSTPB6
+#define	MSTP_SCI12		SYSTEM.MSTPCRB.BIT.MSTPB4
+#define	MSTP_SMCI12		SYSTEM.MSTPCRB.BIT.MSTPB4
+#define	MSTP_CAN2		SYSTEM.MSTPCRB.BIT.MSTPB2
+#define	MSTP_CAN1		SYSTEM.MSTPCRB.BIT.MSTPB1
+#define	MSTP_CAN0		SYSTEM.MSTPCRB.BIT.MSTPB0
+#define	MSTP_SCIFA8		SYSTEM.MSTPCRC.BIT.MSTPC27
+#define	MSTP_SCIFA9		SYSTEM.MSTPCRC.BIT.MSTPC26
+#define	MSTP_SCIFA10	SYSTEM.MSTPCRC.BIT.MSTPC25
+#define	MSTP_SCIFA11	SYSTEM.MSTPCRC.BIT.MSTPC24
+#define	MSTP_QSPI		SYSTEM.MSTPCRC.BIT.MSTPC23
+#define	MSTP_CAC		SYSTEM.MSTPCRC.BIT.MSTPC19
+#define	MSTP_RIIC2		SYSTEM.MSTPCRC.BIT.MSTPC17
 #define	MSTP_STBYRAM	SYSTEM.MSTPCRC.BIT.MSTPC7
-#define	MSTP_ECCRAM	SYSTEM.MSTPCRC.BIT.MSTPC2
-#define	MSTP_RAM0	SYSTEM.MSTPCRC.BIT.MSTPC0
-#define	MSTP_AES	SYSTEM.MSTPCRD.BIT.MSTPD31
-#define	MSTP_DES	SYSTEM.MSTPCRD.BIT.MSTPD30
-#define	MSTP_SHA	SYSTEM.MSTPCRD.BIT.MSTPD29
-#define	MSTP_RNG	SYSTEM.MSTPCRD.BIT.MSTPD28
-#define	MSTP_SRC	SYSTEM.MSTPCRD.BIT.MSTPD23
-#define	MSTP_MMC	SYSTEM.MSTPCRD.BIT.MSTPD21
-#define	MSTP_SDHI	SYSTEM.MSTPCRD.BIT.MSTPD19
-#define	MSTP_SSI0	SYSTEM.MSTPCRD.BIT.MSTPD15
-#define	MSTP_SSI1	SYSTEM.MSTPCRD.BIT.MSTPD14
+#define	MSTP_ECCRAM		SYSTEM.MSTPCRC.BIT.MSTPC6
+#define	MSTP_RAM0		SYSTEM.MSTPCRC.BIT.MSTPC0
+#define	MSTP_AES		SYSTEM.MSTPCRD.BIT.MSTPD31
+#define	MSTP_DES		SYSTEM.MSTPCRD.BIT.MSTPD30
+#define	MSTP_SHA		SYSTEM.MSTPCRD.BIT.MSTPD29
+#define	MSTP_RNG		SYSTEM.MSTPCRD.BIT.MSTPD28
+#define	MSTP_SRC		SYSTEM.MSTPCRD.BIT.MSTPD23
+#define	MSTP_MMCIF		SYSTEM.MSTPCRD.BIT.MSTPD21
+#define	MSTP_SDHI		SYSTEM.MSTPCRD.BIT.MSTPD19
+#define	MSTP_SSI0		SYSTEM.MSTPCRD.BIT.MSTPD15
+#define	MSTP_SSI1		SYSTEM.MSTPCRD.BIT.MSTPD14
+
+#define	IS_CAN0_ERS0		IS0
+#define	IS_CAN1_ERS1		IS1
+#define	IS_CAN2_ERS2		IS2
+#define	IS_SCI0_TEI0		IS0
+#define	IS_SCI0_ERI0		IS1
+#define	IS_SCI1_TEI0		IS2
+#define	IS_SCI1_ERI1		IS3
+#define	IS_SCI2_TEI0		IS4
+#define	IS_SCI2_ERI2		IS5
+#define	IS_SCI3_TEI0		IS6
+#define	IS_SCI3_ERI3		IS7
+#define	IS_SCI4_TEI4		IS8
+#define	IS_SCI4_ERI4		IS9
+#define	IS_SCI5_TEI5		IS10
+#define	IS_SCI5_ERI5		IS11
+#define	IS_SCI6_TEI6		IS12
+#define	IS_SCI6_ERI6		IS13
+#define	IS_SCI7_TEI7		IS14
+#define	IS_SCI7_ERI7		IS15
+#define	IS_SCI12_TEI12		IS16
+#define	IS_SCI12_ERI12		IS17
+#define	IS_SCI12_SCIX0		IS18
+#define	IS_SCI12_SCIX1		IS19
+#define	IS_SCI12_SCIX2		IS20
+#define	IS_SCI12_SCIX3		IS21
+#define	IS_QSPI_QSPSSLI		IS24
+#define	IS_CAC_FERRF		IS26
+#define	IS_CAC_MENDF		IS27
+#define	IS_CAC_OVFF			IS28
+#define	IS_DOC_DOPCF		IS29
+#define	IS_PDC_PCFEI		IS30
+#define	IS_PDC_PCERI		IS31
+#define	IS_SRC_PCERI		IS0
+#define	IS_SRC_OVF			IS1
+#define	IS_SRC_CEF			IS2
+#define	IS_SDHI_CDETI		IS3
+#define	IS_SDHI_CACI		IS4
+#define	IS_SDHI_SDACI		IS5
+#define	IS_MMCIF_CDETIO		IS6
+#define	IS_MMCIF_ERRIO		IS7
+#define	IS_MMCIF_ACCIO		IS8
+#define	IS_POE3_OEI1		IS9
+#define	IS_POE3_OEI2		IS10
+#define	IS_POE3_OEI3		IS11
+#define	IS_POE3_OEI4		IS12
+#define	IS_RIIC0_TEI0		IS13
+#define	IS_RIIC0_EEI0		IS14
+#define	IS_RIIC2_TEI2		IS15
+#define	IS_RIIC2_EEI2		IS16
+#define	IS_SSI0_SSIF0		IS17
+#define	IS_SSI1_SSIF1		IS18
+#define	IS_S12AD0_S12CMPI0	IS20
+#define	IS_S12AD1_S12CMPI1	IS22
+#define	IS_SCIFA8_TEIF8		IS0
+#define	IS_SCIFA8_ERIF8		IS1
+#define	IS_SCIFA8_BRIF8		IS2
+#define	IS_SCIFA8_DRIF8		IS3
+#define	IS_SCIFA9_TEIF9		IS4
+#define	IS_SCIFA9_ERIF9		IS5
+#define	IS_SCIFA9_BRIF9		IS6
+#define	IS_SCIFA9_DRIF9		IS7
+#define	IS_SCIFA10_TEIF10	IS8
+#define	IS_SCIFA10_ERIF10	IS9
+#define	IS_SCIFA10_BRIF10	IS10
+#define	IS_SCIFA10_DRIF10	IS11
+#define	IS_SCIFA11_TEIF11	IS12
+#define	IS_SCIFA11_ERIF11	IS13
+#define	IS_SCIFA11_BRIF11	IS14
+#define	IS_SCIFA11_DRIF11	IS15
+#define	IS_RSPI0_SPII0		IS16
+#define	IS_RSPI0_SPEI0		IS17
+#define	IS_EPTPC_MINT		IS0
+#define	IS_PRPEDMAC_PINT	IS1
+#define	IS_EDMAC0_EINT0		IS4
+#define	IS_EDMAC1_EINT1		IS5
+
+#define	EN_CAN0_ERS0		EN0
+#define	EN_CAN1_ERS1		EN1
+#define	EN_CAN2_ERS2		EN2
+#define	EN_SCI0_TEI0		EN0
+#define	EN_SCI0_ERI0		EN1
+#define	EN_SCI1_TEI0		EN2
+#define	EN_SCI1_ERI1		EN3
+#define	EN_SCI2_TEI0		EN4
+#define	EN_SCI2_ERI2		EN5
+#define	EN_SCI3_TEI0		EN6
+#define	EN_SCI3_ERI3		EN7
+#define	EN_SCI4_TEI4		EN8
+#define	EN_SCI4_ERI4		EN9
+#define	EN_SCI5_TEI5		EN10
+#define	EN_SCI5_ERI5		EN11
+#define	EN_SCI6_TEI6		EN12
+#define	EN_SCI6_ERI6		EN13
+#define	EN_SCI7_TEI7		EN14
+#define	EN_SCI7_ERI7		EN15
+#define	EN_SCI12_TEI12		EN16
+#define	EN_SCI12_ERI12		EN17
+#define	EN_SCI12_SCIX0		EN18
+#define	EN_SCI12_SCIX1		EN19
+#define	EN_SCI12_SCIX2		EN20
+#define	EN_SCI12_SCIX3		EN21
+#define	EN_QSPI_QSPSSLI		EN24
+#define	EN_CAC_FERRF		EN26
+#define	EN_CAC_MENDF		EN27
+#define	EN_CAC_OVFF			EN28
+#define	EN_DOC_DOPCF		EN29
+#define	EN_PDC_PCFEI		EN30
+#define	EN_PDC_PCERI		EN31
+#define	EN_SRC_PCERI		EN0
+#define	EN_SRC_OVF			EN1
+#define	EN_SRC_CEF			EN2
+#define	EN_SDHI_CDETI		EN3
+#define	EN_SDHI_CACI		EN4
+#define	EN_SDHI_SDACI		EN5
+#define	EN_MMCIF_CDETIO		EN6
+#define	EN_MMCIF_ERRIO		EN7
+#define	EN_MMCIF_ACCIO		EN8
+#define	EN_POE3_OEI1		EN9
+#define	EN_POE3_OEI2		EN10
+#define	EN_POE3_OEI3		EN11
+#define	EN_POE3_OEI4		EN12
+#define	EN_RIIC0_TEI0		EN13
+#define	EN_RIIC0_EEI0		EN14
+#define	EN_RIIC2_TEI2		EN15
+#define	EN_RIIC2_EEI2		EN16
+#define	EN_SSI0_SSIF0		EN17
+#define	EN_SSI1_SSIF1		EN18
+#define	EN_S12AD0_S12CMPI0	EN20
+#define	EN_S12AD1_S12CMPI1	EN22
+#define	EN_SCIFA8_TEIF8		EN0
+#define	EN_SCIFA8_ERIF8		EN1
+#define	EN_SCIFA8_BRIF8		EN2
+#define	EN_SCIFA8_DRIF8		EN3
+#define	EN_SCIFA9_TEIF9		EN4
+#define	EN_SCIFA9_ERIF9		EN5
+#define	EN_SCIFA9_BRIF9		EN6
+#define	EN_SCIFA9_DRIF9		EN7
+#define	EN_SCIFA10_TEIF10	EN8
+#define	EN_SCIFA10_ERIF10	EN9
+#define	EN_SCIFA10_BRIF10	EN10
+#define	EN_SCIFA10_DRIF10	EN11
+#define	EN_SCIFA11_TEIF11	EN12
+#define	EN_SCIFA11_ERIF11	EN13
+#define	EN_SCIFA11_BRIF11	EN14
+#define	EN_SCIFA11_DRIF11	EN15
+#define	EN_RSPI0_SPII0		EN16
+#define	EN_RSPI0_SPEI0		EN17
+#define	EN_EPTPC_MINT		EN0
+#define	EN_PRPEDMAC_PINT	EN1
+#define	EN_EDMAC0_EINT0		EN4
+#define	EN_EDMAC1_EINT1		EN5
+
+#define	CLR_CAN0_ERS0		CLR0
+#define	CLR_CAN1_ERS1		CLR1
+#define	CLR_CAN2_ERS2		CLR2
+
+#define	GEN_CAN0_ERS0		GENBE0
+#define	GEN_CAN1_ERS1		GENBE0
+#define	GEN_CAN2_ERS2		GENBE0
+#define	GEN_SCI0_TEI0		GENBL0
+#define	GEN_SCI0_ERI0		GENBL0
+#define	GEN_SCI1_TEI0		GENBL0
+#define	GEN_SCI1_ERI1		GENBL0
+#define	GEN_SCI2_TEI0		GENBL0
+#define	GEN_SCI2_ERI2		GENBL0
+#define	GEN_SCI3_TEI0		GENBL0
+#define	GEN_SCI3_ERI3		GENBL0
+#define	GEN_SCI4_TEI4		GENBL0
+#define	GEN_SCI4_ERI4		GENBL0
+#define	GEN_SCI5_TEI5		GENBL0
+#define	GEN_SCI5_ERI5		GENBL0
+#define	GEN_SCI6_TEI6		GENBL0
+#define	GEN_SCI6_ERI6		GENBL0
+#define	GEN_SCI7_TEI7		GENBL0
+#define	GEN_SCI7_ERI7		GENBL0
+#define	GEN_SCI12_TEI12		GENBL0
+#define	GEN_SCI12_ERI12		GENBL0
+#define	GEN_SCI12_SCIX0		GENBL0
+#define	GEN_SCI12_SCIX1		GENBL0
+#define	GEN_SCI12_SCIX2		GENBL0
+#define	GEN_SCI12_SCIX3		GENBL0
+#define	GEN_QSPI_QSPSSLI	GENBL0
+#define	GEN_CAC_FERRF		GENBL0
+#define	GEN_CAC_MENDF		GENBL0
+#define	GEN_CAC_OVFF		GENBL0
+#define	GEN_DOC_DOPCF		GENBL0
+#define	GEN_PDC_PCFEI		GENBL0
+#define	GEN_PDC_PCERI		GENBL0
+#define	GEN_SRC_PCERI		GENBL1
+#define	GEN_SRC_OVF			GENBL1
+#define	GEN_SRC_CEF			GENBL1
+#define	GEN_SDHI_CDETI		GENBL1
+#define	GEN_SDHI_CACI		GENBL1
+#define	GEN_SDHI_SDACI		GENBL1
+#define	GEN_MMCIF_CDETIO	GENBL1
+#define	GEN_MMCIF_ERRIO		GENBL1
+#define	GEN_MMCIF_ACCIO		GENBL1
+#define	GEN_POE3_OEI1		GENBL1
+#define	GEN_POE3_OEI2		GENBL1
+#define	GEN_POE3_OEI3		GENBL1
+#define	GEN_POE3_OEI4		GENBL1
+#define	GEN_RIIC0_TEI0		GENBL1
+#define	GEN_RIIC0_EEI0		GENBL1
+#define	GEN_RIIC2_TEI2		GENBL1
+#define	GEN_RIIC2_EEI2		GENBL1
+#define	GEN_SSI0_SSIF0		GENBL1
+#define	GEN_SSI1_SSIF1		GENBL1
+#define	GEN_S12AD0_S12CMPI0	GENBL1
+#define	GEN_S12AD1_S12CMPI1	GENBL1
+#define	GEN_SCIFA8_TEIF8	GENAL0
+#define	GEN_SCIFA8_ERIF8	GENAL0
+#define	GEN_SCIFA8_BRIF8	GENAL0
+#define	GEN_SCIFA8_DRIF8	GENAL0
+#define	GEN_SCIFA9_TEIF9	GENAL0
+#define	GEN_SCIFA9_ERIF9	GENAL0
+#define	GEN_SCIFA9_BRIF9	GENAL0
+#define	GEN_SCIFA9_DRIF9	GENAL0
+#define	GEN_SCIFA10_TEIF10	GENAL0
+#define	GEN_SCIFA10_ERIF10	GENAL0
+#define	GEN_SCIFA10_BRIF10	GENAL0
+#define	GEN_SCIFA10_DRIF10	GENAL0
+#define	GEN_SCIFA11_TEIF11	GENAL0
+#define	GEN_SCIFA11_ERIF11	GENAL0
+#define	GEN_SCIFA11_BRIF11	GENAL0
+#define	GEN_SCIFA11_DRIF11	GENAL0
+#define	GEN_RSPI0_SPII0		GENAL0
+#define	GEN_RSPI0_SPEI0		GENAL0
+#define	GEN_EPTPC_MINT		GENAL1
+#define	GEN_PRPEDMAC_PINT	GENAL1
+#define	GEN_EDMAC0_EINT0	GENAL1
+#define	GEN_EDMAC1_EINT1	GENAL1
+
+#define	GRP_CAN0_ERS0		GRPBE0
+#define	GRP_CAN1_ERS1		GRPBE0
+#define	GRP_CAN2_ERS2		GRPBE0
+#define	GRP_SCI0_TEI0		GRPBL0
+#define	GRP_SCI0_ERI0		GRPBL0
+#define	GRP_SCI1_TEI0		GRPBL0
+#define	GRP_SCI1_ERI1		GRPBL0
+#define	GRP_SCI2_TEI0		GRPBL0
+#define	GRP_SCI2_ERI2		GRPBL0
+#define	GRP_SCI3_TEI0		GRPBL0
+#define	GRP_SCI3_ERI3		GRPBL0
+#define	GRP_SCI4_TEI4		GRPBL0
+#define	GRP_SCI4_ERI4		GRPBL0
+#define	GRP_SCI5_TEI5		GRPBL0
+#define	GRP_SCI5_ERI5		GRPBL0
+#define	GRP_SCI6_TEI6		GRPBL0
+#define	GRP_SCI6_ERI6		GRPBL0
+#define	GRP_SCI7_TEI7		GRPBL0
+#define	GRP_SCI7_ERI7		GRPBL0
+#define	GRP_SCI12_TEI12		GRPBL0
+#define	GRP_SCI12_ERI12		GRPBL0
+#define	GRP_SCI12_SCIX0		GRPBL0
+#define	GRP_SCI12_SCIX1		GRPBL0
+#define	GRP_SCI12_SCIX2		GRPBL0
+#define	GRP_SCI12_SCIX3		GRPBL0
+#define	GRP_QSPI_QSPSSLI	GRPBL0
+#define	GRP_CAC_FERRF		GRPBL0
+#define	GRP_CAC_MENDF		GRPBL0
+#define	GRP_CAC_OVFF		GRPBL0
+#define	GRP_DOC_DOPCF		GRPBL0
+#define	GRP_PDC_PCFEI		GRPBL0
+#define	GRP_PDC_PCERI		GRPBL0
+#define	GRP_SRC_PCERI		GRPBL1
+#define	GRP_SRC_OVF			GRPBL1
+#define	GRP_SRC_CEF			GRPBL1
+#define	GRP_SDHI_CDETI		GRPBL1
+#define	GRP_SDHI_CACI		GRPBL1
+#define	GRP_SDHI_SDACI		GRPBL1
+#define	GRP_MMCIF_CDETIO	GRPBL1
+#define	GRP_MMCIF_ERRIO		GRPBL1
+#define	GRP_MMCIF_ACCIO		GRPBL1
+#define	GRP_POE3_OEI1		GRPBL1
+#define	GRP_POE3_OEI2		GRPBL1
+#define	GRP_POE3_OEI3		GRPBL1
+#define	GRP_POE3_OEI4		GRPBL1
+#define	GRP_RIIC0_TEI0		GRPBL1
+#define	GRP_RIIC0_EEI0		GRPBL1
+#define	GRP_RIIC2_TEI2		GRPBL1
+#define	GRP_RIIC2_EEI2		GRPBL1
+#define	GRP_SSI0_SSIF0		GRPBL1
+#define	GRP_SSI1_SSIF1		GRPBL1
+#define	GRP_S12AD0_S12CMPI0	GRPBL1
+#define	GRP_S12AD1_S12CMPI1	GRPBL1
+#define	GRP_SCIFA8_TEIF8	GRPAL0
+#define	GRP_SCIFA8_ERIF8	GRPAL0
+#define	GRP_SCIFA8_BRIF8	GRPAL0
+#define	GRP_SCIFA8_DRIF8	GRPAL0
+#define	GRP_SCIFA9_TEIF9	GRPAL0
+#define	GRP_SCIFA9_ERIF9	GRPAL0
+#define	GRP_SCIFA9_BRIF9	GRPAL0
+#define	GRP_SCIFA9_DRIF9	GRPAL0
+#define	GRP_SCIFA10_TEIF10	GRPAL0
+#define	GRP_SCIFA10_ERIF10	GRPAL0
+#define	GRP_SCIFA10_BRIF10	GRPAL0
+#define	GRP_SCIFA10_DRIF10	GRPAL0
+#define	GRP_SCIFA11_TEIF11	GRPAL0
+#define	GRP_SCIFA11_ERIF11	GRPAL0
+#define	GRP_SCIFA11_BRIF11	GRPAL0
+#define	GRP_SCIFA11_DRIF11	GRPAL0
+#define	GRP_RSPI0_SPII0		GRPAL0
+#define	GRP_RSPI0_SPEI0		GRPAL0
+#define	GRP_EPTPC_MINT		GRPAL1
+#define	GRP_PRPEDMAC_PINT	GRPAL1
+#define	GRP_EDMAC0_EINT0	GRPAL1
+#define	GRP_EDMAC1_EINT1	GRPAL1
+
+#define	GCR_CAN0_ERS0		GCRBE0
+#define	GCR_CAN1_ERS1		GCRBE0
+#define	GCR_CAN2_ERS2		GCRBE0
 
 #define	__IR( x )		ICU.IR[ IR ## x ].BIT.IR
 #define	 _IR( x )		__IR( x )
@@ -18461,145 +17349,148 @@ IPR_PERIA255_INTA255=255
 #define	 _MSTP( x )		__MSTP( x )
 #define	  MSTP( x )		_MSTP( _ ## x )
 
-#define	BSC		(*(volatile struct st_bsc     __evenaccess *)0x81300)
-#define	CAC		(*(volatile struct st_cac     __evenaccess *)0x8B000)
-#define	CAN0	(*(volatile struct st_can     __evenaccess *)0x90200)
-#define	CAN1	(*(volatile struct st_can     __evenaccess *)0x91200)
-#define	CAN2	(*(volatile struct st_can     __evenaccess *)0x92200)
-#define	CMT		(*(volatile struct st_cmt     __evenaccess *)0x88000)
-#define	CMT0	(*(volatile struct st_cmt0    __evenaccess *)0x88002)
-#define	CMT1	(*(volatile struct st_cmt0    __evenaccess *)0x88008)
-#define	CMT2	(*(volatile struct st_cmt0    __evenaccess *)0x88012)
-#define	CMT3	(*(volatile struct st_cmt0    __evenaccess *)0x88018)
-#define	CMTW0	(*(volatile struct st_cmtw    __evenaccess *)0x94200)
-#define	CMTW1	(*(volatile struct st_cmtw    __evenaccess *)0x94280)
-#define	CRC		(*(volatile struct st_crc     __evenaccess *)0x88280)
-#define	DA		(*(volatile struct st_da      __evenaccess *)0x88040)
-#define	DMAC	(*(volatile struct st_dmac    __evenaccess *)0x82200)
-#define	DMAC0	(*(volatile struct st_dmac0   __evenaccess *)0x82000)
-#define	DMAC1	(*(volatile struct st_dmac1   __evenaccess *)0x82040)
-#define	DMAC2	(*(volatile struct st_dmac1   __evenaccess *)0x82080)
-#define	DMAC3	(*(volatile struct st_dmac1   __evenaccess *)0x820C0)
-#define	DMAC4	(*(volatile struct st_dmac1   __evenaccess *)0x82100)
-#define	DMAC5	(*(volatile struct st_dmac1   __evenaccess *)0x82140)
-#define	DMAC6	(*(volatile struct st_dmac1   __evenaccess *)0x82180)
-#define	DMAC7	(*(volatile struct st_dmac1   __evenaccess *)0x821C0)
-#define	DOC		(*(volatile struct st_doc     __evenaccess *)0x8B080)
-#define	DTC		(*(volatile struct st_dtc     __evenaccess *)0x82400)
-#define	ECCRAM	(*(volatile struct st_eccram  __evenaccess *)0x812C0)
-#define	EDMAC0	(*(volatile struct st_edmac   __evenaccess *)0xC0000)
-#define	EDMAC1	(*(volatile struct st_edmac   __evenaccess *)0xC0200)
-#define	EDMACP	(*(volatile struct st_edmacp  __evenaccess *)0xC0400)
-#define	ELC		(*(volatile struct st_elc     __evenaccess *)0x8B100)
-#define	EPTPC	(*(volatile struct st_eptpc   __evenaccess *)0xC0500)
-#define	EPTPCS0	(*(volatile struct st_eptpcs  __evenaccess *)0xC4800)
-#define	EPTPCS1	(*(volatile struct st_eptpcs  __evenaccess *)0xC4C00)
-#define	ETHERC0	(*(volatile struct st_etherc  __evenaccess *)0xC0100)
-#define	ETHERC1	(*(volatile struct st_etherc  __evenaccess *)0xC0300)
-#define	EXDMAC	(*(volatile struct st_exdmac  __evenaccess *)0x82A00)
-#define	EXDMAC0	(*(volatile struct st_exdmac0 __evenaccess *)0x82800)
-#define	EXDMAC1	(*(volatile struct st_exdmac1 __evenaccess *)0x82840)
-#define	GPT		(*(volatile struct st_gpt     __evenaccess *)0xC2000)
-#define	GPT0	(*(volatile struct st_gpt0    __evenaccess *)0xC2100)
-#define	GPT1	(*(volatile struct st_gpt0    __evenaccess *)0xC2180)
-#define	GPT2	(*(volatile struct st_gpt0    __evenaccess *)0xC2200)
-#define	GPT3	(*(volatile struct st_gpt0    __evenaccess *)0xC2280)
-#define	ICU		(*(volatile struct st_icu     __evenaccess *)0x87000)
-#define	IWDT	(*(volatile struct st_iwdt    __evenaccess *)0x88030)
-#define	MMC		(*(volatile struct st_mmc     __evenaccess *)0x88500)
-#define	MPC		(*(volatile struct st_mpc     __evenaccess *)0x8C100)
-#define	MPU		(*(volatile struct st_mpu     __evenaccess *)0x86400)
-#define	MTU		(*(volatile struct st_mtu     __evenaccess *)0xC120A)
-#define	MTU0	(*(volatile struct st_mtu0    __evenaccess *)0xC1290)
-#define	MTU1	(*(volatile struct st_mtu1    __evenaccess *)0xC1290)
-#define	MTU2	(*(volatile struct st_mtu2    __evenaccess *)0xC1292)
-#define	MTU3	(*(volatile struct st_mtu3    __evenaccess *)0xC1200)
-#define	MTU4	(*(volatile struct st_mtu4    __evenaccess *)0xC1200)
-#define	MTU5	(*(volatile struct st_mtu5    __evenaccess *)0xC1294)
-#define	MTU6	(*(volatile struct st_mtu6    __evenaccess *)0xC12A2)
-#define	MTU7	(*(volatile struct st_mtu7    __evenaccess *)0xC12A4)
-#define	MTU8	(*(volatile struct st_mtu8    __evenaccess *)0xC1298)
-#define	PDC		(*(volatile struct st_pdc     __evenaccess *)0xA0500)
-#define	POE3	(*(volatile struct st_poe     __evenaccess *)0x8C4C0)
-#define	PORT0	(*(volatile struct st_port0   __evenaccess *)0x8C000)
-#define	PORT1	(*(volatile struct st_port1   __evenaccess *)0x8C001)
-#define	PORT2	(*(volatile struct st_port2   __evenaccess *)0x8C002)
-#define	PORT3	(*(volatile struct st_port3   __evenaccess *)0x8C003)
-#define	PORT4	(*(volatile struct st_port4   __evenaccess *)0x8C004)
-#define	PORT5	(*(volatile struct st_port5   __evenaccess *)0x8C005)
-#define	PORT6	(*(volatile struct st_port6   __evenaccess *)0x8C006)
-#define	PORT7	(*(volatile struct st_port7   __evenaccess *)0x8C007)
-#define	PORT8	(*(volatile struct st_port8   __evenaccess *)0x8C008)
-#define	PORT9	(*(volatile struct st_port9   __evenaccess *)0x8C009)
-#define	PORTA	(*(volatile struct st_porta   __evenaccess *)0x8C00A)
-#define	PORTB	(*(volatile struct st_portb   __evenaccess *)0x8C00B)
-#define	PORTC	(*(volatile struct st_portc   __evenaccess *)0x8C00C)
-#define	PORTD	(*(volatile struct st_portd   __evenaccess *)0x8C00D)
-#define	PORTE	(*(volatile struct st_porte   __evenaccess *)0x8C00E)
-#define	PORTF	(*(volatile struct st_portf   __evenaccess *)0x8C00F)
-#define	PORTG	(*(volatile struct st_portg   __evenaccess *)0x8C010)
-#define	PORTJ	(*(volatile struct st_portj   __evenaccess *)0x8C012)
-#define	PPG0	(*(volatile struct st_ppg0    __evenaccess *)0x881E6)
-#define	PPG1	(*(volatile struct st_ppg1    __evenaccess *)0x881F0)
-#define	QSPI	(*(volatile struct st_qspi    __evenaccess *)0x89E00)
-#define	RIIC0	(*(volatile struct st_riic0   __evenaccess *)0x88300)
-#define	RIIC2	(*(volatile struct st_riic2   __evenaccess *)0x88340)
-#define	RSPI0	(*(volatile struct st_rspi0   __evenaccess *)0xD0100)
-#define	RTC		(*(volatile struct st_rtc     __evenaccess *)0x8C400)
-#define	RTCB	(*(volatile struct st_rtcb    __evenaccess *)0x8C402)
-#define	S12ADC0	(*(volatile struct st_s12ad   __evenaccess *)0x89000)
-#define	S12ADC1	(*(volatile struct st_s12ad1  __evenaccess *)0x89104)
-#define	SCI0	(*(volatile struct st_sci0    __evenaccess *)0x8A000)
-#define	SCI1	(*(volatile struct st_sci0    __evenaccess *)0x8A020)
-#define	SCI2	(*(volatile struct st_sci0    __evenaccess *)0x8A040)
-#define	SCI3	(*(volatile struct st_sci0    __evenaccess *)0x8A060)
-#define	SCI4	(*(volatile struct st_sci0    __evenaccess *)0x8A080)
-#define	SCI5	(*(volatile struct st_sci0    __evenaccess *)0x8A0A0)
-#define	SCI6	(*(volatile struct st_sci0    __evenaccess *)0x8A0C0)
-#define	SCI7	(*(volatile struct st_sci0    __evenaccess *)0x8A0E0)
-#define	SCI12	(*(volatile struct st_sci12   __evenaccess *)0x8B300)
-//#define	SCIA	(*(volatile struct st_scia    __evenaccess *)0x88484)
-//#define	SCIF10A	(*(volatile struct st_scia    __evenaccess *)0xD0042)
-//#define	SCIF11A	(*(volatile struct st_scia    __evenaccess *)0xD0062)
-#define	SCIF8	(*(volatile struct st_scif    __evenaccess *)0xD0000)
-#define	SCIF9	(*(volatile struct st_scif    __evenaccess *)0xD0020)
-#define	SCIF10	(*(volatile struct st_scif    __evenaccess *)0xD0040)
-#define	SCIF11	(*(volatile struct st_scif    __evenaccess *)0xD0060)
-//#define	SCIF8A	(*(volatile struct st_scia    __evenaccess *)0xD0002)
-//#define	SCIF9A	(*(volatile struct st_scia    __evenaccess *)0xD0022)
-#define	SMCI	(*(volatile struct st_smci    __evenaccess *)0x88480)
-#define	SMCI0	(*(volatile struct st_smci0   __evenaccess *)0x8A000)
-#define	SMCI1	(*(volatile struct st_smci0   __evenaccess *)0x8A020)
-#define	SMCI2	(*(volatile struct st_smci0   __evenaccess *)0x8A040)
-#define	SMCI3	(*(volatile struct st_smci0   __evenaccess *)0x8A060)
-#define	SMCI4	(*(volatile struct st_smci0   __evenaccess *)0x8A080)
-#define	SMCI5	(*(volatile struct st_smci0   __evenaccess *)0x8A0A0)
-#define	SMCI6	(*(volatile struct st_smci0   __evenaccess *)0x8A0C0)
-#define	SMCI7	(*(volatile struct st_smci0   __evenaccess *)0x8A0E0)
-#define	SMCI12	(*(volatile struct st_smci0   __evenaccess *)0x8B300)
-//#define	SMCIA	(*(volatile struct st_scia    __evenaccess *)0x88484)
-#define	SRC		(*(volatile struct st_src     __evenaccess *)0x98000)
-#define	SSI0	(*(volatile struct st_ssi     __evenaccess *)0x8A500)
-#define	SSI1	(*(volatile struct st_ssi     __evenaccess *)0x8A540)
-#define	SYSTEM	(*(volatile struct st_system  __evenaccess *)0x80000)
-#define	TEMPS	(*(volatile struct st_temps   __evenaccess *)0x8C500)
-#define	TMR0	(*(volatile struct st_tmr0    __evenaccess *)0x88200)
-#define	TMR1	(*(volatile struct st_tmr1    __evenaccess *)0x88201)
-#define	TMR2	(*(volatile struct st_tmr0    __evenaccess *)0x88210)
-#define	TMR3	(*(volatile struct st_tmr1    __evenaccess *)0x88211)
-#define	TMR01	(*(volatile struct st_tmr01   __evenaccess *)0x88204)
-#define	TMR23	(*(volatile struct st_tmr01   __evenaccess *)0x88214)
-#define	TPU0	(*(volatile struct st_tpu0    __evenaccess *)0x88108)
-#define	TPU1	(*(volatile struct st_tpu1    __evenaccess *)0x88108)
-#define	TPU2	(*(volatile struct st_tpu2    __evenaccess *)0x8810A)
-#define	TPU3	(*(volatile struct st_tpu3    __evenaccess *)0x8810A)
-#define	TPU4	(*(volatile struct st_tpu4    __evenaccess *)0x8810C)
-#define	TPU5	(*(volatile struct st_tpu5    __evenaccess *)0x8810C)
-#define	TPUA	(*(volatile struct st_tpua    __evenaccess *)0x88100)
-#define	USB		(*(volatile struct st_usb     __evenaccess *)0xA0400)
-#define	USB0	(*(volatile struct st_usb0    __evenaccess *)0xA0000)
-#define	USBHS	(*(volatile struct st_usbhs   __evenaccess *)0xD0400)
-#define	WDT		(*(volatile struct st_wdt     __evenaccess *)0x88020)
+#define	__IS( x )		ICU.GRP ## x.BIT.IS ## x
+#define	 _IS( x )		__IS( x )
+#define	  IS( x , y )	_IS( _ ## x ## _ ## y )
+#define	__EN( x )		ICU.GEN ## x.BIT.EN ## x
+#define	 _EN( x )		__EN( x )
+#define	  EN( x , y )	_EN( _ ## x ## _ ## y )
+#define	__CLR( x )		ICU.GCR ## x.BIT.CLR ## x
+#define	 _CLR( x )		__CLR( x )
+#define	  CLR( x , y )	_CLR( _ ## x ## _ ## y )
+
+#define	BSC			(*(volatile struct st_bsc      __evenaccess *)0x81300)
+#define	CAC			(*(volatile struct st_cac      __evenaccess *)0x8B000)
+#define	CAN0		(*(volatile struct st_can      __evenaccess *)0x90200)
+#define	CAN1		(*(volatile struct st_can      __evenaccess *)0x91200)
+#define	CAN2		(*(volatile struct st_can      __evenaccess *)0x92200)
+#define	CMT			(*(volatile struct st_cmt      __evenaccess *)0x88000)
+#define	CMT0		(*(volatile struct st_cmt0     __evenaccess *)0x88002)
+#define	CMT1		(*(volatile struct st_cmt0     __evenaccess *)0x88008)
+#define	CMT2		(*(volatile struct st_cmt0     __evenaccess *)0x88012)
+#define	CMT3		(*(volatile struct st_cmt0     __evenaccess *)0x88018)
+#define	CMTW0		(*(volatile struct st_cmtw     __evenaccess *)0x94200)
+#define	CMTW1		(*(volatile struct st_cmtw     __evenaccess *)0x94280)
+#define	CRC			(*(volatile struct st_crc      __evenaccess *)0x88280)
+#define	DA			(*(volatile struct st_da       __evenaccess *)0x88040)
+#define	DMAC		(*(volatile struct st_dmac     __evenaccess *)0x82200)
+#define	DMAC0		(*(volatile struct st_dmac0    __evenaccess *)0x82000)
+#define	DMAC1		(*(volatile struct st_dmac1    __evenaccess *)0x82040)
+#define	DMAC2		(*(volatile struct st_dmac1    __evenaccess *)0x82080)
+#define	DMAC3		(*(volatile struct st_dmac1    __evenaccess *)0x820C0)
+#define	DMAC4		(*(volatile struct st_dmac1    __evenaccess *)0x82100)
+#define	DMAC5		(*(volatile struct st_dmac1    __evenaccess *)0x82140)
+#define	DMAC6		(*(volatile struct st_dmac1    __evenaccess *)0x82180)
+#define	DMAC7		(*(volatile struct st_dmac1    __evenaccess *)0x821C0)
+#define	DOC			(*(volatile struct st_doc      __evenaccess *)0x8B080)
+#define	DTC			(*(volatile struct st_dtc      __evenaccess *)0x82400)
+#define	ECCRAM		(*(volatile struct st_eccram   __evenaccess *)0x812C0)
+#define	EDMAC0		(*(volatile struct st_edmac    __evenaccess *)0xC0000)
+#define	EDMAC1		(*(volatile struct st_edmac    __evenaccess *)0xC0200)
+#define	ELC			(*(volatile struct st_elc      __evenaccess *)0x8B100)
+#define	EPTPC		(*(volatile struct st_eptpc    __evenaccess *)0xC0500)
+#define	EPTPC0		(*(volatile struct st_eptpc0   __evenaccess *)0xC4800)
+#define	EPTPC1		(*(volatile struct st_eptpc0   __evenaccess *)0xC4C00)
+#define	ETHERC0		(*(volatile struct st_etherc   __evenaccess *)0xC0100)
+#define	ETHERC1		(*(volatile struct st_etherc   __evenaccess *)0xC0300)
+#define	EXDMAC		(*(volatile struct st_exdmac   __evenaccess *)0x82A00)
+#define	EXDMAC0		(*(volatile struct st_exdmac0  __evenaccess *)0x82800)
+#define	EXDMAC1		(*(volatile struct st_exdmac1  __evenaccess *)0x82840)
+#define	FLASH		(*(volatile struct st_flash    __evenaccess *)0x8C296)
+#define	GPT			(*(volatile struct st_gpt      __evenaccess *)0xC2000)
+#define	GPT0		(*(volatile struct st_gpt0     __evenaccess *)0xC2100)
+#define	GPT1		(*(volatile struct st_gpt0     __evenaccess *)0xC2180)
+#define	GPT2		(*(volatile struct st_gpt0     __evenaccess *)0xC2200)
+#define	GPT3		(*(volatile struct st_gpt0     __evenaccess *)0xC2280)
+#define	ICU			(*(volatile struct st_icu      __evenaccess *)0x87000)
+#define	IWDT		(*(volatile struct st_iwdt     __evenaccess *)0x88030)
+#define	MMCIF		(*(volatile struct st_mmcif    __evenaccess *)0x88500)
+#define	MPC			(*(volatile struct st_mpc      __evenaccess *)0x8C100)
+#define	MPU			(*(volatile struct st_mpu      __evenaccess *)0x86400)
+#define	MTU			(*(volatile struct st_mtu      __evenaccess *)0xC120A)
+#define	MTU0		(*(volatile struct st_mtu0     __evenaccess *)0xC1290)
+#define	MTU1		(*(volatile struct st_mtu1     __evenaccess *)0xC1290)
+#define	MTU2		(*(volatile struct st_mtu2     __evenaccess *)0xC1292)
+#define	MTU3		(*(volatile struct st_mtu3     __evenaccess *)0xC1200)
+#define	MTU4		(*(volatile struct st_mtu4     __evenaccess *)0xC1200)
+#define	MTU5		(*(volatile struct st_mtu5     __evenaccess *)0xC1A94)
+#define	MTU6		(*(volatile struct st_mtu6     __evenaccess *)0xC1A00)
+#define	MTU7		(*(volatile struct st_mtu7     __evenaccess *)0xC1A00)
+#define	MTU8		(*(volatile struct st_mtu8     __evenaccess *)0xC1298)
+#define	PDC			(*(volatile struct st_pdc      __evenaccess *)0xA0500)
+#define	POE3		(*(volatile struct st_poe      __evenaccess *)0x8C4C0)
+#define	PORT0		(*(volatile struct st_port0    __evenaccess *)0x8C000)
+#define	PORT1		(*(volatile struct st_port1    __evenaccess *)0x8C001)
+#define	PORT2		(*(volatile struct st_port2    __evenaccess *)0x8C002)
+#define	PORT3		(*(volatile struct st_port3    __evenaccess *)0x8C003)
+#define	PORT4		(*(volatile struct st_port4    __evenaccess *)0x8C004)
+#define	PORT5		(*(volatile struct st_port5    __evenaccess *)0x8C005)
+#define	PORT6		(*(volatile struct st_port6    __evenaccess *)0x8C006)
+#define	PORT7		(*(volatile struct st_port7    __evenaccess *)0x8C007)
+#define	PORT8		(*(volatile struct st_port8    __evenaccess *)0x8C008)
+#define	PORT9		(*(volatile struct st_port9    __evenaccess *)0x8C009)
+#define	PORTA		(*(volatile struct st_porta    __evenaccess *)0x8C00A)
+#define	PORTB		(*(volatile struct st_portb    __evenaccess *)0x8C00B)
+#define	PORTC		(*(volatile struct st_portc    __evenaccess *)0x8C00C)
+#define	PORTD		(*(volatile struct st_portd    __evenaccess *)0x8C00D)
+#define	PORTE		(*(volatile struct st_porte    __evenaccess *)0x8C00E)
+#define	PORTF		(*(volatile struct st_portf    __evenaccess *)0x8C00F)
+#define	PORTG		(*(volatile struct st_portg    __evenaccess *)0x8C010)
+#define	PORTJ		(*(volatile struct st_portj    __evenaccess *)0x8C012)
+#define	PPG0		(*(volatile struct st_ppg0     __evenaccess *)0x881E6)
+#define	PPG1		(*(volatile struct st_ppg1     __evenaccess *)0x881F0)
+#define	PTPEDMAC	(*(volatile struct st_ptpedmac __evenaccess *)0xC0400)
+#define	QSPI		(*(volatile struct st_qspi     __evenaccess *)0x89E00)
+#define	RIIC0		(*(volatile struct st_riic     __evenaccess *)0x88300)
+#define	RIIC2		(*(volatile struct st_riic     __evenaccess *)0x88340)
+#define	RSPI0		(*(volatile struct st_rspi     __evenaccess *)0xD0100)
+#define	RTC			(*(volatile struct st_rtc      __evenaccess *)0x8C400)
+#define	S12AD		(*(volatile struct st_s12ad    __evenaccess *)0x89000)
+#define	S12AD1		(*(volatile struct st_s12ad1   __evenaccess *)0x89100)
+#define	SCI0		(*(volatile struct st_sci0     __evenaccess *)0x8A000)
+#define	SCI1		(*(volatile struct st_sci0     __evenaccess *)0x8A020)
+#define	SCI2		(*(volatile struct st_sci0     __evenaccess *)0x8A040)
+#define	SCI3		(*(volatile struct st_sci0     __evenaccess *)0x8A060)
+#define	SCI4		(*(volatile struct st_sci0     __evenaccess *)0x8A080)
+#define	SCI5		(*(volatile struct st_sci0     __evenaccess *)0x8A0A0)
+#define	SCI6		(*(volatile struct st_sci0     __evenaccess *)0x8A0C0)
+#define	SCI7		(*(volatile struct st_sci0     __evenaccess *)0x8A0E0)
+#define	SCI12		(*(volatile struct st_sci12    __evenaccess *)0x8B300)
+#define	SCIFA8		(*(volatile struct st_scifa    __evenaccess *)0xD0000)
+#define	SCIFA9		(*(volatile struct st_scifa    __evenaccess *)0xD0020)
+#define	SCIFA10		(*(volatile struct st_scifa    __evenaccess *)0xD0040)
+#define	SCIFA11		(*(volatile struct st_scifa    __evenaccess *)0xD0060)
+#define	SMCI0		(*(volatile struct st_smci0    __evenaccess *)0x8A000)
+#define	SMCI1		(*(volatile struct st_smci0    __evenaccess *)0x8A020)
+#define	SMCI2		(*(volatile struct st_smci0    __evenaccess *)0x8A040)
+#define	SMCI3		(*(volatile struct st_smci0    __evenaccess *)0x8A060)
+#define	SMCI4		(*(volatile struct st_smci0    __evenaccess *)0x8A080)
+#define	SMCI5		(*(volatile struct st_smci0    __evenaccess *)0x8A0A0)
+#define	SMCI6		(*(volatile struct st_smci0    __evenaccess *)0x8A0C0)
+#define	SMCI7		(*(volatile struct st_smci0    __evenaccess *)0x8A0E0)
+#define	SMCI12		(*(volatile struct st_smci0    __evenaccess *)0x8B300)
+#define	SRC			(*(volatile struct st_src      __evenaccess *)0x98000)
+#define	SSI0		(*(volatile struct st_ssi      __evenaccess *)0x8A500)
+#define	SSI1		(*(volatile struct st_ssi      __evenaccess *)0x8A540)
+#define	SYSTEM		(*(volatile struct st_system   __evenaccess *)0x80000)
+#define	TEMPS		(*(volatile struct st_temps    __evenaccess *)0x8C500)
+#define	TMR0		(*(volatile struct st_tmr0     __evenaccess *)0x88200)
+#define	TMR1		(*(volatile struct st_tmr1     __evenaccess *)0x88201)
+#define	TMR2		(*(volatile struct st_tmr0     __evenaccess *)0x88210)
+#define	TMR3		(*(volatile struct st_tmr1     __evenaccess *)0x88211)
+#define	TMR01		(*(volatile struct st_tmr01    __evenaccess *)0x88204)
+#define	TMR23		(*(volatile struct st_tmr01    __evenaccess *)0x88214)
+#define	TPU0		(*(volatile struct st_tpu0     __evenaccess *)0x88108)
+#define	TPU1		(*(volatile struct st_tpu1     __evenaccess *)0x88108)
+#define	TPU2		(*(volatile struct st_tpu2     __evenaccess *)0x8810A)
+#define	TPU3		(*(volatile struct st_tpu3     __evenaccess *)0x8810A)
+#define	TPU4		(*(volatile struct st_tpu4     __evenaccess *)0x8810C)
+#define	TPU5		(*(volatile struct st_tpu5     __evenaccess *)0x8810C)
+#define	TPUA		(*(volatile struct st_tpua     __evenaccess *)0x88100)
+#define	USB			(*(volatile struct st_usb      __evenaccess *)0xA0400)
+#define	USB0		(*(volatile struct st_usb0     __evenaccess *)0xA0000)
+#define	USBA		(*(volatile struct st_usba     __evenaccess *)0xD0400)
+#define	WDT			(*(volatile struct st_wdt      __evenaccess *)0x88020)
 #pragma bit_order
 #pragma packoption
 #endif

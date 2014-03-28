@@ -82,19 +82,6 @@
  * <HR>
  */
 
-/*
-Changes from V3.0.0
-	+ CreationCount sizes changed from unsigned portBASE_TYPE to
-	  unsigned short to minimize the risk of overflowing.
-	
-	+ Reset of usLastCreationCount added
-	
-Changes from V3.1.0
-	+ Changed the dummy calculation to use variables of type long, rather than
-	  float.  This allows the file to be used with ports that do not support
-	  floating point.
-
-*/
 
 #include <stdlib.h>
 

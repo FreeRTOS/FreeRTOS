@@ -291,6 +291,8 @@ unsigned portBASE_TYPE xTimer;
 													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
 													prvAutoReloadTimerCallback );		/* The callback to be called when the timer expires. */
 
+		configASSERT( strcmp( pcTimerGetTimerName( xAutoReloadTimers[ xTimer ] ), "FR Timer" ) == 0 );
+
 		if( xAutoReloadTimers[ xTimer ] == NULL )
 		{
 			xTestStatus = pdFAIL;

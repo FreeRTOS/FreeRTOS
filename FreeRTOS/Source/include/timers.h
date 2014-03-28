@@ -1094,6 +1094,17 @@ BaseType_t xTimerPendFunctionCallFromISR( PendedFunction_t xFunctionToPend, void
   */
 BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait );
 
+/**
+ * const char * const pcTimerGetTimerName( TimerHandle_t xTimer );
+ *
+ * Returns the name that was asigned to a timer when the timer was created.
+ *
+ * @param xTimer The handle of the timer being queried.
+ *
+ * @return The name asigned to the timer specified by the xTimer parameter.
+ */
+const char * const pcTimerGetTimerName( TimerHandle_t xTimer );
+
 /*
  * Functions beyond this part are not part of the public API and are intended
  * for use by the kernel only.

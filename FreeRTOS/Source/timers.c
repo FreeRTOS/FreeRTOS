@@ -363,6 +363,14 @@ DaemonTaskMessage_t xMessage;
 #endif
 /*-----------------------------------------------------------*/
 
+const char * const pcTimerGetTimerName( TimerHandle_t xTimer )
+{
+Timer_t *pxTimer = ( Timer_t * ) xTimer;
+
+	return pxTimer->pcTimerName;
+}
+/*-----------------------------------------------------------*/
+
 static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow )
 {
 BaseType_t xResult;

@@ -83,7 +83,7 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1394031827230</id>
+			<id>1395248551327</id>
 			<name>Source/Common_Demo_Source/Minimal</name>
 			<type>6</type>
 			<matcher>
@@ -92,7 +92,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1394031827245</id>
+			<id>1395248551343</id>
 			<name>Source/Common_Demo_Source/Minimal</name>
 			<type>6</type>
 			<matcher>
@@ -101,7 +101,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1394031827261</id>
+			<id>1395248551358</id>
 			<name>Source/Common_Demo_Source/Minimal</name>
 			<type>6</type>
 			<matcher>
@@ -110,16 +110,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1394031827261</id>
-			<name>Source/Common_Demo_Source/Minimal</name>
-			<type>6</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-IntQueue.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1394031827276</id>
+			<id>1395248551374</id>
 			<name>Source/Common_Demo_Source/Minimal</name>
 			<type>6</type>
 			<matcher>

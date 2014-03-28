@@ -84,20 +84,12 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * FreeRTOS+CLI command console.  The command console is access through the
- * UART to USB connector on the ZC702 Zynq development board (marked J2).  For
- * reasons of robustness testing the UART driver is deliberately written to be
- * inefficient and should not be used as a template for a production driver.
- * Type "help" to see a list of registered commands.  The FreeRTOS+CLI license
- * is different to the FreeRTOS license, see http://www.FreeRTOS.org/cli for
- * license and usage details.  The default baud rate is 115200.
- *
- * "Reg test" tasks - These fill both the core and floating point registers with
- * known values, then check that each register maintains its expected value for
- * the lifetime of the task.  Each task uses a different set of values.  The reg
- * test tasks execute with a very low priority, so get preempted very
- * frequently.  A register containing an unexpected value is indicative of an
- * error in the context switching mechanism.
+ * "Reg test" tasks - These fill the core registers with known values, then
+ * check that each register maintains its expected value for the lifetime of the
+ * task.  Each task uses a different set of values.  The reg test tasks execute
+ * with a very low priority, so get preempted very frequently.  A register
+ * containing an unexpected value is indicative of an error in the context
+ * switching mechanism.
  *
  * "Check" task - The check task period is initially set to three seconds.  The
  * task checks that all the standard demo tasks, and the register check tasks,
@@ -137,6 +129,7 @@
 #include "QueueOverwrite.h"
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
+#include "flash.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -147,12 +140,13 @@
 #define mainCOM_TEST_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
+#define mainFLASH_PRIORITY					( tskIDLE_PRIORITY )
 
 /* The priority used by the UART command console task. */
 #define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
 
 /* The LED used by the check timer. */
-#define mainCHECK_LED						( 0 )
+#define mainCHECK_LED						( 3 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -233,7 +227,7 @@ void main_full( void )
 	/* Start all the other standard demo/test tasks.  They have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-//	vStartInterruptQueueTasks();
+	vStartInterruptQueueTasks();
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
@@ -245,13 +239,7 @@ void main_full( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 	vStartEventGroupTasks();
-
-	/* Start the tasks that implements the command console on the UART, as
-	described above. */
-//	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
-
-	/* Register the standard CLI commands. */
-//	vRegisterSampleCLICommands();
+	vStartLEDFlashTasks( mainFLASH_PRIORITY );
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );

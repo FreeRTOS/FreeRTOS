@@ -163,6 +163,9 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+	/* Set up the ports used by the LED outputs (the name ParTest is now
+	obsolete - it originally came from "parallel port test"). */
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 

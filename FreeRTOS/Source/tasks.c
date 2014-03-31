@@ -760,7 +760,11 @@ TCB_t * pxNewTCB;
 			{
 				/* Reset the next expected unblock time in case it referred to
 				the task that has just been deleted. */
-				prvResetNextTaskUnblockTime();
+				taskENTER_CRITICAL();
+				{
+					prvResetNextTaskUnblockTime();
+				}
+				taskEXIT_CRITICAL();
 			}
 		}
 	}
@@ -1259,7 +1263,11 @@ TCB_t * pxNewTCB;
 				/* A task other than the currently running task was suspended,
 				reset the next expected unblock time in case it referred to the
 				task that is now in the Suspended state. */
-				prvResetNextTaskUnblockTime();
+				taskENTER_CRITICAL();
+				{
+					prvResetNextTaskUnblockTime();
+				}
+				taskEXIT_CRITICAL();
 			}
 			else
 			{

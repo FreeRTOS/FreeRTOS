@@ -544,6 +544,38 @@ EventBits_t uxBits;
 		xError = pdTRUE;
 	}
 
+	/* Try a synch with no other tasks involved.  First set all the bits other
+	than this task's bit. */
+	xEventGroupSetBits( xEventGroup, ( ebALL_SYNC_BITS & ~ebSET_BIT_TASK_SYNC_BIT ) );
+
+	/* Then wait on just one bit - the bit that is being set. */
+	uxBits = xEventGroupSync( xEventGroup,			/* The event group used for the synchronisation. */
+							ebSET_BIT_TASK_SYNC_BIT,/* The bit set by this task when it reaches the sync point. */
+							ebSET_BIT_TASK_SYNC_BIT,/* The bits to wait for - in this case it is just waiting for itself. */
+							portMAX_DELAY );		/* The maximum time to wait for the sync condition to be met. */
+
+	/* A sync with a max delay should only exit when all the synchronise
+	bits are set...check that is the case.  In this case there is only one
+	sync bit anyway. */
+	if( ( uxBits & ebSET_BIT_TASK_SYNC_BIT ) != ebSET_BIT_TASK_SYNC_BIT )
+	{
+		xError = pdTRUE;
+	}
+
+	/* ...but now the sync bits should be clear again, leaving all the other
+	bits set (as only one bit was being waited for). */
+	if( xEventGroupGetBits( xEventGroup ) != ( ebALL_SYNC_BITS & ~ebSET_BIT_TASK_SYNC_BIT ) )
+	{
+		xError = pdTRUE;
+	}
+
+	/* Clear all the bits to zero again. */
+	xEventGroupClearBits( xEventGroup, ( ebALL_SYNC_BITS & ~ebSET_BIT_TASK_SYNC_BIT ) );
+	if( xEventGroupGetBits( xEventGroup ) != 0 )
+	{
+		xError = pdTRUE;
+	}
+
 	/* Unsuspend the other tasks then check they have executed up to the
 	synchronisation point. */
 	vTaskResume( xTestSlaveTaskHandle );

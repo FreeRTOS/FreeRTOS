@@ -179,7 +179,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 
 			/* Rendezvous always clear the bits.  They will have been cleared
 			already unless this is the only task in the rendezvous. */
-			pxEventBits->uxEventBits &= uxBitsToWaitFor;
+			pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
 
 			xTicksToWait = 0;
 		}

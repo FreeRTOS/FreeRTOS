@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * FreeRTOS+FAT SL is an complementary component provided to Real Time Engineers
  * Ltd. by HCC Embedded for use with FreeRTOS.  It is not, in itself, part of

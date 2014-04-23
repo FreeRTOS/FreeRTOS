@@ -3,7 +3,7 @@
 /* Device     : RX/RX600/RX64M                                                  */
 /* File Name  : iodefine.h                                                      */
 /* Abstract   : Definition of I/O Register.                                     */
-/* History    : V0.8A  (2014-02-18)  [Hardware Manual Revision : 0.80]          */
+/* History    : V0.8C  (2014-03-22)  [Hardware Manual Revision : 0.80]          */
 /* Note       : This is a typical example.                                      */
 /*                                                                              */
 /*  Copyright(c) 2014 Renesas Electronics Corp.                                 */
@@ -1768,6 +1768,8 @@ struct st_edmac {
 		struct {
 			unsigned long :24;
 			unsigned long RMAFCE:1;
+			unsigned long :2;
+			unsigned long RRFCE:1;
 		} BIT;
 	} TRSCER;
 	char           wk7[4];
@@ -2783,9 +2785,9 @@ struct st_eptpc0 {
 			unsigned long MACL:24;
 		} BIT;
 	} SYMACRL;
-	char           wk0a[1];
+	char           wk1[4];
 	unsigned long  SYIPADDRR;
-	char           wk1[32];
+	char           wk2[32];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2801,7 +2803,7 @@ struct st_eptpc0 {
 			unsigned long DNUM:8;
 		} BIT;
 	} SYDOMR;
-	char           wk2[8];
+	char           wk3[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2899,7 +2901,7 @@ struct st_eptpc0 {
 			unsigned long PNUM:16;
 		} BIT;
 	} SYPNUMR;
-	char           wk3[20];
+	char           wk4[20];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2909,7 +2911,7 @@ struct st_eptpc0 {
 			unsigned long BMUP:1;
 		} BIT;
 	} SYRVLDR;
-	char           wk4[12];
+	char           wk5[12];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2955,7 +2957,7 @@ struct st_eptpc0 {
 			unsigned long ANCE:1;
 		} BIT;
 	} SYTRENR;
-	char           wk5[4];
+	char           wk6[4];
 	unsigned long  MTCIDU;
 	unsigned long  MTCIDL;
 	union {
@@ -2965,7 +2967,7 @@ struct st_eptpc0 {
 			unsigned long PNUM:16;
 		} BIT;
 	} MTPID;
-	char           wk6[20];
+	char           wk7[20];
 	union {
 		unsigned long LONG;
 		struct {
@@ -2988,7 +2990,7 @@ struct st_eptpc0 {
 	unsigned long  OFMRL;
 	unsigned long  MPDRU;
 	unsigned long  MPDRL;
-	char           wk7[8];
+	char           wk8[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3016,7 +3018,7 @@ struct st_eptpc0 {
 			unsigned long SRMV:16;
 		} BIT;
 	} SRR;
-	char           wk8[8];
+	char           wk9[8];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3052,7 +3054,7 @@ struct st_eptpc0 {
 			unsigned long TYPE:16;
 		} BIT;
 	} PETYPER;
-	char           wk9[12];
+	char           wk10[12];
 	unsigned long  PPIPR;
 	unsigned long  PDIPR;
 	union {
@@ -3108,7 +3110,7 @@ struct st_eptpc0 {
 			unsigned long SEL:1;
 		} BIT;
 	} FFLTR;
-	char           wk10[28];
+	char           wk11[28];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3137,7 +3139,7 @@ struct st_eptpc0 {
 			unsigned long MACL:24;
 		} BIT;
 	} FMAC1RL;
-	char           wk11[80];
+	char           wk12[80];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3563,6 +3565,7 @@ struct st_exdmac1 {
 };
 
 struct st_flash {
+	char           wk0[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3570,7 +3573,7 @@ struct st_flash {
 			unsigned char FLWE:2;
 		} BIT;
 	} FWEPROR;
-	char           wk0[7806329];
+	char           wk1[7806329];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3582,7 +3585,7 @@ struct st_flash {
 			unsigned char ECRCT:1;
 		} BIT;
 	} FASTAT;
-	char           wk1[3];
+	char           wk2[3];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3594,7 +3597,7 @@ struct st_flash {
 			unsigned char ECRCTIE:1;
 		} BIT;
 	} FAEINT;
-	char           wk2[3];
+	char           wk3[3];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3602,7 +3605,7 @@ struct st_flash {
 			unsigned char FRDYIE:1;
 		} BIT;
 	} FRDYIE;
-	char           wk3[23];
+	char           wk4[23];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3615,7 +3618,7 @@ struct st_flash {
 			unsigned long FEADDR:32;
 		} BIT;
 	} FEADDR;
-	char           wk4[28];
+	char           wk5[28];
 	union {
 		unsigned short WORD;
 		struct {
@@ -3625,7 +3628,7 @@ struct st_flash {
 			unsigned short FCRME:1;
 		} BIT;
 	} FCURAME;
-	char           wk5[42];
+	char           wk6[42];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3654,7 +3657,7 @@ struct st_flash {
 			unsigned short FENTRYC:1;
 		} BIT;
 	} FENTRYR;
-	char           wk6[2];
+	char           wk7[2];
 	union {
 		unsigned short WORD;
 		struct {
@@ -3663,7 +3666,7 @@ struct st_flash {
 			unsigned short FPROTCN:1;
 		} BIT;
 	} FPROTR;
-	char           wk7[2];
+	char           wk8[2];
 	union {
 		unsigned short WORD;
 		struct {
@@ -3672,7 +3675,7 @@ struct st_flash {
 			unsigned short SUINIT:1;
 		} BIT;
 	} FSUINITR;
-	char           wk8[2];
+	char           wk9[2];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3680,7 +3683,7 @@ struct st_flash {
 			unsigned char FLOCKST:1;
 		} BIT;
 	} FLKSTAT;
-	char           wk9[15];
+	char           wk10[15];
 	union {
 		unsigned short WORD;
 		struct {
@@ -3688,7 +3691,7 @@ struct st_flash {
 			unsigned short PCMDR:8;
 		} BIT;
 	} FCMDR;
-	char           wk10[30];
+	char           wk11[30];
 	union {
 		unsigned short WORD;
 		struct {
@@ -3696,7 +3699,7 @@ struct st_flash {
 			unsigned short PEERRST:8;
 		} BIT;
 	} FPESTAT;
-	char           wk11[14];
+	char           wk12[14];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3704,7 +3707,7 @@ struct st_flash {
 			unsigned char BCDIR:1;
 		} BIT;
 	} FBCCNT;
-	char           wk12[3];
+	char           wk13[3];
 	union {
 		unsigned char BYTE;
 		struct {
@@ -3712,7 +3715,7 @@ struct st_flash {
 			unsigned char BCST:1;
 		} BIT;
 	} FBCSTAT;
-	char           wk13[3];
+	char           wk14[3];
 	union {
 		unsigned long LONG;
 		struct {
@@ -3720,7 +3723,7 @@ struct st_flash {
 			unsigned long PSADR:19;
 		} BIT;
 	} FPSADDR;
-	char           wk14[4];
+	char           wk15[4];
 	union {
 		unsigned short WORD;
 		struct {
@@ -3728,7 +3731,7 @@ struct st_flash {
 			unsigned short ESUSPMD:1;
 		} BIT;
 	} FCPSR;
-	char           wk15[2];
+	char           wk16[2];
 	union {
 		unsigned short WORD;
 		struct {
@@ -17396,7 +17399,7 @@ IPR_PERIA_INTA253=253,IPR_PERIA_INTA254=254,IPR_PERIA_INTA255=255
 #define	EXDMAC		(*(volatile struct st_exdmac   __evenaccess *)0x82A00)
 #define	EXDMAC0		(*(volatile struct st_exdmac0  __evenaccess *)0x82800)
 #define	EXDMAC1		(*(volatile struct st_exdmac1  __evenaccess *)0x82840)
-#define	FLASH		(*(volatile struct st_flash    __evenaccess *)0x8C296)
+#define	FLASH		(*(volatile struct st_flash    __evenaccess *)0x8C294)
 #define	GPT			(*(volatile struct st_gpt      __evenaccess *)0xC2000)
 #define	GPT0		(*(volatile struct st_gpt0     __evenaccess *)0xC2100)
 #define	GPT1		(*(volatile struct st_gpt0     __evenaccess *)0xC2180)

@@ -52,9 +52,6 @@ Title0=ITrgPwr
 Symbol0=0 4 1
 LiveEnabled=0
 LiveFile=PowerLogLive.log
-[Trace2]
-Enabled=0
-ShowSource=0
 [SWOTraceWindow]
 ForcedPcSampling=0
 ForcedInterruptLogs=0
@@ -94,9 +91,6 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
-[Trace1]
-Enabled=0
-ShowSource=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

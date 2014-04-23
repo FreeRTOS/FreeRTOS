@@ -1019,8 +1019,8 @@ BaseType_t xMessagePosted;
 		/* Clear the bits again. */
 		uxReturned = xEventGroupClearBitsFromISR( xISREventGroup, uxBitsToSet );
 
-		/* The returned value should be the value before the bits were cleaed.*/
-		if( uxReturned != uxBitsToSet )
+		/* Check the message was posted. */
+		if( uxReturned != pdPASS )
 		{
 			xISRTestError = pdTRUE;
 		}

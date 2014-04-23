@@ -184,6 +184,9 @@ UBaseType_t uxCriticalNesting = 0xef;
 
 #ifndef portRESTORE_CONTEXT
 	#error Unrecognised device selected
+
+	/* Note:  dsPIC parts with EDS are not supported as there is no easy way to
+	recover the hardware stacked copies for DOCOUNT, DOHIGH, DOLOW. */
 #endif
 
 /*

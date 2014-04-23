@@ -237,7 +237,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 				/* Although the task got here because it timed out before the
 				bits it was waiting for were set, it is possible that since it
 				unblocked another task has set the bits.  If this is the case
-				then it may be required to clear the bits before exiting. */
+				then it needs to clear the bits before exiting. */
 				if( ( uxReturn & uxBitsToWaitFor ) == uxBitsToWaitFor )
 				{
 					pxEventBits->uxEventBits &= ~uxBitsToWaitFor;
@@ -253,13 +253,16 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 		}
 		else
 		{
-			/* The task unblocked because the bits were set.  Clear the control
-			bits before returning the value. */
-			uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
+			/* The task unblocked because the bits were set. */
 		}
+
+		/* Control bits might be set as the task had blocked should not be
+		returned. */
+		uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
 	}
 
 	traceEVENT_GROUP_SYNC_END( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTimeoutOccurred );
+
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
@@ -394,16 +397,19 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 			}
 			taskEXIT_CRITICAL();
 
+			/* Prevent compiler warnings when trace macros are not used. */
 			xTimeoutOccurred = pdFALSE;
 		}
 		else
 		{
-			/* The task unblocked because the bits were set.  Clear the control
-			bits before returning the value. */
-			uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
+			/* The task unblocked because the bits were set. */
 		}
+
+		/* The task blocked so control bits may have been set. */
+		uxReturn &= ~eventEVENT_BITS_CONTROL_BYTES;
 	}
 	traceEVENT_GROUP_WAIT_BITS_END( xEventGroup, uxBitsToWaitFor, xTimeoutOccurred );
+
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
@@ -434,26 +440,30 @@ EventBits_t uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-EventBits_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
+
+	BaseType_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
+	{
+		BaseType_t xReturn;
+
+		traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
+		xReturn = xTimerPendFunctionCallFromISR( vEventGroupClearBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToClear, NULL );
+
+		return xReturn;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
 {
 UBaseType_t uxSavedInterruptStatus;
 EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup;
 EventBits_t uxReturn;
 
-	/* Check the user is not attempting to clear the bits used by the kernel
-	itself. */
-	configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
-		traceEVENT_GROUP_CLEAR_BITS_FROM_ISR( xEventGroup, uxBitsToClear );
-
-		/* The value returned is the event group value prior to the bits being
-		cleared. */
 		uxReturn = pxEventBits->uxEventBits;
-
-		/* Clear the bits. */
-		pxEventBits->uxEventBits &= ~uxBitsToClear;
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
@@ -585,6 +595,14 @@ void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet 
 }
 /*-----------------------------------------------------------*/
 
+/* For internal use only - execute a 'clear bits' command that was pended from
+an interrupt. */
+void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear )
+{
+	( void ) xEventGroupClearBits( pvEventGroup, ( EventBits_t ) ulBitsToClear );
+}
+/*-----------------------------------------------------------*/
+
 static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, const EventBits_t uxBitsToWaitFor, const BaseType_t xWaitForAllBits )
 {
 BaseType_t xWaitConditionMet = pdFALSE;
@@ -621,6 +639,7 @@ BaseType_t xWaitConditionMet = pdFALSE;
 /*-----------------------------------------------------------*/
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
+
 	BaseType_t xEventGroupSetBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	BaseType_t xReturn;
@@ -630,10 +649,12 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 		return xReturn;
 	}
+
 #endif
 /*-----------------------------------------------------------*/
 
 #if (configUSE_TRACE_FACILITY == 1)
+
 	UBaseType_t uxEventGroupGetNumber( void* xEventGroup )
 	{
 	UBaseType_t xReturn;
@@ -650,5 +671,6 @@ BaseType_t xWaitConditionMet = pdFALSE;
 
 		return xReturn;
 	}
+
 #endif
 

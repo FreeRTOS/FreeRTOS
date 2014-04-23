@@ -110,6 +110,8 @@
 	#error configMAX_API_CALL_INTERRUPT_PRIORITY must be greater than ( configUNIQUE_INTERRUPT_PRIORITIES / 2 )
 #endif
 
+/* Some vendor specific files default configCLEAR_TICK_INTERRUPT() in
+portmacro.h. */
 #ifndef configCLEAR_TICK_INTERRUPT
 	#define configCLEAR_TICK_INTERRUPT()
 #endif

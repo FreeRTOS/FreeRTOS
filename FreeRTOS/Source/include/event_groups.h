@@ -325,16 +325,61 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
 /**
  * event_groups.h
  *<pre>
-	EventBits_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear );
+	BaseType_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet );
  </pre>
  *
- * A version of xEventGroupClearBits() that can be called from an interrupt
- * service routine.  See the xEventGroupClearBits() documentation.
+ * A version of xEventGroupClearBits() that can be called from an interrupt.
  *
- * \defgroup xEventGroupClearBitsFromISR xEventGroupClearBitsFromISR
+ * Setting bits in an event group is not a deterministic operation because there
+ * are an unknown number of tasks that may be waiting for the bit or bits being
+ * set.  FreeRTOS does not allow nondeterministic operations to be performed
+ * while interrupts are disabled, so protects event groups that are accessed
+ * from tasks by suspending the scheduler rather than disabling interrupts.  As
+ * a result event groups cannot be accessed directly from an interrupt service
+ * routine.  Therefore xEventGroupClearBitsFromISR() sends a message to the 
+ * timer task to have the clear operation performed in the context of the timer 
+ * task.
+ *
+ * @param xEventGroup The event group in which the bits are to be cleared.
+ *
+ * @param uxBitsToClear A bitwise value that indicates the bit or bits to clear.
+ * For example, to clear bit 3 only, set uxBitsToClear to 0x08.  To clear bit 3
+ * and bit 0 set uxBitsToClear to 0x09.
+ *
+ * @return If the request to execute the function was posted successfully then 
+ * pdPASS is returned, otherwise pdFALSE is returned.  pdFALSE will be returned 
+ * if the timer service queue was full.
+ *
+ * Example usage:
+   <pre>
+   #define BIT_0	( 1 << 0 )
+   #define BIT_4	( 1 << 4 )
+
+   // An event group which it is assumed has already been created by a call to
+   // xEventGroupCreate().
+   EventGroupHandle_t xEventGroup;
+
+   void anInterruptHandler( void )
+   {
+		// Clear bit 0 and bit 4 in xEventGroup.
+		xResult = xEventGroupClearBitsFromISR(
+							xEventGroup,	 // The event group being updated.
+							BIT_0 | BIT_4 ); // The bits being set.
+
+		if( xResult == pdPASS )
+		{
+			// The message was posted successfully.
+		}
+  }
+   </pre>
+ * \defgroup xEventGroupSetBitsFromISR xEventGroupSetBitsFromISR
  * \ingroup EventGroup
  */
-EventBits_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear ) PRIVILEGED_FUNCTION;
+#if( configUSE_TRACE_FACILITY == 1 )
+	BaseType_t xEventGroupClearBitsFromISR( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet );
+#else
+	#define xEventGroupClearBitsFromISR( xEventGroup, uxBitsToClear ) xTimerPendFunctionCallFromISR( vEventGroupClearBitsCallback, ( void * ) xEventGroup, ( uint32_t ) uxBitsToClear, NULL )
+#endif
 
 /**
  * event_groups.h
@@ -648,7 +693,7 @@ EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t u
  * \defgroup xEventGroupGetBitsFromISR xEventGroupGetBitsFromISR
  * \ingroup EventGroup
  */
-#define xEventGroupGetBitsFromISR( xEventGroup ) xEventGroupClearBitsFromISR( xEventGroup, 0 )
+EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup );
 
 /**
  * event_groups.h
@@ -666,6 +711,7 @@ void vEventGroupDelete( EventGroupHandle_t xEventGroup );
 
 /* For internal use only. */
 void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet );
+void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear );
 
 #if (configUSE_TRACE_FACILITY == 1)
 	UBaseType_t uxEventGroupGetNumber( void* xEventGroup );

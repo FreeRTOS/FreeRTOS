@@ -1097,13 +1097,13 @@ BaseType_t xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvPar
 /**
  * const char * const pcTimerGetTimerName( TimerHandle_t xTimer );
  *
- * Returns the name that was asigned to a timer when the timer was created.
+ * Returns the name that was assigned to a timer when the timer was created.
  *
  * @param xTimer The handle of the timer being queried.
  *
- * @return The name asigned to the timer specified by the xTimer parameter.
+ * @return The name assigned to the timer specified by the xTimer parameter.
  */
-const char * const pcTimerGetTimerName( TimerHandle_t xTimer );
+const char * pcTimerGetTimerName( TimerHandle_t xTimer );
 
 /*
  * Functions beyond this part are not part of the public API and are intended

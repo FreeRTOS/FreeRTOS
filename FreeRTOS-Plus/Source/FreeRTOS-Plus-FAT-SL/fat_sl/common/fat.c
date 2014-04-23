@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -45,7 +45,7 @@
 #include "drv.h"
 
 #include "../../version/ver_fat_sl.h"
-#if VER_FAT_SL_MAJOR != 3 || VER_FAT_SL_MINOR != 2
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
  #error Incompatible FAT_SL version number!
 #endif
 
@@ -487,7 +487,6 @@ unsigned char _f_getcurrsector ( void )
       return F_ERR_EOF;
     }
 
-    gl_file.prevcluster = gl_file.pos.cluster;
     _f_clustertopos( cluster, &gl_file.pos );
   }
 
@@ -510,7 +509,6 @@ unsigned char _f_getcurrsector ( void )
  * error code or zero if successful
  *
  ***************************************************************************/
-
 unsigned char _f_alloccluster ( unsigned long * pcluster )
 {
   unsigned long  maxcluster = gl_volume.maxcluster;
@@ -563,7 +561,6 @@ unsigned char _f_alloccluster ( unsigned long * pcluster )
  * error code or zero if successful
  *
  ***************************************************************************/
-
 unsigned char _f_removechain ( unsigned long cluster )
 {
   gl_volume.fatsector = (unsigned long)-1;

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -42,7 +42,7 @@
 #define __DIR_H
 
 #include "../../version/ver_fat_sl.h"
-#if VER_FAT_SL_MAJOR != 3 || VER_FAT_SL_MINOR != 2
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
  #error Incompatible FAT_SL version number!
 #endif
 
@@ -51,6 +51,22 @@ extern "C" {
 #endif
 
 
+/* definitions for ctime */
+#define F_CTIME_SEC_SHIFT   0
+#define F_CTIME_SEC_MASK    0x001f  /*0-30 in 2seconds*/
+#define F_CTIME_MIN_SHIFT   5
+#define F_CTIME_MIN_MASK    0x07e0  /*0-59 */
+#define F_CTIME_HOUR_SHIFT  11
+#define F_CTIME_HOUR_MASK   0xf800  /*0-23*/
+
+
+/* definitions for cdate */
+#define F_CDATE_DAY_SHIFT   0
+#define F_CDATE_DAY_MASK    0x001f  /*0-31*/
+#define F_CDATE_MONTH_SHIFT 5
+#define F_CDATE_MONTH_MASK  0x01e0  /*1-12*/
+#define F_CDATE_YEAR_SHIFT  9
+#define F_CDATE_YEAR_MASK   0xfe00  /*0-119 (1980+value)*/
 
 
 #define NTRES_LOW           0x08 /*lower case name*/

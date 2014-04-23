@@ -34,19 +34,29 @@
  *
  */
 
-#ifndef _CONFIG_MDRIVER_RAM_H_
-#define _CONFIG_MDRIVER_RAM_H_
+#ifndef _CONFIG_FAT_SL_TEST_H
+#define _CONFIG_FAT_SL_TEST_H
 
-#include "../version/ver_mdriver_ram.h"
-#if VER_MDRIVER_RAM_MAJOR != 1 || VER_MDRIVER_RAM_MINOR != 2
- #error Incompatible MDRIVER_RAM version number!
+#include "../version/ver_fat_sl.h"
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
+ #error Incompatible FAT_SL version number!
 #endif
 
-#define MDRIVER_RAM_SECTOR_SIZE   512       /* Sector size */
 
-#define MDRIVER_RAM_VOLUME0_SIZE  (128 * 1024) /* defintion for size of ramdrive0 */
+/*
+** Maximum size for seek test.
+** Options: 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768
+*/
+#define F_MAX_SEEK_TEST 16384
 
-#define MDRIVER_MEM_LONG_ACCESS   1         /* set this value to 1 if 32bit access available */
 
-#endif /* ifndef _CONFIG_MDRIVER_RAM_H_ */
+/*
+** Defines media type for testing.
+** Options: F_FAT12_MEDIA, F_FAT16_MEDIA, F_FAT32_MEDIA
+*/
+#define F_FAT_TYPE      F_FAT16_MEDIA
+
+
+#endif /* ifndef _CONFIG_STHIN_TEST_H */
+
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -41,7 +41,7 @@
 #ifndef _VER_FAT_SL_H
 #define _VER_FAT_SL_H
 
-#define VER_FAT_SL_MAJOR 3
+#define VER_FAT_SL_MAJOR 5
 #define VER_FAT_SL_MINOR 2
 
 #endif

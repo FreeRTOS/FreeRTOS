@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -49,7 +49,7 @@
 #include "file.h"
 
 #include "../../version/ver_fat_sl.h"
-#if VER_FAT_SL_MAJOR != 3 || VER_FAT_SL_MINOR != 2
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
  #error Incompatible FAT_SL version number!
 #endif
 
@@ -112,8 +112,8 @@ static unsigned char _f_writebootrecord ( F_PHY * phy )
   unsigned char   rs;
   unsigned short  mre;
 
-  unsigned char  ret;
-  unsigned char  _n = 0;
+  unsigned char   ret;
+  unsigned char   _n = 0;
 
   if ( gl_volume.mediatype == F_FAT32_MEDIA )
   {  /*write FS_INFO*/
@@ -379,6 +379,7 @@ static unsigned char _f_prepareformat ( F_PHY * phy, unsigned char fattype )
 
     gl_volume.bootrecord.sector_per_cluster = FAT32_CS[i].sector_per_cluster;
   }
+
   if ( !gl_volume.bootrecord.sector_per_cluster )
   {
     return F_ERR_INVALIDMEDIA;                                               /*fat16 cannot be there*/
@@ -869,17 +870,52 @@ unsigned char fn_getserial ( unsigned long * serial )
   return 0;
 }
 
+
 /*
-** fn_init
+** fs_init
 **
-** Initialize FAT_SL file system
+** Initialize STHIN file system
 **
 ** RETURN: F_NO_ERROR on success, other if error.
 */
-unsigned char fn_init ( void )
+unsigned char fs_init ( void )
 {
-  return F_NO_ERROR;
-} /* fn_init */
+  unsigned char  rc = F_NO_ERROR;
+
+#if RTOS_SUPPORT
+  rc = fsr_init();
+  if ( rc )
+  {
+    return rc;
+  }
+
+#endif
+  return rc;
+} /* fs_init */
+
+
+/*
+** fs_delete
+**
+** Delete STHIN file system
+**
+** RETURN: F_NO_ERROR on success, other if error.
+*/
+unsigned char fs_delete ( void )
+{
+  unsigned char  rc = F_NO_ERROR;
+
+#if RTOS_SUPPORT
+  rc = fsr_delete();
+  if ( rc )
+  {
+    return rc;
+  }
+
+#endif
+  return rc;
+} /* fs_delete */
+
 
 /****************************************************************************
  *
@@ -896,16 +932,18 @@ unsigned char fn_init ( void )
 unsigned char fn_initvolume ( F_DRIVERINIT initfunc )
 {
 #if F_FS_THREAD_AWARE == 1
-  {
-    if( fs_lock_semaphore == NULL )
-    {
-      fs_lock_semaphore = xSemaphoreCreateMutex();
-      if( fs_lock_semaphore == NULL )
-      {
-        return F_ERR_OS;
-      }
-    }
-  }
+	{
+		extern xSemaphoreHandle fs_lock_semaphore;
+
+		if( fs_lock_semaphore == NULL )
+		{
+			fs_lock_semaphore = xSemaphoreCreateMutex();
+			if( fs_lock_semaphore == NULL )
+			{
+				return F_ERR_OS;
+			}
+		}
+	}
 #endif /* F_FS_THREAD_AWARE */
 
   gl_volume.state = F_STATE_NONE;
@@ -924,6 +962,7 @@ unsigned char fn_initvolume ( F_DRIVERINIT initfunc )
 
   return _f_getvolume();
 } /* fn_initvolume */
+
 
 /****************************************************************************
  *

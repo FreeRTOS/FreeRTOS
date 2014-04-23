@@ -173,5 +173,8 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\f_lock.h">
       <Filter>FreeRTOS+\FreeRTOS+FAT SL</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigurationFiles\config_fat_sl_test.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

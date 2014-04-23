@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -49,7 +49,7 @@
 #include "file.h"
 
 #include "../../version/ver_fat_sl.h"
-#if VER_FAT_SL_MAJOR != 3 || VER_FAT_SL_MINOR != 2
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
  #error Incompatible FAT_SL version number!
 #endif
 
@@ -206,7 +206,9 @@ unsigned char _f_findfilewc ( char * name, char * ext, F_POS * pos, F_DIRENTRY *
         pos->cluster = gl_volume.bootrecord.rootcluster;
       }
       else
+      {
         return 0;
+      }
     }
 
     {
@@ -303,6 +305,7 @@ static void _f_getfilename ( char * dest, char * name, char * ext )
 unsigned long _f_getdecluster ( F_DIRENTRY * de )
 {
   unsigned long  cluster;
+
   if ( gl_volume.mediatype == F_FAT32_MEDIA )
   {
     cluster = _f_getword( &de->clusterhi );
@@ -384,6 +387,7 @@ unsigned char _f_findpath ( F_NAME * fsname, F_POS * pos )
       {
         return 0;
       }
+
       if ( !( de->attr & F_ATTR_DIR ) )
       {
         return 0;
@@ -506,8 +510,6 @@ unsigned char _f_findpath ( F_NAME * fsname, F_POS * pos )
  * error code or zero if successful
  *
  ***************************************************************************/
-
-
 unsigned char fn_getcwd ( char * buffer, unsigned char maxlen, char root )
 {
   unsigned char  a;
@@ -557,8 +559,6 @@ unsigned char fn_getcwd ( char * buffer, unsigned char maxlen, char root )
  * error code or zero if successful
  *
  ***************************************************************************/
-
-
 unsigned char fn_findfirst ( const char * filename, F_FIND * find )
 {
   unsigned char  ret;
@@ -605,8 +605,6 @@ unsigned char fn_findfirst ( const char * filename, F_FIND * find )
  * error code or zero if successful
  *
  ***************************************************************************/
-
-
 unsigned char fn_findnext ( F_FIND * find )
 {
   F_DIRENTRY   * de;
@@ -827,7 +825,9 @@ unsigned char _f_addentry ( F_NAME * fsname, F_POS * pos, F_DIRENTRY * * pde )
         pos->cluster = gl_volume.bootrecord.rootcluster;
       }
       else
+      {
         return F_ERR_NOMOREENTRY;
+      }
     }
 
     {

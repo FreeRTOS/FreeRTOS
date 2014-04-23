@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -44,7 +44,7 @@
 #include "config_fat_sl.h"
 
 #include "../version/ver_fat_sl.h"
-#if VER_FAT_SL_MAJOR != 3 || VER_FAT_SL_MINOR != 2
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
  #error Incompatible FAT_SL version number!
 #endif
 
@@ -87,23 +87,6 @@ typedef struct
   F_POS           pos;
 } F_FIND;
 
-/* definitions for ctime */
-#define F_CTIME_SEC_SHIFT   0
-#define F_CTIME_SEC_MASK    0x001f  /*0-30 in 2seconds*/
-#define F_CTIME_MIN_SHIFT   5
-#define F_CTIME_MIN_MASK    0x07e0  /*0-59 */
-#define F_CTIME_HOUR_SHIFT  11
-#define F_CTIME_HOUR_MASK   0xf800  /*0-23*/
-
-
-/* definitions for cdate */
-#define F_CDATE_DAY_SHIFT   0
-#define F_CDATE_DAY_MASK    0x001f  /*0-31*/
-#define F_CDATE_MONTH_SHIFT 5
-#define F_CDATE_MONTH_MASK  0x01e0  /*1-12*/
-#define F_CDATE_YEAR_SHIFT  9
-#define F_CDATE_YEAR_MASK   0xfe00  /*0-119 (1980+value)*/
-
 #define F_ATTR_ARC         0x20
 #define F_ATTR_DIR         0x10
 #define F_ATTR_VOLUME      0x08
@@ -126,7 +109,6 @@ typedef struct
   unsigned long  abspos;
   unsigned long  filesize;
   unsigned long  startcluster;
-  unsigned long  prevcluster;
   unsigned long  relpos;
   unsigned char  modified;
   unsigned char  mode;
@@ -238,9 +220,6 @@ enum
  * for file changed events
  *
  ***************************************************************************/
-#ifndef F_FILE_CHANGED_EVENT
-	#define F_FILE_CHANGED_EVENT 0
-#endif
 
 #if F_FILE_CHANGED_EVENT
 
@@ -277,8 +256,16 @@ extern F_FILE_CHANGED_EVENTFUNC  f_filechangedevent;
  #define FACTION_ADDED            0x00000001
  #define FACTION_REMOVED          0x00000002
  #define FACTION_MODIFIED         0x00000003
+ #define FACTION_RENAMED_OLD_NAME 0x00000004
+ #define FACTION_RENAMED_NEW_NAME 0x00000005
 
 #endif /* if F_FILE_CHANGED_EVENT */
+
+unsigned char fs_init ( void );
+unsigned char fs_delete ( void );
+
+#define f_initvolume fn_initvolume
+#define f_delvolume  fn_delvolume
 
 unsigned char fn_initvolume ( F_DRIVERINIT initfunc );
 unsigned char fn_delvolume ( void );
@@ -318,7 +305,6 @@ F_FILE * fn_truncate ( const char *, long );
 unsigned char fn_getcwd ( char * buffer, unsigned char maxlen, char root );
 
 unsigned char fn_hardformat ( unsigned char fattype );
-unsigned char fn_format ( unsigned char fattype );
 
 unsigned char fn_getserial ( unsigned long * );
 
@@ -327,14 +313,6 @@ unsigned char fn_getserial ( unsigned long * );
 
 #include "FreeRTOS.h"
 #include "semphr.h"
-#ifndef FS_MUTEX_DEFINED
-	extern xSemaphoreHandle fs_lock_semaphore;
-#endif /* FS_MUTEX_DEFINED */
-
-unsigned char fn_init ( void );
-#define f_init fn_init
-#define f_initvolume fn_initvolume
-#define f_delvolume  fn_delvolume
 
 unsigned char fr_hardformat ( unsigned char fattype );
 #define f_hardformat( fattype ) fr_hardformat( fattype )
@@ -405,11 +383,6 @@ F_FILE * fr_truncate ( const char *, long );
 
 #else /* F_FS_THREAD_AWARE */
 
-unsigned char fn_init ( void );
-#define f_init fn_init
-#define f_initvolume fn_initvolume
-#define f_delvolume  fn_delvolume
-
 #define f_hardformat( fattype ) fn_hardformat( fattype )
 #define f_format( fattype )    fn_hardformat( fattype )
 
@@ -467,6 +440,7 @@ F_FILE * fn_truncate ( const char *, long );
 #define f_read( buf, size, _size_t, filehandle ) fn_read( buf, size, _size_t, filehandle )
 
 #endif /* F_FS_THREAD_AWARE */
+
 
 /****************************************************************************
  *

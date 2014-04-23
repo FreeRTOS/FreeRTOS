@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+FAT FS V1.0.0 (C) 2013 HCC Embedded
+ * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
  * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
  * terms.
@@ -49,11 +49,11 @@
 #include "file.h"
 
 #include "../../version/ver_fat_sl.h"
-#if VER_FAT_SL_MAJOR != 3 || VER_FAT_SL_MINOR != 2
+#if VER_FAT_SL_MAJOR != 5 || VER_FAT_SL_MINOR != 2
  #error Incompatible FAT_SL version number!
 #endif
 
-static unsigned char _f_emptywritebuffer ( void );
+static unsigned char _f_stepnextsector ( void );
 
 
 /****************************************************************************
@@ -125,73 +125,77 @@ long fn_filelength ( const char * filename )
  * error code or zero if successful
  *
  ***************************************************************************/
-
-
-static unsigned char _f_emptywritebuffer ( void )
+static unsigned char _f_stepnextsector ( void )
 {
   unsigned char  ret;
+  unsigned char  b_alloc;
 
-  ret = _f_writeglsector( gl_file.pos.sector );
-  if ( ret )
+  b_alloc = 0;
+  gl_volume.fatsector = (unsigned long)-1;
+  if ( gl_file.startcluster == 0 )
   {
-    return ret;
+    b_alloc = 1;
+  }
+  else
+  {
+    ++gl_file.pos.sector;
+    if ( gl_file.pos.sector >= gl_file.pos.sectorend )
+    {
+      unsigned long  value;
+
+      ret = _f_getclustervalue( gl_file.pos.cluster, &value );
+      if ( ret )
+      {
+        return ret;
+      }
+
+      if ( ( value >= 2 ) && ( value < F_CLUSTER_RESERVED ) ) /*we are in chain*/
+      {
+        _f_clustertopos( value, &gl_file.pos );    /*go to next cluster*/
+      }
+      else
+      {
+        b_alloc = 1;
+      }
+    }
   }
 
-  gl_file.modified = 0;
-
-  gl_file.pos.sector++;
-
-  if ( gl_file.pos.sector >= gl_file.pos.sectorend )
+  if ( b_alloc != 0 )
   {
-    unsigned long  value;
+    unsigned long  nextcluster;
 
-    gl_volume.fatsector = (unsigned long)-1;
-    ret = _f_getclustervalue( gl_file.pos.cluster, &value );
+    ret = _f_alloccluster( &nextcluster );
     if ( ret )
     {
       return ret;
     }
 
-    if ( ( value >= 2 ) && ( value < F_CLUSTER_RESERVED ) ) /*we are in chain*/
+    ret = _f_setclustervalue( nextcluster, F_CLUSTER_LAST );
+    if ( ret )
     {
-      gl_file.prevcluster = gl_file.pos.cluster;
-      _f_clustertopos( value, &gl_file.pos );    /*go to next cluster*/
+      return ret;
+    }
+
+    if ( gl_file.startcluster == 0 )
+    {
+      gl_file.startcluster = nextcluster;
     }
     else
     {
-      unsigned long  nextcluster;
-
-      ret = _f_alloccluster( &nextcluster );
-      if ( ret )
-      {
-        return ret;
-      }
-
-      ret = _f_setclustervalue( nextcluster, F_CLUSTER_LAST );
-      if ( ret )
-      {
-        return ret;
-      }
-
       ret = _f_setclustervalue( gl_file.pos.cluster, nextcluster );
       if ( ret )
       {
         return ret;
       }
-
-      gl_file.prevcluster = gl_file.pos.cluster;
-
-      _f_clustertopos( nextcluster, &gl_file.pos );
-
-      return _f_writefatsector();
     }
+
+    _f_clustertopos( nextcluster, &gl_file.pos );
+
+    return _f_writefatsector();
   }
 
-
   return F_NO_ERROR;
-} /* _f_emptywritebuffer */
-
-
+} /* _f_stepnextsector */
 
 
 /****************************************************************************
@@ -209,30 +213,65 @@ static unsigned char _f_extend ( long size )
   size -= gl_file.filesize;
   _size = (unsigned long)size;
 
-  rc = _f_getcurrsector();
-  if ( rc )
+  if ( gl_file.startcluster == 0 )
   {
-    return rc;
+    if ( _f_stepnextsector() )
+    {
+      return F_ERR_WRITE;
+    }
+  }
+  else
+  {
+    if ( ( gl_file.relpos > 0 ) && ( gl_file.relpos < F_SECTOR_SIZE ) )
+    {
+      rc = _f_getcurrsector();
+      if ( rc )
+      {
+        return rc;
+      }
+    }
   }
 
-  psp_memset( gl_sector + gl_file.relpos, 0, ( F_SECTOR_SIZE - gl_file.relpos ) );
-
-  if ( gl_file.relpos + _size > F_SECTOR_SIZE )
+  if ( gl_file.relpos + _size >= F_SECTOR_SIZE )
   {
-    _size -= ( F_SECTOR_SIZE - gl_file.relpos );
-    while ( _size )
+    if ( gl_file.relpos < F_SECTOR_SIZE )
     {
-      if ( _f_emptywritebuffer() )
+      psp_memset( gl_sector + gl_file.relpos, 0, ( F_SECTOR_SIZE - gl_file.relpos ) );
+      _size -= ( F_SECTOR_SIZE - gl_file.relpos );
+
+      if ( _f_writeglsector( gl_file.pos.sector ) )
+      {
+        return F_ERR_WRITE;
+      }
+    }
+
+    if ( _f_stepnextsector() )
+    {
+      return F_ERR_WRITE;
+    }
+
+    psp_memset( gl_sector, 0, F_SECTOR_SIZE );
+
+    while ( _size >= F_SECTOR_SIZE )
+    {
+      if ( _f_writeglsector( gl_file.pos.sector ) )
+      {
+        return F_ERR_WRITE;
+      }
+
+      if ( _f_stepnextsector() )
       {
         return F_ERR_WRITE;
       }
 
       psp_memset( gl_sector, 0, F_SECTOR_SIZE );
-      _size -= ( _size > F_SECTOR_SIZE ? F_SECTOR_SIZE : _size );
+
+      _size -= F_SECTOR_SIZE;
     }
   }
   else
   {
+    psp_memset( gl_sector + gl_file.relpos, 0, ( F_SECTOR_SIZE - gl_file.relpos ) );
     _size += gl_file.relpos;
   }
 
@@ -295,7 +334,6 @@ static unsigned char _f_fseek ( long offset )
     {
       gl_file.abspos = 0;
       gl_file.relpos = 0;
-      gl_file.prevcluster = 0;
       gl_file.pos.cluster = gl_file.startcluster;
       remain = gl_file.filesize;
 
@@ -326,7 +364,6 @@ static unsigned char _f_fseek ( long offset )
           break;
         }
 
-        gl_file.prevcluster = gl_file.pos.cluster;
         gl_file.pos.cluster = cluster;
       }
 
@@ -352,6 +389,10 @@ static unsigned char _f_fseek ( long offset )
       {
         gl_file.relpos = (unsigned short)offset;
       }
+    }
+    else
+    {
+      ret = _f_extend( offset );
     }
   }
 
@@ -452,7 +493,7 @@ F_FILE * fn_open ( const char * filename, const char * mode )
     return 0;
   }
 
-  psp_memset( &gl_file, 0, 21 );
+  psp_memset( &gl_file, 0, sizeof( F_FILE ) );
 
   if ( !_f_findpath( &fsname, &gl_file.dirpos ) )
   {
@@ -604,27 +645,6 @@ F_FILE * fn_open ( const char * filename, const char * mode )
     default:
       return 0;        /*invalid mode*/
   } /* switch */
-
-  if ( ( m_mode != F_FILE_RD ) && ( gl_file.startcluster == 0 ) )
-  {
-    gl_volume.fatsector = (unsigned long)-1;
-    if ( _f_alloccluster( &( gl_file.startcluster ) ) )
-    {
-      return 0;
-    }
-
-    _f_clustertopos( gl_file.startcluster, &gl_file.pos );
-    if ( _f_setclustervalue( gl_file.startcluster, F_CLUSTER_LAST ) )
-    {
-      return 0;
-    }
-
-    if ( _f_writefatsector() )
-    {
-      return 0;
-    }
-  }
-
 
   gl_file.mode = m_mode; /* lock it */
   return (F_FILE *)1;
@@ -967,6 +987,11 @@ long fn_write ( const void * buf, long size, long _size_st, F_FILE * f )
   _size_st = retsize;
   retsize = 0;
 
+  if ( size == 0 )
+  {
+    return 0;
+  }
+
   if ( _f_getvolume() )
   {
     return 0;                     /*can't write*/
@@ -981,10 +1006,21 @@ long fn_write ( const void * buf, long size, long _size_st, F_FILE * f )
     }
   }
 
-  if ( _f_getcurrsector() )
+  if ( gl_file.startcluster == 0 )
   {
-    gl_file.mode = F_FILE_CLOSE;
-    return 0;
+    if ( _f_stepnextsector() )
+    {
+      gl_file.mode = F_FILE_CLOSE;
+      return 0;
+    }
+  }
+  else
+  {
+    if ( _f_getcurrsector() )
+    {
+      gl_file.mode = F_FILE_CLOSE;
+      return 0;
+    }
   }
 
   for( ; ; )
@@ -995,7 +1031,7 @@ long fn_write ( const void * buf, long size, long _size_st, F_FILE * f )
     {     /*now full*/
       if ( gl_file.modified )
       {
-        if ( _f_emptywritebuffer() )
+        if ( _f_writeglsector( gl_file.pos.sector ) )
         {
           gl_file.mode = F_FILE_CLOSE;
           if ( _f_updatefileentry( 0 ) == 0 )
@@ -1007,10 +1043,21 @@ long fn_write ( const void * buf, long size, long _size_st, F_FILE * f )
             return 0;
           }
         }
+
+        gl_file.modified = 0;
       }
-      else
+
+      if ( _f_stepnextsector() )
       {
-        gl_file.pos.sector++;       /*goto next*/
+        gl_file.mode = F_FILE_CLOSE;
+        if ( _f_updatefileentry( 0 ) == 0 )
+        {
+          return retsize;
+        }
+        else
+        {
+          return 0;
+        }
       }
 
       gl_file.abspos += gl_file.relpos;

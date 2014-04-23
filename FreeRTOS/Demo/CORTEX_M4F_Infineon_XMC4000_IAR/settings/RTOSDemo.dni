@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=92877996
+Checksum=1444046619
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -23,9 +23,9 @@ CStepIntDis=_ 0
 OverrideDefaultClocks=0
 CpuClock=72000000
 ClockAutoDetect=0
-ClockWanted=2000000
-JtagSpeed=2000000
-Prescaler=36
+ClockWanted=1000000
+JtagSpeed=1000000
+Prescaler=72
 TimeStampPrescIndex=0
 TimeStampPrescData=0
 PcSampCYCTAP=1
@@ -36,13 +36,22 @@ ITMportsEnable=0
 ITMportsTermIO=0
 ITMportsLogFile=0
 ITMlogFile=$PROJ_DIR$\ITM.log
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
 [PowerLog]
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=0
-Title0=I0
-Symbol0=0 4 1
+Title_0=I0
+Symbol_0=0 4 227
 LiveEnabled=0
 LiveFile=PowerLogLive.log
 [DataLog]
@@ -57,14 +66,6 @@ SumEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
-Title0=Ch0
-Symbol0=0 4 1
-Title1=Ch1
-Symbol1=0 4 1
-Title2=Ch2
-Symbol2=0 4 1
-Title3=Ch3
-Symbol3=0 4 1
 SumSortOrder=0
 [InterruptLog]
 LogEnabled=0
@@ -80,24 +81,12 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Trace2]
+[CallStackLog]
 Enabled=0
-ShowSource=0
-[SWOTraceWindow]
-PcSampling=0
-InterruptLogs=0
-ForcedTimeStamps=0
-EventCPI=0
-EventEXC=0
-EventFOLD=0
-EventLSU=0
-EventSLEEP=0
 [PowerProbe]
 Frequency=10000
 Probe0=I0
 ProbeSetup0=2 1 1 2 0 0
-[CallStackLog]
-Enabled=0
 [DriverProfiling]
 Enabled=0
 Mode=3

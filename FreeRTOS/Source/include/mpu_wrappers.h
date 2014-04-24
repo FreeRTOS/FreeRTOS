@@ -117,6 +117,7 @@ only for ports that are using the MPU. */
 		#define xQueueAddToSet					MPU_xQueueAddToSet
 		#define xQueueRemoveFromSet				MPU_xQueueRemoveFromSet
 		#define xQueuePeekFromISR				MPU_xQueuePeekFromISR
+		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
 
 		#define pvPortMalloc					MPU_pvPortMalloc
 		#define vPortFree						MPU_vPortFree

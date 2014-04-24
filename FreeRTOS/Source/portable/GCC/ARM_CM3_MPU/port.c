@@ -216,6 +216,7 @@ QueueSetMemberHandle_t MPU_xQueueSelectFromSet( QueueSetHandle_t xQueueSet, Tick
 BaseType_t MPU_xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet );
 BaseType_t MPU_xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet );
 BaseType_t MPU_xQueuePeekFromISR( QueueHandle_t xQueue, void * const pvBuffer );
+void* MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore );
 
 /*-----------------------------------------------------------*/
 
@@ -1011,6 +1012,17 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 BaseType_t xReturn;
 
 	xReturn = xQueuePeekFromISR( pxQueue, pvBuffer );
+	portRESET_PRIVILEGE( xRunningPrivileged );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+void* MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore )
+{
+BaseType_t xRunningPrivileged = prvRaisePrivilege();
+void * xReturn;
+
+	xReturn = ( void * ) xQueueGetMutexHolder( xSemaphore );
 	portRESET_PRIVILEGE( xRunningPrivileged );
 	return xReturn;
 }

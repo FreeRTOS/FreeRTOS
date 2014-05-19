@@ -119,7 +119,7 @@ extern uint32_t ulPortYieldRequired;			\
 }
 
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
-#define portYIELD() __asm( "SWI 0" );
+#define portYIELD() __asm volatile ( "SWI 0" );
 
 
 /*-----------------------------------------------------------

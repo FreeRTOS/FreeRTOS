@@ -70,8 +70,8 @@
 * groups.  It is not intended to be a user friendly demonstration of the
 * event groups API.
 *
-* NOTE:  The tests implemented in this file are informal 'sanity' tests 
-* only and are not part of the module tests that make use of the 
+* NOTE:  The tests implemented in this file are informal 'sanity' tests
+* only and are not part of the module tests that make use of the
 * mtCOVERAGE_TEST_MARKER macro within the event groups implementation.
 */
 
@@ -128,20 +128,20 @@ event bits in a group are unblocked as appropriate as different bits get set. */
 /*-----------------------------------------------------------*/
 
 /*
- * NOTE:  The tests implemented in this function are informal 'sanity' tests 
- * only and are not part of the module tests that make use of the 
+ * NOTE:  The tests implemented in this function are informal 'sanity' tests
+ * only and are not part of the module tests that make use of the
  * mtCOVERAGE_TEST_MARKER macro within the event groups implementation.
  *
  * The master test task.  This task:
  *
- * 1) Calls prvSelectiveBitsTestMasterFunction() to test the behaviour when two 
- *    tasks are blocked on different bits in an event group.  The counterpart of 
- *    this test is implemented by the prvSelectiveBitsTestSlaveFunction() 
+ * 1) Calls prvSelectiveBitsTestMasterFunction() to test the behaviour when two
+ *    tasks are blocked on different bits in an event group.  The counterpart of
+ *    this test is implemented by the prvSelectiveBitsTestSlaveFunction()
  *    function (which is called by the two tasks that block on the event group).
  *
  * 2) Calls prvBitCombinationTestMasterFunction() to test the behaviour when
- *    just one task is blocked on various combinations of bits within an event 
- *    group.  The counterpart of this test is implemented within the 'test 
+ *    just one task is blocked on various combinations of bits within an event
+ *    group.  The counterpart of this test is implemented within the 'test
  *    slave' task.
  *
  * 3) Calls prvPerformTaskSyncTests() to test task synchronisation behaviour.
@@ -149,7 +149,7 @@ event bits in a group are unblocked as appropriate as different bits get set. */
 static void prvTestMasterTask( void *pvParameters );
 
 /*
- * A helper task that enables the 'test master' task to perform several 
+ * A helper task that enables the 'test master' task to perform several
  * behavioural tests.  See the comments above the prvTestMasterTask() prototype
  * above.
  */
@@ -169,7 +169,7 @@ static BaseType_t prvBitCombinationTestMasterFunction( BaseType_t xError, TaskHa
 static BaseType_t prvPerformTaskSyncTests( BaseType_t xError, TaskHandle_t xTestSlaveTaskHandle );
 
 /*
- * Two instances of prvSyncTask() are created.  They start by calling 
+ * Two instances of prvSyncTask() are created.  They start by calling
  * prvSelectiveBitsTestSlaveFunction() to act as slaves when the test master is
  * executing the prvSelectiveBitsTestMasterFunction() function.  They then loop
  * to test the task synchronisation (rendezvous) behaviour.
@@ -178,7 +178,7 @@ static void prvSyncTask( void *pvParameters );
 
 /*
  * Functions used in a test that blocks two tasks on various different bits
- * within an event group - then sets each bit in turn and checks that the 
+ * within an event group - then sets each bit in turn and checks that the
  * correct tasks unblock at the correct times.
  */
 static BaseType_t prvSelectiveBitsTestMasterFunction( void );
@@ -210,8 +210,8 @@ TaskHandle_t xTestSlaveTaskHandle;
 	 * groups.  It is not intended to be a user friendly demonstration of the
 	 * event groups API.
 	 *
-	 * NOTE:  The tests implemented in this file are informal 'sanity' tests 
-	 * only and are not part of the module tests that make use of the 
+	 * NOTE:  The tests implemented in this file are informal 'sanity' tests
+	 * only and are not part of the module tests that make use of the
 	 * mtCOVERAGE_TEST_MARKER macro within the event groups implementation.
 	 *
 	 * Create the test tasks as described at the top of this file.
@@ -245,8 +245,8 @@ TaskHandle_t xTestSlaveTaskHandle = ( TaskHandle_t ) pvParameters;
 	xEventGroup = xEventGroupCreate();
 	configASSERT( xEventGroup );
 
-	/* Perform the tests that block two tasks on different combinations of bits, 
-	then set each bit in turn and check the correct tasks unblock at the correct 
+	/* Perform the tests that block two tasks on different combinations of bits,
+	then set each bit in turn and check the correct tasks unblock at the correct
 	times. */
 	xError = prvSelectiveBitsTestMasterFunction();
 
@@ -298,7 +298,7 @@ static void prvSyncTask( void *pvParameters )
 {
 EventBits_t uxSynchronisationBit, uxReturned;
 
-	/* A few tests that check the behaviour when two tasks are blocked on 
+	/* A few tests that check the behaviour when two tasks are blocked on
 	various different bits within an event group are performed before this task
 	enters its infinite loop to carry out its main demo function. */
 	prvSelectiveBitsTestSlaveFunction();
@@ -309,10 +309,10 @@ EventBits_t uxSynchronisationBit, uxReturned;
 
 	for( ;; )
 	{
-		/* Now this task takes part in a task synchronisation - sometimes known 
-		as a 'rendezvous'.  Its execution pattern is controlled by the 'test 
-		master' task, which is responsible for taking this task out of the 
-		Suspended state when it is time to test the synchronisation behaviour.  
+		/* Now this task takes part in a task synchronisation - sometimes known
+		as a 'rendezvous'.  Its execution pattern is controlled by the 'test
+		master' task, which is responsible for taking this task out of the
+		Suspended state when it is time to test the synchronisation behaviour.
 		See: http://www.freertos.org/xEventGroupSync.html. */
 		vTaskSuspend( NULL );
 
@@ -326,7 +326,7 @@ EventBits_t uxSynchronisationBit, uxReturned;
 									portMAX_DELAY );/* The maximum time to wait for the sync condition to be met before giving up. */
 
 		/* A max delay was used, so this task should only exit the above
-		function call when the sync condition is met.  Check this is the 
+		function call when the sync condition is met.  Check this is the
 		case. */
 		configASSERT( ( uxReturned & ebALL_SYNC_BITS ) == ebALL_SYNC_BITS );
 
@@ -337,17 +337,17 @@ EventBits_t uxSynchronisationBit, uxReturned;
 		vTaskSuspend( NULL );
 
 		/* Set the bit that indicates this task is at the synchronisation
-		point again.  This time the 'test master' task has a higher priority 
+		point again.  This time the 'test master' task has a higher priority
 		than this task so will get to the sync point before this task. */
 		uxReturned = xEventGroupSync( xEventGroup, uxSynchronisationBit, ebALL_SYNC_BITS, portMAX_DELAY );
 
 		/* Again a max delay was used, so this task should only exit the above
-		function call when the sync condition is met.  Check this is the 
+		function call when the sync condition is met.  Check this is the
 		case. */
 		configASSERT( ( uxReturned & ebALL_SYNC_BITS ) == ebALL_SYNC_BITS );
 
 		/* Block on the event group again.  This time the event group is going
-		to be deleted while this task is blocked on it so it is expected that 0 
+		to be deleted while this task is blocked on it so it is expected that 0
 		be returned. */
 		uxReturned = xEventGroupWaitBits( xEventGroup, ebALL_SYNC_BITS, pdFALSE, pdTRUE, portMAX_DELAY );
 		configASSERT( uxReturned == 0 );
@@ -366,13 +366,13 @@ BaseType_t xError = pdFALSE;
 	for( ;; )
 	{
 		/**********************************************************************
-		* Part 1:  This section is the counterpart to the 
+		* Part 1:  This section is the counterpart to the
 		* prvBitCombinationTestMasterFunction() function which is called by the
 		* test master task.
 		***********************************************************************
 
 		This task is controller by the 'test master' task (which is
-		implemented by prvTestMasterTask()).  Suspend until resumed by the 
+		implemented by prvTestMasterTask()).  Suspend until resumed by the
 		'test master' task. */
 		vTaskSuspend( NULL );
 
@@ -384,19 +384,19 @@ BaseType_t xError = pdFALSE;
 										 pdTRUE,		/* Wait for all the bits (only one in this case anyway). */
 										 portMAX_DELAY ); /* Block indefinitely to wait for the condition to be met. */
 
-		/* The 'test master' task set all the bits defined by ebCOMBINED_BITS, 
+		/* The 'test master' task set all the bits defined by ebCOMBINED_BITS,
 		only one of which was being waited for by this task.  The return value
 		shows the state of the event bits when the task was unblocked, however
-		because the task was waiting for ebBIT_1 and 'clear on exit' was set to 
+		because the task was waiting for ebBIT_1 and 'clear on exit' was set to
 		the current state of the event bits will have ebBIT_1 clear.  */
 		if( uxReturned != ebCOMBINED_BITS )
 		{
 			xError = pdTRUE;
 		}
 
-		/* Now call xEventGroupWaitBits() again, this time waiting for all the 
-		bits in ebCOMBINED_BITS to be set.  This call should block until the 
-		'test master' task sets ebBIT_1 - which was the bit cleared in the call 
+		/* Now call xEventGroupWaitBits() again, this time waiting for all the
+		bits in ebCOMBINED_BITS to be set.  This call should block until the
+		'test master' task sets ebBIT_1 - which was the bit cleared in the call
 		to xEventGroupWaitBits() above. */
 		uxReturned = xEventGroupWaitBits( xEventGroup,
 										 ebCOMBINED_BITS, /* The bits being waited on. */
@@ -413,8 +413,8 @@ BaseType_t xError = pdFALSE;
 		/* Suspend again to wait for the 'test master' task. */
 		vTaskSuspend( NULL );
 
-		/* Now call xEventGroupWaitBits() again, again waiting for all the bits 
-		in ebCOMBINED_BITS to be set, but this time clearing the bits when the 
+		/* Now call xEventGroupWaitBits() again, again waiting for all the bits
+		in ebCOMBINED_BITS to be set, but this time clearing the bits when the
 		task is unblocked. */
 		uxReturned = xEventGroupWaitBits( xEventGroup,
 									 ebCOMBINED_BITS, /* The bits being waited on. */
@@ -422,7 +422,7 @@ BaseType_t xError = pdFALSE;
 									 pdTRUE,		  /* All the bits must be set to unblock. */
 									 portMAX_DELAY );
 
-		/* The 'test master' task set all the bits in the event group, so that 
+		/* The 'test master' task set all the bits in the event group, so that
 		is the value that should have been returned.  The bits defined by
 		ebCOMBINED_BITS will have been clear again in the current value though
 		as 'clear on exit' was set to pdTRUE. */
@@ -436,7 +436,7 @@ BaseType_t xError = pdFALSE;
 
 
 		/**********************************************************************
-		* Part 2:  This section is the counterpart to the 
+		* Part 2:  This section is the counterpart to the
 		* prvPerformTaskSyncTests() function which is called by the
 		* test master task.
 		***********************************************************************
@@ -447,7 +447,7 @@ BaseType_t xError = pdFALSE;
 		vTaskSuspend( NULL );
 
 		/* Now peform a synchronisation with all the other tasks.  At this point
-		the 'test master' task has the lowest priority so will get to the sync 
+		the 'test master' task has the lowest priority so will get to the sync
 		point after all the other synchronising tasks. */
 		uxReturned = xEventGroupSync( xEventGroup,		/* The event group used for the sync. */
 									ebWAIT_BIT_TASK_SYNC_BIT, /* The bit in the event group used to indicate this task is at the sync point. */
@@ -485,7 +485,7 @@ BaseType_t xError = pdFALSE;
 		vTaskSuspend( NULL );
 
 		/* This time sync when the 'test master' task has the highest priority
-		at the point where it sets its sync bit - so this time the 'test master' 
+		at the point where it sets its sync bit - so this time the 'test master'
 		task will get to the sync point before this task. */
 		uxReturned = xEventGroupSync( xEventGroup, ebWAIT_BIT_TASK_SYNC_BIT, ebALL_SYNC_BITS, portMAX_DELAY );
 
@@ -503,7 +503,7 @@ BaseType_t xError = pdFALSE;
 		}
 
 		/* Block on the event group again.  This time the event group is going
-		to be deleted while this task is blocked on it, so it is expected that 0 
+		to be deleted while this task is blocked on it, so it is expected that 0
 		will be returned. */
 		uxReturned = xEventGroupWaitBits( xEventGroup, ebALL_SYNC_BITS, pdFALSE, pdTRUE, portMAX_DELAY );
 
@@ -845,8 +845,8 @@ static void prvSelectiveBitsTestSlaveFunction( void )
 {
 EventBits_t uxPendBits, uxReturned;
 
-	/* Used in a test that blocks two tasks on various different bits within an 
-	event group - then sets each bit in turn and checks that the correct tasks 
+	/* Used in a test that blocks two tasks on various different bits within an
+	event group - then sets each bit in turn and checks that the correct tasks
 	unblock at the correct times.
 
 	This function is called by two different tasks - each of which will use a
@@ -864,7 +864,7 @@ EventBits_t uxPendBits, uxReturned;
 	for( ;; )
 	{
 		/* Wait until it is time to perform the next cycle of the test.  The
-		task is unsuspended by the tests implemented in the 
+		task is unsuspended by the tests implemented in the
 		prvSelectiveBitsTestMasterFunction() function. */
 		vTaskSuspend( NULL );
 		uxReturned = xEventGroupWaitBits( xEventGroup, uxPendBits, pdTRUE, pdFALSE, portMAX_DELAY );
@@ -882,9 +882,9 @@ static BaseType_t prvSelectiveBitsTestMasterFunction( void )
 BaseType_t xError = pdFALSE;
 EventBits_t uxBit;
 
-	/* Used in a test that blocks two tasks on various different bits within an 
-	event group - then sets each bit in turn and checks that the correct tasks 
-	unblock at the correct times.  The two other tasks (xSyncTask1 and 
+	/* Used in a test that blocks two tasks on various different bits within an
+	event group - then sets each bit in turn and checks that the correct tasks
+	unblock at the correct times.  The two other tasks (xSyncTask1 and
 	xSyncTask2) call prvSelectiveBitsTestSlaveFunction() to perform their parts in
 	this test.
 
@@ -980,7 +980,7 @@ const EventBits_t uxBitsToSet = 0x12U;
 EventBits_t uxReturned;
 BaseType_t xMessagePosted;
 
-	/* Called periodically from the tick hook to exercise the "FromISR" 
+	/* Called periodically from the tick hook to exercise the "FromISR"
 	functions. */
 
 	xCallCount++;

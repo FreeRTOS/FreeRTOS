@@ -410,8 +410,8 @@ void FreeRTOS_Tick_Handler( void )
 	updated. */
 	portCPU_IRQ_DISABLE();
 	portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
-	__asm(	"dsb		\n"
-			"isb		\n" );
+	__asm volatile (	"dsb		\n"
+						"isb		\n" );
 	portCPU_IRQ_ENABLE();
 
 	/* Increment the RTOS tick. */
@@ -435,7 +435,7 @@ uint32_t ulInitialFPSCR = 0;
 	ulPortTaskHasFPUContext = pdTRUE;
 
 	/* Initialise the floating point status register. */
-	__asm( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) );
+	__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) );
 }
 /*-----------------------------------------------------------*/
 
@@ -464,8 +464,8 @@ uint32_t ulReturn;
 	{
 		ulReturn = pdFALSE;
 		portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
-		__asm(	"dsb		\n"
-				"isb		\n" );
+		__asm volatile (	"dsb		\n"
+							"isb		\n" );
 	}
 	portCPU_IRQ_ENABLE();
 

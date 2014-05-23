@@ -145,6 +145,9 @@
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
 
+/* lwIP includes. */
+#include "lwip/tcpip.h"
+
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -225,6 +228,11 @@ extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriori
  */
 static void prvPseudoRandomiser( void *pvParameters );
 
+/*
+ * Defined in lwIPApps.c.
+ */
+extern void lwIPAppsInit( void *pvArguments );
+
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
@@ -233,10 +241,16 @@ then the register check tasks has not discovered any errors.  If a variable
 stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
+/* String for display in the web server.  It is set to an error message if the
+check task detects an error.  */
+char *pcStatusMessage = "All tasks running without error";
 /*-----------------------------------------------------------*/
 
 void main_full( void )
 {
+	/* Init lwIP and start lwIP tasks. */
+	tcpip_init( lwIPAppsInit, NULL );
+
 	/* Start all the other standard demo/test tasks.  They have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
@@ -409,8 +423,15 @@ unsigned long ulErrorFound = pdFALSE;
 			gone wrong (it might just be that the loop back connector required
 			by the comtest tasks has not been fitted). */
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
+			pcStatusMessage = "Error found in at least one task.";
 		}
 	}
+}
+/*-----------------------------------------------------------*/
+
+char *pcMainGetTaskStatusMessage( void )
+{
+	return pcStatusMessage;
 }
 /*-----------------------------------------------------------*/
 

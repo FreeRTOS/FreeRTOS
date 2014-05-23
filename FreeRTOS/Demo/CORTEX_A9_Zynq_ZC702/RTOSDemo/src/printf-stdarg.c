@@ -282,12 +282,4 @@ int main(void)
 #endif
 
 
-/* To keep linker happy. */
-int	write( int i, char* c, int n)
-{
-	(void)i;
-	(void)n;
-	(void)c;
-	return 0;
-}
 

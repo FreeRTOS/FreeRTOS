@@ -31,7 +31,11 @@
 									<listOptionValue builtIn="false" value="../../RTOSDemo_bsp/ps7_cortexa9_0/include"/>
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.1516519458" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/lwIP_port/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/lwIP_port/netif}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/lwip-1.4.0/src/include/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/lwip-1.4.0/src/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/FreeRTOS-Plus-CLI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
@@ -91,6 +95,9 @@
 							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.386600654" name="Resource Custom Build Step Output Type"/>
 						</tool>
 					</fileInfo>
+					<sourceEntries>
+						<entry excluding="src/Full_Demo/lwIP_port/netif/xlltemacif.c|src/Full_Demo/lwIP_port/netif/xlltemacif_sdma.c|src/Full_Demo/lwIP_port/netif/xlltemacif_physpeed.c|src/Full_Demo/lwIP_port/netif/xlltemacif_hw.h|src/Full_Demo/lwIP_port/netif/xlltemacif_hw.c|src/Full_Demo/lwIP_port/netif/xlltemacif_fifo.h|src/Full_Demo/lwIP_port/netif/xlltemacif_fifo.c|src/Full_Demo/lwIP_port/netif/xemacliteif.c|src/Full_Demo/lwIP_port/netif/xaxiemacif.c|src/Full_Demo/lwIP_port/netif/xaxiemacif_physpeed.c|src/Full_Demo/lwIP_port/netif/xaxiemacif_hw.h|src/Full_Demo/lwIP_port/netif/xaxiemacif_hw.c|src/Full_Demo/lwIP_port/netif/xaxiemacif_fifo.h|src/Full_Demo/lwIP_port/netif/xaxiemacif_fifo.c|src/Full_Demo/lwIP_port/netif/xaxiemacif_dma.c|src/Full_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c|src/Full_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/makefsdata" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -182,6 +189,13 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMGCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

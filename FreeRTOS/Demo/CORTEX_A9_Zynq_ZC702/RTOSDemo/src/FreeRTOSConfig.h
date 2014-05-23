@@ -117,7 +117,7 @@
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 7 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 200 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 65536 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 80 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -202,6 +202,32 @@ Zynq MPU. */
 #define configINTERRUPT_CONTROLLER_BASE_ADDRESS 		( XPAR_PS7_SCUGIC_0_DIST_BASEADDR )
 #define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET ( -0xf00 )
 #define configUNIQUE_INTERRUPT_PRIORITIES				32
+
+
+
+/****** Network configuration settings. ***************************************/
+
+#define configLWIP_TASK_PRIORITY			( 5 )
+
+/* MAC address configuration. */
+#define configMAC_ADDR0	0x00
+#define configMAC_ADDR1	0x13
+#define configMAC_ADDR2	0x14
+#define configMAC_ADDR3	0x15
+#define configMAC_ADDR4	0x15
+#define configMAC_ADDR5	0x16
+
+/* IP address configuration. */
+#define configIP_ADDR0		10
+#define configIP_ADDR1		134
+#define configIP_ADDR2		134
+#define configIP_ADDR3		210
+
+/* Netmask configuration. */
+#define configNET_MASK0		255
+#define configNET_MASK1		255
+#define configNET_MASK2		255
+#define configNET_MASK3		0
 
 #endif /* FREERTOS_CONFIG_H */
 

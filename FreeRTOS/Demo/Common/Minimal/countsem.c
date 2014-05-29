@@ -95,7 +95,7 @@ count value set to the maximum, and one with the count value set to zero. */
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
 detected in any of the tasks. */
-static volatile portBASE_TYPE xErrorDetected = pdFALSE;
+static volatile BaseType_t xErrorDetected = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -111,13 +111,13 @@ static void prvCountingSemaphoreTask( void *pvParameters );
  * Utility function to increment the semaphore count value up from zero to
  * countMAX_COUNT_VALUE.
  */
-static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter );
+static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter );
 
 /*
  * Utility function to decrement the semaphore count value up from 
  * countMAX_COUNT_VALUE to zero.
  */
-static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter );
+static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter );
 
 /*-----------------------------------------------------------*/
 
@@ -130,11 +130,11 @@ typedef struct COUNT_SEM_STRUCT
 	/* Set to countSTART_AT_MAX_COUNT if the semaphore should be created with
 	its count value set to its max count value, or countSTART_AT_ZERO if it
 	should have been created with its count value set to 0. */
-	unsigned portBASE_TYPE uxExpectedStartCount;	
+	UBaseType_t uxExpectedStartCount;	
 
 	/* Incremented on each cycle of the demo task.  Used to detect a stalled
 	task. */
-	unsigned portBASE_TYPE uxLoopCounter;			
+	UBaseType_t uxLoopCounter;			
 } xCountSemStruct;
 
 /* Two structures are defined, one is passed to each test task. */
@@ -175,9 +175,9 @@ void vStartCountingSemaphoreTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter )
+static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter )
 {
-unsigned portBASE_TYPE ux;
+UBaseType_t ux;
 
 	/* If the semaphore count is at its maximum then we should not be able to
 	'give' the semaphore. */
@@ -211,9 +211,9 @@ unsigned portBASE_TYPE ux;
 }
 /*-----------------------------------------------------------*/
 
-static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, unsigned portBASE_TYPE *puxLoopCounter )
+static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter )
 {
-unsigned portBASE_TYPE ux;
+UBaseType_t ux;
 
 	/* If the semaphore count is zero then we should not be able to	'take' 
 	the semaphore. */
@@ -285,10 +285,10 @@ xCountSemStruct *pxParameter;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreCountingSemaphoreTasksStillRunning( void )
+BaseType_t xAreCountingSemaphoreTasksStillRunning( void )
 {
-static unsigned portBASE_TYPE uxLastCount0 = 0, uxLastCount1 = 0;
-portBASE_TYPE xReturn = pdPASS;
+static UBaseType_t uxLastCount0 = 0, uxLastCount1 = 0;
+BaseType_t xReturn = pdPASS;
 
 	/* Return fail if any 'give' or 'take' did not result in the expected
 	behaviour. */

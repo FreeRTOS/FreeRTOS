@@ -88,7 +88,7 @@
 Changes from V2.0.0
 
 	+ Delay periods are now specified using variables and constants of
-	  TickType_t rather than unsigned long.
+	  TickType_t rather than uint32_t.
 */
 
 #include <stdlib.h>
@@ -106,8 +106,8 @@ Changes from V2.0.0
 #define pollqPRODUCER_DELAY		( ( TickType_t ) 200 / portTICK_PERIOD_MS )
 #define pollqCONSUMER_DELAY		( pollqPRODUCER_DELAY - ( TickType_t ) ( 20 / portTICK_PERIOD_MS ) )
 #define pollqNO_DELAY			( ( TickType_t ) 0 )
-#define pollqVALUES_TO_PRODUCE	( ( signed portBASE_TYPE ) 3 )
-#define pollqINITIAL_VALUE		( ( signed portBASE_TYPE ) 0 )
+#define pollqVALUES_TO_PRODUCE	( ( BaseType_t ) 3 )
+#define pollqINITIAL_VALUE		( ( BaseType_t ) 0 )
 
 /* The task that posts the incrementing number onto the queue. */
 static portTASK_FUNCTION_PROTO( vPolledQueueProducer, pvParameters );
@@ -117,16 +117,16 @@ static portTASK_FUNCTION_PROTO( vPolledQueueConsumer, pvParameters );
 
 /* Variables that are used to check that the tasks are still running with no
 errors. */
-static volatile signed portBASE_TYPE xPollingConsumerCount = pollqINITIAL_VALUE, xPollingProducerCount = pollqINITIAL_VALUE;
+static volatile BaseType_t xPollingConsumerCount = pollqINITIAL_VALUE, xPollingProducerCount = pollqINITIAL_VALUE;
 
 /*-----------------------------------------------------------*/
 
-void vStartAltPolledQueueTasks( unsigned portBASE_TYPE uxPriority )
+void vStartAltPolledQueueTasks( UBaseType_t uxPriority )
 {
 static QueueHandle_t xPolledQueue;
 
 	/* Create the queue used by the producer and consumer. */
-	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
+	xPolledQueue = xQueueCreate( pollqQUEUE_SIZE, ( UBaseType_t ) sizeof( uint16_t ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware 
@@ -145,8 +145,8 @@ static QueueHandle_t xPolledQueue;
 
 static portTASK_FUNCTION( vPolledQueueProducer, pvParameters )
 {
-unsigned short usValue = ( unsigned short ) 0;
-signed portBASE_TYPE xError = pdFALSE, xLoop;
+uint16_t usValue = ( uint16_t ) 0;
+BaseType_t xError = pdFALSE, xLoop;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
@@ -193,8 +193,8 @@ signed portBASE_TYPE xError = pdFALSE, xLoop;
 
 static portTASK_FUNCTION( vPolledQueueConsumer, pvParameters )
 {
-unsigned short usData, usExpectedValue = ( unsigned short ) 0;
-signed portBASE_TYPE xError = pdFALSE;
+uint16_t usData, usExpectedValue = ( uint16_t ) 0;
+BaseType_t xError = pdFALSE;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
@@ -247,9 +247,9 @@ signed portBASE_TYPE xError = pdFALSE;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running with no errors. */
-portBASE_TYPE xAreAltPollingQueuesStillRunning( void )
+BaseType_t xAreAltPollingQueuesStillRunning( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	/* Check both the consumer and producer poll count to check they have both
 	been changed since out last trip round.  We do not need a critical section

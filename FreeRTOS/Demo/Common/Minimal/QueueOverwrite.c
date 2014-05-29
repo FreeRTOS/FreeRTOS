@@ -87,11 +87,11 @@ static void prvQueueOverwriteTask( void *pvParameters );
 
 /* Variable that is incremented on each loop of prvQueueOverwriteTask() provided
 prvQueueOverwriteTask() has not found any errors. */
-static unsigned long ulLoopCounter = 0;
+static uint32_t ulLoopCounter = 0;
 
 /* Set to pdFALSE if an error is discovered by the
 vQueueOverwritePeriodicISRDemo() function. */
-static portBASE_TYPE xISRTestStatus = pdPASS;
+static BaseType_t xISRTestStatus = pdPASS;
 
 /* The queue that is accessed from the ISR.  The queue accessed by the task is
 created inside the task itself. */
@@ -99,13 +99,13 @@ static QueueHandle_t xISRQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
-void vStartQueueOverwriteTask( unsigned portBASE_TYPE uxPriority )
+void vStartQueueOverwriteTask( UBaseType_t uxPriority )
 {
-const unsigned portBASE_TYPE uxQueueLength = 1;
+const UBaseType_t uxQueueLength = 1;
 
 	/* Create the queue used by the ISR.  xQueueOverwriteFromISR() should only
 	be used on queues that have a length of 1. */
-	xISRQueue = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( unsigned long ) );
+	xISRQueue = xQueueCreate( uxQueueLength, ( UBaseType_t ) sizeof( uint32_t ) );
 
 	/* Create the test task.  The queue used by the test task is created inside
 	the task itself. */
@@ -116,15 +116,15 @@ const unsigned portBASE_TYPE uxQueueLength = 1;
 static void prvQueueOverwriteTask( void *pvParameters )
 {
 QueueHandle_t xTaskQueue;
-const unsigned portBASE_TYPE uxQueueLength = 1;
-unsigned long ulValue, ulStatus = pdPASS, x;
+const UBaseType_t uxQueueLength = 1;
+uint32_t ulValue, ulStatus = pdPASS, x;
 
 	/* The parameter is not used. */
 	( void ) pvParameters;
 
 	/* Create the queue.  xQueueOverwrite() should only be used on queues that
 	have a length of 1. */
-	xTaskQueue = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( unsigned long ) );
+	xTaskQueue = xQueueCreate( uxQueueLength, ( UBaseType_t ) sizeof( uint32_t ) );
 	configASSERT( xTaskQueue );
 
 	for( ;; )
@@ -186,9 +186,9 @@ unsigned long ulValue, ulStatus = pdPASS, x;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xIsQueueOverwriteTaskStillRunning( void )
+BaseType_t xIsQueueOverwriteTaskStillRunning( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	if( xISRTestStatus != pdPASS )
 	{
@@ -212,9 +212,9 @@ portBASE_TYPE xReturn;
 
 void vQueueOverwritePeriodicISRDemo( void )
 {
-static unsigned long ulCallCount = 0;
-const unsigned long ulTx1 = 10UL, ulTx2 = 20UL, ulNumberOfSwitchCases = 3UL;
-unsigned long ulRx;
+static uint32_t ulCallCount = 0;
+const uint32_t ulTx1 = 10UL, ulTx2 = 20UL, ulNumberOfSwitchCases = 3UL;
+uint32_t ulRx;
 
 	/* This function should be called from an interrupt, such as the tick hook
 	function vApplicationTickHook(). */

@@ -152,12 +152,12 @@ static void vComRxTask( void *pvParameters );
 
 /* The Rx task will toggle LED ( uxBaseLED + comRX_LED_OFFSET).  The Tx task
 will toggle LED ( uxBaseLED + comTX_LED_OFFSET ). */
-static unsigned portBASE_TYPE uxBaseLED = 0;
+static UBaseType_t uxBaseLED = 0;
 
 /* The Rx task toggles uxRxLoops on each successful iteration of its defined
 function - provided no errors have ever been latched.  If this variable stops
 incrementing, then an error has occurred. */
-static volatile unsigned portBASE_TYPE uxRxLoops = 0UL;
+static volatile UBaseType_t uxRxLoops = 0UL;
 
 /* The timer used to periodically transmit the string.  This is the timer that
 has prvComTxTimerCallback allocated to it as its callback function. */
@@ -169,7 +169,7 @@ static size_t xStringLength = 0U;
 
 /*-----------------------------------------------------------*/
 
-void vStartComTestStringsTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulBaudRate, unsigned portBASE_TYPE uxLED )
+void vStartComTestStringsTasks( UBaseType_t uxPriority, uint32_t ulBaudRate, UBaseType_t uxLED )
 {
 	/* Store values that are used at run time. */
 	uxBaseLED = uxLED;
@@ -232,7 +232,7 @@ TickType_t xTimeToWait;
 
 static void vComRxTask( void *pvParameters )
 {
-portBASE_TYPE xState = comtstWAITING_START_OF_STRING, xErrorOccurred = pdFALSE;
+BaseType_t xState = comtstWAITING_START_OF_STRING, xErrorOccurred = pdFALSE;
 char *pcExpectedByte, cRxedChar;
 const xComPortHandle xPort = NULL;
 
@@ -324,9 +324,9 @@ const xComPortHandle xPort = NULL;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreComTestTasksStillRunning( void )
+BaseType_t xAreComTestTasksStillRunning( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	/* If the count of successful reception loops has not changed than at
 	some time an error occurred (i.e. a character was received out of sequence)

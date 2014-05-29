@@ -118,20 +118,20 @@ static portTASK_FUNCTION_PROTO( vBlockingQueueConsumer, pvParameters );
 /* Variables which are incremented each time an item is removed from a queue, and
 found to be the expected value.
 These are used to check that the tasks are still running. */
-static volatile short sBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
+static volatile short sBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( uint16_t ) 0, ( uint16_t ) 0, ( uint16_t ) 0 };
 
 /* Variable which are incremented each time an item is posted on a queue.   These
 are used to check that the tasks are still running. */
-static volatile short sBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
+static volatile short sBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( uint16_t ) 0, ( uint16_t ) 0, ( uint16_t ) 0 };
 
 /*-----------------------------------------------------------*/
 
-void vStartBlockingQueueTasks( unsigned portBASE_TYPE uxPriority )
+void vStartBlockingQueueTasks( UBaseType_t uxPriority )
 {
 xBlockingQueueParameters *pxQueueParameters1, *pxQueueParameters2;
 xBlockingQueueParameters *pxQueueParameters3, *pxQueueParameters4;
 xBlockingQueueParameters *pxQueueParameters5, *pxQueueParameters6;
-const unsigned portBASE_TYPE uxQueueSize1 = 1, uxQueueSize5 = 5;
+const UBaseType_t uxQueueSize1 = 1, uxQueueSize5 = 5;
 const TickType_t xBlockTime = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
 const TickType_t xDontBlock = ( TickType_t ) 0;
 
@@ -142,7 +142,7 @@ const TickType_t xDontBlock = ( TickType_t ) 0;
 
 	/* Create the queue used by the first two tasks to pass the incrementing number.
 	Pass a pointer to the queue in the parameter structure. */
-	pxQueueParameters1->xQueue = xQueueCreate( uxQueueSize1, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
+	pxQueueParameters1->xQueue = xQueueCreate( uxQueueSize1, ( UBaseType_t ) sizeof( uint16_t ) );
 
 	/* The consumer is created first so gets a block time as described above. */
 	pxQueueParameters1->xBlockTime = xBlockTime;
@@ -177,7 +177,7 @@ const TickType_t xDontBlock = ( TickType_t ) 0;
 	the same mechanism but reverses the task priorities. */
 
 	pxQueueParameters3 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-	pxQueueParameters3->xQueue = xQueueCreate( uxQueueSize1, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
+	pxQueueParameters3->xQueue = xQueueCreate( uxQueueSize1, ( UBaseType_t ) sizeof( uint16_t ) );
 	pxQueueParameters3->xBlockTime = xDontBlock;
 	pxQueueParameters3->psCheckVariable = &( sBlockingProducerCount[ 1 ] );
 
@@ -194,7 +194,7 @@ const TickType_t xDontBlock = ( TickType_t ) 0;
 	/* Create the last two tasks as described above.  The mechanism is again just
 	the same.  This time both parameter structures are given a block time. */
 	pxQueueParameters5 = ( xBlockingQueueParameters * ) pvPortMalloc( sizeof( xBlockingQueueParameters ) );
-	pxQueueParameters5->xQueue = xQueueCreate( uxQueueSize5, ( unsigned portBASE_TYPE ) sizeof( unsigned short ) );
+	pxQueueParameters5->xQueue = xQueueCreate( uxQueueSize5, ( UBaseType_t ) sizeof( uint16_t ) );
 	pxQueueParameters5->xBlockTime = xBlockTime;
 	pxQueueParameters5->psCheckVariable = &( sBlockingProducerCount[ 2 ] );
 
@@ -210,7 +210,7 @@ const TickType_t xDontBlock = ( TickType_t ) 0;
 
 static portTASK_FUNCTION( vBlockingQueueProducer, pvParameters )
 {
-unsigned short usValue = 0;
+uint16_t usValue = 0;
 xBlockingQueueParameters *pxQueueParameters;
 short sErrorEverOccurred = pdFALSE;
 
@@ -245,7 +245,7 @@ short sErrorEverOccurred = pdFALSE;
 
 static portTASK_FUNCTION( vBlockingQueueConsumer, pvParameters )
 {
-unsigned short usData, usExpectedValue = 0;
+uint16_t usData, usExpectedValue = 0;
 xBlockingQueueParameters *pxQueueParameters;
 short sErrorEverOccurred = pdFALSE;
 
@@ -290,11 +290,11 @@ short sErrorEverOccurred = pdFALSE;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreBlockingQueuesStillRunning( void )
+BaseType_t xAreBlockingQueuesStillRunning( void )
 {
-static short sLastBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
-static short sLastBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( unsigned short ) 0, ( unsigned short ) 0, ( unsigned short ) 0 };
-portBASE_TYPE xReturn = pdPASS, xTasks;
+static short sLastBlockingConsumerCount[ blckqNUM_TASK_SETS ] = { ( uint16_t ) 0, ( uint16_t ) 0, ( uint16_t ) 0 };
+static short sLastBlockingProducerCount[ blckqNUM_TASK_SETS ] = { ( uint16_t ) 0, ( uint16_t ) 0, ( uint16_t ) 0 };
+BaseType_t xReturn = pdPASS, xTasks;
 
 	/* Not too worried about mutual exclusion on these variables as they are 16
 	bits and we are only reading them. We also only care to see if they have

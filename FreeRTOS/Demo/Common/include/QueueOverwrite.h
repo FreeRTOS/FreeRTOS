@@ -66,8 +66,8 @@
 #ifndef QUEUE_OVERWRITE_H
 #define QUEUE_OVERWRITE_H
 
-void vStartQueueOverwriteTask( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xIsQueueOverwriteTaskStillRunning( void );
+void vStartQueueOverwriteTask( UBaseType_t uxPriority );
+BaseType_t xIsQueueOverwriteTaskStillRunning( void );
 void vQueueOverwritePeriodicISRDemo( void );
 
 #endif /* QUEUE_OVERWRITE_H */

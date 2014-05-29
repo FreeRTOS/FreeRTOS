@@ -115,7 +115,7 @@ posted to the 'hook' co-routines. */
 /*
  * The co-routine function itself.
  */
-static void prvHookCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
+static void prvHookCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex );
 
 
 /*
@@ -138,20 +138,20 @@ The hood function transmits (Tx's) on these queues.  One queue per
 static QueueHandle_t xHookTxQueues[ hookNUM_HOOK_CO_ROUTINES ];
 
 /* Set to true if an error is detected at any time. */
-static portBASE_TYPE xCoRoutineErrorDetected = pdFALSE;
+static BaseType_t xCoRoutineErrorDetected = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
 void vStartHookCoRoutines( void )
 {
-unsigned portBASE_TYPE uxIndex, uxValueToPost = 0;
+UBaseType_t uxIndex, uxValueToPost = 0;
 
 	for( uxIndex = 0; uxIndex < hookNUM_HOOK_CO_ROUTINES; uxIndex++ )
 	{
 		/* Create a queue to transmit to and receive from each 'hook' 
 		co-routine. */
-		xHookRxQueues[ uxIndex ] = xQueueCreate( hookHOOK_QUEUE_LENGTH, sizeof( unsigned portBASE_TYPE ) );
-		xHookTxQueues[ uxIndex ] = xQueueCreate( hookHOOK_QUEUE_LENGTH, sizeof( unsigned portBASE_TYPE ) );
+		xHookRxQueues[ uxIndex ] = xQueueCreate( hookHOOK_QUEUE_LENGTH, sizeof( UBaseType_t ) );
+		xHookTxQueues[ uxIndex ] = xQueueCreate( hookHOOK_QUEUE_LENGTH, sizeof( UBaseType_t ) );
 
 		/* To start things off the tick hook function expects the queue it 
 		uses to receive data to contain a value.  */
@@ -163,11 +163,11 @@ unsigned portBASE_TYPE uxIndex, uxValueToPost = 0;
 }
 /*-----------------------------------------------------------*/
 
-static unsigned portBASE_TYPE uxCallCounter = 0, uxNumberToPost = 0;
+static UBaseType_t uxCallCounter = 0, uxNumberToPost = 0;
 void vApplicationTickHook( void )
 {
-unsigned portBASE_TYPE uxReceivedNumber;
-signed portBASE_TYPE xIndex, xCoRoutineWoken;
+UBaseType_t uxReceivedNumber;
+BaseType_t xIndex, xCoRoutineWoken;
 
 	/* Is it time to talk to the 'hook' co-routines again? */
 	uxCallCounter++;
@@ -217,10 +217,10 @@ signed portBASE_TYPE xIndex, xCoRoutineWoken;
 }
 /*-----------------------------------------------------------*/
 
-static void prvHookCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
+static void prvHookCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
 {
-static unsigned portBASE_TYPE uxReceivedValue[ hookNUM_HOOK_CO_ROUTINES ];
-portBASE_TYPE xResult;
+static UBaseType_t uxReceivedValue[ hookNUM_HOOK_CO_ROUTINES ];
+BaseType_t xResult;
 
 	/* Each co-routine MUST start with a call to crSTART(); */
 	crSTART( xHandle );
@@ -254,7 +254,7 @@ portBASE_TYPE xResult;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreHookCoRoutinesStillRunning( void )
+BaseType_t xAreHookCoRoutinesStillRunning( void )
 {
 	if( xCoRoutineErrorDetected )
 	{

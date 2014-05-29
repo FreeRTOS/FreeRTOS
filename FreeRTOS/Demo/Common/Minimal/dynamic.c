@@ -146,7 +146,7 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 #define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
 #define priSLEEP_TIME				( ( TickType_t ) 128 / portTICK_PERIOD_MS )
 #define priLOOPS					( 5 )
-#define priMAX_COUNT				( ( unsigned long ) 0xff )
+#define priMAX_COUNT				( ( uint32_t ) 0xff )
 #define priNO_BLOCK					( ( TickType_t ) 0 )
 #define priSUSPENDED_QUEUE_LENGTH	( 1 )
 
@@ -158,15 +158,15 @@ static TaskHandle_t xContinuousIncrementHandle, xLimitedIncrementHandle;
 
 /* The shared counter variable.  This is passed in as a parameter to the two
 counter variables for demonstration purposes. */
-static volatile unsigned long ulCounter;
+static volatile uint32_t ulCounter;
 
 /* Variables used to check that the tasks are still operating without error.
 Each complete iteration of the controller task increments this variable
 provided no errors have been found.  The variable maintaining the same value
 is therefore indication of an error. */
-static volatile unsigned short usCheckVariable = ( unsigned short ) 0;
-static volatile portBASE_TYPE xSuspendedQueueSendError = pdFALSE;
-static volatile portBASE_TYPE xSuspendedQueueReceiveError = pdFALSE;
+static volatile uint16_t usCheckVariable = ( uint16_t ) 0;
+static volatile BaseType_t xSuspendedQueueSendError = pdFALSE;
+static volatile BaseType_t xSuspendedQueueReceiveError = pdFALSE;
 
 /* Queue used by the second test. */
 QueueHandle_t xSuspendedTestQueue;
@@ -174,7 +174,7 @@ QueueHandle_t xSuspendedTestQueue;
 /* The value the queue receive task expects to receive next.  This is file
 scope so xAreDynamicPriorityTasksStillRunning() can ensure it is still
 incrementing. */
-static unsigned long ulExpectedValue = ( unsigned long ) 0;
+static uint32_t ulExpectedValue = ( uint32_t ) 0;
 
 /*-----------------------------------------------------------*/
 /*
@@ -183,7 +183,7 @@ static unsigned long ulExpectedValue = ( unsigned long ) 0;
  */
 void vStartDynamicPriorityTasks( void )
 {
-	xSuspendedTestQueue = xQueueCreate( priSUSPENDED_QUEUE_LENGTH, sizeof( unsigned long ) );
+	xSuspendedTestQueue = xQueueCreate( priSUSPENDED_QUEUE_LENGTH, sizeof( uint32_t ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware
@@ -207,11 +207,11 @@ void vStartDynamicPriorityTasks( void )
  */
 static portTASK_FUNCTION( vLimitedIncrementTask, pvParameters )
 {
-unsigned long *pulCounter;
+uint32_t *pulCounter;
 
 	/* Take a pointer to the shared variable from the parameters passed into
 	the task. */
-	pulCounter = ( unsigned long * ) pvParameters;
+	pulCounter = ( uint32_t * ) pvParameters;
 
 	/* This will run before the control task, so the first thing it does is
 	suspend - the control task will resume it when ready. */
@@ -236,12 +236,12 @@ unsigned long *pulCounter;
  */
 static portTASK_FUNCTION( vContinuousIncrementTask, pvParameters )
 {
-volatile unsigned long *pulCounter;
-unsigned portBASE_TYPE uxOurPriority;
+volatile uint32_t *pulCounter;
+UBaseType_t uxOurPriority;
 
 	/* Take a pointer to the shared variable from the parameters passed into
 	the task. */
-	pulCounter = ( unsigned long * ) pvParameters;
+	pulCounter = ( uint32_t * ) pvParameters;
 
 	/* Query our priority so we can raise it when exclusive access to the
 	shared variable is required. */
@@ -272,7 +272,7 @@ unsigned portBASE_TYPE uxOurPriority;
  */
 static portTASK_FUNCTION( vCounterControlTask, pvParameters )
 {
-unsigned long ulLastCounter;
+uint32_t ulLastCounter;
 short sLoops;
 short sError = pdFALSE;
 
@@ -282,7 +282,7 @@ short sError = pdFALSE;
 	for( ;; )
 	{
 		/* Start with the counter at zero. */
-		ulCounter = ( unsigned long ) 0;
+		ulCounter = ( uint32_t ) 0;
 
 		/* First section : */
 
@@ -340,7 +340,7 @@ short sError = pdFALSE;
 		vTaskSuspend( xContinuousIncrementHandle );
 
 		/* Reset the variable. */
-		ulCounter = ( unsigned long ) 0;
+		ulCounter = ( uint32_t ) 0;
 
 		#if( INCLUDE_eTaskGetState == 1 )
 		{
@@ -391,7 +391,7 @@ short sError = pdFALSE;
 
 static portTASK_FUNCTION( vQueueSendWhenSuspendedTask, pvParameters )
 {
-static unsigned long ulValueToSend = ( unsigned long ) 0;
+static uint32_t ulValueToSend = ( uint32_t ) 0;
 
 	/* Just to stop warning messages. */
 	( void ) pvParameters;
@@ -417,8 +417,8 @@ static unsigned long ulValueToSend = ( unsigned long ) 0;
 
 static portTASK_FUNCTION( vQueueReceiveWhenSuspendedTask, pvParameters )
 {
-unsigned long ulReceivedValue;
-portBASE_TYPE xGotValue;
+uint32_t ulReceivedValue;
+BaseType_t xGotValue;
 
 	/* Just to stop warning messages. */
 	( void ) pvParameters;
@@ -470,13 +470,13 @@ portBASE_TYPE xGotValue;
 /*-----------------------------------------------------------*/
 
 /* Called to check that all the created tasks are still running without error. */
-portBASE_TYPE xAreDynamicPriorityTasksStillRunning( void )
+BaseType_t xAreDynamicPriorityTasksStillRunning( void )
 {
 /* Keep a history of the check variables so we know if it has been incremented
 since the last call. */
-static unsigned short usLastTaskCheck = ( unsigned short ) 0;
-static unsigned long ulLastExpectedValue = ( unsigned long ) 0U;
-portBASE_TYPE xReturn = pdTRUE;
+static uint16_t usLastTaskCheck = ( uint16_t ) 0;
+static uint32_t ulLastExpectedValue = ( uint32_t ) 0U;
+BaseType_t xReturn = pdTRUE;
 
 	/* Check the tasks are still running by ensuring the check variable
 	is still incrementing. */

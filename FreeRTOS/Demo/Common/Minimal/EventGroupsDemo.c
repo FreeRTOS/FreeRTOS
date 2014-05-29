@@ -188,7 +188,7 @@ static void prvSelectiveBitsTestSlaveFunction( void );
 
 /* Variables that are incremented by the tasks on each cycle provided no errors
 have been found.  Used to detect an error or stall in the test cycling. */
-static volatile unsigned long ulTestMasterCycles = 0, ulTestSlaveCycles = 0, ulISRCycles = 0;
+static volatile uint32_t ulTestMasterCycles = 0, ulTestSlaveCycles = 0, ulISRCycles = 0;
 
 /* The event group used by all the task based tests. */
 static EventGroupHandle_t xEventGroup = NULL;
@@ -1045,7 +1045,7 @@ BaseType_t xMessagePosted;
 /* This is called to check that all the created tasks are still running. */
 BaseType_t xAreEventGroupTasksStillRunning( void )
 {
-static unsigned long ulPreviousWaitBitCycles = 0, ulPreviousSetBitCycles = 0, ulPreviousISRCycles = 0;
+static uint32_t ulPreviousWaitBitCycles = 0, ulPreviousSetBitCycles = 0, ulPreviousISRCycles = 0;
 BaseType_t xStatus = pdPASS;
 
 	/* Check the tasks are still cycling without finding any errors. */

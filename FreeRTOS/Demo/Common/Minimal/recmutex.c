@@ -132,8 +132,8 @@ static void prvRecursiveMutexPollingTask( void *pvParameters );
 static SemaphoreHandle_t xMutex;
 
 /* Variables used to detect and latch errors. */
-static volatile portBASE_TYPE xErrorOccurred = pdFALSE, xControllingIsSuspended = pdFALSE, xBlockingIsSuspended = pdFALSE;
-static volatile unsigned portBASE_TYPE uxControllingCycles = 0, uxBlockingCycles = 0, uxPollingCycles = 0;
+static volatile BaseType_t xErrorOccurred = pdFALSE, xControllingIsSuspended = pdFALSE, xBlockingIsSuspended = pdFALSE;
+static volatile UBaseType_t uxControllingCycles = 0, uxBlockingCycles = 0, uxPollingCycles = 0;
 
 /* Handles of the two higher priority tasks, required so they can be resumed
 (unsuspended). */
@@ -167,7 +167,7 @@ void vStartRecursiveMutexTasks( void )
 
 static void prvRecursiveMutexControllingTask( void *pvParameters )
 {
-unsigned portBASE_TYPE ux;
+UBaseType_t ux;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -388,10 +388,10 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreRecursiveMutexTasksStillRunning( void )
+BaseType_t xAreRecursiveMutexTasksStillRunning( void )
 {
-portBASE_TYPE xReturn;
-static unsigned portBASE_TYPE uxLastControllingCycles = 0, uxLastBlockingCycles = 0, uxLastPollingCycles = 0;
+BaseType_t xReturn;
+static UBaseType_t uxLastControllingCycles = 0, uxLastBlockingCycles = 0, uxLastPollingCycles = 0;
 
 	/* Is the controlling task still cycling? */
 	if( uxLastControllingCycles == uxControllingCycles )

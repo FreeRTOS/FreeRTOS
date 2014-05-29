@@ -66,8 +66,8 @@
 #ifndef ALT_POLLED_Q_H
 #define ALT_POLLED_Q_H
 
-void vStartAltPolledQueueTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xAreAltPollingQueuesStillRunning( void );
+void vStartAltPolledQueueTasks( UBaseType_t uxPriority );
+BaseType_t xAreAltPollingQueuesStillRunning( void );
 
 #endif
 

@@ -67,7 +67,7 @@
 #define DYNAMIC_MANIPULATION_H
 
 void vStartDynamicPriorityTasks( void );
-portBASE_TYPE xAreDynamicPriorityTasksStillRunning( void );
+BaseType_t xAreDynamicPriorityTasksStillRunning( void );
 
 #endif
 

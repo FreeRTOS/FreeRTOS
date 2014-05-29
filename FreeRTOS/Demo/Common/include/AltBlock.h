@@ -67,7 +67,7 @@
 #define FAST_BLOCK_TIME_TEST_H
 
 void vCreateAltBlockTimeTasks( void );
-portBASE_TYPE xAreAltBlockTimeTestTasksStillRunning( void );
+BaseType_t xAreAltBlockTimeTestTasksStillRunning( void );
 
 #endif
 

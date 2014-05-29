@@ -127,7 +127,7 @@ don't have to block to send. */
 #define comFIRST_BYTE				( 'A' )
 #define comLAST_BYTE				( 'X' )
 
-#define comBUFFER_LEN				( ( unsigned portBASE_TYPE ) ( comLAST_BYTE - comFIRST_BYTE ) + ( unsigned portBASE_TYPE ) 1 )
+#define comBUFFER_LEN				( ( UBaseType_t ) ( comLAST_BYTE - comFIRST_BYTE ) + ( UBaseType_t ) 1 )
 #define comINITIAL_RX_COUNT_VALUE	( 0 )
 
 /* Handle to the com port used by both tasks. */
@@ -142,16 +142,16 @@ static portTASK_FUNCTION_PROTO( vComRxTask, pvParameters );
 /* The LED that should be toggled by the Rx and Tx tasks.  The Rx task will
 toggle LED ( uxBaseLED + comRX_LED_OFFSET).  The Tx task will toggle LED
 ( uxBaseLED + comTX_LED_OFFSET ). */
-static unsigned portBASE_TYPE uxBaseLED = 0;
+static UBaseType_t uxBaseLED = 0;
 
 /* Check variable used to ensure no error have occurred.  The Rx task will
 increment this variable after every successfully received sequence.  If at any
 time the sequence is incorrect the the variable will stop being incremented. */
-static volatile unsigned portBASE_TYPE uxRxLoops = comINITIAL_RX_COUNT_VALUE;
+static volatile UBaseType_t uxRxLoops = comINITIAL_RX_COUNT_VALUE;
 
 /*-----------------------------------------------------------*/
 
-void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulBaudRate, unsigned portBASE_TYPE uxLED )
+void vAltStartComTestTasks( UBaseType_t uxPriority, uint32_t ulBaudRate, UBaseType_t uxLED )
 {
 	/* Initialise the com port then spawn the Rx and Tx tasks. */
 	uxBaseLED = uxLED;
@@ -208,7 +208,7 @@ TickType_t xTimeToWait;
 static portTASK_FUNCTION( vComRxTask, pvParameters )
 {
 signed char cExpectedByte, cByteRxed;
-portBASE_TYPE xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
+BaseType_t xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
@@ -278,9 +278,9 @@ portBASE_TYPE xResyncRequired = pdFALSE, xErrorOccurred = pdFALSE;
 } /*lint !e715 !e818 pvParameters is required for a task function even if it is not referenced. */
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreComTestTasksStillRunning( void )
+BaseType_t xAreComTestTasksStillRunning( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	/* If the count of successful reception loops has not changed than at
 	some time an error occurred (i.e. a character was received out of sequence)

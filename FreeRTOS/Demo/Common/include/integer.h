@@ -66,8 +66,8 @@
 #ifndef INTEGER_TASKS_H
 #define INTEGER_TASKS_H
 
-void vStartIntegerMathTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xAreIntegerMathsTaskStillRunning( void );
+void vStartIntegerMathTasks( UBaseType_t uxPriority );
+BaseType_t xAreIntegerMathsTaskStillRunning( void );
 
 #endif
 

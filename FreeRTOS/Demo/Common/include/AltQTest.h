@@ -66,8 +66,8 @@
 #ifndef FAST_GEN_Q_TEST_H
 #define FAST_GEN_Q_TEST_H
 
-void vStartAltGenericQueueTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xAreAltGenericQueueTasksStillRunning( void );
+void vStartAltGenericQueueTasks( UBaseType_t uxPriority );
+BaseType_t xAreAltGenericQueueTasksStillRunning( void );
 
 #endif /* GEN_Q_TEST_H */
 

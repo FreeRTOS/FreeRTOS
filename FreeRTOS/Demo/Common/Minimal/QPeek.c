@@ -106,11 +106,11 @@ static void prvHighestPriorityPeekTask( void *pvParameters );
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
 detected in any of the tasks. */
-static volatile portBASE_TYPE xErrorDetected = pdFALSE;
+static volatile BaseType_t xErrorDetected = pdFALSE;
 
 /* Counter that is incremented on each cycle of a test.  This is used to
 detect a stalled task - a test that is no longer running. */
-static volatile unsigned long ulLoopCounter = 0;
+static volatile uint32_t ulLoopCounter = 0;
 
 /* Handles to the test tasks. */
 TaskHandle_t xMediumPriorityTask, xHighPriorityTask, xHighestPriorityTask;
@@ -121,7 +121,7 @@ void vStartQueuePeekTasks( void )
 QueueHandle_t xQueue;
 
 	/* Create the queue that we are going to use for the test/demo. */
-	xQueue = xQueueCreate( qpeekQUEUE_LENGTH, sizeof( unsigned long ) );
+	xQueue = xQueueCreate( qpeekQUEUE_LENGTH, sizeof( uint32_t ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware
@@ -144,7 +144,7 @@ QueueHandle_t xQueue;
 static void prvHighestPriorityPeekTask( void *pvParameters )
 {
 QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
-unsigned long ulValue;
+uint32_t ulValue;
 
 	#ifdef USE_STDIO
 	{
@@ -253,7 +253,7 @@ unsigned long ulValue;
 static void prvHighPriorityPeekTask( void *pvParameters )
 {
 QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
-unsigned long ulValue;
+uint32_t ulValue;
 
 	for( ;; )
 	{
@@ -308,7 +308,7 @@ unsigned long ulValue;
 static void prvMediumPriorityPeekTask( void *pvParameters )
 {
 QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
-unsigned long ulValue;
+uint32_t ulValue;
 
 	for( ;; )
 	{
@@ -349,7 +349,7 @@ unsigned long ulValue;
 static void prvLowPriorityPeekTask( void *pvParameters )
 {
 QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
-unsigned long ulValue;
+uint32_t ulValue;
 
 	for( ;; )
 	{
@@ -453,9 +453,9 @@ unsigned long ulValue;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreQueuePeekTasksStillRunning( void )
+BaseType_t xAreQueuePeekTasksStillRunning( void )
 {
-static unsigned long ulLastLoopCounter = 0;
+static uint32_t ulLastLoopCounter = 0;
 
 	/* If the demo task is still running then we expect the loopcounter to
 	have incremented since this function was last called. */
@@ -469,6 +469,6 @@ static unsigned long ulLastLoopCounter = 0;
 	/* Errors detected in the task itself will have latched xErrorDetected
 	to true. */
 
-	return ( portBASE_TYPE ) !xErrorDetected;
+	return ( BaseType_t ) !xErrorDetected;
 }
 

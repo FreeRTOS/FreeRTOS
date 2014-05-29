@@ -99,11 +99,11 @@ static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 /* These variables are used to check that all the tasks are still running.  If a 
 task gets a calculation wrong it will
 stop incrementing its check variable. */
-static volatile unsigned short usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
+static volatile uint16_t usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
 
 /*-----------------------------------------------------------*/
 
-void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
+void vStartMathTasks( UBaseType_t uxPriority )
 {
 	xTaskCreate( vCompetingMathTask1, "Math1", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 0 ] ), uxPriority, NULL );
 	xTaskCreate( vCompetingMathTask2, "Math2", mathSTACK_SIZE, ( void * ) &( usTaskCheck[ 1 ] ), uxPriority, NULL );
@@ -119,7 +119,7 @@ void vStartMathTasks( unsigned portBASE_TYPE uxPriority )
 static portTASK_FUNCTION( vCompetingMathTask1, pvParameters )
 {
 volatile float f1, f2, f3, f4;
-volatile unsigned short *pusTaskCheckVariable;
+volatile uint16_t *pusTaskCheckVariable;
 volatile float fAnswer;
 short sError = pdFALSE;
 
@@ -131,7 +131,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
@@ -171,7 +171,7 @@ short sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask2, pvParameters )
 {
 volatile float f1, f2, f3, f4;
-volatile unsigned short *pusTaskCheckVariable;
+volatile uint16_t *pusTaskCheckVariable;
 volatile float fAnswer;
 short sError = pdFALSE;
 
@@ -184,7 +184,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -224,14 +224,14 @@ short sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask3, pvParameters )
 {
 volatile float *pfArray, fTotal1, fTotal2, fDifference, fPosition;
-volatile unsigned short *pusTaskCheckVariable;
+volatile uint16_t *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
 	pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
 
@@ -282,14 +282,14 @@ short sError = pdFALSE;
 static portTASK_FUNCTION( vCompetingMathTask4, pvParameters )
 {
 volatile float *pfArray, fTotal1, fTotal2, fDifference, fPosition;
-volatile unsigned short *pusTaskCheckVariable;
+volatile uint16_t *pusTaskCheckVariable;
 const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in 
 	as the parameter. */
-	pusTaskCheckVariable = ( unsigned short * ) pvParameters;
+	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
 	pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
 
@@ -338,12 +338,12 @@ short sError = pdFALSE;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreMathsTaskStillRunning( void )
+BaseType_t xAreMathsTaskStillRunning( void )
 {
 /* Keep a history of the check variables so we know if they have been incremented 
 since the last call. */
-static unsigned short usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( unsigned short ) 0 };
-portBASE_TYPE xReturn = pdTRUE, xTask;
+static uint16_t usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
+BaseType_t xReturn = pdTRUE, xTask;
 
 	/* Check the maths tasks are still running by ensuring their check variables 
 	are still incrementing. */

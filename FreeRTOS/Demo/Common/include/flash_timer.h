@@ -74,6 +74,6 @@
  * within the callback function to determine which timer has actually expired
  * (and therefore which LED to toggle).
  */
-void vStartLEDFlashTimers( unsigned portBASE_TYPE uxNumberOfLEDs );
+void vStartLEDFlashTimers( UBaseType_t uxNumberOfLEDs );
 
 #endif /* FLASH_TIMER_H */

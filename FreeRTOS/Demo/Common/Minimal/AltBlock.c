@@ -90,7 +90,7 @@
 #define bktALLOWABLE_MARGIN			( 12 )
 #define bktTIME_TO_BLOCK			( 175 )
 #define bktDONT_BLOCK				( ( TickType_t ) 0 )
-#define bktRUN_INDICATOR			( ( unsigned portBASE_TYPE ) 0x55 )
+#define bktRUN_INDICATOR			( ( UBaseType_t ) 0x55 )
 
 /* The queue on which the tasks block. */
 static QueueHandle_t xTestQueue;
@@ -100,12 +100,12 @@ to vTaskSuspend/Resume(). */
 static TaskHandle_t xSecondary;
 
 /* Used to ensure that tasks are still executing without error. */
-static portBASE_TYPE xPrimaryCycles = 0, xSecondaryCycles = 0;
-static portBASE_TYPE xErrorOccurred = pdFALSE;
+static BaseType_t xPrimaryCycles = 0, xSecondaryCycles = 0;
+static BaseType_t xErrorOccurred = pdFALSE;
 
 /* Provides a simple mechanism for the primary task to know when the
 secondary task has executed. */
-static volatile unsigned portBASE_TYPE xRunIndicator;
+static volatile UBaseType_t xRunIndicator;
 
 /* The two test tasks.  Their behaviour is commented within the files. */
 static void vPrimaryBlockTimeTestTask( void *pvParameters );
@@ -116,7 +116,7 @@ static void vSecondaryBlockTimeTestTask( void *pvParameters );
 void vCreateAltBlockTimeTasks( void )
 {
 	/* Create the queue on which the two tasks block. */
-    xTestQueue = xQueueCreate( bktQUEUE_LENGTH, sizeof( portBASE_TYPE ) );
+    xTestQueue = xQueueCreate( bktQUEUE_LENGTH, sizeof( BaseType_t ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware 
@@ -135,7 +135,7 @@ void vCreateAltBlockTimeTasks( void )
 
 static void vPrimaryBlockTimeTestTask( void *pvParameters )
 {
-portBASE_TYPE xItem, xData;
+BaseType_t xItem, xData;
 TickType_t xTimeWhenBlocking;
 TickType_t xTimeToBlock, xBlockedTime;
 
@@ -416,7 +416,7 @@ TickType_t xTimeToBlock, xBlockedTime;
 static void vSecondaryBlockTimeTestTask( void *pvParameters )
 {
 TickType_t xTimeWhenBlocking, xBlockedTime;
-portBASE_TYPE xData;
+BaseType_t xData;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
@@ -520,10 +520,10 @@ portBASE_TYPE xData;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreAltBlockTimeTestTasksStillRunning( void )
+BaseType_t xAreAltBlockTimeTestTasksStillRunning( void )
 {
-static portBASE_TYPE xLastPrimaryCycleCount = 0, xLastSecondaryCycleCount = 0;
-portBASE_TYPE xReturn = pdPASS;
+static BaseType_t xLastPrimaryCycleCount = 0, xLastSecondaryCycleCount = 0;
+BaseType_t xReturn = pdPASS;
 
 	/* Have both tasks performed at least one cycle since this function was
 	last called? */

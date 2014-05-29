@@ -98,8 +98,8 @@
 #include "semtest.h"
 
 /* The value to which the shared variables are counted. */
-#define semtstBLOCKING_EXPECTED_VALUE		( ( unsigned long ) 0xfff )
-#define semtstNON_BLOCKING_EXPECTED_VALUE	( ( unsigned long ) 0xff  )
+#define semtstBLOCKING_EXPECTED_VALUE		( ( uint32_t ) 0xfff )
+#define semtstNON_BLOCKING_EXPECTED_VALUE	( ( uint32_t ) 0xff  )
 
 #define semtstSTACK_SIZE			configMINIMAL_STACK_SIZE
 
@@ -114,7 +114,7 @@ static portTASK_FUNCTION_PROTO( prvSemaphoreTest, pvParameters );
 typedef struct SEMAPHORE_PARAMETERS
 {
 	SemaphoreHandle_t xSemaphore;
-	volatile unsigned long *pulSharedVariable;
+	volatile uint32_t *pulSharedVariable;
 	TickType_t xBlockTime;
 } xSemaphoreParameters;
 
@@ -124,7 +124,7 @@ static volatile short sNextCheckVariable = 0;
 
 /*-----------------------------------------------------------*/
 
-void vStartSemaphoreTasks( unsigned portBASE_TYPE uxPriority )
+void vStartSemaphoreTasks( UBaseType_t uxPriority )
 {
 xSemaphoreParameters *pxFirstSemaphoreParameters, *pxSecondSemaphoreParameters;
 const TickType_t xBlockTime = ( TickType_t ) 100;
@@ -141,7 +141,7 @@ const TickType_t xBlockTime = ( TickType_t ) 100;
 		if( pxFirstSemaphoreParameters->xSemaphore != NULL )
 		{
 			/* Create the variable which is to be shared by the first two tasks. */
-			pxFirstSemaphoreParameters->pulSharedVariable = ( unsigned long * ) pvPortMalloc( sizeof( unsigned long ) );
+			pxFirstSemaphoreParameters->pulSharedVariable = ( uint32_t * ) pvPortMalloc( sizeof( uint32_t ) );
 
 			/* Initialise the share variable to the value the tasks expect. */
 			*( pxFirstSemaphoreParameters->pulSharedVariable ) = semtstNON_BLOCKING_EXPECTED_VALUE;
@@ -165,7 +165,7 @@ const TickType_t xBlockTime = ( TickType_t ) 100;
 
 		if( pxSecondSemaphoreParameters->xSemaphore != NULL )
 		{
-			pxSecondSemaphoreParameters->pulSharedVariable = ( unsigned long * ) pvPortMalloc( sizeof( unsigned long ) );
+			pxSecondSemaphoreParameters->pulSharedVariable = ( uint32_t * ) pvPortMalloc( sizeof( uint32_t ) );
 			*( pxSecondSemaphoreParameters->pulSharedVariable ) = semtstBLOCKING_EXPECTED_VALUE;
 			pxSecondSemaphoreParameters->xBlockTime = xBlockTime / portTICK_PERIOD_MS;
 
@@ -188,8 +188,8 @@ const TickType_t xBlockTime = ( TickType_t ) 100;
 static portTASK_FUNCTION( prvSemaphoreTest, pvParameters )
 {
 xSemaphoreParameters *pxParameters;
-volatile unsigned long *pulSharedVariable, ulExpectedValue;
-unsigned long ulCounter;
+volatile uint32_t *pulSharedVariable, ulExpectedValue;
+uint32_t ulCounter;
 short sError = pdFALSE, sCheckVariableToUse;
 
 	/* See which check variable to use.  sNextCheckVariable is not semaphore 
@@ -231,7 +231,7 @@ short sError = pdFALSE, sCheckVariableToUse;
 			/* Clear the variable, then count it back up to the expected value
 			before releasing the semaphore.  Would expect a context switch or
 			two during this time. */
-			for( ulCounter = ( unsigned long ) 0; ulCounter <= ulExpectedValue; ulCounter++ )
+			for( ulCounter = ( uint32_t ) 0; ulCounter <= ulExpectedValue; ulCounter++ )
 			{
 				*pulSharedVariable = ulCounter;
 				if( *pulSharedVariable != ulCounter )
@@ -277,10 +277,10 @@ short sError = pdFALSE, sCheckVariableToUse;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreSemaphoreTasksStillRunning( void )
+BaseType_t xAreSemaphoreTasksStillRunning( void )
 {
 static short sLastCheckVariables[ semtstNUM_TASKS ] = { 0 };
-portBASE_TYPE xTask, xReturn = pdTRUE;
+BaseType_t xTask, xReturn = pdTRUE;
 
 	for( xTask = 0; xTask < semtstNUM_TASKS; xTask++ )
 	{

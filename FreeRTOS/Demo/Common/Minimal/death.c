@@ -103,17 +103,17 @@ static portTASK_FUNCTION_PROTO( vSuicidalTask, pvParameters );
 
 /* A variable which is incremented every time the dynamic tasks are created.  This
 is used to check that the task is still running. */
-static volatile unsigned short usCreationCount = 0;
+static volatile uint16_t usCreationCount = 0;
 
 /* Used to store the number of tasks that were originally running so the creator
 task can tell if any of the suicidal tasks have failed to die.
 */
-static volatile unsigned portBASE_TYPE uxTasksRunningAtStart = 0;
+static volatile UBaseType_t uxTasksRunningAtStart = 0;
 
 /* Tasks are deleted by the idle task.  Under heavy load the idle task might
 not get much processing time, so it would be legitimate for several tasks to
 remain undeleted for a short period. */
-static const unsigned portBASE_TYPE uxMaxNumberOfExtraTasksRunning = 3;
+static const UBaseType_t uxMaxNumberOfExtraTasksRunning = 3;
 
 /* Used to store a handle to the task that should be killed by a suicidal task,
 before it kills itself. */
@@ -121,20 +121,20 @@ TaskHandle_t xCreatedTask;
 
 /*-----------------------------------------------------------*/
 
-void vCreateSuicidalTasks( unsigned portBASE_TYPE uxPriority )
+void vCreateSuicidalTasks( UBaseType_t uxPriority )
 {
-unsigned portBASE_TYPE *puxPriority;
+UBaseType_t *puxPriority;
 
 	/* Create the Creator tasks - passing in as a parameter the priority at which
 	the suicidal tasks should be created. */
-	puxPriority = ( unsigned portBASE_TYPE * ) pvPortMalloc( sizeof( unsigned portBASE_TYPE ) );
+	puxPriority = ( UBaseType_t * ) pvPortMalloc( sizeof( UBaseType_t ) );
 	*puxPriority = uxPriority;
 
 	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
 
 	/* Record the number of tasks that are running now so we know if any of the
 	suicidal tasks have failed to be killed. */
-	uxTasksRunningAtStart = ( unsigned portBASE_TYPE ) uxTaskGetNumberOfTasks();
+	uxTasksRunningAtStart = ( UBaseType_t ) uxTaskGetNumberOfTasks();
 	
 	/* FreeRTOS.org versions before V3.0 started the idle-task as the very
 	first task. The idle task was then already included in uxTasksRunningAtStart.
@@ -196,9 +196,9 @@ const TickType_t xDelay = ( TickType_t ) 200 / portTICK_PERIOD_MS;
 static portTASK_FUNCTION( vCreateTasks, pvParameters )
 {
 const TickType_t xDelay = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
-unsigned portBASE_TYPE uxPriority;
+UBaseType_t uxPriority;
 
-	uxPriority = *( unsigned portBASE_TYPE * ) pvParameters;
+	uxPriority = *( UBaseType_t * ) pvParameters;
 	vPortFree( pvParameters );
 
 	for( ;; )
@@ -218,11 +218,11 @@ unsigned portBASE_TYPE uxPriority;
 
 /* This is called to check that the creator task is still running and that there
 are not any more than four extra tasks. */
-portBASE_TYPE xIsCreateTaskStillRunning( void )
+BaseType_t xIsCreateTaskStillRunning( void )
 {
-static unsigned short usLastCreationCount = 0xfff;
-portBASE_TYPE xReturn = pdTRUE;
-static unsigned portBASE_TYPE uxTasksRunningNow;
+static uint16_t usLastCreationCount = 0xfff;
+BaseType_t xReturn = pdTRUE;
+static UBaseType_t uxTasksRunningNow;
 
 	if( usLastCreationCount == usCreationCount )
 	{
@@ -233,7 +233,7 @@ static unsigned portBASE_TYPE uxTasksRunningNow;
 		usLastCreationCount = usCreationCount;
 	}
 	
-	uxTasksRunningNow = ( unsigned portBASE_TYPE ) uxTaskGetNumberOfTasks();
+	uxTasksRunningNow = ( UBaseType_t ) uxTaskGetNumberOfTasks();
 
 	if( uxTasksRunningNow < uxTasksRunningAtStart )
 	{

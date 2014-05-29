@@ -153,7 +153,7 @@ static void prvQueueSetReceivingTask( void *pvParameters );
  * range of the value being used to distinguish between the two message
  * sources.
  */
-static void prvCheckReceivedValue( unsigned long ulReceived );
+static void prvCheckReceivedValue( uint32_t ulReceived );
 
 /*
  * For purposes of test coverage, functions that read from and write to a
@@ -172,7 +172,7 @@ static void prvSetupTest( void );
  * Checks a value received from a queue falls within the range of expected
  * values.
  */
-static portBASE_TYPE prvCheckReceivedValueWithinExpectedRange( unsigned long ulReceived, unsigned long ulExpectedReceived );
+static BaseType_t prvCheckReceivedValueWithinExpectedRange( uint32_t ulReceived, uint32_t ulExpectedReceived );
 
 /*
  * Increase test coverage by occasionally change the priorities of the two tasks
@@ -183,8 +183,8 @@ static void prvChangeRelativePriorities( void );
  * Local pseudo random number seed and return functions.  Used to avoid calls
  * to the standard library.
  */
-static unsigned long prvRand( void );
-static void prvSRand( unsigned long ulSeed );
+static uint32_t prvRand( void );
+static void prvSRand( uint32_t ulSeed );
 
 /*-----------------------------------------------------------*/
 
@@ -193,7 +193,7 @@ static QueueHandle_t xQueues[ queuesetNUM_QUEUES_IN_SET ] = { 0 };
 
 /* Counts how many times each queue in the set is used to ensure all the
 queues are used. */
-static unsigned long ulQueueUsedCounter[ queuesetNUM_QUEUES_IN_SET ] = { 0 };
+static uint32_t ulQueueUsedCounter[ queuesetNUM_QUEUES_IN_SET ] = { 0 };
 
 /* The handle of the queue set to which the queues are added. */
 static QueueSetHandle_t xQueueSet;
@@ -203,23 +203,23 @@ it increments ulCycleCounter on each iteration.
 xAreQueueSetTasksStillRunning() returns pdPASS if the value of
 ulCycleCounter has changed between consecutive calls, and pdFALSE if
 ulCycleCounter has stopped incrementing (indicating an error condition). */
-static volatile unsigned long ulCycleCounter = 0UL;
+static volatile uint32_t ulCycleCounter = 0UL;
 
 /* Set to pdFAIL if an error is detected by any queue set task.
 ulCycleCounter will only be incremented if xQueueSetTasksSatus equals pdPASS. */
-static volatile portBASE_TYPE xQueueSetTasksStatus = pdPASS;
+static volatile BaseType_t xQueueSetTasksStatus = pdPASS;
 
 /* Just a flag to let the function that writes to a queue from an ISR know that
 the queues are setup and can be used. */
-static volatile portBASE_TYPE xSetupComplete = pdFALSE;
+static volatile BaseType_t xSetupComplete = pdFALSE;
 
 /* The value sent to the queue from the ISR is file scope so the
 xAreQueeuSetTasksStillRunning() function can check it is incrementing as
 expected. */
-static volatile unsigned long ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
+static volatile uint32_t ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
 
 /* Used by the pseudo random number generator. */
-static unsigned long ulNextRand = 0;
+static uint32_t ulNextRand = 0;
 
 /* The task handles are stored so their priorities can be changed. */
 TaskHandle_t xQueueSetSendingTask, xQueueSetReceivingTask;
@@ -241,11 +241,11 @@ void vStartQueueSetTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreQueueSetTasksStillRunning( void )
+BaseType_t xAreQueueSetTasksStillRunning( void )
 {
-static unsigned long ulLastCycleCounter, ulLastISRTxValue = 0;
-static unsigned long ulLastQueueUsedCounter[ queuesetNUM_QUEUES_IN_SET ] = { 0 };
-portBASE_TYPE xReturn = pdPASS, x;
+static uint32_t ulLastCycleCounter, ulLastISRTxValue = 0;
+static uint32_t ulLastQueueUsedCounter[ queuesetNUM_QUEUES_IN_SET ] = { 0 };
+BaseType_t xReturn = pdPASS, x;
 
 	if( ulLastCycleCounter == ulCycleCounter )
 	{
@@ -291,14 +291,14 @@ portBASE_TYPE xReturn = pdPASS, x;
 
 static void prvQueueSetSendingTask( void *pvParameters )
 {
-unsigned long ulTaskTxValue = 0, ulQueueToWriteTo;
+uint32_t ulTaskTxValue = 0, ulQueueToWriteTo;
 QueueHandle_t xQueueInUse;
 
 	/* Remove compiler warning about the unused parameter. */
 	( void ) pvParameters;
 
 	/* Seed mini pseudo random number generator. */
-	prvSRand( ( unsigned long ) &ulTaskTxValue );
+	prvSRand( ( uint32_t ) &ulTaskTxValue );
 
 	for( ;; )
 	{
@@ -341,7 +341,7 @@ QueueHandle_t xQueueInUse;
 
 static void prvChangeRelativePriorities( void )
 {
-static unsigned portBASE_TYPE ulLoops = 0;
+static UBaseType_t ulLoops = 0;
 static eRelativePriorities ePriorities = eEqualPriority;
 
 	/* Occasionally change the task priority relative to the priority of
@@ -389,7 +389,7 @@ static eRelativePriorities ePriorities = eEqualPriority;
 
 static void prvQueueSetReceivingTask( void *pvParameters )
 {
-unsigned long ulReceived;
+uint32_t ulReceived;
 QueueHandle_t xActivatedQueue;
 
 	/* Remove compiler warnings. */
@@ -440,7 +440,7 @@ QueueHandle_t xActivatedQueue;
 
 void vQueueSetAccessQueueSetFromISR( void )
 {
-static unsigned long ulCallCount = 0;
+static uint32_t ulCallCount = 0;
 
 	/* xSetupComplete is set to pdTRUE when the queues have been created and
 	are available for use. */
@@ -463,9 +463,9 @@ static unsigned long ulCallCount = 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckReceivedValue( unsigned long ulReceived )
+static void prvCheckReceivedValue( uint32_t ulReceived )
 {
-static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
+static uint32_t ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR = queuesetINITIAL_ISR_TX_VALUE;
 
 	/* Values are received in tasks and interrupts.  It is likely that the
 	receiving task will sometimes get preempted by the receiving interrupt
@@ -543,9 +543,9 @@ static unsigned long ulExpectedReceivedFromTask = 0, ulExpectedReceivedFromISR =
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvCheckReceivedValueWithinExpectedRange( unsigned long ulReceived, unsigned long ulExpectedReceived )
+static BaseType_t prvCheckReceivedValueWithinExpectedRange( uint32_t ulReceived, uint32_t ulExpectedReceived )
 {
-portBASE_TYPE xReturn = pdPASS;
+BaseType_t xReturn = pdPASS;
 
 	if( ulReceived > ulExpectedReceived )
 	{
@@ -571,7 +571,7 @@ portBASE_TYPE xReturn = pdPASS;
 static void prvReceiveFromQueueInSetFromISR( void )
 {
 QueueSetMemberHandle_t xActivatedQueue;
-unsigned long ulReceived;
+uint32_t ulReceived;
 
 	/* See if any of the queues in the set contain data. */
 	xActivatedQueue = xQueueSelectFromSetFromISR( xQueueSet );
@@ -594,7 +594,7 @@ unsigned long ulReceived;
 
 static void prvSendToQueueInSetFromISR( void )
 {
-static portBASE_TYPE xQueueToWriteTo = 0;
+static BaseType_t xQueueToWriteTo = 0;
 
 	if( xQueueSendFromISR( xQueues[ xQueueToWriteTo ], ( void * ) &ulISRTxValue, NULL ) == pdPASS )
 	{
@@ -619,8 +619,8 @@ static portBASE_TYPE xQueueToWriteTo = 0;
 
 static void prvSetupTest( void )
 {
-portBASE_TYPE x;
-unsigned long ulValueToSend = 0;
+BaseType_t x;
+uint32_t ulValueToSend = 0;
 
 	/* Ensure the queues are created and the queue set configured before the
 	sending task is unsuspended.
@@ -632,8 +632,8 @@ unsigned long ulValueToSend = 0;
 	for( x = 0; x < queuesetNUM_QUEUES_IN_SET; x++ )
 	{
 		/* Create the queue and add it to the set.  The queue is just holding
-		unsigned long value. */
-		xQueues[ x ] = xQueueCreate( queuesetQUEUE_LENGTH, sizeof( unsigned long ) );
+		uint32_t value. */
+		xQueues[ x ] = xQueueCreate( queuesetQUEUE_LENGTH, sizeof( uint32_t ) );
 		configASSERT( xQueues[ x ] );
 		if( xQueueAddToSet( xQueues[ x ], xQueueSet ) != pdPASS )
 		{
@@ -701,14 +701,14 @@ unsigned long ulValueToSend = 0;
 }
 /*-----------------------------------------------------------*/
 
-static unsigned long prvRand( void )
+static uint32_t prvRand( void )
 {
 	ulNextRand = ( ulNextRand * 1103515245UL ) + 12345UL;
     return ( ulNextRand / 65536UL ) % 32768UL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSRand( unsigned long ulSeed )
+static void prvSRand( uint32_t ulSeed )
 {
     ulNextRand = ulSeed;
 }

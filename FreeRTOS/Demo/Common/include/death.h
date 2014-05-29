@@ -66,8 +66,8 @@
 #ifndef SUICIDE_TASK_H
 #define SUICIDE_TASK_H
 
-void vCreateSuicidalTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xIsCreateTaskStillRunning( void );
+void vCreateSuicidalTasks( UBaseType_t uxPriority );
+BaseType_t xIsCreateTaskStillRunning( void );
 
 #endif
 

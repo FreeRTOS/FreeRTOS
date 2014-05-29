@@ -67,7 +67,7 @@
 #define COUNT_SEMAPHORE_TEST_H
 
 void vStartCountingSemaphoreTasks( void );
-portBASE_TYPE xAreCountingSemaphoreTasksStillRunning( void );
+BaseType_t xAreCountingSemaphoreTasksStillRunning( void );
 
 #endif
 

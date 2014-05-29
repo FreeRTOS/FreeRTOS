@@ -67,7 +67,7 @@
 #define QUEUE_WAIT_MULTIPLE_H
 
 void vStartQueueSetTasks( void );
-portBASE_TYPE xAreQueueSetTasksStillRunning( void );
+BaseType_t xAreQueueSetTasksStillRunning( void );
 void vQueueSetAccessQueueSetFromISR( void );
 
 #endif /* QUEUE_WAIT_MULTIPLE_H */

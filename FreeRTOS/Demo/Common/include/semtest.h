@@ -66,8 +66,8 @@
 #ifndef SEMAPHORE_TEST_H
 #define SEMAPHORE_TEST_H
 
-void vStartSemaphoreTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xAreSemaphoreTasksStillRunning( void );
+void vStartSemaphoreTasks( UBaseType_t uxPriority );
+BaseType_t xAreSemaphoreTasksStillRunning( void );
 
 #endif
 

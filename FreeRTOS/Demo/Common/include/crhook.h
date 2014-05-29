@@ -75,7 +75,7 @@ void vStartHookCoRoutines( void );
  * Return pdPASS or pdFAIL depending on whether an error has been detected
  * or not.
  */
-portBASE_TYPE xAreHookCoRoutinesStillRunning( void );
+BaseType_t xAreHookCoRoutinesStillRunning( void );
 
 #endif
 

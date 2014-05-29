@@ -75,7 +75,7 @@
 #define EVENT_GROUPS_DEMO_H
 
 void vStartEventGroupTasks( void );
-portBASE_TYPE xAreEventGroupTasksStillRunning( void );
+BaseType_t xAreEventGroupTasksStillRunning( void );
 void vPeriodicEventGroupsProcessing( void );
 
 #endif /* EVENT_GROUPS_DEMO_H */

@@ -66,8 +66,8 @@
 #ifndef ALT_BLOCK_Q_H
 #define ALT_BLOCK_Q_H
 
-void vStartAltBlockingQueueTasks( unsigned portBASE_TYPE uxPriority );
-portBASE_TYPE xAreAltBlockingQueuesStillRunning( void );
+void vStartAltBlockingQueueTasks( UBaseType_t uxPriority );
+BaseType_t xAreAltBlockingQueuesStillRunning( void );
 
 #endif
 

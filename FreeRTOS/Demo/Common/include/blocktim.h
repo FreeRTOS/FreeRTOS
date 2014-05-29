@@ -67,7 +67,7 @@
 #define BLOCK_TIME_TEST_H
 
 void vCreateBlockTimeTasks( void );
-portBASE_TYPE xAreBlockTimeTestTasksStillRunning( void );
+BaseType_t xAreBlockTimeTestTasksStillRunning( void );
 
 #endif
 

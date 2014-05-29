@@ -73,13 +73,13 @@
  *		  also effects the number of LED's that will be utilised.  For example,
  *		  passing in 3 will cause LED's 0 to 2 to be utilised.
  */
-void vStartFlashCoRoutines( unsigned portBASE_TYPE uxPriority );
+void vStartFlashCoRoutines( UBaseType_t uxPriority );
 
 /*
  * Return pdPASS or pdFAIL depending on whether an error has been detected
  * or not.
  */
-portBASE_TYPE xAreFlashCoRoutinesStillRunning( void );
+BaseType_t xAreFlashCoRoutinesStillRunning( void );
 
 #endif
 

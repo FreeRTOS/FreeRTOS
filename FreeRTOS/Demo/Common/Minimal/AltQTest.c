@@ -123,15 +123,15 @@ static void prvHighPriorityMutexTask( void *pvParameters );
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
 detected in any of the tasks. */
-static portBASE_TYPE xErrorDetected = pdFALSE;
+static BaseType_t xErrorDetected = pdFALSE;
 
 /* Counters that are incremented on each cycle of a test.  This is used to
 detect a stalled task - a test that is no longer running. */
-static volatile unsigned long ulLoopCounter = 0;
-static volatile unsigned long ulLoopCounter2 = 0;
+static volatile uint32_t ulLoopCounter = 0;
+static volatile uint32_t ulLoopCounter2 = 0;
 
 /* The variable that is guarded by the mutex in the mutex demo tasks. */
-static volatile unsigned long ulGuardedVariable = 0;
+static volatile uint32_t ulGuardedVariable = 0;
 
 /* Handles used in the mutext test to suspend and resume the high and medium
 priority mutex test tasks. */
@@ -139,14 +139,14 @@ static TaskHandle_t xHighPriorityMutexTask, xMediumPriorityMutexTask;
 
 /*-----------------------------------------------------------*/
 
-void vStartAltGenericQueueTasks( unsigned portBASE_TYPE uxPriority )
+void vStartAltGenericQueueTasks( UBaseType_t uxPriority )
 {
 QueueHandle_t xQueue;
 SemaphoreHandle_t xMutex;
 
 	/* Create the queue that we are going to use for the
 	prvSendFrontAndBackTest demo. */
-	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( unsigned long ) );
+	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( uint32_t ) );
 
 	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
 	in use.  The queue registry is provided as a means for kernel aware 
@@ -183,7 +183,7 @@ SemaphoreHandle_t xMutex;
 
 static void prvSendFrontAndBackTest( void *pvParameters )
 {
-unsigned long ulData, ulData2;
+uint32_t ulData, ulData2;
 QueueHandle_t xQueue;
 
 	#ifdef USE_STDIO
@@ -559,9 +559,9 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreAltGenericQueueTasksStillRunning( void )
+BaseType_t xAreAltGenericQueueTasksStillRunning( void )
 {
-static unsigned long ulLastLoopCounter = 0, ulLastLoopCounter2 = 0;
+static uint32_t ulLastLoopCounter = 0, ulLastLoopCounter2 = 0;
 
 	/* If the demo task is still running then we expect the loopcounters to
 	have incremented since this function was last called. */

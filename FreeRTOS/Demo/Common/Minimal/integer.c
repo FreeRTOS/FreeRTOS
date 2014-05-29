@@ -100,11 +100,11 @@ static portTASK_FUNCTION_PROTO( vCompeteingIntMathTask, pvParameters );
 that the task is still executing.  The check task sets the variable back to
 false, flagging an error if the variable is still false the next time it
 is called. */
-static volatile signed portBASE_TYPE xTaskCheck[ intgNUMBER_OF_TASKS ] = { ( signed portBASE_TYPE ) pdFALSE };
+static volatile BaseType_t xTaskCheck[ intgNUMBER_OF_TASKS ] = { ( BaseType_t ) pdFALSE };
 
 /*-----------------------------------------------------------*/
 
-void vStartIntegerMathTasks( unsigned portBASE_TYPE uxPriority )
+void vStartIntegerMathTasks( UBaseType_t uxPriority )
 {
 short sTask;
 
@@ -121,12 +121,12 @@ static portTASK_FUNCTION( vCompeteingIntMathTask, pvParameters )
 ensure the compiler does not just get rid of them. */
 volatile long lValue;
 short sError = pdFALSE;
-volatile signed portBASE_TYPE *pxTaskHasExecuted;
+volatile BaseType_t *pxTaskHasExecuted;
 
 	/* Set a pointer to the variable we are going to set to true each
 	iteration.  This is also a good test of the parameter passing mechanism
 	within each port. */
-	pxTaskHasExecuted = ( volatile signed portBASE_TYPE * ) pvParameters;
+	pxTaskHasExecuted = ( volatile BaseType_t * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -176,9 +176,9 @@ volatile signed portBASE_TYPE *pxTaskHasExecuted;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreIntegerMathsTaskStillRunning( void )
+BaseType_t xAreIntegerMathsTaskStillRunning( void )
 {
-portBASE_TYPE xReturn = pdTRUE;
+BaseType_t xReturn = pdTRUE;
 short sTask;
 
 	/* Check the maths tasks are still running by ensuring their check variables 

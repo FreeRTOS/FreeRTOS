@@ -118,28 +118,28 @@ created. */
 /*
  * The 'fixed delay' co-routine as described at the top of the file.
  */
-static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
+static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex );
 
 /*
  * The 'flash' co-routine as described at the top of the file.
  */
-static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex );
+static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex );
 
 /* The queue used to pass data between the 'fixed delay' co-routines and the
 'flash' co-routine. */
 static QueueHandle_t xFlashQueue;
 
 /* This will be set to pdFALSE if we detect an error. */
-static portBASE_TYPE xCoRoutineFlashStatus = pdPASS;
+static BaseType_t xCoRoutineFlashStatus = pdPASS;
 
 /*-----------------------------------------------------------*/
 
 /*
  * See the header file for details.
  */
-void vStartFlashCoRoutines( unsigned portBASE_TYPE uxNumberToCreate )
+void vStartFlashCoRoutines( UBaseType_t uxNumberToCreate )
 {
-unsigned portBASE_TYPE uxIndex;
+UBaseType_t uxIndex;
 
 	if( uxNumberToCreate > crfMAX_FLASH_TASKS )
 	{
@@ -147,7 +147,7 @@ unsigned portBASE_TYPE uxIndex;
 	}
 
 	/* Create the queue used to pass data between the co-routines. */
-	xFlashQueue = xQueueCreate( crfQUEUE_LENGTH, sizeof( unsigned portBASE_TYPE ) );
+	xFlashQueue = xQueueCreate( crfQUEUE_LENGTH, sizeof( UBaseType_t ) );
 
 	if( xFlashQueue )
 	{
@@ -163,11 +163,11 @@ unsigned portBASE_TYPE uxIndex;
 }
 /*-----------------------------------------------------------*/
 
-static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
+static void prvFixedDelayCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
 {
 /* Even though this is a co-routine the xResult variable does not need to be
 static as we do not need it to maintain its state between blocks. */
-signed portBASE_TYPE xResult;
+BaseType_t xResult;
 /* The uxIndex parameter of the co-routine function is used as an index into
 the xFlashRates array to obtain the delay period to use. */
 static const TickType_t xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_PERIOD_MS,
@@ -204,12 +204,12 @@ static const TickType_t xFlashRates[ crfMAX_FLASH_TASKS ] = { 150 / portTICK_PER
 }
 /*-----------------------------------------------------------*/
 
-static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, unsigned portBASE_TYPE uxIndex )
+static void prvFlashCoRoutine( CoRoutineHandle_t xHandle, UBaseType_t uxIndex )
 {
 /* Even though this is a co-routine the variable do not need to be
 static as we do not need it to maintain their state between blocks. */
-signed portBASE_TYPE xResult;
-unsigned portBASE_TYPE uxLEDToFlash;
+BaseType_t xResult;
+UBaseType_t uxLEDToFlash;
 
 	/* Co-routines MUST start with a call to crSTART. */
 	crSTART( xHandle );
@@ -237,7 +237,7 @@ unsigned portBASE_TYPE uxLEDToFlash;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xAreFlashCoRoutinesStillRunning( void )
+BaseType_t xAreFlashCoRoutinesStillRunning( void )
 {
 	/* Return pdPASS or pdFAIL depending on whether an error has been detected
 	or not. */

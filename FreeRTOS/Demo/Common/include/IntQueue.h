@@ -67,9 +67,9 @@
 #define QUEUE_ACCESS_TEST
 
 void vStartInterruptQueueTasks( void );
-portBASE_TYPE xAreIntQueueTasksStillRunning( void );
-portBASE_TYPE xFirstTimerHandler( void );
-portBASE_TYPE xSecondTimerHandler( void );
+BaseType_t xAreIntQueueTasksStillRunning( void );
+BaseType_t xFirstTimerHandler( void );
+BaseType_t xSecondTimerHandler( void );
 
 #endif /* QUEUE_ACCESS_TEST */
 

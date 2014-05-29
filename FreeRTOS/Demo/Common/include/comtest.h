@@ -66,9 +66,9 @@
 #ifndef COMTEST_H
 #define COMTEST_H
 
-void vAltStartComTestTasks( unsigned portBASE_TYPE uxPriority, unsigned long ulBaudRate, unsigned portBASE_TYPE uxLED );
-void vStartComTestTasks( unsigned portBASE_TYPE uxPriority, eCOMPort ePort, eBaud eBaudRate );
-portBASE_TYPE xAreComTestTasksStillRunning( void );
+void vAltStartComTestTasks( UBaseType_t uxPriority, uint32_t ulBaudRate, UBaseType_t uxLED );
+void vStartComTestTasks( UBaseType_t uxPriority, eCOMPort ePort, eBaud eBaudRate );
+BaseType_t xAreComTestTasksStillRunning( void );
 void vComTestUnsuspendTask( void );
 
 #endif

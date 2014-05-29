@@ -218,7 +218,7 @@ static void prvPseudoRandomiser( void *pvParameters );
 register check tasks to the check task.  If the variables keep incrementing,
 then the register check tasks has not discovered any errors.  If a variable
 stops incrementing, then an error has been found. */
-volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
+volatile uint32_t ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
 
@@ -276,8 +276,8 @@ static void prvCheckTask( void *pvParameters )
 {
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-unsigned long ulErrorFound = pdFALSE;
+static uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+uint32_t ulErrorFound = pdFALSE;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;

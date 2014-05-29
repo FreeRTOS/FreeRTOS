@@ -264,7 +264,7 @@ static void prvRecordValue_NormallyFull( unsigned portBASE_TYPE uxValue, unsigne
 		}
 
 		/* Log that this value has been received. */
-		ucNormallyFullReceivedValues[ uxValue ] = uxSource;
+		ucNormallyFullReceivedValues[ uxValue ] = ( unsigned char ) uxSource;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -281,7 +281,7 @@ static void prvRecordValue_NormallyEmpty( unsigned portBASE_TYPE uxValue, unsign
 		}
 
 		/* Log that this value has been received. */
-		ucNormallyEmptyReceivedValues[ uxValue ] = uxSource;
+		ucNormallyEmptyReceivedValues[ uxValue ] = ( unsigned char ) uxSource;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -657,7 +657,8 @@ unsigned portBASE_TYPE uxValue, uxTxed = 9999;
 
 portBASE_TYPE xFirstTimerHandler( void )
 {
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE, uxRxedValue;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+unsigned portBASE_TYPE uxRxedValue;
 static unsigned portBASE_TYPE uxNextOperation = 0;
 
 	/* Called from a timer interrupt.  Perform various read and write

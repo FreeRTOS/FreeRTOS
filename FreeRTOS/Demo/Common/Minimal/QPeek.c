@@ -469,6 +469,6 @@ static unsigned long ulLastLoopCounter = 0;
 	/* Errors detected in the task itself will have latched xErrorDetected
 	to true. */
 
-	return !xErrorDetected;
+	return ( portBASE_TYPE ) !xErrorDetected;
 }
 

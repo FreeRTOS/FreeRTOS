@@ -410,7 +410,7 @@ TickType_t xBlockPeriod, xTimerPeriod, xExpectedNumber;
 		xExpectedNumber = xBlockPeriod / xTimerPeriod;
 		
 		ucMaxAllowableValue = ( ( unsigned char ) xExpectedNumber ) ;
-		ucMinAllowableValue = ( ( unsigned char ) xExpectedNumber - ( unsigned char ) 1 );
+		ucMinAllowableValue = ( unsigned char ) ( ( unsigned char ) xExpectedNumber - ( unsigned char ) 1 ); /* Weird casting to try and please all compilers. */
 
 		if( ( ucAutoReloadTimerCounters[ ucTimer ] < ucMinAllowableValue ) ||
 			( ucAutoReloadTimerCounters[ ucTimer ] > ucMaxAllowableValue )

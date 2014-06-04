@@ -74,9 +74,6 @@
 /* Library includes. */
 #include "string.h"
 
-/* Hardware specifics. */
-#include "iodefine.h"
-
 /*-----------------------------------------------------------*/
 
 /* Tasks should start with interrupts enabled and in Supervisor mode, therefore
@@ -89,8 +86,8 @@ xTaskIncrementTick(), which is only ever called from interrupts at the kernel
 priority - ie a known priority.  Therefore these local macros are a slight
 optimisation compared to calling the global SET/CLEAR_INTERRUPT_MASK macros,
 which would require the old IPL to be read first and stored in a local variable. */
-#define portDISABLE_INTERRUPTS_FROM_KERNEL_ISR() 	__asm volatile ( "MVTIPL	%0" ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) )
-#define portENABLE_INTERRUPTS_FROM_KERNEL_ISR() 	__asm volatile ( "MVTIPL	%0" ::"i"(configKERNEL_INTERRUPT_PRIORITY) )
+#define portMASK_INTERRUPTS_FROM_KERNEL_ISR() 	__asm volatile ( "MVTIPL	%0" ::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY) )
+#define portUNMASK_INTERRUPTS_FROM_KERNEL_ISR() 	__asm volatile ( "MVTIPL	%0" ::"i"(configKERNEL_INTERRUPT_PRIORITY) )
 
 /*-----------------------------------------------------------*/
 
@@ -176,9 +173,17 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_FPSW;
 	pxTopOfStack--;
-	*pxTopOfStack = 0x12345678; /* Accumulator. */
+	*pxTopOfStack = 0x11111111; /* Accumulator 0. */
 	pxTopOfStack--;
-	*pxTopOfStack = 0x87654321; /* Accumulator. */
+	*pxTopOfStack = 0x22222222; /* Accumulator 0. */
+	pxTopOfStack--;
+	*pxTopOfStack = 0x33333333; /* Accumulator 0. */
+	pxTopOfStack--;
+	*pxTopOfStack = 0x44444444; /* Accumulator 1. */
+	pxTopOfStack--;
+	*pxTopOfStack = 0x55555555; /* Accumulator 1. */
+	pxTopOfStack--;
+	*pxTopOfStack = 0x66666666; /* Accumulator 1. */
 
 	return pxTopOfStack;
 }
@@ -242,11 +247,27 @@ static void prvStartFirstTask( void )
 	    "POP		R15						\n" \
 
 		/* Accumulator low 32 bits. */
-	    "MVTACLO	R15 					\n" \
+	    "MVTACLO	R15, A0					\n" \
 	    "POP		R15						\n" \
 
-		/* Accumulator high 32 bits. */
-	    "MVTACHI	R15 					\n" \
+	    /* Accumulator high 32 bits. */
+	    "MVTACHI	R15, A0					\n" \
+	    "POP		R15						\n" \
+
+	    /* Accumulator guard. */
+	    "MVTACGU	R15, A0					\n" \
+	    "POP		R15						\n" \
+
+	    /* Accumulator low 32 bits. */
+	    "MVTACLO	R15, A1					\n" \
+	    "POP		R15						\n" \
+
+	    /* Accumulator high 32 bits. */
+	    "MVTACHI	R15, A1					\n" \
+	    "POP		R15						\n" \
+
+	    /* Accumulator guard. */
+	    "MVTACGU	R15, A1					\n" \
 	    "POP		R15						\n" \
 
 		/* Floating point status word. */
@@ -300,14 +321,19 @@ void vSoftwareInterruptISR( void )
 		/* Save the FPSW and accumulator. */
 		"MVFC		FPSW, R15					\n" \
 		"PUSH.L		R15							\n" \
-		"MVFACHI 	R15							\n" \
+		"MVFACGU	#0, A1, R15					\n" \
 		"PUSH.L		R15							\n" \
-
-		/* Middle word. */
-		"MVFACMI	R15							\n" \
-
-		/* Shifted left as it is restored to the low order word. */
-		"SHLL		#16, R15					\n" \
+		"MVFACHI	#0, A1, R15					\n" \
+		"PUSH.L		R15							\n" \
+		/* Low order word. */
+		"MVFACLO	#0, A1, R15					\n" \
+		"PUSH.L		R15							\n" \
+		"MVFACGU	#0, A0, R15					\n" \
+		"PUSH.L		R15							\n" \
+		"MVFACHI	#0, A0, R15					\n" \
+		"PUSH.L		R15							\n" \
+		/* Low order word. */
+		"MVFACLO	#0, A0, R15					\n" \
 		"PUSH.L		R15							\n" \
 
 		/* Save the stack pointer to the TCB. */
@@ -333,10 +359,30 @@ void vSoftwareInterruptISR( void )
 
 		/* Restore the context of the new task.  The PSW (Program Status Word) and
 		PC will be popped by the RTE instruction. */
-		"POP		R15							\n" \
-		"MVTACLO 	R15							\n" \
-		"POP		R15							\n" \
-		"MVTACHI 	R15							\n" \
+	    "POP		R15							\n" \
+
+	    /* Accumulator low 32 bits. */
+	    "MVTACLO	R15, A0						\n" \
+	    "POP		R15							\n" \
+
+	    /* Accumulator high 32 bits. */
+	    "MVTACHI	R15, A0						\n" \
+	    "POP		R15							\n" \
+
+	    /* Accumulator guard. */
+	    "MVTACGU	R15, A0						\n" \
+	    "POP		R15							\n" \
+
+	    /* Accumulator low 32 bits. */
+	    "MVTACLO	R15, A1						\n" \
+	    "POP		R15							\n" \
+
+	    /* Accumulator high 32 bits. */
+	    "MVTACHI	R15, A1						\n" \
+	    "POP		R15							\n" \
+
+	    /* Accumulator guard. */
+	    "MVTACGU	R15, A1						\n" \
 		"POP		R15							\n" \
 		"MVTC		R15, FPSW					\n" \
 		"POPM		R1-R15						\n" \
@@ -355,14 +401,14 @@ void vTickISR( void )
 
 	/* Increment the tick, and perform any processing the new tick value
 	necessitates.  Ensure IPL is at the max syscall value first. */
-	portDISABLE_INTERRUPTS_FROM_KERNEL_ISR();
+	portMASK_INTERRUPTS_FROM_KERNEL_ISR();
 	{
 		if( xTaskIncrementTick() != pdFALSE )
 		{
 			taskYIELD();
 		}
 	}
-	portENABLE_INTERRUPTS_FROM_KERNEL_ISR();
+	portUNMASK_INTERRUPTS_FROM_KERNEL_ISR();
 }
 /*-----------------------------------------------------------*/
 

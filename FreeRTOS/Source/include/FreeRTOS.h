@@ -90,11 +90,11 @@
 extern "C" {
 #endif
 
-/* Basic FreeRTOS definitions. */
-#include "projdefs.h"
-
 /* Application specific configuration options. */
 #include "FreeRTOSConfig.h"
+
+/* Basic FreeRTOS definitions. */
+#include "projdefs.h"
 
 /* configUSE_PORT_OPTIMISED_TASK_SELECTION must be defined before portable.h
 is included as it is used by the port layer. */

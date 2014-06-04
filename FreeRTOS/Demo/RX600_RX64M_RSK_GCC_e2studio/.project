@@ -53,7 +53,7 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1395316906017</id>
+			<id>1401803846285</id>
 			<name>src/Common_Demo_Tasks</name>
 			<type>22</type>
 			<matcher>
@@ -62,7 +62,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1395316906049</id>
+			<id>1401803846295</id>
 			<name>src/Common_Demo_Tasks</name>
 			<type>22</type>
 			<matcher>
@@ -71,16 +71,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1395316906064</id>
-			<name>src/Common_Demo_Tasks</name>
-			<type>22</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-Int*.*</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1395316906080</id>
+			<id>1401803846295</id>
 			<name>src/Common_Demo_Tasks</name>
 			<type>22</type>
 			<matcher>
@@ -89,7 +80,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1395316906096</id>
+			<id>1401803846295</id>
 			<name>src/Common_Demo_Tasks</name>
 			<type>22</type>
 			<matcher>

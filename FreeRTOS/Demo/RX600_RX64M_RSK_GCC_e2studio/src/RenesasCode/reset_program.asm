@@ -71,7 +71,7 @@ _PowerON_Reset :
 
 /* change PSW PM to user-mode */
     MVFC   PSW,R1
-    OR     #00100000h,R1
+/* DON'T CHANGE TO USER MODE    OR     #00100000h,R1 */
     PUSH.L R1
     MVFC   PC,R1
     ADD    #10,R1

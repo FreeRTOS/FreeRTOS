@@ -77,9 +77,17 @@
 #include "IntQueueTimer.h"
 #include "IntQueue.h"
 
-/* Renesas includes. */
-#include "r_cg_macrodriver.h"
-#include "RegisterWriteProtect.h"
+#define IPR_PERIB_INTB128	128
+#define IPR_PERIB_INTB129	129
+#define IER_PERIB_INTB128	0x10
+#define IER_PERIB_INTB129	0x10
+#define	IEN_PERIB_INTB128	IEN0
+#define	IEN_PERIB_INTB129	IEN1
+#define IR_PERIB_INTB128	128
+#define IR_PERIB_INTB129	129
+
+void vIntQTimerISR0( void ) __attribute__ ((interrupt));
+void vIntQTimerISR1( void ) __attribute__ ((interrupt));
 
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
 #define tmrTIMER_2_3_FREQUENCY	( 2001UL )
@@ -89,7 +97,8 @@ void vInitialiseTimerForIntQueueTest( void )
 	/* Ensure interrupts do not start until full configuration is complete. */
 	portENTER_CRITICAL();
 	{
-		EnablePRCR( PRC1_BIT );
+		/* Give write access. */
+		SYSTEM.PRCR.WORD = 0xa502;
 
 		/* Cascade two 8bit timer channels to generate the interrupts. 
 		8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
@@ -148,16 +157,22 @@ void vInitialiseTimerForIntQueueTest( void )
 }
 /*-----------------------------------------------------------*/
 
-#pragma interrupt ( Excep_PERIB_INTB128( vect = 128, enable ) )
-void Excep_PERIB_INTB128( void )
+/* On vector 128. */
+void vIntQTimerISR0( void )
 {
+	/* Enable interrupts to allow interrupt nesting. */
+	__asm volatile( "setpsw	i" );
+
 	portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
-#pragma interrupt ( Excep_PERIB_INTB129( vect = 129, enable ) )
-void Excep_PERIB_INTB129( void )
+/* On vector 129. */
+void vIntQTimerISR1( void )
 {
+	/* Enable interrupts to allow interrupt nesting. */
+	__asm volatile( "setpsw	i" );
+
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 

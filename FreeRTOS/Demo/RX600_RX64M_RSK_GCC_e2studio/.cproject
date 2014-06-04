@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.606469687">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.606469687" moduleId="org.eclipse.cdt.core.settings" name="HardwareDebug">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="RTOSDemo" buildArtefactType="com.renesas.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=com.renesas.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf *.lst *.lis *.lpp *.map" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.VCErrorParser" id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.606469687" name="HardwareDebug" parent="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id">
+				<configuration artifactName="RTOSDemo" buildArtefactType="com.renesas.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=com.renesas.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf *.lst *.lis *.lpp *.map" description="" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.VCErrorParser" id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.606469687" name="HardwareDebug" parent="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id">
 					<folderInfo id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.606469687." name="/" resourcePath="">
-						<toolChain id="%com.renesas.cdt.rx.hardwaredebug.win32.toolChain.Id.804086182" name="KPIT GNURX-ELF Toolchain" superClass="%com.renesas.cdt.rx.hardwaredebug.win32.toolChain.Id">
+						<toolChain errorParsers="" id="%com.renesas.cdt.rx.hardwaredebug.win32.toolChain.Id.804086182" name="KPIT GNURX-ELF Toolchain" superClass="%com.renesas.cdt.rx.hardwaredebug.win32.toolChain.Id">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.rx.hardwaredebug.win32.targetPlatform.Id.1441458979" osList="win32" superClass="com.renesas.cdt.rx.hardwaredebug.win32.targetPlatform.Id"/>
-							<builder buildPath="${workspace_loc:/RTOSDemo}/HardwareDebug" id="com.renesas.cdt.rx.hardwaredebug.win32.builder.Id.476907861" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.renesas.cdt.rx.hardwaredebug.win32.builder.Id"/>
-							<tool command="rx-elf-libgen" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.libgen.Id.2057566942" name="Library Generator" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.libgen.Id">
+							<builder buildPath="${workspace_loc:/RTOSDemo}/HardwareDebug" errorParsers="org.eclipse.cdt.core.GmakeErrorParser" id="com.renesas.cdt.rx.hardwaredebug.win32.builder.Id.476907861" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.renesas.cdt.rx.hardwaredebug.win32.builder.Id"/>
+							<tool command="rx-elf-libgen" errorParsers="" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.libgen.Id.2057566942" name="Library Generator" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.libgen.Id">
 								<option id="com.renesas.cdt.core.LibraryGenerator.option.math.2039618467" name="math.h : Performs numeric calculations such as trigonometric functions" superClass="com.renesas.cdt.core.LibraryGenerator.option.math" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.LibraryGenerator.option.stdio.2055452080" name="stdio.h : Performs input/output handling" superClass="com.renesas.cdt.core.LibraryGenerator.option.stdio" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.LibraryGenerator.option.stdlib.321901636" name="stdlib.h : Performs C program standard processing such as storage area management" superClass="com.renesas.cdt.core.LibraryGenerator.option.stdlib" value="true" valueType="boolean"/>
@@ -30,7 +28,7 @@
 								<option id="com.renesas.cdt.core.LibraryGenerator.option.selectLibrary.236583299" name="Select library" superClass="com.renesas.cdt.core.LibraryGenerator.option.selectLibrary" value="Optimized" valueType="enumerated"/>
 								<option id="com.renesas.cdt.core.LibraryGenerator.option.libraryType.1090078057" name="Library type" superClass="com.renesas.cdt.core.LibraryGenerator.option.libraryType" value="Project-Built" valueType="enumerated"/>
 							</tool>
-							<tool id="com.renesas.cdt.rx.hardwaredebug.win32.tool.compiler.Id.315385351" name="Compiler" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.compiler.Id">
+							<tool errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.compiler.Id.315385351" name="Compiler" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.compiler.Id">
 								<option defaultValue="true" id="com.renesas.cdt.core.Compiler.option.misc2.945596144" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.rx.HardwareDebug.Compiler.option.macroDefines.1508551089" name="Macro Defines" superClass="com.renesas.cdt.rx.HardwareDebug.Compiler.option.macroDefines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__RX_LITTLE_ENDIAN__=1"/>
@@ -43,30 +41,33 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS/Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Common_Demo_Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS/Source/portable/GCC/RX600v2}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}\rx-elf\optlibinc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/rx-elf/optlibinc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/RenesasCode}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RTOSDemo/src/RenesasCode/cg_src}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.CPUSeries.1945733388" name="Cpu Series" superClass="com.renesas.cdt.core.Compiler.option.CPUSeries" value="RX64M" valueType="string"/>
 								<option id="com.renesas.cdt.core.Compiler.option.warning14.1219627871" name="Print extra warning messages(-Wextra)" superClass="com.renesas.cdt.core.Compiler.option.warning14" value="true" valueType="boolean"/>
+								<option command="-mcpu=rx64m" commandFalse="-mcpu=rx600" id="com.renesas.cdt.rx.HardwareDebug.Compiler.option.genCodeForRX64M.2046419337" name="Generate code for RX64M target" superClass="com.renesas.cdt.rx.HardwareDebug.Compiler.option.genCodeForRX64M" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.rx.HardwareDebug.Compiler.option.optimizationLevel.68724734" name="Optimization level" superClass="com.renesas.cdt.rx.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rx.HardwareDebug.Compiler.option.optimizationLevel.none" valueType="enumerated"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1746322545" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.1052891014" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>
-							<tool id="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id.508016564" name="Assembler" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id">
+							<tool errorParsers="org.eclipse.cdt.core.GASErrorParser" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id.508016564" name="Assembler" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id">
 								<option id="com.renesas.cdt.rx.HardwareDebug.Assembler.option.dataEndian.735581335" name="Data Endian" superClass="com.renesas.cdt.rx.HardwareDebug.Assembler.option.dataEndian" value="Little-endian data" valueType="enumerated"/>
 								<option id="com.renesas.cdt.core.Assembler.option.includeFileDirectories.286633038" name="Include file directories" superClass="com.renesas.cdt.core.Assembler.option.includeFileDirectories" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}\src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}/src&quot;"/>
 								</option>
 								<inputType id="%Base.Assembler.inputType.Id.1966626285" name="Assembler InputType" superClass="%Base.Assembler.inputType.Id"/>
 							</tool>
-							<tool command="rx-elf-ld" commandLinePattern="${COMMAND} ${OUTPUT_FLAG}${OUTPUT_PREFIX} ${OUTPUT}${INPUTS} ${FLAGS}" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.linker.Id.1075007051" name="Linker" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.linker.Id">
+							<tool command="rx-elf-ld" commandLinePattern="${COMMAND} ${OUTPUT_FLAG}${OUTPUT_PREFIX} ${OUTPUT}${INPUTS} ${FLAGS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.linker.Id.1075007051" name="Linker" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.linker.Id">
 								<option id="com.renesas.cdt.rx.HardwareDebug.Linker.option.dataEndian.233227307" name="Data Endian" superClass="com.renesas.cdt.rx.HardwareDebug.Linker.option.dataEndian" value="Little-endian data" valueType="enumerated"/>
 								<option id="com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveSearchDirectories.1899007176" name="Archive search directories" superClass="com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveSearchDirectories" valueType="stringList">
 									<listOptionValue builtIn="false" value="&quot;${CONFIGDIR}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}\lib\gcc\rx-elf\\${GCC_VERSION}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/lib/gcc/rx-elf//${GCC_VERSION}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveLibraryFiles.821809154" name="Archive (library) files" superClass="com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveLibraryFiles" valueType="stringList">
-									<listOptionValue builtIn="false" value="${ProjName}"/>
+									<listOptionValue builtIn="false" value="${BuildArtifactFileBaseName}"/>
 									<listOptionValue builtIn="false" value="gcc"/>
 								</option>
 								<option id="com.renesas.cdt.core.Linker.option.userDefinedOptions.1112264479" name="User defined options" superClass="com.renesas.cdt.core.Linker.option.userDefinedOptions" valueType="stringList">
@@ -89,11 +90,11 @@
 									<listOptionValue builtIn="false" value="&quot;.\libRTOSDemo.a&quot;"/>
 								</option>
 							</tool>
-							<tool id="com.renesas.cdt.rx.hardwaredebug.win32.tool.objcopy.Id.2054059721" name="Objcopy" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.objcopy.Id"/>
+							<tool errorParsers="" id="com.renesas.cdt.rx.hardwaredebug.win32.tool.objcopy.Id.2054059721" name="Objcopy" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

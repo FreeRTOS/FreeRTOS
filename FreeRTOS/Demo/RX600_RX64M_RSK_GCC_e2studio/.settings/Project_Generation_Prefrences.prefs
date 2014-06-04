@@ -18,5 +18,5 @@ com.renesas.cdt.rx.HardwareDebug.Compiler.option.generateRXas100output=false
 com.renesas.cdt.rx.HardwareDebug.Compiler.option.macroDefines=__RX_LITTLE_ENDIAN__\=1;
 com.renesas.cdt.rx.HardwareDebug.Compiler.option.make64bitDouble=false
 com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveLibraryFiles=${ProjName};gcc;
-com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveSearchDirectories.1899007176="${CONFIGDIR}";"${TCINSTALL}\\lib\\gcc\\rx-elf\\\\${GCC_VERSION}";
+com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveSearchDirectories.1899007176="${CONFIGDIR}";"${TCINSTALL}/lib/gcc/rx-elf//${GCC_VERSION}";"${TCINSTALL}/lib/gcc/rx-elf/${GCC_VERSION}";
 eclipse.preferences.version=1

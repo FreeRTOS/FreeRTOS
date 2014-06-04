@@ -75,7 +75,7 @@
 #include "partest.h"
 
 /* Hardware specifics. */
-//#include "iodefine.h"
+#include "rskrx64mdef.h"
 
 #define partestNUM_LEDS ( 4 )
 
@@ -85,14 +85,22 @@ long lParTestGetLEDState( unsigned long ulLED );
 
 void vParTestInitialise( void )
 {
-	/* Port pin configuration is done by the low level set up prior to this
-	function being called. */
+	/* First set the data levels. */
+	LED0 = LED_OFF;
+	LED1 = LED_OFF;
+	LED2 = LED_OFF;
+	LED3 = LED_OFF;
+
+	/* Set port direction registers. */
+	LED0_PIN_DIR = OUTPUT_PIN;
+	LED1_PIN_DIR = OUTPUT_PIN;
+	LED2_PIN_DIR = OUTPUT_PIN;
+	LED3_PIN_DIR = OUTPUT_PIN;
 }
 /*-----------------------------------------------------------*/
 
 void vParTestSetLED( unsigned long ulLED, signed long xValue )
 {
-#if 0
 	if( ulLED < partestNUM_LEDS )
 	{
 		if( xValue != 0 )
@@ -135,13 +143,11 @@ void vParTestSetLED( unsigned long ulLED, signed long xValue )
 			taskEXIT_CRITICAL();
 		}
 	}
-#endif
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned long ulLED )
 {
-#if 0
 	if( ulLED < partestNUM_LEDS )
 	{
 		taskENTER_CRITICAL();
@@ -157,14 +163,13 @@ void vParTestToggleLED( unsigned long ulLED )
 		}
 		taskEXIT_CRITICAL();
 	}
-#endif
 }
 /*-----------------------------------------------------------*/
 
 long lParTestGetLEDState( unsigned long ulLED )
 {
 long lReturn = pdTRUE;
-#if 0
+
 	if( ulLED < partestNUM_LEDS )
 	{
 		switch( ulLED )
@@ -191,7 +196,7 @@ long lReturn = pdTRUE;
 						break;
 		}
 	}
-#endif
+
 	return lReturn;
 }
 /*-----------------------------------------------------------*/

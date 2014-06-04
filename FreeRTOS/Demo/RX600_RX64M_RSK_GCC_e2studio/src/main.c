@@ -91,9 +91,6 @@
 #include "QueueOverwrite.h"
 #include "EventGroupsDemo.h"
 
-/* Renesas includes. */
-#include "iodefine.h"
-
 /* Set option bytes */
 #pragma address OFS0_location = 0xFFFFFF8CUL
 #pragma address OFS1_location = 0xFFFFFF88UL
@@ -163,6 +160,9 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+	/* Set up the ports used by the LED outputs (the name ParTest is now
+	obsolete - it originally came from "parallel port test"). */
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 

@@ -138,7 +138,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
-
+uint32_t ul1, ul2;
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */

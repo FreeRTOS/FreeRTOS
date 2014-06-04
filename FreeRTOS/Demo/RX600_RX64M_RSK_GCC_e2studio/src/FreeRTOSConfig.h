@@ -66,6 +66,9 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+/* Hardware specifics. */
+#include "iodefine.h"
+
 /* Prevent Renesas headers redefining some stdint.h types. */
 #define __TYPEDEF__	1
 

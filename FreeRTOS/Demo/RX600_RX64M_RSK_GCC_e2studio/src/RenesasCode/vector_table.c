@@ -21,6 +21,10 @@
 typedef void (*fp) (void);
 extern void PowerON_Reset (void);
 extern void stack (void);
+extern void vTickISR( void );
+extern void vSoftwareInterruptISR( void );
+extern void vIntQTimerISR0( void );
+extern void vIntQTimerISR1( void );
 
 #define FVECT_SECT    __attribute__ ((section (".fvectors")))
 
@@ -98,65 +102,65 @@ const void *HardwareVectors[] FVECT_SECT  = {
 
 const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x0000  Reserved
-    
+	(fp)0,
 //;0x0004  Reserved
-    
+	(fp)0,
 //;0x0008  Reserved
-    
+	(fp)0,
 //;0x000C  Reserved
-    
+	(fp)0,
 //;0x0010  Reserved
-    
+	(fp)0,
 //;0x0014  Reserved
-    
+	(fp)0,
 //;0x0018  Reserved
-    
+	(fp)0,
 //;0x001C  Reserved
-    
+	(fp)0,
 //;0x0020  Reserved
-    
+	(fp)0,
 //;0x0024  Reserved
-    
+	(fp)0,
 //;0x0028  Reserved
-    
+	(fp)0,
 //;0x002C  Reserved
-    
+	(fp)0,
 //;0x0030  Reserved
-    
+	(fp)0,
 //;0x0034  Reserved
-    
+	(fp)0,
 //;0x0038  Reserved
-    
+	(fp)0,
 //;0x003C  Reserved
-
+	(fp)0,
 //;0x0040  BUSERR
     (fp)INT_Excep_BSC_BUSERR,
 //;0x0044  Reserved
-
+    (fp)0,
 //;0x0048  RAMERR
     (fp)INT_Excep_RAM_RAMERR,
 //;0x004C  Reserved
-
+    (fp)0,
 //;0x0050  Reserved
-
+    (fp)0,
 //;0x0054 FIFERR
     (fp)INT_Excep_FCU_FIFERR,
 //;0x0058  Reserved
-
+    (fp)0,
 //;0x005C  FRDYI
     (fp)INT_Excep_FCU_FRDYI,
 //;0x0060  Reserved
-
+    (fp)0,
 //;0x0064  Reserved
-
+    (fp)0,
 //;0x0068  SWINT2
     (fp)INT_Excep_ICU_SWINT2,
 
 //;0x006C  SWINT
-    (fp)INT_Excep_ICU_SWINT,
+    (fp)vSoftwareInterruptISR,
 
 //;0x0070  CMI0
-    (fp)INT_Excep_CMT0_CMI0,
+    (fp)vTickISR,
 
 //;0x0074  CMI1
     (fp)INT_Excep_CMT1_CMI1,
@@ -179,18 +183,18 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x008C  D1FIFO0
     (fp)INT_Excep_USB0_D1FIFO0,
 //;0x0090  Reserved
-
+    (fp)0,
 //;0x0094  Reserved
-
+    (fp)0,
 //;0x0098  SPRI0
     (fp)INT_Excep_RSPI0_SPRI0,
 
 //;0x009C  SPTI0
     (fp)INT_Excep_RSPI0_SPTI0,
 //;0x00A0  Reserved
-
+    (fp)0,
 //;0x00A4  Reserved
-
+    (fp)0,
 //;0x00A8  SPRI
     (fp)INT_Excep_QSPI_SPRI,
 
@@ -212,7 +216,7 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x00C0  SSIRTI1
     (fp)INT_Excep_SSI1_SSIRTI1,
 //;0x00C4  Reserved
-
+    (fp)0,
 //;0x00C8  IDEI
     (fp)INT_Excep_SRC_IDEI,
 
@@ -231,9 +235,9 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x00DC TXI2
     (fp)INT_Excep_RIIC2_TXI2,
 //;0x00E0  Reserved
-
+    (fp)0,
 //;0x00E4  Reserved
-
+    (fp)0,
 //;0x00E8 RXI0
     (fp)INT_Excep_SCI0_RXI0,
 
@@ -333,7 +337,7 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x0168 USBR0
     (fp)INT_Excep_USB_USBR0,
 //;0x016C Reserved
-
+    (fp)0,
 //;0x0170 ALM
     (fp)INT_Excep_RTC_ALM,
 
@@ -379,11 +383,11 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x01A8 GROUPBE0
     (fp)INT_Excep_ICU_GROUPBE0,
 //;0x01AC Reserved 
-
+    (fp)0,
 //;0x01B0 Reserved 
-
+    (fp)0,
 //;0x01B4 Reserved 
-
+    (fp)0,
 //;0x01B8 GROUPBL0
     (fp)INT_Excep_ICU_GROUPBL0,
 
@@ -409,9 +413,9 @@ const fp RelocatableVectors[] RVECT_SECT  = {
     (fp)INT_Excep_SCIF12_TXIF12,
 
 //;0x01D8 Reserved
-
+    (fp)0,
 //;0x01DC Reserved
-
+    (fp)0,
 //;0x01E0 DMAC0I
     (fp)INT_Excep_DMAC_DMAC0I,
 
@@ -437,10 +441,10 @@ const fp RelocatableVectors[] RVECT_SECT  = {
     (fp)INT_Excep_EXDMAC_EXDMAC1I,
 
 //;0x0200  INTB128
-    (fp)INT_Excep_PERIB_INTB128,
+    (fp)vIntQTimerISR0,
 
 //;0x0204 INTB129
-    (fp)INT_Excep_PERIB_INTB129,
+    (fp)vIntQTimerISR1,
 
 //;0x0208 INTB130
     (fp)INT_Excep_PERIB_INTB130,

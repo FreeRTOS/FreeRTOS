@@ -109,11 +109,9 @@ _vRegTest1Task:
 	MOVW	BC, #0x6666
 	MOVW	DE, #0x7777
 	MOVW	HL, #0x8888
-	SEL		RB3
-	MOVW	AX, #0xAAAA
-	MOVW	BC, #0xBBBB
-	MOVW	DE, #0xCCCC
-	MOVW	HL, #0xDDDD
+
+	/* Register bank 3 is not used outside of interrupts so is not saved as part
+	of the task context. */
 	SEL		RB0
 
 _loop1:
@@ -186,24 +184,8 @@ _loop1:
 	MOVW	AX, #0x5555
 
 
-	SEL		RB3
-	CMPW	AX, #0xAAAA
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, BC
-	CMPW	AX, #0xBBBB
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, DE
-	CMPW	AX, #0xCCCC
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, HL
-	CMPW	AX, #0xDDDD
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, #0xAAAA
-
+	/* Register bank 3 is not used outside of interrupts so is not saved as
+	part of the task context. */
 
 	SEL 	RB0
 
@@ -235,11 +217,9 @@ _vRegTest2Task:
 	MOVW	BC, #0x0660
 	MOVW	DE, #0x0770
 	MOVW	HL, #0x0880
-	SEL		RB3
-	MOVW	AX, #0x0AA0
-	MOVW	BC, #0x0BB0
-	MOVW	DE, #0x0CC0
-	MOVW	HL, #0x0DD0
+
+	/* Register bank 3 is not used outside of interrupts so is not saved as
+	part of the task context. */
 	SEL		RB0
 
 _loop2:
@@ -296,23 +276,8 @@ _loop2:
 	BR		!!_vRegTestError
 	MOVW	AX, #0x0550
 
-	SEL		RB3
-	CMPW	AX, #0x0AA0
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, BC
-	CMPW	AX, #0x0BB0
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, DE
-	CMPW	AX, #0x0CC0
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, HL
-	CMPW	AX, #0x0DD0
-	BZ		$.+5
-	BR		!!_vRegTestError
-	MOVW	AX, #0x0AA0
+	/* Register bank 3 is not used outside of interrupts so is not saved as
+	part of the task context. */
 
 	SEL 	RB0
 

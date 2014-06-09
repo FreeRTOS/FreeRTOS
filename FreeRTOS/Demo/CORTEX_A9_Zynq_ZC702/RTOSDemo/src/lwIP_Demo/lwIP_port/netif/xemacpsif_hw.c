@@ -51,6 +51,9 @@ void init_emacps(xemacpsif_s *xemacps, struct netif *netif)
 	/* obtain config of this emac */
 	mac_config = (XEmacPs_Config *)xemacps_lookup_config(mac_address);
 
+	/* Does not appear to be used. */
+	( void ) mac_config;
+
 	xemacpsp = &xemacps->emacps;
 
 	/* set mac address */
@@ -77,6 +80,9 @@ void init_emacps_on_error (xemacpsif_s *xemacps, struct netif *netif)
 
 	/* obtain config of this emac */
 	mac_config = (XEmacPs_Config *)xemacps_lookup_config(mac_address);
+
+	/* Does not appear to be used? */
+	( void ) mac_config;
 
 	xemacpsp = &xemacps->emacps;
 
@@ -152,6 +158,10 @@ void emacps_error_handler(void *arg,u8 Direction, u32 ErrorWord)
 	txring = &XEmacPs_GetRxRing(&xemacpsif->emacps);
 	xtopologyp = &xtopology[xemac->topology_index];
 	xemacps = &xemacpsif->emacps;
+
+	/* Do not appear to be used. */
+	( void ) xemacps;
+	( void ) xtopologyp;
 
 	if (ErrorWord != 0) {
 		switch (Direction) {

@@ -286,7 +286,9 @@ void setup_rx_bds(XEmacPs_BdRing *rxring)
 			if (Status == XST_DMA_SG_LIST_ERROR)
 				LWIP_DEBUGF(NETIF_DEBUG, ("XST_DMA_SG_LIST_ERROR: this function was called out of sequence with XEmacPs_BdRingAlloc()\r\n"));
 			else
+			{
 				LWIP_DEBUGF(NETIF_DEBUG, ("set of BDs was rejected because the first BD did not have its start-of-packet bit set, or the last BD did not have its end-of-packet bit set, or any one of the BD set has 0 as length value\r\n"));
+			}
 			return;
 		}
 	}
@@ -396,7 +398,7 @@ XStatus init_dma(struct xemac_s *xemac)
 	XStatus Status;
 	int i;
 	unsigned int BdIndex;
-	char *endAdd = &_end;
+	char *endAdd = (char *) &_end;
 	/*
 	 * Align the BD starte address to 1 MB boundary.
 	 */

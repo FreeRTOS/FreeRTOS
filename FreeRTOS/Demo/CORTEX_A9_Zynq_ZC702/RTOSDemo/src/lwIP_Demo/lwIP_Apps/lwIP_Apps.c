@@ -127,7 +127,7 @@ void lwIPAppsInit( void *pvArgument )
 {
 ip_addr_t xIPAddr, xNetMask, xGateway;
 extern err_t xemacpsif_init( struct netif *netif );
-extern void xemacif_input_thread( struct netif *netif );
+extern void xemacif_input_thread( void *netif );
 static struct netif xNetIf;
 
 	( void ) pvArgument;
@@ -150,7 +150,7 @@ static struct netif xNetIf;
 	xNetIf.hwaddr[ 4 ] = configMAC_ADDR4;
 	xNetIf.hwaddr[ 5 ] = configMAC_ADDR5;
 
-	netif_set_default( netif_add( &xNetIf, &xIPAddr, &xNetMask, &xGateway, XPAR_XEMACPS_0_BASEADDR, xemacpsif_init, tcpip_input ) );
+	netif_set_default( netif_add( &xNetIf, &xIPAddr, &xNetMask, &xGateway, ( void * ) XPAR_XEMACPS_0_BASEADDR, xemacpsif_init, tcpip_input ) );
 	netif_set_up( &xNetIf );
 
 	/* Install the server side include handler. */

@@ -64,12 +64,13 @@
 */
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
- * select between the two.  The simply blinky demo is implemented and described
- * in main_blinky.c.  The more comprehensive test and demo application is
- * implemented and described in main_full.c.
+ * This project provides three demo applications.  A simple blinky style
+ * project, a more comprehensive test and demo application, and an lwIP example.
+ * The mainSELECTED_APPLICATION setting (defined in this file) is used to
+ * select between the three.  The simply blinky demo is implemented and
+ * described in main_blinky.c.  The more comprehensive test and demo application
+ * is implemented and described in main_full.c.  The lwIP example is implemented
+ * and described in main_lwIP.c.
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -111,9 +112,18 @@
 #include "xscugic.h"
 #include "xil_exception.h"
 
-/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+/* mainSELECTED_APPLICATION is used to select between three demo applications,
+ * as described at the top of this file.
+ *
+ * When mainSELECTED_APPLICATION is set to 0 the simple blinky example will
+ * be run.
+ *
+ * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
+ * application will be run.
+ *
+ * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
+ */
+#define mainSELECTED_APPLICATION	0
 
 /*-----------------------------------------------------------*/
 
@@ -123,13 +133,17 @@ or 0 to run the more comprehensive test and demo application. */
 static void prvSetupHardware( void );
 
 /*
- * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ * See the comments at the top of this file and above the
+ * mainSELECTED_APPLICATION definition.
  */
-#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+#if ( mainSELECTED_APPLICATION == 0 )
 	extern void main_blinky( void );
-#else
+#elif ( mainSELECTED_APPLICATION == 1 )
 	extern void main_full( void );
+#elif ( mainSELECTED_APPLICATION == 2 )
+	extern void main_lwIP( void );
+#else
+	#error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /*
@@ -162,17 +176,19 @@ extern void main_lwIP( void );
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
-main_lwIP();
-
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	/* The mainSELECTED_APPLICATION setting is described at the top
 	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	#if( mainSELECTED_APPLICATION == 0 )
 	{
 		main_blinky();
 	}
-	#else
+	#elif( mainSELECTED_APPLICATION == 1 )
 	{
 		main_full();
+	}
+	#else
+	{
+		main_lwIP();
 	}
 	#endif
 
@@ -281,7 +297,7 @@ volatile unsigned long ul = 0;
 
 void vApplicationTickHook( void )
 {
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+	#if( mainSELECTED_APPLICATION == 1 )
 	{
 		/* The full demo includes a software timer demo/test that requires
 		prodding periodically from the tick interrupt. */

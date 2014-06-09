@@ -109,7 +109,7 @@ void vLwipAppsReleaseTxBuffer( void );
    byte alignment -> define MEM_ALIGNMENT to 2. */
 /* MSVC port: intel processors don't need 4-byte alignment,
    but are faster that way! */
-#define MEM_ALIGNMENT			4
+#define MEM_ALIGNMENT			64
 
 /* MEM_SIZE: the size of the heap memory. If the application will send
 a lot of data that needs to be copied, this should be set high. */
@@ -148,10 +148,10 @@ a lot of data that needs to be copied, this should be set high. */
 /* The following four are used only with the sequential API and can be
    set to 0 if the application only will use the raw API. */
 /* MEMP_NUM_NETBUF: the number of struct netbufs. */
-#define MEMP_NUM_NETBUF         0
+#define MEMP_NUM_NETBUF         8
 
 /* MEMP_NUM_NETCONN: the number of struct netconns. */
-#define MEMP_NUM_NETCONN        10
+#define MEMP_NUM_NETCONN        16
 
 /* MEMP_NUM_TCPIP_MSG_*: the number of struct tcpip_msg, which is used
    for sequential API communication and incoming packets. Used in
@@ -198,6 +198,13 @@ a lot of data that needs to be copied, this should be set high. */
    TCP_SND_BUF/TCP_MSS for things to work. */
 #define TCP_SND_QUEUELEN		(16 * TCP_SND_BUF/TCP_MSS)
 
+#define CHECKSUM_GEN_TCP 	0
+#define CHECKSUM_GEN_UDP 	0
+#define CHECKSUM_GEN_IP  	0
+#define CHECKSUM_CHECK_TCP  0
+#define CHECKSUM_CHECK_UDP  0
+#define CHECKSUM_CHECK_IP 	0
+
 /* TCP writable space (bytes). This must be less than or equal
    to TCP_SND_BUF. It is the amount of space which must be
    available in the tcp snd_buf for select to return writable */
@@ -227,10 +234,15 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* IP reassembly and segmentation.These are orthogonal even
  * if they both deal with IP fragments */
-#define IP_REASSEMBLY			0
-#define IP_REASS_MAX_PBUFS		10
+#define IP_REASSEMBLY			1
+#define IP_REASS_MAX_PBUFS		128
 #define MEMP_NUM_REASSDATA		10
-#define IP_FRAG					0
+#define IP_FRAG					1
+
+#define IP_OPTIONS 0
+#define IP_FRAG_MAX_MTU 1500
+#define IP_DEFAULT_TTL 255
+#define LWIP_CHKSUM_ALGORITHM 3
 
 
 /* ---------- ICMP options ---------- */
@@ -276,6 +288,15 @@ a lot of data that needs to be copied, this should be set high. */
 	#define PBUF_STATS				1
 	#define SYS_STATS				1
 #endif /* LWIP_STATS */
+
+
+#define NO_SYS_NO_TIMERS 1
+#define MEMP_SEPARATE_POOLS 1
+#define MEMP_NUM_FRAG_PBUF 256
+#define IP_OPTIONS_ALLOWED 0
+#define TCP_OVERSIZE TCP_MSS
+#define LWIP_COMPAT_MUTEX 0
+#define LWIP_ALLOW_MEM_FREE_FROM_OTHER_CONTEXT 1
 
 
 /* ---------- PPP options ---------- */

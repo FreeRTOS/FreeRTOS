@@ -218,10 +218,10 @@ Zynq MPU. */
 #define configMAC_ADDR5	0x16
 
 /* IP address configuration. */
-#define configIP_ADDR0		10
-#define configIP_ADDR1		134
-#define configIP_ADDR2		134
-#define configIP_ADDR3		210
+#define configIP_ADDR0		172
+#define configIP_ADDR1		25
+#define configIP_ADDR2		218
+#define configIP_ADDR3		200
 
 /* Netmask configuration. */
 #define configNET_MASK0		255

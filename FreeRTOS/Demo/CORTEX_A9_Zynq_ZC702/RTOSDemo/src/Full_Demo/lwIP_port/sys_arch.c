@@ -276,15 +276,10 @@ err_t sys_sem_new( sys_sem_t *pxSemaphore, u8_t ucCount )
 {
 err_t xReturn = ERR_MEM;
 
-	vSemaphoreCreateBinary( ( *pxSemaphore ) );
+	*pxSemaphore = xSemaphoreCreateCounting( 0xffff, ( unsigned long ) ucCount );
 
 	if( *pxSemaphore != NULL )
 	{
-		if( ucCount == 0U )
-		{
-			xSemaphoreTake( *pxSemaphore, 1UL );
-		}
-
 		xReturn = ERR_OK;
 		SYS_STATS_INC_USED( sem );
 	}

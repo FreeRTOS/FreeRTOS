@@ -56,7 +56,7 @@ static int EmacIntrNum;
 extern u8 _end;
 
 #ifdef OS_IS_FREERTOS
-long xInsideISR = 0;
+extern BaseType_t xInsideISR;
 #endif
 
 #define XEMACPS_BD_TO_INDEX(ringptr, bdptr)				\

@@ -145,9 +145,6 @@
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
 
-/* lwIP includes. */
-#include "lwip/tcpip.h"
-
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -228,11 +225,6 @@ extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriori
  */
 static void prvPseudoRandomiser( void *pvParameters );
 
-/*
- * Defined in lwIPApps.c.
- */
-extern void lwIPAppsInit( void *pvArguments );
-
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
@@ -248,9 +240,6 @@ char *pcStatusMessage = "All tasks running without error";
 
 void main_full( void )
 {
-	/* Init lwIP and start lwIP tasks. */
-	tcpip_init( lwIPAppsInit, NULL );
-
 	/* Start all the other standard demo/test tasks.  They have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */

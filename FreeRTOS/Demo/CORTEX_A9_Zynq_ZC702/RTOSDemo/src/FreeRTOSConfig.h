@@ -207,7 +207,8 @@ Zynq MPU. */
 
 /****** Network configuration settings. ***************************************/
 
-#define configLWIP_TASK_PRIORITY			( 5 )
+#define configMAC_INPUT_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define configLWIP_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
 
 /* MAC address configuration. */
 #define configMAC_ADDR0	0x00

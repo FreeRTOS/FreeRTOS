@@ -48,6 +48,11 @@
 #include "lwip/mem.h"
 #include "lwip/stats.h"
 
+/* Very crude mechanism used to determine if the critical section handling
+functions are being called from an interrupt context or not.  This relies on
+the interrupt handler setting this variable manually. */
+BaseType_t xInsideISR = pdFALSE;
+
 /*---------------------------------------------------------------------------*
  * Routine:  sys_mbox_new
  *---------------------------------------------------------------------------*
@@ -137,8 +142,19 @@ void sys_mbox_post( sys_mbox_t *pxMailBox, void *pxMessageToPost )
 err_t sys_mbox_trypost( sys_mbox_t *pxMailBox, void *pxMessageToPost )
 {
 err_t xReturn;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
-	if( xQueueSend( *pxMailBox, &pxMessageToPost, 0UL ) == pdPASS )
+	if( xInsideISR != pdFALSE )
+	{
+		xReturn = xQueueSendFromISR( *pxMailBox, &pxMessageToPost, &xHigherPriorityTaskWoken );
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
+	else
+	{
+		xReturn = xQueueSend( *pxMailBox, &pxMessageToPost, ( TickType_t ) 0 );
+	}
+
+	if( xReturn == pdPASS )
 	{
 		xReturn = ERR_OK;
 	}
@@ -192,6 +208,8 @@ unsigned long ulReturn;
 
 	if( ulTimeOut != 0UL )
 	{
+		configASSERT( xInsideISR == ( portBASE_TYPE ) 0 );
+
 		if( pdTRUE == xQueueReceive( *pxMailBox, &( *ppvBuffer ), ulTimeOut/ portTICK_PERIOD_MS ) )
 		{
 			xEndTime = xTaskGetTickCount();
@@ -241,13 +259,25 @@ u32_t sys_arch_mbox_tryfetch( sys_mbox_t *pxMailBox, void **ppvBuffer )
 {
 void *pvDummy;
 unsigned long ulReturn;
+long lResult;
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	if( ppvBuffer== NULL )
 	{
 		ppvBuffer = &pvDummy;
 	}
 
-	if( pdTRUE == xQueueReceive( *pxMailBox, &( *ppvBuffer ), 0UL ) )
+	if( xInsideISR != pdFALSE )
+	{
+		lResult = xQueueReceiveFromISR( *pxMailBox, &( *ppvBuffer ), &xHigherPriorityTaskWoken );
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
+	else
+	{
+		lResult = xQueueReceive( *pxMailBox, &( *ppvBuffer ), 0UL );
+	}
+
+	if( lResult == pdPASS )
 	{
 		ulReturn = ERR_OK;
 	}
@@ -276,10 +306,16 @@ err_t sys_sem_new( sys_sem_t *pxSemaphore, u8_t ucCount )
 {
 err_t xReturn = ERR_MEM;
 
+	//vSemaphoreCreateBinary( ( *pxSemaphore ) );
 	*pxSemaphore = xSemaphoreCreateCounting( 0xffff, ( unsigned long ) ucCount );
 
 	if( *pxSemaphore != NULL )
 	{
+		if( ucCount == 0U )
+		{
+//			xSemaphoreTake( *pxSemaphore, 1UL );
+		}
+
 		xReturn = ERR_OK;
 		SYS_STATS_INC_USED( sem );
 	}
@@ -377,7 +413,20 @@ err_t xReturn = ERR_MEM;
  * @param mutex the mutex to lock */
 void sys_mutex_lock( sys_mutex_t *pxMutex )
 {
-	while( xSemaphoreTake( *pxMutex, portMAX_DELAY ) != pdPASS );
+BaseType_t xGotSemaphore;
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+	if( xInsideISR == 0 )
+	{
+		while( xSemaphoreTake( *pxMutex, portMAX_DELAY ) != pdPASS );
+	}
+	else
+	{
+#warning What happens if the mutex cannot be taken from an ISR in the code below
+		xGotSemaphore = xSemaphoreTakeFromISR( *pxMutex, &xHigherPriorityTaskWoken );
+		configASSERT( xGotSemaphore );
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
 }
 
 /** Unlock a mutex
@@ -407,7 +456,17 @@ void sys_mutex_free( sys_mutex_t *pxMutex )
  *---------------------------------------------------------------------------*/
 void sys_sem_signal( sys_sem_t *pxSemaphore )
 {
-	xSemaphoreGive( *pxSemaphore );
+portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+
+	if( xInsideISR != pdFALSE )
+	{
+		xSemaphoreGiveFromISR( *pxSemaphore, &xHigherPriorityTaskWoken );
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
+	else
+	{
+		xSemaphoreGive( *pxSemaphore );
+	}
 }
 
 /*---------------------------------------------------------------------------*
@@ -498,7 +557,10 @@ sys_thread_t xReturn;
  *---------------------------------------------------------------------------*/
 sys_prot_t sys_arch_protect( void )
 {
-	taskENTER_CRITICAL();
+	if( xInsideISR == pdFALSE )
+	{
+		taskENTER_CRITICAL();
+	}
 	return ( sys_prot_t ) 1;
 }
 
@@ -516,7 +578,10 @@ sys_prot_t sys_arch_protect( void )
 void sys_arch_unprotect( sys_prot_t xValue )
 {
 	(void) xValue;
-	taskEXIT_CRITICAL();
+	if( xInsideISR == pdFALSE )
+	{
+		taskEXIT_CRITICAL();
+	}
 }
 
 /*

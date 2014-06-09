@@ -132,12 +132,6 @@ the queue empty. */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
-/*
- * Called by main() to create the simply blinky style application if
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- */
-void main_blinky( void );
-
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */

@@ -165,7 +165,7 @@ static struct netif xNetIf;
 	use of the lwIP raw API. */
 	httpd_init();
 
-	sys_thread_new( "lwIP Input", xemacif_input_thread, &xNetIf, configMINIMAL_STACK_SIZE * 6, tskIDLE_PRIORITY );
+	sys_thread_new( "lwIP Input", xemacif_input_thread, &xNetIf, configMINIMAL_STACK_SIZE, configMAC_INPUT_TASK_PRIORITY );
 
 	/* Create the FreeRTOS defined basic command server.  This demonstrates use
 	of the lwIP sockets API. */

@@ -159,14 +159,13 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
-/* portCONFIGURE_TIMER_FOR_RUN_TIME_STATS is not required because the time base
-comes from the ulHighFrequencyTimerCounts variable which is incremented in a
-high frequency timer that is already being started as part of the interrupt
-nesting test. */
-#define configGENERATE_RUN_TIME_STATS	1
-extern volatile uint32_t ulHighFrequencyTimerCounts;
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
-#define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTimerCounts
+/* The private watchdog is used to generate run time stats. */
+#include "xscuwdt.h"
+extern XScuWdt xWatchDogInstance;
+extern void vInitialiseTimerForRunTimeStats( void );
+#define configGENERATE_RUN_TIME_STATS 1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vInitialiseTimerForRunTimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() ( 0xffffffffUL - XScuWdt_ReadReg( xWatchDogInstance.Config.BaseAddr, XSCUWDT_COUNTER_OFFSET ) )
 
 /* The size of the global output buffer that is available for use when there
 are multiple command interpreters running at once (for example, one on a UART
@@ -205,10 +204,20 @@ Zynq MPU. */
 
 
 
-/****** Network configuration settings. ***************************************/
+/****** Network configuration settings - only used when the lwIP example is
+built.  See the page that documents this demo on the http://www.FreeRTOS.org
+website for more information. ***********************************************/
 
+/* The priority for the task that unblocked by the MAC interrupt to process
+received packets. */
 #define configMAC_INPUT_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+
+/* The priority of the task that runs the lwIP stack. */
 #define configLWIP_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
+
+/* The priority of the task that uses lwIP sockets to provide a simple command
+line interface. */
+#define configCLI_TASK_PRIORITY				( tskIDLE_PRIORITY )
 
 /* MAC address configuration. */
 #define configMAC_ADDR0	0x00

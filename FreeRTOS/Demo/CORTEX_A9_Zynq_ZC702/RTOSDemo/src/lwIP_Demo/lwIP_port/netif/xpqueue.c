@@ -31,7 +31,7 @@ pq_create_queue()
 	pq_queue_t *q = NULL;
 
 	if (i >= NUM_QUEUES) {
-		xil_printf("ERR: Max Queues allocated\n\r");
+		//xil_printf("ERR: Max Queues allocated\n\r");
 		return q;
 	}
 

@@ -93,6 +93,7 @@
 
 /* Standard includes. */
 #include <stdio.h>
+#include <limits.h>
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -123,7 +124,7 @@
  *
  * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
  */
-#define mainSELECTED_APPLICATION	0
+#define mainSELECTED_APPLICATION	2
 
 /*-----------------------------------------------------------*/
 
@@ -160,6 +161,10 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
+
+/* The private watchdog is used as the timer that generates run time
+stats.  This frequency means it will overflow quite quickly. */
+XScuWdt xWatchDogInstance;
 
 /*-----------------------------------------------------------*/
 
@@ -359,5 +364,25 @@ size_t x;
 
     return ulBytes - x;
 }
+/*-----------------------------------------------------------*/
+
+void vInitialiseTimerForRunTimeStats( void )
+{
+XScuWdt_Config *pxWatchDogInstance;
+uint32_t ulValue;
+const uint32_t ulMaxDivisor = 0xff, ulDivisorShift = 0x08;
+
+	 pxWatchDogInstance = XScuWdt_LookupConfig( XPAR_SCUWDT_0_DEVICE_ID );
+	 XScuWdt_CfgInitialize( &xWatchDogInstance, pxWatchDogInstance, pxWatchDogInstance->BaseAddr );
+
+	 ulValue = XScuWdt_GetControlReg( &xWatchDogInstance );
+	 ulValue |= ulMaxDivisor << ulDivisorShift;
+	 XScuWdt_SetControlReg( &xWatchDogInstance, ulValue );
+
+	 XScuWdt_LoadWdt( &xWatchDogInstance, UINT_MAX );
+	 XScuWdt_SetTimerMode( &xWatchDogInstance );
+	 XScuWdt_Start( &xWatchDogInstance );
+}
+
 
 

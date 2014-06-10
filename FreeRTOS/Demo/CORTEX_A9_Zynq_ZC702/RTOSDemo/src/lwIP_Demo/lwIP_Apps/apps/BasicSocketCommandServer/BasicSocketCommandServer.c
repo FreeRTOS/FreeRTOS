@@ -83,8 +83,12 @@ const char *pcWelcomeMessage = "FreeRTOS command server - connection accepted.\r
 char cInChar;
 static char cInputString[ cmdMAX_INPUT_SIZE ], cOutputString[ cmdMAX_OUTPUT_SIZE ];
 portBASE_TYPE xReturned;
+extern void vRegisterSampleCLICommands( void );
 
 	( void ) pvParameters;
+
+	/* Register the standard CLI commands. */
+	vRegisterSampleCLICommands();
 
 	lSocket = lwip_socket(AF_INET, SOCK_STREAM, 0);
 

@@ -110,6 +110,10 @@
 	#error configMAX_API_CALL_INTERRUPT_PRIORITY must be greater than ( configUNIQUE_INTERRUPT_PRIORITIES / 2 )
 #endif
 
+/* Used to check non ISR safe API functions are not called from inside an
+ISR. */
+#define portASSERT_IF_IN_INTERRUPT() configASSERT( ( portICCRPR_RUNNING_PRIORITY_REGISTER == 0xffUL ) || ( portICCRPR_RUNNING_PRIORITY_REGISTER == portLOWEST_INTERRUPT_PRIORITY ) )
+
 /* Some vendor specific files default configCLEAR_TICK_INTERRUPT() in
 portmacro.h. */
 #ifndef configCLEAR_TICK_INTERRUPT
@@ -371,6 +375,10 @@ void vPortEndScheduler( void )
 
 void vPortEnterCritical( void )
 {
+	/* This is not the interrupt safe version of the enter critical function.
+	Only API functions that end in "FromISR" can be used in an interrupt. */
+	portASSERT_IF_IN_INTERRUPT();
+
 	/* Mask interrupts up to the max syscall interrupt priority. */
 	ulPortSetInterruptMask();
 
@@ -383,6 +391,10 @@ void vPortEnterCritical( void )
 
 void vPortExitCritical( void )
 {
+	/* This is not the interrupt safe version of the enter critical function.
+	Only API functions that end in "FromISR" can be used in an interrupt. */
+	portASSERT_IF_IN_INTERRUPT();
+
 	if( ulCriticalNesting > portNO_CRITICAL_NESTING )
 	{
 		/* Decrement the nesting count as the critical section is being
@@ -490,11 +502,8 @@ uint32_t ulReturn;
 		configMAX_SYSCALL_INTERRUPT_PRIORITY.
 
 		FreeRTOS maintains separate thread and ISR API functions to ensure
-		interrupt entry is as fast and simple as possible.
+		interrupt entry is as fast and simple as possible. */
 
-		The following links provide detailed information:
-		http://www.freertos.org/RTOS-Cortex-M3-M4.html
-		http://www.freertos.org/FAQHelp.html */
 		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER >= ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
 
 		/* Priority grouping:  The interrupt controller (GIC) allows the bits
@@ -512,4 +521,6 @@ uint32_t ulReturn;
 
 #endif /* configASSERT_DEFINED */
 /*-----------------------------------------------------------*/
+
+
 

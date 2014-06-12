@@ -124,6 +124,12 @@ void process_sent_bds(XEmacPs_BdRing *txring)
 	return;
 }
 
+void vPendableSendCompleteFunction( void *pvParameter, uint32_t ulParameter )
+{
+	( void ) ulParameter;
+	process_sent_bds(pvParameter);
+}
+
 void emacps_send_handler(void *arg)
 {
 	struct xemac_s *xemac;
@@ -139,11 +145,19 @@ void emacps_send_handler(void *arg)
 	regval = XEmacPs_ReadReg(xemacpsif->emacps.Config.BaseAddress, XEMACPS_TXSR_OFFSET);
 	XEmacPs_WriteReg(xemacpsif->emacps.Config.BaseAddress,XEMACPS_TXSR_OFFSET, regval);
 
-	/* If Transmit done interrupt is asserted, process completed BD's */
-	process_sent_bds(TxRingPtr);
 #ifdef OS_IS_FREERTOS
 	xInsideISR--;
 #endif
+
+	/* If Transmit done interrupt is asserted, process completed BD's - Replaced
+	a call to process_sent_bds(TxRingPtr); with a pendable function to prevent
+	the memory allocation files being accessed from the ISR with not redress if
+	obtaining the mutex fails. */
+	{
+		BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+		xTimerPendFunctionCallFromISR( vPendableSendCompleteFunction, TxRingPtr, 0, &xHigherPriorityTaskWoken );
+		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+	}
 }
 
 XStatus emacps_sgsend(xemacpsif_s *xemacpsif, struct pbuf *p)

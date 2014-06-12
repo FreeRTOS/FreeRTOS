@@ -67,7 +67,7 @@
 #include "FreeRTOS_CLI.h"
 
 /* Dimensions the buffer into which input characters are placed. */
-#define cmdMAX_INPUT_SIZE	20
+#define cmdMAX_INPUT_SIZE	100
 
 /* Dimensions the buffer into which string outputs can be placed. */
 #define cmdMAX_OUTPUT_SIZE	1024

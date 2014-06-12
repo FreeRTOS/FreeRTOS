@@ -140,7 +140,7 @@ XUartPs_Config *pxConfig;
 	the semaphore so it is in the correct state the first time
 	xSerialSendString() is called.  A block time of zero is used when taking
 	the semaphore as it is guaranteed to be available (it was just created). */
-	xTxCompleteSemaphore = xSemaphoreCreateMutex();
+	xTxCompleteSemaphore = xSemaphoreCreateBinary();
 	configASSERT( xTxCompleteSemaphore );
 	xSemaphoreTake( xTxCompleteSemaphore, 0 );
 
@@ -208,7 +208,7 @@ const TickType_t xMaxWait = 200UL / portTICK_PERIOD_MS;
 	otherwise there is a risk the calling function will overwrite the string
 	pointed to by the pcString parameter while it is still being transmitted.
 	The calling task will wait in the Blocked state (so not consuming any
-	processing time) until the mutex is available. */
+	processing time) until the semaphore is available. */
 	xSemaphoreTake( xTxCompleteSemaphore, xMaxWait );
 }
 /*-----------------------------------------------------------*/
@@ -221,7 +221,7 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 	/* Send the character. */
 	XUartPs_Send( &xUARTInstance, ( void * ) &cOutChar, sizeof( cOutChar ) );
 
-	/* Wait for the transmission to be complete so the mutex is left in the
+	/* Wait for the transmission to be complete so the semaphore is left in the
 	correct state for the next time vSerialPutString() is called. */
 	xSemaphoreTake( xTxCompleteSemaphore, xBlockTime );
 

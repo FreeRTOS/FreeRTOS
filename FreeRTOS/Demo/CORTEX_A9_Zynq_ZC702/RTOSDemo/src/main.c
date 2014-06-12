@@ -124,7 +124,7 @@
  *
  * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
  */
-#define mainSELECTED_APPLICATION	2
+#define mainSELECTED_APPLICATION	1
 
 /*-----------------------------------------------------------*/
 

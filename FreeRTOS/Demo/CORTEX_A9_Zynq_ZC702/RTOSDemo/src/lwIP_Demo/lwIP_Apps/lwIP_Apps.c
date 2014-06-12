@@ -62,6 +62,7 @@
 /* lwIP core includes */
 #include "lwip/opt.h"
 #include "lwip/tcpip.h"
+#include "lwip/inet.h"
 
 /* applications includes */
 #include "apps/httpserver_raw_from_lwIP_download/httpd.h"
@@ -121,6 +122,21 @@ static signed char cTxBuffer[ lwipappsTX_BUFFER_SIZE ];
 
 /*-----------------------------------------------------------*/
 
+void vStatusCallback( struct netif *pxNetIf )
+{
+char pcMessage[20];
+
+	if( netif_is_up( pxNetIf ) != 0 )
+	{
+		strcpy( pcMessage, "IP=" );
+		strcat( pcMessage, inet_ntoa( *( struct in_addr* ) &( pxNetIf->ip_addr ) ) );
+		xil_printf( pcMessage );
+	}
+	else
+	{
+		xil_printf( "Network is down" );
+	}
+}
 
 /* Called from the TCP/IP thread. */
 void lwIPAppsInit( void *pvArgument )
@@ -151,7 +167,16 @@ static struct netif xNetIf;
 	xNetIf.hwaddr[ 5 ] = configMAC_ADDR5;
 
 	netif_set_default( netif_add( &xNetIf, &xIPAddr, &xNetMask, &xGateway, ( void * ) XPAR_XEMACPS_0_BASEADDR, xemacpsif_init, tcpip_input ) );
-	netif_set_up( &xNetIf );
+	netif_set_status_callback( &xNetIf, vStatusCallback );
+	#if LWIP_DHCP
+	{
+		dhcp_start( &xNetIf );
+	}
+	#else
+	{
+		netif_set_up( &xNetIf );
+	}
+	#endif
 
 	/* Install the server side include handler. */
 	http_set_ssi_handler( uslwIPAppsSSIHandler, pccSSITags, sizeof( pccSSITags ) / sizeof( char * ) );

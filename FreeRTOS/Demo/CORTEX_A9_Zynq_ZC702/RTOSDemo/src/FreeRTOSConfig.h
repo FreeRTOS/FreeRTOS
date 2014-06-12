@@ -117,7 +117,7 @@
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 7 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 200 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 80 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( 80 * 1024 )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -165,7 +165,7 @@ extern XScuWdt xWatchDogInstance;
 extern void vInitialiseTimerForRunTimeStats( void );
 #define configGENERATE_RUN_TIME_STATS 1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vInitialiseTimerForRunTimeStats()
-#define portGET_RUN_TIME_COUNTER_VALUE() ( 0xffffffffUL - XScuWdt_ReadReg( xWatchDogInstance.Config.BaseAddr, XSCUWDT_COUNTER_OFFSET ) )
+#define portGET_RUN_TIME_COUNTER_VALUE() ( ( 0xffffffffUL - XScuWdt_ReadReg( xWatchDogInstance.Config.BaseAddr, XSCUWDT_COUNTER_OFFSET ) ) >> 1 )
 
 /* The size of the global output buffer that is available for use when there
 are multiple command interpreters running at once (for example, one on a UART

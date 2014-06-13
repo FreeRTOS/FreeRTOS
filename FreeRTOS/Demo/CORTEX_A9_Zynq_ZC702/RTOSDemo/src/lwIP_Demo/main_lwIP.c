@@ -74,8 +74,23 @@
  * basic demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware are defined in main.c.
  ******************************************************************************
+ *
+ * The lwIP example can be configured to use either a static or dynamic IP
+ * address:
+ *    + To use a dynamically allocated IP address set LWIP_DHCP to 1 in
+ *      lwipopts.h and connect the target to a network that includes a DHCP
+ *      server.  The obtained IP address is printed to the UART console.
+ *    + To use a static IP address set LWIP_DHCP to 0 in lwipopts.h and set
+ *      the static IP address using the configIP_ADDR0 to configIP_ADDR3
+ *      constants at the bottom of FreeRTOSConfig.h.  Constants used to define
+ *      a netmask are also located at the bottom of FreeRTOSConfig.h.
+ *
+ * When connected correctly the demo uses the lwIP sockets API to create
+ * a FreeRTOS+CLI command console, and the lwIP raw API to create a create a
+ * basic HTTP web server with server side includes that generate dynamic run
+ * time web pages.  See http://www.freertos.org/RTOS-Xilinx-Zynq.html for more
+ * information.
  */
-#warning Need to update the comment above.
 
 /* Kernel includes. */
 #include "FreeRTOS.h"

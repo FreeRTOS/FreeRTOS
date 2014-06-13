@@ -422,7 +422,6 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	}
 	else
 	{
-#warning What happens if the mutex cannot be taken from an ISR in the code below
 		xGotSemaphore = xSemaphoreTakeFromISR( *pxMutex, &xHigherPriorityTaskWoken );
 		configASSERT( xGotSemaphore );
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );

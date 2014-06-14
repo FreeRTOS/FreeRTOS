@@ -110,6 +110,9 @@
 #define portPRIORITY_GROUP_MASK				( 0x07UL << 8UL )
 #define portPRIGROUP_SHIFT					( 8UL )
 
+/* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
+#define portVECTACTIVE_MASK					( 0x1FUL )
+
 /* Constants required to manipulate the VFP. */
 #define portFPCCR					( ( volatile uint32_t * ) 0xe000ef34 ) /* Floating point context control register. */
 #define portASPEN_AND_LSPEN_BITS	( 0x3UL << 30UL )
@@ -280,6 +283,7 @@ static void prvPortStartFirstTask( void )
 					" ldr r0, [r0] 			\n"
 					" msr msp, r0			\n" /* Set the msp back to the start of the stack. */
 					" cpsie i				\n" /* Globally enable interrupts. */
+					" cpsie f				\n"
 					" dsb					\n"
 					" isb					\n"
 					" svc 0					\n" /* System call to start first task. */
@@ -398,6 +402,16 @@ void vPortEnterCritical( void )
 	uxCriticalNesting++;
 	__asm volatile( "dsb" );
 	__asm volatile( "isb" );
+	
+	/* This is not the interrupt safe version of the enter critical function so
+	assert() if it is being called from an interrupt context.  Only API 
+	functions that end in "FromISR" can be used in an interrupt.  Only assert if
+	the critical nesting count is 1 to protect against recursive calls if the
+	assert function also uses a critical section. */
+	if( uxCriticalNesting == 1 )
+	{
+		configASSERT( ( portNVIC_INT_CTRL_REG & portVECTACTIVE_MASK ) == 0 );
+	}
 }
 /*-----------------------------------------------------------*/
 

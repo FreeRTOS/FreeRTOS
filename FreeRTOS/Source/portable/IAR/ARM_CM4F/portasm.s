@@ -172,6 +172,7 @@ vPortStartFirstTask
 	msr msp, r0
 	/* Call SVC to start the first task. */
 	cpsie i
+	cpsie f
 	dsb
 	isb
 	svc 0

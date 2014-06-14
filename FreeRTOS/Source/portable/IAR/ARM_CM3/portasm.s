@@ -145,8 +145,9 @@ vPortStartFirstTask
 	ldr r0, [r0]
 	/* Set the msp back to the start of the stack. */
 	msr msp, r0
-	/* Call SVC to start the first task. */
+	/* Call SVC to start the first task, ensuring interrupts are enabled. */
 	cpsie i
+	cpsie f
 	dsb
 	isb
 	svc 0

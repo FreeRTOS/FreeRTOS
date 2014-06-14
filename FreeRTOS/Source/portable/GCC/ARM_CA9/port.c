@@ -379,10 +379,11 @@ void vPortEnterCritical( void )
 	portENTER_CRITICAL() has been called. */
 	ulCriticalNesting++;
 
-	/* This is not the interrupt safe version of the enter critical function.
-	Only API functions that end in "FromISR" can be used in an interrupt.  The
-	test of ulCriticalNesting() guards against recursive calls to assert in the
-	case that assert itself contains a call to taskENTER_CRITICAL. */
+	/* This is not the interrupt safe version of the enter critical function so
+	assert() if it is being called from an interrupt context.  Only API 
+	functions that end in "FromISR" can be used in an interrupt.  Only assert if
+	the critical nesting count is 1 to protect against recursive calls if the
+	assert function also uses a critical section. */
 	if( ulCriticalNesting == 1 )
 	{
 		configASSERT( ulPortInterruptNesting == 0 );

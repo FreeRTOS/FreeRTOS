@@ -92,6 +92,7 @@ _vector_14: .type func
 
 	stmdb sp!, {r3}
 	ldr.w r0, =ulMaxSyscallInterruptPriorityConst
+	ldr r0, [r0]
 	msr basepri, r0
 	bl vTaskSwitchContext
 	mov r0, #0
@@ -146,6 +147,7 @@ _lc_ref__vector_pp_14: .type func
 
 	stmdb sp!, {r3}
 	ldr.w r0, =ulMaxSyscallInterruptPriorityConst
+	ldr r0, [r0]
 	msr basepri, r0
 	bl vTaskSwitchContext
 	mov r0, #0
@@ -206,6 +208,7 @@ vPortStartFirstTask .type func
 	msr msp, r0
 	;Call SVC to start the first task.
 	cpsie i
+	cpsie f
 	dsb
 	isb
 	svc 0
@@ -237,6 +240,7 @@ vPortEnableVFP .type func
 ulPortSetInterruptMask:
 	mrs r0, basepri
 	ldr.w r1, =ulMaxSyscallInterruptPriorityConst
+	ldr r1, [r1]
 	msr basepri, r1
 	bx r14
 	.size	ulPortSetInterruptMask, $-ulPortSetInterruptMask

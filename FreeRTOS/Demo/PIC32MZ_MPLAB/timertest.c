@@ -117,7 +117,6 @@ void vSetupTimerTest( unsigned short usFrequencyHz )
 
 void vT2InterruptHandler( void )
 {
-extern unsigned long uxInterruptNesting;
 static unsigned long ulMaxNestingDepth = 0;
 
 	/* Keep a count of interrupts so the check timer can ensure they are

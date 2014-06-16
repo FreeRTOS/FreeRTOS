@@ -206,8 +206,8 @@ uint32_t ulCause;							\
 	_CP0_SET_CAUSE( ulCause );					\
 }
 
-#define portCURRENT_INTERRUPT_PRIORITY ( ( _CP0_GET_STATUS() & portALL_IPL_BITS ) >> portIPL_SHIFT )
-#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() configASSERT( portCURRENT_INTERRUPT_PRIORITY <= configMAX_SYSCALL_INTERRUPT_PRIORITY )
+extern volatile UBaseType_t uxInterruptNesting;
+#define portASSERT_IF_IN_ISR() configASSERT( uxInterruptNesting == 0 )
 
 #define portNOP()	__asm volatile ( "nop" )
 

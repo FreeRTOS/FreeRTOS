@@ -315,6 +315,16 @@ void vPortEnterCritical( void )
 	directly.  Increment ulCriticalNesting to keep a count of how many times
 	portENTER_CRITICAL() has been called. */
 	ulCriticalNesting++;
+	
+	/* This is not the interrupt safe version of the enter critical function so
+	assert() if it is being called from an interrupt context.  Only API 
+	functions that end in "FromISR" can be used in an interrupt.  Only assert if
+	the critical nesting count is 1 to protect against recursive calls if the
+	assert function also uses a critical section. */
+	if( ulCriticalNesting == 1 )
+	{
+		configASSERT( ulPortInterruptNesting == 0 );
+	}
 }
 /*-----------------------------------------------------------*/
 

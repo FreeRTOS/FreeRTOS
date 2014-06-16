@@ -216,7 +216,7 @@ static BaseType_t prvIsQueueFull( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
  * Copies an item into the queue, either at the front of the queue or the
  * back of the queue.
  */
-static void prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
+static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
 
 /*
  * Copies an item out of a queue.
@@ -421,7 +421,10 @@ QueueHandle_t xReturn = NULL;
 
 			traceCREATE_MUTEX( pxNewQueue );
 
-			/* Start with the semaphore in the expected state. */
+			/* Start with the semaphore in the expected state.  Preload the
+			 mutex held count as calling xQueueGenericSend() will decrement the
+			 count back to 0. */
+			vTaskIncrementMutexHeldCount();
 			( void ) xQueueGenericSend( pxNewQueue, NULL, ( TickType_t ) 0U, queueSEND_TO_BACK );
 		}
 		else
@@ -508,7 +511,8 @@ QueueHandle_t xReturn = NULL;
 		}
 		else
 		{
-			/* We cannot give the mutex because we are not the holder. */
+			/* The mutex cannot be given because the calling task is not the 
+			holder. */
 			xReturn = pdFAIL;
 
 			traceGIVE_MUTEX_RECURSIVE_FAILED( pxMutex );
@@ -543,8 +547,9 @@ QueueHandle_t xReturn = NULL;
 		{
 			xReturn = xQueueGenericReceive( pxMutex, NULL, xTicksToWait, pdFALSE );
 
-			/* pdPASS will only be returned if we successfully obtained the mutex,
-			we may have blocked to reach here. */
+			/* pdPASS will only be returned if the mutex was successfully 
+			obtained.  The calling task may have entered the Blocked state
+			before reaching here. */
 			if( xReturn == pdPASS )
 			{
 				( pxMutex->u.uxRecursiveCallCount )++;
@@ -592,7 +597,7 @@ QueueHandle_t xReturn = NULL;
 
 BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition )
 {
-BaseType_t xEntryTimeSet = pdFALSE;
+BaseType_t xEntryTimeSet = pdFALSE, xYieldRequired;
 TimeOut_t xTimeOut;
 Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
@@ -620,7 +625,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 			{
 				traceQUEUE_SEND( pxQueue );
-				prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+				xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
@@ -657,6 +662,14 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 								mtCOVERAGE_TEST_MARKER();
 							}
 						}
+						else if( xYieldRequired != pdFALSE )
+						{
+							/* This path is a special case that will only get
+							executed if the task was holding multiple mutexes
+							and the mutexes were given back in an order that is
+							different to that in which they were taken. */
+							queueYIELD_IF_USING_PREEMPTION();
+						}
 						else
 						{
 							mtCOVERAGE_TEST_MARKER();
@@ -690,9 +703,6 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				#endif /* configUSE_QUEUE_SETS */
 
 				taskEXIT_CRITICAL();
-
-				/* Return to the original privilege level before exiting the
-				function. */
 				return pdPASS;
 			}
 			else
@@ -1059,7 +1069,20 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		{
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
 
-			prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+			if( prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition ) != pdFALSE )
+			{
+				/* This is a special case that can only be executed if a task
+				holds multiple mutexes and then gives the mutexes back in an
+				order that is different to that in which they were taken. */
+				if( pxHigherPriorityTaskWoken != NULL )
+				{
+					*pxHigherPriorityTaskWoken = pdTRUE;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
@@ -1591,8 +1614,10 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 #endif /* configUSE_TRACE_FACILITY */
 /*-----------------------------------------------------------*/
 
-static void prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
+static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
 {
+BaseType_t xReturn = pdFALSE;
+
 	if( pxQueue->uxItemSize == ( UBaseType_t ) 0 )
 	{
 		#if ( configUSE_MUTEXES == 1 )
@@ -1600,8 +1625,9 @@ static void prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQue
 			if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
 				/* The mutex is no longer being held. */
-				vTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
-				pxQueue->pxMutexHolder = NULL;
+				vTaskDecrementMutexHeldCount();
+				xReturn = xTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
+				pxQueue->pxMutexHolder = NULL;				
 			}
 			else
 			{
@@ -1658,6 +1684,8 @@ static void prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQue
 	}
 
 	++( pxQueue->uxMessagesWaiting );
+
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -1678,7 +1706,8 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 	}
 	else
 	{
-		mtCOVERAGE_TEST_MARKER();
+		/* A mutex was taken. */
+		vTaskIncrementMutexHeldCount();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -2367,8 +2396,9 @@ BaseType_t xReturn;
 		if( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength )
 		{
 			traceQUEUE_SEND( pxQueueSetContainer );
-			/* The data copies is the handle of the queue that contains data. */
-			prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
+			/* The data copied is the handle of the queue that contains data. */
+			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
+
 			if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
 			{
 				if( xTaskRemoveFromEventList( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) != pdFALSE )

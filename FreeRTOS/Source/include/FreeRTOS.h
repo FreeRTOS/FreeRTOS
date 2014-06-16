@@ -717,6 +717,10 @@ is included as it is used by the port layer. */
 	#define mtCOVERAGE_TEST_MARKER()
 #endif
 
+#ifndef portASSERT_IF_IN_ISR
+	#define portASSERT_IF_IN_ISR()
+#endif
+
 /* Definitions to allow backward compatibility with FreeRTOS versions prior to
 V8 if desired. */
 #ifndef configENABLE_BACKWARD_COMPATIBILITY

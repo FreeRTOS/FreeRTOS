@@ -1507,7 +1507,7 @@ void vTaskPriorityInherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTIO
  * Set the priority of a task back to its proper priority in the case that it
  * inherited a higher priority while it was holding a semaphore.
  */
-void vTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTION;
+BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTION;
 
 /*
  * Generic version of the task creation function which is in turn called by the
@@ -1551,6 +1551,15 @@ void vTaskStepTick( const TickType_t xTicksToJump ) PRIVILEGED_FUNCTION;
  * entered to ensure it is ok to proceed into the sleep mode.
  */
 eSleepModeStatus eTaskConfirmSleepModeStatus( void ) PRIVILEGED_FUNCTION;
+
+/*
+ * For internal use only.  Increment the mutex held count when a mutex is
+ * taken and decrement the mutex held count when the mutex is given back
+ * respectively.  The mutex held count is used to know when it is safe to
+ * disinherit a priority.
+ */
+void vTaskIncrementMutexHeldCount( void );
+void vTaskDecrementMutexHeldCount( void );
 
 #ifdef __cplusplus
 }

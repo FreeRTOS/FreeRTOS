@@ -146,6 +146,7 @@ typedef struct tskTaskControlBlock
 
 	#if ( configUSE_MUTEXES == 1 )
 		UBaseType_t 	uxBasePriority;		/*< The priority last assigned to the task - used by the priority inheritance mechanism. */
+		UBaseType_t 	uxMutexesHeld;
 	#endif
 
 	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
@@ -2737,6 +2738,7 @@ UBaseType_t x;
 	#if ( configUSE_MUTEXES == 1 )
 	{
 		pxTCB->uxBasePriority = uxPriority;
+		pxTCB->uxMutexesHeld = 0;
 	}
 	#endif /* configUSE_MUTEXES */
 
@@ -3235,41 +3237,57 @@ TCB_t *pxTCB;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	void vTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder )
+	BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder )
 	{
 	TCB_t * const pxTCB = ( TCB_t * ) pxMutexHolder;
+	BaseType_t xReturn = pdFALSE;
 
 		if( pxMutexHolder != NULL )
 		{
 			if( pxTCB->uxPriority != pxTCB->uxBasePriority )
 			{
-				/* We must be the running task to be able to give the mutex back.
-				Remove ourselves from the ready list we currently appear in. */
-				if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+				/* Only disinherit if no other mutexes are held. */
+				if( pxTCB->uxMutexesHeld == 0 )
 				{
-					taskRESET_READY_PRIORITY( pxTCB->uxPriority );
+					/* The holding task must be the running task to be able to give
+					the mutex back.  Remove the holding task from the ready list. */
+					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+					{
+						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
+
+					/* Disinherit the priority before adding the task into the new
+					ready list. */
+					traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
+					pxTCB->uxPriority = pxTCB->uxBasePriority;
+
+					/* Only reset the event list item value if the value is not
+					being used for anything else. */
+					if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
+					{
+						listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+					}
+					else
+					{
+#warning Is it possible to come through here?
+						mtCOVERAGE_TEST_MARKER();
+					}
+					prvAddTaskToReadyList( pxTCB );
+
+					/* Return true to indicate that a context switch is required.
+					This is only actually required in the corner case whereby
+					multiple mutexes were held and the mutexes were given back
+					in an order different to that in which they were taken. */
+					xReturn = pdTRUE;
 				}
 				else
 				{
 					mtCOVERAGE_TEST_MARKER();
 				}
-
-				/* Disinherit the priority before adding the task into the new
-				ready list. */
-				traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
-				pxTCB->uxPriority = pxTCB->uxBasePriority;
-
-				/* Only reset the event list item value if the value is not
-				being used for anything else. */
-				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
-				{
-					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-				prvAddTaskToReadyList( pxTCB );
 			}
 			else
 			{
@@ -3280,6 +3298,8 @@ TCB_t *pxTCB;
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
+
+		return xReturn;
 	}
 
 #endif /* configUSE_MUTEXES */
@@ -3294,6 +3314,18 @@ TCB_t *pxTCB;
 		if( xSchedulerRunning != pdFALSE )
 		{
 			( pxCurrentTCB->uxCriticalNesting )++;
+
+			/* This is not the interrupt safe version of the enter critical
+			function so	assert() if it is being called from an interrupt
+			context.  Only API functions that end in "FromISR" can be used in an
+			interrupt.  Only assert if the critical nesting count is 1 to
+			protect against recursive calls if the assert function also uses a
+			critical section. */
+			if( pxCurrentTCB->uxCriticalNesting == 1 )
+			{
+				portASSERT_IF_IN_ISR();
+			}
+
 		}
 		else
 		{
@@ -3556,6 +3588,18 @@ TickType_t uxReturn;
 	return uxReturn;
 }
 /*-----------------------------------------------------------*/
+
+void vTaskIncrementMutexHeldCount( void )
+{
+	( pxCurrentTCB->uxMutexesHeld )++;
+}
+/*-----------------------------------------------------------*/
+
+void vTaskDecrementMutexHeldCount( void )
+{
+	configASSERT( pxCurrentTCB->uxMutexesHeld );
+	( pxCurrentTCB->uxMutexesHeld )--;
+}
 
 #ifdef FREERTOS_MODULE_TEST
 	#include "tasks_test_access_functions.h"

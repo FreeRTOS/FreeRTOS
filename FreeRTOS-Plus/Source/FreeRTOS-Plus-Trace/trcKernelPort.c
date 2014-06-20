@@ -56,7 +56,7 @@ traceObjectClass TraceObjectClassTable[5] = {
 int uiInEventGroupSetBitsFromISR = 0;
 
 extern unsigned char ucQueueGetQueueType(void*);
-extern portBASE_TYPE uxQueueGetQueueNumber(void*);
+extern BaseType_t uxQueueGetQueueNumber(void*);
 
 objectHandleType prvTraceGetObjectNumber(void* handle)
 {

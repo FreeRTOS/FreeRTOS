@@ -180,7 +180,7 @@ const unsigned long ulMSToSleep = 5;
 	the	set of sample files are created from the idle task hook function. */
 	#if F_FS_THREAD_AWARE == 1
 	{
-		static portBASE_TYPE xCreatedSampleFiles = pdFALSE;
+		static BaseType_t xCreatedSampleFiles = pdFALSE;
 
 		/* Initialise the drive and file system, then create a few example
 		files.  The output from this function just goes to the stdout window,

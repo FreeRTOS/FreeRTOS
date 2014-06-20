@@ -82,9 +82,9 @@ static xSemaphoreHandle xNetworkBufferSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkBuffersInitialise( void )
+BaseType_t xNetworkBuffersInitialise( void )
 {
-portBASE_TYPE xReturn, x;
+BaseType_t xReturn, x;
 
 	/* Only initialise the buffers and their associated kernel objects if they
 	have not been initialised before. */
@@ -126,7 +126,7 @@ portBASE_TYPE xReturn, x;
 }
 /*-----------------------------------------------------------*/
 
-xNetworkBufferDescriptor_t *pxNetworkBufferGet( size_t xRequestedSizeBytes, portTickType xBlockTimeTicks )
+xNetworkBufferDescriptor_t *pxNetworkBufferGet( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks )
 {
 xNetworkBufferDescriptor_t *pxReturn = NULL;
 
@@ -158,7 +158,7 @@ xNetworkBufferDescriptor_t *pxReturn = NULL;
 xNetworkBufferDescriptor_t *pxNetworkBufferGetFromISR( size_t xRequestedSizeBytes )
 {
 xNetworkBufferDescriptor_t *pxReturn = NULL;
-unsigned portBASE_TYPE uxSavedInterruptStatus;
+UBaseType_t uxSavedInterruptStatus;
 
 	/*_RB_ The current implementation only has a single size memory block, so
 	the requested size parameter is not used (yet). */
@@ -194,10 +194,10 @@ unsigned portBASE_TYPE uxSavedInterruptStatus;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE vNetworkBufferReleaseFromISR( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+BaseType_t vNetworkBufferReleaseFromISR( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
-unsigned portBASE_TYPE uxSavedInterruptStatus;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+UBaseType_t uxSavedInterruptStatus;
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Ensure the buffer is returned to the list of free buffers before the
 	counting semaphore is 'given' to say a buffer is available. */
@@ -216,7 +216,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 void vNetworkBufferRelease( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
-portBASE_TYPE xListItemAlreadyInFreeList;
+BaseType_t xListItemAlreadyInFreeList;
 
 	/* Ensure the buffer is returned to the list of free buffers before the
 	counting semaphore is 'given' to say a buffer is available. */
@@ -240,7 +240,7 @@ portBASE_TYPE xListItemAlreadyInFreeList;
 
 #if( ipconfigINCLUDE_TEST_CODE == 1 )
 
-unsigned portBASE_TYPE uxGetNumberOfFreeNetworkBuffers( void )
+UBaseType_t uxGetNumberOfFreeNetworkBuffers( void )
 {
 	return listCURRENT_LIST_LENGTH( &xFreeBuffersList );
 }

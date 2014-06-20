@@ -217,7 +217,7 @@ const uint32_t ulLongTime_ms = 250UL;
 
 static void prvQueueSendTask( void *pvParameters )
 {
-portTickType xNextWakeTime;
+TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 
 	/* Remove warning about unused parameters. */

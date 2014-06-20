@@ -102,7 +102,7 @@ static xSocket_t prvOpenUDPServerSocket( uint16_t usPort );
 
 /*-----------------------------------------------------------*/
 
-void vStartUDPCommandInterpreterTask( uint16_t usStackSize, uint32_t ulPort, unsigned portBASE_TYPE uxPriority )
+void vStartUDPCommandInterpreterTask( uint16_t usStackSize, uint32_t ulPort, UBaseType_t uxPriority )
 {
 	xTaskCreate( vUDPCommandInterpreterTask, "CLI", usStackSize, ( void * ) ulPort, uxPriority, NULL );
 }
@@ -118,7 +118,7 @@ void vUDPCommandInterpreterTask( void *pvParameters )
 long lBytes, lByte;
 signed char cInChar, cInputIndex = 0;
 static signed char cInputString[ cmdMAX_INPUT_SIZE ], cOutputString[ cmdMAX_OUTPUT_SIZE ], cLocalBuffer[ cmdSOCKET_INPUT_BUFFER_SIZE ];
-portBASE_TYPE xMoreDataToFollow;
+BaseType_t xMoreDataToFollow;
 struct freertos_sockaddr xClient;
 socklen_t xClientAddressLength = 0; /* This is required as a parameter to maintain the sendto() Berkeley sockets API - but it is not actually used so can take any value. */
 xSocket_t xSocket;

@@ -46,13 +46,13 @@
 /*
  * Initialise the MAC and PHY.
  */
-portBASE_TYPE xEMACInit( uint8_t ucMACAddress[ 6 ] );
+BaseType_t xEMACInit( uint8_t ucMACAddress[ 6 ] );
 
 /*
  * Return pdTRUE if there is a FreeRTOS Tx descriptor.  Return pdFALSE if all
  * Tx descriptors are already in use.
  */
-portBASE_TYPE xEMACIsTxDescriptorAvailable( void );
+BaseType_t xEMACIsTxDescriptorAvailable( void );
 
 /*
  * Assign a buffer to a Tx descriptor so it is ready to be transmitted, but
@@ -77,7 +77,7 @@ void vEMACReturnRxDescriptor( void );
  * Returns pdTRUE if the next Rx descriptor contains received data.  Returns
  * pdFLASE fi the next Rx descriptor is still under the control of the DMA.
  */
-portBASE_TYPE xEMACRxDataAvailable( void );
+BaseType_t xEMACRxDataAvailable( void );
 void vEMACSwapEmptyBufferForRxedData( xNetworkBufferDescriptor_t *pxNetworkBuffer );
 
 #endif /* LPC18xx_43xx_EMAC_H */

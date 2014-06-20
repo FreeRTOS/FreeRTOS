@@ -100,7 +100,7 @@ static void prvCreateFileInfoString( char *pcBuffer, F_FIND *pxFindStruct );
 /*
  * Copies an existing file into a newly created file.
  */
-static portBASE_TYPE prvPerformCopy( const char *pcSourceFile,
+static BaseType_t prvPerformCopy( const char *pcSourceFile,
 									int32_t lSourceFileLength,
 									const char *pcDestinationFile,
 									char *pxWriteBuffer,
@@ -109,27 +109,27 @@ static portBASE_TYPE prvPerformCopy( const char *pcSourceFile,
 /*
  * Implements the DIR command.
  */
-static portBASE_TYPE prvDIRCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvDIRCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the CD command.
  */
-static portBASE_TYPE prvCDCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvCDCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the DEL command.
  */
-static portBASE_TYPE prvDELCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvDELCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the TYPE command.
  */
-static portBASE_TYPE prvTYPECommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvTYPECommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the COPY command.
  */
-static portBASE_TYPE prvCOPYCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvCOPYCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /* Structure that defines the DIR command line command, which lists all the
 files in the current directory. */
@@ -193,10 +193,10 @@ void vRegisterFileSystemCLICommands( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTYPECommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvTYPECommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE xParameterStringLength, xReturn = pdTRUE;
+BaseType_t xParameterStringLength, xReturn = pdTRUE;
 static F_FILE *pxFile = NULL;
 int iChar;
 size_t xByte;
@@ -267,10 +267,10 @@ size_t xColumns = 50U;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvCDCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvCDCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE xParameterStringLength;
+BaseType_t xParameterStringLength;
 unsigned char ucReturned;
 size_t xStringLength;
 
@@ -305,11 +305,11 @@ size_t xStringLength;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvDIRCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvDIRCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 static F_FIND *pxFindStruct = NULL;
 unsigned char ucReturned;
-portBASE_TYPE xReturn = pdFALSE;
+BaseType_t xReturn = pdFALSE;
 
 	/* This assumes pcWriteBuffer is long enough. */
 	( void ) pcCommandString;
@@ -371,10 +371,10 @@ portBASE_TYPE xReturn = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvDELCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvDELCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE xParameterStringLength;
+BaseType_t xParameterStringLength;
 unsigned char ucReturned;
 
 	/* This function assumes xWriteBufferLen is large enough! */
@@ -409,10 +409,10 @@ unsigned char ucReturned;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvCOPYCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvCOPYCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 char *pcSourceFile, *pcDestinationFile;
-portBASE_TYPE xParameterStringLength;
+BaseType_t xParameterStringLength;
 long lSourceLength, lDestinationLength = 0;
 
 	/* Obtain the name of the destination file. */
@@ -478,7 +478,7 @@ long lSourceLength, lDestinationLength = 0;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvPerformCopy( const char *pcSourceFile,
+static BaseType_t prvPerformCopy( const char *pcSourceFile,
 									int32_t lSourceFileLength,
 									const char *pcDestinationFile,
 									char *pxWriteBuffer,
@@ -486,7 +486,7 @@ static portBASE_TYPE prvPerformCopy( const char *pcSourceFile,
 {
 int32_t lBytesRead = 0, lBytesToRead, lBytesRemaining;
 F_FILE *pxFile;
-portBASE_TYPE xReturn = pdPASS;
+BaseType_t xReturn = pdPASS;
 
 	/* NOTE:  Error handling has been omitted for clarity. */
 

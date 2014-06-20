@@ -71,6 +71,6 @@
  * to send to and receive from an echo server.  The other task uses the zero
  * copy interface to send to and receive from an echo server.
  */
-void vStartEchoClientTasks( uint16_t usTaskStackSize, unsigned portBASE_TYPE uxTaskPriority );
+void vStartEchoClientTasks( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority );
 
 #endif /* TWO_ECHO_CLIENTS_H */

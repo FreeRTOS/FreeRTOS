@@ -71,7 +71,7 @@
 task performing the transmit will block for niTX_BUFFER_FREE_WAIT
 milliseconds.  It will do this a maximum of niMAX_TX_ATTEMPTS before giving
 up. */
-#define niTX_BUFFER_FREE_WAIT	( ( portTickType ) 2UL / portTICK_RATE_MS )
+#define niTX_BUFFER_FREE_WAIT	( ( TickType_t ) 2UL / portTICK_RATE_MS )
 #define niMAX_TX_ATTEMPTS		( 5 )
 
 /* The length of the queue used to send interrupt status words from the
@@ -95,9 +95,9 @@ interrupt is received. */
 xSemaphoreHandle xEMACRxEventSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceInitialise( void )
+BaseType_t xNetworkInterfaceInitialise( void )
 {
-portBASE_TYPE xStatus, xReturn;
+BaseType_t xStatus, xReturn;
 extern uint8_t ucMACAddress[ 6 ];
 
 	/* Initialise the MAC. */
@@ -120,7 +120,7 @@ extern uint8_t ucMACAddress[ 6 ];
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 extern void vEMACCopyWrite( uint8_t * pucBuffer, uint16_t usLength );
 

@@ -91,17 +91,17 @@ commands. */
 /*
  * Defines a command that prints out IP address information.
  */
-static portBASE_TYPE prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that prints out the gathered demo debug stats.
  */
-static portBASE_TYPE prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that sends an ICMP ping request to an IP address.
  */
-static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /* Structure that defines the "ip-config" command line command. */
 static const CLI_Command_Definition_t xIPConfig =
@@ -162,10 +162,10 @@ void vRegisterUDPCLICommands( void )
 
 #if ipconfigSUPPORT_OUTGOING_PINGS == 1
 
-	static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+	static BaseType_t prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
 	char * pcParameter;
-	portBASE_TYPE lParameterStringLength, xReturn;
+	BaseType_t lParameterStringLength, xReturn;
 	uint32_t ulIPAddress, ulBytesToPing;
 	const uint32_t ulDefaultBytesToPing = 8UL;
 	char cBuffer[ 16 ];
@@ -253,11 +253,11 @@ void vRegisterUDPCLICommands( void )
 
 #if configINCLUDE_DEMO_DEBUG_STATS != 0
 
-	static portBASE_TYPE prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+	static BaseType_t prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-	static portBASE_TYPE xIndex = -1;
+	static BaseType_t xIndex = -1;
 	extern xExampleDebugStatEntry_t xIPTraceValues[];
-	portBASE_TYPE xReturn;
+	BaseType_t xReturn;
 
 		/* Remove compile time warnings about unused parameters, and check the
 		write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -289,10 +289,10 @@ void vRegisterUDPCLICommands( void )
 
 #endif /* configINCLUDE_DEMO_DEBUG_STATS */
 
-static portBASE_TYPE prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-static portBASE_TYPE xIndex = 0;
-portBASE_TYPE xReturn;
+static BaseType_t xIndex = 0;
+BaseType_t xReturn;
 uint32_t ulAddress;
 
 	/* Remove compile time warnings about unused parameters, and check the

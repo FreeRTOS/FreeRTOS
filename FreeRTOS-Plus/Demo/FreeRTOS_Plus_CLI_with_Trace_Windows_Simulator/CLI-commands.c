@@ -83,31 +83,31 @@ static void prvSaveTraceFile( void );
  * Defines a command that returns a table showing the state of each task at the
  * time the command is called.
  */
-static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that returns a table showing how much time each task has
  * spent in the Running state.
  */
-static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that expects exactly three parameters.  Each of the three
  * parameter are echoed back one at a time.
  */
-static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that can take a variable number of parameters.  Each
  * parameter is echoes back one at a time.
  */
-static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that starts/stops events being recorded for offline viewing
  * in FreeRTOS+Trace.
  */
-static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /* Structure that defines the "run-time-stats" command line command. */
 static const CLI_Command_Definition_t xRunTimeStats =
@@ -172,7 +172,7 @@ void vRegisterCLICommands( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
@@ -193,7 +193,7 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
@@ -214,11 +214,11 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE lParameterStringLength, xReturn;
-static portBASE_TYPE lParameterNumber = 0;
+BaseType_t lParameterStringLength, xReturn;
+static BaseType_t lParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -281,11 +281,11 @@ static portBASE_TYPE lParameterNumber = 0;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE lParameterStringLength, xReturn;
-static portBASE_TYPE lParameterNumber = 0;
+BaseType_t lParameterStringLength, xReturn;
+static BaseType_t lParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -348,10 +348,10 @@ static portBASE_TYPE lParameterNumber = 0;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE lParameterStringLength;
+BaseType_t lParameterStringLength;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the

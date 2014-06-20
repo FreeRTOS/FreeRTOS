@@ -129,9 +129,9 @@ xSemaphoreHandle xPCAPMutex = NULL;
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceInitialise( void )
+BaseType_t xNetworkInterfaceInitialise( void )
 {
-portBASE_TYPE xReturn = pdFALSE;
+BaseType_t xReturn = pdFALSE;
 pcap_if_t *pxAllNetworkInterfaces;
 
 	if( xPCAPMutex == NULL )
@@ -165,13 +165,13 @@ pcap_if_t *pxAllNetworkInterfaces;
 
 #if updconfigLOOPBACK_ETHERNET_PACKETS == 1
 
-	portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+	BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 	{
 	xEthernetHeader_t *pxEthernetHeader;
 	xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 	extern uint8_t xDefaultPartUDPPacketHeader[];
 	static const xMACAddress_t xBroadcastMACAddress = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
-	portBASE_TYPE xCanLoopback;
+	BaseType_t xCanLoopback;
 
 		pxEthernetHeader = ( xEthernetHeader_t * ) pxNetworkBuffer->pucEthernetBuffer;
 
@@ -199,7 +199,7 @@ pcap_if_t *pxAllNetworkInterfaces;
 			is sending a message to itself, so a block time cannot be used for
 			fear of deadlocking. */
 			xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-			if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( portTickType ) 0 ) == pdFALSE )
+			if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
 			{
 				vNetworkBufferRelease( pxNetworkBuffer );
 				iptraceETHERNET_RX_EVENT_LOST();
@@ -227,7 +227,7 @@ pcap_if_t *pxAllNetworkInterfaces;
 
 #else /* updconfigLOOPBACK_ETHERNET_PACKETS == 1 */
 
-	portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+	BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 	{
 		xSemaphoreTake( xPCAPMutex, portMAX_DELAY );
 		{
@@ -432,7 +432,7 @@ eFrameProcessingResult_t eResult;
 
 						/* Data was received and stored.  Send a message to the IP
 						task to let it know. */
-						if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( portTickType ) 0 ) == pdFALSE )
+						if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
 						{
 							/* The buffer could not be sent to the stack so
 							must be released again.  This is only an interrupt
@@ -471,7 +471,7 @@ eFrameProcessingResult_t eResult;
 #if configUSE_STATIC_BUFFERS == 1
 	void vNetworkInterfaceAllocateRAMToBuffers( xNetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFERS ] )
 	{
-	portBASE_TYPE x;
+	BaseType_t x;
 
 		for( x = 0; x < ipconfigNUM_NETWORK_BUFFERS; x++ )
 		{

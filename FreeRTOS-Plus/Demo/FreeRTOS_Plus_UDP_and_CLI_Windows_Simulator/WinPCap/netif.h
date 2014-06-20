@@ -78,13 +78,13 @@ void vNetifTx( void );
  * bytes are placed in uip_buf.  The number of bytes copied into uip_buf is
  * returned.
  */
-unsigned portBASE_TYPE uxNetifRx( void );
+UBaseType_t uxNetifRx( void );
 
 /*
  * Prepare a packet capture session.  This will print out all the network 
  * interfaces available, and the one actually used is set by the 
  * configNETWORK_INTERFACE_TO_USE constant that is defined in 
  * FreeRTOSConfig.h. */
-portBASE_TYPE xNetifInit( void );
+BaseType_t xNetifInit( void );
 
 #endif /* NET_IF_H */

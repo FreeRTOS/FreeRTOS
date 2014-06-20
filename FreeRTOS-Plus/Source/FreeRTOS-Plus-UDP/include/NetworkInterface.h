@@ -44,8 +44,8 @@
 #define NETWORK_INTERFACE_H
 
 /* NOTE PUBLIC API FUNCTIONS. */
-portBASE_TYPE xNetworkInterfaceInitialise( void );
-portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer );
+BaseType_t xNetworkInterfaceInitialise( void );
+BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer );
 void vNetworkInterfaceAllocateRAMToBuffers( xNetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFERS ] );
 
 #endif /* NETWORK_INTERFACE_H */

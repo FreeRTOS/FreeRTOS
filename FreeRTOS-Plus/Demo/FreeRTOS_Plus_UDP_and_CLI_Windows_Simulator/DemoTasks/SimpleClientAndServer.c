@@ -81,7 +81,7 @@
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_Sockets.h"
 
-#define simpTINY_DELAY	( ( portTickType ) 2 )
+#define simpTINY_DELAY	( ( TickType_t ) 2 )
 
 /*
  * Uses a socket to send data without using the zero copy option.
@@ -109,7 +109,7 @@ static void prvSimpleZeroCopyServerTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-void vStartSimpleUDPClientServerTasks( uint16_t usStackSize, uint32_t ulPort, unsigned portBASE_TYPE uxPriority )
+void vStartSimpleUDPClientServerTasks( uint16_t usStackSize, uint32_t ulPort, UBaseType_t uxPriority )
 {
 	/* Create the client and server tasks that do not use the zero copy
 	interface. */
@@ -127,10 +127,10 @@ static void prvSimpleClientTask( void *pvParameters )
 xSocket_t xClientSocket;
 struct freertos_sockaddr xDestinationAddress;
 char cString[ 50 ];
-portBASE_TYPE lReturned;
+BaseType_t lReturned;
 uint32_t ulCount = 0UL, ulIPAddress;
 const uint32_t ulLoopsPerSocket = 10UL;
-const portTickType x150ms = 150UL / portTICK_RATE_MS;
+const TickType_t x150ms = 150UL / portTICK_RATE_MS;
 
 	/* Remove compiler warning about unused parameters. */
 	( void ) pvParameters;
@@ -230,7 +230,7 @@ xSocket_t xListeningSocket;
 		}
 
 		/* Error check. */
-		configASSERT( lBytes == ( portBASE_TYPE ) strlen( cReceivedString ) );
+		configASSERT( lBytes == ( BaseType_t ) strlen( cReceivedString ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -240,11 +240,11 @@ static void prvSimpleZeroCopyUDPClientTask( void *pvParameters )
 xSocket_t xClientSocket;
 uint8_t *pucUDPPayloadBuffer;
 struct freertos_sockaddr xDestinationAddress;
-portBASE_TYPE lReturned;
+BaseType_t lReturned;
 uint32_t ulCount = 0UL, ulIPAddress;
 const uint32_t ulLoopsPerSocket = 10UL;
 const char *pcStringToSend = "Server received (using zero copy): Message number ";
-const portTickType x150ms = 150UL / portTICK_RATE_MS;
+const TickType_t x150ms = 150UL / portTICK_RATE_MS;
 /* 15 is added to ensure the number, \r\n and terminating zero fit. */
 const size_t xStringLength = strlen( pcStringToSend ) + 15;
 
@@ -379,7 +379,7 @@ xSocket_t xListeningSocket;
 
 		/* It is expected to receive one more byte than the string length as
 		the NULL terminator is also transmitted. */
-		configASSERT( lBytes == ( ( portBASE_TYPE ) strlen( ( const char * ) pucUDPPayloadBuffer ) + 1 ) );
+		configASSERT( lBytes == ( ( BaseType_t ) strlen( ( const char * ) pucUDPPayloadBuffer ) + 1 ) );
 
 		/* Print the received characters. */
 		if( lBytes > 0 )

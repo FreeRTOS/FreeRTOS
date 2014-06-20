@@ -70,7 +70,7 @@ port number. */
 
 /* xWaitingPacketSemaphore is not created until the socket is bound, so can be
 tested to see if bind() has been called. */
-#define socketSOCKET_IS_BOUND( pxSocket ) ( ( portBASE_TYPE ) pxSocket->xWaitingPacketSemaphore )
+#define socketSOCKET_IS_BOUND( pxSocket ) ( ( BaseType_t ) pxSocket->xWaitingPacketSemaphore )
 
 /* If FreeRTOS_sendto() is called on a socket that is not bound to a port
 number then, depending on the FreeRTOSIPConfig.h settings, it might be that a
@@ -98,7 +98,7 @@ static uint16_t prvGetPrivatePortNumber( void );
  * Return the list itme from within pxList that has an item value of
  * xWantedItemValue.  If there is no such list item return NULL.
  */
-xListItem * pxListFindListItemWithValue( xList *pxList, portTickType xWantedItemValue );
+xListItem * pxListFindListItemWithValue( xList *pxList, TickType_t xWantedItemValue );
 
 /*-----------------------------------------------------------*/
 
@@ -107,8 +107,8 @@ typedef struct XSOCKET
 	xSemaphoreHandle xWaitingPacketSemaphore;
 	xList xWaitingPacketsList;
 	xListItem xBoundSocketListItem; /* Used to reference the socket from a bound sockets list. */
-	portTickType xReceiveBlockTime;
-	portTickType xSendBlockTime;
+	TickType_t xReceiveBlockTime;
+	TickType_t xSendBlockTime;
 	uint8_t ucSocketOptions;
 	#if ipconfigSUPPORT_SELECT_FUNCTION == 1
 		xQueueHandle xSelectQueue;
@@ -122,7 +122,7 @@ static xList xBoundSocketsList;
 
 /*-----------------------------------------------------------*/
 
-xSocket_t FreeRTOS_socket( portBASE_TYPE xDomain, portBASE_TYPE xType, portBASE_TYPE xProtocol )
+xSocket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol )
 {
 xFreeRTOS_Socket_t *pxSocket;
 
@@ -149,7 +149,7 @@ xFreeRTOS_Socket_t *pxSocket;
 		vListInitialise( &( pxSocket->xWaitingPacketsList ) );
 		vListInitialiseItem( &( pxSocket->xBoundSocketListItem ) );
 		listSET_LIST_ITEM_OWNER( &( pxSocket->xBoundSocketListItem ), ( void * ) pxSocket );
-		pxSocket->xSendBlockTime = ( portTickType ) 0;
+		pxSocket->xSendBlockTime = ( TickType_t ) 0;
 		pxSocket->xReceiveBlockTime = portMAX_DELAY;
 		pxSocket->ucSocketOptions = FREERTOS_SO_UDPCKSUM_OUT;
 		#if ipconfigSUPPORT_SELECT_FUNCTION == 1
@@ -168,7 +168,7 @@ xFreeRTOS_Socket_t *pxSocket;
 
 #if ipconfigSUPPORT_SELECT_FUNCTION == 1
 
-	xSocketSet_t FreeRTOS_CreateSocketSet( unsigned portBASE_TYPE uxEventQueueLength )
+	xSocketSet_t FreeRTOS_CreateSocketSet( UBaseType_t uxEventQueueLength )
 	{
 	xQueueHandle xSelectQueue;
 
@@ -184,11 +184,11 @@ xFreeRTOS_Socket_t *pxSocket;
 
 #if ipconfigSUPPORT_SELECT_FUNCTION == 1
 
-	portBASE_TYPE FreeRTOS_FD_SET( xSocket_t xSocket, xSocketSet_t xSocketSet )
+	BaseType_t FreeRTOS_FD_SET( xSocket_t xSocket, xSocketSet_t xSocketSet )
 	{
 	xFreeRTOS_Socket_t *pxSocket = ( xFreeRTOS_Socket_t * ) xSocket;
-	portBASE_TYPE xReturn = pdFALSE;
-	unsigned portBASE_TYPE uxMessagesWaiting;
+	BaseType_t xReturn = pdFALSE;
+	UBaseType_t uxMessagesWaiting;
 
 		configASSERT( xSocket );
 
@@ -230,10 +230,10 @@ xFreeRTOS_Socket_t *pxSocket;
 
 #if ipconfigSUPPORT_SELECT_FUNCTION == 1
 
-	portBASE_TYPE FreeRTOS_FD_CLR( xSocket_t xSocket, xSocketSet_t xSocketSet )
+	BaseType_t FreeRTOS_FD_CLR( xSocket_t xSocket, xSocketSet_t xSocketSet )
 	{
 	xFreeRTOS_Socket_t *pxSocket = ( xFreeRTOS_Socket_t * ) xSocket;
-	portBASE_TYPE xReturn;
+	BaseType_t xReturn;
 
 		/* Is the socket a member of the select group? */
 		if( pxSocket->xSelectQueue == ( xQueueHandle ) xSocketSet )
@@ -255,7 +255,7 @@ xFreeRTOS_Socket_t *pxSocket;
 
 #if ipconfigSUPPORT_SELECT_FUNCTION == 1
 
-	xSocket_t FreeRTOS_select( xSocketSet_t xSocketSet, portTickType xBlockTimeTicks )
+	xSocket_t FreeRTOS_select( xSocketSet_t xSocketSet, TickType_t xBlockTimeTicks )
 	{
 	xFreeRTOS_Socket_t *pxSocket;
 
@@ -361,7 +361,7 @@ xFreeRTOS_Socket_t *pxSocket;
 	extern xQueueHandle xNetworkEventQueue;
 	uint8_t *pucBuffer;
 	xTimeOutType xTimeOut;
-	portTickType xTicksToWait;
+	TickType_t xTicksToWait;
 	uint16_t usFragmentOffset;
 	xFreeRTOS_Socket_t *pxSocket;
 
@@ -537,7 +537,7 @@ xFreeRTOS_Socket_t *pxSocket;
 	xIPStackEvent_t xStackTxEvent = { eStackTxEvent, NULL };
 	extern xQueueHandle xNetworkEventQueue;
 	xTimeOutType xTimeOut;
-	portTickType xTicksToWait;
+	TickType_t xTicksToWait;
 	int32_t lReturn = 0;
 	xFreeRTOS_Socket_t *pxSocket;
 	uint8_t *pucBuffer;
@@ -649,9 +649,9 @@ xFreeRTOS_Socket_t *pxSocket;
 #endif /* ipconfigCAN_FRAGMENT_OUTGOING_PACKETS */
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_bind( xSocket_t xSocket, struct freertos_sockaddr * pxAddress, socklen_t xAddressLength )
+BaseType_t FreeRTOS_bind( xSocket_t xSocket, struct freertos_sockaddr * pxAddress, socklen_t xAddressLength )
 {
-portBASE_TYPE xReturn = 0; /* In Berkeley sockets, 0 means pass for bind(). */
+BaseType_t xReturn = 0; /* In Berkeley sockets, 0 means pass for bind(). */
 xFreeRTOS_Socket_t *pxSocket;
 #if ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND == 1
 	struct freertos_sockaddr xAddress;
@@ -695,7 +695,7 @@ xFreeRTOS_Socket_t *pxSocket;
 		vTaskSuspendAll();
 		{
 			/* Check to ensure the port is not already in use. */
-			if( pxListFindListItemWithValue( &xBoundSocketsList, ( portTickType ) pxAddress->sin_port ) != NULL )
+			if( pxListFindListItemWithValue( &xBoundSocketsList, ( TickType_t ) pxAddress->sin_port ) != NULL )
 			{
 				xReturn = FREERTOS_EADDRINUSE;
 			}
@@ -749,7 +749,7 @@ xFreeRTOS_Socket_t *pxSocket;
 } /* Tested */
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_closesocket( xSocket_t xSocket )
+BaseType_t FreeRTOS_closesocket( xSocket_t xSocket )
 {
 xNetworkBufferDescriptor_t *pxNetworkBuffer;
 xFreeRTOS_Socket_t *pxSocket;
@@ -795,11 +795,11 @@ void FreeRTOS_SocketsInit( void )
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_setsockopt( xSocket_t xSocket, int32_t lLevel, int32_t lOptionName, const void *pvOptionValue, size_t xOptionLength )
+BaseType_t FreeRTOS_setsockopt( xSocket_t xSocket, int32_t lLevel, int32_t lOptionName, const void *pvOptionValue, size_t xOptionLength )
 {
 /* The standard Berkeley function returns 0 for success. */
-portBASE_TYPE xReturn = 0;
-portBASE_TYPE lOptionValue;
+BaseType_t xReturn = 0;
+BaseType_t lOptionValue;
 xFreeRTOS_Socket_t *pxSocket;
 
 	pxSocket = ( xFreeRTOS_Socket_t * ) xSocket;
@@ -815,7 +815,7 @@ xFreeRTOS_Socket_t *pxSocket;
 	{
 		case FREERTOS_SO_RCVTIMEO	:
 			/* Receive time out. */
-			pxSocket->xReceiveBlockTime = *( ( portTickType * ) pvOptionValue );
+			pxSocket->xReceiveBlockTime = *( ( TickType_t * ) pvOptionValue );
 			break;
 
 		case FREERTOS_SO_SNDTIMEO	:
@@ -823,7 +823,7 @@ xFreeRTOS_Socket_t *pxSocket;
 			where ipconfigMAX_SEND_BLOCK_TIME_TICKS is defined in
 			FreeRTOSIPConfig.h (assuming an official configuration file is being
 			used. */
-			pxSocket->xSendBlockTime = *( ( portTickType * ) pvOptionValue );
+			pxSocket->xSendBlockTime = *( ( TickType_t * ) pvOptionValue );
 			if( pxSocket->xSendBlockTime > ipconfigMAX_SEND_BLOCK_TIME_TICKS )
 			{
 				pxSocket->xSendBlockTime = ipconfigMAX_SEND_BLOCK_TIME_TICKS;
@@ -832,7 +832,7 @@ xFreeRTOS_Socket_t *pxSocket;
 
 		case FREERTOS_SO_UDPCKSUM_OUT :
 			/* Turn calculating of the UDP checksum on/off for this socket. */
-			lOptionValue = ( portBASE_TYPE ) pvOptionValue;
+			lOptionValue = ( BaseType_t ) pvOptionValue;
 
 			if( lOptionValue == 0 )
 			{
@@ -854,18 +854,18 @@ xFreeRTOS_Socket_t *pxSocket;
 } /* Tested */
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xProcessReceivedUDPPacket( xNetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort )
+BaseType_t xProcessReceivedUDPPacket( xNetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort )
 {
 xListItem *pxListItem;
-portBASE_TYPE xReturn = pdPASS;
+BaseType_t xReturn = pdPASS;
 xFreeRTOS_Socket_t *pxSocket;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	vTaskSuspendAll();
 	{
 		/* See if there is a list item associated with the port number on the
 		list of bound sockets. */
-		pxListItem = pxListFindListItemWithValue( &xBoundSocketsList, ( portTickType ) usPort );
+		pxListItem = pxListFindListItemWithValue( &xBoundSocketsList, ( TickType_t ) usPort );
 	}
 	xTaskResumeAll();
 
@@ -952,7 +952,7 @@ uint16_t usReturn;
 } /* Tested */
 /*-----------------------------------------------------------*/
 
-xListItem * pxListFindListItemWithValue( xList *pxList, portTickType xWantedItemValue )
+xListItem * pxListFindListItemWithValue( xList *pxList, TickType_t xWantedItemValue )
 {
 xListItem *pxIterator, *pxReturn;
 
@@ -978,7 +978,7 @@ xListItem *pxIterator, *pxReturn;
 	uint8_t ucOctet[ socketMAX_IP_ADDRESS_OCTETS ];
 	const char *pcPointerOnEntering;
 	uint32_t ulReturn = 0UL, ulOctetNumber, ulValue;
-	portBASE_TYPE xResult = pdPASS;
+	BaseType_t xResult = pdPASS;
 
 		for( ulOctetNumber = 0; ulOctetNumber < socketMAX_IP_ADDRESS_OCTETS; ulOctetNumber++ )
 		{

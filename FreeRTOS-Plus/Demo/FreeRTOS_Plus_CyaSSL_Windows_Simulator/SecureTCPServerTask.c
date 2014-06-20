@@ -117,7 +117,7 @@ static CYASSL_CTX* xCyaSSL_ServerContext = NULL;
 /* See the comments at the top of main.c. */
 void vSecureTCPServerTask( void *pvParameters )
 {
-portBASE_TYPE xReturned;
+BaseType_t xReturned;
 long lBytes;
 uint8_t cReceivedString[ 60 ];
 struct sockaddr_in xClient;

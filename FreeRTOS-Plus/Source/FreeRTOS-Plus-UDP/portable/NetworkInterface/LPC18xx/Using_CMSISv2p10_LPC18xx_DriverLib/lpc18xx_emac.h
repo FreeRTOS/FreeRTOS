@@ -215,15 +215,15 @@ typedef struct {
 
 
 /*  Prototypes               */
-portBASE_TYPE EMAC_Init(EMAC_CFG_Type *EMAC_ConfigStruct);
+BaseType_t EMAC_Init(EMAC_CFG_Type *EMAC_ConfigStruct);
 int32_t EMAC_UpdatePHYStatus(void);
 uint32_t EMAC_GetReceiveDataSize(void);
 void EMAC_StartTransmitNextBuffer( uint32_t ulLength );
 void EMAC_SetNextPacketToSend( uint8_t * pucBuffer );
 void EMAC_NextPacketToRead( xNetworkBufferDescriptor_t *pxNetworkBuffer );
 void EMAC_UpdateRxConsumeIndex(void);
-portBASE_TYPE EMAC_CheckReceiveIndex(void);
-portBASE_TYPE EMAC_CheckTransmitIndex(void);
+BaseType_t EMAC_CheckReceiveIndex(void);
+BaseType_t EMAC_CheckTransmitIndex(void);
 
 #ifdef __cplusplus
 }

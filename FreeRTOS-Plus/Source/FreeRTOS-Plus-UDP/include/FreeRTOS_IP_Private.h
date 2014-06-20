@@ -294,7 +294,7 @@ void vNetworkBufferRelease( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
  * interrupt.  If a non zero value is returned, then the calling ISR should
  * perform a context switch before exiting the ISR.
  */
-portBASE_TYPE FreeRTOS_ReleaseFreeNetworkBufferFromISR( void );
+BaseType_t FreeRTOS_ReleaseFreeNetworkBufferFromISR( void );
 
 /*
  * Create a message that contains a command to initialise the network interface.
@@ -309,7 +309,7 @@ portBASE_TYPE FreeRTOS_ReleaseFreeNetworkBufferFromISR( void );
  * the interrupt is exited.
  */
 void FreeRTOS_NetworkDown( void );
-portBASE_TYPE FreeRTOS_NetworkDownFromISR( void );
+BaseType_t FreeRTOS_NetworkDownFromISR( void );
 
 /*
  * Inspect an Ethernet frame to see if it contains data that the stack needs to
@@ -319,11 +319,11 @@ portBASE_TYPE FreeRTOS_NetworkDownFromISR( void );
 eFrameProcessingResult_t eConsiderFrameForProcessing( const uint8_t * const pucEthernetBuffer );
 
 #if( ipconfigINCLUDE_TEST_CODE == 1 )
-	unsigned portBASE_TYPE uxGetNumberOfFreeNetworkBuffers( void );
+	UBaseType_t uxGetNumberOfFreeNetworkBuffers( void );
 #endif /* ipconfigINCLUDE_TEST_CODE */
 
 /* Socket related private functions. */
-portBASE_TYPE xProcessReceivedUDPPacket( xNetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort );
+BaseType_t xProcessReceivedUDPPacket( xNetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort );
 void FreeRTOS_SocketsInit( void );
 
 /* If FreeRTOS+NABTO is included then include the prototype of the function that

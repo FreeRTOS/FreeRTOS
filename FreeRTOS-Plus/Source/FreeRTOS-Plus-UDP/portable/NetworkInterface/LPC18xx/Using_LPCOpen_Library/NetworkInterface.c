@@ -78,7 +78,7 @@
 operation will be held in the Blocked state (so other tasks can execute) for
 niTX_BUFFER_FREE_WAIT ticks.  It will do this a maximum of niMAX_TX_ATTEMPTS
 before giving up. */
-#define niTX_BUFFER_FREE_WAIT	( ( portTickType ) 2UL / portTICK_RATE_MS )
+#define niTX_BUFFER_FREE_WAIT	( ( TickType_t ) 2UL / portTICK_RATE_MS )
 #define niMAX_TX_ATTEMPTS		( 5 )
 
 /*-----------------------------------------------------------*/
@@ -99,9 +99,9 @@ xSemaphoreHandle xEMACRxEventSemaphore = NULL;
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceInitialise( void )
+BaseType_t xNetworkInterfaceInitialise( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 extern uint8_t ucMACAddress[ 6 ];
 
 	xReturn = xEMACInit( ucMACAddress );
@@ -138,9 +138,9 @@ extern uint8_t ucMACAddress[ 6 ];
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
-portBASE_TYPE xReturn = pdFAIL;
+BaseType_t xReturn = pdFAIL;
 int32_t x;
 
 	/* Attempt to obtain access to a Tx descriptor. */
@@ -203,7 +203,7 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 		{
 			/* The buffer filled by the DMA is going to be passed into the IP
 			stack.  Allocate another buffer for the DMA descriptor. */
-			pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, ( portTickType ) 0 );
+			pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, ( TickType_t ) 0 );
 
 			if( pxNetworkBuffer != NULL )
 			{
@@ -240,7 +240,7 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 					/* Data was received and stored.  Send it to the IP task
 					for processing. */
 					xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( portTickType ) 0 ) == pdFALSE )
+					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
 					{
 						/* The buffer could not be sent to the IP task so the
 						buffer must be released. */

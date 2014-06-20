@@ -84,9 +84,9 @@ static unsigned int xTxDescriptorIndex = 0;
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xEMACInit( uint8_t ucMACAddress[ 6 ] )
+BaseType_t xEMACInit( uint8_t ucMACAddress[ 6 ] )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 uint32_t ulPHYStatus;
 
 	/* Configure the hardware. */
@@ -151,9 +151,9 @@ uint32_t ulPHYStatus;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xEMACIsTxDescriptorAvailable( void )
+BaseType_t xEMACIsTxDescriptorAvailable( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	if( ( xTxDescriptors[ xTxDescriptorIndex ].CTRLSTAT & RDES_OWN ) == 0 )
 	{
@@ -215,9 +215,9 @@ void vEMACReturnRxDescriptor( void )
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xEMACRxDataAvailable( void )
+BaseType_t xEMACRxDataAvailable( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	if( ( xRXDescriptors[ xRxDescriptorIndex ].STATUS & RDES_OWN ) == 0 )
 	{

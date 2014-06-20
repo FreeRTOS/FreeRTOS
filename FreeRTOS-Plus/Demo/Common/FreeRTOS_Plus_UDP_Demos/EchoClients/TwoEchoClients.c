@@ -87,13 +87,13 @@
 #include "FreeRTOS_Sockets.h"
 
 /* Small delay used between attempts to obtain a zero copy buffer. */
-#define echoTINY_DELAY	( ( portTickType ) 2 )
+#define echoTINY_DELAY	( ( TickType_t ) 2 )
 
 /* The echo tasks create a socket, send out a number of echo requests
 (listening for each echo reply), then close the socket again before
 starting over.  This delay is used between each iteration to ensure the
 network does not get too congested. */
-#define echoLOOP_DELAY	( ( portTickType ) 250 / portTICK_RATE_MS )
+#define echoLOOP_DELAY	( ( TickType_t ) 250 / portTICK_RATE_MS )
 
 #if ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1
 	/* When the trace recorder code is included user events are generated to
@@ -125,14 +125,14 @@ static void prvZeroCopyEchoClientTask( void *pvParameters );
 /* The receive timeout is set shorter when the windows simulator is used
 because simulated time is slower than real time. */
 #ifdef _WINDOWS_
-	const portTickType xReceiveTimeOut = 50 / portTICK_RATE_MS;
+	const TickType_t xReceiveTimeOut = 50 / portTICK_RATE_MS;
 #else
-	const portTickType xReceiveTimeOut = 500 / portTICK_RATE_MS;
+	const TickType_t xReceiveTimeOut = 500 / portTICK_RATE_MS;
 #endif
 
 /*-----------------------------------------------------------*/
 
-void vStartEchoClientTasks( uint16_t usTaskStackSize, unsigned portBASE_TYPE uxTaskPriority )
+void vStartEchoClientTasks( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority )
 {
 	/* Create the echo client task that does not use the zero copy interface. */
 	xTaskCreate( 	prvEchoClientTask,	/* The function that implements the task. */

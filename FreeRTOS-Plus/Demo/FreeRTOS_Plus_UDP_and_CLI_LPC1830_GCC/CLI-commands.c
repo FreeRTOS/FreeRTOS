@@ -96,43 +96,43 @@ commands. */
 /*
  * Implements the run-time-stats command.
  */
-static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the task-stats command.
  */
-static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the echo-three-parameters command.
  */
-static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the echo-parameters command.
  */
-static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that prints out IP address information.
  */
-static portBASE_TYPE prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that prints out the gathered demo debug stats.
  */
-static portBASE_TYPE prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Defines a command that sends an ICMP ping request to an IP address.
  */
-static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Implements the "trace start" and "trace stop" commands;
  */
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
-	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+	static BaseType_t prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 #endif
 
 /* Structure that defines the "ip-config" command line command. */
@@ -248,7 +248,7 @@ void vRegisterCLICommands( void )
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
 
@@ -269,7 +269,7 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
 
@@ -290,11 +290,11 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE xParameterStringLength, xReturn;
-static portBASE_TYPE lParameterNumber = 0;
+BaseType_t xParameterStringLength, xReturn;
+static BaseType_t lParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -357,11 +357,11 @@ static portBASE_TYPE lParameterNumber = 0;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 const char *pcParameter;
-portBASE_TYPE xParameterStringLength, xReturn;
-static portBASE_TYPE lParameterNumber = 0;
+BaseType_t xParameterStringLength, xReturn;
+static BaseType_t lParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -426,10 +426,10 @@ static portBASE_TYPE lParameterNumber = 0;
 
 #if ipconfigSUPPORT_OUTGOING_PINGS == 1
 
-	static portBASE_TYPE prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+	static BaseType_t prvPingCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
 	char * pcParameter;
-	portBASE_TYPE lParameterStringLength, xReturn;
+	BaseType_t lParameterStringLength, xReturn;
 	uint32_t ulIPAddress, ulBytesToPing;
 	const uint32_t ulDefaultBytesToPing = 8UL;
 	char cBuffer[ 16 ];
@@ -517,11 +517,11 @@ static portBASE_TYPE lParameterNumber = 0;
 
 #if configINCLUDE_DEMO_DEBUG_STATS != 0
 
-	static portBASE_TYPE prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+	static BaseType_t prvDisplayIPDebugStats( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-	static portBASE_TYPE xIndex = -1;
+	static BaseType_t xIndex = -1;
 	extern xExampleDebugStatEntry_t xIPTraceValues[];
-	portBASE_TYPE xReturn;
+	BaseType_t xReturn;
 
 		/* Remove compile time warnings about unused parameters, and check the
 		write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -553,10 +553,10 @@ static portBASE_TYPE lParameterNumber = 0;
 
 #endif /* configINCLUDE_DEMO_DEBUG_STATS */
 
-static portBASE_TYPE prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvDisplayIPConfig( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-static portBASE_TYPE xIndex = 0;
-portBASE_TYPE xReturn;
+static BaseType_t xIndex = 0;
+BaseType_t xReturn;
 uint32_t ulAddress;
 
 	/* Remove compile time warnings about unused parameters, and check the
@@ -615,10 +615,10 @@ uint32_t ulAddress;
 
 #if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
 
-	static portBASE_TYPE prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+	static BaseType_t prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
 	const char *pcParameter;
-	portBASE_TYPE lParameterStringLength;
+	BaseType_t lParameterStringLength;
 
 		/* Remove compile time warnings about unused parameters, and check the
 		write buffer is not NULL.  NOTE - for simplicity, this example assumes the

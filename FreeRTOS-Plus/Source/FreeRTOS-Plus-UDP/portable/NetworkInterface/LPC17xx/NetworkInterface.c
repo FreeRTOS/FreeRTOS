@@ -75,7 +75,7 @@
 task performing the transmit will block for niTX_BUFFER_FREE_WAIT
 milliseconds.  It will do this a maximum of niMAX_TX_ATTEMPTS before giving
 up. */
-#define niTX_BUFFER_FREE_WAIT	( ( portTickType ) 2UL / portTICK_RATE_MS )
+#define niTX_BUFFER_FREE_WAIT	( ( TickType_t ) 2UL / portTICK_RATE_MS )
 #define niMAX_TX_ATTEMPTS		( 5 )
 
 /* The length of the queue used to send interrupt status words from the
@@ -99,11 +99,11 @@ interrupt is received. */
 static xSemaphoreHandle xEMACRxEventSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceInitialise( void )
+BaseType_t xNetworkInterfaceInitialise( void )
 {
 EMAC_CFG_Type Emac_Config;
 PINSEL_CFG_Type xPinConfig;
-portBASE_TYPE xStatus, xReturn;
+BaseType_t xStatus, xReturn;
 extern uint8_t ucMACAddress[ 6 ];
 
 	/* Enable Ethernet Pins */
@@ -142,9 +142,9 @@ extern uint8_t ucMACAddress[ 6 ];
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
-portBASE_TYPE xReturn = pdFAIL;
+BaseType_t xReturn = pdFAIL;
 int32_t x;
 extern void EMAC_StartTransmitNextBuffer( uint32_t ulLength );
 extern void EMAC_SetNextPacketToSend( uint8_t * pucBuffer );
@@ -252,7 +252,7 @@ extern uint8_t *EMAC_NextPacketToRead( void );
 				stack.  No storage is required as the network buffer
 				will point directly to the buffer that already holds
 				the	received data. */
-				pxNetworkBuffer = pxNetworkBufferGet( 0, ( portTickType ) 0 );
+				pxNetworkBuffer = pxNetworkBufferGet( 0, ( TickType_t ) 0 );
 
 				if( pxNetworkBuffer != NULL )
 				{
@@ -262,7 +262,7 @@ extern uint8_t *EMAC_NextPacketToRead( void );
 
 					/* Data was received and stored.  Send a message to the IP
 					task to let it know. */
-					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( portTickType ) 0 ) == pdFALSE )
+					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
 					{
 						vNetworkBufferRelease( pxNetworkBuffer );
 						iptraceETHERNET_RX_EVENT_LOST();

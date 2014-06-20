@@ -138,7 +138,7 @@ signed char cRxedChar;
 uint8_t ucInputIndex = 0;
 char *pcOutputString;
 static char cInputString[ cmdMAX_INPUT_SIZE ], cLastInputString[ cmdMAX_INPUT_SIZE ];
-portBASE_TYPE xReturned;
+BaseType_t xReturned;
 xComPortHandle xPort;
 
 	( void ) pvParameters;

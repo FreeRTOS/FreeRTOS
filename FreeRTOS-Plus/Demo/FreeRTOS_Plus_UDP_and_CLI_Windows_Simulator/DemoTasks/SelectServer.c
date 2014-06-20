@@ -81,7 +81,7 @@
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_Sockets.h"
 
-#define selTINY_DELAY				( ( portTickType ) 2 )
+#define selTINY_DELAY				( ( TickType_t ) 2 )
 #define selNUMBER_OF_SOCKETS		( 3 )
 #define selSELECT_QUEUE_SIZE		( selNUMBER_OF_SOCKETS * 2 )
 
@@ -101,7 +101,7 @@ static xSocket_t xRxSockets[ selNUMBER_OF_SOCKETS ] = { 0 };
 
 /*-----------------------------------------------------------*/
 
-void vStartSelectUDPServerTasks( uint16_t usStackSize, uint32_t ulFirstPortNumber, unsigned portBASE_TYPE uxPriority )
+void vStartSelectUDPServerTasks( uint16_t usStackSize, uint32_t ulFirstPortNumber, UBaseType_t uxPriority )
 {
 	/* Create task that sends to multiple sockets, and the task that uses the
 	FreeRTOS_select() function to receive from multiple sockets.  The first
@@ -120,7 +120,7 @@ struct freertos_sockaddr xAddress;
 uint32_t xClientLength = sizeof( struct freertos_sockaddr ), ulFirstRxPortNumber, x;
 uint32_t ulReceivedValue = 0, ulExpectedValue = 0UL, ulReceivedCount[ selNUMBER_OF_SOCKETS ] = { 0 };
 int32_t lBytes;
-const portTickType xRxBlockTime = 0;
+const TickType_t xRxBlockTime = 0;
 
 	/* The number of the port the first Rx socket will be bound to is passed in
 	as the task parameter.  Other port numbers used are consecutive from this. */
@@ -197,7 +197,7 @@ uint32_t ulTxValue = 0;
 struct freertos_sockaddr xDestinationAddress;
 uint32_t ulIPAddress, ulFirstDestinationPortNumber, xPortNumber;
 xSocket_t xTxSocket;
-const portTickType xShortDelay = 100 / portTICK_RATE_MS, xSendBlockTime = 500 / portTICK_RATE_MS;
+const TickType_t xShortDelay = 100 / portTICK_RATE_MS, xSendBlockTime = 500 / portTICK_RATE_MS;
 
 	srand( ( unsigned int ) &xPortNumber );
 

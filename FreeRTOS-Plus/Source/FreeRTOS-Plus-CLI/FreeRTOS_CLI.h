@@ -48,7 +48,7 @@ commands must comply.  pcWriteBuffer is a buffer into which the output from
 executing the command can be written, xWriteBufferLen is the length, in bytes of
 the pcWriteBuffer buffer, and pcCommandString is the entire string as input by
 the user (from which parameters can be extracted).*/
-typedef portBASE_TYPE (*pdCOMMAND_LINE_CALLBACK)( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+typedef BaseType_t (*pdCOMMAND_LINE_CALLBACK)( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /* The structure that defines command line commands.  A command line command
 should be defined by declaring a const structure of this type. */
@@ -69,7 +69,7 @@ typedef struct xCOMMAND_LINE_INPUT
  * handled by the command interpreter.  Once a command has been registered it
  * can be executed from the command line.
  */
-portBASE_TYPE FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister );
+BaseType_t FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister );
 
 /*
  * Runs the command interpreter for the command string "pcCommandInput".  Any
@@ -82,7 +82,7 @@ portBASE_TYPE FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * cons
  * pcCmdIntProcessCommand is not reentrant.  It must not be called from more
  * than one task - or at least - by more than one task at a time.
  */
-portBASE_TYPE FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char * pcWriteBuffer, size_t xWriteBufferLen  );
+BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char * pcWriteBuffer, size_t xWriteBufferLen  );
 
 /*-----------------------------------------------------------*/
 
@@ -102,7 +102,7 @@ char *FreeRTOS_CLIGetOutputBuffer( void );
 /*
  * Return a pointer to the xParameterNumber'th word in pcCommandString.
  */
-const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, unsigned portBASE_TYPE uxWantedParameter, portBASE_TYPE *pxParameterStringLength );
+const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, UBaseType_t uxWantedParameter, BaseType_t *pxParameterStringLength );
 
 #endif /* COMMAND_INTERPRETER_H */
 

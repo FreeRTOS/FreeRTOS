@@ -95,7 +95,7 @@ CYASSL* xCyaSSL_Object;
 WORD wVersionRequested;
 WSADATA xWSAData;
 char cString[ 50 ];
-portBASE_TYPE lReturned;
+BaseType_t lReturned;
 uint32_t ulCount = 0UL;
 
 	/* Remove compiler warning about unused parameters. */

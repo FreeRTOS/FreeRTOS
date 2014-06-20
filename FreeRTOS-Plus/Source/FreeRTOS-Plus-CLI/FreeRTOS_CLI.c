@@ -61,7 +61,7 @@ typedef struct xCOMMAND_INPUT_LIST
  * The callback function that is executed when "help" is entered.  This is the
  * only default command that is always present.
  */
-static portBASE_TYPE prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+static BaseType_t prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 
 /*
  * Return the number of parameters that follow the command name.
@@ -98,11 +98,11 @@ static char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister )
+BaseType_t FreeRTOS_CLIRegisterCommand( const CLI_Command_Definition_t * const pxCommandToRegister )
 {
 static CLI_Definition_List_Item_t *pxLastCommandInList = &xRegisteredCommands;
 CLI_Definition_List_Item_t *pxNewListItem;
-portBASE_TYPE xReturn = pdFAIL;
+BaseType_t xReturn = pdFAIL;
 
 	/* Check the parameter is not NULL. */
 	configASSERT( pxCommandToRegister );
@@ -139,10 +139,10 @@ portBASE_TYPE xReturn = pdFAIL;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char * pcWriteBuffer, size_t xWriteBufferLen  )
+BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char * pcWriteBuffer, size_t xWriteBufferLen  )
 {
 static const CLI_Definition_List_Item_t *pxCommand = NULL;
-portBASE_TYPE xReturn = pdTRUE;
+BaseType_t xReturn = pdTRUE;
 const char *pcRegisteredCommandString;
 size_t xCommandStringLength;
 
@@ -220,9 +220,9 @@ char *FreeRTOS_CLIGetOutputBuffer( void )
 }
 /*-----------------------------------------------------------*/
 
-const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, unsigned portBASE_TYPE uxWantedParameter, portBASE_TYPE *pxParameterStringLength )
+const char *FreeRTOS_CLIGetParameter( const char *pcCommandString, UBaseType_t uxWantedParameter, BaseType_t *pxParameterStringLength )
 {
-unsigned portBASE_TYPE uxParametersFound = 0;
+UBaseType_t uxParametersFound = 0;
 const char *pcReturn = NULL;
 
 	*pxParameterStringLength = 0;
@@ -276,10 +276,10 @@ const char *pcReturn = NULL;
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+static BaseType_t prvHelpCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
 static const CLI_Definition_List_Item_t * pxCommand = NULL;
-signed portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	( void ) pcCommandString;
 
@@ -312,7 +312,7 @@ signed portBASE_TYPE xReturn;
 static int8_t prvGetNumberOfParameters( const char *pcCommandString )
 {
 int8_t cParameters = 0;
-portBASE_TYPE xLastCharacterWasSpace = pdFALSE;
+BaseType_t xLastCharacterWasSpace = pdFALSE;
 
 	/* Count the number of space delimited words in pcCommandString. */
 	while( *pcCommandString != 0x00 )

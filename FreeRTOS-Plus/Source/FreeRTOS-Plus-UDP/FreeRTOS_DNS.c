@@ -136,7 +136,7 @@ static xSocket_t xDNSSocket = NULL;
 uint32_t ulIPAddress = 0UL;
 uint8_t *pucUDPPayloadBuffer;
 static uint32_t ulAddressLength;
-portBASE_TYPE xAttempt;
+BaseType_t xAttempt;
 int32_t lBytes;
 size_t xPayloadLength;
 const size_t xExpectedPayloadLength = sizeof( xDNSMessage_t ) + strlen( pcHostName ) + sizeof( uint16_t ) + sizeof( uint16_t ) + 2; /* Two for the count of characters in the first subdomain part, and the string end byte */
@@ -384,8 +384,8 @@ static xSocket_t prvCreateDNSSocket( void )
 {
 static xSocket_t xSocket = NULL;
 struct freertos_sockaddr xAddress;
-portBASE_TYPE xReturn;
-portTickType xTimeoutTime = 200 / portTICK_RATE_MS;
+BaseType_t xReturn;
+TickType_t xTimeoutTime = 200 / portTICK_RATE_MS;
 
 	/* This must be the first time this function has been called.  Create
 	the socket. */
@@ -404,8 +404,8 @@ portTickType xTimeoutTime = 200 / portTICK_RATE_MS;
 	else
 	{
 		/* Set the send and receive timeouts. */
-		FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xTimeoutTime, sizeof( portTickType ) );
-		FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xTimeoutTime, sizeof( portTickType ) );
+		FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
+		FreeRTOS_setsockopt( xSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
 	}
 
 	return xSocket;

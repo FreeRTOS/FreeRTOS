@@ -185,7 +185,7 @@ static void prvSendDHCPDiscover( xMACAddress_t *pxMACAddress );
 /*
  * Interpret message received on the DHCP socket.
  */
-static portBASE_TYPE prvProcessDHCPReplies( uint8_t ucExpectedMessageType, xMACAddress_t *pxMACAddress, xNetworkAddressingParameters_t *pxNetworkAddressing );
+static BaseType_t prvProcessDHCPReplies( uint8_t ucExpectedMessageType, xMACAddress_t *pxMACAddress, xNetworkAddressingParameters_t *pxNetworkAddressing );
 
 /*
  * Generate a DHCP request packet, and send it on the DHCP socket.
@@ -221,14 +221,14 @@ static xSocket_t xDHCPSocket = NULL;
 static uint32_t ulTransactionId = 0UL, ulOfferedIPAddress = 0UL, ulDHCPServerAddress = 0UL, ulLeaseTime = 0;
 
 /* Hold information on the current timer state. */
-static portTickType xDHCPTxTime = 0x00, xDHCPTxPeriod = 0x00;
+static TickType_t xDHCPTxTime = 0x00, xDHCPTxPeriod = 0x00;
 
 /* Maintains the DHCP state machine state. */
 static eDHCPState_t eDHCPState = eWaitingSendFirstDiscover;
 
 /*-----------------------------------------------------------*/
 
-void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *pulIPAddress, xNetworkAddressingParameters_t *pxNetworkAddressing )
+void vDHCPProcess( BaseType_t xReset, xMACAddress_t *pxMACAddress, uint32_t *pulIPAddress, xNetworkAddressingParameters_t *pxNetworkAddressing )
 {
 	if( xReset != pdFALSE )
 	{
@@ -288,7 +288,7 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 						}
 						taskEXIT_CRITICAL();
 						eDHCPState = eNotUsingLeasedAddress;
-						xTimerStop( xDHCPTimer, ( portTickType ) 0 );
+						xTimerStop( xDHCPTimer, ( TickType_t ) 0 );
 
 						#if ipconfigUSE_NETWORK_EVENT_HOOK == 1
 						{
@@ -395,7 +395,7 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 			break;
 
 		case eNotUsingLeasedAddress:
-			xTimerStop( xDHCPTimer, ( portTickType ) 0 );
+			xTimerStop( xDHCPTimer, ( TickType_t ) 0 );
 			break;
 	}
 }
@@ -404,8 +404,8 @@ void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *
 static void prvCreateDHCPSocket( void )
 {
 struct freertos_sockaddr xAddress;
-portBASE_TYPE xReturn;
-portTickType xTimeoutTime = 0;
+BaseType_t xReturn;
+TickType_t xTimeoutTime = 0;
 
 	/* Create the socket, if it has not already been created. */
 	if( xDHCPSocket == NULL )
@@ -415,8 +415,8 @@ portTickType xTimeoutTime = 0;
 
 		/* Ensure the Rx and Tx timeouts are zero as the DHCP executes in the
 		context of the IP task. */
-		FreeRTOS_setsockopt( xDHCPSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xTimeoutTime, sizeof( portTickType ) );
-		FreeRTOS_setsockopt( xDHCPSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xTimeoutTime, sizeof( portTickType ) );
+		FreeRTOS_setsockopt( xDHCPSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
+		FreeRTOS_setsockopt( xDHCPSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
 
 		/* Bind to the standard DHCP client port. */
 		xAddress.sin_port = dhcpCLIENT_PORT;
@@ -462,7 +462,7 @@ extern void vIPFunctionsTimerCallback( xTimerHandle xTimer );
 }
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvProcessDHCPReplies( uint8_t ucExpectedMessageType, xMACAddress_t *pxMACAddress, xNetworkAddressingParameters_t *pxNetworkAddressing )
+static BaseType_t prvProcessDHCPReplies( uint8_t ucExpectedMessageType, xMACAddress_t *pxMACAddress, xNetworkAddressingParameters_t *pxNetworkAddressing )
 {
 uint8_t *pucUDPPayload, *pucLastByte;
 struct freertos_sockaddr xClient;
@@ -471,7 +471,7 @@ int32_t lBytes;
 xDHCPMessage_t *pxDHCPMessage;
 uint8_t *pucByte, ucOptionCode, ucLength;
 uint32_t ulProcessed;
-portBASE_TYPE xReturn = pdFALSE;
+BaseType_t xReturn = pdFALSE;
 const uint32_t ulMandatoryOptions = 2; /* DHCP server address, and the correct DHCP message type must be present in the options. */
 
 	lBytes = FreeRTOS_recvfrom( xDHCPSocket, ( void * ) &pucUDPPayload, 0, FREERTOS_ZERO_COPY, &xClient, &xClientLength );

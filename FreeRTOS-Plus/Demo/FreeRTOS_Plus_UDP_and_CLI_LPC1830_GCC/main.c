@@ -213,7 +213,7 @@ void vApplicationMallocFailedHook( void )
 /* Called by FreeRTOS+UDP when the network connects. */
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
-static portBASE_TYPE xTaskAlreadyCreated = pdFALSE;
+static BaseType_t xTaskAlreadyCreated = pdFALSE;
 
 	if( eNetworkEvent == eNetworkUp )
 	{

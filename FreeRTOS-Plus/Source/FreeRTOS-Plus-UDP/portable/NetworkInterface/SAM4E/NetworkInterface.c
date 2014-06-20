@@ -61,7 +61,7 @@
 operation will be held in the Blocked state (so other tasks can execute) for
 niTX_BUFFER_FREE_WAIT ticks.  It will do this a maximum of niMAX_TX_ATTEMPTS
 before giving up. */
-#define niTX_BUFFER_FREE_WAIT	( ( portTickType ) 2UL / portTICK_RATE_MS )
+#define niTX_BUFFER_FREE_WAIT	( ( TickType_t ) 2UL / portTICK_RATE_MS )
 #define niMAX_TX_ATTEMPTS		( 5 )
 
 /*-----------------------------------------------------------*/
@@ -90,12 +90,12 @@ static gmac_device_t xGMACStruct;
 
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceInitialise( void )
+BaseType_t xNetworkInterfaceInitialise( void )
 {
 gmac_options_t xGMACOptions;
 extern uint8_t ucMACAddress[ 6 ];
-const portTickType xPHYDelay_400ms = 400UL;
-portBASE_TYPE xReturn = pdFALSE;
+const TickType_t xPHYDelay_400ms = 400UL;
+BaseType_t xReturn = pdFALSE;
 
 	/* Ensure PHY is ready. */
 	vTaskDelay( xPHYDelay_400ms / portTICK_RATE_MS );
@@ -167,7 +167,7 @@ portBASE_TYPE xReturn = pdFALSE;
 
 static void prvGMACRxCallback( uint32_t ulStatus )
 {
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Unblock the deferred interrupt handler task if the event was an Rx. */
 	if( ulStatus == GMAC_RSR_REC )
@@ -179,9 +179,9 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
+BaseType_t xNetworkInterfaceOutput( xNetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
-portBASE_TYPE xReturn = pdFAIL;
+BaseType_t xReturn = pdFAIL;
 int32_t x;
 
 	/* Attempt to obtain access to a Tx descriptor. */
@@ -217,7 +217,7 @@ static void prvGMACDeferredInterruptHandlerTask( void *pvParameters )
 {
 xNetworkBufferDescriptor_t *pxNetworkBuffer;
 xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
-static const portTickType xBufferWaitDelay = 1500UL / portTICK_RATE_MS;
+static const TickType_t xBufferWaitDelay = 1500UL / portTICK_RATE_MS;
 uint32_t ulReturned;
 
 	( void ) pvParameters;
@@ -268,7 +268,7 @@ uint32_t ulReturned;
 					/* Data was received and stored.  Send it to the IP task
 					for processing. */
 					xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( portTickType ) 0 ) == pdFALSE )
+					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
 					{
 						/* The buffer could not be sent to the IP task so the
 						buffer must be released. */

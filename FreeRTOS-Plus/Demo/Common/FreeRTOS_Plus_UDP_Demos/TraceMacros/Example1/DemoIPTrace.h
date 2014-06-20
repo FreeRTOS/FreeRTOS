@@ -150,7 +150,7 @@ configINCLUDE_DEMO_DEBUG_STATS setting in FreeRTOSIPConfig.h. */
 	/*
 	 * Returns the number of entries in the xIPTraceValues table.
 	 */
-	portBASE_TYPE xExampleDebugStatEntries( void );
+	BaseType_t xExampleDebugStatEntries( void );
 
 #endif /* configINCLUDE_DEMO_DEBUG_STATS == 1 */
 

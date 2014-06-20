@@ -148,20 +148,20 @@ typedef void *xSocketSet_t;
  * FUNCTIONS IS AVAILABLE ON THE FOLLOWING URL:
  * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/FreeRTOS_UDP_API_Functions.shtml
  */
-xSocket_t FreeRTOS_socket( portBASE_TYPE xDomain, portBASE_TYPE xType, portBASE_TYPE xProtocol );
+xSocket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol );
 int32_t FreeRTOS_recvfrom( xSocket_t xSocket, void *pvBuffer, size_t xBufferLength, uint32_t ulFlags, struct freertos_sockaddr *pxSourceAddress, socklen_t *pxSourceAddressLength );
 int32_t FreeRTOS_sendto( xSocket_t xSocket, const void *pvBuffer, size_t xTotalDataLength, uint32_t ulFlags, const struct freertos_sockaddr *pxDestinationAddress, socklen_t xDestinationAddressLength );
-portBASE_TYPE FreeRTOS_bind( xSocket_t xSocket, struct freertos_sockaddr *pxAddress, socklen_t xAddressLength );
-portBASE_TYPE FreeRTOS_setsockopt( xSocket_t xSocket, int32_t lLevel, int32_t lOptionName, const void *pvOptionValue, size_t xOptionLength );
-portBASE_TYPE FreeRTOS_closesocket( xSocket_t xSocket );
+BaseType_t FreeRTOS_bind( xSocket_t xSocket, struct freertos_sockaddr *pxAddress, socklen_t xAddressLength );
+BaseType_t FreeRTOS_setsockopt( xSocket_t xSocket, int32_t lLevel, int32_t lOptionName, const void *pvOptionValue, size_t xOptionLength );
+BaseType_t FreeRTOS_closesocket( xSocket_t xSocket );
 uint32_t FreeRTOS_gethostbyname( const char *pcHostName );
 uint32_t FreeRTOS_inet_addr( const char *pcIPAddress );
 
 #if ipconfigSUPPORT_SELECT_FUNCTION == 1
-	xSocketSet_t FreeRTOS_CreateSocketSet( unsigned portBASE_TYPE uxEventQueueLength );
-	portBASE_TYPE FreeRTOS_FD_SET( xSocket_t xSocket, xSocketSet_t xSocketSet );
-	portBASE_TYPE FreeRTOS_FD_CLR( xSocket_t xSocket, xSocketSet_t xSocketSet );
-	xSocket_t FreeRTOS_select( xSocketSet_t xSocketSet, portTickType xBlockTimeTicks );
+	xSocketSet_t FreeRTOS_CreateSocketSet( UBaseType_t uxEventQueueLength );
+	BaseType_t FreeRTOS_FD_SET( xSocket_t xSocket, xSocketSet_t xSocketSet );
+	BaseType_t FreeRTOS_FD_CLR( xSocket_t xSocket, xSocketSet_t xSocketSet );
+	xSocket_t FreeRTOS_select( xSocketSet_t xSocketSet, TickType_t xBlockTimeTicks );
 #endif /* ipconfigSUPPORT_SELECT_FUNCTION */
 
 #endif /* FREERTOS_UDP_H */

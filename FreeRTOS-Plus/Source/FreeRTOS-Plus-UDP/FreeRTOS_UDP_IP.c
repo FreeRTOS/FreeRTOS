@@ -95,7 +95,7 @@
 #define ipIP_VERSION_AND_HEADER_LENGTH_BYTE ( ( uint8_t ) 0x45 )
 
 /* Time delay between repeated attempts to initialise the network hardware. */
-#define ipINITIALISATION_RETRY_DELAY	( ( ( portTickType ) 3000 ) / portTICK_RATE_MS )
+#define ipINITIALISATION_RETRY_DELAY	( ( ( TickType_t ) 3000 ) / portTICK_RATE_MS )
 
 /* The local MAC address is accessed from within xDefaultPartUDPPacketHeader,
 rather than duplicated in its own variable. */
@@ -220,7 +220,7 @@ static void prvReturnEthernetFrame( xNetworkBufferDescriptor_t * const pxNetwork
 /*
  * Return the checksum generated over usDataLengthBytes from pucNextData.
  */
-static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes, portBASE_TYPE xChecksumIsOffloaded );
+static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes, BaseType_t xChecksumIsOffloaded );
 
 /*
  * The callback function that is assigned to all periodic processing timers -
@@ -246,7 +246,7 @@ static void prvRefreshARPCacheEntry( const xMACAddress_t * const pxMACAddress, c
  * Creates the pseudo header necessary then generate the checksum over the UDP
  * packet.  Returns the calculated checksum.
  */
-static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket, portBASE_TYPE xChecksumIsOffloaded );
+static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket, BaseType_t xChecksumIsOffloaded );
 
 /*
  * Look for ulIPAddress in the ARP cache.  If the IP address exists, copy the
@@ -293,7 +293,7 @@ static void prvCompleteUDPHeader( xNetworkBufferDescriptor_t *pxNetworkBuffer, x
  * zero.  Return pdPASS if the message was sent successfully, otherwise return
  * pdFALSE.
 */
-static portBASE_TYPE prvSendEventToIPTask( eIPEvent_t eEvent );
+static BaseType_t prvSendEventToIPTask( eIPEvent_t eEvent );
 
 /*
  * Generate and send an ARP request for the IP address passed in ulIPAddress.
@@ -335,7 +335,7 @@ static xTimerHandle xARPTimer = NULL;
 /* Used to ensure network down events cannot be missed when they cannot be
 posted to the network event queue because the network event queue is already
 full. */
-static portBASE_TYPE xNetworkDownEventPending = pdFALSE;
+static BaseType_t xNetworkDownEventPending = pdFALSE;
 
 /* For convenience, a MAC address of all zeros and another of all 0xffs are
 defined const for quick reference. */
@@ -463,7 +463,7 @@ xIPStackEvent_t xReceivedEvent;
 void FreeRTOS_NetworkDown( void )
 {
 static const xIPStackEvent_t xNetworkDownEvent = { eNetworkDownEvent, NULL };
-const portTickType xDontBlock = 0;
+const TickType_t xDontBlock = 0;
 
 	/* Simply send the network task the appropriate event. */
 	if( xQueueSendToBack( xNetworkEventQueue, &xNetworkDownEvent, xDontBlock ) != pdPASS )
@@ -479,10 +479,10 @@ const portTickType xDontBlock = 0;
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_NetworkDownFromISR( void )
+BaseType_t FreeRTOS_NetworkDownFromISR( void )
 {
 static const xIPStackEvent_t xNetworkDownEvent = { eNetworkDownEvent, NULL };
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Simply send the network task the appropriate event. */
 	if( xQueueSendToBackFromISR( xNetworkEventQueue, &xNetworkDownEvent, &xHigherPriorityTaskWoken ) != pdPASS )
@@ -499,7 +499,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void *FreeRTOS_GetUDPPayloadBuffer( size_t xRequestedSizeBytes, portTickType xBlockTimeTicks )
+void *FreeRTOS_GetUDPPayloadBuffer( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks )
 {
 xNetworkBufferDescriptor_t *pxNetworkBuffer;
 void *pvReturn;
@@ -547,9 +547,9 @@ uint8_t * FreeRTOS_GetMACAddress( void )
 }
 /*-----------------------------------------------------------*/
 
-portBASE_TYPE FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] )
+BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] )
 {
-static portBASE_TYPE xReturn = pdFALSE;
+static BaseType_t xReturn = pdFALSE;
 
 	/* Only create the IP event queue if it has not already been created, in
 	case this function is called more than once. */
@@ -632,11 +632,11 @@ void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress, uint32_t *pulNetM
 
 #if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
 
-	portBASE_TYPE FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t xNumberOfBytesToSend, portTickType xBlockTimeTicks )
+	BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t xNumberOfBytesToSend, TickType_t xBlockTimeTicks )
 	{
 	xNetworkBufferDescriptor_t *pxNetworkBuffer;
 	xICMPHeader_t *pxICMPHeader;
-	portBASE_TYPE xReturn = pdFAIL;
+	BaseType_t xReturn = pdFAIL;
 	static uint16_t usSequenceNumber = 0;
 	uint8_t *pucChar;
 	xIPStackEvent_t xStackTxEvent = { eStackTxEvent, NULL };
@@ -699,11 +699,11 @@ void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress, uint32_t *pulNetM
 
 /*-----------------------------------------------------------*/
 
-static portBASE_TYPE prvSendEventToIPTask( eIPEvent_t eEvent )
+static BaseType_t prvSendEventToIPTask( eIPEvent_t eEvent )
 {
 xIPStackEvent_t xEventMessage;
-const portTickType xDontBlock = 0;
-portBASE_TYPE xReturn;
+const TickType_t xDontBlock = 0;
+BaseType_t xReturn;
 
 	xEventMessage.eEventType = eEvent;
 	xReturn = xQueueSendToBack( xNetworkEventQueue, &xEventMessage, xDontBlock );
@@ -724,7 +724,7 @@ eIPEvent_t eMessage;
 	/* This time can be used to send more than one type of message to the IP
 	task.  The message ID is stored in the ID of the timer.  The strange
 	casting is to avoid compiler warnings. */
-	eMessage = ( eIPEvent_t ) ( ( portBASE_TYPE ) pvTimerGetTimerID( xTimer ) );
+	eMessage = ( eIPEvent_t ) ( ( BaseType_t ) pvTimerGetTimerID( xTimer ) );
 
 	prvSendEventToIPTask( eMessage );
 }
@@ -748,7 +748,7 @@ xNetworkBufferDescriptor_t *pxNetworkBuffer;
 
 static void prvAgeARPCache( void )
 {
-portBASE_TYPE x;
+BaseType_t x;
 
 	/* Loop through each entry in the ARP cache. */
 	for( x = 0; x < ipconfigARP_CACHE_ENTRIES; x++ )
@@ -791,7 +791,7 @@ portBASE_TYPE x;
 
 static eARPLookupResult_t prvGetARPCacheEntry( uint32_t *pulIPAddress, xMACAddress_t * const pxMACAddress )
 {
-portBASE_TYPE x;
+BaseType_t x;
 eARPLookupResult_t eReturn;
 uint32_t ulAddressToLookup;
 
@@ -873,7 +873,7 @@ uint32_t ulAddressToLookup;
 
 static void prvRefreshARPCacheEntry( const xMACAddress_t * const pxMACAddress, const uint32_t ulIPAddress )
 {
-portBASE_TYPE x, xEntryFound = pdFALSE, xOldestEntry = 0;
+BaseType_t x, xEntryFound = pdFALSE, xOldestEntry = 0;
 uint8_t ucMinAgeFound = 0U;
 
 	/* Only process the IP address if it is on the local network. */
@@ -1355,7 +1355,7 @@ static void prvProcessNetworkDownEvent( void )
 
 	#if ipconfigUSE_NETWORK_EVENT_HOOK == 1
 	{
-		static portBASE_TYPE xCallEventHook = pdFALSE;
+		static BaseType_t xCallEventHook = pdFALSE;
 
 		/* The first network down event is generated by the IP stack
 		itself to initialise the network hardware, so do not call the
@@ -1480,7 +1480,7 @@ static eFrameProcessingResult_t prvProcessIPPacket( const xIPPacket_t * const px
 eFrameProcessingResult_t eReturn = eReleaseBuffer;
 const xIPHeader_t * pxIPHeader;
 xUDPPacket_t *pxUDPPacket;
-portBASE_TYPE xChecksumIsCorrect;
+BaseType_t xChecksumIsCorrect;
 
 	pxIPHeader = &( pxIPPacket->xIPHeader );
 
@@ -1569,7 +1569,7 @@ portBASE_TYPE xChecksumIsCorrect;
 }
 /*-----------------------------------------------------------*/
 
-static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket, portBASE_TYPE xChecksumIsOffloaded )
+static uint16_t prvGenerateUDPChecksum( const xUDPPacket_t * const pxUDPPacket, BaseType_t xChecksumIsOffloaded )
 {
 xPseudoHeader_t *pxPseudoHeader;
 uint16_t usLength, usReturn;
@@ -1727,7 +1727,7 @@ uint16_t usLength, usReturn;
 #endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 /*-----------------------------------------------------------*/
 
-static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes, portBASE_TYPE xChecksumIsOffloaded )
+static uint16_t prvGenerateChecksum( const uint8_t * const pucNextData, const uint16_t usDataLengthBytes, BaseType_t xChecksumIsOffloaded )
 {
 uint32_t ulChecksum = 0;
 uint16_t us, usDataLength16BitWords, *pusNextData, usReturn;

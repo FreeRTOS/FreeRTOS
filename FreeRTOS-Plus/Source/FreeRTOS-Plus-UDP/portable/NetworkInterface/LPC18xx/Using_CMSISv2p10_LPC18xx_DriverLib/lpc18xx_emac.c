@@ -81,13 +81,13 @@ static void setEmacAddr( uint8_t abStationAddr[] );
  *  all remain interrupts are disabled
  *  (Ref. from LPC17xx UM)
  **********************************************************************/
-portBASE_TYPE EMAC_Init(EMAC_CFG_Type *EMAC_ConfigStruct)
+BaseType_t EMAC_Init(EMAC_CFG_Type *EMAC_ConfigStruct)
 {
 int32_t id1, id2, regv, phy = 0;
 int32_t phy_linkstatus_reg, phy_linkstatus_mask;
 uint32_t x;
 const uint32_t ulMaxAttempts = 250UL;
-portBASE_TYPE xReturn = pdPASS;
+BaseType_t xReturn = pdPASS;
 
 	/* Enable Ethernet Pins (NGX LPC1830 Xplorer. */
 	scu_pinmux(0x2 ,0 , (MD_EHS | MD_PLN | MD_EZI | MD_ZI), FUNC7);
@@ -287,9 +287,9 @@ portBASE_TYPE xReturn = pdPASS;
 
 /*********************************************************************//**
  **********************************************************************/
-portBASE_TYPE EMAC_CheckTransmitIndex( void )
+BaseType_t EMAC_CheckTransmitIndex( void )
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	if( ( Tx_Desc[ TxDescIndex ].Status & OWN_BIT ) == 0 )
 	{
@@ -374,9 +374,9 @@ void EMAC_UpdateRxConsumeIndex( void )
  * it means there're available data has been received. They should be read
  * out and released the Receive Data Buffer by updating the RxConsumeIndex value.
  **********************************************************************/
-portBASE_TYPE EMAC_CheckReceiveIndex(void)
+BaseType_t EMAC_CheckReceiveIndex(void)
 {
-portBASE_TYPE xReturn;
+BaseType_t xReturn;
 
 	if( ( Rx_Desc[ RxDescIndex ].Status & OWN_BIT ) == 0 )
 	{

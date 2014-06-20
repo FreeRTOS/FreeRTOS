@@ -225,7 +225,7 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
 uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
 int8_t cBuffer[ 16 ];
-static portBASE_TYPE xTasksAlreadyCreated = pdFALSE;
+static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
 	if( eNetworkEvent == eNetworkUp )
 	{

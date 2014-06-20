@@ -66,6 +66,6 @@
 #ifndef SELECT_SERVER_H
 #define SELECT_SERVER_H
 
-void vStartSelectUDPServerTasks( uint16_t usStackSize, uint32_t ulFirstPortNumber, unsigned portBASE_TYPE uxPriority );
+void vStartSelectUDPServerTasks( uint16_t usStackSize, uint32_t ulFirstPortNumber, UBaseType_t uxPriority );
 
 #endif /* SELECT_SERVER_H */

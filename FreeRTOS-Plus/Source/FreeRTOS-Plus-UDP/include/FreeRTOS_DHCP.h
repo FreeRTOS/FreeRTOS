@@ -50,7 +50,7 @@
 /*
  * NOT A PUBLIC API FUNCTION.
  */
-void vDHCPProcess( portBASE_TYPE xReset, xMACAddress_t *pxMACAddress, uint32_t *pulIPAddress, xNetworkAddressingParameters_t *pxNetworkAddressing );
+void vDHCPProcess( BaseType_t xReset, xMACAddress_t *pxMACAddress, uint32_t *pulIPAddress, xNetworkAddressingParameters_t *pxNetworkAddressing );
 
 #endif /* FREERTOS_DHCP_H */
 

@@ -82,7 +82,7 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
-#define configMAX_PRIORITIES			( ( unsigned portBASE_TYPE ) 7 )
+#define configMAX_PRIORITIES			( ( UBaseType_t ) 7 )
 #define configTICK_RATE_HZ				( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 32U * 1024U ) )
@@ -179,7 +179,7 @@ example, on my development laptop setting configNETWORK_INTERFACE_TO_USE to 1
 results in the wired network being used, while setting
 configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
 used. */
-#define configNETWORK_INTERFACE_TO_USE 1L
+#define configNETWORK_INTERFACE_TO_USE 4L
 
 /* The address of an echo server that will be used by the two demo echo client
 tasks.

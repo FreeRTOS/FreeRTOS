@@ -44,11 +44,11 @@
 #define NETWORK_BUFFER_MANAGEMENT_H
 
 /* NOTE PUBLIC API FUNCTIONS. */
-portBASE_TYPE xNetworkBuffersInitialise( void );
-xNetworkBufferDescriptor_t *pxNetworkBufferGet( size_t xRequestedSizeBytes, portTickType xBlockTimeTicks );
+BaseType_t xNetworkBuffersInitialise( void );
+xNetworkBufferDescriptor_t *pxNetworkBufferGet( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks );
 xNetworkBufferDescriptor_t *pxNetworkBufferGetFromISR( size_t xRequestedSizeBytes );
 void vNetworkBufferRelease( xNetworkBufferDescriptor_t * const pxNetworkBuffer );
-portBASE_TYPE vNetworkBufferReleaseFromISR( xNetworkBufferDescriptor_t * const pxNetworkBuffer );
+BaseType_t vNetworkBufferReleaseFromISR( xNetworkBufferDescriptor_t * const pxNetworkBuffer );
 uint8_t *pucEthernetBufferGet( size_t *pxRequestedSizeBytes );
 void vEthernetBufferRelease( uint8_t *pucEthernetBuffer );
 

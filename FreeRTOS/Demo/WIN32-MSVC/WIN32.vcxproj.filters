@@ -100,9 +100,6 @@
     <ClCompile Include="Run-time-stats-utils.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\portable\MemMang\heap_4.c">
-      <Filter>FreeRTOS Source\Source\Portable</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\croutine.c">
       <Filter>FreeRTOS Source\Source</Filter>
     </ClCompile>
@@ -135,6 +132,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\event_groups.c">
       <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\portable\MemMang\heap_5.c">
+      <Filter>FreeRTOS Source\Source\Portable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +170,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\include\timers.h">
       <Filter>FreeRTOS Source\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Trace_Recorder_Configuration\trcHardwarePort.h">
-      <Filter>Configuration Files</Filter>
     </ClInclude>
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h">
       <Filter>Configuration Files</Filter>

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -66,9 +66,9 @@
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
  * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.  
- * The simply blinky demo is implemented and described in main_blinky.c.  The 
- * more comprehensive test and demo application is implemented and described in 
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
+ * The simply blinky demo is implemented and described in main_blinky.c.  The
+ * more comprehensive test and demo application is implemented and described in
  * main_full.c.
  *
  * This file implements the code that is not demo specific, including the
@@ -80,9 +80,9 @@
  * application.  It is provided as a convenient development and demonstration
  * test bed only.  This was tested using Windows XP on a dual core laptop.
  *
- * Windows will not be running the FreeRTOS simulator threads continuously, so 
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.  
- * See the documentation page for the Windows simulator for an explanation of 
+ * Windows will not be running the FreeRTOS simulator threads continuously, so
+ * the timing information in the FreeRTOS+Trace logs have no meaningful units.
+ * See the documentation page for the Windows simulator for an explanation of
  * the slow timing:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
@@ -101,11 +101,20 @@
 
 /* This project provides two demo applications.  A simple blinky style project,
 and a more comprehensive test and demo application.  The
-mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.  
-The simply blinky demo is implemented and described in main_blinky.c.  The more 
-comprehensive test and demo application is implemented and described in 
+mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
+The simply blinky demo is implemented and described in main_blinky.c.  The more
+comprehensive test and demo application is implemented and described in
 main_full.c. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+
+/* This demo uses heap_5.c, and these constants define the sizes of the regions
+that make up the total heap.  This is only done to provide an example of heap_5
+being used as this demo could easily create one large heap region instead of
+multiple smaller heap regions - in which case heap_4.c would be the more
+appropriate choice. */
+#define mainREGION_1_SIZE	2001
+#define mainREGION_2_SIZE	18005
+#define mainREGION_3_SIZE	1007
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -114,15 +123,28 @@ main_full.c. */
 extern void main_blinky( void );
 extern void main_full( void );
 
-/* Some of the RTOS hook (callback) functions only need special processing when
-the full demo is being used.  The simply blinky demo has no special requirements,
-so these functions are called from the hook functions defined in this file, but
-are defined in main_full.c. */
+/*
+ * Some of the RTOS hook (callback) functions only need special processing when
+ * the full demo is being used.  The simply blinky demo has no special
+ * requirements, so these functions are called from the hook functions defined
+ * in this file, but are defined in main_full.c.
+ */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
 
-/* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file. */
+/*
+ * This demo uses heap_5.c, so start by defining some heap regions.  This is
+ * only done to provide an example as this demo could easily create one large
+ * heap region instead of multiple smaller heap regions - in which case heap_4.c
+ * would be the more appropriate choice.  No initialisation is required when
+ * heap_4.c is used.
+ */
+static void  prvInitialiseHeap( void );
+
+/*
+ * Prototypes for the standard FreeRTOS callback/hook functions implemented
+ * within this file.
+ */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
@@ -145,6 +167,13 @@ static portBASE_TYPE xTraceRunning = pdTRUE;
 
 int main( void )
 {
+	/* This demo uses heap_5.c, so start by defining some heap regions.  This
+	is only done to provide an example as this demo could easily create one
+	large heap region instead of multiple smaller heap regions - in which case
+	heap_4.c would be the more appropriate choice.  No initialisation is
+	required when heap_4.c is used. */
+	prvInitialiseHeap();
+
 	/* Initialise the trace recorder and create the label used to post user
 	events to the trace recording on each tick interrupt. */
 	vTraceInitTraceData();
@@ -199,10 +228,10 @@ void vApplicationIdleHook( void )
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
-	/* Uncomment the following code to allow the trace to be stopped with any 
+	/* Uncomment the following code to allow the trace to be stopped with any
 	key press.  The code is commented out by default as the kbhit() function
 	interferes with the run time behaviour. */
-	/* 
+	/*
 		if( _kbhit() != pdFALSE )
 		{
 			if( xTraceRunning == pdTRUE )
@@ -250,10 +279,10 @@ void vApplicationTickHook( void )
 	}
 	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 
-	/* Write a user event to the trace log.  
+	/* Write a user event to the trace log.
 	Note tick events will not appear in the trace recording with regular period
 	because this project runs in a Windows simulator, and does not therefore
-	exhibit deterministic behaviour.  Windows will run the simulator in 
+	exhibit deterministic behaviour.  Windows will run the simulator in
 	bursts. */
 	vTraceUserEvent( xTickTraceUserEvent );
 }
@@ -311,3 +340,33 @@ FILE* pxOutputFile;
 		printf( "\r\nFailed to create trace dump file\r\n" );
 	}
 }
+/*-----------------------------------------------------------*/
+
+static void  prvInitialiseHeap( void )
+{
+/* This demo uses heap_5.c, so start by defining some heap regions.  This is
+only done to provide an example as this demo could easily create one large heap
+region instead of multiple smaller heap regions - in which case heap_4.c would
+be the more appropriate choice.  No initialisation is required when heap_4.c is
+used.  The xHeapRegions structure requires the regions to be defined in order,
+so this just creates one big array, then populates the structure with offsets
+into the array - with gaps in between and messy alignment just for test
+purposes. */
+static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+volatile uint32_t ulAdditionalOffset = 19; /* Just to prevent 'condition is always true' warnings in configASSERT(). */
+const HeapRegion_t xHeapRegions[] =
+{
+	/* Start address with dummy offsets						Size */
+	{ ucHeap + 1,											mainREGION_1_SIZE },
+	{ ucHeap + 15 + mainREGION_1_SIZE,						mainREGION_2_SIZE },
+	{ ucHeap + 19 + mainREGION_1_SIZE + mainREGION_2_SIZE,	mainREGION_3_SIZE },
+	{ NULL, 0 }
+};
+
+	/* Sanity check that the sizes and offsets defined actually fit into the
+	array. */
+	configASSERT( ( ulAdditionalOffset + mainREGION_1_SIZE + mainREGION_2_SIZE + mainREGION_3_SIZE ) < configTOTAL_HEAP_SIZE );
+
+	vPortDefineHeapRegions( xHeapRegions );
+}
+

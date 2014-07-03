@@ -95,8 +95,8 @@
  *
  * HeapRegion_t xHeapRegions[] =
  * {
- * 	{ 0x80000000UL, 0x10000 }, << Defines a block of 0x10000 bytes starting at address 0x80000000
- * 	{ 0x90000000UL, 0xa0000 }, << Defines a block of 0xa0000 bytes starting at address of 0x90000000
+ * 	{ ( uint8_t * ) 0x80000000UL, 0x10000 }, << Defines a block of 0x10000 bytes starting at address 0x80000000
+ * 	{ ( uint8_t * ) 0x90000000UL, 0xa0000 }, << Defines a block of 0xa0000 bytes starting at address of 0x90000000
  * 	{ NULL, 0 }                << Terminates the array.
  * };
  *

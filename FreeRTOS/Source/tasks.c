@@ -3265,17 +3265,10 @@ TCB_t *pxTCB;
 					traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
 					pxTCB->uxPriority = pxTCB->uxBasePriority;
 
-					/* Only reset the event list item value if the value is not
-					being used for anything else. */
-					if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
-					{
-						listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-					}
-					else
-					{
-#warning Is it possible to come through here?
-						mtCOVERAGE_TEST_MARKER();
-					}
+					/* Reset the event list item value.  It cannot be in use for
+					any other purpose if this task is running, and it must be
+					running to give back the mutex. */
+					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 					prvAddTaskToReadyList( pxTCB );
 
 					/* Return true to indicate that a context switch is required.
@@ -3591,14 +3584,24 @@ TickType_t uxReturn;
 
 void vTaskIncrementMutexHeldCount( void )
 {
-	( pxCurrentTCB->uxMutexesHeld )++;
+	/* If xSemaphoreCreateMutex() is called before any tasks have been created
+	then pxCurrentTCB will be NULL. */
+	if( pxCurrentTCB != NULL )
+	{
+		( pxCurrentTCB->uxMutexesHeld )++;
+	}
 }
 /*-----------------------------------------------------------*/
 
 void vTaskDecrementMutexHeldCount( void )
 {
-	configASSERT( pxCurrentTCB->uxMutexesHeld );
-	( pxCurrentTCB->uxMutexesHeld )--;
+	/* If xSemaphoreCreateMutex() is called before any tasks have been created
+	then pxCurrentTCB will be NULL. */
+	if( pxCurrentTCB != NULL )
+	{
+		configASSERT( pxCurrentTCB->uxMutexesHeld );
+		( pxCurrentTCB->uxMutexesHeld )--;
+	}
 }
 
 #ifdef FREERTOS_MODULE_TEST

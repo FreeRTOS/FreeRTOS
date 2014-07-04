@@ -424,14 +424,14 @@ uint8_t *puc;
 }
 /*-----------------------------------------------------------*/
 
-void vPortDefineHeapRegions( HeapRegion_t *pxHeapRegions )
+void vPortDefineHeapRegions( const HeapRegion_t * const pxHeapRegions )
 {
 BlockLink_t *pxFirstFreeBlockInRegion = NULL, *pxPreviousFreeBlock;
 uint8_t *pucAlignedHeap;
 size_t xTotalRegionSize, xTotalHeapSize = 0;
 BaseType_t xDefinedRegions = 0;
 uint32_t ulAddress;
-HeapRegion_t *pxHeapRegion;
+const HeapRegion_t *pxHeapRegion;
 
 	/* Can only call once! */
 	configASSERT( pxEnd == NULL );

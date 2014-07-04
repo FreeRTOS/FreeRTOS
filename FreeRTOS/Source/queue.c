@@ -511,7 +511,7 @@ QueueHandle_t xReturn = NULL;
 		}
 		else
 		{
-			/* The mutex cannot be given because the calling task is not the 
+			/* The mutex cannot be given because the calling task is not the
 			holder. */
 			xReturn = pdFAIL;
 
@@ -547,7 +547,7 @@ QueueHandle_t xReturn = NULL;
 		{
 			xReturn = xQueueGenericReceive( pxMutex, NULL, xTicksToWait, pdFALSE );
 
-			/* pdPASS will only be returned if the mutex was successfully 
+			/* pdPASS will only be returned if the mutex was successfully
 			obtained.  The calling task may have entered the Blocked state
 			before reaching here. */
 			if( xReturn == pdPASS )
@@ -695,6 +695,14 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 							mtCOVERAGE_TEST_MARKER();
 						}
 					}
+					else if( xYieldRequired != pdFALSE )
+					{
+						/* This path is a special case that will only get
+						executed if the task was holding multiple mutexes and
+						the mutexes were given back in an order that is
+						different to that in which they were taken. */
+						queueYIELD_IF_USING_PREEMPTION();
+					}					
 					else
 					{
 						mtCOVERAGE_TEST_MARKER();
@@ -1627,7 +1635,7 @@ BaseType_t xReturn = pdFALSE;
 				/* The mutex is no longer being held. */
 				vTaskDecrementMutexHeldCount();
 				xReturn = xTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
-				pxQueue->pxMutexHolder = NULL;				
+				pxQueue->pxMutexHolder = NULL;
 			}
 			else
 			{

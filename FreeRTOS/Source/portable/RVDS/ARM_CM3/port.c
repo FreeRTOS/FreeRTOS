@@ -110,6 +110,9 @@ is defined. */
 #define portNVIC_PENDSVCLEAR_BIT 			( 1UL << 27UL )
 #define portNVIC_PEND_SYSTICK_CLEAR_BIT		( 1UL << 25UL )
 
+/* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
+#define portVECTACTIVE_MASK					( 0x1FUL )
+
 #define portNVIC_PENDSV_PRI					( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
 #define portNVIC_SYSTICK_PRI				( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 
@@ -268,10 +271,12 @@ __asm void prvStartFirstTask( void )
 	msr msp, r0
 	/* Globally enable interrupts. */
 	cpsie i
+	cpsie f
 	dsb
 	isb
 	/* Call SVC to start the first task. */
 	svc 0
+	nop
 	nop
 }
 /*-----------------------------------------------------------*/
@@ -370,6 +375,16 @@ void vPortEnterCritical( void )
 	uxCriticalNesting++;
 	__dsb( portSY_FULL_READ_WRITE );
 	__isb( portSY_FULL_READ_WRITE );
+
+	/* This is not the interrupt safe version of the enter critical function so
+	assert() if it is being called from an interrupt context.  Only API
+	functions that end in "FromISR" can be used in an interrupt.  Only assert if
+	the critical nesting count is 1 to protect against recursive calls if the
+	assert function also uses a critical section. */
+	if( uxCriticalNesting == 1 )
+	{
+		configASSERT( ( portNVIC_INT_CTRL_REG & portVECTACTIVE_MASK ) == 0 );
+	}
 }
 /*-----------------------------------------------------------*/
 

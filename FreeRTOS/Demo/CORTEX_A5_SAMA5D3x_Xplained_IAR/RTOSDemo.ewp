@@ -65,7 +65,7 @@
         </option>
         <option>
           <name>OGCoreOrChip</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -309,7 +309,7 @@
           <state>$PROJ_DIR$/AtmelFiles/libchip_sama5d3x/include</state>
           <state>$PROJ_DIR$/.</state>
           <state>$PROJ_DIR$\..\..\Source\include</state>
-          <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA9</state>
+          <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC</state>
           <state>$PROJ_DIR$\..\Common\include</state>
         </option>
         <option>
@@ -959,9 +959,6 @@
     <group>
       <name>libboard_sama5d3x-ek</name>
       <file>
-        <name>$PROJ_DIR$\AtmelFiles\libboard_sama5d3x-ek\source\board_cstartup_iar.s</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\AtmelFiles\libboard_sama5d3x-ek\source\board_lowlevel.c</name>
       </file>
       <file>
@@ -1003,6 +1000,12 @@
     </group>
   </group>
   <group>
+    <name>Blinky Demo</name>
+    <file>
+      <name>$PROJ_DIR$\blinky_demo\main_blinky.c</name>
+    </file>
+  </group>
+  <group>
     <name>FreeRTOS Source</name>
     <group>
       <name>portable</name>
@@ -1013,10 +1016,16 @@
         </file>
       </group>
       <file>
-        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA9\port.c</name>
+        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC\port.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA9\portASM.s</name>
+        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC\portASM.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC\portASM.s</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC\portmacro.h</name>
       </file>
     </group>
     <file>
@@ -1039,6 +1048,9 @@
     <name>$PROJ_DIR$\atmel_main.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\cstartup_with_FreeRTOS_vectors.s</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\FreeRTOS_tick_config.c</name>
   </file>
   <file>
@@ -1049,9 +1061,6 @@
   </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\main_blinky.c</name>
   </file>
 </project>
 

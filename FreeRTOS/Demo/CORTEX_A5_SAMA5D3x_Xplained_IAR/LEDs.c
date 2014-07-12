@@ -76,20 +76,34 @@
 /* Demo includes. */
 #include "partest.h"
 
+/* Library includes. */
+#include "board.h"
+
 /*-----------------------------------------------------------*/
 
 void vParTestInitialise( void )
 {
+	LED_Configure( 0 );
+	LED_Configure( 1 );
 }
 /*-----------------------------------------------------------*/
 
 void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
 {
+	if( xValue == pdTRUE )
+	{
+		LED_Set( uxLED );
+	}
+	else
+	{
+		LED_Clear( uxLED );
+	}
 }
 /*-----------------------------------------------------------*/
 
 void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
 {
+	LED_Toggle( uxLED );
 }
 
 

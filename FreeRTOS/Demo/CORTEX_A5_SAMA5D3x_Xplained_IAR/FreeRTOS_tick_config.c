@@ -67,6 +67,9 @@
 #include "FreeRTOS.h"
 #include "Task.h"
 
+/* Library includes. */
+#include "board.h"
+
 /*
  * The application must provide a function that configures a peripheral to
  * create the FreeRTOS tick interrupt, then define configSETUP_TICK_INTERRUPT()
@@ -75,23 +78,27 @@
  */
 void vConfigureTickInterrupt( void )
 {
-#warning Needs implementing.
+extern void FreeRTOS_Tick_Handler( void );
+
+	/* NOTE:  The PIT interrupt is cleared by the configCLEAR_TICK_INTERRUPT()
+	macro in FreeRTOSConfig.h. */
+
+	/* Enable the PIT clock. */
+	PMC->PMC_PCER0 = 1 << ID_PIT;
+	
+	/* Initialize the PIT to the desired frequency - specified in uS. */
+	PIT_Init( 1000000UL / configTICK_RATE_HZ, BOARD_MCK / 1000000 );
+	
+	/* Configure interrupt on PIT */
+#warning This is on the system interrupt and other interrupts may need processing to.
+	IRQ_ConfigureIT( ID_PIT, 0, FreeRTOS_Tick_Handler );
+	IRQ_EnableIT( ID_PIT );
+	PIT_EnableIT();
+	
+	/* Enable the pit. */
+	PIT_Enable();
 }
 /*-----------------------------------------------------------*/
-void vApplicationIRQHandler( uint32_t ulICCIAR );
-void vApplicationIRQHandler( uint32_t ulICCIAR )
-{
-uint32_t ulInterruptID;
-
-	/* Re-enable interrupts. */
-    __asm ( "cpsie i" );
-
-	/* The ID of the interrupt is obtained by bitwise anding the ICCIAR value
-	with 0x3FF. */
-	ulInterruptID = ulICCIAR & 0x3FFUL;
-	
-#warning Needs implementing.
-}
 
 
 

@@ -80,6 +80,8 @@
  *
  */
 
+#warning Remove unused libary files.
+
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -89,6 +91,9 @@
 #include "partest.h"
 #include "TimerDemo.h"
 #include "QueueOverwrite.h"
+
+/* Library includes. */
+#include "chip.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
@@ -120,10 +125,9 @@ void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 extern int atmel_main( void );
+extern void vConfigureTickInterrupt( void );
 int main( void )
-{
-    atmel_main();
-    
+{	
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
@@ -145,6 +149,11 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+	/* Set protect mode in the AIC for easier debugging. */
+	AIC->AIC_DCR != AIC_DCR_PROT;
+	
+	/* Configure ports used by LEDs. */
+	vParTestInitialise();
 }
 /*-----------------------------------------------------------*/
 

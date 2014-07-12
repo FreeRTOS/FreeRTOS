@@ -47,7 +47,7 @@
 //------------------------------------------------------------------------------
 //         Definitions
 //------------------------------------------------------------------------------
-
+//_RB_ These definitions can go.
 #define AIC         0xFFFFF000
 #define AIC_IVR     0x10
 #define AIC_EOICR   0x38
@@ -71,10 +71,10 @@
         SECTION .vectors:CODE:NOROOT(2)
 
         PUBLIC  resetVector
-        PUBLIC  irqHandler
 
+        EXTERN  FreeRTOS_IRQ_Handler
         EXTERN  Undefined_Handler
-        EXTERN  SWI_Handler
+        EXTERN  FreeRTOS_SWI_Handler
         EXTERN  Prefetch_Handler
         EXTERN  Abort_Handler
         EXTERN  FIQ_Handler
@@ -94,57 +94,15 @@ resetVector:
         LDR     pc, Prefetch_Addr        ; Prefetch abort
         LDR     pc, Abort_Addr           ; Data abort
         B       .                        ; RESERVED
-        LDR     pc, =irqHandler          ; IRQ
+        LDR     pc, IRQ_Addr             ; IRQ
         LDR     pc, FIQ_Addr             ; FIQ
 
+IRQ_Addr:       DCD   FreeRTOS_IRQ_Handler
 Undefined_Addr: DCD   Undefined_Handler
-SWI_Addr:       DCD   SWI_Handler
+SWI_Addr:       DCD   FreeRTOS_SWI_Handler
 Prefetch_Addr:  DCD   Prefetch_Handler
 Abort_Addr:     DCD   Abort_Handler
 FIQ_Addr:       DCD   FIQ_Handler
-
-/*
-   Handles incoming interrupt requests by branching to the corresponding
-   handler, as defined in the AIC. Supports interrupt nesting.
- */
-irqHandler:
-        /* Save interrupt context on the stack to allow nesting */
-        SUB     lr, lr, #4
-        STMFD   sp!, {lr}
-        MRS     lr, SPSR
-        STMFD   sp!, {r0, lr}
-
-        /* Write in the IVR to support Protect Mode */
-        LDR     lr, =AIC
-        LDR     r0, [r14, #AIC_IVR]
-        STR     lr, [r14, #AIC_IVR]
-
-        /* Branch to interrupt handler in Supervisor mode */
-        MSR     CPSR_c, #ARM_MODE_SYS
-        STMFD   sp!, {r1-r3, r4, r12, lr}
-
-        /* Check for 8-byte alignment and save lr plus a */
-        /* word to indicate the stack adjustment used (0 or 4) */
-        AND     r1, sp, #4
-        SUB     sp, sp, r1
-        STMFD   sp!, {r1, lr}
-
-        BLX     r0
-
-        LDMIA   sp!, {r1, lr}
-        ADD     sp, sp, r1
-
-        LDMIA   sp!, {r1-r3, r4, r12, lr}
-        MSR     CPSR_c, #ARM_MODE_IRQ | I_BIT
-
-        /* Acknowledge interrupt */
-        LDR     lr, =AIC
-        STR     lr, [r14, #AIC_EOICR]
-
-        /* Restore interrupt context and branch back to calling code */
-        LDMIA   sp!, {r0, lr}
-        MSR     SPSR_cxsf, lr
-        LDMIA   sp!, {pc}^
 
 
 /*

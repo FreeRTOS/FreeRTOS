@@ -78,29 +78,6 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-/*
- * The FreeRTOS Cortex-A port implements a full interrupt nesting model.
- *
- * Interrupts that are assigned a priority at or below
- * configMAX_API_CALL_INTERRUPT_PRIORITY (which counter-intuitively in the ARM
- * generic interrupt controller [GIC] means a priority that has a numerical
- * value above configMAX_API_CALL_INTERRUPT_PRIORITY) can call FreeRTOS safe API
- * functions and will nest.
- *
- * Interrupts that are assigned a priority above
- * configMAX_API_CALL_INTERRUPT_PRIORITY (which in the GIC means a numerical
- * value below configMAX_API_CALL_INTERRUPT_PRIORITY) cannot call any FreeRTOS
- * API functions, will nest, and will not be masked by FreeRTOS critical
- * sections (although it is necessary for interrupts to be globally disabled
- * extremely briefly as the interrupt mask is updated in the GIC).
- *
- * FreeRTOS functions that can be called from an interrupt are those that end in
- * "FromISR".  FreeRTOS maintains a separate interrupt safe API to enable
- * interrupt entry to be shorter, faster, simpler and smaller.
- */
-#define configMAX_API_CALL_INTERRUPT_PRIORITY	25
-
-
 #define configCPU_CLOCK_HZ						100000000UL
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_TICKLESS_IDLE					0
@@ -158,8 +135,8 @@ used. */
 	void vInitialiseRunTimeStats( void );
 
 	#define configGENERATE_RUN_TIME_STATS	0
-//	#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vInitialiseRunTimeStats()
-//	#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
+//_RB_	#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vInitialiseRunTimeStats()
+//_RB_	#define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
 
 	/* The size of the global output buffer that is available for use when there
 	are multiple command interpreters running at once (for example, one on a UART
@@ -185,18 +162,10 @@ used. */
 	 */
 	void vConfigureTickInterrupt( void );
 	#define configSETUP_TICK_INTERRUPT() vConfigureTickInterrupt()
+	
+	#define configPIT_PIVR	( *( ( volatile uint32_t * ) 0xFFFFFE38UL ) )
+	#define configCLEAR_TICK_INTERRUPT() ( void ) configPIT_PIVR /* Read PIT_PIVR to clear interrupt. */
 #endif /* __IASMARM__ */
-
-/* The following constants describe the hardware, and are correct for the
-Atmel SAMA5 MPU. */
-#define configINTERRUPT_CONTROLLER_BASE_ADDRESS	0xE8201000
-#define configINTERRUPT_CONTROLLER_CPU_INTERFACE_OFFSET 0x1000
-#define configUNIQUE_INTERRUPT_PRIORITIES		32
-
-/* Map the FreeRTOS IRQ and SVC/SWI handlers to the names used in the C startup
-code (which is where the vector table is defined). */
-#define FreeRTOS_IRQ_Handler IRQ_Handler
-#define FreeRTOS_SWI_Handler SWI_Handler
 
 #endif /* FREERTOS_CONFIG_H */
 

@@ -239,7 +239,8 @@ static void _Pit_Handler( void )
 /**
  *  \brief Handler for Sysc interrupts.
  */
-static void _Sysc_Handler( void )
+void _Sysc_Handler( void );
+void _Sysc_Handler( void )
 {
     _Pit_Handler( ) ;
   #ifdef NO_PUSHBUTTON

@@ -78,11 +78,10 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#define configCPU_CLOCK_HZ						100000000UL
+#define configCPU_CLOCK_HZ						/* Not used in this port as the value comes from the Atmel libraries. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_TICKLESS_IDLE					0
 #define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
-#define configPERIPHERAL_CLOCK_HZ  				( 33333000UL )
 #define configUSE_PREEMPTION					1
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
@@ -113,19 +112,28 @@
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet		1
-#define INCLUDE_uxTaskPriorityGet		1
-#define INCLUDE_vTaskDelete				1
-#define INCLUDE_vTaskCleanUpResources	1
-#define INCLUDE_vTaskSuspend			1
-#define INCLUDE_vTaskDelayUntil			1
-#define INCLUDE_vTaskDelay				1
+#define INCLUDE_vTaskPrioritySet			1
+#define INCLUDE_uxTaskPriorityGet			1
+#define INCLUDE_vTaskDelete					1
+#define INCLUDE_vTaskCleanUpResources		1
+#define INCLUDE_vTaskSuspend				1
+#define INCLUDE_vTaskDelayUntil				1
+#define INCLUDE_vTaskDelay					1
+#define INCLUDE_eTaskGetState				1
+#define INCLUDE_xEventGroupSetBitFromISR	1
+#define INCLUDE_xTimerPendFunctionCall		1
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
+
+/* FPU has 16 (rather than 32) d registers. */
+#define configFPU_D32	0
+
+#define configPIT_PIVR	( *( ( volatile uint32_t * ) 0xFFFFFE38UL ) )
+#define configCLEAR_TICK_INTERRUPT() ( void ) configPIT_PIVR /* Read PIT_PIVR to clear interrupt. */
 
 /* Prevent C code being included in assembly files when the IAR compiler is
 used. */
@@ -162,9 +170,7 @@ used. */
 	 */
 	void vConfigureTickInterrupt( void );
 	#define configSETUP_TICK_INTERRUPT() vConfigureTickInterrupt()
-	
-	#define configPIT_PIVR	( *( ( volatile uint32_t * ) 0xFFFFFE38UL ) )
-	#define configCLEAR_TICK_INTERRUPT() ( void ) configPIT_PIVR /* Read PIT_PIVR to clear interrupt. */
+
 #endif /* __IASMARM__ */
 
 #endif /* FREERTOS_CONFIG_H */

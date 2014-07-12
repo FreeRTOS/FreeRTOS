@@ -65,7 +65,7 @@
         </option>
         <option>
           <name>OGCoreOrChip</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -305,12 +305,13 @@
           <name>CCIncludePath2</name>
           <state>$PROJ_DIR$/AtmelFiles/libboard_sama5d3x-ek</state>
           <state>$PROJ_DIR$/AtmelFiles/libchip_sama5d3x</state>
-          <state>$PROJ_DIR$/AtmelFiles/libboard_sama5d3x-ek/include</state>
           <state>$PROJ_DIR$/AtmelFiles/libchip_sama5d3x/include</state>
           <state>$PROJ_DIR$/.</state>
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC</state>
           <state>$PROJ_DIR$\..\Common\include</state>
+          <state>$PROJ_DIR$\Full_Demo</state>
+          <state>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1042,6 +1043,66 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+    </file>
+  </group>
+  <group>
+    <name>FreeRTOS+CLI</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c</name>
+    </file>
+  </group>
+  <group>
+    <name>Full Demo</name>
+    <group>
+      <name>Common Demo Tasks</name>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\flop.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\IntQueue.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\QueueOverwrite.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\semtest.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
+      </file>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\Full_Demo\IntQueueTimer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Full_Demo\main_full.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Full_Demo\reg_test.S</name>
     </file>
   </group>
   <file>

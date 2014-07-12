@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -81,6 +81,7 @@
  */
 
 #warning Remove unused libary files.
+#warning document configFPU_D32
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -91,13 +92,14 @@
 #include "partest.h"
 #include "TimerDemo.h"
 #include "QueueOverwrite.h"
+#include "EventGroupsDemo.h"
 
 /* Library includes. */
 #include "chip.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
@@ -124,10 +126,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
-extern int atmel_main( void );
-extern void vConfigureTickInterrupt( void );
+
 int main( void )
-{	
+{
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
@@ -150,8 +151,8 @@ int main( void )
 static void prvSetupHardware( void )
 {
 	/* Set protect mode in the AIC for easier debugging. */
-	AIC->AIC_DCR != AIC_DCR_PROT;
-	
+	AIC->AIC_DCR |= AIC_DCR_PROT;
+
 	/* Configure ports used by LEDs. */
 	vParTestInitialise();
 }
@@ -230,6 +231,9 @@ void vApplicationTickHook( void )
 
 		/* Call the periodic queue overwrite from ISR demo. */
 		vQueueOverwritePeriodicISRDemo();
+
+		/* Call the periodic event group from ISR demo. */
+		vPeriodicEventGroupsProcessing();
 	}
 	#endif
 }

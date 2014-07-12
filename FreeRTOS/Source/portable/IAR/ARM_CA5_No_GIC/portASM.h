@@ -80,7 +80,9 @@ portSAVE_CONTEXT macro
 	; Save the floating point context, if any
 	FMRXNE  R1,  FPSCR
 	VPUSHNE {D0-D15}
+#if configFPU_D32 == 1
 	VPUSHNE	{D16-D31}
+#endif ; configFPU_D32
 	PUSHNE	{R1}
 
 	; Save ulPortTaskHasFPUContext itself
@@ -114,7 +116,9 @@ portRESTORE_CONTEXT macro
 
 	; Restore the floating point context, if any
 	POPNE 	{R0}
+#if configFPU_D32 == 1
 	VPOPNE	{D16-D31}
+#endif ; configFPU_D32
 	VPOPNE	{D0-D15}
 	VMSRNE  FPSCR, R0
 

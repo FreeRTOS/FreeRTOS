@@ -23,7 +23,7 @@
 								<inputType id="xilinx.gnu.assembler.input.1210492545" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.arm.c.toolchain.compiler.debug.1720434900" name="ARM gcc compiler" superClass="xilinx.gnu.arm.c.toolchain.compiler.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.1197002886" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" valueType="enumerated"/>
+								<option defaultValue="gnu.c.optimization.level.none" id="xilinx.gnu.compiler.option.optimization.level.1197002886" name="Optimization Level" superClass="xilinx.gnu.compiler.option.optimization.level" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.option.debugging.level.1441612435" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.2110847612" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemo_bsp/ps7_cortexa9_0/include"/>
@@ -40,7 +40,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Standard-Demo-Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 								</option>
-								<option id="xilinx.gnu.compiler.misc.other.697975463" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -Wextra" valueType="string"/>
+								<option id="xilinx.gnu.compiler.misc.other.697975463" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -Wextra -ffunction-sections -fdata-sections" valueType="string"/>
 								<inputType id="xilinx.gnu.arm.c.compiler.input.783477932" name="C source files" superClass="xilinx.gnu.arm.c.compiler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.arm.cxx.toolchain.compiler.debug.1175556061" name="ARM g++ compiler" superClass="xilinx.gnu.arm.cxx.toolchain.compiler.debug">
@@ -59,6 +59,9 @@
 									<listOptionValue builtIn="false" value="-Wl,--start-group,-lxil,-lgcc,-lc,--end-group"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.1669492416" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
+								<option id="xilinx.gnu.c.link.option.other.712574482" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other" valueType="stringList">
+									<listOptionValue builtIn="false" value="--gc-sections"/>
+								</option>
 								<inputType id="xilinx.gnu.linker.input.1960859838" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -77,9 +80,6 @@
 							<tool id="xilinx.gnu.arm.size.debug.167865540" name="ARM Print Size" superClass="xilinx.gnu.arm.size.debug"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="xilinx.gnu.arm.exe.debug.1043799205.2119759067" name="fsdata.c" rcbsApplicability="disable" resourcePath="src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c" toolsToInvoke="xilinx.gnu.arm.c.toolchain.compiler.debug.1720434900.1218965551">
-						<tool id="xilinx.gnu.arm.c.toolchain.compiler.debug.1720434900.1218965551" name="ARM gcc compiler" superClass="xilinx.gnu.arm.c.toolchain.compiler.debug.1720434900"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c|src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/makefsdata" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

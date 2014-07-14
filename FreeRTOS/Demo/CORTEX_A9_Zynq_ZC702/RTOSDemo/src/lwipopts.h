@@ -245,7 +245,7 @@ a lot of data that needs to be copied, this should be set high. */
 /* ---------- DHCP options ---------- */
 /* Define LWIP_DHCP to 1 if you want DHCP configuration of
    interfaces. */
-#define LWIP_DHCP				0
+#define LWIP_DHCP				1
 
 /* 1 if you want to do an ARP check on the offered address
    (recommended). */

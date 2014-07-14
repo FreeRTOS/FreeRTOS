@@ -63,6 +63,7 @@
 #include "lwip/opt.h"
 #include "lwip/tcpip.h"
 #include "lwip/inet.h"
+#include "lwip/dhcp.h"
 
 /* applications includes */
 #include "apps/httpserver_raw_from_lwIP_download/httpd.h"
@@ -125,11 +126,13 @@ static signed char cTxBuffer[ lwipappsTX_BUFFER_SIZE ];
 void vStatusCallback( struct netif *pxNetIf )
 {
 char pcMessage[20];
+struct in_addr* pxIPAddress;
 
 	if( netif_is_up( pxNetIf ) != 0 )
 	{
 		strcpy( pcMessage, "IP=" );
-		strcat( pcMessage, inet_ntoa( *( struct in_addr* ) &( pxNetIf->ip_addr ) ) );
+		pxIPAddress = ( struct in_addr* ) &( pxNetIf->ip_addr );
+		strcat( pcMessage, inet_ntoa( ( *pxIPAddress ) ) );
 		xil_printf( pcMessage );
 	}
 	else

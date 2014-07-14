@@ -428,7 +428,7 @@ static void SetUpSLCRDivisors(int mac_baseaddr, int speed)
 	volatile u32 slcrBaseAddress;
 #ifndef PEEP
 	u32 SlcrDiv0;
-	u32 SlcrDiv1;
+	u32 SlcrDiv1=0;
 	u32 SlcrTxClkCntrl;
 #endif
 

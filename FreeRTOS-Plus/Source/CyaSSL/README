@@ -12,7 +12,7 @@ harder.  Now to run testsuite just do:
 
 or 
 
-make test    (when using autoconf)
+make check    (when using autoconf)
 
 On *nix or Windows the examples and testsuite will check to see if the current
 directory is the source directory and if so, attempt to change to the CyaSSL
@@ -23,18 +23,339 @@ beginning of the note and specify the full path.
 Note 2)
 CyaSSL takes a different approach to certificate verification than OpenSSL does.
 The default policy for the client is to verify the server, this means that if
-you don't load CAs to verify the server you'll get a connect error, unable to 
-verify (-155).  It you want to mimic OpenSSL behavior of having SSL_connect
-succeed even if verifying the server fails and reducing security you can do
-this by calling:
+you don't load CAs to verify the server you'll get a connect error, no signer
+error to confirm failure (-188).  If you want to mimic OpenSSL behavior of
+having SSL_connect succeed even if verifying the server fails and reducing
+security you can do this by calling:
 
 SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, 0);
 
 before calling SSL_new();  Though it's not recommended.
 
-*** end Note ***
+*** end Notes ***
 
-CyaSSL Release 2.3.0 (8/10/2012)
+
+CyaSSL Release 3.1.0 (07/14/2014)
+
+Release 3.1.0 CyaSSL has bug fixes and new features including:
+
+- Fix for older versions of icc without 128-bit type
+- Intel ASM syntax for AES-NI
+- Updated NTRU support, keygen benchmark
+- FIPS check for minimum required HMAC key length
+- Small stack (--enable-smallstack) improvements for PKCS#7, ASN
+- TLS extension support for DTLS
+- Default I/O callbacks external to user
+- Updated example client with bad clock test
+- Ability to set optional ECC context info
+- Ability to enable/disable DH separate from opensslextra
+- Additional test key/cert buffers for CA and server
+- Updated example certificates
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
+and comments about the new features please check the manual.
+
+
+************ CyaSSL Release 3.0.2 (05/30/2014)
+
+Release 3.0.2 CyaSSL has bug fixes and new features including:
+
+- Added the following cipher suites:
+  * TLS_PSK_WITH_AES_128_GCM_SHA256
+  * TLS_PSK_WITH_AES_256_GCM_SHA384
+  * TLS_PSK_WITH_AES_256_CBC_SHA384
+  * TLS_PSK_WITH_NULL_SHA384
+  * TLS_DHE_PSK_WITH_AES_128_GCM_SHA256
+  * TLS_DHE_PSK_WITH_AES_256_GCM_SHA384
+  * TLS_DHE_PSK_WITH_AES_128_CBC_SHA256
+  * TLS_DHE_PSK_WITH_AES_256_CBC_SHA384
+  * TLS_DHE_PSK_WITH_NULL_SHA256
+  * TLS_DHE_PSK_WITH_NULL_SHA384
+  * TLS_DHE_PSK_WITH_AES_128_CCM
+  * TLS_DHE_PSK_WITH_AES_256_CCM
+- Added AES-NI support for Microsoft Visual Studio builds.
+- Changed small stack build to be disabled by default.
+- Updated the Hash DRBG and provided a configure option to enable.
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
+and comments about the new features please check the manual.
+
+
+************ CyaSSL Release 3.0.0 (04/29/2014)
+
+Release 3.0.0 CyaSSL has bug fixes and new features including:
+
+- FIPS release candidate
+- X.509 improvements that address items reported by Suman Jana with security
+  researchers at UT Austin and UC Davis
+- Small stack size improvements, --enable-smallstack. Offloads large local
+  variables to the heap. (Note this is not complete.)
+- Updated AES-CCM-8 cipher suites to use approved suite numbers.
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions
+and comments about the new features please check the manual.
+
+
+************ CyaSSL Release 2.9.4 (04/09/2014)
+
+Release 2.9.4 CyaSSL has bug fixes and new features including:
+
+- Security fixes that address items reported by Ivan Fratric of the Google
+  Security Team
+- X.509 Unknown critical extensions treated as errors, report by Suman Jana with
+  security researchers at UT Austin and UC Davis
+- Sniffer fixes for corrupted packet length and Jumbo frames
+- ARM thumb mode assembly fixes
+- Xcode 5.1 support including new clang
+- PIC32 MZ hardware support
+- CyaSSL Object has enough room to read the Record Header now w/o allocs
+- FIPS wrappers for AES, 3DES, SHA1, SHA256, SHA384, HMAC, and RSA.
+- A sample I/O pool is demonstrated with --enable-iopool to overtake memory
+  handling and reduce memory fragmentation on I/O large sizes
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+************ CyaSSL Release 2.9.0 (02/07/2014)
+
+Release 2.9.0 CyaSSL has bug fixes and new features including:
+- Freescale Kinetis RNGB support
+- Freescale Kinetis mmCAU support
+- TLS Hello extensions
+  - ECC
+  - Secure Renegotiation (null) 
+  - Truncated HMAC
+- SCEP support
+  - PKCS #7 Enveloped data and signed data
+  - PKCS #10 Certificate Signing Request generation
+- DTLS sliding window
+- OCSP Improvements
+  - API change to integrate into Certificate Manager
+  - IPv4/IPv6 agnostic
+  - example client/server support for OCSP
+  - OCSP nonces are optional
+- GMAC hashing
+- Windows build additions
+- Windows CYGWIN build fixes
+- Updated test certificates
+- Microchip MPLAB Harmony support
+- Update autoconf scripts
+- Additional X.509 inspection functions
+- ECC encrypt/decrypt primitives
+- ECC Certificate generation
+
+The Freescale Kinetis K53 RNGB documentation can be found in Chapter 33 of the
+K53 Sub-Family Reference Manual:
+http://cache.freescale.com/files/32bit/doc/ref_manual/K53P144M100SF2RM.pdf
+
+Freescale Kinetis K60 mmCAU (AES, DES, 3DES, MD5, SHA, SHA256) documentation
+can be found in the "ColdFire/ColdFire+ CAU and Kinetis mmCAU Software Library
+User Guide":
+http://cache.freescale.com/files/32bit/doc/user_guide/CAUAPIUG.pdf
+
+
+*****************CyaSSL Release 2.8.0 (8/30/2013)
+
+Release 2.8.0 CyaSSL has bug fixes and new features including:
+- AES-GCM and AES-CCM use AES-NI
+- NetX default IO callback handlers
+- IPv6 fixes for DTLS Hello Cookies
+- The ability to unload Certs/Keys after the handshake, CyaSSL_UnloadCertsKeys()
+- SEP certificate extensions
+- Callback getters for easier resource freeing
+- External CYASSL_MAX_ERROR_SZ for correct error buffer sizing
+- MacEncrypt and DecryptVerify Callbacks for User Atomic Record Layer Processing
+- Public Key Callbacks for ECC and RSA
+- Client now sends blank cert upon request if doesn't have one with TLS <= 1.2
+
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+*****************CyaSSL Release 2.7.0 (6/17/2013)
+
+Release 2.7.0 CyaSSL has bug fixes and new features including:
+- SNI support for client and server
+- KEIL MDK-ARM projects
+- Wildcard check to domain name match, and Subject altnames are checked too
+- Better error messages for certificate verification errors
+- Ability to discard session during handshake verify
+- More consistent error returns across all APIs
+- Ability to unload CAs at the CTX or CertManager level
+- Authority subject id support for Certificate matching
+- Persistent session cache functionality
+- Persistent CA cache functionality
+- Client session table lookups to push serverID table to library level
+- Camellia support to sniffer
+- User controllable settings for DTLS timeout values
+- Sniffer fixes for caching long lived sessions
+- DTLS reliability enhancements for the handshake
+- Better ThreadX support
+
+When compiling with Mingw, libtool may give the following warning due to
+path conversion errors:
+
+libtool: link: Could not determine host file name corresponding to **
+libtool: link: Continuing, but uninstalled executables may not work.
+
+If so, examples and testsuite will have problems when run, showing an
+error while loading shared libraries. To resolve, please run "make install".
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+************** CyaSSL Release 2.6.0 (04/15/2013)
+
+Release 2.6.0 CyaSSL has bug fixes and new features including:
+- DTLS 1.2 support including AEAD ciphers
+- SHA-3 finalist Blake2 support, it's fast and uses little resources
+- SHA-384 cipher suites including ECC ones
+- HMAC now supports SHA-512
+- Track memory use for example client/server with -t option
+- Better IPv6 examples with --enable-ipv6, before if ipv6 examples/tests were
+  turned on, localhost only was used.  Now link-local (with scope ids) and ipv6
+  hosts can be used as well.
+- Xcode v4.6 project for iOS v6.1 update
+- settings.h is now checked in all *.c files for true one file setting detection
+- Better alignment at SSL layer for hardware crypto alignment needs
+    * Note, SSL itself isn't friendly to alignment with 5 byte TLS headers and
+      13 bytes DTLS headers, but every effort is now made to align with the
+      CYASSL_GENERAL_ALIGNMENT flag which sets desired alignment requirement
+- NO_64BIT flag to turn off 64bit data type accumulators in public key code
+    * Note, some systems are faster with 32bit accumulators 
+- --enable-stacksize for example client/server stack use
+    * Note, modern desktop Operating Systems may add bytes to each stack frame
+- Updated compression/decompression with direct crypto access
+- All ./configure options are now lowercase only for consistency
+- ./configure builds default to fastmath option
+    * Note, if on ia32 and building in shared mode this may produce a problem
+      with a missing register being available because of PIC, there are at least
+      5 solutions to this:
+      1) --disable-fastmath , don't use fastmath
+      2) --disable-shared, don't build a shared library
+      3) C_EXTRA_FLAGS=-DTFM_NO_ASM , turn off assembly use
+      4) use clang, it just seems to work
+      5) play around with no PIC options to force all registers being open
+- Many new ./configure switches for option enable/disable for example
+    * rsa
+    * dh
+    * dsa
+    * md5
+    * sha 
+    * arc4
+    * null    (allow NULL ciphers)
+    * oldtls  (only use TLS 1.2)
+    * asn     (no certs or public keys allowed)
+- ./configure generates cyassl/options.h which allows a header the user can 
+  include in their app to make sure the same options are set at the app and
+  CyaSSL level.
+- autoconf no longer needs serial-tests which lowers version requirements of
+  automake to 1.11 and autoconf to 2.63
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+
+************** CyaSSL Release 2.5.0 (02/04/2013)
+
+Release 2.5.0 CyaSSL has bug fixes and new features including:
+- Fix for TLS CBC padding timing attack identified by Nadhem Alfardan and
+  Kenny Paterson: http://www.isg.rhul.ac.uk/tls/
+- Microchip PIC32 (MIPS16, MIPS32) support
+- Microchip MPLAB X example projects for PIC32 Ethernet Starter Kit
+- Updated CTaoCrypt benchmark app for embedded systems
+- 1024-bit test certs/keys and cert/key buffers
+- AES-CCM-8 crypto and cipher suites
+- Camellia crypto and cipher suites
+- Bumped minimum autoconf version to 2.65, automake version to 1.12
+- Addition of OCSP callbacks
+- STM32F2 support with hardware crypto and RNG 
+- Cavium NITROX support
+
+CTaoCrypt now has support for the Microchip PIC32 and has been tested with
+the Microchip PIC32 Ethernet Starter Kit, the XC32 compiler and
+MPLAB X IDE in both MIPS16 and MIPS32 instruction set modes. See the README
+located under the <cyassl_root>/mplabx directory for more details.
+
+To add Cavium NITROX support do:
+
+./configure --with-cavium=/home/user/cavium/software
+
+pointing to your licensed cavium/software directory.  Since Cavium doesn't
+build a library we pull in the cavium_common.o file which gives a libtool 
+warning about the portability of this.  Also, if you're using the github source
+tree you'll need to remove the -Wredundant-decls warning from the generated
+Makefile because the cavium headers don't conform to this warning.  Currently
+CyaSSL supports Cavium RNG, AES, 3DES, RC4, HMAC, and RSA directly at the crypto
+layer.  Support at the SSL level is partial and currently just does AES, 3DES,
+and RC4.  RSA and HMAC are slower until the Cavium calls can be utilized in non
+blocking mode.  The example client turns on cavium support as does the crypto
+test and benchmark.  Please see the HAVE_CAVIUM define.
+
+CyaSSL is able to use the STM32F2 hardware-based cryptography and random number
+generator through the STM32F2 Standard Peripheral Library. For necessary
+defines, see the CYASSL_STM32F2 define in settings.h. Documentation for the
+STM32F2 Standard Peripheral Library can be found in the following document: 
+http://www.st.com/internet/com/TECHNICAL_RESOURCES/TECHNICAL_LITERATURE/USER_MANUAL/DM00023896.pdf
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+
+*************** CyaSSL Release 2.4.6 (12/20/2012)
+
+Release 2.4.6 CyaSSL has bug fixes and a few new features including:
+- ECC into main version
+- Lean PSK build (reduced code size, RAM usage, and stack usage)
+- FreeBSD CRL monitor support
+- CyaSSL_peek()
+- CyaSSL_send() and CyaSSL_recv() for I/O flag setting
+- CodeWarrior Support
+- MQX Support
+- Freescale Kinetis support including Hardware RNG
+- autoconf builds use jobserver
+- cyassl-config
+- Sniffer memory reductions
+
+Thanks to Brian Aker for the improved autoconf system, make rpm, cyassl-config,
+warning system, and general good ideas for improving CyaSSL!
+
+The Freescale Kinetis K70 RNGA documentation can be found in Chapter 37 of the
+K70 Sub-Family Reference Manual:
+http://cache.freescale.com/files/microcontrollers/doc/ref_manual/K70P256M150SF3RM.pdf
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+*************** CyaSSL Release 2.4.0 (10/10/2012)
+
+Release 2.4.0 CyaSSL has bug fixes and a few new features including:
+- DTLS reliability
+- Reduced memory usage after handshake
+- Updated build process
+
+The CyaSSL manual is available at:
+http://www.yassl.com/documentation/CyaSSL-Manual.pdf.  For build instructions 
+and comments about the new features please check the manual.
+
+
+
+*************** CyaSSL Release 2.3.0 (8/10/2012)
 
 Release 2.3.0 CyaSSL has bug fixes and a few new features including:
 - AES-GCM crypto and cipher suites
@@ -134,7 +455,7 @@ Release 2.0.0rc3 for CyaSSL has bug fixes and a few new features including:
 - CyaSSL headers now in <cyassl/*.h>
 - CTaocrypt headers now in <cyassl/ctaocrypt/*.h>
 - OpenSSL compatibility headers now in <cyassl/openssl/*.h>
-- examples and tests all run from home diretory so can use certs in ./certs
+- examples and tests all run from home directory so can use certs in ./certs
         (see note 1)
 
 So previous applications that used the OpenSSL compatibility header
@@ -156,7 +477,7 @@ Release 2.0.0rc2 for CyaSSL has bug fixes and a few new features including:
 - Wshadow warnings removed
 - asn public header
 - CTaoCrypt public headers now all have ctc_ prefix (the manual is still being
-        updated to relfect this change)
+        updated to reflect this change)
 - and more.
 
 This is the 2nd and perhaps final release candidate for version 2.
@@ -479,8 +800,8 @@ Release Candidate 2 for CyaSSL 1.0.0 adds bug fixes and adds two new stream
 ciphers along with their respective cipher suites.  CyaSSL adds support for
 HC-128 and RABBIT stream ciphers.  The new suites are:
 
-TLS_RSA_WITH_HC_128_CBC_SHA
-TLS_RSA_WITH_RABBIT_CBC_SHA
+TLS_RSA_WITH_HC_128_SHA
+TLS_RSA_WITH_RABBIT_SHA
 
 And the corresponding cipher names are
 

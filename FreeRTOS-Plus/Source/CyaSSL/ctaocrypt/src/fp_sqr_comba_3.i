@@ -1,6 +1,6 @@
 /* fp_sqr_comba_3.i
  *
- * Copyright (C) 2006-2011 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,14 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
 #ifdef TFM_SQR3
 void fp_sqr_comba3(fp_int *A, fp_int *B)
 {
-   fp_digit *a, b[6], c0, c1, c2, sc0, sc1, sc2;
+   fp_digit *a, b[6], c0, c1, c2;
+#ifdef TFM_ISO
+   fp_word tt;
+#endif
 
    a = A->dp;
    COMBA_START; 

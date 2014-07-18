@@ -1,6 +1,6 @@
 /* ssl.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * a with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -92,6 +92,8 @@ typedef CYASSL_X509_STORE_CTX X509_STORE_CTX;
 #ifdef CYASSL_DTLS
     #define DTLSv1_client_method CyaDTLSv1_client_method
     #define DTLSv1_server_method CyaDTLSv1_server_method
+    #define DTLSv1_2_client_method CyaDTLSv1_2_client_method
+    #define DTLSv1_2_server_method CyaDTLSv1_2_server_method
 #endif
 
 
@@ -116,6 +118,7 @@ typedef CYASSL_X509_STORE_CTX X509_STORE_CTX;
 
 #define SSL_write    CyaSSL_write
 #define SSL_read     CyaSSL_read
+#define SSL_peek     CyaSSL_peek
 #define SSL_accept   CyaSSL_accept
 #define SSL_CTX_free CyaSSL_CTX_free
 #define SSL_free     CyaSSL_free
@@ -139,6 +142,7 @@ typedef CYASSL_X509_STORE_CTX X509_STORE_CTX;
 
 #define ERR_error_string CyaSSL_ERR_error_string
 #define ERR_error_string_n CyaSSL_ERR_error_string_n
+#define ERR_reason_error_string CyaSSL_ERR_reason_error_string
 
 #define SSL_set_ex_data CyaSSL_set_ex_data
 #define SSL_get_shutdown CyaSSL_get_shutdown

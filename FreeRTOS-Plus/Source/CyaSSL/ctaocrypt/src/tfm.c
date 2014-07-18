@@ -1,6 +1,6 @@
 /* tfm.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -26,7 +26,7 @@
  */
 
 /**
- *  Edited by Moisés Guimarães (moises.guimaraes@phoebus.com.br)
+ *  Edited by Moisés Guimarães (moisesguimaraesm@gmail.com)
  *  to fit CyaSSL's needs.
  */
 
@@ -95,7 +95,7 @@ void s_fp_add(fp_int *a, fp_int *b, fp_int *c)
   register fp_word  t;
 
   y       = MAX(a->used, b->used);
-  oldused = c->used;
+  oldused = MAX(c->used, FP_SIZE);   /* help static analysis w/ max size */
   c->used = y;
  
   t = 0;
@@ -169,7 +169,7 @@ void s_fp_sub(fp_int *a, fp_int *b, fp_int *c)
   for (; x < a->used; x++) {
      t         = ((fp_word)a->dp[x]) - t;
      c->dp[x]  = (fp_digit)t;
-     t         = (t >> DIGIT_BIT);
+     t         = (t >> DIGIT_BIT)&1;
    }
   for (; x < oldused; x++) {
      c->dp[x] = 0;
@@ -524,7 +524,7 @@ int fp_div(fp_int *a, fp_int *b, fp_int *c, fp_int *d)
     /* step 3.1 if xi == yt then set q{i-t-1} to b-1, 
      * otherwise set q{i-t-1} to (xi*b + x{i-1})/yt */
     if (x.dp[i] == y.dp[t]) {
-      q.dp[i - t - 1] = ((((fp_word)1) << DIGIT_BIT) - 1);
+      q.dp[i - t - 1] = (fp_digit) ((((fp_word)1) << DIGIT_BIT) - 1);
     } else {
       fp_word tmp;
       tmp = ((fp_word) x.dp[i]) << ((fp_word) DIGIT_BIT);
@@ -641,8 +641,7 @@ void fp_div_2(fp_int * a, fp_int * b)
 /* c = a / 2**b */
 void fp_div_2d(fp_int *a, int b, fp_int *c, fp_int *d)
 {
-  fp_digit D, r, rr;
-  int      x;
+  int      D;
   fp_int   t;
 
   /* if the shift count is <= 0 then we do no work */
@@ -670,32 +669,9 @@ void fp_div_2d(fp_int *a, int b, fp_int *c, fp_int *d)
   }
 
   /* shift any bit count < DIGIT_BIT */
-  D = (fp_digit) (b % DIGIT_BIT);
+  D = (b % DIGIT_BIT);
   if (D != 0) {
-    register fp_digit *tmpc, mask, shift;
-
-    /* mask */
-    mask = (((fp_digit)1) << D) - 1;
-
-    /* shift for lsb */
-    shift = DIGIT_BIT - D;
-
-    /* alias */
-    tmpc = c->dp + (c->used - 1);
-
-    /* carry */
-    r = 0;
-    for (x = c->used - 1; x >= 0; x--) {
-      /* get the lower  bits of this word in a temp */
-      rr = *tmpc & mask;
-
-      /* shift the current word and mix in the carry bits from the previous word */
-      *tmpc = (*tmpc >> D) | (r << shift);
-      --tmpc;
-
-      /* set the carry to the carry bits of the current word found above */
-      r = rr;
-    }
+    fp_rshb(c, D);
   }
   fp_clamp (c);
   if (d != NULL) {
@@ -1005,7 +981,7 @@ static int _fp_exptmod(fp_int * G, fp_int * X, fp_int * P, fp_int * Y)
     }
 
     /* grab the next msb from the exponent */
-    y     = (fp_digit)(buf >> (DIGIT_BIT - 1)) & 1;
+    y     = (int)(buf >> (DIGIT_BIT - 1)) & 1;
     buf <<= (fp_digit)1;
 
     /* do ops */
@@ -1107,7 +1083,7 @@ static int _fp_exptmod(fp_int * G, fp_int * X, fp_int * P, fp_int * Y)
     }
 
     /* grab the next msb from the exponent */
-    y     = (fp_digit)(buf >> (DIGIT_BIT - 1)) & 1;
+    y     = (int)(buf >> (DIGIT_BIT - 1)) & 1;
     buf <<= (fp_digit)1;
 
     /* if the bit is zero and mode == 0 then we ignore it
@@ -1183,16 +1159,16 @@ static int _fp_exptmod(fp_int * G, fp_int * X, fp_int * P, fp_int * Y)
 
 int fp_exptmod(fp_int * G, fp_int * X, fp_int * P, fp_int * Y)
 {
-   fp_int tmp;
-   int    err;
-  
    /* prevent overflows */
    if (P->used > (FP_SIZE/2)) {
       return FP_VAL;
    }
 
-   /* is X negative?  */
    if (X->sign == FP_NEG) {
+#ifndef POSITIVE_EXP_ONLY  /* reduce stack if assume no negatives */
+      int    err;
+      fp_int tmp;
+
       /* yes, copy G and invmod it */
       fp_copy(G, &tmp);
       if ((err = fp_invmod(&tmp, P, &tmp)) != FP_OKAY) {
@@ -1204,7 +1180,11 @@ int fp_exptmod(fp_int * G, fp_int * X, fp_int * P, fp_int * Y)
          X->sign = FP_NEG;
       }
       return err;
-   } else {
+#else
+      return FP_VAL;
+#endif 
+   }
+   else {
       /* Positive exponent so just exptmod */
       return _fp_exptmod(G, X, P, Y);
    }
@@ -1548,7 +1528,7 @@ void fp_montgomery_calc_normalization(fp_int *a, fp_int *b)
 /* computes x/R == x (mod N) via Montgomery Reduction */
 void fp_montgomery_reduce(fp_int *a, fp_int *m, fp_digit mp)
 {
-   fp_digit c[FP_SIZE], *_c, *tmpm, mu;
+   fp_digit c[FP_SIZE], *_c, *tmpm, mu = 0;
    int      oldused, x, y, pa;
 
    /* bail if too large */
@@ -1565,10 +1545,8 @@ void fp_montgomery_reduce(fp_int *a, fp_int *m, fp_digit mp)
 #endif
 
 
-#if defined(USE_MEMSET)
    /* now zero the buff */
    XMEMSET(c, 0, sizeof c);
-#endif
    pa = m->used;
 
    /* copy the input */
@@ -1576,11 +1554,6 @@ void fp_montgomery_reduce(fp_int *a, fp_int *m, fp_digit mp)
    for (x = 0; x < oldused; x++) {
        c[x] = a->dp[x];
    }
-#if !defined(USE_MEMSET)
-   for (; x < 2*pa+1; x++) {
-       c[x] = 0;
-   }
-#endif
    MONT_START;
 
    for (x = 0; x < pa; x++) {
@@ -1638,10 +1611,10 @@ void fp_read_unsigned_bin(fp_int *a, unsigned char *b, int c)
 
   /* If we know the endianness of this architecture, and we're using
      32-bit fp_digits, we can optimize this */
-#if (defined(ENDIAN_LITTLE) || defined(ENDIAN_BIG)) && !defined(FP_64BIT)
+#if (defined(LITTLE_ENDIAN_ORDER) || defined(BIG_ENDIAN_ORDER)) && !defined(FP_64BIT)
   /* But not for both simultaneously */
-#if defined(ENDIAN_LITTLE) && defined(ENDIAN_BIG)
-#error Both ENDIAN_LITTLE and ENDIAN_BIG defined.
+#if defined(LITTLE_ENDIAN_ORDER) && defined(BIG_ENDIAN_ORDER)
+#error Both LITTLE_ENDIAN_ORDER and BIG_ENDIAN_ORDER defined.
 #endif
   {
      unsigned char *pd = (unsigned char *)a->dp;
@@ -1653,7 +1626,7 @@ void fp_read_unsigned_bin(fp_int *a, unsigned char *b, int c)
      }
      a->used = (c + sizeof(fp_digit) - 1)/sizeof(fp_digit);
      /* read the bytes in */
-#ifdef ENDIAN_BIG
+#ifdef BIG_ENDIAN_ORDER
      {
        /* Use Duff's device to unroll the loop. */
        int idx = (c - 1) & ~3;
@@ -1733,6 +1706,25 @@ int fp_count_bits (fp_int * a)
   return r;
 }
 
+int fp_leading_bit(fp_int *a)
+{
+    int bit = 0;
+
+    if (a->used != 0) {
+        fp_digit q = a->dp[a->used - 1];
+        int qSz = sizeof(fp_digit);
+
+        while (qSz > 0) {
+            if ((unsigned char)q != 0)
+                bit = (q & 0x80) != 0;
+            q >>= 8;
+            qSz--;
+        }
+    }
+
+    return bit;
+}
+
 void fp_lshd(fp_int *a, int x)
 {
    int y;
@@ -1756,6 +1748,39 @@ void fp_lshd(fp_int *a, int x)
    /* clamp digits */
    fp_clamp(a);
 }
+
+
+/* right shift by bit count */
+void fp_rshb(fp_int *c, int x)
+{
+    register fp_digit *tmpc, mask, shift;
+    fp_digit r, rr;
+    fp_digit D = x;
+
+    /* mask */
+    mask = (((fp_digit)1) << D) - 1;
+
+    /* shift for lsb */
+    shift = DIGIT_BIT - D;
+
+    /* alias */
+    tmpc = c->dp + (c->used - 1);
+
+    /* carry */
+    r = 0;
+    for (x = c->used - 1; x >= 0; x--) {
+      /* get the lower  bits of this word in a temp */
+      rr = *tmpc & mask;
+
+      /* shift the current word and mix in the carry bits from previous word */
+      *tmpc = (*tmpc >> D) | (r << shift);
+      --tmpc;
+
+      /* set the carry to the carry bits of the current word found above */
+      r = rr;
+    }
+}
+
 
 void fp_rshd(fp_int *a, int x)
 {
@@ -1959,6 +1984,19 @@ int mp_iszero(mp_int* a)
 int mp_count_bits (mp_int* a)
 {
     return fp_count_bits(a);
+}
+
+
+int mp_leading_bit (mp_int* a)
+{
+    return fp_leading_bit(a);
+}
+
+
+/* fast math conversion */
+void mp_rshb (mp_int* a, int x)
+{
+    fp_rshb(a, x);
 }
 
 
@@ -2364,7 +2402,7 @@ int mp_add_d(fp_int *a, fp_digit b, fp_int *c)
 #ifdef HAVE_ECC
 
 /* chars used in radix conversions */
-const char *fp_s_rmap = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
+static const char *fp_s_rmap = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
 
 static int fp_read_radix(fp_int *a, const char *str, int radix)
 {

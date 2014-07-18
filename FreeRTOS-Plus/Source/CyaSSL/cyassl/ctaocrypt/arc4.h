@@ -1,6 +1,6 @@
 /* arc4.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -32,6 +32,8 @@
 #endif
 
 
+#define CYASSL_ARC4_CAVIUM_MAGIC 0xBEEF0001
+
 enum {
 	ARC4_ENC_TYPE   = 4,    /* cipher unique type */
     ARC4_STATE_SIZE = 256
@@ -42,11 +44,20 @@ typedef struct Arc4 {
     byte x;
     byte y;
     byte state[ARC4_STATE_SIZE];
+#ifdef HAVE_CAVIUM
+    int    devId;           /* nitrox device id */
+    word32 magic;           /* using cavium magic */
+    word64 contextHandle;   /* nitrox context memory handle */
+#endif
 } Arc4;
 
 CYASSL_API void Arc4Process(Arc4*, byte*, const byte*, word32);
 CYASSL_API void Arc4SetKey(Arc4*, const byte*, word32);
 
+#ifdef HAVE_CAVIUM
+    CYASSL_API int  Arc4InitCavium(Arc4*, int);
+    CYASSL_API void Arc4FreeCavium(Arc4*);
+#endif
 
 #ifdef __cplusplus
     } /* extern "C" */

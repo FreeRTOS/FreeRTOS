@@ -1,6 +1,6 @@
 /* logging.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 /* submitted by eof */
@@ -58,7 +58,7 @@ CYASSL_API int CyaSSL_SetLoggingCb(CyaSSL_Logging_cb log_function);
     #define CYASSL_ENTER(m)
     #define CYASSL_LEAVE(m, r)
 
-    #define CYASSL_ERROR(e) 
+    #define CYASSL_ERROR(e)
     #define CYASSL_MSG(m)
 
 #endif /* DEBUG_CYASSL  */

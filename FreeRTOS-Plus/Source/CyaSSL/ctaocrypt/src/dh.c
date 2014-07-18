@@ -1,6 +1,6 @@
 /* dh.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,17 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
 
+#include <cyassl/ctaocrypt/settings.h>
+
 #ifndef NO_DH
 
 #include <cyassl/ctaocrypt/dh.h>
-#include <cyassl/ctaocrypt/error.h>
+#include <cyassl/ctaocrypt/error-crypt.h>
 
 #ifndef USER_MATH_LIB
     #include <math.h>
@@ -80,15 +82,22 @@ static word32 DiscreteLogWorkFactor(word32 n)
 }
 
 
-static void GeneratePrivate(DhKey* key, RNG* rng, byte* priv, word32* privSz)
+static int GeneratePrivate(DhKey* key, RNG* rng, byte* priv, word32* privSz)
 {
+    int ret;
     word32 sz = mp_unsigned_bin_size(&key->p);
-    sz = min(sz, 2 * DiscreteLogWorkFactor(sz * BIT_SIZE) / BIT_SIZE + 1);
+    sz = min(sz, 2 * DiscreteLogWorkFactor(sz * CYASSL_BIT_SIZE) /
+                                           CYASSL_BIT_SIZE + 1);
 
-    RNG_GenerateBlock(rng, priv, sz);
+    ret = RNG_GenerateBlock(rng, priv, sz);
+    if (ret != 0)
+        return ret;
+
     priv[0] |= 0x0C;
 
     *privSz = sz;
+
+    return 0;
 }
 
 
@@ -125,9 +134,9 @@ static int GeneratePublic(DhKey* key, const byte* priv, word32 privSz,
 int DhGenerateKeyPair(DhKey* key, RNG* rng, byte* priv, word32* privSz,
                       byte* pub, word32* pubSz)
 {
-    GeneratePrivate(key, rng, priv, privSz);
-    return GeneratePublic(key, priv, *privSz, pub, pubSz);
+    int ret = GeneratePrivate(key, rng, priv, privSz);
 
+    return (ret != 0) ? ret : GeneratePublic(key, priv, *privSz, pub, pubSz);
 }
 
 int DhAgree(DhKey* key, byte* agree, word32* agreeSz, const byte* priv,

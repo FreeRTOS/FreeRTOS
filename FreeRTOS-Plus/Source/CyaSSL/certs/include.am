@@ -26,15 +26,17 @@ EXTRA_DIST += \
 
 EXTRA_DIST += \
 	     certs/ca-key.der \
+	     certs/ca-cert.der \
 	     certs/client-cert.der \
 	     certs/client-key.der \
 	     certs/dh2048.der \
 	     certs/rsa2048.der \
 	     certs/dsa2048.der \
-	     certs/ecc-key.der
+	     certs/ecc-key.der \
+	     certs/server-key.der \
+	     certs/server-cert.der
 
-
-doc_DATA+= certs/taoCert.txt
+dist_doc_DATA+= certs/taoCert.txt
 
 EXTRA_DIST+= certs/ntru-key.raw
 

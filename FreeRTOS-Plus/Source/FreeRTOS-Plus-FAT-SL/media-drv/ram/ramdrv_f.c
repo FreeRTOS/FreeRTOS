@@ -1,29 +1,29 @@
 /*
  * FreeRTOS+FAT SL V1.0.1 (C) 2014 HCC Embedded
  *
- * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license 
+ * The FreeRTOS+FAT SL license terms are different to the FreeRTOS license
  * terms.
- * 
- * FreeRTOS+FAT SL uses a dual license model that allows the software to be used 
- * under a standard GPL open source license, or a commercial license.  The 
- * standard GPL license (unlike the modified GPL license under which FreeRTOS 
- * itself is distributed) requires that all software statically linked with 
- * FreeRTOS+FAT SL is also distributed under the same GPL V2 license terms.  
+ *
+ * FreeRTOS+FAT SL uses a dual license model that allows the software to be used
+ * under a standard GPL open source license, or a commercial license.  The
+ * standard GPL license (unlike the modified GPL license under which FreeRTOS
+ * itself is distributed) requires that all software statically linked with
+ * FreeRTOS+FAT SL is also distributed under the same GPL V2 license terms.
  * Details of both license options follow:
- * 
+ *
  * - Open source licensing -
  * FreeRTOS+FAT SL is a free download and may be used, modified, evaluated and
- * distributed without charge provided the user adheres to version two of the 
- * GNU General Public License (GPL) and does not remove the copyright notice or 
+ * distributed without charge provided the user adheres to version two of the
+ * GNU General Public License (GPL) and does not remove the copyright notice or
  * this text.  The GPL V2 text is available on the gnu.org web site, and on the
  * following URL: http://www.FreeRTOS.org/gpl-2.0.txt.
- * 
+ *
  * - Commercial licensing -
  * Businesses and individuals who for commercial or other reasons cannot comply
- * with the terms of the GPL V2 license must obtain a commercial license before 
- * incorporating FreeRTOS+FAT SL into proprietary software for distribution in 
- * any form.  Commercial licenses can be purchased from 
- * http://shop.freertos.org/fat_sl and do not require any source files to be 
+ * with the terms of the GPL V2 license must obtain a commercial license before
+ * incorporating FreeRTOS+FAT SL into proprietary software for distribution in
+ * any form.  Commercial licenses can be purchased from
+ * http://shop.freertos.org/fat_sl and do not require any source files to be
  * changed.
  *
  * FreeRTOS+FAT SL is distributed in the hope that it will be useful.  You
@@ -47,23 +47,17 @@
  #error Incompatible MDRIVER_RAM version number!
 #endif
 
+/* The array used as the RAM disk storage. */
+static char  ramdrv[ MDRIVER_RAM_VOLUME0_SIZE ];
 
-char  ramdrv0[MDRIVER_RAM_VOLUME0_SIZE];
+/* The F_DRIVER structure that is filled with the RAM disk versions of the read
+sector, write sector, etc. functions. */
+static F_DRIVER  t_driver;
 
-typedef struct
-{
-  char         * ramdrv;
-  unsigned long  maxsector;
-  int            use;
-  F_DRIVER     * driver;
-} t_RamDrv;
+static const unsigned long maxsector = MDRIVER_RAM_VOLUME0_SIZE / MDRIVER_RAM_SECTOR_SIZE;
 
-static F_DRIVER  t_drivers[1];
-
-static t_RamDrv  RamDrv[1] =
-{
-  { ramdrv0, ( MDRIVER_RAM_VOLUME0_SIZE / MDRIVER_RAM_SECTOR_SIZE ), 0, &t_drivers[0] }
-};
+/* Disk not initialized yet. */
+static char in_use = 0;
 
 
 /****************************************************************************
@@ -74,14 +68,23 @@ static int ram_readsector ( F_DRIVER * driver, void * data, unsigned long sector
   long       len;
   char     * d = (char *)data;
   char     * s;
-  t_RamDrv * p = (t_RamDrv *)( driver->user_ptr );
 
-  if ( sector >= p->maxsector )
+  /* Not used. */
+  ( void ) driver;
+
+  /* Check for valid sector. */
+  if ( sector >= maxsector )
   {
     return MDRIVER_RAM_ERR_SECTOR;
   }
 
-  s = p->ramdrv;
+  if( in_use == 0 )
+  {
+    return MDRIVER_RAM_ERR_NOTAVAILABLE;
+  }
+
+  /* Locate offset into RAM disk for sector. */
+  s = ramdrv;
   s += sector * MDRIVER_RAM_SECTOR_SIZE;
   len = MDRIVER_RAM_SECTOR_SIZE;
 
@@ -91,6 +94,7 @@ static int ram_readsector ( F_DRIVER * driver, void * data, unsigned long sector
     long * dd = (long *)d;
     long * ss = (long *)s;
     len >>= 2;
+	/* Read words. */
     while ( len-- )
     {
       *dd++ = *ss++;
@@ -101,6 +105,7 @@ static int ram_readsector ( F_DRIVER * driver, void * data, unsigned long sector
 
 #endif /* if MDRIVER_MEM_LONG_ACCESS */
 
+  /* Read bytes. */
   while ( len-- )
   {
     *d++ = *s++;
@@ -117,14 +122,23 @@ static int ram_writesector ( F_DRIVER * driver, void * data, unsigned long secto
   long       len;
   char     * s = (char *)data;
   char     * d;
-  t_RamDrv * p = (t_RamDrv *)( driver->user_ptr );
 
-  if ( sector >= p->maxsector )
+  /* Not used. */
+  ( void ) driver;
+
+  /* Check for valid sector. */
+  if ( sector >= maxsector )
   {
     return MDRIVER_RAM_ERR_SECTOR;
   }
 
-  d = p->ramdrv;
+  if( in_use == 0 )
+  {
+	  return MDRIVER_RAM_ERR_NOTAVAILABLE;
+  }
+
+  /* Locate offset into RAM disk for sector. */
+  d = ramdrv;
   d += sector * MDRIVER_RAM_SECTOR_SIZE;
   len = MDRIVER_RAM_SECTOR_SIZE;
 
@@ -134,6 +148,8 @@ static int ram_writesector ( F_DRIVER * driver, void * data, unsigned long secto
     long * dd = (long *)d;
     long * ss = (long *)s;
     len >>= 2;
+
+	/* Write words. */
     while ( len-- )
     {
       *dd++ = *ss++;
@@ -141,9 +157,9 @@ static int ram_writesector ( F_DRIVER * driver, void * data, unsigned long secto
 
     return MDRIVER_RAM_NO_ERROR;
   }
-
 #endif /* if MDRIVER_MEM_LONG_ACCESS */
 
+  /* Write bytes. */
   while ( len-- )
   {
     *d++ = *s++;
@@ -171,9 +187,10 @@ static int ram_writesector ( F_DRIVER * driver, void * data, unsigned long secto
  ***************************************************************************/
 static int ram_getphy ( F_DRIVER * driver, F_PHY * phy )
 {
-  t_RamDrv * p = (t_RamDrv *)( driver->user_ptr );
+  /* Not used. */
+  ( void ) driver;
 
-  phy->number_of_sectors = p->maxsector;
+  phy->number_of_sectors = maxsector;
   phy->bytes_per_sector = MDRIVER_RAM_SECTOR_SIZE;
 
   return MDRIVER_RAM_NO_ERROR;
@@ -193,12 +210,11 @@ static int ram_getphy ( F_DRIVER * driver, F_PHY * phy )
  ***************************************************************************/
 static void ram_release ( F_DRIVER * driver )
 {
-  t_RamDrv * p = (t_RamDrv *)( driver->user_ptr );
+  /* Not used. */
+  ( void ) driver;
 
-  if ( p == RamDrv )
-  {
-    p->use = 0;
-  }
+  /* Disk no longer in use. */
+  in_use = 0;
 }
 
 
@@ -220,30 +236,20 @@ static void ram_release ( F_DRIVER * driver )
  ***************************************************************************/
 F_DRIVER * ram_initfunc ( unsigned long driver_param )
 {
-  t_RamDrv    * p;
+  ( void ) driver_param;
 
-  p = RamDrv + driver_param;
+  if( in_use )
+    return NULL;
 
-  if ( p != RamDrv )
-  {
-    return 0;
-  }
+  (void)psp_memset( &t_driver, 0, sizeof( F_DRIVER ) );
 
-  if ( p->use )
-  {
-    return 0;
-  }
+  t_driver.readsector = ram_readsector;
+  t_driver.writesector = ram_writesector;
+  t_driver.getphy = ram_getphy;
+  t_driver.release = ram_release;
 
-  (void)psp_memset( p->driver, 0, sizeof( F_DRIVER ) );
+  in_use = 1;
 
-  p->driver->readsector = ram_readsector;
-  p->driver->writesector = ram_writesector;
-  p->driver->getphy = ram_getphy;
-  p->driver->release = ram_release;
-  p->driver->user_ptr = p;
-
-  p->use = 1;
-
-  return p->driver;
+  return &t_driver;
 } /* ram_initfunc */
 

@@ -8,13 +8,18 @@ include cyassl/openssl/include.am
 EXTRA_DIST+= cyassl/sniffer_error.rc
 
 nobase_include_HEADERS+= \
-                         cyassl/error.h \
-                         cyassl/internal.h \
+                         cyassl/error-ssl.h \
                          cyassl/ssl.h \
                          cyassl/sniffer_error.h \
                          cyassl/sniffer.h \
                          cyassl/callbacks.h \
+                         cyassl/certs_test.h \
                          cyassl/test.h \
                          cyassl/version.h \
+                         cyassl/options.h \
                          cyassl/ocsp.h \
                          cyassl/crl.h
+
+noinst_HEADERS+= \
+                         cyassl/internal.h
+

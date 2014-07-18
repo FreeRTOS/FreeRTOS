@@ -135,6 +135,12 @@
     <ClCompile Include="SecureTCPClientTask.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\wc_port.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\error.c">
+      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

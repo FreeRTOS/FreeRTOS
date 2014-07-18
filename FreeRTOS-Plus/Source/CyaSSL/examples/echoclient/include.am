@@ -3,12 +3,18 @@
 # All paths should be given relative to the root
 
 
+if BUILD_EXAMPLES
 noinst_PROGRAMS += examples/echoclient/echoclient
+noinst_HEADERS += examples/echoclient/echoclient.h
 examples_echoclient_echoclient_SOURCES      = examples/echoclient/echoclient.c
 examples_echoclient_echoclient_LDADD        = src/libcyassl.la
 examples_echoclient_echoclient_DEPENDENCIES = src/libcyassl.la
+endif
 EXTRA_DIST += examples/echoclient/echoclient.sln
 EXTRA_DIST += examples/echoclient/echoclient-ntru.vcproj
 EXTRA_DIST += examples/echoclient/echoclient.vcproj
+EXTRA_DIST += examples/echoclient/echoclient.vcxproj
 
-example_DATA+= examples/echoclient/echoclient.c
+dist_example_DATA+= examples/echoclient/echoclient.c
+DISTCLEANFILES+= examples/echoclient/.libs/echoclient
+

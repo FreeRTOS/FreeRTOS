@@ -1,6 +1,6 @@
 /* logging.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,18 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
 
+#include <cyassl/ctaocrypt/settings.h>
+
 /* submitted by eof */
 
-#include <cyassl/ctaocrypt/settings.h>
 #include <cyassl/ctaocrypt/logging.h>
-#include <cyassl/ctaocrypt/error.h>
+#include <cyassl/ctaocrypt/error-crypt.h>
 
 
 #ifdef __cplusplus
@@ -88,7 +89,11 @@ void CyaSSL_Debugging_OFF(void)
 
 #ifdef DEBUG_CYASSL
 
-#include <stdio.h>   /* for default printf stuff */
+#ifdef FREESCALE_MQX
+    #include <fio.h>
+#else
+    #include <stdio.h>   /* for default printf stuff */
+#endif
 
 #ifdef THREADX
     int dc_log_printf(char*, ...);
@@ -106,6 +111,10 @@ static void cyassl_log(const int logLevel, const char *const logMessage)
         #if (NET_SECURE_MGR_CFG_EN == DEF_ENABLED)
             NetSecure_TraceOut((CPU_CHAR *)logMessage);
         #endif
+#elif defined(CYASSL_MDK_ARM)
+            fflush(stdout) ;
+            printf("%s\n", logMessage);
+            fflush(stdout) ;
 #else
             fprintf(stderr, "%s\n", logMessage);
 #endif

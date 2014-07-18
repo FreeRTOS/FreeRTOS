@@ -1,6 +1,6 @@
 /* md5.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -24,7 +24,18 @@
     #include <config.h>
 #endif
 
+#include <cyassl/ctaocrypt/settings.h>
+
+#if !defined(NO_MD5)
+
+#ifdef CYASSL_PIC32MZ_HASH
+#define InitMd5   InitMd5_sw
+#define Md5Update Md5Update_sw
+#define Md5Final  Md5Final_sw
+#endif
+
 #include <cyassl/ctaocrypt/md5.h>
+#include <cyassl/ctaocrypt/error-crypt.h>
 
 #ifdef NO_INLINE
     #include <cyassl/ctaocrypt/misc.h>
@@ -32,6 +43,128 @@
     #include <ctaocrypt/src/misc.c>
 #endif
 
+#ifdef FREESCALE_MMCAU
+    #include "cau_api.h"
+    #define XTRANSFORM(S,B)  cau_md5_hash_n((B), 1, (unsigned char*)(S)->digest)
+#else
+    #define XTRANSFORM(S,B)  Transform((S))
+#endif
+
+
+#ifdef STM32F2_HASH
+    /*
+     * STM32F2 hardware MD5 support through the STM32F2 standard peripheral
+     * library. Documentation located in STM32F2xx Standard Peripheral Library
+     * document (See note in README).
+     */
+    #include "stm32f2xx.h"
+
+    void InitMd5(Md5* md5)
+    {
+        /* STM32F2 struct notes:
+         * md5->buffer  = first 4 bytes used to hold partial block if needed 
+         * md5->buffLen = num bytes currently stored in md5->buffer
+         * md5->loLen   = num bytes that have been written to STM32 FIFO
+         */
+        XMEMSET(md5->buffer, 0, MD5_REG_SIZE);
+			
+        md5->buffLen = 0;
+        md5->loLen = 0;
+
+        /* initialize HASH peripheral */
+        HASH_DeInit();
+
+        /* configure algo used, algo mode, datatype */
+        HASH->CR &= ~ (HASH_CR_ALGO | HASH_CR_DATATYPE | HASH_CR_MODE);
+        HASH->CR |= (HASH_AlgoSelection_MD5 | HASH_AlgoMode_HASH 
+                 | HASH_DataType_8b);
+
+        /* reset HASH processor */
+        HASH->CR |= HASH_CR_INIT;
+    }
+
+    void Md5Update(Md5* md5, const byte* data, word32 len)
+    {
+        word32 i = 0;
+        word32 fill = 0;
+        word32 diff = 0;
+
+        /* if saved partial block is available */
+        if (md5->buffLen > 0) {
+            fill = 4 - md5->buffLen;
+
+            /* if enough data to fill, fill and push to FIFO */
+            if (fill <= len) {
+                XMEMCPY((byte*)md5->buffer + md5->buffLen, data, fill);
+                HASH_DataIn(*(uint32_t*)md5->buffer);
+
+                data += fill;
+                len -= fill;
+                md5->loLen += 4;
+                md5->buffLen = 0;
+            } else {
+                /* append partial to existing stored block */
+                XMEMCPY((byte*)md5->buffer + md5->buffLen, data, len);
+                md5->buffLen += len;
+                return;
+            }
+        }
+
+        /* write input block in the IN FIFO */
+        for (i = 0; i < len; i += 4)
+        {
+            diff = len - i;
+            if (diff < 4) {
+                /* store incomplete last block, not yet in FIFO */
+                XMEMSET(md5->buffer, 0, MD5_REG_SIZE);
+                XMEMCPY((byte*)md5->buffer, data, diff);
+                md5->buffLen = diff;
+            } else {
+                HASH_DataIn(*(uint32_t*)data);
+                data+=4;
+            }
+        }
+
+        /* keep track of total data length thus far */
+        md5->loLen += (len - md5->buffLen);
+    }
+
+    void Md5Final(Md5* md5, byte* hash)
+    {
+        __IO uint16_t nbvalidbitsdata = 0;
+
+        /* finish reading any trailing bytes into FIFO */
+        if (md5->buffLen > 0) {
+            HASH_DataIn(*(uint32_t*)md5->buffer);
+            md5->loLen += md5->buffLen;
+        }
+
+        /* calculate number of valid bits in last word of input data */
+        nbvalidbitsdata = 8 * (md5->loLen % MD5_REG_SIZE);
+
+        /* configure number of valid bits in last word of the data */
+        HASH_SetLastWordValidBitsNbr(nbvalidbitsdata);
+
+        /* start HASH processor */
+        HASH_StartDigest();
+
+        /* wait until Busy flag == RESET */
+        while (HASH_GetFlagStatus(HASH_FLAG_BUSY) != RESET) {}
+        
+        /* read message digest */
+        md5->digest[0] = HASH->HR[0];
+        md5->digest[1] = HASH->HR[1];
+        md5->digest[2] = HASH->HR[2];
+        md5->digest[3] = HASH->HR[3];
+
+        ByteReverseWords(md5->digest, md5->digest, MD5_DIGEST_SIZE);
+
+        XMEMCPY(hash, md5->digest, MD5_DIGEST_SIZE);
+
+        InitMd5(md5);  /* reset state */
+    }
+
+#else /* CTaoCrypt software implementation */
 
 #ifndef min
 
@@ -55,6 +188,7 @@ void InitMd5(Md5* md5)
     md5->hiLen   = 0;
 }
 
+#ifndef FREESCALE_MMCAU
 
 static void Transform(Md5* md5)
 {
@@ -147,6 +281,8 @@ static void Transform(Md5* md5)
     md5->digest[3] += d;
 }
 
+#endif /* FREESCALE_MMCAU */
+
 
 static INLINE void AddLength(Md5* md5, word32 len)
 {
@@ -170,10 +306,10 @@ void Md5Update(Md5* md5, const byte* data, word32 len)
         len          -= add;
 
         if (md5->buffLen == MD5_BLOCK_SIZE) {
-            #ifdef BIG_ENDIAN_ORDER
-                ByteReverseBytes(local, local, MD5_BLOCK_SIZE);
+            #if defined(BIG_ENDIAN_ORDER) && !defined(FREESCALE_MMCAU)
+                ByteReverseWords(md5->buffer, md5->buffer, MD5_BLOCK_SIZE);
             #endif
-            Transform(md5);
+            XTRANSFORM(md5, local);
             AddLength(md5, MD5_BLOCK_SIZE);
             md5->buffLen = 0;
         }
@@ -185,7 +321,7 @@ void Md5Final(Md5* md5, byte* hash)
 {
     byte* local = (byte*)md5->buffer;
 
-    AddLength(md5, md5->buffLen);               /* before adding pads */
+    AddLength(md5, md5->buffLen);  /* before adding pads */
 
     local[md5->buffLen++] = 0x80;  /* add 1 */
 
@@ -194,10 +330,10 @@ void Md5Final(Md5* md5, byte* hash)
         XMEMSET(&local[md5->buffLen], 0, MD5_BLOCK_SIZE - md5->buffLen);
         md5->buffLen += MD5_BLOCK_SIZE - md5->buffLen;
 
-        #ifdef BIG_ENDIAN_ORDER
-            ByteReverseBytes(local, local, MD5_BLOCK_SIZE);
+        #if defined(BIG_ENDIAN_ORDER) && !defined(FREESCALE_MMCAU)
+            ByteReverseWords(md5->buffer, md5->buffer, MD5_BLOCK_SIZE);
         #endif
-        Transform(md5);
+        XTRANSFORM(md5, local);
         md5->buffLen = 0;
     }
     XMEMSET(&local[md5->buffLen], 0, MD5_PAD_SIZE - md5->buffLen);
@@ -208,14 +344,14 @@ void Md5Final(Md5* md5, byte* hash)
     md5->loLen = md5->loLen << 3;
 
     /* store lengths */
-    #ifdef BIG_ENDIAN_ORDER
-        ByteReverseBytes(local, local, MD5_BLOCK_SIZE);
+    #if defined(BIG_ENDIAN_ORDER) && !defined(FREESCALE_MMCAU)
+        ByteReverseWords(md5->buffer, md5->buffer, MD5_BLOCK_SIZE);
     #endif
     /* ! length ordering dependent on digest endian type ! */
     XMEMCPY(&local[MD5_PAD_SIZE], &md5->loLen, sizeof(word32));
     XMEMCPY(&local[MD5_PAD_SIZE + sizeof(word32)], &md5->hiLen, sizeof(word32));
 
-    Transform(md5);
+    XTRANSFORM(md5, local);
     #ifdef BIG_ENDIAN_ORDER
         ByteReverseWords(md5->digest, md5->digest, MD5_DIGEST_SIZE);
     #endif
@@ -224,3 +360,32 @@ void Md5Final(Md5* md5, byte* hash)
     InitMd5(md5);  /* reset state */
 }
 
+#endif /* STM32F2_HASH */
+
+
+int Md5Hash(const byte* data, word32 len, byte* hash)
+{
+#ifdef CYASSL_SMALL_STACK
+    Md5* md5;
+#else
+    Md5 md5[1];
+#endif
+
+#ifdef CYASSL_SMALL_STACK
+    md5 = (Md5*)XMALLOC(sizeof(Md5), NULL, DYNAMIC_TYPE_TMP_BUFFER);
+    if (md5 == NULL)
+        return MEMORY_E;
+#endif
+
+    InitMd5(md5);
+    Md5Update(md5, data, len);
+    Md5Final(md5, hash);
+
+#ifdef CYASSL_SMALL_STACK
+    XFREE(md5, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+
+    return 0;
+}
+
+#endif /* NO_MD5 */

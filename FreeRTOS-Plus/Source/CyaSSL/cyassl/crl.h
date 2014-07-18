@@ -1,6 +1,6 @@
 /* crl.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,12 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
 #ifndef CYASSL_CRL_H
 #define CYASSL_CRL_H
+
+
+#ifdef HAVE_CRL
 
 #include <cyassl/ssl.h>
 #include <cyassl/ctaocrypt/asn.h>
@@ -33,7 +36,7 @@
 typedef struct CYASSL_CRL CYASSL_CRL;
 
 CYASSL_LOCAL int  InitCRL(CYASSL_CRL*, CYASSL_CERT_MANAGER*);
-CYASSL_LOCAL void FreeCRL(CYASSL_CRL*);
+CYASSL_LOCAL void FreeCRL(CYASSL_CRL*, int dynamic);
 
 CYASSL_LOCAL int  LoadCRL(CYASSL_CRL* crl, const char* path, int type, int mon);
 CYASSL_LOCAL int  BufferLoadCRL(CYASSL_CRL*, const byte*, long, int);
@@ -44,4 +47,5 @@ CYASSL_LOCAL int  CheckCertCRL(CYASSL_CRL*, DecodedCert*);
     }  /* extern "C" */
 #endif
 
+#endif /* HAVE_CRL */
 #endif /* CYASSL_CRL_H */

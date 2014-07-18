@@ -1,0 +1,11 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+#
+
+EXTRA_DIST += \
+         mplabx/cyassl.X/Makefile
+
+EXTRA_DIST += \
+         mplabx/cyassl.X/nbproject/configurations.xml \
+         mplabx/cyassl.X/nbproject/project.xml
+

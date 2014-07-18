@@ -1,6 +1,6 @@
 /* asn.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,9 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#ifndef NO_ASN
 
 #ifndef CTAO_CRYPT_ASN_H
 #define CTAO_CRYPT_ASN_H
@@ -58,10 +59,14 @@ enum ASN_Tags {
     ASN_TAG_NULL          = 0x05,
     ASN_OBJECT_ID         = 0x06,
     ASN_ENUMERATED        = 0x0a,
+    ASN_UTF8STRING        = 0x0c,
     ASN_SEQUENCE          = 0x10,
     ASN_SET               = 0x11,
     ASN_UTC_TIME          = 0x17,
+    ASN_OTHER_TYPE        = 0x00,
+    ASN_RFC822_TYPE       = 0x01,
     ASN_DNS_TYPE          = 0x02,
+    ASN_DIR_TYPE          = 0x04,
     ASN_GENERALIZED_TIME  = 0x18,
     CRL_EXTENSIONS        = 0xa0,
     ASN_EXTENSIONS        = 0xa3,
@@ -76,6 +81,7 @@ enum  ASN_Flags{
 enum DN_Tags {
     ASN_COMMON_NAME   = 0x03,   /* CN */
     ASN_SUR_NAME      = 0x04,   /* SN */
+    ASN_SERIAL_NUMBER = 0x05,   /* serialNumber */
     ASN_COUNTRY_NAME  = 0x06,   /* C  */
     ASN_LOCALITY_NAME = 0x07,   /* L  */
     ASN_STATE_NAME    = 0x08,   /* ST */
@@ -122,6 +128,9 @@ enum Misc_ASN {
     MAX_ALGO_SZ         =  20,
     MAX_SEQ_SZ          =   5,     /* enum(seq | con) + length(4) */  
     MAX_SET_SZ          =   5,     /* enum(set | con) + length(4) */  
+    MAX_OCTET_STR_SZ    =   5,     /* enum(set | con) + length(4) */
+    MAX_EXP_SZ          =   5,     /* enum(contextspec|con|exp) + length(4) */
+    MAX_PRSTR_SZ        =   5,     /* enum(prstr) + length(4) */
     MAX_VERSION_SZ      =   5,     /* enum + id + version(byte) + (header(2))*/
     MAX_ENCODED_DIG_SZ  =  73,     /* sha512 + enum(bit or octet) + legnth(4) */
     MAX_RSA_INT_SZ      = 517,     /* RSA raw sz 4096 for bits + tag + len(4) */
@@ -132,6 +141,11 @@ enum Misc_ASN {
     MAX_CA_SZ           =  32,     /* Max encoded CA basic constraint length */
     MAX_SN_SZ           =  35,     /* Max encoded serial number (INT) length */
 #ifdef CYASSL_CERT_GEN
+    #ifdef CYASSL_CERT_REQ
+                          /* Max encoded cert req attributes length */
+        MAX_ATTRIB_SZ   = MAX_SEQ_SZ * 3 + (11 + MAX_SEQ_SZ) * 2 +
+                          MAX_PRSTR_SZ + CTC_NAME_SIZE, /* 11 is the OID size */
+    #endif
     #ifdef CYASSL_ALT_NAMES
         MAX_EXTENSIONS_SZ   = 1 + MAX_LENGTH_SZ + CTC_MAX_ALT_SIZE,
     #else
@@ -141,15 +155,18 @@ enum Misc_ASN {
 #endif
     MAX_OCSP_EXT_SZ     = 58,      /* Max OCSP Extension length */
     MAX_OCSP_NONCE_SZ   = 18,      /* OCSP Nonce size           */
+    EIGHTK_BUF          = 8192,    /* Tmp buffer size           */
     MAX_PUBLIC_KEY_SZ   = MAX_NTRU_ENC_SZ + MAX_ALGO_SZ + MAX_SEQ_SZ * 2
                                    /* use bigger NTRU size */
 };
 
 
 enum Oid_Types {
-    hashType = 0,
-    sigType  = 1,
-    keyType  = 2
+    hashType  = 0,
+    sigType   = 1,
+    keyType   = 2,
+    curveType = 3,
+    blkType   = 4
 };
 
 
@@ -163,10 +180,16 @@ enum Hash_Sum  {
 };
 
 
+enum Block_Sum {
+    DESb  = 69,
+    DES3b = 652
+};
+
+
 enum Key_Sum {
     DSAk   = 515,
     RSAk   = 645,
-    NTRUk  = 364,
+    NTRUk  = 274,
     ECDSAk = 518
 };
 
@@ -187,11 +210,38 @@ enum KDF_Sum {
 
 
 enum Extensions_Sum {
-    BASIC_CA_OID  = 133,
-    ALT_NAMES_OID = 131,
-    CRL_DIST_OID  = 145,
-    AUTH_INFO_OID = 69,
-    CA_ISSUER_OID = 117
+    BASIC_CA_OID    = 133,
+    ALT_NAMES_OID   = 131,
+    CRL_DIST_OID    = 145,
+    AUTH_INFO_OID   = 69,
+    CA_ISSUER_OID   = 117,
+    AUTH_KEY_OID    = 149,
+    SUBJ_KEY_OID    = 128,
+    CERT_POLICY_OID = 146,
+    KEY_USAGE_OID   = 129,  /* 2.5.29.15 */
+    INHIBIT_ANY_OID = 168,  /* 2.5.29.54 */
+    EXT_KEY_USAGE_OID = 151, /* 2.5.29.37 */
+    NAME_CONS_OID   = 144   /* 2.5.29.30 */
+};
+
+enum CertificatePolicy_Sum {
+    CP_ANY_OID      = 146  /* id-ce 32 0 */
+};
+
+enum SepHardwareName_Sum {
+    HW_NAME_OID     = 79   /* 1.3.6.1.5.5.7.8.4 from RFC 4108*/
+};
+
+enum AuthInfo_Sum {
+    AIA_OCSP_OID      = 116, /* 1.3.6.1.5.5.7.48.1 */
+    AIA_CA_ISSUER_OID = 117  /* 1.3.6.1.5.5.7.48.2 */
+};
+
+enum ExtKeyUsage_Sum { /* From RFC 5280 */
+    EKU_ANY_OID         = 151, /* 2.5.29.37.0, anyExtendedKeyUsage         */
+    EKU_SERVER_AUTH_OID = 71,  /* 1.3.6.1.5.5.7.3.1, id-kp-serverAuth      */
+    EKU_CLIENT_AUTH_OID = 72,  /* 1.3.6.1.5.5.7.3.2, id-kp-clientAuth      */
+    EKU_OCSP_SIGN_OID   = 79,  /* 1.3.6.1.5.5.7.3.9, OCSPSigning           */
 };
 
 
@@ -201,6 +251,22 @@ enum VerifyType {
 };
 
 
+/* Key usage extension bits */
+#define KEYUSE_DIGITAL_SIG    0x0100
+#define KEYUSE_CONTENT_COMMIT 0x0080
+#define KEYUSE_KEY_ENCIPHER   0x0040
+#define KEYUSE_DATA_ENCIPHER  0x0020
+#define KEYUSE_KEY_AGREE      0x0010
+#define KEYUSE_KEY_CERT_SIGN  0x0008
+#define KEYUSE_CRL_SIGN       0x0004
+#define KEYUSE_ENCIPHER_ONLY  0x0002
+#define KEYUSE_DECIPHER_ONLY  0x0001
+
+#define EXTKEYUSE_ANY         0x08
+#define EXTKEYUSE_OCSP_SIGN   0x04
+#define EXTKEYUSE_CLIENT_AUTH 0x02
+#define EXTKEYUSE_SERVER_AUTH 0x01
+
 typedef struct DNS_entry   DNS_entry;
 
 struct DNS_entry {
@@ -208,7 +274,46 @@ struct DNS_entry {
     char*      name;   /* actual DNS name */
 };
 
+
+typedef struct Base_entry  Base_entry;
+
+struct Base_entry {
+    Base_entry* next;   /* next on name base list */
+    char*       name;   /* actual name base */
+    int         nameSz; /* name length */
+    byte        type;   /* Name base type (DNS or RFC822) */
+};
+
+
+struct DecodedName {
+    char*   fullName;
+    int     fullNameLen;
+    int     entryCount;
+    int     cnIdx;
+    int     cnLen;
+    int     snIdx;
+    int     snLen;
+    int     cIdx;
+    int     cLen;
+    int     lIdx;
+    int     lLen;
+    int     stIdx;
+    int     stLen;
+    int     oIdx;
+    int     oLen;
+    int     ouIdx;
+    int     ouLen;
+    int     emailIdx;
+    int     emailLen;
+    int     uidIdx;
+    int     uidLen;
+    int     serialIdx;
+    int     serialLen;
+};
+
+
 typedef struct DecodedCert DecodedCert;
+typedef struct DecodedName DecodedName;
 typedef struct Signer      Signer;
 
 
@@ -221,7 +326,13 @@ struct DecodedCert {
     word32  sigLength;               /* length of signature              */
     word32  signatureOID;            /* sum of algorithm object id       */
     word32  keyOID;                  /* sum of key algo  object id       */
+    int     version;                 /* cert version, 1 or 3             */
     DNS_entry* altNames;             /* alt names list of dns entries    */
+#ifndef IGNORE_NAME_CONSTRAINTS
+    DNS_entry* altEmailNames;        /* alt names list of RFC822 entries */
+    Base_entry* permittedNames;      /* Permitted name bases             */
+    Base_entry* excludedNames;       /* Excluded name bases              */
+#endif /* IGNORE_NAME_CONSTRAINTS */
     byte    subjectHash[SHA_SIZE];   /* hash of all Names                */
     byte    issuerHash[SHA_SIZE];    /* hash of all Names                */
 #ifdef HAVE_OCSP
@@ -229,7 +340,8 @@ struct DecodedCert {
 #endif /* HAVE_OCSP */
     byte*   signature;               /* not owned, points into raw cert  */
     char*   subjectCN;               /* CommonName                       */
-    int     subjectCNLen;
+    int     subjectCNLen;            /* CommonName Length                */
+    char    subjectCNEnc;            /* CommonName Encoding              */
     int     subjectCNStored;         /* have we saved a copy we own      */
     char    issuer[ASN_NAME_MAX];    /* full name including common name  */
     char    subject[ASN_NAME_MAX];   /* full name including common name  */
@@ -247,38 +359,122 @@ struct DecodedCert {
     int     extAuthInfoSz;           /* length of the URI                */
     byte*   extCrlInfo;              /* CRL Distribution Points          */
     int     extCrlInfoSz;            /* length of the URI                */
-    byte    isCA;                    /* CA basic constraint true */
-#ifdef CYASSL_CERT_GEN
-    /* easy access to subject info for other sign */
-    char*   subjectSN;
-    int     subjectSNLen;
-    char*   subjectC;
-    int     subjectCLen;
-    char*   subjectL;
-    int     subjectLLen;
-    char*   subjectST;
-    int     subjectSTLen;
-    char*   subjectO;
-    int     subjectOLen;
-    char*   subjectOU;
-    int     subjectOULen;
-    char*   subjectEmail;
-    int     subjectEmailLen;
+    byte    extSubjKeyId[SHA_SIZE];  /* Subject Key ID                   */
+    byte    extSubjKeyIdSet;         /* Set when the SKID was read from cert */
+    byte    extAuthKeyId[SHA_SIZE];  /* Authority Key ID                 */
+    byte    extAuthKeyIdSet;         /* Set when the AKID was read from cert */
+#ifndef IGNORE_NAME_CONSTRAINTS
+    byte    extNameConstraintSet;
+#endif /* IGNORE_NAME_CONSTRAINTS */
+    byte    isCA;                    /* CA basic constraint true         */
+    byte    extKeyUsageSet;
+    word16  extKeyUsage;             /* Key usage bitfield               */
+    byte    extExtKeyUsageSet;       /* Extended Key Usage               */
+    byte    extExtKeyUsage;          /* Extended Key usage bitfield      */
+#ifdef OPENSSL_EXTRA
+    byte    extBasicConstSet;
+    byte    extBasicConstCrit;
+    byte    extBasicConstPlSet;
+    word32  pathLength;              /* CA basic constraint path length, opt */
+    byte    extSubjAltNameSet;
+    byte    extSubjAltNameCrit;
+    byte    extAuthKeyIdCrit;
+#ifndef IGNORE_NAME_CONSTRAINTS
+    byte    extNameConstraintCrit;
+#endif /* IGNORE_NAME_CONSTRAINTS */
+    byte    extSubjKeyIdCrit;
+    byte    extKeyUsageCrit;
+    byte    extExtKeyUsageCrit;
+    byte*   extExtKeyUsageSrc;
+    word32  extExtKeyUsageSz;
+    word32  extExtKeyUsageCount;
+    byte*   extAuthKeyIdSrc;
+    word32  extAuthKeyIdSz;
+    byte*   extSubjKeyIdSrc;
+    word32  extSubjKeyIdSz;
+#endif
+#ifdef HAVE_ECC
+    word32  pkCurveOID;           /* Public Key's curve OID */
+#endif /* HAVE_ECC */
     byte*   beforeDate;
     int     beforeDateLen;
     byte*   afterDate;
     int     afterDateLen;
+#ifdef HAVE_PKCS7
+    byte*   issuerRaw;               /* pointer to issuer inside source */
+    int     issuerRawLen;
+#endif
+#ifndef IGNORE_NAME_CONSTRAINT
+    byte*   subjectRaw;               /* pointer to subject inside source */
+    int     subjectRawLen;
+#endif
+#if defined(CYASSL_CERT_GEN)
+    /* easy access to subject info for other sign */
+    char*   subjectSN;
+    int     subjectSNLen;
+    char    subjectSNEnc;
+    char*   subjectC;
+    int     subjectCLen;
+    char    subjectCEnc;
+    char*   subjectL;
+    int     subjectLLen;
+    char    subjectLEnc;
+    char*   subjectST;
+    int     subjectSTLen;
+    char    subjectSTEnc;
+    char*   subjectO;
+    int     subjectOLen;
+    char    subjectOEnc;
+    char*   subjectOU;
+    int     subjectOULen;
+    char    subjectOUEnc;
+    char*   subjectEmail;
+    int     subjectEmailLen;
 #endif /* CYASSL_CERT_GEN */
+#ifdef OPENSSL_EXTRA
+    DecodedName issuerName;
+    DecodedName subjectName;
+#endif /* OPENSSL_EXTRA */
+#ifdef CYASSL_SEP
+    int     deviceTypeSz;
+    byte*   deviceType;
+    int     hwTypeSz;
+    byte*   hwType;
+    int     hwSerialNumSz;
+    byte*   hwSerialNum;
+    #ifdef OPENSSL_EXTRA
+        byte    extCertPolicySet;
+        byte    extCertPolicyCrit;
+    #endif /* OPENSSL_EXTRA */
+#endif /* CYASSL_SEP */
 };
 
 
+#ifdef SHA_DIGEST_SIZE
+    #define SIGNER_DIGEST_SIZE SHA_DIGEST_SIZE
+#else
+    #define SIGNER_DIGEST_SIZE 20 
+#endif
+
 /* CA Signers */
+/* if change layout change PERSIST_CERT_CACHE functions too */
 struct Signer {
-    byte*   publicKey;
     word32  pubKeySize;
     word32  keyOID;                  /* key type */
+    word16  keyUsage;
+    byte*   publicKey;
+    int     nameLen;
     char*   name;                    /* common name */
-    byte    hash[SHA_DIGEST_SIZE];   /* sha hash of names in certificate */
+#ifndef IGNORE_NAME_CONSTRAINTS
+        Base_entry* permittedNames;
+        Base_entry* excludedNames;
+#endif /* IGNORE_NAME_CONSTRAINTS */
+    byte    subjectNameHash[SIGNER_DIGEST_SIZE];
+                                     /* sha hash of names in certificate */
+    #ifndef NO_SKID
+        byte    subjectKeyIdHash[SIGNER_DIGEST_SIZE];
+                                     /* sha hash of names in certificate */
+    #endif
     Signer* next;
 };
 
@@ -291,6 +487,9 @@ struct Signer {
 #endif
 
 CYASSL_TEST_API void FreeAltNames(DNS_entry*, void*);
+#ifndef IGNORE_NAME_CONSTRAINTS
+    CYASSL_TEST_API void FreeNameSubtrees(Base_entry*, void*);
+#endif /* IGNORE_NAME_CONSTRAINTS */
 CYASSL_TEST_API void InitDecodedCert(DecodedCert*, byte*, word32, void*);
 CYASSL_TEST_API void FreeDecodedCert(DecodedCert*);
 CYASSL_TEST_API int  ParseCert(DecodedCert*, int type, int verify, void* cm);
@@ -302,7 +501,8 @@ CYASSL_LOCAL word32 EncodeSignature(byte* out, const byte* digest, word32 digSz,
                                     int hashOID);
 
 CYASSL_LOCAL Signer* MakeSigner(void*);
-CYASSL_LOCAL void    FreeSigners(Signer*, void*);
+CYASSL_LOCAL void    FreeSigner(Signer*, void*);
+CYASSL_LOCAL void    FreeSignerTable(Signer**, int, void*);
 
 
 CYASSL_LOCAL int ToTraditional(byte* buffer, word32 length);
@@ -310,15 +510,37 @@ CYASSL_LOCAL int ToTraditionalEnc(byte* buffer, word32 length,const char*, int);
 
 CYASSL_LOCAL int ValidateDate(const byte* date, byte format, int dateType);
 
+/* ASN.1 helper functions */
+CYASSL_LOCAL int GetLength(const byte* input, word32* inOutIdx, int* len,
+                           word32 maxIdx);
+CYASSL_LOCAL int GetSequence(const byte* input, word32* inOutIdx, int* len,
+                             word32 maxIdx);
+CYASSL_LOCAL int GetSet(const byte* input, word32* inOutIdx, int* len,
+                        word32 maxIdx);
+CYASSL_LOCAL int GetMyVersion(const byte* input, word32* inOutIdx,
+                              int* version);
+CYASSL_LOCAL int GetInt(mp_int* mpi, const byte* input, word32* inOutIdx,
+                        word32 maxIdx);
+CYASSL_LOCAL int GetAlgoId(const byte* input, word32* inOutIdx, word32* oid,
+                           word32 maxIdx);
+CYASSL_LOCAL word32 SetLength(word32 length, byte* output);
+CYASSL_LOCAL word32 SetSequence(word32 len, byte* output);
+CYASSL_LOCAL word32 SetOctetString(word32 len, byte* output);
+CYASSL_LOCAL word32 SetImplicit(byte tag, byte number, word32 len,byte* output);
+CYASSL_LOCAL word32 SetExplicit(byte number, word32 len, byte* output);
+CYASSL_LOCAL word32 SetSet(word32 len, byte* output);
+CYASSL_LOCAL word32 SetAlgoID(int algoOID, byte* output, int type, int curveSz);
+CYASSL_LOCAL int SetMyVersion(word32 version, byte* output, int header);
+CYASSL_LOCAL int SetSerialNumber(const byte* sn, word32 snSz, byte* output);
+CYASSL_LOCAL int GetNameHash(const byte* source, word32* idx, byte* hash,
+                             int maxIdx);
+
 #ifdef HAVE_ECC
     /* ASN sig helpers */
     CYASSL_LOCAL int StoreECC_DSA_Sig(byte* out, word32* outLen, mp_int* r,
                                       mp_int* s);
     CYASSL_LOCAL int DecodeECC_DSA_Sig(const byte* sig, word32 sigLen,
                                        mp_int* r, mp_int* s);
-    /* private key helpers */
-    CYASSL_LOCAL int EccPrivateKeyDecode(const byte* input,word32* inOutIdx,
-                                         ecc_key*,word32);
 #endif
 
 #ifdef CYASSL_CERT_GEN
@@ -328,7 +550,8 @@ enum cert_enums {
     JOINT_LEN       =  2,
     EMAIL_JOINT_LEN =  9,
     RSA_KEY         = 10,
-    NTRU_KEY        = 11
+    NTRU_KEY        = 11,
+    ECC_KEY         = 12
 };
 
 
@@ -415,6 +638,7 @@ struct OcspResponse {
 struct OcspRequest {
     DecodedCert* cert;
 
+    byte    useNonce;
     byte    nonce[MAX_OCSP_NONCE_SZ];
     int     nonceSz;
 
@@ -431,7 +655,8 @@ struct OcspRequest {
 CYASSL_LOCAL void InitOcspResponse(OcspResponse*, CertStatus*, byte*, word32);
 CYASSL_LOCAL int  OcspResponseDecode(OcspResponse*);
 
-CYASSL_LOCAL void InitOcspRequest(OcspRequest*, DecodedCert*, byte*, word32);
+CYASSL_LOCAL void InitOcspRequest(OcspRequest*, DecodedCert*,
+                                                          byte, byte*, word32);
 CYASSL_LOCAL int  EncodeOcspRequest(OcspRequest*);
 
 CYASSL_LOCAL int  CompareOcspReqResp(OcspRequest*, OcspResponse*);
@@ -460,7 +685,7 @@ struct DecodedCRL {
     word32  signatureOID;            /* sum of algorithm object id       */
     byte*   signature;               /* pointer into raw source, not owned */
     byte    issuerHash[SHA_DIGEST_SIZE];  /* issuer hash                 */ 
-    byte    crlHash[MD5_DIGEST_SIZE];     /* raw crl data hash           */ 
+    byte    crlHash[SHA_DIGEST_SIZE];     /* raw crl data hash           */ 
     byte    lastDate[MAX_DATE_SIZE]; /* last date updated  */
     byte    nextDate[MAX_DATE_SIZE]; /* next update date   */
     byte    lastDateFormat;          /* format of last date */
@@ -470,7 +695,7 @@ struct DecodedCRL {
 };
 
 CYASSL_LOCAL void InitDecodedCRL(DecodedCRL*);
-CYASSL_LOCAL int  ParseCRL(DecodedCRL*, const byte* buff, long sz, void* cm);
+CYASSL_LOCAL int  ParseCRL(DecodedCRL*, const byte* buff, word32 sz, void* cm);
 CYASSL_LOCAL void FreeDecodedCRL(DecodedCRL*);
 
 
@@ -483,3 +708,4 @@ CYASSL_LOCAL void FreeDecodedCRL(DecodedCRL*);
 
 #endif /* CTAO_CRYPT_ASN_H */
 
+#endif /* !NO_ASN */

@@ -49,6 +49,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4206"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -163,7 +164,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ctaocrypt\src\blake2b.c"
+				>
+			</File>
+			<File
+				RelativePath=".\ctaocrypt\src\camellia.c"
+				>
+			</File>
+			<File
 				RelativePath=".\ctaocrypt\src\coding.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\crl.c"
 				>
 			</File>
 			<File
@@ -176,6 +189,14 @@
 			</File>
 			<File
 				RelativePath=".\ctaocrypt\src\dsa.c"
+				>
+			</File>
+			<File
+				RelativePath=".\ctaocrypt\src\ecc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\ctaocrypt\src\error.c"
 				>
 			</File>
 			<File
@@ -216,6 +237,14 @@
 			</File>
 			<File
 				RelativePath=".\ctaocrypt\src\memory.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ocsp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\ctaocrypt\src\wc_port.c"
 				>
 			</File>
 			<File

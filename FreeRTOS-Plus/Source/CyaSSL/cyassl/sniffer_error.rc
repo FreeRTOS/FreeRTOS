@@ -81,5 +81,8 @@ STRINGTABLE
 
     66, "Bad Finished Message Processing"
     67, "Bad Compression Type"
+    68, "Bad DeriveKeys Error"
+    69, "Saw ACK for Missing Packet Error"
+    70, "Bad Decrypt Operation"
 }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\CyaSSL-Lib.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\wolfCrypt-benchmark.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\wolfCrypt-test.ewp</path>
+  </project>
+  <batchBuild/>
+</workspace>
+
+

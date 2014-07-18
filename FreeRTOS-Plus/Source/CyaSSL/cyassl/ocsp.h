@@ -1,6 +1,6 @@
-/* ssl.h
+/* ocsp.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -25,6 +25,7 @@
 #ifndef CYASSL_OCSP_H
 #define CYASSL_OCSP_H
 
+#ifdef HAVE_OCSP
 
 #include <cyassl/ssl.h>
 #include <cyassl/ctaocrypt/asn.h>
@@ -35,18 +36,17 @@
 
 typedef struct CYASSL_OCSP CYASSL_OCSP;
 
-CYASSL_LOCAL int  CyaSSL_OCSP_Init(CYASSL_OCSP*);
-CYASSL_LOCAL void CyaSSL_OCSP_Cleanup(CYASSL_OCSP*);
+CYASSL_LOCAL int  InitOCSP(CYASSL_OCSP*, CYASSL_CERT_MANAGER*);
+CYASSL_LOCAL void FreeOCSP(CYASSL_OCSP*, int dynamic);
 
-CYASSL_LOCAL int  CyaSSL_OCSP_set_override_url(CYASSL_OCSP*, const char*);
-CYASSL_LOCAL int  CyaSSL_OCSP_Lookup_Cert(CYASSL_OCSP*, DecodedCert*);
-
+CYASSL_LOCAL int  CheckCertOCSP(CYASSL_OCSP*, DecodedCert*);
 
 #ifdef __cplusplus
     }  /* extern "C" */
 #endif
 
 
+#endif /* HAVE_OCSP */
 #endif /* CYASSL_OCSP_H */
 
 

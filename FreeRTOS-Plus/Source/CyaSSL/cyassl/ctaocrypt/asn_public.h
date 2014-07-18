@@ -1,6 +1,6 @@
 /* asn_public.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -24,6 +24,7 @@
 #define CTAO_CRYPT_ASN_PUBLIC_H
 
 #include <cyassl/ctaocrypt/types.h>
+#include <cyassl/ctaocrypt/ecc.h>
 #ifdef CYASSL_CERT_GEN
     #include <cyassl/ctaocrypt/rsa.h>
 #endif
@@ -40,7 +41,9 @@ enum CertType {
     PRIVATEKEY_TYPE,
     DH_PARAM_TYPE,
     CRL_TYPE,
-    CA_TYPE
+    CA_TYPE,
+    ECC_PRIVATEKEY_TYPE,
+    CERTREQ_TYPE
 };
 
 
@@ -59,24 +62,40 @@ enum Ctc_SigType {
     CTC_SHA512wECDSA = 526
 };
 
+enum Ctc_Encoding {
+    CTC_UTF8       = 0x0c, /* utf8      */
+    CTC_PRINTABLE  = 0x13  /* printable */
+};
+
 
 #ifdef CYASSL_CERT_GEN
 
+#ifndef HAVE_ECC
+    typedef struct ecc_key ecc_key;
+#endif
+
 enum Ctc_Misc {
-    CTC_NAME_SIZE    =   64,
-    CTC_DATE_SIZE    =   32,
-    CTC_MAX_ALT_SIZE = 8192,    /* may be huge */
-    CTC_SERIAL_SIZE  =    8
+    CTC_NAME_SIZE    =    64,
+    CTC_DATE_SIZE    =    32,
+    CTC_MAX_ALT_SIZE = 16384,   /* may be huge */
+    CTC_SERIAL_SIZE  =     8
 };
 
 typedef struct CertName {
     char country[CTC_NAME_SIZE];
+    char countryEnc;
     char state[CTC_NAME_SIZE];
+    char stateEnc;
     char locality[CTC_NAME_SIZE];
+    char localityEnc;
     char sur[CTC_NAME_SIZE];
+    char surEnc;
     char org[CTC_NAME_SIZE];
+    char orgEnc;
     char unit[CTC_NAME_SIZE];
+    char unitEnc;
     char commonName[CTC_NAME_SIZE];
+    char commonNameEnc;
     char email[CTC_NAME_SIZE];  /* !!!! email has to be last !!!! */
 } CertName;
 
@@ -102,6 +121,9 @@ typedef struct Cert {
     byte     afterDate[CTC_DATE_SIZE];   /* after date copy */
     int      afterDateSz;                /* size of copy */
 #endif
+#ifdef CYASSL_CERT_REQ
+    char     challengePw[CTC_NAME_SIZE];
+#endif
 } Cert;
 
 
@@ -119,8 +141,14 @@ typedef struct Cert {
    keyType    = RSA_KEY (default)
 */
 CYASSL_API void InitCert(Cert*);
-CYASSL_API int  MakeCert(Cert*, byte* derBuffer, word32 derSz, RsaKey*, RNG*);
-CYASSL_API int  SignCert(Cert*, byte* derBuffer, word32 derSz, RsaKey*, RNG*);
+CYASSL_API int  MakeCert(Cert*, byte* derBuffer, word32 derSz, RsaKey*,
+                         ecc_key*, RNG*);
+#ifdef CYASSL_CERT_REQ
+    CYASSL_API int  MakeCertReq(Cert*, byte* derBuffer, word32 derSz, RsaKey*,
+                                ecc_key*);
+#endif
+CYASSL_API int  SignCert(int requestSz, int sigType, byte* derBuffer,
+                         word32 derSz, RsaKey*, ecc_key*, RNG*);
 CYASSL_API int  MakeSelfCert(Cert*, byte* derBuffer, word32 derSz, RsaKey*,
                              RNG*);
 CYASSL_API int  SetIssuer(Cert*, const char*);
@@ -144,6 +172,12 @@ CYASSL_API int  SetDatesBuffer(Cert*, const byte*, int);
 #if defined(CYASSL_KEY_GEN) || defined(CYASSL_CERT_GEN)
     CYASSL_API int DerToPem(const byte* der, word32 derSz, byte* output,
                             word32 outputSz, int type);
+#endif
+
+#ifdef HAVE_ECC
+    /* private key helpers */
+    CYASSL_API int EccPrivateKeyDecode(const byte* input,word32* inOutIdx,
+                                         ecc_key*,word32);
 #endif
 
 

@@ -2,4 +2,4 @@
 # included from Top Level Makefile.am
 # All paths should be given relative to the root
 
-doc_DATA+= doc/README.txt
+dist_doc_DATA+= doc/README.txt

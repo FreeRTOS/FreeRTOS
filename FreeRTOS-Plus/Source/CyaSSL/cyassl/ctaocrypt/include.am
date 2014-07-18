@@ -6,12 +6,15 @@ nobase_include_HEADERS+= \
                          cyassl/ctaocrypt/arc4.h \
                          cyassl/ctaocrypt/asn.h \
                          cyassl/ctaocrypt/asn_public.h \
+                         cyassl/ctaocrypt/camellia.h \
                          cyassl/ctaocrypt/coding.h \
+                         cyassl/ctaocrypt/compress.h \
                          cyassl/ctaocrypt/des3.h \
                          cyassl/ctaocrypt/dh.h \
                          cyassl/ctaocrypt/dsa.h \
                          cyassl/ctaocrypt/ecc.h \
-                         cyassl/ctaocrypt/error.h \
+                         cyassl/ctaocrypt/error-crypt.h \
+                         cyassl/ctaocrypt/fips_test.h \
                          cyassl/ctaocrypt/hc128.h \
                          cyassl/ctaocrypt/hmac.h \
                          cyassl/ctaocrypt/integer.h \
@@ -19,6 +22,8 @@ nobase_include_HEADERS+= \
                          cyassl/ctaocrypt/md4.h \
                          cyassl/ctaocrypt/md5.h \
                          cyassl/ctaocrypt/misc.h \
+                         cyassl/ctaocrypt/pkcs7.h \
+                         cyassl/ctaocrypt/wc_port.h \
                          cyassl/ctaocrypt/pwdbased.h \
                          cyassl/ctaocrypt/rabbit.h \
                          cyassl/ctaocrypt/random.h \
@@ -28,6 +33,9 @@ nobase_include_HEADERS+= \
                          cyassl/ctaocrypt/sha256.h \
                          cyassl/ctaocrypt/sha512.h \
                          cyassl/ctaocrypt/sha.h \
+                         cyassl/ctaocrypt/blake2.h \
+                         cyassl/ctaocrypt/blake2-int.h \
+                         cyassl/ctaocrypt/blake2-impl.h \
                          cyassl/ctaocrypt/tfm.h \
                          cyassl/ctaocrypt/types.h \
                          cyassl/ctaocrypt/visibility.h \

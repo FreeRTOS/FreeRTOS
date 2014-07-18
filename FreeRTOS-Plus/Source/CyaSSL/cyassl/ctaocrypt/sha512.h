@@ -1,6 +1,6 @@
 /* sha512.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -51,12 +51,13 @@ typedef struct Sha512 {
 } Sha512;
 
 
-CYASSL_API void InitSha512(Sha512*);
-CYASSL_API void Sha512Update(Sha512*, const byte*, word32);
-CYASSL_API void Sha512Final(Sha512*, byte*);
+CYASSL_API int InitSha512(Sha512*);
+CYASSL_API int Sha512Update(Sha512*, const byte*, word32);
+CYASSL_API int Sha512Final(Sha512*, byte*);
+CYASSL_API int Sha512Hash(const byte*, word32, byte*);
 
 
-#ifdef CYASSL_SHA384
+#if defined(CYASSL_SHA384) || defined(HAVE_AESGCM)
 
 /* in bytes */
 enum {
@@ -77,9 +78,37 @@ typedef struct Sha384 {
 } Sha384;
 
 
-CYASSL_API void InitSha384(Sha384*);
-CYASSL_API void Sha384Update(Sha384*, const byte*, word32);
-CYASSL_API void Sha384Final(Sha384*, byte*);
+CYASSL_API int InitSha384(Sha384*);
+CYASSL_API int Sha384Update(Sha384*, const byte*, word32);
+CYASSL_API int Sha384Final(Sha384*, byte*);
+CYASSL_API int Sha384Hash(const byte*, word32, byte*);
+
+
+#ifdef HAVE_FIPS
+    /* fips wrapper calls, user can call direct */
+    CYASSL_API int InitSha512_fips(Sha512*);
+    CYASSL_API int Sha512Update_fips(Sha512*, const byte*, word32);
+    CYASSL_API int Sha512Final_fips(Sha512*, byte*);
+    #ifndef FIPS_NO_WRAPPERS
+        /* if not impl or fips.c impl wrapper force fips calls if fips build */
+        #define InitSha512   InitSha512_fips
+        #define Sha512Update Sha512Update_fips
+        #define Sha512Final  Sha512Final_fips
+    #endif /* FIPS_NO_WRAPPERS */
+
+    /* fips wrapper calls, user can call direct */
+    CYASSL_API int InitSha384_fips(Sha384*);
+    CYASSL_API int Sha384Update_fips(Sha384*, const byte*, word32);
+    CYASSL_API int Sha384Final_fips(Sha384*, byte*);
+    #ifndef FIPS_NO_WRAPPERS
+        /* if not impl or fips.c impl wrapper force fips calls if fips build */
+        #define InitSha384   InitSha384_fips
+        #define Sha384Update Sha384Update_fips
+        #define Sha384Final  Sha384Final_fips
+    #endif /* FIPS_NO_WRAPPERS */
+
+#endif /* HAVE_FIPS */
+
 
 #endif /* CYASSL_SHA384 */
 

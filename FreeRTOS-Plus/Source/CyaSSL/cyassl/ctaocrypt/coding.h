@@ -1,6 +1,6 @@
 /* coding.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -39,9 +39,16 @@ CYASSL_LOCAL int Base64_Decode(const byte* in, word32 inLen, byte* out,
     CYASSL_API
     int Base64_Encode(const byte* in, word32 inLen, byte* out,
                                   word32* outLen);
-    CYASSL_LOCAL 
+    CYASSL_API
+    int Base64_EncodeEsc(const byte* in, word32 inLen, byte* out,
+                                  word32* outLen);
+#endif
+
+#if defined(OPENSSL_EXTRA) || defined(HAVE_WEBSERVER) || defined(HAVE_FIPS)
+    CYASSL_API
     int Base16_Decode(const byte* in, word32 inLen, byte* out, word32* outLen);
 #endif
+
 
 #ifdef __cplusplus
     } /* extern "C" */

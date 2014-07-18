@@ -1,6 +1,6 @@
 /* integer.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 /*
@@ -70,6 +70,10 @@ extern "C" {
       #define MP_64BIT
    #endif
 #endif
+/* if intel compiler doesn't provide 128 bit type don't turn on 64bit */
+#if defined(MP_64BIT) && defined(__INTEL_COMPILER) && !defined(HAVE___UINT128_T)
+    #undef MP_64BIT
+#endif
 
 /* some default configurations.
  *
@@ -82,33 +86,23 @@ extern "C" {
 #ifdef MP_8BIT
    typedef unsigned char      mp_digit;
    typedef unsigned short     mp_word;
-#elif defined(MP_16BIT)
+#elif defined(MP_16BIT) || defined(NO_64BIT)
    typedef unsigned short     mp_digit;
-   typedef unsigned long      mp_word;
+   typedef unsigned int       mp_word;
 #elif defined(MP_64BIT)
    /* for GCC only on supported platforms */
-#ifndef CRYPT
-   typedef unsigned long long ulong64;
-   typedef signed long long   long64;
-#endif
-
-   typedef unsigned long      mp_digit;
+   typedef unsigned long long mp_digit;  /* 64 bit type, 128 uses mode(TI) */
    typedef unsigned long      mp_word __attribute__ ((mode(TI)));
 
    #define DIGIT_BIT          60
 #else
    /* this is the default case, 28-bit digits */
    
-   /* this is to make porting into LibTomCrypt easier :-) */
-#ifndef CRYPT
    #if defined(_MSC_VER) || defined(__BORLANDC__) 
       typedef unsigned __int64   ulong64;
-      typedef signed __int64     long64;
    #else
       typedef unsigned long long ulong64;
-      typedef signed long long   long64;
    #endif
-#endif
 
    typedef unsigned int       mp_digit;  /* long could be 64 now, changed TAO */
    typedef ulong64            mp_word;
@@ -235,15 +229,16 @@ int  mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y);
 
 /* functions added to support above needed, removed TOOM and KARATSUBA */
 int  mp_count_bits (mp_int * a);
+int  mp_leading_bit (mp_int * a);
 int  mp_init_copy (mp_int * a, mp_int * b);
 int  mp_copy (mp_int * a, mp_int * b);
 int  mp_grow (mp_int * a, int size);
-void bn_reverse (unsigned char *s, int len);
 int  mp_div_2d (mp_int * a, int b, mp_int * c, mp_int * d);
 void mp_zero (mp_int * a);
 void mp_clamp (mp_int * a);
 void mp_exch (mp_int * a, mp_int * b);
 void mp_rshd (mp_int * a, int b);
+void mp_rshb (mp_int * a, int b);
 int  mp_mod_2d (mp_int * a, int b, mp_int * c);
 int  mp_mul_2d (mp_int * a, int b, mp_int * c);
 int  mp_lshd (mp_int * a, int b);
@@ -295,6 +290,7 @@ int  mp_2expt (mp_int * a, int b);
 int  mp_reduce_2k_setup(mp_int *a, mp_digit *d);
 int  mp_add_d (mp_int* a, mp_digit b, mp_int* c);
 int mp_set_int (mp_int * a, unsigned long b);
+int mp_sub_d (mp_int * a, mp_digit b, mp_int * c);
 /* end support added functions */
 
 /* added */
@@ -312,10 +308,6 @@ int mp_init_multi(mp_int* a, mp_int* b, mp_int* c, mp_int* d, mp_int* e,
     int mp_prime_is_prime (mp_int * a, int t, int *result);
     int mp_gcd (mp_int * a, mp_int * b, mp_int * c);
     int mp_lcm (mp_int * a, mp_int * b, mp_int * c);
-#endif
-
-#if defined(CYASSL_KEY_GEN) || defined(HAVE_ECC) || !defined(NO_PWDBASED)
-    int mp_sub_d (mp_int * a, mp_digit b, mp_int * c);
 #endif
 
 #ifdef __cplusplus

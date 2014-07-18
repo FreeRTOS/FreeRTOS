@@ -1,6 +1,6 @@
 /* evp.h
  *
- * Copyright (C) 2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2013 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -95,8 +95,10 @@ typedef struct CYASSL_EVP_MD_CTX {
 
 typedef union {
     Aes  aes;
+#ifndef NO_DES3
     Des  des;
     Des3 des3;
+#endif
     Arc4 arc4;
 } CYASSL_Cipher;
 
@@ -123,7 +125,7 @@ typedef struct CYASSL_EVP_CIPHER_CTX {
     int            keyLen;         /* user may set for variable */
     unsigned char  enc;            /* if encrypt side, then true */
     unsigned char  cipherType;
-    unsigned char  iv[64];         /* working iv pointer into cipher */
+    unsigned char  iv[AES_BLOCK_SIZE];    /* working iv pointer into cipher */
     CYASSL_Cipher  cipher;
 } CYASSL_EVP_CIPHER_CTX;
 

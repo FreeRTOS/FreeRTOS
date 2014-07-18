@@ -1,6 +1,6 @@
 /* cyassl_version.h.in
  *
- * Copyright (C) 2006-2011 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -26,8 +26,8 @@
 extern "C" {
 #endif
 
-#define LIBCYASSL_VERSION_STRING "2.3.0"
-#define LIBCYASSL_VERSION_HEX 0x02003000
+#define LIBCYASSL_VERSION_STRING "3.1.0"
+#define LIBCYASSL_VERSION_HEX 0x03001000
 
 #ifdef __cplusplus
 }

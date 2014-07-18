@@ -1,6 +1,6 @@
 /* types.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -24,13 +24,14 @@
 #define CTAO_CRYPT_TYPES_H
 
 #include <cyassl/ctaocrypt/settings.h>
+#include <cyassl/ctaocrypt/wc_port.h>
 
 #ifdef __cplusplus
     extern "C" {
 #endif
 
 
-#if defined(WORDS_BIGENDIAN) || (defined(__MWERKS__) && !defined(__INTEL__))
+#if defined(WORDS_BIGENDIAN)
     #define BIG_ENDIAN_ORDER
 #endif
 
@@ -51,10 +52,10 @@
 #if !defined(_MSC_VER) && !defined(__BCPLUSPLUS__)
     #if !defined(SIZEOF_LONG_LONG) && !defined(SIZEOF_LONG)
         #if (defined(__alpha__) || defined(__ia64__) || defined(_ARCH_PPC64) \
-                || defined(__mips64)  || defined(__x86_64__)) 
+                || defined(__mips64)  || defined(__x86_64__))
             /* long should be 64bit */
             #define SIZEOF_LONG 8
-        #elif (defined__i386__) 
+        #elif defined(__i386__) || defined(__CORTEX_M3__)
             /* long long should be 64bit */
             #define SIZEOF_LONG_LONG 8
         #endif
@@ -66,11 +67,15 @@
     #define WORD64_AVAILABLE
     #define W64LIT(x) x##ui64
     typedef unsigned __int64 word64;
-#elif SIZEOF_LONG == 8
+#elif defined(SIZEOF_LONG) && SIZEOF_LONG == 8
     #define WORD64_AVAILABLE
     #define W64LIT(x) x##LL
     typedef unsigned long word64;
-#elif SIZEOF_LONG_LONG == 8 
+#elif defined(SIZEOF_LONG_LONG) && SIZEOF_LONG_LONG == 8
+    #define WORD64_AVAILABLE
+    #define W64LIT(x) x##LL
+    typedef unsigned long long word64;
+#elif defined(__SIZEOF_LONG_LONG__) && __SIZEOF_LONG_LONG__ == 8
     #define WORD64_AVAILABLE
     #define W64LIT(x) x##LL
     typedef unsigned long long word64;
@@ -82,7 +87,7 @@
 
 /* These platforms have 64-bit CPU registers.  */
 #if (defined(__alpha__) || defined(__ia64__) || defined(_ARCH_PPC64) || \
-     defined(__mips64)  || defined(__x86_64__)) 
+     defined(__mips64)  || defined(__x86_64__) || defined(_M_X64))
     typedef word64 word;
 #else
     typedef word32 word;
@@ -93,11 +98,12 @@
 
 
 enum {
-    WORD_SIZE  = sizeof(word),
-    BIT_SIZE   = 8,
-    WORD_BITS  = WORD_SIZE * BIT_SIZE
+    CYASSL_WORD_SIZE  = sizeof(word),
+    CYASSL_BIT_SIZE   = 8,
+    CYASSL_WORD_BITS  = CYASSL_WORD_SIZE * CYASSL_BIT_SIZE
 };
 
+#define CYASSL_MAX_16BIT 0xffffU
 
 /* use inlining if compiler allows */
 #ifndef INLINE
@@ -106,13 +112,15 @@ enum {
         #define INLINE __inline
     #elif defined(__GNUC__)
         #define INLINE inline
+    #elif defined(__IAR_SYSTEMS_ICC__)
+        #define INLINE inline
     #elif defined(THREADX)
         #define INLINE _Inline
     #else
-        #define INLINE 
+        #define INLINE
     #endif
 #else
-    #define INLINE 
+    #define INLINE
 #endif
 #endif
 
@@ -131,8 +139,21 @@ enum {
 #endif
 
 
+/* set up thread local storage if available */
+#ifdef HAVE_THREAD_LS
+    #if defined(_MSC_VER)
+        #define THREAD_LS_T __declspec(thread)
+    #else
+        #define THREAD_LS_T __thread
+    #endif
+#else
+    #define THREAD_LS_T
+#endif
+
+
 /* Micrium will use Visual Studio for compilation but not the Win32 API */
-#if defined(_WIN32) && !defined(MICRIUM) && !defined(FREERTOS)
+#if defined(_WIN32) && !defined(MICRIUM) && !defined(FREERTOS) \
+        && !defined(EBSNET)
     #define USE_WINDOWS_API
 #endif
 
@@ -141,16 +162,24 @@ enum {
 /* default to libc stuff */
 /* XREALLOC is used once in normal math lib, not in fast math lib */
 /* XFREE on some embeded systems doesn't like free(0) so test  */
-#ifdef XMALLOC_USER
+#if defined(XMALLOC_USER)
     /* prototypes for user heap override functions */
     #include <stddef.h>  /* for size_t */
     extern void *XMALLOC(size_t n, void* heap, int type);
     extern void *XREALLOC(void *p, size_t n, void* heap, int type);
     extern void XFREE(void *p, void* heap, int type);
-#elif !defined(MICRIUM_MALLOC)
-    /* default C runtime, can install different routines at runtime */
+#elif defined(NO_CYASSL_MEMORY)
+    /* just use plain C stdlib stuff if desired */
+    #include <stdlib.h>
+    #define XMALLOC(s, h, t)     ((void)h, (void)t, malloc((s)))
+    #define XFREE(p, h, t)       {void* xp = (p); if((xp)) free((xp));}
+    #define XREALLOC(p, n, h, t) realloc((p), (n))
+#elif !defined(MICRIUM_MALLOC) && !defined(EBSNET) \
+        && !defined(CYASSL_SAFERTOS) && !defined(FREESCALE_MQX) \
+        && !defined(CYASSL_LEANPSK)
+    /* default C runtime, can install different routines at runtime via cbs */
     #include <cyassl/ctaocrypt/memory.h>
-    #define XMALLOC(s, h, t)     CyaSSL_Malloc((s))
+    #define XMALLOC(s, h, t)     ((void)h, (void)t, CyaSSL_Malloc((s)))
     #define XFREE(p, h, t)       {void* xp = (p); if((xp)) CyaSSL_Free((xp));}
     #define XREALLOC(p, n, h, t) CyaSSL_Realloc((p), (n))
 #endif
@@ -172,47 +201,83 @@ enum {
     #define XSTRNSTR(s1,s2,n) mystrnstr((s1),(s2),(n))
     #define XSTRNCMP(s1,s2,n) strncmp((s1),(s2),(n))
     #define XSTRNCAT(s1,s2,n) strncat((s1),(s2),(n))
+    #ifndef USE_WINDOWS_API
+        #define XSTRNCASECMP(s1,s2,n) strncasecmp((s1),(s2),(n))
+        #define XSNPRINTF snprintf
+    #else
+        #define XSTRNCASECMP(s1,s2,n) _strnicmp((s1),(s2),(n))
+        #define XSNPRINTF _snprintf
+    #endif
 #endif
 
-#ifdef HAVE_ECC
-    #ifndef CTYPE_USER
-        #include <ctype.h>
+#ifndef CTYPE_USER
+    #include <ctype.h>
+    #if defined(HAVE_ECC) || defined(HAVE_OCSP)
         #define XTOUPPER(c)     toupper((c))
+        #define XISALPHA(c)     isalpha((c))
     #endif
+    /* needed by CyaSSL_check_domain_name() */
+    #ifdef __CYGWIN__
+        /* Cygwin uses a macro version of tolower() by default, use the
+         * function version. */
+        #undef tolower
+    #endif
+    #define XTOLOWER(c)      tolower((c))
 #endif
 
 
 /* memory allocation types for user hints */
 enum {
-    DYNAMIC_TYPE_CA         = 1,
-    DYNAMIC_TYPE_CERT       = 2,
-    DYNAMIC_TYPE_KEY        = 3,
-    DYNAMIC_TYPE_FILE       = 4,
-    DYNAMIC_TYPE_SUBJECT_CN = 5,
-    DYNAMIC_TYPE_PUBLIC_KEY = 6,
-    DYNAMIC_TYPE_SIGNER     = 7,
-    DYNAMIC_TYPE_NONE       = 8,
-    DYNAMIC_TYPE_BIGINT     = 9,
-    DYNAMIC_TYPE_RSA        = 10,
-    DYNAMIC_TYPE_METHOD     = 11,
-    DYNAMIC_TYPE_OUT_BUFFER = 12,
-    DYNAMIC_TYPE_IN_BUFFER  = 13,
-    DYNAMIC_TYPE_INFO       = 14,
-    DYNAMIC_TYPE_DH         = 15,
-    DYNAMIC_TYPE_DOMAIN     = 16,
-    DYNAMIC_TYPE_SSL        = 17,
-    DYNAMIC_TYPE_CTX        = 18,
-    DYNAMIC_TYPE_WRITEV     = 19,
-    DYNAMIC_TYPE_OPENSSL    = 20,
-    DYNAMIC_TYPE_DSA        = 21,
-    DYNAMIC_TYPE_CRL        = 22,
-    DYNAMIC_TYPE_REVOKED    = 23,
-    DYNAMIC_TYPE_CRL_ENTRY  = 24,
+    DYNAMIC_TYPE_CA           = 1,
+    DYNAMIC_TYPE_CERT         = 2,
+    DYNAMIC_TYPE_KEY          = 3,
+    DYNAMIC_TYPE_FILE         = 4,
+    DYNAMIC_TYPE_SUBJECT_CN   = 5,
+    DYNAMIC_TYPE_PUBLIC_KEY   = 6,
+    DYNAMIC_TYPE_SIGNER       = 7,
+    DYNAMIC_TYPE_NONE         = 8,
+    DYNAMIC_TYPE_BIGINT       = 9,
+    DYNAMIC_TYPE_RSA          = 10,
+    DYNAMIC_TYPE_METHOD       = 11,
+    DYNAMIC_TYPE_OUT_BUFFER   = 12,
+    DYNAMIC_TYPE_IN_BUFFER    = 13,
+    DYNAMIC_TYPE_INFO         = 14,
+    DYNAMIC_TYPE_DH           = 15,
+    DYNAMIC_TYPE_DOMAIN       = 16,
+    DYNAMIC_TYPE_SSL          = 17,
+    DYNAMIC_TYPE_CTX          = 18,
+    DYNAMIC_TYPE_WRITEV       = 19,
+    DYNAMIC_TYPE_OPENSSL      = 20,
+    DYNAMIC_TYPE_DSA          = 21,
+    DYNAMIC_TYPE_CRL          = 22,
+    DYNAMIC_TYPE_REVOKED      = 23,
+    DYNAMIC_TYPE_CRL_ENTRY    = 24,
     DYNAMIC_TYPE_CERT_MANAGER = 25,
     DYNAMIC_TYPE_CRL_MONITOR  = 26,
     DYNAMIC_TYPE_OCSP_STATUS  = 27,
     DYNAMIC_TYPE_OCSP_ENTRY   = 28,
-    DYNAMIC_TYPE_ALTNAME      = 29
+    DYNAMIC_TYPE_ALTNAME      = 29,
+    DYNAMIC_TYPE_SUITES       = 30,
+    DYNAMIC_TYPE_CIPHER       = 31,
+    DYNAMIC_TYPE_RNG          = 32,
+    DYNAMIC_TYPE_ARRAYS       = 33,
+    DYNAMIC_TYPE_DTLS_POOL    = 34,
+    DYNAMIC_TYPE_SOCKADDR     = 35,
+    DYNAMIC_TYPE_LIBZ         = 36,
+    DYNAMIC_TYPE_ECC          = 37,
+    DYNAMIC_TYPE_TMP_BUFFER   = 38,
+    DYNAMIC_TYPE_DTLS_MSG     = 39,
+    DYNAMIC_TYPE_CAVIUM_TMP   = 40,
+    DYNAMIC_TYPE_CAVIUM_RSA   = 41,
+    DYNAMIC_TYPE_X509         = 42,
+    DYNAMIC_TYPE_TLSX         = 43,
+    DYNAMIC_TYPE_OCSP         = 44,
+    DYNAMIC_TYPE_SIGNATURE    = 45
+};
+
+/* max error buffer string size */
+enum {
+    CYASSL_MAX_ERROR_SZ = 80
 };
 
 /* stack protection */

@@ -3,37 +3,92 @@
 # All paths should be given relative to the root
 
 lib_LTLIBRARIES+= src/libcyassl.la
-src_libcyassl_la_SOURCES = \
-			   src/internal.c \
-			   src/io.c \
-			   src/keys.c \
-			   src/ssl.c \
-			   src/tls.c  \
-			   ctaocrypt/src/asn.c \
-			   ctaocrypt/src/coding.c \
-			   ctaocrypt/src/des3.c \
-			   ctaocrypt/src/hmac.c \
-			   ctaocrypt/src/md5.c \
-			   ctaocrypt/src/md4.c \
-			   ctaocrypt/src/random.c \
-			   ctaocrypt/src/rsa.c \
-			   ctaocrypt/src/sha.c \
-			   ctaocrypt/src/aes.c \
-			   ctaocrypt/src/sha256.c \
-			   ctaocrypt/src/dh.c \
-			   ctaocrypt/src/dsa.c \
-			   ctaocrypt/src/arc4.c \
-			   ctaocrypt/src/rabbit.c \
-			   ctaocrypt/src/pwdbased.c \
-			   ctaocrypt/src/logging.c \
-			   ctaocrypt/src/memory.c
+src_libcyassl_la_SOURCES =
+
+if BUILD_FIPS
+src_libcyassl_la_SOURCES += ctaocrypt/src/wolfcrypt_first.c
+endif
+
+src_libcyassl_la_SOURCES += \
+               src/internal.c \
+               src/io.c \
+               src/keys.c \
+               src/ssl.c \
+               src/tls.c  \
+               ctaocrypt/src/hmac.c \
+               ctaocrypt/src/random.c \
+               ctaocrypt/src/sha256.c \
+               ctaocrypt/src/logging.c \
+               ctaocrypt/src/wc_port.c \
+               ctaocrypt/src/error.c
 src_libcyassl_la_LDFLAGS = ${AM_LDFLAGS} -no-undefined -version-info ${CYASSL_LIBRARY_VERSION}
 src_libcyassl_la_LIBADD = $(LIBM)
 src_libcyassl_la_CFLAGS = -DBUILDING_CYASSL $(AM_CFLAGS)
 src_libcyassl_la_CPPFLAGS = -DBUILDING_CYASSL $(AM_CPPFLAGS)
 
+if BUILD_MEMORY
+src_libcyassl_la_SOURCES += ctaocrypt/src/memory.c
+endif
+
+if BUILD_RSA
+src_libcyassl_la_SOURCES += ctaocrypt/src/rsa.c
+endif
+
+if BUILD_DH
+src_libcyassl_la_SOURCES += ctaocrypt/src/dh.c
+endif
+
+if BUILD_ASN
+src_libcyassl_la_SOURCES += ctaocrypt/src/asn.c
+endif
+
+if BUILD_FIPS
+src_libcyassl_la_SOURCES += ctaocrypt/src/fips.c
+src_libcyassl_la_SOURCES += ctaocrypt/src/fips_test.c
+endif
+
+if BUILD_CODING
+src_libcyassl_la_SOURCES += ctaocrypt/src/coding.c
+endif
+
+if BUILD_AES
+src_libcyassl_la_SOURCES += ctaocrypt/src/aes.c
+endif
+
+if BUILD_DES3
+src_libcyassl_la_SOURCES += ctaocrypt/src/des3.c
+endif
+
+if BUILD_SHA
+src_libcyassl_la_SOURCES += ctaocrypt/src/sha.c
+endif
+
+if BUILD_RC4
+src_libcyassl_la_SOURCES += ctaocrypt/src/arc4.c
+endif
+
+if BUILD_MD4
+src_libcyassl_la_SOURCES += ctaocrypt/src/md4.c
+endif
+
+if BUILD_MD5
+src_libcyassl_la_SOURCES += ctaocrypt/src/md5.c
+endif
+
+if BUILD_PWDBASED
+src_libcyassl_la_SOURCES += ctaocrypt/src/pwdbased.c
+endif
+
+if BUILD_DSA
+src_libcyassl_la_SOURCES += ctaocrypt/src/dsa.c
+endif
+
 if BUILD_AESNI
 src_libcyassl_la_SOURCES += ctaocrypt/src/aes_asm.s
+endif
+
+if BUILD_CAMELLIA
+src_libcyassl_la_SOURCES += ctaocrypt/src/camellia.c
 endif
 
 if BUILD_MD2
@@ -48,6 +103,10 @@ if BUILD_SHA512
 src_libcyassl_la_SOURCES += ctaocrypt/src/sha512.c
 endif
 
+if BUILD_BLAKE2
+src_libcyassl_la_SOURCES += ctaocrypt/src/blake2b.c
+endif
+
 if BUILD_SNIFFER
 src_libcyassl_la_SOURCES += src/sniffer.c
 endif
@@ -56,13 +115,19 @@ if BUILD_HC128
 src_libcyassl_la_SOURCES += ctaocrypt/src/hc128.c
 endif
 
-if BUILD_NOINLINE
+if BUILD_RABBIT
+src_libcyassl_la_SOURCES += ctaocrypt/src/rabbit.c
+endif
+
+if !BUILD_INLINE
 src_libcyassl_la_SOURCES += ctaocrypt/src/misc.c
 endif
 
 if BUILD_FASTMATH
 src_libcyassl_la_SOURCES += ctaocrypt/src/tfm.c
-else
+endif
+
+if BUILD_SLOWMATH
 src_libcyassl_la_SOURCES += ctaocrypt/src/integer.c
 endif
 
@@ -78,8 +143,15 @@ if BUILD_CRL
 src_libcyassl_la_SOURCES += src/crl.c
 endif
 
-if BUILD_CRL_MONITOR
-src_libcyassl_la_CFLAGS += $(PTHREAD_CFLAGS)
-src_libcyassl_la_LIBADD += $(PTHREAD_LIBS)
+if BUILD_LIBZ
+src_libcyassl_la_SOURCES += ctaocrypt/src/compress.c
+endif
+
+if BUILD_PKCS7
+src_libcyassl_la_SOURCES += ctaocrypt/src/pkcs7.c
+endif
+
+if BUILD_FIPS
+src_libcyassl_la_SOURCES += ctaocrypt/src/wolfcrypt_last.c
 endif
 

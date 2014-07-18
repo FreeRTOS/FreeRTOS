@@ -1,6 +1,6 @@
 /* hc128.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,18 +16,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
 
+#include <cyassl/ctaocrypt/settings.h>
+
 #ifdef HAVE_HC128
 
 #include <cyassl/ctaocrypt/hc128.h>
+#include <cyassl/ctaocrypt/error-crypt.h>
+#include <cyassl/ctaocrypt/logging.h>
 #ifdef NO_INLINE
     #include <cyassl/ctaocrypt/hc128.h>
+		#include <cyassl/ctaocrypt/misc.h>
 #else
     #include <ctaocrypt/src/misc.c>
 #endif
@@ -224,12 +229,18 @@ static void setup_update(HC128* ctx)  /*each time 16 steps*/
 
 
 
-static void Hc128_SetIV(HC128* ctx, const byte* iv)
+static void Hc128_SetIV(HC128* ctx, const byte* inIv)
 { 
     word32 i;
-	
+    word32 iv[4];
+
+    if (inIv)
+        XMEMCPY(iv, inIv, sizeof(iv));
+    else
+        XMEMSET(iv,    0, sizeof(iv));
+    
 	for (i = 0; i < (128 >> 5); i++)
-        ctx->iv[i] = LITTLE32(((word32*)iv)[i]);
+        ctx->iv[i] = LITTLE32(iv[i]);
 	
     for (; i < 8; i++) ctx->iv[i] = ctx->iv[i-4];
   
@@ -259,7 +270,7 @@ static void Hc128_SetIV(HC128* ctx, const byte* iv)
 }
 
 
-void Hc128_SetKey(HC128* ctx, const byte* key, const byte* iv)
+static INLINE int DoKey(HC128* ctx, const byte* key, const byte* iv)
 { 
   word32 i;  
 
@@ -270,11 +281,35 @@ void Hc128_SetKey(HC128* ctx, const byte* key, const byte* iv)
   for ( ; i < 8 ; i++) ctx->key[i] = ctx->key[i-4];
 
   Hc128_SetIV(ctx, iv);
+
+  return 0;
 }
 
 
+/* Key setup */
+int Hc128_SetKey(HC128* ctx, const byte* key, const byte* iv)
+{
+#ifdef XSTREAM_ALIGN
+    if ((word)key % 4) {
+        int alignKey[4];
+
+        /* iv gets aligned in SetIV */
+        CYASSL_MSG("Hc128SetKey unaligned key");
+
+        XMEMCPY(alignKey, key, sizeof(alignKey));
+
+        return DoKey(ctx, (const byte*)alignKey, iv);
+    }
+#endif /* XSTREAM_ALIGN */
+
+    return DoKey(ctx, key, iv);
+}
+
+
+
 /* The following defines the encryption of data stream */
-void Hc128_Process(HC128* ctx, byte* output, const byte* input, word32 msglen)
+static INLINE int DoProcess(HC128* ctx, byte* output, const byte* input,
+                            word32 msglen)
 {
   word32 i, keystream[16];
 
@@ -303,6 +338,7 @@ void Hc128_Process(HC128* ctx, byte* output, const byte* input, word32 msglen)
 
   if (msglen > 0)
   {
+      XMEMSET(keystream, 0, sizeof(keystream)); /* hush the static analysis */
       generate_keystream(ctx, keystream);
 
 #ifdef BIG_ENDIAN_ORDER
@@ -318,6 +354,36 @@ void Hc128_Process(HC128* ctx, byte* output, const byte* input, word32 msglen)
 	      output[i] = input[i] ^ ((byte*)keystream)[i];
   }
 
+  return 0;
+}
+
+
+/* Encrypt/decrypt a message of any size */
+int Hc128_Process(HC128* ctx, byte* output, const byte* input, word32 msglen)
+{
+#ifdef XSTREAM_ALIGN
+    if ((word)input % 4 || (word)output % 4) {
+        #ifndef NO_CYASSL_ALLOC_ALIGN
+            byte* tmp;
+            CYASSL_MSG("Hc128Process unaligned");
+
+            tmp = (byte*)XMALLOC(msglen, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+            if (tmp == NULL) return MEMORY_E;
+
+            XMEMCPY(tmp, input, msglen);
+            DoProcess(ctx, tmp, tmp, msglen);
+            XMEMCPY(output, tmp, msglen);
+
+            XFREE(tmp, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+
+            return 0;
+        #else
+            return BAD_ALIGN_E;
+        #endif
+    }
+#endif /* XSTREAM_ALIGN */
+
+    return DoProcess(ctx, output, input, msglen);
 }
 
 

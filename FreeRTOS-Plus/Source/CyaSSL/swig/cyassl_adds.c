@@ -1,6 +1,6 @@
 /* cyassl_adds.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,12 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
+
+#include <cyassl/ctaocrypt/settings.h>
 
 #ifndef _WIN32
     #define HAVE_CONFIG_H
@@ -174,7 +176,7 @@ int CyaSSL_swig_connect(CYASSL* ssl, const char* server, int port)
 
 char* CyaSSL_error_string(int err)
 {
-    static char buffer[80];
+    static char buffer[CYASSL_MAX_ERROR_SZ];
 
     return CyaSSL_ERR_error_string(err, buffer);
 }

@@ -54,7 +54,7 @@ CYASSL_API void CyaSSL_SHA256_Update(CYASSL_SHA256_CTX*, const void*,
 CYASSL_API void CyaSSL_SHA256_Final(unsigned char*, CYASSL_SHA256_CTX*);
 
 enum {
-    SHA256_DIGEST_LENGTH = 20
+    SHA256_DIGEST_LENGTH = 32 
 };
 
 

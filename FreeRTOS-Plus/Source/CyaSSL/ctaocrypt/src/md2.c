@@ -1,6 +1,6 @@
 /* md2.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -24,9 +24,13 @@
     #include <config.h>
 #endif
 
+#include <cyassl/ctaocrypt/settings.h>
+
 #ifdef CYASSL_MD2
 
 #include <cyassl/ctaocrypt/md2.h>
+#include <cyassl/ctaocrypt/error-crypt.h>
+
 #ifdef NO_INLINE
     #include <cyassl/ctaocrypt/misc.h>
 #else
@@ -123,6 +127,32 @@ void Md2Final(Md2* md2, byte* hash)
     XMEMCPY(hash, md2->X, MD2_DIGEST_SIZE);
 
     InitMd2(md2);
+}
+
+
+int Md2Hash(const byte* data, word32 len, byte* hash)
+{
+#ifdef CYASSL_SMALL_STACK
+    Md2* md2;
+#else
+    Md2 md2[1];
+#endif
+
+#ifdef CYASSL_SMALL_STACK
+    md2 = (Md2*)XMALLOC(sizeof(Md2), NULL, DYNAMIC_TYPE_TMP_BUFFER);
+    if (md2 == NULL)
+        return MEMORY_E;
+#endif
+
+    InitMd2(md2);
+    Md2Update(md2, data, len);
+    Md2Final(md2, hash);
+
+#ifdef CYASSL_SMALL_STACK
+    XFREE(md2, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+
+    return 0;
 }
 
 

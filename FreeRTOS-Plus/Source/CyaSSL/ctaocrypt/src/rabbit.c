@@ -1,6 +1,6 @@
 /* rabbit.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,16 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
 
+#include <cyassl/ctaocrypt/settings.h>
+
 #ifndef NO_RABBIT
 
 #include <cyassl/ctaocrypt/rabbit.h>
+#include <cyassl/ctaocrypt/error-crypt.h>
+#include <cyassl/ctaocrypt/logging.h>
 #ifdef NO_INLINE
     #include <cyassl/ctaocrypt/misc.h>
 #else
@@ -39,7 +43,7 @@
     #define LITTLE32(x) (x)
 #endif
 
-#define U32V(x) (word32)(x)
+#define U32V(x) ((word32)(x) & 0xFFFFFFFFU)
 
 
 /* Square a 32-bit unsigned integer to obtain the 64-bit result and return */
@@ -100,14 +104,20 @@ static void RABBIT_next_state(RabbitCtx* ctx)
 
 
 /* IV setup */
-static void RabbitSetIV(Rabbit* ctx, const byte* iv)
+static void RabbitSetIV(Rabbit* ctx, const byte* inIv)
 {
     /* Temporary variables */
     word32 i0, i1, i2, i3, i;
+    word32 iv[2];
+
+    if (inIv)
+        XMEMCPY(iv, inIv, sizeof(iv));
+    else
+        XMEMSET(iv,    0, sizeof(iv));
       
     /* Generate four subvectors */
-    i0 = LITTLE32(*(word32*)(iv+0));
-    i2 = LITTLE32(*(word32*)(iv+4));
+    i0 = LITTLE32(iv[0]);
+    i2 = LITTLE32(iv[1]);
     i1 = (i0>>16) | (i2&0xFFFF0000);
     i3 = (i2<<16) | (i0&0x0000FFFF);
 
@@ -133,7 +143,7 @@ static void RabbitSetIV(Rabbit* ctx, const byte* iv)
 
 
 /* Key setup */
-void RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
+static INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
 {
     /* Temporary variables */
     word32 k0, k1, k2, k3, i;
@@ -182,14 +192,36 @@ void RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
     }
     ctx->workCtx.carry = ctx->masterCtx.carry;
 
-    if (iv) RabbitSetIV(ctx, iv);    
+    RabbitSetIV(ctx, iv);
+
+    return 0;
+}
+
+
+/* Key setup */
+int RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
+{
+#ifdef XSTREAM_ALIGN
+    if ((word)key % 4) {
+        int alignKey[4];
+
+        /* iv aligned in SetIV */
+        CYASSL_MSG("RabbitSetKey unaligned key");
+
+        XMEMCPY(alignKey, key, sizeof(alignKey));
+
+        return DoKey(ctx, (const byte*)alignKey, iv);
+    }
+#endif /* XSTREAM_ALIGN */
+
+    return DoKey(ctx, key, iv);
 }
 
 
 /* Encrypt/decrypt a message of any size */
-void RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
+static INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
+                            word32 msglen)
 {
-
     /* Encrypt/decrypt all full blocks */
     while (msglen >= 16) {
         /* Iterate the system */
@@ -210,7 +242,7 @@ void RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
                    U32V(ctx->workCtx.x[1]<<16));
 
         /* Increment pointers and decrement length */
-        input += 16;
+        input  += 16;
         output += 16;
         msglen -= 16;
     }
@@ -221,6 +253,8 @@ void RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
         word32 i;
         word32 tmp[4];
         byte*  buffer = (byte*)tmp;
+
+        XMEMSET(tmp, 0, sizeof(tmp));   /* help static analysis */
 
         /* Iterate the system */
         RABBIT_next_state(&(ctx->workCtx));
@@ -239,8 +273,38 @@ void RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
         for (i=0; i<msglen; i++)
             output[i] = input[i] ^ buffer[i];
     }
+
+    return 0;
 }
 
+
+/* Encrypt/decrypt a message of any size */
+int RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
+{
+#ifdef XSTREAM_ALIGN
+    if ((word)input % 4 || (word)output % 4) {
+        #ifndef NO_CYASSL_ALLOC_ALIGN
+            byte* tmp;
+            CYASSL_MSG("RabbitProcess unaligned");
+
+            tmp = (byte*)XMALLOC(msglen, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+            if (tmp == NULL) return MEMORY_E;
+
+            XMEMCPY(tmp, input, msglen);
+            DoProcess(ctx, tmp, tmp, msglen);
+            XMEMCPY(output, tmp, msglen);
+
+            XFREE(tmp, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+
+            return 0;
+        #else
+            return BAD_ALIGN_E;
+        #endif
+    }
+#endif /* XSTREAM_ALIGN */
+
+    return DoProcess(ctx, output, input, msglen);
+}
 
 
 #endif /* NO_RABBIT */

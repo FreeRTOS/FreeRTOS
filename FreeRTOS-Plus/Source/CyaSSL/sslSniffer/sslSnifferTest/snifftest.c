@@ -1,6 +1,6 @@
 /* snifftest.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,12 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
+
+#include <cyassl/ctaocrypt/settings.h>
 
 #ifdef _WIN32
     #define CYASSL_SNIFFER
@@ -32,7 +34,7 @@
 /* blank build */
 #include <stdio.h>
 #include <stdlib.h>
-int main()
+int main(void)
 {
     printf("do ./configure --enable-sniffer to enable build support\n");
     return EXIT_SUCCESS;
@@ -67,26 +69,35 @@ enum {
 };
 
 
-pcap_t* pcap = 0;
-pcap_if_t *alldevs;
+pcap_t* pcap = NULL;
+pcap_if_t* alldevs = NULL;
+
+
+static void FreeAll(void)
+{
+    if (pcap)
+        pcap_close(pcap);
+    if (alldevs)
+        pcap_freealldevs(alldevs);
+#ifndef _WIN32
+    ssl_FreeSniffer();
+#endif
+}
 
 static void sig_handler(const int sig) 
 {
     printf("SIGINT handled = %d.\n", sig);
-    if (pcap)
-        pcap_close(pcap);
-	pcap_freealldevs(alldevs);
-#ifndef _WIN32
-    ssl_FreeSniffer();
-#endif
-    exit(EXIT_SUCCESS);
+    FreeAll();
+    if (sig)
+        exit(EXIT_SUCCESS);
 }
 
 
 static void err_sys(const char* msg)
 {
 	fprintf(stderr, "%s\n", msg);
-	exit(EXIT_FAILURE);
+    if (msg)
+	    exit(EXIT_FAILURE);
 }
 
 
@@ -110,7 +121,7 @@ static char* iptos(unsigned int addr)
 
 int main(int argc, char** argv)
 {
-    int          ret;
+    int          ret = 0;
 	int		     inum;
 	int		     port;
     int          saveFile = 0;
@@ -149,7 +160,9 @@ int main(int argc, char** argv)
                     " installed correctly and you have sufficient permissions");
 
 	    printf("Enter the interface number (1-%d): ", i);
-	    scanf("%d", &inum);
+	    ret = scanf("%d", &inum);
+        if (ret != 1)
+            printf("scanf port failed\n");
 
 	    if (inum < 1 || inum > i)
 		    err_sys("Interface number out of range");
@@ -196,7 +209,9 @@ int main(int argc, char** argv)
         if (ret != 0) printf("pcap_activate failed %s\n", pcap_geterr(pcap));
 
 	    printf("Enter the port to scan: ");
-	    scanf("%d", &port);
+	    ret = scanf("%d", &port);
+        if (ret != 1)
+            printf("scanf port failed\n");
 
 	    SNPRINTF(filter, sizeof(filter), "tcp and port %d", port);
 
@@ -208,6 +223,9 @@ int main(int argc, char** argv)
 
         ret = ssl_SetPrivateKey(server, port, "../../certs/server-key.pem",
                                FILETYPE_PEM, NULL, err);
+        if (ret != 0) {
+            printf("Please run directly from sslSniffer/sslSnifferTest dir\n");
+        }
     }
     else if (argc >= 3) {
         saveFile = 1;
@@ -217,6 +235,7 @@ int main(int argc, char** argv)
             ret = -1;
         }
         else {
+            const char* passwd = NULL;
             /* defaults for server and port */
             port = 443;
             server = "127.0.0.1";
@@ -227,14 +246,17 @@ int main(int argc, char** argv)
             if (argc >= 5)
                 port = atoi(argv[4]);
 
+            if (argc >= 6)
+                passwd = argv[5];
+
             ret = ssl_SetPrivateKey(server, port, argv[2],
-                                    FILETYPE_PEM, NULL, err);
+                                    FILETYPE_PEM, passwd, err);
         }
     }
     else {
         /* usage error */
-        printf(
-             "usage: ./snifftest or ./snifftest dump pemKey [server] [port]\n");
+        printf( "usage: ./snifftest or ./snifftest dump pemKey"
+                " [server] [port] [password]\n");
         exit(EXIT_FAILURE);
     }
 
@@ -245,11 +267,13 @@ int main(int argc, char** argv)
         frame = NULL_IF_FRAME_LEN;
 
     while (1) {
+        static int packetNumber = 0;
         struct pcap_pkthdr header;
         const unsigned char* packet = pcap_next(pcap, &header);
+        packetNumber++;
         if (packet) {
 
-            byte data[65535];
+            byte data[65535+16384];  /* may have a partial 16k record cached */
 
             if (header.caplen > 40)  { /* min ip(20) + min tcp(20) */
 				packet        += frame;
@@ -263,12 +287,13 @@ int main(int argc, char** argv)
                 printf("ssl_Decode ret = %d, %s\n", ret, err);
             if (ret > 0) {
                 data[ret] = 0;
-				printf("SSL App Data:%s\n", data);
+				printf("SSL App Data(%d:%d):%s\n", packetNumber, ret, data);
             }
         }
         else if (saveFile)
             break;      /* we're done reading file */
     }
+    FreeAll();
 
     return EXIT_SUCCESS;
 }

@@ -2,7 +2,8 @@
 # All paths should be given relative to the root
 
 EXTRA_DIST += ctaocrypt/src/misc.c
-EXTRA_DIST += ctaocrypt/src/asm.c 
+EXTRA_DIST += ctaocrypt/src/asm.c
+EXTRA_DIST += ctaocrypt/src/aes_asm.asm
 
 EXTRA_DIST += \
               ctaocrypt/src/ecc_fp.c \

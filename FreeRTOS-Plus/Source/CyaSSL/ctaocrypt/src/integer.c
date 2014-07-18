@@ -1,6 +1,6 @@
 /* integer.c
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 
@@ -33,10 +33,19 @@
 /* in case user set USE_FAST_MATH there */
 #include <cyassl/ctaocrypt/settings.h>
 
+#ifndef NO_BIG_INT 
+
 #ifndef USE_FAST_MATH
 
 #include <cyassl/ctaocrypt/integer.h>
 
+#ifndef NO_CYASSL_SMALL_STACK
+    #ifndef CYASSL_SMALL_STACK
+        #define CYASSL_SMALL_STACK
+    #endif
+#endif
+
+static void bn_reverse (unsigned char *s, int len);
 
 /* math settings check */
 word32 CheckRunTimeSettings(void)
@@ -116,6 +125,9 @@ mp_clear (mp_int * a)
 {
   int i;
 
+  if (a == NULL)
+      return;
+
   /* only do anything if a hasn't been freed previously */
   if (a->dp != NULL) {
     /* first zero the digits */
@@ -164,6 +176,28 @@ mp_count_bits (mp_int * a)
     q >>= ((mp_digit) 1);
   }
   return r;
+}
+
+
+int mp_leading_bit (mp_int * a)
+{
+    int bit = 0;
+    mp_int t;
+
+    if (mp_init_copy(&t, a) != MP_OKAY)
+        return 0;
+
+    while (mp_iszero(&t) == 0) {
+#ifndef MP_8BIT
+        bit = (t.dp[0] & 0x80) != 0;
+#else
+        bit = (t.dp[0] | ((t.dp[1] & 0x01) << 7)) & 0x80 != 0;
+#endif
+        if (mp_div_2d (&t, 8, &t, NULL) != MP_OKAY)
+            break;
+    }
+    mp_clear(&t);
+    return bit;
 }
 
 
@@ -316,8 +350,7 @@ bn_reverse (unsigned char *s, int len)
    remainder in d) */
 int mp_div_2d (mp_int * a, int b, mp_int * c, mp_int * d)
 {
-  mp_digit D, r, rr;
-  int     x, res;
+  int     D, res;
   mp_int  t;
 
 
@@ -354,33 +387,9 @@ int mp_div_2d (mp_int * a, int b, mp_int * c, mp_int * d)
   }
 
   /* shift any bit count < DIGIT_BIT */
-  D = (mp_digit) (b % DIGIT_BIT);
+  D = (b % DIGIT_BIT);
   if (D != 0) {
-    register mp_digit *tmpc, mask, shift;
-
-    /* mask */
-    mask = (((mp_digit)1) << D) - 1;
-
-    /* shift for lsb */
-    shift = DIGIT_BIT - D;
-
-    /* alias */
-    tmpc = c->dp + (c->used - 1);
-
-    /* carry */
-    r = 0;
-    for (x = c->used - 1; x >= 0; x--) {
-      /* get the lower  bits of this word in a temp */
-      rr = *tmpc & mask;
-
-      /* shift the current word and mix in the carry bits from the previous
-         word */
-      *tmpc = (*tmpc >> D) | (r << shift);
-      --tmpc;
-
-      /* set the carry to the carry bits of the current word found above */
-      r = rr;
-    }
+    mp_rshb(c, D);
   }
   mp_clamp (c);
   if (d != NULL) {
@@ -442,6 +451,38 @@ mp_exch (mp_int * a, mp_int * b)
   t  = *a;
   *a = *b;
   *b = t;
+}
+
+
+/* shift right a certain number of bits */
+void mp_rshb (mp_int *c, int x)
+{
+    register mp_digit *tmpc, mask, shift;
+    mp_digit r, rr;
+    mp_digit D = x;
+
+    /* mask */
+    mask = (((mp_digit)1) << D) - 1;
+
+    /* shift for lsb */
+    shift = DIGIT_BIT - D;
+
+    /* alias */
+    tmpc = c->dp + (c->used - 1);
+
+    /* carry */
+    r = 0;
+    for (x = c->used - 1; x >= 0; x--) {
+      /* get the lower  bits of this word in a temp */
+      rr = *tmpc & mask;
+
+      /* shift the current word and mix in the carry bits from previous word */
+      *tmpc = (*tmpc >> D) | (r << shift);
+      --tmpc;
+
+      /* set the carry to the carry bits of the current word found above */
+      r = rr;
+    }
 }
 
 
@@ -1813,15 +1854,15 @@ int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
   }
 
   /* compute the value at M[1<<(winsize-1)] by squaring M[1] (winsize-1) times*/
-  if ((err = mp_copy (&M[1], &M[1 << (winsize - 1)])) != MP_OKAY) {
+  if ((err = mp_copy (&M[1], &M[(mp_digit)(1 << (winsize - 1))])) != MP_OKAY) {
     goto LBL_RES;
   }
 
   for (x = 0; x < (winsize - 1); x++) {
-    if ((err = mp_sqr (&M[1 << (winsize - 1)], &M[1 << (winsize - 1)])) != MP_OKAY) {
+    if ((err = mp_sqr (&M[(mp_digit)(1 << (winsize - 1))], &M[(mp_digit)(1 << (winsize - 1))])) != MP_OKAY) {
       goto LBL_RES;
     }
-    if ((err = redux (&M[1 << (winsize - 1)], P, mp)) != MP_OKAY) {
+    if ((err = redux (&M[(mp_digit)(1 << (winsize - 1))], P, mp)) != MP_OKAY) {
       goto LBL_RES;
     }
   }
@@ -1857,7 +1898,7 @@ int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
     }
 
     /* grab the next msb from the exponent */
-    y     = (mp_digit)(buf >> (DIGIT_BIT - 1)) & 1;
+    y     = (int)(buf >> (DIGIT_BIT - 1)) & 1;
     buf <<= (mp_digit)1;
 
     /* if the bit is zero and mode == 0 then we ignore it
@@ -3209,19 +3250,19 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y, int redmode)
   /* compute the value at M[1<<(winsize-1)] by squaring 
    * M[1] (winsize-1) times 
    */
-  if ((err = mp_copy (&M[1], &M[1 << (winsize - 1)])) != MP_OKAY) {
+  if ((err = mp_copy (&M[1], &M[(mp_digit)(1 << (winsize - 1))])) != MP_OKAY) {
     goto LBL_MU;
   }
 
   for (x = 0; x < (winsize - 1); x++) {
     /* square it */
-    if ((err = mp_sqr (&M[1 << (winsize - 1)], 
-                       &M[1 << (winsize - 1)])) != MP_OKAY) {
+    if ((err = mp_sqr (&M[(mp_digit)(1 << (winsize - 1))], 
+                       &M[(mp_digit)(1 << (winsize - 1))])) != MP_OKAY) {
       goto LBL_MU;
     }
 
     /* reduce modulo P */
-    if ((err = redux (&M[1 << (winsize - 1)], P, &mu)) != MP_OKAY) {
+    if ((err = redux (&M[(mp_digit)(1 << (winsize - 1))], P, &mu)) != MP_OKAY) {
       goto LBL_MU;
     }
   }
@@ -3265,7 +3306,7 @@ int s_mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y, int redmode)
     }
 
     /* grab the next msb from the exponent */
-    y     = (buf >> (mp_digit)(DIGIT_BIT - 1)) & 1;
+    y     = (int)(buf >> (mp_digit)(DIGIT_BIT - 1)) & 1;
     buf <<= (mp_digit)1;
 
     /* if the bit is zero and mode == 0 then we ignore it
@@ -3388,7 +3429,7 @@ int mp_reduce (mp_int * x, mp_int * m, mp_int * mu)
   mp_rshd (&q, um - 1);         
 
   /* according to HAC this optimization is ok */
-  if (((unsigned long) um) > (((mp_digit)1) << (DIGIT_BIT - 1))) {
+  if (((mp_word) um) > (((mp_digit)1) << (DIGIT_BIT - 1))) {
     if ((res = mp_mul (&q, mu, &q)) != MP_OKAY) {
       goto CLEANUP;
     }
@@ -3724,7 +3765,7 @@ int mp_sqrmod (mp_int * a, mp_int * b, mp_int * c)
 #endif
 
 
-#if defined(CYASSL_KEY_GEN) || defined(HAVE_ECC) || !defined(NO_PWDBASED)
+#if defined(HAVE_ECC) || !defined(NO_PWDBASED) || defined(CYASSL_SNIFFER) || defined(CYASSL_HAVE_WOLFSCEP) || defined(CYASSL_KEY_GEN)
 
 /* single digit addition */
 int mp_add_d (mp_int* a, mp_digit b, mp_int* c)
@@ -3784,8 +3825,10 @@ int mp_add_d (mp_int* a, mp_digit b, mp_int* c)
         *tmpc++ &= MP_MASK;
      }
      /* set final carry */
-     ix++;
-     *tmpc++  = mu;
+     if (mu != 0 && ix < c->alloc) {
+        ix++;
+        *tmpc++  = mu;
+     }
 
      /* setup size */
      c->used = a->used + 1;
@@ -3886,7 +3929,7 @@ int mp_sub_d (mp_int * a, mp_digit b, mp_int * c)
   return MP_OKAY;
 }
 
-#endif /* CYASSL_KEY_GEN || HAVE_ECC */
+#endif /* defined(HAVE_ECC) || !defined(NO_PWDBASED) */
 
 
 #ifdef CYASSL_KEY_GEN
@@ -4442,3 +4485,4 @@ int mp_read_radix (mp_int * a, const char *str, int radix)
 
 #endif /* USE_FAST_MATH */
 
+#endif /* NO_BIG_INT */

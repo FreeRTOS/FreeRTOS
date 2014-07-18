@@ -1,6 +1,6 @@
 /* ecc.h
  *
- * Copyright (C) 2006-2012 Sawtooth Consulting Ltd.
+ * Copyright (C) 2006-2014 wolfSSL Inc.
  *
  * This file is part of CyaSSL.
  *
@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
 #ifdef HAVE_ECC
@@ -49,7 +49,7 @@ typedef struct {
     int size;       /* The size of the curve in octets */
     const char* name;     /* name of this curve */
     const char* prime;    /* prime that defines the field, curve is in (hex) */
-    const char* B;        /* fields B param (hex) */
+    const char* Bf;       /* fields B param (hex) */
     const char* order;    /* order of the curve (hex) */
     const char* Gx;       /* x coordinate of the base point on curve (hex) */
     const char* Gy;       /* y coordinate of the base point on curve (hex) */
@@ -91,12 +91,14 @@ CYASSL_API
 int ecc_sign_hash(const byte* in, word32 inlen, byte* out, word32 *outlen, 
                   RNG* rng, ecc_key* key);
 CYASSL_API
-int ecc_verify_hash(const byte* sig, word32 siglen, byte* hash, word32 hashlen, 
-                    int* stat, ecc_key* key);
+int ecc_verify_hash(const byte* sig, word32 siglen, const byte* hash,
+                    word32 hashlen, int* stat, ecc_key* key);
 CYASSL_API
 void ecc_init(ecc_key* key);
 CYASSL_API
 void ecc_free(ecc_key* key);
+CYASSL_API
+void ecc_fp_free(void);
 
 
 /* ASN key helpers */
@@ -107,6 +109,8 @@ int ecc_import_x963(const byte* in, word32 inLen, ecc_key* key);
 CYASSL_API
 int ecc_import_private_key(const byte* priv, word32 privSz, const byte* pub,
                            word32 pubSz, ecc_key* key);
+CYASSL_API
+int ecc_export_private_only(ecc_key* key, byte* out, word32* outLen);
 
 /* size helper */
 CYASSL_API
@@ -114,12 +118,63 @@ int ecc_size(ecc_key* key);
 CYASSL_API
 int ecc_sig_size(ecc_key* key);
 
-/* TODO: fix mutex types */
-#define MUTEX_GLOBAL(x) int (x);
-#define MUTEX_LOCK(x)
-#define MUTEX_UNLOCK(x)
+
+#ifdef HAVE_ECC_ENCRYPT
+/* ecc encrypt */
+
+enum ecEncAlgo {
+    ecAES_128_CBC = 1,  /* default */
+    ecAES_256_CBC = 2
+};
+
+enum ecKdfAlgo {
+    ecHKDF_SHA256 = 1,  /* default */
+    ecHKDF_SHA1   = 2
+};
+
+enum ecMacAlgo {
+    ecHMAC_SHA256 = 1,  /* default */
+    ecHMAC_SHA1   = 2
+};
+
+enum {
+    KEY_SIZE_128     = 16,   
+    KEY_SIZE_256     = 32,   
+    IV_SIZE_64       =  8,
+    EXCHANGE_SALT_SZ = 16,  
+    EXCHANGE_INFO_SZ = 23  
+};
+
+enum ecFlags {
+    REQ_RESP_CLIENT = 1,
+    REQ_RESP_SERVER = 2
+};
 
 
+typedef struct ecEncCtx ecEncCtx;
+
+CYASSL_API
+ecEncCtx* ecc_ctx_new(int flags, RNG* rng);
+CYASSL_API
+void ecc_ctx_free(ecEncCtx*);
+CYASSL_API
+int ecc_ctx_reset(ecEncCtx*, RNG*);   /* reset for use again w/o alloc/free */
+
+CYASSL_API
+const byte* ecc_ctx_get_own_salt(ecEncCtx*);
+CYASSL_API
+int ecc_ctx_set_peer_salt(ecEncCtx*, const byte* salt);
+CYASSL_API
+int ecc_ctx_set_info(ecEncCtx*, const byte* info, int sz);
+
+CYASSL_API
+int ecc_encrypt(ecc_key* privKey, ecc_key* pubKey, const byte* msg,
+                word32 msgSz, byte* out, word32* outSz, ecEncCtx* ctx);
+CYASSL_API
+int ecc_decrypt(ecc_key* privKey, ecc_key* pubKey, const byte* msg,
+                word32 msgSz, byte* out, word32* outSz, ecEncCtx* ctx);
+
+#endif /* HAVE_ECC_ENCRYPT */
 
 #ifdef __cplusplus
     }    /* extern "C" */    

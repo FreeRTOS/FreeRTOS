@@ -135,6 +135,7 @@
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\des3.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\dh.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\dsa.c" />
+    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\error.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\hc128.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\hmac.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\integer.c" />
@@ -149,6 +150,7 @@
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\rsa.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\sha.c" />
     <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\sha256.c" />
+    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\wc_port.c" />
     <ClCompile Include="..\..\Source\CyaSSL\src\internal.c" />
     <ClCompile Include="..\..\Source\CyaSSL\src\io.c" />
     <ClCompile Include="..\..\Source\CyaSSL\src\keys.c" />

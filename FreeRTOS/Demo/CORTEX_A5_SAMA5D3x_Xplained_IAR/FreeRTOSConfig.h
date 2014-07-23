@@ -133,6 +133,8 @@ FreeRTOS/Source/tasks.c for limitations. */
 #define configFPU_D32	0
 
 #define configPIT_PIVR	( *( ( volatile uint32_t * ) 0xFFFFFE38UL ) )
+#define configINTERRUPT_VECTOR_ADDRESS	0xFFFFF010UL
+#define configEOI_ADDRESS	0xFFFFF038UL
 #define configCLEAR_TICK_INTERRUPT() ( void ) configPIT_PIVR /* Read PIT_PIVR to clear interrupt. */
 
 /* Prevent C code being included in assembly files when the IAR compiler is

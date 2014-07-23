@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2012, Atmel Corporation
  *
@@ -26,18 +26,18 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
-
-/** \file */
 
 
 /** \file */
-/** 
+
+
+/** \file */
+/**
  * \addtogroup cp15_cache Cache Operations
  *
  * \section Usage
  *
- * They are performed as MCR instructions and only operate on a level 1 cache associated with 
+ * They are performed as MCR instructions and only operate on a level 1 cache associated with
  * ATM v7 processor.
  * The supported operations are:
  * <ul>
@@ -62,7 +62,7 @@
  * \ref cp15.h\n
  * \ref cp15_arm_iar.s \n
  */
- 
+
 
         MODULE  ?cp15
 
@@ -73,7 +73,6 @@
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
-#define __ASSEMBLY__
 
 
 /*----------------------------------------------------------------------------
@@ -103,10 +102,10 @@
         PUBLIC  CP15_flush_dcache_for_dma
         PUBLIC  CP15_flush_kern_dcache_for_dma
 
-/** 
+/**
  * \brief Register c0 accesses the ID Register, Cache Type Register, and TCM Status Registers.
  *  Reading from this register returns the device ID, the cache type, or the TCM status
- *   depending on the value of Opcode_2 used. 
+ *   depending on the value of Opcode_2 used.
  */
         SECTION .CP15_ReadID:DATA:NOROOT(2)
         PUBLIC   CP15_ReadID
@@ -115,7 +114,7 @@ CP15_ReadID:
         mrc     p15, 0, r0, c0, c0, 0
         bx      lr
 
-/** 
+/**
  * \brief Register c1 is the Control Register for the ARM926EJ-S processor.
  * This register specifies the configuration used to enable and disable the
  * caches and MMU. It is recommended that you access this register using a
@@ -125,7 +124,7 @@ CP15_ReadID:
         PUBLIC   CP15_ReadControl
 CP15_ReadControl:
         mov     r0, #0
-        mrc     p15, 0, r0, c1, c0, 0   
+        mrc     p15, 0, r0, c1, c0, 0
         bx      lr
 
         SECTION .CP15_WriteControl:CODE:NOROOT(2)
@@ -155,8 +154,8 @@ CP15_WriteDomainAccessControl:
         nop
         nop
         bx      lr
- 
-/** 
+
+/**
  * \brief  ARMv7A architecture supports two translation tables
  * Configure translation table base (TTB) control register cp15,c2
  * to a value of all zeros, indicates we are using TTB register 0.
@@ -277,7 +276,7 @@ CP15_CleanDCacheBySetWay:
         bx      lr
 
 /**
- * \brief Clean unified cache line by MVA 
+ * \brief Clean unified cache line by MVA
  */
         SECTION .CP15_CleanDCacheMva:CODE:NOROOT(2)
         PUBLIC   CP15_CleanDCacheMva
@@ -293,7 +292,7 @@ CP15_CleanDCacheMva:
         PUBLIC   CP15_CleanInvalidateDcacheLineByMva
 CP15_CleanInvalidateDcacheLineByMva:
         mov     r0, #0
-        mcr     p15, 0, r0, c7, c14, 1 
+        mcr     p15, 0, r0, c7, c14, 1
         bx      lr
 
 /**
@@ -317,7 +316,7 @@ CP15_CleanInvalidateDcacheLine:
         PUBLIC   CP15_coherent_dcache_for_dma
 CP15_coherent_dcache_for_dma:
 //      dcache_line_size r2, r3
- 
+
         mrc     p15, 0, r3, c0, c0, 1         // read ctr
         lsr     r3, r3, #16
         and     r3, r3, #0xf                  // cache line size encoding

@@ -127,6 +127,7 @@ void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
+#warning Try re-using the main stack.
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */
@@ -150,6 +151,9 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+    /* Disable watchdog */
+    WDT_Disable( WDT );
+
 	/* Set protect mode in the AIC for easier debugging. */
 	AIC->AIC_DCR |= AIC_DCR_PROT;
 

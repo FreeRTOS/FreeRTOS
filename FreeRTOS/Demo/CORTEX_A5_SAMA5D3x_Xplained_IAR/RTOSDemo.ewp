@@ -214,7 +214,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state></state>
+          <state>Pa131</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -312,6 +312,8 @@
           <state>$PROJ_DIR$\..\Common\include</state>
           <state>$PROJ_DIR$\Full_Demo</state>
           <state>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI</state>
+          <state>$PROJ_DIR$\AtmelFiles\usb\device</state>
+          <state>$PROJ_DIR$\AtmelFiles\usb\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -323,7 +325,7 @@
         </option>
         <option>
           <name>IInterwork2</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IProcessorMode2</name>
@@ -981,6 +983,15 @@
         <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\source\aic.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\cp15\cp15.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\cp15\cp15_asm_iar.s</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\source\mmu.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\source\pio.c</name>
       </file>
       <file>
@@ -996,7 +1007,70 @@
         <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\source\tc.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\source\USBD_HAL.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\AtmelFiles\libchip_sama5d3x\source\wdt.c</name>
+      </file>
+    </group>
+    <group>
+      <name>usb</name>
+      <group>
+        <name>common</name>
+        <group>
+          <name>cdc</name>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\common\cdc\CDCLineCoding.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\common\cdc\CDCSetControlLineStateRequest.c</name>
+          </file>
+        </group>
+        <group>
+          <name>core</name>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\common\core\USBDescriptors.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\common\core\USBRequests.c</name>
+          </file>
+        </group>
+      </group>
+      <group>
+        <name>device</name>
+        <group>
+          <name>cdc-serial</name>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\cdc-serial\CDCDSerial.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\cdc-serial\CDCDSerial_Callbacks.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\cdc-serial\CDCDSerialDriver.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\cdc-serial\CDCDSerialPort.c</name>
+          </file>
+        </group>
+        <group>
+          <name>core</name>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\core\USBD.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\core\USBDCallbacks.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\core\USBDDriver.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$\AtmelFiles\usb\device\core\USBDDriverCallbacks.c</name>
+          </file>
+        </group>
+      </group>
+      <file>
+        <name>$PROJ_DIR$\AtmelFiles\usb\USBDDriverDescriptors.c</name>
       </file>
     </group>
   </group>
@@ -1107,6 +1181,9 @@
   </group>
   <file>
     <name>$PROJ_DIR$\atmel_main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\CDCCommandConsole.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\cstartup_with_FreeRTOS_vectors.s</name>

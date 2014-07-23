@@ -47,10 +47,6 @@
 //------------------------------------------------------------------------------
 //         Definitions
 //------------------------------------------------------------------------------
-//_RB_ These definitions can go.
-#define AIC         0xFFFFF000
-#define AIC_IVR     0x10
-#define AIC_EOICR   0x38
 
 #define ARM_MODE_ABT     0x17
 #define ARM_MODE_FIQ     0x11

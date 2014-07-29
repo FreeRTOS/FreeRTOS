@@ -126,8 +126,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
-
-#warning Try re-using the main stack.
+#warning check stack sizes in linker script.
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */

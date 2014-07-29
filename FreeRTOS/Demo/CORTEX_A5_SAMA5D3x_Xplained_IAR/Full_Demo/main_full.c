@@ -233,7 +233,7 @@ void main_full( void )
 	/* Start all the other standard demo/test tasks.  They have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-//_RB_	vStartInterruptQueueTasks();
+	vStartInterruptQueueTasks();
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
@@ -251,7 +251,7 @@ void main_full( void )
 	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
 
 	/* Register the standard CLI commands. */
-//	vRegisterSampleCLICommands();
+	vRegisterSampleCLICommands();
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -313,7 +313,7 @@ unsigned long ulErrorFound = pdFALSE;
 		that they are all still running, and that none have detected an error. */
 		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
-//_RB_			ulErrorFound = pdTRUE;
+			ulErrorFound = pdTRUE;
 		}
 
 		if( xAreMathsTaskStillRunning() != pdTRUE )
@@ -455,8 +455,40 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 
 static void prvPseudoRandomiser( void *pvParameters )
 {
-const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL, ulMinDelay = ( 35 / portTICK_PERIOD_MS );
+const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL, ulMinDelay = ( 35 / portTICK_PERIOD_MS ), ulIBit = ( 1UL << 7UL );
 volatile uint32_t ulNextRand = ( uint32_t ) &pvParameters, ulValue;
+
+	/* A few minor port tests before entering the randomiser loop.
+
+	At this point interrupts should be enabled. */
+	configASSERT( ( __get_CPSR() & ulIBit ) == 0 );
+
+	/* The CPU does not have an interrupt mask register, so critical sections
+	have to globally disable interrupts.  Therefore entering a critical section
+	should leave the I bit set. */
+	taskENTER_CRITICAL();
+	configASSERT( ( __get_CPSR() & ulIBit ) == ulIBit );
+
+	/* Nest the critical sections. */
+	taskENTER_CRITICAL();
+	configASSERT( ( __get_CPSR() & ulIBit ) == ulIBit );
+
+	/* After yielding the I bit should still be set.  Note yielding is possible
+	in a critical section as each task maintains its own critical section
+	nesting count so some tasks are in critical sections and others are not -
+	however this is *not* something task code should do! */
+	taskYIELD();
+	configASSERT( ( __get_CPSR() & ulIBit ) == ulIBit );
+
+	/* The I bit should not be cleared again until both critical sections have
+	been exited. */
+	taskEXIT_CRITICAL();
+	taskYIELD();
+	configASSERT( ( __get_CPSR() & ulIBit ) == ulIBit );
+	taskEXIT_CRITICAL();
+	configASSERT( ( __get_CPSR() & ulIBit ) == 0 );
+	taskYIELD();
+	configASSERT( ( __get_CPSR() & ulIBit ) == 0 );
 
 	/* This task does nothing other than ensure there is a little bit of
 	disruption in the scheduling pattern of the other tasks.  Normally this is

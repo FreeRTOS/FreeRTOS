@@ -77,11 +77,11 @@ extern WEAK void LowLevelInit( void )
     if ((uint32_t)LowLevelInit < DDR_CS_ADDR) /* Code not in external mem */ {
         PMC_SelectExt12M_Osc();
         PMC_SwitchMck2Main();
-        PMC_SetPllA( CKGR_PLLAR_STUCKTO1 | 
+        PMC_SetPllA( CKGR_PLLAR_STUCKTO1 |
                      CKGR_PLLAR_PLLACOUNT(0x3F) |
                      CKGR_PLLAR_OUTA(0x0) |
-                     CKGR_PLLAR_MULA(65) | 
-                     CKGR_PLLAR_DIVA(1), 
+                     CKGR_PLLAR_MULA(65) |
+                     CKGR_PLLAR_DIVA(1),
                      0x3u << 8);
         PMC_SetMckPllaDiv(PMC_MCKR_PLLADIV2_DIV2);
         PMC_SetMckPrescaler(PMC_MCKR_PRES_CLOCK);

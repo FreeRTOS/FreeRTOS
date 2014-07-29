@@ -88,6 +88,8 @@ static void System_Handler( void );
 
 static void System_Handler( void )
 {
+	__enable_interrupt();
+
 	/* See the comments above the function prototype in this file. */
 	FreeRTOS_Tick_Handler();
 }
@@ -113,7 +115,7 @@ void vConfigureTickInterrupt( void )
 	/* Configure interrupt on PIT.  Note this is on the system interrupt, which
 	is shared with other system peripherals, so System_Handler() must be
 	installed in place of FreeRTOS_Tick_Handler() if other system handlers are
-	required. */
+	required.  The tick must be given the lowest priority (0 in the SAMA5 AIC) */
 	IRQ_ConfigureIT( ID_PIT, 0, FreeRTOS_Tick_Handler );
 	/* See commend directly above IRQ_ConfigureIT( ID_PIT, 0, System_Handler ); */
 	IRQ_EnableIT( ID_PIT );
@@ -128,6 +130,4 @@ void vConfigureTickInterrupt( void )
 	( void ) System_Handler;
 }
 /*-----------------------------------------------------------*/
-
-
 

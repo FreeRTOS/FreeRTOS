@@ -140,9 +140,13 @@ label:
         MSR     cpsr_c, #ARM_MODE_IRQ | I_BIT | F_BIT      ; Change the mode
         LDR     sp, =SFE(IRQ_STACK)
 
-        /* Set up the SYS stack pointer. */
-        MSR     cpsr_c, #ARM_MODE_SYS | F_BIT              ; Change the mode
+        /* Set up the SVC stack pointer.  This allows the stack used by main()
+		to get reused by interrupts (which switch from IRQ mode to SVC mode). */
+        MSR     cpsr_c, #ARM_MODE_SVC | F_BIT              ; Change the mode
         LDR     sp, =SFE(CSTACK)
+
+		/* No need to set up stacks for any other mode as that stack used by
+		tasks is allocated by FreeRTOS. */
 
         /* Branch to main() */
         LDR     r0, =?main

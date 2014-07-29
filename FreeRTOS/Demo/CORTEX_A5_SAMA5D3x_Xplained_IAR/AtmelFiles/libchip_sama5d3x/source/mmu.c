@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -26,10 +26,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ----------------------------------------------------------------------------
  */
- 
+
 /** \file */
 
-/** 
+/**
  * \addtogroup mmu MMU Initialization
  *
  * \section Usage
@@ -38,7 +38,7 @@
  * translation table entries. TLBs avoid the requirement for every memory access to perform a translation table
  * lookup. The ARM architecture does not specify the exact form of the TLB structures for any design. In a
  * similar way to the requirements for caches, the architecture only defines certain principles for TLBs:
- * 
+ *
  * The MMU supports memory accesses based on memory sections or pages:
  * Supersections Consist of 16MB blocks of memory. Support for Supersections is optional.
  * -# Sections Consist of 1MB blocks of memory.
@@ -54,7 +54,7 @@
  * \ref mmu.c\n
  * \ref mmu.h \n
  */
- 
+
 /*------------------------------------------------------------------------------ */
 /*         Headers                                                               */
 /*------------------------------------------------------------------------------ */

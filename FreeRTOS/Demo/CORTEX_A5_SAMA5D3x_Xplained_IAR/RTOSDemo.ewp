@@ -174,7 +174,7 @@
           <name>CCDefines</name>
           <state>sama5d3x</state>
           <state>sram</state>
-          <state>TRACE_LEVEL=4</state>
+          <state>TRACE_LEVEL=0</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1170,6 +1170,9 @@
       </file>
     </group>
     <file>
+      <name>$PROJ_DIR$\CDCCommandConsole.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\Full_Demo\IntQueueTimer.c</name>
     </file>
     <file>
@@ -1178,12 +1181,12 @@
     <file>
       <name>$PROJ_DIR$\Full_Demo\reg_test.S</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c</name>
+    </file>
   </group>
   <file>
     <name>$PROJ_DIR$\atmel_main.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\CDCCommandConsole.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\cstartup_with_FreeRTOS_vectors.s</name>

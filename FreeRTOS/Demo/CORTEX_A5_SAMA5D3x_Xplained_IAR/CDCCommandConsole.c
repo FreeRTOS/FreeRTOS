@@ -477,8 +477,9 @@ void USBDCallbacks_Initialized( void )
 {
 	/* CDC specific re-implementation of weak callback function.  Invoked after
 	the USB driver has been initialised. By default, configures the UDP/UDPHS
-	interrupt. */
-	IRQ_ConfigureIT( ID_UDPHS, 0, USBD_IrqHandler );
+	interrupt.  The interrupt priority is set to the highest to ensure the
+	interrupt nesting tests interfer as little as possible with the USB. */
+	IRQ_ConfigureIT( ID_UDPHS, 7, USBD_IrqHandler );
 	IRQ_EnableIT( ID_UDPHS );
 }
 /*-----------------------------------------------------------*/

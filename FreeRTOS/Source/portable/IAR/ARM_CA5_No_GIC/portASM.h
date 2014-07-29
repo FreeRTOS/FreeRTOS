@@ -127,18 +127,12 @@ portRESTORE_CONTEXT macro
 	POP		{R1}
 	STR		R1, [R0]
 
-	; Ensure the priority mask is correct for the critical nesting depth
-;_RB_	LDR		R2, =portICCPMR_PRIORITY_MASK_REGISTER_ADDRESS
-	CMP		R1, #0
-	MOVEQ	R4, #255
-;_RB_	LDRNE	R4, =( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT )
-	STR		R4, [r2]
-
 	; Restore all system mode registers other than the SP (which is already
 	; being used)
 	POP		{R0-R12, R14}
 
-	; Return to the task code, loading CPSR on the way.
+	; Return to the task code, loading CPSR on the way.  CPSR has the interrupt
+	; enable bit set appropriately for the task about to execute.
 	RFEIA	sp!
 
 	endm

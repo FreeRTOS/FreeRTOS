@@ -67,10 +67,6 @@ SYS_MODE			EQU		0x1f
 SVC_MODE			EQU		0x13
 IRQ_MODE			EQU		0x12
 
-; AIC register definitions.
-AIC_IVR				EQU		0xFFFFF010UL
-AIC_EOICR			EQU		0xFFFFF038UL
-
 	SECTION .text:CODE:ROOT(2)
 	ARM
 
@@ -93,7 +89,7 @@ vPortRestoreTaskContext
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; AIC interrupt handler
+; IRQ interrupt handler used when individual priorities cannot be masked
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FreeRTOS_IRQ_Handler
 
@@ -127,7 +123,7 @@ FreeRTOS_IRQ_Handler
 
 	; Call the interrupt handler
 	PUSH	{r0-r3, lr}
-	LDR		r1, =AIC_IVR
+	LDR		r1, =configINTERRUPT_VECTOR_ADDRESS
 	LDR		r0, [r1]
 	STR		r1, [r1] ; Write to IVR in case protect mode is being used.
 	BLX		r0
@@ -137,7 +133,7 @@ FreeRTOS_IRQ_Handler
 	CPSID	i
 
 	; Write to the EOI register
-	LDR 	r4, =AIC_EOICR
+	LDR 	r4, =configEOI_ADDRESS
 	STR		r0, [r4]
 
 	; Restore the old nesting count

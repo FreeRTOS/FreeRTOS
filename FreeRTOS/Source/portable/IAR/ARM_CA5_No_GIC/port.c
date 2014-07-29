@@ -111,6 +111,11 @@ mode. */
  */
 extern void vPortRestoreTaskContext( void );
 
+/*
+ * Used to catch tasks that attempt to return from their implementing function.
+ */
+static void prvTaskExitError( void );
+
 /*-----------------------------------------------------------*/
 
 /* A variable is used to keep track of the critical section nesting.  This
@@ -137,7 +142,6 @@ uint32_t ulPortInterruptNesting = 0UL;
 #warning What about branch distance in asm file.
 #warning Does not support flop use in ISRs.
 #warning Level interrupts must be cleared in their handling function.
-#warning Can this be made generic by defining the vector address register externally?
 
 /*
  * See header file for description.
@@ -165,13 +169,13 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	}
 
 	pxTopOfStack--;
-#warning What about task exit error function?
+
 	/* Next the return address, which in this case is the start of the task. */
 	*pxTopOfStack = ( StackType_t ) pxCode;
 	pxTopOfStack--;
 
 	/* Next all the registers other than the stack pointer. */
-	*pxTopOfStack = ( StackType_t ) 0x00000000;	/* R14 */
+	*pxTopOfStack = ( StackType_t ) prvTaskExitError;	/* R14 */
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) 0x12121212;	/* R12 */
 	pxTopOfStack--;
@@ -214,6 +218,20 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 }
 /*-----------------------------------------------------------*/
 
+static void prvTaskExitError( void )
+{
+	/* A function that implements a task must not exit or attempt to return to
+	its caller as there is nothing to return to.  If a task wants to exit it
+	should instead call vTaskDelete( NULL ).
+
+	Artificially force an assert() to be triggered if configASSERT() is
+	defined, then stop here so application writers can catch the error. */
+	configASSERT( ulPortInterruptNesting == ~0UL );
+	portDISABLE_INTERRUPTS();
+	for( ;; );
+}
+/*-----------------------------------------------------------*/
+
 BaseType_t xPortStartScheduler( void )
 {
 uint32_t ulAPSR;
@@ -228,7 +246,6 @@ uint32_t ulAPSR;
 	{
 		/* Start the timer that generates the tick ISR. */
 		configSETUP_TICK_INTERRUPT();
-#warning Install spurious handler
 		__enable_irq();
 		vPortRestoreTaskContext();
 	}

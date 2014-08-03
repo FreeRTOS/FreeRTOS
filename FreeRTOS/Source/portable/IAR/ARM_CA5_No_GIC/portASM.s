@@ -58,6 +58,7 @@
 	EXTERN	vTaskSwitchContext
 	EXTERN	ulPortYieldRequired
 	EXTERN	ulPortInterruptNesting
+	EXTERN	vApplicationIRQHandler
 
 	PUBLIC	FreeRTOS_SWI_Handler
 	PUBLIC  FreeRTOS_IRQ_Handler
@@ -126,15 +127,13 @@ FreeRTOS_IRQ_Handler
 	AND		r2, r2, #4
 	SUB		sp, sp, r2
 
-	; Obtain the address of the interrupt handler, then call it.
+	; Obtain the address of the interrupt handler, then pass it into the ISR
+	; callback.
 	PUSH	{r0-r3, lr}
 	LDR		r1, =configINTERRUPT_VECTOR_ADDRESS
 	LDR		r0, [r1]
-	STR		r1, [r1] ; [SAMA5] Write to IVR in case protect mode is being used.
-	DSB
-	ISB
-	CPSIE	i
-	BLX		r0
+	LDR		r1, =vApplicationIRQHandler
+	BLX		r1
 	POP		{r0-r3, lr}
 	ADD		sp, sp, r2
 

@@ -73,7 +73,7 @@ IRQ_MODE			EQU		0x12
 	INCLUDE portASM.h
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; SVC handler is used to start the scheduler and yield a task.
+; SVC handler is used to yield a task.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FreeRTOS_SWI_Handler
 
@@ -83,10 +83,15 @@ FreeRTOS_SWI_Handler
 	portSAVE_CONTEXT
 	LDR R0, =vTaskSwitchContext
 	BLX	R0
-
-vPortRestoreTaskContext
 	portRESTORE_CONTEXT
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; vPortRestoreTaskContext is used to start the scheduler.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+vPortRestoreTaskContext
+	; Switch to system mode
+	CPS		#SYS_MODE
+	portRESTORE_CONTEXT
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; IRQ interrupt handler used when individual priorities cannot be masked
@@ -121,11 +126,14 @@ FreeRTOS_IRQ_Handler
 	AND		r2, r2, #4
 	SUB		sp, sp, r2
 
-	; Call the interrupt handler
+	; Obtain the address of the interrupt handler, then call it.
 	PUSH	{r0-r3, lr}
 	LDR		r1, =configINTERRUPT_VECTOR_ADDRESS
 	LDR		r0, [r1]
-	STR		r1, [r1] ; Write to IVR in case protect mode is being used.
+	STR		r1, [r1] ; [SAMA5] Write to IVR in case protect mode is being used.
+	DSB
+	ISB
+	CPSIE	i
 	BLX		r0
 	POP		{r0-r3, lr}
 	ADD		sp, sp, r2

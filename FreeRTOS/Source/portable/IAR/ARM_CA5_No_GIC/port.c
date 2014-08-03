@@ -139,10 +139,6 @@ uint32_t ulPortInterruptNesting = 0UL;
 
 /*-----------------------------------------------------------*/
 
-#warning What about branch distance in asm file.
-#warning Does not support flop use in ISRs.
-#warning Level interrupts must be cleared in their handling function.
-
 /*
  * See header file for description.
  */

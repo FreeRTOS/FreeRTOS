@@ -124,7 +124,7 @@
 	}
 
 	#define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
-	#define portYIELD() __asm( "SWI 0" );
+	#define portYIELD() __asm( "SWI 0" ); __ISB()
 
 
 	/*-----------------------------------------------------------
@@ -138,9 +138,9 @@
 
 	#define portENTER_CRITICAL()		vPortEnterCritical();
 	#define portEXIT_CRITICAL()			vPortExitCritical();
-	#define portDISABLE_INTERRUPTS()	__disable_irq() /* No priority mask register so global disable is used. */
+	#define portDISABLE_INTERRUPTS()	__disable_irq(); __DSB(); __ISB() /* No priority mask register so global disable is used. */
 	#define portENABLE_INTERRUPTS()		__enable_irq()
-	#define portSET_INTERRUPT_MASK_FROM_ISR()		__get_interrupt_state()
+	#define portSET_INTERRUPT_MASK_FROM_ISR()		__get_interrupt_state(); __disable_irq() /* No priority mask register so global disable is used. */
 	#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	__set_interrupt_state(x)
 
 	/*-----------------------------------------------------------*/

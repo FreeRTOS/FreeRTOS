@@ -90,6 +90,9 @@ FreeRTOS_SWI_Handler
 ; vPortRestoreTaskContext is used to start the scheduler.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 vPortRestoreTaskContext
+
+	PRESERVE8
+
 	; Switch to system mode
 	CPS		#SYS_MODE
 	portRESTORE_CONTEXT
@@ -98,6 +101,8 @@ vPortRestoreTaskContext
 ; IRQ interrupt handler used when individual priorities cannot be masked
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FreeRTOS_IRQ_Handler
+
+	PRESERVE8
 
 	; Return to the interrupted instruction.
 	SUB		lr, lr, #4

@@ -89,6 +89,10 @@
 	#define configINCLUDE_TRACE_RELATED_CLI_COMMANDS 0
 #endif
 
+/*
+ * The function that registers the commands that are defined within this file.
+ */
+void vRegisterSampleCLICommands( void );
 
 /*
  * Implements the task-stats command.

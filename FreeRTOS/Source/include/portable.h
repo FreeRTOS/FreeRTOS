@@ -322,7 +322,7 @@ to find the path to the correct portmacro.h file. */
 #endif
 
 #if portBYTE_ALIGNMENT == 8
-	#define portBYTE_ALIGNMENT_MASK ( 0x0007 )
+	#define portBYTE_ALIGNMENT_MASK ( 0x0007U )
 #endif
 
 #if portBYTE_ALIGNMENT == 4

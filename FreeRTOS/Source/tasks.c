@@ -2151,11 +2151,13 @@ void vTaskSwitchContext( void )
 		}
 		#endif /* configGENERATE_RUN_TIME_STATS */
 
+		/* Check for stack overflow, if configured. */
 		taskFIRST_CHECK_FOR_STACK_OVERFLOW();
 		taskSECOND_CHECK_FOR_STACK_OVERFLOW();
 
+		/* Select a new task to run using either the generic C or port
+		optimised asm code. */
 		taskSELECT_HIGHEST_PRIORITY_TASK();
-
 		traceTASK_SWITCHED_IN();
 
 		#if ( configUSE_NEWLIB_REENTRANT == 1 )

@@ -108,6 +108,7 @@ extern WEAK void LowLevelInit( void )
     /* Wait for the PCKRDY1 bit to be set in the PMC_SR register*/
     while ((REG_PMC_SR & PMC_SR_PCKRDY1) == 0);
 #endif
+
     /* select FIQ */
     AIC->AIC_SSR = 0;
     AIC->AIC_SVR = (unsigned int) defaultFiqHandler;

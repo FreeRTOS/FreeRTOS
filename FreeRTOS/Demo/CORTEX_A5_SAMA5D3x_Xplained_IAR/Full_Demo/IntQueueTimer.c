@@ -71,15 +71,16 @@
  * interrupts.  As the interrupt is shared the nesting achieved is not as deep
  * as normal when this test is executed, but still worth while.
  *
- * TC2 channel 0 provides a much higher frequency timer that tests the nesting of
- * interrupts that execute above the maximum syscall interrupt priority.
+ * TC2 channel 0 provides a much higher frequency timer that tests the nesting
+ * of interrupts that don't use the FreeRTOS API.  For convenience, the high
+ * frequency timer also keeps a count of the number of time it executes, and the
+ * count is used as the time base for the run time stats (which can be viewed
+ * through the CLI).
  *
  * All the timers can nest with the tick interrupt - creating a maximum
  * interrupt nesting depth of 3 (normally 4, if the first two timers used
  * separate interrupts).
  *
- * For convenience, the high frequency timer is also used to provide the time
- * base for the run time stats.
  */
 
 /* Scheduler includes. */
@@ -96,7 +97,6 @@
 ensure they don't remain synchronised.  The frequency of the highest priority
 interrupt is 20 times faster so really hammers the interrupt entry and exit
 code. */
-#define tmrTIMERS_USED	3
 #define tmrTIMER_0_FREQUENCY	( 2000UL )
 #define tmrTIMER_1_FREQUENCY	( 2003UL )
 #define tmrTIMER_2_FREQUENCY	( 20000UL )
@@ -115,7 +115,8 @@ of the lower frequency timers must still be above the tick interrupt priority. *
 #define tmrHIGHER_PRIORITY		5
 /*-----------------------------------------------------------*/
 
-/* Handlers for the three timer channels. */
+/* Handlers for the two timer peripherals - two channels are used in the TC0
+timer. */
 static void prvTC0_Handler( void );
 static void prvTC1_Handler( void );
 
@@ -169,9 +170,6 @@ const uint32_t ulDivider = 128UL, ulTCCLKS = 3UL;
 
 static void prvTC0_Handler( void )
 {
-#warning Why can interrupts only be enabled inside the C function?
-	__enable_interrupt();
-
     /* Read will clear the status bit. */
 	if( ( TC0->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_SR & tmrRC_COMPARE ) != 0 )
 	{
@@ -188,8 +186,6 @@ static void prvTC0_Handler( void )
 static void prvTC1_Handler( void )
 {
 volatile uint32_t ulDummy;
-
-	__enable_interrupt();
 
     /* Dummy read to clear status bit. */
     ulDummy = TC1->TC_CHANNEL[ tmrTC1_CHANNEL_0 ].TC_SR;

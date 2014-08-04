@@ -88,8 +88,6 @@ static void System_Handler( void );
 
 static void System_Handler( void )
 {
-	__enable_interrupt();
-
 	/* See the comments above the function prototype in this file. */
 	FreeRTOS_Tick_Handler();
 }

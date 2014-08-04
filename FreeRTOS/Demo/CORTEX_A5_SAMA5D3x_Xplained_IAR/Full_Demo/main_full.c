@@ -84,13 +84,12 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * FreeRTOS+CLI command console.  The command console is access through the
- * UART to USB connector on the _RB_.  For
- * reasons of robustness testing the UART driver is deliberately written to be
- * inefficient and should not be used as a template for a production driver.
- * Type "help" to see a list of registered commands.  The FreeRTOS+CLI license
- * is different to the FreeRTOS license, see http://www.FreeRTOS.org/cli for
- * license and usage details.  The default baud rate is 115200.
+ * "FreeRTOS+CLI command console" -  The command console is access using the USB
+ * CDC driver provided by Atmel.  It is accessed through the USB connector
+ * marked J6 SAMA5D3 Xplained board.  Type "help" to see a list of registered
+ * commands.  The FreeRTOS+CLI license is different to the FreeRTOS license, see
+ * http://www.FreeRTOS.org/cli for license and usage details.  The default baud
+ * rate is 115200.
  *
  * "Reg test" tasks - These fill both the core and floating point registers with
  * known values, then check that each register maintains its expected value for
@@ -143,12 +142,12 @@
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
 #define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
-#define mainUART_COMMAND_CONSOLE_STACK_SIZE	( configMINIMAL_STACK_SIZE * 3UL )
+#define mainCDC_COMMAND_CONSOLE_STACK_SIZE	( configMINIMAL_STACK_SIZE * 2UL )
 #define mainCOM_TEST_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
 
-/* The priority used by the UART command console task. */
+/* The initial priority used by the UART command console task. */
 #define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
 
 /* The LED used by the check timer. */
@@ -209,7 +208,7 @@ extern void vRegisterSampleCLICommands( void );
 /*
  * The task that manages the FreeRTOS+CLI input and output.
  */
-extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
+extern void vUSBCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
 
 /*
  * A high priority task that does nothing other than execute at a pseudo random
@@ -227,7 +226,7 @@ stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 /*-----------------------------------------------------------*/
-#warning Check demo and source folders for _RB_
+
 void main_full( void )
 {
 	/* Start all the other standard demo/test tasks.  They have not particular
@@ -248,7 +247,7 @@ void main_full( void )
 
 	/* Start the tasks that implements the command console on the UART, as
 	described above. */
-	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
+	vUSBCommandConsoleStart( mainCDC_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
 
 	/* Register the standard CLI commands. */
 	vRegisterSampleCLICommands();

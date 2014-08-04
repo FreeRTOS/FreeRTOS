@@ -186,8 +186,8 @@ uint8_t *pc1, *pc2;
 	usTemp = ( ( *pc2 ) << 8 ) | *pc1;
 
 	return usTemp;
-#warning The original code below crashes when build for A5 as endpoint can be misaligned.
-    //_RB_return endpoint->wMaxPacketSize;
+#warning The above code replaces the line below to ensure aborts are not received due to unaligned accesses.  Alternatively use the --no_unaligned_access compiler option.
+    //return endpoint->wMaxPacketSize;
 }
 
 /**

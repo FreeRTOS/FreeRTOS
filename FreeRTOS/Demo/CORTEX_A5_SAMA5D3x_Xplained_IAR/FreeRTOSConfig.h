@@ -86,8 +86,8 @@
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 5 )
-#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 160 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 45 * 1024 ) )
+#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 150 )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 42 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -156,7 +156,7 @@ used. */
 	and one on TCP/IP).  This is done to prevent an output buffer being defined by
 	each implementation - which would waste RAM.  In this case, there is only one
 	command interpreter running. */
-	#define configCOMMAND_INT_MAX_OUTPUT_SIZE 2096
+	#define configCOMMAND_INT_MAX_OUTPUT_SIZE 3000
 
 	/* Normal assert() semantics without relying on the provision of an assert.h
 	header file. */

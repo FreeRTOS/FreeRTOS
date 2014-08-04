@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -64,15 +64,15 @@
 */
 
 /*
- * Creates eight tasks, each of which loops continuously performing a floating 
+ * Creates eight tasks, each of which loops continuously performing a floating
  * point calculation.
  *
  * All the tasks run at the idle priority and never block or yield.  This causes
- * all eight tasks to time slice with the idle task.  Running at the idle 
- * priority means that these tasks will get pre-empted any time another task is 
- * ready to run or a time slice occurs.  More often than not the pre-emption 
- * will occur mid calculation, creating a good test of the schedulers context 
- * switch mechanism - a calculation producing an unexpected result could be a 
+ * all eight tasks to time slice with the idle task.  Running at the idle
+ * priority means that these tasks will get pre-empted any time another task is
+ * ready to run or a time slice occurs.  More often than not the pre-emption
+ * will occur mid calculation, creating a good test of the schedulers context
+ * switch mechanism - a calculation producing an unexpected result could be a
  * symptom of a corruption in the context of a task.
  */
 
@@ -375,7 +375,7 @@ BaseType_t xReturn = pdPASS, xTask;
 			usTaskCheck[ xTask ] = pdFALSE;
 		}
 	}
-		
+
 	return xReturn;
 }
 

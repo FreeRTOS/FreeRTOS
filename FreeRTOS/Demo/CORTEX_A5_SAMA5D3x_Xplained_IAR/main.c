@@ -72,7 +72,8 @@
  * implemented and described in main_full.c.
  *
  * This file implements the code that is not demo specific, including the
- * hardware setup and FreeRTOS hook functions.
+ * hardware setup, standard FreeRTOS hook functions, and the ISR hander called
+ * by the RTOS after interrupt entry (including nesting) has been taken care of.
  *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
@@ -80,8 +81,7 @@
  *
  */
 
-#warning Remove unused libary files.
-#warning document configFPU_D32
+#warning Things to document 1) configFPU_D32 setting,  2) flops can't be used in ISRs, 3) Level interrupts need to be cleared in their handling functions 4) Notes on tailoring generic Cortex-A port 5) assert() will hit if CDC is hammered.  6) Barrier instructions in A9 callbacks.  7) In thumb mode the "common sub expression elimination" optimisation cannot be used.
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -125,8 +125,15 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
+/* Prototype for the IRQ handler called by the generic Cortex-A5 RTOS port
+layer.  The address of the ISR is passed into this function as a parameter.
+Note this level of indirection could be removed by creating a SAMA5 specific
+port layer that calls the IRQ directly from the port layer rather than via this
+application callback. */
+void vApplicationIRQHandler( uint32_t ulInterruptVectorAddress );
+
 /*-----------------------------------------------------------*/
-#warning check stack sizes in linker script.
+
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */
@@ -158,6 +165,8 @@ static void prvSetupHardware( void )
 
 	/* Configure ports used by LEDs. */
 	vParTestInitialise();
+
+	CP15_EnableIcache();
 }
 /*-----------------------------------------------------------*/
 
@@ -240,6 +249,31 @@ void vApplicationTickHook( void )
 	}
 	#endif
 }
+/*-----------------------------------------------------------*/
 
+/* The function called by the RTOS port layer after it has managed interrupt
+entry. */
+void vApplicationIRQHandler( uint32_t ulInterruptVectorAddress )
+{
+typedef void (*ISRFunction_t)( void );
+ISRFunction_t pxISRFunction;
+volatile uint32_t * pulAIC_IVR = ( uint32_t * ) configINTERRUPT_VECTOR_ADDRESS;
+
+	/* On the SAMA5 the parameter is a pointer to the ISR handling function. */
+	pxISRFunction = ( ISRFunction_t ) ulInterruptVectorAddress;
+
+	/* Write back to the SAMA5's interrupt controller's IVR register in case the
+	CPU is in protect mode.  If the interrupt controller is not in protect mode
+	then this write is not necessary. */
+	*pulAIC_IVR = 0;
+
+	/* Ensure the write takes before re-enabling interrupts. */
+	__DSB();
+	__ISB();
+    __enable_irq();
+
+	/* Call the installed ISR. */
+	pxISRFunction();
+}
 
 

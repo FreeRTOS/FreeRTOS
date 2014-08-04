@@ -124,7 +124,7 @@ extern void USBD_IrqHandler( void );
 /*
  * The function that creates the CLI task.
  */
-void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
+void vUSBCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
 
 /*
  * Send xDataLength bytes from pcData to the CDC port.
@@ -178,7 +178,7 @@ static EventGroupHandle_t xCDCEventBits;
 
 /*-----------------------------------------------------------*/
 
-void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority )
+void vUSBCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority )
 {
 	/* Event group used to indicate that bytes are available in the Rx buffer
 	or that bytes have finished sending. */

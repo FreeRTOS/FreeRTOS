@@ -30,30 +30,7 @@
     extern "C" {
 #endif
 
-/* Uncomment next line if using IPHONE */
-/* #define IPHONE */
-
-/* Uncomment next line if using ThreadX */
-/* #define THREADX */
-
-/* Uncomment next line if using Micrium ucOS */
-/* #define MICRIUM */
-
-/* Uncomment next line if using Mbed */
-/* #define MBED */
-
-/* Uncomment next line if using Microchip PIC32 ethernet starter kit */
-/* #define MICROCHIP_PIC32 */
-
-/* Uncomment next line if using Microchip TCP/IP stack, version 5 */
-/* #define MICROCHIP_TCPIP_V5 */
-
-/* Uncomment next line if using Microchip TCP/IP stack, version 6 or later */
-/* #define MICROCHIP_TCPIP */
-
-/* Uncomment next line if using PIC32MZ Crypto Engine */
-/* #define CYASSL_MICROCHIP_PIC32MZ */
-        
+       
 /* Uncomment next line if using FreeRTOS */
 /* #define FREERTOS */
 

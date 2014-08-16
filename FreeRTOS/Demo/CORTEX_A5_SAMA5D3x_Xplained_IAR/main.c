@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.1.0 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -80,8 +80,6 @@
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
  */
-
-#warning Things to document 1) configFPU_D32 setting,  2) flops can't be used in ISRs, 3) Level interrupts need to be cleared in their handling functions 4) Notes on tailoring generic Cortex-A port 5) assert() will hit if CDC is hammered.  6) Barrier instructions in A9 callbacks.  7) In thumb mode the "common sub expression elimination" optimisation cannot be used.
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"

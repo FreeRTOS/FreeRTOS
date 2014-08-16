@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.1.0 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -384,7 +384,10 @@ uint32_t ulAPSR;
 
 	/* Will only get here if xTaskStartScheduler() was called with the CPU in
 	a non-privileged mode or the binary point register was not set to its lowest
-	possible value. */
+	possible value.  prvTaskExitError() is referenced to prevent a compiler
+	warning about it being defined but not referenced in the case that the user
+	defines their own exit address. */
+	( void ) prvTaskExitError;
 	return 0;
 }
 /*-----------------------------------------------------------*/

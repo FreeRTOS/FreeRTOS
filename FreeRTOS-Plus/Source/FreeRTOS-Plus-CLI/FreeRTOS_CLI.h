@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+CLI V1.0.3 (C) 2014 Real Time Engineers ltd. All rights reserved.
+ * FreeRTOS+CLI V1.0.4 (C) 2014 Real Time Engineers ltd. All rights reserved.
  *
  * This file is part of the FreeRTOS+CLI distribution.  The FreeRTOS+CLI license
  * terms are different to the FreeRTOS license terms.

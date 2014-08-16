@@ -1,3 +1,8 @@
+Changes between V1.0.3 and V1.0.4 released
+
+	+ Update to use stdint and the FreeRTOS specific typedefs that were
+	  introduced in FreeRTOS V8.0.0.
+
 Changes between V1.0.2 and V1.0.3
 
 	+ Previously, and in line with good software engineering practice, the

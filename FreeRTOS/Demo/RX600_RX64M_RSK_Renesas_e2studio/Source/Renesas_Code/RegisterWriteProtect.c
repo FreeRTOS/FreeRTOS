@@ -5,7 +5,7 @@
  *      Author: WarnerR
  */
 
-#include "r_cg_iodefine.h"
+#include "../iodefine.h"
 #include "stdint.h"
 
 #define	PRC0_BIT	0x0001

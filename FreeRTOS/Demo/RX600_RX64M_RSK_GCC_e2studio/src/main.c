@@ -91,6 +91,10 @@
 #include "QueueOverwrite.h"
 #include "EventGroupsDemo.h"
 
+/* Hardware specifics. */
+#include "iodefine.h"
+#include "rskrx64mdef.h"
+
 /* Set option bytes */
 #pragma address OFS0_location = 0xFFFFFF8CUL
 #pragma address OFS1_location = 0xFFFFFF88UL

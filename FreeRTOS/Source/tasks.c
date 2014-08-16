@@ -3586,24 +3586,32 @@ TickType_t uxReturn;
 
 void vTaskIncrementMutexHeldCount( void )
 {
-	/* If xSemaphoreCreateMutex() is called before any tasks have been created
-	then pxCurrentTCB will be NULL. */
-	if( pxCurrentTCB != NULL )
+	#if ( configUSE_MUTEXES == 1 )
 	{
-		( pxCurrentTCB->uxMutexesHeld )++;
+		/* If xSemaphoreCreateMutex() is called before any tasks have been created
+		then pxCurrentTCB will be NULL. */
+		if( pxCurrentTCB != NULL )
+		{
+			( pxCurrentTCB->uxMutexesHeld )++;
+		}
 	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
 void vTaskDecrementMutexHeldCount( void )
 {
-	/* If xSemaphoreCreateMutex() is called before any tasks have been created
-	then pxCurrentTCB will be NULL. */
-	if( pxCurrentTCB != NULL )
+	#if ( configUSE_MUTEXES == 1 )
 	{
-		configASSERT( pxCurrentTCB->uxMutexesHeld );
-		( pxCurrentTCB->uxMutexesHeld )--;
+		/* If xSemaphoreCreateMutex() is called before any tasks have been created
+		then pxCurrentTCB will be NULL. */
+		if( pxCurrentTCB != NULL )
+		{
+			configASSERT( pxCurrentTCB->uxMutexesHeld );
+			( pxCurrentTCB->uxMutexesHeld )--;
+		}
 	}
+	#endif
 }
 
 #ifdef FREERTOS_MODULE_TEST

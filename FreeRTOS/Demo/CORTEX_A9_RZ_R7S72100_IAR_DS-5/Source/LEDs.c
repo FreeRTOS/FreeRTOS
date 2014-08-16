@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.0.1 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -64,7 +64,7 @@
 */
 
 /*-----------------------------------------------------------
- * Simple IO routines to control the LEDs.
+ * Simple IO routines to control an LED.
  *-----------------------------------------------------------*/
 
 /* Scheduler includes. */
@@ -81,17 +81,24 @@
 
 void vParTestInitialise( void )
 {
-	/* Initialise P4_10 for LED1. */
-	PORT4.PMCn.BIT.PMCn10 = 0;
-	PORT4.Pn.BIT.Pn10 = 1;
-	PORT4.PMn.BIT.PMn10 = 0;
-	PORT4.PIPCn.BIT.PIPCn10 = 0;
+	/* Initialise P7_01 for LED0. */
+	PORT7.PMCn.BIT.PMCn1 = 0;
+	PORT7.Pn.BIT.Pn1 = 1;
+	PORT7.PMn.BIT.PMn1 = 0;
+	PORT7.PIPCn.BIT.PIPCn1 = 0;
+}
+/*-----------------------------------------------------------*/
 
-	/* Initialise P4_11 for LED2. */
-	PORT4.PMCn.BIT.PMCn11 = 0;
-	PORT4.Pn.BIT.Pn11 = 1;
-	PORT4.PMn.BIT.PMn11 = 0;
-	PORT4.PIPCn.BIT.PIPCn11 = 0;
+void vParTestToggleLED( unsigned long ulLED )
+{
+	if( ulLED == 0 )
+	{
+		taskENTER_CRITICAL();
+		{
+			PORT7.Pn.BIT.Pn1 = !PORT7.Pn.BIT.Pn1;
+		}
+		taskEXIT_CRITICAL();
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -100,37 +107,13 @@ void vParTestSetLED( unsigned long ulLED, signed long xValue )
 	/* A high value turns the LED off. */
 	xValue = !xValue;
 
-	taskENTER_CRITICAL();
+	if( ulLED == 0 )
 	{
-		if( ulLED == 0 )
+		taskENTER_CRITICAL();
 		{
-			PORT4.Pn.BIT.Pn10 = xValue;
+			PORT7.Pn.BIT.Pn1 = xValue;
 		}
-
-		if( ulLED == 1 )
-		{
-			PORT4.Pn.BIT.Pn11 = xValue;
-		}
+		taskEXIT_CRITICAL();
 	}
-	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned long ulLED )
-{
-	taskENTER_CRITICAL();
-	{
-		if( ulLED == 0 )
-		{
-			PORT4.Pn.BIT.Pn10 = !PORT4.Pn.BIT.Pn10;
-		}
-
-		if( ulLED == 1 )
-		{
-			PORT4.Pn.BIT.Pn11 = !PORT4.Pn.BIT.Pn11;
-		}
-	}
-	taskEXIT_CRITICAL();
-}
-/*-----------------------------------------------------------*/
-

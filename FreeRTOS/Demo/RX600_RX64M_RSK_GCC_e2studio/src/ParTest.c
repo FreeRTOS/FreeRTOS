@@ -75,6 +75,7 @@
 #include "partest.h"
 
 /* Hardware specifics. */
+#include "iodefine.h"
 #include "rskrx64mdef.h"
 
 #define partestNUM_LEDS ( 4 )

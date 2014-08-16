@@ -176,8 +176,6 @@ XScuGic xInterruptController;
 
 int main( void )
 {
-extern void main_lwIP( void );
-
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 

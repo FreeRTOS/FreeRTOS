@@ -179,6 +179,12 @@ header file. */
 void vAssertCalled( const char * pcFile, unsigned long ulLine );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 
+/* If configTASK_RETURN_ADDRESS is not defined then a task that attempts to
+return from its implementing function will end up in a "task exit error"
+function - which contains a call to configASSERT().  However this can give GCC
+some problems when it tries to unwind the stack, as the exit error function has
+nothing to return to.  To avoid this define configTASK_RETURN_ADDRESS to 0.  */
+#define configTASK_RETURN_ADDRESS	NULL
 
 
 /****** Hardware specific settings. *******************************************/

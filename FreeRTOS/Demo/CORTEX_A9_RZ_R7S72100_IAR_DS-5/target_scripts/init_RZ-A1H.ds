@@ -1,11 +1,10 @@
-stop
-pause 500
 reset
 stop
 #reset
 
 info memory
 memory S:0x00000000 S:0x07ffffff ro
+memory S:0x08000000 S:0x0fffffff cache
 memory S:0x3fffff80 S:0x3fffffff nocache noverify
 memory S:0xfcfe0000 S:0xfcfeffff nocache noverify
 
@@ -21,7 +20,8 @@ mem set 0x3fffff80 32 0x00000001
 
 # ;*Writing to On-Chip Data-Retention RAM is enabled.
 # ;SYSCR3.RRAMWE3=RRAMWE2=RRAMWE1=RRAMWE0=1
-mem set 0xfcfe0408 32 0xf
+memory set S:0xFCFE0408 0 {(unsigned char)0x0F}
+x/1b 0xfcfe0408
 
 ######################################
 # CS0 Port Setting					##
@@ -39,12 +39,6 @@ mem set 0xfcfe3A20 16 0x0000        # PFCAE8
 mem set 0xfcfe3620 16 0x0000        # PFCE8
 mem set 0xfcfe3520 16 0x0000        # PFC8
 mem set 0xfcfe7220 16 0xffff        # PIPC8
-# P7_6(WE0#), P7_8(RD#), P7_0(CS0#),
-mem set 0xfcfe341c 16 0xff41        # PMC7
-mem set 0xfcfe3A1c 16 0x0000        # PFCAE7
-mem set 0xfcfe361c 16 0x0000        # PFCE7
-mem set 0xfcfe351c 16 0x0000        # PFC7
-mem set 0xfcfe721c 16 0xff41        # PIPC7
 # P3_7(CS1#),
 mem set 0xfcfe340c 16 0x0080        # PMC3
 mem set 0xfcfe3A0c 16 0x0080        # PFCAE3
@@ -52,4 +46,47 @@ mem set 0xfcfe360c 16 0x0080        # PFCE3
 mem set 0xfcfe350c 16 0x0000        # PFC3
 mem set 0xfcfe720c 16 0x0080        # PIPC3
 
+# SRSR - SDRAM Setup?
+# P7_8(RD#), P7_7(WE1#), P7_6(WE0#), P7_5(RD/WR#), P7_4(CKE), P7_3(CAS#), P7_2(RAS#), P7_1(CS3#), P7_0(CS0#)
+mem set 0xfcfe341c 16 0xffff        # PMC7
+mem set 0xfcfe3A1c 16 0x0000        # PFCAE7
+mem set 0xfcfe361c 16 0x0000        # PFCE7
+mem set 0xfcfe351c 16 0x0000        # PFC7
+mem set 0xfcfe721c 16 0xffff        # PIPC7
+# P5_8(CS2#),
+mem set 0xfcfe3414 16 0x0100        # PMC5
+mem set 0xfcfe3A14 16 0x0100        # PFCAE5
+mem set 0xfcfe3614 16 0x0000        # PFCE5
+mem set 0xfcfe3514 16 0x0100        # PFC5
+mem set 0xfcfe7214 16 0x0100        # PIPC5
 
+# disable verify on SDRAM setup registers
+memory S:0x3fffc000 S:0x3fffffff nocache noverify
+
+######################################
+# CS2 SDRAM Setting                 ##
+######################################
+mem set 0x3fffc00c 32 0x00004C00    # CS2BCR - SDRAM
+mem set 0x3fffc030 32 0x00000080    # CS2WCR - SDRAM
+mem set 0x3fffd040 16 0x0000        # SDRAM_MODE_CS2
+
+######################################
+# CS3 SDRAM Setting                 ##
+######################################
+wait 0.5s
+mem set 0x3fffc010 32 0x00004C00    # CS3BCR - SDRAM
+mem set 0x3fffc034 32 0x00002492    # CS3WCR - SDRAM
+mem set 0x3fffc04c 32 0x00120812    # SDCR
+mem set 0x3fffc058 32 0xA55A0020    # RTCOR
+mem set 0x3fffc050 32 0xA55A0010    # RTCSR
+mem set 0x3fffe040 16 0x0000        # SDRAM_MODE_CS3
+# SRSR - SDRAM Setup?
+
+#SRSR - Not used - updated to include SDRAM setup
+# P7_6(WE0#), P7_8(RD#), P7_0(CS0#),
+#mem set 0xfcfe341c 16 0xff41        # PMC7
+#mem set 0xfcfe3A1c 16 0x0000        # PFCAE7
+#mem set 0xfcfe361c 16 0x0000        # PFCE7
+#mem set 0xfcfe351c 16 0x0000        # PFC7
+#mem set 0xfcfe721c 16 0xff41        # PIPC7
+#SRSR - Not used - updated to include SDRAM setup

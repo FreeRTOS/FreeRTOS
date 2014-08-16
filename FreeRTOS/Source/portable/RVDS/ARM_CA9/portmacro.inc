@@ -104,9 +104,6 @@ IRQ_MODE			EQU		0x12
 	MACRO
 	portRESTORE_CONTEXT
 
-	; Switch to system mode
-	CPS		#SYS_MODE
-
 	; Set the SP to point to the stack of the task being restored.
 	LDR		R0, =pxCurrentTCB
 	LDR		R1, [R0]

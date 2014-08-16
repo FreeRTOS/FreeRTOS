@@ -57,6 +57,14 @@ VbarInit	FUNCTION
 ;	LDR r0, =||Image$$VECTOR_TABLE$$Base||
 	MCR p15, 0, r0, c12, c0, 0
 
+;===================================================================
+; Set low vectors
+;===================================================================
+
+    MRC  p15, 0, r0, c1, c0, 0   ;/* Read CP15 System Control register (SCTLR) */
+    BIC  r0, r0, #(0x1 << 13)    ;/* Clear V bit 13 to set Low Vectors  */
+    MCR  p15, 0, r0, c1, c0, 0   ;/* Write CP15 System Control register */
+    ISB
 	BX		lr
 
 	ENDFUNC

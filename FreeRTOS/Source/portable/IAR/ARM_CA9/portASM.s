@@ -75,7 +75,7 @@ IRQ_MODE			EQU		0x12
 	INCLUDE portASM.h
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; SVC handler is used to start the scheduler and yield a task.
+; SVC handler is used to yield a task.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 FreeRTOS_SWI_Handler
 
@@ -85,10 +85,15 @@ FreeRTOS_SWI_Handler
 	portSAVE_CONTEXT
 	LDR R0, =vTaskSwitchContext
 	BLX	R0
-
-vPortRestoreTaskContext
 	portRESTORE_CONTEXT
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; vPortRestoreTaskContext is used to start the scheduler.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+vPortRestoreTaskContext
+	; Switch to system mode
+	CPS		#SYS_MODE
+	portRESTORE_CONTEXT
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PL390 GIC interrupt handler
@@ -167,7 +172,7 @@ exit_without_switch
 	MOVS	PC, LR
 
 switch_before_exit
-	; A context swtich is to be performed.  Clear the context switch pending
+	; A context switch is to be performed.  Clear the context switch pending
 	; flag.
 	MOV		r0, #0
 	STR		r0, [r1]

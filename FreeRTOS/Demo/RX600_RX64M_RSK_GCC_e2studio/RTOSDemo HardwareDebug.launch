@@ -17,6 +17,7 @@
 <stringAttribute key="com.renesas.cdt.core.targetDevice" value="R5F564ML"/>
 <booleanAttribute key="com.renesas.cdt.core.useRemoteTarget" value="true"/>
 <booleanAttribute key="com.renesas.cdt.core.verboseMode" value="false"/>
+<stringAttribute key="com.renesas.cdt.debug.ioview.dsf.registerSelection" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;selectedRegisterList ioFilePath=&quot;C:\DevTools\Renesas\e2_studio\internal\IoFiles\RX\RX64M.sfrx&quot;/&gt;&#13;&#10;"/>
 <stringAttribute key="com.renesas.cdt.debug.realtimemanager.memory.mruRanges" value=""/>
 <stringAttribute key="com.renesas.cdt.launch.dsf.IO_MAP" value="${eclipse_home}..\internal\IoFiles\RX\RX64M.sfrx"/>
 <booleanAttribute key="com.renesas.cdt.launch.dsf.USE_DEFAULT_IO_MAP" value="true"/>

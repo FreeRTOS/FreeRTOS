@@ -77,6 +77,10 @@
 #include "IntQueueTimer.h"
 #include "IntQueue.h"
 
+/* Hardware specifics. */
+#include "iodefine.h"
+#include "rskrx64mdef.h"
+
 #define IPR_PERIB_INTB128	128
 #define IPR_PERIB_INTB129	129
 #define IER_PERIB_INTB128	0x10

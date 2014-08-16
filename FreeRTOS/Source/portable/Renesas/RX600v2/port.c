@@ -74,6 +74,9 @@
 /* Library includes. */
 #include "string.h"
 
+/* Hardware specifics. */
+#include "iodefine.h"
+
 /*-----------------------------------------------------------*/
 
 /* Tasks should start with interrupts enabled and in Supervisor mode, therefore

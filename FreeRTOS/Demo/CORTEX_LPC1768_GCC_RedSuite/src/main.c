@@ -106,10 +106,6 @@
 #include "QPeek.h"
 #include "recmutex.h"
 
-/* Red Suite includes. */
-#include "lcd_driver.h"
-#include "lcd.h"
-
 /*-----------------------------------------------------------*/
 
 /* The time between cycles of the 'check' functionality (defined within the
@@ -190,12 +186,13 @@ char cIPAddress[ 16 ]; /* Enough space for "xxx.xxx.xxx.xxx\0". */
     xTaskCreate( vUSBTask, "USB", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Display the IP address, then create the uIP task.  The WEB server runs
-	in this task. */
+	in this task.  --- Due to tool changes since this demo was created the LCD
+	is no longer used.
 	LCDdriver_initialisation();
 	LCD_PrintString( 5, 10, "FreeRTOS.org", 14, COLOR_GREEN);
 	sprintf( cIPAddress, "%d.%d.%d.%d", configIP_ADDR0, configIP_ADDR1, configIP_ADDR2, configIP_ADDR3 );
 	LCD_PrintString( 5, 30, cIPAddress, 14, COLOR_RED);
-    xTaskCreate( vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL );
+    xTaskCreate( vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, ( void * ) NULL, mainUIP_TASK_PRIORITY, NULL ); */
 
     /* Start the scheduler. */
 	vTaskStartScheduler();

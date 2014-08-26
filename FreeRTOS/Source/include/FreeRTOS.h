@@ -99,7 +99,7 @@ extern "C" {
 /* configUSE_PORT_OPTIMISED_TASK_SELECTION must be defined before portable.h
 is included as it is used by the port layer. */
 #ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
-	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #endif
 
 /* Definitions specific to the port being used. */
@@ -609,7 +609,7 @@ is included as it is used by the port layer. */
 
 #ifndef tracePEND_FUNC_CALL_FROM_ISR
 	#define tracePEND_FUNC_CALL_FROM_ISR(xFunctionToPend, pvParameter1, ulParameter2, ret)
-#endif 
+#endif
 
 #ifndef traceQUEUE_REGISTRY_ADD
 	#define traceQUEUE_REGISTRY_ADD(xQueue, pcQueueName)

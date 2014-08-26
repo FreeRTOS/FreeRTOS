@@ -86,9 +86,9 @@
  *      a netmask are also located at the bottom of FreeRTOSConfig.h.
  *
  * When connected correctly the demo uses the lwIP sockets API to create
- * a FreeRTOS+CLI command console, and the lwIP raw API to create a create a
- * basic HTTP web server with server side includes that generate dynamic run
- * time web pages.  See http://www.freertos.org/RTOS-Xilinx-Zynq.html for more
+ * a FreeRTOS+CLI command console, and the lwIP raw API to create a basic HTTP
+ * web server with server side includes that generate dynamic run time web
+ * pages.  See http://www.freertos.org/RTOS-Xilinx-Zynq.html for more
  * information.
  *
  * To connect to FreeRTOS+CLI, open a command prompt and enter "telnet <ipaddr>"

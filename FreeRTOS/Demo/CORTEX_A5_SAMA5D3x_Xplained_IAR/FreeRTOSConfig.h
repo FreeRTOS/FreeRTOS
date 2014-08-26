@@ -86,7 +86,7 @@
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 5 )
-#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 150 )
+#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 100 )
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 42 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
@@ -136,7 +136,7 @@ http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
 /* Cortex-A specific setting:  The address of the register within the interrupt
 controller from which the address of the current interrupt's handling function
 can be obtained.  See:
-http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html
+http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
 #define configINTERRUPT_VECTOR_ADDRESS	0xFFFFF010UL
 
 /* Cortex-A specific setting:  The address of End of Interrupt register within

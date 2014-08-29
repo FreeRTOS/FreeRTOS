@@ -1554,12 +1554,9 @@ eSleepModeStatus eTaskConfirmSleepModeStatus( void ) PRIVILEGED_FUNCTION;
 
 /*
  * For internal use only.  Increment the mutex held count when a mutex is
- * taken and decrement the mutex held count when the mutex is given back
- * respectively.  The mutex held count is used to know when it is safe to
- * disinherit a priority.
+ * taken and return the handle of the task that has taken the mutex.
  */
-void vTaskIncrementMutexHeldCount( void );
-void vTaskDecrementMutexHeldCount( void );
+void *pvTaskIncrementMutexHeldCount( void );
 
 #ifdef __cplusplus
 }

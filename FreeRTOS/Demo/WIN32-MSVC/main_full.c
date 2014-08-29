@@ -162,7 +162,7 @@ static void prvTestTask( void *pvParameters );
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 
 /*
- * Called from the idle task hook function to demonstrate the use of 
+ * Called from the idle task hook function to demonstrate the use of
  * xTimerPendFunctionCall() as xTimerPendFunctionCall() is not demonstrated by
  * any of the standard demo tasks.
  */
@@ -401,6 +401,9 @@ void vFullDemoTickHookFunction( void )
 
 	/* Exercise event groups from interrupts. */
 	vPeriodicEventGroupsProcessing();
+
+	/* Exercise giving mutexes from an interrupt. */
+	vMutexISRInteractionTest();
 }
 /*-----------------------------------------------------------*/
 

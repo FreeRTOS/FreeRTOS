@@ -741,7 +741,12 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	as well as late timer expiries. */
 	const TickType_t xMargin = 6;
 #else
-	const TickType_t xMargin = 3;
+	#ifdef _WINDOWS_
+		/* Windows is not real real time. */
+		const TickType_t xMargin = 8;
+	#else
+		const TickType_t xMargin = 4;
+	#endif /* _WINDOWS_ */
 #endif
 
 

@@ -93,6 +93,7 @@
 #define genqMUTEX_MEDIUM_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define genqMUTEX_HIGH_PRIORITY		( tskIDLE_PRIORITY + 3 )
 
+#define genqINTERRUPT_MUTEX_GIVE_PERIOD_MS ( 100 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -121,6 +122,28 @@ static void prvLowPriorityMutexTask( void *pvParameters );
 static void prvMediumPriorityMutexTask( void *pvParameters );
 static void prvHighPriorityMutexTask( void *pvParameters );
 
+/*
+ * Exercises the priority inheritance when a task takes two mutexes, returning
+ * them in a different order to which they were taken.
+ */
+static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex );
+
+/*
+ * Exercises the priority inheritance when a task takes two mutexes, returning
+ * them in the same order in which they were taken.
+ */
+static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex );
+
+/*
+ * Task that receives an a mutex that is given from an interrupt - although
+ * generally mutexes should not be used given in interrupts (and definitely
+ * never taken in an interrupt) there are some circumstances when it may be
+ * desirable.  NOTE:  This function is not declared static to prevent compiler
+ * warnings being generated in demos where the function is declared but not
+ * used.
+ */
+void vInterruptMutexTask( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
@@ -139,12 +162,20 @@ static volatile uint32_t ulGuardedVariable = 0;
 priority mutex test tasks. */
 static TaskHandle_t xHighPriorityMutexTask, xMediumPriorityMutexTask;
 
+/* A mutex which is given from an interrupt - although generally mutexes should
+not be used given in interrupts (and definitely never taken in an interrupt)
+there are some circumstances when it may be desirable. */
+static SemaphoreHandle_t xISRMutex = NULL;
+
 /*-----------------------------------------------------------*/
 
 void vStartGenericQueueTasks( UBaseType_t uxPriority )
 {
 QueueHandle_t xQueue;
 SemaphoreHandle_t xMutex;
+
+	xISRMutex = xSemaphoreCreateMutex();
+	configASSERT( xISRMutex );
 
 	/* Create the queue that we are going to use for the
 	prvSendFrontAndBackTest demo. */
@@ -180,6 +211,14 @@ SemaphoreHandle_t xMutex;
 	xTaskCreate( prvLowPriorityMutexTask, "MuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
 	xTaskCreate( prvMediumPriorityMutexTask, "MuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
 	xTaskCreate( prvHighPriorityMutexTask, "MuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
+
+	/* Only when the windows simulator is being used - create the task that
+	receives a mutex from an interrupt. */
+	#ifdef _WINDOWS_
+	{
+		xTaskCreate( vInterruptMutexTask, "IntMu", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, NULL );
+	}
+	#endif /* __WINDOWS__ */
 }
 /*-----------------------------------------------------------*/
 
@@ -411,6 +450,252 @@ QueueHandle_t xQueue;
 }
 /*-----------------------------------------------------------*/
 
+static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex )
+{
+	/* Take the mutex.  It should be available now. */
+	if( xSemaphoreTake( xMutex, genqNO_BLOCK ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Set the guarded variable to a known start value. */
+	ulGuardedVariable = 0;
+
+	/* This task's priority should be as per that assigned when the task was
+	created. */
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Now unsuspend the high priority task.  This will attempt to take the
+	mutex, and block when it finds it cannot obtain it. */
+	vTaskResume( xHighPriorityMutexTask );
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
+	/* Ensure the task is reporting its priority as blocked and not
+	suspended (as it would have done in versions up to V7.5.3). */
+	#if( INCLUDE_eTaskGetState == 1 )
+	{
+		configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
+	}
+	#endif /* INCLUDE_eTaskGetState */
+
+	/* The priority of the high priority task should now have been inherited
+	as by now it will have attempted to get the mutex. */
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Attempt to set the priority of this task to the test priority -
+	between the	idle priority and the medium/high test priorities, but the
+	actual priority should remain at the high priority. */
+	vTaskPrioritySet( NULL, genqMUTEX_TEST_PRIORITY );
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Now unsuspend the medium priority task.  This should not run as the
+	inherited priority of this task is above that of the medium priority
+	task. */
+	vTaskResume( xMediumPriorityMutexTask );
+
+	/* If the medium priority task did run then it will have incremented the
+	guarded variable. */
+	if( ulGuardedVariable != 0 )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Take the local mutex too, so two mutexes are now held. */
+	if( xSemaphoreTake( xLocalMutex, genqNO_BLOCK ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* When the semaphore is given back the priority of this task should not
+	yet be disinherited because the local mutex is still held.  This is a
+	simplification to allow FreeRTOS to be integrated with middleware that
+	attempts to hold multiple mutexes without bloating the code with complex
+	algorithms.  It is possible that the high priority mutex task will
+	execute as it shares a priority with this task. */
+	if( xSemaphoreGive( xMutex ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
+	/* The guarded variable is only incremented by the medium priority task,
+	which still should not have executed as this task should remain at the
+	higher priority, ensure this is the case. */
+	if( ulGuardedVariable != 0 )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Now also give back the local mutex, taking the held count back to 0.
+	This time the priority of this task should be disinherited back to the
+	priority to which it was set while the mutex was held.  This means
+	the medium priority task should execute and increment the guarded
+	variable.   When this task next	runs both the high and medium priority
+	tasks will have been suspended again. */
+	if( xSemaphoreGive( xLocalMutex ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
+	/* Check the guarded variable did indeed increment... */
+	if( ulGuardedVariable != 1 )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* ... and that the priority of this task has been disinherited to
+	genqMUTEX_TEST_PRIORITY. */
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_TEST_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Set the priority of this task back to its original value, ready for
+	the next loop around this test. */
+	vTaskPrioritySet( NULL, genqMUTEX_LOW_PRIORITY );
+}
+/*-----------------------------------------------------------*/
+
+static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex )
+{
+	/* Take the mutex.  It should be available now. */
+	if( xSemaphoreTake( xMutex, genqNO_BLOCK ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Set the guarded variable to a known start value. */
+	ulGuardedVariable = 0;
+
+	/* This task's priority should be as per that assigned when the task was
+	created. */
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Now unsuspend the high priority task.  This will attempt to take the
+	mutex, and block when it finds it cannot obtain it. */
+	vTaskResume( xHighPriorityMutexTask );
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
+	/* Ensure the task is reporting its priority as blocked and not
+	suspended (as it would have done in versions up to V7.5.3). */
+	#if( INCLUDE_eTaskGetState == 1 )
+	{
+		configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
+	}
+	#endif /* INCLUDE_eTaskGetState */
+
+	/* The priority of the high priority task should now have been inherited
+	as by now it will have attempted to get the mutex. */
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Now unsuspend the medium priority task.  This should not run as the
+	inherited priority of this task is above that of the medium priority
+	task. */
+	vTaskResume( xMediumPriorityMutexTask );
+
+	/* If the medium priority task did run then it will have incremented the
+	guarded variable. */
+	if( ulGuardedVariable != 0 )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Take the local mutex too, so two mutexes are now held. */
+	if( xSemaphoreTake( xLocalMutex, genqNO_BLOCK ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* When the local semaphore is given back the priority of this task should
+	not	yet be disinherited because the shared mutex is still held.  This is a
+	simplification to allow FreeRTOS to be integrated with middleware that
+	attempts to hold multiple mutexes without bloating the code with complex
+	algorithms.  It is possible that the high priority mutex task will
+	execute as it shares a priority with this task. */
+	if( xSemaphoreGive( xLocalMutex ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
+	/* The guarded variable is only incremented by the medium priority task,
+	which still should not have executed as this task should remain at the
+	higher priority, ensure this is the case. */
+	if( ulGuardedVariable != 0 )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* Now also give back the shared mutex, taking the held count back to 0.
+	This time the priority of this task should be disinherited back to the
+	priority at which it was created.  This means the medium priority task
+	should execute and increment the guarded variable.  When this task next runs
+	both the high and medium priority tasks will have been suspended again. */
+	if( xSemaphoreGive( xMutex ) != pdPASS )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	#if configUSE_PREEMPTION == 0
+		taskYIELD();
+	#endif
+
+	/* Check the guarded variable did indeed increment... */
+	if( ulGuardedVariable != 1 )
+	{
+		xErrorDetected = pdTRUE;
+	}
+
+	/* ... and that the priority of this task has been disinherited to
+	genqMUTEX_LOW_PRIORITY. */
+	if( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+	{
+		xErrorDetected = pdTRUE;
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvLowPriorityMutexTask( void *pvParameters )
 {
 SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters, xLocalMutex;
@@ -430,131 +715,21 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters, xLocalMutex;
 
 	for( ;; )
 	{
-		/* Take the mutex.  It should be available now. */
-		if( xSemaphoreTake( xMutex, genqNO_BLOCK ) != pdPASS )
-		{
-			xErrorDetected = pdTRUE;
-		}
+		/* The first tests exercise the priority inheritance when two mutexes
+		are taken then returned in a different order to which they were
+		taken. */
+		prvTakeTwoMutexesReturnInDifferentOrder( xMutex, xLocalMutex );
 
-		/* Set the guarded variable to a known start value. */
-		ulGuardedVariable = 0;
-
-		/* This task's priority should be as per that assigned when the task was
-		created. */
-		if( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Now unsuspend the high priority task.  This will attempt to take the
-		mutex, and block when it finds it cannot obtain it. */
-		vTaskResume( xHighPriorityMutexTask );
+		/* Just to show this task is still running. */
+		ulLoopCounter2++;
 
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
 		#endif
 
-		/* Ensure the task is reporting its priority as blocked and not
-		suspended (as it would have done in versions up to V7.5.3). */
-		#if( INCLUDE_eTaskGetState == 1 )
-		{
-			configASSERT( eTaskGetState( xHighPriorityMutexTask ) == eBlocked );
-		}
-		#endif /* INCLUDE_eTaskGetState */
-
-		/* The priority of the high priority task should now have been inherited
-		as by now it will have attempted to get the mutex. */
-		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Attempt to set the priority of this task to the test priority -
-		between the	idle priority and the medium/high test priorities, but the
-		actual priority should remain at the high priority. */
-		vTaskPrioritySet( NULL, genqMUTEX_TEST_PRIORITY );
-		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Now unsuspend the medium priority task.  This should not run as the
-		inherited priority of this task is above that of the medium priority
-		task. */
-		vTaskResume( xMediumPriorityMutexTask );
-
-		/* If the medium priority task did run then it will have incremented the 
-		guarded variable. */
-		if( ulGuardedVariable != 0 )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Take the local mutex too, so two mutexes are now held. */
-		if( xSemaphoreTake( xLocalMutex, genqNO_BLOCK ) != pdPASS )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* When the semaphore is given back the priority of this task should not
-		yet be disinherited because the local mutex is still held.  This is a
-		simplification to allow FreeRTOS to be integrated with middleware that
-		attempts to hold multiple mutexes without bloating the code with complex
-		algorithms.  It is possible that the high priority mutex task will
-		execute as it shares a priority with this task. */
-		if( xSemaphoreGive( xMutex ) != pdPASS )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
-
-		/* The guarded variable is only incremented by the medium priority task,
-		which still should not have executed as this task should remain at the
-		higher priority, ensure this is the case. */
-		if( ulGuardedVariable != 0 )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Now also give back the local mutex, taking the held count back to 0.
-		This time the priority of this task should be disinherited back to the
-		priority to which it was set while the mutex was held.  This means
-		the medium priority task should execute and increment the guarded 
-		variable.   When this task next	runs both the high and medium priority 
-		tasks will have been suspended again. */
-		if( xSemaphoreGive( xLocalMutex ) != pdPASS )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		#if configUSE_PREEMPTION == 0
-			taskYIELD();
-		#endif
-
-		/* Check the guarded variable did indeed increment... */
-		if( ulGuardedVariable != 1 )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* ... and that the priority of this task has been disinherited to
-		genqMUTEX_TEST_PRIORITY. */
-		if( uxTaskPriorityGet( NULL ) != genqMUTEX_TEST_PRIORITY )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Set the priority of this task back to its original value, ready for
-		the next loop around this test. */
-		vTaskPrioritySet( NULL, genqMUTEX_LOW_PRIORITY );
+		/* The second tests exercise the priority inheritance when two mutexes
+		are taken then returned in the same order in which they were taken. */
+		prvTakeTwoMutexesReturnInSameOrder( xMutex, xLocalMutex );
 
 		/* Just to show this task is still running. */
 		ulLoopCounter2++;
@@ -612,12 +787,53 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters;
 }
 /*-----------------------------------------------------------*/
 
+/* NOTE: This function is not declared static to prevent compiler warnings in
+demos where the function is declared but not used. */
+void vInterruptMutexTask( void *pvParameters )
+{
+const TickType_t xInterruptGivePeriod = pdMS_TO_TICKS( genqINTERRUPT_MUTEX_GIVE_PERIOD_MS );
+volatile uint32_t ulLoops = 0;
+
+	/* Just to avoid compiler warnings. */
+	( void ) pvParameters;
+
+	for( ;; )
+	{
+		/* Has to wait longer than the time between gives to make sure it
+		should definitely have received the mutex. */
+		if( xSemaphoreTake( xISRMutex, ( xInterruptGivePeriod * 2 ) ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+		else
+		{
+			ulLoops++;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vMutexISRInteractionTest( void )
+{
+static TickType_t xLastGiveTime = 0;
+TickType_t xTimeNow;
+
+	xTimeNow = xTaskGetTickCountFromISR();
+	if( ( xTimeNow - xLastGiveTime ) >= pdMS_TO_TICKS( genqINTERRUPT_MUTEX_GIVE_PERIOD_MS ) )
+	{
+		configASSERT( xISRMutex );
+		xSemaphoreGiveFromISR( xISRMutex, NULL );
+		xLastGiveTime = xTimeNow;
+	}
+}
+/*-----------------------------------------------------------*/
+
 /* This is called to check that all the created tasks are still running. */
 BaseType_t xAreGenericQueueTasksStillRunning( void )
 {
 static uint32_t ulLastLoopCounter = 0, ulLastLoopCounter2 = 0;
 
-	/* If the demo task is still running then we expect the loopcounters to
+	/* If the demo task is still running then we expect the loop counters to
 	have incremented since this function was last called. */
 	if( ulLastLoopCounter == ulLoopCounter )
 	{

@@ -297,7 +297,7 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 	( void ) ulLine;
 	( void ) pcFileName;
 
-	taskENTER_CRITICAL();
+ 	taskENTER_CRITICAL();
 	{
 		/* Stop the trace recording. */
 		if( xPrinted == pdFALSE )

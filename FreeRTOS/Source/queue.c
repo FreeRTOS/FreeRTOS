@@ -421,10 +421,7 @@ QueueHandle_t xReturn = NULL;
 
 			traceCREATE_MUTEX( pxNewQueue );
 
-			/* Start with the semaphore in the expected state.  Preload the
-			 mutex held count as calling xQueueGenericSend() will decrement the
-			 count back to 0. */
-			vTaskIncrementMutexHeldCount();
+			/* Start with the semaphore in the expected state. */
 			( void ) xQueueGenericSend( pxNewQueue, NULL, ( TickType_t ) 0U, queueSEND_TO_BACK );
 		}
 		else
@@ -702,7 +699,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						the mutexes were given back in an order that is
 						different to that in which they were taken. */
 						queueYIELD_IF_USING_PREEMPTION();
-					}					
+					}
 					else
 					{
 						mtCOVERAGE_TEST_MARKER();
@@ -1125,8 +1122,8 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						{
 							if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 							{
-								/* The task waiting has a higher priority so record that a
-								context	switch is required. */
+								/* The task waiting has a higher priority so 
+								record that a context switch is required. */
 								if( pxHigherPriorityTaskWoken != NULL )
 								{
 									*pxHigherPriorityTaskWoken = pdTRUE;
@@ -1243,7 +1240,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						{
 							/* Record the information required to implement
 							priority inheritance should it become necessary. */
-							pxQueue->pxMutexHolder = ( int8_t * ) xTaskGetCurrentTaskHandle(); /*lint !e961 Cast is not redundant as TaskHandle_t is a typedef. */
+							pxQueue->pxMutexHolder = ( int8_t * ) pvTaskIncrementMutexHeldCount(); /*lint !e961 Cast is not redundant as TaskHandle_t is a typedef. */
 						}
 						else
 						{
@@ -1633,7 +1630,6 @@ BaseType_t xReturn = pdFALSE;
 			if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
 				/* The mutex is no longer being held. */
-				vTaskDecrementMutexHeldCount();
 				xReturn = xTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
 				pxQueue->pxMutexHolder = NULL;
 			}
@@ -1699,7 +1695,7 @@ BaseType_t xReturn = pdFALSE;
 
 static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer )
 {
-	if( pxQueue->uxQueueType != queueQUEUE_IS_MUTEX )
+	if( pxQueue->uxItemSize != 0 )
 	{
 		pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
 		if( pxQueue->u.pcReadFrom >= pxQueue->pcTail ) /*lint !e946 MISRA exception justified as use of the relational operator is the cleanest solutions. */
@@ -1711,11 +1707,6 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 			mtCOVERAGE_TEST_MARKER();
 		}
 		( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 MISRA exception as the casts are only redundant for some ports.  Also previous logic ensures a null pointer can only be passed to memcpy() when the count is 0. */
-	}
-	else
-	{
-		/* A mutex was taken. */
-		vTaskIncrementMutexHeldCount();
 	}
 }
 /*-----------------------------------------------------------*/

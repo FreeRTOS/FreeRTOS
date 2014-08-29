@@ -553,14 +553,14 @@ TCB_t * pxNewTCB;
 			pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK  ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
 
 			/* Check the alignment of the calculated top of stack is correct. */
-			configASSERT( ( ( ( uint32_t ) pxTopOfStack & ( uint32_t ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+			configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 		}
 		#else /* portSTACK_GROWTH */
 		{
 			pxTopOfStack = pxNewTCB->pxStack;
 
 			/* Check the alignment of the stack buffer is correct. */
-			configASSERT( ( ( ( uint32_t ) pxNewTCB->pxStack & ( uint32_t ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+			configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxNewTCB->pxStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
 
 			/* If we want to use stack checking on architectures that use
 			a positive stack growth direction then we also need to store the
@@ -3246,6 +3246,9 @@ TCB_t *pxTCB;
 
 		if( pxMutexHolder != NULL )
 		{
+			configASSERT( pxTCB->uxMutexesHeld );
+			( pxTCB->uxMutexesHeld )--;
+
 			if( pxTCB->uxPriority != pxTCB->uxBasePriority )
 			{
 				/* Only disinherit if no other mutexes are held. */
@@ -3584,7 +3587,7 @@ TickType_t uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vTaskIncrementMutexHeldCount( void )
+void *pvTaskIncrementMutexHeldCount( void )
 {
 	#if ( configUSE_MUTEXES == 1 )
 	{
@@ -3594,25 +3597,12 @@ void vTaskIncrementMutexHeldCount( void )
 		{
 			( pxCurrentTCB->uxMutexesHeld )++;
 		}
+
+		return pxCurrentTCB;
 	}
 	#endif
 }
 /*-----------------------------------------------------------*/
-
-void vTaskDecrementMutexHeldCount( void )
-{
-	#if ( configUSE_MUTEXES == 1 )
-	{
-		/* If xSemaphoreCreateMutex() is called before any tasks have been created
-		then pxCurrentTCB will be NULL. */
-		if( pxCurrentTCB != NULL )
-		{
-			configASSERT( pxCurrentTCB->uxMutexesHeld );
-			( pxCurrentTCB->uxMutexesHeld )--;
-		}
-	}
-	#endif
-}
 
 #ifdef FREERTOS_MODULE_TEST
 	#include "tasks_test_access_functions.h"

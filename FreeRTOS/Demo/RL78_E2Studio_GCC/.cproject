@@ -208,7 +208,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="mot" artifactName="RTOSDemo" buildArtefactType="com.renesas.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=com.renesas.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf *.lst *.lis *.lpp *.map" description="" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.1336466388" name="RSKRL78L13" parent="com.renesas.cdt.RL78.configuration.hardwaredebug">
+				<configuration artifactExtension="mot" artifactName="RTOSDemo" buildArtefactType="com.renesas.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=com.renesas.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf *.lst *.lis *.lpp *.map" description="" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser" id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.1336466388" name="RSKRL78L13" parent="com.renesas.cdt.RL78.configuration.hardwaredebug" postbuildStep="rl78-elf-size RTOSDemo.x">
 					<folderInfo id="com.renesas.cdt.RL78.configuration.hardwaredebug.1462655394.864201896.1336466388." name="/" resourcePath="">
 						<toolChain errorParsers="" id="com.renesas.cdt.RL78.toolChain.hardwaredebugConf.173659762" name="KPIT GNURL78-ELF Toolchain" superClass="com.renesas.cdt.RL78.toolChain.hardwaredebugConf">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.rl78.hardwaredebug.win32.targetPlatform.1290357402" osList="win32" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.targetPlatform"/>
@@ -248,13 +248,16 @@
 								<option id="com.renesas.cdt.core.Compiler.option.warning12.1187041851" name="Issue Warning of member initialisation mismatch(-Wreorder)" superClass="com.renesas.cdt.core.Compiler.option.warning12" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.warning13.2085992177" name="Issue Warning of bad sign comparisions(-Wsign-compare)" superClass="com.renesas.cdt.core.Compiler.option.warning13" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat.1743586745" name="Debug format" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.debugFormat.dwarf" valueType="enumerated"/>
-								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.854346802" name="Optimization level" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.speedCodeSize" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.854346802" name="Optimization level" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.optimizationLevel.none" valueType="enumerated"/>
 								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.macroDefines.1857322785" name="Macro Defines" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.macroDefines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="RSKRL78L13"/>
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.includeSymbolTable.1827952485" name="Include Symbol Table(s)" superClass="com.renesas.cdt.core.Compiler.option.includeSymbolTable" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.misc2.1309529749" name="Don't search standard system directories for header files(-nostdinc)" superClass="com.renesas.cdt.core.Compiler.option.misc2" value="false" valueType="boolean"/>
-								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.1713741321" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions"/>
+								<option id="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions.1713741321" name="User defined options" superClass="com.renesas.cdt.rl78.HardwareDebug.Compiler.option.userDefinedOptions" valueType="stringList">
+									<listOptionValue builtIn="false" value="-ffunction-sections"/>
+									<listOptionValue builtIn="false" value="-fdata-sections"/>
+								</option>
 								<inputType id="%Base.Compiler.C.InputType.Id.1471081059" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.1237074300" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>
@@ -276,8 +279,32 @@
 								</option>
 								<option id="com.renesas.cdt.core.Linker.option.userDefinedOptions.393231908" name="User defined options" superClass="com.renesas.cdt.core.Linker.option.userDefinedOptions" valueType="stringList">
 									<listOptionValue builtIn="false" value="-e_PowerON_Reset"/>
+									<listOptionValue builtIn="false" value="--gc-sections"/>
 								</option>
 								<option command="-stats" id="com.renesas.cdt.core.Linker.option.misc8.1087911111" name="Compute and display statistics about the operation of the linker(-stats)" superClass="com.renesas.cdt.core.Linker.option.misc8" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.core.Linker.option.linkOrderList.1908118178" name="" superClass="com.renesas.cdt.core.Linker.option.linkOrderList" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source/portable/MemMang\heap_2.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source/portable/GCC/RL78\port.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source/portable/GCC/RL78\portasm.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source\croutine.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source\event_groups.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source\list.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source\queue.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source\tasks.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/FreeRTOS_Source\timers.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/Common-Demo-Tasks\PollQ.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/Common-Demo-Tasks\blocktim.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/Common-Demo-Tasks\dynamic.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\ExampleISR.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\RegTest.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\hardware_setup.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\main.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\main_blinky.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\main_full.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\reset_program.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\vector_table.o&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\libRTOSDemo.a&quot;"/>
+								</option>
 							</tool>
 							<tool errorParsers="" id="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id.290652406" name="Objcopy" superClass="com.renesas.cdt.rl78.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
@@ -604,5 +631,21 @@
 			</scannerInfoProvider>
 		</profile>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="RL78_G1A_TB">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+		<configuration configurationName="YRDKRL78G14">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+		<configuration configurationName="RSKRL78L13">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+		<configuration configurationName="RSKRL78L1C">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+		<configuration configurationName="RSKRL78G1C">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+	</storageModule>
 </cproject>

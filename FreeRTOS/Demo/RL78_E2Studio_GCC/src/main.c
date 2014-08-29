@@ -129,10 +129,41 @@ to write an ISR to be included in this file. */
 static SemaphoreHandle_t xSemaphore = NULL;
 /*-----------------------------------------------------------*/
 
+#define portPSW ( 0xc6UL )
+volatile uint32_t *pulAddress;
+volatile uint32_t ulValue, ulError = 0;
+
 int main( void )
 {
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
+	/* Store an address below 0x8000 */
+	pulAddress = ( uint32_t * ) 0x7fff;
+
+	/* Cast and OR with a value that uses the two most significant
+	bytes. */
+	ulValue = ( ( uint32_t ) pulAddress ) | ( portPSW << 24UL );
+
+	/* This test passes. */
+	if( ulValue != 0xc6007fff )
+	{
+		/* This line of code is not executed. */
+		ulError = 1;
+	}
+
+	/* Now do the same, but with an address above 0x7fff, but
+	still slower than the max 16-bit value. */
+	pulAddress = ( uint32_t * ) 0x8000;
+	ulValue = ( ( uint32_t ) pulAddress ) | ( portPSW << 24UL );
+
+	/* This test *fails*. */
+	if( ulValue != 0xc6008000 )
+	{
+		/* This line of code *is* executed. */
+		ulError = 1;
+	}
+
+
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is
+	described at the top of this file. */
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
 	{
 		main_blinky();

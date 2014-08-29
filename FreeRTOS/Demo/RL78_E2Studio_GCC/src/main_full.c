@@ -226,8 +226,8 @@ void main_full( void )
 	/* First create the 'standard demo' tasks.  These are used to demonstrate
 	API functions being used and also to test the kernel port.  More information
 	is provided on the FreeRTOS.org WEB site. */
-	vStartDynamicPriorityTasks();
-	vStartPolledQueueTasks( tskIDLE_PRIORITY );
+//	vStartDynamicPriorityTasks();
+//	vStartPolledQueueTasks( tskIDLE_PRIORITY );
 
 	/* Additional tasks can be added by un-commenting the line below on devices
 	with sufficient RAM for a larger heap (see configTOTAL_HEAP_SIZE in
@@ -239,36 +239,39 @@ void main_full( void )
 				 "Reg1",					/* Text name for the task - to assist debugging only, not used by the kernel. */
 				 configMINIMAL_STACK_SIZE, 	/* The size of the stack allocated to the task (in words, not bytes). */
 				 mainREG_TEST_1_PARAMETER,  /* The parameter passed into the task. */
-				 tskIDLE_PRIORITY, 			/* The priority at which the task will execute. */
+				 configMAX_PRIORITIES-1, /*tskIDLE_PRIORITY,*/ 			/* The priority at which the task will execute. */
 				 NULL );					/* Used to pass the handle of the created task out to the function caller - not used in this case. */
 
-	xTaskCreate( prvRegTest2Entry, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+//	xTaskCreate( prvRegTest2Entry, "Reg2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
-	xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
-								( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,					/* The ID is not used, so can be set to anything. */
-								prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-							  );
+//	xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+//								( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+//								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+//								( void * ) 0,					/* The ID is not used, so can be set to anything. */
+//								prvCheckTimerCallback			/* The callback function that inspects the status of all the other tasks. */
+//							  );
 
 	/* Create the software timer that just increments a variable for demo
 	purposes. */
-	xDemoTimer = xTimerCreate( "DemoTimer",						/* A text name, purely to help debugging. */
-								( mainDEMO_TIMER_PERIOD_MS ),	/* The timer period, in this case it is always calculated relative to the check timer period (see the definition of mainDEMO_TIMER_PERIOD_MS). */
-								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-								( void * ) 0,					/* The ID is not used, so can be set to anything. */
-								prvDemoTimerCallback			/* The callback function that inspects the status of all the other tasks. */
-							  );
+//	xDemoTimer = xTimerCreate( "DemoTimer",						/* A text name, purely to help debugging. */
+//								( mainDEMO_TIMER_PERIOD_MS ),	/* The timer period, in this case it is always calculated relative to the check timer period (see the definition of mainDEMO_TIMER_PERIOD_MS). */
+//								pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+//								( void * ) 0,					/* The ID is not used, so can be set to anything. */
+//								prvDemoTimerCallback			/* The callback function that inspects the status of all the other tasks. */
+//							  );
 
 	/* Start both the check timer and the demo timer.  The timers won't actually
 	start until the scheduler is started. */
-	xTimerStart( xCheckTimer, mainDONT_BLOCK );
-	xTimerStart( xDemoTimer, mainDONT_BLOCK );
+//	xTimerStart( xCheckTimer, mainDONT_BLOCK );
+//	xTimerStart( xDemoTimer, mainDONT_BLOCK );
 
 	/* Finally start the scheduler running. */
 	vTaskStartScheduler();
+
+extern void my_function( void );
+	my_function();
 
 	/* If all is well execution will never reach here as the scheduler will be
 	running.  If this null loop is reached then it is likely there was

@@ -328,12 +328,12 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 	/* A port optimised version is provided, call it only if the TCB being reset
 	is being referenced from a ready list.  If it is referenced from a delayed
 	or suspended list then it won't be in a ready list. */
-	#define taskRESET_READY_PRIORITY( uxPriority )													\
-	{																								\
-		if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ ( uxPriority ) ] ) ) == 0 )				\
-		{																							\
-			portRESET_READY_PRIORITY( ( uxPriority ), ( uxTopReadyPriority ) );						\
-		}																							\
+	#define taskRESET_READY_PRIORITY( uxPriority )														\
+	{																									\
+		if( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ ( uxPriority ) ] ) ) == ( UBaseType_t ) 0 )	\
+		{																								\
+			portRESET_READY_PRIORITY( ( uxPriority ), ( uxTopReadyPriority ) );							\
+		}																								\
 	}
 
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
@@ -1000,7 +1000,7 @@ TCB_t * pxNewTCB;
 		}
 
 		return eReturn;
-	}
+	} /*lint !e818 xTask cannot be a pointer to const because it is a typedef. */
 
 #endif /* INCLUDE_eTaskGetState */
 /*-----------------------------------------------------------*/
@@ -1728,7 +1728,7 @@ UBaseType_t uxTaskGetNumberOfTasks( void )
 
 #if ( INCLUDE_pcTaskGetTaskName == 1 )
 
-	char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery )
+	char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	TCB_t *pxTCB;
 
@@ -3039,13 +3039,13 @@ TCB_t *pxNewTCB;
 	{
 	uint32_t ulCount = 0U;
 
-		while( *pucStackByte == tskSTACK_FILL_BYTE )
+		while( *pucStackByte == ( uint8_t ) tskSTACK_FILL_BYTE )
 		{
 			pucStackByte -= portSTACK_GROWTH;
 			ulCount++;
 		}
 
-		ulCount /= ( uint32_t ) sizeof( StackType_t );
+		ulCount /= ( uint32_t ) sizeof( StackType_t ); /*lint !e961 Casting is not redundant on smaller architectures. */
 
 		return ( uint16_t ) ulCount;
 	}
@@ -3252,7 +3252,7 @@ TCB_t *pxTCB;
 			if( pxTCB->uxPriority != pxTCB->uxBasePriority )
 			{
 				/* Only disinherit if no other mutexes are held. */
-				if( pxTCB->uxMutexesHeld == 0 )
+				if( pxTCB->uxMutexesHeld == ( UBaseType_t ) 0 )
 				{
 					/* The holding task must be the running task to be able to give
 					the mutex back.  Remove the holding task from the ready list. */
@@ -3587,9 +3587,9 @@ TickType_t uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-void *pvTaskIncrementMutexHeldCount( void )
-{
-	#if ( configUSE_MUTEXES == 1 )
+#if ( configUSE_MUTEXES == 1 )
+
+	void *pvTaskIncrementMutexHeldCount( void )
 	{
 		/* If xSemaphoreCreateMutex() is called before any tasks have been created
 		then pxCurrentTCB will be NULL. */
@@ -3600,8 +3600,9 @@ void *pvTaskIncrementMutexHeldCount( void )
 
 		return pxCurrentTCB;
 	}
-	#endif
-}
+
+#endif /* configUSE_MUTEXES */
+
 /*-----------------------------------------------------------*/
 
 #ifdef FREERTOS_MODULE_TEST

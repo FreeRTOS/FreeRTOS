@@ -591,7 +591,7 @@ TickType_t xTimeNow;
 		{
 			/* Negative commands are pended function calls rather than timer
 			commands. */
-			if( xMessage.xMessageID < 0 )
+			if( xMessage.xMessageID < ( BaseType_t ) 0 )
 			{
 				const CallbackParameters_t * const pxCallback = &( xMessage.u.xCallbackParameters );
 
@@ -843,7 +843,7 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 		xMessage.u.xCallbackParameters.ulParameter2 = ulParameter2;
 
 		xReturn = xQueueSendFromISR( xTimerQueue, &xMessage, pxHigherPriorityTaskWoken );
-		
+
 		tracePEND_FUNC_CALL_FROM_ISR( xFunctionToPend, pvParameter1, ulParameter2, xReturn );
 
 		return xReturn;
@@ -869,7 +869,7 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 		xReturn = xQueueSendToBack( xTimerQueue, &xMessage, xTicksToWait );
 
 		tracePEND_FUNC_CALL( xFunctionToPend, pvParameter1, ulParameter2, xReturn );
-		
+
 		return xReturn;
 	}
 

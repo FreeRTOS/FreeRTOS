@@ -461,7 +461,7 @@ QueueHandle_t xReturn = NULL;
 		taskEXIT_CRITICAL();
 
 		return pxReturn;
-	}
+	} /*lint !e818 xSemaphore cannot be a pointer to const because it is a typedef. */
 
 #endif
 /*-----------------------------------------------------------*/
@@ -1122,7 +1122,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 						{
 							if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 							{
-								/* The task waiting has a higher priority so 
+								/* The task waiting has a higher priority so
 								record that a context switch is required. */
 								if( pxHigherPriorityTaskWoken != NULL )
 								{
@@ -1247,7 +1247,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 							mtCOVERAGE_TEST_MARKER();
 						}
 					}
-					#endif
+					#endif /* configUSE_MUTEXES */
 
 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 					{
@@ -1695,7 +1695,7 @@ BaseType_t xReturn = pdFALSE;
 
 static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer )
 {
-	if( pxQueue->uxItemSize != 0 )
+	if( pxQueue->uxItemSize != ( UBaseType_t ) 0 )
 	{
 		pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
 		if( pxQueue->u.pcReadFrom >= pxQueue->pcTail ) /*lint !e946 MISRA exception justified as use of the relational operator is the cleanest solutions. */

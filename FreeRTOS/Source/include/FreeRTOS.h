@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.1.1 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -95,12 +95,6 @@ extern "C" {
 
 /* Basic FreeRTOS definitions. */
 #include "projdefs.h"
-
-/* configUSE_PORT_OPTIMISED_TASK_SELECTION must be defined before portable.h
-is included as it is used by the port layer. */
-#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
-	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
-#endif
 
 /* Definitions specific to the port being used. */
 #include "portable.h"
@@ -719,6 +713,10 @@ is included as it is used by the port layer. */
 
 #ifndef portASSERT_IF_IN_ISR
 	#define portASSERT_IF_IN_ISR()
+#endif
+
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #endif
 
 /* Definitions to allow backward compatibility with FreeRTOS versions prior to

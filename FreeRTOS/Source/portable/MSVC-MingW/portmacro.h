@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.1.1 - Copyright (C) 2014 Real Time Engineers Ltd.
+    FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -114,6 +114,10 @@ void vPortExitCritical( void );
 #define portENTER_CRITICAL()		vPortEnterCritical()
 #define portEXIT_CRITICAL()			vPortExitCritical()
 
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+#endif
+
 #if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
 
 	/* Check the configuration. */
@@ -137,7 +141,7 @@ void vPortExitCritical( void );
 	#else
 		/* BitScanReverse returns the bit position of the most significant '1'
 		in the word. */
-		#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) _BitScanReverse( ( DWORD * ) &( uxTopPriority ), ( uxReadyPriorities ) )		
+		#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) _BitScanReverse( ( DWORD * ) &( uxTopPriority ), ( uxReadyPriorities ) )
 	#endif /* __GNUC__ */
 
 #endif /* taskRECORD_READY_PRIORITY */

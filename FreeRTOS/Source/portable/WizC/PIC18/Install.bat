@@ -1,5 +1,5 @@
 REM/*
-REM    FreeRTOS V8.1.1 - Copyright (C) 2014 Real Time Engineers Ltd.
+REM    FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd.
 REM
 REM
 REM    ***************************************************************************

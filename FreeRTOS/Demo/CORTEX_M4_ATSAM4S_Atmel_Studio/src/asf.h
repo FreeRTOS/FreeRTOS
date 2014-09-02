@@ -7,6 +7,8 @@
  *
  * \asf_license_start
  *
+ * \page License
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -60,21 +62,32 @@
 // From module: Generic board support
 #include <board.h>
 
-// From module: Interrupt management - SAM3 implementation
+// From module: Interrupt management - SAM implementation
 #include <interrupt.h>
 
 // From module: PIO - Parallel Input/Output Controller
 #include <pio.h>
-#include <pio_handler.h>
 
 // From module: PMC - Power Management Controller
 #include <pmc.h>
 #include <sleep.h>
 
+// From module: Part identification macros
+#include <parts.h>
+
+// From module: SAM4S startup code
+#include <exceptions.h>
+
 // From module: System Clock Control - SAM4S implementation
 #include <sysclk.h>
 
+// From module: TC - Timer Counter
+#include <tc.h>
+
 // From module: USART - Univ. Syn Async Rec/Trans
 #include <usart.h>
+
+// From module: pio_handler support enabled
+#include <pio_handler.h>
 
 #endif // ASF_H

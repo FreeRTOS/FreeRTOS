@@ -743,7 +743,7 @@ static TickType_t uxTick = ( TickType_t ) -1;
 #else
 	#ifdef _WINDOWS_
 		/* Windows is not real real time. */
-		const TickType_t xMargin = 8;
+		const TickType_t xMargin = 10;
 	#else
 		const TickType_t xMargin = 4;
 	#endif /* _WINDOWS_ */

@@ -86,14 +86,13 @@
 #include "GenQTest.h"
 
 #define genqQUEUE_LENGTH		( 5 )
-#define genqNO_BLOCK			( 0 )
+#define intsemNO_BLOCK			( 0 )
 
 #define genqMUTEX_LOW_PRIORITY		( tskIDLE_PRIORITY )
 #define genqMUTEX_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
 #define genqMUTEX_MEDIUM_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define genqMUTEX_HIGH_PRIORITY		( tskIDLE_PRIORITY + 3 )
 
-#define genqINTERRUPT_MUTEX_GIVE_PERIOD_MS ( 100 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -122,28 +121,6 @@ static void prvLowPriorityMutexTask( void *pvParameters );
 static void prvMediumPriorityMutexTask( void *pvParameters );
 static void prvHighPriorityMutexTask( void *pvParameters );
 
-/*
- * Exercises the priority inheritance when a task takes two mutexes, returning
- * them in a different order to which they were taken.
- */
-static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex );
-
-/*
- * Exercises the priority inheritance when a task takes two mutexes, returning
- * them in the same order in which they were taken.
- */
-static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex );
-
-/*
- * Task that receives an a mutex that is given from an interrupt - although
- * generally mutexes should not be used given in interrupts (and definitely
- * never taken in an interrupt) there are some circumstances when it may be
- * desirable.  NOTE:  This function is not declared static to prevent compiler
- * warnings being generated in demos where the function is declared but not
- * used.
- */
-void vInterruptMutexTask( void *pvParameters );
-
 /*-----------------------------------------------------------*/
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
@@ -162,11 +139,6 @@ static volatile uint32_t ulGuardedVariable = 0;
 priority mutex test tasks. */
 static TaskHandle_t xHighPriorityMutexTask, xMediumPriorityMutexTask;
 
-/* A mutex which is given from an interrupt - although generally mutexes should
-not be used given in interrupts (and definitely never taken in an interrupt)
-there are some circumstances when it may be desirable. */
-static SemaphoreHandle_t xISRMutex = NULL;
-
 /*-----------------------------------------------------------*/
 
 void vStartGenericQueueTasks( UBaseType_t uxPriority )
@@ -174,8 +146,6 @@ void vStartGenericQueueTasks( UBaseType_t uxPriority )
 QueueHandle_t xQueue;
 SemaphoreHandle_t xMutex;
 
-	xISRMutex = xSemaphoreCreateMutex();
-	configASSERT( xISRMutex );
 
 	/* Create the queue that we are going to use for the
 	prvSendFrontAndBackTest demo. */
@@ -211,14 +181,6 @@ SemaphoreHandle_t xMutex;
 	xTaskCreate( prvLowPriorityMutexTask, "MuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
 	xTaskCreate( prvMediumPriorityMutexTask, "MuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
 	xTaskCreate( prvHighPriorityMutexTask, "MuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
-
-	/* Only when the windows simulator is being used - create the task that
-	receives a mutex from an interrupt. */
-	#ifdef _WINDOWS_
-	{
-		xTaskCreate( vInterruptMutexTask, "IntMu", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, NULL );
-	}
-	#endif /* __WINDOWS__ */
 }
 /*-----------------------------------------------------------*/
 
@@ -244,14 +206,14 @@ QueueHandle_t xQueue;
 		should have the same efect as sending it to the front of the queue.
 
 		First send to the front and check everything is as expected. */
-		xQueueSendToFront( xQueue, ( void * ) &ulLoopCounter, genqNO_BLOCK );
+		xQueueSendToFront( xQueue, ( void * ) &ulLoopCounter, intsemNO_BLOCK );
 
 		if( uxQueueMessagesWaiting( xQueue ) != 1 )
 		{
 			xErrorDetected = pdTRUE;
 		}
 
-		if( xQueueReceive( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != pdPASS )
+		if( xQueueReceive( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != pdPASS )
 		{
 			xErrorDetected = pdTRUE;
 		}
@@ -270,14 +232,14 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 
-		xQueueSendToBack( xQueue, ( void * ) &ulLoopCounter, genqNO_BLOCK );
+		xQueueSendToBack( xQueue, ( void * ) &ulLoopCounter, intsemNO_BLOCK );
 
 		if( uxQueueMessagesWaiting( xQueue ) != 1 )
 		{
 			xErrorDetected = pdTRUE;
 		}
 
-		if( xQueueReceive( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != pdPASS )
+		if( xQueueReceive( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != pdPASS )
 		{
 			xErrorDetected = pdTRUE;
 		}
@@ -303,7 +265,7 @@ QueueHandle_t xQueue;
 		/* Place 2, 3, 4 into the queue, adding items to the back of the queue. */
 		for( ulData = 2; ulData < 5; ulData++ )
 		{
-			xQueueSendToBack( xQueue, ( void * ) &ulData, genqNO_BLOCK );
+			xQueueSendToBack( xQueue, ( void * ) &ulData, intsemNO_BLOCK );
 		}
 
 		/* Now the order in the queue should be 2, 3, 4, with 2 being the first
@@ -313,9 +275,9 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 		ulData = 1;
-		xQueueSendToFront( xQueue, ( void * ) &ulData, genqNO_BLOCK );
+		xQueueSendToFront( xQueue, ( void * ) &ulData, intsemNO_BLOCK );
 		ulData = 0;
-		xQueueSendToFront( xQueue, ( void * ) &ulData, genqNO_BLOCK );
+		xQueueSendToFront( xQueue, ( void * ) &ulData, intsemNO_BLOCK );
 
 		/* Now the queue should be full, and when we read the data out we
 		should receive 0, 1, 2, 3, 4. */
@@ -324,12 +286,12 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 
-		if( xQueueSendToFront( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != errQUEUE_FULL )
+		if( xQueueSendToFront( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != errQUEUE_FULL )
 		{
 			xErrorDetected = pdTRUE;
 		}
 
-		if( xQueueSendToBack( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != errQUEUE_FULL )
+		if( xQueueSendToBack( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != errQUEUE_FULL )
 		{
 			xErrorDetected = pdTRUE;
 		}
@@ -342,7 +304,7 @@ QueueHandle_t xQueue;
 		for( ulData = 0; ulData < genqQUEUE_LENGTH; ulData++ )
 		{
 			/* Try peeking the data first. */
-			if( xQueuePeek( xQueue, &ulData2, genqNO_BLOCK ) != pdPASS )
+			if( xQueuePeek( xQueue, &ulData2, intsemNO_BLOCK ) != pdPASS )
 			{
 				xErrorDetected = pdTRUE;
 			}
@@ -356,7 +318,7 @@ QueueHandle_t xQueue;
 			/* Now try receiving the data for real.  The value should be the
 			same.  Clobber the value first so we know we really received it. */
 			ulData2 = ~ulData2;
-			if( xQueueReceive( xQueue, &ulData2, genqNO_BLOCK ) != pdPASS )
+			if( xQueueReceive( xQueue, &ulData2, intsemNO_BLOCK ) != pdPASS )
 			{
 				xErrorDetected = pdTRUE;
 			}
@@ -380,12 +342,12 @@ QueueHandle_t xQueue;
 
 		/* Our queue is empty once more, add 10, 11 to the back. */
 		ulData = 10;
-		if( xQueueSend( xQueue, &ulData, genqNO_BLOCK ) != pdPASS )
+		if( xQueueSend( xQueue, &ulData, intsemNO_BLOCK ) != pdPASS )
 		{
 			xErrorDetected = pdTRUE;
 		}
 		ulData = 11;
-		if( xQueueSend( xQueue, &ulData, genqNO_BLOCK ) != pdPASS )
+		if( xQueueSend( xQueue, &ulData, intsemNO_BLOCK ) != pdPASS )
 		{
 			xErrorDetected = pdTRUE;
 		}
@@ -399,7 +361,7 @@ QueueHandle_t xQueue;
 		front. */
 		for( ulData = 9; ulData >= 7; ulData-- )
 		{
-			if( xQueueSendToFront( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != pdPASS )
+			if( xQueueSendToFront( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != pdPASS )
 			{
 				xErrorDetected = pdTRUE;
 			}
@@ -412,12 +374,12 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 
-		if( xQueueSendToFront( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != errQUEUE_FULL )
+		if( xQueueSendToFront( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != errQUEUE_FULL )
 		{
 			xErrorDetected = pdTRUE;
 		}
 
-		if( xQueueSendToBack( xQueue, ( void * ) &ulData, genqNO_BLOCK ) != errQUEUE_FULL )
+		if( xQueueSendToBack( xQueue, ( void * ) &ulData, intsemNO_BLOCK ) != errQUEUE_FULL )
 		{
 			xErrorDetected = pdTRUE;
 		}
@@ -429,7 +391,7 @@ QueueHandle_t xQueue;
 		/* Check the data we read out is in the expected order. */
 		for( ulData = 7; ulData < ( 7 + genqQUEUE_LENGTH ); ulData++ )
 		{
-			if( xQueueReceive( xQueue, &ulData2, genqNO_BLOCK ) != pdPASS )
+			if( xQueueReceive( xQueue, &ulData2, intsemNO_BLOCK ) != pdPASS )
 			{
 				xErrorDetected = pdTRUE;
 			}
@@ -453,7 +415,7 @@ QueueHandle_t xQueue;
 static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex )
 {
 	/* Take the mutex.  It should be available now. */
-	if( xSemaphoreTake( xMutex, genqNO_BLOCK ) != pdPASS )
+	if( xSemaphoreTake( xMutex, intsemNO_BLOCK ) != pdPASS )
 	{
 		xErrorDetected = pdTRUE;
 	}
@@ -513,7 +475,7 @@ static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, S
 	}
 
 	/* Take the local mutex too, so two mutexes are now held. */
-	if( xSemaphoreTake( xLocalMutex, genqNO_BLOCK ) != pdPASS )
+	if( xSemaphoreTake( xLocalMutex, intsemNO_BLOCK ) != pdPASS )
 	{
 		xErrorDetected = pdTRUE;
 	}
@@ -583,7 +545,7 @@ static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, S
 static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex )
 {
 	/* Take the mutex.  It should be available now. */
-	if( xSemaphoreTake( xMutex, genqNO_BLOCK ) != pdPASS )
+	if( xSemaphoreTake( xMutex, intsemNO_BLOCK ) != pdPASS )
 	{
 		xErrorDetected = pdTRUE;
 	}
@@ -634,7 +596,7 @@ static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, Semaph
 	}
 
 	/* Take the local mutex too, so two mutexes are now held. */
-	if( xSemaphoreTake( xLocalMutex, genqNO_BLOCK ) != pdPASS )
+	if( xSemaphoreTake( xLocalMutex, intsemNO_BLOCK ) != pdPASS )
 	{
 		xErrorDetected = pdTRUE;
 	}
@@ -787,46 +749,6 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters;
 }
 /*-----------------------------------------------------------*/
 
-/* NOTE: This function is not declared static to prevent compiler warnings in
-demos where the function is declared but not used. */
-void vInterruptMutexTask( void *pvParameters )
-{
-const TickType_t xInterruptGivePeriod = pdMS_TO_TICKS( genqINTERRUPT_MUTEX_GIVE_PERIOD_MS );
-volatile uint32_t ulLoops = 0;
-
-	/* Just to avoid compiler warnings. */
-	( void ) pvParameters;
-
-	for( ;; )
-	{
-		/* Has to wait longer than the time between gives to make sure it
-		should definitely have received the mutex. */
-		if( xSemaphoreTake( xISRMutex, ( xInterruptGivePeriod * 2 ) ) != pdPASS )
-		{
-			xErrorDetected = pdTRUE;
-		}
-		else
-		{
-			ulLoops++;
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
-void vMutexISRInteractionTest( void )
-{
-static TickType_t xLastGiveTime = 0;
-TickType_t xTimeNow;
-
-	xTimeNow = xTaskGetTickCountFromISR();
-	if( ( xTimeNow - xLastGiveTime ) >= pdMS_TO_TICKS( genqINTERRUPT_MUTEX_GIVE_PERIOD_MS ) )
-	{
-		configASSERT( xISRMutex );
-		xSemaphoreGiveFromISR( xISRMutex, NULL );
-		xLastGiveTime = xTimeNow;
-	}
-}
-/*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
 BaseType_t xAreGenericQueueTasksStillRunning( void )

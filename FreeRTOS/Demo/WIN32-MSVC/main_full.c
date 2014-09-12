@@ -133,6 +133,7 @@
 #include "QueueSet.h"
 #include "QueueOverwrite.h"
 #include "EventGroupsDemo.h"
+#include "IntSemTest.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -209,6 +210,7 @@ int main_full( void )
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	vStartEventGroupTasks();
+	vStartInterruptSemaphoreTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -263,7 +265,11 @@ const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 		}
 		#endif
 
-		if( xAreEventGroupTasksStillRunning() != pdTRUE )
+		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: IntSem";
+		}
+		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: EventGroup";
 		}
@@ -403,7 +409,7 @@ void vFullDemoTickHookFunction( void )
 	vPeriodicEventGroupsProcessing();
 
 	/* Exercise giving mutexes from an interrupt. */
-	vMutexISRInteractionTest();
+	vInterruptSemaphorePeriodicTest();
 }
 /*-----------------------------------------------------------*/
 

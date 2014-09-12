@@ -136,6 +136,9 @@
     <ClCompile Include="..\..\Source\portable\MemMang\heap_5.c">
       <Filter>FreeRTOS Source\Source\Portable</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Minimal\IntSemTest.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

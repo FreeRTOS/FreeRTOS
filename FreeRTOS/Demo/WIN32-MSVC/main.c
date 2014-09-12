@@ -112,7 +112,7 @@ that make up the total heap.  This is only done to provide an example of heap_5
 being used as this demo could easily create one large heap region instead of
 multiple smaller heap regions - in which case heap_4.c would be the more
 appropriate choice. */
-#define mainREGION_1_SIZE	2001
+#define mainREGION_1_SIZE	3001
 #define mainREGION_2_SIZE	18005
 #define mainREGION_3_SIZE	1007
 

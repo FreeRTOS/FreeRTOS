@@ -377,6 +377,7 @@ enum sleepmgr_mode xSleepMode;
 				ulAlarmValue = ulAlarmValueForOneTick;
 				ulCompleteTickPeriods++;
 			}
+			ast_write_counter_value( AST, 0 );
 			ast_write_alarm0_value( AST, ulAlarmValue );
 		}
 

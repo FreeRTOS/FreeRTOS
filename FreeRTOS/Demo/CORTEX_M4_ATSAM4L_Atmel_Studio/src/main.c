@@ -112,6 +112,10 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
+/* A handler for a button interrupt.  The button's only purpose is to bring the
+CPU out of sleep mode early. */
+static void prvButtonISR( void );
+
 /*-----------------------------------------------------------*/
 
 /* See the documentation page for this demo on the FreeRTOS.org web site for
@@ -137,9 +141,33 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
+static void prvButtonISR( void )
+{
+	/* The button doesn't do anything other than providing a means for brining
+	the MCU out of sleep mode early. */
+	if( eic_line_interrupt_is_pending( EIC, GPIO_PUSH_BUTTON_EIC_LINE ) ) 
+	{
+		eic_line_clear_interrupt( EIC, GPIO_PUSH_BUTTON_EIC_LINE );
+	}		
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupHardware( void )
 {
 extern void SystemCoreClockUpdate( void );
+struct eic_line_config xEICLineConfiguration;
+
+	/* Configure the external interrupt controller so button pushes can
+	generate interrupts. */
+	xEICLineConfiguration.eic_mode = EIC_MODE_EDGE_TRIGGERED;
+	xEICLineConfiguration.eic_edge = EIC_EDGE_FALLING_EDGE;
+	xEICLineConfiguration.eic_level = EIC_LEVEL_LOW_LEVEL;
+	xEICLineConfiguration.eic_filter = EIC_FILTER_DISABLED;
+	xEICLineConfiguration.eic_async = EIC_ASYNCH_MODE;
+	eic_enable( EIC );
+	eic_line_set_config( EIC, GPIO_PUSH_BUTTON_EIC_LINE, &xEICLineConfiguration );
+	eic_line_set_callback( EIC, GPIO_PUSH_BUTTON_EIC_LINE, prvButtonISR, EIC_5_IRQn, 0 );
+	eic_line_enable( EIC, GPIO_PUSH_BUTTON_EIC_LINE );
 
 	/* ASF function to setup clocking. */
 	sysclk_init();

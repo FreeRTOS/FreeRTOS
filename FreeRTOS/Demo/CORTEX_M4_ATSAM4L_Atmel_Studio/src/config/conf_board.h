@@ -50,4 +50,6 @@
 /** Enable LCD backlight */
 #define CONF_BOARD_BL
 
+#define CONF_BOARD_EIC
+
 #endif  /* CONF_BOARD_H_INCLUDED */

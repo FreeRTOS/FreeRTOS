@@ -1269,7 +1269,8 @@ uint32_t ulVarToSend, ulValReceived;
  *
  * It is preferred that the macros xQueueSendFromISR(),
  * xQueueSendToFrontFromISR() and xQueueSendToBackFromISR() be used in place
- * of calling this function directly.
+ * of calling this function directly.  xQueueGenericGiveFromISR() is an
+ * equivalent for use by semaphores that don't actually copy any data.
  *
  * Post an item on a queue.  It is safe to use this function from within an
  * interrupt service routine.
@@ -1333,6 +1334,7 @@ uint32_t ulVarToSend, ulValReceived;
  * \ingroup QueueManagement
  */
 BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQueue, BaseType_t * const pxHigherPriorityTaskWoken, const BaseType_t xCopyPosition ) PRIVILEGED_FUNCTION;
+BaseType_t xQueueGenericGiveFromISR( QueueHandle_t xQueue, BaseType_t * const pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
 /**
  * queue. h

@@ -3254,8 +3254,11 @@ TCB_t *pxTCB;
 				/* Only disinherit if no other mutexes are held. */
 				if( pxTCB->uxMutexesHeld == ( UBaseType_t ) 0 )
 				{
-					/* The holding task must be the running task to be able to give
-					the mutex back.  Remove the holding task from the ready list. */
+					/* A task can only have an inhertied priority if it holds
+					the mutex.  If the mutex is held by a task then it cannot be
+					given from an interrupt, and if a mutex is given by the
+					holding	task then it must be the running state task.  Remove
+					the	holding task from the ready	list. */
 					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -3265,8 +3268,8 @@ TCB_t *pxTCB;
 						mtCOVERAGE_TEST_MARKER();
 					}
 
-					/* Disinherit the priority before adding the task into the new
-					ready list. */
+					/* Disinherit the priority before adding the task into the
+					new	ready list. */
 					traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
 					pxTCB->uxPriority = pxTCB->uxBasePriority;
 
@@ -3279,7 +3282,11 @@ TCB_t *pxTCB;
 					/* Return true to indicate that a context switch is required.
 					This is only actually required in the corner case whereby
 					multiple mutexes were held and the mutexes were given back
-					in an order different to that in which they were taken. */
+					in an order different to that in which they were taken.
+					If a context switch did not occur when the first mutex was
+					returned, even if a task was waiting on it, then a context
+					switch should occur when the last mutex is returned whether
+					a task is waiting on it or not. */
 					xReturn = pdTRUE;
 				}
 				else

@@ -605,7 +605,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreGiveFromISR xSemaphoreGiveFromISR
  * \ingroup Semaphores
  */
-#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )	xQueueGenericSendFromISR( ( QueueHandle_t ) ( xSemaphore ), NULL, ( pxHigherPriorityTaskWoken ), queueSEND_TO_BACK )
+#define xSemaphoreGiveFromISR( xSemaphore, pxHigherPriorityTaskWoken )	xQueueGenericGiveFromISR( ( QueueHandle_t ) ( xSemaphore ), ( pxHigherPriorityTaskWoken ) )
 
 /**
  * semphr. h

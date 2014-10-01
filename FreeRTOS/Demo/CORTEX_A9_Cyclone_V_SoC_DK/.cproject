@@ -41,7 +41,7 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.451869963" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
 								<option id="gnu.c.link.option.other.1746198439" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" valueType="stringList">
-									<listOptionValue builtIn="false" value="-TcycloneV-dk-oc-ram.ld"/>
+									<listOptionValue builtIn="false" value="-TcycloneV-dk-ram.ld"/>
 									<listOptionValue builtIn="false" value="--defsym=__cs3_isr_irq=FreeRTOS_IRQ_Handler"/>
 									<listOptionValue builtIn="false" value="--defsym=__cs3_isr_swi=FreeRTOS_SWI_Handler"/>
 									<listOptionValue builtIn="false" value="-Map=RTOSDemo.map"/>

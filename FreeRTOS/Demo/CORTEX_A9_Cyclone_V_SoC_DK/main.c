@@ -29,9 +29,21 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+extern uint8_t __cs3_interrupt_vector;
+uint32_t ulSCTLR, ulVectorTable = ( uint32_t ) &__cs3_interrupt_vector;
+const uint32_t ulVBit = 13U;
+
 	alt_int_global_init();
+
+	/* Clear SCTLR.V for low vectors and map the vector table to the beginning
+	of the code. */
+	__asm( "MRC p15, 0, %0, c1, c0, 0" : "=r" ( ulSCTLR ) );
+	ulSCTLR &= ~( 1 << ulVBit );
+	__asm( "MCR p15, 0, %0, c1, c0, 0" : : "r" ( ulSCTLR ) );
+	__asm( "MCR p15, 0, %0, c12, c0, 0" : : "r" ( ulVectorTable ) );
+
 	cache_init();
-	//_RB_mmu_init();
+	mmu_init();
 }
 /*-----------------------------------------------------------*/
 

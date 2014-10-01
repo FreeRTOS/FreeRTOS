@@ -22,10 +22,12 @@
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1039712839" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<builder buildPath="${workspace_loc:/RTOSDemo}/Debug" id="cdt.managedbuild.builder.gnu.cross.89590670" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.909202128" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.743924763" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.743924763" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.972637953" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.291093471" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS+CLI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Standard_Demo_Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Altera_Code/SoCSupport/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Altera_Code/HardwareLibrary/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
@@ -65,6 +67,18 @@
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.309103126" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.840887560.620646012" name="/" resourcePath="FreeRTOS+CLI/Examples">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.2111927848" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1982152472.1688335078" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1982152472"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.859871788.1933970670" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.859871788"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.941709227" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.909202128"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.2304967" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.81973727"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.344179079" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.451869963"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.285236367" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.372124763"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1219871621" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.550935274"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.105343637" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.738229482"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

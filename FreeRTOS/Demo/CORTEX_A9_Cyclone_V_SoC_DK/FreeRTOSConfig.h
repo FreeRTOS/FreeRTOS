@@ -66,6 +66,11 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+/* Altera library includes. */
+#include "alt_timers.h"
+#include "alt_interrupt.h"
+#include "alt_globaltmr.h"
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -98,8 +103,8 @@
  * "FromISR".  FreeRTOS maintains a separate interrupt safe API to enable
  * interrupt entry to be shorter, faster, simpler and smaller.
  *
- * The Cyclone V SoC implements 256 unique interrupt priorities.  For the
- * purpose of setting configMAX_API_CALL_INTERRUPT_PRIORITY 255 represents the
+ * The Cyclone V SoC implements 32 unique interrupt priorities.  For the
+ * purpose of setting configMAX_API_CALL_INTERRUPT_PRIORITY 32 represents the
  * lowest priority.
  */
 #define configMAX_API_CALL_INTERRUPT_PRIORITY	18
@@ -113,7 +118,7 @@
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 7 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 200 )
-#define configTOTAL_HEAP_SIZE					( 5 * 1024 )
+#define configTOTAL_HEAP_SIZE					( 50 * 1024 )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -155,8 +160,11 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
+/* Run time stats related definitions. */
+#define configGENERATE_RUN_TIME_STATS 1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() alt_globaltmr_start()
+#define portGET_RUN_TIME_COUNTER_VALUE()  ( ( uint32_t ) ( alt_globaltmr_get64() >> ( uint64_t ) 16 ) )
 
-#define configGENERATE_RUN_TIME_STATS 0
 
 /* The size of the global output buffer that is available for use when there
 are multiple command interpreters running at once (for example, one on a UART
@@ -179,25 +187,6 @@ nothing to return to.  To avoid this define configTASK_RETURN_ADDRESS to 0.  */
 
 
 /****** Hardware specific settings. *******************************************/
-
-/* Rename the FreeRTOS interrupt handlers to the names used in the vector
-table. */
-//#define FreeRTOS_IRQ_Handler __cs3_isr_irq
-//#define FreeRTOS_SWI_Handler __cs3_isr_swi
-// --defsym=__cs3_isr_irq=FreeRTOS_IRQ_Handler --defsym=__cs3_isr_swi=FreeRTOS_SWI_Handler
-
-
-/* Altera library includes. */
-#include "hwlib.h"
-#include "alt_timers.h"
-#include "alt_clock_manager.h"
-#include "alt_interrupt.h"
-#include "alt_globaltmr.h"
-#include "alt_address_space.h"
-#include "alt_watchdog.h"
-#include "mmu_support.h"
-#include "cache_support.h"
-#include "fpga_support.h"
 
  typedef struct INT_DISPATCH_s
  {

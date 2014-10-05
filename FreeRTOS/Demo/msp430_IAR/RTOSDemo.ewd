@@ -12,7 +12,7 @@
       <name>C-SPY</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>21</version>
+        <version>27</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -57,7 +57,7 @@
         </option>
         <option>
           <name>DdfFileName</name>
-          <state>$TOOLKIT_DIR$\config\MSP430F449.ddf</state>
+          <state>$TOOLKIT_DIR$\config\debugger\MSP430F449.ddf</state>
         </option>
         <option>
           <name>ProcTMS</name>
@@ -79,21 +79,85 @@
           <name>CompilerDataModel</name>
           <state>1</state>
         </option>
+        <option>
+          <name>IVBASE</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck3</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CPUTAG</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>L092Mode</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCImagesOffset1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesOffset2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesOffset3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesUse1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesUse2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesUse3</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ENERGYTRACE</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FETIPE</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>14</version>
+        <version>26</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
           <name>CFetMandatory</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>EMUSuppressLoadP7</name>
           <state>0</state>
         </option>
         <option>
@@ -103,10 +167,6 @@
         <option>
           <name>EMUVerifyDownloadP7</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>EMUAskSuppressP7</name>
-          <state>0</state>
         </option>
         <option>
           <name>EraseOptionSlaveP7</name>
@@ -135,7 +195,7 @@
         </option>
         <option>
           <name>TargetVoltage</name>
-          <state>3.0</state>
+          <state>3.3</state>
         </option>
         <option>
           <name>AllowLockedFlashAccessP7</name>
@@ -147,10 +207,6 @@
         </option>
         <option>
           <name>AttachOptionSlave</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>OProtocolTypeDefault</name>
           <state>0</state>
         </option>
         <option>
@@ -179,7 +235,7 @@
         </option>
         <option>
           <name>FetConnection</name>
-          <version>1</version>
+          <version>2</version>
           <state>1</state>
         </option>
         <option>
@@ -198,13 +254,61 @@
           <name>AllowAccessToBSL</name>
           <state>0</state>
         </option>
+        <option>
+          <name>OTargetVccTypeDefault</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCBetaDll</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GPassword</name>
+          <state></state>
+        </option>
+        <option>
+          <name>DebugLPM5</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>LPM5Slave</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CRadioAutoManualType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ExternalCodeDownload</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCVCCDefault</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>Retain</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>jstatebit</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RadioJtagSpeedType</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>memoryTypeSlave</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>SIM430</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>2</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -215,6 +319,22 @@
           <name>CSimMandatory</name>
           <state>1</state>
         </option>
+        <option>
+          <name>derivativeSim</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SimEnablePSP</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SimPspOverrideConfig</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SimPspConfigFile</name>
+          <state>$TOOLKIT_DIR$\CONFIG\test.psp.config</state>
+        </option>
       </data>
     </settings>
     <debuggerPlugins>
@@ -223,11 +343,43 @@
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\embOS\embOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\PowerPac\PowerPacRTOS.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\TI-RTOS\tirtosplugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-286-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-III\uCOS-III-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -239,16 +391,12 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
         <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\uCProbe\uCProbePlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
       </plugin>
     </debuggerPlugins>
   </configuration>
@@ -262,7 +410,7 @@
       <name>C-SPY</name>
       <archiveVersion>4</archiveVersion>
       <data>
-        <version>21</version>
+        <version>27</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -329,21 +477,85 @@
           <name>CompilerDataModel</name>
           <state>1</state>
         </option>
+        <option>
+          <name>IVBASE</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesSuppressCheck3</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesPath3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CPUTAG</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>L092Mode</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>OCImagesOffset1</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesOffset2</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesOffset3</name>
+          <state></state>
+        </option>
+        <option>
+          <name>OCImagesUse1</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesUse2</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>OCImagesUse3</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ENERGYTRACE</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>FETIPE</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>14</version>
+        <version>26</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
           <name>CFetMandatory</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>EMUSuppressLoadP7</name>
           <state>0</state>
         </option>
         <option>
@@ -352,10 +564,6 @@
         </option>
         <option>
           <name>EMUVerifyDownloadP7</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>EMUAskSuppressP7</name>
           <state>0</state>
         </option>
         <option>
@@ -400,10 +608,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>OProtocolTypeDefault</name>
-          <state>0</state>
-        </option>
-        <option>
           <name>CRadioProtocolType</name>
           <state>1</state>
         </option>
@@ -429,7 +633,7 @@
         </option>
         <option>
           <name>FetConnection</name>
-          <version>1</version>
+          <version>2</version>
           <state>1</state>
         </option>
         <option>
@@ -448,13 +652,61 @@
           <name>AllowAccessToBSL</name>
           <state>0</state>
         </option>
+        <option>
+          <name>OTargetVccTypeDefault</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCBetaDll</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>GPassword</name>
+          <state>###Uninitialized###</state>
+        </option>
+        <option>
+          <name>DebugLPM5</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>LPM5Slave</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CRadioAutoManualType</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>ExternalCodeDownload</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCVCCDefault</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>Retain</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>jstatebit</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>RadioJtagSpeedType</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>memoryTypeSlave</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>SIM430</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>2</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -465,6 +717,22 @@
           <name>CSimMandatory</name>
           <state>1</state>
         </option>
+        <option>
+          <name>derivativeSim</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SimEnablePSP</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SimPspOverrideConfig</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>SimPspConfigFile</name>
+          <state>###Uninitialized###</state>
+        </option>
       </data>
     </settings>
     <debuggerPlugins>
@@ -473,11 +741,43 @@
         <loadFlag>1</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxTinyPlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\embOS\embOSPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\PowerPac\PowerPacRTOS.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\SafeRTOS\SafeRTOSPlugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\TI-RTOS\tirtosplugin.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-286-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
         <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-II\uCOS-II-KA-CSpy.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\rtos\uCOS-III\uCOS-III-KA-CSpy.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -489,16 +789,12 @@
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
-        <file>$EW_DIR$\common\plugins\Profiling\Profiling.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
-        <file>$EW_DIR$\common\plugins\Stack\Stack.ENU.ewplugin</file>
-        <loadFlag>1</loadFlag>
-      </plugin>
-      <plugin>
         <file>$EW_DIR$\common\plugins\SymList\SymList.ENU.ewplugin</file>
         <loadFlag>1</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$EW_DIR$\common\plugins\uCProbe\uCProbePlugin.ENU.ewplugin</file>
+        <loadFlag>0</loadFlag>
       </plugin>
     </debuggerPlugins>
   </configuration>

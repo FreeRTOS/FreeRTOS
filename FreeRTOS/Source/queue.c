@@ -120,7 +120,8 @@ zero. */
 
 /*
  * Definition of the queue used by the scheduler.
- * Items are queued by copy, not reference.
+ * Items are queued by copy, not reference.  See the following link for the
+ * rationale: http://www.freertos.org/Embedded-RTOS-Queues.html
  */
 typedef struct QueueDefinition
 {
@@ -310,55 +311,68 @@ QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseT
 Queue_t *pxNewQueue;
 size_t xQueueSizeInBytes;
 QueueHandle_t xReturn = NULL;
+int8_t *pcAllocatedBuffer;
 
 	/* Remove compiler warnings about unused parameters should
 	configUSE_TRACE_FACILITY not be set to 1. */
 	( void ) ucQueueType;
 
-	/* Allocate the new queue structure. */
-	if( uxQueueLength > ( UBaseType_t ) 0 )
+	configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
+
+	if( uxItemSize == ( UBaseType_t ) 0 )
 	{
-		pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) );
-		if( pxNewQueue != NULL )
+		/* There is not going to be a queue storage area. */
+		xQueueSizeInBytes = ( size_t ) 0;
+	}
+	else
+	{
+		/* The queue is one byte longer than asked for to make wrap checking
+		easier/faster. */
+		xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ) + ( size_t ) 1; /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+	}
+
+	/* Allocate the new queue structure and storage area. */
+	pcAllocatedBuffer = ( int8_t * ) pvPortMalloc( sizeof( Queue_t ) + xQueueSizeInBytes );
+
+	if( pcAllocatedBuffer != NULL )
+	{
+		pxNewQueue = ( Queue_t * ) pcAllocatedBuffer; /*lint !e826 MISRA The buffer cannot be to small because it was dimensioned by sizeof( Queue_t ) + xQueueSizeInBytes. */
+
+		if( uxItemSize == ( UBaseType_t ) 0 )
 		{
-			/* Create the list of pointers to queue items.  The queue is one byte
-			longer than asked for to make wrap checking easier/faster. */
-			xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ) + ( size_t ) 1; /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-
-			pxNewQueue->pcHead = ( int8_t * ) pvPortMalloc( xQueueSizeInBytes );
-			if( pxNewQueue->pcHead != NULL )
-			{
-				/* Initialise the queue members as described above where the
-				queue type is defined. */
-				pxNewQueue->uxLength = uxQueueLength;
-				pxNewQueue->uxItemSize = uxItemSize;
-				( void ) xQueueGenericReset( pxNewQueue, pdTRUE );
-
-				#if ( configUSE_TRACE_FACILITY == 1 )
-				{
-					pxNewQueue->ucQueueType = ucQueueType;
-				}
-				#endif /* configUSE_TRACE_FACILITY */
-
-				#if( configUSE_QUEUE_SETS == 1 )
-				{
-					pxNewQueue->pxQueueSetContainer = NULL;
-				}
-				#endif /* configUSE_QUEUE_SETS */
-
-				traceQUEUE_CREATE( pxNewQueue );
-				xReturn = pxNewQueue;
-			}
-			else
-			{
-				traceQUEUE_CREATE_FAILED( ucQueueType );
-				vPortFree( pxNewQueue );
-			}
+			/* No RAM was allocated for the queue storage area, but PC head
+			cannot be set to NULL because NULL is used as a key to say the queue
+			is used as a mutex.  Therefore just set pcHead to point to the queue
+			as a benign value that is known to be within the memory map. */
+			pxNewQueue->pcHead = ( int8_t * ) pxNewQueue;
 		}
 		else
 		{
-			mtCOVERAGE_TEST_MARKER();
+			/* Jump past the queue structure to find the location of the queue
+			storage area - adding the padding bytes to get a better alignment. */
+			pxNewQueue->pcHead = pcAllocatedBuffer + sizeof( Queue_t );
 		}
+
+		/* Initialise the queue members as described above where the queue type
+		is defined. */
+		pxNewQueue->uxLength = uxQueueLength;
+		pxNewQueue->uxItemSize = uxItemSize;
+		( void ) xQueueGenericReset( pxNewQueue, pdTRUE );
+
+		#if ( configUSE_TRACE_FACILITY == 1 )
+		{
+			pxNewQueue->ucQueueType = ucQueueType;
+		}
+		#endif /* configUSE_TRACE_FACILITY */
+
+		#if( configUSE_QUEUE_SETS == 1 )
+		{
+			pxNewQueue->pxQueueSetContainer = NULL;
+		}
+		#endif /* configUSE_QUEUE_SETS */
+
+		traceQUEUE_CREATE( pxNewQueue );
+		xReturn = pxNewQueue;
 	}
 	else
 	{
@@ -943,7 +957,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					{
 						traceQUEUE_PEEK( pxQueue );
 
-						/* We are not removing the data, so reset our read
+						/* The data is not being removed, so reset our read
 						pointer. */
 						pxQueue->u.pcReadFrom = pcOriginalReadPosition;
 
@@ -1334,7 +1348,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			xReturn = errQUEUE_FULL;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus ); //0.36
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 	return xReturn;
 }
@@ -1625,6 +1639,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
+	configASSERT( pxQueue->uxItemSize != 0 ); /* Can't peek a semaphore. */
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -1727,10 +1742,6 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		vQueueUnregisterQueue( pxQueue );
 	}
 	#endif
-	if( pxQueue->pcHead != NULL )
-	{
-		vPortFree( pxQueue->pcHead );
-	}
 	vPortFree( pxQueue );
 }
 /*-----------------------------------------------------------*/

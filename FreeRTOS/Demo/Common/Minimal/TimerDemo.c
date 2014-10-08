@@ -277,7 +277,7 @@ static TickType_t xIterationsWithoutCounterIncrement = ( TickType_t ) 0, xLastCy
 
 static void prvTest1_CreateTimersWithoutSchedulerRunning( void )
 {
-UBaseType_t xTimer;
+TickType_t xTimer;
 
 	for( xTimer = 0; xTimer < configTIMER_QUEUE_LENGTH; xTimer++ )
 	{

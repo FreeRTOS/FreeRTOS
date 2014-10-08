@@ -719,6 +719,10 @@ extern "C" {
 	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #endif
 
+#ifndef configAPPLICATION_ALLOCATED_HEAP
+	#define configAPPLICATION_ALLOCATED_HEAP 0
+#endif
+
 /* Definitions to allow backward compatibility with FreeRTOS versions prior to
 V8 if desired. */
 #ifndef configENABLE_BACKWARD_COMPATIBILITY

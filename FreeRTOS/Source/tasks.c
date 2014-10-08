@@ -412,7 +412,9 @@ static void prvInitialiseTCBVariables( TCB_t * const pxTCB, const char * const p
  * currently in the Suspended state, or pdFALSE if the task referenced by xTask
  * is in any other state.
  */
-static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+#if ( INCLUDE_vTaskSuspend == 1 )
+	static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+#endif /* INCLUDE_vTaskSuspend */
 
 /*
  * Utility to ready all the lists used by the scheduler.  This is called
@@ -2915,33 +2917,71 @@ static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t *
 {
 TCB_t *pxNewTCB;
 
-	/* Allocate space for the TCB.  Where the memory comes from depends on
-	the implementation of the port malloc function. */
-	pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) );
-
-	if( pxNewTCB != NULL )
+	/* If the stack grows down then allocate the stack then the TCB so the stack
+	does not grow into the TCB.  Likewise if the stack grows up then allocate
+	the TCB then the stack. */
+	#if( portSTACK_GROWTH > 0 )
 	{
-		/* Allocate space for the stack used by the task being created.
-		The base of the stack memory stored in the TCB so the task can
-		be deleted later if required. */
-		pxNewTCB->pxStack = ( StackType_t * ) pvPortMallocAligned( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ), puxStackBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+		/* Allocate space for the TCB.  Where the memory comes from depends on
+		the implementation of the port malloc function. */
+		pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) );
 
-		if( pxNewTCB->pxStack == NULL )
+		if( pxNewTCB != NULL )
 		{
-			/* Could not allocate the stack.  Delete the allocated TCB. */
-			vPortFree( pxNewTCB );
-			pxNewTCB = NULL;
+			/* Allocate space for the stack used by the task being created.
+			The base of the stack memory stored in the TCB so the task can
+			be deleted later if required. */
+			pxNewTCB->pxStack = ( StackType_t * ) pvPortMallocAligned( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ), puxStackBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+			if( pxNewTCB->pxStack == NULL )
+			{
+				/* Could not allocate the stack.  Delete the allocated TCB. */
+				vPortFree( pxNewTCB );
+				pxNewTCB = NULL;
+			}
+		}
+	}
+	#else /* portSTACK_GROWTH */
+	{
+	StackType_t *pxStack;
+
+		/* Allocate space for the stack used by the task being created. */
+		pxStack = ( StackType_t * ) pvPortMallocAligned( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ), puxStackBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+		if( pxStack != NULL )
+		{
+			/* Allocate space for the TCB.  Where the memory comes from depends
+			on the implementation of the port malloc function. */
+			pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) );
+
+			if( pxNewTCB != NULL )
+			{
+				/* Store the stack location in the TCB. */
+				pxNewTCB->pxStack = pxStack;
+			}
+			else
+			{
+				/* The stack cannot be used as the TCB was not created.  Free it
+				again. */
+				vPortFree( pxStack );
+			}
 		}
 		else
 		{
-			/* Avoid dependency on memset() if it is not required. */
-			#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
-			{
-				/* Just to help debugging. */
-				( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( StackType_t ) );
-			}
-			#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
+			pxNewTCB = NULL;
 		}
+	}
+	#endif /* portSTACK_GROWTH */
+
+	if( pxNewTCB != NULL )
+	{
+		/* Avoid dependency on memset() if it is not required. */
+		#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
+		{
+			/* Just to help debugging. */
+			( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( StackType_t ) );
+		}
+		#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
 	}
 
 	return pxNewTCB;

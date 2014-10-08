@@ -532,7 +532,6 @@ uint32_t ulReturn;
 
 		FreeRTOS maintains separate thread and ISR API functions to ensure
 		interrupt entry is as fast and simple as possible. */
-
 		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER >= ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
 
 		/* Priority grouping:  The interrupt controller (GIC) allows the bits
@@ -550,6 +549,4 @@ uint32_t ulReturn;
 
 #endif /* configASSERT_DEFINED */
 /*-----------------------------------------------------------*/
-
-
 

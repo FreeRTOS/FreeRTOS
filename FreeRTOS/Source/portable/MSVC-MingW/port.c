@@ -63,10 +63,12 @@
     1 tab == 4 spaces!
 */
 
+/* Standard includes. */
+#include <stdio.h>
+
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include <stdio.h>
 
 #ifdef __GNUC__
 	#include "mmsystem.h"

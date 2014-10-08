@@ -153,6 +153,7 @@ extern void vPortYield( void );
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portNOP()
+#define portPOINTER_SIZE_TYPE		uint16_t
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site. */

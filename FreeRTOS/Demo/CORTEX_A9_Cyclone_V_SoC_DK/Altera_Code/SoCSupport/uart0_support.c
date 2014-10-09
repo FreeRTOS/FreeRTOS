@@ -56,7 +56,7 @@ ALT_STATUS_CODE uart0_init(void) {
 
 ALT_STATUS_CODE uart0_uninit(void) {
 
-	ALT_STATUS_CODE status;
+	ALT_STATUS_CODE status = 0;
 
 	status += alt_16550_disable(&g_uart0_handle);
 

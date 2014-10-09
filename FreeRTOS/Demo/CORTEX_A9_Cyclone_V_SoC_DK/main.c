@@ -114,7 +114,7 @@
  * When mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0 the comprehensive test
  * and demo application will be run.
  */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -139,6 +139,21 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
+
+/*-----------------------------------------------------------*/
+
+/* configAPPLICATION_ALLOCATED_HEAP is set to 1 in FreeRTOSConfig.h so the
+application can define the array used as the FreeRTOS heap.  This is done so the
+heap can be forced into fast internal RAM - useful because the stacks used by
+the tasks come from this space. */
+uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] __attribute__ ( ( section( ".oc_ram" ) ) );
+
+/* FreeRTOS uses its own interrupt handler code.  This code cannot use the array
+of handlers defined by the Altera drivers because the array is declared static,
+and so not accessible outside of the dirver's source file.  Instead declare an
+array for use by the FreeRTOS handler.  See:
+http://www.freertos.org/Using-FreeRTOS-on-Cortex-A-Embedded-Processors.html. */
+static INT_DISPATCH_t xISRHandlers[ ALT_INT_PROVISION_INT_COUNT ];
 
 /*-----------------------------------------------------------*/
 
@@ -305,7 +320,6 @@ void FreeRTOS_Tick_Handler( void );
 	vRegisterIRQHandler( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE, ( alt_int_callback_t ) FreeRTOS_Tick_Handler, NULL );
 
 	/* This tick interrupt must run at the lowest priority. */
-#warning Is this the correct way of specifying the priority value?
 	alt_int_dist_priority_set( ALT_INT_INTERRUPT_PPI_TIMER_PRIVATE, portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 
 	/* Ensure the interrupt is forwarded to the CPU. */
@@ -317,9 +331,6 @@ void FreeRTOS_Tick_Handler( void );
 
 }
 /*-----------------------------------------------------------*/
-
-#warning A separate array of handlers is maintained as the drivers array is static so cannot be reached and the handler is incompatible.
-static INT_DISPATCH_t xISRHandlers[ ALT_INT_PROVISION_INT_COUNT ];
 
 void vRegisterIRQHandler( uint32_t ulID, alt_int_callback_t pxHandlerFunction, void *pvContext )
 {

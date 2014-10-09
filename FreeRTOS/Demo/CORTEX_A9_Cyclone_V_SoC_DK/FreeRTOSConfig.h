@@ -109,6 +109,17 @@
  */
 #define configMAX_API_CALL_INTERRUPT_PRIORITY	18
 
+/* The application will define the array used as the RTOS heap to ensure it can
+be located in the (faster) on-chip RAM.  Whe this parameter is set to 1 the
+application must define an array using the name and size as follows below, but
+is free to locate the array in any suitable RAM region (the faster the better as
+the stacks used by the tasks are allocated from this array):
+
+uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+
+*/
+#define configAPPLICATION_ALLOCATED_HEAP		1
+
 #define configCPU_CLOCK_HZ						/* Not used in this portabsciex.com. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_TICKLESS_IDLE					0

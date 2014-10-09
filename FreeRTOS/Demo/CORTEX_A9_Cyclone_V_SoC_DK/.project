@@ -40,9 +40,14 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common</locationURI>
 		</link>
 		<link>
-			<name>FreeRTOS+CLI/Examples</name>
+			<name>FreeRTOS+CLI/CLI_Examples</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos</locationURI>
+		</link>
+		<link>
+			<name>FreeRTOS+CLI/Examples</name>
+			<type>2</type>
+			<location>C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos</location>
 		</link>
 	</linkedResources>
 	<filteredResources>
@@ -65,7 +70,25 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1412167807232</id>
+			<id>1412856477507</id>
+			<name>FreeRTOS+CLI/CLI_Examples</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Sample-CLI-commands.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1412856477537</id>
+			<name>FreeRTOS+CLI/CLI_Examples</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-UARTCommandConsole.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1412859886777</id>
 			<name>FreeRTOS+CLI/Examples</name>
 			<type>5</type>
 			<matcher>
@@ -74,7 +97,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1412167807242</id>
+			<id>1412859886785</id>
 			<name>FreeRTOS+CLI/Examples</name>
 			<type>5</type>
 			<matcher>

@@ -69,18 +69,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.840887560.620646012" name="/" resourcePath="FreeRTOS+CLI/Examples">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.2111927848" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.1982152472.1688335078" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1982152472"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.859871788.1933970670" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.859871788"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.941709227" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.909202128"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.2304967" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.81973727"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.344179079" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.451869963"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.285236367" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.372124763"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1219871621" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.550935274"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.105343637" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.738229482"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
@@ -99,5 +87,9 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+	</storageModule>
 </cproject>

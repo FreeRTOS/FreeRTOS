@@ -86,8 +86,8 @@
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 5 )
-#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 100 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 42 * 1024 ) )
+#define configMINIMAL_STACK_SIZE				( ( unsigned short ) 120 )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 38 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -129,9 +129,9 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
-/* Cortex-A specific setting:  FPU has 16 (rather than 32) d registers.  See:
+/* Cortex-A specific setting:  FPU has 32 (rather than 16) d registers.  See:
 http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
-#define configFPU_D32	0
+#define configFPU_D32	1
 
 /* Cortex-A specific setting:  The address of the register within the interrupt
 controller from which the address of the current interrupt's handling function
@@ -159,10 +159,10 @@ used. */
 	the need to use a separate timer for that purpose.  The 20KHz timer
 	increments ulHighFrequencyTimerCounts, which is used as the time base.
 	Therefore the following macro is not implemented. */
-	#define configGENERATE_RUN_TIME_STATS	0
-//_RB_	extern volatile uint32_t ulHighFrequencyTimerCounts;
-//_RB_	#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
-//_RB_	#define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTimerCounts
+	#define configGENERATE_RUN_TIME_STATS	1
+	extern volatile uint32_t ulHighFrequencyTimerCounts;
+	#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
+	#define portGET_RUN_TIME_COUNTER_VALUE() ulHighFrequencyTimerCounts
 
 	/* The size of the global output buffer that is available for use when there
 	are multiple command interpreters running at once (for example, one on a UART

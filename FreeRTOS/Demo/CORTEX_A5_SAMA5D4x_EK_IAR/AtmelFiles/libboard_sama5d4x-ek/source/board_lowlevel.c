@@ -208,6 +208,7 @@ void v_ARM_ClrCPSR_bits(unsigned int mask)
   asm("AND R0, R0, R1"); // Calculate new CPSR value
   asm("MSR CPSR_c,R0");  // Set new value
   asm("bx lr");
+  ( void ) mask;
 }
 
 void Dummy_Handler( void );
@@ -285,23 +286,15 @@ void Spurious_Handler( void );
 /**
  * \brief Dummy default handler.
  */
-volatile uint32_t ulx = 0;
 void Dummy_Handler( void )
 {
-    while ( ulx == 0 )
-	{
-		__asm volatile( "NOP" );
-	}
-	ulx = 0;
+    while ( 1 ) ;
 }
 
+volatile uint32_t ulSpuriousCount = 0;
 void Spurious_Handler( void )
 {
-    while ( ulx == 0 )
-	{
-		__asm volatile( "NOP" );
-	}
-	ulx = 0;
+	ulSpuriousCount++;
 }
 
 /**

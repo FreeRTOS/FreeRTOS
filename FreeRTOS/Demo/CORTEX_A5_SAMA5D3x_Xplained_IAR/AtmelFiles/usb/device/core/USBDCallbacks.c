@@ -54,7 +54,6 @@
 WEAK void USBDCallbacks_Initialized(void)
 {
     /* Does nothing */
-	__asm volatile( "NOP" );
 }
 
 /**

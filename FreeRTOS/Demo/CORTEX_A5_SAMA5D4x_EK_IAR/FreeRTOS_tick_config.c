@@ -99,31 +99,6 @@ static void System_Handler( void )
  * in FreeRTOSConfig.h to call the function.  This file contains a function
  * that is suitable for use on the Atmel SAMA5.
  */
-
-/*_RB_*/
-uint32_t IRQ_ConfigureIT(uint32_t source,
-                     uint32_t mode,
-                     void( *handler )( void ));
-
-uint32_t IRQ_ConfigureIT(uint32_t source,
-                     uint32_t mode,
-                     void( *handler )( void ))
-{
-    uint32_t prevHandler;
-    PMC->PMC_PCER1 = (1 << ( ID_IRQ - 32));
-    AIC->AIC_SSR  = source;
-    prevHandler = AIC->AIC_SVR;
-    /* Disable the interrupt first */
-    AIC->AIC_IDCR = AIC_IDCR_INTD;
-    /* Configure mode and handler */
-    AIC->AIC_SMR  = mode;
-    AIC->AIC_SVR = (uint32_t) handler;
-    /* Clear interrupt */
-    AIC->AIC_ICCR = AIC_ICCR_INTCLR;
-    return prevHandler;
-}
-
-
 void vConfigureTickInterrupt( void )
 {
 	/* NOTE:  The PIT interrupt is cleared by the configCLEAR_TICK_INTERRUPT()
@@ -135,18 +110,25 @@ void vConfigureTickInterrupt( void )
 	/* Initialize the PIT to the desired frequency - specified in uS. */
 	PIT_Init( 1000000UL / configTICK_RATE_HZ, ( BOARD_MCK / 2 ) / 1000000 );
 
-	/* Configure interrupt on PIT.  Note this is on the system interrupt, which
-	is shared with other system peripherals, so System_Handler() must be
-	installed in place of FreeRTOS_Tick_Handler() if other system handlers are
-	required.  The tick must be given the lowest priority (0 in the SAMA5 AIC) */
-	IRQ_ConfigureIT( ID_PIT, 0, FreeRTOS_Tick_Handler );
-	/* See commend directly above IRQ_ConfigureIT( ID_PIT, 0, System_Handler ); */
-//_RB_	IRQ_EnableIT( ID_PIT );
-AIC_EnableIT( ID_PIT );
+	/* Enable IRQ / select PIT interrupt. */
+	PMC->PMC_PCER1 = ( 1 << ( ID_IRQ - 32 ) );
+	AIC->AIC_SSR  = ID_PIT;
 
+	/* Ensure interrupt is disabled before setting the mode and installing the
+	handler.  The priority of the tick interrupt should always be set to the
+	lowest possible. */
+	AIC->AIC_IDCR = AIC_IDCR_INTD;
+	AIC->AIC_SMR  = AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE;
+	AIC->AIC_SVR = ( uint32_t ) FreeRTOS_Tick_Handler;
+
+	/* Start with the interrupt clear. */
+	AIC->AIC_ICCR = AIC_ICCR_INTCLR;
+
+	/* Enable the interrupt in the AIC and peripheral. */
+	AIC_EnableIT( ID_PIT );
 	PIT_EnableIT();
 
-	/* Enable the pit. */
+	/* Enable the peripheral. */
 	PIT_Enable();
 
 	/* Prevent compiler warnings in the case where System_Handler() is not used

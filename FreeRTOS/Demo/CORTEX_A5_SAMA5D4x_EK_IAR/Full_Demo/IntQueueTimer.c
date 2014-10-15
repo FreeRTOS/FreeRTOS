@@ -111,7 +111,7 @@ code. */
 
 /* The high frequency interrupt given the highest priority or all.  The priority
 of the lower frequency timers must still be above the tick interrupt priority. */
-#define tmrLOWER_PRIORITY		1
+#define tmrLOWER_PRIORITY		3
 #define tmrHIGHER_PRIORITY		5
 /*-----------------------------------------------------------*/
 
@@ -136,32 +136,48 @@ void vInitialiseTimerForIntQueueTest( void )
 const uint32_t ulDivider = 128UL, ulTCCLKS = 3UL;
 
 	/* Enable the TC clocks. */
-	PMC->PMC_PCER0 = 1 << ID_TC0;
-	PMC->PMC_PCER0 = 1 << ID_TC1;
+	PMC_EnablePeripheral( ID_TC0 );
+	PMC_EnablePeripheral( ID_TC1 );
 
 	/* Configure TC0 channel 0 for a tmrTIMER_0_FREQUENCY frequency and trigger
-	on RC compare. */
+	on RC compare.  This is part of the IntQTimer test. */
 	TC_Configure( TC0, tmrTC0_CHANNEL_0, ulTCCLKS | TC_CMR_CPCTRG );
-	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_RC = BOARD_MCK / ( tmrTIMER_0_FREQUENCY * ulDivider );
+	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_RC = ( BOARD_MCK / 2 ) / ( tmrTIMER_0_FREQUENCY * ulDivider );
 	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_IER = TC_IER_CPCS;
 
 	/* Configure TC0 channel 1 for a tmrTIMER_1_FREQUENCY frequency and trigger
-	on RC compare. */
+	on RC compare.  This is part of the IntQTimer test. */
 	TC_Configure( TC0, tmrTC0_CHANNEL_1, ulTCCLKS | TC_CMR_CPCTRG );
-	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_RC = BOARD_MCK / ( tmrTIMER_1_FREQUENCY * ulDivider );
+	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_RC = ( BOARD_MCK / 2 ) / ( tmrTIMER_1_FREQUENCY * ulDivider );
 	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_IER = TC_IER_CPCS;
 
 	/* Configure TC1 channel 0 tmrTIMER_2_FREQUENCY frequency and trigger on
-	RC compare. */
+	RC compare.  This is the very high frequency timer. */
 	TC_Configure( TC1, tmrTC1_CHANNEL_0, ulTCCLKS | TC_CMR_CPCTRG );
 	TC1->TC_CHANNEL[ tmrTC1_CHANNEL_0 ].TC_RC = BOARD_MCK / ( tmrTIMER_2_FREQUENCY * ulDivider );
 	TC1->TC_CHANNEL[ tmrTC1_CHANNEL_0 ].TC_IER = TC_IER_CPCS;
 
-	/* Enable interrupts and start the timers. */
-	IRQ_ConfigureIT( ID_TC0, tmrLOWER_PRIORITY, prvTC0_Handler );
-	IRQ_ConfigureIT( ID_TC1, tmrHIGHER_PRIORITY, prvTC1_Handler );
-	IRQ_EnableIT( ID_TC0 );
-	IRQ_EnableIT( ID_TC1 );
+	/* First setup TC0 interrupt, in which two channels are used. */
+    AIC->AIC_SSR = ID_TC0;
+
+	/* Ensure the interrupt is disabled before setting mode and handler. */
+    AIC->AIC_IDCR = AIC_IDCR_INTD;
+    AIC->AIC_SMR  = AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE |  tmrLOWER_PRIORITY;
+    AIC->AIC_SVR = ( uint32_t ) prvTC0_Handler;
+
+	/* Start with the interrupt clear. */
+    AIC->AIC_ICCR = AIC_ICCR_INTCLR;
+
+	/* Do the same for TC1 - which is the high frequency timer. */
+    AIC->AIC_SSR = ID_TC1;
+    AIC->AIC_IDCR = AIC_IDCR_INTD;
+    AIC->AIC_SMR  = AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE | tmrHIGHER_PRIORITY;
+    AIC->AIC_SVR = ( uint32_t ) prvTC1_Handler;
+    AIC->AIC_ICCR = AIC_ICCR_INTCLR;
+
+	/* Finally enable the interrupts and start the timers. */
+	AIC_EnableIT( ID_TC0 );
+	AIC_EnableIT( ID_TC1 );
 	TC_Start( TC0, tmrTC0_CHANNEL_0 );
 	TC_Start( TC0, tmrTC0_CHANNEL_1 );
 	TC_Start( TC1, tmrTC1_CHANNEL_0 );
@@ -170,16 +186,28 @@ const uint32_t ulDivider = 128UL, ulTCCLKS = 3UL;
 
 static void prvTC0_Handler( void )
 {
-    /* Read will clear the status bit. */
-	if( ( TC0->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_SR & tmrRC_COMPARE ) != 0 )
-	{
-		portYIELD_FROM_ISR( xFirstTimerHandler() );
-	}
+uint32_t ulDidSomething;
 
-	if( ( TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_SR & tmrRC_COMPARE ) != 0 )
+	do
 	{
-		portYIELD_FROM_ISR( xSecondTimerHandler() );
-	}
+		ulDidSomething = pdFALSE;
+
+		/* Read will clear the status bit. */
+		if( ( TC0->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_SR & tmrRC_COMPARE ) != 0 )
+		{
+			/* Call the IntQ test function for this channel. */
+			portYIELD_FROM_ISR( xFirstTimerHandler() );
+			ulDidSomething = pdTRUE;
+		}
+
+		if( ( TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_SR & tmrRC_COMPARE ) != 0 )
+		{
+			/* Call the IntQ test function for this channel. */
+			portYIELD_FROM_ISR( xSecondTimerHandler() );
+			ulDidSomething = pdTRUE;
+		}
+
+	} while( ulDidSomething == pdTRUE );
 }
 /*-----------------------------------------------------------*/
 

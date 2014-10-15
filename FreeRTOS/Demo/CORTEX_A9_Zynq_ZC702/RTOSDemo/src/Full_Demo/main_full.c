@@ -68,7 +68,7 @@
  * style project, a more comprehensive test and demo application, and an
  * lwIP example.  The mainSELECTED_APPLICATION setting in main.c is used to
  * select between the three.  See the notes on using mainSELECTED_APPLICATION
- * in main.c.  This file implements the simply blinky style version.
+ * in main.c.  This file implements the comprehensive version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions

@@ -6,13 +6,13 @@ define symbol __ICFEDIT_region_RAM_start__ = 0x200000;
 define symbol __ICFEDIT_region_RAM_end__   = 0x21FFFF;
 /*-Sizes-*/
 define symbol __ICFEDIT_size_vectors__  = 0x100;
-define symbol __ICFEDIT_size_cstack__   = 0x4000; 
-define symbol __ICFEDIT_size_irqstack__ = 0x60;
+define symbol __ICFEDIT_size_cstack__   = 0x900;
+define symbol __ICFEDIT_size_irqstack__ = 0x400;
 define symbol __ICFEDIT_size_fiqstack__ = 0x60;
 define symbol __ICFEDIT_size_abtstack__ = 0x60;
 define symbol __ICFEDIT_size_undstack__ = 0x40;
 
-define symbol __ICFEDIT_size_heap__     = 0x400;
+define symbol __ICFEDIT_size_heap__     = 0x0;
 /*-Exports-*/
 export symbol __ICFEDIT_region_RAM_start__;
 export symbol __ICFEDIT_region_RAM_end__;
@@ -35,7 +35,7 @@ define block ABT_STACK with alignment = 8, size = __ICFEDIT_size_abtstack__ { };
 define block UND_STACK with alignment = 8, size = __ICFEDIT_size_undstack__ { };
 define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
 
-initialize by copy with packing=none { readwrite };  
+initialize by copy with packing=none { readwrite };
 do not initialize  { readonly section .noinit };
 
 place in VEC_region { section .vectors };

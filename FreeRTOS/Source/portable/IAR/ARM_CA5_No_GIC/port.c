@@ -63,9 +63,6 @@
     1 tab == 4 spaces!
 */
 
-/* Standard includes. */
-#include <stdlib.h>
-
 /* IAR includes. */
 #include <intrinsics.h>
 
@@ -79,6 +76,14 @@
 		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
 	#endif
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+
+#ifndef configSETUP_TICK_INTERRUPT
+	#error configSETUP_TICK_INTERRUPT() must be defined in FreeRTOSConfig.h to call the function that sets up the tick interrupt.  A default that uses the PIT is provided in the official demo application.
+#endif
+
+#ifndef configCLEAR_TICK_INTERRUPT
+	#error configCLEAR_TICK_INTERRUPT must be defined in FreeRTOSConfig.h to clear which ever interrupt was used to generate the tick interrupt.  A default that uses the PIT is provided in the official demo application.
+#endif
 
 /* A critical section is exited when the critical section nesting count reaches
 this value. */
@@ -242,7 +247,6 @@ uint32_t ulAPSR;
 	{
 		/* Start the timer that generates the tick ISR. */
 		configSETUP_TICK_INTERRUPT();
-		__enable_irq();
 		vPortRestoreTaskContext();
 	}
 

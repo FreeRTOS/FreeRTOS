@@ -86,7 +86,7 @@
  *
  * "FreeRTOS+CLI command console" -  The command console is access using the USB
  * CDC driver provided by Atmel.  It is accessed through the USB connector
- * marked J6 SAMA5D3 Xplained board.  Type "help" to see a list of registered
+ * marked J1 SAMA5D4 Xplained board.  Type "help" to see a list of registered
  * commands.  The FreeRTOS+CLI license is different to the FreeRTOS license, see
  * http://www.FreeRTOS.org/cli for license and usage details.  The default baud
  * rate is 115200.

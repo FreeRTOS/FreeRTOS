@@ -124,19 +124,13 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /* Prototype for the IRQ handler called by the generic Cortex-A5 RTOS port
-layer.  The address of the ISR is passed into this function as a parameter.
-Note this level of indirection could be removed by creating a SAMA5 specific
-port layer that calls the IRQ directly from the port layer rather than via this
-application callback. */
-void vApplicationIRQHandler( uint32_t ulInterruptVectorAddress );
+layer. */
+void vApplicationIRQHandler( void );
 
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
-//extern int atmel_main( void );
-//atmel_main();
-
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
@@ -161,13 +155,21 @@ static void prvSetupHardware( void )
     /* Disable watchdog */
     WDT_Disable( WDT );
 
-	/* Set protect mode in the AIC for easier debugging. */
-//	AIC->AIC_DCR |= AIC_DCR_PROT;
+	/* Set protect mode in the AIC for easier debugging.  THIS IS COMMENTED OUT
+	AS IT RESULTS IN SPURIOUS INTERRUPTS.
+	AIC->AIC_DCR |= AIC_DCR_PROT; */
 
 	/* Configure ports used by LEDs. */
 	vParTestInitialise();
 
-//_RB_	CP15_EnableIcache();
+	#if defined (ddram)
+	{
+		MMU_Initialize( ( uint32_t * ) 0x20C000 );
+		CP15_EnableMMU();
+		CP15_EnableDcache();
+		CP15_EnableIcache();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -178,8 +180,9 @@ void vApplicationMallocFailedHook( void )
 	internally by FreeRTOS API functions that create tasks, queues, software
 	timers, and semaphores.  The size of the FreeRTOS heap is set by the
 	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+
+	/* Force an assert. */
+	configASSERT( ( volatile void * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -191,8 +194,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
-	taskDISABLE_INTERRUPTS();
-	for( ;; );
+
+	/* Force an assert. */
+	configASSERT( ( volatile void * ) NULL );
 }
 /*-----------------------------------------------------------*/
 
@@ -254,19 +258,19 @@ void vApplicationTickHook( void )
 
 /* The function called by the RTOS port layer after it has managed interrupt
 entry. */
-void vApplicationIRQHandler( uint32_t ulInterruptVectorAddress )
+void vApplicationIRQHandler( void )
 {
 typedef void (*ISRFunction_t)( void );
 ISRFunction_t pxISRFunction;
 volatile uint32_t * pulAIC_IVR = ( uint32_t * ) configINTERRUPT_VECTOR_ADDRESS;
 
-	/* On the SAMA5 the parameter is a pointer to the ISR handling function. */
-	pxISRFunction = ( ISRFunction_t ) ulInterruptVectorAddress;
+	/* Obtain the address of the interrupt handler from the AIR. */
+	pxISRFunction = ( ISRFunction_t ) *pulAIC_IVR;
 
 	/* Write back to the SAMA5's interrupt controller's IVR register in case the
 	CPU is in protect mode.  If the interrupt controller is not in protect mode
 	then this write is not necessary. */
-	*pulAIC_IVR = 0;
+	*pulAIC_IVR = ( uint32_t ) pxISRFunction;
 
 	/* Ensure the write takes before re-enabling interrupts. */
 	__DSB();
@@ -276,5 +280,4 @@ volatile uint32_t * pulAIC_IVR = ( uint32_t * ) configINTERRUPT_VECTOR_ADDRESS;
 	/* Call the installed ISR. */
 	pxISRFunction();
 }
-
 

@@ -132,26 +132,24 @@ FreeRTOS_IRQ_Handler
 	AND		r2, r2, #4
 	SUB		sp, sp, r2
 
-	; Obtain the address of the interrupt handler, then pass it into the ISR
-	; callback.
 	PUSH	{r0-r3, lr}
-	LDR		r1, =configINTERRUPT_VECTOR_ADDRESS
-	LDR		r0, [r1]
-	LDR		r1, =vApplicationIRQHandler
-	BLX		r1
+
+	; Call the port part specific handler.
+	LDR		r0, =vApplicationIRQHandler
+	BLX		r0
 	POP		{r0-r3, lr}
 	ADD		sp, sp, r2
 
 	CPSID	i
 
-	; Write to the EOI register
+	; Write to the EOI register.
 	LDR 	r4, =configEOI_ADDRESS
 	STR		r0, [r4]
 
 	; Restore the old nesting count
 	STR		r1, [r3]
 
-	; A context switch is never performed if the nesting count is not 0
+	; A context switch is never performed if the nesting count is not 0.
 	CMP		r1, #0
 	BNE		exit_without_switch
 
@@ -197,7 +195,6 @@ switch_before_exit
 
 	; Restore the context of, and branch to, the task selected to execute next.
 	portRESTORE_CONTEXT
-
 
 	END
 

@@ -113,7 +113,7 @@ static void prvCDCInit( void );
  * Handler installed on the VBUS pin to detect connect() and disconnect()
  * events.
  */
-static void prvVBusISRHandler( const Pin *pxPin );
+static void prvVBusISRHandler( void );
 
 /*
  * USB handler defined by the driver, installed after the CDC driver has been
@@ -387,14 +387,12 @@ const TickType_t xTransferCompleteDelay = pdMS_TO_TICKS( 750UL );
 }
 /*-----------------------------------------------------------*/
 
-static void prvVBusISRHandler( const Pin *pxPin )
+static void prvVBusISRHandler( void )
 {
-	/* NOTE: As this was written for the XPlained board, which is powered
-	through the USB and cannot be on without the USB connected, this function
-	has not been exercised. */
+const Pin xVBusPin = PIN_USB_VBUS;
 
     /* Check current level on VBus to detect a connect/disconnect. */
-    if( PIO_Get( pxPin ) != 0 )
+    if( PIO_Get( &xVBusPin ) != 0 )
     {
         USBD_Connect();
     }
@@ -454,16 +452,29 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 static void prvConfigureVBus( void )
 {
 const Pin xVBusPin = PIN_USB_VBUS;
+const uint32_t ulPriority = 7; /* Highest. */
 
 	/* Configure PIO to generate an interrupt on status change. */
-	PIO_Configure( &xVBusPin, 1 );
-	PIO_ConfigureIt( &xVBusPin, prvVBusISRHandler );
+    PIO_Configure( &xVBusPin, 1 );
+    PIO_ConfigureIt( &xVBusPin );
+
+	/* Ensure interrupt is disabled before setting the mode and installing the
+	handler.  The priority of the tick interrupt should always be set to the
+	lowest possible. */
+	AIC->AIC_SSR  = ID_PIOE;
+	AIC->AIC_IDCR = AIC_IDCR_INTD;
+	AIC->AIC_SMR  = AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE | ulPriority;
+	AIC->AIC_SVR = ( uint32_t ) prvVBusISRHandler;
+
+	/* Start with the interrupt clear. */
+	AIC->AIC_ICCR = AIC_ICCR_INTCLR;
 	PIO_EnableIt( &xVBusPin );
+    AIC_EnableIT( ID_PIOE );
 
 	/* Check current level on VBus */
 	if( PIO_Get( &xVBusPin ) != pdFALSE )
 	{
-		/* if VBUS present, force the connect */
+		/* If VBUS present, force the connect */
 		USBD_Connect();
 	}
 	else
@@ -479,8 +490,7 @@ void USBDCallbacks_Initialized( void )
 	the USB driver has been initialised. By default, configures the UDP/UDPHS
 	interrupt.  The interrupt priority is set to the highest to ensure the
 	interrupt nesting tests interfer as little as possible with the USB. */
-	IRQ_ConfigureIT( ID_UDPHS, 7, USBD_IrqHandler );
-	IRQ_EnableIT( ID_UDPHS );
+	AIC_EnableIT( ID_UDPHS );
 }
 /*-----------------------------------------------------------*/
 

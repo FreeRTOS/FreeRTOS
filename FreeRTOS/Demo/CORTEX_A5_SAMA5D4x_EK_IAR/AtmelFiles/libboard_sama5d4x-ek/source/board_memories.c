@@ -27,12 +27,12 @@
  * ----------------------------------------------------------------------------
  */
 
-/** \addtogroup ddrd_module 
+/** \addtogroup ddrd_module
  *
  * The DDR/SDR SDRAM Controller (DDRSDRC) is a multiport memory controller. It comprises
  * four slave AHB interfaces. All simultaneous accesses (four independent AHB ports) are interleaved
  * to maximize memory bandwidth and minimize transaction latency due to SDRAM protocol.
- * 
+ *
  * \section ddr2 Configures DDR2
  *
  * The DDR2-SDRAM devices are initialized by the following sequence:
@@ -77,8 +77,8 @@
  * <li> Step 1. Program the memory device type into the Memory Device Register</li>
  * <li> Step 2. Program the features of the SDR-SDRAM device into the Timing Register and into the Configuration Register.</li>
  * <li> Step 3. For low-power SDRAM, temperature-compensated self refresh (TCSR), drive strength (DS) and partial array self refresh (PASR) must be set in the Low-power Register.</li>
- * <li> Step 4. A NOP command is issued to the SDR-SDRAM. Program NOP command into Mode Register, the application must 
- * set Mode to 1 in the Mode Register. Perform a write access to any SDR-SDRAM address to acknowledge this command. 
+ * <li> Step 4. A NOP command is issued to the SDR-SDRAM. Program NOP command into Mode Register, the application must
+ * set Mode to 1 in the Mode Register. Perform a write access to any SDR-SDRAM address to acknowledge this command.
  * Now the clock which drives SDR-SDRAM device is enabled.</li>
  * <li> Step 5. An all banks precharge command is issued to the SDR-SDRAM. Program all banks precharge command into Mode Register, the application must set Mode to 2 in the
  * Mode Register . Perform a write access to any SDRSDRAM address to acknowledge this command.</li>
@@ -95,8 +95,8 @@
 /*@{*/
 /*@}*/
 
- 
- 
+
+
 /**
  * \file
  *
@@ -104,7 +104,7 @@
  *
  */
 
- 
+
 /*----------------------------------------------------------------------------
  *        Headers
  *----------------------------------------------------------------------------*/
@@ -139,8 +139,9 @@ void BOARD_RemapRam( void )
  */
 void BOARD_ConfigureVddMemSel( uint8_t VddMemSel )
 {
+	( void ) VddMemSel;
 }
- 
+
 #define DDR2_BA0(r) (1 << (26 + r))
 #define DDR2_BA1(r) (1 << (27 + r))
 
@@ -149,17 +150,17 @@ void BOARD_ConfigureVddMemSel( uint8_t VddMemSel )
 static void matrix_configure_slave_ddr(void)
 {
      int ddr_port;
- 
+
      /* Disable write protection */
      MATRIX0->MATRIX_WPMR = MPDDRC_WPMR_WPKEY_PASSWD;
- 
+
      /* Partition internal SRAM */
      MATRIX0->MATRIX_SSR[11]   = 0;
      MATRIX0->MATRIX_SRTSR[11] = 0x05;
      MATRIX0->MATRIX_SASSR[11] = 0x04;
- 
+
      ddr_port = 1;
-      
+
      /* Partition external DDR */
      /* DDR port 0 not used from NWd */
      for (ddr_port = 1 ; ddr_port < 8 ; ddr_port++) {
@@ -198,7 +199,7 @@ static void matrix_configure_slave_nand(void)
  Refresh count: 8K
  Row address: A[12:0] (8K)
  Column address A[9:0] (1K)
- Bank address BA[2:0] a(24,25) (8) 
+ Bank address BA[2:0] a(24,25) (8)
  */
 void BOARD_ConfigureDdram( void )
 {
@@ -206,13 +207,13 @@ void BOARD_ConfigureDdram( void )
     volatile uint32_t i;
 
     volatile uint32_t dummy_value;
-    
+
     matrix_configure_slave_ddr();
 
     /* Enable DDR2 clock x2 in PMC */
     PMC->PMC_PCER0 = (1 << (ID_MPDDRC));
     PMC->PMC_SCER  |= PMC_SCER_DDRCK;
- 
+
     /* MPDDRC I/O Calibration Register */
     dummy_value  =  MPDDRC->MPDDRC_IO_CALIBR;
     dummy_value &= ~MPDDRC_IO_CALIBR_RDIV_Msk;
@@ -227,7 +228,7 @@ void BOARD_ConfigureDdram( void )
     /* Step 1: Program the memory device type */
     /* DBW = 0 (32 bits bus wide); Memory Device = 6 = DDR2-SDRAM = 0x00000006*/
 
-    MPDDRC->MPDDRC_MD   =  MPDDRC_MD_MD_DDR2_SDRAM | MPDDRC_MD_DBW_DBW_32_BITS; 
+    MPDDRC->MPDDRC_MD   =  MPDDRC_MD_MD_DDR2_SDRAM | MPDDRC_MD_DBW_DBW_32_BITS;
 
     MPDDRC->MPDDRC_RD_DATA_PATH = MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_ONE_CYCLE;
 
@@ -241,8 +242,8 @@ void BOARD_ConfigureDdram( void )
                            MPDDRC_CR_NB_8_BANKS         |
                            MPDDRC_CR_NDQS_DISABLED      |
                            MPDDRC_CR_UNAL_SUPPORTED     |
-                           MPDDRC_CR_OCD_DDR2_EXITCALIB; 
-   
+                           MPDDRC_CR_OCD_DDR2_EXITCALIB;
+
     MPDDRC->MPDDRC_TPR0 = MPDDRC_TPR0_TRAS(8)    //  40 ns
                         | MPDDRC_TPR0_TRCD(3)    //  12.5 ns
                         | MPDDRC_TPR0_TWR(3)     //  15 ns
@@ -251,14 +252,14 @@ void BOARD_ConfigureDdram( void )
                         | MPDDRC_TPR0_TRRD(2)    //  8 ns
                         | MPDDRC_TPR0_TWTR(2)    //  2 clock cycle
                         | MPDDRC_TPR0_TMRD(2);   //  2 clock cycles
-    
+
 
     MPDDRC->MPDDRC_TPR1 = MPDDRC_TPR1_TRFC(23)
                         | MPDDRC_TPR1_TXSNR(25)
                         | MPDDRC_TPR1_TXSRD(200)
                         | MPDDRC_TPR1_TXP(2);
 
-    MPDDRC->MPDDRC_TPR2 = MPDDRC_TPR2_TXARD(8)  
+    MPDDRC->MPDDRC_TPR2 = MPDDRC_TPR2_TXARD(8)
                           | MPDDRC_TPR2_TXARDS(2)
                           | MPDDRC_TPR2_TRPA(3)
                           | MPDDRC_TPR2_TRTP(2)
@@ -267,19 +268,19 @@ void BOARD_ConfigureDdram( void )
     /* DDRSDRC Low-power Register */
     for (i = 0; i < 13300; i++) {
         asm("nop");
-    } 
+    }
 
 /* Step 3: An NOP command is issued to the DDR2-SDRAM. Program the NOP command into
     the Mode Register, the application must set MODE to 1 in the Mode Register. */
     MPDDRC->MPDDRC_MR = MPDDRC_MR_MODE_NOP_CMD;
     /* Perform a write access to any DDR2-SDRAM address to acknowledge this command */
     *pDdr = 0;  /* Now clocks which drive DDR2-SDRAM device are enabled.*/
-   
+
     /* A minimum pause of 200 ¦Ìs is provided to precede any signal toggle. (6 core cycles per iteration, core is at 396MHz: min 13200 loops) */
     for (i = 0; i < 13300; i++) {
         asm("nop");
-    } 
- 
+    }
+
 /* Step 4:  An NOP command is issued to the DDR2-SDRAM */
     MPDDRC->MPDDRC_MR = MPDDRC_MR_MODE_NOP_CMD;
     /* Perform a write access to any DDR2-SDRAM address to acknowledge this command.*/
@@ -288,7 +289,7 @@ void BOARD_ConfigureDdram( void )
     for (i = 0; i < 100; i++) {
         asm("nop");
     }
- 
+
 /* Step 5: An all banks precharge command is issued to the DDR2-SDRAM. */
     MPDDRC->MPDDRC_MR = MPDDRC_MR_MODE_PRCGALL_CMD;
     /* Perform a write access to any DDR2-SDRAM address to acknowledge this command.*/
@@ -332,7 +333,7 @@ void BOARD_ConfigureDdram( void )
     for (i = 0; i < 100; i++) {
         asm("nop");
     }
- 
+
 /* Step 11: An all banks precharge command is issued to the DDR2-SDRAM. */
     MPDDRC->MPDDRC_MR = MPDDRC_MR_MODE_PRCGALL_CMD;
     *(pDdr) = 0;  /* Perform a write access to any DDR2-SDRAM address to acknowledge this command */
@@ -357,7 +358,7 @@ void BOARD_ConfigureDdram( void )
     }
 
 /* Step 13: Program DLL field into the Configuration Register to low(Disable DLL reset). */
-    MPDDRC->MPDDRC_CR   &= ~MPDDRC_CR_DLL_RESET_ENABLED;  
+    MPDDRC->MPDDRC_CR   &= ~MPDDRC_CR_DLL_RESET_ENABLED;
 
 /* Step 14: A Mode Register set (MRS) cycle is issued to program the parameters of the DDR2-SDRAM devices. */
     MPDDRC->MPDDRC_MR = MPDDRC_MR_MODE_LMR_CMD;
@@ -393,10 +394,10 @@ void BOARD_ConfigureDdram( void )
     MPDDRC->MPDDRC_MR = MPDDRC_MR_MODE_NORMAL_CMD;
     *(pDdr) = 0;
 
-/* Step 21: Write the refresh rate into the count field in the Refresh Timer register. The DDR2-SDRAM device requires a refresh every 15.625 ¦Ìs or 7.81 ¦Ìs. 
+/* Step 21: Write the refresh rate into the count field in the Refresh Timer register. The DDR2-SDRAM device requires a refresh every 15.625 ¦Ìs or 7.81 ¦Ìs.
    With a 100MHz frequency, the refresh timer count register must to be set with (15.625 /100 MHz) = 1562 i.e. 0x061A or (7.81 /100MHz) = 781 i.e. 0x030d. */
     /* For MT47H64M16HR, The refresh period is 64ms (commercial), This equates to an average
-       refresh rate of 7.8125¦Ìs (commercial), To ensure all rows of all banks are properly 
+       refresh rate of 7.8125¦Ìs (commercial), To ensure all rows of all banks are properly
        refreshed, 8192 REFRESH commands must be issued every 64ms (commercial) */
     /* ((64 x 10(^-3))/8192) x133 x (10^6) */
     MPDDRC->MPDDRC_RTR = MPDDRC_RTR_COUNT(0x2b0); /* Set Refresh timer 7.8125 us*/
@@ -447,7 +448,7 @@ void BOARD_ConfigureNandFlash( uint8_t busWidth )
     HSMC->HSMC_CS_NUMBER[3].HSMC_MODE = HSMC_MODE_READ_MODE |
                                      HSMC_MODE_WRITE_MODE |
                                      ((busWidth == 8 )? HSMC_MODE_DBW_BIT_8 :HSMC_MODE_DBW_BIT_16) |
-                                      HSMC_MODE_TDF_CYCLES(1);    
+                                      HSMC_MODE_TDF_CYCLES(1);
 }
 
 
@@ -455,7 +456,7 @@ void BOARD_ConfigureNorFlash( uint8_t busWidth )
 {
     uint32_t dbw;
     PMC_EnablePeripheral(ID_HSMC);
-    if (busWidth == 8) 
+    if (busWidth == 8)
     {
         dbw = HSMC_MODE_DBW_BIT_8;
     }

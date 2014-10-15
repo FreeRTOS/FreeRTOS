@@ -186,8 +186,6 @@ uint8_t *pc1, *pc2;
 	usTemp = ( ( *pc2 ) << 8 ) | *pc1;
 
 	return usTemp;
-#warning The above code replaces the line below to ensure aborts are not received due to unaligned accesses.  Alternatively use the --no_unaligned_access compiler option.
-    //return endpoint->wMaxPacketSize;
 }
 
 /**
@@ -208,15 +206,9 @@ uint8_t USBEndpointDescriptor_GetInterval(
  *  \param configuration Pointer to a USBConfigurationDescriptor instance.
  *  \return Total length (in bytes) of the configuration.
  */
-volatile unsigned long ulCount = 0;
 uint32_t USBConfigurationDescriptor_GetTotalLength(
     const USBConfigurationDescriptor *configuration)
 {
-ulCount++;
-if( ulCount == 5 )
-{
-	__asm volatile( "NOP" );
-}
     return configuration->wTotalLength;
 }
 

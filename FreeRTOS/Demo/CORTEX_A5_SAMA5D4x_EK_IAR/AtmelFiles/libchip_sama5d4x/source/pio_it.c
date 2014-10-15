@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAM Software Package License 
+ *         SAM Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2013, Atmel Corporation
  *
@@ -151,6 +151,8 @@ extern void PIO_InitializeInterrupts( uint32_t dwPriority )
 {
     TRACE_DEBUG( "PIO_Initialize()\n\r" ) ;
 
+	( void ) dwPriority;
+
     /* Reset sources */
     _dwNumSources = 0 ;
 
@@ -234,7 +236,7 @@ extern void PIO_ConfigureIt( const Pin *pPin )
         }
 
         /* if bit field of selected pin is 1, set as edge detection source */
-        if (pPin->attribute & PIO_IT_EDGE) 
+        if (pPin->attribute & PIO_IT_EDGE)
             pio->PIO_ESR = pPin->mask;
         else
             pio->PIO_LSR = pPin->mask;

@@ -42,8 +42,35 @@
 /*----------------------------------------------------------------------------
  *        Macro
  *----------------------------------------------------------------------------*/
+
+/** Memory barriers */
+
+#define rmb()   __ASM("dsb ")
+
+#if defined ( __ICCARM__ )
+    #define wmb()   __ASM("dsb #st")
+#else
+    #define wmb()   __ASM("dsb st")
+#endif
+
+/** ISO/IEC 14882:2003(E) - 5.6 Multiplicative operators:
+ * The binary / operator yields the quotient, and the binary % operator yields the remainder 
+ * from the division of the first expression by the second. 
+ * If the second operand of / or % is zero the behavior is undefined; otherwise (a/b)*b + a%b is equal to a.
+ * If both operands are nonnegative then the remainder is nonnegative;
+ * if not, the sign of the remainder is implementation-defined 74).
+ */
+static inline int fixed_mod(int a, int b)
+{
+    int rem = a % b;
+    while (rem < 0)
+        rem += b;
+
+    return rem;
+}
+
 /** Return count in buffer */
-#define GCIRC_CNT(head,tail,size) (((head) - (tail)) % (size))
+#define GCIRC_CNT(head,tail,size)  fixed_mod((head) - (tail), (size))
 
 /** Return space available, 0..size-1. always leave one free char as a completely full buffer 
     has head == tail, which is the same as empty */
@@ -53,13 +80,13 @@
     so they can change underneath us without returning inconsistent results */
 #define GCIRC_CNT_TO_END(head,tail,size) \
      ({int end = (size) - (tail); \
-     int n = ((head) + end) % (size); \
+     int n = fixed_mod((head) + end, (size));	\
      n < end ? n : end;})
 
 /** Return space available up to the end of the buffer */
 #define GCIRC_SPACE_TO_END(head,tail,size) \
    ({int end = (size) - 1 - (head); \
-     int n = (end + (tail)) % (size); \
+     int n = fixed_mod(end + (tail), (size));	\
      n <= end ? n : end+1;})
 
 /** Increment head or tail */
@@ -99,6 +126,14 @@
 #define GMAC_TX_ERR_BIT         (1 << 27) /// Exhausted in mid-frame
 #define GMAC_TX_ERR_BITS  \
     (GMAC_TX_RLE_BIT | GMAC_TX_UND_BIT | GMAC_TX_ERR_BIT)
+
+// Interrupt bits
+#define GMAC_INT_RX_BITS  \
+    (GMAC_IER_RCOMP | GMAC_IER_RXUBR | GMAC_IER_ROVR)
+#define GMAC_INT_TX_ERR_BITS  \
+    (GMAC_IER_TUR | GMAC_IER_RLEX | GMAC_IER_TFC)
+#define GMAC_INT_TX_BITS  \
+    (GMAC_INT_TX_ERR_BITS | GMAC_IER_TCOMP)
 
 /*---------------------------------------------------------------------------
  *         Local functions
@@ -161,7 +196,140 @@ static void GMACD_ResetRx(sGmacd *pDrv )
     GMAC_SetRxQueue(pHw, (uint32_t) pRd);
 }
 
-    
+
+/**
+ *  \brief Process successfully sent packets
+ *  \param pGmacd Pointer to GMAC Driver instance.
+ */
+static void GMACD_TxCompleteHandler(sGmacd *pGmacd)
+{
+    Gmac                   *pHw = pGmacd->pHw;
+    sGmacTxDescriptor      *pTxTd;
+    fGmacdTransferCallback fTxCb;
+    uint32_t               tsr;
+
+    /* Clear status */
+    tsr = GMAC_GetTxStatus(pHw);
+    GMAC_ClearTxStatus(pHw, tsr);
+
+    while (!GCIRC_EMPTY(pGmacd->wTxHead, pGmacd->wTxTail)) {
+        pTxTd = &pGmacd->pTxD[pGmacd->wTxTail];
+
+        /* Make hw descriptor updates visible to CPU */
+        rmb();
+
+        /* Exit if frame has not been sent yet:
+         * On TX completion, the GMAC set the USED bit only into the
+         * very first buffer descriptor of the sent frame.
+         * Otherwise it updates this descriptor with status error bits.
+         * This is the descriptor writeback.
+         */
+        if ((pTxTd->status.val & GMAC_TX_USED_BIT) == 0)
+            break;
+
+        /* Process all buffers of the current transmitted frame */
+        while ((pTxTd->status.val & GMAC_TX_LAST_BUFFER_BIT) == 0) {
+            GCIRC_INC(pGmacd->wTxTail, pGmacd->wTxListSize);
+            pTxTd = &pGmacd->pTxD[pGmacd->wTxTail];
+            rmb();
+        }
+
+        /* Notify upper layer that a frame has been sent */
+        fTxCb = pGmacd->fTxCbList[pGmacd->wTxTail];
+        if (fTxCb)
+            fTxCb(tsr);
+
+        /* Go to next frame */
+        GCIRC_INC(pGmacd->wTxTail, pGmacd->wTxListSize);
+    }
+
+    /* If a wakeup has been scheduled, notify upper layer that it can
+       send other packets, send will be successfull. */
+    if (pGmacd->fWakupCb &&
+        GCIRC_SPACE(pGmacd->wTxHead,
+                    pGmacd->wTxTail,
+                    pGmacd->wTxListSize) >= pGmacd->bWakeupThreshold)
+        pGmacd->fWakupCb();
+}
+
+
+/**
+ *  \brief Reset TX queue when errors are detected
+ *  \param pGmacd Pointer to GMAC Driver instance.
+ */
+static void GMACD_TxErrorHandler(sGmacd *pGmacd)
+{
+    Gmac                   *pHw = pGmacd->pHw;
+    sGmacTxDescriptor      *pTxTd;
+    fGmacdTransferCallback fTxCb;
+    uint32_t               tsr;
+
+    /* Clear TXEN bit into the Network Configuration Register:
+     * this is a workaround to recover from TX lockups that 
+     * occur on sama5d3 gmac (r1p24f2) when using  scatter-gather.
+     * This issue has never been seen on sama5d4 gmac (r1p31).
+     */
+    GMAC_TransmitEnable(pHw, 0);
+
+    /* The following step should be optional since this function is called 
+     * directly by the IRQ handler. Indeed, according to Cadence 
+     * documentation, the transmission is halted on errors such as
+     * too many retries or transmit under run.
+     * However it would become mandatory if the call of this function
+     * were scheduled as a task by the IRQ handler (this is how Linux 
+     * driver works). Then this function might compete with GMACD_Send().
+     *
+     * Setting bit 10, tx_halt, of the Network Control Register is not enough:
+     * We should wait for bit 3, tx_go, of the Transmit Status Register to 
+     * be cleared at transmit completion if a frame is being transmitted.
+     */
+    GMAC_TransmissionHalt(pHw);
+    while (GMAC_GetTxStatus(pHw) & GMAC_TSR_TXGO);
+
+    /* Treat frames in TX queue including the ones that caused the error. */
+    while (!GCIRC_EMPTY(pGmacd->wTxHead, pGmacd->wTxTail)) {
+        int tx_completed = 0;
+        pTxTd = &pGmacd->pTxD[pGmacd->wTxTail];
+
+        /* Make hw descriptor updates visible to CPU */
+        rmb();
+
+        /* Check USED bit on the very first buffer descriptor to validate
+         * TX completion.
+         */
+        if (pTxTd->status.val & GMAC_TX_USED_BIT)
+            tx_completed = 1;
+
+        /* Go to the last buffer descriptor of the frame */
+        while ((pTxTd->status.val & GMAC_TX_LAST_BUFFER_BIT) == 0) {
+            GCIRC_INC(pGmacd->wTxTail, pGmacd->wTxListSize);
+            pTxTd = &pGmacd->pTxD[pGmacd->wTxTail];
+            rmb();
+        }
+
+        /* Notify upper layer that a frame status */
+        fTxCb = pGmacd->fTxCbList[pGmacd->wTxTail];
+        if (fTxCb)
+            fTxCb(tx_completed ? GMAC_TSR_TXCOMP : 0); // TODO: which error to notify?
+
+        /* Go to next frame */
+        GCIRC_INC(pGmacd->wTxTail, pGmacd->wTxListSize);
+    }    
+
+    /* Reset TX queue */
+    GMACD_ResetTx(pGmacd);
+
+    /* Clear status */
+    tsr = GMAC_GetTxStatus(pHw);
+    GMAC_ClearTxStatus(pHw, tsr);
+
+    /* Now we are ready to start transmission again */
+    GMAC_TransmitEnable(pHw, 1);
+    if (pGmacd->fWakupCb)
+        pGmacd->fWakupCb();
+}
+
+ 
 /*---------------------------------------------------------------------------
  *         Exported functions
  *---------------------------------------------------------------------------*/
@@ -174,122 +342,36 @@ static void GMACD_ResetRx(sGmacd *pDrv )
 void GMACD_Handler(sGmacd *pGmacd )
 {
     Gmac *pHw = pGmacd->pHw;
-    sGmacTxDescriptor      *pTxTd;
-    fGmacdTransferCallback *pTxCb = NULL;
     uint32_t isr;
     uint32_t rsr;
-    uint32_t tsr;
-   
-    uint32_t rxStatusFlag;
-    uint32_t txStatusFlag;
-    isr = GMAC_GetItStatus(pHw);
-    rsr = GMAC_GetRxStatus(pHw);
-    tsr = GMAC_GetTxStatus(pHw);
 
-    isr &= ~(GMAC_GetItMask(pHw)| 0xF8030300);
+    /* Interrupt Status Register is cleared on read */
+    while ((isr = GMAC_GetItStatus(pHw)) != 0) {
+        /* RX packet */
+        if (isr & GMAC_INT_RX_BITS) {
+            /* Clear status */
+            rsr = GMAC_GetRxStatus(pHw);
+            GMAC_ClearRxStatus(pHw, rsr);
 
-    /* RX packet */
-    if ((isr & GMAC_ISR_RCOMP) || (rsr & GMAC_RSR_REC)) {
-        asm("nop");
-        rxStatusFlag = GMAC_RSR_REC;
-        /* Frame received */
-        /* Check OVR */
-        if (rsr & GMAC_RSR_RXOVR) {
-            rxStatusFlag |= GMAC_RSR_RXOVR;
+            /* Invoke callback */
+            if (pGmacd->fRxCb)
+                pGmacd->fRxCb(rsr);
         }
-        /* Check BNA */
-        if (rsr & GMAC_RSR_BNA) {
-            rxStatusFlag |= GMAC_RSR_BNA;
-        }
-        /* Check HNO */
-        if (rsr & GMAC_RSR_HNO) {
-            rxStatusFlag |= GMAC_RSR_HNO;
-        }        
-        /* Clear status */
-        GMAC_ClearRxStatus(pHw, rxStatusFlag);
 
-        /* Invoke callbacks */
-        if (pGmacd->fRxCb)
-        {
-            pGmacd->fRxCb(rxStatusFlag);
+        /* TX error */
+        if (isr & GMAC_INT_TX_ERR_BITS) {
+            GMACD_TxErrorHandler(pGmacd);
+            break;
+        }
+
+        /* TX packet */
+        if (isr & GMAC_IER_TCOMP)
+            GMACD_TxCompleteHandler(pGmacd);
+
+        if (isr & GMAC_IER_HRESP) {
+            TRACE_ERROR("HRESP\n\r");
         }
     }
-
-    /* TX packet */
-    if ((isr & GMAC_ISR_TCOMP) || (tsr & GMAC_TSR_TXCOMP)) {
-        asm("nop");
-        txStatusFlag = GMAC_TSR_TXCOMP;
-
-        /*  A frame transmitted Check RLE */
-        if (tsr & GMAC_TSR_RLE) {
-            /* Status RLE & Number of discarded buffers */
-            txStatusFlag = GMAC_TSR_RLE
-                         | GCIRC_CNT(pGmacd->wTxHead,
-                                     pGmacd->wTxTail,
-                                     pGmacd->wTxListSize);
-            pTxCb = &pGmacd->fTxCbList[pGmacd->wTxTail];
-            GMACD_ResetTx(pGmacd);
-            TRACE_INFO("Tx RLE!!\n\r");
-            GMAC_TransmitEnable(pHw, 1);
-        }
-        /* Check COL */
-        if (tsr & GMAC_TSR_COL) {
-            txStatusFlag |= GMAC_TSR_COL;
-        }
-        /* Check TFC */
-        if (tsr & GMAC_TSR_TFC) {
-            txStatusFlag |= GMAC_TSR_TFC;
-        }
-        /* Check UND */
-        if (tsr & GMAC_TSR_UND) {
-            txStatusFlag |= GMAC_TSR_UND;
-        }
-        /* Check HRESP */
-        if (tsr & GMAC_TSR_HRESP) {
-            txStatusFlag |= GMAC_TSR_HRESP;
-        }
-        /* Clear status */
-        GMAC_ClearTxStatus(pHw, txStatusFlag);
-
-        if (!GCIRC_EMPTY(pGmacd->wTxHead, pGmacd->wTxTail))
-        {
-            /* Check the buffers */
-            do {
-                pTxTd = &pGmacd->pTxD[pGmacd->wTxTail];
-                pTxCb = &pGmacd->fTxCbList[pGmacd->wTxTail];
-                /* Exit if buffer has not been sent yet */
-
-                if ((pTxTd->status.val & (uint32_t)GMAC_TX_USED_BIT) == 0) {
-                    break;
-                }
-                /* Notify upper layer that a packet has been sent */
-                if (*pTxCb) {
-                    (*pTxCb)(txStatusFlag);
-                }
-                GCIRC_INC( pGmacd->wTxTail, pGmacd->wTxListSize );
-            } while (GCIRC_CNT(pGmacd->wTxHead, pGmacd->wTxTail, pGmacd->wTxListSize));
-        }
-        
-        if (tsr & GMAC_TSR_RLE) {
-            /* Notify upper layer RLE */
-            if (*pTxCb) {
-                (*pTxCb)(txStatusFlag);
-            }
-        }
-        
-        /* If a wakeup has been scheduled, notify upper layer that it can
-           send other packets, send will be successfull. */
-        if((GCIRC_SPACE(pGmacd->wTxHead,
-                         pGmacd->wTxTail,
-                         pGmacd->wTxListSize) >= pGmacd->bWakeupThreshold) && pGmacd->fWakupCb)
-        {
-            pGmacd->fWakupCb();
-        }
-    }
-
-    /* PAUSE Frame */
-    if (isr & GMAC_ISR_PFNZ) TRACE_INFO("Pause!\n\r");
-    if (isr & GMAC_ISR_PTZ)  TRACE_INFO("Pause TO!\n\r");
 }
 
 
@@ -412,30 +494,12 @@ uint8_t GMACD_InitTransfer( sGmacd *pGmacd,
     GMAC_ReceiveEnable(pHw, 1);
     GMAC_StatisticsWriteEnable(pHw, 1);
 
-    /* Setup the interrupts for TX (and errors) */
-    GMAC_EnableIt(pHw, GMAC_IER_MFS 
-                      |GMAC_IER_RCOMP
-                      |GMAC_IER_RXUBR
-                      |GMAC_IER_TXUBR
-                      |GMAC_IER_TUR
-                      |GMAC_IER_RLEX
-                      |GMAC_IER_TFC 
-                      |GMAC_IER_TCOMP
-                      |GMAC_IER_ROVR 
-                      |GMAC_IER_HRESP
-                      |GMAC_IER_PFNZ 
-                      |GMAC_IER_PTZ 
-                      |GMAC_IER_PFTR
-                      |GMAC_IER_EXINT
-                      |GMAC_IER_DRQFR
-                      |GMAC_IER_SFR
-                      |GMAC_IER_DRQFT
-                      |GMAC_IER_SFT
-                      |GMAC_IER_PDRQFR
-                      |GMAC_IER_PDRSFR
-                      |GMAC_IER_PDRQFT
-                      |GMAC_IER_PDRSFT);
-    //0x03FCFCFF
+    /* Setup the interrupts for RX/TX completion (and errors) */
+    GMAC_EnableIt(pHw,
+                  GMAC_INT_RX_BITS |
+                  GMAC_INT_TX_BITS |
+                  GMAC_IER_HRESP);
+
     return GMACD_OK;
 }
 
@@ -456,6 +520,102 @@ void GMACD_Reset(sGmacd *pGmacd)
 }
 
 /**
+ * \brief Send a frame splitted into buffers. If the frame size is larger than transfer buffer size
+ * error returned. If frame transfer status is monitored, specify callback for each frame.
+ *  \param pGmacd Pointer to GMAC Driver instance. 
+ *  \param sgl Pointer to a scatter-gather list describing the buffers of the ethernet frame.
+ */
+uint8_t GMACD_SendSG(sGmacd *pGmacd,
+                     const sGmacSGList *sgl,
+                     fGmacdTransferCallback fTxCb)
+{
+    Gmac *pHw = pGmacd->pHw;
+    sGmacTxDescriptor *pTxTd;
+    uint16_t wTxPos, wTxHead;
+    int i;
+
+    TRACE_DEBUG("GMACD_SendSG\n\r");
+
+    /* Check parameter */
+    if (!sgl->len) {
+        TRACE_ERROR("GMACD_SendSG: ethernet frame is empty.\r\n");
+        return GMACD_PARAM;
+    }
+    if (sgl->len >= pGmacd->wTxListSize) {
+        TRACE_ERROR("GMACD_SendSG: ethernet frame has too many buffers.\r\n");
+        return GMACD_PARAM;
+    }
+
+    /* Check available space */
+    if (GCIRC_SPACE(pGmacd->wTxHead, pGmacd->wTxTail, pGmacd->wTxListSize) < (int)sgl->len)
+        return GMACD_TX_BUSY;
+
+    /* Tag end of TX queue */
+    wTxHead = fixed_mod(pGmacd->wTxHead + sgl->len, pGmacd->wTxListSize);
+    wTxPos = wTxHead;
+    pGmacd->fTxCbList[wTxPos] = NULL;
+    pTxTd = &pGmacd->pTxD[wTxPos];
+    pTxTd->status.val = GMAC_TX_USED_BIT;
+
+    /* Update buffer descriptors in reverse order to avoid a race 
+     * condition with hardware.
+     */
+    for (i = (int)(sgl->len-1); i >= 0; --i) {
+        const sGmacSG *sg = &sgl->sg[i];
+        uint32_t status;
+
+        if (sg->size > GMAC_TX_UNITSIZE) {
+            TRACE_ERROR("GMACD_SendSG: buffer size is too big.\r\n");
+            return GMACD_PARAM;
+        }
+
+        if (wTxPos == 0)
+            wTxPos = pGmacd->wTxListSize-1;
+        else
+            wTxPos--;
+
+        /* Reset TX callback */
+        pGmacd->fTxCbList[wTxPos] = NULL;
+
+        pTxTd = &pGmacd->pTxD[wTxPos];
+#ifdef GMAC_ZERO_COPY
+        /** Update buffer descriptor address word:
+         *  MUST be done before status word to avoid a race condition.
+         */
+        pTxTd->addr = (uint32_t)sg->pBuffer;
+        wmb();
+#else
+        /* Copy data into transmittion buffer */
+        if (sg->pBuffer && sg->size)
+            memcpy((void *)pTxTd->addr, sg->pBuffer, sg->size);
+#endif
+
+        /* Compute buffer descriptor status word */
+        status = sg->size & GMAC_LENGTH_FRAME;
+        if (i == (int)(sgl->len-1)) {
+            status |= GMAC_TX_LAST_BUFFER_BIT;
+            pGmacd->fTxCbList[wTxPos] = fTxCb;
+        }
+        if (wTxPos == pGmacd->wTxListSize-1)
+            status |= GMAC_TX_WRAP_BIT;
+
+        /* Update buffer descriptor status word: clear USED bit */
+        pTxTd->status.val = status;
+
+        /* Make newly initialized descriptor visible to hardware */
+        wmb();
+    }
+
+    /* Update TX ring buffer pointers */
+    pGmacd->wTxHead = wTxHead;
+
+    /* Now start to transmit if it is not already done */
+    GMAC_TransmissionStart(pHw);
+
+    return GMACD_OK;
+}
+
+/**
  * \brief Send a packet with GMAC. If the packet size is larger than transfer buffer size 
  * error returned. If packet transfer status is monitored, specify callback for each packet.
  *  \param pGmacd Pointer to GMAC Driver instance. 
@@ -466,58 +626,20 @@ void GMACD_Reset(sGmacd *pGmacd)
  *  \return         OK, Busy or invalid packet
  */
 uint8_t GMACD_Send(sGmacd *pGmacd,
-                  void *pBuffer,
-                  uint32_t size,
-                  fGmacdTransferCallback fTxCb )
+                   void *pBuffer,
+                   uint32_t size,
+                   fGmacdTransferCallback fTxCb)
 {
-    Gmac *pHw = pGmacd->pHw;
-    sGmacTxDescriptor      *pTxTd;
-    volatile fGmacdTransferCallback *pfTxCb;
-    
-    TRACE_DEBUG("GMAC_Send\n\r");
-    /* Check parameter */
-    if (size > GMAC_TX_UNITSIZE) {
+    sGmacSGList sgl;
+    sGmacSG sg;
 
-        TRACE_ERROR("GMAC driver does not split send packets.");
-        return GMACD_PARAM;
-    }
+    /* Init single entry scatter-gather list */
+    sg.size = size;
+    sg.pBuffer = pBuffer;
+    sgl.len = 1;
+    sgl.sg = &sg;
 
-    /* Pointers to the current TxTd */
-    pTxTd = &pGmacd->pTxD[pGmacd->wTxHead];
-    /* If no free TxTd, buffer can't be sent */
-    if( GCIRC_SPACE(pGmacd->wTxHead, pGmacd->wTxTail, pGmacd->wTxListSize) == 0)
-        return GMACD_TX_BUSY;
-    /* Pointers to the current Tx Callback */
-    pfTxCb = &pGmacd->fTxCbList[pGmacd->wTxHead];
-    /* Sanity check */
-
-    /* Setup/Copy data to transmition buffer */
-    if (pBuffer && size) {
-        // Driver manage the ring buffer
-        memcpy((void *)pTxTd->addr, pBuffer, size);
-    }
-    /* Tx Callback */
-    *pfTxCb = fTxCb;
-
-    /* Update TD status. The buffer size defined is length of ethernet frame
-      so it's always the last buffer of the frame. */
-    if (pGmacd->wTxHead == pGmacd->wTxListSize-1) {
-        pTxTd->status.val = 
-            (size & GMAC_LENGTH_FRAME) | GMAC_TX_LAST_BUFFER_BIT | GMAC_TX_WRAP_BIT;
-    }
-    else {
-        pTxTd->status.val = (size & GMAC_LENGTH_FRAME) | GMAC_TX_LAST_BUFFER_BIT;
-    }
-    
-    GCIRC_INC(pGmacd->wTxHead, pGmacd->wTxListSize);
-    
-    //CP15_flush_dcache_for_dma ((uint32_t)(pTxTd), ((uint32_t)(pTxTd) + sizeof(pTxTd)));
-    /* Tx packets count */
-
-    /* Now start to transmit if it is not already done */
-    GMAC_TransmissionStart(pHw);
-
-    return GMACD_OK;
+    return GMACD_SendSG(pGmacd, &sgl, fTxCb);
 }
 
 

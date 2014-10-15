@@ -106,6 +106,22 @@ typedef void (*fGmacdTransferCallback)(uint32_t status);
 typedef void (*fGmacdWakeupCallback)(void);
 
 /**
+ * GMAC scatter-gather entry.
+ */
+typedef struct _GmacSG {
+    uint32_t size;
+    void *pBuffer;
+} sGmacSG;
+
+/**
+ * GMAC scatter-gather list.
+ */
+typedef struct _GmacSGList {
+    uint32_t len;
+    sGmacSG  *sg;
+} sGmacSGList;
+
+/**
  * GMAC driver struct.
  */
 typedef struct _GmacDriver {
@@ -174,6 +190,10 @@ extern uint8_t GMACD_InitTransfer( sGmacd *pGmacd,
                                    uint16_t wTxSize);
 
 extern void GMACD_Reset(sGmacd *pGmacd);
+
+extern uint8_t GMACD_SendSG(sGmacd *pGmacd,
+                            const sGmacSGList *sgl,
+                            fGmacdTransferCallback fTxCb);
 
 extern uint8_t GMACD_Send(sGmacd *pGmacd,
                          void *pBuffer,

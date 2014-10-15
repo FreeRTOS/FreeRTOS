@@ -72,6 +72,8 @@
 ;    mission critical applications that require provable dependability.
 ;*/
 
+#include "FreeRTOSConfig.h"
+
 	EXPORT vRegTest1Implementation
 	EXPORT vRegTest2Implementation
 
@@ -122,6 +124,23 @@ vRegTest1Implementation
 	vmov 	d13, r2, r3
 	vmov 	d14, r4, r5
 	vmov 	d15, r6, r7
+
+	vmov 	d16, r0, r1
+	vmov 	d17, r2, r3
+	vmov 	d18, r4, r5
+	vmov 	d19, r6, r7
+	vmov 	d20, r8, r9
+	vmov 	d21, r10, r11
+	vmov 	d22, r0, r1
+	vmov 	d23, r2, r3
+	vmov 	d24, r4, r5
+	vmov 	d25, r6, r7
+	vmov 	d26, r8, r9
+	vmov 	d27, r10, r11
+	vmov 	d28, r0, r1
+	vmov 	d29, r2, r3
+	vmov 	d30, r4, r5
+	vmov 	d31, r6, r7
 
 	; Loop, checking each itteration that each register still contains the
 	; expected value.
@@ -209,6 +228,87 @@ reg1_loop
 	cmp 	r1, #0x55
 	bne 	reg1_error_loopf
 	vmov 	r0, r1, d15
+	cmp 	r0, #0x66
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x77
+	bne 	reg1_error_loopf
+
+	vmov 	r0, r1, d16
+	cmp 	r0, #0xFF
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x11
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d17
+	cmp 	r0, #0x22
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x33
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d18
+	cmp 	r0, #0x44
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x55
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d19
+	cmp 	r0, #0x66
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x77
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d20
+	cmp 	r0, #0x88
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x99
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d21
+	cmp 	r0, #0xAA
+	bne 	reg1_error_loopf
+	cmp 	r1, #0xBB
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d22
+	cmp 	r0, #0xFF
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x11
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d23
+	cmp 	r0, #0x22
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x33
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d24
+	cmp 	r0, #0x44
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x55
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d25
+	cmp 	r0, #0x66
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x77
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d26
+	cmp 	r0, #0x88
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x99
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d27
+	cmp 	r0, #0xAA
+	bne 	reg1_error_loopf
+	cmp 	r1, #0xBB
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d28
+	cmp 	r0, #0xFF
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x11
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d29
+	cmp 	r0, #0x22
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x33
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d30
+	cmp 	r0, #0x44
+	bne 	reg1_error_loopf
+	cmp 	r1, #0x55
+	bne 	reg1_error_loopf
+	vmov 	r0, r1, d31
 	cmp 	r0, #0x66
 	bne 	reg1_error_loopf
 	cmp 	r1, #0x77
@@ -317,6 +417,23 @@ vRegTest2Implementation
 	vmov 	d14, r4, r5
 	vmov 	d15, r6, r7
 
+	vmov 	d16, r0, r1
+	vmov 	d17, r2, r3
+	vmov 	d18, r4, r5
+	vmov 	d19, r6, r7
+	vmov 	d20, r8, r9
+	vmov 	d21, r10, r11
+	vmov 	d22, r0, r1
+	vmov 	d23, r2, r3
+	vmov 	d24, r4, r5
+	vmov 	d25, r6, r7
+	vmov 	d26, r8, r9
+	vmov 	d27, r10, r11
+	vmov 	d28, r0, r1
+	vmov 	d29, r2, r3
+	vmov 	d30, r4, r5
+	vmov 	d31, r6, r7
+
 	; Loop, checking each itteration that each register still contains the
 	; expected value.
 reg2_loop
@@ -405,6 +522,87 @@ reg2_loop
 	cmp 	r1, #0x77000000
 	bne 	reg2_error_loopf
 
+	vmov 	r0, r1, d16
+	cmp 	r0, #0xFF000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x11000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d17
+	cmp 	r0, #0x22000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x33000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d18
+	cmp 	r0, #0x44000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x55000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d19
+	cmp 	r0, #0x66000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x77000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d20
+	cmp 	r0, #0x88000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x99000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d21
+	cmp 	r0, #0xAA000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0xBB000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d22
+	cmp 	r0, #0xFF000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x11000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d23
+	cmp 	r0, #0x22000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x33000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d24
+	cmp 	r0, #0x44000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x55000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d25
+	cmp 	r0, #0x66000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x77000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d26
+	cmp 	r0, #0x88000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x99000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d27
+	cmp 	r0, #0xAA000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0xBB000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d28
+	cmp 	r0, #0xFF000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x11000000
+	bne 	reg2_error_loopf
+	vmov	r0, r1, d29
+	cmp 	r0, #0x22000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x33000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d30
+	cmp 	r0, #0x44000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x55000000
+	bne 	reg2_error_loopf
+	vmov 	r0, r1, d31
+	cmp 	r0, #0x66000000
+	bne 	reg2_error_loopf
+	cmp 	r1, #0x77000000
+	bne 	reg2_error_loopf
+
 	; Restore the registers that were clobbered by the test.
 	pop 	{r0-r1}
 
@@ -463,6 +661,5 @@ reg2_error_loop
 	; The loop ensures the loop counter stops incrementing.
 	b 		reg2_error_loop
 	nop
-
 
 	END

@@ -214,7 +214,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa131</state>
+          <state>Pa131, Pa039</state>
         </option>
         <option>
           <name>CCDiagRemark</name>

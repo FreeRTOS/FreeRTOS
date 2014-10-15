@@ -44,7 +44,6 @@
 //         Headers
 //------------------------------------------------------------------------------
 
-#define __ASSEMBLY__
 
 //------------------------------------------------------------------------------
 //         Definitions
@@ -82,7 +81,6 @@ MODE_MSK DEFINE 0x1F            ; Bit mask for mode bits in CPSR
         SECTION .vectors:CODE:NOROOT(2)
 
         PUBLIC  resetVector
-        PUBLIC  IRQ_Handler
         EXTERN  FreeRTOS_IRQ_Handler
         EXTERN  Undefined_C_Handler
         EXTERN  FreeRTOS_SWI_Handler
@@ -113,50 +111,7 @@ Undefined_Addr: DCD   Undefined_C_Handler
 SWI_Addr:       DCD   FreeRTOS_SWI_Handler
 Abort_Addr:     DCD   Abort_C_Handler
 Prefetch_Addr:  DCD   Prefetch_C_Handler
-;IRQ_Addr:       DCD   IRQ_Handler
 FIQ_Addr:       DCD   FIQ_Handler
-/*
-   Handles incoming interrupt requests by branching to the corresponding
-   handler, as defined in the AIC. Supports interrupt nesting.
- */
-IRQ_Handler:
-        /* Save interrupt context on the stack to allow nesting */
-        SUB     lr, lr, #4
-        STMFD   sp!, {lr}
-        MRS     lr, SPSR
-        STMFD   sp!, {r0, lr}
-
-        /* Write in the IVR to support Protect Mode */
-        LDR     lr, =AIC
-        LDR     r0, [r14, #AIC_IVR]
-        STR     lr, [r14, #AIC_IVR]
-
-        /* Branch to interrupt handler in Supervisor mode */
-        MSR     CPSR_c, #ARM_MODE_SVC
-        STMFD   sp!, {r1-r3, r4, r12, lr}
-
-        /* Check for 8-byte alignment and save lr plus a */
-        /* word to indicate the stack adjustment used (0 or 4) */
-        AND     r1, sp, #4
-        SUB     sp, sp, r1
-        STMFD   sp!, {r1, lr}
-
-        BLX     r0
-
-        LDMIA   sp!, {r1, lr}
-        ADD     sp, sp, r1
-
-        LDMIA   sp!, {r1-r3, r4, r12, lr}
-        MSR     CPSR_c, #ARM_MODE_IRQ | I_BIT | F_BIT
-
-        /* Acknowledge interrupt */
-        LDR     lr, =AIC
-        STR     lr, [r14, #AIC_EOICR]
-
-        /* Restore interrupt context and branch back to calling code */
-        LDMIA   sp!, {r0, lr}
-        MSR     SPSR_cxsf, lr
-        LDMIA   sp!, {pc}^
 
 
 /*

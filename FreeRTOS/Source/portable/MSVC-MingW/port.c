@@ -178,7 +178,7 @@ TIMECAPS xTimeCaps;
 	/* Just to prevent compiler warnings. */
 	( void ) lpParameter;
 
-	for(;;)
+	for( ;; )
 	{
 		/* Wait until the timer expires and we can access the simulated interrupt
 		variables.  *NOTE* this is not a 'real time' way of generating tick

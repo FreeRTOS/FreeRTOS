@@ -53,7 +53,7 @@
         </option>
         <option>
           <name>RunToEnable</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RunToName</name>
@@ -1362,7 +1362,7 @@
         <debug>1</debug>
         <option>
           <name>FlashLoadersV3</name>
-          <state></state>
+          <state>$TOOLKIT_DIR$\config\flashloader\</state>
         </option>
         <option>
           <name>CInput</name>
@@ -1386,7 +1386,7 @@
         </option>
         <option>
           <name>MacFile</name>
-          <state>$PROJ_DIR$\..\..\..\..\libraries\libboard_sama5d4x-ek\resources\ewarm\sama5d4x-ek-ddram.mac</state>
+          <state>$PROJ_DIR$\AtmelFiles\libboard_sama5d4x-ek\resources\ewarm\sama5d4x-ek-ddram.mac</state>
         </option>
         <option>
           <name>MemOverride</name>
@@ -1394,11 +1394,11 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\Atmel\iosama5d4x.ddf</state>
+          <state></state>
         </option>
         <option>
           <name>RunToEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>RunToName</name>
@@ -1438,7 +1438,7 @@
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>6.30.1.53141</state>
+          <state>7.20.2.7418</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>

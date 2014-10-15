@@ -114,7 +114,7 @@ void vConfigureTickInterrupt( void )
 	is shared with other system peripherals, so System_Handler() must be
 	installed in place of FreeRTOS_Tick_Handler() if other system handlers are
 	required.  The tick must be given the lowest priority (0 in the SAMA5 AIC) */
-	IRQ_ConfigureIT( ID_PIT, 0, FreeRTOS_Tick_Handler );
+	IRQ_ConfigureIT( ID_PIT, AIC_SMR_SRCTYPE_EXT_POSITIVE_EDGE, FreeRTOS_Tick_Handler );
 	/* See commend directly above IRQ_ConfigureIT( ID_PIT, 0, System_Handler ); */
 	IRQ_EnableIT( ID_PIT );
 	PIT_EnableIT();

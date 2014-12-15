@@ -723,6 +723,10 @@ extern "C" {
 	#define configAPPLICATION_ALLOCATED_HEAP 0
 #endif
 
+#ifndef configUSE_TASK_NOTIFICATIONS
+	#define configUSE_TASK_NOTIFICATIONS 1
+#endif
+
 /* Definitions to allow backward compatibility with FreeRTOS versions prior to
 V8 if desired. */
 #ifndef configENABLE_BACKWARD_COMPATIBILITY

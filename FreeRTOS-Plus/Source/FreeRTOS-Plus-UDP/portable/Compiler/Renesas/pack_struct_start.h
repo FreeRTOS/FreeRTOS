@@ -42,7 +42,7 @@
 
 /*****************************************************************************
  *
- * See the following URL for an exaplanation of this file:
+ * See the following URL for an explanation of this file:
  * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Compiler_Porting.shtml
  *
  *****************************************************************************/

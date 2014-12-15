@@ -132,7 +132,7 @@ BaseType_t xStatus;
 XUartPs_Config *pxConfig;
 
 	/* Create the queue used to hold received characters.  NOTE THE COMMENTS AT
-	THE TOP OF THIS FILE REGARDING THE QUEUE OF QUEUES FOR THIS PURPSOE. */
+	THE TOP OF THIS FILE REGARDING THE USE OF QUEUES FOR THIS PURPSOE. */
 	xRxQueue = xQueueCreate( uxQueueLength, sizeof( char ) );
 	configASSERT( xRxQueue );
 

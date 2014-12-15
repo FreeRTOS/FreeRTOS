@@ -139,6 +139,9 @@
     <ClCompile Include="..\Common\Minimal\IntSemTest.c">
       <Filter>Demo App Source\Common Demo Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Minimal\TaskNotify.c">
+      <Filter>Demo App Source\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

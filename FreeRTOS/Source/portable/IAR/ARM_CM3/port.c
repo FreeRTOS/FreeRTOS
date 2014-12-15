@@ -114,7 +114,7 @@
 #define portPRIGROUP_SHIFT					( 8UL )
 
 /* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
-#define portVECTACTIVE_MASK					( 0x1FUL )
+#define portVECTACTIVE_MASK					( 0xFFUL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR					( 0x01000000 )
@@ -327,9 +327,9 @@ void vPortEnterCritical( void )
 	uxCriticalNesting++;
 	__DSB();
 	__ISB();
-	
+
 	/* This is not the interrupt safe version of the enter critical function so
-	assert() if it is being called from an interrupt context.  Only API 
+	assert() if it is being called from an interrupt context.  Only API
 	functions that end in "FromISR" can be used in an interrupt.  Only assert if
 	the critical nesting count is 1 to protect against recursive calls if the
 	assert function also uses a critical section. */

@@ -80,7 +80,7 @@
  * point registers.  To avoid this causing corruption it is necessary to avoid
  * their use.  For this reason main.c contains very basic C implementations of
  * the standard C library functions memset(), memcpy() and memcmp(), which are
- * are used by FreeRTOS itself.  Defining these functions in the project 
+ * are used by FreeRTOS itself.  Defining these functions in the project
  * prevents the linker pulling them in from the library.  Any other standard C
  * library functions that are used by the application must likewise be defined
  * in C.
@@ -145,7 +145,7 @@ static void prvSetupHardware( void );
 	extern void main_lwIP( void );
 #else
 	#error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
-#endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
+#endif
 
 /*
  * The Xilinx projects use a BSP that do not allow the start up code to be

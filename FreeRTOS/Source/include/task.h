@@ -114,13 +114,23 @@ typedef enum
 	eDeleted		/* The task being queried has been deleted, but its TCB has not yet been freed. */
 } eTaskState;
 
+/* Actions that can be performed when vTaskNotify() is called. */
+typedef enum
+{
+	eNoAction,					/* Notify the task without updating its notify value. */
+	eSetBits,					/* Set bits in the task's notification value. */
+	eIncrement,					/* Increment the task's notification value. */
+	eSetValueWithOverwrite,		/* Set the task's notification value to a specific value even if the previous value has not yet been read by the task. */
+	eSetValueWithoutOverwrite	/* Set the task's notification value if the previous value has been read by the task. */
+} eNotifyAction;
+
 /*
  * Used internally only.
  */
 typedef struct xTIME_OUT
 {
 	BaseType_t xOverflowCount;
-	TickType_t  xTimeOnEntering;
+	TickType_t xTimeOnEntering;
 } TimeOut_t;
 
 /*
@@ -1357,6 +1367,432 @@ void vTaskList( char * pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unquali
  * \ingroup TaskUtils
  */
 void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
+/**
+ * task. h
+ * <PRE>BaseType_t xTaskNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction );</PRE>
+ *
+ * configUSE_TASK_NOTIFICATIONS must be defined as 1 for this function to be
+ * available.
+ *
+ * When configUSE_TASK_NOTIFICATIONS is set to one each task has its own private
+ * "notification value", which is a 32-bit unsigned integer (uint32_t).
+ *
+ * Events can be sent to a task using an intermediary object.  Examples of such
+ * objects are queues, semaphores, mutexes and event groups.  Task notifications
+ * are a method of sending an event directly to a task without the need for such
+ * an intermediary object.
+ *
+ * A notification sent to a task can optionally perform an action, such as
+ * update, overwrite or increment the task's notification value.  In that way
+ * task notifications can be used to send data to a task, or be used as light
+ * weight and fast binary or counting semaphores.
+ *
+ * A notification sent to a task will remain pending until it is cleared by the
+ * task calling xTaskNotifyWait() or ulTaskNotifyTake().  If the task was
+ * already in the Blocked state to wait for a notification when the notification
+ * arrives then the task will automatically be removed from the Blocked state
+ * (unblocked) and the notification cleared.
+ *
+ * A task can use xTaskNotifyWait() to [optionally] block to wait for a
+ * notification to be pending, or xTaskNotifyTake() to [optionally] block
+ * to wait for its notification value to have a non-zero value.  The task does
+ * not consume any CPU time while it is in the Blocked state.
+ *
+ * See http://www.FreeRTOS.org/RTOS_task_notifications.html for details of when
+ * it is best to use a task notification to send an event to a task compared to
+ * when it is best to use an intermediary object (such as a queue, semaphore,
+ * mutex or event group) to send an event to a task.
+ *
+ * @param xTaskToNotify The handle of the task being notified.  The handle to a
+ * task can be returned from the xTaskCreate() API function used to create the
+ * task, and the handle of the currently running task can be obtained by calling
+ * xTaskGetCurrentTaskHandle().
+ *
+ * @param ulValue Data that can be sent with the notification.  How the data is
+ * used depends on the value of the eAction parameter.
+ *
+ * @param eAction Specifies how the notification updates the task's notification
+ * value, if at all.  Valid values for eAction are as follows:
+ *
+ *	eSetBits -
+ *	The task's notification value is bitwise ORed with ulValue.  xTaskNofify()
+ * 	always returns pdPASS in this case.
+ *
+ *	eIncrement -
+ *	The task's notification value is incremented.  ulValue is not used and
+ *	xTaskNotify() always returns pdPASS in this case.
+ *
+ *	eSetValueWithOverwrite -
+ *	The task's notification value is set to the value of ulValue, even if the
+ *	task being notified had not yet processed the previous notification (the
+ *	task already had a notification pending).  xTaskNotify() always returns
+ *	pdPASS in this case.
+ *
+ *	eSetValueWithoutOverwrite -
+ *	If the task being notified did not already have a notification pending then
+ *	the task's notification value is set to ulValue and xTaskNotify() will
+ *	return pdPASS.  If the task being notified already had a notification
+ *	pending then no action is performed and pdFAIL is returned.
+ *
+ *	eNoAction -
+ *	The task receives a notification without its notification value being
+ *	updated.  ulValue is not used and xTaskNotify() always returns pdPASS in
+ *	this case.
+ *
+ * @return Dependent on the value of eAction.  See the description of the
+ * eAction parameter.
+ *
+ * \defgroup xTaskNotify xTaskNotify
+ * \ingroup TaskNotifications
+ */
+BaseType_t xTaskNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction );
+
+/**
+ * task. h
+ * <PRE>BaseType_t xTaskNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, BaseType_t *pxHigherPriorityTaskWoken );</PRE>
+ *
+ * configUSE_TASK_NOTIFICATIONS must be defined as 1 for this function to be
+ * available.
+ *
+ * When configUSE_TASK_NOTIFICATIONS is set to one each task has its own private
+ * "notification value", which is a 32-bit unsigned integer (uint32_t).
+ *
+ * A version of xTaskNotify() that can be used from an interrupt service routine
+ * (ISR).
+ *
+ * Events can be sent to a task using an intermediary object.  Examples of such
+ * objects are queues, semaphores, mutexes and event groups.  Task notifications
+ * are a method of sending an event directly to a task without the need for such
+ * an intermediary object.
+ *
+ * A notification sent to a task can optionally perform an action, such as
+ * update, overwrite or increment the task's notification value.  In that way
+ * task notifications can be used to send data to a task, or be used as light
+ * weight and fast binary or counting semaphores.
+ *
+ * A notification sent to a task will remain pending until it is cleared by the
+ * task calling xTaskNotifyWait() or ulTaskNotifyTake().  If the task was
+ * already in the Blocked state to wait for a notification when the notification
+ * arrives then the task will automatically be removed from the Blocked state
+ * (unblocked) and the notification cleared.
+ *
+ * A task can use xTaskNotifyWait() to [optionally] block to wait for a
+ * notification to be pending, or xTaskNotifyTake() to [optionally] block
+ * to wait for its notification value to have a non-zero value.  The task does
+ * not consume any CPU time while it is in the Blocked state.
+ *
+ * See http://www.FreeRTOS.org/RTOS_task_notifications.html for details of when
+ * it is best to use a task notification to send an event to a task compared to
+ * when it is best to use an intermediary object (such as a queue, semaphore,
+ * mutex or event group) to send an event to a task.
+ *
+ * @param xTaskToNotify The handle of the task being notified.  The handle to a
+ * task can be returned from the xTaskCreate() API function used to create the
+ * task, and the handle of the currently running task can be obtained by calling
+ * xTaskGetCurrentTaskHandle().
+ *
+ * @param ulValue Data that can be sent with the notification.  How the data is
+ * used depends on the value of the eAction parameter.
+ *
+ * @param eAction Specifies how the notification updates the task's notification
+ * value, if at all.  Valid values for eAction are as follows:
+ *
+ *	eSetBits -
+ *	The task's notification value is bitwise ORed with ulValue.  xTaskNofify()
+ * 	always returns pdPASS in this case.
+ *
+ *	eIncrement -
+ *	The task's notification value is incremented.  ulValue is not used and
+ *	xTaskNotify() always returns pdPASS in this case.
+ *
+ *	eSetValueWithOverwrite -
+ *	The task's notification value is set to the value of ulValue, even if the
+ *	task being notified had not yet processed the previous notification (the
+ *	task already had a notification pending).  xTaskNotify() always returns
+ *	pdPASS in this case.
+ *
+ *	eSetValueWithoutOverwrite -
+ *	If the task being notified did not already have a notification pending then
+ *	the task's notification value is set to ulValue and xTaskNotify() will
+ *	return pdPASS.  If the task being notified already had a notification
+ *	pending then no action is performed and pdFAIL is returned.
+ *
+ *	eNoAction -
+ *	The task receives a notification without its notification value being
+ *	updated.  ulValue is not used and xTaskNotify() always returns pdPASS in
+ *	this case.
+ *
+ * @param pxHigherPriorityTaskWoken  xTaskNotifyFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending the notification caused the
+ * task to which the notification was sent to leave the Blocked state, and the
+ * unblocked task has a priority higher than the currently running task.  If
+ * xTaskNotifyFromISR() sets this value to pdTRUE then a context switch should
+ * be requested before the interrupt is exited.  How a context switch is
+ * requested from an ISR is dependent on the port - see the documentation page
+ * for the port in use.
+ *
+ * @return Dependent on the value of eAction.  See the description of the
+ * eAction parameter.
+ *
+ * \defgroup xTaskNotify xTaskNotify
+ * \ingroup TaskNotifications
+ */
+BaseType_t xTaskNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, BaseType_t *pxHigherPriorityTaskWoken );
+
+/**
+ * task. h
+ * <PRE>BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, BaseType_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait );</pre>
+ *
+ * configUSE_TASK_NOTIFICATIONS must be defined as 1 for this function to be
+ * available.
+ *
+ * When configUSE_TASK_NOTIFICATIONS is set to one each task has its own private
+ * "notification value", which is a 32-bit unsigned integer (uint32_t).
+ *
+ * Events can be sent to a task using an intermediary object.  Examples of such
+ * objects are queues, semaphores, mutexes and event groups.  Task notifications
+ * are a method of sending an event directly to a task without the need for such
+ * an intermediary object.
+ *
+ * A notification sent to a task can optionally perform an action, such as
+ * update, overwrite or increment the task's notification value.  In that way
+ * task notifications can be used to send data to a task, or be used as light
+ * weight and fast binary or counting semaphores.
+ *
+ * A notification sent to a task will remain pending until it is cleared by the
+ * task calling xTaskNotifyWait() or ulTaskNotifyTake().  If the task was
+ * already in the Blocked state to wait for a notification when the notification
+ * arrives then the task will automatically be removed from the Blocked state
+ * (unblocked) and the notification cleared.
+ *
+ * A task can use xTaskNotifyWait() to [optionally] block to wait for a
+ * notification to be pending, or xTaskNotifyTake() to [optionally] block
+ * to wait for its notification value to have a non-zero value.  The task does
+ * not consume any CPU time while it is in the Blocked state.
+ *
+ * See http://www.FreeRTOS.org/RTOS_task_notifications.html for details of when
+ * it is best to use a task notification to send an event to a task compared to
+ * when it is best to use an intermediary object (such as a queue, semaphore,
+ * mutex or event group) to send an event to a task.
+ *
+ * @param ulBitsToClearOnEntry Bits that are set in ulBitsToClearOnEntry value
+ * will be cleared in the calling task's notification value before the task
+ * checks to see if any notifications are pending, and optionally blocks if no
+ * notifications are pending.  Setting ulBitsToClearOnEntry to ULONG_MAX (if
+ * limits.h is included) or 0xffffffffUL (if limits.h is not included) will have
+ * the effect of resetting the task's notification value to 0.  Setting
+ * ulBitsToClearOnEntry to 0 will leave the task's notification value unchanged.
+ *
+ * @param ulBitsToClearOnExit If a notification is pending or received before
+ * the calling task exits the xTaskNotifyWait() function then the task's
+ * notification value (see the xTaskNotify() API function) is passed out using
+ * the pulNotificationValue parameter.  Then any bits that are set in
+ * ulBitsToClearOnExit will be cleared in the task's notification value (note
+ * *pulNotificationValue is set before any bits are cleared).  Setting
+ * ulBitsToClearOnExit to ULONG_MAX (if limits.h is included) or 0xffffffffUL
+ * (if limits.h is not included) will have the effect of resetting the task's
+ * notification value to 0 before the function exits.  Setting
+ * ulBitsToClearOnExit to 0 will leave the task's notification value unchanged
+ * when the function exits (in which case the value passed out in
+ * pulNotificationValue will match the task's notification value).
+ *
+ * @param pulNotificationValue Used to pass the task's notification value out
+ * of the function.  Note the value passed out will not be effected by the
+ * clearing of any bits caused by ulBitsToClearOnExit being non-zero.
+ *
+ * @param xTicksToWait The maximum amount of time that the task should wait in
+ * the Blocked state for a notification to be received, should a notification
+ * not already be pending when xTaskNotifyWait() was called.  The task
+ * will not consume any processing time while it is in the Blocked state.  This
+ * is specified in kernel ticks, the macro pdMS_TO_TICSK( value_in_ms ) can be
+ * used to convert a time specified in milliseconds to a time specified in
+ * ticks.
+ *
+ * @return If a notification was received (including notifications that were
+ * already pending when xTaskNotifyWait was called) then pdPASS is
+ * returned.  Otherwise pdFAIL is returned.
+ *
+ * \defgroup xTaskNotifyWait xTaskNotifyWait
+ * \ingroup TaskNotifications
+ */
+BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, BaseType_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait );
+
+/**
+ * task. h
+ * <PRE>BaseType_t xTaskNotifyGive( TaskHandle_t xTaskHandle, BaseType_t *pxHigherPriorityTaskWoken );
+ *
+ * configUSE_TASK_NOTIFICATIONS must be defined as 1 for this macro to be
+ * available.
+ *
+ * When configUSE_TASK_NOTIFICATIONS is set to one each task has its own private
+ * "notification value", which is a 32-bit unsigned integer (uint32_t).
+ *
+ * Events can be sent to a task using an intermediary object.  Examples of such
+ * objects are queues, semaphores, mutexes and event groups.  Task notifications
+ * are a method of sending an event directly to a task without the need for such
+ * an intermediary object.
+ *
+ * A notification sent to a task can optionally perform an action, such as
+ * update, overwrite or increment the task's notification value.  In that way
+ * task notifications can be used to send data to a task, or be used as light
+ * weight and fast binary or counting semaphores.
+ *
+ * xTaskNotifyGive() is a helper macro intended for use when task notifications
+ * are used as light weight and faster binary or counting semaphore equivalents.
+ * Actual FreeRTOS semaphores are given using the xSemaphoreGive() API function,
+ * the equivalent action that instead uses a task notification is
+ * xTaskNotifyGive().
+ *
+ * When task notifications are being used as a binary or counting semaphore
+ * equivalent then the task being notified should wait for the notification
+ * using the ulTaskNotificationTake() API function rather than the
+ * xTaskNotifyWait() API function.
+ *
+ * See http://www.FreeRTOS.org/RTOS_task_notifications.html for more details.
+ *
+ * @param xTaskToNotify The handle of the task being notified.  The handle to a
+ * task can be returned from the xTaskCreate() API function used to create the
+ * task, and the handle of the currently running task can be obtained by calling
+ * xTaskGetCurrentTaskHandle().
+ *
+ * @return xTaskNotifyGive() is a macro that calls xTaskNotify() with the
+ * eAction parameter set to eIncrement - so pdPASS is always returned.
+ *
+ * \defgroup xTaskNotifyGive xTaskNotifyGive
+ * \ingroup TaskNotifications
+ */
+#define xTaskNotifyGive( xTaskToNotify ) xTaskNotify( ( xTaskToNotify ), 0, eIncrement );
+
+/**
+ * task. h
+ * <PRE>BaseType_t xTaskNotifyGiveFromISR( TaskHandle_t xTaskHandle, BaseType_t *pxHigherPriorityTaskWoken );
+ *
+ * configUSE_TASK_NOTIFICATIONS must be defined as 1 for this macro to be
+ * available.
+ *
+ * When configUSE_TASK_NOTIFICATIONS is set to one each task has its own private
+ * "notification value", which is a 32-bit unsigned integer (uint32_t).
+ *
+ * A version of xTaskNotifyGive() that can be called from an interrupt service
+ * routine (ISR).
+ *
+ * Events can be sent to a task using an intermediary object.  Examples of such
+ * objects are queues, semaphores, mutexes and event groups.  Task notifications
+ * are a method of sending an event directly to a task without the need for such
+ * an intermediary object.
+ *
+ * A notification sent to a task can optionally perform an action, such as
+ * update, overwrite or increment the task's notification value.  In that way
+ * task notifications can be used to send data to a task, or be used as light
+ * weight and fast binary or counting semaphores.
+ *
+ * xTaskNotifyGiveFromISR() is a helper macro intended for use when task
+ * notifications are used as light weight and faster binary or counting
+ * semaphore equivalents.  Actual FreeRTOS semaphores are given from an ISR
+ * using the xSemaphoreGiveFromISR() API function, the equivalent action that
+ * instead uses a task notification is xTaskNotifyGiveFromISR().
+ *
+ * When task notifications are being used as a binary or counting semaphore
+ * equivalent then the task being notified should wait for the notification
+ * using the ulTaskNotificationTake() API function rather than the
+ * xTaskNotifyWait() API function.
+ *
+ * See http://www.FreeRTOS.org/RTOS_task_notifications.html for more details.
+ *
+ * @param xTaskToNotify The handle of the task being notified.  The handle to a
+ * task can be returned from the xTaskCreate() API function used to create the
+ * task, and the handle of the currently running task can be obtained by calling
+ * xTaskGetCurrentTaskHandle().
+ *
+ * @param pxHigherPriorityTaskWoken  xTaskNotifyGiveFromISR() will set
+ * *pxHigherPriorityTaskWoken to pdTRUE if sending the notification caused the
+ * task to which the notification was sent to leave the Blocked state, and the
+ * unblocked task has a priority higher than the currently running task.  If
+ * xTaskNotifyGiveFromISR() sets this value to pdTRUE then a context switch
+ * should be requested before the interrupt is exited.  How a context switch is
+ * requested from an ISR is dependent on the port - see the documentation page
+ * for the port in use.
+ *
+ * @return xTaskNotifyGiveFromISR() is a macro that calls xTaskNotifyFromISR()
+ * with the eAction parameter set to eIncrement - so pdPASS is always returned.
+ *
+ * \defgroup xTaskNotifyWait xTaskNotifyWait
+ * \ingroup TaskNotifications
+ */
+#define xTaskNotifyGiveFromISR( xTaskToNotify, pxHigherPriorityTaskWoken ) xTaskNotifyFromISR( ( xTaskToNotify ), 0, eIncrement, ( pxHigherPriorityTaskWoken ) )
+
+/**
+ * task. h
+ * <PRE>uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait );</pre>
+ *
+ * configUSE_TASK_NOTIFICATIONS must be defined as 1 for this function to be
+ * available.
+ *
+ * When configUSE_TASK_NOTIFICATIONS is set to one each task has its own private
+ * "notification value", which is a 32-bit unsigned integer (uint32_t).
+ *
+ * Events can be sent to a task using an intermediary object.  Examples of such
+ * objects are queues, semaphores, mutexes and event groups.  Task notifications
+ * are a method of sending an event directly to a task without the need for such
+ * an intermediary object.
+ *
+ * A notification sent to a task can optionally perform an action, such as
+ * update, overwrite or increment the task's notification value.  In that way
+ * task notifications can be used to send data to a task, or be used as light
+ * weight and fast binary or counting semaphores.
+ *
+ * ulTaskNotifyTake() is intended for use when a task notification is used as a
+ * faster and lighter weight binary or counting semaphore alternative.  Actual
+ * FreeRTOS semaphores are taken using the xSemaphoreTake() API function, the
+ * equivalent action that instead uses a task notification is
+ * xTaskNotifyTake().
+ *
+ * When a task is using its notification value as a binary or counting semaphore
+ * other tasks should send notifications to it using the xTaskNotifyGive()
+ * macro, or xTaskNotify() function with the eAction parameter set to
+ * eIncrement.
+ *
+ * xTaskNotifyTake() can either clear the task's notification value to
+ * zero on exit, in which case the notification value acts like a binary
+ * semaphore, or decrement the task's notification value on exit, in which case
+ * the notification value acts like a counting semaphore.
+ *
+ * A task can use xTaskNotifyTake() to [optionally] block to wait for a
+ * the tasks notification value to be non-zero.  The task does not consume any
+ * CPU time while it is in the Blocked state.
+ *
+ * Where as xTaskNotifyWait() will return when a notification is pending,
+ * xTaskNotifyTake() will return when the task's notification value is
+ * not zero.
+ *
+ * See http://www.FreeRTOS.org/RTOS_task_notifications.html for details of when
+ * it is best to use a task notification to send an event to a task compared to
+ * when it is best to use an intermediary object (such as a queue, semaphore,
+ * mutex or event group) to send an event to a task.
+ *
+ * @param xClearCountOnExit if xClearCountOnExit is pdFALSE then the task's
+ * notification value is decremented when the function exits.  In this way the
+ * notification value acts like a counting semaphore.  If xClearCountOnExit is
+ * not pdFALSE then the task's notification value is cleared to zero when the
+ * function exits.  In this way the notification value acts like a binary
+ * semaphore.
+ *
+ * @param xTicksToWait The maximum amount of time that the task should wait in
+ * the Blocked state for the task's notification value to be greater than zero,
+ * should the count not already be greater than zero when
+ * xTaskNotifyTake() was called.  The task will not consume any processing
+ * time while it is in the Blocked state.  This is specified in kernel ticks,
+ * the macro pdMS_TO_TICSK( value_in_ms ) can be used to convert a time
+ * specified in milliseconds to a time specified in ticks.
+ *
+ * @return The task's notification count before it is either cleared to zero or
+ * decremented (see the xClearCountOnExit parameter).
+ *
+ * \defgroup ulTaskNotifyTake ulTaskNotifyTake
+ * \ingroup TaskNotifications
+ */
+uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait );
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

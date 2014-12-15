@@ -35,8 +35,10 @@ work under terms of your choice, provided that
 
   + The combined work is not itself an RTOS, scheduler, kernel or related product.
 
-  + The independent modules add significant and primary functionality to FreeRTOS
-  and do not merely extend the existing functionality already present in FreeRTOS.
+  + The independent modules add significant and primary functionality that is
+  unrelated to multitasking, intertask communication or intertask signalling -
+  and therefore do not merely extend the functionality already present in
+  FreeRTOS.
 
 Clause 2:
 

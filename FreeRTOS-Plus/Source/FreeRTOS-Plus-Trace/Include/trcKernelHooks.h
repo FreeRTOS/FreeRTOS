@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Tracealyzer v2.6.0 Recorder Library
+* Tracealyzer v2.7.0 Recorder Library
 * Percepio AB, www.percepio.com
 *
 * trcKernelHooks.h
@@ -12,7 +12,7 @@
 * compile-time errors.
 *
 * #ifdef __ICCARM__
-*       #include "percepio/Include/trcKernelHooks.h"
+*		#include "trcKernelPort.h"
 * #endif
 *
 * Terms of Use
@@ -208,3 +208,6 @@ vTraceStoreObjectPropertiesOnCloseEvent(TRACE_GET_TIMER_NUMBER(pxTimer), TRACE_C
 vTraceFreeObjectHandle(TRACE_CLASS_TIMER, TRACE_GET_TIMER_NUMBER(pxTimer));
 
 #endif /* TRCKERNELHOOKS_H */
+
+
+

@@ -83,7 +83,7 @@
 #define configUSE_TICK_HOOK						1
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 50 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the win32 thread. */
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 22 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 23 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 12 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -97,6 +97,7 @@
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configUSE_ALTERNATIVE_API				1
 #define configUSE_QUEUE_SETS					1
+#define configUSE_TASK_NOTIFICATIONS			1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS						1
@@ -104,18 +105,18 @@
 #define configTIMER_QUEUE_LENGTH				20
 #define configTIMER_TASK_STACK_DEPTH			( configMINIMAL_STACK_SIZE * 2 )
 
-#define configMAX_PRIORITIES			( 7 )
+#define configMAX_PRIORITIES					( 7 )
 
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
 void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS	1
+#define configGENERATE_RUN_TIME_STATS			1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
 #define portGET_RUN_TIME_COUNTER_VALUE() ulGetRunTimeCounterValue()
 
 /* Co-routine related configuration options. */
-#define configUSE_CO_ROUTINES 		1
-#define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#define configUSE_CO_ROUTINES 					1
+#define configMAX_CO_ROUTINE_PRIORITIES			( 2 )
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
@@ -148,6 +149,8 @@ extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
+#define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
+#define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
 #include "trcKernelPort.h"
 
 #endif /* FREERTOS_CONFIG_H */

@@ -133,6 +133,8 @@
 #include "QueueSet.h"
 #include "QueueOverwrite.h"
 #include "EventGroupsDemo.h"
+#include "IntSemTest.h"
+#include "TaskNotify.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -162,7 +164,7 @@ static void prvTestTask( void *pvParameters );
 static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 
 /*
- * Called from the idle task hook function to demonstrate the use of 
+ * Called from the idle task hook function to demonstrate the use of
  * xTimerPendFunctionCall() as xTimerPendFunctionCall() is not demonstrated by
  * any of the standard demo tasks.
  */
@@ -195,6 +197,7 @@ int main_full( void )
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the standard demo tasks. */
+	vStartTaskNotifyTask();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -209,6 +212,7 @@ int main_full( void )
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	vStartEventGroupTasks();
+	vStartInterruptSemaphoreTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -263,7 +267,16 @@ const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 		}
 		#endif
 
-		if( xAreEventGroupTasksStillRunning() != pdTRUE )
+		if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error:  Notification";
+		}
+
+		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error: IntSem";
+		}
+		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: EventGroup";
 		}
@@ -374,7 +387,7 @@ void *pvAllocated;
 		xMutexToDelete = NULL;
 	}
 
-	/* Exercise heap_4 a bit.  The malloc failed hook will trap failed
+	/* Exercise heap_5 a bit.  The malloc failed hook will trap failed
 	allocations so there is no need to test here. */
 	pvAllocated = pvPortMalloc( ( rand() % 100 ) + 1 );
 	vPortFree( pvAllocated );
@@ -402,6 +415,12 @@ void vFullDemoTickHookFunction( void )
 
 	/* Exercise event groups from interrupts. */
 	vPeriodicEventGroupsProcessing();
+
+	/* Exercise giving mutexes from an interrupt. */
+	vInterruptSemaphorePeriodicTest();
+
+	/* Exercise using task notifications from an interrupt. */
+	xNotifyTaskFromISR();
 }
 /*-----------------------------------------------------------*/
 

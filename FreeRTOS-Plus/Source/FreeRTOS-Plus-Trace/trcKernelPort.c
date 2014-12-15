@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.6.0 Recorder Library
+ * Tracealyzer v2.7.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernelPort.c
@@ -31,7 +31,9 @@
  * damages, or the exclusion of implied warranties or limitations on how long an 
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * Copyright Percepio AB, 2013.
+ * Tabs are used for indent in this file (1 tab = 4 spaces)
+ *
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -56,12 +58,26 @@ traceObjectClass TraceObjectClassTable[5] = {
 int uiInEventGroupSetBitsFromISR = 0;
 
 extern unsigned char ucQueueGetQueueType(void*);
-extern BaseType_t uxQueueGetQueueNumber(void*);
+
+#if (FREERTOS_VERSION < FREERTOS_VERSION_8_0_OR_LATER)
+
+extern portBASE_TYPE ucQueueGetQueueNumber(void*);
 
 objectHandleType prvTraceGetObjectNumber(void* handle)
 {
-	return ( objectHandleType ) uxQueueGetQueueNumber(handle);	
+	return (objectHandleType) ucQueueGetQueueNumber(handle);
 }
+
+#else
+
+extern portBASE_TYPE uxQueueGetQueueNumber(void*);
+
+objectHandleType prvTraceGetObjectNumber(void* handle)
+{
+	return (objectHandleType) uxQueueGetQueueNumber(handle);
+}
+
+#endif
 
 unsigned char prvTraceGetObjectType(void* handle)
 {
@@ -139,7 +155,7 @@ void vTraceInitObjectHandleStack()
 	objectHandleStacks.indexOfNextAvailableHandle[5] = objectHandleStacks.lowestIndexOfClass[5] = NQueue + NSemaphore + NMutex + NTask + NISR;
 	objectHandleStacks.indexOfNextAvailableHandle[6] = objectHandleStacks.lowestIndexOfClass[6] = NQueue + NSemaphore + NMutex + NTask + NISR + NTimer;
 
-    objectHandleStacks.highestIndexOfClass[0] = NQueue - 1;
+	objectHandleStacks.highestIndexOfClass[0] = NQueue - 1;
 	objectHandleStacks.highestIndexOfClass[1] = NQueue + NSemaphore - 1;
 	objectHandleStacks.highestIndexOfClass[2] = NQueue + NSemaphore + NMutex - 1;
 	objectHandleStacks.highestIndexOfClass[3] = NQueue + NSemaphore + NMutex + NTask - 1;

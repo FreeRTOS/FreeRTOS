@@ -107,29 +107,30 @@ typedef unsigned long UBaseType_t;
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT			8
+
+/* Constants used with memory barrier intrinsics. */
+#define portSY_FULL_READ_WRITE		( 15 )
+
 /*-----------------------------------------------------------*/
 
 /* Scheduler utilities. */
-extern void vPortYield( void );
 #define portNVIC_INT_CTRL_REG		( * ( ( volatile uint32_t * ) 0xe000ed04 ) )
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
 #define portYIELD()					vPortYield()
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired != pdFALSE ) vPortYield()
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
-extern uint32_t ulPortSetInterruptMask( void );
-extern void vPortClearInterruptMask( uint32_t ulNewMask );
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()				ulPortSetInterruptMask()
-#define portENABLE_INTERRUPTS()					vPortClearInterruptMask( 0 )
+#define portDISABLE_INTERRUPTS()				ulPortRaiseBASEPRI()
+#define portENABLE_INTERRUPTS()					vPortSetBASEPRI( 0 )
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
-#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask(x)
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortRaiseBASEPRI()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortSetBASEPRI(x)
 
 /*-----------------------------------------------------------*/
 
@@ -177,6 +178,53 @@ not necessary for to use this port.  They are defined so the common demo files
 
 /* portNOP() is not required by this port. */
 #define portNOP()
+
+#ifndef portFORCE_INLINE
+	#define portFORCE_INLINE __forceinline
+#endif
+
+/*-----------------------------------------------------------*/
+
+static portFORCE_INLINE void vPortSetBASEPRI( uint32_t ulBASEPRI )
+{
+	__asm
+	{
+		/* Barrier instructions are not used as this function is only used to
+		lower the BASEPRI value. */
+		msr basepri, ulBASEPRI
+	}
+}
+/*-----------------------------------------------------------*/
+
+static portFORCE_INLINE uint32_t ulPortRaiseBASEPRI( void )
+{
+uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
+
+	__asm
+	{
+		/* Set BASEPRI to the max syscall priority to effect a critical
+		section. */
+		mrs ulReturn, basepri
+		msr basepri, ulNewBASEPRI
+		dsb
+		isb
+	}
+
+	return ulReturn;
+}
+/*-----------------------------------------------------------*/
+
+static portFORCE_INLINE void vPortYield( void )
+{
+	/* Set a PendSV to request a context switch. */
+	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+
+	/* Barriers are normally not required but do ensure the code is completely
+	within the specified behaviour for the architecture. */
+	__dsb( portSY_FULL_READ_WRITE );
+	__isb( portSY_FULL_READ_WRITE );
+}
+/*-----------------------------------------------------------*/
 
 #ifdef __cplusplus
 }

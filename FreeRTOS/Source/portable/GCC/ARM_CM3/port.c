@@ -114,7 +114,7 @@ FreeRTOS.org versions prior to V4.4.0 did not include this definition. */
 #define portPRIGROUP_SHIFT					( 8UL )
 
 /* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
-#define portVECTACTIVE_MASK					( 0x1FUL )
+#define portVECTACTIVE_MASK					( 0xFFUL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR					( 0x01000000UL )

@@ -124,7 +124,7 @@ is defined. */
 #define portPRIGROUP_SHIFT					( 8UL )
 
 /* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
-#define portVECTACTIVE_MASK					( 0x1FUL )
+#define portVECTACTIVE_MASK					( 0xFFUL )
 
 /* Constants required to manipulate the VFP. */
 #define portFPCCR					( ( volatile uint32_t * ) 0xe000ef34 ) /* Floating point context control register. */
@@ -133,9 +133,6 @@ is defined. */
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
 #define portINITIAL_EXEC_RETURN		( 0xfffffffd )
-
-/* Constants used with memory barrier intrinsics. */
-#define portSY_FULL_READ_WRITE		( 15 )
 
 /* The systick is a 24-bit counter. */
 #define portMAX_24_BIT_NUMBER				( 0xffffffUL )
@@ -401,24 +398,10 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( void )
-{
-	/* Set a PendSV to request a context switch. */
-	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-
-	/* Barriers are normally not required but do ensure the code is completely
-	within the specified behaviour for the architecture. */
-	__dsb( portSY_FULL_READ_WRITE );
-	__isb( portSY_FULL_READ_WRITE );
-}
-/*-----------------------------------------------------------*/
-
 void vPortEnterCritical( void )
 {
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
-	__dsb( portSY_FULL_READ_WRITE );
-	__isb( portSY_FULL_READ_WRITE );
 
 	/* This is not the interrupt safe version of the enter critical function so
 	assert() if it is being called from an interrupt context.  Only API
@@ -471,6 +454,8 @@ __asm void xPortPendSVHandler( void )
 	stmdb sp!, {r3}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
+	dsb
+	isb
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
@@ -700,26 +685,6 @@ void xPortSysTickHandler( void )
 	}
 
 #endif /* configOVERRIDE_DEFAULT_TICK_CONFIGURATION */
-/*-----------------------------------------------------------*/
-
-__asm uint32_t ulPortSetInterruptMask( void )
-{
-	PRESERVE8
-
-	mrs r0, basepri
-	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
-	msr basepri, r1
-	bx r14
-}
-/*-----------------------------------------------------------*/
-
-__asm void vPortClearInterruptMask( uint32_t ulNewMask )
-{
-	PRESERVE8
-
-	msr basepri, r0
-	bx r14
-}
 /*-----------------------------------------------------------*/
 
 __asm uint32_t vPortGetIPSR( void )

@@ -217,7 +217,7 @@ typedef struct PORT_REGISTER_DUMP
 	/* The human readable name of the task that was running at the time the
 	exception occurred.  This is the name that was given to the task when the
 	task was created using the FreeRTOS xTaskCreate() API function. */
-	int8_t *pcCurrentTaskName;
+	char *pcCurrentTaskName;
 
 	/* The handle of the task that was running a the time the exception
 	occurred. */

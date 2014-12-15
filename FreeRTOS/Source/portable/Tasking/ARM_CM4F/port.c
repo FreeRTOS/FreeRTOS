@@ -82,7 +82,7 @@
 #define portNVIC_SYSTICK_PRI		( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24 )
 
 /* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
-#define portVECTACTIVE_MASK					( 0x1FUL )
+#define portVECTACTIVE_MASK			( 0xFFUL )
 
 /* Constants required to manipulate the VFP. */
 #define portFPCCR					( ( volatile uint32_t * ) 0xe000ef34 ) /* Floating point context control register. */

@@ -167,8 +167,8 @@ the CPU itself before modifying certain hardware registers. */
 {																	\
 	portCPU_IRQ_DISABLE();											\
 	portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;			\
-	__asm(	"DSB		\n"											\
-			"ISB		\n" );										\
+	__asm volatile (	"DSB		\n"								\
+						"ISB		\n" );							\
 	portCPU_IRQ_ENABLE();											\
 }
 

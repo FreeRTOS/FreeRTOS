@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.6.0 Recorder Library
+ * Tracealyzer v2.7.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcUser.h
@@ -30,7 +30,9 @@
  * damages, or the exclusion of implied warranties or limitations on how long an
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * Copyright Percepio AB, 2013.
+ * Tabs are used for indent in this file (1 tab = 4 spaces)
+ *
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -81,6 +83,13 @@ void vTraceInitTraceData(void);
 #if (TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_CUSTOM)
 void vTraceSetRecorderData(void* pRecorderData);
 #endif
+
+/*******************************************************************************
+ * vTraceSetStopHook
+ *
+ * Sets a function to be called when the recorder is stopped.
+ ******************************************************************************/
+void vTraceSetStopHook(TRACE_STOP_HOOK stopHookFunction);
 
 /*******************************************************************************
  * uiTraceStart
@@ -154,21 +163,17 @@ void vTraceClearError(int resetErrorMessage);
  * started.
  *
  * Example:
- *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
- *     #define PRIO_OF_ISR_TIMER1 3  // the hardware priority of the interrupt
- *     ...
- *     vTraceSetISRProperties(ID_ISR_TIMER1, "ISRTimer1", PRIO_OF_ISR_TIMER1);
- *     ...
- *     void ISR_handler()
- *     {
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
- *         vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
- *         portEXIT_CRITICAL();
- *         ...
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
- *         vTraceStoreISREnd();
- *         portEXIT_CRITICAL();
- *     }
+ *	 #define ID_ISR_TIMER1 1		// lowest valid ID is 1
+ *	 #define PRIO_OF_ISR_TIMER1 3 // the hardware priority of the interrupt
+ *	 ...
+ *	 vTraceSetISRProperties(ID_ISR_TIMER1, "ISRTimer1", PRIO_OF_ISR_TIMER1);
+ *	 ...
+ *	 void ISR_handler()
+ *	 {
+ *		 vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
+ *		 ...
+ *		 vTraceStoreISREnd(0);
+ *	 }
  ******************************************************************************/
 void vTraceSetISRProperties(objectHandleType handle, const char* name, char priority);
 
@@ -179,21 +184,17 @@ void vTraceSetISRProperties(objectHandleType handle, const char* name, char prio
  * If allowing nested ISRs, this must be called with interrupts disabled.
  *
  * Example:
- *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
- *     #define PRIO_OF_ISR_TIMER1 3  // the hardware priority of the interrupt
- *     ...
- *     vTraceSetISRProperties(ID_ISR_TIMER1, "ISRTimer1", PRIO_OF_ISR_TIMER1);
- *     ...
- *     void ISR_handler()
- *     {
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
- *         vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
- *         portEXIT_CRITICAL();
- *         ...
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
- *         vTraceStoreISREnd();
- *         portEXIT_CRITICAL();
- *     }
+ *	 #define ID_ISR_TIMER1 1		// lowest valid ID is 1
+ *	 #define PRIO_OF_ISR_TIMER1 3 // the hardware priority of the interrupt
+ *	 ...
+ *	 vTraceSetISRProperties(ID_ISR_TIMER1, "ISRTimer1", PRIO_OF_ISR_TIMER1);
+ *	 ...
+ *	 void ISR_handler()
+ *	 {
+ *		 vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
+ *		 ...
+ *		 vTraceStoreISREnd(0);
+ *	 }
  *
  ******************************************************************************/
 void vTraceStoreISRBegin(objectHandleType id);
@@ -203,30 +204,27 @@ void vTraceStoreISRBegin(objectHandleType id);
  *
  * Registers the end of an Interrupt Service Routine.
  *
- * If allowing nested ISRs, this must be called with interrupts disabled.
+ * The parameter pendingISR indicates if the interrupt has requested a
+ * task-switch (= 1) or if the interrupt returns to the earlier context (= 0)
  *
  * Example:
- *     #define ID_ISR_TIMER1 1       // lowest valid ID is 1
- *     #define PRIO_OF_ISR_TIMER1 3  // the hardware priority of the interrupt
- *     ...
- *     vTraceSetISRProperties(ID_ISR_TIMER1, "ISRTimer1", PRIO_OF_ISR_TIMER1);
- *     ...
- *     void ISR_handler()
- *     {
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
- *         vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
- *         portEXIT_CRITICAL();
- *         ...
- *         portENTER_CRITICAL(); // Required if nested ISRs are allowed
- *         vTraceStoreISREnd();
- *         portEXIT_CRITICAL();
- *     }
+ *	 #define ID_ISR_TIMER1 1	  // lowest valid ID is 1
+ *	 #define PRIO_OF_ISR_TIMER1 3 // the hardware priority of the interrupt
+ *	 ...
+ *	 vTraceSetISRProperties(ID_ISR_TIMER1, "ISRTimer1", PRIO_OF_ISR_TIMER1);
+ *	 ...
+ *	 void ISR_handler()
+ *	 {
+ *		 vTraceStoreISRBegin(ID_OF_ISR_TIMER1);
+ *		 ...
+ *		 vTraceStoreISREnd(0);
+ *	 }
  *
  ******************************************************************************/
-void vTraceStoreISREnd(void);
+void vTraceStoreISREnd(int pendingISR);
 
 #else
-   /* If not including the ISR recording */
+	/* If not including the ISR recording */
 
 void vTraceIncreaseISRActive(void);
 
@@ -238,28 +236,59 @@ void vTraceDecreaseISRActive(void);
 
 #endif
 
-/*******************************************************************************
- * vvTraceTaskSkipDefaultInstanceFinishedEvents
- *
- * This is useful if there are implicit Instance Finish Events, such as
- * vTaskDelayUntil or xQueueReceive, in a task where an explicit Instance Finish
- * Event has been defined. This function tells the recorder that only the
- * explicitly defined functions (using vTraceTaskInstanceIsFinished) should be
- * treated as Instance Finish Events for this task. The implicit Instance Finish
- * Events are thus disregarded for this task.
- ******************************************************************************/
-void vTraceTaskSkipDefaultInstanceFinishedEvents(void);
 
-/*******************************************************************************
- * vTraceTaskInstanceIsFinished
+/******************************************************************************
+ * vTraceTaskInstanceFinish(void)
  *
- * This defines an explicit Instance Finish Event for the current task. It tells
- * the recorder that the current instance of this task is finished at the next
- * kernel call of the task, e.g., a taskDelay or a queue receive. This function
- * should be called right before the api function call considered to be the end
- * of the task instamce, i.e., the Instance Finish Event.
- ******************************************************************************/
-void vTraceTaskInstanceIsFinished(void);
+ * Marks the current task instance as finished on the next kernel call.
+ *
+ * If that kernel call is blocking, the instance ends after the blocking event
+ * and the corresponding return event is then the start of the next instance.
+ * If the kernel call is not blocking, the viewer instead splits the current
+ * fragment right before the kernel call, which makes this call the first event
+ * of the next instance.
+ *
+ * See also USE_IMPLICIT_IFE_RULES in trcConfig.h
+ *
+ * Example:
+ *
+ *		while(1)
+ *		{
+ *			xQueueReceive(CommandQueue, &command, timeoutDuration);
+ *			processCommand(command);
+ *          vTraceInstanceFinish();
+ *		}
+ *
+ *****************************************************************************/
+void vTraceTaskInstanceFinish(void);
+
+/******************************************************************************
+ * vTraceTaskInstanceFinishDirect(void)
+ *
+ * Marks the current task instance as finished at this very instant.
+ * This makes the viewer to splits the current fragment at this point and begin
+ * a new actor instance.
+ *
+ * See also USE_IMPLICIT_IFE_RULES in trcConfig.h
+ *
+ * Example:
+ *
+ *		This example will generate two instances for each loop iteration.
+ *		The first instance ends at vTraceInstanceFinishDirect(), while the second
+ *      instance ends at the next xQueueReceive call.
+ *
+ *		while (1)
+ *		{
+ *          xQueueReceive(CommandQueue, &command, timeoutDuration);
+ *			ProcessCommand(command);
+ *			vTraceInstanceFinishDirect();
+ *			DoSometingElse();
+ *          vTraceInstanceFinish();
+ *      }
+ *
+ *
+ *****************************************************************************/
+void vTraceTaskInstanceFinishDirect(void);
 
 /*******************************************************************************
  * vTraceGetTraceBuffer
@@ -292,7 +321,7 @@ uint32_t uiTraceGetTraceBufferSize(void);
  * When logging a user event, a numeric handle (reference) to this string is
  * used to identify the event. This is obtained by calling
  *
- *     xTraceOpenLabel()
+ *	 xTraceOpenLabel()
  *
  * whihc adds the string to the symbol table (if not already present)
  * and returns the corresponding handle.
@@ -302,15 +331,15 @@ uint32_t uiTraceGetTraceBufferSize(void);
  * 1. The handle is looked up every time, when storing the user event.
  *
  * Example:
- *     vTraceUserEvent(xTraceOpenLabel("MyUserEvent"));
+ *	 vTraceUserEvent(xTraceOpenLabel("MyUserEvent"));
  *
  * 2. The label is registered just once, with the handle stored in an
- *  application variable - much like using a file handle.
+ * application variable - much like using a file handle.
  *
  * Example:
- *     myEventHandle = xTraceOpenLabel("MyUserEvent");
- *     ...
- *     vTraceUserEvent(myEventHandle);
+ *	 myEventHandle = xTraceOpenLabel("MyUserEvent");
+ *	 ...
+ *	 vTraceUserEvent(myEventHandle);
  *
  * The second option is faster since no lookup is required on each event, and
  * therefore recommended for user events that are frequently
@@ -342,17 +371,17 @@ void vTraceUserEvent(traceLabel eventLabel);
  * User Event labels are created using xTraceOpenLabel.
  * Example:
  *
- *     traceLabel adc_uechannel = xTraceOpenLabel("ADC User Events");
- *     ...
- *     vTracePrint(adc_uechannel,
- *                 "ADC channel %d: %lf volts",
- *                 ch, (double)adc_reading/(double)scale);
+ *	 traceLabel adc_uechannel = xTraceOpenLabel("ADC User Events");
+ *	 ...
+ *	 vTracePrint(adc_uechannel,
+ *				 "ADC channel %d: %lf volts",
+ *				 ch, (double)adc_reading/(double)scale);
  *
  * This can be combined into one line, if desired, but this is slower:
  *
- *     vTracePrint(xTraceOpenLabel("ADC User Events"),
- *                 "ADC channel %d: %lf volts",
- *                 ch, (double)adc_reading/(double)scale);
+ *	 vTracePrint(xTraceOpenLabel("ADC User Events"),
+ *				 "ADC channel %d: %lf volts",
+ *				 ch, (double)adc_reading/(double)scale);
  *
  * Calling xTraceOpenLabel multiple times will not create duplicate entries, but
  * it is of course faster to just do it once, and then keep the handle for later
@@ -360,15 +389,15 @@ void vTraceUserEvent(traceLabel eventLabel);
  * better to use vTraceUserEvent - it is faster.
  *
  * Format specifiers supported:
- *  %d - 32 bit signed integer
- *  %u - 32 bit unsigned integer
- *  %f - 32 bit float
- *  %s - string (is copied to the recorder symbol table)
- *  %hd - 16 bit signed integer
- *  %hu - 16 bit unsigned integer
- *  %bd - 8 bit signed integer
- *  %bu - 8 bit unsigned integer
- *  %lf - double-precision float (Note! See below...)
+ * %d - 32 bit signed integer
+ * %u - 32 bit unsigned integer
+ * %f - 32 bit float
+ * %s - string (is copied to the recorder symbol table)
+ * %hd - 16 bit signed integer
+ * %hu - 16 bit unsigned integer
+ * %bd - 8 bit signed integer
+ * %bu - 8 bit unsigned integer
+ * %lf - double-precision float (Note! See below...)
  *
  * Up to 15 data arguments are allowed, with a total size of maximum 32 byte.
  * In case this is exceeded, the user event is changed into an error message.
@@ -380,7 +409,7 @@ void vTraceUserEvent(traceLabel eventLabel);
  * unless the higher precision is really necessary.
  *
  * Note that the double-precision float (%lf) assumes a 64 bit double
- * representation. This does not seem to be the case on e.g. PIC24F.
+ * representation. This does not seem to be the case on e.g. PIC24 and PIC32.
  * Before using a %lf argument on a 16-bit MCU, please verify that
  * "sizeof(double)" actually gives 8 as expected. If not, use %f instead.
  ******************************************************************************/
@@ -417,7 +446,6 @@ void vTraceChannelUserEvent(UserEventChannel channel);
 #define vTracePrintF(eventLabel,formatStr,...)
 #define vTraceExcludeTaskFromSchedulingTrace(name)
 
-#define vTraceTaskSkipDefaultInstanceFinishedEvents()
 #define vTraceSetISRProperties(handle, name, priority)
 #define vTraceStoreISRBegin(id)
 #define vTraceStoreISREnd()
@@ -427,6 +455,7 @@ void vTraceChannelUserEvent(UserEventChannel channel);
 #define vTraceSetSemaphoreName(a, b)
 #define vTraceSetEventGroupName(a, b)
 
+#define vTraceSetStopHook(a)
 #endif
 
 #ifdef __cplusplus

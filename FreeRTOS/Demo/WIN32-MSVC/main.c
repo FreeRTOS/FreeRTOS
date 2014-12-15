@@ -113,8 +113,8 @@ being used as this demo could easily create one large heap region instead of
 multiple smaller heap regions - in which case heap_4.c would be the more
 appropriate choice. */
 #define mainREGION_1_SIZE	3001
-#define mainREGION_2_SIZE	18005
-#define mainREGION_3_SIZE	1007
+#define mainREGION_2_SIZE	18105
+#define mainREGION_3_SIZE	1407
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -228,10 +228,10 @@ void vApplicationIdleHook( void )
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
-	/* Uncomment the following code to allow the trace to be stopped with any
+	/* Uncomment the following code to allow the trace to be stopped with any 
 	key press.  The code is commented out by default as the kbhit() function
 	interferes with the run time behaviour. */
-	/*
+	/* 
 		if( _kbhit() != pdFALSE )
 		{
 			if( xTraceRunning == pdTRUE )
@@ -369,4 +369,5 @@ const HeapRegion_t xHeapRegions[] =
 
 	vPortDefineHeapRegions( xHeapRegions );
 }
+/*-----------------------------------------------------------*/
 

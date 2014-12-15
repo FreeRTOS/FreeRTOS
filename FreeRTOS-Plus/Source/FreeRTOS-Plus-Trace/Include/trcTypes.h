@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.6.0 Recorder Library
+ * Tracealyzer v2.7.0 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcTypes.h
@@ -31,7 +31,9 @@
  * damages, or the exclusion of implied warranties or limitations on how long an 
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * Copyright Percepio AB, 2013.
+ * Tabs are used for indent in this file (1 tab = 4 spaces)
+ *
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 

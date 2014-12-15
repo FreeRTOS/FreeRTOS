@@ -739,11 +739,16 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	will expire when the kernel's tick count is (100 + xBasePeriod).  For this
 	reason xMargin is used as an allowable margin for premature timer expiries
 	as well as late timer expiries. */
-	const TickType_t xMargin = 6;
+	#ifdef _WINDOWS_
+		/* Windows is not real real time. */
+		const TickType_t xMargin = 20;
+	#else
+		const TickType_t xMargin = 6;
+	#endif /* _WINDOWS_ */
 #else
 	#ifdef _WINDOWS_
 		/* Windows is not real real time. */
-		const TickType_t xMargin = 10;
+		const TickType_t xMargin = 20;
 	#else
 		const TickType_t xMargin = 4;
 	#endif /* _WINDOWS_ */

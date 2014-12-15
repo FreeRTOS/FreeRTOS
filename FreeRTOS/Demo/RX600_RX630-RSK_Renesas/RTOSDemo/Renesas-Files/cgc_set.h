@@ -1,7 +1,7 @@
 #ifndef CGC_SET_VALUES_H_
 #define CGC_SET_VALUES_H_
 
-/* Do not modify these macros.  These values are used to initialise  
+/* Do not modify these macros.  These values are used to initialise
    the SCKCR and SCKCR2 registers based upon the above values.      */
 #if   (FCLK_DIV == 64)
     #define FCLK_SCKCR  0x60000000L
@@ -40,12 +40,12 @@
     #define ICLK_SCKCR  0x01000000L
 #endif
 
-    
+
 #if (BCLK_PIN == 1)
     #define PSTOP1_SCKCR 0x00800000L
-#elif    
+#else
     #define PSTOP1_SCKCR 0x00000000L
-#endif    
+#endif
 
 
 #if   (BCLK_DIV == 64)
@@ -120,7 +120,7 @@
 #elif (PCLK47_DIV ==  1)
     #define PCLK47_SCKCR  0x00000000L
 #else
-    #define PCLK47_SCKCR  0x00000010L    
+    #define PCLK47_SCKCR  0x00000010L
 #endif
 
 
@@ -139,7 +139,7 @@
 #elif (PCLK03_DIV ==  1)
     #define PCLK03_SCKCR  0x00000000L
 #else
-    #define PCLK03_SCKCR  0x00000001L    
+    #define PCLK03_SCKCR  0x00000001L
 #endif
 
 
@@ -173,7 +173,7 @@
 
 #if (CLK_SOURCE == CLK_SOURCE_LOCO)
 /* Internal LOCO circuit - 125kHz*/
-#define     CLK_FREQUENCY       (125000L)	
+#define     CLK_FREQUENCY       (125000L)
 #define     FCLK_FREQUENCY      (CLK_FREQUENCY / FCLK_DIV)
 #define     ICLK_FREQUENCY      (CLK_FREQUENCY / ICLK_DIV)
 #define     BCLK_FREQUENCY      (CLK_FREQUENCY / BCLK_DIV)
@@ -185,7 +185,7 @@
 
 #elif (CLK_SOURCE == CLK_SOURCE_HOCO)
 /* Internal high speed on-chip oscillator (HOCO) */
-#define     CLK_FREQUENCY       (50000000L)	
+#define     CLK_FREQUENCY       (50000000L)
 #define     FCLK_FREQUENCY      (CLK_FREQUENCY / FCLK_DIV)
 #define     ICLK_FREQUENCY      (CLK_FREQUENCY / ICLK_DIV)
 #define     BCLK_FREQUENCY      (CLK_FREQUENCY / BCLK_DIV)
@@ -196,7 +196,7 @@
 
 
 #elif (CLK_SOURCE == CLK_SOURCE_MAIN)
-/* External XTAL, but not via the PLL circuit */	
+/* External XTAL, but not via the PLL circuit */
 #define     FCLK_FREQUENCY      (XTAL_FREQUENCY / FCLK_DIV)
 #define     ICLK_FREQUENCY      (XTAL_FREQUENCY / ICLK_DIV)
 #define     BCLK_FREQUENCY      (XTAL_FREQUENCY / BCLK_DIV)
@@ -207,7 +207,7 @@
 
 
 #elif (CLK_SOURCE == CLK_SOURCE_SUB)
-/* External 32khZ XTAL */	
+/* External 32khZ XTAL */
 #define     FCLK_FREQUENCY      (SUB_FREQUENCY / FCLK_DIV)
 #define     ICLK_FREQUENCY      (SUB_FREQUENCY / ICLK_DIV)
 #define     BCLK_FREQUENCY      (SUB_FREQUENCY / BCLK_DIV)
@@ -219,7 +219,7 @@
 
 #elif (CLK_SOURCE == CLK_SOURCE_PLL)
 /* External XTAL, but using the PLL circuit */
-#define     PLL_FREQUENCY       (XTAL_FREQUENCY * (PLL_MUL / PLL_INPUT_FREQ_DIV))	
+#define     PLL_FREQUENCY       (XTAL_FREQUENCY * (PLL_MUL / PLL_INPUT_FREQ_DIV))
 #define     FCLK_FREQUENCY      (PLL_FREQUENCY / FCLK_DIV)
 #define     ICLK_FREQUENCY      (PLL_FREQUENCY / ICLK_DIV)
 #define     BCLK_FREQUENCY      (PLL_FREQUENCY / BCLK_DIV)

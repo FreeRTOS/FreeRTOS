@@ -396,6 +396,8 @@ void *pvAllocated;
 /* Called by vApplicationTickHook(), which is defined in main.c. */
 void vFullDemoTickHookFunction( void )
 {
+TaskHandle_t xTimerTask;
+
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
 	#if( configUSE_PREEMPTION != 0 )
@@ -420,6 +422,10 @@ void vFullDemoTickHookFunction( void )
 
 	/* Exercise using task notifications from an interrupt. */
 	xNotifyTaskFromISR();
+
+	/* For code coverage purposes. */
+	xTimerTask = xTimerGetTimerDaemonTaskHandle();
+	configASSERT( uxTaskPriorityGetFromISR( xTimerTask ) == configTIMER_TASK_PRIORITY );
 }
 /*-----------------------------------------------------------*/
 

@@ -92,7 +92,7 @@ extern uint32_t SystemCoreClock;
 #define configTICK_RATE_HZ				100
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 300 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 40 * 1024 ) ) /* Has not effect in this demo as the heap is manually pointed to AHB RAM. */
-#define configMAX_TASK_NAME_LEN			( 12 )
+#define configMAX_TASK_NAME_LEN			( 9 )
 #define configIDLE_SHOULD_YIELD			0
 #define configQUEUE_REGISTRY_SIZE		10
 #define configUSE_TRACE_FACILITY		1

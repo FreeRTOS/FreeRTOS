@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd. 
+    FreeRTOS V8.1.2 - Copyright (C) 2014 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -101,6 +101,10 @@ typedef unsigned long UBaseType_t;
 #else
 	typedef uint32_t TickType_t;
 	#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
+
+	/* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+	not need to be guarded with a critical section. */
+	#define portTICK_TYPE_IS_ATOMIC 1
 #endif
 /*-----------------------------------------------------------*/
 

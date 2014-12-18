@@ -103,9 +103,6 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcBase.h">
       <Filter>FreeRTOS+\FreeRTOS+Trace\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcHooks.h">
-      <Filter>FreeRTOS+\FreeRTOS+Trace\Include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernel.h">
       <Filter>FreeRTOS+\FreeRTOS+Trace\Include</Filter>
     </ClInclude>
@@ -114,9 +111,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h">
       <Filter>FreeRTOS+\FreeRTOS+Trace\Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Trace_Recorder_Configuration\trcHardwarePort.h">
-      <Filter>Demo App Source\Trace Recorder Configuration</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

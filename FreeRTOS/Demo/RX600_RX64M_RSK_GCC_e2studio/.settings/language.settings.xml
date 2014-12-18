@@ -3,11 +3,11 @@
 	<configuration id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.606469687" name="HardwareDebug">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
-			<provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
-			<provider class="com.renesas.cdt.common.build.spec.RXGCCBuiltinSpecsDetector" console="false" env-hash="982537399514949188" id="RXGCCBuiltinSpecsDetector" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" options-hash="1142094570" parameter="rx-elf-gcc -E -P -v -dD ${INPUTS} -mcpu=rx600 -mlittle-endian-data" prefer-non-shared="true">
+			<provider class="com.renesas.cdt.common.build.spec.RXGCCBuiltinSpecsDetector" console="false" env-hash="879191947459214602" id="RXGCCBuiltinSpecsDetector" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" options-hash="1142094570" parameter="rx-elf-gcc -E -P -v -dD ${INPUTS}" prefer-non-shared="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 			</provider>
+			<provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
 		</extension>
 	</configuration>
 </project>

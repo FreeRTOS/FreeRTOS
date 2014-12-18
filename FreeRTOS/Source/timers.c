@@ -468,10 +468,10 @@ BaseType_t xTimerListsWereSwitched;
 
 				if( xTaskResumeAll() == pdFALSE )
 				{
-					/* Yield to wait for either a command to arrive, or the block time
-					to expire.  If a command arrived between the critical section being
-					exited and this yield then the yield will not cause the task
-					to block. */
+					/* Yield to wait for either a command to arrive, or the
+					block time to expire.  If a command arrived between the
+					critical section being exited and this yield then the yield
+					will not cause the task to block. */
 					portYIELD_WITHIN_API();
 				}
 				else
@@ -843,7 +843,7 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 		xMessage.u.xCallbackParameters.ulParameter2 = ulParameter2;
 
 		xReturn = xQueueSendFromISR( xTimerQueue, &xMessage, pxHigherPriorityTaskWoken );
-		
+
 		tracePEND_FUNC_CALL_FROM_ISR( xFunctionToPend, pvParameter1, ulParameter2, xReturn );
 
 		return xReturn;
@@ -869,7 +869,7 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 		xReturn = xQueueSendToBack( xTimerQueue, &xMessage, xTicksToWait );
 
 		tracePEND_FUNC_CALL( xFunctionToPend, pvParameter1, ulParameter2, xReturn );
-		
+
 		return xReturn;
 	}
 

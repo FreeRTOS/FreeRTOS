@@ -95,6 +95,10 @@ typedef unsigned long UBaseType_t;
 #else
     typedef uint32_t TickType_t;
     #define portMAX_DELAY (TickType_t) 0xFFFFFFFFF
+
+	/* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+	not need to be guarded with a critical section. */
+	#define portTICK_TYPE_IS_ATOMIC 1
 #endif
 
 

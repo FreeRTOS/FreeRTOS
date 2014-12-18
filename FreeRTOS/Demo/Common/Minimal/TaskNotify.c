@@ -123,6 +123,9 @@ static uint32_t ulTimerNotificationsReceived = 0UL, ulTimerNotificationsSent = 0
 /* The timer used to notify the task. */
 static TimerHandle_t xTimer = NULL;
 
+/* Used by the pseudo random number generating function. */
+static uint32_t ulNextRand = 0;
+
 /*-----------------------------------------------------------*/
 
 void vStartTaskNotifyTask( void  )
@@ -130,6 +133,9 @@ void vStartTaskNotifyTask( void  )
 	/* Create the task that performs some tests by itself, then loops around
 	being notified by both a software timer and an interrupt. */
 	xTaskCreate( prvNotifiedTask, "Notified", configMINIMAL_STACK_SIZE, NULL, notifyTASK_PRIORITY, &xTaskToNotify );
+
+	/* Pseudo seed the random number generator. */
+	ulNextRand = ( uint32_t ) prvRand;
 }
 /*-----------------------------------------------------------*/
 
@@ -349,9 +355,9 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 }
 /*-----------------------------------------------------------*/
 
-static void prvNotifyingTimer( TimerHandle_t xTimer )
+static void prvNotifyingTimer( TimerHandle_t xNotUsed )
 {
-	( void ) xTimer;
+	( void ) xNotUsed;
 
 	xTaskNotifyGive( xTaskToNotify );
 
@@ -494,9 +500,7 @@ const uint32_t ulMaxSendReceiveDeviation = 5UL;
 
 static UBaseType_t prvRand( void )
 {
-	static uint32_t ulNextRand = ( uint32_t ) prvRand;
-
-	const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
+const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
 
 	/* Utility function to generate a pseudo random number. */
 	ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;

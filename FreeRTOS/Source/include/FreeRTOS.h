@@ -727,6 +727,27 @@ extern "C" {
 	#define configUSE_TASK_NOTIFICATIONS 1
 #endif
 
+#ifndef portTICK_TYPE_IS_ATOMIC
+	#define portTICK_TYPE_IS_ATOMIC 0
+#endif
+
+#if( portTICK_TYPE_IS_ATOMIC == 0 )
+	/* Either variables of tick type cannot be read atomically, or
+	portTICK_TYPE_IS_ATOMIC was not set - map the critical sections used when
+	the tick count is returned to the standard critical section macros. */
+	#define portTICK_TYPE_ENTER_CRITICAL() portENTER_CRITICAL()
+	#define portTICK_TYPE_EXIT_CRITICAL() portEXIT_CRITICAL()
+	#define portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR() portSET_INTERRUPT_MASK_FROM_ISR()
+	#define portTICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR( x ) portCLEAR_INTERRUPT_MASK_FROM_ISR( ( x ) )
+#else
+	/* The tick type can be read atomically, so critical sections used when the
+	tick count is returned can be defined away. */
+	#define portTICK_TYPE_ENTER_CRITICAL()
+	#define portTICK_TYPE_EXIT_CRITICAL()
+	#define portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR() 0
+	#define portTICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR( x ) ( void ) x
+#endif
+
 /* Definitions to allow backward compatibility with FreeRTOS versions prior to
 V8 if desired. */
 #ifndef configENABLE_BACKWARD_COMPATIBILITY

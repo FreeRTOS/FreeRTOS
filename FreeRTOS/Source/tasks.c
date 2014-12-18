@@ -1080,8 +1080,8 @@ TCB_t * pxNewTCB;
 
 		uxSavedInterruptState = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
-			/* If null is passed in here then we are changing the
-			priority of the calling function. */
+			/* If null is passed in here then it is the priority of the calling
+			task that is being queried. */
 			pxTCB = prvGetTCBFromHandle( xTask );
 			uxReturn = pxTCB->uxPriority;
 		}
@@ -1743,11 +1743,11 @@ TickType_t xTaskGetTickCount( void )
 TickType_t xTicks;
 
 	/* Critical section required if running on a 16 bit processor. */
-	taskENTER_CRITICAL();
+	portTICK_TYPE_ENTER_CRITICAL();
 	{
 		xTicks = xTickCount;
 	}
-	taskEXIT_CRITICAL();
+	portTICK_TYPE_EXIT_CRITICAL();
 
 	return xTicks;
 }
@@ -1774,11 +1774,11 @@ UBaseType_t uxSavedInterruptStatus;
 	link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+	uxSavedInterruptStatus = portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR();
 	{
 		xReturn = xTickCount;
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+	portTICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 	return xReturn;
 }
@@ -3510,7 +3510,7 @@ TCB_t *pxTCB;
 
 		/* Pad the end of the string with spaces to ensure columns line up when
 		printed out. */
-		for( x = strlen( pcBuffer ); x < configMAX_TASK_NAME_LEN; x++ )
+		for( x = strlen( pcBuffer ); x < ( configMAX_TASK_NAME_LEN - 1 ); x++ )
 		{
 			pcBuffer[ x ] = ' ';
 		}
@@ -3578,22 +3578,22 @@ TCB_t *pxTCB;
 			{
 				switch( pxTaskStatusArray[ x ].eCurrentState )
 				{
-				case eReady:		cStatus = tskREADY_CHAR;
-									break;
+					case eReady:		cStatus = tskREADY_CHAR;
+										break;
 
-				case eBlocked:		cStatus = tskBLOCKED_CHAR;
-									break;
+					case eBlocked:		cStatus = tskBLOCKED_CHAR;
+										break;
 
-				case eSuspended:	cStatus = tskSUSPENDED_CHAR;
-									break;
+					case eSuspended:	cStatus = tskSUSPENDED_CHAR;
+										break;
 
-				case eDeleted:		cStatus = tskDELETED_CHAR;
-									break;
+					case eDeleted:		cStatus = tskDELETED_CHAR;
+										break;
 
-				default:			/* Should not get here, but it is included
-									to prevent static checking errors. */
-									cStatus = 0x00;
-									break;
+					default:			/* Should not get here, but it is included
+										to prevent static checking errors. */
+										cStatus = 0x00;
+										break;
 				}
 
 				/* Write the task name to the string, padding with spaces so it
@@ -3685,13 +3685,13 @@ TCB_t *pxTCB;
 					ulTotalRunTimeDiv100 has already been divided by 100. */
 					ulStatsAsPercentage = pxTaskStatusArray[ x ].ulRunTimeCounter / ulTotalTime;
 
+					/* Write the task name to the string, padding with
+					spaces so it can be printed in tabular form more
+					easily. */
+					pcWriteBuffer = prvWriteNameToBuffer( pcWriteBuffer, pxTaskStatusArray[ x ].pcTaskName );
+
 					if( ulStatsAsPercentage > 0UL )
 					{
-						/* Write the task name to the string, padding with
-						spaces so it can be printed in tabular form more
-						easily. */
-						pcWriteBuffer = prvWriteNameToBuffer( pcWriteBuffer, pxTaskStatusArray[ x ].pcTaskName );
-
 						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
 						{
 							sprintf( pcWriteBuffer, "\t\t%lu\t\t%lu%%\r\n", pxTaskStatusArray[ x ].ulRunTimeCounter, ulStatsAsPercentage );
@@ -3710,13 +3710,13 @@ TCB_t *pxTCB;
 						consumed less than 1% of the total run time. */
 						#ifdef portLU_PRINTF_SPECIFIER_REQUIRED
 						{
-							sprintf( pcWriteBuffer, "%s\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
+							sprintf( pcWriteBuffer, "\t\t%lu\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, pxTaskStatusArray[ x ].ulRunTimeCounter );
 						}
 						#else
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
-							sprintf( pcWriteBuffer, "%s\t\t%u\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+							sprintf( pcWriteBuffer, "\t\t%u\t\t<1%%\r\n", pxTaskStatusArray[ x ].pcTaskName, ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
 						}
 						#endif
 					}

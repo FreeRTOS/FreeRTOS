@@ -657,6 +657,14 @@ UBaseType_t uxTaskPriorityGet( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
+ * <pre>UBaseType_t uxTaskPriorityGetFromISR( TaskHandle_t xTask );</pre>
+ *
+ * A version of uxTaskPriorityGet() that can be used from an ISR.
+ */
+UBaseType_t uxTaskPriorityGetFromISR( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+
+/**
+ * task. h
  * <pre>eTaskState eTaskGetState( TaskHandle_t xTask );</pre>
  *
  * INCLUDE_eTaskGetState must be defined as 1 for this function to be available.

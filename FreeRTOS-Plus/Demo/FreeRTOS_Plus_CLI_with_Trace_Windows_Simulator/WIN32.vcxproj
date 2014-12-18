@@ -151,14 +151,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcBase.h" />
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcHooks.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernel.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcTypes.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcUser.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
-    <ClInclude Include="Trace_Recorder_Configuration\trcHardwarePort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

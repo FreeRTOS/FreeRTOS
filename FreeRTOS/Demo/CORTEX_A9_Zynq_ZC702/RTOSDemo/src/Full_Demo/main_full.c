@@ -144,6 +144,8 @@
 #include "QueueOverwrite.h"
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
+#include "TaskNotify.h"
+#include "IntSemTest.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -250,6 +252,9 @@ void main_full( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 	vStartEventGroupTasks();
+	vStartTaskNotifyTask();
+	vStartInterruptSemaphoreTasks();
+
 
 	/* Start the tasks that implements the command console on the UART, as
 	described above. */
@@ -318,80 +323,90 @@ unsigned long ulErrorFound = pdFALSE;
 		that they are all still running, and that none have detected an error. */
 		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 0UL;
 		}
 
 		if( xAreMathsTaskStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 1UL;
 		}
 
 		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 2UL;
 		}
 
 		if( xAreBlockingQueuesStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 3UL;
 		}
 
 		if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 4UL;
 		}
 
 		if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 5UL;
 		}
 
 		if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 6UL;
 		}
 
 		if( xIsCreateTaskStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 7UL;
 		}
 
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 8UL;
 		}
 
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 9UL;
 		}
 
 		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 10UL;
 		}
 
 		if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 11UL;
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 12UL;
+		}
+
+		if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+		{
+			ulErrorFound |= 1UL << 13UL;
+		}
+
+		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			ulErrorFound |= 1UL << 14UL;
 		}
 
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 15UL;
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			ulErrorFound = pdTRUE;
+			ulErrorFound |= 1UL << 16UL;
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 

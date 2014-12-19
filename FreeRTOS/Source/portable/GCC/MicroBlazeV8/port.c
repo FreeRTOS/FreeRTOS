@@ -155,7 +155,7 @@ const uint32_t ulR13 = ( uint32_t ) &_SDA_BASE_;
 	*pxTopOfStack = ( StackType_t ) 0x00000000;
 	pxTopOfStack--;
 
-	#if XPAR_MICROBLAZE_0_USE_FPU == 1
+	#if XPAR_MICROBLAZE_0_USE_FPU != 0
 		/* The FSR value placed in the initial task context is just 0. */
 		*pxTopOfStack = portINITIAL_FSR;
 		pxTopOfStack--;

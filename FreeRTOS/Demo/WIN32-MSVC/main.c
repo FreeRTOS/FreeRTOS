@@ -112,9 +112,9 @@ that make up the total heap.  This is only done to provide an example of heap_5
 being used as this demo could easily create one large heap region instead of
 multiple smaller heap regions - in which case heap_4.c would be the more
 appropriate choice. */
-#define mainREGION_1_SIZE	3001
+#define mainREGION_1_SIZE	4001
 #define mainREGION_2_SIZE	18105
-#define mainREGION_3_SIZE	1407
+#define mainREGION_3_SIZE	1807
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -228,10 +228,10 @@ void vApplicationIdleHook( void )
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
 
-	/* Uncomment the following code to allow the trace to be stopped with any 
+	/* Uncomment the following code to allow the trace to be stopped with any
 	key press.  The code is commented out by default as the kbhit() function
 	interferes with the run time behaviour. */
-	/* 
+	/*
 		if( _kbhit() != pdFALSE )
 		{
 			if( xTraceRunning == pdTRUE )
@@ -366,6 +366,9 @@ const HeapRegion_t xHeapRegions[] =
 	/* Sanity check that the sizes and offsets defined actually fit into the
 	array. */
 	configASSERT( ( ulAdditionalOffset + mainREGION_1_SIZE + mainREGION_2_SIZE + mainREGION_3_SIZE ) < configTOTAL_HEAP_SIZE );
+
+	/* Prevent compiler warnings when configASSERT() is not defined. */
+	( void ) ulAdditionalOffset;
 
 	vPortDefineHeapRegions( xHeapRegions );
 }

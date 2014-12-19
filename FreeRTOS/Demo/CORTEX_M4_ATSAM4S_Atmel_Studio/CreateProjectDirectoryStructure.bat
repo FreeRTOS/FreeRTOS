@@ -24,6 +24,7 @@ IF EXIST src\asf\thirdparty\FreeRTOS Goto END
     copy %FREERTOS_SOURCE%\queue.c src\asf\thirdparty\FreeRTOS
     copy %FREERTOS_SOURCE%\list.c src\asf\thirdparty\FreeRTOS
     copy %FREERTOS_SOURCE%\timers.c src\asf\thirdparty\FreeRTOS
+    copy %FREERTOS_SOURCE%\event_groups.c src\asf\thirdparty\FreeRTOS
 
     REM Copy the common header files into the project directory
     copy %FREERTOS_SOURCE%\include\*.* src\asf\thirdparty\FreeRTOS\include
@@ -48,6 +49,10 @@ IF EXIST src\asf\thirdparty\FreeRTOS Goto END
     copy %COMMON_SOURCE%\integer.c         src\Common-Demo-Source
     copy %COMMON_SOURCE%\QueueSet.c        src\Common-Demo-Source
     COPY %COMMON_SOURCE%\IntQueue.c        src\Common-Demo-Source
+    COPY %COMMON_SOURCE%\TaskNotify.c      src\Common-Demo-Source
+    COPY %COMMON_SOURCE%\TimerDemo.c       src\Common-Demo-Source
+    COPY %COMMON_SOURCE%\EventGroupsDemo.c src\Common-Demo-Source
+    COPY %COMMON_SOURCE%\IntSemTest.c      src\Common-Demo-Source
 
     REM Copy the common demo file headers.
     copy %COMMON_INCLUDE%\*.h              src\Common-Demo-Source\include

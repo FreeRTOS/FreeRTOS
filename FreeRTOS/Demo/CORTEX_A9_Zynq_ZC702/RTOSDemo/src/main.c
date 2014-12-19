@@ -105,6 +105,8 @@
 #include "TimerDemo.h"
 #include "QueueOverwrite.h"
 #include "EventGroupsDemo.h"
+#include "TaskNotify.h"
+#include "IntSemTest.h"
 
 /* Xilinx includes. */
 #include "platform.h"
@@ -311,6 +313,12 @@ void vApplicationTickHook( void )
 
 		/* Call the periodic event group from ISR demo. */
 		vPeriodicEventGroupsProcessing();
+
+		/* Use task notifications from an interrupt. */
+		xNotifyTaskFromISR();
+
+		/* Use mutexes from interrupts. */
+		vInterruptSemaphorePeriodicTest();
 	}
 	#endif
 }

@@ -106,7 +106,6 @@
  */
 #define configMAX_API_CALL_INTERRUPT_PRIORITY	18
 
-
 #define configCPU_CLOCK_HZ						100000000UL
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_TICKLESS_IDLE					0

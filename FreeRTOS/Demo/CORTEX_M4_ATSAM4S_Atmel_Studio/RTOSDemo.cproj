@@ -142,7 +142,7 @@
   <documentation help="" />
   <offline-documentation help="" />
   <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.6.0" />
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.10.1" />
   </dependencies>
 </framework-data>
     </AsfFrameworkConfig>
@@ -267,11 +267,6 @@
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
   <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
-  <armgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/sam/drivers/tc</Value>
-    </ListValues>
-  </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4S_EK -D__SAM4S16C__</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
@@ -372,12 +367,8 @@
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
   <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4s/sam4s16/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
-  <armgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/sam/drivers/tc</Value>
-    </ListValues>
-  </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4S_EK -D__SAM4S16C__</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
@@ -423,16 +414,34 @@
     <None Include="src\asf\sam\drivers\usart\usart.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\asf\thirdparty\FreeRTOS\event_groups.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\asf\thirdparty\FreeRTOS\portable\MemMang\heap_4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\EventGroupsDemo.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\Common-Demo-Source\include\demo_serial.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\Common-Demo-Source\include\TaskNotify.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\Common-Demo-Source\IntQueue.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\Common-Demo-Source\IntSemTest.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\Common-Demo-Source\QueueSet.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\TaskNotify.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\Common-Demo-Source\TimerDemo.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\IntQueueTimer.c">

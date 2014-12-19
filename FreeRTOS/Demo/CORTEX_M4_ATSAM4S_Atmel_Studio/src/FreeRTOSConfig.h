@@ -91,7 +91,7 @@ extern uint32_t SystemCoreClock;
 
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
-#define configUSE_IDLE_HOOK						0
+#define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
 #define configCPU_CLOCK_HZ						( SystemCoreClock )
 #define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
@@ -132,6 +132,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 #define INCLUDE_eTaskGetState			1
+#define INCLUDE_xTimerPendFunctionCall	1
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

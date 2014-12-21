@@ -15,8 +15,9 @@
           <option id="sam.components.display.aat31xx" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.components.display.ili93xx" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.components.ethernet_phy.ksz8051mnl" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="sam.drivers.gmac" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.drivers.smc" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.gmac" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.tc" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam.utils.cmsis.sam4e.source.template" value="Add" config="" content-id="Atmel.ASF" />
         </options>
@@ -173,6 +174,8 @@
           <file path="src/Config/conf_ili93xx.h" framework="" version="3.11.0" source="sam\components\display\ili93xx\module_config\conf_ili93xx.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/drivers/ebi/smc/smc.c" framework="" version="3.11.0" source="sam\drivers\ebi\smc\smc.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam/drivers/ebi/smc/smc.h" framework="" version="3.11.0" source="sam\drivers\ebi\smc\smc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/tc/tc.c" framework="" version="3.11.0" source="sam\drivers\tc\tc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/tc/tc.h" framework="" version="3.11.0" source="sam\drivers\tc\tc.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.11.0/common.applications.user_application.sam4e_ek/html/index.html" />
         <offline-documentation help="" />
@@ -207,12 +210,12 @@
       <ToolOptions>
         <InterfaceProperties>
           <JtagEnableExtResetOnStartSession>false</JtagEnableExtResetOnStartSession>
-          <SwdClock>12000000</SwdClock>
+          <SwdClock>7020000</SwdClock>
         </InterfaceProperties>
         <InterfaceName>SWD</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.samice</ToolType>
-      <ToolNumber>000158000789</ToolNumber>
+      <ToolNumber>158000789</ToolNumber>
       <ToolName>J-Link</ToolName>
     </com_atmel_avrdbg_tool_samice>
     <avrtoolinterface>SWD</avrtoolinterface>
@@ -261,6 +264,7 @@
       <Value>../src/ASF/sam/components/display/aat31xx</Value>
       <Value>../src/ASF/sam/components/display/ili93xx</Value>
       <Value>../src/ASF/sam/drivers/ebi/smc</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
@@ -310,6 +314,7 @@
       <Value>../src/ASF/sam/components/display/aat31xx</Value>
       <Value>../src/ASF/sam/components/display/ili93xx</Value>
       <Value>../src/ASF/sam/drivers/ebi/smc</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
 </ArmGcc>
@@ -372,6 +377,7 @@
       <Value>../src/ASF/sam/components/display/ili93xx</Value>
       <Value>../src/ASF/sam/drivers/ebi/smc</Value>
       <Value>../../../../FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_UDP_Demos/EchoClients</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
@@ -391,6 +397,7 @@
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
   <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam/utils/linker_scripts/sam4e/sam4e16e/gcc/flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4E_EK -D__SAM4E16E__ -Dprintf=iprintf</armgcc.preprocessingassembler.general.AssemblerFlags>
@@ -422,6 +429,7 @@
       <Value>../src/ASF/sam/components/display/aat31xx</Value>
       <Value>../src/ASF/sam/components/display/ili93xx</Value>
       <Value>../src/ASF/sam/drivers/ebi/smc</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
     </ListValues>
   </armgcc.preprocessingassembler.general.IncludePaths>
   <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
@@ -525,6 +533,14 @@
       <SubType>compile</SubType>
       <Link>src\Common Demo Tasks\GenQTest.c</Link>
     </Compile>
+    <Compile Include="..\Common\Minimal\IntQueue.c">
+      <SubType>compile</SubType>
+      <Link>src\Common Demo Tasks\IntQueue.c</Link>
+    </Compile>
+    <Compile Include="..\Common\Minimal\IntSemTest.c">
+      <SubType>compile</SubType>
+      <Link>src\Common Demo Tasks\IntSemTest.c</Link>
+    </Compile>
     <Compile Include="..\Common\Minimal\QPeek.c">
       <SubType>compile</SubType>
       <Link>src\Common Demo Tasks\QPeek.c</Link>
@@ -544,6 +560,14 @@
     <Compile Include="..\Common\Minimal\semtest.c">
       <SubType>compile</SubType>
       <Link>src\Common Demo Tasks\semtest.c</Link>
+    </Compile>
+    <Compile Include="..\Common\Minimal\TaskNotify.c">
+      <SubType>compile</SubType>
+      <Link>src\Common Demo Tasks\TaskNotify.c</Link>
+    </Compile>
+    <Compile Include="..\Common\Minimal\TimerDemo.c">
+      <SubType>compile</SubType>
+      <Link>src\Common Demo Tasks\TimerDemo.c</Link>
     </Compile>
     <Compile Include="src\ASF\sam\components\display\aat31xx\aat31xx.c">
       <SubType>compile</SubType>
@@ -569,6 +593,12 @@
     <None Include="src\ASF\sam\drivers\ebi\smc\smc.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="src\ASF\sam\drivers\tc\tc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\drivers\tc\tc.h">
+      <SubType>compile</SubType>
+    </None>
     <Compile Include="src\ASF\sam\utils\syscalls\gcc\syscalls.c">
       <SubType>compile</SubType>
     </Compile>
@@ -588,6 +618,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\FreeRTOS+\FreeRTOS+FAT SL\API\fat_sl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\IntQueueTimer.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\LCDUtils.c">
@@ -1102,6 +1135,7 @@
     <Folder Include="src\ASF\sam\drivers\ebi\smc\" />
     <Folder Include="src\ASF\sam\drivers\gmac\" />
     <Folder Include="src\ASF\sam\drivers\pmc\" />
+    <Folder Include="src\ASF\sam\drivers\tc\" />
     <Folder Include="src\ASF\sam\utils\" />
     <Folder Include="src\ASF\sam\utils\cmsis\" />
     <Folder Include="src\ASF\sam\utils\cmsis\sam4e\" />

@@ -136,6 +136,10 @@
 #include "QueueSet.h"
 #include "recmutex.h"
 #include "EventGroupsDemo.h"
+#include "TaskNotify.h"
+#include "IntSemTest.h"
+#include "TimerDemo.h"
+#include "IntQueue.h"
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
@@ -182,7 +186,7 @@ http://www.FreeRTOS.org/udp */
 /* UDP command server and echo task parameters. */
 #define mainUDP_CLI_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainUDP_CLI_PORT_NUMBER				( 5001UL )
-#define mainUDP_CLI_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE * 2U )
+#define mainUDP_CLI_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 90 )
 #define mainECHO_CLIENT_STACK_SIZE			( configMINIMAL_STACK_SIZE + 30 )
 
 /* Set to 1 to include the UDP echo client tasks in the build.  The echo clients
@@ -190,6 +194,9 @@ require the IP address of the echo server to be defined using the
 configECHO_SERVER_ADDR0 to configECHO_SERVER_ADDR3 constants in
 FreeRTOSConfig.h. */
 #define mainINCLUDE_ECHO_CLIENT_TASKS		1
+
+/* Used by the standard demo timer tasks. */
+#define mainTIMER_TEST_PERIOD				( 50 )
 
 /*-----------------------------------------------------------*/
 
@@ -225,6 +232,14 @@ extern void vRegisterUDPCLICommands( void );
  */
 extern void vInitialiseLCD( void );
 
+/*
+ * Register check tasks, and the tasks used to write over and check the contents
+ * of the FPU registers, as described at the top of this file.  The nature of
+ * these files necessitates that they are written in an assembly file.
+ */
+static void prvRegTest1Task( void *pvParameters ) __attribute__((naked));
+static void prvRegTest2Task( void *pvParameters ) __attribute__((naked));
+
 /*-----------------------------------------------------------*/
 
 /* The default IP and MAC address used by the demo.  The address configuration
@@ -241,12 +256,16 @@ probably be read from flash memory or an EEPROM.  Here it is just hard coded.
 Note each node on a network must have a unique MAC address. */
 const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
+/* The following two variables are used to communicate the status of the
+register check tasks to the check software timer.  If the variables keep
+incrementing, then the register check tasks has not discovered any errors.  If
+a variable stops incrementing, then an error has been found. */
+volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
+
 /*-----------------------------------------------------------*/
 
 int main_full( void )
 {
-TimerHandle_t xTimer = NULL;
-
 	/* Usage instructions on http://www.FreeRTOS.org/Atmel_SAM4E_RTOS_Demo.html */
 
 	/* Initialise the LCD and output a bitmap.  The IP address will also be
@@ -284,8 +303,7 @@ TimerHandle_t xTimer = NULL;
 	has completed if DHCP is used). */
 	FreeRTOS_IPInit( ucIPAddress, ucNetMask, ucGatewayAddress, ucDNSServerAddress, ucMACAddress );
 
-	/* Create all the other standard demo tasks. */
-	vStartLEDFlashTimers( mainNUM_FLASH_TIMER_LEDS );
+	/* Create all the other standard demo tasks. */	
 	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
@@ -296,19 +314,15 @@ TimerHandle_t xTimer = NULL;
 	vStartQueueSetTasks();
 	vStartRecursiveMutexTasks();
 	vStartEventGroupTasks();
+	vStartTaskNotifyTask();
+	vStartInterruptSemaphoreTasks();
+	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartInterruptQueueTasks();
 
-	/* Create the software timer that performs the 'check' functionality, as
-	described at the top of this file. */
-	xTimer = xTimerCreate( 	"CheckTimer",					/* A text name, purely to help debugging. */
-							( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
-							pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-							( void * ) 0,					/* The ID is not used, so can be set to anything. */
-							prvCheckTimerCallback );		/* The callback function that inspects the status of all the other tasks. */
-
-	if( xTimer != NULL )
-	{
-		xTimerStart( xTimer, mainDONT_BLOCK );
-	}
+	/* Create the register check tasks, as described at the top of this
+	file */
+	xTaskCreate( prvRegTest1Task, "Reg1", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest2Task, "Reg2", configMINIMAL_STACK_SIZE, ( void * ) NULL, tskIDLE_PRIORITY, NULL );
 
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
@@ -325,6 +339,7 @@ TimerHandle_t xTimer = NULL;
 static void prvCheckTimerCallback( TimerHandle_t xTimer )
 {
 static long lChangedTimerPeriodAlready = pdFALSE;
+static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 unsigned long ulErrorOccurred = pdFALSE;
 
 	/* Avoid compiler warnings. */
@@ -372,6 +387,37 @@ unsigned long ulErrorOccurred = pdFALSE;
 	{
 		ulErrorOccurred |= ( 0x01UL << 13UL );
 	}
+	else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 14UL );
+	}
+	else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 15UL );
+	}
+	else if( xAreTimerDemoTasksStillRunning( mainCHECK_TIMER_PERIOD_MS ) != pdTRUE )
+	{
+		ulErrorOccurred |= 1UL << 16UL;
+	}	
+	else if( xAreIntQueueTasksStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= 1UL << 17UL;
+	}
+
+	
+	/* Check that the register test 1 task is still running. */
+	if( ulLastRegTest1Value == ulRegTest1LoopCounter )
+	{
+		ulErrorOccurred |= 1UL << 18UL;
+	}
+	ulLastRegTest1Value = ulRegTest1LoopCounter;
+
+	/* Check that the register test 2 task is still running. */
+	if( ulLastRegTest2Value == ulRegTest2LoopCounter )
+	{
+		ulErrorOccurred |= 1UL << 19UL;
+	}
+	ulLastRegTest2Value = ulRegTest2LoopCounter;
 
 	if( ulErrorOccurred != pdFALSE )
 	{
@@ -464,6 +510,30 @@ char cIPAddress[ 20 ];
 
 void vFullDemoIdleHook( void )
 {
+static TimerHandle_t xCheckTimer = NULL;
+		
+	if( xCheckTimer == NULL )
+	{
+		/* Create the software timer that performs the 'check' 
+		functionality, in the full demo.  This is not done before the
+		scheduler is started as to do so would prevent the standard demo
+		timer tasks from passing their tests (they expect the timer
+		command queue to be empty. */
+		xCheckTimer = xTimerCreate( "CheckTimer",					/* A text name, purely to help debugging. */
+									( mainCHECK_TIMER_PERIOD_MS ),	/* The timer period, in this case 3000ms (3s). */
+									pdTRUE,							/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
+									( void * ) 0,					/* The ID is not used, so can be set to anything. */
+									prvCheckTimerCallback );		/* The callback function that inspects the status of all the other tasks. */
+
+		if( xCheckTimer != NULL )
+		{
+			xTimerStart( xCheckTimer, mainDONT_BLOCK );
+		}
+		
+		/* Also start some timers that just flash LEDs. */
+		vStartLEDFlashTimers( mainNUM_FLASH_TIMER_LEDS );
+	}
+	
 	/* If the file system is only going to be accessed from one task then
 	F_FS_THREAD_AWARE can be set to 0 and the set of example files is created
 	before the RTOS scheduler is started.  If the file system is going to be
@@ -497,6 +567,15 @@ void vFullDemoTickHook( void )
 	
 	/* Call the event group ISR tests. */
 	vPeriodicEventGroupsProcessing();
+	
+	/* Exercise task notifications from interrupts. */
+	xNotifyTaskFromISR();
+	
+	/* Use mutexes from interrupts. */
+	vInterruptSemaphorePeriodicTest();
+	
+	/* Use timers from an interrupt. */
+	vTimerPeriodicISRTests();
 }
 /*-----------------------------------------------------------*/
 
@@ -510,3 +589,384 @@ void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifie
 }
 /*-----------------------------------------------------------*/
 
+/* This is a naked function. */
+static void prvRegTest1Task( void *pvParameters )
+{
+	__asm volatile
+	(
+		"	/* Fill the core registers with known values. */		\n"
+		"	mov r0, #100											\n"
+		"	mov r1, #101											\n"
+		"	mov r2, #102											\n"
+		"	mov r3, #103											\n"
+		"	mov	r4, #104											\n"
+		"	mov	r5, #105											\n"
+		"	mov	r6, #106											\n"
+		"	mov r7, #107											\n"
+		"	mov	r8, #108											\n"
+		"	mov	r9, #109											\n"
+		"	mov	r10, #110											\n"
+		"	mov	r11, #111											\n"
+		"	mov r12, #112											\n"
+		"															\n"
+		"	/* Fill the VFP registers with known values. */			\n"
+		"	vmov d0, r0, r1											\n"
+		"	vmov d1, r2, r3											\n"
+		"	vmov d2, r4, r5											\n"
+		"	vmov d3, r6, r7											\n"
+		"	vmov d4, r8, r9											\n"
+		"	vmov d5, r10, r11										\n"
+		"	vmov d6, r0, r1											\n"
+		"	vmov d7, r2, r3											\n"
+		"	vmov d8, r4, r5											\n"
+		"	vmov d9, r6, r7											\n"
+		"	vmov d10, r8, r9										\n"
+		"	vmov d11, r10, r11										\n"
+		"	vmov d12, r0, r1										\n"
+		"	vmov d13, r2, r3										\n"
+		"	vmov d14, r4, r5										\n"
+		"	vmov d15, r6, r7										\n"
+		"															\n"
+		"reg1_loop:													\n"
+		"	/* Check all the VFP registers still contain the values set above.\n"
+		"	First save registers that are clobbered by the test. */	\n"
+		"	push { r0-r1 }											\n"
+		"															\n"
+		"	vmov r0, r1, d0											\n"
+		"	cmp r0, #100											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #101											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d1											\n"
+		"	cmp r0, #102											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #103											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d2											\n"
+		"	cmp r0, #104											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #105											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d3											\n"
+		"	cmp r0, #106											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #107											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d4											\n"
+		"	cmp r0, #108											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #109											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d5											\n"
+		"	cmp r0, #110											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #111											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d6											\n"
+		"	cmp r0, #100											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #101											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d7											\n"
+		"	cmp r0, #102											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #103											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d8											\n"
+		"	cmp r0, #104											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #105											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d9											\n"
+		"	cmp r0, #106											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #107											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d10										\n"
+		"	cmp r0, #108											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #109											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d11										\n"
+		"	cmp r0, #110											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #111											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d12										\n"
+		"	cmp r0, #100											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #101											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d13										\n"
+		"	cmp r0, #102											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #103											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d14										\n"
+		"	cmp r0, #104											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #105											\n"
+		"	bne reg1_error_loopf									\n"
+		"	vmov r0, r1, d15										\n"
+		"	cmp r0, #106											\n"
+		"	bne reg1_error_loopf									\n"
+		"	cmp r1, #107											\n"
+		"	bne reg1_error_loopf									\n"
+		"															\n"
+		"	/* Restore the registers that were clobbered by the test. */\n"
+		"	pop {r0-r1}												\n"
+		"															\n"
+		"	/* VFP register test passed.  Jump to the core register test. */\n"
+		"	b reg1_loopf_pass										\n"
+		"															\n"
+		"reg1_error_loopf:											\n"
+		"	/* If this line is hit then a VFP register value was found to be\n"
+		"	incorrect. */											\n"
+		"	b reg1_error_loopf										\n"
+		"															\n"
+		"reg1_loopf_pass:											\n"
+		"															\n"
+		"	cmp	r0, #100											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r1, #101											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r2, #102											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp r3, #103											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r4, #104											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r5, #105											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r6, #106											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r7, #107											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r8, #108											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r9, #109											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r10, #110											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r11, #111											\n"
+		"	bne	reg1_error_loop										\n"
+		"	cmp	r12, #112											\n"
+		"	bne	reg1_error_loop										\n"
+		"															\n"
+		"	/* Everything passed, increment the loop counter. */	\n"
+		"	push { r0-r1 }											\n"
+		"	ldr	r0, =ulRegTest1LoopCounter							\n"
+		"	ldr r1, [r0]											\n"
+		"	adds r1, r1, #1											\n"
+		"	str r1, [r0]											\n"
+		"	pop { r0-r1 }											\n"
+		"															\n"
+		"	/* Start again. */										\n"
+		"	b reg1_loop												\n"
+		"															\n"
+		"reg1_error_loop:											\n"
+		"	/* If this line is hit then there was an error in a core register value.\n"
+		"	The loop ensures the loop counter stops incrementing. */\n"
+		"	b reg1_error_loop										\n"
+		"	nop														"
+	);
+	
+	/* Remove compiler warnings about unused parameters. */
+	( void ) pvParameters;
+}
+/*-----------------------------------------------------------*/
+
+/* This is a naked function. */
+static void prvRegTest2Task( void *pvParameters )
+{
+	__asm volatile
+	(
+		"	/* Set all the core registers to known values. */		\n"
+		"	mov r0, #-1												\n"
+		"	mov r1, #1												\n"
+		"	mov r2, #2												\n"
+		"	mov r3, #3												\n"
+		"	mov	r4, #4												\n"
+		"	mov	r5, #5												\n"
+		"	mov	r6, #6												\n"
+		"	mov r7, #7												\n"
+		"	mov	r8, #8												\n"
+		"	mov	r9, #9												\n"
+		"	mov	r10, #10											\n"
+		"	mov	r11, #11											\n"
+		"	mov r12, #12											\n"
+		"															\n"
+		"	/* Set all the VFP to known values. */					\n"
+		"	vmov d0, r0, r1											\n"
+		"	vmov d1, r2, r3											\n"
+		"	vmov d2, r4, r5											\n"
+		"	vmov d3, r6, r7											\n"
+		"	vmov d4, r8, r9											\n"
+		"	vmov d5, r10, r11										\n"
+		"	vmov d6, r0, r1											\n"
+		"	vmov d7, r2, r3											\n"
+		"	vmov d8, r4, r5											\n"
+		"	vmov d9, r6, r7											\n"
+		"	vmov d10, r8, r9										\n"
+		"	vmov d11, r10, r11										\n"
+		"	vmov d12, r0, r1										\n"
+		"	vmov d13, r2, r3										\n"
+		"	vmov d14, r4, r5										\n"
+		"	vmov d15, r6, r7										\n"
+		"															\n"
+		"reg2_loop:													\n"
+		"															\n"
+		"	/* Check all the VFP registers still contain the values set above.\n"
+		"	First save registers that are clobbered by the test. */	\n"
+		"	push { r0-r1 }											\n"
+		"															\n"
+		"	vmov r0, r1, d0											\n"
+		"	cmp r0, #-1												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #1												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d1											\n"
+		"	cmp r0, #2												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #3												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d2											\n"
+		"	cmp r0, #4												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #5												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d3											\n"
+		"	cmp r0, #6												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #7												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d4											\n"
+		"	cmp r0, #8												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #9												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d5											\n"
+		"	cmp r0, #10												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #11												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d6											\n"
+		"	cmp r0, #-1												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #1												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d7											\n"
+		"	cmp r0, #2												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #3												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d8											\n"
+		"	cmp r0, #4												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #5												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d9											\n"
+		"	cmp r0, #6												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #7												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d10										\n"
+		"	cmp r0, #8												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #9												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d11										\n"
+		"	cmp r0, #10												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #11												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d12										\n"
+		"	cmp r0, #-1												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #1												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d13										\n"
+		"	cmp r0, #2												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #3												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d14										\n"
+		"	cmp r0, #4												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #5												\n"
+		"	bne reg2_error_loopf									\n"
+		"	vmov r0, r1, d15										\n"
+		"	cmp r0, #6												\n"
+		"	bne reg2_error_loopf									\n"
+		"	cmp r1, #7												\n"
+		"	bne reg2_error_loopf									\n"
+		"															\n"
+		"	/* Restore the registers that were clobbered by the test. */\n"
+		"	pop {r0-r1}												\n"
+		"															\n"
+		"	/* VFP register test passed.  Jump to the core register test. */\n"
+		"	b reg2_loopf_pass										\n"
+		"															\n"
+		"reg2_error_loopf:											\n"
+		"	/* If this line is hit then a VFP register value was found to be\n"
+		"	incorrect. */											\n"
+		"	b reg2_error_loopf										\n"
+		"															\n"
+		"reg2_loopf_pass:											\n"
+		"															\n"
+		"	cmp	r0, #-1												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r1, #1												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r2, #2												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp r3, #3												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r4, #4												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r5, #5												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r6, #6												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r7, #7												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r8, #8												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r9, #9												\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r10, #10											\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r11, #11											\n"
+		"	bne	reg2_error_loop										\n"
+		"	cmp	r12, #12											\n"
+		"	bne	reg2_error_loop										\n"
+		"															\n"
+		"	/* Increment the loop counter to indicate this test is still functioning\n"
+		"	correctly. */											\n"
+		"	push { r0-r1 }											\n"
+		"	ldr	r0, =ulRegTest2LoopCounter							\n"
+		"	ldr r1, [r0]											\n"
+		"	adds r1, r1, #1											\n"
+		"	str r1, [r0]											\n"
+		"															\n"
+		"	/* Yield to increase test coverage. */ 					\n"
+		"	movs r0, #0x01											\n"
+		"	ldr r1, =0xe000ed04 									\n" /* NVIC_INT_CTRL */
+		"	lsl r0, #28 											\n" /* Shift to PendSV bit */
+		"	str r0, [r1]											\n"
+		"	dsb														\n"
+		"	pop { r0-r1 }											\n"
+		"															\n"
+		"	/* Start again. */										\n"
+		"	b reg2_loop												\n"
+		"															\n"
+		"reg2_error_loop:											\n"
+		"	/* If this line is hit then there was an error in a core register value.\n"
+		"	This loop ensures the loop counter variable stops incrementing. */\n"
+		"	b reg2_error_loop										\n"
+		"	nop														\n"
+	);
+
+	/* Remove compiler warnings about unused parameters. */
+	( void ) pvParameters;
+}

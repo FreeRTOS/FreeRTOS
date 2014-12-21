@@ -85,7 +85,7 @@
 #define cmdMAX_INPUT_SIZE	60
 
 /* Dimensions the buffer into which string outputs can be placed. */
-#define cmdMAX_OUTPUT_SIZE	1024
+#define cmdMAX_OUTPUT_SIZE	1250
 
 /* Dimensions the buffer passed to the recvfrom() call. */
 #define cmdSOCKET_INPUT_BUFFER_SIZE 60

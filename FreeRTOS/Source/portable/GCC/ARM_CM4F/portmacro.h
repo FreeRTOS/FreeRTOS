@@ -126,7 +126,7 @@ extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 #define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortRaiseBASEPRI()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortSetBASEPRI(x)
-#define portDISABLE_INTERRUPTS()				ulPortRaiseBASEPRI()
+#define portDISABLE_INTERRUPTS()				vPortRaiseBASEPRI()
 #define portENABLE_INTERRUPTS()					vPortSetBASEPRI(0)
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
@@ -191,6 +191,22 @@ not necessary for to use this port.  They are defined so the common demo files
 #ifndef portFORCE_INLINE
 	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
+
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+{
+uint32_t ulNewBASEPRI;
+
+	__asm volatile
+	(
+		"	mov %0, %1												\n"	\
+		"	msr basepri, %0											\n" \
+		"	isb														\n" \
+		"	dsb														\n" \
+		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	);
+}
 
 /*-----------------------------------------------------------*/
 

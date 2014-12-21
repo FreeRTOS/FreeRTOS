@@ -141,6 +141,8 @@ static void prvSetupHardware( void )
 
 void vApplicationMallocFailedHook( void )
 {
+static volatile uint32_t ulCount = 0;
+
 	/* vApplicationMallocFailedHook() will only be called if
 	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
 	function that will get called if a call to pvPortMalloc() fails.
@@ -150,8 +152,12 @@ void vApplicationMallocFailedHook( void )
 	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
 	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
 	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
-	vAssertCalled( __LINE__, __FILE__ );
+	provide information on how the remaining heap might be fragmented). 
+	
+	Just count the number of malloc fails as some failures may occur simply
+	because the network load is very high, resulting in the consumption of a
+	lot of network buffers. */
+	ulCount++;	
 }
 /*-----------------------------------------------------------*/
 

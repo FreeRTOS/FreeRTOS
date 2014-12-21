@@ -139,7 +139,10 @@ from within the interrupts. */
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();															\
 		{																													\
 			uxValueForNormallyEmptyQueue++;																					\
-			xQueueSendFromISR( xNormallyEmptyQueue, ( void * ) &uxValueForNormallyEmptyQueue, &xHigherPriorityTaskWoken );	\
+			if( xQueueSendFromISR( xNormallyEmptyQueue, ( void * ) &uxValueForNormallyEmptyQueue, &xHigherPriorityTaskWoken ) != pdPASS ) \
+			{																												\
+				uxValueForNormallyEmptyQueue--;																				\
+			}																												\
 		}																													\
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\
@@ -153,7 +156,10 @@ from within the interrupts. */
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();															\
 		{																													\
 			uxValueForNormallyFullQueue++;																					\
-			xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ); 	\
+			if( xQueueSendFromISR( xNormallyFullQueue, ( void * ) &uxValueForNormallyFullQueue, &xHigherPriorityTaskWoken ) != pdPASS ) \
+			{																												\
+				uxValueForNormallyFullQueue--;																				\
+			} 																												\
 		}																													\
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );														\
 	}																														\

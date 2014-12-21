@@ -180,8 +180,8 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
-		uint32_t ulNotifiedValue;
-		eNotifyValue eNotifyState;
+		volatile uint32_t ulNotifiedValue;
+		volatile eNotifyValue eNotifyState;
 	#endif
 
 } tskTCB;
@@ -4227,6 +4227,90 @@ TickType_t uxReturn;
 
 #endif /* configUSE_TASK_NOTIFICATIONS */
 /*-----------------------------------------------------------*/
+
+#if( configUSE_TASK_NOTIFICATIONS == 1 )
+
+	BaseType_t xTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken )
+	{
+	TCB_t * pxTCB;
+	eNotifyValue eOriginalNotifyState;
+	BaseType_t xReturn = pdPASS;
+	UBaseType_t uxSavedInterruptStatus;
+
+		configASSERT( xTaskToNotify );
+
+		/* RTOS ports that support interrupt nesting have the concept of a
+		maximum	system call (or maximum API call) interrupt priority.
+		Interrupts that are	above the maximum system call priority are keep
+		permanently enabled, even when the RTOS kernel is in a critical section,
+		but cannot make any calls to FreeRTOS API functions.  If configASSERT()
+		is defined in FreeRTOSConfig.h then
+		portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
+		failure if a FreeRTOS API function is called from an interrupt that has
+		been assigned a priority above the configured maximum system call
+		priority.  Only FreeRTOS functions that end in FromISR can be called
+		from interrupts	that have been assigned a priority at or (logically)
+		below the maximum system call interrupt priority.  FreeRTOS maintains a
+		separate interrupt safe API to ensure interrupt entry is as fast and as
+		simple as possible.  More information (albeit Cortex-M specific) is
+		provided on the following link:
+		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
+
+		pxTCB = ( TCB_t * ) xTaskToNotify;
+
+		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+		{
+			eOriginalNotifyState = pxTCB->eNotifyState;
+			pxTCB->eNotifyState = eNotified;
+
+			/* 'Giving' is equivalent to incrementing a count in a counting
+			semaphore. */
+			( pxTCB->ulNotifiedValue )++;
+
+			/* If the task is in the blocked state specifically to wait for a
+			notification then unblock it now. */
+			if( eOriginalNotifyState == eWaitingNotification )
+			{
+				/* The task should not have been on an event list. */
+				configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
+
+				if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
+				{
+					( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+					prvAddTaskToReadyList( pxTCB );
+				}
+				else
+				{
+					/* The delayed and ready lists cannot be accessed, so hold
+					this task pending until the scheduler is resumed. */
+					vListInsertEnd( &( xPendingReadyList ), &( pxTCB->xEventListItem ) );
+				}
+
+				if( pxTCB->uxPriority > pxCurrentTCB->uxPriority )
+				{
+					/* The notified task has a priority above the currently
+					executing task so a yield is required. */
+					if( pxHigherPriorityTaskWoken != NULL )
+					{
+						*pxHigherPriorityTaskWoken = pdTRUE;
+					}
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+		}
+		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+
+		return xReturn;
+	}
+
+#endif /* configUSE_TASK_NOTIFICATIONS */
+
+/*-----------------------------------------------------------*/
+
 
 #ifdef FREERTOS_MODULE_TEST
 	#include "tasks_test_access_functions.h"

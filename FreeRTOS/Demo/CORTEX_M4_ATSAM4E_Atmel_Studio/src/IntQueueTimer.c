@@ -89,7 +89,7 @@ interrupt is 20 times faster so really hammers the interrupt entry and exit
 code. */
 #define tmrTIMER_0_FREQUENCY	( 2000UL )
 #define tmrTIMER_1_FREQUENCY	( 1003UL )
-#define tmrTIMER_2_FREQUENCY	( 5000UL )
+#define tmrTIMER_2_FREQUENCY	( 20000UL )
 
 /* Priorities used by the timer interrupts - these are set differently to make
 nesting likely/common.  The high frequency timer operates above the max

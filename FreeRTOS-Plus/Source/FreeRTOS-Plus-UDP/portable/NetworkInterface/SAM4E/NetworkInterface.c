@@ -81,12 +81,11 @@ static void prvGMACRxCallback( uint32_t ulStatus );
 /* The queue used to communicate Ethernet events to the IP task. */
 extern xQueueHandle xNetworkEventQueue;
 
-/* The semaphore used to wake the deferred interrupt handler task when an Rx
-interrupt is received. */
-static xSemaphoreHandle xGMACRxEventSemaphore = NULL;
-
 /* The GMAC driver instance. */
 static gmac_device_t xGMACStruct;
+
+/* Handle of the task used to process MAC events. */
+static TaskHandle_t xMACEventHandlingTask = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -123,20 +122,6 @@ BaseType_t xReturn = pdFALSE;
 			vTaskDelay( xPHYDelay_400ms * 2UL );
 			if( ethernet_phy_set_link( GMAC, BOARD_GMAC_PHY_ADDR, 1 ) == GMAC_OK )
 			{
-				/* Create the event semaphore if it has not already been
-				created. */
-				if( xGMACRxEventSemaphore == NULL )
-				{
-					xGMACRxEventSemaphore = xSemaphoreCreateCounting( ULONG_MAX, 0 );
-					#if ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1
-					{
-						/* If the trace recorder code is included name the semaphore for
-						viewing in FreeRTOS+Trace. */
-						vTraceSetQueueName( xGMACRxEventSemaphore, "MAC_RX" );
-					}
-					#endif /*  ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 */
-				}
-
 				/* Register the callbacks. */
 				gmac_dev_set_rx_callback( &xGMACStruct, prvGMACRxCallback );
 
@@ -149,7 +134,7 @@ BaseType_t xReturn = pdFALSE;
 								configMINIMAL_STACK_SIZE,	/* Stack allocated to the task (defined in words, not bytes). */
 								NULL, 						/* The task parameter is not used. */
 								configMAX_PRIORITIES - 1, 	/* The priority assigned to the task. */
-								NULL );						/* The handle is not required, so NULL is passed. */
+								&xMACEventHandlingTask );	/* The handle is stored so the ISR knows which task to notify. */
 
 				/* Enable the interrupt and set its priority as configured.
 				THIS DRIVER REQUIRES configMAC_INTERRUPT_PRIORITY TO BE DEFINED,
@@ -169,10 +154,12 @@ static void prvGMACRxCallback( uint32_t ulStatus )
 {
 BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
+	configASSERT( xMACEventHandlingTask );
+
 	/* Unblock the deferred interrupt handler task if the event was an Rx. */
 	if( ulStatus == GMAC_RSR_REC )
 	{
-		xSemaphoreGiveFromISR( xGMACRxEventSemaphore, &xHigherPriorityTaskWoken );
+		xTaskNotifyGiveFromISR( xMACEventHandlingTask, &xHigherPriorityTaskWoken );
 	}
 
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
@@ -220,8 +207,9 @@ xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 static const TickType_t xBufferWaitDelay = 1500UL / portTICK_RATE_MS;
 uint32_t ulReturned;
 
+	/* This is a very simply but also inefficient implementation. */
+
 	( void ) pvParameters;
-	configASSERT( xGMACRxEventSemaphore );
 
 	for( ;; )
 	{
@@ -229,9 +217,9 @@ uint32_t ulReturned;
 		received.  The while() loop is only needed if INCLUDE_vTaskSuspend is
 		set to 0 in FreeRTOSConfig.h.  If INCLUDE_vTaskSuspend is set to 1
 		then portMAX_DELAY would be an indefinite block time and
-		xSemaphoreTake() would only return when the semaphore was actually
-		obtained. */
-		while( xSemaphoreTake( xGMACRxEventSemaphore, portMAX_DELAY ) == pdFALSE );
+		xTaskNotifyTake() would only return when the task was actually
+		notified. */
+		while( ulTaskNotifyTake( pdFALSE, portMAX_DELAY ) == 0 );
 
 		/* Allocate a buffer to hold the data. */
 		pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, xBufferWaitDelay );

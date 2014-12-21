@@ -129,7 +129,7 @@ typedef unsigned long UBaseType_t;
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 
-#define portDISABLE_INTERRUPTS()				ulPortRaiseBASEPRI()
+#define portDISABLE_INTERRUPTS()				vPortRaiseBASEPRI()
 #define portENABLE_INTERRUPTS()					vPortSetBASEPRI( 0 )
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
@@ -196,6 +196,21 @@ static portFORCE_INLINE void vPortSetBASEPRI( uint32_t ulBASEPRI )
 		/* Barrier instructions are not used as this function is only used to
 		lower the BASEPRI value. */
 		msr basepri, ulBASEPRI
+	}
+}
+/*-----------------------------------------------------------*/
+
+static portFORCE_INLINE void vPortRaiseBASEPRI( void )
+{
+uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
+
+	__asm
+	{
+		/* Set BASEPRI to the max syscall priority to effect a critical
+		section. */
+		msr basepri, ulNewBASEPRI
+		dsb
+		isb
 	}
 }
 /*-----------------------------------------------------------*/

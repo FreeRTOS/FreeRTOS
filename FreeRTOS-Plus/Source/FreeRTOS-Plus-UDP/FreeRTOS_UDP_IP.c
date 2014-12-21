@@ -392,7 +392,7 @@ xIPStackEvent_t xReceivedEvent;
 
 	/* Create the ARP timer, but don't start it until the network has
 	connected. */
-	xARPTimer = xTimerCreate( 	"ARPTimer", ( ipARP_TIMER_PERIOD_MS / portTICK_RATE_MS ), pdTRUE, ( void * ) eARPTimerEvent, vIPFunctionsTimerCallback );
+	xARPTimer = xTimerCreate( "ARPTimer", ( ipARP_TIMER_PERIOD_MS / portTICK_RATE_MS ), pdTRUE, ( void * ) eARPTimerEvent, vIPFunctionsTimerCallback );
 	configASSERT( xARPTimer );
 
 	/* Generate a dummy message to say that the network connection has gone

@@ -1728,7 +1728,7 @@ BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, BaseType_t ulBitsToCl
  * \defgroup xTaskNotifyWait xTaskNotifyWait
  * \ingroup TaskNotifications
  */
-#define xTaskNotifyGiveFromISR( xTaskToNotify, pxHigherPriorityTaskWoken ) xTaskNotifyFromISR( ( xTaskToNotify ), 0, eIncrement, ( pxHigherPriorityTaskWoken ) )
+BaseType_t xTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken );
 
 /**
  * task. h

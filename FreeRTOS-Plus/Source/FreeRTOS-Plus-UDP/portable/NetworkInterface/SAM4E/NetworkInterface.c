@@ -157,7 +157,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	configASSERT( xMACEventHandlingTask );
 
 	/* Unblock the deferred interrupt handler task if the event was an Rx. */
-	if( ulStatus == GMAC_RSR_REC )
+	if( ( ulStatus & GMAC_RSR_REC ) != 0 )
 	{
 		xTaskNotifyGiveFromISR( xMACEventHandlingTask, &xHigherPriorityTaskWoken );
 	}
@@ -202,7 +202,7 @@ void GMAC_Handler( void )
 
 static void prvGMACDeferredInterruptHandlerTask( void *pvParameters )
 {
-xNetworkBufferDescriptor_t *pxNetworkBuffer;
+xNetworkBufferDescriptor_t *pxNetworkBuffer = NULL;
 xIPStackEvent_t xRxEvent = { eEthernetRxEvent, NULL };
 static const TickType_t xBufferWaitDelay = 1500UL / portTICK_RATE_MS;
 uint32_t ulReturned;
@@ -214,78 +214,90 @@ uint32_t ulReturned;
 	for( ;; )
 	{
 		/* Wait for the GMAC interrupt to indicate that another packet has been
-		received.  The while() loop is only needed if INCLUDE_vTaskSuspend is
-		set to 0 in FreeRTOSConfig.h.  If INCLUDE_vTaskSuspend is set to 1
-		then portMAX_DELAY would be an indefinite block time and
-		xTaskNotifyTake() would only return when the task was actually
-		notified. */
-		while( ulTaskNotifyTake( pdFALSE, portMAX_DELAY ) == 0 );
+		received.  A while loop is used to process all received frames each time
+		this task is notified, so it is ok to clear the notification count on the
+		take (hence the first parameter is pdTRUE ). */
+		ulTaskNotifyTake( pdTRUE, xBufferWaitDelay );
 
-		/* Allocate a buffer to hold the data. */
-		pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, xBufferWaitDelay );
-
-		if( pxNetworkBuffer != NULL )
+		ulReturned = GMAC_OK;
+		while( ulReturned == GMAC_OK )
 		{
-			/* At least one packet has been received. */
-			ulReturned = gmac_dev_read( &xGMACStruct, pxNetworkBuffer->pucEthernetBuffer, ipTOTAL_ETHERNET_FRAME_SIZE, ( uint32_t * ) &( pxNetworkBuffer->xDataLength ) );
-			if( ulReturned == GMAC_OK )
+			/* Allocate a buffer to hold the data if one is not already held. */
+			if( pxNetworkBuffer == NULL )
 			{
-				#if ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 1
+				pxNetworkBuffer = pxNetworkBufferGet( ipTOTAL_ETHERNET_FRAME_SIZE, xBufferWaitDelay );
+			}
+
+			if( pxNetworkBuffer != NULL )
+			{
+				/* Attempt to read data. */
+				ulReturned = gmac_dev_read( &xGMACStruct, pxNetworkBuffer->pucEthernetBuffer, ipTOTAL_ETHERNET_FRAME_SIZE, ( uint32_t * ) &( pxNetworkBuffer->xDataLength ) );
+
+				if( ulReturned == GMAC_OK )
 				{
-					if( pxNetworkBuffer->xDataLength > 0 )
+					#if ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 1
 					{
-						/* If the frame would not be processed by the IP stack then
-						don't even bother sending it to the IP stack. */
-						if( eConsiderFrameForProcessing( pxNetworkBuffer->pucEthernetBuffer ) != eProcessBuffer )
+						if( pxNetworkBuffer->xDataLength > 0 )
 						{
-							pxNetworkBuffer->xDataLength = 0;
+							/* If the frame would not be processed by the IP
+							stack then don't even bother sending it to the IP
+							stack. */
+							if( eConsiderFrameForProcessing( pxNetworkBuffer->pucEthernetBuffer ) != eProcessBuffer )
+							{
+								pxNetworkBuffer->xDataLength = 0;
+							}
 						}
 					}
-				}
-				#endif
+					#endif
 
-				if( pxNetworkBuffer->xDataLength > 0 )
-				{
-					/* Store a pointer to the network buffer structure in the
-					padding	space that was left in front of the Ethernet frame.
-					The pointer	is needed to ensure the network buffer structure
-					can be located when it is time for it to be freed if the
-					Ethernet frame gets	used as a zero copy buffer. */
-					*( ( xNetworkBufferDescriptor_t ** ) ( ( pxNetworkBuffer->pucEthernetBuffer - ipBUFFER_PADDING ) ) ) = pxNetworkBuffer;
-
-					/* Data was received and stored.  Send it to the IP task
-					for processing. */
-					xRxEvent.pvData = ( void * ) pxNetworkBuffer;
-					if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
+					if( pxNetworkBuffer->xDataLength > 0 )
 					{
-						/* The buffer could not be sent to the IP task so the
-						buffer must be released. */
-						vNetworkBufferRelease( pxNetworkBuffer );
-						iptraceETHERNET_RX_EVENT_LOST();
+						/* Store a pointer to the network buffer structure in
+						the	padding	space that was left in front of the Ethernet
+						frame.  The pointer is needed to ensure the network
+						buffer structure can be located when it is time for it
+						to be freed if the Ethernet frame gets used as a zero
+						copy buffer. */
+						*( ( xNetworkBufferDescriptor_t ** ) ( ( pxNetworkBuffer->pucEthernetBuffer - ipBUFFER_PADDING ) ) ) = pxNetworkBuffer;
+
+						/* Data was received and stored.  Send it to the IP task
+						for processing. */
+						xRxEvent.pvData = ( void * ) pxNetworkBuffer;
+						if( xQueueSendToBack( xNetworkEventQueue, &xRxEvent, ( TickType_t ) 0 ) == pdFALSE )
+						{
+							/* The buffer could not be sent to the IP task. The
+							frame will be dropped and the buffer reused. */
+							iptraceETHERNET_RX_EVENT_LOST();
+						}
+						else
+						{
+							iptraceNETWORK_INTERFACE_RECEIVE();
+
+							/* The buffer is not owned by the IP task - a new
+							buffer is needed the next time around. */
+							pxNetworkBuffer = NULL;
+						}
 					}
 					else
 					{
-						iptraceNETWORK_INTERFACE_RECEIVE();
+						/* The buffer does not contain any data so there is no
+						point sending it to the IP task.  Re-use the buffer on
+						the next loop. */
+						iptraceETHERNET_RX_EVENT_LOST();
 					}
 				}
 				else
 				{
-					/* The buffer does not contain any data so there is no
-					point sending it to the IP task.  Just release it. */
-					vNetworkBufferRelease( pxNetworkBuffer );
-					iptraceETHERNET_RX_EVENT_LOST();
+					/* No data was received, keep the buffer for re-use.  The
+					loop will exit as ulReturn is not GMAC_OK. */
 				}
 			}
 			else
 			{
-				vNetworkBufferRelease( pxNetworkBuffer );
-				iptraceETHERNET_RX_EVENT_LOST();
+				/* Left a frame in the driver as a buffer was not available.
+				Break out of loop. */
+				ulReturned = GMAC_INVALID;
 			}
-		}
-		else
-		{
-			/* Left a frame in the driver as a buffer was not available. */
-			gmac_dev_reset( &xGMACStruct );
 		}
 	}
 }

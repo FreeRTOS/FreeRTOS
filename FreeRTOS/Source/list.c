@@ -134,8 +134,8 @@ void vListInitialiseItem( ListItem_t * const pxItem )
 
 	/* Write known values into the list item if
 	configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
-	listSET_LIST_ITEM_INTEGRITY_CHECK_1_VALUE( pxItem );
-	listSET_LIST_ITEM_INTEGRITY_CHECK_2_VALUE( pxItem );
+	listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
+	listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE( pxItem );
 }
 /*-----------------------------------------------------------*/
 

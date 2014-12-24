@@ -147,7 +147,7 @@ functions but without including stdio.h here. */
 /* Value that can be assigned to the eNotifyState member of the TCB. */
 typedef enum
 {
-	eNotWaitingNotification,
+	eNotWaitingNotification = 0,
 	eWaitingNotification,
 	eNotified
 } eNotifyValue;
@@ -3846,7 +3846,7 @@ TickType_t uxReturn;
 				/* Mark this task as waiting for a notification. */
 				pxCurrentTCB->eNotifyState = eWaitingNotification;
 
-				if( xTicksToWait > 0 )
+				if( xTicksToWait > ( TickType_t ) 0 )
 				{
 					/* The task is going to block.  First it must be removed
 					from the ready list. */
@@ -3915,7 +3915,7 @@ TickType_t uxReturn;
 		{
 			ulReturn = pxCurrentTCB->ulNotifiedValue;
 
-			if( ulReturn != 0 )
+			if( ulReturn != 0UL )
 			{
 				if( xClearCountOnExit != pdFALSE )
 				{
@@ -3943,7 +3943,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, BaseType_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait )
+	BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait )
 	{
 	TickType_t xTimeToWake;
 	BaseType_t xReturn;
@@ -3961,7 +3961,7 @@ TickType_t uxReturn;
 				/* Mark this task as waiting for a notification. */
 				pxCurrentTCB->eNotifyState = eWaitingNotification;
 
-				if( xTicksToWait > 0 )
+				if( xTicksToWait > ( TickType_t ) 0 )
 				{
 					/* The task is going to block.  First it must be removed
 					from the	ready list. */
@@ -4105,7 +4105,7 @@ TickType_t uxReturn;
 					}
 					break;
 
-				default :
+				case eNoAction:
 					/* The task is being notified without its notify value being
 					updated. */
 					break;
@@ -4209,7 +4209,7 @@ TickType_t uxReturn;
 					}
 					break;
 
-				default :
+				case eNoAction :
 					/* The task is being notified without its notify value being
 					updated. */
 					break;
@@ -4260,11 +4260,10 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	BaseType_t xTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken )
+	void vTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	TCB_t * pxTCB;
 	eNotifyValue eOriginalNotifyState;
-	BaseType_t xReturn = pdPASS;
 	UBaseType_t uxSavedInterruptStatus;
 
 		configASSERT( xTaskToNotify );
@@ -4333,8 +4332,6 @@ TickType_t uxReturn;
 			}
 		}
 		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
-
-		return xReturn;
 	}
 
 #endif /* configUSE_TASK_NOTIFICATIONS */

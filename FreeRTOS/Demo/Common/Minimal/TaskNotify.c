@@ -489,7 +489,7 @@ const BaseType_t xCallInterval = pdMS_TO_TICKS( 50 );
 			/* It is time to 'give' the notification again. */
 			xCallCount = 0;
 
-			xTaskNotifyGiveFromISR( xTaskToNotify, NULL );
+			vTaskNotifyGiveFromISR( xTaskToNotify, NULL );
 			ulTimerNotificationsSent++;
 		}
 	}

@@ -159,7 +159,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	/* Unblock the deferred interrupt handler task if the event was an Rx. */
 	if( ( ulStatus & GMAC_RSR_REC ) != 0 )
 	{
-		xTaskNotifyGiveFromISR( xMACEventHandlingTask, &xHigherPriorityTaskWoken );
+		vTaskNotifyGiveFromISR( xMACEventHandlingTask, &xHigherPriorityTaskWoken );
 	}
 
 	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );

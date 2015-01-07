@@ -169,7 +169,6 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\f_lock.h" />
     <ClInclude Include="ConfigurationFiles\config_fat_sl.h" />
     <ClInclude Include="ConfigurationFiles\config_fat_sl_test.h" />
-    <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\dir.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\drv.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\fat.h" />
@@ -177,6 +176,7 @@
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\util.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\util_sfn.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-FAT-SL\fat_sl\common\volume.h" />
+    <ClInclude Include="ConfigurationFiles\FreeRTOSConfig.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

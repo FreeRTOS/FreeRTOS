@@ -119,9 +119,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FreeRTOSConfig.h">
-      <Filter>Configuration Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.h">
       <Filter>FreeRTOS+\FreeRTOS+CLI\include</Filter>
     </ClInclude>
@@ -174,6 +171,9 @@
       <Filter>FreeRTOS+\FreeRTOS+FAT SL</Filter>
     </ClInclude>
     <ClInclude Include="ConfigurationFiles\config_fat_sl_test.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationFiles\FreeRTOSConfig.h">
       <Filter>Configuration Files</Filter>
     </ClInclude>
   </ItemGroup>

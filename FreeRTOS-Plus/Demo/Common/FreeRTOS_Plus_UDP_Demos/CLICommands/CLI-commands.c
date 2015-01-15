@@ -280,7 +280,8 @@ void vRegisterCLICommands( void )
 
 static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-const char *const pcHeader = "Task          State  Priority  Stack	#\r\n************************************************\r\n";
+const char *const pcHeader = "  State\tPriority\tStack\t#\r\n************************************************\r\n";
+BaseType_t xSpacePadding;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -290,6 +291,22 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
+	strcpy( pcWriteBuffer, "Task" );
+	pcWriteBuffer += strlen( pcWriteBuffer );
+
+	/* Pad the string "task" with however many bytes necessary to make it the
+	length of a task name.  Minus three for the null terminator and half the 
+	number of characters in	"Task" so the column lines up with the centre of 
+	the heading. */
+	for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+	{
+		/* Add a space to align columns after the task's name. */
+		*pcWriteBuffer = ' ';
+		pcWriteBuffer++;
+
+		/* Ensure always terminated. */
+		*pcWriteBuffer = 0x00;
+	}
 	strcpy( pcWriteBuffer, pcHeader );
 	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
 
@@ -301,7 +318,8 @@ const char *const pcHeader = "Task          State  Priority  Stack	#\r\n********
 
 static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-const char * const pcHeader = "Task            Abs Time      % Time\r\n****************************************\r\n";
+const char * const pcHeader = "  Abs Time      % Time\r\n****************************************\r\n";
+BaseType_t xSpacePadding;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -311,6 +329,23 @@ const char * const pcHeader = "Task            Abs Time      % Time\r\n*********
 	configASSERT( pcWriteBuffer );
 
 	/* Generate a table of task stats. */
+	strcpy( pcWriteBuffer, "Task" );
+	pcWriteBuffer += strlen( pcWriteBuffer );
+
+	/* Pad the string "task" with however many bytes necessary to make it the
+	length of a task name.  Minus three for the null terminator and half the 
+	number of characters in	"Task" so the column lines up with the centre of 
+	the heading. */
+	for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+	{
+		/* Add a space to align columns after the task's name. */
+		*pcWriteBuffer = ' ';
+		pcWriteBuffer++;
+
+		/* Ensure always terminated. */
+		*pcWriteBuffer = 0x00;
+	}
+
 	strcpy( pcWriteBuffer, pcHeader );
 	vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
 

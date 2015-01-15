@@ -289,7 +289,7 @@ void prvSetupHardware( void )
 	/* Disable TPIU. */
 	PINCON->PINSEL10 = 0;
 
-	/*  Setup the peripheral bus to be the same as the PLL output (64 MHz). */
+	/*  Setup the peripheral bus to be the same as the CPU output (100 MHz). */
 	SC->PCLKSEL0 = 0x05555555;
 
 	/* Configure the LEDs. */

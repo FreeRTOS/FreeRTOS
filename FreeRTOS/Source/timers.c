@@ -889,6 +889,11 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 	DaemonTaskMessage_t xMessage;
 	BaseType_t xReturn;
 
+		/* This function can only be called after a timer has been created or
+		after the scheduler has been started because, until then, the timer
+		queue does not exist. */
+		configASSERT( xTimerQueue );
+
 		/* Complete the message with the function parameters and post it to the
 		daemon task. */
 		xMessage.xMessageID = tmrCOMMAND_EXECUTE_CALLBACK;

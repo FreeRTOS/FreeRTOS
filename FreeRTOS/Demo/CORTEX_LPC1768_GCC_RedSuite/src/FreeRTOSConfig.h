@@ -96,10 +96,10 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/* 
+/*
  * The following #error directive is to remind users that a batch file must be
- * executed prior to this project being built.  The batch file *cannot* be 
- * executed from within the IDE!  Once it has been executed, re-open or refresh 
+ * executed prior to this project being built.  The batch file *cannot* be
+ * executed from within the IDE!  Once it has been executed, re-open or refresh
  * the Eclipse project and remove the #error line below.
  */
 #error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
@@ -120,7 +120,7 @@
 #define configUSE_IDLE_HOOK			0
 #define configMAX_PRIORITIES		( 5 )
 #define configUSE_TICK_HOOK			1
-#define configCPU_CLOCK_HZ			( ( unsigned long ) 99000000 )
+#define configCPU_CLOCK_HZ			( ( unsigned long ) 100000000 )
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 80 )
 #define configTOTAL_HEAP_SIZE		( ( size_t ) ( 19 * 1024 ) )
@@ -154,7 +154,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 

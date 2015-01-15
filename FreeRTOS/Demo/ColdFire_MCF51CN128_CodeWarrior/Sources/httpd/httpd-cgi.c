@@ -61,7 +61,7 @@ HTTPD_CGI_CALL(rtos, "rtos-stats", rtos_stats );
 HTTPD_CGI_CALL(io, "led-io", led_io );
 
 
-static const struct httpd_cgi_call *calls[] = { &file, &tcp, &net, &rtos, &io, NULL };
+static const struct httpd_cgi_call * const calls[] = { &file, &tcp, &net, &rtos, &io, NULL };
 
 /*---------------------------------------------------------------------------*/
 static

@@ -292,7 +292,7 @@ back into the caller stack. */
 returned to last left the Running state by calling taskYIELD() (rather than
 being preempted by an interrupt). */
 	.text
-	.align  2
+	.align  4
 exit_from_yield:
 
 	/* r18 was being used as a temporary.  Now restore its true value from the
@@ -308,7 +308,7 @@ exit_from_yield:
 
 
 	.text
-	.align  2
+	.align  4
 _interrupt_handler:
 
 	portSAVE_CONTEXT
@@ -350,7 +350,7 @@ task_switch_not_requested:
 
 
 	.text
-	.align  2
+	.align  4
 VPortYieldASM:
 
 	portSAVE_CONTEXT
@@ -371,7 +371,7 @@ VPortYieldASM:
 	portRESTORE_CONTEXT
 
 	.text
-	.align  2
+	.align  4
 vPortStartFirstTask:
 
 	portRESTORE_CONTEXT
@@ -381,7 +381,7 @@ vPortStartFirstTask:
 #if MICROBLAZE_EXCEPTIONS_ENABLED == 1
 
 	.text
-	.align 2
+	.align 4
 vPortExceptionHandlerEntry:
 
 	/* Take a copy of the stack pointer before vPortExecptionHandler is called,

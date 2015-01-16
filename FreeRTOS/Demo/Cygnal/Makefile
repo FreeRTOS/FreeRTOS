@@ -1,5 +1,5 @@
 #/*
-#    FreeRTOS V8.2.0 - Copyright (C) 2014 Real Time Engineers Ltd.
+#    FreeRTOS V8.2.0 - Copyright (C) 2015 Real Time Engineers Ltd.
 #	
 #
 #    ***************************************************************************

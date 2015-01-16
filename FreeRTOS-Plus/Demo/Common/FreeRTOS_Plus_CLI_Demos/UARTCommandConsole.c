@@ -89,12 +89,16 @@
 /* Dimensions the buffer into which input characters are placed. */
 #define cmdMAX_INPUT_SIZE		50
 
+/* Dimentions a buffer to be used by the UART driver, if the UART driver uses a
+buffer at all. */
 #define cmdQUEUE_LENGTH			25
 
 /* DEL acts as a backspace. */
 #define cmdASCII_DEL		( 0x7F )
 
-#define cmdMAX_MUTEX_WAIT		( ( ( TickType_t ) 300 ) / ( portTICK_PERIOD_MS ) )
+/* The maximum time to wait for the mutex that guards the UART to become
+available. */
+#define cmdMAX_MUTEX_WAIT		pdMS_TO_TICKS( 300 )
 
 #ifndef configCLI_BAUD_RATE
 	#define configCLI_BAUD_RATE	115200
@@ -115,7 +119,11 @@ static const char * const pcWelcomeMessage = "FreeRTOS command server.\r\nType H
 static const char * const pcEndOfOutputMessage = "\r\n[Press ENTER to execute the previous command again]\r\n>";
 static const char * const pcNewLine = "\r\n";
 
-SemaphoreHandle_t xTxMutex = NULL;
+/* Used to guard access to the UART in case messages are sent to the UART from
+more than one task. */
+static SemaphoreHandle_t xTxMutex = NULL;
+
+/* The handle to the UART port, which is not used by all ports. */
 static xComPortHandle xPort = 0;
 
 /*-----------------------------------------------------------*/

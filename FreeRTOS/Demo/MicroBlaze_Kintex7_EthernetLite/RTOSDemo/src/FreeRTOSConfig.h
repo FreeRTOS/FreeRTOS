@@ -106,9 +106,9 @@ this demo on the FreeRTOS.org web site for more information. */
 
 /* Constants that describe the hardware and memory usage. */
 #define configCPU_CLOCK_HZ						( Not used in this demo as it is determined by the hardware )
-#define configMINIMAL_STACK_SIZE				( ( uint16_t ) 220 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 50 * 1024 ) ) /* No effect if heap_3.c is used. */
-#define configMAX_TASK_NAME_LEN					( 12 )
+#define configMINIMAL_STACK_SIZE				( ( uint16_t ) 170 )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 80 * 1024 ) ) /* No effect if heap_3.c is used. */
+#define configMAX_TASK_NAME_LEN					( 10 )
 
 /* Constants that build features in or out. */
 #define configUSE_MUTEXES						1
@@ -133,8 +133,8 @@ this demo on the FreeRTOS.org web site for more information. */
 
 /* Constants related to the generation of run time stats. */
 #define configGENERATE_RUN_TIME_STATS			1
-#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vMainConfigTimerForRunTimeStats(); /* Only used when configGENERATE_RUN_TIME_STATS is 1. */
-#define portGET_RUN_TIME_COUNTER_VALUE() 		ulMainGetRunTimeCounterValue();		/* Only used when configGENERATE_RUN_TIME_STATS is 1. */
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() /* Only used when configGENERATE_RUN_TIME_STATS is 1.  In this case the timer is setup when the tick timer is set up. */
+#define portGET_RUN_TIME_COUNTER_VALUE() ulMainGetRunTimeCounterValue()	 /* Only used when configGENERATE_RUN_TIME_STATS is 1. */
 
 /* Software timer definitions. */
 #define configUSE_TIMERS						1
@@ -175,11 +175,10 @@ are multiple command interpreters running at once (for example, one on a UART
 and one on TCP/IP).  This is done to prevent an output buffer being defined by
 each implementation - which would waste RAM.  In this case, there is only one
 command interpreter running. */
-#define configCOMMAND_INT_MAX_OUTPUT_SIZE 1024
+#define configCOMMAND_INT_MAX_OUTPUT_SIZE 2048
 
 /* Prevent the function prototypes being included from asm files. */
 #ifndef __ASSEMBLER__
-	void vMainConfigTimerForRunTimeStats( void );
 	uint32_t ulMainGetRunTimeCounterValue( void );
 	void vAssertCalled( const char * pcFile, unsigned long ulLine );
 #endif

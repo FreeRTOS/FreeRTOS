@@ -84,8 +84,6 @@
  *
  */
 
-#warning Try reducing minimal stack size.
-
 /* Standard includes. */
 #include <stdio.h>
 #include <limits.h>
@@ -136,8 +134,9 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* The dual timer is used to generate the RTOS tick interrupt. */
-static XTmrCtr xDualTimerInstance;
+/* The dual timer is used to generate the RTOS tick interrupt and as a time base
+for the run time stats. */
+static XTmrCtr xTickTimerInstance;
 
 /*-----------------------------------------------------------*/
 
@@ -165,10 +164,6 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-#warning Stacks are in BRAM.
-#warning Caches are disabled.
-//	init_platform();
-
 	microblaze_disable_interrupts();
 
 	#if defined( XPAR_MICROBLAZE_USE_ICACHE ) && ( XPAR_MICROBLAZE_USE_ICACHE != 0 )
@@ -275,12 +270,13 @@ below declares as an extern. */
 void vApplicationSetupTimerInterrupt( void )
 {
 portBASE_TYPE xStatus;
-const unsigned char ucTimerCounterNumber = ( unsigned char ) 0U;
+const unsigned char ucTickTimerCounterNumber = ( unsigned char ) 0U;
+const unsigned char ucRunTimeStatsCounterNumber = ( unsigned char ) 1U;
 const unsigned long ulCounterValue = ( ( XPAR_TMRCTR_0_CLOCK_FREQ_HZ / configTICK_RATE_HZ ) - 1UL );
 extern void vPortTickISR( void *pvUnused );
 
 	/* Initialise the timer/counter. */
-	xStatus = XTmrCtr_Initialize( &xDualTimerInstance, XPAR_TMRCTR_0_DEVICE_ID );
+	xStatus = XTmrCtr_Initialize( &xTickTimerInstance, XPAR_TMRCTR_0_DEVICE_ID );
 
 	if( xStatus == XST_SUCCESS )
 	{
@@ -298,19 +294,29 @@ extern void vPortTickISR( void *pvUnused );
 		vPortEnableInterrupt( XPAR_INTC_0_TMRCTR_0_VEC_ID );
 
 		/* Configure the timer interrupt handler. */
-		XTmrCtr_SetHandler( &xDualTimerInstance, ( void * ) vPortTickISR, NULL );
+		XTmrCtr_SetHandler( &xTickTimerInstance, ( void * ) vPortTickISR, NULL );
 
 		/* Set the correct period for the timer. */
-		XTmrCtr_SetResetValue( &xDualTimerInstance, ucTimerCounterNumber, ulCounterValue );
+		XTmrCtr_SetResetValue( &xTickTimerInstance, ucTickTimerCounterNumber, ulCounterValue );
 
 		/* Enable the interrupts.  Auto-reload mode is used to generate a
 		periodic tick.  Note that interrupts are disabled when this function is
 		called, so interrupts will not start to be processed until the first
 		task has started to run. */
-		XTmrCtr_SetOptions( &xDualTimerInstance, ucTimerCounterNumber, ( XTC_INT_MODE_OPTION | XTC_AUTO_RELOAD_OPTION | XTC_DOWN_COUNT_OPTION ) );
+		XTmrCtr_SetOptions( &xTickTimerInstance, ucTickTimerCounterNumber, ( XTC_INT_MODE_OPTION | XTC_AUTO_RELOAD_OPTION | XTC_DOWN_COUNT_OPTION ) );
 
 		/* Start the timer. */
-		XTmrCtr_Start( &xDualTimerInstance, ucTimerCounterNumber );
+		XTmrCtr_Start( &xTickTimerInstance, ucTickTimerCounterNumber );
+
+
+
+
+		/* The second timer is used as the time base for the run time stats.
+		Auto-reload mode is used to ensure the timer does not stop. */
+		XTmrCtr_SetOptions( &xTickTimerInstance, ucRunTimeStatsCounterNumber, XTC_AUTO_RELOAD_OPTION );
+
+		/* Start the timer. */
+		XTmrCtr_Start( &xTickTimerInstance, ucRunTimeStatsCounterNumber );
 	}
 
 	/* Sanity check that the function executed as expected. */
@@ -344,12 +350,20 @@ void *malloc( size_t x )
 }
 /*-----------------------------------------------------------*/
 
-void vMainConfigTimerForRunTimeStats( void )
-{
-}
-/*-----------------------------------------------------------*/
-
 uint32_t ulMainGetRunTimeCounterValue( void )
 {
-	return 0;
+static uint32_t ulOverflows = 0, ulLastTime = 0;
+uint32_t ulTimeNow, ulReturn;
+const uint32_t ulPrescale = 10, ulTCR2Offset = 24UL;
+
+	ulTimeNow = * ( ( uint32_t * ) ( XPAR_TMRCTR_0_BASEADDR + ulTCR2Offset ) );
+
+	if( ulTimeNow < ulLastTime )
+	{
+		ulOverflows += ( 1UL << ulPrescale );
+	}
+
+	ulReturn = ( ulTimeNow >> ulPrescale ) + ulOverflows;
+
+	return ulReturn;
 }

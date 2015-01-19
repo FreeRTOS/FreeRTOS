@@ -79,6 +79,7 @@
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
+#include "task.h"
 #include "queue.h"
 #include "comtest_strings.h"
 
@@ -102,6 +103,10 @@ static XUartLite xUartLiteInstance;
 
 /* The queue used to hold received characters. */
 static QueueHandle_t xRxedChars;
+
+/* Holds the handle of a task performing a Tx so it can be notified of when
+the Tx has completed. */
+static TaskHandle_t xUARTSendingTask = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -182,20 +187,40 @@ portBASE_TYPE xReturn;
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
+const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 150UL );
+portBASE_TYPE xReturn;
+
 	( void ) pxPort;
 	( void ) xBlockTime;
 
+	/* Note this is the currently sending task. */
+	xUARTSendingTask = xTaskGetCurrentTaskHandle();
+
 	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) &cOutChar, sizeof( cOutChar ) );
-	return pdPASS;
+
+	/* Wait in the Blocked state (so not using any CPU time) for the Tx to
+	complete. */
+	xReturn = ulTaskNotifyTake( pdTRUE, xMaxBlockTime );
+
+	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
+const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 150UL );
+
 	( void ) pxPort;
+
+	/* Note this is the currently sending task. */
+	xUARTSendingTask = xTaskGetCurrentTaskHandle();
 
 	/* Output uxStringLength bytes starting from pcString. */
 	XUartLite_Send( &xUartLiteInstance, ( unsigned char * ) pcString, usStringLength );
+
+	/* Wait in the Blocked state (so not using any CPU time) for the Tx to
+	complete. */
+	ulTaskNotifyTake( pdTRUE, xMaxBlockTime );
 }
 /*-----------------------------------------------------------*/
 
@@ -225,14 +250,21 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static void prvTxHandler( void *pvUnused, unsigned portBASE_TYPE uxByteCount )
+static void prvTxHandler( void *pvUnused, unsigned portBASE_TYPE uxUnused )
 {
-	( void ) pvUnused;
-	( void ) uxByteCount;
+BaseType_t xHigherPriorityTaskWoken = NULL;
 
-	/* Nothing to do here.  The Xilinx library function takes care of the
-	transmission. */
-	portNOP();
+	( void ) pvUnused;
+	( void ) uxUnused;
+
+	/* Notify the sending that that the Tx has completed. */
+	if( xUARTSendingTask != NULL )
+	{
+		vTaskNotifyGiveFromISR( xUARTSendingTask, &xHigherPriorityTaskWoken );
+		xUARTSendingTask = NULL;
+	}
+
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 
 

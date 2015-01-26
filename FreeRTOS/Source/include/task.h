@@ -1158,6 +1158,18 @@ constant. */
 	#endif /* configUSE_APPLICATION_TASK_TAG ==1 */
 #endif /* ifdef configUSE_APPLICATION_TASK_TAG */
 
+#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
+
+	/* Each task contains an array of pointers that is dimensioned by the
+	configNUM_THREAD_LOCAL_STORAGE_POINTERS setting in FreeRTOSConfig.h.  The
+	kernel does not use the pointers itself, so the application writer can use
+	the pointers for any purpose they wish.  The following two functions are
+	used to set and query a pointer respectively. */	
+	void vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue );
+	void *pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex );
+
+#endif
+
 /**
  * task.h
  * <pre>BaseType_t xTaskCallApplicationTaskHook( TaskHandle_t xTask, void *pvParameter );</pre>

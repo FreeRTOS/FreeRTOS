@@ -168,12 +168,14 @@ static void prvSetupHardware( void )
 
 	#if defined( XPAR_MICROBLAZE_USE_ICACHE ) && ( XPAR_MICROBLAZE_USE_ICACHE != 0 )
 	{
+		Xil_ICacheInvalidate();
 		Xil_ICacheEnable();
 	}
 	#endif
 
 	#if defined( XPAR_MICROBLAZE_USE_DCACHE ) && ( XPAR_MICROBLAZE_USE_DCACHE != 0 )
 	{
+		Xil_DCacheInvalidate();
 		Xil_DCacheEnable();
 	}
 	#endif

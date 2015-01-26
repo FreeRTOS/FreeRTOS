@@ -195,6 +195,10 @@ extern "C" {
 	#define configUSE_APPLICATION_TASK_TAG 0
 #endif
 
+#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
+	#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 0
+#endif
+
 #ifndef INCLUDE_uxTaskGetStackHighWaterMark
 	#define INCLUDE_uxTaskGetStackHighWaterMark 0
 #endif

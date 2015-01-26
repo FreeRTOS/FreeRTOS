@@ -168,6 +168,10 @@ typedef struct tskTaskControlBlock
 		TaskHookFunction_t pxTaskTag;
 	#endif
 
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
+		void *pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+	#endif
+
 	#if ( configGENERATE_RUN_TIME_STATS == 1 )
 		uint32_t		ulRunTimeCounter;	/*< Stores the amount of time the task has spent in the Running state. */
 	#endif
@@ -2882,6 +2886,15 @@ UBaseType_t x;
 	}
 	#endif /* portUSING_MPU_WRAPPERS */
 
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
+	{
+		for( x = 0; x < ( UBaseType_t ) configNUM_THREAD_LOCAL_STORAGE_POINTERS; x++ )
+		{
+			pxTCB->pvThreadLocalStoragePointers[ x ] = NULL;
+		}
+	}
+	#endif
+
 	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
 	{
 		pxTCB->ulNotifiedValue = 0;
@@ -2896,6 +2909,45 @@ UBaseType_t x;
 	}
 	#endif /* configUSE_NEWLIB_REENTRANT */
 }
+/*-----------------------------------------------------------*/
+
+#if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
+
+	void vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
+	{
+	TCB_t *pxTCB;
+
+		if( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS )
+		{
+			pxTCB = prvGetTCBFromHandle( xTaskToSet );
+			pxTCB->pvThreadLocalStoragePointers[ xIndex ] = pvValue;
+		}
+	}
+
+#endif /* configNUM_THREAD_LOCAL_STORAGE_POINTERS */
+/*-----------------------------------------------------------*/
+
+#if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
+
+	void *pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex )
+	{
+	void *pvReturn = NULL;
+	TCB_t *pxTCB;
+
+		if( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS )
+		{
+			pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+			pvReturn = pxTCB->pvThreadLocalStoragePointers[ xIndex ];
+		}
+		else
+		{
+			pvReturn = NULL;
+		}
+
+		return pvReturn;
+	}
+
+#endif /* configNUM_THREAD_LOCAL_STORAGE_POINTERS */
 /*-----------------------------------------------------------*/
 
 #if ( portUSING_MPU_WRAPPERS == 1 )
@@ -4100,7 +4152,7 @@ TickType_t uxReturn;
 				{
 					/* The notified task has a priority above the currently
 					executing task so a yield is required. */
-					portYIELD_WITHIN_API();
+					taskYIELD_IF_USING_PREEMPTION();
 				}
 				else
 				{

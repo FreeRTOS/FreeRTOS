@@ -387,7 +387,7 @@ count overflows. */
  * the task.  It is inserted at the end of the list.
  */
 #define prvAddTaskToReadyList( pxTCB )																\
-	traceMOVED_TASK_TO_READY_STATE( pxTCB )															\
+	traceMOVED_TASK_TO_READY_STATE( pxTCB );														\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
 	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) )
 /*-----------------------------------------------------------*/
@@ -598,7 +598,7 @@ StackType_t *pxTopOfStack;
 		#if( portSTACK_GROWTH < 0 )
 		{
 			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
-			pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ( portPOINTER_SIZE_TYPE ) ~portBYTE_ALIGNMENT_MASK  ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
+			pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
 
 			/* Check the alignment of the calculated top of stack is correct. */
 			configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
@@ -2395,7 +2395,7 @@ TickType_t xTimeToWake;
 		/* This function should not be called by application code hence the
 		'Restricted' in its name.  It is not part of the public API.  It is
 		designed for use by kernel code, and has special calling requirements -
-		it should be called from a critical section. */
+		it should be called with the scheduler suspended. */
 
 
 		/* Place the event list item of the TCB in the appropriate event list.
@@ -2406,7 +2406,8 @@ TickType_t xTimeToWake;
 
 		/* We must remove this task from the ready list before adding it to the
 		blocked list as the same list item is used for both lists.  This
-		function is called form a critical section. */
+		function is called with the scheduler locked so interrupts will not
+		access the lists at the same time. */
 		if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
 		{
 			/* The current task must be in a ready list, so there is no need to
@@ -3394,6 +3395,9 @@ TCB_t *pxTCB;
 		locked then the mutex holder might now be NULL. */
 		if( pxMutexHolder != NULL )
 		{
+			/* If the holder of the mutex has a priority below the priority of
+			the task attempting to obtain the mutex then it will temporarily
+			inherit the priority of the task attempting to obtain the mutex. */
 			if( pxTCB->uxPriority < pxCurrentTCB->uxPriority )
 			{
 				/* Adjust the mutex holder state to account for its new
@@ -3408,8 +3412,8 @@ TCB_t *pxTCB;
 					mtCOVERAGE_TEST_MARKER();
 				}
 
-				/* If the task being modified is in the ready state it will need to
-				be moved into a new list. */
+				/* If the task being modified is in the ready state it will need
+				to be moved into a new list. */
 				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
 				{
 					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
@@ -3456,15 +3460,23 @@ TCB_t *pxTCB;
 
 		if( pxMutexHolder != NULL )
 		{
+			/* A task can only have an inherited priority if it holds the mutex.
+			If the mutex is held by a task then it cannot be given from an
+			interrupt, and if a mutex is given by the holding task then it must
+			be the running state task. */
+			configASSERT( pxTCB == pxCurrentTCB );
+
 			configASSERT( pxTCB->uxMutexesHeld );
 			( pxTCB->uxMutexesHeld )--;
 
+			/* Has the holder of the mutex inherited the priority of another
+			task? */
 			if( pxTCB->uxPriority != pxTCB->uxBasePriority )
 			{
 				/* Only disinherit if no other mutexes are held. */
 				if( pxTCB->uxMutexesHeld == ( UBaseType_t ) 0 )
 				{
-					/* A task can only have an inhertied priority if it holds
+					/* A task can only have an inherited priority if it holds
 					the mutex.  If the mutex is held by a task then it cannot be
 					given from an interrupt, and if a mutex is given by the
 					holding	task then it must be the running state task.  Remove

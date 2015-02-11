@@ -322,7 +322,7 @@ xThreadState *pxThreadState;
 
 		/* Start the highest priority task by obtaining its associated thread
 		state structure, in which is stored the thread handle. */
-		pxThreadState = ( xThreadState * ) *( ( uint32_t * ) pxCurrentTCB );
+		pxThreadState = ( xThreadState * ) *( ( size_t * ) pxCurrentTCB );
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
 		/* Bump up the priority of the thread that is going to run, in the
@@ -422,12 +422,12 @@ void *pvObjectList[ 2 ];
 			if( pvOldCurrentTCB != pxCurrentTCB )
 			{
 				/* Suspend the old thread. */
-				pxThreadState = ( xThreadState *) *( ( uint32_t * ) pvOldCurrentTCB );
+				pxThreadState = ( xThreadState *) *( ( size_t * ) pvOldCurrentTCB );
 				SuspendThread( pxThreadState->pvThread );
 
 				/* Obtain the state of the task now selected to enter the
 				Running state. */
-				pxThreadState = ( xThreadState * ) ( *( uint32_t *) pxCurrentTCB );
+				pxThreadState = ( xThreadState * ) ( *( size_t *) pxCurrentTCB );
 				ResumeThread( pxThreadState->pvThread );
 			}
 		}
@@ -446,7 +446,7 @@ uint32_t ulErrorCode;
 	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
-	pxThreadState = ( xThreadState * ) ( *( uint32_t *) pvTaskToDelete );
+	pxThreadState = ( xThreadState * ) ( *( size_t *) pvTaskToDelete );
 
 	/* Check that the thread is still valid, it might have been closed by
 	vPortCloseRunningThread() - which will be the case if the task associated
@@ -477,7 +477,7 @@ uint32_t ulErrorCode;
 	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
-	pxThreadState = ( xThreadState * ) ( *( uint32_t *) pvTaskToDelete );
+	pxThreadState = ( xThreadState * ) ( *( size_t *) pvTaskToDelete );
 	pvThread = pxThreadState->pvThread;
 
 	/* Raise the Windows priority of the thread to ensure the FreeRTOS scheduler

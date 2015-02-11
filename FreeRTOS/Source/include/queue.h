@@ -1490,10 +1490,8 @@ BaseType_t xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xTicksToWa
 BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION;
 
 /*
- * Reset a queue back to its original empty state.  pdPASS is returned if the
- * queue is successfully reset.  pdFAIL is returned if the queue could not be
- * reset because there are tasks blocked on the queue waiting to either
- * receive from the queue or send to the queue.
+ * Reset a queue back to its original empty state.  The return value is now
+ * obsolete and is always set to pdPASS.
  */
 #define xQueueReset( xQueue ) xQueueGenericReset( xQueue, pdFALSE )
 

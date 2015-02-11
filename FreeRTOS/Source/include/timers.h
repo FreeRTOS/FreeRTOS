@@ -265,11 +265,11 @@ TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTi
  * Returns the ID assigned to the timer.
  *
  * IDs are assigned to timers using the pvTimerID parameter of the call to
- * xTimerCreated() that was used to create the timer.
+ * xTimerCreated() that was used to create the timer, and by calling the
+ * vTimerSetTimerID() API function.
  *
  * If the same callback function is assigned to multiple timers then the timer
- * ID can be used within the callback function to identify which timer actually
- * expired.
+ * ID can be used as time specific (timer local) storage.
  *
  * @param xTimer The timer being queried.
  *
@@ -280,6 +280,27 @@ TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTi
  * See the xTimerCreate() API function example usage scenario.
  */
 void *pvTimerGetTimerID( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION;
+
+/**
+ * void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID );
+ *
+ * Sets the ID assigned to the timer.
+ *
+ * IDs are assigned to timers using the pvTimerID parameter of the call to
+ * xTimerCreated() that was used to create the timer.
+ *
+ * If the same callback function is assigned to multiple timers then the timer
+ * ID can be used as time specific (timer local) storage.
+ *
+ * @param xTimer The timer being updated.
+ *
+ * @param pvNewID The ID to assign to the timer.
+ *
+ * Example usage:
+ *
+ * See the xTimerCreate() API function example usage scenario.
+ */
+void vTimerSetTimerID( const TimerHandle_t xTimer, void *pvNewID ) PRIVILEGED_FUNCTION;
 
 /**
  * BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer );

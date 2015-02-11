@@ -827,8 +827,31 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 void *pvTimerGetTimerID( const TimerHandle_t xTimer )
 {
 Timer_t * const pxTimer = ( Timer_t * ) xTimer;
+void *pvReturn;
 
-	return pxTimer->pvTimerID;
+	configASSERT( xTimer );
+
+	taskENTER_CRITICAL();
+	{
+		pvReturn = pxTimer->pvTimerID;
+	}
+	taskEXIT_CRITICAL();
+
+	return pvReturn;
+}
+/*-----------------------------------------------------------*/
+
+void vTimerSetTimerID( const TimerHandle_t xTimer, void *pvNewID )
+{
+Timer_t * const pxTimer = ( Timer_t * ) xTimer;
+
+	configASSERT( xTimer );
+
+	taskENTER_CRITICAL();
+	{
+		pxTimer->pvTimerID = pvNewID;
+	}
+	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 

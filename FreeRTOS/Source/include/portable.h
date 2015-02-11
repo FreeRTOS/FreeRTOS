@@ -95,7 +95,7 @@ must be set in the compiler's include path. */
 #endif
 
 #if portBYTE_ALIGNMENT == 8
-	#define portBYTE_ALIGNMENT_MASK ( 0x0007U )
+	#define portBYTE_ALIGNMENT_MASK ( 0x0007 )
 #endif
 
 #if portBYTE_ALIGNMENT == 4

@@ -633,10 +633,10 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	{
 		taskENTER_CRITICAL();
 		{
-			/* Is there room on the queue now?  The running task must be
-			the highest priority task wanting to access the queue.  If
-			the head item in the queue is to be overwritten then it does
-			not matter if the queue is full. */
+			/* Is there room on the queue now?  The running task must be the
+			highest priority task wanting to access the queue.  If the head item
+			in the queue is to be overwritten then it does not matter if the
+			queue is full. */
 			if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 			{
 				traceQUEUE_SEND( pxQueue );
@@ -1092,11 +1092,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		{
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
 
-			/* A task can only have an inherited priority if it is a mutex
-			holder - and if there is a mutex holder then the mutex cannot be
-			given from an ISR.  Therefore, unlike the xQueueGenericGive()
-			function, there is no need to determine the need for priority
-			disinheritance here or to clear the mutex holder TCB member. */
+			/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
+			semaphore or mutex.  That means prvCopyDataToQueue() cannot result
+			in a task disinheriting a priority and prvCopyDataToQueue() can be
+			called here even though the disinherit function does not check if
+			the scheduler is suspended before accessing the ready lists. */
 			( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
 			/* The event list is not altered if the queue is locked.  This will
@@ -1210,10 +1210,22 @@ BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
 Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
+	/* Similar to xQueueGenericSendFromISR() but used with semaphores where the
+	item size is 0.  Don't directly wake a task that was blocked on a queue
+	read, instead return a flag to say whether a context switch is required or
+	not (i.e. has a task with a higher priority than us been woken by this
+	post). */
+
 	configASSERT( pxQueue );
 
-	/* xQueueGenericSendFromISR() should be used in the item size is not 0. */
+	/* xQueueGenericSendFromISR() should be used instead of xQueueGiveFromISR()
+	if the item size is not 0. */
 	configASSERT( pxQueue->uxItemSize == 0 );
+
+	/* Normally a mutex would not be given from an interrupt, and doing so is
+	definitely wrong if there is a mutex holder as priority inheritance makes no
+	sense for an interrupts, only tasks. */
+	configASSERT( !( ( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX ) && ( pxQueue->pxMutexHolder != NULL ) ) );
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -1231,11 +1243,6 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-	/* Similar to xQueueGenericSendFromISR() but used with semaphores where the
-	item size is 0.  Don't directly wake a task that was blocked on a queue
-	read, instead return a flag to say whether a context switch is required or
-	not (i.e. has a task with a higher priority than us been woken by this
-	post). */
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
 		/* When the queue is used to implement a semaphore no data is ever
@@ -1247,10 +1254,10 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 			/* A task can only have an inherited priority if it is a mutex
 			holder - and if there is a mutex holder then the mutex cannot be
-			given from an ISR.  Therefore, unlike the xQueueGenericGive()
-			function, there is no need to determine the need for priority
-			disinheritance here or to clear the mutex holder TCB member. */
-
+			given from an ISR.  As this is the ISR version of the function it
+			can be assumed there is no mutex holder and no need to determine if
+			priority disinheritance is needed.  Simply increase the count of
+			messages (semaphores) available. */
 			++( pxQueue->uxMessagesWaiting );
 
 			/* The event list is not altered if the queue is locked.  This will
@@ -1441,8 +1448,6 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					any other tasks waiting for the data. */
 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 					{
-						/* Tasks that are removed from the event list will get added to
-						the pending ready list as the scheduler is still suspended. */
 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 						{
 							/* The task waiting has a higher priority than this task. */
@@ -2556,6 +2561,7 @@ BaseType_t xReturn;
 		if( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength )
 		{
 			traceQUEUE_SEND( pxQueueSetContainer );
+
 			/* The data copied is the handle of the queue that contains data. */
 			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
 

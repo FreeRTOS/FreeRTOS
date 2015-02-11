@@ -81,8 +81,9 @@
 #define portDOUBLE		double
 #define portLONG		long
 #define portSHORT		short
-#define portSTACK_TYPE	uint32_t
+#define portSTACK_TYPE	size_t
 #define portBASE_TYPE	long
+#define portPOINTER_SIZE_TYPE size_t
 
 typedef portSTACK_TYPE StackType_t;
 typedef long BaseType_t;
@@ -96,15 +97,21 @@ typedef unsigned long UBaseType_t;
     typedef uint32_t TickType_t;
     #define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 
-	/* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
-	not need to be guarded with a critical section. */
+	/* 32/64-bit tick type on a 32/64-bit architecture, so reads of the tick
+	count do not need to be guarded with a critical section. */
 	#define portTICK_TYPE_IS_ATOMIC 1
 #endif
 
 /* Hardware specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portBYTE_ALIGNMENT			4
+
+
+#if defined( __x86_64_ _) || defined( _M_X64 )
+	#define portBYTE_ALIGNMENT		8
+#else
+	#define portBYTE_ALIGNMENT		4
+#endif
 
 #define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
@@ -186,3 +193,4 @@ void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber );
 void vPortSetInterruptHandler( uint32_t ulInterruptNumber, uint32_t (*pvHandler)( void ) );
 
 #endif
+

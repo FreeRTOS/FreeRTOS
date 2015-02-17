@@ -107,7 +107,7 @@ typedef unsigned long UBaseType_t;
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 
 
-#if defined( __x86_64_ _) || defined( _M_X64 )
+#if defined( __x86_64__) || defined( _M_X64 )
 	#define portBYTE_ALIGNMENT		8
 #else
 	#define portBYTE_ALIGNMENT		4

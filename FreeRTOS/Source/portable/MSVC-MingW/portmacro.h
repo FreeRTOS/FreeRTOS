@@ -115,6 +115,10 @@ typedef unsigned long UBaseType_t;
 
 #define portYIELD()					vPortGenerateSimulatedInterrupt( portINTERRUPT_YIELD )
 
+/* Simulated interrupts return pdFALSE if no context switch should be performed,
+or a non-zero number if a context switch should be performed. */
+#define portYIELD_FROM_ISR( x ) return x
+
 void vPortCloseRunningThread( void *pvTaskToDelete, volatile BaseType_t *pxPendYield );
 void vPortDeleteThread( void *pvThreadToDelete );
 #define portCLEAN_UP_TCB( pxTCB )	vPortDeleteThread( pxTCB )

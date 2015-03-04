@@ -139,6 +139,7 @@
 #include "EventGroupsDemo.h"
 #include "IntSemTest.h"
 #include "TaskNotify.h"
+#include "QueueSetPolling.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -214,9 +215,10 @@ int main_full( void )
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	vStartEventGroupTasks();
 	vStartInterruptSemaphoreTasks();
+	vStartQueueSetPollingTask();
+	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -336,6 +338,10 @@ const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 		{
 			pcStatusMessage = "Error: Queue overwrite";
 		}
+		else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Queue set polling";
+		}
 
 		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
@@ -417,6 +423,7 @@ TaskHandle_t xTimerTask;
 	/* Write to a queue that is in use as part of the queue set demo to
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();
+	vQueueSetPollingInterruptAccess();
 
 	/* Exercise event groups from interrupts. */
 	vPeriodicEventGroupsProcessing();

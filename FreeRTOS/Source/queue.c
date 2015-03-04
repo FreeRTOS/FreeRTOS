@@ -2565,12 +2565,19 @@ BaseType_t xReturn;
 			/* The data copied is the handle of the queue that contains data. */
 			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
 
-			if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
+			if( pxQueueSetContainer->xTxLock == queueUNLOCKED )
 			{
-				if( xTaskRemoveFromEventList( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) != pdFALSE )
+				if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
 				{
-					/* The task waiting has a higher priority */
-					xReturn = pdTRUE;
+					if( xTaskRemoveFromEventList( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) != pdFALSE )
+					{
+						/* The task waiting has a higher priority. */
+						xReturn = pdTRUE;
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
 				}
 				else
 				{
@@ -2579,7 +2586,7 @@ BaseType_t xReturn;
 			}
 			else
 			{
-				mtCOVERAGE_TEST_MARKER();
+				( pxQueueSetContainer->xTxLock )++;
 			}
 		}
 		else

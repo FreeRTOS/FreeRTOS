@@ -719,6 +719,10 @@ extern "C" {
 	#define mtCOVERAGE_TEST_MARKER()
 #endif
 
+#ifndef mtCOVERAGE_TEST_DELAY
+	#define mtCOVERAGE_TEST_DELAY()
+#endif
+
 #ifndef portASSERT_IF_IN_ISR
 	#define portASSERT_IF_IN_ISR()
 #endif

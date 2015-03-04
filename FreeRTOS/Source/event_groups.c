@@ -139,7 +139,7 @@ EventGroupHandle_t xEventGroupCreate( void )
 {
 EventGroup_t *pxEventBits;
 
-	pxEventBits = pvPortMalloc( sizeof( EventGroup_t ) );
+	pxEventBits = ( EventGroup_t * ) pvPortMalloc( sizeof( EventGroup_t ) );
 	if( pxEventBits != NULL )
 	{
 		pxEventBits->uxEventBits = 0;

@@ -395,6 +395,7 @@ static void prvQueueSetReceivingTask( void *pvParameters )
 {
 uint32_t ulReceived;
 QueueHandle_t xActivatedQueue;
+TickType_t xBlockTime;
 
 	/* Remove compiler warnings. */
 	( void ) pvParameters;
@@ -405,14 +406,28 @@ QueueHandle_t xActivatedQueue;
 
 	for( ;; )
 	{
+		/* For test coverage reasons, the block time is dependent on the
+		priority of this task - which changes during the test.  When the task
+		is at the idle priority it polls the queue set. */
+		if( uxTaskPriorityGet( NULL ) == tskIDLE_PRIORITY )
+		{
+			xBlockTime = 0;
+		}
+		else
+		{
+			xBlockTime = portMAX_DELAY;
+		}
+
 		/* Wait for a message to arrive on one of the queues in the set. */
-		xActivatedQueue = xQueueSelectFromSet( xQueueSet, portMAX_DELAY );
-		configASSERT( xActivatedQueue );
+		xActivatedQueue = xQueueSelectFromSet( xQueueSet, portMAX_DELAY );		
 
 		if( xActivatedQueue == NULL )
 		{
-			/* This should not happen as an infinite delay was used. */
-			xQueueSetTasksStatus = pdFAIL;
+			if( xBlockTime != 0 )
+			{
+				/* This should not happen as an infinite delay was used. */
+				xQueueSetTasksStatus = pdFAIL;
+			}
 		}
 		else
 		{
@@ -432,11 +447,11 @@ QueueHandle_t xActivatedQueue;
 				prvCheckReceivedValue( ulReceived );
 			}
 			taskEXIT_CRITICAL();
-		}
 
-		if( xQueueSetTasksStatus == pdPASS )
-		{
-			ulCycleCounter++;
+			if( xQueueSetTasksStatus == pdPASS )
+			{
+				ulCycleCounter++;
+			}
 		}
 	}
 }
@@ -604,8 +619,7 @@ static BaseType_t xQueueToWriteTo = 0;
 	{
 		ulISRTxValue++;
 
-		/* If the Tx value has wrapped then set it back to its
-		initial	value. */
+		/* If the Tx value has wrapped then set it back to its initial value. */
 		if( ulISRTxValue == 0UL )
 		{
 			ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;

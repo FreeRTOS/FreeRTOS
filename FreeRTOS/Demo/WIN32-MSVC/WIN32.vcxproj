@@ -148,6 +148,7 @@
     <ClCompile Include="..\Common\Minimal\QPeek.c" />
     <ClCompile Include="..\Common\Minimal\QueueOverwrite.c" />
     <ClCompile Include="..\Common\Minimal\QueueSet.c" />
+    <ClCompile Include="..\Common\Minimal\QueueSetPolling.c" />
     <ClCompile Include="..\Common\Minimal\semtest.c" />
     <ClCompile Include="..\Common\Minimal\TaskNotify.c" />
     <ClCompile Include="..\Common\Minimal\timerdemo.c" />

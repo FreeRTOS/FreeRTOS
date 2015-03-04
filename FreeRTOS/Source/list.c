@@ -128,6 +128,10 @@ ListItem_t * const pxIndex = pxList->pxIndex;
 	listGET_OWNER_OF_NEXT_ENTRY(). */
 	pxNewListItem->pxNext = pxIndex;
 	pxNewListItem->pxPrevious = pxIndex->pxPrevious;
+
+	/* Only used during decision coverage testing. */
+	mtCOVERAGE_TEST_DELAY();
+
 	pxIndex->pxPrevious->pxNext = pxNewListItem;
 	pxIndex->pxPrevious = pxNewListItem;
 
@@ -213,6 +217,9 @@ List_t * const pxList = ( List_t * ) pxItemToRemove->pvContainer;
 
 	pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
 	pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;
+
+	/* Only used during decision coverage testing. */
+	mtCOVERAGE_TEST_DELAY();
 
 	/* Make sure the index is left pointing to a valid item. */
 	if( pxList->pxIndex == pxItemToRemove )

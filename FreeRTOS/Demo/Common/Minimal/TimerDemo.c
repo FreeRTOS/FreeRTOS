@@ -395,10 +395,14 @@ static void	prvTest3_CheckAutoReloadExpireRates( void )
 {
 uint8_t ucMaxAllowableValue, ucMinAllowableValue, ucTimer;
 TickType_t xBlockPeriod, xTimerPeriod, xExpectedNumber;
+UBaseType_t uxOriginalPriority;
 
-	/* Check the auto reload timers expire at the expected rates. */
-
-
+	/* Check the auto reload timers expire at the expected rates.  Do this at a
+	high priority for maximum accuracy.  This is ok as most of the time is spent
+	in the Blocked state. */
+	uxOriginalPriority = uxTaskPriorityGet( NULL );
+	vTaskPrioritySet( NULL, ( configMAX_PRIORITIES - 1 ) );
+	
 	/* Delaying for configTIMER_QUEUE_LENGTH * xBasePeriod ticks should allow
 	all the auto reload timers to expire at least once. */
 	xBlockPeriod = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
@@ -424,6 +428,9 @@ TickType_t xBlockPeriod, xTimerPeriod, xExpectedNumber;
 			configASSERT( xTestStatus );
 		}
 	}
+
+	/* Return to the original priority. */
+	vTaskPrioritySet( NULL, uxOriginalPriority );
 
 	if( xTestStatus == pdPASS )
 	{

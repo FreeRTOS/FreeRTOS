@@ -512,7 +512,7 @@ TickType_t xTimeNow;
 	/* No mutual exclusion on xOkToGiveMutex, but this is only test code (and
 	only executed on a 32-bit architecture) so ignore that in this case. */
 	xTimeNow = xTaskGetTickCountFromISR();
-	if( ( xTimeNow - xLastGiveTime ) >= pdMS_TO_TICKS( intsemINTERRUPT_MUTEX_GIVE_PERIOD_MS ) )
+	if( ( ( TickType_t ) ( xTimeNow - xLastGiveTime ) ) >= pdMS_TO_TICKS( intsemINTERRUPT_MUTEX_GIVE_PERIOD_MS ) )
 	{
 		configASSERT( xISRMutex );
 		if( xOkToGiveMutex != pdFALSE )

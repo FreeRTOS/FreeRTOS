@@ -137,7 +137,6 @@
 #include "partest.h"
 #include "serial.h"
 #include "TimerDemo.h"
-#include "IntQueue.h"
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 #include "IntSemTest.h"
@@ -242,8 +241,6 @@ void main_full( void )
 	/* Start all the other standard demo/test tasks.  They have not particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-//	vStartInterruptQueueTasks();
-
 	vStartDynamicPriorityTasks();
 	vCreateBlockTimeTasks();
 	vStartCountingSemaphoreTasks();
@@ -321,11 +318,6 @@ unsigned long ulErrorFound = pdFALSE;
 
 		/* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
-if( 0 )//		if( xAreIntQueueTasksStillRunning() != pdTRUE )
-		{
-			ulErrorFound |= 1UL << 0UL;
-		}
-
 		if( xAreMathsTaskStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 1UL;
@@ -356,6 +348,11 @@ if( 0 )//		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 			ulErrorFound |= 1UL << 8UL;
 		}
 
+		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
+		{
+			ulErrorFound |= 1UL << 9UL;
+		}
+
 		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 10UL;
@@ -364,11 +361,6 @@ if( 0 )//		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 14UL;
-		}
-
-		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
-		{
-			ulErrorFound |= 1UL << 9UL;
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )

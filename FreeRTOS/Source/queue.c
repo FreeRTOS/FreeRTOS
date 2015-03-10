@@ -340,7 +340,7 @@ int8_t *pcAllocatedBuffer;
 
 	if( pcAllocatedBuffer != NULL )
 	{
-		pxNewQueue = ( Queue_t * ) pcAllocatedBuffer; /*lint !e826 MISRA The buffer cannot be to small because it was dimensioned by sizeof( Queue_t ) + xQueueSizeInBytes. */
+		pxNewQueue = ( Queue_t * ) pcAllocatedBuffer; /*lint !e826 MISRA The buffer cannot be too small because it was dimensioned by sizeof( Queue_t ) + xQueueSizeInBytes. */
 
 		if( uxItemSize == ( UBaseType_t ) 0 )
 		{

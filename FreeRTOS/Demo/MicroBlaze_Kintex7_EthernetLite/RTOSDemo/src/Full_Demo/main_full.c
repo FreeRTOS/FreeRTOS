@@ -69,10 +69,10 @@
 
 
 /******************************************************************************
- * NOTE 1:  This project provides two demo applications.  A simple blinky
- * style project, and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLY_BLINKY_DEMO_ONLY setting in main.c is used to select
- * between the two.  See the notes on using mainCREATE_SIMPLY_BLINKY_DEMO_ONLY
+ * NOTE 1:  This project provides three demo applications.  A simple blinky
+ * style project, a more comprehensive test and demo application, and an
+ * lwIP example.  The mainSELECTED_APPLICATION setting in main.c is used to
+ * select between the three.  See the notes on using mainSELECTED_APPLICATION
  * in main.c.  This file implements the comprehensive version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
@@ -358,11 +358,6 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound |= 1UL << 10UL;
 		}
 
-		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
-		{
-			ulErrorFound |= 1UL << 14UL;
-		}
-
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
 			ulErrorFound |= 1UL << 12UL;
@@ -371,6 +366,11 @@ unsigned long ulErrorFound = pdFALSE;
 		if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 13UL;
+		}
+
+		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			ulErrorFound |= 1UL << 14UL;
 		}
 
 		/* Check that the register test 1 task is still running. */
@@ -396,8 +396,7 @@ unsigned long ulErrorFound = pdFALSE;
 		{
 			/* An error has been detected in one of the tasks - flash the LED
 			at a higher frequency to give visible feedback that something has
-			gone wrong (it might just be that the loop back connector required
-			by the comtest tasks has not been fitted). */
+			gone wrong. */
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
 	}

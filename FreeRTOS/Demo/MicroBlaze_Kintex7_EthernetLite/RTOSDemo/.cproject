@@ -38,6 +38,9 @@
 									<listOptionValue builtIn="false" value="../../BSP/microblaze_0/include"/>
 								</option>
 								<option id="xilinx.gnu.compiler.dircategory.includes.926330011" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/lwIP_Demo/lwIP-1.4.0/src/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/lwIP_Demo/lwIP_port/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/lwIP_Demo/lwIP-1.4.0/src/include/ipv4}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/FreeRTOS+CLI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Common_Demo_Source/include}&quot;"/>
@@ -112,8 +115,11 @@
 							<tool id="xilinx.gnu.mb.size.debug.725684245" name="MicroBlaze Print Size" superClass="xilinx.gnu.mb.size.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="xilinx.gnu.mb.exe.debug.1168698469.494031543" name="fsdata.c" rcbsApplicability="disable" resourcePath="src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c" toolsToInvoke="xilinx.gnu.mb.c.toolchain.compiler.debug.610152912.1752708935">
+						<tool id="xilinx.gnu.mb.c.toolchain.compiler.debug.610152912.1752708935" name="MicroBlaze gcc compiler" superClass="xilinx.gnu.mb.c.toolchain.compiler.debug.610152912"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="src/platform.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c|src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/makefsdata|src/platform.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

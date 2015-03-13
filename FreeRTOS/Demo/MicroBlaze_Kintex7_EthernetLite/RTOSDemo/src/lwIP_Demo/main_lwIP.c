@@ -67,7 +67,6 @@
     1 tab == 4 spaces!
 */
 
-
 /******************************************************************************
  * NOTE 1:  This project provides three demo applications.  A simple blinky
  * style project, a more comprehensive test and demo application, and an
@@ -80,91 +79,90 @@
  * required to configure the hardware are defined in main.c.
  ******************************************************************************
  *
- * main_blinky() creates one queue, and two tasks.  It then starts the
- * scheduler.
+ * The lwIP example can be configured to use either a static or dynamic IP
+ * address:
+ *    + To use a dynamically allocated IP address set LWIP_DHCP to 1 in
+ *      lwipopts.h and connect the target to a network that includes a DHCP
+ *      server.  The obtained IP address is printed to the UART console.
+ *    + To use a static IP address set LWIP_DHCP to 0 in lwipopts.h and set
+ *      the static IP address using the configIP_ADDR0 to configIP_ADDR3
+ *      constants at the bottom of FreeRTOSConfig.h.  Constants used to define
+ *      a netmask are also located at the bottom of FreeRTOSConfig.h.
  *
- * The Queue Send Task:
- * The queue send task is implemented by the prvQueueSendTask() function in
- * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
- * block for 200 milliseconds, before sending the value 100 to the queue that
- * was created within main_blinky().  Once the value is sent, the task loops
- * back around to block for another 200 milliseconds...and so on.
+ * When connected correctly the demo uses the lwIP sockets API to create
+ * a FreeRTOS+CLI command console, and the lwIP raw API to create a basic HTTP
+ * web server with server side includes that generate dynamic run time web
+ * pages.  See http://www.freertos.org/RTOS-Xilinx-Zynq.html for more
+ * information.
  *
- * The Queue Receive Task:
- * The queue receive task is implemented by the prvQueueReceiveTask() function
- * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
- * blocks on attempts to read data from the queue that was created within
- * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, toggles an LED.  The 'block
- * time' parameter passed to the queue receive function specifies that the
- * task should be held in the Blocked state indefinitely to wait for data to
- * be available on the queue.  The queue receive task will only leave the
- * Blocked state when the queue send task writes to the queue.  As the queue
- * send task writes to the queue every 200 milliseconds, the queue receive
- * task leaves the Blocked state every 200 milliseconds, and therefore toggles
- * the LED every 200 milliseconds.
+ * To connect to FreeRTOS+CLI, open a command prompt and enter "telnet <ipaddr>"
+ * where <ipaddr> is the IP address of the target.  Once connected type "help"
+ * to see a list of registered commands.  Note this example does not implement
+ * a real telnet server, it just uses the telnet port number to allow easy
+ * connection using telnet tools.
+ *
+ * To connect to the http server simply type the IP address of the target into
+ * the address bar of a web browser.
+ *
  */
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
+#include "timers.h"
 
 /* Standard demo includes. */
 #include "partest.h"
 
-/* Priorities at which the tasks are created. */
-#define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
-#define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
+/* lwIP includes. */
+#include "lwip/tcpip.h"
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the pdMS_TO_TICKS() macro. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( pdMS_TO_TICKS( 200UL ) )
-
-/* The number of items the queue can hold.  This is 1 as the receive task
-will remove items as they are added, meaning the send task should always find
-the queue empty. */
-#define mainQUEUE_LENGTH					( 1 )
+to ticks using the portTICK_PERIOD_MS constant. */
+#define mainTIMER_PERIOD_MS			( pdMS_TO_TICKS( 200 ) )
 
 /* The LED toggled by the Rx task. */
-#define mainTASK_LED						( 0 )
+#define mainTIMER_LED				( 0 )
+
+/* A block time of zero just means "don't block". */
+#define mainDONT_BLOCK				( 0 )
 
 /*-----------------------------------------------------------*/
 
 /*
- * The tasks as described in the comments at the top of this file.
+ * The callback for the timer that just toggles an LED to show the system is
+ * running.
  */
-static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
+static void prvLEDToggleTimer( TimerHandle_t pxTimer );
+
+/*
+ * Defined in lwIPApps.c.
+ */
+extern void lwIPAppsInit( void *pvArguments );
 
 /*-----------------------------------------------------------*/
 
-/* The queue used by both tasks. */
-static QueueHandle_t xQueue = NULL;
-
-/*-----------------------------------------------------------*/
-
-void main_blinky( void )
+void main_lwIP( void )
 {
-	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
+TimerHandle_t xTimer;
 
-	if( xQueue != NULL )
-	{
-		/* Start the two tasks as described in the comments at the top of this
-		file. */
-		xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
-					"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-					configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task. */
-					NULL, 								/* The parameter passed to the task - not used in this case. */
-					mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
-					NULL );								/* The task handle is not required, so NULL is passed. */
+	/* Init lwIP and start lwIP tasks. */
+	tcpip_init( lwIPAppsInit, NULL );
 
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+	/* A timer is used to toggle an LED just to show the application is
+	executing. */
+	xTimer = xTimerCreate( 	"LED", 					/* Text name to make debugging easier. */
+							mainTIMER_PERIOD_MS, 	/* The timer's period. */
+							pdTRUE,					/* This is an auto reload timer. */
+							NULL,					/* ID is not used. */
+							prvLEDToggleTimer );	/* The callback function. */
 
-		/* Start the tasks and timer running. */
-		vTaskStartScheduler();
-	}
+	/* Start the timer. */
+	configASSERT( xTimer );
+	xTimerStart( xTimer, mainDONT_BLOCK );
+
+	/* Start the tasks and timer running. */
+	vTaskStartScheduler();
 
 	/* If all is well, the scheduler will now be running, and the following
 	line will never be reached.  If the following line does execute, then
@@ -178,54 +176,19 @@ void main_blinky( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvLEDToggleTimer( TimerHandle_t pxTimer )
 {
-TickType_t xNextWakeTime;
-const uint32_t ulValueToSend = 100UL;
+	/* Prevent compiler warnings. */
+	( void ) pxTimer;
 
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
-
-	/* Initialise xNextWakeTime - this only needs to be done once. */
-	xNextWakeTime = xTaskGetTickCount();
-
-	for( ;; )
-	{
-		/* Place this task in the blocked state until it is time to run again. */
-		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
-
-		/* Send to the queue - causing the queue receive task to unblock and
-		toggle the LED.  0 is used as the block time so the sending operation
-		will not block - it shouldn't need to block as the queue should always
-		be empty at this point in the code. */
-		xQueueSend( xQueue, &ulValueToSend, 0U );
-	}
+	/* Just toggle an LED to show the application is running. */
+	vParTestToggleLED( mainTIMER_LED );
 }
+
 /*-----------------------------------------------------------*/
 
-static void prvQueueReceiveTask( void *pvParameters )
+char *pcMainGetTaskStatusMessage( void )
 {
-uint32_t ulReceivedValue;
-const uint32_t ulExpectedValue = 100UL;
-
-	/* Remove compiler warning about unused parameter. */
-	( void ) pvParameters;
-
-	for( ;; )
-	{
-		/* Wait until something arrives in the queue - this task will block
-		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-		FreeRTOSConfig.h. */
-		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
-
-		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, toggle the LED. */
-		if( ulReceivedValue == ulExpectedValue )
-		{
-			vParTestToggleLED( mainTASK_LED );
-			ulReceivedValue = 0U;
-		}
-	}
+	return "Running lwIP demo";
 }
 /*-----------------------------------------------------------*/
-

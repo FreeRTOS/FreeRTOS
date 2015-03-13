@@ -49,6 +49,11 @@
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/UARTCommandConsole.c</locationURI>
 		</link>
+		<link>
+			<name>src/lwIP_Demo/lwIP-1.4.0</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/ethernet/lwip-1.4.0</locationURI>
+		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
@@ -94,6 +99,15 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-Minimal</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1426008704838</id>
+			<name>src/lwIP_Demo/lwIP-1.4.0</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ports</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -238,6 +252,33 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-blocktim.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1426008787023</id>
+			<name>src/lwIP_Demo/lwIP-1.4.0/src/core</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ipv6</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1426008787043</id>
+			<name>src/lwIP_Demo/lwIP-1.4.0/src/core</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-snmp</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1426008835701</id>
+			<name>src/lwIP_Demo/lwIP-1.4.0/src/netif</name>
+			<type>14</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ppp</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

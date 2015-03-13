@@ -68,12 +68,13 @@
 */
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
- * select between the two.  The simply blinky demo is implemented and described
- * in main_blinky.c.  The more comprehensive test and demo application is
- * implemented and described in main_full.c.
+ * This project provides three demo applications.  A simple blinky style
+ * project, a more comprehensive test and demo application, and an lwIP example.
+ * The mainSELECTED_APPLICATION setting (defined in this file) is used to
+ * select between the three.  The simply blinky demo is implemented and
+ * described in main_blinky.c.  The more comprehensive test and demo application
+ * is implemented and described in main_full.c.  The lwIP example is implemented
+ * and described in main_lwIP.c.
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -99,16 +100,18 @@
 #include "xtmrctr.h"
 #include "xil_cache.h"
 
-/* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is used to select between the simply
- * blinky demo and the comprehensive test and demo application.
+/* mainSELECTED_APPLICATION is used to select between three demo applications,
+ * as described at the top of this file.
  *
- * When mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1 the simple blinky example
- * will be run.
+ * When mainSELECTED_APPLICATION is set to 0 the simple blinky example will
+ * be run.
  *
- * When mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0 the comprehensive test
- * and demo application will be run.
+ * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
+ * application will be run.
+ *
+ * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
  */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainSELECTED_APPLICATION	0
 
 /*-----------------------------------------------------------*/
 
@@ -118,13 +121,17 @@
 static void prvSetupHardware( void );
 
 /*
- * See the comments at the top of this file and above the
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY definition.
- */
-#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+* See the comments at the top of this file and above the
+* mainSELECTED_APPLICATION definition.
+*/
+#if ( mainSELECTED_APPLICATION == 0 )
 	extern void main_blinky( void );
-#else
+#elif ( mainSELECTED_APPLICATION == 1 )
 	extern void main_full( void );
+#elif ( mainSELECTED_APPLICATION == 2 )
+	extern void main_lwIP( void );
+#else
+	#error Invalid mainSELECTED_APPLICATION setting.  See the comments at the top of this file and above the mainSELECTED_APPLICATION definition.
 #endif
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
@@ -139,21 +146,30 @@ for the run time stats. */
 static XTmrCtr xTickTimerInstance;
 
 /*-----------------------------------------------------------*/
+volatile uint32_t ulx = 999;
 
 int main( void )
 {
+	/* Check start up code executed correctly. */
+	configASSERT( ulx == 999 );
+	ulx = 0;
+
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
-	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	/* The mainSELECTED_APPLICATION setting is described at the top
 	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	#if( mainSELECTED_APPLICATION == 0 )
 	{
 		main_blinky();
 	}
-	#else
+	#elif( mainSELECTED_APPLICATION == 1 )
 	{
 		main_full();
+	}
+	#else
+	{
+		main_lwIP();
 	}
 	#endif
 
@@ -208,14 +224,14 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected.  Force an assertion
-	failuse. */
+	failure. */
 	configASSERT( ( char * ) pxTask == pcTaskName );
 }
 /*-----------------------------------------------------------*/
 
 void vApplicationIdleHook( void )
 {
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+	#if( mainSELECTED_APPLICATION == 1 )
 	{
 		extern void vFullDemoIdleHook( void );
 
@@ -249,7 +265,7 @@ volatile unsigned long ul = 0;
 
 void vApplicationTickHook( void )
 {
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0 )
+	#if( mainSELECTED_APPLICATION == 1 )
 	{
 		extern void vFullDemoTickHook( void );
 
@@ -362,10 +378,25 @@ const uint32_t ulPrescale = 10, ulTCR2Offset = 24UL;
 
 	if( ulTimeNow < ulLastTime )
 	{
-		ulOverflows += ( 1UL << ulPrescale );
+		/* 32 as its a 32-bit number. */
+		ulOverflows += ( 1UL << ( 32 - ulPrescale ) );
 	}
+	ulLastTime = ulTimeNow;
 
 	ulReturn = ( ulTimeNow >> ulPrescale ) + ulOverflows;
 
 	return ulReturn;
 }
+/*-----------------------------------------------------------*/
+
+int outbyte( int c )
+{
+	return c;
+}
+
+void xil_printf( const char *pc, ... )
+{
+	( void ) pc;
+}
+
+

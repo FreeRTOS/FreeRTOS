@@ -146,14 +146,9 @@ for the run time stats. */
 static XTmrCtr xTickTimerInstance;
 
 /*-----------------------------------------------------------*/
-volatile uint32_t ulx = 999;
 
 int main( void )
 {
-	/* Check start up code executed correctly. */
-	configASSERT( ulx == 999 );
-	ulx = 0;
-
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 

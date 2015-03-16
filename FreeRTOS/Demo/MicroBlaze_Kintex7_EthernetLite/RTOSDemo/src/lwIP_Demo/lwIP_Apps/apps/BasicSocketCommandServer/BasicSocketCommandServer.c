@@ -176,7 +176,7 @@ extern void vRegisterSampleCLICommands( void );
 									cInputString[ lInputIndex ] = '\0';
 								}
 							}
-							else
+							else if( ( cInChar >= ' ' ) && ( cInChar <= 'z' ) )
 							{
 								/* A character was entered.  Add it to the string
 								entered so far.  When a \n is entered the complete

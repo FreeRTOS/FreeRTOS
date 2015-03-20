@@ -306,7 +306,9 @@ extern void vPortTickISR( void *pvUnused );
 		purpose. */
 		vPortEnableInterrupt( XPAR_INTC_0_TMRCTR_0_VEC_ID );
 
-		/* Configure the timer interrupt handler. */
+		/* Configure the timer interrupt handler.  This installs the handler
+		directly, rather than through the Xilinx driver.  This is done for
+		efficiency. */
 		XTmrCtr_SetHandler( &xTickTimerInstance, ( void * ) vPortTickISR, NULL );
 
 		/* Set the correct period for the timer. */

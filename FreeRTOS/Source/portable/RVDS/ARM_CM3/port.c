@@ -271,6 +271,7 @@ __asm void prvStartFirstTask( void )
 	ldr r0, =0xE000ED08
 	ldr r0, [r0]
 	ldr r0, [r0]
+
 	/* Set the msp back to the start of the stack. */
 	msr msp, r0
 	/* Globally enable interrupts. */

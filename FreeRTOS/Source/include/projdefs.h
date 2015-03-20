@@ -87,7 +87,7 @@ typedef void (*TaskFunction_t)( void * );
 #define errQUEUE_EMPTY	( ( BaseType_t ) 0 )
 #define errQUEUE_FULL	( ( BaseType_t ) 0 )
 
-/* Error definitions. */
+/* FreeRTOS error definitions. */
 #define errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY	( -1 )
 #define errQUEUE_BLOCKED						( -4 )
 #define errQUEUE_YIELD							( -5 )
@@ -102,6 +102,11 @@ typedef void (*TaskFunction_t)( void * );
 #else
 	#define pdINTEGRITY_CHECK_VALUE 0x5a5a5a5aUL
 #endif
+
+/* The following endian values are used by FreeRTOS+ components, not FreeRTOS
+itself. */
+#define pdFREERTOS_LITTLE_ENDIAN	0
+#define pdFREERTOS_BIG_ENDIAN		1
 
 #endif /* PROJDEFS_H */
 

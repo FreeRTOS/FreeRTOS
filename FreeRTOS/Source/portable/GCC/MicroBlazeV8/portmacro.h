@@ -119,20 +119,19 @@ void microblaze_disable_interrupts( void );
 void microblaze_enable_interrupts( void );
 #define portDISABLE_INTERRUPTS()	microblaze_disable_interrupts()
 #define portENABLE_INTERRUPTS()		microblaze_enable_interrupts()
-
 /*-----------------------------------------------------------*/
 
 /* Critical section macros. */
 void vPortEnterCritical( void );
 void vPortExitCritical( void );
 #define portENTER_CRITICAL()		{																\
-										extern volatile UBaseType_t uxCriticalNesting;	\
+										extern volatile UBaseType_t uxCriticalNesting;				\
 										microblaze_disable_interrupts();							\
 										uxCriticalNesting++;										\
 									}
 
 #define portEXIT_CRITICAL()			{																\
-										extern volatile UBaseType_t uxCriticalNesting;	\
+										extern volatile UBaseType_t uxCriticalNesting;				\
 										/* Interrupts are disabled, so we can */					\
 										/* access the variable directly. */							\
 										uxCriticalNesting--;										\

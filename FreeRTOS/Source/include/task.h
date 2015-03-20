@@ -214,6 +214,7 @@ typedef enum
  * \ingroup SchedulerControl
  */
 #define taskENTER_CRITICAL()		portENTER_CRITICAL()
+#define taskENTER_CRITICAL_FROM_ISR( x ) portSET_INTERRUPT_MASK_FROM_ISR( x )
 
 /**
  * task. h
@@ -228,7 +229,7 @@ typedef enum
  * \ingroup SchedulerControl
  */
 #define taskEXIT_CRITICAL()			portEXIT_CRITICAL()
-
+#define taskEXIT_CRITICAL_FROM_ISR() portCLEAR_INTERRUPT_MASK_FROM_ISR()
 /**
  * task. h
  *
@@ -1164,7 +1165,7 @@ constant. */
 	configNUM_THREAD_LOCAL_STORAGE_POINTERS setting in FreeRTOSConfig.h.  The
 	kernel does not use the pointers itself, so the application writer can use
 	the pointers for any purpose they wish.  The following two functions are
-	used to set and query a pointer respectively. */	
+	used to set and query a pointer respectively. */
 	void vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue );
 	void *pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex );
 

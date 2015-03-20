@@ -352,7 +352,7 @@ vPortStartFirstTask:
 
 
 
-#if MICROBLAZE_EXCEPTIONS_ENABLED == 1
+#if ( MICROBLAZE_EXCEPTIONS_ENABLED == 1 ) && ( configINSTALL_EXCEPTION_HANDLERS == 1 )
 
 	.text
 	.align 4
@@ -364,7 +364,7 @@ vPortExceptionHandlerEntry:
 	bralid r15, vPortExceptionHandler
 	or r0, r0, r0
 
-#endif /* MICROBLAZE_EXCEPTIONS_ENABLED */
+#endif /* ( MICROBLAZE_EXCEPTIONS_ENABLED == 1 ) && ( configINSTALL_EXCEPTION_HANDLERS == 1 ) */
 
 
 

@@ -105,7 +105,7 @@ typedef unsigned long UBaseType_t;
 /* Hardware specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-
+#define portINLINE __inline
 
 #if defined( __x86_64__) || defined( _M_X64 )
 	#define portBYTE_ALIGNMENT		8
@@ -173,7 +173,6 @@ void vPortExitCritical( void );
 /* Task function macros as described on the FreeRTOS.org WEB site. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void * pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void * pvParameters )
-
 
 #define portINTERRUPT_YIELD				( 0UL )
 #define portINTERRUPT_TICK				( 1UL )

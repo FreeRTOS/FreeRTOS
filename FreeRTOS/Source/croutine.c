@@ -71,6 +71,9 @@
 #include "task.h"
 #include "croutine.h"
 
+/* Remove the whole file is co-routines are not being used. */
+#if( configUSE_CO_ROUTINES != 0 )
+
 /*
  * Some kernel aware debuggers require data to be viewed to be global, rather
  * than file scope.
@@ -387,4 +390,6 @@ BaseType_t xReturn;
 
 	return xReturn;
 }
+
+#endif /* configUSE_CO_ROUTINES == 0 */
 

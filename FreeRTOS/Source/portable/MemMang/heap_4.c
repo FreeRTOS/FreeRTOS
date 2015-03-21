@@ -130,7 +130,7 @@ static void prvHeapInit( void );
 
 /* The size of the structure placed at the beginning of each allocated memory
 block must by correctly byte aligned. */
-static const size_t xHeapStructSize	= ( ( sizeof( BlockLink_t ) + ( portBYTE_ALIGNMENT - 1 ) ) & ~portBYTE_ALIGNMENT_MASK );
+static const size_t xHeapStructSize	= ( ( sizeof( BlockLink_t ) + ( ( ( size_t ) portBYTE_ALIGNMENT_MASK ) - ( size_t ) 1 ) ) & ~( ( size_t ) portBYTE_ALIGNMENT_MASK ) );
 
 /* Create a couple of list links to mark the start and end of the list. */
 static BlockLink_t xStart, *pxEnd = NULL;
@@ -377,7 +377,7 @@ size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 	if( ( ulAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
 	{
 		ulAddress += ( portBYTE_ALIGNMENT - 1 );
-		ulAddress &= ~portBYTE_ALIGNMENT_MASK;
+		ulAddress &= ~( ( uint32_t ) portBYTE_ALIGNMENT_MASK );
 		xTotalHeapSize -= ulAddress - ( uint32_t ) ucHeap;
 	}
 
@@ -392,7 +392,7 @@ size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 	at the end of the heap space. */
 	ulAddress = ( ( uint32_t ) pucAlignedHeap ) + xTotalHeapSize;
 	ulAddress -= xHeapStructSize;
-	ulAddress &= ~portBYTE_ALIGNMENT_MASK;
+	ulAddress &= ~( ( uint32_t ) portBYTE_ALIGNMENT_MASK );
 	pxEnd = ( void * ) ulAddress;
 	pxEnd->xBlockSize = 0;
 	pxEnd->pxNextFreeBlock = NULL;

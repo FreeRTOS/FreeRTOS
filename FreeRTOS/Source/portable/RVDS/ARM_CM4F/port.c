@@ -114,6 +114,12 @@ is defined. */
 #define portNVIC_PENDSVCLEAR_BIT 			( 1UL << 27UL )
 #define portNVIC_PEND_SYSTICK_CLEAR_BIT		( 1UL << 25UL )
 
+/* Constants used to detect a Cortex-M7 r0p1 core, which should use the ARM_CM7
+r0p1 port. */
+#define portCPUID							( * ( ( volatile uint32_t * ) 0xE000ed00 ) )
+#define portCORTEX_M7_r0p1_ID				( 0x410FC271UL )
+#define portCORTEX_M7_r0p0_ID				( 0x410FC270UL )
+
 #define portNVIC_PENDSV_PRI					( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
 #define portNVIC_SYSTICK_PRI				( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 
@@ -325,6 +331,16 @@ __asm void prvEnableVFP( void )
  */
 BaseType_t xPortStartScheduler( void )
 {
+	/* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.
+	See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
+	configASSERT( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+
+	/* This port can be used on all revisions of the Cortex-M7 core other than
+	the r0p1 parts.  r0p1 parts should use the port from the
+	/source/portable/GCC/ARM_CM7/r0p1 directory. */
+	configASSERT( portCPUID != portCORTEX_M7_r0p1_ID );
+	configASSERT( portCPUID != portCORTEX_M7_r0p0_ID );
+
 	#if( configASSERT_DEFINED == 1 )
 	{
 		volatile uint32_t ulOriginalPriority;
@@ -345,6 +361,10 @@ BaseType_t xPortStartScheduler( void )
 
 		/* Read the value back to see how many bits stuck. */
 		ucMaxPriorityValue = *pucFirstUserPriorityRegister;
+
+		/* The kernel interrupt priority should be set to the lowest
+		priority. */
+		configASSERT( ucMaxPriorityValue == ( configKERNEL_INTERRUPT_PRIORITY & ucMaxPriorityValue ) );
 
 		/* Use the same mask on the maximum system call priority. */
 		ucMaxSysCallPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY & ucMaxPriorityValue;

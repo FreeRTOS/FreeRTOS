@@ -129,10 +129,6 @@ extern "C" {
 	#error Missing definition:  configUSE_TICK_HOOK must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef configUSE_CO_ROUTINES
-	#error  Missing definition:  configUSE_CO_ROUTINES must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
 #ifndef INCLUDE_vTaskPrioritySet
 	#error Missing definition:  INCLUDE_vTaskPrioritySet must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
@@ -161,14 +157,18 @@ extern "C" {
 	#error Missing definition:  configUSE_16_BIT_TICKS must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
+#ifndef configMAX_PRIORITIES
+	#error configMAX_PRIORITIES must be defined to be greater than or equal to 1.
+#endif
+
+#ifndef configUSE_CO_ROUTINES
+	#define configUSE_CO_ROUTINES 0
+#endif
+
 #if configUSE_CO_ROUTINES != 0
 	#ifndef configMAX_CO_ROUTINE_PRIORITIES
 		#error configMAX_CO_ROUTINE_PRIORITIES must be greater than or equal to 1.
 	#endif
-#endif
-
-#ifndef configMAX_PRIORITIES
-	#error configMAX_PRIORITIES must be defined to be greater than or equal to 1.
 #endif
 
 #ifndef INCLUDE_xTaskGetIdleTaskHandle

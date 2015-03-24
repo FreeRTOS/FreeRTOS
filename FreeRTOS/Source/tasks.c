@@ -4101,7 +4101,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	BaseType_t xTaskNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction )
+	BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue )
 	{
 	TCB_t * pxTCB;
 	eNotifyValue eOriginalNotifyState;
@@ -4112,6 +4112,11 @@ TickType_t uxReturn;
 
 		taskENTER_CRITICAL();
 		{
+			if( pulPreviousNotificationValue != NULL )
+			{
+				*pulPreviousNotificationValue = pxTCB->ulNotifiedValue;
+			}
+
 			eOriginalNotifyState = pxTCB->eNotifyState;
 
 			pxTCB->eNotifyState = eNotified;

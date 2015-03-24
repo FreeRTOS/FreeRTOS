@@ -147,7 +147,7 @@ static void prvSingleTaskTests( void )
 {
 const TickType_t xTicksToWait = pdMS_TO_TICKS( 100UL );
 BaseType_t xReturned;
-uint32_t ulNotifiedValue, ulLoop, ulNotifyingValue;
+uint32_t ulNotifiedValue, ulLoop, ulNotifyingValue, ulPreviousValue, ulExpectedValue;
 TickType_t xTimeOnEntering;
 const uint32_t ulFirstNotifiedConst = 100001UL, ulSecondNotifiedValueConst = 5555UL, ulMaxLoops = 5UL;
 const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
@@ -172,11 +172,14 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	Check no blocking when notifications are pending.  First notify itself -
 	this would not be a normal thing to do and is done here for test purposes
 	only. */
-	xReturned = xTaskNotify( xTaskToNotify, ulFirstNotifiedConst, eSetValueWithoutOverwrite );
+	xReturned = xTaskNotifyAndQuery( xTaskToNotify, ulFirstNotifiedConst, eSetValueWithoutOverwrite, &ulPreviousValue );
 
 	/* Even through the 'without overwrite' action was used the update should
 	have been successful. */
 	configASSERT( xReturned == pdPASS );
+
+	/* No bits should have been pending previously. */
+	configASSERT( ulPreviousValue == 0 );
 
 	/* The task should now have a notification pending, and so not time out. */
 	xTimeOnEntering = xTaskGetTickCount();
@@ -350,6 +353,28 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	configASSERT( ulNotifiedValue == ( ULONG_MAX & ~( ulBit0 | ulBit1 ) ) );
 
 
+
+
+	/*--------------------------------------------------------------------------
+	Now try querying the previus value while notifying a task. */
+	xTaskNotifyAndQuery( xTaskToNotify, 0x00, eSetBits, &ulPreviousValue );
+	configASSERT( ulNotifiedValue == ( ULONG_MAX & ~( ulBit0 | ulBit1 ) ) );
+
+	/* Clear all bits. */
+	xTaskNotifyWait( 0x00, ULONG_MAX, &ulNotifiedValue, 0 );
+	xTaskNotifyAndQuery( xTaskToNotify, 0x00, eSetBits, &ulPreviousValue );
+	configASSERT( ulPreviousValue == 0 );
+
+	ulExpectedValue = 0;
+	for( ulLoop = 0x01; ulLoop < 0x80UL; ulLoop <<= 1UL )
+	{
+		/* Set the next bit up, and expect to receive the last bits set (so
+		the previous value will not yet have the bit being set this time
+		around). */
+		xTaskNotifyAndQuery( xTaskToNotify, ulLoop, eSetBits, &ulPreviousValue );
+		configASSERT( ulExpectedValue == ulPreviousValue );
+		ulExpectedValue |= ulLoop;
+	}
 
 	/* Incremented to show the task is still running. */
 	ulNotifyCycleCount++;

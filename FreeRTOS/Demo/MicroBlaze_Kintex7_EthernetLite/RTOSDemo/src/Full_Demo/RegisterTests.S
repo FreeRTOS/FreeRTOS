@@ -82,7 +82,6 @@ detected an error. */
 .extern ulRegTest1LoopCounter
 .extern ulRegTest2LoopCounter
 
-#warning Does not seem to test the floating point context register.
 /*-----------------------------------------------------------*/
 
 .section .text

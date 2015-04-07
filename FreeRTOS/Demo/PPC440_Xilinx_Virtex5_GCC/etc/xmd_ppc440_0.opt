@@ -1,0 +1,1 @@
+connect ppc hw -debugdevice cpunr 1

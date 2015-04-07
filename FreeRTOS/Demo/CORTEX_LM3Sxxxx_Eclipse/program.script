@@ -1,0 +1,17 @@
+halt
+sleep 200
+wait_halt
+flash probe 0
+#sleep 500
+flash info 0
+#sleep 500
+#flash protect 0 0 31 off
+#sleep 500
+flash erase 0 0 255
+sleep 200
+flash write 0 ./RTOSDemo/RTOSDemo.bin 0
+sleep 200
+reset run
+shutdown
+
+

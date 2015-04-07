@@ -1,0 +1,1 @@
+connect ppc hw -cable type xilinx_parallel port LPT1 frequency 2500000 -debugdevice cpunr 1 fpuType sp

@@ -1,0 +1,22 @@
+Library\ Generator\ Command=rx-elf-libgen
+com.renesas.cdt.core.Assembler.option.includeFileDirectories="${workspace_loc\:/${ProjName}}\\src";
+com.renesas.cdt.core.Compiler.option.includeFileDir.1782217841="${TCINSTALL}\\rx-elf\\optlibinc";
+com.renesas.cdt.core.LibraryGenerator.option.ctype=false
+com.renesas.cdt.core.LibraryGenerator.option.libraryType=Project-Built
+com.renesas.cdt.core.LibraryGenerator.option.math=true
+com.renesas.cdt.core.LibraryGenerator.option.selectLibrary=Optimized
+com.renesas.cdt.core.LibraryGenerator.option.stdio=true
+com.renesas.cdt.core.LibraryGenerator.option.stdlib=true
+com.renesas.cdt.core.LibraryGenerator.option.string=true
+com.renesas.cdt.core.Linker.option.userDefinedOptions=-e_PowerON_Reset;
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.cpuType=RX600
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.cpuType.681354731=RX600
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.dataEndian=Little-endian data
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.disableFPUInstructions=false
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.genCodeForRX610=false
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.generateRXas100output=false
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.macroDefines=__RX_LITTLE_ENDIAN__\=1;
+com.renesas.cdt.rx.HardwareDebug.Compiler.option.make64bitDouble=false
+com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveLibraryFiles=${ProjName};gcc;
+com.renesas.cdt.rx.HardwareDebug.Linker.option.archiveSearchDirectories.1899007176="${CONFIGDIR}";"${TCINSTALL}/lib/gcc/rx-elf//${GCC_VERSION}";"${TCINSTALL}/lib/gcc/rx-elf/${GCC_VERSION}";
+eclipse.preferences.version=1

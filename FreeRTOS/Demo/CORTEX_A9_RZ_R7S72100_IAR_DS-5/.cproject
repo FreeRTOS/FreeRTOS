@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.arm.eclipse.builder.armcc.error" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="axf" artifactName="${ProjName}" buildArtefactType="com.arm.eclipse.build.artefact.baremetal.exe" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=com.arm.eclipse.build.artefact.baremetal.exe" cleanCommand="clean" description="" id="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085" name="Debug" parent="com.arm.eclipse.build.config.baremetal.exe.debug">
+					<folderInfo id="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085." name="/" resourcePath="">
+						<toolChain id="com.arm.toolchain.baremetal.exe.debug.1290118951" name="ARM Compiler" superClass="com.arm.toolchain.baremetal.exe.debug">
+							<targetPlatform id="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085..1663367574" name=""/>
+							<builder buildPath="${workspace_loc:/FreeRTOS_Demo/Debug}" id="com.arm.toolchain.baremetal.builder.1669748612" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.arm.toolchain.baremetal.builder"/>
+							<tool command="armcc" id="com.arm.tool.c.compiler.baremetal.exe.debug.134129553" name="ARM C Compiler" superClass="com.arm.tool.c.compiler.baremetal.exe.debug">
+								<option id="com.arm.tool.c.compiler.option.defmac.1895063579" name="Define macro (-D)" superClass="com.arm.tool.c.compiler.option.defmac" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ARM_SIM"/>
+									<listOptionValue builtIn="false" value="__STANDALONE__"/>
+								</option>
+								<option id="com.arm.tool.c.compiler.option.undefmac.1335777080" name="Undefine macro (-U)" superClass="com.arm.tool.c.compiler.option.undefmac" valueType="undefDefinedSymbols">
+									<listOptionValue builtIn="false" value="ARM_SIM"/>
+								</option>
+								<option id="com.arm.tool.c.compiler.baremetal.exe.debug.option.opt.799477241" name="Optimization level" superClass="com.arm.tool.c.compiler.baremetal.exe.debug.option.opt" value="com.arm.tool.c.compiler.option.optlevel.min" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.optfor.2031421359" name="Optimize for" superClass="com.arm.tool.c.compiler.option.optfor" value="com.arm.tool.c.compiler.option.optfor.time" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.targetcpu.1542570835" name="Target CPU (--cpu)" superClass="com.arm.tool.c.compiler.option.targetcpu" value="Cortex-A9" valueType="string"/>
+								<option id="com.arm.tool.c.compiler.option.endian.1071397580" name="Byte order" superClass="com.arm.tool.c.compiler.option.endian" value="com.arm.tool.c.compiler.option.endian.little" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.inst.1331808544" name="Instruction set" superClass="com.arm.tool.c.compiler.option.inst" value="com.arm.tool.c.compiler.option.inst.arm" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.flags.1182288132" name="Other flags" superClass="com.arm.tool.c.compiler.option.flags" value="--asm" valueType="string"/>
+								<option id="com.arm.tool.c.compiler.option.incpath.1948708236" name="Include path (-I)" superClass="com.arm.tool.c.compiler.option.incpath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/RenesasFiles/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/FreeRTOS-Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/FreeRTOS-Source/Portable/RVDS/ARM_CA9}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/Full-Demo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/Full-Demo/FreeRTOS-Plus-CLI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/Full-Demo/FreeRTOS-Plus-FAT-SL/api}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/RenesasFiles/include/iodefines}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Source/Full-Demo/Common-Demo-Source/include}&quot;"/>
+								</option>
+								<option id="com.arm.tool.c.compiler.options.debug.format.1592969903" name="Debug format" superClass="com.arm.tool.c.compiler.options.debug.format" value="com.arm.tool.c.compiler.options.debug.format.dwarf2" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.fppcs.1616556608" name="Floating-point PCS (--apcs)" superClass="com.arm.tool.c.compiler.option.fppcs" value="com.arm.tool.c.compiler.option.fppcs.auto" valueType="enumerated"/>
+								<option id="com.arm.tool.c.compiler.option.targetfpu.1451840280" name="Target FPU (--fpu)" superClass="com.arm.tool.c.compiler.option.targetfpu" value="" valueType="string"/>
+								<option id="com.arm.tool.c.compiler.option.inter.1620266183" name="Interworking (--apcs=/interwork)" superClass="com.arm.tool.c.compiler.option.inter" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.compiler.option.suppress.760817473" name="Suppress (--diag_suppress)" superClass="com.arm.tool.c.compiler.option.suppress" value="191" valueType="string"/>
+								<inputType id="com.arm.tool.c.compiler.input.1380994877" superClass="com.arm.tool.c.compiler.input"/>
+								<inputType id="com.arm.tool.cpp.compiler.input.1474568149" superClass="com.arm.tool.cpp.compiler.input"/>
+							</tool>
+							<tool id="com.arm.tool.cpp.compiler.baremetal.exe.debug.1814014638" name="ARM C++ Compiler" superClass="com.arm.tool.cpp.compiler.baremetal.exe.debug"/>
+							<tool command="armasm" id="com.arm.tool.assembler.160755413" name="ARM Assembler" superClass="com.arm.tool.assembler">
+								<option id="com.arm.tool.assembler.option.unalign.808397636" name="Disable unaligned accesses (--no_unaligned_access)" superClass="com.arm.tool.assembler.option.unalign" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.assembler.option.cpu.1187436399" name="Target CPU (--cpu)" superClass="com.arm.tool.assembler.option.cpu" value="Cortex-A9" valueType="string"/>
+								<option id="com.arm.tool.assembler.option.debug.format.1169303932" name="Debug format" superClass="com.arm.tool.assembler.option.debug.format" value="com.arm.tool.c.compiler.options.debug.format.dwarf2" valueType="enumerated"/>
+								<option id="com.arm.tool.assembler.option.flags.1558586813" name="Other flags" superClass="com.arm.tool.assembler.option.flags" value="--predefine &quot;__IASMARM__ SETA 0&quot; -I&quot;${workspace_loc:/${ProjName}/Source/FreeRTOS-Source/Portable/RVDS/ARM_CA9}&quot; -I&quot;${workspace_loc:/${ProjName}/Source}&quot;" valueType="string"/>
+								<option id="com.arm.tool.assembler.option.fppcs.1537902628" name="Floating-point PCS (--apcs)" superClass="com.arm.tool.assembler.option.fppcs" value="com.arm.tool.c.compiler.option.fppcs.auto" valueType="enumerated"/>
+								<option id="com.arm.tool.assembler.option.fpu.281853644" name="Target FPU (--fpu)" superClass="com.arm.tool.assembler.option.fpu" value="" valueType="string"/>
+								<option id="com.arm.tool.assembler.option.inter.408608874" name="Interworking (--apcs=/interwork)" superClass="com.arm.tool.assembler.option.inter" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.assembler.option.inst.638741516" name="Instruction set" superClass="com.arm.tool.assembler.option.inst" value="com.arm.tool.c.compiler.option.inst.arm" valueType="enumerated"/>
+								<option id="com.arm.tool.assembler.option.preprocflags.192573494" name="Preprocessor options (--cpreproc_opts)" superClass="com.arm.tool.assembler.option.preprocflags" value="" valueType="string"/>
+								<option id="com.arm.tool.assembler.option.preproc.1233793979" name="Preprocess input before assembling (--cpreproc)" superClass="com.arm.tool.assembler.option.preproc" value="false" valueType="boolean"/>
+							</tool>
+							<tool id="com.arm.tool.c.linker.216427938" name="ARM Linker" superClass="com.arm.tool.c.linker">
+								<option id="com.arm.tool.c.linker.option.cpu.1649465823" name="Target CPU (--cpu)" superClass="com.arm.tool.c.linker.option.cpu" value="Cortex-A9" valueType="string"/>
+								<option id="com.arm.tool.c.linker.option.entry.1057749536" name="Image entry point (--entry)" superClass="com.arm.tool.c.linker.option.entry" value="Start" valueType="string"/>
+								<option id="com.arm.tool.c.linker.option.scatter.502405005" name="Scatter file (--scatter)" superClass="com.arm.tool.c.linker.option.scatter" value="..\scatter.scat" valueType="string"/>
+								<option id="com.arm.tool.c.linker.option.eleminate.1472541094" name="Eliminate unused sections (--remove)" superClass="com.arm.tool.c.linker.option.eleminate" value="false" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.callgraph.998823310" name="Generate call graph (--callgraph)" superClass="com.arm.tool.c.linker.option.callgraph" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.imagemap.419116438" name="Generate image map (--map)" superClass="com.arm.tool.c.linker.option.imagemap" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.verbose.818405632" name="Verbose output (--verbose)" superClass="com.arm.tool.c.linker.option.verbose" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.totals.187813888" name="List total code and data sizes of output image (--info=totals)" superClass="com.arm.tool.c.linker.option.totals" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.elim.787464959" name="List unused sections that are eliminated (--info=unused)" superClass="com.arm.tool.c.linker.option.elim" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.stack.1092108841" name="List stack usage of global symbols (--info=stack)" superClass="com.arm.tool.c.linker.option.stack" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.linker.option.inlineinfo.1923984063" name="List functions inlined by linker (--info=inline)" superClass="com.arm.tool.c.linker.option.inlineinfo" value="true" valueType="boolean"/>
+								<option id="com.arm.tool.c.link.option.suppress.1792647487" name="Suppress (--diag_suppress)" superClass="com.arm.tool.c.link.option.suppress" value="L6314" valueType="string"/>
+								<option id="com.arm.tool.c.linker.option.flags.351641295" name="Other flags" superClass="com.arm.tool.c.linker.option.flags" value="--symbols --load_addr_map_info --datacompressor=off --list=FreeRTOS_Demo.map" valueType="string"/>
+								<inputType id="com.arm.tool.c.linker.input.526302387" superClass="com.arm.tool.c.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinputdependency" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="com.arm.tool.librarian.460150243" name="ARM Librarian" superClass="com.arm.tool.librarian"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="IAR|Source/samples" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="FreeRTOS_Demo.com.arm.eclipse.build.project.baremetal.exe.508091358" name="Bare-metal Executable" projectType="com.arm.eclipse.build.project.baremetal.exe"/>
+	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/FreeRTOS_Demo"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085;com.arm.eclipse.build.config.baremetal.exe.debug.2085733085.;com.arm.tool.c.compiler.baremetal.exe.debug.134129553;com.arm.tool.c.compiler.input.1380994877">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.arm.eclipse.builder.armcc.ARMCompilerDiscoveryProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.arm.eclipse.build.config.baremetal.exe.debug.2085733085;com.arm.eclipse.build.config.baremetal.exe.debug.2085733085.;com.arm.tool.c.compiler.baremetal.exe.debug.134129553;com.arm.tool.cpp.compiler.input.1474568149">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.arm.eclipse.builder.armcc.ARMCompilerDiscoveryProfile"/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+</cproject>

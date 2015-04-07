@@ -1,0 +1,20 @@
+ppc405_0
+TESTAPP_PERIPHERAL_SOURCES = /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/TestApp_Peripheral.c /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/xintc_tapp_example.c /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/xuartlite_selftest_example.c /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/xuartlite_intr_tapp_example.c /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/xgpio_tapp_example.c /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/xsysace_selftest_example.c 
+TESTAPP_PERIPHERAL_HEADERS = /cygdrive/c//E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/intc_header.h /cygdrive/c//E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/uartlite_header.h /cygdrive/c//E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/uartlite_intr_header.h /cygdrive/c//E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/gpio_header.h /cygdrive/c//E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/sysace_header.h 
+TESTAPP_PERIPHERAL_CC = powerpc-eabi-gcc
+TESTAPP_PERIPHERAL_CC_SIZE = powerpc-eabi-size
+TESTAPP_PERIPHERAL_CC_OPT = -O0
+TESTAPP_PERIPHERAL_CFLAGS = 
+TESTAPP_PERIPHERAL_CC_SEARCH = # -B
+TESTAPP_PERIPHERAL_LIBPATH = -L./ppc405_0/lib/ # -L
+TESTAPP_PERIPHERAL_INCLUDES = -I./ppc405_0/include/  -ITestApp_Peripheral/src/ # -I
+TESTAPP_PERIPHERAL_LFLAGS = # -l
+TESTAPP_PERIPHERAL_LINKER_SCRIPT = /cygdrive/c/E/Dev/FreeRTOS/WorkingCopy2/Demo/PPC405_FPU_Xilinx_Virtex4_GCC/TestApp_Peripheral/src/TestApp_Peripheral_LinkScr.ld
+TESTAPP_PERIPHERAL_CC_DEBUG_FLAG =  -g 
+TESTAPP_PERIPHERAL_CC_PROFILE_FLAG = # -pg
+TESTAPP_PERIPHERAL_CC_GLOBPTR_FLAG= # -msdata=eabi
+TESTAPP_PERIPHERAL_CC_INFERRED_FLAGS= -mfpu=sp_full 
+TESTAPP_PERIPHERAL_CC_START_ADDR_FLAG=  #  # -Wl,-defsym -Wl,_START_ADDR=
+TESTAPP_PERIPHERAL_CC_STACK_SIZE_FLAG=  #  # -Wl,-defsym -Wl,_STACK_SIZE=
+TESTAPP_PERIPHERAL_CC_HEAP_SIZE_FLAG=  #  # -Wl,-defsym -Wl,_HEAP_SIZE=
+                  $(TESTAPP_PERIPHERAL_CC_INFERRED_FLAGS)  \

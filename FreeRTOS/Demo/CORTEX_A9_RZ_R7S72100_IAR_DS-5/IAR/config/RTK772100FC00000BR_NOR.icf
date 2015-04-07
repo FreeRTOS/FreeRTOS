@@ -1,0 +1,59 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\a_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x00000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__   = 0x00000040;
+define symbol __ICFEDIT_region_ROM_end__     = 0x07FFFFFF;
+define symbol __ICFEDIT_region_RAM_start__   = 0x20020000;
+define symbol __ICFEDIT_region_RAM_end__     = 0x209FFFFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__   = 0x8000;
+define symbol __ICFEDIT_size_svcstack__ = 0x40;
+define symbol __ICFEDIT_size_irqstack__ = 0x40;
+define symbol __ICFEDIT_size_fiqstack__ = 0x40;
+define symbol __ICFEDIT_size_undstack__ = 0x40;
+define symbol __ICFEDIT_size_abtstack__ = 0x40;
+define symbol __ICFEDIT_size_heap__     = 0x8000;
+/**** End of ICF editor section. ###ICF###*/
+
+define symbol __ICFEDIT_region_RetRAM_start__       = 0x20000000;
+define symbol __ICFEDIT_region_RetRAM_end__         = 0x2001FFFF;
+
+define symbol __ICFEDIT_region_MirrorRAM_start__    = 0x60020000;
+define symbol __ICFEDIT_region_MirrorRAM_end__      = 0x609FFFFF;
+
+define symbol __ICFEDIT_region_MirrorRetRAM_start__ = 0x60000000;
+define symbol __ICFEDIT_region_MirrorRetRAM_end__   = 0x6001FFFF;
+
+define memory mem with size = 4G;
+
+define region ROM_region          = mem:[from __ICFEDIT_region_ROM_start__          to __ICFEDIT_region_ROM_end__];
+define region RAM_region          = mem:[from __ICFEDIT_region_RAM_start__          to __ICFEDIT_region_RAM_end__];
+define region RetRAM_region       = mem:[from __ICFEDIT_region_RetRAM_start__       to __ICFEDIT_region_RetRAM_end__];
+define region MirrorRAM_region    = mem:[from __ICFEDIT_region_MirrorRAM_start__    to __ICFEDIT_region_MirrorRAM_end__];
+define region MirrorRetRAM_region = mem:[from __ICFEDIT_region_MirrorRetRAM_start__ to __ICFEDIT_region_MirrorRetRAM_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block SVC_STACK with alignment = 8, size = __ICFEDIT_size_svcstack__ { };
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block FIQ_STACK with alignment = 8, size = __ICFEDIT_size_fiqstack__ { };
+define block UND_STACK with alignment = 8, size = __ICFEDIT_size_undstack__ { };
+define block ABT_STACK with alignment = 8, size = __ICFEDIT_size_abtstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+do not initialize  { section MMU_TT };
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+
+place in ROM_region     { readonly };
+place in RAM_region     { readwrite,
+                          block CSTACK, block SVC_STACK, block IRQ_STACK, block FIQ_STACK,
+                          block UND_STACK, block ABT_STACK, block HEAP };
+
+place in RetRAM_region       { section .retram };
+place in MirrorRAM_region    { section .mirrorram };
+place in MirrorRetRAM_region { section .mirrorretram };

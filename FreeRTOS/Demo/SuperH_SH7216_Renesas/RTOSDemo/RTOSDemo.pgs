@@ -1,0 +1,35 @@
+; Project Generator Setup Infomation
+
+[PGS Version]
+Version=1.0
+
+[Toolchain]
+Toolchain=Renesas SuperH Standard
+Toolchain Name=Renesas SuperH RISC engine Standard Toolchain
+Toolchain Version=9.3.2.0
+
+[CPU]
+CPU Family=SuperH RISC engine
+CPU Series=SH2A-FPU
+CPU Type=Other
+Operating Mode=Not Support
+Address Space=Not Support
+Multiple=Not Support
+Divide=Not Support
+
+[Project]
+Project Name=RTOSDemo
+Project Type=Application
+
+[Stack Settings]
+Stack Pointer Address=H'FFFC0000
+Stack Size=H'400
+Stack Section Name=S
+Stack Section Address=
+Source File Name=stacksct.h
+Description=#pragma stacksize 0x400         /* Do not modify this line. */
+Default Stack Pointer Address=H'FFFC0000
+Default Stack Size=H'400
+
+[Initial Settings]
+Simulator I/O=disable

@@ -1,0 +1,250 @@
+PACKAGE install2 
+{
+   # This file informs the Nios II IDE of non-legacy component paths.
+   # Generated 2009.08.06.21:27:33
+   COMPONENT alt_vip_clip 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/clipper/lib";
+      }
+   }
+   COMPONENT alt_vip_cpr 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/color_plane_sequencer/lib";
+      }
+   }
+   COMPONENT alt_vip_crs 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/chroma_resampler/lib";
+      }
+   }
+   COMPONENT alt_vip_csc 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/csc/lib";
+      }
+   }
+   COMPONENT alt_vip_dil 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/deinterlacer/lib";
+      }
+   }
+   COMPONENT alt_vip_fir 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/fir_filter_2d/lib";
+      }
+   }
+   COMPONENT alt_vip_gam 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/gamma_corrector/lib";
+      }
+   }
+   COMPONENT alt_vip_lbc 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/line_buffer_compiler/lib";
+      }
+   }
+   COMPONENT alt_vip_med 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/median_filter_2d/lib";
+      }
+   }
+   COMPONENT alt_vip_mix 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/alpha_blending_mixer/lib";
+      }
+   }
+   COMPONENT alt_vip_scl 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/scaler/lib";
+      }
+   }
+   COMPONENT alt_vip_tpg 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/test_pattern_generator/lib";
+      }
+   }
+   COMPONENT alt_vip_vfb 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/frame_buffer/lib";
+      }
+   }
+   COMPONENT altera_avalon_dc_fifo 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_dc_fifo";
+      }
+   }
+   COMPONENT altera_avalon_half_rate_bridge 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_half_rate_bridge";
+      }
+   }
+   COMPONENT altera_avalon_multi_channel_shared_fifo 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_multi_channel_shared_fifo";
+      }
+   }
+   COMPONENT altera_avalon_packets_to_master 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_packets_to_master";
+      }
+   }
+   COMPONENT altera_avalon_pixel_converter 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_pixel_converter";
+      }
+   }
+   COMPONENT altera_avalon_remote_update_cycloneiii 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_remote_update_cycloneiii";
+      }
+   }
+   COMPONENT altera_avalon_round_robin_scheduler 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_round_robin_scheduler";
+      }
+   }
+   COMPONENT altera_avalon_sc_fifo 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_sc_fifo";
+      }
+   }
+   COMPONENT altera_avalon_st_bytes_to_packets 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_st_bytes_to_packets";
+      }
+   }
+   COMPONENT altera_avalon_st_idle_inserter 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_st_idle_inserter";
+      }
+   }
+   COMPONENT altera_avalon_st_idle_remover 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_st_idle_remover";
+      }
+   }
+   COMPONENT altera_avalon_st_packets_to_bytes 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_st_packets_to_bytes";
+      }
+   }
+   COMPONENT altera_avalon_video_sync_generator 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_video_sync_generator";
+      }
+   }
+   COMPONENT altera_jtag_avalon_master 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_jtag_avalon_master";
+      }
+   }
+   COMPONENT altera_jtag_dc_streaming 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_jtag_phy";
+      }
+   }
+   COMPONENT altpll 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_altpll";
+      }
+   }
+   COMPONENT avalon_mm_master_bfm 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/verification/avalon_mm_bfm/avalon_mm_master_bfm";
+      }
+   }
+   COMPONENT avalon_mm_slave_bfm 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/verification/avalon_mm_bfm/avalon_mm_slave_bfm";
+      }
+   }
+   COMPONENT pci_lite 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_pci_lite";
+      }
+   }
+   COMPONENT sls_avalon_usb20hr 
+   {
+      VERSION 2.2 
+      {
+         local = "C:/devtools/altera/90sp2/ip/sls/usb20hr_ocp_eval_pack/hardware/component";
+      }
+   }
+   COMPONENT spi_slave_to_avalon_mm_master_bridge 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_spislave_to_avalonmm_bridge";
+      }
+   }
+   COMPONENT spislave 
+   {
+      VERSION 9.0 
+      {
+         local = "C:/devtools/altera/90sp2/ip/altera/sopc_builder_ip/altera_avalon_spi_phy_slave";
+      }
+   }
+}

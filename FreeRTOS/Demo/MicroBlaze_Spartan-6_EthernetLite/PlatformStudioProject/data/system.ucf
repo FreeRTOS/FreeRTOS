@@ -1,0 +1,41 @@
+#
+# pin constraints
+#
+NET CLK_N LOC = "K22"  |  DIFF_TERM = "TRUE"  |  IOSTANDARD = "LVDS_25";
+NET CLK_P LOC = "K21"  |  DIFF_TERM = "TRUE"  |  IOSTANDARD = "LVDS_25";
+NET Ethernet_Lite_COL LOC = "M16"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_CRS LOC = "N15"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_MDC LOC = "R19"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_MDIO LOC = "V20"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_PHY_RST_N LOC = "J22"  |  IOSTANDARD = "LVCMOS25"  |  TIG;
+NET Ethernet_Lite_RXD[0] LOC = "P19"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_RXD[1] LOC = "Y22"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_RXD[2] LOC = "Y21"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_RXD[3] LOC = "W22"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_RX_CLK LOC = "P20"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_RX_DV LOC = "T22"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_RX_ER LOC = "U20"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_TXD[0] LOC = "U10"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_TXD[1] LOC = "T10"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_TXD[2] LOC = "AB8"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_TXD[3] LOC = "AA8"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_TX_CLK LOC = "L20"  |  IOSTANDARD = "LVCMOS25";
+NET Ethernet_Lite_TX_EN LOC = "T8"  |  IOSTANDARD = "LVCMOS25";
+NET LEDs_4Bits_TRI_O[0] LOC = "D17"  |  IOSTANDARD = "LVCMOS25";
+NET LEDs_4Bits_TRI_O[1] LOC = "AB4"  |  IOSTANDARD = "LVCMOS25";
+NET LEDs_4Bits_TRI_O[2] LOC = "D21"  |  IOSTANDARD = "LVCMOS25";
+NET LEDs_4Bits_TRI_O[3] LOC = "W15"  |  IOSTANDARD = "LVCMOS25";
+NET Push_Buttons_4Bits_TRI_I[0] LOC = "F3"  |  IOSTANDARD = "LVCMOS25";
+NET Push_Buttons_4Bits_TRI_I[1] LOC = "G6"  |  IOSTANDARD = "LVCMOS25";
+NET Push_Buttons_4Bits_TRI_I[2] LOC = "F5"  |  IOSTANDARD = "LVCMOS25";
+NET Push_Buttons_4Bits_TRI_I[3] LOC = "C1"  |  IOSTANDARD = "LVCMOS25";
+NET RESET LOC = "H8"  |  IOSTANDARD = "LVCMOS15"  |  TIG;
+NET RS232_Uart_1_sin LOC = "H17"  |  IOSTANDARD = "LVCMOS25";
+NET RS232_Uart_1_sout LOC = "B21"  |  IOSTANDARD = "LVCMOS25";
+#
+# additional constraints
+#
+
+NET "CLK" TNM_NET = sys_clk_pin;
+TIMESPEC TS_sys_clk_pin = PERIOD sys_clk_pin 200000 kHz;
+

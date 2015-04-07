@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<Project Version="1" Minor="0">
+	<BUILD_NUMBER Name="1071353"/>
+	<FULL_BUILD Name="SW Build 1071353 on Tue Nov 18 18:29:27 MST 2014"/>
+	<MODE Name="Post-Bitstream"/>
+	<SYSTEMINFO BOARD="xilinx.com:kc705:part0:1.1" ARCH="kintex7" PACKAGE="ffg900" DEVICE="7k325t" SPEED="-2" LUT="" FF="" BRAM="" DSP=""/>
+	<HIERARCHY Name="base_microblaze_design_i"/>
+	<File Type="HW_HANDOFF" Name="base_microblaze_design.hwh" ModTime="1421754940"/>
+	<File Type="BIT" Name="base_microblaze_design_wrapper.bit" ModTime="1421759776"/>
+	<File Type="BMM" Name="base_microblaze_design_wrapper.mmi" ModTime="1421759676"/>
+	<File Type="BD_TCL" Name="base_microblaze_design_bd.tcl" ModTime="1421754940"/>
+	<USEDRESOURCES LUT="" FF="" BRAM="" DSP=""/>
+</Project>
+

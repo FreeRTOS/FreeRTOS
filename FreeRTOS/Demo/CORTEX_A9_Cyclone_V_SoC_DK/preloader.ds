@@ -1,0 +1,48 @@
+############################################################
+#
+# Copyright Altera 2013
+# All Rights Reserved
+# File: preloader.ds
+#
+############################################################
+
+#
+# stop processor if running
+#
+stop
+wait 5s
+reset system
+wait 5s
+
+#set semihosting enabled 0
+
+#
+# load the preloader (a.k.a the spl from our uboot dist)
+#
+loadfile "$sdir/uboot-socfpga/spl/u-boot-spl" 0x0
+
+#
+# set pc to entry point
+#
+set debug-from *$entrypoint     # Set start-at setting to address of $entrypoint
+start 
+
+#
+# delete any breakpoints
+#
+delete
+
+#
+# set hw breakpoint in spl in function, spl_boot_device,
+# The function, spl_boot_device, is called right before the spl tries
+# to load.  We stop here so we don't have to change any spl.
+#
+tbreak spl_boot_device
+
+# tell target to continue executing spl
+cont
+
+# wait for breakpoint
+wait 60s
+
+

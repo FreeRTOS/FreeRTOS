@@ -1,0 +1,12 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+EXTRA_DIST+= \
+	     swig/PythonBuild.sh \
+	     swig/README \
+	     swig/cyassl.i \
+	     swig/cyassl_adds.c \
+	     swig/python_cyassl.vcproj \
+	     swig/rsasign.py \
+	     swig/runme.py
+

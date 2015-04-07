@@ -1,0 +1,131 @@
+// ---------------------------------------------------------
+//   ATMEL Microcontroller Software Support  -  ROUSSET  -
+// ---------------------------------------------------------
+// The software is delivered "AS IS" without warranty or
+// condition of any  kind, either express, implied or
+// statutory. This includes without limitation any warranty
+// or condition with respect to merchantability or fitness
+// for any particular purpose, or against the infringements of
+// intellectual property rights of others.
+// ---------------------------------------------------------
+//  File: SAM9XE_FLASH.mac
+//  User setup file for CSPY debugger.
+//  1.1 08/Aug/06 jpp    : Creation
+//
+//  $Revision: 23594 $
+//
+// ---------------------------------------------------------
+__var __mac_i;
+__var __mac_pt;
+
+/*********************************************************************
+*
+*       execUserReset() : JTAG set initially to Full Speed
+*/
+execUserReset()
+{
+    __message "------------------------------ execUserReset ---------------------------------";
+    __writeMemory32(0x00000500, 0xFFFFFA00, "Memory"); // Set flash wait states
+    __PllSetting();                        //* Init PLL
+    __PllSetting100MHz();              
+    __message "-------------------------------Set PC Reset ----------------------------------";
+}
+
+/*********************************************************************
+*
+*       execUserPreload() : JTAG set initially to 32kHz
+*/
+execUserPreload()
+{
+    __message "------------------------------ execUserPreload ---------------------------------";
+    __hwReset(0);                          //* Hardware Reset: CPU is automatically halted after the reset (JTAG is already configured to 32kHz)
+    __writeMemory32(0xD3,0x98,"Register"); //*  Set CPSR
+    __writeMemory32(0x00000500, 0xFFFFFA00, "Memory"); // Set flash wait states
+    __PllSetting();                        //* Init PLL
+    __PllSetting100MHz();    
+    _InitRSTC();                           //* Enable User Reset to allow execUserReset() execution
+}
+
+
+
+/*********************************************************************
+*
+*       _InitRSTC()
+*
+* Function description
+*   Initializes the RSTC (Reset controller).
+*   This makes sense since the default is to not allow user resets, which makes it impossible to
+*   apply a second RESET via J-Link
+*/
+_InitRSTC() {
+    __writeMemory32(0xA5000001, 0xFFFFFD08,"Memory");    // Allow user reset
+}
+
+
+
+/*********************************************************************
+*
+*       __PllSetting()
+* Function description
+*   Initializes the PMC.
+*   1. Enable the Main Oscillator
+*   2. Configure PLL
+*   3. Switch Master
+*/
+__PllSetting()
+{
+     if ((__readMemory32(0xFFFFFC30,"Memory")&0x3) != 0 ) {
+//* Disable all PMC interrupt ( $$ JPP)
+//* AT91C_PMC_IDR   ((AT91_REG *) 0xFFFFFC64) //(PMC) Interrupt Disable Register
+//*    pPmc->PMC_IDR = 0xFFFFFFFF;
+    __writeMemory32(0xFFFFFFFF,0xFFFFFC64,"Memory");
+//* AT91C_PMC_PCDR  ((AT91_REG *) 0xFFFFFC14) //(PMC) Peripheral Clock Disable Register
+    __writeMemory32(0xFFFFFFFF,0xFFFFFC14,"Memory");
+// Disable all clock only Processor clock is enabled.
+    __writeMemory32(0xFFFFFFFE,0xFFFFFC04,"Memory");
+
+// AT91C_PMC_MCKR  ((AT91_REG *) 	0xFFFFFC30) // (PMC) Master Clock Register
+    __writeMemory32(0x00000001,0xFFFFFC30,"Memory");
+    __sleep(10000);
+
+// write reset value to PLLA and PLLB
+// AT91C_PMC_PLLAR ((AT91_REG *) 	0xFFFFFC28) // (PMC) PLL A Register
+    __writeMemory32(0x00003F00,0xFFFFFC28,"Memory");
+
+// AT91C_PMC_PLLBR ((AT91_REG *) 	0xFFFFFC2C) // (PMC) PLL B Register
+    __writeMemory32(0x00003F00,0xFFFFFC2C,"Memory");
+    __sleep(10000);
+
+   __message "------------------------------- PLL  Enable -----------------------------------------";
+   } else {
+   __message " ********* Core in SLOW CLOCK mode ********* "; }
+}
+
+
+/*********************************************************************
+*
+*       __PllSetting100MHz()
+* Function description
+*   Set core at 200 MHz and MCK at 100 MHz 
+*/
+__PllSetting100MHz()
+{
+
+   __message "------------------------------- PLL Set at 100 MHz ----------------------------------";
+
+//* pPmc->PMC_MOR = (( AT91C_CKGR_OSCOUNT & (0x40 <<8) | AT91C_CKGR_MOSCEN ));
+    __writeMemory32(0x00004001,0xFFFFFC20,"Memory");
+    __sleep(10000);
+// AT91C_PMC_MCKR  ((AT91_REG *) 	0xFFFFFC30) // (PMC) Master Clock Register
+    __writeMemory32(0x00000001,0xFFFFFC30,"Memory");
+    __sleep(10000);
+//*   AT91C_BASE_CKGR->CKGR_PLLAR = (AT91C_CKGR_SRCA | ((96 << 16) & AT91C_CKGR_MULA) | 
+//    (AT91C_CKGR_PLLACOUNT | (AT91C_CKGR_OUTA_0 | (9);
+    __writeMemory32(0x2060BF09,0xFFFFFC28,"Memory");
+    __sleep(10000);
+//*   AT91C_BASE_PMC->PMC_MCKR =  AT91C_PMC_CSS_PLLA_CLK | AT91C_PMC_PRES_CLK | AT91C_PMC_MDIV_2;;
+    __writeMemory32(0x00000102,0xFFFFFC30,"Memory");
+     __sleep(10000);
+
+}
+

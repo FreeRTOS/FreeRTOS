@@ -1,0 +1,114 @@
+
+Tracealyzer - Uploading the trace data
+-----------------------------------------
+Percepio AB, Jan. 23, 2014
+
+This document decribes how to upload the trace data from the target system to
+Tracealyzer. 
+
+Tracealyzer uses your existing debugger to upload the trace data from the 
+chip RAM. This is a plain RAM dump, that is done whenever you want to look at 
+the trace buffer contents. This means it works with essentially with any debug 
+probe on the market.
+
+Built-in support for Segger J-Link/J-Trace and Atmel SAM-ICE
+------------------------------------------------------------
+Tracealyzer v2.3 supports Segger J-Link and J-Link compatible debuggers 
+directly, without any debugger IDE involved. Using other debug probes is 
+also possible, but requires some extra steps, described below.
+
+If you have a Segger J-Link/J-Trace debug probe or another J-Link compatible 
+debug probe, just select "Read Trace" in the "J-Link" menu. Note that this 
+menu is only available if a compatible debug probe is found.
+
+This opens a dialog where you get to enter the memory region where
+the recorder data structure is located. Normally you select the entire 
+internal RAM according to the datasheet of your MCU, but the exact address
+can be found can by inspecting the "RecorderData" struct or the 
+"RecorderDataPtr" pointer with your debugger.
+
+J-Link compatible debug probes also include Atmel SAM-ICE and many built-in 
+debug interfaces on demonstration/evaluation boards (where there is a USB 
+connection directly to the board). Look for a Segger J-Link label on the board.
+
+MemoryLogger extension in Atmel Studio 6
+----------------------------------------
+Atmel's MemoryLogger extension provides a superb integration with FreeRTOS+Trace. 
+Look for "MemoryLogger" in Atmel Gallery, available in Atmel Studio and at the 
+Atmel website (http://gallery.atmel.com).
+
+This extension automatically detects the path to FreeRTOS+Trace, if 
+installed, and gives you a single-click upload/refresh. You can use it 
+while debugging and optionally get an automatic refresh eash time the 
+MCU is halted, e.g., on each breakpoint.
+
+Using other development environments and debug probes
+-----------------------------------------------------
+Most debuggers are able to save the RAM contents to a file. Tracealyzer 
+supports the following common formats:
+- Binary (.bin), supporting gdb, J-Link and Renesas HEW.
+- Intel Hex (.hex), supporting IAR Embedded Workbench and Atmel Studio (atprogram.exe)
+- MCH (.mch), supporting Microchip MPLAB.
+
+When you store the RAM dump, you must also make sure to select the right region, 
+i.e., start address and size. The recorder data is stored in a single data 
+block, identified by the pointer RecorderDataPtr. 
+It is not necessary to match the begin and end of the recorder data, as long as 
+it is fully included by the dumped memory region. Tracealyzer automatically 
+finds the trace data in the RAM dump, thanks to special signatures. For chips 
+with on-chip RAM only, we therefore recommend to dump the entire RAM. This is 
+usually very fast.
+For chips with larger amounts of (external) RAM, it is typically possible to 
+dump a limited region where the data is typically found.
+
+Using IAR Embedded Workbench for ARM, version 6.3
+-------------------------------------------------
+In the debugger view, when stopped on a breakpoint:
+- Select "Debug" menu, "Memory" submenu, "Save..." (keyboard shortcut: ALT,d,y,s)
+- In the Save dialog
+	- Zone: Memory
+	- Start Adress: 10000000 (for NXP LPC1766 in the demo project)
+	- End Adress: 1000FFFF (for NXP LPC1766 in the demo project)
+	- File format: Intel Extended
+	- Filename: <name>.hex
+	- Press "Save" button
+You can now open <name>.hex in Tracealyzer.
+
+To find the right Start and End addresses, check the address of the symbol 
+"RecorderData". The addresses does not need to match this symbol exactly, as 
+long as the whole data is included.
+
+Using Renesas High-performance Embedded Workshop v4.09
+------------------------------------------------------
+In the debugger view, when stopped on a breakpoint:
+- Select "Debug" menu, "Save Memory..." (keyboard shortcut: ALT,d,a)
+- In the Save dialog
+	- Format: Binary
+	- Filename: <name>.bin
+	- Start Address: 00000000 (For RX62N in the demo project)
+	- End Address: 0000FFFF (For RX62N in the demo project)
+	- Access size: 1
+	- Press "Save" button and open <name>.bin in Tracealyzer.
+	
+Using Microchip MPLAB v8.86
+------------------------------------------------------
+- Select "View" -> "File Registers". This shows you the memory contents.
+- Make sure "Hex" is selected in the bottom left (instead of "Symbolic"). Hex mode seems to be default.
+- Right click in the view and select "Export Table...".
+- In the dialog ("Export As"), make sure "Single Column Output" is selected (seems to be default).
+- Select start address 0x0000 and make sure the end address is beyond the RecorderData structure. 
+  The default values seems to be the whole RAM, so you probably don't need to change this.
+- Save as a .mch file and open this file in Tracealyzer v2.2.4 or later (support for the .mch format was added in v2.2.4).
+
+Using STM32 ST-Link
+------------------------------------------------------
+- Start "ST-Link Utility"
+- Connect to the device and view the device memory.
+- Set the view to display the entire RAM, or at least the section containing the RecorderData structure.
+- Select "Save as" and choose binary (.bin) or Intel Hex (.hex) format.
+- Open the resulting file in Tracealyzer.
+
+In case you have any question, contact support@percepio.com
+
+Percepio AB
+www.percepio.com

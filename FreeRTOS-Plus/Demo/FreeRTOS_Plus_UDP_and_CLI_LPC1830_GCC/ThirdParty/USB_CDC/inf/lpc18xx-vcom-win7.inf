@@ -1,0 +1,60 @@
+; 
+; Keil - An ARM Company  Comunication Device Class driver installation file
+; (C)2007 Copyright 
+;
+
+[Version] 
+Signature="$Windows NT$" 
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318} 
+Provider=%Keil% 
+LayoutFile=layout.inf
+DriverVer=01/06/07
+
+[Manufacturer] 
+%Keil%=DeviceList,NT,NTamd64
+
+[DestinationDirs]
+DefaultDestDir=12
+
+[SourceDisksFiles]
+
+[SourceDisksNames]
+
+[DeviceList.NT] 
+%DESCRIPTION%=LPC18xxUSB, USB\VID_1FC9&PID_2002 
+[DeviceList.NTamd64]
+%DESCRIPTION%=LPC18xxUSB, USB\VID_1FC9&PID_2002
+
+;------------------------------------------------------------------------------
+;  Windows Sections
+;------------------------------------------------------------------------------
+
+[LPC18xxUSB.NT] 
+Include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection
+AddReg=LPC18xxUSB.NT.AddReg
+
+[LPC18xxUSB.NT.AddReg] 
+HKR,,DevLoader,,*ntkern 
+HKR,,NTMPDriver,,usbser.sys 
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider" 
+
+[LPC18xxUSB.NT.Services] 
+AddService=usbser, 0x00000002, DriverService.NT
+
+[DriverService.NT] 
+DisplayName=%DESCRIPTION% 
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\usbser.sys 
+LoadOrderGroup = Base
+
+;------------------------------------------------------------------------------
+;  String Definitions
+;------------------------------------------------------------------------------
+
+[Strings] 
+NXP="NXP - Founded by Philips"
+DESCRIPTION="LPC18xx USB VCom Port" 

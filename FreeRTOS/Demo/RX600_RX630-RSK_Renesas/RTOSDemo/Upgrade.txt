@@ -1,0 +1,5 @@
+Project name : RTOSDemo
+
+Renesas RX Standard Toolchain 1.0.2.0 was upgraded to
+   Renesas RX Standard Toolchain 1.1.0.0.
+

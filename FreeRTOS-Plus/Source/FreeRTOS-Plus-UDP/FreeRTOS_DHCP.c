@@ -630,6 +630,7 @@ static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress, x
 xDHCPMessage_t *pxDHCPMessage;
 const size_t xRequiredBufferSize = sizeof( xDHCPMessage_t ) + xOptionsArraySize;
 uint8_t *pucUDPPayloadBuffer;
+static uint8_t ucUseBroadcastFlag = pdFALSE;
 
 	/* Get a buffer.  This uses a maximum delay, but the delay will be capped
 	to ipconfigMAX_SEND_BLOCK_TIME_TICKS so the return value still needs to be
@@ -649,7 +650,19 @@ uint8_t *pucUDPPayloadBuffer;
 	pxDHCPMessage->ucAddressLength = dhcpETHERNET_ADDRESS_LENGTH;
 	pxDHCPMessage->ulTransactionID = ulTransactionId;
 	pxDHCPMessage->ulDHCPCookie = dhcpCOOKIE;
-	pxDHCPMessage->usFlags = dhcpBROADCAST;
+
+	/* For maximum possibility of success, alternate between broadcast and non
+	broadcast. */
+	ucUseBroadcastFlag = !ucUseBroadcastFlag;
+	if( ucUseBroadcastFlag == pdTRUE )
+	{
+		pxDHCPMessage->usFlags = dhcpBROADCAST;
+	}
+	else
+	{
+		pxDHCPMessage->usFlags = 0;
+	}
+
 	memcpy( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ), ( void * ) pxMACAddress, sizeof( xMACAddress_t ) );
 
 	/* Copy in the const part of the options options. */

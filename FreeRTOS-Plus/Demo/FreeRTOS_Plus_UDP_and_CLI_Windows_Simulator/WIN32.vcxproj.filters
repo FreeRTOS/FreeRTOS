@@ -109,6 +109,9 @@
     <ClCompile Include="DemoTasks\SelectServer.c">
       <Filter>Demo App Source\DemoTasks</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\portable\BufferManagement\BufferAllocation_1.c">
+      <Filter>FreeRTOS+\FreeRTOS+UDP\portable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

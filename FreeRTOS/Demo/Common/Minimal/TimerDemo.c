@@ -192,7 +192,7 @@ static void prvTimerTestTask( void *pvParameters )
 	xOneShotTimer = xTimerCreate(	"Oneshot Timer",				/* Text name to facilitate debugging.  The kernel does not use this itself. */
 									tmrdemoONE_SHOT_TIMER_PERIOD,	/* The period for the timer. */
 									pdFALSE,						/* Don't auto-reload - hence a one shot timer. */
-									( void * ) 0,					/* The timer identifier.  In this case this is not used as the timer has its own callback. */
+									( void * ) 0,					/* The timer identifier.  Initialise to 0, then increment each time it is called. */
 									prvOneShotTimerCallback );		/* The callback to be called when the timer expires. */
 
 	if( xOneShotTimer == NULL )
@@ -1062,9 +1062,22 @@ uint32_t ulTimerID;
 
 static void prvOneShotTimerCallback( TimerHandle_t pxExpiredTimer )
 {
-	/* The parameter is not used in this case as only one timer uses this
-	callback function. */
-	( void ) pxExpiredTimer;
+/* A count is kept of the number of times this callback function is executed.
+The count is stored as the timer's ID.  This is only done to test the
+vTimerSetTimerID() function. */
+static uint32_t ulCallCount = 0;
+uint32_t ulLastCallCount;
+
+	/* Obtain the timer's ID, which should be a count of the number of times
+	this callback function has been executed. */
+	ulLastCallCount = ( uint32_t ) pvTimerGetTimerID( pxExpiredTimer );
+	configASSERT( ulLastCallCount == ulCallCount );
+
+	/* Increment the call count, then save it back as the timer's ID.  This is
+	only done to test the vTimerSetTimerID() API function. */
+	ulLastCallCount++;
+	vTimerSetTimerID( pxExpiredTimer, ( void * ) ulLastCallCount );
+	ulCallCount++;	
 
 	ucOneShotTimerCounter++;
 }

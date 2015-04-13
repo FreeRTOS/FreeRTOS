@@ -139,6 +139,9 @@
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\FreeRTOS_DNS.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\FreeRTOS_Sockets.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\FreeRTOS_UDP_IP.c" />
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\portable\BufferManagement\BufferAllocation_1.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-UDP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\Common\FreeRTOS_Plus_UDP_Demos\CLICommands\CLI-commands.c" />

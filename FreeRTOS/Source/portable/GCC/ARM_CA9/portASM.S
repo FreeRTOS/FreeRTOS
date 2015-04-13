@@ -76,7 +76,6 @@
 	.global FreeRTOS_IRQ_Handler
 	.global FreeRTOS_SWI_Handler
 	.global vPortRestoreTaskContext
-	.global vPortInstallFreeRTOSVectorTable
 
 
 

@@ -312,12 +312,13 @@ xThreadState *pxThreadState;
 		tick interrupts.  The priority is set below that of the simulated
 		interrupt handler so the interrupt event mutex is used for the
 		handshake / overrun protection. */
-		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, 0, NULL );
+		pvHandle = CreateThread( NULL, 0, prvSimulatedPeripheralTimer, NULL, CREATE_SUSPENDED, NULL );
 		if( pvHandle != NULL )
 		{
 			SetThreadPriority( pvHandle, THREAD_PRIORITY_BELOW_NORMAL );
 			SetThreadPriorityBoost( pvHandle, TRUE );
 			SetThreadAffinityMask( pvHandle, 0x01 );
+			ResumeThread( pvHandle );
 		}
 
 		/* Start the highest priority task by obtaining its associated thread

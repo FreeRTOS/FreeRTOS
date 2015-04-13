@@ -841,7 +841,7 @@ void *pvReturn;
 }
 /*-----------------------------------------------------------*/
 
-void vTimerSetTimerID( const TimerHandle_t xTimer, void *pvNewID )
+void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID )
 {
 Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 

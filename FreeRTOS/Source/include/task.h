@@ -214,7 +214,7 @@ typedef enum
  * \ingroup SchedulerControl
  */
 #define taskENTER_CRITICAL()		portENTER_CRITICAL()
-#define taskENTER_CRITICAL_FROM_ISR( x ) portSET_INTERRUPT_MASK_FROM_ISR( x )
+#define taskENTER_CRITICAL_FROM_ISR() portSET_INTERRUPT_MASK_FROM_ISR()
 
 /**
  * task. h
@@ -229,7 +229,7 @@ typedef enum
  * \ingroup SchedulerControl
  */
 #define taskEXIT_CRITICAL()			portEXIT_CRITICAL()
-#define taskEXIT_CRITICAL_FROM_ISR() portCLEAR_INTERRUPT_MASK_FROM_ISR()
+#define taskEXIT_CRITICAL_FROM_ISR( x ) portCLEAR_INTERRUPT_MASK_FROM_ISR( x )
 /**
  * task. h
  *

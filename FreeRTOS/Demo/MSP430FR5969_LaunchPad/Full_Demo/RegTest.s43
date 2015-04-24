@@ -1,0 +1,213 @@
+/*
+    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+    All rights reserved
+
+    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
+
+    This file is part of the FreeRTOS distribution.
+
+    FreeRTOS is free software; you can redistribute it and/or modify it under
+    the terms of the GNU General Public License (version 2) as published by the
+    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+
+    ***************************************************************************
+    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
+    >>!   distribute a combined work that includes FreeRTOS without being   !<<
+    >>!   obliged to provide the source code for proprietary components     !<<
+    >>!   outside of the FreeRTOS kernel.                                   !<<
+    ***************************************************************************
+
+    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
+    link: http://www.freertos.org/a00114.html
+
+    ***************************************************************************
+     *                                                                       *
+     *    FreeRTOS provides completely free yet professionally developed,    *
+     *    robust, strictly quality controlled, supported, and cross          *
+     *    platform software that is more than just the market leader, it     *
+     *    is the industry's de facto standard.                               *
+     *                                                                       *
+     *    Help yourself get started quickly while simultaneously helping     *
+     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
+     *    tutorial book, reference manual, or both:                          *
+     *    http://www.FreeRTOS.org/Documentation                              *
+     *                                                                       *
+    ***************************************************************************
+
+    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
+    the FAQ page "My application does not run, what could be wrong?".  Have you
+    defined configASSERT()?
+
+    http://www.FreeRTOS.org/support - In return for receiving this top quality
+    embedded software for free we request you assist our global community by
+    participating in the support forum.
+
+    http://www.FreeRTOS.org/training - Investing in training allows your team to
+    be as productive as possible as early as possible.  Now you can receive
+    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
+    Ltd, and the world's leading authority on the world's leading RTOS.
+
+    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
+    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
+    compatible FAT file system, and our tiny thread aware UDP/IP stack.
+
+    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
+    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
+
+    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
+    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
+    licenses offer ticketed support, indemnification and commercial middleware.
+
+    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
+    engineered and independently SIL3 certified version for use in safety and
+    mission critical applications that require provable dependability.
+
+    1 tab == 4 spaces!
+*/
+#include "msp430.h"
+#include "FreeRTOSConfig.h"
+#include "data_model.h"
+
+/*
+ * The definition of the "register test" tasks, as described at the top of
+ * main.c
+ */
+
+
+
+	IMPORT usRegTest1LoopCounter
+	IMPORT usRegTest2LoopCounter
+	IMPORT vPortYield
+
+	EXPORT vRegTest1Implementation
+	EXPORT vRegTest2Implementation
+
+	RSEG CODE
+
+	EVEN
+
+vRegTest1Implementation:
+
+	/* Fill each general purpose register with a known value. */
+	mov_x	#0x4444, r4
+	mov_x	#0x5555, r5
+	mov_x	#0x6666, r6
+	mov_x	#0x7777, r7
+	mov_x	#0x8888, r8
+	mov_x	#0x9999, r9
+	mov_x	#0xaaaa, r10
+	mov_x	#0xbbbb, r11
+	mov_x	#0xcccc, r12
+	mov_x	#0xdddd, r13
+	mov_x	#0xeeee, r14
+	mov_x	#0xffff, r15
+
+prvRegTest1Loop:
+
+	/* Test each general purpose register to check that it still contains the
+	expected known value, jumping to vRegTest1Error if any register contains
+	an unexpected value. */
+	cmp_x	#0x4444, r4
+	jne		vRegTest1Error
+	cmp_x	#0x5555, r5
+	jne		vRegTest1Error
+	cmp_x	#0x6666, r6
+	jne		vRegTest1Error
+	cmp_x	#0x7777, r7
+	jne		vRegTest1Error
+	cmp_x	#0x8888, r8
+	jne		vRegTest1Error
+	cmp_x	#0x9999, r9
+	jne		vRegTest1Error
+	cmp_x	#0xaaaa, r10
+	jne		vRegTest1Error
+	cmp_x	#0xbbbb, r11
+	jne		vRegTest1Error
+	cmp_x	#0xcccc, r12
+	jne		vRegTest1Error
+	cmp_x	#0xdddd, r13
+	jne		vRegTest1Error
+	cmp_x	#0xeeee, r14
+	jne		vRegTest1Error
+	cmp_x	#0xffff, r15
+	jne		vRegTest1Error
+
+	/* This task is still running without jumping to vRegTest1Error, so increment
+	the loop counter so the check task knows the task is running error free. */
+	incx.w	&usRegTest1LoopCounter
+
+	/* Loop again, performing the same tests. */
+	jmp		prvRegTest1Loop
+	nop
+
+
+	EVEN
+
+vRegTest1Error:
+	jmp vRegTest1Error
+	nop
+
+/*-----------------------------------------------------------*/
+
+/* See the comments in vRegTest1Implementation.  This task is the same, it just uses
+different values in its registers. */
+vRegTest2Implementation:
+
+	mov_x	#0x4441, r4
+	mov_x	#0x5551, r5
+	mov_x	#0x6661, r6
+	mov_x	#0x7771, r7
+	mov_x	#0x8881, r8
+	mov_x	#0x9991, r9
+	mov_x	#0xaaa1, r10
+	mov_x	#0xbbb1, r11
+	mov_x	#0xccc1, r12
+	mov_x	#0xddd1, r13
+	mov_x	#0xeee1, r14
+	mov_x	#0xfff1, r15
+
+prvRegTest2Loop:
+
+	cmp_x	#0x4441, r4
+	jne		vRegTest2Error
+	cmp_x	#0x5551, r5
+	jne		vRegTest2Error
+	cmp_x	#0x6661, r6
+	jne		vRegTest2Error
+	cmp_x	#0x7771, r7
+	jne		vRegTest2Error
+	cmp_x	#0x8881, r8
+	jne		vRegTest2Error
+	cmp_x	#0x9991, r9
+	jne		vRegTest2Error
+	cmp_x	#0xaaa1, r10
+	jne		vRegTest2Error
+	cmp_x	#0xbbb1, r11
+	jne		vRegTest2Error
+	cmp_x	#0xccc1, r12
+	jne		vRegTest2Error
+	cmp_x	#0xddd1, r13
+	jne		vRegTest2Error
+	cmp_x	#0xeee1, r14
+	jne		vRegTest2Error
+	cmp_x	#0xfff1, r15
+	jne		vRegTest2Error
+
+	/* Also perform a manual yield, just to increase the scope of the test. */
+	calla 	#vPortYield
+
+	incx.w	&usRegTest2LoopCounter
+	jmp		prvRegTest2Loop
+	nop
+
+
+vRegTest2Error:
+	jmp vRegTest2Error
+	nop
+/*-----------------------------------------------------------*/
+
+
+	END
+

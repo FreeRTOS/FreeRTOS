@@ -67,20 +67,20 @@
         <option>
           <name>Input variant</name>
           <version>2</version>
-          <state>3</state>
+          <state>7</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>No specifier n, no float or long long.</state>
+          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing, without multibyte support.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>2</version>
-          <state>3</state>
+          <state>7</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a or A.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long, without multibytes.</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
@@ -101,15 +101,15 @@
         </option>
         <option>
           <name>GStackHeapOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GStackSize2</name>
-          <state>160</state>
+          <state>100</state>
         </option>
         <option>
           <name>GHeapSize2</name>
-          <state>160</state>
+          <state>0</state>
         </option>
         <option>
           <name>RadioDataModelType</name>
@@ -117,7 +117,7 @@
         </option>
         <option>
           <name>GHeap20Size</name>
-          <state>80</state>
+          <state>0</state>
         </option>
         <option>
           <name>GeneralMisraRules98</name>
@@ -220,11 +220,11 @@
         <option>
           <name>Math variant</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>Math description</name>
-          <state>Default variants of cos, sin, tan, log, log10, pow, and exp.</state>
+          <state>Smaller size, higher execution speed, less precision, smaller input range.</state>
         </option>
       </data>
     </settings>
@@ -395,6 +395,7 @@
           <state>$PROJ_DIR$\..\..\Source\include</state>
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\MSP430X</state>
           <state>$PROJ_DIR$\..\Common\include</state>
+          <state>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1359,6 +1360,9 @@
       <file>
         <name>$PROJ_DIR$\..\..\Source\portable\IAR\MSP430X\portext.s43</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Source\portable\IAR\MSP430X\portmacro.h</name>
+      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
@@ -1374,6 +1378,54 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+    </file>
+  </group>
+  <group>
+    <name>Full_Demo</name>
+    <group>
+      <name>FreeRTOS+CLI</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c</name>
+      </file>
+    </group>
+    <group>
+      <name>Standard Demo Tasks</name>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\countsem.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\dynamic.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\EventGroupsDemo.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\Full_Demo\serial.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
+      </file>
+    </group>
+    <file>
+      <name>$PROJ_DIR$\Full_Demo\main_full.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Full_Demo\RegTest.s43</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\UARTCommandConsole.c</name>
     </file>
   </group>
   <file>

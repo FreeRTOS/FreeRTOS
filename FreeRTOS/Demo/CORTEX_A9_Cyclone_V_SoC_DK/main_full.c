@@ -214,7 +214,7 @@ static void prvPseudoRandomiser( void *pvParameters );
 
 /* The following two variables are used to communicate the status of the
 register check tasks to the check task.  If the variables keep incrementing,
-then the register check tasks has not discovered any errors.  If a variable
+then the register check tasks have not discovered any errors.  If a variable
 stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
@@ -222,7 +222,7 @@ volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 void main_full( void )
 {
-	/* Start all the other standard demo/test tasks.  They have not particular
+	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
 	vStartDynamicPriorityTasks();

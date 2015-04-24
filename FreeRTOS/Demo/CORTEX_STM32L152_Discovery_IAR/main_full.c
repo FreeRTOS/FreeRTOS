@@ -167,7 +167,7 @@ TimerHandle_t xCheckTimer = NULL;
 	/* The LCD is only used in the Full demo. */
 	prvConfigureLCD();
 
-	/* Start all the other standard demo/test tasks.  They have not particular
+	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
 	vStartDynamicPriorityTasks();

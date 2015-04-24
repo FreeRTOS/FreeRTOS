@@ -98,7 +98,9 @@ portRESTORE_CONTEXT macro
 	pop_x	r15
 	mov.w	r15, &usCriticalNesting
 	popm_x	#12, r15
+	nop
 	pop.w	sr
+	nop
 	reta
 	endm
 /*-----------------------------------------------------------*/
@@ -143,7 +145,7 @@ vPortYield:
 	/* The sr needs saving before it is modified. */
 	push.w	sr
 
-	/* Now the SR is stacked we can disable interrupts. */
+	/* Now the SR is stacked interrupts can be disabled. */
 	dint
 	nop
 

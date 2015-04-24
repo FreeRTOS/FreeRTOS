@@ -134,24 +134,24 @@ FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
 /* Cortex-A specific setting:  FPU has 32 (rather than 16) d registers.  See:
-http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
+http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-proprietary-interrupt-controller.html */
 #define configFPU_D32	1
 
 /* Cortex-A specific setting:  The address of the register within the interrupt
 controller from which the address of the current interrupt's handling function
 can be obtained.  See:
-http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
+http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-proprietary-interrupt-controller.html */
 #define configINTERRUPT_VECTOR_ADDRESS	0xFC06E010UL
 
 /* Cortex-A specific setting:  The address of End of Interrupt register within
 the interrupt controller.  See:
-http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
+http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-proprietary-interrupt-controller.html */
 #define configEOI_ADDRESS	0xFC06E038UL
 
 /* Cortex-A specific setting: configCLEAR_TICK_INTERRUPT() is a macro that is
 called by the RTOS kernel's tick handler to clear the source of the tick
 interrupt.  See:
-http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-MPUs-without-a-GIC.html */
+http://www.FreeRTOS.org/Using-FreeRTOS-on-Cortex-A-proprietary-interrupt-controller.html */
 #define configCLEAR_TICK_INTERRUPT() ( void ) ( *( ( volatile uint32_t * ) 0xFC068638UL ) ) /* Read PIT_PIVR to clear interrupt. */
 
 /* Prevent C code being included in assembly files when the IAR compiler is

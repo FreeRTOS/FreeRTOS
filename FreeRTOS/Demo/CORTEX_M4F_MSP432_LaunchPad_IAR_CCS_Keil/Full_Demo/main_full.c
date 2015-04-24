@@ -227,7 +227,7 @@ static void prvConfigureClocks( void );
 
 /* The following two variables are used to communicate the status of the
 register check tasks to the check task.  If the variables keep incrementing,
-then the register check tasks has not discovered any errors.  If a variable
+then the register check tasks have not discovered any errors.  If a variable
 stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
@@ -243,7 +243,7 @@ void main_full( void )
 	used so set to 0 to make this obvious. */
 	xSerialPortInitMinimal( 0, mainRX_QUEUE_LENGTH );
 
-	/* Start all the other standard demo/test tasks.  They have not particular
+	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
 	vStartInterruptQueueTasks();

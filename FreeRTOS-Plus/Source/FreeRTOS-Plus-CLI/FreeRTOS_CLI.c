@@ -51,6 +51,16 @@
 /* Utils includes. */
 #include "FreeRTOS_CLI.h"
 
+/* If the application writer needs to place the buffer used by the CLI at a
+fixed address then set configAPPLICATION_PROVIDES_cOutputBuffer to 1 in
+FreeRTOSConfig.h, and provide then declare an array as follows with the
+following name and size in one of the application files:
+	char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+*/
+#ifndef configAPPLICATION_PROVIDES_cOutputBuffer
+	#define configAPPLICATION_PROVIDES_cOutputBuffer 0
+#endif
+
 typedef struct xCOMMAND_INPUT_LIST
 {
 	const CLI_Command_Definition_t *pxCommandLineDefinition;
@@ -93,8 +103,17 @@ command interpreter by UART and by Ethernet.  Sharing a buffer is done purely
 to save RAM.  Note, however, that the command console itself is not re-entrant,
 so only one command interpreter interface can be used at any one time.  For that
 reason, no attempt at providing mutual exclusion to the cOutputBuffer array is
-attempted. */
-static char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+attempted.
+
+configAPPLICATION_PROVIDES_cOutputBuffer is provided to allow the application
+writer to provide their own cOutputBuffer declaration in cases where the
+buffer needs to be placed at a fixed address (rather than by the linker). */
+#if( configAPPLICATION_PROVIDES_cOutputBuffer == 0 )
+	static char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+#else
+	extern char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+#endif
+
 
 /*-----------------------------------------------------------*/
 

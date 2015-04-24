@@ -262,7 +262,7 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 /* The following two variables are used to communicate the status of the
 register check tasks to the check software timer.  If the variables keep
-incrementing, then the register check tasks has not discovered any errors.  If
+incrementing, then the register check tasks have not discovered any errors.  If
 a variable stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 

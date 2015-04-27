@@ -192,10 +192,15 @@ stops incrementing, then an error has been found. */
 volatile uint16_t usRegTest1LoopCounter = 0UL, usRegTest2LoopCounter = 0UL;
 
 /* cOutputBuffer is used by FreeRTOS+CLI.  It is declared here so the
-__persistent qualifier can be used.  For the buffer to be declared here, rather
+persistent qualifier can be used.  For the buffer to be declared here, rather
 than in FreeRTOS_CLI.c, configAPPLICATION_PROVIDES_cOutputBuffer must be set to
 1 in FreeRTOSConfig.h. */
-__persistent char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
+#ifdef __ICC430__
+	__persistent 							/* IAR version. */
+#else
+	#pragma PERSISTENT( cOutputBuffer ) 	/* CCS version. */
+#endif
+char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ] = { 0 };
 
 /* Used for maintaining a 32-bit run time stats counter from a 16-bit timer. */
 volatile uint32_t ulRunTimeCounterOverflows = 0;

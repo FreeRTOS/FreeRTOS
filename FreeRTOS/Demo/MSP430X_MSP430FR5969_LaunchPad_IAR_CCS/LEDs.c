@@ -105,7 +105,7 @@ void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
 }
 /*-----------------------------------------------------------*/
 
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
+void vParTestToggleLED( UBaseType_t uxLED )
 {
 	if( uxLED < partstNUM_LEDS )
 	{

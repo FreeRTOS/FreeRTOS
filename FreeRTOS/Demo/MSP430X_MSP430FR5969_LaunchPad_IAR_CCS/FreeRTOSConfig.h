@@ -124,13 +124,14 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 /* Event group related definitions. */
 #define configUSE_EVENT_GROUPS			0
 
-/* Prevent the following line being included from asm files. */
-#ifdef __ICC430__
+/* Prevent the following line being included from IAR asm files. */
+#ifndef __IAR_SYSTEMS_ASM__
+	void vConfigureTimerForRunTimeStats( void );
+	extern volatile uint32_t ulRunTimeCounterOverflows;
 	void vConfigureTimerForRunTimeStats( void );
 #endif
 
 /* Run time stats gathering definitions. */
-extern volatile uint32_t ulRunTimeCounterOverflows;
 #define configGENERATE_RUN_TIME_STATS	1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() vConfigureTimerForRunTimeStats()
 /* Return the current timer counter value + the overflow counter. */

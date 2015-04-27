@@ -2551,7 +2551,7 @@
       <name>$PROJ_DIR$\Full_Demo\main_full.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\Full_Demo\RegTest.s43</name>
+      <name>$PROJ_DIR$\IAR_Only\RegTest.s43</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c</name>
@@ -2567,7 +2567,7 @@
     <name>$PROJ_DIR$\LEDs.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\low_level_init_iar.c</name>
+    <name>$PROJ_DIR$\IAR_Only\low_level_init_iar.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>

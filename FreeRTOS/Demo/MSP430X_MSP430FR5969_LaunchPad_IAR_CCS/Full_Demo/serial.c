@@ -102,7 +102,7 @@ static QueueHandle_t xCharsForTx;
 
 /*-----------------------------------------------------------*/
 
-xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, UBaseType_t uxQueueLength )
+xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 unsigned long ulBaudRateCount;
 
@@ -144,7 +144,7 @@ unsigned long ulBaudRateCount;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
 	/* Get the next character from the buffer.  Return false if no characters
 	are available, or arrive before xBlockTime expires. */
@@ -159,7 +159,7 @@ BaseType_t xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickT
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
+signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
 BaseType_t xReturn;
 
@@ -202,7 +202,7 @@ of the DMA.  Or, as a minimum, transmission and reception could use a simple
 RAM ring buffer, and synchronise with a task using a semaphore when a complete
 message has been received or transmitted. */
 #pragma vector=USCI_A0_VECTOR
-static __interrupt void prvUSCI_A0_ISR( void )
+__interrupt void prvUSCI_A0_ISR( void )
 {
 signed char cChar;
 BaseType_t xHigherPriorityTaskWoken = pdFALSE;

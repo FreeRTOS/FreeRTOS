@@ -126,10 +126,15 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* The heap is allocated here so the __persistent qualifier can be used.  This
+/* The heap is allocated here so the "persistent" qualifier can be used.  This
 requires configAPPLICATION_ALLOCATED_HEAP to be set to 1 in FreeRTOSConfig.h.
 See http://www.freertos.org/a00111.html for more information. */
-__persistent uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+#ifdef __ICC430__
+	__persistent 					/* IAR version. */
+#else
+	#pragma PERSISTENT( ucHeap ) 	/* CCS version. */
+#endif
+uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
 
 /*-----------------------------------------------------------*/
 
@@ -238,6 +243,9 @@ const unsigned short usACLK_Frequency_Hz = 32768;
 
 static void prvSetupHardware( void )
 {
+    /* Stop Watchdog timer. */
+    WDT_A_hold( __MSP430_BASEADDRESS_WDT_A__ );
+
 	/* Set all GPIO pins to output and low. */
 	GPIO_setOutputLowOnPin( GPIO_PORT_P1, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7 );
 	GPIO_setOutputLowOnPin( GPIO_PORT_P2, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4 | GPIO_PIN5 | GPIO_PIN6 | GPIO_PIN7 );
@@ -281,3 +289,14 @@ static void prvSetupHardware( void )
 	PMM_unlockLPM5();
 }
 /*-----------------------------------------------------------*/
+
+int _system_pre_init( void )
+{
+    /* Stop Watchdog timer. */
+    WDT_A_hold( __MSP430_BASEADDRESS_WDT_A__ );
+
+    /* Return 1 for segments to be initialised. */
+    return 1;
+}
+
+

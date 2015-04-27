@@ -368,20 +368,20 @@ static void prvHeapInit( void )
 {
 BlockLink_t *pxFirstFreeBlock;
 uint8_t *pucAlignedHeap;
-uint32_t ulAddress;
+size_t uxAddress;
 size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 
 	/* Ensure the heap starts on a correctly aligned boundary. */
-	ulAddress = ( uint32_t ) ucHeap;
+	uxAddress = ( size_t ) ucHeap;
 
-	if( ( ulAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
+	if( ( uxAddress & portBYTE_ALIGNMENT_MASK ) != 0 )
 	{
-		ulAddress += ( portBYTE_ALIGNMENT - 1 );
-		ulAddress &= ~( ( uint32_t ) portBYTE_ALIGNMENT_MASK );
-		xTotalHeapSize -= ulAddress - ( uint32_t ) ucHeap;
+		uxAddress += ( portBYTE_ALIGNMENT - 1 );
+		uxAddress &= ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+		xTotalHeapSize -= uxAddress - ( size_t ) ucHeap;
 	}
 
-	pucAlignedHeap = ( uint8_t * ) ulAddress;
+	pucAlignedHeap = ( uint8_t * ) uxAddress;
 
 	/* xStart is used to hold a pointer to the first item in the list of free
 	blocks.  The void cast is used to prevent compiler warnings. */
@@ -390,17 +390,17 @@ size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 
 	/* pxEnd is used to mark the end of the list of free blocks and is inserted
 	at the end of the heap space. */
-	ulAddress = ( ( uint32_t ) pucAlignedHeap ) + xTotalHeapSize;
-	ulAddress -= xHeapStructSize;
-	ulAddress &= ~( ( uint32_t ) portBYTE_ALIGNMENT_MASK );
-	pxEnd = ( void * ) ulAddress;
+	uxAddress = ( ( size_t ) pucAlignedHeap ) + xTotalHeapSize;
+	uxAddress -= xHeapStructSize;
+	uxAddress &= ~( ( size_t ) portBYTE_ALIGNMENT_MASK );
+	pxEnd = ( void * ) uxAddress;
 	pxEnd->xBlockSize = 0;
 	pxEnd->pxNextFreeBlock = NULL;
 
 	/* To start with there is a single free block that is sized to take up the
 	entire heap space, minus the space taken by pxEnd. */
 	pxFirstFreeBlock = ( void * ) pucAlignedHeap;
-	pxFirstFreeBlock->xBlockSize = ulAddress - ( uint32_t ) pxFirstFreeBlock;
+	pxFirstFreeBlock->xBlockSize = uxAddress - ( size_t ) pxFirstFreeBlock;
 	pxFirstFreeBlock->pxNextFreeBlock = pxEnd;
 
 	/* Only one block exists - and it covers the entire usable heap space. */

@@ -227,7 +227,7 @@ void vRegisterSampleCLICommands( void )
 
 static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 {
-const char *const pcHeader = "       State  Priority  Stack    #\r\n************************************************\r\n";
+const char *const pcHeader = "     State   Priority  Stack    #\r\n************************************************\r\n";
 BaseType_t xSpacePadding;
 
 	/* Remove compile time warnings about unused parameters, and check the
@@ -300,8 +300,8 @@ BaseType_t xSpacePadding;
 	pcWriteBuffer += strlen( pcWriteBuffer );
 
 	/* Pad the string "task" with however many bytes necessary to make it the
-	length of a task name.  Minus three for the null terminator and half the 
-	number of characters in	"Task" so the column lines up with the centre of 
+	length of a task name.  Minus three for the null terminator and half the
+	number of characters in	"Task" so the column lines up with the centre of
 	the heading. */
 	for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
 	{

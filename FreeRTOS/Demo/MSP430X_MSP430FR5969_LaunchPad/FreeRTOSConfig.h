@@ -84,7 +84,6 @@
 /* The array used as the heap is declared by the application to allow the
 __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4 */
 #define configAPPLICATION_ALLOCATED_HEAP		1
-
 #define configUSE_PREEMPTION					1
 #define configMAX_PRIORITIES					( 5 )
 #define configCPU_CLOCK_HZ						( 8000000 )
@@ -112,7 +111,7 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 
 /* Hook function related definitions. */
 #define configUSE_TICK_HOOK				1
-#define configUSE_IDLE_HOOK				0
+#define configUSE_IDLE_HOOK				1
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configCHECK_FOR_STACK_OVERFLOW	2
 

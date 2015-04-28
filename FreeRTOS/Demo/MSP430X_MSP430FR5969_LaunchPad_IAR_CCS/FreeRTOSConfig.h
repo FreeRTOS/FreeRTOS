@@ -88,7 +88,7 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 #define configMAX_PRIORITIES					( 5 )
 #define configCPU_CLOCK_HZ						( 8000000 )
 #define configTICK_RATE_HZ						( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
-#define configTOTAL_HEAP_SIZE					( 20 * 1024 )
+#define configTOTAL_HEAP_SIZE					( 14 * 1024 )
 #define configMAX_TASK_NAME_LEN					( 15 )
 #define configUSE_TRACE_FACILITY				1
 #define configUSE_16_BIT_TICKS					0
@@ -102,12 +102,6 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 #define configUSE_ALTERNATIVE_API				0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS	0
 #define configENABLE_BACKWARD_COMPATIBILITY		0
-
-#if __DATA_MODEL__ == __DATA_MODEL_SMALL__
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 110 )
-#else
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#endif
 
 /* Hook function related definitions. */
 #define configUSE_TICK_HOOK				1
@@ -123,13 +117,6 @@ __persistent keyword to be used.  See http://www.freertos.org/a00111.html#heap_4
 
 /* Event group related definitions. */
 #define configUSE_EVENT_GROUPS			0
-
-/* Prevent the following line being included from IAR asm files. */
-#ifndef __IAR_SYSTEMS_ASM__
-	void vConfigureTimerForRunTimeStats( void );
-	extern volatile uint32_t ulRunTimeCounterOverflows;
-	void vConfigureTimerForRunTimeStats( void );
-#endif
 
 /* Run time stats gathering definitions. */
 #define configGENERATE_RUN_TIME_STATS	1
@@ -192,6 +179,30 @@ CLI. */
 
 /* The baudrate used for the CLI. */
 #define configCLI_BAUD_RATE			19200
+
+/* Compiler specifics below here. */
+/* Prevent the following line being included from IAR asm files. */
+#ifndef __IAR_SYSTEMS_ASM__
+	void vConfigureTimerForRunTimeStats( void );
+	extern volatile uint32_t ulRunTimeCounterOverflows;
+	void vConfigureTimerForRunTimeStats( void );
+#endif
+
+#ifdef __ICC430__
+	/* Using the IAR pre-processor constants. */
+	#if ( __DATA_MODEL__ == __DATA_MODEL_LARGE__ )
+		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+	#else
+		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 130 )
+	#endif
+#else
+	/* Using the CCS pre-processor constants. */
+	#ifdef __LARGE_DATA_MODEL__
+		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+	#else
+		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
+	#endif
+#endif /* IAR_MSP */
 
 #endif /* FREERTOS_CONFIG_H */
 

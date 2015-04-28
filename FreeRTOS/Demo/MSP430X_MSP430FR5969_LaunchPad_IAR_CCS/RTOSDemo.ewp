@@ -2484,6 +2484,9 @@
     <group>
       <name>portable</name>
       <file>
+        <name>$PROJ_DIR$\..\..\Source\portable\IAR\MSP430X\data_model.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
       </file>
       <file>

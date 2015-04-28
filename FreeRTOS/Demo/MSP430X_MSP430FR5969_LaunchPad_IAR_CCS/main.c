@@ -140,6 +140,8 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = { 0 };
 
 int main( void )
 {
+	/* See http://www.FreeRTOS.org/MSP430FR5969_Free_RTOS_Demo.html */
+
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 

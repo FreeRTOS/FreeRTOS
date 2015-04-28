@@ -94,6 +94,7 @@
 /* The stack type changes depending on the data model. */
 #if( __DATA_MODEL__ == __DATA_MODEL_SMALL__ )
 	#define portSTACK_TYPE uint16_t
+	#define portPOINTER_SIZE_TYPE uint16_t
 #else
 	#define portSTACK_TYPE uint32_t
 #endif

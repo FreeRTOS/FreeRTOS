@@ -97,14 +97,14 @@
 #define ebWAIT_BIT_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
 
 /* Generic bit definitions. */
-#define ebBIT_0		( 0x01UL )
-#define ebBIT_1		( 0x02UL )
-#define ebBIT_2		( 0x04UL )
-#define ebBIT_3		( 0x08UL )
-#define ebBIT_4		( 0x10UL )
-#define ebBIT_5		( 0x20UL )
-#define ebBIT_6		( 0x40UL )
-#define ebBIT_7		( 0x80UL )
+#define ebBIT_0		( 0x01 )
+#define ebBIT_1		( 0x02 )
+#define ebBIT_2		( 0x04 )
+#define ebBIT_3		( 0x08 )
+#define ebBIT_4		( 0x10 )
+#define ebBIT_5		( 0x20 )
+#define ebBIT_6		( 0x40 )
+#define ebBIT_7		( 0x80 )
 
 /* Combinations of bits used in the demo. */
 #define ebCOMBINED_BITS ( ebBIT_1 | ebBIT_5 | ebBIT_7 )

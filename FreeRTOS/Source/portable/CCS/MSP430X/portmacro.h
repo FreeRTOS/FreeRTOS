@@ -96,6 +96,7 @@
 	#define portSTACK_TYPE uint32_t
 #else
 	#define portSTACK_TYPE uint16_t
+	#define portPOINTER_SIZE_TYPE uint16_t
 #endif
 
 typedef portSTACK_TYPE StackType_t;

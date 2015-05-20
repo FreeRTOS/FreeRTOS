@@ -192,7 +192,7 @@ void vPortTaskUsesFPU( void );
 #endif /* configASSERT */
 
 #define portNOP() __asm volatile( "NOP" )
-
+#define portINLINE __inline
 
 #ifdef __cplusplus
 	} /* extern C */

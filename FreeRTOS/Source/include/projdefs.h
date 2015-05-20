@@ -103,7 +103,7 @@ typedef void (*TaskFunction_t)( void * );
 	#define pdINTEGRITY_CHECK_VALUE 0x5a5a5a5aUL
 #endif
 
-/* The following errno values are used by FreeRTOS+ components, not FreeRTOS 
+/* The following errno values are used by FreeRTOS+ components, not FreeRTOS
 itself. */
 #define pdFREERTOS_ERRNO_NONE			0	/* No errors */
 #define	pdFREERTOS_ERRNO_ENOENT			2	/* No such file or directory */
@@ -145,7 +145,7 @@ itself. */
 #define	pdFREERTOS_ERRNO_EILSEQ			138	/* An invalid UTF-16 sequence was encountered. */
 #define	pdFREERTOS_ERRNO_ECANCELED		140	/* Operation canceled. */
 
-/* The following endian values are used by FreeRTOS+ components, not FreeRTOS 
+/* The following endian values are used by FreeRTOS+ components, not FreeRTOS
 itself. */
 #define pdFREERTOS_LITTLE_ENDIAN	0
 #define pdFREERTOS_BIG_ENDIAN		1

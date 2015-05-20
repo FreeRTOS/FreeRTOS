@@ -99,8 +99,8 @@ functions but without including stdio.h here. */
 #endif /* configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) */
 
 /* Sanity check the configuration. */
-#if configUSE_TICKLESS_IDLE != 0
-	#if INCLUDE_vTaskSuspend != 1
+#if( configUSE_TICKLESS_IDLE != 0 )
+	#if( INCLUDE_vTaskSuspend != 1 )
 		#error INCLUDE_vTaskSuspend must be set to 1 if configUSE_TICKLESS_IDLE is not set to 0
 	#endif /* INCLUDE_vTaskSuspend */
 #endif /* configUSE_TICKLESS_IDLE */
@@ -2387,7 +2387,7 @@ TickType_t xTimeToWake;
 
 #if configUSE_TIMERS == 1
 
-	void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, const TickType_t xTicksToWait )
+	void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, const TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
 	{
 	TickType_t xTimeToWake;
 
@@ -2420,12 +2420,44 @@ TickType_t xTimeToWake;
 			mtCOVERAGE_TEST_MARKER();
 		}
 
-		/* Calculate the time at which the task should be woken if the event does
-		not occur.  This may overflow but this doesn't matter. */
-		xTimeToWake = xTickCount + xTicksToWait;
+		/* If vTaskSuspend() is available then the suspended task list is also
+		available and a task that is blocking indefinitely can enter the
+		suspended state (it is not really suspended as it will re-enter the
+		Ready state when the event it is waiting indefinitely for occurs).
+		Blocking indefinitely is useful when using tickless idle mode as when
+		all tasks are blocked indefinitely all timers can be turned off. */
+		#if( INCLUDE_vTaskSuspend == 1 )
+		{
+			if( xWaitIndefinitely == pdTRUE )
+			{
+				/* Add the task to the suspended task list instead of a delayed
+				task list to ensure the task is not woken by a timing event.  It
+				will block indefinitely. */
+				vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+			}
+			else
+			{
+				/* Calculate the time at which the task should be woken if the
+				event does not occur.  This may overflow but this doesn't
+				matter. */
+				xTimeToWake = xTickCount + xTicksToWait;
+				traceTASK_DELAY_UNTIL();
+				prvAddCurrentTaskToDelayedList( xTimeToWake );
+			}
+		}
+		#else
+		{
+			/* Calculate the time at which the task should be woken if the event
+			does not occur.  This may overflow but this doesn't matter. */
+			xTimeToWake = xTickCount + xTicksToWait;
+			traceTASK_DELAY_UNTIL();
+			prvAddCurrentTaskToDelayedList( xTimeToWake );
 
-		traceTASK_DELAY_UNTIL();
-		prvAddCurrentTaskToDelayedList( xTimeToWake );
+			/* Remove compiler warnings when INCLUDE_vTaskSuspend() is not
+			defined. */
+			( void ) xWaitIndefinitely;
+		}
+		#endif
 	}
 
 #endif /* configUSE_TIMERS */
@@ -2481,12 +2513,12 @@ BaseType_t xReturn;
 		xReturn = pdFALSE;
 	}
 
-	#if( configUSE_TICKLESS_IDLE == 1 )
+	#if( configUSE_TICKLESS_IDLE != 0 )
 	{
 		/* If a task is blocked on a kernel object then xNextTaskUnblockTime
 		might be set to the blocked task's time out time.  If the task is
 		unblocked for a reason other than a timeout xNextTaskUnblockTime is
-		normally left unchanged, because it is automatically get reset to a new
+		normally left unchanged, because it is automatically reset to a new
 		value when the tick count equals xNextTaskUnblockTime.  However if
 		tickless idling is used it might be more important to enter sleep mode
 		at the earliest possible time - so reset xNextTaskUnblockTime here to
@@ -2759,10 +2791,12 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-#if configUSE_TICKLESS_IDLE != 0
+#if( configUSE_TICKLESS_IDLE != 0 )
 
 	eSleepModeStatus eTaskConfirmSleepModeStatus( void )
 	{
+	/* The idle task exists in addition to the application tasks. */
+	const UBaseType_t uxNonApplicationTasks = 1;
 	eSleepModeStatus eReturn = eStandardSleep;
 
 		if( listCURRENT_LIST_LENGTH( &xPendingReadyList ) != 0 )
@@ -2777,29 +2811,23 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		}
 		else
 		{
-			#if configUSE_TIMERS == 0
+			/* If all the tasks are in the suspended list (which might mean they
+			have an infinite block time rather than actually being suspended)
+			then it is safe to turn all clocks off and just wait for external
+			interrupts. */
+			if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
 			{
-				/* The idle task exists in addition to the application tasks. */
-				const UBaseType_t uxNonApplicationTasks = 1;
-
-				/* If timers are not being used and all the tasks are in the
-				suspended list (which might mean they have an infinite block
-				time rather than actually being suspended) then it is safe to
-				turn all clocks off and just wait for external interrupts. */
-				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == ( uxCurrentNumberOfTasks - uxNonApplicationTasks ) )
-				{
-					eReturn = eNoTasksWaitingTimeout;
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
+				eReturn = eNoTasksWaitingTimeout;
 			}
-			#endif /* configUSE_TIMERS */
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
 		}
 
 		return eReturn;
 	}
+
 #endif /* configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 
@@ -2958,7 +2986,8 @@ UBaseType_t x;
 	{
 	TCB_t *pxTCB;
 
-		/* If null is passed in here then we are deleting ourselves. */
+		/* If null is passed in here then we are modifying the MPU settings of
+		the calling task. */
 		pxTCB = prvGetTCBFromHandle( xTaskToModify );
 
         vPortStoreTaskMPUSettings( &( pxTCB->xMPUSettings ), xRegions, NULL, 0 );
@@ -4164,6 +4193,22 @@ TickType_t uxReturn;
 
 				/* The task should not have been on an event list. */
 				configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
+
+				#if( configUSE_TICKLESS_IDLE != 0 )
+				{
+					/* If a task is blocked waiting for a notification then
+					xNextTaskUnblockTime might be set to the blocked task's time
+					out time.  If the task is unblocked for a reason other than
+					a timeout xNextTaskUnblockTime is normally left unchanged,
+					because it will automatically get reset to a new value when
+					the tick count equals xNextTaskUnblockTime.  However if
+					tickless idling is used it might be more important to enter
+					sleep mode at the earliest possible time - so reset
+					xNextTaskUnblockTime here to ensure it is updated at the
+					earliest possible time. */
+					prvResetNextTaskUnblockTime();
+				}
+				#endif
 
 				if( pxTCB->uxPriority > pxCurrentTCB->uxPriority )
 				{

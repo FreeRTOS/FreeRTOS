@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_flash_ex.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of FLASH HAL Extension module.
   ******************************************************************************
   * @attention
@@ -211,8 +211,8 @@ typedef struct
 /** @defgroup FLASHEx_Option_Bytes_IWDG_FREEZE_STOP FLASH IWDG Counter Freeze in STOP
   * @{
   */
-#define OB_IWDG_STOP_FREEZE      ((uint32_t)0x40000000) /*!< Freeze IWDG counter in STOP mode */
-#define OB_IWDG_STOP_ACTIVE      ((uint32_t)0x00000000) /*!< IWDG counter active in STOP mode */
+#define OB_IWDG_STOP_FREEZE      ((uint32_t)0x00000000) /*!< Freeze IWDG counter in STOP mode */
+#define OB_IWDG_STOP_ACTIVE      ((uint32_t)0x40000000) /*!< IWDG counter active in STOP mode */
 /**
   * @}
   */
@@ -220,8 +220,8 @@ typedef struct
 /** @defgroup FLASHEx_Option_Bytes_IWDG_FREEZE_SANDBY FLASH IWDG Counter Freeze in STANDBY
   * @{
   */
-#define OB_IWDG_STDBY_FREEZE      ((uint32_t)0x80000000) /*!< Freeze IWDG counter in STANDBY mode */
-#define OB_IWDG_STDBY_ACTIVE      ((uint32_t)0x00000000) /*!< IWDG counter active in STANDBY mode */
+#define OB_IWDG_STDBY_FREEZE      ((uint32_t)0x00000000) /*!< Freeze IWDG counter in STANDBY mode */
+#define OB_IWDG_STDBY_ACTIVE      ((uint32_t)0x40000000) /*!< IWDG counter active in STANDBY mode */
 /**
   * @}
   */

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dcmi.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of DCMI HAL module.
   ******************************************************************************
   * @attention
@@ -63,15 +63,6 @@
 /** @defgroup DCMI_Exported_Types DCMI Exported Types
   * @{
   */
-/** 
-  * @brief DCMI Error source
-  */
-typedef enum
-{ 
-  DCMI_ERROR_SYNC = 1,     /*!< Synchronisation error */
-  DCMI_OVERRUN   = 2,      /*!< DCMI Overrun */
-}DCMI_ErrorTypeDef;
-
 /** 
   * @brief  HAL DCMI State structures definition
   */ 
@@ -387,7 +378,7 @@ typedef struct
   * @{
   */
 
-/** @addtogroup DCMI_Exported_Functions_Group1 Initialization and de-initialization functions
+/** @addtogroup DCMI_Exported_Functions_Group1 Initialization and Configuration functions
  * @{
  */
 /* Initialization and de-initialization functions *****************************/
@@ -399,7 +390,7 @@ void       HAL_DCMI_MspDeInit(DCMI_HandleTypeDef* hdcmi);
   * @}
   */
   
-/** @addtogroup DCMI_Exported_Functions_Group2 Operations functions
+/** @addtogroup DCMI_Exported_Functions_Group2 IO operation functions
  * @{
  */
 /* IO operation functions *****************************************************/

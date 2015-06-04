@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file    stm32f7xx_hal_msp_template.c
+  * @file    stm32f7xx_hal_msp.c
   * @author  MCD Application Team
-  * @version V0.0.1
-  * @date    21-October-2014
+  * @version V1.0.0
+  * @date    22-May-2015
   * @brief   HAL MSP module.
   *          This file template is located in the HAL folder and should be copied 
   *          to the user folder.
@@ -13,14 +13,14 @@
                      ##### How to use this driver #####
  ===============================================================================
     [..]
-    This file is generated automatically by MicroXplorer and eventually modified 
+    This file is generated automatically by STM32CubeMX and eventually modified 
     by the user
 
   @endverbatim
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2014 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -77,7 +77,7 @@
   */
 void HAL_MspInit(void)
 {
-  /* NOTE : This function is generated automatically by MicroXplorer and eventually  
+  /* NOTE : This function is generated automatically by STM32CubeMX and eventually  
             modified by the user
    */ 
 }
@@ -89,31 +89,7 @@ void HAL_MspInit(void)
   */
 void HAL_MspDeInit(void)
 {
-  /* NOTE : This function is generated automatically by MicroXplorer and eventually  
-            modified by the user
-   */
-}
-
-/**
-  * @brief  Initializes the PPP MSP.
-  * @param  None
-  * @retval None
-  */
-void HAL_PPP_MspInit(void)
-{
-  /* NOTE : This function is generated automatically by MicroXplorer and eventually  
-            modified by the user
-   */ 
-}
-
-/**
-  * @brief  DeInitializes the PPP MSP.
-  * @param  None  
-  * @retval None
-  */
-void HAL_PPP_MspDeInit(void)
-{
-  /* NOTE : This function is generated automatically by MicroXplorer and eventually  
+  /* NOTE : This function is generated automatically by STM32CubeMX and eventually  
             modified by the user
    */
 }

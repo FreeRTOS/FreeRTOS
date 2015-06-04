@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_can.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   CAN HAL module driver.
   *
   *          This file provides firmware functions to manage the following 
@@ -19,7 +19,7 @@
   ==============================================================================
     [..]            
       (#) Enable the CAN controller interface clock using 
-          __HAL_RCC_CAN1_CLK_ENABLE() for CAN1 and __HAL_RCC_CAN1_CLK_ENABLE() for CAN2
+          __HAL_RCC_CAN1_CLK_ENABLE() for CAN1 and __HAL_RCC_CAN2_CLK_ENABLE() for CAN2
       -@- In case you are using CAN2 only, you have to enable the CAN1 clock.
        
       (#) CAN pins configuration
@@ -191,7 +191,9 @@ HAL_StatusTypeDef HAL_CAN_Init(CAN_HandleTypeDef* hcan)
   
 
   if(hcan->State == HAL_CAN_STATE_RESET)
-  {    
+  {
+    /* Allocate lock resource and initialize it */
+    hcan->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_CAN_MspInit(hcan);
   }

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dac.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   DAC HAL module driver.
   *         This file provides firmware functions to manage the following 
   *         functionalities of the Digital to Analog Converter (DAC) peripheral:
@@ -185,7 +185,6 @@
 
 #ifdef HAL_DAC_MODULE_ENABLED
 
-#if defined(STM32F756xx) || defined(STM32F746xx)
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -239,7 +238,9 @@ HAL_StatusTypeDef HAL_DAC_Init(DAC_HandleTypeDef* hdac)
   assert_param(IS_DAC_ALL_INSTANCE(hdac->Instance));
   
   if(hdac->State == HAL_DAC_STATE_RESET)
-  {  
+  { 
+    /* Allocate lock resource and initialize it */
+    hdac->Lock = HAL_UNLOCKED; 
     /* Init the low level hardware */
     HAL_DAC_MspInit(hdac);
   }
@@ -934,7 +935,7 @@ static void DAC_DMAErrorCh1(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
-#endif /* STM32F756xx || STM32F746xx */
+
 #endif /* HAL_DAC_MODULE_ENABLED */
 
 /**

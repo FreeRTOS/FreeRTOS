@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_tim.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   TIM HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Timer (TIM) peripheral:
@@ -489,7 +489,9 @@ HAL_StatusTypeDef HAL_TIM_OC_Init(TIM_HandleTypeDef* htim)
   assert_param(IS_TIM_CLOCKDIVISION_DIV(htim->Init.ClockDivision));
  
   if(htim->State == HAL_TIM_STATE_RESET)
-  {   
+  { 
+    /* Allocate lock resource and initialize it */
+    htim->Lock = HAL_UNLOCKED;  
     /* Init the low level hardware : GPIO, CLOCK, NVIC and DMA */
     HAL_TIM_OC_MspInit(htim);
   }
@@ -997,6 +999,8 @@ HAL_StatusTypeDef HAL_TIM_PWM_Init(TIM_HandleTypeDef *htim)
 
   if(htim->State == HAL_TIM_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    htim->Lock = HAL_UNLOCKED;  
     /* Init the low level hardware : GPIO, CLOCK, NVIC and DMA */
     HAL_TIM_PWM_MspInit(htim);
   }
@@ -1506,7 +1510,9 @@ HAL_StatusTypeDef HAL_TIM_IC_Init(TIM_HandleTypeDef *htim)
   assert_param(IS_TIM_CLOCKDIVISION_DIV(htim->Init.ClockDivision)); 
 
   if(htim->State == HAL_TIM_STATE_RESET)
-  {  
+  { 
+    /* Allocate lock resource and initialize it */
+    htim->Lock = HAL_UNLOCKED;   
     /* Init the low level hardware : GPIO, CLOCK, NVIC and DMA */
     HAL_TIM_IC_MspInit(htim);
   }
@@ -1983,7 +1989,9 @@ HAL_StatusTypeDef HAL_TIM_OnePulse_Init(TIM_HandleTypeDef *htim, uint32_t OnePul
   assert_param(IS_TIM_OPM_MODE(OnePulseMode));
   
   if(htim->State == HAL_TIM_STATE_RESET)
-  {   
+  { 
+    /* Allocate lock resource and initialize it */
+    htim->Lock = HAL_UNLOCKED;    
     /* Init the low level hardware : GPIO, CLOCK, NVIC and DMA */
     HAL_TIM_OnePulse_MspInit(htim);
   }
@@ -2265,6 +2273,8 @@ HAL_StatusTypeDef HAL_TIM_Encoder_Init(TIM_HandleTypeDef *htim,  TIM_Encoder_Ini
 
   if(htim->State == HAL_TIM_STATE_RESET)
   { 
+    /* Allocate lock resource and initialize it */
+    htim->Lock = HAL_UNLOCKED;  
     /* Init the low level hardware : GPIO, CLOCK, NVIC and DMA */
     HAL_TIM_Encoder_MspInit(htim);
   }

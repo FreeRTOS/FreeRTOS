@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_pcd.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of PCD HAL module.
   ******************************************************************************
   * @attention
@@ -130,6 +130,20 @@ typedef struct
   */
 #define PCD_PHY_ULPI                 1
 #define PCD_PHY_EMBEDDED             2
+/**
+  * @}
+  */
+
+/** @defgroup PCD_Turnaround_Timeout Turnaround Timeout Value
+  * @{
+  */
+#ifndef USBD_HS_TRDT_VALUE
+ #define USBD_HS_TRDT_VALUE           9
+#endif /* USBD_HS_TRDT_VALUE */
+#ifndef USBD_FS_TRDT_VALUE
+ #define USBD_FS_TRDT_VALUE           5
+#endif /* USBD_HS_TRDT_VALUE */
+
 /**
   * @}
   */

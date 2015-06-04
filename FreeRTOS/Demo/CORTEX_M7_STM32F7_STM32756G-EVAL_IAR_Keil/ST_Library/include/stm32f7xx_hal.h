@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   This file contains all the functions prototypes for the HAL 
   *          module driver.
   ******************************************************************************

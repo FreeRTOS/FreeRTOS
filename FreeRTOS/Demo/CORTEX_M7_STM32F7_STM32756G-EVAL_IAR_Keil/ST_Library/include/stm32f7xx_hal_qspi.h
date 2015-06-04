@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_qspi.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of QSPI HAL module.
   ******************************************************************************
   * @attention
@@ -69,7 +69,7 @@ typedef struct
                                   This parameter can be a number between 0 and 255 */ 
                                   
   uint32_t FifoThreshold;      /* Specifies the threshold number of bytes in the FIFO (used only in indirect mode)
-                                  This parameter can be a value between 1 and 16 */
+                                  This parameter can be a value between 1 and 32 */
                                   
   uint32_t SampleShifting;     /* Specifies the Sample Shift. The data is sampled 1/2 clock cycle delay later to 
                                   take in account external signal delays. (It should be QSPI_SAMPLE_SHIFTING_NONE in DDR mode)
@@ -353,8 +353,8 @@ typedef struct
 /** @defgroup QSPI_SIOOMode QSPI SIOO Mode
   * @{
   */
-#define QSPI_SIOO_INST_EVERY_CMD      ((uint32_t)0x00000000)       /*!<Send instruction on every transaction*/
-#define QSPI_SIOO_INST_ONLY_FIRST_CMD ((uint32_t)QUADSPI_CCR_SIOO) /*!<Send instruction only for the first command*/
+#define QSPI_SIOO_INST_EVERY_CMD       ((uint32_t)0x00000000)       /*!<Send instruction on every transaction*/
+#define QSPI_SIOO_INST_ONLY_FIRST_CMD  ((uint32_t)QUADSPI_CCR_SIOO) /*!<Send instruction only for the first command*/
 /**
   * @}
   */
@@ -625,7 +625,7 @@ void                  HAL_QSPI_SetTimeout(QSPI_HandleTypeDef *hqspi, uint32_t Ti
 /** @defgroup QSPI_FifoThreshold  QSPI Fifo Threshold 
   * @{
   */
-#define IS_QSPI_FIFO_THRESHOLD(THR)         (((THR) > 0) && ((THR) <= 16))
+#define IS_QSPI_FIFO_THRESHOLD(THR)         (((THR) > 0) && ((THR) <= 32))
 /**
   * @}
   */

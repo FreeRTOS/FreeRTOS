@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_can.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of CAN HAL module.
   ******************************************************************************
   * @attention
@@ -179,7 +179,7 @@ typedef struct
   uint32_t DLC;      /*!< Specifies the length of the frame that will be transmitted.
                           This parameter must be a number between Min_Data = 0 and Max_Data = 8 */
 
-  uint32_t Data[8];  /*!< Contains the data to be transmitted.
+  uint8_t Data[8];  /*!< Contains the data to be transmitted.
                           This parameter must be a number between Min_Data = 0 and Max_Data = 0xFF */
 
 }CanTxMsgTypeDef;
@@ -204,7 +204,7 @@ typedef struct
   uint32_t DLC;         /*!< Specifies the length of the frame that will be received.
                              This parameter must be a number between Min_Data = 0 and Max_Data = 8 */
 
-  uint32_t Data[8];     /*!< Contains the data to be received.
+  uint8_t Data[8];      /*!< Contains the data to be received.
                              This parameter must be a number between Min_Data = 0 and Max_Data = 0xFF */
 
   uint32_t FMI;         /*!< Specifies the index of the filter the message stored in the mailbox passes through.
@@ -354,7 +354,6 @@ typedef struct
   */
 #define CAN_FILTER_FIFO0             ((uint8_t)0x00)  /*!< Filter FIFO 0 assignment for filter x */
 #define CAN_FILTER_FIFO1             ((uint8_t)0x01)  /*!< Filter FIFO 1 assignment for filter x */
-
 /**
   * @}
   */
@@ -739,35 +738,6 @@ HAL_CAN_StateTypeDef HAL_CAN_GetState(CAN_HandleTypeDef* hcan);
                                 ((IDTYPE) == CAN_ID_EXT))
 #define IS_CAN_RTR(RTR) (((RTR) == CAN_RTR_DATA) || ((RTR) == CAN_RTR_REMOTE))
 #define IS_CAN_FIFO(FIFO) (((FIFO) == CAN_FIFO0) || ((FIFO) == CAN_FIFO1))
-
-#define IS_CAN_GET_FLAG(FLAG) (((FLAG) == CAN_FLAG_RQCP2) || ((FLAG) == CAN_FLAG_BOF)   || \
-                               ((FLAG) == CAN_FLAG_EPV)   || ((FLAG) == CAN_FLAG_EWG)   || \
-                               ((FLAG) == CAN_FLAG_WKU)   || ((FLAG) == CAN_FLAG_FOV0)  || \
-                               ((FLAG) == CAN_FLAG_FF0)   || ((FLAG) == CAN_FLAG_SLAK)  || \
-                               ((FLAG) == CAN_FLAG_FOV1)  || ((FLAG) == CAN_FLAG_FF1)   || \
-                               ((FLAG) == CAN_FLAG_RQCP1) || ((FLAG) == CAN_FLAG_RQCP0))
-                               
-
-#define IS_CAN_CLEAR_FLAG(FLAG)(((FLAG) == CAN_FLAG_SLAK)  || ((FLAG) == CAN_FLAG_RQCP2) || \
-                                ((FLAG) == CAN_FLAG_RQCP1) || ((FLAG) == CAN_FLAG_RQCP0) || \
-                                ((FLAG) == CAN_FLAG_FF0)   || ((FLAG) == CAN_FLAG_FOV0)  || \
-                                ((FLAG) == CAN_FLAG_FF1)   || ((FLAG) == CAN_FLAG_FOV1)  || \
-                                ((FLAG) == CAN_FLAG_WKU))
-
-#define IS_CAN_IT(IT)        (((IT) == CAN_IT_TME) || ((IT) == CAN_IT_FMP0)  ||\
-                             ((IT) == CAN_IT_FF0)  || ((IT) == CAN_IT_FOV0)  ||\
-                             ((IT) == CAN_IT_FMP1) || ((IT) == CAN_IT_FF1)   ||\
-                             ((IT) == CAN_IT_FOV1) || ((IT) == CAN_IT_EWG)   ||\
-                             ((IT) == CAN_IT_EPV)  || ((IT) == CAN_IT_BOF)   ||\
-                             ((IT) == CAN_IT_LEC)  || ((IT) == CAN_IT_ERR)   ||\
-                             ((IT) == CAN_IT_WKU)  || ((IT) == CAN_IT_SLK))
-
-#define IS_CAN_CLEAR_IT(IT) (((IT) == CAN_IT_TME) || ((IT) == CAN_IT_FF0)    ||\
-                             ((IT) == CAN_IT_FOV0)|| ((IT) == CAN_IT_FF1)    ||\
-                             ((IT) == CAN_IT_FOV1)|| ((IT) == CAN_IT_EWG)    ||\
-                             ((IT) == CAN_IT_EPV) || ((IT) == CAN_IT_BOF)    ||\
-                             ((IT) == CAN_IT_LEC) || ((IT) == CAN_IT_ERR)    ||\
-                             ((IT) == CAN_IT_WKU) || ((IT) == CAN_IT_SLK))
 
 /**
   * @}

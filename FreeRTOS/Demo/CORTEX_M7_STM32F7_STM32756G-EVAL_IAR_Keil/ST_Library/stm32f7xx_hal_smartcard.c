@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_smartcard.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   SMARTCARD HAL module driver.
   *          This file provides firmware functions to manage the following
   *          functionalities of the SMARTCARD peripheral:
@@ -198,7 +198,9 @@ HAL_StatusTypeDef HAL_SMARTCARD_Init(SMARTCARD_HandleTypeDef *hsc)
   assert_param(IS_SMARTCARD_INSTANCE(hsc->Instance));
   
   if(hsc->State == HAL_SMARTCARD_STATE_RESET)
-  {  
+  { 
+    /* Allocate lock resource and initialize it */
+    hsc->Lock = HAL_UNLOCKED; 
     /* Init the low level hardware : GPIO, CLOCK, CORTEX */
     HAL_SMARTCARD_MspInit(hsc);
   }

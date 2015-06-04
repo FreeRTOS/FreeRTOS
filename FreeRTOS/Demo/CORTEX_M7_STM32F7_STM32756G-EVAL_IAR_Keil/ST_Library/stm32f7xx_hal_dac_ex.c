@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dac_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Extended DAC HAL module driver.
   *         This file provides firmware functions to manage the following 
   *         functionalities of DAC extension peripheral:
@@ -66,8 +66,6 @@
   */ 
 
 #ifdef HAL_DAC_MODULE_ENABLED
-
-#if defined(STM32F756xx) || defined(STM32F746xx)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -364,8 +362,6 @@ void DAC_DMAErrorCh2(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
-
-#endif /* STM32F756xx || STM32F746xx */
 
 #endif /* HAL_DAC_MODULE_ENABLED */
 

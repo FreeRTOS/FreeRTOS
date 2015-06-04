@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_cryp_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Extended CRYP HAL module driver
   *          This file provides firmware functions to manage the following 
   *          functionalities of CRYP extension peripheral:
@@ -102,15 +102,14 @@
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
-
+#if defined(STM32F756xx)
 /** @defgroup CRYPEx CRYPEx
   * @brief CRYP Extension HAL module driver.
   * @{
   */
 
-#ifdef HAL_CRYP_MODULE_ENABLED
 
-#if defined(STM32F756xx)
+#ifdef HAL_CRYP_MODULE_ENABLED
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -3028,14 +3027,12 @@ void HAL_CRYPEx_GCMCCM_IRQHandler(CRYP_HandleTypeDef *hcryp)
 /**
   * @}
   */
-#endif /* STM32F756xx */
-
 #endif /* HAL_CRYP_MODULE_ENABLED */
 
 /**
   * @}
   */
-
+#endif /* STM32F756xx */
 /**
   * @}
   */

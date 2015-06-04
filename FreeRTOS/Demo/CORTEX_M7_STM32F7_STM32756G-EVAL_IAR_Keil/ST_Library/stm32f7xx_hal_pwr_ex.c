@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_pwr_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Extended PWR HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of PWR extension peripheral:           
@@ -272,7 +272,7 @@ HAL_StatusTypeDef HAL_PWREx_EnableOverDrive(void)
 
   __HAL_RCC_PWR_CLK_ENABLE();
   
-  /* Enable the Over-drive to extend the clock frequency to 200 Mhz */
+  /* Enable the Over-drive to extend the clock frequency to 216 MHz */
   __HAL_PWR_OVERDRIVE_ENABLE();
 
   /* Get tick */
@@ -449,7 +449,6 @@ HAL_StatusTypeDef HAL_PWREx_EnterUnderDriveSTOPMode(uint32_t Regulator, uint8_t 
 
 /**
   * @brief Returns Voltage Scaling Range.
-  * @param  None       
   * @retval VOS bit field (PWR_REGULATOR_VOLTAGE_SCALE1, PWR_REGULATOR_VOLTAGE_SCALE2 or 
   *            PWR_REGULATOR_VOLTAGE_SCALE3)PWR_REGULATOR_VOLTAGE_SCALE1
   */  
@@ -465,7 +464,7 @@ uint32_t HAL_PWREx_GetVoltageRange(void)
   *          This parameter can be one of the following values:
   *            @arg PWR_REGULATOR_VOLTAGE_SCALE1: Regulator voltage output range 1 mode,
   *                                                typical output voltage at 1.4 V,  
-  *                                                system frequency up to 200 MHz.
+  *                                                system frequency up to 216 MHz.
   *            @arg PWR_REGULATOR_VOLTAGE_SCALE2: Regulator voltage output range 2 mode,
   *                                                typical output voltage at 1.2 V,                
   *                                                system frequency up to 180 MHz.

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_uart.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of UART HAL module.
   ******************************************************************************
   * @attention
@@ -936,7 +936,7 @@ typedef struct
 
 /** @brief  Check UART Baud rate
   * @param  BAUDRATE: Baudrate specified by the user
-  *         The maximum Baud Rate is derived from the maximum clock on F7 (i.e. 200 MHz)
+  *         The maximum Baud Rate is derived from the maximum clock on F7 (i.e. 216 MHz)
   *         divided by the smallest oversampling used on the USART (i.e. 8)
   * @retval Test result (TRUE or FALSE).
   */

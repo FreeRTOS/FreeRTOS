@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_sd.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   SD card HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Secure Digital (SD) peripheral:
@@ -339,6 +339,9 @@ HAL_SD_ErrorTypedef HAL_SD_Init(SD_HandleTypeDef *hsd, HAL_SD_CardInfoTypedef *S
 { 
   __IO HAL_SD_ErrorTypedef errorstate = SD_OK;
   SD_InitTypeDef tmpinit;
+  
+  /* Allocate lock resource and initialize it */
+  hsd->Lock = HAL_UNLOCKED;
   
   /* Initialize the low level hardware (MSP) */
   HAL_SD_MspInit(hsd);

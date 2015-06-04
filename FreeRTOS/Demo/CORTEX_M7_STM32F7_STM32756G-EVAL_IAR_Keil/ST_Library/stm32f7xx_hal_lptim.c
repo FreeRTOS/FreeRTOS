@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_lptim.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   LPTIM HAL module driver.
   *    
   *          This file provides firmware functions to manage the following 
@@ -258,6 +258,8 @@ HAL_StatusTypeDef HAL_LPTIM_Init(LPTIM_HandleTypeDef *hlptim)
   
   if(hlptim->State == HAL_LPTIM_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hlptim->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_LPTIM_MspInit(hlptim);
   }

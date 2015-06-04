@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_smartcard_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   SMARTCARD HAL module driver.
   *
   *          This file provides extended firmware functions to manage the following 
@@ -72,7 +72,7 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup SMARTCARDEx_Private_Functions
+/** @defgroup SMARTCARDEx_Exported_Functions SMARTCARDEx Exported Functions
   * @{
   */
 

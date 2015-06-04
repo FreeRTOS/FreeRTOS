@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_adc.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of ADC HAL module.
   ******************************************************************************
   * @attention
@@ -181,7 +181,15 @@ typedef struct
 /**
   * @}
   */ 
- 
+
+/** @defgroup ADCEx_channels  ADC Specific Channels
+  * @{
+  */
+#define ADC_CHANNEL_TEMPSENSOR  ((uint32_t)ADC_CHANNEL_16)    
+/**
+  * @}
+  */
+  
 /**
   * @}
   */ 
@@ -190,7 +198,6 @@ typedef struct
 /** @defgroup ADC_Exported_Macros ADC Exported Macros
   * @{
   */
-	
 /**
   * @}
   */
@@ -242,6 +249,9 @@ HAL_StatusTypeDef HAL_ADCEx_MultiModeConfigChannel(ADC_HandleTypeDef* hadc, ADC_
 /** @defgroup ADCEx_Private_Macros ADC Private Macros
   * @{
   */
+#define IS_ADC_CHANNEL(CHANNEL) (((CHANNEL) <= ADC_CHANNEL_18)  || \
+                                 ((CHANNEL) == ADC_CHANNEL_TEMPSENSOR))
+                                     
 #define IS_ADC_MODE(__MODE__) (((__MODE__) == ADC_MODE_INDEPENDENT)                 || \
                                ((__MODE__) == ADC_DUALMODE_REGSIMULT_INJECSIMULT)   || \
                                ((__MODE__) == ADC_DUALMODE_REGSIMULT_ALTERTRIG)     || \

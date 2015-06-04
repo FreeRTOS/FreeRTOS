@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_spi.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of SPI HAL module.
   ******************************************************************************
   * @attention
@@ -634,7 +634,7 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
   * @}
   */
 
-/** @addtogroup SPI_Exported_Functions_Group2 Input and Output operation functions 
+/** @addtogroup SPI_Exported_Functions_Group2 IO operation functions
   * @{
   */
 
@@ -664,7 +664,7 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi);
   * @}
   */
 
-/** @addtogroup SPI_Exported_Functions_Group3 Peripheral Control functions 
+/** @addtogroup SPI_Exported_Functions_Group3 Peripheral State and Errors functions
   * @{
   */
 

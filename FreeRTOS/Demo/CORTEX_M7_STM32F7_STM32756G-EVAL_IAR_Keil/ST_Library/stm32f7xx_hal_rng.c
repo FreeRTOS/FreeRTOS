@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_rng.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   RNG HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Random Number Generator (RNG) peripheral:
@@ -68,9 +68,6 @@
   */
 
 #ifdef HAL_RNG_MODULE_ENABLED
-
-#if defined(STM32F746xx) || defined(STM32F756xx)
-
 
 /* Private types -------------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
@@ -500,7 +497,6 @@ HAL_RNG_StateTypeDef HAL_RNG_GetState(RNG_HandleTypeDef *hrng)
   * @}
   */
 
-#endif /* STM32F746xx || STM32F756xx */
 #endif /* HAL_RNG_MODULE_ENABLED */
 
 /**

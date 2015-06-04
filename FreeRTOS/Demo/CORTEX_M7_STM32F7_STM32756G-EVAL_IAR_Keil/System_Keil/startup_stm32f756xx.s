@@ -1,8 +1,8 @@
 ;******************** (C) COPYRIGHT 2015 STMicroelectronics ********************
 ;* File Name          : startup_stm32f756xx.s
 ;* Author             : MCD Application Team
-;* Version            : V1.0.0RC1
-;* Date               : 24-March-2015
+;* Version            : V1.0.0
+;* Date               : 22-May-2015
 ;* Description        : STM32F756xx devices vector table for MDK-ARM toolchain. 
 ;*                      This module performs:
 ;*                      - Set the initial SP
@@ -15,7 +15,7 @@
 ;* <<< Use Configuration Wizard in Context Menu >>>   
 ;*******************************************************************************
 ; 
-;* Redistribution and use in source and binary forms, with or without modification,
+;* Redistribution and use in so urce and binary forms, with or without modification,
 ;* are permitted provided that the following conditions are met:
 ;*   1. Redistributions of source code must retain the above copyright notice,
 ;*      this list of conditions and the following disclaimer.
@@ -45,7 +45,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000400
+Stack_Size		EQU     0x400;
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -56,7 +56,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000200
+Heap_Size      EQU     0x200;
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base

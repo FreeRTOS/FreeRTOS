@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_hash.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   HASH HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the HASH peripheral:
@@ -102,14 +102,13 @@
   * @{
   */
 
+#if defined(STM32F756xx)
+
 /** @defgroup HASH HASH
   * @brief HASH HAL module driver.
   * @{
   */
-
 #ifdef HAL_HASH_MODULE_ENABLED
-
-#if defined(STM32F756xx)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -355,6 +354,8 @@ HAL_StatusTypeDef HAL_HASH_Init(HASH_HandleTypeDef *hhash)
    
   if(hhash->State == HAL_HASH_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hhash->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_HASH_MspInit(hhash);
   }
@@ -1828,11 +1829,12 @@ HAL_HASH_STATETypeDef HAL_HASH_GetState(HASH_HandleTypeDef *hhash)
   * @}
   */
 
-#endif /* STM32F756xx */
 #endif /* HAL_HASH_MODULE_ENABLED */
+
 /**
   * @}
   */
+#endif /* STM32F756xx */
 
 /**
   * @}

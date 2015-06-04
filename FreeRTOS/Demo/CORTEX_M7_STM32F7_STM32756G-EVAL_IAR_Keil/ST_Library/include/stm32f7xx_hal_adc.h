@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_adc.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of ADC HAL extension module.
   ******************************************************************************
   * @attention
@@ -200,10 +200,10 @@ typedef struct
 /** @defgroup ADC_ClockPrescaler ADC Clock Prescaler
   * @{
   */ 
-#define ADC_CLOCKPRESCALER_PCLK_DIV2    ((uint32_t)0x00000000)
-#define ADC_CLOCKPRESCALER_PCLK_DIV4    ((uint32_t)ADC_CCR_ADCPRE_0)
-#define ADC_CLOCKPRESCALER_PCLK_DIV6    ((uint32_t)ADC_CCR_ADCPRE_1)
-#define ADC_CLOCKPRESCALER_PCLK_DIV8    ((uint32_t)ADC_CCR_ADCPRE)
+#define ADC_CLOCK_SYNC_PCLK_DIV2    ((uint32_t)0x00000000)
+#define ADC_CLOCK_SYNC_PCLK_DIV4    ((uint32_t)ADC_CCR_ADCPRE_0)
+#define ADC_CLOCK_SYNC_PCLK_DIV6    ((uint32_t)ADC_CCR_ADCPRE_1)
+#define ADC_CLOCK_SYNC_PCLK_DIV8    ((uint32_t)ADC_CCR_ADCPRE)
 /**
   * @}
   */ 
@@ -311,7 +311,6 @@ typedef struct
 #define ADC_CHANNEL_17          ((uint32_t)(ADC_CR1_AWDCH_4 | ADC_CR1_AWDCH_0))
 #define ADC_CHANNEL_18          ((uint32_t)(ADC_CR1_AWDCH_4 | ADC_CR1_AWDCH_1))
 
-#define ADC_CHANNEL_TEMPSENSOR  ((uint32_t)ADC_CHANNEL_16)
 #define ADC_CHANNEL_VREFINT     ((uint32_t)ADC_CHANNEL_17)
 #define ADC_CHANNEL_VBAT        ((uint32_t)ADC_CHANNEL_18)
 /**
@@ -566,10 +565,10 @@ uint32_t             HAL_ADC_GetError(ADC_HandleTypeDef *hadc);
 /** @defgroup ADC_Private_Macros ADC Private Macros
   * @{
   */
-#define IS_ADC_CLOCKPRESCALER(__ADC_CLOCK__)     (((__ADC_CLOCK__) == ADC_CLOCKPRESCALER_PCLK_DIV2) || \
-                                                  ((__ADC_CLOCK__) == ADC_CLOCKPRESCALER_PCLK_DIV4) || \
-                                                  ((__ADC_CLOCK__) == ADC_CLOCKPRESCALER_PCLK_DIV6) || \
-                                                  ((__ADC_CLOCK__) == ADC_CLOCKPRESCALER_PCLK_DIV8))
+#define IS_ADC_CLOCKPRESCALER(__ADC_CLOCK__)     (((__ADC_CLOCK__) == ADC_CLOCK_SYNC_PCLK_DIV2) || \
+                                                  ((__ADC_CLOCK__) == ADC_CLOCK_SYNC_PCLK_DIV4) || \
+                                                  ((__ADC_CLOCK__) == ADC_CLOCK_SYNC_PCLK_DIV6) || \
+                                                  ((__ADC_CLOCK__) == ADC_CLOCK_SYNC_PCLK_DIV8))
 #define IS_ADC_SAMPLING_DELAY(__DELAY__) (((__DELAY__) == ADC_TWOSAMPLINGDELAY_5CYCLES)  || \
                                           ((__DELAY__) == ADC_TWOSAMPLINGDELAY_6CYCLES)  || \
                                           ((__DELAY__) == ADC_TWOSAMPLINGDELAY_7CYCLES)  || \
@@ -612,25 +611,7 @@ uint32_t             HAL_ADC_GetError(ADC_HandleTypeDef *hadc);
 																			((__REGTRIG__) == ADC_SOFTWARE_START))
 #define IS_ADC_DATA_ALIGN(__ALIGN__) (((__ALIGN__) == ADC_DATAALIGN_RIGHT) || \
                                       ((__ALIGN__) == ADC_DATAALIGN_LEFT))		
-#define IS_ADC_CHANNEL(__CHANNEL__) (((__CHANNEL__) == ADC_CHANNEL_0)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_1)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_2)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_3)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_4)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_5)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_6)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_7)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_8)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_9)  || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_10) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_11) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_12) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_13) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_14) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_15) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_16) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_17) || \
-                                     ((__CHANNEL__) == ADC_CHANNEL_18))										
+                                      									
 #define IS_ADC_SAMPLE_TIME(__TIME__) (((__TIME__) == ADC_SAMPLETIME_3CYCLES)   || \
                                       ((__TIME__) == ADC_SAMPLETIME_15CYCLES)  || \
                                       ((__TIME__) == ADC_SAMPLETIME_28CYCLES)  || \

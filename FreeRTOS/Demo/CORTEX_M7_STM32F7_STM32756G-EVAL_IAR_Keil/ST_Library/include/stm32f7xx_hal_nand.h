@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_nand.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of NAND HAL module.
   ******************************************************************************
   * @attention
@@ -54,7 +54,6 @@
   * @{
   */ 
 
-#if defined(STM32F756xx) || defined(STM32F746xx)
 /* Exported typedef ----------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup NAND_Exported_Types NAND Exported Types
@@ -281,7 +280,6 @@ uint32_t              HAL_NAND_Read_Status(NAND_HandleTypeDef *hnand);
 /**
   * @}
   */
-#endif /* STM32F756xx || STM32F746xx */
     
 /**
   * @}

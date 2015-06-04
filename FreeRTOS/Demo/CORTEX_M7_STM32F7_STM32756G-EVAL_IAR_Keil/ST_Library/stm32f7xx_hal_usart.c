@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_usart.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   USART HAL module driver.
   *
   *          This file provides firmware functions to manage the following 
@@ -126,6 +126,7 @@ static HAL_StatusTypeDef USART_WaitOnFlagUntilTimeout(USART_HandleTypeDef *husar
 static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart);
 static HAL_StatusTypeDef USART_CheckIdleState(USART_HandleTypeDef *husart);
 static HAL_StatusTypeDef USART_Transmit_IT(USART_HandleTypeDef *husart);
+static HAL_StatusTypeDef USART_EndTransmit_IT(USART_HandleTypeDef *husart);
 static HAL_StatusTypeDef USART_Receive_IT(USART_HandleTypeDef *husart);
 static HAL_StatusTypeDef USART_TransmitReceive_IT(USART_HandleTypeDef *husart);
 /**
@@ -197,6 +198,8 @@ HAL_StatusTypeDef HAL_USART_Init(USART_HandleTypeDef *husart)
 
   if(husart->State == HAL_USART_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    husart->Lock = HAL_UNLOCKED;
     /* Init the low level hardware : GPIO, CLOCK */
     HAL_USART_MspInit(husart);
   }
@@ -1133,6 +1136,12 @@ void HAL_USART_IRQHandler(USART_HandleTypeDef *husart)
     }
   }
 
+  /* USART in mode Transmitter (transmission end) -----------------------------*/
+  if((__HAL_USART_GET_IT(husart, USART_IT_TC) != RESET) &&(__HAL_USART_GET_IT_SOURCE(husart, USART_IT_TC) != RESET))
+  {
+    USART_EndTransmit_IT(husart);
+  }
+	
 }
 
 /**
@@ -1276,16 +1285,8 @@ static HAL_StatusTypeDef USART_Transmit_IT(USART_HandleTypeDef *husart)
       /* Disable the USART Transmit Complete Interrupt */
       __HAL_USART_DISABLE_IT(husart, USART_IT_TXE);
 
-      /* Disable the USART Error Interrupt: (Frame error, noise error, overrun error) */
-      __HAL_USART_DISABLE_IT(husart, USART_IT_ERR);
-
-      if(USART_WaitOnFlagUntilTimeout(husart, USART_FLAG_TC, RESET, USART_TIMEOUT_VALUE) != HAL_OK)
-      {
-        return HAL_TIMEOUT;
-      }
-      husart->State = HAL_USART_STATE_READY;
-
-      HAL_USART_TxCpltCallback(husart);
+      /* Enable the USART Transmit Complete Interrupt */
+      __HAL_USART_ENABLE_IT(husart, USART_IT_TC);
 
       return HAL_OK;
     }
@@ -1311,6 +1312,27 @@ static HAL_StatusTypeDef USART_Transmit_IT(USART_HandleTypeDef *husart)
   {
     return HAL_BUSY;
   }
+}
+
+/**
+  * @brief  Wraps up transmission in non-blocking mode.
+  * @param  husart: pointer to a USART_HandleTypeDef structure that contains
+  *                the configuration information for the specified USART module.
+  * @retval HAL status
+  */
+static HAL_StatusTypeDef USART_EndTransmit_IT(USART_HandleTypeDef *husart)
+{
+  /* Disable the USART Transmit Complete Interrupt */
+  __HAL_USART_DISABLE_IT(husart, USART_IT_TC);
+
+  /* Disable the USART Error Interrupt: (Frame error, noise error, overrun error) */
+  __HAL_USART_DISABLE_IT(husart, USART_IT_ERR);
+
+  husart->State = HAL_USART_STATE_READY;
+
+  HAL_USART_TxCpltCallback(husart);
+
+  return HAL_OK;
 }
 
 /**
@@ -1476,7 +1498,7 @@ static HAL_StatusTypeDef USART_WaitOnFlagUntilTimeout(USART_HandleTypeDef *husar
           __HAL_USART_DISABLE_IT(husart, USART_IT_PE);
           __HAL_USART_DISABLE_IT(husart, USART_IT_ERR);
 
-          husart->State= HAL_USART_STATE_TIMEOUT;
+          husart->State= HAL_USART_STATE_READY;
 
           /* Process Unlocked */
           __HAL_UNLOCK(husart);
@@ -1501,7 +1523,7 @@ static HAL_StatusTypeDef USART_WaitOnFlagUntilTimeout(USART_HandleTypeDef *husar
           __HAL_USART_DISABLE_IT(husart, USART_IT_PE);
           __HAL_USART_DISABLE_IT(husart, USART_IT_ERR);
 
-          husart->State= HAL_USART_STATE_TIMEOUT;
+          husart->State= HAL_USART_STATE_READY;
 
           /* Process Unlocked */
           __HAL_UNLOCK(husart);
@@ -1524,32 +1546,29 @@ static void USART_DMATransmitCplt(DMA_HandleTypeDef *hdma)
 {
   USART_HandleTypeDef* husart = ( USART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
 
-  husart->TxXferCount = 0;
-  
-  if(husart->State == HAL_USART_STATE_BUSY_TX)
-  {
-    /* Wait for USART TC Flag */
-    if(USART_WaitOnFlagUntilTimeout(husart, USART_FLAG_TC, RESET, USART_TXDMA_TIMEOUTVALUE) != HAL_OK)
+  /* DMA Normal mode */
+  if((hdma->Instance->CR & DMA_SxCR_CIRC) == 0)
+  { 
+    husart->TxXferCount = 0;
+
+    if(husart->State == HAL_USART_STATE_BUSY_TX)
     {
-      /* Timeout occurred */ 
-      husart->State = HAL_USART_STATE_TIMEOUT;
-      HAL_USART_ErrorCallback(husart);
-    }
-    else
-    {
-      /* No Timeout */
-      /* Disable the DMA transfer for transmit request by setting the DMAT bit
-       in the USART CR3 register */
+      /* Disable the DMA transfer for transmit request by resetting the DMAT bit
+         in the USART CR3 register */
       husart->Instance->CR3 &= ~(USART_CR3_DMAT);
-      husart->State= HAL_USART_STATE_READY;
+
+      /* Enable the USART Transmit Complete Interrupt */
+      __HAL_USART_ENABLE_IT(husart, USART_IT_TC);
     }
   }
-  /* the usart state is HAL_USART_STATE_BUSY_TX_RX*/
+  /* DMA Circular mode */
   else
   {
-    husart->State= HAL_USART_STATE_BUSY_RX;
+    if(husart->State == HAL_USART_STATE_BUSY_TX)
+    {
     HAL_USART_TxCpltCallback(husart);
-  }
+   }
+ }
 }
 
 
@@ -1574,18 +1593,42 @@ static void USART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)
 {
   USART_HandleTypeDef* husart = ( USART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
 
-  husart->RxXferCount = 0;
+  /* DMA Normal mode */
+  if((hdma->Instance->CR & DMA_SxCR_CIRC) == 0)
+  { 
+    husart->RxXferCount = 0;
 
-  /* Disable the DMA RX transfer for the receiver request by resetting the DMAR bit
-  in USART CR3 register */
-  husart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAR);
-  /* similarly, disable the DMA TX transfer that was started to provide the
-     clock to the slave device */
-  husart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAT);
+    /* Disable the DMA RX transfer for the receiver request by resetting the DMAR bit
+    in USART CR3 register */
+    husart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAR);
+    /* similarly, disable the DMA TX transfer that was started to provide the
+       clock to the slave device */
+    husart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAT);
 
-  husart->State= HAL_USART_STATE_READY;
-
-  HAL_USART_RxCpltCallback(husart);
+      if(husart->State == HAL_USART_STATE_BUSY_RX)
+      {
+        HAL_USART_RxCpltCallback(husart);
+      }
+      /* The USART state is HAL_USART_STATE_BUSY_TX_RX */
+      else
+      {
+        HAL_USART_TxRxCpltCallback(husart);
+      }
+    husart->State= HAL_USART_STATE_READY;
+  }
+  /* DMA circular mode */
+  else
+  {
+    if(husart->State == HAL_USART_STATE_BUSY_RX)
+    {
+      HAL_USART_RxCpltCallback(husart);
+    }
+    /* The USART state is HAL_USART_STATE_BUSY_TX_RX */
+    else
+    {
+      HAL_USART_TxRxCpltCallback(husart);
+    }
+  }
 }
 
 /**
@@ -1627,6 +1670,8 @@ static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart)
   uint32_t tmpreg      = 0x0;
   USART_ClockSourceTypeDef clocksource = USART_CLOCKSOURCE_UNDEFINED;
   HAL_StatusTypeDef ret                = HAL_OK;
+  uint16_t brrtemp                     = 0x0000;
+  uint16_t usartdiv                    = 0x0000;
   
   /* Check the parameters */
   assert_param(IS_USART_POLARITY(husart->Init.CLKPolarity));
@@ -1669,26 +1714,30 @@ static HAL_StatusTypeDef USART_SetConfig(USART_HandleTypeDef *husart)
   USART_GETCLOCKSOURCE(husart, clocksource);
   switch (clocksource)
   {
-  case USART_CLOCKSOURCE_PCLK1: 
-    husart->Instance->BRR = (uint16_t)(2*HAL_RCC_GetPCLK1Freq() / husart->Init.BaudRate);
-    break;
-  case USART_CLOCKSOURCE_PCLK2: 
-    husart->Instance->BRR = (uint16_t)(2*HAL_RCC_GetPCLK2Freq() / husart->Init.BaudRate);
-    break;
-  case USART_CLOCKSOURCE_HSI: 
-    husart->Instance->BRR = (uint16_t)(2*HSI_VALUE / husart->Init.BaudRate); 
-    break; 
-  case USART_CLOCKSOURCE_SYSCLK:  
-    husart->Instance->BRR = (uint16_t)(2*HAL_RCC_GetSysClockFreq() / husart->Init.BaudRate);
-    break;  
-  case USART_CLOCKSOURCE_LSE:                
-    husart->Instance->BRR = (uint16_t)(2*LSE_VALUE / husart->Init.BaudRate); 
-    break;
-    case USART_CLOCKSOURCE_UNDEFINED:                
-  default:
-      ret = HAL_ERROR; 
-    break;    
+    case USART_CLOCKSOURCE_PCLK1:
+      usartdiv = (uint16_t)((2*HAL_RCC_GetPCLK1Freq()) / husart->Init.BaudRate);
+      break;
+    case USART_CLOCKSOURCE_PCLK2:
+      usartdiv = (uint16_t)((2*HAL_RCC_GetPCLK2Freq()) / husart->Init.BaudRate);
+      break;
+    case USART_CLOCKSOURCE_HSI:
+      usartdiv = (uint16_t)((2*HSI_VALUE) / husart->Init.BaudRate);
+      break;
+    case USART_CLOCKSOURCE_SYSCLK:
+      usartdiv = (uint16_t)((2*HAL_RCC_GetSysClockFreq()) / husart->Init.BaudRate);
+      break;
+    case USART_CLOCKSOURCE_LSE:
+      usartdiv = (uint16_t)((2*LSE_VALUE) / husart->Init.BaudRate);
+      break;
+    case USART_CLOCKSOURCE_UNDEFINED:
+    default:
+      ret = HAL_ERROR;
+      break;
   } 
+  
+  brrtemp = usartdiv & 0xFFF0;
+  brrtemp |= (uint16_t)((usartdiv & (uint16_t)0x000F) >> 1U);
+  husart->Instance->BRR = brrtemp;
   
   return ret; 
 }

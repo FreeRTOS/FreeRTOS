@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f746xx.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    28-April-2015
   * @brief   CMSIS STM32F746xx Device Peripheral Access Layer Header File.
   *
   *          This file contains:
@@ -3810,8 +3810,8 @@ typedef struct
 #define FLASH_OPTCR_BOR_LEV                 ((uint32_t)0x0000000C)
 #define FLASH_OPTCR_BOR_LEV_0               ((uint32_t)0x00000004)
 #define FLASH_OPTCR_BOR_LEV_1               ((uint32_t)0x00000008)
-#define FLASH_OPTCR_IWDG_SW                 ((uint32_t)0x00000010)
-#define FLASH_OPTCR_WWDG_SW                 ((uint32_t)0x00000020)
+#define FLASH_OPTCR_WWDG_SW                 ((uint32_t)0x00000010)
+#define FLASH_OPTCR_IWDG_SW                 ((uint32_t)0x00000020)
 #define FLASH_OPTCR_nRST_STOP               ((uint32_t)0x00000040)
 #define FLASH_OPTCR_nRST_STDBY              ((uint32_t)0x00000080)
 #define FLASH_OPTCR_RDP                     ((uint32_t)0x0000FF00)
@@ -3832,8 +3832,8 @@ typedef struct
 #define FLASH_OPTCR_nWRP_5                  ((uint32_t)0x00200000)
 #define FLASH_OPTCR_nWRP_6                  ((uint32_t)0x00400000)
 #define FLASH_OPTCR_nWRP_7                  ((uint32_t)0x00800000)
-#define FLASH_OPTCR_IWDG_STOP               ((uint32_t)0x40000000)
-#define FLASH_OPTCR_IWDG_STDBY              ((uint32_t)0x80000000)
+#define FLASH_OPTCR_IWDG_STDBY              ((uint32_t)0x40000000)
+#define FLASH_OPTCR_IWDG_STOP               ((uint32_t)0x80000000)
 
 /*******************  Bits definition for FLASH_OPTCR1 register  ***************/
 #define FLASH_OPTCR1_BOOT_ADD0              ((uint32_t)0x0000FFFF)
@@ -8278,7 +8278,7 @@ typedef struct
 /*                                       USB_OTG                              */
 /*                                                                            */
 /******************************************************************************/
-/********************  Bit definition forUSB_OTG_GOTGCTL register  ********************/
+/********************  Bit definition for USB_OTG_GOTGCTL register  ********************/
 #define USB_OTG_GOTGCTL_SRQSCS                  ((uint32_t)0x00000001)         /*!< Session request success */
 #define USB_OTG_GOTGCTL_SRQ                     ((uint32_t)0x00000002)         /*!< Session request */
 #define USB_OTG_GOTGCTL_VBVALOEN                ((uint32_t)0x00000004)         /*!< VBUS valid override enable */
@@ -8298,15 +8298,13 @@ typedef struct
 #define USB_OTG_GOTGCTL_BSESVLD                 ((uint32_t)0x00080000)         /*!< B-session valid */
 #define USB_OTG_GOTGCTL_OTGVER                  ((uint32_t)0x00100000)         /*!< OTG version  */
 
-/********************  Bit definition forUSB_OTG_HCFG register  ********************/
-
+/********************  Bit definition for USB_OTG_HCFG register  ********************/
 #define USB_OTG_HCFG_FSLSPCS                 ((uint32_t)0x00000003)            /*!< FS/LS PHY clock select  */
 #define USB_OTG_HCFG_FSLSPCS_0               ((uint32_t)0x00000001)            /*!<Bit 0 */
 #define USB_OTG_HCFG_FSLSPCS_1               ((uint32_t)0x00000002)            /*!<Bit 1 */
 #define USB_OTG_HCFG_FSLSS                   ((uint32_t)0x00000004)            /*!< FS- and LS-only support */
 
-/********************  Bit definition forUSB_OTG_DCFG register  ********************/
-
+/********************  Bit definition for USB_OTG_DCFG register  ********************/
 #define USB_OTG_DCFG_DSPD                    ((uint32_t)0x00000003)            /*!< Device speed */
 #define USB_OTG_DCFG_DSPD_0                  ((uint32_t)0x00000001)            /*!<Bit 0 */
 #define USB_OTG_DCFG_DSPD_1                  ((uint32_t)0x00000002)            /*!<Bit 1 */
@@ -8329,12 +8327,12 @@ typedef struct
 #define USB_OTG_DCFG_PERSCHIVL_0             ((uint32_t)0x01000000)            /*!<Bit 0 */
 #define USB_OTG_DCFG_PERSCHIVL_1             ((uint32_t)0x02000000)            /*!<Bit 1 */
 
-/********************  Bit definition forUSB_OTG_PCGCR register  ********************/
+/********************  Bit definition for USB_OTG_PCGCR register  ********************/
 #define USB_OTG_PCGCR_STPPCLK                 ((uint32_t)0x00000001)            /*!< Stop PHY clock */
 #define USB_OTG_PCGCR_GATEHCLK                ((uint32_t)0x00000002)            /*!< Gate HCLK */
 #define USB_OTG_PCGCR_PHYSUSP                 ((uint32_t)0x00000010)            /*!< PHY suspended */
 
-/********************  Bit definition forUSB_OTG_GOTGINT register  ********************/
+/********************  Bit definition for USB_OTG_GOTGINT register  ********************/
 #define USB_OTG_GOTGINT_SEDET                   ((uint32_t)0x00000004)            /*!< Session end detected                   */
 #define USB_OTG_GOTGINT_SRSSCHG                 ((uint32_t)0x00000100)            /*!< Session request success status change  */
 #define USB_OTG_GOTGINT_HNSSCHG                 ((uint32_t)0x00000200)            /*!< Host negotiation success status change */
@@ -8343,7 +8341,7 @@ typedef struct
 #define USB_OTG_GOTGINT_DBCDNE                  ((uint32_t)0x00080000)            /*!< Debounce done                          */
 #define USB_OTG_GOTGINT_IDCHNG                  ((uint32_t)0x00100000)            /*!< Change in ID pin input value           */
 
-/********************  Bit definition forUSB_OTG_DCTL register  ********************/
+/********************  Bit definition for USB_OTG_DCTL register  ********************/
 #define USB_OTG_DCTL_RWUSIG                  ((uint32_t)0x00000001)            /*!< Remote wakeup signaling */
 #define USB_OTG_DCTL_SDIS                    ((uint32_t)0x00000002)            /*!< Soft disconnect         */
 #define USB_OTG_DCTL_GINSTS                  ((uint32_t)0x00000004)            /*!< Global IN NAK status    */
@@ -8359,14 +8357,14 @@ typedef struct
 #define USB_OTG_DCTL_CGONAK                  ((uint32_t)0x00000400)            /*!< Clear global OUT NAK      */
 #define USB_OTG_DCTL_POPRGDNE                ((uint32_t)0x00000800)            /*!< Power-on programming done */
 
-/********************  Bit definition forUSB_OTG_HFIR register  ********************/
+/********************  Bit definition for USB_OTG_HFIR register  ********************/
 #define USB_OTG_HFIR_FRIVL                   ((uint32_t)0x0000FFFF)            /*!< Frame interval */
 
-/********************  Bit definition forUSB_OTG_HFNUM register  ********************/
+/********************  Bit definition for USB_OTG_HFNUM register  ********************/
 #define USB_OTG_HFNUM_FRNUM                   ((uint32_t)0x0000FFFF)            /*!< Frame number         */
 #define USB_OTG_HFNUM_FTREM                   ((uint32_t)0xFFFF0000)            /*!< Frame time remaining */
 
-/********************  Bit definition forUSB_OTG_DSTS register  ********************/
+/********************  Bit definition for USB_OTG_DSTS register  ********************/
 #define USB_OTG_DSTS_SUSPSTS                 ((uint32_t)0x00000001)            /*!< Suspend status   */
 
 #define USB_OTG_DSTS_ENUMSPD                 ((uint32_t)0x00000006)            /*!< Enumerated speed */
@@ -8375,7 +8373,7 @@ typedef struct
 #define USB_OTG_DSTS_EERR                    ((uint32_t)0x00000008)            /*!< Erratic error     */
 #define USB_OTG_DSTS_FNSOF                   ((uint32_t)0x003FFF00)            /*!< Frame number of the received SOF */
 
-/********************  Bit definition forUSB_OTG_GAHBCFG register  ********************/
+/********************  Bit definition for USB_OTG_GAHBCFG register  ********************/
 #define USB_OTG_GAHBCFG_GINT                    ((uint32_t)0x00000001)            /*!< Global interrupt mask */
 #define USB_OTG_GAHBCFG_HBSTLEN                 ((uint32_t)0x0000001E)            /*!< Burst length/type */
 #define USB_OTG_GAHBCFG_HBSTLEN_0               ((uint32_t)0x00000002)            /*!<Bit 0 */
@@ -8386,8 +8384,7 @@ typedef struct
 #define USB_OTG_GAHBCFG_TXFELVL                 ((uint32_t)0x00000080)            /*!< TxFIFO empty level */
 #define USB_OTG_GAHBCFG_PTXFELVL                ((uint32_t)0x00000100)            /*!< Periodic TxFIFO empty level */
 
-/********************  Bit definition forUSB_OTG_GUSBCFG register  ********************/
-
+/********************  Bit definition for USB_OTG_GUSBCFG register  ********************/
 #define USB_OTG_GUSBCFG_TOCAL                   ((uint32_t)0x00000007)            /*!< FS timeout calibration */
 #define USB_OTG_GUSBCFG_TOCAL_0                 ((uint32_t)0x00000001)            /*!<Bit 0 */
 #define USB_OTG_GUSBCFG_TOCAL_1                 ((uint32_t)0x00000002)            /*!<Bit 1 */
@@ -8414,7 +8411,7 @@ typedef struct
 #define USB_OTG_GUSBCFG_FDMOD                   ((uint32_t)0x40000000)            /*!< Forced peripheral mode          */
 #define USB_OTG_GUSBCFG_CTXPKT                  ((uint32_t)0x80000000)            /*!< Corrupt Tx packet               */
 
-/********************  Bit definition forUSB_OTG_GRSTCTL register  ********************/
+/********************  Bit definition for USB_OTG_GRSTCTL register  ********************/
 #define USB_OTG_GRSTCTL_CSRST                   ((uint32_t)0x00000001)            /*!< Core soft reset          */
 #define USB_OTG_GRSTCTL_HSRST                   ((uint32_t)0x00000002)            /*!< HCLK soft reset          */
 #define USB_OTG_GRSTCTL_FCRST                   ((uint32_t)0x00000004)            /*!< Host frame counter reset */
@@ -8429,7 +8426,7 @@ typedef struct
 #define USB_OTG_GRSTCTL_DMAREQ                  ((uint32_t)0x40000000)            /*!< DMA request signal */
 #define USB_OTG_GRSTCTL_AHBIDL                  ((uint32_t)0x80000000)            /*!< AHB master idle */
 
-/********************  Bit definition forUSB_OTG_DIEPMSK register  ********************/
+/********************  Bit definition for USB_OTG_DIEPMSK register  ********************/
 #define USB_OTG_DIEPMSK_XFRCM                   ((uint32_t)0x00000001)            /*!< Transfer completed interrupt mask                 */
 #define USB_OTG_DIEPMSK_EPDM                    ((uint32_t)0x00000002)            /*!< Endpoint disabled interrupt mask                  */
 #define USB_OTG_DIEPMSK_TOM                     ((uint32_t)0x00000008)            /*!< Timeout condition mask (nonisochronous endpoints) */
@@ -8439,7 +8436,7 @@ typedef struct
 #define USB_OTG_DIEPMSK_TXFURM                  ((uint32_t)0x00000100)            /*!< FIFO underrun mask                                */
 #define USB_OTG_DIEPMSK_BIM                     ((uint32_t)0x00000200)            /*!< BNA interrupt mask                                */
 
-/********************  Bit definition forUSB_OTG_HPTXSTS register  ********************/
+/********************  Bit definition for USB_OTG_HPTXSTS register  ********************/
 #define USB_OTG_HPTXSTS_PTXFSAVL                ((uint32_t)0x0000FFFF)            /*!< Periodic transmit data FIFO space available     */
 #define USB_OTG_HPTXSTS_PTXQSAV                 ((uint32_t)0x00FF0000)            /*!< Periodic transmit request queue space available */
 #define USB_OTG_HPTXSTS_PTXQSAV_0               ((uint32_t)0x00010000)            /*!<Bit 0 */
@@ -8461,10 +8458,10 @@ typedef struct
 #define USB_OTG_HPTXSTS_PTXQTOP_6               ((uint32_t)0x40000000)            /*!<Bit 6 */
 #define USB_OTG_HPTXSTS_PTXQTOP_7               ((uint32_t)0x80000000)            /*!<Bit 7 */
 
-/********************  Bit definition forUSB_OTG_HAINT register  ********************/
+/********************  Bit definition for USB_OTG_HAINT register  ********************/
 #define USB_OTG_HAINT_HAINT                   ((uint32_t)0x0000FFFF)            /*!< Channel interrupts */
 
-/********************  Bit definition forUSB_OTG_DOEPMSK register  ********************/
+/********************  Bit definition for USB_OTG_DOEPMSK register  ********************/
 #define USB_OTG_DOEPMSK_XFRCM                   ((uint32_t)0x00000001)            /*!< Transfer completed interrupt mask */
 #define USB_OTG_DOEPMSK_EPDM                    ((uint32_t)0x00000002)            /*!< Endpoint disabled interrupt mask               */
 #define USB_OTG_DOEPMSK_STUPM                   ((uint32_t)0x00000008)            /*!< SETUP phase done mask                          */
@@ -8473,7 +8470,7 @@ typedef struct
 #define USB_OTG_DOEPMSK_OPEM                    ((uint32_t)0x00000100)            /*!< OUT packet error mask                          */
 #define USB_OTG_DOEPMSK_BOIM                    ((uint32_t)0x00000200)            /*!< BNA interrupt mask                             */
 
-/********************  Bit definition forUSB_OTG_GINTSTS register  ********************/
+/********************  Bit definition for USB_OTG_GINTSTS register  ********************/
 #define USB_OTG_GINTSTS_CMOD                    ((uint32_t)0x00000001)            /*!< Current mode of operation                      */
 #define USB_OTG_GINTSTS_MMIS                    ((uint32_t)0x00000002)            /*!< Mode mismatch interrupt                        */
 #define USB_OTG_GINTSTS_OTGINT                  ((uint32_t)0x00000004)            /*!< OTG interrupt                                  */
@@ -8503,7 +8500,7 @@ typedef struct
 #define USB_OTG_GINTSTS_SRQINT                  ((uint32_t)0x40000000)            /*!< Session request/new session detected interrupt */
 #define USB_OTG_GINTSTS_WKUINT                  ((uint32_t)0x80000000)            /*!< Resume/remote wakeup detected interrupt        */
 
-/********************  Bit definition forUSB_OTG_GINTMSK register  ********************/
+/********************  Bit definition for USB_OTG_GINTMSK register  ********************/
 #define USB_OTG_GINTMSK_MMISM                   ((uint32_t)0x00000002)            /*!< Mode mismatch interrupt mask                        */
 #define USB_OTG_GINTMSK_OTGINT                  ((uint32_t)0x00000004)            /*!< OTG interrupt mask                                  */
 #define USB_OTG_GINTMSK_SOFM                    ((uint32_t)0x00000008)            /*!< Start of frame mask                                 */
@@ -8533,11 +8530,11 @@ typedef struct
 #define USB_OTG_GINTMSK_SRQIM                   ((uint32_t)0x40000000)            /*!< Session request/new session detected interrupt mask */
 #define USB_OTG_GINTMSK_WUIM                    ((uint32_t)0x80000000)            /*!< Resume/remote wakeup detected interrupt mask        */
 
-/********************  Bit definition forUSB_OTG_DAINT register  ********************/
+/********************  Bit definition for USB_OTG_DAINT register  ********************/
 #define USB_OTG_DAINT_IEPINT                  ((uint32_t)0x0000FFFF)            /*!< IN endpoint interrupt bits  */
 #define USB_OTG_DAINT_OEPINT                  ((uint32_t)0xFFFF0000)            /*!< OUT endpoint interrupt bits */
 
-/********************  Bit definition forUSB_OTG_HAINTMSK register  ********************/
+/********************  Bit definition for USB_OTG_HAINTMSK register  ********************/
 #define USB_OTG_HAINTMSK_HAINTM                  ((uint32_t)0x0000FFFF)            /*!< Channel interrupt mask */
 
 /********************  Bit definition for USB_OTG_GRXSTSP register  ********************/
@@ -8546,7 +8543,7 @@ typedef struct
 #define USB_OTG_GRXSTSP_DPID                     ((uint32_t)0x00018000)            /*!< OUT EP interrupt mask bits */
 #define USB_OTG_GRXSTSP_PKTSTS                   ((uint32_t)0x001E0000)            /*!< OUT EP interrupt mask bits */
 
-/********************  Bit definition forUSB_OTG_DAINTMSK register  ********************/
+/********************  Bit definition for USB_OTG_DAINTMSK register  ********************/
 #define USB_OTG_DAINTMSK_IEPM                    ((uint32_t)0x0000FFFF)            /*!< IN EP interrupt mask bits */
 #define USB_OTG_DAINTMSK_OEPM                    ((uint32_t)0xFFFF0000)            /*!< OUT EP interrupt mask bits */
 
@@ -8612,10 +8609,10 @@ typedef struct
 #define USB_OTG_FRMNUM_2                ((uint32_t)0x00800000)            /*!<Bit 2 */
 #define USB_OTG_FRMNUM_3                ((uint32_t)0x01000000)            /*!<Bit 3 */
 
-/********************  Bit definition forUSB_OTG_GRXFSIZ register  ********************/
+/********************  Bit definition for USB_OTG_GRXFSIZ register  ********************/
 #define USB_OTG_GRXFSIZ_RXFD            ((uint32_t)0x0000FFFF)            /*!< RxFIFO depth */
 
-/********************  Bit definition forUSB_OTG_DVBUSDIS register  ********************/
+/********************  Bit definition for USB_OTG_DVBUSDIS register  ********************/
 #define USB_OTG_DVBUSDIS_VBUSDT         ((uint32_t)0x0000FFFF)            /*!< Device VBUS discharge time */
 
 /********************  Bit definition for OTG register  ********************/
@@ -8624,10 +8621,10 @@ typedef struct
 #define USB_OTG_TX0FSA                  ((uint32_t)0x0000FFFF)            /*!< Endpoint 0 transmit RAM start address  */
 #define USB_OTG_TX0FD                   ((uint32_t)0xFFFF0000)            /*!< Endpoint 0 TxFIFO depth                */
 
-/********************  Bit definition forUSB_OTG_DVBUSPULSE register  ********************/
+/********************  Bit definition for USB_OTG_DVBUSPULSE register  ********************/
 #define USB_OTG_DVBUSPULSE_DVBUSP                  ((uint32_t)0x00000FFF)            /*!< Device VBUS pulsing time */
 
-/********************  Bit definition forUSB_OTG_GNPTXSTS register  ********************/
+/********************  Bit definition for USB_OTG_GNPTXSTS register  ********************/
 #define USB_OTG_GNPTXSTS_NPTXFSAV                ((uint32_t)0x0000FFFF)            /*!< Nonperiodic TxFIFO space available */
 
 #define USB_OTG_GNPTXSTS_NPTQXSAV                ((uint32_t)0x00FF0000)            /*!< Nonperiodic transmit request queue space available */
@@ -8649,7 +8646,7 @@ typedef struct
 #define USB_OTG_GNPTXSTS_NPTXQTOP_5              ((uint32_t)0x20000000)            /*!<Bit 5 */
 #define USB_OTG_GNPTXSTS_NPTXQTOP_6              ((uint32_t)0x40000000)            /*!<Bit 6 */
 
-/********************  Bit definition forUSB_OTG_DTHRCTL register  ********************/
+/********************  Bit definition for USB_OTG_DTHRCTL register  ********************/
 #define USB_OTG_DTHRCTL_NONISOTHREN             ((uint32_t)0x00000001)            /*!< Nonisochronous IN endpoints threshold enable */
 #define USB_OTG_DTHRCTL_ISOTHREN                ((uint32_t)0x00000002)            /*!< ISO IN endpoint threshold enable */
 
@@ -8677,34 +8674,26 @@ typedef struct
 #define USB_OTG_DTHRCTL_RXTHRLEN_8              ((uint32_t)0x02000000)            /*!<Bit 8 */
 #define USB_OTG_DTHRCTL_ARPEN                   ((uint32_t)0x08000000)            /*!< Arbiter parking enable */
 
-/********************  Bit definition forUSB_OTG_DIEPEMPMSK register  ********************/
+/********************  Bit definition for USB_OTG_DIEPEMPMSK register  ********************/
 #define USB_OTG_DIEPEMPMSK_INEPTXFEM               ((uint32_t)0x0000FFFF)         /*!< IN EP Tx FIFO empty interrupt mask bits */
 
-/********************  Bit definition forUSB_OTG_DEACHINT register  ********************/
+/********************  Bit definition for USB_OTG_DEACHINT register  ********************/
 #define USB_OTG_DEACHINT_IEP1INT                 ((uint32_t)0x00000002)           /*!< IN endpoint 1interrupt bit   */
 #define USB_OTG_DEACHINT_OEP1INT                 ((uint32_t)0x00020000)           /*!< OUT endpoint 1 interrupt bit */
 
-/********************  Bit definition forUSB_OTG_GCCFG register  ********************/
-#define USB_OTG_GCCFG_DCDET                  ((uint32_t)0x00000001)              /*!< Data contact detection (DCD) status */
-#define USB_OTG_GCCFG_PDET                   ((uint32_t)0x00000002)              /*!< Primary detection (PD) status */
-#define USB_OTG_GCCFG_SDET                   ((uint32_t)0x00000004)              /*!< Secondary detection (SD) status */
-#define USB_OTG_GCCFG_PS2DET                 ((uint32_t)0x00000008)              /*!< DM pull-up detection status */
+/********************  Bit definition for USB_OTG_GCCFG register  ********************/
 #define USB_OTG_GCCFG_PWRDWN                 ((uint32_t)0x00010000)              /*!< Power down */
-#define USB_OTG_GCCFG_BCDEN                  ((uint32_t)0x00020000)              /*!< Battery charging detector (BCD) enable */
-#define USB_OTG_GCCFG_DCDEN                  ((uint32_t)0x00040000)              /*!< Data contact detection (DCD) mode enable*/
-#define USB_OTG_GCCFG_PDEN                   ((uint32_t)0x00080000)              /*!< Primary detection (PD) mode enable*/
-#define USB_OTG_GCCFG_SDEN                   ((uint32_t)0x00100000)              /*!< Secondary detection (SD) mode enable */
 #define USB_OTG_GCCFG_VBDEN                  ((uint32_t)0x00200000)              /*!< USB VBUS Detection Enable */
 
-/********************  Bit definition forUSB_OTG_GPWRDN) register  ********************/
+/********************  Bit definition for USB_OTG_GPWRDN) register  ********************/
 #define USB_OTG_GPWRDN_ADPMEN                 ((uint32_t)0x00000001)             /*!< ADP module enable */
 #define USB_OTG_GPWRDN_ADPIF                  ((uint32_t)0x00800000)             /*!< ADP Interrupt flag */
 
-/********************  Bit definition forUSB_OTG_DEACHINTMSK register  ********************/
+/********************  Bit definition for USB_OTG_DEACHINTMSK register  ********************/
 #define USB_OTG_DEACHINTMSK_IEP1INTM          ((uint32_t)0x00000002)            /*!< IN Endpoint 1 interrupt mask bit  */
 #define USB_OTG_DEACHINTMSK_OEP1INTM          ((uint32_t)0x00020000)            /*!< OUT Endpoint 1 interrupt mask bit */
  
-/********************  Bit definition forUSB_OTG_CID register  ********************/
+/********************  Bit definition for USB_OTG_CID register  ********************/
 #define USB_OTG_CID_PRODUCT_ID               ((uint32_t)0xFFFFFFFF)            /*!< Product ID field */
 
 /********************  Bit definition for USB_OTG_GLPMCFG register  ********************/
@@ -8724,7 +8713,7 @@ typedef struct
 #define  USB_OTG_GLPMCFG_LPMRCNTSTS          ((uint32_t)0x0E000000)            /*!< LPM retry count status                                 */
 #define  USB_OTG_GLPMCFG_ENBESL              ((uint32_t)0x10000000)            /*!< Enable best effort service latency                     */
 
-/********************  Bit definition forUSB_OTG_DIEPEACHMSK1 register  ********************/
+/********************  Bit definition for USB_OTG_DIEPEACHMSK1 register  ********************/
 #define USB_OTG_DIEPEACHMSK1_XFRCM           ((uint32_t)0x00000001)            /*!< Transfer completed interrupt mask                 */
 #define USB_OTG_DIEPEACHMSK1_EPDM            ((uint32_t)0x00000002)            /*!< Endpoint disabled interrupt mask                  */
 #define USB_OTG_DIEPEACHMSK1_TOM             ((uint32_t)0x00000008)            /*!< Timeout condition mask (nonisochronous endpoints) */
@@ -8735,7 +8724,7 @@ typedef struct
 #define USB_OTG_DIEPEACHMSK1_BIM             ((uint32_t)0x00000200)            /*!< BNA interrupt mask                                */
 #define USB_OTG_DIEPEACHMSK1_NAKM            ((uint32_t)0x00002000)            /*!< NAK interrupt mask                                */
 
-/********************  Bit definition forUSB_OTG_HPRT register  ********************/
+/********************  Bit definition for USB_OTG_HPRT register  ********************/
 #define USB_OTG_HPRT_PCSTS                   ((uint32_t)0x00000001)            /*!< Port connect status        */
 #define USB_OTG_HPRT_PCDET                   ((uint32_t)0x00000002)            /*!< Port connect detected      */
 #define USB_OTG_HPRT_PENA                    ((uint32_t)0x00000004)            /*!< Port enable                */
@@ -8761,7 +8750,7 @@ typedef struct
 #define USB_OTG_HPRT_PSPD_0                  ((uint32_t)0x00020000)            /*!<Bit 0 */
 #define USB_OTG_HPRT_PSPD_1                  ((uint32_t)0x00040000)            /*!<Bit 1 */
 
-/********************  Bit definition forUSB_OTG_DOEPEACHMSK1 register  ********************/
+/********************  Bit definition for USB_OTG_DOEPEACHMSK1 register  ********************/
 #define USB_OTG_DOEPEACHMSK1_XFRCM                   ((uint32_t)0x00000001)            /*!< Transfer completed interrupt mask         */
 #define USB_OTG_DOEPEACHMSK1_EPDM                    ((uint32_t)0x00000002)            /*!< Endpoint disabled interrupt mask          */
 #define USB_OTG_DOEPEACHMSK1_TOM                     ((uint32_t)0x00000008)            /*!< Timeout condition mask                    */
@@ -8774,11 +8763,11 @@ typedef struct
 #define USB_OTG_DOEPEACHMSK1_NAKM                    ((uint32_t)0x00002000)            /*!< NAK interrupt mask                        */
 #define USB_OTG_DOEPEACHMSK1_NYETM                   ((uint32_t)0x00004000)            /*!< NYET interrupt mask                       */
 
-/********************  Bit definition forUSB_OTG_HPTXFSIZ register  ********************/
+/********************  Bit definition for USB_OTG_HPTXFSIZ register  ********************/
 #define USB_OTG_HPTXFSIZ_PTXSA                   ((uint32_t)0x0000FFFF)            /*!< Host periodic TxFIFO start address            */
 #define USB_OTG_HPTXFSIZ_PTXFD                   ((uint32_t)0xFFFF0000)            /*!< Host periodic TxFIFO depth                    */
 
-/********************  Bit definition forUSB_OTG_DIEPCTL register  ********************/
+/********************  Bit definition for USB_OTG_DIEPCTL register  ********************/
 #define USB_OTG_DIEPCTL_MPSIZ                   ((uint32_t)0x000007FF)            /*!< Maximum packet size              */
 #define USB_OTG_DIEPCTL_USBAEP                  ((uint32_t)0x00008000)            /*!< USB active endpoint              */
 #define USB_OTG_DIEPCTL_EONUM_DPID              ((uint32_t)0x00010000)            /*!< Even/odd frame                   */
@@ -8801,7 +8790,7 @@ typedef struct
 #define USB_OTG_DIEPCTL_EPDIS                   ((uint32_t)0x40000000)            /*!< Endpoint disable                 */
 #define USB_OTG_DIEPCTL_EPENA                   ((uint32_t)0x80000000)            /*!< Endpoint enable                  */
 
-/********************  Bit definition forUSB_OTG_HCCHAR register  ********************/
+/********************  Bit definition for USB_OTG_HCCHAR register  ********************/
 #define USB_OTG_HCCHAR_MPSIZ                   ((uint32_t)0x000007FF)            /*!< Maximum packet size */
 
 #define USB_OTG_HCCHAR_EPNUM                   ((uint32_t)0x00007800)            /*!< Endpoint number */
@@ -8832,7 +8821,7 @@ typedef struct
 #define USB_OTG_HCCHAR_CHDIS                   ((uint32_t)0x40000000)            /*!< Channel disable */
 #define USB_OTG_HCCHAR_CHENA                   ((uint32_t)0x80000000)            /*!< Channel enable */
 
-/********************  Bit definition forUSB_OTG_HCSPLT register  ********************/
+/********************  Bit definition for USB_OTG_HCSPLT register  ********************/
 
 #define USB_OTG_HCSPLT_PRTADDR                 ((uint32_t)0x0000007F)            /*!< Port address */
 #define USB_OTG_HCSPLT_PRTADDR_0               ((uint32_t)0x00000001)            /*!<Bit 0 */
@@ -8858,7 +8847,7 @@ typedef struct
 #define USB_OTG_HCSPLT_COMPLSPLT               ((uint32_t)0x00010000)            /*!< Do complete split */
 #define USB_OTG_HCSPLT_SPLITEN                 ((uint32_t)0x80000000)            /*!< Split enable */
 
-/********************  Bit definition forUSB_OTG_HCINT register  ********************/
+/********************  Bit definition for USB_OTG_HCINT register  ********************/
 #define USB_OTG_HCINT_XFRC                    ((uint32_t)0x00000001)            /*!< Transfer completed */
 #define USB_OTG_HCINT_CHH                     ((uint32_t)0x00000002)            /*!< Channel halted */
 #define USB_OTG_HCINT_AHBERR                  ((uint32_t)0x00000004)            /*!< AHB error */
@@ -8871,7 +8860,7 @@ typedef struct
 #define USB_OTG_HCINT_FRMOR                   ((uint32_t)0x00000200)            /*!< Frame overrun */
 #define USB_OTG_HCINT_DTERR                   ((uint32_t)0x00000400)            /*!< Data toggle error */
 
-/********************  Bit definition forUSB_OTG_DIEPINT register  ********************/
+/********************  Bit definition for USB_OTG_DIEPINT register  ********************/
 #define USB_OTG_DIEPINT_XFRC                    ((uint32_t)0x00000001)            /*!< Transfer completed interrupt */
 #define USB_OTG_DIEPINT_EPDISD                  ((uint32_t)0x00000002)            /*!< Endpoint disabled interrupt */
 #define USB_OTG_DIEPINT_TOC                     ((uint32_t)0x00000008)            /*!< Timeout condition */
@@ -8884,7 +8873,7 @@ typedef struct
 #define USB_OTG_DIEPINT_BERR                    ((uint32_t)0x00001000)            /*!< Babble error interrupt */
 #define USB_OTG_DIEPINT_NAK                     ((uint32_t)0x00002000)            /*!< NAK interrupt */
 
-/********************  Bit definition forUSB_OTG_HCINTMSK register  ********************/
+/********************  Bit definition for USB_OTG_HCINTMSK register  ********************/
 #define USB_OTG_HCINTMSK_XFRCM                   ((uint32_t)0x00000001)            /*!< Transfer completed mask */
 #define USB_OTG_HCINTMSK_CHHM                    ((uint32_t)0x00000002)            /*!< Channel halted mask */
 #define USB_OTG_HCINTMSK_AHBERR                  ((uint32_t)0x00000004)            /*!< AHB error */
@@ -8902,7 +8891,7 @@ typedef struct
 #define USB_OTG_DIEPTSIZ_XFRSIZ                  ((uint32_t)0x0007FFFF)            /*!< Transfer size */
 #define USB_OTG_DIEPTSIZ_PKTCNT                  ((uint32_t)0x1FF80000)            /*!< Packet count */
 #define USB_OTG_DIEPTSIZ_MULCNT                  ((uint32_t)0x60000000)            /*!< Packet count */
-/********************  Bit definition forUSB_OTG_HCTSIZ register  ********************/
+/********************  Bit definition for USB_OTG_HCTSIZ register  ********************/
 #define USB_OTG_HCTSIZ_XFRSIZ                    ((uint32_t)0x0007FFFF)            /*!< Transfer size */
 #define USB_OTG_HCTSIZ_PKTCNT                    ((uint32_t)0x1FF80000)            /*!< Packet count */
 #define USB_OTG_HCTSIZ_DOPING                    ((uint32_t)0x80000000)            /*!< Do PING */
@@ -8910,20 +8899,20 @@ typedef struct
 #define USB_OTG_HCTSIZ_DPID_0                    ((uint32_t)0x20000000)            /*!<Bit 0 */
 #define USB_OTG_HCTSIZ_DPID_1                    ((uint32_t)0x40000000)            /*!<Bit 1 */
 
-/********************  Bit definition forUSB_OTG_DIEPDMA register  ********************/
+/********************  Bit definition for USB_OTG_DIEPDMA register  ********************/
 #define USB_OTG_DIEPDMA_DMAADDR                  ((uint32_t)0xFFFFFFFF)            /*!< DMA address */
 
-/********************  Bit definition forUSB_OTG_HCDMA register  ********************/
+/********************  Bit definition for USB_OTG_HCDMA register  ********************/
 #define USB_OTG_HCDMA_DMAADDR                    ((uint32_t)0xFFFFFFFF)            /*!< DMA address */
 
-/********************  Bit definition forUSB_OTG_DTXFSTS register  ********************/
+/********************  Bit definition for USB_OTG_DTXFSTS register  ********************/
 #define USB_OTG_DTXFSTS_INEPTFSAV                ((uint32_t)0x0000FFFF)            /*!< IN endpoint TxFIFO space available */
 
-/********************  Bit definition forUSB_OTG_DIEPTXF register  ********************/
+/********************  Bit definition for USB_OTG_DIEPTXF register  ********************/
 #define USB_OTG_DIEPTXF_INEPTXSA                 ((uint32_t)0x0000FFFF)            /*!< IN endpoint FIFOx transmit RAM start address */
 #define USB_OTG_DIEPTXF_INEPTXFD                 ((uint32_t)0xFFFF0000)            /*!< IN endpoint TxFIFO depth */
 
-/********************  Bit definition forUSB_OTG_DOEPCTL register  ********************/
+/********************  Bit definition for USB_OTG_DOEPCTL register  ********************/
 #define USB_OTG_DOEPCTL_MPSIZ                     ((uint32_t)0x000007FF)            /*!< Maximum packet size */          /*!<Bit 1 */
 #define USB_OTG_DOEPCTL_USBAEP                    ((uint32_t)0x00008000)            /*!< USB active endpoint */
 #define USB_OTG_DOEPCTL_NAKSTS                    ((uint32_t)0x00020000)            /*!< NAK status */
@@ -8939,7 +8928,7 @@ typedef struct
 #define USB_OTG_DOEPCTL_EPDIS                     ((uint32_t)0x40000000)            /*!< Endpoint disable */
 #define USB_OTG_DOEPCTL_EPENA                     ((uint32_t)0x80000000)            /*!< Endpoint enable */
 
-/********************  Bit definition forUSB_OTG_DOEPINT register  ********************/
+/********************  Bit definition for USB_OTG_DOEPINT register  ********************/
 #define USB_OTG_DOEPINT_XFRC                    ((uint32_t)0x00000001)            /*!< Transfer completed interrupt */
 #define USB_OTG_DOEPINT_EPDISD                  ((uint32_t)0x00000002)            /*!< Endpoint disabled interrupt */
 #define USB_OTG_DOEPINT_STUP                    ((uint32_t)0x00000008)            /*!< SETUP phase done */
@@ -8947,8 +8936,7 @@ typedef struct
 #define USB_OTG_DOEPINT_B2BSTUP                 ((uint32_t)0x00000040)            /*!< Back-to-back SETUP packets received */
 #define USB_OTG_DOEPINT_NYET                    ((uint32_t)0x00004000)            /*!< NYET interrupt */
 
-/********************  Bit definition forUSB_OTG_DOEPTSIZ register  ********************/
-
+/********************  Bit definition for USB_OTG_DOEPTSIZ register  ********************/
 #define USB_OTG_DOEPTSIZ_XFRSIZ                  ((uint32_t)0x0007FFFF)            /*!< Transfer size */
 #define USB_OTG_DOEPTSIZ_PKTCNT                  ((uint32_t)0x1FF80000)            /*!< Packet count */
 

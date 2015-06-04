@@ -122,7 +122,7 @@ will remove items as they are added, meaning the send task should always find
 the queue empty. */
 #define mainQUEUE_LENGTH					( 1 )
 
-/* The LED is used to show the demo status. */
+/* The LED is used to show the demo status. (not connected on Rev A hardware) */
 #define mainTOGGLE_LED()	HAL_GPIO_TogglePin( GPIOF, GPIO_PIN_10 )
 
 /*-----------------------------------------------------------*/

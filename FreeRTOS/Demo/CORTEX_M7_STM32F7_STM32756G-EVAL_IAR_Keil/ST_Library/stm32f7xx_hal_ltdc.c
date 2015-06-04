@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_ltdc.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   LTDC HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the LTDC peripheral:
@@ -102,6 +102,8 @@
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
+#if defined(STM32F756xx) || defined(STM32F746xx)
+
 /** @defgroup LTDC LTDC
   * @brief LTDC HAL module driver
   * @{
@@ -170,6 +172,8 @@ HAL_StatusTypeDef HAL_LTDC_Init(LTDC_HandleTypeDef *hltdc)
 
   if(hltdc->State == HAL_LTDC_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hltdc->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_LTDC_MspInit(hltdc);
   }
@@ -1176,9 +1180,11 @@ static void LTDC_SetConfig(LTDC_HandleTypeDef *hltdc, LTDC_LayerCfgTypeDef *pLay
   */
 
 #endif /* HAL_LTDC_MODULE_ENABLED */
+
 /**
   * @}
   */
+#endif /* STM32F756xx || STM32F746xx */
 
 /**
   * @}

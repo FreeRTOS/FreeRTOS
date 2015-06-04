@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_cortex.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of CORTEX HAL module.
   ******************************************************************************
   * @attention
@@ -436,7 +436,6 @@ void HAL_SYSTICK_Callback(void);
 #if (__MPU_PRESENT == 1)
 /**
   * @brief  Disables the MPU
-  * @param  None 
   * @retval None
   */
 __STATIC_INLINE void HAL_MPU_Disable(void)
@@ -451,7 +450,7 @@ __STATIC_INLINE void HAL_MPU_Disable(void)
 /**
   * @brief  Enables the MPU
   * @param  MPU_Control: Specifies the control mode of the MPU during hard fault, 
-  *          NMI, FAULTMASK and privileged accessto the default memory 
+  *          NMI, FAULTMASK and privileged access to the default memory 
   *          This parameter can be one of the following values:
   *            @arg MPU_HFNMI_PRIVDEF_NONE
   *            @arg MPU_HARDFAULT_NMI

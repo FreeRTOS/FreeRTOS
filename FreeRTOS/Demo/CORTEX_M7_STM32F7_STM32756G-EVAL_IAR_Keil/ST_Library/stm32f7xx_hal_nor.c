@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_nor.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   NOR HAL module driver.
   *          This file provides a generic firmware to drive NOR memories mounted 
   *          as external device.
@@ -94,7 +94,6 @@
   * @{
   */
 #ifdef HAL_NOR_MODULE_ENABLED
-#if defined(STM32F756xx) || defined(STM32F746xx)
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -836,7 +835,7 @@ HAL_StatusTypeDef HAL_NOR_Read_CFI(NOR_HandleTypeDef *hnor, NOR_CFITypeDef *pNOR
   * @}
   */
   
-/** @defgroup NOR_Exported_Functions_Group3 Control functions 
+/** @defgroup NOR_Exported_Functions_Group3 NOR Control functions
  *  @brief   management functions 
  *
 @verbatim   
@@ -904,7 +903,7 @@ HAL_StatusTypeDef HAL_NOR_WriteOperation_Disable(NOR_HandleTypeDef *hnor)
   * @}
   */  
   
-/** @defgroup NOR_Exported_Functions_Group4 State functions 
+/** @defgroup NOR_Exported_Functions_Group4 NOR State functions 
  *  @brief   Peripheral State functions 
  *
 @verbatim   
@@ -1003,7 +1002,6 @@ HAL_NOR_StatusTypeDef HAL_NOR_GetStatus(NOR_HandleTypeDef *hnor, uint32_t Addres
 /**
   * @}
   */
-#endif /* STM32F756xx || STM32F746xx */
 #endif /* HAL_NOR_MODULE_ENABLED */
 /**
   * @}

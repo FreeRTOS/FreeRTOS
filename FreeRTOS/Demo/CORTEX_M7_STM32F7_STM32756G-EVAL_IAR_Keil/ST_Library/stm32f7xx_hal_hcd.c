@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_hcd.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   HCD HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the USB Peripheral Controller:
@@ -896,16 +896,17 @@ static void HCD_HC_IN_IRQHandler   (HCD_HandleTypeDef *hhcd, uint8_t chnum)
       __HAL_HCD_UNMASK_HALT_HC_INT(chnum); 
       USB_HC_Halt(hhcd->Instance, chnum);  
     }
-    else if  ((hhcd->hc[chnum].ep_type == EP_TYPE_CTRL)||
-              (hhcd->hc[chnum].ep_type == EP_TYPE_BULK))
+    
+    hhcd->hc[chnum].state = HC_NAK;
+    __HAL_HCD_CLEAR_HC_INT(chnum, USB_OTG_HCINT_NAK);
+     
+    if  ((hhcd->hc[chnum].ep_type == EP_TYPE_CTRL)||
+         (hhcd->hc[chnum].ep_type == EP_TYPE_BULK))
     {
       /* re-activate the channel  */
       USBx_HC(chnum)->HCCHAR &= ~USB_OTG_HCCHAR_CHDIS;         
       USBx_HC(chnum)->HCCHAR |= USB_OTG_HCCHAR_CHENA;
-   
     }
-    hhcd->hc[chnum].state = HC_NAK;
-     __HAL_HCD_CLEAR_HC_INT(chnum, USB_OTG_HCINT_NAK);
   }
 }
 

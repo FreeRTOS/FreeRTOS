@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_irda.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of IRDA HAL module.
   ******************************************************************************
   * @attention
@@ -494,11 +494,11 @@ typedef struct
 #include "stm32f7xx_hal_irda_ex.h"  
 
 /* Exported functions --------------------------------------------------------*/
-/** @addtogroup IRDA_Exported_Functions IRDA Exported Functions
+/** @addtogroup IRDA_Exported_Functions IrDA Exported Functions
   * @{
   */
 
-/** @addtogroup IRDA_Exported_Functions_Group1 Initialization and de-initialization functions
+/** @addtogroup IRDA_Exported_Functions_Group1 IrDA Initialization and de-initialization functions
   * @{
   */
 
@@ -535,7 +535,7 @@ void HAL_IRDA_ErrorCallback(IRDA_HandleTypeDef *hirda);
  * @}
  */
 
-/** @addtogroup IRDA_Exported_Functions_Group3 Control functions
+/** @addtogroup IRDA_Exported_Functions_Group3 Peripheral Control functions
  * @{
  */
 /* Peripheral State methods  **************************************************/

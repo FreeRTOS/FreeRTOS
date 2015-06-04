@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_adc.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   This file provides firmware functions to manage the following 
   *          functionalities of the Analog to Digital Convertor (ADC) peripheral:
   *           + Initialization and de-initialization functions
@@ -284,6 +284,8 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef* hadc)
 
   if(hadc->State == HAL_ADC_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hadc->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_ADC_MspInit(hadc);
   }
@@ -1250,7 +1252,7 @@ uint32_t HAL_ADC_GetError(ADC_HandleTypeDef *hadc)
 
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup ADC_Private_Functions
+/** @defgroup ADC_Private_Functions ADC Private Functions
   * @{
   */
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_eth.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   ETH HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Ethernet (ETH) peripheral:
@@ -190,6 +190,8 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
   
   if(heth->State == HAL_ETH_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    heth->Lock = HAL_UNLOCKED;
     /* Init the low level hardware : GPIO, CLOCK, NVIC. */
     HAL_ETH_MspInit(heth);
   }
@@ -243,7 +245,7 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
   }
   else /* ((hclk >= 150000000)&&(hclk <= 200000000)) */
   {
-    /* CSR Clock Range between 150-200 MHz */ 
+    /* CSR Clock Range between 150-216 MHz */ 
     tempreg |= (uint32_t)ETH_MACMIIAR_CR_Div102;    
   }
   

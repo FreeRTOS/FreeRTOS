@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_pcd.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   PCD HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the USB Peripheral Controller:
@@ -530,14 +530,14 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
       if ( USB_GetDevSpeed(hpcd->Instance) == USB_OTG_SPEED_HIGH)
       {
         hpcd->Init.speed            = USB_OTG_SPEED_HIGH;
-        hpcd->Init.ep0_mps          = USB_OTG_HS_MAX_PACKET_SIZE ;    
-        hpcd->Instance->GUSBCFG |= (USB_OTG_GUSBCFG_TRDT_0 | USB_OTG_GUSBCFG_TRDT_3);
+        hpcd->Init.ep0_mps          = USB_OTG_HS_MAX_PACKET_SIZE ;
+        hpcd->Instance->GUSBCFG |= (uint32_t)((USBD_HS_TRDT_VALUE << 10) & USB_OTG_GUSBCFG_TRDT);
       }
       else
       {
         hpcd->Init.speed            = USB_OTG_SPEED_FULL;
         hpcd->Init.ep0_mps          = USB_OTG_FS_MAX_PACKET_SIZE ;  
-        hpcd->Instance->GUSBCFG |= (USB_OTG_GUSBCFG_TRDT_0 | USB_OTG_GUSBCFG_TRDT_2);
+        hpcd->Instance->GUSBCFG |= (uint32_t)((USBD_FS_TRDT_VALUE << 10) & USB_OTG_GUSBCFG_TRDT);
       }
       
       HAL_PCD_ResetCallback(hpcd);

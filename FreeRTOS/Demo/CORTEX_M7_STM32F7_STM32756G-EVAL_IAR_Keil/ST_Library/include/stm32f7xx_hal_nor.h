@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_nor.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of NOR HAL module.
   ******************************************************************************
   * @attention
@@ -55,7 +55,6 @@
   * @{
   */ 
 
-#if defined(STM32F756xx) || defined(STM32F746xx)
 /* Exported typedef ----------------------------------------------------------*/
 /** @defgroup NOR_Exported_Types NOR Exported Types
   * @{
@@ -192,7 +191,7 @@ HAL_StatusTypeDef HAL_NOR_Read_CFI(NOR_HandleTypeDef *hnor, NOR_CFITypeDef *pNOR
   * @}
   */
   
-/** @addtogroup NOR_Exported_Functions_Group3 Peripheral Control functions 
+/** @addtogroup NOR_Exported_Functions_Group3 NOR Control functions 
   * @{
   */
 
@@ -203,7 +202,7 @@ HAL_StatusTypeDef HAL_NOR_WriteOperation_Disable(NOR_HandleTypeDef *hnor);
   * @}
   */
   
-/** @addtogroup NOR_Exported_Functions_Group4 Peripheral State functions 
+/** @addtogroup NOR_Exported_Functions_Group4 NOR State functions 
   * @{
   */
 
@@ -282,7 +281,7 @@ HAL_NOR_StatusTypeDef HAL_NOR_GetStatus(NOR_HandleTypeDef *hnor, uint32_t Addres
 /**
   * @}
   */
-#endif /* STM32F756xx || STM32F746xx */
+
 /**
   * @}
   */ 

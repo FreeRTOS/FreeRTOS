@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_rcc.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   RCC HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Reset and Clock Control (RCC) peripheral:
@@ -157,7 +157,7 @@ const uint8_t APBAHBPrescTable[16] = {0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 
       (#) LSE (low-speed external), 32 KHz oscillator used as RTC clock source.   
 
       (#) PLL (clocked by HSI or HSE), featuring two different output clocks:
-        (++) The first output is used to generate the high speed system clock (up to 200 MHz)
+        (++) The first output is used to generate the high speed system clock (up to 216 MHz)
         (++) The second output is used to generate the clock for the USB OTG FS (48 MHz),
              the random analog generator (<=48 MHz) and the SDIO (<= 48 MHz).
 

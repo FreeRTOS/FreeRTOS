@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_i2s.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   I2S HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Integrated Interchip Sound (I2S) peripheral:
@@ -139,11 +139,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
 
-/** @addtogroup STM32F3xx_HAL_Driver
+/** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
 
-/** @defgroup I2S I2S HAL module driver
+/** @defgroup I2S I2S
   * @brief I2S HAL module driver
   * @{
   */
@@ -234,11 +234,16 @@ HAL_StatusTypeDef HAL_I2S_Init(I2S_HandleTypeDef *hi2s)
   assert_param(IS_I2S_CPOL(hi2s->Init.CPOL));  
   assert_param(IS_I2S_CLOCKSOURCE(hi2s->Init.ClockSource));
   
+  if(hi2s->State == HAL_I2S_STATE_RESET)
+  {
+    /* Allocate lock resource and initialize it */
+    hi2s->Lock = HAL_UNLOCKED;
+    /* Init the low level hardware : GPIO, CLOCK, CORTEX...etc */
+    HAL_I2S_MspInit(hi2s);
+  }
+  
   hi2s->State = HAL_I2S_STATE_BUSY;
-  
-  /* Init the low level hardware : GPIO, CLOCK, CORTEX...etc */
-  HAL_I2S_MspInit(hi2s);
-  
+    
   /*----------------------- SPIx I2SCFGR & I2SPR Configuration -----------------*/
   /* Clear I2SMOD, I2SE, I2SCFG, PCMSYNC, I2SSTD, CKPOL, DATLEN and CHLEN bits */
   hi2s->Instance->I2SCFGR &= ~(SPI_I2SCFGR_CHLEN | SPI_I2SCFGR_DATLEN | SPI_I2SCFGR_CKPOL | \
@@ -1300,7 +1305,7 @@ uint32_t HAL_I2S_GetError(I2S_HandleTypeDef *hi2s)
 
   /**
   * @brief  Get I2S Input Clock based on I2S source clock selection
-  * @param  hsai: pointer to a I2S_HandleTypeDef structure that contains
+  * @param  hi2s: pointer to a I2S_HandleTypeDef structure that contains
   *               the configuration information for I2S module.   
   * @retval I2S Clock Input 
   */

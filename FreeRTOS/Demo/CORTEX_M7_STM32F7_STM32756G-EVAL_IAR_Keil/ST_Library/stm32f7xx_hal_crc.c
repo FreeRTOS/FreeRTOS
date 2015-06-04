@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_crc.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   CRC HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Cyclic Redundancy Check (CRC) peripheral:
@@ -87,7 +87,7 @@ static uint32_t CRC_Handle_8(CRC_HandleTypeDef *hcrc, uint8_t pBuffer[], uint32_
 static uint32_t CRC_Handle_16(CRC_HandleTypeDef *hcrc, uint16_t pBuffer[], uint32_t BufferLength);
 /* Exported functions --------------------------------------------------------*/
 
-/** @defgroup CRC_Exported_Functions
+/** @defgroup CRC_Exported_Functions CRC Exported Functions
   * @{
   */
 
@@ -128,6 +128,8 @@ HAL_StatusTypeDef HAL_CRC_Init(CRC_HandleTypeDef *hcrc)
 
   if(hcrc->State == HAL_CRC_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hcrc->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_CRC_MspInit(hcrc);
   }
@@ -415,12 +417,12 @@ static uint32_t CRC_Handle_8(CRC_HandleTypeDef *hcrc, uint8_t pBuffer[], uint32_
      }
      if  (BufferLength%4 == 2)
      {
-       *(__IO uint16_t*) (&hcrc->Instance->DR) = (uint16_t)(((uint32_t)(pBuffer[4*i])<<8) | (uint32_t)(pBuffer[4*i+1]));
+       *(__IO uint32_t*) (&hcrc->Instance->DR) = (uint16_t)(((uint32_t)(pBuffer[4*i])<<8) | (uint32_t)(pBuffer[4*i+1]));
      }
      if  (BufferLength%4 == 3)
      {
-       *(__IO uint16_t*) (&hcrc->Instance->DR) = (uint16_t)(((uint32_t)(pBuffer[4*i])<<8) | (uint32_t)(pBuffer[4*i+1]));
-       *(__IO uint8_t*) (&hcrc->Instance->DR) = pBuffer[4*i+2];       
+       *(__IO uint32_t*) (&hcrc->Instance->DR) = (uint16_t)(((uint32_t)(pBuffer[4*i])<<8) | (uint32_t)(pBuffer[4*i+1]));
+       *(__IO uint32_t*) (&hcrc->Instance->DR) = pBuffer[4*i+2];       
      }
    }
   
@@ -451,7 +453,7 @@ static uint32_t CRC_Handle_16(CRC_HandleTypeDef *hcrc, uint16_t pBuffer[], uint3
   }
   if ((BufferLength%2) != 0)
   {
-       *(__IO uint16_t*) (&hcrc->Instance->DR) = pBuffer[2*i]; 
+       *(__IO uint32_t*) (&hcrc->Instance->DR) = pBuffer[2*i]; 
   }
    
   /* Return the CRC computed value */ 

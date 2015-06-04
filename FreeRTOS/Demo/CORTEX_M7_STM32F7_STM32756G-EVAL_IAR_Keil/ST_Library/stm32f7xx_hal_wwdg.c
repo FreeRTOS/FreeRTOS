@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_wwdg.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   WWDG HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Window Watchdog (WWDG) peripheral:
@@ -163,6 +163,8 @@ HAL_StatusTypeDef HAL_WWDG_Init(WWDG_HandleTypeDef *hwwdg)
   
   if(hwwdg->State == HAL_WWDG_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hwwdg->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_WWDG_MspInit(hwwdg);
   }

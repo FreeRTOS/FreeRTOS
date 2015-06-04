@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_qspi.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   QSPI HAL module driver.
   *
   *          This file provides firmware functions to manage the following 
@@ -254,14 +254,21 @@ HAL_StatusTypeDef HAL_QSPI_Init(QSPI_HandleTypeDef *hqspi)
   assert_param(IS_QSPI_FLASH_SIZE(hqspi->Init.FlashSize));
   assert_param(IS_QSPI_CS_HIGH_TIME(hqspi->Init.ChipSelectHighTime));
   assert_param(IS_QSPI_CLOCK_MODE(hqspi->Init.ClockMode));
-  assert_param(IS_QSPI_FLASH_ID(hqspi->Init.FlashID));
   assert_param(IS_QSPI_DUAL_FLASH_MODE(hqspi->Init.DualFlash));
 
+  if (hqspi->Init.DualFlash != QSPI_DUALFLASH_ENABLE )
+  {
+    assert_param(IS_QSPI_FLASH_ID(hqspi->Init.FlashID));
+  }
+  
   /* Process locked */
   __HAL_LOCK(hqspi);
     
   if(hqspi->State == HAL_QSPI_STATE_RESET)
-  {  
+  { 
+    /* Allocate lock resource and initialize it */
+    hqspi->Lock = HAL_UNLOCKED;
+     
     /* Init the low level hardware : GPIO, CLOCK */
     HAL_QSPI_MspInit(hqspi);
              
@@ -1772,7 +1779,7 @@ static HAL_StatusTypeDef QSPI_WaitFlagStateUntilTimeout(QSPI_HandleTypeDef *hqsp
   * @param  hqspi: QSPI handle
   * @param  cmd: structure that contains the command configuration information
   * @param  FunctionalMode: functional mode to configured
-  *           This parameter can be a value of @ref QSPI_FunctionalMode
+  *           This parameter can be one of the following values:
   *            @arg QSPI_FUNCTIONAL_MODE_INDIRECT_WRITE: Indirect write mode
   *            @arg QSPI_FUNCTIONAL_MODE_INDIRECT_READ: Indirect read mode
   *            @arg QSPI_FUNCTIONAL_MODE_AUTO_POLLING: Automatic polling mode

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_rtc_ex.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of RTC HAL Extension module.
   ******************************************************************************
   * @attention
@@ -186,7 +186,7 @@ typedef struct
 /** @defgroup RTCEx_TimeStamp_Pin_Selection RTCEx TimeStamp Pin Selection
   * @{
   */ 
-#define RTC_TIMESTAMPPIN_PC13              ((uint32_t)0x00000000)
+#define RTC_TIMESTAMPPIN_DEFAULT              ((uint32_t)0x00000000)
 #define RTC_TIMESTAMPPIN_PI8               ((uint32_t)0x00000002)
 #define RTC_TIMESTAMPPIN_PC1               ((uint32_t)0x00000004)
 /**
@@ -924,8 +924,8 @@ HAL_StatusTypeDef HAL_RTCEx_PollForAlarmBEvent(RTC_HandleTypeDef *hrtc, uint32_t
 /** @defgroup RTCEx_Private_Constants RTCEx Private Constants
   * @{
   */
-#define RTC_EXTI_LINE_TAMPER_TIMESTAMP_EVENT  ((uint32_t)0x00200000)  /*!< External interrupt line 21 Connected to the RTC Tamper and Time Stamp events */                                               
-#define RTC_EXTI_LINE_WAKEUPTIMER_EVENT       ((uint32_t)0x00400000)  /*!< External interrupt line 22 Connected to the RTC Wake-up event */  
+#define RTC_EXTI_LINE_TAMPER_TIMESTAMP_EVENT  ((uint32_t)EXTI_IMR_MR21)  /*!< External interrupt line 21 Connected to the RTC Tamper and Time Stamp events */                                               
+#define RTC_EXTI_LINE_WAKEUPTIMER_EVENT       ((uint32_t)EXTI_IMR_MR22)  /*!< External interrupt line 22 Connected to the RTC Wake-up event */  
 /**
   * @}
   */
@@ -947,7 +947,7 @@ HAL_StatusTypeDef HAL_RTCEx_PollForAlarmBEvent(RTC_HandleTypeDef *hrtc, uint32_t
                                      ((__EDGE__) == RTC_TIMESTAMPEDGE_FALLING))
 #define IS_RTC_TAMPER(__TAMPER__) ((((__TAMPER__) & (uint32_t)0xFFFFFFD6) == 0x00) && ((__TAMPER__) != (uint32_t)RESET))
 #define IS_RTC_TAMPER_INTERRUPT(__INTERRUPT__) ((((__INTERRUPT__) & (uint32_t)0xFFB6FFFB) == 0x00) && ((__INTERRUPT__) != (uint32_t)RESET))
-#define IS_RTC_TIMESTAMP_PIN(__PIN__) (((__PIN__) == RTC_TIMESTAMPPIN_PC13) || \
+#define IS_RTC_TIMESTAMP_PIN(__PIN__) (((__PIN__) == RTC_TIMESTAMPPIN_DEFAULT) || \
                                        ((__PIN__) == RTC_TIMESTAMPPIN_PI8)  || \
                                        ((__PIN__) == RTC_TIMESTAMPPIN_PC1))
 #define IS_RTC_TAMPER_TRIGGER(__TRIGGER__) (((__TRIGGER__) == RTC_TAMPERTRIGGER_RISINGEDGE) || \

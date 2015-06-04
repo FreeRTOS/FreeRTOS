@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dcmi_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   DCMI Extension HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of DCMI extension peripheral:
@@ -57,14 +57,13 @@
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
-/** @defgroup DCMI DCMI
-  * @brief DCMI HAL module driver
+/** @defgroup DCMIEx DCMIEx
+  * @brief DCMI Extended HAL module driver
   * @{
   */
 
 #ifdef HAL_DCMI_MODULE_ENABLED
 
-#if defined(STM32F746xx) || defined(STM32F756xx)
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -72,7 +71,7 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
-/** @defgroup DCMIEx_Exported_Functions DCMI Extended Exported Functions
+/** @defgroup DCMIEx_Exported_Functions DCMIEx Exported Functions
   * @{
   */
 
@@ -190,7 +189,6 @@ HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
 /**
   * @}
   */
-#endif /* STM32F746xx || STM32F756xx */
 #endif /* HAL_DCMI_MODULE_ENABLED */
 /**
   * @}

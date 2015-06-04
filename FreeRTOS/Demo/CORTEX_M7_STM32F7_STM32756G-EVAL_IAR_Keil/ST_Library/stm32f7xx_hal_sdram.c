@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_sdram.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   SDRAM HAL module driver.
   *          This file provides a generic firmware to drive SDRAM memories mounted 
   *          as external device.
@@ -145,6 +145,8 @@ HAL_StatusTypeDef HAL_SDRAM_Init(SDRAM_HandleTypeDef *hsdram, FMC_SDRAM_TimingTy
   
   if(hsdram->State == HAL_SDRAM_STATE_RESET)
   {  
+    /* Allocate lock resource and initialize it */
+    hsdram->Lock = HAL_UNLOCKED;
     /* Initialize the low level hardware (MSP) */
     HAL_SDRAM_MspInit(hsdram);
   }

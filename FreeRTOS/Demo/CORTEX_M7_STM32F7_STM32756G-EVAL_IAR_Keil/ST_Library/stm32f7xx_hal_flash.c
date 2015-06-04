@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_flash.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   FLASH HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the internal FLASH memory:
@@ -308,7 +308,6 @@ HAL_StatusTypeDef HAL_FLASH_Program_IT(uint32_t TypeProgram, uint32_t Address, u
 
 /**
   * @brief This function handles FLASH interrupt request.
-  * @param  None
   * @retval None
   */
 void HAL_FLASH_IRQHandler(void)
@@ -593,7 +592,6 @@ HAL_StatusTypeDef HAL_FLASH_OB_Launch(void)
 
 /**
   * @brief  Get the specific FLASH error flag.
-  * @param  None
   * @retval FLASH_ErrorCode: The returned value can be:
   *            @arg FLASH_ERROR_ERS: FLASH Erasing Sequence error flag 
   *            @arg FLASH_ERROR_PGP: FLASH Programming Parallelism error flag  
@@ -772,7 +770,6 @@ static void FLASH_Program_Byte(uint32_t Address, uint8_t Data)
 
 /**
   * @brief  Set the specific FLASH error flag.
-  * @param  None
   * @retval None
   */
 static void FLASH_SetErrorCode(void)

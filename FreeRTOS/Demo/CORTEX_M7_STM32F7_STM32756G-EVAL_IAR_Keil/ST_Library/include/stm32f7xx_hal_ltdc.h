@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_ltdc.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of LTDC HAL module.
   ******************************************************************************
   * @attention
@@ -43,6 +43,7 @@
  extern "C" {
 #endif
 
+#if defined(STM32F756xx) || defined(STM32F746xx)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
 
@@ -615,7 +616,7 @@ uint32_t              HAL_LTDC_GetError(LTDC_HandleTypeDef *hltdc);
 /**
   * @}
   */ 
-
+#endif /* STM32F756xx || STM32F746xx */
 /**
   * @}
   */

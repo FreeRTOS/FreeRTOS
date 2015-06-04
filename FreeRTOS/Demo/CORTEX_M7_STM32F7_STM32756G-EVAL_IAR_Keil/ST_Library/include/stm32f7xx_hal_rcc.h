@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_rcc.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of RCC HAL module.
   ******************************************************************************
   * @attention
@@ -537,11 +537,11 @@ typedef struct
   *         using it.
   * @{
   */
-#define __HAL_RCC_WWDG_IS_CLK_ENABLED()        ((RCC->APB1ENR1 & (RCC_APB1ENR1_WWDGEN)) != RESET)
-#define __HAL_RCC_PWR_IS_CLK_ENABLED()         ((RCC->APB1ENR1 & (RCC_APB1ENR1_PWREN)) != RESET)
+#define __HAL_RCC_WWDG_IS_CLK_ENABLED()        ((RCC->APB1ENR & (RCC_APB1ENR_WWDGEN)) != RESET)
+#define __HAL_RCC_PWR_IS_CLK_ENABLED()         ((RCC->APB1ENR & (RCC_APB1ENR_PWREN)) != RESET)
 
-#define __HAL_RCC_WWDG_IS_CLK_DISABLED()       ((RCC->APB1ENR1 & (RCC_APB1ENR1_WWDGEN)) == RESET)
-#define __HAL_RCC_PWR_IS_CLK_DISABLED()        ((RCC->APB1ENR1 & (RCC_APB1ENR1_PWREN)) == RESET)
+#define __HAL_RCC_WWDG_IS_CLK_DISABLED()       ((RCC->APB1ENR & (RCC_APB1ENR_WWDGEN)) == RESET)
+#define __HAL_RCC_PWR_IS_CLK_DISABLED()        ((RCC->APB1ENR & (RCC_APB1ENR_PWREN)) == RESET)
 /**
   * @}
   */  
@@ -649,11 +649,11 @@ typedef struct
   * @note   By default, all peripheral clocks are enabled during SLEEP mode.
   * @{
   */
-#define __HAL_RCC_CRC_IS_CLK_SLEEP_ENABLED()     ((RCC->AHB1SMENR & (RCC_AHB1SMENR_CRCSMEN)) != RESET)
-#define __HAL_RCC_DMA1_IS_CLK_SLEEP_ENABLED()    ((RCC->AHB1SMENR & (RCC_AHB1SMENR_DMA1SMEN)) != RESET)
+#define __HAL_RCC_CRC_IS_CLK_SLEEP_ENABLED()     ((RCC->AHB1LPENR & (RCC_AHB1LPENR_CRCLPEN)) != RESET)
+#define __HAL_RCC_DMA1_IS_CLK_SLEEP_ENABLED()    ((RCC->AHB1LPENR & (RCC_AHB1LPENR_DMA1LPEN)) != RESET)
 
-#define __HAL_RCC_CRC_IS_CLK_SLEEP_DISABLED()    ((RCC->AHB1SMENR & (RCC_AHB1SMENR_CRCSMEN)) == RESET)
-#define __HAL_RCC_DMA1_IS_CLK_SLEEP_DISABLED()   ((RCC->AHB1SMENR & (RCC_AHB1SMENR_DMA1SMEN)) == RESET)
+#define __HAL_RCC_CRC_IS_CLK_SLEEP_DISABLED()    ((RCC->AHB1LPENR & (RCC_AHB1LPENR_CRCLPEN)) == RESET)
+#define __HAL_RCC_DMA1_IS_CLK_SLEEP_DISABLED()   ((RCC->AHB1LPENR & (RCC_AHB1LPENR_DMA1LPEN)) == RESET)
 /**
   * @}
   */
@@ -666,11 +666,11 @@ typedef struct
   * @note   By default, all peripheral clocks are enabled during SLEEP mode.
   * @{
   */
-#define __HAL_RCC_WWDG_IS_CLK_SLEEP_ENABLED()      ((RCC->APB1SMENR1 & (RCC_APB1SMENR1_WWDGSMEN)) != RESET)
-#define __HAL_RCC_PWR_IS_CLK_SLEEP_ENABLED()       ((RCC->APB1SMENR1 & (RCC_APB1SMENR1_PWRSMEN)) != RESET)
+#define __HAL_RCC_WWDG_IS_CLK_SLEEP_ENABLED()      ((RCC->APB1LPENR & (RCC_APB1LPENR_WWDGLPEN)) != RESET)
+#define __HAL_RCC_PWR_IS_CLK_SLEEP_ENABLED()       ((RCC->APB1LPENR & (RCC_APB1LPENR_PWRLPEN)) != RESET)
 
-#define __HAL_RCC_WWDG_IS_CLK_SLEEP_DISABLED()     ((RCC->APB1SMENR1 & (RCC_APB1SMENR1_WWDGSMEN)) == RESET)
-#define __HAL_RCC_PWR_IS_CLK_SLEEP_DISABLED()      ((RCC->APB1SMENR1 & (RCC_APB1SMENR1_PWRSMEN)) == RESET)
+#define __HAL_RCC_WWDG_IS_CLK_SLEEP_DISABLED()     ((RCC->APB1LPENR & (RCC_APB1LPENR_WWDGLPEN)) == RESET)
+#define __HAL_RCC_PWR_IS_CLK_SLEEP_DISABLED()      ((RCC->APB1LPENR & (RCC_APB1LPENR_PWRLPEN)) == RESET)
 /**
   * @}
   */
@@ -683,8 +683,8 @@ typedef struct
   * @note   By default, all peripheral clocks are enabled during SLEEP mode.
   * @{
   */
-#define __HAL_RCC_SYSCFG_IS_CLK_SLEEP_ENABLED()    ((RCC->APB2SMENR & (RCC_APB2SMENR_SYSCFGSMEN)) != RESET)
-#define __HAL_RCC_SYSCFG_IS_CLK_SLEEP_DISABLED()   ((RCC->APB2SMENR & (RCC_APB2SMENR_SYSCFGSMEN)) == RESET)
+#define __HAL_RCC_SYSCFG_IS_CLK_SLEEP_ENABLED()    ((RCC->APB2LPENR & (RCC_APB2LPENR_SYSCFGLPEN)) != RESET)
+#define __HAL_RCC_SYSCFG_IS_CLK_SLEEP_DISABLED()   ((RCC->APB2LPENR & (RCC_APB2LPENR_SYSCFGLPEN)) == RESET)
 /**
   * @}
   */  
@@ -912,7 +912,7 @@ typedef struct
   *         output frequency is between 192 and 432 MHz.
   * @param  __PLLP__: specifies the division factor for main system clock (SYSCLK)
   *         This parameter must be a number in the range {2, 4, 6, or 8}.
-  * @note   You have to set the PLLP parameter correctly to not exceed 200 MHz on
+  * @note   You have to set the PLLP parameter correctly to not exceed 216 MHz on
   *         the System clock frequency.
   * @param  __PLLQ__: specifies the division factor for OTG FS, SDMMC and RNG clocks
   *         This parameter must be a number between Min_Data = 2 and Max_Data = 15.
@@ -925,6 +925,27 @@ typedef struct
                             (RCC->PLLCFGR = (0x20000000 | (__PLLM__) | ((__PLLN__) << POSITION_VAL(RCC_PLLCFGR_PLLN)) | \
                             ((((__PLLP__) >> 1) -1) << POSITION_VAL(RCC_PLLCFGR_PLLP)) | (__RCC_PLLSource__) | \
                             ((__PLLQ__) << POSITION_VAL(RCC_PLLCFGR_PLLQ))))
+                            
+/** @brief  Macro to configure the PLL clock source.
+  * @note   This function must be used only when the main PLL is disabled.
+  * @param  __PLLSOURCE__: specifies the PLL entry clock source.
+  *         This parameter can be one of the following values:
+  *            @arg RCC_PLLSOURCE_HSI: HSI oscillator clock selected as PLL clock entry
+  *            @arg RCC_PLLSOURCE_HSE: HSE oscillator clock selected as PLL clock entry
+  *      
+  */
+#define __HAL_RCC_PLL_PLLSOURCE_CONFIG(__PLLSOURCE__) MODIFY_REG(RCC->PLLCFGR, RCC_PLLCFGR_PLLSRC, (__PLLSOURCE__))
+
+/** @brief  Macro to configure the PLL multiplication factor.
+  * @note   This function must be used only when the main PLL is disabled.
+  * @param  __PLLM__: specifies the division factor for PLL VCO input clock
+  *         This parameter must be a number between Min_Data = 2 and Max_Data = 63.
+  * @note   You have to set the PLLM parameter correctly to ensure that the VCO input
+  *         frequency ranges from 1 to 2 MHz. It is recommended to select a frequency
+  *         of 2 MHz to limit PLL jitter.
+  *      
+  */
+#define __HAL_RCC_PLL_PLLM_CONFIG(__PLLM__) MODIFY_REG(RCC->PLLCFGR, RCC_PLLCFGR_PLLM, (__PLLM__))
 /**
   * @}
   */

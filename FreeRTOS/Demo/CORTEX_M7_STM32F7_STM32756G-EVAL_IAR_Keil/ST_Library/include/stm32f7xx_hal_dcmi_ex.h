@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dcmi_ex.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of DCMI Extension HAL module.
   ******************************************************************************
   * @attention
@@ -52,13 +52,13 @@
   * @{
   */
 
-/** @addtogroup DCMIEx DCMI Extended
-  * @brief DCMI HAL module driver
+/** @addtogroup DCMIEx DCMIEx
   * @{
-  */  
+  */ 
+ 
 
 /* Exported types ------------------------------------------------------------*/
-/** @defgroup DCMIEx_Exported_Types DCMI Extende Exported Types
+/** @defgroup DCMIEx_Exported_Types DCMIEx Exported Types
   * @{
   */
 /** 
@@ -99,7 +99,7 @@ typedef struct
 
   uint32_t JPEGMode;                    /*!< Enable or Disable the JPEG mode.                                
                                              This parameter can be a value of @ref DCMI_MODE_JPEG            */
-#if defined(STM32F746xx) || defined(STM32F756xx)
+
   uint32_t ByteSelectMode;              /*!< Specifies the data to be captured by the interface 
                                             This parameter can be a value of @ref DCMIEx_Byte_Select_Mode      */
                                             
@@ -111,21 +111,18 @@ typedef struct
                                             
   uint32_t LineSelectStart;             /*!< Specifies if the line of data to be captured by the interface is even or odd
                                             This parameter can be a value of @ref DCMIEx_Line_Select_Start     */
-                                                                                        
-#endif /* STM32F746xx || STM32F756xx */
 }DCMI_InitTypeDef;
 
 /**
   * @}
   */
 
-#if defined(STM32F746xx) || defined(STM32F756xx)
 /* Exported constants --------------------------------------------------------*/
-/** @defgroup DCMIEx_Exported_Constants DCMI Exported Constants
+/** @defgroup DCMIEx_Exported_Constants DCMIEx Exported Constants
   * @{
   */
 
-/** @defgroup DCMIEx_Byte_Select_Mode DCMI Byte Select Mode
+/** @defgroup DCMIEx_Byte_Select_Mode DCMIEx Byte Select Mode
   * @{
   */
 #define DCMI_BSM_ALL                 ((uint32_t)0x00000000) /*!< Interface captures all received data */
@@ -137,7 +134,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup DCMIEx_Byte_Select_Start DCMI Byte Select Start
+/** @defgroup DCMIEx_Byte_Select_Start DCMIEx Byte Select Start
   * @{
   */ 
 #define DCMI_OEBS_ODD               ((uint32_t)0x00000000) /*!< Interface captures first data from the frame/line start, second one being dropped */
@@ -147,7 +144,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup DCMIEx_Line_Select_Mode DCMI Line Select Mode
+/** @defgroup DCMIEx_Line_Select_Mode DCMIEx Line Select Mode
   * @{
   */
 #define DCMI_LSM_ALL                 ((uint32_t)0x00000000) /*!< Interface captures all received lines */
@@ -157,7 +154,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup DCMIEx_Line_Select_Start DCMI Line Select Start
+/** @defgroup DCMIEx_Line_Select_Start DCMIEx Line Select Start
   * @{
   */ 
 #define DCMI_OELS_ODD               ((uint32_t)0x00000000) /*!< Interface captures first line from the frame start, second one being dropped */
@@ -177,7 +174,7 @@ typedef struct
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/   
 /* Private macro -------------------------------------------------------------*/
-/** @defgroup DCMIEx_Private_Macros DCMI Extended Private Macros
+/** @defgroup DCMIEx_Private_Macros DCMIEx Private Macros
   * @{
   */
 #define IS_DCMI_BYTE_SELECT_MODE(MODE)(((MODE) == DCMI_BSM_ALL) || \
@@ -196,7 +193,7 @@ typedef struct
 /**
   * @}
   */
-#endif /* STM32F746xx || STM32F756xx */
+
 /* Private functions ---------------------------------------------------------*/
 
 /**

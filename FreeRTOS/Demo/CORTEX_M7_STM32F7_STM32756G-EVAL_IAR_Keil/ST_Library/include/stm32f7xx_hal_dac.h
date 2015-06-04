@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dac.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of DAC HAL module.
   ******************************************************************************
   * @attention
@@ -42,8 +42,6 @@
 #ifdef __cplusplus
  extern "C" {
 #endif
-
-#if defined(STM32F756xx) || defined(STM32F746xx)
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
@@ -392,7 +390,6 @@ void HAL_DAC_DMAUnderrunCallbackCh1(DAC_HandleTypeDef *hdac);
 /**
   * @}
   */
-#endif /* STM32F756xx || STM32F746xx */
 
 /**
   * @}

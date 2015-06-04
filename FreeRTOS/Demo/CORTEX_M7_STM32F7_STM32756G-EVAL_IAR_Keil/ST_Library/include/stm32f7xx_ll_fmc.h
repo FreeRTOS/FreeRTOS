@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_ll_fmc.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of FMC HAL module.
   ******************************************************************************
   * @attention
@@ -53,8 +53,6 @@
 /** @addtogroup FMC_LL
   * @{
   */
-#if defined(STM32F756xx) || defined(STM32F746xx)
- 
 
 /** @addtogroup FMC_LL_Private_Macros
   * @{
@@ -1323,7 +1321,6 @@ uint32_t           FMC_SDRAM_GetModeStatus(FMC_SDRAM_TypeDef *Device, uint32_t B
   * @}
   */
 
-#endif /* STM32F756xx || STM32F746xx */
 /**
   * @}
   */

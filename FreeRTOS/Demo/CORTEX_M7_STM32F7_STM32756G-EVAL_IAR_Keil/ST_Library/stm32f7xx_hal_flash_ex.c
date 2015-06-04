@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_flash_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Extended FLASH HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the FLASH extension peripheral:
@@ -326,8 +326,8 @@ HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
                                  pOBInit->USERConfig & OB_IWDG_SW,
                                  pOBInit->USERConfig & OB_STOP_NO_RST,
                                  pOBInit->USERConfig & OB_STDBY_NO_RST, 
-                                 pOBInit->USERConfig & OB_IWDG_STOP_FREEZE,
-                                 pOBInit->USERConfig & OB_IWDG_STDBY_FREEZE);
+                                 pOBInit->USERConfig & OB_IWDG_STOP_ACTIVE,
+                                 pOBInit->USERConfig & OB_IWDG_STDBY_ACTIVE);
   }
   
   /* BOR Level  configuration */
@@ -666,7 +666,7 @@ static HAL_StatusTypeDef FLASH_OB_BOR_LevelConfig(uint8_t Level)
   *          This parameter can be one of the following values:
   *            @arg OPTIONBYTE_BOOTADDR_0 : Boot address based when Boot pin = 0                 
   *            @arg OPTIONBYTE_BOOTADDR_1 : Boot address based when Boot pin = 1  
-  *          Address: specifies Boot base address
+  * @param   Address: specifies Boot base address
   *          This parameter can be one of the following values:
   *            @arg OB_BOOTADDR_ITCM_RAM : Boot from ITCM RAM (0x00000000)                 
   *            @arg OB_BOOTADDR_SYSTEM : Boot from System memory bootloader (0x00100000) 

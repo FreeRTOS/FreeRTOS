@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_tim_ex.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   TIM HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Timer extension peripheral:
@@ -106,7 +106,7 @@
   * @{
   */
 
-/** @defgroup TIMEx TIM Extended HAL module driver
+/** @defgroup TIMEx TIMEx
   * @brief TIM Extended HAL module driver
   * @{
   */
@@ -131,7 +131,7 @@ static void TIM_OC6_SetConfig(TIM_TypeDef *TIMx, TIM_OC_InitTypeDef *OC_Config);
   */
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup TIMEx_Private_Functions
+/** @defgroup TIMEx_Exported_Functions TIMEx Exported Functions
   * @{
   */
 
@@ -2167,7 +2167,7 @@ HAL_StatusTypeDef HAL_TIMEx_ConfigBreakDeadTime(TIM_HandleTypeDef *htim,
   * @brief  Configures the TIM2, TIM5 and TIM11 Remapping input capabilities.
   * @param  htim: pointer to a TIM_HandleTypeDef structure that contains
   *                the configuration information for TIM module.
-  * @param  TIM_Remap: specifies the TIM input remapping source.
+  * @param  Remap: specifies the TIM input remapping source.
   *          This parameter can be one of the following values:
   *            @arg TIM_TIM2_TIM8_TRGO: TIM2 ITR1 input is connected to TIM8 Trigger output(default)
   *            @arg TIM_TIM2_ETH_PTP:   TIM2 ITR1 input is connected to ETH PTP trigger output.

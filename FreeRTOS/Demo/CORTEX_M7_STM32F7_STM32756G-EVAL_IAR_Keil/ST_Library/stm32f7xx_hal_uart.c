@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_uart.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   UART HAL module driver.
   *
   *          This file provides firmware functions to manage the following 
@@ -181,14 +181,15 @@ static void UART_DMARxHalfCplt(DMA_HandleTypeDef *hdma);
 static void UART_DMATxHalfCplt(DMA_HandleTypeDef *hdma);
 static void UART_DMAError(DMA_HandleTypeDef *hdma); 
 static HAL_StatusTypeDef UART_Transmit_IT(UART_HandleTypeDef *huart);
+static HAL_StatusTypeDef UART_EndTransmit_IT(UART_HandleTypeDef *huart);
 static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart);
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup UART_Private_Functions
+/** @defgroup UART_Exported_Functions UART Exported Functions
   * @{
   */
 
-/** @defgroup HAL_UART_Group1 Initialization/de-initialization functions 
+/** @defgroup UART_Exported_Functions_Group1 Initialization and de-initialization functions 
   *  @brief    Initialization and Configuration functions 
   *
 @verbatim    
@@ -297,6 +298,8 @@ HAL_StatusTypeDef HAL_HalfDuplex_Init(UART_HandleTypeDef *huart)
   
   if(huart->State == HAL_UART_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    huart->Lock = HAL_UNLOCKED;
     /* Init the low level hardware : GPIO, CLOCK */
     HAL_UART_MspInit(huart);
   }
@@ -358,7 +361,9 @@ HAL_StatusTypeDef HAL_LIN_Init(UART_HandleTypeDef *huart, uint32_t BreakDetectLe
   assert_param(IS_LIN_WORD_LENGTH(huart->Init.WordLength));
   	
   if(huart->State == HAL_UART_STATE_RESET)
-  {   
+  {  
+    /* Allocate lock resource and initialize it */
+    huart->Lock = HAL_UNLOCKED; 
     /* Init the low level hardware : GPIO, CLOCK */
     HAL_UART_MspInit(huart);
   }
@@ -428,7 +433,9 @@ HAL_StatusTypeDef HAL_MultiProcessor_Init(UART_HandleTypeDef *huart, uint8_t Add
   assert_param(IS_UART_WAKEUPMETHOD(WakeUpMethod));
   
   if(huart->State == HAL_UART_STATE_RESET)
-  {   
+  { 
+    /* Allocate lock resource and initialize it */
+    huart->Lock = HAL_UNLOCKED;  
     /* Init the low level hardware : GPIO, CLOCK */
     HAL_UART_MspInit(huart);
   }
@@ -539,7 +546,7 @@ HAL_StatusTypeDef HAL_UART_DeInit(UART_HandleTypeDef *huart)
   * @}
   */
 
-/** @defgroup HAL_UART_Group2 IO operation functions 
+/** @defgroup UART_Exported_Functions_Group2 IO operation functions 
   *  @brief UART Transmit/Receive functions 
   *
 @verbatim   
@@ -1172,6 +1179,12 @@ void HAL_UART_IRQHandler(UART_HandleTypeDef *huart)
     UART_Transmit_IT(huart);
   }
 
+  /* UART in mode Transmitter (transmission end) -----------------------------*/
+ if((__HAL_UART_GET_IT(huart, UART_IT_TC) != RESET) &&(__HAL_UART_GET_IT_SOURCE(huart, UART_IT_TC) != RESET))
+  {
+    UART_EndTransmit_IT(huart);
+  }
+  
 }
 
 
@@ -1203,7 +1216,7 @@ HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_
           __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
           __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
           
-          huart->State= HAL_UART_STATE_TIMEOUT;
+          huart->State= HAL_UART_STATE_READY;
           
           /* Process Unlocked */
           __HAL_UNLOCK(huart);
@@ -1228,7 +1241,7 @@ HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_
           __HAL_UART_DISABLE_IT(huart, UART_IT_PE);
           __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
           
-          huart->State= HAL_UART_STATE_TIMEOUT;
+          huart->State= HAL_UART_STATE_READY;
           
           /* Process Unlocked */
           __HAL_UNLOCK(huart);
@@ -1251,31 +1264,22 @@ HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_
 static void UART_DMATransmitCplt(DMA_HandleTypeDef *hdma)     
 {
   UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  huart->TxXferCount = 0;
   
-  /* Disable the DMA transfer for transmit request by setting the DMAT bit
-  in the UART CR3 register */
-  huart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAT);
-  
-  /* Wait for UART TC Flag */
-  if(UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_TC, RESET, HAL_UART_TXDMA_TIMEOUTVALUE) != HAL_OK)
+  /* DMA Normal mode*/
+  if((hdma->Instance->CR & DMA_SxCR_CIRC) == 0)
   {
-    /* Timeout Occured */ 
-    huart->State = HAL_UART_STATE_TIMEOUT;
-    HAL_UART_ErrorCallback(huart);
+    huart->TxXferCount = 0;
+
+    /* Disable the DMA transfer for transmit request by setting the DMAT bit
+       in the UART CR3 register */
+    huart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAT);
+
+    /* Enable the UART Transmit Complete Interrupt */
+    __HAL_UART_ENABLE_IT(huart, UART_IT_TC);
   }
+  /* DMA Circular mode */
   else
   {
-    /* No Timeout */
-    /* Check if a receive process is ongoing or not */
-    if(huart->State == HAL_UART_STATE_BUSY_TX_RX)
-    {
-      huart->State = HAL_UART_STATE_BUSY_RX;
-    }
-    else
-    {
-      huart->State = HAL_UART_STATE_READY;
-    }
     HAL_UART_TxCpltCallback(huart);
   }
 }
@@ -1300,20 +1304,25 @@ static void UART_DMATxHalfCplt(DMA_HandleTypeDef *hdma)
 static void UART_DMAReceiveCplt(DMA_HandleTypeDef *hdma)  
 {
   UART_HandleTypeDef* huart = ( UART_HandleTypeDef* )((DMA_HandleTypeDef* )hdma)->Parent;
-  huart->RxXferCount = 0;
   
-  /* Disable the DMA transfer for the receiver request by setting the DMAR bit 
-     in the UART CR3 register */
-  huart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAR);
-  
-  /* Check if a transmit Process is ongoing or not */
-  if(huart->State == HAL_UART_STATE_BUSY_TX_RX) 
-  {
-    huart->State = HAL_UART_STATE_BUSY_TX;
-  }
-  else
-  {
-    huart->State = HAL_UART_STATE_READY;
+  /* DMA Normal mode */
+  if((hdma->Instance->CR & DMA_SxCR_CIRC) == 0)
+  { 
+    huart->RxXferCount = 0;
+    
+    /* Disable the DMA transfer for the receiver request by setting the DMAR bit 
+    in the UART CR3 register */
+    huart->Instance->CR3 &= (uint32_t)~((uint32_t)USART_CR3_DMAR);
+    
+    /* Check if a transmit Process is ongoing or not */
+    if(huart->State == HAL_UART_STATE_BUSY_TX_RX) 
+    {
+      huart->State = HAL_UART_STATE_BUSY_TX;
+    }
+    else
+    {
+      huart->State = HAL_UART_STATE_READY;
+    }
   }
   HAL_UART_RxCpltCallback(huart);
 }
@@ -1472,6 +1481,35 @@ static HAL_StatusTypeDef UART_Transmit_IT(UART_HandleTypeDef *huart)
 }
 
 /**
+  * @brief  Wrap up transmission in non-blocking mode.
+  * @param  huart: pointer to a UART_HandleTypeDef structure that contains
+  *                the configuration information for the specified UART module.
+  * @retval HAL status
+  */
+static HAL_StatusTypeDef UART_EndTransmit_IT(UART_HandleTypeDef *huart)
+{
+  /* Disable the UART Transmit Complete Interrupt */
+  __HAL_UART_DISABLE_IT(huart, UART_IT_TC);
+
+  /* Check if a receive process is ongoing or not */
+  if(huart->State == HAL_UART_STATE_BUSY_TX_RX)
+  {
+    huart->State = HAL_UART_STATE_BUSY_RX;
+  }
+  else
+  {
+    /* Disable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+    __HAL_UART_DISABLE_IT(huart, UART_IT_ERR);
+
+    huart->State = HAL_UART_STATE_READY;
+  }
+
+  HAL_UART_TxCpltCallback(huart);
+
+  return HAL_OK;
+}
+
+/**
   * @brief Receive an amount of data in interrupt mode 
   *         Function called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Receive_IT()
@@ -1534,7 +1572,7 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
   * @}
   */
 
-/** @defgroup HAL_UART_Group3 Peripheral Control functions 
+/** @defgroup UART_Exported_Functions_Group3 Peripheral Control functions 
   *  @brief   UART control functions 
   *
 @verbatim   
@@ -1836,7 +1874,7 @@ HAL_StatusTypeDef UART_CheckIdleState(UART_HandleTypeDef *huart)
     /* Wait until TEACK flag is set */
     if(UART_WaitOnFlagUntilTimeout(huart, USART_ISR_TEACK, RESET, HAL_UART_TIMEOUT_VALUE) != HAL_OK)  
     {
-      /* Timeout Occured */
+      /* Timeout Occurred */
       return HAL_TIMEOUT;
     }
   }
@@ -1846,7 +1884,7 @@ HAL_StatusTypeDef UART_CheckIdleState(UART_HandleTypeDef *huart)
     /* Wait until REACK flag is set */
     if(UART_WaitOnFlagUntilTimeout(huart, USART_ISR_REACK, RESET,  HAL_UART_TIMEOUT_VALUE) != HAL_OK)  
     { 
-      /* Timeout Occured */
+      /* Timeout Occurred */
       return HAL_TIMEOUT;
     }
   }

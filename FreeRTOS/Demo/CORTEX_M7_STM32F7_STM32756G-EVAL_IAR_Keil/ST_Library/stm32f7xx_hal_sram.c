@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_sram.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   SRAM HAL module driver.
   *          This file provides a generic firmware to drive SRAM memories  
   *          mounted as external device.
@@ -146,6 +146,8 @@ HAL_StatusTypeDef HAL_SRAM_Init(SRAM_HandleTypeDef *hsram, FMC_NORSRAM_TimingTyp
   
   if(hsram->State == HAL_SRAM_STATE_RESET)
   {  
+    /* Allocate lock resource and initialize it */
+    hsram->Lock = HAL_UNLOCKED;
     /* Initialize the low level hardware (MSP) */
     HAL_SRAM_MspInit(hsram);
   }

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_dcmi.c
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   DCMI HAL module driver
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Digital Camera Interface (DCMI) peripheral:
@@ -160,6 +160,8 @@ __weak HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
 
   if(hdcmi->State == HAL_DCMI_STATE_RESET)
   {
+    /* Allocate lock resource and initialize it */
+    hdcmi->Lock = HAL_UNLOCKED;
     /* Init the low level hardware */
     HAL_DCMI_MspInit(hdcmi);
   } 

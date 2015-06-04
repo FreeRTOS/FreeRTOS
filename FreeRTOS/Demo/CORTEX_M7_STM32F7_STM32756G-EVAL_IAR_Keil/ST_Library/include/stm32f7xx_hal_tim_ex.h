@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f7xx_hal_tim_ex.h
   * @author  MCD Application Team
-  * @version V1.0.0RC1
-  * @date    24-March-2015
+  * @version V1.0.0
+  * @date    12-May-2015
   * @brief   Header file of TIM HAL Extension module.
   ******************************************************************************
   * @attention
@@ -46,7 +46,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
 
-/** @addtogroup STM32F7xx_HAL
+/** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
 
@@ -126,11 +126,11 @@ typedef struct
   */
   
 /* Exported constants --------------------------------------------------------*/
-/** @defgroup TIMEx_Exported_Constants  TIM Exported Constants
+/** @defgroup TIMEx_Exported_Constants  TIMEx Exported Constants
   * @{
   */
   
-/** @defgroup TIMEx_Channel TIM Channel
+/** @defgroup TIMEx_Channel TIMEx Channel
   * @{
   */
 
@@ -146,7 +146,7 @@ typedef struct
   * @}
   */ 
     
-/** @defgroup TIMEx_Output_Compare_and_PWM_modes TIM  Extended Output Compare and PWM Modes
+/** @defgroup TIMEx_Output_Compare_and_PWM_modes TIMEx Output Compare and PWM Modes
   * @{
   */
 #define TIM_OCMODE_TIMING                   ((uint32_t)0x0000)
@@ -168,7 +168,7 @@ typedef struct
   * @}
   */
       
-/** @defgroup TIMEx_Remap  TIM Remap
+/** @defgroup TIMEx_Remap  TIMEx Remap
   * @{
   */
 #define TIM_TIM2_TIM8_TRGO                     (0x00000000)
@@ -187,7 +187,7 @@ typedef struct
   * @}
   */	
 
-/** @defgroup TIMEx_ClearInput_Source TIM  Extended Clear Input Source
+/** @defgroup TIMEx_ClearInput_Source TIMEx Clear Input Source
   * @{
   */
 #define TIM_CLEARINPUTSOURCE_ETR            ((uint32_t)0x0001) 
@@ -197,7 +197,7 @@ typedef struct
   * @}
   */
   
-/** @defgroup TIMEx_Break2_Input_enable_disable  TIMEX Break input 2 Enable
+/** @defgroup TIMEx_Break2_Input_enable_disable  TIMEx Break input 2 Enable
   * @{
   */                         
 #define TIM_BREAK2_DISABLE         ((uint32_t)0x00000000)
@@ -215,7 +215,7 @@ typedef struct
   * @}
   */
  
-/** @defgroup TIMEx_Group_Channel5 Group Channel 5 and Channel 1, 2 or 3
+/** @defgroup TIMEx_Group_Channel5 TIMEx Group Channel 5 and Channel 1, 2 or 3
   * @{
   */
 #define TIM_GROUPCH5_NONE       (uint32_t)0x00000000  /* !< No effect of OC5REF on OC1REFC, OC2REFC and OC3REFC */
@@ -226,7 +226,7 @@ typedef struct
   * @}
   */
 	
-/** @defgroup TIMEx_Master_Mode_Selection_2 TIM  Extended Master Mode Selection 2 (TRGO2)
+/** @defgroup TIMEx_Master_Mode_Selection_2 TIMEx Master Mode Selection 2 (TRGO2)
   * @{
   */  
 #define	TIM_TRGO2_RESET                          ((uint32_t)0x00000000)             
@@ -249,7 +249,7 @@ typedef struct
   * @}
   */ 
     
-/** @defgroup TIMEx_Slave_Mode TIM  Extended Slave mode
+/** @defgroup TIMEx_Slave_Mode TIMEx Slave mode
   * @{
   */
 #define TIM_SLAVEMODE_DISABLE                ((uint32_t)0x0000)
@@ -266,7 +266,7 @@ typedef struct
   */
 
 /* Exported macro ------------------------------------------------------------*/
-/** @defgroup TIMEx_Exported_Macros TIM Extended Exported Macros
+/** @defgroup TIMEx_Exported_Macros TIMEx Exported Macros
   * @{
   */  
 
@@ -441,7 +441,7 @@ HAL_TIM_StateTypeDef HAL_TIMEx_HallSensor_GetState(TIM_HandleTypeDef* htim);
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
-/** @defgroup TIMEx_Private_Macros TIM Private Macros
+/** @defgroup TIMEx_Private_Macros TIMEx Private Macros
   * @{
   */
 #define IS_TIM_CHANNELS(CHANNEL) (((CHANNEL) == TIM_CHANNEL_1) || \
@@ -527,7 +527,7 @@ HAL_TIM_StateTypeDef HAL_TIMEx_HallSensor_GetState(TIM_HandleTypeDef* htim);
   */  
 
 /* Private functions ---------------------------------------------------------*/
-/** @defgroup TIMEx_Private_Functions TIM Private Functions
+/** @defgroup TIMEx_Private_Functions TIMEx Private Functions
   * @{
   */
   

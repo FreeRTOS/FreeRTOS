@@ -142,12 +142,11 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
-          <Name>-X"EDBG CMSIS-DAP" -UFFFFFFFFFFFFFFFFFFFF -O239 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(0BD11477) -L00(0) -FO7 -FD20400000 -FC1000 -FN0</Name>
+          <Name>-X"EDBG CMSIS-DAP" -UATML2407080200001813 -O239 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(0BD11477) -L00(0) -FO7 -FD20400000 -FC1000 -FN0</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>

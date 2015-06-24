@@ -365,6 +365,7 @@ static void prvProcessSimulatedInterrupts( void )
 uint32_t ulSwitchRequired, i;
 xThreadState *pxThreadState;
 void *pvObjectList[ 2 ];
+CONTEXT xContext;
 
 	/* Going to block on the mutex that ensured exclusive access to the simulated
 	interrupt objects, and the event that signals that a simulated interrupt
@@ -425,6 +426,13 @@ void *pvObjectList[ 2 ];
 				/* Suspend the old thread. */
 				pxThreadState = ( xThreadState *) *( ( size_t * ) pvOldCurrentTCB );
 				SuspendThread( pxThreadState->pvThread );
+
+				/* Ensure the thread is actually suspended by performing a 
+				synchronous operation that can only complete when the thread is 
+				actually suspended.  The below code asks for dummy register
+				data. */
+				xContext.ContextFlags = CONTEXT_INTEGER;
+				( void ) GetThreadContext( pxThreadState->pvThread, &xContext );
 
 				/* Obtain the state of the task now selected to enter the
 				Running state. */

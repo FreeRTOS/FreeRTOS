@@ -103,6 +103,7 @@ this demo on the FreeRTOS.org web site for more information. */
 #define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
 #define configIDLE_SHOULD_YIELD					1
 #define configUSE_16_BIT_TICKS					0 /* Only for 8 and 16-bit hardware. */
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
 /* Constants that describe the hardware and memory usage. */
 #define configCPU_CLOCK_HZ						( Not used in this demo as it is determined by the hardware )

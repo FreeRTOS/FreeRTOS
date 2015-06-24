@@ -63,6 +63,60 @@
       <ToolNumber>59101789</ToolNumber>
       <ToolName>J-Link</ToolName>
     </com_atmel_avrdbg_tool_samice>
+    <PercepioTrace>
+      <TargetOS>FreeRTOSv8</TargetOS>
+      <Frequency>300000000</Frequency>
+      <EnableTraceInterrupts>True</EnableTraceInterrupts>
+      <EnableNonintrusive>True</EnableNonintrusive>
+      <EnableTargetOS>True</EnableTargetOS>
+      <EnableApplicationOutput>False</EnableApplicationOutput>
+      <EnableDataWatchPoints>False</EnableDataWatchPoints>
+      <EnablePC>False</EnablePC>
+      <EnablePCPolled>False</EnablePCPolled>
+      <PolledFrequency>1000</PolledFrequency>
+      <EnableMcu>False</EnableMcu>
+      <EnableOsAwareness>True</EnableOsAwareness>
+      <HWApplicationOutput>False</HWApplicationOutput>
+      <HWInterrupt>False</HWInterrupt>
+      <HWIntrusiveDataWatch>True</HWIntrusiveDataWatch>
+      <HWNonintrusiveDataWatch>False</HWNonintrusiveDataWatch>
+      <HWPolledDataWatch>True</HWPolledDataWatch>
+      <HWPolledProgramCounterSampling>True</HWPolledProgramCounterSampling>
+      <HWProfiling>False</HWProfiling>
+      <HWProgramCounterSampling>False</HWProgramCounterSampling>
+      <ApplicationOutput0>String</ApplicationOutput0>
+      <ApplicationOutput1>String</ApplicationOutput1>
+      <ApplicationOutput2>String</ApplicationOutput2>
+      <ApplicationOutput3>String</ApplicationOutput3>
+      <ApplicationOutput4>String</ApplicationOutput4>
+      <ApplicationOutput5>String</ApplicationOutput5>
+      <ApplicationOutput6>String</ApplicationOutput6>
+      <ApplicationOutput7>String</ApplicationOutput7>
+      <ApplicationOutput8>String</ApplicationOutput8>
+      <ApplicationOutput9>String</ApplicationOutput9>
+      <ApplicationOutput10>String</ApplicationOutput10>
+      <ApplicationOutput11>String</ApplicationOutput11>
+      <ApplicationOutput12>String</ApplicationOutput12>
+      <ApplicationOutput13>String</ApplicationOutput13>
+      <ApplicationOutput14>String</ApplicationOutput14>
+      <ApplicationOutput15>String</ApplicationOutput15>
+      <ApplicationOutput16>String</ApplicationOutput16>
+      <ApplicationOutput17>String</ApplicationOutput17>
+      <ApplicationOutput18>String</ApplicationOutput18>
+      <ApplicationOutput19>String</ApplicationOutput19>
+      <ApplicationOutput20>String</ApplicationOutput20>
+      <ApplicationOutput21>String</ApplicationOutput21>
+      <ApplicationOutput22>String</ApplicationOutput22>
+      <ApplicationOutput23>String</ApplicationOutput23>
+      <ApplicationOutput24>String</ApplicationOutput24>
+      <ApplicationOutput25>String</ApplicationOutput25>
+      <ApplicationOutput26>String</ApplicationOutput26>
+      <ApplicationOutput27>String</ApplicationOutput27>
+      <ApplicationOutput28>String</ApplicationOutput28>
+      <ApplicationOutput29>String</ApplicationOutput29>
+      <ApplicationOutput30>String</ApplicationOutput30>
+      <ApplicationOutput31>String</ApplicationOutput31>
+    </PercepioTrace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>

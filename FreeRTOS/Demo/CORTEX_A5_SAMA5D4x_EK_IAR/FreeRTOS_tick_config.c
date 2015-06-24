@@ -69,7 +69,7 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 
 /* Library includes. */
 #include "board.h"

@@ -132,7 +132,7 @@
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 
 /* Demo includes. */
 #include "DiceTask.h"

@@ -515,7 +515,7 @@ const uint32_t ulMaxSendReceiveDeviation = 5UL;
 
 	/* Check the count of 'takes' from the software timer is keeping track with
 	the amount of 'gives'. */
-	if( ulTimerNotificationsSent > ulTimerNotificationsSent )
+	if( ulTimerNotificationsSent > ulTimerNotificationsReceived )
 	{
 		if( ( ulTimerNotificationsSent - ulTimerNotificationsReceived ) > ulMaxSendReceiveDeviation )
 		{

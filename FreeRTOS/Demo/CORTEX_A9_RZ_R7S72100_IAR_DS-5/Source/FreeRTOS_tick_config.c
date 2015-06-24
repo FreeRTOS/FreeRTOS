@@ -69,7 +69,7 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 
 /* Renesas driver includes. */
 #include "stdint.h"

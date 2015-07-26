@@ -315,7 +315,6 @@ QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseT
 Queue_t *pxNewQueue;
 size_t xQueueSizeInBytes;
 QueueHandle_t xReturn = NULL;
-int8_t *pcAllocatedBuffer;
 
 	/* Remove compiler warnings about unused parameters should
 	configUSE_TRACE_FACILITY not be set to 1. */
@@ -336,12 +335,10 @@ int8_t *pcAllocatedBuffer;
 	}
 
 	/* Allocate the new queue structure and storage area. */
-	pcAllocatedBuffer = ( int8_t * ) pvPortMalloc( sizeof( Queue_t ) + xQueueSizeInBytes );
+	pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) + xQueueSizeInBytes );
 
-	if( pcAllocatedBuffer != NULL )
+	if( pxNewQueue != NULL )
 	{
-		pxNewQueue = ( Queue_t * ) pcAllocatedBuffer; /*lint !e826 MISRA The buffer cannot be too small because it was dimensioned by sizeof( Queue_t ) + xQueueSizeInBytes. */
-
 		if( uxItemSize == ( UBaseType_t ) 0 )
 		{
 			/* No RAM was allocated for the queue storage area, but PC head
@@ -353,8 +350,8 @@ int8_t *pcAllocatedBuffer;
 		else
 		{
 			/* Jump past the queue structure to find the location of the queue
-			storage area - adding the padding bytes to get a better alignment. */
-			pxNewQueue->pcHead = pcAllocatedBuffer + sizeof( Queue_t );
+			storage area. */
+			pxNewQueue->pcHead = ( ( int8_t * ) pxNewQueue ) + sizeof( Queue_t );
 		}
 
 		/* Initialise the queue members as described above where the queue type

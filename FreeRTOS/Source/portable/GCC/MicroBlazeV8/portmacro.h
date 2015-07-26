@@ -156,7 +156,7 @@ context, if the flag is not false.  This is done to prevent multiple calls to
 vTaskSwitchContext() being made from a single interrupt, as a single interrupt
 can result in multiple peripherals being serviced. */
 extern volatile uint32_t ulTaskSwitchRequested;
-#define portYIELD_FROM_ISR( x ) if( x != pdFALSE ) ulTaskSwitchRequested = 1
+#define portYIELD_FROM_ISR( x ) if( ( x ) != pdFALSE ) ulTaskSwitchRequested = 1
 
 #if( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 )
 

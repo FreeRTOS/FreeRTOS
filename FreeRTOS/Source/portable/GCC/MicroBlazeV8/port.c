@@ -89,8 +89,10 @@ the scheduler being commenced interrupts should not be enabled, so the critical
 nesting variable is initialised to a non-zero value. */
 #define portINITIAL_NESTING_VALUE	( 0xff )
 
-/* The bit within the MSR register that enabled/disables interrupts. */
+/* The bit within the MSR register that enabled/disables interrupts and 
+exceptions respectively. */
 #define portMSR_IE					( 0x02U )
+#define portMSR_EE					( 0x100U )
 
 /* If the floating point unit is included in the MicroBlaze build, then the
 FSR register is saved as part of the task context.  portINITIAL_FSR is the value
@@ -159,7 +161,7 @@ const uint32_t ulR13 = ( uint32_t ) &_SDA_BASE_;
 	*pxTopOfStack = ( StackType_t ) 0x00000000;
 	pxTopOfStack--;
 
-	#if XPAR_MICROBLAZE_0_USE_FPU != 0
+	#if( XPAR_MICROBLAZE_USE_FPU != 0 )
 		/* The FSR value placed in the initial task context is just 0. */
 		*pxTopOfStack = portINITIAL_FSR;
 		pxTopOfStack--;
@@ -169,6 +171,14 @@ const uint32_t ulR13 = ( uint32_t ) &_SDA_BASE_;
 	disabled.  Each task will enable interrupts automatically when it enters
 	the running state for the first time. */
 	*pxTopOfStack = mfmsr() & ~portMSR_IE;
+	
+	#if( MICROBLAZE_EXCEPTIONS_ENABLED == 1 )
+	{
+		/* Ensure exceptions are enabled for the task. */
+		*pxTopOfStack |= portMSR_EE;
+	}
+	#endif
+
 	pxTopOfStack--;
 
 	/* First stack an initial value for the critical section nesting.  This

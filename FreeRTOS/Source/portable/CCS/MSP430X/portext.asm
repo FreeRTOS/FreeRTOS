@@ -89,7 +89,9 @@ portRESTORE_CONTEXT .macro
 	pop_x	r15
 	mov.w	r15, &usCriticalNesting
 	popm_x	#12, r15
+	nop
 	pop.w	sr
+	nop
 	ret_x
 	.endm
 ;-----------------------------------------------------------

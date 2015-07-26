@@ -69,7 +69,7 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "Task.h"
+#include "task.h"
 
 /* Xilinx includes. */
 #include "xscutimer.h"
@@ -121,6 +121,9 @@ const uint8_t ucRisingEdge = 3;
 
 	/* Enable Auto reload mode. */
 	XScuTimer_EnableAutoReload( &xTimer );
+
+	/* Ensure there is no prescale. */
+	XScuTimer_SetPrescaler( &xTimer, 0 );
 
 	/* Load the timer counter register. */
 	XScuTimer_LoadTimer( &xTimer, XSCUTIMER_CLOCK_HZ / configTICK_RATE_HZ );

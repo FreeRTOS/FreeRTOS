@@ -1,1 +1,0 @@
- -p virtex4 -lang vhdl    -pe microblaze_0 RTOSDemo/executable.elf -s mti

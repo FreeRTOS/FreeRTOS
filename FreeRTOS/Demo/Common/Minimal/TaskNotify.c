@@ -426,8 +426,8 @@ TickType_t xPeriod;
 			xPeriod = xMinPeriod;
 		}
 
+		/* Change the timer period and start the timer. */
 		xTimerChangePeriod( xTimer, xPeriod, portMAX_DELAY );
-		xTimerStart( xTimer, portMAX_DELAY );
 
 		/* Block waiting for the notification again with a different period.
 		Sometimes the period will be higher than the tasks block time, sometimes

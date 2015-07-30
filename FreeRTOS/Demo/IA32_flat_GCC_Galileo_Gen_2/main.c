@@ -324,9 +324,6 @@ void vApplicationTickHook( void )
 
 static void prvSetupHardware( void )
 {
-	ClearScreen();
-	printf( ANSI_COLOR_WHITE );
-
 	/* Initialise the serial port and GPIO. */
 	vInitializeGalileoSerialPort( DEBUG_SERIAL_PORT );
 	vGalileoInitializeGpioController();

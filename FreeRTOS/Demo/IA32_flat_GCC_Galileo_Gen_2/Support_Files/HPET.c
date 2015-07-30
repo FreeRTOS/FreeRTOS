@@ -908,7 +908,7 @@ struct hpet_info *pi;
 			#if (hpetUSE_HPET_TIMER_NUMBER_0 == 1 )
 				if(TimerNumber == 0)
 				{
-					row = 8 ; col = 1;
+					row = 9 ; col = 1;
 					pi->comparator_h = hpetHPET_TMR0_COMPARATOR_HIGH;
 					pi->comparator_l = hpetHPET_TMR0_COMPARATOR_LOW;
 					execute = pdTRUE;
@@ -917,7 +917,7 @@ struct hpet_info *pi;
 			#if ( hpetUSE_HPET_TIMER_NUMBER_1 == 1 )
 				if(TimerNumber == 1)
 				{
-					row = 12 ; col = 1;
+					row = 13 ; col = 1;
 					pi->comparator_h = hpetHPET_TMR1_COMPARATOR_HIGH;
 					pi->comparator_l = hpetHPET_TMR1_COMPARATOR_LOW;
 					execute = pdTRUE;
@@ -926,7 +926,7 @@ struct hpet_info *pi;
 			#if ( hpetUSE_HPET_TIMER_NUMBER_2 == 1 )
 				if(TimerNumber == 2)
 				{
-					row = 16 ; col = 1;
+					row = 17 ; col = 1;
 					pi->comparator_h = hpetHPET_TMR2_COMPARATOR_HIGH;
 					pi->comparator_l = hpetHPET_TMR2_COMPARATOR_LOW;
 					execute = pdTRUE;

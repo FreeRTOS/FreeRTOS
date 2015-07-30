@@ -22,12 +22,11 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.850200804" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option id="gnu.c.compiler.option.include.paths.369547224" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Full_Demo}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Full_Demo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Support_Files}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/IA32_flat}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/IA32_flat}&quot;"/>
 								</option>
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1628552532" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1363374967" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
@@ -59,10 +58,26 @@
 							<tool command="gcc" id="cdt.managedbuild.tool.gnu.cross.assembler.500911803" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<option id="gnu.both.asm.option.include.paths.1341458440" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/IA32_flat}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRTOS_Source/portable/GCC/IA32_flat}&quot;"/>
 								</option>
 								<option id="gnu.both.asm.option.flags.342663249" name="Assembler flags" superClass="gnu.both.asm.option.flags" value="-Wa,--gdwarf2 -Wa,-march=pentium -c" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.458498164" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.exe.debug.5899473.1173721081" name="/" resourcePath="Full_Demo/Standard_Demo_Tasks">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.1555812406" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base" unusedChildren="">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1160671315.1680026821" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1160671315"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.942625968.1399515051" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.942625968"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.100957841" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.850200804">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1496229673" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1644078528" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1667900842"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1073540094" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.2047125905"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.956115598" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1304180380"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.520187407" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.2001524857"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.737789519" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.500911803">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.225651200" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>

@@ -1,42 +1,32 @@
 /******************************************************************************
 *
-* (c) Copyright 2009 Xilinx, Inc. All rights reserved.
+* Copyright (C) 2009 - 2014 Xilinx, Inc.  All rights reserved.
 *
-* This file contains confidential and proprietary information of Xilinx, Inc.
-* and is protected under U.S. and international copyright and other
-* intellectual property laws.
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
 *
-* DISCLAIMER
-* This disclaimer is not a license and does not grant any rights to the
-* materials distributed herewith. Except as otherwise provided in a valid
-* license issued to you by Xilinx, and to the maximum extent permitted by
-* applicable law: (1) THESE MATERIALS ARE MADE AVAILABLE "AS IS" AND WITH ALL
-* FAULTS, AND XILINX HEREBY DISCLAIMS ALL WARRANTIES AND CONDITIONS, EXPRESS,
-* IMPLIED, OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF
-* MERCHANTABILITY, NON-INFRINGEMENT, OR FITNESS FOR ANY PARTICULAR PURPOSE;
-* and (2) Xilinx shall not be liable (whether in contract or tort, including
-* negligence, or under any other theory of liability) for any loss or damage
-* of any kind or nature related to, arising under or in connection with these
-* materials, including for any direct, or any indirect, special, incidental,
-* or consequential loss or damage (including loss of data, profits, goodwill,
-* or any type of loss or damage suffered as a result of any action brought by
-* a third party) even if such damage or loss was reasonably foreseeable or
-* Xilinx had been advised of the possibility of the same.
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
 *
-* CRITICAL APPLICATIONS
-* Xilinx products are not designed or intended to be fail-safe, or for use in
-* any application requiring fail-safe performance, such as life-support or
-* safety devices or systems, Class III medical devices, nuclear facilities,
-* applications related to the deployment of airbags, or any other applications
-* that could lead to death, personal injury, or severe property or
-* environmental damage (individually and collectively, "Critical
-* Applications"). Customer assumes the sole risk and liability of any use of
-* Xilinx products in Critical Applications, subject only to applicable laws
-* and regulations governing limitations on product liability.
+* Use of the Software is limited solely to applications:
+* (a) running on a Xilinx device, or
+* (b) that interact with a Xilinx device through a bus or interconnect.
 *
-* THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS PART OF THIS FILE
-* AT ALL TIMES.
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+* OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
 *
+* Except as contained in this notice, the name of the Xilinx shall not be used
+* in advertising or otherwise to promote the sale, use or other dealings in
+* this Software without prior written authorization from Xilinx.
 *
 ******************************************************************************/
 /*****************************************************************************/
@@ -131,7 +121,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 		/* fall through case statement */
 
 	case XIL_TESTMEM_INCREMENT:
-		
+
 		/*
 		 * Fill the memory with incrementing
 		 * values starting from 'FirtVal'
@@ -179,13 +169,13 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 		 * set up to cycle through all possible initial
 		 * test Patterns for walking ones test
 		 */
-		
+
 		for (J = 0L; J < 32; J++) {
 			/*
 			 * Generate an initial value for walking ones test
 			 * to test for bad data bits
 			 */
-			
+
 			Val = 1 << J;
 
 			/*
@@ -209,7 +199,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 			 * written */
 			for (I = 0L; I < 32; I++) {
 				/* read memory location */
-				
+
 				Word = Addr[I];
 
 				if (Word != Val) {
@@ -247,7 +237,7 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 			 * START walking zeros test
 			 * Write a one to each data bit indifferent locations
 			 */
-			
+
 			for (I = 0L; I < 32; I++) {
 				/* write memory location */
 				Addr[I] = Val;
@@ -294,12 +284,12 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 		 * Check every word within the words
 		 * of tested memory
 		 */
-		
+
 		for (I = 0L; I < Words; I++) {
 			/* Read the location */
 			Word = Addr[I];
 			Val = (u32) (~((u32) (&Addr[I])));
-			
+
 			if ((Word ^ Val) != 0x00000000) {
 				return -1;
 			}
@@ -339,11 +329,11 @@ int Xil_TestMem32(u32 *Addr, u32 Words, u32 Pattern, u8 Subtest)
 		 * of tested memory and compare it
 		 * with the fixed Pattern
 		 */
-		
+
 		for (I = 0L; I < Words; I++) {
-			
+
 			/* read memory location */
-			
+
 			Word = Addr[I];
 			if (Word != Val) {
 				return -1;
@@ -448,7 +438,7 @@ int Xil_TestMem16(u16 *Addr, u32 Words, u16 Pattern, u8 Subtest)
 		 * of tested memory and compare it
 		 * with the incrementing reference val
 		 */
-		
+
 		for (I = 0L; I < Words; I++) {
 			/* read memory location */
 			Word = Addr[I];
@@ -469,13 +459,13 @@ int Xil_TestMem16(u16 *Addr, u32 Words, u16 Pattern, u8 Subtest)
 		 * set up to cycle through all possible initial test
 		 * Patterns for walking ones test
 		 */
-		
+
 		for (J = 0L; J < 16; J++) {
 			/*
 			 * Generate an initial value for walking ones test
 			 * to test for bad data bits
 			 */
-			
+
 			Val = 1 << J;
 			/*
 			 * START walking ones test
@@ -527,7 +517,7 @@ int Xil_TestMem16(u16 *Addr, u32 Words, u16 Pattern, u8 Subtest)
 			 * START walking zeros test
 			 * Write a one to each data bit indifferent locations
 			 */
-			
+
 			for (I = 0L; I < 16; I++) {
 				/* write memory location */
 				Addr[I] = Val;
@@ -607,7 +597,7 @@ int Xil_TestMem16(u16 *Addr, u32 Words, u16 Pattern, u8 Subtest)
 		 * of tested memory and compare it
 		 * with the fixed pattern
 		 */
-		
+
 		for (I = 0L; I < Words; I++) {
 			/* read memory location */
 			Word = Addr[I];
@@ -822,12 +812,12 @@ int Xil_TestMem8(u8 *Addr, u32 Words, u8 Pattern, u8 Subtest)
 			Val = (u8) (~((u32) (&Addr[I])));
 			Addr[I] = Val;
 		}
-		
+
 		/*
 		 * Check every word within the words
 		 * of tested memory
 		 */
-		
+
 		for (I = 0L; I < Words; I++) {
 			/* read memory location */
 			Word = Addr[I];
@@ -866,7 +856,7 @@ int Xil_TestMem8(u8 *Addr, u32 Words, u8 Pattern, u8 Subtest)
 		 * of tested memory and compare it
 		 * with the fixed Pattern
 		 */
-		
+
 		for (I = 0L; I < Words; I++) {
 			/* read memory location */
 			Word = Addr[I];

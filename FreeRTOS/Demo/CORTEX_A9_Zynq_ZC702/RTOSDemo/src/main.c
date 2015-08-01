@@ -130,7 +130,7 @@
  *
  * When mainSELECTED_APPLICATION is set to 2 the lwIP example will be run.
  */
-#define mainSELECTED_APPLICATION	0
+#define mainSELECTED_APPLICATION	1
 
 /*-----------------------------------------------------------*/
 
@@ -328,43 +328,53 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void *memcpy( void *pvDest, const void *pvSource, size_t ulBytes )
+void *memcpy( void *pvDest, const void *pvSource, size_t xBytes )
 {
-unsigned char *pcDest = ( unsigned char * ) pvDest, *pcSource = ( unsigned char * ) pvSource;
+/* The compiler used during development seems to err unless these volatiles are
+included at -O3 optimisation.  */
+volatile unsigned char *pcDest = ( volatile unsigned char * ) pvDest, *pcSource = ( volatile unsigned char * ) pvSource;
 size_t x;
 
-	for( x = 0; x < ulBytes; x++ )
+	/* Extremely crude standard library implementations in lieu of having a C
+	library. */
+	if( pvDest != pvSource )
 	{
-		*pcDest = *pcSource;
-		pcDest++;
-		pcSource++;
+		for( x = 0; x < xBytes; x++ )
+		{
+			pcDest[ x ] = pcSource[ x ];
+		}
 	}
 
 	return pvDest;
 }
 /*-----------------------------------------------------------*/
 
-void *memset( void *pvDest, int iValue, size_t ulBytes )
+void *memset( void *pvDest, int iValue, size_t xBytes )
 {
-unsigned char *pcDest = ( unsigned char * ) pvDest;
-size_t x;
+/* The compiler used during development seems to err unless these volatiles are
+included at -O3 optimisation.  */
+volatile unsigned char * volatile pcDest = ( volatile unsigned char * volatile ) pvDest;
+volatile size_t x;
 
-	for( x = 0; x < ulBytes; x++ )
+	/* Extremely crude standard library implementations in lieu of having a C
+	library. */
+	for( x = 0; x < xBytes; x++ )
 	{
-		*pcDest = ( unsigned char ) iValue;
-		pcDest++;
+		pcDest[ x ] = ( unsigned char ) iValue;
 	}
 
 	return pvDest;
 }
 /*-----------------------------------------------------------*/
 
-int memcmp( const void *pvMem1, const void *pvMem2, size_t ulBytes )
+int memcmp( const void *pvMem1, const void *pvMem2, size_t xBytes )
 {
-const unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
-size_t x;
+const volatile unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
+register size_t x;
 
-    for( x = 0; x < ulBytes; x++ )
+	/* Extremely crude standard library implementations in lieu of having a C
+	library. */
+    for( x = 0; x < xBytes; x++ )
     {
         if( pucMem1[ x ] != pucMem2[ x ] )
         {
@@ -372,7 +382,7 @@ size_t x;
         }
     }
 
-    return ulBytes - x;
+    return xBytes - x;
 }
 /*-----------------------------------------------------------*/
 

@@ -1,3 +1,4 @@
 THIRPARTY=false
+HW_PROJECT_REFERENCE=ZC702_hw_platform
 PROCESSOR=ps7_cortexa9_0
 MSS_FILE=system.mss

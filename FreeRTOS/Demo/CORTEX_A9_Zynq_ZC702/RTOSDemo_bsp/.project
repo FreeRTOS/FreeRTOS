@@ -3,7 +3,6 @@
 	<name>RTOSDemo_bsp</name>
 	<comment>Created by SDK v2014.2</comment>
 	<projects>
-		<project>ZC702_hw_platform</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -1219,9 +1219,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	if the item size is not 0. */
 	configASSERT( pxQueue->uxItemSize == 0 );
 
-	/* Normally a mutex would not be given from an interrupt, and doing so is
-	definitely wrong if there is a mutex holder as priority inheritance makes no
-	sense for an interrupts, only tasks. */
+	/* Normally a mutex would not be given from an interrupt, especially if 
+	there is a mutex holder, as priority inheritance makes no sense for an 
+	interrupts, only tasks.  However, on occasions when it is wanted to give
+	a mutex from an interrupt, use xQueueSendFromISR() in place of
+	xSemaphoreGiveFromISR(). */
 	configASSERT( !( ( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX ) && ( pxQueue->pxMutexHolder != NULL ) ) );
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum

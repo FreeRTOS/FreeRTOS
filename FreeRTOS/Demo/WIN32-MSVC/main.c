@@ -302,6 +302,8 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 	( void ) ulLine;
 	( void ) pcFileName;
 
+	printf( "ASSERT! Line %d, file %s\r\n", ulLine, pcFileName );
+
  	taskENTER_CRITICAL();
 	{
 		/* Stop the trace recording. */

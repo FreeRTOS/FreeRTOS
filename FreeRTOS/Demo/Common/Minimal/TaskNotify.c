@@ -472,8 +472,10 @@ TickType_t xPeriod;
 
 void xNotifyTaskFromISR( void )
 {
-static BaseType_t xCallCount = 0;
+static BaseType_t xCallCount = 0, xAPIToUse = 0;
 const BaseType_t xCallInterval = pdMS_TO_TICKS( 50 );
+uint32_t ulPreviousValue;
+const uint32_t ulUnexpectedValue = 0xff;
 
 	/* The task performs some tests before starting the timer that gives the
 	notification from this interrupt.  If the timer has not been created yet
@@ -488,7 +490,28 @@ const BaseType_t xCallInterval = pdMS_TO_TICKS( 50 );
 			/* It is time to 'give' the notification again. */
 			xCallCount = 0;
 
-			vTaskNotifyGiveFromISR( xTaskToNotify, NULL );
+			/* Test using both vTaskNotifyGiveFromISR(), xTaskNotifyFromISR()
+			and xTaskNotifyAndQueryFromISR(). */
+			switch( xAPIToUse )
+			{
+				case 0:	vTaskNotifyGiveFromISR( xTaskToNotify, NULL );
+						xAPIToUse++;
+						break;
+
+				case 1:	xTaskNotifyFromISR( xTaskToNotify, 0, eIncrement, NULL );
+						xAPIToUse++;
+						break;
+
+				case 2: ulPreviousValue = ulUnexpectedValue;
+						xTaskNotifyAndQueryFromISR( xTaskToNotify, 0, eIncrement, &ulPreviousValue, NULL );
+						configASSERT( ulPreviousValue != ulUnexpectedValue );
+						xAPIToUse = 0;
+						break;
+
+				default:/* Should never get here!. */
+						break;						
+			}
+			
 			ulTimerNotificationsSent++;
 		}
 	}

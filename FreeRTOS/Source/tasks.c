@@ -3489,12 +3489,6 @@ TCB_t *pxTCB;
 
 		if( pxMutexHolder != NULL )
 		{
-			/* A task can only have an inherited priority if it holds the mutex.
-			If the mutex is held by a task then it cannot be given from an
-			interrupt, and if a mutex is given by the holding task then it must
-			be the running state task. */
-			configASSERT( pxTCB == pxCurrentTCB );
-
 			configASSERT( pxTCB->uxMutexesHeld );
 			( pxTCB->uxMutexesHeld )--;
 
@@ -4236,7 +4230,7 @@ TickType_t uxReturn;
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
 
-	BaseType_t xTaskNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, BaseType_t *pxHigherPriorityTaskWoken )
+	BaseType_t xTaskGenericNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	TCB_t * pxTCB;
 	eNotifyValue eOriginalNotifyState;
@@ -4267,8 +4261,12 @@ TickType_t uxReturn;
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
-			eOriginalNotifyState = pxTCB->eNotifyState;
+			if( pulPreviousNotificationValue != NULL )
+			{
+				*pulPreviousNotificationValue = pxTCB->ulNotifiedValue;
+			}
 
+			eOriginalNotifyState = pxTCB->eNotifyState;
 			pxTCB->eNotifyState = eNotified;
 
 			switch( eAction )

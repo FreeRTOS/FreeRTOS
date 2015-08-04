@@ -163,7 +163,7 @@ static SemaphoreHandle_t xMasterSlaveMutex = NULL;
 /* Flag that allows the master task to control when the interrupt gives or does
 not give the mutex.  There is no mutual exclusion on this variable, but this is
 only test code and it should be fine in the 32=bit test environment. */
-static BaseType_t xOkToGiveMutex = pdFALSE, xOkToGiveCountingSemaphore = pdFALSE, xOkToGiveMasterSlaveMutex = pdFALSE;
+static BaseType_t xOkToGiveMutex = pdFALSE, xOkToGiveCountingSemaphore = pdFALSE;
 
 /* Used to coordinate timing between tasks and the interrupt. */
 const TickType_t xInterruptGivePeriod = pdMS_TO_TICKS( intsemINTERRUPT_MUTEX_GIVE_PERIOD_MS );
@@ -217,8 +217,6 @@ static void vInterruptMutexMasterTask( void *pvParameters )
 
 static void prvTakeAndGiveInTheSameOrder( void )
 {
-static BaseType_t xGiveFromTask = pdTRUE;
-
 	/* Ensure the slave is suspended, and that this task is running at the
 	lower priority as expected as the start conditions. */
 	#if( INCLUDE_eTaskGetState == 1 )
@@ -295,27 +293,10 @@ static BaseType_t xGiveFromTask = pdTRUE;
 	/* Finally give back the shared mutex.  This time the higher priority
 	task should run before this task runs again - so this task should have
 	disinherited the priority and the higher priority task should be in the
-	suspended state again.  Alternatve beetween giving the mutex from this task,
-	and giving it from the interrupt. */
-	if( xGiveFromTask == pdTRUE )
+	suspended state again. */
+	if( xSemaphoreGive( xMasterSlaveMutex ) != pdPASS )
 	{
-		if( xSemaphoreGive( xMasterSlaveMutex ) != pdPASS )
-		{
-			xErrorDetected = pdTRUE;
-		}
-
-		/* Give the mutex from the interrupt on the next go around. */
-		xGiveFromTask = pdFALSE;
-	}
-	else
-	{
-		/* Wait for the mutex to be given from the interrupt. */
-		xOkToGiveMasterSlaveMutex = pdTRUE;
-		vTaskDelay( xInterruptGivePeriod + ( xInterruptGivePeriod >> 1 ) );
-		xOkToGiveMasterSlaveMutex = pdFALSE;
-
-		/* Give the mutex from the task on the next go around. */
-		xGiveFromTask = pdTRUE;
+		xErrorDetected = pdTRUE;
 	}
 
 	if( uxTaskPriorityGet( NULL ) != intsemMASTER_PRIORITY )
@@ -533,36 +514,15 @@ TickType_t xTimeNow;
 	xTimeNow = xTaskGetTickCountFromISR();
 	if( ( ( TickType_t ) ( xTimeNow - xLastGiveTime ) ) >= pdMS_TO_TICKS( intsemINTERRUPT_MUTEX_GIVE_PERIOD_MS ) )
 	{
+		configASSERT( xISRMutex );
 		if( xOkToGiveMutex != pdFALSE )
 		{
-			configASSERT( xISRMutex );
-
 			/* Null is used as the second parameter in this give, and non-NULL
-			in the other gives, for code coverage reasons.  NOTE:  This is a
-			Mutex, so xQueueGiveFromISR() should be used in place of
-			xSemaphoreGiveFromISR() in case there is a mutex holder that has
-			inherited a priority (although, in the case of xISRMutex, there
-			isn't).  The "item to queue" parameter is set to NULL as no data is 
-			copied into a mutex.*/
-			xQueueSendFromISR( ( QueueHandle_t ) xISRMutex, NULL, NULL );
+			in the other gives for code coverage reasons. */
+			xSemaphoreGiveFromISR( xISRMutex, NULL );
 
 			/* Second give attempt should fail. */
-			configASSERT( xQueueSendFromISR( xISRMutex, NULL, &xHigherPriorityTaskWoken ) == pdFAIL );
-		}
-
-		if( xOkToGiveMasterSlaveMutex != pdFALSE )
-		{
-			configASSERT( xOkToGiveMasterSlaveMutex );
-
-			/* NOTE:  This is a Mutex, so xQueueGiveFromISR() should be used in 
-			place of xSemaphoreGiveFromISR() in case there is a mutex holder 
-			that has inherited a priority (as indeed there is in this case).  
-			The "item to queue" parameter is set to NULL as no data is copied 
-			into a mutex. */
-			xQueueSendFromISR( ( QueueHandle_t ) xMasterSlaveMutex, NULL, NULL );
-
-			/* Second give attempt should fail. */
-			configASSERT( xQueueSendFromISR( xMasterSlaveMutex, NULL, &xHigherPriorityTaskWoken ) == pdFAIL );
+			configASSERT( xSemaphoreGiveFromISR( xISRMutex, &xHigherPriorityTaskWoken ) == pdFAIL );
 		}
 
 		if( xOkToGiveCountingSemaphore != pdFALSE )

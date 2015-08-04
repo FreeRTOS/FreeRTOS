@@ -90,7 +90,10 @@
 /* Demo program include files. */
 #include "flop.h"
 
-#define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
+#ifndef mathSTACK_SIZE
+	#define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
+#endif
+
 #define mathNUMBER_OF_TASKS  ( 4 )
 
 /* Four tasks, each of which performs a different floating point calculation.

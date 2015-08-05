@@ -370,7 +370,7 @@ volatile size_t x;
 int memcmp( const void *pvMem1, const void *pvMem2, size_t xBytes )
 {
 const volatile unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
-register size_t x;
+volatile size_t x;
 
 	/* Extremely crude standard library implementations in lieu of having a C
 	library. */

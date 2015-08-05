@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{38712199-cebf-4124-bf15-398f7c3419ea}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS">
+      <UniqueIdentifier>{af3445a1-4908-4170-89ed-39345d90d30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS\Source">
+      <UniqueIdentifier>{f32be356-4763-4cae-9020-974a2638cb08}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\Portable">
+      <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+">
+      <UniqueIdentifier>{e5ad4ec7-23dc-4295-8add-2acaee488f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+CLI">
+      <UniqueIdentifier>{fd43c0ed-fdbc-437f-a5a3-c50399690bd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+CLI\include">
+      <UniqueIdentifier>{c5889fe2-af0f-4cea-927f-6a6935ec5e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configuration Files">
+      <UniqueIdentifier>{19ff1a34-36de-4c48-9d10-3fb1fa0d1fa4}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\include">
+      <UniqueIdentifier>{ab23827c-126c-4e5a-bc99-8efa44d8a8bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+Reliance Edge">
+      <UniqueIdentifier>{9c9c3b2d-6958-407d-b742-23fbf73678ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+Reliance Edge\test">
+      <UniqueIdentifier>{e47b8f1d-1582-4e56-9c2f-ca2cdbea1b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+Reliance Edge\port">
+      <UniqueIdentifier>{9ecfe142-5bd2-472b-9568-243fa6169874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+Reliance Edge\driver">
+      <UniqueIdentifier>{28ee3d7e-231b-4094-8a10-ad89fc82f705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+Reliance Edge\util">
+      <UniqueIdentifier>{a955d01e-1f95-4c34-9558-14c52b75576f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\list.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c">
+      <Filter>FreeRTOS+\FreeRTOS+CLI</Filter>
+    </ClCompile>
+    <ClCompile Include="UDPCommandServer.c" />
+    <ClCompile Include="File-system-demo.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="Run-time-stats-utils.c" />
+    <ClCompile Include="Sample-CLI-commands.c" />
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\printf.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\rand.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\posix\fsstress.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\ostimestamp.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osassert.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osbdev.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osclock.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osmutex.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\osoutput.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\os\freertos\services\ostask.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\volume.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\blockio.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\buffer.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\core.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\dir.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\format.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\fse\fse.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\imap.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\imapextern.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\imapinline.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\inode.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\core\driver\inodedata.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\posix\path.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\posix\posix.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\bitmap.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\string.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\crc.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\endian.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\memory.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\namelen.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\util\sign.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\util</Filter>
+    </ClCompile>
+    <ClCompile Include="File-Related-CLI-commands.c" />
+    <ClCompile Include="ConfigurationFiles\redconf.c">
+      <Filter>Configuration Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\atoi.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\tests\util\math.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\toolcmn\getopt.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reliance-Edge\toolcmn\toolcmn.c">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.h">
+      <Filter>FreeRTOS+\FreeRTOS+CLI\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\timers.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\FreeRTOS.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\projdefs.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\queue.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\semphr.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\FreeRTOS\Source\include\task.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationFiles\FreeRTOSConfig.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reliance-Edge\os\freertos\include\ostypes.h">
+      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationFiles\redconf.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigurationFiles\redtypes.h">
+      <Filter>Configuration Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

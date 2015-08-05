@@ -1,0 +1,18 @@
+Reliance Edge Credits
+=====================
+
+This is a list (or partial list) of people who have made non-trivial or
+noteworthy contributions to the Reliance Edge project.  It is sorted by name.
+Entries are formatted as below:
+
+Real Name (githubaccount)
+Short description of how Real Name contributed to Reliance Edge.
+
+The real name may be withheld by request and the GitHub account name might be
+missing if the contributor does not use GitHub.
+
+Credits
+-------
+
+None yet! ;)
+

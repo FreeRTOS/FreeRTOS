@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.1 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V8.2.2 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -103,6 +103,9 @@ only for ports that are using the MPU. */
 		#define xTaskGetSchedulerState			MPU_xTaskGetSchedulerState
 		#define xTaskGetIdleTaskHandle			MPU_xTaskGetIdleTaskHandle
 		#define uxTaskGetSystemState			MPU_uxTaskGetSystemState
+		#define xTaskGenericNotify				MPU_xTaskGenericNotify
+		#define xTaskNotifyWait					MPU_xTaskNotifyWait
+		#define ulTaskNotifyTake				MPU_ulTaskNotifyTake
 
 		#define xQueueGenericCreate				MPU_xQueueGenericCreate
 		#define xQueueCreateMutex				MPU_xQueueCreateMutex
@@ -120,18 +123,35 @@ only for ports that are using the MPU. */
 		#define xQueueSelectFromSet				MPU_xQueueSelectFromSet
 		#define xQueueAddToSet					MPU_xQueueAddToSet
 		#define xQueueRemoveFromSet				MPU_xQueueRemoveFromSet
-		#define xQueuePeekFromISR				MPU_xQueuePeekFromISR
+		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
 		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
 
 		#define pvPortMalloc					MPU_pvPortMalloc
 		#define vPortFree						MPU_vPortFree
 		#define xPortGetFreeHeapSize			MPU_xPortGetFreeHeapSize
 		#define vPortInitialiseBlocks			MPU_vPortInitialiseBlocks
+		#define xPortGetMinimumEverFreeHeapSize	MPU_xPortGetMinimumEverFreeHeapSize
 
 		#if configQUEUE_REGISTRY_SIZE > 0
 			#define vQueueAddToRegistry				MPU_vQueueAddToRegistry
 			#define vQueueUnregisterQueue			MPU_vQueueUnregisterQueue
 		#endif
+
+		#define xTimerCreate					MPU_xTimerCreate
+		#define pvTimerGetTimerID				MPU_pvTimerGetTimerID
+		#define vTimerSetTimerID				MPU_vTimerSetTimerID
+		#define xTimerIsTimerActive				MPU_xTimerIsTimerActive
+		#define xTimerGetTimerDaemonTaskHandle	MPU_xTimerGetTimerDaemonTaskHandle
+		#define xTimerPendFunctionCall			MPU_xTimerPendFunctionCall
+		#define pcTimerGetTimerName				MPU_pcTimerGetTimerName
+		#define xTimerGenericCommand			MPU_xTimerGenericCommand
+
+		#define xEventGroupCreate				MPU_xEventGroupCreate
+		#define xEventGroupWaitBits				MPU_xEventGroupWaitBits
+		#define xEventGroupClearBits			MPU_xEventGroupClearBits
+		#define xEventGroupSetBits				MPU_xEventGroupSetBits
+		#define xEventGroupSync					MPU_xEventGroupSync
+		#define vEventGroupDelete				MPU_vEventGroupDelete
 
 		/* Remove the privileged function macro. */
 		#define PRIVILEGED_FUNCTION

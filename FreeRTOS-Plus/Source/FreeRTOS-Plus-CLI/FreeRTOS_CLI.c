@@ -53,8 +53,8 @@
 
 /* If the application writer needs to place the buffer used by the CLI at a
 fixed address then set configAPPLICATION_PROVIDES_cOutputBuffer to 1 in
-FreeRTOSConfig.h, and provide then declare an array as follows with the
-following name and size in one of the application files:
+FreeRTOSConfig.h, then declare an array with the following name and size in 
+one of the application files:
 	char cOutputBuffer[ configCOMMAND_INT_MAX_OUTPUT_SIZE ];
 */
 #ifndef configAPPLICATION_PROVIDES_cOutputBuffer

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.0 Recorder Library
+ * Tracealyzer v2.7.7 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernelPort.c
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2014.
+ * Copyright Percepio AB, 2012-2015.
  * www.percepio.com
  ******************************************************************************/
 

@@ -435,7 +435,7 @@ proc generate {os_handle} {
 		puts $config_file "void FreeRTOS_SetupTickInterrupt( void );"
 		puts $config_file "#define configSETUP_TICK_INTERRUPT() FreeRTOS_SetupTickInterrupt()\n"
 		puts $config_file "void FreeRTOS_ClearTickInterrupt( void );"
-		puts $config_file "#define portCLEAR_TICK_INTERRUPT()	FreeRTOS_ClearTickInterrupt()\n"
+		puts $config_file "#define configCLEAR_TICK_INTERRUPT()	FreeRTOS_ClearTickInterrupt()\n"
 	}
 	# end of if $proctype == "ps7_cortexa9"
 

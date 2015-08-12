@@ -138,9 +138,8 @@ int main( void )
 	for more details. */
 	for( ;; );
 }
-
-
 /*-----------------------------------------------------------*/
+
 static void prvTxTask( void *pvParameters )
 {
 const TickType_t x500ms = pdMS_TO_TICKS( 500UL );
@@ -156,10 +155,12 @@ uint32_t ulValueToSend = 0;
 		xQueueSend( xQueue,			/* The queue being written to. */
 					&ulValueToSend, /* The address of the data being sent. */
 					0UL );			/* The block time. */
+
+		ulValueToSend++;
 	}
 }
-
 /*-----------------------------------------------------------*/
+
 static void prvRxTask( void *pvParameters )
 {
 uint32_t ulValueReceived;
@@ -172,7 +173,7 @@ uint32_t ulValueReceived;
 						portMAX_DELAY );	/* Wait without a timeout for data. */
 
 		/* Print the received data. */
-		xil_printf( "Rx task received %u\r\n", ( unsigned int ) ulValueReceived );
+		xil_printf( "Rx task received %d\r\n", ( int ) ulValueReceived );
 	}
 }
 

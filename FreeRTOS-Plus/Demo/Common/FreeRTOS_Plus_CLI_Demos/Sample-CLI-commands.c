@@ -110,7 +110,9 @@ static BaseType_t prvTaskStatsCommand( char *pcWriteBuffer, size_t xWriteBufferL
 /*
  * Implements the run-time-stats command.
  */
-static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+#if( configGENERATE_RUN_TIME_STATS == 1 )
+	static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
+#endif /* configGENERATE_RUN_TIME_STATS */
 
 /*
  * Implements the echo-three-parameters command.
@@ -135,16 +137,6 @@ static BaseType_t prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBuf
 #if( configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1 )
 	static BaseType_t prvStartStopTraceCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString );
 #endif
-
-/* Structure that defines the "run-time-stats" command line command.   This
-generates a table that shows how much run time each task has */
-static const CLI_Command_Definition_t xRunTimeStats =
-{
-	"run-time-stats", /* The command string to type. */
-	"\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n",
-	prvRunTimeStatsCommand, /* The function to run. */
-	0 /* No parameters are expected. */
-};
 
 /* Structure that defines the "task-stats" command line command.  This generates
 a table that gives information on each task in the system. */
@@ -178,6 +170,18 @@ static const CLI_Command_Definition_t xParameterEcho =
 	-1 /* The user can enter any number of commands. */
 };
 
+#if( configGENERATE_RUN_TIME_STATS == 1 )
+	/* Structure that defines the "run-time-stats" command line command.   This
+	generates a table that shows how much run time each task has */
+	static const CLI_Command_Definition_t xRunTimeStats =
+	{
+		"run-time-stats", /* The command string to type. */
+		"\r\nrun-time-stats:\r\n Displays a table showing how much processing time each FreeRTOS task has used\r\n",
+		prvRunTimeStatsCommand, /* The function to run. */
+		0 /* No parameters are expected. */
+	};
+#endif /* configGENERATE_RUN_TIME_STATS */
+
 #if( configINCLUDE_QUERY_HEAP_COMMAND == 1 )
 	/* Structure that defines the "query_heap" command line command. */
 	static const CLI_Command_Definition_t xQueryHeap =
@@ -206,11 +210,16 @@ static const CLI_Command_Definition_t xParameterEcho =
 void vRegisterSampleCLICommands( void )
 {
 	/* Register all the command line commands defined immediately above. */
-	FreeRTOS_CLIRegisterCommand( &xTaskStats );
-	FreeRTOS_CLIRegisterCommand( &xRunTimeStats );
+	FreeRTOS_CLIRegisterCommand( &xTaskStats );	
 	FreeRTOS_CLIRegisterCommand( &xThreeParameterEcho );
 	FreeRTOS_CLIRegisterCommand( &xParameterEcho );
 
+	#if( configGENERATE_RUN_TIME_STATS == 1 )
+	{
+		FreeRTOS_CLIRegisterCommand( &xRunTimeStats );
+	}
+	#endif
+	
 	#if( configINCLUDE_QUERY_HEAP_COMMAND == 1 )
 	{
 		FreeRTOS_CLIRegisterCommand( &xQueryHeap );
@@ -283,43 +292,47 @@ BaseType_t xSpacePadding;
 #endif /* configINCLUDE_QUERY_HEAP */
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
-{
-const char * const pcHeader = "  Abs Time      % Time\r\n****************************************\r\n";
-BaseType_t xSpacePadding;
-
-	/* Remove compile time warnings about unused parameters, and check the
-	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
-	write buffer length is adequate, so does not check for buffer overflows. */
-	( void ) pcCommandString;
-	( void ) xWriteBufferLen;
-	configASSERT( pcWriteBuffer );
-
-	/* Generate a table of task stats. */
-	strcpy( pcWriteBuffer, "Task" );
-	pcWriteBuffer += strlen( pcWriteBuffer );
-
-	/* Pad the string "task" with however many bytes necessary to make it the
-	length of a task name.  Minus three for the null terminator and half the
-	number of characters in	"Task" so the column lines up with the centre of
-	the heading. */
-	for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+#if( configGENERATE_RUN_TIME_STATS == 1 )
+	
+	static BaseType_t prvRunTimeStatsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
 	{
-		/* Add a space to align columns after the task's name. */
-		*pcWriteBuffer = ' ';
-		pcWriteBuffer++;
+	const char * const pcHeader = "  Abs Time      % Time\r\n****************************************\r\n";
+	BaseType_t xSpacePadding;
 
-		/* Ensure always terminated. */
-		*pcWriteBuffer = 0x00;
+		/* Remove compile time warnings about unused parameters, and check the
+		write buffer is not NULL.  NOTE - for simplicity, this example assumes the
+		write buffer length is adequate, so does not check for buffer overflows. */
+		( void ) pcCommandString;
+		( void ) xWriteBufferLen;
+		configASSERT( pcWriteBuffer );
+
+		/* Generate a table of task stats. */
+		strcpy( pcWriteBuffer, "Task" );
+		pcWriteBuffer += strlen( pcWriteBuffer );
+
+		/* Pad the string "task" with however many bytes necessary to make it the
+		length of a task name.  Minus three for the null terminator and half the
+		number of characters in	"Task" so the column lines up with the centre of
+		the heading. */
+		for( xSpacePadding = strlen( "Task" ); xSpacePadding < ( configMAX_TASK_NAME_LEN - 3 ); xSpacePadding++ )
+		{
+			/* Add a space to align columns after the task's name. */
+			*pcWriteBuffer = ' ';
+			pcWriteBuffer++;
+
+			/* Ensure always terminated. */
+			*pcWriteBuffer = 0x00;
+		}
+
+		strcpy( pcWriteBuffer, pcHeader );
+		vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
+
+		/* There is no more data to return after this single string, so return
+		pdFALSE. */
+		return pdFALSE;
 	}
-
-	strcpy( pcWriteBuffer, pcHeader );
-	vTaskGetRunTimeStats( pcWriteBuffer + strlen( pcHeader ) );
-
-	/* There is no more data to return after this single string, so return
-	pdFALSE. */
-	return pdFALSE;
-}
+	
+#endif /* configGENERATE_RUN_TIME_STATS */
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )

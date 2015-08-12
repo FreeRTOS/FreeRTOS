@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.0 Recorder Library
+ * Tracealyzer v2.7.7 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.c
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2014.
+ * Copyright Percepio AB, 2012-2015.
  * www.percepio.com
  ******************************************************************************/
 
@@ -44,18 +44,28 @@
 #include <stdint.h>
 
 /* Internal variables */
-uint8_t nISRactive = 0;
+int8_t nISRactive = 0;
 objectHandleType handle_of_last_logged_task = 0;
 uint8_t inExcludedTask = 0;
 
+#if (INCLUDE_MEMMANG_EVENTS == 1)
 /* Current heap usage. Always updated. */
 static uint32_t heapMemUsage = 0;
+#endif
 
 #if (TRACE_SCHEDULING_ONLY == 0)
 static uint32_t prvTraceGetParam(uint32_t, uint32_t);
 #endif
 
 #if !defined INCLUDE_READY_EVENTS || INCLUDE_READY_EVENTS == 1
+
+static int readyEventsEnabled = 1;
+
+void vTraceSetReadyEventsEnabled(int status)
+{
+	readyEventsEnabled = status;
+}
+
 /*******************************************************************************
  * vTraceStoreTaskReady
  *
@@ -73,6 +83,14 @@ void vTraceStoreTaskReady(objectHandleType handle)
 	{
 		/*  On FreeRTOS v7.3.0, this occurs when creating tasks due to a bad
 		placement of the trace macro. In that case, the events are ignored. */
+		return;
+	}
+	
+	if (! readyEventsEnabled)
+	{
+		/* When creating tasks, ready events are also created. If creating 
+		a "hidden" (not traced) task, we must therefore disable recording 
+		of ready events to avoid an undesired ready event... */
 		return;
 	}
 
@@ -171,13 +189,15 @@ void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t signed_si
 	uint16_t addr_low;
 	uint8_t addr_high;
 	uint32_t size;
+	TRACE_SR_ALLOC_CRITICAL_SECTION();
+
+	if (RecorderDataPtr == NULL) // This happens in vTraceInitTraceData, if using dynamic allocation...
+		return;
 	
 	if (signed_size < 0)
 		size = (uint32_t)(- signed_size);
 	else
 		size = (uint32_t)(signed_size);
-	
-	TRACE_SR_ALLOC_CRITICAL_SECTION();
 
 	trcCRITICAL_SECTION_BEGIN();
 	
@@ -619,9 +639,9 @@ void vTraceSetPriorityProperty(uint8_t objectclass, objectHandleType id, uint8_t
 uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, objectHandleType id)
 {
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES,
-		"uiTraceGetPriorityProperty: objectclass >= TRACE_NCLASSES", 0);
+		"uiTraceGetPriorityProperty: Invalid objectclass number (>= TRACE_NCLASSES)", 0);
 	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass],
-		"uiTraceGetPriorityProperty: Invalid value for id", 0);
+		"uiTraceGetPriorityProperty: Task handle exceeds NTask. You may need to increase this constant in trcConfig.h.", 0);
 
 	return TRACE_PROPERTY_ACTOR_PRIORITY(objectclass, id);
 }

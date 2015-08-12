@@ -71,7 +71,7 @@
  *
  * This demo is described on the following web page:
  * TODO: This link describes the FAT version of this demo.
- * http://FreeRTOS-Plus/Fail_Safe_File_System/Fail_Safe_Embedded_File_System_demo.shtml
+ * http://www.freertos.org/FreeRTOS-Plus/Fail_Safe_File_System/Fail_Safe_Embedded_File_System_demo.shtml
  *
  ******************************************************************************/
 
@@ -112,7 +112,10 @@ extern void vUDPCommandInterpreterTask( void *pvParameters );
 extern void vCreateAndVerifySampleFiles( void );
 
 /*-----------------------------------------------------------*/
-#pragma warning - add link to documentation page
+
+/* See http://www.freertos.org/FreeRTOS-Plus/Fail_Safe_File_System/Fail_Safe_Embedded_File_System_demo.shtml
+for instructions. */
+
 int main( void )
 {
 const uint32_t ulLongTime_ms = 250UL;

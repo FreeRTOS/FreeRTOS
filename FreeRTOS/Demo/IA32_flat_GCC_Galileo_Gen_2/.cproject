@@ -65,22 +65,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.exe.debug.5899473.1173721081" name="/" resourcePath="Full_Demo/Standard_Demo_Tasks">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.1555812406" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base" unusedChildren="">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.1160671315.1680026821" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix.1160671315"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.942625968.1399515051" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path.942625968"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.100957841" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.850200804">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1496229673" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1644078528" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1667900842"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1073540094" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.2047125905"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.956115598" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1304180380"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.520187407" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.2001524857"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.737789519" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.500911803">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.225651200" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry excluding="Support_Files/stdlib_functions.c|nops.c|Source|uart.c|early_uart.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

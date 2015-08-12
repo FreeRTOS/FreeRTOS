@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.0 Recorder Library
+ * Tracealyzer v2.7.7 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -34,7 +34,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2014.
+ * Copyright Percepio AB, 2012-2015.
  * www.percepio.com
  ******************************************************************************/
 
@@ -112,6 +112,7 @@
 #define PORT_NXP_LPC210X					13	/*	No			Any					*/
 #define PORT_MICROCHIP_PIC32MZ				14	/*	Yes			Any					*/
 #define PORT_ARM_CORTEX_A9					15	/*	No			Any					*/
+#define PORT_ARM_CORTEX_M0					16	/*	Yes			Any					*/
 
 #include "trcConfig.h"
 
@@ -199,12 +200,12 @@
 #elif (SELECTED_PORT == PORT_ARM_CortexM)
 
 	void prvTraceInitCortexM(void);
-	
+
 	#define REG_DEMCR (*(volatile unsigned int*)0xE000EDFC)
 	#define REG_DWT_CTRL (*(volatile unsigned int*)0xE0001000)
 	#define REG_DWT_CYCCNT (*(volatile unsigned int*)0xE0001004)
 	#define REG_DWT_EXCCNT (*(volatile unsigned int*)0xE000100C)
-	
+
 	/* Bit mask for TRCENA bit in DEMCR - Global enable for DWT and ITM */
 	#define DEMCR_TRCENA (1 << 24)
 
@@ -223,7 +224,7 @@
 	#define PORT_SPECIFIC_INIT() prvTraceInitCortexM()
 
 	extern uint32_t DWT_CYCLES_ADDED;
-	
+
 	#define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
 	#define HWTC_COUNT (REG_DWT_CYCCNT + DWT_CYCLES_ADDED)
 	#define HWTC_PERIOD 0
@@ -231,6 +232,14 @@
 
 	#define IRQ_PRIORITY_ORDER 0 // lower IRQ priority values are more significant
 
+#elif (SELECTED_PORT == PORT_ARM_CORTEX_M0)
+    #define HWTC_COUNT_DIRECTION DIRECTION_DECREMENTING
+    #define HWTC_COUNT (*((uint32_t*)0xE000E018))
+    #define HWTC_PERIOD ((*(uint32_t*)0xE000E014) + 1)
+    #define HWTC_DIVISOR 2
+	
+    #define IRQ_PRIORITY_ORDER 0 // lower IRQ priority values are more significant
+	
 #elif (SELECTED_PORT == PORT_Renesas_RX600)
 
 	#include "iodefine.h"
@@ -241,8 +250,8 @@
 	#define HWTC_DIVISOR 1
 	#define IRQ_PRIORITY_ORDER 1 // higher IRQ priority values are more significant
 
-#elif (SELECTED_PORT == PORT_MICROCHIP_PIC32MX || SELECTED_PORT == PORT_MICROCHIP_PIC32MZ)
-	
+#elif ((SELECTED_PORT == PORT_MICROCHIP_PIC32MX) || (SELECTED_PORT == PORT_MICROCHIP_PIC32MZ))
+
 	#define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
 	#define HWTC_COUNT (TMR1)
 	#define HWTC_PERIOD (PR1 + 1)
@@ -299,11 +308,11 @@
 
 	/* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
 
-	#define RTIFRC0 *((uint32_t *)0xFFFFFC10)
-	#define RTICOMP0 *((uint32_t *)0xFFFFFC50)
-	#define RTIUDCP0 *((uint32_t *)0xFFFFFC54)
+	#define TRC_RTIFRC0 *((uint32_t *)0xFFFFFC10)
+	#define TRC_RTICOMP0 *((uint32_t *)0xFFFFFC50)
+	#define TRC_RTIUDCP0 *((uint32_t *)0xFFFFFC54)
 	#define HWTC_COUNT_DIRECTION DIRECTION_INCREMENTING
-	#define HWTC_COUNT (RTIFRC0 - (RTICOMP0 - RTIUDCP0))
+	#define HWTC_COUNT (TRC_RTIFRC0 - (TRC_RTICOMP0 - TRC_RTIUDCP0))
 	#define HWTC_PERIOD (RTIUDCP0)
 	#define HWTC_DIVISOR 1
 

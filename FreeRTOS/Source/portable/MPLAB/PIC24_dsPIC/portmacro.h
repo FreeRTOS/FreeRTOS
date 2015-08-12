@@ -113,10 +113,8 @@ typedef unsigned short UBaseType_t;
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
-#define portINTERRUPT_BITS			( ( uint16_t ) configKERNEL_INTERRUPT_PRIORITY << ( uint16_t ) 5 )
-
-#define portDISABLE_INTERRUPTS()	SR |= portINTERRUPT_BITS; __asm volatile ( "NOP" )
-#define portENABLE_INTERRUPTS()		SR &= ~portINTERRUPT_BITS
+#define portDISABLE_INTERRUPTS()	SET_CPU_IPL( configKERNEL_INTERRUPT_PRIORITY ); __asm volatile ( "NOP" )
+#define portENABLE_INTERRUPTS()		SET_CPU_IPL( 0 )
 
 /* Note that exiting a critical sectino will set the IPL bits to 0, nomatter
 what their value was prior to entering the critical section. */

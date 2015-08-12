@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.0 Recorder Library
+ * Tracealyzer v2.7.7 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcUser.c
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2014.
+ * Copyright Percepio AB, 2012-2015.
  * www.percepio.com
  ******************************************************************************/
 #include "FreeRTOS.h"
@@ -50,7 +50,7 @@
 TRACE_STOP_HOOK vTraceStopHookPtr = (TRACE_STOP_HOOK)0;
 
 extern uint8_t inExcludedTask;
-extern uint8_t nISRactive;
+extern int8_t nISRactive;
 extern objectHandleType handle_of_last_logged_task;
 extern uint32_t dts_min;
 extern uint32_t hwtc_count_max_after_tick;
@@ -127,6 +127,8 @@ void vTraceClear(void)
 
 	memset(RecorderDataPtr->eventData, 0, RecorderDataPtr->maxEvents * 4);
 
+	handle_of_last_logged_task = 0;
+	
 	trcCRITICAL_SECTION_END();
 
 }
@@ -632,47 +634,55 @@ void vTraceStoreISREnd(int pendingISR)
 	uint16_t dts5;
 	TRACE_SR_ALLOC_CRITICAL_SECTION();
 
+	if (! RecorderDataPtr->recorderActive ||  ! handle_of_last_logged_task)
+	{
+		return;
+	}
+
 	if (recorder_busy)
 	{
 		vTraceError("Illegal call to vTraceStoreISREnd, recorder busy!");
+		return;
+	}
+	
+	if (nISRactive == 0)
+	{
+		vTraceError("Unmatched call to vTraceStoreISREnd (nISRactive == 0, expected > 0)");
 		return;
 	}
 
 	trcCRITICAL_SECTION_BEGIN();
 	if (pendingISR == 0)
 	{
-		if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
+		uint8_t hnd8, type;
+		dts5 = (uint16_t)prvTraceGetDTS(0xFFFF);
+
+		if (nISRactive > 1)
 		{
-			uint8_t hnd8, type;
-			dts5 = (uint16_t)prvTraceGetDTS(0xFFFF);
-
-			if (nISRactive > 1)
-			{
-				/* return to another isr */
-				type = TS_ISR_RESUME;
-				hnd8 = prvTraceGet8BitHandle(isrstack[nISRactive]);
-			}
-			else
-			{
-				/* return to task */
-				type = TS_TASK_RESUME;
-				hnd8 = prvTraceGet8BitHandle(handle_of_last_logged_task);
-			}
-
-			ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
-			if (ts != NULL)
-			{
-				ts->type = type;
-				ts->objHandle = hnd8;
-				ts->dts = dts5;
-				prvTraceUpdateCounters();
-			}
-
-			#if (SELECTED_PORT == PORT_ARM_CortexM)
-			/* Remember the last ISR exit event, as the event needs to be modified in case of a following ISR entry (if tail-chained ISRs) */
-			ptrLastISRExitEvent = (uint8_t*)ts;
-			#endif
+			/* return to another isr */
+			type = TS_ISR_RESUME;
+			hnd8 = prvTraceGet8BitHandle(isrstack[nISRactive]);
 		}
+		else
+		{
+			/* return to task */
+			type = TS_TASK_RESUME;
+			hnd8 = prvTraceGet8BitHandle(handle_of_last_logged_task);
+		}
+
+		ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
+		if (ts != NULL)
+		{
+			ts->type = type;
+			ts->objHandle = hnd8;
+			ts->dts = dts5;
+			prvTraceUpdateCounters();
+		}
+
+		#if (SELECTED_PORT == PORT_ARM_CortexM)
+		/* Remember the last ISR exit event, as the event needs to be modified in case of a following ISR entry (if tail-chained ISRs) */
+		ptrLastISRExitEvent = (uint8_t*)ts;
+		#endif		
 	}
 	nISRactive--;
 

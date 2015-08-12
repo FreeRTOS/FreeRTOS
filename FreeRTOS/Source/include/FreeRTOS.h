@@ -617,6 +617,34 @@ extern "C" {
 	#define traceQUEUE_REGISTRY_ADD(xQueue, pcQueueName)
 #endif
 
+#ifndef traceTASK_NOTIFY_TAKE_BLOCK
+	#define traceTASK_NOTIFY_TAKE_BLOCK()
+#endif
+
+#ifndef traceTASK_NOTIFY_TAKE
+	#define traceTASK_NOTIFY_TAKE()
+#endif
+
+#ifndef traceTASK_NOTIFY_WAIT_BLOCK
+	#define traceTASK_NOTIFY_WAIT_BLOCK()
+#endif
+
+#ifndef traceTASK_NOTIFY_WAIT
+	#define traceTASK_NOTIFY_WAIT()
+#endif
+
+#ifndef traceTASK_NOTIFY
+	#define traceTASK_NOTIFY()
+#endif
+
+#ifndef traceTASK_NOTIFY_FROM_ISR
+	#define traceTASK_NOTIFY_FROM_ISR()
+#endif
+
+#ifndef traceTASK_NOTIFY_GIVE_FROM_ISR
+	#define traceTASK_NOTIFY_GIVE_FROM_ISR()
+#endif
+
 #ifndef configGENERATE_RUN_TIME_STATS
 	#define configGENERATE_RUN_TIME_STATS 0
 #endif

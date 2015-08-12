@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.0 Recorder Library
+ * Tracealyzer v2.7.7 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.h
@@ -31,7 +31,7 @@
  * damages, or the exclusion of implied warranties or limitations on how long an
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * Copyright Percepio AB, 2013.
+ * Copyright Percepio AB, 2012-2015.
  * www.percepio.com
  ******************************************************************************/
 
@@ -45,7 +45,10 @@
 /* Internal functions */
 
 #if !defined INCLUDE_READY_EVENTS || INCLUDE_READY_EVENTS == 1
-void vTraceStoreTaskReady(objectHandleType handle);
+	void vTraceSetReadyEventsEnabled(int status);
+	void vTraceStoreTaskReady(objectHandleType handle);
+#else
+	#define vTraceSetReadyEventsEnabled(status)
 #endif
 
 void vTraceStoreLowPower(uint32_t flag);

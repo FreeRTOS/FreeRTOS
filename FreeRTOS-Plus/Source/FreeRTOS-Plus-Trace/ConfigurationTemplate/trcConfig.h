@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.0 Recorder Library
+ * Tracealyzer v2.7.7 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2014.
+ * Copyright Percepio AB, 2012-2015.
  * www.percepio.com
  ******************************************************************************/
 
@@ -70,18 +70,20 @@
  * PORT_NXP_LPC210X						13		No			Any				
  * PORT_MICROCHIP_PIC32MZ				14		Yes			Any			
  * PORT_ARM_CORTEX_A9					15		No			Any
+ * PORT_ARM_CORTEX_M0					16		Yes			Any
  *****************************************************************************/
 
-#ifndef WIN32
-	// Set the port setting here!
-	#define SELECTED_PORT PORT_NOT_SET
+// Set the port setting here!
+#define SELECTED_PORT PORT_NOT_SET
 
-	#if (SELECTED_PORT == PORT_NOT_SET)
-		#error "You need to define SELECTED_PORT here!"
-	#endif
-#else
-	// For Win32 demo projects this is set automatically
-	#define SELECTED_PORT PORT_Win32	
+#if (SELECTED_PORT == PORT_ARM_CortexM)
+	/* For ARM Cortex-M: make sure ARM's CMSIS library is included here, which
+       is used for accessing the PRIMASK register. e.g. #include "board.h" */
+#endif
+
+
+#if (SELECTED_PORT == PORT_NOT_SET)
+	#error "You need to define SELECTED_PORT here!"
 #endif
 
 /******************************************************************************

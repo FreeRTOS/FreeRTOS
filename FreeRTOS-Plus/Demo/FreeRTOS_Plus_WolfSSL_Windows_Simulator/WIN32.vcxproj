@@ -54,7 +54,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Source\CyaSSL;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Source\wolfSSL;..\..\..\FreeRTOS\Source\include;..\..\..\FreeRTOS\Source\portable\MSVC-MingW;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;SIZEOF_LONG_LONG=8;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -67,6 +67,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4206;4214;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -128,34 +129,54 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\aes.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\arc4.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\asn.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\coding.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\des3.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\dh.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\dsa.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\error.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\hc128.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\hmac.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\integer.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\logging.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\md4.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\md5.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\memory.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\misc.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\pwdbased.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\rabbit.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\random.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\rsa.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\sha.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\sha256.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\wc_port.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\src\internal.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\src\io.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\src\keys.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\src\ssl.c" />
-    <ClCompile Include="..\..\Source\CyaSSL\src\tls.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\aes.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\arc4.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\asn.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\blake2b.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\camellia.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\chacha.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\chacha20_poly1305.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\coding.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\compress.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\curve25519.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\des3.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\dh.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\dsa.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ecc.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ecc_fp.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ed25519.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\error.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\fe_low_mem.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\fe_operations.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ge_low_mem.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ge_operations.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\hash.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\hc128.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\hmac.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\integer.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\logging.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\md2.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\md4.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\md5.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\memory.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\misc.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\pkcs7.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\poly1305.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\pwdbased.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\rabbit.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\random.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ripemd.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\rsa.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\sha.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\sha256.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\sha512.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\tfm.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\wc_port.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\src\internal.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\src\io.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\src\keys.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\src\ssl.c" />
+    <ClCompile Include="..\..\Source\wolfSSL\src\tls.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\list.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MemMang\heap_3.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c" />

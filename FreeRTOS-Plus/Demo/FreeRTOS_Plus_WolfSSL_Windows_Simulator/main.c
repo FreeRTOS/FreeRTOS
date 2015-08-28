@@ -101,7 +101,7 @@ int main( void )
 const uint32_t ulLongTime_ms = 250UL;
 
 	/* Create the TCP server task.  This will itself create the client task
-	once it has completed the CyaSSL initialisation. */
+	once it has completed the wolfSSL initialisation. */
 	xTaskCreate( vSecureTCPServerTask, "Server", configMINIMAL_STACK_SIZE, NULL, mainSECURE_SERVER_TASK_PRIORITY, NULL );
 
 	/* Start the task running. */

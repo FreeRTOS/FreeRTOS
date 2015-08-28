@@ -22,10 +22,10 @@
     <Filter Include="FreeRTOS+">
       <UniqueIdentifier>{e5ad4ec7-23dc-4295-8add-2acaee488f5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\CyaSSL">
+    <Filter Include="FreeRTOS+\wolfSSL">
       <UniqueIdentifier>{8b481200-a9e5-48a4-98ad-49d2783cd652}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\CyaSSL\ctaocrypt">
+    <Filter Include="FreeRTOS+\wolfSSL\wolfcrypt">
       <UniqueIdentifier>{738eaad9-4e49-4309-9074-c3d9e102fb4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -51,83 +51,143 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c">
       <Filter>FreeRTOS\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\src\internal.c">
-      <Filter>FreeRTOS+\CyaSSL</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\src\internal.c">
+      <Filter>FreeRTOS+\wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\src\io.c">
-      <Filter>FreeRTOS+\CyaSSL</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\src\io.c">
+      <Filter>FreeRTOS+\wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\src\keys.c">
-      <Filter>FreeRTOS+\CyaSSL</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\src\keys.c">
+      <Filter>FreeRTOS+\wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\src\ssl.c">
-      <Filter>FreeRTOS+\CyaSSL</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\src\ssl.c">
+      <Filter>FreeRTOS+\wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\src\tls.c">
-      <Filter>FreeRTOS+\CyaSSL</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\src\tls.c">
+      <Filter>FreeRTOS+\wolfSSL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\aes.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\aes.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\arc4.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\arc4.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\asn.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\asn.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\coding.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\blake2b.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\des3.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\camellia.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\dh.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\chacha.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\dsa.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\chacha20_poly1305.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\hc128.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\coding.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\hmac.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\compress.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\integer.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\curve25519.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\logging.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\des3.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\md4.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\dh.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\md5.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\dsa.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\memory.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ecc.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\misc.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ecc_fp.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\pwdbased.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ed25519.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\rabbit.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\fe_low_mem.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\random.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\fe_operations.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\rsa.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ge_low_mem.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\sha256.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ge_operations.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\sha.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\hash.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\hc128.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\hmac.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\integer.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\logging.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\md2.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\md4.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\md5.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\memory.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\misc.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\pkcs7.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\poly1305.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\pwdbased.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\rabbit.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\random.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\ripemd.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\rsa.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\sha.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\sha256.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\sha512.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\tfm.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
     <ClCompile Include="SecureTCPServerTask.c">
       <Filter>Demo App Source</Filter>
@@ -135,11 +195,11 @@
     <ClCompile Include="SecureTCPClientTask.c">
       <Filter>Demo App Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\wc_port.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\wc_port.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\CyaSSL\ctaocrypt\src\error.c">
-      <Filter>FreeRTOS+\CyaSSL\ctaocrypt</Filter>
+    <ClCompile Include="..\..\Source\wolfSSL\wolfcrypt\src\error.c">
+      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

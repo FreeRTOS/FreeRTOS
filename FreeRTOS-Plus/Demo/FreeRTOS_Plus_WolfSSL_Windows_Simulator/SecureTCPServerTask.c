@@ -72,8 +72,8 @@
 /* Win32 includes. */
 #include <WinSock2.h>
 
-/* CyaSSL includes. */
-#include "cyassl/ssl.h"
+/* wolfSSL includes. */
+#include "wolfssl/ssl.h"
 
 /* Standard includes. */
 #include <stdint.h>
@@ -101,10 +101,10 @@ FreeRTOS ports do not have this restriction. */
  */
 static SOCKET prvOpenServerSocket( void );
 
-/* 
- * Prepare the CyaSSL library for use.
+/*
+ * Prepare the wolfSSL library for use.
  */
-static void prvInitialiseCyaSSL( void );
+static void prvInitialiseWolfSSL( void );
 
 /*
  * The task that implements the client side of the connection.
@@ -113,8 +113,8 @@ extern void vSecureTCPClientTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 
-/* The CyaSSL context for the server. */
-static CYASSL_CTX* xCyaSSL_ServerContext = NULL;
+/* The wolfSSL context for the server. */
+static WOLFSSL_CTX* xWolfSSL_ServerContext = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -127,19 +127,19 @@ uint8_t cReceivedString[ 60 ];
 struct sockaddr_in xClient;
 int xClientAddressLength = sizeof( struct sockaddr_in );
 SOCKET xListeningSocket, xConnectedSocket;
-CYASSL* xCyaSSL_Object; /* Only one connection is accepted at a time, so only one object is needed at a time. */
+WOLFSSL* xWolfSSL_Object; /* Only one connection is accepted at a time, so only one object is needed at a time. */
 
 	/* Just to prevent compiler warnings. */
 	( void ) pvParameters;
 
-	/* Perform the initialisation necessary before CyaSSL can be used. */
-	prvInitialiseCyaSSL();
-	configASSERT( xCyaSSL_ServerContext );
+	/* Perform the initialisation necessary before wolfSSL can be used. */
+	prvInitialiseWolfSSL();
+	configASSERT( xWolfSSL_ServerContext );
 
 	/* Attempt to open the socket. */
 	xListeningSocket = prvOpenServerSocket();
 
-	/* Now the server socket has been created and the CyaSSL library has been
+	/* Now the server socket has been created and the wolfSSL library has been
 	initialised, the task that implements the client side can be created. */
 	xTaskCreate( vSecureTCPClientTask, "Client", configMINIMAL_STACK_SIZE, NULL, sstSECURE_CLIENT_TASK_PRIORITY, NULL );
 
@@ -155,25 +155,25 @@ CYASSL* xCyaSSL_Object; /* Only one connection is accepted at a time, so only on
 			{
 				printf( "Connection established\r\n" );
 
-				/* A connection has been accepted by the server.  Create a 
-				CyaSSL object for use with the newly connected socket. */
-				xCyaSSL_Object = NULL;
-				xCyaSSL_Object = CyaSSL_new( xCyaSSL_ServerContext );
-    
-				if( xCyaSSL_Object != NULL )
+				/* A connection has been accepted by the server.  Create a
+				wolfSSL object for use with the newly connected socket. */
+				xWolfSSL_Object = NULL;
+				xWolfSSL_Object = wolfSSL_new( xWolfSSL_ServerContext );
+
+				if( xWolfSSL_Object != NULL )
 				{
-					/* Associate the created CyaSSL object with the connected 
+					/* Associate the created wolfSSL object with the connected
 					socket. */
-					xReturned = CyaSSL_set_fd( xCyaSSL_Object, xConnectedSocket );
+					xReturned = wolfSSL_set_fd( xWolfSSL_Object, xConnectedSocket );
 					configASSERT( xReturned == SSL_SUCCESS );
 
 					do
 					{
-						/* The next line is the secure equivalent to the 
+						/* The next line is the secure equivalent to the
 						standard sockets call:
 						lBytes = recv( xConnectedSocket, cReceivedString, 50, 0 ); */
-						lBytes = CyaSSL_read( xCyaSSL_Object, cReceivedString, sizeof( cReceivedString ) );
-						
+						lBytes = wolfSSL_read( xWolfSSL_Object, cReceivedString, sizeof( cReceivedString ) );
+
 						/* Print the received characters. */
 						if( lBytes > 0 )
 						{
@@ -183,13 +183,13 @@ CYASSL* xCyaSSL_Object; /* Only one connection is accepted at a time, so only on
 					} while ( lBytes > 0 );
 
 					/* The connection was closed, close the socket and free the
-					CyaSSL object. */
-					closesocket( xConnectedSocket );					
-					CyaSSL_free( xCyaSSL_Object );
+					wolfSSL object. */
+					closesocket( xConnectedSocket );
+					wolfSSL_free( xWolfSSL_Object );
 					printf( "Connection closed, back to start\r\n\r\n" );
-				}								
+				}
 			}
-		} 
+		}
 	}
 	else
 	{
@@ -252,37 +252,36 @@ SOCKET xSocket = INVALID_SOCKET;
 }
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseCyaSSL( void )
+static void prvInitialiseWolfSSL( void )
 {
 int32_t iReturn;
 
-	#ifdef DEBUG_CYASSL
+	#ifdef DEBUG_WOLFSSL
 	{
-		CyaSSL_Debugging_ON();
+		wolfSSL_Debugging_ON();
 	}
 	#endif
 
-    /* Initialise CyaSSL.  This must be done before any other CyaSSL functions
+    /* Initialise wolfSSL.  This must be done before any other wolfSSL functions
     are called. */
-    CyaSSL_Init();
+    wolfSSL_Init();
 
-    /* Attempt to create a context that uses the TLS V1 server protocol. */
-    xCyaSSL_ServerContext = CyaSSL_CTX_new( CyaTLSv1_server_method() );
+    /* Attempt to create a context that uses the TLS 1.2 server protocol. */
+    xWolfSSL_ServerContext = wolfSSL_CTX_new( wolfTLSv1_2_server_method() );
 
-    if( xCyaSSL_ServerContext != NULL )
+    if( xWolfSSL_ServerContext != NULL )
     {
         /* Load the CA certificate.  Real applications should ensure that
-        CyaSSL_CTX_load_verify_locations() returns SSL_SUCCESS before 
+        wolfSSL_CTX_load_verify_locations() returns SSL_SUCCESS before
 		proceeding. */
-        iReturn = CyaSSL_CTX_load_verify_locations( xCyaSSL_ServerContext, "ca-cert.pem", 0 );
+        iReturn = wolfSSL_CTX_load_verify_locations( xWolfSSL_ServerContext, "ca-cert.pem", 0 );
 		configASSERT( iReturn == SSL_SUCCESS );
 
-		iReturn = CyaSSL_CTX_use_certificate_file( xCyaSSL_ServerContext, "server-cert.pem", SSL_FILETYPE_PEM );
+		iReturn = wolfSSL_CTX_use_certificate_file( xWolfSSL_ServerContext, "server-cert.pem", SSL_FILETYPE_PEM );
 		configASSERT( iReturn == SSL_SUCCESS );
 
-		iReturn = CyaSSL_CTX_use_PrivateKey_file( xCyaSSL_ServerContext, "server-key.pem", SSL_FILETYPE_PEM );
+		iReturn = wolfSSL_CTX_use_PrivateKey_file( xWolfSSL_ServerContext, "server-key.pem", SSL_FILETYPE_PEM );
 		configASSERT( iReturn == SSL_SUCCESS );
     }
 }
-
 

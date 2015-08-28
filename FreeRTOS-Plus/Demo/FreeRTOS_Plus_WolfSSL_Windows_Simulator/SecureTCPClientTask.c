@@ -72,8 +72,8 @@
 /* Win32 includes. */
 #include <WinSock2.h>
 
-/* CyaSSL includes. */
-#include "cyassl/ssl.h"
+/* wolfSSL includes. */
+#include "wolfssl/ssl.h"
 
 /* Standard includes. */
 #include <stdint.h>
@@ -85,8 +85,8 @@
 
 /*-----------------------------------------------------------*/
 
-/* The CyaSSL context for the client. */
-static CYASSL_CTX* xCyaSSL_ClientContext = NULL;
+/* The wolfSSL context for the client. */
+static WOLFSSL_CTX* xWolfSSL_ClientContext = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -95,7 +95,7 @@ void vSecureTCPClientTask( void *pvParameters )
 {
 SOCKET xClientSocket;
 struct sockaddr_in xConnection;
-CYASSL* xCyaSSL_Object;
+WOLFSSL* xWolfSSL_Object;
 WORD wVersionRequested;
 WSADATA xWSAData;
 char cString[ 50 ];
@@ -115,12 +115,12 @@ uint32_t ulCount = 0UL;
 	xConnection.sin_addr.s_addr = inet_addr("127.0.0.1");
 	xConnection.sin_port = htons( configTCP_PORT_NUMBER );
 
-    /* Attempt to create a context that uses the TLS V1 server protocol. */
-    xCyaSSL_ClientContext = CyaSSL_CTX_new( CyaTLSv1_client_method() );
-	configASSERT( xCyaSSL_ClientContext );
+    /* Attempt to create a context that uses the TLS 1.2 server protocol. */
+    xWolfSSL_ClientContext = wolfSSL_CTX_new( wolfTLSv1_2_client_method() );
+	configASSERT( xWolfSSL_ClientContext );
 
     /* Load the CA certificate. */
-    lReturned = CyaSSL_CTX_load_verify_locations( xCyaSSL_ClientContext, "ca-cert.pem", 0 );
+    lReturned = wolfSSL_CTX_load_verify_locations( xWolfSSL_ClientContext, "ca-cert.pem", 0 );
 	configASSERT( lReturned == SSL_SUCCESS );
 
 	for( ;; )
@@ -132,15 +132,15 @@ uint32_t ulCount = 0UL;
 		/* Connect to the secure server. */
 		if( connect( xClientSocket, ( SOCKADDR * ) &xConnection, sizeof( xConnection ) ) == 0 )
 		{
-			/* The connect was successful.  Create a CyaSSL object to associate
+			/* The connect was successful.  Create a wolfSSL object to associate
 			with this connection. */
-			xCyaSSL_Object = CyaSSL_new( xCyaSSL_ClientContext );
+			xWolfSSL_Object = wolfSSL_new( xWolfSSL_ClientContext );
 
-			if( xCyaSSL_Object != NULL )
+			if( xWolfSSL_Object != NULL )
 			{
-				/* Associate the created CyaSSL object with the connected
+				/* Associate the created wolfSSL object with the connected
 				socket. */
-				lReturned = CyaSSL_set_fd( xCyaSSL_Object, xClientSocket );
+				lReturned = wolfSSL_set_fd( xWolfSSL_Object, xClientSocket );
 				configASSERT( lReturned == SSL_SUCCESS );
 
 				/* The count is used to differentiate between messages sent to
@@ -155,7 +155,7 @@ uint32_t ulCount = 0UL;
 					/* The next line is the secure equivalent of the standard
 					sockets call:
 					lReturned = send( xClientSocket, cString, strlen( cString ) + 1, 0 ); */
-					lReturned = CyaSSL_write( xCyaSSL_Object, cString, strlen( cString ) + 1 );
+					lReturned = wolfSSL_write( xWolfSSL_Object, cString, strlen( cString ) + 1 );
 
 
 					/* Short delay to prevent the messages streaming up the
@@ -166,7 +166,7 @@ uint32_t ulCount = 0UL;
 				} while( ( lReturned != SOCKET_ERROR ) && ( ulCount < 10UL ) );
 			}
 
-			CyaSSL_free( xCyaSSL_Object );
+			wolfSSL_free( xWolfSSL_Object );
 			closesocket( xClientSocket );
 
 			/* Delay for a short time before starting over. */

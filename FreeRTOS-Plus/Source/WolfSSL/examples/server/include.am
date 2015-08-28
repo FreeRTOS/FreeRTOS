@@ -7,8 +7,8 @@ if BUILD_EXAMPLES
 noinst_PROGRAMS += examples/server/server
 noinst_HEADERS += examples/server/server.h
 examples_server_server_SOURCES      = examples/server/server.c
-examples_server_server_LDADD        = src/libcyassl.la
-examples_server_server_DEPENDENCIES = src/libcyassl.la
+examples_server_server_LDADD        = src/libwolfssl.la
+examples_server_server_DEPENDENCIES = src/libwolfssl.la
 endif
 EXTRA_DIST += examples/server/server.sln
 EXTRA_DIST += examples/server/server-ntru.vcproj

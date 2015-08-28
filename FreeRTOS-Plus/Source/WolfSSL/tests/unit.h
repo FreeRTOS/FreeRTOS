@@ -3,7 +3,8 @@
 #ifndef CyaSSL_UNIT_H
 #define CyaSSL_UNIT_H
 
-#include <cyassl/test.h>    /* thread and tcp stuff */
+#include <wolfssl/ssl.h>
+#include <wolfssl/test.h>    /* thread and tcp stuff */
 
 #define Fail(description, result) do {                                         \
     printf("\nERROR - %s line %d failed with:", __FILE__, __LINE__);           \
@@ -55,7 +56,7 @@
 #define AssertStrLE(x, y) AssertStr(x, y, <=,  >)
 
 
-int ApiTest(void);
+void ApiTest(void);
 int SuiteTest(void);
 int HashTest(void);
 

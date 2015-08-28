@@ -14,8 +14,8 @@ tests_unit_test_SOURCES = \
                   examples/client/client.c \
                   examples/server/server.c
 tests_unit_test_CFLAGS       = -DNO_MAIN_DRIVER $(AM_CFLAGS)
-tests_unit_test_LDADD        = src/libcyassl.la
-tests_unit_test_DEPENDENCIES = src/libcyassl.la
+tests_unit_test_LDADD        = src/libwolfssl.la
+tests_unit_test_DEPENDENCIES = src/libwolfssl.la
 endif
 EXTRA_DIST += tests/unit.h
 EXTRA_DIST += tests/test.conf \

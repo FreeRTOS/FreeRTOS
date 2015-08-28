@@ -5,8 +5,8 @@ if BUILD_EXAMPLES
 noinst_PROGRAMS += examples/client/client
 noinst_HEADERS += examples/client/client.h
 examples_client_client_SOURCES      = examples/client/client.c
-examples_client_client_LDADD        = src/libcyassl.la
-examples_client_client_DEPENDENCIES = src/libcyassl.la
+examples_client_client_LDADD        = src/libwolfssl.la
+examples_client_client_DEPENDENCIES = src/libwolfssl.la
 endif
 EXTRA_DIST += examples/client/client.sln
 EXTRA_DIST += examples/client/client-ntru.vcproj

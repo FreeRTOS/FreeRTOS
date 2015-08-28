@@ -1,15 +1,15 @@
 /* testsuite.c
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,15 +23,16 @@
     #include <config.h>
 #endif
 
-#include <cyassl/ctaocrypt/settings.h>
+#include <wolfssl/wolfcrypt/settings.h>
 
-#include <cyassl/test.h>
-#include "ctaocrypt/test/test.h"
+#include <wolfssl/ssl.h>
+#include <wolfssl/test.h>
+#include "wolfcrypt/test/test.h"
 
 #ifndef SINGLE_THREADED
 
-#include <cyassl/openssl/ssl.h>
-#include <cyassl/ctaocrypt/sha256.h>
+#include <wolfssl/openssl/ssl.h>
+#include <wolfssl/wolfcrypt/sha256.h>
 
 #include "examples/echoclient/echoclient.h"
 #include "examples/echoserver/echoserver.h"
@@ -47,22 +48,40 @@ enum {
     NUMARGS = 3
 };
 
-#ifndef USE_WINDOWS_API
-    static const char outputName[] = "/tmp/output";
-#else
-    static const char outputName[] = "output";
-#endif
-
+static const char *outputName;
 
 int myoptind = 0;
 char* myoptarg = NULL;
 
-int main(int argc, char** argv)
+
+#ifndef NO_TESTSUITE_MAIN_DRIVER
+
+    static int testsuite_test(int argc, char** argv);
+
+    int main(int argc, char** argv)
+    {
+        return testsuite_test(argc, argv);
+    }
+
+#endif /* NO_TESTSUITE_MAIN_DRIVER */
+
+
+int testsuite_test(int argc, char** argv)
 {
     func_args server_args;
 
     tcp_ready ready;
     THREAD_TYPE serverThread;
+
+#ifndef USE_WINDOWS_API
+    char tempName[] = "/tmp/output-XXXXXX";
+    int len = 18;
+    int num = 6;
+#else
+    char tempName[] = "fnXXXXXX";
+    int len = 8;
+    int num = 6;
+#endif
 
 #ifdef HAVE_CAVIUM
         int ret = OpenNitroxDevice(CAVIUM_DIRECT, CAVIUM_DEV_ID);
@@ -75,11 +94,12 @@ int main(int argc, char** argv)
     server_args.argc = argc;
     server_args.argv = argv;
 
-    CyaSSL_Init();
-#if defined(DEBUG_CYASSL) && !defined(HAVE_VALGRIND)
-    CyaSSL_Debugging_ON();
+    wolfSSL_Init();
+#if defined(DEBUG_WOLFSSL) && !defined(HAVE_VALGRIND)
+    wolfSSL_Debugging_ON();
 #endif
 
+#if !defined(WOLFSSL_TIRTOS)
     if (CurrentDir("testsuite") || CurrentDir("_build"))
         ChangeDirBack(1);
     else if (CurrentDir("Debug") || CurrentDir("Release"))
@@ -87,18 +107,24 @@ int main(int argc, char** argv)
                                    /* Derived Data Advanced -> Custom  */
                                    /* Relative to Workspace, Build/Products */
                                    /* Debug or Release */
+#endif
+
+#ifdef WOLFSSL_TIRTOS
+    fdOpenSession(Task_self());
+#endif
+
     server_args.signal = &ready;
     InitTcpReady(&ready);
 
-    /* CTaoCrypt test */
-    ctaocrypt_test(&server_args);
+    /* wc_ test */
+    wolfcrypt_test(&server_args);
     if (server_args.return_code != 0) return server_args.return_code;
  
-    /* Simple CyaSSL client server test */
+    /* Simple wolfSSL client server test */
     simple_test(&server_args);
     if (server_args.return_code != 0) return server_args.return_code;
 
-    /* Echo input yaSSL client server test */
+    /* Echo input wolfSSL client server test */
     start_thread(echoserver_test, &server_args, &serverThread);
     wait_tcp_ready(&server_args);
     {
@@ -115,20 +141,26 @@ int main(int argc, char** argv)
 
         echo_args.argc = 3;
         echo_args.argv = myArgv;
-   
+
+        /* Create unique file name */
+        outputName = mymktemp(tempName, len, num);
+        if (outputName == NULL) {
+            printf("Could not create unique file name");
+            return EXIT_FAILURE;
+        }
+
         strcpy(echo_args.argv[0], "echoclient");
         strcpy(echo_args.argv[1], "input");
         strcpy(echo_args.argv[2], outputName);
-        remove(outputName);
 
         /* Share the signal, it has the new port number in it. */
         echo_args.signal = server_args.signal;
 
         /* make sure OK */
         echoclient_test(&echo_args);
-        if (echo_args.return_code != 0) return echo_args.return_code;  
+        if (echo_args.return_code != 0) return echo_args.return_code;
 
-#ifdef CYASSL_DTLS
+#ifdef WOLFSSL_DTLS
         wait_tcp_ready(&server_args);
 #endif
         /* send quit to echoserver */
@@ -141,6 +173,14 @@ int main(int argc, char** argv)
         if (server_args.return_code != 0) return server_args.return_code;
     }
 
+    /* show ciphers */
+    {
+        char ciphers[1024];
+        XMEMSET(ciphers, 0, sizeof(ciphers));
+        wolfSSL_get_ciphers(ciphers, sizeof(ciphers)-1);
+        printf("ciphers = %s\n", ciphers);
+    }
+
     /* validate output equals input */
     {
         byte input[SHA256_DIGEST_SIZE];
@@ -148,12 +188,17 @@ int main(int argc, char** argv)
 
         file_test("input",  input);
         file_test(outputName, output);
+        remove(outputName);
         if (memcmp(input, output, sizeof(input)) != 0)
             return EXIT_FAILURE;
     }
 
-    CyaSSL_Cleanup();
+    wolfSSL_Cleanup();
     FreeTcpReady(&ready);
+
+#ifdef WOLFSSL_TIRTOS
+    fdCloseSession(Task_self());
+#endif
 
 #ifdef HAVE_CAVIUM
         CspShutdown(CAVIUM_DEV_ID);
@@ -203,9 +248,10 @@ void simple_test(func_args* args)
     cliArgs.argc = 1;
     cliArgs.argv = cliArgv;
     cliArgs.return_code = 0;
-   
+
     strcpy(svrArgs.argv[0], "SimpleServer");
-    #if !defined(USE_WINDOWS_API) && !defined(CYASSL_SNIFFER)
+    #if !defined(USE_WINDOWS_API) && !defined(WOLFSSL_SNIFFER)  && \
+                                     !defined(WOLFSSL_TIRTOS)
         strcpy(svrArgs.argv[svrArgs.argc++], "-p");
         strcpy(svrArgs.argv[svrArgs.argc++], "0");
     #endif
@@ -223,7 +269,7 @@ void simple_test(func_args* args)
     svrArgs.signal = args->signal;
     start_thread(server_test, &svrArgs, &serverThread);
     wait_tcp_ready(&svrArgs);
-   
+
     /* Setting the actual port number. */
     strcpy(cliArgs.argv[0], "SimpleClient");
     #ifndef USE_WINDOWS_API
@@ -246,7 +292,7 @@ void wait_tcp_ready(func_args* args)
 {
 #if defined(_POSIX_THREADS) && !defined(__MINGW32__)
     pthread_mutex_lock(&args->signal->mutex);
-    
+
     if (!args->signal->ready)
         pthread_cond_wait(&args->signal->cond, &args->signal->mutex);
     args->signal->ready = 0; /* reset */
@@ -263,6 +309,17 @@ void start_thread(THREAD_FUNC fun, func_args* args, THREAD_TYPE* thread)
 #if defined(_POSIX_THREADS) && !defined(__MINGW32__)
     pthread_create(thread, 0, fun, args);
     return;
+#elif defined(WOLFSSL_TIRTOS)
+    /* Initialize the defaults and set the parameters. */
+    Task_Params taskParams;
+    Task_Params_init(&taskParams);
+    taskParams.arg0 = (UArg)args;
+    taskParams.stackSize = 65535;
+    *thread = Task_create((Task_FuncPtr)fun, &taskParams, NULL);
+    if (*thread == NULL) {
+        printf("Failed to create new Task\n");
+    }
+    Task_yield();
 #else
     *thread = (THREAD_TYPE)_beginthreadex(0, 0, fun, args, 0, 0);
 #endif
@@ -273,6 +330,14 @@ void join_thread(THREAD_TYPE thread)
 {
 #if defined(_POSIX_THREADS) && !defined(__MINGW32__)
     pthread_join(thread, 0);
+#elif defined(WOLFSSL_TIRTOS)
+    while(1) {
+        if (Task_getMode(thread) == Task_Mode_TERMINATED) {
+		    Task_sleep(5);
+            break;
+        }
+        Task_yield();
+    }
 #else
     int res = WaitForSingleObject((HANDLE)thread, INFINITE);
     assert(res == WAIT_OBJECT_0);
@@ -311,10 +376,10 @@ void file_test(const char* file, byte* check)
     Sha256   sha256;
     byte  buf[1024];
     byte  shasum[SHA256_DIGEST_SIZE];
-   
-    ret = InitSha256(&sha256);
+
+    ret = wc_InitSha256(&sha256);
     if (ret != 0) {
-        printf("Can't InitSha256 %d\n", ret);
+        printf("Can't wc_InitSha256 %d\n", ret);
         return;
     }
     if( !( f = fopen( file, "rb" ) )) {
@@ -322,24 +387,24 @@ void file_test(const char* file, byte* check)
         return;
     }
     while( ( i = (int)fread(buf, 1, sizeof(buf), f )) > 0 ) {
-        ret = Sha256Update(&sha256, buf, i);
+        ret = wc_Sha256Update(&sha256, buf, i);
         if (ret != 0) {
-            printf("Can't Sha256Update %d\n", ret);
+            printf("Can't wc_Sha256Update %d\n", ret);
             return;
         }
     }
-    
-    ret = Sha256Final(&sha256, shasum);
+
+    ret = wc_Sha256Final(&sha256, shasum);
     if (ret != 0) {
-        printf("Can't Sha256Final %d\n", ret);
+        printf("Can't wc_Sha256Final %d\n", ret);
         return;
     }
 
     memcpy(check, shasum, sizeof(shasum));
 
-    for(j = 0; j < SHA256_DIGEST_SIZE; ++j ) 
+    for(j = 0; j < SHA256_DIGEST_SIZE; ++j )
         printf( "%02x", shasum[j] );
-   
+
     printf("  %s\n", file);
 
     fclose(f);
@@ -368,7 +433,7 @@ int main(int argc, char** argv)
                                    /* Relative to Workspace, Build/Products */
                                    /* Debug or Release */
 
-    ctaocrypt_test(&server_args);
+    wolfcrypt_test(&server_args);
     if (server_args.return_code != 0) return server_args.return_code;
 
     printf("\nAll tests passed!\n");

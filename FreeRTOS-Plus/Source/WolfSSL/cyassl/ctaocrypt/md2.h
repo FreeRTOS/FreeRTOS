@@ -1,15 +1,15 @@
 /* md2.h
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,46 +20,23 @@
  */
 
 
+/* check for old macro */
+#if !defined(CYASSL_MD2) && defined(WOLFSSL_MD2)
+    #define CYASSL_MD2
+#endif
+
 #ifdef CYASSL_MD2
 
 #ifndef CTAO_CRYPT_MD2_H
 #define CTAO_CRYPT_MD2_H
 
-#include <cyassl/ctaocrypt/types.h>
+#include <wolfssl/wolfcrypt/md2.h>
 
-#ifdef __cplusplus
-    extern "C" {
-#endif
-
-
-/* in bytes */
-enum {
-    MD2             =  6,    /* hash type unique */
-    MD2_BLOCK_SIZE  = 16,
-    MD2_DIGEST_SIZE = 16,
-    MD2_PAD_SIZE    = 16,
-    MD2_X_SIZE      = 48
-};
-
-
-/* Md2 digest */
-typedef struct Md2 {
-    word32  count;   /* bytes % PAD_SIZE  */
-    byte    X[MD2_X_SIZE];
-    byte    C[MD2_BLOCK_SIZE];
-    byte    buffer[MD2_BLOCK_SIZE];
-} Md2;
-
-
-CYASSL_API void InitMd2(Md2*);
-CYASSL_API void Md2Update(Md2*, const byte*, word32);
-CYASSL_API void Md2Final(Md2*, byte*);
-CYASSL_API int  Md2Hash(const byte*, word32, byte*);
-
-
-#ifdef __cplusplus
-    } /* extern "C" */
-#endif
+#define InitMd2   wc_InitMd2
+#define Md2Update wc_Md2Update
+#define Md2Final  wc_Md2Final
+#define Md2Hash   wc_Md2Hash
 
 #endif /* CTAO_CRYPT_MD2_H */
 #endif /* CYASSL_MD2 */
+

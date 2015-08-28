@@ -1,5 +1,5 @@
 /* engine.h for libcurl */
 
-#undef HAVE_OPENSSL_ENGINE_H
+#include <wolfssl/openssl/engine.h>
 
 

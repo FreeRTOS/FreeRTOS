@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib neo.lib"
+				AdditionalDependencies="Ws2_32.lib NtruEncrypt_DLL.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\NTRU\bin"
 				GenerateDebugInformation="true"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib neo.lib"
+				AdditionalDependencies="Ws2_32.lib NtruEncrypt_DLL.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\NTRU\bin"
 				GenerateDebugInformation="true"

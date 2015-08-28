@@ -1,15 +1,15 @@
 /* snifftest.c
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,13 +23,13 @@
     #include <config.h>
 #endif
 
-#include <cyassl/ctaocrypt/settings.h>
+#include <wolfssl/wolfcrypt/settings.h>
 
 #ifdef _WIN32
-    #define CYASSL_SNIFFER
+    #define WOLFSSL_SNIFFER
 #endif
 
-#ifndef CYASSL_SNIFFER
+#ifndef WOLFSSL_SNIFFER
 
 /* blank build */
 #include <stdio.h>
@@ -58,6 +58,7 @@ int main(void)
 
 
 #ifndef _WIN32
+    #include <sys/socket.h>    /* AF_INET */
     #include <arpa/inet.h>
 #endif
 
@@ -122,6 +123,7 @@ static char* iptos(unsigned int addr)
 int main(int argc, char** argv)
 {
     int          ret = 0;
+    int          hadBadPacket = 0;
 	int		     inum;
 	int		     port;
     int          saveFile = 0;
@@ -226,6 +228,25 @@ int main(int argc, char** argv)
         if (ret != 0) {
             printf("Please run directly from sslSniffer/sslSnifferTest dir\n");
         }
+
+#ifdef HAVE_SNI
+        {
+            char altName[128];
+
+            printf("Enter alternate SNI: ");
+            ret = scanf("%s", altName);
+
+            if (strnlen(altName, 128) > 0) {
+                ret = ssl_SetNamedPrivateKey(altName,
+                                   server, port, "../../certs/server-key.pem",
+                                   FILETYPE_PEM, NULL, err);
+                if (ret != 0) {
+                    printf("Please run directly from "
+                           "sslSniffer/sslSnifferTest dir\n");
+                }
+            }
+        }
+#endif
     }
     else if (argc >= 3) {
         saveFile = 1;
@@ -283,8 +304,10 @@ int main(int argc, char** argv)
                 continue;
 
             ret = ssl_DecodePacket(packet, header.caplen, data, err);
-            if (ret < 0)
+            if (ret < 0) {
                 printf("ssl_Decode ret = %d, %s\n", ret, err);
+                hadBadPacket = 1;
+            }
             if (ret > 0) {
                 data[ret] = 0;
 				printf("SSL App Data(%d:%d):%s\n", packetNumber, ret, data);
@@ -295,7 +318,7 @@ int main(int argc, char** argv)
     }
     FreeAll();
 
-    return EXIT_SUCCESS;
+    return hadBadPacket ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 #endif /* full build */

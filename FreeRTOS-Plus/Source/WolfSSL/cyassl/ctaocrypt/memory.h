@@ -1,15 +1,15 @@
 /* memory.h
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -25,31 +25,17 @@
 #ifndef CYASSL_MEMORY_H
 #define CYASSL_MEMORY_H
 
-#include <stdlib.h>
 
-#ifdef __cplusplus
-    extern "C" {
-#endif
-
-
-typedef void *(*CyaSSL_Malloc_cb)(size_t size);
-typedef void (*CyaSSL_Free_cb)(void *ptr);
-typedef void *(*CyaSSL_Realloc_cb)(void *ptr, size_t size);
-
-
-/* Public set function */
-CYASSL_API int CyaSSL_SetAllocators(CyaSSL_Malloc_cb  malloc_function,
-                                    CyaSSL_Free_cb    free_function,
-                                    CyaSSL_Realloc_cb realloc_function);
+#include <wolfssl/wolfcrypt/memory.h>
+#define CyaSSL_Malloc_cb     wolfSSL_Malloc_cb
+#define CyaSSL_Free_cb       wolfSSL_Free_cb
+#define CyaSSL_Realloc_cb    wolfSSL_Realloc_cb
+#define CyaSSL_SetAllocators wolfSSL_SetAllocators
 
 /* Public in case user app wants to use XMALLOC/XFREE */
-CYASSL_API void* CyaSSL_Malloc(size_t size);
-CYASSL_API void  CyaSSL_Free(void *ptr);
-CYASSL_API void* CyaSSL_Realloc(void *ptr, size_t size);
-
-
-#ifdef __cplusplus
-}
-#endif
+#define CyaSSL_Malloc  wolfSSL_Malloc
+#define CyaSSL_Free    wolfSSL_Free
+#define CyaSSL_Realloc wolfSSL_Realloc
 
 #endif /* CYASSL_MEMORY_H */
+

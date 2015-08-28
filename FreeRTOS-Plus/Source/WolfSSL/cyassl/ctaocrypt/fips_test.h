@@ -1,15 +1,15 @@
 /* fips_test.h
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -30,9 +30,24 @@
     extern "C" {
 #endif
 
-/* Known Answer Test string inputs are hex */
+/* Known Answer Test string inputs are hex, internal */
+CYASSL_LOCAL int DoKnownAnswerTests(char*, int);
 
-CYASSL_LOCAL int DoKnownAnswerTests(void);
+
+/* FIPS failure callback */
+typedef void(*wolfCrypt_fips_cb)(int ok, int err, const char* hash);
+
+/* Public set function */
+CYASSL_API int wolfCrypt_SetCb_fips(wolfCrypt_fips_cb cbf);
+
+/* Public get status functions */
+CYASSL_API int wolfCrypt_GetStatus_fips(void);
+CYASSL_API const char* wolfCrypt_GetCoreHash_fips(void);
+
+#ifdef HAVE_FORCE_FIPS_FAILURE
+    /* Public function to force failure mode for operational testing */
+    CYASSL_API int wolfCrypt_SetStatus_fips(int);
+#endif
 
 
 #ifdef __cplusplus

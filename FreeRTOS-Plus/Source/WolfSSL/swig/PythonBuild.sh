@@ -1,9 +1,9 @@
 #!/bin/bash
 echo
-swig -python cyassl.i
+swig -python wolfssl.i
 pythonIncludes=`python-config --includes`
 pythonLibs=`python-config --libs`
-gcc -c -fpic cyassl_wrap.c -I$pythonIncludes
-gcc -c -fpic cyassl_adds.c 
-gcc -shared -flat_namespace  cyassl_adds.o  cyassl_wrap.o -lcyassl $pythonLibs -o _cyassl.so
+gcc -c -fpic wolfssl_wrap.c -I$pythonIncludes
+gcc -c -fpic wolfssl_adds.c 
+gcc -shared -flat_namespace  wolfssl_adds.o  wolfssl_wrap.o -lwolfssl $pythonLibs -o _wolfssl.so
 python runme.py

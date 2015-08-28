@@ -1,15 +1,15 @@
 /* echoclient.c
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -25,6 +25,8 @@
 
 #include <cyassl/ctaocrypt/settings.h>
 
+/* let's use cyassl layer AND cyassl openssl layer */
+#include <cyassl/ssl.h>
 #include <cyassl/openssl/ssl.h>
 
 #if defined(CYASSL_MDK_ARM)
@@ -106,7 +108,7 @@ void echoclient_test(void* args)
 #endif
 
 #if defined(CYASSL_DTLS)
-    method  = DTLSv1_client_method();
+    method  = DTLSv1_2_client_method();
 #elif  !defined(NO_TLS)
     method = CyaSSLv23_client_method();
 #else
@@ -117,18 +119,18 @@ void echoclient_test(void* args)
 #ifndef NO_FILESYSTEM
     #ifndef NO_RSA
     if (SSL_CTX_load_verify_locations(ctx, caCert, 0) != SSL_SUCCESS)
-        err_sys("can't load ca file, Please run from CyaSSL home dir");
+        err_sys("can't load ca file, Please run from wolfSSL home dir");
     #endif
     #ifdef HAVE_ECC
         if (SSL_CTX_load_verify_locations(ctx, eccCert, 0) != SSL_SUCCESS)
-            err_sys("can't load ca file, Please run from CyaSSL home dir");
+            err_sys("can't load ca file, Please run from wolfSSL home dir");
     #endif
 #elif !defined(NO_CERTS)
     if (!doPSK)
         load_buffer(ctx, caCert, CYASSL_CA);
 #endif
 
-#if defined(CYASSL_SNIFFER) && !defined(HAVE_NTRU) && !defined(HAVE_ECC)
+#if defined(CYASSL_SNIFFER)
     /* don't use EDH, can't sniff tmp keys */
     SSL_CTX_set_cipher_list(ctx, "AES256-SHA");
 #endif
@@ -156,7 +158,6 @@ void echoclient_test(void* args)
     #endif
 
     ssl = SSL_new(ctx);
-        
 
     if (doDTLS) {
         SOCKADDR_IN_T addr;
@@ -262,11 +263,12 @@ void echoclient_test(void* args)
 #if defined(DEBUG_CYASSL) && !defined(CYASSL_MDK_SHELL)
         CyaSSL_Debugging_ON();
 #endif
-
+#ifndef CYASSL_TIRTOS
         if (CurrentDir("echoclient"))
             ChangeDirBack(2);
         else if (CurrentDir("Debug") || CurrentDir("Release"))
             ChangeDirBack(3);
+#endif
         echoclient_test(&args);
 
         CyaSSL_Cleanup();

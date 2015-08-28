@@ -5,8 +5,8 @@
 if BUILD_SNIFFTEST
 noinst_PROGRAMS += sslSniffer/sslSnifferTest/snifftest
 sslSniffer_sslSnifferTest_snifftest_SOURCES = sslSniffer/sslSnifferTest/snifftest.c
-sslSniffer_sslSnifferTest_snifftest_LDADD        = src/libcyassl.la -lpcap
-sslSniffer_sslSnifferTest_snifftest_DEPENDENCIES = src/libcyassl.la
+sslSniffer_sslSnifferTest_snifftest_LDADD        = src/libwolfssl.la -lpcap
+sslSniffer_sslSnifferTest_snifftest_DEPENDENCIES = src/libwolfssl.la
 endif
 EXTRA_DIST += sslSniffer/sslSniffer.vcproj
 EXTRA_DIST += sslSniffer/sslSniffer.vcxproj

@@ -97,7 +97,8 @@ to use PKCS#5 v2 instead of v1.5 which is default add
 
 to use PKCS#12 instead use -v1 witch a 12 algo like
 
--v1 PBE-SHA1-RC4-128   # file Pkcs8Enc12 , see man pkcs8 for more info
+-v1 PBE-SHA1-3DES   # file Pkcs8Enc12 , see man pkcs8 for more info
+-v1 PBE-SHA1-RC4-128   # no longer file Pkcs8Enc12, arc4 now off by default
 
 
 **** To convert from pkcs8 to traditional ****
@@ -123,6 +124,8 @@ openssl dhparam -in dh2048.param -text > dh2048.pem
     make a new key
         openssl ecparam -genkey -text -name secp256r1 -out ecc-key.pem
 
+    convert to compressed
+        openssl ec -in ecc-key.pem -conv_form compressed -out ecc-key-comp.pem 
 
 *** CRL ***
 

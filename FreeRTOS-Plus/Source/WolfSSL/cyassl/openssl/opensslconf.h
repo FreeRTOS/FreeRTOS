@@ -1,8 +1,3 @@
 /* opensslconf.h for openSSL */
 
-
-#ifndef OPENSSL_THREADS
-    #define OPENSSL_THREADS
-#endif
-
-
+#include <wolfssl/openssl/opensslconf.h>

@@ -9,6 +9,7 @@ EXTRA_DIST += \
 	     certs/client-keyEnc.pem \
 	     certs/client-key.pem \
 	     certs/ecc-key.pem \
+	     certs/ecc-key-comp.pem \
 	     certs/ecc-keyPkcs8.pem \
 	     certs/ecc-client-key.pem \
 	     certs/client-ecc-cert.pem \
@@ -16,14 +17,15 @@ EXTRA_DIST += \
 	     certs/dh2048.pem \
 	     certs/server-cert.pem \
 	     certs/server-ecc.pem \
+	     certs/server-ecc-comp.pem \
 	     certs/server-ecc-rsa.pem \
 	     certs/server-keyEnc.pem \
 	     certs/server-key.pem \
 	     certs/server-keyPkcs8Enc12.pem \
 	     certs/server-keyPkcs8Enc2.pem \
 	     certs/server-keyPkcs8Enc.pem \
-	     certs/server-keyPkcs8.pem
-
+	     certs/server-keyPkcs8.pem \
+         certs/wolfssl-website-ca.pem
 EXTRA_DIST += \
 	     certs/ca-key.der \
 	     certs/ca-cert.der \

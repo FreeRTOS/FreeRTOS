@@ -1,15 +1,15 @@
 /* suites.c
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,12 +23,12 @@
     #include <config.h>
 #endif
 
-#include <cyassl/ctaocrypt/settings.h>
+#include <wolfssl/wolfcrypt/settings.h>
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <cyassl/ssl.h>
+#include <wolfssl/ssl.h>
 #include <tests/unit.h>
 
 
@@ -44,7 +44,7 @@
 #include "examples/server/server.h"
 
 
-static CYASSL_CTX* cipherSuiteCtx = NULL;
+static WOLFSSL_CTX* cipherSuiteCtx = NULL;
 static char nonblockFlag[] = "-N";
 static char noVerifyFlag[] = "-d";
 static char portFlag[] = "-p";
@@ -109,7 +109,7 @@ static int IsValidCipherSuite(const char* line, char* suite)
     }
 
     if (found) {
-        if (CyaSSL_CTX_set_cipher_list(cipherSuiteCtx, suite) == SSL_SUCCESS)
+        if (wolfSSL_CTX_set_cipher_list(cipherSuiteCtx, suite) == SSL_SUCCESS)
             valid = 1;
     }
 
@@ -121,8 +121,17 @@ static int execute_test_case(int svr_argc, char** svr_argv,
                               int cli_argc, char** cli_argv,
                               int addNoVerify, int addNonBlocking)
 {
+#ifdef WOLFSSL_TIRTOS
+    func_args cliArgs = {0};
+    func_args svrArgs = {0};
+    cliArgs.argc = cli_argc;
+    cliArgs.argv = cli_argv;
+    svrArgs.argc = svr_argc;
+    svrArgs.argv = svr_argv;
+#else
     func_args cliArgs = {cli_argc, cli_argv, 0, NULL, NULL};
     func_args svrArgs = {svr_argc, svr_argv, 0, NULL, NULL};
+#endif
 
     tcp_ready   ready;
     THREAD_TYPE serverThread;
@@ -183,7 +192,7 @@ static int execute_test_case(int svr_argc, char** svr_argv,
             strcat(commandLine, flagSep);
         }
     }
-    #ifndef USE_WINDOWS_API
+    #if !defined(USE_WINDOWS_API) && !defined(WOLFSSL_TIRTOS)
         /* add port 0 */
         if (svr_argc + 2 > MAX_ARGS)
             printf("cannot add the magic port number flag to server\n");
@@ -222,11 +231,15 @@ static int execute_test_case(int svr_argc, char** svr_argv,
 
     InitTcpReady(&ready);
 
+#ifdef WOLFSSL_TIRTOS
+    fdOpenSession(Task_self());
+#endif
+
     /* start server */
     svrArgs.signal = &ready;
     start_thread(server_test, &svrArgs, &serverThread);
     wait_tcp_ready(&svrArgs);
-    #ifndef USE_WINDOWS_API
+    #if !defined(USE_WINDOWS_API) && !defined(WOLFSSL_TIRTOS)
         if (ready.port != 0)
         {
             if (cli_argc + 2 > MAX_ARGS)
@@ -255,6 +268,9 @@ static int execute_test_case(int svr_argc, char** svr_argv,
         exit(EXIT_FAILURE);
     }
 
+#ifdef WOLFSSL_TIRTOS
+    fdCloseSession(Task_self());
+#endif
     FreeTcpReady(&ready);
     
     return 0;
@@ -412,7 +428,7 @@ int SuiteTest(void)
 
     (void)test_harness;
 
-    cipherSuiteCtx = CyaSSL_CTX_new(CyaTLSv1_2_client_method());
+    cipherSuiteCtx = wolfSSL_CTX_new(wolfTLSv1_2_client_method());
     if (cipherSuiteCtx == NULL) {
         printf("can't get cipher suite ctx\n");
         exit(EXIT_FAILURE);  
@@ -430,7 +446,7 @@ int SuiteTest(void)
     /* any extra cases will need another argument */
     args.argc = 2;
 
-#ifdef CYASSL_DTLS 
+#ifdef WOLFSSL_DTLS 
     /* add dtls extra suites */
     strcpy(argv0[1], "tests/test-dtls.conf");
     printf("starting dtls extra cipher suite tests\n");
@@ -443,7 +459,8 @@ int SuiteTest(void)
 
     printf(" End Cipher Suite Tests\n");
 
-    CyaSSL_CTX_free(cipherSuiteCtx);
+    wolfSSL_CTX_free(cipherSuiteCtx);
+    wolfSSL_Cleanup();
 
     return args.return_code;
 }

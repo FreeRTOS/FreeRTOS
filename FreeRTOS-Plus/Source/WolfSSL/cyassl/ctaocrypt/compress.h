@@ -1,15 +1,15 @@
 /* compress.h
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -25,26 +25,11 @@
 #ifndef CTAO_CRYPT_COMPRESS_H
 #define CTAO_CRYPT_COMPRESS_H
 
+#include <wolfssl/wolfcrypt/compress.h>
 
-#include <cyassl/ctaocrypt/types.h>
-
-
-#ifdef __cplusplus
-    extern "C" {
-#endif
-
-
-#define COMPRESS_FIXED 1
-
-
-CYASSL_API int Compress(byte*, word32, const byte*, word32, word32);
-CYASSL_API int DeCompress(byte*, word32, const byte*, word32);
-
-
-#ifdef __cplusplus
-    } /* extern "C" */
-#endif
-
+/* reverse compatibility */
+#define Compress   wc_Compress
+#define DeCompress wc_DeCompress
 
 #endif /* CTAO_CRYPT_COMPRESS_H */
 

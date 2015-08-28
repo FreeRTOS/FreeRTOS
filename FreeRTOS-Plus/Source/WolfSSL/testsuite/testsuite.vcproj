@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="NO_MAIN_DRIVER;CYASSL_RIPEMD;CYASSL_SHA512;OPENSSL_EXTRA;NO_PSK"
+				PreprocessorDefinitions="NO_MAIN_DRIVER;WOLFSSL_RIPEMD;WOLFSSL_SHA512;OPENSSL_EXTRA;NO_PSK"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -117,7 +117,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="NO_MAIN_DRIVER;CYASSL_RIPEMD;CYASSL_SHA512;OPENSSL_EXTRA;NO_PSK"
+				PreprocessorDefinitions="NO_MAIN_DRIVER;WOLFSSL_RIPEMD;WOLFSSL_SHA512;OPENSSL_EXTRA;NO_PSK"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -191,7 +191,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ctaocrypt\test\test.c"
+				RelativePath="..\wolfcrypt\test\test.c"
 				>
 			</File>
 			<File

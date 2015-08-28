@@ -1,8 +1,8 @@
-Summary: Embedded SSL Library 
+Summary: Embedded SSL Library
 Name: @PACKAGE@
 Version: @VERSION@
 Release: 1
-License: GPLv2 
+License: GPLv2
 Group: System Environment/Libraries
 BuildRequires: gcc
 BuildRequires: glibc
@@ -13,15 +13,15 @@ BuildRequires: make
 BuildRequires: pkgconfig
 BuildRequires: sed
 BuildRequires: tar
-URL: http://www.yassl.com/yaSSL/Home.html
+URL: http://www.wolfssl.com/
 
 Packager: Brian Aker <brian@tangent.org>
 
-Source: http://yassl.com/yaSSL/download/%{name}-%{version}.tar.gz
+Source: http://wolfssl.com/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
-Misc tools for Yassl.
+Misc tools for wolfSSL.
 
 %package devel
 Summary: Header files and development libraries for %{name}
@@ -30,7 +30,7 @@ Requires: %{name} = %{version}-%{release}
 
 %description devel
 This package contains the header files and development libraries
-for %{name}. If you like to develop programs using %{name}, 
+for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
 %prep
@@ -60,21 +60,21 @@ mkdir -p $RPM_BUILD_ROOT/
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_docdir}/cyassl/taoCert.txt
-%{_docdir}/cyassl/example/echoserver.c
-%{_docdir}/cyassl/example/server.c
-%{_docdir}/cyassl/example/echoclient.c
-%{_docdir}/cyassl/example/client.c
-%{_docdir}/cyassl/README.txt
-%{_libdir}/libcyassl.la
-%{_libdir}/libcyassl.so
-%{_libdir}/libcyassl.so.5
-%{_libdir}/libcyassl.so.5.0.5
+%{_docdir}/wolfssl/taoCert.txt
+%{_docdir}/wolfssl/example/echoserver.c
+%{_docdir}/wolfssl/example/server.c
+%{_docdir}/wolfssl/example/echoclient.c
+%{_docdir}/wolfssl/example/client.c
+%{_docdir}/wolfssl/README.txt
+%{_libdir}/libwolfssl.la
+%{_libdir}/libwolfssl.so
+%{_libdir}/libwolfssl.so.0
+%{_libdir}/libwolfssl.so.0.0.2
 
 %files devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_bindir}/cyassl-config
+%{_bindir}/wolfssl-config
 %{_includedir}/cyassl/callbacks.h
 %{_includedir}/cyassl/certs_test.h
 %{_includedir}/cyassl/crl.h
@@ -86,6 +86,7 @@ mkdir -p $RPM_BUILD_ROOT/
 %{_includedir}/cyassl/ctaocrypt/blake2-int.h
 %{_includedir}/cyassl/ctaocrypt/blake2.h
 %{_includedir}/cyassl/ctaocrypt/camellia.h
+%{_includedir}/cyassl/ctaocrypt/chacha.h
 %{_includedir}/cyassl/ctaocrypt/coding.h
 %{_includedir}/cyassl/ctaocrypt/compress.h
 %{_includedir}/cyassl/ctaocrypt/des3.h
@@ -106,6 +107,7 @@ mkdir -p $RPM_BUILD_ROOT/
 %{_includedir}/cyassl/ctaocrypt/mpi_class.h
 %{_includedir}/cyassl/ctaocrypt/mpi_superclass.h
 %{_includedir}/cyassl/ctaocrypt/pkcs7.h
+%{_includedir}/cyassl/ctaocrypt/poly1305.h
 %{_includedir}/cyassl/ctaocrypt/wc_port.h
 %{_includedir}/cyassl/ctaocrypt/pwdbased.h
 %{_includedir}/cyassl/ctaocrypt/rabbit.h
@@ -113,6 +115,7 @@ mkdir -p $RPM_BUILD_ROOT/
 %{_includedir}/cyassl/ctaocrypt/ripemd.h
 %{_includedir}/cyassl/ctaocrypt/rsa.h
 %{_includedir}/cyassl/ctaocrypt/settings.h
+%{_includedir}/cyassl/ctaocrypt/settings_comp.h
 %{_includedir}/cyassl/ctaocrypt/sha.h
 %{_includedir}/cyassl/ctaocrypt/sha256.h
 %{_includedir}/cyassl/ctaocrypt/sha512.h
@@ -159,8 +162,104 @@ mkdir -p $RPM_BUILD_ROOT/
 %{_includedir}/cyassl/ssl.h
 %{_includedir}/cyassl/test.h
 %{_includedir}/cyassl/version.h
-%{_libdir}/pkgconfig/cyassl.pc
+%{_includedir}/wolfssl/callbacks.h
+%{_includedir}/wolfssl/certs_test.h
+%{_includedir}/wolfssl/crl.h
+%{_includedir}/wolfssl/wolfcrypt/aes.h
+%{_includedir}/wolfssl/wolfcrypt/arc4.h
+%{_includedir}/wolfssl/wolfcrypt/asn.h
+%{_includedir}/wolfssl/wolfcrypt/asn_public.h
+%{_includedir}/wolfssl/wolfcrypt/blake2-impl.h
+%{_includedir}/wolfssl/wolfcrypt/blake2-int.h
+%{_includedir}/wolfssl/wolfcrypt/blake2.h
+%{_includedir}/wolfssl/wolfcrypt/camellia.h
+%{_includedir}/wolfssl/wolfcrypt/chacha.h
+%{_includedir}/wolfssl/wolfcrypt/chacha20_poly1305.h
+%{_includedir}/wolfssl/wolfcrypt/coding.h
+%{_includedir}/wolfssl/wolfcrypt/compress.h
+%{_includedir}/wolfssl/wolfcrypt/curve25519.h
+%{_includedir}/wolfssl/wolfcrypt/des3.h
+%{_includedir}/wolfssl/wolfcrypt/dh.h
+%{_includedir}/wolfssl/wolfcrypt/dsa.h
+%{_includedir}/wolfssl/wolfcrypt/ecc.h
+%{_includedir}/wolfssl/wolfcrypt/ed25519.h
+%{_includedir}/wolfssl/wolfcrypt/error-crypt.h
+%{_includedir}/wolfssl/wolfcrypt/fe_operations.h
+%{_includedir}/wolfssl/wolfcrypt/fips_test.h
+%{_includedir}/wolfssl/wolfcrypt/ge_operations.h
+%{_includedir}/wolfssl/wolfcrypt/hash.h
+%{_includedir}/wolfssl/wolfcrypt/hc128.h
+%{_includedir}/wolfssl/wolfcrypt/hmac.h
+%{_includedir}/wolfssl/wolfcrypt/integer.h
+%{_includedir}/wolfssl/wolfcrypt/logging.h
+%{_includedir}/wolfssl/wolfcrypt/md2.h
+%{_includedir}/wolfssl/wolfcrypt/md4.h
+%{_includedir}/wolfssl/wolfcrypt/md5.h
+%{_includedir}/wolfssl/wolfcrypt/memory.h
+%{_includedir}/wolfssl/wolfcrypt/misc.h
+%{_includedir}/wolfssl/wolfcrypt/mpi_class.h
+%{_includedir}/wolfssl/wolfcrypt/mpi_superclass.h
+%{_includedir}/wolfssl/wolfcrypt/pkcs7.h
+%{_includedir}/wolfssl/wolfcrypt/wc_port.h
+%{_includedir}/wolfssl/wolfcrypt/poly1305.h
+%{_includedir}/wolfssl/wolfcrypt/pwdbased.h
+%{_includedir}/wolfssl/wolfcrypt/rabbit.h
+%{_includedir}/wolfssl/wolfcrypt/random.h
+%{_includedir}/wolfssl/wolfcrypt/ripemd.h
+%{_includedir}/wolfssl/wolfcrypt/rsa.h
+%{_includedir}/wolfssl/wolfcrypt/settings.h
+%{_includedir}/wolfssl/wolfcrypt/sha.h
+%{_includedir}/wolfssl/wolfcrypt/sha256.h
+%{_includedir}/wolfssl/wolfcrypt/sha512.h
+%{_includedir}/wolfssl/wolfcrypt/tfm.h
+%{_includedir}/wolfssl/wolfcrypt/types.h
+%{_includedir}/wolfssl/wolfcrypt/visibility.h
+%{_includedir}/wolfssl/error-ssl.h
+%{_includedir}/wolfssl/ocsp.h
+%{_includedir}/wolfssl/openssl/asn1.h
+%{_includedir}/wolfssl/openssl/bio.h
+%{_includedir}/wolfssl/openssl/bn.h
+%{_includedir}/wolfssl/openssl/conf.h
+%{_includedir}/wolfssl/openssl/crypto.h
+%{_includedir}/wolfssl/openssl/des.h
+%{_includedir}/wolfssl/openssl/dh.h
+%{_includedir}/wolfssl/openssl/dsa.h
+%{_includedir}/wolfssl/openssl/ec.h
+%{_includedir}/wolfssl/openssl/ecdsa.h
+%{_includedir}/wolfssl/openssl/engine.h
+%{_includedir}/wolfssl/openssl/err.h
+%{_includedir}/wolfssl/openssl/evp.h
+%{_includedir}/wolfssl/openssl/hmac.h
+%{_includedir}/wolfssl/openssl/lhash.h
+%{_includedir}/wolfssl/openssl/md4.h
+%{_includedir}/wolfssl/openssl/md5.h
+%{_includedir}/wolfssl/openssl/ocsp.h
+%{_includedir}/wolfssl/openssl/opensslconf.h
+%{_includedir}/wolfssl/openssl/opensslv.h
+%{_includedir}/wolfssl/openssl/ossl_typ.h
+%{_includedir}/wolfssl/openssl/pem.h
+%{_includedir}/wolfssl/openssl/pkcs12.h
+%{_includedir}/wolfssl/openssl/rand.h
+%{_includedir}/wolfssl/openssl/ripemd.h
+%{_includedir}/wolfssl/openssl/rsa.h
+%{_includedir}/wolfssl/openssl/sha.h
+%{_includedir}/wolfssl/openssl/ssl.h
+%{_includedir}/wolfssl/openssl/stack.h
+%{_includedir}/wolfssl/openssl/ui.h
+%{_includedir}/wolfssl/openssl/x509.h
+%{_includedir}/wolfssl/openssl/x509v3.h
+%{_includedir}/wolfssl/options.h
+%{_includedir}/wolfssl/sniffer.h
+%{_includedir}/wolfssl/sniffer_error.h
+%{_includedir}/wolfssl/ssl.h
+%{_includedir}/wolfssl/test.h
+%{_includedir}/wolfssl/version.h
+%{_libdir}/pkgconfig/wolfssl.pc
 
 %changelog
+* Tue Mar 31 2015 John Safranek <john@wolfssl.com>
+- Added recent new wolfcrypt headers for curve25519
+* Fri Jan 09 2015 John Safranek <john@wolfssl.com>
+- Update for cyassl->wolfssl name change
 * Fri Oct 20 2012 Brian Aker <brian@tangent.org>
 - Initial package

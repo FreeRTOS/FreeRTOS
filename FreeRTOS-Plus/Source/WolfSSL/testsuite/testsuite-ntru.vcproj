@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../;../NTRU/include"
-				PreprocessorDefinitions="NO_MAIN_DRIVER;CYASSL_RIPEMD;CYASSL_SHA512;OPENSSL_EXTRA;HAVE_NTRU;NO_PSK;WIN32"
+				PreprocessorDefinitions="NO_MAIN_DRIVER;WOLFSSL_RIPEMD;WOLFSSL_SHA512;OPENSSL_EXTRA;HAVE_NTRU;NO_PSK;WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib neo.lib"
+				AdditionalDependencies="Ws2_32.lib NtruEncrypt_DLL.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\NTRU\bin"
 				GenerateDebugInformation="true"
@@ -118,7 +118,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../;../NTRU/include"
-				PreprocessorDefinitions="NO_MAIN_DRIVER;CYASSL_RIPEMD;CYASSL_SHA512;OPENSSL_EXTRA;HAVE_NTRU;NO_PSK;WIN32"
+				PreprocessorDefinitions="NO_MAIN_DRIVER;WOLFSSL_RIPEMD;WOLFSSL_SHA512;OPENSSL_EXTRA;HAVE_NTRU;NO_PSK;WIN32"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib neo.lib"
+				AdditionalDependencies="Ws2_32.lib NtruEncrypt_DLL.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\NTRU\bin"
 				GenerateDebugInformation="true"
@@ -193,7 +193,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ctaocrypt\test\test.c"
+				RelativePath="..\wolfcrypt\test\test.c"
 				>
 			</File>
 			<File

@@ -1,15 +1,15 @@
 /* echoserver.c
  *
- * Copyright (C) 2006-2014 wolfSSL Inc.
+ * Copyright (C) 2006-2015 wolfSSL Inc.
  *
- * This file is part of CyaSSL.
+ * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
- * CyaSSL is free software; you can redistribute it and/or modify
+ * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CyaSSL is distributed in the hope that it will be useful,
+ * wolfSSL is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,7 +23,11 @@
     #include <config.h>
 #endif
 
+#include <cyassl/ssl.h> /* name change portability layer */
 #include <cyassl/ctaocrypt/settings.h>
+#ifdef HAVE_ECC
+    #include <cyassl/ctaocrypt/ecc.h>   /* ecc_fp_free */
+#endif
 
 #if defined(CYASSL_MDK_ARM)
         #include <stdio.h>
@@ -48,11 +52,6 @@
 #endif
 
 #include "examples/echoserver/echoserver.h"
-
-
-#ifdef SESSION_STATS
-    CYASSL_API void PrintSessionStats(void);
-#endif
 
 #define SVR_COMMAND_SIZE 256
 
@@ -115,16 +114,22 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
 #endif
 
     #if defined(NO_MAIN_DRIVER) && !defined(USE_WINDOWS_API) && \
-                      !defined(CYASSL_SNIFFER) && !defined(CYASSL_MDK_SHELL)
+        !defined(CYASSL_SNIFFER) && !defined(CYASSL_MDK_SHELL) && \
+        !defined(CYASSL_TIRTOS)
         port = 0;
     #endif
     #if defined(USE_ANY_ADDR)
         useAnyAddr = 1;
     #endif
+
+#ifdef CYASSL_TIRTOS
+    fdOpenSession(Task_self());
+#endif
+
     tcp_listen(&sockfd, &port, useAnyAddr, doDTLS);
 
 #if defined(CYASSL_DTLS)
-    method  = CyaDTLSv1_server_method();
+    method  = CyaDTLSv1_2_server_method();
 #elif  !defined(NO_TLS)
     method = CyaSSLv23_server_method();
 #else
@@ -137,6 +142,13 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
     CyaSSL_CTX_set_default_passwd_cb(ctx, PasswordCallBack);
 #endif
 
+#if defined(HAVE_SESSION_TICKET) && defined(HAVE_CHACHA) && \
+                                    defined(HAVE_POLY1305)
+    if (TicketInit() != 0)
+        err_sys("unable to setup Session Ticket Key context");
+    wolfSSL_CTX_set_TicketEncCb(ctx, myTicketEncCb);
+#endif
+
 #ifndef NO_FILESYSTEM
     if (doPSK == 0) {
     #ifdef HAVE_NTRU
@@ -144,23 +156,23 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
         if (CyaSSL_CTX_use_certificate_file(ctx, ntruCert, SSL_FILETYPE_PEM)
                 != SSL_SUCCESS)
             err_sys("can't load ntru cert file, "
-                    "Please run from CyaSSL home dir");
+                    "Please run from wolfSSL home dir");
 
         if (CyaSSL_CTX_use_NTRUPrivateKey_file(ctx, ntruKey)
                 != SSL_SUCCESS)
             err_sys("can't load ntru key file, "
-                    "Please run from CyaSSL home dir");
-    #elif defined(HAVE_ECC)
+                    "Please run from wolfSSL home dir");
+    #elif defined(HAVE_ECC) && !defined(CYASSL_SNIFFER)
         /* ecc */
         if (CyaSSL_CTX_use_certificate_file(ctx, eccCert, SSL_FILETYPE_PEM)
                 != SSL_SUCCESS)
             err_sys("can't load server cert file, "
-                    "Please run from CyaSSL home dir");
+                    "Please run from wolfSSL home dir");
 
         if (CyaSSL_CTX_use_PrivateKey_file(ctx, eccKey, SSL_FILETYPE_PEM)
                 != SSL_SUCCESS)
             err_sys("can't load server key file, "
-                    "Please run from CyaSSL home dir");
+                    "Please run from wolfSSL home dir");
     #elif defined(NO_CERTS)
         /* do nothing, just don't load cert files */
     #else
@@ -168,12 +180,12 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
         if (CyaSSL_CTX_use_certificate_file(ctx, svrCert, SSL_FILETYPE_PEM)
                 != SSL_SUCCESS)
             err_sys("can't load server cert file, "
-                    "Please run from CyaSSL home dir");
+                    "Please run from wolfSSL home dir");
 
         if (CyaSSL_CTX_use_PrivateKey_file(ctx, svrKey, SSL_FILETYPE_PEM)
                 != SSL_SUCCESS)
             err_sys("can't load server key file, "
-                    "Please run from CyaSSL home dir");
+                    "Please run from wolfSSL home dir");
     #endif
     } /* doPSK */
 #elif !defined(NO_CERTS)
@@ -183,7 +195,7 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
     }
 #endif
 
-#if defined(CYASSL_SNIFFER) && !defined(HAVE_NTRU) && !defined(HAVE_ECC)
+#if defined(CYASSL_SNIFFER)
     /* don't use EDH, can't sniff tmp keys */
     CyaSSL_CTX_set_cipher_list(ctx, "AES256-SHA");
 #endif
@@ -227,7 +239,7 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
         ssl = CyaSSL_new(ctx);
         if (ssl == NULL) err_sys("SSL_new failed");
         CyaSSL_set_fd(ssl, clientfd);
-        #if !defined(NO_FILESYSTEM) && !defined(NO_DH)
+        #if !defined(NO_FILESYSTEM) && !defined(NO_DH) && !defined(NO_ASN)
             CyaSSL_SetTmpDH_file(ssl, dhParam, SSL_FILETYPE_PEM);
         #elif !defined(NO_DH)
             SetDH(ssl);  /* will repick suites with DHE, higher than PSK */
@@ -265,9 +277,9 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
                 printf("client sent break command: closing session!\n");
                 break;
             }
-#ifdef SESSION_STATS
+#ifdef PRINT_SESSION_STATS
             if ( strncmp(command, "printstats", 10) == 0) {
-                PrintSessionStats();
+                CyaSSL_PrintSessionStats();
                 break;
             }
 #endif
@@ -275,7 +287,7 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
                 char type[]   = "HTTP/1.0 200 ok\r\nContent-type:"
                                 " text/html\r\n\r\n";
                 char header[] = "<html><body BGCOLOR=\"#ffffff\">\n<pre>\n";
-                char body[]   = "greetings from CyaSSL\n";
+                char body[]   = "greetings from wolfSSL\n";
                 char footer[] = "</body></html>\r\n\r\n";
             
                 strncpy(command, type, sizeof(type));
@@ -321,7 +333,24 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
 #endif
 
     ((func_args*)args)->return_code = 0;
+
+#if defined(NO_MAIN_DRIVER) && defined(HAVE_ECC) && defined(FP_ECC) \
+                            && defined(HAVE_THREAD_LS)
+    ecc_fp_free();  /* free per thread cache */
+#endif
+
+#ifdef CYASSL_TIRTOS
+    fdCloseSession(Task_self());
+#endif
+
+#if defined(HAVE_SESSION_TICKET) && defined(HAVE_CHACHA) && \
+                                    defined(HAVE_POLY1305)
+    TicketCleanup();
+#endif
+
+#ifndef CYASSL_TIRTOS
     return 0;
+#endif
 }
 
 
@@ -362,7 +391,5 @@ THREAD_RETURN CYASSL_THREAD echoserver_test(void* args)
 
         
 #endif /* NO_MAIN_DRIVER */
-
-
 
 

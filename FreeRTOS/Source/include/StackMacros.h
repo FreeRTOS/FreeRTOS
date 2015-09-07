@@ -147,7 +147,7 @@
 																																		\
 																																		\
 		/* Has the extremity of the task stack ever been written over? */																\
-		if( memcmp( ( void * ) pxCurrentTCB->pxStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )			\
+		if( memcmp( ( const void * ) pxCurrentTCB->pxStack, ( const void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )			\
 		{																																\
 			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );									\
 		}																																\

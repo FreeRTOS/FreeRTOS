@@ -68,6 +68,7 @@
 	.extern ulPortInterruptNesting
 	.extern ulPortTaskHasFPUContext
 	.extern ulICCEOIR
+	.extern ulPortYieldRequired
 
 	.global FreeRTOS_IRQ_Handler
 	.global FreeRTOS_SVC_Handler
@@ -155,7 +156,7 @@
 
 
 /******************************************************************************
- * SVC handler is used to start the scheduler.
+ * SVC handler is used to yield.
  *****************************************************************************/
 .align 4
 .type FreeRTOS_SVC_Handler, %function
@@ -189,7 +190,6 @@ FreeRTOS_IRQ_Handler:
 	PUSH	{lr}
 
 	/* Change to supervisor mode to allow reentry. */
-	CPS		#SVC_MODE
 
 	/* Push used registers. */
 	PUSH	{r0-r4, r12}

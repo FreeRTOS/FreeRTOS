@@ -153,7 +153,7 @@ globally enable and disable interrupts. */
 													 "DSB		\n"		\
 													 "ISB		  " );
 
-__attribute__( ( always_inline ) ) static __inline uint32_t portSET_INTERRUPT_MASK_FROM_ISR( void )
+__attribute__( ( always_inline ) ) static __inline uint32_t portINLINE_SET_INTERRUPT_MASK_FROM_ISR( void )
 {
 volatile uint32_t ulCPSR;
 
@@ -163,7 +163,8 @@ volatile uint32_t ulCPSR;
 	return ulCPSR;
 }
 
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	if( x != 0 ) portENABLE_INTERRUPTS()
+#define portSET_INTERRUPT_MASK_FROM_ISR() portINLINE_SET_INTERRUPT_MASK_FROM_ISR()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	if( x == 0 ) portENABLE_INTERRUPTS()
 
 /*-----------------------------------------------------------*/
 
@@ -198,7 +199,7 @@ void vPortTaskUsesFPU( void );
 
 	/*-----------------------------------------------------------*/
 
-	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - __builtin_clz( uxReadyPriorities ) )
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) __builtin_clz( uxReadyPriorities ) )
 
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
 

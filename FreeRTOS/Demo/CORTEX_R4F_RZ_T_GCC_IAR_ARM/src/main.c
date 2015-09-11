@@ -228,7 +228,7 @@ volatile size_t xFreeHeapSpace;
 	management options.  If there is a lot of heap memory free then the
 	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
 	RAM. */
-//	xFreeHeapSpace = xPortGetFreeHeapSize();
+	xFreeHeapSpace = xPortGetFreeHeapSize();
 
 	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
 	( void ) xFreeHeapSpace;

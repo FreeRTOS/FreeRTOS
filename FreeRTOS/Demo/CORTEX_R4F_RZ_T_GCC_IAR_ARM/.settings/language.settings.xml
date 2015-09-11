@@ -3,7 +3,7 @@
 	<configuration id="com.renesas.cdt.rz.hardwaredebug.win32.configuration.Id.137003302" name="HardwareDebug">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
 			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
-			<provider class="com.renesas.cdt.common.build.spec.RZGCCBuiltinSpecsDetector" console="false" env-hash="-432948836777516605" id="RZGCCBuiltinSpecsDetector" keep-relative-paths="false" name="Renesas GNUARM-NONE GCCBuildinCompilerSettings" options-hash="857384749" parameter="arm-none-eabi-gcc -E -P -v -dD ${INPUTS}" prefer-non-shared="true">
+			<provider class="com.renesas.cdt.common.build.spec.RZGCCBuiltinSpecsDetector" console="false" env-hash="-542772021278886125" id="RZGCCBuiltinSpecsDetector" keep-relative-paths="false" name="Renesas GNUARM-NONE GCCBuildinCompilerSettings" options-hash="857384749" parameter="arm-none-eabi-gcc -E -P -v -dD ${INPUTS}" prefer-non-shared="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 			</provider>

@@ -329,7 +329,9 @@ void vPortExitCritical( void )
 
 void FreeRTOS_Tick_Handler( void )
 {
-	portDISABLE_INTERRUPTS();
+uint32_t ulInterruptStatus;
+
+	ulInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 
 	/* Increment the RTOS tick. */
 	if( xTaskIncrementTick() != pdFALSE )
@@ -337,7 +339,8 @@ void FreeRTOS_Tick_Handler( void )
 		ulPortYieldRequired = pdTRUE;
 	}
 
-	portENABLE_INTERRUPTS();
+	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulInterruptStatus );
+
 	configCLEAR_TICK_INTERRUPT();
 }
 /*-----------------------------------------------------------*/

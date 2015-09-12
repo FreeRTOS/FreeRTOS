@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/interrupts/girq23d.S</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Source/tasks.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/Full_Demo/timertest.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/interrupts/girq23.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/main.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/Common/Minimal/IntQueue.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/Full_Demo/IntQueueTimer.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/Full_Demo/main_full.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Source/portable/MPLAB/PIC32MEC14xx/port.c</file>
+            <file>file:/C:/Users/m91145/Documents/OS%20IDE%20Specialist%20Team/FreeRTOS%20MEC%20Port/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/Full_Demo/IntQueueTimer_isr.S</file>
+        </group>
+        <group name="Masters19024">
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/startup/MPLAB/default-on-bootstrap.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/tasks.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/startup/MPLAB/crt0.S</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/list.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/startup/MPLAB/on_reset.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/startup/MPLAB/crti.S</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/main.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/MEC14xx/startup/MPLAB/crtn.S</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/src/Blinky_Demo/main_blinky.c</file>
+        </group>
+    </open-files>
+</project-private>

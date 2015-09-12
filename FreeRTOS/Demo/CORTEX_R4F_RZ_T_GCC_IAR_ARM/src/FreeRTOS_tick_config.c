@@ -69,7 +69,6 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "ISR_Support.h"
 
 /* Renesas includes. */
 #include "r_cg_macrodriver.h"
@@ -79,10 +78,30 @@
 /*-----------------------------------------------------------*/
 
 /*
- * Entry point for the FreeRTOS tick interrupt.  This provides the prolog code
- * necessary to support interrupt nesting.
+ * Entry point for the FreeRTOS tick interrupt.  This sets the pxISRFunction
+ * variable to point to the RTOS tick handler, then branches to the FreeRTOS
+ * IRQ handler.
  */
 static void FreeRTOS_Tick_Handler_Entry( void ) __attribute__((naked));
+
+/*
+ * The FreeRTOS IRQ handler, which is implemented in the RTOS port layer.
+ */
+extern void FreeRTOS_IRQ_Handler( void );
+
+/*
+ * The function called by the FreeRTOS_IRQ_Handler() to call the actual
+ * peripheral handler.
+ */
+void vApplicationIRQHandler( void );
+
+/*-----------------------------------------------------------*/
+
+/*
+ * Variable used to hold the address of the interrupt handler the FreeRTOS IRQ
+ * handler will branch to.
+ */
+ISRFunction_t pxISRFunction = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -107,7 +126,6 @@ const uint32_t ulPeripheralClockDivider = 6UL, ulCMTClockDivider = 8UL;
 	/* Interrupt on compare match. */
 	CMT5.CMCR.BIT.CMIE = 1;
 
-#warning Tick rate is not yet accurate.
 	/* Calculate the compare match value. */
 	ulCompareMatchValue = configCPU_CLOCK_HZ / ulPeripheralClockDivider;
 	ulCompareMatchValue /= ulCMTClockDivider;
@@ -139,14 +157,43 @@ const uint32_t ulPeripheralClockDivider = 6UL, ulCMTClockDivider = 8UL;
 }
 /*-----------------------------------------------------------*/
 
+/*
+ * The function called by the FreeRTOS IRQ handler, after it has managed
+ * interrupt entry.  This function creates a local copy of pxISRFunction before
+ * re-enabling interrupts and actually calling the handler pointed to by
+ * pxISRFunction.
+ */
+void vApplicationIRQHandler( void )
+{
+ISRFunction_t pxISRToCall = pxISRFunction;
+
+	portENABLE_INTERRUPTS();
+
+	/* Call the installed ISR. */
+	pxISRToCall();
+}
+/*-----------------------------------------------------------*/
+
+/*
+ * The RZ/T vectors directly to a peripheral specific interrupt handler, rather
+ * than using the Cortex-R IRQ vector.  Therefore each interrupt handler
+ * installed by the application must follow the example below, which saves a
+ * pointer to a standard C function in the pxISRFunction variable, before
+ * branching to the FreeRTOS IRQ handler.  The FreeRTOS IRQ handler then manages
+ * interrupt entry (including interrupt nesting), before calling the C function
+ * saved in the pxISRFunction variable.  NOTE:  This entry point is a naked
+ * function - do not add C code to this function.
+ */
 static void FreeRTOS_Tick_Handler_Entry( void )
 {
-	/* This is a naked function, and should not include any C code. */
-	portNESTING_INTERRUPT_ENTRY();
-	__asm volatile( " LDR		r1, vTickHandlerConst				\t\n"
-					" BLX		r1									\t\n"
-					" vTickHandlerConst: .word FreeRTOS_Tick_Handler	" );
-	portNESTING_INTERRUPT_EXIT();
+	__asm volatile (													 	\
+						"PUSH	{r0-r1}								\t\n"	\
+						"LDR	r0, =pxISRFunction					\t\n"	\
+						"LDR	R1, =FreeRTOS_Tick_Handler			\t\n"	\
+						"STR	R1, [r0]							\t\n"	\
+						"POP	{r0-r1}								\t\n"	\
+						"B		FreeRTOS_IRQ_Handler					"
+					);
 }
 /*-----------------------------------------------------------*/
 

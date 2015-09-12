@@ -248,8 +248,7 @@ void main_full( void )
 	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
-#warning IntQ tasks not included.
-//	vStartInterruptQueueTasks();
+	vStartInterruptQueueTasks();
 	vStartDynamicPriorityTasks();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
@@ -331,8 +330,7 @@ unsigned long ulErrorFound = pdFALSE;
 
 		/* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
-#warning Int q tasks not created.
-if( 0 )//		if( xAreIntQueueTasksStillRunning() != pdTRUE )
+		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 0UL;
 		}

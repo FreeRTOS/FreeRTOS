@@ -1021,7 +1021,7 @@ BaseType_t xMessagePosted;
 	else if( xCallCount == xClearBitsCount )
 	{
 		/* Clear the bits again. */
-		uxReturned = xEventGroupClearBitsFromISR( xISREventGroup, uxBitsToSet );
+		uxReturned = ( EventBits_t ) xEventGroupClearBitsFromISR( xISREventGroup, uxBitsToSet );
 
 		/* Check the message was posted. */
 		if( uxReturned != pdPASS )

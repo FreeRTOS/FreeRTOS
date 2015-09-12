@@ -86,14 +86,23 @@
 #include "r_cg_cmt.h"
 #include "r_reset.h"
 
-#define tmrCMT_1_CHANNEL_0_HZ	( 2000UL )
+#define tmrCMT_1_CHANNEL_0_HZ	( 4000UL )
 #define tmrCMT_1_CHANNEL_1_HZ	( 2011UL )
 
-/* Handlers for the two timers used.  See the documentation page
-for this port on http://www.FreeRTOS.org for more information on writing
-interrupt handlers. */
+/*
+ * Handlers for the two timers used.  See the documentation page
+ * for this port on TBD for more information on writing
+ * interrupt handlers.
+ */
 void vCMT_1_Channel_0_ISR( void );
 void vCMT_1_Channel_1_ISR( void );
+
+/*
+ * Entry point for the handlers.  These set the pxISRFunction variable to point
+ * to the C handler for each timer, then branch to the FreeRTOS IRQ handler.
+ */
+static void vCMT_1_Channel_0_ISR_Entry( void ) __attribute__((naked));
+static void vCMT_1_Channel_1_ISR_Entry( void ) __attribute__((naked));
 
 /*-----------------------------------------------------------*/
 
@@ -101,7 +110,6 @@ void vInitialiseTimerForIntQueueTest( void )
 {
 uint32_t ulCompareMatchValue;
 const uint32_t ulPeripheralClockDivider = 6UL, ulCMTClockDivider = 8UL;
-extern void FreeRTOS_IRQ_Handler( void );
 
 	/* Disable CMI2 and CMI3 interrupts. */
 	VIC.IEC0.LONG = ( 1UL << 23UL ) | ( 1UL << 24UL );
@@ -140,16 +148,15 @@ extern void FreeRTOS_IRQ_Handler( void );
 	VIC.PLS0.LONG |= ( 1UL << 23UL ) | ( 1UL << 24UL );
 
 	/* Set CMI2 and CMI3 priority levels so they nest. */
-	VIC.PRL23.LONG = _CMT_PRIORITY_LEVEL10;
+	VIC.PRL23.LONG = _CMT_PRIORITY_LEVEL2;
 	VIC.PRL24.LONG = _CMT_PRIORITY_LEVEL9;
 
 	/* Set CMI2 and CMI3 interrupt address. */
-#warning Int 1 timer handler addresses not set.
-	VIC.VAD23.LONG = ( uint32_t ) NULL;
-	VIC.VAD24.LONG = ( uint32_t ) NULL;
+	VIC.VAD23.LONG = ( uint32_t ) vCMT_1_Channel_0_ISR_Entry;
+	VIC.VAD24.LONG = ( uint32_t ) vCMT_1_Channel_1_ISR_Entry;
 
     /* Enable CMI2 and CMI3 interrupts in ICU. */
-    VIC.IEN0.LONG |= ( 1UL << 23UL ) | ( 1UL << 24UL );
+	VIC.IEN0.LONG |= ( 1UL << 23UL ) | ( 1UL << 24UL );
 
     /* Start CMT1 channel 0 and 1 count. */
     CMT.CMSTR1.BIT.STR2 = 1U;
@@ -159,8 +166,8 @@ extern void FreeRTOS_IRQ_Handler( void );
 
 void vCMT_1_Channel_0_ISR( void )
 {
-	/* Re-enabled interrupts. */
-	taskENABLE_INTERRUPTS();
+	/* Clear the interrupt. */
+	VIC.PIC0.LONG = ( 1UL << 23UL );
 
 	/* Call the handler that is part of the common code - this is where the
 	non-portable code ends and the actual test is performed. */
@@ -170,8 +177,8 @@ void vCMT_1_Channel_0_ISR( void )
 
 void vCMT_1_Channel_1_ISR( void )
 {
-	/* Re-enabled interrupts. */
-	portENABLE_INTERRUPTS();
+	/* Clear the interrupt. */
+	VIC.PIC0.LONG = ( 1UL << 24UL );
 
 	/* Call the handler that is part of the common code - this is where the
 	non-portable code ends and the actual test is performed. */
@@ -179,6 +186,40 @@ void vCMT_1_Channel_1_ISR( void )
 }
 /*-----------------------------------------------------------*/
 
+/*
+ * The RZ/T vectors directly to a peripheral specific interrupt handler, rather
+ * than using the Cortex-R IRQ vector.  Therefore each interrupt handler
+ * installed by the application must follow the examples below, which save a
+ * pointer to a standard C function in the pxISRFunction variable, before
+ * branching to the FreeRTOS IRQ handler.  The FreeRTOS IRQ handler then manages
+ * interrupt entry (including interrupt nesting), before calling the C function
+ * saved in the pxISRFunction variable.  NOTE:  The entry points are naked
+ * functions - do not add C code to these functions.
+ */
+static void vCMT_1_Channel_0_ISR_Entry( void )
+{
+	__asm volatile (													 	\
+						"PUSH	{r0-r1}								\t\n"	\
+						"LDR	r0, =pxISRFunction					\t\n"	\
+						"LDR	r1, =vCMT_1_Channel_0_ISR			\t\n"	\
+						"STR	r1, [r0]							\t\n"	\
+						"POP	{r0-r1}								\t\n"	\
+						"B		FreeRTOS_IRQ_Handler					"
+					);
+}
+/*-----------------------------------------------------------*/
+
+static void vCMT_1_Channel_1_ISR_Entry( void )
+{
+	__asm volatile (													 	\
+						"PUSH	{r0-r1}								\t\n"	\
+						"LDR	r0, =pxISRFunction					\t\n"	\
+						"LDR	r1, =vCMT_1_Channel_1_ISR			\t\n"	\
+						"STR	r1, [r0]							\t\n"	\
+						"POP	{r0-r1}								\t\n"	\
+						"B		FreeRTOS_IRQ_Handler					"
+					);
+}
 
 
 

@@ -75,8 +75,6 @@
 	.global vPortRestoreTaskContext
 
 
-
-
 .macro portSAVE_CONTEXT
 
 	/* Save the LR and SPSR onto the system mode stack before switching to
@@ -190,22 +188,23 @@ FreeRTOS_IRQ_Handler:
 	PUSH	{lr}
 
 	/* Change to supervisor mode to allow reentry. */
+	CPS		#0x13
 
 	/* Push used registers. */
-	PUSH	{r0-r4, r12}
+	PUSH	{r0-r3, r12}
 
 	/* Increment nesting count.  r3 holds the address of ulPortInterruptNesting
 	for future use.  r1 holds the original ulPortInterruptNesting value for
 	future use. */
 	LDR		r3, ulPortInterruptNestingConst
 	LDR		r1, [r3]
-	ADD		r4, r1, #1
-	STR		r4, [r3]
+	ADD		r0, r1, #1
+	STR		r0, [r3]
 
 	/* Ensure bit 2 of the stack pointer is clear.  r2 holds the bit 2 value for
 	future use. */
-	MOV		r2, sp
-	AND		r2, r2, #4
+	MOV		r0, sp
+	AND		r2, r0, #4
 	SUB		sp, sp, r2
 
 	/* Call the interrupt handler. */
@@ -220,9 +219,9 @@ FreeRTOS_IRQ_Handler:
 	ISB
 
 	/* Write to the EOI register. */
-	LDR 	r4, ulICCEOIRConst
-	LDR		r4, [r4]
-	STR		r0, [r4]
+	LDR 	r0, ulICCEOIRConst
+	LDR		r2, [r0]
+	STR		r0, [r2]
 
 	/* Restore the old nesting count. */
 	STR		r1, [r3]
@@ -234,7 +233,7 @@ FreeRTOS_IRQ_Handler:
 	/* Did the interrupt request a context switch?  r1 holds the address of
 	ulPortYieldRequired and r0 the value of ulPortYieldRequired for future
 	use. */
-	LDR		r1, =ulPortYieldRequired
+	LDR		r1, ulPortYieldRequiredConst
 	LDR		r0, [r1]
 	CMP		r0, #0
 	BNE		switch_before_exit
@@ -242,7 +241,7 @@ FreeRTOS_IRQ_Handler:
 exit_without_switch:
 	/* No context switch.  Restore used registers, LR_irq and SPSR before
 	returning. */
-	POP		{r0-r4, r12}
+	POP		{r0-r3, r12}
 	CPS		#IRQ_MODE
 	POP		{LR}
 	MSR		SPSR_cxsf, LR
@@ -257,7 +256,7 @@ switch_before_exit:
 
 	/* Restore used registers, LR-irq and SPSR before saving the context
 	to the task stack. */
-	POP		{r0-r4, r12}
+	POP		{r0-r3, r12}
 	CPS		#IRQ_MODE
 	POP		{LR}
 	MSR		SPSR_cxsf, LR
@@ -282,6 +281,7 @@ ulPortTaskHasFPUContextConst: .word ulPortTaskHasFPUContext
 vTaskSwitchContextConst: .word vTaskSwitchContext
 vApplicationIRQHandlerConst: .word vApplicationIRQHandler
 ulPortInterruptNestingConst: .word ulPortInterruptNesting
+ulPortYieldRequiredConst: .word ulPortYieldRequired
 
 .end
 

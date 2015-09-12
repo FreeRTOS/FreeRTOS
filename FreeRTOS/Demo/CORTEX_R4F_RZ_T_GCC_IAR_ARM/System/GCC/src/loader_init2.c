@@ -98,8 +98,7 @@ void loader_init2 (void)
     R_ATCM_WaitSet(ATCM_WAIT_1_OPT);
      
     /* Initialise I1, D1 Cache and MPU setting */
-#warning Cache not enabled.
-//    cache_init();
+    cache_init();
     
     /* Set RZ/T1 to Low-vector (SCTLR.V = 0) */
     set_low_vec();  

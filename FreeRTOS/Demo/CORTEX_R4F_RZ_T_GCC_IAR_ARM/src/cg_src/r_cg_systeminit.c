@@ -58,7 +58,6 @@ void R_Systeminit(void);
 
 /* End user code. Do not edit comment generated here */
 
-extern void r_set_exception_handler(void);
 /***********************************************************************************************************************
 * Function Name: R_Systeminit
 * Description  : This function initializes every macro.

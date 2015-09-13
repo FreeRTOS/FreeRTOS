@@ -96,22 +96,20 @@
 /* Renesas includes. */
 #include "r_cg_macrodriver.h"
 #include "r_cg_icu.h"
-#include "r_cg_scifa.h"
 #include "r_cg_rspi.h"
 #include "r_system.h"
 #include "r_reset.h"
-#include "siochar.h"
 #include "r_cg_userdefine.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*-----------------------------------------------------------*/
 
 /*
- * The start up code does not include a routine to clear the BSS segment to 0
- * (as would be normal before calling main()), so the BSS is cleared manually
+ * The GCC start up code does not include a routine to clear the BSS segment to
+ * 0 (as would be normal before calling main()), so the BSS is cleared manually
  * using the following function.
  */
 static void prvClearBSS( void );
@@ -176,19 +174,6 @@ int main( void )
 static void prvSetupHardware( void )
 {
 	R_Systeminit();
-
-	/* Enable RSPI1 (serial peripheral interface). */
-	R_RSPI1_Start();
-
-	/* Configure the UART channel for communication with a host PC via on-board
-	RL78/G1C device. */
-	io_init_scifa2();
-
-	/* Enable SCIFA2 (serial communications interface with FIFO). */
-	R_SCIFA2_Start();
-
-	/* SW3 interrupts. */
-	R_ICU_IRQ12_Start();
 }
 /*-----------------------------------------------------------*/
 
@@ -251,13 +236,17 @@ void vApplicationTickHook( void )
 
 static void prvClearBSS( void )
 {
-extern uint32_t __bss_start__[];
-extern uint32_t __bss_end__[];
-size_t xSize;
+#ifdef __GNUC__
+	/* The GCC start up files seem to be missing code to clear the BSS, so it
+	is done manually here. */
+	extern uint32_t __bss_start__[];
+	extern uint32_t __bss_end__[];
+	size_t xSize;
 
 	/* Zero out bss. */
 	xSize = ( ( size_t ) __bss_end__ ) - ( ( size_t ) __bss_start__ );
 	memset( ( void * ) __bss_start__, 0x00, xSize );
+#endif /* __GNUC__ */
 }
 
 

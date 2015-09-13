@@ -2,15 +2,15 @@
 * DISCLAIMER
 * This software is supplied by Renesas Electronics Corporation and is only intended for use with Renesas products.
 * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is protected under all
-* applicable laws, including copyright laws. 
+* applicable laws, including copyright laws.
 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIESREGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED
 * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY
 * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE FOR ANY DIRECT,
 * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR
 * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability 
-* of this software. By using this software, you agree to the additional terms and conditions found by accessing the 
+* Renesas reserves the right, without notice, to make changes to this software and to discontinue the availability
+* of this software. By using this software, you agree to the additional terms and conditions found by accessing the
 * following link:
 * http://www.renesas.com/disclaimer
 *
@@ -44,40 +44,36 @@ Typedef definitions
 Global functions
 ***********************************************************************************************************************/
 /* FIQ exception handler */
-void r_fiq_handler(void) __attribute__((interrupt ("FIQ")));
+#ifdef __ICCARM__
+	__irq __arm void r_fiq_handler(void);
 
-/* ICU IRQ12 */
-void r_icu_irq12_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* ICU IRQ12 */
+	__irq __arm void r_icu_irq12_interrupt(void);
 
-/* ADC Unit0 S12ADI0 */
-void r_s12ad_s12adi0_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* RSPI1 SPTI1 */
+	__irq __arm void r_rspi1_transmit_interrupt(void);
 
-/* RSPI1 SPTI1 */
-void r_rspi1_transmit_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* RSPI1 SPEI1 */
+	__irq __arm void r_rspi1_error_interrupt(void);
 
-/* RSPI1 SPEI1 */
-void r_rspi1_error_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* RSPI1 SPII1 */
+	__irq __arm void r_rspi1_idle_interrupt(void);
+#endif /* __ICCARM__ */
 
-/* RSPI1 SPII1 */
-void r_rspi1_idle_interrupt(void) __attribute__((interrupt ("IRQ")));
+#ifdef __GNUC__
+	void r_fiq_handler(void) __attribute__((interrupt ("FIQ")));
 
-/* SCIFA TXIF2 */
-void r_scifa2_txif2_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* ICU IRQ12 */
+	void r_icu_irq12_interrupt(void) __attribute__((interrupt ("IRQ")));
 
-/* SCIFA DRIF2 */
-void r_scifa2_drif2_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* RSPI1 SPTI1 */
+	void r_rspi1_transmit_interrupt(void) __attribute__((interrupt ("IRQ")));
 
-/* SCIFA RXIF2 */
-void r_scifa2_rxif2_interrupt(void) __attribute__((interrupt ("IRQ")));
+	/* RSPI1 SPEI1 */
+	void r_rspi1_error_interrupt(void) __attribute__((interrupt ("IRQ")));
 
-/* SCIFA BRIF2 */
-void r_scifa2_brif2_interrupt(void) __attribute__((interrupt ("IRQ")));
-
-/* CMT CMI4 */
-void r_cmt_cmi4_interrupt(void) __attribute__((interrupt ("IRQ")));
-
-/* CMT CMI5 */
-void r_cmt_cmi5_interrupt(void) __attribute__((interrupt ("IRQ")));
-
+	/* RSPI1 SPII1 */
+	void r_rspi1_idle_interrupt(void) __attribute__((interrupt ("IRQ")));
+#endif /* __GNUC__ */
 
 #endif

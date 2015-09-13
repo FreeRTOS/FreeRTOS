@@ -44,7 +44,6 @@
     .code 32
 
     .global undefined_handler
-    .global FreeRTOS_SVC_Handler
     .global prefetch_handler
     .global abort_handler
     .global reserved_handler

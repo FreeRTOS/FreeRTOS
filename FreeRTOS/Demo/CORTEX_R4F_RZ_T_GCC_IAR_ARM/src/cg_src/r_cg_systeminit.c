@@ -40,10 +40,7 @@ Includes
 #include "r_cg_icu.h"
 #include "r_cg_port.h"
 #include "r_cg_tpu.h"
-#include "r_cg_cmt.h"
-#include "r_cg_scifa.h"
 #include "r_cg_rspi.h"
-#include "r_cg_s12ad.h"
 #include "r_cg_mpc.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
@@ -82,11 +79,7 @@ void R_Systeminit(void)
     R_ICU_Create();
     R_PORT_Create();
     R_TPU_Create();
-    R_CMT4_Create();
-    R_CMT5_Create();
-    R_SCIFA2_Create();
     R_RSPI1_Create();
-    R_S12AD0_Create();
     R_MPC_Create();
 
     /* Disable writing to MPC pin function control registers */

@@ -82,7 +82,14 @@
  * variable to point to the RTOS tick handler, then branches to the FreeRTOS
  * IRQ handler.
  */
-static void FreeRTOS_Tick_Handler_Entry( void ) __attribute__((naked));
+#ifdef __GNUC__
+	static void FreeRTOS_Tick_Handler_Entry( void ) __attribute__((naked));
+#endif /* __GNUC__ */
+#ifdef __ICCARM__
+	/* IAR requires the entry point to be in an assembly file.  The function is
+	implemented in $PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm. */
+	extern void FreeRTOS_Tick_Handler_Entry( void );
+#endif /* __ICCARM__ */
 
 /*
  * The FreeRTOS IRQ handler, which is implemented in the RTOS port layer.
@@ -184,17 +191,21 @@ ISRFunction_t pxISRToCall = pxISRFunction;
  * saved in the pxISRFunction variable.  NOTE:  This entry point is a naked
  * function - do not add C code to this function.
  */
-static void FreeRTOS_Tick_Handler_Entry( void )
-{
-	__asm volatile (													 	\
-						"PUSH	{r0-r1}								\t\n"	\
-						"LDR	r0, =pxISRFunction					\t\n"	\
-						"LDR	R1, =FreeRTOS_Tick_Handler			\t\n"	\
-						"STR	R1, [r0]							\t\n"	\
-						"POP	{r0-r1}								\t\n"	\
-						"B		FreeRTOS_IRQ_Handler					"
-					);
-}
+#ifdef __GNUC__
+	/* The IAR equivalent is implemented in
+	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
+	static void FreeRTOS_Tick_Handler_Entry( void )
+	{
+		__asm volatile (													 	\
+							"PUSH	{r0-r1}								\t\n"	\
+							"LDR	r0, =pxISRFunction					\t\n"	\
+							"LDR	R1, =FreeRTOS_Tick_Handler			\t\n"	\
+							"STR	R1, [r0]							\t\n"	\
+							"POP	{r0-r1}								\t\n"	\
+							"B		FreeRTOS_IRQ_Handler					"
+						);
+	}
+#endif /* __GNUC__ */
 /*-----------------------------------------------------------*/
 
 

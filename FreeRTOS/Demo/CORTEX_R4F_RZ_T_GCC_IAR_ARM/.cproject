@@ -48,7 +48,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/portable/GCC/ARM_CRx_No_GIC}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/cg_src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/System/GCC/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
@@ -92,7 +91,7 @@
 								<option id="com.renesas.cdt.core.Compiler.option.warning30.1994659686" name="Issue Warning about c and ansi c construct incompatibility(-Wtraditional)" superClass="com.renesas.cdt.core.Compiler.option.warning30" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.warning31.531473224" name="Give string constants the type 'const char[length]'(-Wwrite-strings)" superClass="com.renesas.cdt.core.Compiler.option.warning31" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.CPUSeries.114360178" name="Cpu Series" superClass="com.renesas.cdt.core.Compiler.option.CPUSeries"/>
-								<option id="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel.2026925660" name="Optimization Level" superClass="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel.speedCodeSize" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel.2026925660" name="Optimization Level" superClass="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel.none" valueType="enumerated"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.321945067" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.678276075" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>
@@ -144,8 +143,11 @@
 							<tool id="com.renesas.cdt.rz.hardwaredebug.win32.tool.objcopy.Id.1674695683" name="Objcopy" superClass="com.renesas.cdt.rz.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.renesas.cdt.rz.hardwaredebug.win32.configuration.Id.137003302.1449590210" name="reg_test_IAR.asm" rcbsApplicability="disable" resourcePath="src/Full_Demo/reg_test_IAR.asm" toolsToInvoke="com.renesas.cdt.rz.hardwaredebug.win32.tool.compiler.Id.542544613.984236333">
+						<tool id="com.renesas.cdt.rz.hardwaredebug.win32.tool.compiler.Id.542544613.984236333" name="Compiler" superClass="com.renesas.cdt.rz.hardwaredebug.win32.tool.compiler.Id.542544613"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="System/GCC/src/gnu_io.c|System/GCC/src/syscalls.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Full_Demo/reg_test_IAR.asm|src/cg_src/r_cg_s12ad_user.c|src/cg_src/r_cg_scifa.c|src/cg_src/r_cg_s12ad.c|src/cg_src/r_cg_scifa_user.c|src/cg_src/r_cg_cmt.c|System/GCC/src/siorw.c|System/GCC/src/siochar.c|System/GCC/src/gnu_io.c|System/GCC/src/syscalls.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

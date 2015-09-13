@@ -101,9 +101,16 @@ void vCMT_1_Channel_1_ISR( void );
  * Entry point for the handlers.  These set the pxISRFunction variable to point
  * to the C handler for each timer, then branch to the FreeRTOS IRQ handler.
  */
-static void vCMT_1_Channel_0_ISR_Entry( void ) __attribute__((naked));
-static void vCMT_1_Channel_1_ISR_Entry( void ) __attribute__((naked));
-
+#ifdef __GNUC__
+	static void vCMT_1_Channel_0_ISR_Entry( void ) __attribute__((naked));
+	static void vCMT_1_Channel_1_ISR_Entry( void ) __attribute__((naked));
+#endif /* __GNUC__ */
+#ifdef __ICCARM__
+	/* IAR requires the entry point to be in an assembly file.  The functions
+	are	implemented in $PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm. */
+	extern void vCMT_1_Channel_0_ISR_Entry( void );
+	extern void vCMT_1_Channel_1_ISR_Entry( void );
+#endif /* __ICCARM__ */
 /*-----------------------------------------------------------*/
 
 void vInitialiseTimerForIntQueueTest( void )
@@ -196,30 +203,38 @@ void vCMT_1_Channel_1_ISR( void )
  * saved in the pxISRFunction variable.  NOTE:  The entry points are naked
  * functions - do not add C code to these functions.
  */
-static void vCMT_1_Channel_0_ISR_Entry( void )
-{
-	__asm volatile (													 	\
-						"PUSH	{r0-r1}								\t\n"	\
-						"LDR	r0, =pxISRFunction					\t\n"	\
-						"LDR	r1, =vCMT_1_Channel_0_ISR			\t\n"	\
-						"STR	r1, [r0]							\t\n"	\
-						"POP	{r0-r1}								\t\n"	\
-						"B		FreeRTOS_IRQ_Handler					"
-					);
-}
+#ifdef __GNUC__
+	/* The IAR equivalent is implemented in
+	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
+	static void vCMT_1_Channel_0_ISR_Entry( void )
+	{
+		__asm volatile (													 	\
+							"PUSH	{r0-r1}								\t\n"	\
+							"LDR	r0, =pxISRFunction					\t\n"	\
+							"LDR	r1, =vCMT_1_Channel_0_ISR			\t\n"	\
+							"STR	r1, [r0]							\t\n"	\
+							"POP	{r0-r1}								\t\n"	\
+							"B		FreeRTOS_IRQ_Handler					"
+						);
+	}
+#endif /* __GNUC__ */
 /*-----------------------------------------------------------*/
 
-static void vCMT_1_Channel_1_ISR_Entry( void )
-{
-	__asm volatile (													 	\
-						"PUSH	{r0-r1}								\t\n"	\
-						"LDR	r0, =pxISRFunction					\t\n"	\
-						"LDR	r1, =vCMT_1_Channel_1_ISR			\t\n"	\
-						"STR	r1, [r0]							\t\n"	\
-						"POP	{r0-r1}								\t\n"	\
-						"B		FreeRTOS_IRQ_Handler					"
-					);
-}
+#ifdef __GNUC__
+	/* The IAR equivalent is implemented in
+	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
+	static void vCMT_1_Channel_1_ISR_Entry( void )
+	{
+		__asm volatile (													 	\
+							"PUSH	{r0-r1}								\t\n"	\
+							"LDR	r0, =pxISRFunction					\t\n"	\
+							"LDR	r1, =vCMT_1_Channel_1_ISR			\t\n"	\
+							"STR	r1, [r0]							\t\n"	\
+							"POP	{r0-r1}								\t\n"	\
+							"B		FreeRTOS_IRQ_Handler					"
+						);
+	}
+#endif /* __GNUC__ */
 
 
 

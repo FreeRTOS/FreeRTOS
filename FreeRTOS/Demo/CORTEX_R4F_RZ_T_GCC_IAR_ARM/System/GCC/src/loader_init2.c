@@ -121,8 +121,8 @@ void loader_init2 (void)
 ***********************************************************************************************************************/
 static void reset_check(void)
 {
-    volatile uint8_t result;
-    volatile uint32_t dummy;
+    volatile uint8_t result=0;
+    volatile uint32_t dummy=0;
     
     UNUSED_VARIABLE(result);
     UNUSED_VARIABLE(dummy);
@@ -196,7 +196,7 @@ static void reset_check(void)
 ***********************************************************************************************************************/
 static void cpg_init(void)
 {
-    volatile uint32_t dummy; 
+    volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
 

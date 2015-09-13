@@ -113,7 +113,7 @@ void R_MPC_Create_UserInit(void)
 ***********************************************************************************************************************/
 void R_MPC_WriteEnable(void)
 {
-    volatile uint8_t dummy; 
+    volatile uint8_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
   
@@ -138,7 +138,7 @@ void R_MPC_WriteEnable(void)
 ***********************************************************************************************************************/
 void R_MPC_WriteDisable(void)
 {
-    volatile uint8_t dummy; 
+    volatile uint8_t dummy=0;
 
     UNUSED_PARAM(dummy);
   

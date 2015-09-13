@@ -92,6 +92,7 @@
 								<option id="com.renesas.cdt.core.Compiler.option.warning30.1994659686" name="Issue Warning about c and ansi c construct incompatibility(-Wtraditional)" superClass="com.renesas.cdt.core.Compiler.option.warning30" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.warning31.531473224" name="Give string constants the type 'const char[length]'(-Wwrite-strings)" superClass="com.renesas.cdt.core.Compiler.option.warning31" value="false" valueType="boolean"/>
 								<option id="com.renesas.cdt.core.Compiler.option.CPUSeries.114360178" name="Cpu Series" superClass="com.renesas.cdt.core.Compiler.option.CPUSeries"/>
+								<option id="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel.2026925660" name="Optimization Level" superClass="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rz.HardwareDebug.Compiler.option.optimizationLevel.speedCodeSize" valueType="enumerated"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.321945067" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.678276075" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>

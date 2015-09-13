@@ -108,7 +108,7 @@ void R_RAM_ECCEnable(void)
 ***********************************************************************************************************************/
 void R_RAM_WriteEnable(void)
 {
-    volatile uint32_t dummy; 
+    volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
     
@@ -134,7 +134,7 @@ void R_RAM_WriteEnable(void)
 ***********************************************************************************************************************/
 void R_RAM_WriteDisable(void)
 {
-    volatile uint32_t dummy; 
+    volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
     

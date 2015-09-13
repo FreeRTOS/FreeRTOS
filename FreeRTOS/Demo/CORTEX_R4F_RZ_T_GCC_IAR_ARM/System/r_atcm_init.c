@@ -85,7 +85,7 @@ Private variables and functions
 ***********************************************************************************************************************/
 void R_ATCM_WaitSet(uint32_t atcm_wait)
 {
-    volatile uint32_t dummy; 
+    volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
   

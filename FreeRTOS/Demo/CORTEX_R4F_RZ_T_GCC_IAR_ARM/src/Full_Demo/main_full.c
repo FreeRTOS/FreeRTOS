@@ -89,13 +89,6 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * FreeRTOS+CLI command console.  For reasons of robustness testing the UART
- * driver is deliberately written to be inefficient and should not be used as a
- * template for a production driver.  Type "help" to see a list of registered
- * commands.  The FreeRTOS+CLI license is different to the FreeRTOS license, see
- * http://www.FreeRTOS.org/cli for license and usage details.  The default baud
- * rate is 115200.
- *
  * "Reg test" tasks - These fill both the core and floating point registers with
  * known values, then check that each register maintains its expected value for
  * the lifetime of the task.  Each task uses a different set of values.  The reg
@@ -213,17 +206,6 @@ static void prvRegTestTaskEntry2( void *pvParameters );
 extern void vRegTest2Implementation( void );
 
 /*
- * Register commands that can be used with FreeRTOS+CLI.  The commands are
- * defined in CLI-Commands.c and File-Related-CLI-Command.c respectively.
- */
-extern void vRegisterSampleCLICommands( void );
-
-/*
- * The task that manages the FreeRTOS+CLI input and output.
- */
-extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
-
-/*
  * A high priority task that does nothing other than execute at a pseudo random
  * time to ensure the other test tasks don't just execute in a repeating
  * pattern.
@@ -262,15 +244,6 @@ void main_full( void )
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 	vStartInterruptSemaphoreTasks();
-
-
-	/* Start the tasks that implements the command console on the UART, as
-	described above. */
-#warning CLI is commented out
-//	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
-
-	/* Register the standard CLI commands. */
-//	vRegisterSampleCLICommands();
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );

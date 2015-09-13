@@ -85,7 +85,7 @@ Private variables and functions
 ***********************************************************************************************************************/
 void r_rst_write_enable(void)
 {
-    volatile uint32_t dummy; 
+    volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
   
@@ -109,7 +109,7 @@ void r_rst_write_enable(void)
 ***********************************************************************************************************************/
 void r_rst_write_disable(void)
 {
-    volatile uint32_t dummy; 
+    volatile uint32_t dummy=0;
 
     UNUSED_VARIABLE(dummy);
   

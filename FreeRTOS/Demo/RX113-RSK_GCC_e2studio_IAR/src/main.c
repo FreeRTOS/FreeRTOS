@@ -95,11 +95,10 @@
 #include <rskrx113def.h>
 #include "r_cg_macrodriver.h"
 #include "r_cg_sci.h"
-#include "r_rsk_async.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -253,6 +252,26 @@ const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500
     /* Reneable register protection. */
     SYSTEM.PRCR.WORD = ulDisableRegisterWrite;
 }
+/*-----------------------------------------------------------*/
+
+#ifdef __ICCRX__
+
+	#include <intrinsics.h>
+
+	/* Called from the C start up code when compiled with IAR. */
+	#pragma diag_suppress = Pm011
+	int __low_level_init(void)
+	#pragma diag_default = Pm011
+	{
+	extern void R_Systeminit( void );
+
+		__disable_interrupt();
+		R_Systeminit();
+
+		return (int)(1U);
+	}
+
+#endif /* __ICCRX__ */
 
 
 

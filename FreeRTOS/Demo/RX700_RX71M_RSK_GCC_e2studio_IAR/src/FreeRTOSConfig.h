@@ -71,7 +71,14 @@
 #define FREERTOS_CONFIG_H
 
 /* Renesas hardware definition header. */
-#include "iodefine.h"
+#ifdef __ICCRX__
+	#include <iorx71m.h>
+	#include <machine.h>
+#endif
+
+#ifdef __GNUC__
+	#include "iodefine.h"
+#endif
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -128,7 +135,7 @@ kernel is doing. */
 /* The peripheral used to generate the tick interrupt is configured as part of
 the application code.  This constant should be set to the vector number of the
 peripheral chosen.  As supplied this is CMT0. */
-#define configTICK_VECTOR						_CMT0_CMI0
+#define configTICK_VECTOR						28 /*vect _CMT0_CMI0*/
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

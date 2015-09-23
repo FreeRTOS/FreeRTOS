@@ -179,6 +179,11 @@ extern void vTaskExitCritical( void );
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
 
+/* Prevent warnings of undefined behaviour: the order of volatile accesses is
+undefined - all warnings have been manually checked and are not an issue, and
+the warnings cannot be prevent by code changes without undesirable effects. */
+#pragma diag_suppress=Pa082
+
 #ifdef __cplusplus
 }
 #endif

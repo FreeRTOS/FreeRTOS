@@ -99,8 +99,11 @@
 							<tool id="com.renesas.cdt.rx.hardwaredebug.win32.tool.objcopy.Id.634856905" name="Objcopy" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.485661513.1746000023" name="RegTest_IAR.s" rcbsApplicability="disable" resourcePath="src/Full_Demo/RegTest_IAR.s" toolsToInvoke="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id.19236880.127535740">
+						<tool id="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id.19236880.127535740" name="Assembler" superClass="com.renesas.cdt.rx.hardwaredebug.win32.tool.assembler.Id.19236880"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="cg_src/r_cg_sbrk.h|cg_src/r_cg_sbrk.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="Full_Demo/RegTest_IAR.s|cg_src/r_cg_sbrk.h|cg_src/r_cg_sbrk.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -114,6 +117,10 @@
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="HardwareDebug">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

@@ -68,9 +68,9 @@
 */
 
 /*
- * This file contains the non-portable and therefore RX62N specific parts of
- * the IntQueue standard demo task - namely the configuration of the timers
- * that generate the interrupts and the interrupt entry points.
+ * This file contains the non-portable and therefore RX specific parts of the
+ * IntQueue standard demo task - namely the configuration of the timers that
+ * generate the interrupts and the interrupt entry points.
  */
 
 /* Scheduler includes. */
@@ -81,23 +81,8 @@
 #include "IntQueueTimer.h"
 #include "IntQueue.h"
 
-/* Hardware specifics. */
-#include "iodefine.h"
-
-#define IPR_PERIB_INTB128	128
-#define IPR_PERIB_INTB129	129
-#define IER_PERIB_INTB128	0x10
-#define IER_PERIB_INTB129	0x10
-#define	IEN_PERIB_INTB128	IEN0
-#define	IEN_PERIB_INTB129	IEN1
-#define IR_PERIB_INTB128	128
-#define IR_PERIB_INTB129	129
-
-void vIntQTimerISR0( void ) __attribute__ ((interrupt));
-void vIntQTimerISR1( void ) __attribute__ ((interrupt));
-
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
-#define tmrTIMER_2_3_FREQUENCY	( 2001UL )
+#define tmrTIMER_2_3_FREQUENCY	( 2301UL )
 
 void vInitialiseTimerForIntQueueTest( void )
 {
@@ -107,7 +92,7 @@ void vInitialiseTimerForIntQueueTest( void )
 		/* Give write access. */
 		SYSTEM.PRCR.WORD = 0xa502;
 
-		/* Cascade two 8bit timer channels to generate the interrupts. 
+		/* Cascade two 8bit timer channels to generate the interrupts.
 		8bit timer unit 1 (TMR0 and TMR1) and 8bit timer unit 2 (TMR2 and TMR3 are
 		utilised for this test. */
 
@@ -130,11 +115,11 @@ void vInitialiseTimerForIntQueueTest( void )
 		/* 16 bit operation ( count from timer 1,2 ). */
 		TMR0.TCCR.BIT.CSS = 3;
 		TMR2.TCCR.BIT.CSS = 3;
-	
+
 		/* Use PCLK as the input. */
 		TMR1.TCCR.BIT.CSS = 1;
 		TMR3.TCCR.BIT.CSS = 1;
-	
+
 		/* Divide PCLK by 8. */
 		TMR1.TCCR.BIT.CKS = 2;
 		TMR3.TCCR.BIT.CKS = 2;
@@ -143,11 +128,9 @@ void vInitialiseTimerForIntQueueTest( void )
 		TMR0.TCR.BIT.CMIEA = 1;
 		TMR2.TCR.BIT.CMIEA = 1;
 
-		/* Map TMR0 CMIA0 interrupt to vector slot B number 128 and set
-		priority above the kernel's priority, but below the max syscall
-		priority. */
-	    ICU.SLIBXR128.BYTE = 3; /* Three is TMR0 compare match A. */
-	    IPR( PERIB, INTB128 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
+		/* Set priority and enable interrupt. */
+		ICU.SLIBXR128.BYTE = 3; /* Three is TMR0 compare match A. */
+		IPR( PERIB, INTB128 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 1;
 		IEN( PERIB, INTB128 ) = 1;
 
 		/* Ensure that the flag is set to 0, otherwise the interrupt will not be
@@ -155,8 +138,8 @@ void vInitialiseTimerForIntQueueTest( void )
 		IR( PERIB, INTB128 ) = 0;
 
 		/* Do the same for TMR2, but to vector 129. */
-	    ICU.SLIBXR129.BYTE = 9; /* Nine is TMR2 compare match A. */
-	    IPR( PERIB, INTB129 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 2;
+		ICU.SLIBXR129.BYTE = 9; /* Nine is TMR2 compare match A. */
+		IPR( PERIB, INTB129 ) = configMAX_SYSCALL_INTERRUPT_PRIORITY - 2;
 		IEN( PERIB, INTB129 ) = 1;
 		IR( PERIB, INTB129 ) = 0;
 	}
@@ -164,25 +147,49 @@ void vInitialiseTimerForIntQueueTest( void )
 }
 /*-----------------------------------------------------------*/
 
-/* On vector 128. */
-void vIntQTimerISR0( void )
-{
-	/* Enable interrupts to allow interrupt nesting. */
-	__asm volatile( "setpsw	i" );
+#ifdef __GNUC__
 
+	void vIntQTimerISR0( void ) __attribute__ ((interrupt));
+	void vIntQTimerISR1( void ) __attribute__ ((interrupt));
+
+	void vIntQTimerISR0( void )
+	{
+		/* Enable interrupts to allow interrupt nesting. */
+		__asm volatile( "setpsw	i" );
+
+		portYIELD_FROM_ISR( xFirstTimerHandler() );
+	}
+	/*-----------------------------------------------------------*/
+
+	void vIntQTimerISR1( void )
+	{
+		/* Enable interrupts to allow interrupt nesting. */
+		__asm volatile( "setpsw	i" );
+
+		portYIELD_FROM_ISR( xSecondTimerHandler() );
+	}
+
+#endif /* __GNUC__ */
+/*-----------------------------------------------------------*/
+
+#ifdef __ICCRX__
+
+#pragma vector = VECT_PERIB_INTB128
+__interrupt void vT0_1InterruptHandler( void )
+{
+	__enable_interrupt();
 	portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
-/* On vector 129. */
-void vIntQTimerISR1( void )
+#pragma vector = VECT_PERIB_INTB129
+__interrupt void vT2_3InterruptHandler( void )
 {
-	/* Enable interrupts to allow interrupt nesting. */
-	__asm volatile( "setpsw	i" );
-
+	__enable_interrupt();
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 
+#endif /* __ICCRX__ */
 
 
 

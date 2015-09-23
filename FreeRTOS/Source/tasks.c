@@ -3581,7 +3581,6 @@ TCB_t *pxTCB;
 			{
 				portASSERT_IF_IN_ISR();
 			}
-
 		}
 		else
 		{

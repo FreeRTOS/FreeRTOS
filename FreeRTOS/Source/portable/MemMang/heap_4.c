@@ -237,7 +237,7 @@ void *pvReturn = NULL;
 						pxBlock->xBlockSize = xWantedSize;
 
 						/* Insert the new block into the list of free blocks. */
-						prvInsertBlockIntoFreeList( ( pxNewBlockLink ) );
+						prvInsertBlockIntoFreeList( pxNewBlockLink );
 					}
 					else
 					{

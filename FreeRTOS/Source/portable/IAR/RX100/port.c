@@ -82,7 +82,8 @@
 #include "string.h"
 
 /* Hardware specifics. */
-#include "iorx111.h"
+#warning Used to include the chip specific header here.
+#include "machine.h"
 
 /*-----------------------------------------------------------*/
 

@@ -43,12 +43,93 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
+			<id>1443109912507</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.dep</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443109912517</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewd</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443109912517</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewp</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443109912527</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewt</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443109912537</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.eww</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443109912537</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Debug</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443169247928</id>
+			<name>src</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-PriorityDefinitions.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443169247928</id>
+			<name>src</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IAR_Support</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1442956878652</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-croutine.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443109933450</id>
+			<name>src/Main_Full</name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*IAR.*</arguments>
 			</matcher>
 		</filter>
 		<filter>

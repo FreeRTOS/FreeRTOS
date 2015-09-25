@@ -31,12 +31,12 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
 		<link>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
 		</link>
 		<link>
-			<name>src/Main_Full/Standard_Demo_Tasks/include</name>
+			<name>src/Full_Demo/Standard_Demo_Tasks/include</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
 		</link>
@@ -124,12 +124,12 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1443109933450</id>
-			<name>src/Main_Full</name>
+			<id>1443173361824</id>
+			<name>src/Full_Demo</name>
 			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-*IAR.*</arguments>
+				<arguments>1.0-name-matches-false-false-*IAR*.*</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -151,8 +151,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159158</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629007</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -160,8 +160,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159162</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629017</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -169,8 +169,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159166</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629017</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -178,8 +178,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159170</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629017</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -187,8 +187,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159175</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629027</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -196,8 +196,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159180</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629027</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -205,8 +205,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159185</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629037</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -214,8 +214,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159190</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629037</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -223,8 +223,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159195</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629047</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -232,8 +232,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159200</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629047</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -241,8 +241,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159205</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629047</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -250,8 +250,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159209</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629057</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -259,8 +259,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159214</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629057</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -268,8 +268,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159219</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629067</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
@@ -277,8 +277,8 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442958159224</id>
-			<name>src/Main_Full/Standard_Demo_Tasks</name>
+			<id>1443172629067</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>

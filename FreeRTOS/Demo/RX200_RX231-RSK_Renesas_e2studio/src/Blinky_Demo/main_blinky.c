@@ -109,6 +109,9 @@
 #include "task.h"
 #include "semphr.h"
 
+/* Renesas includes. */
+#include "rskrx231def.h"
+
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -221,7 +224,7 @@ const unsigned long ulExpectedValue = 100UL;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-//_RB_			LED0 = !LED0;
+			LED0 = !LED0;
 			ulReceivedValue = 0U;
 		}
 	}

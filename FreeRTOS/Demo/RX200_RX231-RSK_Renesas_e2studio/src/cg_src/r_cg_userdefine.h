@@ -23,7 +23,7 @@
 * Device(s)    : R5F52318AxFP
 * Tool-Chain   : CCRX
 * Description  : This file includes user definition.
-* Creation Date: 23/09/2015
+* Creation Date: 2015/08/17
 ***********************************************************************************************************************/
 #ifndef _USER_DEF_H
 #define _USER_DEF_H
@@ -34,5 +34,11 @@ User definitions
 #define FAST_INTERRUPT_VECTOR 0
 
 /* Start user code for function. Do not edit comment generated here */
+
+#define TRUE            (1)
+#define FALSE           (0)
+
+extern volatile uint8_t g_adc_trigger;
+
 /* End user code. Do not edit comment generated here */
 #endif

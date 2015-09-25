@@ -137,6 +137,9 @@
 #include "TaskNotify.h"
 #include "IntSemTest.h"
 
+/* Renesas includes. */
+#include "rskrx231def.h"
+
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2UL )
@@ -390,7 +393,7 @@ unsigned long ulErrorFound = pdFALSE;
 		/* Toggle the check LED to give an indication of the system status.  If
 		the LED toggles every mainNO_ERROR_CHECK_TASK_PERIOD milliseconds then
 		everything is ok.  A faster toggle indicates an error. */
-//_RB_		LED0 = !LED0;
+		LED0 = !LED0;
 
 		if( ulErrorFound != pdFALSE )
 		{

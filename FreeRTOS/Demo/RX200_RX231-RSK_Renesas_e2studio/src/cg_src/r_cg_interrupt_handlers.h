@@ -18,27 +18,55 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : r_cg_userdefine.h
+* File Name    : r_cg_interrupt_handlers.h
 * Version      : Code Generator for RX231 V1.00.00.03 [10 Jul 2015]
 * Device(s)    : R5F52318AxFP
-* Tool-Chain   : CCRX
-* Description  : This file includes user definition.
-* Creation Date: 2015/08/17
+* Tool-Chain   : GCCRX
+* Description  : This file declares interrupt handlers.
+* Creation Date: 23/09/2015
 ***********************************************************************************************************************/
-#ifndef _USER_DEF_H
-#define _USER_DEF_H
+#ifndef INTERRUPT_HANDLERS_H
+#define INTERRUPT_HANDLERS_H
 
 /***********************************************************************************************************************
-User definitions
+Macro definitions (Register bit)
 ***********************************************************************************************************************/
-#define FAST_INTERRUPT_VECTOR 0
 
-/* Start user code for function. Do not edit comment generated here */
+/***********************************************************************************************************************
+Macro definitions
+***********************************************************************************************************************/
 
-#define TRUE            (1)
-#define FALSE           (0)
+/***********************************************************************************************************************
+Typedef definitions
+***********************************************************************************************************************/
 
-extern volatile uint8_t g_adc_trigger;
+/***********************************************************************************************************************
+Global functions
+***********************************************************************************************************************/
 
-/* End user code. Do not edit comment generated here */
+/* Undefined */
+void r_undefined_exception(void) __attribute__ ((interrupt));
+
+/* Access Exception */
+void r_access_exception(void) __attribute__ ((interrupt));
+
+/* Privileged Instruction Exception */
+void r_privileged_exception(void) __attribute__ ((interrupt));
+
+/* Floating Point Exception */
+void r_floatingpoint_exception(void) __attribute__ ((interrupt));
+
+/* NMI */
+void r_nmi_exception(void) __attribute__ ((interrupt));
+
+/* BRK */
+void r_brk_exception(void) __attribute__ ((interrupt));
+
+/* Hardware Vectors */
+void PowerON_Reset(void) __attribute__ ((interrupt));
+
+/* Idle Vectors */
+void r_undefined_exception(void) __attribute__ ((interrupt));
+void r_reserved_exception(void) __attribute__ ((interrupt));
+
 #endif

@@ -21,7 +21,7 @@
 * File Name    : r_cg_hardware_setup.c
 * Version      : Code Generator for RX231 V1.00.00.03 [10 Jul 2015]
 * Device(s)    : R5F52318AxFP
-* Tool-Chain   : CCRX
+* Tool-Chain   : GCCRX
 * Description  : This file implements system initializing function.
 * Creation Date: 23/09/2015
 ***********************************************************************************************************************/
@@ -37,6 +37,9 @@ Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_cgc.h"
+#include "r_cg_icu.h"
+#include "r_cg_port.h"
+
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
@@ -46,6 +49,9 @@ Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
+
+int HardwareSetup(void);
+void R_Systeminit(void);
 
 /***********************************************************************************************************************
 * Function Name: R_Systeminit
@@ -64,6 +70,8 @@ void R_Systeminit(void)
 
     /* Set peripheral settings */
     R_CGC_Create();
+    R_ICU_Create();
+    R_PORT_Create();
 
     /* Disable writing to MPC pin function control registers */
     MPC.PWPR.BIT.PFSWE = 0U;    
@@ -78,9 +86,11 @@ void R_Systeminit(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void HardwareSetup(void)
+int HardwareSetup(void)
 {
     R_Systeminit();
+
+    return (1U);
 }
 
 /* Start user code for adding. Do not edit comment generated here */

@@ -21,9 +21,9 @@
 * File Name    : r_cg_cgc.h
 * Version      : Code Generator for RX231 V1.00.00.03 [10 Jul 2015]
 * Device(s)    : R5F52318AxFP
-* Tool-Chain   : GCCRX
+* Tool-Chain   : CCRX
 * Description  : This file implements device driver for CGC module.
-* Creation Date: 23/09/2015
+* Creation Date: 2015/08/17
 ***********************************************************************************************************************/
 #ifndef CGC_H
 #define CGC_H
@@ -212,6 +212,8 @@ Macro definitions (Register bit)
 /***********************************************************************************************************************
 Macro definitions
 ***********************************************************************************************************************/
+#define _007B_CGC_SUBSTPWT_WAIT             (0x007BU) /* Wait time for 5 sub clock cycles */
+#define _00061A81_CGC_SUBOSCWT_WAIT         (0x00061A81U) /* Wait time for sub clock stable */
 
 /***********************************************************************************************************************
 Typedef definitions

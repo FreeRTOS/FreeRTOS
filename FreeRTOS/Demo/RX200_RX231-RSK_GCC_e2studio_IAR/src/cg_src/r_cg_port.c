@@ -18,11 +18,11 @@
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
-* File Name    : r_cg_cgc.c
+* File Name    : r_cg_port.c
 * Version      : Code Generator for RX231 V1.00.00.03 [10 Jul 2015]
 * Device(s)    : R5F52318AxFP
 * Tool-Chain   : CCRX
-* Description  : This file implements device driver for CGC module.
+* Description  : This file implements device driver for Port module.
 * Creation Date: 2015/08/17
 ***********************************************************************************************************************/
 
@@ -36,7 +36,7 @@ Pragma directive
 Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
-#include "r_cg_cgc.h"
+#include "r_cg_port.h"
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
@@ -48,92 +48,21 @@ Global variables and functions
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
-* Function Name: R_CGC_Create
-* Description  : This function initializes the clock generator.
+* Function Name: R_PORT_Create
+* Description  : This function initializes the Port I/O.
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
-void R_CGC_Create(void)
+void R_PORT_Create(void)
 {
-    uint32_t sckcr_dummy;
-    uint32_t w_count;
-    volatile uint32_t memorywaitcycle;
-
-    /* Set main clock control registers */
-    SYSTEM.MOFCR.BYTE = _00_CGC_MAINOSC_RESONATOR | _00_CGC_MAINOSC_UNDER10M;
-    SYSTEM.MOSCWTCR.BYTE = _04_CGC_OSC_WAIT_CYCLE_8192;
-
-    /* Set main clock operation */
-    SYSTEM.MOSCCR.BIT.MOSTP = 0U;
-
-    /* Wait for main clock oscillator wait counter overflow */
-    while (1U != SYSTEM.OSCOVFSR.BIT.MOOVF);
-
-    /* Set system clock */
-    sckcr_dummy = _00000000_CGC_PCLKD_DIV_1 | _00000100_CGC_PCLKB_DIV_2 | _00000000_CGC_PCLKA_DIV_1 | 
-                  _00010000_CGC_BCLK_DIV_2 | _00000000_CGC_ICLK_DIV_1 | _10000000_CGC_FCLK_DIV_2;
-    SYSTEM.SCKCR.LONG = sckcr_dummy;
-
-    while (SYSTEM.SCKCR.LONG != sckcr_dummy);
-
-    /* Set PLL circuit */
-    SYSTEM.PLLCR.WORD = _0001_CGC_PLL_FREQ_DIV_2 | _1A00_CGC_PLL_FREQ_MUL_13_5;
-    SYSTEM.PLLCR2.BIT.PLLEN = 0U;
-
-    /* Wait for PLL wait counter overflow */
-    while (1U != SYSTEM.OSCOVFSR.BIT.PLOVF);
-
-    /* Stop sub-clock */
-    SYSTEM.SOSCCR.BIT.SOSTP = 1U;
-
-    /* Wait for the register modification to complete */
-    while (1U != SYSTEM.SOSCCR.BIT.SOSTP);
-
-    /* Stop sub-clock */
-    RTC.RCR3.BIT.RTCEN = 0U;
-
-    /* Wait for the register modification to complete */
-    while (0U != RTC.RCR3.BIT.RTCEN);
-
-    /* Wait for 5 sub-clock cycles */
-    for (w_count = 0U; w_count < _007B_CGC_SUBSTPWT_WAIT; w_count++)
-    {
-        nop();
-    }
-
-    /* Set sub-clock drive capacity */
-    RTC.RCR3.BIT.RTCDV = 1U;
-
-    /* Wait for the register modification to complete */
-    while (1U != RTC.RCR3.BIT.RTCDV);
-
-    /* Set sub-clock */
-    SYSTEM.SOSCCR.BIT.SOSTP = 0U;
-
-    /* Wait for the register modification to complete */
-    while (0U != SYSTEM.SOSCCR.BIT.SOSTP);
-
-    /* Wait for sub-clock to be stable */
-    for (w_count = 0U; w_count < _00061A81_CGC_SUBOSCWT_WAIT; w_count++)
-    {
-        nop();
-    }
-
-    /* Set BCLK */
-    SYSTEM.SCKCR.BIT.PSTOP1 = 1U;
-
-    /* Set memory wait cycle setting register */
-    SYSTEM.MEMWAIT.BIT.MEMWAIT = 1U;
-    memorywaitcycle = SYSTEM.MEMWAIT.BYTE;
-    memorywaitcycle++;
-
-    /* Set clock source */
-    SYSTEM.SCKCR3.WORD = _0400_CGC_CLOCKSOURCE_PLL;
-
-    while (SYSTEM.SCKCR3.WORD != _0400_CGC_CLOCKSOURCE_PLL);
-
-    /* Set LOCO */
-    SYSTEM.LOCOCR.BIT.LCSTP = 1U;
+    PORT1.PODR.BYTE = _80_Pm7_OUTPUT_1;
+    PORT3.PODR.BYTE = _08_Pm3_OUTPUT_1;
+    PORT5.PODR.BYTE = _01_Pm0_OUTPUT_1 | _02_Pm1_OUTPUT_1 | _04_Pm2_OUTPUT_1;
+    PORTE.PODR.BYTE = _08_Pm3_OUTPUT_1 | _80_Pm7_OUTPUT_1;
+    PORT1.PDR.BYTE = _80_Pm7_MODE_OUTPUT;
+    PORT3.PDR.BYTE = _08_Pm3_MODE_OUTPUT;
+    PORT5.PDR.BYTE = _01_Pm0_MODE_OUTPUT | _02_Pm1_MODE_OUTPUT | _04_Pm2_MODE_OUTPUT;
+    PORTE.PDR.BYTE = _08_Pm3_MODE_OUTPUT | _10_Pm4_MODE_OUTPUT | _80_Pm7_MODE_OUTPUT;
 }
 
 /* Start user code for adding. Do not edit comment generated here */

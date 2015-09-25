@@ -78,8 +78,8 @@
 #include "task.h"
 
 /* Demo includes. */
-#include "IntQueueTimer.h"
 #include "IntQueue.h"
+#include "IntQueueTimer.h"
 
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
 #define tmrTIMER_2_3_FREQUENCY	( 2111UL )

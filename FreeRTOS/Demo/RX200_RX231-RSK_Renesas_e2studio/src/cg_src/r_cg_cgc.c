@@ -23,7 +23,7 @@
 * Device(s)    : R5F52318AxFP
 * Tool-Chain   : CCRX
 * Description  : This file implements device driver for CGC module.
-* Creation Date: 23/09/2015
+* Creation Date: 2015/08/17
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -56,11 +56,12 @@ Global variables and functions
 void R_CGC_Create(void)
 {
     uint32_t sckcr_dummy;
+    uint32_t w_count;
     volatile uint32_t memorywaitcycle;
 
     /* Set main clock control registers */
     SYSTEM.MOFCR.BYTE = _00_CGC_MAINOSC_RESONATOR | _00_CGC_MAINOSC_UNDER10M;
-    SYSTEM.MOSCWTCR.BYTE = _06_CGC_OSC_WAIT_CYCLE_32768;
+    SYSTEM.MOSCWTCR.BYTE = _04_CGC_OSC_WAIT_CYCLE_8192;
 
     /* Set main clock operation */
     SYSTEM.MOSCCR.BIT.MOSTP = 0U;
@@ -69,30 +70,54 @@ void R_CGC_Create(void)
     while (1U != SYSTEM.OSCOVFSR.BIT.MOOVF);
 
     /* Set system clock */
-    sckcr_dummy = _00000000_CGC_PCLKD_DIV_1 | _00000100_CGC_PCLKB_DIV_2 | _00001000_CGC_PCLKA_DIV_2 | 
+    sckcr_dummy = _00000000_CGC_PCLKD_DIV_1 | _00000100_CGC_PCLKB_DIV_2 | _00000000_CGC_PCLKA_DIV_1 | 
                   _00010000_CGC_BCLK_DIV_2 | _00000000_CGC_ICLK_DIV_1 | _10000000_CGC_FCLK_DIV_2;
     SYSTEM.SCKCR.LONG = sckcr_dummy;
 
     while (SYSTEM.SCKCR.LONG != sckcr_dummy);
 
     /* Set PLL circuit */
-    SYSTEM.PLLCR.WORD = _0000_CGC_PLL_FREQ_DIV_1 | _0C00_CGC_PLL_FREQ_MUL_6_5;
+    SYSTEM.PLLCR.WORD = _0001_CGC_PLL_FREQ_DIV_2 | _1A00_CGC_PLL_FREQ_MUL_13_5;
     SYSTEM.PLLCR2.BIT.PLLEN = 0U;
 
     /* Wait for PLL wait counter overflow */
     while (1U != SYSTEM.OSCOVFSR.BIT.PLOVF);
 
-    /* Disable sub-clock */
+    /* Stop sub-clock */
     SYSTEM.SOSCCR.BIT.SOSTP = 1U;
 
     /* Wait for the register modification to complete */
     while (1U != SYSTEM.SOSCCR.BIT.SOSTP);
 
-    /* Disable sub-clock */
+    /* Stop sub-clock */
     RTC.RCR3.BIT.RTCEN = 0U;
 
     /* Wait for the register modification to complete */
     while (0U != RTC.RCR3.BIT.RTCEN);
+
+    /* Wait for 5 sub-clock cycles */
+    for (w_count = 0U; w_count < _007B_CGC_SUBSTPWT_WAIT; w_count++)
+    {
+        nop();
+    }
+
+    /* Set sub-clock drive capacity */
+    RTC.RCR3.BIT.RTCDV = 1U;
+
+    /* Wait for the register modification to complete */
+    while (1U != RTC.RCR3.BIT.RTCDV);
+
+    /* Set sub-clock */
+    SYSTEM.SOSCCR.BIT.SOSTP = 0U;
+
+    /* Wait for the register modification to complete */
+    while (0U != SYSTEM.SOSCCR.BIT.SOSTP);
+
+    /* Wait for sub-clock to be stable */
+    for (w_count = 0U; w_count < _00061A81_CGC_SUBOSCWT_WAIT; w_count++)
+    {
+        nop();
+    }
 
     /* Set BCLK */
     SYSTEM.SCKCR.BIT.PSTOP1 = 1U;

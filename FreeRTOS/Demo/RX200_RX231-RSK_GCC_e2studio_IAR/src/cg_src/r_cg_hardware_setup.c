@@ -37,6 +37,9 @@ Includes
 ***********************************************************************************************************************/
 #include "r_cg_macrodriver.h"
 #include "r_cg_cgc.h"
+#include "r_cg_icu.h"
+#include "r_cg_port.h"
+
 /* Start user code for include. Do not edit comment generated here */
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
@@ -67,6 +70,8 @@ void R_Systeminit(void)
 
     /* Set peripheral settings */
     R_CGC_Create();
+    R_ICU_Create();
+    R_PORT_Create();
 
     /* Disable writing to MPC pin function control registers */
     MPC.PWPR.BIT.PFSWE = 0U;    

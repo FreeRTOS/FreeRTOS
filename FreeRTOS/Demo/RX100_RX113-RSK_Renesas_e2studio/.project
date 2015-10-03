@@ -43,12 +43,21 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1442828545389</id>
+			<id>1443895064622</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-croutine.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443895064632</id>
+			<name>src/FreeRTOS_Source</name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-utils</arguments>
 			</matcher>
 		</filter>
 		<filter>

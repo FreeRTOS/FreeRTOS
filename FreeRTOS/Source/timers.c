@@ -318,6 +318,8 @@ BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommand
 BaseType_t xReturn = pdFAIL;
 DaemonTaskMessage_t xMessage;
 
+	configASSERT( xTimer );
+
 	/* Send a message to the timer service task to perform a particular action
 	on a particular timer definition. */
 	if( xTimerQueue != NULL )
@@ -371,6 +373,7 @@ const char * pcTimerGetTimerName( TimerHandle_t xTimer )
 {
 Timer_t *pxTimer = ( Timer_t * ) xTimer;
 
+	configASSERT( xTimer );
 	return pxTimer->pcTimerName;
 }
 /*-----------------------------------------------------------*/
@@ -809,6 +812,8 @@ BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer )
 {
 BaseType_t xTimerIsInActiveList;
 Timer_t *pxTimer = ( Timer_t * ) xTimer;
+
+	configASSERT( xTimer );
 
 	/* Is the timer in the list of active timers? */
 	taskENTER_CRITICAL();

@@ -70,8 +70,8 @@
 	PUBLIC _vRegTest1Implementation
 	PUBLIC _vRegTest2Implementation
 
-	EXTERN _ulRegTest1CycleCount
-	EXTERN _ulRegTest2CycleCount
+	EXTERN _ulRegTest1LoopCounter
+	EXTERN _ulRegTest2LoopCounter
 
 	RSEG CODE:CODE(4)
 
@@ -107,7 +107,7 @@ _vRegTest1Implementation:
 
 		/* Increment the loop counter to show this task is still getting CPU
 		time. */
-		MOV.L	#_ulRegTest1CycleCount, R14
+		MOV.L	#_ulRegTest1LoopCounter, R14
 		MOV.L	[ R14 ], R15
 		ADD		#1, R15
 		MOV.L	R15, [ R14 ]
@@ -206,7 +206,7 @@ _vRegTest2Implementation:
 
 		/* Increment the loop counter to show this task is still getting CPU
 		time. */
-		MOV.L	#_ulRegTest2CycleCount, R14
+		MOV.L	#_ulRegTest2LoopCounter, R14
 		MOV.L	[ R14 ], R15
 		ADD		#1, R15
 		MOV.L	R15, [ R14 ]

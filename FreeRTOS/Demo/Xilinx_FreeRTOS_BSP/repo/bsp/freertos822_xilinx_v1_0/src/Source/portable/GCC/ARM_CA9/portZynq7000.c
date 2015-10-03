@@ -101,6 +101,11 @@ projects. */
 void FreeRTOS_ApplicationIRQHandler( uint32_t ulICCIAR );
 void vApplicationIRQHandler( uint32_t ulICCIAR ) __attribute__ ( ( weak, alias ("FreeRTOS_ApplicationIRQHandler") ) );
 
+/* The function that sets up the tick is declared week to allow it to be
+overridden by the application. */
+void FreeRTOS_SetupTickInterrupt( void )  __attribute__ ( ( weak ) );
+void FreeRTOS_ClearTickInterrupt( void )  __attribute__ ( ( weak ) );
+
 /*-----------------------------------------------------------*/
 
 void FreeRTOS_SetupTickInterrupt( void )

@@ -135,6 +135,16 @@
 							<inputType id="%Base.Compiler.Shc.C.Input1.Id.803597369" name="C++ Input" superClass="%Base.Compiler.Shc.C.Input1.Id"/>
 						</tool>
 					</fileInfo>
+					<folderInfo id="com.renesas.cdt.rxc.hardwaredebug.win32.configuration.Id.941970450.497502634" name="/" resourcePath="src/FreeRTOS_Source">
+						<toolChain id="com.renesas.cdt.rxc.hardwaredebug.win32.toolChain.Id.45016972" name="Renesas RXC Toolchain" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.toolChain.Id" unusedChildren="">
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.compiler.Id.1830726910" name="Compiler" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.compiler.Id.741766106"/>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.assembler.Id.252059482" name="Assembler" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.assembler.Id.1503720976"/>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.270734961" name="Linker" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.1635879936"/>
+							<tool id="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.345810510" name="Standard Library" superClass="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.763608360"/>
+							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.2001992067" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.345873254"/>
+							<tool id="com.renesas.cdt.rxc.release.win32.tool.config.Id.1243141782" name="RTOS Configurator" superClass="com.renesas.cdt.rxc.release.win32.tool.config.Id.1131737081"/>
+						</toolChain>
+					</folderInfo>
 					<folderInfo id="com.renesas.cdt.rxc.hardwaredebug.win32.configuration.Id.941970450.1671746385" name="/" resourcePath="src/FreeRTOS_Source/portable/MemMang">
 						<toolChain id="com.renesas.cdt.rxc.hardwaredebug.win32.toolChain.Id.197179432" name="Renesas RXC Toolchain" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.toolChain.Id" unusedChildren="">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.rxc.hardwaredebug.win32.targetPlatform.Id" isAbstract="false" osList="win32" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.targetPlatform.Id"/>

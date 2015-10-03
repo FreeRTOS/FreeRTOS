@@ -149,12 +149,6 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-    /* Set up SCI1 receive buffer */
-    R_SCI1_Serial_Receive((uint8_t *) &g_rx_char, 1);
-
-    /* Enable SCI1 operations */
-    R_SCI1_Start();
-
     LED0 = LED_OFF;
     LED1 = LED_OFF;
     LED2 = LED_OFF;

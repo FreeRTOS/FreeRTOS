@@ -124,13 +124,13 @@ typedef unsigned long UBaseType_t;
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portNOP()					__no_operation()
 
-#define portYIELD()							\
-	__asm volatile							\
-	(										\
-		"MOV.L #0x872E0, R15		\n\t"	\
-		"MOV.B #1, [R15]			\n\t"	\
-		"MOV.L [R15], R15			\n\t"	\
-		::: "R15"							\
+#define portYIELD()						\
+	__asm volatile						\
+	(									\
+		"MOV.L #0x872E0, R15		\n"	\
+		"MOV.B #1, [R15]			\n"	\
+		"MOV.L [R15], R15			\n"	\
+		::: "R15"						\
 	)
 
 #define portYIELD_FROM_ISR( x )	if( ( x ) != pdFALSE ) { portYIELD(); }

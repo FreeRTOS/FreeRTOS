@@ -29,7 +29,7 @@
         </option>
         <option>
           <name>CRunToEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CRunToName</name>
@@ -53,7 +53,7 @@
         </option>
         <option>
           <name>DDFFile</name>
-          <state>$TOOLKIT_DIR$\config\debugger\ior5f571ml.ddf</state>
+          <state>$TOOLKIT_DIR$\config\debugger\ior5f51138.ddf</state>
         </option>
         <option>
           <name>DebuggerUseExtraOptions</name>
@@ -162,7 +162,7 @@
         </option>
         <option>
           <name>OCDownloadVerifyAll</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OCDownloadAttach</name>

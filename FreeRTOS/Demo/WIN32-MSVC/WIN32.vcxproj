@@ -149,10 +149,10 @@
     <ClCompile Include="..\Common\Minimal\QueueOverwrite.c" />
     <ClCompile Include="..\Common\Minimal\QueueSet.c" />
     <ClCompile Include="..\Common\Minimal\QueueSetPolling.c" />
+    <ClCompile Include="..\Common\Minimal\recmutex.c" />
     <ClCompile Include="..\Common\Minimal\semtest.c" />
     <ClCompile Include="..\Common\Minimal\TaskNotify.c" />
     <ClCompile Include="..\Common\Minimal\timerdemo.c" />
-    <ClCompile Include="DemosModifiedForLowTickRate\recmutex.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>

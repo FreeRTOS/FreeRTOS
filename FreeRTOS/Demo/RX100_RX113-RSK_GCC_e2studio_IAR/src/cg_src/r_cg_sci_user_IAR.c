@@ -97,12 +97,12 @@ static volatile uint8_t sci1_txdone;
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
+#pragma vector = VECT_SCI1_TXI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_TXI1
-#pragma interrupt r_sci1_transmit_interrupt(vect=VECT(SCI1,TXI1),fint)
+__fast_interrupt static void r_sci1_transmit_interrupt(void)
 #else
-#pragma interrupt r_sci1_transmit_interrupt(vect=VECT(SCI1,TXI1))
+__interrupt static void r_sci1_transmit_interrupt(void)
 #endif
-static void r_sci1_transmit_interrupt(void)
 {
     if (g_sci1_tx_count > 0U)
     {
@@ -122,12 +122,12 @@ static void r_sci1_transmit_interrupt(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
+#pragma vector = VECT_SCI1_TEI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_TEI1
-#pragma interrupt r_sci1_transmitend_interrupt(vect=VECT(SCI1,TEI1),fint)
+__fast_interrupt static void r_sci1_transmitend_interrupt(void)
 #else
-#pragma interrupt r_sci1_transmitend_interrupt(vect=VECT(SCI1,TEI1))
+__interrupt static void r_sci1_transmitend_interrupt(void)
 #endif
-static void r_sci1_transmitend_interrupt(void)
 {
     /* Set TXD1 pin */
     PORT1.PMR.BYTE &= 0xBFU;
@@ -143,12 +143,12 @@ static void r_sci1_transmitend_interrupt(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
+#pragma vector = VECT_SCI1_RXI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_RXI1
-#pragma interrupt r_sci1_receive_interrupt(vect=VECT(SCI1,RXI1),fint)
+__fast_interrupt static void r_sci1_receive_interrupt(void)
 #else
-#pragma interrupt r_sci1_receive_interrupt(vect=VECT(SCI1,RXI1))
+__interrupt static void r_sci1_receive_interrupt(void)
 #endif
-static void r_sci1_receive_interrupt(void)
 {
     if (g_sci1_rx_length > g_sci1_rx_count)
     {
@@ -168,12 +168,12 @@ static void r_sci1_receive_interrupt(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
+#pragma vector = VECT_SCI1_ERI1
 #if FAST_INTERRUPT_VECTOR == VECT_SCI1_ERI1
-#pragma interrupt r_sci1_receiveerror_interrupt(vect=VECT(SCI1,ERI1),fint)
+__fast_interrupt static void r_sci1_receiveerror_interrupt(void)
 #else
-#pragma interrupt r_sci1_receiveerror_interrupt(vect=VECT(SCI1,ERI1))
+__interrupt static void r_sci1_receiveerror_interrupt(void)
 #endif
-static void r_sci1_receiveerror_interrupt(void)
 {
     uint8_t err_type;
 

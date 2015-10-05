@@ -71,6 +71,10 @@
  * This file contains the non-portable and therefore RX62N specific parts of
  * the IntQueue standard demo task - namely the configuration of the timers
  * that generate the interrupts and the interrupt entry points.
+ *
+ * ***NOTE***: When using GCC it is best to compile this file with maximum speed
+ * optimisation - otherwise standard demo tasks that monitor their own
+ * performance might fail assertion tests.
  */
 
 /* Scheduler includes. */
@@ -82,7 +86,7 @@
 #include "IntQueue.h"
 
 #define tmrTIMER_0_1_FREQUENCY	( 2000UL )
-#define tmrTIMER_2_3_FREQUENCY	( 2111UL )
+#define tmrTIMER_2_3_FREQUENCY	( 2007UL )
 
 void vInitialiseTimerForIntQueueTest( void )
 {

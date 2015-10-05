@@ -82,7 +82,6 @@
 #include "string.h"
 
 /* Hardware specifics. */
-#warning Used to include the chip specific header here.
 #include "machine.h"
 
 /*-----------------------------------------------------------*/

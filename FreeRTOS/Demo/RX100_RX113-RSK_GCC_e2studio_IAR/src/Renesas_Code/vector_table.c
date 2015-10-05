@@ -25,6 +25,10 @@ extern void vPortSoftwareInterruptISR( void );
 extern void vPortTickISR( void );
 extern void vIntQTimerISR0( void );
 extern void vIntQTimerISR1( void );
+extern void r_sci1_transmit_interrupt( void );
+extern void r_sci1_transmitend_interrupt( void );
+extern void r_sci1_receive_interrupt( void );
+extern void r_sci1_receiveerror_interrupt( void );
 
 #define FVECT_SECT          __attribute__ ((section (".fvectors")))
 
@@ -542,13 +546,13 @@ const fp RelocatableVectors[] RVECT_SECT  = {
 //;0x0364  SCI0_TEI0
     (fp)INT_Excep_SCI0_TEI0,
 //;0x0368  SCI1_ERI1
-    (fp)INT_Excep_SCI1_ERI1,
+    (fp)r_sci1_receiveerror_interrupt,
 //;0x036C  SCI1_RXI1
-    (fp)INT_Excep_SCI1_RXI1,
+    (fp)r_sci1_receive_interrupt,
 //;0x0370  SCI1_TXI1
-    (fp)INT_Excep_SCI1_TXI1,
+    (fp)r_sci1_transmit_interrupt,
 //;0x0374  SCI1_TEI1
-    (fp)INT_Excep_SCI1_TEI1,
+    (fp)r_sci1_transmitend_interrupt,
 //;0x0378  SCI5_ERI5
     (fp)INT_Excep_SCI5_ERI5,
 //;0x037C  SCI5_RXI5

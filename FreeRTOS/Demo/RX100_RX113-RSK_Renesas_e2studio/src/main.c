@@ -76,8 +76,7 @@
  * implemented and described in main_full.c.
  *
  * This file implements the code that is not demo specific, including the
- * hardware setup, standard FreeRTOS hook functions, and the ISR hander called
- * by the RTOS after interrupt entry (including nesting) has been taken care of.
+ * hardware setup and standard FreeRTOS hook functions.
  *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
@@ -91,15 +90,13 @@
 #include "semphr.h"
 
 /* Renesas includes. */
-/* Renesas includes. */
 #include <rskrx113def.h>
 #include "r_cg_macrodriver.h"
 #include "r_cg_sci.h"
-#include "r_rsk_async.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -144,18 +141,15 @@ int main( void )
 	}
 	#endif
 
+	/* Should never get reached. */
 	return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
-    /* Set up SCI1 receive buffer */
-    R_SCI1_Serial_Receive((uint8_t *) &g_rx_char, 1);
-
-    /* Enable SCI1 operations */
-    R_SCI1_Start();
-
+	/* Some hardware setup is performed before main() is called.  This routine
+	just ensures the LEDs start off. */
     LED0 = LED_OFF;
     LED1 = LED_OFF;
     LED2 = LED_OFF;
@@ -210,6 +204,7 @@ volatile size_t xFreeHeapSpace;
 
 void vApplicationTickHook( void )
 {
+	/* The tick hook is not used by the blinky demo, but is by the full demo. */
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
 	{
 		extern void vFullDemoTickHook( void );
@@ -221,7 +216,9 @@ void vApplicationTickHook( void )
 /*-----------------------------------------------------------*/
 
 /* The RX port uses this callback function to configure its tick interrupt.
-This allows the application to choose the tick interrupt source. */
+This allows the application to choose the tick interrupt source.
+***NOTE***: configTICK_VECTOR must be set in FreeRTOSConfig.h to be correct for
+whichever vector is used. */
 void vApplicationSetupTimerInterrupt( void )
 {
 const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500UL;

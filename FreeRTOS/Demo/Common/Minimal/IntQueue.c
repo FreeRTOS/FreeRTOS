@@ -195,7 +195,7 @@ an interrupt. */
 static QueueHandle_t xNormallyEmptyQueue, xNormallyFullQueue;
 
 /* Variables used to detect a stall in one of the tasks. */
-static UBaseType_t uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0, uxLowPriorityLoops1 = 0, uxLowPriorityLoops2 = 0;
+static volatile UBaseType_t uxHighPriorityLoops1 = 0, uxHighPriorityLoops2 = 0, uxLowPriorityLoops1 = 0, uxLowPriorityLoops2 = 0;
 
 /* Any unexpected behaviour sets xErrorStatus to fail and log the line that
 caused the error in xErrorLine. */
@@ -207,7 +207,7 @@ static BaseType_t xWasSuspended = pdFALSE;
 
 /* The values that are sent to the queues.  An incremented value is sent each
 time to each queue. */
-volatile UBaseType_t uxValueForNormallyEmptyQueue = 0, uxValueForNormallyFullQueue = 0;
+static volatile UBaseType_t uxValueForNormallyEmptyQueue = 0, uxValueForNormallyFullQueue = 0;
 
 /* A handle to some of the tasks is required so they can be suspended/resumed. */
 TaskHandle_t xHighPriorityNormallyEmptyTask1, xHighPriorityNormallyEmptyTask2, xHighPriorityNormallyFullTask1, xHighPriorityNormallyFullTask2;
@@ -715,7 +715,6 @@ static UBaseType_t uxNextOperation = 0;
 	else
 	{
 		timerNORMALLY_FULL_RX();
-		timerNORMALLY_FULL_TX();
 		timerNORMALLY_FULL_TX();
 		timerNORMALLY_FULL_TX();
 		timerNORMALLY_FULL_TX();

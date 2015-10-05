@@ -200,16 +200,16 @@
         </option>
         <option>
           <name>IccOptLevel</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccOptStrategy</name>
           <version>0</version>
-          <state>0</state>
+          <state>2</state>
         </option>
         <option>
           <name>IccOptLevelSlave</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccOptAllowList</name>
@@ -329,6 +329,7 @@
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\RX100</state>
           <state>$PROJ_DIR$\..\Common\include</state>
           <state>$PROJ_DIR$\src\Full_Demo</state>
+          <state>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1936,6 +1937,9 @@
     <file>
       <name>$PROJ_DIR$\src\cg_src\r_cg_sci.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\src\cg_src\r_cg_sci_user_IAR.c</name>
+    </file>
   </group>
   <group>
     <name>FreeRTOS_Source</name>
@@ -1972,6 +1976,12 @@
   </group>
   <group>
     <name>Full_Demo</name>
+    <group>
+      <name>FreeRTOS+CLI</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c</name>
+      </file>
+    </group>
     <group>
       <name>Standard_Demo_Tasks</name>
       <file>
@@ -2016,9 +2026,6 @@
       <file>
         <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
       </file>
-      <file>
-        <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
-      </file>
     </group>
     <file>
       <name>$PROJ_DIR$\src\Full_Demo\IntQueueTimer.c</name>
@@ -2028,6 +2035,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\src\Full_Demo\RegTest_IAR.s</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\UARTCommandConsole.c</name>
     </file>
   </group>
   <file>

@@ -81,13 +81,19 @@
  *
  ******************************************************************************
  *
- * main_full() creates all the demo application tasks and software timers, then
+ * main_full() creates a set of demo application tasks and software timers, then
  * starts the scheduler.  The web documentation provides more details of the
  * standard demo application tasks, which provide no particular functionality,
  * but do provide a good example of how to use the FreeRTOS API.
  *
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
+ *
+ * "FreeRTOS+CLI command console" -  The command console uses SCI1 for its
+ * input and output.  The baud rate is set to 19200.  Type "help" to see a list
+ * of registered commands.  The FreeRTOS+CLI license is different to the
+ * FreeRTOS license, see http://www.FreeRTOS.org/cli for license and usage
+ * details.
  *
  * "Reg test" tasks - These fill both the core and floating point registers with
  * known values, then check that each register maintains its expected value for
@@ -97,15 +103,14 @@
  * error in the context switching mechanism.
  *
  * "Check" task - The check task period is initially set to three seconds.  The
- * task checks that all the standard demo tasks, and the register check tasks,
- * are not only still executing, but are executing without reporting any errors.
- * If the check task discovers that a task has either stalled, or reported an
- * error, then it changes its own execution period from the initial three
- * seconds, to just 200ms.  The check task also toggles an LED each time it is
- * called.  This provides a visual indication of the system status:  If the LED
- * toggles every three seconds, then no issues have been discovered.  If the LED
- * toggles every 200ms, then an issue has been discovered with at least one
- * task.
+ * task checks that all the standard demo tasks are not only still executing,
+ * but are executing without reporting any errors.  If the check task discovers
+ * that a task has either stalled, or reported an error, then it changes its own
+ * execution period from the initial three seconds, to just 200ms.  The check
+ * task also toggles an LED on each iteration of its loop.  This provides a
+ * visual indication of the system status:  If the LED toggles every three
+ * seconds, then no issues have been discovered.  If the LED toggles every
+ * 200ms, then an issue has been discovered with at least one task.
  */
 
 /* Standard includes. */
@@ -130,7 +135,6 @@
 #include "partest.h"
 #include "comtest2.h"
 #include "serial.h"
-#include "TimerDemo.h"
 #include "QueueOverwrite.h"
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
@@ -148,30 +152,26 @@
 #define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 #define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
 #define mainUART_COMMAND_CONSOLE_STACK_SIZE	( configMINIMAL_STACK_SIZE * 3UL )
-#define mainCOM_TEST_TASK_PRIORITY			( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
 #define mainQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
 
 /* The priority used by the UART command console task. */
-#define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
-
-/* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0UL )
+#define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( tskIDLE_PRIORITY + 1 )
 
 /* The period after which the check timer will expire, in ms, provided no errors
 have been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD		( 3000UL / portTICK_PERIOD_MS )
+#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000UL )
 
 /* The period at which the check timer will expire, in ms, if an error has been
 reported in one of the standard demo tasks.  ms are converted to the equivalent
 in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TASK_PERIOD 		( 200UL / portTICK_PERIOD_MS )
+#define mainERROR_CHECK_TASK_PERIOD 		pdMS_TO_TICKS( 200UL )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
-#define mainREG_TEST_1_PARAMETER	( ( void * ) 0x12121212UL )
-#define mainREG_TEST_2_PARAMETER	( ( void * ) 0x12345678UL )
+#define mainREG_TEST_1_PARAMETER			( ( void * ) 0x12121212UL )
+#define mainREG_TEST_2_PARAMETER			( ( void * ) 0x12345678UL )
 
 /* The base period used by the timer test tasks. */
 #define mainTIMER_TEST_PERIOD				( 50 )
@@ -212,6 +212,17 @@ void vRegTest2Implementation( void );
  */
 static void prvPseudoRandomiser( void *pvParameters );
 
+/*
+ * Register commands that can be used with FreeRTOS+CLI.  The commands are
+ * defined in CLI-Commands.c and File-Related-CLI-Command.c respectively.
+ */
+extern void vRegisterSampleCLICommands( void );
+
+/*
+ * The task that manages the FreeRTOS+CLI input and output.
+ */
+extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
+
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
@@ -220,9 +231,6 @@ then the register check tasks have not discovered any errors.  If a variable
 stops incrementing, then an error has been found. */
 volatile unsigned long ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
-/* String for display in the web server.  It is set to an error message if the
-check task detects an error.  */
-const char *pcStatusMessage = "All tasks running without error";
 /*-----------------------------------------------------------*/
 
 void main_full( void )
@@ -238,8 +246,7 @@ void main_full( void )
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartRecursiveMutexTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-//_RB_	vStartMathTasks( mainFLOP_TASK_PRIORITY );
-	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
@@ -250,7 +257,14 @@ void main_full( void )
 	xTaskCreate( prvRegTest2Task, "RegTst2", configMINIMAL_STACK_SIZE, mainREG_TEST_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Create the task that just adds a little random behaviour. */
-	xTaskCreate( prvPseudoRandomiser, "Rnd", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
+	xTaskCreate( prvPseudoRandomiser, "Rnd", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 2, NULL );
+
+	/* Start the tasks that implements the command console on the UART, as
+	described above. */
+	vUARTCommandConsoleStart( mainUART_COMMAND_CONSOLE_STACK_SIZE, mainUART_COMMAND_CONSOLE_TASK_PRIORITY );
+
+	/* Register the standard CLI commands. */
+	vRegisterSampleCLICommands();
 
 	/* Create the task that performs the 'check' functionality,	as described at
 	the top of this file. */
@@ -308,12 +322,11 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound |= 1UL << 0UL;
 		}
 
-#ifdef _RB_
 		if( xAreMathsTaskStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 1UL;
 		}
-#endif
+
 		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 2UL;
@@ -347,11 +360,6 @@ unsigned long ulErrorFound = pdFALSE;
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound |= 1UL << 8UL;
-		}
-
-		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) mainNO_ERROR_CHECK_TASK_PERIOD ) != pdPASS )
-		{
-			ulErrorFound |= 1UL << 9UL;
 		}
 
 		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
@@ -405,7 +413,6 @@ unsigned long ulErrorFound = pdFALSE;
 			gone wrong (it might just be that the loop back connector required
 			by the comtest tasks has not been fitted). */
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
-			pcStatusMessage = "Error found in at least one task.";
 		}
 	}
 }
@@ -413,7 +420,7 @@ unsigned long ulErrorFound = pdFALSE;
 
 static void prvPseudoRandomiser( void *pvParameters )
 {
-const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL, ulMinDelay = ( 35 / portTICK_PERIOD_MS );
+const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL, ulMinDelay = pdMS_TO_TICKS( 35 );
 volatile uint32_t ulNextRand = ( uint32_t ) &pvParameters, ulValue;
 
 	/* This task does nothing other than ensure there is a little bit of
@@ -440,7 +447,7 @@ volatile uint32_t ulNextRand = ( uint32_t ) &pvParameters, ulValue;
 			__asm volatile( "NOP" );
 			__asm volatile( "NOP" );
 			__asm volatile( "NOP" );
-
+			vTaskDelay( 2 );
 			ulValue--;
 		}
 	}
@@ -449,10 +456,6 @@ volatile uint32_t ulNextRand = ( uint32_t ) &pvParameters, ulValue;
 
 void vFullDemoTickHook( void )
 {
-	/* The full demo includes a software timer demo/test that requires
-	prodding periodically from the tick interrupt. */
-	vTimerPeriodicISRTests();
-
 	/* Call the periodic queue overwrite from ISR demo. */
 	vQueueOverwritePeriodicISRDemo();
 

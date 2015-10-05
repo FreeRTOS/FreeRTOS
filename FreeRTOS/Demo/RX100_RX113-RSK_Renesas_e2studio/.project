@@ -31,9 +31,24 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
 		<link>
+			<name>src/Full_Demo/FreeRTOS-Plus-CLI</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI</locationURI>
+		</link>
+		<link>
+			<name>src/Full_Demo/Sample-CLI-commands.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/Sample-CLI-commands.c</locationURI>
+		</link>
+		<link>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
+			<name>src/Full_Demo/UARTCommandConsole.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/UARTCommandConsole.c</locationURI>
 		</link>
 		<link>
 			<name>src/Full_Demo/Standard_Demo_Tasks/include</name>
@@ -79,7 +94,34 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201321</id>
+			<id>1443945160058</id>
+			<name>src/Full_Demo/FreeRTOS-Plus-CLI</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443945160058</id>
+			<name>src/Full_Demo/FreeRTOS-Plus-CLI</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443945160068</id>
+			<name>src/Full_Demo/FreeRTOS-Plus-CLI</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-*.url</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1443988432315</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -88,7 +130,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201326</id>
+			<id>1443988432325</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -97,7 +139,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201332</id>
+			<id>1443988432325</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -106,7 +148,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201337</id>
+			<id>1443988432335</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -115,7 +157,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201342</id>
+			<id>1443988432345</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -124,7 +166,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201347</id>
+			<id>1443988432345</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -133,7 +175,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201353</id>
+			<id>1443988432355</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -142,7 +184,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201358</id>
+			<id>1443988432365</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -151,7 +193,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201363</id>
+			<id>1443988432365</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -160,7 +202,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201367</id>
+			<id>1443988432375</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -169,7 +211,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201373</id>
+			<id>1443988432385</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -178,7 +220,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201377</id>
+			<id>1443988432395</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -187,7 +229,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201382</id>
+			<id>1443988432405</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -196,21 +238,12 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1442838201387</id>
+			<id>1443988432415</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-TaskNotify.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1442838201391</id>
-			<name>src/Full_Demo/Standard_Demo_Tasks</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-TimerDemo.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

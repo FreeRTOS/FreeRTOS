@@ -91,7 +91,6 @@
 #include "semphr.h"
 
 /* Renesas includes. */
-/* Renesas includes. */
 #include <rskrx113def.h>
 #include "r_cg_macrodriver.h"
 #include "r_cg_sci.h"
@@ -143,12 +142,15 @@ int main( void )
 	}
 	#endif
 
+	/* Should never get reached. */
 	return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvSetupHardware( void )
 {
+	/* Some hardware setup is performed before main() is called.  This routine
+	just ensures the LEDs start off. */
     LED0 = LED_OFF;
     LED1 = LED_OFF;
     LED2 = LED_OFF;
@@ -203,6 +205,7 @@ volatile size_t xFreeHeapSpace;
 
 void vApplicationTickHook( void )
 {
+	/* The tick hook is not used by the blinky demo, but is by the full demo. */
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
 	{
 		extern void vFullDemoTickHook( void );
@@ -214,7 +217,9 @@ void vApplicationTickHook( void )
 /*-----------------------------------------------------------*/
 
 /* The RX port uses this callback function to configure its tick interrupt.
-This allows the application to choose the tick interrupt source. */
+This allows the application to choose the tick interrupt source.
+***NOTE***: configTICK_VECTOR must be set in FreeRTOSConfig.h to be correct for
+whichever vector is used. */
 void vApplicationSetupTimerInterrupt( void )
 {
 const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500UL;

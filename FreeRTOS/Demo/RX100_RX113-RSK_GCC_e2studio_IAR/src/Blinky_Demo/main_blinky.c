@@ -84,24 +84,14 @@
  *
  * The Queue Send Task:
  * The queue send task is implemented by the prvQueueSendTask() function in
- * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
- * block for 200 milliseconds, before sending the value 100 to the queue that
- * was created within main_blinky().  Once the value is sent, the task loops
- * back around to block for another 200 milliseconds...and so on.
+ * this file.  It sends the value 100 to the queue every 200 milliseconds.
  *
  * The Queue Receive Task:
  * The queue receive task is implemented by the prvQueueReceiveTask() function
- * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
- * blocks on attempts to read data from the queue that was created within
- * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, toggles an LED.  The 'block
- * time' parameter passed to the queue receive function specifies that the
- * task should be held in the Blocked state indefinitely to wait for data to
- * be available on the queue.  The queue receive task will only leave the
- * Blocked state when the queue send task writes to the queue.  As the queue
- * send task writes to the queue every 200 milliseconds, the queue receive
- * task leaves the Blocked state every 200 milliseconds, and therefore toggles
- * the LED every 200 milliseconds.
+ * in this file.  It blocks on the queue to wait for data to arrive from the
+ * queue send task - toggling the LED each time it receives the value 100.  The
+ * queue send task writes to the queue every 200ms, so the LED should toggle
+ * every 200ms.
  */
 
 /* Kernel includes. */
@@ -120,7 +110,7 @@
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
 to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			( pdMS_TO_TICKS( 200UL ) )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find

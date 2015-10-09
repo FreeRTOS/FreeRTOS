@@ -4,10 +4,10 @@ Tracealyzer Trace Recorder Library
 Percepio AB
 www.percepio.com
 
-This directory contains the a generic trace recorder library for Tracealyzer v2.7. 
+This directory contains the a generic trace recorder library for Tracealyzer v3.0.2.
 
 For information on how to upload the trace data from your target system RAM to 
-Tracealyzer, see the User Manual (e.g., http://percepio.com/docs/FreeRTOS/manual/Recorder.html)
+Tracealyzer, see the User Manual.
 
 Files included
 --------------

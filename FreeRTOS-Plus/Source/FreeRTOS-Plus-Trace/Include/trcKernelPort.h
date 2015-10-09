@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
- * trcKernelPortFreeRTOS.h
+ * trcKernelPort.h
  *
  * Kernel-specific functionality for FreeRTOS, used by the recorder library.
  *
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -56,14 +56,19 @@ extern int uiInEventGroupSetBitsFromISR;
 #define TRACE_CPU_CLOCK_HZ configCPU_CLOCK_HZ /* Defined in "FreeRTOSConfig.h" */
 
 #if (SELECTED_PORT == PORT_ARM_CortexM)
-		
-    /* If you get warnings regarding __get_PRIMASK and __set_PRIMASK, make sure that ARM's CMSIS API is included 
-	by the recorder using your chip vendor header file (e.g., "board.h", "stm32f4xx.h", "lpc17xx.h") */
 	
-	#define TRACE_SR_ALLOC_CRITICAL_SECTION() int __irq_status; 
+	/* Uses CMSIS API */
+
+	#define TRACE_SR_ALLOC_CRITICAL_SECTION() int __irq_status;
 	#define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = __get_PRIMASK(); __set_PRIMASK(1);}
 	#define TRACE_EXIT_CRITICAL_SECTION() {__set_PRIMASK(__irq_status);}
 
+#endif
+
+#if (SELECTED_PORT == PORT_ARM_CORTEX_M0)
+	#define TRACE_SR_ALLOC_CRITICAL_SECTION() int __irq_status;
+	#define TRACE_ENTER_CRITICAL_SECTION() {__irq_status = portSET_INTERRUPT_MASK_FROM_ISR();}
+	#define TRACE_EXIT_CRITICAL_SECTION() {portCLEAR_INTERRUPT_MASK_FROM_ISR(__irq_status);}
 #endif
 
 #if ((SELECTED_PORT == PORT_ARM_CORTEX_A9) || (SELECTED_PORT == PORT_Renesas_RX600) || (SELECTED_PORT == PORT_MICROCHIP_PIC32MX) || (SELECTED_PORT == PORT_MICROCHIP_PIC32MZ))
@@ -471,7 +476,6 @@ void* prvTraceGetCurrentTaskHandle(void);
 #define TRACE_GET_CLASS_TRACE_CLASS(CLASS, kernelClass) TraceObjectClassTable[kernelClass]
 #define TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject) TRACE_GET_CLASS_TRACE_CLASS(CLASS, prvTraceGetObjectType(pxObject))
 
-/* Note: Timer tracing only supported on FreeRTOS v8 or later, so "Timer_t" is safe to use! */
 #define TRACE_GET_TIMER_NUMBER(tmr) ( ( objectHandleType ) ((Timer_t*)tmr)->uxTimerNumber )
 #define TRACE_SET_TIMER_NUMBER(tmr) ((Timer_t*)tmr)->uxTimerNumber = xTraceGetObjectHandle(TRACE_CLASS_TIMER);
 #define TRACE_GET_TIMER_NAME(pxTimer) pxTimer->pcTimerName
@@ -552,6 +556,12 @@ void* prvTraceGetCurrentTaskHandle(void);
 #undef traceTASK_SUSPEND
 #define traceTASK_SUSPEND( pxTaskToSuspend ) \
 	trcKERNEL_HOOKS_TASK_SUSPEND(TASK_SUSPEND, pxTaskToSuspend);
+
+/* Called from special case with timer only */
+#undef traceTASK_DELAY_SUSPEND
+#define traceTASK_DELAY_SUSPEND( pxTaskToSuspend ) \
+	trcKERNEL_HOOKS_TASK_SUSPEND(TASK_SUSPEND, pxTaskToSuspend); \
+	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
 
 /* Called on vTaskDelay - note the use of FreeRTOS variable xTicksToDelay */
 #undef traceTASK_DELAY
@@ -1064,11 +1074,3 @@ vTraceSetObjectName(TRACE_CLASS_EVENTGROUP, (objectHandleType)uxEventGroupGetNum
 #endif
 
 #endif /* TRCKERNELPORTFREERTOS_H_ */
-
-
-
-
-
-
-
-

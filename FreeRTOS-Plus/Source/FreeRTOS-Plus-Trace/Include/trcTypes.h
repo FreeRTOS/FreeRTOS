@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcTypes.h
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 

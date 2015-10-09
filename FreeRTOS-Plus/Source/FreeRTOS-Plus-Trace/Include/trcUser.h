@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcUser.h
@@ -32,7 +32,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -385,7 +385,7 @@ void vTraceUserEvent(traceLabel eventLabel);
  *
  * Calling xTraceOpenLabel multiple times will not create duplicate entries, but
  * it is of course faster to just do it once, and then keep the handle for later
- * use. If you don´t have any data arguments, only a text label/string, it is
+ * use. If you donï¿½t have any data arguments, only a text label/string, it is
  * better to use vTraceUserEvent - it is faster.
  *
  * Format specifiers supported:

@@ -1,0 +1,45 @@
+Release notes, Trace Recorder Library for Tracealyzer v3.0.2
+September 29, 2015. Percepio AB.
+
+Changes:
+v3.0.2
+- Fixed bug in tracing of nested interrupts.
+- Made locally used variables and functions static.
+v3.0.1
+- Added vTraceOnTraceBegin()/vTraceOnTraceEnd() in trcKernelPort.c to allow custom cleanup via macros TRC_STREAM_PORT_ON_TRACE_BEGIN()/TRC_STREAM_PORT_ON_TRACE_END().
+v3.0.0
+- Modified trcTCPIP functions to take bytes written/read as parameters and instead return potential errors.
+- Added vTraceOnTraceBegin()/vTraceOnTraceEnd() in trcKernelPort that in turn uses macros from trcStreamPort.h to allow transfer method defined (as well as user defined) actions where appropriate. Currently only used by TCP/IP to re-initialize the paged event buffer so no old data is sent on trace start.
+v2.8.6
+- Changed void* to uint32_t to ensure 32bit for vTraceStoreEvent1(), vTraceStoreEvent2() and vTraceStoreEvent3().
+- Added prefix TRC to most macros to avoid conflicts.
+- Moved all trace stream macros to trcStreamPort.h.
+- Now allows users to define their own trace stream macros. First specify TRC_RECORDER_TRANSFER_METHOD_CUSTOM and then modify the TRC_STREAM_CUSTOM_XXXXXXXXX macros.
+- Added trcPagedEventBuffer that can be used to avoid endless recursion for trace stream methods that use kernel objects (semaphores, mutexes) when sending data.
+- Added trcTCPIP/trcTCPIPConfig for easy trace stream integration with custom TCP/IP stacks.
+v2.8.5
+- Added internal OS tick counter that can be used by certain kernel ports to keep track of the actual OS tick, in case it can be delayed.
+- Updated generic macro names.
+- Removed usage of strlen().
+
+- Added support for width and padding formats for %d, %u, %x and %X.
+- Reduced RAM usage for certain cases by redefining unused buffers.
+- Fixed traceTAKE_MUTEX_RECURSIVE_FAILED being called traceTAKE_MUTEX_RECURSIVE resulting in duplicate defines.
+- Implemented fix for missing parameter "xCopyPosition" when using "xSemaphoreGiveFromISR()" in FreeRTOS v8.
+- Added prefix to internal defines to avoid conflicts.
+- Fixed possible memory alignment issue which could cause hard fault.
+- Made sure TzCtrl runs every 100ms instead of every 100 OS ticks.
+- Moved project specific includes to trcConfig.h.
+- Added a few backwards compatibility macros.
+v2.8.2
+- Improved vTracePrintF() parsing.
+- Added vTracePrint() that performs no formatting.
+- Removed need for passing parameter to vTraceStoreISREnd() on embOS port. This parameter is detected automatically.
+- Added vTraceStoreISREndManual(param) that can be used on kernel ports that doesn't automatically detect pending task switches after interrupts.
+v2.8.1
+- New J-Link drivers fixes the RTT Buffer Index != 0 issue.
+- trcRecorder.c hotfixed to handle missing defines in embOS that haven't made it to release yet.
+v2.8.0
+- Initial release. Only RTT Buffer Index 0 works in this version.
+
+For questions, contact support@percepio.com or sales@percepio.com

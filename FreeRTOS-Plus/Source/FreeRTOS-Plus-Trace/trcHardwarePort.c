@@ -1,15 +1,16 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
- * trcBase.c
+ * trcHardwarePort.c
  *
- * Core functionality of the trace recorder library.
+ * Contains together with trcHardwarePort.h all hardware portability issues of
+ * the trace recorder library.
  *
  * Terms of Use
  * This software is copyright Percepio AB. The recorder library is free for
  * use together with Percepio products. You may distribute the recorder library
- * in its original form, including modifications in trcHardwarePort.c/.h
+ * in its original form, including modifications in trcPort.c and trcPort.h
  * given that these modification are clearly marked as your own modifications
  * and documented in the initial comment section of these source files.
  * This software is the intellectual property of Percepio AB and may not be
@@ -33,7 +34,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 

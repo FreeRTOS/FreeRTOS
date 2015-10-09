@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.h
@@ -31,7 +31,7 @@
  * damages, or the exclusion of implied warranties or limitations on how long an
  * implied warranty may last, so the above limitations may not apply to you.
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2013.
  * www.percepio.com
  ******************************************************************************/
 

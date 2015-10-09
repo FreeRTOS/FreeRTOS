@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcUser.c
@@ -33,12 +33,9 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
-#include "FreeRTOS.h"
-#include "task.h"
-
 #include "trcUser.h"
 
 #if (USE_TRACEALYZER_RECORDER == 1)
@@ -367,6 +364,7 @@ void vTraceTaskInstanceFinishDirect(void)
 
 #define MAX_ISR_NESTING 16
 static uint8_t isrstack[MAX_ISR_NESTING];
+int32_t isPendingContextSwitch = 0;
 
 /*******************************************************************************
  * vTraceSetISRProperties
@@ -572,11 +570,15 @@ void vTraceStoreISRBegin(objectHandleType handle)
 	 return;
 	}
 	trcCRITICAL_SECTION_BEGIN();
+	
+	if (nISRactive == 0)
+		isPendingContextSwitch = 0;	/* We are at the start of a possible ISR chain. No context switches should have been triggered now. */
+	
 	if (RecorderDataPtr->recorderActive && handle_of_last_logged_task)
 	{
 
 		TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[TRACE_CLASS_ISR], "vTraceStoreISRBegin: Invalid value for handle", );
-
+		
 		dts4 = (uint16_t)prvTraceGetDTS(0xFFFF);
 
 		if (RecorderDataPtr->recorderActive) /* Need to repeat this check! */
@@ -632,6 +634,8 @@ void vTraceStoreISREnd(int pendingISR)
 {
 	TSEvent* ts;
 	uint16_t dts5;
+	uint8_t hnd8 = 0, type = 0;
+	
 	TRACE_SR_ALLOC_CRITICAL_SECTION();
 
 	if (! RecorderDataPtr->recorderActive ||  ! handle_of_last_logged_task)
@@ -652,24 +656,28 @@ void vTraceStoreISREnd(int pendingISR)
 	}
 
 	trcCRITICAL_SECTION_BEGIN();
-	if (pendingISR == 0)
+	isPendingContextSwitch |= pendingISR;	/* Is there a pending context switch right now? */
+	nISRactive--;
+	if (nISRactive > 0)
 	{
-		uint8_t hnd8, type;
+		/* Return to another isr */
+		type = TS_ISR_RESUME;
+		hnd8 = prvTraceGet8BitHandle(isrstack[nISRactive - 1]); /* isrstack[nISRactive] is the handle of the ISR we're currently exiting. isrstack[nISRactive - 1] is the handle of the ISR that was executing previously. */
+	}
+	else if (isPendingContextSwitch == 0)
+	{
+		/* No context switch has been triggered by any ISR in the chain. Return to task */
+		type = TS_TASK_RESUME;
+		hnd8 = prvTraceGet8BitHandle(handle_of_last_logged_task);
+	}
+	else
+	{
+		/* Context switch has been triggered by some ISR. We expect a proper context switch event shortly so we do nothing. */
+	}
+
+	if (type != 0)
+	{
 		dts5 = (uint16_t)prvTraceGetDTS(0xFFFF);
-
-		if (nISRactive > 1)
-		{
-			/* return to another isr */
-			type = TS_ISR_RESUME;
-			hnd8 = prvTraceGet8BitHandle(isrstack[nISRactive]);
-		}
-		else
-		{
-			/* return to task */
-			type = TS_TASK_RESUME;
-			hnd8 = prvTraceGet8BitHandle(handle_of_last_logged_task);
-		}
-
 		ts = (TSEvent*)xTraceNextFreeEventBufferSlot();
 		if (ts != NULL)
 		{
@@ -684,7 +692,6 @@ void vTraceStoreISREnd(int pendingISR)
 		ptrLastISRExitEvent = (uint8_t*)ts;
 		#endif		
 	}
-	nISRactive--;
 
 	#if (SELECTED_PORT == PORT_ARM_CortexM)
 	DWTCycleCountAtLastISRExit = REG_DWT_CYCCNT;
@@ -1251,7 +1258,7 @@ void vTraceChannelUserEvent(UserEventChannel channelPair)
  *
  * Calling xTraceOpenLabel multiple times will not create duplicate entries, but
  * it is of course faster to just do it once, and then keep the handle for later
- * use. If you don´t have any data arguments, only a text label/string, it is
+ * use. If you donï¿½t have any data arguments, only a text label/string, it is
  * better to use vTraceUserEvent - it is faster.
  *
  * Format specifiers supported:

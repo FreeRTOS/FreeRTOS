@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -116,7 +116,7 @@
  * recording is stopped when the buffer becomes full. This is useful for
  * recording events following a specific state, e.g., the startup sequence.
  *****************************************************************************/
-#define TRACE_RECORDER_STORE_MODE TRACE_STORE_MODE_STOP_WHEN_FULL
+#define TRACE_RECORDER_STORE_MODE TRACE_STORE_MODE_RING_BUFFER
 
 /*******************************************************************************
  * TRACE_SCHEDULING_ONLY
@@ -126,8 +126,8 @@
  * If this setting is enabled (= 1), only scheduling events are recorded.
  * If disabled (= 0), all events are recorded.
  *
- * Users of FreeRTOS+Trace Free Edition only displays scheduling events, so this
- * option can be used to avoid storing unsupported events.
+ * For users of "Free Edition", that only  displays scheduling events, this
+ * option can be used to avoid storing other events.
  *
  * Default value is 0 (store all enabled events).
  *

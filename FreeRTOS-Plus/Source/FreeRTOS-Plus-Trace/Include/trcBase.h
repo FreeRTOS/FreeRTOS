@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
- * trcKernel.c
+ * trcBase.h
  *
- * Functions used by trcKernelHooks.h for storing various kernel events.
+ * Core functionality of the Tracealyzer recorder library.
  *
  * Terms of Use
  * This software is copyright Percepio AB. The recorder library is free for
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -65,8 +65,10 @@
 /* Max number of event codes supported */
 #define NEventCodes 0x100
 
-extern volatile int recorder_busy; // This is used to keep track of the recorder's critical sections, to determine if it is busy
-// Our local critical sections for the recorder - updates an internal busy flag
+/* Keeps track of the recorder's critical sections */
+extern volatile int recorder_busy;
+
+/* Our local critical sections for the recorder */
 #define trcCRITICAL_SECTION_BEGIN() {TRACE_ENTER_CRITICAL_SECTION(); recorder_busy++;}
 #define trcCRITICAL_SECTION_END() {recorder_busy--; TRACE_EXIT_CRITICAL_SECTION();}
 
@@ -145,7 +147,7 @@ typedef struct
 
 	/* This is used to calculate the index in the dynamic object table
 	(handle - 1 - nofStaticObjects = index)*/
-#if (USE_16BIT_OBJECT_HANDLES == 1)	
+#if (USE_16BIT_OBJECT_HANDLES == 1)
 	objectHandleType NumberOfObjectsPerClass[2*((TRACE_NCLASSES+1)/2)];
 #else
 	objectHandleType NumberOfObjectsPerClass[4*((TRACE_NCLASSES+3)/4)];
@@ -242,7 +244,7 @@ typedef struct
 	uint8_t type;
 	uint8_t unused1;
 	uint8_t unused2;
-	uint8_t dts;	
+	uint8_t dts;
 } TaskInstanceStatusEvent;
 
 typedef struct
@@ -335,7 +337,7 @@ typedef struct
 	/* Used to determine Kernel and Endianess */
 	uint16_t version;
 
-	/* Currently 3, since v2.6.0 */
+	/* Currently 3 */
 	uint8_t minor_version;
 
 	/* This should be 0 if lower IRQ priority values implies higher priority
@@ -374,7 +376,7 @@ typedef struct
 
 	/* Not used, remains for compatibility and future use */
 	uint8_t notused[28];
-	
+
 	/* The amount of heap memory remaining at the last malloc or free event */
 	uint32_t heapMemUsage;
 

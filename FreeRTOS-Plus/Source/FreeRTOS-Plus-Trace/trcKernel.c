@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Tracealyzer v2.7.7 Recorder Library
+ * Tracealyzer v3.0.2 Recorder Library
  * Percepio AB, www.percepio.com
  *
  * trcKernel.c
@@ -33,7 +33,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2012-2015.
+ * Copyright Percepio AB, 2014.
  * www.percepio.com
  ******************************************************************************/
 
@@ -48,9 +48,9 @@ int8_t nISRactive = 0;
 objectHandleType handle_of_last_logged_task = 0;
 uint8_t inExcludedTask = 0;
 
-#if (INCLUDE_MEMMANG_EVENTS == 1)
-/* Current heap usage. Always updated. */
-static uint32_t heapMemUsage = 0;
+#if (INCLUDE_MEMMANG_EVENTS == 1) && (TRACE_SCHEDULING_ONLY == 0)
+ /* Current heap usage. Always updated. */
+ static uint32_t heapMemUsage = 0;
 #endif
 
 #if (TRACE_SCHEDULING_ONLY == 0)
@@ -639,9 +639,9 @@ void vTraceSetPriorityProperty(uint8_t objectclass, objectHandleType id, uint8_t
 uint8_t uiTraceGetPriorityProperty(uint8_t objectclass, objectHandleType id)
 {
 	TRACE_ASSERT(objectclass < TRACE_NCLASSES,
-		"uiTraceGetPriorityProperty: Invalid objectclass number (>= TRACE_NCLASSES)", 0);
+		"uiTraceGetPriorityProperty: objectclass >= TRACE_NCLASSES", 0);
 	TRACE_ASSERT(id <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass],
-		"uiTraceGetPriorityProperty: Task handle exceeds NTask. You may need to increase this constant in trcConfig.h.", 0);
+		"uiTraceGetPriorityProperty: Invalid value for id", 0);
 
 	return TRACE_PROPERTY_ACTOR_PRIORITY(objectclass, id);
 }

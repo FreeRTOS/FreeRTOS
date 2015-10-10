@@ -83,6 +83,8 @@
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
+ * http://www.freertos.org/RX231_RTOS_Renesas_GCC_IAR.html
+ *
  */
 
 /* Scheduler include files. */
@@ -120,6 +122,7 @@ void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
+/* See http://www.freertos.org/RX231_RTOS_Renesas_GCC_IAR.html */
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */
@@ -214,7 +217,9 @@ void vApplicationTickHook( void )
 /*-----------------------------------------------------------*/
 
 /* The RX port uses this callback function to configure its tick interrupt.
-This allows the application to choose the tick interrupt source. */
+This allows the application to choose the tick interrupt source.
+***NOTE***: configTICK_VECTOR must be set in FreeRTOSConfig.h to be correct for
+whichever vector is used. */
 void vApplicationSetupTimerInterrupt( void )
 {
 const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500UL;

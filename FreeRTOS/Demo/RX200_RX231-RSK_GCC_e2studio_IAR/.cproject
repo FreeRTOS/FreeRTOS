@@ -53,6 +53,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.core.Compiler.option.CPUSeries.930403567" name="Cpu Series" superClass="com.renesas.cdt.core.Compiler.option.CPUSeries" value="RX231" valueType="string"/>
+								<option id="com.renesas.cdt.rx.HardwareDebug.Compiler.option.optimizationLevel.1101824266" name="Optimization level" superClass="com.renesas.cdt.rx.HardwareDebug.Compiler.option.optimizationLevel" value="com.renesas.cdt.rx.HardwareDebug.Compiler.option.optimizationLevel.none" valueType="enumerated"/>
+								<option id="com.renesas.cdt.core.Compiler.option.misc67.567825448" name="Do not Inline functions early before doing `-fprofile-generate' instrumentation and real inlining pass (-fno-early-inlining)" superClass="com.renesas.cdt.core.Compiler.option.misc67" value="false" valueType="boolean"/>
 								<inputType id="%Base.Compiler.C.InputType.Id.1532375645" name="C Input" superClass="%Base.Compiler.C.InputType.Id"/>
 								<inputType id="Base.Compiler.CPP.InputType.Id.842694984" name="C++ Input" superClass="Base.Compiler.CPP.InputType.Id"/>
 							</tool>

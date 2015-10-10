@@ -83,6 +83,8 @@
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
+ * See http://www.freertos.org/RX113_RTOS_Renesas_GCC_IAR.html
+ *
  */
 
 /* Scheduler include files. */
@@ -124,7 +126,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
-
+/* See http://www.freertos.org/RX113_RTOS_Renesas_GCC_IAR.html */
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */

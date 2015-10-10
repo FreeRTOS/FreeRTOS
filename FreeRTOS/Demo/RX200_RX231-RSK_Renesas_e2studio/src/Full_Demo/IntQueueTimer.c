@@ -92,6 +92,7 @@ void vInitialiseTimerForIntQueueTest( void )
 	/* Ensure interrupts do not start until full configuration is complete. */
 	portENTER_CRITICAL();
 	{
+		/* Give write access. */
 		SYSTEM.PRCR.WORD = 0xa502;
 
 		/* Cascade two 8bit timer channels to generate the interrupts. 

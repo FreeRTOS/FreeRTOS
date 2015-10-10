@@ -83,6 +83,8 @@
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
+ * http://www.freertos.org/RX231_RTOS_Renesas_GCC_IAR.html
+ *
  */
 
 /* Scheduler include files. */
@@ -92,7 +94,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -120,6 +122,7 @@ void vApplicationTickHook( void );
 
 /*-----------------------------------------------------------*/
 
+/* See http://www.freertos.org/RX231_RTOS_Renesas_GCC_IAR.html */
 int main( void )
 {
 	/* Configure the hardware ready to run the demo. */

@@ -55,6 +55,7 @@
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa.760685592" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa.rxv2" valueType="enumerated"/>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.floatIns.1935378446" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.floatIns" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.floatIns.enable" valueType="enumerated"/>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.1251656569" name="Optimize level" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.0" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizationType.1200083822" name="Optimization type" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizationType" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizationType.speed" valueType="enumerated"/>
 								<inputType id="%Base.Compiler.Shc.C.Input.Id.421764231" name="C Input" superClass="%Base.Compiler.Shc.C.Input.Id"/>
 								<inputType id="%Base.Compiler.Shc.C.Input1.Id.1660674237" name="C++ Input" superClass="%Base.Compiler.Shc.C.Input1.Id"/>
 							</tool>

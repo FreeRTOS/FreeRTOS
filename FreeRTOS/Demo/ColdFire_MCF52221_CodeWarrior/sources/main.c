@@ -262,7 +262,7 @@ volatile unsigned portBASE_TYPE uxUnusedStack;
 	    	ulTicksToWait = mainERROR_PERIOD;
 		}
 
-		/* Toggle the LED each itteration. */
+		/* Toggle the LED each iteration. */
 		vParTestToggleLED( mainCHECK_LED );
 
 		/* For demo only - how much unused stack does this task have? */

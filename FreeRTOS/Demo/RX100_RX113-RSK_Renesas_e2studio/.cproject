@@ -58,9 +58,10 @@
 								</option>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa.891020448" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.isa.rxv1" valueType="enumerated"/>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.floatIns.887015730" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.floatIns" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.floatIns.enable" valueType="enumerated"/>
-								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.964108751" name="Optimize level" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.0" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.964108751" name="Optimize level" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizeLevel.max" valueType="enumerated"/>
 								<option defaultValue="true" id="com.renesas.cdt.renesas.Compiler.option.GenDebugInfo.159226508" name="Generate debug information" superClass="com.renesas.cdt.renesas.Compiler.option.GenDebugInfo" value="true" valueType="boolean"/>
 								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.stuffD.189152785" name="Allocates initialized variables to 4-byte boundary alignment sections" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.stuffD" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizationType.2131923502" superClass="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizationType" value="com.renesas.cdt.rxc.HardwareDebug.Compiler.option.optimizationType.speed" valueType="enumerated"/>
 								<inputType id="%Base.Compiler.Shc.C.Input.Id.1411777144" name="C Input" superClass="%Base.Compiler.Shc.C.Input.Id"/>
 								<inputType id="%Base.Compiler.Shc.C.Input1.Id.1988726590" name="C++ Input" superClass="%Base.Compiler.Shc.C.Input1.Id"/>
 							</tool>

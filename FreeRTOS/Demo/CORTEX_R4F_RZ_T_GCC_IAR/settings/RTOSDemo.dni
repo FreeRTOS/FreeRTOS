@@ -48,7 +48,7 @@ PrevWtdReset=Reset and halt after bootloader
 [ArmDriver]
 EnableCache=1
 [DebugChecksum]
-Checksum=479945930
+Checksum=1116957455
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -104,9 +104,10 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Disassemble mode]
-mode=0
+mode=3
 [Breakpoints2]
-Count=0
+Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\src\cg_src\r_cg_scifa_user.c}.237.2" 0 0 1 "" 0 "" 0
+Count=1
 [Aliases]
 Count=0
 SuppressDialog=0

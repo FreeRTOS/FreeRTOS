@@ -233,7 +233,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>11111110</state>
+          <state>00000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -308,6 +308,7 @@
           <state>$PROJ_DIR$\src\cg_src</state>
           <state>$PROJ_DIR$\..\Common\include</state>
           <state>$PROJ_DIR$\src\Full_Demo</state>
+          <state>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -327,7 +328,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -336,7 +337,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -1990,6 +1991,12 @@
         <name>$PROJ_DIR$\..\Common\Minimal\TimerDemo.c</name>
       </file>
     </group>
+    <group>
+      <name>FreeRTOS+CLI</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c</name>
+      </file>
+    </group>
     <file>
       <name>$PROJ_DIR$\src\Full_Demo\IntQueueTimer.c</name>
     </file>
@@ -1998,6 +2005,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\src\Full_Demo\reg_test_IAR.asm</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\UARTCommandConsole.c</name>
     </file>
   </group>
   <group>
@@ -2028,6 +2041,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\src\cg_src\r_cg_rspi_user.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\cg_src\r_cg_scifa.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\src\cg_src\r_cg_scifa_user.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\src\cg_src\r_cg_systeminit.c</name>

@@ -95,7 +95,7 @@ _prvRegTest1Implementation:
 	MOV	#14, R14					
 	MOV	#15, R15					
 	
-	/* Loop, checking each itteration that each register still contains the
+	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 TestLoop1:								
 
@@ -180,7 +180,7 @@ _prvRegTest2Implementation:
 	MOV	#140H, R14					
 	MOV	#150H, R15					
 	
-	/* Loop, checking each itteration that each register still contains the
+	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 TestLoop2:								
 

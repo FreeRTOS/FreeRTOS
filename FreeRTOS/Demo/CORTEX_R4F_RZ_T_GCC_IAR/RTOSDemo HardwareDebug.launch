@@ -13,7 +13,7 @@
 <stringAttribute key="com.renesas.cdt.core.targetDevice" value="R7S910018"/>
 <booleanAttribute key="com.renesas.cdt.core.useRemoteTarget" value="true"/>
 <booleanAttribute key="com.renesas.cdt.core.verboseMode" value="false"/>
-<stringAttribute key="com.renesas.cdt.debug.ioview.dsf.registerSelection" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;selectedRegisterList ioFilePath=&quot;C:\DevTools\Renesas\e2_studio\internal\IoFiles\RZ\R7S910018.sfrx&quot;/&gt;&#13;&#10;"/>
+<stringAttribute key="com.renesas.cdt.debug.ioview.dsf.registerSelection" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;selectedRegisterList ioFilePath=&quot;C:\DevTools\Renesas\e2_studio_4\internal\IoFiles\RZ\R7S910018.sfrx&quot;/&gt;&#13;&#10;"/>
 <stringAttribute key="com.renesas.cdt.launch.dsf.IO_MAP" value="${eclipse_home}..\internal\IoFiles\RZ\R7S910018.sfrx"/>
 <booleanAttribute key="com.renesas.cdt.launch.dsf.USE_DEFAULT_IO_MAP" value="true"/>
 <listAttribute key="com.renesas.cdt.launch.dsf.downloadImages">
@@ -46,7 +46,7 @@
 <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="3"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="true"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_R4F_RZ_T_GCC_IAR_ARM\HardwareDebug\RTOSDemo.x"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_R4F_RZ_T_GCC_IAR\HardwareDebug\RTOSDemo.x"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value="0"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value=""/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
@@ -54,10 +54,10 @@
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
-<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
-<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_R4F_RZ_T_GCC_IAR_ARM\HardwareDebug\RTOSDemo.x"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_R4F_RZ_T_GCC_IAR\HardwareDebug\RTOSDemo.x"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value="0"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForImage" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForSymbols" value="false"/>
@@ -69,11 +69,11 @@
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
-<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="HardwareDebug/RTOSDemo.x"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="RTOSDemo"/>
-<booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.renesas.cdt.rz.hardwaredebug.win32.configuration.Id.137003302"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/RTOSDemo"/>

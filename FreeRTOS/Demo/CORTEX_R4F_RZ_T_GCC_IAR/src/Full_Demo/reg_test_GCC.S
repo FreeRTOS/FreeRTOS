@@ -119,7 +119,7 @@ vRegTest1Implementation:
 	vmov 	d14, r4, r5
 	vmov 	d15, r6, r7
 
-	/* Loop, checking each itteration that each register still contains the
+	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 reg1_loop:
 	/* Yield to increase test coverage */
@@ -312,7 +312,7 @@ vRegTest2Implementation:
 	vmov 	d14, r4, r5
 	vmov 	d15, r6, r7
 
-	/* Loop, checking each itteration that each register still contains the
+	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 reg2_loop:
 	/* Check all the VFP registers still contain the values set above.

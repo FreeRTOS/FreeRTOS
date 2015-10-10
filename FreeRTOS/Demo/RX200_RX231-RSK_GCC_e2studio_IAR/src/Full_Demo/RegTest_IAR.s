@@ -106,7 +106,7 @@ _vRegTest1Implementation:
 	MVTACLO R2, A0
 	MVTACHI R3, A1
 	MVTACLO R4, A1
-	/* Loop, checking each itteration that each register still contains the
+	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 TestLoop1:								
 
@@ -223,7 +223,7 @@ _vRegTest2Implementation:
 	MVTACHI R3, A1
 	MVTACLO R4, A1
 
-	/* Loop, checking each itteration that each register still contains the
+	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 TestLoop2:								
 

@@ -115,11 +115,6 @@ or 0 to run the more comprehensive test and demo application. */
 static void prvClearBSS( void );
 
 /*
- * Configure the hardware as necessary to run this demo.
- */
-static void prvSetupHardware( void );
-
-/*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
@@ -136,10 +131,6 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* Prototype for the IRQ handler called by the generic Cortex-A5 RTOS port
-layer. */
-void vApplicationIRQHandler( void );
-
 /* Library initialisation. */
 extern void R_Systeminit( void );
 
@@ -153,7 +144,7 @@ int main( void )
 	prvClearBSS();
 
 	/* Configure the hardware ready to run the demo. */
-	prvSetupHardware();
+	R_Systeminit();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -168,12 +159,6 @@ int main( void )
 	#endif
 
 	return 0;
-}
-/*-----------------------------------------------------------*/
-
-static void prvSetupHardware( void )
-{
-	R_Systeminit();
 }
 /*-----------------------------------------------------------*/
 

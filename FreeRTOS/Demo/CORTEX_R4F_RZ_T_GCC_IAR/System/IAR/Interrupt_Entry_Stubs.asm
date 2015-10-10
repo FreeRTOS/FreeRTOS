@@ -74,10 +74,18 @@
 	EXTERN FreeRTOS_IRQ_Handler
 	EXTERN vCMT_1_Channel_0_ISR
 	EXTERN vCMT_1_Channel_1_ISR
+	EXTERN r_scifa2_txif2_interrupt
+	EXTERN r_scifa2_rxif2_interrupt
+	EXTERN r_scifa2_drif2_interrupt
+	EXTERN r_scifa2_brif2_interrupt
 
 	PUBLIC FreeRTOS_Tick_Handler_Entry
 	PUBLIC vCMT_1_Channel_0_ISR_Entry
 	PUBLIC vCMT_1_Channel_1_ISR_Entry
+	PUBLIC r_scifa2_txif2_interrupt_entry
+	PUBLIC r_scifa2_rxif2_interrupt_entry
+	PUBLIC r_scifa2_drif2_interrupt_entry
+	PUBLIC r_scifa2_brif2_interrupt_entry
 
 FreeRTOS_Tick_Handler_Entry:
 	/* Save used registers (probably not necessary). */
@@ -113,5 +121,53 @@ vCMT_1_Channel_1_ISR_Entry:
 	/* Restore used registers then branch to the FreeRTOS IRQ handler. */
 	POP		{r0-r1}
 	B		FreeRTOS_IRQ_Handler
+/*-----------------------------------------------------------*/
 
-    END
+r_scifa2_txif2_interrupt_entry:
+	/* Save used registers (probably not necessary). */
+	PUSH	{r0-r1}
+	/* Save the address of the C portion of this handler in pxISRFunction. */
+	LDR		r0, =pxISRFunction
+	LDR		R1, =r_scifa2_txif2_interrupt
+	STR		R1, [r0]
+	/* Restore used registers then branch to the FreeRTOS IRQ handler. */
+	POP		{r0-r1}
+	B		FreeRTOS_IRQ_Handler
+/*-----------------------------------------------------------*/
+
+r_scifa2_rxif2_interrupt_entry:
+	/* Save used registers (probably not necessary). */
+	PUSH	{r0-r1}
+	/* Save the address of the C portion of this handler in pxISRFunction. */
+	LDR		r0, =pxISRFunction
+	LDR		R1, =r_scifa2_rxif2_interrupt
+	STR		R1, [r0]
+	/* Restore used registers then branch to the FreeRTOS IRQ handler. */
+	POP		{r0-r1}
+	B		FreeRTOS_IRQ_Handler
+/*-----------------------------------------------------------*/
+
+r_scifa2_drif2_interrupt_entry:
+	/* Save used registers (probably not necessary). */
+	PUSH	{r0-r1}
+	/* Save the address of the C portion of this handler in pxISRFunction. */
+	LDR		r0, =pxISRFunction
+	LDR		R1, =r_scifa2_drif2_interrupt
+	STR		R1, [r0]
+	/* Restore used registers then branch to the FreeRTOS IRQ handler. */
+	POP		{r0-r1}
+	B		FreeRTOS_IRQ_Handler
+/*-----------------------------------------------------------*/
+
+r_scifa2_brif2_interrupt_entry:
+	/* Save used registers (probably not necessary). */
+	PUSH	{r0-r1}
+	/* Save the address of the C portion of this handler in pxISRFunction. */
+	LDR		r0, =pxISRFunction
+	LDR		R1, =r_scifa2_brif2_interrupt
+	STR		R1, [r0]
+	/* Restore used registers then branch to the FreeRTOS IRQ handler. */
+	POP		{r0-r1}
+	B		FreeRTOS_IRQ_Handler
+
+	END

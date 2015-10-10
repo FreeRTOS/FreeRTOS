@@ -280,7 +280,7 @@ TickType_t xLastExecutionTime;
 	    	ulTicksToWait = mainERROR_PERIOD;
 		}
 
-		/* Toggle the LED each itteration. */
+		/* Toggle the LED each iteration. */
 		vParTestToggleLED( mainCHECK_LED );
 	}
 }

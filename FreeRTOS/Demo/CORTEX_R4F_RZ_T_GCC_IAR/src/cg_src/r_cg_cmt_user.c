@@ -58,6 +58,9 @@ volatile uint32_t g_time_us_count;
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
+#ifdef __ICCARM__
+	__arm __irq
+#endif
 void r_cmt_cmi4_interrupt(void)
 {
     /* Clear the interrupt source CMI4 */
@@ -79,6 +82,9 @@ void r_cmt_cmi4_interrupt(void)
 * Arguments    : None
 * Return Value : None
 ***********************************************************************************************************************/
+#ifdef __ICCARM__
+	__arm __irq
+#endif
 void r_cmt_cmi5_interrupt(void)
 {
     /* Clear the interrupt source CMI5 */

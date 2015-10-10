@@ -92,7 +92,7 @@ _vRegTest1Implementation:
 	MOV.L	#14, R14
 	MOV.L	#15, R15
 
-	; Loop, checking each itteration that each register still contains the
+	; Loop, checking each iteration that each register still contains the
 	; expected value.
 TestLoop1:
 
@@ -177,7 +177,7 @@ _vRegTest2Implementation:
 	MOV.L	#140, R14
 	MOV.L	#150, R15
 
-	; Loop, checking on each itteration that each register still contains the
+	; Loop, checking on each iteration that each register still contains the
 	; expected value.
 TestLoop2:
 

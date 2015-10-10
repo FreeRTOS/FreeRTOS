@@ -70,8 +70,7 @@
 
  /******************************************************************************
  *
- * See the following URL for information on the commands defined in this file:
- * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_UDP/Embedded_Ethernet_Examples/Ethernet_Related_CLI_Commands.shtml
+ * http://www.FreeRTOS.org/cli
  *
  ******************************************************************************/
 
@@ -339,7 +338,7 @@ static BaseType_t prvThreeParameterEchoCommand( char *pcWriteBuffer, size_t xWri
 {
 const char *pcParameter;
 BaseType_t xParameterStringLength, xReturn;
-static BaseType_t lParameterNumber = 0;
+static UBaseType_t uxParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -348,7 +347,7 @@ static BaseType_t lParameterNumber = 0;
 	( void ) xWriteBufferLen;
 	configASSERT( pcWriteBuffer );
 
-	if( lParameterNumber == 0 )
+	if( uxParameterNumber == 0 )
 	{
 		/* The first time the function is called after the command has been
 		entered just a header string is returned. */
@@ -356,7 +355,7 @@ static BaseType_t lParameterNumber = 0;
 
 		/* Next time the function is called the first parameter will be echoed
 		back. */
-		lParameterNumber = 1L;
+		uxParameterNumber = 1U;
 
 		/* There is more data to be returned as no parameters have been echoed
 		back yet. */
@@ -368,7 +367,7 @@ static BaseType_t lParameterNumber = 0;
 		pcParameter = FreeRTOS_CLIGetParameter
 						(
 							pcCommandString,		/* The command string itself. */
-							lParameterNumber,		/* Return the next parameter. */
+							uxParameterNumber,		/* Return the next parameter. */
 							&xParameterStringLength	/* Store the parameter string length. */
 						);
 
@@ -377,24 +376,24 @@ static BaseType_t lParameterNumber = 0;
 
 		/* Return the parameter string. */
 		memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-		sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-		strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
+		sprintf( pcWriteBuffer, "%d: ", ( int ) uxParameterNumber );
+		strncat( pcWriteBuffer, pcParameter, ( size_t ) xParameterStringLength );
 		strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 		/* If this is the last of the three parameters then there are no more
 		strings to return after this one. */
-		if( lParameterNumber == 3L )
+		if( uxParameterNumber == 3U )
 		{
 			/* If this is the last of the three parameters then there are no more
 			strings to return after this one. */
 			xReturn = pdFALSE;
-			lParameterNumber = 0L;
+			uxParameterNumber = 0;
 		}
 		else
 		{
 			/* There are more parameters to return after this one. */
 			xReturn = pdTRUE;
-			lParameterNumber++;
+			uxParameterNumber++;
 		}
 	}
 
@@ -406,7 +405,7 @@ static BaseType_t prvParameterEchoCommand( char *pcWriteBuffer, size_t xWriteBuf
 {
 const char *pcParameter;
 BaseType_t xParameterStringLength, xReturn;
-static BaseType_t lParameterNumber = 0;
+static UBaseType_t uxParameterNumber = 0;
 
 	/* Remove compile time warnings about unused parameters, and check the
 	write buffer is not NULL.  NOTE - for simplicity, this example assumes the
@@ -415,7 +414,7 @@ static BaseType_t lParameterNumber = 0;
 	( void ) xWriteBufferLen;
 	configASSERT( pcWriteBuffer );
 
-	if( lParameterNumber == 0 )
+	if( uxParameterNumber == 0 )
 	{
 		/* The first time the function is called after the command has been
 		entered just a header string is returned. */
@@ -423,7 +422,7 @@ static BaseType_t lParameterNumber = 0;
 
 		/* Next time the function is called the first parameter will be echoed
 		back. */
-		lParameterNumber = 1L;
+		uxParameterNumber = 1U;
 
 		/* There is more data to be returned as no parameters have been echoed
 		back yet. */
@@ -435,7 +434,7 @@ static BaseType_t lParameterNumber = 0;
 		pcParameter = FreeRTOS_CLIGetParameter
 						(
 							pcCommandString,		/* The command string itself. */
-							lParameterNumber,		/* Return the next parameter. */
+							uxParameterNumber,		/* Return the next parameter. */
 							&xParameterStringLength	/* Store the parameter string length. */
 						);
 
@@ -443,13 +442,13 @@ static BaseType_t lParameterNumber = 0;
 		{
 			/* Return the parameter string. */
 			memset( pcWriteBuffer, 0x00, xWriteBufferLen );
-			sprintf( pcWriteBuffer, "%d: ", ( int ) lParameterNumber );
-			strncat( pcWriteBuffer, pcParameter, xParameterStringLength );
+			sprintf( pcWriteBuffer, "%d: ", ( int ) uxParameterNumber );
+			strncat( pcWriteBuffer, ( char * ) pcParameter, ( size_t ) xParameterStringLength );
 			strncat( pcWriteBuffer, "\r\n", strlen( "\r\n" ) );
 
 			/* There might be more parameters to return after this one. */
 			xReturn = pdTRUE;
-			lParameterNumber++;
+			uxParameterNumber++;
 		}
 		else
 		{
@@ -461,7 +460,7 @@ static BaseType_t lParameterNumber = 0;
 			xReturn = pdFALSE;
 
 			/* Start over the next time this command is executed. */
-			lParameterNumber = 0;
+			uxParameterNumber = 0;
 		}
 	}
 

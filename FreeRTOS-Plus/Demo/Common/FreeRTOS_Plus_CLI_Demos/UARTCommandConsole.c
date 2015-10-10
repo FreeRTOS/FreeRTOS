@@ -164,7 +164,7 @@ xComPortHandle xPort;
 	xPort = xSerialPortInitMinimal( configCLI_BAUD_RATE, cmdQUEUE_LENGTH );
 
 	/* Send the welcome message. */
-	vSerialPutString( xPort, ( signed char * ) pcWelcomeMessage, strlen( pcWelcomeMessage ) );
+	vSerialPutString( xPort, ( signed char * ) pcWelcomeMessage, ( unsigned short ) strlen( pcWelcomeMessage ) );
 
 	for( ;; )
 	{
@@ -183,7 +183,7 @@ xComPortHandle xPort;
 			if( cRxedChar == '\n' || cRxedChar == '\r' )
 			{
 				/* Just to space the output from the input. */
-				vSerialPutString( xPort, ( signed char * ) pcNewLine, strlen( pcNewLine ) );
+				vSerialPutString( xPort, ( signed char * ) pcNewLine, ( unsigned short ) strlen( pcNewLine ) );
 
 				/* See if the command is empty, indicating that the last command
 				is to be executed again. */
@@ -203,7 +203,7 @@ xComPortHandle xPort;
 					xReturned = FreeRTOS_CLIProcessCommand( cInputString, pcOutputString, configCOMMAND_INT_MAX_OUTPUT_SIZE );
 
 					/* Write the generated string to the UART. */
-					vSerialPutString( xPort, ( signed char * ) pcOutputString, strlen( pcOutputString ) );
+					vSerialPutString( xPort, ( signed char * ) pcOutputString, ( unsigned short ) strlen( pcOutputString ) );
 
 				} while( xReturned != pdFALSE );
 
@@ -215,7 +215,7 @@ xComPortHandle xPort;
 				ucInputIndex = 0;
 				memset( cInputString, 0x00, cmdMAX_INPUT_SIZE );
 
-				vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, strlen( pcEndOfOutputMessage ) );
+				vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, ( unsigned short ) strlen( pcEndOfOutputMessage ) );
 			}
 			else
 			{
@@ -260,7 +260,7 @@ void vOutputString( const char * const pcMessage )
 {
 	if( xSemaphoreTake( xTxMutex, cmdMAX_MUTEX_WAIT ) == pdPASS )
 	{
-		vSerialPutString( xPort, ( signed char * ) pcMessage, strlen( pcMessage ) );
+		vSerialPutString( xPort, ( signed char * ) pcMessage, ( unsigned short ) strlen( pcMessage ) );
 		xSemaphoreGive( xTxMutex );
 	}
 }

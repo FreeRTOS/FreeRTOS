@@ -44,6 +44,7 @@
 								<option id="com.renesas.cdt.core.Compiler.option.deviceShortName.897790463" name="DeviceShortName" superClass="com.renesas.cdt.core.Compiler.option.deviceShortName" value="R7S910018" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.core.Compiler.option.includeFileDir.1914876765" name="Include file directories" superClass="com.renesas.cdt.core.Compiler.option.includeFileDir" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/bin/newlib/libc/sys/arm&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/FreeRTOS-Plus-CLI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/include}&quot;"/>
@@ -138,16 +139,13 @@
 									<listOptionValue builtIn="false" value="&quot;.\libTutorial.a&quot;"/>
 								</option>
 								<option id="com.renesas.cdt.core.Linker.option.commandFileOverride.622113609" name="Command file overide" superClass="com.renesas.cdt.core.Linker.option.commandFileOverride" value="com.renesas.cdt.core.Linker.option.commandFileOverride.externalLinkerScript" valueType="enumerated"/>
-								<option command=" -T&quot;C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/CORTEX_R4F_RZ_T_GCC_IAR_ARM\HardwareDebug\LinkerSubCommand.tmp&quot; -T" id="com.renesas.cdt.core.Linker.option.file.464254322" name="File" superClass="com.renesas.cdt.core.Linker.option.file" value="&quot;${workspace_loc:/${ProjName}/System/GCC/GNU_LINKER_ATCM.ld}&quot;" valueType="string"/>
+								<option command=" -T&quot;C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/CORTEX_R4F_RZ_T_GCC_IAR\HardwareDebug\LinkerSubCommand.tmp&quot; -T" id="com.renesas.cdt.core.Linker.option.file.464254322" name="File" superClass="com.renesas.cdt.core.Linker.option.file" value="&quot;${workspace_loc:/${ProjName}/System/GCC/GNU_LINKER_ATCM.ld}&quot;" valueType="string"/>
 							</tool>
 							<tool id="com.renesas.cdt.rz.hardwaredebug.win32.tool.objcopy.Id.1674695683" name="Objcopy" superClass="com.renesas.cdt.rz.hardwaredebug.win32.tool.objcopy.Id"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.renesas.cdt.rz.hardwaredebug.win32.configuration.Id.137003302.1449590210" name="reg_test_IAR.asm" rcbsApplicability="disable" resourcePath="src/Full_Demo/reg_test_IAR.asm" toolsToInvoke="com.renesas.cdt.rz.hardwaredebug.win32.tool.compiler.Id.542544613.984236333">
-						<tool id="com.renesas.cdt.rz.hardwaredebug.win32.tool.compiler.Id.542544613.984236333" name="Compiler" superClass="com.renesas.cdt.rz.hardwaredebug.win32.tool.compiler.Id.542544613"/>
-					</fileInfo>
 					<sourceEntries>
-						<entry excluding="src/Full_Demo/reg_test_IAR.asm|src/cg_src/r_cg_s12ad_user.c|src/cg_src/r_cg_scifa.c|src/cg_src/r_cg_s12ad.c|src/cg_src/r_cg_scifa_user.c|src/cg_src/r_cg_cmt.c|System/GCC/src/siorw.c|System/GCC/src/siochar.c|System/GCC/src/gnu_io.c|System/GCC/src/syscalls.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/Full_Demo/reg_test_IAR.asm|src/cg_src/r_cg_s12ad_user.c|src/cg_src/r_cg_s12ad.c|src/cg_src/r_cg_cmt.c|System/GCC/src/siorw.c|System/GCC/src/siochar.c|System/GCC/src/gnu_io.c|System/GCC/src/syscalls.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

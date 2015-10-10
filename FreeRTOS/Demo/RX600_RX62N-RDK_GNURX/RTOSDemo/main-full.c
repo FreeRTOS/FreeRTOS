@@ -539,7 +539,7 @@ static void prvRegTest1Implementation( void )
 			"MOV	#14, R14					\n" \
 			"MOV	#15, R15					\n" \
 			
-			/* Loop, checking each itteration that each register still contains the
+			/* Loop, checking each iteration that each register still contains the
 			expected value. */
 		"TestLoop1:								\n" \
 
@@ -628,7 +628,7 @@ static void prvRegTest2Implementation( void )
 			"MOV	#140H, R14					\n" \
 			"MOV	#150H, R15					\n" \
 			
-			/* Loop, checking each itteration that each register still contains the
+			/* Loop, checking each iteration that each register still contains the
 			expected value. */
 		"TestLoop2:								\n" \
 

@@ -31,9 +31,24 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
 		<link>
+			<name>src/Full_Demo/FreeRTOS-Plus-CLI</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Source/FreeRTOS-Plus-CLI</locationURI>
+		</link>
+		<link>
+			<name>src/Full_Demo/Sample-CLI-commands.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/Sample-CLI-commands.c</locationURI>
+		</link>
+		<link>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
+			<name>src/Full_Demo/UARTCommandConsole.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Demo/Common/FreeRTOS_Plus_CLI_Demos/UARTCommandConsole.c</locationURI>
 		</link>
 		<link>
 			<name>src/Full_Demo/Standard_Demo_Tasks/include</name>
@@ -42,6 +57,78 @@
 		</link>
 	</linkedResources>
 	<filteredResources>
+		<filter>
+			<id>1444470719732</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewd</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719742</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.eww</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719742</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewp</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719757</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewt</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719769</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.dep</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719775</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Debug</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719782</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-setting</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444470719788</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-settings</arguments>
+			</matcher>
+		</filter>
 		<filter>
 			<id>1442133034715</id>
 			<name>System</name>

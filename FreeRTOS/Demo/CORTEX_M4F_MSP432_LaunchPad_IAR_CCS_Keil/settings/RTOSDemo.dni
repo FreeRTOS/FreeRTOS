@@ -9,21 +9,8 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [PlDriver]
-MemConfigValue=
+MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.2\arm\CONFIG\debugger\TexasInstruments\MSP432P401R.svd
 FirstRun=0
-[PlCacheRanges]
-CustomRanges0=0 0 536870912 1 0
-CustomRangesText0=Code
-CustomRanges1=0 536870912 33554432 0 0
-CustomRangesText1=SRAM
-CustomRanges2=0 570425344 33554432 0 0
-CustomRangesText2=bit-banding
-CustomRanges3=0 1073741824 33554432 2 0
-CustomRangesText3=Peripheral
-CustomRanges4=0 1107296256 33554432 2 0
-CustomRangesText4=bit-banding
-CustomRanges5=0 3758096384 536870912 2 0
-CustomRangesText5=Private peripheral
 [Jet]
 JetConnSerialNo=73866
 JetConnFoundProbes=
@@ -32,7 +19,7 @@ MultiCoreRunAll=0
 OnlineReset=Software
 PrevWtdReset=System
 [DebugChecksum]
-Checksum=701872400
+Checksum=-1201177865
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -77,6 +64,19 @@ ITMportsLogFile=0
 ITMlogFile=$PROJ_DIR$\ITM.log
 [Breakpoints]
 Count=0
+[PlCacheRanges]
+CustomRanges0=0 0 536870912 1 0
+CustomRangesText0=Code
+CustomRanges1=0 536870912 33554432 0 0
+CustomRangesText1=SRAM
+CustomRanges2=0 570425344 33554432 0 0
+CustomRangesText2=bit-banding
+CustomRanges3=0 1073741824 33554432 2 0
+CustomRangesText3=Peripheral
+CustomRanges4=0 1107296256 33554432 2 0
+CustomRangesText4=bit-banding
+CustomRanges5=0 3758096384 536870912 2 0
+CustomRangesText5=Private peripheral
 [Trace2]
 Enabled=0
 ShowSource=0
@@ -90,36 +90,45 @@ EventFOLD=0
 EventLSU=0
 EventSLEEP=0
 [PowerLog]
+Title_0=I0
+Symbol_0=0 4 1
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
-ShowTimeSum=0
-Title_0=I0
-Symbol_0=0 4 1
 LiveEnabled=0
 LiveFile=PowerLogLive.log
 [DataLog]
 LogEnabled=0
-SumEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
+SumEnabled=0
 ShowTimeSum=1
 [EventLog]
+Title_0=Ch3
+Symbol_0=0 4 1
+Title_1=Ch2
+Symbol_1=0 4 1
+Title_2=Ch1
+Symbol_2=0 4 1
+Title_3=Ch0
+Symbol_3=0 4 1
 LogEnabled=0
-SumEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
+SumEnabled=0
 ShowTimeSum=1
 SumSortOrder=0
 [InterruptLog]
 LogEnabled=0
-SumEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
+SumEnabled=0
 ShowTimeSum=1
 SumSortOrder=0
 [CallStackLog]
 Enabled=0
+[CallStackStripe]
+ShowTiming=1
 [DriverProfiling]
 Enabled=0
 Mode=3

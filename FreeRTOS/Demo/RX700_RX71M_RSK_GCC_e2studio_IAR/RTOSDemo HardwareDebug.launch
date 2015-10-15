@@ -9,7 +9,7 @@
 <stringAttribute key="com.renesas.cdt.core.optionInitCommands" value=""/>
 <intAttribute key="com.renesas.cdt.core.portNumber" value="61234"/>
 <stringAttribute key="com.renesas.cdt.core.runCommands" value=""/>
-<stringAttribute key="com.renesas.cdt.core.serverParam" value="-g E1  -t R5F571ML  -p 61234 -d 61236 -uClockSrcHoco= 0 -uInputClock= 27.0000 -uAllowClockSourceInternal= 1 -uUseFine= 0 -uJTagClockFreq= 16.5 -w 0 -z 0 -uRegisterSetting= 0 -uModePin= 0 -uDebugMode= 0 -uExecuteProgram= 0 -uIdCode= FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF -b -n 0 -uWorkRamAddress= 1000 -uProgReWriteIRom= 0 -uProgReWriteDFlash= 0 -uPTimerClock= 120000000 -uhookWorkRamAddr= 0x1000 -uhookWorkRamSize= 0x230"/>
+<stringAttribute key="com.renesas.cdt.core.serverParam" value="-g E1  -t R5F571ML  -p 61234 -d 61236 -uClockSrcHoco= 0 -uInputClock= 27.0000 -uAllowClockSourceInternal= 1 -uUseFine= 0 -uJTagClockFreq= 16.5 -w 1 -z 0 -uRegisterSetting= 0 -uModePin= 0 -uDebugMode= 0 -uExecuteProgram= 0 -uIdCode= FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF -b -n 0 -uWorkRamAddress= 1000 -uProgReWriteIRom= 0 -uProgReWriteDFlash= 0 -uPTimerClock= 120000000 -uhookWorkRamAddr= 0x1000 -uhookWorkRamSize= 0x230"/>
 <booleanAttribute key="com.renesas.cdt.core.setResume" value="true"/>
 <booleanAttribute key="com.renesas.cdt.core.setStopAt" value="true"/>
 <booleanAttribute key="com.renesas.cdt.core.startServer" value="true"/>
@@ -29,7 +29,7 @@
 <booleanAttribute key="com.renesas.hardwaredebug.e1.allow.clock.source.internal" value="true"/>
 <intAttribute key="com.renesas.hardwaredebug.e1.clock_source" value="0"/>
 <stringAttribute key="com.renesas.hardwaredebug.e1.connection.mode" value="0"/>
-<booleanAttribute key="com.renesas.hardwaredebug.e1.e1_pwr" value="false"/>
+<booleanAttribute key="com.renesas.hardwaredebug.e1.e1_pwr" value="true"/>
 <booleanAttribute key="com.renesas.hardwaredebug.e1.enable.hot.plug" value="false"/>
 <booleanAttribute key="com.renesas.hardwaredebug.e1.enable_external_flash" value="false"/>
 <booleanAttribute key="com.renesas.hardwaredebug.e1.execute.program" value="false"/>
@@ -62,7 +62,7 @@
 <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="3"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX700_RX71M_GCC_e2studio\HardwareDebug\RTOSDemo.x"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX700_RX71M_RSK_GCC_e2studio_IAR\HardwareDebug\RTOSDemo.x"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value=""/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
@@ -73,7 +73,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX700_RX71M_GCC_e2studio\HardwareDebug\RTOSDemo.x"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value="C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX700_RX71M_RSK_GCC_e2studio_IAR\HardwareDebug\RTOSDemo.x"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value=""/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForImage" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForSymbols" value="false"/>

@@ -198,7 +198,7 @@ CLI. */
 #else
 	/* Using the CCS pre-processor constants. */
 	#ifdef __LARGE_DATA_MODEL__
-		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 85 )
 	#else
 		#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 	#endif

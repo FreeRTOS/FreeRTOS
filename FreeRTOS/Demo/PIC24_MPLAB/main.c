@@ -165,6 +165,10 @@ static void vCheckTask( void *pvParameters );
  */
 static void prvSetupHardware( void );
 
+/* Prototypes for the standard FreeRTOS callback/hook functions implemented
+within this file. */
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the LCD task. */
@@ -289,4 +293,16 @@ void vApplicationIdleHook( void )
 	vCoRoutineSchedule();
 }
 /*-----------------------------------------------------------*/
+
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
+{
+	( void ) pcTaskName;
+	( void ) pxTask;
+
+	/* Run time stack overflow checking is performed if
+	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	function is called if a stack overflow is detected. */
+	taskDISABLE_INTERRUPTS();
+	for( ;; );
+}
 

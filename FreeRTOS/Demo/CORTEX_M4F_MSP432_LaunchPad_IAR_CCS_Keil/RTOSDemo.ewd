@@ -85,7 +85,7 @@
         </option>
         <option>
           <name>OCDynDriverList</name>
-          <state>JLINK_ID</state>
+          <state>IJET_ID</state>
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
@@ -538,7 +538,7 @@
         <option>
           <name>IjetResetList</name>
           <version>1</version>
-          <state>10</state>
+          <state>4</state>
         </option>
         <option>
           <name>IjetHWResetDuration</name>
@@ -603,7 +603,7 @@
         </option>
         <option>
           <name>IjetCpuClockEdit</name>
-          <state>72.0</state>
+          <state></state>
         </option>
         <option>
           <name>IjetSwoPrescalerList</name>

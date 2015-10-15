@@ -1812,6 +1812,18 @@ void vTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPri
  */
 uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
 
+/**
+ * task. h
+ * <PRE>void vTaskNotifyClear( TaskHandle_t xTask );</pre>
+ *
+ * Clear the notification state of the task referenced by the handle xTask.  The
+ * task's notification value is not altered.  Set xTask to NULL to clear the
+ * notification state of the calling task.
+ * \defgroup vTaskNotifyClear vTaskNotifyClear
+ * \ingroup TaskNotifications
+ */
+void vTaskNotifyStateClear( TaskHandle_t xTask );
+
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES
  *----------------------------------------------------------*/

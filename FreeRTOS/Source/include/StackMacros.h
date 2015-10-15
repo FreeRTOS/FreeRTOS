@@ -86,28 +86,10 @@
 
 /*-----------------------------------------------------------*/
 
-#if( configCHECK_FOR_STACK_OVERFLOW == 0 )
-
-	/* FreeRTOSConfig.h is not set to check for stack overflows. */
-	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()
-	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()
-
-#endif /* configCHECK_FOR_STACK_OVERFLOW == 0 */
-/*-----------------------------------------------------------*/
-
-#if( configCHECK_FOR_STACK_OVERFLOW == 1 )
-
-	/* FreeRTOSConfig.h is only set to use the first method of
-	overflow checking. */
-	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()
-
-#endif
-/*-----------------------------------------------------------*/
-
-#if( ( configCHECK_FOR_STACK_OVERFLOW > 0 ) && ( portSTACK_GROWTH < 0 ) )
+#if( ( configCHECK_FOR_STACK_OVERFLOW == 1 ) && ( portSTACK_GROWTH < 0 ) )
 
 	/* Only the current stack state is to be checked. */
-	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
+	#define taskCHECK_FOR_STACK_OVERFLOW()																\
 	{																									\
 		/* Is the currently saved stack pointer within the stack limit? */								\
 		if( pxCurrentTCB->pxTopOfStack <= pxCurrentTCB->pxStack )										\
@@ -116,13 +98,13 @@
 		}																								\
 	}
 
-#endif /* configCHECK_FOR_STACK_OVERFLOW > 0 */
+#endif /* configCHECK_FOR_STACK_OVERFLOW == 1 */
 /*-----------------------------------------------------------*/
 
-#if( ( configCHECK_FOR_STACK_OVERFLOW > 0 ) && ( portSTACK_GROWTH > 0 ) )
+#if( ( configCHECK_FOR_STACK_OVERFLOW == 1 ) && ( portSTACK_GROWTH > 0 ) )
 
 	/* Only the current stack state is to be checked. */
-	#define taskFIRST_CHECK_FOR_STACK_OVERFLOW()														\
+	#define taskCHECK_FOR_STACK_OVERFLOW()																\
 	{																									\
 																										\
 		/* Is the currently saved stack pointer within the stack limit? */								\
@@ -137,20 +119,18 @@
 
 #if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) && ( portSTACK_GROWTH < 0 ) )
 
-	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																						\
-	{																																	\
-	static const uint8_t ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-													tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-													tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-													tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
-													tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE };	\
-																																		\
-																																		\
-		/* Has the extremity of the task stack ever been written over? */																\
-		if( memcmp( ( const void * ) pxCurrentTCB->pxStack, ( const void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) != 0 )			\
-		{																																\
-			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );									\
-		}																																\
+	#define taskCHECK_FOR_STACK_OVERFLOW()																\
+	{																									\
+		const uint32_t * const pulStack = ( uint32_t * ) pxCurrentTCB->pxStack;							\
+		const uint32_t ulCheckValue = ( uint32_t ) 0xa5a5a5a5;											\
+																										\
+		if( ( pulStack[ 0 ] != ulCheckValue ) ||												\
+			( pulStack[ 1 ] != ulCheckValue ) ||												\
+			( pulStack[ 2 ] != ulCheckValue ) ||												\
+			( pulStack[ 3 ] != ulCheckValue ) )												\
+		{																								\
+			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
+		}																								\
 	}
 
 #endif /* #if( configCHECK_FOR_STACK_OVERFLOW > 1 ) */
@@ -158,7 +138,7 @@
 
 #if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) && ( portSTACK_GROWTH > 0 ) )
 
-	#define taskSECOND_CHECK_FOR_STACK_OVERFLOW()																						\
+	#define taskCHECK_FOR_STACK_OVERFLOW()																								\
 	{																																	\
 	int8_t *pcEndOfStack = ( int8_t * ) pxCurrentTCB->pxEndOfStack;																		\
 	static const uint8_t ucExpectedStackBytes[] = {	tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE, tskSTACK_FILL_BYTE,		\
@@ -179,6 +159,13 @@
 
 #endif /* #if( configCHECK_FOR_STACK_OVERFLOW > 1 ) */
 /*-----------------------------------------------------------*/
+
+/* Remove stack overflow macro if not being used. */
+#ifndef taskCHECK_FOR_STACK_OVERFLOW
+	#define taskCHECK_FOR_STACK_OVERFLOW()
+#endif
+
+
 
 #endif /* STACK_MACROS_H */
 

@@ -58,7 +58,7 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1427193581265</id>
+			<id>1444926372795</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -67,7 +67,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1427193581275</id>
+			<id>1444926372800</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -76,12 +76,75 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1427193581275</id>
+			<id>1444926372806</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-Keil_*</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372810</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.dep</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372815</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewd</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372819</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewp</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372823</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.ewt</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372829</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.eww</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372834</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.uvoptx</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1444926372841</id>
+			<name></name>
+			<type>6</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RTOSDemo.uvprojx</arguments>
 			</matcher>
 		</filter>
 		<filter>

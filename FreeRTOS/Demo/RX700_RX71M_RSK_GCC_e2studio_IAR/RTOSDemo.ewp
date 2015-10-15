@@ -76,20 +76,20 @@
         <option>
           <name>GenLibInFormatter</name>
           <version>1</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GenLibInFormatterDescription</name>
-          <state>Full formatting.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>GenLibOutFormatter</name>
           <version>1</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GenLibOutFormatterDescription</name>
-          <state>Full formatting.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -255,7 +255,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>__RX</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -329,6 +329,7 @@
           <state>$PROJ_DIR$\..\..\Source\portable\IAR\RXv2</state>
           <state>$PROJ_DIR$\..\Common\include</state>
           <state>$PROJ_DIR$\src\Full_Demo</state>
+          <state>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1979,6 +1980,12 @@
   <group>
     <name>Full_Demo</name>
     <group>
+      <name>FreeRTOS+CLI</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c</name>
+      </file>
+    </group>
+    <group>
       <name>Standard_Demo_Tasks</name>
       <file>
         <name>$PROJ_DIR$\..\Common\Minimal\BlockQ.c</name>
@@ -2035,12 +2042,21 @@
     <file>
       <name>$PROJ_DIR$\src\Full_Demo\RegTest_IAR.s</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\Sample-CLI-commands.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\FreeRTOS-Plus\Demo\Common\FreeRTOS_Plus_CLI_Demos\UARTCommandConsole.c</name>
+    </file>
   </group>
   <file>
     <name>$PROJ_DIR$\src\FreeRTOSConfig.h</name>
   </file>
   <file>
     <name>$PROJ_DIR$\src\main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\src\cg_src\r_cg_intprg_iar.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\src\rskrx71mdef.h</name>

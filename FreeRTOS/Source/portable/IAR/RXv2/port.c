@@ -79,7 +79,6 @@
 #include "string.h"
 
 /* Hardware specifics. */
-#warning RX600v1 port included chip specific header file here.
 #include <machine.h>
 
 /*-----------------------------------------------------------*/

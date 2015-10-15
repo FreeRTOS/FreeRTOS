@@ -96,7 +96,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*-----------------------------------------------------------*/
 
@@ -141,6 +141,7 @@ int main( void )
 	}
 	#endif
 
+	/* Should never get reached. */
 	return 0;
 }
 /*-----------------------------------------------------------*/
@@ -202,6 +203,7 @@ volatile size_t xFreeHeapSpace;
 
 void vApplicationTickHook( void )
 {
+	/* The tick hook is not used by the blinky demo, but is by the full demo. */
 	#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 0
 	{
 		extern void vFullDemoTickHook( void );
@@ -213,7 +215,9 @@ void vApplicationTickHook( void )
 /*-----------------------------------------------------------*/
 
 /* The RX port uses this callback function to configure its tick interrupt.
-This allows the application to choose the tick interrupt source. */
+This allows the application to choose the tick interrupt source.
+***NOTE***: configTICK_VECTOR must be set in FreeRTOSConfig.h to be correct for
+whichever vector is used. */
 void vApplicationSetupTimerInterrupt( void )
 {
 const uint32_t ulEnableRegisterWrite = 0xA50BUL, ulDisableRegisterWrite = 0xA500UL;

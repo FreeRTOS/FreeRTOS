@@ -83,6 +83,8 @@
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
+ * http://www.freertos.org/Renesas_RZ-T_Cortex-R4F-RTOS.html
+ *
  */
 
 /* Standard includes. */
@@ -136,6 +138,7 @@ extern void R_Systeminit( void );
 
 /*-----------------------------------------------------------*/
 
+/* See http://www.freertos.org/Renesas_RZ-T_Cortex-R4F-RTOS.html */
 int main( void )
 {
 	/* The start up code does not include a routine to clear the BSS segment to

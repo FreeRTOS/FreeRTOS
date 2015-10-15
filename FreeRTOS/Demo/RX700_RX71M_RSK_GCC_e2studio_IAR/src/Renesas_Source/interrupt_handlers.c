@@ -16,6 +16,7 @@
 /*    Date Generated: 18/12/2014                                        */
 /************************************************************************/
 #include "interrupt_handlers.h"
+#include "iodefine.h"
 
 // Exception(Supervisor Instruction)
 void INT_Excep_SuperVisorInst(void){/* brk(); */}
@@ -328,7 +329,20 @@ void INT_Excep_ICU_GROUPBE0(void){ }
 //;0x01B4 Reserved 
 
 //;0x01B8 GROUPBL0
-void INT_Excep_ICU_GROUPBL0(void){ }
+void INT_Excep_ICU_GROUPBL0(void)
+{
+extern void r_sci7_transmitend_interrupt( void );
+extern void r_sci7_receiveerror_interrupt( void );
+
+    if (ICU.GRPBL0.BIT.IS14 == 1U)
+    {
+        r_sci7_transmitend_interrupt();
+    }
+    if (ICU.GRPBL0.BIT.IS15 == 1U)
+    {
+        r_sci7_receiveerror_interrupt();
+    }
+}
 
 //;0x01BC GROUPBL1
 void INT_Excep_ICU_GROUPBL1(void){ }

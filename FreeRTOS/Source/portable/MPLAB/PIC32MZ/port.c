@@ -93,6 +93,8 @@
 #define portIE_BIT					( 0x00000001 )
 #define portEXL_BIT					( 0x00000002 )
 #define portMX_BIT					( 0x01000000 ) /* Allow access to DSP instructions. */
+#define portCU1_BIT					( 0x20000000 ) /* enable CP1 for parts with hardware. */
+#define portFR_BIT					( 0x04000000 ) /* Enable 64 bit floating point registers. */
 
 /* Bits within the CAUSE register. */
 #define portCORE_SW_0				( 0x00000100 )
@@ -100,7 +102,16 @@
 
 /* The EXL bit is set to ensure interrupts do not occur while the context of
 the first task is being restored. */
-#define portINITIAL_SR				( portIE_BIT | portEXL_BIT | portMX_BIT )
+#if ( __mips_hard_float == 1 )
+    #define portINITIAL_SR			( portIE_BIT | portEXL_BIT | portMX_BIT | portFR_BIT | portCU1_BIT )
+#else
+    #define portINITIAL_SR			( portIE_BIT | portEXL_BIT | portMX_BIT )
+#endif
+
+/* The initial value to store into the FPU status and control register. This is
+ only used on parts that support a hardware FPU. */
+#define portINITIAL_FPSCR			(0x1000000) /* High perf on denormal ops */
+
 
 /*
 By default port.c generates its tick interrupt from TIMER1.  The user can
@@ -184,6 +195,12 @@ StackType_t xISRStack[ configISR_STACK_SIZE ] = { 0 };
 the callers stack, as some functions seem to want to do this. */
 const StackType_t * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 ] );
 
+/* Saved as part of the task context. Set to pdFALSE if the task does not
+ require an FPU context. */
+#if ( __mips_hard_float == 1 ) && ( configUSE_TASK_FPU_SUPPORT == 1 )
+	uint32_t ulTaskHasFPUContext = 0;
+#endif
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -191,7 +208,8 @@ const StackType_t * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 
  */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-	/* Ensure byte alignment is maintained when leaving this function. */
+	/* Ensure 8 byte alignment is maintained when leaving this function. */
+	pxTopOfStack--;
 	pxTopOfStack--;
 
 	*pxTopOfStack = (StackType_t) 0xDEADBEEF;
@@ -207,10 +225,10 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack--;
 
 	*pxTopOfStack = (StackType_t) pxCode; 		/* CP0_EPC */
-	pxTopOfStack -= 7;  							/* Includes space for AC1 - AC3. */
-
-	*pxTopOfStack = (StackType_t) 0x00000000;	/* DSPControl */
 	pxTopOfStack--;
+    
+	*pxTopOfStack = (StackType_t) 0x00000000;	/* DSPControl */    
+	pxTopOfStack -= 7;  						/* Includes space for AC1 - AC3. */
 
 	*pxTopOfStack = (StackType_t) portTASK_RETURN_ADDRESS;	/* ra */
 	pxTopOfStack -= 15;
@@ -218,6 +236,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	*pxTopOfStack = (StackType_t) pvParameters; /* Parameters to pass in. */
 	pxTopOfStack -= 15;
 
+	*pxTopOfStack = (StackType_t) pdFALSE; /*by default disable FPU context save on parts with FPU */
+    
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -361,6 +381,27 @@ void vPortClearInterruptMaskFromISR( UBaseType_t uxSavedStatusRegister )
 }
 /*-----------------------------------------------------------*/
 
+#if ( __mips_hard_float == 1 ) && ( configUSE_TASK_FPU_SUPPORT == 1 )
+
+	void vPortTaskUsesFPU(void)
+	{
+	extern void vPortInitialiseFPSCR( uint32_t uxFPSCRInit );
+
+		portENTER_CRITICAL();
+    
+		/* Initialise the floating point status register. */
+		vPortInitialiseFPSCR(portINITIAL_FPSCR);  
+    
+		/* A task is registering the fact that it needs a FPU context. Set the
+		FPU flag (saved as part of the task context). */
+		ulTaskHasFPUContext = pdTRUE;
+    
+		portEXIT_CRITICAL();
+	}
+
+#endif /* __mips_hard_float == 1 */
+
+/*-----------------------------------------------------------*/
 
 
 

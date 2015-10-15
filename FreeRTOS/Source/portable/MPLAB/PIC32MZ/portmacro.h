@@ -183,6 +183,15 @@ extern void vPortClearInterruptMaskFromISR( UBaseType_t );
 #define portSET_INTERRUPT_MASK_FROM_ISR() uxPortSetInterruptMaskFromISR()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusRegister ) vPortClearInterruptMaskFromISR( uxSavedStatusRegister )
 
+#if ( __mips_hard_float == 0 ) && ( configUSE_TASK_FPU_SUPPORT == 1 )
+    #error configUSE_TASK_FPU_SUPPORT can only be set to 1 when the part supports a hardware FPU module.
+#endif
+
+#if ( __mips_hard_float == 1 ) && ( configUSE_TASK_FPU_SUPPORT == 1 )
+    void vPortTaskUsesFPU( void );
+	#define portTASK_USES_FLOATING_POINT() vPortTaskUsesFPU()
+#endif
+
 #ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
 	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #endif

@@ -202,18 +202,20 @@ void vCMT_1_Channel_1_ISR( void )
  * interrupt entry (including interrupt nesting), before calling the C function
  * saved in the pxISRFunction variable.  NOTE:  The entry points are naked
  * functions - do not add C code to these functions.
+ *
+ * See http://www.freertos.org/Renesas_RZ-T_Cortex-R4F-RTOS.html
  */
 #ifdef __GNUC__
 	/* The IAR equivalent is implemented in
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	static void vCMT_1_Channel_0_ISR_Entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	r1, =vCMT_1_Channel_0_ISR			\t\n"	\
-							"STR	r1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	r1, =vCMT_1_Channel_0_ISR			\t\n"
+							"STR	r1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}
@@ -225,12 +227,12 @@ void vCMT_1_Channel_1_ISR( void )
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	static void vCMT_1_Channel_1_ISR_Entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	r1, =vCMT_1_Channel_1_ISR			\t\n"	\
-							"STR	r1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	r1, =vCMT_1_Channel_1_ISR			\t\n"
+							"STR	r1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}

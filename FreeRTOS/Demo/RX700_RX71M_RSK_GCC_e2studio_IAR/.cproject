@@ -46,6 +46,7 @@
 								<option id="com.renesas.cdt.core.Compiler.option.deviceShortName.339321196" name="DeviceShortName" superClass="com.renesas.cdt.core.Compiler.option.deviceShortName" value="R5F571MLCxFC" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.core.Compiler.option.includeFileDir.1486703917" name="Include file directories" superClass="com.renesas.cdt.core.Compiler.option.includeFileDir" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/rx-elf/optlibinc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/FreeRTOS-Plus-CLI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/cg_src}&quot;"/>
@@ -120,7 +121,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="cg_src/r_cg_sci_user_iar.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="cg_src/r_cg_intprg_gcc.c|cg_src/r_cg_intprg_iar.c|cg_src/r_cg_sci_user_iar.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

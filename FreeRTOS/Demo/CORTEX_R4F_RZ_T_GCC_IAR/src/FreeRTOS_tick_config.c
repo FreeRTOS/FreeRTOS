@@ -196,12 +196,12 @@ ISRFunction_t pxISRToCall = pxISRFunction;
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	static void FreeRTOS_Tick_Handler_Entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	R1, =FreeRTOS_Tick_Handler			\t\n"	\
-							"STR	R1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	R1, =FreeRTOS_Tick_Handler			\t\n"
+							"STR	R1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}

@@ -375,7 +375,7 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
 	( void ) pxPort;
 
 	/* Don't send the string unless the previous string has been sent. */
-	if( xSendingTask == NULL )
+	if( ( xSendingTask == NULL ) && ( usStringLength > 0 ) )
 	{
 		/* Ensure the calling task's notification state is not already
 		pending. */
@@ -433,12 +433,12 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	void r_scifa2_txif2_interrupt_entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	r1, =r_scifa2_txif2_interrupt		\t\n"	\
-							"STR	r1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	r1, =r_scifa2_txif2_interrupt		\t\n"
+							"STR	r1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}
@@ -450,12 +450,12 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	void r_scifa2_rxif2_interrupt_entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	r1, =r_scifa2_rxif2_interrupt		\t\n"	\
-							"STR	r1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	r1, =r_scifa2_rxif2_interrupt		\t\n"
+							"STR	r1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}
@@ -467,12 +467,12 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	void r_scifa2_drif2_interrupt_entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	r1, =r_scifa2_drif2_interrupt		\t\n"	\
-							"STR	r1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	r1, =r_scifa2_drif2_interrupt		\t\n"
+							"STR	r1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}
@@ -484,12 +484,12 @@ signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar
 	$PROJ_DIR$/System/IAR/Interrupt_Entry_Stubs.asm */
 	void r_scifa2_brif2_interrupt_entry( void )
 	{
-		__asm volatile (													 	\
-							"PUSH	{r0-r1}								\t\n"	\
-							"LDR	r0, =pxISRFunction					\t\n"	\
-							"LDR	r1, =r_scifa2_brif2_interrupt		\t\n"	\
-							"STR	r1, [r0]							\t\n"	\
-							"POP	{r0-r1}								\t\n"	\
+		__asm volatile (
+							"PUSH	{r0-r1}								\t\n"
+							"LDR	r0, =pxISRFunction					\t\n"
+							"LDR	r1, =r_scifa2_brif2_interrupt		\t\n"
+							"STR	r1, [r0]							\t\n"
+							"POP	{r0-r1}								\t\n"
 							"B		FreeRTOS_IRQ_Handler					"
 						);
 	}

@@ -67,7 +67,7 @@
     1 tab == 4 spaces!
 */
 	SECTION intvec:CODE:ROOT(2)
-    ARM
+	ARM
 
 	EXTERN pxISRFunction
 	EXTERN FreeRTOS_Tick_Handler

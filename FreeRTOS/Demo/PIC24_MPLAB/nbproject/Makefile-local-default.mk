@@ -15,23 +15,23 @@
 # $ makeMP_CC="/opt/microchip/mplabc30/v3.30c/bin/pic30-gcc" ...  
 #
 SHELL=cmd.exe
-PATH_TO_IDE_BIN=C:/devtools/Microchip/MPLABX/mplab_ide/mplab_ide/modules/../../bin/
+PATH_TO_IDE_BIN=C:/DevTools/Microchip/MPLABX/v3.10/mplab_ide/mplab_ide/modules/../../bin/
 # Adding MPLAB X bin directory to path.
-PATH:=C:/devtools/Microchip/MPLABX/mplab_ide/mplab_ide/modules/../../bin/:$(PATH)
+PATH:=C:/DevTools/Microchip/MPLABX/v3.10/mplab_ide/mplab_ide/modules/../../bin/:$(PATH)
 # Path to java used to run MPLAB X when this makefile was created
-MP_JAVA_PATH="C:\devtools\Microchip\MPLABX\sys\java\jre1.7.0_17/bin/"
+MP_JAVA_PATH="C:\DevTools\Microchip\MPLABX\v3.10\sys\java\jre1.7.0_79/bin/"
 OS_CURRENT="$(shell uname -s)"
-MP_CC="C:\devtools\Microchip\xc16\v1.11\bin\xc16-gcc.exe"
+MP_CC="C:\DevTools\Microchip\xc16\v1.25\bin\xc16-gcc.exe"
 # MP_CPPC is not defined
 # MP_BC is not defined
-# MP_AS is not defined
+MP_AS="C:\DevTools\Microchip\xc16\v1.25\bin\xc16-as.exe"
 # MP_LD is not defined
-MP_AR="C:\devtools\Microchip\xc16\v1.11\bin\xc16-ar.exe"
-DEP_GEN=${MP_JAVA_PATH}java -jar "C:/devtools/Microchip/MPLABX/mplab_ide/mplab_ide/modules/../../bin/extractobjectdependencies.jar" 
-MP_CC_DIR="C:\devtools\Microchip\xc16\v1.11\bin"
+MP_AR="C:\DevTools\Microchip\xc16\v1.25\bin\xc16-ar.exe"
+DEP_GEN=${MP_JAVA_PATH}java -jar "C:/DevTools/Microchip/MPLABX/v3.10/mplab_ide/mplab_ide/modules/../../bin/extractobjectdependencies.jar"
+MP_CC_DIR="C:\DevTools\Microchip\xc16\v1.25\bin"
 # MP_CPPC_DIR is not defined
 # MP_BC_DIR is not defined
-# MP_AS_DIR is not defined
+MP_AS_DIR="C:\DevTools\Microchip\xc16\v1.25\bin"
 # MP_LD_DIR is not defined
-MP_AR_DIR="C:\devtools\Microchip\xc16\v1.11\bin"
+MP_AR_DIR="C:\DevTools\Microchip\xc16\v1.25\bin"
 # MP_BC_DIR is not defined

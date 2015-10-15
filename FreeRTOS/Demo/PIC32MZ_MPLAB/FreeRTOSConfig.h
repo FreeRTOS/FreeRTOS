@@ -94,20 +94,27 @@
 #define configPERIPHERAL_CLOCK_HZ				( 40000000UL )
 #define configMAX_PRIORITIES					( 5UL )
 #define configMINIMAL_STACK_SIZE				( 190 )
-#define configISR_STACK_SIZE					( 300 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) 56000 )
+#define configISR_STACK_SIZE					( 400 )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) 60000 )
 #define configMAX_TASK_NAME_LEN					( 8 )
 #define configUSE_TRACE_FACILITY				0
 #define configUSE_16_BIT_TICKS					0
 #define configIDLE_SHOULD_YIELD					1
 #define configUSE_MUTEXES						1
-#define configCHECK_FOR_STACK_OVERFLOW			3
+#define configCHECK_FOR_STACK_OVERFLOW			3 /* Three also checks the system/interrupt stack. */
 #define configQUEUE_REGISTRY_SIZE				0
 #define configUSE_RECURSIVE_MUTEXES				1
 #define configUSE_MALLOC_FAILED_HOOK			1
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configGENERATE_RUN_TIME_STATS			0
+
+/* Enable support for Task based FPU operations. This will enable support for
+FPU context saving during switches only on architectures with hardware FPU.
+
+NOTE: This constant is defined in the project options as configurations are 
+provided that both enable and disable floating point support. 
+#define configUSE_TASK_FPU_SUPPORT				0 */
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES					0
@@ -147,5 +154,5 @@ interrupts. */
 	extern void vAssertCalled( const char * pcFile, unsigned long ulLine );
 	#define configASSERT( x ) if( ( x ) == 0  ) vAssertCalled( __FILE__, __LINE__ )
 #endif
-
+    
 #endif /* FREERTOS_CONFIG_H */

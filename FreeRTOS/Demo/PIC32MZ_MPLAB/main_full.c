@@ -143,6 +143,7 @@
 #include "QueueSet.h"
 #include "recmutex.h"
 #include "EventGroupsDemo.h"
+#include "flop_mz.h"
 
 /*-----------------------------------------------------------*/
 
@@ -160,9 +161,10 @@ in ticks using the portTICK_PERIOD_MS constant. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainBLOCK_Q_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCOM_TEST_PRIORITY				( tskIDLE_PRIORITY + 2 )
-#define mainINTEGER_TASK_PRIORITY           ( tskIDLE_PRIORITY )
+#define mainINTEGER_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainGEN_QUEUE_TASK_PRIORITY			( tskIDLE_PRIORITY )
 #define mainQUEUE_OVERWRITE_TASK_PRIORITY	( tskIDLE_PRIORITY )
+#define mainFLOP_TASK_PRIORITY				( tskIDLE_PRIORITY )
 
 /* The LED controlled by the 'check' software timer. */
 #define mainCHECK_LED						( 2 )
@@ -242,6 +244,7 @@ TimerHandle_t xTimer = NULL;
 	vStartQueueSetTasks();
 	vStartRecursiveMutexTasks();
 	vStartEventGroupTasks();
+	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( prvRegTestTask1,			/* The function that implements the task. */
@@ -294,6 +297,11 @@ extern void vRegTest1( volatile unsigned long * );
 	/* Avoid compiler warnings. */
 	( void ) pvParameters;
 
+	/* Must be called before any hardware floating point operations are
+	performed to let the RTOS portable layer know that this task requires
+	a floating point context. */
+	portTASK_USES_FLOATING_POINT();
+
 	/* Pass the address of the RegTest1 loop counter into the test function,
 	which is necessarily implemented in assembler. */
 	vRegTest1( &ulRegTest1Cycles );
@@ -309,6 +317,11 @@ extern void vRegTest2( volatile unsigned long * );
 
 	/* Avoid compiler warnings. */
 	( void ) pvParameters;
+
+	/* Must be called before any hardware floating point operations are
+	performed to let the RTOS portable layer know that this task requires
+	a floating point context. */
+	portTASK_USES_FLOATING_POINT();
 
 	/* Pass the address of the RegTest2 loop counter into the test function,
 	which is necessarily implemented in assembler. */
@@ -392,6 +405,10 @@ extern unsigned long ulHighFrequencyTimerInterrupts;
 	else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 	{
 		ulErrorOccurred |= ( 0x01UL << 13UL );
+	}
+	else if( xAreMathsTaskStillRunning() != pdTRUE )
+	{
+		ulErrorOccurred |= ( 0x01UL << 15UL );
 	}
 
 	/* Ensure the expected number of high frequency interrupts have occurred. */

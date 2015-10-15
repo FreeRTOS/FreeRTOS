@@ -43,15 +43,15 @@
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application.
 
-The comprehensive demo uses FreeRTOS+CLI to create a simple command line 
+The comprehensive demo uses FreeRTOS+CLI to create a simple command line
 interface through a UART.
 
 The blinky demo uses FreeRTOS's tickless idle mode to reduce power consumption.
-See the notes on the web page below regarding the difference in power saving 
-that can be achieved between using the generic tickless implementation (as used 
-by the blinky demo) and a tickless implementation that is tailored specifically 
+See the notes on the web page below regarding the difference in power saving
+that can be achieved between using the generic tickless implementation (as used
+by the blinky demo) and a tickless implementation that is tailored specifically
 to the MSP432.
- 
+
 See http://www.FreeRTOS.org/TI_MSP432_Free_RTOS_Demo.html for instructions. */
 #define configCREATE_SIMPLE_TICKLESS_DEMO	0
 

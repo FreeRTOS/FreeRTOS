@@ -33,6 +33,7 @@ Includes
 #ifdef __ICCRX__
 	#include <iorx71m.h>
 	#include <machine.h>
+	#include <stdint.h>
 #endif
 
 #ifdef __GNUC__

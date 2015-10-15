@@ -25,6 +25,8 @@ extern void vTickISR( void );
 extern void vSoftwareInterruptISR( void );
 extern void vIntQTimerISR0( void );
 extern void vIntQTimerISR1( void );
+void r_sci7_transmit_interrupt(void);
+void r_sci7_receive_interrupt(void);
 
 #define EXVECT_SECT    __attribute__ ((section (".exvectors")))
 
@@ -365,10 +367,10 @@ const fp RelocatableVectors[] RVECT_SECT  = {
     (fp)INT_Excep_PDC_PCDFI,
 
 //;0x0188 RXI7
-    (fp)INT_Excep_SCI7_RXI7,
+    (fp)r_sci7_receive_interrupt,
 
 //;0x018C TXI7
-    (fp)INT_Excep_SCI7_TXI7,
+    (fp)r_sci7_transmit_interrupt,
 
 //;0x0190 RXIF8
     (fp)INT_Excep_SCIFA8_RXIF8,

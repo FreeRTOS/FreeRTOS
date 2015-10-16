@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.2 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -8,7 +8,7 @@
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 
     ***************************************************************************
     >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -379,7 +379,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 	/* -------------------------------------------------------------------------
-	/* Clear the previous notifications. */
+	Clear the previous notifications. */
 	xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
 
 	/* The task should not have any notifications pending, so an attempt to clear

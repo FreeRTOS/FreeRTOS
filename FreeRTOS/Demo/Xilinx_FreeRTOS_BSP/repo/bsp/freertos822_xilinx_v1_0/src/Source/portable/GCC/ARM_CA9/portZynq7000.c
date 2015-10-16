@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.2 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -8,7 +8,7 @@
 
     FreeRTOS is free software; you can redistribute it and/or modify it under
     the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 
     ***************************************************************************
     >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -106,11 +106,15 @@ overridden by the application. */
 void FreeRTOS_SetupTickInterrupt( void )  __attribute__ ( ( weak ) );
 void FreeRTOS_ClearTickInterrupt( void )  __attribute__ ( ( weak ) );
 
+/* The interrupt controller used when the tick interrupt is installed is made
+global so the application code can use the same object.  The object must not be
+used until either it has been initialised using XScuGic_CfgInitialize(), or the
+scheduler has been started. */
+XScuGic xFreeRTOSInterruptController; 	/* Interrupt controller instance */
 /*-----------------------------------------------------------*/
 
 void FreeRTOS_SetupTickInterrupt( void )
 {
-static XScuGic xInterruptController; 	/* Interrupt controller instance */
 BaseType_t xStatus;
 extern void FreeRTOS_Tick_Handler( void );
 XScuTimer_Config *pxTimerConfig;
@@ -124,15 +128,15 @@ const uint8_t ucRisingEdge = 3;
 	/* Ensure XScuGic_CfgInitialize() has been called.  In this demo it has
 	already been called from prvSetupHardware() in main(). */
 	pxGICConfig = XScuGic_LookupConfig( XPAR_SCUGIC_SINGLE_DEVICE_ID );
-	xStatus = XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
+	xStatus = XScuGic_CfgInitialize( &xFreeRTOSInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
 	configASSERT( xStatus == XST_SUCCESS );
 	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
 	/* The priority must be the lowest possible. */
-	XScuGic_SetPriorityTriggerType( &xInterruptController, XPAR_SCUTIMER_INTR, portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT, ucRisingEdge );
+	XScuGic_SetPriorityTriggerType( &xFreeRTOSInterruptController, XPAR_SCUTIMER_INTR, portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT, ucRisingEdge );
 
 	/* Install the FreeRTOS tick handler. */
-	xStatus = XScuGic_Connect( &xInterruptController, XPAR_SCUTIMER_INTR, (Xil_ExceptionHandler) FreeRTOS_Tick_Handler, ( void * ) &xTimer );
+	xStatus = XScuGic_Connect( &xFreeRTOSInterruptController, XPAR_SCUTIMER_INTR, (Xil_ExceptionHandler) FreeRTOS_Tick_Handler, ( void * ) &xTimer );
 	configASSERT( xStatus == XST_SUCCESS );
 	( void ) xStatus; /* Remove compiler warning if configASSERT() is not defined. */
 
@@ -156,7 +160,7 @@ const uint8_t ucRisingEdge = 3;
 	XScuTimer_Start( &xTimer );
 
 	/* Enable the interrupt for the xTimer in the interrupt controller. */
-	XScuGic_Enable( &xInterruptController, XPAR_SCUTIMER_INTR );
+	XScuGic_Enable( &xFreeRTOSInterruptController, XPAR_SCUTIMER_INTR );
 
 	/* Enable the interrupt in the xTimer itself. */
 	FreeRTOS_ClearTickInterrupt();

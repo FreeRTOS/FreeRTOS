@@ -14,7 +14,7 @@ C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MEC14xx_MPLAB/PIC32MEC14xx_RTOS
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -1933,7 +1933,7 @@ BFD06DEA      0C00   NOP
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -10229,7 +10229,7 @@ BFD032C0      0C00   NOP
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -15088,7 +15088,7 @@ BFD04492      0C00   NOP
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -15587,7 +15587,7 @@ BFD09D28      4C05   ADDIU SP, SP, 8
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -16390,7 +16390,7 @@ BFD09ADC      0C00   NOP
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -16954,7 +16954,7 @@ BFD084F4      0C00   NOP
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -17372,7 +17372,7 @@ BFD001FE      0C00   NOP
 8:                   
 9:                       FreeRTOS is free software; you can redistribute it and/or modify it under
 10:                      the terms of the GNU General Public License (version 2) as published by the
-11:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+11:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 12:                  
 13:                      ***************************************************************************
 14:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -29005,7 +29005,7 @@ BFD0091C      0C00   NOP
 10:                  
 11:                      FreeRTOS is free software; you can redistribute it and/or modify it under
 12:                      the terms of the GNU General Public License (version 2) as published by the
-13:                      Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+13:                      Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
 14:                  
 15:                      ***************************************************************************
 16:                      >>!   NOTE: The modification to the GPL is included to allow you to     !<<
@@ -29786,7 +29786,7 @@ BFD09736      4C09   ADDIU SP, SP, 16
                                                   8:     
                                                   9:         FreeRTOS is free software; you can redistribute it and/or modify it under
                                                   10:        the terms of the GNU General Public License (version 2) as published by the
-                                                  11:        Free Software Foundation >>!AND MODIFIED BY!<< the FreeRTOS exception.
+                                                  11:        Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
                                                   12:    
                                                   13:        ***************************************************************************
                                                   14:        >>!   NOTE: The modification to the GPL is included to allow you to     !<<

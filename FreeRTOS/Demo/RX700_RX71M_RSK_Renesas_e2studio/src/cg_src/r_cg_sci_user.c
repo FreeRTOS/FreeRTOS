@@ -331,7 +331,7 @@ const TickType_t xMaxBlockTime = pdMS_TO_TICKS( 5000 );
     {
         /* Ensure the calling task's notification state is not already
         pending. */
-        vTaskNotifyStateClear( NULL );
+        xTaskNotifyStateClear( NULL );
 
         /* Store the handle of the transmitting task.  This is used to unblock
         the task when the transmission has completed. */

@@ -69,15 +69,10 @@ portSAVE_CONTEXT MACRO
 
 	PUSH      AX                    ; Save AX Register to stack.
 	PUSH      HL
-#if configMEMORY_MODE == 1
 	MOV       A, CS                 ; Save CS register.
 	XCH       A, X
 	MOV       A, ES                 ; Save ES register.
 	PUSH      AX
-#else
-	MOV       A, CS                 ; Save CS register.
-	PUSH      AX
-#endif
 	PUSH      DE                    ; Save the remaining general purpose registers.
 	PUSH      BC
 	MOVW      AX, usCriticalNesting ; Save the usCriticalNesting value.
@@ -104,15 +99,10 @@ portRESTORE_CONTEXT MACRO
 	MOVW      usCriticalNesting, AX
 	POP	      BC                    ; Restore the necessary general purpose registers.
 	POP	      DE
-#if configMEMORY_MODE == 1
 	POP       AX                    ; Restore the ES register.
 	MOV       ES, A
 	XCH       A, X                  ; Restore the CS register.
 	MOV       CS, A
-#else
-	POP       AX
-	MOV       CS, A                 ; Restore CS register.
-#endif
 	POP       HL                    ; Restore general purpose register HL.
 	POP       AX                    ; Restore AX.
 	ENDM

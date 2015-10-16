@@ -1814,15 +1814,19 @@ uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait
 
 /**
  * task. h
- * <PRE>void vTaskNotifyClear( TaskHandle_t xTask );</pre>
+ * <PRE>BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask );</pre>
  *
- * Clear the notification state of the task referenced by the handle xTask.  The
- * task's notification value is not altered.  Set xTask to NULL to clear the
+ * If the notification state of the task referenced by the handle xTask is 
+ * eNotified, then set the task's notification state to eNotWaitingNotification.  
+ * The task's notification value is not altered.  Set xTask to NULL to clear the
  * notification state of the calling task.
+ *
+ * @return pdTRUE if the task's notification state was set to 
+ * eNotWaitingNotification, otherwise pdFALSE.
  * \defgroup vTaskNotifyClear vTaskNotifyClear
  * \ingroup TaskNotifications
  */
-void vTaskNotifyStateClear( TaskHandle_t xTask );
+BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask );
 
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES

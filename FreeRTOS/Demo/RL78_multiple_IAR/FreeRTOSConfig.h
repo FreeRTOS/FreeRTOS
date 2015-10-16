@@ -98,7 +98,7 @@ multiple evaluation boards. */
 #define configUSE_PREEMPTION			1
 #define configTICK_RATE_HZ				( ( unsigned short ) 1000 )
 #define configMAX_PRIORITIES			( 4 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 75 )
 #define configMAX_TASK_NAME_LEN			( 10 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			1

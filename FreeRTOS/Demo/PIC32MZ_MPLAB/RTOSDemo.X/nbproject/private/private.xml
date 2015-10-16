@@ -16,6 +16,7 @@
         </group>
         <group name="Masters19024">
             <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MZ_MPLAB/main.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MZ_MPLAB/flop_mz.c</file>
         </group>
     </open-files>
 </project-private>

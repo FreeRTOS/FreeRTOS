@@ -2241,8 +2241,7 @@ void vTaskSwitchContext( void )
 		#endif /* configGENERATE_RUN_TIME_STATS */
 
 		/* Check for stack overflow, if configured. */
-		taskFIRST_CHECK_FOR_STACK_OVERFLOW();
-		taskSECOND_CHECK_FOR_STACK_OVERFLOW();
+		taskCHECK_FOR_STACK_OVERFLOW();
 
 		/* Select a new task to run using either the generic C or port
 		optimised asm code. */
@@ -4078,7 +4077,7 @@ TickType_t uxReturn;
 					#endif /* INCLUDE_vTaskSuspend */
 
 					traceTASK_NOTIFY_WAIT_BLOCK();
-					
+
 					/* All ports are written to allow a yield in a critical
 					section (some will yield immediately, others wait until the
 					critical section exits) - but it is not something that
@@ -4100,7 +4099,7 @@ TickType_t uxReturn;
 		taskENTER_CRITICAL();
 		{
 			traceTASK_NOTIFY_WAIT();
-			
+
 			if( pulNotificationValue != NULL )
 			{
 				/* Output the current notification value, which may or may not
@@ -4315,7 +4314,7 @@ TickType_t uxReturn;
 			}
 
 			traceTASK_NOTIFY_FROM_ISR();
-			
+
 			/* If the task is in the blocked state specifically to wait for a
 			notification then unblock it now. */
 			if( eOriginalNotifyState == eWaitingNotification )
@@ -4396,7 +4395,7 @@ TickType_t uxReturn;
 			/* 'Giving' is equivalent to incrementing a count in a counting
 			semaphore. */
 			( pxTCB->ulNotifiedValue )++;
-			
+
 			traceTASK_NOTIFY_GIVE_FROM_ISR();
 
 			/* If the task is in the blocked state specifically to wait for a
@@ -4440,6 +4439,37 @@ TickType_t uxReturn;
 
 /*-----------------------------------------------------------*/
 
+#if( configUSE_TASK_NOTIFICATIONS == 1 )
+
+	BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask )
+	{
+	TCB_t *pxTCB;
+	BaseType_t xReturn;
+
+		pxTCB = ( TCB_t * ) xTask;
+
+		/* If null is passed in here then it is the calling task that is having
+		its notification state cleared. */
+		pxTCB = prvGetTCBFromHandle( pxTCB );
+
+		taskENTER_CRITICAL();
+		{
+			if( pxTCB->eNotifyState == eNotified )
+			{
+				pxTCB->eNotifyState = eNotWaitingNotification;
+				xReturn = pdPASS;
+			}
+			else
+			{
+				xReturn = pdFAIL;
+			}
+		}
+		taskEXIT_CRITICAL();
+
+		return xReturn;
+	}
+
+#endif /* configUSE_TASK_NOTIFICATIONS */
 
 #ifdef FREERTOS_MODULE_TEST
 	#include "tasks_test_access_functions.h"

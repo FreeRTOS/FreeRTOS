@@ -1,8 +1,8 @@
 ----------------------------------------------------------------------------
 
-NOTE: The modification to the GPL is included to allow you to distribute a
-combined work that includes FreeRTOS without being obliged to provide the source
-code for proprietary components.
+NOTE: The modification to the GPL documented below is included to allow you to
+distribute a combined work that includes FreeRTOS without being obliged to
+provide the source code for proprietary components.
 
 ----------------------------------------------------------------------------
 
@@ -10,8 +10,8 @@ The FreeRTOS GPL Exception Text:
 
 Any FreeRTOS source code, whether modified or in it's original release form,
 or whether in whole or in part, can only be distributed by you under the terms
-of the GNU General Public License plus this exception.  An independent module is
-a module which is not derived from or based on FreeRTOS.
+of version 2 of the GNU General Public License plus this exception.  An
+independent module is a module which is not derived from or based on FreeRTOS.
 
 Clause 1:
 
@@ -37,7 +37,7 @@ industry and is intended to ensure information accuracy).
 
 --------------------------------------------------------------------
 
-The standard GPL exception text:
+The standard GPL v2 text follows:
 
 
 		    GNU GENERAL PUBLIC LICENSE

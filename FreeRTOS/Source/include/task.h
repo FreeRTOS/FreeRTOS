@@ -85,10 +85,10 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V8.2.2"
+#define tskKERNEL_VERSION_NUMBER "V8.2.3"
 #define tskKERNEL_VERSION_MAJOR 8
 #define tskKERNEL_VERSION_MINOR 2
-#define tskKERNEL_VERSION_BUILD 2
+#define tskKERNEL_VERSION_BUILD 3
 
 /**
  * task. h
@@ -1816,12 +1816,12 @@ uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait
  * task. h
  * <PRE>BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask );</pre>
  *
- * If the notification state of the task referenced by the handle xTask is 
- * eNotified, then set the task's notification state to eNotWaitingNotification.  
+ * If the notification state of the task referenced by the handle xTask is
+ * eNotified, then set the task's notification state to eNotWaitingNotification.
  * The task's notification value is not altered.  Set xTask to NULL to clear the
  * notification state of the calling task.
  *
- * @return pdTRUE if the task's notification state was set to 
+ * @return pdTRUE if the task's notification state was set to
  * eNotWaitingNotification, otherwise pdFALSE.
  * \defgroup xTaskNotifyStateClear xTaskNotifyStateClear
  * \ingroup TaskNotifications

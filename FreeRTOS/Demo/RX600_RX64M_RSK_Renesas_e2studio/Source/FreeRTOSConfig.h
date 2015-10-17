@@ -88,8 +88,8 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 120000000UL ) /*_RB_ guess*/
-#define configPERIPHERAL_CLOCK_HZ		( 60000000UL ) /*_RB_ guess*/
+#define configCPU_CLOCK_HZ				( 120000000UL )
+#define configPERIPHERAL_CLOCK_HZ		( 60000000UL )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 140 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 45 * 1024 ) )

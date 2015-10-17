@@ -39,14 +39,13 @@
 #endif
 
 /*
- * Avoids a compiler warning in case this was already defined      
+ * Avoids a compiler warning in case this was already defined
  * (someone defined _WINSOCKAPI_ when including 'windows.h', in order
  * to prevent it from including 'winsock.h')
  */
 #ifdef _WINSOCKAPI_
 #undef _WINSOCKAPI_
 #endif
-//_RB_#include <winsock2.h>
 
 #include <fcntl.h>
 
@@ -66,7 +65,7 @@
 #define strdup _strdup
 #endif
 
-#define inline __inline 
+#define inline __inline
 
 #ifdef __MINGW32__
 #include <stdint.h>
@@ -88,6 +87,6 @@ typedef __int64    intptr_t;
 typedef _W64 int   intptr_t;
 #endif
 #define _INTPTR_T_DEFINED
-#endif 
+#endif
 
 #endif /*__MINGW32__*/

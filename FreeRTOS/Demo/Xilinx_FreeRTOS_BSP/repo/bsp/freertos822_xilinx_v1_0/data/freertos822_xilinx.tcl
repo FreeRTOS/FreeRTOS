@@ -402,7 +402,7 @@ proc generate {os_handle} {
 	puts $config_file "#define INCLUDE_xTaskGetIdleTaskHandle       1"
 	puts $config_file "#define INCLUDE_xQueueGetMutexHolder         1"
 	puts $config_file "#define INCLUDE_eTaskGetState                1"
-	puts $config_file "#define INCLUDE_xEventGroupSetBitFromISR     1"
+	puts $config_file "#define INCLUDE_xEventGroupSetBitsFromISR    1"
 	puts $config_file "#define INCLUDE_xTimerPendFunctionCall       1"
 	puts $config_file "#define INCLUDE_pcTaskGetTaskName            1"
 	puts $config_file "#define INCLUDE_xTaskResumeFromISR           1"

@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>6.2</ProjectVersion>
+    <ProjectVersion>7.0</ProjectVersion>
     <ToolchainName>com.Atmel.ARMGCC.C</ToolchainName>
     <ProjectGuid>{dfc77570-bc67-4ee7-8143-c34e75167169}</ProjectGuid>
     <avrdevice>ATSAM4LC4C</avrdevice>
@@ -23,116 +23,116 @@
     <AsfVersion>3.5.1</AsfVersion>
     <AsfFrameworkConfig>
       <framework-data>
-  <options>
-    <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="common.services.basic.sleepmgr" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="sam.drivers.ast" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="sam.drivers.bpm" value="Add" config="" content-id="Atmel.ASF" />
-    <option id="sam.drivers.eic" value="Add" config="" content-id="Atmel.ASF" />
-  </options>
-  <configurations>
-    <configuration key="config.compiler.armgcc.create_aux" value="no" default="no" content-id="Atmel.ASF" />
-    <configuration key="config.compiler.iarewarm.create_aux" value="no" default="no" content-id="Atmel.ASF" />
-    <configuration key="config.compiler.as5_arm.create_aux" value="no" default="no" content-id="Atmel.ASF" />
-  </configurations>
-  <files>
-    <file path="src/asf/common/boards/board.h" framework="" version="3.5.1" source="common/boards/board.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/dfll.h" framework="" version="3.5.1" source="common/services/clock/dfll.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/genclk.h" framework="" version="3.5.1" source="common/services/clock/genclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/osc.h" framework="" version="3.5.1" source="common/services/clock/osc.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/pll.h" framework="" version="3.5.1" source="common/services/clock/pll.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/dfll.c" framework="" version="3.5.1" source="common/services/clock/sam4l/dfll.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/dfll.h" framework="" version="3.5.1" source="common/services/clock/sam4l/dfll.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/genclk.h" framework="" version="3.5.1" source="common/services/clock/sam4l/genclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/osc.c" framework="" version="3.5.1" source="common/services/clock/sam4l/osc.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/osc.h" framework="" version="3.5.1" source="common/services/clock/sam4l/osc.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/pll.c" framework="" version="3.5.1" source="common/services/clock/sam4l/pll.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/pll.h" framework="" version="3.5.1" source="common/services/clock/sam4l/pll.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/sysclk.c" framework="" version="3.5.1" source="common/services/clock/sam4l/sysclk.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sam4l/sysclk.h" framework="" version="3.5.1" source="common/services/clock/sam4l/sysclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/clock/sysclk.h" framework="" version="3.5.1" source="common/services/clock/sysclk.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/ioport/ioport.h" framework="" version="3.5.1" source="common/services/ioport/ioport.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/ioport/sam/ioport_gpio.h" framework="" version="3.5.1" source="common/services/ioport/sam/ioport_gpio.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/sleepmgr/sam4l/sleepmgr.c" framework="" version="3.5.1" source="common/services/sleepmgr/sam4l/sleepmgr.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/sleepmgr/sam4l/sleepmgr.h" framework="" version="3.5.1" source="common/services/sleepmgr/sam4l/sleepmgr.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/services/sleepmgr/sleepmgr.h" framework="" version="3.5.1" source="common/services/sleepmgr/sleepmgr.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/utils/interrupt.h" framework="" version="3.5.1" source="common/utils/interrupt.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/utils/interrupt/interrupt_sam_nvic.c" framework="" version="3.5.1" source="common/utils/interrupt/interrupt_sam_nvic.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/utils/interrupt/interrupt_sam_nvic.h" framework="" version="3.5.1" source="common/utils/interrupt/interrupt_sam_nvic.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/common/utils/parts.h" framework="" version="3.5.1" source="common/utils/parts.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/boards/sam4l_ek/init.c" framework="" version="3.5.1" source="sam/boards/sam4l_ek/init.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/boards/sam4l_ek/sam4l_ek.h" framework="" version="3.5.1" source="sam/boards/sam4l_ek/sam4l_ek.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/bpm/bpm.c" framework="" version="3.5.1" source="sam/drivers/bpm/bpm.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/bpm/bpm.h" framework="" version="3.5.1" source="sam/drivers/bpm/bpm.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/bpm/sleep.h" framework="" version="3.5.1" source="sam/drivers/bpm/sleep.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/flashcalw/flashcalw.c" framework="" version="3.5.1" source="sam/drivers/flashcalw/flashcalw.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/flashcalw/flashcalw.h" framework="" version="3.5.1" source="sam/drivers/flashcalw/flashcalw.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/lcdca_example.c" framework="" version="3.5.1" source="sam/drivers/lcdca/example/lcdca_example.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/config/conf_board.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_board.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/config/conf_clock.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_clock.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/config/conf_example.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_example.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/config/conf_sleepmgr.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_sleepmgr.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/cmsis/sam4l/include/sam4l.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/include/sam4l.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/cmsis/sam4l/include/sam4l_patch_asf.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/include/sam4l_patch_asf.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/exceptions.c" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/exceptions.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/exceptions.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/exceptions.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/gcc/startup_sam4l.c" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/gcc/startup_sam4l.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/system_sam4l.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/system_sam4l.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/compiler.h" framework="" version="3.5.1" source="sam/utils/compiler.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/header_files/io.h" framework="" version="3.5.1" source="sam/utils/header_files/io.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld" framework="" version="3.5.1" source="sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/make/Makefile.in" framework="" version="3.5.1" source="sam/utils/make/Makefile.in" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/preprocessor/mrepeat.h" framework="" version="3.5.1" source="sam/utils/preprocessor/mrepeat.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/preprocessor/preprocessor.h" framework="" version="3.5.1" source="sam/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/preprocessor/stringz.h" framework="" version="3.5.1" source="sam/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/preprocessor/tpaste.h" framework="" version="3.5.1" source="sam/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/status_codes.h" framework="" version="3.5.1" source="sam/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/utils/syscalls/gcc/syscalls.c" framework="" version="3.5.1" source="sam/utils/syscalls/gcc/syscalls.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" framework="" version="3.5.1" source="thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/Include/arm_math.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/arm_math.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/Include/core_cm4.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cm4.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/Include/core_cm4_simd.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cm4_simd.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/Include/core_cmFunc.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cmFunc.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/Include/core_cmInstr.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cmInstr.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/Lib/GCC/libarm_cortexM4l_math.a" framework="" version="3.5.1" source="thirdparty/CMSIS/Lib/GCC/libarm_cortexM4l_math.a" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/README.txt" framework="" version="3.5.1" source="thirdparty/CMSIS/README.txt" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/CMSIS/license.txt" framework="" version="3.5.1" source="thirdparty/CMSIS/license.txt" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/timers.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\timers.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/tasks.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\tasks.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/queue.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\queue.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/list.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\list.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/FreeRTOS_CLI.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\FreeRTOS_CLI.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/memmang/heap_4.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\memmang\heap_4.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/gcc/arm_cm3/port.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\gcc\arm_cm3\port.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/readme.txt" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\readme.txt" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/ATMEL-disclaimer.txt" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\ATMEL-disclaimer.txt" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/mpu_wrappers.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\mpu_wrappers.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/semphr.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\semphr.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/FreeRTOS.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\FreeRTOS.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/portable.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\portable.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/queue.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\queue.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/list.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\list.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/timers.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\timers.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/StackMacros.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\StackMacros.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/projdefs.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\projdefs.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/task.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\task.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/gcc/arm_cm3/portmacro.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\gcc\arm_cm3\portmacro.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/FreeRTOS_CLI.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\FreeRTOS_CLI.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/croutine.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\croutine.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/ast/ast.c" framework="" version="" source="sam\drivers\ast\ast.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/asf/sam/drivers/ast/ast.h" framework="" version="" source="sam\drivers\ast\ast.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/config/conf_ast.h" framework="" version="" source="sam\drivers\ast\module_config\conf_ast.h" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/sam/drivers/eic/eic.c" framework="" version="3.6.0" source="sam\drivers\eic\eic.c" changed="False" content-id="Atmel.ASF" />
-    <file path="src/ASF/sam/drivers/eic/eic.h" framework="" version="3.6.0" source="sam\drivers\eic\eic.h" changed="False" content-id="Atmel.ASF" />
-  </files>
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.6.0" />
-  </dependencies>
-</framework-data>
+        <options>
+          <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.sleepmgr" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.ast" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.bpm" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.eic" value="Add" config="" content-id="Atmel.ASF" />
+        </options>
+        <configurations>
+          <configuration key="config.compiler.armgcc.create_aux" value="no" default="no" content-id="Atmel.ASF" />
+          <configuration key="config.compiler.iarewarm.create_aux" value="no" default="no" content-id="Atmel.ASF" />
+          <configuration key="config.compiler.as5_arm.create_aux" value="no" default="no" content-id="Atmel.ASF" />
+        </configurations>
+        <files>
+          <file path="src/asf/common/boards/board.h" framework="" version="3.5.1" source="common/boards/board.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/dfll.h" framework="" version="3.5.1" source="common/services/clock/dfll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/genclk.h" framework="" version="3.5.1" source="common/services/clock/genclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/osc.h" framework="" version="3.5.1" source="common/services/clock/osc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/pll.h" framework="" version="3.5.1" source="common/services/clock/pll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/dfll.c" framework="" version="3.5.1" source="common/services/clock/sam4l/dfll.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/dfll.h" framework="" version="3.5.1" source="common/services/clock/sam4l/dfll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/genclk.h" framework="" version="3.5.1" source="common/services/clock/sam4l/genclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/osc.c" framework="" version="3.5.1" source="common/services/clock/sam4l/osc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/osc.h" framework="" version="3.5.1" source="common/services/clock/sam4l/osc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/pll.c" framework="" version="3.5.1" source="common/services/clock/sam4l/pll.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/pll.h" framework="" version="3.5.1" source="common/services/clock/sam4l/pll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/sysclk.c" framework="" version="3.5.1" source="common/services/clock/sam4l/sysclk.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sam4l/sysclk.h" framework="" version="3.5.1" source="common/services/clock/sam4l/sysclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/clock/sysclk.h" framework="" version="3.5.1" source="common/services/clock/sysclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/ioport/ioport.h" framework="" version="3.5.1" source="common/services/ioport/ioport.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/ioport/sam/ioport_gpio.h" framework="" version="3.5.1" source="common/services/ioport/sam/ioport_gpio.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/sleepmgr/sam4l/sleepmgr.c" framework="" version="3.5.1" source="common/services/sleepmgr/sam4l/sleepmgr.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/sleepmgr/sam4l/sleepmgr.h" framework="" version="3.5.1" source="common/services/sleepmgr/sam4l/sleepmgr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/services/sleepmgr/sleepmgr.h" framework="" version="3.5.1" source="common/services/sleepmgr/sleepmgr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/utils/interrupt.h" framework="" version="3.5.1" source="common/utils/interrupt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/utils/interrupt/interrupt_sam_nvic.c" framework="" version="3.5.1" source="common/utils/interrupt/interrupt_sam_nvic.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/utils/interrupt/interrupt_sam_nvic.h" framework="" version="3.5.1" source="common/utils/interrupt/interrupt_sam_nvic.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/common/utils/parts.h" framework="" version="3.5.1" source="common/utils/parts.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/boards/sam4l_ek/init.c" framework="" version="3.5.1" source="sam/boards/sam4l_ek/init.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/boards/sam4l_ek/sam4l_ek.h" framework="" version="3.5.1" source="sam/boards/sam4l_ek/sam4l_ek.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/bpm/bpm.c" framework="" version="3.5.1" source="sam/drivers/bpm/bpm.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/bpm/bpm.h" framework="" version="3.5.1" source="sam/drivers/bpm/bpm.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/bpm/sleep.h" framework="" version="3.5.1" source="sam/drivers/bpm/sleep.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/flashcalw/flashcalw.c" framework="" version="3.5.1" source="sam/drivers/flashcalw/flashcalw.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/flashcalw/flashcalw.h" framework="" version="3.5.1" source="sam/drivers/flashcalw/flashcalw.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/lcdca_example.c" framework="" version="3.5.1" source="sam/drivers/lcdca/example/lcdca_example.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_board.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_board.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_clock.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_clock.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_example.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_example.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_sleepmgr.h" framework="" version="3.5.1" source="sam/drivers/lcdca/example/sam4lc4c_sam4l_ek/conf_sleepmgr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/cmsis/sam4l/include/sam4l.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/include/sam4l.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/cmsis/sam4l/include/sam4l_patch_asf.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/include/sam4l_patch_asf.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/exceptions.c" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/exceptions.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/exceptions.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/exceptions.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/gcc/startup_sam4l.c" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/gcc/startup_sam4l.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/cmsis/sam4l/source/templates/system_sam4l.h" framework="" version="3.5.1" source="sam/utils/cmsis/sam4l/source/templates/system_sam4l.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/compiler.h" framework="" version="3.5.1" source="sam/utils/compiler.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/header_files/io.h" framework="" version="3.5.1" source="sam/utils/header_files/io.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld" framework="" version="3.5.1" source="sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/make/Makefile.in" framework="" version="3.5.1" source="sam/utils/make/Makefile.in" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/preprocessor/mrepeat.h" framework="" version="3.5.1" source="sam/utils/preprocessor/mrepeat.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/preprocessor/preprocessor.h" framework="" version="3.5.1" source="sam/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/preprocessor/stringz.h" framework="" version="3.5.1" source="sam/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/preprocessor/tpaste.h" framework="" version="3.5.1" source="sam/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/status_codes.h" framework="" version="3.5.1" source="sam/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/utils/syscalls/gcc/syscalls.c" framework="" version="3.5.1" source="sam/utils/syscalls/gcc/syscalls.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" framework="" version="3.5.1" source="thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/Include/arm_math.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/arm_math.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/Include/core_cm4.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cm4.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/Include/core_cm4_simd.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cm4_simd.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/Include/core_cmFunc.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cmFunc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/Include/core_cmInstr.h" framework="" version="3.5.1" source="thirdparty/CMSIS/Include/core_cmInstr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/Lib/GCC/libarm_cortexM4l_math.a" framework="" version="3.5.1" source="thirdparty/CMSIS/Lib/GCC/libarm_cortexM4l_math.a" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/README.txt" framework="" version="3.5.1" source="thirdparty/CMSIS/README.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/CMSIS/license.txt" framework="" version="3.5.1" source="thirdparty/CMSIS/license.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/timers.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\timers.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/tasks.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\tasks.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/queue.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\queue.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/list.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\list.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/FreeRTOS_CLI.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\FreeRTOS_CLI.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/memmang/heap_4.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\memmang\heap_4.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/gcc/arm_cm3/port.c" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\gcc\arm_cm3\port.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/readme.txt" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\readme.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/ATMEL-disclaimer.txt" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\ATMEL-disclaimer.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/mpu_wrappers.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\mpu_wrappers.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/semphr.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\semphr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/FreeRTOS.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\FreeRTOS.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/portable.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\portable.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/queue.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\queue.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/list.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\list.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/timers.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\timers.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/StackMacros.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\StackMacros.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/projdefs.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\projdefs.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/task.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\task.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/portable/gcc/arm_cm3/portmacro.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\portable\gcc\arm_cm3\portmacro.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/FreeRTOS_CLI.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\FreeRTOS_CLI.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/thirdparty/freertos/freertos-7.3.0/source/include/croutine.h" framework="" version="" source="thirdparty\freertos\freertos-7.3.0\source\include\croutine.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/ast/ast.c" framework="" version="" source="sam\drivers\ast\ast.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/asf/sam/drivers/ast/ast.h" framework="" version="" source="sam\drivers\ast\ast.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_ast.h" framework="" version="" source="sam\drivers\ast\module_config\conf_ast.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/eic/eic.c" framework="" version="3.6.0" source="sam\drivers\eic\eic.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/eic/eic.h" framework="" version="3.6.0" source="sam\drivers\eic\eic.h" changed="False" content-id="Atmel.ASF" />
+        </files>
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.18.1" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
     <avrtoolinterface>SWD</avrtoolinterface>
     <avrtool>com.atmel.avrdbg.tool.samice</avrtool>
@@ -166,6 +166,8 @@
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <BootSegment>2</BootSegment>
+    <preserveEEPROM>true</preserveEEPROM>
+    <ExternalProgrammingToolCommand />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -228,11 +230,6 @@
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
   <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
   <armgcc.assembler.general.AssemblerFlags>-D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__</armgcc.assembler.general.AssemblerFlags>
-  <armgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/sam/drivers/eic</Value>
-    </ListValues>
-  </armgcc.assembler.general.IncludePaths>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4L_EK -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.IncludePaths>
     <ListValues>
@@ -315,7 +312,7 @@
   <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
   <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
   <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
-  <armgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wmissing-field-initializers -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wmissing-field-initializers -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -Wno-attributes</armgcc.compiler.miscellaneous.OtherFlags>
   <armgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>libm</Value>
@@ -328,13 +325,9 @@
     </ListValues>
   </armgcc.linker.libraries.LibrarySearchPaths>
   <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
   <armgcc.linker.miscellaneous.LinkerFlags>-T../src/asf/sam/utils/linker_scripts/sam4l/sam4l4/gcc/flash.ld -Wl,--cref -Wl,--entry=Reset_Handler -mthumb</armgcc.linker.miscellaneous.LinkerFlags>
   <armgcc.assembler.general.AssemblerFlags>-D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__</armgcc.assembler.general.AssemblerFlags>
-  <armgcc.assembler.general.IncludePaths>
-    <ListValues>
-      <Value>../src/ASF/sam/drivers/eic</Value>
-    </ListValues>
-  </armgcc.assembler.general.IncludePaths>
   <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
   <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM4=true -DBOARD=SAM4L_EK -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__ -D__ATSAM4LC4C__</armgcc.preprocessingassembler.general.AssemblerFlags>
   <armgcc.preprocessingassembler.general.IncludePaths>

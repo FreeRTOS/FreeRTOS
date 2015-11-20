@@ -247,10 +247,6 @@ extern "C" {
 	#define INCLUDE_xTaskResumeFromISR 1
 #endif
 
-#ifndef INCLUDE_xEventGroupSetBitFromISR
-	#define INCLUDE_xEventGroupSetBitFromISR 0
-#endif
-
 #ifndef INCLUDE_xTimerPendFunctionCall
 	#define INCLUDE_xTimerPendFunctionCall 0
 #endif
@@ -403,6 +399,10 @@ extern "C" {
 
 #ifndef traceMOVED_TASK_TO_READY_STATE
 	#define traceMOVED_TASK_TO_READY_STATE( pxTCB )
+#endif
+
+#ifndef tracePOST_MOVED_TASK_TO_READY_STATE
+	#define tracePOST_MOVED_TASK_TO_READY_STATE( pxTCB )
 #endif
 
 #ifndef traceQUEUE_CREATE
@@ -821,7 +821,7 @@ V8 if desired. */
 
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even
 if floating point hardware is otherwise supported by the FreeRTOS port in use.
-This constant is not supported by all FreeRTOS ports that include floating 
+This constant is not supported by all FreeRTOS ports that include floating
 point support. */
 #ifndef configUSE_TASK_FPU_SUPPORT
 	#define configUSE_TASK_FPU_SUPPORT 1

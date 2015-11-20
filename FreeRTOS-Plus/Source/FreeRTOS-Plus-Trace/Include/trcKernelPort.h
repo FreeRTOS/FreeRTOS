@@ -165,7 +165,7 @@ extern int uiInEventGroupSetBitsFromISR;
 #include "trcUser.h"
 
 #if (INCLUDE_NEW_TIME_EVENTS == 1 && configUSE_TICKLESS_IDLE != 0)
-#error "NewTime events can not be used in combination with tickless idle!"
+	#error "NewTime events can not be used in combination with tickless idle!"
 #endif
 
 /* Initialization of the object property table */

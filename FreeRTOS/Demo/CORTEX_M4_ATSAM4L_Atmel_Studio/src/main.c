@@ -131,7 +131,7 @@ int main( void )
 
 	/* The configCREATE_LOW_POWER_DEMO setting is described at the top of
 	this file. */
-	#if configCREATE_LOW_POWER_DEMO == 1
+	#if( configCREATE_LOW_POWER_DEMO == 1 )
 	{
 		main_low_power();
 	}

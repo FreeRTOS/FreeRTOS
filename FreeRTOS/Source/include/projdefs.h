@@ -107,6 +107,7 @@ typedef void (*TaskFunction_t)( void * );
 itself. */
 #define pdFREERTOS_ERRNO_NONE			0	/* No errors */
 #define	pdFREERTOS_ERRNO_ENOENT			2	/* No such file or directory */
+#define	pdFREERTOS_ERRNO_EINTR			4	/* Interrupted system call */
 #define	pdFREERTOS_ERRNO_EIO			5	/* I/O error */
 #define	pdFREERTOS_ERRNO_ENXIO			6	/* No such device or address */
 #define	pdFREERTOS_ERRNO_EBADF			9	/* Bad file number */

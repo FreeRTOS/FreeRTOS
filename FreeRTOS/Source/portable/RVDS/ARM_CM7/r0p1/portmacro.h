@@ -202,6 +202,8 @@ not necessary for to use this port.  They are defined so the common demo files
 	#define portFORCE_INLINE __forceinline
 #endif
 
+#define portINLINE __inline
+
 /*-----------------------------------------------------------*/
 
 static portFORCE_INLINE void vPortSetBASEPRI( uint32_t ulBASEPRI )

@@ -376,7 +376,7 @@ EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBit
 		}
   }
    </pre>
- * \defgroup xEventGroupSetBitsFromISR xEventGroupSetBitsFromISR
+ * \defgroup xEventGroupClearBitsFromISR xEventGroupClearBitsFromISR
  * \ingroup EventGroup
  */
 #if( configUSE_TRACE_FACILITY == 1 )
@@ -470,7 +470,7 @@ EventBits_t xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_
  * Setting bits in an event group is not a deterministic operation because there
  * are an unknown number of tasks that may be waiting for the bit or bits being
  * set.  FreeRTOS does not allow nondeterministic operations to be performed in
- * interrupts or from critical sections.  Therefore xEventGroupSetBitFromISR()
+ * interrupts or from critical sections.  Therefore xEventGroupSetBitsFromISR()
  * sends a message to the timer task to have the set operation performed in the
  * context of the timer task - where a scheduler lock is used in place of a
  * critical section.

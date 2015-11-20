@@ -341,7 +341,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 	{																								\
 	UBaseType_t uxTopPriority;																		\
 																									\
-		/* Find the highest priority queue that contains ready tasks. */							\
+		/* Find the highest priority list that contains ready tasks. */								\
 		portGET_HIGHEST_PRIORITY( uxTopPriority, uxTopReadyPriority );								\
 		configASSERT( listCURRENT_LIST_LENGTH( &( pxReadyTasksLists[ uxTopPriority ] ) ) > 0 );		\
 		listGET_OWNER_OF_NEXT_ENTRY( pxCurrentTCB, &( pxReadyTasksLists[ uxTopPriority ] ) );		\
@@ -389,7 +389,8 @@ count overflows. */
 #define prvAddTaskToReadyList( pxTCB )																\
 	traceMOVED_TASK_TO_READY_STATE( pxTCB );														\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
-	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) )
+	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) ); \
+	tracePOST_MOVED_TASK_TO_READY_STATE( pxTCB )
 /*-----------------------------------------------------------*/
 
 /*
@@ -1645,6 +1646,34 @@ void vTaskSuspendAll( void )
 	static TickType_t prvGetExpectedIdleTime( void )
 	{
 	TickType_t xReturn;
+	UBaseType_t uxHigherPriorityReadyTasks = pdFALSE;
+
+		/* uxHigherPriorityReadyTasks takes care of the case where
+		configUSE_PREEMPTION is 0, so there may be tasks above the idle priority
+		task that are in the Ready state, even though the idle task is
+		running. */
+		#if( configUSE_PORT_OPTIMISED_TASK_SELECTION == 0 )
+		{
+			if( uxTopReadyPriority > tskIDLE_PRIORITY )
+			{
+				uxHigherPriorityReadyTasks = pdTRUE;
+			}
+		}
+		#else
+		{
+			const UBaseType_t uxLeastSignificantBit = ( UBaseType_t ) 0x01;
+
+			/* When port optimised task selection is used the uxTopReadyPriority
+			variable is used as a bit map.  If bits other than the least
+			significant bit are set then there are tasks that have a priority
+			above the idle priority that are in the Ready state.  This takes
+			care of the case where the co-operative scheduler is in use. */
+			if( uxTopReadyPriority > uxLeastSignificantBit )
+			{
+				uxHigherPriorityReadyTasks = pdTRUE;
+			}
+		}
+		#endif
 
 		if( pxCurrentTCB->uxPriority > tskIDLE_PRIORITY )
 		{
@@ -1655,6 +1684,13 @@ void vTaskSuspendAll( void )
 			/* There are other idle priority tasks in the ready state.  If
 			time slicing is used then the very next tick interrupt must be
 			processed. */
+			xReturn = 0;
+		}
+		else if( uxHigherPriorityReadyTasks != pdFALSE )
+		{
+			/* There are tasks in the Ready state that have a priority above the
+			idle priority.  This path can only be reached if
+			configUSE_PREEMPTION is 0. */
 			xReturn = 0;
 		}
 		else
@@ -2222,9 +2258,9 @@ void vTaskSwitchContext( void )
 				#endif
 
 				/* Add the amount of time the task has been running to the
-				accumulated	time so far.  The time the task started running was
+				accumulated time so far.  The time the task started running was
 				stored in ulTaskSwitchedInTime.  Note that there is no overflow
-				protection here	so count values are only valid until the timer
+				protection here so count values are only valid until the timer
 				overflows.  The guard against negative values is to protect
 				against suspect run time stat counter implementations - which
 				are provided by the application, not the kernel. */
@@ -3148,7 +3184,10 @@ TCB_t *pxNewTCB;
 			{
 				/* The stack cannot be used as the TCB was not created.  Free it
 				again. */
-				vPortFree( pxStack );
+				if( puxStackBuffer == NULL )
+				{
+					vPortFree( pxStack );
+				}
 			}
 		}
 		else

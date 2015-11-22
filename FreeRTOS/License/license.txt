@@ -1,17 +1,30 @@
+The FreeRTOS open source license covers the FreeRTOS source files,
+which are located in the /FreeRTOS/Source directory of the official FreeRTOS
+download.  It also covers most of the source files in the demo application
+projects, which are located in the /FreeRTOS/Demo directory of the official
+FreeRTOS download.  The demo projects may also include third party software that
+is not part of FreeRTOS and is licensed separately to FreeRTOS.  Examples of
+third party software includes header files provided by chip or tools vendors,
+linker scripts, peripheral drivers, etc.  All the software in subdirectories of
+the /FreeRTOS directory is either open source or distributed with permission,
+and is free for use.  For the avoidance of doubt, refer to the comments at the
+top of each source file.
+
 ----------------------------------------------------------------------------
 
-NOTE: The modification to the GPL documented below is included to allow you to
-distribute a combined work that includes FreeRTOS without being obliged to
-provide the source code for proprietary components.
+NOTE: The modification to the GPL is included to allow you to distribute a
+combined work that includes FreeRTOS without being obliged to provide the source
+code for proprietary components.
 
 ----------------------------------------------------------------------------
 
-The FreeRTOS GPL Exception Text:
+Applying to FreeRTOS V8.2.3 up to the latest version, the FreeRTOS GPL Exception
+Text follows:
 
-Any FreeRTOS source code, whether modified or in it's original release form,
+Any FreeRTOS *source code*, whether modified or in it's original release form,
 or whether in whole or in part, can only be distributed by you under the terms
-of version 2 of the GNU General Public License plus this exception.  An
-independent module is a module which is not derived from or based on FreeRTOS.
+of the GNU General Public License plus this exception.  An independent module is
+a module which is not derived from or based on FreeRTOS.
 
 Clause 1:
 
@@ -35,9 +48,12 @@ express permission of Real Time Engineers Ltd. (this is the norm within the
 industry and is intended to ensure information accuracy).
 
 
+
 --------------------------------------------------------------------
 
-The standard GPL v2 text follows:
+
+
+The standard GPL V2 text:
 
 
 		    GNU GENERAL PUBLIC LICENSE

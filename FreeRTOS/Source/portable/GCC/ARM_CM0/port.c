@@ -183,6 +183,7 @@ void vPortStartFirstTask( void )
 	"	msr psp, r0					\n" /* This is now the new top of stack to use in the task. */
 	"	movs r0, #2					\n" /* Switch to the psp stack. */
 	"	msr CONTROL, r0				\n"
+	"	isb							\n"
 	"	pop {r0-r5}					\n" /* Pop the registers that are saved automatically. */
 	"	mov lr, r5					\n" /* lr is now in r5. */
 	"	cpsie i						\n" /* The first task has its context and interrupts can be enabled. */

@@ -119,7 +119,7 @@ static void prvSendFrontAndBackTest( void *pvParameters );
  * priority task while it holds the inherited high priority.  Once the mutex
  * is returned the task with the inherited priority returns to its original
  * low priority, and is therefore immediately preempted by first the high
- * priority task and then the medium prioroity task before it can continue.
+ * priority task and then the medium priority task before it can continue.
  */
 static void prvLowPriorityMutexTask( void *pvParameters );
 static void prvMediumPriorityMutexTask( void *pvParameters );
@@ -139,7 +139,7 @@ static volatile uint32_t ulLoopCounter2 = 0;
 /* The variable that is guarded by the mutex in the mutex demo tasks. */
 static volatile uint32_t ulGuardedVariable = 0;
 
-/* Handles used in the mutext test to suspend and resume the high and medium
+/* Handles used in the mutex test to suspend and resume the high and medium
 priority mutex test tasks. */
 static TaskHandle_t xHighPriorityMutexTask, xMediumPriorityMutexTask;
 
@@ -150,7 +150,6 @@ void vStartGenericQueueTasks( UBaseType_t uxPriority )
 QueueHandle_t xQueue;
 SemaphoreHandle_t xMutex;
 
-
 	/* Create the queue that we are going to use for the
 	prvSendFrontAndBackTest demo. */
 	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( uint32_t ) );
@@ -160,8 +159,21 @@ SemaphoreHandle_t xMutex;
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
-	defined to be less than 1. */
+	defined to be less than 1.  First check a name is not returned before the
+	queue has been added. */
+	configASSERT( pcQueueGetQueueName( xQueue ) == NULL );
+	
+	/* Then add the queue to the registry, and check its name is returned
+	correctly. */
 	vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
+	configASSERT( strcmp( pcQueueGetQueueName( xQueue ), "Gen_Queue_Test" ) == 0 );
+	
+	/* Then, for test purposes, remove the queue from the registry again, check
+	NULL is returned for its name, before adding back and leaving it. */
+	vQueueUnregisterQueue( xQueue );
+	configASSERT( pcQueueGetQueueName( xQueue ) == NULL );
+	vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
+	configASSERT( strcmp( pcQueueGetQueueName( xQueue ), "Gen_Queue_Test" ) == 0 );
 
 	/* Create the demo task and pass it the queue just created.  We are
 	passing the queue handle by value so it does not matter that it is

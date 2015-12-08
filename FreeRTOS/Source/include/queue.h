@@ -1517,7 +1517,7 @@ BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION
  * stores a pointer to the string - so the string must be persistent (global or
  * preferably in ROM/Flash), not on the stack.
  */
-#if configQUEUE_REGISTRY_SIZE > 0
+#if( configQUEUE_REGISTRY_SIZE > 0 )
 	void vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcName ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 #endif
 
@@ -1531,8 +1531,23 @@ BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION
  *
  * @param xQueue The handle of the queue being removed from the registry.
  */
-#if configQUEUE_REGISTRY_SIZE > 0
+#if( configQUEUE_REGISTRY_SIZE > 0 )
 	void vQueueUnregisterQueue( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
+#endif
+
+/*
+ * The registry is provided as a means for kernel aware debuggers to
+ * locate queues, semaphores and mutexes.  Call pcQueueGetQueueName() to look
+ * up and return the name of a queue in the queue registry from the queue's
+ * handle.
+ *
+ * @param xQueue The handle of the queue the name of which will be returned.
+ * @return If the queue is in the registry then a pointer to the name of the
+ * queue is returned.  If the queue is not in the registry then NULL is
+ * returned.
+ */
+#if( configQUEUE_REGISTRY_SIZE > 0 )
+	const char *pcQueueGetQueueName( QueueHandle_t xQueue );
 #endif
 
 /*

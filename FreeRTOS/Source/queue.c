@@ -2372,6 +2372,34 @@ BaseType_t xReturn;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
+	const char *pcQueueGetQueueName( QueueHandle_t xQueue )
+	{
+	UBaseType_t ux;
+	const char *pcReturn = NULL;
+
+		/* Note there is nothing here to protect against another task adding or
+		removing entries from the registry while it is being searched. */
+		for( ux = ( UBaseType_t ) 0U; ux < ( UBaseType_t ) configQUEUE_REGISTRY_SIZE; ux++ )
+		{
+			if( xQueueRegistry[ ux ].xHandle == xQueue )
+			{
+				pcReturn = xQueueRegistry[ ux ].pcQueueName;
+				break;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+
+		return pcReturn;
+	}
+
+#endif /* configQUEUE_REGISTRY_SIZE */
+/*-----------------------------------------------------------*/
+
+#if ( configQUEUE_REGISTRY_SIZE > 0 )
+
 	void vQueueUnregisterQueue( QueueHandle_t xQueue )
 	{
 	UBaseType_t ux;
@@ -2384,6 +2412,11 @@ BaseType_t xReturn;
 			{
 				/* Set the name to NULL to show that this slot if free again. */
 				xQueueRegistry[ ux ].pcQueueName = NULL;
+
+				/* Set the handle to NULL to ensure the same queue handle cannot
+				appear in the registry twice if it is added, removed, then
+				added again. */
+				xQueueRegistry[ ux ].xHandle = ( QueueHandle_t ) 0;
 				break;
 			}
 			else

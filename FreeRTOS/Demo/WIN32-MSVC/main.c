@@ -79,19 +79,17 @@
  * hardware setup and FreeRTOS hook functions.
  *
  *******************************************************************************
- * -NOTE- The Win32 port is a simulation (or is that emulation?) only!  Do not
- * expect to get real time behaviour from the Win32 port or this demo
- * application.  It is provided as a convenient development and demonstration
- * test bed only.  This was tested using Windows XP on a dual core laptop.
- *
- * Windows will not be running the FreeRTOS simulator threads continuously, so
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.
- * See the documentation page for the Windows simulator for an explanation of
- * the slow timing:
+ * NOTE: Windows will not be running the FreeRTOS demo threads continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * this demo application.  Also, the timing information in the FreeRTOS+Trace
+ * logs have no meaningful units.  See the documentation page for the Windows
+ * port for further information:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
- * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
- *******************************************************************************
  *
+ * This demo was created using Windows XP on a dual core laptop, and has since
+ * been maintained using Windows 7 on a quad core laptop.
+ *
+ *******************************************************************************
  */
 
 /* Standard includes. */
@@ -103,22 +101,28 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* This project provides two demo applications.  A simple blinky style project,
-and a more comprehensive test and demo application.  The
+/* This project provides two demo applications.  A simple blinky style demo
+application, and a more comprehensive test and demo application.  The
 mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
-The simply blinky demo is implemented and described in main_blinky.c.  The more
-comprehensive test and demo application is implemented and described in
-main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 then the blinky demo will be built.
+The blinky demo is implemented and described in main_blinky.c.
+
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
+demo application will be built.  The comprehensive test and demo application is
+implemented and described in main_full.c. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /* This demo uses heap_5.c, and these constants define the sizes of the regions
-that make up the total heap.  This is only done to provide an example of heap_5
-being used as this demo could easily create one large heap region instead of
-multiple smaller heap regions - in which case heap_4.c would be the more
-appropriate choice. */
+that make up the total heap.  heap_5 is only used for test and example purposes
+as this demo could easily create one large heap region instead of multiple
+smaller heap regions - in which case heap_4.c would be the more appropriate
+choice.  See http://www.freertos.org/a00111.html for an explanation. */
 #define mainREGION_1_SIZE	4001
 #define mainREGION_2_SIZE	18105
 #define mainREGION_3_SIZE	1807
+
+/*-----------------------------------------------------------*/
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -128,26 +132,23 @@ extern void main_blinky( void );
 extern void main_full( void );
 
 /*
- * Some of the RTOS hook (callback) functions only need special processing when
- * the full demo is being used.  The simply blinky demo has no special
- * requirements, so these functions are called from the hook functions defined
- * in this file, but are defined in main_full.c.
+ * Only the comprehensive demo uses application hook (callback) functions.  See
+ * http://www.freertos.org/a00016.html for more information.
  */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
 
 /*
- * This demo uses heap_5.c, so start by defining some heap regions.  This is
- * only done to provide an example as this demo could easily create one large
- * heap region instead of multiple smaller heap regions - in which case heap_4.c
- * would be the more appropriate choice.  No initialisation is required when
- * heap_4.c is used.
+ * This demo uses heap_5.c, so start by defining some heap regions.  It is not
+ * necessary for this demo to use heap_5, as it could define one large heap
+ * region.  Heap_5 is only used for test and example purposes.  See
+ * http://www.freertos.org/a00111.html for an explanation.
  */
 static void  prvInitialiseHeap( void );
 
 /*
- * Prototypes for the standard FreeRTOS callback/hook functions implemented
- * within this file.
+ * Prototypes for the standard FreeRTOS application hook (callback) functions
+ * implemented within this file.  See http://www.freertos.org/a00016.html .
  */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
@@ -161,9 +162,9 @@ void vApplicationTickHook( void );
 static void prvSaveTraceFile( void );
 
 /* The user trace event posted to the trace recording on each tick interrupt.
-Note tick events will not appear in the trace recording with regular period
-because this project runs in a Windows simulator, and does not therefore
-exhibit deterministic behaviour. */
+Note:  This project runs under Windows, and Windows will not be executing the
+RTOS threads continuously.  Therefore tick events will not appear with a regular
+interval within the the trace recording. */
 traceLabel xTickTraceUserEvent;
 static portBASE_TYPE xTraceRunning = pdTRUE;
 
@@ -171,23 +172,17 @@ static portBASE_TYPE xTraceRunning = pdTRUE;
 
 int main( void )
 {
-	/* This demo uses heap_5.c, so start by defining some heap regions.  This
-	is only done to provide an example as this demo could easily create one
-	large heap region instead of multiple smaller heap regions - in which case
-	heap_4.c would be the more appropriate choice.  No initialisation is
-	required when heap_4.c is used. */
+	/* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
+	is only used for test and example reasons.  Heap_4 is more appropriate.  See
+	http://www.freertos.org/a00111.html for an explanation. */
 	prvInitialiseHeap();
 
 	/* Initialise the trace recorder and create the label used to post user
-	events to the trace recording on each tick interrupt. */
+	events to the trace recording on each tick interrupt.  Use of the trace
+	recorder is optional.  See http://www.FreeRTOS.org/trace for more
+	information. */
 	vTraceInitTraceData();
 	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
-
-	/* Start the trace recording - the recording is written to a file if
-	configASSERT() is called. */
-	printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-	printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
-	uiTraceStart();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -197,6 +192,12 @@ int main( void )
 	}
 	#else
 	{
+		/* Start the trace recording - the recording is written to a file if
+		configASSERT() is called. */
+		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
+		uiTraceStart();
+
 		main_full();
 	}
 	#endif
@@ -212,11 +213,13 @@ void vApplicationMallocFailedHook( void )
 	function that will get called if a call to pvPortMalloc() fails.
 	pvPortMalloc() is called internally by the kernel whenever a task, queue,
 	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
+	demo application.  If heap_1.c, heap_2.c or heap_4.c is being used, then the
+	size of the	heap available to pvPortMalloc() is defined by
+	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+	API function can be used to query the size of free heap space that remains
+	(although it does not provide information on how the remaining heap might be
+	fragmented).  See http://www.freertos.org/a00111.html for more
+	information. */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -227,11 +230,11 @@ void vApplicationIdleHook( void )
 	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
 	task.  It is essential that code added to this hook function never attempts
 	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+	specified, or call vTaskDelay()).  If application tasks make use of the
+	vTaskDelete() API function to delete themselves then it is also important
+	that vApplicationIdleHook() is permitted to return to its calling function,
+	because it is the responsibility of the idle task to clean up memory
+	allocated by the kernel to any task that has since deleted itself. */
 
 	/* Uncomment the following code to allow the trace to be stopped with any
 	key press.  The code is commented out by default as the kbhit() function
@@ -265,7 +268,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+	function is called if a stack overflow is detected.  This function is
+	provided as an example only as stack overflow checking does not function
+	when running the FreeRTOS Windows port. */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -284,11 +289,10 @@ void vApplicationTickHook( void )
 	}
 	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
 
-	/* Write a user event to the trace log.
-	Note tick events will not appear in the trace recording with regular period
-	because this project runs in a Windows simulator, and does not therefore
-	exhibit deterministic behaviour.  Windows will run the simulator in
-	bursts. */
+	/* Write a user event to the trace log.  Note:  This project runs under
+	Windows, and Windows will not be executing the RTOS threads continuously.
+	Therefore tick events will not appear with a regular interval within the the
+	trace recording. */
 	vTraceUserEvent( xTickTraceUserEvent );
 }
 /*-----------------------------------------------------------*/
@@ -297,6 +301,9 @@ void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
 static portBASE_TYPE xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
+
+	/* Called if an assertion passed to configASSERT() fails.  See
+	http://www.freertos.org/a00110.html#configASSERT for more information. */
 
 	/* Parameters are not used. */
 	( void ) ulLine;
@@ -351,13 +358,15 @@ FILE* pxOutputFile;
 
 static void  prvInitialiseHeap( void )
 {
-/* This demo uses heap_5.c, so start by defining some heap regions.  This is
-only done to provide an example as this demo could easily create one large heap
-region instead of multiple smaller heap regions - in which case heap_4.c would
-be the more appropriate choice.  No initialisation is required when heap_4.c is
-used.  The xHeapRegions structure requires the regions to be defined in order,
-so this just creates one big array, then populates the structure with offsets
-into the array - with gaps in between and messy alignment just for test
+/* The Windows demo could create one large heap region, in which case it would
+be appropriate to use heap_4.  However, purely for demonstration purposes,
+heap_5 is used instead, so start by defining some heap regions.  No
+initialisation is required when any other heap implementation is used.  See
+http://www.freertos.org/a00111.html for more information.
+
+The xHeapRegions structure requires the regions to be defined in start address
+order, so this just creates one big array, then populates the structure with
+offsets into the array - with gaps in between and messy alignment just for test
 purposes. */
 static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 volatile uint32_t ulAdditionalOffset = 19; /* Just to prevent 'condition is always true' warnings in configASSERT(). */

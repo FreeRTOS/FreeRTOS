@@ -222,7 +222,7 @@ PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been r
 #if ( INCLUDE_vTaskDelete == 1 )
 
 	PRIVILEGED_DATA static List_t xTasksWaitingTermination;				/*< Tasks that have been deleted - but their memory not yet freed. */
-	PRIVILEGED_DATA static volatile UBaseType_t uxTasksDeleted = ( UBaseType_t ) 0U;
+	PRIVILEGED_DATA static volatile UBaseType_t uxDeletedTasksWaitingCleanUp = ( UBaseType_t ) 0U;
 
 #endif
 
@@ -752,10 +752,7 @@ StackType_t *pxTopOfStack;
 			being deleted. */
 			pxTCB = prvGetTCBFromHandle( xTaskToDelete );
 
-			/* Remove task from the ready list and place in the	termination list.
-			This will stop the task from be scheduled.  The idle task will check
-			the termination list and free up any memory allocated by the
-			scheduler for the TCB and stack. */
+			/* Remove task from the ready list. */
 			if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
 			{
 				taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -775,15 +772,28 @@ StackType_t *pxTopOfStack;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			vListInsertEnd( &xTasksWaitingTermination, &( pxTCB->xGenericListItem ) );
+			if( pxTCB == pxCurrentTCB )
+			{
+				/* A task is deleting itself.  This cannot complete within the
+				task itself, as a context switch to another task is required.
+				Place the task in the termination list.  The idle task will
+				check the termination list and free up any memory allocated by
+				the scheduler for the TCB and stack of the deleted task. */
+				vListInsertEnd( &xTasksWaitingTermination, &( pxTCB->xGenericListItem ) );
 
-			/* Increment the ucTasksDeleted variable so the idle task knows
-			there is a task that has been deleted and that it should therefore
-			check the xTasksWaitingTermination list. */
-			++uxTasksDeleted;
+				/* Increment the ucTasksDeleted variable so the idle task knows
+				there is a task that has been deleted and that it should therefore
+				check the xTasksWaitingTermination list. */
+				++uxDeletedTasksWaitingCleanUp;
+			}
+			else
+			{
+				--uxCurrentNumberOfTasks;
+				prvDeleteTCB( pxTCB );
+			}
 
-			/* Increment the uxTaskNumberVariable also so kernel aware debuggers
-			can detect that the task lists need re-generating. */
+			/* Increment the uxTaskNumber also so kernel aware debuggers can
+			detect that the task lists need re-generating. */
 			uxTaskNumber++;
 
 			traceTASK_DELETE( pxTCB );
@@ -1032,10 +1042,11 @@ StackType_t *pxTopOfStack;
 			#endif
 
 			#if ( INCLUDE_vTaskDelete == 1 )
-				else if( pxStateList == &xTasksWaitingTermination )
+				else if( ( pxStateList == &xTasksWaitingTermination ) || ( pxStateList == NULL ) )
 				{
 					/* The task being queried is referenced from the deleted
-					tasks list. */
+					tasks list, or it is not referenced from any lists at 
+					all. */
 					eReturn = eDeleted;
 				}
 			#endif
@@ -3071,7 +3082,7 @@ static void prvCheckTasksWaitingTermination( void )
 
 		/* ucTasksDeleted is used to prevent vTaskSuspendAll() being called
 		too often in the idle task. */
-		while( uxTasksDeleted > ( UBaseType_t ) 0U )
+		while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
 		{
 			vTaskSuspendAll();
 			{
@@ -3088,7 +3099,7 @@ static void prvCheckTasksWaitingTermination( void )
 					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
 					( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
 					--uxCurrentNumberOfTasks;
-					--uxTasksDeleted;
+					--uxDeletedTasksWaitingCleanUp;
 				}
 				taskEXIT_CRITICAL();
 
@@ -3100,7 +3111,7 @@ static void prvCheckTasksWaitingTermination( void )
 			}
 		}
 	}
-	#endif /* vTaskDelete */
+	#endif /* INCLUDE_vTaskDelete */
 }
 /*-----------------------------------------------------------*/
 

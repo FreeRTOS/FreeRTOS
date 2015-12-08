@@ -311,6 +311,7 @@ extern "C" {
 #if ( configQUEUE_REGISTRY_SIZE < 1 )
 	#define vQueueAddToRegistry( xQueue, pcName )
 	#define vQueueUnregisterQueue( xQueue )
+	#define pcQueueGetQueueName( xQueue )
 #endif
 
 #ifndef portPOINTER_SIZE_TYPE

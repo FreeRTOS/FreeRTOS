@@ -69,14 +69,12 @@
 
 /*
  *******************************************************************************
- * NOTE 1: Do not expect to get real time behaviour from the Win32 port or this
- * demo application.  It is provided as a convenient development and
- * demonstration test bed only.  Windows will not be running the FreeRTOS
- * threads continuously, so the timing information in the FreeRTOS+Trace logs
- * have no meaningful units.  See the documentation page for the Windows
- * simulator for further explanation:
+ * NOTE: Windows will not be running the FreeRTOS demo threads continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * this demo application.  Also, the timing information in the FreeRTOS+Trace
+ * logs have no meaningful units.  See the documentation page for the Windows
+ * port for further information:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
- * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The
@@ -100,9 +98,9 @@
  * "Check" task - This only executes every five seconds but has a high priority
  * to ensure it gets processor time.  Its main function is to check that all the
  * standard demo tasks are still operational.  While no errors have been
- * discovered the check task will print out "OK" and the current simulated tick
- * time.  If an error is discovered in the execution of a task then the check
- * task will print out an appropriate error message.
+ * discovered the check task will print out "No Errors" along with some system
+ * status information.  If an error is discovered in the execution of a task 
+ * then the check task will print out an appropriate error message.
  *
  */
 
@@ -185,7 +183,7 @@ static void prvDemoQueueSpaceFunctions( void *pvParameters );
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
-static char *pcStatusMessage = "OK";
+static char *pcStatusMessage = "No errors";
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
 semaphore tracing API functions.  It has no other purpose. */
@@ -246,7 +244,7 @@ int main_full( void )
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
+const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -342,7 +340,10 @@ const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 
 		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
-		printf( "%s - %d\r\n", pcStatusMessage, xTaskGetTickCount() );
+		printf( "%s - tick count %d - free heap %d - min free heap %d\r\n", pcStatusMessage,
+																			xTaskGetTickCount(),
+																			xPortGetFreeHeapSize(),
+																			xPortGetMinimumEverFreeHeapSize() );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -395,7 +396,7 @@ void *pvAllocated;
 
 	/* Exercise heap_5 a bit.  The malloc failed hook will trap failed
 	allocations so there is no need to test here. */
-	pvAllocated = pvPortMalloc( ( rand() % 100 ) + 1 );
+	pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
 	vPortFree( pvAllocated );
 }
 /*-----------------------------------------------------------*/

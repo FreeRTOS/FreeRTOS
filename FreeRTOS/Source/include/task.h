@@ -128,6 +128,12 @@ typedef enum
 	eSetValueWithoutOverwrite	/* Set the task's notification value if the previous value has been read by the task. */
 } eNotifyAction;
 
+/* For data hiding purposes. */
+typedef enum
+{
+	eNothing = 0
+} eDummy;
+
 /*
  * Used internally only.
  */
@@ -183,6 +189,65 @@ typedef enum
 	eNoTasksWaitingTimeout	/* No tasks are waiting for a timeout so it is safe to enter a sleep mode that can only be exited by an external interrupt. */
 } eSleepModeStatus;
 
+/* Value that can be assigned to the eNotifyState member of the TCB. */
+typedef enum
+{
+	eNotWaitingNotification = 0,
+	eWaitingNotification,
+	eNotified
+} eNotifyValue;
+
+/*
+ * FreeRTOS implements a strict data hiding policy, so the real task control
+ * block (TCB) structure is not accessible to the application code.  However, if
+ * the application writer wants to statically allocate a TCB then the size of
+ * the TCB needs to be know.  The dummy TCB structure below is used for this
+ * purpose.  Its size will allows match the size of the real TCB, no matter what
+ * the FreeRTOSConfig.h settings.
+ */
+typedef struct xDUMMY_TCB
+{
+	void				*pxDummy1;
+	#if ( portUSING_MPU_WRAPPERS == 1 )
+		xMPU_SETTINGS	xDummy2;
+	#endif
+	ListItem_t			xDummy3[ 2 ];
+	UBaseType_t			uxDummy5;
+	void				*pxDummy6;
+	uint8_t				ucDummy7[ configMAX_TASK_NAME_LEN ];
+	#if ( portSTACK_GROWTH > 0 )
+		void			*pxDummy8;
+	#endif
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+		UBaseType_t		uxDummy9;
+	#endif
+	#if ( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t		uxDummy10[ 2 ];
+	#endif
+	#if ( configUSE_MUTEXES == 1 )
+		UBaseType_t		uxDummy12[ 2 ];
+	#endif
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+		void			*pxDummy14;
+	#endif
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
+		void			pvDummy15[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+	#endif
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+		uint32_t		ulDummy16;
+	#endif
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		struct	_reent	xDummy17;
+	#endif
+	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
+		uint32_t 		ulDummy18;
+		eDummy 			eDummy19;
+	#endif
+	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+		UBaseType_t		uxDummy20;
+	#endif
+
+} DummyTCB_t;
 
 /**
  * Defines the priority used by the idle task.  This must not be modified.
@@ -342,7 +407,112 @@ is used in assert() statements. */
  * \defgroup xTaskCreate xTaskCreate
  * \ingroup Tasks
  */
-#define xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( NULL ), ( NULL ) )
+#define xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( NULL ), ( NULL ), ( NULL ) )
+
+/**
+ * task. h
+ *<pre>
+ BaseType_t xTaskCreateStatic(
+							  TaskFunction_t pvTaskCode,
+							  const char * const pcName,
+							  uint16_t usStackDepth,
+							  void *pvParameters,
+							  UBaseType_t uxPriority,
+							  TaskHandle_t *pvCreatedTask,
+							  StackType_t *pxStackBuffer,
+							  DummyTCB_t *pxTCBBuffer
+						  );</pre>
+ *
+ * Create a new task and add it to the list of tasks that are ready to run.
+ * If a task is created using xTaskCreate() then the stack and task control 
+ * block (TCB) used by the task are allocated dynamically.  If a task is created
+ * using xTaskCreateStatic() then the application writer can optionally provide
+ * the buffers that will hold the task stack and TCB respectively.  
+ * xTaskCreateStatic() therefore allows tasks to be created without any dynamic
+ * memory allocation.
+ *
+ * @param pvTaskCode Pointer to the task entry function.  Tasks
+ * must be implemented to never return (i.e. continuous loop).
+ *
+ * @param pcName A descriptive name for the task.  This is mainly used to
+ * facilitate debugging.  The maximum length of the string is defined by 
+ * configMAX_TASK_NAME_LEN in FreeRTOSConfig.h.
+ *
+ * @param usStackDepth The size of the task stack specified as the number of
+ * variables the stack can hold - not the number of bytes.  For example, if
+ * the stack is 32-bits wide and usStackDepth is defined as 100 then 400 bytes
+ * will be allocated for stack storage.
+ *
+ * @param pvParameters Pointer that will be used as the parameter for the task
+ * being created.
+ *
+ * @param uxPriority The priority at which the task will run.
+ *
+ * @param pvCreatedTask Used to pass back a handle by which the created task
+ * can be referenced.  Pass as NULL if the handle is not required.
+ *
+ * @param pxStackBuffer If pxStackBuffer is NULL then the stack used by the
+ * task will be allocated dynamically, just as if the task was created using
+ * xTaskCreate().  if pxStackBuffer is not NULL then it must point to a 
+ * StackType_t array that has at least usStackDepth indexes - the array will
+ * then be used as the task's stack.
+ *
+ * @param pxTCBBuffer If pxTCBBuffer is NULL then the TCB (which is the
+ * structures used internally within FreeRTOS to hold information on the task)
+ * will be allocated dynamically, just as when xTaskCreate() is used.  If
+ * pxTCBBuffer is not NULL then it must point to a variable of type DummyTCB_T,
+ * which will then be used as the TCB of the task being created.
+ *
+ * @return pdPASS if the task was successfully created and added to a ready
+ * list, otherwise an error code defined in the file projdefs.h
+ *
+ * Example usage:
+   <pre>
+
+ // Dimensions the buffer that the task being created will use as its stack.
+ // NOTE:  This is the number of words the stack will hold, not the number of
+ // bytes.  For example, if each stack item is 32-bits, and this is set to 100,
+ // then 400 bytes (100 * 32-bits) will be allocated.
+ #define STACK_SIZE 200
+
+ // Structure that will hold the TCB of the task being created.
+ DummyTCB_t xTCB;
+
+ // Buffer that the task being created will use as its stack.
+ StackType_t xStack[ STACK_SIZE ];
+   
+ // Task to be created.
+ void vTaskCode( void * pvParameters )
+ {
+	 for( ;; )
+	 {
+		 // Task code goes here.
+	 }
+ }
+
+ // Function that creates a task.
+ void vOtherFunction( void )
+ {
+ static uint8_t ucParameterToPass;
+ TaskHandle_t xHandle = NULL;
+
+	 // Create the task without using any dynamic memory allocation.
+	 xTaskCreate( vTaskCode,          // As per xTaskCreate() parameter.
+				  "NAME",             // As per xTaskCreate() parameter.
+				  STACK_SIZE,         // As per xTaskCreate() parameter.
+				  &ucParameterToPass, // As per xTaskCreate() parameter. 
+				  tskIDLE_PRIORITY,   // As per xTaskCreate() parameter.
+				  &xHandle,           // As per xTaskCreate() parameter.
+				  xStack,             // Pointer to the buffer that the task being created will use as its stack.
+				  &xTCB );            // Pointer to a structure in which the TCB of the task being created will be stored.
+ }
+   </pre>
+ * \defgroup xTaskCreateStatic xTaskCreateStatic
+ * \ingroup Tasks
+ */
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#define xTaskCreateStatic( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, puxStackBuffer, pxDummyTCB ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( puxStackBuffer ), ( pxDummyTCB ), ( NULL ) )
+#endif
 
 /**
  * task. h
@@ -411,7 +581,7 @@ TaskHandle_t xHandle;
  * \defgroup xTaskCreateRestricted xTaskCreateRestricted
  * \ingroup Tasks
  */
-#define xTaskCreateRestricted( x, pxCreatedTask ) xTaskGenericCreate( ((x)->pvTaskCode), ((x)->pcName), ((x)->usStackDepth), ((x)->pvParameters), ((x)->uxPriority), (pxCreatedTask), ((x)->puxStackBuffer), ((x)->xRegions) )
+#define xTaskCreateRestricted( x, pxCreatedTask ) xTaskGenericCreate( ((x)->pvTaskCode), ((x)->pcName), ((x)->usStackDepth), ((x)->pvParameters), ((x)->uxPriority), (pxCreatedTask), ((x)->puxStackBuffer), ( NULL ), ((x)->xRegions) )
 
 /**
  * task. h
@@ -1983,7 +2153,7 @@ BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGE
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, DummyTCB_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.

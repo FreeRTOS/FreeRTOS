@@ -125,7 +125,7 @@ be overridden by a definition in FreeRTOSConfig.h. */
 /* Misc. */
 #define recmuSHORT_DELAY				( pdMS_TO_TICKS( 20 ) )
 #define recmuNO_DELAY					( ( TickType_t ) 0 )
-#define recmuEIGHT_TICK_DELAY			( ( TickType_t ) 8 )
+#define recmu15ms_DELAY					( pdMS_TO_TICKS( 15 ) )
 
 /* The three tasks as described at the top of this file. */
 static void prvRecursiveMutexControllingTask( void *pvParameters );
@@ -199,7 +199,7 @@ UBaseType_t ux;
 			long enough to ensure the polling task will execute again before the
 			block time expires.  If the block time does expire then the error
 			flag will be set here. */
-			if( xSemaphoreTakeRecursive( xMutex, recmuEIGHT_TICK_DELAY ) != pdPASS )
+			if( xSemaphoreTakeRecursive( xMutex, recmu15ms_DELAY ) != pdPASS )
 			{
 				xErrorOccurred = pdTRUE;
 			}

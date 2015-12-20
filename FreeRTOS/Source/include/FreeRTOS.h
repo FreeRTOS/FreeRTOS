@@ -681,7 +681,7 @@ extern "C" {
 #endif
 
 #ifndef pvPortMallocAligned
-	#define pvPortMallocAligned( x, puxStackBuffer ) ( ( ( puxStackBuffer ) == NULL ) ? ( pvPortMalloc( ( x ) ) ) : ( puxStackBuffer ) )
+	#define pvPortMallocAligned( x, puxPreallocatedBuffer ) ( ( ( puxPreallocatedBuffer ) == NULL ) ? ( pvPortMalloc( ( x ) ) ) : ( puxPreallocatedBuffer ) )
 #endif
 
 #ifndef vPortFreeAligned
@@ -770,6 +770,10 @@ extern "C" {
 
 #ifndef portTICK_TYPE_IS_ATOMIC
 	#define portTICK_TYPE_IS_ATOMIC 0
+#endif
+
+#ifndef configSUPPORT_STATIC_ALLOCATION
+	#define configSUPPORT_STATIC_ALLOCATION 0
 #endif
 
 #if( portTICK_TYPE_IS_ATOMIC == 0 )

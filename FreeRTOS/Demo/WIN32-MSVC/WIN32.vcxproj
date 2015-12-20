@@ -151,6 +151,7 @@
     <ClCompile Include="..\Common\Minimal\QueueSetPolling.c" />
     <ClCompile Include="..\Common\Minimal\recmutex.c" />
     <ClCompile Include="..\Common\Minimal\semtest.c" />
+    <ClCompile Include="..\Common\Minimal\StaticAllocation.c" />
     <ClCompile Include="..\Common\Minimal\TaskNotify.c" />
     <ClCompile Include="..\Common\Minimal\timerdemo.c" />
     <ClCompile Include="main.c">

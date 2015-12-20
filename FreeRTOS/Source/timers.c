@@ -178,6 +178,16 @@ PRIVILEGED_DATA static QueueHandle_t xTimerQueue = NULL;
 
 /*-----------------------------------------------------------*/
 
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+
+	/* If static allocation is supported then the application must provide the
+	following callback function - which enables the application to optionally
+	provide the memory that will be used by the timer task as the task's stack
+	and TCB. */
+	extern void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
+
+#endif
+
 /*
  * Initialise the infrastructure used by the timer service task if it has not
  * been initialised already.
@@ -240,6 +250,10 @@ static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseTy
 BaseType_t xTimerCreateTimerTask( void )
 {
 BaseType_t xReturn = pdFAIL;
+DummyTCB_t *pxTimerTaskTCBBuffer = NULL;
+StackType_t *pxTimerTaskStackBuffer = NULL;
+uint16_t usTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+
 
 	/* This function is called when the scheduler is started if
 	configUSE_TIMERS is set to 1.  Check that the infrastructure used by the
@@ -249,16 +263,24 @@ BaseType_t xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
+
+		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		{
+			vApplicationGetTimerTaskMemory( &pxTimerTaskTCBBuffer, &pxTimerTaskStackBuffer, &usTimerTaskStackSize );
+		}
+		#endif /* configSUPPORT_STATIC_ALLOCATION */
+
+
 		#if ( INCLUDE_xTimerGetTimerDaemonTaskHandle == 1 )
 		{
 			/* Create the timer task, storing its handle in xTimerTaskHandle so
 			it can be returned by the xTimerGetTimerDaemonTaskHandle() function. */
-			xReturn = xTaskCreate( prvTimerTask, "Tmr Svc", ( uint16_t ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );
+			xReturn = xTaskGenericCreate( prvTimerTask, "Tmr Svc", usTimerTaskStackSize, NULL, ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle, pxTimerTaskStackBuffer, pxTimerTaskTCBBuffer, NULL );
 		}
 		#else
 		{
 			/* Create the timer task without storing its handle. */
-			xReturn = xTaskCreate( prvTimerTask, "Tmr Svc", ( uint16_t ) configTIMER_TASK_STACK_DEPTH, NULL, ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL);
+			xReturn = xTaskGenericCreate( prvTimerTask, "Tmr Svc", usTimerTaskStackSize, NULL, ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, NULL, pxTimerTaskStackBuffer, pxTimerTaskTCBBuffer, NULL );
 		}
 		#endif
 	}

@@ -154,6 +154,8 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
+void vApplicationGetIdleTaskMemory( DummyTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
+void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
 
 /*
  * Writes trace data to a disk file when the trace recording is stopped.
@@ -389,4 +391,38 @@ const HeapRegion_t xHeapRegions[] =
 	vPortDefineHeapRegions( xHeapRegions );
 }
 /*-----------------------------------------------------------*/
+
+void vApplicationGetIdleTaskMemory( DummyTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
+{
+/* The buffers used by the idle task must be static so they are persistent, and
+so exist after this function returns. */
+static DummyTCB_t xIdleTaskTCB;
+static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+
+	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
+	opportunity to supply the buffers that will be used by the Idle task as its
+	stack and to hold its TCB.  If these are set to NULL then the buffers will
+	be allocated dynamically, just as if xTaskCreate() had been called. */
+	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+	*pusIdleTaskStackSize = configMINIMAL_STACK_SIZE; /* In words.  NOT in bytes! */
+}
+/*-----------------------------------------------------------*/
+DummyTCB_t xTimerTaskTCB;
+void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
+{
+/* The buffers used by the Timer/Daemon task must be static so they are
+persistent, and so exist after this function returns. */
+//static DummyTCB_t xTimerTaskTCB;
+static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+
+	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
+	opportunity to supply the buffers that will be used by the Timer/RTOS daemon
+	task as its	stack and to hold its TCB.  If these are set to NULL then the
+	buffers will be allocated dynamically, just as if xTaskCreate() had been
+	called. */
+	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
+	*pusTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH; /* In words.  NOT in bytes! */
+}
 

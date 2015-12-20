@@ -1935,8 +1935,8 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 				{
 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
 					{
-						/* The task waiting has a higher priority so record that a
-						context	switch is required. */
+						/* The task waiting has a higher priority so record that
+						a context switch is required. */
 						vTaskMissedYield();
 					}
 					else

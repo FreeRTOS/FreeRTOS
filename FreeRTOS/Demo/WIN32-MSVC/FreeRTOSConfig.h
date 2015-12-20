@@ -78,7 +78,8 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.  See
+ * http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION					1
@@ -102,6 +103,7 @@
 #define configUSE_ALTERNATIVE_API				1
 #define configUSE_QUEUE_SETS					1
 #define configUSE_TASK_NOTIFICATIONS			1
+#define configSUPPORT_STATIC_ALLOCATION			1
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS						1

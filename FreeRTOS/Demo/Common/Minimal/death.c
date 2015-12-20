@@ -114,9 +114,11 @@ task can tell if any of the suicidal tasks have failed to die.
 */
 static volatile UBaseType_t uxTasksRunningAtStart = 0;
 
-/* Tasks are deleted by the idle task.  Under heavy load the idle task might
-not get much processing time, so it would be legitimate for several tasks to
-remain undeleted for a short period. */
+/* When a task deletes itself, it stack and TCB are cleaned up by the Idle task.
+Under heavy load the idle task might not get much processing time, so it would 
+be legitimate for several tasks to remain undeleted for a short period.  There
+may also be a few other unexpected tasks if, for example, the tasks that test
+static allocation are also being used. */
 static const UBaseType_t uxMaxNumberOfExtraTasksRunning = 3;
 
 /* Used to store a handle to the task that should be killed by a suicidal task,
@@ -151,7 +153,9 @@ UBaseType_t *puxPriority;
 	If this is done, then uxTasksRunningAtStart needs incrementing again as that
 	too is created when the scheduler is started. */
 	#if configUSE_TIMERS == 1
+	{
 		uxTasksRunningAtStart++;
+	}
 	#endif
 }
 /*-----------------------------------------------------------*/

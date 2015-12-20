@@ -425,6 +425,7 @@ static void prvNotifiedTask( void *pvParameters )
 {
 const TickType_t xMaxPeriod = pdMS_TO_TICKS( 90 ), xMinPeriod = pdMS_TO_TICKS( 10 ), xDontBlock = 0;
 TickType_t xPeriod;
+const uint32_t ulCyclesToRaisePriority = 50UL;
 
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
@@ -482,9 +483,28 @@ TickType_t xPeriod;
 		the function call. */
 		ulTimerNotificationsReceived += ulTaskNotifyTake( pdTRUE, xPeriod );
 
-		/* Wait for the next notification again, clearing all notifications if
-		one is received, but this time blocking indefinitely. */
-		ulTimerNotificationsReceived += ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+		/* Occasionally raise the priority of the task being notified to test
+		the path where the task is notified from an ISR and becomes the highest
+		priority ready state task, but the pxHigherPriorityTaskWoken parameter
+		is NULL (which it is in the tick hook that sends notifications to this
+		task. */
+		if( ( ulNotifyCycleCount % ulCyclesToRaisePriority ) == 0 )
+		{
+			vTaskPrioritySet( xTaskToNotify, configMAX_PRIORITIES - 1 );
+
+			/* Wait for the next notification again, clearing all notifications if
+			one is received, but this time blocking indefinitely. */
+			ulTimerNotificationsReceived += ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+
+			/* Reset the priority. */
+			vTaskPrioritySet( xTaskToNotify, notifyTASK_PRIORITY );
+		}
+		else
+		{
+			/* Wait for the next notification again, clearing all notifications if
+			one is received, but this time blocking indefinitely. */
+			ulTimerNotificationsReceived += ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+		}
 
 		/* Incremented to show the task is still running. */
 		ulNotifyCycleCount++;

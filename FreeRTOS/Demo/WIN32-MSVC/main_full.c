@@ -99,7 +99,7 @@
  * to ensure it gets processor time.  Its main function is to check that all the
  * standard demo tasks are still operational.  While no errors have been
  * discovered the check task will print out "No Errors" along with some system
- * status information.  If an error is discovered in the execution of a task 
+ * status information.  If an error is discovered in the execution of a task
  * then the check task will print out an appropriate error message.
  *
  */
@@ -135,6 +135,7 @@
 #include "IntSemTest.h"
 #include "TaskNotify.h"
 #include "QueueSetPolling.h"
+#include "StaticAllocation.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -214,6 +215,7 @@ int main_full( void )
 	vStartInterruptSemaphoreTasks();
 	vStartQueueSetPollingTask();
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	vStartStaticallyAllocatedTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -336,6 +338,10 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Queue set polling";
+		}
+		else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Static allocation";
 		}
 
 		/* This is the only task that uses stdout so its ok to call printf()

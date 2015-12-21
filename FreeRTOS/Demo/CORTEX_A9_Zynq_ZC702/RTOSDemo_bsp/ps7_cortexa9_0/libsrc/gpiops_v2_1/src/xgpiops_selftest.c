@@ -33,6 +33,8 @@
 /**
 *
 * @file xgpiops_selftest.c
+* @addtogroup gpiops_v2_1
+* @{
 *
 * This file contains a diagnostic self-test function for the XGpioPs driver.
 *
@@ -129,3 +131,4 @@ int XGpioPs_SelfTest(XGpioPs *InstancePtr)
 
 	return Status;
 }
+/** @} */

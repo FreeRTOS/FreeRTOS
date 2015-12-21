@@ -33,6 +33,8 @@
 /**
 *
 * @file xttcps_selftest.c
+* @addtogroup ttcps_v2_0
+* @{
 *
 * This file contains the implementation of self test function for the
 * XTtcPs driver.
@@ -100,3 +102,4 @@ int XTtcPs_SelfTest(XTtcPs *InstancePtr)
 
 	return XST_SUCCESS;
 }
+/** @} */

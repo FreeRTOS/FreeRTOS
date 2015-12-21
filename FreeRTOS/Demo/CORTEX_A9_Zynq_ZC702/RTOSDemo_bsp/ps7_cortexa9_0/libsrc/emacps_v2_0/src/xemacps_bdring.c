@@ -34,6 +34,8 @@
 /**
 *
 * @file xemacps_bdring.c
+* @addtogroup emacps_v2_0
+* @{
 *
 * This file implements buffer descriptor ring related functions.
 *
@@ -999,3 +1001,4 @@ int XEmacPs_BdRingCheck(XEmacPs_BdRing * RingPtr, u8 Direction)
 	/* No problems found */
 	return (XST_SUCCESS);
 }
+/** @} */

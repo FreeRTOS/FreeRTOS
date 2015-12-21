@@ -33,6 +33,9 @@
 /**
 *
 * @file xadcps.h
+* @addtogroup xadcps_v2_0
+* @{
+* @details
 *
 * The XAdcPs driver supports the Xilinx XADC/ADC device.
 *
@@ -557,3 +560,4 @@ void XAdcPs_IntrClear(XAdcPs *InstancePtr, u32 Mask);
 #endif
 
 #endif  /* End of protection macro. */
+/** @} */

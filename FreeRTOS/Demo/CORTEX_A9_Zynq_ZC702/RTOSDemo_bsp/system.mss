@@ -1,6 +1,4 @@
 
- PARAMETER NAME = C:\E\Dev\workspaces\XilinxSDK\FreeRTOS_Demo\RTOSDemo_bsp\system.mss
-
  PARAMETER VERSION = 2.2.0
 
 

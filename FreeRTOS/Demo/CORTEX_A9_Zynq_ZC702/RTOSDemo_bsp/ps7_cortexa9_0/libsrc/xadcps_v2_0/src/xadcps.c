@@ -33,6 +33,8 @@
 /**
 *
 * @file xadcps.c
+* @addtogroup xadcps_v2_0
+* @{
 *
 * This file contains the driver API functions that can be used to access
 * the XADC device.
@@ -1824,3 +1826,4 @@ u32 XAdcPs_ReadInternalReg(XAdcPs *InstancePtr, u32 RegOffset)
 }
 
 
+/** @} */

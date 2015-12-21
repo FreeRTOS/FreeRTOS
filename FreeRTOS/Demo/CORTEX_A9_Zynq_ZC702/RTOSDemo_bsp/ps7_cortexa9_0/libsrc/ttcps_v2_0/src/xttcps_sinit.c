@@ -33,6 +33,8 @@
 /**
 *
 * @file xttcps_sinit.c
+* @addtogroup ttcps_v2_0
+* @{
 *
 * The implementation of the XTtcPs driver's static initialization functionality.
 *
@@ -92,3 +94,4 @@ XTtcPs_Config *XTtcPs_LookupConfig(u16 DeviceId)
 
 	return CfgPtr;
 }
+/** @} */

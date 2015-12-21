@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps_options.c
+* @addtogroup iicps_v2_1
+* @{
 *
 * Contains functions for the configuration of the XIccPs driver.
 *
@@ -484,3 +486,4 @@ u32 XIicPs_GetSClk(XIicPs *InstancePtr)
 	return ActualFscl;
 }
 
+/** @} */

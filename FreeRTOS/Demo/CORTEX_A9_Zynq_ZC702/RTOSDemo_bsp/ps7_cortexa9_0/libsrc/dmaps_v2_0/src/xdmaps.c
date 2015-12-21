@@ -33,6 +33,8 @@
 /**
 *
 * @file xdmaps.c
+* @addtogroup dmaps_v2_0
+* @{
 *
 * This file contains the implementation of the interface functions for XDmaPs
 * driver. Refer to the header file xdmaps.h for more detailed information.
@@ -1978,3 +1980,4 @@ static void XDmaPs_Print_DmaProgBuf(char *Buf, int Length)
 }
 
 
+/** @} */

@@ -32,6 +32,8 @@
 /******************************************************************************/
 /**
  * @file xusbps.c
+* @addtogroup usbps_v2_1
+* @{
  *
  * The XUsbPs driver. Functions in this file are the minimum required
  * functions for this driver. See xusbps.h for a detailed description of the
@@ -359,3 +361,4 @@ int XUsbPs_SetDeviceAddress(XUsbPs *InstancePtr, u8 Address)
 	return XST_SUCCESS;
 }
 
+/** @} */

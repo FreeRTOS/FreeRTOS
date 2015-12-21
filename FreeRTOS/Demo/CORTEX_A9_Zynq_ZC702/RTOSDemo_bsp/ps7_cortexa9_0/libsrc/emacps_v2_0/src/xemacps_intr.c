@@ -34,6 +34,8 @@
 /**
 *
 * @file xemacps_intr.c
+* @addtogroup emacps_v2_0
+* @{
 *
 * Functions in this file implement general purpose interrupt processing related
 * functionality. See xemacps.h for a detailed description of the driver.
@@ -218,3 +220,4 @@ void XEmacPs_IntrHandler(void *XEmacPsPtr)
 	}
 
 }
+/** @} */

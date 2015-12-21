@@ -33,6 +33,9 @@
 /**
 *
 * @file xsdps.h
+* @addtogroup sdps_v2_1
+* @{
+* @details
 *
 * This file contains the implementation of XSdPs driver.
 * This driver is used initialize read from and write to the SD card.
@@ -181,3 +184,4 @@ int XSdPs_Get_Mmc_ExtCsd(XSdPs *InstancePtr, u8 *ReadBuff);
 #endif
 
 #endif /* SD_H_ */
+/** @} */

@@ -33,6 +33,9 @@
 /**
 *
 * @file xscugic.h
+* @addtogroup scugic_v2_1
+* @{
+* @details
 *
 * The generic interrupt controller driver component.
 *
@@ -313,3 +316,4 @@ int  XScuGic_SelfTest(XScuGic *InstancePtr);
 
 #endif            /* end of protection macro */
 
+/** @} */

@@ -33,6 +33,8 @@
 /**
 *
 * @file xemacps_hw.h
+* @addtogroup emacps_v2_0
+* @{
 *
 * This header file contains identifiers and low-level driver functions (or
 * macros) that can be used to access the PS Ethernet MAC (XEmacPs) device.
@@ -594,3 +596,4 @@ void XEmacPs_ResetHw(u32 BaseAddr);
 #endif
 
 #endif /* end of protection macro */
+/** @} */

@@ -33,6 +33,8 @@
 /**
 *
 * @file xadcps_sinit.c
+* @addtogroup xadcps_v2_0
+* @{
 *
 * This file contains the implementation of the XAdcPs driver's static
 * initialization functionality.
@@ -98,3 +100,4 @@ XAdcPs_Config *XAdcPs_LookupConfig(u16 DeviceId)
 
 	return CfgPtr;
 }
+/** @} */

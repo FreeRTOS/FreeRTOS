@@ -33,6 +33,8 @@
 /**
 *
 * @file xdevcfg_hw.c
+* @addtogroup devcfg_v3_1
+* @{
 *
 * This file contains the implementation of the interface reset functionality
 * <pre>
@@ -108,3 +110,4 @@ void XDcfg_ResetHw(u32 BaseAddr)
 	XDcfg_WriteReg(BaseAddr, XDCFG_CTRL_OFFSET, Regval);
 				
 }
+/** @} */

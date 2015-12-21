@@ -34,6 +34,8 @@
 /**
 *
 * @file xemacps_sinit.c
+* @addtogroup emacps_v2_0
+* @{
 *
 * This file contains lookup method by device ID when success, it returns
 * pointer to config table to be used to initialize the device.
@@ -91,3 +93,4 @@ XEmacPs_Config *XEmacPs_LookupConfig(u16 DeviceId)
 
 	return (CfgPtr);
 }
+/** @} */

@@ -33,6 +33,8 @@
 /**
 *
 * @file xqspips.c
+* @addtogroup qspips_v3_0
+* @{
 *
 * Contains implements the interface functions of the XQspiPs driver.
 * See xqspips.h for a detailed description of the device and driver.
@@ -1547,3 +1549,4 @@ static void XQspiPs_GetReadData(XQspiPs *InstancePtr, u32 Data, u8 Size)
 		InstancePtr->RequestedBytes = 0;
 	}
 }
+/** @} */

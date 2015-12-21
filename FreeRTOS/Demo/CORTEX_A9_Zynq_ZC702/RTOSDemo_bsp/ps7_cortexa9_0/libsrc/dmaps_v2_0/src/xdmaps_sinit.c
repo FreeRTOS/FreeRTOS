@@ -33,6 +33,8 @@
 /**
 *
 * @file xdmaps_sinit.c
+* @addtogroup dmaps_v2_0
+* @{
 *
 * The implementation of the XDmaPs driver's static initialzation
 * functionality.
@@ -99,3 +101,4 @@ XDmaPs_Config *XDmaPs_LookupConfig(u16 DeviceId)
 
 	return CfgPtr;
 }
+/** @} */

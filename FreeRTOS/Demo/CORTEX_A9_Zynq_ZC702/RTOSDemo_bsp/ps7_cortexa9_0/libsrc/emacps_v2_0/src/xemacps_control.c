@@ -34,6 +34,8 @@
 /**
  *
  * @file xemacps_control.c
+* @addtogroup emacps_v2_0
+* @{
  *
  * Functions in this file implement general purpose command and control related
  * functionality. See xemacps.h for a detailed description of the driver.
@@ -1073,3 +1075,4 @@ void XEmacPs_DMABLengthUpdate(XEmacPs *InstancePtr, int BLength)
 	XEmacPs_WriteReg(InstancePtr->Config.BaseAddress, XEMACPS_DMACR_OFFSET,
 																	Reg);
 }
+/** @} */

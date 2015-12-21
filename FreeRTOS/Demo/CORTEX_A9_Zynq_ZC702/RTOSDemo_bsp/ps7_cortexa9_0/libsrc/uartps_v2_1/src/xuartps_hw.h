@@ -33,6 +33,8 @@
 /**
 *
 * @file xuartps_hw.h
+* @addtogroup uartps_v2_1
+* @{
 *
 * This header file contains the hardware interface of an XUartPs device.
 *
@@ -421,3 +423,4 @@ void XUartPs_ResetHw(u32 BaseAddress);
 #endif
 
 #endif /* end of protection macro */
+/** @} */

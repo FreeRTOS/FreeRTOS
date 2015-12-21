@@ -33,6 +33,8 @@
 /**
 *
 * @file xscutimer.c
+* @addtogroup scutimer_v2_0
+* @{
 *
 * Contains the implementation of interface functions of the SCU Timer driver.
 * See xscutimer.h for a description of the driver.
@@ -277,3 +279,4 @@ u8 XScuTimer_GetPrescaler(XScuTimer *InstancePtr)
 
 	return (ControlReg >> XSCUTIMER_CONTROL_PRESCALER_SHIFT);
 }
+/** @} */

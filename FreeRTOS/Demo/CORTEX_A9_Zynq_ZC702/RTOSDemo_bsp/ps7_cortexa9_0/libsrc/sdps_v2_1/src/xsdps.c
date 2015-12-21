@@ -33,6 +33,8 @@
 /**
 *
 * @file xsdps.c
+* @addtogroup sdps_v2_1
+* @{
 *
 * Contains the interface functions of the XSdPs driver.
 * See xsdps.h for a detailed description of the device and driver.
@@ -1098,3 +1100,4 @@ RETURN_PATH:
 }
 
 
+/** @} */

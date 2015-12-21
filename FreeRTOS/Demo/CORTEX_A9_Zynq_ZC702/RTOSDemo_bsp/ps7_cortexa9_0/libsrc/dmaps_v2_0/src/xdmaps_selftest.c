@@ -33,6 +33,8 @@
 /**
 *
 * @file xdmaps_selftest.c
+* @addtogroup dmaps_v2_0
+* @{
 *
 * This file contains the self-test functions for the XDmaPs driver.
 *
@@ -105,3 +107,4 @@ int XDmaPs_SelfTest(XDmaPs *InstPtr)
 	}
 	return XST_SUCCESS;
 }
+/** @} */

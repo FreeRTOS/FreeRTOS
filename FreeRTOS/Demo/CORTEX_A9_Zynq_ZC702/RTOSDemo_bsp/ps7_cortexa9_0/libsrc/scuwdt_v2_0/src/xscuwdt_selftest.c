@@ -33,6 +33,8 @@
 /**
 *
 * @file xscuwdt_selftest.c
+* @addtogroup scuwdt_v2_0
+* @{
 *
 * Contains diagnostic self-test functions for the XScuWdt driver.
 *
@@ -121,3 +123,4 @@ int XScuWdt_SelfTest(XScuWdt *InstancePtr)
 
 	return XST_SUCCESS;
 }
+/** @} */

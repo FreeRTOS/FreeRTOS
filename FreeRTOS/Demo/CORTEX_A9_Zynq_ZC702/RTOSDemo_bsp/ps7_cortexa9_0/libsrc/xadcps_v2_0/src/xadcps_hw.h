@@ -33,6 +33,8 @@
 /**
 *
 * @file xadcps_hw.h
+* @addtogroup xadcps_v2_0
+* @{
 *
 * This header file contains identifiers and basic driver functions (or
 * macros) that can be used to access the XADC device through the Device
@@ -497,3 +499,4 @@ extern "C" {
 #endif
 
 #endif  /* End of protection macro. */
+/** @} */

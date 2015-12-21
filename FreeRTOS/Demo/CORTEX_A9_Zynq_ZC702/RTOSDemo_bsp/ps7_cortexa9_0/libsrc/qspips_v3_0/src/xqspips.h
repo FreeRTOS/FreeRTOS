@@ -33,6 +33,9 @@
 /**
 *
 * @file xqspips.h
+* @addtogroup qspips_v3_0
+* @{
+* @details
 *
 * This file contains the implementation of the XQspiPs driver. It supports only
 * master mode. User documentation for the driver functions is contained in this
@@ -779,3 +782,4 @@ void XQspiPs_GetDelays(XQspiPs *InstancePtr, u8 *DelayNss, u8 *DelayBtwn,
 
 #endif /* end of protection macro */
 
+/** @} */

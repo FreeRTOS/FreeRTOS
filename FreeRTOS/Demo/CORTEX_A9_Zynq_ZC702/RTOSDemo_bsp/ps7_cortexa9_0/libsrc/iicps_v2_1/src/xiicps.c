@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps.c
+* @addtogroup iicps_v2_1
+* @{
 *
 * Contains implementation of required functions for the XIicPs driver.
 * See xiicps.h for detailed description of the device and driver.
@@ -320,3 +322,4 @@ int TransmitFifoFill(XIicPs *InstancePtr)
 
 	return InstancePtr->SendByteCount;
 }
+/** @} */

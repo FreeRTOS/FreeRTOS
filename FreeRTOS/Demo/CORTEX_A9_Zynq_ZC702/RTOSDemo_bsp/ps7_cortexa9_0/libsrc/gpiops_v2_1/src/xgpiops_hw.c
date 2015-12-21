@@ -33,6 +33,8 @@
 /**
 *
 * @file xgpiops_hw.c
+* @addtogroup gpiops_v2_1
+* @{
 *
 * This file contains low level GPIO functions.
 *
@@ -160,3 +162,4 @@ void XGpioPs_ResetHw(u32 BaseAddress)
 }
 
 
+/** @} */

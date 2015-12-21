@@ -33,6 +33,8 @@
 /**
 *
 * @file xsdps_options.c
+* @addtogroup sdps_v2_1
+* @{
 *
 * Contains API's for changing the various options in host and card.
 * See xsdps.h for a detailed description of the device and driver.
@@ -802,3 +804,4 @@ int XSdPs_Get_Mmc_ExtCsd(XSdPs *InstancePtr, u8 *ReadBuff)
 
 }
 
+/** @} */

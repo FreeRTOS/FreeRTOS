@@ -403,6 +403,30 @@ const uint32_t ulMaxDivisor = 0xff, ulDivisorShift = 0x08;
 	 XScuWdt_SetTimerMode( &xWatchDogInstance );
 	 XScuWdt_Start( &xWatchDogInstance );
 }
+/*-----------------------------------------------------------*/
 
+void vApplicationGetIdleTaskMemory( DummyTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
+{
+	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
+	opportunity to supply the buffers that will be used by the Idle task as its
+	stack and to hold its TCB.  If these are set to NULL then the buffers will
+	be allocated dynamically, just as if xTaskCreate() had been called. */
+	*ppxIdleTaskTCBBuffer = NULL;
+	*ppxIdleTaskStackBuffer = NULL;
+	*pusIdleTaskStackSize = configMINIMAL_STACK_SIZE; /* In words.  NOT in bytes! */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
+{
+	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
+	opportunity to supply the buffers that will be used by the Timer/RTOS daemon
+	task as its	stack and to hold its TCB.  If these are set to NULL then the
+	buffers will be allocated dynamically, just as if xTaskCreate() had been
+	called. */
+	*ppxTimerTaskTCBBuffer = NULL;
+	*ppxTimerTaskStackBuffer = NULL;
+	*pusTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH; /* In words.  NOT in bytes! */
+}
 
 

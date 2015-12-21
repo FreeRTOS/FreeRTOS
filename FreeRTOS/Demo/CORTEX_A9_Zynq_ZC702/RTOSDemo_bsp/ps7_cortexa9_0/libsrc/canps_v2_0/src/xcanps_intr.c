@@ -33,6 +33,8 @@
 /**
 *
 * @file xcanps_intr.c
+* @addtogroup canps_v2_0
+* @{
 *
 * This file contains functions related to CAN interrupt handling.
 *
@@ -401,3 +403,4 @@ int XCanPs_SetHandler(XCanPs *InstancePtr, u32 HandlerType,
 	return (XST_SUCCESS);
 }
 
+/** @} */

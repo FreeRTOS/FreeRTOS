@@ -33,6 +33,8 @@
 /**
 *
 * @file xqspips_hw.c
+* @addtogroup qspips_v3_0
+* @{
 *
 * Contains low level functions, primarily reset related.
 *
@@ -217,3 +219,4 @@ void XQspiPs_LinearInit(u32 BaseAddress)
 }
 
 
+/** @} */

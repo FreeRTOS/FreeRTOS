@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps_hw.h
+* @addtogroup iicps_v2_1
+* @{
 *
 * This header file contains the hardware definition for an IIC device.
 * It includes register definitions and interface functions to read/write
@@ -377,3 +379,4 @@ void XIicPs_ResetHw(u32 BaseAddr);
 
 #endif /* end of protection macro */
 
+/** @} */

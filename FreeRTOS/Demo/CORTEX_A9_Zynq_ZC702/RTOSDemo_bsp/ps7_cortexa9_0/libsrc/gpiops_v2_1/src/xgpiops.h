@@ -33,6 +33,9 @@
 /**
 *
 * @file xgpiops.h
+* @addtogroup gpiops_v2_1
+* @{
+* @details
 *
 * The Xilinx PS GPIO driver. This driver supports the Xilinx PS GPIO
 * Controller.
@@ -253,3 +256,4 @@ XGpioPs_Config *XGpioPs_LookupConfig(u16 DeviceId);
 #endif
 
 #endif /* end of protection macro */
+/** @} */

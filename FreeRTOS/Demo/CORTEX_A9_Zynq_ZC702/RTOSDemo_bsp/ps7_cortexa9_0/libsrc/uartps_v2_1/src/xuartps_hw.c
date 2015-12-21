@@ -33,6 +33,8 @@
 /**
 *
 * @file xuartps_hw.c
+* @addtogroup uartps_v2_1
+* @{
 *
 *
 * <pre>
@@ -190,3 +192,4 @@ void XUartPs_ResetHw(u32 BaseAddress)
 
 }
 
+/** @} */

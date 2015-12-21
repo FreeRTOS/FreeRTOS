@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps_selftest.c
+* @addtogroup iicps_v2_1
+* @{
 *
 * This component contains the implementation of selftest functions for the
 * XIicPs driver component.
@@ -129,3 +131,4 @@ int XIicPs_SelfTest(XIicPs *InstancePtr)
 	return XST_SUCCESS;
 }
 
+/** @} */

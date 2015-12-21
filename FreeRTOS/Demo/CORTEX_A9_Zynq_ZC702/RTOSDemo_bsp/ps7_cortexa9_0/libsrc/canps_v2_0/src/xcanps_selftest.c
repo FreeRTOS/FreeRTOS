@@ -33,6 +33,8 @@
 /**
 *
 * @file xcanps_selftest.c
+* @addtogroup canps_v2_0
+* @{
 *
 * This file contains a diagnostic self-test function for the XCanPs driver.
 *
@@ -205,3 +207,4 @@ int XCanPs_SelfTest(XCanPs *InstancePtr)
 }
 
 
+/** @} */

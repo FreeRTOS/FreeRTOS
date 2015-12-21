@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps_hw.c
+* @addtogroup iicps_v2_1
+* @{
 *
 * Contains implementation of required functions for providing the reset sequence
 * to the i2c interface
@@ -105,3 +107,4 @@ void XIicPs_ResetHw(u32 BaseAddress)
 	XIicPs_WriteReg(BaseAddress, XIICPS_CR_OFFSET, 0x0);
 }
 
+/** @} */

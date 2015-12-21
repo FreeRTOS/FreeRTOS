@@ -33,6 +33,8 @@
 /**
  *
  * @file xusbps_sinit.c
+* @addtogroup usbps_v2_1
+* @{
  *
  * The implementation of the XUsbPs driver's static initialzation
  * functionality.
@@ -94,3 +96,4 @@ XUsbPs_Config *XUsbPs_LookupConfig(u16 DeviceID)
 
 	return CfgPtr;
 }
+/** @} */

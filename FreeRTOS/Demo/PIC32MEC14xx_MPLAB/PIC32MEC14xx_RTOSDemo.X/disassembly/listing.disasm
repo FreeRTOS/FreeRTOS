@@ -17451,11 +17451,11 @@ BFD001FE      0C00   NOP
 87:                  privileged Vs unprivileged linkage and placement. */
 88:                  #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
 89:                  
-90:                  #if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( configUSE_TIMERS == 0 )
+90:                  #if ( INCLUDE_xEventGroupSetBitsFromISR == 1 ) && ( configUSE_TIMERS == 0 )
 91:                  	#error configUSE_TIMERS must be set to 1 to make the xEventGroupSetBitFromISR() function available.
 92:                  #endif
 93:                  
-94:                  #if ( INCLUDE_xEventGroupSetBitFromISR == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 0 )
+94:                  #if ( INCLUDE_xEventGroupSetBitsFromISR == 1 ) && ( INCLUDE_xTimerPendFunctionCall == 0 )
 95:                  	#error INCLUDE_xTimerPendFunctionCall must also be set to one to make the xEventGroupSetBitFromISR() function available.
 96:                  #endif
 97:                  

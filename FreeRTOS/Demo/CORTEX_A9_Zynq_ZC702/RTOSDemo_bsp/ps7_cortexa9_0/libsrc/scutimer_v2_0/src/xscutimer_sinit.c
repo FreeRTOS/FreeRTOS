@@ -33,6 +33,8 @@
 /**
 *
 * @file xscutimer_sinit.c
+* @addtogroup scutimer_v2_0
+* @{
 *
 * This file contains method for static initialization (compile-time) of the
 * driver.
@@ -88,3 +90,4 @@ XScuTimer_Config *XScuTimer_LookupConfig(u16 DeviceId)
 
 	return (CfgPtr);
 }
+/** @} */

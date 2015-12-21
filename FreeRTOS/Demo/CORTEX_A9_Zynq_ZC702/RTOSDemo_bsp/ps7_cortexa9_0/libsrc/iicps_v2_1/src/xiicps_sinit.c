@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps_sinit.c
+* @addtogroup iicps_v2_1
+* @{
 *
 * The implementation of the XIicPs component's static initialization
 * functionality.
@@ -96,3 +98,4 @@ XIicPs_Config *XIicPs_LookupConfig(u16 DeviceId)
 
 	return CfgPtr;
 }
+/** @} */

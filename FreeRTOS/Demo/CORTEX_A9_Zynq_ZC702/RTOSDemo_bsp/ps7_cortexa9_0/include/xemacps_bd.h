@@ -34,6 +34,8 @@
 /**
  *
  * @file xemacps_bd.h
+* @addtogroup emacps_v2_0
+* @{
  *
  * This header provides operations to manage buffer descriptors in support
  * of scatter-gather DMA.
@@ -726,3 +728,4 @@ typedef u32 XEmacPs_Bd[XEMACPS_BD_NUM_WORDS];
 #endif
 
 #endif /* end of protection macro */
+/** @} */

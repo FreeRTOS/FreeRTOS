@@ -33,6 +33,8 @@
 /**
 *
 * @file xuartps_options.c
+* @addtogroup uartps_v2_1
+* @{
 *
 * The implementation of the options functions for the XUartPs driver.
 *
@@ -794,3 +796,4 @@ void XUartPs_GetDataFormat(XUartPs *InstancePtr, XUartPsFormat * FormatPtr)
 		(ModeRegister & XUARTPS_MR_PARITY_MASK) >>
 		XUARTPS_MR_PARITY_SHIFT;
 }
+/** @} */

@@ -33,6 +33,9 @@
 /**
  *
  * @file xemacps.h
+* @addtogroup emacps_v2_0
+* @{
+* @details
  *
  * The Xilinx Embedded Processor Block Ethernet driver.
  *
@@ -710,3 +713,4 @@ void XEmacPs_DMABLengthUpdate(XEmacPs *InstancePtr, int BLength);
 #endif
 
 #endif /* end of protection macro */
+/** @} */

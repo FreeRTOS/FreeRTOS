@@ -33,6 +33,8 @@
 /**
 *
 * @file xcanps_hw.h
+* @addtogroup canps_v2_0
+* @{
 *
 * This header file contains the identifiers and basic driver functions (or
 * macros) that can be used to access the device. Other driver functions
@@ -364,3 +366,4 @@ void XCanPs_ResetHw(u32 BaseAddr);
 
 #endif /* end of protection macro */
 
+/** @} */

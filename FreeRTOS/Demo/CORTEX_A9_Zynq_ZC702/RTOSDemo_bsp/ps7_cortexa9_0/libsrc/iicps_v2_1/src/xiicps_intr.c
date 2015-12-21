@@ -33,6 +33,8 @@
 /**
 *
 * @file xiicps_intr.c
+* @addtogroup iicps_v2_1
+* @{
 *
 * Contains functions of the XIicPs driver for interrupt-driven transfers.
 * See xiicps.h for a detailed description of the device and driver.
@@ -95,3 +97,4 @@ void XIicPs_SetStatusHandler(XIicPs *InstancePtr, void *CallBackRef,
 	InstancePtr->StatusHandler = FuncPtr;
 	InstancePtr->CallBackRef = CallBackRef;
 }
+/** @} */

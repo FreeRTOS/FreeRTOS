@@ -33,6 +33,9 @@
 /**
 *
 * @file xiicps.h
+* @addtogroup iicps_v2_1
+* @{
+* @details
 *
 * This is an implementation of IIC driver in the PS block. The device can
 * be either a master or a slave on the IIC bus. This implementation supports
@@ -399,3 +402,4 @@ u32 XIicPs_GetSClk(XIicPs *InstancePtr);
 
 #endif /* end of protection macro */
 
+/** @} */

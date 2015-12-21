@@ -33,6 +33,8 @@
 /**
 *
 * @file xttcps_options.c
+* @addtogroup ttcps_v2_0
+* @{
 *
 * This file contains functions to get or set option features for the device.
 *
@@ -230,3 +232,4 @@ u32 XTtcPs_GetOptions(XTtcPs *InstancePtr)
 
 	return OptionsFlag;
 }
+/** @} */

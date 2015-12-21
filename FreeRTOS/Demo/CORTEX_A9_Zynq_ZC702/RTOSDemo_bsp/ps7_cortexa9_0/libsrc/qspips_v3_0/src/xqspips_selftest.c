@@ -33,6 +33,8 @@
 /**
 *
 * @file xqspips_selftest.c
+* @addtogroup qspips_v3_0
+* @{
 *
 * This file contains the implementation of selftest function for the QSPI
 * device.
@@ -148,3 +150,4 @@ int XQspiPs_SelfTest(XQspiPs *InstancePtr)
 
 	return XST_SUCCESS;
 }
+/** @} */

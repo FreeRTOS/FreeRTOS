@@ -33,6 +33,8 @@
 /**
 *
 * @file xdmaps_hw.c
+* @addtogroup dmaps_v2_0
+* @{
 *
 * This file contains the implementation of the interface reset functionality 
 *	for XDmaPs driver.
@@ -111,3 +113,4 @@ void XDmaPs_ResetHw(u32 BaseAddress)
 
 
 
+/** @} */

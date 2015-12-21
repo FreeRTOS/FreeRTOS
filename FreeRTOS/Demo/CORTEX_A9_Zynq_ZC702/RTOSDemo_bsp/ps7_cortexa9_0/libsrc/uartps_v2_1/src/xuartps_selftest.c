@@ -33,6 +33,8 @@
 /**
 *
 * @file xuartps_selftest.c
+* @addtogroup uartps_v2_1
+* @{
 *
 * This file contains the self-test functions for the XUartPs driver.
 *
@@ -165,3 +167,4 @@ int XUartPs_SelfTest(XUartPs *InstancePtr)
 
 	return Status;
 }
+/** @} */

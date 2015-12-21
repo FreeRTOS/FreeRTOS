@@ -33,6 +33,8 @@
 /**
 *
 * @file xscugic_intr.c
+* @addtogroup scugic_v2_1
+* @{
 *
 * This file contains the interrupt processing for the driver for the Xilinx
 * Interrupt Controller.  The interrupt processing is partitioned separately such
@@ -165,3 +167,4 @@ void XScuGic_InterruptHandler(XScuGic *InstancePtr)
 	     * Return from the interrupt. Change security domains could happen here.
      */
 }
+/** @} */

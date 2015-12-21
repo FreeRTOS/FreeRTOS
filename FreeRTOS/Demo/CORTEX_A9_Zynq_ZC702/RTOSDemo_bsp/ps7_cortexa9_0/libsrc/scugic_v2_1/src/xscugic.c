@@ -33,6 +33,8 @@
 /**
 *
 * @file xscugic.c
+* @addtogroup scugic_v2_1
+* @{
 *
 * Contains required functions for the XScuGic driver for the Interrupt
 * Controller. See xscugic.h for a detailed description of the driver.
@@ -708,3 +710,4 @@ void XScuGic_GetPriorityTriggerType(XScuGic *InstancePtr, u32 Int_Id,
 	*Trigger = RegValue & XSCUGIC_INT_CFG_MASK;
 }
 
+/** @} */

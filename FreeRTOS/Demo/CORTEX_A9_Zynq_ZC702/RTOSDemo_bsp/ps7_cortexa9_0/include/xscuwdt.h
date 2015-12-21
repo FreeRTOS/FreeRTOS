@@ -33,6 +33,9 @@
 /**
 *
 * @file xscuwdt.h
+* @addtogroup scuwdt_v2_0
+* @{
+* @details
 *
 * The Xilinx SCU watchdog timer driver (XScuWdt) supports the Xilinx SCU private
 * watchdog timer hardware.
@@ -378,3 +381,4 @@ int XScuWdt_SelfTest(XScuWdt *InstancePtr);
 #endif
 
 #endif	/* end of protection macro */
+/** @} */

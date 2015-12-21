@@ -87,6 +87,9 @@
 /* Demo program include files. */
 #include "StaticAllocation.h"
 
+/* Exclude the entire file if configSUPPORT_STATIC_ALLOCATION is 0. */
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+
 #define staticTASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 
 /*
@@ -307,4 +310,7 @@ BaseType_t xReturn;
 
 	return xReturn;
 }
+/*-----------------------------------------------------------*/
 
+/* Exclude the entire file if configSUPPORT_STATIC_ALLOCATION is 0. */
+#endif /* configSUPPORT_STATIC_ALLOCATION == 1 */

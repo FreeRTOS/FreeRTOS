@@ -32,6 +32,8 @@
 /******************************************************************************/
 /**
  * @file xusbps_endpoint.c
+* @addtogroup usbps_v2_1
+* @{
  *
  * Endpoint specific function implementations.
  *
@@ -1444,3 +1446,4 @@ int EpNum, unsigned short NewDirection)
 	return XST_SUCCESS;
 }
 
+/** @} */

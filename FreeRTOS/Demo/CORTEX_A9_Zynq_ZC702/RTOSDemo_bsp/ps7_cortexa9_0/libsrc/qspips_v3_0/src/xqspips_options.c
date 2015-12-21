@@ -33,6 +33,8 @@
 /**
 *
 * @file xqspips_options.c
+* @addtogroup qspips_v3_0
+* @{
 *
 * Contains functions for the configuration of the XQspiPs driver component.
 *
@@ -423,3 +425,4 @@ void XQspiPs_GetDelays(XQspiPs *InstancePtr, u8 *DelayNss, u8 *DelayBtwn,
 	*DelayNss = (u8)((DelayRegister & XQSPIPS_DR_NSS_MASK) >>
 			  XQSPIPS_DR_NSS_SHIFT);
 }
+/** @} */

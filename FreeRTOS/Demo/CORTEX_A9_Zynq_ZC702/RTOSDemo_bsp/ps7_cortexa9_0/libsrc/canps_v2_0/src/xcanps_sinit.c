@@ -33,6 +33,8 @@
 /**
 *
 * @file xcanps_sinit.c
+* @addtogroup canps_v2_0
+* @{
 *
 * This file contains the implementation of the XCanPs driver's static
 * initialization functionality.
@@ -97,3 +99,4 @@ XCanPs_Config *XCanPs_LookupConfig(u16 DeviceId)
 
 	return CfgPtr;
 }
+/** @} */

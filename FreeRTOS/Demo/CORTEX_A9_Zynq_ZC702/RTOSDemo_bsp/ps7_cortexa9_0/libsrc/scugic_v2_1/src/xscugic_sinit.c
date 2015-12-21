@@ -33,6 +33,8 @@
 /**
 *
 * @file xscugic_sinit.c
+* @addtogroup scugic_v2_1
+* @{
 *
 * Contains static init functions for the XScuGic driver for the Interrupt
 * Controller. See xscugic.h for a detailed description of the driver.
@@ -98,3 +100,4 @@ XScuGic_Config *XScuGic_LookupConfig(u16 DeviceId)
 	return CfgPtr;
 }
 
+/** @} */

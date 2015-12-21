@@ -33,6 +33,8 @@
 /**
 *
 * @file xcanps_hw.c
+* @addtogroup canps_v2_0
+* @{
 *
 * This file contains the implementation of the canps interface reset sequence
 *
@@ -87,3 +89,4 @@ void XCanPs_ResetHw(u32 BaseAddr)
 	XCanPs_WriteReg(BaseAddr, XCANPS_SRR_OFFSET, \
 			   XCANPS_SRR_SRST_MASK);
 }
+/** @} */

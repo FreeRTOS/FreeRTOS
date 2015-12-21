@@ -34,6 +34,8 @@
 /**
 *
 * @file xemacps.c
+* @addtogroup emacps_v2_0
+* @{
 *
 * The XEmacPs driver. Functions in this file are the minimum required functions
 * for this driver. See xemacps.h for a detailed description of the driver.
@@ -390,3 +392,4 @@ void XEmacPs_StubHandler(void)
 {
 	Xil_AssertVoidAlways();
 }
+/** @} */

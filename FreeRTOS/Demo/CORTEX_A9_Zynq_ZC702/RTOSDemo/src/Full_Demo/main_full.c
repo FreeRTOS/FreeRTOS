@@ -150,6 +150,7 @@
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 #include "IntSemTest.h"
+#include "StaticAllocation.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -258,7 +259,7 @@ void main_full( void )
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 	vStartInterruptSemaphoreTasks();
-
+	vStartStaticallyAllocatedTasks();
 
 	/* Start the tasks that implements the command console on the UART, as
 	described above. */
@@ -400,17 +401,22 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound |= 1UL << 14UL;
 		}
 
+		if( xAreStaticAllocationTasksStillRunning() != pdPASS )
+		{
+			ulErrorFound |= 1UL << 15UL;
+		}
+
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			ulErrorFound |= 1UL << 15UL;
+			ulErrorFound |= 1UL << 16UL;
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			ulErrorFound |= 1UL << 16UL;
+			ulErrorFound |= 1UL << 17UL;
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 

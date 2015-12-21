@@ -33,6 +33,8 @@
 /**
 *
 * @file xadcps_selftest.c
+* @addtogroup xadcps_v2_0
+* @{
 *
 * This file contains a diagnostic self test function for the XAdcPs driver.
 * The self test function does a simple read/write test of the Alarm Threshold
@@ -136,3 +138,4 @@ int XAdcPs_SelfTest(XAdcPs *InstancePtr)
 	 */
 	return Status;
 }
+/** @} */

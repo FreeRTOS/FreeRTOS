@@ -33,6 +33,8 @@
 /**
 *
 * @file xgpiops_intr.c
+* @addtogroup gpiops_v2_1
+* @{
 *
 * This file contains functions related to GPIO interrupt handling.
 *
@@ -730,3 +732,4 @@ void StubHandler(void *CallBackRef, int Bank, u32 Status)
 
 	Xil_AssertVoidAlways();
 }
+/** @} */

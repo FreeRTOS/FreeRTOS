@@ -32,6 +32,8 @@
 /******************************************************************************/
 /**
  * @file xusbps_intr.c
+* @addtogroup usbps_v2_1
+* @{
  *
  * This file contains the functions that are related to interrupt processing
  * for the EPB USB driver.
@@ -465,3 +467,4 @@ static void XUsbPs_IntrHandleEp0Setup(XUsbPs *InstancePtr)
 }
 
 
+/** @} */

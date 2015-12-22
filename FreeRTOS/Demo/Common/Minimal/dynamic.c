@@ -148,7 +148,7 @@ static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
 #define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
-#define priSLEEP_TIME				( ( TickType_t ) 128 / portTICK_PERIOD_MS )
+#define priSLEEP_TIME				pdMS_TO_TICKS( 128 )
 #define priLOOPS					( 5 )
 #define priMAX_COUNT				( ( uint32_t ) 0xff )
 #define priNO_BLOCK					( ( TickType_t ) 0 )

@@ -84,7 +84,7 @@
 #include "TaskNotify.h"
 
 #define notifyTASK_PRIORITY		( tskIDLE_PRIORITY )
-
+#define notifyUINT32_MAX	( ( uint32_t ) 0xffffffff )
 /*-----------------------------------------------------------*/
 
 /*
@@ -128,7 +128,7 @@ static uint32_t ulTimerNotificationsReceived = 0UL, ulTimerNotificationsSent = 0
 static TimerHandle_t xTimer = NULL;
 
 /* Used by the pseudo random number generating function. */
-static uint32_t ulNextRand = 0;
+static size_t uxNextRand = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -139,7 +139,7 @@ void vStartTaskNotifyTask( void  )
 	xTaskCreate( prvNotifiedTask, "Notified", configMINIMAL_STACK_SIZE, NULL, notifyTASK_PRIORITY, &xTaskToNotify );
 
 	/* Pseudo seed the random number generator. */
-	ulNextRand = ( uint32_t ) prvRand;
+	uxNextRand = ( size_t ) prvRand;
 }
 /*-----------------------------------------------------------*/
 
@@ -155,7 +155,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	/* -------------------------------------------------------------------------
 	Check blocking when there are no notifications. */
 	xTimeOnEntering = xTaskGetTickCount();
-	xReturned = xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, xTicksToWait );
+	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
 
 	/* Should have blocked for the entire block time. */
 	if( ( xTaskGetTickCount() - xTimeOnEntering ) < xTicksToWait )
@@ -183,7 +183,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 	/* The task should now have a notification pending, and so not time out. */
 	xTimeOnEntering = xTaskGetTickCount();
-	xReturned = xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, xTicksToWait );
+	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
 
 	if( ( xTaskGetTickCount() - xTimeOnEntering ) >= xTicksToWait )
 	{
@@ -215,7 +215,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 	/* Waiting for the notification should now return immediately so a block
 	time of zero is used. */
-	xReturned = xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
+	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
@@ -233,7 +233,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	configASSERT( xReturned == pdPASS );
 	xReturned = xTaskNotify( xTaskToNotify, ulSecondNotifiedValueConst, eSetValueWithOverwrite );
 	configASSERT( xReturned == pdPASS );
-	xReturned = xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
+	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
 
@@ -246,7 +246,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	remain at ulSecondNotifiedConst. */
 	xReturned = xTaskNotify( xTaskToNotify, ulFirstNotifiedConst, eNoAction );
 	configASSERT( xReturned == pdPASS );
-	xReturned = xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
+	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
 
 
@@ -262,7 +262,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 		configASSERT( xReturned == pdPASS );
 	}
 
-	xReturned = xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
+	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ( ulSecondNotifiedValueConst + ulMaxLoops ) );
 
@@ -282,7 +282,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	ulLoop = 0;
 
 	/* Start with all bits clear. */
-	xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
+	xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 
 	do
 	{
@@ -300,7 +300,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 		/* Use the next bit on the next iteration around this loop. */
 		ulNotifyingValue <<= 1UL;
 
-	} while ( ulNotifiedValue != ULONG_MAX );
+	} while ( ulNotifiedValue != notifyUINT32_MAX );
 
 	/* As a 32-bit value was used the loop should have executed 32 times before
 	all the bits were set. */
@@ -320,15 +320,15 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	configASSERT( xReturned == pdFAIL );
 
 	/* Notify the task with no action so as not to update the bits even though
-	ULONG_MAX is used as the notification value. */
-	xTaskNotify( xTaskToNotify, ULONG_MAX, eNoAction );
+	notifyUINT32_MAX is used as the notification value. */
+	xTaskNotify( xTaskToNotify, notifyUINT32_MAX, eNoAction );
 
 	/* Reading back the value should should find bit 0 is clear, as this was
 	cleared on entry, but bit 1 is not clear as it will not have been cleared on
 	exit as no notification was received. */
 	xReturned = xTaskNotifyWait( 0x00UL, 0x00UL, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdPASS );
-	configASSERT( ulNotifiedValue == ( ULONG_MAX & ~ulBit0 ) );
+	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~ulBit0 ) );
 
 
 
@@ -343,25 +343,25 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	/* However as the bit is cleared on exit, after the returned notification
 	value is set, the returned notification value should not have the bit
 	cleared... */
-	configASSERT( ulNotifiedValue == ( ULONG_MAX & ~ulBit0 ) );
+	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~ulBit0 ) );
 
 	/* ...but reading the value back again should find that the bit was indeed
 	cleared internally.  The returned value should be pdFAIL however as nothing
 	has notified the task in the mean time. */
 	xReturned = xTaskNotifyWait( 0x00, 0x00, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdFAIL );
-	configASSERT( ulNotifiedValue == ( ULONG_MAX & ~( ulBit0 | ulBit1 ) ) );
+	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~( ulBit0 | ulBit1 ) ) );
 
 
 
 
 	/*--------------------------------------------------------------------------
-	Now try querying the previous value while notifying a task. */
+	Now try querying the previus value while notifying a task. */
 	xTaskNotifyAndQuery( xTaskToNotify, 0x00, eSetBits, &ulPreviousValue );
-	configASSERT( ulNotifiedValue == ( ULONG_MAX & ~( ulBit0 | ulBit1 ) ) );
+	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~( ulBit0 | ulBit1 ) ) );
 
 	/* Clear all bits. */
-	xTaskNotifyWait( 0x00, ULONG_MAX, &ulNotifiedValue, 0 );
+	xTaskNotifyWait( 0x00, notifyUINT32_MAX, &ulNotifiedValue, 0 );
 	xTaskNotifyAndQuery( xTaskToNotify, 0x00, eSetBits, &ulPreviousValue );
 	configASSERT( ulPreviousValue == 0 );
 
@@ -380,7 +380,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 	/* -------------------------------------------------------------------------
 	Clear the previous notifications. */
-	xTaskNotifyWait( ULONG_MAX, 0, &ulNotifiedValue, 0 );
+	xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 
 	/* The task should not have any notifications pending, so an attempt to clear
 	the notification state should fail. */
@@ -402,7 +402,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 	ulNotifyCycleCount++;
 
 	/* Leave all bits cleared. */
-	xTaskNotifyWait( ULONG_MAX, 0, NULL, 0 );
+	xTaskNotifyWait( notifyUINT32_MAX, 0, NULL, 0 );
 }
 /*-----------------------------------------------------------*/
 
@@ -594,10 +594,10 @@ const uint32_t ulMaxSendReceiveDeviation = 5UL;
 
 static UBaseType_t prvRand( void )
 {
-const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
+const size_t uxMultiplier = ( size_t ) 0x015a4e35, uxIncrement = ( size_t ) 1;
 
 	/* Utility function to generate a pseudo random number. */
-	ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-	return( ( ulNextRand >> 16UL ) & 0x7fffUL );
+	uxNextRand = ( uxMultiplier * uxNextRand ) + uxIncrement;
+	return( ( uxNextRand >> 16 ) & ( ( size_t ) 0x7fff ) );
 }
 /*-----------------------------------------------------------*/

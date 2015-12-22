@@ -187,8 +187,8 @@ static void prvChangeRelativePriorities( void );
  * Local pseudo random number seed and return functions.  Used to avoid calls
  * to the standard library.
  */
-static uint32_t prvRand( void );
-static void prvSRand( uint32_t ulSeed );
+static size_t prvRand( void );
+static void prvSRand( size_t uxSeed );
 
 /*-----------------------------------------------------------*/
 
@@ -223,7 +223,7 @@ expected. */
 static volatile uint32_t ulISRTxValue = queuesetINITIAL_ISR_TX_VALUE;
 
 /* Used by the pseudo random number generator. */
-static uint32_t ulNextRand = 0;
+static size_t uxNextRand = 0;
 
 /* The task handles are stored so their priorities can be changed. */
 TaskHandle_t xQueueSetSendingTask, xQueueSetReceivingTask;
@@ -295,24 +295,25 @@ BaseType_t xReturn = pdPASS, x;
 
 static void prvQueueSetSendingTask( void *pvParameters )
 {
-uint32_t ulTaskTxValue = 0, ulQueueToWriteTo;
+uint32_t ulTaskTxValue = 0;
+size_t uxQueueToWriteTo;
 QueueHandle_t xQueueInUse;
 
 	/* Remove compiler warning about the unused parameter. */
 	( void ) pvParameters;
 
 	/* Seed mini pseudo random number generator. */
-	prvSRand( ( uint32_t ) &ulTaskTxValue );
+	prvSRand( ( size_t ) &ulTaskTxValue );
 
 	for( ;; )
 	{
 		/* Generate the index for the queue to which a value is to be sent. */
-		ulQueueToWriteTo = prvRand() % queuesetNUM_QUEUES_IN_SET;
-		xQueueInUse = xQueues[ ulQueueToWriteTo ];
+		uxQueueToWriteTo = prvRand() % queuesetNUM_QUEUES_IN_SET;
+		xQueueInUse = xQueues[ uxQueueToWriteTo ];
 
 		/* Note which index is being written to to ensure all the queues are
 		used. */
-		( ulQueueUsedCounter[ ulQueueToWriteTo ] )++;
+		( ulQueueUsedCounter[ uxQueueToWriteTo ] )++;
 
 		/* Send to the queue to unblock the task that is waiting for data to
 		arrive on a queue within the queue set to which this queue belongs. */
@@ -719,15 +720,15 @@ uint32_t ulValueToSend = 0;
 }
 /*-----------------------------------------------------------*/
 
-static uint32_t prvRand( void )
+static size_t prvRand( void )
 {
-	ulNextRand = ( ulNextRand * 1103515245UL ) + 12345UL;
-    return ( ulNextRand / 65536UL ) % 32768UL;
+	uxNextRand = ( uxNextRand * ( size_t ) 1103515245 ) + ( size_t ) 12345;
+	return ( uxNextRand / ( size_t ) 65536 ) % ( size_t ) 32768;
 }
 /*-----------------------------------------------------------*/
 
-static void prvSRand( uint32_t ulSeed )
+static void prvSRand( size_t uxSeed )
 {
-    ulNextRand = ulSeed;
+	uxNextRand = uxSeed;
 }
 

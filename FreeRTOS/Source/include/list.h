@@ -414,12 +414,12 @@ void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem ) PRIV
  * such that it will be the last item within the list returned by multiple
  * calls to listGET_OWNER_OF_NEXT_ENTRY.
  *
- * The list member pvIndex is used to walk through a list.  Calling
- * listGET_OWNER_OF_NEXT_ENTRY increments pvIndex to the next item in the list.
+ * The list member pxIndex is used to walk through a list.  Calling
+ * listGET_OWNER_OF_NEXT_ENTRY increments pxIndex to the next item in the list.
  * Placing an item in a list using vListInsertEnd effectively places the item
- * in the list position pointed to by pvIndex.  This means that every other
+ * in the list position pointed to by pxIndex.  This means that every other
  * item within the list will be returned by listGET_OWNER_OF_NEXT_ENTRY before
- * the pvIndex parameter again points to the item being inserted.
+ * the pxIndex parameter again points to the item being inserted.
  *
  * @param pxList The list into which the item is to be inserted.
  *

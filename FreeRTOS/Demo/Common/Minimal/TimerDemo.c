@@ -1044,12 +1044,12 @@ static TickType_t uxTick = ( TickType_t ) -1;
 
 static void prvAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer )
 {
-uint32_t ulTimerID;
+size_t uxTimerID;
 
-	ulTimerID = ( uint32_t ) pvTimerGetTimerID( pxExpiredTimer );
-	if( ulTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
+	uxTimerID = ( size_t ) pvTimerGetTimerID( pxExpiredTimer );
+	if( uxTimerID <= ( configTIMER_QUEUE_LENGTH + 1 ) )
 	{
-		( ucAutoReloadTimerCounters[ ulTimerID ] )++;
+		( ucAutoReloadTimerCounters[ uxTimerID ] )++;
 	}
 	else
 	{
@@ -1065,19 +1065,19 @@ static void prvOneShotTimerCallback( TimerHandle_t pxExpiredTimer )
 /* A count is kept of the number of times this callback function is executed.
 The count is stored as the timer's ID.  This is only done to test the
 vTimerSetTimerID() function. */
-static uint32_t ulCallCount = 0;
-uint32_t ulLastCallCount;
+static size_t uxCallCount = 0;
+size_t uxLastCallCount;
 
 	/* Obtain the timer's ID, which should be a count of the number of times
 	this callback function has been executed. */
-	ulLastCallCount = ( uint32_t ) pvTimerGetTimerID( pxExpiredTimer );
-	configASSERT( ulLastCallCount == ulCallCount );
+	uxLastCallCount = ( size_t ) pvTimerGetTimerID( pxExpiredTimer );
+	configASSERT( uxLastCallCount == uxCallCount );
 
 	/* Increment the call count, then save it back as the timer's ID.  This is
 	only done to test the vTimerSetTimerID() API function. */
-	ulLastCallCount++;
-	vTimerSetTimerID( pxExpiredTimer, ( void * ) ulLastCallCount );
-	ulCallCount++;	
+	uxLastCallCount++;
+	vTimerSetTimerID( pxExpiredTimer, ( void * ) uxLastCallCount );
+	uxCallCount++;
 
 	ucOneShotTimerCounter++;
 }

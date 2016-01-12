@@ -1618,7 +1618,7 @@ uint16_t usIdleTaskStackSize = tskIDLE_STACK_SIZE;
 		configASSERT( xReturn );
 	}
 
-	/* Prevent compiler warnings if INCLUDE_xTaskGetIdleTaskHandle is set to 0, 
+	/* Prevent compiler warnings if INCLUDE_xTaskGetIdleTaskHandle is set to 0,
 	meaning xIdleTaskHandle is not used anywhere else. */
 	( void ) xIdleTaskHandle;
 }
@@ -2732,9 +2732,13 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 	/* Stop warnings. */
 	( void ) pvParameters;
 
+	/** THIS IS THE RTOS IDLE TASK - WHICH IS CREATED AUTOMATICALLY WHEN THE
+	SCHEDULER IS STARTED. **/
+
 	for( ;; )
 	{
-		/* See if any tasks have been deleted. */
+		/* See if any tasks have deleted themselves - if so then the idle task
+		is responsible for freeing the deleted task's TCB and stack. */
 		prvCheckTasksWaitingTermination();
 
 		#if ( configUSE_PREEMPTION == 0 )
@@ -3029,7 +3033,7 @@ UBaseType_t x;
 		the calling task. */
 		pxTCB = prvGetTCBFromHandle( xTaskToModify );
 
-        vPortStoreTaskMPUSettings( &( pxTCB->xMPUSettings ), xRegions, NULL, 0 );
+		vPortStoreTaskMPUSettings( &( pxTCB->xMPUSettings ), xRegions, NULL, 0 );
 	}
 
 #endif /* portUSING_MPU_WRAPPERS */
@@ -3069,6 +3073,9 @@ UBaseType_t uxPriority;
 
 static void prvCheckTasksWaitingTermination( void )
 {
+
+	/** THIS FUNCTION IS CALLED FROM  THE RTOS IDLE TASK **/
+
 	#if ( INCLUDE_vTaskDelete == 1 )
 	{
 		BaseType_t xListIsEmpty;

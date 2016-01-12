@@ -776,6 +776,10 @@ extern "C" {
 	#define configSUPPORT_STATIC_ALLOCATION 0
 #endif
 
+#if( ( configUSE_RECURSIVE_MUTEXES == 1 ) && ( configUSE_MUTEXES != 1 ) )
+    #error configUSE_MUTEXES must be set to 1 to use recursive mutexes
+#endif 
+
 #if( portTICK_TYPE_IS_ATOMIC == 0 )
 	/* Either variables of tick type cannot be read atomically, or
 	portTICK_TYPE_IS_ATOMIC was not set - map the critical sections used when

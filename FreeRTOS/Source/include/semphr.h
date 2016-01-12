@@ -839,6 +839,18 @@ typedef QueueHandle_t SemaphoreHandle_t;
  */
 #define xSemaphoreGetMutexHolder( xSemaphore ) xQueueGetMutexHolder( ( xSemaphore ) )
 
+/**
+ * semphr.h
+ * <pre>TaskHandle_t xSemaphoreGetCount( SemaphoreHandle_t xMutex );</pre>
+ *
+ * If the semaphore is a counting semaphore then xSemaphoreGetCount() returns
+ * its current count value.  If the semaphore is a binary semaphore then
+ * xSemaphoreGetCount() returns 1 if the semaphore is available, and 0 if the
+ * semaphore is not available.
+ *
+ */
+#define xSemaphoreGetCount( xSemaphore ) uxQueueMessagesWaiting( ( QueueHandle_t ) ( xSemaphore ) )
+
 #endif /* SEMAPHORE_H */
 
 

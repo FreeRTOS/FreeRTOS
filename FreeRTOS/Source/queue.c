@@ -797,8 +797,6 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			prvUnlockQueue( pxQueue );
 			( void ) xTaskResumeAll();
 
-			/* Return to the original privilege level before exiting the
-			function. */
 			traceQUEUE_SEND_FAILED( pxQueue );
 			return errQUEUE_FULL;
 		}
@@ -1385,7 +1383,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		taskENTER_CRITICAL();
 		{
 			/* Is there data in the queue now?  To be running the calling task
-			must be	the highest priority task wanting to access the queue. */
+			must be the highest priority task wanting to access the queue. */
 			if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
 			{
 				/* Remember the read position in case the queue is only being
@@ -1541,8 +1539,16 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		{
 			prvUnlockQueue( pxQueue );
 			( void ) xTaskResumeAll();
-			traceQUEUE_RECEIVE_FAILED( pxQueue );
-			return errQUEUE_EMPTY;
+
+			if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
+			{
+				traceQUEUE_RECEIVE_FAILED( pxQueue );
+				return errQUEUE_EMPTY;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
 		}
 	}
 }

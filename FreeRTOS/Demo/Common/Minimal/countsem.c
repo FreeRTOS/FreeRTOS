@@ -68,7 +68,7 @@
 */
 
 
-/* 
+/*
  * Simple demonstration of the usage of counting semaphore.
  */
 
@@ -84,7 +84,7 @@
 #define countMAX_COUNT_VALUE	( 200 )
 
 /* Constants used to indicate whether or not the semaphore should have been
-created with its maximum count value, or its minimum count value.  These 
+created with its maximum count value, or its minimum count value.  These
 numbers are used to ensure that the pointers passed in as the task parameters
 are valid. */
 #define countSTART_AT_MAX_COUNT	( 0xaa )
@@ -118,7 +118,7 @@ static void prvCountingSemaphoreTask( void *pvParameters );
 static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter );
 
 /*
- * Utility function to decrement the semaphore count value up from 
+ * Utility function to decrement the semaphore count value up from
  * countMAX_COUNT_VALUE to zero.
  */
 static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter );
@@ -134,11 +134,11 @@ typedef struct COUNT_SEM_STRUCT
 	/* Set to countSTART_AT_MAX_COUNT if the semaphore should be created with
 	its count value set to its max count value, or countSTART_AT_ZERO if it
 	should have been created with its count value set to 0. */
-	UBaseType_t uxExpectedStartCount;	
+	UBaseType_t uxExpectedStartCount;
 
 	/* Incremented on each cycle of the demo task.  Used to detect a stalled
 	task. */
-	UBaseType_t uxLoopCounter;			
+	UBaseType_t uxLoopCounter;
 } xCountSemStruct;
 
 /* Two structures are defined, one is passed to each test task. */
@@ -160,10 +160,10 @@ void vStartCountingSemaphoreTasks( void )
 	xParameters[ 1 ].uxLoopCounter = 0;
 
 	/* vQueueAddToRegistry() adds the semaphore to the registry, if one is
-	in use.  The registry is provided as a means for kernel aware 
+	in use.  The registry is provided as a means for kernel aware
 	debuggers to locate semaphores and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is 
+	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
 	defined to be less than 1. */
 	vQueueAddToRegistry( ( QueueHandle_t ) xParameters[ 0 ].xSemaphore, "Counting_Sem_1" );
 	vQueueAddToRegistry( ( QueueHandle_t ) xParameters[ 1 ].xSemaphore, "Counting_Sem_2" );
@@ -174,7 +174,7 @@ void vStartCountingSemaphoreTasks( void )
 	{
 		/* Create the demo tasks, passing in the semaphore to use as the parameter. */
 		xTaskCreate( prvCountingSemaphoreTask, "CNT1", configMINIMAL_STACK_SIZE, ( void * ) &( xParameters[ 0 ] ), tskIDLE_PRIORITY, NULL );
-		xTaskCreate( prvCountingSemaphoreTask, "CNT2", configMINIMAL_STACK_SIZE, ( void * ) &( xParameters[ 1 ] ), tskIDLE_PRIORITY, NULL );		
+		xTaskCreate( prvCountingSemaphoreTask, "CNT2", configMINIMAL_STACK_SIZE, ( void * ) &( xParameters[ 1 ] ), tskIDLE_PRIORITY, NULL );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -193,6 +193,8 @@ UBaseType_t ux;
 	/* We should be able to 'take' the semaphore countMAX_COUNT_VALUE times. */
 	for( ux = 0; ux < countMAX_COUNT_VALUE; ux++ )
 	{
+		configASSERT( xSemaphoreGetCount( xSemaphore ) == ( countMAX_COUNT_VALUE - ux ) );
+
 		if( xSemaphoreTake( xSemaphore, countDONT_BLOCK ) != pdPASS )
 		{
 			/* We expected to be able to take the semaphore. */
@@ -206,8 +208,9 @@ UBaseType_t ux;
 		taskYIELD();
 	#endif
 
-	/* If the semaphore count is zero then we should not be able to	'take' 
+	/* If the semaphore count is zero then we should not be able to	'take'
 	the semaphore. */
+	configASSERT( xSemaphoreGetCount( xSemaphore ) == 0 );
 	if( xSemaphoreTake( xSemaphore, countDONT_BLOCK ) == pdPASS )
 	{
 		xErrorDetected = pdTRUE;
@@ -219,7 +222,7 @@ static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_
 {
 UBaseType_t ux;
 
-	/* If the semaphore count is zero then we should not be able to	'take' 
+	/* If the semaphore count is zero then we should not be able to	'take'
 	the semaphore. */
 	if( xSemaphoreTake( xSemaphore, countDONT_BLOCK ) == pdPASS )
 	{
@@ -229,6 +232,8 @@ UBaseType_t ux;
 	/* We should be able to 'give' the semaphore countMAX_COUNT_VALUE times. */
 	for( ux = 0; ux < countMAX_COUNT_VALUE; ux++ )
 	{
+		configASSERT( xSemaphoreGetCount( xSemaphore ) == ux );
+
 		if( xSemaphoreGive( xSemaphore ) != pdPASS )
 		{
 			/* We expected to be able to take the semaphore. */
@@ -257,7 +262,7 @@ xCountSemStruct *pxParameter;
 
 	#ifdef USE_STDIO
 	void vPrintDisplayMessage( const char * const * ppcMessageToSend );
-	
+
 		const char * const pcTaskStartMsg = "Counting semaphore demo started.\r\n";
 
 		/* Queue a message for printing to say the task has started. */

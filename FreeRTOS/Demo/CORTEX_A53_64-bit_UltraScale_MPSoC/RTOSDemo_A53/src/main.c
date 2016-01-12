@@ -122,7 +122,7 @@
  * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
  * application will be run.
  */
-#define mainSELECTED_APPLICATION	1
+#define mainSELECTED_APPLICATION	0
 
 /*-----------------------------------------------------------*/
 

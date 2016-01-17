@@ -77,8 +77,9 @@
  * prvLowPriorityMutexTask() prototypes below for more information.
  */
 
-
+/* Standard includes. */
 #include <stdlib.h>
+#include <string.h>
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -162,12 +163,12 @@ SemaphoreHandle_t xMutex;
 	defined to be less than 1.  First check a name is not returned before the
 	queue has been added. */
 	configASSERT( pcQueueGetQueueName( xQueue ) == NULL );
-	
+
 	/* Then add the queue to the registry, and check its name is returned
 	correctly. */
 	vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
 	configASSERT( strcmp( pcQueueGetQueueName( xQueue ), "Gen_Queue_Test" ) == 0 );
-	
+
 	/* Then, for test purposes, remove the queue from the registry again, check
 	NULL is returned for its name, before adding back and leaving it. */
 	vQueueUnregisterQueue( xQueue );

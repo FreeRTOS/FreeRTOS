@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/com.silabs.ide.si32.iar.debug\#com.silabs.ide.si32.iar\:7.40.1.8447/PATH/delimiter=;
+environment/project/com.silabs.ide.si32.iar.debug\#com.silabs.ide.si32.iar\:7.40.1.8447/PATH/operation=prepend
+environment/project/com.silabs.ide.si32.iar.debug\#com.silabs.ide.si32.iar\:7.40.1.8447/PATH/value=C\:\\DevTools\\SiliconLabs\\SimplicityStudio\\v3\\developer\\msys\\1.0\\bin
+environment/project/com.silabs.ide.si32.iar.debug\#com.silabs.ide.si32.iar\:7.40.1.8447/append=true
+environment/project/com.silabs.ide.si32.iar.debug\#com.silabs.ide.si32.iar\:7.40.1.8447/appendContributed=true

@@ -72,7 +72,7 @@
 							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.base.1942793763" name="GNU ARM C Linker" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.base">
 								<option id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.nostdlibs.1238746537" name="No startup or default libs (-nostdlib)" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.nostdlibs" value="false" valueType="boolean"/>
 								<option id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.printffloat.1689266799" name="Printf float" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.printffloat" value="true" valueType="boolean"/>
-								<option id="gnu.c.link.option.libs.1846704343" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs"/>
+								<option id="gnu.c.link.option.libs.1846704343" name="Libraries (-l)" superClass="gnu.c.link.option.libs"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.301647948" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -83,7 +83,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Source/RTT|Source/SilLabs_Code/kits/bsp/bsp_dk_mcuboard.c|Source/SilLabs_Code/kits/bsp/bsp_dk_leds.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3201.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3200.c|Source/SilLabs_Code/kits/bsp/bsp_bcc.c|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG/Source|CMSIS/efm32gg/startup_iar_efm32gg.s|FreeRTOS/efm32gg/port_iar.c|FreeRTOS/efm32gg/portasm.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Source/low_power_tick_management.c|Source/RTT|Source/SilLabs_Code/kits/bsp/bsp_dk_mcuboard.c|Source/SilLabs_Code/kits/bsp/bsp_dk_leds.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3201.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3200.c|Source/SilLabs_Code/kits/bsp/bsp_bcc.c|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG/Source|CMSIS/efm32gg/startup_iar_efm32gg.s|FreeRTOS/efm32gg/port_iar.c|FreeRTOS/efm32gg/portasm.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

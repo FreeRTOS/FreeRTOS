@@ -94,7 +94,7 @@
 /* SiLabs includes. */
 #include "em_chip.h"
 #include "bsp.h"
-#include "segmentlcd.h"
+#include "bsp_trace.h"
 #include "sleep.h"
 
 /* Set mainCREATE_LOW_POWER_DEMO to one to run the simple blinky demo, or 0 to
@@ -124,9 +124,6 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
-
-
-//    SegmentLCD_Write(text);
 
 /*-----------------------------------------------------------*/
 
@@ -159,9 +156,8 @@ static void prvSetupHardware( void )
 {
 	/* Library initialisation routines. */
 	CHIP_Init();
-//_RB_  BSP_TraceProfilerSetup();
+	BSP_TraceProfilerSetup();
 	SLEEP_Init( NULL, NULL );
-	SegmentLCD_Init( false );
 	BSP_LedsInit();
 
 	#if (configSLEEP_MODE < 3)

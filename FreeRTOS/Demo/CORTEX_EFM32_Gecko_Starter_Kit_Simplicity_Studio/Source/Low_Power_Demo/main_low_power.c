@@ -121,7 +121,7 @@
 
 /* The rate at which data is sent to the queue.  The 200ms value is converted
 to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
+#define mainQUEUE_SEND_FREQUENCY_MS			pdMS_TO_TICKS( 500 )
 
 /* The number of items the queue can hold.  This is 1 as the receive task
 will remove items as they are added, meaning the send task should always find
@@ -187,7 +187,7 @@ void main_low_power( void )
 static void prvQueueSendTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
+const uint32_t ulValueToSend = 100UL;
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -211,8 +211,9 @@ const unsigned long ulValueToSend = 100UL;
 
 static void prvQueueReceiveTask( void *pvParameters )
 {
-unsigned long ulReceivedValue;
-const unsigned long ulExpectedValue = 100UL;
+uint32_t ulReceivedValue;
+const uint32_t ulExpectedValue = 100UL;
+const TickType_t xShortDelay = pdMS_TO_TICKS( 10 );
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -228,7 +229,11 @@ const unsigned long ulExpectedValue = 100UL;
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			BSP_LedToggle( mainTASK_LED );
+			/* Turn the LED on for a brief time only so it doens't distort the
+			enerty reading. */
+			BSP_LedSet( mainTASK_LED );
+			vTaskDelay( xShortDelay );
+			BSP_LedClear( mainTASK_LED );
 			ulReceivedValue = 0U;
 		}
 	}

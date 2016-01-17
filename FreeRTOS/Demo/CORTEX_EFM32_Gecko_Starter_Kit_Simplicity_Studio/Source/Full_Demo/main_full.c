@@ -119,6 +119,7 @@
 
 /* SiLabs includes. */
 #include "bsp.h"
+#include "segmentlcd.h"
 
 /* Standard demo application includes. */
 #include "flop.h"
@@ -210,6 +211,9 @@ extern volatile uint32_t ulLED;
 
 void main_full( void )
 {
+	SegmentLCD_Init( false );
+	SegmentLCD_Write( "F'RTOS" );
+
 	/* Start all the other standard demo/test tasks.  They have no particular
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
@@ -355,8 +359,7 @@ unsigned long ulErrorFound = pdFALSE;
 		{
 			/* An error has been detected in one of the tasks - flash the LED
 			at a higher frequency to give visible feedback that something has
-			gone wrong (it might just be that the loop back connector required
-			by the comtest tasks has not been fitted). */
+			gone wrong. */
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
 

@@ -184,7 +184,7 @@ PRIVILEGED_DATA static QueueHandle_t xTimerQueue = NULL;
 	following callback function - which enables the application to optionally
 	provide the memory that will be used by the timer task as the task's stack
 	and TCB. */
-	extern void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
+	extern void vApplicationGetTimerTaskMemory( StaticTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
 
 #endif
 
@@ -250,7 +250,7 @@ static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseTy
 BaseType_t xTimerCreateTimerTask( void )
 {
 BaseType_t xReturn = pdFAIL;
-DummyTCB_t *pxTimerTaskTCBBuffer = NULL;
+StaticTCB_t *pxTimerTaskTCBBuffer = NULL;
 StackType_t *pxTimerTaskStackBuffer = NULL;
 uint16_t usTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 

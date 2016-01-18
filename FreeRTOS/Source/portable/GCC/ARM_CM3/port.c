@@ -255,7 +255,7 @@ void vPortSVCHandler( void )
 					"	orr r14, #0xd					\n"
 					"	bx r14							\n"
 					"									\n"
-					"	.align 2						\n"
+					"	.align 4						\n"
 					"pxCurrentTCBConst2: .word pxCurrentTCB				\n"
 				);
 }
@@ -382,9 +382,9 @@ void vPortEnterCritical( void )
 	uxCriticalNesting++;
 	__asm volatile( "dsb" );
 	__asm volatile( "isb" );
-	
+
 	/* This is not the interrupt safe version of the enter critical function so
-	assert() if it is being called from an interrupt context.  Only API 
+	assert() if it is being called from an interrupt context.  Only API
 	functions that end in "FromISR" can be used in an interrupt.  Only assert if
 	the critical nesting count is 1 to protect against recursive calls if the
 	assert function also uses a critical section. */
@@ -467,7 +467,7 @@ void xPortPendSVHandler( void )
 	"	isb									\n"
 	"	bx r14								\n"
 	"										\n"
-	"	.align 2							\n"
+	"	.align 4							\n"
 	"pxCurrentTCBConst: .word pxCurrentTCB	\n"
 	::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
 	);

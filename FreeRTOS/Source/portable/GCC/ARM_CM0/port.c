@@ -189,7 +189,7 @@ void vPortStartFirstTask( void )
 	"	cpsie i						\n" /* The first task has its context and interrupts can be enabled. */
 	"	pop {pc}					\n" /* Finally, pop the PC to jump to the user defined task code. */
 	"								\n"
-	"	.align 2					\n"
+	"	.align 4					\n"
 	"pxCurrentTCBConst2: .word pxCurrentTCB	  "
 				  );
 }
@@ -332,7 +332,7 @@ void xPortPendSVHandler( void )
 	"										\n"
 	"	bx r3								\n"
 	"										\n"
-	"	.align 2							\n"
+	"	.align 4							\n"
 	"pxCurrentTCBConst: .word pxCurrentTCB	  "
 	);
 }

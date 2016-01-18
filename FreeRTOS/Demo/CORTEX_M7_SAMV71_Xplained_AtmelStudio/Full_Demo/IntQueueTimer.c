@@ -146,18 +146,18 @@ const uint32_t ulDivider = 128UL, ulTCCLKS = 3UL;
 	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_RC = ( configCPU_CLOCK_HZ / 2 ) / ( tmrTIMER_1_FREQUENCY * ulDivider );
 	TC0->TC_CHANNEL[ tmrTC0_CHANNEL_1 ].TC_IER = TC_IER_CPCS;
 
-    /* Configure and enable TC0 interrupt on RC compare. */ 
+	/* Configure and enable TC0 interrupt on RC compare. */
 	NVIC_SetPriority( TC0_IRQn, tmrLOWER_PRIORITY );
-    NVIC_ClearPendingIRQ( TC0_IRQn );
-    NVIC_EnableIRQ( TC0_IRQn );
-	
+	NVIC_ClearPendingIRQ( TC0_IRQn );
+	NVIC_EnableIRQ( TC0_IRQn );
+
 	/* Configure TC1 channel 0 tmrTIMER_2_FREQUENCY frequency and trigger on
 	RC compare.  This is the very high frequency timer. */
 	TC_Configure( TC1, tmrTC1_CHANNEL_0, ulTCCLKS | TC_CMR_CPCTRG );
 	TC1->TC_CHANNEL[ tmrTC1_CHANNEL_0 ].TC_RC = ( configCPU_CLOCK_HZ / 2 ) / ( tmrTIMER_2_FREQUENCY * ulDivider );
 	TC1->TC_CHANNEL[ tmrTC1_CHANNEL_0 ].TC_IER = TC_IER_CPCS;
 
-    /* Configure and enable TC1 interrupt on RC compare */    
+    /* Configure and enable TC1 interrupt on RC compare */
 //	NVIC_SetPriority( TC1_IRQn, tmrHIGHER_PRIORITY );
 //    NVIC_ClearPendingIRQ( TC1_IRQn );
 //    NVIC_EnableIRQ( TC1_IRQn );
@@ -196,8 +196,8 @@ volatile uint32_t ulDummy;
 	/* Keep a count of the number of interrupts to use as a time base for the
 	run-time stats. */
 	ulHighFrequencyTimerCounts++;
-	
-	/* Prevent compiler warnings about the variable being set but then 
+
+	/* Prevent compiler warnings about the variable being set but then
 	unused. */
 	( void ) ulDummy;
 }

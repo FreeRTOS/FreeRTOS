@@ -122,12 +122,12 @@ functions but without including stdio.h here. */
 	#define taskYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
 #endif
 
-/* Bits that can be set in tskTCB->uxStaticAllocationFlags to indicate that the
+/* Bits that can be set in tskTCB->ucStaticAllocationFlags to indicate that the
 stack and TCB were statically allocated respectively.  When these are statically
 allocated they won't be freed if the task using the stack and TCB gets
 deleted. */
-#define taskSTATICALLY_ALLOCATED_STACK	( ( UBaseType_t ) 0x01 )
-#define taskSTATICALLY_ALLOCATED_TCB	( ( UBaseType_t ) 0x02 )
+#define taskSTATICALLY_ALLOCATED_STACK	( ( uint8_t ) 0x01 )
+#define taskSTATICALLY_ALLOCATED_TCB	( ( uint8_t ) 0x02 )
 
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
@@ -195,7 +195,7 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-		UBaseType_t		uxStaticAllocationFlags; /* Set to pdTRUE if the stack is a statically allocated array, and pdFALSE if the stack is dynamically allocated. */
+		uint8_t		ucStaticAllocationFlags; /* Set to pdTRUE if the stack is a statically allocated array, and pdFALSE if the stack is dynamically allocated. */
 	#endif
 
 	} tskTCB;
@@ -426,7 +426,7 @@ to its original value when it is released. */
 #endif
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	extern void vApplicationGetIdleTaskMemory( DummyTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
+	extern void vApplicationGetIdleTaskMemory( StaticTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
 #endif
 
 /* File private functions. --------------------------------*/
@@ -554,7 +554,7 @@ static void prvResetNextTaskUnblockTime( void );
 #endif
 /*-----------------------------------------------------------*/
 
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, DummyTCB_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTCB_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 BaseType_t xReturn;
 TCB_t * pxNewTCB;
@@ -1546,7 +1546,7 @@ StackType_t *pxTopOfStack;
 void vTaskStartScheduler( void )
 {
 BaseType_t xReturn;
-DummyTCB_t *pxIdleTaskTCBBuffer = NULL;
+StaticTCB_t *pxIdleTaskTCBBuffer = NULL;
 StackType_t *pxIdleTaskStackBuffer = NULL;
 uint16_t usIdleTaskStackSize = tskIDLE_STACK_SIZE;
 
@@ -3149,9 +3149,12 @@ static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t *
 {
 TCB_t *pxNewTCB;
 
-	#if( configASSERT_DEFINED == 1 )
+	#if( ( configASSERT_DEFINED == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 	{
-		volatile size_t xSize = sizeof( DummyTCB_t );
+		/* Sanity check that the size of the structure used to declare a
+		variable of type StaticTCB_t matches the size of the actual TCB_t
+		structure. */
+		volatile size_t xSize = sizeof( StaticTCB_t );
 		configASSERT( xSize == sizeof( TCB_t ) );
 	}
 	#endif /* configASSERT_DEFINED */
@@ -3234,13 +3237,13 @@ TCB_t *pxNewTCB;
 
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 		{
-			pxNewTCB->uxStaticAllocationFlags = 0;
+			pxNewTCB->ucStaticAllocationFlags = 0;
 
 			if( puxStackBuffer != NULL )
 			{
 				/* The application provided its own stack - note the fact so no
 				attempt is made to delete the stack if the task is deleted. */
-				pxNewTCB->uxStaticAllocationFlags |= taskSTATICALLY_ALLOCATED_STACK;
+				pxNewTCB->ucStaticAllocationFlags |= taskSTATICALLY_ALLOCATED_STACK;
 			}
 			else
 			{
@@ -3251,7 +3254,7 @@ TCB_t *pxNewTCB;
 			{
 				/* The application provided its own TCB.  Note the fact so no
 				attempt is made to delete the TCB if the task is deleted. */
-				pxNewTCB->uxStaticAllocationFlags |= taskSTATICALLY_ALLOCATED_TCB;
+				pxNewTCB->ucStaticAllocationFlags |= taskSTATICALLY_ALLOCATED_TCB;
 			}
 			else
 			{
@@ -3419,7 +3422,7 @@ TCB_t *pxNewTCB;
 		{
 			/* Only free the stack and TCB if they were allocated dynamically in
 			the first place. */
-			if( ( pxTCB->uxStaticAllocationFlags & taskSTATICALLY_ALLOCATED_STACK ) == ( UBaseType_t ) 0 )
+			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_STACK ) == ( UBaseType_t ) 0 )
 			{
 				vPortFreeAligned( pxTCB->pxStack );
 			}
@@ -3428,7 +3431,7 @@ TCB_t *pxNewTCB;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			if( ( pxTCB->uxStaticAllocationFlags & taskSTATICALLY_ALLOCATED_TCB ) == ( UBaseType_t ) 0 )
+			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_TCB ) == ( UBaseType_t ) 0 )
 			{
 				vPortFreeAligned( pxTCB );
 			}

@@ -79,7 +79,6 @@
 
 /* Standard includes. */
 #include <stdlib.h>
-#include <string.h>
 
 /* Scheduler include files. */
 #include "FreeRTOS.h"
@@ -160,21 +159,8 @@ SemaphoreHandle_t xMutex;
 	debuggers to locate queues and has no purpose if a kernel aware debugger
 	is not being used.  The call to vQueueAddToRegistry() will be removed
 	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
-	defined to be less than 1.  First check a name is not returned before the
-	queue has been added. */
-	configASSERT( pcQueueGetQueueName( xQueue ) == NULL );
-
-	/* Then add the queue to the registry, and check its name is returned
-	correctly. */
+	defined to be less than 1. */
 	vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
-	configASSERT( strcmp( pcQueueGetQueueName( xQueue ), "Gen_Queue_Test" ) == 0 );
-
-	/* Then, for test purposes, remove the queue from the registry again, check
-	NULL is returned for its name, before adding back and leaving it. */
-	vQueueUnregisterQueue( xQueue );
-	configASSERT( pcQueueGetQueueName( xQueue ) == NULL );
-	vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
-	configASSERT( strcmp( pcQueueGetQueueName( xQueue ), "Gen_Queue_Test" ) == 0 );
 
 	/* Create the demo task and pass it the queue just created.  We are
 	passing the queue handle by value so it does not matter that it is

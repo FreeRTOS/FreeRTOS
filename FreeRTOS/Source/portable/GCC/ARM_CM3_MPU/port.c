@@ -334,7 +334,7 @@ static void prvRestoreContextOfFirstTask( void )
 		"	ldr r14, =0xfffffffd			\n" /* Load exec return code. */
 		"	bx r14							\n"
 		"									\n"
-		"	.align 2						\n"
+		"	.align 4						\n"
 		"pxCurrentTCBConst2: .word pxCurrentTCB	\n"
 	);
 }
@@ -440,7 +440,7 @@ void xPortPendSVHandler( void )
 		"	msr psp, r0							\n"
 		"	bx r14								\n"
 		"										\n"
-		"	.align 2							\n"
+		"	.align 4							\n"
 		"pxCurrentTCBConst: .word pxCurrentTCB	\n"
 		::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
 	);
@@ -911,7 +911,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		uxReturn = uxTaskGetSystemState( pxTaskStatusArray, uxArraySize, pulTotalRunTime );
 		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
+		return uxReturn;
 	}
 #endif
 /*-----------------------------------------------------------*/

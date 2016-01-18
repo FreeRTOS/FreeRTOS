@@ -778,7 +778,7 @@ extern "C" {
 
 #if( ( configUSE_RECURSIVE_MUTEXES == 1 ) && ( configUSE_MUTEXES != 1 ) )
     #error configUSE_MUTEXES must be set to 1 to use recursive mutexes
-#endif 
+#endif
 
 #if( portTICK_TYPE_IS_ATOMIC == 0 )
 	/* Either variables of tick type cannot be read atomically, or
@@ -835,6 +835,135 @@ point support. */
 #ifndef configUSE_TASK_FPU_SUPPORT
 	#define configUSE_TASK_FPU_SUPPORT 1
 #endif
+
+/*
+ * In line with software engineering best practice, FreeRTOS implements a strict
+ * data hiding policy, so the real structures used by FreeRTOS to maintain the
+ * state of tasks, queues, semaphores, etc. are not accessible to the application
+ * code.  However, if the application writer wants to statically allocate such
+ * an object then the size of the object needs to be know.  Dummy structures
+ * that are guaranteed to have the same size and alignment requirements of the
+ * real objects are used for this purpose.  The dummy list and list item
+ * structures below are used for inclusion in such a dummy structure.
+ */
+struct xSTATIC_LIST_ITEM
+{
+	TickType_t xDummy1;
+	void *pvDummy2[ 4 ];
+};
+typedef struct xSTATIC_LIST_ITEM StaticListItem_t;
+
+/* See the comments above the struct xSTATIC_LIST_ITEM definition. */
+struct xSTATIC_MINI_LIST_ITEM
+{
+	TickType_t xDummy1;
+	void *pvDummy2[ 2 ];
+};
+typedef struct xSTATIC_MINI_LIST_ITEM StaticMiniListItem_t;
+
+/* See the comments above the struct xSTATIC_LIST_ITEM definition. */
+typedef struct xSTATIC_LIST
+{
+	UBaseType_t uxDummy1;
+	void *pvDummy2;
+	StaticMiniListItem_t xDummy3;
+} StaticList_t;
+
+/* For data hiding purposes. */
+typedef enum
+{
+	eNothing = 0
+} eDummy;
+
+/*
+ * In line with software engineering best practice, FreeRTOS implements a strict
+ * data hiding policy, so the real task control block (TCB) structure is not
+ * accessible to the application code.  However, if the application writer wants
+ * to statically allocate a TCB then the size of the TCB needs to be know.  The
+ * dummy TCB structure below is used for this purpose.  Its size will allows
+ * match the size of the real TCB, no matter what the FreeRTOSConfig.h settings.
+ */
+typedef struct xSTATIC_TCB
+{
+	void				*pxDummy1;
+	#if ( portUSING_MPU_WRAPPERS == 1 )
+		xMPU_SETTINGS	xDummy2;
+	#endif
+	StaticListItem_t	xDummy3[ 2 ];
+	UBaseType_t			uxDummy5;
+	void				*pxDummy6;
+	uint8_t				ucDummy7[ configMAX_TASK_NAME_LEN ];
+	#if ( portSTACK_GROWTH > 0 )
+		void			*pxDummy8;
+	#endif
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+		UBaseType_t		uxDummy9;
+	#endif
+	#if ( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t		uxDummy10[ 2 ];
+	#endif
+	#if ( configUSE_MUTEXES == 1 )
+		UBaseType_t		uxDummy12[ 2 ];
+	#endif
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+		void			*pxDummy14;
+	#endif
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
+		void			pvDummy15[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+	#endif
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+		uint32_t		ulDummy16;
+	#endif
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		struct	_reent	xDummy17;
+	#endif
+	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
+		uint32_t 		ulDummy18;
+		eDummy 			eDummy19;
+	#endif
+	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+		UBaseType_t		uxDummy20;
+	#endif
+
+} StaticTCB_t;
+
+/*
+ * In line with software engineering best practice, FreeRTOS implements a strict
+ * data hiding policy, so the queue structure is not accessible to the
+ * application code.  However, if the application writer wants to statically
+ * allocate a queue (or one of the other objects that uses a queue as its base
+ * structure) then the size of the queue needs to be know.  The dummy queue
+ * structure below is used for this purpose.  Its size will allows match the
+ * size of the real queue, no matter what the FreeRTOSConfig.h settings.
+ */
+typedef struct xSTATIC_QUEUE
+{
+	void *pvDummy1[ 3 ];
+
+	union
+	{
+		void *pvDummy2;
+		UBaseType_t uxDummy2;
+	} u;
+
+	StaticList_t xDummy3[ 2 ];
+	UBaseType_t uxDummy4[ 5 ];
+
+	#if ( configUSE_QUEUE_SETS == 1 )
+		void *pvDummy7;
+	#endif
+
+	#if ( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t uxDummy5;
+		uint8_t ucDummy6;
+	#endif
+
+	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+			uint8_t ucDummy7;
+	#endif
+
+} StaticQueue_t;
+
 
 #ifdef __cplusplus
 }

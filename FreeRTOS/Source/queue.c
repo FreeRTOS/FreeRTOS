@@ -239,6 +239,17 @@ static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvIte
  */
 static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
+/*
+ * A queue requires two blocks of memory; a structure to hold the queue state
+ * and a storage area to hold the items in the queue.  The memory is assigned
+ * by prvAllocateQueueMemory().  If ppucQueueStorage is NULL then the queue
+ * storage will allocated dynamically, otherwise the buffer passed in
+ * ppucQueueStorage will be used.  If pxStaticQueue is NULL then the queue
+ * structure will be allocated dynamically, otherwise the buffer pointed to by
+ * pxStaticQueue will be used.
+ */
+static Queue_t *prvAllocateQueueMemory( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t **ppucQueueStorage, StaticQueue_t *pxStaticQueue );
+
 #if ( configUSE_QUEUE_SETS == 1 )
 	/*
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
@@ -331,8 +342,8 @@ size_t xQueueSizeInBytes;
 	#if( ( configASSERT_DEFINED == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 	{
 		/* Sanity check that the size of the structure used to declare a
-		variable of type DummyQueue_t or DummySemaphore_t equals the size of the
-		real queue and semaphore structures. */
+		variable of type StaticQueue_t or StaticSemaphore_t equals the size of 
+		the real queue and semaphore structures. */
 		volatile size_t xSize = sizeof( StaticQueue_t );
 		configASSERT( xSize == sizeof( Queue_t ) );
 	}
@@ -345,9 +356,9 @@ size_t xQueueSizeInBytes;
 	}
 	else
 	{
-		/* The queue is one byte longer than asked for to make wrap checking
-		easier/faster. */
-		xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ) + ( size_t ) 1; /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+		/* Allocate enough space to hold the maximum number of items that can be
+		in the queue at any time. */
+		xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 	}
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 0 )
@@ -361,7 +372,7 @@ size_t xQueueSizeInBytes;
 			storage area. */
 			*ppucQueueStorage = ( ( uint8_t * ) pxNewQueue ) + sizeof( Queue_t );
 		}
-		
+
 		/* The pxStaticQueue parameter is not used.  Remove compiler warnings. */
 		( void ) pxStaticQueue;
 	}
@@ -399,7 +410,16 @@ size_t xQueueSizeInBytes;
 					{
 						vPortFree( ( void * ) pxNewQueue );
 					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
+
 					pxNewQueue = NULL;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
 				}
 			}
 			else
@@ -1860,12 +1880,20 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			freed. */
 			vPortFree( pxQueue->pcHead );
 		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
 
 		if( ( pxQueue->ucStaticAllocationFlags & queueSTATICALLY_ALLOCATED_QUEUE_STRUCT ) == 0 )
 		{
 			/* The queue structure was dynamically allocated, so must be
 			free. */
 			vPortFree( pxQueue );
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
 		}
 	}
 	#endif

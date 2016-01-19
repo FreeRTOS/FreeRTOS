@@ -170,7 +170,11 @@ typedef void * QueueSetMemberHandle_t;
  * \defgroup xQueueCreate xQueueCreate
  * \ingroup QueueManagement
  */
-#define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, queueQUEUE_TYPE_BASE )
+#define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, NULL, NULL, queueQUEUE_TYPE_BASE )
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#define xQueueCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue ) xQueueGenericCreate( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue, queueQUEUE_TYPE_BASE )
+#endif
 
 /**
  * queue. h
@@ -1554,7 +1558,7 @@ BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION
  * Generic version of the queue creation function, which is in turn called by
  * any queue, semaphore or mutex creation function or macro.
  */
-QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, const uint8_t ucQueueType ) PRIVILEGED_FUNCTION;
+QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType ) PRIVILEGED_FUNCTION;
 
 /*
  * Queue sets provide a mechanism to allow a task to block (pend) on a read

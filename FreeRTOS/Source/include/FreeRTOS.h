@@ -922,7 +922,7 @@ typedef struct xSTATIC_TCB
 		eDummy 			eDummy19;
 	#endif
 	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-		UBaseType_t		uxDummy20;
+		uint8_t			uxDummy20;
 	#endif
 
 } StaticTCB_t;
@@ -963,6 +963,8 @@ typedef struct xSTATIC_QUEUE
 	#endif
 
 } StaticQueue_t;
+
+typedef StaticQueue_t StaticSemaphore_t;
 
 
 #ifdef __cplusplus

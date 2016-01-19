@@ -193,7 +193,7 @@ UBaseType_t ux;
 	/* We should be able to 'take' the semaphore countMAX_COUNT_VALUE times. */
 	for( ux = 0; ux < countMAX_COUNT_VALUE; ux++ )
 	{
-		configASSERT( xSemaphoreGetCount( xSemaphore ) == ( countMAX_COUNT_VALUE - ux ) );
+		configASSERT( uxSemaphoreGetCount( xSemaphore ) == ( countMAX_COUNT_VALUE - ux ) );
 
 		if( xSemaphoreTake( xSemaphore, countDONT_BLOCK ) != pdPASS )
 		{
@@ -210,7 +210,7 @@ UBaseType_t ux;
 
 	/* If the semaphore count is zero then we should not be able to	'take'
 	the semaphore. */
-	configASSERT( xSemaphoreGetCount( xSemaphore ) == 0 );
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 0 );
 	if( xSemaphoreTake( xSemaphore, countDONT_BLOCK ) == pdPASS )
 	{
 		xErrorDetected = pdTRUE;
@@ -232,7 +232,7 @@ UBaseType_t ux;
 	/* We should be able to 'give' the semaphore countMAX_COUNT_VALUE times. */
 	for( ux = 0; ux < countMAX_COUNT_VALUE; ux++ )
 	{
-		configASSERT( xSemaphoreGetCount( xSemaphore ) == ux );
+		configASSERT( uxSemaphoreGetCount( xSemaphore ) == ux );
 
 		if( xSemaphoreGive( xSemaphore ) != pdPASS )
 		{

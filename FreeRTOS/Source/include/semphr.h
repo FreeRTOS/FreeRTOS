@@ -87,6 +87,10 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * semphr. h
  * <pre>vSemaphoreCreateBinary( SemaphoreHandle_t xSemaphore )</pre>
  *
+ * In many usage scenarios it is faster and more memory efficient to use a
+ * direct to task notification in place of a binary semaphore!
+ * http://www.freertos.org/RTOS-task-notifications.html
+ *
  * This old vSemaphoreCreateBinary() macro is now deprecated in favour of the
  * xSemaphoreCreateBinary() function.  Note that binary semaphores created using
  * the vSemaphoreCreateBinary() macro are created in a state such that the
@@ -128,18 +132,22 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup vSemaphoreCreateBinary vSemaphoreCreateBinary
  * \ingroup Semaphores
  */
-#define vSemaphoreCreateBinary( xSemaphore )																							\
-	{																																	\
-		( xSemaphore ) = xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_BINARY_SEMAPHORE );	\
-		if( ( xSemaphore ) != NULL )																									\
-		{																																\
-			( void ) xSemaphoreGive( ( xSemaphore ) );																					\
-		}																																\
+#define vSemaphoreCreateBinary( xSemaphore )																										\
+	{																																				\
+		( xSemaphore ) = xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, NULL, queueQUEUE_TYPE_BINARY_SEMAPHORE );	\
+		if( ( xSemaphore ) != NULL )																												\
+		{																																			\
+			( void ) xSemaphoreGive( ( xSemaphore ) );																								\
+		}																																			\
 	}
 
 /**
  * semphr. h
  * <pre>SemaphoreHandle_t xSemaphoreCreateBinary( void )</pre>
+ *
+ * In many usage scenarios it is faster and more memory efficient to use a
+ * direct to task notification in place of a binary semaphore!
+ * http://www.freertos.org/RTOS-task-notifications.html
  *
  * The old vSemaphoreCreateBinary() macro is now deprecated in favour of this
  * xSemaphoreCreateBinary() function.  Note that binary semaphores created using
@@ -182,7 +190,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup vSemaphoreCreateBinary vSemaphoreCreateBinary
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateBinary() xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_BINARY_SEMAPHORE )
+#define xSemaphoreCreateBinary() xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, NULL, queueQUEUE_TYPE_BINARY_SEMAPHORE )
+#define xSemaphoreCreateBinaryStatic( pxStaticQueue ) xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, pxStaticQueue, queueQUEUE_TYPE_BINARY_SEMAPHORE )
 
 /**
  * semphr. h
@@ -849,7 +858,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * semaphore is not available.
  *
  */
-#define xSemaphoreGetCount( xSemaphore ) uxQueueMessagesWaiting( ( QueueHandle_t ) ( xSemaphore ) )
+#define uxSemaphoreGetCount( xSemaphore ) uxQueueMessagesWaiting( ( QueueHandle_t ) ( xSemaphore ) )
 
 #endif /* SEMAPHORE_H */
 

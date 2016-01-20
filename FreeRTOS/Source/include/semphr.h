@@ -699,7 +699,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup vSemaphoreCreateMutex vSemaphoreCreateMutex
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateMutex() xQueueCreateMutex( queueQUEUE_TYPE_MUTEX )
+#define xSemaphoreCreateMutex() xQueueCreateMutex( queueQUEUE_TYPE_MUTEX, NULL )
+#define xSemaphoreCreateMutexStatic( pxStaticQueue ) xQueueCreateMutex( queueQUEUE_TYPE_MUTEX, ( pxStaticQueue ) )
 
 
 /**
@@ -754,7 +755,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup vSemaphoreCreateMutex vSemaphoreCreateMutex
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateRecursiveMutex() xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX )
+#define xSemaphoreCreateRecursiveMutex() xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX, NULL )
+#define xSemaphoreCreateRecursiveMutexStatic( pxStaticSemaphore ) xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX, pxStaticSemaphore )
 
 /**
  * semphr. h
@@ -817,7 +819,8 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \defgroup xSemaphoreCreateCounting xSemaphoreCreateCounting
  * \ingroup Semaphores
  */
-#define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ) )
+#define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ), ( NULL ) )
+#define xSemaphoreCreateCountingStatic( uxMaxCount, uxInitialCount, pxStaticSemaphore ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ), ( pxStaticSemaphore ) )
 
 /**
  * semphr. h

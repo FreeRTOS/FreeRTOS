@@ -146,6 +146,28 @@ static void prvCreateAndDeleteStaticallyAllocatedQueues( void );
 static void prvCreateAndDeleteStaticallyAllocatedBinarySemaphores( void );
 
 /*
+ * A function that demonstrates and tests the xSemaphoreCreateMutexStatic() API
+ * macro by creating and then deleting mutexes with both dynamically and
+ * statically allocated semaphore structures.
+ */
+static void prvCreateAndDeleteStaticallyAllocatedMutexes( void );
+
+/*
+ * A function that demonstrates and tests the xSemaphoreCreateCountingStatic()
+ * API macro by creating and then deleting counting semaphores with both
+ * dynamically and statically allocated semaphore structures.
+ */
+static void prvCreateAndDeleteStaticallyAllocatedCountingSemaphores( void );
+
+/*
+ * A function that demonstrates and tests the
+ * xSemaphoreCreateRecursiveMutexStatic() API macro by creating and then
+ * deleting recursive mutexes with both dynamically and statically allocated
+ * semaphore structures.
+ */
+static void prvCreateAndDeleteStaticallyAllocatedRecursiveMutexes( void );
+
+/*
  * The task that creates and deletes other tasks has to delay occasionally to
  * ensure lower priority tasks are not starved of processing time.  A pseudo
  * random delay time is used just to add a little bit of randomisation into the
@@ -157,6 +179,11 @@ static TickType_t prvGetNextDelayTime( void );
  * Checks the basic operation of a queue after it has been created.
  */
 static void prvCheckQueueFunction( QueueHandle_t xQueue );
+
+/*
+ * Checks the basic operation of a recursive mutex after it has been created.
+ */
+static void prvCheckRecursiveSemaphoreFunction( SemaphoreHandle_t xSemaphore );
 
 /*
  * Checks the basic operation of a binary semaphore after it has been created.
@@ -218,9 +245,15 @@ static void prvStaticallyAllocatedCreator( void *pvParameters )
 
 	for( ;; )
 	{
+		/* Loop, running functions that create and delete the various objects
+		that can be optionally created using either static or dynamic memory
+		allocation. */
 		prvCreateAndDeleteStaticallyAllocatedTasks();
 		prvCreateAndDeleteStaticallyAllocatedQueues();
 		prvCreateAndDeleteStaticallyAllocatedBinarySemaphores();
+		prvCreateAndDeleteStaticallyAllocatedCountingSemaphores();
+		prvCreateAndDeleteStaticallyAllocatedMutexes();
+		prvCreateAndDeleteStaticallyAllocatedRecursiveMutexes();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -363,6 +396,162 @@ BaseType_t xReturned, xLoop;
 }
 /*-----------------------------------------------------------*/
 
+static void prvCheckRecursiveSemaphoreFunction( SemaphoreHandle_t xSemaphore )
+{
+const BaseType_t xLoops = 5;
+BaseType_t x, xReturned;
+
+	/* A very basic test that the recursive semaphore behaved like a recursive
+	semaphore. First the semaphore should not be able to be given, as it has not
+	yet been taken. */
+	xReturned = xSemaphoreGiveRecursive( xSemaphore );
+
+	if( xReturned != pdFAIL )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Now it should be possible to take the mutex a number of times. */
+	for( x = 0; x < xLoops; x++ )
+	{
+		xReturned = xSemaphoreTakeRecursive( xSemaphore, staticDONT_BLOCK );
+
+		if( xReturned != pdPASS )
+		{
+			xErrorOccurred = pdTRUE;
+		}
+	}
+
+	/* Should be possible to give the semaphore the same number of times as it
+	was given in the loop above. */
+	for( x = 0; x < xLoops; x++ )
+	{
+		xReturned = xSemaphoreGiveRecursive( xSemaphore );
+
+		if( xReturned != pdPASS )
+		{
+			xErrorOccurred = pdTRUE;
+		}
+	}
+
+	/* No more gives should be possible though. */
+	xReturned = xSemaphoreGiveRecursive( xSemaphore );
+
+	if( xReturned != pdFAIL )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvCreateAndDeleteStaticallyAllocatedCountingSemaphores( void )
+{
+SemaphoreHandle_t xSemaphore;
+const UBaseType_t uxMaxCount = ( UBaseType_t ) 10;
+
+/* StaticSemaphore_t is a publicly accessible structure that has the same size
+and alignment requirements as the real semaphore structure.  It is provided as a
+mechanism for applications to know the size of the semaphore (which is dependent
+on the architecture and configuration file settings) without breaking the strict
+data hiding policy by exposing the real semaphore internals.  This
+StaticSemaphore_t variable is passed into the xSemaphoreCreateCountingStatic()
+function calls within this function.  NOTE: In most usage scenarios now it is
+faster and more memory efficient to use a direct to task notification instead of
+a counting semaphore.  http://www.freertos.org/RTOS-task-notifications.html */
+static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+
+	/* Create the semaphore.  xSemaphoreCreateCountingStatic() has one more
+	parameter than the usual xSemaphoreCreateCounting() function.  The paraemter
+	is a pointer to the pre-allocated StaticSemaphore_t structure, which will
+	hold information on the semaphore in an anonymous way.  If the pointer is
+	passed as NULL then the structure will be allocated dynamically, just as
+	when xSemaphoreCreateCounting() is called. */
+	xSemaphore = xSemaphoreCreateCountingStatic( uxMaxCount, 0, &xSemaphoreBuffer );
+
+	/* The semaphore handle should equal the static semaphore structure passed
+	into the xSemaphoreCreateBinaryStatic() function. */
+	configASSERT( xSemaphore == ( SemaphoreHandle_t ) &xSemaphoreBuffer );
+
+	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
+	prvCheckSemaphoreFunction( xSemaphore, uxMaxCount );
+
+	/* Delete the semaphore again so the buffers can be reused. */
+	vSemaphoreDelete( xSemaphore );
+
+
+	/* The semaphore created above had a statically allocated semaphore
+	structure.  Repeat the above using NULL as the third
+	xSemaphoreCreateCountingStatic() parameter so the semaphore structure is
+	instead allocated dynamically. */
+	xSemaphore = xSemaphoreCreateCountingStatic( uxMaxCount, 0, NULL );
+
+	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
+	prvCheckSemaphoreFunction( xSemaphore, uxMaxCount );
+
+	/* Delete the semaphore again so the buffers can be reused. */
+	vSemaphoreDelete( xSemaphore );
+
+	/* Ensure lower priority tasks get CPU time. */
+	vTaskDelay( prvGetNextDelayTime() );
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+}
+/*-----------------------------------------------------------*/
+
+static void prvCreateAndDeleteStaticallyAllocatedRecursiveMutexes( void )
+{
+SemaphoreHandle_t xSemaphore;
+
+/* StaticSemaphore_t is a publicly accessible structure that has the same size
+and alignment requirements as the real semaphore structure.  It is provided as a
+mechanism for applications to know the size of the semaphore (which is dependent
+on the architecture and configuration file settings) without breaking the strict
+data hiding policy by exposing the real semaphore internals.  This
+StaticSemaphore_t variable is passed into the
+xSemaphoreCreateRecursiveMutexStatic() function calls within this function. */
+static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+
+	/* Create the semaphore.  xSemaphoreCreateRecursiveMutexStatic() has one
+	more parameter than the usual xSemaphoreCreateRecursiveMutex() function.
+	The parameter is a pointer to the pre-allocated StaticSemaphore_t structure,
+	which will hold information on the semaphore in an anonymous way.  If the
+	pointer is passed as NULL then the structure will be allocated dynamically,
+	just as	when xSemaphoreCreateRecursiveMutex() is called. */
+	xSemaphore = xSemaphoreCreateRecursiveMutexStatic( &xSemaphoreBuffer );
+
+	/* The semaphore handle should equal the static semaphore structure passed
+	into the xSemaphoreCreateBinaryStatic() function. */
+	configASSERT( xSemaphore == ( SemaphoreHandle_t ) &xSemaphoreBuffer );
+
+	/* Ensure the semaphore passes a few sanity checks as a valid
+	recursive semaphore. */
+	prvCheckRecursiveSemaphoreFunction( xSemaphore );
+
+	/* Delete the semaphore again so the buffers can be reused. */
+	vSemaphoreDelete( xSemaphore );
+
+
+	/* The semaphore created above had a statically allocated semaphore
+	structure.  Repeat the above using NULL as the
+	xSemaphoreCreateRecursiveMutexStatic() parameter so the semaphore structure
+	is instead allocated dynamically. */
+	xSemaphore = xSemaphoreCreateRecursiveMutexStatic( NULL );
+
+	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
+	prvCheckRecursiveSemaphoreFunction( xSemaphore );
+
+	/* Delete the semaphore again so the buffers can be reused. */
+	vSemaphoreDelete( xSemaphore );
+
+	/* Ensure lower priority tasks get CPU time. */
+	vTaskDelay( prvGetNextDelayTime() );
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+}
+/*-----------------------------------------------------------*/
+
 static void prvCreateAndDeleteStaticallyAllocatedQueues( void )
 {
 QueueHandle_t xQueue;
@@ -448,6 +637,76 @@ static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_
 }
 /*-----------------------------------------------------------*/
 
+static void prvCreateAndDeleteStaticallyAllocatedMutexes( void )
+{
+SemaphoreHandle_t xSemaphore;
+BaseType_t xReturned;
+
+/* StaticSemaphore_t is a publicly accessible structure that has the same size
+and alignment requirements as the real semaphore structure.  It is provided as a
+mechanism for applications to know the size of the semaphore (which is dependent
+on the architecture and configuration file settings) without breaking the strict
+data hiding policy by exposing the real semaphore internals.  This
+StaticSemaphore_t variable is passed into the xSemaphoreCreateMutexStatic()
+function calls within this function. */
+static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+
+	/* Create the semaphore.  xSemaphoreCreateMutexStatic() has one more
+	parameter than the usual xSemaphoreCreateMutex() function.  The paraemter
+	is a pointer to the pre-allocated StaticSemaphore_t structure, which will
+	hold information on the semaphore in an anonymous way.  If the pointer is
+	passed as NULL then the structure will be allocated dynamically, just as
+	when xSemaphoreCreateMutex() is called. */
+	xSemaphore = xSemaphoreCreateMutexStatic( &xSemaphoreBuffer );
+
+	/* The semaphore handle should equal the static semaphore structure passed
+	into the xSemaphoreCreateMutexStatic() function. */
+	configASSERT( xSemaphore == ( SemaphoreHandle_t ) &xSemaphoreBuffer );
+
+	/* Take the mutex so the mutex is in the state expected by the
+	prvCheckSemaphoreFunction() function. */
+	xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
+
+	if( xReturned != pdPASS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
+	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+
+	/* Delete the semaphore again so the buffers can be reused. */
+	vSemaphoreDelete( xSemaphore );
+
+
+	/* The semaphore created above had a statically allocated semaphore
+	structure.  Repeat the above using NULL as the xSemaphoreCreateMutexStatic()
+	parameter so the semaphore structure is instead allocated dynamically. */
+	xSemaphore = xSemaphoreCreateMutexStatic( NULL );
+
+	/* Take the mutex so the mutex is in the state expected by the
+	prvCheckSemaphoreFunction() function. */
+	xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
+
+	if( xReturned != pdPASS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
+	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+
+	/* Delete the semaphore again so the buffers can be reused. */
+	vSemaphoreDelete( xSemaphore );
+
+	/* Ensure lower priority tasks get CPU time. */
+	vTaskDelay( prvGetNextDelayTime() );
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+}
+/*-----------------------------------------------------------*/
+
 static void prvCreateAndDeleteStaticallyAllocatedBinarySemaphores( void )
 {
 SemaphoreHandle_t xSemaphore;
@@ -457,10 +716,10 @@ and alignment requirements as the real semaphore structure.  It is provided as a
 mechanism for applications to know the size of the semaphore (which is dependent
 on the architecture and configuration file settings) without breaking the strict
 data hiding policy by exposing the real semaphore internals.  This
-StaticSemaphore_t variable is passed into the xSemaphoreCreateBinary() function
-calls within this function.  NOTE: In most usage scenarios now it is faster and
-more memory efficient to use a direct to task notification instead of a binary
-semaphore.  http://www.freertos.org/RTOS-task-notifications.html */
+StaticSemaphore_t variable is passed into the xSemaphoreCreateBinaryStatic()
+function calls within this function.  NOTE: In most usage scenarios now it is
+faster and more memory efficient to use a direct to task notification instead of
+a binary semaphore.  http://www.freertos.org/RTOS-task-notifications.html */
 static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
 
 	/* Create the semaphore.  xSemaphoreCreateBinaryStatic() has one more
@@ -484,7 +743,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 
 	/* The semaphore created above had a statically allocated semaphore
 	structure.  Repeat the above using NULL as the xSemaphoreCreateBinaryStatic()
-	parameter so the queue structure is instead allocated dynamically. */
+	parameter so the semaphore structure is instead allocated dynamically. */
 	xSemaphore = xSemaphoreCreateBinaryStatic( NULL );
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */

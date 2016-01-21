@@ -876,12 +876,17 @@ typedef enum
 } eDummy;
 
 /*
- * In line with software engineering best practice, FreeRTOS implements a strict
- * data hiding policy, so the real task control block (TCB) structure is not
- * accessible to the application code.  However, if the application writer wants
- * to statically allocate a TCB then the size of the TCB needs to be know.  The
- * dummy TCB structure below is used for this purpose.  Its size will allows
- * match the size of the real TCB, no matter what the FreeRTOSConfig.h settings.
+ * In line with software engineering best practice, especially when supplying a
+ * library that is likely to change in future versions, FreeRTOS implements a
+ * strict data hiding policy.  This means the Task structure used internally by
+ * FreeRTOS is not accessible to application code.  However, if the application
+ * writer wants to statically allocate the memory required to create a task then
+ * the size of the task object needs to be know.  The StaticTask_t structure
+ * below is provided for this purpose.  Its sizes and alignment requirements are
+ * guaranteed to match those of the genuine structure, no matter which
+ * architecture is being used, and no matter how the values in FreeRTOSConfig.h
+ * are set.  Its contents are somewhat obfuscated in the hope users will
+ * recognise that it would be unwise to make direct use of the structure members.
  */
 typedef struct xSTATIC_TCB
 {
@@ -925,16 +930,21 @@ typedef struct xSTATIC_TCB
 		uint8_t			uxDummy20;
 	#endif
 
-} StaticTCB_t;
+} StaticTask_t;
 
 /*
- * In line with software engineering best practice, FreeRTOS implements a strict
- * data hiding policy, so the queue structure is not accessible to the
- * application code.  However, if the application writer wants to statically
- * allocate a queue (or one of the other objects that uses a queue as its base
- * structure) then the size of the queue needs to be know.  The dummy queue
- * structure below is used for this purpose.  Its size will allows match the
- * size of the real queue, no matter what the FreeRTOSConfig.h settings.
+ * In line with software engineering best practice, especially when supplying a
+ * library that is likely to change in future versions, FreeRTOS implements a
+ * strict data hiding policy.  This means the Queue structure used internally by
+ * FreeRTOS is not accessible to application code.  However, if the application
+ * writer wants to statically allocate the memory required to create a queue
+ * then the size of the queue object needs to be know.  The StaticQueue_t
+ * structure below is provided for this purpose.  Its sizes and alignment
+ * requirements are guaranteed to match those of the genuine structure, no
+ * matter which architecture is being used, and no matter how the values in
+ * FreeRTOSConfig.h are set.  Its contents are somewhat obfuscated in the hope
+ * users will recognise that it would be unwise to make direct use of the
+ * structure members.
  */
 typedef struct xSTATIC_QUEUE
 {
@@ -963,9 +973,67 @@ typedef struct xSTATIC_QUEUE
 	#endif
 
 } StaticQueue_t;
-
 typedef StaticQueue_t StaticSemaphore_t;
 
+/*
+ * In line with software engineering best practice, especially when supplying a
+ * library that is likely to change in future versions, FreeRTOS implements a
+ * strict data hiding policy.  This means the event group structure used
+ * internally by FreeRTOS is not accessible to application code.  However, if
+ * the application writer wants to statically allocate the memory required to
+ * create an event group then the size of the event group object needs to be
+ * know.  The StaticEventGroup_t structure below is provided for this purpose.
+ * Its sizes and alignment requirements are guaranteed to match those of the
+ * genuine structure, no matter which architecture is being used, and no matter
+ * how the values in FreeRTOSConfig.h are set.  Its contents are somewhat
+ * obfuscated in the hope users will recognise that it would be unwise to make
+ * direct use of the structure members.
+ */
+typedef struct xSTATIC_EVENT_GROUP
+{
+	TickType_t xDummy1;
+	StaticList_t xDummy2;
+
+	#if( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t uxDummy3;
+	#endif
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+			uint8_t ucStaticallyAllocated;
+	#endif
+
+} StaticEventGroup_t;
+
+/*
+ * In line with software engineering best practice, especially when supplying a
+ * library that is likely to change in future versions, FreeRTOS implements a
+ * strict data hiding policy.  This means the software timer structure used
+ * internally by FreeRTOS is not accessible to application code.  However, if
+ * the application writer wants to statically allocate the memory required to
+ * create a software timer then the size of the queue object needs to be know.
+ * The StaticTimer_t structure below is provided for this purpose.  Its sizes
+ * and alignment requirements are guaranteed to match those of the genuine
+ * structure, no matter which architecture is being used, and no matter how the
+ * values in FreeRTOSConfig.h are set.  Its contents are somewhat obfuscated in
+ * the hope users will recognise that it would be unwise to make direct use of
+ * the structure members.
+ */
+typedef struct xSTATIC_TIMER
+{
+	void				*pvDummy1;
+	StaticListItem_t	xDummy2;
+	TickType_t			xDummy3;
+	UBaseType_t			uxDummy4;
+	void 				*pvDummy5[ 2 ];
+	#if( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t		uxDummy6;
+	#endif
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		uint8_t 		ucStaticallyAllocated;
+	#endif
+
+} StaticTimer_t;
 
 #ifdef __cplusplus
 }

@@ -111,6 +111,9 @@ typedef struct xEventGroupDefinition
 		UBaseType_t uxEventGroupNumber;
 	#endif
 
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		uint8_t ucStaticallyAllocated;
+	#endif
 } EventGroup_t;
 
 /*-----------------------------------------------------------*/
@@ -127,15 +130,36 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 
 /*-----------------------------------------------------------*/
 
-EventGroupHandle_t xEventGroupCreate( void )
+EventGroupHandle_t xEventGroupGenericCreate( StaticEventGroup_t *pxStaticEventGroup )
 {
 EventGroup_t *pxEventBits;
 
-	pxEventBits = ( EventGroup_t * ) pvPortMalloc( sizeof( EventGroup_t ) );
+	if( pxStaticEventGroup == NULL )
+	{
+		/* The user has not provided a statically allocated event group, so
+		create on dynamically. */
+		pxEventBits = ( EventGroup_t * ) pvPortMalloc( sizeof( EventGroup_t ) );
+	}
+	else
+	{
+		/* The user has provided a statically allocated event group - use it. */
+		pxEventBits = ( EventGroup_t * ) pxStaticEventGroup;
+	}
+
 	if( pxEventBits != NULL )
 	{
 		pxEventBits->uxEventBits = 0;
 		vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
+
+		if( pxStaticEventGroup == NULL )
+		{
+			pxEventBits->ucStaticallyAllocated = pdFALSE;
+		}
+		else
+		{
+			pxEventBits->ucStaticallyAllocated = pdTRUE;
+		}
+
 		traceEVENT_GROUP_CREATE( pxEventBits );
 	}
 	else
@@ -580,7 +604,11 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 			( void ) xTaskRemoveFromUnorderedEventList( pxTasksWaitingForBits->xListEnd.pxNext, eventUNBLOCKED_DUE_TO_BIT_SET );
 		}
 
-		vPortFree( pxEventBits );
+		/* Only free the memory if it was allocated dynamically. */
+		if( pxEventBits->ucStaticallyAllocated == pdFALSE )
+		{
+			vPortFree( pxEventBits );
+		}
 	}
 	( void ) xTaskResumeAll();
 }

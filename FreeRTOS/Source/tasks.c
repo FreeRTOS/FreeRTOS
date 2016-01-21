@@ -426,7 +426,7 @@ to its original value when it is released. */
 #endif
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	extern void vApplicationGetIdleTaskMemory( StaticTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
+	extern void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
 #endif
 
 /* File private functions. --------------------------------*/
@@ -554,7 +554,7 @@ static void prvResetNextTaskUnblockTime( void );
 #endif
 /*-----------------------------------------------------------*/
 
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTCB_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 BaseType_t xReturn;
 TCB_t * pxNewTCB;
@@ -1546,7 +1546,7 @@ StackType_t *pxTopOfStack;
 void vTaskStartScheduler( void )
 {
 BaseType_t xReturn;
-StaticTCB_t *pxIdleTaskTCBBuffer = NULL;
+StaticTask_t *pxIdleTaskTCBBuffer = NULL;
 StackType_t *pxIdleTaskStackBuffer = NULL;
 uint16_t usIdleTaskStackSize = tskIDLE_STACK_SIZE;
 
@@ -3152,9 +3152,9 @@ TCB_t *pxNewTCB;
 	#if( ( configASSERT_DEFINED == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 	{
 		/* Sanity check that the size of the structure used to declare a
-		variable of type StaticTCB_t matches the size of the actual TCB_t
+		variable of type StaticTask_t matches the size of the actual TCB_t
 		structure. */
-		volatile size_t xSize = sizeof( StaticTCB_t );
+		volatile size_t xSize = sizeof( StaticTask_t );
 		configASSERT( xSize == sizeof( TCB_t ) );
 	}
 	#endif /* configASSERT_DEFINED */

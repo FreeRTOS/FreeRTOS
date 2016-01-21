@@ -362,7 +362,7 @@ is used in assert() statements. */
 							  UBaseType_t uxPriority,
 							  TaskHandle_t *pvCreatedTask,
 							  StackType_t *pxStackBuffer,
-							  StaticTCB_t *pxTCBBuffer
+							  StaticTask_t *pxTCBBuffer
 						  );</pre>
  *
  * Create a new task and add it to the list of tasks that are ready to run.
@@ -402,7 +402,7 @@ is used in assert() statements. */
  * @param pxTCBBuffer If pxTCBBuffer is NULL then the TCB (which is the
  * structures used internally within FreeRTOS to hold information on the task)
  * will be allocated dynamically, just as when xTaskCreate() is used.  If
- * pxTCBBuffer is not NULL then it must point to a variable of type StaticTCB_t,
+ * pxTCBBuffer is not NULL then it must point to a variable of type StaticTask_t,
  * which will then be used as the TCB of the task being created.
  *
  * @return pdPASS if the task was successfully created and added to a ready
@@ -418,7 +418,7 @@ is used in assert() statements. */
  #define STACK_SIZE 200
 
  // Structure that will hold the TCB of the task being created.
- StaticTCB_t xTCB;
+ StaticTask_t xTCB;
 
  // Buffer that the task being created will use as its stack.
  StackType_t xStack[ STACK_SIZE ];
@@ -454,7 +454,7 @@ is used in assert() statements. */
  */
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	#define xTaskCreateStatic( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, puxStackBuffer, pxDummyTCB ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( puxStackBuffer ), ( pxDummyTCB ), ( NULL ) )
-#endif
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * task. h
@@ -2095,7 +2095,7 @@ BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGE
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTCB_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.

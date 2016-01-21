@@ -70,13 +70,9 @@
 
 /*
  * Demonstrates how to create FreeRTOS objects using pre-allocated memory,
- * rather than the normal dynamically allocated memory.
- *
- * Two buffers are required by a task - one that is used by the task as its
- * stack, and one that holds the task's control block (TCB).
- * prvStaticallyAllocatedCreator() creates and deletes tasks with all
- * possible combinations of statically allocated and dynamically allocated
- * stacks and TCBs.
+ * rather than the normal dynamically allocated memory, and tests objects being
+ * created and deleted with both statically allocated memory and dynamically
+ * allocated memory.
  */
 
 /* Scheduler include files. */
@@ -84,6 +80,8 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "event_groups.h"
+#include "timers.h"
 
 /* Demo program include files. */
 #include "StaticAllocation.h"
@@ -104,14 +102,14 @@ allocation tests. */
 /* Binary semaphores have a maximum count of 1. */
 #define staticBINARY_SEMAPHORE_MAX_COUNT	( 1 )
 
+/* The size of the stack used by the task that runs the tests. */
+#define staticCREATOR_TASK_STACK_SIZE		( configMINIMAL_STACK_SIZE * 2 )
+
+/* The number of times the software timer will execute before stopping itself. */
+#define staticMAX_TIMER_CALLBACK_EXECUTIONS	( 5 )
+
 
 /*-----------------------------------------------------------*/
-
-/*
- * A task that is created and deleted multiple times, using both statically and
- * dynamically allocated stack and TCB.
- */
-static void prvStaticallyAllocatedTask( void *pvParameters );
 
 /*
  * The task that repeatedly creates and deletes statically allocated tasks, and
@@ -120,9 +118,16 @@ static void prvStaticallyAllocatedTask( void *pvParameters );
 static void prvStaticallyAllocatedCreator( void *pvParameters );
 
 /*
- * Utility function to create pseudo random numbers.
+ * The callback function used by the software timer that is repeatedly created
+ * and deleted using both static and dynamically allocated memory.
  */
-static UBaseType_t prvRand( void );
+static void prvTimerCallback( TimerHandle_t xExpiredTimer );
+
+/*
+ * A task that is created and deleted multiple times, using both statically and
+ * dynamically allocated stack and TCB.
+ */
+static void prvStaticallyAllocatedTask( void *pvParameters );
 
 /*
  * A function that demonstrates and tests the xTaskCreateStatic() API function
@@ -130,6 +135,13 @@ static UBaseType_t prvRand( void );
  * allocated TCBs and stacks.
  */
 static void prvCreateAndDeleteStaticallyAllocatedTasks( void );
+
+/*
+ * A function that demonstrates and tests the xEventGroupCreateStatic() API
+ * function by creating and then deleting event groups using both dynamically
+ * and statically allocated event group structures.
+ */
+static void prvCreateAndDeleteStaticallyAllocatedEventGroups( void );
 
 /*
  * A function that demonstrates and tests the xQueueCreateStatic() API function
@@ -144,6 +156,13 @@ static void prvCreateAndDeleteStaticallyAllocatedQueues( void );
  * and statically allocated semaphore structures.
  */
 static void prvCreateAndDeleteStaticallyAllocatedBinarySemaphores( void );
+
+/*
+ * A function that demonstrates and tests the xTimerCreateStatic() API macro by
+ * creating and then deleting software timers with both dynamically and
+ * statically allocated timer structures.
+ */
+static void prvCreateAndDeleteStaticallyAllocatedTimers( void );
 
 /*
  * A function that demonstrates and tests the xSemaphoreCreateMutexStatic() API
@@ -168,6 +187,11 @@ static void prvCreateAndDeleteStaticallyAllocatedCountingSemaphores( void );
 static void prvCreateAndDeleteStaticallyAllocatedRecursiveMutexes( void );
 
 /*
+ * Utility function to create pseudo random numbers.
+ */
+static UBaseType_t prvRand( void );
+
+/*
  * The task that creates and deletes other tasks has to delay occasionally to
  * ensure lower priority tasks are not starved of processing time.  A pseudo
  * random delay time is used just to add a little bit of randomisation into the
@@ -178,34 +202,39 @@ static TickType_t prvGetNextDelayTime( void );
 /*
  * Checks the basic operation of a queue after it has been created.
  */
-static void prvCheckQueueFunction( QueueHandle_t xQueue );
+static void prvSanityCheckCreatedQueue( QueueHandle_t xQueue );
 
 /*
  * Checks the basic operation of a recursive mutex after it has been created.
  */
-static void prvCheckRecursiveSemaphoreFunction( SemaphoreHandle_t xSemaphore );
+static void prvSanityCheckCreatedRecursiveMutex( SemaphoreHandle_t xSemaphore );
 
 /*
  * Checks the basic operation of a binary semaphore after it has been created.
  */
-static void prvCheckSemaphoreFunction( SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount );
+static void prvSanityCheckCreatedSemaphore( SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount );
+
+/*
+ * Checks the basic operation of an event group after it has been created.
+ */
+static void prvSanityCheckCreatedEventGroup( EventGroupHandle_t xEventGroup );
 
 /*-----------------------------------------------------------*/
 
-/* StaticTCB_t is a publicly accessible structure that has the same size and
+/* StaticTask_t is a publicly accessible structure that has the same size and
 alignment requirements as the real TCB structure.  It is provided as a mechanism
 for applications to know the size of the TCB (which is dependent on the
 architecture and configuration file settings) without breaking the strict data
-hiding policy by exposing the real TCB.  This StaticTCB_t variable is passed
+hiding policy by exposing the real TCB.  This StaticTask_t variable is passed
 into the xTaskCreateStatic() function that creates the
 prvStaticallyAllocatedCreator() task, and will hold the TCB of the created
 tasks. */
-static StaticTCB_t xCreatorTaskTCBBuffer;
+static StaticTask_t xCreatorTaskTCBBuffer;
 
 /* This is the stack that will be used by the prvStaticallyAllocatedCreator()
 task, which is itself created using statically allocated buffers (so without any
 dynamic memory allocation). */
-static StackType_t uxCreatorTaskStackBuffer[ configMINIMAL_STACK_SIZE ];
+static StackType_t uxCreatorTaskStackBuffer[ staticCREATOR_TASK_STACK_SIZE ];
 
 /* Used by the pseudo random number generating function. */
 static uint32_t ulNextRand = 0;
@@ -224,9 +253,9 @@ void vStartStaticallyAllocatedTasks( void  )
 	/* Create a single task, which then repeatedly creates and deletes the
 	task implemented by prvStaticallyAllocatedTask() at various different
 	priorities, and both with and without statically allocated TCB and stack. */
-	xTaskCreateStatic( prvStaticallyAllocatedCreator,	/* The function that implements the task being created. */
+	xTaskCreateStatic( prvStaticallyAllocatedCreator,		/* The function that implements the task being created. */
 					   "StatCreate",						/* Text name for the task - not used by the RTOS, its just to assist debugging. */
-					   configMINIMAL_STACK_SIZE,			/* Size of the buffer passed in as the stack - in words, not bytes! */
+					   staticCREATOR_TASK_STACK_SIZE,		/* Size of the buffer passed in as the stack - in words, not bytes! */
 					   NULL,								/* Parameter passed into the task - not used in this case. */
 					   staticTASK_PRIORITY,					/* Priority of the task. */
 					   NULL,								/* Handle of the task being created, not used in this case. */
@@ -254,11 +283,58 @@ static void prvStaticallyAllocatedCreator( void *pvParameters )
 		prvCreateAndDeleteStaticallyAllocatedCountingSemaphores();
 		prvCreateAndDeleteStaticallyAllocatedMutexes();
 		prvCreateAndDeleteStaticallyAllocatedRecursiveMutexes();
+		prvCreateAndDeleteStaticallyAllocatedEventGroups();
+		prvCreateAndDeleteStaticallyAllocatedTimers();
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckSemaphoreFunction( SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount )
+static void prvSanityCheckCreatedEventGroup( EventGroupHandle_t xEventGroup )
+{
+EventBits_t xEventBits;
+const EventBits_t xFirstTestBits = ( EventBits_t ) 0xaa, xSecondTestBits = ( EventBits_t ) 0x55;
+
+	/* The event group should not have any bits set yet. */
+	xEventBits = xEventGroupGetBits( xEventGroup );
+
+	if( xEventBits != ( EventBits_t ) 0 )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Some some bits, then read them back to check they are as expected. */
+	xEventGroupSetBits( xEventGroup, xFirstTestBits );
+
+	xEventBits = xEventGroupGetBits( xEventGroup );
+
+	if( xEventBits != xFirstTestBits )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	xEventGroupSetBits( xEventGroup, xSecondTestBits );
+
+	xEventBits = xEventGroupGetBits( xEventGroup );
+
+	if( xEventBits != ( xFirstTestBits | xSecondTestBits ) )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Finally try clearing some bits too and check that operation proceeds as
+	expected. */
+	xEventGroupClearBits( xEventGroup, xFirstTestBits );
+
+	xEventBits = xEventGroupGetBits( xEventGroup );
+
+	if( xEventBits != xSecondTestBits )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvSanityCheckCreatedSemaphore( SemaphoreHandle_t xSemaphore, UBaseType_t uxMaxCount )
 {
 BaseType_t xReturned;
 UBaseType_t x;
@@ -335,7 +411,7 @@ TickType_t xTickCount;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckQueueFunction( QueueHandle_t xQueue )
+static void prvSanityCheckCreatedQueue( QueueHandle_t xQueue )
 {
 uint64_t ull, ullRead;
 BaseType_t xReturned, xLoop;
@@ -396,7 +472,7 @@ BaseType_t xReturned, xLoop;
 }
 /*-----------------------------------------------------------*/
 
-static void prvCheckRecursiveSemaphoreFunction( SemaphoreHandle_t xSemaphore )
+static void prvSanityCheckCreatedRecursiveMutex( SemaphoreHandle_t xSemaphore )
 {
 const BaseType_t xLoops = 5;
 BaseType_t x, xReturned;
@@ -458,7 +534,7 @@ StaticSemaphore_t variable is passed into the xSemaphoreCreateCountingStatic()
 function calls within this function.  NOTE: In most usage scenarios now it is
 faster and more memory efficient to use a direct to task notification instead of
 a counting semaphore.  http://www.freertos.org/RTOS-task-notifications.html */
-static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Create the semaphore.  xSemaphoreCreateCountingStatic() has one more
 	parameter than the usual xSemaphoreCreateCounting() function.  The paraemter
@@ -473,7 +549,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	configASSERT( xSemaphore == ( SemaphoreHandle_t ) &xSemaphoreBuffer );
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckSemaphoreFunction( xSemaphore, uxMaxCount );
+	prvSanityCheckCreatedSemaphore( xSemaphore, uxMaxCount );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -486,7 +562,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	xSemaphore = xSemaphoreCreateCountingStatic( uxMaxCount, 0, NULL );
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckSemaphoreFunction( xSemaphore, uxMaxCount );
+	prvSanityCheckCreatedSemaphore( xSemaphore, uxMaxCount );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -510,7 +586,7 @@ on the architecture and configuration file settings) without breaking the strict
 data hiding policy by exposing the real semaphore internals.  This
 StaticSemaphore_t variable is passed into the
 xSemaphoreCreateRecursiveMutexStatic() function calls within this function. */
-static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Create the semaphore.  xSemaphoreCreateRecursiveMutexStatic() has one
 	more parameter than the usual xSemaphoreCreateRecursiveMutex() function.
@@ -526,7 +602,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 
 	/* Ensure the semaphore passes a few sanity checks as a valid
 	recursive semaphore. */
-	prvCheckRecursiveSemaphoreFunction( xSemaphore );
+	prvSanityCheckCreatedRecursiveMutex( xSemaphore );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -539,7 +615,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	xSemaphore = xSemaphoreCreateRecursiveMutexStatic( NULL );
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckRecursiveSemaphoreFunction( xSemaphore );
+	prvSanityCheckCreatedRecursiveMutex( xSemaphore );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -588,7 +664,7 @@ static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_
 	configASSERT( xQueue == ( QueueHandle_t ) &xStaticQueue );
 
 	/* Ensure the queue passes a few sanity checks as a valid queue. */
-	prvCheckQueueFunction( xQueue );
+	prvSanityCheckCreatedQueue( xQueue );
 
 	/* Delete the queue again so the buffers can be reused. */
 	vQueueDelete( xQueue );
@@ -604,7 +680,7 @@ static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_
 								 &xStaticQueue );	 /* The static queue structure that will hold the state of the queue. */
 
 	configASSERT( xQueue == ( QueueHandle_t ) &xStaticQueue );
-	prvCheckQueueFunction( xQueue );
+	prvSanityCheckCreatedQueue( xQueue );
 	vQueueDelete( xQueue );
 
 	/* Ensure lower priority tasks get CPU time. */
@@ -618,7 +694,7 @@ static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_
 								 ucQueueStorageArea, /* The buffer used to hold items within the queue. */
 								 NULL );			 /* The queue structure is allocated dynamically. */
 
-	prvCheckQueueFunction( xQueue );
+	prvSanityCheckCreatedQueue( xQueue );
 	vQueueDelete( xQueue );
 
 	xQueue = xQueueCreateStatic( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
@@ -626,7 +702,7 @@ static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_
 								 NULL,				 /* Allocate the buffer used to hold items within the queue dynamically. */
 								 NULL );			 /* The queue structure is allocated dynamically. */
 
-	prvCheckQueueFunction( xQueue );
+	prvSanityCheckCreatedQueue( xQueue );
 	vQueueDelete( xQueue );
 
 	/* Ensure lower priority tasks get CPU time. */
@@ -649,7 +725,7 @@ on the architecture and configuration file settings) without breaking the strict
 data hiding policy by exposing the real semaphore internals.  This
 StaticSemaphore_t variable is passed into the xSemaphoreCreateMutexStatic()
 function calls within this function. */
-static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Create the semaphore.  xSemaphoreCreateMutexStatic() has one more
 	parameter than the usual xSemaphoreCreateMutex() function.  The paraemter
@@ -664,7 +740,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	configASSERT( xSemaphore == ( SemaphoreHandle_t ) &xSemaphoreBuffer );
 
 	/* Take the mutex so the mutex is in the state expected by the
-	prvCheckSemaphoreFunction() function. */
+	prvSanityCheckCreatedSemaphore() function. */
 	xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
 
 	if( xReturned != pdPASS )
@@ -673,7 +749,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	}
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -685,7 +761,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	xSemaphore = xSemaphoreCreateMutexStatic( NULL );
 
 	/* Take the mutex so the mutex is in the state expected by the
-	prvCheckSemaphoreFunction() function. */
+	prvSanityCheckCreatedSemaphore() function. */
 	xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
 
 	if( xReturned != pdPASS )
@@ -694,7 +770,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	}
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -720,7 +796,7 @@ StaticSemaphore_t variable is passed into the xSemaphoreCreateBinaryStatic()
 function calls within this function.  NOTE: In most usage scenarios now it is
 faster and more memory efficient to use a direct to task notification instead of
 a binary semaphore.  http://www.freertos.org/RTOS-task-notifications.html */
-static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much stack space. */
+StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Create the semaphore.  xSemaphoreCreateBinaryStatic() has one more
 	parameter than the usual xSemaphoreCreateBinary() function.  The paraemter
@@ -735,7 +811,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	configASSERT( xSemaphore == ( SemaphoreHandle_t ) &xSemaphoreBuffer );
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -747,7 +823,7 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 	xSemaphore = xSemaphoreCreateBinaryStatic( NULL );
 
 	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
@@ -767,8 +843,191 @@ static StaticSemaphore_t xSemaphoreBuffer; /* Static so it doesn't use too much 
 		xErrorOccurred = pdTRUE;
 	}
 
-	prvCheckSemaphoreFunction( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
 	vSemaphoreDelete( xSemaphore );
+
+	/* Ensure lower priority tasks get CPU time. */
+	vTaskDelay( prvGetNextDelayTime() );
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTimerCallback( TimerHandle_t xExpiredTimer )
+{
+UBaseType_t *puxVariableToIncrement;
+BaseType_t xReturned;
+
+	/* Obtain the address of the variable to increment from the timer ID. */
+	puxVariableToIncrement = ( UBaseType_t * ) pvTimerGetTimerID( xExpiredTimer );
+
+	/* Increment the variable to show the timer callback has executed. */
+	( *puxVariableToIncrement )++;
+
+	/* If this callback has executed the required number of times, stop the
+	timer. */
+	if( *puxVariableToIncrement == staticMAX_TIMER_CALLBACK_EXECUTIONS )
+	{
+		/* This is called from a timer callback so must not block. */
+		xReturned = xTimerStop( xExpiredTimer, staticDONT_BLOCK );
+
+		if( xReturned != pdPASS )
+		{
+			xErrorOccurred = pdTRUE;
+		}
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvCreateAndDeleteStaticallyAllocatedTimers( void )
+{
+TimerHandle_t xTimer;
+UBaseType_t uxVariableToIncrement;
+const TickType_t xTimerPeriod = pdMS_TO_TICKS( 20 );
+BaseType_t xReturned;
+
+/* StaticTimer_t is a publicly accessible structure that has the same size
+and alignment requirements as the real timer structure.  It is provided as a
+mechanism for applications to know the size of the timer structure (which is
+dependent on the architecture and configuration file settings) without breaking
+the strict data hiding policy by exposing the real timer internals.  This
+StaticTimer_t variable is passed into the xTimerCreateStatic() function calls
+within this function. */
+StaticTimer_t xTimerBuffer;
+
+	/* Create the software time.  xTimerCreateStatic() has an extra parameter
+	than the normal xTimerCreate() API function.  The parameter is a pointer to
+	the StaticTimer_t structure that will hold the software timer structure.  If
+	the parameter is passed as NULL then the structure will be allocated
+	dynamically, just as if xTimerCreate() had been called. */
+	xTimer = xTimerCreateStatic( "T1",					/* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
+								 xTimerPeriod,			/* The period of the timer in ticks. */
+								 pdTRUE,				/* This is an auto-reload timer. */
+								 ( void * ) &uxVariableToIncrement,	/* The variable incremented by the test is passed into the timer callback using the timer ID. */
+								 prvTimerCallback,		/* The function to execute when the timer expires. */
+								 &xTimerBuffer );		/* The buffer that will hold the software timer structure. */
+
+	/* The timer handle should equal the static timer structure passed into the
+	xTimerCreateStatic() function. */
+	configASSERT( xTimer == ( TimerHandle_t ) &xTimerBuffer );
+
+	/* Set the variable to 0, wait for a few timer periods to expire, then check
+	the timer callback has incremented the variable to the expected value. */
+	uxVariableToIncrement = 0;
+
+	/* This is a low priority so a block time should not be needed. */
+	xReturned = xTimerStart( xTimer, staticDONT_BLOCK );
+
+	if( xReturned != pdPASS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
+
+	/* By now the timer should have expired staticMAX_TIMER_CALLBACK_EXECUTIONS
+	times, and then stopped itself. */
+	if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Finished with the timer, delete it. */
+	xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
+
+	/* Again, as this is a low priority task it is expected that the timer
+	command will have been sent even without a block time being used. */
+	if( xReturned != pdPASS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+
+	/* The software timer created above had a statically allocated timer
+	structure.  Repeat the above using NULL as the xTimerCreateStatic()
+	parameter so the timer structure is instead allocated dynamically. */
+	xTimer = xTimerCreateStatic( "T1",					/* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
+								 xTimerPeriod,			/* The period of the timer in ticks. */
+								 pdTRUE,				/* This is an auto-reload timer. */
+								 ( void * ) &uxVariableToIncrement,	/* The variable incremented by the test is passed into the timer callback using the timer ID. */
+								 prvTimerCallback,		/* The function to execute when the timer expires. */
+								 NULL );				/* A buffer is not passed this time, so the timer should be allocated dynamically. */
+	uxVariableToIncrement = 0;
+	xReturned = xTimerStart( xTimer, staticDONT_BLOCK );
+
+	if( xReturned != pdPASS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+
+	if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
+
+	if( xReturned != pdPASS )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	/* Just to show the check task that this task is still executing. */
+	uxCycleCounter++;
+}
+/*-----------------------------------------------------------*/
+
+static void prvCreateAndDeleteStaticallyAllocatedEventGroups( void )
+{
+EventGroupHandle_t xEventGroup;
+
+/* StaticEventGroup_t is a publicly accessible structure that has the same size
+and alignment requirements as the real event group structure.  It is provided as
+a mechanism for applications to know the size of the event group (which is
+dependent on the architecture and configuration file settings) without breaking
+the strict data hiding policy by exposing the real event group internals.  This
+StaticEventGroup_t variable is passed into the xSemaphoreCreateEventGroupStatic()
+function calls within this function. */
+StaticEventGroup_t xEventGroupBuffer;
+
+	/* Create the event group.  xEventGroupCreateStatic() has an extra parameter
+	than the normal xEventGroupCreate() API function.  The parameter is a
+	pointer to the StaticEventGroup_t structure that will hold the event group
+	structure.  If the parameter is passed as NULL then the structure will be
+	allocated dynamically, just as if xEventGroupCreate() had been called. */
+	xEventGroup = xEventGroupCreateStatic( &xEventGroupBuffer );
+
+	/* The event group handle should equal the static event group structure
+	passed into the xEventGroupCreateStatic() function. */
+	configASSERT( xEventGroup == ( EventGroupHandle_t ) &xEventGroupBuffer );
+
+	/* Ensure the event group passes a few sanity checks as a valid event
+	group. */
+	prvSanityCheckCreatedEventGroup( xEventGroup );
+
+	/* Delete the event group again so the buffers can be reused. */
+	vEventGroupDelete( xEventGroup );
+
+
+	/* The event group created above had a statically allocated event group
+	structure.  Repeat the above using NULL as the xEventGroupCreateStatic()
+	parameter so the event group structure is instead allocated dynamically. */
+	xEventGroup = xEventGroupCreateStatic( NULL );
+
+	/* Ensure the event group passes a few sanity checks as a valid event
+	group. */
+	prvSanityCheckCreatedEventGroup( xEventGroup );
+
+	/* Delete the event group again so the buffers can be reused. */
+	vEventGroupDelete( xEventGroup );
 
 	/* Ensure lower priority tasks get CPU time. */
 	vTaskDelay( prvGetNextDelayTime() );
@@ -786,7 +1045,7 @@ BaseType_t xReturned;
 /* The variable that will hold the TCB of tasks created by this function.  See
 the comments above the declaration of the xCreatorTaskTCBBuffer variable for
 more information. */
-static StaticTCB_t xTCBBuffer; /* Static so it does not use too much stack space. */
+StaticTask_t xTCBBuffer;
 
 /* This buffer that will be used as the stack of tasks created by this function.
 See the comments above the declaration of the uxCreatorTaskStackBuffer[] array
@@ -796,7 +1055,7 @@ static StackType_t uxStackBuffer[ configMINIMAL_STACK_SIZE ];
 	/* Create the task.  xTaskCreateStatic() has two more parameters than
 	the usual xTaskCreate() function.  The first new parameter is a pointer to
 	the pre-allocated stack.  The second new parameter is a pointer to the
-	StaticTCB_t structure that will hold the task's TCB.  If either pointer is
+	StaticTask_t structure that will hold the task's TCB.  If either pointer is
 	passed as NULL then the respective object will be allocated dynamically as
 	if xTaskCreate() had been called. */
 	xReturned = xTaskCreateStatic(

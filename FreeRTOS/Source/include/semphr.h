@@ -191,7 +191,10 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \ingroup Semaphores
  */
 #define xSemaphoreCreateBinary() xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, NULL, queueQUEUE_TYPE_BINARY_SEMAPHORE )
-#define xSemaphoreCreateBinaryStatic( pxStaticQueue ) xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, pxStaticQueue, queueQUEUE_TYPE_BINARY_SEMAPHORE )
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#define xSemaphoreCreateBinaryStatic( pxStaticQueue ) xQueueGenericCreate( ( UBaseType_t ) 1, semSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, pxStaticQueue, queueQUEUE_TYPE_BINARY_SEMAPHORE )
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * semphr. h
@@ -700,7 +703,10 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \ingroup Semaphores
  */
 #define xSemaphoreCreateMutex() xQueueCreateMutex( queueQUEUE_TYPE_MUTEX, NULL )
-#define xSemaphoreCreateMutexStatic( pxStaticQueue ) xQueueCreateMutex( queueQUEUE_TYPE_MUTEX, ( pxStaticQueue ) )
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#define xSemaphoreCreateMutexStatic( pxStaticQueue ) xQueueCreateMutex( queueQUEUE_TYPE_MUTEX, ( pxStaticQueue ) )
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 
 /**
@@ -756,7 +762,10 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \ingroup Semaphores
  */
 #define xSemaphoreCreateRecursiveMutex() xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX, NULL )
-#define xSemaphoreCreateRecursiveMutexStatic( pxStaticSemaphore ) xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX, pxStaticSemaphore )
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#define xSemaphoreCreateRecursiveMutexStatic( pxStaticSemaphore ) xQueueCreateMutex( queueQUEUE_TYPE_RECURSIVE_MUTEX, pxStaticSemaphore )
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * semphr. h
@@ -820,7 +829,10 @@ typedef QueueHandle_t SemaphoreHandle_t;
  * \ingroup Semaphores
  */
 #define xSemaphoreCreateCounting( uxMaxCount, uxInitialCount ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ), ( NULL ) )
-#define xSemaphoreCreateCountingStatic( uxMaxCount, uxInitialCount, pxStaticSemaphore ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ), ( pxStaticSemaphore ) )
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#define xSemaphoreCreateCountingStatic( uxMaxCount, uxInitialCount, pxStaticSemaphore ) xQueueCreateCountingSemaphore( ( uxMaxCount ), ( uxInitialCount ), ( pxStaticSemaphore ) )
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * semphr. h

@@ -405,7 +405,7 @@ const uint32_t ulMaxDivisor = 0xff, ulDivisorShift = 0x08;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationGetIdleTaskMemory( StaticTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
 {
 	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
 	opportunity to supply the buffers that will be used by the Idle task as its
@@ -417,7 +417,7 @@ void vApplicationGetIdleTaskMemory( StaticTCB_t **ppxIdleTaskTCBBuffer, StackTyp
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationGetTimerTaskMemory( StaticTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
 {
 	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
 	opportunity to supply the buffers that will be used by the Timer/RTOS daemon

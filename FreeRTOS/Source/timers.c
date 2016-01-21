@@ -112,6 +112,10 @@ typedef struct tmrTimerControl
 	#if( configUSE_TRACE_FACILITY == 1 )
 		UBaseType_t			uxTimerNumber;		/*<< An ID assigned by trace tools such as FreeRTOS+Trace */
 	#endif
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		uint8_t 			ucStaticallyAllocated; /*<< Set to pdTRUE if the timer was created from a StaticTimer_t structure, and pdFALSE if the timer structure was allocated dynamically. */
+	#endif
 } xTIMER;
 
 /* The old xTIMER name is maintained above then typedefed to the new Timer_t
@@ -184,7 +188,7 @@ PRIVILEGED_DATA static QueueHandle_t xTimerQueue = NULL;
 	following callback function - which enables the application to optionally
 	provide the memory that will be used by the timer task as the task's stack
 	and TCB. */
-	extern void vApplicationGetTimerTaskMemory( StaticTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
+	extern void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
 
 #endif
 
@@ -250,7 +254,7 @@ static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseTy
 BaseType_t xTimerCreateTimerTask( void )
 {
 BaseType_t xReturn = pdFAIL;
-StaticTCB_t *pxTimerTaskTCBBuffer = NULL;
+StaticTask_t *pxTimerTaskTCBBuffer = NULL;
 StackType_t *pxTimerTaskStackBuffer = NULL;
 uint16_t usTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 
@@ -294,9 +298,19 @@ uint16_t usTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/
 
-TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+TimerHandle_t xTimerGenericCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxStaticTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxNewTimer;
+
+	#if( ( configASSERT_DEFINED == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
+	{
+		/* Sanity check that the size of the structure used to declare a
+		variable of type StaticTimer_t equals the size of the real timer
+		structures. */
+		volatile size_t xSize = sizeof( StaticTimer_t );
+		configASSERT( xSize == sizeof( Timer_t ) );
+	}
+	#endif /* configASSERT_DEFINED */
 
 	/* Allocate the timer structure. */
 	if( xTimerPeriodInTicks == ( TickType_t ) 0U )
@@ -305,20 +319,40 @@ Timer_t *pxNewTimer;
 	}
 	else
 	{
-		pxNewTimer = ( Timer_t * ) pvPortMalloc( sizeof( Timer_t ) );
+		/* If the user passed in a statically allocated timer structure then use
+		it, otherwise allocate the structure dynamically. */
+		if( pxStaticTimer == NULL )
+		{
+			pxNewTimer = ( Timer_t * ) pvPortMalloc( sizeof( Timer_t ) );
+		}
+		else
+		{
+			pxNewTimer = ( Timer_t * ) pxStaticTimer;
+		}
+
 		if( pxNewTimer != NULL )
 		{
 			/* Ensure the infrastructure used by the timer service task has been
 			created/initialised. */
 			prvCheckForValidListAndQueue();
 
-			/* Initialise the timer structure members using the function parameters. */
+			/* Initialise the timer structure members using the function
+			parameters. */
 			pxNewTimer->pcTimerName = pcTimerName;
 			pxNewTimer->xTimerPeriodInTicks = xTimerPeriodInTicks;
 			pxNewTimer->uxAutoReload = uxAutoReload;
 			pxNewTimer->pvTimerID = pvTimerID;
 			pxNewTimer->pxCallbackFunction = pxCallbackFunction;
 			vListInitialiseItem( &( pxNewTimer->xTimerListItem ) );
+
+			if( pxStaticTimer == NULL )
+			{
+				pxNewTimer->ucStaticallyAllocated = pdFALSE;
+			}
+			else
+			{
+				pxNewTimer->ucStaticallyAllocated = pdTRUE;
+			}
 
 			traceTIMER_CREATE( pxNewTimer );
 		}
@@ -716,19 +750,27 @@ TickType_t xTimeNow;
 					pxTimer->xTimerPeriodInTicks = xMessage.u.xTimerParameters.xMessageValue;
 					configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
 
-					/* The new period does not really have a reference, and can be
-					longer or shorter than the old one.  The command time is
-					therefore set to the current time, and as the period cannot be
-					zero the next expiry time can only be in the future, meaning
-					(unlike for the xTimerStart() case above) there is no fail case
-					that needs to be handled here. */
+					/* The new period does not really have a reference, and can
+					be longer or shorter than the old one.  The command time is
+					therefore set to the current time, and as the period cannot
+					be zero the next expiry time can only be in the future,
+					meaning (unlike for the xTimerStart() case above) there is
+					no fail case that needs to be handled here. */
 					( void ) prvInsertTimerInActiveList( pxTimer, ( xTimeNow + pxTimer->xTimerPeriodInTicks ), xTimeNow, xTimeNow );
 					break;
 
 				case tmrCOMMAND_DELETE :
 					/* The timer has already been removed from the active list,
-					just free up the memory. */
-					vPortFree( pxTimer );
+					just free up the memory if the memory was dynamically
+					allocated. */
+					if( pxTimer->ucStaticallyAllocated == pdFALSE )
+					{
+						vPortFree( pxTimer );
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
 					break;
 
 				default	:

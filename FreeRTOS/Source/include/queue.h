@@ -174,7 +174,7 @@ typedef void * QueueSetMemberHandle_t;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	#define xQueueCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue ) xQueueGenericCreate( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue, queueQUEUE_TYPE_BASE )
-#endif
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
  * queue. h

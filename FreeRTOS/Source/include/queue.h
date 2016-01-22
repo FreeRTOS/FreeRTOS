@@ -123,8 +123,19 @@ typedef void * QueueSetMemberHandle_t;
 						  );
  * </pre>
  *
- * Creates a new queue instance.  This allocates the storage required by the
- * new queue and returns a handle for the queue.
+ * Creates a new queue instance, and returns a handle by which the new queue
+ * can be referenced.
+ *
+ * Internally, within the FreeRTOS implementation, queue's use two blocks of
+ * memory.  The first block is used to hold the queue's data structures.  The
+ * second block is used to hold items placed into the queue.  If a queue is
+ * created using xQueueCreate() then both blocks of memory are automatically
+ * dynamically allocated inside the xQueueCreate() function.  (see
+ * http://www.freertos.org/a00111.html).  If a queue is created using
+ * xQueueCreateStatic() then the application writer can instead optionally
+ * provide the memory that will get used by the queue.  xQueueCreateStatic()
+ * therefore allows a queue to be created without using any dynamic memory
+ * allocation.
  *
  * @param uxQueueLength The maximum number of items that the queue can contain.
  *
@@ -172,8 +183,95 @@ typedef void * QueueSetMemberHandle_t;
  */
 #define xQueueCreate( uxQueueLength, uxItemSize ) xQueueGenericCreate( uxQueueLength, uxItemSize, NULL, NULL, queueQUEUE_TYPE_BASE )
 
+/**
+ * queue. h
+ * <pre>
+ QueueHandle_t xQueueCreateStatic(
+							  UBaseType_t uxQueueLength,
+							  UBaseType_t uxItemSize,
+							  uint8_t *pucQueueStorageBuffer,
+							  StaticQueue_t *pxQueueBuffer
+						  );
+ * </pre>
+ *
+ * Creates a new queue instance, and returns a handle by which the new queue
+ * can be referenced.
+ *
+ * Internally, within the FreeRTOS implementation, queue's use two blocks of
+ * memory.  The first block is used to hold the queue's data structures.  The
+ * second block is used to hold items placed into the queue.  If a queue is
+ * created using xQueueCreate() then both blocks of memory are automatically
+ * dynamically allocated inside the xQueueCreate() function.  (see
+ * http://www.freertos.org/a00111.html).  If a queue is created using
+ * xQueueCreateStatic() then the application writer can instead optionally
+ * provide the memory that will get used by the queue.  xQueueCreateStatic()
+ * therefore allows a queue to be created without using any dynamic memory
+ * allocation.
+ *
+ * @param uxQueueLength The maximum number of items that the queue can contain.
+ *
+ * @param uxItemSize The number of bytes each item in the queue will require.
+ * Items are queued by copy, not by reference, so this is the number of bytes
+ * that will be copied for each posted item.  Each item on the queue must be
+ * the same size.
+ *
+ * @param pucQueueStorageBuffer If pucQueueStorageBuffer is NULL then the memory
+ * used to hold items stored in the queue will be allocated dynamically, just as
+ * when a queue is created using xQueueCreate().  If pxQueueStorageBuffer is not
+ * NULL then it must point to a uint8_t array that is at least large enough to
+ * hold the maximum number of items that can be in the queue at any one time -
+ * which is ( uxQueueLength * uxItemsSize ) bytes.
+ *
+ * @param pxQueueBuffer If pxQueueBuffer is NULL then the memory required to
+ * hold the queue's data structures will be allocated dynamically, just as when
+ * a queue is created using xQueueCreate().  If pxQueueBuffer is not NULL then
+ * it must point to a variable of type StaticQueue_t, which will then be used to
+ * hold the queue's data structure, removing the need for the memory to be
+ * allocated dynamically.
+ *
+ * @return If the queue is successfully create then a handle to the newly
+ * created queue is returned.  If the queue cannot be created then 0 is
+ * returned.
+ *
+ * Example usage:
+   <pre>
+ struct AMessage
+ {
+	char ucMessageID;
+	char ucData[ 20 ];
+ };
+
+ #define QUEUE_LENGTH 10
+ #define ITEM_SIZE sizeof( uint32_t )
+
+ // xQueueBuffer will hold the queue structure.
+ StaticQueue_t xQueueBuffer; 
+
+ // ucQueueStorage will hold the items posted to the queue.  Must be at least
+ // [(queue length) * ( queue item size)] bytes long.
+ uint8_t ucQueueStorage[ QUEUE_LENGTH * ITEM_SIZE ];
+
+ void vATask( void *pvParameters )
+ {
+ QueueHandle_t xQueue1;
+
+	// Create a queue capable of containing 10 uint32_t values.
+	xQueue1 = xQueueCreate( QUEUE_LENGTH, // The number of items the queue can hold.
+							ITEM_SIZE	  // The size of each item in the queue
+							&( ucQueueStorage[ 0 ] ), // The buffer that will hold the items in the queue.
+							&xQueueBuffer ); // The buffer that will hold the queue structure.
+
+	// The queue is guaranteed to be created successfully as no dynamic memory
+	// allocation was used.  Therefore xQueue1 is now a handle to a valid queue.
+
+	// ... Rest of task code.
+ }
+ </pre>
+ * \defgroup xQueueCreate xQueueCreate
+ * \ingroup QueueManagement
+ */
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	#define xQueueCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue ) xQueueGenericCreate( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue, queueQUEUE_TYPE_BASE )
+	#define xQueueCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxQueueBuffer ) xQueueGenericCreate( ( uxQueueLength ), ( uxItemSize ), ( pucQueueStorage ), ( pxQueueBuffer ), ( queueQUEUE_TYPE_BASE ) )
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**

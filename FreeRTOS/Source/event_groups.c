@@ -151,14 +151,18 @@ EventGroup_t *pxEventBits;
 		pxEventBits->uxEventBits = 0;
 		vListInitialise( &( pxEventBits->xTasksWaitingForBits ) );
 
-		if( pxStaticEventGroup == NULL )
+		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 		{
-			pxEventBits->ucStaticallyAllocated = pdFALSE;
+			if( pxStaticEventGroup == NULL )
+			{
+				pxEventBits->ucStaticallyAllocated = pdFALSE;
+			}
+			else
+			{
+				pxEventBits->ucStaticallyAllocated = pdTRUE;
+			}
 		}
-		else
-		{
-			pxEventBits->ucStaticallyAllocated = pdTRUE;
-		}
+		#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 		traceEVENT_GROUP_CREATE( pxEventBits );
 	}
@@ -605,10 +609,18 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 		}
 
 		/* Only free the memory if it was allocated dynamically. */
-		if( pxEventBits->ucStaticallyAllocated == pdFALSE )
+		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		{
+			if( pxEventBits->ucStaticallyAllocated == pdFALSE )
+			{
+				vPortFree( pxEventBits );
+			}
+		}
+		#else
 		{
 			vPortFree( pxEventBits );
 		}
+		#endif /* configSUPPORT_STATIC_ALLOCATION */
 	}
 	( void ) xTaskResumeAll();
 }

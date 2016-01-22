@@ -278,6 +278,8 @@ const TickType_t xRegulatorOffIdleTime = 30;
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
 		__asm volatile ( "cpsie i" );
+		__asm volatile ( "dsb" );
+		__asm volatile ( "isb" );
 	}
 	else
 	{

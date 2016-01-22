@@ -298,7 +298,7 @@ uint16_t usTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/
 
-TimerHandle_t xTimerGenericCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxStaticTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+TimerHandle_t xTimerGenericCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxTimerBuffer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxNewTimer;
 
@@ -321,13 +321,13 @@ Timer_t *pxNewTimer;
 	{
 		/* If the user passed in a statically allocated timer structure then use
 		it, otherwise allocate the structure dynamically. */
-		if( pxStaticTimer == NULL )
+		if( pxTimerBuffer == NULL )
 		{
 			pxNewTimer = ( Timer_t * ) pvPortMalloc( sizeof( Timer_t ) );
 		}
 		else
 		{
-			pxNewTimer = ( Timer_t * ) pxStaticTimer;
+			pxNewTimer = ( Timer_t * ) pxTimerBuffer;
 		}
 
 		if( pxNewTimer != NULL )
@@ -345,14 +345,18 @@ Timer_t *pxNewTimer;
 			pxNewTimer->pxCallbackFunction = pxCallbackFunction;
 			vListInitialiseItem( &( pxNewTimer->xTimerListItem ) );
 
-			if( pxStaticTimer == NULL )
+			#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			{
-				pxNewTimer->ucStaticallyAllocated = pdFALSE;
+				if( pxTimerBuffer == NULL )
+				{
+					pxNewTimer->ucStaticallyAllocated = pdFALSE;
+				}
+				else
+				{
+					pxNewTimer->ucStaticallyAllocated = pdTRUE;
+				}
 			}
-			else
-			{
-				pxNewTimer->ucStaticallyAllocated = pdTRUE;
-			}
+			#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 			traceTIMER_CREATE( pxNewTimer );
 		}
@@ -763,14 +767,22 @@ TickType_t xTimeNow;
 					/* The timer has already been removed from the active list,
 					just free up the memory if the memory was dynamically
 					allocated. */
-					if( pxTimer->ucStaticallyAllocated == pdFALSE )
+					#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+					{
+						if( pxTimer->ucStaticallyAllocated == pdFALSE )
+						{
+							vPortFree( pxTimer );
+						}
+						else
+						{
+							mtCOVERAGE_TEST_MARKER();
+						}
+					}
+					#else
 					{
 						vPortFree( pxTimer );
 					}
-					else
-					{
-						mtCOVERAGE_TEST_MARKER();
-					}
+					#endif /* configSUPPORT_STATIC_ALLOCATION */
 					break;
 
 				default	:

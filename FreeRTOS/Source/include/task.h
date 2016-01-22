@@ -283,6 +283,20 @@ is used in assert() statements. */
  *
  * Create a new task and add it to the list of tasks that are ready to run.
  *
+ * Internally, within the FreeRTOS implementation, tasks's use two blocks of
+ * memory.  The first block is used to hold the tasks's data structures.  The
+ * second block is used by the task as its stack.  If a task is created using
+ * xTaskCreate() then both blocks of memory are automatically dynamically
+ * allocated inside the xTaskCreate() function.  (see
+ * http://www.freertos.org/a00111.html).  If a task is created using
+ * xTaskCreateStatic() then the application writer can instead optionally
+ * provide the memory that will get used by the task.  xTaskCreateStatic()
+ * therefore allows a task to be created without using any dynamic memory
+ * allocation.
+ *
+ * See xTaskCreateStatic() for a version that does not use any dynamic memory
+ * allocation.
+ *
  * xTaskCreate() can only be used to create a task that has unrestricted
  * access to the entire microcontroller memory map.  Systems that include MPU
  * support can alternatively create an MPU constrained task using
@@ -362,16 +376,21 @@ is used in assert() statements. */
 							  UBaseType_t uxPriority,
 							  TaskHandle_t *pvCreatedTask,
 							  StackType_t *pxStackBuffer,
-							  StaticTask_t *pxTCBBuffer
+							  StaticTask_t *pxTaskBuffer
 						  );</pre>
  *
  * Create a new task and add it to the list of tasks that are ready to run.
- * If a task is created using xTaskCreate() then the stack and task control
- * block (TCB) used by the task are allocated dynamically.  If a task is created
- * using xTaskCreateStatic() then the application writer can optionally provide
- * the buffers that will hold the task stack and TCB respectively.
- * xTaskCreateStatic() therefore allows tasks to be created without any dynamic
- * memory allocation.
+ *
+ * Internally, within the FreeRTOS implementation, tasks's use two blocks of
+ * memory.  The first block is used to hold the tasks's data structures.  The
+ * second block is used by the task as its stack.  If a task is created using
+ * xTaskCreate() then both blocks of memory are automatically dynamically
+ * allocated inside the xTaskCreate() function.  (see
+ * http://www.freertos.org/a00111.html).  If a task is created using
+ * xTaskCreateStatic() then the application writer can instead optionally
+ * provide the memory that will get used by the task.  xTaskCreateStatic()
+ * therefore allows a task to be created without using any dynamic memory
+ * allocation.
  *
  * @param pvTaskCode Pointer to the task entry function.  Tasks
  * must be implemented to never return (i.e. continuous loop).
@@ -395,15 +414,17 @@ is used in assert() statements. */
  *
  * @param pxStackBuffer If pxStackBuffer is NULL then the stack used by the
  * task will be allocated dynamically, just as if the task was created using
- * xTaskCreate().  if pxStackBuffer is not NULL then it must point to a
+ * xTaskCreate().  If pxStackBuffer is not NULL then it must point to a
  * StackType_t array that has at least usStackDepth indexes - the array will
- * then be used as the task's stack.
+ * then be used as the task's stack, removing the need for the stack to be
+ * allocated dynamically.
  *
- * @param pxTCBBuffer If pxTCBBuffer is NULL then the TCB (which is the
- * structures used internally within FreeRTOS to hold information on the task)
- * will be allocated dynamically, just as when xTaskCreate() is used.  If
- * pxTCBBuffer is not NULL then it must point to a variable of type StaticTask_t,
- * which will then be used as the TCB of the task being created.
+ * @param pxTaskBuffer If pxTaskBuffer is NULL then the memory used to hold the
+ * task's data structures will be allocated dynamically, just as when a task is
+ * created using xTaskCreate().  If pxTaskBuffer is not NULL then it must point
+ * to a variable of type StaticTask_t, which will then be used to hold the
+ * task's data structures, removing the need for the memory to be allocated
+ * dynamically.
  *
  * @return pdPASS if the task was successfully created and added to a ready
  * list, otherwise an error code defined in the file projdefs.h
@@ -418,7 +439,7 @@ is used in assert() statements. */
  #define STACK_SIZE 200
 
  // Structure that will hold the TCB of the task being created.
- StaticTask_t xTCB;
+ StaticTask_t xTaskBuffer;
 
  // Buffer that the task being created will use as its stack.
  StackType_t xStack[ STACK_SIZE ];
@@ -446,14 +467,14 @@ is used in assert() statements. */
 				  tskIDLE_PRIORITY,   // As per xTaskCreate() parameter.
 				  &xHandle,           // As per xTaskCreate() parameter.
 				  xStack,             // Pointer to the buffer that the task being created will use as its stack.
-				  &xTCB );            // Pointer to a structure in which the TCB of the task being created will be stored.
+				  &xTaskBuffer );     // Pointer to a StaticTask_t structure for use as the memory require by the task.
  }
    </pre>
  * \defgroup xTaskCreateStatic xTaskCreateStatic
  * \ingroup Tasks
  */
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	#define xTaskCreateStatic( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, puxStackBuffer, pxDummyTCB ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( puxStackBuffer ), ( pxDummyTCB ), ( NULL ) )
+	#define xTaskCreateStatic( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, puxStackBuffer, pxTaskBuffer ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( puxStackBuffer ), ( pxTaskBuffer ), ( NULL ) )
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
@@ -2095,7 +2116,7 @@ BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGE
  * Generic version of the task creation function which is in turn called by the
  * xTaskCreate() and xTaskCreateRestricted() macros.
  */
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.

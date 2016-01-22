@@ -554,7 +554,7 @@ static void prvResetNextTaskUnblockTime( void );
 #endif
 /*-----------------------------------------------------------*/
 
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTCBBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 BaseType_t xReturn;
 TCB_t * pxNewTCB;
@@ -565,7 +565,7 @@ StackType_t *pxTopOfStack;
 
 	/* Allocate the memory required by the TCB and stack for the new task,
 	checking that the allocation was successful. */
-	pxNewTCB = prvAllocateTCBAndStack( usStackDepth, puxStackBuffer, ( TCB_t* ) pxTCBBuffer ); /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+	pxNewTCB = prvAllocateTCBAndStack( usStackDepth, puxStackBuffer, ( TCB_t* ) pxTaskBuffer ); /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
 
 	if( pxNewTCB != NULL )
 	{
@@ -3145,7 +3145,7 @@ static void prvAddCurrentTaskToDelayedList( const TickType_t xTimeToWake )
 }
 /*-----------------------------------------------------------*/
 
-static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t * const puxStackBuffer, TCB_t * const pxTCBBuffer )
+static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t * const puxStackBuffer, TCB_t * const pxTaskBuffer )
 {
 TCB_t *pxNewTCB;
 
@@ -3166,7 +3166,7 @@ TCB_t *pxNewTCB;
 	{
 		/* Allocate space for the TCB.  Where the memory comes from depends on
 		the implementation of the port malloc function. */
-		pxNewTCB = ( TCB_t * ) pvPortMallocAligned( sizeof( TCB_t ), pxTCBBuffer );
+		pxNewTCB = ( TCB_t * ) pvPortMallocAligned( sizeof( TCB_t ), pxTaskBuffer );
 
 		if( pxNewTCB != NULL )
 		{
@@ -3179,7 +3179,7 @@ TCB_t *pxNewTCB;
 			{
 				/* Could not allocate the stack.  Delete the allocated TCB - if
 				it was allocated dynamically. */
-				if( pxTCBBuffer == NULL )
+				if( pxTaskBuffer == NULL )
 				{
 					vPortFree( pxNewTCB );
 				}
@@ -3197,7 +3197,7 @@ TCB_t *pxNewTCB;
 		if( pxStack != NULL )
 		{
 			/* Allocate space for the TCB. */
-			pxNewTCB = ( TCB_t * ) pvPortMallocAligned( sizeof( TCB_t ), pxTCBBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some paths. */
+			pxNewTCB = ( TCB_t * ) pvPortMallocAligned( sizeof( TCB_t ), pxTaskBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some paths. */
 
 			if( pxNewTCB != NULL )
 			{
@@ -3250,7 +3250,7 @@ TCB_t *pxNewTCB;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			if( pxTCBBuffer != NULL )
+			if( pxTaskBuffer != NULL )
 			{
 				/* The application provided its own TCB.  Note the fact so no
 				attempt is made to delete the TCB if the task is deleted. */

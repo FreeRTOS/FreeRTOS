@@ -70,10 +70,10 @@
 /******************************************************************************
  * NOTE 1:  This project provides two demo applications.  A simple blinky style
  * project that demonstrates the tickless low power features of FreeRTOS, and a
- * more comprehensive test and demo application.  The mainCREATE_LOW_POWER_DEMO
- * setting in main.c is used to select between the two.  See the notes on using
- * mainCREATE_LOW_POWER_DEMO in main.c.  This file implements the comprehensive
- * test and demo version.
+ * more comprehensive test and demo application.  The configCREATE_LOW_POWER_DEMO
+ * setting in FreeRTOSConifg.h is used to select between the two.  See the notes
+ * on using conifgCREATE_LOW_POWER_DEMO in main.c.  This file implements the 
+ * comprehensive test and demo version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions
@@ -133,6 +133,7 @@
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 #include "IntSemTest.h"
+#include "StaticAllocation.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -227,6 +228,7 @@ void main_full( void )
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 	vStartInterruptSemaphoreTasks();
+	vStartStaticallyAllocatedTasks();
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -289,6 +291,11 @@ unsigned long ulErrorFound = pdFALSE;
 		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound = 1UL << 2UL;
+		}
+
+		if( xAreStaticAllocationTasksStillRunning() != pdPASS )
+		{
+			ulErrorFound = 1UL << 3UL;
 		}
 
 		if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )

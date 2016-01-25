@@ -69,11 +69,11 @@
 
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project
- * that demonstrates tickless low power functionality, and a more comprehensive
- * test and demo application.  The mainCREATE_LOW_POWER_DEMO setting (defined in
- * this file) is used to select between the two.  The simply blinky low power
- * demo is implemented and described in main_low_power.c.  The more
- * comprehensive test and demo application is implemented and described in
+ * that demonstrates low power tickless functionality, and a more comprehensive
+ * test and demo application.  The configCREATE_LOW_POWER_DEMO setting, which is
+ * defined in FreeRTOSConfig.h, is used to select between the two.  The simply
+ * blinky low power demo is implemented and described in main_low_power.c.  The
+ * more comprehensive test and demo application is implemented and described in
  * main_full.c.
  *
  * This file implements the code that is not demo specific, including the
@@ -84,8 +84,6 @@
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
  */
-
-#warning FreeRTOSConfig.h needs formatting.
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -109,14 +107,14 @@ run the more comprehensive test and demo application. */
 static void prvSetupHardware( void );
 
 /*
- * main_low_power() is used when mainCREATE_LOW_POWER_DEMO is set to 1.
- * main_full() is used when mainCREATE_LOW_POWER_DEMO is set to 0.
+ * main_low_power() is used when configCREATE_LOW_POWER_DEMO is set to 1.
+ * main_full() is used when configCREATE_LOW_POWER_DEMO is set to 0.
  */
-#if mainCREATE_LOW_POWER_DEMO == 1
+#if( configCREATE_LOW_POWER_DEMO == 1 )
 	extern void main_low_power( void );
 #else
 	extern void main_full( void );
-#endif /* #if mainCREATE_LOW_POWER_DEMO == 1 */
+#endif /* #if configCREATE_LOW_POWER_DEMO == 1 */
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
 within this file. */
@@ -134,7 +132,7 @@ int main( void )
 
 	/* The mainCREATE_LOW_POWER_DEMO setting is described at the top
 	of this file. */
-	#if( mainCREATE_LOW_POWER_DEMO == 1 )
+	#if( configCREATE_LOW_POWER_DEMO == 1 )
 	{
 		main_low_power();
 	}
@@ -144,10 +142,7 @@ int main( void )
 	}
 	#endif
 
-	/* Start FreeRTOS Scheduler */
-	vTaskStartScheduler();
-
-	/* Cannot get here. */
+	/* Should not get here. */
 	return 0;
 }
 /*-----------------------------------------------------------*/
@@ -160,11 +155,7 @@ static void prvSetupHardware( void )
 	SLEEP_Init( NULL, NULL );
 	BSP_LedsInit();
 
-	#if (configSLEEP_MODE < 3)
-	{
-		SLEEP_SleepBlockBegin((SLEEP_EnergyMode_t)(configSLEEP_MODE+1));
-	}
-	#endif
+//_RB_	SLEEP_SleepBlockBegin( ( SLEEP_EnergyMode_t ) ( configSLEEP_MODE+1 ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -216,12 +207,41 @@ volatile size_t xFreeHeapSpace;
 void vApplicationTickHook( void )
 {
 	/* The full demo includes tests that run from the tick hook. */
-	#if( mainCREATE_LOW_POWER_DEMO == 0 )
+	#if( configCREATE_LOW_POWER_DEMO == 0 )
 	{
 	extern void vFullDemoTickHook( void );
 
+		/* Some of the tests and demo tasks executed by the full demo include
+		interaction from an interrupt - for which the tick interrupt is used
+		via the tick hook function. */
 		vFullDemoTickHook();
 	}
 	#endif
 }
+/*-----------------------------------------------------------*/
+
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
+{
+	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
+	opportunity to supply the buffers that will be used by the Idle task as its
+	stack and to hold its TCB.  If these are set to NULL then the buffers will
+	be allocated dynamically, just as if xTaskCreate() had been called. */
+	*ppxIdleTaskTCBBuffer = NULL;
+	*ppxIdleTaskStackBuffer = NULL;
+	*pusIdleTaskStackSize = configMINIMAL_STACK_SIZE; /* In words.  NOT in bytes! */
+}
+/*-----------------------------------------------------------*/
+
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
+{
+	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
+	opportunity to supply the buffers that will be used by the Timer/RTOS daemon
+	task as its	stack and to hold its TCB.  If these are set to NULL then the
+	buffers will be allocated dynamically, just as if xTaskCreate() had been
+	called. */
+	*ppxTimerTaskTCBBuffer = NULL;
+	*ppxTimerTaskStackBuffer = NULL;
+	*pusTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH; /* In words.  NOT in bytes! */
+}
+/*-----------------------------------------------------------*/
 

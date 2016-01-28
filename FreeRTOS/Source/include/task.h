@@ -115,7 +115,8 @@ typedef enum
 	eReady,			/* The task being queried is in a read or pending ready list. */
 	eBlocked,		/* The task being queried is in the Blocked state. */
 	eSuspended,		/* The task being queried is in the Suspended state, or is in the Blocked state with an infinite time out. */
-	eDeleted		/* The task being queried has been deleted, but its TCB has not yet been freed. */
+	eDeleted,		/* The task being queried has been deleted, but its TCB has not yet been freed. */
+	eInvalid			/* Used as an 'invalid state' value. */
 } eTaskState;
 
 /* Actions that can be performed when vTaskNotify() is called. */
@@ -172,6 +173,7 @@ typedef struct xTASK_STATUS
 	UBaseType_t uxCurrentPriority;	/* The priority at which the task was running (may be inherited) when the structure was populated. */
 	UBaseType_t uxBasePriority;		/* The priority to which the task will return if the task's current priority has been inherited to avoid unbounded priority inversion when obtaining a mutex.  Only valid if configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
 	uint32_t ulRunTimeCounter;		/* The total run time allocated to the task so far, as defined by the run time stats clock.  See http://www.freertos.org/rtos-run-time-stats.html.  Only valid when configGENERATE_RUN_TIME_STATS is defined as 1 in FreeRTOSConfig.h. */
+	StackType_t *pxStackBase;		/* Points to the lowest address of the task's stack area. */
 	uint16_t usStackHighWaterMark;	/* The minimum amount of stack space that has remained for the task since the task was created.  The closer this value is to zero the closer the task has come to overflowing its stack. */
 } TaskStatus_t;
 
@@ -426,8 +428,12 @@ is used in assert() statements. */
  * task's data structures, removing the need for the memory to be allocated
  * dynamically.
  *
- * @return pdPASS if the task was successfully created and added to a ready
- * list, otherwise an error code defined in the file projdefs.h
+ * @return If neither pxStackBuffer or pxTaskBuffer are NULL, then the function
+ * will not attempt any dynamic memory allocation, and pdPASS will always be
+ * returned.  If pxStackBuffer or pxTaskBuffer is NULL then the function will
+ * attempt to dynamically allocate one of both buffers.  In this case, if the
+ * allocation succeeds then pdPASS will be returned, and if the allocation fails
+ * then an error code defined in projdefs.h is returned.
  *
  * Example usage:
    <pre>
@@ -818,6 +824,62 @@ UBaseType_t uxTaskPriorityGetFromISR( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
  * functions return value being tested by the calling task.
  */
 eTaskState eTaskGetState( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+
+/**
+ * task. h
+ * <pre>void vTaskGetTaskInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState );</pre>
+ *
+ * configUSE_TRACE_FACILITY must be defined as 1 for this function to be
+ * available.  See the configuration section for more information.
+ *
+ * Populates a TaskStatus_t structure with information about a task.
+ *
+ * @param xTask Handle of the task being queried.  If xTask is NULL then
+ * information will be returned about the calling task.
+ *
+ * @param pxTaskStatus A pointer to the TaskStatus_t structure that will be
+ * filled with information about the task referenced by the handle passed using
+ * the xTask parameter.
+ *
+ * @xGetFreeStackSpace The TaskStatus_t structure contains a member to report
+ * the stack high water mark of the task being queried.  Calculating the stack
+ * high water mark takes a relatively long time, and can make the system
+ * temporarily unresponsive - so the xGetFreeStackSpace parameter is provided to
+ * allow the high water mark checking to be skipped.  The high watermark value
+ * will only be written to the TaskStatus_t structure if xGetFreeStackSpace is
+ * not set to pdFALSE;
+ *
+ * @param eState The TaskStatus_t structure contains a member to report the
+ * state of the task being queried.  Obtaining the task state is not as fast as
+ * a simple assignment - so the eState parameter is provided to allow the state
+ * information to be omitted from the TaskStatus_t structure.  To obtain state
+ * information then set eState to eInvalid - otherwise the value passed in
+ * eState will be reported as the task state in the TaskStatus_t structure.
+ *
+ * Example usage:
+   <pre>
+ void vAFunction( void )
+ {
+ TaskHandle_t xHandle;
+ TaskStatus_t xTaskDetails;
+
+    // Obtain the handle of a task from its name.
+    xHandle = xTaskGetTaskHandle( "Task_Name" );
+
+    // Check the handle is not NULL.
+    configASSERT( xHandle );
+
+    // Use the handle to obtain further information about the task.
+    vTaskGetTaskInfo( xHandle,
+                      &xTaskDetails,
+                      pdTRUE, // Include the high water mark in xTaskDetails.
+                      eInvalid ); // Include the task state in xTaskDetails.
+ }
+   </pre>
+ * \defgroup vTaskGetTaskInfo vTaskGetTaskInfo
+ * \ingroup TaskCtrl
+ */
+void vTaskGetTaskInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState );
 
 /**
  * task. h
@@ -1242,6 +1304,22 @@ UBaseType_t uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
  * \ingroup TaskUtils
  */
 char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
+/**
+ * task. h
+ * <PRE>TaskHandle_t xTaskGetTaskHandle( const char *pcNameToQuery );</PRE>
+ *
+ * NOTE:  This function takes a relatively long time to complete and should be
+ * used sparingly.
+ *
+ * @return The handle of the task that has the human readable name pcNameToQuery.
+ * NULL is returned if no matching name is found.  INCLUDE_xTaskGetTaskHandle
+ * must be set to 1 in FreeRTOSConfig.h for pcTaskGetTaskHandle() to be available.
+ *
+ * \defgroup pcTaskGetTaskHandle pcTaskGetTaskHandle
+ * \ingroup TaskUtils
+ */
+TaskHandle_t xTaskGetTaskHandle( const char *pcNameToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * task.h

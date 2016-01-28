@@ -145,8 +145,8 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * http://www.freertos.org/a00111.html).  If a software timer is created using
  * xTimerCreateStatic() then the application writer can instead optionally
  * provide the memory that will get used by the software timer.
- * xTimerCreateStatic() therefore allows a software to be created without using
- * any dynamic memory allocation.
+ * xTimerCreateStatic() therefore allows a software timer to be created without
+ * using any dynamic memory allocation.
  *
  * Timers are created in the dormant state.  The xTimerStart(), xTimerReset(),
  * xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and
@@ -327,10 +327,12 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * will be then be used to hold the software timer's data structures, removing
  * the need for the memory to be allocated dynamically.
  *
- * @return If the timer is successfully created then a handle to the newly
- * created timer is returned.  If the timer cannot be created (because either
- * there is insufficient FreeRTOS heap remaining to allocate the timer
- * structures, or the timer period was set to 0) then NULL is returned.
+ * @return If pxTimerBuffer is not NULL then the function will not attempt
+ * any dynamic memory allocation, and a handle to the created timer will always
+ * be returned.  If pxTimerBuffer is NULL then the function will attempt to
+ * dynamically allocate the memory required to hold the timer's data structures.
+ * In this case, if the allocation succeeds then a handle to the created timer
+ * will be returned, and if the allocation fails NULL will be returned.
  *
  * Example usage:
  * @verbatim
@@ -1277,7 +1279,7 @@ const char * pcTimerGetTimerName( TimerHandle_t xTimer ) PRIVILEGED_FUNCTION; /*
  */
 BaseType_t xTimerCreateTimerTask( void ) PRIVILEGED_FUNCTION;
 BaseType_t xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait ) PRIVILEGED_FUNCTION;
-TimerHandle_t xTimerGenericCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxTimerBuffer ) PRIVILEGED_FUNCTION;
+TimerHandle_t xTimerGenericCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxTimerBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 #ifdef __cplusplus
 }

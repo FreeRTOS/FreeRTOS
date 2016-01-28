@@ -507,7 +507,17 @@ static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t *
  */
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	static UBaseType_t prvListTaskWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState ) PRIVILEGED_FUNCTION;
+	static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState ) PRIVILEGED_FUNCTION;
+
+#endif
+
+/*
+ * Searches pxList for a task with name pcNameToQuery - returning a handle to
+ * the task if it is found, or NULL if the task is not found.
+ */
+#if ( INCLUDE_xTaskGetTaskHandle == 1 )
+
+	static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] );
 
 #endif
 
@@ -985,7 +995,7 @@ StackType_t *pxTopOfStack;
 #endif /* INCLUDE_vTaskDelay */
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_eTaskGetState == 1 )
+#if( ( INCLUDE_eTaskGetState == 1 ) || ( configUSE_TRACE_FACILITY == 1 ) )
 
 	eTaskState eTaskGetState( TaskHandle_t xTask )
 	{
@@ -1321,6 +1331,21 @@ StackType_t *pxTopOfStack;
 		}
 		taskEXIT_CRITICAL();
 
+		if( xSchedulerRunning != pdFALSE )
+		{
+			/* Reset the next expected unblock time in case it referred to the
+			task that is now in the Suspended state. */
+			taskENTER_CRITICAL();
+			{
+				prvResetNextTaskUnblockTime();
+			}
+			taskEXIT_CRITICAL();
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+
 		if( pxTCB == pxCurrentTCB )
 		{
 			if( xSchedulerRunning != pdFALSE )
@@ -1350,21 +1375,7 @@ StackType_t *pxTopOfStack;
 		}
 		else
 		{
-			if( xSchedulerRunning != pdFALSE )
-			{
-				/* A task other than the currently running task was suspended,
-				reset the next expected unblock time in case it referred to the
-				task that is now in the Suspended state. */
-				taskENTER_CRITICAL();
-				{
-					prvResetNextTaskUnblockTime();
-				}
-				taskEXIT_CRITICAL();
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
+			mtCOVERAGE_TEST_MARKER();
 		}
 	}
 
@@ -1710,7 +1721,7 @@ void vTaskSuspendAll( void )
 
 BaseType_t xTaskResumeAll( void )
 {
-TCB_t *pxTCB;
+TCB_t *pxTCB = NULL;
 BaseType_t xAlreadyYielded = pdFALSE;
 
 	/* If uxSchedulerSuspended is zero then this function does not match a
@@ -1749,6 +1760,17 @@ BaseType_t xAlreadyYielded = pdFALSE;
 					{
 						mtCOVERAGE_TEST_MARKER();
 					}
+				}
+
+				if( pxTCB != NULL )
+				{
+					/* A task was unblocked while the scheduler was suspended,
+					which may have prevented the next unblock time from being
+					re-calculated, in which case re-calculate it now.  Mainly
+					important for low power tickless implementations, where
+					this can prevent an unnecessary exit from low power
+					state. */
+					prvResetNextTaskUnblockTime();
 				}
 
 				/* If any ticks occurred while the scheduler was suspended then
@@ -1861,13 +1883,137 @@ UBaseType_t uxTaskGetNumberOfTasks( void )
 	{
 	TCB_t *pxTCB;
 
-		/* If null is passed in here then the name of the calling task is being queried. */
+		/* If null is passed in here then the name of the calling task is being
+		queried. */
 		pxTCB = prvGetTCBFromHandle( xTaskToQuery );
 		configASSERT( pxTCB );
 		return &( pxTCB->pcTaskName[ 0 ] );
 	}
 
 #endif /* INCLUDE_pcTaskGetTaskName */
+/*-----------------------------------------------------------*/
+
+#if ( INCLUDE_xTaskGetTaskHandle == 1 )
+
+	static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] )
+	{
+	TCB_t *pxNextTCB, *pxFirstTCB, *pxReturn = NULL;
+	UBaseType_t x;
+	char cNextChar;
+
+		/* This function is called with the scheduler suspended. */
+
+		if( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 )
+		{
+			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
+
+			do
+			{
+				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
+
+				/* Check each character in the name looking for a match or
+				mismatch. */
+				for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
+				{
+					cNextChar = pxNextTCB->pcTaskName[ x ];
+
+					if( cNextChar != pcNameToQuery[ x ] )
+					{
+						/* Characters didn't match. */
+						break;
+					}
+					else if( cNextChar == 0x00 )
+					{
+						/* Both strings terminated, a match must have been
+						found. */
+						pxReturn = pxNextTCB;
+						break;
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
+				}
+
+				if( pxReturn != NULL )
+				{
+					/* The handle has been found. */
+					break;
+				}
+
+			} while( pxNextTCB != pxFirstTCB );
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+
+		return pxReturn;
+	}
+
+#endif /* INCLUDE_xTaskGetTaskHandle */
+/*-----------------------------------------------------------*/
+
+#if ( INCLUDE_xTaskGetTaskHandle == 1 )
+
+	TaskHandle_t xTaskGetTaskHandle( const char *pcNameToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	{
+	UBaseType_t uxQueue = configMAX_PRIORITIES;
+	TCB_t* pxTCB;
+
+		vTaskSuspendAll();
+		{
+			/* Search the ready lists. */
+			do
+			{
+				uxQueue--;
+				pxTCB = prvSearchForNameWithinSingleList( ( List_t * ) &( pxReadyTasksLists[ uxQueue ] ), pcNameToQuery );
+
+				if( pxTCB != NULL )
+				{
+					/* Found the handle. */
+					break;
+				}
+
+			} while( uxQueue > ( UBaseType_t ) tskIDLE_PRIORITY ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+			/* Search the delayed lists. */
+			if( pxTCB == NULL )
+			{
+				pxTCB = prvSearchForNameWithinSingleList( ( List_t * ) pxDelayedTaskList, pcNameToQuery );
+			}
+
+			if( pxTCB == NULL )
+			{
+				pxTCB = prvSearchForNameWithinSingleList( ( List_t * ) pxOverflowDelayedTaskList, pcNameToQuery );
+			}
+
+			#if ( INCLUDE_vTaskSuspend == 1 )
+			{
+				if( pxTCB == NULL )
+				{
+					/* Search the suspended list. */
+					pxTCB = prvSearchForNameWithinSingleList( &xSuspendedTaskList, pcNameToQuery );
+				}
+			}
+			#endif
+
+			#if( INCLUDE_vTaskDelete == 1 )
+			{
+				if( pxTCB == NULL )
+				{
+					/* Search the deleted list. */
+					pxTCB = prvSearchForNameWithinSingleList( &xTasksWaitingTermination, pcNameToQuery );
+				}
+			}
+			#endif
+		}
+		( void ) xTaskResumeAll();
+
+		return ( TaskHandle_t ) pxTCB;
+	}
+
+#endif /* INCLUDE_xTaskGetTaskHandle */
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
@@ -1886,20 +2032,20 @@ UBaseType_t uxTaskGetNumberOfTasks( void )
 				do
 				{
 					uxQueue--;
-					uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &( pxReadyTasksLists[ uxQueue ] ), eReady );
+					uxTask += prvListTasksWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &( pxReadyTasksLists[ uxQueue ] ), eReady );
 
 				} while( uxQueue > ( UBaseType_t ) tskIDLE_PRIORITY ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 
 				/* Fill in an TaskStatus_t structure with information on each
 				task in the Blocked state. */
-				uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( List_t * ) pxDelayedTaskList, eBlocked );
-				uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( List_t * ) pxOverflowDelayedTaskList, eBlocked );
+				uxTask += prvListTasksWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( List_t * ) pxDelayedTaskList, eBlocked );
+				uxTask += prvListTasksWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), ( List_t * ) pxOverflowDelayedTaskList, eBlocked );
 
 				#if( INCLUDE_vTaskDelete == 1 )
 				{
 					/* Fill in an TaskStatus_t structure with information on
 					each task that has been deleted but not yet cleaned up. */
-					uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &xTasksWaitingTermination, eDeleted );
+					uxTask += prvListTasksWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &xTasksWaitingTermination, eDeleted );
 				}
 				#endif
 
@@ -1907,7 +2053,7 @@ UBaseType_t uxTaskGetNumberOfTasks( void )
 				{
 					/* Fill in an TaskStatus_t structure with information on
 					each task in the Suspended state. */
-					uxTask += prvListTaskWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &xSuspendedTaskList, eSuspended );
+					uxTask += prvListTasksWithinSingleList( &( pxTaskStatusArray[ uxTask ] ), &xSuspendedTaskList, eSuspended );
 				}
 				#endif
 
@@ -3268,9 +3414,98 @@ TCB_t *pxNewTCB;
 }
 /*-----------------------------------------------------------*/
 
+#if( configUSE_TRACE_FACILITY == 1 )
+
+	void vTaskGetTaskInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState )
+	{
+	TCB_t *pxTCB;
+
+		/* xTask is NULL then get the state of the calling task. */
+		pxTCB = prvGetTCBFromHandle( xTask );
+
+		pxTaskStatus->xHandle = ( TaskHandle_t ) pxTCB;
+		pxTaskStatus->pcTaskName = ( const char * ) &( pxTCB->pcTaskName [ 0 ] );
+		pxTaskStatus->uxCurrentPriority = pxTCB->uxPriority;
+		pxTaskStatus->pxStackBase = pxTCB->pxStack;
+		pxTaskStatus->xTaskNumber = pxTCB->uxTCBNumber;
+
+		#if ( INCLUDE_vTaskSuspend == 1 )
+		{
+			/* If the task is in the suspended list then there is a chance it is
+			actually just blocked indefinitely - so really it should be reported as
+			being in the Blocked state. */
+			if( pxTaskStatus->eCurrentState == eSuspended )
+			{
+				vTaskSuspendAll();
+				{
+					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
+					{
+						pxTaskStatus->eCurrentState = eBlocked;
+					}
+				}
+				xTaskResumeAll();
+			}
+		}
+		#endif /* INCLUDE_vTaskSuspend */
+
+		#if ( configUSE_MUTEXES == 1 )
+		{
+			pxTaskStatus->uxBasePriority = pxTCB->uxBasePriority;
+		}
+		#else
+		{
+			pxTaskStatus->uxBasePriority = 0;
+		}
+		#endif
+
+		#if ( configGENERATE_RUN_TIME_STATS == 1 )
+		{
+			pxTaskStatus->ulRunTimeCounter = pxTCB->ulRunTimeCounter;
+		}
+		#else
+		{
+			pxTaskStatus->ulRunTimeCounter = 0;
+		}
+		#endif
+
+		/* Obtaining the task state is a little fiddly, so is only done if the value
+		of eState passed into this function is eInvalid - otherwise the state is
+		just set to whatever is passed in. */
+		if( eState != eInvalid )
+		{
+			pxTaskStatus->eCurrentState = eState;
+		}
+		else
+		{
+			pxTaskStatus->eCurrentState = eTaskGetState( xTask );
+		}
+
+		/* Obtaining the stack space takes some time, so the xGetFreeStackSpace
+		parameter is provided to allow it to be skipped. */
+		if( xGetFreeStackSpace != pdFALSE )
+		{
+			#if ( portSTACK_GROWTH > 0 )
+			{
+				pxTaskStatus->usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( uint8_t * ) pxTCB->pxEndOfStack );
+			}
+			#else
+			{
+				pxTaskStatus->usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( uint8_t * ) pxTCB->pxStack );
+			}
+			#endif
+		}
+		else
+		{
+			pxTaskStatus->usStackHighWaterMark = 0;
+		}
+	}
+
+#endif /* INCLUDE_eTaskGetState */
+/*-----------------------------------------------------------*/
+
 #if ( configUSE_TRACE_FACILITY == 1 )
 
-	static UBaseType_t prvListTaskWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState )
+	static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState )
 	{
 	volatile TCB_t *pxNextTCB, *pxFirstTCB;
 	UBaseType_t uxTask = 0;
@@ -3286,60 +3521,8 @@ TCB_t *pxNewTCB;
 			do
 			{
 				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
-
-				pxTaskStatusArray[ uxTask ].xHandle = ( TaskHandle_t ) pxNextTCB;
-				pxTaskStatusArray[ uxTask ].pcTaskName = ( const char * ) &( pxNextTCB->pcTaskName [ 0 ] );
-				pxTaskStatusArray[ uxTask ].xTaskNumber = pxNextTCB->uxTCBNumber;
-				pxTaskStatusArray[ uxTask ].eCurrentState = eState;
-				pxTaskStatusArray[ uxTask ].uxCurrentPriority = pxNextTCB->uxPriority;
-
-				#if ( INCLUDE_vTaskSuspend == 1 )
-				{
-					/* If the task is in the suspended list then there is a chance
-					it is actually just blocked indefinitely - so really it should
-					be reported as being in the Blocked state. */
-					if( eState == eSuspended )
-					{
-						if( listLIST_ITEM_CONTAINER( &( pxNextTCB->xEventListItem ) ) != NULL )
-						{
-							pxTaskStatusArray[ uxTask ].eCurrentState = eBlocked;
-						}
-					}
-				}
-				#endif /* INCLUDE_vTaskSuspend */
-
-				#if ( configUSE_MUTEXES == 1 )
-				{
-					pxTaskStatusArray[ uxTask ].uxBasePriority = pxNextTCB->uxBasePriority;
-				}
-				#else
-				{
-					pxTaskStatusArray[ uxTask ].uxBasePriority = 0;
-				}
-				#endif
-
-				#if ( configGENERATE_RUN_TIME_STATS == 1 )
-				{
-					pxTaskStatusArray[ uxTask ].ulRunTimeCounter = pxNextTCB->ulRunTimeCounter;
-				}
-				#else
-				{
-					pxTaskStatusArray[ uxTask ].ulRunTimeCounter = 0;
-				}
-				#endif
-
-				#if ( portSTACK_GROWTH > 0 )
-				{
-					pxTaskStatusArray[ uxTask ].usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( uint8_t * ) pxNextTCB->pxEndOfStack );
-				}
-				#else
-				{
-					pxTaskStatusArray[ uxTask ].usStackHighWaterMark = prvTaskCheckFreeStackSpace( ( uint8_t * ) pxNextTCB->pxStack );
-				}
-				#endif
-
+				vTaskGetTaskInfo( ( TaskHandle_t ) pxNextTCB, &( pxTaskStatusArray[ uxTask ] ), pdTRUE, eState );
 				uxTask++;
-
 			} while( pxNextTCB != pxFirstTCB );
 		}
 		else
@@ -3422,7 +3605,7 @@ TCB_t *pxNewTCB;
 		{
 			/* Only free the stack and TCB if they were allocated dynamically in
 			the first place. */
-			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_STACK ) == ( UBaseType_t ) 0 )
+			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_STACK ) == ( uint8_t ) 0 )
 			{
 				vPortFreeAligned( pxTCB->pxStack );
 			}
@@ -3431,7 +3614,7 @@ TCB_t *pxNewTCB;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_TCB ) == ( UBaseType_t ) 0 )
+			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_TCB ) == ( uint8_t ) 0 )
 			{
 				vPortFreeAligned( pxTCB );
 			}

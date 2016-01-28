@@ -171,6 +171,10 @@ extern "C" {
 	#endif
 #endif
 
+#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
+	#define configUSE_DAEMON_TASK_STARTUP_HOOK 0
+#endif
+
 #ifndef INCLUDE_xTaskGetIdleTaskHandle
 	#define INCLUDE_xTaskGetIdleTaskHandle 0
 #endif
@@ -189,6 +193,10 @@ extern "C" {
 
 #ifndef INCLUDE_pcTaskGetTaskName
 	#define INCLUDE_pcTaskGetTaskName 0
+#endif
+
+#ifndef INCLUDE_xTaskGetTaskHandle
+	#define INCLUDE_xTaskGetTaskHandle 0
 #endif
 
 #ifndef configUSE_APPLICATION_TASK_TAG

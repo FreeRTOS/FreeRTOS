@@ -154,14 +154,23 @@ void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
-void vApplicationGetIdleTaskMemory( DummyTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
-void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
 
 /*
  * Writes trace data to a disk file when the trace recording is stopped.
  * This function will simply overwrite any trace files that already exist.
  */
 static void prvSaveTraceFile( void );
+
+/*-----------------------------------------------------------*/
+
+/* When configSUPPORT_STATIC_ALLOCATION is set to 1 the application writer can
+use a callback function to optionally provide the memory required by the idle
+and timer tasks.  This is the stack that will be used by the timer task.  It is
+declared here, as a global, so it can be checked by a test that is implemented
+in a different file. */
+StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 /* The user trace event posted to the trace recording on each tick interrupt.
 Note:  This project runs under Windows, and Windows will not be executing the
@@ -299,6 +308,15 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
+void vApplicationDaemonTaskStartupHook( void )
+{
+	/* This function will be called once only, when the daemon task starts to
+	execute	(sometimes called the timer task).  This is useful if the
+	application includes initialisation code that would benefit from executing
+	after the scheduler has been started. */
+}
+/*-----------------------------------------------------------*/
+
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
 static portBASE_TYPE xPrinted = pdFALSE;
@@ -392,11 +410,11 @@ const HeapRegion_t xHeapRegions[] =
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationGetIdleTaskMemory( DummyTCB_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
 {
 /* The buffers used by the idle task must be static so they are persistent, and
 so exist after this function returns. */
-static DummyTCB_t xIdleTaskTCB;
+static StaticTask_t xIdleTaskTCB;
 static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
 	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
@@ -409,12 +427,13 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationGetTimerTaskMemory( DummyTCB_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
 {
 /* The buffers used by the Timer/Daemon task must be static so they are
-persistent, and so exist after this function returns. */
-static DummyTCB_t xTimerTaskTCB;
-static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+persistent, and so exist after this function returns.  The stack buffer is
+not declared here, but globally, as it is checked by a test in a different
+file. */
+static StaticTask_t xTimerTaskTCB;
 
 	/* configUSE_STATIC_ALLOCATION is set to 1, so the application has the
 	opportunity to supply the buffers that will be used by the Timer/RTOS daemon

@@ -274,7 +274,6 @@ uint16_t usTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 		}
 		#endif /* configSUPPORT_STATIC_ALLOCATION */
 
-
 		#if ( INCLUDE_xTimerGetTimerDaemonTaskHandle == 1 )
 		{
 			/* Create the timer task, storing its handle in xTimerTaskHandle so
@@ -327,7 +326,7 @@ Timer_t *pxNewTimer;
 		}
 		else
 		{
-			pxNewTimer = ( Timer_t * ) pxTimerBuffer;
+			pxNewTimer = ( Timer_t * ) pxTimerBuffer; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
 		}
 
 		if( pxNewTimer != NULL )
@@ -429,7 +428,7 @@ DaemonTaskMessage_t xMessage;
 #endif
 /*-----------------------------------------------------------*/
 
-const char * pcTimerGetTimerName( TimerHandle_t xTimer )
+const char * pcTimerGetTimerName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxTimer = ( Timer_t * ) xTimer;
 
@@ -485,6 +484,18 @@ BaseType_t xListWasEmpty;
 
 	/* Just to avoid compiler warnings. */
 	( void ) pvParameters;
+
+	#if( configUSE_DAEMON_TASK_STARTUP_HOOK == 1 )
+	{
+		extern void vApplicationDaemonTaskStartupHook( void );
+
+		/* Allow the application writer to execute some code in the context of
+		this task at the point the task starts executing.  This is useful if the
+		application includes initialisation code that would benefit from
+		executing after the scheduler has been started. */
+		vApplicationDaemonTaskStartupHook();
+	}
+	#endif /* configUSE_DAEMON_TASK_STARTUP_HOOK */
 
 	for( ;; )
 	{
@@ -769,7 +780,7 @@ TickType_t xTimeNow;
 					allocated. */
 					#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 					{
-						if( pxTimer->ucStaticallyAllocated == pdFALSE )
+						if( pxTimer->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
 						{
 							vPortFree( pxTimer );
 						}

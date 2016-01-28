@@ -229,9 +229,13 @@ typedef void * QueueSetMemberHandle_t;
  * hold the queue's data structure, removing the need for the memory to be
  * allocated dynamically.
  *
- * @return If the queue is successfully create then a handle to the newly
- * created queue is returned.  If the queue cannot be created then 0 is
- * returned.
+ * @return If neither pucQueueStorageBuffer or pxQueueBuffer are NULL, then the
+ * function will not attempt any dynamic memory allocation, and a handle to the
+ * created queue will always be returned.  If pucQueueStorageBuffer or
+ * pxQueueBuffer is NULL then the function will attempt to dynamically allocate
+ * one of both buffers.  In this case, if the allocation succeeds then a handle
+ * to the created queue will be returned, and if one of the the allocation fails
+ * NULL will be returned.
  *
  * Example usage:
    <pre>
@@ -245,7 +249,7 @@ typedef void * QueueSetMemberHandle_t;
  #define ITEM_SIZE sizeof( uint32_t )
 
  // xQueueBuffer will hold the queue structure.
- StaticQueue_t xQueueBuffer; 
+ StaticQueue_t xQueueBuffer;
 
  // ucQueueStorage will hold the items posted to the queue.  Must be at least
  // [(queue length) * ( queue item size)] bytes long.
@@ -267,7 +271,7 @@ typedef void * QueueSetMemberHandle_t;
 	// ... Rest of task code.
  }
  </pre>
- * \defgroup xQueueCreate xQueueCreate
+ * \defgroup xQueueCreateStatic xQueueCreateStatic
  * \ingroup QueueManagement
  */
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
@@ -1649,7 +1653,7 @@ BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION
  * returned.
  */
 #if( configQUEUE_REGISTRY_SIZE > 0 )
-	const char *pcQueueGetQueueName( QueueHandle_t xQueue );
+	const char *pcQueueGetQueueName( QueueHandle_t xQueue ); /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 #endif
 
 /*

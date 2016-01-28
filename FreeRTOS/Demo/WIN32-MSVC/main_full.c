@@ -215,7 +215,12 @@ int main_full( void )
 	vStartInterruptSemaphoreTasks();
 	vStartQueueSetPollingTask();
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	vStartStaticallyAllocatedTasks();
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		vStartStaticallyAllocatedTasks();
+	}
+	#endif
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -339,10 +344,13 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: Queue set polling";
 		}
-		else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Static allocation";
-		}
+
+		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+			else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "Error: Static allocation";
+			}
+		#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
@@ -396,6 +404,16 @@ void *pvAllocated;
 	that has tasks blocked on it. */
 	if( xMutexToDelete != NULL )
 	{
+		/* For test purposes, add the mutex to the registry, then remove it
+		again, before it is deleted - checking its name is as expected before
+		and after the assertion into the registry and its removal from the
+		registry. */
+		configASSERT( pcQueueGetQueueName( xMutexToDelete ) == NULL );
+		vQueueAddToRegistry( xMutexToDelete, "Test_Mutex" );
+		configASSERT( strcmp( pcQueueGetQueueName( xMutexToDelete ), "Test_Mutex" ) == 0 );
+		vQueueUnregisterQueue( xMutexToDelete );
+		configASSERT( pcQueueGetQueueName( xMutexToDelete ) == NULL );
+
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;
 	}
@@ -482,6 +500,8 @@ TaskHandle_t xIdleTaskHandle, xTimerTaskHandle;
 char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
+TaskStatus_t xTaskInfo;
+extern StackType_t uxTimerTaskStack[];
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -496,11 +516,28 @@ TaskHandle_t xTestTask;
 		pcStatusMessage = "Error:  Returned idle task handle was incorrect";
 	}
 
+	/* Check the same handle is obtained using the idle task's name.  First try
+	with the wrong name, then the right name. */
+	if( xTaskGetTaskHandle( "Idle" ) == xIdleTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
+	}
+
+	if( xTaskGetTaskHandle( "IDLE" ) != xIdleTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
+	}
+
 	/* Check the timer task handle was returned correctly. */
 	pcTaskName = pcTaskGetTaskName( xTimerTaskHandle );
 	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
 	{
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
+	}
+
+	if( xTaskGetTaskHandle( "Tmr Svc" ) != xTimerTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned handle for name Tmr Svc was incorrect";
 	}
 
 	/* This task is running, make sure it's state is returned as running. */
@@ -513,6 +550,22 @@ TaskHandle_t xTestTask;
 	if( eTaskStateGet( xTimerTaskHandle ) != eBlocked )
 	{
 		pcStatusMessage = "Error:  Returned timer task state was incorrect";
+	}
+
+	/* Also with the vTaskGetTaskInfo() function. */
+	vTaskGetTaskInfo( xTimerTaskHandle, /* The task being queried. */
+					  &xTaskInfo,		/* The structure into which information on the task will be written. */
+					  pdTRUE,			/* Include the task's high watermark in the structure. */
+					  eInvalid );		/* Include the task state in the structure. */
+
+	/* Check the information returned by vTaskGetTaskInfo() is as expected. */
+	if( ( xTaskInfo.eCurrentState != eBlocked )						 ||
+		( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 )			 ||
+		( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
+		( xTaskInfo.pxStackBase != uxTimerTaskStack )				 ||
+		( xTaskInfo.xHandle != xTimerTaskHandle ) )
+	{
+		pcStatusMessage = "Error:  vTaskGetTaskInfo() returned incorrect information about the timer task";
 	}
 
 	/* Other tests that should only be performed once follow.  The test task

@@ -72,7 +72,7 @@
  * project that demonstrates the tickless low power features of FreeRTOS, and a
  * more comprehensive test and demo application.  The configCREATE_LOW_POWER_DEMO
  * setting in FreeRTOSConifg.h is used to select between the two.  See the notes
- * on using conifgCREATE_LOW_POWER_DEMO in main.c.  This file implements the 
+ * on using conifgCREATE_LOW_POWER_DEMO in main.c.  This file implements the
  * comprehensive test and demo version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
@@ -128,11 +128,9 @@
 #include "blocktim.h"
 #include "GenQTest.h"
 #include "recmutex.h"
-#include "death.h"
 #include "TimerDemo.h"
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
-#include "IntSemTest.h"
 #include "StaticAllocation.h"
 
 /* Priorities for the demo application tasks. */
@@ -227,7 +225,6 @@ void main_full( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
-	vStartInterruptSemaphoreTasks();
 	vStartStaticallyAllocatedTasks();
 
 	/* Create the register check tasks, as described at the top of this	file */
@@ -237,11 +234,6 @@ void main_full( void )
 	/* Create the task that performs the 'check' functionality,	as described at
 	the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
-
-	/* The set of tasks created by the following function call have to be
-	created last as they keep account of the number of tasks they expect to see
-	running. */
-	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -313,11 +305,6 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound = 1UL << 6UL;
 		}
 
-		if( xIsCreateTaskStillRunning() != pdTRUE )
-		{
-			ulErrorFound = 1UL << 7UL;
-		}
-
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound = 1UL << 8UL;
@@ -326,11 +313,6 @@ unsigned long ulErrorFound = pdFALSE;
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) != pdPASS )
 		{
 			ulErrorFound = 1UL << 9UL;
-		}
-
-		if( xAreInterruptSemaphoreTasksStillRunning() != pdPASS )
-		{
-			ulErrorFound = 1UL << 11UL;
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
@@ -423,9 +405,6 @@ void vFullDemoTickHook( void )
 
 	/* Call the periodic event group from ISR demo. */
 	vPeriodicEventGroupsProcessing();
-
-	/* Call the code that uses a mutex from an ISR. */
-	vInterruptSemaphorePeriodicTest();
 
 	/* Call the code that 'gives' a task notification from an ISR. */
 	xNotifyTaskFromISR();

@@ -1,0 +1,113 @@
+END-USER LICENSE AGREEMENT
+IMPORTANT:  READ CAREFULLY
+BEFORE AGREEING TO TERMS
+
+THIS PRODUCT CONTAINS CERTAIN COMPUTER PROGRAMS AND OTHER THIRD PARTY
+PROPRIETARY MATERIAL ("LICENSED PRODUCT"), THE USE OF WHICH IS SUBJECT TO THIS
+END-USER LICENSE AGREEMENT. INDICATING YOUR AGREEMENT CONSTITUTES YOUR AND
+(IF APPLICABLE) YOUR COMPANY'S ASSENT TO AND ACCEPTANCE OF THIS END-USER LICENSE
+AGREEMENT (THE "LICENSE" OR "AGREEMENT").  IF YOU DO NOT AGREE WITH ALL OF THE
+TERMS, YOU MUST NOT USE THIS PRODUCT.  WRITTEN APPROVAL IS NOT A PREREQUISITE TO
+THE VALIDITY OR ENFORCEABILITY OF THIS AGREEMENT, AND NO SOLICITATION OF SUCH
+WRITTEN APPROVAL BY OR ON BEHALF OF SILICON LABORATORIES, INC. ("SILICON LABS")
+SHALL BE CONSTRUED AS AN INFERENCE TO THE CONTRARY.  IF THESE TERMS ARE
+CONSIDERED AN OFFER BY SILICON LABS, ACCEPTANCE IS EXPRESSLY LIMITED TO THESE
+TERMS.
+
+LICENSE AND WARRANTY:  The Licensed Product and the embedded Software which is
+made the subject of this License is either the property of SILICON LABS or a
+third party from whom SILICON LABS has the authorization to distribute to you
+subject to the terms of this Agreement.  This Licensed Product is protected by
+state, federal, and international copyright law. Although SILICON LABS continues
+to own the Licensed Product and the right to distribute the embedded third party
+Software, you will have certain rights to use the Licensed Product and the
+embedded Software after your acceptance of this License. Except as may be
+modified by a license addendum which accompanies this License, your rights and
+obligations with respect to the use of this Product and the embedded software
+are as follows:
+
+1.  AS APPROPRIATE WITH RESPECT TO THE LICENSED PRODUCT, YOU MAY: Use, copy,
+    distribute and make derivative works of the Software for any purpose,
+    including commercial applications, subject to the following restrictions:
+    (i) The origin of this software must not be misrepresented; (ii) you must
+    not claim that you wrote the original software; (iii) altered source
+    versions must be plainly marked as such, and must not be misrepresented as
+    being the original software; and (iv) any notices contained in the Software
+    may not be removed or altered, including notices in source code versions.
+
+2.  YOU MAY NOT: (A) Sublicense, assign, rent or lease any portion of the
+    Licensed Product or the embedded Software; or (B) Remove any product
+    identification, copyright or other notices that appear on the Licensed
+    Product or embedded Software.
+
+3.  Limited Use:  Use of any of the Software is strictly limited to use in
+    systems containing one or more SILICON LABS products when the Software is
+    enabled to be functional.  Any unauthorized use is expressly prohibited and
+    will constitute a breach of this Agreement.
+
+4.  Warranty:  SILICON LABS does not warrant that the Licensed Product or
+    embedded Software will meet your requirements or that operation of the
+    Licensed Product will be uninterrupted or that the embedded Software will be
+    error-free.  You agree that the Licensed Product is provided "AS IS" and
+    that SILICON LABS makes no warranty as to the Licensed Product or embedded
+    Software.  SILICON LABS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED,
+    INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT, RELATED TO THE
+    SOFTWARE, ITS USE OR ANY INABILITY TO USE IT, THE RESULTS OF ITS USE AND
+    THIS AGREEMENT.
+
+    YOU MAY HAVE OTHER RIGHTS, WHICH VARY FROM STATE TO STATE.
+
+5.  Disclaimer of Damages:  IN NO EVENT WILL SILICON LABS BE LIABLE TO YOU FOR
+    ANY SPECIAL, CONSEQUENTIAL, INDIRECT, OR SIMILAR DAMAGES, INCLUDING ANY LOST
+    PROFITS OR LOST DATA ARISING OUT OF THE USE OR INABILITY TO USE THE LICENSED
+    PRODUCT EVEN IF SILICON LABS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+    DAMAGES.
+
+    SOME STATES DO NOT ALLOW THE LIMITATION OR EXCLUSION OF LIABILITY FOR
+    INCIDENTAL OR CONSEQUENTIAL DAMAGES. SO THE ABOVE LIMITATION OR EXCLUSION
+    MAY NOT APPLY TO YOU.
+
+    IN NO CASE SHALL SILICON LABS' LIABILITY EXCEED THE PURCHASE PRICE FOR THE
+    LICENSED PRODUCT.  The disclaimers and limitations set forth above will
+    apply regardless of whether you accept the Licensed Software.
+
+6.  Term and Termination:  The term of this Agreement and the License granted
+    herein shall begin upon use of the Licensed Product and continue in
+    perpetuity unless you breach any of the obligations set out under this
+    Agreement.  Upon your breach of this Agreement by you, the license granted
+    hereunder shall terminate immediately and you shall cease all use of the
+    Licensed Products and return same as well as any copies of the Licensed
+    Product and/or embedded Software to SILICON LABS immediately.  Termination
+    of this License upon your breach is only one remedy available to SILICON
+    LABS. In addition to termination of this Agreement upon your breach,
+    SILICON LABS shall be entitled to seek any and all other available remedies,
+    at law or at equity, arising from your breach.
+
+7.  Export: You shall comply with all applicable federal, provincial, state and
+    local laws, regulations and ordinances including but not limited to
+    applicable U.S. Export Administration Laws and Regulations.  You shall not
+    export or re-export, or allow the export or re-export of the Licensed
+    Product, any component of the Licensed Product, or any copy of the embedded
+    Software in violation of any such restrictions, laws or regulations, or to
+    Cuba, Libya, North Korea, Iran, Iraq, or Rwanda or to any Group D:1 or E:2
+    country (or any national of such country) specified in the then current
+    Supplement No. 1 to Part 740, or, in violation of the embargo provisions in
+    Part 746, of the U.S. Export Administration Regulations (or any successor
+    regulations or supplement), except in compliance with and with all licenses
+    and approvals required under applicable export laws and regulations,
+    including without limitation, those of the U.S. Department of Commerce.
+
+8.  General: This Agreement will be governed by the laws of the State of Texas
+    and any applicable federal laws or regulations. The waiver by either Party
+    of any default or breach of this Agreement shall not constitute a waiver of
+    any other or subsequent default or breach. This Agreement constitutes the
+    complete and exclusive statement of the mutual understanding between you and
+    SILICON LABS with respect to this subject matter herein. This Agreement may
+    only be modified by a written addendum, which has been signed by both you
+    and SILICON LABS. Should you have any questions concerning this Agreement,
+    or if you desire to contact SILICON LABS for any reason, please write:
+
+Silicon Laboratories, Inc.
+400 West Cesar Chavez
+Austin, Texas 78701, U.S.A.

@@ -1,0 +1,17 @@
+================ Revision history ============================================
+4.0.0:
+- Removed wrist based support from biometric demo.
+- Contact Silicon Labs for wrist based HRM solution.
+
+3.20.12:
+- Fixed MSD device example, formatting now OK on WinXP.
+
+3.20.5:
+- Added EM4+RTC mode demo in emode example.
+- Added new USB composite device example project.
+
+3.20.2:
+- Added FreeRTOS tickless and blink demo
+
+3.20.0:
+- Initial revision.

@@ -67,6 +67,8 @@
     1 tab == 4 spaces!
 */
 
+#warning Not functioning correctly above -O1 optimisation level.
+
 /* Standard includes. */
 #include "limits.h"
 

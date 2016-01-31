@@ -3500,7 +3500,7 @@ TCB_t *pxNewTCB;
 		}
 	}
 
-#endif /* INCLUDE_eTaskGetState */
+#endif /* configUSE_TRACE_FACILITY */
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )

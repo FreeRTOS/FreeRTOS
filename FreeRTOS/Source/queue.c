@@ -390,13 +390,13 @@ size_t xQueueSizeInBytes;
 			/* The address of a statically allocated queue was passed in, use
 			it and note that the queue was not dynamically allocated so there is
 			no attempt to free it again should the queue be deleted. */
-			pxNewQueue = ( Queue_t * ) pxStaticQueue;
+			pxNewQueue = ( Queue_t * ) pxStaticQueue; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
 			pxNewQueue->ucStaticAllocationFlags = queueSTATICALLY_ALLOCATED_QUEUE_STRUCT;
 		}
 
 		if( pxNewQueue != NULL )
 		{
-			if( ( *ppucQueueStorage == NULL ) && ( xQueueSizeInBytes > 0 ) )
+			if( ( *ppucQueueStorage == NULL ) && ( xQueueSizeInBytes > ( size_t ) 0 ) )
 			{
 				/* A statically allocated queue storage area was not passed in,
 				so allocate the queue storage area dynamically. */
@@ -2499,10 +2499,10 @@ BaseType_t xReturn;
 
 #if ( configQUEUE_REGISTRY_SIZE > 0 )
 
-	const char *pcQueueGetQueueName( QueueHandle_t xQueue )
+	const char *pcQueueGetQueueName( QueueHandle_t xQueue ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	UBaseType_t ux;
-	const char *pcReturn = NULL;
+	const char *pcReturn = NULL; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 		/* Note there is nothing here to protect against another task adding or
 		removing entries from the registry while it is being searched. */

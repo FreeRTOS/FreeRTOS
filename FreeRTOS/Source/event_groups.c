@@ -143,7 +143,7 @@ EventGroup_t *pxEventBits;
 	else
 	{
 		/* The user has provided a statically allocated event group - use it. */
-		pxEventBits = ( EventGroup_t * ) pxStaticEventGroup;
+		pxEventBits = ( EventGroup_t * ) pxStaticEventGroup; /*lint !e740 EventGroup_t and StaticEventGroup_t are guaranteed to have the same size and alignment requirement - checked by configASSERT(). */
 	}
 
 	if( pxEventBits != NULL )
@@ -611,7 +611,7 @@ const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 		/* Only free the memory if it was allocated dynamically. */
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 		{
-			if( pxEventBits->ucStaticallyAllocated == pdFALSE )
+			if( pxEventBits->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
 			{
 				vPortFree( pxEventBits );
 			}

@@ -154,8 +154,6 @@ static void prvSetupHardware( void )
 	BSP_TraceProfilerSetup();
 	SLEEP_Init( NULL, NULL );
 	BSP_LedsInit();
-
-//_RB_	SLEEP_SleepBlockBegin( ( SLEEP_EnergyMode_t ) ( configSLEEP_MODE+1 ) );
 }
 /*-----------------------------------------------------------*/
 

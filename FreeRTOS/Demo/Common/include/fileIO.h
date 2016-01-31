@@ -68,7 +68,7 @@
 */
 
 #ifndef FILE_IO_H
-#define FILE_OI_H
+#define FILE_IO_H
 
 void vDisplayMessage( const char * const pcMessageToPrint );
 void vWriteMessageToDisk( const char * const pcMessage );

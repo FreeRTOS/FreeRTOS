@@ -70,7 +70,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082417</id>
+			<id>1454263538723</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -79,7 +79,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082420</id>
+			<id>1454263538726</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -88,7 +88,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082425</id>
+			<id>1454263538748</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -97,7 +97,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082429</id>
+			<id>1454263538751</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -106,7 +106,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082433</id>
+			<id>1454263538755</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -115,7 +115,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082437</id>
+			<id>1454263538759</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -124,7 +124,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082441</id>
+			<id>1454263538763</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -133,7 +133,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082445</id>
+			<id>1454263538766</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -142,16 +142,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082449</id>
-			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-death.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1453621082455</id>
+			<id>1454263538770</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -160,16 +151,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1453621082460</id>
-			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-IntSemTest.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1453621082465</id>
+			<id>1454263538774</id>
 			<name>Source/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -178,12 +160,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>0</id>
+			<id>1454264510429</id>
 			<name>Source/FreeRTOS_Source/portable/GCC</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-ARM_CM3</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1454264510433</id>
+			<name>Source/FreeRTOS_Source/portable/GCC</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-ARM_CM4F</arguments>
 			</matcher>
 		</filter>
 		<filter>

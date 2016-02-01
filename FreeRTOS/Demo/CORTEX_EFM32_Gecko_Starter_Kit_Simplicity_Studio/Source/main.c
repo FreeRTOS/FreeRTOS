@@ -71,10 +71,12 @@
  * This project provides two demo applications.  A simple blinky style project
  * that demonstrates low power tickless functionality, and a more comprehensive
  * test and demo application.  The configCREATE_LOW_POWER_DEMO setting, which is
- * defined in FreeRTOSConfig.h, is used to select between the two.  The simply
- * blinky low power demo is implemented and described in main_low_power.c.  The
- * more comprehensive test and demo application is implemented and described in
- * main_full.c.
+ * defined in FreeRTOSConfig.h, is used to select between the two, and to select
+ * the clock used when demonstrating tickless functionality.
+ *
+ * The simply blinky low power demo is implemented and described in
+ * main_low_power.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and standard FreeRTOS hook functions.
@@ -84,6 +86,8 @@
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
  */
+
+#warning Check the tick suppression routine in the case where the system unblocks before an entire tick period has expired.
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -132,7 +136,7 @@ int main( void )
 
 	/* The mainCREATE_LOW_POWER_DEMO setting is described at the top
 	of this file. */
-	#if( configCREATE_LOW_POWER_DEMO == 1 )
+	#if( configCREATE_LOW_POWER_DEMO != 0 )
 	{
 		main_low_power();
 	}
@@ -154,6 +158,8 @@ static void prvSetupHardware( void )
 	BSP_TraceProfilerSetup();
 	SLEEP_Init( NULL, NULL );
 	BSP_LedsInit();
+
+	SLEEP_SleepBlockBegin( configENERGY_MODE );
 }
 /*-----------------------------------------------------------*/
 

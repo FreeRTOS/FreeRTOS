@@ -71,8 +71,9 @@
  * NOTE 1:  This project provides two demo applications.  A simple blinky style
  * project that demonstrates the tickless low power features of FreeRTOS, and a
  * more comprehensive test and demo application.  The configCREATE_LOW_POWER_DEMO
- * setting in FreeRTOSConifg.h is used to select between the two.  See the notes
- * on using conifgCREATE_LOW_POWER_DEMO in main.c.  This file implements the
+ * setting in FreeRTOSConifg.h is used to select between the two, and to select
+ * the clock used when tickless mode is used.  See the notes on using
+ * conifgCREATE_LOW_POWER_DEMO in main.c.  This file implements the
  * comprehensive test and demo version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the

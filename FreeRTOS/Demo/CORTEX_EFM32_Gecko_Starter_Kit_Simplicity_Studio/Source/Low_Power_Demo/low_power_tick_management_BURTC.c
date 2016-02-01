@@ -83,7 +83,9 @@
 #include "em_int.h"
 #include "sleep.h"
 
-/* This file contains functions that will override the default implementations
+/* SEE THE COMMENTS ABOVE THE DEFINITION OF configCREATE_LOW_POWER_DEMO IN
+FreeRTOSConfig.h
+This file contains functions that will override the default implementations
 in the RTOS port layer.  Therefore only build this file if the low power demo
 is being built. */
 #if( configCREATE_LOW_POWER_DEMO == 1 )
@@ -98,7 +100,8 @@ is being built. */
  */
 void vPortSetupTimerInterrupt( void );
 
-/* Override the default definition of vPortSuppressTicksAndSleep() that is
+/*
+ * Override the default definition of vPortSuppressTicksAndSleep() that is
  * weakly defined in the FreeRTOS Cortex-M port layer with a version that
  * manages the BURTC clock, as the tick is generated from the low power BURTC
  * and not the SysTick as would normally be the case on a Cortex-M.
@@ -110,12 +113,11 @@ void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
 /* Calculate how many clock increments make up a single tick period. */
 static const uint32_t ulReloadValueForOneTick = ( mainTIMER_FREQUENCY_HZ / configTICK_RATE_HZ );
 
-/* Calculate the maximum number of ticks that can be suppressed when using the
-high resolution clock and low resolution clock respectively. */
+/* Will hold the maximum number of ticks that can be suppressed. */
 static uint32_t xMaximumPossibleSuppressedTicks = 0;
 
 /* Flag set from the tick interrupt to allow the sleep processing to know if
-sleep mode was exited because of an timer interrupt or a different interrupt. */
+sleep mode was exited because of a timer interrupt or a different interrupt. */
 static volatile uint32_t ulTickFlag = pdFALSE;
 
 /* As the clock is only 2KHz, it is likely a value of 1 will be too much, so
@@ -128,6 +130,8 @@ static const uint32_t ulStoppedTimerCompensation = 0UL;
 void vPortSetupTimerInterrupt( void )
 {
 BURTC_Init_TypeDef xBURTCInitStruct = BURTC_INIT_DEFAULT;
+
+	/* Configure the BURTC to generate the RTOS tick interrupt. */
 
 	xMaximumPossibleSuppressedTicks = ULONG_MAX / ulReloadValueForOneTick;
 
@@ -145,7 +149,7 @@ BURTC_Init_TypeDef xBURTCInitStruct = BURTC_INIT_DEFAULT;
 	BURTC_IntDisable( BURTC_IF_COMP0 );
 	BURTC_Init( &xBURTCInitStruct );
 
-	/* The tick interrupt must be set to the lowest possible. */
+	/* The tick interrupt must be set to the lowest priority possible. */
 	NVIC_SetPriority( BURTC_IRQn, configKERNEL_INTERRUPT_PRIORITY );
 	NVIC_ClearPendingIRQ( BURTC_IRQn );
 	NVIC_EnableIRQ( BURTC_IRQn );
@@ -299,11 +303,11 @@ TickType_t xModifiableIdleTime;
 }
 /*-----------------------------------------------------------*/
 
-void BURTC_IRQHandler(void)
+void BURTC_IRQHandler( void )
 {
 	if( ulTickFlag == pdFALSE )
 	{
-		/* Set BURTC interrupt to one system tick period*/
+		/* Set BURTC interrupt to one RTOS tick period. */
 		BURTC_Enable( false );
 		BURTC_CompareSet( 0, ulReloadValueForOneTick );
 		ulTickFlag = pdTRUE;

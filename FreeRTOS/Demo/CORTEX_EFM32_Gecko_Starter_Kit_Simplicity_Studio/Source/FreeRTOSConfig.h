@@ -87,28 +87,24 @@ extern "C" {
  *----------------------------------------------------------*/
 
 
-/* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky demo low power
-example, or 1 to run the more comprehensive test and demo application.  See
-the comments at the top of main.c for more information. */
-#define configCREATE_LOW_POWER_DEMO	1
+/* Set configCREATE_LOW_POWER_DEMO as follows:
+ *
+ * 0: Build the full test and demo application.
+ * 1: Build the simple blinky tickless low power demo, generating the tick
+ *    interrupt from the BURTC.  EM3 will be entered, but use of the ULFRCO
+ *    clock means timing will be inaccurate.
+ * 2: Build the simple blinky tickless low power demo, generating the tick from
+ *    the RTC.  EM2 will be entered.  The LXFO clock is used, which is more
+ *    accurate than the ULFRCO clock.
+ *  See the comments at the top of main.c, main_full.c and main_low_power.c for
+ *  more information.
+ */
+#define configCREATE_LOW_POWER_DEMO	2
 
 /* Some configuration is dependent on the demo being built. */
-#if( configCREATE_LOW_POWER_DEMO == 1 )
+#if( configCREATE_LOW_POWER_DEMO == 0 )
 
-	/* The slow clock used to generate the tick interrupt in the low power demo
-	runs at 32768Hz.  Ensure the clock is a multiple of the tick rate. */
-	#define configTICK_RATE_HZ				( 100 )
-
-	/* The low power demo uses the tickless idle feature. */
-	#define configUSE_TICKLESS_IDLE			1
-
-	/* Hook function related definitions. */
-	#define configUSE_TICK_HOOK				( 0 )
-	#define configCHECK_FOR_STACK_OVERFLOW	( 0 )
-	#define configUSE_MALLOC_FAILED_HOOK	( 0 )
-	#define configUSE_IDLE_HOOK				( 0 )
-
-#else
+	/* Tickless mode is not used. */
 
 	/* Some of the standard demo test tasks assume a tick rate of 1KHz, even
 	though that is faster than would normally be warranted by a real
@@ -124,7 +120,49 @@ the comments at the top of main.c for more information. */
 	#define configUSE_TICK_HOOK				( 1 )
 	#define configCHECK_FOR_STACK_OVERFLOW	( 1 )
 	#define configUSE_MALLOC_FAILED_HOOK	( 1 )
-	#define configUSE_IDLE_HOOK  ( 1 )
+	#define configUSE_IDLE_HOOK  			( 1 )
+
+	#define configENERGY_MODE				( sleepEM3 )
+
+#elif( configCREATE_LOW_POWER_DEMO == 1 )
+
+	/* Tickless idle mode, generating RTOS tick interrupts from the BURTC, fed
+	by the [inaccurate] ULFRCO clock. */
+
+	/* The slow clock used to generate the tick interrupt in the low power demo
+	runs at 2KHz.  Ensure the tick rate is a multiple of the clock. */
+	#define configTICK_RATE_HZ				( 100 )
+
+	/* The low power demo uses the tickless idle feature. */
+	#define configUSE_TICKLESS_IDLE			1
+
+	/* Hook function related definitions. */
+	#define configUSE_TICK_HOOK				( 0 )
+	#define configCHECK_FOR_STACK_OVERFLOW	( 0 )
+	#define configUSE_MALLOC_FAILED_HOOK	( 0 )
+	#define configUSE_IDLE_HOOK				( 0 )
+
+	#define configENERGY_MODE				( sleepEM4 )
+
+#elif( configCREATE_LOW_POWER_DEMO == 2 )
+
+	/* Tickless idle mode, generating RTOS tick interrupts from the RTC, fed
+	by the LXFO clock. */
+
+	/* The slow clock used to generate the tick interrupt in the low power demo
+	runs at 32768/8=4096Hz.  Ensure the tick rate is a multiple of the clock. */
+	#define configTICK_RATE_HZ				( 128 )
+
+	/* The low power demo uses the tickless idle feature. */
+	#define configUSE_TICKLESS_IDLE			1
+
+	/* Hook function related definitions. */
+	#define configUSE_TICK_HOOK				( 0 )
+	#define configCHECK_FOR_STACK_OVERFLOW	( 0 )
+	#define configUSE_MALLOC_FAILED_HOOK	( 0 )
+	#define configUSE_IDLE_HOOK				( 0 )
+
+	#define configENERGY_MODE				( sleepEM3 )
 
 #endif
 

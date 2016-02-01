@@ -71,9 +71,10 @@
  * NOTE 1:  This project provides two demo applications.  A simple blinky demo
  * that demonstrates tickless low power operation, and a more comprehensive
  * test and demo application.  The configCREATE_LOW_POWER_DEMO setting in
- * FreeRTOSConfig.h is used to select between the two.  See the notes on using
- * configCREATE_LOW_POWER_DEMO in main.c.  This file implements the low power
- * version.
+ * FreeRTOSConfig.h is used to select between the two, and to select the clock
+ * used when tickless low power operation is demonstrated.  See the notes on
+ * using configCREATE_LOW_POWER_DEMO in main.c.  This file implements the low
+ * power version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
  * low power demo.  Generic functions, such FreeRTOS hook functions, and
@@ -211,7 +212,7 @@ const TickType_t xShortDelay = pdMS_TO_TICKS( 10 );
 		if( ulReceivedValue == ulExpectedValue )
 		{
 			/* Turn the LED on for a brief time only so it doens't distort the
-			enerty reading. */
+			energy reading. */
 			BSP_LedSet( mainTASK_LED );
 			vTaskDelay( xShortDelay );
 			BSP_LedClear( mainTASK_LED );

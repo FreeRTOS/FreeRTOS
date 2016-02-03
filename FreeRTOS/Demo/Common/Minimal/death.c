@@ -115,7 +115,7 @@ task can tell if any of the suicidal tasks have failed to die.
 static volatile UBaseType_t uxTasksRunningAtStart = 0;
 
 /* When a task deletes itself, it stack and TCB are cleaned up by the Idle task.
-Under heavy load the idle task might not get much processing time, so it would 
+Under heavy load the idle task might not get much processing time, so it would
 be legitimate for several tasks to remain undeleted for a short period.  There
 may also be a few other unexpected tasks if, for example, the tasks that test
 static allocation are also being used. */
@@ -141,15 +141,15 @@ UBaseType_t *puxPriority;
 	/* Record the number of tasks that are running now so we know if any of the
 	suicidal tasks have failed to be killed. */
 	uxTasksRunningAtStart = ( UBaseType_t ) uxTaskGetNumberOfTasks();
-	
+
 	/* FreeRTOS.org versions before V3.0 started the idle-task as the very
 	first task. The idle task was then already included in uxTasksRunningAtStart.
 	From FreeRTOS V3.0 on, the idle task is started when the scheduler is
 	started. Therefore the idle task is not yet accounted for. We correct
 	this by increasing uxTasksRunningAtStart by 1. */
 	uxTasksRunningAtStart++;
-	
-	/* From FreeRTOS version 7.0.0 can optionally create a timer service task.  
+
+	/* From FreeRTOS version 7.0.0 can optionally create a timer service task.
 	If this is done, then uxTasksRunningAtStart needs incrementing again as that
 	too is created when the scheduler is started. */
 	#if configUSE_TIMERS == 1
@@ -159,12 +159,12 @@ UBaseType_t *puxPriority;
 	#endif
 }
 /*-----------------------------------------------------------*/
-					
+
 static portTASK_FUNCTION( vSuicidalTask, pvParameters )
 {
 volatile long l1, l2;
 TaskHandle_t xTaskToKill;
-const TickType_t xDelay = ( TickType_t ) 200 / portTICK_PERIOD_MS;
+const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 200 );
 
 	if( pvParameters != NULL )
 	{
@@ -203,7 +203,7 @@ const TickType_t xDelay = ( TickType_t ) 200 / portTICK_PERIOD_MS;
 
 static portTASK_FUNCTION( vCreateTasks, pvParameters )
 {
-const TickType_t xDelay = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
+const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 1000 );
 UBaseType_t uxPriority;
 
 	uxPriority = *( UBaseType_t * ) pvParameters;
@@ -240,7 +240,7 @@ static UBaseType_t uxTasksRunningNow;
 	{
 		usLastCreationCount = usCreationCount;
 	}
-	
+
 	uxTasksRunningNow = ( UBaseType_t ) uxTaskGetNumberOfTasks();
 
 	if( uxTasksRunningNow < uxTasksRunningAtStart )

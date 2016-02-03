@@ -122,7 +122,7 @@ queuesetPRIORITY_CHANGE_LOOPS number of values are sent to a queue. */
 /* A delay inserted when the Tx task changes its priority to be above the idle
 task priority to ensure the idle priority tasks get some CPU time before the
 next iteration of the queue set Tx task. */
-#define queuesetTX_LOOP_DELAY	( 200 / portTICK_PERIOD_MS )
+#define queuesetTX_LOOP_DELAY	pdMS_TO_TICKS( ( TickType_t ) 200 )
 
 /* The allowable maximum deviation between a received value and the expected
 received value.  A deviation will occur when data is received from a queue
@@ -420,7 +420,7 @@ TickType_t xBlockTime;
 		}
 
 		/* Wait for a message to arrive on one of the queues in the set. */
-		xActivatedQueue = xQueueSelectFromSet( xQueueSet, portMAX_DELAY );		
+		xActivatedQueue = xQueueSelectFromSet( xQueueSet, portMAX_DELAY );
 
 		if( xActivatedQueue == NULL )
 		{

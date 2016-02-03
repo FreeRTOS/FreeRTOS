@@ -103,9 +103,6 @@
 							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.archiver.base.1920617400" name="GNU ARM Archiver" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.archiver.base"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.silabs.ide.si32.gcc.debug#com.silabs.ide.si32.gcc:4.8.3.20131129.566130702" name="low_power_tick_management_BURTC.c" rcbsApplicability="disable" resourcePath="Source/Low_Power_Demo/low_power_tick_management_BURTC.c" toolsToInvoke="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.1299820402.669016646">
-						<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.1299820402.669016646" name="GNU ARM C Compiler" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.1299820402"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Source/FreeRTOS_Source/portable/GCC/ARM_CM4F|Source/SilLabs_Code/kits/EFM32WG_STK3800|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG/Source|Source/SilLabs_Code/Device/SiliconLabs/EFM32WG|Source/SilLabs_Code/CMSIS/efm32wg|CMSIS/efm32wg|Source/SilLabs_Code/kits/bsp/bsp_dk_3201.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3200.c|Source/SilLabs_Code/kits/bsp/bsp_dk_leds.c|Source/RTT|Source/SilLabs_Code/kits/bsp/bsp_dk_mcuboard.c|Source/SilLabs_Code/kits/bsp/bsp_bcc.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

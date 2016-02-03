@@ -136,7 +136,7 @@ xBlockingQueueParameters *pxQueueParameters1, *pxQueueParameters2;
 xBlockingQueueParameters *pxQueueParameters3, *pxQueueParameters4;
 xBlockingQueueParameters *pxQueueParameters5, *pxQueueParameters6;
 const UBaseType_t uxQueueSize1 = 1, uxQueueSize5 = 5;
-const TickType_t xBlockTime = ( TickType_t ) 1000 / portTICK_PERIOD_MS;
+const TickType_t xBlockTime = pdMS_TO_TICKS( ( TickType_t ) 1000 );
 const TickType_t xDontBlock = ( TickType_t ) 0;
 
 	/* Create the first two tasks as described at the top of the file. */

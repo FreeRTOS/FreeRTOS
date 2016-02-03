@@ -150,7 +150,7 @@ BURTC_Init_TypeDef xBURTCInitStruct = BURTC_INIT_DEFAULT;
 	BURTC_Init( &xBURTCInitStruct );
 
 	/* The tick interrupt must be set to the lowest priority possible. */
-	NVIC_SetPriority( BURTC_IRQn, configKERNEL_INTERRUPT_PRIORITY );
+	NVIC_SetPriority( BURTC_IRQn, configLIBRARY_LOWEST_INTERRUPT_PRIORITY );
 	NVIC_ClearPendingIRQ( BURTC_IRQn );
 	NVIC_EnableIRQ( BURTC_IRQn );
 	BURTC_CompareSet( 0, ulReloadValueForOneTick );
@@ -162,7 +162,7 @@ BURTC_Init_TypeDef xBURTCInitStruct = BURTC_INIT_DEFAULT;
 
 void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 {
-uint32_t ulReloadValue, ulCompleteTickPeriods, ulCurrentCount;
+uint32_t ulReloadValue, ulCompleteTickPeriods, ulCountBeforeSleep, ulCountAfterSleep;
 eSleepModeStatus eSleepAction;
 TickType_t xModifiableIdleTime;
 
@@ -189,12 +189,20 @@ TickType_t xModifiableIdleTime;
 	result in some tiny drift of the time maintained by the kernel with respect
 	to calendar time.  The count is latched before stopping the timer as
 	stopping the timer appears to clear the count. */
-	ulCurrentCount = BURTC_CounterGet();
+	ulCountBeforeSleep = BURTC_CounterGet();
 	BURTC_Enable( false );
+
+	/* If this function is re-entered before one complete tick period then the
+	reload value might be to take into account a partial tick, but just reading
+	the count assumes it is counting up to a full ticks worth - so add in the
+	different if any. */
+	ulCountBeforeSleep += ( ulReloadValueForOneTick - BURTC_CompareGet( 0 ) );
 
 	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as
 	that will mask interrupts that should exit sleep mode. */
 	INT_Disable();
+	__asm volatile( "dsb" );
+	__asm volatile( "isb" );
 
 	/* The tick flag is set to false before sleeping.  If it is true when sleep
 	mode is exited then sleep mode was probably exited because the tick was
@@ -209,7 +217,7 @@ TickType_t xModifiableIdleTime;
 	{
 		/* Restart tick and count up to whatever was left of the current time
 		slice. */
-		BURTC_CompareSet( 0, ulReloadValueForOneTick - ulCurrentCount );
+		BURTC_CompareSet( 0, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
 		BURTC_Enable( true );
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
@@ -220,7 +228,7 @@ TickType_t xModifiableIdleTime;
 	{
 		/* Adjust the reload value to take into account that the current time
 		slice is already partially complete. */
-		ulReloadValue -= ulCurrentCount;
+		ulReloadValue -= ulCountBeforeSleep;
 		BURTC_CompareSet( 0, ulReloadValue );
 
 		/* Restart the BURTC. */
@@ -248,12 +256,14 @@ TickType_t xModifiableIdleTime;
 		result in some tiny drift of the time maintained by the	kernel with
 		respect to calendar time.  The count value is latched before stopping
 		the timer as stopping the timer appears to clear the count. */
-		ulCurrentCount = BURTC_CounterGet();
+		ulCountAfterSleep = BURTC_CounterGet();
 		BURTC_Enable( false );
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
 		INT_Enable();
+		__asm volatile( "dsb" );
+		__asm volatile( "isb" );
 
 		if( ulTickFlag != pdFALSE )
 		{
@@ -261,7 +271,7 @@ TickType_t xModifiableIdleTime;
 			function is called with the scheduler suspended the actual tick
 			processing will not occur until after this function has exited.
 			Reset the reload value with whatever remains of this tick period. */
-			ulReloadValue = ulReloadValueForOneTick - ulCurrentCount;
+			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
 			BURTC_CompareSet( 0, ulReloadValue );
 
 			/* The tick interrupt handler will already have pended the tick
@@ -275,12 +285,17 @@ TickType_t xModifiableIdleTime;
 		{
 			/* Something other than the tick interrupt ended the sleep.  How
 			many complete tick periods passed while the processor was
-			sleeping? */
-			ulCompleteTickPeriods = ulCurrentCount / ulReloadValueForOneTick;
+			sleeping?  Add back in the adjustment that was made to the reload
+			value to account for the fact that a time slice was part way through
+			when this function was called. */
+			ulCountAfterSleep += ulCountBeforeSleep;
+			ulCompleteTickPeriods = ulCountAfterSleep / ulReloadValueForOneTick;
 
 			/* The reload value is set to whatever fraction of a single tick
 			period remains. */
-			ulReloadValue = ulCurrentCount - ( ulCompleteTickPeriods * ulReloadValueForOneTick );
+			ulCountAfterSleep -= ( ulCompleteTickPeriods * ulReloadValueForOneTick );
+			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
+
 			if( ulReloadValue == 0 )
 			{
 				/* There is no fraction remaining. */
@@ -305,12 +320,13 @@ TickType_t xModifiableIdleTime;
 
 void BURTC_IRQHandler( void )
 {
-	if( ulTickFlag == pdFALSE )
+	ulTickFlag = pdTRUE;
+
+	if( RTC_CompareGet( 0 ) != ulReloadValueForOneTick )
 	{
-		/* Set BURTC interrupt to one RTOS tick period. */
+		/* Set RTC interrupt to one RTOS tick period. */
 		BURTC_Enable( false );
 		BURTC_CompareSet( 0, ulReloadValueForOneTick );
-		ulTickFlag = pdTRUE;
 		BURTC_Enable( true );
 	}
 

@@ -122,7 +122,7 @@ that synchronise with the xEventGroupSync() function. */
 #define ebDONT_BLOCK	( 0 )
 
 /* A 5ms delay. */
-#define ebSHORT_DELAY	( 5 / portTICK_PERIOD_MS )
+#define ebSHORT_DELAY	pdMS_TO_TICKS( ( TickType_t ) 5 )
 
 /* Used in the selective bits test which checks no, one or both tasks blocked on
 event bits in a group are unblocked as appropriate as different bits get set. */

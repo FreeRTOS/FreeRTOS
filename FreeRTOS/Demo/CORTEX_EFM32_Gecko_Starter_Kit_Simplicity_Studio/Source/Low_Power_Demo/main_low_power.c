@@ -84,10 +84,22 @@
  * main_low_power() creates one queue, and two tasks.  It then starts the
  * scheduler.
  *
- * TBD
+ * The Queue Send Task:
+ * The queue send task is implemented by the prvQueueSendTask() function in
+ * this file.  It sends the value 100 to the queue every second.
+ *
+ * The Queue Receive Task:
+ * The queue receive task is implemented by the prvQueueReceiveTask() function
+ * in this file.  prvQueueReceiveTask() blocks on the queue, blipping (quickly
+ * turn on then off again) the LED each time it received the value 100 from the
+ * queue send task.  The queue send task writes to the queue every second, so
+ * the LED will blip once a second.
+ *
+ * The RTOS tick is turned off when the queue send task and queue receive task
+ * are both in the Blocked state.
+ *
  */
 
-#warning Description of demo in comments above is not correct.
 
 /* Kernel includes. */
 #include "FreeRTOS.h"

@@ -74,9 +74,12 @@
 /* SiLabs library includes. */
 #include "em_cmu.h"
 #include "em_rtc.h"
+#include "em_burtc.h"
 #include "em_rmu.h"
 #include "em_int.h"
 #include "sleep.h"
+
+#define lpINCLUDE_TEST_TIMER	1
 
 /* SEE THE COMMENTS ABOVE THE DEFINITION OF configCREATE_LOW_POWER_DEMO IN
 FreeRTOSConfig.h
@@ -102,6 +105,14 @@ void vPortSetupTimerInterrupt( void );
  * and not the SysTick as would normally be the case on a Cortex-M.
  */
 void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
+
+/* If lpINCLUDE_TEST_TIMER is defined then the BURTC is used to generate
+interrupts that will wake the processor prior to the expected idle time
+completing.  The timer interval can be altered to test different
+scenarios. */
+#if( lpINCLUDE_TEST_TIMER == 1 )
+	static void prvSetupTestTimer( void );
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -155,19 +166,27 @@ const uint32_t ulMAX24BitValue = 0xffffffUL;
 	RTC_IntDisable( RTC_IFC_COMP0 );
 
 	/* The tick interrupt must be set to the lowest priority possible. */
-	NVIC_SetPriority( RTC_IRQn, configKERNEL_INTERRUPT_PRIORITY );
+	NVIC_SetPriority( RTC_IRQn, configLIBRARY_LOWEST_INTERRUPT_PRIORITY );
 	NVIC_ClearPendingIRQ( RTC_IRQn );
 	NVIC_EnableIRQ( RTC_IRQn );
 	RTC_CompareSet( 0, ulReloadValueForOneTick );
 	RTC_IntClear( RTC_IFC_COMP0 );
 	RTC_IntEnable( RTC_IF_COMP0 );
 	RTC_Enable( true );
+
+	/* If lpINCLUDE_TEST_TIMER is defined then the BURTC is used to generate
+	interrupts that will wake the processor prior to the expected idle time
+	completing.  The timer interval can be altered to test different
+	scenarios. */
+	#if( lpINCLUDE_TEST_TIMER == 1 )
+		prvSetupTestTimer();
+	#endif
 }
 /*-----------------------------------------------------------*/
 
 void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 {
-uint32_t ulReloadValue, ulCompleteTickPeriods, ulCurrentCount;
+uint32_t ulReloadValue, ulCompleteTickPeriods, ulCountBeforeSleep, ulCountAfterSleep;
 eSleepModeStatus eSleepAction;
 TickType_t xModifiableIdleTime;
 
@@ -194,8 +213,14 @@ TickType_t xModifiableIdleTime;
 	in some tiny drift of the time maintained by the kernel with respect to
 	calendar time.  The count is latched before stopping the timer as stopping
 	the timer appears to clear the count. */
-	ulCurrentCount = RTC_CounterGet();
+	ulCountBeforeSleep = RTC_CounterGet();
 	RTC_Enable( false );
+
+	/* If this function is re-entered before one complete tick period then the
+	reload value might be to take into account a partial tick, but just reading
+	the count assumes it is counting up to a full ticks worth - so add in the
+	different if any. */
+	ulCountBeforeSleep += ( ulReloadValueForOneTick - RTC_CompareGet( 0 ) );
 
 	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as
 	that will mask interrupts that should exit sleep mode. */
@@ -216,7 +241,7 @@ TickType_t xModifiableIdleTime;
 	{
 		/* Restart tick and count up to whatever was left of the current time
 		slice. */
-		RTC_CompareSet( 0, ulReloadValueForOneTick - ulCurrentCount );
+		RTC_CompareSet( 0, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
 		RTC_Enable( true );
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
@@ -227,7 +252,7 @@ TickType_t xModifiableIdleTime;
 	{
 		/* Adjust the reload value to take into account that the current time
 		slice is already partially complete. */
-		ulReloadValue -= ulCurrentCount;
+		ulReloadValue -= ulCountBeforeSleep;
 		RTC_CompareSet( 0, ulReloadValue );
 
 		/* Restart the RTC. */
@@ -255,7 +280,7 @@ TickType_t xModifiableIdleTime;
 		result in some tiny drift of the time maintained by the	kernel with
 		respect to calendar time.  The count value is latched before stopping
 		the timer as stopping the timer appears to clear the count. */
-		ulCurrentCount = RTC_CounterGet();
+		ulCountAfterSleep = RTC_CounterGet();
 		RTC_Enable( false );
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
@@ -270,7 +295,7 @@ TickType_t xModifiableIdleTime;
 			function is called with the scheduler suspended the actual tick
 			processing will not occur until after this function has exited.
 			Reset the reload value with whatever remains of this tick period. */
-			ulReloadValue = ulReloadValueForOneTick - ulCurrentCount;
+			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
 			RTC_CompareSet( 0, ulReloadValue );
 
 			/* The tick interrupt handler will already have pended the tick
@@ -284,12 +309,17 @@ TickType_t xModifiableIdleTime;
 		{
 			/* Something other than the tick interrupt ended the sleep.  How
 			many complete tick periods passed while the processor was
-			sleeping? */
-			ulCompleteTickPeriods = ulCurrentCount / ulReloadValueForOneTick;
+			sleeping?  Add back in the adjustment that was made to the reload
+			value to account for the fact that a time slice was part way through
+			when this function was called. */
+			ulCountAfterSleep += ulCountBeforeSleep;
+			ulCompleteTickPeriods = ulCountAfterSleep / ulReloadValueForOneTick;
 
 			/* The reload value is set to whatever fraction of a single tick
 			period remains. */
-			ulReloadValue = ulCurrentCount - ( ulCompleteTickPeriods * ulReloadValueForOneTick );
+			ulCountAfterSleep -= ( ulCompleteTickPeriods * ulReloadValueForOneTick );
+			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
+
 			if( ulReloadValue == 0 )
 			{
 				/* There is no fraction remaining. */
@@ -314,12 +344,13 @@ TickType_t xModifiableIdleTime;
 
 void RTC_IRQHandler( void )
 {
-	if( ulTickFlag == pdFALSE )
+	ulTickFlag = pdTRUE;
+
+	if( RTC_CompareGet( 0 ) != ulReloadValueForOneTick )
 	{
 		/* Set RTC interrupt to one RTOS tick period. */
 		RTC_Enable( false );
 		RTC_CompareSet( 0, ulReloadValueForOneTick );
-		ulTickFlag = pdTRUE;
 		RTC_Enable( true );
 	}
 
@@ -336,6 +367,64 @@ void RTC_IRQHandler( void )
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
 }
+/*-----------------------------------------------------------*/
 
-#endif /* ( configCREATE_LOW_POWER_DEMO == 1 ) */
+#if( lpINCLUDE_TEST_TIMER == 1 )
 
+	/* If lpINCLUDE_TEST_TIMER is defined then the BURTC is used to generate
+	interrupts that will wake the processor prior to the expected idle time
+	completing.  The timer interval can be altered to test different
+	scenarios. */
+	static void prvSetupTestTimer( void )
+	{
+	BURTC_Init_TypeDef xBURTCInitStruct = BURTC_INIT_DEFAULT;
+	const uint32_t ulBURTClockHz = 2000UL, ulInterruptFrequency = 1000UL;
+	const uint32_t ulReload = ( ulBURTClockHz / ulInterruptFrequency );
+
+		/* Ensure LE modules are accessible. */
+		CMU_ClockEnable( cmuClock_CORELE, true );
+
+		/* Enable access to BURTC registers. */
+		RMU_ResetControl( rmuResetBU, false );
+
+		/* Generate periodic interrupts from BURTC. */
+		xBURTCInitStruct.mode   = burtcModeEM3;		/* Operational in EM3. */
+		xBURTCInitStruct.clkSel = burtcClkSelULFRCO;/* ULFRCO clock. */
+		xBURTCInitStruct.clkDiv = burtcClkDiv_1;	/* 2kHz ULFRCO clock. */
+		xBURTCInitStruct.compare0Top = true;		/* Wrap on COMP0. */
+		BURTC_IntDisable( BURTC_IF_COMP0 );
+		BURTC_Init( &xBURTCInitStruct );
+
+		NVIC_SetPriority( BURTC_IRQn, configLIBRARY_LOWEST_INTERRUPT_PRIORITY );
+		NVIC_ClearPendingIRQ( BURTC_IRQn );
+		NVIC_EnableIRQ( BURTC_IRQn );
+		BURTC_CompareSet( 0, ulReload );
+		BURTC_IntClear( BURTC_IF_COMP0 );
+		BURTC_IntEnable( BURTC_IF_COMP0 );
+		BURTC_CounterReset();
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#if( lpINCLUDE_TEST_TIMER == 1 )
+
+	/* If lpINCLUDE_TEST_TIMER is defined then the BURTC is used to generate
+	interrupts that will wake the processor prior to the expected idle time
+	completing.  The timer interval can be altered to test different
+	scenarios. */
+	volatile uint32_t ulTestTimerCounts = 0;
+
+	void BURTC_IRQHandler( void )
+	{
+		/* Nothing to do here - just testing the code in the scenario where a
+		tickless idle period is ended prior to the expected maximum idle time
+		expiring. */
+		BURTC_IntClear( _RTC_IFC_MASK );
+		ulTestTimerCounts++;
+	}
+
+#endif
+/*-----------------------------------------------------------*/
+
+#endif /* ( configCREATE_LOW_POWER_DEMO == 2 ) */

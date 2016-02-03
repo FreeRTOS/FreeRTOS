@@ -99,7 +99,7 @@ extern "C" {
  *  See the comments at the top of main.c, main_full.c and main_low_power.c for
  *  more information.
  */
-#define configCREATE_LOW_POWER_DEMO	2
+#define configCREATE_LOW_POWER_DEMO	1
 
 /* Some configuration is dependent on the demo being built. */
 #if( configCREATE_LOW_POWER_DEMO == 0 )
@@ -142,7 +142,7 @@ extern "C" {
 	#define configUSE_MALLOC_FAILED_HOOK	( 0 )
 	#define configUSE_IDLE_HOOK				( 0 )
 
-	#define configENERGY_MODE				( sleepEM4 )
+	#define configENERGY_MODE				( sleepEM3 )
 
 #elif( configCREATE_LOW_POWER_DEMO == 2 )
 
@@ -198,9 +198,31 @@ extern "C" {
 #define configTIMER_QUEUE_LENGTH				( 10 )
 #define configTIMER_TASK_STACK_DEPTH			( configMINIMAL_STACK_SIZE )
 
-/* Interrupt nesting behaviour configuration. */
-#define configKERNEL_INTERRUPT_PRIORITY			( 255 )
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY	( 191 ) /* equivalent to 0xa0, or priority 5. */
+/* Cortex-M specific definitions. */
+#ifdef __NVIC_PRIO_BITS
+	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+	#define configPRIO_BITS		       __NVIC_PRIO_BITS
+#else
+	#define configPRIO_BITS		       3	/* 7 priority levels */
+#endif
+
+/* The lowest interrupt priority that can be used in a call to a "set priority"
+function. */
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0x07
+
+/* The highest interrupt priority that can be used by any interrupt service
+routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+PRIORITY THAN THIS! (higher priorities are lower numeric values. */
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY	0x05
+
+/* Interrupt priorities used by the kernel port layer itself.  These are generic
+to all Cortex-M ports, and do not rely on any particular library functions. */
+#define configKERNEL_INTERRUPT_PRIORITY		 ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY	 ( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
+
 
 /* Optional functions - most linkers will remove unused functions anyway. */
 #define INCLUDE_vTaskPrioritySet				( 1 )

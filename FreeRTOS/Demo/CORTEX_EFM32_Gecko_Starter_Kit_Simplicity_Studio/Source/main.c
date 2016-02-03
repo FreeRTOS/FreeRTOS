@@ -87,8 +87,6 @@
  *
  */
 
-#warning Check the tick suppression routine in the case where the system unblocks before an entire tick period has expired.
-
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -114,7 +112,7 @@ static void prvSetupHardware( void );
  * main_low_power() is used when configCREATE_LOW_POWER_DEMO is set to 1.
  * main_full() is used when configCREATE_LOW_POWER_DEMO is set to 0.
  */
-#if( configCREATE_LOW_POWER_DEMO == 1 )
+#if( configCREATE_LOW_POWER_DEMO != 0 )
 	extern void main_low_power( void );
 #else
 	extern void main_full( void );

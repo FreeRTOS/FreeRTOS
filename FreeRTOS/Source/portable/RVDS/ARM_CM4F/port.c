@@ -517,8 +517,9 @@ void xPortSysTickHandler( void )
 	/* The SysTick runs at the lowest interrupt priority, so when this interrupt
 	executes all interrupts must be unmasked.  There is therefore no need to
 	save and then restore the interrupt mask value as its value is already
-	known. */
-	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
+	known - therefore the slightly faster vPortRaiseBASEPRI() function is used
+	in place of portSET_INTERRUPT_MASK_FROM_ISR(). */
+	vPortRaiseBASEPRI();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
@@ -528,7 +529,7 @@ void xPortSysTickHandler( void )
 			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
+	vPortClearBASEPRIFromISR();
 }
 /*-----------------------------------------------------------*/
 
@@ -662,7 +663,7 @@ void xPortSysTickHandler( void )
 
 				/* The reload value is set to whatever fraction of a single tick
 				period remains. */
-				portNVIC_SYSTICK_LOAD_REG = ( ( ulCompleteTickPeriods + 1 ) * ulTimerCountsForOneTick ) - ulCompletedSysTickDecrements;
+				portNVIC_SYSTICK_LOAD_REG = ( ( ulCompleteTickPeriods + 1UL ) * ulTimerCountsForOneTick ) - ulCompletedSysTickDecrements;
 			}
 
 			/* Restart SysTick so it runs from portNVIC_SYSTICK_LOAD_REG

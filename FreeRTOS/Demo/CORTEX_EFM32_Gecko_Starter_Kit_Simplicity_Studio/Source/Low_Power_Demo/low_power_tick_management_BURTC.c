@@ -193,9 +193,9 @@ TickType_t xModifiableIdleTime;
 	BURTC_Enable( false );
 
 	/* If this function is re-entered before one complete tick period then the
-	reload value might be to take into account a partial tick, but just reading
-	the count assumes it is counting up to a full ticks worth - so add in the
-	different if any. */
+	reload value might be set to take into account a partial time slice, but
+	just reading the count assumes it is counting up to a full ticks worth - so
+	add in the difference if any. */
 	ulCountBeforeSleep += ( ulReloadValueForOneTick - BURTC_CompareGet( 0 ) );
 
 	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as

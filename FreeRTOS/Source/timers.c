@@ -633,7 +633,7 @@ BaseType_t xProcessTimerNow = pdFALSE;
 	{
 		/* Has the expiry time elapsed between the command to start/reset a
 		timer was issued, and the time the command was processed? */
-		if( ( xTimeNow - xCommandTime ) >= pxTimer->xTimerPeriodInTicks )
+		if( ( ( TickType_t ) ( xTimeNow - xCommandTime ) ) >= pxTimer->xTimerPeriodInTicks )
 		{
 			/* The time between a command being issued and the command being
 			processed actually exceeds the timers period.  */

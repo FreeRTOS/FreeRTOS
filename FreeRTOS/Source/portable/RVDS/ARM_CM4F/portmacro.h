@@ -178,7 +178,7 @@ extern void vPortExitCritical( void );
 
 	/*-----------------------------------------------------------*/
 
-	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31 - __clz( ( uxReadyPriorities ) ) )
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - __clz( ( uxReadyPriorities ) ) )
 
 #endif /* taskRECORD_READY_PRIORITY */
 /*-----------------------------------------------------------*/
@@ -232,6 +232,18 @@ uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
 }
 /*-----------------------------------------------------------*/
 
+static portFORCE_INLINE void vPortClearBASEPRIFromISR( void )
+{
+	__asm
+	{
+		/* Set BASEPRI to 0 so no interrupts are masked.  This function is only
+		used to lower the mask in an interrupt, so memory barriers are not 
+		used. */
+		msr basepri, #0
+	}
+}
+/*-----------------------------------------------------------*/
+
 static portFORCE_INLINE uint32_t ulPortRaiseBASEPRI( void )
 {
 uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
@@ -249,6 +261,30 @@ uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
 	return ulReturn;
 }
 /*-----------------------------------------------------------*/
+
+static portFORCE_INLINE BaseType_t xPortIsInsideInterrupt( void )
+{
+uint32_t ulCurrentInterrupt;
+BaseType_t xReturn;
+
+	/* Obtain the number of the currently executing interrupt. */
+	__asm
+	{
+		mrs ulCurrentInterrupt, ipsr
+	}
+
+	if( ulCurrentInterrupt == 0 )
+	{
+		xReturn = pdFALSE;
+	}
+	else
+	{
+		xReturn = pdTRUE;
+	}
+
+	return xReturn;
+}
+
 
 #ifdef __cplusplus
 }

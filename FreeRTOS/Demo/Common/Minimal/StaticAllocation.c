@@ -244,7 +244,7 @@ stalled. */
 static volatile UBaseType_t uxCycleCounter = 0;
 
 /* A variable that gets set to pdTRUE if an error is detected. */
-static BaseType_t xErrorOccurred = pdFALSE;
+static volatile BaseType_t xErrorOccurred = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -346,7 +346,7 @@ TickType_t xTickCount;
 	xTickCount = xTaskGetTickCount();
 	xReturned = xSemaphoreTake( xSemaphore, xShortBlockTime );
 
-	if( ( xTaskGetTickCount() - xTickCount) < xShortBlockTime )
+	if( ( ( TickType_t ) ( xTaskGetTickCount() - xTickCount ) ) < xShortBlockTime )
 	{
 		/* Did not block on the semaphore as long as expected. */
 		xErrorOccurred = pdTRUE;
@@ -396,7 +396,7 @@ TickType_t xTickCount;
 	xTickCount = xTaskGetTickCount();
 	xReturned = xSemaphoreTake( xSemaphore, xShortBlockTime );
 
-	if( ( xTaskGetTickCount() - xTickCount) < xShortBlockTime )
+	if( ( ( TickType_t ) ( xTaskGetTickCount() - xTickCount ) ) < xShortBlockTime )
 	{
 		/* Did not block on the semaphore as long as expected. */
 		xErrorOccurred = pdTRUE;

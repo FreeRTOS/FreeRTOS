@@ -129,6 +129,11 @@ deleted. */
 #define taskSTATICALLY_ALLOCATED_STACK	( ( uint8_t ) 0x01 )
 #define taskSTATICALLY_ALLOCATED_TCB	( ( uint8_t ) 0x02 )
 
+/* Values that can be assigned to the ucNotifyState member of the TCB. */
+#define taskNOT_WAITING_NOTIFICATION	( ( uint8_t ) 0 )
+#define taskWAITING_NOTIFICATION		( ( uint8_t ) 1 )
+#define taskNOTIFICATION_RECEIVED		( ( uint8_t ) 2 )
+
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
  * and stores task state information, including a pointer to the task's context
@@ -174,7 +179,7 @@ typedef struct tskTaskControlBlock
 		void *pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
 	#endif
 
-	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+	#if( configGENERATE_RUN_TIME_STATS == 1 )
 		uint32_t		ulRunTimeCounter;	/*< Stores the amount of time the task has spent in the Running state. */
 	#endif
 
@@ -189,16 +194,16 @@ typedef struct tskTaskControlBlock
 		struct	_reent xNewLib_reent;
 	#endif
 
-	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
+	#if( configUSE_TASK_NOTIFICATIONS == 1 )
 		volatile uint32_t ulNotifiedValue;
-		volatile eNotifyValue eNotifyState;
+		volatile uint8_t ucNotifyState;
 	#endif
 
 	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 		uint8_t		ucStaticAllocationFlags; /* Set to pdTRUE if the stack is a statically allocated array, and pdFALSE if the stack is dynamically allocated. */
 	#endif
 
-	} tskTCB;
+} tskTCB;
 
 /* The old tskTCB name is maintained above then typedefed to the new TCB_t name
 below to enable the use of older kernel aware debuggers. */
@@ -489,7 +494,7 @@ static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
  * The currently executing task is entering the Blocked state.  Add the task to
  * either the current or the overflow delayed task list.
  */
-static void prvAddCurrentTaskToDelayedList( const TickType_t xTimeToWake ) PRIVILEGED_FUNCTION;
+static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseType_t xCanBlockIndefinitely ) PRIVILEGED_FUNCTION;
 
 /*
  * Allocates memory from the heap for a TCB and associated stack.  Checks the
@@ -615,7 +620,7 @@ StackType_t *pxTopOfStack;
 			/* If we want to use stack checking on architectures that use
 			a positive stack growth direction then we also need to store the
 			other extreme of the stack space. */
-			pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( usStackDepth - 1 );
+			pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
 		}
 		#endif /* portSTACK_GROWTH */
 
@@ -889,23 +894,11 @@ StackType_t *pxTopOfStack;
 
 			if( xShouldDelay != pdFALSE )
 			{
-				traceTASK_DELAY_UNTIL();
+				traceTASK_DELAY_UNTIL( xTimeToWake );
 
-				/* Remove the task from the ready list before adding it to the
-				blocked list as the same list item is used for both lists. */
-				if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
-				{
-					/* The current task must be in a ready list, so there is
-					no need to check, and the port reset macro can be called
-					directly. */
-					portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-
-				prvAddCurrentTaskToDelayedList( xTimeToWake );
+				/* prvAddCurrentTaskToDelayedList() needs the block time, not
+				the time to wake, so subtract the current tick count. */
+				prvAddCurrentTaskToDelayedList( xTimeToWake - xConstTickCount, pdFALSE );
 			}
 			else
 			{
@@ -933,9 +926,7 @@ StackType_t *pxTopOfStack;
 
 	void vTaskDelay( const TickType_t xTicksToDelay )
 	{
-	TickType_t xTimeToWake;
 	BaseType_t xAlreadyYielded = pdFALSE;
-
 
 		/* A delay time of zero just forces a reschedule. */
 		if( xTicksToDelay > ( TickType_t ) 0U )
@@ -952,26 +943,7 @@ StackType_t *pxTopOfStack;
 
 				This task cannot be in an event list as it is the currently
 				executing task. */
-
-				/* Calculate the time to wake - this may overflow but this is
-				not a problem. */
-				xTimeToWake = xTickCount + xTicksToDelay;
-
-				/* We must remove ourselves from the ready list before adding
-				ourselves to the blocked list as the same list item is used for
-				both lists. */
-				if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
-				{
-					/* The current task must be in a ready list, so there is
-					no need to check, and the port reset macro can be called
-					directly. */
-					portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-				prvAddCurrentTaskToDelayedList( xTimeToWake );
+				prvAddCurrentTaskToDelayedList( xTicksToDelay, pdFALSE );
 			}
 			xAlreadyYielded = xTaskResumeAll();
 		}
@@ -2447,8 +2419,6 @@ void vTaskSwitchContext( void )
 
 void vTaskPlaceOnEventList( List_t * const pxEventList, const TickType_t xTicksToWait )
 {
-TickType_t xTimeToWake;
-
 	configASSERT( pxEventList );
 
 	/* THIS FUNCTION MUST BE CALLED WITH EITHER INTERRUPTS DISABLED OR THE
@@ -2460,54 +2430,12 @@ TickType_t xTimeToWake;
 	list is locked, preventing simultaneous access from interrupts. */
 	vListInsert( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 
-	/* The task must be removed from from the ready list before it is added to
-	the blocked list as the same list item is used for both lists.  Exclusive
-	access to the ready lists guaranteed because the scheduler is locked. */
-	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
-	{
-		/* The current task must be in a ready list, so there is no need to
-		check, and the port reset macro can be called directly. */
-		portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-	}
-	else
-	{
-		mtCOVERAGE_TEST_MARKER();
-	}
-
-	#if ( INCLUDE_vTaskSuspend == 1 )
-	{
-		if( xTicksToWait == portMAX_DELAY )
-		{
-			/* Add the task to the suspended task list instead of a delayed task
-			list to ensure the task is not woken by a timing event.  It will
-			block indefinitely. */
-			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-		}
-		else
-		{
-			/* Calculate the time at which the task should be woken if the event
-			does not occur.  This may overflow but this doesn't matter, the
-			scheduler will handle it. */
-			xTimeToWake = xTickCount + xTicksToWait;
-			prvAddCurrentTaskToDelayedList( xTimeToWake );
-		}
-	}
-	#else /* INCLUDE_vTaskSuspend */
-	{
-			/* Calculate the time at which the task should be woken if the event does
-			not occur.  This may overflow but this doesn't matter, the scheduler
-			will handle it. */
-			xTimeToWake = xTickCount + xTicksToWait;
-			prvAddCurrentTaskToDelayedList( xTimeToWake );
-	}
-	#endif /* INCLUDE_vTaskSuspend */
+	prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 }
 /*-----------------------------------------------------------*/
 
 void vTaskPlaceOnUnorderedEventList( List_t * pxEventList, const TickType_t xItemValue, const TickType_t xTicksToWait )
 {
-TickType_t xTimeToWake;
-
 	configASSERT( pxEventList );
 
 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED.  It is used by
@@ -2526,56 +2454,14 @@ TickType_t xTimeToWake;
 	the task level). */
 	vListInsertEnd( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 
-	/* The task must be removed from the ready list before it is added to the
-	blocked list.  Exclusive access can be assured to the ready list as the
-	scheduler is locked. */
-	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
-	{
-		/* The current task must be in a ready list, so there is no need to
-		check, and the port reset macro can be called directly. */
-		portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-	}
-	else
-	{
-		mtCOVERAGE_TEST_MARKER();
-	}
-
-	#if ( INCLUDE_vTaskSuspend == 1 )
-	{
-		if( xTicksToWait == portMAX_DELAY )
-		{
-			/* Add the task to the suspended task list instead of a delayed task
-			list to ensure it is not woken by a timing event.  It will block
-			indefinitely. */
-			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-		}
-		else
-		{
-			/* Calculate the time at which the task should be woken if the event
-			does not occur.  This may overflow but this doesn't matter, the
-			kernel will manage it correctly. */
-			xTimeToWake = xTickCount + xTicksToWait;
-			prvAddCurrentTaskToDelayedList( xTimeToWake );
-		}
-	}
-	#else /* INCLUDE_vTaskSuspend */
-	{
-			/* Calculate the time at which the task should be woken if the event does
-			not occur.  This may overflow but this doesn't matter, the kernel
-			will manage it correctly. */
-			xTimeToWake = xTickCount + xTicksToWait;
-			prvAddCurrentTaskToDelayedList( xTimeToWake );
-	}
-	#endif /* INCLUDE_vTaskSuspend */
+	prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 }
 /*-----------------------------------------------------------*/
 
-#if configUSE_TIMERS == 1
+#if( configUSE_TIMERS == 1 )
 
-	void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, const TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
+	void vTaskPlaceOnEventListRestricted( List_t * const pxEventList, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
 	{
-	TickType_t xTimeToWake;
-
 		configASSERT( pxEventList );
 
 		/* This function should not be called by application code hence the
@@ -2590,59 +2476,16 @@ TickType_t xTimeToWake;
 		can be used in place of vListInsert. */
 		vListInsertEnd( pxEventList, &( pxCurrentTCB->xEventListItem ) );
 
-		/* We must remove this task from the ready list before adding it to the
-		blocked list as the same list item is used for both lists.  This
-		function is called with the scheduler locked so interrupts will not
-		access the lists at the same time. */
-		if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+		/* If the task should block indefinitely then set the block time to a
+		value that will be recognised as an indefinite delay inside the
+		prvAddCurrentTaskToDelayedList() function. */
+		if( xWaitIndefinitely == pdTRUE )
 		{
-			/* The current task must be in a ready list, so there is no need to
-			check, and the port reset macro can be called directly. */
-			portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
+			xTicksToWait = portMAX_DELAY;
 		}
 
-		/* If vTaskSuspend() is available then the suspended task list is also
-		available and a task that is blocking indefinitely can enter the
-		suspended state (it is not really suspended as it will re-enter the
-		Ready state when the event it is waiting indefinitely for occurs).
-		Blocking indefinitely is useful when using tickless idle mode as when
-		all tasks are blocked indefinitely all timers can be turned off. */
-		#if( INCLUDE_vTaskSuspend == 1 )
-		{
-			if( xWaitIndefinitely == pdTRUE )
-			{
-				/* Add the task to the suspended task list instead of a delayed
-				task list to ensure the task is not woken by a timing event.  It
-				will block indefinitely. */
-				vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-			}
-			else
-			{
-				/* Calculate the time at which the task should be woken if the
-				event does not occur.  This may overflow but this doesn't
-				matter. */
-				xTimeToWake = xTickCount + xTicksToWait;
-				traceTASK_DELAY_UNTIL();
-				prvAddCurrentTaskToDelayedList( xTimeToWake );
-			}
-		}
-		#else
-		{
-			/* Calculate the time at which the task should be woken if the event
-			does not occur.  This may overflow but this doesn't matter. */
-			xTimeToWake = xTickCount + xTicksToWait;
-			traceTASK_DELAY_UNTIL();
-			prvAddCurrentTaskToDelayedList( xTimeToWake );
-
-			/* Remove compiler warnings when INCLUDE_vTaskSuspend() is not
-			defined. */
-			( void ) xWaitIndefinitely;
-		}
-		#endif
+		traceTASK_DELAY_UNTIL( ( xTickCount + xTicksToWait ) );
+		prvAddCurrentTaskToDelayedList( xTicksToWait, xWaitIndefinitely );
 	}
 
 #endif /* configUSE_TIMERS */
@@ -2782,9 +2625,9 @@ BaseType_t xReturn;
 		const TickType_t xConstTickCount = xTickCount;
 
 		#if ( INCLUDE_vTaskSuspend == 1 )
-			/* If INCLUDE_vTaskSuspend is set to 1 and the block time specified is
-			the maximum block time then the task should block indefinitely, and
-			therefore never time out. */
+			/* If INCLUDE_vTaskSuspend is set to 1 and the block time specified
+			is the maximum block time then the task should block indefinitely,
+			and therefore never time out. */
 			if( *pxTicksToWait == portMAX_DELAY )
 			{
 				xReturn = pdFALSE;
@@ -2794,16 +2637,17 @@ BaseType_t xReturn;
 
 		if( ( xNumOfOverflows != pxTimeOut->xOverflowCount ) && ( xConstTickCount >= pxTimeOut->xTimeOnEntering ) ) /*lint !e525 Indentation preferred as is to make code within pre-processor directives clearer. */
 		{
-			/* The tick count is greater than the time at which vTaskSetTimeout()
-			was called, but has also overflowed since vTaskSetTimeOut() was called.
-			It must have wrapped all the way around and gone past us again. This
-			passed since vTaskSetTimeout() was called. */
+			/* The tick count is greater than the time at which
+			vTaskSetTimeout() was called, but has also overflowed since
+			vTaskSetTimeOut() was called.  It must have wrapped all the way
+			around and gone past again. This passed since vTaskSetTimeout()
+			was called. */
 			xReturn = pdTRUE;
 		}
-		else if( ( xConstTickCount - pxTimeOut->xTimeOnEntering ) < *pxTicksToWait )
+		else if( ( ( TickType_t ) ( xConstTickCount - pxTimeOut->xTimeOnEntering ) ) < *pxTicksToWait )
 		{
 			/* Not a genuine timeout. Adjust parameters for time remaining. */
-			*pxTicksToWait -= ( xConstTickCount -  pxTimeOut->xTimeOnEntering );
+			*pxTicksToWait -= ( xConstTickCount - pxTimeOut->xTimeOnEntering );
 			vTaskSetTimeOutState( pxTimeOut );
 			xReturn = pdFALSE;
 		}
@@ -3117,7 +2961,7 @@ UBaseType_t x;
 	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
 	{
 		pxTCB->ulNotifiedValue = 0;
-		pxTCB->eNotifyState = eNotWaitingNotification;
+		pxTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
 	}
 	#endif
 
@@ -3126,7 +2970,7 @@ UBaseType_t x;
 		/* Initialise this task's Newlib reent structure. */
 		_REENT_INIT_PTR( ( &( pxTCB->xNewLib_reent ) ) );
 	}
-	#endif /* configUSE_NEWLIB_REENTRANT */
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -3258,36 +3102,6 @@ static void prvCheckTasksWaitingTermination( void )
 		}
 	}
 	#endif /* INCLUDE_vTaskDelete */
-}
-/*-----------------------------------------------------------*/
-
-static void prvAddCurrentTaskToDelayedList( const TickType_t xTimeToWake )
-{
-	/* The list item will be inserted in wake time order. */
-	listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
-
-	if( xTimeToWake < xTickCount )
-	{
-		/* Wake time has overflowed.  Place this item in the overflow list. */
-		vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-	}
-	else
-	{
-		/* The wake time has not overflowed, so the current block list is used. */
-		vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-
-		/* If the task entering the blocked state was placed at the head of the
-		list of blocked tasks then xNextTaskUnblockTime needs to be updated
-		too. */
-		if( xTimeToWake < xNextTaskUnblockTime )
-		{
-			xNextTaskUnblockTime = xTimeToWake;
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-	}
 }
 /*-----------------------------------------------------------*/
 
@@ -4190,7 +4004,6 @@ TickType_t uxReturn;
 
 	uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait )
 	{
-	TickType_t xTimeToWake;
 	uint32_t ulReturn;
 
 		taskENTER_CRITICAL();
@@ -4199,55 +4012,11 @@ TickType_t uxReturn;
 			if( pxCurrentTCB->ulNotifiedValue == 0UL )
 			{
 				/* Mark this task as waiting for a notification. */
-				pxCurrentTCB->eNotifyState = eWaitingNotification;
+				pxCurrentTCB->ucNotifyState = taskWAITING_NOTIFICATION;
 
 				if( xTicksToWait > ( TickType_t ) 0 )
 				{
-					/* The task is going to block.  First it must be removed
-					from the ready list. */
-					if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
-					{
-						/* The current task must be in a ready list, so there is
-						no need to check, and the port reset macro can be called
-						directly. */
-						portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-					}
-					else
-					{
-						mtCOVERAGE_TEST_MARKER();
-					}
-
-					#if ( INCLUDE_vTaskSuspend == 1 )
-					{
-						if( xTicksToWait == portMAX_DELAY )
-						{
-							/* Add the task to the suspended task list instead
-							of a delayed task list to ensure the task is not
-							woken by a timing event.  It will block
-							indefinitely. */
-							vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-						}
-						else
-						{
-							/* Calculate the time at which the task should be
-							woken if no notification events occur.  This may
-							overflow but this doesn't matter, the scheduler will
-							handle it. */
-							xTimeToWake = xTickCount + xTicksToWait;
-							prvAddCurrentTaskToDelayedList( xTimeToWake );
-						}
-					}
-					#else /* INCLUDE_vTaskSuspend */
-					{
-							/* Calculate the time at which the task should be
-							woken if the event does not occur.  This may
-							overflow but this doesn't matter, the scheduler will
-							handle it. */
-							xTimeToWake = xTickCount + xTicksToWait;
-							prvAddCurrentTaskToDelayedList( xTimeToWake );
-					}
-					#endif /* INCLUDE_vTaskSuspend */
-
+					prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 					traceTASK_NOTIFY_TAKE_BLOCK();
 
 					/* All ports are written to allow a yield in a critical
@@ -4289,7 +4058,7 @@ TickType_t uxReturn;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			pxCurrentTCB->eNotifyState = eNotWaitingNotification;
+			pxCurrentTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
 		}
 		taskEXIT_CRITICAL();
 
@@ -4303,13 +4072,12 @@ TickType_t uxReturn;
 
 	BaseType_t xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait )
 	{
-	TickType_t xTimeToWake;
 	BaseType_t xReturn;
 
 		taskENTER_CRITICAL();
 		{
 			/* Only block if a notification is not already pending. */
-			if( pxCurrentTCB->eNotifyState != eNotified )
+			if( pxCurrentTCB->ucNotifyState != taskNOTIFICATION_RECEIVED )
 			{
 				/* Clear bits in the task's notification value as bits may get
 				set	by the notifying task or interrupt.  This can be used to
@@ -4317,55 +4085,11 @@ TickType_t uxReturn;
 				pxCurrentTCB->ulNotifiedValue &= ~ulBitsToClearOnEntry;
 
 				/* Mark this task as waiting for a notification. */
-				pxCurrentTCB->eNotifyState = eWaitingNotification;
+				pxCurrentTCB->ucNotifyState = taskWAITING_NOTIFICATION;
 
 				if( xTicksToWait > ( TickType_t ) 0 )
 				{
-					/* The task is going to block.  First it must be removed
-					from the	ready list. */
-					if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
-					{
-						/* The current task must be in a ready list, so there is
-						no need to check, and the port reset macro can be called
-						directly. */
-						portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
-					}
-					else
-					{
-						mtCOVERAGE_TEST_MARKER();
-					}
-
-					#if ( INCLUDE_vTaskSuspend == 1 )
-					{
-						if( xTicksToWait == portMAX_DELAY )
-						{
-							/* Add the task to the suspended task list instead
-							of a delayed task list to ensure the task is not
-							woken by a timing event.  It will block
-							indefinitely. */
-							vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
-						}
-						else
-						{
-							/* Calculate the time at which the task should be
-							woken if no notification events occur.  This may
-							overflow but this doesn't matter, the scheduler will
-							handle it. */
-							xTimeToWake = xTickCount + xTicksToWait;
-							prvAddCurrentTaskToDelayedList( xTimeToWake );
-						}
-					}
-					#else /* INCLUDE_vTaskSuspend */
-					{
-							/* Calculate the time at which the task should be
-							woken if the event does not occur.  This may
-							overflow but this doesn't matter, the scheduler will
-							handle it. */
-							xTimeToWake = xTickCount + xTicksToWait;
-							prvAddCurrentTaskToDelayedList( xTimeToWake );
-					}
-					#endif /* INCLUDE_vTaskSuspend */
-
+					prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
 					traceTASK_NOTIFY_WAIT_BLOCK();
 
 					/* All ports are written to allow a yield in a critical
@@ -4397,11 +4121,11 @@ TickType_t uxReturn;
 				*pulNotificationValue = pxCurrentTCB->ulNotifiedValue;
 			}
 
-			/* If eNotifyValue is set then either the task never entered the
+			/* If ucNotifyValue is set then either the task never entered the
 			blocked state (because a notification was already pending) or the
 			task unblocked because of a notification.  Otherwise the task
 			unblocked because of a timeout. */
-			if( pxCurrentTCB->eNotifyState == eWaitingNotification )
+			if( pxCurrentTCB->ucNotifyState == taskWAITING_NOTIFICATION )
 			{
 				/* A notification was not received. */
 				xReturn = pdFALSE;
@@ -4414,7 +4138,7 @@ TickType_t uxReturn;
 				xReturn = pdTRUE;
 			}
 
-			pxCurrentTCB->eNotifyState = eNotWaitingNotification;
+			pxCurrentTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
 		}
 		taskEXIT_CRITICAL();
 
@@ -4429,8 +4153,8 @@ TickType_t uxReturn;
 	BaseType_t xTaskGenericNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue )
 	{
 	TCB_t * pxTCB;
-	eNotifyValue eOriginalNotifyState;
 	BaseType_t xReturn = pdPASS;
+	uint8_t ucOriginalNotifyState;
 
 		configASSERT( xTaskToNotify );
 		pxTCB = ( TCB_t * ) xTaskToNotify;
@@ -4442,9 +4166,9 @@ TickType_t uxReturn;
 				*pulPreviousNotificationValue = pxTCB->ulNotifiedValue;
 			}
 
-			eOriginalNotifyState = pxTCB->eNotifyState;
+			ucOriginalNotifyState = pxTCB->ucNotifyState;
 
-			pxTCB->eNotifyState = eNotified;
+			pxTCB->ucNotifyState = taskNOTIFICATION_RECEIVED;
 
 			switch( eAction )
 			{
@@ -4461,7 +4185,7 @@ TickType_t uxReturn;
 					break;
 
 				case eSetValueWithoutOverwrite :
-					if( eOriginalNotifyState != eNotified )
+					if( ucOriginalNotifyState != taskNOTIFICATION_RECEIVED )
 					{
 						pxTCB->ulNotifiedValue = ulValue;
 					}
@@ -4482,7 +4206,7 @@ TickType_t uxReturn;
 
 			/* If the task is in the blocked state specifically to wait for a
 			notification then unblock it now. */
-			if( eOriginalNotifyState == eWaitingNotification )
+			if( ucOriginalNotifyState == taskWAITING_NOTIFICATION )
 			{
 				( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
 				prvAddTaskToReadyList( pxTCB );
@@ -4535,7 +4259,7 @@ TickType_t uxReturn;
 	BaseType_t xTaskGenericNotifyFromISR( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	TCB_t * pxTCB;
-	eNotifyValue eOriginalNotifyState;
+	uint8_t ucOriginalNotifyState;
 	BaseType_t xReturn = pdPASS;
 	UBaseType_t uxSavedInterruptStatus;
 
@@ -4568,8 +4292,8 @@ TickType_t uxReturn;
 				*pulPreviousNotificationValue = pxTCB->ulNotifiedValue;
 			}
 
-			eOriginalNotifyState = pxTCB->eNotifyState;
-			pxTCB->eNotifyState = eNotified;
+			ucOriginalNotifyState = pxTCB->ucNotifyState;
+			pxTCB->ucNotifyState = taskNOTIFICATION_RECEIVED;
 
 			switch( eAction )
 			{
@@ -4586,7 +4310,7 @@ TickType_t uxReturn;
 					break;
 
 				case eSetValueWithoutOverwrite :
-					if( eOriginalNotifyState != eNotified )
+					if( ucOriginalNotifyState != taskNOTIFICATION_RECEIVED )
 					{
 						pxTCB->ulNotifiedValue = ulValue;
 					}
@@ -4607,7 +4331,7 @@ TickType_t uxReturn;
 
 			/* If the task is in the blocked state specifically to wait for a
 			notification then unblock it now. */
-			if( eOriginalNotifyState == eWaitingNotification )
+			if( ucOriginalNotifyState == taskWAITING_NOTIFICATION )
 			{
 				/* The task should not have been on an event list. */
 				configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
@@ -4659,7 +4383,7 @@ TickType_t uxReturn;
 	void vTaskNotifyGiveFromISR( TaskHandle_t xTaskToNotify, BaseType_t *pxHigherPriorityTaskWoken )
 	{
 	TCB_t * pxTCB;
-	eNotifyValue eOriginalNotifyState;
+	uint8_t ucOriginalNotifyState;
 	UBaseType_t uxSavedInterruptStatus;
 
 		configASSERT( xTaskToNotify );
@@ -4686,8 +4410,8 @@ TickType_t uxReturn;
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
-			eOriginalNotifyState = pxTCB->eNotifyState;
-			pxTCB->eNotifyState = eNotified;
+			ucOriginalNotifyState = pxTCB->ucNotifyState;
+			pxTCB->ucNotifyState = taskNOTIFICATION_RECEIVED;
 
 			/* 'Giving' is equivalent to incrementing a count in a counting
 			semaphore. */
@@ -4697,7 +4421,7 @@ TickType_t uxReturn;
 
 			/* If the task is in the blocked state specifically to wait for a
 			notification then unblock it now. */
-			if( eOriginalNotifyState == eWaitingNotification )
+			if( ucOriginalNotifyState == taskWAITING_NOTIFICATION )
 			{
 				/* The task should not have been on an event list. */
 				configASSERT( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL );
@@ -4756,9 +4480,9 @@ TickType_t uxReturn;
 
 		taskENTER_CRITICAL();
 		{
-			if( pxTCB->eNotifyState == eNotified )
+			if( pxTCB->ucNotifyState == taskNOTIFICATION_RECEIVED )
 			{
-				pxTCB->eNotifyState = eNotWaitingNotification;
+				pxTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
 				xReturn = pdPASS;
 			}
 			else
@@ -4773,6 +4497,109 @@ TickType_t uxReturn;
 
 #endif /* configUSE_TASK_NOTIFICATIONS */
 /*-----------------------------------------------------------*/
+
+
+static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, BaseType_t xCanBlockIndefinitely )
+{
+TickType_t xTimeToWake;
+
+	/* Remove the task from the ready list before adding it to the blocked list
+	as the same list item is used for both lists. */
+	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+	{
+		/* The current task must be in a ready list, so there is no need to
+		check, and the port reset macro can be called directly. */
+		portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
+	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
+
+
+	#if ( INCLUDE_vTaskSuspend == 1 )
+	{
+		if( ( xTicksToWait == portMAX_DELAY ) && ( xCanBlockIndefinitely != pdFALSE ) )
+		{
+			/* Add the task to the suspended task list instead of a delayed task
+			list to ensure it is not woken by a timing event.  It will block
+			indefinitely. */
+			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+		}
+		else
+		{
+			/* Calculate the time at which the task should be woken if the event
+			does not occur.  This may overflow but this doesn't matter, the
+			kernel will manage it correctly. */
+			xTimeToWake = xTickCount + xTicksToWait;
+
+			/* The list item will be inserted in wake time order. */
+			listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
+
+			if( xTimeToWake < xTickCount )
+			{
+				/* Wake time has overflowed.  Place this item in the overflow
+				list. */
+				vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+			}
+			else
+			{
+				/* The wake time has not overflowed, so the current block list
+				is used. */
+				vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+
+				/* If the task entering the blocked state was placed at the
+				head of the list of blocked tasks then xNextTaskUnblockTime
+				needs to be updated too. */
+				if( xTimeToWake < xNextTaskUnblockTime )
+				{
+					xNextTaskUnblockTime = xTimeToWake;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+		}
+	}
+	#else /* INCLUDE_vTaskSuspend */
+	{
+		/* Calculate the time at which the task should be woken if the event
+		does not occur.  This may overflow but this doesn't matter, the kernel
+		will manage it correctly. */
+		xTimeToWake = xTickCount + xTicksToWait;
+
+		/* The list item will be inserted in wake time order. */
+		listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
+
+		if( xTimeToWake < xTickCount )
+		{
+			/* Wake time has overflowed.  Place this item in the overflow list. */
+			vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+		}
+		else
+		{
+			/* The wake time has not overflowed, so the current block list is used. */
+			vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+
+			/* If the task entering the blocked state was placed at the head of the
+			list of blocked tasks then xNextTaskUnblockTime needs to be updated
+			too. */
+			if( xTimeToWake < xNextTaskUnblockTime )
+			{
+				xNextTaskUnblockTime = xTimeToWake;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+
+		/* Avoid compiler warning when INCLUDE_vTaskSuspend is not 1. */
+		( void ) xCanBlockIndefinitely;
+	}
+	#endif /* INCLUDE_vTaskSuspend */
+}
 
 
 #ifdef FREERTOS_MODULE_TEST

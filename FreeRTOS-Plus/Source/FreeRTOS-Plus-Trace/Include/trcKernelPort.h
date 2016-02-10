@@ -56,7 +56,7 @@ extern int uiInEventGroupSetBitsFromISR;
 #define TRACE_CPU_CLOCK_HZ configCPU_CLOCK_HZ /* Defined in "FreeRTOSConfig.h" */
 
 #if (SELECTED_PORT == PORT_ARM_CortexM)
-	
+
 	/* Uses CMSIS API */
 
 	#define TRACE_SR_ALLOC_CRITICAL_SECTION() int __irq_status;
@@ -571,8 +571,8 @@ void* prvTraceGetCurrentTaskHandle(void);
 
 /* Called on vTaskDelayUntil - note the use of FreeRTOS variable xTimeToWake */
 #undef traceTASK_DELAY_UNTIL
-#define traceTASK_DELAY_UNTIL() \
-	trcKERNEL_HOOKS_TASK_DELAY(TASK_DELAY_UNTIL, pxCurrentTCB, xTimeToWake); \
+#define traceTASK_DELAY_UNTIL( xTickTimeToWake ) \
+	trcKERNEL_HOOKS_TASK_DELAY(TASK_DELAY_UNTIL, pxCurrentTCB, ( xTickTimeToWake)); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
 
 #if (INCLUDE_OBJECT_DELETE == 1)
@@ -819,7 +819,7 @@ else \
 
 #undef traceTASK_NOTIFY_TAKE
 #define traceTASK_NOTIFY_TAKE() \
-	if (pxCurrentTCB->eNotifyState == eNotified) \
+	if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 		vTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_TAKE, TRACE_CLASS_TASK, uxTaskGetTaskNumber(pxCurrentTCB), xTicksToWait); \
 	else \
 		vTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_TAKE_FAILED, TRACE_CLASS_TASK, uxTaskGetTaskNumber(pxCurrentTCB), xTicksToWait);
@@ -831,7 +831,7 @@ else \
 
 #undef traceTASK_NOTIFY_WAIT
 #define traceTASK_NOTIFY_WAIT() \
-	if (pxCurrentTCB->eNotifyState == eNotified) \
+	if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 		vTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT, TRACE_CLASS_TASK, uxTaskGetTaskNumber(pxCurrentTCB), xTicksToWait); \
 	else \
 		vTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_FAILED, TRACE_CLASS_TASK, uxTaskGetTaskNumber(pxCurrentTCB), xTicksToWait);
@@ -848,7 +848,7 @@ else \
 #undef traceTASK_NOTIFY_FROM_ISR
 #define traceTASK_NOTIFY_FROM_ISR() \
 	vTraceStoreKernelCall(TRACE_TASK_NOTIFY_FROM_ISR, TRACE_CLASS_TASK, uxTaskGetTaskNumber(xTaskToNotify));
-	
+
 #undef traceTASK_NOTIFY_GIVE_FROM_ISR
 #define traceTASK_NOTIFY_GIVE_FROM_ISR() \
 	vTraceStoreKernelCall(TRACE_TASK_NOTIFY_GIVE_FROM_ISR, TRACE_CLASS_TASK, uxTaskGetTaskNumber(xTaskToNotify));

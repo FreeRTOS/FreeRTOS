@@ -129,30 +129,6 @@ extern "C" {
 	#error Missing definition:  configUSE_TICK_HOOK must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
 
-#ifndef INCLUDE_vTaskPrioritySet
-	#error Missing definition:  INCLUDE_vTaskPrioritySet must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
-#ifndef INCLUDE_uxTaskPriorityGet
-	#error Missing definition:  INCLUDE_uxTaskPriorityGet must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
-#ifndef INCLUDE_vTaskDelete
-	#error Missing definition:  INCLUDE_vTaskDelete must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
-#ifndef INCLUDE_vTaskSuspend
-	#error Missing definition:  INCLUDE_vTaskSuspend must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
-#ifndef INCLUDE_vTaskDelayUntil
-	#error Missing definition:  INCLUDE_vTaskDelayUntil must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
-#ifndef INCLUDE_vTaskDelay
-	#error Missing definition:  INCLUDE_vTaskDelay must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
-#endif
-
 #ifndef configUSE_16_BIT_TICKS
 	#error Missing definition:  configUSE_16_BIT_TICKS must be defined in FreeRTOSConfig.h as either 1 or 0.  See the Configuration section of the FreeRTOS API documentation for details.
 #endif
@@ -165,18 +141,36 @@ extern "C" {
 	#define configUSE_CO_ROUTINES 0
 #endif
 
-#if configUSE_CO_ROUTINES != 0
-	#ifndef configMAX_CO_ROUTINE_PRIORITIES
-		#error configMAX_CO_ROUTINE_PRIORITIES must be greater than or equal to 1.
-	#endif
+#ifndef INCLUDE_vTaskPrioritySet
+	#define INCLUDE_vTaskPrioritySet 0
 #endif
 
-#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
-	#define configUSE_DAEMON_TASK_STARTUP_HOOK 0
+#ifndef INCLUDE_uxTaskPriorityGet
+	#define INCLUDE_uxTaskPriorityGet 0
+#endif
+
+#ifndef INCLUDE_vTaskDelete
+	#define INCLUDE_vTaskDelete 0
+#endif
+
+#ifndef INCLUDE_vTaskSuspend
+	#define INCLUDE_vTaskSuspend 0
+#endif
+
+#ifndef INCLUDE_vTaskDelayUntil
+	#define INCLUDE_vTaskDelayUntil 0
+#endif
+
+#ifndef INCLUDE_vTaskDelay
+	#define INCLUDE_vTaskDelay 0
 #endif
 
 #ifndef INCLUDE_xTaskGetIdleTaskHandle
 	#define INCLUDE_xTaskGetIdleTaskHandle 0
+#endif
+
+#ifndef INCLUDE_xTaskAbortDelay
+	#define INCLUDE_xTaskAbortDelay 0
 #endif
 
 #ifndef INCLUDE_xTimerGetTimerDaemonTaskHandle
@@ -199,20 +193,46 @@ extern "C" {
 	#define INCLUDE_xTaskGetTaskHandle 0
 #endif
 
-#ifndef configUSE_APPLICATION_TASK_TAG
-	#define configUSE_APPLICATION_TASK_TAG 0
-#endif
-
-#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
-	#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 0
-#endif
-
 #ifndef INCLUDE_uxTaskGetStackHighWaterMark
 	#define INCLUDE_uxTaskGetStackHighWaterMark 0
 #endif
 
 #ifndef INCLUDE_eTaskGetState
 	#define INCLUDE_eTaskGetState 0
+#endif
+
+#ifndef INCLUDE_xTaskResumeFromISR
+	#define INCLUDE_xTaskResumeFromISR 1
+#endif
+
+#ifndef INCLUDE_xTimerPendFunctionCall
+	#define INCLUDE_xTimerPendFunctionCall 0
+#endif
+
+#ifndef INCLUDE_xTaskGetSchedulerState
+	#define INCLUDE_xTaskGetSchedulerState 0
+#endif
+
+#ifndef INCLUDE_xTaskGetCurrentTaskHandle
+	#define INCLUDE_xTaskGetCurrentTaskHandle 0
+#endif
+
+#if configUSE_CO_ROUTINES != 0
+	#ifndef configMAX_CO_ROUTINE_PRIORITIES
+		#error configMAX_CO_ROUTINE_PRIORITIES must be greater than or equal to 1.
+	#endif
+#endif
+
+#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
+	#define configUSE_DAEMON_TASK_STARTUP_HOOK 0
+#endif
+
+#ifndef configUSE_APPLICATION_TASK_TAG
+	#define configUSE_APPLICATION_TASK_TAG 0
+#endif
+
+#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
+	#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 0
 #endif
 
 #ifndef configUSE_RECURSIVE_MUTEXES
@@ -251,14 +271,6 @@ extern "C" {
 	#error configMAX_TASK_NAME_LEN must be set to a minimum of 1 in FreeRTOSConfig.h
 #endif
 
-#ifndef INCLUDE_xTaskResumeFromISR
-	#define INCLUDE_xTaskResumeFromISR 1
-#endif
-
-#ifndef INCLUDE_xTimerPendFunctionCall
-	#define INCLUDE_xTimerPendFunctionCall 0
-#endif
-
 #ifndef configASSERT
 	#define configASSERT( x )
 	#define configASSERT_DEFINED 0
@@ -282,15 +294,6 @@ extern "C" {
 	#endif /* configTIMER_TASK_STACK_DEPTH */
 
 #endif /* configUSE_TIMERS */
-
-#ifndef INCLUDE_xTaskGetSchedulerState
-	#define INCLUDE_xTaskGetSchedulerState 0
-#endif
-
-#ifndef INCLUDE_xTaskGetCurrentTaskHandle
-	#define INCLUDE_xTaskGetCurrentTaskHandle 0
-#endif
-
 
 #ifndef portSET_INTERRUPT_MASK_FROM_ISR
 	#define portSET_INTERRUPT_MASK_FROM_ISR() 0
@@ -515,7 +518,7 @@ extern "C" {
 #endif
 
 #ifndef traceTASK_DELAY_UNTIL
-	#define traceTASK_DELAY_UNTIL()
+	#define traceTASK_DELAY_UNTIL( x )
 #endif
 
 #ifndef traceTASK_DELAY
@@ -877,12 +880,6 @@ typedef struct xSTATIC_LIST
 	StaticMiniListItem_t xDummy3;
 } StaticList_t;
 
-/* For data hiding purposes. */
-typedef enum
-{
-	eNothing = 0
-} eDummy;
-
 /*
  * In line with software engineering best practice, especially when supplying a
  * library that is likely to change in future versions, FreeRTOS implements a
@@ -932,7 +929,7 @@ typedef struct xSTATIC_TCB
 	#endif
 	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
 		uint32_t 		ulDummy18;
-		eDummy 			eDummy19;
+		uint8_t 		ucDummy19;
 	#endif
 	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 		uint8_t			uxDummy20;

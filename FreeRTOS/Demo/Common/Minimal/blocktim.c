@@ -102,7 +102,7 @@
 /*-----------------------------------------------------------*/
 
 /*
- * The two test tasks.  Their behaviour is commented within the files.
+ * The two test tasks.  Their behaviour is commented within the functions.
  */
 static void vPrimaryBlockTimeTestTask( void *pvParameters );
 static void vSecondaryBlockTimeTestTask( void *pvParameters );
@@ -420,7 +420,7 @@ BaseType_t xData;
 		/*********************************************************************
 		Test 0, 1 and 2
 
-		This task does does not participate in these tests. */
+		This task does not participate in these tests. */
 		vTaskSuspend( NULL );
 
 		/*********************************************************************

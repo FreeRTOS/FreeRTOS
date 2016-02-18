@@ -619,14 +619,14 @@ volatile uint32_t ulErrorStatus = 0;
 	{
 	BaseType_t xReturn;
 
-		if( prvCheckValidityOfVectorNumber( ulVectorNumber ) != pdFAIL )
+		xReturn = prvCheckValidityOfVectorNumber( ulVectorNumber );
+
+		if( xReturn != pdFAIL )
 		{
 			/* Save the handler passed in by the application in the vector number
 			passed in.  The addresses are then called from the central interrupt
 			handler. */
 			xInterruptHandlerTable[ ulVectorNumber ] = pxHandler;
-
-			xReturn = pdPASS;
 		}
 
 		return xReturn;
@@ -639,7 +639,9 @@ BaseType_t xPortInstallInterruptHandler( ISR_Handler_t pxHandler, uint32_t ulVec
 {
 BaseType_t xReturn;
 
-	if( prvCheckValidityOfVectorNumber( ulVectorNumber ) != pdFAIL )
+	xReturn = prvCheckValidityOfVectorNumber( ulVectorNumber );
+	
+	if( xReturn != pdFAIL )
 	{
 		taskENTER_CRITICAL();
 		{
@@ -647,8 +649,6 @@ BaseType_t xReturn;
 			prvSetInterruptGate( ( uint8_t ) ulVectorNumber, ( ISR_Handler_t ) pxHandler, portIDT_FLAGS );
 		}
 		taskEXIT_CRITICAL();
-
-		xReturn = pdPASS;
 	}
 
 	return xReturn;

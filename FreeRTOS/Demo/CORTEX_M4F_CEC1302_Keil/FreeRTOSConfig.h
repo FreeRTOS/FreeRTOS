@@ -215,7 +215,7 @@ header file. */
 
 /* LED not used at present, so just increment a variable to keep a count of the
 number of times the LED would otherwise have been toggled. */
-#define mainTOGGLE_LED()	ulLED++
+#define configTOGGLE_LED()	ulLED++
 
 
 #ifdef __cplusplus

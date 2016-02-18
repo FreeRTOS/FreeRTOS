@@ -104,7 +104,7 @@
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
-#define configUSE_ALTERNATIVE_API		1
+#define configUSE_ALTERNATIVE_API		0
 
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		2
@@ -134,7 +134,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the xTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configINCLUDE_STATS_FORMATTING_FUNCTIONS	1
 

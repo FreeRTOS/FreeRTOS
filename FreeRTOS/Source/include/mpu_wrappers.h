@@ -113,8 +113,6 @@ only for ports that are using the MPU. */
 		#define xQueueTakeMutexRecursive		MPU_xQueueTakeMutexRecursive
 		#define xQueueCreateCountingSemaphore	MPU_xQueueCreateCountingSemaphore
 		#define xQueueGenericSend				MPU_xQueueGenericSend
-		#define xQueueAltGenericSend			MPU_xQueueAltGenericSend
-		#define xQueueAltGenericReceive			MPU_xQueueAltGenericReceive
 		#define xQueueGenericReceive			MPU_xQueueGenericReceive
 		#define uxQueueMessagesWaiting			MPU_uxQueueMessagesWaiting
 		#define vQueueDelete					MPU_vQueueDelete
@@ -123,7 +121,6 @@ only for ports that are using the MPU. */
 		#define xQueueSelectFromSet				MPU_xQueueSelectFromSet
 		#define xQueueAddToSet					MPU_xQueueAddToSet
 		#define xQueueRemoveFromSet				MPU_xQueueRemoveFromSet
-		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
 		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
 
 		#define pvPortMalloc					MPU_pvPortMalloc

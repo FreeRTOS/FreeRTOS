@@ -48,7 +48,7 @@
  ******************************************************************************/
 
 /* Tasks and kernel objects can be explicitly excluded from the trace to reduce
-buffer usage. This structure handles the exclude flags for all objects and tasks. 
+buffer usage. This structure handles the exclude flags for all objects and tasks.
 Note that slot 0 is not used, since not a valid handle. */
 uint8_t excludedObjects[(TRACE_KERNEL_OBJECT_COUNT + TRACE_NCLASSES) / 8 + 1] = { 0 };
 
@@ -58,43 +58,43 @@ This structure handle the exclude flags for all event codes */
 uint8_t excludedEventCodes[NEventCodes / 8 + 1] = { 0 };
 
 /* A set of stacks that keeps track of available object handles for each class.
-The stacks are empty initially, meaning that allocation of new handles will be 
+The stacks are empty initially, meaning that allocation of new handles will be
 based on a counter (for each object class). Any delete operation will
 return the handle to the corresponding stack, for reuse on the next allocate.*/
 objectHandleStackType objectHandleStacks = { { 0 }, { 0 }, { 0 }, { 0 }, { 0 } };
 
-/* Initial HWTC_COUNT value, for detecting if the time-stamping source is 
-enabled. If using the OS periodic timer for time-stamping, this might not 
+/* Initial HWTC_COUNT value, for detecting if the time-stamping source is
+enabled. If using the OS periodic timer for time-stamping, this might not
 have been configured on the earliest events during the startup. */
 uint32_t init_hwtc_count;
 
 /*******************************************************************************
  * RecorderData
  *
- * The main data structure. This is the data read by the Tracealyzer tools, 
- * typically through a debugger RAM dump. The recorder uses the pointer 
+ * The main data structure. This is the data read by the Tracealyzer tools,
+ * typically through a debugger RAM dump. The recorder uses the pointer
  * RecorderDataPtr for accessing this, to allow for dynamic allocation.
  *
  * On the NXP LPC17xx you may use the secondary RAM bank (AHB RAM) for this
  * purpose. For instance, the LPC1766 has 32 KB AHB RAM which allows for
  * allocating a buffer size of at least 7500 events without affecting the main
- * RAM. To place RecorderData in this RAM bank using IAR Embedded Workbench 
+ * RAM. To place RecorderData in this RAM bank using IAR Embedded Workbench
  * for ARM, use this pragma right before the declaration:
  *
  *	 #pragma location="AHB_RAM_MEMORY"
  *
  * This of course works for other hardware architectures with additional RAM
- * banks as well, just replace "AHB_RAM_MEMORY" with the section name from the 
+ * banks as well, just replace "AHB_RAM_MEMORY" with the section name from the
  * linker .map file, or simply the desired address.
  *
- * For portability reasons, we don't add the pragma directly in trcBase.c, but 
+ * For portability reasons, we don't add the pragma directly in trcBase.c, but
  * in a header file included below. To include this header, you need to enable
  * USE_LINKER_PRAGMA, defined in trcConfig.h.
  *
  * If using GCC, you need to modify the declaration as follows:
  *
  *	 RecorderDataType RecorderData __attribute__ ((section ("name"))) = ...
- * 
+ *
  * Remember to replace "name" with the correct section name.
  ******************************************************************************/
 
@@ -113,9 +113,9 @@ RecorderDataType* RecorderDataPtr = NULL;
 
 /* This version of the function dynamically allocates the trace data */
 void prvTraceInitTraceData()
-{		
+{
 	init_hwtc_count = HWTC_COUNT;
-	
+
 #if TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_STATIC
 	RecorderDataPtr = &RecorderData;
 #elif TRACE_DATA_ALLOCATION == TRACE_DATA_ALLOCATION_DYNAMIC
@@ -132,7 +132,7 @@ void prvTraceInitTraceData()
 		vTraceError("No recorder data structure allocated!");
 		return;
 	}
-		
+
 	(void)memset(RecorderDataPtr, 0, sizeof(RecorderDataType));
 
 	RecorderDataPtr->startmarker0 = 0x00;
@@ -196,7 +196,7 @@ void prvTraceInitTraceData()
 
 	/* Fix the start markers of the trace data structure */
 	vInitStartMarkers();
-	
+
 	#ifdef PORT_SPECIFIC_INIT
 	PORT_SPECIFIC_INIT();
 	#endif
@@ -242,15 +242,15 @@ void* xTraceNextFreeEventBufferSlot(void)
 
 uint16_t uiIndexOfObject(objectHandleType objecthandle, uint8_t objectclass)
 {
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, 
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES,
 		"uiIndexOfObject: Invalid value for objectclass", 0);
-	TRACE_ASSERT(objecthandle > 0 && objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], 
+	TRACE_ASSERT(objecthandle > 0 && objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass],
 		"uiIndexOfObject: Invalid value for objecthandle", 0);
 
-	if ((objectclass < TRACE_NCLASSES) && (objecthandle > 0) && 
+	if ((objectclass < TRACE_NCLASSES) && (objecthandle > 0) &&
 		(objecthandle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass]))
 	{
-		return (uint16_t)(RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[objectclass] + 
+		return (uint16_t)(RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[objectclass] +
 			(RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[objectclass] * (objecthandle-1)));
 	}
 
@@ -286,7 +286,7 @@ objectHandleType xTraceGetObjectHandle(traceObjectClass objectclass)
 	objectHandleType handle;
 	static int indexOfHandle;
 
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, 
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES,
 		"xTraceGetObjectHandle: Invalid value for objectclass", (objectHandleType)0);
 
 	indexOfHandle = objectHandleStacks.indexOfNextAvailableHandle[objectclass];
@@ -335,9 +335,9 @@ void vTraceFreeObjectHandle(traceObjectClass objectclass, objectHandleType handl
 {
 	int indexOfHandle;
 
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, 
+	TRACE_ASSERT(objectclass < TRACE_NCLASSES,
 		"vTraceFreeObjectHandle: Invalid value for objectclass", );
-	TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], 
+	TRACE_ASSERT(handle > 0 && handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass],
 		"vTraceFreeObjectHandle: Invalid value for handle", );
 
 	/* Check that there is room to push the handle on the stack */
@@ -421,10 +421,10 @@ traceLabel prvTraceOpenSymbol(const char* name, traceLabel userEventChannel)
 	uint8_t len;
 	uint8_t crc;
 	TRACE_SR_ALLOC_CRITICAL_SECTION();
-	
+
 	len = 0;
 	crc = 0;
-	
+
 	TRACE_ASSERT(name != NULL, "prvTraceOpenSymbol: name == NULL", (traceLabel)0);
 
 	prvTraceGetChecksum(name, &crc, &len);
@@ -470,9 +470,9 @@ void vTraceError(const char* msg)
 	{
 		traceErrorMessage = (char*)msg;
 		(void)strncpy(RecorderDataPtr->systemInfo, traceErrorMessage, 80);
-		RecorderDataPtr->internalErrorOccured = 1;	 	 
+		RecorderDataPtr->internalErrorOccured = 1;
 	}
-	
+
 }
 
 /******************************************************************************
@@ -496,7 +496,7 @@ void prvCheckDataToBeOverwrittenForMultiEntryEvents(uint8_t nofEntriesToCheck)
 	unsigned int i = 0;
 	unsigned int e = 0;
 
-	TRACE_ASSERT(nofEntriesToCheck != 0, 
+	TRACE_ASSERT(nofEntriesToCheck != 0,
 		"prvCheckDataToBeOverwrittenForMultiEntryEvents: nofEntriesToCheck == 0", );
 
 	while (i < nofEntriesToCheck)
@@ -535,12 +535,12 @@ void prvCheckDataToBeOverwrittenForMultiEntryEvents(uint8_t nofEntriesToCheck)
  * Updates the index of the event buffer.
  ******************************************************************************/
 void prvTraceUpdateCounters(void)
-{	
+{
 	if (RecorderDataPtr->recorderActive == 0)
 	{
 		return;
 	}
-	
+
 	RecorderDataPtr->numEvents++;
 
 	RecorderDataPtr->nextFreeIndex++;
@@ -584,9 +584,9 @@ uint16_t prvTraceGetDTS(uint16_t param_maxDTS)
 	if (RecorderDataPtr->frequency == 0 && init_hwtc_count != HWTC_COUNT)
 	{
 		/* If HWTC_PERIOD is mapped to the timer reload register,
-		it might not be initialized	before the scheduler has been started. 
+		it might not be initialized	before the scheduler has been started.
 		We therefore store the frequency of the timer when the counter
-		register has changed from its initial value. 
+		register has changed from its initial value.
 		(Note that this function is called also by vTraceStart and
 		uiTraceStart, which might be called before the scheduler
 		has been started.) */
@@ -605,9 +605,9 @@ uint16_t prvTraceGetDTS(uint16_t param_maxDTS)
 	* If necessary, whole seconds are extracted using division while the rest
 	* comes from the modulo operation.
 	**************************************************************************/
-	
-	vTracePortGetTimeStamp(&timestamp);	
-	
+
+	vTracePortGetTimeStamp(&timestamp);
+
 	/***************************************************************************
 	* Since dts is unsigned the result will be correct even if timestamp has
 	* wrapped around.
@@ -818,14 +818,14 @@ void prvTraceGetChecksum(const char *pname, uint8_t* pcrc, uint8_t* plength)
 
 #if (USE_16BIT_OBJECT_HANDLES == 1)
 
-void prvTraceStoreXID(objectHandleType handle); 
+void prvTraceStoreXID(objectHandleType handle);
 
 /******************************************************************************
  * prvTraceStoreXID
  *
  * Stores an XID (eXtended IDentifier) event.
  * This is used if an object/task handle is larger than 255.
- * The parameter "handle" is the full (16 bit) handle, assumed to be 256 or 
+ * The parameter "handle" is the full (16 bit) handle, assumed to be 256 or
  * larger. Handles below 256 should not use this function.
  *
  * NOTE: this function MUST be called from within a critical section.
@@ -844,7 +844,7 @@ void prvTraceStoreXID(objectHandleType handle)
 		xid->type = XID;
 
 		/* This function is (only) used when objectHandleType is 16 bit... */
-		xid->xps_16 = handle; 
+		xid->xps_16 = handle;
 
 		prvTraceUpdateCounters();
 	}
@@ -853,11 +853,11 @@ void prvTraceStoreXID(objectHandleType handle)
 unsigned char prvTraceGet8BitHandle(objectHandleType handle)
 {
 	if (handle > 255)
-	{		
+	{
 		prvTraceStoreXID(handle);
-		/* The full handle (16 bit) is stored in the XID event. 
+		/* The full handle (16 bit) is stored in the XID event.
 		This code (255) is used instead of zero (which is an error code).*/
-		return 255; 
+		return 255;
 	}
 	return (unsigned char)(handle & 0xFF);
 }

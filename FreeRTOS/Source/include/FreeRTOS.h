@@ -839,6 +839,10 @@ V8 if desired. */
 	#define xList List_t
 #endif /* configENABLE_BACKWARD_COMPATIBILITY */
 
+#if( configUSE_ALTERNATIVE_API != 0 )
+	#error The alternative API was deprecated some time ago, and was removed in FreeRTOS V9.0 0
+#endif
+
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even
 if floating point hardware is otherwise supported by the FreeRTOS port in use.
 This constant is not supported by all FreeRTOS ports that include floating

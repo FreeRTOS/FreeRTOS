@@ -168,13 +168,13 @@
  * check the actual usage by selecting View menu -> Trace Details ->
  * Resource Usage -> Object Table.
  ******************************************************************************/
-#define NTask			100
-#define NISR			60
-#define NQueue			60
-#define NSemaphore		60
-#define NMutex			60
-#define NTimer			200
-#define NEventGroup		60
+#define NTask			150
+#define NISR			90
+#define NQueue			90
+#define NSemaphore		90
+#define NMutex			90
+#define NTimer			300
+#define NEventGroup		90
 
 /******************************************************************************
  * INCLUDE_MEMMANG_EVENTS

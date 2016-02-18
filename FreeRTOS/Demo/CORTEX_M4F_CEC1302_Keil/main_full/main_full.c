@@ -363,7 +363,7 @@ unsigned long ulErrorFound = pdFALSE;
 		/* Toggle the check LED to give an indication of the system status.  If
 		the LED toggles every mainNO_ERROR_CHECK_TASK_PERIOD milliseconds then
 		everything is ok.  A faster toggle indicates an error. */
-		mainTOGGLE_LED();
+		configTOGGLE_LED();
 
 		if( ulErrorFound != pdFALSE )
 		{

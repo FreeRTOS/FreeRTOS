@@ -136,6 +136,8 @@
 #include "TaskNotify.h"
 #include "QueueSetPolling.h"
 #include "StaticAllocation.h"
+#include "blocktim.h"
+#include "AbortDelay.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -181,6 +183,12 @@ static void prvPendedFunction( void *pvParameter1, uint32_t ulParameter2 );
  */
 static void prvDemoQueueSpaceFunctions( void *pvParameters );
 
+/*
+ * Tasks that ensure indefinite delays are truly indefinite.
+ */
+static void prvPermanentlyBlockingSemaphoreTask( void *pvParameters );
+static void prvPermanentlyBlockingNotificationTask( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
@@ -214,7 +222,11 @@ int main_full( void )
 	vStartEventGroupTasks();
 	vStartInterruptSemaphoreTasks();
 	vStartQueueSetPollingTask();
+	vCreateBlockTimeTasks();
+	vCreateAbortDelayTasks();
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{
@@ -242,9 +254,9 @@ int main_full( void )
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
-    /* Should never get here unless there was not enough heap space to create
+	/* Should never get here unless there was not enough heap space to create
 	the idle and other system tasks. */
-    return 0;
+	return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -343,6 +355,14 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Queue set polling";
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Block time";
+		}
+		else if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Abort delay";
 		}
 
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
@@ -671,5 +691,35 @@ unsigned portBASE_TYPE uxReturn, x;
 		#endif
 	}
 }
+/*-----------------------------------------------------------*/
+
+static void prvPermanentlyBlockingSemaphoreTask( void *pvParameters )
+{
+SemaphoreHandle_t xSemaphore;
+
+	/* This task should block on a semaphore, and never return. */
+	xSemaphore = xSemaphoreCreateBinary();
+	configASSERT( xSemaphore );
+
+	xSemaphoreTake( xSemaphore, portMAX_DELAY );
+
+	/* The above xSemaphoreTake() call should never return, force an assert if
+	it does. */
+	configASSERT( pvParameters != NULL );
+	vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvPermanentlyBlockingNotificationTask( void *pvParameters )
+{
+	/* This task should block on a task notification, and never return. */
+	ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+
+	/* The above ulTaskNotifyTake() call should never return, force an assert
+	if it does. */
+	configASSERT( pvParameters != NULL );
+	vTaskDelete( NULL );
+}
+
 
 

@@ -725,7 +725,7 @@ void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToCl
  * Generic version of the event group creation function, which is in turn called
  * by the event group creation macros.
  */
-EventGroupHandle_t xEventGroupGenericCreate( StaticEventGroup_t *pxStaticEventGroup );
+EventGroupHandle_t xEventGroupGenericCreate( StaticEventGroup_t *pxStaticEventGroup ) PRIVILEGED_FUNCTION;
 
 #if (configUSE_TRACE_FACILITY == 1)
 	UBaseType_t uxEventGroupGetNumber( void* xEventGroup ) PRIVILEGED_FUNCTION;

@@ -268,7 +268,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 void vApplicationIdleHook( void )
 {
-volatile size_t xFreeHeapSpace;
+volatile size_t xFreeHeapSpace, xMinimumEverFreeHeapSpace;
 
 	/* This is just a trivial example of an idle hook.  It is called on each
 	cycle of the idle task.  It must *NOT* attempt to block.  In this case the
@@ -278,9 +278,11 @@ volatile size_t xFreeHeapSpace;
 	configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
 	RAM. */
 	xFreeHeapSpace = xPortGetFreeHeapSize();
+	xMinimumEverFreeHeapSpace = xPortGetMinimumEverFreeHeapSize();
 
 	/* Remove compiler warning about xFreeHeapSpace being set but never used. */
 	( void ) xFreeHeapSpace;
+	( void ) xMinimumEverFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 

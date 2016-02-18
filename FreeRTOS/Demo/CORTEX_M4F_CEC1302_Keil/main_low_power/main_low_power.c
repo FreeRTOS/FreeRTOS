@@ -225,9 +225,9 @@ const TickType_t xShortDelay = pdMS_TO_TICKS( 10 );
 		{
 			/* Blip the LED briefly to show the demo is running, but without
 			leaving the LED on too long as energy is being conserved. */
-			mainTOGGLE_LED();
+			configTOGGLE_LED();
 			vTaskDelay( xShortDelay );
-			mainTOGGLE_LED();
+			configTOGGLE_LED();
 
 			ulReceivedValue = 0U;
 		}

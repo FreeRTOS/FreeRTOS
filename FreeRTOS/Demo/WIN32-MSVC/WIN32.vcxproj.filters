@@ -151,6 +151,9 @@
     <ClCompile Include="..\Common\Minimal\StaticAllocation.c">
       <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\Minimal\AbortDelay.c">
+      <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">

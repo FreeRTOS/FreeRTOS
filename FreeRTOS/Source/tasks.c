@@ -147,7 +147,7 @@ typedef struct tskTaskControlBlock
 		xMPU_SETTINGS	xMPUSettings;		/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
 	#endif
 
-	ListItem_t			xGenericListItem;	/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
+	ListItem_t			xStateListItem;	/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
 	ListItem_t			xEventListItem;		/*< Used to reference a task from an event list. */
 	UBaseType_t			uxPriority;			/*< The priority of the task.  0 is the lowest priority. */
 	StackType_t			*pxStack;			/*< Points to the start of the stack. */
@@ -260,8 +260,8 @@ PRIVILEGED_DATA static volatile TickType_t xNextTaskUnblockTime		= ( TickType_t 
 PRIVILEGED_DATA static TaskHandle_t xIdleTaskHandle					= NULL;			/*< Holds the handle of the idle task.  The idle task is created automatically when the scheduler is started. */
 
 /* Context switches are held pending while the scheduler is suspended.  Also,
-interrupts must not manipulate the xGenericListItem of a TCB, or any of the
-lists the xGenericListItem can be referenced from, if the scheduler is suspended.
+interrupts must not manipulate the xStateListItem of a TCB, or any of the
+lists the xStateListItem can be referenced from, if the scheduler is suspended.
 If an interrupt needs to unblock a task while the scheduler is suspended then it
 moves the task's event list item into the xPendingReadyList, ready for the
 kernel to move the task from the pending ready list into the real ready list
@@ -399,7 +399,7 @@ count overflows. */
 #define prvAddTaskToReadyList( pxTCB )																\
 	traceMOVED_TASK_TO_READY_STATE( pxTCB );														\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
-	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xGenericListItem ) ); \
+	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xStateListItem ) ); \
 	tracePOST_MOVED_TASK_TO_READY_STATE( pxTCB )
 /*-----------------------------------------------------------*/
 
@@ -526,7 +526,7 @@ static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t *
  */
 #if ( INCLUDE_xTaskGetTaskHandle == 1 )
 
-	static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] );
+	static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] ) PRIVILEGED_FUNCTION;
 
 #endif
 
@@ -568,7 +568,7 @@ static void prvResetNextTaskUnblockTime( void );
 	 * Helper function used to pad task names with spaces when printing out
 	 * human readable tables of task information.
 	 */
-	static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName );
+	static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName ) PRIVILEGED_FUNCTION;
 
 #endif
 /*-----------------------------------------------------------*/
@@ -763,7 +763,7 @@ StackType_t *pxTopOfStack;
 			pxTCB = prvGetTCBFromHandle( xTaskToDelete );
 
 			/* Remove task from the ready list. */
-			if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+			if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 			{
 				taskRESET_READY_PRIORITY( pxTCB->uxPriority );
 			}
@@ -789,7 +789,7 @@ StackType_t *pxTopOfStack;
 				Place the task in the termination list.  The idle task will
 				check the termination list and free up any memory allocated by
 				the scheduler for the TCB and stack of the deleted task. */
-				vListInsertEnd( &xTasksWaitingTermination, &( pxTCB->xGenericListItem ) );
+				vListInsertEnd( &xTasksWaitingTermination, &( pxTCB->xStateListItem ) );
 
 				/* Increment the ucTasksDeleted variable so the idle task knows
 				there is a task that has been deleted and that it should therefore
@@ -990,7 +990,7 @@ StackType_t *pxTopOfStack;
 		{
 			taskENTER_CRITICAL();
 			{
-				pxStateList = ( List_t * ) listLIST_ITEM_CONTAINER( &( pxTCB->xGenericListItem ) );
+				pxStateList = ( List_t * ) listLIST_ITEM_CONTAINER( &( pxTCB->xStateListItem ) );
 			}
 			taskEXIT_CRITICAL();
 
@@ -1225,12 +1225,12 @@ StackType_t *pxTopOfStack;
 				nothing more than change it's priority variable. However, if
 				the task is in a ready list it needs to be removed and placed
 				in the list appropriate to its new priority. */
-				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
+				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
 				{
 					/* The task is currently in its ready list - remove before adding
 					it to it's new ready list.  As we are in a critical section we
 					can do this even if the scheduler is suspended. */
-					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						/* It is known that the task is in its ready list so
 						there is no need to check again and the port level
@@ -1284,7 +1284,7 @@ StackType_t *pxTopOfStack;
 
 			/* Remove task from the ready/delayed list and place in the
 			suspended list. */
-			if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+			if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 			{
 				taskRESET_READY_PRIORITY( pxTCB->uxPriority );
 			}
@@ -1303,7 +1303,7 @@ StackType_t *pxTopOfStack;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) );
+			vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xStateListItem ) );
 		}
 		taskEXIT_CRITICAL();
 
@@ -1372,7 +1372,7 @@ StackType_t *pxTopOfStack;
 		configASSERT( xTask );
 
 		/* Is the task being resumed actually in the suspended list? */
-		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xGenericListItem ) ) != pdFALSE )
+		if( listIS_CONTAINED_WITHIN( &xSuspendedTaskList, &( pxTCB->xStateListItem ) ) != pdFALSE )
 		{
 			/* Has the task already been resumed from within an ISR? */
 			if( listIS_CONTAINED_WITHIN( &xPendingReadyList, &( pxTCB->xEventListItem ) ) == pdFALSE )
@@ -1425,7 +1425,7 @@ StackType_t *pxTopOfStack;
 
 					/* As we are in a critical section we can access the ready
 					lists even if the scheduler is suspended. */
-					( void ) uxListRemove(  &( pxTCB->xGenericListItem ) );
+					( void ) uxListRemove(  &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 
 					/* We may have just resumed a higher priority task. */
@@ -1506,7 +1506,7 @@ StackType_t *pxTopOfStack;
 						mtCOVERAGE_TEST_MARKER();
 					}
 
-					( void ) uxListRemove(  &( pxTCB->xGenericListItem ) );
+					( void ) uxListRemove(  &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 				}
 				else
@@ -1723,7 +1723,7 @@ BaseType_t xAlreadyYielded = pdFALSE;
 				{
 					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xPendingReadyList ) );
 					( void ) uxListRemove( &( pxTCB->xEventListItem ) );
-					( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 
 					/* If the moved task has a priority higher than the current
@@ -2117,9 +2117,9 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 			if( eTaskGetState( xTask ) == eBlocked )
 			{
 				/* Remove the reference to the task from the blocked list.  An
-				interrupt won't touch the xGenericListItem because the
+				interrupt won't touch the xStateListItem because the
 				scheduler is suspended. */
-				( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 
 				/* Is the task waiting on an event also?  If so remove it from
 				the event list too.  Interrupts can touch the event list item,
@@ -2230,7 +2230,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 						at which the task at the head of the delayed list must
 						be removed from the Blocked state. */
 						pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
-						xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xGenericListItem ) );
+						xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ) );
 
 						if( xConstTickCount < xItemValue )
 						{
@@ -2248,7 +2248,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 						}
 
 						/* It is time to remove the item from the Blocked state. */
-						( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+						( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 
 						/* Is the task waiting on an event also?  If so remove
 						it from the event list. */
@@ -2596,7 +2596,7 @@ BaseType_t xReturn;
 
 	if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
 	{
-		( void ) uxListRemove( &( pxUnblockedTCB->xGenericListItem ) );
+		( void ) uxListRemove( &( pxUnblockedTCB->xStateListItem ) );
 		prvAddTaskToReadyList( pxUnblockedTCB );
 	}
 	else
@@ -2661,7 +2661,7 @@ BaseType_t xReturn;
 	/* Remove the task from the delayed list and add it to the ready list.  The
 	scheduler is suspended so interrupts will not be accessing the ready
 	lists. */
-	( void ) uxListRemove( &( pxUnblockedTCB->xGenericListItem ) );
+	( void ) uxListRemove( &( pxUnblockedTCB->xStateListItem ) );
 	prvAddTaskToReadyList( pxUnblockedTCB );
 
 	if( pxUnblockedTCB->uxPriority > pxCurrentTCB->uxPriority )
@@ -3001,12 +3001,12 @@ UBaseType_t x;
 	}
 	#endif /* configUSE_MUTEXES */
 
-	vListInitialiseItem( &( pxTCB->xGenericListItem ) );
+	vListInitialiseItem( &( pxTCB->xStateListItem ) );
 	vListInitialiseItem( &( pxTCB->xEventListItem ) );
 
 	/* Set the pxTCB as a link back from the ListItem_t.  This is so we can get
 	back to	the containing TCB from a generic item in a list. */
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xGenericListItem ), pxTCB );
+	listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
 
 	/* Event lists are always in priority order. */
 	listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
@@ -3185,7 +3185,7 @@ static void prvCheckTasksWaitingTermination( void )
 				taskENTER_CRITICAL();
 				{
 					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
-					( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 					--uxCurrentNumberOfTasks;
 					--uxDeletedTasksWaitingCleanUp;
 				}
@@ -3565,7 +3565,7 @@ TCB_t *pxTCB;
 		which the task at the head of the delayed list should be removed
 		from the Blocked state. */
 		( pxTCB ) = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
-		xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( ( pxTCB )->xGenericListItem ) );
+		xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( ( pxTCB )->xStateListItem ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -3644,9 +3644,9 @@ TCB_t *pxTCB;
 
 				/* If the task being modified is in the ready state it will need
 				to be moved into a new list. */
-				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xGenericListItem ) ) != pdFALSE )
+				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
 				{
-					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
 					}
@@ -3711,7 +3711,7 @@ TCB_t *pxTCB;
 					given from an interrupt, and if a mutex is given by the
 					holding	task then it must be the running state task.  Remove
 					the	holding task from the ready	list. */
-					if( uxListRemove( &( pxTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
 					}
@@ -4306,7 +4306,7 @@ TickType_t uxReturn;
 			notification then unblock it now. */
 			if( ucOriginalNotifyState == taskWAITING_NOTIFICATION )
 			{
-				( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 				prvAddTaskToReadyList( pxTCB );
 
 				/* The task should not have been on an event list. */
@@ -4436,7 +4436,7 @@ TickType_t uxReturn;
 
 				if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
 				{
-					( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 				}
 				else
@@ -4526,7 +4526,7 @@ TickType_t uxReturn;
 
 				if( uxSchedulerSuspended == ( UBaseType_t ) pdFALSE )
 				{
-					( void ) uxListRemove( &( pxTCB->xGenericListItem ) );
+					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 				}
 				else
@@ -4612,7 +4612,7 @@ TickType_t xTimeToWake;
 
 	/* Remove the task from the ready list before adding it to the blocked list
 	as the same list item is used for both lists. */
-	if( uxListRemove( &( pxCurrentTCB->xGenericListItem ) ) == ( UBaseType_t ) 0 )
+	if( uxListRemove( &( pxCurrentTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 	{
 		/* The current task must be in a ready list, so there is no need to
 		check, and the port reset macro can be called directly. */
@@ -4631,7 +4631,7 @@ TickType_t xTimeToWake;
 			/* Add the task to the suspended task list instead of a delayed task
 			list to ensure it is not woken by a timing event.  It will block
 			indefinitely. */
-			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+			vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xStateListItem ) );
 		}
 		else
 		{
@@ -4641,19 +4641,19 @@ TickType_t xTimeToWake;
 			xTimeToWake = xTickCount + xTicksToWait;
 
 			/* The list item will be inserted in wake time order. */
-			listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
+			listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xStateListItem ), xTimeToWake );
 
 			if( xTimeToWake < xTickCount )
 			{
 				/* Wake time has overflowed.  Place this item in the overflow
 				list. */
-				vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+				vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
 			}
 			else
 			{
 				/* The wake time has not overflowed, so the current block list
 				is used. */
-				vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+				vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
 
 				/* If the task entering the blocked state was placed at the
 				head of the list of blocked tasks then xNextTaskUnblockTime
@@ -4677,17 +4677,17 @@ TickType_t xTimeToWake;
 		xTimeToWake = xTickCount + xTicksToWait;
 
 		/* The list item will be inserted in wake time order. */
-		listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xGenericListItem ), xTimeToWake );
+		listSET_LIST_ITEM_VALUE( &( pxCurrentTCB->xStateListItem ), xTimeToWake );
 
 		if( xTimeToWake < xTickCount )
 		{
 			/* Wake time has overflowed.  Place this item in the overflow list. */
-			vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+			vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
 		}
 		else
 		{
 			/* The wake time has not overflowed, so the current block list is used. */
-			vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xGenericListItem ) );
+			vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
 
 			/* If the task entering the blocked state was placed at the head of the
 			list of blocked tasks then xNextTaskUnblockTime needs to be updated

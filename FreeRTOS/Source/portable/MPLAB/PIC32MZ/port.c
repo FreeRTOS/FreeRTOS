@@ -226,8 +226,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 
 	*pxTopOfStack = (StackType_t) pxCode; 		/* CP0_EPC */
 	pxTopOfStack--;
-    
-	*pxTopOfStack = (StackType_t) 0x00000000;	/* DSPControl */    
+
+	*pxTopOfStack = (StackType_t) 0x00000000;	/* DSPControl */
 	pxTopOfStack -= 7;  						/* Includes space for AC1 - AC3. */
 
 	*pxTopOfStack = (StackType_t) portTASK_RETURN_ADDRESS;	/* ra */
@@ -237,7 +237,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack -= 15;
 
 	*pxTopOfStack = (StackType_t) pdFALSE; /*by default disable FPU context save on parts with FPU */
-    
+
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -267,7 +267,7 @@ static void prvTaskExitError( void )
  */
 __attribute__(( weak )) void vApplicationSetupTickTimerInterrupt( void )
 {
-const uint32_t ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ ) - 1;
+const uint32_t ulCompareMatch = ( (configPERIPHERAL_CLOCK_HZ / portTIMER_PRESCALE) / configTICK_RATE_HZ ) - 1UL;
 
 	T1CON = 0x0000;
 	T1CONbits.TCKPS = portPRESCALE_BITS;
@@ -388,14 +388,14 @@ void vPortClearInterruptMaskFromISR( UBaseType_t uxSavedStatusRegister )
 	extern void vPortInitialiseFPSCR( uint32_t uxFPSCRInit );
 
 		portENTER_CRITICAL();
-    
+
 		/* Initialise the floating point status register. */
-		vPortInitialiseFPSCR(portINITIAL_FPSCR);  
-    
+		vPortInitialiseFPSCR(portINITIAL_FPSCR);
+
 		/* A task is registering the fact that it needs a FPU context. Set the
 		FPU flag (saved as part of the task context). */
 		ulTaskHasFPUContext = pdTRUE;
-    
+
 		portEXIT_CRITICAL();
 	}
 

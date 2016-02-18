@@ -102,7 +102,7 @@
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_QUEUE_SETS			1
 #define configUSE_COUNTING_SEMAPHORES	1
-#define configUSE_ALTERNATIVE_API		1
+#define configUSE_ALTERNATIVE_API		0
 
 #define configMAX_PRIORITIES			( 5UL )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )

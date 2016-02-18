@@ -207,8 +207,6 @@ QueueHandle_t MPU_xQueueCreateMutex( void );
 QueueHandle_t MPU_xQueueCreateCountingSemaphore( UBaseType_t uxCountValue, UBaseType_t uxInitialCount );
 BaseType_t MPU_xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xBlockTime );
 BaseType_t MPU_xQueueGiveMutexRecursive( QueueHandle_t xMutex );
-BaseType_t MPU_xQueueAltGenericSend( QueueHandle_t pxQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, BaseType_t xCopyPosition );
-BaseType_t MPU_xQueueAltGenericReceive( QueueHandle_t pxQueue, void * const pvBuffer, TickType_t xTicksToWait, BaseType_t xJustPeeking );
 void MPU_vQueueAddToRegistry( QueueHandle_t xQueue, char *pcName );
 void MPU_vQueueDelete( QueueHandle_t xQueue );
 void *MPU_pvPortMalloc( size_t xSize );
@@ -1130,32 +1128,6 @@ void * xReturn;
 	BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		xReturn = xQueueRemoveFromSet( xQueueOrSemaphore, xQueueSet );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if configUSE_ALTERNATIVE_API == 1
-	BaseType_t MPU_xQueueAltGenericSend( QueueHandle_t pxQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, BaseType_t xCopyPosition )
-	{
-   	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = 	BaseType_t xQueueAltGenericSend( pxQueue, pvItemToQueue, xTicksToWait, xCopyPosition );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if configUSE_ALTERNATIVE_API == 1
-	BaseType_t MPU_xQueueAltGenericReceive( QueueHandle_t pxQueue, void * const pvBuffer, TickType_t xTicksToWait, BaseType_t xJustPeeking )
-	{
-    BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueAltGenericReceive( pxQueue, pvBuffer, xTicksToWait, xJustPeeking );
 		portRESET_PRIVILEGE( xRunningPrivileged );
 		return xReturn;
 	}

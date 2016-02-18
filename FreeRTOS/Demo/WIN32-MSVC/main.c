@@ -118,9 +118,9 @@ that make up the total heap.  heap_5 is only used for test and example purposes
 as this demo could easily create one large heap region instead of multiple
 smaller heap regions - in which case heap_4.c would be the more appropriate
 choice.  See http://www.freertos.org/a00111.html for an explanation. */
-#define mainREGION_1_SIZE	4001
+#define mainREGION_1_SIZE	7001
 #define mainREGION_2_SIZE	18105
-#define mainREGION_3_SIZE	1807
+#define mainREGION_3_SIZE	2807
 
 /*-----------------------------------------------------------*/
 
@@ -175,7 +175,7 @@ StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 /* The user trace event posted to the trace recording on each tick interrupt.
 Note:  This project runs under Windows, and Windows will not be executing the
 RTOS threads continuously.  Therefore tick events will not appear with a regular
-interval within the the trace recording. */
+interval within the trace recording. */
 traceLabel xTickTraceUserEvent;
 static portBASE_TYPE xTraceRunning = pdTRUE;
 

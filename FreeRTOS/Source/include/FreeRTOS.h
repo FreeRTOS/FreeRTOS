@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -788,7 +788,7 @@ extern "C" {
 #endif
 
 #if( ( configUSE_RECURSIVE_MUTEXES == 1 ) && ( configUSE_MUTEXES != 1 ) )
-    #error configUSE_MUTEXES must be set to 1 to use recursive mutexes
+	#error configUSE_MUTEXES must be set to 1 to use recursive mutexes
 #endif
 
 #if( portTICK_TYPE_IS_ATOMIC == 0 )

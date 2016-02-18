@@ -1,5 +1,5 @@
 ;/*
-;    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+;    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
 ;    All rights reserved
 ;
 ;

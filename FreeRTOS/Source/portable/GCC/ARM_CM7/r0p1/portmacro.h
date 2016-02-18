@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -202,9 +202,31 @@ not necessary for to use this port.  They are defined so the common demo files
 /* portNOP() is not required by this port. */
 #define portNOP()
 
+#define portINLINE	__inline
+
 #ifndef portFORCE_INLINE
 	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
+
+portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+{
+uint32_t ulCurrentInterrupt;
+BaseType_t xReturn;
+
+	/* Obtain the number of the currently executing interrupt. */
+	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+
+	if( ulCurrentInterrupt == 0 )
+	{
+		xReturn = pdFALSE;
+	}
+	else
+	{
+		xReturn = pdTRUE;
+	}
+
+	return xReturn;
+}
 
 /*-----------------------------------------------------------*/
 

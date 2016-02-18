@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -76,8 +76,6 @@
 	EXTERN vTaskSwitchContext
 
 	PUBLIC xPortPendSVHandler
-	PUBLIC ulPortSetInterruptMask
-	PUBLIC vPortClearInterruptMask
 	PUBLIC vPortSVCHandler
 	PUBLIC vPortStartFirstTask
 
@@ -97,6 +95,8 @@ xPortPendSVHandler:
 	stmdb sp!, {r3, r14}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
+	dsb
+	isb
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
@@ -109,20 +109,6 @@ xPortPendSVHandler:
 	isb
 	bx r14
 
-
-/*-----------------------------------------------------------*/
-
-ulPortSetInterruptMask:
-	mrs r0, basepri
-	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
-	msr basepri, r1
-	bx r14
-
-/*-----------------------------------------------------------*/
-
-vPortClearInterruptMask:
-	msr basepri, r0
-	bx r14
 
 /*-----------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -313,24 +313,10 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( void )
-{
-	/* Set a PendSV to request a context switch. */
-	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-
-	/* Barriers are normally not required but do ensure the code is completely
-	within the specified behaviour for the architecture. */
-	__DSB();
-	__ISB();
-}
-/*-----------------------------------------------------------*/
-
 void vPortEnterCritical( void )
 {
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
-	__DSB();
-	__ISB();
 
 	/* This is not the interrupt safe version of the enter critical function so
 	assert() if it is being called from an interrupt context.  Only API
@@ -361,7 +347,7 @@ void xPortSysTickHandler( void )
 	executes all interrupts must be unmasked.  There is therefore no need to
 	save and then restore the interrupt mask value as its value is already
 	known. */
-	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
+	portDISABLE_INTERRUPTS();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
@@ -371,7 +357,7 @@ void xPortSysTickHandler( void )
 			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
+	portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
 
@@ -534,7 +520,7 @@ void xPortSysTickHandler( void )
 __weak void vPortSetupTimerInterrupt( void )
 {
 	/* Calculate the constants required to configure the tick interrupt. */
-	#if configUSE_TICKLESS_IDLE == 1
+	#if( configUSE_TICKLESS_IDLE == 1 )
 	{
 		ulTimerCountsForOneTick = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ );
 		xMaximumPossibleSuppressedTicks = portMAX_24_BIT_NUMBER / ulTimerCountsForOneTick;

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -366,7 +366,7 @@ uint32_t ulReturn;
 	ulReturn = ulTaskNotifyTake( pdFALSE, xMaxBlockTime );
 	if( ulReturn != 0 )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -378,7 +378,7 @@ uint32_t ulReturn;
 	ulReturn = ulTaskNotifyTake( pdFALSE, xMaxBlockTime );
 	if( ulReturn != 0 )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
 
@@ -389,7 +389,7 @@ uint32_t ulReturn;
 	ulReturn = ulTaskNotifyTake( pdFALSE, xMaxBlockTime );
 	if( ulReturn != 0 )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 }
@@ -413,7 +413,7 @@ EventBits_t xBitsToWaitFor = ( EventBits_t ) 0x01, xReturn;
 	xReturn = xEventGroupWaitBits( xEventGroup, xBitsToWaitFor, pdTRUE, pdTRUE, xMaxBlockTime );
 	if( xReturn != 0x00 )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -425,7 +425,7 @@ EventBits_t xBitsToWaitFor = ( EventBits_t ) 0x01, xReturn;
 	xReturn = xEventGroupWaitBits( xEventGroup, xBitsToWaitFor, pdTRUE, pdTRUE, xMaxBlockTime );
 	if( xReturn != 0x00 )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
 
@@ -436,7 +436,7 @@ EventBits_t xBitsToWaitFor = ( EventBits_t ) 0x01, xReturn;
 	xReturn = xEventGroupWaitBits( xEventGroup, xBitsToWaitFor, pdTRUE, pdTRUE, xMaxBlockTime );
 	if( xReturn != 0x00 )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -463,7 +463,7 @@ QueueHandle_t xQueue;
 	xReturn = xQueueSend( xQueue, &ucItemToQueue, xMaxBlockTime );
 	if( xReturn != pdPASS )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 
 	/* Note the time before the delay so the length of the delay is known. */
@@ -473,7 +473,7 @@ QueueHandle_t xQueue;
 	xReturn = xQueueSend( xQueue, &ucItemToQueue, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -485,7 +485,7 @@ QueueHandle_t xQueue;
 	xReturn = xQueueSend( xQueue, &ucItemToQueue, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
 
@@ -496,7 +496,7 @@ QueueHandle_t xQueue;
 	xReturn = xQueueSend( xQueue, &ucItemToQueue, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -523,7 +523,7 @@ SemaphoreHandle_t xSemaphore;
 	xReturn = xSemaphoreTake( xSemaphore, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -535,7 +535,7 @@ SemaphoreHandle_t xSemaphore;
 	xReturn = xSemaphoreTake( xSemaphore, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
 
@@ -546,7 +546,7 @@ SemaphoreHandle_t xSemaphore;
 	xReturn = xSemaphoreTake( xSemaphore, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -567,7 +567,7 @@ BaseType_t xReturn;
 	xReturn = xTaskNotifyWait( 0, 0, NULL, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 
@@ -579,7 +579,7 @@ BaseType_t xReturn;
 	xReturn = xTaskNotifyWait( 0, 0, NULL, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
 
@@ -590,7 +590,7 @@ BaseType_t xReturn;
 	xReturn = xTaskNotifyWait( 0, 0, NULL, xMaxBlockTime );
 	if( xReturn != pdFALSE )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
 }
@@ -606,7 +606,7 @@ TickType_t xTimeNow, xActualBlockTime;
 	/* The actual block time should not be less than the expected block time. */
 	if( xActualBlockTime < xExpectedBlockTime )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d, actual block time %d, expected %d", __LINE__, xActualBlockTime, xExpectedBlockTime );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 
 	/* The actual block time can be greater than the expected block time, as it
@@ -614,7 +614,7 @@ TickType_t xTimeNow, xActualBlockTime;
 	acceptable margin. */
 	if( xActualBlockTime > ( xExpectedBlockTime + xAllowableMargin ) )
 	{
-		xErrorOccurred = pdTRUE; printf( "Line %d", __LINE__ );taskDISABLE_INTERRUPTS();for(;;){Sleep( 1000 );}
+		xErrorOccurred = pdTRUE;
 	}
 }
 /*-----------------------------------------------------------*/

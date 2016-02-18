@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -85,10 +85,10 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V8.2.3"
-#define tskKERNEL_VERSION_MAJOR 8
-#define tskKERNEL_VERSION_MINOR 2
-#define tskKERNEL_VERSION_BUILD 3
+#define tskKERNEL_VERSION_NUMBER "V9.0.0rc1"
+#define tskKERNEL_VERSION_MAJOR 9
+#define tskKERNEL_VERSION_MINOR 0
+#define tskKERNEL_VERSION_BUILD 0
 
 /**
  * task. h

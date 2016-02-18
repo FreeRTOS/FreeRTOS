@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -92,6 +92,7 @@ to be used without modification when the chip used includes the PMU CM001
 errata. */
 #define WORKAROUND_PMU_CM001					1
 
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_IDLE_HOOK						0

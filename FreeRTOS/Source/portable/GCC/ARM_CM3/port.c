@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -364,24 +364,10 @@ void vPortEndScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( void )
-{
-	/* Set a PendSV to request a context switch. */
-	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-
-	/* Barriers are normally not required but do ensure the code is completely
-	within the specified behaviour for the architecture. */
-	__asm volatile( "dsb" );
-	__asm volatile( "isb" );
-}
-/*-----------------------------------------------------------*/
-
 void vPortEnterCritical( void )
 {
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
-	__asm volatile( "dsb" );
-	__asm volatile( "isb" );
 
 	/* This is not the interrupt safe version of the enter critical function so
 	assert() if it is being called from an interrupt context.  Only API
@@ -403,37 +389,6 @@ void vPortExitCritical( void )
 	{
 		portENABLE_INTERRUPTS();
 	}
-}
-/*-----------------------------------------------------------*/
-
-__attribute__(( naked )) uint32_t ulPortSetInterruptMask( void )
-{
-	__asm volatile														\
-	(																	\
-		"	mrs r0, basepri											\n" \
-		"	mov r1, %0												\n"	\
-		"	msr basepri, r1											\n" \
-		"	bx lr													\n" \
-		:: "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "r0", "r1"	\
-	);
-
-	/* This return will not be reached but is necessary to prevent compiler
-	warnings. */
-	return 0;
-}
-/*-----------------------------------------------------------*/
-
-__attribute__(( naked )) void vPortClearInterruptMask( uint32_t ulNewMaskValue )
-{
-	__asm volatile													\
-	(																\
-		"	msr basepri, r0										\n"	\
-		"	bx lr												\n" \
-		:::"r0"														\
-	);
-
-	/* Just to avoid compiler warnings. */
-	( void ) ulNewMaskValue;
 }
 /*-----------------------------------------------------------*/
 
@@ -480,7 +435,7 @@ void xPortSysTickHandler( void )
 	executes all interrupts must be unmasked.  There is therefore no need to
 	save and then restore the interrupt mask value as its value is already
 	known. */
-	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
+	portDISABLE_INTERRUPTS();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
@@ -490,7 +445,7 @@ void xPortSysTickHandler( void )
 			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
+	portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
 

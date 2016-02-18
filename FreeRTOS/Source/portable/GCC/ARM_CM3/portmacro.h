@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -117,27 +117,34 @@ typedef unsigned long UBaseType_t;
 #define portBYTE_ALIGNMENT			8
 /*-----------------------------------------------------------*/
 
-
 /* Scheduler utilities. */
-extern void vPortYield( void );
+#define portYIELD() 															\
+{																				\
+	/* Set a PendSV to request a context switch. */								\
+	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;								\
+																				\
+	/* Barriers are normally not required but do ensure the code is completely	\
+	within the specified behaviour for the architecture. */						\
+	__asm volatile( "dsb" );													\
+	__asm volatile( "isb" );													\
+}
+
 #define portNVIC_INT_CTRL_REG		( * ( ( volatile uint32_t * ) 0xe000ed04 ) )
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
-#define portYIELD()					vPortYield()
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired != pdFALSE ) portYIELD()
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
 /* Critical section management. */
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
-extern uint32_t ulPortSetInterruptMask( void );
-extern void vPortClearInterruptMask( uint32_t ulNewMaskValue );
-#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortSetInterruptMask()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortClearInterruptMask(x)
-#define portDISABLE_INTERRUPTS()				ulPortSetInterruptMask()
-#define portENABLE_INTERRUPTS()					vPortClearInterruptMask(0)
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortRaiseBASEPRI()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortSetBASEPRI(x)
+#define portDISABLE_INTERRUPTS()				vPortRaiseBASEPRI()
+#define portENABLE_INTERRUPTS()					vPortSetBASEPRI(0)
 #define portENTER_CRITICAL()					vPortEnterCritical()
 #define portEXIT_CRITICAL()						vPortExitCritical()
+
 /*-----------------------------------------------------------*/
 
 /* Task function macros as described on the FreeRTOS.org WEB site.  These are
@@ -194,6 +201,80 @@ not necessary for to use this port.  They are defined so the common demo files
 
 /* portNOP() is not required by this port. */
 #define portNOP()
+
+#define portINLINE	__inline
+
+#ifndef portFORCE_INLINE
+	#define portFORCE_INLINE inline __attribute__(( always_inline))
+#endif
+
+portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+{
+uint32_t ulCurrentInterrupt;
+BaseType_t xReturn;
+
+	/* Obtain the number of the currently executing interrupt. */
+	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+
+	if( ulCurrentInterrupt == 0 )
+	{
+		xReturn = pdFALSE;
+	}
+	else
+	{
+		xReturn = pdTRUE;
+	}
+
+	return xReturn;
+}
+
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+{
+uint32_t ulNewBASEPRI;
+
+	__asm volatile
+	(
+		"	mov %0, %1												\n"	\
+		"	msr basepri, %0											\n" \
+		"	isb														\n" \
+		"	dsb														\n" \
+		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	);
+}
+
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static uint32_t ulPortRaiseBASEPRI( void )
+{
+uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
+
+	__asm volatile
+	(
+		"	mrs %0, basepri											\n" \
+		"	mov %1, %2												\n"	\
+		"	msr basepri, %1											\n" \
+		"	isb														\n" \
+		"	dsb														\n" \
+		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	);
+
+	/* This return will not be reached but is necessary to prevent compiler
+	warnings. */
+	return ulOriginalBASEPRI;
+}
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static void vPortSetBASEPRI( uint32_t ulNewMaskValue )
+{
+	__asm volatile
+	(
+		"	msr basepri, %0	" :: "r" ( ulNewMaskValue )
+	);
+}
+/*-----------------------------------------------------------*/
+
 
 #ifdef __cplusplus
 }

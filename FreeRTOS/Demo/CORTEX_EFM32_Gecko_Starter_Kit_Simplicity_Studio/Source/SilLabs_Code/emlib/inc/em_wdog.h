@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_wdog.h
  * @brief Watchdog (WDOG) peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -31,8 +31,8 @@
  ******************************************************************************/
 
 
-#ifndef __SILICON_LABS_EM_WDOG_H_
-#define __SILICON_LABS_EM_WDOG_H_
+#ifndef __SILICON_LABS_EM_WDOG_H__
+#define __SILICON_LABS_EM_WDOG_H__
 
 #include "em_device.h"
 #if defined(WDOG_COUNT) && (WDOG_COUNT > 0)
@@ -122,17 +122,18 @@ typedef struct
 } WDOG_Init_TypeDef;
 
 /** Suggested default config for WDOG init structure. */
-#define WDOG_INIT_DEFAULT                                                                        \
-  { true,               /* Start watchdog when init done */                                      \
-    false,              /* WDOG not counting during debug halt */                                \
-    false,              /* WDOG not counting when in EM2 */                                      \
-    false,              /* WDOG not counting when in EM3 */                                      \
-    false,              /* EM4 can be entered */                                                 \
-    false,              /* Do not block disabling LFRCO/LFXO in CMU */                           \
-    false,              /* Do not lock WDOG configuration (if locked, reset needed to unlock) */ \
-    wdogClkSelULFRCO,   /* Select 1kHZ WDOG oscillator */                                        \
-    wdogPeriod_256k     /* Set longest possible timeout period */                                \
-  }
+#define WDOG_INIT_DEFAULT                                                                      \
+{                                                                                              \
+  true,               /* Start watchdog when init done */                                      \
+  false,              /* WDOG not counting during debug halt */                                \
+  false,              /* WDOG not counting when in EM2 */                                      \
+  false,              /* WDOG not counting when in EM3 */                                      \
+  false,              /* EM4 can be entered */                                                 \
+  false,              /* Do not block disabling LFRCO/LFXO in CMU */                           \
+  false,              /* Do not lock WDOG configuration (if locked, reset needed to unlock) */ \
+  wdogClkSelULFRCO,   /* Select 1kHZ WDOG oscillator */                                        \
+  wdogPeriod_256k     /* Set longest possible timeout period */                                \
+}
 
 
 /*******************************************************************************
@@ -152,4 +153,4 @@ void WDOG_Lock(void);
 #endif
 
 #endif /* defined(WDOG_COUNT) && (WDOG_COUNT > 0) */
-#endif /* __SILICON_LABS_EM_WDOG_H_ */
+#endif /* __SILICON_LABS_EM_WDOG_H__ */

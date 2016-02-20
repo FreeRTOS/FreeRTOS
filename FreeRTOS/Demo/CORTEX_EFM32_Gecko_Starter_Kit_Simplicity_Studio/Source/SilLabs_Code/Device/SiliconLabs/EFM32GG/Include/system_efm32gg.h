@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file system_efm32gg.h
  * @brief CMSIS Cortex-M3 System Layer for EFM32GG devices.
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,8 +30,8 @@
  *
  *****************************************************************************/
 
-#ifndef __SILICON_LABS_SYSTEM_EFM32GG_H__
-#define __SILICON_LABS_SYSTEM_EFM32GG_H__
+#ifndef SYSTEM_EFM32GG_H
+#define SYSTEM_EFM32GG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,7 +50,6 @@ extern uint32_t SystemCoreClock;    /**< System Clock Frequency (Core Clock) */
  ******************************************************************************/
 
 /* Interrupt routines - prototypes */
-#if defined(_EFM32_GIANT_FAMILY)
 void Reset_Handler(void);
 void NMI_Handler(void);
 void HardFault_Handler(void);
@@ -61,6 +60,7 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+
 void DMA_IRQHandler(void);
 void GPIO_EVEN_IRQHandler(void);
 void TIMER0_IRQHandler(void);
@@ -100,9 +100,9 @@ void MSC_IRQHandler(void);
 void AES_IRQHandler(void);
 void EBI_IRQHandler(void);
 void EMU_IRQHandler(void);
-#endif
 
 uint32_t SystemCoreClockGet(void);
+uint32_t SystemMaxCoreClockGet(void);
 
 /**************************************************************************//**
  * @brief
@@ -135,4 +135,4 @@ void SystemLFXOClockSet(uint32_t freq);
 #ifdef __cplusplus
 }
 #endif
-#endif /* __SILICON_LABS_SYSTEM_EFM32GG_H__ */
+#endif /* SYSTEM_EFM32GG_H */

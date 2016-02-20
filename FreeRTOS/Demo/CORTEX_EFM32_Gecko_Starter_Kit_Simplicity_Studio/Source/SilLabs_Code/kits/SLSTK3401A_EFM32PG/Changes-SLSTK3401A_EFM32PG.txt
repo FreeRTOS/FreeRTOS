@@ -1,0 +1,14 @@
+================ Revision history ============================================
+4.2.1:
+ - Fixed armgcc makefiles for mbedtls examples.
+
+4.2.0:
+ - Added prs example.
+ - Added examples for mbedtls on Pearl, namely mbedtls_aescrypt and
+   mbedtls_ecdsa.
+
+4.1.1:
+ - No changes.
+
+4.1.0:
+ - Initial version.

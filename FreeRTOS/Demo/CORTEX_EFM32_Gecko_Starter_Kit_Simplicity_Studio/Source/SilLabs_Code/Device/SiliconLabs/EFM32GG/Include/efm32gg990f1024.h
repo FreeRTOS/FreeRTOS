@@ -2,10 +2,10 @@
  * @file efm32gg990f1024.h
  * @brief CMSIS Cortex-M Peripheral Access Layer Header File
  *        for EFM32GG990F1024
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -31,8 +31,8 @@
  *
  *****************************************************************************/
 
-#ifndef __SILICON_LABS_EFM32GG990F1024_H__
-#define __SILICON_LABS_EFM32GG990F1024_H__
+#ifndef EFM32GG990F1024_H
+#define EFM32GG990F1024_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -476,4 +476,4 @@ typedef enum IRQn
 #ifdef __cplusplus
 }
 #endif
-#endif /* __SILICON_LABS_EFM32GG990F1024_H__ */
+#endif /* EFM32GG990F1024_H */

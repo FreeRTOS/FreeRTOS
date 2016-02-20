@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32gg_usart.h
  * @brief EFM32GG_USART register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -29,6 +29,10 @@
  * any third party, arising from your use of this Software.
  *
  *****************************************************************************/
+/**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
 /**************************************************************************//**
  * @defgroup EFM32GG_USART
  * @{
@@ -1145,5 +1149,5 @@ typedef struct
 #define USART_I2SCTRL_FORMAT_W8D8             (_USART_I2SCTRL_FORMAT_W8D8 << 8)      /**< Shifted mode W8D8 for USART_I2SCTRL */
 
 /** @} End of group EFM32GG_USART */
-
+/** @} End of group Parts */
 

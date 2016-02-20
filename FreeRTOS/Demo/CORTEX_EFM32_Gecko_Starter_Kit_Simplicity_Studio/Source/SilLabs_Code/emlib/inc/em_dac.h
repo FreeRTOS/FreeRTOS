@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_dac.h
  * @brief Digital to Analog Converter (DAC) peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,15 +30,14 @@
  *
  ******************************************************************************/
 
-
-#ifndef __EM_DAC_H
-#define __EM_DAC_H
+#ifndef __SILICON_LABS_EM_DAC_H__
+#define __SILICON_LABS_EM_DAC_H__
 
 #include "em_device.h"
-#include "em_assert.h"
 
 #if defined(DAC_COUNT) && (DAC_COUNT > 0)
 
+#include "em_assert.h"
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -180,18 +179,19 @@ typedef struct
 } DAC_Init_TypeDef;
 
 /** Default config for DAC init structure. */
-#define DAC_INIT_DEFAULT                                                 \
-  { dacRefresh8,              /* Refresh every 8 prescaled cycles. */    \
-    dacRef1V25,               /* 1.25V internal reference. */            \
-    dacOutputPin,             /* Output to pin only. */                  \
-    dacConvModeContinuous,    /* Continuous mode. */                     \
-    0,                        /* No prescaling. */                       \
-    false,                    /* Do not enable low pass filter. */       \
-    false,                    /* Do not reset prescaler on ch0 start. */ \
-    false,                    /* DAC output enable always on. */         \
-    false,                    /* Disable sine mode. */                   \
-    false                     /* Single ended mode. */                   \
-  }
+#define DAC_INIT_DEFAULT                                               \
+{                                                                      \
+  dacRefresh8,              /* Refresh every 8 prescaled cycles. */    \
+  dacRef1V25,               /* 1.25V internal reference. */            \
+  dacOutputPin,             /* Output to pin only. */                  \
+  dacConvModeContinuous,    /* Continuous mode. */                     \
+  0,                        /* No prescaling. */                       \
+  false,                    /* Do not enable low pass filter. */       \
+  false,                    /* Do not reset prescaler on ch0 start. */ \
+  false,                    /* DAC output enable always on. */         \
+  false,                    /* Disable sine mode. */                   \
+  false                     /* Single ended mode. */                   \
+}
 
 
 /** DAC channel init structure. */
@@ -220,12 +220,13 @@ typedef struct
 } DAC_InitChannel_TypeDef;
 
 /** Default config for DAC channel init structure. */
-#define DAC_INITCHANNEL_DEFAULT                                           \
-  { false,              /* Leave channel disabled when init done. */      \
-    false,              /* Disable PRS triggering. */                     \
-    false,              /* Channel not refreshed automatically. */        \
-    dacPRSSELCh0        /* Select PRS ch0 (if PRS triggering enabled). */ \
-  }
+#define DAC_INITCHANNEL_DEFAULT                                         \
+{                                                                       \
+  false,              /* Leave channel disabled when init done. */      \
+  false,              /* Disable PRS triggering. */                     \
+  false,              /* Channel not refreshed automatically. */        \
+  dacPRSSELCh0        /* Select PRS ch0 (if PRS triggering enabled). */ \
+}
 
 
 /*******************************************************************************
@@ -315,7 +316,7 @@ __STATIC_INLINE void DAC_IntClear(DAC_TypeDef *dac, uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE void DAC_IntDisable(DAC_TypeDef *dac, uint32_t flags)
 {
-  dac->IEN &= ~(flags);
+  dac->IEN &= ~flags;
 }
 
 
@@ -357,7 +358,39 @@ __STATIC_INLINE void DAC_IntEnable(DAC_TypeDef *dac, uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE uint32_t DAC_IntGet(DAC_TypeDef *dac)
 {
-  return(dac->IF);
+  return dac->IF;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Get enabled and pending DAC interrupt flags.
+ *   Useful for handling more interrupt sources in the same interrupt handler.
+ *
+ * @param[in] dac
+ *   Pointer to DAC peripheral register block.
+ *
+ * @note
+ *   Interrupt flags are not cleared by the use of this function.
+ *
+ * @return
+ *   Pending and enabled DAC interrupt sources.
+ *   The return value is the bitwise AND combination of
+ *   - the OR combination of enabled interrupt sources in DACx_IEN_nnn
+ *     register (DACx_IEN_nnn) and
+ *   - the OR combination of valid interrupt flags of the DAC module
+ *     (DACx_IF_nnn).
+ ******************************************************************************/
+__STATIC_INLINE uint32_t DAC_IntGetEnabled(DAC_TypeDef *dac)
+{
+  uint32_t ien;
+
+  /* Store DAC->IEN in temporary variable in order to define explicit order
+   * of volatile accesses. */
+  ien = dac->IEN;
+
+  /* Bitwise AND of pending and enabled interrupts */
+  return dac->IF & ien;
 }
 
 
@@ -388,5 +421,4 @@ void DAC_Reset(DAC_TypeDef *dac);
 #endif
 
 #endif /* defined(DAC_COUNT) && (DAC_COUNT > 0) */
-
-#endif /* __EM_DAC_H */
+#endif /* __SILICON_LABS_EM_DAC_H__ */

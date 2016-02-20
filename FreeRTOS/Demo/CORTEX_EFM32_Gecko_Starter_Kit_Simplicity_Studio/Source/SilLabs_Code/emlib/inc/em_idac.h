@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_idac.h
  * @brief Current Digital to Analog Converter (IDAC) peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,9 +30,8 @@
  *
  ******************************************************************************/
 
-
-#ifndef __SILICON_LABS_EM_IDAC_H_
-#define __SILICON_LABS_EM_IDAC_H_
+#ifndef __SILICON_LABS_EM_IDAC_H__
+#define __SILICON_LABS_EM_IDAC_H__
 
 #include "em_device.h"
 
@@ -67,8 +66,43 @@ extern "C" {
 /** Output mode. */
 typedef enum
 {
+#if defined( _IDAC_CTRL_OUTMODE_MASK )
   idacOutputPin     = IDAC_CTRL_OUTMODE_PIN,     /**< Output to IDAC OUT pin */
   idacOutputADC     = IDAC_CTRL_OUTMODE_ADC      /**< Output to ADC */
+#elif ( _IDAC_CTRL_APORTOUTSEL_MASK )
+  idacOutputAPORT1XCH0 = IDAC_CTRL_APORTOUTSEL_APORT1XCH0, /**< Output to APORT 1X CH0 */
+  idacOutputAPORT1YCH1 = IDAC_CTRL_APORTOUTSEL_APORT1YCH1, /**< Output to APORT 1Y CH1 */
+  idacOutputAPORT1XCH2 = IDAC_CTRL_APORTOUTSEL_APORT1XCH2, /**< Output to APORT 1X CH2 */
+  idacOutputAPORT1YCH3 = IDAC_CTRL_APORTOUTSEL_APORT1YCH3, /**< Output to APORT 1Y CH3 */
+  idacOutputAPORT1XCH4 = IDAC_CTRL_APORTOUTSEL_APORT1XCH4, /**< Output to APORT 1X CH4 */
+  idacOutputAPORT1YCH5 = IDAC_CTRL_APORTOUTSEL_APORT1YCH5, /**< Output to APORT 1Y CH5 */
+  idacOutputAPORT1XCH6 = IDAC_CTRL_APORTOUTSEL_APORT1XCH6, /**< Output to APORT 1X CH6 */
+  idacOutputAPORT1YCH7 = IDAC_CTRL_APORTOUTSEL_APORT1YCH7, /**< Output to APORT 1Y CH7 */
+  idacOutputAPORT1XCH8 = IDAC_CTRL_APORTOUTSEL_APORT1XCH8, /**< Output to APORT 1X CH8 */
+  idacOutputAPORT1YCH9 = IDAC_CTRL_APORTOUTSEL_APORT1YCH9, /**< Output to APORT 1Y CH9 */
+  idacOutputAPORT1XCH10 = IDAC_CTRL_APORTOUTSEL_APORT1XCH10, /**< Output to APORT 1X CH10 */
+  idacOutputAPORT1YCH11 = IDAC_CTRL_APORTOUTSEL_APORT1YCH11, /**< Output to APORT 1Y CH11 */
+  idacOutputAPORT1XCH12 = IDAC_CTRL_APORTOUTSEL_APORT1XCH12, /**< Output to APORT 1X CH12 */
+  idacOutputAPORT1YCH13 = IDAC_CTRL_APORTOUTSEL_APORT1YCH13, /**< Output to APORT 1Y CH13 */
+  idacOutputAPORT1XCH14 = IDAC_CTRL_APORTOUTSEL_APORT1XCH14, /**< Output to APORT 1X CH14 */
+  idacOutputAPORT1YCH15 = IDAC_CTRL_APORTOUTSEL_APORT1YCH15, /**< Output to APORT 1Y CH15 */
+  idacOutputAPORT1XCH16 = IDAC_CTRL_APORTOUTSEL_APORT1XCH16, /**< Output to APORT 1X CH16 */
+  idacOutputAPORT1YCH17 = IDAC_CTRL_APORTOUTSEL_APORT1YCH17, /**< Output to APORT 1Y CH17 */
+  idacOutputAPORT1XCH18 = IDAC_CTRL_APORTOUTSEL_APORT1XCH18, /**< Output to APORT 1X CH18 */
+  idacOutputAPORT1YCH19 = IDAC_CTRL_APORTOUTSEL_APORT1YCH19, /**< Output to APORT 1Y CH19 */
+  idacOutputAPORT1XCH20 = IDAC_CTRL_APORTOUTSEL_APORT1XCH20, /**< Output to APORT 1X CH20 */
+  idacOutputAPORT1YCH21 = IDAC_CTRL_APORTOUTSEL_APORT1YCH21, /**< Output to APORT 1Y CH21 */
+  idacOutputAPORT1XCH22 = IDAC_CTRL_APORTOUTSEL_APORT1XCH22, /**< Output to APORT 1X CH22 */
+  idacOutputAPORT1YCH23 = IDAC_CTRL_APORTOUTSEL_APORT1YCH23, /**< Output to APORT 1Y CH23 */
+  idacOutputAPORT1XCH24 = IDAC_CTRL_APORTOUTSEL_APORT1XCH24, /**< Output to APORT 1X CH24 */
+  idacOutputAPORT1YCH25 = IDAC_CTRL_APORTOUTSEL_APORT1YCH25, /**< Output to APORT 1Y CH25 */
+  idacOutputAPORT1XCH26 = IDAC_CTRL_APORTOUTSEL_APORT1XCH26, /**< Output to APORT 1X CH26 */
+  idacOutputAPORT1YCH27 = IDAC_CTRL_APORTOUTSEL_APORT1YCH27, /**< Output to APORT 1Y CH27 */
+  idacOutputAPORT1XCH28 = IDAC_CTRL_APORTOUTSEL_APORT1XCH28, /**< Output to APORT 1X CH28 */
+  idacOutputAPORT1YCH29 = IDAC_CTRL_APORTOUTSEL_APORT1YCH29, /**< Output to APORT 1Y CH29 */
+  idacOutputAPORT1XCH30 = IDAC_CTRL_APORTOUTSEL_APORT1XCH30, /**< Output to APORT 1X CH30 */
+  idacOutputAPORT1YCH31 = IDAC_CTRL_APORTOUTSEL_APORT1YCH31, /**< Output to APORT 1Y CH31 */
+#endif
 } IDAC_OutMode_TypeDef;
 
 
@@ -80,28 +114,16 @@ typedef enum
   idacPRSSELCh1 = IDAC_CTRL_PRSSEL_PRSCH1,      /**< PRS channel 1. */
   idacPRSSELCh2 = IDAC_CTRL_PRSSEL_PRSCH2,      /**< PRS channel 2. */
   idacPRSSELCh3 = IDAC_CTRL_PRSSEL_PRSCH3,      /**< PRS channel 3. */
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH4 )
+#if defined( IDAC_CTRL_PRSSEL_PRSCH4 )
   idacPRSSELCh4 = IDAC_CTRL_PRSSEL_PRSCH4,      /**< PRS channel 4. */
-#endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH5 )
   idacPRSSELCh5 = IDAC_CTRL_PRSSEL_PRSCH5,      /**< PRS channel 5. */
 #endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH6 )
+#if defined( IDAC_CTRL_PRSSEL_PRSCH6 )
   idacPRSSELCh6 = IDAC_CTRL_PRSSEL_PRSCH6,      /**< PRS channel 6. */
-#endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH7 )
   idacPRSSELCh7 = IDAC_CTRL_PRSSEL_PRSCH7,      /**< PRS channel 7. */
-#endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH8 )
   idacPRSSELCh8 = IDAC_CTRL_PRSSEL_PRSCH8,      /**< PRS channel 8. */
-#endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH9 )
   idacPRSSELCh9 = IDAC_CTRL_PRSSEL_PRSCH9,      /**< PRS channel 9. */
-#endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH10 )
   idacPRSSELCh10 = IDAC_CTRL_PRSSEL_PRSCH10,    /**< PRS channel 10 */
-#endif
-#if  defined( IDAC_CTRL_PRSSEL_PRSCH11 )
   idacPRSSELCh11 = IDAC_CTRL_PRSSEL_PRSCH11,    /**< PRS channel 11 */
 #endif
 } IDAC_PRSSEL_TypeDef;
@@ -148,13 +170,25 @@ typedef struct
 } IDAC_Init_TypeDef;
 
 /** Default config for IDAC init structure. */
-#define IDAC_INIT_DEFAULT                                             \
-  { false,          /* Leave IDAC disabled when init done. */         \
-    idacOutputPin,   /* Output to IDAC OUT pin. */                     \
-    false,          /* Disable PRS triggering. */                     \
-    idacPRSSELCh0,  /* Select PRS ch0 (if PRS triggering enabled). */ \
-    false           /* Disable current sink mode. */                  \
-  }
+#if defined( _IDAC_CTRL_OUTMODE_MASK )
+#define IDAC_INIT_DEFAULT                                              \
+{                                                                      \
+  false,          /**< Leave IDAC disabled when init done. */          \
+  idacOutputPin,  /**< Output to IDAC output pin. */                   \
+  false,          /**< Disable PRS triggering. */                      \
+  idacPRSSELCh0,  /**< Select PRS ch0 (if PRS triggering enabled). */  \
+  false           /**< Disable current sink mode. */                   \
+}
+#elif ( _IDAC_CTRL_APORTOUTSEL_MASK )
+#define IDAC_INIT_DEFAULT                                              \
+{                                                                      \
+  false,          /**< Leave IDAC disabled when init done. */          \
+  idacOutputAPORT1XCH0, /**< Output to APORT. */                       \
+  false,          /**< Disable PRS triggering. */                      \
+  idacPRSSELCh0,  /**< Select PRS ch0 (if PRS triggering enabled). */  \
+  false           /**< Disable current sink mode. */                   \
+}
+#endif
 
 
 /*******************************************************************************
@@ -262,6 +296,133 @@ void IDAC_StepSet(IDAC_TypeDef *idac, const uint32_t step);
 void IDAC_OutEnable(IDAC_TypeDef *idac, bool enable);
 
 
+#if defined( _IDAC_IEN_MASK )
+/***************************************************************************//**
+ * @brief
+ *   Clear one or more pending IDAC interrupts.
+ *
+ * @param[in] IDAC
+ *   Pointer to IDAC peripheral register block.
+ *
+ * @param[in] flags
+ *   Pending IDAC interrupt source(s) to clear. Use one or more valid
+ *   interrupt flags for the IDAC module (IDAC_IF_nnn) OR'ed together.
+ ******************************************************************************/
+__STATIC_INLINE void IDAC_IntClear(IDAC_TypeDef *idac, uint32_t flags)
+{
+  idac->IFC = flags;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Disable one or more IDAC interrupts.
+ *
+ * @param[in] IDAC
+ *   Pointer to IDAC peripheral register block.
+ *
+ * @param[in] flags
+ *   IDAC interrupt source(s) to disable. Use one or more valid
+ *   interrupt flags for the IDAC module (IDAC_IF_nnn) OR'ed together.
+ ******************************************************************************/
+__STATIC_INLINE void IDAC_IntDisable(IDAC_TypeDef *idac, uint32_t flags)
+{
+  idac->IEN &= ~flags;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Enable one or more IDAC interrupts.
+ *
+ * @note
+ *   Depending on the use, a pending interrupt may already be set prior to
+ *   enabling the interrupt. Consider using IDAC_IntClear() prior to enabling
+ *   if such a pending interrupt should be ignored.
+ *
+ * @param[in] IDAC
+ *   Pointer to IDAC peripheral register block.
+ *
+ * @param[in] flags
+ *   IDAC interrupt source(s) to enable. Use one or more valid
+ *   interrupt flags for the IDAC module (IDAC_IF_nnn) OR'ed together.
+ ******************************************************************************/
+__STATIC_INLINE void IDAC_IntEnable(IDAC_TypeDef *idac, uint32_t flags)
+{
+  idac->IEN |= flags;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Get pending IDAC interrupt flags.
+ *
+ * @note
+ *   The event bits are not cleared by the use of this function.
+ *
+ * @param[in] IDAC
+ *   Pointer to IDAC peripheral register block.
+ *
+ * @return
+ *   IDAC interrupt source(s) pending. Returns one or more valid
+ *   interrupt flags for the IDAC module (IDAC_IF_nnn) OR'ed together.
+ ******************************************************************************/
+__STATIC_INLINE uint32_t IDAC_IntGet(IDAC_TypeDef *idac)
+{
+  return idac->IF;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Get enabled and pending IDAC interrupt flags.
+ *   Useful for handling more interrupt sources in the same interrupt handler.
+ *
+ * @param[in] IDAC
+ *   Pointer to IDAC peripheral register block.
+ *
+ * @note
+ *   Interrupt flags are not cleared by the use of this function.
+ *
+ * @return
+ *   Pending and enabled IDAC interrupt sources.
+ *   The return value is the bitwise AND combination of
+ *   - the OR combination of enabled interrupt sources in IDACx_IEN_nnn
+ *     register (IDACx_IEN_nnn) and
+ *   - the OR combination of valid interrupt flags of the IDAC module
+ *     (IDACx_IF_nnn).
+ ******************************************************************************/
+__STATIC_INLINE uint32_t IDAC_IntGetEnabled(IDAC_TypeDef *idac)
+{
+  uint32_t ien;
+
+  /* Store flags in temporary variable in order to define explicit order
+   * of volatile accesses. */
+  ien = idac->IEN;
+
+  /* Bitwise AND of pending and enabled interrupts */
+  return idac->IF & ien;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Set one or more pending IDAC interrupts from SW.
+ *
+ * @param[in] IDAC
+ *   Pointer to IDAC peripheral register block.
+ *
+ * @param[in] flags
+ *   IDAC interrupt source(s) to set to pending. Use one or more valid
+ *   interrupt flags for the IDAC module (IDAC_IF_nnn) OR'ed together.
+ ******************************************************************************/
+__STATIC_INLINE void IDAC_IntSet(IDAC_TypeDef *idac, uint32_t flags)
+{
+  idac->IFS = flags;
+}
+#endif
+
+
 /** @} (end addtogroup IDAC) */
 /** @} (end addtogroup EM_Library) */
 
@@ -271,4 +432,4 @@ void IDAC_OutEnable(IDAC_TypeDef *idac, bool enable);
 
 #endif /* defined(IDAC_COUNT) && (IDAC_COUNT > 0) */
 
-#endif /* __SILICON_LABS_EM_IDAC_H_ */
+#endif /* __SILICON_LABS_EM_IDAC_H__ */

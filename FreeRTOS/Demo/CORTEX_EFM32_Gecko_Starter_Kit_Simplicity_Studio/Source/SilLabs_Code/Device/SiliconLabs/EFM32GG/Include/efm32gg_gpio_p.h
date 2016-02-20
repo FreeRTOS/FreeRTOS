@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32gg_gpio_p.h
  * @brief EFM32GG_GPIO_P register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,6 +30,10 @@
  *
  *****************************************************************************/
 /**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
+/**************************************************************************//**
  * @brief GPIO_P EFM32GG GPIO P
  *****************************************************************************/
 typedef struct
@@ -44,4 +48,7 @@ typedef struct
   __I uint32_t  DIN;      /**< Port Data In Register  */
   __IO uint32_t PINLOCKN; /**< Port Unlocked Pins Register  */
 } GPIO_P_TypeDef;
+
+/** @} End of group Parts */
+
 

@@ -1,7 +1,7 @@
 /* @file startup_efm32gg.S
  * @brief startup file for Silicon Labs EFM32GG devices.
  *        For use with GCC for ARM Embedded Processors
- * @version 4.0.0
+ * @version 4.2.1
  * Date:    12 June 2014
  *
  */
@@ -88,6 +88,7 @@ __Vectors:
     .long       SysTick_Handler       /* SysTick Handler */
 
     /* External interrupts */
+
     .long       DMA_IRQHandler    /* 0 - DMA */
     .long       GPIO_EVEN_IRQHandler    /* 1 - GPIO_EVEN */
     .long       TIMER0_IRQHandler    /* 2 - TIMER0 */

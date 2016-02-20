@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32wg_dma.h
  * @brief EFM32WG_DMA register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -29,6 +29,10 @@
  * any third party, arising from your use of this Software.
  *
  *****************************************************************************/
+/**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
 /**************************************************************************//**
  * @defgroup EFM32WG_DMA
  * @{
@@ -1624,5 +1628,5 @@ typedef struct
 #define DMA_CH_CTRL_SOURCESEL_EBI                       (_DMA_CH_CTRL_SOURCESEL_EBI << 16)            /**< Shifted mode EBI for DMA_CH_CTRL */
 
 /** @} End of group EFM32WG_DMA */
-
+/** @} End of group Parts */
 

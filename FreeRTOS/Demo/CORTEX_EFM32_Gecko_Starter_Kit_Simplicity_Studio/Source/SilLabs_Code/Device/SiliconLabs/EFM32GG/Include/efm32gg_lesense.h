@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32gg_lesense.h
  * @brief EFM32GG_LESENSE register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -29,6 +29,10 @@
  * any third party, arising from your use of this Software.
  *
  *****************************************************************************/
+/**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
 /**************************************************************************//**
  * @defgroup EFM32GG_LESENSE
  * @{
@@ -1922,5 +1926,5 @@ typedef struct
 #define LESENSE_CH_EVAL_SCANRESINV_DEFAULT             (_LESENSE_CH_EVAL_SCANRESINV_DEFAULT << 19) /**< Shifted mode DEFAULT for LESENSE_CH_EVAL */
 
 /** @} End of group EFM32GG_LESENSE */
-
+/** @} End of group Parts */
 

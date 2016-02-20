@@ -104,7 +104,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Source/FreeRTOS_Source/portable/GCC/ARM_CM4F|Source/SilLabs_Code/kits/EFM32WG_STK3800|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG/Source|Source/SilLabs_Code/Device/SiliconLabs/EFM32WG|Source/SilLabs_Code/CMSIS/efm32wg|CMSIS/efm32wg|Source/SilLabs_Code/kits/bsp/bsp_dk_3201.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3200.c|Source/SilLabs_Code/kits/bsp/bsp_dk_leds.c|Source/RTT|Source/SilLabs_Code/kits/bsp/bsp_dk_mcuboard.c|Source/SilLabs_Code/kits/bsp/bsp_bcc.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Source/SilLabs_Code/CMSIS/efm32pg1b|Source/SilLabs_Code/Device/SiliconLabs/EFM32PG1B|Source/SilLabs_Code/kits/SLSTK3401A_EFM32PG|Source/FreeRTOS_Source/portable/GCC/ARM_CM4F|Source/SilLabs_Code/kits/EFM32WG_STK3800|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG/Source|Source/SilLabs_Code/Device/SiliconLabs/EFM32WG|Source/SilLabs_Code/CMSIS/efm32wg|CMSIS/efm32wg|Source/SilLabs_Code/kits/bsp/bsp_dk_3201.c|Source/SilLabs_Code/kits/bsp/bsp_dk_3200.c|Source/SilLabs_Code/kits/bsp/bsp_dk_leds.c|Source/RTT|Source/SilLabs_Code/kits/bsp/bsp_dk_mcuboard.c|Source/SilLabs_Code/kits/bsp/bsp_bcc.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -212,8 +212,19 @@
 							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.archiver.base.310362498" name="GNU ARM Archiver" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.archiver.base"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.silabs.ide.si32.gcc.debug#com.silabs.ide.si32.gcc:4.8.3.20131129@5.1008127701" name="/" resourcePath="Source/SilLabs_Code/kits/SLSTK3401A_EFM32PG">
+						<toolChain id="com.silabs.ide.si32.gcc.cdt.managedbuild.toolchain.exe.2026080801" name="Si32 GNU ARM" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.toolchain.exe" unusedChildren="">
+							<option id="com.silabs.ide.si32.gcc.cdt.managedbuild.toolchain.debug.level.860218153.408368925" name="Debug Level" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.toolchain.debug.level.860218153"/>
+							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.276729238" name="GNU ARM C Compiler" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.compiler.base.637949526"/>
+							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.cpp.compiler.base.289631977" name="GNU ARM C++ Compiler" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.cpp.compiler.base.607108724"/>
+							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.assembler.base.1946889243" name="GNU ARM Assembler" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.assembler.base.599397077"/>
+							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.base.364942885" name="GNU ARM C Linker" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.c.linker.base.1895173662"/>
+							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.cpp.linker.base.915572947" name="GNU ARM C++ Linker" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.cpp.linker.base.1027397459"/>
+							<tool id="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.archiver.base.1439736431" name="GNU ARM Archiver" superClass="com.silabs.ide.si32.gcc.cdt.managedbuild.tool.gnu.archiver.base.310362498"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Source/FreeRTOS_Source/portable/GCC/ARM_CM3|Source/SilLabs_Code/Device/SiliconLabs/EFM32WG/Source|Source/SilLabs_Code/kits/EFM32GG_STK3700|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG|Source/SilLabs_Code/CMSIS/efm32gg|CMSIS/efm32gg" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Source/SilLabs_Code/kits/SLSTK3401A_EFM32PG|Source/SilLabs_Code/Device/SiliconLabs/EFM32PG1B|Source/SilLabs_Code/CMSIS/efm32pg1b|Source/FreeRTOS_Source/portable/GCC/ARM_CM3|Source/SilLabs_Code/Device/SiliconLabs/EFM32WG/Source|Source/SilLabs_Code/kits/EFM32GG_STK3700|Source/SilLabs_Code/Device/SiliconLabs/EFM32GG|Source/SilLabs_Code/CMSIS/efm32gg|CMSIS/efm32gg" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

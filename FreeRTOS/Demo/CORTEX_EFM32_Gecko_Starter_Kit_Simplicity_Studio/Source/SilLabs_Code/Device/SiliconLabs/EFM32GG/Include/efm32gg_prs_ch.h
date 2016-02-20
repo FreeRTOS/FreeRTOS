@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32gg_prs_ch.h
  * @brief EFM32GG_PRS_CH register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,10 +30,17 @@
  *
  *****************************************************************************/
 /**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
+/**************************************************************************//**
  * @brief PRS_CH EFM32GG PRS CH
  *****************************************************************************/
 typedef struct
 {
   __IO uint32_t CTRL; /**< Channel Control Register  */
 } PRS_CH_TypeDef;
+
+/** @} End of group Parts */
+
 

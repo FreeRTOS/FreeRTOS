@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_bitband.h
  * @brief Bitband Peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,11 +30,11 @@
  *
  ******************************************************************************/
 
+#ifndef __SILICON_LABS_EM_BITBAND_H__
+#define __SILICON_LABS_EM_BITBAND_H__
 
-#ifndef __SILICON_LABS_EM_BITBAND_H_
-#define __SILICON_LABS_EM_BITBAND_H_
+#include "em_bus.h"
 
-#include "em_device.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,7 +46,7 @@ extern "C" {
 
 /***************************************************************************//**
  * @addtogroup BITBAND
- * @brief BITBAND Peripheral API
+ * @brief BITBAND Peripheral API (deprecated - use em_bus.h)
  * @{
  ******************************************************************************/
 
@@ -68,22 +68,7 @@ extern "C" {
  *
  * @param[in] val Value to set bit to, 0 or 1.
  ******************************************************************************/
-__STATIC_INLINE void BITBAND_Peripheral(volatile uint32_t *addr,
-                                        uint32_t bit,
-                                        uint32_t val)
-{
-#if defined(BITBAND_PER_BASE)
-  uint32_t tmp =
-    BITBAND_PER_BASE + (((uint32_t)addr - PER_MEM_BASE) * 32) + (bit * 4);
-
-  *((volatile uint32_t *)tmp) = (uint32_t)val;
-#else
-  uint32_t tmp = *addr;
-  /* Make sure val is not more than 1, because we only want to set one bit. */
-  val &= 0x1;
-  *addr = (tmp & ~(1 << bit)) | (val << bit);
-#endif /* defined(BITBAND_PER_BASE) */
-}
+#define BITBAND_Peripheral(addr, bit, val) BUS_RegBitWrite(addr, bit, val)
 
 
 /***************************************************************************//**
@@ -102,18 +87,7 @@ __STATIC_INLINE void BITBAND_Peripheral(volatile uint32_t *addr,
  *
  * @return           Value of the requested bit.
  ******************************************************************************/
-__STATIC_INLINE uint32_t BITBAND_PeripheralRead(volatile uint32_t *addr,
-                                                uint32_t bit)
-{
-#if defined(BITBAND_PER_BASE)
-  uint32_t tmp =
-    BITBAND_PER_BASE + (((uint32_t)addr - PER_MEM_BASE) * 32) + (bit * 4);
-
-  return *((volatile uint32_t *)tmp);
-#else
-  return ((*addr) >> bit) & 1;
-#endif /* defined(BITBAND_PER_BASE) */
-}
+#define BITBAND_PeripheralRead(addr, bit) BUS_RegBitRead(addr, bit)
 
 
 /***************************************************************************//**
@@ -134,20 +108,7 @@ __STATIC_INLINE uint32_t BITBAND_PeripheralRead(volatile uint32_t *addr,
  *
  * @param[in] val Value to set bit to, 0 or 1.
  ******************************************************************************/
-__STATIC_INLINE void BITBAND_SRAM(uint32_t *addr, uint32_t bit, uint32_t val)
-{
-#if defined(BITBAND_RAM_BASE)
-  uint32_t tmp =
-    BITBAND_RAM_BASE + (((uint32_t)addr - RAM_MEM_BASE) * 32) + (bit * 4);
-
-  *((volatile uint32_t *)tmp) = (uint32_t)val;
-#else
-  uint32_t tmp = *addr;
-  /* Make sure val is not more than 1, because we only want to set one bit. */
-  val &= 0x1;
-  *addr = (tmp & ~(1 << bit)) | (val << bit);
-#endif /* defined(BITBAND_RAM_BASE) */
-}
+#define BITBAND_SRAM(addr, bit, val) BUS_RamBitWrite(addr, bit, val)
 
 
 /***************************************************************************//**
@@ -166,17 +127,7 @@ __STATIC_INLINE void BITBAND_SRAM(uint32_t *addr, uint32_t bit, uint32_t val)
  *
  * @return            Value of the requested bit.
  ******************************************************************************/
-__STATIC_INLINE uint32_t BITBAND_SRAMRead(uint32_t *addr, uint32_t bit)
-{
-#if defined(BITBAND_RAM_BASE)
-  uint32_t tmp =
-    BITBAND_RAM_BASE + (((uint32_t)addr - RAM_MEM_BASE) * 32) + (bit * 4);
-
-  return *((volatile uint32_t *)tmp);
-#else
-  return ((*addr) >> bit) & 1;
-#endif /* defined(BITBAND_RAM_BASE) */
-}
+#define BITBAND_SRAMRead(addr, bit) BUS_RamBitRead(addr, bit)
 
 /** @} (end addtogroup BITBAND) */
 /** @} (end addtogroup EM_Library) */
@@ -185,4 +136,4 @@ __STATIC_INLINE uint32_t BITBAND_SRAMRead(uint32_t *addr, uint32_t bit)
 }
 #endif
 
-#endif /* __SILICON_LABS_EM_BITBAND_H_ */
+#endif /* __SILICON_LABS_EM_BITBAND_H__ */

@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_vcmp.h
  * @brief Voltage Comparator (VCMP) peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,9 +30,8 @@
  *
  ******************************************************************************/
 
-
-#ifndef __SILICON_LABS_EM_VCMP_H_
-#define __SILICON_LABS_EM_VCMP_H_
+#ifndef __SILICON_LABS_EM_VCMP_H__
+#define __SILICON_LABS_EM_VCMP_H__
 
 #include "em_device.h"
 #if defined(VCMP_COUNT) && (VCMP_COUNT > 0)
@@ -121,38 +120,27 @@ typedef struct
 } VCMP_Init_TypeDef;
 
 /** Default VCMP initialization structure */
-#define VCMP_INIT_DEFAULT                                                  \
-  { true,                /** Half Bias enabled */                          \
-    0x7,                 /** Bias curernt 0.7 uA when half bias enabled */ \
-    false,               /** Falling edge sense not enabled */             \
-    false,               /** Rising edge sense not enabled */              \
-    vcmpWarmTime4Cycles, /** 4 clock cycles warm-up time */                \
-    vcmpHystNone,        /** No hysteresis */                              \
-    0,                   /** 0 in digital ouput when inactive */           \
-    true,                /** Do not use low power reference */             \
-    39,                  /** Trigger level just below 3V */                \
-    true,                /** Enable after init */                          \
-  }
+#define VCMP_INIT_DEFAULT                                                \
+{                                                                        \
+  true,                /** Half Bias enabled */                          \
+  0x7,                 /** Bias curernt 0.7 uA when half bias enabled */ \
+  false,               /** Falling edge sense not enabled */             \
+  false,               /** Rising edge sense not enabled */              \
+  vcmpWarmTime4Cycles, /** 4 clock cycles warm-up time */                \
+  vcmpHystNone,        /** No hysteresis */                              \
+  0,                   /** 0 in digital ouput when inactive */           \
+  true,                /** Do not use low power reference */             \
+  39,                  /** Trigger level just below 3V */                \
+  true,                /** Enable after init */                          \
+}
 
 /*******************************************************************************
  *****************************   PROTOTYPES   **********************************
  ******************************************************************************/
+
 void VCMP_Init(const VCMP_Init_TypeDef *vcmpInit);
 void VCMP_LowPowerRefSet(bool enable);
 void VCMP_TriggerSet(int level);
-
-__STATIC_INLINE void VCMP_Enable(void);
-__STATIC_INLINE void VCMP_Disable(void);
-__STATIC_INLINE uint32_t VCMP_VoltageToLevel(float v);
-__STATIC_INLINE bool VCMP_VDDLower(void);
-__STATIC_INLINE bool VCMP_VDDHigher(void);
-__STATIC_INLINE bool VCMP_Ready(void);
-__STATIC_INLINE void VCMP_IntClear(uint32_t flags);
-__STATIC_INLINE void VCMP_IntSet(uint32_t flags);
-__STATIC_INLINE void VCMP_IntDisable(uint32_t flags);
-__STATIC_INLINE void VCMP_IntEnable(uint32_t flags);
-__STATIC_INLINE uint32_t VCMP_IntGet(void);
-__STATIC_INLINE uint32_t VCMP_IntGetEnabled(void);
 
 /***************************************************************************//**
  * @brief
@@ -170,7 +158,7 @@ __STATIC_INLINE void VCMP_Enable(void)
  ******************************************************************************/
 __STATIC_INLINE void VCMP_Disable(void)
 {
-  VCMP->CTRL &= ~(VCMP_CTRL_EN);
+  VCMP->CTRL &= ~VCMP_CTRL_EN;
 }
 
 
@@ -284,7 +272,7 @@ __STATIC_INLINE void VCMP_IntSet(uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE void VCMP_IntDisable(uint32_t flags)
 {
-  VCMP->IEN &= ~(flags);
+  VCMP->IEN &= ~flags;
 }
 
 
@@ -316,7 +304,7 @@ __STATIC_INLINE void VCMP_IntEnable(uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE uint32_t VCMP_IntGet(void)
 {
-  return(VCMP->IF);
+  return VCMP->IF;
 }
 
 
@@ -358,4 +346,4 @@ __STATIC_INLINE uint32_t VCMP_IntGetEnabled(void)
 #endif
 
 #endif /* defined(VCMP_COUNT) && (VCMP_COUNT > 0) */
-#endif /* __SILICON_LABS_EM_VCMP_H_ */
+#endif /* __SILICON_LABS_EM_VCMP_H__ */

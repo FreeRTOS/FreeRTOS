@@ -81,6 +81,7 @@
 #include "em_burtc.h"
 #include "em_rmu.h"
 #include "em_int.h"
+#include "em_rtc.h"
 #include "sleep.h"
 
 /* SEE THE COMMENTS ABOVE THE DEFINITION OF configCREATE_LOW_POWER_DEMO IN

@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_chip.h
  * @brief Chip Initialization API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,9 +30,8 @@
  *
  ******************************************************************************/
 
-
-#ifndef __SILICON_LABS_EM_CHIP_H_
-#define __SILICON_LABS_EM_CHIP_H_
+#ifndef __SILICON_LABS_EM_CHIP_H__
+#define __SILICON_LABS_EM_CHIP_H__
 
 #include "em_device.h"
 #include "em_system.h"
@@ -56,7 +55,7 @@ extern "C" {
  * @brief
  *   Chip initialization routine for revision errata workarounds
  *
- * This init function will configure the EFM32 device to a state where it is
+ * This init function will configure the device to a state where it is
  * as similar as later revisions as possible, to improve software compatibility
  * with newer parts. See the device specific errata for details.
  *****************************************************************************/
@@ -172,12 +171,12 @@ __STATIC_INLINE void CHIP_Init(void)
 #if defined(_EFM32_HAPPY_FAMILY)
   uint32_t rev;
   rev = *(volatile uint32_t *)(0x0FE081FC);
-  
+
   if ((rev >> 24) <= 129)
   {
     /* This fixes a mistaken internal connection between PC0 and PC4 */
     /* This disables an internal pulldown on PC4 */
-    *(volatile uint32_t*)(0x400C6018) = (1 << 26) | (5 << 0); 
+    *(volatile uint32_t*)(0x400C6018) = (1 << 26) | (5 << 0);
     /* This disables an internal LDO test signal driving PC4 */
     *(volatile uint32_t*)(0x400C80E4) &= ~(1 << 24);
   }
@@ -191,4 +190,4 @@ __STATIC_INLINE void CHIP_Init(void)
 }
 #endif
 
-#endif /* __SILICON_LABS_EM_CHIP_H_ */
+#endif /* __SILICON_LABS_EM_CHIP_H__ */

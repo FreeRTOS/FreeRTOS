@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_dbg.h
  * @brief Debug (DBG) API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -31,13 +31,13 @@
  ******************************************************************************/
 
 
-#ifndef __SILICON_LABS_EM_DBG_H_
-#define __SILICON_LABS_EM_DBG_H_
+#ifndef __SILICON_LABS_EM_DBG_H__
+#define __SILICON_LABS_EM_DBG_H__
 
 #include <stdbool.h>
 #include "em_device.h"
 
-#if defined ( CoreDebug_DHCSR_C_DEBUGEN_Msk )
+#if defined( CoreDebug_DHCSR_C_DEBUGEN_Msk )
 
 #ifdef __cplusplus
 extern "C" {
@@ -57,7 +57,7 @@ extern "C" {
  *****************************   PROTOTYPES   **********************************
  ******************************************************************************/
 
-#if defined( GPIO_ROUTE_SWCLKPEN )
+#if defined( GPIO_ROUTE_SWCLKPEN ) || defined( GPIO_ROUTEPEN_SWCLKTCKPEN )
 /***************************************************************************//**
  * @brief
  *   Check if a debugger is connected (and debug session activated)
@@ -72,12 +72,12 @@ extern "C" {
  ******************************************************************************/
 __STATIC_INLINE bool DBG_Connected(void)
 {
-  return ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) ? true : false);
+  return (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) ? true : false;
 }
 #endif
 
 
-#if defined( GPIO_ROUTE_SWOPEN )
+#if defined( GPIO_ROUTE_SWOPEN ) || defined( GPIO_ROUTEPEN_SWVPEN )
 void DBG_SWOEnable(unsigned int location);
 #endif
 
@@ -88,6 +88,6 @@ void DBG_SWOEnable(unsigned int location);
 }
 #endif
 
-#endif /* defined ( CoreDebug_DHCSR_C_DEBUGEN_Msk ) */
+#endif /* defined( CoreDebug_DHCSR_C_DEBUGEN_Msk ) */
 
-#endif /* __SILICON_LABS_EM_DBG_H_ */
+#endif /* __SILICON_LABS_EM_DBG_H__ */

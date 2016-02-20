@@ -1,4 +1,19 @@
 ================ Revision history ============================================
+4.2.1:
+ - No changes.
+
+4.2.0:
+ - Various corrections and improvements of Jade/Pearl/EFR family files.
+
+4.1.1:
+ - Added CRYPTO module (cryptographic engine) to Jade/Pearl/EFR families.
+
+4.1.0:
+ - Added device headers for new families EZR32HG (EZR Happy Gecko), EFM32JG
+   (Jade Gecko) and EFM32PG (Pearl Gecko)
+ - Bugfixes in EZR32 LG and WG system/startup files.
+ - Added support for new EZR32HG family.
+
 4.0.0:
  - Use ARM CMSIS version 4.2.0.
  - emlib:  New style version macros in em_version.h.

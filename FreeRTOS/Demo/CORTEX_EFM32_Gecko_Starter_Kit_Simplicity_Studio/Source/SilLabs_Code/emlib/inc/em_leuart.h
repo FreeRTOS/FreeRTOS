@@ -2,10 +2,10 @@
  * @file em_leuart.h
  * @brief Low Energy Universal Asynchronous Receiver/Transmitter (LEUART)
  *   peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -31,9 +31,8 @@
  *
  ******************************************************************************/
 
-
-#ifndef __SILICON_LABS_EM_LEUART_H_
-#define __SILICON_LABS_EM_LEUART_H_
+#ifndef __SILICON_LABS_EM_LEUART_H__
+#define __SILICON_LABS_EM_LEUART_H__
 
 #include "em_device.h"
 #if defined(LEUART_COUNT) && (LEUART_COUNT > 0)
@@ -130,14 +129,15 @@ typedef struct
 } LEUART_Init_TypeDef;
 
 /** Default config for LEUART init structure. */
-#define LEUART_INIT_DEFAULT                                                                   \
-  { leuartEnable,      /* Enable RX/TX when init completed. */                                \
-    0,                 /* Use current configured reference clock for configuring baudrate. */ \
-    9600,              /* 9600 bits/s. */                                                     \
-    leuartDatabits8,   /* 8 databits. */                                                      \
-    leuartNoParity,    /* No parity. */                                                       \
-    leuartStopbits1    /* 1 stopbit. */                                                       \
-  }
+#define LEUART_INIT_DEFAULT                                                                 \
+{                                                                                           \
+  leuartEnable,      /* Enable RX/TX when init completed. */                                \
+  0,                 /* Use current configured reference clock for configuring baudrate. */ \
+  9600,              /* 9600 bits/s. */                                                     \
+  leuartDatabits8,   /* 8 databits. */                                                      \
+  leuartNoParity,    /* No parity. */                                                       \
+  leuartStopbits1    /* 1 stopbit. */                                                       \
+}
 
 
 /*******************************************************************************
@@ -185,7 +185,7 @@ __STATIC_INLINE void LEUART_IntClear(LEUART_TypeDef *leuart, uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE void LEUART_IntDisable(LEUART_TypeDef *leuart, uint32_t flags)
 {
-  leuart->IEN &= ~(flags);
+  leuart->IEN &= ~flags;
 }
 
 
@@ -227,7 +227,7 @@ __STATIC_INLINE void LEUART_IntEnable(LEUART_TypeDef *leuart, uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE uint32_t LEUART_IntGet(LEUART_TypeDef *leuart)
 {
-  return(leuart->IF);
+  return leuart->IF;
 }
 
 
@@ -333,7 +333,7 @@ void LEUART_TxExt(LEUART_TypeDef *leuart, uint16_t data);
  ******************************************************************************/
 __STATIC_INLINE uint8_t LEUART_RxDataGet(LEUART_TypeDef *leuart)
 {
-  return (uint8_t) (leuart->RXDATA);
+  return (uint8_t)leuart->RXDATA;
 }
 
 
@@ -342,10 +342,10 @@ __STATIC_INLINE uint8_t LEUART_RxDataGet(LEUART_TypeDef *leuart)
  *   Receive one 8-9 bit frame, with extended information.
  *
  * @details
- *   This function is used to quickly receive one 8-9 bit frame with extended 
- *   information by reading the RXDATAX register directly, without checking the 
- *   STATUS register for the RXDATAV flag. This can be useful from the RXDATAV 
- *   interrupt handler, i.e. waiting is superfluous, in order to quickly read 
+ *   This function is used to quickly receive one 8-9 bit frame with extended
+ *   information by reading the RXDATAX register directly, without checking the
+ *   STATUS register for the RXDATAV flag. This can be useful from the RXDATAV
+ *   interrupt handler, i.e. waiting is superfluous, in order to quickly read
  *   the received data.
  *
  * @note
@@ -367,7 +367,7 @@ __STATIC_INLINE uint8_t LEUART_RxDataGet(LEUART_TypeDef *leuart)
  ******************************************************************************/
 __STATIC_INLINE uint16_t LEUART_RxDataXGet(LEUART_TypeDef *leuart)
 {
-  return (uint16_t) (leuart->RXDATAX);
+  return (uint16_t)leuart->RXDATAX;
 }
 
 
@@ -379,5 +379,4 @@ __STATIC_INLINE uint16_t LEUART_RxDataXGet(LEUART_TypeDef *leuart)
 #endif
 
 #endif /* defined(LEUART_COUNT) && (LEUART_COUNT > 0) */
-
-#endif /* __SILICON_LABS_EM_LEUART_H_ */
+#endif /* __SILICON_LABS_EM_LEUART_H__ */

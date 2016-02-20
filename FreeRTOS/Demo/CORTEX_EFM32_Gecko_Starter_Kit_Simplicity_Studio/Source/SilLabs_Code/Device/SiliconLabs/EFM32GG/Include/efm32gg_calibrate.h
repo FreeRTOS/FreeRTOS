@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32gg_calibrate.h
  * @brief EFM32GG_CALIBRATE register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,6 +30,10 @@
  *
  *****************************************************************************/
 /**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
+/**************************************************************************//**
  * @defgroup EFM32GG_CALIBRATE
  * @{
  *****************************************************************************/
@@ -40,4 +44,7 @@ typedef struct
   __I uint32_t ADDRESS; /**< Address of calibration register */
   __I uint32_t VALUE;   /**< Default value for calibration register */
 } CALIBRATE_TypeDef;    /** @} */
+
+/** @} End of group Parts */
+
 

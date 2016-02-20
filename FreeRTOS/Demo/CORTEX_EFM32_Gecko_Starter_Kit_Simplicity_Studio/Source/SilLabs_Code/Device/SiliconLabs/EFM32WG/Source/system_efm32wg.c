@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file system_efm32wg.c
  * @brief CMSIS Cortex-M4 System Layer for EFM32WG devices.
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -54,27 +54,27 @@
 /* SW footprint. */
 
 #ifndef EFM32_HFXO_FREQ
-#if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_WONDER_FAMILY)
-#define EFM32_HFXO_FREQ (48000000UL)        
-#else
-#define EFM32_HFXO_FREQ (32000000UL)
+#define EFM32_HFXO_FREQ (48000000UL)
 #endif
-#endif
+
+#define EFM32_HFRCO_MAX_FREQ (28000000UL)
+
 /* Do not define variable if HF crystal oscillator not present */
 #if (EFM32_HFXO_FREQ > 0)
 /** @cond DO_NOT_INCLUDE_WITH_DOXYGEN */
-/** System HFXO clock. */ 
+/** System HFXO clock. */
 static uint32_t SystemHFXOClock = EFM32_HFXO_FREQ;
 /** @endcond (DO_NOT_INCLUDE_WITH_DOXYGEN) */
 #endif
 
-#ifndef EFM32_LFXO_FREQ 
+#ifndef EFM32_LFXO_FREQ
 #define EFM32_LFXO_FREQ (EFM32_LFRCO_FREQ)
 #endif
+
 /* Do not define variable if LF crystal oscillator not present */
 #if (EFM32_LFXO_FREQ > 0)
 /** @cond DO_NOT_INCLUDE_WITH_DOXYGEN */
-/** System LFXO clock. */ 
+/** System LFXO clock. */
 static uint32_t SystemLFXOClock = EFM32_LFXO_FREQ;
 /** @endcond (DO_NOT_INCLUDE_WITH_DOXYGEN) */
 #endif
@@ -123,19 +123,34 @@ uint32_t SystemCoreClock;
 uint32_t SystemCoreClockGet(void)
 {
   uint32_t ret;
-  
+
   ret = SystemHFClockGet();
-#if defined(_EFM32_GIANT_FAMILY) || defined(_EFM32_WONDER_FAMILY)
   /* Leopard/Giant/Wonder Gecko has an additional divider */
   ret =  ret / (1 + ((CMU->CTRL & _CMU_CTRL_HFCLKDIV_MASK)>>_CMU_CTRL_HFCLKDIV_SHIFT));
-#endif
-  ret >>= (CMU->HFCORECLKDIV & _CMU_HFCORECLKDIV_HFCORECLKDIV_MASK) >> 
+  ret >>= (CMU->HFCORECLKDIV & _CMU_HFCORECLKDIV_HFCORECLKDIV_MASK) >>
           _CMU_HFCORECLKDIV_HFCORECLKDIV_SHIFT;
 
   /* Keep CMSIS variable up-to-date just in case */
   SystemCoreClock = ret;
 
   return ret;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Get the maximum core clock frequency.
+ *
+ * @note
+ *   This is an EFR32 proprietary function, not part of the CMSIS definition.
+ *
+ * @return
+ *   The maximum core clock frequency in Hz.
+ ******************************************************************************/
+uint32_t SystemMaxCoreClockGet(void)
+{
+  return (EFM32_HFRCO_MAX_FREQ > EFM32_HFXO_FREQ ? \
+          EFM32_HFRCO_MAX_FREQ : EFM32_HFXO_FREQ);
 }
 
 
@@ -152,7 +167,7 @@ uint32_t SystemCoreClockGet(void)
 uint32_t SystemHFClockGet(void)
 {
   uint32_t ret;
-  
+
   switch (CMU->STATUS & (CMU_STATUS_HFRCOSEL | CMU_STATUS_HFXOSEL |
                          CMU_STATUS_LFRCOSEL | CMU_STATUS_LFXOSEL))
   {
@@ -165,11 +180,11 @@ uint32_t SystemHFClockGet(void)
       ret = 0;
 #endif
       break;
-      
+
     case CMU_STATUS_LFRCOSEL:
       ret = EFM32_LFRCO_FREQ;
       break;
-      
+
     case CMU_STATUS_HFXOSEL:
 #if (EFM32_HFXO_FREQ > 0)
       ret = SystemHFXOClock;
@@ -179,7 +194,7 @@ uint32_t SystemHFClockGet(void)
       ret = 0;
 #endif
       break;
-      
+
     default: /* CMU_STATUS_HFRCOSEL */
       switch (CMU->HFRCOCTRL & _CMU_HFRCOCTRL_BAND_MASK)
       {

@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_msc.h
  * @brief Flash controller module (MSC) peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -38,7 +38,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "em_bitband.h"
+#include "em_bus.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -71,6 +71,24 @@ extern "C" {
  */
 #define MSC_PROGRAM_TIMEOUT    10000000ul
 
+/**
+ * @brief
+ *    By compiling with the define EM_MSC_RUN_FROM_FLASH the Flash
+ *    controller (MSC) peripheral will remain in and execute from flash.
+ *    This is useful for targets that don't want to allocate RAM space to
+ *    hold the flash functions.  Without this define the MSC peripheral
+ *    functions will be copied into and run out of RAM.
+ * @note
+ *    This define is commented out by default so the MSC controller API
+ *    will run from RAM by default.
+ *
+ */
+#if defined( DOXY_DOC_ONLY )
+#define EM_MSC_RUN_FROM_FLASH
+#else
+//#define EM_MSC_RUN_FROM_FLASH
+#endif
+
 /*******************************************************************************
  *************************   TYPEDEFS   ****************************************
  ******************************************************************************/
@@ -88,13 +106,36 @@ typedef enum
 
 #if defined( _MSC_READCTRL_BUSSTRATEGY_MASK )
 /** Strategy for prioritized bus access */
-typedef enum {
+typedef enum
+{
   mscBusStrategyCPU = MSC_READCTRL_BUSSTRATEGY_CPU,       /**< Prioritize CPU bus accesses */
   mscBusStrategyDMA = MSC_READCTRL_BUSSTRATEGY_DMA,       /**< Prioritize DMA bus accesses */
   mscBusStrategyDMAEM1 = MSC_READCTRL_BUSSTRATEGY_DMAEM1, /**< Prioritize DMAEM1 for bus accesses */
   mscBusStrategyNone = MSC_READCTRL_BUSSTRATEGY_NONE      /**< No unit has bus priority */
 } MSC_BusStrategy_Typedef;
 #endif
+
+/** Code execution configuration */
+typedef struct
+{
+  bool scbtEn;          /**< Enable Suppressed Conditional Branch Target Prefetch */
+  bool prefetchEn;      /**< Enable MSC prefetching */
+  bool ifcDis;          /**< Disable instruction cache */
+  bool aiDis;           /**< Disable automatic cache invalidation on write or erase */
+  bool iccDis;          /**< Disable automatic caching of fetches in interrupt context */
+  bool useHprot;        /**< Use ahb_hprot to determine if the instruction is cacheable or not */
+} MSC_ExecConfig_TypeDef;
+
+/** Default MSC ExecConfig initialization */
+#define MSC_EXECCONFIG_DEFAULT  \
+{                               \
+  false,                        \
+  true,                         \
+  false,                        \
+  false,                        \
+  false,                        \
+  false,                        \
+}
 
 /** @cond DO_NOT_INCLUDE_WITH_DOXYGEN */
 /* Legacy type names */
@@ -108,6 +149,9 @@ typedef enum {
 
 void MSC_Init(void);
 void MSC_Deinit(void);
+#if !defined( _EFM32_GECKO_FAMILY )
+void MSC_ExecConfigSet(MSC_ExecConfig_TypeDef *execConfig);
+#endif
 
 /***************************************************************************//**
  * @brief
@@ -328,7 +372,7 @@ __STATIC_INLINE void MSC_FlushCache(void)
  ******************************************************************************/
 __STATIC_INLINE void MSC_EnableCache(bool enable)
 {
-  BITBAND_Peripheral(&(MSC->READCTRL), _MSC_READCTRL_IFCDIS_SHIFT, ~enable);
+  BUS_RegBitWrite(&(MSC->READCTRL), _MSC_READCTRL_IFCDIS_SHIFT, !enable);
 }
 
 
@@ -341,7 +385,7 @@ __STATIC_INLINE void MSC_EnableCache(bool enable)
  ******************************************************************************/
 __STATIC_INLINE void MSC_EnableCacheIRQs(bool enable)
 {
-  BITBAND_Peripheral(&(MSC->READCTRL), _MSC_READCTRL_ICCDIS_SHIFT, ~enable);
+  BUS_RegBitWrite(&(MSC->READCTRL), _MSC_READCTRL_ICCDIS_SHIFT, !enable);
 }
 #endif
 
@@ -354,7 +398,7 @@ __STATIC_INLINE void MSC_EnableCacheIRQs(bool enable)
  ******************************************************************************/
 __STATIC_INLINE void MSC_EnableAutoCacheFlush(bool enable)
 {
-  BITBAND_Peripheral(&(MSC->READCTRL), _MSC_READCTRL_AIDIS_SHIFT, ~enable);
+  BUS_RegBitWrite(&(MSC->READCTRL), _MSC_READCTRL_AIDIS_SHIFT, !enable);
 }
 #endif /* defined( MSC_IF_CHOF ) && defined( MSC_IF_CMOF ) */
 
@@ -372,56 +416,43 @@ __STATIC_INLINE void MSC_BusStrategy(mscBusStrategy_Typedef mode)
 }
 #endif
 
-
-#ifdef __CC_ARM  /* MDK-ARM compiler */
-MSC_Status_TypeDef MSC_WriteWord(uint32_t *address, void const *data, uint32_t numBytes);
-#if !defined( _EFM32_GECKO_FAMILY )
-MSC_Status_TypeDef MSC_WriteWordFast(uint32_t *address, void const *data, uint32_t numBytes);
+#if defined(EM_MSC_RUN_FROM_FLASH)
+#define MSC_FUNC_PREFIX
+#define MSC_FUNC_POSTFIX
+#elif defined(__CC_ARM)
+#define MSC_FUNC_PREFIX
+#define MSC_FUNC_POSTFIX
+#elif defined(__ICCARM__)
+#define MSC_FUNC_PREFIX   __ramfunc
+#define MSC_FUNC_POSTFIX
+#elif defined(__GNUC__) && defined(__CROSSWORKS_ARM)
+#define MSC_FUNC_PREFIX
+#define MSC_FUNC_POSTFIX  __attribute__ ((section(".fast")))
+#elif defined(__GNUC__)
+#define MSC_FUNC_PREFIX
+#define MSC_FUNC_POSTFIX  __attribute__ ((section(".ram")))
 #endif
-MSC_Status_TypeDef MSC_ErasePage(uint32_t *startAddress);
+
+
+MSC_FUNC_PREFIX MSC_Status_TypeDef
+  MSC_WriteWord(uint32_t *address,
+                void const *data,
+                uint32_t numBytes) MSC_FUNC_POSTFIX;
+
+#if !defined( _EFM32_GECKO_FAMILY )
+MSC_FUNC_PREFIX MSC_Status_TypeDef
+  MSC_WriteWordFast(uint32_t *address,
+                    void const *data,
+                    uint32_t numBytes) MSC_FUNC_POSTFIX;
+
+#endif
+
+MSC_FUNC_PREFIX MSC_Status_TypeDef
+  MSC_ErasePage(uint32_t *startAddress) MSC_FUNC_POSTFIX;
 
 #if defined( _MSC_MASSLOCK_MASK )
-MSC_Status_TypeDef MSC_MassErase(void);
+MSC_FUNC_PREFIX MSC_Status_TypeDef MSC_MassErase(void) MSC_FUNC_POSTFIX;
 #endif
-#endif /* __CC_ARM */
-
-#ifdef __ICCARM__ /* IAR compiler */
-__ramfunc MSC_Status_TypeDef MSC_WriteWord(uint32_t *address, void const *data, uint32_t numBytes);
-#if !defined( _EFM32_GECKO_FAMILY )
-__ramfunc MSC_Status_TypeDef MSC_WriteWordFast(uint32_t *address, void const *data, uint32_t numBytes);
-#endif
-__ramfunc MSC_Status_TypeDef MSC_ErasePage(uint32_t *startAddress);
-
-#if defined( _MSC_MASSLOCK_MASK )
-__ramfunc MSC_Status_TypeDef MSC_MassErase(void);
-#endif
-#endif /* __ICCARM__ */
-
-#ifdef __GNUC__  /* GCC based compilers */
-#ifdef __CROSSWORKS_ARM  /* Rowley Crossworks (GCC based) */
-MSC_Status_TypeDef MSC_WriteWord(uint32_t *address, void const *data, uint32_t numBytes) __attribute__ ((section(".fast")));
-#if !defined( _EFM32_GECKO_FAMILY )
-MSC_Status_TypeDef MSC_WriteWordFast(uint32_t *address, void const *data, uint32_t numBytes) __attribute__ ((section(".fast")));
-#endif
-MSC_Status_TypeDef MSC_ErasePage(uint32_t *startAddress) __attribute__ ((section(".fast")));
-
-#if defined( _MSC_MASSLOCK_MASK )
-MSC_Status_TypeDef MSC_MassErase(void) __attribute__ ((section(".fast")));
-#endif
-
-#else /* GCC */
-MSC_Status_TypeDef MSC_WriteWord(uint32_t *address, void const *data, uint32_t numBytes) __attribute__ ((section(".ram")));
-#if !defined( _EFM32_GECKO_FAMILY )
-MSC_Status_TypeDef MSC_WriteWordFast(uint32_t *address, void const *data, uint32_t numBytes) __attribute__ ((section(".ram")));
-#endif
-MSC_Status_TypeDef MSC_ErasePage(uint32_t *startAddress) __attribute__ ((section(".ram")));
-
-#if defined( _MSC_MASSLOCK_MASK )
-MSC_Status_TypeDef MSC_MassErase(void) __attribute__ ((section(".ram")));
-#endif
-
-#endif /* __GNUC__ */
-#endif /* __CROSSWORKS_ARM */
 
 /** @} (end addtogroup MSC) */
 /** @} (end addtogroup EM_Library) */

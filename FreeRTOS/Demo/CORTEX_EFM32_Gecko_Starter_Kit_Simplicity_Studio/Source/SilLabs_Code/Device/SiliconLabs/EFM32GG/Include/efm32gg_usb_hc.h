@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file efm32gg_usb_hc.h
  * @brief EFM32GG_USB_HC register and bit field definitions
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
+ * <b>Copyright 2015 Silicon Laboratories, Inc. http://www.silabs.com</b>
  ******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,6 +30,10 @@
  *
  *****************************************************************************/
 /**************************************************************************//**
+* @addtogroup Parts
+* @{
+******************************************************************************/
+/**************************************************************************//**
  * @brief USB_HC EFM32GG USB HC
  *****************************************************************************/
 typedef struct
@@ -42,4 +46,7 @@ typedef struct
   __IO uint32_t DMAADDR;      /**< Host Channel x DMA Address Register  */
   uint32_t      RESERVED1[2]; /**< Reserved future */
 } USB_HC_TypeDef;
+
+/** @} End of group Parts */
+
 

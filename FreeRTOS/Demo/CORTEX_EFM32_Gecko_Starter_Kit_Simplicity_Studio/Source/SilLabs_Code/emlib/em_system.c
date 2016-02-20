@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_system.c
  * @brief System Peripheral API
- * @version 4.0.0
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -29,7 +29,6 @@
  * arising from your use of this Software.
  *
  ******************************************************************************/
-
 
 #include "em_system.h"
 #include "em_assert.h"
@@ -60,24 +59,26 @@ void SYSTEM_ChipRevisionGet(SYSTEM_ChipRevision_TypeDef *rev)
 {
   uint8_t tmp;
 
-  EFM_ASSERT(rev);  
-  
+  EFM_ASSERT(rev);
+
   /* CHIP FAMILY bit [5:2] */
-  tmp  = (((ROMTABLE->PID1 & _ROMTABLE_PID1_FAMILYMSB_MASK) >> _ROMTABLE_PID1_FAMILYMSB_SHIFT) << 2);           
+  tmp  = (((ROMTABLE->PID1 & _ROMTABLE_PID1_FAMILYMSB_MASK) >> _ROMTABLE_PID1_FAMILYMSB_SHIFT) << 2);
   /* CHIP FAMILY bit [1:0] */
-  tmp |=  ((ROMTABLE->PID0 & _ROMTABLE_PID0_FAMILYLSB_MASK) >> _ROMTABLE_PID0_FAMILYLSB_SHIFT);                 
+  tmp |=  ((ROMTABLE->PID0 & _ROMTABLE_PID0_FAMILYLSB_MASK) >> _ROMTABLE_PID0_FAMILYLSB_SHIFT);
   rev->family = tmp;
 
   /* CHIP MAJOR bit [3:0] */
-  rev->major = (ROMTABLE->PID0 & _ROMTABLE_PID0_REVMAJOR_MASK) >> _ROMTABLE_PID0_REVMAJOR_SHIFT;                
+  rev->major = (ROMTABLE->PID0 & _ROMTABLE_PID0_REVMAJOR_MASK) >> _ROMTABLE_PID0_REVMAJOR_SHIFT;
 
   /* CHIP MINOR bit [7:4] */
-  tmp  = (((ROMTABLE->PID2 & _ROMTABLE_PID2_REVMINORMSB_MASK) >> _ROMTABLE_PID2_REVMINORMSB_SHIFT) << 4);  
+  tmp  = (((ROMTABLE->PID2 & _ROMTABLE_PID2_REVMINORMSB_MASK) >> _ROMTABLE_PID2_REVMINORMSB_SHIFT) << 4);
   /* CHIP MINOR bit [3:0] */
-  tmp |=  ((ROMTABLE->PID3 & _ROMTABLE_PID3_REVMINORLSB_MASK) >> _ROMTABLE_PID3_REVMINORLSB_SHIFT);             
+  tmp |=  ((ROMTABLE->PID3 & _ROMTABLE_PID3_REVMINORLSB_MASK) >> _ROMTABLE_PID3_REVMINORLSB_SHIFT);
   rev->minor = tmp;
 }
 
+
+#if defined(CALIBRATE)
 /***************************************************************************//**
  * @brief
  *    Get factory calibration value for a given peripheral register.
@@ -114,6 +115,7 @@ uint32_t SYSTEM_GetCalibrationValue(volatile uint32_t *regAddress)
     regCount++;
   }
 }
+#endif /* defined (CALIBRATE) */
 
 /** @} (end addtogroup SYSTEM) */
 /** @} (end addtogroup EM_Library) */

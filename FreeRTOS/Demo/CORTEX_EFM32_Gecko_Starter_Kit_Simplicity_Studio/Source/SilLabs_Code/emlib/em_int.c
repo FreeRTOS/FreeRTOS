@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file em_int.c
  * @brief Interrupt enable/disable unit API
- * @version 4.0.0
+ * @version 4.2.1
  ******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,7 +30,6 @@
  *
  ******************************************************************************/
 
-
 #include <stdint.h>
 #include "em_int.h"
 
@@ -41,15 +40,17 @@
 
 /***************************************************************************//**
  * @addtogroup INT
- * @brief Safe nesting interrupt disable/enable API
+ * @brief Safe nesting of interrupt disable/enable API
  * @{
  * @details
  *  This module contains functions to safely disable and enable interrupts
- *  at cpu level. INT_Disable() disables interrupts and increments a lock
- *  level counter. INT_Enable() decrements the lock level counter and enable
- *  interrupts if the counter was decremented to zero.
+ *  at CPU level. INT_Disable() disables interrupts globally and increments a lock
+ *  level counter (counting semaphore). INT_Enable() decrements the lock level 
+ *  counter and enable interrupts if the counter reaches zero.
  *
- *  These functions would normally be used to secure critical regions.
+ *  These functions would normally be used to secure critical regions, and 
+ *  to make sure that a critical section that calls into another critical 
+ *  section does not unintentionally terminate the callee critical section.
  *
  *  These functions should also be used inside interrupt handlers:
  *  @verbatim
@@ -67,7 +68,6 @@
 /** Interrupt lock level counter. Set to zero initially as we normally enter
  * main with interrupts enabled  */
 uint32_t INT_LockCnt = 0;
-
 
 /** @} (end addtogroup INT) */
 /** @} (end addtogroup EM_Library) */

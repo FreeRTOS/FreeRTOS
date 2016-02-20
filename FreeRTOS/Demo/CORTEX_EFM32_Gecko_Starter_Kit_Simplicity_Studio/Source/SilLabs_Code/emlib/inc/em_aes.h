@@ -1,11 +1,10 @@
 /***************************************************************************//**
  * @file em_aes.h
- * @brief Advanced encryption standard (AES) accelerator peripheral API for
- *   EFM32.
- * @version 4.0.0
+ * @brief Advanced encryption standard (AES) accelerator peripheral API.
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -31,9 +30,8 @@
  *
  ******************************************************************************/
 
-
-#ifndef __SILICON_LABS_EM_AES_H_
-#define __SILICON_LABS_EM_AES_H_
+#ifndef __SILICON_LABS_EM_AES_H__
+#define __SILICON_LABS_EM_AES_H__
 
 #include "em_device.h"
 #if defined(AES_COUNT) && (AES_COUNT > 0)
@@ -201,7 +199,30 @@ __STATIC_INLINE void AES_IntEnable(uint32_t flags)
  ******************************************************************************/
 __STATIC_INLINE uint32_t AES_IntGet(void)
 {
-  return(AES->IF);
+  return AES->IF;
+}
+
+
+/***************************************************************************//**
+ * @brief
+ *   Get enabled and pending AES interrupt flags.
+ *   Useful for handling more interrupt sources in the same interrupt handler.
+ *
+ * @note
+ *   Interrupt flags are not cleared by the use of this function.
+ *
+ * @return
+ *   Pending and enabled AES interrupt sources
+ *   The return value is the bitwise AND of
+ *   - the enabled interrupt sources in AES_IEN and
+ *   - the pending interrupt flags AES_IF
+ ******************************************************************************/
+__STATIC_INLINE uint32_t AES_IntGetEnabled(void)
+{
+  uint32_t ien;
+
+  ien = AES->IEN;
+  return AES->IF & ien;
 }
 
 
@@ -242,6 +263,6 @@ void AES_OFB256(uint8_t *out,
 #endif
 
 #endif /* defined(AES_COUNT) && (AES_COUNT > 0) */
-#endif /* __SILICON_LABS_EM_AES_H_ */
+#endif /* __SILICON_LABS_EM_AES_H__ */
 
 

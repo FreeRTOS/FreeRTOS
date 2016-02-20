@@ -1,10 +1,10 @@
 /***************************************************************************//**
  * @file em_common.h
- * @brief EFM32 general purpose utilities.
- * @version 4.0.0
+ * @brief Emlib general purpose utilities.
+ * @version 4.2.1
  *******************************************************************************
  * @section License
- * <b>(C) Copyright 2014 Silicon Labs, http://www.silabs.com</b>
+ * <b>(C) Copyright 2015 Silicon Labs, http://www.silabs.com</b>
  *******************************************************************************
  *
  * Permission is granted to anyone to use this software for any purpose,
@@ -30,13 +30,11 @@
  *
  ******************************************************************************/
 
+#ifndef __SILICON_LABS_EM_COMMON_H__
+#define __SILICON_LABS_EM_COMMON_H__
 
-#ifndef __SILICON_LABS_EM_COMMON_H_
-#define __SILICON_LABS_EM_COMMON_H_
-
-#include <stdint.h>
+#include "em_device.h"
 #include <stdbool.h>
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +47,7 @@ extern "C" {
 
 /***************************************************************************//**
  * @addtogroup COMMON
- * @brief EFM32 general purpose utilities.
+ * @brief Emlib general purpose utilities.
  * @{
  ******************************************************************************/
 
@@ -75,7 +73,7 @@ extern "C" {
 #define EFM32_ALIGN(X) _Pragma( STRINGIZE( data_alignment=X ) )
 #endif
 
-#else
+#else // !defined(__GNUC__)
 
 /** Macro for getting minimum value. No sideeffects, a and b are evaluated once only. */
 #define EFM32_MIN(a, b)    ({ __typeof__(a) _a = (a); __typeof__(b) _b = (b); _a < _b ? _a : _b; })
@@ -104,7 +102,33 @@ extern "C" {
  */
 #define EFM32_ALIGN(X)
 
+#endif // !defined(__GNUC__)
+
+/***************************************************************************//**
+ * @brief
+ *   Count trailing number of zero's.
+ *
+ * @note
+ *   Disabling SWDClk will disable the debug interface, which may result in
+ *   a lockout if done early in startup (before debugger is able to halt core).
+ *
+ * @param[in] value
+ *   Data value to check for number of trailing zero bits.
+ *
+ * @return
+ *   Number of trailing zero's in value.
+ ******************************************************************************/
+__STATIC_INLINE uint32_t EFM32_CTZ(uint32_t value)
+{
+#if (__CORTEX_M >= 3)
+  return __CLZ(__RBIT(value));
+
+#else
+  uint32_t zeros;
+  for(zeros=0; (zeros<32) && ((value&0x1) == 0); zeros++, value>>=1);
+  return zeros;
 #endif
+}
 
 /** @} (end addtogroup COMMON) */
 /** @} (end addtogroup EM_Library) */
@@ -113,4 +137,4 @@ extern "C" {
 }
 #endif
 
-#endif /* __SILICON_LABS_EM_COMMON_H_ */
+#endif /* __SILICON_LABS_EM_COMMON_H__ */

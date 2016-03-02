@@ -74,9 +74,6 @@
 extern "C" {
 #endif
 
-#include "em_chip.h"
-#include "em_cmu.h"
-
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -94,7 +91,11 @@ extern "C" {
  *
  * 0: Build the full test and demo application.
  * 1: Build the simple blinky tickless low power demo, generating the tick
- *    interrupt from the RTCC.  EM2 will be entered.  The LXFO clock is used.
+ *    interrupt from the BURTC.  EM3 will be entered, but use of the ULFRCO
+ *    clock means timing will be inaccurate.
+ * 2: Build the simple blinky tickless low power demo, generating the tick from
+ *    the RTC.  EM2 will be entered.  The LXFO clock is used, which is more
+ *    accurate than the ULFRCO clock.
  *  See the comments at the top of main.c, main_full.c and main_low_power.c for
  *  more information.
  */
@@ -123,7 +124,27 @@ extern "C" {
 
 	#define configENERGY_MODE				( sleepEM3 )
 
-#else
+#elif( configCREATE_LOW_POWER_DEMO == 1 )
+
+	/* Tickless idle mode, generating RTOS tick interrupts from the BURTC, fed
+	by the [inaccurate] ULFRCO clock. */
+
+	/* The slow clock used to generate the tick interrupt in the low power demo
+	runs at 2KHz.  Ensure the tick rate is a multiple of the clock. */
+	#define configTICK_RATE_HZ				( 100 )
+
+	/* The low power demo uses the tickless idle feature. */
+	#define configUSE_TICKLESS_IDLE			1
+
+	/* Hook function related definitions. */
+	#define configUSE_TICK_HOOK				( 0 )
+	#define configCHECK_FOR_STACK_OVERFLOW	( 0 )
+	#define configUSE_MALLOC_FAILED_HOOK	( 0 )
+	#define configUSE_IDLE_HOOK				( 0 )
+
+	#define configENERGY_MODE				( sleepEM3 )
+
+#elif( configCREATE_LOW_POWER_DEMO == 2 )
 
 	/* Tickless idle mode, generating RTOS tick interrupts from the RTC, fed
 	by the LXFO clock. */
@@ -141,13 +162,15 @@ extern "C" {
 	#define configUSE_MALLOC_FAILED_HOOK	( 0 )
 	#define configUSE_IDLE_HOOK				( 0 )
 
+	#define configENERGY_MODE				( sleepEM3 )
+
 #endif
 
 /* Main functions*/
 #define configUSE_PREEMPTION					( 1 )
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	( 1 )
 #define configSUPPORT_STATIC_ALLOCATION			( 1 )
-#define configCPU_CLOCK_HZ						( CMU_ClockFreqGet( cmuClock_CORE ) )
+#define configCPU_CLOCK_HZ						(( unsigned long ) 14000000)
 #define configMAX_PRIORITIES					( 6 )
 #define configMINIMAL_STACK_SIZE				(( unsigned short ) 130)
 #define configTOTAL_HEAP_SIZE					(( size_t )(25000))

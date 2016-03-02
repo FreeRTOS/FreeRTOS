@@ -67,10 +67,8 @@
     1 tab == 4 spaces!
 */
 
-#warning Not functioning correctly above -O1 optimisation level.
-
-/* Standard includes. */
-#include "limits.h"
+/* Standard inlcludes. */
+#include <limits.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -78,7 +76,7 @@
 
 /* SiLabs library includes. */
 #include "em_cmu.h"
-#include "em_burtc.h"
+#include "em_rtcc.h"
 #include "em_rmu.h"
 #include "em_int.h"
 #include "sleep.h"
@@ -90,7 +88,12 @@ in the RTOS port layer.  Therefore only build this file if the low power demo
 is being built. */
 #if( configCREATE_LOW_POWER_DEMO == 1 )
 
-#define mainTIMER_FREQUENCY_HZ	( 2000UL )
+/* The RTCC channel used to generate the tick interrupt. */
+#define lpRTCC_CHANNEL		( 1 )
+
+/* 32768 clock divided by 1.  Don't use a prescale if errata RTCC_E201
+applies. */
+#define mainTIMER_FREQUENCY_HZ	( 32768UL )
 
 /*
  * The low power demo does not use the SysTick, so override the
@@ -103,7 +106,7 @@ void vPortSetupTimerInterrupt( void );
 /*
  * Override the default definition of vPortSuppressTicksAndSleep() that is
  * weakly defined in the FreeRTOS Cortex-M port layer with a version that
- * manages the BURTC clock, as the tick is generated from the low power BURTC
+ * manages the RTC clock, as the tick is generated from the low power RTC
  * and not the SysTick as would normally be the case on a Cortex-M.
  */
 void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime );
@@ -120,43 +123,74 @@ static uint32_t xMaximumPossibleSuppressedTicks = 0;
 sleep mode was exited because of a timer interrupt or a different interrupt. */
 static volatile uint32_t ulTickFlag = pdFALSE;
 
-/* As the clock is only 2KHz, it is likely a value of 1 will be too much, so
-use zero - but leave the value here to assist porting to different clock
-speeds. */
+/* As the clock is only 32KHz, it is likely a value of 1 will be enough. */
 static const uint32_t ulStoppedTimerCompensation = 0UL;
+
+/* RTCC configuration structures. */
+static const RTCC_Init_TypeDef xRTCInitStruct =
+{
+	false,                /* Don't start counting when init complete. */
+	false,                /* Disable counter during debug halt. */
+	false,                /* Don't care. */
+	true,                 /* Enable counter wrap on ch. 1 CCV value. */
+	rtccCntPresc_1,       /* NOTE:  Do not use a pre-scale if errata RTCC_E201 applies. */
+	rtccCntTickPresc,     /* Count using the clock input directly. */
+#if defined(_RTCC_CTRL_BUMODETSEN_MASK)
+	false,                /* Disable storing RTCC counter value in RTCC_CCV2 upon backup mode entry. */
+#endif
+	false,                /* Oscillator fail detection disabled. */
+	rtccCntModeNormal,    /* Use RTCC in normal mode (increment by 1 on each tick) and not in calendar mode. */
+	false                 /* Don't care. */
+};
+
+static const RTCC_CCChConf_TypeDef xRTCCChannel1InitStruct =
+{
+	rtccCapComChModeCompare,    /* Use Compare mode. */
+	rtccCompMatchOutActionPulse,/* Don't care. */
+	rtccPRSCh0,                 /* PRS not used. */
+	rtccInEdgeNone,             /* Capture Input not used. */
+	rtccCompBaseCnt,            /* Compare with Base CNT register. */
+	0,                          /* Compare mask. */
+	rtccDayCompareModeMonth     /* Don't care. */
+};
 
 /*-----------------------------------------------------------*/
 
 void vPortSetupTimerInterrupt( void )
 {
-BURTC_Init_TypeDef xBURTCInitStruct = BURTC_INIT_DEFAULT;
+	/* Configure the RTCC to generate the RTOS tick interrupt. */
 
-	/* Configure the BURTC to generate the RTOS tick interrupt. */
-
+	/* The maximum number of ticks that can be suppressed depends on the clock
+	frequency. */
 	xMaximumPossibleSuppressedTicks = ULONG_MAX / ulReloadValueForOneTick;
 
 	/* Ensure LE modules are accessible. */
 	CMU_ClockEnable( cmuClock_CORELE, true );
 
-	/* Enable access to BURTC registers. */
-	RMU_ResetControl( rmuResetBU, false );
+	/* Use LFXO. */
+	CMU_ClockSelectSet( cmuClock_LFE, cmuSelect_LFXO );
 
-	/* Generate the tick interrupt from BURTC. */
-	xBURTCInitStruct.mode   = burtcModeEM3;		/* Operational in EM3. */
-	xBURTCInitStruct.clkSel = burtcClkSelULFRCO;/* ULFRCO clock. */
-	xBURTCInitStruct.clkDiv = burtcClkDiv_1;	/* 2kHz ULFRCO clock. */
-	xBURTCInitStruct.compare0Top = true;		/* Wrap on COMP0. */
-	BURTC_IntDisable( BURTC_IF_COMP0 );
-	BURTC_Init( &xBURTCInitStruct );
+	/* Enable clock to the RTC module. */
+	CMU_ClockEnable( cmuClock_RTCC, true );
+
+	/* Use channel 1 to generate the RTOS tick interrupt. */
+	RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValueForOneTick );
+
+	RTCC_Init( &xRTCInitStruct );
+	RTCC_ChannelInit( lpRTCC_CHANNEL, &xRTCCChannel1InitStruct );
+	RTCC_EM4WakeupEnable( true );
+
+	/* Disable RTCC interrupt. */
+	RTCC_IntDisable( _RTCC_IF_MASK );
+	RTCC_IntClear( _RTCC_IF_MASK );
+	RTCC->CNT = _RTCC_CNT_RESETVALUE;
 
 	/* The tick interrupt must be set to the lowest priority possible. */
-	NVIC_SetPriority( BURTC_IRQn, configLIBRARY_LOWEST_INTERRUPT_PRIORITY );
-	NVIC_ClearPendingIRQ( BURTC_IRQn );
-	NVIC_EnableIRQ( BURTC_IRQn );
-	BURTC_CompareSet( 0, ulReloadValueForOneTick );
-	BURTC_IntClear( BURTC_IF_COMP0 );
-	BURTC_IntEnable( BURTC_IF_COMP0 );
-	BURTC_CounterReset();
+	NVIC_SetPriority( RTCC_IRQn, configLIBRARY_LOWEST_INTERRUPT_PRIORITY );
+	NVIC_ClearPendingIRQ( RTCC_IRQn );
+	NVIC_EnableIRQ( RTCC_IRQn );
+	RTCC_IntEnable( RTCC_IEN_CC1 );
+	RTCC_Enable( true );
 }
 /*-----------------------------------------------------------*/
 
@@ -168,7 +202,7 @@ TickType_t xModifiableIdleTime;
 
 	/* THIS FUNCTION IS CALLED WITH THE SCHEDULER SUSPENDED. */
 
-	/* Make sure the BURTC reload value does not overflow the counter. */
+	/* Make sure the RTC reload value does not overflow the counter. */
 	if( xExpectedIdleTime > xMaximumPossibleSuppressedTicks )
 	{
 		xExpectedIdleTime = xMaximumPossibleSuppressedTicks;
@@ -179,24 +213,24 @@ TickType_t xModifiableIdleTime;
 	ulReloadValue = ulReloadValueForOneTick * xExpectedIdleTime;
 	if( ulReloadValue > ulStoppedTimerCompensation )
 	{
-		/* Compensate for the fact that the BURTC is going to be stopped
+		/* Compensate for the fact that the RTC is going to be stopped
 		momentarily. */
 		ulReloadValue -= ulStoppedTimerCompensation;
 	}
 
-	/* Stop the BURTC momentarily.  The time the BURTC is stopped for is
-	accounted for as best it can be, but using the tickless mode will inevitably
-	result in some tiny drift of the time maintained by the kernel with respect
-	to calendar time.  The count is latched before stopping the timer as
-	stopping the timer appears to clear the count. */
-	ulCountBeforeSleep = BURTC_CounterGet();
-	BURTC_Enable( false );
+	/* Stop the RTC momentarily.  The time the RTC is stopped for is accounted
+	for as best it can be, but using the tickless mode will inevitably result
+	in some tiny drift of the time maintained by the kernel with respect to
+	calendar time.  The count is latched before stopping the timer as stopping
+	the timer appears to clear the count. */
+	ulCountBeforeSleep = RTCC_CounterGet();
+	RTCC_Enable( false );
 
 	/* If this function is re-entered before one complete tick period then the
 	reload value might be set to take into account a partial time slice, but
 	just reading the count assumes it is counting up to a full ticks worth - so
 	add in the difference if any. */
-	ulCountBeforeSleep += ( ulReloadValueForOneTick - BURTC_CompareGet( 0 ) );
+	ulCountBeforeSleep += ( ulReloadValueForOneTick - RTCC_ChannelCCVGet( lpRTCC_CHANNEL ) );
 
 	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as
 	that will mask interrupts that should exit sleep mode. */
@@ -217,8 +251,8 @@ TickType_t xModifiableIdleTime;
 	{
 		/* Restart tick and count up to whatever was left of the current time
 		slice. */
-		BURTC_CompareSet( 0, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
-		BURTC_Enable( true );
+		RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
+		RTCC_Enable( true );
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
@@ -229,10 +263,10 @@ TickType_t xModifiableIdleTime;
 		/* Adjust the reload value to take into account that the current time
 		slice is already partially complete. */
 		ulReloadValue -= ulCountBeforeSleep;
-		BURTC_CompareSet( 0, ulReloadValue );
+		RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValue );
 
-		/* Restart the BURTC. */
-		BURTC_Enable( true );
+		/* Restart the RTC. */
+		RTCC_Enable( true );
 
 		/* Allow the application to define some pre-sleep processing. */
 		xModifiableIdleTime = xExpectedIdleTime;
@@ -251,13 +285,13 @@ TickType_t xModifiableIdleTime;
 		/* Allow the application to define some post sleep processing. */
 		configPOST_SLEEP_PROCESSING( xModifiableIdleTime );
 
-		/* Stop BURTC.  Again, the time the SysTick is stopped for is accounted
+		/* Stop RTC.  Again, the time the SysTick is stopped for is accounted
 		for as best it can be, but using the tickless mode will	inevitably
 		result in some tiny drift of the time maintained by the	kernel with
 		respect to calendar time.  The count value is latched before stopping
 		the timer as stopping the timer appears to clear the count. */
-		ulCountAfterSleep = BURTC_CounterGet();
-		BURTC_Enable( false );
+		ulCountAfterSleep = RTCC_CounterGet();
+		RTCC_Enable( false );
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
@@ -272,7 +306,7 @@ TickType_t xModifiableIdleTime;
 			processing will not occur until after this function has exited.
 			Reset the reload value with whatever remains of this tick period. */
 			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
-			BURTC_CompareSet( 0, ulReloadValue );
+			RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValue );
 
 			/* The tick interrupt handler will already have pended the tick
 			processing in the kernel.  As the pending tick will be processed as
@@ -303,13 +337,13 @@ TickType_t xModifiableIdleTime;
 				ulCompleteTickPeriods++;
 			}
 
-			BURTC_CompareSet( 0, ulReloadValue );
+			RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValue );
 		}
 
-		/* Restart the BURTC so it runs up to the alarm value.  The alarm value
+		/* Restart the RTC so it runs up to the alarm value.  The alarm value
 		will get set to the value required to generate exactly one tick period
-		the next time the BURTC interrupt executes. */
-		BURTC_Enable( true );
+		the next time the RTC interrupt executes. */
+		RTCC_Enable( true );
 
 		/* Wind the tick forward by the number of tick periods that the CPU
 		remained in a low power state. */
@@ -318,21 +352,21 @@ TickType_t xModifiableIdleTime;
 }
 /*-----------------------------------------------------------*/
 
-void BURTC_IRQHandler( void )
+void RTCC_IRQHandler( void )
 {
 	ulTickFlag = pdTRUE;
 
-	if( BURTC_CompareGet( 0 ) != ulReloadValueForOneTick )
+	if( RTCC_ChannelCCVGet( lpRTCC_CHANNEL ) != ulReloadValueForOneTick )
 	{
-		/* Set BURTC interrupt to one RTOS tick period. */
-		BURTC_Enable( false );
-		BURTC_CompareSet( 0, ulReloadValueForOneTick );
-		BURTC_Enable( true );
+		/* Set RTC interrupt to one RTOS tick period. */
+		RTCC_Enable( false );
+		RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValueForOneTick );
+		RTCC_Enable( true );
 	}
 
-	BURTC_IntClear( _BURTC_IFC_MASK );
+	RTCC_IntClear( _RTCC_IF_MASK );
 
-	/* Critical section which protect incrementing the tick. */
+	/* Critical section which protect incrementing the tick*/
 	portDISABLE_INTERRUPTS();
 	{
 		if( xTaskIncrementTick() != pdFALSE )
@@ -343,6 +377,6 @@ void BURTC_IRQHandler( void )
 	}
 	portENABLE_INTERRUPTS();
 }
+/*-----------------------------------------------------------*/
 
 #endif /* ( configCREATE_LOW_POWER_DEMO == 1 ) */
-

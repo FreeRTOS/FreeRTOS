@@ -356,8 +356,8 @@ void RTC_IRQHandler( void )
 
 	RTC_IntClear( _RTC_IFC_MASK );
 
-	/* Critical section which protect incrementing the tick*/
-	( void ) portSET_INTERRUPT_MASK_FROM_ISR();
+	/* Critical section which protect incrementing the tick. */
+	portDISABLE_INTERRUPTS();
 	{
 		if( xTaskIncrementTick() != pdFALSE )
 		{
@@ -365,7 +365,7 @@ void RTC_IRQHandler( void )
 			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 		}
 	}
-	portCLEAR_INTERRUPT_MASK_FROM_ISR( 0 );
+	portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
 

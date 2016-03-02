@@ -923,7 +923,7 @@ typedef struct xSTATIC_TCB
 		void			*pxDummy14;
 	#endif
 	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
-		void			pvDummy15[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+		void			*pvDummy15[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
 	#endif
 	#if ( configGENERATE_RUN_TIME_STATS == 1 )
 		uint32_t		ulDummy16;

@@ -244,7 +244,7 @@ TickType_t xModifiableIdleTime;
 		RTC_CompareSet( 0, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
 		RTC_Enable( true );
 
-		/* Re-enable interrupts - see comments above the cpsid instruction()
+		/* Re-enable interrupts - see comments above the INT_Enable() call
 		above. */
 		INT_Enable();
 	}
@@ -283,7 +283,7 @@ TickType_t xModifiableIdleTime;
 		ulCountAfterSleep = RTC_CounterGet();
 		RTC_Enable( false );
 
-		/* Re-enable interrupts - see comments above the cpsid instruction()
+		/* Re-enable interrupts - see comments above the INT_Enable() call
 		above. */
 		INT_Enable();
 		__asm volatile( "dsb" );

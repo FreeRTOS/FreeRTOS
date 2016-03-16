@@ -220,7 +220,7 @@ TickType_t xModifiableIdleTime;
 		BURTC_CompareSet( 0, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
 		BURTC_Enable( true );
 
-		/* Re-enable interrupts - see comments above the cpsid instruction()
+		/* Re-enable interrupts - see comments above the INT_Enable() call
 		above. */
 		INT_Enable();
 	}
@@ -259,7 +259,7 @@ TickType_t xModifiableIdleTime;
 		ulCountAfterSleep = BURTC_CounterGet();
 		BURTC_Enable( false );
 
-		/* Re-enable interrupts - see comments above the cpsid instruction()
+		/* Re-enable interrupts - see comments above the INT_Enable() call
 		above. */
 		INT_Enable();
 		__asm volatile( "dsb" );

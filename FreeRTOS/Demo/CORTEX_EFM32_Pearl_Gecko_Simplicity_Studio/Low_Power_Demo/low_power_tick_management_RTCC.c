@@ -79,6 +79,7 @@
 #include "em_rtcc.h"
 #include "em_rmu.h"
 #include "em_int.h"
+#include "em_letimer.h"
 #include "sleep.h"
 
 /* SEE THE COMMENTS ABOVE THE DEFINITION OF configCREATE_LOW_POWER_DEMO IN
@@ -87,6 +88,11 @@ This file contains functions that will override the default implementations
 in the RTOS port layer.  Therefore only build this file if the low power demo
 is being built. */
 #if( configCREATE_LOW_POWER_DEMO == 1 )
+
+/* When lpUSE_TEST_TIMER is 1 a second timer will be used to bring the MCU out
+of its low power state before the expected idle time has completed.  This is
+done purely for test coverage purposes. */
+#define lpUSE_TEST_TIMER	( 0 )
 
 /* The RTCC channel used to generate the tick interrupt. */
 #define lpRTCC_CHANNEL		( 1 )
@@ -191,12 +197,22 @@ void vPortSetupTimerInterrupt( void )
 	NVIC_EnableIRQ( RTCC_IRQn );
 	RTCC_IntEnable( RTCC_IEN_CC1 );
 	RTCC_Enable( true );
+
+	#if( lpUSE_TEST_TIMER == 1 )
+	{
+		void prvSetupTestTimer( void );
+
+		/* A second timer is used to test the path where the MCU is brought out
+		of a low power state by a timer other than the tick timer. */
+		prvSetupTestTimer();
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 
 void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 {
-uint32_t ulReloadValue, ulCompleteTickPeriods, ulCountBeforeSleep, ulCountAfterSleep;
+uint32_t ulReloadValue, ulCompleteTickPeriods, ulCountAfterSleep;
 eSleepModeStatus eSleepAction;
 TickType_t xModifiableIdleTime;
 
@@ -221,16 +237,8 @@ TickType_t xModifiableIdleTime;
 	/* Stop the RTC momentarily.  The time the RTC is stopped for is accounted
 	for as best it can be, but using the tickless mode will inevitably result
 	in some tiny drift of the time maintained by the kernel with respect to
-	calendar time.  The count is latched before stopping the timer as stopping
-	the timer appears to clear the count. */
-	ulCountBeforeSleep = RTCC_CounterGet();
+	calendar time. */
 	RTCC_Enable( false );
-
-	/* If this function is re-entered before one complete tick period then the
-	reload value might be set to take into account a partial time slice, but
-	just reading the count assumes it is counting up to a full ticks worth - so
-	add in the difference if any. */
-	ulCountBeforeSleep += ( ulReloadValueForOneTick - RTCC_ChannelCCVGet( lpRTCC_CHANNEL ) );
 
 	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as
 	that will mask interrupts that should exit sleep mode. */
@@ -249,20 +257,16 @@ TickType_t xModifiableIdleTime;
 	eSleepAction = eTaskConfirmSleepModeStatus();
 	if( eSleepAction == eAbortSleep )
 	{
-		/* Restart tick and count up to whatever was left of the current time
+		/* Restart tick and continue counting to complete the current time
 		slice. */
-		RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ( ulReloadValueForOneTick - ulCountBeforeSleep ) + ulStoppedTimerCompensation );
 		RTCC_Enable( true );
 
-		/* Re-enable interrupts - see comments above the cpsid instruction()
+		/* Re-enable interrupts - see comments above the RTCC_Enable() call
 		above. */
 		INT_Enable();
 	}
 	else
 	{
-		/* Adjust the reload value to take into account that the current time
-		slice is already partially complete. */
-		ulReloadValue -= ulCountBeforeSleep;
 		RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValue );
 
 		/* Restart the RTC. */
@@ -288,12 +292,11 @@ TickType_t xModifiableIdleTime;
 		/* Stop RTC.  Again, the time the SysTick is stopped for is accounted
 		for as best it can be, but using the tickless mode will	inevitably
 		result in some tiny drift of the time maintained by the	kernel with
-		respect to calendar time.  The count value is latched before stopping
-		the timer as stopping the timer appears to clear the count. */
-		ulCountAfterSleep = RTCC_CounterGet();
+		respect to calendar time. */
 		RTCC_Enable( false );
+		ulCountAfterSleep = RTCC_CounterGet();
 
-		/* Re-enable interrupts - see comments above the cpsid instruction()
+		/* Re-enable interrupts - see comments above the INT_Enable() call
 		above. */
 		INT_Enable();
 		__asm volatile( "dsb" );
@@ -304,40 +307,30 @@ TickType_t xModifiableIdleTime;
 			/* The tick interrupt has already executed, although because this
 			function is called with the scheduler suspended the actual tick
 			processing will not occur until after this function has exited.
-			Reset the reload value with whatever remains of this tick period. */
-			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
-			RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValue );
-
-			/* The tick interrupt handler will already have pended the tick
+			The tick interrupt handler will already have pended the tick
 			processing in the kernel.  As the pending tick will be processed as
 			soon as this function exits, the tick value	maintained by the tick
 			is stepped forward by one less than the	time spent sleeping.  The
 			actual stepping of the tick appears later in this function. */
 			ulCompleteTickPeriods = xExpectedIdleTime - 1UL;
+
+			/* The interrupt should have reset the CCV value. */
+			configASSERT( RTCC_ChannelCCVGet( lpRTCC_CHANNEL ) == ulReloadValueForOneTick );
 		}
 		else
 		{
 			/* Something other than the tick interrupt ended the sleep.  How
 			many complete tick periods passed while the processor was
-			sleeping?  Add back in the adjustment that was made to the reload
-			value to account for the fact that a time slice was part way through
-			when this function was called. */
-			ulCountAfterSleep += ulCountBeforeSleep;
+			sleeping? */
 			ulCompleteTickPeriods = ulCountAfterSleep / ulReloadValueForOneTick;
 
-			/* The reload value is set to whatever fraction of a single tick
-			period remains. */
-			ulCountAfterSleep -= ( ulCompleteTickPeriods * ulReloadValueForOneTick );
-			ulReloadValue = ulReloadValueForOneTick - ulCountAfterSleep;
-
-			if( ulReloadValue == 0 )
-			{
-				/* There is no fraction remaining. */
-				ulReloadValue = ulReloadValueForOneTick;
-				ulCompleteTickPeriods++;
-			}
-
-			RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValue );
+			/* The next interrupt is configured to occur at whatever fraction of
+			the current tick period remains by setting the reload value back to
+			that required for one tick, and truncating the count to remove the
+			counts that are greater than the reload value. */
+			RTCC_ChannelCCVSet( lpRTCC_CHANNEL, ulReloadValueForOneTick );
+			ulCountAfterSleep %= ulReloadValueForOneTick;
+			RTCC_CounterSet( ulCountAfterSleep );
 		}
 
 		/* Restart the RTC so it runs up to the alarm value.  The alarm value
@@ -378,5 +371,56 @@ void RTCC_IRQHandler( void )
 	portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
+
+#if( lpUSE_TEST_TIMER == 1 )
+
+	/* Juse used to ensure the second timer is executing. */
+	volatile uint32_t ulLETimerIncrements = 0;
+
+	void LETIMER0_IRQHandler( void )
+	{
+		/* This ISR is used purely to bring the MCU out of sleep mode - it has
+		no other purpose. */
+		ulLETimerIncrements++;
+		LETIMER_IntClear( LETIMER0, LETIMER_IF_COMP0 );
+	}
+
+#endif /* lpUSE_TEST_TIMER == 1 */
+/*-----------------------------------------------------------*/
+
+#if( lpUSE_TEST_TIMER == 1 )
+
+	/* Set up a timer that used used to bring the MCU out of sleep mode using
+	an interrupt other than the tick interrupt.  This is done for code coverage
+	puposes only. */
+	void prvSetupTestTimer( void )
+	{
+	static const LETIMER_Init_TypeDef xLETimerInitStruct =
+	{
+		true,               /* Enable timer when init complete. */
+		false,              /* Stop counter during debug halt. */
+		true,               /* Load COMP0 into CNT on underflow. */
+		false,              /* Do not load COMP1 into COMP0 when REP0 reaches 0. */
+		0,                  /* Idle value 0 for output 0. */
+		0,                  /* Idle value 0 for output 1. */
+		letimerUFOANone,    /* No action on underflow on output 0. */
+		letimerUFOANone,    /* No action on underflow on output 1. */
+		letimerRepeatFree   /* Count until stopped by SW. */
+	};
+	const uint32_t ulCompareMatch = 32768UL / 10UL;
+
+		CMU_ClockSelectSet( cmuClock_LFA, cmuSelect_LFXO );
+		CMU_ClockEnable( cmuClock_LETIMER0, true );
+
+		LETIMER_CompareSet( LETIMER0, 0, ulCompareMatch );
+		LETIMER_IntEnable( LETIMER0, LETIMER_IF_COMP0 );
+		NVIC_EnableIRQ( LETIMER0_IRQn );
+		LETIMER_Init( LETIMER0, &xLETimerInitStruct);
+	}
+
+#endif /* lpUSE_TEST_TIMER == 1 */
+
+
+
 
 #endif /* ( configCREATE_LOW_POWER_DEMO == 1 ) */

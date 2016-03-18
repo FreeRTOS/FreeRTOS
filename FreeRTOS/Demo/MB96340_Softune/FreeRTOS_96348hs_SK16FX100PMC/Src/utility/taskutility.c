@@ -137,7 +137,7 @@ void vUtilityStartTraceTask( unsigned portBASE_TYPE uxPriority )
 	{
 		portENTER_CRITICAL();
 		InitUart0();
-		portENTER_CRITICAL();
+		portEXIT_CRITICAL();
 		xTaskCreate( vUART0Task, "UART1", configMINIMAL_STACK_SIZE * 3, ( void * ) NULL, uxPriority, &UART_TaskHandle );
 	}
 }

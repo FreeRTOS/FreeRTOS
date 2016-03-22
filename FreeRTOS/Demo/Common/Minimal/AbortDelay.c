@@ -398,13 +398,23 @@ uint32_t ulReturn;
 static void prvTestAbortingEventGroupWait( void )
 {
 TickType_t xTimeAtStart;
-static StaticEventGroup_t xEventGroupBuffer;
 EventGroupHandle_t xEventGroup;
 EventBits_t xBitsToWaitFor = ( EventBits_t ) 0x01, xReturn;
 
-	/* Create the event group.  Statically allocated memory is used so the
-	creation cannot fail. */
-	xEventGroup = xEventGroupCreateStatic( &xEventGroupBuffer );
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		static StaticEventGroup_t xEventGroupBuffer;
+
+		/* Create the event group.  Statically allocated memory is used so the
+		creation cannot fail. */
+		xEventGroup = xEventGroupCreateStatic( &xEventGroupBuffer );
+	}
+	#else
+	{
+		xEventGroup = xEventGroupCreate();
+		configASSERT( xEventGroup );
+	}
+	#endif
 
 	/* Note the time before the delay so the length of the delay is known. */
 	xTimeAtStart = xTaskGetTickCount();
@@ -449,14 +459,25 @@ static void prvTestAbortingQueueSend( void )
 {
 TickType_t xTimeAtStart;
 BaseType_t xReturn;
-static StaticQueue_t xQueueBuffer;
-static uint8_t ucQueueStorage[ sizeof( uint8_t ) ], ucItemToQueue;
 const UBaseType_t xQueueLength = ( UBaseType_t ) 1;
 QueueHandle_t xQueue;
+uint8_t ucItemToQueue;
 
-	/* Create the queue.  Statically allocated memory is used so the
-	creation cannot fail. */
-	xQueue = xQueueCreateStatic( xQueueLength, sizeof( uint8_t ), ucQueueStorage, &xQueueBuffer );
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		static StaticQueue_t xQueueBuffer;
+		static uint8_t ucQueueStorage[ sizeof( uint8_t ) ];
+
+		/* Create the queue.  Statically allocated memory is used so the
+		creation cannot fail. */
+		xQueue = xQueueCreateStatic( xQueueLength, sizeof( uint8_t ), ucQueueStorage, &xQueueBuffer );
+	}
+	#else
+	{
+		xQueue = xQueueCreate( xQueueLength, sizeof( uint8_t ) );
+		configASSERT( xQueue );
+	}
+	#endif
 
 	/* This function tests aborting when in the blocked state waiting to send,
 	so the queue must be full.  There is only one space in the queue. */
@@ -509,12 +530,21 @@ static void prvTestAbortingSemaphoreTake( void )
 {
 TickType_t xTimeAtStart;
 BaseType_t xReturn;
-static StaticSemaphore_t xSemaphoreBuffer;
 SemaphoreHandle_t xSemaphore;
 
-	/* Create the semaphore.  Statically allocated memory is used so the
-	creation cannot fail. */
-	xSemaphore = xSemaphoreCreateBinaryStatic( &xSemaphoreBuffer );
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		static StaticSemaphore_t xSemaphoreBuffer;
+
+		/* Create the semaphore.  Statically allocated memory is used so the
+		creation cannot fail. */
+		xSemaphore = xSemaphoreCreateBinaryStatic( &xSemaphoreBuffer );
+	}
+	#else
+	{
+		xSemaphore = xSemaphoreCreateBinary();
+	}
+	#endif
 
 	/* Note the time before the delay so the length of the delay is known. */
 	xTimeAtStart = xTaskGetTickCount();

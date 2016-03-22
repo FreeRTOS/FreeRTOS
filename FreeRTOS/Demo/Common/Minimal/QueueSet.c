@@ -234,14 +234,18 @@ void vStartQueueSetTasks( void )
 {
 	/* Create the tasks. */
 	xTaskCreate( prvQueueSetSendingTask, "SetTx", configMINIMAL_STACK_SIZE, NULL, queuesetMEDIUM_PRIORITY, &xQueueSetSendingTask );
-	xTaskCreate( prvQueueSetReceivingTask, "SetRx", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, &xQueueSetReceivingTask );
 
-	/* It is important that the sending task does not attempt to write to a
-	queue before the queue has been created.  It is therefore placed into the
-	suspended state before the scheduler has started.  It is resumed by the
-	receiving task after the receiving task has created the queues and added the
-	queues to the queue set. */
-	vTaskSuspend( xQueueSetSendingTask );
+	if( xQueueSetSendingTask != NULL )
+	{
+		xTaskCreate( prvQueueSetReceivingTask, "SetRx", configMINIMAL_STACK_SIZE, ( void * ) xQueueSetSendingTask, queuesetMEDIUM_PRIORITY, &xQueueSetReceivingTask );
+
+		/* It is important that the sending task does not attempt to write to a
+		queue before the queue has been created.  It is therefore placed into
+		the suspended state before the scheduler has started.  It is resumed by
+		the receiving task after the receiving task has created the queues and
+		added the queues to the queue set. */
+		vTaskSuspend( xQueueSetSendingTask );
+	}
 }
 /*-----------------------------------------------------------*/
 

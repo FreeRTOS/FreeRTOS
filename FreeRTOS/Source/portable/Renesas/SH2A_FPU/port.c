@@ -84,12 +84,16 @@
 value is for all interrupts to be enabled. */
 #define portINITIAL_SR				( 0UL )
 
-/* Dimensions the array into which the floating point context is saved.  
+/* Dimensions the array into which the floating point context is saved.
 Allocate enough space for FPR0 to FPR15, FPUL and FPSCR, each of which is 4
 bytes big.  If this number is changed then the 72 in portasm.src also needs
 changing. */
 #define portFLOP_REGISTERS_TO_STORE	( 18 )
 #define portFLOP_STORAGE_SIZE 		( portFLOP_REGISTERS_TO_STORE * 4 )
+
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
+	#error configSUPPORT_DYNAMIC_ALLOCATION must be 1 to use this port.
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -110,8 +114,8 @@ extern uint32_t ulPortGetGBR( void );
 
 /*-----------------------------------------------------------*/
 
-/* 
- * See header file for description. 
+/*
+ * See header file for description.
  */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
@@ -124,17 +128,17 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack--;
 
 	/* SR. */
-	*pxTopOfStack = portINITIAL_SR; 
+	*pxTopOfStack = portINITIAL_SR;
 	pxTopOfStack--;
-	
+
 	/* PC. */
 	*pxTopOfStack = ( uint32_t ) pxCode;
 	pxTopOfStack--;
-	
+
 	/* PR. */
 	*pxTopOfStack = 15;
 	pxTopOfStack--;
-	
+
 	/* 14. */
 	*pxTopOfStack = 14;
 	pxTopOfStack--;
@@ -190,22 +194,22 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* R1. */
 	*pxTopOfStack = 1;
 	pxTopOfStack--;
-	
+
 	/* R0 */
 	*pxTopOfStack = 0;
 	pxTopOfStack--;
-	
+
 	/* MACL. */
 	*pxTopOfStack = 16;
 	pxTopOfStack--;
-	
+
 	/* MACH. */
 	*pxTopOfStack = 17;
 	pxTopOfStack--;
-	
+
 	/* GBR. */
 	*pxTopOfStack = ulPortGetGBR();
-	
+
 	/* GBR = global base register.
 	   VBR = vector base register.
 	   TBR = jump table base register.
@@ -220,7 +224,7 @@ BaseType_t xPortStartScheduler( void )
 extern void vApplicationSetupTimerInterrupt( void );
 
 	/* Call an application function to set up the timer that will generate the
-	tick interrupt.  This way the application can decide which peripheral to 
+	tick interrupt.  This way the application can decide which peripheral to
 	use.  A demo application is provided to show a suitable example. */
 	vApplicationSetupTimerInterrupt();
 
@@ -252,11 +256,11 @@ int32_t lInterruptMask;
 
 	/* taskYIELD() can only be called from a task, not an interrupt, so the
 	current interrupt mask can only be 0 or portKERNEL_INTERRUPT_PRIORITY and
-	the mask can be set without risk of accidentally lowering the mask value. */	
+	the mask can be set without risk of accidentally lowering the mask value. */
 	set_imask( portKERNEL_INTERRUPT_PRIORITY );
-	
+
 	trapa( portYIELD_TRAP_NO );
-	
+
 	/* Restore the interrupt mask to whatever it was previously (when the
 	function was entered). */
 	set_imask( ( int ) lInterruptMask );
@@ -282,26 +286,26 @@ extern void * volatile pxCurrentTCB;
 
 	/* Allocate a buffer large enough to hold all the flop registers. */
 	pulFlopBuffer = ( uint32_t * ) pvPortMalloc( portFLOP_STORAGE_SIZE );
-	
+
 	if( pulFlopBuffer != NULL )
 	{
 		/* Start with the registers in a benign state. */
 		memset( ( void * ) pulFlopBuffer, 0x00, portFLOP_STORAGE_SIZE );
-		
+
 		/* The first thing to get saved in the buffer is the FPSCR value -
 		initialise this to the current FPSCR value. */
 		*pulFlopBuffer = get_fpscr();
-		
-		/* Use the task tag to point to the flop buffer.  Pass pointer to just 
+
+		/* Use the task tag to point to the flop buffer.  Pass pointer to just
 		above the buffer because the flop save routine uses a pre-decrement. */
-		vTaskSetApplicationTaskTag( xTask, ( void * ) ( pulFlopBuffer + portFLOP_REGISTERS_TO_STORE ) );		
+		vTaskSetApplicationTaskTag( xTask, ( void * ) ( pulFlopBuffer + portFLOP_REGISTERS_TO_STORE ) );
 		xReturn = pdPASS;
 	}
 	else
 	{
 		xReturn = pdFAIL;
 	}
-	
+
 	return xReturn;
 }
 /*-----------------------------------------------------------*/

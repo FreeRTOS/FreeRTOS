@@ -279,10 +279,25 @@ static void prvStaticallyAllocatedCreator( void *pvParameters )
 		allocation. */
 		prvCreateAndDeleteStaticallyAllocatedTasks();
 		prvCreateAndDeleteStaticallyAllocatedQueues();
+
+		/* Ensure lower priority tasks get CPU time. */
+		vTaskDelay( prvGetNextDelayTime() );
+
+		/* Just to show the check task that this task is still executing. */
+		uxCycleCounter++;
+
 		prvCreateAndDeleteStaticallyAllocatedBinarySemaphores();
 		prvCreateAndDeleteStaticallyAllocatedCountingSemaphores();
+
+		vTaskDelay( prvGetNextDelayTime() );
+		uxCycleCounter++;
+
 		prvCreateAndDeleteStaticallyAllocatedMutexes();
 		prvCreateAndDeleteStaticallyAllocatedRecursiveMutexes();
+
+		vTaskDelay( prvGetNextDelayTime() );
+		uxCycleCounter++;
+
 		prvCreateAndDeleteStaticallyAllocatedEventGroups();
 		prvCreateAndDeleteStaticallyAllocatedTimers();
 	}
@@ -553,25 +568,6 @@ StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
-
-
-	/* The semaphore created above had a statically allocated semaphore
-	structure.  Repeat the above using NULL as the third
-	xSemaphoreCreateCountingStatic() parameter so the semaphore structure is
-	instead allocated dynamically. */
-	xSemaphore = xSemaphoreCreateCountingStatic( uxMaxCount, 0, NULL );
-
-	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvSanityCheckCreatedSemaphore( xSemaphore, uxMaxCount );
-
-	/* Delete the semaphore again so the buffers can be reused. */
-	vSemaphoreDelete( xSemaphore );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 
@@ -606,25 +602,6 @@ StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
-
-
-	/* The semaphore created above had a statically allocated semaphore
-	structure.  Repeat the above using NULL as the
-	xSemaphoreCreateRecursiveMutexStatic() parameter so the semaphore structure
-	is instead allocated dynamically. */
-	xSemaphore = xSemaphoreCreateRecursiveMutexStatic( NULL );
-
-	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvSanityCheckCreatedRecursiveMutex( xSemaphore );
-
-	/* Delete the semaphore again so the buffers can be reused. */
-	vSemaphoreDelete( xSemaphore );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 
@@ -649,11 +626,11 @@ http://www.freertos.org/Embedded-RTOS-Queues.html */
 static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_t ) ];
 
 	/* Create the queue.  xQueueCreateStatic() has two more parameters than the
-	usual xQueueCreate() function.  The first new paraemter is a pointer to the
+	usual xQueueCreate() function.  The first new parameter is a pointer to the
 	pre-allocated queue storage area.  The second new parameter is a pointer to
 	the StaticQueue_t structure that will hold the queue state information in
-	an anonymous way.  If either pointer is passed as NULL then the respective
-	data will be allocated dynamically as if xQueueCreate() had been called. */
+	an anonymous way.  If the two pointers are passed as NULL then the data
+	will be allocated dynamically as if xQueueCreate() had been called. */
 	xQueue = xQueueCreateStatic( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
 								 sizeof( uint64_t ), /* The size of each item. */
 								 ucQueueStorageArea, /* The buffer used to hold items within the queue. */
@@ -668,48 +645,6 @@ static uint8_t ucQueueStorageArea[ staticQUEUE_LENGTH_IN_ITEMS * sizeof( uint64_
 
 	/* Delete the queue again so the buffers can be reused. */
 	vQueueDelete( xQueue );
-
-
-	/* The queue created above had a statically allocated queue storage area and
-	queue structure.  Repeat the above with three more times - with different
-	combinations of static and dynamic allocation. */
-
-	xQueue = xQueueCreateStatic( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
-								 sizeof( uint64_t ), /* The size of each item. */
-								 NULL,				 /* Allocate the buffer used to hold items within the queue dynamically. */
-								 &xStaticQueue );	 /* The static queue structure that will hold the state of the queue. */
-
-	configASSERT( xQueue == ( QueueHandle_t ) &xStaticQueue );
-	prvSanityCheckCreatedQueue( xQueue );
-	vQueueDelete( xQueue );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
-
-	xQueue = xQueueCreateStatic( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
-								 sizeof( uint64_t ), /* The size of each item. */
-								 ucQueueStorageArea, /* The buffer used to hold items within the queue. */
-								 NULL );			 /* The queue structure is allocated dynamically. */
-
-	prvSanityCheckCreatedQueue( xQueue );
-	vQueueDelete( xQueue );
-
-	xQueue = xQueueCreateStatic( staticQUEUE_LENGTH_IN_ITEMS, /* The maximum number of items the queue can hold. */
-								 sizeof( uint64_t ), /* The size of each item. */
-								 NULL,				 /* Allocate the buffer used to hold items within the queue dynamically. */
-								 NULL );			 /* The queue structure is allocated dynamically. */
-
-	prvSanityCheckCreatedQueue( xQueue );
-	vQueueDelete( xQueue );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 
@@ -753,33 +688,6 @@ StaticSemaphore_t xSemaphoreBuffer;
 
 	/* Delete the semaphore again so the buffers can be reused. */
 	vSemaphoreDelete( xSemaphore );
-
-
-	/* The semaphore created above had a statically allocated semaphore
-	structure.  Repeat the above using NULL as the xSemaphoreCreateMutexStatic()
-	parameter so the semaphore structure is instead allocated dynamically. */
-	xSemaphore = xSemaphoreCreateMutexStatic( NULL );
-
-	/* Take the mutex so the mutex is in the state expected by the
-	prvSanityCheckCreatedSemaphore() function. */
-	xReturned = xSemaphoreTake( xSemaphore, staticDONT_BLOCK );
-
-	if( xReturned != pdPASS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-
-	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
-
-	/* Delete the semaphore again so the buffers can be reused. */
-	vSemaphoreDelete( xSemaphore );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 
@@ -817,40 +725,25 @@ StaticSemaphore_t xSemaphoreBuffer;
 	vSemaphoreDelete( xSemaphore );
 
 
-	/* The semaphore created above had a statically allocated semaphore
-	structure.  Repeat the above using NULL as the xSemaphoreCreateBinaryStatic()
-	parameter so the semaphore structure is instead allocated dynamically. */
-	xSemaphore = xSemaphoreCreateBinaryStatic( NULL );
-
-	/* Ensure the semaphore passes a few sanity checks as a valid semaphore. */
-	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
-
-	/* Delete the semaphore again so the buffers can be reused. */
-	vSemaphoreDelete( xSemaphore );
-
-
-
 	/* There isn't a static version of the old and deprecated
 	vSemaphoreCreateBinary() macro (because its deprecated!), but check it is
 	still functioning correctly when configSUPPORT_STATIC_ALLOCATION is set to
 	1. */
-	vSemaphoreCreateBinary( xSemaphore );
-
-	/* The macro starts with the binary semaphore available, but the test
-	function expects it to be unavailable. */
-	if( xSemaphoreTake( xSemaphore, staticDONT_BLOCK ) == pdFAIL )
+	#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 	{
-		xErrorOccurred = pdTRUE;
+		vSemaphoreCreateBinary( xSemaphore );
+
+		/* The macro starts with the binary semaphore available, but the test
+		function expects it to be unavailable. */
+		if( xSemaphoreTake( xSemaphore, staticDONT_BLOCK ) == pdFAIL )
+		{
+			xErrorOccurred = pdTRUE;
+		}
+
+		prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
+		vSemaphoreDelete( xSemaphore );
 	}
-
-	prvSanityCheckCreatedSemaphore( xSemaphore, staticBINARY_SEMAPHORE_MAX_COUNT );
-	vSemaphoreDelete( xSemaphore );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
+	#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -945,43 +838,6 @@ StaticTimer_t xTimerBuffer;
 
 	/* Just to show the check task that this task is still executing. */
 	uxCycleCounter++;
-
-	/* The software timer created above had a statically allocated timer
-	structure.  Repeat the above using NULL as the xTimerCreateStatic()
-	parameter so the timer structure is instead allocated dynamically. */
-	xTimer = xTimerCreateStatic( "T1",					/* Text name for the task.  Helps debugging only.  Not used by FreeRTOS. */
-								 xTimerPeriod,			/* The period of the timer in ticks. */
-								 pdTRUE,				/* This is an auto-reload timer. */
-								 ( void * ) &uxVariableToIncrement,	/* The variable incremented by the test is passed into the timer callback using the timer ID. */
-								 prvTimerCallback,		/* The function to execute when the timer expires. */
-								 NULL );				/* A buffer is not passed this time, so the timer should be allocated dynamically. */
-	uxVariableToIncrement = 0;
-	xReturned = xTimerStart( xTimer, staticDONT_BLOCK );
-
-	if( xReturned != pdPASS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-
-	vTaskDelay( xTimerPeriod * staticMAX_TIMER_CALLBACK_EXECUTIONS );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
-
-	if( uxVariableToIncrement != staticMAX_TIMER_CALLBACK_EXECUTIONS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-
-	xReturned = xTimerDelete( xTimer, staticDONT_BLOCK );
-
-	if( xReturned != pdPASS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 
@@ -1015,25 +871,6 @@ StaticEventGroup_t xEventGroupBuffer;
 
 	/* Delete the event group again so the buffers can be reused. */
 	vEventGroupDelete( xEventGroup );
-
-
-	/* The event group created above had a statically allocated event group
-	structure.  Repeat the above using NULL as the xEventGroupCreateStatic()
-	parameter so the event group structure is instead allocated dynamically. */
-	xEventGroup = xEventGroupCreateStatic( NULL );
-
-	/* Ensure the event group passes a few sanity checks as a valid event
-	group. */
-	prvSanityCheckCreatedEventGroup( xEventGroup );
-
-	/* Delete the event group again so the buffers can be reused. */
-	vEventGroupDelete( xEventGroup );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 
@@ -1055,7 +892,7 @@ static StackType_t uxStackBuffer[ configMINIMAL_STACK_SIZE ];
 	/* Create the task.  xTaskCreateStatic() has two more parameters than
 	the usual xTaskCreate() function.  The first new parameter is a pointer to
 	the pre-allocated stack.  The second new parameter is a pointer to the
-	StaticTask_t structure that will hold the task's TCB.  If either pointer is
+	StaticTask_t structure that will hold the task's TCB.  If both pointers are
 	passed as NULL then the respective object will be allocated dynamically as
 	if xTaskCreate() had been called. */
 	xReturned = xTaskCreateStatic(
@@ -1075,77 +912,6 @@ static StackType_t uxStackBuffer[ configMINIMAL_STACK_SIZE ];
 		xErrorOccurred = pdTRUE;
 	}
 	vTaskDelete( xCreatedTask );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Create and delete the task a few times again - testing both static and
-	dynamic allocation for the stack and TCB. */
-	xReturned = xTaskCreateStatic(
-						prvStaticallyAllocatedTask, /* Function that implements the task. */
-						"Static",					/* Human readable name for the task. */
-						configMINIMAL_STACK_SIZE,	/* Task's stack size, in words (not bytes!). */
-						NULL,						/* Parameter to pass into the task. */
-						staticTASK_PRIORITY + 1,	/* The priority of the task. */
-						&xCreatedTask,				/* Handle of the task being created. */
-						NULL,						/* This time, dynamically allocate the stack. */
-						&xTCBBuffer );				/* The variable that will hold that task's TCB. */
-
-	configASSERT( xReturned == pdPASS );
-	if( xReturned != pdPASS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-	vTaskDelete( xCreatedTask );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	xReturned = xTaskCreateStatic(
-						prvStaticallyAllocatedTask, /* Function that implements the task. */
-						"Static",					/* Human readable name for the task. */
-						configMINIMAL_STACK_SIZE,	/* Task's stack size, in words (not bytes!). */
-						NULL,						/* Parameter to pass into the task. */
-						staticTASK_PRIORITY - 1,	/* The priority of the task. */
-						&xCreatedTask,				/* Handle of the task being created. */
-						&( uxStackBuffer[ 0 ] ),	/* The buffer to use as the task's stack. */
-						NULL );						/* This time dynamically allocate the TCB. */
-
-	configASSERT( xReturned == pdPASS );
-	if( xReturned != pdPASS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-	vTaskDelete( xCreatedTask );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	xReturned = xTaskCreateStatic(
-						prvStaticallyAllocatedTask, /* Function that implements the task. */
-						"Static",					/* Human readable name for the task. */
-						configMINIMAL_STACK_SIZE,	/* Task's stack size, in words (not bytes!). */
-						NULL,						/* Parameter to pass into the task. */
-						staticTASK_PRIORITY,		/* The priority of the task. */
-						&xCreatedTask,				/* Handle of the task being created. */
-						NULL,						/* This time dynamically allocate the stack and TCB. */
-						NULL );						/* This time dynamically allocate the stack and TCB. */
-
-	configASSERT( xReturned == pdPASS );
-	if( xReturned != pdPASS )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-	vTaskDelete( xCreatedTask );
-
-	/* Ensure lower priority tasks get CPU time. */
-	vTaskDelay( prvGetNextDelayTime() );
-
-	/* Just to show the check task that this task is still executing. */
-	uxCycleCounter++;
 }
 /*-----------------------------------------------------------*/
 

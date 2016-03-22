@@ -130,10 +130,14 @@ void vStartQueueSetPollingTask( void )
 	the set. */
 	xQueue = xQueueCreate( setpollQUEUE_LENGTH, sizeof( uint32_t ) );
 	xQueueSet = xQueueCreateSet( setpollQUEUE_LENGTH );
-	xQueueAddToSet( xQueue, xQueueSet );
 
-	/* Create the task. */
-	xTaskCreate( prvQueueSetReceivingTask, "SetPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	if( ( xQueue != NULL ) && ( xQueueSet != NULL ) )
+	{
+		xQueueAddToSet( xQueue, xQueueSet );
+
+		/* Create the task. */
+		xTaskCreate( prvQueueSetReceivingTask, "SetPoll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	}
 }
 /*-----------------------------------------------------------*/
 

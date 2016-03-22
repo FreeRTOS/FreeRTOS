@@ -129,14 +129,7 @@ TaskHandle_t xCreatedTask;
 
 void vCreateSuicidalTasks( UBaseType_t uxPriority )
 {
-UBaseType_t *puxPriority;
-
-	/* Create the Creator tasks - passing in as a parameter the priority at which
-	the suicidal tasks should be created. */
-	puxPriority = ( UBaseType_t * ) pvPortMalloc( sizeof( UBaseType_t ) );
-	*puxPriority = uxPriority;
-
-	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) puxPriority, uxPriority, NULL );
+	xTaskCreate( vCreateTasks, "CREATOR", deathSTACK_SIZE, ( void * ) NULL, uxPriority, NULL );
 
 	/* Record the number of tasks that are running now so we know if any of the
 	suicidal tasks have failed to be killed. */
@@ -206,8 +199,10 @@ static portTASK_FUNCTION( vCreateTasks, pvParameters )
 const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 1000 );
 UBaseType_t uxPriority;
 
-	uxPriority = *( UBaseType_t * ) pvParameters;
-	vPortFree( pvParameters );
+	/* Remove compiler warning about unused parameter. */
+	( void ) pvParameters;
+
+	uxPriority = uxTaskPriorityGet( NULL );
 
 	for( ;; )
 	{

@@ -104,6 +104,10 @@
 #define blckqSTACK_SIZE		configMINIMAL_STACK_SIZE
 #define blckqNUM_TASK_SETS	( 3 )
 
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 0 )
+	#error This example cannot be used if dynamic allocation is not allowed.
+#endif
+
 /* Structure used to pass parameters to the blocking queue tasks. */
 typedef struct BLOCKING_QUEUE_PARAMETERS
 {

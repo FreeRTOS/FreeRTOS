@@ -123,8 +123,11 @@ only for ports that are using the MPU. */
 		#define xQueueRemoveFromSet				MPU_xQueueRemoveFromSet
 		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
 
-		#define pvPortMalloc					MPU_pvPortMalloc
-		#define vPortFree						MPU_vPortFree
+		#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+			#define pvPortMalloc					MPU_pvPortMalloc
+			#define vPortFree						MPU_vPortFree
+		#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+
 		#define xPortGetFreeHeapSize			MPU_xPortGetFreeHeapSize
 		#define vPortInitialiseBlocks			MPU_vPortInitialiseBlocks
 		#define xPortGetMinimumEverFreeHeapSize	MPU_xPortGetMinimumEverFreeHeapSize

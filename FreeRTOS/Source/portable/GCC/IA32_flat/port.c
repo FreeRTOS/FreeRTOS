@@ -89,6 +89,10 @@
 	#error configMAX_API_CALL_INTERRUPT_PRIORITY must be between 2 and 15
 #endif
 
+#if( ( configSUPPORT_FPU == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 0 ) )
+	#error configSUPPORT_DYNAMIC_ALLOCATION must be set to 1 to use this port with an FPU
+#endif
+
 /* A critical section is exited when the critical section nesting count reaches
 this value. */
 #define portNO_CRITICAL_NESTING			( ( uint32_t ) 0 )
@@ -640,7 +644,7 @@ BaseType_t xPortInstallInterruptHandler( ISR_Handler_t pxHandler, uint32_t ulVec
 BaseType_t xReturn;
 
 	xReturn = prvCheckValidityOfVectorNumber( ulVectorNumber );
-	
+
 	if( xReturn != pdFAIL )
 	{
 		taskENTER_CRITICAL();

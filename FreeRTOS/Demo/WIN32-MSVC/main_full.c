@@ -697,6 +697,10 @@ static void prvPermanentlyBlockingSemaphoreTask( void *pvParameters )
 {
 SemaphoreHandle_t xSemaphore;
 
+	/* Prevent compiler warning about unused parameter in the case that
+	configASSERT() is not defined. */
+	( void ) pvParameters;
+
 	/* This task should block on a semaphore, and never return. */
 	xSemaphore = xSemaphoreCreateBinary();
 	configASSERT( xSemaphore );
@@ -712,6 +716,10 @@ SemaphoreHandle_t xSemaphore;
 
 static void prvPermanentlyBlockingNotificationTask( void *pvParameters )
 {
+	/* Prevent compiler warning about unused parameter in the case that
+	configASSERT() is not defined. */
+	( void ) pvParameters;
+
 	/* This task should block on a task notification, and never return. */
 	ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
 

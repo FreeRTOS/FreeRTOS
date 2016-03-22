@@ -134,19 +134,22 @@ static volatile UBaseType_t xRunIndicator;
 void vCreateBlockTimeTasks( void )
 {
 	/* Create the queue on which the two tasks block. */
-    xTestQueue = xQueueCreate( bktQUEUE_LENGTH, sizeof( BaseType_t ) );
+	xTestQueue = xQueueCreate( bktQUEUE_LENGTH, sizeof( BaseType_t ) );
 
-	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware
-	debuggers to locate queues and has no purpose if a kernel aware debugger
-	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
-	defined to be less than 1. */
-	vQueueAddToRegistry( xTestQueue, "Block_Time_Queue" );
+	if( xTestQueue != NULL )
+	{
+		/* vQueueAddToRegistry() adds the queue to the queue registry, if one
+		is in use.  The queue registry is provided as a means for kernel aware
+		debuggers to locate queues and has no purpose if a kernel aware
+		debugger is not being used.  The call to vQueueAddToRegistry() will be
+		removed by the pre-processor if configQUEUE_REGISTRY_SIZE is not
+		defined or is defined to be less than 1. */
+		vQueueAddToRegistry( xTestQueue, "Block_Time_Queue" );
 
-	/* Create the two test tasks. */
-	xTaskCreate( vPrimaryBlockTimeTestTask, "BTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
-	xTaskCreate( vSecondaryBlockTimeTestTask, "BTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
+		/* Create the two test tasks. */
+		xTaskCreate( vPrimaryBlockTimeTestTask, "BTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
+		xTaskCreate( vSecondaryBlockTimeTestTask, "BTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
+	}
 }
 /*-----------------------------------------------------------*/
 

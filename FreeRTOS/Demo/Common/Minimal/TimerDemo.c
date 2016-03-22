@@ -285,17 +285,15 @@ TickType_t xTimer;
 
 	for( xTimer = 0; xTimer < configTIMER_QUEUE_LENGTH; xTimer++ )
 	{
-		/* As the timer queue is not yet full, it should be possible to both create
-		and start a timer.  These timers are being started before the scheduler has
-		been started, so their block times should get set to zero within the timer
-		API itself. */
+		/* As the timer queue is not yet full, it should be possible to both
+		create and start a timer.  These timers are being started before the
+		scheduler has been started, so their block times should get set to zero
+		within the timer API itself. */
 		xAutoReloadTimers[ xTimer ] = xTimerCreate( "FR Timer",							/* Text name to facilitate debugging.  The kernel does not use this itself. */
 													( ( xTimer + ( TickType_t ) 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
 													pdTRUE,								/* Auto-reload is set to true. */
 													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
 													prvAutoReloadTimerCallback );		/* The callback to be called when the timer expires. */
-
-		configASSERT( strcmp( pcTimerGetTimerName( xAutoReloadTimers[ xTimer ] ), "FR Timer" ) == 0 );
 
 		if( xAutoReloadTimers[ xTimer ] == NULL )
 		{
@@ -304,6 +302,8 @@ TickType_t xTimer;
 		}
 		else
 		{
+			configASSERT( strcmp( pcTimerGetTimerName( xAutoReloadTimers[ xTimer ] ), "FR Timer" ) == 0 );
+
 			/* The scheduler has not yet started, so the block period of
 			portMAX_DELAY should just get set to zero in xTimerStart().  Also,
 			the timer queue is not yet full so xTimerStart() should return
@@ -402,7 +402,7 @@ UBaseType_t uxOriginalPriority;
 	in the Blocked state. */
 	uxOriginalPriority = uxTaskPriorityGet( NULL );
 	vTaskPrioritySet( NULL, ( configMAX_PRIORITIES - 1 ) );
-	
+
 	/* Delaying for configTIMER_QUEUE_LENGTH * xBasePeriod ticks should allow
 	all the auto reload timers to expire at least once. */
 	xBlockPeriod = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;

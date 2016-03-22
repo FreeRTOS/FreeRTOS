@@ -98,22 +98,6 @@ functions but without including stdio.h here. */
 	#include <stdio.h>
 #endif /* configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) */
 
-/* Sanity check the configuration. */
-#if( configUSE_TICKLESS_IDLE != 0 )
-	#if( INCLUDE_vTaskSuspend != 1 )
-		#error INCLUDE_vTaskSuspend must be set to 1 if configUSE_TICKLESS_IDLE is not set to 0
-	#endif /* INCLUDE_vTaskSuspend */
-#endif /* configUSE_TICKLESS_IDLE */
-
-#if( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_STATIC_ALLOCATION != 1 ) )
-	#error configSUPPORT_STATIC_ALLOCATION must be set to 1 in FreeRTOSConfig.h when the MPU is used.
-#endif
-
-/*
- * Defines the size, in words, of the stack allocated to the idle task.
- */
-#define tskIDLE_STACK_SIZE	configMINIMAL_STACK_SIZE
-
 #if( configUSE_PREEMPTION == 0 )
 	/* If the cooperative scheduler is being used then a yield should not be
 	performed just because a higher priority task has been woken. */
@@ -122,163 +106,10 @@ functions but without including stdio.h here. */
 	#define taskYIELD_IF_USING_PREEMPTION() portYIELD_WITHIN_API()
 #endif
 
-/* Bits that can be set in tskTCB->ucStaticAllocationFlags to indicate that the
-stack and TCB were statically allocated respectively.  When these are statically
-allocated they won't be freed if the task using the stack and TCB gets
-deleted. */
-#define taskSTATICALLY_ALLOCATED_STACK	( ( uint8_t ) 0x01 )
-#define taskSTATICALLY_ALLOCATED_TCB	( ( uint8_t ) 0x02 )
-
 /* Values that can be assigned to the ucNotifyState member of the TCB. */
 #define taskNOT_WAITING_NOTIFICATION	( ( uint8_t ) 0 )
 #define taskWAITING_NOTIFICATION		( ( uint8_t ) 1 )
 #define taskNOTIFICATION_RECEIVED		( ( uint8_t ) 2 )
-
-/*
- * Task control block.  A task control block (TCB) is allocated for each task,
- * and stores task state information, including a pointer to the task's context
- * (the task's run time environment, including register values)
- */
-typedef struct tskTaskControlBlock
-{
-	volatile StackType_t	*pxTopOfStack;	/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
-
-	#if ( portUSING_MPU_WRAPPERS == 1 )
-		xMPU_SETTINGS	xMPUSettings;		/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
-	#endif
-
-	ListItem_t			xStateListItem;	/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
-	ListItem_t			xEventListItem;		/*< Used to reference a task from an event list. */
-	UBaseType_t			uxPriority;			/*< The priority of the task.  0 is the lowest priority. */
-	StackType_t			*pxStack;			/*< Points to the start of the stack. */
-	char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-
-	#if ( portSTACK_GROWTH > 0 )
-		StackType_t		*pxEndOfStack;		/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
-	#endif
-
-	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
-		UBaseType_t		uxCriticalNesting;	/*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
-	#endif
-
-	#if ( configUSE_TRACE_FACILITY == 1 )
-		UBaseType_t		uxTCBNumber;		/*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
-		UBaseType_t		uxTaskNumber;		/*< Stores a number specifically for use by third party trace code. */
-	#endif
-
-	#if ( configUSE_MUTEXES == 1 )
-		UBaseType_t		uxBasePriority;		/*< The priority last assigned to the task - used by the priority inheritance mechanism. */
-		UBaseType_t		uxMutexesHeld;
-	#endif
-
-	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-		TaskHookFunction_t pxTaskTag;
-	#endif
-
-	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
-		void *pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
-	#endif
-
-	#if( configGENERATE_RUN_TIME_STATS == 1 )
-		uint32_t		ulRunTimeCounter;	/*< Stores the amount of time the task has spent in the Running state. */
-	#endif
-
-	#if ( configUSE_NEWLIB_REENTRANT == 1 )
-		/* Allocate a Newlib reent structure that is specific to this task.
-		Note Newlib support has been included by popular demand, but is not
-		used by the FreeRTOS maintainers themselves.  FreeRTOS is not
-		responsible for resulting newlib operation.  User must be familiar with
-		newlib and must provide system-wide implementations of the necessary
-		stubs. Be warned that (at the time of writing) the current newlib design
-		implements a system-wide malloc() that must be provided with locks. */
-		struct	_reent xNewLib_reent;
-	#endif
-
-	#if( configUSE_TASK_NOTIFICATIONS == 1 )
-		volatile uint32_t ulNotifiedValue;
-		volatile uint8_t ucNotifyState;
-	#endif
-
-	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-		uint8_t	ucStaticAllocationFlags; /* Set to pdTRUE if the stack is a statically allocated array, and pdFALSE if the stack is dynamically allocated. */
-	#endif
-
-	#if( INCLUDE_xTaskAbortDelay == 1 )
-		uint8_t ucDelayAborted;
-	#endif
-
-} tskTCB;
-
-/* The old tskTCB name is maintained above then typedefed to the new TCB_t name
-below to enable the use of older kernel aware debuggers. */
-typedef tskTCB TCB_t;
-
-/*
- * Some kernel aware debuggers require the data the debugger needs access to be
- * global, rather than file scope.
- */
-#ifdef portREMOVE_STATIC_QUALIFIER
-	#define static
-#endif
-
-/*lint -e956 A manual analysis and inspection has been used to determine which
-static variables must be declared volatile. */
-
-PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
-
-/* Lists for ready and blocked tasks. --------------------*/
-PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
-PRIVILEGED_DATA static List_t xDelayedTaskList1;						/*< Delayed tasks. */
-PRIVILEGED_DATA static List_t xDelayedTaskList2;						/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
-PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;				/*< Points to the delayed task list currently being used. */
-PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;		/*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
-PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
-
-#if ( INCLUDE_vTaskDelete == 1 )
-
-	PRIVILEGED_DATA static List_t xTasksWaitingTermination;				/*< Tasks that have been deleted - but their memory not yet freed. */
-	PRIVILEGED_DATA static volatile UBaseType_t uxDeletedTasksWaitingCleanUp = ( UBaseType_t ) 0U;
-
-#endif
-
-#if ( INCLUDE_vTaskSuspend == 1 )
-
-	PRIVILEGED_DATA static List_t xSuspendedTaskList;					/*< Tasks that are currently suspended. */
-
-#endif
-
-/* Other file private variables. --------------------------------*/
-PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseType_t ) 0U;
-PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) 0U;
-PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
-PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
-PRIVILEGED_DATA static volatile UBaseType_t uxPendedTicks 			= ( UBaseType_t ) 0U;
-PRIVILEGED_DATA static volatile BaseType_t xYieldPending 			= pdFALSE;
-PRIVILEGED_DATA static volatile BaseType_t xNumOfOverflows 			= ( BaseType_t ) 0;
-PRIVILEGED_DATA static UBaseType_t uxTaskNumber 					= ( UBaseType_t ) 0U;
-PRIVILEGED_DATA static volatile TickType_t xNextTaskUnblockTime		= ( TickType_t ) 0U; /* Initialised to portMAX_DELAY before the scheduler starts. */
-PRIVILEGED_DATA static TaskHandle_t xIdleTaskHandle					= NULL;			/*< Holds the handle of the idle task.  The idle task is created automatically when the scheduler is started. */
-
-/* Context switches are held pending while the scheduler is suspended.  Also,
-interrupts must not manipulate the xStateListItem of a TCB, or any of the
-lists the xStateListItem can be referenced from, if the scheduler is suspended.
-If an interrupt needs to unblock a task while the scheduler is suspended then it
-moves the task's event list item into the xPendingReadyList, ready for the
-kernel to move the task from the pending ready list into the real ready list
-when the scheduler is unsuspended.  The pending ready list itself can only be
-accessed from a critical section. */
-PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t ) pdFALSE;
-
-#if ( configGENERATE_RUN_TIME_STATS == 1 )
-
-	PRIVILEGED_DATA static uint32_t ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
-	PRIVILEGED_DATA static uint32_t ulTotalRunTime = 0UL;		/*< Holds the total amount of execution time as defined by the run time counter clock. */
-
-#endif
-
-/*lint +e956 */
-
-/* Debugging and trace facilities private variables and macros. ------------*/
 
 /*
  * The value used to fill the stack of a task when the task is created.  This
@@ -294,7 +125,13 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 #define tskDELETED_CHAR		( 'D' )
 #define tskSUSPENDED_CHAR	( 'S' )
 
-/*-----------------------------------------------------------*/
+/*
+ * Some kernel aware debuggers require the data the debugger needs access to be
+ * global, rather than file scope.
+ */
+#ifdef portREMOVE_STATIC_QUALIFIER
+	#define static
+#endif
 
 #if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 0 )
 
@@ -425,6 +262,144 @@ to its original value when it is released. */
 	#define taskEVENT_LIST_ITEM_VALUE_IN_USE	0x80000000UL
 #endif
 
+/*
+ * Task control block.  A task control block (TCB) is allocated for each task,
+ * and stores task state information, including a pointer to the task's context
+ * (the task's run time environment, including register values)
+ */
+typedef struct tskTaskControlBlock
+{
+	volatile StackType_t	*pxTopOfStack;	/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
+
+	#if ( portUSING_MPU_WRAPPERS == 1 )
+		xMPU_SETTINGS	xMPUSettings;		/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
+	#endif
+
+	ListItem_t			xStateListItem;	/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
+	ListItem_t			xEventListItem;		/*< Used to reference a task from an event list. */
+	UBaseType_t			uxPriority;			/*< The priority of the task.  0 is the lowest priority. */
+	StackType_t			*pxStack;			/*< Points to the start of the stack. */
+	char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
+	#if ( portSTACK_GROWTH > 0 )
+		StackType_t		*pxEndOfStack;		/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
+	#endif
+
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+		UBaseType_t		uxCriticalNesting;	/*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
+	#endif
+
+	#if ( configUSE_TRACE_FACILITY == 1 )
+		UBaseType_t		uxTCBNumber;		/*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
+		UBaseType_t		uxTaskNumber;		/*< Stores a number specifically for use by third party trace code. */
+	#endif
+
+	#if ( configUSE_MUTEXES == 1 )
+		UBaseType_t		uxBasePriority;		/*< The priority last assigned to the task - used by the priority inheritance mechanism. */
+		UBaseType_t		uxMutexesHeld;
+	#endif
+
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+		TaskHookFunction_t pxTaskTag;
+	#endif
+
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
+		void *pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+	#endif
+
+	#if( configGENERATE_RUN_TIME_STATS == 1 )
+		uint32_t		ulRunTimeCounter;	/*< Stores the amount of time the task has spent in the Running state. */
+	#endif
+
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+		/* Allocate a Newlib reent structure that is specific to this task.
+		Note Newlib support has been included by popular demand, but is not
+		used by the FreeRTOS maintainers themselves.  FreeRTOS is not
+		responsible for resulting newlib operation.  User must be familiar with
+		newlib and must provide system-wide implementations of the necessary
+		stubs. Be warned that (at the time of writing) the current newlib design
+		implements a system-wide malloc() that must be provided with locks. */
+		struct	_reent xNewLib_reent;
+	#endif
+
+	#if( configUSE_TASK_NOTIFICATIONS == 1 )
+		volatile uint32_t ulNotifiedValue;
+		volatile uint8_t ucNotifyState;
+	#endif
+
+	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+		uint8_t	ucStaticallyAllocated; /* Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */
+	#endif
+
+	#if( INCLUDE_xTaskAbortDelay == 1 )
+		uint8_t ucDelayAborted;
+	#endif
+
+} tskTCB;
+
+/* The old tskTCB name is maintained above then typedefed to the new TCB_t name
+below to enable the use of older kernel aware debuggers. */
+typedef tskTCB TCB_t;
+
+/*lint -e956 A manual analysis and inspection has been used to determine which
+static variables must be declared volatile. */
+
+PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
+
+/* Lists for ready and blocked tasks. --------------------*/
+PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
+PRIVILEGED_DATA static List_t xDelayedTaskList1;						/*< Delayed tasks. */
+PRIVILEGED_DATA static List_t xDelayedTaskList2;						/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
+PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;				/*< Points to the delayed task list currently being used. */
+PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;		/*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
+PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+
+#if( ( INCLUDE_vTaskDelete == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+
+	PRIVILEGED_DATA static List_t xTasksWaitingTermination;				/*< Tasks that have been deleted - but their memory not yet freed. */
+	PRIVILEGED_DATA static volatile UBaseType_t uxDeletedTasksWaitingCleanUp = ( UBaseType_t ) 0U;
+
+#endif
+
+#if ( INCLUDE_vTaskSuspend == 1 )
+
+	PRIVILEGED_DATA static List_t xSuspendedTaskList;					/*< Tasks that are currently suspended. */
+
+#endif
+
+/* Other file private variables. --------------------------------*/
+PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseType_t ) 0U;
+PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) 0U;
+PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
+PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
+PRIVILEGED_DATA static volatile UBaseType_t uxPendedTicks 			= ( UBaseType_t ) 0U;
+PRIVILEGED_DATA static volatile BaseType_t xYieldPending 			= pdFALSE;
+PRIVILEGED_DATA static volatile BaseType_t xNumOfOverflows 			= ( BaseType_t ) 0;
+PRIVILEGED_DATA static UBaseType_t uxTaskNumber 					= ( UBaseType_t ) 0U;
+PRIVILEGED_DATA static volatile TickType_t xNextTaskUnblockTime		= ( TickType_t ) 0U; /* Initialised to portMAX_DELAY before the scheduler starts. */
+PRIVILEGED_DATA static TaskHandle_t xIdleTaskHandle					= NULL;			/*< Holds the handle of the idle task.  The idle task is created automatically when the scheduler is started. */
+
+/* Context switches are held pending while the scheduler is suspended.  Also,
+interrupts must not manipulate the xStateListItem of a TCB, or any of the
+lists the xStateListItem can be referenced from, if the scheduler is suspended.
+If an interrupt needs to unblock a task while the scheduler is suspended then it
+moves the task's event list item into the xPendingReadyList, ready for the
+kernel to move the task from the pending ready list into the real ready list
+when the scheduler is unsuspended.  The pending ready list itself can only be
+accessed from a critical section. */
+PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t ) pdFALSE;
+
+#if ( configGENERATE_RUN_TIME_STATS == 1 )
+
+	PRIVILEGED_DATA static uint32_t ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
+	PRIVILEGED_DATA static uint32_t ulTotalRunTime = 0UL;		/*< Holds the total amount of execution time as defined by the run time counter clock. */
+
+#endif
+
+/*lint +e956 */
+
+/*-----------------------------------------------------------*/
+
 /* Callback function prototypes. --------------------------*/
 #if(  configCHECK_FOR_STACK_OVERFLOW > 0 )
 	extern void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
@@ -439,12 +414,6 @@ to its original value when it is released. */
 #endif
 
 /* File private functions. --------------------------------*/
-
-/*
- * Utility to ready a TCB for a given task.  Mainly just copies the parameters
- * into the TCB structure.
- */
-static void prvInitialiseTCBVariables( TCB_t * const pxTCB, const char * const pcName, UBaseType_t uxPriority, const MemoryRegion_t * const xRegions, const uint16_t usStackDepth ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * Utility task that simply returns pdTRUE if the task referenced by xTask is
@@ -499,12 +468,6 @@ static void prvCheckTasksWaitingTermination( void ) PRIVILEGED_FUNCTION;
  * either the current or the overflow delayed task list.
  */
 static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseType_t xCanBlockIndefinitely ) PRIVILEGED_FUNCTION;
-
-/*
- * Allocates memory from the heap for a TCB and associated stack.  Checks the
- * allocation was successful.
- */
-static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t * const puxStackBuffer, TCB_t * const pucTCBBuffer ) PRIVILEGED_FUNCTION;
 
 /*
  * Fills an TaskStatus_t structure with information on each task that is
@@ -571,169 +534,353 @@ static void prvResetNextTaskUnblockTime( void );
 	static char *prvWriteNameToBuffer( char *pcBuffer, const char *pcTaskName ) PRIVILEGED_FUNCTION;
 
 #endif
+
+/*
+ * Called after a Task_t structure has been allocated either statically or
+ * dynamically to fill in the structure's members.
+ */
+static void prvInitialiseNewTask( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+
+/*
+ * Called after a new task has been created and initialised to place the task
+ * under the control of the scheduler.
+ */
+static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
+
 /*-----------------------------------------------------------*/
 
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer, const MemoryRegion_t * const xRegions ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-{
-BaseType_t xReturn;
-TCB_t * pxNewTCB;
-StackType_t *pxTopOfStack;
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	configASSERT( pxTaskCode );
-	configASSERT( ( ( uxPriority & ( UBaseType_t ) ( ~portPRIVILEGE_BIT ) ) < ( UBaseType_t ) configMAX_PRIORITIES ) );
-
-	/* Allocate the memory required by the TCB and stack for the new task,
-	checking that the allocation was successful. */
-	pxNewTCB = prvAllocateTCBAndStack( usStackDepth, puxStackBuffer, ( TCB_t* ) pxTaskBuffer ); /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
-
-	if( pxNewTCB != NULL )
+	BaseType_t xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
-		#if( portUSING_MPU_WRAPPERS == 1 )
-			/* Should the task be created in privileged mode? */
-			BaseType_t xRunPrivileged;
-			if( ( uxPriority & portPRIVILEGE_BIT ) != 0U )
-			{
-				xRunPrivileged = pdTRUE;
-			}
-			else
-			{
-				xRunPrivileged = pdFALSE;
-			}
-			uxPriority &= ~portPRIVILEGE_BIT;
-		#endif /* portUSING_MPU_WRAPPERS == 1 */
+	TCB_t *pxNewTCB;
+	BaseType_t xReturn;
 
-		/* Calculate the top of stack address.  This depends on whether the
-		stack grows from high memory to low (as per the 80x86) or vice versa.
-		portSTACK_GROWTH is used to make the result positive or negative as
-		required by the port. */
-		#if( portSTACK_GROWTH < 0 )
+		configASSERT( puxStackBuffer != NULL );
+		configASSERT( pxTaskBuffer != NULL );
+
+		/* The memory used for the task's TCB and stack are passed into this
+		function - use them. */
+		pxNewTCB = ( TCB_t * ) pxTaskBuffer; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+
+		if( pxNewTCB != NULL )
 		{
-			pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
-			pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
+			pxNewTCB->pxStack = ( StackType_t * ) puxStackBuffer;
 
-			/* Check the alignment of the calculated top of stack is correct. */
-			configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+			#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+			{
+				/* Tasks can be created statically or dynamically, so note this
+				task was created statically in case the task is later deleted. */
+				pxNewTCB->ucStaticallyAllocated = pdTRUE;
+			}
+			#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+
+			prvInitialiseNewTask( pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB );
+			prvAddNewTaskToReadyList( pxNewTCB );
+			xReturn = pdPASS;
+		}
+		else
+		{
+			xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
+		}
+
+		return xReturn;
+	}
+
+#endif /* SUPPORT_STATIC_ALLOCATION */
+/*-----------------------------------------------------------*/
+
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+
+	BaseType_t xTaskCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	{
+	TCB_t *pxNewTCB;
+	BaseType_t xReturn;
+
+		/* If the stack grows down then allocate the stack then the TCB so the stack
+		does not grow into the TCB.  Likewise if the stack grows up then allocate
+		the TCB then the stack. */
+		#if( portSTACK_GROWTH > 0 )
+		{
+			/* Allocate space for the TCB.  Where the memory comes from depends on
+			the implementation of the port malloc function and whether or not static
+			allocation is being used. */
+			pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) );
+
+			if( pxNewTCB != NULL )
+			{
+				/* Allocate space for the stack used by the task being created.
+				The base of the stack memory stored in the TCB so the task can
+				be deleted later if required. */
+				pxNewTCB->pxStack = ( StackType_t * ) pvPortMalloc( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+
+				if( pxNewTCB->pxStack == NULL )
+				{
+					/* Could not allocate the stack.  Delete the allocated TCB. */
+					vPortFree( pxNewTCB );
+					pxNewTCB = NULL;
+				}
+			}
 		}
 		#else /* portSTACK_GROWTH */
 		{
-			pxTopOfStack = pxNewTCB->pxStack;
+		StackType_t *pxStack;
 
-			/* Check the alignment of the stack buffer is correct. */
-			configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxNewTCB->pxStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+			/* Allocate space for the stack used by the task being created. */
+			pxStack = ( StackType_t * ) pvPortMalloc( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 
-			/* If we want to use stack checking on architectures that use
-			a positive stack growth direction then we also need to store the
-			other extreme of the stack space. */
-			pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
+			if( pxStack != NULL )
+			{
+				/* Allocate space for the TCB. */
+				pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) ); /*lint !e961 MISRA exception as the casts are only redundant for some paths. */
+
+				if( pxNewTCB != NULL )
+				{
+					/* Store the stack location in the TCB. */
+					pxNewTCB->pxStack = pxStack;
+				}
+				else
+				{
+					/* The stack cannot be used as the TCB was not created.  Free
+					it again. */
+					vPortFree( pxStack );
+				}
+			}
+			else
+			{
+				pxNewTCB = NULL;
+			}
 		}
 		#endif /* portSTACK_GROWTH */
 
-		/* Setup the newly allocated TCB with the initial state of the task. */
-		prvInitialiseTCBVariables( pxNewTCB, pcName, uxPriority, xRegions, usStackDepth );
+		if( pxNewTCB != NULL )
+		{
+			#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+			{
+				/* Tasks can be created statically or dynamically, so note this
+				task was created dynamically in case it is later deleted. */
+				pxNewTCB->ucStaticallyAllocated = pdFALSE;
+			}
+			#endif /* configSUPPORT_STATIC_ALLOCATION */
 
-		/* Initialize the TCB stack to look as if the task was already running,
-		but had been interrupted by the scheduler.  The return address is set
-		to the start of the task function. Once the stack has been initialised
-		the	top of stack variable is updated. */
-		#if( portUSING_MPU_WRAPPERS == 1 )
-		{
-			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
+			prvInitialiseNewTask( pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB );
+			prvAddNewTaskToReadyList( pxNewTCB );
+			xReturn = pdPASS;
 		}
-		#else /* portUSING_MPU_WRAPPERS */
+		else
 		{
-			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+			xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
 		}
-		#endif /* portUSING_MPU_WRAPPERS */
 
-		if( ( void * ) pxCreatedTask != NULL )
+		return xReturn;
+	}
+
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+/*-----------------------------------------------------------*/
+
+static void prvInitialiseNewTask( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, TCB_t *pxNewTCB ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+{
+StackType_t *pxTopOfStack;
+UBaseType_t x;
+
+	#if( portUSING_MPU_WRAPPERS == 1 )
+		/* Should the task be created in privileged mode? */
+		BaseType_t xRunPrivileged;
+		if( ( uxPriority & portPRIVILEGE_BIT ) != 0U )
 		{
-			/* Pass the TCB out - in an anonymous way.  The calling function/
-			task can use this as a handle to delete the task later if
-			required.*/
-			*pxCreatedTask = ( TaskHandle_t ) pxNewTCB;
+			xRunPrivileged = pdTRUE;
+		}
+		else
+		{
+			xRunPrivileged = pdFALSE;
+		}
+		uxPriority &= ~portPRIVILEGE_BIT;
+	#endif /* portUSING_MPU_WRAPPERS == 1 */
+
+	/* Avoid dependency on memset() if it is not required. */
+	#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
+	{
+		/* Fill the stack with a known value to assist debugging. */
+		( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( StackType_t ) );
+	}
+	#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
+
+	/* Calculate the top of stack address.  This depends on whether the stack
+	grows from high memory to low (as per the 80x86) or vice versa.
+	portSTACK_GROWTH is used to make the result positive or negative as required
+	by the port. */
+	#if( portSTACK_GROWTH < 0 )
+	{
+		pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
+		pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
+
+		/* Check the alignment of the calculated top of stack is correct. */
+		configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+	}
+	#else /* portSTACK_GROWTH */
+	{
+		pxTopOfStack = pxNewTCB->pxStack;
+
+		/* Check the alignment of the stack buffer is correct. */
+		configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxNewTCB->pxStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+
+		/* The other extreme of the stack space is required if stack checking is
+		performed. */
+		pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
+	}
+	#endif /* portSTACK_GROWTH */
+
+	/* Store the task name in the TCB. */
+	for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
+	{
+		pxNewTCB->pcTaskName[ x ] = pcName[ x ];
+
+		/* Don't copy all configMAX_TASK_NAME_LEN if the string is shorter than
+		configMAX_TASK_NAME_LEN characters just in case the memory after the
+		string is not accessible (extremely unlikely). */
+		if( pcName[ x ] == 0x00 )
+		{
+			break;
 		}
 		else
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
+	}
 
-		/* Ensure interrupts don't access the task lists while they are being
-		updated. */
-		taskENTER_CRITICAL();
-		{
-			uxCurrentNumberOfTasks++;
-			if( pxCurrentTCB == NULL )
-			{
-				/* There are no other tasks, or all the other tasks are in
-				the suspended state - make this the current task. */
-				pxCurrentTCB =  pxNewTCB;
+	/* Ensure the name string is terminated in the case that the string length
+	was greater or equal to configMAX_TASK_NAME_LEN. */
+	pxNewTCB->pcTaskName[ configMAX_TASK_NAME_LEN - 1 ] = '\0';
 
-				if( uxCurrentNumberOfTasks == ( UBaseType_t ) 1 )
-				{
-					/* This is the first task to be created so do the preliminary
-					initialisation required.  We will not recover if this call
-					fails, but we will report the failure. */
-					prvInitialiseTaskLists();
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-			}
-			else
-			{
-				/* If the scheduler is not already running, make this task the
-				current task if it is the highest priority task to be created
-				so far. */
-				if( xSchedulerRunning == pdFALSE )
-				{
-					if( pxCurrentTCB->uxPriority <= uxPriority )
-					{
-						pxCurrentTCB = pxNewTCB;
-					}
-					else
-					{
-						mtCOVERAGE_TEST_MARKER();
-					}
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-			}
-
-			uxTaskNumber++;
-
-			#if ( configUSE_TRACE_FACILITY == 1 )
-			{
-				/* Add a counter into the TCB for tracing only. */
-				pxNewTCB->uxTCBNumber = uxTaskNumber;
-			}
-			#endif /* configUSE_TRACE_FACILITY */
-			traceTASK_CREATE( pxNewTCB );
-
-			prvAddTaskToReadyList( pxNewTCB );
-
-			xReturn = pdPASS;
-			portSETUP_TCB( pxNewTCB );
-		}
-		taskEXIT_CRITICAL();
+	/* This is used as an array index so must ensure it's not too large.  First
+	remove the privilege bit if one is present. */
+	if( uxPriority >= ( UBaseType_t ) configMAX_PRIORITIES )
+	{
+		uxPriority = ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) 1U;
 	}
 	else
 	{
-		xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
-		traceTASK_CREATE_FAILED();
+		mtCOVERAGE_TEST_MARKER();
 	}
 
-	if( xReturn == pdPASS )
+	pxNewTCB->uxPriority = uxPriority;
+	#if ( configUSE_MUTEXES == 1 )
 	{
-		if( xSchedulerRunning != pdFALSE )
+		pxNewTCB->uxBasePriority = uxPriority;
+		pxNewTCB->uxMutexesHeld = 0;
+	}
+	#endif /* configUSE_MUTEXES */
+
+	vListInitialiseItem( &( pxNewTCB->xStateListItem ) );
+	vListInitialiseItem( &( pxNewTCB->xEventListItem ) );
+
+	/* Set the pxNewTCB as a link back from the ListItem_t.  This is so we can get
+	back to	the containing TCB from a generic item in a list. */
+	listSET_LIST_ITEM_OWNER( &( pxNewTCB->xStateListItem ), pxNewTCB );
+
+	/* Event lists are always in priority order. */
+	listSET_LIST_ITEM_VALUE( &( pxNewTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+	listSET_LIST_ITEM_OWNER( &( pxNewTCB->xEventListItem ), pxNewTCB );
+
+	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
+	{
+		pxNewTCB->uxCriticalNesting = ( UBaseType_t ) 0U;
+	}
+	#endif /* portCRITICAL_NESTING_IN_TCB */
+
+	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+	{
+		pxNewTCB->pxTaskTag = NULL;
+	}
+	#endif /* configUSE_APPLICATION_TASK_TAG */
+
+	#if ( configGENERATE_RUN_TIME_STATS == 1 )
+	{
+		pxNewTCB->ulRunTimeCounter = 0UL;
+	}
+	#endif /* configGENERATE_RUN_TIME_STATS */
+
+	#if ( portUSING_MPU_WRAPPERS == 1 )
+	{
+		vPortStoreTaskMPUSettings( &( pxNewTCB->xMPUSettings ), xRegions, pxNewTCB->pxStack, usStackDepth );
+	}
+	#endif
+
+	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
+	{
+		for( x = 0; x < ( UBaseType_t ) configNUM_THREAD_LOCAL_STORAGE_POINTERS; x++ )
 		{
-			/* If the created task is of a higher priority than the current task
-			then it should run now. */
-			if( pxCurrentTCB->uxPriority < uxPriority )
+			pxNewTCB->pvThreadLocalStoragePointers[ x ] = NULL;
+		}
+	}
+	#endif
+
+	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
+	{
+		pxNewTCB->ulNotifiedValue = 0;
+		pxNewTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
+	}
+	#endif
+
+	#if ( configUSE_NEWLIB_REENTRANT == 1 )
+	{
+		/* Initialise this task's Newlib reent structure. */
+		_REENT_INIT_PTR( ( &( pxNewTCB->xNewLib_reent ) ) );
+	}
+	#endif
+
+	#if( INCLUDE_xTaskAbortDelay == 1 )
+	{
+		pxNewTCB->ucDelayAborted = pdFALSE;
+	}
+	#endif
+
+	/* Initialize the TCB stack to look as if the task was already running,
+	but had been interrupted by the scheduler.  The return address is set
+	to the start of the task function. Once the stack has been initialised
+	the	top of stack variable is updated. */
+	#if( portUSING_MPU_WRAPPERS == 1 )
+	{
+		pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
+	}
+	#else /* portUSING_MPU_WRAPPERS */
+	{
+		pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+	}
+	#endif /* portUSING_MPU_WRAPPERS */
+
+	if( ( void * ) pxCreatedTask != NULL )
+	{
+		/* Pass the handle out in an anonymous way.  The handle can be used to
+		change the created task's priority, delete the created task, etc.*/
+		*pxCreatedTask = ( TaskHandle_t ) pxNewTCB;
+	}
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
+{
+	/* Ensure interrupts don't access the task lists while the lists are being
+	updated. */
+	taskENTER_CRITICAL();
+	{
+		uxCurrentNumberOfTasks++;
+		if( pxCurrentTCB == NULL )
+		{
+			/* There are no other tasks, or all the other tasks are in
+			the suspended state - make this the current task. */
+			pxCurrentTCB = pxNewTCB;
+
+			if( uxCurrentNumberOfTasks == ( UBaseType_t ) 1 )
 			{
-				taskYIELD_IF_USING_PREEMPTION();
+				/* This is the first task to be created so do the preliminary
+				initialisation required.  We will not recover if this call
+				fails, but we will report the failure. */
+				prvInitialiseTaskLists();
 			}
 			else
 			{
@@ -742,11 +889,59 @@ StackType_t *pxTopOfStack;
 		}
 		else
 		{
+			/* If the scheduler is not already running, make this task the
+			current task if it is the highest priority task to be created
+			so far. */
+			if( xSchedulerRunning == pdFALSE )
+			{
+				if( pxCurrentTCB->uxPriority <= pxNewTCB->uxPriority )
+				{
+					pxCurrentTCB = pxNewTCB;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+
+		uxTaskNumber++;
+
+		#if ( configUSE_TRACE_FACILITY == 1 )
+		{
+			/* Add a counter into the TCB for tracing only. */
+			pxNewTCB->uxTCBNumber = uxTaskNumber;
+		}
+		#endif /* configUSE_TRACE_FACILITY */
+		traceTASK_CREATE( pxNewTCB );
+
+		prvAddTaskToReadyList( pxNewTCB );
+
+		portSETUP_TCB( pxNewTCB );
+	}
+	taskEXIT_CRITICAL();
+
+	if( xSchedulerRunning != pdFALSE )
+	{
+		/* If the created task is of a higher priority than the current task
+		then it should run now. */
+		if( pxCurrentTCB->uxPriority < pxNewTCB->uxPriority )
+		{
+			taskYIELD_IF_USING_PREEMPTION();
+		}
+		else
+		{
 			mtCOVERAGE_TEST_MARKER();
 		}
 	}
-
-	return xReturn;
+	else
+	{
+		mtCOVERAGE_TEST_MARKER();
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -1533,18 +1728,25 @@ StackType_t *pxTopOfStack;
 void vTaskStartScheduler( void )
 {
 BaseType_t xReturn;
-StaticTask_t *pxIdleTaskTCBBuffer = NULL;
-StackType_t *pxIdleTaskStackBuffer = NULL;
-uint16_t usIdleTaskStackSize = tskIDLE_STACK_SIZE;
-
-	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	{
-		vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &usIdleTaskStackSize );
-	}
-	#endif /* configSUPPORT_STATIC_ALLOCATION */
+uint16_t usIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 
 	/* Add the idle task at the lowest priority. */
-	xReturn = xTaskGenericCreate( prvIdleTask, "IDLE", usIdleTaskStackSize, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle, pxIdleTaskStackBuffer, pxIdleTaskTCBBuffer, NULL ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		StaticTask_t *pxIdleTaskTCBBuffer = NULL;
+		StackType_t *pxIdleTaskStackBuffer = NULL;
+
+		/* The Idle task is created using user provided RAM - obtain the
+		address of the RAM then create the idle task. */
+		vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &usIdleTaskStackSize );
+		xReturn = xTaskCreateStatic( prvIdleTask, "IDLE", usIdleTaskStackSize, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle, pxIdleTaskStackBuffer, pxIdleTaskTCBBuffer ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+	}
+	#else
+	{
+		/* The Idle task is being created using dynamically allocated RAM. */
+		xReturn = xTaskCreate( prvIdleTask, "IDLE", usIdleTaskStackSize, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+	}
+	#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 	#if ( configUSE_TIMERS == 1 )
 	{
@@ -2220,7 +2422,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 						unlikely that the
 						if( xTickCount >= xNextTaskUnblockTime ) test will pass
 						next time through. */
-						xNextTaskUnblockTime = portMAX_DELAY;
+						xNextTaskUnblockTime = portMAX_DELAY; /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 						break;
 					}
 					else
@@ -2956,122 +3158,6 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 #endif /* configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseTCBVariables( TCB_t * const pxTCB, const char * const pcName, UBaseType_t uxPriority, const MemoryRegion_t * const xRegions, const uint16_t usStackDepth ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-{
-UBaseType_t x;
-
-	/* Store the task name in the TCB. */
-	for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
-	{
-		pxTCB->pcTaskName[ x ] = pcName[ x ];
-
-		/* Don't copy all configMAX_TASK_NAME_LEN if the string is shorter than
-		configMAX_TASK_NAME_LEN characters just in case the memory after the
-		string is not accessible (extremely unlikely). */
-		if( pcName[ x ] == 0x00 )
-		{
-			break;
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-	}
-
-	/* Ensure the name string is terminated in the case that the string length
-	was greater or equal to configMAX_TASK_NAME_LEN. */
-	pxTCB->pcTaskName[ configMAX_TASK_NAME_LEN - 1 ] = '\0';
-
-	/* This is used as an array index so must ensure it's not too large.  First
-	remove the privilege bit if one is present. */
-	if( uxPriority >= ( UBaseType_t ) configMAX_PRIORITIES )
-	{
-		uxPriority = ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) 1U;
-	}
-	else
-	{
-		mtCOVERAGE_TEST_MARKER();
-	}
-
-	pxTCB->uxPriority = uxPriority;
-	#if ( configUSE_MUTEXES == 1 )
-	{
-		pxTCB->uxBasePriority = uxPriority;
-		pxTCB->uxMutexesHeld = 0;
-	}
-	#endif /* configUSE_MUTEXES */
-
-	vListInitialiseItem( &( pxTCB->xStateListItem ) );
-	vListInitialiseItem( &( pxTCB->xEventListItem ) );
-
-	/* Set the pxTCB as a link back from the ListItem_t.  This is so we can get
-	back to	the containing TCB from a generic item in a list. */
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xStateListItem ), pxTCB );
-
-	/* Event lists are always in priority order. */
-	listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-	listSET_LIST_ITEM_OWNER( &( pxTCB->xEventListItem ), pxTCB );
-
-	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
-	{
-		pxTCB->uxCriticalNesting = ( UBaseType_t ) 0U;
-	}
-	#endif /* portCRITICAL_NESTING_IN_TCB */
-
-	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	{
-		pxTCB->pxTaskTag = NULL;
-	}
-	#endif /* configUSE_APPLICATION_TASK_TAG */
-
-	#if ( configGENERATE_RUN_TIME_STATS == 1 )
-	{
-		pxTCB->ulRunTimeCounter = 0UL;
-	}
-	#endif /* configGENERATE_RUN_TIME_STATS */
-
-	#if ( portUSING_MPU_WRAPPERS == 1 )
-	{
-		vPortStoreTaskMPUSettings( &( pxTCB->xMPUSettings ), xRegions, pxTCB->pxStack, usStackDepth );
-	}
-	#else /* portUSING_MPU_WRAPPERS */
-	{
-		( void ) xRegions;
-		( void ) usStackDepth;
-	}
-	#endif /* portUSING_MPU_WRAPPERS */
-
-	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
-	{
-		for( x = 0; x < ( UBaseType_t ) configNUM_THREAD_LOCAL_STORAGE_POINTERS; x++ )
-		{
-			pxTCB->pvThreadLocalStoragePointers[ x ] = NULL;
-		}
-	}
-	#endif
-
-	#if ( configUSE_TASK_NOTIFICATIONS == 1 )
-	{
-		pxTCB->ulNotifiedValue = 0;
-		pxTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
-	}
-	#endif
-
-	#if ( configUSE_NEWLIB_REENTRANT == 1 )
-	{
-		/* Initialise this task's Newlib reent structure. */
-		_REENT_INIT_PTR( ( &( pxTCB->xNewLib_reent ) ) );
-	}
-	#endif
-
-	#if( INCLUDE_xTaskAbortDelay == 1 )
-	{
-		pxTCB->ucDelayAborted = pdFALSE;
-	}
-	#endif
-}
-/*-----------------------------------------------------------*/
-
 #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
 
 	void vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
@@ -3200,129 +3286,6 @@ static void prvCheckTasksWaitingTermination( void )
 		}
 	}
 	#endif /* INCLUDE_vTaskDelete */
-}
-/*-----------------------------------------------------------*/
-
-static TCB_t *prvAllocateTCBAndStack( const uint16_t usStackDepth, StackType_t * const puxStackBuffer, TCB_t * const pxTaskBuffer )
-{
-TCB_t *pxNewTCB;
-
-	#if( ( configASSERT_DEFINED == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
-	{
-		/* Sanity check that the size of the structure used to declare a
-		variable of type StaticTask_t matches the size of the actual TCB_t
-		structure. */
-		volatile size_t xSize = sizeof( StaticTask_t );
-		configASSERT( xSize == sizeof( TCB_t ) );
-	}
-	#endif /* configASSERT_DEFINED */
-
-	/* If the stack grows down then allocate the stack then the TCB so the stack
-	does not grow into the TCB.  Likewise if the stack grows up then allocate
-	the TCB then the stack. */
-	#if( portSTACK_GROWTH > 0 )
-	{
-		/* Allocate space for the TCB.  Where the memory comes from depends on
-		the implementation of the port malloc function. */
-		pxNewTCB = ( TCB_t * ) pvPortMallocAligned( sizeof( TCB_t ), pxTaskBuffer );
-
-		if( pxNewTCB != NULL )
-		{
-			/* Allocate space for the stack used by the task being created.
-			The base of the stack memory stored in the TCB so the task can
-			be deleted later if required. */
-			pxNewTCB->pxStack = ( StackType_t * ) pvPortMallocAligned( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ), puxStackBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-
-			if( pxNewTCB->pxStack == NULL )
-			{
-				/* Could not allocate the stack.  Delete the allocated TCB - if
-				it was allocated dynamically. */
-				if( pxTaskBuffer == NULL )
-				{
-					vPortFree( pxNewTCB );
-				}
-				pxNewTCB = NULL;
-			}
-		}
-	}
-	#else /* portSTACK_GROWTH */
-	{
-	StackType_t *pxStack;
-
-		/* Allocate space for the stack used by the task being created. */
-		pxStack = ( StackType_t * ) pvPortMallocAligned( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ), puxStackBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-
-		if( pxStack != NULL )
-		{
-			/* Allocate space for the TCB. */
-			pxNewTCB = ( TCB_t * ) pvPortMallocAligned( sizeof( TCB_t ), pxTaskBuffer ); /*lint !e961 MISRA exception as the casts are only redundant for some paths. */
-
-			if( pxNewTCB != NULL )
-			{
-				/* Store the stack location in the TCB. */
-				pxNewTCB->pxStack = pxStack;
-			}
-			else
-			{
-				/* The stack cannot be used as the TCB was not created.  Free it
-				again. */
-				if( puxStackBuffer == NULL )
-				{
-					vPortFree( pxStack );
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-			}
-		}
-		else
-		{
-			pxNewTCB = NULL;
-		}
-	}
-	#endif /* portSTACK_GROWTH */
-
-	if( pxNewTCB != NULL )
-	{
-		/* Avoid dependency on memset() if it is not required. */
-		#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
-		{
-			/* Just to help debugging. */
-			( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( StackType_t ) );
-		}
-		#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
-
-		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-		{
-			pxNewTCB->ucStaticAllocationFlags = 0;
-
-			if( puxStackBuffer != NULL )
-			{
-				/* The application provided its own stack - note the fact so no
-				attempt is made to delete the stack if the task is deleted. */
-				pxNewTCB->ucStaticAllocationFlags |= taskSTATICALLY_ALLOCATED_STACK;
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
-
-			if( pxTaskBuffer != NULL )
-			{
-				/* The application provided its own TCB.  Note the fact so no
-				attempt is made to delete the TCB if the task is deleted. */
-				pxNewTCB->ucStaticAllocationFlags |= taskSTATICALLY_ALLOCATED_TCB;
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
-		}
-		#endif /* configSUPPORT_STATIC_ALLOCATION */
-	}
-
-	return pxNewTCB;
 }
 /*-----------------------------------------------------------*/
 
@@ -3513,34 +3476,28 @@ TCB_t *pxNewTCB;
 		}
 		#endif /* configUSE_NEWLIB_REENTRANT */
 
-		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		#if( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 0 ) )
 		{
-			/* Only free the stack and TCB if they were allocated dynamically in
-			the first place. */
-			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_STACK ) == ( uint8_t ) 0 )
-			{
-				vPortFreeAligned( pxTCB->pxStack );
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
-
-			if( ( pxTCB->ucStaticAllocationFlags & taskSTATICALLY_ALLOCATED_TCB ) == ( uint8_t ) 0 )
-			{
-				vPortFreeAligned( pxTCB );
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
-		}
-		#else
-		{
-			vPortFreeAligned( pxTCB->pxStack );
+			/* The task can only have been allocated dynamically - free it
+			again. */
+			vPortFree( pxTCB->pxStack );
 			vPortFree( pxTCB );
 		}
-		#endif
+		#elif( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
+		{
+			/* The task could have been allocated statically or dynamically, so
+			check before attempting to free the memory. */
+			if( pxTCB->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
+			{
+				vPortFree( pxTCB->pxStack );
+				vPortFree( pxTCB );
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+		#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 	}
 
 #endif /* INCLUDE_vTaskDelete */
@@ -3891,7 +3848,9 @@ TCB_t *pxTCB;
 		function is executing. */
 		uxArraySize = uxCurrentNumberOfTasks;
 
-		/* Allocate an array index for each task. */
+		/* Allocate an array index for each task.  NOTE!  if
+		configSUPPORT_DYNAMIC_ALLOCATION is set to 0 then pvPortMalloc() will
+		equate to NULL. */
 		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( TaskStatus_t ) );
 
 		if( pxTaskStatusArray != NULL )
@@ -3931,7 +3890,8 @@ TCB_t *pxTCB;
 				pcWriteBuffer += strlen( pcWriteBuffer );
 			}
 
-			/* Free the array again. */
+			/* Free the array again.  NOTE!  If configSUPPORT_DYNAMIC_ALLOCATION
+			is 0 then vPortFree() will be #defined to nothing. */
 			vPortFree( pxTaskStatusArray );
 		}
 		else
@@ -3989,7 +3949,9 @@ TCB_t *pxTCB;
 		function is executing. */
 		uxArraySize = uxCurrentNumberOfTasks;
 
-		/* Allocate an array index for each task. */
+		/* Allocate an array index for each task.  NOTE!  If
+		configSUPPORT_DYNAMIC_ALLOCATION is set to 0 then pvPortMalloc() will
+		equate to NULL. */
 		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( TaskStatus_t ) );
 
 		if( pxTaskStatusArray != NULL )
@@ -4055,7 +4017,8 @@ TCB_t *pxTCB;
 				mtCOVERAGE_TEST_MARKER();
 			}
 
-			/* Free the array again. */
+			/* Free the array again.  NOTE!  If configSUPPORT_DYNAMIC_ALLOCATION
+			is 0 then vPortFree() will be #defined to nothing. */
 			vPortFree( pxTaskStatusArray );
 		}
 		else

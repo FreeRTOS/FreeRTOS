@@ -90,9 +90,9 @@ privileged Vs unprivileged linkage and placement. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
 
 
-/* Constants used with the xRxLock and xTxLock structure members. */
-#define queueUNLOCKED					( ( BaseType_t ) -1 )
-#define queueLOCKED_UNMODIFIED			( ( BaseType_t ) 0 )
+/* Constants used with the cRxLock and cTxLock structure members. */
+#define queueUNLOCKED					( ( int8_t ) -1 )
+#define queueLOCKED_UNMODIFIED			( ( int8_t ) 0 )
 
 /* When the Queue_t structure is used to represent a base queue its pcHead and
 pcTail members are used as pointers into the queue storage area.  When the
@@ -113,13 +113,6 @@ structure member). */
 zero. */
 #define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( ( UBaseType_t ) 0 )
 #define queueMUTEX_GIVE_BLOCK_TIME		 ( ( TickType_t ) 0U )
-
-/* Bits that can be set in xQUEUE->ucStaticAllocationFlags to indicate that the
-queue storage area and queue structure were statically allocated respectively.
-When these are statically allocated they won't be freed if the queue gets
-deleted. */
-#define queueSTATICALLY_ALLOCATED_STORAGE		( ( uint8_t ) 0x01 )
-#define queueSTATICALLY_ALLOCATED_QUEUE_STRUCT	( ( uint8_t ) 0x02 )
 
 #if( configUSE_PREEMPTION == 0 )
 	/* If the cooperative scheduler is being used then a yield should not be
@@ -153,8 +146,12 @@ typedef struct QueueDefinition
 	UBaseType_t uxLength;			/*< The length of the queue defined as the number of items it will hold, not the number of bytes. */
 	UBaseType_t uxItemSize;			/*< The size of each items that the queue will hold. */
 
-	volatile BaseType_t xRxLock;	/*< Stores the number of items received from the queue (removed from the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
-	volatile BaseType_t xTxLock;	/*< Stores the number of items transmitted to the queue (added to the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
+	volatile int8_t cRxLock;		/*< Stores the number of items received from the queue (removed from the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
+	volatile int8_t cTxLock;		/*< Stores the number of items transmitted to the queue (added to the queue) while the queue was locked.  Set to queueUNLOCKED when the queue is not locked. */
+
+	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+		uint8_t ucStaticallyAllocated;	/*< Set to pdTRUE if the memory used by the queue was statically allocated to ensure no attempt is made to free the memory. */
+	#endif
 
 	#if ( configUSE_QUEUE_SETS == 1 )
 		struct QueueDefinition *pxQueueSetContainer;
@@ -163,10 +160,6 @@ typedef struct QueueDefinition
 	#if ( configUSE_TRACE_FACILITY == 1 )
 		UBaseType_t uxQueueNumber;
 		uint8_t ucQueueType;
-	#endif
-
-	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-		uint8_t ucStaticAllocationFlags;
 	#endif
 
 } xQUEUE;
@@ -239,17 +232,6 @@ static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvIte
  */
 static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer ) PRIVILEGED_FUNCTION;
 
-/*
- * A queue requires two blocks of memory; a structure to hold the queue state
- * and a storage area to hold the items in the queue.  The memory is assigned
- * by prvAllocateQueueMemory().  If ppucQueueStorage is NULL then the queue
- * storage will allocated dynamically, otherwise the buffer passed in
- * ppucQueueStorage will be used.  If pxStaticQueue is NULL then the queue
- * structure will be allocated dynamically, otherwise the buffer pointed to by
- * pxStaticQueue will be used.
- */
-static Queue_t *prvAllocateQueueMemory( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t **ppucQueueStorage, StaticQueue_t *pxStaticQueue ) PRIVILEGED_FUNCTION;
-
 #if ( configUSE_QUEUE_SETS == 1 )
 	/*
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
@@ -257,6 +239,19 @@ static Queue_t *prvAllocateQueueMemory( const UBaseType_t uxQueueLength, const U
 	 */
 	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition ) PRIVILEGED_FUNCTION;
 #endif
+
+/*
+ * Called after a Queue_t structure has been allocated either statically or
+ * dynamically to fill in the structure's members.
+ */
+static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
+
+/*
+ * Mutexes are a special type of queue.  When a mutex is created, first the
+ * queue is created, then prvInitialiseMutex() is called to configure the queue
+ * as a mutex.
+ */
+static void prvInitialiseMutex( Queue_t *pxNewQueue );
 
 /*-----------------------------------------------------------*/
 
@@ -267,13 +262,13 @@ static Queue_t *prvAllocateQueueMemory( const UBaseType_t uxQueueLength, const U
 #define prvLockQueue( pxQueue )								\
 	taskENTER_CRITICAL();									\
 	{														\
-		if( ( pxQueue )->xRxLock == queueUNLOCKED )			\
+		if( ( pxQueue )->cRxLock == queueUNLOCKED )			\
 		{													\
-			( pxQueue )->xRxLock = queueLOCKED_UNMODIFIED;	\
+			( pxQueue )->cRxLock = queueLOCKED_UNMODIFIED;	\
 		}													\
-		if( ( pxQueue )->xTxLock == queueUNLOCKED )			\
+		if( ( pxQueue )->cTxLock == queueUNLOCKED )			\
 		{													\
-			( pxQueue )->xTxLock = queueLOCKED_UNMODIFIED;	\
+			( pxQueue )->cTxLock = queueLOCKED_UNMODIFIED;	\
 		}													\
 	}														\
 	taskEXIT_CRITICAL()
@@ -291,8 +286,8 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		pxQueue->uxMessagesWaiting = ( UBaseType_t ) 0U;
 		pxQueue->pcWriteTo = pxQueue->pcHead;
 		pxQueue->u.pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - ( UBaseType_t ) 1U ) * pxQueue->uxItemSize );
-		pxQueue->xRxLock = queueUNLOCKED;
-		pxQueue->xTxLock = queueUNLOCKED;
+		pxQueue->cRxLock = queueUNLOCKED;
+		pxQueue->cTxLock = queueUNLOCKED;
 
 		if( xNewQueue == pdFALSE )
 		{
@@ -332,175 +327,193 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 }
 /*-----------------------------------------------------------*/
 
-static Queue_t *prvAllocateQueueMemory( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t **ppucQueueStorage, StaticQueue_t *pxStaticQueue )
-{
-Queue_t *pxNewQueue;
-size_t xQueueSizeInBytes;
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
-
-	#if( ( configASSERT_DEFINED == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
+	QueueHandle_t xQueueGenericCreateStatic( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
 	{
-		/* Sanity check that the size of the structure used to declare a
-		variable of type StaticQueue_t or StaticSemaphore_t equals the size of
-		the real queue and semaphore structures. */
-		volatile size_t xSize = sizeof( StaticQueue_t );
-		configASSERT( xSize == sizeof( Queue_t ) );
+	Queue_t *pxNewQueue;
+
+		configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
+
+		/* The StaticQueue_t structure and the queue storage area must be
+		supplied. */
+		configASSERT( pxStaticQueue != NULL );
+
+		/* A queue storage area should be provided if the item size is not 0, and
+		should not be provided if the item size is 0. */
+		configASSERT( !( ( pucQueueStorage != NULL ) && ( uxItemSize == 0 ) ) );
+		configASSERT( !( ( pucQueueStorage == NULL ) && ( uxItemSize != 0 ) ) );
+
+		#if( configASSERT_DEFINED == 1 )
+		{
+			/* Sanity check that the size of the structure used to declare a
+			variable of type StaticQueue_t or StaticSemaphore_t equals the size of
+			the real queue and semaphore structures. */
+			volatile size_t xSize = sizeof( StaticQueue_t );
+			configASSERT( xSize == sizeof( Queue_t ) );
+		}
+		#endif /* configASSERT_DEFINED */
+
+		/* The address of a statically allocated queue was passed in, use it.
+		The address of a statically allocated storage area was also passed in
+		but is already set. */
+		pxNewQueue = ( Queue_t * ) pxStaticQueue; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+
+		if( pxNewQueue != NULL )
+		{
+			#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+			{
+				/* Queues can be allocated wither statically or dynamically, so
+				note this queue was allocated statically in case the queue is
+				later deleted. */
+				pxNewQueue->ucStaticallyAllocated = pdTRUE;
+			}
+			#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+
+			prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );
+		}
+
+		return pxNewQueue;
 	}
-	#endif /* configASSERT_DEFINED */
 
-	if( uxItemSize == ( UBaseType_t ) 0 )
-	{
-		/* There is not going to be a queue storage area. */
-		xQueueSizeInBytes = ( size_t ) 0;
-	}
-	else
-	{
-		/* Allocate enough space to hold the maximum number of items that can be
-		in the queue at any time. */
-		xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-	}
+#endif /* configSUPPORT_STATIC_ALLOCATION */
+/*-----------------------------------------------------------*/
 
-	#if( configSUPPORT_STATIC_ALLOCATION == 0 )
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+
+	QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, const uint8_t ucQueueType )
 	{
-		/* Allocate the new queue structure and storage area. */
+	Queue_t *pxNewQueue;
+	size_t xQueueSizeInBytes;
+	uint8_t *pucQueueStorage;
+
+		configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
+
+		if( uxItemSize == ( UBaseType_t ) 0 )
+		{
+			/* There is not going to be a queue storage area. */
+			xQueueSizeInBytes = ( size_t ) 0;
+		}
+		else
+		{
+			/* Allocate enough space to hold the maximum number of items that
+			can be in the queue at any time. */
+			xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+		}
+
 		pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) + xQueueSizeInBytes );
 
 		if( pxNewQueue != NULL )
 		{
 			/* Jump past the queue structure to find the location of the queue
 			storage area. */
-			*ppucQueueStorage = ( ( uint8_t * ) pxNewQueue ) + sizeof( Queue_t );
-		}
+			pucQueueStorage = ( ( uint8_t * ) pxNewQueue ) + sizeof( Queue_t );
 
-		/* The pxStaticQueue parameter is not used.  Remove compiler warnings. */
-		( void ) pxStaticQueue;
-	}
-	#else
-	{
-		if( pxStaticQueue == NULL )
-		{
-			/* A statically allocated queue was not passed in, so create one
-			dynamically. */
-			pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) );
-			pxNewQueue->ucStaticAllocationFlags = 0;
-		}
-		else
-		{
-			/* The address of a statically allocated queue was passed in, use
-			it and note that the queue was not dynamically allocated so there is
-			no attempt to free it again should the queue be deleted. */
-			pxNewQueue = ( Queue_t * ) pxStaticQueue; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
-			pxNewQueue->ucStaticAllocationFlags = queueSTATICALLY_ALLOCATED_QUEUE_STRUCT;
-		}
-
-		if( pxNewQueue != NULL )
-		{
-			if( ( *ppucQueueStorage == NULL ) && ( xQueueSizeInBytes > ( size_t ) 0 ) )
+			#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			{
-				/* A statically allocated queue storage area was not passed in,
-				so allocate the queue storage area dynamically. */
-				*ppucQueueStorage = ( uint8_t * ) pvPortMalloc( xQueueSizeInBytes );
-
-				if( *ppucQueueStorage == NULL )
-				{
-					/* The queue storage area could not be created, so free the
-					queue structure also. */
-					if( ( pxNewQueue->ucStaticAllocationFlags & queueSTATICALLY_ALLOCATED_QUEUE_STRUCT ) == 0 )
-					{
-						vPortFree( ( void * ) pxNewQueue );
-					}
-					else
-					{
-						mtCOVERAGE_TEST_MARKER();
-					}
-
-					pxNewQueue = NULL;
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
+				/* Queues can be created either statically or dynamically, so
+				note this task was created dynamically in case it is later
+				deleted. */
+				pxNewQueue->ucStaticallyAllocated = pdFALSE;
 			}
-			else
-			{
-				/* Note the fact that either the queue storage area was passed
-				into this function, or the size requirement for the queue
-				storage area was zero - either way no attempt should be made to
-				free the queue storage area if the queue is deleted. */
-				pxNewQueue->ucStaticAllocationFlags |= queueSTATICALLY_ALLOCATED_STORAGE;
-			}
+			#endif /* configSUPPORT_STATIC_ALLOCATION */
+
+			prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );
 		}
-	}
-	#endif
 
-	return pxNewQueue;
-}
+		return pxNewQueue;
+	}
+
+#endif /* configSUPPORT_STATIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-QueueHandle_t xQueueGenericCreate( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
+static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, const uint8_t ucQueueType, Queue_t *pxNewQueue )
 {
-Queue_t *pxNewQueue;
-
 	/* Remove compiler warnings about unused parameters should
 	configUSE_TRACE_FACILITY not be set to 1. */
 	( void ) ucQueueType;
 
-	/* A queue requires a queue structure and a queue storage area.  These may
-	be allocated statically or dynamically, depending on the parameter
-	values. */
-	pxNewQueue = prvAllocateQueueMemory( uxQueueLength, uxItemSize, &pucQueueStorage, pxStaticQueue );
-
-	if( pxNewQueue != NULL )
+	if( uxItemSize == ( UBaseType_t ) 0 )
 	{
-		if( uxItemSize == ( UBaseType_t ) 0 )
-		{
-			/* No RAM was allocated for the queue storage area, but PC head
-			cannot be set to NULL because NULL is used as a key to say the queue
-			is used as a mutex.  Therefore just set pcHead to point to the queue
-			as a benign value that is known to be within the memory map. */
-			pxNewQueue->pcHead = ( int8_t * ) pxNewQueue;
-		}
-		else
-		{
-			/* Set the head to the start of the queue storage area. */
-			pxNewQueue->pcHead = ( int8_t * ) pucQueueStorage;
-		}
-
-		/* Initialise the queue members as described where the queue type is
-		defined. */
-		pxNewQueue->uxLength = uxQueueLength;
-		pxNewQueue->uxItemSize = uxItemSize;
-		( void ) xQueueGenericReset( pxNewQueue, pdTRUE );
-
-		#if ( configUSE_TRACE_FACILITY == 1 )
-		{
-			pxNewQueue->ucQueueType = ucQueueType;
-		}
-		#endif /* configUSE_TRACE_FACILITY */
-
-		#if( configUSE_QUEUE_SETS == 1 )
-		{
-			pxNewQueue->pxQueueSetContainer = NULL;
-		}
-		#endif /* configUSE_QUEUE_SETS */
-
-		traceQUEUE_CREATE( pxNewQueue );
+		/* No RAM was allocated for the queue storage area, but PC head cannot
+		be set to NULL because NULL is used as a key to say the queue is used as
+		a mutex.  Therefore just set pcHead to point to the queue as a benign
+		value that is known to be within the memory map. */
+		pxNewQueue->pcHead = ( int8_t * ) pxNewQueue;
 	}
 	else
 	{
-		mtCOVERAGE_TEST_MARKER();
+		/* Set the head to the start of the queue storage area. */
+		pxNewQueue->pcHead = ( int8_t * ) pucQueueStorage;
 	}
 
-	configASSERT( pxNewQueue );
+	/* Initialise the queue members as described where the queue type is
+	defined. */
+	pxNewQueue->uxLength = uxQueueLength;
+	pxNewQueue->uxItemSize = uxItemSize;
+	( void ) xQueueGenericReset( pxNewQueue, pdTRUE );
 
-	return ( QueueHandle_t ) pxNewQueue;
+	#if ( configUSE_TRACE_FACILITY == 1 )
+	{
+		pxNewQueue->ucQueueType = ucQueueType;
+	}
+	#endif /* configUSE_TRACE_FACILITY */
+
+	#if( configUSE_QUEUE_SETS == 1 )
+	{
+		pxNewQueue->pxQueueSetContainer = NULL;
+	}
+	#endif /* configUSE_QUEUE_SETS */
+
+	traceQUEUE_CREATE( pxNewQueue );
 }
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_MUTEXES == 1 )
+static void prvInitialiseMutex( Queue_t *pxNewQueue )
+{
+	if( pxNewQueue != NULL )
+	{
+		/* The queue create function will set all the queue structure members
+		correctly for a generic queue, but this function is creating a
+		mutex.  Overwrite those members that need to be set differently -
+		in particular the information required for priority inheritance. */
+		pxNewQueue->pxMutexHolder = NULL;
+		pxNewQueue->uxQueueType = queueQUEUE_IS_MUTEX;
 
-	QueueHandle_t xQueueCreateMutex( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue )
+		/* In case this is a recursive mutex. */
+		pxNewQueue->u.uxRecursiveCallCount = 0;
+
+		traceCREATE_MUTEX( pxNewQueue );
+
+		/* Start with the semaphore in the expected state. */
+		( void ) xQueueGenericSend( pxNewQueue, NULL, ( TickType_t ) 0U, queueSEND_TO_BACK );
+	}
+	else
+	{
+		traceCREATE_MUTEX_FAILED();
+	}
+}
+/*-----------------------------------------------------------*/
+
+#if( ( configUSE_MUTEXES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+
+	QueueHandle_t xQueueCreateMutex( const uint8_t ucQueueType )
+	{
+	Queue_t *pxNewQueue;
+	const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
+
+		pxNewQueue = ( Queue_t * ) xQueueGenericCreate( uxMutexLength, uxMutexSize, ucQueueType );
+		prvInitialiseMutex( pxNewQueue );
+
+		return pxNewQueue;
+	}
+
+#endif /* configUSE_MUTEXES */
+/*-----------------------------------------------------------*/
+
+#if( ( configUSE_MUTEXES == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
+
+	QueueHandle_t xQueueCreateMutexStatic( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue )
 	{
 	Queue_t *pxNewQueue;
 	const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
@@ -509,30 +522,8 @@ Queue_t *pxNewQueue;
 		configUSE_TRACE_FACILITY does not equal 1. */
 		( void ) ucQueueType;
 
-		pxNewQueue = ( Queue_t * ) xQueueGenericCreate( uxMutexLength, uxMutexSize, NULL, pxStaticQueue, ucQueueType );
-
-		/* Allocate the new queue structure. */
-		if( pxNewQueue != NULL )
-		{
-			/* xQueueGenericCreate() will set all the queue structure members
-			correctly for a generic queue, but this function is creating a
-			mutex.  Overwrite those members that need to be set differently -
-			in particular the information required for priority inheritance. */
-			pxNewQueue->pxMutexHolder = NULL;
-			pxNewQueue->uxQueueType = queueQUEUE_IS_MUTEX;
-
-			/* In case this is a recursive mutex. */
-			pxNewQueue->u.uxRecursiveCallCount = 0;
-
-			traceCREATE_MUTEX( pxNewQueue );
-
-			/* Start with the semaphore in the expected state. */
-			( void ) xQueueGenericSend( pxNewQueue, NULL, ( TickType_t ) 0U, queueSEND_TO_BACK );
-		}
-		else
-		{
-			traceCREATE_MUTEX_FAILED();
-		}
+		pxNewQueue = ( Queue_t * ) xQueueGenericCreateStatic( uxMutexLength, uxMutexSize, NULL, pxStaticQueue, ucQueueType );
+		prvInitialiseMutex( pxNewQueue );
 
 		return pxNewQueue;
 	}
@@ -667,16 +658,16 @@ Queue_t *pxNewQueue;
 #endif /* configUSE_RECURSIVE_MUTEXES */
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_COUNTING_SEMAPHORES == 1 )
+#if( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 
-	QueueHandle_t xQueueCreateCountingSemaphore( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount, StaticQueue_t *pxStaticQueue )
+	QueueHandle_t xQueueCreateCountingSemaphoreStatic( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount, StaticQueue_t *pxStaticQueue )
 	{
 	QueueHandle_t xHandle;
 
 		configASSERT( uxMaxCount != 0 );
 		configASSERT( uxInitialCount <= uxMaxCount );
 
-		xHandle = xQueueGenericCreate( uxMaxCount, queueSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, pxStaticQueue, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
+		xHandle = xQueueGenericCreateStatic( uxMaxCount, queueSEMAPHORE_QUEUE_ITEM_LENGTH, NULL, pxStaticQueue, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
 
 		if( xHandle != NULL )
 		{
@@ -689,11 +680,38 @@ Queue_t *pxNewQueue;
 			traceCREATE_COUNTING_SEMAPHORE_FAILED();
 		}
 
-		configASSERT( xHandle );
 		return xHandle;
 	}
 
-#endif /* configUSE_COUNTING_SEMAPHORES */
+#endif /* ( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) ) */
+/*-----------------------------------------------------------*/
+
+#if( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+
+	QueueHandle_t xQueueCreateCountingSemaphore( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount )
+	{
+	QueueHandle_t xHandle;
+
+		configASSERT( uxMaxCount != 0 );
+		configASSERT( uxInitialCount <= uxMaxCount );
+
+		xHandle = xQueueGenericCreate( uxMaxCount, queueSEMAPHORE_QUEUE_ITEM_LENGTH, queueQUEUE_TYPE_COUNTING_SEMAPHORE );
+
+		if( xHandle != NULL )
+		{
+			( ( Queue_t * ) xHandle )->uxMessagesWaiting = uxInitialCount;
+
+			traceCREATE_COUNTING_SEMAPHORE();
+		}
+		else
+		{
+			traceCREATE_COUNTING_SEMAPHORE_FAILED();
+		}
+
+		return xHandle;
+	}
+
+#endif /* ( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) ) */
 /*-----------------------------------------------------------*/
 
 BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition )
@@ -940,7 +958,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
-			if( pxQueue->xTxLock == queueUNLOCKED )
+			if( pxQueue->cTxLock == queueUNLOCKED )
 			{
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
@@ -1026,7 +1044,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was posted while it was locked. */
-				++( pxQueue->xTxLock );
+				++( pxQueue->cTxLock );
 			}
 
 			xReturn = pdPASS;
@@ -1101,7 +1119,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
-			if( pxQueue->xTxLock == queueUNLOCKED )
+			if( pxQueue->cTxLock == queueUNLOCKED )
 			{
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
@@ -1187,7 +1205,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was posted while it was locked. */
-				++( pxQueue->xTxLock );
+				++( pxQueue->cTxLock );
 			}
 
 			xReturn = pdPASS;
@@ -1438,7 +1456,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			Instead update the lock count so the task that unlocks the queue
 			will know that an ISR has removed data while the queue was
 			locked. */
-			if( pxQueue->xRxLock == queueUNLOCKED )
+			if( pxQueue->cRxLock == queueUNLOCKED )
 			{
 				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 				{
@@ -1469,7 +1487,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was removed while it was locked. */
-				++( pxQueue->xRxLock );
+				++( pxQueue->cRxLock );
 			}
 
 			xReturn = pdPASS;
@@ -1591,37 +1609,26 @@ void vQueueDelete( QueueHandle_t xQueue )
 Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	configASSERT( pxQueue );
-
 	traceQUEUE_DELETE( pxQueue );
+
 	#if ( configQUEUE_REGISTRY_SIZE > 0 )
 	{
 		vQueueUnregisterQueue( pxQueue );
 	}
 	#endif
 
-	#if( configSUPPORT_STATIC_ALLOCATION == 0 )
+	#if( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 0 ) )
 	{
-		/* The queue and the queue storage area will have been dynamically
-		allocated in one go. */
+		/* The queue can only have been allocated dynamically - free it
+		again. */
 		vPortFree( pxQueue );
 	}
-	#else
+	#elif( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 	{
-		if( ( pxQueue->ucStaticAllocationFlags & queueSTATICALLY_ALLOCATED_STORAGE ) == 0 )
+		/* The queue could have been allocated statically or dynamically, so
+		check before attempting to free the memory. */
+		if( pxQueue->ucStaticallyAllocated == ( uint8_t ) pdFALSE )
 		{
-			/* The queue storage area was dynamically allocated, so must be
-			freed. */
-			vPortFree( pxQueue->pcHead );
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-
-		if( ( pxQueue->ucStaticAllocationFlags & queueSTATICALLY_ALLOCATED_QUEUE_STRUCT ) == 0 )
-		{
-			/* The queue structure was dynamically allocated, so must be
-			free. */
 			vPortFree( pxQueue );
 		}
 		else
@@ -1629,7 +1636,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			mtCOVERAGE_TEST_MARKER();
 		}
 	}
-	#endif
+	#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 }
 /*-----------------------------------------------------------*/
 
@@ -1766,7 +1773,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 	taskENTER_CRITICAL();
 	{
 		/* See if data was added to the queue while it was locked. */
-		while( pxQueue->xTxLock > queueLOCKED_UNMODIFIED )
+		while( pxQueue->cTxLock > queueLOCKED_UNMODIFIED )
 		{
 			/* Data was posted while the queue was locked.  Are any tasks
 			blocked waiting for data to become available? */
@@ -1834,17 +1841,17 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 			}
 			#endif /* configUSE_QUEUE_SETS */
 
-			--( pxQueue->xTxLock );
+			--( pxQueue->cTxLock );
 		}
 
-		pxQueue->xTxLock = queueUNLOCKED;
+		pxQueue->cTxLock = queueUNLOCKED;
 	}
 	taskEXIT_CRITICAL();
 
 	/* Do the same for the Rx lock. */
 	taskENTER_CRITICAL();
 	{
-		while( pxQueue->xRxLock > queueLOCKED_UNMODIFIED )
+		while( pxQueue->cRxLock > queueLOCKED_UNMODIFIED )
 		{
 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 			{
@@ -1857,7 +1864,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 					mtCOVERAGE_TEST_MARKER();
 				}
 
-				--( pxQueue->xRxLock );
+				--( pxQueue->cRxLock );
 			}
 			else
 			{
@@ -1865,7 +1872,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 			}
 		}
 
-		pxQueue->xRxLock = queueUNLOCKED;
+		pxQueue->cRxLock = queueUNLOCKED;
 	}
 	taskEXIT_CRITICAL();
 }
@@ -2349,13 +2356,13 @@ BaseType_t xReturn;
 #endif /* configUSE_TIMERS */
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_QUEUE_SETS == 1 )
+#if( ( configUSE_QUEUE_SETS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
 	QueueSetHandle_t xQueueCreateSet( const UBaseType_t uxEventQueueLength )
 	{
 	QueueSetHandle_t pxQueue;
 
-		pxQueue = xQueueGenericCreate( uxEventQueueLength, sizeof( Queue_t * ), NULL, NULL, queueQUEUE_TYPE_SET );
+		pxQueue = xQueueGenericCreate( uxEventQueueLength, sizeof( Queue_t * ), queueQUEUE_TYPE_SET );
 
 		return pxQueue;
 	}
@@ -2477,7 +2484,7 @@ BaseType_t xReturn;
 			/* The data copied is the handle of the queue that contains data. */
 			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
 
-			if( pxQueueSetContainer->xTxLock == queueUNLOCKED )
+			if( pxQueueSetContainer->cTxLock == queueUNLOCKED )
 			{
 				if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
 				{
@@ -2498,7 +2505,7 @@ BaseType_t xReturn;
 			}
 			else
 			{
-				( pxQueueSetContainer->xTxLock )++;
+				( pxQueueSetContainer->cTxLock )++;
 			}
 		}
 		else

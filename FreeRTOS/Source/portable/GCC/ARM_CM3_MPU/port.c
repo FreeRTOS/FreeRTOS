@@ -71,6 +71,8 @@
  * Implementation of functions defined in portable.h for the ARM CM3 port.
  *----------------------------------------------------------*/
 
+#error This port is not currently supported in this V9.0.0 revision number but will be by the final release.  For now use V8.2.3 instead.
+ 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
 task.h is included from an application file. */
@@ -1156,27 +1158,35 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
-void *MPU_pvPortMalloc( size_t xSize )
-{
-void *pvReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	
+	void *MPU_pvPortMalloc( size_t xSize )
+	{
+	void *pvReturn;
+	BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
-	pvReturn = pvPortMalloc( xSize );
+		pvReturn = pvPortMalloc( xSize );
 
-	portRESET_PRIVILEGE( xRunningPrivileged );
+		portRESET_PRIVILEGE( xRunningPrivileged );
 
-	return pvReturn;
-}
+		return pvReturn;
+	}
+	
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-void MPU_vPortFree( void *pv )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	vPortFree( pv );
+	void MPU_vPortFree( void *pv )
+	{
+	BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
+		vPortFree( pv );
+
+		portRESET_PRIVILEGE( xRunningPrivileged );
+	}
+	
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
 void MPU_vPortInitialiseBlocks( void )

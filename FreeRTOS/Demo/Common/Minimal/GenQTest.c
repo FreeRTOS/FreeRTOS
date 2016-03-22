@@ -154,36 +154,42 @@ SemaphoreHandle_t xMutex;
 	prvSendFrontAndBackTest demo. */
 	xQueue = xQueueCreate( genqQUEUE_LENGTH, sizeof( uint32_t ) );
 
-	/* vQueueAddToRegistry() adds the queue to the queue registry, if one is
-	in use.  The queue registry is provided as a means for kernel aware
-	debuggers to locate queues and has no purpose if a kernel aware debugger
-	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
-	defined to be less than 1. */
-	vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
+	if( xQueue != NULL )
+	{
+		/* vQueueAddToRegistry() adds the queue to the queue registry, if one
+		is in use.  The queue registry is provided as a means for kernel aware
+		debuggers to locate queues and has no purpose if a kernel aware debugger
+		is not being used.  The call to vQueueAddToRegistry() will be removed
+		by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
+		defined to be less than 1. */
+		vQueueAddToRegistry( xQueue, "Gen_Queue_Test" );
 
-	/* Create the demo task and pass it the queue just created.  We are
-	passing the queue handle by value so it does not matter that it is
-	declared on the stack here. */
-	xTaskCreate( prvSendFrontAndBackTest, "GenQ", configMINIMAL_STACK_SIZE, ( void * ) xQueue, uxPriority, NULL );
+		/* Create the demo task and pass it the queue just created.  We are
+		passing the queue handle by value so it does not matter that it is
+		declared on the stack here. */
+		xTaskCreate( prvSendFrontAndBackTest, "GenQ", configMINIMAL_STACK_SIZE, ( void * ) xQueue, uxPriority, NULL );
+	}
 
 	/* Create the mutex used by the prvMutexTest task. */
 	xMutex = xSemaphoreCreateMutex();
 
-	/* vQueueAddToRegistry() adds the mutex to the registry, if one is
-	in use.  The registry is provided as a means for kernel aware
-	debuggers to locate mutexes and has no purpose if a kernel aware debugger
-	is not being used.  The call to vQueueAddToRegistry() will be removed
-	by the pre-processor if configQUEUE_REGISTRY_SIZE is not defined or is
-	defined to be less than 1. */
-	vQueueAddToRegistry( ( QueueHandle_t ) xMutex, "Gen_Queue_Mutex" );
+	if( xMutex != NULL )
+	{
+		/* vQueueAddToRegistry() adds the mutex to the registry, if one is
+		in use.  The registry is provided as a means for kernel aware
+		debuggers to locate mutexes and has no purpose if a kernel aware
+		debugger is not being used.  The call to vQueueAddToRegistry() will be
+		removed by the pre-processor if configQUEUE_REGISTRY_SIZE is not
+		defined or is defined to be less than 1. */
+		vQueueAddToRegistry( ( QueueHandle_t ) xMutex, "Gen_Queue_Mutex" );
 
-	/* Create the mutex demo tasks and pass it the mutex just created.  We are
-	passing the mutex handle by value so it does not matter that it is declared
-	on the stack here. */
-	xTaskCreate( prvLowPriorityMutexTask, "MuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
-	xTaskCreate( prvMediumPriorityMutexTask, "MuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
-	xTaskCreate( prvHighPriorityMutexTask, "MuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
+		/* Create the mutex demo tasks and pass it the mutex just created.  We
+		are passing the mutex handle by value so it does not matter that it is
+		declared on the stack here. */
+		xTaskCreate( prvLowPriorityMutexTask, "MuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
+		xTaskCreate( prvMediumPriorityMutexTask, "MuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
+		xTaskCreate( prvHighPriorityMutexTask, "MuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
+	}
 }
 /*-----------------------------------------------------------*/
 

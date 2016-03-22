@@ -357,7 +357,9 @@ is used in assert() statements. */
  * \defgroup xTaskCreate xTaskCreate
  * \ingroup Tasks
  */
-#define xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( NULL ), ( NULL ), ( NULL ) )
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	BaseType_t xTaskCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+#endif
 
 /**
  * task. h
@@ -458,21 +460,21 @@ is used in assert() statements. */
  TaskHandle_t xHandle = NULL;
 
 	 // Create the task without using any dynamic memory allocation.
-	 xTaskCreate( vTaskCode,          // As per xTaskCreate() parameter.
-				  "NAME",             // As per xTaskCreate() parameter.
-				  STACK_SIZE,         // As per xTaskCreate() parameter.
-				  &ucParameterToPass, // As per xTaskCreate() parameter.
-				  tskIDLE_PRIORITY,   // As per xTaskCreate() parameter.
-				  &xHandle,           // As per xTaskCreate() parameter.
-				  xStack,             // Pointer to the buffer that the task being created will use as its stack.
-				  &xTaskBuffer );     // Pointer to a StaticTask_t structure for use as the memory require by the task.
+	 xTaskCreateStatic( vTaskCode,          // As per xTaskCreate() parameter.
+				        "NAME",             // As per xTaskCreate() parameter.
+				        STACK_SIZE,         // As per xTaskCreate() parameter.
+				        &ucParameterToPass, // As per xTaskCreate() parameter.
+				        tskIDLE_PRIORITY,   // As per xTaskCreate() parameter.
+				        &xHandle,           // As per xTaskCreate() parameter.
+				        xStack,             // Pointer to the buffer that the task being created will use as its stack.
+				        &xTaskBuffer );     // Pointer to a StaticTask_t structure for use as the memory require by the task.
  }
    </pre>
  * \defgroup xTaskCreateStatic xTaskCreateStatic
  * \ingroup Tasks
  */
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	#define xTaskCreateStatic( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, puxStackBuffer, pxTaskBuffer ) xTaskGenericCreate( ( pvTaskCode ), ( pcName ), ( usStackDepth ), ( pvParameters ), ( uxPriority ), ( pxCreatedTask ), ( puxStackBuffer ), ( pxTaskBuffer ), ( NULL ) )
+	BaseType_t xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**
@@ -2206,12 +2208,6 @@ void vTaskPriorityInherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTIO
  * inherited a higher priority while it was holding a semaphore.
  */
 BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTION;
-
-/*
- * Generic version of the task creation function which is in turn called by the
- * xTaskCreate() and xTaskCreateRestricted() macros.
- */
-BaseType_t xTaskGenericCreate( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer, const MemoryRegion_t * const xRegions ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Get the uxTCBNumber assigned to the task referenced by the xTask parameter.

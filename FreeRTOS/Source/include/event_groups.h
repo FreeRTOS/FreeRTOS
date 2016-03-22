@@ -74,6 +74,7 @@
 	#error "include FreeRTOS.h" must appear in source files before "include event_groups.h"
 #endif
 
+/* FreeRTOS includes. */
 #include "timers.h"
 
 #ifdef __cplusplus
@@ -173,10 +174,12 @@ typedef TickType_t EventBits_t;
  * \defgroup xEventGroupCreate xEventGroupCreate
  * \ingroup EventGroup
  */
-#define xEventGroupCreate() xEventGroupGenericCreate( NULL )
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	EventGroupHandle_t xEventGroupCreate( void ) PRIVILEGED_FUNCTION;
+#endif
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	#define xEventGroupCreateStatic( pxStaticEventGroup ) xEventGroupGenericCreate( ( pxStaticEventGroup ) )
+	EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxStaticEventGroup ) PRIVILEGED_FUNCTION;
 #endif
 
 /**
@@ -721,11 +724,6 @@ void vEventGroupDelete( EventGroupHandle_t xEventGroup ) PRIVILEGED_FUNCTION;
 void vEventGroupSetBitsCallback( void *pvEventGroup, const uint32_t ulBitsToSet ) PRIVILEGED_FUNCTION;
 void vEventGroupClearBitsCallback( void *pvEventGroup, const uint32_t ulBitsToClear ) PRIVILEGED_FUNCTION;
 
-/*
- * Generic version of the event group creation function, which is in turn called
- * by the event group creation macros.
- */
-EventGroupHandle_t xEventGroupGenericCreate( StaticEventGroup_t *pxStaticEventGroup ) PRIVILEGED_FUNCTION;
 
 #if (configUSE_TRACE_FACILITY == 1)
 	UBaseType_t uxEventGroupGetNumber( void* xEventGroup ) PRIVILEGED_FUNCTION;

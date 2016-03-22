@@ -139,6 +139,9 @@
 #include "EventGroupsDemo.h"
 #include "IntSemTest.h"
 #include "TaskNotify.h"
+#include "QueueSetPolling.h"
+#include "blocktim.h"
+#include "AbortDelay.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -217,6 +220,9 @@ int main_full( void )
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	vStartEventGroupTasks();
 	vStartInterruptSemaphoreTasks();
+	vStartQueueSetPollingTask();
+	vCreateBlockTimeTasks();
+	vCreateAbortDelayTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -238,16 +244,16 @@ int main_full( void )
 	/* Start the scheduler itself. */
 	vTaskStartScheduler();
 
-    /* Should never get here unless there was not enough heap space to create
+	/* Should never get here unless there was not enough heap space to create
 	the idle and other system tasks. */
-    return 0;
+	return 0;
 }
 /*-----------------------------------------------------------*/
 
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
+const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -336,6 +342,18 @@ const TickType_t xCycleFrequency = 2500 / portTICK_PERIOD_MS;
 		{
 			pcStatusMessage = "Error: Queue overwrite";
 		}
+		else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Queue set polling";
+		}
+		else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Block time";
+		}
+		else if( xAreAbortDelayTestTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Abort delay";
+		}
 
 		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
@@ -416,6 +434,7 @@ void vFullDemoTickHookFunction( void )
 	/* Write to a queue that is in use as part of the queue set demo to
 	demonstrate using queue sets from an ISR. */
 	vQueueSetAccessQueueSetFromISR();
+	vQueueSetPollingInterruptAccess();
 
 	/* Exercise event groups from interrupts. */
 	vPeriodicEventGroupsProcessing();

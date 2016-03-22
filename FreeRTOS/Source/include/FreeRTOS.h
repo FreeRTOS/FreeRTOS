@@ -173,10 +173,6 @@ extern "C" {
 	#define INCLUDE_xTaskAbortDelay 0
 #endif
 
-#ifndef INCLUDE_xTimerGetTimerDaemonTaskHandle
-	#define INCLUDE_xTimerGetTimerDaemonTaskHandle 0
-#endif
-
 #ifndef INCLUDE_xQueueGetMutexHolder
 	#define INCLUDE_xQueueGetMutexHolder 0
 #endif
@@ -691,14 +687,6 @@ extern "C" {
 	#define portYIELD_WITHIN_API portYIELD
 #endif
 
-#ifndef pvPortMallocAligned
-	#define pvPortMallocAligned( x, puxPreallocatedBuffer ) ( ( ( puxPreallocatedBuffer ) == NULL ) ? ( pvPortMalloc( ( x ) ) ) : ( puxPreallocatedBuffer ) )
-#endif
-
-#ifndef vPortFreeAligned
-	#define vPortFreeAligned( pvBlockToFree ) vPortFree( pvBlockToFree )
-#endif
-
 #ifndef portSUPPRESS_TICKS_AND_SLEEP
 	#define portSUPPRESS_TICKS_AND_SLEEP( xExpectedIdleTime )
 #endif
@@ -784,7 +772,28 @@ extern "C" {
 #endif
 
 #ifndef configSUPPORT_STATIC_ALLOCATION
+	/* Defaults to 0 for backward compatibility. */
 	#define configSUPPORT_STATIC_ALLOCATION 0
+#endif
+
+#ifndef configSUPPORT_DYNAMIC_ALLOCATION
+	/* Defaults to 1 for backward compatibility. */
+	#define configSUPPORT_DYNAMIC_ALLOCATION 1
+#endif
+
+/* Sanity check the configuration. */
+#if( configUSE_TICKLESS_IDLE != 0 )
+	#if( INCLUDE_vTaskSuspend != 1 )
+		#error INCLUDE_vTaskSuspend must be set to 1 if configUSE_TICKLESS_IDLE is not set to 0
+	#endif /* INCLUDE_vTaskSuspend */
+#endif /* configUSE_TICKLESS_IDLE */
+
+#if( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_STATIC_ALLOCATION != 1 ) )
+	#error configSUPPORT_STATIC_ALLOCATION must be set to 1 in FreeRTOSConfig.h when the MPU is used.
+#endif
+
+#if( ( configSUPPORT_STATIC_ALLOCATION == 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 0 ) )
+	#error configSUPPORT_STATIC_ALLOCATION and configSUPPORT_DYNAMIC_ALLOCATION cannot both be 0, but can both be 1.
 #endif
 
 #if( ( configUSE_RECURSIVE_MUTEXES == 1 ) && ( configUSE_MUTEXES != 1 ) )
@@ -966,19 +975,20 @@ typedef struct xSTATIC_QUEUE
 	} u;
 
 	StaticList_t xDummy3[ 2 ];
-	UBaseType_t uxDummy4[ 5 ];
+	UBaseType_t uxDummy4[ 3 ];
+	uint8_t ucDummy5[ 2 ];
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+		uint8_t ucDummy6;
+	#endif
 
 	#if ( configUSE_QUEUE_SETS == 1 )
 		void *pvDummy7;
 	#endif
 
 	#if ( configUSE_TRACE_FACILITY == 1 )
-		UBaseType_t uxDummy5;
-		uint8_t ucDummy6;
-	#endif
-
-	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
-			uint8_t ucDummy7;
+		UBaseType_t uxDummy8;
+		uint8_t ucDummy9;
 	#endif
 
 } StaticQueue_t;

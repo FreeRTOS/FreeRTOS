@@ -277,16 +277,15 @@ is used in assert() statements. */
  *
  * Create a new task and add it to the list of tasks that are ready to run.
  *
- * Internally, within the FreeRTOS implementation, tasks's use two blocks of
- * memory.  The first block is used to hold the tasks's data structures.  The
+ * Internally, within the FreeRTOS implementation, tasks use two blocks of
+ * memory.  The first block is used to hold the task's data structures.  The
  * second block is used by the task as its stack.  If a task is created using
  * xTaskCreate() then both blocks of memory are automatically dynamically
  * allocated inside the xTaskCreate() function.  (see
  * http://www.freertos.org/a00111.html).  If a task is created using
- * xTaskCreateStatic() then the application writer can instead optionally
- * provide the memory that will get used by the task.  xTaskCreateStatic()
- * therefore allows a task to be created without using any dynamic memory
- * allocation.
+ * xTaskCreateStatic() then the application writer must provide the required
+ * memory.  xTaskCreateStatic() therefore allows a task to be created without
+ * using any dynamic memory allocation.
  *
  * See xTaskCreateStatic() for a version that does not use any dynamic memory
  * allocation.
@@ -377,16 +376,15 @@ is used in assert() statements. */
  *
  * Create a new task and add it to the list of tasks that are ready to run.
  *
- * Internally, within the FreeRTOS implementation, tasks's use two blocks of
- * memory.  The first block is used to hold the tasks's data structures.  The
+ * Internally, within the FreeRTOS implementation, tasks use two blocks of
+ * memory.  The first block is used to hold the task's data structures.  The
  * second block is used by the task as its stack.  If a task is created using
  * xTaskCreate() then both blocks of memory are automatically dynamically
  * allocated inside the xTaskCreate() function.  (see
  * http://www.freertos.org/a00111.html).  If a task is created using
- * xTaskCreateStatic() then the application writer can instead optionally
- * provide the memory that will get used by the task.  xTaskCreateStatic()
- * therefore allows a task to be created without using any dynamic memory
- * allocation.
+ * xTaskCreateStatic() then the application writer must provide the required
+ * memory.  xTaskCreateStatic() therefore allows a task to be created without
+ * using any dynamic memory allocation.
  *
  * @param pvTaskCode Pointer to the task entry function.  Tasks
  * must be implemented to never return (i.e. continuous loop).
@@ -408,26 +406,18 @@ is used in assert() statements. */
  * @param pvCreatedTask Used to pass back a handle by which the created task
  * can be referenced.  Pass as NULL if the handle is not required.
  *
- * @param pxStackBuffer If pxStackBuffer is NULL then the stack used by the
- * task will be allocated dynamically, just as if the task was created using
- * xTaskCreate().  If pxStackBuffer is not NULL then it must point to a
- * StackType_t array that has at least usStackDepth indexes - the array will
- * then be used as the task's stack, removing the need for the stack to be
- * allocated dynamically.
+ * @param pxStackBuffer Must point to a StackType_t array that has at least
+ * usStackDepth indexes - the array will then be used as the task's stack,
+ * removing the need for the stack to be allocated dynamically.
  *
- * @param pxTaskBuffer If pxTaskBuffer is NULL then the memory used to hold the
- * task's data structures will be allocated dynamically, just as when a task is
- * created using xTaskCreate().  If pxTaskBuffer is not NULL then it must point
- * to a variable of type StaticTask_t, which will then be used to hold the
- * task's data structures, removing the need for the memory to be allocated
- * dynamically.
+ * @param pxTaskBuffer Must point to a variable of type StaticTask_t, which will
+ * then be used to hold the task's data structures, removing the need for the
+ * memory to be allocated dynamically.
  *
- * @return If neither pxStackBuffer or pxTaskBuffer are NULL, then the function
- * will not attempt any dynamic memory allocation, and pdPASS will always be
- * returned.  If pxStackBuffer or pxTaskBuffer is NULL then the function will
- * attempt to dynamically allocate one of both buffers.  In this case, if the
- * allocation succeeds then pdPASS will be returned, and if the allocation fails
- * then an error code defined in projdefs.h is returned.
+ * @return If neither pxStackBuffer or pxTaskBuffer are NULL, then the task will
+ * be created and pdPASS is returned.  If either pxStackBuffer or pxTaskBuffer
+ * are NULL then the task will not be created and 
+ * errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY is returned.
  *
  * Example usage:
    <pre>

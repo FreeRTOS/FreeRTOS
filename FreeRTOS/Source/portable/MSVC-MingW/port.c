@@ -261,6 +261,16 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 xThreadState *pxThreadState = NULL;
 int8_t *pcTopOfStack = ( int8_t * ) pxTopOfStack;
 
+	#ifdef portSOAK_TEST
+	{
+		/* Ensure highest priority class is inherited. */
+		if( !SetPriorityClass( GetCurrentProcess(), REALTIME_PRIORITY_CLASS ) )
+		{
+			printf( "SetPriorityClass() failed\r\n" );
+		}
+	}
+	#endif
+
 	/* In this simulated case a stack is not initialised, but instead a thread
 	is created that will execute the task being created.  The thread handles
 	the context switching itself.  The xThreadState object is placed onto

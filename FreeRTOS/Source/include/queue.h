@@ -126,16 +126,17 @@ typedef void * QueueSetMemberHandle_t;
  * Creates a new queue instance, and returns a handle by which the new queue
  * can be referenced.
  *
- * Internally, within the FreeRTOS implementation, queue's use two blocks of
+ * Internally, within the FreeRTOS implementation, queues use two blocks of
  * memory.  The first block is used to hold the queue's data structures.  The
  * second block is used to hold items placed into the queue.  If a queue is
  * created using xQueueCreate() then both blocks of memory are automatically
  * dynamically allocated inside the xQueueCreate() function.  (see
  * http://www.freertos.org/a00111.html).  If a queue is created using
- * xQueueCreateStatic() then the application writer can instead optionally
- * provide the memory that will get used by the queue.  xQueueCreateStatic()
- * therefore allows a queue to be created without using any dynamic memory
- * allocation.
+ * xQueueCreateStatic() then the application writer must provide the memory that
+ * will get used by the queue.  xQueueCreateStatic() therefore allows a queue to
+ * be created without using any dynamic memory allocation.
+ *
+ * http://www.FreeRTOS.org/Embedded-RTOS-Queues.html
  *
  * @param uxQueueLength The maximum number of items that the queue can contain.
  *
@@ -199,16 +200,17 @@ typedef void * QueueSetMemberHandle_t;
  * Creates a new queue instance, and returns a handle by which the new queue
  * can be referenced.
  *
- * Internally, within the FreeRTOS implementation, queue's use two blocks of
+ * Internally, within the FreeRTOS implementation, queues use two blocks of
  * memory.  The first block is used to hold the queue's data structures.  The
  * second block is used to hold items placed into the queue.  If a queue is
  * created using xQueueCreate() then both blocks of memory are automatically
  * dynamically allocated inside the xQueueCreate() function.  (see
  * http://www.freertos.org/a00111.html).  If a queue is created using
- * xQueueCreateStatic() then the application writer can instead optionally
- * provide the memory that will get used by the queue.  xQueueCreateStatic()
- * therefore allows a queue to be created without using any dynamic memory
- * allocation.
+ * xQueueCreateStatic() then the application writer must provide the memory that
+ * will get used by the queue.  xQueueCreateStatic() therefore allows a queue to
+ * be created without using any dynamic memory allocation.
+ *
+ * http://www.FreeRTOS.org/Embedded-RTOS-Queues.html
  *
  * @param uxQueueLength The maximum number of items that the queue can contain.
  *
@@ -217,27 +219,17 @@ typedef void * QueueSetMemberHandle_t;
  * that will be copied for each posted item.  Each item on the queue must be
  * the same size.
  *
- * @param pucQueueStorageBuffer If pucQueueStorageBuffer is NULL then the memory
- * used to hold items stored in the queue will be allocated dynamically, just as
- * when a queue is created using xQueueCreate().  If pxQueueStorageBuffer is not
- * NULL then it must point to a uint8_t array that is at least large enough to
- * hold the maximum number of items that can be in the queue at any one time -
- * which is ( uxQueueLength * uxItemsSize ) bytes.
+ * @param pucQueueStorageBuffer If uxItemSize is not zero then
+ * pucQueueStorageBuffer must point to a uint8_t array that is at least large
+ * enough to hold the maximum number of items that can be in the queue at any
+ * one time - which is ( uxQueueLength * uxItemsSize ) bytes.  If uxItemSize is
+ * zero then pucQueueStorageBuffer can be NULL.
  *
- * @param pxQueueBuffer If pxQueueBuffer is NULL then the memory required to
- * hold the queue's data structures will be allocated dynamically, just as when
- * a queue is created using xQueueCreate().  If pxQueueBuffer is not NULL then
- * it must point to a variable of type StaticQueue_t, which will then be used to
- * hold the queue's data structure, removing the need for the memory to be
- * allocated dynamically.
+ * @param pxQueueBuffer Must point to a variable of type StaticQueue_t, which
+ * will be used to hold the queue's data structure.
  *
- * @return If neither pucQueueStorageBuffer or pxQueueBuffer are NULL, then the
- * function will not attempt any dynamic memory allocation, and a handle to the
- * created queue will always be returned.  If pucQueueStorageBuffer or
- * pxQueueBuffer is NULL then the function will attempt to dynamically allocate
- * one of both buffers.  In this case, if the allocation succeeds then a handle
- * to the created queue will be returned, and if one of the the allocation fails
- * NULL will be returned.
+ * @return If the queue is created then a handle to the created queue is
+ * returned.  If pxQueueBuffer is NULL then NULL is returned.
  *
  * Example usage:
    <pre>
@@ -268,7 +260,7 @@ typedef void * QueueSetMemberHandle_t;
 							&xQueueBuffer ); // The buffer that will hold the queue structure.
 
 	// The queue is guaranteed to be created successfully as no dynamic memory
-	// allocation was used.  Therefore xQueue1 is now a handle to a valid queue.
+	// allocation is used.  Therefore xQueue1 is now a handle to a valid queue.
 
 	// ... Rest of task code.
  }

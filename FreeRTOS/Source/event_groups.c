@@ -132,15 +132,15 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxStaticEventGroup )
+	EventGroupHandle_t xEventGroupCreateStatic( StaticEventGroup_t *pxEventGroupBuffer )
 	{
 	EventGroup_t *pxEventBits;
 
 		/* A StaticEventGroup_t object must be provided. */
-		configASSERT( pxStaticEventGroup );
+		configASSERT( pxEventGroupBuffer );
 
 		/* The user has provided a statically allocated event group - use it. */
-		pxEventBits = ( EventGroup_t * ) pxStaticEventGroup; /*lint !e740 EventGroup_t and StaticEventGroup_t are guaranteed to have the same size and alignment requirement - checked by configASSERT(). */
+		pxEventBits = ( EventGroup_t * ) pxEventGroupBuffer; /*lint !e740 EventGroup_t and StaticEventGroup_t are guaranteed to have the same size and alignment requirement - checked by configASSERT(). */
 
 		if( pxEventBits != NULL )
 		{

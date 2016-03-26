@@ -944,7 +944,7 @@ typedef struct xSTATIC_TCB
 		uint32_t 		ulDummy18;
 		uint8_t 		ucDummy19;
 	#endif
-	#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 		uint8_t			uxDummy20;
 	#endif
 
@@ -978,7 +978,7 @@ typedef struct xSTATIC_QUEUE
 	UBaseType_t uxDummy4[ 3 ];
 	uint8_t ucDummy5[ 2 ];
 
-	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 		uint8_t ucDummy6;
 	#endif
 
@@ -1017,8 +1017,8 @@ typedef struct xSTATIC_EVENT_GROUP
 		UBaseType_t uxDummy3;
 	#endif
 
-	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-			uint8_t ucStaticallyAllocated;
+	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+			uint8_t ucDummy4;
 	#endif
 
 } StaticEventGroup_t;
@@ -1048,8 +1048,8 @@ typedef struct xSTATIC_TIMER
 		UBaseType_t		uxDummy6;
 	#endif
 
-	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-		uint8_t 		ucStaticallyAllocated;
+	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+		uint8_t 		ucDummy7;
 	#endif
 
 } StaticTimer_t;

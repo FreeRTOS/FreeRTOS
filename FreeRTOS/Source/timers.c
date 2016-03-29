@@ -433,6 +433,26 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void )
 }
 /*-----------------------------------------------------------*/
 
+TickType_t xTimerGetPeriod( TimerHandle_t xTimer )
+{
+const Timer_t * const pxTimer = ( const Timer_t * const  ) xTimer;
+
+	configASSERT( xTimer );
+	return pxTimer->xTimerPeriodInTicks;
+}
+/*-----------------------------------------------------------*/
+
+TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
+{
+const Timer_t * const pxTimer = ( const Timer_t * const  ) xTimer;
+TickType_t xReturn;
+
+	configASSERT( xTimer );
+	xReturn = listGET_LIST_ITEM_VALUE( &( pxTimer->xTimerListItem ) );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
 const char * pcTimerGetTimerName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxTimer = ( Timer_t * ) xTimer;

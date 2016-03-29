@@ -947,6 +947,8 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	{
 		if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 		{
+			const int8_t cTxLock = pxQueue->cTxLock;
+
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
 
 			/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
@@ -958,7 +960,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
-			if( pxQueue->cTxLock == queueUNLOCKED )
+			if( cTxLock == queueUNLOCKED )
 			{
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
@@ -1044,7 +1046,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was posted while it was locked. */
-				++( pxQueue->cTxLock );
+				pxQueue->cTxLock = cTxLock + 1;
 			}
 
 			xReturn = pdPASS;
@@ -1102,11 +1104,15 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
+		const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
+
 		/* When the queue is used to implement a semaphore no data is ever
 		moved through the queue but it is still valid to see if the queue 'has
 		space'. */
-		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+		if( uxMessagesWaiting < pxQueue->uxLength )
 		{
+			const int8_t cTxLock = pxQueue->cTxLock;
+
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
 
 			/* A task can only have an inherited priority if it is a mutex
@@ -1115,11 +1121,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			can be assumed there is no mutex holder and no need to determine if
 			priority disinheritance is needed.  Simply increase the count of
 			messages (semaphores) available. */
-			++( pxQueue->uxMessagesWaiting );
+			pxQueue->uxMessagesWaiting = uxMessagesWaiting + 1;
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
-			if( pxQueue->cTxLock == queueUNLOCKED )
+			if( cTxLock == queueUNLOCKED )
 			{
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
@@ -1205,7 +1211,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was posted while it was locked. */
-				++( pxQueue->cTxLock );
+				pxQueue->cTxLock = cTxLock + 1;
 			}
 
 			xReturn = pdPASS;
@@ -1245,9 +1251,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	{
 		taskENTER_CRITICAL();
 		{
+			const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
+
 			/* Is there data in the queue now?  To be running the calling task
 			must be the highest priority task wanting to access the queue. */
-			if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
+			if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 			{
 				/* Remember the read position in case the queue is only being
 				peeked. */
@@ -1260,7 +1268,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					traceQUEUE_RECEIVE( pxQueue );
 
 					/* Actually removing data, not just peeking. */
-					--( pxQueue->uxMessagesWaiting );
+					pxQueue->uxMessagesWaiting = uxMessagesWaiting - 1;
 
 					#if ( configUSE_MUTEXES == 1 )
 					{
@@ -1444,19 +1452,23 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 	{
+		const UBaseType_t uxMessagesWaiting = pxQueue->uxMessagesWaiting;
+
 		/* Cannot block in an ISR, so check there is data available. */
-		if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
+		if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 		{
+			const int8_t cRxLock = pxQueue->cRxLock;
+
 			traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
 
 			prvCopyDataFromQueue( pxQueue, pvBuffer );
-			--( pxQueue->uxMessagesWaiting );
+			pxQueue->uxMessagesWaiting = uxMessagesWaiting - 1;
 
 			/* If the queue is locked the event list will not be modified.
 			Instead update the lock count so the task that unlocks the queue
 			will know that an ISR has removed data while the queue was
 			locked. */
-			if( pxQueue->cRxLock == queueUNLOCKED )
+			if( cRxLock == queueUNLOCKED )
 			{
 				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 				{
@@ -1487,7 +1499,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was removed while it was locked. */
-				++( pxQueue->cRxLock );
+				pxQueue->cRxLock = cRxLock + 1;
 			}
 
 			xReturn = pdPASS;
@@ -1673,6 +1685,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
 {
 BaseType_t xReturn = pdFALSE;
+UBaseType_t uxMessagesWaiting;
+
+	/* This function is called from a critical section. */
+
+	uxMessagesWaiting = pxQueue->uxMessagesWaiting;
 
 	if( pxQueue->uxItemSize == ( UBaseType_t ) 0 )
 	{
@@ -1719,13 +1736,13 @@ BaseType_t xReturn = pdFALSE;
 
 		if( xPosition == queueOVERWRITE )
 		{
-			if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
+			if( uxMessagesWaiting > ( UBaseType_t ) 0 )
 			{
 				/* An item is not being added but overwritten, so subtract
 				one from the recorded number of items in the queue so when
 				one is added again below the number of recorded items remains
 				correct. */
-				--( pxQueue->uxMessagesWaiting );
+				--uxMessagesWaiting;
 			}
 			else
 			{
@@ -1738,7 +1755,7 @@ BaseType_t xReturn = pdFALSE;
 		}
 	}
 
-	++( pxQueue->uxMessagesWaiting );
+	pxQueue->uxMessagesWaiting = uxMessagesWaiting + 1;
 
 	return xReturn;
 }
@@ -1772,8 +1789,10 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 	updated. */
 	taskENTER_CRITICAL();
 	{
+		int8_t cTxLock = pxQueue->cTxLock;
+
 		/* See if data was added to the queue while it was locked. */
-		while( pxQueue->cTxLock > queueLOCKED_UNMODIFIED )
+		while( cTxLock > queueLOCKED_UNMODIFIED )
 		{
 			/* Data was posted while the queue was locked.  Are any tasks
 			blocked waiting for data to become available? */
@@ -1841,7 +1860,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 			}
 			#endif /* configUSE_QUEUE_SETS */
 
-			--( pxQueue->cTxLock );
+			--cTxLock;
 		}
 
 		pxQueue->cTxLock = queueUNLOCKED;
@@ -1851,7 +1870,9 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 	/* Do the same for the Rx lock. */
 	taskENTER_CRITICAL();
 	{
-		while( pxQueue->cRxLock > queueLOCKED_UNMODIFIED )
+		int8_t cRxLock = pxQueue->cRxLock;
+
+		while( cRxLock > queueLOCKED_UNMODIFIED )
 		{
 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
 			{
@@ -1864,7 +1885,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 					mtCOVERAGE_TEST_MARKER();
 				}
 
-				--( pxQueue->cRxLock );
+				--cRxLock;
 			}
 			else
 			{
@@ -2479,12 +2500,14 @@ BaseType_t xReturn;
 
 		if( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength )
 		{
+			const int8_t cTxLock = pxQueueSetContainer->cTxLock;
+
 			traceQUEUE_SEND( pxQueueSetContainer );
 
 			/* The data copied is the handle of the queue that contains data. */
 			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
 
-			if( pxQueueSetContainer->cTxLock == queueUNLOCKED )
+			if( cTxLock == queueUNLOCKED )
 			{
 				if( listLIST_IS_EMPTY( &( pxQueueSetContainer->xTasksWaitingToReceive ) ) == pdFALSE )
 				{
@@ -2505,7 +2528,7 @@ BaseType_t xReturn;
 			}
 			else
 			{
-				( pxQueueSetContainer->cTxLock )++;
+				pxQueueSetContainer->cTxLock = cTxLock + 1;
 			}
 		}
 		else

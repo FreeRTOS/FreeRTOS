@@ -88,13 +88,15 @@ Priorities are higher when a soak test is performed to lessen the effect of
 Windows interfering with the timing. */
 #define portSOAK_TEST
 #ifndef portSOAK_TEST
+	#define portDELETE_SELF_THREAD_PRIORITY			 THREAD_PRIORITY_HIGHEST /* Must be highest. */
 	#define portSIMULATED_INTERRUPTS_THREAD_PRIORITY THREAD_PRIORITY_NORMAL
 	#define portSIMULATED_TIMER_THREAD_PRIORITY		 THREAD_PRIORITY_BELOW_NORMAL
 	#define portTASK_THREAD_PRIORITY				 THREAD_PRIORITY_IDLE
 #else
-	#define portSIMULATED_INTERRUPTS_THREAD_PRIORITY THREAD_PRIORITY_TIME_CRITICAL
-	#define portSIMULATED_TIMER_THREAD_PRIORITY		 THREAD_PRIORITY_HIGHEST
-	#define portTASK_THREAD_PRIORITY				 THREAD_PRIORITY_ABOVE_NORMAL
+	#define portDELETE_SELF_THREAD_PRIORITY			 THREAD_PRIORITY_TIME_CRITICAL /* Must be highest. */
+	#define portSIMULATED_INTERRUPTS_THREAD_PRIORITY THREAD_PRIORITY_HIGHEST
+	#define portSIMULATED_TIMER_THREAD_PRIORITY		 THREAD_PRIORITY_ABOVE_NORMAL
+	#define portTASK_THREAD_PRIORITY				 THREAD_PRIORITY_NORMAL
 #endif
 /*
  * Created as a high priority thread, this function uses a timer to simulate
@@ -516,7 +518,7 @@ uint32_t ulErrorCode;
 	does not run and swap it out before it is closed.  If that were to happen
 	the thread would never run again and effectively be a thread handle and
 	memory leak. */
-	SetThreadPriority( pvThread, THREAD_PRIORITY_HIGHEST );
+	SetThreadPriority( pvThread, portDELETE_SELF_THREAD_PRIORITY );
 
 	/* This function will not return, therefore a yield is set as pending to
 	ensure a context switch occurs away from this thread on the next tick. */

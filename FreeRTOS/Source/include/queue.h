@@ -1616,7 +1616,7 @@ BaseType_t xQueueGiveMutexRecursive( QueueHandle_t pxMutex ) PRIVILEGED_FUNCTION
 #endif
 
 /*
- * The registry is provided as a means for kernel aware debuggers to
+ * The queue registry is provided as a means for kernel aware debuggers to
  * locate queues, semaphores and mutexes.  Call pcQueueGetQueueName() to look
  * up and return the name of a queue in the queue registry from the queue's
  * handle.

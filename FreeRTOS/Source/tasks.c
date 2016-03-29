@@ -2063,20 +2063,16 @@ UBaseType_t uxTaskGetNumberOfTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_pcTaskGetTaskName == 1 )
+char *pcTaskGetName( TaskHandle_t xTaskToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+{
+TCB_t *pxTCB;
 
-	char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-	{
-	TCB_t *pxTCB;
-
-		/* If null is passed in here then the name of the calling task is being
-		queried. */
-		pxTCB = prvGetTCBFromHandle( xTaskToQuery );
-		configASSERT( pxTCB );
-		return &( pxTCB->pcTaskName[ 0 ] );
-	}
-
-#endif /* INCLUDE_pcTaskGetTaskName */
+	/* If null is passed in here then the name of the calling task is being
+	queried. */
+	pxTCB = prvGetTCBFromHandle( xTaskToQuery );
+	configASSERT( pxTCB );
+	return &( pxTCB->pcTaskName[ 0 ] );
+}
 /*-----------------------------------------------------------*/
 
 #if ( INCLUDE_xTaskGetTaskHandle == 1 )

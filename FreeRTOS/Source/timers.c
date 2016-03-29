@@ -453,7 +453,7 @@ TickType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-const char * pcTimerGetTimerName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+const char * pcTimerGetName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 Timer_t *pxTimer = ( Timer_t * ) xTimer;
 

@@ -416,7 +416,7 @@ is used in assert() statements. */
  *
  * @return If neither pxStackBuffer or pxTaskBuffer are NULL, then the task will
  * be created and pdPASS is returned.  If either pxStackBuffer or pxTaskBuffer
- * are NULL then the task will not be created and 
+ * are NULL then the task will not be created and
  * errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY is returned.
  *
  * Example usage:
@@ -1302,17 +1302,16 @@ UBaseType_t uxTaskGetNumberOfTasks( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <PRE>char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery );</PRE>
+ * <PRE>char *pcTaskGetName( TaskHandle_t xTaskToQuery );</PRE>
  *
  * @return The text (human readable) name of the task referenced by the handle
  * xTaskToQuery.  A task can query its own name by either passing in its own
- * handle, or by setting xTaskToQuery to NULL.  INCLUDE_pcTaskGetTaskName must be
- * set to 1 in FreeRTOSConfig.h for pcTaskGetTaskName() to be available.
+ * handle, or by setting xTaskToQuery to NULL.
  *
- * \defgroup pcTaskGetTaskName pcTaskGetTaskName
+ * \defgroup pcTaskGetName pcTaskGetName
  * \ingroup TaskUtils
  */
-char *pcTaskGetTaskName( TaskHandle_t xTaskToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+char *pcTaskGetName( TaskHandle_t xTaskToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * task. h

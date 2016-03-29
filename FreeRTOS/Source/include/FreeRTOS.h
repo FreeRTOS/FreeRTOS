@@ -181,10 +181,6 @@ extern "C" {
 	#define INCLUDE_xSemaphoreGetMutexHolder INCLUDE_xQueueGetMutexHolder
 #endif
 
-#ifndef INCLUDE_pcTaskGetTaskName
-	#define INCLUDE_pcTaskGetTaskName 0
-#endif
-
 #ifndef INCLUDE_xTaskGetTaskHandle
 	#define INCLUDE_xTaskGetTaskHandle 0
 #endif
@@ -318,7 +314,7 @@ extern "C" {
 #if ( configQUEUE_REGISTRY_SIZE < 1 )
 	#define vQueueAddToRegistry( xQueue, pcName )
 	#define vQueueUnregisterQueue( xQueue )
-	#define pcQueueGetQueueName( xQueue )
+	#define pcQueueGetName( xQueue )
 #endif
 
 #ifndef portPOINTER_SIZE_TYPE
@@ -839,6 +835,8 @@ V8 if desired. */
 	#define xCoRoutineHandle CoRoutineHandle_t
 	#define pdTASK_HOOK_CODE TaskHookFunction_t
 	#define portTICK_RATE_MS portTICK_PERIOD_MS
+	#define pcTaskGetTaskName pcTaskGetName
+	#define pcTimerGetTimerName pcTimerGetName
 
 	/* Backward compatibility within the scheduler code only - these definitions
 	are not really required but are included for completeness. */

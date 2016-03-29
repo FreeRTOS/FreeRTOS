@@ -143,7 +143,7 @@ only for ports that are using the MPU. */
 		#define xTimerIsTimerActive				MPU_xTimerIsTimerActive
 		#define xTimerGetTimerDaemonTaskHandle	MPU_xTimerGetTimerDaemonTaskHandle
 		#define xTimerPendFunctionCall			MPU_xTimerPendFunctionCall
-		#define pcTimerGetTimerName				MPU_pcTimerGetTimerName
+		#define pcTimerGetName					MPU_pcTimerGetName
 		#define xTimerGenericCommand			MPU_xTimerGenericCommand
 
 		#define xEventGroupCreate				MPU_xEventGroupCreate

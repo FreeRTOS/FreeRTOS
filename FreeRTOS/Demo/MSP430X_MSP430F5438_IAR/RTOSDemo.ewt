@@ -12,6 +12,14 @@
       <name>C-STAT</name>
       <archiveVersion>1</archiveVersion>
       <data>
+        <version>1</version>
+        <cstatargs>
+          <useExtraArgs>0</useExtraArgs>
+          <extraArgs></extraArgs>
+          <analyzeTimeout>600</analyzeTimeout>
+          <enableParallel>0</enableParallel>
+          <parallelThreads>2</parallelThreads>
+        </cstatargs>
         <cstatsettings>
           <package checked="true" name="STDCHECKS">
             <group checked="true" name="ARR">
@@ -983,6 +991,14 @@
       <name>C-STAT</name>
       <archiveVersion>1</archiveVersion>
       <data>
+        <version>1</version>
+        <cstatargs>
+          <useExtraArgs>0</useExtraArgs>
+          <extraArgs></extraArgs>
+          <analyzeTimeout>600</analyzeTimeout>
+          <enableParallel>0</enableParallel>
+          <parallelThreads>2</parallelThreads>
+        </cstatargs>
         <cstatsettings>
           <package checked="true" name="STDCHECKS">
             <group checked="true" name="ARR">
@@ -1954,6 +1970,14 @@
       <name>C-STAT</name>
       <archiveVersion>1</archiveVersion>
       <data>
+        <version>1</version>
+        <cstatargs>
+          <useExtraArgs>0</useExtraArgs>
+          <extraArgs></extraArgs>
+          <analyzeTimeout>600</analyzeTimeout>
+          <enableParallel>0</enableParallel>
+          <parallelThreads>2</parallelThreads>
+        </cstatargs>
         <cstatsettings>
           <package checked="true" name="STDCHECKS">
             <group checked="true" name="ARR">
@@ -2925,6 +2949,14 @@
       <name>C-STAT</name>
       <archiveVersion>1</archiveVersion>
       <data>
+        <version>1</version>
+        <cstatargs>
+          <useExtraArgs>0</useExtraArgs>
+          <extraArgs></extraArgs>
+          <analyzeTimeout>600</analyzeTimeout>
+          <enableParallel>0</enableParallel>
+          <parallelThreads>2</parallelThreads>
+        </cstatargs>
         <cstatsettings>
           <package checked="true" name="STDCHECKS">
             <group checked="true" name="ARR">

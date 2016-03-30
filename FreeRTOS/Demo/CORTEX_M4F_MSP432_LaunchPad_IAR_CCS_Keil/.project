@@ -166,7 +166,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780710</id>
+			<id>1458999824885</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -175,7 +175,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780715</id>
+			<id>1458999824885</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -184,7 +184,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780721</id>
+			<id>1458999824885</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -193,7 +193,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780726</id>
+			<id>1458999824895</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -202,7 +202,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780730</id>
+			<id>1458999824895</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -211,7 +211,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780734</id>
+			<id>1458999824905</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -220,7 +220,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780739</id>
+			<id>1458999824905</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -229,7 +229,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780744</id>
+			<id>1458999824915</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -238,12 +238,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1424443780748</id>
+			<id>1458999824915</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-timer32.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1458999824925</id>
+			<name>driverlib</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-sysctl.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

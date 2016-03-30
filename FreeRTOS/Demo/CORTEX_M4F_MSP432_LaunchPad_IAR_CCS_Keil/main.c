@@ -122,7 +122,7 @@ int main( void )
 
 	/* The configCREATE_SIMPLE_TICKLESS_DEMO setting is described at the top
 	of this file. */
-	#if configCREATE_SIMPLE_TICKLESS_DEMO == 1
+	#if( configCREATE_SIMPLE_TICKLESS_DEMO == 1 )
 	{
 		main_blinky();
 	}

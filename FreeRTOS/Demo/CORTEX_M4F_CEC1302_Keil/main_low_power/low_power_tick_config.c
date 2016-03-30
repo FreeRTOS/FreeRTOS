@@ -109,15 +109,15 @@ resolution and low resolution respectively. */
 /* When lpINCLUDE_TEST_TIMER is set to 1 a basic timer is used to generate
 interrupts at a low frequency.  The purpose being to bring the CPU out of its
 sleep mode by an interrupt other than the tick interrupt, and therefore
-allowing an additional past through the code to be tested. */
+allowing an additional paths through the code to be tested. */
 #define lpINCLUDE_TEST_TIMER			0
 
 /* Some registers are accessed directly as the library is not compatible with
 all the compilers used. */
-#define lpHTIMER_PRELOAD_REGISTER		( * ( uint16_t * ) 0x40009800 )
-#define lpHTIMER_CONTROL_REGISTER		( * ( uint16_t * ) 0x40009804 )
-#define lpHTIMER_COUNT_REGISTER			( * ( uint16_t * ) 0x40009808 )
-#define lpEC_GIRQ17_ENABLE_SET			( * ( uint32_t * ) 0x4000C0B8 )
+#define lpHTIMER_PRELOAD_REGISTER		( * ( volatile uint16_t * ) 0x40009800 )
+#define lpHTIMER_CONTROL_REGISTER		( * ( volatile uint16_t * ) 0x40009804 )
+#define lpHTIMER_COUNT_REGISTER			( * ( volatile uint16_t * ) 0x40009808 )
+#define lpEC_GIRQ17_ENABLE_SET			( * ( volatile uint32_t * ) 0x4000C0B8 )
 #define lpHTIMER_INTERRUPT_CONTROL_BIT	( 1UL << 20UL )
 
 /*
@@ -378,7 +378,7 @@ TickType_t xModifiableIdleTime;
 			/* Undo the adjustment that was made to the reload value to account
 			for the fact that a time slice was part way through when this
 			function was called before working out how many complete tick
-			periods this represents.  (could have used [ulExpectedIdleTime * 
+			periods this represents.  (could have used [ulExpectedIdleTime *
 			ulReloadValueForOneHighResolutionTick] instead of ulReloadValue on
 			the previous line, but this way avoids the multiplication). */
 			ulCompletedTimerDecrements += ( ulReloadValueForOneHighResolutionTick - ulCountBeforeSleep );

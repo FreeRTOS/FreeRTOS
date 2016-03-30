@@ -1,38 +1,38 @@
-//*****************************************************************************
-//
-// Copyright (C) 2012 - 2014 Texas Instruments Incorporated - http://www.ti.com/ 
-//
-// Redistribution and use in source and binary forms, with or without 
-// modification, are permitted provided that the following conditions 
-// are met:
-//
-//  Redistributions of source code must retain the above copyright 
-//  notice, this list of conditions and the following disclaimer.
-//
-//  Redistributions in binary form must reproduce the above copyright
-//  notice, this list of conditions and the following disclaimer in the 
-//  documentation and/or other materials provided with the   
-//  distribution.
-//
-//  Neither the name of Texas Instruments Incorporated nor the names of
-//  its contributors may be used to endorse or promote products derived
-//  from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
-//
-// MSP432 Family Interrupt Vector Table for CGT
-//
-//****************************************************************************
+/******************************************************************************
+* 
+*  Copyright (C) 2012 - 2016 Texas Instruments Incorporated - http://www.ti.com/ 
+* 
+*  Redistribution and use in source and binary forms, with or without 
+*  modification, are permitted provided that the following conditions 
+*  are met:
+* 
+*   Redistributions of source code must retain the above copyright 
+*   notice, this list of conditions and the following disclaimer.
+* 
+*   Redistributions in binary form must reproduce the above copyright
+*   notice, this list of conditions and the following disclaimer in the 
+*   documentation and/or other materials provided with the   
+*   distribution.
+* 
+*   Neither the name of Texas Instruments Incorporated nor the names of
+*   its contributors may be used to endorse or promote products derived
+*   from this software without specific prior written permission.
+* 
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+* 
+*  MSP432P401R Interrupt Vector Table and startup code for CCS TI ARM
+* 
+*****************************************************************************/
 
 #include <stdint.h>
 #include <driverlib.h>
@@ -48,6 +48,8 @@ static void defaultISR(void);
 /* processor is started                                                     */
 extern void _c_int00(void);
 
+/* External declaration for system initialization function                  */
+extern void SystemInit(void);
 
 /* Linker variable that marks the top of the stack. */
 extern unsigned long __STACK_END;
@@ -67,6 +69,7 @@ extern void vT32_1_Handler( void );
 /* Intrrupt vector table.  Note that the proper constructs must be placed on this to  */
 /* ensure that it ends up at physical address 0x0000.0000 or at the start of          */
 /* the program if located at a start address other than 0.                            */
+#pragma RETAIN(interruptVectors)
 #pragma DATA_SECTION(interruptVectors, ".intvecs")
 void (* const interruptVectors[])(void) =
 {
@@ -163,6 +166,8 @@ void (* const interruptVectors[])(void) =
 /* application.                                                                */
 void resetISR(void)
 {
+    SystemInit();
+
     /* Jump to the CCS C Initialization Routine. */
 	MAP_WDT_A_holdTimer();
     __asm("    .global _c_int00\n"
@@ -175,10 +180,16 @@ void resetISR(void)
 /* by a debugger.                                                              */
 static void nmiISR(void)
 {
+    /* Fault trap exempt from ULP advisor */
+    #pragma diag_push
+    #pragma CHECK_ULP("-2.1")
+
     /* Enter an infinite loop. */
     while(1)
     {
     }
+
+    #pragma diag_pop
 }
 
 
@@ -187,10 +198,16 @@ static void nmiISR(void)
 /* for examination by a debugger.                                               */
 static void faultISR(void)
 {
+    /* Fault trap exempt from ULP advisor */
+    #pragma diag_push
+    #pragma CHECK_ULP("-2.1")
+
     /* Enter an infinite loop. */
     while(1)
     {
     }
+
+    #pragma diag_pop
 }
 
 
@@ -199,8 +216,14 @@ static void faultISR(void)
 /* for examination by a debugger.                                               */
 static void defaultISR(void)
 {
+    /* Fault trap exempt from ULP advisor */
+    #pragma diag_push
+    #pragma CHECK_ULP("-2.1")
+
     /* Enter an infinite loop. */
     while(1)
     {
     }
+
+    #pragma diag_pop
 }

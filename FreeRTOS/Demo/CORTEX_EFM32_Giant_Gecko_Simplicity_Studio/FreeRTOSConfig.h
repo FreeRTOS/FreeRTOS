@@ -173,7 +173,7 @@ extern "C" {
 #define configCPU_CLOCK_HZ						(( unsigned long ) 14000000)
 #define configMAX_PRIORITIES					( 6 )
 #define configMINIMAL_STACK_SIZE				(( unsigned short ) 130)
-#define configTOTAL_HEAP_SIZE					(( size_t )(25000))
+#define configTOTAL_HEAP_SIZE					(( size_t )(24000))
 #define configMAX_TASK_NAME_LEN				 	( 10 )
 #define configUSE_TRACE_FACILITY				( 0 )
 #define configUSE_16_BIT_TICKS					( 0 )
@@ -237,7 +237,6 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define INCLUDE_uxTaskGetStackHighWaterMark		( 0 )
 #define INCLUDE_xTaskGetIdleTaskHandle			( 0 )
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle	( 0 )
-#define INCLUDE_pcTaskGetTaskName				( 0 )
 #define INCLUDE_eTaskGetState					( 1 )
 #define INCLUDE_xTimerPendFunctionCall			( 1 )
 

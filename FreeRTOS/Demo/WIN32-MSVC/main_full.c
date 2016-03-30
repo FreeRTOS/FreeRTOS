@@ -174,9 +174,18 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 static void prvDemonstratePendingFunctionCall( void );
 
 /*
- * The function that is pended by prvDemonstratePendingFunctionCall().
- */
+* The function that is pended by prvDemonstratePendingFunctionCall().
+*/
 static void prvPendedFunction( void *pvParameter1, uint32_t ulParameter2 );
+
+/*
+ * prvDemonstrateTimerQueryFunctions() is called from the idle task hook
+ * function to demonstrate the use of functions that query information about a
+ * software timer.  prvTestTimerCallback() is the callback function for the
+ * timer being queried.
+ */
+static void prvDemonstrateTimerQueryFunctions( void );
+static void prvTestTimerCallback( TimerHandle_t xTimer );
 
 /*
  * A task to demonstrate the use of the xQueueSpacesAvailable() function.
@@ -418,6 +427,11 @@ void *pvAllocated;
 	demonstrated by any of the standard demo tasks. */
 	prvDemonstratePendingFunctionCall();
 
+	/* Demonstrate the use of functions that query information about a software
+	timer. */
+	prvDemonstrateTimerQueryFunctions();
+
+
 	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the
 	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
@@ -428,11 +442,11 @@ void *pvAllocated;
 		again, before it is deleted - checking its name is as expected before
 		and after the assertion into the registry and its removal from the
 		registry. */
-		configASSERT( pcQueueGetQueueName( xMutexToDelete ) == NULL );
+		configASSERT( pcQueueGetName( xMutexToDelete ) == NULL );
 		vQueueAddToRegistry( xMutexToDelete, "Test_Mutex" );
-		configASSERT( strcmp( pcQueueGetQueueName( xMutexToDelete ), "Test_Mutex" ) == 0 );
+		configASSERT( strcmp( pcQueueGetName( xMutexToDelete ), "Test_Mutex" ) == 0 );
 		vQueueUnregisterQueue( xMutexToDelete );
-		configASSERT( pcQueueGetQueueName( xMutexToDelete ) == NULL );
+		configASSERT( pcQueueGetName( xMutexToDelete ) == NULL );
 
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;
@@ -499,6 +513,53 @@ uint32_t ulParameter1;
 }
 /*-----------------------------------------------------------*/
 
+static void prvTestTimerCallback( TimerHandle_t xTimer )
+{
+	/* This is the callback function for the timer accessed by
+	prvDemonstrateTimerQueryFunctions().  The callback does not do anything. */
+	( void ) xTimer;
+}
+/*-----------------------------------------------------------*/
+
+static void prvDemonstrateTimerQueryFunctions( void )
+{
+static TimerHandle_t xTimer = NULL;
+const char *pcTimerName = "TestTimer";
+volatile TickType_t xExpiryTime;
+const TickType_t xDontBlock = 0;
+
+	if( xTimer == NULL )
+	{
+		xTimer = xTimerCreate( pcTimerName, portMAX_DELAY, pdTRUE, NULL, prvTestTimerCallback );
+
+		if( xTimer != NULL )
+		{
+			/* Called from the idle task so a block time must not be
+			specified. */
+			xTimerStart( xTimer, xDontBlock );
+		}
+	}
+
+	if( xTimer != NULL )
+	{
+		/* Demonstrate querying a timer's name. */
+		configASSERT( strcmp( pcTimerGetName( xTimer ), pcTimerName ) == 0 );
+
+		/* Demonstrate querying a timer's period. */
+		configASSERT( xTimerGetPeriod( xTimer ) == portMAX_DELAY );
+
+		/* Demonstrate querying a timer's next expiry time, although nothing is
+		done with the returned value.  Note if the expiry time is less than the
+		maximum tick count then the expiry time has overflowed from the current
+		time.  In this case the expiry time was set to portMAX_DELAY, so it is
+		expected to be less than the current time until the current time has
+		itself overflowed. */
+		xExpiryTime = xTimerGetExpiryTime( xTimer );
+		( void ) xExpiryTime;
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvDemonstratePendingFunctionCall( void )
 {
 static uint32_t ulParameter1 = 1000UL, ulParameter2 = 0UL;
@@ -549,7 +610,7 @@ extern StackType_t uxTimerTaskStack[];
 	}
 
 	/* Check the timer task handle was returned correctly. */
-	pcTaskName = pcTaskGetTaskName( xTimerTaskHandle );
+	pcTaskName = pcTaskGetName( xTimerTaskHandle );
 	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
 	{
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";

@@ -9,17 +9,17 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [PlDriver]
-MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.2\arm\CONFIG\debugger\TexasInstruments\MSP432P401R.svd
+MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.3\arm\CONFIG\debugger\TexasInstruments\MSP432P401R.ddf
 FirstRun=0
 [Jet]
-JetConnSerialNo=73866
+JetConnSerialNo=59065
 JetConnFoundProbes=
 DisableInterrupts=0
 MultiCoreRunAll=0
 OnlineReset=Software
 PrevWtdReset=System
 [DebugChecksum]
-Checksum=-1201177865
+Checksum=-851533712
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -30,8 +30,8 @@ MixedMode=1
 [SWOManager]
 SamplingDivider=8192
 OverrideClock=0
-CpuClock=696008061
-SwoClock=560889384
+CpuClock=542261577
+SwoClock=1953724755
 DataLogMode=0
 ItmPortsEnabled=63
 ItmTermIOPorts=1
@@ -64,31 +64,6 @@ ITMportsLogFile=0
 ITMlogFile=$PROJ_DIR$\ITM.log
 [Breakpoints]
 Count=0
-[PlCacheRanges]
-CustomRanges0=0 0 536870912 1 0
-CustomRangesText0=Code
-CustomRanges1=0 536870912 33554432 0 0
-CustomRangesText1=SRAM
-CustomRanges2=0 570425344 33554432 0 0
-CustomRangesText2=bit-banding
-CustomRanges3=0 1073741824 33554432 2 0
-CustomRangesText3=Peripheral
-CustomRanges4=0 1107296256 33554432 2 0
-CustomRangesText4=bit-banding
-CustomRanges5=0 3758096384 536870912 2 0
-CustomRangesText5=Private peripheral
-[Trace2]
-Enabled=0
-ShowSource=0
-[SWOTraceWindow]
-ForcedPcSampling=0
-ForcedInterruptLogs=0
-ForcedItmLogs=0
-EventCPI=0
-EventEXC=0
-EventFOLD=0
-EventLSU=0
-EventSLEEP=0
 [PowerLog]
 Title_0=I0
 Symbol_0=0 4 1
@@ -139,6 +114,34 @@ Exclusions=
 Frequency=10000
 Probe0=I0
 ProbeSetup0=2 1 1 2 0 0
+[XdsDriver]
+CStepIntDis=_ 0
+[Trace1]
+Enabled=0
+ShowSource=1
+[ETMTraceWindow]
+PortWidth=4
+PortMode=0
+CaptureDataValues=0
+CaptureDataAddresses=0
+CaptureDataRange=0
+DataFirst=0
+DataLast=-1
+StopWhen=0
+StallCPU=0
+NoPCCapture=0
+[Trace2]
+Enabled=0
+ShowSource=0
+[SWOTraceWindow]
+ForcedPcSampling=0
+ForcedInterruptLogs=0
+ForcedItmLogs=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

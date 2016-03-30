@@ -154,7 +154,6 @@ referenced anyway. */
 #define INCLUDE_vTaskDelayUntil					1
 #define INCLUDE_vTaskDelay						1
 #define INCLUDE_uxTaskGetStackHighWaterMark		1
-#define INCLUDE_pcTaskGetTaskName				1
 #define INCLUDE_xTaskGetIdleTaskHandle			0
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xTaskResumeFromISR				0

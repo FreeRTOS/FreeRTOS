@@ -1,5 +1,76 @@
+/*
+ * -------------------------------------------
+ *    MSP432 DriverLib - v3_10_00_09
+ * -------------------------------------------
+ *
+ * --COPYRIGHT--,BSD,BSD
+ * Copyright (c) 2014, Texas Instruments Incorporated
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * *  Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * *  Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * *  Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * --/COPYRIGHT--*/
+//*****************************************************************************
+//
+// Copyright (C) 2012 - 2015 Texas Instruments Incorporated - http://www.ti.com/
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+//
+//  Redistributions of source code must retain the above copyright
+//  notice, this list of conditions and the following disclaimer.
+//
+//  Redistributions in binary form must reproduce the above copyright
+//  notice, this list of conditions and the following disclaimer in the
+//  documentation and/or other materials provided with the
+//  distribution.
+//
+//  Neither the name of Texas Instruments Incorporated nor the names of
+//  its contributors may be used to endorse or promote products derived
+//  from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// MSP432 Startup Code for IAR Embedded Workbench for ARM
+//
+//****************************************************************************
+
 #include <stdint.h>
-#include <msp.h>
 
 //*****************************************************************************
 //
@@ -13,10 +84,10 @@
 // Forward declaration of the default fault handlers.
 //
 //*****************************************************************************
-void resetISR(void);
-static void nmiSR(void);
-static void faultISR(void);
-static void intDefaultHandler(void);
+void ResetISR(void);
+static void NmiSR(void);
+static void FaultISR(void);
+static void IntDefaultHandler(void);
 
 //*****************************************************************************
 //
@@ -67,86 +138,86 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
 {
     { .ptr = (uint32_t)systemStack + sizeof(systemStack) },
                                             // The initial stack pointer
-    resetISR,                               // The reset handler
-    nmiSR,                                  // The NMI handler
-    faultISR,                               // The hard fault handler
-    intDefaultHandler,                             // The MPU fault handler
-    intDefaultHandler,                             // The bus fault handler
-    intDefaultHandler,                             // The usage fault handler
+    ResetISR,                               // The reset handler
+    NmiSR,                                  // The NMI handler
+    FaultISR,                               // The hard fault handler
+    IntDefaultHandler,                      // The MPU fault handler
+    IntDefaultHandler,                      // The bus fault handler
+    IntDefaultHandler,                      // The usage fault handler
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
     0,                                      // Reserved
     SVC_Handler,                             // SVCall handler
-    intDefaultHandler,                             // Debug monitor handler
+    IntDefaultHandler,                      // Debug monitor handler
     0,                                      // Reserved
     PendSV_Handler,                             // The PendSV handler
     SysTick_Handler,                            // The SysTick handler
-    intDefaultHandler,                             // PSS ISR
-    intDefaultHandler,                             // CS ISR
-    intDefaultHandler,                             // PCM ISR
-    intDefaultHandler,                             // WDT ISR
-    intDefaultHandler,                             // FPU ISR
-    intDefaultHandler,                             // FLCTL ISR
-    intDefaultHandler,                             // COMP0 ISR
-    intDefaultHandler,                             // COMP1 ISR
-    intDefaultHandler,                             // TA0_0 ISR
-    intDefaultHandler,                             // TA0_N ISR
-    intDefaultHandler,                            // TA1_0 ISR
-    intDefaultHandler,                             // TA1_N ISR
-    intDefaultHandler,                            // TA2_0 ISR
-    intDefaultHandler,                             // TA2_N ISR
-    intDefaultHandler,                             // TA3_0 ISR
-    intDefaultHandler,                             // TA3_N ISR
+    IntDefaultHandler,                      // PSS ISR
+    IntDefaultHandler,                      // CS ISR
+    IntDefaultHandler,                      // PCM ISR
+    IntDefaultHandler,                      // WDT ISR
+    IntDefaultHandler,                      // FPU ISR
+    IntDefaultHandler,                      // FLCTL ISR
+    IntDefaultHandler,                      // COMP_E0_MODULE ISR
+    IntDefaultHandler,                      // COMP_E1_MODULE ISR
+    IntDefaultHandler,                      // TA0_0 ISR
+    IntDefaultHandler,                      // TA0_N ISR
+    IntDefaultHandler,                      // TA1_0 ISR
+    IntDefaultHandler,                      // TA1_N ISR
+    IntDefaultHandler,                      // TA2_0 ISR
+    IntDefaultHandler,                      // TA2_N ISR
+    IntDefaultHandler,                      // TA3_0 ISR
+    IntDefaultHandler,                      // TA3_N ISR
     vUART_Handler,                            // EUSCIA0 ISR
-    intDefaultHandler,                             // EUSCIA1 ISR
-    intDefaultHandler,                             // EUSCIA2 ISR
-    intDefaultHandler,                             // EUSCIA3 ISR
-    intDefaultHandler,                             // EUSCIB0 ISR
-    intDefaultHandler,                             // EUSCIB1 ISR
-    intDefaultHandler,                             // EUSCIB2 ISR
-    intDefaultHandler,                             // EUSCIB3 ISR
-    intDefaultHandler,                             // ADC14 ISR
+    IntDefaultHandler,                      // EUSCIA1 ISR
+    IntDefaultHandler,                      // EUSCIA2 ISR
+    IntDefaultHandler,                      // EUSCIA3 ISR
+    IntDefaultHandler,                      // EUSCIB0 ISR
+    IntDefaultHandler,                      // EUSCIB1 ISR
+    IntDefaultHandler,                      // EUSCIB2 ISR
+    IntDefaultHandler,                      // EUSCIB3 ISR
+    IntDefaultHandler,                      // ADC12 ISR
     vT32_0_Handler,                                // T32_INT1 ISR
     vT32_1_Handler,                                // T32_INT2 ISR
-    intDefaultHandler,                             // T32_INTC ISR
-    intDefaultHandler,                             // AES ISR
-    intDefaultHandler,                             // RTC ISR
-    intDefaultHandler,                             // DMA_ERR ISR
-    intDefaultHandler,                             // DMA_INT3 ISR
-    intDefaultHandler,                             // DMA_INT2 ISR
-    intDefaultHandler,                             // DMA_INT1 ISR
-    intDefaultHandler,                             // DMA_INT0 ISR
-    intDefaultHandler,                        // PORT1 ISR
-    intDefaultHandler,                             // PORT2 ISR
-    intDefaultHandler,                             // PORT3 ISR
-    intDefaultHandler,                             // PORT4 ISR
-    intDefaultHandler,                             // PORT5 ISR
-    intDefaultHandler,                             // PORT6 ISR
-    intDefaultHandler,                             // Reserved 41
-    intDefaultHandler,                             // Reserved 42
-    intDefaultHandler,                             // Reserved 43
-    intDefaultHandler,                             // Reserved 44
-    intDefaultHandler,                             // Reserved 45
-    intDefaultHandler,                             // Reserved 46
-    intDefaultHandler,                             // Reserved 47
-    intDefaultHandler,                             // Reserved 48
-    intDefaultHandler,                             // Reserved 49
-    intDefaultHandler,                             // Reserved 50
-    intDefaultHandler,                             // Reserved 51
-    intDefaultHandler,                             // Reserved 52
-    intDefaultHandler,                             // Reserved 53
-    intDefaultHandler,                             // Reserved 54
-    intDefaultHandler,                             // Reserved 55
-    intDefaultHandler,                             // Reserved 56
-    intDefaultHandler,                             // Reserved 57
-    intDefaultHandler,                             // Reserved 58
-    intDefaultHandler,                             // Reserved 59
-    intDefaultHandler,                             // Reserved 60
-    intDefaultHandler,                             // Reserved 61
-    intDefaultHandler,                             // Reserved 62
-    intDefaultHandler,                             // Reserved 63
-    intDefaultHandler                              // Reserved 64
+    IntDefaultHandler,                      // T32_INTC ISR
+    IntDefaultHandler,                      // AES ISR
+    IntDefaultHandler,                      // RTC ISR
+    IntDefaultHandler,                      // DMA_ERR ISR
+    IntDefaultHandler,                      // DMA_INT3 ISR
+    IntDefaultHandler,                      // DMA_INT2 ISR
+    IntDefaultHandler,                       // DMA_INT1 ISR
+    IntDefaultHandler,                      // DMA_INT0 ISR
+    IntDefaultHandler,                      // PORT1 ISR
+    IntDefaultHandler,                      // PORT2 ISR
+    IntDefaultHandler,                      // PORT3 ISR
+    IntDefaultHandler,                      // PORT4 ISR
+    IntDefaultHandler,                      // PORT5 ISR
+    IntDefaultHandler,                      // PORT6 ISR
+    IntDefaultHandler,                      // Reserved 41
+    IntDefaultHandler,                      // Reserved 42
+    IntDefaultHandler,                      // Reserved 43
+    IntDefaultHandler,                      // Reserved 44
+    IntDefaultHandler,                      // Reserved 45
+    IntDefaultHandler,                      // Reserved 46
+    IntDefaultHandler,                      // Reserved 47
+    IntDefaultHandler,                      // Reserved 48
+    IntDefaultHandler,                      // Reserved 49
+    IntDefaultHandler,                      // Reserved 50
+    IntDefaultHandler,                      // Reserved 51
+    IntDefaultHandler,                      // Reserved 52
+    IntDefaultHandler,                      // Reserved 53
+    IntDefaultHandler,                      // Reserved 54
+    IntDefaultHandler,                      // Reserved 55
+    IntDefaultHandler,                      // Reserved 56
+    IntDefaultHandler,                      // Reserved 57
+    IntDefaultHandler,                      // Reserved 58
+    IntDefaultHandler,                      // Reserved 59
+    IntDefaultHandler,                      // Reserved 60
+    IntDefaultHandler,                      // Reserved 61
+    IntDefaultHandler,                      // Reserved 62
+    IntDefaultHandler,                      // Reserved 63
+    IntDefaultHandler                       // Reserved 64
 };
 
 //*****************************************************************************
@@ -160,10 +231,12 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
 //
 //*****************************************************************************
 void
-resetISR(void)
+ResetISR(void)
 {
+void SystemInit(void);
 
-    WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
+	// Initialize the device
+	SystemInit();
 
     //
     // Call the application's entry point.
@@ -179,7 +252,7 @@ resetISR(void)
 //
 //*****************************************************************************
 static void
-nmiSR(void)
+NmiSR(void)
 {
     //
     // Enter an infinite loop.
@@ -197,7 +270,7 @@ nmiSR(void)
 //
 //*****************************************************************************
 static void
-faultISR(void)
+FaultISR(void)
 {
     //
     // Enter an infinite loop.
@@ -215,7 +288,7 @@ faultISR(void)
 //
 //*****************************************************************************
 static void
-intDefaultHandler(void)
+IntDefaultHandler(void)
 {
     //
     // Go into an infinite loop.

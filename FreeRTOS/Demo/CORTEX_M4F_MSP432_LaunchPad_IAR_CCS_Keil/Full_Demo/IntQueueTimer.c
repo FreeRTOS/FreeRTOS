@@ -104,17 +104,17 @@ void vT32_1_Handler( void );
 void vInitialiseTimerForIntQueueTest( void )
 {
     /* Configure the timer channels. */
-	MAP_Timer32_initModule( TIMER32_0_MODULE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
-	MAP_Timer32_setCount( TIMER32_0_MODULE, CS_getMCLK() / tmrTIMER_0_FREQUENCY );
-	MAP_Timer32_enableInterrupt( TIMER32_0_MODULE );
-	MAP_Timer32_startTimer( TIMER32_0_MODULE, false );
+	MAP_Timer32_initModule( (uint32_t)TIMER32_0_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
+	MAP_Timer32_setCount( (uint32_t)TIMER32_0_BASE, CS_getMCLK() / tmrTIMER_0_FREQUENCY );
+	MAP_Timer32_enableInterrupt( (uint32_t)TIMER32_0_BASE );
+	MAP_Timer32_startTimer( (uint32_t)TIMER32_0_BASE, false );
 	MAP_Interrupt_setPriority( INT_T32_INT1, tmrLOWER_PRIORITY );
 	MAP_Interrupt_enableInterrupt( INT_T32_INT1 );
 
-	MAP_Timer32_initModule( TIMER32_1_MODULE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
-	MAP_Timer32_setCount( TIMER32_1_MODULE, CS_getMCLK() / tmrTIMER_1_FREQUENCY );
-	MAP_Timer32_enableInterrupt( TIMER32_1_MODULE );
-	MAP_Timer32_startTimer( TIMER32_1_MODULE, false );
+	MAP_Timer32_initModule( (uint32_t)TIMER32_1_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE );
+	MAP_Timer32_setCount( (uint32_t)TIMER32_1_BASE, CS_getMCLK() / tmrTIMER_1_FREQUENCY );
+	MAP_Timer32_enableInterrupt( (uint32_t)TIMER32_1_BASE );
+	MAP_Timer32_startTimer( (uint32_t)TIMER32_1_BASE, false );
 	MAP_Interrupt_setPriority( INT_T32_INT2, tmrHIGHER_PRIORITY );
 	MAP_Interrupt_enableInterrupt( INT_T32_INT2 );
 }
@@ -122,14 +122,14 @@ void vInitialiseTimerForIntQueueTest( void )
 
 void vT32_0_Handler( void )
 {
-    MAP_Timer32_clearInterruptFlag( TIMER32_0_MODULE );
+    MAP_Timer32_clearInterruptFlag( (uint32_t)TIMER32_0_BASE );
 	portYIELD_FROM_ISR( xFirstTimerHandler() );
 }
 /*-----------------------------------------------------------*/
 
 void vT32_1_Handler( void )
 {
-    MAP_Timer32_clearInterruptFlag( TIMER32_1_MODULE );
+    MAP_Timer32_clearInterruptFlag( (uint32_t)TIMER32_1_BASE );
 	portYIELD_FROM_ISR( xSecondTimerHandler() );
 }
 

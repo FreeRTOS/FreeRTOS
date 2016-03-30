@@ -302,7 +302,7 @@ TickType_t xTimer;
 		}
 		else
 		{
-			configASSERT( strcmp( pcTimerGetTimerName( xAutoReloadTimers[ xTimer ] ), "FR Timer" ) == 0 );
+			configASSERT( strcmp( pcTimerGetName( xAutoReloadTimers[ xTimer ] ), "FR Timer" ) == 0 );
 
 			/* The scheduler has not yet started, so the block period of
 			portMAX_DELAY should just get set to zero in xTimerStart().  Also,

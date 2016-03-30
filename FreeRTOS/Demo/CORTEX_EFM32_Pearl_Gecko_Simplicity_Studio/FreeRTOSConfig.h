@@ -98,7 +98,7 @@ extern "C" {
  *  See the comments at the top of main.c, main_full.c and main_low_power.c for
  *  more information.
  */
-#define configCREATE_LOW_POWER_DEMO		0
+#define configCREATE_LOW_POWER_DEMO		1
 
 /* Some configuration is dependent on the demo being built. */
 #if( configCREATE_LOW_POWER_DEMO == 0 )
@@ -150,7 +150,7 @@ extern "C" {
 #define configCPU_CLOCK_HZ						( CMU_ClockFreqGet( cmuClock_CORE ) )
 #define configMAX_PRIORITIES					( 6 )
 #define configMINIMAL_STACK_SIZE				(( unsigned short ) 130)
-#define configTOTAL_HEAP_SIZE					(( size_t )(25000))
+#define configTOTAL_HEAP_SIZE					(( size_t )(24000))
 #define configMAX_TASK_NAME_LEN				 	( 10 )
 #define configUSE_TRACE_FACILITY				( 0 )
 #define configUSE_16_BIT_TICKS					( 0 )
@@ -214,7 +214,6 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define INCLUDE_uxTaskGetStackHighWaterMark		( 0 )
 #define INCLUDE_xTaskGetIdleTaskHandle			( 0 )
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle	( 0 )
-#define INCLUDE_pcTaskGetTaskName				( 0 )
 #define INCLUDE_eTaskGetState					( 1 )
 #define INCLUDE_xTimerPendFunctionCall			( 1 )
 

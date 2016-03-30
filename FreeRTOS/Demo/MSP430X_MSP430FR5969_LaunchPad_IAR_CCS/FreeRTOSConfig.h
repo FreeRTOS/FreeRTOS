@@ -146,7 +146,6 @@ left at 1 with no impact on the code size. */
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xEventGroupSetBitsFromISR		1
 #define INCLUDE_xTimerPendFunctionCall			1
-#define INCLUDE_pcTaskGetTaskName				1
 
 /* Include functions that format system and run-time stats into human readable
 tables. */

@@ -12,7 +12,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>26</version>
+        <version>27</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\TexasInstruments\MSP432P401R.svd</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\TexasInstruments\MSP432P401R.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -85,11 +85,11 @@
         </option>
         <option>
           <name>OCDynDriverList</name>
-          <state>IJET_ID</state>
+          <state>CMSISDAP_ID</state>
         </option>
         <option>
           <name>OCLastSavedByProductVersion</name>
-          <state>7.40.1.8463</state>
+          <state>7.50.3.10745</state>
         </option>
         <option>
           <name>OCDownloadAttachToProgram</name>
@@ -206,6 +206,10 @@
         <option>
           <name>OCMulticoreSlaveConfiguration</name>
           <state></state>
+        </option>
+        <option>
+          <name>OCDownloadExtraImage</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -1064,7 +1068,7 @@
       <name>PEMICRO_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1074,19 +1078,6 @@
         <option>
           <name>OCPEMicroAttachSlave</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>CCPEMicroInterfaceList</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCPEMicroResetDelay</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CCPEMicroJtagSpeed</name>
-          <state>#UNINITIALIZED#</state>
         </option>
         <option>
           <name>CCJPEMicroShowSettings</name>
@@ -1099,36 +1090,6 @@
         <option>
           <name>LogFile</name>
           <state>$PROJ_DIR$\cspycomm.log</state>
-        </option>
-        <option>
-          <name>CCPEMicroUSBDevice</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCPEMicroSerialPort</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCJPEMicroTCPIPAutoScanNetwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCPEMicroTCPIP</name>
-          <state>10.0.0.1</state>
-        </option>
-        <option>
-          <name>CCPEMicroCommCmdLineProducer</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCSTLinkInterfaceRadio</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCSTLinkInterfaceCmdLine</name>
-          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1193,7 +1154,7 @@
       <name>STLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1224,6 +1185,71 @@
         <option>
           <name>CCSwoClockEdit</name>
           <state>2000</state>
+        </option>
+        <option>
+          <name>DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>LogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>CCSTLinkDoUpdateBreakpoints</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkUpdateBreakpoints</name>
+          <state>_call_main</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchCHRERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkUsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCSTLinkUsbSerialNoSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkJtagSpeedList</name>
+          <version>0</version>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -1256,7 +1282,7 @@
       <name>XDS100_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1276,11 +1302,6 @@
           <state>C:\ti\ccs_base</state>
         </option>
         <option>
-          <name>CCXds100InterfaceList</name>
-          <version>2</version>
-          <state>9</state>
-        </option>
-        <option>
           <name>BoardFile</name>
           <state>Browse to your board file</state>
         </option>
@@ -1292,11 +1313,138 @@
           <name>LogFile</name>
           <state>$PROJ_DIR$\cspycomm.log</state>
         </option>
+        <option>
+          <name>CCXds100BreakpointRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100DoUpdateBreakpoints</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100UpdateBreakpoints</name>
+          <state>_call_main</state>
+        </option>
+        <option>
+          <name>CCXds100CatchReset</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchUndef</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchSWI</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchData</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchPrefetch</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchIRQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchFIQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchCHRERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCXds100SwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100SwoClockEdit</name>
+          <state>1000</state>
+        </option>
+        <option>
+          <name>CCXds100HWResetDelay</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100ResetList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100UsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCXds100UsbSerialNoSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100JtagSpeedList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100InterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100InterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100ProbeList</name>
+          <version>0</version>
+          <state>4</state>
+        </option>
       </data>
     </settings>
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\middleware\HCCWare\HCCWare.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\middleware\PercepioTraceExporter\PercepioTraceExportPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>
@@ -1379,7 +1527,7 @@
       <name>C-SPY</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>26</version>
+        <version>27</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -1573,6 +1721,10 @@
         <option>
           <name>OCMulticoreSlaveConfiguration</name>
           <state></state>
+        </option>
+        <option>
+          <name>OCDownloadExtraImage</name>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -2431,7 +2583,7 @@
       <name>PEMICRO_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>1</version>
+        <version>2</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -2441,19 +2593,6 @@
         <option>
           <name>OCPEMicroAttachSlave</name>
           <state>1</state>
-        </option>
-        <option>
-          <name>CCPEMicroInterfaceList</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCPEMicroResetDelay</name>
-          <state></state>
-        </option>
-        <option>
-          <name>CCPEMicroJtagSpeed</name>
-          <state>#UNINITIALIZED#</state>
         </option>
         <option>
           <name>CCJPEMicroShowSettings</name>
@@ -2466,36 +2605,6 @@
         <option>
           <name>LogFile</name>
           <state>$PROJ_DIR$\cspycomm.log</state>
-        </option>
-        <option>
-          <name>CCPEMicroUSBDevice</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCPEMicroSerialPort</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCJPEMicroTCPIPAutoScanNetwork</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>CCPEMicroTCPIP</name>
-          <state>10.0.0.1</state>
-        </option>
-        <option>
-          <name>CCPEMicroCommCmdLineProducer</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCSTLinkInterfaceRadio</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>CCSTLinkInterfaceCmdLine</name>
-          <state>0</state>
         </option>
       </data>
     </settings>
@@ -2560,7 +2669,7 @@
       <name>STLINK_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>3</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -2591,6 +2700,71 @@
         <option>
           <name>CCSwoClockEdit</name>
           <state>2000</state>
+        </option>
+        <option>
+          <name>DoLogfile</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>LogFile</name>
+          <state>$PROJ_DIR$\cspycomm.log</state>
+        </option>
+        <option>
+          <name>CCSTLinkDoUpdateBreakpoints</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkUpdateBreakpoints</name>
+          <state>_call_main</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchCHRERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkCatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkUsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCSTLinkUsbSerialNoSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCSTLinkJtagSpeedList</name>
+          <version>0</version>
+          <state>0</state>
         </option>
       </data>
     </settings>
@@ -2623,7 +2797,7 @@
       <name>XDS100_ID</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>2</version>
+        <version>4</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
@@ -2643,11 +2817,6 @@
           <state></state>
         </option>
         <option>
-          <name>CCXds100InterfaceList</name>
-          <version>2</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>BoardFile</name>
           <state></state>
         </option>
@@ -2659,11 +2828,138 @@
           <name>LogFile</name>
           <state>$PROJ_DIR$\cspycomm.log</state>
         </option>
+        <option>
+          <name>CCXds100BreakpointRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100DoUpdateBreakpoints</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100UpdateBreakpoints</name>
+          <state>_call_main</state>
+        </option>
+        <option>
+          <name>CCXds100CatchReset</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchUndef</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchSWI</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchData</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchPrefetch</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchIRQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchFIQ</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchCORERESET</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchMMERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchNOCPERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchCHRERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchSTATERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchBUSERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchINTERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchHARDERR</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CatchDummy</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100CpuClockEdit</name>
+          <state>72.0</state>
+        </option>
+        <option>
+          <name>CCXds100SwoClockAuto</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100SwoClockEdit</name>
+          <state>1000</state>
+        </option>
+        <option>
+          <name>CCXds100HWResetDelay</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100ResetList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100UsbSerialNo</name>
+          <state></state>
+        </option>
+        <option>
+          <name>CCXds100UsbSerialNoSelect</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100JtagSpeedList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100InterfaceRadio</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100InterfaceCmdLine</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCXds100ProbeList</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <debuggerPlugins>
       <plugin>
         <file>$TOOLKIT_DIR$\plugins\middleware\HCCWare\HCCWare.ewplugin</file>
+        <loadFlag>0</loadFlag>
+      </plugin>
+      <plugin>
+        <file>$TOOLKIT_DIR$\plugins\middleware\PercepioTraceExporter\PercepioTraceExportPlugin.ewplugin</file>
         <loadFlag>0</loadFlag>
       </plugin>
       <plugin>

@@ -107,7 +107,7 @@ static QueueHandle_t xRxQueue = NULL;
 static volatile const signed char *pcStringStart = NULL, *pcStringEnd = NULL;
 static volatile TaskHandle_t xTransmittingTask = NULL;
 
-static EUSCI_A0_Type * const pxUARTA0 = ( EUSCI_A0_Type * ) EUSCI_A0_MODULE;
+static EUSCI_A_Type * const pxUARTA0 = ( EUSCI_A_Type * ) EUSCI_A0_BASE;
 
 /* UART Configuration for 19200 baud.  Value generated using the tool provided
 on the following page:
@@ -137,10 +137,10 @@ xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned long
 	configASSERT( xRxQueue );
 
 	/* Use the library functions to initialise and enable the UART. */
-	MAP_UART_initModule( EUSCI_A0_MODULE, &xUARTConfig );
-	MAP_UART_enableModule( EUSCI_A0_MODULE );
-	MAP_UART_clearInterruptFlag( EUSCI_A0_MODULE, EUSCI_A_UART_RECEIVE_INTERRUPT | EUSCI_A_UART_TRANSMIT_INTERRUPT );
-	MAP_UART_enableInterrupt( EUSCI_A0_MODULE, EUSCI_A_UART_RECEIVE_INTERRUPT );
+	MAP_UART_initModule( EUSCI_A0_BASE, &xUARTConfig );
+	MAP_UART_enableModule( EUSCI_A0_BASE );
+	MAP_UART_clearInterruptFlag( EUSCI_A0_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT | EUSCI_A_UART_TRANSMIT_INTERRUPT );
+	MAP_UART_enableInterrupt( EUSCI_A0_BASE, EUSCI_A_UART_RECEIVE_INTERRUPT );
 
 	/* The interrupt handler uses the FreeRTOS API function so its priority must
 	be at or below the configured maximum system call interrupt priority.
@@ -191,11 +191,11 @@ const TickType_t xMaxWaitTime = pdMS_TO_TICKS( 20UL * ( uint32_t ) usStringLengt
 	pcStringEnd = pcStringStart + usStringLength;
 
 	/* Start to send the first byte. */
-	pxUARTA0->rTXBUF.r = ( uint_fast8_t ) *pcString;
+	pxUARTA0->TXBUF = ( uint_fast8_t ) *pcString;
 
 	/* Enable the interrupt then wait for the byte to be sent.  The interrupt
 	will be disabled again in the ISR. */
-	MAP_UART_enableInterrupt( EUSCI_A0_MODULE, EUSCI_A_UART_TRANSMIT_INTERRUPT );
+	MAP_UART_enableInterrupt( EUSCI_A0_BASE, EUSCI_A_UART_TRANSMIT_INTERRUPT );
 	ulTaskNotifyTake( pdTRUE, xMaxWaitTime );
 }
 /*-----------------------------------------------------------*/
@@ -223,11 +223,11 @@ const TickType_t xMaxWaitTime = pdMS_TO_TICKS( 20UL );
 	pcStringEnd = pcStringStart + sizeof( cOutChar );
 
 	/* Start to send the byte. */
-	pxUARTA0->rTXBUF.r = ( uint_fast8_t ) cOutChar;
+	pxUARTA0->TXBUF = ( uint_fast8_t ) cOutChar;
 
 	/* Enable the interrupt then wait for the byte to be sent.  The interrupt
 	will be disabled again in the ISR. */
-	MAP_UART_enableInterrupt( EUSCI_A0_MODULE, EUSCI_A_UART_TRANSMIT_INTERRUPT );
+	MAP_UART_enableInterrupt( EUSCI_A0_BASE, EUSCI_A_UART_TRANSMIT_INTERRUPT );
 	ulTaskNotifyTake( pdTRUE, xMaxWaitTime );
 
 	return pdPASS;
@@ -247,12 +247,12 @@ uint8_t ucChar;
 BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 uint_fast8_t xInterruptStatus;
 
-	xInterruptStatus = MAP_UART_getEnabledInterruptStatus( EUSCI_A0_MODULE );
+	xInterruptStatus = MAP_UART_getEnabledInterruptStatus( EUSCI_A0_BASE );
 
 	if( ( xInterruptStatus & EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG ) != 0x00 )
 	{
 		/* Obtain the character. */
-		ucChar = MAP_UART_receiveData( EUSCI_A0_MODULE );
+		ucChar = MAP_UART_receiveData( EUSCI_A0_BASE );
 
 		/* Send the character to the queue.  Note the comments at the top of this
 		file with regards to the inefficiency of this method for anything other than
@@ -277,13 +277,13 @@ uint_fast8_t xInterruptStatus;
 			/* This is probably quite a heavy wait function just for writing to
 			the Tx register.  An optimised design would probably replace this
 			with a simple register write. */
-			pxUARTA0->rTXBUF.r = ( uint_fast8_t ) *pcStringStart;
+			pxUARTA0->TXBUF = ( uint_fast8_t ) *pcStringStart;
 		}
 		else
 		{
 			/* No more characters to send.  Disable the interrupt and notify the
 			task, if the task is waiting. */
-			MAP_UART_disableInterrupt( EUSCI_A0_MODULE, EUSCI_A_UART_TRANSMIT_INTERRUPT );
+			MAP_UART_disableInterrupt( EUSCI_A0_BASE, EUSCI_A_UART_TRANSMIT_INTERRUPT );
 			if( xTransmittingTask != NULL )
 			{
 				vTaskNotifyGiveFromISR( xTransmittingTask, &xHigherPriorityTaskWoken );

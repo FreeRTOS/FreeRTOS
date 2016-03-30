@@ -500,7 +500,7 @@ TaskHandle_t xTestTask;
 	}
 
 	/* Check the timer task handle was returned correctly. */
-	pcTaskName = pcTaskGetTaskName( xTimerTaskHandle );
+	pcTaskName = pcTaskGetName( xTimerTaskHandle );
 	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
 	{
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";

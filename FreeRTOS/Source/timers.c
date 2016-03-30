@@ -435,7 +435,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void )
 
 TickType_t xTimerGetPeriod( TimerHandle_t xTimer )
 {
-const Timer_t * const pxTimer = ( const Timer_t * const  ) xTimer;
+Timer_t *pxTimer = ( Timer_t * ) xTimer;
 
 	configASSERT( xTimer );
 	return pxTimer->xTimerPeriodInTicks;
@@ -444,7 +444,7 @@ const Timer_t * const pxTimer = ( const Timer_t * const  ) xTimer;
 
 TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
 {
-const Timer_t * const pxTimer = ( const Timer_t * const  ) xTimer;
+Timer_t * pxTimer = ( Timer_t * ) xTimer;
 TickType_t xReturn;
 
 	configASSERT( xTimer );

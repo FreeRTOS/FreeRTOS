@@ -153,7 +153,7 @@
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>29</version>
+        <version>30</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -316,6 +316,10 @@
         </option>
         <option>
           <name>cycleCounterLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>variablewatch</name>
           <state>0</state>
         </option>
       </data>
@@ -563,7 +567,7 @@
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>29</version>
+        <version>30</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -726,6 +730,10 @@
         </option>
         <option>
           <name>cycleCounterLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>variablewatch</name>
           <state>0</state>
         </option>
       </data>
@@ -973,7 +981,7 @@
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>29</version>
+        <version>30</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1136,6 +1144,10 @@
         </option>
         <option>
           <name>cycleCounterLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>variablewatch</name>
           <state>0</state>
         </option>
       </data>
@@ -1383,7 +1395,7 @@
       <name>430FET</name>
       <archiveVersion>1</archiveVersion>
       <data>
-        <version>29</version>
+        <version>30</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1546,6 +1558,10 @@
         </option>
         <option>
           <name>cycleCounterLevel</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>variablewatch</name>
           <state>0</state>
         </option>
       </data>

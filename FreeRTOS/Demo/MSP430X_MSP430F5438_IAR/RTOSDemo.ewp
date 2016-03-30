@@ -10,7 +10,7 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>17</archiveVersion>
+      <archiveVersion>18</archiveVersion>
       <data>
         <version>33</version>
         <wantNonLocal>1</wantNonLocal>
@@ -754,7 +754,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -948,7 +948,7 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -1139,7 +1139,7 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>17</archiveVersion>
+      <archiveVersion>18</archiveVersion>
       <data>
         <version>33</version>
         <wantNonLocal>1</wantNonLocal>
@@ -1883,7 +1883,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -2077,7 +2077,7 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -2268,7 +2268,7 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>17</archiveVersion>
+      <archiveVersion>18</archiveVersion>
       <data>
         <version>33</version>
         <wantNonLocal>1</wantNonLocal>
@@ -3012,7 +3012,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -3206,7 +3206,7 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -3397,7 +3397,7 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>17</archiveVersion>
+      <archiveVersion>18</archiveVersion>
       <data>
         <version>33</version>
         <wantNonLocal>1</wantNonLocal>
@@ -4141,7 +4141,7 @@
         </option>
         <option>
           <name>FormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>
@@ -4335,7 +4335,7 @@
         </option>
         <option>
           <name>ExtraFormatVariant</name>
-          <version>8</version>
+          <version>9</version>
           <state>2</state>
         </option>
         <option>

@@ -10,11 +10,13 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>MSP432P401R</Device>
           <Vendor>Texas Instruments</Vendor>
-          <PackID>TI.MSP432.1.0.0</PackID>
+          <PackID>TexasInstruments.MSP432.1.0.3</PackID>
+          <PackURL>http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/mspkeil/latest/exports</PackURL>
           <Cpu>IROM(0x00000000,0x00040000) IROM2(0x00200000,0x00004000) IRAM(0x20000000,0x00010000) IRAM2(0x01000000,0x00010000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -83,6 +85,8 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
+            <nStopA1X>0</nStopA1X>
+            <nStopA2X>0</nStopA2X>
           </AfterMake>
           <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
@@ -121,47 +125,6 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
-            <Driver>BIN\UL2CM3.DLL</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -226,6 +189,7 @@
             <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
+            <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
@@ -358,13 +322,17 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
+            <v6Lang>1</v6Lang>
+            <v6LangP>1</v6LangP>
+            <vShortEn>1</vShortEn>
+            <vShortWch>1</vShortWch>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>keil __MSP432P401R__</Define>
+              <Define>keil __MSP432P401R__ NO_MSP_CLASSIC_DEFINES</Define>
               <Undefine></Undefine>
-              <IncludePath>.\driverlib;..\CORTEX_M4F_MSP432_LaunchPad_IAR_CCS_Keil;.\Full_Demo;..\Common\include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F</IncludePath>
+              <IncludePath>.\driverlib;..\CORTEX_M4F_MSP432_LaunchPad_IAR_CCS_Keil;.\Full_Demo;..\Common\include;..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-CLI;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM4F;.\driverlib\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -413,9 +381,9 @@
               <FilePath>.\system\Keil\startup_MSP432P4.s</FilePath>
             </File>
             <File>
-              <FileName>system_MSP432P4.c</FileName>
+              <FileName>system_msp432p401r.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\system\Keil\system_MSP432P4.c</FilePath>
+              <FilePath>.\system\Keil\system_msp432p401r.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -636,6 +604,11 @@
               <FileName>timer32.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\driverlib\timer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc_c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\driverlib\rtc_c.c</FilePath>
             </File>
           </Files>
         </Group>

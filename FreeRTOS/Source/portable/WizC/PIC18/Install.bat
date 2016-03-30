@@ -1,5 +1,5 @@
 REM/*
-REM    FreeRTOS V9.0.0rc1 - Copyright (C) 2016 Real Time Engineers Ltd.
+REM    FreeRTOS V9.0.0rc2 - Copyright (C) 2016 Real Time Engineers Ltd.
 REM
 REM
 REM    ***************************************************************************

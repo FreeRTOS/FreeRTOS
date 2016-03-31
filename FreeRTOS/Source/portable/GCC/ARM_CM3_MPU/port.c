@@ -72,7 +72,7 @@
  *----------------------------------------------------------*/
 
 #error This port is not supported in this V9.0.0 pre-release revision, but will be supported in the final release.  For now use V8.2.3 instead.
- 
+
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
 task.h is included from an application file. */
@@ -581,7 +581,7 @@ static BaseType_t prvRaisePrivilege( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint16_t usStackDepth )
+void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint32_t ulStackDepth )
 {
 extern uint32_t __SRAM_segment_start__[];
 extern uint32_t __SRAM_segment_end__[];
@@ -630,7 +630,7 @@ uint32_t ul;
 		which case the stack region parameters will be valid.  At all other
 		times the stack parameters will not be valid and it is assumed that the
 		stack region has already been configured. */
-		if( usStackDepth > 0 )
+		if( ulStackDepth > 0 )
 		{
 			/* Define the region that allows access to the stack. */
 			xMPUSettings->xRegion[ 0 ].ulRegionBaseAddress =
@@ -640,7 +640,7 @@ uint32_t ul;
 
 			xMPUSettings->xRegion[ 0 ].ulRegionAttribute =
 					( portMPU_REGION_READ_WRITE ) | /* Read and write. */
-					( prvGetMPURegionSizeSetting( ( uint32_t ) usStackDepth * ( uint32_t ) sizeof( StackType_t ) ) ) |
+					( prvGetMPURegionSizeSetting( ulStackDepth * ( uint32_t ) sizeof( StackType_t ) ) ) |
 					( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
 					( portMPU_REGION_ENABLE );
 		}
@@ -1159,7 +1159,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-	
+
 	void *MPU_pvPortMalloc( size_t xSize )
 	{
 	void *pvReturn;
@@ -1171,7 +1171,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		return pvReturn;
 	}
-	
+
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
@@ -1185,7 +1185,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		portRESET_PRIVILEGE( xRunningPrivileged );
 	}
-	
+
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 

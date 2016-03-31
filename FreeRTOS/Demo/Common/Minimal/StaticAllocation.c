@@ -251,7 +251,6 @@ void vStartStaticallyAllocatedTasks( void  )
 					   staticCREATOR_TASK_STACK_SIZE,		/* Size of the buffer passed in as the stack - in words, not bytes! */
 					   NULL,								/* Parameter passed into the task - not used in this case. */
 					   staticTASK_PRIORITY,					/* Priority of the task. */
-					   NULL,								/* Handle of the task being created, not used in this case. */
 					   &( uxCreatorTaskStackBuffer[ 0 ] ),  /* The buffer to use as the task's stack. */
 					   &xCreatorTaskTCBBuffer );			/* The variable that will hold the task's TCB. */
 
@@ -773,7 +772,6 @@ StaticEventGroup_t xEventGroupBuffer;
 static void prvCreateAndDeleteStaticallyAllocatedTasks( void )
 {
 TaskHandle_t xCreatedTask;
-BaseType_t xReturned;
 
 /* The variable that will hold the TCB of tasks created by this function.  See
 the comments above the declaration of the xCreatorTaskTCBBuffer variable for
@@ -791,38 +789,40 @@ static StackType_t uxStackBuffer[ configMINIMAL_STACK_SIZE ];
 	StaticTask_t structure that will hold the task's TCB.  If both pointers are
 	passed as NULL then the respective object will be allocated dynamically as
 	if xTaskCreate() had been called. */
-	xReturned = xTaskCreateStatic(
+	xCreatedTask = xTaskCreateStatic(
 						prvStaticallyAllocatedTask, 	/* Function that implements the task. */
 						"Static",						/* Human readable name for the task. */
 						configMINIMAL_STACK_SIZE,		/* Task's stack size, in words (not bytes!). */
 						NULL,							/* Parameter to pass into the task. */
 						uxTaskPriorityGet( NULL ) + 1,	/* The priority of the task. */
-						&xCreatedTask,					/* Handle of the task being created. */
 						&( uxStackBuffer[ 0 ] ),		/* The buffer to use as the task's stack. */
 						&xTCBBuffer );					/* The variable that will hold that task's TCB. */
 
-	/* The created task had a higher priority so should have executed and
-	suspended itself by now. */
-	if( eTaskGetState( xCreatedTask ) != eSuspended )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-
 	/* Check the task was created correctly, then delete the task. */
-	configASSERT( xReturned == pdPASS );
-	if( xReturned != pdPASS )
+	if( xCreatedTask == NULL )
 	{
 		xErrorOccurred = pdTRUE;
 	}
-	vTaskDelete( xCreatedTask );
+	else if( eTaskGetState( xCreatedTask ) != eSuspended )
+	{
+		/* The created task had a higher priority so should have executed and
+		suspended itself by now. */
+		xErrorOccurred = pdTRUE;
+	}
+	else
+	{
+		vTaskDelete( xCreatedTask );
+	}
 
 	/* Now do the same using a dynamically allocated task to ensure the delete
 	function is working correctly in both the static and dynamic allocation
 	cases. */
 	#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 	{
+	BaseType_t xReturned;
+
 		xReturned = xTaskCreate(
-									prvStaticallyAllocatedTask,		/* Function that implements the task. */
+									prvStaticallyAllocatedTask,		/* Function that implements the task - the same function is used but is actually dynamically allocated this time. */
 									"Static",						/* Human readable name for the task. */
 									configMINIMAL_STACK_SIZE,		/* Task's stack size, in words (not bytes!). */
 									NULL,							/* Parameter to pass into the task. */

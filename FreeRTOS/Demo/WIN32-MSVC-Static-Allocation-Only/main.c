@@ -109,7 +109,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
  * application callback function must be provided to supply the RAM that will
  * get used for the Idle task data structures and stack.
  */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
 
 /*
 * This demo has configSUPPORT_STATIC_ALLOCATION set to 1 and configUSE_TIMERS
@@ -117,7 +117,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 * supply the RAM that will get used for the Timer task data structures and
 * stack.
 */
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize );
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize );
 
 /* This demo only uses the standard demo tasks that use statically allocated
 RAM.  A 'check' task is also created to periodically inspect the demo tasks to
@@ -166,7 +166,7 @@ static StackType_t ucTaskStack[ configMINIMAL_STACK_SIZE * sizeof( StackType_t )
 
 	/* Create the task, which will use the RAM allocated by the linker to the
 	variables declared in this function. */
-	xTaskCreateStatic( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL, ucTaskStack, &xCheckTask );
+	xTaskCreateStatic( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, ucTaskStack, &xCheckTask );
 }
 /*-----------------------------------------------------------*/
 
@@ -244,7 +244,7 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
 implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
 used by the Idle task. */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
 {
 /* If the buffers to be provided to the Idle task are declared inside this
 function then they must be declared static - otherwise they will be allocated on
@@ -262,14 +262,14 @@ static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
 	Note that, as the array is necessarily of type StackType_t,
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pusIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
 application must provide an implementation of vApplicationGetTimerTaskMemory()
 to provide the memory that is used by the Timer service task. */
-void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint16_t *pusTimerTaskStackSize )
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
 {
 /* If the buffers to be provided to the Timer task are declared inside this
 function then they must be declared static - otherwise they will be allocated on
@@ -287,6 +287,6 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
 	Note that, as the array is necessarily of type StackType_t,
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-	*pusTimerTaskStackSize = configMINIMAL_STACK_SIZE;
+	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 

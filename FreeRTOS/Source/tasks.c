@@ -413,7 +413,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 #endif
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	extern void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint16_t *pusIdleTaskStackSize );
+	extern void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
 #endif
 
 /* File private functions. --------------------------------*/
@@ -542,7 +542,7 @@ static void prvResetNextTaskUnblockTime( void );
  * Called after a Task_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-static void prvInitialiseNewTask( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+static void prvInitialiseNewTask( TaskFunction_t pxTaskCode, const char * const pcName, const uint32_t ulStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /*
  * Called after a new task has been created and initialised to place the task
@@ -554,10 +554,10 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	BaseType_t xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TaskHandle_t xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint32_t ulStackDepth, void * const pvParameters, UBaseType_t uxPriority, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	TCB_t *pxNewTCB;
-	BaseType_t xReturn;
+	TaskHandle_t xReturn;
 
 		configASSERT( puxStackBuffer != NULL );
 		configASSERT( pxTaskBuffer != NULL );
@@ -577,13 +577,12 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 			}
 			#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 
-			prvInitialiseNewTask( pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB );
+			prvInitialiseNewTask( pxTaskCode, pcName, ulStackDepth, pvParameters, uxPriority, &xReturn, pxNewTCB );
 			prvAddNewTaskToReadyList( pxNewTCB );
-			xReturn = pdPASS;
 		}
 		else
 		{
-			xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
+			xReturn = NULL;
 		}
 
 		return xReturn;
@@ -665,7 +664,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 			}
 			#endif /* configSUPPORT_STATIC_ALLOCATION */
 
-			prvInitialiseNewTask( pxTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB );
+			prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB );
 			prvAddNewTaskToReadyList( pxNewTCB );
 			xReturn = pdPASS;
 		}
@@ -680,7 +679,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseNewTask( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, TCB_t *pxNewTCB ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+static void prvInitialiseNewTask( TaskFunction_t pxTaskCode, const char * const pcName, const uint32_t ulStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, TCB_t *pxNewTCB ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 StackType_t *pxTopOfStack;
 UBaseType_t x;
@@ -703,7 +702,7 @@ UBaseType_t x;
 	#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 	{
 		/* Fill the stack with a known value to assist debugging. */
-		( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) usStackDepth * sizeof( StackType_t ) );
+		( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) ulStackDepth * sizeof( StackType_t ) );
 	}
 	#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
 
@@ -713,7 +712,7 @@ UBaseType_t x;
 	by the port. */
 	#if( portSTACK_GROWTH < 0 )
 	{
-		pxTopOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
+		pxTopOfStack = pxNewTCB->pxStack + ( ulStackDepth - ( uint32_t ) 1 );
 		pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
 
 		/* Check the alignment of the calculated top of stack is correct. */
@@ -728,7 +727,7 @@ UBaseType_t x;
 
 		/* The other extreme of the stack space is required if stack checking is
 		performed. */
-		pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( usStackDepth - ( uint16_t ) 1 );
+		pxNewTCB->pxEndOfStack = pxNewTCB->pxStack + ( ulStackDepth - ( uint32_t ) 1 );
 	}
 	#endif /* portSTACK_GROWTH */
 
@@ -804,7 +803,7 @@ UBaseType_t x;
 
 	#if ( portUSING_MPU_WRAPPERS == 1 )
 	{
-		vPortStoreTaskMPUSettings( &( pxNewTCB->xMPUSettings ), xRegions, pxNewTCB->pxStack, usStackDepth );
+		vPortStoreTaskMPUSettings( &( pxNewTCB->xMPUSettings ), xRegions, pxNewTCB->pxStack, ulStackDepth );
 	}
 	#endif
 
@@ -1730,23 +1729,32 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 void vTaskStartScheduler( void )
 {
 BaseType_t xReturn;
-uint16_t usIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 
 	/* Add the idle task at the lowest priority. */
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{
 		StaticTask_t *pxIdleTaskTCBBuffer = NULL;
 		StackType_t *pxIdleTaskStackBuffer = NULL;
+		uint32_t ulIdleTaskStackSize;
 
 		/* The Idle task is created using user provided RAM - obtain the
 		address of the RAM then create the idle task. */
-		vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &usIdleTaskStackSize );
-		xReturn = xTaskCreateStatic( prvIdleTask, "IDLE", usIdleTaskStackSize, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle, pxIdleTaskStackBuffer, pxIdleTaskTCBBuffer ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+		vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &ulIdleTaskStackSize );
+		xIdleTaskHandle = xTaskCreateStatic( prvIdleTask, "IDLE", ulIdleTaskStackSize, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), pxIdleTaskStackBuffer, pxIdleTaskTCBBuffer ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+
+		if( xIdleTaskHandle != NULL )
+		{
+			xReturn = pdPASS;
+		}
+		else
+		{
+			xReturn = pdFAIL;
+		}
 	}
 	#else
 	{
 		/* The Idle task is being created using dynamically allocated RAM. */
-		xReturn = xTaskCreate( prvIdleTask, "IDLE", usIdleTaskStackSize, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
+		xReturn = xTaskCreate( prvIdleTask, "IDLE", configMINIMAL_STACK_SIZE, ( void * ) NULL, ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), &xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
 	}
 	#endif /* configSUPPORT_STATIC_ALLOCATION */
 

@@ -196,7 +196,7 @@ void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
  */
 #if( portUSING_MPU_WRAPPERS == 1 )
 	struct xMEMORY_REGION;
-	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint16_t usStackDepth ) PRIVILEGED_FUNCTION;
+	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint32_t ulStackDepth ) PRIVILEGED_FUNCTION;
 #endif
 
 #ifdef __cplusplus

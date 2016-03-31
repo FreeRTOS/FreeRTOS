@@ -363,16 +363,13 @@ is used in assert() statements. */
 /**
  * task. h
  *<pre>
- BaseType_t xTaskCreateStatic(
-							  TaskFunction_t pvTaskCode,
-							  const char * const pcName,
-							  uint16_t usStackDepth,
-							  void *pvParameters,
-							  UBaseType_t uxPriority,
-							  TaskHandle_t *pvCreatedTask,
-							  StackType_t *pxStackBuffer,
-							  StaticTask_t *pxTaskBuffer
-						  );</pre>
+ TaskHandle_t xTaskCreateStatic( TaskFunction_t pvTaskCode,
+								 const char * const pcName,
+								 uint32_t ulStackDepth,
+								 void *pvParameters,
+								 UBaseType_t uxPriority,
+								 StackType_t *pxStackBuffer,
+								 StaticTask_t *pxTaskBuffer );</pre>
  *
  * Create a new task and add it to the list of tasks that are ready to run.
  *
@@ -393,9 +390,9 @@ is used in assert() statements. */
  * facilitate debugging.  The maximum length of the string is defined by
  * configMAX_TASK_NAME_LEN in FreeRTOSConfig.h.
  *
- * @param usStackDepth The size of the task stack specified as the number of
+ * @param ulStackDepth The size of the task stack specified as the number of
  * variables the stack can hold - not the number of bytes.  For example, if
- * the stack is 32-bits wide and usStackDepth is defined as 100 then 400 bytes
+ * the stack is 32-bits wide and ulStackDepth is defined as 100 then 400 bytes
  * will be allocated for stack storage.
  *
  * @param pvParameters Pointer that will be used as the parameter for the task
@@ -403,11 +400,8 @@ is used in assert() statements. */
  *
  * @param uxPriority The priority at which the task will run.
  *
- * @param pvCreatedTask Used to pass back a handle by which the created task
- * can be referenced.  Pass as NULL if the handle is not required.
- *
  * @param pxStackBuffer Must point to a StackType_t array that has at least
- * usStackDepth indexes - the array will then be used as the task's stack,
+ * ulStackDepth indexes - the array will then be used as the task's stack,
  * removing the need for the stack to be allocated dynamically.
  *
  * @param pxTaskBuffer Must point to a variable of type StaticTask_t, which will
@@ -422,49 +416,59 @@ is used in assert() statements. */
  * Example usage:
    <pre>
 
- // Dimensions the buffer that the task being created will use as its stack.
- // NOTE:  This is the number of words the stack will hold, not the number of
- // bytes.  For example, if each stack item is 32-bits, and this is set to 100,
- // then 400 bytes (100 * 32-bits) will be allocated.
- #define STACK_SIZE 200
+    // Dimensions the buffer that the task being created will use as its stack.
+    // NOTE:  This is the number of words the stack will hold, not the number of
+    // bytes.  For example, if each stack item is 32-bits, and this is set to 100,
+    // then 400 bytes (100 * 32-bits) will be allocated.
+    #define STACK_SIZE 200
 
- // Structure that will hold the TCB of the task being created.
- StaticTask_t xTaskBuffer;
+    // Structure that will hold the TCB of the task being created.
+    StaticTask_t xTaskBuffer;
 
- // Buffer that the task being created will use as its stack.
- StackType_t xStack[ STACK_SIZE ];
+    // Buffer that the task being created will use as its stack.  Note this is
+    // an array of StackType_t variables.  The size of StackType_t is dependent on
+    // the RTOS port.
+    StackType_t xStack[ STACK_SIZE ];
 
- // Task to be created.
- void vTaskCode( void * pvParameters )
- {
-	 for( ;; )
-	 {
-		 // Task code goes here.
-	 }
- }
+    // Function that implements the task being created.
+    void vTaskCode( void * pvParameters )
+    {
+        // The parameter value is expected to be 1 as 1 is passed in the
+        // pvParameters value in the call to xTaskCreateStatic().
+        configASSERT( ( uint32_t ) pvParameters == 1UL );
 
- // Function that creates a task.
- void vOtherFunction( void )
- {
- static uint8_t ucParameterToPass;
- TaskHandle_t xHandle = NULL;
+        for( ;; )
+        {
+            // Task code goes here.
+        }
+    }
 
-	 // Create the task without using any dynamic memory allocation.
-	 xTaskCreateStatic( vTaskCode,          // As per xTaskCreate() parameter.
-				        "NAME",             // As per xTaskCreate() parameter.
-				        STACK_SIZE,         // As per xTaskCreate() parameter.
-				        &ucParameterToPass, // As per xTaskCreate() parameter.
-				        tskIDLE_PRIORITY,   // As per xTaskCreate() parameter.
-				        &xHandle,           // As per xTaskCreate() parameter.
-				        xStack,             // Pointer to the buffer that the task being created will use as its stack.
-				        &xTaskBuffer );     // Pointer to a StaticTask_t structure for use as the memory require by the task.
- }
+    // Function that creates a task.
+    void vOtherFunction( void )
+    {
+        TaskHandle_t xHandle = NULL;
+
+        // Create the task without using any dynamic memory allocation.
+        xHandle = xTaskCreateStatic(
+                      vTaskCode,       // Function that implements the task.
+                      "NAME",          // Text name for the task.
+                      STACK_SIZE,      // Stack size in words, not bytes.
+                      ( void * ) 1,    // Parameter passed into the task.
+                      tskIDLE_PRIORITY,// Priority at which the task is created.
+                      xStack,          // Array to use as the task's stack.
+                      &xTaskBuffer );  // Variable to hold the task's data structure.
+
+        // puxStackBuffer and pxTaskBuffer were not NULL, so the task will have
+        // been created, and xHandle will be the task's handle.  Use the handle
+        // to suspend the task.
+        vTaskSuspend( xHandle );
+    }
    </pre>
  * \defgroup xTaskCreateStatic xTaskCreateStatic
  * \ingroup Tasks
  */
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	BaseType_t xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint16_t usStackDepth, void * const pvParameters, UBaseType_t uxPriority, TaskHandle_t * const pxCreatedTask, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TaskHandle_t xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint32_t ulStackDepth, void * const pvParameters, UBaseType_t uxPriority, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
 /**

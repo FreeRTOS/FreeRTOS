@@ -149,21 +149,21 @@
 /* The priority used by the UART command console task. */
 #define mainUART_COMMAND_CONSOLE_TASK_PRIORITY	( configMAX_PRIORITIES - 2 )
 
-/* The LED used by the check timer. */
+/* The LED used by the check task. */
 #define mainCHECK_LED						( 3 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
 
-/* The period after which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD		( 3000UL / portTICK_PERIOD_MS )
+/* The period of the check task, in ms, provided no errors have been reported by
+any of the standard demo tasks.  ms are converted to the equivalent in ticks
+using the pdMS_TO_TICKS() macro constant. */
+#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000UL )
 
-/* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TASK_PERIOD 		( 200UL / portTICK_PERIOD_MS )
+/* The period of the check task, in ms, if an error has been reported in one of
+the standard demo tasks.  ms are converted to the equivalent in ticks using the
+pdMS_TO_TICKS() macro. */
+#define mainERROR_CHECK_TASK_PERIOD 		pdMS_TO_TICKS( 200UL )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -409,7 +409,7 @@ static void prvRegTestTaskEntry1( void *pvParameters )
 	}
 
 	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check timer will detect that the regtest loop counter is
+	be incorrect.  The check task will detect that the regtest loop counter is
 	not being incremented and flag an error. */
 	vTaskDelete( NULL );
 }
@@ -427,7 +427,7 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 	}
 
 	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check timer will detect that the regtest loop counter is
+	be incorrect.  The check task will detect that the regtest loop counter is
 	not being incremented and flag an error. */
 	vTaskDelete( NULL );
 }

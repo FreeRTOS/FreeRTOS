@@ -309,10 +309,10 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: EventGroup";
 		}
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
+		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: IntMath";
-	    }
+		}
 		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: GenQueue";
@@ -325,20 +325,20 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: BlockQueue";
 		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: SemTest";
-	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
-	    {
+		}
+		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: PollQueue";
-	    }
+		}
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Flop";
 		}
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: RecMutex";
 		}
 		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )

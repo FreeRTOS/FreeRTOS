@@ -98,7 +98,7 @@ extern "C" {
  *  See the comments at the top of main.c, main_full.c and main_low_power.c for
  *  more information.
  */
-#define configCREATE_LOW_POWER_DEMO		1
+#define configCREATE_LOW_POWER_DEMO		0
 
 /* Some configuration is dependent on the demo being built. */
 #if( configCREATE_LOW_POWER_DEMO == 0 )

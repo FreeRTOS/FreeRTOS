@@ -130,7 +130,7 @@ the comments at the top of main.c for more information. */
 #define configCPU_CLOCK_HZ						48000000
 #define configMAX_PRIORITIES					( 5 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 120 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 40 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 28 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				0
 #define configUSE_16_BIT_TICKS					0
@@ -182,12 +182,12 @@ to exclude the API function. */
 	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
 	#define configPRIO_BITS		       __NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS		       4	/* 15 priority levels */
+	#define configPRIO_BITS		       3	/* 7 priority levels */
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"
 function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0xf
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0x7
 
 /* The highest interrupt priority that can be used by any interrupt service
 routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL

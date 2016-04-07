@@ -39,7 +39,6 @@ Last Change:	Updated for tabs
 #include "common_lib.h"
 #include "btimer.h"
 #include "..\pcr\pcr.h"
-//#include "..\interrupt\ecia.h"
 
 /** Basic Timer Sleep Registers & Bit Positions */
 static const uint32_t btmr_pcr_id[BTIMER_MAX_INSTANCE] = {

@@ -7,9 +7,9 @@
 
   <Targets>
     <Target>
-      <TargetName>RTOSDemo</TargetName>
-      <ToolsetNumber>0x4</ToolsetNumber>
-      <ToolsetName>ARM-ADS</ToolsetName>
+      <TargetName>RTOSDemo_GCC</TargetName>
+      <ToolsetNumber>0x3</ToolsetNumber>
+      <ToolsetName>ARM-GNU</ToolsetName>
       <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
@@ -51,9 +51,9 @@
           <OutputName>RTOSDemo</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -144,9 +144,9 @@
           <pFcArmRoot></pFcArmRoot>
           <FcArmLst>0</FcArmLst>
         </Utilities>
-        <TargetArmAds>
-          <ArmAdsMisc>
-            <GenerateListings>0</GenerateListings>
+        <TargetArm>
+          <ArmMisc>
+            <asLst>1</asLst>
             <asHll>1</asHll>
             <asAsm>1</asAsm>
             <asMacX>1</asMacX>
@@ -154,27 +154,11 @@
             <asFals>1</asFals>
             <asDbgD>1</asDbgD>
             <asForm>1</asForm>
-            <ldLst>0</ldLst>
+            <ldLst>1</ldLst>
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>1</AdsALst>
-            <AdsACrf>1</AdsACrf>
-            <AdsANop>0</AdsANop>
-            <AdsANot>0</AdsANot>
-            <AdsLLst>1</AdsLLst>
-            <AdsLmap>1</AdsLmap>
-            <AdsLcgr>1</AdsLcgr>
-            <AdsLsym>1</AdsLsym>
-            <AdsLszi>1</AdsLszi>
-            <AdsLtoi>1</AdsLtoi>
-            <AdsLsun>1</AdsLsun>
-            <AdsLven>1</AdsLven>
-            <AdsLsxf>1</AdsLsxf>
-            <RvctClst>1</RvctClst>
-            <GenPPlst>0</GenPPlst>
-            <AdsCpuType>"Cortex-M4"</AdsCpuType>
-            <RvctDeviceName></RvctDeviceName>
+            <GCPUTYP>"Cortex-M4"</GCPUTYP>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
             <uocRam>0</uocRam>
@@ -185,30 +169,6 @@
             <RvdsVP>2</RvdsVP>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
-            <StupSel>8</StupSel>
-            <useUlib>1</useUlib>
-            <EndSel>1</EndSel>
-            <uLtcg>0</uLtcg>
-            <nSecure>0</nSecure>
-            <RoSelD>3</RoSelD>
-            <RwSelD>3</RwSelD>
-            <CodeSel>0</CodeSel>
-            <OptFeed>0</OptFeed>
-            <NoZi1>0</NoZi1>
-            <NoZi2>0</NoZi2>
-            <NoZi3>0</NoZi3>
-            <NoZi4>0</NoZi4>
-            <NoZi5>0</NoZi5>
-            <Ro1Chk>0</Ro1Chk>
-            <Ro2Chk>0</Ro2Chk>
-            <Ro3Chk>0</Ro3Chk>
-            <Ir1Chk>1</Ir1Chk>
-            <Ir2Chk>0</Ir2Chk>
-            <Ra1Chk>0</Ra1Chk>
-            <Ra2Chk>0</Ra2Chk>
-            <Ra3Chk>0</Ra3Chk>
-            <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -255,135 +215,74 @@
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </XRAM>
-              <OCR_RVCT1>
-                <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
-              </OCR_RVCT1>
-              <OCR_RVCT2>
-                <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
-              </OCR_RVCT2>
-              <OCR_RVCT3>
-                <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
-              </OCR_RVCT3>
-              <OCR_RVCT4>
-                <Type>1</Type>
-                <StartAddress>0x100000</StartAddress>
-                <Size>0x18000</Size>
-              </OCR_RVCT4>
-              <OCR_RVCT5>
-                <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
-              </OCR_RVCT5>
-              <OCR_RVCT6>
+              <IRAM2>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
-              </OCR_RVCT6>
-              <OCR_RVCT7>
+              </IRAM2>
+              <IROM2>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
-              </OCR_RVCT7>
-              <OCR_RVCT8>
-                <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
-              </OCR_RVCT8>
-              <OCR_RVCT9>
-                <Type>0</Type>
-                <StartAddress>0x118000</StartAddress>
-                <Size>0x8000</Size>
-              </OCR_RVCT9>
-              <OCR_RVCT10>
-                <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
-              </OCR_RVCT10>
+              </IROM2>
             </OnChipMemories>
-            <RvctStartVector></RvctStartVector>
-          </ArmAdsMisc>
-          <Cads>
+          </ArmMisc>
+          <Carm>
+            <arpcs>1</arpcs>
+            <stkchk>0</stkchk>
+            <reentr>0</reentr>
             <interw>1</interw>
-            <Optim>1</Optim>
-            <oTime>0</oTime>
-            <SplitLS>0</SplitLS>
-            <OneElfS>1</OneElfS>
+            <bigend>0</bigend>
             <Strict>0</Strict>
-            <EnumInt>0</EnumInt>
-            <PlainCh>0</PlainCh>
-            <Ropi>0</Ropi>
-            <Rwpi>0</Rwpi>
+            <Optim>0</Optim>
             <wLevel>2</wLevel>
-            <uThumb>0</uThumb>
-            <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
-            <v6Lang>0</v6Lang>
-            <v6LangP>0</v6LangP>
-            <vShortEn>0</vShortEn>
-            <vShortWch>0</vShortWch>
+            <uThumb>1</uThumb>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -O0 -g</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..;..\..\..\Source\include;..\..\..\Source\portable\RVDS\ARM_CM4F;..\..\Common\include;..\peripheral_library;..\CMSIS;..\main_full</IncludePath>
+              <IncludePath>..;..\..\..\Source\include;..\..\..\Source\portable\GCC\ARM_CM4F;..\..\Common\include;..\peripheral_library;..\CMSIS;..\main_full</IncludePath>
             </VariousControls>
-          </Cads>
-          <Aads>
+          </Carm>
+          <Aarm>
+            <bBE>0</bBE>
             <interw>1</interw>
-            <Ropi>0</Ropi>
-            <Rwpi>0</Rwpi>
-            <thumb>0</thumb>
-            <SplitLS>0</SplitLS>
-            <SwStkChk>0</SwStkChk>
-            <NoWarn>0</NoWarn>
-            <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
-          </Aads>
-          <LDads>
-            <umfTarg>0</umfTarg>
-            <Ropi>0</Ropi>
-            <Rwpi>0</Rwpi>
+          </Aarm>
+          <LDarm>
+            <umfTarg>1</umfTarg>
+            <enaGarb>0</enaGarb>
+            <noStart>1</noStart>
             <noStLib>0</noStLib>
-            <RepFail>1</RepFail>
-            <useFile>0</useFile>
-            <TextAddressRange>0x00000000</TextAddressRange>
-            <DataAddressRange>0x20000000</DataAddressRange>
-            <pXoBase></pXoBase>
-            <ScatterFile>RTOSDemo.sct</ScatterFile>
+            <uMathLib>1</uMathLib>
+            <TextAddressRange></TextAddressRange>
+            <DataAddressRange></DataAddressRange>
+            <BSSAddressRange></BSSAddressRange>
             <IncludeLibs></IncludeLibs>
-            <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
-            <LinkerInputFile></LinkerInputFile>
-            <DisabledWarnings></DisabledWarnings>
-          </LDads>
-        </TargetArmAds>
+            <IncludeDir></IncludeDir>
+            <Misc>-Xlinker --gc-sections</Misc>
+            <ScatterFile>.\sections.ld</ScatterFile>
+          </LDarm>
+        </TargetArm>
       </TargetOption>
       <Groups>
         <Group>
           <GroupName>System</GroupName>
           <Files>
             <File>
-              <FileName>startup_CEC1302.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\startup_CEC1302.s</FilePath>
-            </File>
-            <File>
               <FileName>system.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\system.c</FilePath>
+            </File>
+            <File>
+              <FileName>startup_ARMCM4.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\startup_ARMCM4.S</FilePath>
             </File>
           </Files>
         </Group>
@@ -404,70 +303,6 @@
         </Group>
         <Group>
           <GroupName>FreeRTOS_Source</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>1</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
           <Files>
             <File>
               <FileName>event_groups.c</FileName>
@@ -502,7 +337,7 @@
             <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Source\portable\RVDS\ARM_CM4F\port.c</FilePath>
+              <FilePath>..\..\..\Source\portable\GCC\ARM_CM4F\port.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -608,16 +443,6 @@
               <FileName>btimer_perphl.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\peripheral_library\basic_timer\btimer_perphl.c</FilePath>
-            </File>
-            <File>
-              <FileName>pcr_perphl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\peripheral_library\pcr\pcr_perphl.c</FilePath>
-            </File>
-            <File>
-              <FileName>pcr_api.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\peripheral_library\pcr\pcr_api.c</FilePath>
             </File>
           </Files>
         </Group>

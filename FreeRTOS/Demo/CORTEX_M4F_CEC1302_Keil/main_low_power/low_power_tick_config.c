@@ -77,18 +77,6 @@
 /* Library includes. */
 #include "common_lib.h"
 
-#define prvDisableInterrupts()	 __asm volatile ( "cpsid i" );		\
-								__dsb( portSY_FULL_READ_WRITE );	\
-								__isb( portSY_FULL_READ_WRITE );
-
-#define prvSleep()				 __dsb( portSY_FULL_READ_WRITE );	\
-								__wfi();							\
-								__isb( portSY_FULL_READ_WRITE );
-
-#define prvEnableInterrupts()	 __asm volatile ( "cpsie i" );		\
-								__dsb( portSY_FULL_READ_WRITE );	\
-								__isb( portSY_FULL_READ_WRITE );
-
 /* This file contains functions that will override the default implementations
 in the RTOS port layer.  Therefore only build this file if the low power demo
 is being built. */
@@ -282,7 +270,9 @@ TickType_t xModifiableIdleTime;
 
 	/* Enter a critical section but don't use the taskENTER_CRITICAL() method as
 	that will mask interrupts that should exit sleep mode. */
-	prvDisableInterrupts();
+	__asm volatile( "cpsid i" );
+	__asm volatile( "dsb" );
+	__asm volatile( "isb" );
 
 	/* The tick flag is set to false before sleeping.  If it is true when sleep
 	mode is exited then sleep mode was probably exited because the tick was
@@ -313,7 +303,9 @@ TickType_t xModifiableIdleTime;
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
-		prvEnableInterrupts();
+		__asm volatile( "cpsie i" );
+		__asm volatile( "dsb" );
+		__asm volatile( "isb" );
 	}
 	else
 	{
@@ -330,7 +322,9 @@ TickType_t xModifiableIdleTime;
 		instructions. */
 		if( xModifiableIdleTime > 0 )
 		{
-			prvSleep();
+			__asm volatile( "dsb" );
+			__asm volatile( "wfi" );
+			__asm volatile( "isb" );
 		}
 
 		/* Allow the application to define some post sleep processing. */
@@ -346,7 +340,9 @@ TickType_t xModifiableIdleTime;
 
 		/* Re-enable interrupts - see comments above the cpsid instruction()
 		above. */
-		prvEnableInterrupts();
+		__asm volatile( "cpsie i" );
+		__asm volatile( "dsb" );
+		__asm volatile( "isb" );
 
 		if( ulTickFlag != pdFALSE )
 		{

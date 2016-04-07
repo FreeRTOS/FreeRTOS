@@ -76,7 +76,7 @@
 #endif
 
 #ifndef TOOLSET
-#error "ERROR: cfg.h TOOLSET not defined!"
+//#error "ERROR: cfg.h TOOLSET not defined!"
 #endif
 
 #if TOOLSET == TOOLMDK

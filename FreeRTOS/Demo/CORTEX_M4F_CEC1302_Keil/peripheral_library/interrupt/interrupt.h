@@ -52,7 +52,6 @@
 /* public function prototypes */
 void interrupt_block_init(void);
 void null_handler(void);
-__irq void SysTick_Handler(void);
 
 /* macro for interrupt control */
 /* 16-bit timers interrupt control */

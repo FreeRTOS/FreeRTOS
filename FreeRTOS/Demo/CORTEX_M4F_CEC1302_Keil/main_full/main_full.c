@@ -121,11 +121,9 @@
 #include "flop.h"
 #include "semtest.h"
 #include "dynamic.h"
-#include "BlockQ.h"
 #include "blocktim.h"
 #include "countsem.h"
 #include "GenQTest.h"
-#include "recmutex.h"
 #include "death.h"
 #include "TimerDemo.h"
 #include "IntQueue.h"
@@ -142,15 +140,15 @@
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
 
-/* The period after which the check timer will expire, in ms, provided no errors
-have been reported by any of the standard demo tasks.  ms are converted to the
-equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD		( 3000UL / portTICK_PERIOD_MS )
+/* The period of the check task, in ms, provided no errors have been reported by
+any of the standard demo tasks.  ms are converted to the equivalent in ticks
+using the pdMS_TO_TICKS() macro constant. */
+#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000UL )
 
-/* The period at which the check timer will expire, in ms, if an error has been
-reported in one of the standard demo tasks.  ms are converted to the equivalent
-in ticks using the portTICK_PERIOD_MS constant. */
-#define mainERROR_CHECK_TASK_PERIOD 		( 200UL / portTICK_PERIOD_MS )
+/* The period of the check task, in ms, if an error has been reported in one of
+the standard demo tasks.  ms are converted to the equivalent in ticks using the
+pdMS_TO_TICKS() macro. */
+#define mainERROR_CHECK_TASK_PERIOD 		pdMS_TO_TICKS( 200UL )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -216,11 +214,9 @@ void main_full( void )
 	functionality, but do demonstrate how to use the FreeRTOS API and test the
 	kernel port. */
 	vStartDynamicPriorityTasks();
-	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vCreateBlockTimeTasks();
 	vStartCountingSemaphoreTasks();
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartMathTasks( mainFLOP_TASK_PRIORITY );
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
@@ -296,11 +292,6 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound = 1UL << 2UL;
 		}
 
-		if( xAreBlockingQueuesStillRunning() != pdTRUE )
-		{
-			ulErrorFound = 1UL << 3UL;
-		}
-
 		if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound = 1UL << 4UL;
@@ -309,11 +300,6 @@ unsigned long ulErrorFound = pdFALSE;
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound = 1UL << 5UL;
-		}
-
-		if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-		{
-			ulErrorFound = 1UL << 6UL;
 		}
 
 		if( xIsCreateTaskStillRunning() != pdTRUE )
@@ -375,7 +361,7 @@ unsigned long ulErrorFound = pdFALSE;
 		}
 
 		configASSERT( ulErrorFound == pdFALSE );
-		
+
 		/* Just testing the xPortIsInsideInterrupt() functionality. */
 		configASSERT( xPortIsInsideInterrupt() == pdFALSE );
 	}
@@ -394,7 +380,7 @@ static void prvRegTestTaskEntry1( void *pvParameters )
 	}
 
 	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check timer will detect that the regtest loop counter is
+	be incorrect.  The check task will detect that the regtest loop counter is
 	not being incremented and flag an error. */
 	vTaskDelete( NULL );
 }
@@ -412,7 +398,7 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 	}
 
 	/* The following line will only execute if the task parameter is found to
-	be incorrect.  The check timer will detect that the regtest loop counter is
+	be incorrect.  The check task will detect that the regtest loop counter is
 	not being incremented and flag an error. */
 	vTaskDelete( NULL );
 }

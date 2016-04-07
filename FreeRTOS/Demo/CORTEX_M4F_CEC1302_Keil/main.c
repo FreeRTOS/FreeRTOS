@@ -161,17 +161,17 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+extern void system_set_ec_clock( void );
+extern unsigned long __Vectors[];
+	
 	/* Disable M4 write buffer: fix MEC1322 hardware bug. */
 	mainNVIC_AUX_ACTLR |= 0x07;
 
-	#ifdef __CC_ARM
-	{
-		/* Assuming downloading code via the debugger - so ensure the hardware
-		is using the vector table downloaded with the application. */
-		extern unsigned long __Vectors[];
-		mainVTOR = ( uint32_t ) __Vectors;
-	}
-	#endif
+	system_set_ec_clock();
+	
+	/* Assuming downloading code via the debugger - so ensure the hardware
+	is using the vector table downloaded with the application. */
+	mainVTOR = ( uint32_t ) __Vectors;
 }
 /*-----------------------------------------------------------*/
 
@@ -282,14 +282,5 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
 	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
-
-
-
-
-
-
-
-
-
 
 

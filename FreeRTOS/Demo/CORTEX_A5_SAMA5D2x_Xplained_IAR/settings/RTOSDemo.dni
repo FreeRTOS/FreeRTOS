@@ -1,0 +1,101 @@
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=0
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[JLinkDriver]
+WatchCond=_ 0
+Watch0=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
+Watch1=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
+CStepIntDis=_ 0
+LeaveTargetRunning=_ 0
+[DebugChecksum]
+Checksum=-596461035
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=0
+Graph=0
+Symbiont=0
+Exclusions=
+[PlDriver]
+MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\Atmel\ATSAMA5D35.ddf
+FirstRun=0
+[Jet]
+DisableInterrupts=0
+MultiCoreRunAll=0
+JetConnSerialNo=408243741
+JetConnFoundProbes=
+OnlineReset=Software
+PrevWtdReset=Disabled (no reset)
+LeaveRunning=0
+[ArmDriver]
+EnableCache=1
+[SWOManager]
+SamplingDivider=8192
+OverrideClock=0
+CpuClock=1919246957
+SwoClock=941636128
+DataLogMode=0
+ItmPortsEnabled=63
+ItmTermIOPorts=1
+ItmLogPorts=0
+ItmLogFile=$PROJ_DIR$\ITM.log
+PowerForcePC=1
+PowerConnectPC=1
+[watch_formats]
+Fmt0={W}1:xTickCount	3	0
+[Trace1]
+Enabled=0
+ShowSource=1
+[ETMTraceWindow]
+PortWidth=4
+PortMode=0
+CaptureDataValues=0
+CaptureDataAddresses=0
+CaptureDataRange=0
+DataFirst=0
+DataLast=-1
+StopWhen=0
+StallCPU=0
+NoPCCapture=0
+[Trace2]
+Enabled=0
+ShowSource=0
+[SWOTraceWindow]
+ForcedPcSampling=0
+ForcedInterruptLogs=0
+ForcedItmLogs=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\main.c}.254.2" 0 0 1 "" 0 "" 0
+Count=1
+[Aliases]
+Count=0
+SuppressDialog=0

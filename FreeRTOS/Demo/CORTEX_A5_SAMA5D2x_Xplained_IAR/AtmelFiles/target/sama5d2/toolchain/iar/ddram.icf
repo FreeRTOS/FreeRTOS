@@ -1,0 +1,65 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_1.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x00000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_IROM1_start__ = 0x0;
+define symbol __ICFEDIT_region_IROM1_end__   = 0x0;
+define symbol __ICFEDIT_region_IROM2_start__ = 0x0;
+define symbol __ICFEDIT_region_IROM2_end__   = 0x0;
+define symbol __ICFEDIT_region_EROM1_start__ = 0x0;
+define symbol __ICFEDIT_region_EROM1_end__   = 0x0;
+define symbol __ICFEDIT_region_EROM2_start__ = 0x0;
+define symbol __ICFEDIT_region_EROM2_end__   = 0x0;
+define symbol __ICFEDIT_region_EROM3_start__ = 0x0;
+define symbol __ICFEDIT_region_EROM3_end__   = 0x0;
+define symbol __ICFEDIT_region_IRAM1_start__ = 0x200000;
+define symbol __ICFEDIT_region_IRAM1_end__   = 0x21FFFF;
+define symbol __ICFEDIT_region_IRAM2_start__ = 0x0;
+define symbol __ICFEDIT_region_IRAM2_end__   = 0x0;
+define symbol __ICFEDIT_region_ERAM1_start__ = 0x20000000;
+define symbol __ICFEDIT_region_ERAM1_end__   = 0x23FFFFFF;
+define symbol __ICFEDIT_region_ERAM2_start__ = 0x24000000;
+define symbol __ICFEDIT_region_ERAM2_end__   = 0x24FFFFFF;
+define symbol __ICFEDIT_region_ERAM3_start__ = 0x0;
+define symbol __ICFEDIT_region_ERAM3_end__   = 0x0;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_intvec__   = 0x100;
+define symbol __ICFEDIT_size_irqstack__ = 0x60;
+define symbol __ICFEDIT_size_fiqstack__ = 0x60;
+define symbol __ICFEDIT_size_abtstack__ = 0x40;
+define symbol __ICFEDIT_size_undstack__ = 0x40;
+define symbol __ICFEDIT_size_sysstack__ = 0x40;
+define symbol __ICFEDIT_size_cstack__   = 0x3000;
+define symbol __ICFEDIT_size_heap__     = 0x200;
+/**** End of ICF editor section. ###ICF###*/
+
+define memory mem with size = 4G;
+define region VEC_region = mem:[from __ICFEDIT_region_IRAM1_start__ size __ICFEDIT_size_intvec__];
+define region RAM_region = mem:[from __ICFEDIT_region_IRAM1_start__+__ICFEDIT_size_intvec__ to __ICFEDIT_region_IRAM1_end__];
+define region DDRAM_region = mem:[from __ICFEDIT_region_ERAM1_start__ to __ICFEDIT_region_ERAM1_end__];
+define region DDRAM_NOCACHE_region = mem:[from __ICFEDIT_region_ERAM2_start__ to __ICFEDIT_region_ERAM2_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block FIQ_STACK with alignment = 8, size = __ICFEDIT_size_fiqstack__ { };
+define block ABT_STACK with alignment = 8, size = __ICFEDIT_size_abtstack__ { };
+define block UND_STACK with alignment = 8, size = __ICFEDIT_size_undstack__ { };
+define block SYS_STACK with alignment = 8, size = __ICFEDIT_size_sysstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy with packing=none { readwrite };
+do not initialize  { readonly section .noinit };
+/* Warning: ICC still considers the sections below as zero-initialized, by default. */
+do not initialize  { section .region_sram };
+do not initialize  { section .region_ddr };
+do not initialize  { section .region_ddr_nocache };
+
+place in VEC_region { section .vectors };
+place in RAM_region { section .region_sram };
+place in DDRAM_region { readonly };
+place in DDRAM_region { section .cstartup };
+place in DDRAM_region { readwrite, block IRQ_STACK, block FIQ_STACK, block ABT_STACK, block UND_STACK, block SYS_STACK, block CSTACK, block HEAP };
+place in DDRAM_region { section .region_ddr };
+place in DDRAM_NOCACHE_region { section .region_ddr_nocache };

@@ -15,7 +15,7 @@ Watch1=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
 CStepIntDis=_ 0
 LeaveTargetRunning=_ 0
 [DebugChecksum]
-Checksum=-596461035
+Checksum=-97074387
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -32,7 +32,7 @@ Graph=0
 Symbiont=0
 Exclusions=
 [PlDriver]
-MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\Atmel\ATSAMA5D35.ddf
+MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\Atmel\ATSAMA5D27.ddf
 FirstRun=0
 [Jet]
 DisableInterrupts=0

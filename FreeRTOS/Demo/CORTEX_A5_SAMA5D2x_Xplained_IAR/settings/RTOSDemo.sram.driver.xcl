@@ -6,13 +6,13 @@
 
 "-p" 
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\Atmel\ATSAMA5D35.ddf" 
+"C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\Atmel\ATSAMA5D27.ddf" 
 
 "--drv_verify_download" 
 
 "--semihosting=none" 
 
-"--device=ATSAMA5D35" 
+"--device=ATSAMA5D27" 
 
 "--multicore_nr_of_cores=1" 
 
@@ -29,6 +29,8 @@
 "--reset_style=\"5,SoftwareReset,0,Custom\"" 
 
 "--drv_catch_exceptions=0x01a" 
+
+"--jet_emu_param=L2CC=0x00A00000" 
 
 
 

@@ -89,7 +89,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>ATSAMA5D35	Atmel ATSAMA5D35</state>
+          <state>ATSAMA5D27	Atmel ATSAMA5D27</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -149,7 +149,7 @@
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
-          <state>ATSAMA5D35	Atmel ATSAMA5D35</state>
+          <state>ATSAMA5D27	Atmel ATSAMA5D27</state>
         </option>
         <option>
           <name>FPU2</name>

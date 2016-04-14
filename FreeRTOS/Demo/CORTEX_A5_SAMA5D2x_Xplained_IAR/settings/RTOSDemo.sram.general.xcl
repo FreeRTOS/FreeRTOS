@@ -6,7 +6,7 @@
 
 --plugin "C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\bin\armbat.dll" 
 
---device_macro "C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\config\debugger\Atmel\SAMA5D3.dmac" 
+--device_macro "C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\config\debugger\Atmel\SAMA5D2.dmac" 
 
 --macro "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_A5_SAMA5D2x_Xplained_IAR\AtmelFiles\target\sama5d2\toolchain\iar\sram.mac" 
 

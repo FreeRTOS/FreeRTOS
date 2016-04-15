@@ -91,7 +91,7 @@ extern "C" {
 /* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky demo low power
 example, or 1 to run the more comprehensive test and demo application.  See
 the comments at the top of main.c for more information. */
-#define configCREATE_LOW_POWER_DEMO	1
+#define configCREATE_LOW_POWER_DEMO	0
 
 /* Some configuration is dependent on the demo being built. */
 #if( configCREATE_LOW_POWER_DEMO == 1 )

@@ -137,6 +137,10 @@ occurred while the SysTick counter is stopped during tickless idle
 calculations. */
 #define portMISSED_COUNTS_FACTOR			( 45UL )
 
+/* For strict compliance with the Cortex-M spec the task start address should
+have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
+#define portSTART_ADDRESS_MASK		( ( StackType_t ) 0xfffffffeUL )
+
 /* Required to allow portasm.asm access the configMAX_SYSCALL_INTERRUPT_PRIORITY
 setting. */
 const uint32_t ulMaxSyscallInterruptPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY;
@@ -224,7 +228,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) pxCode;	/* PC */
+	*pxTopOfStack = ( ( StackType_t ) pxCode ) & portSTART_ADDRESS_MASK;	/* PC */
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) prvTaskExitError;	/* LR */
 
@@ -419,6 +423,9 @@ void xPortSysTickHandler( void )
 		/* Enter a critical section but don't use the taskENTER_CRITICAL()
 		method as that will mask interrupts that should exit sleep mode. */
 		__asm( "	cpsid i" );
+		__asm( "	dsb" );
+		__asm( "	isb" );
+
 
 		/* If a context switch is pending or a task is waiting for the scheduler
 		to be unsuspended then abandon the low power entry. */

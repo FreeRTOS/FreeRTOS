@@ -181,8 +181,8 @@ extern "C" {
 	#define INCLUDE_xSemaphoreGetMutexHolder INCLUDE_xQueueGetMutexHolder
 #endif
 
-#ifndef INCLUDE_xTaskGetTaskHandle
-	#define INCLUDE_xTaskGetTaskHandle 0
+#ifndef INCLUDE_xTaskGetHandle
+	#define INCLUDE_xTaskGetHandle 0
 #endif
 
 #ifndef INCLUDE_uxTaskGetStackHighWaterMark
@@ -837,6 +837,8 @@ V8 if desired. */
 	#define portTICK_RATE_MS portTICK_PERIOD_MS
 	#define pcTaskGetTaskName pcTaskGetName
 	#define pcTimerGetTimerName pcTimerGetName
+	#define pcQueueGetQueueName pcQueueGetName
+	#define vTaskGetTaskInfo vTaskGetInfo
 
 	/* Backward compatibility within the scheduler code only - these definitions
 	are not really required but are included for completeness. */

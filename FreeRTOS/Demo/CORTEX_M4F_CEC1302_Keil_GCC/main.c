@@ -90,8 +90,9 @@
 #include "task.h"
 
 /* Hardware register addresses. */
-#define mainVTOR 			( * ( uint32_t * ) 0xE000ED08 )
-#define mainNVIC_AUX_ACTLR	( * ( uint32_t * ) 0xE000E008 )
+#define mainVTOR 					( * ( uint32_t * ) 0xE000ED08 )
+#define mainNVIC_AUX_ACTLR			( * ( uint32_t * ) 0xE000E008 )
+#define mainEC_INTERRUPT_CONTROL	( * ( volatile uint32_t * ) 0x4000FC18 )
 
 /*-----------------------------------------------------------*/
 
@@ -163,12 +164,15 @@ static void prvSetupHardware( void )
 {
 extern void system_set_ec_clock( void );
 extern unsigned long __Vectors[];
-	
+
 	/* Disable M4 write buffer: fix MEC1322 hardware bug. */
 	mainNVIC_AUX_ACTLR |= 0x07;
 
+	/* Enable alternative NVIC vectors. */
+	mainEC_INTERRUPT_CONTROL = pdTRUE;
+
 	system_set_ec_clock();
-	
+
 	/* Assuming downloading code via the debugger - so ensure the hardware
 	is using the vector table downloaded with the application. */
 	mainVTOR = ( uint32_t ) __Vectors;

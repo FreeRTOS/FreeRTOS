@@ -89,8 +89,8 @@
 build.  Remove the whole file if this is not the case. */
 #if( INCLUDE_xTaskAbortDelay == 1 )
 
-#if( INCLUDE_xTaskGetTaskHandle != 1 )
-	#error This test file uses the xTaskGetTaskHandle() API function so INCLUDE_xTaskGetTaskHandle must be set to 1 in FreeRTOSConfig.h.
+#if( INCLUDE_xTaskGetHandle != 1 )
+	#error This test file uses the xTaskGetHandle() API function so INCLUDE_xTaskGetHandle must be set to 1 in FreeRTOSConfig.h.
 #endif
 
 /* Task priorities.  Allow these to be overridden. */
@@ -183,7 +183,7 @@ const TickType_t xStartMargin = 2UL;
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
 
-	xBlockingTask = xTaskGetTaskHandle( pcBlockingTaskName );
+	xBlockingTask = xTaskGetHandle( pcBlockingTaskName );
 	configASSERT( xBlockingTask );
 
 	for( ;; )
@@ -241,7 +241,7 @@ uint32_t ulNotificationValue;
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
 
-	xControllingTask = xTaskGetTaskHandle( pcControllingTaskName );
+	xControllingTask = xTaskGetHandle( pcControllingTaskName );
 	configASSERT( xControllingTask );
 
 	for( ;; )

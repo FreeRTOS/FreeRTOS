@@ -157,7 +157,7 @@ to exclude the API function. */
 #define INCLUDE_xTimerPendFunctionCall			1
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xTaskAbortDelay					1
-#define INCLUDE_xTaskGetTaskHandle				1
+#define INCLUDE_xTaskGetHandle					1
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human

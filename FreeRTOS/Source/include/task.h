@@ -840,7 +840,7 @@ eTaskState eTaskGetState( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
- * <pre>void vTaskGetTaskInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState );</pre>
+ * <pre>void vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState );</pre>
  *
  * configUSE_TRACE_FACILITY must be defined as 1 for this function to be
  * available.  See the configuration section for more information.
@@ -877,22 +877,22 @@ eTaskState eTaskGetState( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
  TaskStatus_t xTaskDetails;
 
     // Obtain the handle of a task from its name.
-    xHandle = xTaskGetTaskHandle( "Task_Name" );
+    xHandle = xTaskGetHandle( "Task_Name" );
 
     // Check the handle is not NULL.
     configASSERT( xHandle );
 
     // Use the handle to obtain further information about the task.
-    vTaskGetTaskInfo( xHandle,
-                      &xTaskDetails,
-                      pdTRUE, // Include the high water mark in xTaskDetails.
-                      eInvalid ); // Include the task state in xTaskDetails.
+    vTaskGetInfo( xHandle,
+                  &xTaskDetails,
+                  pdTRUE, // Include the high water mark in xTaskDetails.
+                  eInvalid ); // Include the task state in xTaskDetails.
  }
    </pre>
- * \defgroup vTaskGetTaskInfo vTaskGetTaskInfo
+ * \defgroup vTaskGetInfo vTaskGetInfo
  * \ingroup TaskCtrl
  */
-void vTaskGetTaskInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState ) PRIVILEGED_FUNCTION;
+void vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
@@ -1319,19 +1319,19 @@ char *pcTaskGetName( TaskHandle_t xTaskToQuery ) PRIVILEGED_FUNCTION; /*lint !e9
 
 /**
  * task. h
- * <PRE>TaskHandle_t xTaskGetTaskHandle( const char *pcNameToQuery );</PRE>
+ * <PRE>TaskHandle_t xTaskGetHandle( const char *pcNameToQuery );</PRE>
  *
  * NOTE:  This function takes a relatively long time to complete and should be
  * used sparingly.
  *
  * @return The handle of the task that has the human readable name pcNameToQuery.
- * NULL is returned if no matching name is found.  INCLUDE_xTaskGetTaskHandle
- * must be set to 1 in FreeRTOSConfig.h for pcTaskGetTaskHandle() to be available.
+ * NULL is returned if no matching name is found.  INCLUDE_xTaskGetHandle
+ * must be set to 1 in FreeRTOSConfig.h for pcTaskGetHandle() to be available.
  *
- * \defgroup pcTaskGetTaskHandle pcTaskGetTaskHandle
+ * \defgroup pcTaskGetHandle pcTaskGetHandle
  * \ingroup TaskUtils
  */
-TaskHandle_t xTaskGetTaskHandle( const char *pcNameToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+TaskHandle_t xTaskGetHandle( const char *pcNameToQuery ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
  * task.h

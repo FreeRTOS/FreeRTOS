@@ -490,7 +490,7 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseT
  * Searches pxList for a task with name pcNameToQuery - returning a handle to
  * the task if it is found, or NULL if the task is not found.
  */
-#if ( INCLUDE_xTaskGetTaskHandle == 1 )
+#if ( INCLUDE_xTaskGetHandle == 1 )
 
 	static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] ) PRIVILEGED_FUNCTION;
 
@@ -978,6 +978,12 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				mtCOVERAGE_TEST_MARKER();
 			}
 
+			/* Increment the uxTaskNumber also so kernel aware debuggers can
+			detect that the task lists need re-generating.  This is done before
+			portPRE_TASK_DELETE_HOOK() as in the Windows port that macro will
+			not return. */
+			uxTaskNumber++;
+
 			if( pxTCB == pxCurrentTCB )
 			{
 				/* A task is deleting itself.  This cannot complete within the
@@ -991,16 +997,23 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				there is a task that has been deleted and that it should therefore
 				check the xTasksWaitingTermination list. */
 				++uxDeletedTasksWaitingCleanUp;
+
+				/* The pre-delete hook is primarily for the Windows simulator,
+				in which Windows specific clean up operations are performed,
+				after which it is not possible to yield away from this task -
+				hence xYieldPending is used to latch that a context switch is
+				required. */
+				portPRE_TASK_DELETE_HOOK( pxTCB, &xYieldPending );
 			}
 			else
 			{
 				--uxCurrentNumberOfTasks;
 				prvDeleteTCB( pxTCB );
-			}
 
-			/* Increment the uxTaskNumber also so kernel aware debuggers can
-			detect that the task lists need re-generating. */
-			uxTaskNumber++;
+				/* Reset the next expected unblock time in case it referred to
+				the task that has just been deleted. */
+				prvResetNextTaskUnblockTime();
+			}
 
 			traceTASK_DELETE( pxTCB );
 		}
@@ -1013,24 +1026,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 			if( pxTCB == pxCurrentTCB )
 			{
 				configASSERT( uxSchedulerSuspended == 0 );
-
-				/* The pre-delete hook is primarily for the Windows simulator,
-				in which Windows specific clean up operations are performed,
-				after which it is not possible to yield away from this task -
-				hence xYieldPending is used to latch that a context switch is
-				required. */
-				portPRE_TASK_DELETE_HOOK( pxTCB, &xYieldPending );
 				portYIELD_WITHIN_API();
 			}
 			else
 			{
-				/* Reset the next expected unblock time in case it referred to
-				the task that has just been deleted. */
-				taskENTER_CRITICAL();
-				{
-					prvResetNextTaskUnblockTime();
-				}
-				taskEXIT_CRITICAL();
+				mtCOVERAGE_TEST_MARKER();
 			}
 		}
 	}
@@ -2083,7 +2083,7 @@ TCB_t *pxTCB;
 }
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskGetTaskHandle == 1 )
+#if ( INCLUDE_xTaskGetHandle == 1 )
 
 	static TCB_t *prvSearchForNameWithinSingleList( List_t *pxList, const char pcNameToQuery[] )
 	{
@@ -2141,12 +2141,12 @@ TCB_t *pxTCB;
 		return pxReturn;
 	}
 
-#endif /* INCLUDE_xTaskGetTaskHandle */
+#endif /* INCLUDE_xTaskGetHandle */
 /*-----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskGetTaskHandle == 1 )
+#if ( INCLUDE_xTaskGetHandle == 1 )
 
-	TaskHandle_t xTaskGetTaskHandle( const char *pcNameToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TaskHandle_t xTaskGetHandle( const char *pcNameToQuery ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	UBaseType_t uxQueue = configMAX_PRIORITIES;
 	TCB_t* pxTCB;
@@ -2206,7 +2206,7 @@ TCB_t *pxTCB;
 		return ( TaskHandle_t ) pxTCB;
 	}
 
-#endif /* INCLUDE_xTaskGetTaskHandle */
+#endif /* INCLUDE_xTaskGetHandle */
 /*-----------------------------------------------------------*/
 
 #if ( configUSE_TRACE_FACILITY == 1 )
@@ -3301,7 +3301,7 @@ static void prvCheckTasksWaitingTermination( void )
 
 #if( configUSE_TRACE_FACILITY == 1 )
 
-	void vTaskGetTaskInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState )
+	void vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState )
 	{
 	TCB_t *pxTCB;
 
@@ -3406,7 +3406,7 @@ static void prvCheckTasksWaitingTermination( void )
 			do
 			{
 				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
-				vTaskGetTaskInfo( ( TaskHandle_t ) pxNextTCB, &( pxTaskStatusArray[ uxTask ] ), pdTRUE, eState );
+				vTaskGetInfo( ( TaskHandle_t ) pxNextTCB, &( pxTaskStatusArray[ uxTask ] ), pdTRUE, eState );
 				uxTask++;
 			} while( pxNextTCB != pxFirstTCB );
 		}

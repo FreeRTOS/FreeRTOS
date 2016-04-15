@@ -157,8 +157,8 @@ void vInitialiseTimerForIntQueueTest( void )
 
 	/* Configure TC1 channel 0 tmrTIMER_2_FREQUENCY frequency and trigger on
 	RC compare. */
-	tc_trigger_on_freq( TC1, tmrTC0_CHANNEL_0, tmrTIMER_2_FREQUENCY );
-	TC1->TC_CHANNEL[ tmrTC0_CHANNEL_0 ].TC_IER = TC_IER_CPCS;
+	tc_trigger_on_freq( TC1, tmrTC1_CHANNEL_0, tmrTIMER_2_FREQUENCY );
+	TC1->TC_CHANNEL[ tmrTC1_CHANNEL_0 ].TC_IER = TC_IER_CPCS;
 
 	/* Enable interrupts and start the timers. */
 	aic_configure( ID_TC0, tmrLOWER_PRIORITY );

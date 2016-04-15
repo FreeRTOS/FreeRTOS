@@ -599,12 +599,12 @@ extern StackType_t uxTimerTaskStack[];
 
 	/* Check the same handle is obtained using the idle task's name.  First try
 	with the wrong name, then the right name. */
-	if( xTaskGetTaskHandle( "Idle" ) == xIdleTaskHandle )
+	if( xTaskGetHandle( "Idle" ) == xIdleTaskHandle )
 	{
 		pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
 	}
 
-	if( xTaskGetTaskHandle( "IDLE" ) != xIdleTaskHandle )
+	if( xTaskGetHandle( "IDLE" ) != xIdleTaskHandle )
 	{
 		pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
 	}
@@ -616,7 +616,7 @@ extern StackType_t uxTimerTaskStack[];
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
 	}
 
-	if( xTaskGetTaskHandle( "Tmr Svc" ) != xTimerTaskHandle )
+	if( xTaskGetHandle( "Tmr Svc" ) != xTimerTaskHandle )
 	{
 		pcStatusMessage = "Error:  Returned handle for name Tmr Svc was incorrect";
 	}
@@ -633,20 +633,20 @@ extern StackType_t uxTimerTaskStack[];
 		pcStatusMessage = "Error:  Returned timer task state was incorrect";
 	}
 
-	/* Also with the vTaskGetTaskInfo() function. */
-	vTaskGetTaskInfo( xTimerTaskHandle, /* The task being queried. */
+	/* Also with the vTaskGetInfo() function. */
+	vTaskGetInfo( xTimerTaskHandle, /* The task being queried. */
 					  &xTaskInfo,		/* The structure into which information on the task will be written. */
 					  pdTRUE,			/* Include the task's high watermark in the structure. */
 					  eInvalid );		/* Include the task state in the structure. */
 
-	/* Check the information returned by vTaskGetTaskInfo() is as expected. */
+	/* Check the information returned by vTaskGetInfo() is as expected. */
 	if( ( xTaskInfo.eCurrentState != eBlocked )						 ||
 		( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 )			 ||
 		( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
 		( xTaskInfo.pxStackBase != uxTimerTaskStack )				 ||
 		( xTaskInfo.xHandle != xTimerTaskHandle ) )
 	{
-		pcStatusMessage = "Error:  vTaskGetTaskInfo() returned incorrect information about the timer task";
+		pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";
 	}
 
 	/* Other tests that should only be performed once follow.  The test task

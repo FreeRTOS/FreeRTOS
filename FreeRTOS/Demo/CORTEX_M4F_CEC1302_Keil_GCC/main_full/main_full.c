@@ -355,8 +355,7 @@ unsigned long ulErrorFound = pdFALSE;
 		{
 			/* An error has been detected in one of the tasks - flash the LED
 			at a higher frequency to give visible feedback that something has
-			gone wrong (it might just be that the loop back connector required
-			by the comtest tasks has not been fitted). */
+			gone wrong. */
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
 		}
 

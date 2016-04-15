@@ -134,12 +134,10 @@ static const uint32_t ulHighResolutionReloadValue = ( mainHIGHER_RESOLUTION_TIME
 
 /* Calculate how many clock increments make up a single tick period. */
 static const uint32_t ulReloadValueForOneHighResolutionTick = ( mainHIGHER_RESOLUTION_TIMER_HZ / configTICK_RATE_HZ );
-//static const uint32_t usReloadValueForOneLowResolutionTick = ( mainLOW_RESOLUTION_TIMER_HZ / configTICK_RATE_HZ );
 
 /* Calculate the maximum number of ticks that can be suppressed when using the
 high resolution clock and low resolution clock respectively. */
 static uint32_t ulMaximumPossibleSuppressedHighResolutionTicks = 0;
-//static const uint16_t usMaximumPossibleSuppressedLowResolutionTicks = USHRT_MAX / usReloadValueForOneLowResolutionTick;
 
 /* As the clock is only 2KHz, it is likely a value of 1 will be too much, so
 use zero - but leave the value here to assist porting to different clock
@@ -171,15 +169,14 @@ void NVIC_Handler_HIB_TMR( void )
 
 #if( lpINCLUDE_TEST_TIMER == 1 )
 
-	#define GIRQ23_ENABLE_SET		( * ( uint32_t * ) 0x4000C130 )
+	#define lpGIRQ23_ENABLE_SET		( * ( uint32_t * ) 0x4000C130 )
 
 	static void prvSetupBasicTimer( void )
 	{
 	const uint8_t ucTimerChannel = 0;
 	const uint32_t ulTimer0Count = configCPU_CLOCK_HZ / 10;
 
-		GIRQ23_ENABLE_SET = 0x03;
-		*(unsigned int*)0x4000FC18 = 1;
+		lpGIRQ23_ENABLE_SET = 0x03;
 
 		/* To fully test the low power tick processing it is necessary to sometimes
 		bring the MCU out of its sleep state by a method other than the tick
@@ -202,9 +199,7 @@ void vPortSetupTimerInterrupt( void )
 	ulMaximumPossibleSuppressedHighResolutionTicks = ( ( uint32_t ) USHRT_MAX ) / ulReloadValueForOneHighResolutionTick;
 
 	/* Set up the hibernation timer to start at the value required by the
-	tick interrupt.  Equivalent to the following libarary call.  The library
-	is not used as it is not compatible with all the compilers used:
-	htimer_enable( mainTICK_HTIMER_ID, ulHighResolutionReloadValue, mainHTIMER_HIGH_RESOLUTION ); */
+	tick interrupt. */
 	lpHTIMER_PRELOAD_REGISTER = ulHighResolutionReloadValue;
 	lpHTIMER_CONTROL_REGISTER = mainHTIMER_HIGH_RESOLUTION;
 
@@ -285,7 +280,7 @@ TickType_t xModifiableIdleTime;
 	eSleepAction = eTaskConfirmSleepModeStatus();
 	if( eSleepAction == eAbortSleep )
 	{
-		/* Resetart the timer from whatever remains in the counter register,
+		/* Restart the timer from whatever remains in the counter register,
 		but 0 is not a valid value. */
 		ulReloadValue = ulCountBeforeSleep - ulStoppedTimerCompensation;
 

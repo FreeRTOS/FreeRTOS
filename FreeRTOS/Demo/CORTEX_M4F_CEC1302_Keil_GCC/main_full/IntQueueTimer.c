@@ -119,7 +119,6 @@ timers must still be above the tick interrupt priority. */
 
 /* Hardware register locations. */
 #define tmrGIRQ23_ENABLE_SET			( * ( volatile uint32_t * ) 0x4000C130 )
-#define tmrMMCR_EC_INTERRUPT_CONTROL	( * ( volatile uint8_t * ) 0x4000FC18 )
 
 #define tmrRECORD_NESTING_DEPTH()						\
 	ulNestingDepth++;									\
@@ -140,12 +139,11 @@ const uint32_t ulTimer1Count = configCPU_CLOCK_HZ / tmrTIMER_1_FREQUENCY;
 const uint32_t ulTimer2Count = configCPU_CLOCK_HZ / tmrTIMER_2_FREQUENCY;
 
 	tmrGIRQ23_ENABLE_SET = 0x03;
-	tmrMMCR_EC_INTERRUPT_CONTROL = 1; 
-	
-	/* Initialise the three timers as described at the top of this file, and 
+
+	/* Initialise the three timers as described at the top of this file, and
 	enable their interrupts in the NVIC. */
 	btimer_init( tmrTIMER_CHANNEL_0, BTIMER_AUTO_RESTART | BTIMER_COUNT_DOWN | BTIMER_INT_EN, 0, ulTimer0Count, ulTimer0Count );
-	btimer_interrupt_status_get_clr( tmrTIMER_CHANNEL_0 );	
+	btimer_interrupt_status_get_clr( tmrTIMER_CHANNEL_0 );
 	enable_timer0_irq();
 	NVIC_SetPriority( TIMER0_IRQn, tmrLOWER_PRIORITY ); //0xc0 into 0xe000e431
 	NVIC_ClearPendingIRQ( TIMER0_IRQn );

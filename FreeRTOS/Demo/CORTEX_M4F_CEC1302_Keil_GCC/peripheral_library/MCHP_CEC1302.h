@@ -963,7 +963,7 @@ typedef struct {                                    /*!< ACPI_EC0 Structure     
     struct {
       __I  uint8_t   OBF        :  1;               /*!< Output Buffer Full bit                                                */
       __I  uint8_t   IBF        :  1;               /*!< Input Buffer Full bit                                                 */
-      __I  uint8_t   UD1A       :  1;               /*!< User Defined                                                          */
+      __IO uint8_t   UD1A       :  1;               /*!< User Defined                                                          */
       __I  uint8_t   CMD        :  1;               /*!< OS2EC Data contains a command byte                                    */
       __IO uint8_t   BURST      :  1;               /*!< set when the ACPI_EC is in Burst Mode                                 */
       __IO uint8_t   SCI_EVT    :  1;               /*!< set when an SCI event is pending                                      */
@@ -975,8 +975,8 @@ typedef struct {                                    /*!< ACPI_EC0 Structure     
   __I  uint16_t  RESERVED1;
   
   union {
-    __IO uint32_t  OS2EC_DATA;                      /*!< OS2EC Data EC-Register                                                */
-    __IO uint8_t   OS2EC_DATA_BYTE[4];              /*!< OS2EC Data Bytes                                                      */
+    __I uint32_t  OS2EC_DATA;                       /*!< OS2EC Data EC-Register                                                */
+    __I uint8_t   OS2EC_DATA_BYTE[4];               /*!< OS2EC Data Bytes                                                      */
   };
 } ACPI_EC0_Type;
 
@@ -1034,7 +1034,7 @@ typedef struct {                                    /*!< KBC Structure          
       __IO uint8_t   UD0        :  1;               /*!< User-defined data.                                                    */
       __I  uint8_t   CMDnDATA   :  1;               /*!< data register contains data(0) or command(1)                          */
       __IO uint8_t   UD1        :  1;               /*!< User-defined data.                                                    */
-      __IO uint8_t   AUXOBF     :  1;               /*!< Auxiliary Output Buffer Full.                                         */
+      __I  uint8_t   AUXOBF     :  1;               /*!< Auxiliary Output Buffer Full.                                         */
       __IO uint8_t   UD2        :  2;               /*!< User-defined data.                                                    */
     } STATUS_b;                                     /*!< BitSize                                                               */
   };
@@ -1087,7 +1087,7 @@ typedef struct {                                    /*!< PORT92 Structure       
   __I  uint8_t   RESERVED1[7];
   __O  uint8_t   SETGA20L;                          /*!< write to set GATEA20 in GATEA20 Control Reg                           */
   __I  uint8_t   RESERVED2[3];
-  __IO uint8_t   RSTGA20L;                          /*!< write to set GATEA20 in GATEA20 Control Reg                           */
+  __O  uint8_t   RSTGA20L;                          /*!< write to set GATEA20 in GATEA20 Control Reg                           */
   __I  uint8_t   RESERVED3[547];
   __IO uint8_t   PORT92_ENABLE;                     /*!< [0:0] 1= Port92h Register is enabled.                                 */
 } PORT92_Type;
@@ -2110,8 +2110,7 @@ typedef struct {                                    /*!< RPM_FAN Structure      
   __IO uint8_t   VALID_TACH_COUNT;                  /*!< max value to indicate fan spin properly                               */
   __IO uint16_t  DRIVE_FAIL_BAND;                   /*!< [15:3]counts for Drive Fail circuitry                                 */
   __IO uint16_t  TACH_TARGET;                       /*!< [12:0] The target tachometer value.                                   */
-  __IO uint8_t   TACH_READING;                      /*!< [15:3]current tachometer reading value.                               */
-  __I  uint8_t   RESERVED1;
+  __IO uint16_t  TACH_READING;                      /*!< [15:3]current tachometer reading value.                               */
   __IO uint8_t   DRIVER_BASE_FREQUENCY;             /*!< [1:0]frequency range of the PWM fan driver                            */
   
   union {
@@ -2513,7 +2512,7 @@ typedef struct {                                    /*!< JTAG Structure         
 
 
 /*------------- Public Key Encryption Subsystem (PKE) -----------------------------*/
-/** @addtogroup MEC1322_PKE Public Key Encryption (PKE)
+/** @addtogroup CEC1302_PKE Public Key Encryption (PKE)
   @{
 */
 typedef struct
@@ -2525,10 +2524,10 @@ typedef struct
     __I     uint32_t VERSION;               /*!< Offset: 0x0010  Version */
     __IO    uint32_t LOAD_MICRO_CODE;       /*!< Offset: 0x0014  Load Micro Code */
 } PKE_TypeDef;
-/*@}*/ /* end of group MEC1322_PKE */
+/*@}*/ /* end of group CEC1302_PKE */
 
 /*------------- Random Number Generator Subsystem (TRNG) -----------------------------*/
-/** @addtogroup MEC1322_TRNG Random Number Generator (TRNG)
+/** @addtogroup CEC1302_TRNG Random Number Generator (TRNG)
   @{
 */
 typedef struct
@@ -2537,10 +2536,10 @@ typedef struct
     __I     uint32_t FIFO_LEVEL;            /*!< Offset: 0x0004  FIFO Level */
     __I     uint32_t VERSION;               /*!< Offset: 0x0008  Version */
 } TRNG_TypeDef;
-/*@}*/ /* end of group MEC1322_TRNG */
+/*@}*/ /* end of group CEC1302_TRNG */
 
 /*------------- Hash Subsystem (HASH) -----------------------------*/
-/** @addtogroup MEC1322_HASH Hash Security (HASH)
+/** @addtogroup CEC1302_HASH Hash Security (HASH)
   @{
 */
 typedef struct
@@ -2555,12 +2554,12 @@ typedef struct
     __IO    uint32_t DATA_SOURCE_ADDR;      /*!< Offset: 0x001C  Data to hash Address */
     __IO    uint32_t HASH_RESULT_ADDR;      /*!< Offset: 0x0020  Hash result address */
 } HASH_TypeDef;
-/*@}*/ /* end of group MEC1322_HASH */
+/*@}*/ /* end of group CEC1302_HASH */
 
 
 
 /*------------- Advanced Encryption Subsystem (AES) -----------------------------*/
-/** @addtogroup MEC1322_AES Advanced Encryption Subsys (AES)
+/** @addtogroup CEC1302_AES Advanced Encryption Subsys (AES)
   @{
 */
 
@@ -2603,7 +2602,7 @@ typedef struct
                                               !< Offset: 0x0158  KeyIn1[95:64] 
                                               !< Offset: 0x015C  KeyIn1[127:96] */
 } AES_TypeDef;
-/*@}*/ /* end of group MEC1322_AES */
+/*@}*/ /* end of group CEC1302_AES */
 
 /* --------------------  End of section using anonymous unions  ------------------- */
 #if defined(__CC_ARM)
@@ -3278,114 +3277,6 @@ typedef struct
 #define ACPI_EC0_EC_STATUS_SMI_EVT_Msk        (0x40UL)                  /*!< ACPI_EC0 EC_STATUS: SMI_EVT (Bitfield-Mask: 0x01)           */
 #define ACPI_EC0_EC_STATUS_UD0A_Pos           (7UL)                     /*!< ACPI_EC0 EC_STATUS: UD0A (Bit 7)                            */
 #define ACPI_EC0_EC_STATUS_UD0A_Msk           (0x80UL)                  /*!< ACPI_EC0 EC_STATUS: UD0A (Bitfield-Mask: 0x01)              */
-
-
-/* ================================================================================ */
-/* ================        struct 'ACPI_EC1' Position & Mask       ================ */
-/* ================================================================================ */
-
-
-/* -----------------------------  ACPI_EC1_OS_STATUS  ----------------------------- */
-#define ACPI_EC1_OS_STATUS_OBF_Pos            (0UL)                     /*!< ACPI_EC1 OS_STATUS: OBF (Bit 0)                             */
-#define ACPI_EC1_OS_STATUS_OBF_Msk            (0x1UL)                   /*!< ACPI_EC1 OS_STATUS: OBF (Bitfield-Mask: 0x01)               */
-#define ACPI_EC1_OS_STATUS_IBF_Pos            (1UL)                     /*!< ACPI_EC1 OS_STATUS: IBF (Bit 1)                             */
-#define ACPI_EC1_OS_STATUS_IBF_Msk            (0x2UL)                   /*!< ACPI_EC1 OS_STATUS: IBF (Bitfield-Mask: 0x01)               */
-#define ACPI_EC1_OS_STATUS_UD1B_Pos           (2UL)                     /*!< ACPI_EC1 OS_STATUS: UD1B (Bit 2)                            */
-#define ACPI_EC1_OS_STATUS_UD1B_Msk           (0x4UL)                   /*!< ACPI_EC1 OS_STATUS: UD1B (Bitfield-Mask: 0x01)              */
-#define ACPI_EC1_OS_STATUS_CMD_Pos            (3UL)                     /*!< ACPI_EC1 OS_STATUS: CMD (Bit 3)                             */
-#define ACPI_EC1_OS_STATUS_CMD_Msk            (0x8UL)                   /*!< ACPI_EC1 OS_STATUS: CMD (Bitfield-Mask: 0x01)               */
-#define ACPI_EC1_OS_STATUS_BURST_Pos          (4UL)                     /*!< ACPI_EC1 OS_STATUS: BURST (Bit 4)                           */
-#define ACPI_EC1_OS_STATUS_BURST_Msk          (0x10UL)                  /*!< ACPI_EC1 OS_STATUS: BURST (Bitfield-Mask: 0x01)             */
-#define ACPI_EC1_OS_STATUS_SCI_EVT_Pos        (5UL)                     /*!< ACPI_EC1 OS_STATUS: SCI_EVT (Bit 5)                         */
-#define ACPI_EC1_OS_STATUS_SCI_EVT_Msk        (0x20UL)                  /*!< ACPI_EC1 OS_STATUS: SCI_EVT (Bitfield-Mask: 0x01)           */
-#define ACPI_EC1_OS_STATUS_SMI_EVT_Pos        (6UL)                     /*!< ACPI_EC1 OS_STATUS: SMI_EVT (Bit 6)                         */
-#define ACPI_EC1_OS_STATUS_SMI_EVT_Msk        (0x40UL)                  /*!< ACPI_EC1 OS_STATUS: SMI_EVT (Bitfield-Mask: 0x01)           */
-#define ACPI_EC1_OS_STATUS_UD0B_Pos           (7UL)                     /*!< ACPI_EC1 OS_STATUS: UD0B (Bit 7)                            */
-#define ACPI_EC1_OS_STATUS_UD0B_Msk           (0x80UL)                  /*!< ACPI_EC1 OS_STATUS: UD0B (Bitfield-Mask: 0x01)              */
-
-/* -----------------------------  ACPI_EC1_EC_STATUS  ----------------------------- */
-#define ACPI_EC1_EC_STATUS_OBF_Pos            (0UL)                     /*!< ACPI_EC1 EC_STATUS: OBF (Bit 0)                             */
-#define ACPI_EC1_EC_STATUS_OBF_Msk            (0x1UL)                   /*!< ACPI_EC1 EC_STATUS: OBF (Bitfield-Mask: 0x01)               */
-#define ACPI_EC1_EC_STATUS_IBF_Pos            (1UL)                     /*!< ACPI_EC1 EC_STATUS: IBF (Bit 1)                             */
-#define ACPI_EC1_EC_STATUS_IBF_Msk            (0x2UL)                   /*!< ACPI_EC1 EC_STATUS: IBF (Bitfield-Mask: 0x01)               */
-#define ACPI_EC1_EC_STATUS_UD1A_Pos           (2UL)                     /*!< ACPI_EC1 EC_STATUS: UD1A (Bit 2)                            */
-#define ACPI_EC1_EC_STATUS_UD1A_Msk           (0x4UL)                   /*!< ACPI_EC1 EC_STATUS: UD1A (Bitfield-Mask: 0x01)              */
-#define ACPI_EC1_EC_STATUS_CMD_Pos            (3UL)                     /*!< ACPI_EC1 EC_STATUS: CMD (Bit 3)                             */
-#define ACPI_EC1_EC_STATUS_CMD_Msk            (0x8UL)                   /*!< ACPI_EC1 EC_STATUS: CMD (Bitfield-Mask: 0x01)               */
-#define ACPI_EC1_EC_STATUS_BURST_Pos          (4UL)                     /*!< ACPI_EC1 EC_STATUS: BURST (Bit 4)                           */
-#define ACPI_EC1_EC_STATUS_BURST_Msk          (0x10UL)                  /*!< ACPI_EC1 EC_STATUS: BURST (Bitfield-Mask: 0x01)             */
-#define ACPI_EC1_EC_STATUS_SCI_EVT_Pos        (5UL)                     /*!< ACPI_EC1 EC_STATUS: SCI_EVT (Bit 5)                         */
-#define ACPI_EC1_EC_STATUS_SCI_EVT_Msk        (0x20UL)                  /*!< ACPI_EC1 EC_STATUS: SCI_EVT (Bitfield-Mask: 0x01)           */
-#define ACPI_EC1_EC_STATUS_SMI_EVT_Pos        (6UL)                     /*!< ACPI_EC1 EC_STATUS: SMI_EVT (Bit 6)                         */
-#define ACPI_EC1_EC_STATUS_SMI_EVT_Msk        (0x40UL)                  /*!< ACPI_EC1 EC_STATUS: SMI_EVT (Bitfield-Mask: 0x01)           */
-#define ACPI_EC1_EC_STATUS_UD0A_Pos           (7UL)                     /*!< ACPI_EC1 EC_STATUS: UD0A (Bit 7)                            */
-#define ACPI_EC1_EC_STATUS_UD0A_Msk           (0x80UL)                  /*!< ACPI_EC1 EC_STATUS: UD0A (Bitfield-Mask: 0x01)              */
-
-
-/* ================================================================================ */
-/* ================          struct 'KBC' Position & Mask          ================ */
-/* ================================================================================ */
-
-
-/* ----------------------------  KBC_RD_PORT64_STATUS  ---------------------------- */
-#define KBC_RD_PORT64_STATUS_OBF_Pos          (0UL)                     /*!< KBC RD_PORT64_STATUS: OBF (Bit 0)                           */
-#define KBC_RD_PORT64_STATUS_OBF_Msk          (0x1UL)                   /*!< KBC RD_PORT64_STATUS: OBF (Bitfield-Mask: 0x01)             */
-#define KBC_RD_PORT64_STATUS_IBF_Pos          (1UL)                     /*!< KBC RD_PORT64_STATUS: IBF (Bit 1)                           */
-#define KBC_RD_PORT64_STATUS_IBF_Msk          (0x2UL)                   /*!< KBC RD_PORT64_STATUS: IBF (Bitfield-Mask: 0x01)             */
-#define KBC_RD_PORT64_STATUS_UD0_Pos          (2UL)                     /*!< KBC RD_PORT64_STATUS: UD0 (Bit 2)                           */
-#define KBC_RD_PORT64_STATUS_UD0_Msk          (0x4UL)                   /*!< KBC RD_PORT64_STATUS: UD0 (Bitfield-Mask: 0x01)             */
-#define KBC_RD_PORT64_STATUS_CMDnDATA_Pos     (3UL)                     /*!< KBC RD_PORT64_STATUS: CMDnDATA (Bit 3)                      */
-#define KBC_RD_PORT64_STATUS_CMDnDATA_Msk     (0x8UL)                   /*!< KBC RD_PORT64_STATUS: CMDnDATA (Bitfield-Mask: 0x01)        */
-#define KBC_RD_PORT64_STATUS_UD1_Pos          (4UL)                     /*!< KBC RD_PORT64_STATUS: UD1 (Bit 4)                           */
-#define KBC_RD_PORT64_STATUS_UD1_Msk          (0x10UL)                  /*!< KBC RD_PORT64_STATUS: UD1 (Bitfield-Mask: 0x01)             */
-#define KBC_RD_PORT64_STATUS_AUXOBF_Pos       (5UL)                     /*!< KBC RD_PORT64_STATUS: AUXOBF (Bit 5)                        */
-#define KBC_RD_PORT64_STATUS_AUXOBF_Msk       (0x20UL)                  /*!< KBC RD_PORT64_STATUS: AUXOBF (Bitfield-Mask: 0x01)          */
-#define KBC_RD_PORT64_STATUS_UD2_Pos          (6UL)                     /*!< KBC RD_PORT64_STATUS: UD2 (Bit 6)                           */
-#define KBC_RD_PORT64_STATUS_UD2_Msk          (0xc0UL)                  /*!< KBC RD_PORT64_STATUS: UD2 (Bitfield-Mask: 0x03)             */
-
-/* ---------------------------------  KBC_STATUS  --------------------------------- */
-#define KBC_STATUS_OBF_Pos                    (0UL)                     /*!< KBC STATUS: OBF (Bit 0)                                     */
-#define KBC_STATUS_OBF_Msk                    (0x1UL)                   /*!< KBC STATUS: OBF (Bitfield-Mask: 0x01)                       */
-#define KBC_STATUS_IBF_Pos                    (1UL)                     /*!< KBC STATUS: IBF (Bit 1)                                     */
-#define KBC_STATUS_IBF_Msk                    (0x2UL)                   /*!< KBC STATUS: IBF (Bitfield-Mask: 0x01)                       */
-#define KBC_STATUS_UD0_Pos                    (2UL)                     /*!< KBC STATUS: UD0 (Bit 2)                                     */
-#define KBC_STATUS_UD0_Msk                    (0x4UL)                   /*!< KBC STATUS: UD0 (Bitfield-Mask: 0x01)                       */
-#define KBC_STATUS_CMDnDATA_Pos               (3UL)                     /*!< KBC STATUS: CMDnDATA (Bit 3)                                */
-#define KBC_STATUS_CMDnDATA_Msk               (0x8UL)                   /*!< KBC STATUS: CMDnDATA (Bitfield-Mask: 0x01)                  */
-#define KBC_STATUS_UD1_Pos                    (4UL)                     /*!< KBC STATUS: UD1 (Bit 4)                                     */
-#define KBC_STATUS_UD1_Msk                    (0x10UL)                  /*!< KBC STATUS: UD1 (Bitfield-Mask: 0x01)                       */
-#define KBC_STATUS_AUXOBF_Pos                 (5UL)                     /*!< KBC STATUS: AUXOBF (Bit 5)                                  */
-#define KBC_STATUS_AUXOBF_Msk                 (0x20UL)                  /*!< KBC STATUS: AUXOBF (Bitfield-Mask: 0x01)                    */
-#define KBC_STATUS_UD2_Pos                    (6UL)                     /*!< KBC STATUS: UD2 (Bit 6)                                     */
-#define KBC_STATUS_UD2_Msk                    (0xc0UL)                  /*!< KBC STATUS: UD2 (Bitfield-Mask: 0x03)                       */
-
-/* ---------------------------------  KBC_CONTROL  -------------------------------- */
-#define KBC_CONTROL_UD3_Pos                   (0UL)                     /*!< KBC CONTROL: UD3 (Bit 0)                                    */
-#define KBC_CONTROL_UD3_Msk                   (0x1UL)                   /*!< KBC CONTROL: UD3 (Bitfield-Mask: 0x01)                      */
-#define KBC_CONTROL_SAEN_Pos                  (1UL)                     /*!< KBC CONTROL: SAEN (Bit 1)                                   */
-#define KBC_CONTROL_SAEN_Msk                  (0x2UL)                   /*!< KBC CONTROL: SAEN (Bitfield-Mask: 0x01)                     */
-#define KBC_CONTROL_PCOBFEN_Pos               (2UL)                     /*!< KBC CONTROL: PCOBFEN (Bit 2)                                */
-#define KBC_CONTROL_PCOBFEN_Msk               (0x4UL)                   /*!< KBC CONTROL: PCOBFEN (Bitfield-Mask: 0x01)                  */
-#define KBC_CONTROL_UD4_Pos                   (3UL)                     /*!< KBC CONTROL: UD4 (Bit 3)                                    */
-#define KBC_CONTROL_UD4_Msk                   (0x18UL)                  /*!< KBC CONTROL: UD4 (Bitfield-Mask: 0x03)                      */
-#define KBC_CONTROL_OBFEN_Pos                 (5UL)                     /*!< KBC CONTROL: OBFEN (Bit 5)                                  */
-#define KBC_CONTROL_OBFEN_Msk                 (0x20UL)                  /*!< KBC CONTROL: OBFEN (Bitfield-Mask: 0x01)                    */
-#define KBC_CONTROL_UD5_Pos                   (6UL)                     /*!< KBC CONTROL: UD5 (Bit 6)                                    */
-#define KBC_CONTROL_UD5_Msk                   (0x40UL)                  /*!< KBC CONTROL: UD5 (Bitfield-Mask: 0x01)                      */
-#define KBC_CONTROL_AUXH_Pos                  (7UL)                     /*!< KBC CONTROL: AUXH (Bit 7)                                   */
-#define KBC_CONTROL_AUXH_Msk                  (0x80UL)                  /*!< KBC CONTROL: AUXH (Bitfield-Mask: 0x01)                     */
-
-
-/* ================================================================================ */
-/* ================         struct 'PORT92' Position & Mask        ================ */
-/* ================================================================================ */
-
-
-/* --------------------------------  PORT92_PORT92  ------------------------------- */
-#define PORT92_PORT92_ALT_CPU_RESET_Pos       (0UL)                     /*!< PORT92 PORT92: ALT_CPU_RESET (Bit 0)                        */
-#define PORT92_PORT92_ALT_CPU_RESET_Msk       (0x1UL)                   /*!< PORT92 PORT92: ALT_CPU_RESET (Bitfield-Mask: 0x01)          */
-#define PORT92_PORT92_ALT_GATE_A20_Pos        (1UL)                     /*!< PORT92 PORT92: ALT_GATE_A20 (Bit 1)                         */
-#define PORT92_PORT92_ALT_GATE_A20_Msk        (0x2UL)                   /*!< PORT92 PORT92: ALT_GATE_A20 (Bitfield-Mask: 0x01)           */
 
 
 /* ================================================================================ */

@@ -21,8 +21,8 @@
 Version Control Information (Perforce)
 ******************************************************************************
 $Revision: #1 $ 
-$DateTime: 2015/12/17 01:09:00 $ 
-$Author: snakka $
+$DateTime: 2016/04/08 10:18:28 $ 
+$Author: pramans $
 Last Change:  Updated for peripheral functions prefix p_
 ******************************************************************************/
 /** @file btimer.h
@@ -83,9 +83,6 @@ void htimer_reload(uint8_t htimer_id, uint16_t reload_value);
  * @param preload_value	- 16-bit preload value 
  */
 void p_htimer_preload_set(uint8_t htimer_id, uint16_t preload_value);
-
-/*_RB_ Added by RB. */
-uint16_t p_htimer_preload_get(uint8_t htimer_id);
 
 /** Sets hibernation timer resolution
  * @param htimer_id Hibernation Timer ID

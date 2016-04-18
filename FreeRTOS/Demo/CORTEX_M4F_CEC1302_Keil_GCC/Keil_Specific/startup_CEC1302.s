@@ -19,10 +19,10 @@
 ;* OF THESE TERMS.
 ;******************************************************************************
 ; */
-;/** @file startup_MEC1322.s
-; *MEC1322 API Test: startup and vector table
+;/** @file startup_CEC1302.s
+; *CEC1302 API Test: startup and vector table
 ; */
-;/** @defgroup startup_MEC1322
+;/** @defgroup startup_CEC1302
 ; *  @{
 ; */
 
@@ -55,7 +55,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x00000000 
+Heap_Size       EQU     0x00000000
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
@@ -88,7 +88,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     PendSV_Handler            ; PendSV Handler
                 DCD     SysTick_Handler           ; SysTick Handler
 
-                ; MEC1322 External Interrupts
+                ; CEC1302 External Interrupts
                 DCD     NVIC_Handler_I2C0           ; 40h: 0, I2C/SMBus 0
                 DCD     NVIC_Handler_I2C1           ; 44h: 1, I2C/SMBus 1
                 DCD     NVIC_Handler_I2C2           ; 48h: 2, I2C/SMBus 2
@@ -152,7 +152,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     NVIC_Handler_GIRQ11         ; 130h: 60, GIRQ11
                 DCD     NVIC_Handler_GIRQ12        ; 134h: 61, GIRQ12
                 DCD     NVIC_Handler_GIRQ13         ; 138h: 62, GIRQ13
-				DCD     NVIC_Handler_GIRQ14         ; 13Ch: 63, GIRQ14
+                DCD     NVIC_Handler_GIRQ14         ; 13Ch: 63, GIRQ14
                 DCD     NVIC_Handler_GIRQ15         ; 140h: 64, GIRQ15
                 DCD     NVIC_Handler_GIRQ16         ; 144h: 65, GIRQ16
                 DCD     NVIC_Handler_GIRQ17         ; 148h: 66, GIRQ17
@@ -178,9 +178,9 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     NVIC_Handler_PKE_ERR        ; 198h: 86, PKE Error
                 DCD     NVIC_Handler_PKE_END        ; 19Ch: 87, PKE End
                 DCD     NVIC_Handler_TRNG           ; 1A0h: 88, TRandom Num Gen
-                DCD     NVIC_Handler_AES            ; 1A4h: 89, AES 
+                DCD     NVIC_Handler_AES            ; 1A4h: 89, AES
                 DCD     NVIC_Handler_HASH           ; 1A8h: 90, HASH
-                
+
 
                 AREA    ROMTABLE, CODE, READONLY
                 THUMB
@@ -198,16 +198,16 @@ Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
 
                 CPSID    i
-                
- 				; support code is loaded from ROM loader
-        		LDR 	SP, =__initial_sp
-				; configure CPU speed 
+
+                ; support code is loaded from ROM loader
+                LDR     SP, =__initial_sp
+                ; configure CPU speed
                 LDR     R0, =system_set_ec_clock
                 BLX     R0
 
                 LDR     SP, =__initial_sp
 
- 				; support FPU
+                ; support FPU
                 IF      {CPU} = "Cortex-M4.fp"
                 LDR     R0, =0xE000ED88           ; Enable CP10,CP11
                 LDR     R1,[R0]
@@ -275,7 +275,7 @@ SysTick_Handler PROC
 
 Default_Handler PROC
 
-        ; External MEC1322 NVIC Interrupt Inputs
+        ; External CEC1302 NVIC Interrupt Inputs
         EXPORT  NVIC_Handler_I2C0               [WEAK]
         EXPORT  NVIC_Handler_I2C1               [WEAK]
         EXPORT  NVIC_Handler_I2C2               [WEAK]
@@ -468,14 +468,14 @@ NVIC_Handler_HASH
 ; User Initial Stack & Heap
 
                 IF      :DEF:__MICROLIB
-                
+
                 EXPORT  __initial_sp
                 EXPORT  __heap_base
                 EXPORT  __heap_limit
                 EXPORT  __stack_bottom
 
                 ELSE
-                
+
                 IMPORT  __use_two_region_memory
                 EXPORT  __user_initial_stackheap
 __user_initial_stackheap

@@ -20,9 +20,9 @@
 
 Version Control Information (Perforce)
 ******************************************************************************
-$Revision: #2 $ 
-$DateTime: 2015/11/24 06:27:00 $ 
-$Author: amohandas $
+$Revision: #1 $ 
+$DateTime: 2016/04/08 10:18:28 $ 
+$Author: pramans $
 Last Change:	Updated for tabs
 ******************************************************************************/
 /** @file btimer_api.c
@@ -39,6 +39,7 @@ Last Change:	Updated for tabs
 #include "common_lib.h"
 #include "btimer.h"
 #include "..\pcr\pcr.h"
+//#include "..\interrupt\ecia.h"
 
 /** Basic Timer Sleep Registers & Bit Positions */
 static const uint32_t btmr_pcr_id[BTIMER_MAX_INSTANCE] = {

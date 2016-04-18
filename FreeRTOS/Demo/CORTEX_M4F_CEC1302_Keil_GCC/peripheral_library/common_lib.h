@@ -21,12 +21,12 @@
  *  common.h
  *      This is the header file including common headers from various modules
  **********************************************************************************
- *  $Revision: #1 $  $DateTime: 2015/12/23 15:37:58 $  $    $
+ *  $Revision: #1 $  $DateTime: 2016/04/08 10:18:28 $  $    $
  *  Description: added ict module
  **********************************************************************************
  *  #xx
  **********************************************************************************
- * $File: //depot_pcs/FWEng/Release/projects/CEC1302_CLIB/release2/Source/hw_blks/common/include/common_lib.h $
+ * $File: //depot_pcs/FWEng/Release/projects/CEC1302_PLIB_CLIB/release5/Source/hw_blks/common/include/common_lib.h $
  */
 
 /*********************************************************************************/
@@ -49,12 +49,11 @@
 #include "MCHP_CEC1302.h"
 /* Cortex-M4 processor and core peripherals */
 #include "core_cm4.h" 
-#include "MEC1322.h"
 #include "defs.h"
 #include "string.h"
-//_RB_#include "build.h"
-//_RB_#include "..\system\system.h"
-//_RB_#include "..\debug\trace.h"
+//#include "build.h"
+//#include "..\system\system.h"
+//#include "..\debug\trace.h"
 #include <stdbool.h>
 #endif /*_COMMON_LIB_H_*/
 

@@ -76,6 +76,8 @@
 
 /* Library includes. */
 #include "common_lib.h"
+#include "peripheral_library/interrupt/interrupt.h"
+#include "peripheral_library/basic_timer/btimer.h"
 
 /* This file contains functions that will override the default implementations
 in the RTOS port layer.  Therefore only build this file if the low power demo
@@ -170,13 +172,14 @@ void NVIC_Handler_HIB_TMR( void )
 #if( lpINCLUDE_TEST_TIMER == 1 )
 
 	#define lpGIRQ23_ENABLE_SET		( * ( uint32_t * ) 0x4000C130 )
+	#define tmrGIRQ23_BIT_TIMER0	( 1UL << 0UL )
 
 	static void prvSetupBasicTimer( void )
 	{
 	const uint8_t ucTimerChannel = 0;
 	const uint32_t ulTimer0Count = configCPU_CLOCK_HZ / 10;
 
-		lpGIRQ23_ENABLE_SET = 0x03;
+		lpGIRQ23_ENABLE_SET = tmrGIRQ23_BIT_TIMER0;
 
 		/* To fully test the low power tick processing it is necessary to sometimes
 		bring the MCU out of its sleep state by a method other than the tick
@@ -184,7 +187,6 @@ void NVIC_Handler_HIB_TMR( void )
 		purpose. */
 		btimer_init( ucTimerChannel, BTIMER_AUTO_RESTART | BTIMER_COUNT_DOWN | BTIMER_INT_EN, 0, ulTimer0Count, ulTimer0Count );
 		btimer_interrupt_status_get_clr( ucTimerChannel );
-		enable_timer0_irq();
 		NVIC_SetPriority( TIMER0_IRQn, ucTimerChannel );
 		NVIC_ClearPendingIRQ( TIMER0_IRQn );
 		NVIC_EnableIRQ( TIMER0_IRQn );

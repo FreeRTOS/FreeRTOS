@@ -23,7 +23,7 @@
  **********************************************************************************
  *  #xx
  **********************************************************************************
- * $File: //depot_pcs/FWEng/Release/projects/CEC1302_CLIB/release2/Source/hw_blks/common/include/defs.h $
+ * $File: //depot_pcs/FWEng/Release/projects/CEC1302_PLIB_CLIB/release5/Source/hw_blks/common/include/defs.h $
  */
 
 

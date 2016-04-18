@@ -1,9 +1,10 @@
 /*
- * Default linker script for GCC MEC1322
+ * Default linker script for GCC CEC1302
  * Based upon linker scripts from GNU ARM Eclipse plug-in
  */
 
 INCLUDE mem.ld
+__SRAM_segment_end__ = ORIGIN( RAM ) + LENGTH( RAM );
 
 /*
  * The '__stack' definition is required by crt0, do not remove it.
@@ -58,7 +59,7 @@ SECTIONS
      * For Cortex-M devices, the beginning of the startup code is stored in
      * the .isr_vector section, which goes to ROM
      */
-	 
+
 	.isr_vector :
 	{
 		. = ALIGN(4);
@@ -66,8 +67,8 @@ SECTIONS
 		KEEP(*(.isr_vector))
 		. = ALIGN(4);
 	} >ROM
- 
-	 
+
+
     .text :
     {
         . = ALIGN(4);

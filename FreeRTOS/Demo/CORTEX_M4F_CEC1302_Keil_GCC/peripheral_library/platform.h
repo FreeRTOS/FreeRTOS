@@ -35,10 +35,10 @@
 /*******************************************************************************
  *  SMSC version control information (Perforce):
  *
- *  FILE:     $File: //depot_pcs/FWEng/Release/projects/CEC1302_CLIB/release2/Source/hw_blks/common/include/platform.h $
+ *  FILE:     $File: //depot_pcs/FWEng/Release/projects/CEC1302_PLIB_CLIB/release5/Source/hw_blks/common/include/platform.h $
  *  REVISION: $Revision: #1 $
- *  DATETIME: $DateTime: 2015/12/23 15:37:58 $
- *  AUTHOR:   $Author: akrishnan $
+ *  DATETIME: $DateTime: 2016/04/08 10:18:28 $
+ *  AUTHOR:   $Author: pramans $
  *
  *  Revision history (latest first):
  *      #xx
@@ -48,6 +48,12 @@
 #ifndef _PLATFORM_H_
 #define _PLATFORM_H_
 #include <stdint.h>
+
+/* Enable any one of the below flag which enables either Aggregated or Disaggregated Interrupts */
+#define DISAGGREGATED_INPT_DEFINED 		1
+//#define AGGREGATED_INPT_DEFINED			1
+
+
 /* Platform Configuration PreProcessor Conditions */
 #define TOOLKEIL    1
 #define TOOLPC      2
@@ -132,6 +138,10 @@ typedef signed long             INT32;
 
 typedef void                    VOID;
 
+typedef volatile unsigned char      VUINT8;
+typedef volatile unsigned short int VUINT16;
+typedef volatile unsigned long int  VUINT32;
+
 /* union types */
 typedef union _BITS_8
 {
@@ -189,7 +199,7 @@ typedef union _BITS_8
 #define FUNC_NEVER_RETURNS
 #define BEGIN_SMALL_DATA_BLOCK(x)
 #define END_SMALL_DATA_BLOCK()
-UINT32 soft_norm(UINT32 val);
+uint32_t soft_norm(uint32_t val);
 #define NORM(x) soft_norm(x)
 //
 #define USE_FUNC_REPLACEMENT    0
@@ -228,7 +238,7 @@ UINT32 soft_norm(UINT32 val);
 #define FUNC_NEVER_RETURNS
 #define BEGIN_SMALL_DATA_BLOCK(x)
 #define END_SMALL_DATA_BLOCK()
-UINT32 soft_norm(UINT32 val);
+uint32_t soft_norm(uint32_t val);
 #define NORM(x) soft_norm(x)
 //
 #define USE_FUNC_REPLACEMENT    0
@@ -335,7 +345,7 @@ UINT32 soft_norm(UINT32 val);
 #else
 /* for ARM MDK */
 #define FUNC_NEVER_RETURNS
-UINT32 soft_norm(UINT32 val);
+uint32_t soft_norm(uint32_t val);
 #define NORM(x) soft_norm(x)
 #endif
 #endif

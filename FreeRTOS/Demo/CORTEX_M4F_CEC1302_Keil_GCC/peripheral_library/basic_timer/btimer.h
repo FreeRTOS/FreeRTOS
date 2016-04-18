@@ -21,8 +21,8 @@
 Version Control Information (Perforce)
 ******************************************************************************
 $Revision: #1 $ 
-$DateTime: 2015/11/22 06:01:28 $ 
-$Author: amohandas $
+$DateTime: 2016/04/08 10:18:28 $ 
+$Author: pramans $
 Last Change:	Updated with unit testing feedbacks
 ******************************************************************************/
 /** @file btimer.h

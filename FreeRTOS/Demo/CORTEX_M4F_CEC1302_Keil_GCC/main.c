@@ -165,7 +165,7 @@ static void prvSetupHardware( void )
 extern void system_set_ec_clock( void );
 extern unsigned long __Vectors[];
 
-	/* Disable M4 write buffer: fix MEC1322 hardware bug. */
+	/* Disable M4 write buffer: fix CEC1302 hardware bug. */
 	mainNVIC_AUX_ACTLR |= 0x07;
 
 	/* Enable alternative NVIC vectors. */

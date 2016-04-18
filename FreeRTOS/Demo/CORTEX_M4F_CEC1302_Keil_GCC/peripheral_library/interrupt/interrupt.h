@@ -1,5 +1,5 @@
-/****************************************************************************
-* © 2013 Microchip Technology Inc. and its subsidiaries.
+/*****************************************************************************
+* © 2015 Microchip Technology Inc. and its subsidiaries.
 * You may use this software and any derivatives exclusively with
 * Microchip products.
 * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS".
@@ -16,220 +16,28 @@
 * FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 * MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE
 * OF THESE TERMS.
-*/
+******************************************************************************
 
-/** @defgroup interrupt interrupt
+Version Control Information (Perforce)
+******************************************************************************
+$Revision: #1 $ 
+$DateTime: 2016/04/08 10:18:28 $ 
+$Author: pramans $
+Last Change: Corrected several header definations
+******************************************************************************/
+/** @file interrupt.h
+* \brief Interrupt Header File
+* \author jvasanth
+* 
+* This file implements the Interrupt Module Header file  
+******************************************************************************/
+
+/** @defgroup Interrupt
  *  @{
  */
-/** @file interrupt.h
- \brief This is the header file for interrupt.c
- This program is designed to allow the other C programs to be able to use this component
 
- There are entry points for all C wrapper API implementation
-
-<b>Platform:</b> This is ARC-based component 
-
-<b>Toolset:</b> Metaware IDE(8.5.1)
-<b>Reference:</b> smsc_reusable_fw_requirement.doc */
-
-/*******************************************************************************
- *  SMSC version control information (Perforce):
- *
- *  FILE:     $File: //depot_pcs/FWEng/Release/projects/CEC1302_CLIB/release2/Source/hw_blks/kernel/skern/source/interrupt/interrupt.h $
- *  REVISION: $Revision: #1 $
- *  DATETIME: $DateTime: 2015/12/23 15:37:58 $
- *  AUTHOR:   $Author: akrishnan $
- *
- *  Revision history (latest first):
- *      #xx
- ***********************************************************************************
- */
-
-#ifndef _INTERRUPT_H_
-#define _INTERRUPT_H_
-
-
-/* public function prototypes */
-void interrupt_block_init(void);
-void null_handler(void);
-
-/* macro for interrupt control */
-/* 16-bit timers interrupt control */
-#define sbit_TIMER0				( 1UL << 0UL )
-#define sbit_TIMER1				( 1UL << 1UL )
-#define sbit_TIMER2				( 1UL << 2UL )
-#define sbit_TIMER3				( 1UL << 3Ul )
-
-#define disable_timer0_irq()	mCLR_BIT(sbit_TIMER0, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_timer0_irq()		mSET_BIT(sbit_TIMER0, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_timer0_source()	mCLR_SRC_BIT(sbit_TIMER0, MMCR_EC_GIRQ23_SOURCE)
-#define get_timer0_source()	    mGET_BIT(sbit_TIMER0, MMCR_EC_GIRQ23_SOURCE)
-
-#define disable_timer1_irq()	mCLR_BIT(sbit_TIMER1, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_timer1_irq()		mSET_BIT(sbit_TIMER1, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_timer1_source()	mCLR_SRC_BIT(sbit_TIMER1, MMCR_EC_GIRQ23_SOURCE)
-#define get_timer1_source()	    mGET_BIT(sbit_TIMER1, MMCR_EC_GIRQ23_SOURCE)
-
-#define disable_timer2_irq()	mCLR_BIT(sbit_TIMER2, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_timer2_irq()		mSET_BIT(sbit_TIMER2, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_timer2_source()	mCLR_SRC_BIT(sbit_TIMER2, MMCR_EC_GIRQ23_SOURCE)
-#define get_timer2_source()	    mGET_BIT(sbit_TIMER2, MMCR_EC_GIRQ23_SOURCE)
-
-#define disable_timer3_irq()	mCLR_BIT(sbit_TIMER3, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_timer3_irq()		mSET_BIT(sbit_TIMER3, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_timer3_source()	mCLR_SRC_BIT(sbit_TIMER3, MMCR_EC_GIRQ23_SOURCE)
-#define get_timer3_source()	    mGET_BIT(sbit_TIMER3, MMCR_EC_GIRQ23_SOURCE)
-
-
-/* hibernation timers interrupt control */
-#define sbit_HTIMER0			( 1UL << 20 )
-#define sbit_HTIMER1			b_bit14
-
-#define disable_htimer0_irq()	mCLR_BIT(sbit_HTIMER0, MMCR_EC_GIRQ17_ENABLE_SET)
-#define enable_htimer0_irq()	mSET_BIT(sbit_HTIMER0, MMCR_EC_GIRQ17_ENABLE_SET)
-#define clear_htimer0_source()	mCLR_SRC_BIT(sbit_HTIMER0, MMCR_EC_GIRQ17_SOURCE)
-#define get_htimer0_source()	mGET_BIT(sbit_HTIMER0, MMCR_EC_GIRQ17_SOURCE)
-
-#define disable_htimer1_irq()	mCLR_BIT(sbit_HTIMER1, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_htimer1_irq()	mSET_BIT(sbit_HTIMER1, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_htimer1_source()	mCLR_SRC_BIT(sbit_HTIMER1, MMCR_EC_GIRQ23_SOURCE)
-#define get_htimer1_source()	mGET_BIT(sbit_HTIMER1, MMCR_EC_GIRQ23_SOURCE)
-
-/* RTC  interrupt control */
-#define b_bit18 (1 << 18)
-#define b_bit19 (1 << 19)
-#define sbit_RTC_INT                   b_bit18
-#define disable_rtc_irq()              mCLR_BIT(sbit_RTC_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-#define enable_rtc_irq()               mSET_BIT(sbit_RTC_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-#define clear_rtc_irq_source()         mCLR_SRC_BIT(sbit_RTC_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-#define get_rtc_irq_source()           mGET_BIT(sbit_RTC_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-/* RTC  alarm interrupt control */
-#define sbit_RTC_ALM_INT               b_bit19
-#define disable_rtc_alm_irq()          mCLR_BIT(sbit_RTC_ALM_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-#define enable_rtc_alm_irq()           mSET_BIT(sbit_RTC_ALM_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-#define clear_rtc_irq_alm_source()     mCLR_SRC_BIT(sbit_RTC_ALM_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-#define get_rtc_irq_alm_source()       mGET_BIT(sbit_RTC_ALM_INT, MMCR_EC_GIRQ17_ENABLE_SET)
-
-/* week timer interrupt control */
-#define sbit_WKTIMER			b_bit7
-
-#define disable_wktimer_irq()	mCLR_BIT(sbit_WKTIMER, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_wktimer_irq()	mSET_BIT(sbit_WKTIMER, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_wktimer_source()	mCLR_SRC_BIT(sbit_WKTIMER, MMCR_EC_GIRQ23_SOURCE)
-#define get_wktimer_source()	mGET_BIT(sbit_WKTIMER, MMCR_EC_GIRQ23_SOURCE)
-
-
-/* scan matrix interrupt control */
-#define sbit_SCANNER			b_bit16
-#define disable_scanner_irq()	mCLR_BIT(sbit_SCANNER, MMCR_EC_GIRQ18_ENABLE_SET)
-#define enable_scanner_irq()	mSET_BIT(sbit_SCANNER, MMCR_EC_GIRQ18_ENABLE_SET)
-#define clear_scanner_source()	mCLR_SRC_BIT(sbit_SCANNER, MMCR_EC_GIRQ18_SOURCE)
-#define get_scanner_source()	mGET_BIT(sbit_SCANNER, MMCR_EC_GIRQ18_SOURCE)
-
-
-/* PS2 interrupt control */
-/* PS2 activity interrupt */
-#define sbit_PS2_ACT_0			  b_bit13
-#define sbit_PS2_ACT_1			  b_bit14
-#define sbit_PS2_ACT_2			  b_bit15
-/* PS2 wakeup interrupt: detect start bit */
-#define sbit_PS2_WK_0A			  b_bit17
-#define sbit_PS2_WK_1B			  b_bit20
-#define sbit_PS2_WK_2			  b_bit21
-
-/* PS2 activity interrupt control */
-#define disable_ps2_act_0_irq()	  mCLR_BIT(sbit_PS2_ACT_0, MMCR_EC_GIRQ19_ENABLE_SET)
-#define enable_ps2_act_0_irq()	  mSET_BIT(sbit_PS2_ACT_0, MMCR_EC_GIRQ19_ENABLE_SET)
-#define clear_ps2_act_0_source()  mCLR_SRC_BIT(sbit_PS2_ACT_0, MMCR_EC_GIRQ19_SOURCE)
-#define get_ps2_act_0_source()    mGET_BIT(sbit_PS2_ACT_0, MMCR_EC_GIRQ19_SOURCE)
-
-#define disable_ps2_act_1_irq()	  mCLR_BIT(sbit_PS2_ACT_1, MMCR_EC_GIRQ19_ENABLE_SET)
-#define enable_ps2_act_1_irq()	  mSET_BIT(sbit_PS2_ACT_1, MMCR_EC_GIRQ19_ENABLE_SET)
-#define clear_ps2_act_1_source()  mCLR_SRC_BIT(sbit_PS2_ACT_1, MMCR_EC_GIRQ19_SOURCE)
-#define get_ps2_act_1_source()    mGET_BIT(sbit_PS2_ACT_1, MMCR_EC_GIRQ19_SOURCE)
-
-#define disable_ps2_act_2_irq()	  mCLR_BIT(sbit_PS2_ACT_2, MMCR_EC_GIRQ19_ENABLE_SET)
-#define enable_ps2_act_2_irq()	  mSET_BIT(sbit_PS2_ACT_2, MMCR_EC_GIRQ19_ENABLE_SET)
-#define clear_ps2_act_2_source()  mCLR_SRC_BIT(sbit_PS2_ACT_2, MMCR_EC_GIRQ19_SOURCE)
-#define get_ps2_act_2_source()    mGET_BIT(sbit_PS2_ACT_2, MMCR_EC_GIRQ19_SOURCE)
-
-/* PS2 wakeup interrupt control */
-#define disable_ps2_wk_0_irq()	  mCLR_BIT(sbit_PS2_WK_0A, MMCR_EC_GIRQ19_ENABLE_SET)
-#define enable_ps2_wk_0_irq()	  mSET_BIT(sbit_PS2_WK_0A, MMCR_EC_GIRQ19_ENABLE_SET)
-#define clear_ps2_wk_0_source()   mCLR_SRC_BIT(sbit_PS2_WK_0A, MMCR_EC_GIRQ19_SOURCE)
-#define get_ps2_wk_0_source()     mGET_BIT(sbit_PS2_WK_0A, MMCR_EC_GIRQ19_SOURCE)
-
-#define disable_ps2_wk_1_irq()	  mCLR_BIT(sbit_PS2_WK_1B, MMCR_EC_GIRQ19_ENABLE_SET)
-#define enable_ps2_wk_1_irq()	  mSET_BIT(sbit_PS2_WK_1B, MMCR_EC_GIRQ19_ENABLE_SET)
-#define clear_ps2_wk_1_source()   mCLR_SRC_BIT(sbit_PS2_WK_1B, MMCR_EC_GIRQ19_SOURCE)
-#define get_ps2_wk_1_source()     mGET_BIT(sbit_PS2_WK_1B, MMCR_EC_GIRQ19_SOURCE)
-
-#define disable_ps2_wk_2_irq()	  mCLR_BIT(sbit_PS2_WK_2, MMCR_EC_GIRQ19_ENABLE_SET)
-#define enable_ps2_wk_2_irq()	  mSET_BIT(sbit_PS2_WK_2, MMCR_EC_GIRQ19_ENABLE_SET)
-#define clear_ps2_wk_2_source()   mCLR_SRC_BIT(sbit_PS2_WK_2, MMCR_EC_GIRQ19_SOURCE)
-#define get_ps2_wk_2_source()     mGET_BIT(sbit_PS2_WK_2, MMCR_EC_GIRQ19_SOURCE)
-
-
-/* ICT interrupt control */
-/* capture 0~5 interrupt */
-#define sbit_ICT_CAPTURE0		  b_bit17
-#define sbit_ICT_CAPTURE1		  b_bit18
-#define sbit_ICT_CAPTURE2		  b_bit19
-#define sbit_ICT_CAPTURE3		  b_bit20
-#define sbit_ICT_CAPTURE4		  b_bit21
-#define sbit_ICT_CAPTURE5		  b_bit22
-
-/* capture 0 interrupt control */
-#define disable_capture0_irq()	  mCLR_BIT(sbit_ICT_CAPTURE0, MMCR_EC_GIRQ23_ENABLE_SET)
-#define enable_capture0_irq()	  mSET_BIT(sbit_ICT_CAPTURE0, MMCR_EC_GIRQ23_ENABLE_SET)
-#define clear_capture0_source()	  mCLR_SRC_BIT(sbit_ICT_CAPTURE0, MMCR_EC_GIRQ23_SOURCE)
-#define get_capture0_source()	  mGET_BIT(sbit_ICT_CAPTURE0, MMCR_EC_GIRQ23_SOURCE)
-
-
-/* SMBus interrupt control */
-
-
-/* GPIO interrupt control */
-
-
-/* BC link interrupt control */
-/* bclink A~D interrupt */
-#define sbit_BCLINK_A_BUSY		  b_bit0
-#define sbit_BCLINK_A_ERR		  b_bit1
-#define sbit_BCLINK_A_INT		  b_bit2
-#define sbit_BCLINK_B_BUSY		  b_bit3
-#define sbit_BCLINK_B_ERR		  b_bit4
-#define sbit_BCLINK_B_INT		  b_bit5
-#define sbit_BCLINK_C_BUSY		  b_bit6
-#define sbit_BCLINK_C_ERR		  b_bit7
-#define sbit_BCLINK_C_INT		  b_bit8
-#define sbit_BCLINK_D_BUSY		  b_bit9
-#define sbit_BCLINK_D_ERR		  b_bit10
-#define sbit_BCLINK_D_INT		  b_bit11
-
-/* bclink B interrupt control */
-#define disable_bclink_b_busy_irq()		mCLR_BIT(sbit_BCLINK_B_BUSY, MMCR_EC_GIRQ18_ENABLE_SET)
-#define enable_bclink_b_busy_irq()		mSET_BIT(sbit_BCLINK_B_BUSY, MMCR_EC_GIRQ18_ENABLE_SET)
-#define clear_bclink_b_busy_source()    mCLR_SRC_BIT(sbit_BCLINK_B_BUSY, MMCR_EC_GIRQ18_SOURCE)
-#define get_bclink_b_busy_source()      mGET_BIT(sbit_BCLINK_B_BUSY, MMCR_EC_GIRQ18_SOURCE)
-
-#define disable_bclink_b_err_irq()		mCLR_BIT(sbit_BCLINK_B_ERR, MMCR_EC_GIRQ18_ENABLE_SET)
-#define enable_bclink_b_err_irq()		mSET_BIT(sbit_BCLINK_B_ERR, MMCR_EC_GIRQ18_ENABLE_SET)
-#define clear_bclink_b_err_source()     mCLR_SRC_BIT(sbit_BCLINK_B_ERR, MMCR_EC_GIRQ18_SOURCE)
-#define get_bclink_b_err_source()       mGET_BIT(sbit_BCLINK_B_ERR, MMCR_EC_GIRQ18_SOURCE)
-
-#define disable_bclink_b_int_irq()		mCLR_BIT(sbit_BCLINK_B_INT, MMCR_EC_GIRQ18_ENABLE_SET)
-#define enable_bclink_b_int_irq()		mSET_BIT(sbit_BCLINK_B_INT, MMCR_EC_GIRQ18_ENABLE_SET)
-#define clear_bclink_b_int_source()     mCLR_SRC_BIT(sbit_BCLINK_B_INT, MMCR_EC_GIRQ18_SOURCE)
-#define get_bclink_b_int_source()       mGET_BIT(sbit_BCLINK_B_INT, MMCR_EC_GIRQ18_SOURCE)
-
-/* UART interrupt control */
-#define sbit_UART_INT                   b_bit0
-
-#define disable_uart_irq()              mCLR_BIT(sbit_UART_INT, MMCR_EC_GIRQ15_ENABLE_SET)
-#define enable_uart_irq()               mSET_BIT(sbit_UART_INT, MMCR_EC_GIRQ15_ENABLE_SET)
-#define clear_uart_irq_source()         mCLR_SRC_BIT(sbit_UART_INT, MMCR_EC_GIRQ15_SOURCE)
-#define get_uart_irq_source()           mGET_BIT(sbit_UART_INT, MMCR_EC_GIRQ15_SOURCE)
+#ifndef _INTERRUPT_H
+#define _INTERRUPT_H
 
 // GIRQ IDs for EC Interrupt Aggregator
 enum MEC_GIRQ_IDS
@@ -303,6 +111,7 @@ enum MEC_GIRQ_IDS
 #define GPIO_0143_IROUTE                IROUTE(3,8,57,57)
 #define GPIO_0144_IROUTE                IROUTE(4,8,57,57)
 #define GPIO_0145_IROUTE                IROUTE(5,8,57,57)
+#define GPIO_0146_IROUTE                IROUTE(6,8,57,57)
 #define GPIO_0147_IROUTE                IROUTE(7,8,57,57)
 //
 #define GPIO_0150_IROUTE                IROUTE(8,8,57,57)
@@ -320,8 +129,6 @@ enum MEC_GIRQ_IDS
 #define GPIO_0163_IROUTE                IROUTE(19,8,57,57)
 #define GPIO_0164_IROUTE                IROUTE(20,8,57,57)
 #define GPIO_0165_IROUTE                IROUTE(21,8,57,57)
-#define GPIO_0166_IROUTE                IROUTE(22,8,57,57)
-#define GPIO_0167_IROUTE                IROUTE(23,8,57,57)
 
 //
 // GIRQ09
@@ -332,7 +139,7 @@ enum MEC_GIRQ_IDS
 #define GPIO_0103_IROUTE                IROUTE(3,9,58,58)
 #define GPIO_0104_IROUTE                IROUTE(4,9,58,58)
 #define GPIO_0105_IROUTE                IROUTE(5,9,58,58)
-#define GPIO_0105_IROUTE                IROUTE(5,9,58,58)
+#define GPIO_0106_IROUTE                IROUTE(6,9,58,58)
 #define GPIO_0107_IROUTE                IROUTE(7,9,58,58)
 //
 #define GPIO_0110_IROUTE                IROUTE(8,9,58,58)
@@ -369,7 +176,7 @@ enum MEC_GIRQ_IDS
 #define GPIO_0043_IROUTE                IROUTE(3,10,59,59)
 #define GPIO_0044_IROUTE                IROUTE(4,10,59,59)
 #define GPIO_0045_IROUTE                IROUTE(5,10,59,59)
-#define GPIO_0045_IROUTE                IROUTE(5,10,59,59)
+#define GPIO_0046_IROUTE                IROUTE(6,10,59,59)
 #define GPIO_0047_IROUTE                IROUTE(7,10,59,59)
 //
 #define GPIO_0050_IROUTE                IROUTE(8,10,59,59)
@@ -389,14 +196,6 @@ enum MEC_GIRQ_IDS
 #define GPIO_0065_IROUTE                IROUTE(21,10,59,59)
 #define GPIO_0066_IROUTE                IROUTE(22,10,59,59)
 #define GPIO_0067_IROUTE                IROUTE(23,10,59,59)
-//
-#define GPIO_0070_IROUTE                IROUTE(24,10,59,59)
-#define GPIO_0071_IROUTE                IROUTE(25,10,59,59)
-#define GPIO_0072_IROUTE                IROUTE(26,10,59,59)
-#define GPIO_0073_IROUTE                IROUTE(27,10,59,59)
-#define GPIO_0074_IROUTE                IROUTE(28,10,59,59)
-#define GPIO_0075_IROUTE                IROUTE(29,10,59,59)
-#define GPIO_0076_IROUTE                IROUTE(30,10,59,59)
 
 //
 // GIRQ11
@@ -443,12 +242,11 @@ enum MEC_GIRQ_IDS
 #define SMB1_IROUTE                     IROUTE(1,12,61,1)
 #define SMB2_IROUTE                     IROUTE(2,12,61,2)
 #define SMB3_IROUTE                     IROUTE(3,12,61,3)
-// SMB wakes have no direct connection to NVIC, always aggregated
-#define SMB0_WAKE_IROUTE                IROUTE(4,12,61,61)
-#define SMB1_WAKE_IROUTE                IROUTE(5,12,61,61)
-#define SMB2_WAKE_IROUTE                IROUTE(6,12,61,61)
-#define SMB3_WAKE_IROUTE                IROUTE(7,12,61,61)
-#define SMB4_WAKE_IROUTE                IROUTE(8,12,61,61)
+#define I2C0_0_WAKE_IROUTE              IROUTE(4,12,61,61)
+#define I2C0_1_WAKE_IROUTE              IROUTE(5,12,61,61)
+#define I2C2_0_WAKE_IROUTE              IROUTE(6,12,61,61)
+#define I2C1_0_WAKE_IROUTE              IROUTE(7,12,61,61)
+#define I2C3_0_WAKE_IROUTE              IROUTE(8,12,61,61)
 
 //
 // GIRQ13
@@ -519,9 +317,9 @@ enum MEC_GIRQ_IDS
 #define RPM_STALL_IROUTE                IROUTE(23,17,66,41)
 #define RPM_SPIN_IROUTE                 IROUTE(24,17,66,42)
 #define PFR_IROUTE                      IROUTE(25,17,66,43)
-#define LED0_IROUTE                     IROUTE(26,17,66,44)
-#define LED1_IROUTE                     IROUTE(27,17,66,45)
-#define LED2_IROUTE                     IROUTE(28,17,66,46)
+#define PWM_WDT_0_IROUTE                IROUTE(26,17,66,44)
+#define PWM_WDT_1_IROUTE                IROUTE(27,17,66,45)
+#define PWM_WDT_2_IROUTE                IROUTE(28,17,66,46)
 #define BCM_ERR_IROUTE                  IROUTE(29,17,66,47)
 #define BCM_BUSY_IROUTE                 IROUTE(30,17,66,48)
 
@@ -542,8 +340,8 @@ enum MEC_GIRQ_IDS
 //
 // GIRQ19, Aggregated only
 //
-#define LRESET_IROUTE                   IROUTE(0,19,68,68)
-#define VCC_PWRGD_IROUTE                IROUTE(1,19,68,68)
+#define VCC_PWRGD_IROUTE                IROUTE(0,19,68,68)
+#define LRESET_IROUTE                   IROUTE(1,19,68,68)
 
 //
 // GIRQ20, Aggregated only
@@ -553,6 +351,7 @@ enum MEC_GIRQ_IDS
 #define GPIO_0202_IROUTE                IROUTE(2,20,69,69)
 #define GPIO_0203_IROUTE                IROUTE(3,20,69,69)
 #define GPIO_0204_IROUTE                IROUTE(4,20,69,69)
+//
 #define GPIO_0206_IROUTE                IROUTE(6,20,69,69)
 //
 #define GPIO_0210_IROUTE                IROUTE(8,20,69,69)
@@ -580,14 +379,17 @@ enum MEC_GIRQ_IDS
 #define BTMR4_IROUTE                    IROUTE(4,23,72,53)
 #define BTMR5_IROUTE                    IROUTE(5,23,72,54)
 
-// GIRQ08 Bit Positions 
+
+//
+// GIRQ08 Bit Positions
+//
 #define GIRQ08_GPIO_0140_BITPOS         (0)
 #define GIRQ08_GPIO_0141_BITPOS         (1)
 #define GIRQ08_GPIO_0142_BITPOS         (2)
 #define GIRQ08_GPIO_0143_BITPOS         (3)
 #define GIRQ08_GPIO_0144_BITPOS         (4)
 #define GIRQ08_GPIO_0145_BITPOS         (5)
-//#define GIRQ08_GPIO_0146_BITPOS       (6) RESERVED
+#define GIRQ08_GPIO_0146_BITPOS         (6)
 #define GIRQ08_GPIO_0147_BITPOS         (7)
 //
 #define GIRQ08_GPIO_0150_BITPOS         (8)
@@ -612,7 +414,9 @@ enum MEC_GIRQ_IDS
 #define GIRQ08_WAKE_CAPABLE_MASK        (0x00FFFFBFul)
 //
 
+//
 // GIRQ09 Bit Positions 
+//
 #define GIRQ09_GPIO_0100_BITPOS         (0)
 #define GIRQ09_GPIO_0101_BITPOS         (1)
 #define GIRQ09_GPIO_0102_BITPOS         (2)
@@ -634,7 +438,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ09_GPIO_0120_BITPOS         (16)
 #define GIRQ09_GPIO_0121_BITPOS         (17)
 #define GIRQ09_GPIO_0122_BITPOS         (18)
-//#define GIRQ09_GPIO_0123_BITPOS       (19) RESERVED
+#define GIRQ09_GPIO_0123_BITPOS         (19)
 #define GIRQ09_GPIO_0124_BITPOS         (20)
 #define GIRQ09_GPIO_0125_BITPOS         (21)
 #define GIRQ09_GPIO_0126_BITPOS         (22) 
@@ -647,13 +451,14 @@ enum MEC_GIRQ_IDS
 #define GIRQ09_GPIO_0134_BITPOS         (28)
 #define GIRQ09_GPIO_0135_BITPOS         (29)
 #define GIRQ09_GPIO_0136_BITPOS         (30) 
-//#define GIRQ09_GPIO_0137_BITPOS       (31) RESERVED
 //
 #define GIRQ09_MASK                     (0x7FF7FFFFul)
 #define GIRQ09_WAKE_CAPABLE_MASK        (0x7FF7FFFFul)
 //
 
+//
 // GIRQ10 Bit Positions 
+//
 #define GIRQ10_GPIO_0040_BITPOS         (0)
 #define GIRQ10_GPIO_0041_BITPOS         (1)
 #define GIRQ10_GPIO_0042_BITPOS         (2)
@@ -680,15 +485,6 @@ enum MEC_GIRQ_IDS
 #define GIRQ10_GPIO_0065_BITPOS         (21)
 #define GIRQ10_GPIO_0066_BITPOS         (22) 
 #define GIRQ10_GPIO_0067_BITPOS         (23)
-//
-#define GIRQ10_GPIO_0070_BITPOS         (24)
-#define GIRQ10_GPIO_0071_BITPOS         (25)
-#define GIRQ10_GPIO_0072_BITPOS         (26)
-#define GIRQ10_GPIO_0073_BITPOS         (27)
-#define GIRQ10_GPIO_0074_BITPOS         (28)
-#define GIRQ10_GPIO_0075_BITPOS         (29)
-#define GIRQ10_GPIO_0076_BITPOS         (30) 
-//#define GIRQ10_GPIO_0077_BITPOS       (31) RESERVED
 //
 #define GIRQ10_MASK                     (0x7FFFFFFFul)
 #define GIRQ10_WAKE_CAPABLE_MASK        (0x7FFFFFFFul)
@@ -729,7 +525,6 @@ enum MEC_GIRQ_IDS
 #define GIRQ11_GPIO_0034_BITPOS         (28)
 #define GIRQ11_GPIO_0035_BITPOS         (29)
 #define GIRQ11_GPIO_0036_BITPOS         (30) 
-//#define GIRQ11_GPIO_0037_BITPOS       (31) RESERVED
 //
 #define GIRQ11_MASK                     (0x7FFFFFFFul)
 #define GIRQ11_WAKE_CAPABLE_MASK        (0x7FFFFFFFul)
@@ -740,17 +535,19 @@ enum MEC_GIRQ_IDS
 #define GIRQ12_SMBUS1_BITPOS            (1)
 #define GIRQ12_SMBUS2_BITPOS            (2)
 #define GIRQ12_SMBUS3_BITPOS            (3)
-#define GIRQ12_SMBUS0_WAKE_BITPOS       (4)
-#define GIRQ12_SMBUS1_WAKE_BITPOS       (5)
-#define GIRQ12_SMBUS2_WAKE_BITPOS       (6)
-#define GIRQ12_SMBUS3_WAKE_BITPOS       (7)
-#define GIRQ12_SMBUS4_WAKE_BITPOS       (8)
-// RESERVED bits[31:9]
+#define GIRQ12_I2C0_0_WAKE_BITPOS       (4)
+#define GIRQ12_I2C0_1_WAKE_BITPOS       (5)
+#define GIRQ12_I2C2_0_WAKE_BITPOS       (6)
+#define GIRQ12_I2C1_0_WAKE_BITPOS       (7)
+#define GIRQ12_I2C3_0_WAKE_BITPOS       (8)
+//
 #define GIRQ12_MASK                     (0x01FFul)
 #define GIRQ12_WAKE_CAPABLE_MASK        (0x01F0ul)
 //
 
+//
 // GIRQ13 Bit Positions 
+//
 #define GIRQ13_DMA0_BITPOS              (16)
 #define GIRQ13_DMA1_BITPOS              (17)
 #define GIRQ13_DMA2_BITPOS              (18)
@@ -768,18 +565,20 @@ enum MEC_GIRQ_IDS
 #define GIRQ13_WAKE_CAPABLE_MASK        (0x00000000ul)
 //
 
+//
 // GIRQ14 Bit Positions 
+//
 #define GIRQ14_LPC_BITPOS               (2)
 //
 #define GIRQ14_MASK                     (0x04ul)
 #define GIRQ14_WAKE_CAPABLE_MASK        (0x00ul)
 //
 
+//
 // GIRQ15 Bit Positions 
+//
 #define GIRQ15_UART0_BITPOS             (0)
 #define GIRQ15_IMAP_BITPOS              (2)
-#define GIRQ15_KBD_K_BITPOS             (3)
-#define GIRQ15_KBD_M_BITPOS             (4)
 #define GIRQ15_ACPI0_IBF_BITPOS         (6)
 #define GIRQ15_ACPI0_OBF_BITPOS         (7)
 #define GIRQ15_ACPI1_IBF_BITPOS         (8)
@@ -796,14 +595,18 @@ enum MEC_GIRQ_IDS
 #define GIRQ15_WAKE_CAPABLE_MASK        (0x000000ul)
 //
 
+//
 // GIRQ16 Bit Positions 
+//
 #define GIRQ16_PECI_BITPOS              (3)
 //
 #define GIRQ16_MASK                     (0x08ul)
 #define GIRQ16_WAKE_CAPABLE_MASK        (0x00ul)
 //
 
+//
 // GIRQ17 Bit Positions 
+//
 #define GIRQ17_TACH0_BITPOS             (0)
 #define GIRQ17_TACH1_BITPOS             (1)
 #define GIRQ17_PS2_0_WAKE_BITPOS        (2)
@@ -820,16 +623,17 @@ enum MEC_GIRQ_IDS
 #define GIRQ17_PS2_1_BITPOS             (15)
 #define GIRQ17_PS2_2_BITPOS             (16)
 #define GIRQ17_PS2_3_BITPOS             (17)
-// RESERVED b[19:18]
+#define GIRQ17_RTC_BITPOS               (18)
+#define GIRQ17_RTC_ALARM_BITPOS         (19)
 #define GIRQ17_HIBTMR_BITPOS            (20)
 #define GIRQ17_KEY_INT_BITPOS           (21)
 #define GIRQ17_KEY_INT_WAKE_BITPOS      (22)
 #define GIRQ17_RPM_STALL_BITPOS         (23)
 #define GIRQ17_RPM_SPIN_BITPOS          (24)
 #define GIRQ17_VBAT_BITPOS              (25)
-#define GIRQ17_LED0_BITPOS              (26)
-#define GIRQ17_LED1_BITPOS              (27)
-#define GIRQ17_LED2_BITPOS              (28)
+#define GIRQ17_PWM_WDT_0_BITPOS         (26)
+#define GIRQ17_PWM_WDT_1_BITPOS         (27)
+#define GIRQ17_PWM_WDT_2_BITPOS         (28)
 #define GIRQ17_MBC_ERR_BITPOS           (29)
 #define GIRQ17_MBC_BUSY_BITPOS          (30)
 //
@@ -837,12 +641,14 @@ enum MEC_GIRQ_IDS
 #define GIRQ17_WAKE_CAPABLE_MASK        (0x0230007Cul)
 //
 
-// GIRQ18 Bit Positions 
+//
+// GIRQ18 Bit Positions
+//
 #define GIRQ18_SPI0_TX_BITPOS           (0)
 #define GIRQ18_SPI0_RX_BITPOS           (1)
 #define GIRQ18_SPI1_TX_BITPOS           (2)
 #define GIRQ18_SPI1_RX_BITPOS           (3)
-#define GIRQ18_LED3_BITPOS              (4)  // NVIC 85
+#define GIRQ18_PWM_WDT_3_BITPOS         (4)  // NVIC 85
 #define GIRQ18_PKE_ERR_BITPOS           (5)  // NVIC 86
 #define GIRQ18_PKE_END_BITPOS           (6)  // NVIC 87
 #define GIRQ18_TRNG_BITPOS              (7)  // NVIC 88
@@ -853,23 +659,26 @@ enum MEC_GIRQ_IDS
 #define GIRQ18_WAKE_CAPABLE_MASK        (0x000ul)
 //
 
-// GIRQ19 Bit Positions 
-#define GIRQ19_LRESET_BITPOS            (0)
-#define GIRQ19_VCC_PWRGD_BITPOS         (1)
+//
+// GIRQ19 Bit Positions
+//
+#define GIRQ19_VCC_PWRGD_BITPOS         (0)
+#define GIRQ19_LRESET_BITPOS            (1)
 //
 #define GIRQ19_MASK                     (0x03ul)
 #define GIRQ19_WAKE_CAPABLE_MASK        (0x03ul)
 //
 
+//
 // GIRQ20 Bit Positions 
+//
 #define GIRQ20_GPIO_0200_BITPOS         (0)
 #define GIRQ20_GPIO_0201_BITPOS         (1)
 #define GIRQ20_GPIO_0202_BITPOS         (2)
 #define GIRQ20_GPIO_0203_BITPOS         (3)
 #define GIRQ20_GPIO_0204_BITPOS         (4)
-//#define GIRQ20_GPIO_0205_BITPOS       (5)
+//
 #define GIRQ20_GPIO_0206_BITPOS         (6)
-//#define GIRQ20_GPIO_0207_BITPOS       (7)
 //
 #define GIRQ20_GPIO_0210_BITPOS         (8)
 #define GIRQ20_GPIO_0211_BITPOS         (9)
@@ -880,15 +689,21 @@ enum MEC_GIRQ_IDS
 #define GIRQ20_WAKE_CAPABLE_MASK        (0x0F5Ful)
 //
 
+//
 // GIRQ21 Bit Positions 
+//
 #define GIRQ21_MASK                     (0x00ul)
 #define GIRQ21_WAKE_CAPABLE_MASK        (0x00ul)
 
+//
 // GIRQ22 Bit Positions 
+//
 #define GIRQ22_MASK                     (0x00ul)
 #define GIRQ22_WAKE_CAPABLE_MASK        (0x00ul)
 
+//
 // GIRQ23 Bit Positions 
+//
 #define GIRQ23_TMR0_BITPOS              (0)
 #define GIRQ23_TMR1_BITPOS              (1)
 #define GIRQ23_TMR2_BITPOS              (2)
@@ -899,6 +714,7 @@ enum MEC_GIRQ_IDS
 #define GIRQ23_MASK                     (0x03Ful)
 #define GIRQ23_WAKE_CAPABLE_MASK        (0x000ul)
 //
+
 
 /* ------------------------------------------------------------------------------- */
 /*                  NVIC,ECIA Routing Policy for Direct Mode                       */
@@ -1131,7 +947,7 @@ void p_interrupt_ecia_girqs_source_reset(void);
 /** Set interrupt control 
  * @param nvic_en_flag : 0 = Alternate NVIC disabled, 1 = Alternate NVIC enabled
  */
- void p_interrupt_control_set(uint8_t nvic_en_flag);
+void p_interrupt_control_set(uint8_t nvic_en_flag);
      
  /** Read interrupt control 
  * @return uint8_t - 0 = Alternate NVIC disabled, 1 = Alternate NVIC enabled
@@ -1147,7 +963,7 @@ uint8_t p_interrupt_control_get(void);
  * @param en_flag : 1 = Enable the NVIC IRQ, 0 = Disable the NVIC IRQ
  * @note Application should perform this operation
  */
- void p_interrupt_nvic_enable(IRQn_Type nvic_num, uint8_t en_flag);
+void p_interrupt_nvic_enable(IRQn_Type nvic_num, uint8_t en_flag);
      
  /**  ecia_nvic_clr_en - Clear all NVIC external enables */ 
 void p_interrupt_nvic_extEnables_clr(void);
@@ -1167,8 +983,8 @@ void p_interrupt_nvic_priorities_default_set(void);
  */
 void p_interrupt_nvic_priorities_set(uint8_t new_pri);
 
-#endif /*_INTERRUPT_H_*/
-
+#endif // #ifndef _INTERRUPT_H
+/* end interrupt.h */
 /**   @}
  */
 

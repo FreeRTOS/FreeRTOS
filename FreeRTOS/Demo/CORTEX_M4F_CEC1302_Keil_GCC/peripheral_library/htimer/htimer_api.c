@@ -21,8 +21,8 @@
 Version Control Information (Perforce)
 ******************************************************************************
 $Revision: #1 $ 
-$DateTime: 2015/12/17 01:09:00 $ 
-$Author: snakka $
+$DateTime: 2016/04/08 10:18:28 $ 
+$Author: pramans $
 Last Change: Updated for peripheral functions prefix p_
 ******************************************************************************/
 /** @file btimer_perphl.c

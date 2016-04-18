@@ -117,8 +117,13 @@ timers must still be above the tick interrupt priority. */
 #define tmrMEDIUM_PRIORITY		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 0 )
 #define tmrHIGHER_PRIORITY		( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY - 1 )
 
-/* Hardware register locations. */
-#define tmrGIRQ23_ENABLE_SET			( * ( volatile uint32_t * ) 0x4000C130 )
+/* Hardware register locations and bit definitions to enable the btimer 
+interrupts. */
+#define tmrGIRQ23_ENABLE_SET	( * ( volatile uint32_t * ) 0x4000C130 )
+#define tmrGIRQ23_BIT_TIMER0	( 1UL << 0UL )
+#define tmrGIRQ23_BIT_TIMER1	( 1UL << 1UL )
+#define tmrGIRQ23_BIT_TIMER2	( 1UL << 2UL )
+#define tmrGIRQ23_TIMER_BITS	( tmrGIRQ23_BIT_TIMER0 | tmrGIRQ23_BIT_TIMER1 | tmrGIRQ23_BIT_TIMER2 )
 
 #define tmrRECORD_NESTING_DEPTH()						\
 	ulNestingDepth++;									\
@@ -138,13 +143,12 @@ const uint32_t ulTimer0Count = configCPU_CLOCK_HZ / tmrTIMER_0_FREQUENCY;
 const uint32_t ulTimer1Count = configCPU_CLOCK_HZ / tmrTIMER_1_FREQUENCY;
 const uint32_t ulTimer2Count = configCPU_CLOCK_HZ / tmrTIMER_2_FREQUENCY;
 
-	tmrGIRQ23_ENABLE_SET = 0x03;
+	tmrGIRQ23_ENABLE_SET = tmrGIRQ23_TIMER_BITS;
 
 	/* Initialise the three timers as described at the top of this file, and
 	enable their interrupts in the NVIC. */
 	btimer_init( tmrTIMER_CHANNEL_0, BTIMER_AUTO_RESTART | BTIMER_COUNT_DOWN | BTIMER_INT_EN, 0, ulTimer0Count, ulTimer0Count );
 	btimer_interrupt_status_get_clr( tmrTIMER_CHANNEL_0 );
-	enable_timer0_irq();
 	NVIC_SetPriority( TIMER0_IRQn, tmrLOWER_PRIORITY ); //0xc0 into 0xe000e431
 	NVIC_ClearPendingIRQ( TIMER0_IRQn );
 	NVIC_EnableIRQ( TIMER0_IRQn );
@@ -152,7 +156,6 @@ const uint32_t ulTimer2Count = configCPU_CLOCK_HZ / tmrTIMER_2_FREQUENCY;
 
 	btimer_init( tmrTIMER_CHANNEL_1, BTIMER_AUTO_RESTART | BTIMER_COUNT_DOWN | BTIMER_INT_EN, 0, ulTimer1Count, ulTimer1Count );
 	btimer_interrupt_status_get_clr( tmrTIMER_CHANNEL_1 );
-	enable_timer1_irq();
 	NVIC_SetPriority( TIMER1_IRQn, tmrMEDIUM_PRIORITY ); //0xa0 into 0xe000e432
 	NVIC_ClearPendingIRQ( TIMER1_IRQn );
 	NVIC_EnableIRQ( TIMER1_IRQn );
@@ -160,7 +163,6 @@ const uint32_t ulTimer2Count = configCPU_CLOCK_HZ / tmrTIMER_2_FREQUENCY;
 
 	btimer_init( tmrTIMER_CHANNEL_2, BTIMER_AUTO_RESTART | BTIMER_COUNT_DOWN | BTIMER_INT_EN, 0, ulTimer2Count, ulTimer2Count );
 	btimer_interrupt_status_get_clr( tmrTIMER_CHANNEL_2 );
-	enable_timer2_irq();
 	NVIC_SetPriority( TIMER2_IRQn, tmrHIGHER_PRIORITY );
 	NVIC_ClearPendingIRQ( TIMER2_IRQn );
 	NVIC_EnableIRQ( TIMER2_IRQn );

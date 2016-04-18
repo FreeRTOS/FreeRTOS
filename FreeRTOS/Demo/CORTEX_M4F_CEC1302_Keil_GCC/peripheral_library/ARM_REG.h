@@ -23,10 +23,10 @@
  **********************************************************************************
  *  SMSC version control information (Perforce):
  *
- *  FILE:     $File: //depot_pcs/FWEng/Release/projects/CEC1302_CLIB/release2/Source/hw_blks/common/include/ARM_REG.h $
+ *  FILE:     $File: //depot_pcs/FWEng/Release/projects/CEC1302_PLIB_CLIB/release5/Source/hw_blks/common/include/ARM_REG.h $
  *  REVISION: $Revision: #1 $
- *  DATETIME: $DateTime: 2015/12/23 15:37:58 $
- *  AUTHOR:   $Author: akrishnan $
+ *  DATETIME: $DateTime: 2016/04/08 10:18:28 $
+ *  AUTHOR:   $Author: pramans $
  *
  *  Revision history (latest first):
  *      #xx

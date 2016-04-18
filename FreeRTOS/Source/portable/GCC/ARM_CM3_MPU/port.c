@@ -71,8 +71,6 @@
  * Implementation of functions defined in portable.h for the ARM CM3 port.
  *----------------------------------------------------------*/
 
-#error This port is not supported in this V9.0.0 pre-release revision, but will be supported in the final release.  For now use V8.2.3 instead.
-
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
 task.h is included from an application file. */
@@ -126,6 +124,10 @@ task.h is included from an application file. */
 /* Set the privilege level to user mode if xRunningPrivileged is false. */
 #define portRESET_PRIVILEGE( xRunningPrivileged ) if( xRunningPrivileged != pdTRUE ) __asm volatile ( " mrs r0, control \n orr r0, #1 \n msr control, r0" :::"r0" )
 
+/* For strict compliance with the Cortex-M spec the task start address should
+have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
+#define portSTART_ADDRESS_MASK				( ( StackType_t ) 0xfffffffeUL )
+
 /* Each task maintains its own interrupt status in the critical nesting
 variable.  Note this is not saved as part of the task context as context
 switches can only occur when uxCriticalNesting is zero. */
@@ -176,7 +178,8 @@ static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) 
 /*
  * Prototypes for all the MPU wrappers.
  */
-BaseType_t MPU_xTaskGenericCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask, StackType_t *puxStackBuffer, const MemoryRegion_t * const xRegions );
+BaseType_t MPU_xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask );
+BaseType_t MPU_xTaskCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask );
 void MPU_vTaskAllocateMPURegions( TaskHandle_t xTask, const MemoryRegion_t * const xRegions );
 void MPU_vTaskDelete( TaskHandle_t pxTaskToDelete );
 void MPU_vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, TickType_t xTimeIncrement );
@@ -234,7 +237,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) pxCode;	/* PC */
+	*pxTopOfStack = ( ( StackType_t ) pxCode ) & portSTART_ADDRESS_MASK;	/* PC */
 	pxTopOfStack--;
 	*pxTopOfStack = 0;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
@@ -677,12 +680,23 @@ uint32_t ul;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t MPU_xTaskGenericCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask, StackType_t *puxStackBuffer, const MemoryRegion_t * const xRegions )
+BaseType_t MPU_xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
 {
 BaseType_t xReturn;
 BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
-	xReturn = xTaskGenericCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask, puxStackBuffer, xRegions );
+	xReturn = xTaskCreateRestricted( pxTaskDefinition, pxCreatedTask );
+	portRESET_PRIVILEGE( xRunningPrivileged );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xTaskCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask )
+{
+BaseType_t xReturn;
+BaseType_t xRunningPrivileged = prvRaisePrivilege();
+
+	xReturn = xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask );
 	portRESET_PRIVILEGE( xRunningPrivileged );
 	return xReturn;
 }

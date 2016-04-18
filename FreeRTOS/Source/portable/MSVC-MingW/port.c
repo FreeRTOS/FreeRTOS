@@ -262,6 +262,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 {
 xThreadState *pxThreadState = NULL;
 int8_t *pcTopOfStack = ( int8_t * ) pxTopOfStack;
+const SIZE_T xStackSize = 1024; /* Set the size to a small number which will get rounded up to the minimum possible. */
 
 	#ifdef portSOAK_TEST
 	{
@@ -282,8 +283,8 @@ int8_t *pcTopOfStack = ( int8_t * ) pxTopOfStack;
 	pxThreadState = ( xThreadState * ) ( pcTopOfStack - sizeof( xThreadState ) );
 
 	/* Create the thread itself. */
-	pxThreadState->pvThread = CreateThread( NULL, 0, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED, NULL );
-	configASSERT( pxThreadState->pvThread );
+	pxThreadState->pvThread = CreateThread( NULL, xStackSize, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED | STACK_SIZE_PARAM_IS_A_RESERVATION, NULL );
+	configASSERT( pxThreadState->pvThread ); /* See comment where TerminateThread() is called. */
 	SetThreadAffinityMask( pxThreadState->pvThread, 0x01 );
 	SetThreadPriorityBoost( pxThreadState->pvThread, TRUE );
 	SetThreadPriority( pxThreadState->pvThread, portTASK_THREAD_PRIORITY );
@@ -490,6 +491,10 @@ uint32_t ulErrorCode;
 	{
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
+		/* !!! This is not a nice way to terminate a thread, and will eventually
+		result in resources being depleted if tasks frequently delete other
+		tasks (rather than deleting themselves) as the task stacks will not be
+		freed. */
 		ulErrorCode = TerminateThread( pxThreadState->pvThread, 0 );
 		configASSERT( ulErrorCode );
 
@@ -531,6 +536,10 @@ uint32_t ulErrorCode;
 	/* Close the thread. */
 	ulErrorCode = CloseHandle( pvThread );
 	configASSERT( ulErrorCode );
+
+	/* This is called from a critical section, which must be exited before the
+	thread stops. */
+	taskEXIT_CRITICAL();
 
 	ExitThread( 0 );
 }

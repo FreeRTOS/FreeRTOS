@@ -248,7 +248,12 @@ static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseTy
  * Called after a Timer_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-static void prvInitialiseNewTimer( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, Timer_t *pxNewTimer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+static void prvInitialiseNewTimer(	const char * const pcTimerName,
+									const TickType_t xTimerPeriodInTicks,
+									const UBaseType_t uxAutoReload,
+									void * const pvTimerID,
+									TimerCallbackFunction_t pxCallbackFunction,
+									Timer_t *pxNewTimer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 /*-----------------------------------------------------------*/
 
 BaseType_t xTimerCreateTimerTask( void )
@@ -271,7 +276,13 @@ BaseType_t xReturn = pdFAIL;
 			uint32_t ulTimerTaskStackSize;
 
 			vApplicationGetTimerTaskMemory( &pxTimerTaskTCBBuffer, &pxTimerTaskStackBuffer, &ulTimerTaskStackSize );
-			xTimerTaskHandle = xTaskCreateStatic( prvTimerTask, "Tmr Svc", ulTimerTaskStackSize, NULL, ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, pxTimerTaskStackBuffer, pxTimerTaskTCBBuffer );
+			xTimerTaskHandle = xTaskCreateStatic(	prvTimerTask,
+													"Tmr Svc",
+													ulTimerTaskStackSize,
+													NULL,
+													( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
+													pxTimerTaskStackBuffer,
+													pxTimerTaskTCBBuffer );
 
 			if( xTimerTaskHandle != NULL )
 			{
@@ -280,7 +291,12 @@ BaseType_t xReturn = pdFAIL;
 		}
 		#else
 		{
-			xReturn = xTaskCreate( prvTimerTask, "Tmr Svc", configTIMER_TASK_STACK_DEPTH, NULL, ( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT, &xTimerTaskHandle );
+			xReturn = xTaskCreate(	prvTimerTask,
+									"Tmr Svc",
+									configTIMER_TASK_STACK_DEPTH,
+									NULL,
+									( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
+									&xTimerTaskHandle );
 		}
 		#endif /* configSUPPORT_STATIC_ALLOCATION */
 	}
@@ -296,7 +312,11 @@ BaseType_t xReturn = pdFAIL;
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	TimerHandle_t xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TimerHandle_t xTimerCreate(	const char * const pcTimerName,
+								const TickType_t xTimerPeriodInTicks,
+								const UBaseType_t uxAutoReload,
+								void * const pvTimerID,
+								TimerCallbackFunction_t pxCallbackFunction ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	Timer_t *pxNewTimer;
 
@@ -324,7 +344,12 @@ BaseType_t xReturn = pdFAIL;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	TimerHandle_t xTimerCreateStatic( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxTimerBuffer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TimerHandle_t xTimerCreateStatic(	const char * const pcTimerName,
+										const TickType_t xTimerPeriodInTicks,
+										const UBaseType_t uxAutoReload,
+										void * const pvTimerID,
+										TimerCallbackFunction_t pxCallbackFunction,
+										StaticTimer_t *pxTimerBuffer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	{
 	Timer_t *pxNewTimer;
 
@@ -361,7 +386,12 @@ BaseType_t xReturn = pdFAIL;
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseNewTimer( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, Timer_t *pxNewTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+static void prvInitialiseNewTimer(	const char * const pcTimerName,
+									const TickType_t xTimerPeriodInTicks,
+									const UBaseType_t uxAutoReload,
+									void * const pvTimerID,
+									TimerCallbackFunction_t pxCallbackFunction,
+									Timer_t *pxNewTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
 	/* 0 is not a valid value for xTimerPeriodInTicks. */
 	configASSERT( ( xTimerPeriodInTicks > 0 ) );

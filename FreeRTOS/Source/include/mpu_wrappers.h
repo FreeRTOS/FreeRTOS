@@ -79,80 +79,102 @@ only for ports that are using the MPU. */
 	those files. */
 	#ifndef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
-		#define xTaskCreate						MPU_xTaskCreate
-		#define xTaskCreateRestricted			MPU_xTaskCreateRestricted
-		#define vTaskAllocateMPURegions			MPU_vTaskAllocateMPURegions
-		#define vTaskDelete						MPU_vTaskDelete
-		#define vTaskDelayUntil					MPU_vTaskDelayUntil
-		#define vTaskDelay						MPU_vTaskDelay
-		#define uxTaskPriorityGet				MPU_uxTaskPriorityGet
-		#define vTaskPrioritySet				MPU_vTaskPrioritySet
-		#define eTaskGetState					MPU_eTaskGetState
-		#define vTaskSuspend					MPU_vTaskSuspend
-		#define vTaskResume						MPU_vTaskResume
-		#define vTaskSuspendAll					MPU_vTaskSuspendAll
-		#define xTaskResumeAll					MPU_xTaskResumeAll
-		#define xTaskGetTickCount				MPU_xTaskGetTickCount
-		#define uxTaskGetNumberOfTasks			MPU_uxTaskGetNumberOfTasks
-		#define vTaskList						MPU_vTaskList
-		#define vTaskGetRunTimeStats			MPU_vTaskGetRunTimeStats
-		#define vTaskSetApplicationTaskTag		MPU_vTaskSetApplicationTaskTag
-		#define xTaskGetApplicationTaskTag		MPU_xTaskGetApplicationTaskTag
-		#define xTaskCallApplicationTaskHook	MPU_xTaskCallApplicationTaskHook
-		#define uxTaskGetStackHighWaterMark		MPU_uxTaskGetStackHighWaterMark
-		#define xTaskGetCurrentTaskHandle		MPU_xTaskGetCurrentTaskHandle
-		#define xTaskGetSchedulerState			MPU_xTaskGetSchedulerState
-		#define xTaskGetIdleTaskHandle			MPU_xTaskGetIdleTaskHandle
-		#define uxTaskGetSystemState			MPU_uxTaskGetSystemState
-		#define xTaskGenericNotify				MPU_xTaskGenericNotify
-		#define xTaskNotifyWait					MPU_xTaskNotifyWait
-		#define ulTaskNotifyTake				MPU_ulTaskNotifyTake
+		/*
+		 * Map standard (non MPU) API functions to equivalents that start
+		 * "MPU_".  This will cause the application code to call the MPU_
+		 * version, which wraps the non-MPU version with privilege promoting
+		 * then demoting code, so the kernel code always runs will full
+		 * privileges.
+		 */
 
-		#define xQueueGenericCreate				MPU_xQueueGenericCreate
-		#define xQueueCreateMutex				MPU_xQueueCreateMutex
-		#define xQueueGiveMutexRecursive		MPU_xQueueGiveMutexRecursive
-		#define xQueueTakeMutexRecursive		MPU_xQueueTakeMutexRecursive
-		#define xQueueCreateCountingSemaphore	MPU_xQueueCreateCountingSemaphore
-		#define xQueueGenericSend				MPU_xQueueGenericSend
-		#define xQueueGenericReceive			MPU_xQueueGenericReceive
-		#define uxQueueMessagesWaiting			MPU_uxQueueMessagesWaiting
-		#define vQueueDelete					MPU_vQueueDelete
-		#define xQueueGenericReset				MPU_xQueueGenericReset
-		#define xQueueCreateSet					MPU_xQueueCreateSet
-		#define xQueueSelectFromSet				MPU_xQueueSelectFromSet
-		#define xQueueAddToSet					MPU_xQueueAddToSet
-		#define xQueueRemoveFromSet				MPU_xQueueRemoveFromSet
-		#define xQueueGetMutexHolder			MPU_xQueueGetMutexHolder
+		/* Map standard tasks.h API functions to the MPU equivalents. */
+		#define xTaskCreate								MPU_xTaskCreate
+		#define xTaskCreateStatic						MPU_xTaskCreateStatic
+		#define xTaskCreateRestricted					MPU_xTaskCreateRestricted
+		#define vTaskAllocateMPURegions					MPU_vTaskAllocateMPURegions
+		#define vTaskDelete								MPU_vTaskDelete
+		#define vTaskDelay								MPU_vTaskDelay
+		#define vTaskDelayUntil							MPU_vTaskDelayUntil
+		#define xTaskAbortDelay							MPU_xTaskAbortDelay
+		#define uxTaskPriorityGet						MPU_uxTaskPriorityGet
+		#define eTaskGetState							MPU_eTaskGetState
+		#define vTaskGetInfo							MPU_vTaskGetInfo
+		#define vTaskPrioritySet						MPU_vTaskPrioritySet
+		#define vTaskSuspend							MPU_vTaskSuspend
+		#define vTaskResume								MPU_vTaskResume
+		#define vTaskSuspendAll							MPU_vTaskSuspendAll
+		#define xTaskResumeAll							MPU_xTaskResumeAll
+		#define xTaskGetTickCount						MPU_xTaskGetTickCount
+		#define uxTaskGetNumberOfTasks					MPU_uxTaskGetNumberOfTasks
+		#define pcTaskGetName							MPU_pcTaskGetName
+		#define xTaskGetHandle							MPU_xTaskGetHandle
+		#define uxTaskGetStackHighWaterMark				MPU_uxTaskGetStackHighWaterMark
+		#define vTaskSetApplicationTaskTag				MPU_vTaskSetApplicationTaskTag
+		#define xTaskGetApplicationTaskTag				MPU_xTaskGetApplicationTaskTag
+		#define vTaskSetThreadLocalStoragePointer		MPU_vTaskSetThreadLocalStoragePointer
+		#define pvTaskGetThreadLocalStoragePointer		MPU_pvTaskGetThreadLocalStoragePointer
+		#define xTaskCallApplicationTaskHook			MPU_xTaskCallApplicationTaskHook
+		#define xTaskGetIdleTaskHandle					MPU_xTaskGetIdleTaskHandle
+		#define uxTaskGetSystemState					MPU_uxTaskGetSystemState
+		#define vTaskList								MPU_vTaskList
+		#define vTaskGetRunTimeStats					MPU_vTaskGetRunTimeStats
+		#define xTaskGenericNotify						MPU_xTaskGenericNotify
+		#define xTaskNotifyWait							MPU_xTaskNotifyWait
+		#define ulTaskNotifyTake						MPU_ulTaskNotifyTake
 
-		#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-			#define pvPortMalloc					MPU_pvPortMalloc
-			#define vPortFree						MPU_vPortFree
-		#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+		#define xTaskGetCurrentTaskHandle				MPU_xTaskGetCurrentTaskHandle
+		#define vTaskSetTimeOutState					MPU_vTaskSetTimeOutState
+		#define xTaskCheckForTimeOut					MPU_xTaskCheckForTimeOut
+		#define xTaskGetSchedulerState					MPU_xTaskGetSchedulerState
 
-		#define xPortGetFreeHeapSize			MPU_xPortGetFreeHeapSize
-		#define vPortInitialiseBlocks			MPU_vPortInitialiseBlocks
-		#define xPortGetMinimumEverFreeHeapSize	MPU_xPortGetMinimumEverFreeHeapSize
+		/* Map standard queue.h API functions to the MPU equivalents. */
+		#define xQueueGenericSend						MPU_xQueueGenericSend
+		#define xQueueGenericReceive					MPU_xQueueGenericReceive
+		#define uxQueueMessagesWaiting					MPU_uxQueueMessagesWaiting
+		#define uxQueueSpacesAvailable					MPU_uxQueueSpacesAvailable
+		#define vQueueDelete							MPU_vQueueDelete
+		#define xQueueCreateMutex						MPU_xQueueCreateMutex
+		#define xQueueCreateMutexStatic					MPU_xQueueCreateMutexStatic
+		#define xQueueCreateCountingSemaphore			MPU_xQueueCreateCountingSemaphore
+		#define xQueueCreateCountingSemaphoreStatic		MPU_xQueueCreateCountingSemaphoreStatic
+		#define xQueueGetMutexHolder					MPU_xQueueGetMutexHolder
+		#define xQueueTakeMutexRecursive				MPU_xQueueTakeMutexRecursive
+		#define xQueueGiveMutexRecursive				MPU_xQueueGiveMutexRecursive
+		#define xQueueGenericCreate						MPU_xQueueGenericCreate
+		#define xQueueGenericCreateStatic				MPU_xQueueGenericCreateStatic
+		#define xQueueCreateSet							MPU_xQueueCreateSet
+		#define xQueueAddToSet							MPU_xQueueAddToSet
+		#define xQueueRemoveFromSet						MPU_xQueueRemoveFromSet
+		#define xQueueSelectFromSet						MPU_xQueueSelectFromSet
+		#define xQueueGenericReset						MPU_xQueueGenericReset
 
-		#if configQUEUE_REGISTRY_SIZE > 0
-			#define vQueueAddToRegistry				MPU_vQueueAddToRegistry
-			#define vQueueUnregisterQueue			MPU_vQueueUnregisterQueue
+		#if( configQUEUE_REGISTRY_SIZE > 0 )
+			#define vQueueAddToRegistry						MPU_vQueueAddToRegistry
+			#define vQueueUnregisterQueue					MPU_vQueueUnregisterQueue
+			#define pcQueueGetName							MPU_pcQueueGetName
 		#endif
 
-		#define xTimerCreate					MPU_xTimerCreate
-		#define pvTimerGetTimerID				MPU_pvTimerGetTimerID
-		#define vTimerSetTimerID				MPU_vTimerSetTimerID
-		#define xTimerIsTimerActive				MPU_xTimerIsTimerActive
-		#define xTimerGetTimerDaemonTaskHandle	MPU_xTimerGetTimerDaemonTaskHandle
-		#define xTimerPendFunctionCall			MPU_xTimerPendFunctionCall
-		#define pcTimerGetName					MPU_pcTimerGetName
-		#define xTimerGenericCommand			MPU_xTimerGenericCommand
+		/* Map standard timer.h API functions to the MPU equivalents. */
+		#define xTimerCreate							MPU_xTimerCreate
+		#define xTimerCreateStatic						MPU_xTimerCreateStatic
+		#define pvTimerGetTimerID						MPU_pvTimerGetTimerID
+		#define vTimerSetTimerID						MPU_vTimerSetTimerID
+		#define xTimerIsTimerActive						MPU_xTimerIsTimerActive
+		#define xTimerGetTimerDaemonTaskHandle			MPU_xTimerGetTimerDaemonTaskHandle
+		#define xTimerPendFunctionCall					MPU_xTimerPendFunctionCall
+		#define pcTimerGetName							MPU_pcTimerGetName
+		#define xTimerGetPeriod							MPU_xTimerGetPeriod
+		#define xTimerGetExpiryTime						MPU_xTimerGetExpiryTime
+		#define xTimerGenericCommand					MPU_xTimerGenericCommand
 
-		#define xEventGroupCreate				MPU_xEventGroupCreate
-		#define xEventGroupWaitBits				MPU_xEventGroupWaitBits
-		#define xEventGroupClearBits			MPU_xEventGroupClearBits
-		#define xEventGroupSetBits				MPU_xEventGroupSetBits
-		#define xEventGroupSync					MPU_xEventGroupSync
-		#define vEventGroupDelete				MPU_vEventGroupDelete
+		/* Map standard event_group.h API functions to the MPU equivalents. */
+		#define xEventGroupCreate						MPU_xEventGroupCreate
+		#define xEventGroupCreateStatic					MPU_xEventGroupCreateStatic
+		#define xEventGroupWaitBits						MPU_xEventGroupWaitBits
+		#define xEventGroupClearBits					MPU_xEventGroupClearBits
+		#define xEventGroupSetBits						MPU_xEventGroupSetBits
+		#define xEventGroupSync							MPU_xEventGroupSync
+		#define vEventGroupDelete						MPU_vEventGroupDelete
 
 		/* Remove the privileged function macro. */
 		#define PRIVILEGED_FUNCTION

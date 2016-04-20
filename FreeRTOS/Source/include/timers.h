@@ -258,7 +258,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  *
  *     // Starting the scheduler will start the timers running as they have already
  *     // been set into the active state.
- *     xTaskStartScheduler();
+ *     vTaskStartScheduler();
  *
  *     // Should not reach here.
  *     for( ;; );
@@ -388,7 +388,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  *
  *     // Starting the scheduler will start the timers running as they have already
  *     // been set into the active state.
- *     xTaskStartScheduler();
+ *     vTaskStartScheduler();
  *
  *     // Should not reach here.
  *     for( ;; );
@@ -819,7 +819,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void ) PRIVILEGED_FUNCTION;
  *
  *     // Starting the scheduler will start the timer running as it has already
  *     // been set into the active state.
- *     xTaskStartScheduler();
+ *     vTaskStartScheduler();
  *
  *     // Should not reach here.
  *     for( ;; );

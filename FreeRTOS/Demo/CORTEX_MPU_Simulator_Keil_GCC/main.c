@@ -153,6 +153,11 @@ static void prvOldStyleUserModeTask( void *pvParameters );
  */
 static void prvOldStylePrivilegedModeTask( void *pvParameters );
 
+/*
+ * A task that is deleted by the Idle task.  This is just done for code 
+ * coverage test purposes.
+ */
+static void prvTaskToDelete( void *pvParameters );
 
 /*-----------------------------------------------------------*/
 /* Prototypes for other misc functions.  --------------------*/
@@ -176,7 +181,7 @@ static void prvDeleteMe( void ) __attribute__((noinline));
  * If a reg test task detects an error it will delete itself, and in so doing
  * prevent itself from sending any more 'I'm Alive' messages to the check task.
  */
-static void prvSendImAlive( QueueHandle_t xHandle, unsigned long ulTaskNumber );
+static void prvSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber );
 
 /*
  * The check task is created with access to three memory regions (plus its
@@ -196,6 +201,10 @@ any MPU region.  As such other techniques have to be used to allow the tasks
 to gain access to the queue.  See the comments in the tasks themselves for
 further information. */
 static QueueHandle_t xFileScopeCheckQueue = NULL;
+
+/* Holds the handle of a task that is deleted in the idle task hook - this is
+done for code coverage test purposes only. */
+static TaskHandle_t xTaskToDelete = NULL;
 
 
 /*-----------------------------------------------------------*/
@@ -312,12 +321,45 @@ static TaskParameters_t xRegTest2Parameters =
 
 /*-----------------------------------------------------------*/
 
+/*-----------------------------------------------------------*/
+/* Configures the task that is deleted. ---------------------*/
+/*-----------------------------------------------------------*/
+
+/* Define the constants used to allocate the stack of the task that is 
+deleted.  Note that that stack size is defined in words, not bytes. */
+#define mainDELETE_TASK_STACK_SIZE_WORDS	128
+#define mainTASK_TO_DELETE_STACK_ALIGNMENT	( mainDELETE_TASK_STACK_SIZE_WORDS * sizeof( portSTACK_TYPE ) )
+
+/* Declare the stack that will be used by the task that gets deleted.  The
+kernel will automatically create an MPU region for the stack.  The stack 
+alignment must match its size, so if 128 words are reserved for the stack 
+then it must be aligned to ( 128 * 4 ) bytes. */
+static portSTACK_TYPE xDeleteTaskStack[ mainDELETE_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainTASK_TO_DELETE_STACK_ALIGNMENT );
+
+static TaskParameters_t xTaskToDeleteParameters =
+{
+	prvTaskToDelete,					/* pvTaskCode - the function that implements the task. */
+	"DeleteMe",							/* pcName			*/
+	mainDELETE_TASK_STACK_SIZE_WORDS,	/* usStackDepth		*/
+	( void * ) NULL,					/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
+	tskIDLE_PRIORITY + 1,				/* uxPriority		*/
+	xDeleteTaskStack,					/* puxStackBuffer - the array to use as the task stack, as declared above. */
+	{									/* xRegions - this task does not use any non-stack data hence all members are zero. */
+		/* Base address		Length		Parameters */
+		{ 0x00,				0x00,			0x00 },
+		{ 0x00,				0x00,			0x00 },
+		{ 0x00,				0x00,			0x00 }
+	}
+};
+
+/*-----------------------------------------------------------*/
+
 int main( void )
 {
 	prvSetupHardware();
 
 	/* Create the queue used to pass "I'm alive" messages to the check task. */
-	xFileScopeCheckQueue = xQueueCreate( 1, sizeof( unsigned long ) );
+	xFileScopeCheckQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 
 	/* One check task uses the task parameter to receive the queue handle.
 	This allows the file scope variable to be accessed from within the task.
@@ -331,6 +373,11 @@ int main( void )
     xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
 
+	/* Create a task that does nothing but get deleted.  This is done for code
+	coverage test purposes only.  The task's handle is saved in xTaskToDelete
+	so it can get deleted in the idle task hook. */
+	xTaskCreateRestricted( &xTaskToDeleteParameters, &xTaskToDelete );
+	
 	/* Create the tasks that are created using the original xTaskCreate() API
 	function. */
 	xTaskCreate(	prvOldStyleUserModeTask,	/* The function that implements the task. */
@@ -366,9 +413,10 @@ queue variable.  Take a stack copy of this before the task is set into user
 mode.  Once that task is in user mode the file scope queue variable will no
 longer be accessible but the stack copy will. */
 QueueHandle_t xQueue = xFileScopeCheckQueue;
-long lMessage;
-unsigned long ulStillAliveCounts[ 2 ] = { 0 };
+int32_t lMessage;
+uint32_t ulStillAliveCounts[ 2 ] = { 0 };
 const char *pcStatusMessage = "PASS\r\n";
+volatile uint32_t ulStatus = pdPASS;
 
 
 	/* Just to remove compiler warning. */
@@ -409,12 +457,14 @@ const char *pcStatusMessage = "PASS\r\n";
 						/* One or both of the test tasks are no longer sending
 						'still alive' messages. */
 						pcStatusMessage = "FAIL\r\n";
+						
+						/* ulStatus can be viewed (live) in the Keil watch window. */
+						ulStatus = pdFAIL;
+						( void ) ulStatus;
 					}
 
-					/* Print a pass/fail message to the terminal.  This will be
-					visible in the CrossWorks IDE. */
-//					MPU_debug_printf( pcStatusMessage );
-( void ) pcStatusMessage;
+					/* print pcStatusMessage here. */
+					( void ) pcStatusMessage;					
 
 					/* Reset the count of 'still alive' messages. */
 					memset( ulStillAliveCounts, 0x00, sizeof( ulStillAliveCounts ) );
@@ -432,7 +482,7 @@ const char *pcStatusMessage = "PASS\r\n";
 
 static void prvTestMemoryRegions( void )
 {
-long l;
+int32_t x;
 char cTemp;
 
 	/* The check task (from which this function is called) is created in the
@@ -459,10 +509,10 @@ char cTemp;
 	/*cPrivilegedOnlyAccessArray[ 0 ] = 'a';*/
 
 	/* The read/write array can still be successfully read and written. */
-	for( l = 0; l < mainREAD_WRITE_ALIGN_SIZE; l++ )
+	for( x = 0; x < mainREAD_WRITE_ALIGN_SIZE; x++ )
 	{
-		cReadWriteArray[ l ] = 'a';
-		if( cReadWriteArray[ l ] != 'a' )
+		cReadWriteArray[ x ] = 'a';
+		if( cReadWriteArray[ x ] != 'a' )
 		{
 			/* Something unexpected happened.  Delete this task so the error is
 			apparent (no output will be displayed). */
@@ -477,9 +527,9 @@ char cTemp;
 	/* cReadWriteArray[ mainREAD_WRITE_ALIGN_SIZE ] = 0x00; */
 
 	/* The read only array can be successfully read... */
-	for( l = 0; l < mainREAD_ONLY_ALIGN_SIZE; l++ )
+	for( x = 0; x < mainREAD_ONLY_ALIGN_SIZE; x++ )
 	{
-		cTemp = cReadOnlyArray[ l ];
+		cTemp = cReadOnlyArray[ x ];
 	}
 
 	/* ...but cannot be written.  Uncomment the following line to test. */
@@ -645,15 +695,26 @@ QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
 }
 /*-----------------------------------------------------------*/
 
+static void prvTaskToDelete( void *pvParameters )
+{
+	/* Remove compiler warnings about unused parameters. */
+	( void ) pvParameters;
+	
+	/* This task has nothing to do - for code coverage test purposes it is
+	deleted by the Idle task. */
+	vTaskSuspend( NULL );
+}
+/*-----------------------------------------------------------*/
+
 void vApplicationIdleHook( void )
 {
-extern unsigned long __SRAM_segment_end__[];
-extern unsigned long __privileged_data_start__[];
-extern unsigned long __privileged_data_end__[];
-extern unsigned long __FLASH_segment_start__[];
-extern unsigned long __FLASH_segment_end__[];
-volatile unsigned long *pul;
-volatile unsigned long ulReadData;
+extern uint32_t __SRAM_segment_end__[];
+extern uint32_t __privileged_data_start__[];
+extern uint32_t __privileged_data_end__[];
+extern uint32_t __FLASH_segment_start__[];
+extern uint32_t __FLASH_segment_end__[];
+volatile uint32_t *pul;
+volatile uint32_t ulReadData;
 
 	/* The idle task, and therefore this function, run in Supervisor mode and
 	can therefore access all memory.  Try reading from corners of flash and
@@ -685,26 +746,34 @@ volatile unsigned long ulReadData;
 	/* pul = __SRAM_segment_end__ + 1;
 	ulReadData = *pul; */
 
+	/* One task is created purely so it can be deleted - done for code coverage
+	test purposes. */
+	if( xTaskToDelete != NULL )
+	{
+		vTaskDelete( xTaskToDelete );
+		xTaskToDelete = NULL;
+	}
+
 	( void ) ulReadData;
 }
 /*-----------------------------------------------------------*/
 
 static void prvOldStyleUserModeTask( void *pvParameters )
 {
-extern unsigned long __privileged_data_start__[];
-extern unsigned long __privileged_data_end__[];
-extern unsigned long __SRAM_segment_end__[];
-extern unsigned long __privileged_functions_end__[];
-extern unsigned long __FLASH_segment_start__[];
-extern unsigned long __FLASH_segment_end__[];
-//const volatile unsigned long *pulStandardPeripheralRegister = ( volatile unsigned long * ) 0x400FC0C4;
-volatile unsigned long *pul;
-volatile unsigned long ulReadData;
+extern uint32_t __privileged_data_start__[];
+extern uint32_t __privileged_data_end__[];
+extern uint32_t __SRAM_segment_end__[];
+extern uint32_t __privileged_functions_end__[];
+extern uint32_t __FLASH_segment_start__[];
+extern uint32_t __FLASH_segment_end__[];
+/*const volatile uint32_t *pulStandardPeripheralRegister = ( volatile uint32_t * ) 0x40000000;*/
+volatile uint32_t *pul;
+volatile uint32_t ulReadData;
 
 /* The following lines are commented out to prevent the unused variable
-compiler warnings when the tests that use the variable are also commented out.
-extern unsigned long __privileged_functions_start__[];
-const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned long * ) 0xe000e014; */
+compiler warnings when the tests that use the variable are also commented out. */
+/*extern uint32_t __privileged_functions_start__[];
+const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014;*/
 
 	( void ) pvParameters;
 
@@ -727,29 +796,29 @@ const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned 
 	ulReadData = *pul;
 
 	/* Standard peripherals are accessible. */
-//	ulReadData = *pulStandardPeripheralRegister;
+	/*ulReadData = *pulStandardPeripheralRegister;*/
 
 	/* System peripherals are not accessible.  Uncomment the following line
 	to test.  Also uncomment the declaration of pulSystemPeripheralRegister
-	at the top of this function. */
-	/* ulReadData = *pulSystemPeripheralRegister; */
+	at the top of this function. 
+	ulReadData = *pulSystemPeripheralRegister; */
 
 	/* Reading from anywhere inside the privileged Flash or RAM should cause a
 	fault.  This can be tested by uncommenting any of the following pairs of
 	lines.  Also uncomment the declaration of __privileged_functions_start__
 	at the top of this function. */
 
-	/* pul = __privileged_functions_start__;
-	ulReadData = *pul; */
+	/*pul = __privileged_functions_start__;
+	ulReadData = *pul;*/
 
-	/* pul = __privileged_functions_end__ - 1;
-	ulReadData = *pul; */
+	/*pul = __privileged_functions_end__ - 1;
+	ulReadData = *pul;*/
 
-	/* pul = __privileged_data_start__;
-	ulReadData = *pul; */
+	/*pul = __privileged_data_start__;
+	ulReadData = *pul;*/
 
-	/* pul = __privileged_data_end__ - 1;
-	ulReadData = *pul; */
+	/*pul = __privileged_data_end__ - 1;
+	ulReadData = *pul;*/
 
 	/* Must not just run off the end of a task function, so delete this task.
 	Note that because this task was created using xTaskCreate() the stack was
@@ -762,17 +831,17 @@ const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned 
 
 static void prvOldStylePrivilegedModeTask( void *pvParameters )
 {
-extern unsigned long __privileged_data_start__[];
-extern unsigned long __privileged_data_end__[];
-extern unsigned long __SRAM_segment_end__[];
-extern unsigned long __privileged_functions_start__[];
-extern unsigned long __privileged_functions_end__[];
-extern unsigned long __FLASH_segment_start__[];
-extern unsigned long __FLASH_segment_end__[];
-volatile unsigned long *pul;
-volatile unsigned long ulReadData;
-const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned long * ) 0xe000e014; /* Systick */
-//const volatile unsigned long *pulStandardPeripheralRegister = ( volatile unsigned long * ) 0x400FC0C4;
+extern uint32_t __privileged_data_start__[];
+extern uint32_t __privileged_data_end__[];
+extern uint32_t __SRAM_segment_end__[];
+extern uint32_t __privileged_functions_start__[];
+extern uint32_t __privileged_functions_end__[];
+extern uint32_t __FLASH_segment_start__[];
+extern uint32_t __FLASH_segment_end__[];
+volatile uint32_t *pul;
+volatile uint32_t ulReadData;
+const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014; /* Systick */
+/*const volatile uint32_t *pulStandardPeripheralRegister = ( volatile uint32_t * ) 0x40000000;*/
 
 	( void ) pvParameters;
 
@@ -808,7 +877,7 @@ const volatile unsigned long *pulSystemPeripheralRegister = ( volatile unsigned 
 	/* Finally, accessing both System and normal peripherals should both be
 	possible. */
 	ulReadData = *pulSystemPeripheralRegister;
-//	ulReadData = *pulStandardPeripheralRegister;
+	/*ulReadData = *pulStandardPeripheralRegister;*/
 
 	/* Must not just run off the end of a task function, so delete this task.
 	Note that because this task was created using xTaskCreate() the stack was
@@ -825,7 +894,7 @@ static void prvDeleteMe( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvSendImAlive( QueueHandle_t xHandle, unsigned long ulTaskNumber )
+static void prvSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber )
 {
 	if( xHandle != NULL )
 	{
@@ -841,9 +910,9 @@ static void prvSetupHardware( void )
 
 void vApplicationTickHook( void )
 {
-static unsigned long ulCallCount;
-const unsigned long ulCallsBetweenSends = 5000 / portTICK_PERIOD_MS;
-const unsigned long ulMessage = mainPRINT_SYSTEM_STATUS;
+static uint32_t ulCallCount;
+const uint32_t ulCallsBetweenSends = 5000UL / configTICK_RATE_HZ;
+const uint32_t ulMessage = mainPRINT_SYSTEM_STATUS;
 portBASE_TYPE xDummy;
 
 	/* If configUSE_TICK_HOOK is set to 1 then this function will get called
@@ -887,26 +956,26 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void hard_fault_handler(unsigned int * hardfault_args)
+void hard_fault_handler( uint32_t * hardfault_args )
 {
-volatile unsigned int stacked_r0;
-volatile unsigned int stacked_r1;
-volatile unsigned int stacked_r2;
-volatile unsigned int stacked_r3;
-volatile unsigned int stacked_r12;
-volatile unsigned int stacked_lr;
-volatile unsigned int stacked_pc;
-volatile unsigned int stacked_psr;
+volatile uint32_t stacked_r0;
+volatile uint32_t stacked_r1;
+volatile uint32_t stacked_r2;
+volatile uint32_t stacked_r3;
+volatile uint32_t stacked_r12;
+volatile uint32_t stacked_lr;
+volatile uint32_t stacked_pc;
+volatile uint32_t stacked_psr;
 
-	stacked_r0 = ((unsigned long) hardfault_args[0]);
-	stacked_r1 = ((unsigned long) hardfault_args[1]);
-	stacked_r2 = ((unsigned long) hardfault_args[2]);
-	stacked_r3 = ((unsigned long) hardfault_args[3]);
+	stacked_r0 = ((uint32_t) hardfault_args[0]);
+	stacked_r1 = ((uint32_t) hardfault_args[1]);
+	stacked_r2 = ((uint32_t) hardfault_args[2]);
+	stacked_r3 = ((uint32_t) hardfault_args[3]);
 
-	stacked_r12 = ((unsigned long) hardfault_args[4]);
-	stacked_lr = ((unsigned long) hardfault_args[5]);
-	stacked_pc = ((unsigned long) hardfault_args[6]);
-	stacked_psr = ((unsigned long) hardfault_args[7]);
+	stacked_r12 = ((uint32_t) hardfault_args[4]);
+	stacked_lr = ((uint32_t) hardfault_args[5]);
+	stacked_pc = ((uint32_t) hardfault_args[6]);
+	stacked_psr = ((uint32_t) hardfault_args[7]);
 
 	/* Inspect stacked_pc to locate the offending instruction. */
 	for( ;; );
@@ -939,7 +1008,7 @@ void HardFault_Handler( void )
 }
 /*-----------------------------------------------------------*/
 
-void MPU_Fault_ISR( void ) __attribute__((naked));
+void MemManage_Handler( void ) __attribute__((naked));
 void MemManage_Handler( void )
 {
 	__asm volatile
@@ -957,5 +1026,51 @@ void MemManage_Handler( void )
 
 /*-----------------------------------------------------------*/
 
-#warning Why must configSUPPORT_STATIC_ALLOCATION be set to 1 when the MPU is used?
-#warning Linker script is crippled for use with the simulator.
+/* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
+implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
+used by the Idle task. */
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+{
+/* If the buffers to be provided to the Idle task are declared inside this
+function then they must be declared static - otherwise they will be allocated on
+the stack and so not exists after this function exits. */
+static StaticTask_t xIdleTaskTCB;
+static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+
+	/* Pass out a pointer to the StaticTask_t structure in which the Idle task's
+	state will be stored. */
+	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+
+	/* Pass out the array that will be used as the Idle task's stack. */
+	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+
+	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+	Note that, as the array is necessarily of type StackType_t,
+	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
+/*-----------------------------------------------------------*/
+
+/* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
+application must provide an implementation of vApplicationGetTimerTaskMemory()
+to provide the memory that is used by the Timer service task. */
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
+{
+/* If the buffers to be provided to the Timer task are declared inside this
+function then they must be declared static - otherwise they will be allocated on
+the stack and so not exists after this function exits. */
+static StaticTask_t xTimerTaskTCB;
+static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+
+	/* Pass out a pointer to the StaticTask_t structure in which the Timer
+	task's state will be stored. */
+	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+
+	/* Pass out the array that will be used as the Timer task's stack. */
+	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
+
+	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+	Note that, as the array is necessarily of type StackType_t,
+	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}

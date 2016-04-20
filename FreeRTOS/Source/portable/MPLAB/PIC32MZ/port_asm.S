@@ -72,7 +72,6 @@
 #include "FreeRTOSConfig.h"
 #include "ISR_Support.h"
 
-
 	.extern pxCurrentTCB
 	.extern vTaskSwitchContext
 	.extern vPortIncrementTick

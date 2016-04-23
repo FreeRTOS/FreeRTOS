@@ -178,7 +178,7 @@ static void prvPortStartFirstTask( void ) __attribute__ (( naked ));
 /*
  * Function to enable the VFP.
  */
- static void vPortEnableVFP( void ) __attribute__ (( naked ));
+static void vPortEnableVFP( void ) __attribute__ (( naked ));
 
 /*
  * Used to catch tasks that attempt to return from their implementing function.

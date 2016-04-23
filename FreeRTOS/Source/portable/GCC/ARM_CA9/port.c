@@ -202,6 +202,27 @@ extern void vPortRestoreTaskContext( void );
  */
 static void prvTaskExitError( void );
 
+/*
+ * If the application provides an implementation of vApplicationIRQHandler(),
+ * then it will get called directly without saving the FPU registers on
+ * interrupt entry, and this weak implementation of 
+ * vApplicationFPUSafeIRQHandler() is just provided to remove linkage errors -
+ * it should never actually get called so its implementation contains a
+ * call to configASSERT() that will always fail.
+ *
+ * If the application provides its own implementation of 
+ * vApplicationFPUSafeIRQHandler() then the implementation of 
+ * vApplicationIRQHandler() provided in portASM.S will save the FPU registers
+ * before calling it.
+ *
+ * Therefore, if the application writer wants FPU registers to be saved on
+ * interrupt entry their IRQ handler must be called 
+ * vApplicationFPUSafeIRQHandler(), and if the application writer does not want
+ * FPU registers to be saved on interrupt entry their IRQ handler must be
+ * called vApplicationIRQHandler().
+ */
+void vApplicationFPUSafeIRQHandler( uint32_t ulICCIAR ) __attribute__((weak) );
+
 /*-----------------------------------------------------------*/
 
 /* A variable is used to keep track of the critical section nesting.  This
@@ -387,7 +408,7 @@ uint32_t ulAPSR;
 		}
 	}
 
-	/* Will only get here if xTaskStartScheduler() was called with the CPU in
+	/* Will only get here if vTaskStartScheduler() was called with the CPU in
 	a non-privileged mode or the binary point register was not set to its lowest
 	possible value.  prvTaskExitError() is referenced to prevent a compiler
 	warning about it being defined but not referenced in the case that the user
@@ -555,3 +576,7 @@ uint32_t ulReturn;
 #endif /* configASSERT_DEFINED */
 /*-----------------------------------------------------------*/
 
+void vApplicationFPUSafeIRQHandler( uint32_t ulICCIAR )
+{
+	configASSERT( ( volatile void * ) NULL );
+}

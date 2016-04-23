@@ -147,7 +147,14 @@ void vClearTickInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationIRQHandler( uint32_t ulICCIAR )
+/* This is the callback function which is called by the FreeRTOS Cortex-A port
+layer in response to an interrupt.  If the function is called
+vApplicationFPUSafeIRQHandler() then it is called after the floating point
+registers have been saved.  If the function is called vApplicationIRQHandler()
+then it will be called without first having saved the FPU registers.  See
+http://www.freertos.org/Using-FreeRTOS-on-Cortex-A-Embedded-Processors.html for
+more information */
+void vApplicationFPUSafeIRQHandler( uint32_t ulICCIAR )
 {
 extern const XScuGic_Config XScuGic_ConfigTable[];
 static const XScuGic_VectorTableEntry *pxVectorTable = XScuGic_ConfigTable[ XPAR_SCUGIC_SINGLE_DEVICE_ID ].HandlerTable;
@@ -155,7 +162,7 @@ uint32_t ulInterruptID;
 const XScuGic_VectorTableEntry *pxVectorEntry;
 
 	/* Re-enable interrupts. */
-    __asm ( "cpsie i" );
+	__asm ( "cpsie i" );
 
 	/* The ID of the interrupt is obtained by bitwise anding the ICCIAR value
 	with 0x3FF. */

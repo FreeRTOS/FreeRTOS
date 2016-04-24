@@ -74,10 +74,10 @@
  * the new xTaskCreateRestricted() API functions.  The purpose of each created
  * task is documented in the comments above the task function prototype (in
  * this file), with the task behaviour demonstrated and documented within the
- * task function itself.  
+ * task function itself.
  *
- * In addition a queue is used to demonstrate passing data between 
- * protected/restricted tasks as well as passing data between an interrupt and 
+ * In addition a queue is used to demonstrate passing data between
+ * protected/restricted tasks as well as passing data between an interrupt and
  * a protected/restricted task, and a software timer is used.
  */
 
@@ -90,6 +90,7 @@
 #include "queue.h"
 #include "semphr.h"
 #include "timers.h"
+#include "event_groups.h"
 
 /*-----------------------------------------------------------*/
 
@@ -109,10 +110,15 @@
 #define mainNVIC_AUX_ACTLR			( * ( volatile uint32_t * ) 0xE000E008 )
 #define mainEC_INTERRUPT_CONTROL	( * ( volatile uint32_t * ) 0x4000FC18 )
 
-/* The period of the timer must be less than the rate at which 
+/* The period of the timer must be less than the rate at which
 mainPRINT_SYSTEM_STATUS messages are sent to the check task - otherwise the
 check task will think the timer has stopped. */
 #define mainTIMER_PERIOD			pdMS_TO_TICKS( 200 )
+
+/* The name of the task that is deleted by the Idle task is used in a couple of
+places, so is #defined. */
+#define mainTASK_TO_DELETE_NAME		"DeleteMe"
+
 /*-----------------------------------------------------------*/
 /* Prototypes for functions that implement tasks. -----------*/
 /*-----------------------------------------------------------*/
@@ -161,14 +167,17 @@ static void prvOldStyleUserModeTask( void *pvParameters );
 static void prvOldStylePrivilegedModeTask( void *pvParameters );
 
 /*
- * A task that is deleted by the Idle task.  This is just done for code 
- * coverage test purposes.
+ * A task that exercises the API of various RTOS objects before being deleted by
+ * the Idle task.  This is done for MPU API code coverage test purposes.
  */
 static void prvTaskToDelete( void *pvParameters );
 
-/*-----------------------------------------------------------*/
-/* Prototypes for other misc functions.  --------------------*/
-/*-----------------------------------------------------------*/
+/*
+ * Functions called by prvTaskToDelete() to exercise the MPU API.
+ */
+static void prvExerciseEventGroupAPI( void );
+static void prvExerciseSemaphoreAPI( void );
+static void prvExerciseTaskNotificationAPI( void );
 
 /*
  * Just configures any clocks and IO necessary.
@@ -340,21 +349,21 @@ static TaskParameters_t xRegTest2Parameters =
 /* Configures the task that is deleted. ---------------------*/
 /*-----------------------------------------------------------*/
 
-/* Define the constants used to allocate the stack of the task that is 
+/* Define the constants used to allocate the stack of the task that is
 deleted.  Note that that stack size is defined in words, not bytes. */
 #define mainDELETE_TASK_STACK_SIZE_WORDS	128
 #define mainTASK_TO_DELETE_STACK_ALIGNMENT	( mainDELETE_TASK_STACK_SIZE_WORDS * sizeof( portSTACK_TYPE ) )
 
 /* Declare the stack that will be used by the task that gets deleted.  The
-kernel will automatically create an MPU region for the stack.  The stack 
-alignment must match its size, so if 128 words are reserved for the stack 
+kernel will automatically create an MPU region for the stack.  The stack
+alignment must match its size, so if 128 words are reserved for the stack
 then it must be aligned to ( 128 * 4 ) bytes. */
 static portSTACK_TYPE xDeleteTaskStack[ mainDELETE_TASK_STACK_SIZE_WORDS ] mainALIGN_TO( mainTASK_TO_DELETE_STACK_ALIGNMENT );
 
 static TaskParameters_t xTaskToDeleteParameters =
 {
 	prvTaskToDelete,					/* pvTaskCode - the function that implements the task. */
-	"DeleteMe",							/* pcName			*/
+	mainTASK_TO_DELETE_NAME,			/* pcName			*/
 	mainDELETE_TASK_STACK_SIZE_WORDS,	/* usStackDepth		*/
 	( void * ) NULL,					/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
 	tskIDLE_PRIORITY + 1,				/* uxPriority		*/
@@ -392,7 +401,7 @@ int main( void )
 	coverage test purposes only.  The task's handle is saved in xTaskToDelete
 	so it can get deleted in the idle task hook. */
 	xTaskCreateRestricted( &xTaskToDeleteParameters, &xTaskToDelete );
-	
+
 	/* Create the tasks that are created using the original xTaskCreate() API
 	function. */
 	xTaskCreate(	prvOldStyleUserModeTask,	/* The function that implements the task. */
@@ -481,14 +490,14 @@ volatile uint32_t ulStatus = pdPASS;
 						/* One or both of the test tasks are no longer sending
 						'still alive' messages. */
 						pcStatusMessage = "FAIL\r\n";
-						
+
 						/* ulStatus can be viewed (live) in the Keil watch window. */
 						ulStatus = pdFAIL;
 						( void ) ulStatus;
 					}
 
 					/**** print pcStatusMessage here. ****/
-					( void ) pcStatusMessage;					
+					( void ) pcStatusMessage;
 
 					/* Reset the count of 'still alive' messages. */
 					memset( ulStillAliveCounts, 0x00, sizeof( ulStillAliveCounts ) );
@@ -719,13 +728,129 @@ QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
 }
 /*-----------------------------------------------------------*/
 
+static void prvExerciseEventGroupAPI( void )
+{
+EventGroupHandle_t xEventGroup;
+EventBits_t xBits;
+const EventBits_t xBitsToWaitFor = ( EventBits_t ) 0xff, xBitToClear = ( EventBits_t ) 0x01;
+
+	/* Exercise some event group functions. */
+	xEventGroup = xEventGroupCreate();
+	configASSERT( xEventGroup );
+
+	/* No bits should be set. */
+	xBits = xEventGroupWaitBits( xEventGroup, xBitsToWaitFor, pdTRUE, pdFALSE, mainDONT_BLOCK );
+	configASSERT( xBits == ( EventBits_t ) 0 );
+
+	/* Set bits and read back to ensure the bits were set. */
+	xEventGroupSetBits( xEventGroup, xBitsToWaitFor );
+	xBits = xEventGroupGetBits( xEventGroup );
+	configASSERT( xBits == xBitsToWaitFor );
+
+	/* Clear a bit and read back again using a different API function. */
+	xEventGroupClearBits( xEventGroup, xBitToClear );
+	xBits = xEventGroupSync( xEventGroup, 0x00, xBitsToWaitFor, mainDONT_BLOCK );
+	configASSERT( xBits == ( xBitsToWaitFor & ~xBitToClear ) );
+
+	/* Finished with the event group. */
+	vEventGroupDelete( xEventGroup );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExerciseSemaphoreAPI( void )
+{
+SemaphoreHandle_t xSemaphore;
+const UBaseType_t uxMaxCount = 5, uxInitialCount = 0;
+
+	/* Most of the semaphore API is common to the queue API and is already being
+	used.  This function uses a few semaphore functions that are unique to the
+	RTOS objects, rather than generic and used by queues also.
+
+	First create and use a counting semaphore. */
+	xSemaphore = xSemaphoreCreateCounting( uxMaxCount, uxInitialCount );
+	configASSERT( xSemaphore );
+
+	/* Give the semaphore a couple of times and ensure the count is returned
+	correctly. */
+	xSemaphoreGive( xSemaphore );
+	xSemaphoreGive( xSemaphore );
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 2 );
+	vSemaphoreDelete( xSemaphore );
+
+	/* Create a recursive mutex, and ensure the mutex holder and count are
+	returned returned correctly. */
+	xSemaphore = xSemaphoreCreateRecursiveMutex();
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 1 );
+	configASSERT( xSemaphore );
+	xSemaphoreTakeRecursive( xSemaphore, mainDONT_BLOCK );
+	xSemaphoreTakeRecursive( xSemaphore, mainDONT_BLOCK );
+	configASSERT( xSemaphoreGetMutexHolder( xSemaphore ) == xTaskGetCurrentTaskHandle() );
+	configASSERT( xSemaphoreGetMutexHolder( xSemaphore ) == xTaskGetHandle( mainTASK_TO_DELETE_NAME ) );
+	xSemaphoreGiveRecursive( xSemaphore );
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 0 );
+	xSemaphoreGiveRecursive( xSemaphore );
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 1 );
+	configASSERT( xSemaphoreGetMutexHolder( xSemaphore ) == NULL );
+	vSemaphoreDelete( xSemaphore );
+
+	/* Create a normal mutex, and sure the mutex holder and count are returned
+	returned correctly. */
+	xSemaphore = xSemaphoreCreateMutex();
+	configASSERT( xSemaphore );
+	xSemaphoreTake( xSemaphore, mainDONT_BLOCK );
+	xSemaphoreTake( xSemaphore, mainDONT_BLOCK );
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 0 ); /* Not recursive so can only be 1. */
+	configASSERT( xSemaphoreGetMutexHolder( xSemaphore ) == xTaskGetCurrentTaskHandle() );
+	xSemaphoreGive( xSemaphore );
+	configASSERT( uxSemaphoreGetCount( xSemaphore ) == 1 );
+	configASSERT( xSemaphoreGetMutexHolder( xSemaphore ) == NULL );
+	vSemaphoreDelete( xSemaphore );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExerciseTaskNotificationAPI( void )
+{
+uint32_t ulNotificationValue;
+BaseType_t xReturned;
+
+	/* The task should not yet have a notification pending. */
+	xReturned = xTaskNotifyWait( 0, 0, &ulNotificationValue, mainDONT_BLOCK );
+	configASSERT( xReturned == pdFAIL );
+	configASSERT( ulNotificationValue == 0UL );
+
+	/* Exercise the 'give' and 'take' versions of the notification API. */
+	xTaskNotifyGive( xTaskGetCurrentTaskHandle() );
+	xTaskNotifyGive( xTaskGetCurrentTaskHandle() );
+	ulNotificationValue = ulTaskNotifyTake( pdTRUE, mainDONT_BLOCK );
+	configASSERT( ulNotificationValue == 2 );
+
+	/* Exercise the 'notify' and 'clear' API. */
+	ulNotificationValue = 20;
+	xTaskNotify( xTaskGetCurrentTaskHandle(), ulNotificationValue, eSetValueWithOverwrite );
+	ulNotificationValue = 0;
+	xReturned = xTaskNotifyWait( 0, 0, &ulNotificationValue, mainDONT_BLOCK );
+	configASSERT( xReturned == pdPASS );
+	configASSERT( ulNotificationValue == 20 );
+	xTaskNotify( xTaskGetCurrentTaskHandle(), ulNotificationValue, eSetValueWithOverwrite );
+	xReturned = xTaskNotifyStateClear( NULL );
+	configASSERT( xReturned == pdTRUE ); /* First time a notification was pending. */
+	xReturned = xTaskNotifyStateClear( NULL );
+	configASSERT( xReturned == pdFALSE ); /* Second time the notification was already clear. */
+}
+/*-----------------------------------------------------------*/
+
 static void prvTaskToDelete( void *pvParameters )
 {
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
-	
-	/* This task has nothing to do - for code coverage test purposes it is
-	deleted by the Idle task. */
+
+	/* Exercise the API of various RTOS objects. */
+	prvExerciseEventGroupAPI();
+	prvExerciseSemaphoreAPI();
+	prvExerciseTaskNotificationAPI();
+
+	/* For code coverage test purposes it is deleted by the Idle task. */
+	configASSERT( uxTaskGetStackHighWaterMark( NULL ) > 0 );
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/
@@ -824,7 +949,7 @@ const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0
 
 	/* System peripherals are not accessible.  Uncomment the following line
 	to test.  Also uncomment the declaration of pulSystemPeripheralRegister
-	at the top of this function. 
+	at the top of this function.
 	ulReadData = *pulSystemPeripheralRegister; */
 
 	/* Reading from anywhere inside the privileged Flash or RAM should cause a
@@ -991,15 +1116,15 @@ volatile uint32_t stacked_lr;
 volatile uint32_t stacked_pc;
 volatile uint32_t stacked_psr;
 
-	stacked_r0 = ((uint32_t) hardfault_args[0]);
-	stacked_r1 = ((uint32_t) hardfault_args[1]);
-	stacked_r2 = ((uint32_t) hardfault_args[2]);
-	stacked_r3 = ((uint32_t) hardfault_args[3]);
+	stacked_r0 = ((uint32_t) hardfault_args[ 0 ]);
+	stacked_r1 = ((uint32_t) hardfault_args[ 1 ]);
+	stacked_r2 = ((uint32_t) hardfault_args[ 2 ]);
+	stacked_r3 = ((uint32_t) hardfault_args[ 3 ]);
 
-	stacked_r12 = ((uint32_t) hardfault_args[4]);
-	stacked_lr = ((uint32_t) hardfault_args[5]);
-	stacked_pc = ((uint32_t) hardfault_args[6]);
-	stacked_psr = ((uint32_t) hardfault_args[7]);
+	stacked_r12 = ((uint32_t) hardfault_args[ 4 ]);
+	stacked_lr = ((uint32_t) hardfault_args[ 5 ]);
+	stacked_pc = ((uint32_t) hardfault_args[ 6 ]);
+	stacked_psr = ((uint32_t) hardfault_args[ 7 ]);
 
 	/* Inspect stacked_pc to locate the offending instruction. */
 	for( ;; );
@@ -1052,11 +1177,11 @@ void MemManage_Handler( void )
 static void prvTimerCallback( TaskHandle_t xExpiredTimer )
 {
 uint32_t ulCount;
-	
+
 	/* The count of the number of times this timer has expired is saved in the
 	timer's ID.  Obtain the current count. */
 	ulCount = ( uint32_t ) pvTimerGetTimerID( xTimer );
-	
+
 	/* Increment the count, and save it back into the timer's ID. */
 	ulCount++;
 	vTimerSetTimerID( xTimer, ( void * ) ulCount );

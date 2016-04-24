@@ -114,6 +114,7 @@ void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer );
 BaseType_t MPU_xTaskGenericNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue );
 BaseType_t MPU_xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait );
 uint32_t MPU_ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait );
+BaseType_t MPU_xTaskNotifyStateClear( TaskHandle_t xTask );
 BaseType_t MPU_xTaskIncrementTick( void );
 TaskHandle_t MPU_xTaskGetCurrentTaskHandle( void );
 void MPU_vTaskSetTimeOutState( TimeOut_t * const pxTimeOut );

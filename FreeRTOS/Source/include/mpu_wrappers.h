@@ -121,6 +121,7 @@ only for ports that are using the MPU. */
 		#define xTaskGenericNotify						MPU_xTaskGenericNotify
 		#define xTaskNotifyWait							MPU_xTaskNotifyWait
 		#define ulTaskNotifyTake						MPU_ulTaskNotifyTake
+		#define xTaskNotifyStateClear					MPU_xTaskNotifyStateClear
 
 		#define xTaskGetCurrentTaskHandle				MPU_xTaskGetCurrentTaskHandle
 		#define vTaskSetTimeOutState					MPU_vTaskSetTimeOutState

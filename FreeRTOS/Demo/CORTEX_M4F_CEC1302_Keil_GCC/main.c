@@ -68,6 +68,8 @@
 */
 
 /******************************************************************************
+ * See http://www.freertos.org/Microchip_CEC1302_ARM_Cortex-M4F_Low_Power_Demo.html
+ *
  * This project provides two demo applications.  A simple blinky style project
  * that demonstrates low power tickless functionality, and a more comprehensive
  * test and demo application.  The configCREATE_LOW_POWER_DEMO setting, which is
@@ -143,6 +145,8 @@ volatile uint32_t ulLED = 0;
 
 int main( void )
 {
+	/* See http://www.freertos.org/Microchip_CEC1302_ARM_Cortex-M4F_Low_Power_Demo.html */
+
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 

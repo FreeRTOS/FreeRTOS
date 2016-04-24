@@ -781,7 +781,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		xReturn = xTaskGetIdleTaskHandle();
 		portRESET_PRIVILEGE( xRunningPrivileged );
-		return eReturn;
+		return xReturn;
 	}
 #endif
 /*-----------------------------------------------------------*/
@@ -869,7 +869,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 
 		xReturn = xTaskGetHandle( pcNameToQuery );
 		portRESET_PRIVILEGE( xRunningPrivileged );
-		return pcReturn;
+		return xReturn;
 	}
 #endif
 /*-----------------------------------------------------------*/
@@ -1068,6 +1068,19 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
+#if( configUSE_TASK_NOTIFICATIONS == 1 )
+	BaseType_t MPU_xTaskNotifyStateClear( TaskHandle_t xTask )
+	{
+	BaseType_t xReturn;
+	BaseType_t xRunningPrivileged = prvRaisePrivilege();
+
+		xReturn = xTaskNotifyStateClear( xTask );
+		portRESET_PRIVILEGE( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+	
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 	QueueHandle_t MPU_xQueueGenericCreate( UBaseType_t uxQueueLength, UBaseType_t uxItemSize, uint8_t ucQueueType )
 	{

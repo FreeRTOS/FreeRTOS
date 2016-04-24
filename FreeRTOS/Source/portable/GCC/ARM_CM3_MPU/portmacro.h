@@ -201,7 +201,6 @@ http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
 #define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
 
-
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
 

@@ -91,7 +91,7 @@ extern "C" {
 /* Set configCREATE_LOW_POWER_DEMO to one to run the simple blinky demo low power
 example, or 1 to run the more comprehensive test and demo application.  See
 the comments at the top of main.c for more information. */
-#define configCREATE_LOW_POWER_DEMO	0
+#define configCREATE_LOW_POWER_DEMO	1
 
 /* Some configuration is dependent on the demo being built. */
 #if( configCREATE_LOW_POWER_DEMO == 1 )
@@ -130,7 +130,7 @@ the comments at the top of main.c for more information. */
 #define configCPU_CLOCK_HZ						48000000
 #define configMAX_PRIORITIES					( 5 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 120 )
-#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 28 * 1024 ) )
+#define configTOTAL_HEAP_SIZE					( ( size_t ) ( 26 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 10 )
 #define configUSE_TRACE_FACILITY				0
 #define configUSE_16_BIT_TICKS					0
@@ -161,7 +161,7 @@ FreeRTOS/Source/tasks.c for limitations. */
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 2 )
+#define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH		5
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
 

@@ -75,6 +75,10 @@
  * configCREATE_LOW_POWER_DEMO in main.c.  This file implements the low power
  * version.
  *
+ * The simple blinky demo uses aggregated interrupts.  The full demo uses
+ * disaggregated interrupts.
+ *
+ *
  * NOTE 2:  This file only contains the source code that is specific to the
  * low power demo.  Generic functions, such FreeRTOS hook functions, and
  * functions required to configure the hardware are defined in main.c.

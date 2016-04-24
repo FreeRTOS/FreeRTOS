@@ -121,9 +121,7 @@ __isr_vector:
 	.long     NVIC_Handler_GIRQ09
 	.long     NVIC_Handler_GIRQ10
 	.long     NVIC_Handler_GIRQ11
-	;.long     NVIC_Handler_GIRQ12
-	.long     interrupt_irq12
-	;.long     NVIC_Handler_GIRQ13
+	.long     NVIC_Handler_GIRQ12
 	.long     NVIC_Handler_GIRQ13
 	.long     NVIC_Handler_GIRQ14
 	.long     NVIC_Handler_GIRQ15
@@ -180,6 +178,9 @@ Reset_Handler:
  *
  *  All addresses must be aligned to 4 bytes boundary.
  */
+	ldr sp, =__SRAM_segment_end__
+	sub sp, sp, #4
+
 	ldr	r1, =__etext
 	ldr	r2, =__data_start__
 	ldr	r3, =__data_end__
@@ -250,10 +251,10 @@ Default_Handler:
 	def_irq_handler	MemManage_Handler
 	def_irq_handler	BusFault_Handler
 	def_irq_handler	UsageFault_Handler
-	def_irq_handler	SVC_Handler
+/*	def_irq_handler	SVC_Handler */
 	def_irq_handler	DebugMon_Handler
-	def_irq_handler	PendSV_Handler
-	def_irq_handler	SysTick_Handler
+/*	def_irq_handler	PendSV_Handler */
+/*	def_irq_handler	SysTick_Handler */
 	def_irq_handler	DEF_IRQHandler
 
 	def_irq_handler     NVIC_Handler_I2C0

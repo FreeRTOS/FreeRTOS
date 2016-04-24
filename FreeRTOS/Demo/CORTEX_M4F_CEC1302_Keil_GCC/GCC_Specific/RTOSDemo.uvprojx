@@ -234,11 +234,11 @@
             <interw>1</interw>
             <bigend>0</bigend>
             <Strict>0</Strict>
-            <Optim>0</Optim>
-            <wLevel>2</wLevel>
+            <Optim>1</Optim>
+            <wLevel>3</wLevel>
             <uThumb>1</uThumb>
             <VariousControls>
-              <MiscControls>-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -O0 -g</MiscControls>
+              <MiscControls>-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -g</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..;..\..\..\Source\include;..\..\..\Source\portable\GCC\ARM_CM4F;..\..\Common\include;..\peripheral_library;..\CMSIS;..\main_full</IncludePath>
@@ -428,6 +428,11 @@
               <FileName>death.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\Minimal\death.c</FilePath>
+            </File>
+            <File>
+              <FileName>StaticAllocation.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\Minimal\StaticAllocation.c</FilePath>
             </File>
           </Files>
         </Group>

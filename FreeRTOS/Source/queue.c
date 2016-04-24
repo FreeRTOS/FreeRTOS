@@ -1052,7 +1052,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was posted while it was locked. */
-				pxQueue->cTxLock = cTxLock + 1;
+				pxQueue->cTxLock = ( int8_t ) ( cTxLock + 1 );
 			}
 
 			xReturn = pdPASS;
@@ -1217,7 +1217,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was posted while it was locked. */
-				pxQueue->cTxLock = cTxLock + 1;
+				pxQueue->cTxLock = ( int8_t ) ( cTxLock + 1 );
 			}
 
 			xReturn = pdPASS;
@@ -1505,7 +1505,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				/* Increment the lock count so the task that unlocks the queue
 				knows that data was removed while it was locked. */
-				pxQueue->cRxLock = cRxLock + 1;
+				pxQueue->cRxLock = ( int8_t ) ( cRxLock + 1 );
 			}
 
 			xReturn = pdPASS;
@@ -1653,6 +1653,12 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
+	}
+	#else
+	{
+		/* The queue must have been statically allocated, so is not going to be
+		deleted.  Avoid compiler warnings about the unused parameter. */
+		( void ) pxQueue;
 	}
 	#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 }
@@ -2534,7 +2540,7 @@ BaseType_t xReturn;
 			}
 			else
 			{
-				pxQueueSetContainer->cTxLock = cTxLock + 1;
+				pxQueueSetContainer->cTxLock = ( int8_t ) ( cTxLock + 1 );
 			}
 		}
 		else

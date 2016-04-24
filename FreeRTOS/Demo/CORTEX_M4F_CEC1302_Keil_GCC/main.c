@@ -76,6 +76,9 @@
  * more comprehensive test and demo application is implemented and described in
  * main_full.c.
  *
+ * The simple blinky demo uses aggregated interrupts.  The full demo uses
+ * disaggregated interrupts.
+ *
  * This file implements the code that is not demo specific, including the
  * hardware setup and standard FreeRTOS hook functions.
  *
@@ -147,10 +150,18 @@ int main( void )
 	of this file. */
 	#if( configCREATE_LOW_POWER_DEMO == 1 )
 	{
+		/* The low power demo also demonstrated aggregated interrupts, so clear
+		the interrupt control register to disable the alternative NVIC vectors. */
+		mainEC_INTERRUPT_CONTROL = pdFALSE;
+
 		main_low_power();
 	}
 	#else
 	{
+		/* The full demo also demonstrated disaggregated interrupts, so set the
+		interrupt control register to enable the alternative NVIC vectors. */
+		mainEC_INTERRUPT_CONTROL = pdTRUE;
+
 		main_full();
 	}
 	#endif
@@ -167,9 +178,6 @@ extern unsigned long __Vectors[];
 
 	/* Disable M4 write buffer: fix CEC1302 hardware bug. */
 	mainNVIC_AUX_ACTLR |= 0x07;
-
-	/* Enable alternative NVIC vectors. */
-	mainEC_INTERRUPT_CONTROL = pdTRUE;
 
 	system_set_ec_clock();
 

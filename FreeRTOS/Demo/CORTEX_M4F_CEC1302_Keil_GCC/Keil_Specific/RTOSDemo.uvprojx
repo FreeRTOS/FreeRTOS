@@ -310,7 +310,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>0</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -593,6 +593,11 @@
               <FileName>death.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Common\Minimal\death.c</FilePath>
+            </File>
+            <File>
+              <FileName>StaticAllocation.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Common\Minimal\StaticAllocation.c</FilePath>
             </File>
           </Files>
         </Group>

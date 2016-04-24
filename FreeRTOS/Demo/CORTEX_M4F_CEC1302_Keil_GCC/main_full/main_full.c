@@ -75,6 +75,9 @@
  * on using conifgCREATE_LOW_POWER_DEMO in main.c.  This file implements the
  * comprehensive test and demo version.
  *
+ * The simple blinky demo uses aggregated interrupts.  The full demo uses
+ * disaggregated interrupts.
+ *
  * NOTE 2:  This file only contains the source code that is specific to the
  * full demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware, are defined in main.c.
@@ -129,6 +132,7 @@
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
+#include "StaticAllocation.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -223,6 +227,7 @@ void main_full( void )
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 	vStartInterruptQueueTasks();
+	vStartStaticallyAllocatedTasks();
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -265,10 +270,10 @@ unsigned long ulErrorFound = pdFALSE;
 	xLastExecutionTime = xTaskGetTickCount();
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  The onboard LED is toggled on each iteration.
+	operating without error.  The on board LED is toggled on each iteration.
 	If an error is detected then the delay period is decreased from
 	mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
-	effect of increasing the rate at which the onboard LED toggles, and in so
+	effect of increasing the rate at which the on board LED toggles, and in so
 	doing gives visual feedback of the system status. */
 	for( ;; )
 	{
@@ -320,6 +325,11 @@ unsigned long ulErrorFound = pdFALSE;
 		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ulErrorFound = 1UL << 10UL;
+		}
+
+		if( xAreStaticAllocationTasksStillRunning() != pdPASS )
+		{
+			ulErrorFound = 1UL << 11UL;
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )

@@ -74,9 +74,11 @@
  * the new xTaskCreateRestricted() API functions.  The purpose of each created
  * task is documented in the comments above the task function prototype (in
  * this file), with the task behaviour demonstrated and documented within the
- * task function itself.  In addition a queue is used to demonstrate passing
- * data between protected/restricted tasks as well as passing data between an
- * interrupt and a protected/restricted task.
+ * task function itself.  
+ *
+ * In addition a queue is used to demonstrate passing data between 
+ * protected/restricted tasks as well as passing data between an interrupt and 
+ * a protected/restricted task, and a software timer is used.
  */
 
 /* Standard includes. */
@@ -87,6 +89,7 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "timers.h"
 
 /*-----------------------------------------------------------*/
 
@@ -106,6 +109,10 @@
 #define mainNVIC_AUX_ACTLR			( * ( volatile uint32_t * ) 0xE000E008 )
 #define mainEC_INTERRUPT_CONTROL	( * ( volatile uint32_t * ) 0x4000FC18 )
 
+/* The period of the timer must be less than the rate at which 
+mainPRINT_SYSTEM_STATUS messages are sent to the check task - otherwise the
+check task will think the timer has stopped. */
+#define mainTIMER_PERIOD			pdMS_TO_TICKS( 200 )
 /*-----------------------------------------------------------*/
 /* Prototypes for functions that implement tasks. -----------*/
 /*-----------------------------------------------------------*/
@@ -193,6 +200,12 @@ static void prvSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber );
  */
 static void prvTestMemoryRegions( void );
 
+/*
+ * Callback function used with the timer that uses the queue to send messages
+ * to the check task.
+ */
+static void prvTimerCallback( TimerHandle_t xExpiredTimer );
+
 /*-----------------------------------------------------------*/
 
 /* The handle of the queue used to communicate between tasks and between tasks
@@ -206,6 +219,8 @@ static QueueHandle_t xFileScopeCheckQueue = NULL;
 done for code coverage test purposes only. */
 static TaskHandle_t xTaskToDelete = NULL;
 
+/* The timer that periodically sends data to the check task on the queue. */
+static TimerHandle_t xTimer = NULL;
 
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/
@@ -396,6 +411,15 @@ int main( void )
 					NULL							/* Handle. */
 				);
 
+	/* Create and start the software timer. */
+	xTimer = xTimerCreate( "Timer", 			/* Test name for the timer. */
+							mainTIMER_PERIOD, 	/* Period of the timer. */
+							pdTRUE,				/* The timer will auto-reload itself. */
+							( void * ) 0,		/* The timer's ID is used to count the number of times it expires - initialise this to 0. */
+							prvTimerCallback );	/* The function called when the timer expires. */
+	configASSERT( xTimer );
+	xTimerStart( xTimer, mainDONT_BLOCK );
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -463,7 +487,7 @@ volatile uint32_t ulStatus = pdPASS;
 						( void ) ulStatus;
 					}
 
-					/* print pcStatusMessage here. */
+					/**** print pcStatusMessage here. ****/
 					( void ) pcStatusMessage;					
 
 					/* Reset the count of 'still alive' messages. */
@@ -1023,7 +1047,20 @@ void MemManage_Handler( void )
 		" handler2_address_const: .word hard_fault_handler	\n"
 	);
 }
+/*-----------------------------------------------------------*/
 
+static void prvTimerCallback( TaskHandle_t xExpiredTimer )
+{
+uint32_t ulCount;
+	
+	/* The count of the number of times this timer has expired is saved in the
+	timer's ID.  Obtain the current count. */
+	ulCount = ( uint32_t ) pvTimerGetTimerID( xTimer );
+	
+	/* Increment the count, and save it back into the timer's ID. */
+	ulCount++;
+	vTimerSetTimerID( xTimer, ( void * ) ulCount );
+}
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an

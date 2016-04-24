@@ -102,13 +102,23 @@ sleep mode by an interrupt other than the tick interrupt, and therefore
 allowing an additional paths through the code to be tested. */
 #define lpINCLUDE_TEST_TIMER			0
 
-/* Some registers are accessed directly as the library is not compatible with
-all the compilers used. */
+/* Registers and bits required to use the htimer in aggregated mode. */
 #define lpHTIMER_PRELOAD_REGISTER		( * ( volatile uint16_t * ) 0x40009800 )
 #define lpHTIMER_CONTROL_REGISTER		( * ( volatile uint16_t * ) 0x40009804 )
 #define lpHTIMER_COUNT_REGISTER			( * ( volatile uint16_t * ) 0x40009808 )
 #define lpEC_GIRQ17_ENABLE_SET			( * ( volatile uint32_t * ) 0x4000C0B8 )
-#define lpHTIMER_INTERRUPT_CONTROL_BIT	( 1UL << 20UL )
+#define lpEC_GIRQ17_SOURCE 				( * ( volatile uint32_t * ) 0x4000C0B4 )
+#define lpEC_GIRQ17_ENABLE_CLEAR 		( * ( volatile uint32_t * ) 0x4000C0C0 )
+#define lpBLOCK_ENABLE_SET 				( * ( volatile uint32_t * ) 0x4000c200 )
+#define lpGIRQ17_BIT_HTIMER				( 1UL << 20UL )
+#define lpHTIMER_GIRQ_BLOCK				( 1Ul << 17UL )
+
+/* Registers and bits required to use btimer 0 in aggregated mode. */
+#define lpGIRQ23_ENABLE_SET				( * ( volatile uint32_t * ) 0x4000C130 )
+#define lpEC_GIRQ23_SOURCE 				( * ( volatile uint32_t * ) 0x4000C12C )
+#define lpEC_GIRQ23_ENABLE_CLEAR 		( * ( volatile uint32_t * ) 0x4000C138 )
+#define lpGIRQ23_BIT_TIMER0				( 1UL << 0UL )
+#define lpBTIMER_GIRQ_BLOCK				( 1UL << 23UL )
 
 /*
  * The low power demo does not use the SysTick, so override the
@@ -152,34 +162,50 @@ static volatile uint32_t ulTickFlag = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
-void NVIC_Handler_HIB_TMR( void )
+void NVIC_Handler_GIRQ17( void )
 {
-	lpHTIMER_PRELOAD_REGISTER = ulHighResolutionReloadValue;
-
-	/* Increment the RTOS tick. */
-	if( xTaskIncrementTick() != pdFALSE )
+	/* The low power demo is using aggregated interrupts, so although in the
+	demo the htimer is the only peripheral that will generate interrupts on
+	this vector, in a real application it would be necessary to first check the
+	interrupt source. */
+	if( ( lpEC_GIRQ17_SOURCE & lpGIRQ17_BIT_HTIMER ) != 0 )
 	{
-		/* A context switch is required.  Context switching is performed in
-		the PendSV interrupt.  Pend the PendSV interrupt. */
-		portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-	}
+		/* The htimer interrupted.  Clear the interrupt. */
+		lpEC_GIRQ17_SOURCE = lpGIRQ17_BIT_HTIMER;
+		lpHTIMER_PRELOAD_REGISTER = ( uint16_t ) ulHighResolutionReloadValue;
 
-	/* The CPU woke because of a tick. */
-	ulTickFlag = pdTRUE;
+		/* Increment the RTOS tick. */
+		if( xTaskIncrementTick() != pdFALSE )
+		{
+			/* A context switch is required.  Context switching is performed in
+			the PendSV interrupt.  Pend the PendSV interrupt. */
+			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
+		}
+
+		/* The CPU woke because of a tick. */
+		ulTickFlag = pdTRUE;
+	}
+	else
+	{
+		/* Don't expect any other interrupts to use this vector in this
+		demo.  Force an assert. */
+		configASSERT( lpEC_GIRQ17_SOURCE == 0 );
+	}
 }
 /*-----------------------------------------------------------*/
 
 #if( lpINCLUDE_TEST_TIMER == 1 )
-
-	#define lpGIRQ23_ENABLE_SET		( * ( uint32_t * ) 0x4000C130 )
-	#define tmrGIRQ23_BIT_TIMER0	( 1UL << 0UL )
 
 	static void prvSetupBasicTimer( void )
 	{
 	const uint8_t ucTimerChannel = 0;
 	const uint32_t ulTimer0Count = configCPU_CLOCK_HZ / 10;
 
-		lpGIRQ23_ENABLE_SET = tmrGIRQ23_BIT_TIMER0;
+		/* Enable btimer 0 interrupt in the aggregated GIRQ23 block. */
+		lpEC_GIRQ23_SOURCE = lpGIRQ23_BIT_TIMER0;
+		lpEC_GIRQ23_ENABLE_CLEAR = lpGIRQ23_BIT_TIMER0;
+		lpBLOCK_ENABLE_SET = lpBTIMER_GIRQ_BLOCK;
+		lpGIRQ23_ENABLE_SET = lpGIRQ23_BIT_TIMER0;
 
 		/* To fully test the low power tick processing it is necessary to sometimes
 		bring the MCU out of its sleep state by a method other than the tick
@@ -187,9 +213,9 @@ void NVIC_Handler_HIB_TMR( void )
 		purpose. */
 		btimer_init( ucTimerChannel, BTIMER_AUTO_RESTART | BTIMER_COUNT_DOWN | BTIMER_INT_EN, 0, ulTimer0Count, ulTimer0Count );
 		btimer_interrupt_status_get_clr( ucTimerChannel );
-		NVIC_SetPriority( TIMER0_IRQn, ucTimerChannel );
-		NVIC_ClearPendingIRQ( TIMER0_IRQn );
-		NVIC_EnableIRQ( TIMER0_IRQn );
+		NVIC_SetPriority( GIRQ23_IRQn, ucTimerChannel );
+		NVIC_ClearPendingIRQ( GIRQ23_IRQn );
+		NVIC_EnableIRQ( GIRQ23_IRQn );
 		btimer_start( ucTimerChannel );
 	}
 
@@ -198,22 +224,25 @@ void NVIC_Handler_HIB_TMR( void )
 
 void vPortSetupTimerInterrupt( void )
 {
-	ulMaximumPossibleSuppressedHighResolutionTicks = ( ( uint32_t ) USHRT_MAX ) / ulReloadValueForOneHighResolutionTick;
+ulMaximumPossibleSuppressedHighResolutionTicks = ( ( uint32_t ) USHRT_MAX ) / ulReloadValueForOneHighResolutionTick;
 
 	/* Set up the hibernation timer to start at the value required by the
 	tick interrupt. */
 	lpHTIMER_PRELOAD_REGISTER = ulHighResolutionReloadValue;
 	lpHTIMER_CONTROL_REGISTER = mainHTIMER_HIGH_RESOLUTION;
 
-	/* Enable the HTIMER interrupt.  Equivalent to enable_htimer0_irq(); */
-	lpEC_GIRQ17_ENABLE_SET |= lpHTIMER_INTERRUPT_CONTROL_BIT;
+	/* Enable the HTIMER interrupt in the aggregated GIR17 block. */
+	lpEC_GIRQ17_SOURCE = lpGIRQ17_BIT_HTIMER;
+	lpEC_GIRQ17_ENABLE_CLEAR = lpGIRQ17_BIT_HTIMER;
+	lpBLOCK_ENABLE_SET = lpHTIMER_GIRQ_BLOCK;
+	lpEC_GIRQ17_ENABLE_SET = lpGIRQ17_BIT_HTIMER;
 
 	/* The hibernation timer is not an auto-reload timer, so gets reset
 	from within the ISR itself.  For that reason it's interrupt is set
 	to the highest possible priority to ensure clock slippage is minimised. */
-	NVIC_SetPriority( HTIMER_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
-	NVIC_ClearPendingIRQ( HTIMER_IRQn );
-	NVIC_EnableIRQ( HTIMER_IRQn );
+	NVIC_SetPriority( GIRQ17_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY );
+	NVIC_ClearPendingIRQ( GIRQ17_IRQn );
+	NVIC_EnableIRQ( GIRQ17_IRQn );
 
 	/* A basic timer is also started, purely for test purposes.  Its only
 	purpose is to bring the CPU out of its sleep mode by an interrupt other
@@ -327,7 +356,7 @@ TickType_t xModifiableIdleTime;
 		/* Allow the application to define some post sleep processing. */
 		configPOST_SLEEP_PROCESSING( xModifiableIdleTime );
 
-		/* Stop the hibernation timer.  Again, the time the tiemr is stopped
+		/* Stop the hibernation timer.  Again, the time the timer is stopped
 		for is accounted for as best it can be, but using the tickless mode
 		will inevitably result in some tiny drift of the time maintained by the
 		kernel with respect to calendar time.  Take the count value first as
@@ -402,14 +431,31 @@ TickType_t xModifiableIdleTime;
 }
 /*-----------------------------------------------------------*/
 
-void NVIC_Handler_TMR0( void )
+void NVIC_Handler_GIRQ23( void )
 {
-	/* This timer is used for test purposes.  Its only function is to
-	generate interrupts while the MCU is sleeping, so the MCU is sometimes
-	brought out of sleep by a means other than the tick interrupt. */
+static volatile uint32_t ulTimerCounts = 0;
+
+	/* The low power demo is using aggregated interrupts, so although in the
+	demo btimer 0 is the only peripheral that will generate interrupts on
+	this vector, in a real application it would be necessary to first check the
+	interrupt source. */
+	if( ( lpEC_GIRQ23_SOURCE & lpGIRQ23_BIT_TIMER0 ) != 0 )
+	{
+		/* Btimer0 interrupted.  Clear the interrupt. */
+		lpEC_GIRQ23_SOURCE = lpGIRQ23_BIT_TIMER0;
+
+		/* This timer is used for test purposes.  Its only function is to
+		generate interrupts while the MCU is sleeping, so the MCU is sometimes
+		brought out of sleep by a means other than the tick interrupt. */
+		ulTimerCounts++;
+	}
+	else
+	{
+		/* Don't expect any other interrupts to use this vector in this
+		demo.  Force an assert. */
+		configASSERT( lpEC_GIRQ23_SOURCE == 0 );
+	}
 }
 /*-----------------------------------------------------------*/
 
-
-#endif /* configCREATE_LOW_POWER_DEMO */
-
+#endif /* configCREATE_LOW_POWER_DEMO == 1 */

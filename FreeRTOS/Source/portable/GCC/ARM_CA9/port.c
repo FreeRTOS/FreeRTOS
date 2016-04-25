@@ -189,6 +189,10 @@ debugger. */
 	#define portTASK_RETURN_ADDRESS	prvTaskExitError
 #endif
 
+/* The space on the stack required to hold the FPU registers.  This is 32 64-bit
+registers, plus a 32-bit status register. */
+#define portFPU_REGISTER_WORDS	( ( 32 * 2 ) + 1 )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -315,13 +319,32 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* The task will start with a critical nesting count of 0 as interrupts are
 	enabled. */
 	*pxTopOfStack = portNO_CRITICAL_NESTING;
-	pxTopOfStack--;
 
-	/* The task will start without a floating point context.  A task that uses
-	the floating point hardware must call vPortTaskUsesFPU() before executing
-	any floating point instructions. */
-	*pxTopOfStack = portNO_FLOATING_POINT_CONTEXT;
+	#if( configUSE_TASK_FPU_SUPPORT == 1 )
+	{
+		/* The task will start without a floating point context.  A task that
+		uses the floating point hardware must call vPortTaskUsesFPU() before
+		executing any floating point instructions. */
+		pxTopOfStack--;
+		*pxTopOfStack = portNO_FLOATING_POINT_CONTEXT;
+	}
+	#elif( configUSE_TASK_FPU_SUPPORT == 2 )
+	{
+		/* The task will start with a floating point context.  Leave enough
+		space for the registers - and ensure they are initialised to 0. */
+		pxTopOfStack -= portFPU_REGISTER_WORDS;
+		memset( pxTopOfStack, 0x00, portFPU_REGISTER_WORDS * sizeof( StackType_t ) );
 
+		pxTopOfStack--;
+		*pxTopOfStack = pdTRUE;
+		ulPortTaskHasFPUContext = pdTRUE;
+	}
+	#else
+	{
+		#error Invalid configUSE_TASK_FPU_SUPPORT setting - configUSE_TASK_FPU_SUPPORT must be set to 1, 2, or left undefined.
+	}
+	#endif
+	
 	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
@@ -493,17 +516,21 @@ void FreeRTOS_Tick_Handler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortTaskUsesFPU( void )
-{
-uint32_t ulInitialFPSCR = 0;
+#if( configUSE_TASK_FPU_SUPPORT != 2 )
 
-	/* A task is registering the fact that it needs an FPU context.  Set the
-	FPU flag (which is saved as part of the task context). */
-	ulPortTaskHasFPUContext = pdTRUE;
+	void vPortTaskUsesFPU( void )
+	{
+	uint32_t ulInitialFPSCR = 0;
 
-	/* Initialise the floating point status register. */
-	__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) );
-}
+		/* A task is registering the fact that it needs an FPU context.  Set the
+		FPU flag (which is saved as part of the task context). */
+		ulPortTaskHasFPUContext = pdTRUE;
+
+		/* Initialise the floating point status register. */
+		__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) );
+	}
+
+#endif /* configUSE_TASK_FPU_SUPPORT */
 /*-----------------------------------------------------------*/
 
 void vPortClearInterruptMask( uint32_t ulNewMaskValue )
@@ -578,5 +605,6 @@ uint32_t ulReturn;
 
 void vApplicationFPUSafeIRQHandler( uint32_t ulICCIAR )
 {
+	( void ) ulICCIAR;
 	configASSERT( ( volatile void * ) NULL );
 }

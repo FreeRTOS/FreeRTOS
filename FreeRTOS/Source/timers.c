@@ -268,7 +268,6 @@ BaseType_t xReturn = pdFAIL;
 
 	if( xTimerQueue != NULL )
 	{
-
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 		{
 			StaticTask_t *pxTimerTaskTCBBuffer = NULL;

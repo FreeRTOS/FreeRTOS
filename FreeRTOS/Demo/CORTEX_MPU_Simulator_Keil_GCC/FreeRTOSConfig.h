@@ -93,7 +93,7 @@ build, this configuration file has all options turned on. */
 	
 #define configUSE_PREEMPTION					1
 #define configTICK_RATE_HZ						( 1000 )
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION	0
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_QUEUE_SETS					1
 #define configUSE_IDLE_HOOK						1
 #define configUSE_TICK_HOOK						1
@@ -162,12 +162,12 @@ to exclude the API function. */
 	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
 	#define configPRIO_BITS		       __NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS		       3	/* 7 priority levels */
+	#define configPRIO_BITS		       4	/* 15 priority levels */
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"
 function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0x7
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0xf
 
 /* The highest interrupt priority that can be used by any interrupt service
 routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
@@ -191,7 +191,7 @@ standard names. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0UL ) { __asm volatile( "cpsid i" ); for( ;; ); }
+#define configASSERT( x ) if( ( x ) == 0UL ) { taskENTER_CRITICAL(); for( ;; ); }
 
 /* LED not used at present, so just increment a variable to keep a count of the
 number of times the LED would otherwise have been toggled. */

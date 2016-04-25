@@ -334,6 +334,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\Source\portable\GCC\ARM_CM3_MPU\port.c</FilePath>
             </File>
+            <File>
+              <FileName>mpu_wrappers.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Source\portable\Common\mpu_wrappers.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

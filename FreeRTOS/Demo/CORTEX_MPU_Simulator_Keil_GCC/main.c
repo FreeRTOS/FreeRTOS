@@ -397,9 +397,10 @@ int main( void )
     xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
 
-	/* Create a task that does nothing but get deleted.  This is done for code
-	coverage test purposes only.  The task's handle is saved in xTaskToDelete
-	so it can get deleted in the idle task hook. */
+	/* Create a task that does nothing but ensure some of the MPU API functions
+	can be called correctly, then get deleted.  This is done for code coverage
+	test purposes only.  The task's handle is saved in xTaskToDelete so it can 
+	get deleted in the idle task hook. */
 	xTaskCreateRestricted( &xTaskToDeleteParameters, &xTaskToDelete );
 
 	/* Create the tasks that are created using the original xTaskCreate() API
@@ -843,6 +844,12 @@ static void prvTaskToDelete( void *pvParameters )
 {
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
+
+	/* Check the enter and exit critical macros are working correctly.  If the
+	SVC priority is below configMAX_SYSCALL_INTERRUPT_PRIORITY then this will
+	fault. */
+	taskENTER_CRITICAL();
+	taskEXIT_CRITICAL();
 
 	/* Exercise the API of various RTOS objects. */
 	prvExerciseEventGroupAPI();

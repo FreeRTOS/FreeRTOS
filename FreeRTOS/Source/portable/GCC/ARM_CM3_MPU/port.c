@@ -87,18 +87,18 @@ task.h is included from an application file. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* Constants required to access and manipulate the NVIC. */
-#define portNVIC_SYSTICK_CTRL					( ( volatile uint32_t * ) 0xe000e010 )
-#define portNVIC_SYSTICK_LOAD					( ( volatile uint32_t * ) 0xe000e014 )
-#define portNVIC_SYSPRI2						( ( volatile uint32_t * ) 0xe000ed20 )
-#define portNVIC_SYSPRI1						( ( volatile uint32_t * ) 0xe000ed1c )
-#define portNVIC_SYS_CTRL_STATE					( ( volatile uint32_t * ) 0xe000ed24 )
+#define portNVIC_SYSTICK_CTRL_REG				( * ( ( volatile uint32_t * ) 0xe000e010 ) )
+#define portNVIC_SYSTICK_LOAD_REG				( * ( ( volatile uint32_t * ) 0xe000e014 ) )
+#define portNVIC_SYSPRI2_REG					( *	( ( volatile uint32_t * ) 0xe000ed20 ) )
+#define portNVIC_SYSPRI1_REG					( * ( ( volatile uint32_t * ) 0xe000ed1c ) )
+#define portNVIC_SYS_CTRL_STATE_REG				( * ( ( volatile uint32_t * ) 0xe000ed24 ) )
 #define portNVIC_MEM_FAULT_ENABLE				( 1UL << 16UL )
 
 /* Constants required to access and manipulate the MPU. */
-#define portMPU_TYPE							( ( volatile uint32_t * ) 0xe000ed90 )
-#define portMPU_REGION_BASE_ADDRESS				( ( volatile uint32_t * ) 0xe000ed9C )
-#define portMPU_REGION_ATTRIBUTE				( ( volatile uint32_t * ) 0xe000edA0 )
-#define portMPU_CTRL							( ( volatile uint32_t * ) 0xe000ed94 )
+#define portMPU_TYPE_REG						( * ( ( volatile uint32_t * ) 0xe000ed90 ) )
+#define portMPU_REGION_BASE_ADDRESS_REG			( * ( ( volatile uint32_t * ) 0xe000ed9C ) )
+#define portMPU_REGION_ATTRIBUTE_REG			( * ( ( volatile uint32_t * ) 0xe000edA0 ) )
+#define portMPU_CTRL_REG						( * ( ( volatile uint32_t * ) 0xe000ed94 ) )
 #define portEXPECTED_MPU_TYPE_VALUE				( 8UL << 8UL ) /* 8 regions, unified. */
 #define portMPU_ENABLE							( 0x01UL )
 #define portMPU_BACKGROUND_ENABLE				( 1UL << 2UL )
@@ -114,18 +114,25 @@ task.h is included from an application file. */
 #define portNVIC_SYSTICK_ENABLE					( 0x00000001UL )
 #define portNVIC_PENDSV_PRI						( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
 #define portNVIC_SYSTICK_PRI					( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
-#define portNVIC_SVC_PRI						( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
+#define portNVIC_SVC_PRI						( ( ( uint32_t ) configMAX_SYSCALL_INTERRUPT_PRIORITY - 1UL ) << 24UL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR						( 0x01000000 )
 #define portINITIAL_CONTROL_IF_UNPRIVILEGED		( 0x03 )
 #define portINITIAL_CONTROL_IF_PRIVILEGED		( 0x02 )
 
+/* Constants required to check the validity of an interrupt priority. */
+#define portFIRST_USER_INTERRUPT_NUMBER		( 16 )
+#define portNVIC_IP_REGISTERS_OFFSET_16 	( 0xE000E3F0 )
+#define portAIRCR_REG						( * ( ( volatile uint32_t * ) 0xE000ED0C ) )
+#define portMAX_8_BIT_VALUE					( ( uint8_t ) 0xff )
+#define portTOP_BIT_OF_BYTE					( ( uint8_t ) 0x80 )
+#define portMAX_PRIGROUP_BITS				( ( uint8_t ) 7 )
+#define portPRIORITY_GROUP_MASK				( 0x07UL << 8UL )
+#define portPRIGROUP_SHIFT					( 8UL )
+
 /* Offsets in the stack to the parameters when inside the SVC handler. */
 #define portOFFSET_TO_PC						( 6 )
-
-/* Set the privilege level to user mode if xRunningPrivileged is false. */
-#define portRESET_PRIVILEGE( xRunningPrivileged ) if( xRunningPrivileged != pdTRUE ) __asm volatile ( " mrs r0, control \n orr r0, #1 \n msr control, r0" :::"r0" )
 
 /* For strict compliance with the Cortex-M spec the task start address should
 have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
@@ -158,7 +165,7 @@ static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes ) PRIVI
  * if so raises the privilege level and returns false - otherwise does nothing
  * other than return true.
  */
-static BaseType_t prvRaisePrivilege( void ) __attribute__(( naked ));
+BaseType_t xPortRaisePrivilege( void ) __attribute__(( naked ));
 
 /*
  * Standard FreeRTOS exception handlers.
@@ -177,6 +184,17 @@ static void prvRestoreContextOfFirstTask( void ) __attribute__(( naked )) PRIVIL
  * and a C wrapper for simplicity of coding and maintenance.
  */
 static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) PRIVILEGED_FUNCTION;
+
+/*
+ * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
+ * FreeRTOS API functions are not called from interrupts that have been assigned
+ * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
+ */
+#if ( configASSERT_DEFINED == 1 )
+	 static uint8_t ucMaxSysCallPriority = 0;
+	 static uint32_t ulMaxPRIGROUPValue = 0;
+	 static const volatile uint8_t * const pcInterruptPriorityRegisters = ( const volatile uint8_t * const ) portNVIC_IP_REGISTERS_OFFSET_16;
+#endif /* configASSERT_DEFINED */
 
 /*-----------------------------------------------------------*/
 
@@ -238,11 +256,11 @@ uint8_t ucSVCNumber;
 	ucSVCNumber = ( ( uint8_t * ) pulParam[ portOFFSET_TO_PC ] )[ -2 ];
 	switch( ucSVCNumber )
 	{
-		case portSVC_START_SCHEDULER	:	*(portNVIC_SYSPRI1) |= portNVIC_SVC_PRI;
+		case portSVC_START_SCHEDULER	:	portNVIC_SYSPRI1_REG |= portNVIC_SVC_PRI;
 											prvRestoreContextOfFirstTask();
 											break;
 
-		case portSVC_YIELD				:	*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
+		case portSVC_YIELD				:	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 											/* Barriers are normally not required
 											but do ensure the code is completely
 											within the specified behaviour for the
@@ -305,9 +323,55 @@ BaseType_t xPortStartScheduler( void )
 	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
 	configASSERT( ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) );
 
-	/* Make PendSV and SysTick the same priority as the kernel. */
-	*(portNVIC_SYSPRI2) |= portNVIC_PENDSV_PRI;
-	*(portNVIC_SYSPRI2) |= portNVIC_SYSTICK_PRI;
+	#if( configASSERT_DEFINED == 1 )
+	{
+		volatile uint32_t ulOriginalPriority;
+		volatile uint8_t * const pucFirstUserPriorityRegister = ( volatile uint8_t * const ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
+		volatile uint8_t ucMaxPriorityValue;
+
+		/* Determine the maximum priority from which ISR safe FreeRTOS API
+		functions can be called.  ISR safe functions are those that end in
+		"FromISR".  FreeRTOS maintains separate thread and ISR API functions to
+		ensure interrupt entry is as fast and simple as possible.
+
+		Save the interrupt priority value that is about to be clobbered. */
+		ulOriginalPriority = *pucFirstUserPriorityRegister;
+
+		/* Determine the number of priority bits available.  First write to all
+		possible bits. */
+		*pucFirstUserPriorityRegister = portMAX_8_BIT_VALUE;
+
+		/* Read the value back to see how many bits stuck. */
+		ucMaxPriorityValue = *pucFirstUserPriorityRegister;
+
+		/* Use the same mask on the maximum system call priority. */
+		ucMaxSysCallPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY & ucMaxPriorityValue;
+
+		/* Calculate the maximum acceptable priority group value for the number
+		of bits read back. */
+		ulMaxPRIGROUPValue = portMAX_PRIGROUP_BITS;
+		while( ( ucMaxPriorityValue & portTOP_BIT_OF_BYTE ) == portTOP_BIT_OF_BYTE )
+		{
+			ulMaxPRIGROUPValue--;
+			ucMaxPriorityValue <<= ( uint8_t ) 0x01;
+		}
+
+		/* Shift the priority group value back to its position within the AIRCR
+		register. */
+		ulMaxPRIGROUPValue <<= portPRIGROUP_SHIFT;
+		ulMaxPRIGROUPValue &= portPRIORITY_GROUP_MASK;
+
+		/* Restore the clobbered interrupt priority register to its original
+		value. */
+		*pucFirstUserPriorityRegister = ulOriginalPriority;
+	}
+	#endif /* conifgASSERT_DEFINED */
+
+	/* Make PendSV and SysTick the same priority as the kernel, and the SVC
+	handler higher priority so it can be used to exit a critical section (where
+	lower priorities are masked). */
+	portNVIC_SYSPRI2_REG |= portNVIC_PENDSV_PRI;
+	portNVIC_SYSPRI2_REG |= portNVIC_SYSTICK_PRI;
 
 	/* Configure the regions in the MPU that are common to all tasks. */
 	prvSetupMPU();
@@ -338,18 +402,18 @@ void vPortEndScheduler( void )
 
 void vPortEnterCritical( void )
 {
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
 	portDISABLE_INTERRUPTS();
 	uxCriticalNesting++;
 
-	portRESET_PRIVILEGE( xRunningPrivileged );
+	vPortResetPrivilege( xRunningPrivileged );
 }
 /*-----------------------------------------------------------*/
 
 void vPortExitCritical( void )
 {
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
 	configASSERT( uxCriticalNesting );
 	uxCriticalNesting--;
@@ -357,7 +421,7 @@ BaseType_t xRunningPrivileged = prvRaisePrivilege();
 	{
 		portENABLE_INTERRUPTS();
 	}
-	portRESET_PRIVILEGE( xRunningPrivileged );
+	vPortResetPrivilege( xRunningPrivileged );
 }
 /*-----------------------------------------------------------*/
 
@@ -413,7 +477,7 @@ uint32_t ulDummy;
 		if( xTaskIncrementTick() != pdFALSE )
 		{
 			/* Pend a context switch. */
-			*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET;
+			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 		}
 	}
 	portCLEAR_INTERRUPT_MASK_FROM_ISR( ulDummy );
@@ -427,8 +491,8 @@ uint32_t ulDummy;
 static void prvSetupTimerInterrupt( void )
 {
 	/* Configure SysTick to interrupt at the requested rate. */
-	*(portNVIC_SYSTICK_LOAD) = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
-	*(portNVIC_SYSTICK_CTRL) = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
+	portNVIC_SYSTICK_LOAD_REG = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
+	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
 }
 /*-----------------------------------------------------------*/
 
@@ -441,14 +505,14 @@ extern uint32_t __privileged_data_start__[];
 extern uint32_t __privileged_data_end__[];
 
 	/* Check the expected MPU is present. */
-	if( *portMPU_TYPE == portEXPECTED_MPU_TYPE_VALUE )
+	if( portMPU_TYPE_REG == portEXPECTED_MPU_TYPE_VALUE )
 	{
 		/* First setup the entire flash for unprivileged read only access. */
-		*portMPU_REGION_BASE_ADDRESS =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
-										( portMPU_REGION_VALID ) |
-										( portUNPRIVILEGED_FLASH_REGION );
+		portMPU_REGION_BASE_ADDRESS_REG =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
+											( portMPU_REGION_VALID ) |
+											( portUNPRIVILEGED_FLASH_REGION );
 
-		*portMPU_REGION_ATTRIBUTE =		( portMPU_REGION_READ_ONLY ) |
+		portMPU_REGION_ATTRIBUTE_REG =	( portMPU_REGION_READ_ONLY ) |
 										( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
 										( prvGetMPURegionSizeSetting( ( uint32_t ) __FLASH_segment_end__ - ( uint32_t ) __FLASH_segment_start__ ) ) |
 										( portMPU_REGION_ENABLE );
@@ -456,41 +520,41 @@ extern uint32_t __privileged_data_end__[];
 		/* Setup the first 16K for privileged only access (even though less
 		than 10K is actually being used).  This is where the kernel code is
 		placed. */
-		*portMPU_REGION_BASE_ADDRESS =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
-										( portMPU_REGION_VALID ) |
-										( portPRIVILEGED_FLASH_REGION );
+		portMPU_REGION_BASE_ADDRESS_REG =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
+											( portMPU_REGION_VALID ) |
+											( portPRIVILEGED_FLASH_REGION );
 
-		*portMPU_REGION_ATTRIBUTE =		( portMPU_REGION_PRIVILEGED_READ_ONLY ) |
+		portMPU_REGION_ATTRIBUTE_REG =	( portMPU_REGION_PRIVILEGED_READ_ONLY ) |
 										( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
 										( prvGetMPURegionSizeSetting( ( uint32_t ) __privileged_functions_end__ - ( uint32_t ) __FLASH_segment_start__ ) ) |
 										( portMPU_REGION_ENABLE );
 
 		/* Setup the privileged data RAM region.  This is where the kernel data
 		is placed. */
-		*portMPU_REGION_BASE_ADDRESS =	( ( uint32_t ) __privileged_data_start__ ) | /* Base address. */
-										( portMPU_REGION_VALID ) |
-										( portPRIVILEGED_RAM_REGION );
+		portMPU_REGION_BASE_ADDRESS_REG =	( ( uint32_t ) __privileged_data_start__ ) | /* Base address. */
+											( portMPU_REGION_VALID ) |
+											( portPRIVILEGED_RAM_REGION );
 
-		*portMPU_REGION_ATTRIBUTE =		( portMPU_REGION_PRIVILEGED_READ_WRITE ) |
+		portMPU_REGION_ATTRIBUTE_REG =	( portMPU_REGION_PRIVILEGED_READ_WRITE ) |
 										( portMPU_REGION_CACHEABLE_BUFFERABLE ) |
 										prvGetMPURegionSizeSetting( ( uint32_t ) __privileged_data_end__ - ( uint32_t ) __privileged_data_start__ ) |
 										( portMPU_REGION_ENABLE );
 
 		/* By default allow everything to access the general peripherals.  The
 		system peripherals and registers are protected. */
-		*portMPU_REGION_BASE_ADDRESS =	( portPERIPHERALS_START_ADDRESS ) |
-										( portMPU_REGION_VALID ) |
-										( portGENERAL_PERIPHERALS_REGION );
+		portMPU_REGION_BASE_ADDRESS_REG =	( portPERIPHERALS_START_ADDRESS ) |
+											( portMPU_REGION_VALID ) |
+											( portGENERAL_PERIPHERALS_REGION );
 
-		*portMPU_REGION_ATTRIBUTE =		( portMPU_REGION_READ_WRITE | portMPU_REGION_EXECUTE_NEVER ) |
+		portMPU_REGION_ATTRIBUTE_REG =	( portMPU_REGION_READ_WRITE | portMPU_REGION_EXECUTE_NEVER ) |
 										( prvGetMPURegionSizeSetting( portPERIPHERALS_END_ADDRESS - portPERIPHERALS_START_ADDRESS ) ) |
 										( portMPU_REGION_ENABLE );
 
 		/* Enable the memory fault exception. */
-		*portNVIC_SYS_CTRL_STATE |= portNVIC_MEM_FAULT_ENABLE;
+		portNVIC_SYS_CTRL_STATE_REG |= portNVIC_MEM_FAULT_ENABLE;
 
 		/* Enable the MPU with the background region configured. */
-		*portMPU_CTRL |= ( portMPU_ENABLE | portMPU_BACKGROUND_ENABLE );
+		portMPU_CTRL_REG |= ( portMPU_ENABLE | portMPU_BACKGROUND_ENABLE );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -519,7 +583,7 @@ uint32_t ulRegionSize, ulReturnValue = 4;
 }
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvRaisePrivilege( void )
+BaseType_t xPortRaisePrivilege( void )
 {
 	__asm volatile
 	(
@@ -633,1046 +697,65 @@ uint32_t ul;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t MPU_xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
-{
-BaseType_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
+#if( configASSERT_DEFINED == 1 )
 
-	xReturn = xTaskCreateRestricted( pxTaskDefinition, pxCreatedTask );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-	BaseType_t MPU_xTaskCreate( TaskFunction_t pvTaskCode, const char * const pcName, uint16_t usStackDepth, void *pvParameters, UBaseType_t uxPriority, TaskHandle_t *pxCreatedTask )
+	void vPortValidateInterruptPriority( void )
 	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskCreate( pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pxCreatedTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
-/*-----------------------------------------------------------*/
-
-#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	TaskHandle_t MPU_xTaskCreateStatic( TaskFunction_t pxTaskCode, const char * const pcName, const uint32_t ulStackDepth, void * const pvParameters, UBaseType_t uxPriority, StackType_t * const puxStackBuffer, StaticTask_t * const pxTaskBuffer )
-	{
-	TaskHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskCreateStatic( pxTaskCode, pcName, ulStackDepth, pvParameters, uxPriority, puxStackBuffer, pxTaskBuffer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif /* configSUPPORT_STATIC_ALLOCATION */
-/*-----------------------------------------------------------*/
-
-void MPU_vTaskAllocateMPURegions( TaskHandle_t xTask, const MemoryRegion_t * const xRegions )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	vTaskAllocateMPURegions( xTask, xRegions );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskDelete == 1 )
-	void MPU_vTaskDelete( TaskHandle_t pxTaskToDelete )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskDelete( pxTaskToDelete );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskDelayUntil == 1 )
-	void MPU_vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, TickType_t xTimeIncrement )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskDelayUntil( pxPreviousWakeTime, xTimeIncrement );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_xTaskAbortDelay == 1 )
-	BaseType_t MPU_xTaskAbortDelay( TaskHandle_t xTask )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskAbortDelay( xTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskDelay == 1 )
-	void MPU_vTaskDelay( TickType_t xTicksToDelay )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskDelay( xTicksToDelay );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_uxTaskPriorityGet == 1 )
-	UBaseType_t MPU_uxTaskPriorityGet( TaskHandle_t pxTask )
-	{
-	UBaseType_t uxReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		uxReturn = uxTaskPriorityGet( pxTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return uxReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskPrioritySet == 1 )
-	void MPU_vTaskPrioritySet( TaskHandle_t pxTask, UBaseType_t uxNewPriority )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskPrioritySet( pxTask, uxNewPriority );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_eTaskGetState == 1 )
-	eTaskState MPU_eTaskGetState( TaskHandle_t pxTask )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-	eTaskState eReturn;
-
-		eReturn = eTaskGetState( pxTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return eReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TRACE_FACILITY == 1 )
-	void MPU_vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskGetInfo( xTask, pxTaskStatus, xGetFreeStackSpace, eState );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
-	TaskHandle_t MPU_xTaskGetIdleTaskHandle( void )
-	{
-	TaskHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskGetIdleTaskHandle();
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskSuspend == 1 )
-	void MPU_vTaskSuspend( TaskHandle_t pxTaskToSuspend )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskSuspend( pxTaskToSuspend );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_vTaskSuspend == 1 )
-	void MPU_vTaskResume( TaskHandle_t pxTaskToResume )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskResume( pxTaskToResume );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-void MPU_vTaskSuspendAll( void )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	vTaskSuspendAll();
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xTaskResumeAll( void )
-{
-BaseType_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xTaskResumeAll();
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-TickType_t MPU_xTaskGetTickCount( void )
-{
-TickType_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xTaskGetTickCount();
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-UBaseType_t MPU_uxTaskGetNumberOfTasks( void )
-{
-UBaseType_t uxReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	uxReturn = uxTaskGetNumberOfTasks();
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return uxReturn;
-}
-/*-----------------------------------------------------------*/
-
-char * MPU_pcTaskGetName( TaskHandle_t xTaskToQuery )
-{
-char *pcReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	pcReturn = pcTaskGetName( xTaskToQuery );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return pcReturn;
-}
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_xTaskGetHandle == 1 )
-	TaskHandle_t MPU_xTaskGetHandle( const char *pcNameToQuery )
-	{
-	TaskHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskGetHandle( pcNameToQuery );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_TRACE_FACILITY == 1 )
-	void MPU_vTaskList( char *pcWriteBuffer )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskList( pcWriteBuffer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configGENERATE_RUN_TIME_STATS == 1 )
-	void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskGetRunTimeStats( pcWriteBuffer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxTagValue )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskSetApplicationTaskTag( xTask, pxTagValue );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	TaskHookFunction_t MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask )
-	{
-	TaskHookFunction_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskGetApplicationTaskTag( xTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
-	void MPU_vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTaskSetThreadLocalStoragePointer( xTaskToSet, xIndex, pvValue );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
-	void *MPU_pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex )
-	{
-	void *pvReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		pvReturn = pvTaskGetThreadLocalStoragePointer( xTaskToQuery, xIndex );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return pvReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	BaseType_t MPU_xTaskCallApplicationTaskHook( TaskHandle_t xTask, void *pvParameter )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskCallApplicationTaskHook( xTask, pvParameter );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_TRACE_FACILITY == 1 )
-	UBaseType_t MPU_uxTaskGetSystemState( TaskStatus_t *pxTaskStatusArray, UBaseType_t uxArraySize, uint32_t *pulTotalRunTime )
-	{
-	UBaseType_t uxReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		uxReturn = uxTaskGetSystemState( pxTaskStatusArray, uxArraySize, pulTotalRunTime );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return uxReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_uxTaskGetStackHighWaterMark == 1 )
-	UBaseType_t MPU_uxTaskGetStackHighWaterMark( TaskHandle_t xTask )
-	{
-	UBaseType_t uxReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		uxReturn = uxTaskGetStackHighWaterMark( xTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return uxReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_xTaskGetCurrentTaskHandle == 1 )
-	TaskHandle_t MPU_xTaskGetCurrentTaskHandle( void )
-	{
-	TaskHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskGetCurrentTaskHandle();
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( INCLUDE_xTaskGetSchedulerState == 1 )
-	BaseType_t MPU_xTaskGetSchedulerState( void )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskGetSchedulerState();
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-void MPU_vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	vTaskSetTimeOutState( pxTimeOut );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait )
-{
-BaseType_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xTaskCheckForTimeOut( pxTimeOut, pxTicksToWait );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TASK_NOTIFICATIONS == 1 )
-	BaseType_t MPU_xTaskGenericNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction, uint32_t *pulPreviousNotificationValue )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskGenericNotify( xTaskToNotify, ulValue, eAction, pulPreviousNotificationValue );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TASK_NOTIFICATIONS == 1 )
-	BaseType_t MPU_xTaskNotifyWait( uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskNotifyWait( ulBitsToClearOnEntry, ulBitsToClearOnExit, pulNotificationValue, xTicksToWait );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TASK_NOTIFICATIONS == 1 )
-	uint32_t MPU_ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait )
-	{
-	uint32_t ulReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		ulReturn = ulTaskNotifyTake( xClearCountOnExit, xTicksToWait );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return ulReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TASK_NOTIFICATIONS == 1 )
-	BaseType_t MPU_xTaskNotifyStateClear( TaskHandle_t xTask )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTaskNotifyStateClear( xTask );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-	
-#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-	QueueHandle_t MPU_xQueueGenericCreate( UBaseType_t uxQueueLength, UBaseType_t uxItemSize, uint8_t ucQueueType )
-	{
-	QueueHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueGenericCreate( uxQueueLength, uxItemSize, ucQueueType );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	QueueHandle_t MPU_xQueueGenericCreateStatic( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
-	{
-	QueueHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueGenericCreateStatic( uxQueueLength, uxItemSize, pucQueueStorage, pxStaticQueue, ucQueueType );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xQueueGenericReset( QueueHandle_t pxQueue, BaseType_t xNewQueue )
-{
-BaseType_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xQueueGenericReset( pxQueue, xNewQueue );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, BaseType_t xCopyPosition )
-{
-BaseType_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xQueueGenericSend( xQueue, pvItemToQueue, xTicksToWait, xCopyPosition );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-UBaseType_t MPU_uxQueueMessagesWaiting( const QueueHandle_t pxQueue )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-UBaseType_t uxReturn;
-
-	uxReturn = uxQueueMessagesWaiting( pxQueue );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return uxReturn;
-}
-/*-----------------------------------------------------------*/
-
-UBaseType_t MPU_uxQueueSpacesAvailable( const QueueHandle_t xQueue )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-UBaseType_t uxReturn;
-
-	uxReturn = uxQueueSpacesAvailable( xQueue );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return uxReturn;
-}
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xQueueGenericReceive( QueueHandle_t pxQueue, void * const pvBuffer, TickType_t xTicksToWait, BaseType_t xJustPeeking )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-BaseType_t xReturn;
-
-	xReturn = xQueueGenericReceive( pxQueue, pvBuffer, xTicksToWait, xJustPeeking );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xQueuePeekFromISR( QueueHandle_t pxQueue, void * const pvBuffer )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-BaseType_t xReturn;
-
-	xReturn = xQueuePeekFromISR( pxQueue, pvBuffer );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-void* MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-void * xReturn;
-
-	xReturn = ( void * ) xQueueGetMutexHolder( xSemaphore );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-#if( ( configUSE_MUTEXES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
-	QueueHandle_t MPU_xQueueCreateMutex( const uint8_t ucQueueType )
-	{
-	QueueHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueCreateMutex( ucQueueType );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( ( configUSE_MUTEXES == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
-	QueueHandle_t MPU_xQueueCreateMutexStatic( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue )
-	{
-	QueueHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueCreateMutexStatic( ucQueueType, pxStaticQueue );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
-	QueueHandle_t MPU_xQueueCreateCountingSemaphore( UBaseType_t uxCountValue, UBaseType_t uxInitialCount )
-	{
-	QueueHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueCreateCountingSemaphore( uxCountValue, uxInitialCount );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
-
-	QueueHandle_t MPU_xQueueCreateCountingSemaphoreStatic( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount, StaticQueue_t *pxStaticQueue )
-	{
-	QueueHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueCreateCountingSemaphoreStatic( uxMaxCount, uxInitialCount, pxStaticQueue );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_MUTEXES == 1 )
-	BaseType_t MPU_xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xBlockTime )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueTakeMutexRecursive( xMutex, xBlockTime );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_MUTEXES == 1 )
-	BaseType_t MPU_xQueueGiveMutexRecursive( QueueHandle_t xMutex )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueGiveMutexRecursive( xMutex );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_QUEUE_SETS == 1 )
-	QueueSetHandle_t MPU_xQueueCreateSet( UBaseType_t uxEventQueueLength )
-	{
-	QueueSetHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueCreateSet( uxEventQueueLength );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_QUEUE_SETS == 1 )
-	QueueSetMemberHandle_t MPU_xQueueSelectFromSet( QueueSetHandle_t xQueueSet, TickType_t xBlockTimeTicks )
-	{
-	QueueSetMemberHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueSelectFromSet( xQueueSet, xBlockTimeTicks );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_QUEUE_SETS == 1 )
-	BaseType_t MPU_xQueueAddToSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueAddToSet( xQueueOrSemaphore, xQueueSet );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if ( configUSE_QUEUE_SETS == 1 )
-	BaseType_t MPU_xQueueRemoveFromSet( QueueSetMemberHandle_t xQueueOrSemaphore, QueueSetHandle_t xQueueSet )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xQueueRemoveFromSet( xQueueOrSemaphore, xQueueSet );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if configQUEUE_REGISTRY_SIZE > 0
-	void MPU_vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcName )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vQueueAddToRegistry( xQueue, pcName );
-
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if configQUEUE_REGISTRY_SIZE > 0
-	void MPU_vQueueUnregisterQueue( QueueHandle_t xQueue )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vQueueUnregisterQueue( xQueue );
-
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if configQUEUE_REGISTRY_SIZE > 0
-	const char *MPU_pcQueueGetName( QueueHandle_t xQueue )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-	const char *pcReturn;
-
-		pcReturn = pcQueueGetName( xQueue );
-
-		portRESET_PRIVILEGE( xRunningPrivileged );
-		return pcReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-void MPU_vQueueDelete( QueueHandle_t xQueue )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	vQueueDelete( xQueue );
-
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-/*-----------------------------------------------------------*/
-
-#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-
-	void *MPU_pvPortMalloc( size_t xSize )
-	{
-	void *pvReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		pvReturn = pvPortMalloc( xSize );
-
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return pvReturn;
+	uint32_t ulCurrentInterrupt;
+	uint8_t ucCurrentPriority;
+
+		/* Obtain the number of the currently executing interrupt. */
+		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+
+		/* Is the interrupt number a user defined interrupt? */
+		if( ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER )
+		{
+			/* Look up the interrupt's priority. */
+			ucCurrentPriority = pcInterruptPriorityRegisters[ ulCurrentInterrupt ];
+
+			/* The following assertion will fail if a service routine (ISR) for
+			an interrupt that has been assigned a priority above
+			configMAX_SYSCALL_INTERRUPT_PRIORITY calls an ISR safe FreeRTOS API
+			function.  ISR safe FreeRTOS API functions must *only* be called
+			from interrupts that have been assigned a priority at or below
+			configMAX_SYSCALL_INTERRUPT_PRIORITY.
+
+			Numerically low interrupt priority numbers represent logically high
+			interrupt priorities, therefore the priority of the interrupt must
+			be set to a value equal to or numerically *higher* than
+			configMAX_SYSCALL_INTERRUPT_PRIORITY.
+
+			Interrupts that	use the FreeRTOS API must not be left at their
+			default priority of	zero as that is the highest possible priority,
+			which is guaranteed to be above configMAX_SYSCALL_INTERRUPT_PRIORITY,
+			and	therefore also guaranteed to be invalid.
+
+			FreeRTOS maintains separate thread and ISR API functions to ensure
+			interrupt entry is as fast and simple as possible.
+
+			The following links provide detailed information:
+			http://www.freertos.org/RTOS-Cortex-M3-M4.html
+			http://www.freertos.org/FAQHelp.html */
+			configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
+		}
+
+		/* Priority grouping:  The interrupt controller (NVIC) allows the bits
+		that define each interrupt's priority to be split between bits that
+		define the interrupt's pre-emption priority bits and bits that define
+		the interrupt's sub-priority.  For simplicity all bits must be defined
+		to be pre-emption priority bits.  The following assertion will fail if
+		this is not the case (if some bits represent a sub-priority).
+
+		If the application only uses CMSIS libraries for interrupt
+		configuration then the correct setting can be achieved on all Cortex-M
+		devices by calling NVIC_SetPriorityGrouping( 0 ); before starting the
+		scheduler.  Note however that some vendor specific peripheral libraries
+		assume a non-zero priority group setting, in which cases using a value
+		of zero will result in unpredicable behaviour. */
+		configASSERT( ( portAIRCR_REG & portPRIORITY_GROUP_MASK ) <= ulMaxPRIGROUPValue );
 	}
 
-#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+#endif /* configASSERT_DEFINED */
 /*-----------------------------------------------------------*/
 
-#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-
-	void MPU_vPortFree( void *pv )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vPortFree( pv );
-
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-
-#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
-/*-----------------------------------------------------------*/
-
-void MPU_vPortInitialiseBlocks( void )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	vPortInitialiseBlocks();
-
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-/*-----------------------------------------------------------*/
-
-size_t MPU_xPortGetFreeHeapSize( void )
-{
-size_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xPortGetFreeHeapSize();
-
-	portRESET_PRIVILEGE( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-#if( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configUSE_TIMERS == 1 ) )
-	TimerHandle_t MPU_xTimerCreate( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction )
-	{
-	TimerHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerCreate( pcTimerName, xTimerPeriodInTicks, uxAutoReload, pvTimerID, pxCallbackFunction );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configUSE_TIMERS == 1 ) )
-	TimerHandle_t MPU_xTimerCreateStatic( const char * const pcTimerName, const TickType_t xTimerPeriodInTicks, const UBaseType_t uxAutoReload, void * const pvTimerID, TimerCallbackFunction_t pxCallbackFunction, StaticTimer_t *pxTimerBuffer )
-	{
-	TimerHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerCreateStatic( pcTimerName, xTimerPeriodInTicks, uxAutoReload, pvTimerID, pxCallbackFunction, pxTimerBuffer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	void *MPU_pvTimerGetTimerID( const TimerHandle_t xTimer )
-	{
-	void * pvReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		pvReturn = pvTimerGetTimerID( xTimer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return pvReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	void MPU_vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID )
-	{
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		vTimerSetTimerID( xTimer, pvNewID );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	BaseType_t MPU_xTimerIsTimerActive( TimerHandle_t xTimer )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerIsTimerActive( xTimer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	TaskHandle_t MPU_xTimerGetTimerDaemonTaskHandle( void )
-	{
-	TaskHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerGetTimerDaemonTaskHandle();
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( ( INCLUDE_xTimerPendFunctionCall == 1 ) && ( configUSE_TIMERS == 1 ) )
-	BaseType_t MPU_xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerPendFunctionCall( xFunctionToPend, pvParameter1, ulParameter2, xTicksToWait );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	const char * MPU_pcTimerGetName( TimerHandle_t xTimer )
-	{
-	const char * pcReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		pcReturn = pcTimerGetName( xTimer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return pcReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	TickType_t MPU_xTimerGetPeriod( TimerHandle_t xTimer )
-	{
-	TickType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerGetPeriod( xTimer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	TickType_t MPU_xTimerGetExpiryTime( TimerHandle_t xTimer )
-	{
-	TickType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerGetExpiryTime( xTimer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configUSE_TIMERS == 1 )
-	BaseType_t MPU_xTimerGenericCommand( TimerHandle_t xTimer, const BaseType_t xCommandID, const TickType_t xOptionalValue, BaseType_t * const pxHigherPriorityTaskWoken, const TickType_t xTicksToWait )
-	{
-	BaseType_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xTimerGenericCommand( xTimer, xCommandID, xOptionalValue, pxHigherPriorityTaskWoken, xTicksToWait );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-	EventGroupHandle_t MPU_xEventGroupCreate( void )
-	{
-	EventGroupHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xEventGroupCreate();
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-#if( configSUPPORT_STATIC_ALLOCATION == 1 )
-	EventGroupHandle_t MPU_xEventGroupCreateStatic( StaticEventGroup_t *pxEventGroupBuffer )
-	{
-	EventGroupHandle_t xReturn;
-	BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-		xReturn = xEventGroupCreateStatic( pxEventGroupBuffer );
-		portRESET_PRIVILEGE( xRunningPrivileged );
-
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
-EventBits_t MPU_xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
-{
-EventBits_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xEventGroupWaitBits( xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, xTicksToWait );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-EventBits_t MPU_xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
-{
-EventBits_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xEventGroupClearBits( xEventGroup, uxBitsToClear );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-EventBits_t MPU_xEventGroupSetBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet )
-{
-EventBits_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xEventGroupSetBits( xEventGroup, uxBitsToSet );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-EventBits_t MPU_xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
-{
-EventBits_t xReturn;
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	xReturn = xEventGroupSync( xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTicksToWait );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-void MPU_vEventGroupDelete( EventGroupHandle_t xEventGroup )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	vEventGroupDelete( xEventGroup );
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-/*-----------------------------------------------------------*/
-
-
-
-
-
-/* Functions that the application writer wants to execute in privileged mode
-can be defined in application_defined_privileged_functions.h.  The functions
-must take the same format as those above whereby the privilege state on exit
-equals the privilege state on entry.  For example:
-
-void MPU_FunctionName( [parameters ] )
-{
-BaseType_t xRunningPrivileged = prvRaisePrivilege();
-
-	FunctionName( [parameters ] );
-
-	portRESET_PRIVILEGE( xRunningPrivileged );
-}
-*/
-
-#if configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS == 1
-	#include "application_defined_privileged_functions.h"
-#endif
 

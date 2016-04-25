@@ -160,61 +160,168 @@ typedef struct MPU_SETTINGS
 /* Scheduler utilities. */
 
 #define portYIELD()				__asm volatile ( "	SVC	%0	\n" :: "i" (portSVC_YIELD) )
-#define portYIELD_WITHIN_API()	*(portNVIC_INT_CTRL) = portNVIC_PENDSVSET
+#define portYIELD_WITHIN_API() 													\
+{																				\
+	/* Set a PendSV to request a context switch. */								\
+	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;								\
+																				\
+	/* Barriers are normally not required but do ensure the code is completely	\
+	within the specified behaviour for the architecture. */						\
+	__asm volatile( "dsb" );													\
+	__asm volatile( "isb" );													\
+}
 
-#define portNVIC_INT_CTRL			( ( volatile uint32_t *) 0xe000ed04 )
-#define portNVIC_PENDSVSET			0x10000000
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) *(portNVIC_INT_CTRL) = portNVIC_PENDSVSET
+#define portNVIC_INT_CTRL_REG		( * ( ( volatile uint32_t * ) 0xe000ed04 ) )
+#define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
-
 /* Critical section management. */
-
-/*
- * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
- * registers.  r0 is clobbered.
- */
-#define portSET_INTERRUPT_MASK()						\
-	__asm volatile										\
-	(													\
-		"	mov r0, %0								\n"	\
-		"	msr basepri, r0							\n" \
-		::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY):"r0"	\
-	)
-
-/*
- * Set basepri back to 0 without effective other registers.
- * r0 is clobbered.  FAQ:  Setting BASEPRI to 0 is not a bug.  Please see
- * http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing.
- */
-#define portCLEAR_INTERRUPT_MASK()			\
-	__asm volatile							\
-	(										\
-		"	mov r0, #0					\n"	\
-		"	msr basepri, r0				\n"	\
-		:::"r0"								\
-	)
-
-/* FAQ:  Setting BASEPRI to 0 is not a bug.  Please see
-http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html before disagreeing. */
-#define portSET_INTERRUPT_MASK_FROM_ISR()		0;portSET_INTERRUPT_MASK()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	portCLEAR_INTERRUPT_MASK();(void)x
-
 extern void vPortEnterCritical( void );
 extern void vPortExitCritical( void );
+#define portSET_INTERRUPT_MASK_FROM_ISR()		ulPortRaiseBASEPRI()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)	vPortSetBASEPRI(x)
+#define portDISABLE_INTERRUPTS()				vPortRaiseBASEPRI()
+#define portENABLE_INTERRUPTS()					vPortSetBASEPRI(0)
+#define portENTER_CRITICAL()					vPortEnterCritical()
+#define portEXIT_CRITICAL()						vPortExitCritical()
 
-#define portDISABLE_INTERRUPTS()	portSET_INTERRUPT_MASK()
-#define portENABLE_INTERRUPTS()		portCLEAR_INTERRUPT_MASK()
-#define portENTER_CRITICAL()		vPortEnterCritical()
-#define portEXIT_CRITICAL()			vPortExitCritical()
 /*-----------------------------------------------------------*/
 
-/* Task function macros as described on the FreeRTOS.org WEB site. */
+/* Task function macros as described on the FreeRTOS.org WEB site.  These are
+not necessary for to use this port.  They are defined so the common demo files
+(which build with all the ports) will build. */
 #define portTASK_FUNCTION_PROTO( vFunction, pvParameters ) void vFunction( void *pvParameters )
 #define portTASK_FUNCTION( vFunction, pvParameters ) void vFunction( void *pvParameters )
+/*-----------------------------------------------------------*/
 
+/* Architecture specific optimisations. */
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+#endif
+
+#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+
+	/* Generic helper function. */
+	__attribute__( ( always_inline ) ) static inline uint8_t ucPortCountLeadingZeros( uint32_t ulBitmap )
+	{
+	uint8_t ucReturn;
+
+		__asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) );
+		return ucReturn;
+	}
+
+	/* Check the configuration. */
+	#if( configMAX_PRIORITIES > 32 )
+		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
+	#endif
+
+	/* Store/clear the ready priorities in a bit map. */
+	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+
+	/*-----------------------------------------------------------*/
+
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) ucPortCountLeadingZeros( ( uxReadyPriorities ) ) )
+
+#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+
+/*-----------------------------------------------------------*/
+
+#ifdef configASSERT
+	void vPortValidateInterruptPriority( void );
+	#define portASSERT_IF_INTERRUPT_PRIORITY_INVALID() 	vPortValidateInterruptPriority()
+#endif
+
+/* portNOP() is not required by this port. */
 #define portNOP()
+
+#define portINLINE	__inline
+
+#ifndef portFORCE_INLINE
+	#define portFORCE_INLINE inline __attribute__(( always_inline))
+#endif
+
+/* Set the privilege level to user mode if xRunningPrivileged is false. */
+portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged )
+{
+	if( xRunningPrivileged != pdTRUE ) 
+	{
+		__asm volatile ( " mrs r0, control 	\n" \
+						 " orr r0, #1 		\n" \
+						 " msr control, r0	\n"	\
+						 :::"r0" );
+	}
+}
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )
+{
+uint32_t ulCurrentInterrupt;
+BaseType_t xReturn;
+
+	/* Obtain the number of the currently executing interrupt. */
+	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+
+	if( ulCurrentInterrupt == 0 )
+	{
+		xReturn = pdFALSE;
+	}
+	else
+	{
+		xReturn = pdTRUE;
+	}
+
+	return xReturn;
+}
+
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+{
+uint32_t ulNewBASEPRI;
+
+	__asm volatile
+	(
+		"	mov %0, %1												\n"	\
+		"	msr basepri, %0											\n" \
+		"	isb														\n" \
+		"	dsb														\n" \
+		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	);
+}
+
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static uint32_t ulPortRaiseBASEPRI( void )
+{
+uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
+
+	__asm volatile
+	(
+		"	mrs %0, basepri											\n" \
+		"	mov %1, %2												\n"	\
+		"	msr basepri, %1											\n" \
+		"	isb														\n" \
+		"	dsb														\n" \
+		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+	);
+
+	/* This return will not be reached but is necessary to prevent compiler
+	warnings. */
+	return ulOriginalBASEPRI;
+}
+/*-----------------------------------------------------------*/
+
+portFORCE_INLINE static void vPortSetBASEPRI( uint32_t ulNewMaskValue )
+{
+	__asm volatile
+	(
+		"	msr basepri, %0	" :: "r" ( ulNewMaskValue )
+	);
+}
+/*-----------------------------------------------------------*/
 
 
 #ifdef __cplusplus

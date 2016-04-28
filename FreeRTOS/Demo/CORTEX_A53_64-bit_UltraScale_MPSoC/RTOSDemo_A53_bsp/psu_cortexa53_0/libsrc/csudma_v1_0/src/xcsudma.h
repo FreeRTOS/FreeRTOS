@@ -82,6 +82,9 @@
 * to build and link only those parts of the driver that are necessary.
 *
 * @file xcsudma.h
+* @addtogroup csudma_v1_0
+* @{
+* @details
 *
 * This header file contains identifiers and register-level driver functions (or
 * macros), range macros, structure typedefs that can be used to access the
@@ -412,3 +415,4 @@ s32 XCsuDma_SelfTest(XCsuDma *InstancePtr);
 #endif
 
 #endif /* End of protection macro */
+/** @} */

@@ -33,6 +33,8 @@
 /**
 *
 * @file xwdtps.c
+* @addtogroup wdtps_v3_0
+* @{
 *
 * Contains the implementation of interface functions of the XWdtPs driver.
 * See xwdtps.h for a description of the driver.
@@ -481,3 +483,4 @@ void XWdtPs_SetControlValue(XWdtPs *InstancePtr, u8 Control, u32 Value)
 	XWdtPs_WriteReg(InstancePtr->Config.BaseAddress, XWDTPS_CCR_OFFSET,
 			  Register);
 }
+/** @} */

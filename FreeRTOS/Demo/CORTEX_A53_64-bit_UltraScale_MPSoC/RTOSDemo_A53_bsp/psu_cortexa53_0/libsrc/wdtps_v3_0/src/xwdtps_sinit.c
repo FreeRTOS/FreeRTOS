@@ -33,6 +33,8 @@
 /**
 *
 * @file xwdtps_sinit.c
+* @addtogroup wdtps_v3_0
+* @{
 *
 * This file contains method for static initialization (compile-time) of the
 * driver.
@@ -91,3 +93,4 @@ XWdtPs_Config *XWdtPs_LookupConfig(u16 DeviceId)
 	}
 	return (XWdtPs_Config *)CfgPtr;
 }
+/** @} */

@@ -1,4 +1,4 @@
 THIRPARTY=false
-HW_PROJECT_REFERENCE=ZynqMP_hw_platform
+HW_PROJECT_REFERENCE=ZynqMP_ZCU102_hw_platform
 PROCESSOR=psu_cortexa53_0
 MSS_FILE=system.mss

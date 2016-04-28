@@ -34,6 +34,8 @@
 /**
 *
 * @file xcsudma_selftest.c
+* @addtogroup csudma_v1_0
+* @{
 *
 * This file contains a diagnostic self-test function for the CSU_DMA driver.
 * Refer to the header file xcsudma.h for more detailed information.
@@ -120,3 +122,4 @@ s32 XCsuDma_SelfTest(XCsuDma *InstancePtr)
 	return Status;
 
 }
+/** @} */

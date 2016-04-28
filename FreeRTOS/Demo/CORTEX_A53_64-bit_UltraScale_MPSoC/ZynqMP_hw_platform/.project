@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ZynqMP_hw_platform</name>
-	<comment>Created by SDK v2015.1</comment>
+	<name>ZynqMP_ZCU102_hw_platform</name>
+	<comment>Created by SDK v2016.1</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -11,7 +11,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1436883660925</id>
+			<id>1461845622212</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -20,7 +20,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1436883660925</id>
+			<id>1461845622222</id>
 			<name></name>
 			<type>6</type>
 			<matcher>
@@ -29,7 +29,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1436883660925</id>
+			<id>1461845622222</id>
 			<name></name>
 			<type>6</type>
 			<matcher>

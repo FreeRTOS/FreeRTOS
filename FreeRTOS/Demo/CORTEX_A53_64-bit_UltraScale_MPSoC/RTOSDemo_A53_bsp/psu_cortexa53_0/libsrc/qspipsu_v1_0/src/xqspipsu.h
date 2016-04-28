@@ -33,6 +33,9 @@
 /**
 *
 * @file xqspipsu.h
+* @addtogroup qspipsu_v1_0
+* @{
+* @details
 *
 * This is the header file for the implementation of QSPIPSU driver.
 * Generic QSPI interface allows for communication to any QSPI slave device.
@@ -89,12 +92,15 @@
 *       hk  03/18/15 Switch to I/O mode before clearing RX FIFO.
 *                    Clear and disbale DMA interrupts/status in abort.
 *                    Use DMA DONE bit instead of BUSY as recommended.
+*       sk  04/24/15 Modified the code according to MISRAC-2012.
+*       sk  06/17/15 Removed NULL checks for Rx/Tx buffers. As
+*                    writing/reading from 0x0 location is permitted.
 *
 * </pre>
 *
 ******************************************************************************/
-#ifndef _XQSPIPSU_H_		/* prevent circular inclusions */
-#define _XQSPIPSU_H_		/* by using protection macros */
+#ifndef XQSPIPSU_H_		/* prevent circular inclusions */
+#define XQSPIPSU_H_		/* by using protection macros */
 
 #ifdef __cplusplus
 extern "C" {
@@ -104,6 +110,7 @@ extern "C" {
 
 #include "xstatus.h"
 #include "xqspipsu_hw.h"
+#include "xil_cache.h"
 
 /**************************** Type Definitions *******************************/
 /**
@@ -125,7 +132,7 @@ extern "C" {
  *		requested if the status event indicates an error.
  */
 typedef void (*XQspiPsu_StatusHandler) (void *CallBackRef, u32 StatusEvent,
-					unsigned ByteCount);
+					u32 ByteCount);
 
 /**
  * This typedef contains configuration information for a flash message.
@@ -161,16 +168,17 @@ typedef struct {
 	u8 *SendBufferPtr;	 /**< Buffer to send (state) */
 	u8 *RecvBufferPtr;	 /**< Buffer to receive (state) */
 	u8 *GenFifoBufferPtr;	 /**< Gen FIFO entries */
-	int TxBytes;	 /**< Number of bytes to transfer (state) */
-	int RxBytes;	 /**< Number of bytes left to transfer(state) */
-	int GenFifoEntries;	 /**< Number of Gen FIFO entries remaining */
+	s32 TxBytes;	 /**< Number of bytes to transfer (state) */
+	s32 RxBytes;	 /**< Number of bytes left to transfer(state) */
+	s32 GenFifoEntries;	 /**< Number of Gen FIFO entries remaining */
 	u32 IsBusy;		 /**< A transfer is in progress (state) */
 	u32 ReadMode;		 /**< DMA or IO mode */
 	u32 GenFifoCS;
 	u32 GenFifoBus;
-	int NumMsg;
-	int MsgCnt;
-	int IsUnaligned;
+	s32 NumMsg;
+	s32 MsgCnt;
+	s32 IsUnaligned;
+	u8 IsManualstart;
 	XQspiPsu_Msg *Msg;
 	XQspiPsu_StatusHandler StatusHandler;
 	void *StatusRef;  	 /**< Callback reference for status handler */
@@ -178,86 +186,87 @@ typedef struct {
 
 /***************** Macros (Inline Functions) Definitions *********************/
 
-#define XQSPIPSU_READMODE_DMA	0x0
-#define XQSPIPSU_READMODE_IO	0x1
+#define XQSPIPSU_READMODE_DMA	0x0U
+#define XQSPIPSU_READMODE_IO	0x1U
 
-#define XQSPIPSU_SELECT_FLASH_CS_LOWER	0x1
-#define XQSPIPSU_SELECT_FLASH_CS_UPPER	0x2
-#define XQSPIPSU_SELECT_FLASH_CS_BOTH	0x3
+#define XQSPIPSU_SELECT_FLASH_CS_LOWER	0x1U
+#define XQSPIPSU_SELECT_FLASH_CS_UPPER	0x2U
+#define XQSPIPSU_SELECT_FLASH_CS_BOTH	0x3U
 
-#define XQSPIPSU_SELECT_FLASH_BUS_LOWER	0x1
-#define XQSPIPSU_SELECT_FLASH_BUS_UPPER	0x2
-#define XQSPIPSU_SELECT_FLASH_BUS_BOTH	0x3
+#define XQSPIPSU_SELECT_FLASH_BUS_LOWER	0x1U
+#define XQSPIPSU_SELECT_FLASH_BUS_UPPER	0x2U
+#define XQSPIPSU_SELECT_FLASH_BUS_BOTH	0x3U
 
-#define XQSPIPSU_SELECT_MODE_SPI	0x1
-#define XQSPIPSU_SELECT_MODE_DUALSPI	0x2
-#define XQSPIPSU_SELECT_MODE_QUADSPI	0x4
+#define XQSPIPSU_SELECT_MODE_SPI	0x1U
+#define XQSPIPSU_SELECT_MODE_DUALSPI	0x2U
+#define XQSPIPSU_SELECT_MODE_QUADSPI	0x4U
 
-#define XQSPIPSU_GENFIFO_CS_SETUP	0x04
-#define XQSPIPSU_GENFIFO_CS_HOLD	0x03
+#define XQSPIPSU_GENFIFO_CS_SETUP	0x05U
+#define XQSPIPSU_GENFIFO_CS_HOLD	0x04U
 
-#define XQSPIPSU_CLK_ACTIVE_LOW_OPTION	0x2
-#define XQSPIPSU_CLK_PHASE_1_OPTION	0x4
-#define XQSPIPSU_MANUAL_START_OPTION	0x8
+#define XQSPIPSU_CLK_ACTIVE_LOW_OPTION	0x2U
+#define XQSPIPSU_CLK_PHASE_1_OPTION	0x4U
+#define XQSPIPSU_MANUAL_START_OPTION	0x8U
 
-#define XQSPIPSU_GENFIFO_EXP_START	0x100
+#define XQSPIPSU_GENFIFO_EXP_START	0x100U
 
-#define XQSPIPSU_DMA_BYTES_MAX		0x10000000
+#define XQSPIPSU_DMA_BYTES_MAX		0x10000000U
 
-#define XQSPIPSU_CLK_PRESCALE_2		0x00
-#define XQSPIPSU_CLK_PRESCALE_4		0x01
-#define XQSPIPSU_CLK_PRESCALE_8		0x02
-#define XQSPIPSU_CLK_PRESCALE_16		0x03
-#define XQSPIPSU_CLK_PRESCALE_32		0x04
-#define XQSPIPSU_CLK_PRESCALE_64		0x05
-#define XQSPIPSU_CLK_PRESCALE_128	0x06
-#define XQSPIPSU_CLK_PRESCALE_256	0x07
-#define XQSPIPSU_CR_PRESC_MAXIMUM	7
+#define XQSPIPSU_CLK_PRESCALE_2		0x00U
+#define XQSPIPSU_CLK_PRESCALE_4		0x01U
+#define XQSPIPSU_CLK_PRESCALE_8		0x02U
+#define XQSPIPSU_CLK_PRESCALE_16		0x03U
+#define XQSPIPSU_CLK_PRESCALE_32		0x04U
+#define XQSPIPSU_CLK_PRESCALE_64		0x05U
+#define XQSPIPSU_CLK_PRESCALE_128	0x06U
+#define XQSPIPSU_CLK_PRESCALE_256	0x07U
+#define XQSPIPSU_CR_PRESC_MAXIMUM	7U
 
-#define XQSPIPSU_CONNECTION_MODE_SINGLE		0
-#define XQSPIPSU_CONNECTION_MODE_STACKED	1
-#define XQSPIPSU_CONNECTION_MODE_PARALLEL	2
+#define XQSPIPSU_CONNECTION_MODE_SINGLE		0U
+#define XQSPIPSU_CONNECTION_MODE_STACKED	1U
+#define XQSPIPSU_CONNECTION_MODE_PARALLEL	2U
 
 /* Add more flags as required */
-#define XQSPIPSU_MSG_FLAG_STRIPE	0x1
+#define XQSPIPSU_MSG_FLAG_STRIPE	0x1U
+#define XQSPIPSU_MSG_FLAG_RX		0x2U
+#define XQSPIPSU_MSG_FLAG_TX		0x4U
 
-#define XQspiPsu_Select(InstancePtr)	XQspiPsu_Out32((InstancePtr->Config.BaseAddress) + XQSPIPSU_SEL_OFFSET, XQSPIPSU_SEL_MASK)
+#define XQspiPsu_Select(InstancePtr)	XQspiPsu_Out32(((InstancePtr)->Config.BaseAddress) + XQSPIPSU_SEL_OFFSET, XQSPIPSU_SEL_MASK)
 
-#define XQspiPsu_Enable(InstancePtr)	XQspiPsu_Out32((InstancePtr->Config.BaseAddress) + XQSPIPSU_EN_OFFSET, XQSPIPSU_EN_MASK)
+#define XQspiPsu_Enable(InstancePtr)	XQspiPsu_Out32(((InstancePtr)->Config.BaseAddress) + XQSPIPSU_EN_OFFSET, XQSPIPSU_EN_MASK)
 
-#define XQspiPsu_Disable(InstancePtr)	XQspiPsu_Out32((InstancePtr->Config.BaseAddress) + XQSPIPSU_EN_OFFSET, 0x0)
-
-#define XQspiPsu_IsManualStart(InstancePtr) ((XQspiPsu_GetOptions(InstancePtr) & XQSPIPSU_MANUAL_START_OPTION) ? TRUE : FALSE)
+#define XQspiPsu_Disable(InstancePtr)	XQspiPsu_Out32(((InstancePtr)->Config.BaseAddress) + XQSPIPSU_EN_OFFSET, 0x0U)
 
 /************************** Function Prototypes ******************************/
 
 /* Initialization and reset */
 XQspiPsu_Config *XQspiPsu_LookupConfig(u16 DeviceId);
-int XQspiPsu_CfgInitialize(XQspiPsu *InstancePtr, XQspiPsu_Config *ConfigPtr,
+s32 XQspiPsu_CfgInitialize(XQspiPsu *InstancePtr, XQspiPsu_Config *ConfigPtr,
 				u32 EffectiveAddr);
 void XQspiPsu_Reset(XQspiPsu *InstancePtr);
 void XQspiPsu_Abort(XQspiPsu *InstancePtr);
 
 /* Transfer functions and handlers */
-int XQspiPsu_PolledTransfer(XQspiPsu *InstancePtr, XQspiPsu_Msg *Msg,
-				unsigned NumMsg);
-int XQspiPsu_InterruptTransfer(XQspiPsu *InstancePtr, XQspiPsu_Msg *Msg,
-				unsigned NumMsg);
-int XQspiPsu_InterruptHandler(XQspiPsu *InstancePtr);
+s32 XQspiPsu_PolledTransfer(XQspiPsu *InstancePtr, XQspiPsu_Msg *Msg,
+				u32 NumMsg);
+s32 XQspiPsu_InterruptTransfer(XQspiPsu *InstancePtr, XQspiPsu_Msg *Msg,
+				u32 NumMsg);
+s32 XQspiPsu_InterruptHandler(XQspiPsu *InstancePtr);
 void XQspiPsu_SetStatusHandler(XQspiPsu *InstancePtr, void *CallBackRef,
-				XQspiPsu_StatusHandler FuncPtr);
+				XQspiPsu_StatusHandler FuncPointer);
 
 /* Configuration functions */
-int XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler);
+s32 XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler);
 void XQspiPsu_SelectFlash(XQspiPsu *InstancePtr, u8 FlashCS, u8 FlashBus);
-int XQspiPsu_SetOptions(XQspiPsu *InstancePtr, u32 Options);
-int XQspiPsu_ClearOptions(XQspiPsu *InstancePtr, u32 Options);
+s32 XQspiPsu_SetOptions(XQspiPsu *InstancePtr, u32 Options);
+s32 XQspiPsu_ClearOptions(XQspiPsu *InstancePtr, u32 Options);
 u32 XQspiPsu_GetOptions(XQspiPsu *InstancePtr);
-int XQspiPsu_SetReadMode(XQspiPsu *InstancePtr, u32 Mode);
+s32 XQspiPsu_SetReadMode(XQspiPsu *InstancePtr, u32 Mode);
 
 #ifdef __cplusplus
 }
 #endif
 
 
-#endif /* _XQSPIPSU_H_ */
+#endif /* XQSPIPSU_H_ */
+/** @} */

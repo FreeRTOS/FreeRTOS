@@ -34,6 +34,8 @@
 /**
 *
 * @file xcsudma_intr.c
+* @addtogroup csudma_v1_0
+* @{
 *
 * This file contains interrupt related functions of Xilinx CSU_DMA core.
 * Please see xcsudma.h for more details of the driver.
@@ -269,3 +271,4 @@ u32 XCsuDma_GetIntrMask(XCsuDma *InstancePtr, XCsuDma_Channel Channel)
 			((u32)(XCSUDMA_I_MASK_OFFSET) +
 			((u32)Channel * (u32)(XCSUDMA_OFFSET_DIFF)))));
 }
+/** @} */

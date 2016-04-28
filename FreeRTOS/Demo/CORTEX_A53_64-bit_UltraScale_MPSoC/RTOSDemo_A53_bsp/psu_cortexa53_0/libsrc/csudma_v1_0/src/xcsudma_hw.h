@@ -33,6 +33,8 @@
 /**
 *
 * @file xcsudma_hw.h
+* @addtogroup csudma_v1_0
+* @{
 *
 * This header file contains identifiers and register-level driver functions (or
 * macros) that can be used to access the Xilinx CSU_DMA core.
@@ -306,3 +308,4 @@ extern "C" {
 
 
 #endif /* End of protection macro */
+/** @} */

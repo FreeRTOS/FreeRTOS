@@ -33,6 +33,9 @@
 /**
 *
 * @file xwdtps.h
+* @addtogroup wdtps_v3_0
+* @{
+* @details
 *
 * The Xilinx watchdog timer driver supports the Xilinx watchdog timer hardware.
 *
@@ -217,3 +220,4 @@ s32 XWdtPs_SelfTest(XWdtPs *InstancePtr);
 #endif
 
 #endif /* end of protection macro */
+/** @} */

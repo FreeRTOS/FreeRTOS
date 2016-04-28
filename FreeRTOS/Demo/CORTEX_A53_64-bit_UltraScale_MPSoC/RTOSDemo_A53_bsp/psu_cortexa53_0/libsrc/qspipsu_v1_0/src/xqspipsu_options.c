@@ -33,6 +33,8 @@
 /**
 *
 * @file xqspipsu_options.c
+* @addtogroup qspipsu_v1_0
+* @{
 *
 * This file implements funcitons to configure the QSPIPSU component,
 * specifically some optional settings, clock and flash related information.
@@ -44,6 +46,7 @@
 * ----- --- -------- -----------------------------------------------
 * 1.0   hk  08/21/14 First release
 *       sk  03/13/15 Added IO mode support.
+*       sk  04/24/15 Modified the code according to MISRAC-2012.
 *
 * </pre>
 *
@@ -104,11 +107,12 @@ static OptionsMap OptionsTable[] = {
 * This function is not thread-safe.
 *
 ******************************************************************************/
-int XQspiPsu_SetOptions(XQspiPsu *InstancePtr, u32 Options)
+s32 XQspiPsu_SetOptions(XQspiPsu *InstancePtr, u32 Options)
 {
 	u32 ConfigReg;
-	unsigned int Index;
+	u32 Index;
 	u32 QspiPsuOptions;
+	s32 Status;
 
 	Xil_AssertNonvoid(InstancePtr != NULL);
 	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
@@ -117,32 +121,39 @@ int XQspiPsu_SetOptions(XQspiPsu *InstancePtr, u32 Options)
 	 * Do not allow to modify the Control Register while a transfer is in
 	 * progress. Not thread-safe.
 	 */
-	if (InstancePtr->IsBusy) {
-		return XST_DEVICE_BUSY;
-	}
+	if (InstancePtr->IsBusy == TRUE) {
+		Status = (s32)XST_DEVICE_BUSY;
+	} else {
 
-	ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
-				      XQSPIPSU_CFG_OFFSET);
+		ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
+					      XQSPIPSU_CFG_OFFSET);
 
-	/*
-	 * Loop through the options table, turning the option on
-	 * depending on whether the bit is set in the incoming options flag.
-	 */
-	for (Index = 0; Index < XQSPIPSU_NUM_OPTIONS; Index++) {
-		if (Options & OptionsTable[Index].Option) {
-			/* Turn it on */
-			ConfigReg |= OptionsTable[Index].Mask;
+		/*
+		 * Loop through the options table, turning the option on
+		 * depending on whether the bit is set in the incoming options flag.
+		 */
+		for (Index = 0U; Index < XQSPIPSU_NUM_OPTIONS; Index++) {
+			if ((Options & OptionsTable[Index].Option) != FALSE) {
+				/* Turn it on */
+				ConfigReg |= OptionsTable[Index].Mask;
+			}
 		}
+
+		/*
+		 * Now write the control register. Leave it to the upper layers
+		 * to restart the device.
+		 */
+		XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPSU_CFG_OFFSET,
+				 ConfigReg);
+
+		if ((Options & XQSPIPSU_MANUAL_START_OPTION) != FALSE) {
+			InstancePtr->IsManualstart = TRUE;
+		}
+
+		Status = XST_SUCCESS;
 	}
 
-	/*
-	 * Now write the control register. Leave it to the upper layers
-	 * to restart the device.
-	 */
-	XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPSU_CFG_OFFSET,
-			 ConfigReg);
-
-	return XST_SUCCESS;
+	return Status;
 }
 
 /*****************************************************************************/
@@ -168,11 +179,12 @@ int XQspiPsu_SetOptions(XQspiPsu *InstancePtr, u32 Options)
 * This function is not thread-safe.
 *
 ******************************************************************************/
-int XQspiPsu_ClearOptions(XQspiPsu *InstancePtr, u32 Options)
+s32 XQspiPsu_ClearOptions(XQspiPsu *InstancePtr, u32 Options)
 {
 	u32 ConfigReg;
-	unsigned int Index;
+	u32 Index;
 	u32 QspiPsuOptions;
+	s32 Status;
 
 	Xil_AssertNonvoid(InstancePtr != NULL);
 	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
@@ -181,32 +193,39 @@ int XQspiPsu_ClearOptions(XQspiPsu *InstancePtr, u32 Options)
 	 * Do not allow to modify the Control Register while a transfer is in
 	 * progress. Not thread-safe.
 	 */
-	if (InstancePtr->IsBusy) {
-		return XST_DEVICE_BUSY;
-	}
+	if (InstancePtr->IsBusy == TRUE) {
+		Status = (s32)XST_DEVICE_BUSY;
+	} else {
 
-	ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
-				      XQSPIPSU_CFG_OFFSET);
+		ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
+					      XQSPIPSU_CFG_OFFSET);
 
-	/*
-	 * Loop through the options table, turning the option on
-	 * depending on whether the bit is set in the incoming options flag.
-	 */
-	for (Index = 0; Index < XQSPIPSU_NUM_OPTIONS; Index++) {
-		if (Options & OptionsTable[Index].Option) {
-			/* Turn it off */
-			ConfigReg &= ~OptionsTable[Index].Mask;
+		/*
+		 * Loop through the options table, turning the option on
+		 * depending on whether the bit is set in the incoming options flag.
+		 */
+		for (Index = 0U; Index < XQSPIPSU_NUM_OPTIONS; Index++) {
+			if ((Options & OptionsTable[Index].Option) != FALSE) {
+				/* Turn it off */
+				ConfigReg &= ~OptionsTable[Index].Mask;
+			}
 		}
+
+		/*
+		 * Now write the control register. Leave it to the upper layers
+		 * to restart the device.
+		 */
+		XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPSU_CFG_OFFSET,
+				 ConfigReg);
+
+		if ((Options & XQSPIPSU_MANUAL_START_OPTION) != FALSE) {
+			InstancePtr->IsManualstart = FALSE;
+		}
+
+		Status = XST_SUCCESS;
 	}
 
-	/*
-	 * Now write the control register. Leave it to the upper layers
-	 * to restart the device.
-	 */
-	XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPSU_CFG_OFFSET,
-			 ConfigReg);
-
-	return XST_SUCCESS;
+	return Status;
 }
 
 /*****************************************************************************/
@@ -230,7 +249,7 @@ u32 XQspiPsu_GetOptions(XQspiPsu *InstancePtr)
 {
 	u32 OptionsFlag = 0;
 	u32 ConfigReg;
-	unsigned int Index;
+	u32 Index;
 
 	Xil_AssertNonvoid(InstancePtr != NULL);
 	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
@@ -242,8 +261,8 @@ u32 XQspiPsu_GetOptions(XQspiPsu *InstancePtr)
 				      XQSPIPSU_CFG_OFFSET);
 
 	/* Loop through the options table to grab options */
-	for (Index = 0; Index < XQSPIPSU_NUM_OPTIONS; Index++) {
-		if (ConfigReg & OptionsTable[Index].Mask) {
+	for (Index = 0U; Index < XQSPIPSU_NUM_OPTIONS; Index++) {
+		if ((ConfigReg & OptionsTable[Index].Mask) != FALSE) {
 			OptionsFlag |= OptionsTable[Index].Option;
 		}
 	}
@@ -268,9 +287,10 @@ u32 XQspiPsu_GetOptions(XQspiPsu *InstancePtr)
 * @note		None.
 *
 ******************************************************************************/
-int XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler)
+s32 XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler)
 {
 	u32 ConfigReg;
+	s32 Status;
 
 	Xil_AssertNonvoid(InstancePtr != NULL);
 	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
@@ -280,26 +300,29 @@ int XQspiPsu_SetClkPrescaler(XQspiPsu *InstancePtr, u8 Prescaler)
 	 * Do not allow the slave select to change while a transfer is in
 	 * progress. Not thread-safe.
 	 */
-	if (InstancePtr->IsBusy) {
-		return XST_DEVICE_BUSY;
+	if (InstancePtr->IsBusy == TRUE) {
+		Status = (s32)XST_DEVICE_BUSY;
+	} else {
+
+		/*
+		 * Read the configuration register, mask out the relevant bits, and set
+		 * them with the shifted value passed into the function. Write the
+		 * results back to the configuration register.
+		 */
+		ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
+					      XQSPIPSU_CFG_OFFSET);
+
+		ConfigReg &= (u32)(~XQSPIPSU_CFG_BAUD_RATE_DIV_MASK);
+		ConfigReg |= (u32) ((u32)Prescaler & (u32)XQSPIPSU_CR_PRESC_MAXIMUM) <<
+				    XQSPIPSU_CFG_BAUD_RATE_DIV_SHIFT;
+
+		XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress,
+				  XQSPIPSU_CFG_OFFSET, ConfigReg);
+
+		Status = XST_SUCCESS;
 	}
 
-	/*
-	 * Read the configuration register, mask out the relevant bits, and set
-	 * them with the shifted value passed into the function. Write the
-	 * results back to the configuration register.
-	 */
-	ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
-				      XQSPIPSU_CFG_OFFSET);
-
-	ConfigReg &= ~XQSPIPSU_CFG_BAUD_RATE_DIV_MASK;
-	ConfigReg |= (u32) (Prescaler & XQSPIPSU_CR_PRESC_MAXIMUM) <<
-			    XQSPIPSU_CFG_BAUD_RATE_DIV_SHIFT;
-
-	XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress,
-			  XQSPIPSU_CFG_OFFSET, ConfigReg);
-
-	return XST_SUCCESS;
+	return Status;
 }
 
 /*****************************************************************************/
@@ -336,29 +359,35 @@ void XQspiPsu_SelectFlash(XQspiPsu *InstancePtr, u8 FlashCS, u8 FlashBus)
 	/* Choose slave select line */
 	switch (FlashCS) {
 		case XQSPIPSU_SELECT_FLASH_CS_BOTH:
-			InstancePtr->GenFifoCS = XQSPIPSU_GENFIFO_CS_LOWER |
-						XQSPIPSU_GENFIFO_CS_UPPER;
+			InstancePtr->GenFifoCS = (u32)XQSPIPSU_GENFIFO_CS_LOWER |
+						(u32)XQSPIPSU_GENFIFO_CS_UPPER;
 			break;
 		case XQSPIPSU_SELECT_FLASH_CS_UPPER:
 			InstancePtr->GenFifoCS = XQSPIPSU_GENFIFO_CS_UPPER;
 			break;
 		case XQSPIPSU_SELECT_FLASH_CS_LOWER:
+			InstancePtr->GenFifoCS = XQSPIPSU_GENFIFO_CS_LOWER;
+			break;
 		default:
 			InstancePtr->GenFifoCS = XQSPIPSU_GENFIFO_CS_LOWER;
+			break;
 	}
 
 	/* Choose bus */
 	switch (FlashBus) {
 		case XQSPIPSU_SELECT_FLASH_BUS_BOTH:
-			InstancePtr->GenFifoBus = XQSPIPSU_GENFIFO_BUS_LOWER |
-						XQSPIPSU_GENFIFO_BUS_UPPER;
+			InstancePtr->GenFifoBus = (u32)XQSPIPSU_GENFIFO_BUS_LOWER |
+						(u32)XQSPIPSU_GENFIFO_BUS_UPPER;
 			break;
 		case XQSPIPSU_SELECT_FLASH_BUS_UPPER:
 			InstancePtr->GenFifoBus = XQSPIPSU_GENFIFO_BUS_UPPER;
 			break;
 		case XQSPIPSU_SELECT_FLASH_BUS_LOWER:
+			InstancePtr->GenFifoBus = XQSPIPSU_GENFIFO_BUS_LOWER;
+			break;
 		default:
 			InstancePtr->GenFifoBus = XQSPIPSU_GENFIFO_BUS_LOWER;
+			break;
 	}
 }
 
@@ -382,9 +411,10 @@ void XQspiPsu_SelectFlash(XQspiPsu *InstancePtr, u8 FlashCS, u8 FlashBus)
 * This function is not thread-safe.
 *
 ******************************************************************************/
-int XQspiPsu_SetReadMode(XQspiPsu *InstancePtr, u32 Mode)
+s32 XQspiPsu_SetReadMode(XQspiPsu *InstancePtr, u32 Mode)
 {
 	u32 ConfigReg;
+	s32 Status;
 
 	Xil_AssertNonvoid(InstancePtr != NULL);
 	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
@@ -393,24 +423,27 @@ int XQspiPsu_SetReadMode(XQspiPsu *InstancePtr, u32 Mode)
 	 * Do not allow to modify the Control Register while a transfer is in
 	 * progress. Not thread-safe.
 	 */
-	if (InstancePtr->IsBusy) {
-		return XST_DEVICE_BUSY;
-	}
-
-	InstancePtr->ReadMode = Mode;
-
-	ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
-				      XQSPIPSU_CFG_OFFSET);
-
-	if (Mode == XQSPIPSU_READMODE_DMA) {
-		ConfigReg &= ~XQSPIPSU_CFG_MODE_EN_MASK;
-		ConfigReg |= XQSPIPSU_CFG_MODE_EN_DMA_MASK;
+	if (InstancePtr->IsBusy == TRUE) {
+		Status = (s32)XST_DEVICE_BUSY;
 	} else {
-		ConfigReg &= ~XQSPIPSU_CFG_MODE_EN_MASK;
+
+		InstancePtr->ReadMode = Mode;
+
+		ConfigReg = XQspiPsu_ReadReg(InstancePtr->Config.BaseAddress,
+					      XQSPIPSU_CFG_OFFSET);
+
+		if (Mode == XQSPIPSU_READMODE_DMA) {
+			ConfigReg &= ~XQSPIPSU_CFG_MODE_EN_MASK;
+			ConfigReg |= XQSPIPSU_CFG_MODE_EN_DMA_MASK;
+		} else {
+			ConfigReg &= ~XQSPIPSU_CFG_MODE_EN_MASK;
+		}
+
+		XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPSU_CFG_OFFSET,
+				 ConfigReg);
+
+		Status = XST_SUCCESS;
 	}
-
-	XQspiPsu_WriteReg(InstancePtr->Config.BaseAddress, XQSPIPSU_CFG_OFFSET,
-			 ConfigReg);
-
-	return XST_SUCCESS;
+	return Status;
 }
+/** @} */

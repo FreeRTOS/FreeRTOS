@@ -1,6 +1,6 @@
 /******************************************************************************
 *
-* Copyright (C) 2010 - 2014 Xilinx, Inc.  All rights reserved.
+* Copyright (C) 2010 - 2015 Xilinx, Inc.  All rights reserved.
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -18,8 +18,8 @@
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* XILINX CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
@@ -36,10 +36,12 @@
 #include "platform_config.h"
 
 /*
- * Uncomment the following line if ps7 init source files are added in the
- * source directory for compiling example outside of SDK.
+ * Uncomment one of the following two lines, depending on the target,
+ * if ps7/psu init source files are added in the source directory for
+ * compiling example outside of SDK.
  */
 /*#include "ps7_init.h"*/
+/*#include "psu_init.h"*/
 
 #ifdef STDOUT_IS_16550
  #include "xuartns550_l.h"
@@ -77,9 +79,7 @@ init_uart()
     XUartNs550_SetBaud(STDOUT_BASEADDR, XPAR_XUARTNS550_CLOCK_HZ, UART_BAUD);
     XUartNs550_SetLineControlReg(STDOUT_BASEADDR, XUN_LCR_8_DATA_BITS);
 #endif
-#ifdef STDOUT_IS_PS7_UART
-    /* Bootrom/BSP configures PS7 UART to 115200 bps */
-#endif
+    /* Bootrom/BSP configures PS7/PSU UART to 115200 bps */
 }
 
 void
@@ -87,11 +87,13 @@ init_platform()
 {
     /*
      * If you want to run this example outside of SDK,
-     * uncomment the following line and also #include "ps7_init.h" at the top.
-     * Make sure that the ps7_init.c and ps7_init.h files are included
+     * uncomment one of the following two lines and also #include "ps7_init.h"
+     * or #include "ps7_init.h" at the top, depending on the target.
+     * Make sure that the ps7/psu_init.c and ps7/psu_init.h files are included
      * along with this example source files for compilation.
      */
     /* ps7_init();*/
+    /* psu_init();*/
     enable_caches();
     init_uart();
 }

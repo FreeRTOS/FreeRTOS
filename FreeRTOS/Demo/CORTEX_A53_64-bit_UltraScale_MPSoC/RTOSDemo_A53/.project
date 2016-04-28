@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>RTOSDemo_A53</name>
-	<comment>Created by SDK v2015.1. RTOSDemo_A53_bsp - psu_cortexa53_0</comment>
+	<comment>Created by SDK v2016.1. RTOSDemo_A53_bsp - psu_cortexa53_0</comment>
 	<projects>
 		<project>RTOSDemo_A53_bsp</project>
 	</projects>
@@ -42,79 +42,16 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1450692515382</id>
+			<id>1461847194341</id>
 			<name>src/FreeRTOS_Source</name>
-			<type>5</type>
+			<type>6</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-event_groups.c</arguments>
+				<arguments>1.0-name-matches-false-false-croutine.c</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450692515402</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-list.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692515422</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-queue.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692515432</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-tasks.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692515452</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>5</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-timers.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692515452</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>9</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-include</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692515462</id>
-			<name>src/FreeRTOS_Source</name>
-			<type>9</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-portable</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692538900</id>
-			<name>src/FreeRTOS_Source/portable</name>
-			<type>9</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-MemMang</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1450692538920</id>
+			<id>1461847221751</id>
 			<name>src/FreeRTOS_Source/portable</name>
 			<type>9</type>
 			<matcher>
@@ -123,7 +60,16 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252106</id>
+			<id>1461847221761</id>
+			<name>src/FreeRTOS_Source/portable</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MemMang</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1461847438191</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -132,7 +78,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252106</id>
+			<id>1461847438201</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -141,7 +87,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252116</id>
+			<id>1461847438221</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -150,7 +96,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252116</id>
+			<id>1461847438241</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -159,7 +105,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252126</id>
+			<id>1461847438251</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -168,7 +114,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252126</id>
+			<id>1461847438251</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -177,7 +123,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252136</id>
+			<id>1461847438261</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -186,7 +132,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252136</id>
+			<id>1461847438261</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -195,7 +141,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252146</id>
+			<id>1461847438271</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -204,7 +150,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252146</id>
+			<id>1461847438281</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -213,7 +159,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450693252146</id>
+			<id>1461847438301</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -222,7 +168,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450692572845</id>
+			<id>1461847264041</id>
 			<name>src/FreeRTOS_Source/portable/GCC</name>
 			<type>9</type>
 			<matcher>
@@ -231,7 +177,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1450692711859</id>
+			<id>1461847244679</id>
 			<name>src/FreeRTOS_Source/portable/MemMang</name>
 			<type>5</type>
 			<matcher>

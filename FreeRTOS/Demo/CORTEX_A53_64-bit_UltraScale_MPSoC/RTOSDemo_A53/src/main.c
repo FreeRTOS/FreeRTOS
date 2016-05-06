@@ -68,29 +68,14 @@
 */
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainSELECTED_APPLICATION setting (defined in this file) is used to select
- * between the two.  The simply blinky demo is implemented and described in
- * main_blinky.c.  The more comprehensive test and demo application is
- * implemented and described in main_full.c.
+ * NOTE 1:  This project provides two demo applications.  A simple blinky
+ * style project, and a more comprehensive test and demo application.  The
+ * mainSELECTED_APPLICATION setting in main.c is used to select between the two.
+ * See the notes on using mainSELECTED_APPLICATION where it is defined below.
  *
- * This file implements the code that is not demo specific, including the
- * hardware setup and FreeRTOS hook functions.
- *
- * !!! IMPORTANT NOTE !!!
- * Some GCC libraries can make use of the floating point registers.  To avoid
- * this causing corruption it is necessary to avoid their use.  For this reason
- * main.c contains very basic C implementations of the standard C library
- * functions memset(), memcpy() and memcmp(), which are are used by FreeRTOS
- * itself.  Defining these functions in the project prevents the linker pulling
- * them in from the library.  Any other standard C library functions that are
- * used by the application must likewise be defined in C.
- *
- * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
- * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
- * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
- *
+ * NOTE 2:  This file only contains the source code that is not specific to
+ * either the simply blinky or full demos - this includes initialisation code
+ * and callback functions.
  */
 
 /* Standard includes. */
@@ -99,14 +84,6 @@
 /* Scheduler include files. */
 #include "FreeRTOS.h"
 #include "task.h"
-#include "semphr.h"
-
-/* Standard demo includes. */
-#include "partest.h"
-#include "QueueOverwrite.h"
-#include "EventGroupsDemo.h"
-#include "TaskNotify.h"
-#include "IntSemTest.h"
 
 /* Xilinx includes. */
 #include "platform.h"
@@ -122,7 +99,7 @@
  * When mainSELECTED_APPLICATION is set to 1 the comprehensive test and demo
  * application will be run.
  */
-#define mainSELECTED_APPLICATION	0
+#define mainSELECTED_APPLICATION	1
 
 /*-----------------------------------------------------------*/
 
@@ -249,46 +226,65 @@ volatile size_t xFreeHeapSpace;
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char * pcFile, unsigned long ulLine )
-{
-volatile unsigned long ul = 0;
-
-	( void ) pcFile;
-	( void ) ulLine;
-
-	taskENTER_CRITICAL();
-	{
-		#if( configUSE_TRACE_FACILITY == 1 )
-		{
-			vTraceStop();
-		}
-		#endif
-
-		/* Set ul to a non-zero value using the debugger to step out of this
-		function. */
-		while( ul == 0 )
-		{
-			portNOP();
-		}
-	}
-	taskEXIT_CRITICAL();
-}
-/*-----------------------------------------------------------*/
-
 void vApplicationTickHook( void )
 {
 	#if( mainSELECTED_APPLICATION == 1 )
 	{
-		/* Call the periodic event group from ISR demo. */
-		vPeriodicEventGroupsProcessing();
-
-		/* Use task notifications from an interrupt. */
-		xNotifyTaskFromISR();
-
-		/* Use mutexes from interrupts. */
-		vInterruptSemaphorePeriodicTest();
+		/* Only the comprehensive demo actually uses the tick hook. */
+		extern void vFullDemoTickHook( void );
+		vFullDemoTickHook();
 	}
 	#endif
+}
+/*-----------------------------------------------------------*/
+
+/* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
+implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
+used by the Idle task. */
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+{
+/* If the buffers to be provided to the Idle task are declared inside this
+function then they must be declared static - otherwise they will be allocated on
+the stack and so not exists after this function exits. */
+static StaticTask_t xIdleTaskTCB;
+static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+
+	/* Pass out a pointer to the StaticTask_t structure in which the Idle task's
+	state will be stored. */
+	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+
+	/* Pass out the array that will be used as the Idle task's stack. */
+	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
+
+	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+	Note that, as the array is necessarily of type StackType_t,
+	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
+/*-----------------------------------------------------------*/
+
+/* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
+application must provide an implementation of vApplicationGetTimerTaskMemory()
+to provide the memory that is used by the Timer service task. */
+void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize )
+{
+/* If the buffers to be provided to the Timer task are declared inside this
+function then they must be declared static - otherwise they will be allocated on
+the stack and so not exists after this function exits. */
+static StaticTask_t xTimerTaskTCB;
+static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+
+	/* Pass out a pointer to the StaticTask_t structure in which the Timer
+	task's state will be stored. */
+	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+
+	/* Pass out the array that will be used as the Timer task's stack. */
+	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
+
+	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+	Note that, as the array is necessarily of type StackType_t,
+	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/
 
@@ -349,4 +345,11 @@ volatile size_t x;
     return xBytes - x;
 }
 /*-----------------------------------------------------------*/
+
+void vMainAssertCalled( const char *pcFileName, uint32_t ulLineNumber )
+{
+	xil_printf( "ASSERT!  Line %lu of file %s\r\n", ulLineNumber, pcFileName );
+	taskENTER_CRITICAL();
+	for( ;; );
+}
 

@@ -101,16 +101,10 @@
  * frequently.  A register containing an unexpected value is indicative of an
  * error in the context switching mechanism.
  *
- * "Check" task - The check task period is initially set to three seconds.  The
- * task checks that all the standard demo tasks, and the register check tasks,
- * are not only still executing, but are executing without reporting any errors.
- * If the check task discovers that a task has either stalled, or reported an
- * error, then it changes its own execution period from the initial three
- * seconds, to just 200ms.  The check task also toggles an LED each time it is
- * called.  This provides a visual indication of the system status:  If the LED
- * toggles every five seconds, then no issues have been discovered.  If the LED
- * toggles every 200ms, then an issue has been discovered with at least one
- * task.
+ * "Check" task - The check task period is set to five seconds.  Each time it
+ * executes it checks all the standard demo tasks, and the register check tasks,
+ * are not only still executing, but are executing without reporting any errors,
+ * then outputs the system status to the UART.
  */
 
 /* Standard includes. */
@@ -130,11 +124,17 @@
 #include "countsem.h"
 #include "GenQTest.h"
 #include "recmutex.h"
-#include "partest.h"
 #include "IntQueue.h"
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 #include "IntSemTest.h"
+#include "StaticAllocation.h"
+#include "AbortDelay.h"
+#include "QueueOverwrite.h"
+#include "TimerDemo.h"
+
+/* Xilinx includes. */
+#include "xil_printf.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + ( UBaseType_t ) 1 )
@@ -144,22 +144,13 @@
 #define mainUART_COMMAND_CONSOLE_STACK_SIZE	( configMINIMAL_STACK_SIZE * ( UBaseType_t ) 3 )
 #define mainCOM_TEST_TASK_PRIORITY			( tskIDLE_PRIORITY + ( UBaseType_t ) 2 )
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - ( UBaseType_t ) 1 )
-
-/* The LED used by the check task. */
-#define mainCHECK_LED						( 0 )
+#define mainQUEUE_OVERWRITE_PRIORITY		( tskIDLE_PRIORITY )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( ( TickType_t ) 0 )
 
-/* The period of the check task, in ms, provided no errors have been reported by
-any of the standard demo tasks.  ms are converted to the equivalent in ticks
-using the pdMS_TO_TICKS() macro constant. */
+/* The period of the check task, in ms. */
 #define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( ( TickType_t ) 5000 )
-
-/* The period of the check task, in ms, if an error has been reported in one of
-the standard demo tasks.  ms are converted to the equivalent in ticks using the
-pdMS_TO_TICKS() macro. */
-#define mainERROR_CHECK_TASK_PERIOD 		pdMS_TO_TICKS( ( TickType_t ) ( 200 ) )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -207,6 +198,13 @@ extern void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriori
  */
 static void prvPseudoRandomiser( void *pvParameters );
 
+/*
+ *  The full demo uses the tick hook function to include test code in the tick
+ *  interrupt.  vFullDemoTickHook() is called by vApplicationTickHook(), which
+ *  is defined in main.c.
+ */
+void vFullDemoTickHook( void );
+
 /*-----------------------------------------------------------*/
 
 /* The following two variables are used to communicate the status of the
@@ -233,6 +231,10 @@ void main_full( void )
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 	vStartInterruptSemaphoreTasks();
+	vStartStaticallyAllocatedTasks();
+	vCreateAbortDelayTasks();
+	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
+	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );
@@ -266,6 +268,7 @@ TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 static uint64_t ullLastRegTest1Value = 0, ullLastRegTest2Value = 0;
 uint64_t ullErrorFound = pdFALSE;
+const char *pcStatusString = "Pass";
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
@@ -275,11 +278,8 @@ uint64_t ullErrorFound = pdFALSE;
 	xLastExecutionTime = xTaskGetTickCount();
 
 	/* Cycle for ever, delaying then checking all the other tasks are still
-	operating without error.  The onboard LED is toggled on each iteration.
-	If an error is detected then the delay period is decreased from
-	mainNO_ERROR_CHECK_TASK_PERIOD to mainERROR_CHECK_TASK_PERIOD.  This has the
-	effect of increasing the rate at which the onboard LED toggles, and in so
-	doing gives visual feedback of the system status. */
+	operating without error.  The system status is written to the UART on each
+	iteration. */
 	for( ;; )
 	{
 		/* Delay until it is time to execute again. */
@@ -290,85 +290,111 @@ uint64_t ullErrorFound = pdFALSE;
 		if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 0ULL;
+			pcStatusString = "Error: IntQ";
 		}
 
 		if( xAreMathsTaskStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 1ULL;
+			pcStatusString = "Error: Math";
 		}
 
 		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 2ULL;
+			pcStatusString = "Error: Dynamic";
 		}
 
 		if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 4ULL;
+			pcStatusString = "Error: Block Time";
 		}
 
 		if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 5ULL;
+			pcStatusString = "Error: Generic Queue";
 		}
 
 		if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 6ULL;
+			pcStatusString = "Error: Recursive Mutex";
 		}
 
 		if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 8ULL;
+			pcStatusString = "Error: Semaphore";
 		}
 
 		if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 10ULL;
+			pcStatusString = "Error: Counting Semaphore";
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
 			ullErrorFound |= 1ULL << 12ULL;
+			pcStatusString = "Error: Event Group";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 13ULL;
+			pcStatusString = "Error: Task Notifications";
 		}
 
 		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			ullErrorFound |= 1ULL << 14ULL;
+			pcStatusString = "Error: Interrupt Semaphore";
+		}
+
+		if( xAreStaticAllocationTasksStillRunning() != pdTRUE )
+		{
+			ullErrorFound |= 1ULL << 15ULL;
+			pcStatusString = "Error: Static Allocation";
+		}
+
+		if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
+		{
+			ullErrorFound |= 1ULL << 16ULL;
+			pcStatusString = "Error: Abort Delay";
+		}
+
+		if( xIsQueueOverwriteTaskStillRunning() != pdTRUE )
+		{
+			ullErrorFound |= 1ULL << 17ULL;
+			pcStatusString = "Error: Queue Overwrite";
+		}
+
+		if( xAreTimerDemoTasksStillRunning( xDelayPeriod ) != pdTRUE )
+		{
+			ullErrorFound |= 1ULL << 18ULL;
+			pcStatusString = "Error: Timer Demo";
 		}
 
 		/* Check that the register test 1 task is still running. */
 		if( ullLastRegTest1Value == ullRegTest1LoopCounter )
 		{
-			ullErrorFound |= 1ULL << 15ULL;
+			ullErrorFound |= 1ULL << 17ULL;
+			pcStatusString = "Error: Reg Test 1";
 		}
 		ullLastRegTest1Value = ullRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ullLastRegTest2Value == ullRegTest2LoopCounter )
 		{
-			ullErrorFound |= 1ULL << 16ULL;
+			ullErrorFound |= 1ULL << 18ULL;
+			pcStatusString = "Error: Reg Test 2";
 		}
 		ullLastRegTest2Value = ullRegTest2LoopCounter;
 
-		/* Toggle the check LED to give an indication of the system status.  If
-		the LED toggles every mainNO_ERROR_CHECK_TASK_PERIOD milliseconds then
-		everything is ok.  A faster toggle indicates an error. */
-		vParTestToggleLED( mainCHECK_LED );
-
-		if( ullErrorFound != pdFALSE )
-		{
-			/* An error has been detected in one of the tasks - flash the LED
-			at a higher frequency to give visible feedback that something has
-			gone wrong (it might just be that the loop back connector required
-			by the comtest tasks has not been fitted). */
-			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
-		}
+		/* Output the system status string. */
+		xil_printf( "%s, status code = %lu, tick count = %lu\r\n", pcStatusString, ullErrorFound, xTaskGetTickCount() );
 
 		configASSERT( ullErrorFound == pdFALSE );
 	}
@@ -451,9 +477,26 @@ volatile uint64_t ullNextRand = ( uint64_t ) &pvParameters, ullValue;
 		}
 	}
 }
+/*-----------------------------------------------------------*/
 
+void vFullDemoTickHook( void )
+{
+	/* The full demo includes a software timer demo/test that requires
+	prodding periodically from the tick interrupt. */
+	vTimerPeriodicISRTests();
 
+	/* Call the periodic queue overwrite from ISR demo. */
+	vQueueOverwritePeriodicISRDemo();
 
+	/* Call the periodic event group from ISR demo. */
+	vPeriodicEventGroupsProcessing();
+
+	/* Call the ISR component of the interrupt semaphore test. */
+	vInterruptSemaphorePeriodicTest();
+
+	/* Call the code that 'gives' a task notification from an ISR. */
+	xNotifyTaskFromISR();
+}
 
 
 

@@ -357,7 +357,7 @@ uint32_t ulAPSR, ulCycles = 8; /* 8 bits per byte. */
 
 		/* Sanity check configUNIQUE_INTERRUPT_PRIORITIES matches the read
 		value. */
-//		configASSERT( ucMaxPriorityValue == portLOWEST_INTERRUPT_PRIORITY );
+		configASSERT( ucMaxPriorityValue == portLOWEST_INTERRUPT_PRIORITY );
 
 		/* Restore the clobbered interrupt priority register to its original
 		value. */

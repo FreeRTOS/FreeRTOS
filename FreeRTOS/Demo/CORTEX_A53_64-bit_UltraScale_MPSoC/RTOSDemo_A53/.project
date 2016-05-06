@@ -69,7 +69,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438191</id>
+			<id>1462537732456</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -78,7 +78,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438201</id>
+			<id>1462537732456</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -87,7 +87,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438221</id>
+			<id>1462537732466</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -96,7 +96,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438241</id>
+			<id>1462537732466</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -105,7 +105,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438251</id>
+			<id>1462537732476</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -114,7 +114,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438251</id>
+			<id>1462537732486</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -123,7 +123,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438261</id>
+			<id>1462537732486</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -132,7 +132,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438261</id>
+			<id>1462537732496</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -141,7 +141,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438271</id>
+			<id>1462537732506</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -150,7 +150,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438281</id>
+			<id>1462537732506</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -159,12 +159,48 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1461847438301</id>
+			<id>1462537732516</id>
 			<name>src/Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-IntSemTest.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1462537732516</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-StaticAllocation.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1462537732526</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-AbortDelay.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1462537732536</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-QueueOverwrite.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1462537732546</id>
+			<name>src/Full_Demo/Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TimerDemo.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

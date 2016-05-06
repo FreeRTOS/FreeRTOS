@@ -67,39 +67,12 @@
     1 tab == 4 spaces!
 */
 
-/*-----------------------------------------------------------
- * Simple IO routines to control the LEDs.
- * This file is called ParTest.c for historic reasons.  Originally it stood for
- * PARallel port TEST.
- *-----------------------------------------------------------*/
+#ifndef INT_QUEUE_TIMER_H
+#define INT_QUEUE_TIMER_H
 
-/* Scheduler includes. */
-#include "FreeRTOS.h"
-#include "task.h"
+void vInitialiseTimerForIntQueueTest( void );
+portBASE_TYPE xTimer0Handler( void );
+portBASE_TYPE xTimer1Handler( void );
 
-/* Demo includes. */
-#include "partest.h"
-
-
-/* Don't have any real LEDs yet! */
-volatile uint64_t ullLEDToggles = 0;
-
-/*-----------------------------------------------------------*/
-
-void vParTestInitialise( void )
-{
-}
-/*-----------------------------------------------------------*/
-
-void vParTestSetLED( UBaseType_t uxLED, BaseType_t xValue )
-{
-}
-/*-----------------------------------------------------------*/
-
-void vParTestToggleLED( unsigned portBASE_TYPE uxLED )
-{
-	ullLEDToggles++;
-}
-
-
+#endif
 

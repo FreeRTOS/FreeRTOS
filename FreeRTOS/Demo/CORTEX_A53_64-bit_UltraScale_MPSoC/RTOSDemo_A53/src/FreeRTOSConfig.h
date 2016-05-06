@@ -132,6 +132,10 @@
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configUSE_QUEUE_SETS					1
 
+/* This demo creates RTOS objects using both static and dynamic allocation. */
+#define configSUPPORT_STATIC_ALLOCATION			1
+#define configSUPPORT_DYNAMIC_ALLOCATION		1 /* Defaults to 1 anyway. */
+
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 					0
 #define configMAX_CO_ROUTINE_PRIORITIES 		( 2 )
@@ -153,6 +157,8 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelay						1
 #define INCLUDE_xTimerPendFunctionCall			1
 #define INCLUDE_eTaskGetState					1
+#define INCLUDE_xTaskAbortDelay					1
+#define INCLUDE_xTaskGetHandle					1
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
@@ -176,8 +182,8 @@ command interpreter running. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-void vAssertCalled( const char * pcFile, unsigned long ulLine );
-#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
+void vMainAssertCalled( const char *pcFileName, uint32_t ulLineNumber );
+#define configASSERT( x ) if( ( x ) == 0 ) { vMainAssertCalled( __FILE__, __LINE__ ); }
 
 /* If configTASK_RETURN_ADDRESS is not defined then a task that attempts to
 return from its implementing function will end up in a "task exit error"

@@ -33,6 +33,9 @@
 /**
 *
 * @file xmig_7series.h
+* @addtogroup mig_7series_v2_0
+* @{
+* @details
 * This driver exists only to allow the SDK tools to create a memory test
 * application and to populate xparameters.h with memory range constants.
 * There is no source code.
@@ -40,3 +43,4 @@
 * 2.0   adk  19/12/13 Updated as per the New Tcl API's
 *
 ******************************************************************************/
+/** @} */

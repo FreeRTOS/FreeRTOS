@@ -50,8 +50,8 @@ void vLwipAppsReleaseTxBuffer( void );
 #define TCPIP_THREAD_PRIO configLWIP_TASK_PRIORITY
 #define TCPIP_THREAD_STACKSIZE configMINIMAL_STACK_SIZE * 3
 
-#define DEFAULT_TCP_RECVMBOX_SIZE 5
-#define DEFAULT_ACCEPTMBOX_SIZE 5
+#define DEFAULT_TCP_RECVMBOX_SIZE 10
+#define DEFAULT_ACCEPTMBOX_SIZE 10
 #define TCPIP_MBOX_SIZE			 		10
 
 #define NO_SYS							0
@@ -70,7 +70,7 @@ void vLwipAppsReleaseTxBuffer( void );
 #define LWIP_SO_RCVTIMEO		   		1
 #define LWIP_SO_RCVBUF			 		1
 
-//#define LWIP_DEBUG
+#define LWIP_DEBUG
 #ifdef LWIP_DEBUG
 
 #define LWIP_DBG_MIN_LEVEL        LWIP_DBG_LEVEL_ALL // LWIP_DBG_LEVEL_SERIOUS
@@ -112,7 +112,7 @@ void vLwipAppsReleaseTxBuffer( void );
    byte alignment -> define MEM_ALIGNMENT to 2. */
 /* MSVC port: intel processors don't need 4-byte alignment,
    but are faster that way! */
-#define MEM_ALIGNMENT			64
+#define MEM_ALIGNMENT			4
 
 /* MEM_SIZE: the size of the heap memory. If the application will send
 a lot of data that needs to be copied, this should be set high. */
@@ -121,7 +121,7 @@ a lot of data that needs to be copied, this should be set high. */
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
    should be set high. */
-#define MEMP_NUM_PBUF			10
+#define MEMP_NUM_PBUF			20
 
 /* MEMP_NUM_RAW_PCB: the number of UDP protocol control blocks. One
    per active RAW "connection". */
@@ -130,43 +130,43 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
    per active UDP "connection". */
-#define MEMP_NUM_UDP_PCB		4
+#define MEMP_NUM_UDP_PCB		8
 
 /* MEMP_NUM_TCP_PCB: the number of simultaneously active TCP
    connections. */
-#define MEMP_NUM_TCP_PCB		5
+#define MEMP_NUM_TCP_PCB		10
 
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
    connections. */
-#define MEMP_NUM_TCP_PCB_LISTEN 4
+#define MEMP_NUM_TCP_PCB_LISTEN 8
 
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
    segments. */
-#define MEMP_NUM_TCP_SEG		20
+#define MEMP_NUM_TCP_SEG		90
 
 /* MEMP_NUM_SYS_TIMEOUT: the number of simultaneously active
    timeouts. */
-#define MEMP_NUM_SYS_TIMEOUT	8
+#define MEMP_NUM_SYS_TIMEOUT	16
 
 /* The following four are used only with the sequential API and can be
    set to 0 if the application only will use the raw API. */
 /* MEMP_NUM_NETBUF: the number of struct netbufs. */
-#define MEMP_NUM_NETBUF         0
+#define MEMP_NUM_NETBUF         10
 
 /* MEMP_NUM_NETCONN: the number of struct netconns. */
-#define MEMP_NUM_NETCONN        5
+#define MEMP_NUM_NETCONN        10
 
 /* MEMP_NUM_TCPIP_MSG_*: the number of struct tcpip_msg, which is used
    for sequential API communication and incoming packets. Used in
    src/api/tcpip.c. */
-#define MEMP_NUM_TCPIP_MSG_API   4
-#define MEMP_NUM_TCPIP_MSG_INPKT 4
+#define MEMP_NUM_TCPIP_MSG_API   8
+#define MEMP_NUM_TCPIP_MSG_INPKT 8
 
-#define MEMP_NUM_ARP_QUEUE		5
+#define MEMP_NUM_ARP_QUEUE		10
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
-#define PBUF_POOL_SIZE			10
+#define PBUF_POOL_SIZE			40
 
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
 #define PBUF_POOL_BUFSIZE		512
@@ -331,5 +331,8 @@ a lot of data that needs to be copied, this should be set high. */
 #define MEM_LIBC_MALLOC 1
 #define mem_free vPortFree
 #define mem_malloc pvPortMalloc*/
+
+extern void microblaze_disable_interrupts(void);
+#define LWIP_PLATFORM_ASSERT( message ) { microblaze_disable_interrupts(); for( ;; ); }
 
 #endif /* __LWIPOPTS_H__ */

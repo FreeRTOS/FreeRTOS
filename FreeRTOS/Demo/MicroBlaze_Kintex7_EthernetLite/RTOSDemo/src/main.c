@@ -386,14 +386,4 @@ const uint32_t ulPrescale = 10, ulTCR2Offset = 24UL;
 }
 /*-----------------------------------------------------------*/
 
-int outbyte( int c )
-{
-	return c;
-}
-
-void xil_printf( const char *pc, ... )
-{
-	( void ) pc;
-}
-
 

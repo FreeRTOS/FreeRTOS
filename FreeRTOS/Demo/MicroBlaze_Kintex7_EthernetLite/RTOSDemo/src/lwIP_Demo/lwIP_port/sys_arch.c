@@ -75,6 +75,7 @@ err_t xReturn = ERR_MEM;
 		SYS_STATS_INC_USED( mbox );
 	}
 
+	configASSERT( xReturn == ERR_OK );
 	return xReturn;
 }
 

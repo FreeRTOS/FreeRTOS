@@ -215,7 +215,7 @@ xemacif_input_thread(struct netif *netif)
 		 * This semaphore is set by the packet receive interrupt
 		 * routine.
 		 */
-		sys_sem_wait(&emac->sem_rx_data_available);
+		sys_arch_sem_wait( &emac->sem_rx_data_available, pdMS_TO_TICKS( 250 ) );
 
 		/* move all received packets to lwIP */
 		xemacif_input(netif);

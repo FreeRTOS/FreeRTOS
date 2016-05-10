@@ -11,14 +11,14 @@
 /*******************************************************************/
 
 _STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x400;
-_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x4;
+_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x400;
 
 /* Define Memories in the system */
 
 MEMORY
 {
-   microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr : ORIGIN = 0x00000050, LENGTH = 0x0003FFB0
-   mig_7series_0 : ORIGIN = 0x80000000, LENGTH = 0x40000000
+   microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr : ORIGIN = 0x50, LENGTH = 0xFFB0
+   mig_7series_0 : ORIGIN = 0x80000000, LENGTH = 0x20000000
 }
 
 /* Specify the default entry point to the program */
@@ -29,19 +29,19 @@ ENTRY(_start)
 
 SECTIONS
 {
-.vectors.reset 0x00000000 : {
+.vectors.reset 0x0 : {
    KEEP (*(.vectors.reset))
 } 
 
-.vectors.sw_exception 0x00000008 : {
+.vectors.sw_exception 0x8 : {
    KEEP (*(.vectors.sw_exception))
 } 
 
-.vectors.interrupt 0x00000010 : {
+.vectors.interrupt 0x10 : {
    KEEP (*(.vectors.interrupt))
 } 
 
-.vectors.hw_exception 0x00000020 : {
+.vectors.hw_exception 0x20 : {
    KEEP (*(.vectors.hw_exception))
 } 
 
@@ -114,7 +114,7 @@ SECTIONS
    *(.data.*)
    *(.gnu.linkonce.d.*)
    __data_end = .;
-} > microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr
+} > mig_7series_0
 
 .got : {
    *(.got)
@@ -184,7 +184,7 @@ SECTIONS
    *(COMMON)
    . = ALIGN(4);
    __bss_end = .;
-} > microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr
+} > mig_7series_0
 
 _SDA_BASE_ = __sdata_start + ((__sbss_end - __sdata_start) / 2 );
 
@@ -198,7 +198,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    _heap_start = .;
    . += _HEAP_SIZE;
    _heap_end = .;
-} > microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr
+} > mig_7series_0
 
 .stack (NOLOAD) : {
    _stack_end = .;
@@ -206,7 +206,7 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
    . = ALIGN(8);
    _stack = .;
    __stack = _stack;
-} > microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr
+} > mig_7series_0
 
 _end = .;
 }

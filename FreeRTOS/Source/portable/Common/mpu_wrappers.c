@@ -348,7 +348,7 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configGENERATE_RUN_TIME_STATS == 1 )
+#if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
 	void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();

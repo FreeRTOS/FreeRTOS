@@ -191,14 +191,27 @@ standard names. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0UL ) { taskENTER_CRITICAL(); for( ;; ); }
+#define configASSERT( x ) if( ( x ) == 0UL ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* LED not used at present, so just increment a variable to keep a count of the
 number of times the LED would otherwise have been toggled. */
 #define configTOGGLE_LED()	ulLED++
 
+/* Definitions for the messages that can be sent to the check task. */
+#define configREG_TEST_1_STILL_EXECUTING	( 0 )
+#define configREG_TEST_2_STILL_EXECUTING	( 1 )
+#define configTIMER_STILL_EXECUTING			( 2 )
+#define configPRINT_SYSTEM_STATUS			( 3 )
+
+/* Parameters that are passed into the third and fourth register check tasks
+solely for the purpose of ensuring parameters are passed into tasks correctly. */
+#define configREG_TEST_TASK_1_PARAMETER	( ( void * ) 0x11112222 )
+#define configREG_TEST_TASK_3_PARAMETER	( ( void * ) 0x12345678 )
+#define configREG_TEST_TASK_4_PARAMETER	( ( void * ) 0x87654321 )
 
 #ifdef __cplusplus
 }
 #endif
+
 #endif /* FREERTOS_CONFIG_H */
+

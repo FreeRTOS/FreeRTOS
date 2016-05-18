@@ -70,15 +70,15 @@
 
 /*
  * This file demonstrates the use of FreeRTOS-MPU.  It creates tasks in both
- * User mode and Privileged mode, and using both the original xTaskCreate() and
- * the new xTaskCreateRestricted() API functions.  The purpose of each created
- * task is documented in the comments above the task function prototype (in
- * this file), with the task behaviour demonstrated and documented within the
- * task function itself.
+ * User mode and Privileged mode, and using both the xTaskCreate() and
+ * xTaskCreateRestricted() API functions.  The purpose of each created task is
+ * documented in the comments above the task function prototype (in this file),
+ * with the task behaviour demonstrated and documented within the task function
+ * itself.
  *
  * In addition a queue is used to demonstrate passing data between
  * protected/restricted tasks as well as passing data between an interrupt and
- * a protected/restricted task, and a software timer is used.
+ * a protected/restricted task.  A software timer is also used.
  */
 
 /* Standard includes. */
@@ -97,43 +97,63 @@
 /* Misc constants. */
 #define mainDONT_BLOCK					( 0 )
 
-/* Definitions for the messages that can be sent to the check task. */
-#define mainREG_TEST_1_STILL_EXECUTING	( 0 )
-#define mainREG_TEST_2_STILL_EXECUTING	( 1 )
-#define mainPRINT_SYSTEM_STATUS			( 2 )
-
 /* GCC specifics. */
 #define mainALIGN_TO( x )				__attribute__((aligned(x)))
 
 /* Hardware register addresses. */
-#define mainVTOR 					( * ( volatile uint32_t * ) 0xE000ED08 )
-#define mainNVIC_AUX_ACTLR			( * ( volatile uint32_t * ) 0xE000E008 )
-#define mainEC_INTERRUPT_CONTROL	( * ( volatile uint32_t * ) 0x4000FC18 )
+#define mainVTOR 						( * ( volatile uint32_t * ) 0xE000ED08 )
 
 /* The period of the timer must be less than the rate at which
-mainPRINT_SYSTEM_STATUS messages are sent to the check task - otherwise the
+configPRINT_SYSTEM_STATUS messages are sent to the check task - otherwise the
 check task will think the timer has stopped. */
-#define mainTIMER_PERIOD			pdMS_TO_TICKS( 200 )
+#define mainTIMER_PERIOD				pdMS_TO_TICKS( 200 )
 
 /* The name of the task that is deleted by the Idle task is used in a couple of
 places, so is #defined. */
-#define mainTASK_TO_DELETE_NAME		"DeleteMe"
+#define mainTASK_TO_DELETE_NAME			"DeleteMe"
 
 /*-----------------------------------------------------------*/
 /* Prototypes for functions that implement tasks. -----------*/
 /*-----------------------------------------------------------*/
 
 /*
- * Prototype for the reg test tasks.  Amongst other things, these fill the CPU
- * registers with known values before checking that the registers still contain
+ * NOTE:  The filling and checking of the registers in the following two tasks
+ *        is only actually performed when the GCC compiler is used.  Use of the
+ *        queue to communicate with the check task is done with all compilers.
+ *
+ * Prototype for the first two register test tasks, which execute in User mode.
+ * Amongst other things, these fill the CPU registers (other than the FPU
+ * registers) with known values before checking that the registers still contain
  * the expected values.  Each of the two tasks use different values so an error
- * in the context switch mechanism can be caught.  Both reg test tasks execute
- * at the idle priority so will get preempted regularly.  Each task repeatedly
- * sends a message on a queue so long as it remains functioning correctly.  If
- * an error is detected within the task the task is simply deleted.
+ * in the context switch mechanism can be caught.  Both tasks execute at the
+ * idle priority so will get preempted regularly.  Each task repeatedly sends a
+ * message on a queue to a 'check' task so the check task knows the register
+ * check task is still executing and has not detected any errors.  If an error
+ * is detected within the task the task is simply deleted so it no longer sends
+ * messages.
+ *
+ * For demonstration and test purposes, both tasks obtain access to the queue
+ * handle in different ways; vRegTest1Implementation() is created in Privileged
+ * mode and copies the queue handle to its local stack before setting itself to
+ * User mode, and vRegTest2Implementation() receives the task handle using its
+ * parameter.
  */
-static void prvRegTest1Task( void *pvParameters );
-static void prvRegTest2Task( void *pvParameters );
+extern void vRegTest1Implementation( void *pvParameters );
+extern void vRegTest2Implementation( void *pvParameters );
+
+/*
+ * The second two register test tasks are similar to the first two, but do test
+ * the floating point registers, execute in Privileged mode, and signal their
+ * execution status to the 'check' task by incrementing a loop counter on each
+ * iteration instead of sending a message on a queue.  The loop counters use a
+ * memory region to which the User mode 'check' task has read access.
+ *
+ * The functions ending 'Implementation' are called by the register check tasks.
+ */
+static void prvRegTest3Task( void *pvParameters );
+extern void vRegTest3Implementation( void );
+static void prvRegTest4Task( void *pvParameters );
+extern void vRegTest4Implementation( void );
 
 /*
  * Prototype for the check task.  The check task demonstrates various features
@@ -142,13 +162,13 @@ static void prvRegTest2Task( void *pvParameters );
  *
  * Two types of messages can be processes:
  *
- * 1) "I'm Alive" messages sent from the reg test tasks, indicating that the
- *    task is still operational.
+ * 1) "I'm Alive" messages sent from the first two register test tasks and a
+ *    software timer callback, as described above.
  *
  * 2) "Print Status commands" sent periodically by the tick hook function (and
- *    therefore from within an interrupt) which command the check task to write
+ *    therefore from within an interrupt) which commands the check task to write
  *    either pass or fail to the terminal, depending on the status of the reg
- *    test tasks.
+ *    test tasks (no write is performed in the simulator!).
  */
 static void prvCheckTask( void *pvParameters );
 
@@ -189,15 +209,16 @@ static void prvSetupHardware( void );
  * is simpler to call from asm code than the normal vTaskDelete() API function.
  * It has the noinline attribute because it is called from asm code.
  */
-static void prvDeleteMe( void ) __attribute__((noinline));
+void vMainDeleteMe( void ) __attribute__((noinline));
 
 /*
- * Used by both reg test tasks to send messages to the check task.  The message
- * just lets the check task know that the task is still functioning correctly.
- * If a reg test task detects an error it will delete itself, and in so doing
- * prevent itself from sending any more 'I'm Alive' messages to the check task.
+ * Used by the first two reg test tasks and a software timer callback function
+ * to send messages to the check task.  The message just lets the check task
+ * know that the tasks and timer are still functioning correctly.  If a reg test
+ * task detects an error it will delete itself, and in so doing prevent itself
+ * from sending any more 'I'm Alive' messages to the check task.
  */
-static void prvSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber );
+void vMainSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber );
 
 /*
  * The check task is created with access to three memory regions (plus its
@@ -218,11 +239,11 @@ static void prvTimerCallback( TimerHandle_t xExpiredTimer );
 /*-----------------------------------------------------------*/
 
 /* The handle of the queue used to communicate between tasks and between tasks
-and interrupts.  Note that this is a file scope variable that falls outside of
+and interrupts.  Note that this is a global scope variable that falls outside of
 any MPU region.  As such other techniques have to be used to allow the tasks
 to gain access to the queue.  See the comments in the tasks themselves for
 further information. */
-static QueueHandle_t xFileScopeCheckQueue = NULL;
+QueueHandle_t xGlobalScopeCheckQueue = NULL;
 
 /* Holds the handle of a task that is deleted in the idle task hook - this is
 done for code coverage test purposes only. */
@@ -231,6 +252,27 @@ static TaskHandle_t xTaskToDelete = NULL;
 /* The timer that periodically sends data to the check task on the queue. */
 static TimerHandle_t xTimer = NULL;
 
+#if defined ( __GNUC__ )
+	extern uint32_t __FLASH_segment_start__[];
+	extern uint32_t __FLASH_segment_end__[];
+	extern uint32_t __SRAM_segment_start__[];
+	extern uint32_t __SRAM_segment_end__[];
+	extern uint32_t __privileged_functions_start__[];
+	extern uint32_t __privileged_functions_end__[];
+	extern uint32_t __privileged_data_start__[];
+	extern uint32_t __privileged_data_end__[];
+	extern uint32_t __privileged_functions_actual_end__[];
+	extern uint32_t __privileged_data_actual_end__[];
+#else
+	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x00UL;
+	const uint32_t * __FLASH_segment_end__ = ( uint32_t * ) 0x00080000UL;
+	const uint32_t * __SRAM_segment_start__ = ( uint32_t * ) 0x20000000UL;
+	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x20008000UL;
+	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x00UL;
+	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x8000UL;
+	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000UL;
+	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20000200UL;
+#endif
 /*-----------------------------------------------------------*/
 /* Data used by the 'check' task. ---------------------------*/
 /*-----------------------------------------------------------*/
@@ -267,13 +309,23 @@ char cReadOnlyArray[ mainREAD_ONLY_ARRAY_SIZE ] mainALIGN_TO( mainREAD_ONLY_ALIG
 #define mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE 128
 char cPrivilegedOnlyAccessArray[ mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE ] mainALIGN_TO( mainPRIVILEGED_ONLY_ACCESS_ALIGN_SIZE );
 
+/* The following two variables are used to communicate the status of the second
+two register check tasks (tasks 3 and 4) to the check task.  If the variables
+keep incrementing, then the register check tasks have not discovered any errors.
+If a variable stops incrementing, then an error has been found.  The variables
+overlay the array that the check task has access to so they can be read by the
+check task without causing a memory fault.  The check task has the highest
+priority so will have finished with the array before the register test tasks
+start to access it. */
+volatile uint32_t *pulRegTest3LoopCounter = ( uint32_t * ) &( cReadWriteArray[ 0 ] ), *pulRegTest4LoopCounter = ( uint32_t * ) &( cReadWriteArray[ 4 ] );
+
 /* Fill in a TaskParameters_t structure to define the check task - this is the
 structure passed to the xTaskCreateRestricted() function. */
 static const TaskParameters_t xCheckTaskParameters =
 {
 	prvCheckTask,								/* pvTaskCode - the function that implements the task. */
-	"Check",									/* pcName			*/
-	mainCHECK_TASK_STACK_SIZE_WORDS,			/* usStackDepth	- defined in words, not bytes. */
+	"Check",									/* pcName */
+	mainCHECK_TASK_STACK_SIZE_WORDS,			/* usStackDepth - defined in words, not bytes. */
 	( void * ) 0x12121212,						/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
 	( tskIDLE_PRIORITY + 1 ) | portPRIVILEGE_BIT,/* uxPriority - this is the highest priority task in the system.  The task is created in privileged mode to demonstrate accessing the privileged only data. */
 	xCheckTaskStack,							/* puxStackBuffer - the array to use as the task stack, as declared above. */
@@ -312,13 +364,13 @@ static portSTACK_TYPE xRegTest2Stack[ mainREG_TEST_STACK_SIZE_WORDS ] mainALIGN_
 /* Fill in a TaskParameters_t structure per reg test task to define the tasks. */
 static const TaskParameters_t xRegTest1Parameters =
 {
-	prvRegTest1Task,						/* pvTaskCode - the function that implements the task. */
-	"RegTest1",								/* pcName			*/
-	mainREG_TEST_STACK_SIZE_WORDS,			/* usStackDepth		*/
-	( void * ) 0x12345678,					/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
-	tskIDLE_PRIORITY | portPRIVILEGE_BIT,	/* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
-	xRegTest1Stack,							/* puxStackBuffer - the array to use as the task stack, as declared above. */
-	{										/* xRegions - this task does not use any non-stack data hence all members are zero. */
+	vRegTest1Implementation,							/* pvTaskCode - the function that implements the task. */
+	"RegTest1",									/* pcName			*/
+	mainREG_TEST_STACK_SIZE_WORDS,				/* usStackDepth		*/
+	( void * ) configREG_TEST_TASK_1_PARAMETER,	/* pvParameters - this value is just to test that the parameter is being passed into the task correctly. */
+	tskIDLE_PRIORITY | portPRIVILEGE_BIT,		/* uxPriority - note that this task is created with privileges to demonstrate one method of passing a queue handle into the task. */
+	xRegTest1Stack,								/* puxStackBuffer - the array to use as the task stack, as declared above. */
+	{											/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
 		{ 0x00,				0x00,			0x00 },
 		{ 0x00,				0x00,			0x00 },
@@ -329,7 +381,7 @@ static const TaskParameters_t xRegTest1Parameters =
 
 static TaskParameters_t xRegTest2Parameters =
 {
-	prvRegTest2Task,				/* pvTaskCode - the function that implements the task. */
+	vRegTest2Implementation,				/* pvTaskCode - the function that implements the task. */
 	"RegTest2",						/* pcName			*/
 	mainREG_TEST_STACK_SIZE_WORDS,	/* usStackDepth		*/
 	( void * ) NULL,				/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
@@ -342,8 +394,6 @@ static TaskParameters_t xRegTest2Parameters =
 		{ 0x00,				0x00,			0x00 }
 	}
 };
-
-/*-----------------------------------------------------------*/
 
 /*-----------------------------------------------------------*/
 /* Configures the task that is deleted. ---------------------*/
@@ -363,10 +413,10 @@ static portSTACK_TYPE xDeleteTaskStack[ mainDELETE_TASK_STACK_SIZE_WORDS ] mainA
 static TaskParameters_t xTaskToDeleteParameters =
 {
 	prvTaskToDelete,					/* pvTaskCode - the function that implements the task. */
-	mainTASK_TO_DELETE_NAME,			/* pcName			*/
-	mainDELETE_TASK_STACK_SIZE_WORDS,	/* usStackDepth		*/
-	( void * ) NULL,					/* pvParameters	- this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
-	tskIDLE_PRIORITY + 1,				/* uxPriority		*/
+	mainTASK_TO_DELETE_NAME,			/* pcName */
+	mainDELETE_TASK_STACK_SIZE_WORDS,	/* usStackDepth */
+	( void * ) NULL,					/* pvParameters - this task uses the parameter to pass in a queue handle, but the queue is not created yet. */
+	tskIDLE_PRIORITY + 1,				/* uxPriority */
 	xDeleteTaskStack,					/* puxStackBuffer - the array to use as the task stack, as declared above. */
 	{									/* xRegions - this task does not use any non-stack data hence all members are zero. */
 		/* Base address		Length		Parameters */
@@ -378,28 +428,32 @@ static TaskParameters_t xTaskToDeleteParameters =
 
 /*-----------------------------------------------------------*/
 
+volatile uint32_t ul1 = 0x123, ul2 = 0;
+
 int main( void )
 {
+	configASSERT( ul1 == 0x123 );
+	configASSERT( ul2 == 0 );
 	prvSetupHardware();
 
 	/* Create the queue used to pass "I'm alive" messages to the check task. */
-	xFileScopeCheckQueue = xQueueCreate( 1, sizeof( uint32_t ) );
+	xGlobalScopeCheckQueue = xQueueCreate( 1, sizeof( uint32_t ) );
 
 	/* One check task uses the task parameter to receive the queue handle.
 	This allows the file scope variable to be accessed from within the task.
 	The pvParameters member of xRegTest2Parameters can only be set after the
 	queue has been created so is set here. */
-	xRegTest2Parameters.pvParameters = xFileScopeCheckQueue;
+	xRegTest2Parameters.pvParameters = xGlobalScopeCheckQueue;
 
-	/* Create the three test tasks.  Handles to the created tasks are not
-	required, hence the second parameter is NULL. */
+	/* Create three test tasks.  Handles to the created tasks are not required,
+	hence the second parameter is NULL. */
 	xTaskCreateRestricted( &xRegTest1Parameters, NULL );
     xTaskCreateRestricted( &xRegTest2Parameters, NULL );
 	xTaskCreateRestricted( &xCheckTaskParameters, NULL );
 
 	/* Create a task that does nothing but ensure some of the MPU API functions
 	can be called correctly, then get deleted.  This is done for code coverage
-	test purposes only.  The task's handle is saved in xTaskToDelete so it can 
+	test purposes only.  The task's handle is saved in xTaskToDelete so it can
 	get deleted in the idle task hook. */
 	xTaskCreateRestricted( &xTaskToDeleteParameters, &xTaskToDelete );
 
@@ -421,6 +475,11 @@ int main( void )
 					NULL							/* Handle. */
 				);
 
+	/* Create the third and fourth register check tasks, as described at the top
+	of this file. */
+	xTaskCreate( prvRegTest3Task, "Reg3", configMINIMAL_STACK_SIZE, configREG_TEST_TASK_3_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTest4Task, "Reg4", configMINIMAL_STACK_SIZE, configREG_TEST_TASK_4_PARAMETER, tskIDLE_PRIORITY, NULL );
+
 	/* Create and start the software timer. */
 	xTimer = xTimerCreate( "Timer", 			/* Test name for the timer. */
 							mainTIMER_PERIOD, 	/* Period of the timer. */
@@ -436,7 +495,6 @@ int main( void )
 	/* Will only get here if there was insufficient memory to create the idle
 	task. */
 	for( ;; );
-	return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -446,12 +504,21 @@ static void prvCheckTask( void *pvParameters )
 queue variable.  Take a stack copy of this before the task is set into user
 mode.  Once that task is in user mode the file scope queue variable will no
 longer be accessible but the stack copy will. */
-QueueHandle_t xQueue = xFileScopeCheckQueue;
+QueueHandle_t xQueue = xGlobalScopeCheckQueue;
 int32_t lMessage;
-uint32_t ulStillAliveCounts[ 2 ] = { 0 };
+uint32_t ulStillAliveCounts[ 3 ] = { 0 };
 const char *pcStatusMessage = "PASS\r\n";
-volatile uint32_t ulStatus = pdPASS;
+uint32_t ulLastRegTest3CountValue = 0, ulLastRegTest4Value = 0;
 
+/* The register test tasks that also test the floating point registers increment
+a counter on each iteration of their loop.  The counters are inside the array
+that this task has access to. */
+volatile uint32_t *pulOverlaidCounter3 = ( uint32_t * ) &( cReadWriteArray[ 0 ] ), *pulOverlaidCounter4 = ( uint32_t * ) &( cReadWriteArray[ 4 ] );
+
+/* ulCycleCount is incremented on each cycle of the check task.  It can be 
+viewed updating in the Keil watch window as the simulator does not print to
+the ITM port. */
+volatile uint32_t ulCycleCount = 0;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -460,8 +527,9 @@ volatile uint32_t ulStatus = pdPASS;
 	The task privilege level is set down to user mode within this function. */
 	prvTestMemoryRegions();
 
-	/* Tests are done so lower the privilege status. */
-	portSWITCH_TO_USER_MODE();
+	/* Clear overlaid reg test counters before entering the loop below. */
+	*pulOverlaidCounter3 = 0UL;
+	*pulOverlaidCounter4 = 0UL;
 
 	/* This loop performs the main function of the task, which is blocking
 	on a message queue then processing each message as it arrives. */
@@ -472,42 +540,61 @@ volatile uint32_t ulStatus = pdPASS;
 
 		switch( lMessage )
 		{
-			case mainREG_TEST_1_STILL_EXECUTING	:
-					/* Message from task 1, so task 1 must still be executing. */
-					( ulStillAliveCounts[ 0 ] )++;
+			case configREG_TEST_1_STILL_EXECUTING	:
+			case configREG_TEST_2_STILL_EXECUTING	:
+			case configTIMER_STILL_EXECUTING		:
+					/* Message from the first or second register check task, or
+					the timer callback function.  Increment the count of the
+					number of times the message source has sent the message as
+					the message source must still be executed. */
+					( ulStillAliveCounts[ lMessage ] )++;
 					break;
 
-			case mainREG_TEST_2_STILL_EXECUTING	:
-					/* Message from task 2, so task 2 must still be executing. */
-					( ulStillAliveCounts[ 1 ] )++;
-					break;
-
-			case mainPRINT_SYSTEM_STATUS		:
+			case configPRINT_SYSTEM_STATUS		:
 					/* Message from tick hook, time to print out the system
-					status.  If messages has stopped arriving from either reg
-					test task then the status must be set to fail. */
-					if( ( ulStillAliveCounts[ 0 ] == 0 ) || ( ulStillAliveCounts[ 1 ] == 0 )  )
+					status.  If messages have stopped arriving from either of
+					the first two reg test task or the timer callback then the
+					status must be set to fail. */
+					if( ( ulStillAliveCounts[ 0 ] == 0 ) || ( ulStillAliveCounts[ 1 ] == 0 ) || ( ulStillAliveCounts[ 2 ] == 0 ) )
 					{
 						/* One or both of the test tasks are no longer sending
 						'still alive' messages. */
 						pcStatusMessage = "FAIL\r\n";
-
-						/* ulStatus can be viewed (live) in the Keil watch window. */
-						ulStatus = pdFAIL;
-						( void ) ulStatus;
+					}
+					else
+					{
+						/* Reset the count of 'still alive' messages. */
+						memset( ( void * ) ulStillAliveCounts, 0x00, sizeof( ulStillAliveCounts ) );
 					}
 
-					/**** print pcStatusMessage here. ****/
-					( void ) pcStatusMessage;
+					/* Check that the register test 3 task is still incrementing
+					its counter, and therefore still running. */
+					if( ulLastRegTest3CountValue == *pulOverlaidCounter3 )
+					{
+						pcStatusMessage = "FAIL\r\n";
+					}
+					ulLastRegTest3CountValue = *pulOverlaidCounter3;
 
-					/* Reset the count of 'still alive' messages. */
-					memset( ulStillAliveCounts, 0x00, sizeof( ulStillAliveCounts ) );
+					/* Check that the register test 4 task is still incrementing
+					its counter, and therefore still running. */
+					if( ulLastRegTest4Value == *pulOverlaidCounter4 )
+					{
+						pcStatusMessage = "FAIL\r\n";
+					}
+					ulLastRegTest4Value = *pulOverlaidCounter4;
+
+					/**** Print pcStatusMessage here. ****/
+					( void ) pcStatusMessage;
+					
+					/* The cycle count can be viewed updating in the Keil watch
+					window if ITM printf is not being used. */
+					ulCycleCount++;
 					break;
 
 		default :
 					/* Something unexpected happened.  Delete this task so the
 					error is apparent (no output will be displayed). */
-					prvDeleteMe();
+					vMainDeleteMe();
 					break;
 		}
 	}
@@ -527,7 +614,7 @@ char cTemp;
 	{
 		/* Something unexpected happened.  Delete this task so the error is
 		apparent (no output will be displayed). */
-		prvDeleteMe();
+		vMainDeleteMe();
 	}
 
 	/* Writing off the end of the RAM allocated to this task will *NOT* cause a
@@ -550,7 +637,7 @@ char cTemp;
 		{
 			/* Something unexpected happened.  Delete this task so the error is
 			apparent (no output will be displayed). */
-			prvDeleteMe();
+			vMainDeleteMe();
 		}
 	}
 
@@ -582,150 +669,6 @@ char cTemp;
 	/* xCheckTaskStack[ mainCHECK_TASK_STACK_SIZE_WORDS ] = 0; */
 
 	( void ) cTemp;
-}
-/*-----------------------------------------------------------*/
-
-static void prvRegTest1Task( void *pvParameters )
-{
-/* This task is created in privileged mode so can access the file scope
-queue variable.  Take a stack copy of this before the task is set into user
-mode.  Once this task is in user mode the file scope queue variable will no
-longer be accessible but the stack copy will. */
-QueueHandle_t xQueue = xFileScopeCheckQueue;
-
-	/* Now the queue handle has been obtained the task can switch to user
-	mode.  This is just one method of passing a handle into a protected
-	task, the other	reg test task uses the task parameter instead. */
-	portSWITCH_TO_USER_MODE();
-
-	/* First check that the parameter value is as expected. */
-	if( pvParameters != ( void * ) 0x12345678 )
-	{
-		/* Error detected.  Delete the task so it stops communicating with
-		the check task. */
-		prvDeleteMe();
-	}
-
-
-	for( ;; )
-	{
-		/* This task tests the kernel context switch mechanism by reading and
-		writing directly to registers - which requires the test to be written
-		in assembly code. */
-		__asm volatile
-		(
-			"		MOV	R4, #104			\n" /* Set registers to a known value.  R0 to R1 are done in the loop below. */
-			"		MOV	R5, #105			\n"
-			"		MOV	R6, #106			\n"
-			"		MOV	R8, #108			\n"
-			"		MOV	R9, #109			\n"
-			"		MOV	R10, #110			\n"
-			"		MOV	R11, #111			\n"
-			"reg1loop:						\n"
-			"		MOV	R0, #100			\n" /* Set the scratch registers to known values - done inside the loop as they get clobbered. */
-			"		MOV	R1, #101			\n"
-			"		MOV	R2, #102			\n"
-			"		MOV R3, #103			\n"
-			"		MOV	R12, #112			\n"
-			"		SVC #1					\n" /* Yield just to increase test coverage. */
-			"		CMP	R0, #100			\n" /* Check all the registers still contain their expected values. */
-			"		BNE	prvDeleteMe			\n" /* Value was not as expected, delete the task so it stops communicating with the check task. */
-			"		CMP	R1, #101			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R2, #102			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP R3, #103			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R4, #104			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R5, #105			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R6, #106			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R8, #108			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R9, #109			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R10, #110			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R11, #111			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R12, #112			\n"
-			"		BNE	prvDeleteMe			\n"
-			:::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
-		);
-
-		/* Send mainREG_TEST_1_STILL_EXECUTING to the check task to indicate that this
-		task is still functioning. */
-		prvSendImAlive( xQueue, mainREG_TEST_1_STILL_EXECUTING );
-
-		/* Go back to check all the register values again. */
-		__asm volatile( "		B reg1loop	" );
-	}
-}
-/*-----------------------------------------------------------*/
-
-static void prvRegTest2Task( void *pvParameters )
-{
-/* The queue handle is passed in as the task parameter.  This is one method of
-passing data into a protected task, the other reg test task uses a different
-method. */
-QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
-
-	for( ;; )
-	{
-		/* This task tests the kernel context switch mechanism by reading and
-		writing directly to registers - which requires the test to be written
-		in assembly code. */
-		__asm volatile
-		(
-			"		MOV	R4, #4				\n" /* Set registers to a known value.  R0 to R1 are done in the loop below. */
-			"		MOV	R5, #5				\n"
-			"		MOV	R6, #6				\n"
-			"		MOV	R8, #8				\n" /* Frame pointer is omitted as it must not be changed. */
-			"		MOV	R9, #9				\n"
-			"		MOV	R10, 10				\n"
-			"		MOV	R11, #11			\n"
-			"reg2loop:						\n"
-			"		MOV	R0, #13				\n" /* Set the scratch registers to known values - done inside the loop as they get clobbered. */
-			"		MOV	R1, #1				\n"
-			"		MOV	R2, #2				\n"
-			"		MOV R3, #3				\n"
-			"		MOV	R12, #12			\n"
-			"		CMP	R0, #13				\n" /* Check all the registers still contain their expected values. */
-			"		BNE	prvDeleteMe			\n" /* Value was not as expected, delete the task so it stops communicating with the check task */
-			"		CMP	R1, #1				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R2, #2				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP R3, #3				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R4, #4				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R5, #5				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R6, #6				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R8, #8				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R9, #9				\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R10, #10			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R11, #11			\n"
-			"		BNE	prvDeleteMe			\n"
-			"		CMP	R12, #12			\n"
-			"		BNE	prvDeleteMe			\n"
-			:::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
-		);
-
-		/* Send mainREG_TEST_2_STILL_EXECUTING to the check task to indicate that this
-		task is still functioning. */
-		prvSendImAlive( xQueue, mainREG_TEST_2_STILL_EXECUTING );
-
-		/* Go back to check all the register values again. */
-		__asm volatile( "		B reg2loop	" );
-	}
 }
 /*-----------------------------------------------------------*/
 
@@ -864,12 +807,7 @@ static void prvTaskToDelete( void *pvParameters )
 
 void vApplicationIdleHook( void )
 {
-extern uint32_t __SRAM_segment_end__[];
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
-extern uint32_t __FLASH_segment_start__[];
-extern uint32_t __FLASH_segment_end__[];
-volatile uint32_t *pul;
+volatile const uint32_t *pul;
 volatile uint32_t ulReadData;
 
 	/* The idle task, and therefore this function, run in Supervisor mode and
@@ -916,20 +854,14 @@ volatile uint32_t ulReadData;
 
 static void prvOldStyleUserModeTask( void *pvParameters )
 {
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
-extern uint32_t __SRAM_segment_end__[];
-extern uint32_t __privileged_functions_end__[];
-extern uint32_t __FLASH_segment_start__[];
-extern uint32_t __FLASH_segment_end__[];
 /*const volatile uint32_t *pulStandardPeripheralRegister = ( volatile uint32_t * ) 0x40000000;*/
-volatile uint32_t *pul;
+volatile const uint32_t *pul;
 volatile uint32_t ulReadData;
 
 /* The following lines are commented out to prevent the unused variable
 compiler warnings when the tests that use the variable are also commented out. */
-/*extern uint32_t __privileged_functions_start__[];
-const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014;*/
+/* extern uint32_t __privileged_functions_start__[]; */
+/* const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014; */
 
 	( void ) pvParameters;
 
@@ -987,14 +919,7 @@ const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0
 
 static void prvOldStylePrivilegedModeTask( void *pvParameters )
 {
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
-extern uint32_t __SRAM_segment_end__[];
-extern uint32_t __privileged_functions_start__[];
-extern uint32_t __privileged_functions_end__[];
-extern uint32_t __FLASH_segment_start__[];
-extern uint32_t __FLASH_segment_end__[];
-volatile uint32_t *pul;
+volatile const uint32_t *pul;
 volatile uint32_t ulReadData;
 const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0xe000e014; /* Systick */
 /*const volatile uint32_t *pulStandardPeripheralRegister = ( volatile uint32_t * ) 0x40000000;*/
@@ -1044,13 +969,13 @@ const volatile uint32_t *pulSystemPeripheralRegister = ( volatile uint32_t * ) 0
 }
 /*-----------------------------------------------------------*/
 
-static void prvDeleteMe( void )
+void vMainDeleteMe( void )
 {
 	vTaskDelete( NULL );
 }
 /*-----------------------------------------------------------*/
 
-static void prvSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber )
+void vMainSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber )
 {
 	if( xHandle != NULL )
 	{
@@ -1066,9 +991,9 @@ static void prvSetupHardware( void )
 
 void vApplicationTickHook( void )
 {
-static uint32_t ulCallCount;
-const uint32_t ulCallsBetweenSends = 5000UL / configTICK_RATE_HZ;
-const uint32_t ulMessage = mainPRINT_SYSTEM_STATUS;
+static uint32_t ulCallCount = 0;
+const uint32_t ulCallsBetweenSends = pdMS_TO_TICKS( 1000 );
+const uint32_t ulMessage = configPRINT_SYSTEM_STATUS;
 portBASE_TYPE xDummy;
 
 	/* If configUSE_TICK_HOOK is set to 1 then this function will get called
@@ -1087,8 +1012,8 @@ portBASE_TYPE xDummy;
 
 		This is running in an ISR so has to use the "FromISR" version of
 		xQueueSend().  Because it is in an ISR it is running with privileges
-		so can access xFileScopeCheckQueue directly. */
-		xQueueSendFromISR( xFileScopeCheckQueue, &ulMessage, &xDummy );
+		so can access xGlobalScopeCheckQueue directly. */
+		xQueueSendFromISR( xGlobalScopeCheckQueue, &ulMessage, &xDummy );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -1112,75 +1037,6 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-void hard_fault_handler( uint32_t * hardfault_args )
-{
-volatile uint32_t stacked_r0;
-volatile uint32_t stacked_r1;
-volatile uint32_t stacked_r2;
-volatile uint32_t stacked_r3;
-volatile uint32_t stacked_r12;
-volatile uint32_t stacked_lr;
-volatile uint32_t stacked_pc;
-volatile uint32_t stacked_psr;
-
-	stacked_r0 = ((uint32_t) hardfault_args[ 0 ]);
-	stacked_r1 = ((uint32_t) hardfault_args[ 1 ]);
-	stacked_r2 = ((uint32_t) hardfault_args[ 2 ]);
-	stacked_r3 = ((uint32_t) hardfault_args[ 3 ]);
-
-	stacked_r12 = ((uint32_t) hardfault_args[ 4 ]);
-	stacked_lr = ((uint32_t) hardfault_args[ 5 ]);
-	stacked_pc = ((uint32_t) hardfault_args[ 6 ]);
-	stacked_psr = ((uint32_t) hardfault_args[ 7 ]);
-
-	/* Inspect stacked_pc to locate the offending instruction. */
-	for( ;; );
-
-	( void ) stacked_psr;
-	( void ) stacked_pc;
-	( void ) stacked_lr;
-	( void ) stacked_r12;
-    ( void ) stacked_r0;
-    ( void ) stacked_r1;
-    ( void ) stacked_r2;
-    ( void ) stacked_r3;
-}
-/*-----------------------------------------------------------*/
-
-void HardFault_Handler( void ) __attribute__((naked));
-void HardFault_Handler( void )
-{
-	__asm volatile
-	(
-		" tst lr, #4										\n"
-		" ite eq											\n"
-		" mrseq r0, msp										\n"
-		" mrsne r0, psp										\n"
-		" ldr r1, [r0, #24]									\n"
-		" ldr r2, handler_address_const						\n"
-		" bx r2												\n"
-		" handler_address_const: .word hard_fault_handler	\n"
-	);
-}
-/*-----------------------------------------------------------*/
-
-void MemManage_Handler( void ) __attribute__((naked));
-void MemManage_Handler( void )
-{
-	__asm volatile
-	(
-		" tst lr, #4										\n"
-		" ite eq											\n"
-		" mrseq r0, msp										\n"
-		" mrsne r0, psp										\n"
-		" ldr r1, [r0, #24]									\n"
-		" ldr r2, handler2_address_const					\n"
-		" bx r2												\n"
-		" handler2_address_const: .word hard_fault_handler	\n"
-	);
-}
-/*-----------------------------------------------------------*/
-
 static void prvTimerCallback( TaskHandle_t xExpiredTimer )
 {
 uint32_t ulCount;
@@ -1192,6 +1048,9 @@ uint32_t ulCount;
 	/* Increment the count, and save it back into the timer's ID. */
 	ulCount++;
 	vTimerSetTimerID( xTimer, ( void * ) ulCount );
+
+	/* Let the check task know the timer is still running. */
+	vMainSendImAlive( xGlobalScopeCheckQueue, configTIMER_STILL_EXECUTING );
 }
 /*-----------------------------------------------------------*/
 
@@ -1243,3 +1102,41 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
 	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
+/*-----------------------------------------------------------*/
+
+static void prvRegTest3Task( void *pvParameters )
+{
+	/* Although the regtest task is written in assembler, its entry point is
+	written in C for convenience of checking the task parameter is being passed
+	in correctly. */
+	if( pvParameters == configREG_TEST_TASK_3_PARAMETER )
+	{
+		/* Start the part of the test that is written in assembler. */
+		vRegTest3Implementation();
+	}
+
+	/* The following line will only execute if the task parameter is found to
+	be incorrect.  The check task will detect that the regtest loop counter is
+	not being incremented and flag an error. */
+	vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvRegTest4Task( void *pvParameters )
+{
+	/* Although the regtest task is written in assembler, its entry point is
+	written in C for convenience of checking the task parameter is being passed
+	in correctly. */
+	if( pvParameters == configREG_TEST_TASK_4_PARAMETER )
+	{
+		/* Start the part of the test that is written in assembler. */
+		vRegTest4Implementation();
+	}
+
+	/* The following line will only execute if the task parameter is found to
+	be incorrect.  The check task will detect that the regtest loop counter is
+	not being incremented and flag an error. */
+	vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+

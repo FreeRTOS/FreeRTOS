@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0rc2 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,6 +67,10 @@
     1 tab == 4 spaces!
 */
 
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "queue.h"
+
 /*
  * "Reg test" tasks - These fill the registers with known values, then check
  * that each register maintains its expected value for the lifetime of the
@@ -76,14 +80,178 @@
  * switching mechanism.
  */
 
-void vRegTest1Implementation( void ) __attribute__ ((naked));
-void vRegTest2Implementation( void ) __attribute__ ((naked));
+void vRegTest1Implementation( void *pvParameters );
+void vRegTest2Implementation( void *pvParameters );
+void vRegTest3Implementation( void ) __attribute__ ((naked));
+void vRegTest4Implementation( void ) __attribute__ ((naked));
 
-void vRegTest1Implementation( void )
+/*
+ * Used as an easy way of deleting a task from inline assembly.
+ */
+extern void vMainDeleteMe( void ) __attribute__((noinline));
+
+/*
+ * Used by the first two reg test tasks and a software timer callback function
+ * to send messages to the check task.  The message just lets the check task
+ * know that the tasks and timer are still functioning correctly.  If a reg test
+ * task detects an error it will delete itself, and in so doing prevent itself
+ * from sending any more 'I'm Alive' messages to the check task.
+ */
+extern void vMainSendImAlive( QueueHandle_t xHandle, uint32_t ulTaskNumber );
+
+/* The queue used to send a message to the check task. */
+extern QueueHandle_t xGlobalScopeCheckQueue;
+
+/*-----------------------------------------------------------*/
+
+void vRegTest1Implementation( void *pvParameters )
+{
+/* This task is created in privileged mode so can access the file scope
+queue variable.  Take a stack copy of this before the task is set into user
+mode.  Once this task is in user mode the file scope queue variable will no
+longer be accessible but the stack copy will. */
+QueueHandle_t xQueue = xGlobalScopeCheckQueue;
+
+	/* Now the queue handle has been obtained the task can switch to user
+	mode.  This is just one method of passing a handle into a protected
+	task, the other	reg test task uses the task parameter instead. */
+	portSWITCH_TO_USER_MODE();
+
+	/* First check that the parameter value is as expected. */
+	if( pvParameters != ( void * ) configREG_TEST_TASK_1_PARAMETER )
+	{
+		/* Error detected.  Delete the task so it stops communicating with
+		the check task. */
+		vMainDeleteMe();
+	}
+
+	for( ;; )
+	{
+		/* This task tests the kernel context switch mechanism by reading and
+		writing directly to registers - which requires the test to be written
+		in assembly code. */
+		__asm volatile
+		(
+			"		MOV	R4, #104			\n" /* Set registers to a known value.  R0 to R1 are done in the loop below. */
+			"		MOV	R5, #105			\n"
+			"		MOV	R6, #106			\n"
+			"		MOV	R8, #108			\n"
+			"		MOV	R9, #109			\n"
+			"		MOV	R10, #110			\n"
+			"		MOV	R11, #111			\n"
+			"reg1loop:						\n"
+			"		MOV	R0, #100			\n" /* Set the scratch registers to known values - done inside the loop as they get clobbered. */
+			"		MOV	R1, #101			\n"
+			"		MOV	R2, #102			\n"
+			"		MOV R3, #103			\n"
+			"		MOV	R12, #112			\n"
+			"		SVC #1					\n" /* Yield just to increase test coverage. */
+			"		CMP	R0, #100			\n" /* Check all the registers still contain their expected values. */
+			"		BNE	vMainDeleteMe		\n" /* Value was not as expected, delete the task so it stops communicating with the check task. */
+			"		CMP	R1, #101			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R2, #102			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP R3, #103			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R4, #104			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R5, #105			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R6, #106			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R8, #108			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R9, #109			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R10, #110			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R11, #111			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R12, #112			\n"
+			"		BNE	vMainDeleteMe		\n"
+			:::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
+		);
+
+		/* Send configREG_TEST_1_STILL_EXECUTING to the check task to indicate that this
+		task is still functioning. */
+		vMainSendImAlive( xQueue, configREG_TEST_1_STILL_EXECUTING );
+
+		/* Go back to check all the register values again. */
+		__asm volatile( "		B reg1loop	" );
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vRegTest2Implementation( void *pvParameters )
+{
+/* The queue handle is passed in as the task parameter.  This is one method of
+passing data into a protected task, the other reg test task uses a different
+method. */
+QueueHandle_t xQueue = ( QueueHandle_t ) pvParameters;
+
+	for( ;; )
+	{
+		/* This task tests the kernel context switch mechanism by reading and
+		writing directly to registers - which requires the test to be written
+		in assembly code. */
+		__asm volatile
+		(
+			"		MOV	R4, #4				\n" /* Set registers to a known value.  R0 to R1 are done in the loop below. */
+			"		MOV	R5, #5				\n"
+			"		MOV	R6, #6				\n"
+			"		MOV	R8, #8				\n" /* Frame pointer is omitted as it must not be changed. */
+			"		MOV	R9, #9				\n"
+			"		MOV	R10, 10				\n"
+			"		MOV	R11, #11			\n"
+			"reg2loop:						\n"
+			"		MOV	R0, #13				\n" /* Set the scratch registers to known values - done inside the loop as they get clobbered. */
+			"		MOV	R1, #1				\n"
+			"		MOV	R2, #2				\n"
+			"		MOV R3, #3				\n"
+			"		MOV	R12, #12			\n"
+			"		CMP	R0, #13				\n" /* Check all the registers still contain their expected values. */
+			"		BNE	vMainDeleteMe		\n" /* Value was not as expected, delete the task so it stops communicating with the check task */
+			"		CMP	R1, #1				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R2, #2				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP R3, #3				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R4, #4				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R5, #5				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R6, #6				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R8, #8				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R9, #9				\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R10, #10			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R11, #11			\n"
+			"		BNE	vMainDeleteMe		\n"
+			"		CMP	R12, #12			\n"
+			"		BNE	vMainDeleteMe		\n"
+			:::"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r8", "r9", "r10", "r11", "r12"
+		);
+
+		/* Send configREG_TEST_2_STILL_EXECUTING to the check task to indicate that this
+		task is still functioning. */
+		vMainSendImAlive( xQueue, configREG_TEST_2_STILL_EXECUTING );
+
+		/* Go back to check all the register values again. */
+		__asm volatile( "		B reg2loop	" );
+	}
+}
+/*-----------------------------------------------------------*/
+
+void vRegTest3Implementation( void )
 {
 	__asm volatile
 	(
-		".extern ulRegTest1LoopCounter \n"
+		".extern pulRegTest3LoopCounter \n"
 		"/* Fill the core registers with known values. */		\n"
 		"mov	r0, #100			\n"
 		"mov	r1, #101			\n"
@@ -244,7 +412,8 @@ void vRegTest1Implementation( void )
 
 		"/* Everything passed, increment the loop counter. */	\n"
 		"push 	{ r0-r1 }			\n"
-		"ldr	r0, =ulRegTest1LoopCounter	\n"
+		"ldr	r0, =pulRegTest3LoopCounter	\n"
+		"ldr	r0, [r0]			\n"
 		"ldr 	r1, [r0]			\n"
 		"adds 	r1, r1, #1			\n"
 		"str 	r1, [r0]			\n"
@@ -262,11 +431,11 @@ void vRegTest1Implementation( void )
 }
 /*-----------------------------------------------------------*/
 
-void vRegTest2Implementation( void )
+void vRegTest4Implementation( void )
 {
 	__asm volatile
 	(
-		".extern ulRegTest2LoopCounter \n"
+		".extern pulRegTest4LoopCounter \n"
 		"/* Set all the core registers to known values. */	\n"
 		"mov 	r0, #-1				\n"
 		"mov 	r1, #1				\n"
@@ -427,22 +596,18 @@ void vRegTest2Implementation( void )
 		"cmp	r12, #12			\n"
 		"bne	reg2_error_loop		\n"
 
-		"/* Increment the loop counter to indicate this test is still functioning	\n"
-		"correctly. */				\n"
+		"/* Increment the loop counter so the check task knows this task is \n"
+		"still running. */			\n"
 		"push	{ r0-r1 }			\n"
-		"ldr	r0, =ulRegTest2LoopCounter	\n"
+		"ldr	r0, =pulRegTest4LoopCounter	\n"
+		"ldr	r0, [r0]			\n"
 		"ldr 	r1, [r0]			\n"
 		"adds 	r1, r1, #1			\n"
 		"str 	r1, [r0]			\n"
+		"pop { r0-r1 }				\n"
 
 		"/* Yield to increase test coverage. */			\n"
-		"movs 	r0, #0x01			\n"
-		"ldr 	r1, =0xe000ed04 /*NVIC_INT_CTRL */		\n"
-		"lsl 	r0, r0, #28 /* Shift to PendSV bit */	\n"
-		"str 	r0, [r1]			\n"
-		"dsb						\n"
-
-		"pop { r0-r1 }				\n"
+		"SVC #1						\n"
 
 		"/* Start again. */			\n"
 		"b reg2_loop				\n"
@@ -454,4 +619,74 @@ void vRegTest2Implementation( void )
 	); /* __asm volatile */
 }
 /*-----------------------------------------------------------*/
+
+/* Fault handlers are here for convenience as they use compiler specific syntax
+and this file is specific to the GCC compiler. */
+void hard_fault_handler( uint32_t * hardfault_args )
+{
+volatile uint32_t stacked_r0;
+volatile uint32_t stacked_r1;
+volatile uint32_t stacked_r2;
+volatile uint32_t stacked_r3;
+volatile uint32_t stacked_r12;
+volatile uint32_t stacked_lr;
+volatile uint32_t stacked_pc;
+volatile uint32_t stacked_psr;
+
+	stacked_r0 = ((uint32_t) hardfault_args[ 0 ]);
+	stacked_r1 = ((uint32_t) hardfault_args[ 1 ]);
+	stacked_r2 = ((uint32_t) hardfault_args[ 2 ]);
+	stacked_r3 = ((uint32_t) hardfault_args[ 3 ]);
+
+	stacked_r12 = ((uint32_t) hardfault_args[ 4 ]);
+	stacked_lr = ((uint32_t) hardfault_args[ 5 ]);
+	stacked_pc = ((uint32_t) hardfault_args[ 6 ]);
+	stacked_psr = ((uint32_t) hardfault_args[ 7 ]);
+
+	/* Inspect stacked_pc to locate the offending instruction. */
+	for( ;; );
+
+	( void ) stacked_psr;
+	( void ) stacked_pc;
+	( void ) stacked_lr;
+	( void ) stacked_r12;
+    ( void ) stacked_r0;
+    ( void ) stacked_r1;
+    ( void ) stacked_r2;
+    ( void ) stacked_r3;
+}
+/*-----------------------------------------------------------*/
+
+void HardFault_Handler( void ) __attribute__((naked));
+void HardFault_Handler( void )
+{
+	__asm volatile
+	(
+		" tst lr, #4										\n"
+		" ite eq											\n"
+		" mrseq r0, msp										\n"
+		" mrsne r0, psp										\n"
+		" ldr r1, [r0, #24]									\n"
+		" ldr r2, handler_address_const						\n"
+		" bx r2												\n"
+		" handler_address_const: .word hard_fault_handler	\n"
+	);
+}
+/*-----------------------------------------------------------*/
+
+void MemManage_Handler( void ) __attribute__((naked));
+void MemManage_Handler( void )
+{
+	__asm volatile
+	(
+		" tst lr, #4										\n"
+		" ite eq											\n"
+		" mrseq r0, msp										\n"
+		" mrsne r0, psp										\n"
+		" ldr r1, [r0, #24]									\n"
+		" ldr r2, handler2_address_const					\n"
+		" bx r2												\n"
+		" handler2_address_const: .word hard_fault_handler	\n"
+	);
+}/*-----------------------------------------------------------*/
 

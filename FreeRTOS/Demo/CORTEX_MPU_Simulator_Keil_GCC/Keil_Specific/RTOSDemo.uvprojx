@@ -7,9 +7,9 @@
 
   <Targets>
     <Target>
-      <TargetName>RTOSDemo_GCC_MPU</TargetName>
-      <ToolsetNumber>0x3</ToolsetNumber>
-      <ToolsetName>ARM-GNU</ToolsetName>
+      <TargetName>RTOSDemo</TargetName>
+      <ToolsetNumber>0x4</ToolsetNumber>
+      <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
@@ -51,9 +51,9 @@
           <OutputName>RTOSDemo</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -144,9 +144,9 @@
           <pFcArmRoot></pFcArmRoot>
           <FcArmLst>0</FcArmLst>
         </Utilities>
-        <TargetArm>
-          <ArmMisc>
-            <asLst>1</asLst>
+        <TargetArmAds>
+          <ArmAdsMisc>
+            <GenerateListings>0</GenerateListings>
             <asHll>1</asHll>
             <asAsm>1</asAsm>
             <asMacX>1</asMacX>
@@ -154,11 +154,27 @@
             <asFals>1</asFals>
             <asDbgD>1</asDbgD>
             <asForm>1</asForm>
-            <ldLst>1</ldLst>
+            <ldLst>0</ldLst>
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <GCPUTYP>"Cortex-M4"</GCPUTYP>
+            <AdsALst>1</AdsALst>
+            <AdsACrf>1</AdsACrf>
+            <AdsANop>0</AdsANop>
+            <AdsANot>0</AdsANot>
+            <AdsLLst>1</AdsLLst>
+            <AdsLmap>1</AdsLmap>
+            <AdsLcgr>1</AdsLcgr>
+            <AdsLsym>1</AdsLsym>
+            <AdsLszi>1</AdsLszi>
+            <AdsLtoi>1</AdsLtoi>
+            <AdsLsun>1</AdsLsun>
+            <AdsLven>1</AdsLven>
+            <AdsLsxf>1</AdsLsxf>
+            <RvctClst>1</RvctClst>
+            <GenPPlst>0</GenPPlst>
+            <AdsCpuType>"Cortex-M4"</AdsCpuType>
+            <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
             <uocRom>0</uocRom>
             <uocRam>0</uocRam>
@@ -169,6 +185,30 @@
             <RvdsVP>2</RvdsVP>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
+            <StupSel>8</StupSel>
+            <useUlib>1</useUlib>
+            <EndSel>1</EndSel>
+            <uLtcg>0</uLtcg>
+            <nSecure>0</nSecure>
+            <RoSelD>3</RoSelD>
+            <RwSelD>3</RwSelD>
+            <CodeSel>0</CodeSel>
+            <OptFeed>0</OptFeed>
+            <NoZi1>0</NoZi1>
+            <NoZi2>0</NoZi2>
+            <NoZi3>0</NoZi3>
+            <NoZi4>0</NoZi4>
+            <NoZi5>0</NoZi5>
+            <Ro1Chk>0</Ro1Chk>
+            <Ro2Chk>0</Ro2Chk>
+            <Ro3Chk>0</Ro3Chk>
+            <Ir1Chk>1</Ir1Chk>
+            <Ir2Chk>0</Ir2Chk>
+            <Ra1Chk>0</Ra1Chk>
+            <Ra2Chk>0</Ra2Chk>
+            <Ra3Chk>0</Ra3Chk>
+            <Im1Chk>1</Im1Chk>
+            <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -215,74 +255,135 @@
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
               </XRAM>
-              <IRAM2>
+              <OCR_RVCT1>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT1>
+              <OCR_RVCT2>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT2>
+              <OCR_RVCT3>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT3>
+              <OCR_RVCT4>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x80000</Size>
+              </OCR_RVCT4>
+              <OCR_RVCT5>
+                <Type>1</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT5>
+              <OCR_RVCT6>
                 <Type>0</Type>
                 <StartAddress>0x0</StartAddress>
                 <Size>0x0</Size>
-              </IRAM2>
-              <IROM2>
-                <Type>1</Type>
-                <StartAddress>0x200000</StartAddress>
-                <Size>0x4000</Size>
-              </IROM2>
+              </OCR_RVCT6>
+              <OCR_RVCT7>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT7>
+              <OCR_RVCT8>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT8>
+              <OCR_RVCT9>
+                <Type>0</Type>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x8000</Size>
+              </OCR_RVCT9>
+              <OCR_RVCT10>
+                <Type>0</Type>
+                <StartAddress>0x0</StartAddress>
+                <Size>0x0</Size>
+              </OCR_RVCT10>
             </OnChipMemories>
-          </ArmMisc>
-          <Carm>
-            <arpcs>1</arpcs>
-            <stkchk>0</stkchk>
-            <reentr>0</reentr>
+            <RvctStartVector></RvctStartVector>
+          </ArmAdsMisc>
+          <Cads>
             <interw>1</interw>
-            <bigend>0</bigend>
+            <Optim>1</Optim>
+            <oTime>0</oTime>
+            <SplitLS>0</SplitLS>
+            <OneElfS>1</OneElfS>
             <Strict>0</Strict>
-            <Optim>0</Optim>
+            <EnumInt>0</EnumInt>
+            <PlainCh>0</PlainCh>
+            <Ropi>0</Ropi>
+            <Rwpi>0</Rwpi>
             <wLevel>2</wLevel>
-            <uThumb>1</uThumb>
+            <uThumb>0</uThumb>
+            <uSurpInc>0</uSurpInc>
+            <uC99>0</uC99>
+            <useXO>0</useXO>
+            <v6Lang>0</v6Lang>
+            <v6LangP>0</v6LangP>
+            <vShortEn>0</vShortEn>
+            <vShortWch>0</vShortWch>
             <VariousControls>
-              <MiscControls>-mfloat-abi=softfp -mfpu=fpv4-sp-d16 -ffunction-sections -fdata-sections -O0 -g</MiscControls>
+              <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..;..\..\..\Source\include;..\..\..\Source\portable\GCC\ARM_CM4_MPU;..\..\Common\include;..\peripheral_library;..\CMSIS;..\main_full;..\peripheral_library\interrupt</IncludePath>
+              <IncludePath>..;..\..\..\Source\include;..\..\..\Source\portable\RVDS\ARM_CM4_MPU;..\..\Common\include;..\CMSIS;..\main_full</IncludePath>
             </VariousControls>
-          </Carm>
-          <Aarm>
-            <bBE>0</bBE>
+          </Cads>
+          <Aads>
             <interw>1</interw>
+            <Ropi>0</Ropi>
+            <Rwpi>0</Rwpi>
+            <thumb>0</thumb>
+            <SplitLS>0</SplitLS>
+            <SwStkChk>0</SwStkChk>
+            <NoWarn>0</NoWarn>
+            <uSurpInc>0</uSurpInc>
+            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
-          </Aarm>
-          <LDarm>
-            <umfTarg>1</umfTarg>
-            <enaGarb>0</enaGarb>
-            <noStart>1</noStart>
+          </Aads>
+          <LDads>
+            <umfTarg>0</umfTarg>
+            <Ropi>0</Ropi>
+            <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
-            <uMathLib>1</uMathLib>
-            <TextAddressRange></TextAddressRange>
-            <DataAddressRange></DataAddressRange>
-            <BSSAddressRange></BSSAddressRange>
+            <RepFail>1</RepFail>
+            <useFile>0</useFile>
+            <TextAddressRange>0x00000000</TextAddressRange>
+            <DataAddressRange>0x20000000</DataAddressRange>
+            <pXoBase></pXoBase>
+            <ScatterFile>RTOSDemo.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
-            <IncludeDir></IncludeDir>
-            <Misc>-Xlinker --gc-sections</Misc>
-            <ScatterFile>.\sections.ld</ScatterFile>
-          </LDarm>
-        </TargetArm>
+            <IncludeLibsPath></IncludeLibsPath>
+            <Misc></Misc>
+            <LinkerInputFile></LinkerInputFile>
+            <DisabledWarnings></DisabledWarnings>
+          </LDads>
+        </TargetArmAds>
       </TargetOption>
       <Groups>
         <Group>
           <GroupName>System</GroupName>
           <Files>
             <File>
-              <FileName>startup_ARMCM4.S</FileName>
+              <FileName>startup_MPS_CM4.S</FileName>
               <FileType>2</FileType>
-              <FilePath>.\startup_ARMCM4.S</FilePath>
+              <FilePath>.\startup_MPS_CM4.S</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>application_and_config</GroupName>
+          <GroupName>main_and_config</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
@@ -335,14 +436,14 @@
               <FilePath>..\..\..\Source\portable\MemMang\heap_4.c</FilePath>
             </File>
             <File>
+              <FileName>port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Source\portable\RVDS\ARM_CM4_MPU\port.c</FilePath>
+            </File>
+            <File>
               <FileName>mpu_wrappers.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Source\portable\Common\mpu_wrappers.c</FilePath>
-            </File>
-            <File>
-              <FileName>port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Source\portable\GCC\ARM_CM4_MPU\port.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -6,8 +6,8 @@ MEMORY
 }
 
 /* Variables used by FreeRTOS-MPU. */
-_Privileged_Functions_Region_Size = 16K;
-_Privileged_Data_Region_Size = 256;
+_Privileged_Functions_Region_Size = 32K;
+_Privileged_Data_Region_Size = 512;
 
 __FLASH_segment_start__ = ORIGIN( ROM );
 __FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( ROM );
@@ -25,11 +25,7 @@ __privileged_data_end__ = ORIGIN( RAM ) + _Privileged_Data_Region_Size;
 /*
  * The '__stack' definition is required by crt0, do not remove it.
  */
-/* Place top of stack immediate before ROM Log
- *__stack = ORIGIN(RAM) + LENGTH(RAM);
- */
 __stack = ORIGIN(RAM) + LENGTH(RAM);
-
 _estack = __stack;
 
 /*
@@ -51,7 +47,7 @@ PROVIDE ( _Main_Stack_Limit = __Main_Stack_Limit ) ;
  * There will be a link error if there is not this amount of
  * RAM free at the end.
  */
-_Minimum_Stack_Size = 256 ;
+_Minimum_Stack_Size = 1024 ;
 
 /*
  * Default heap definitions.
@@ -82,15 +78,16 @@ SECTIONS
         KEEP(*(.isr_vector))
         *(privileged_functions)
         . = ALIGN(4);
+
+        /* Non privileged code is after _Privileged_Functions_Region_Size. */
+        __privileged_functions_actual_end__ = .;
+        . = _Privileged_Functions_Region_Size;
     } > ROM
 
 
 
     .text :
     {
-        /* Non privileged code kept out of the first 16K or flash. */
-        . = __privileged_functions_start__ + _Privileged_Functions_Region_Size;
-
         . = ALIGN(4);
 
 
@@ -222,10 +219,11 @@ SECTIONS
     privileged_data :
     {
         *(privileged_data)
-        /* Non kernel data is kept out of the first 256 bytes of SRAM. */
+        /* Non kernel data is kept out of the first _Privileged_Data_Region_Size
+        bytes of SRAM. */
+        __privileged_data_actual_end__ = .;
+        . = _Privileged_Data_Region_Size;
     } > RAM
-
-    . = ORIGIN( RAM ) + _Privileged_Data_Region_Size;
 
     /*
      * The initialised data section.
@@ -307,81 +305,6 @@ SECTIONS
 
         . = ALIGN(4);
     } >RAM
-
-    ._check_rom_log :
-    {
-        . = ALIGN(4);
-
-/*        . = . + __ROM_Log_Size ; */
-
-        . = ALIGN(4);
-    } >RAM
-
-/*
-    .bss_CCMRAM : ALIGN(4)
-    {
-        *(.bss.CCMRAM .bss.CCMRAM.*)
-    } > CCMRAM
-*/
-    /*
-     * The ROM Bank1.
-     * The C or assembly source must explicitly place the code
-     * or data there using the "section" attribute.
-     */
-
-
-    /* remaining code */
-    /* read-only data (constants) */
-/*
-    .b1text :
-    {
-        *(.b1text)
-        *(.b1rodata)
-        *(.b1rodata.*)
-    } >ROMB1
-*/
-    /*
-     * The EXTMEM.
-     * The C or assembly source must explicitly place the code or data there
-     * using the "section" attribute.
-     */
-
-    /* EXTMEM Bank0 */
-/*
-    .eb0text :
-    {
-        *(.eb0text)
-        *(.eb0rodata)
-        *(.eb0rodata.*)
-    } >EXTMEMB0
-*/
-    /* EXTMEM Bank1 */
-/*
-    .eb1text :
-    {
-        *(.eb1text)
-        *(.eb1rodata)
-        *(.eb1rodata.*)
-    } >EXTMEMB1
-*/
-    /* EXTMEM Bank2 */
-/*
-    .eb2text :
-    {
-        *(.eb2text)
-        *(.eb2rodata)
-        *(.eb2rodata.*)
-    } >EXTMEMB2
-*/
-    /* EXTMEM Bank0 */
-/*
-    .eb3text :
-    {
-        *(.eb3text)
-        *(.eb3rodata)
-        *(.eb3rodata.*)
-    } >EXTMEMB3
-*/
 
     /* After that there are only debugging sections. */
 

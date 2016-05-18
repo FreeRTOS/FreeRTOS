@@ -78,11 +78,13 @@ task.h is included from an application file. */
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-#include "task.h"
 #include "queue.h"
-#include "timers.h"
 #include "event_groups.h"
 #include "mpu_prototypes.h"
+
+#ifndef __VFP_FP__
+	#error This port can only be used when the project options are configured to enable hardware floating point support.
+#endif
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -116,8 +118,13 @@ task.h is included from an application file. */
 #define portNVIC_SYSTICK_PRI					( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 #define portNVIC_SVC_PRI						( ( ( uint32_t ) configMAX_SYSCALL_INTERRUPT_PRIORITY - 1UL ) << 24UL )
 
+/* Constants required to manipulate the VFP. */
+#define portFPCCR								( ( volatile uint32_t * ) 0xe000ef34UL ) /* Floating point context control register. */
+#define portASPEN_AND_LSPEN_BITS				( 0x3UL << 30UL )
+
 /* Constants required to set up the initial stack. */
-#define portINITIAL_XPSR						( 0x01000000 )
+#define portINITIAL_XPSR						( 0x01000000UL )
+#define portINITIAL_EXEC_RETURN					( 0xfffffffdUL )
 #define portINITIAL_CONTROL_IF_UNPRIVILEGED		( 0x03 )
 #define portINITIAL_CONTROL_IF_PRIVILEGED		( 0x02 )
 
@@ -186,6 +193,11 @@ static void prvRestoreContextOfFirstTask( void ) __attribute__(( naked )) PRIVIL
 static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) PRIVILEGED_FUNCTION;
 
 /*
+ * Function to enable the VFP.
+ */
+ static void vPortEnableVFP( void ) __attribute__ (( naked ));
+ 
+/*
  * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
  * FreeRTOS API functions are not called from interrupts that have been assigned
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
@@ -213,6 +225,12 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	*pxTopOfStack = 0;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
 	*pxTopOfStack = ( StackType_t ) pvParameters;	/* R0 */
+	
+	/* A save method is being used that requires each task to maintain its
+	own exec return value. */
+	pxTopOfStack--;
+	*pxTopOfStack = portINITIAL_EXEC_RETURN;
+	
 	pxTopOfStack -= 9;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	if( xRunPrivileged == pdTRUE )
@@ -300,12 +318,11 @@ static void prvRestoreContextOfFirstTask( void )
 		"	ldr r2, =0xe000ed9c				\n" /* Region Base Address register. */
 		"	ldmia r1!, {r4-r11}				\n" /* Read 4 sets of MPU registers. */
 		"	stmia r2!, {r4-r11}				\n" /* Write 4 sets of MPU registers. */
-		"	ldmia r0!, {r3, r4-r11}			\n" /* Pop the registers that are not automatically saved on exception entry. */
+		"	ldmia r0!, {r3-r11, r14}		\n" /* Pop the registers that are not automatically saved on exception entry. */
 		"	msr control, r3					\n"
 		"	msr psp, r0						\n" /* Restore the task stack pointer. */
 		"	mov r0, #0						\n"
 		"	msr	basepri, r0					\n"
-		"	ldr r14, =0xfffffffd			\n" /* Load exec return code. */
 		"	bx r14							\n"
 		"									\n"
 		"	.align 4						\n"
@@ -383,6 +400,12 @@ BaseType_t xPortStartScheduler( void )
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
 
+	/* Ensure the VFP is enabled - it should be anyway. */
+	vPortEnableVFP();
+
+	/* Lazy save always. */
+	*( portFPCCR ) |= portASPEN_AND_LSPEN_BITS;
+
 	/* Start the first task. */
 	__asm volatile(
 					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
@@ -446,17 +469,23 @@ void xPortPendSVHandler( void )
 		"	ldr	r3, pxCurrentTCBConst			\n" /* Get the location of the current TCB. */
 		"	ldr	r2, [r3]						\n"
 		"										\n"
+		"	tst r14, #0x10						\n" /* Is the task using the FPU context?  If so, push high vfp registers. */
+		"	it eq								\n"
+		"	vstmdbeq r0!, {s16-s31}				\n"
+		"										\n"
 		"	mrs r1, control						\n"
-		"	stmdb r0!, {r1, r4-r11}				\n" /* Save the remaining registers. */
+		"	stmdb r0!, {r1, r4-r11, r14}		\n" /* Save the remaining registers. */
 		"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
 		"										\n"
-		"	stmdb sp!, {r3, r14}				\n"
+		"	stmdb sp!, {r3}						\n"
 		"	mov r0, %0							\n"
 		"	msr basepri, r0						\n"
+		"	dsb									\n"
+		"	isb									\n"
 		"	bl vTaskSwitchContext				\n"
 		"	mov r0, #0							\n"
 		"	msr basepri, r0						\n"
-		"	ldmia sp!, {r3, r14}				\n"
+		"	ldmia sp!, {r3}						\n"
 		"										\n"	/* Restore the context. */
 		"	ldr r1, [r3]						\n"
 		"	ldr r0, [r1]						\n" /* The first item in the TCB is the task top of stack. */
@@ -464,8 +493,12 @@ void xPortPendSVHandler( void )
 		"	ldr r2, =0xe000ed9c					\n" /* Region Base Address register. */
 		"	ldmia r1!, {r4-r11}					\n" /* Read 4 sets of MPU registers. */
 		"	stmia r2!, {r4-r11}					\n" /* Write 4 sets of MPU registers. */
-		"	ldmia r0!, {r3, r4-r11}				\n" /* Pop the registers that are not automatically saved on exception entry. */
+		"	ldmia r0!, {r3-r11, r14}			\n" /* Pop the registers that are not automatically saved on exception entry. */
 		"	msr control, r3						\n"
+		"										\n"
+		"	tst r14, #0x10						\n" /* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+		"	it eq								\n"
+		"	vldmiaeq r0!, {s16-s31}				\n"
 		"										\n"
 		"	msr psp, r0							\n"
 		"	bx r14								\n"
@@ -503,6 +536,21 @@ static void prvSetupTimerInterrupt( void )
 	/* Configure SysTick to interrupt at the requested rate. */
 	portNVIC_SYSTICK_LOAD_REG = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
+}
+/*-----------------------------------------------------------*/
+
+/* This is a naked function. */
+static void vPortEnableVFP( void )
+{
+	__asm volatile
+	(
+		"	ldr.w r0, =0xE000ED88		\n" /* The FPU enable bits are in the CPACR. */
+		"	ldr r1, [r0]				\n"
+		"								\n"
+		"	orr r1, r1, #( 0xf << 20 )	\n" /* Enable CP10 and CP11 coprocessors, then save back. */
+		"	str r1, [r0]				\n"
+		"	bx r14						"
+	);
 }
 /*-----------------------------------------------------------*/
 

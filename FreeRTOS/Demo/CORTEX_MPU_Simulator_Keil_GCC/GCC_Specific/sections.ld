@@ -5,22 +5,6 @@ MEMORY
   RAM (rw)         : ORIGIN = 0x20000000, LENGTH = 0x8000
 }
 
-/* Variables required by FreeRTOS MPU. */
-_Privileged_Functions_Region_Size = 16K;
-_Privileged_Data_Region_Size = 256;
-
-__FLASH_segment_start__ = ORIGIN( ROM );
-__FLASH_segment_end__ = __FLASH_segment_start__ + LENGTH( ROM );
-
-__privileged_functions_start__ = ORIGIN( ROM );
-__privileged_functions_end__ = __privileged_functions_start__ + _Privileged_Functions_Region_Size;
-
-__SRAM_segment_start__ = ORIGIN( RAM );
-__SRAM_segment_end__ = __SRAM_segment_start__ + LENGTH( RAM );
-
-__privileged_data_start__ = ORIGIN( RAM );
-__privileged_data_end__ = ORIGIN( RAM ) + _Privileged_Data_Region_Size;
-
 /* Variables used by FreeRTOS-MPU. */
 _Privileged_Functions_Region_Size = 16K;
 _Privileged_Data_Region_Size = 256;

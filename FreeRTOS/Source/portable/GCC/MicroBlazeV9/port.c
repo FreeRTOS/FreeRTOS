@@ -99,6 +99,7 @@ FSR register is saved as part of the task context.  portINITIAL_FSR is the value
 given to the FSR register when the initial context is set up for a task being
 created. */
 #define portINITIAL_FSR				( 0U )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -150,6 +151,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 extern void *_SDA2_BASE_, *_SDA_BASE_;
 const uint32_t ulR2 = ( uint32_t ) &_SDA2_BASE_;
 const uint32_t ulR13 = ( uint32_t ) &_SDA_BASE_;
+extern void _start1( void );
 
 	/* Place a few bytes of known values on the bottom of the stack.
 	This is essential for the Microblaze port and these lines must
@@ -204,7 +206,7 @@ const uint32_t ulR13 = ( uint32_t ) &_SDA_BASE_;
 		pxTopOfStack--;
 		*pxTopOfStack = ( StackType_t ) 0x07;	/* R7 - other parameters and temporaries. */
 		pxTopOfStack--;
-		*pxTopOfStack = ( StackType_t ) 0x08;	/* R8 - other parameters and temporaries. */
+		*pxTopOfStack = ( StackType_t ) NULL;	/* R8 - other parameters and temporaries. */
 		pxTopOfStack--;
 		*pxTopOfStack = ( StackType_t ) 0x09;	/* R9 - other parameters and temporaries. */
 		pxTopOfStack--;
@@ -222,7 +224,7 @@ const uint32_t ulR13 = ( uint32_t ) &_SDA_BASE_;
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) pxCode;	/* R14 - return address for interrupt. */
 	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) NULL;	/* R15 - return address for subroutine. */
+	*pxTopOfStack = ( StackType_t ) _start1;	/* R15 - return address for subroutine. */
 
 	#ifdef portPRE_LOAD_STACK_FOR_DEBUGGING
 		pxTopOfStack--;

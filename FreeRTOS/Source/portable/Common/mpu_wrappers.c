@@ -337,7 +337,7 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_TRACE_FACILITY == 1 )
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
 	void MPU_vTaskList( char *pcWriteBuffer )
 	{
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();

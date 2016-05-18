@@ -78,11 +78,13 @@ task.h is included from an application file. */
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
-#include "task.h"
 #include "queue.h"
-#include "timers.h"
 #include "event_groups.h"
 #include "mpu_prototypes.h"
+
+#ifndef __TARGET_FPU_VFP
+	#error This port can only be used when the project options are configured to enable hardware floating point support.
+#endif
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -116,8 +118,13 @@ task.h is included from an application file. */
 #define portNVIC_SYSTICK_PRI					( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 24UL )
 #define portNVIC_SVC_PRI						( ( ( uint32_t ) configMAX_SYSCALL_INTERRUPT_PRIORITY - 1UL ) << 24UL )
 
+/* Constants required to manipulate the VFP. */
+#define portFPCCR								( ( volatile uint32_t * ) 0xe000ef34UL ) /* Floating point context control register. */
+#define portASPEN_AND_LSPEN_BITS				( 0x3UL << 30UL )
+
 /* Constants required to set up the initial stack. */
-#define portINITIAL_XPSR						( 0x01000000 )
+#define portINITIAL_XPSR						( 0x01000000UL )
+#define portINITIAL_EXEC_RETURN					( 0xfffffffdUL )
 #define portINITIAL_CONTROL_IF_UNPRIVILEGED		( 0x03 )
 #define portINITIAL_CONTROL_IF_PRIVILEGED		( 0x02 )
 
@@ -154,6 +161,11 @@ static void prvSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
 static void prvSetupMPU( void ) PRIVILEGED_FUNCTION;
 
 /*
+ * Start first task is a separate function so it can be tested in isolation.
+ */
+static void prvStartFirstTask( void ) PRIVILEGED_FUNCTION;
+
+/*
  * Return the smallest MPU region size that a given number of bytes will fit
  * into.  The region size is returned as the value that should be programmed
  * into the region attribute register for that region.
@@ -165,26 +177,36 @@ static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes ) PRIVI
  * if so raises the privilege level and returns false - otherwise does nothing
  * other than return true.
  */
-BaseType_t xPortRaisePrivilege( void ) __attribute__(( naked ));
+BaseType_t xPortRaisePrivilege( void );
 
 /*
  * Standard FreeRTOS exception handlers.
  */
-void xPortPendSVHandler( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
-void xPortSysTickHandler( void )  __attribute__ ((optimize("3"))) PRIVILEGED_FUNCTION;
-void vPortSVCHandler( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
+void xPortPendSVHandler( void ) PRIVILEGED_FUNCTION;
+void xPortSysTickHandler( void ) PRIVILEGED_FUNCTION;
+void vPortSVCHandler( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Starts the scheduler by restoring the context of the first task to run.
  */
-static void prvRestoreContextOfFirstTask( void ) __attribute__(( naked )) PRIVILEGED_FUNCTION;
+static void prvRestoreContextOfFirstTask( void ) PRIVILEGED_FUNCTION;
 
 /*
  * C portion of the SVC handler.  The SVC handler is split between an asm entry
  * and a C wrapper for simplicity of coding and maintenance.
  */
-static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) PRIVILEGED_FUNCTION;
+void prvSVCHandler( uint32_t *pulRegisters ) __attribute__((used)) PRIVILEGED_FUNCTION;
 
+/*
+ * Function to enable the VFP.
+ */
+static void vPortEnableVFP( void );
+
+/*
+ * Utility function.
+ */
+static uint32_t prvPortGetIPSR( void );
+	
 /*
  * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
  * FreeRTOS API functions are not called from interrupts that have been assigned
@@ -193,7 +215,7 @@ static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) 
 #if ( configASSERT_DEFINED == 1 )
 	 static uint8_t ucMaxSysCallPriority = 0;
 	 static uint32_t ulMaxPRIGROUPValue = 0;
-	 static const volatile uint8_t * const pcInterruptPriorityRegisters = ( const volatile uint8_t * const ) portNVIC_IP_REGISTERS_OFFSET_16;
+	 static const volatile uint8_t * const pcInterruptPriorityRegisters = ( const uint8_t * ) portNVIC_IP_REGISTERS_OFFSET_16;
 #endif /* configASSERT_DEFINED */
 
 /*-----------------------------------------------------------*/
@@ -213,6 +235,12 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	*pxTopOfStack = 0;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
 	*pxTopOfStack = ( StackType_t ) pvParameters;	/* R0 */
+
+	/* A save method is being used that requires each task to maintain its
+	own exec return value. */
+	pxTopOfStack--;
+	*pxTopOfStack = portINITIAL_EXEC_RETURN;
+
 	pxTopOfStack -= 9;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	if( xRunPrivileged == pdTRUE )
@@ -228,28 +256,10 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 }
 /*-----------------------------------------------------------*/
 
-void vPortSVCHandler( void )
-{
-	/* Assumes psp was in use. */
-	__asm volatile
-	(
-		#ifndef USE_PROCESS_STACK	/* Code should not be required if a main() is using the process stack. */
-			"	tst lr, #4						\n"
-			"	ite eq							\n"
-			"	mrseq r0, msp					\n"
-			"	mrsne r0, psp					\n"
-		#else
-			"	mrs r0, psp						\n"
-		#endif
-			"	b %0							\n"
-			::"i"(prvSVCHandler):"r0"
-	);
-}
-/*-----------------------------------------------------------*/
-
-static void prvSVCHandler(	uint32_t *pulParam )
+void prvSVCHandler( uint32_t *pulParam )
 {
 uint8_t ucSVCNumber;
+uint32_t ulReg;
 
 	/* The stack contains: r0, r1, r2, r3, r12, r14, the return address and
 	xPSR.  The first argument (r0) is pulParam[ 0 ]. */
@@ -270,13 +280,12 @@ uint8_t ucSVCNumber;
 
 											break;
 
-		case portSVC_RAISE_PRIVILEGE	:	__asm volatile
-											(
-												"	mrs r1, control		\n" /* Obtain current control value. */
-												"	bic r1, #1			\n" /* Set privilege bit. */
-												"	msr control, r1		\n" /* Write back new control value. */
-												:::"r1"
-											);
+		case portSVC_RAISE_PRIVILEGE	:	__asm
+											{
+												mrs ulReg, control	/* Obtain current control value. */
+												bic ulReg, #1		/* Set privilege bit. */
+												msr control, ulReg	/* Write back new control value. */
+											}
 											break;
 
 		default							:	/* Unknown SVC call. */
@@ -285,32 +294,47 @@ uint8_t ucSVCNumber;
 }
 /*-----------------------------------------------------------*/
 
-static void prvRestoreContextOfFirstTask( void )
+__asm void vPortSVCHandler( void )
 {
-	__asm volatile
-	(
-		"	ldr r0, =0xE000ED08				\n" /* Use the NVIC offset register to locate the stack. */
-		"	ldr r0, [r0]					\n"
-		"	ldr r0, [r0]					\n"
-		"	msr msp, r0						\n" /* Set the msp back to the start of the stack. */
-		"	ldr	r3, pxCurrentTCBConst2		\n" /* Restore the context. */
-		"	ldr r1, [r3]					\n"
-		"	ldr r0, [r1]					\n" /* The first item in the TCB is the task top of stack. */
-		"	add r1, r1, #4					\n" /* Move onto the second item in the TCB... */
-		"	ldr r2, =0xe000ed9c				\n" /* Region Base Address register. */
-		"	ldmia r1!, {r4-r11}				\n" /* Read 4 sets of MPU registers. */
-		"	stmia r2!, {r4-r11}				\n" /* Write 4 sets of MPU registers. */
-		"	ldmia r0!, {r3, r4-r11}			\n" /* Pop the registers that are not automatically saved on exception entry. */
-		"	msr control, r3					\n"
-		"	msr psp, r0						\n" /* Restore the task stack pointer. */
-		"	mov r0, #0						\n"
-		"	msr	basepri, r0					\n"
-		"	ldr r14, =0xfffffffd			\n" /* Load exec return code. */
-		"	bx r14							\n"
-		"									\n"
-		"	.align 4						\n"
-		"pxCurrentTCBConst2: .word pxCurrentTCB	\n"
-	);
+	extern prvSVCHandler
+		
+	PRESERVE8
+
+	/* Assumes psp was in use. */
+	#ifndef USE_PROCESS_STACK	/* Code should not be required if a main() is using the process stack. */
+		tst lr, #4
+		ite eq
+		mrseq r0, msp
+		mrsne r0, psp
+	#else
+		mrs r0, psp
+	#endif
+		b prvSVCHandler
+}
+/*-----------------------------------------------------------*/
+
+__asm void prvRestoreContextOfFirstTask( void )
+{
+	PRESERVE8
+
+	ldr r0, =0xE000ED08				/* Use the NVIC offset register to locate the stack. */
+	ldr r0, [r0]
+	ldr r0, [r0]
+	msr msp, r0						/* Set the msp back to the start of the stack. */
+	ldr	r3, =pxCurrentTCB			/* Restore the context. */
+	ldr r1, [r3]
+	ldr r0, [r1]					/* The first item in the TCB is the task top of stack. */
+	add r1, r1, #4					/* Move onto the second item in the TCB... */
+	ldr r2, =0xe000ed9c				/* Region Base Address register. */
+	ldmia r1!, {r4-r11}				/* Read 4 sets of MPU registers. */
+	stmia r2!, {r4-r11}				/* Write 4 sets of MPU registers. */
+	ldmia r0!, {r3-r11, r14}	/* Pop the registers that are not automatically saved on exception entry. */
+	msr control, r3
+	msr psp, r0						/* Restore the task stack pointer. */
+	mov r0, #0
+	msr	basepri, r0
+	bx r14
+	nop
 }
 /*-----------------------------------------------------------*/
 
@@ -326,7 +350,7 @@ BaseType_t xPortStartScheduler( void )
 	#if( configASSERT_DEFINED == 1 )
 	{
 		volatile uint32_t ulOriginalPriority;
-		volatile uint8_t * const pucFirstUserPriorityRegister = ( volatile uint8_t * const ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
+		volatile uint8_t * const pucFirstUserPriorityRegister = ( volatile uint8_t * ) ( portNVIC_IP_REGISTERS_OFFSET_16 + portFIRST_USER_INTERRUPT_NUMBER );
 		volatile uint8_t ucMaxPriorityValue;
 
 		/* Determine the maximum priority from which ISR safe FreeRTOS API
@@ -383,24 +407,36 @@ BaseType_t xPortStartScheduler( void )
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
 
+	/* Ensure the VFP is enabled - it should be anyway. */
+	vPortEnableVFP();
+
+	/* Lazy save always. */
+	*( portFPCCR ) |= portASPEN_AND_LSPEN_BITS;
+
 	/* Start the first task. */
-	__asm volatile(
-					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
-					" ldr r0, [r0] 			\n"
-					" ldr r0, [r0] 			\n"
-					" msr msp, r0			\n" /* Set the msp back to the start of the stack. */
-					" cpsie i				\n" /* Globally enable interrupts. */
-					" cpsie f				\n"
-					" dsb					\n"
-					" isb					\n"
-					" svc %0				\n" /* System call to start first task. */
-					" nop					\n"
-					:: "i" (portSVC_START_SCHEDULER) );
+	prvStartFirstTask();
 
 	/* Should not get here! */
 	return 0;
 }
 /*-----------------------------------------------------------*/
+
+__asm void prvStartFirstTask( void )
+{
+	PRESERVE8
+	
+	ldr r0, =0xE000ED08	/* Use the NVIC offset register to locate the stack. */
+	ldr r0, [r0]
+	ldr r0, [r0]
+	msr msp, r0			/* Set the msp back to the start of the stack. */
+	cpsie i				/* Globally enable interrupts. */
+	cpsie f
+	dsb
+	isb
+	svc portSVC_START_SCHEDULER	/* System call to start first task. */
+	nop
+	nop
+}
 
 void vPortEndScheduler( void )
 {
@@ -435,45 +471,53 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
-void xPortPendSVHandler( void )
+__asm void xPortPendSVHandler( void )
 {
-	/* This is a naked function. */
+	extern uxCriticalNesting;
+	extern pxCurrentTCB;
+	extern vTaskSwitchContext;
 
-	__asm volatile
-	(
-		"	mrs r0, psp							\n"
-		"										\n"
-		"	ldr	r3, pxCurrentTCBConst			\n" /* Get the location of the current TCB. */
-		"	ldr	r2, [r3]						\n"
-		"										\n"
-		"	mrs r1, control						\n"
-		"	stmdb r0!, {r1, r4-r11}				\n" /* Save the remaining registers. */
-		"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
-		"										\n"
-		"	stmdb sp!, {r3, r14}				\n"
-		"	mov r0, %0							\n"
-		"	msr basepri, r0						\n"
-		"	bl vTaskSwitchContext				\n"
-		"	mov r0, #0							\n"
-		"	msr basepri, r0						\n"
-		"	ldmia sp!, {r3, r14}				\n"
-		"										\n"	/* Restore the context. */
-		"	ldr r1, [r3]						\n"
-		"	ldr r0, [r1]						\n" /* The first item in the TCB is the task top of stack. */
-		"	add r1, r1, #4						\n" /* Move onto the second item in the TCB... */
-		"	ldr r2, =0xe000ed9c					\n" /* Region Base Address register. */
-		"	ldmia r1!, {r4-r11}					\n" /* Read 4 sets of MPU registers. */
-		"	stmia r2!, {r4-r11}					\n" /* Write 4 sets of MPU registers. */
-		"	ldmia r0!, {r3, r4-r11}				\n" /* Pop the registers that are not automatically saved on exception entry. */
-		"	msr control, r3						\n"
-		"										\n"
-		"	msr psp, r0							\n"
-		"	bx r14								\n"
-		"										\n"
-		"	.align 4							\n"
-		"pxCurrentTCBConst: .word pxCurrentTCB	\n"
-		::"i"(configMAX_SYSCALL_INTERRUPT_PRIORITY)
-	);
+	PRESERVE8
+
+	mrs r0, psp
+
+	ldr	r3, =pxCurrentTCB			/* Get the location of the current TCB. */
+	ldr	r2, [r3]
+
+	tst r14, #0x10					/* Is the task using the FPU context?  If so, push high vfp registers. */
+	it eq
+	vstmdbeq r0!, {s16-s31}
+
+	mrs r1, control
+	stmdb r0!, {r1, r4-r11, r14}	/* Save the remaining registers. */
+	str r0, [r2]					/* Save the new top of stack into the first member of the TCB. */
+
+	stmdb sp!, {r3}
+	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r0
+	dsb
+	isb
+	bl vTaskSwitchContext
+	mov r0, #0
+	msr basepri, r0
+	ldmia sp!, {r3}
+									/* Restore the context. */
+	ldr r1, [r3]
+	ldr r0, [r1]					/* The first item in the TCB is the task top of stack. */
+	add r1, r1, #4					/* Move onto the second item in the TCB... */
+	ldr r2, =0xe000ed9c				/* Region Base Address register. */
+	ldmia r1!, {r4-r11}				/* Read 4 sets of MPU registers. */
+	stmia r2!, {r4-r11}				/* Write 4 sets of MPU registers. */
+	ldmia r0!, {r3-r11, r14}		/* Pop the registers that are not automatically saved on exception entry. */
+	msr control, r3
+
+	tst r14, #0x10					/* Is the task using the FPU context?  If so, pop the high vfp registers too. */
+	it eq
+	vldmiaeq r0!, {s16-s31}
+
+	msr psp, r0
+	bx r14
+	nop
 }
 /*-----------------------------------------------------------*/
 
@@ -506,13 +550,39 @@ static void prvSetupTimerInterrupt( void )
 }
 /*-----------------------------------------------------------*/
 
+__asm void vPortSwitchToUserMode( void )
+{
+	PRESERVE8
+	
+	mrs r0, control
+	orr r0, #1
+	msr control, r0
+	bx r14
+}
+/*-----------------------------------------------------------*/
+	
+__asm void vPortEnableVFP( void )
+{
+	PRESERVE8
+	
+	ldr.w r0, =0xE000ED88		/* The FPU enable bits are in the CPACR. */
+	ldr r1, [r0]
+
+	orr r1, r1, #( 0xf << 20 )	/* Enable CP10 and CP11 coprocessors, then save back. */
+	str r1, [r0]
+	bx r14
+	nop
+	nop
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupMPU( void )
 {
-extern uint32_t __privileged_functions_end__[];
-extern uint32_t __FLASH_segment_start__[];
-extern uint32_t __FLASH_segment_end__[];
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
+extern uint32_t __privileged_functions_end__;
+extern uint32_t __FLASH_segment_start__;
+extern uint32_t __FLASH_segment_end__;
+extern uint32_t __privileged_data_start__;
+extern uint32_t __privileged_data_end__;
 
 	/* Check the expected MPU is present. */
 	if( portMPU_TYPE_REG == portEXPECTED_MPU_TYPE_VALUE )
@@ -593,30 +663,26 @@ uint32_t ulRegionSize, ulReturnValue = 4;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xPortRaisePrivilege( void )
+__asm BaseType_t xPortRaisePrivilege( void )
 {
-	__asm volatile
-	(
-		"	mrs r0, control						\n"
-		"	tst r0, #1							\n" /* Is the task running privileged? */
-		"	itte ne								\n"
-		"	movne r0, #0						\n" /* CONTROL[0]!=0, return false. */
-		"	svcne %0							\n" /* Switch to privileged. */
-		"	moveq r0, #1						\n" /* CONTROL[0]==0, return true. */
-		"	bx lr								\n"
-		:: "i" (portSVC_RAISE_PRIVILEGE) : "r0"
-	);
-
-	return 0;
+	mrs r0, control
+	tst r0, #1						/* Is the task running privileged? */
+	itte ne
+	movne r0, #0					/* CONTROL[0]!=0, return false. */
+	svcne portSVC_RAISE_PRIVILEGE	/* Switch to privileged. */
+	moveq r0, #1					/* CONTROL[0]==0, return true. */
+	bx lr
 }
 /*-----------------------------------------------------------*/
 
 void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint32_t ulStackDepth )
 {
-extern uint32_t __SRAM_segment_start__[];
-extern uint32_t __SRAM_segment_end__[];
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
+extern uint32_t __SRAM_segment_start__;
+extern uint32_t __SRAM_segment_end__;
+extern uint32_t __privileged_data_start__;
+extern uint32_t __privileged_data_end__;
+
+	
 int32_t lIndex;
 uint32_t ul;
 
@@ -707,6 +773,15 @@ uint32_t ul;
 }
 /*-----------------------------------------------------------*/
 
+__asm uint32_t prvPortGetIPSR( void )
+{
+	PRESERVE8
+
+	mrs r0, ipsr
+	bx r14
+}
+/*-----------------------------------------------------------*/
+
 #if( configASSERT_DEFINED == 1 )
 
 	void vPortValidateInterruptPriority( void )
@@ -715,7 +790,7 @@ uint32_t ul;
 	uint8_t ucCurrentPriority;
 
 		/* Obtain the number of the currently executing interrupt. */
-		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+		ulCurrentInterrupt = prvPortGetIPSR();
 
 		/* Is the interrupt number a user defined interrupt? */
 		if( ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER )
@@ -766,6 +841,5 @@ uint32_t ul;
 	}
 
 #endif /* configASSERT_DEFINED */
-/*-----------------------------------------------------------*/
 
 

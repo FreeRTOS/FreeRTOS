@@ -53,7 +53,7 @@ by the blinky demo) and a tickless implementation that is tailored specifically
 to the MSP432.
 
 See http://www.FreeRTOS.org/TI_MSP432_Free_RTOS_Demo.html for instructions. */
-#define configCREATE_SIMPLE_TICKLESS_DEMO	0
+#define configCREATE_SIMPLE_TICKLESS_DEMO	1
 
 
 /*-----------------------------------------------------------

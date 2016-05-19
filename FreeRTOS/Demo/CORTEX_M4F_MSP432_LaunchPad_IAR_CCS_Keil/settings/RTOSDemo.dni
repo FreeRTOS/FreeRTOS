@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [PlDriver]
-MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.3\arm\CONFIG\debugger\TexasInstruments\MSP432P401R.ddf
+MemConfigValue=C:\DevTools\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\TexasInstruments\MSP432P401R.ddf
 FirstRun=0
 [Jet]
 JetConnSerialNo=59065
@@ -18,8 +18,9 @@ DisableInterrupts=0
 MultiCoreRunAll=0
 OnlineReset=Software
 PrevWtdReset=System
+LeaveRunning=0
 [DebugChecksum]
-Checksum=-851533712
+Checksum=1205021647
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0

@@ -186,8 +186,10 @@ void vPortStartFirstTask( void )
 	"	isb							\n"
 	"	pop {r0-r5}					\n" /* Pop the registers that are saved automatically. */
 	"	mov lr, r5					\n" /* lr is now in r5. */
+	"	pop {r3}					\n" /* Return address is now in r3. */
+	"	pop {r2}					\n" /* Pop and discard XPSR. */
 	"	cpsie i						\n" /* The first task has its context and interrupts can be enabled. */
-	"	pop {pc}					\n" /* Finally, pop the PC to jump to the user defined task code. */
+	"	bx r3						\n" /* Finally, jump to the user defined task code. */
 	"								\n"
 	"	.align 4					\n"
 	"pxCurrentTCBConst2: .word pxCurrentTCB	  "

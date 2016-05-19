@@ -504,16 +504,16 @@ void vPortExitCritical( void )
 			#else
 			{
 				portAPIC_TASK_PRIORITY = 0;
-
-				/* If a yield was pended from within the critical section then
-				perform the yield now. */
-				if( ulPortYieldPending != pdFALSE )
-				{
-					ulPortYieldPending = pdFALSE;
-					__asm volatile( portYIELD_INTERRUPT );
-				}
 			}
 			#endif
+
+			/* If a yield was pended from within the critical section then
+			perform the yield now. */
+			if( ulPortYieldPending != pdFALSE )
+			{
+				ulPortYieldPending = pdFALSE;
+				__asm volatile( portYIELD_INTERRUPT );
+			}
 		}
 	}
 }

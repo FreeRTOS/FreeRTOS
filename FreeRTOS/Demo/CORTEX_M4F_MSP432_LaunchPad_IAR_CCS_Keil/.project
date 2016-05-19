@@ -166,7 +166,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824885</id>
+			<id>1463650948108</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -175,7 +175,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824885</id>
+			<id>1463650948118</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -184,7 +184,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824885</id>
+			<id>1463650948118</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -193,7 +193,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824895</id>
+			<id>1463650948128</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -202,7 +202,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824895</id>
+			<id>1463650948128</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -211,7 +211,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824905</id>
+			<id>1463650948138</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -220,7 +220,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824905</id>
+			<id>1463650948138</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -229,7 +229,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824915</id>
+			<id>1463650948148</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -238,7 +238,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824915</id>
+			<id>1463650948158</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
@@ -247,12 +247,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458999824925</id>
+			<id>1463650948158</id>
 			<name>driverlib</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-sysctl.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1463650948168</id>
+			<name>driverlib</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-flash.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

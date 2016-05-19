@@ -103,6 +103,11 @@ extern "C" {
 /* Definitions specific to the port being used. */
 #include "portable.h"
 
+/* Must be defaulted before configUSE_NEWLIB_REENTRANT is used below. */
+#ifndef configUSE_NEWLIB_REENTRANT
+	#define configUSE_NEWLIB_REENTRANT 0
+#endif
+
 /* Required if struct _reent is used. */
 #if ( configUSE_NEWLIB_REENTRANT == 1 )
 	#include <reent.h>
@@ -725,10 +730,6 @@ extern "C" {
 
 #ifndef configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS
 	#define configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS 0
-#endif
-
-#ifndef configUSE_NEWLIB_REENTRANT
-	#define configUSE_NEWLIB_REENTRANT 0
 #endif
 
 #ifndef configUSE_STATS_FORMATTING_FUNCTIONS

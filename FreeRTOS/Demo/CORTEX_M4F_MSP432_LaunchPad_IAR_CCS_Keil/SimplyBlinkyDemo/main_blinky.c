@@ -270,9 +270,11 @@ static void prvConfigureClocks( void )
 	/* The full demo configures the clocks for maximum frequency, wheras this
 	blinky demo uses a slower clock as it also uses low power features.
 
-	From the datashee:  For AM_LDO_VCORE0 and AM_DCDC_VCORE0 modes, the maximum
+	From the datasheet:  For AM_LDO_VCORE0 and AM_DCDC_VCORE0 modes, the maximum
 	CPU operating frequency is 24 MHz and maximum input clock frequency for
 	peripherals is 12 MHz. */
+	FlashCtl_setWaitState( FLASH_BANK0, 2 );
+	FlashCtl_setWaitState( FLASH_BANK1, 2 );
 	CS_setDCOCenteredFrequency( CS_DCO_FREQUENCY_3 );
 	CS_initClockSignal( CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
 	CS_initClockSignal( CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );

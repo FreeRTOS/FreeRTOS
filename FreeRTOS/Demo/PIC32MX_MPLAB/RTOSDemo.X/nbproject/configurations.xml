@@ -39,7 +39,6 @@
                      displayName="Standard Demo Source"
                      projectFiles="true">
         <itemPath>../../Common/Minimal/blocktim.c</itemPath>
-        <itemPath>../../Common/Minimal/comtest.c</itemPath>
         <itemPath>../../Common/Minimal/semtest.c</itemPath>
         <itemPath>../../Common/Minimal/QPeek.c</itemPath>
         <itemPath>../../Common/Minimal/IntQueue.c</itemPath>
@@ -48,9 +47,6 @@
       </logicalFolder>
       <itemPath>../main.c</itemPath>
       <itemPath>../RegisterTestTasks.S</itemPath>
-      <itemPath>../lcd.c</itemPath>
-      <itemPath>../serial/serial.c</itemPath>
-      <itemPath>../serial/serial_isr.S</itemPath>
       <itemPath>../timertest.c</itemPath>
       <itemPath>../timertest_isr.S</itemPath>
       <itemPath>../IntQueueTimer.c</itemPath>
@@ -82,7 +78,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.34</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -421,7 +417,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.34</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -610,6 +606,7 @@
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
@@ -652,7 +649,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.34</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -817,7 +814,7 @@
         <property key="oscillator.rcfrequencyunit" value="Kilo"/>
         <property key="performancedata.show" value="false"/>
         <property key="periphADC1.altscl" value="false"/>
-        <property key="periphADC1.minTacq" value=""/>
+        <property key="periphADC1.minTacq" value="132"/>
         <property key="periphADC1.tacqunits" value="microseconds"/>
         <property key="periphADC2.altscl" value="false"/>
         <property key="periphADC2.minTacq" value=""/>
@@ -991,7 +988,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>SKDEPIC32PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.34</languageToolchainVersion>
+        <languageToolchainVersion>1.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>

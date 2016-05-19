@@ -130,7 +130,7 @@
         <documentation help="" />
         <offline-documentation help="" />
         <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.18.1" />
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.20.1" />
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>

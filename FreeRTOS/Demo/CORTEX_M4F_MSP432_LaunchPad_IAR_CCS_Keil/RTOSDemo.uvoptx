@@ -73,7 +73,7 @@
         <LExpSel>0</LExpSel>
       </OPTXL>
       <OPTFL>
-        <tvExp>0</tvExp>
+        <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
@@ -122,7 +122,7 @@
         <tRSysVw>1</tRSysVw>
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
-        <nTsel>1</nTsel>
+        <nTsel>2</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -133,18 +133,18 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon>BIN\UL2CM3.DLL</pMon>
+        <pMon>BIN\CMSIS_AGDI.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
-          <Name>-X"XDS-ICDI (02.02.03.02) with CMSIS-DAP" -U00000001 -O175 -S8 -C0 -P00 -N00("ARM CoreSight JTAG-DP") -D00(4BA00477) -L00(0) -FO7 -FD1000000 -FC8000 -FN2 -FF0MSP432P4xx_MainFlash256kB.FLM -FS00 -FL040000 -FP0($$Device:MSP432P401R$Flash\MSP432P4xx_MainFlash256kB.FLM) -FF1MSP432P4xx_InfoFlash.FLM -FS1200000 -FL14000 -FP1($$Device:MSP432P401R$Flash\MSP432P4xx_InfoFlash.FLM)</Name>
+          <Name>-X"XDS110 (02.03.00.01) with CMSIS-DAP" -U00000000 -O239 -S8 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP20 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD1000000 -FC8000 -FN2 -FF0MSP432P4xx_MainFlash256kB.FLM -FS00 -FL040000 -FP0($$Device:MSP432P401R$Flash\MSP432P4xx_MainFlash256kB.FLM) -FF1MSP432P4xx_InfoFlash.FLM -FS1200000 -FL14000 -FP1($$Device:MSP432P401R$Flash\MSP432P4xx_InfoFlash.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>(105=-1,-1,-1,-1,0)</Name>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -169,7 +169,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>-UM0356BUE -O175 -S8 -C0 -P00 -N00("ARM CoreSight JTAG-DP") -D00(4BA00477) -L00(4) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD1000000 -FC8000 -FN2 -FF0MSP432P4xx_MainFlash256kB.FLM -FS00 -FL040000 -FP0($$Device:MSP432P401R$Flash\MSP432P4xx_MainFlash256kB.FLM) -FF1MSP432P4xx_InfoFlash.FLM -FS1200000 -FL14000 -FP1($$Device:MSP432P401R$Flash\MSP432P4xx_InfoFlash.FLM)</Name>
+          <Name>-UM0356BUE -O239 -S8 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO23 -FD1000000 -FC8000 -FN2 -FF0MSP432P4xx_MainFlash256kB.FLM -FS00 -FL040000 -FP0($$Device:MSP432P401R$Flash\MSP432P4xx_MainFlash256kB.FLM) -FF1MSP432P4xx_InfoFlash.FLM -FS1200000 -FL14000 -FP1($$Device:MSP432P401R$Flash\MSP432P4xx_InfoFlash.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <Breakpoint/>
@@ -228,7 +228,7 @@
       <DebugDescription>
         <Enable>1</Enable>
         <EnableLog>0</EnableLog>
-        <Protocol>1</Protocol>
+        <Protocol>2</Protocol>
         <DbgClock>10000000</DbgClock>
       </DebugDescription>
     </TargetOption>
@@ -268,7 +268,7 @@
 
   <Group>
     <GroupName>main</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -300,7 +300,7 @@
 
   <Group>
     <GroupName>Simple Blinky Demo</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -528,7 +528,7 @@
       <GroupNumber>5</GroupNumber>
       <FileNumber>22</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\semtest.c</PathWithFileName>
@@ -781,6 +781,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\driverlib\rtc_c.c</PathWithFileName>
       <FilenameWithoutPath>rtc_c.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>43</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\driverlib\flash.c</PathWithFileName>
+      <FilenameWithoutPath>flash.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

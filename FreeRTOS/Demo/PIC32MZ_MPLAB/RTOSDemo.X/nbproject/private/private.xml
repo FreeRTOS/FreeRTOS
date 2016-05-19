@@ -3,20 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/ISR_Support.h</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Demo/PIC32MZ_MPLAB/FreeRTOSConfig.h</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Demo/PIC32MZ_MPLAB/flop_mz.c</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/port.c</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/port_asm.S</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ/portmacro.h</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Demo/PIC32MZ_MPLAB/main.c</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Demo/PIC32MZ_MPLAB/main_blinky.c</file>
-            <file>file:/C:/Microchip/harmony/v1_06/third_party/rtos/FreeRTOS/Demo/PIC32MZ_MPLAB/main_full.c</file>
-        </group>
         <group name="Masters19024">
             <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MZ_MPLAB/main.c</file>
             <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MZ_MPLAB/flop_mz.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MZ_MPLAB/FreeRTOSConfig.h</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/portable/MPLAB/PIC32MZ/port.c</file>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/portable/MPLAB/PIC32MZ/port_asm.S</file>
+        </group>
+        <group>
+            <file>file:/C:/E/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/PIC32MZ_MPLAB/main.c</file>
         </group>
     </open-files>
 </project-private>

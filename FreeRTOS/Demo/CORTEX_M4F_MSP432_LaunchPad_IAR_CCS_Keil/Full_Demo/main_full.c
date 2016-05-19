@@ -438,6 +438,11 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 
 static void prvConfigureClocks( void )
 {
+	/* Set Flash wait state for high clock frequency.  Refer to datasheet for
+	more details. */
+	FlashCtl_setWaitState( FLASH_BANK0, 2 );
+	FlashCtl_setWaitState( FLASH_BANK1, 2 );
+
 	/* The full demo configures the clocks for maximum frequency, wheras the
 	blinky demo uses a slower clock as it also uses low power features.  Maximum
 	freqency also needs more voltage.

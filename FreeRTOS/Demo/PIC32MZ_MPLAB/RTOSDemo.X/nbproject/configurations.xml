@@ -1010,6 +1010,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="memories.configurationmemory" value="false"/>
         <property key="memories.dataflash" value="true"/>
         <property key="memories.eeprom" value="false"/>

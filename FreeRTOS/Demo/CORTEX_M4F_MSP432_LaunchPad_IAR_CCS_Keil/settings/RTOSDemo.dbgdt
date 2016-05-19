@@ -39,7 +39,7 @@
       
       
       
-    <Wnd3>
+    <Wnd2>
         <Tabs>
           <Tab>
             <Identity>TabID-24437-20285</Identity>
@@ -55,7 +55,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-2417-20288</Identity>
@@ -67,20 +67,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd4></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>96</YPos2><SelStart2>5983</SelStart2><SelEnd2>5983</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>39</YPos2><SelStart2>2555</SelStart2><SelEnd2>2555</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\SimplyBlinkyDemo\main_blinky.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>149</YPos2><SelStart2>8275</SelStart2><SelEnd2>8275</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Full_Demo\main_full.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>256</YPos2><SelStart2>11768</SelStart2><SelEnd2>11768</SelEnd2></Tab><ActiveTab>3</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>113</YPos2><SelStart2>5949</SelStart2><SelEnd2>5949</SelEnd2></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\driverlib\cs.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>664</YPos2><SelStart2>18839</SelStart2><SelEnd2>18839</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\driverlib\flash.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>1473</YPos2><SelStart2>43541</SelStart2><SelEnd2>43541</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\FreeRTOSConfig.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>18</YPos2><SelStart2>2555</SelStart2><SelEnd2>2555</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Full_Demo\main_full.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>423</YPos2><SelStart2>18984</SelStart2><SelEnd2>18984</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-026F17B0><key>iaridepm.enu1</key></Toolbar-026F17B0></Sizes></Row0><Row1><Sizes><Toolbar-07156000><key>debuggergui.enu1</key></Toolbar-07156000></Sizes></Row1><Row2><Sizes><Toolbar-07157838><key>armjet.enu1</key></Toolbar-07157838></Sizes></Row2></Top><Left><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>688</Bottom><Right>351</Right><x>-2</x><y>-2</y><xscreen>229</xscreen><yscreen>230</yscreen><sizeHorzCX>119271</sizeHorzCX><sizeHorzCY>202822</sizeHorzCY><sizeVertCX>183854</sizeVertCX><sizeVertCY>608466</sizeVertCY></Rect></Wnd4></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>354</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>356</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>313933</sizeHorzCY><sizeVertCX>119271</sizeVertCX><sizeVertCY>202822</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-010C1C38><key>iaridepm.enu1</key></Toolbar-010C1C38></Sizes></Row0><Row1><Sizes><Toolbar-0635DF88><key>debuggergui.enu1</key></Toolbar-0635DF88></Sizes></Row1><Row2><Sizes><Toolbar-0635E050><key>armjet.enu1</key></Toolbar-0635E050></Sizes></Row2></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>688</Bottom><Right>351</Right><x>-2</x><y>-2</y><xscreen>229</xscreen><yscreen>230</yscreen><sizeHorzCX>119271</sizeHorzCX><sizeHorzCY>202822</sizeHorzCY><sizeVertCX>183854</sizeVertCX><sizeVertCY>608466</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>354</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>356</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>313933</sizeHorzCY><sizeVertCX>119271</sizeVertCX><sizeVertCY>202822</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

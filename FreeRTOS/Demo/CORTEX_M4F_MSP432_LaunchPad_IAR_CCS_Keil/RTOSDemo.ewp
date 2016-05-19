@@ -77,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>7.50.3.10745</state>
+          <state>7.60.1.11206</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -127,7 +127,7 @@
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>22</version>
+          <version>24</version>
           <state>40</state>
         </option>
         <option>
@@ -144,7 +144,7 @@
         </option>
         <option>
           <name>CoreVariant</name>
-          <version>22</version>
+          <version>24</version>
           <state>39</state>
         </option>
         <option>
@@ -167,7 +167,7 @@
         </option>
         <option>
           <name>GFPUCoreSlave2</name>
-          <version>22</version>
+          <version>24</version>
           <state>39</state>
         </option>
       </data>
@@ -1096,7 +1096,7 @@
         </option>
         <option>
           <name>GBECoreSlave</name>
-          <version>22</version>
+          <version>24</version>
           <state>0</state>
         </option>
         <option>
@@ -1113,7 +1113,7 @@
         </option>
         <option>
           <name>CoreVariant</name>
-          <version>22</version>
+          <version>24</version>
           <state>0</state>
         </option>
         <option>
@@ -1136,7 +1136,7 @@
         </option>
         <option>
           <name>GFPUCoreSlave2</name>
-          <version>22</version>
+          <version>24</version>
           <state>0</state>
         </option>
       </data>
@@ -1939,6 +1939,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\driverlib\cs.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\driverlib\flash.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\driverlib\fpu.c</name>

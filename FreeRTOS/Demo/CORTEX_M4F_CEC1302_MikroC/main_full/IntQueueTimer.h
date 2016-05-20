@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0rc2 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.0 - Copyright (C) 2015 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -67,16 +67,12 @@
     1 tab == 4 spaces!
 */
 
-#ifndef LEDTEST_H
-#define LEDTEST_H
+#ifndef INT_QUEUE_TIMER_H
+#define INT_QUEUE_TIMER_H
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "partest.h"
+void vInitialiseTimerForIntQueueTest( void );
+BaseType_t xTimer0Handler( void );
+BaseType_t xTimer1Handler( void );
 
-/*
- * A task that writes to the LEDs.
- */
-void vLEDTask( void *pvParamters );
+#endif
 
-#endif /* LEDTEST_H */

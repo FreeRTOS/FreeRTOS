@@ -585,7 +585,7 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__DATA_MODEL_LARGE__</state>
+          <state></state>
         </option>
         <option>
           <name>AList</name>
@@ -1104,7 +1104,11 @@
         <debug>1</debug>
         <option>
           <name>CUTest</name>
-          <state>###Uninitialized###</state>
+          <state>-I$TOOLKIT_DIR$\inc</state>
+          <state>-@$TOOLKIT_DIR$\bin\iar.cmd</state>
+          <state>-@$PROJ_DIR$\source.txt</state>
+          <state>-@$PROJ_DIR$\include.txt</state>
+          <state>--preinclude=$PROJ_DIR$\IAR_ULPAdvisor_Defs.h</state>
         </option>
         <option>
           <name>ULPRules</name>
@@ -1158,7 +1162,7 @@
         </option>
         <option>
           <name>Hardware Multiplier</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -1183,11 +1187,11 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xlff.h</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xllff.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xlff.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xllff.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -1353,7 +1357,7 @@
         </option>
         <option>
           <name>Math description</name>
-          <state></state>
+          <state>Default variants of cos, sin, tan, log, log10, pow, and exp.</state>
         </option>
       </data>
     </settings>
@@ -1714,7 +1718,7 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__DATA_MODEL_LARGE__</state>
+          <state></state>
         </option>
         <option>
           <name>AList</name>
@@ -2287,7 +2291,7 @@
         </option>
         <option>
           <name>Hardware Multiplier</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -2312,11 +2316,11 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xsff.h</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsff.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xsff.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlsff.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -2482,7 +2486,7 @@
         </option>
         <option>
           <name>Math description</name>
-          <state></state>
+          <state>Default variants of cos, sin, tan, log, log10, pow, and exp.</state>
         </option>
       </data>
     </settings>
@@ -2843,7 +2847,7 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__DATA_MODEL_SMALL__</state>
+          <state></state>
         </option>
         <option>
           <name>AList</name>
@@ -3416,7 +3420,7 @@
         </option>
         <option>
           <name>Hardware Multiplier</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -3441,11 +3445,11 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xlff.h</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlmff.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dl430xlff.r43</state>
+          <state>$TOOLKIT_DIR$\lib\dlib\dl430xlmff.r43</state>
         </option>
         <option>
           <name>Input variant</name>
@@ -3611,7 +3615,7 @@
         </option>
         <option>
           <name>Math description</name>
-          <state></state>
+          <state>Default variants of cos, sin, tan, log, log10, pow, and exp.</state>
         </option>
       </data>
     </settings>
@@ -3972,7 +3976,7 @@
         </option>
         <option>
           <name>ADefines</name>
-          <state>__DATA_MODEL_MEDIUM__</state>
+          <state></state>
         </option>
         <option>
           <name>AList</name>

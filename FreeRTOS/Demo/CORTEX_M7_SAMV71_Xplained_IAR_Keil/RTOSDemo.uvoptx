@@ -78,6 +78,43 @@
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
       <CpuCode>16</CpuCode>
+      <Books>
+        <Book>
+          <Number>0</Number>
+          <Title>User Manual (SAMV71-XULTRA)</Title>
+          <Path>C:\devtools\Keil_v520\ARM\PACK\Keil\SAM-ESV7_SFP\2.3.1\Boards\Atmel\SAMV71-XULTRA\Documents\Atmel-42408-SAMV71-Xplained-Ultra_User-Guide.pdf</Path>
+        </Book>
+        <Book>
+          <Number>1</Number>
+          <Title>Blinky Lab (SAMV71-XULTRA)</Title>
+          <Path>C:\devtools\Keil_v520\ARM\PACK\Keil\SAM-ESV7_SFP\2.3.1\Boards\Atmel\SAMV71-XULTRA\Documents\Atmel_Blinky_Lab.pdf</Path>
+        </Book>
+        <Book>
+          <Number>2</Number>
+          <Title>Bill of Materials (SAMV71-XULTRA)</Title>
+          <Path>C:\devtools\Keil_v520\ARM\PACK\Keil\SAM-ESV7_SFP\2.3.1\Boards\Atmel\SAMV71-XULTRA\Documents\Bill of Materials Fitted- SAM V71 Xplained Ultra_release_rev3.zip</Path>
+        </Book>
+        <Book>
+          <Number>3</Number>
+          <Title>Gerber Files (SAMV71-XULTRA)</Title>
+          <Path>C:\devtools\Keil_v520\ARM\PACK\Keil\SAM-ESV7_SFP\2.3.1\Boards\Atmel\SAMV71-XULTRA\Documents\Gerber.zip</Path>
+        </Book>
+        <Book>
+          <Number>4</Number>
+          <Title>Quick Start Guide (SAMV71-XULTRA)</Title>
+          <Path>C:\devtools\Keil_v520\ARM\PACK\Keil\SAM-ESV7_SFP\2.3.1\Boards\Atmel\SAMV71-XULTRA\Documents\SAMV71_XUltra_QSG.pdf</Path>
+        </Book>
+        <Book>
+          <Number>5</Number>
+          <Title>Schematics (SAMV71-XULTRA)</Title>
+          <Path>C:\devtools\Keil_v520\ARM\PACK\Keil\SAM-ESV7_SFP\2.3.1\Boards\Atmel\SAMV71-XULTRA\Documents\SAM_V71_Xplained_Ultra_design_documentation_release_rev8.pdf</Path>
+        </Book>
+        <Book>
+          <Number>6</Number>
+          <Title>SAMV71 Xplained Ultra Web Page (SAMV71-XULTRA)</Title>
+          <Path>http://www.atmel.com/tools/ATSAMV71-XULT.aspx</Path>
+        </Book>
+      </Books>
       <DebugOpt>
         <uSim>0</uSim>
         <uTrg>1</uTrg>
@@ -100,7 +137,7 @@
         <tRSysVw>1</tRSysVw>
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
-        <nTsel>6</nTsel>
+        <nTsel>0</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -111,7 +148,7 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile>.\libboard_samv7-ek\resources\mdk\samv7-sram.ini</tIfile>
-        <pMon>Segger\JL2CM3.dll</pMon>
+        <pMon>BIN\UL2CM3.DLL</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
@@ -141,17 +178,13 @@
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
-          <Key>DLGUARM</Key>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
           <Key>CMSIS_AGDI</Key>
           <Name>-X"EDBG CMSIS-DAP" -UATML2407080200001813 -O239 -S0 -C0 -P00 -N00("ARM CoreSight SW-DP") -D00(0BD11477) -L00(0) -FO7 -FD20400000 -FC1000 -FN0</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>UL2CM3</Key>
-          <Name>-S0 -C0 -P0 -FD20400000 -FC1000)</Name>
+          <Name>-S0 -C0 -P0  -FN1 -FC1000 -FD20400000 -FF0ATSAMV7x_2048 -FL0200000 -FS0400000 -FP0($$Device:ATSAMV71Q21$flash\ATSAMV7x_2048.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <Breakpoint/>
@@ -193,6 +226,16 @@
       </DebugFlag>
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
+      <bLintAuto>0</bLintAuto>
+      <Lin2Executable></Lin2Executable>
+      <Lin2ConfigFile></Lin2ConfigFile>
+      <bLin2Auto>0</bLin2Auto>
+      <DebugDescription>
+        <Enable>1</Enable>
+        <EnableLog>0</EnableLog>
+        <Protocol>2</Protocol>
+        <DbgClock>10000000</DbgClock>
+      </DebugDescription>
     </TargetOption>
   </Target>
 
@@ -207,7 +250,6 @@
       <FileNumber>1</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libboard_samv7-ek\source\board_lowlevel.c</PathWithFileName>
@@ -220,7 +262,6 @@
       <FileNumber>2</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libboard_samv7-ek\source\led.c</PathWithFileName>
@@ -233,7 +274,6 @@
       <FileNumber>3</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libboard_samv7-ek\resources\mdk\startup_sam.c</PathWithFileName>
@@ -246,7 +286,6 @@
       <FileNumber>4</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libboard_samv7-ek\source\dbg_console.c</PathWithFileName>
@@ -259,7 +298,6 @@
       <FileNumber>5</FileNumber>
       <FileType>2</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libboard_samv7-ek\resources\mdk\workaround.s</PathWithFileName>
@@ -272,7 +310,6 @@
       <FileNumber>6</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libboard_samv7-ek\resources\system_sam.c</PathWithFileName>
@@ -284,7 +321,7 @@
 
   <Group>
     <GroupName>Source</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -293,7 +330,6 @@
       <FileNumber>7</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
@@ -306,7 +342,6 @@
       <FileNumber>8</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\FreeRTOSConfig.h</PathWithFileName>
@@ -319,7 +354,6 @@
       <FileNumber>9</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Full_Demo\main_full.c</PathWithFileName>
@@ -332,7 +366,6 @@
       <FileNumber>10</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Blinky_Demo\main_blinky.c</PathWithFileName>
@@ -345,7 +378,6 @@
       <FileNumber>11</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Full_Demo\RegTest.c</PathWithFileName>
@@ -358,7 +390,6 @@
       <FileNumber>12</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\Full_Demo\IntQueueTimer.c</PathWithFileName>
@@ -379,7 +410,6 @@
       <FileNumber>13</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libchip_samv7\source\pio.c</PathWithFileName>
@@ -392,7 +422,6 @@
       <FileNumber>14</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libchip_samv7\source\pmc.c</PathWithFileName>
@@ -405,7 +434,6 @@
       <FileNumber>15</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libchip_samv7\source\tc.c</PathWithFileName>
@@ -418,7 +446,6 @@
       <FileNumber>16</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libchip_samv7\source\wdt.c</PathWithFileName>
@@ -431,7 +458,6 @@
       <FileNumber>17</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libchip_samv7\source\supc.c</PathWithFileName>
@@ -444,7 +470,6 @@
       <FileNumber>18</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>.\libchip_samv7\source\pio_capture.c</PathWithFileName>
@@ -465,7 +490,6 @@
       <FileNumber>19</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\event_groups.c</PathWithFileName>
@@ -478,7 +502,6 @@
       <FileNumber>20</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\list.c</PathWithFileName>
@@ -491,7 +514,6 @@
       <FileNumber>21</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\queue.c</PathWithFileName>
@@ -504,7 +526,6 @@
       <FileNumber>22</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\tasks.c</PathWithFileName>
@@ -517,7 +538,6 @@
       <FileNumber>23</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\timers.c</PathWithFileName>
@@ -530,7 +550,6 @@
       <FileNumber>24</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\portable\MemMang\heap_4.c</PathWithFileName>
@@ -543,7 +562,6 @@
       <FileNumber>25</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\Source\portable\RVDS\ARM_CM7\r0p1\port.c</PathWithFileName>
@@ -564,7 +582,6 @@
       <FileNumber>26</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\BlockQ.c</PathWithFileName>
@@ -577,7 +594,6 @@
       <FileNumber>27</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\blocktim.c</PathWithFileName>
@@ -590,7 +606,6 @@
       <FileNumber>28</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\countsem.c</PathWithFileName>
@@ -603,7 +618,6 @@
       <FileNumber>29</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\death.c</PathWithFileName>
@@ -616,7 +630,6 @@
       <FileNumber>30</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\dynamic.c</PathWithFileName>
@@ -629,7 +642,6 @@
       <FileNumber>31</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\EventGroupsDemo.c</PathWithFileName>
@@ -642,7 +654,6 @@
       <FileNumber>32</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\flop.c</PathWithFileName>
@@ -655,7 +666,6 @@
       <FileNumber>33</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\GenQTest.c</PathWithFileName>
@@ -668,7 +678,6 @@
       <FileNumber>34</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\QueueOverwrite.c</PathWithFileName>
@@ -681,7 +690,6 @@
       <FileNumber>35</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\QueueSet.c</PathWithFileName>
@@ -694,7 +702,6 @@
       <FileNumber>36</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\recmutex.c</PathWithFileName>
@@ -707,7 +714,6 @@
       <FileNumber>37</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\semtest.c</PathWithFileName>
@@ -720,7 +726,6 @@
       <FileNumber>38</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\TaskNotify.c</PathWithFileName>
@@ -733,7 +738,6 @@
       <FileNumber>39</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\TimerDemo.c</PathWithFileName>
@@ -746,7 +750,6 @@
       <FileNumber>40</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\IntQueue.c</PathWithFileName>
@@ -759,7 +762,6 @@
       <FileNumber>41</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
-      <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Common\Minimal\IntSemTest.c</PathWithFileName>

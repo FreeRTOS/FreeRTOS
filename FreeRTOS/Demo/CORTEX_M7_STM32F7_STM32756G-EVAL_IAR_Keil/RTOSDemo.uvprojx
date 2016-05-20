@@ -7,22 +7,22 @@
 
   <Targets>
     <Target>
-      <TargetName>SRAM</TargetName>
+      <TargetName>STM32756G_EVAL</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
-          <Device>ATSAMV71Q21</Device>
-          <Vendor>Atmel</Vendor>
-          <PackID>Keil.SAM-V_DFP.2.3.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20400000,0x00060000) IROM(0x00400000,0x00200000) IROM2(0x00800000,0x00004000) CPUTYPE("Cortex-M7") FPU3(DFPU) CLOCK(12000000) ELITTLE</Cpu>
+          <Device>STM32F756NGHx</Device>
+          <Vendor>STMicroelectronics</Vendor>
+          <PackID>Keil.STM32F7xx_DFP.2.5.0</PackID>
+          <PackURL>http://www.keil.com/pack</PackURL>
+          <Cpu>IRAM(0x20010000,0x40000) IRAM2(0x20000000,0x10000) IROM(0x08000000,0x100000) IROM2(0x00200000,0x100000) CPUTYPE("Cortex-M7") FPU3(SFPU) CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20400000 -FC1000 -FN1 -FF0ATSAMV7x_2048 -FS0400000 -FL0200000 -FP0($$Device:ATSAMV71Q21$flash\ATSAMV7x_2048.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20010000 -FC1000 -FN1 -FF0STM32F7x_1024 -FS08000000 -FL0100000 -FP0($$Device:STM32F756NGHx$CMSIS\Flash\STM32F7x_1024.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:ATSAMV71Q21$SAMV71\include\sam.h</RegisterFile>
+          <RegisterFile>$$Device:STM32F756NGHx$Drivers\CMSIS\Device\ST\STM32F7xx\Include\stm32f7xx.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -32,7 +32,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:ATSAMV71Q21$svd\ATSAMV71Q21.svd</SFDFile>
+          <SFDFile>$$Device:STM32F756NGHx$CMSIS\SVD\STM32F7x.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -47,14 +47,14 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\Objects\</OutputDirectory>
+          <OutputDirectory>.\STM32F7xx\</OutputDirectory>
           <OutputName>RTOSDemo</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\Listings\</ListingPath>
+          <ListingPath>.\STM32F7xx\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -128,8 +128,8 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>0</UseTargetDll>
-            <UseExternalTool>1</UseExternalTool>
+            <UseTargetDll>1</UseTargetDll>
+            <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
@@ -140,7 +140,7 @@
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
-          <pFcarmGrp>Source</pFcarmGrp>
+          <pFcarmGrp></pFcarmGrp>
           <pFcArmRoot></pFcArmRoot>
           <FcArmLst>0</FcArmLst>
         </Utilities>
@@ -182,8 +182,8 @@
             <hadIRAM>1</hadIRAM>
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
-            <RvdsVP>3</RvdsVP>
-            <hadIRAM2>0</hadIRAM2>
+            <RvdsVP>2</RvdsVP>
+            <hadIRAM2>1</hadIRAM2>
             <hadIROM2>1</hadIROM2>
             <StupSel>8</StupSel>
             <useUlib>1</useUlib>
@@ -242,13 +242,13 @@
               </Ocm6>
               <IRAM>
                 <Type>0</Type>
-                <StartAddress>0x20400000</StartAddress>
-                <Size>0x60000</Size>
+                <StartAddress>0x20010000</StartAddress>
+                <Size>0x40000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
-                <StartAddress>0x400000</StartAddress>
-                <Size>0x200000</Size>
+                <StartAddress>0x8000000</StartAddress>
+                <Size>0x100000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -272,13 +272,13 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x400000</StartAddress>
-                <Size>0x200000</Size>
+                <StartAddress>0x8000000</StartAddress>
+                <Size>0x100000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
-                <StartAddress>0x800000</StartAddress>
-                <Size>0x4000</Size>
+                <StartAddress>0x200000</StartAddress>
+                <Size>0x100000</Size>
               </OCR_RVCT5>
               <OCR_RVCT6>
                 <Type>0</Type>
@@ -297,13 +297,13 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x20400000</StartAddress>
-                <Size>0x60000</Size>
+                <StartAddress>0x20010000</StartAddress>
+                <Size>0x40000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x10000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
             <RvctStartVector></RvctStartVector>
@@ -313,7 +313,7 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>1</OneElfS>
+            <OneElfS>0</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -322,7 +322,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>1</uC99>
+            <uC99>0</uC99>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -332,9 +332,9 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>__SAMV71Q21__, NDEBUG</Define>
+              <Define>STM32F756xx, CORE_CM7,USE_HAL_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\;.\libchip_samv7\include\cmsis\CMSIS;.\libboard_samv7-ek;.\libchip_samv7;.\libboard_samv7-ek\include;.\libchip_samv7\include\samv7;..\..\Source\include;..\RTOSDemo;..\..\Source\portable\RVDS\ARM_CM7\r0p1;..\Common\include;.\Full_Demo</IncludePath>
+              <IncludePath>.\CMSIS\Device\ST\STM32F7xx\Include;.\CMSIS\Include;.\ST_Library\include;.;..\..\Source\include;..\..\Source\portable\RVDS\ARM_CM7\r0p1;..\Common\include;.\Full_Demo</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -355,16 +355,16 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>0</umfTarg>
+            <umfTarg>1</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
             <RepFail>1</RepFail>
             <useFile>0</useFile>
-            <TextAddressRange>0x00000000</TextAddressRange>
-            <DataAddressRange>0x20400000</DataAddressRange>
+            <TextAddressRange>0x08000000</TextAddressRange>
+            <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\libboard_samv7-ek\resources\mdk\sram.sct</ScatterFile>
+            <ScatterFile>.\STM32L4xx\Project.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -375,52 +375,17 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Atmel_Libboard</GroupName>
+          <GroupName>User</GroupName>
           <Files>
             <File>
-              <FileName>board_lowlevel.c</FileName>
+              <FileName>main_blinky.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libboard_samv7-ek\source\board_lowlevel.c</FilePath>
+              <FilePath>.\Blinky_Demo\main_blinky.c</FilePath>
             </File>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\libboard_samv7-ek\source\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_sam.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\libboard_samv7-ek\resources\mdk\startup_sam.c</FilePath>
-            </File>
-            <File>
-              <FileName>dbg_console.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\libboard_samv7-ek\source\dbg_console.c</FilePath>
-            </File>
-            <File>
-              <FileName>workaround.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>.\libboard_samv7-ek\resources\mdk\workaround.s</FilePath>
-            </File>
-            <File>
-              <FileName>system_sam.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\libboard_samv7-ek\resources\system_sam.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Source</GroupName>
-          <Files>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>FreeRTOSConfig.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FreeRTOSConfig.h</FilePath>
             </File>
             <File>
               <FileName>main_full.c</FileName>
@@ -428,59 +393,89 @@
               <FilePath>.\Full_Demo\main_full.c</FilePath>
             </File>
             <File>
-              <FileName>main_blinky.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Blinky_Demo\main_blinky.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegTest.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Full_Demo\RegTest.c</FilePath>
+              <FileName>FreeRTOSConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FreeRTOSConfig.h</FilePath>
             </File>
             <File>
               <FileName>IntQueueTimer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Full_Demo\IntQueueTimer.c</FilePath>
             </File>
+            <File>
+              <FileName>RegTest_Keil.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Full_Demo\RegTest_Keil.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Atmel_Libchip</GroupName>
+          <GroupName>ST Library</GroupName>
           <Files>
             <File>
-              <FileName>pio.c</FileName>
+              <FileName>stm32f7xx_hal.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libchip_samv7\source\pio.c</FilePath>
+              <FilePath>.\ST_Library\stm32f7xx_hal.c</FilePath>
             </File>
             <File>
-              <FileName>pmc.c</FileName>
+              <FileName>stm32f7xx_hal_cortex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libchip_samv7\source\pmc.c</FilePath>
+              <FilePath>.\ST_Library\stm32f7xx_hal_cortex.c</FilePath>
             </File>
             <File>
-              <FileName>tc.c</FileName>
+              <FileName>stm32f7xx_hal_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libchip_samv7\source\tc.c</FilePath>
+              <FilePath>.\ST_Library\stm32f7xx_hal_gpio.c</FilePath>
             </File>
             <File>
-              <FileName>wdt.c</FileName>
+              <FileName>stm32f7xx_hal_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libchip_samv7\source\wdt.c</FilePath>
+              <FilePath>.\ST_Library\stm32f7xx_hal_rcc.c</FilePath>
             </File>
             <File>
-              <FileName>supc.c</FileName>
+              <FileName>stm32f7xx_hal_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libchip_samv7\source\supc.c</FilePath>
+              <FilePath>.\ST_Library\stm32f7xx_hal_tim.c</FilePath>
             </File>
             <File>
-              <FileName>pio_capture.c</FileName>
+              <FileName>stm32f7xx_hal_dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\libchip_samv7\source\pio_capture.c</FilePath>
+              <FilePath>.\ST_Library\stm32f7xx_hal_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f7xx_hal_tim_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ST_Library\stm32f7xx_hal_tim_ex.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>FreeRTOS_Source</GroupName>
+          <GroupName>System</GroupName>
+          <Files>
+            <File>
+              <FileName>system_stm32f7xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System_Keil\system_stm32f7xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f7xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System_Keil\stm32f7xx_it.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f7xx_hal_msp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System_Keil\stm32f7xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>startup_stm32f756xx.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\System_Keil\startup_stm32f756xx.s</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FreeRTOS Source</GroupName>
           <Files>
             <File>
               <FileName>event_groups.c</FileName>
@@ -520,7 +515,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Common_Demo_Tasks</GroupName>
+          <GroupName>Common Demo Tasks</GroupName>
           <Files>
             <File>
               <FileName>BlockQ.c</FileName>
@@ -563,6 +558,31 @@
               <FilePath>..\Common\Minimal\GenQTest.c</FilePath>
             </File>
             <File>
+              <FileName>integer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\integer.c</FilePath>
+            </File>
+            <File>
+              <FileName>IntQueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\IntQueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>IntSemTest.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\IntSemTest.c</FilePath>
+            </File>
+            <File>
+              <FileName>PollQ.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\PollQ.c</FilePath>
+            </File>
+            <File>
+              <FileName>QPeek.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Common\Minimal\QPeek.c</FilePath>
+            </File>
+            <File>
               <FileName>QueueOverwrite.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Common\Minimal\QueueOverwrite.c</FilePath>
@@ -592,16 +612,6 @@
               <FileType>1</FileType>
               <FilePath>..\Common\Minimal\TimerDemo.c</FilePath>
             </File>
-            <File>
-              <FileName>IntQueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Common\Minimal\IntQueue.c</FilePath>
-            </File>
-            <File>
-              <FileName>IntSemTest.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Common\Minimal\IntSemTest.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -617,7 +627,7 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="Cortex-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
         <targetInfos>
-          <targetInfo name="SRAM"/>
+          <targetInfo name="STM32756G_EVAL"/>
         </targetInfos>
       </component>
     </components>

@@ -1,3 +1,0 @@
-WARNING:MDT - ppc405_virtex4 (ppc405_0) -
-   C:\E\Dev\FreeRTOS\WorkingCopy2\Demo\PPC405_FPU_Xilinx_Virtex4_GCC\dump.mhs
-   line 28 - ADDRESS specified by PARAMETER C_IDCR_BASEADDR is ignored

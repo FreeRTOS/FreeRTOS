@@ -9,167 +9,167 @@
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <AsfFrameworkConfig>
       <framework-data>
-        <options>
-          <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.services.basic.serial" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.applications.user_application.xplained_pro2" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.utils" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="sam0.utils.cmsis.samd20.source.template" value="Add" config="" content-id="Atmel.ASF" />
-        </options>
-        <configurations>
-          <configuration key="config.sam0.drivers.sercom.usart" value="callback" default="callback" content-id="Atmel.ASF" />
-        </configurations>
-        <files>
-          <file path="src/main.c" framework="" version="" source="common2/applications/xplained_pro_user_application/main.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/config/conf_board.h" framework="" version="" source="common2/applications/xplained_pro_user_application/samd20j18_samd20_xplained_pro/config/conf_board.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/config/conf_clocks.h" framework="" version="" source="common2/applications/xplained_pro_user_application/samd20j18_samd20_xplained_pro/config/conf_clocks.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/boards/board.h" framework="" version="" source="common/boards/board.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/interrupt.h" framework="" version="" source="common/utils/interrupt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/interrupt/interrupt_sam_nvic.c" framework="" version="" source="common/utils/interrupt/interrupt_sam_nvic.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/interrupt/interrupt_sam_nvic.h" framework="" version="" source="common/utils/interrupt/interrupt_sam_nvic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/utils/parts.h" framework="" version="" source="common/utils/parts.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/boards/samd20_xplained_pro/board_init.c" framework="" version="" source="sam0/boards/samd20_xplained_pro/board_init.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/boards/samd20_xplained_pro/samd20_xplained_pro.h" framework="" version="" source="sam0/boards/samd20_xplained_pro/samd20_xplained_pro.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/port/port.c" framework="" version="" source="sam0/drivers/port/port.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/port/port.h" framework="" version="" source="sam0/drivers/port/port.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/port/quick_start/qs_port_basic.h" framework="" version="" source="sam0/drivers/port/quick_start/qs_port_basic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/clock.c" framework="" version="" source="sam0/drivers/system/clock/clock.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/clock.h" framework="" version="" source="sam0/drivers/system/clock/clock.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/clock_config_check.h" framework="" version="" source="sam0/drivers/system/clock/clock_config_check.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/gclk.c" framework="" version="" source="sam0/drivers/system/clock/gclk.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/gclk.h" framework="" version="" source="sam0/drivers/system/clock/gclk.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/quick_start_clock/qs_clock_source.h" framework="" version="" source="sam0/drivers/system/clock/quick_start_clock/qs_clock_source.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/clock/quick_start_gclk/qs_gclk_basic.h" framework="" version="" source="sam0/drivers/system/clock/quick_start_gclk/qs_gclk_basic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/interrupt/quick_start/qs_system_interrupt.h" framework="" version="" source="sam0/drivers/system/interrupt/quick_start/qs_system_interrupt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/interrupt/system_interrupt.c" framework="" version="" source="sam0/drivers/system/interrupt/system_interrupt.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/interrupt/system_interrupt.h" framework="" version="" source="sam0/drivers/system/interrupt/system_interrupt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/pinmux/pinmux.c" framework="" version="" source="sam0/drivers/system/pinmux/pinmux.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/pinmux/pinmux.h" framework="" version="" source="sam0/drivers/system/pinmux/pinmux.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/pinmux/quick_start/qs_pinmux_basic.h" framework="" version="" source="sam0/drivers/system/pinmux/quick_start/qs_pinmux_basic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/system.c" framework="" version="" source="sam0/drivers/system/system.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/system/system.h" framework="" version="" source="sam0/drivers/system/system.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_ac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_ac.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_adc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_adc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_dac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_dac.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_dsu.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_dsu.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_eic.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_eic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_evsys.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_evsys.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_gclk.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_gclk.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_nvmctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_nvmctrl.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_pac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_pac.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_pm.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_pm.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_port.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_port.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_rtc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_rtc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_sercom.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_sercom.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_sysctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_sysctrl.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_tc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_tc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_wdt.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_wdt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_ac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_ac.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_adc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_adc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_dac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_dac.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_dsu.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_dsu.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_eic.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_eic.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_evsys.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_evsys.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_gclk.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_gclk.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_nvmctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_nvmctrl.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pac0.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pac0.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pac1.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pac1.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pac2.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pac2.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pm.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pm.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_port.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_port.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_rtc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_rtc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom0.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom0.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom1.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom1.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom2.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom2.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom3.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom3.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom4.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom4.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom5.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom5.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sysctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sysctrl.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc0.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc0.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc1.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc1.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc2.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc2.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc3.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc3.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc4.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc4.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc5.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc5.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc6.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc6.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc7.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc7.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_wdt.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_wdt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e14.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e15.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e16.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e17.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e18.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g14.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g15.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g16.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g17.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g18.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j14.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j15.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j16.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j17.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j18.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e14.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e15.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e16.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e17.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e18.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g14.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g15.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g16.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g17.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g18.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j14.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j15.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j16.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j17.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j18.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/source/gcc/startup_samd20.c" framework="" version="" source="sam0/utils/cmsis/samd20/source/gcc/startup_samd20.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/source/system_samd20.c" framework="" version="" source="sam0/utils/cmsis/samd20/source/system_samd20.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/cmsis/samd20/source/system_samd20.h" framework="" version="" source="sam0/utils/cmsis/samd20/source/system_samd20.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/compiler.h" framework="" version="" source="sam0/utils/compiler.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/header_files/io.h" framework="" version="" source="sam0/utils/header_files/io.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/linker_scripts/samd20/gcc/samd20j18_flash.ld" framework="" version="" source="sam0/utils/linker_scripts/samd20/gcc/samd20j18_flash.ld" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/make/Makefile.sam.in" framework="" version="" source="sam0/utils/make/Makefile.sam.in" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/preprocessor/mrepeat.h" framework="" version="" source="sam0/utils/preprocessor/mrepeat.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/preprocessor/preprocessor.h" framework="" version="" source="sam0/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/preprocessor/stringz.h" framework="" version="" source="sam0/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/preprocessor/tpaste.h" framework="" version="" source="sam0/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/status_codes.h" framework="" version="" source="sam0/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/utils/syscalls/gcc/syscalls.c" framework="" version="" source="sam0/utils/syscalls/gcc/syscalls.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" framework="" version="" source="thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/Include/arm_math.h" framework="" version="" source="thirdparty/CMSIS/Include/arm_math.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/Include/core_cm0plus.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cm0plus.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/Include/core_cmFunc.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cmFunc.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/Include/core_cmInstr.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cmInstr.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/Lib/GCC/libarm_cortexM0l_math.a" framework="" version="" source="thirdparty/CMSIS/Lib/GCC/libarm_cortexM0l_math.a" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/README.txt" framework="" version="" source="thirdparty/CMSIS/README.txt" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/thirdparty/CMSIS/license.txt" framework="" version="" source="thirdparty/CMSIS/license.txt" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/serial/sam0_usart/usart_serial.h" framework="" version="3.11.0" source="common\services\serial\sam0_usart\usart_serial.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/common/services/serial/serial.h" framework="" version="3.11.0" source="common\services\serial\serial.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/sercom_interrupt.c" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom_interrupt.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/sercom.c" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/sercom_interrupt.h" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom_interrupt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/sercom_pinout.h" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom_pinout.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/sercom.h" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/usart/usart.c" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/usart/usart_interrupt.c" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart_interrupt.c" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/usart/quick_start/qs_usart_basic_use.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\quick_start\qs_usart_basic_use.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/usart/usart_interrupt.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart_interrupt.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/usart/quick_start_callback/qs_usart_callback.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\quick_start_callback\qs_usart_callback.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/sercom/usart/usart.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart.h" changed="False" content-id="Atmel.ASF" />
-        </files>
-        <documentation help="http://asf.atmel.com/docs/3.11.0/common.applications.user_application.xplained_pro2.samd20_xplained_pro/html/index.html" />
-        <offline-documentation help="" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.18.1" />
-        </dependencies>
-        <project id="common.applications.user_application.xplained_pro2.samd20_xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
-        <board id="board.samd20_xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
-      </framework-data>
+  <options>
+    <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="sam0.drivers.system" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.services.basic.serial" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.applications.user_application.xplained_pro2" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="common.utils" value="Add" config="" content-id="Atmel.ASF" />
+    <option id="sam0.utils.cmsis.samd20.source.template" value="Add" config="" content-id="Atmel.ASF" />
+  </options>
+  <configurations>
+    <configuration key="config.sam0.drivers.sercom.usart" value="callback" default="callback" content-id="Atmel.ASF" />
+  </configurations>
+  <files>
+    <file path="src/main.c" framework="" version="" source="common2/applications/xplained_pro_user_application/main.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/config/conf_board.h" framework="" version="" source="common2/applications/xplained_pro_user_application/samd20j18_samd20_xplained_pro/config/conf_board.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/config/conf_clocks.h" framework="" version="" source="common2/applications/xplained_pro_user_application/samd20j18_samd20_xplained_pro/config/conf_clocks.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/boards/board.h" framework="" version="" source="common/boards/board.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/interrupt.h" framework="" version="" source="common/utils/interrupt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/interrupt/interrupt_sam_nvic.c" framework="" version="" source="common/utils/interrupt/interrupt_sam_nvic.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/interrupt/interrupt_sam_nvic.h" framework="" version="" source="common/utils/interrupt/interrupt_sam_nvic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/utils/parts.h" framework="" version="" source="common/utils/parts.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/boards/samd20_xplained_pro/board_init.c" framework="" version="" source="sam0/boards/samd20_xplained_pro/board_init.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/boards/samd20_xplained_pro/samd20_xplained_pro.h" framework="" version="" source="sam0/boards/samd20_xplained_pro/samd20_xplained_pro.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/port/port.c" framework="" version="" source="sam0/drivers/port/port.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/port/port.h" framework="" version="" source="sam0/drivers/port/port.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/port/quick_start/qs_port_basic.h" framework="" version="" source="sam0/drivers/port/quick_start/qs_port_basic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/clock.c" framework="" version="" source="sam0/drivers/system/clock/clock.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/clock.h" framework="" version="" source="sam0/drivers/system/clock/clock.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/clock_config_check.h" framework="" version="" source="sam0/drivers/system/clock/clock_config_check.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/gclk.c" framework="" version="" source="sam0/drivers/system/clock/gclk.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/gclk.h" framework="" version="" source="sam0/drivers/system/clock/gclk.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/quick_start_clock/qs_clock_source.h" framework="" version="" source="sam0/drivers/system/clock/quick_start_clock/qs_clock_source.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/clock/quick_start_gclk/qs_gclk_basic.h" framework="" version="" source="sam0/drivers/system/clock/quick_start_gclk/qs_gclk_basic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/interrupt/quick_start/qs_system_interrupt.h" framework="" version="" source="sam0/drivers/system/interrupt/quick_start/qs_system_interrupt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/interrupt/system_interrupt.c" framework="" version="" source="sam0/drivers/system/interrupt/system_interrupt.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/interrupt/system_interrupt.h" framework="" version="" source="sam0/drivers/system/interrupt/system_interrupt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/pinmux/pinmux.c" framework="" version="" source="sam0/drivers/system/pinmux/pinmux.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/pinmux/pinmux.h" framework="" version="" source="sam0/drivers/system/pinmux/pinmux.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/pinmux/quick_start/qs_pinmux_basic.h" framework="" version="" source="sam0/drivers/system/pinmux/quick_start/qs_pinmux_basic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/system.c" framework="" version="" source="sam0/drivers/system/system.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/system/system.h" framework="" version="" source="sam0/drivers/system/system.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_ac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_ac.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_adc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_adc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_dac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_dac.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_dsu.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_dsu.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_eic.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_eic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_evsys.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_evsys.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_gclk.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_gclk.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_nvmctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_nvmctrl.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_pac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_pac.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_pm.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_pm.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_port.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_port.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_rtc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_rtc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_sercom.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_sercom.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_sysctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_sysctrl.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_tc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_tc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/component/component_wdt.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/component/component_wdt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_ac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_ac.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_adc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_adc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_dac.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_dac.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_dsu.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_dsu.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_eic.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_eic.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_evsys.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_evsys.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_gclk.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_gclk.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_nvmctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_nvmctrl.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pac0.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pac0.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pac1.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pac1.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pac2.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pac2.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_pm.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_pm.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_port.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_port.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_rtc.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_rtc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom0.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom0.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom1.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom1.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom2.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom2.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom3.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom3.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom4.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom4.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sercom5.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sercom5.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_sysctrl.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_sysctrl.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc0.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc0.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc1.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc1.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc2.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc2.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc3.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc3.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc4.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc4.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc5.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc5.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc6.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc6.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_tc7.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_tc7.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/instance/instance_wdt.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/instance/instance_wdt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e14.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e15.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e16.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e17.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20e18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20e18.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g14.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g15.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g16.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g17.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20g18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20g18.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j14.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j15.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j16.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j17.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/pio/pio_samd20j18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/pio/pio_samd20j18.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e14.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e15.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e16.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e17.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20e18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20e18.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g14.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g15.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g16.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g17.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20g18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20g18.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j14.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j14.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j15.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j15.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j16.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j16.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j17.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j17.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/include/samd20j18.h" framework="" version="" source="sam0/utils/cmsis/samd20/include/samd20j18.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/source/gcc/startup_samd20.c" framework="" version="" source="sam0/utils/cmsis/samd20/source/gcc/startup_samd20.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/source/system_samd20.c" framework="" version="" source="sam0/utils/cmsis/samd20/source/system_samd20.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/cmsis/samd20/source/system_samd20.h" framework="" version="" source="sam0/utils/cmsis/samd20/source/system_samd20.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/compiler.h" framework="" version="" source="sam0/utils/compiler.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/header_files/io.h" framework="" version="" source="sam0/utils/header_files/io.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/linker_scripts/samd20/gcc/samd20j18_flash.ld" framework="" version="" source="sam0/utils/linker_scripts/samd20/gcc/samd20j18_flash.ld" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/make/Makefile.sam.in" framework="" version="" source="sam0/utils/make/Makefile.sam.in" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/preprocessor/mrepeat.h" framework="" version="" source="sam0/utils/preprocessor/mrepeat.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/preprocessor/preprocessor.h" framework="" version="" source="sam0/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/preprocessor/stringz.h" framework="" version="" source="sam0/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/preprocessor/tpaste.h" framework="" version="" source="sam0/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/status_codes.h" framework="" version="" source="sam0/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/utils/syscalls/gcc/syscalls.c" framework="" version="" source="sam0/utils/syscalls/gcc/syscalls.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" framework="" version="" source="thirdparty/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/Include/arm_math.h" framework="" version="" source="thirdparty/CMSIS/Include/arm_math.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/Include/core_cm0plus.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cm0plus.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/Include/core_cmFunc.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cmFunc.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/Include/core_cmInstr.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cmInstr.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/Lib/GCC/libarm_cortexM0l_math.a" framework="" version="" source="thirdparty/CMSIS/Lib/GCC/libarm_cortexM0l_math.a" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/README.txt" framework="" version="" source="thirdparty/CMSIS/README.txt" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/thirdparty/CMSIS/license.txt" framework="" version="" source="thirdparty/CMSIS/license.txt" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/serial/sam0_usart/usart_serial.h" framework="" version="3.11.0" source="common\services\serial\sam0_usart\usart_serial.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/common/services/serial/serial.h" framework="" version="3.11.0" source="common\services\serial\serial.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/sercom_interrupt.c" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom_interrupt.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/sercom.c" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/sercom_interrupt.h" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom_interrupt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/sercom_pinout.h" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom_pinout.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/sercom.h" framework="" version="3.11.0" source="sam0\drivers\sercom\sercom.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/usart/usart.c" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/usart/usart_interrupt.c" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart_interrupt.c" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/usart/quick_start/qs_usart_basic_use.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\quick_start\qs_usart_basic_use.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/usart/usart_interrupt.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart_interrupt.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/usart/quick_start_callback/qs_usart_callback.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\quick_start_callback\qs_usart_callback.h" changed="False" content-id="Atmel.ASF" />
+    <file path="src/ASF/sam0/drivers/sercom/usart/usart.h" framework="" version="3.11.0" source="sam0\drivers\sercom\usart\usart.h" changed="False" content-id="Atmel.ASF" />
+  </files>
+  <documentation help="http://asf.atmel.com/docs/3.11.0/common.applications.user_application.xplained_pro2.samd20_xplained_pro/html/index.html" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.20.1" />
+  </dependencies>
+  <project id="common.applications.user_application.xplained_pro2.samd20_xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
+  <board id="board.samd20_xplained_pro" value="Add" config="" content-id="Atmel.ASF" />
+</framework-data>
     </AsfFrameworkConfig>
     <avrdevice>ATSAMD20J18</avrdevice>
     <avrdeviceseries>samd20</avrdeviceseries>

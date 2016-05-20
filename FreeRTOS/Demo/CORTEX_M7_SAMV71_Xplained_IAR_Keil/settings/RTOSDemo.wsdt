@@ -12,7 +12,7 @@
           
           
           
-        <Column0>198</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>237</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -28,7 +28,7 @@
     <Windows>
       
       
-    <Wnd0>
+    <Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-23288-9694</Identity>
@@ -40,7 +40,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd0><Wnd2>
+      <SelectedTab>0</SelectedTab></Wnd1><Wnd3>
         <Tabs>
           <Tab>
             <Identity>TabID-13649-20313</Identity>
@@ -56,7 +56,7 @@
           </Tab>
         <Tab><Identity>TabID-30315-19856</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2></Windows>
+      <SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
@@ -69,7 +69,7 @@
       
       
       
-    <Top><Row0><Sizes><Toolbar-00F27AD8><key>iaridepm.enu1</key></Toolbar-00F27AD8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>770</Bottom><Right>272</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>174</yscreen><sizeHorzCX>119048</sizeHorzCX><sizeHorzCY>176829</sizeHorzCY><sizeVertCX>163095</sizeVertCX><sizeVertCY>784553</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>170</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>172</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>174797</sizeHorzCY><sizeVertCX>119048</sizeVertCX><sizeVertCY>176829</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-00DC1998><key>iaridepm.enu1</key></Toolbar-00DC1998></Sizes></Row0></Top><Left><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>894</Bottom><Right>311</Right><x>-2</x><y>-2</y><xscreen>229</xscreen><yscreen>201</yscreen><sizeHorzCX>119271</sizeHorzCX><sizeHorzCY>177249</sizeHorzCY><sizeVertCX>163021</sizeVertCX><sizeVertCY>790123</sizeVertCY></Rect></Wnd1></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>196</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>198</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>174603</sizeHorzCY><sizeVertCX>119271</sizeVertCX><sizeVertCY>177249</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

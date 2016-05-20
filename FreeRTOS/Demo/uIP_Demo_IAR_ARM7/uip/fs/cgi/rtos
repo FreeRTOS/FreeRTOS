@@ -1,6 +1,0 @@
-t <html><head><title>uIP Open Source Embedded TCP/IP Stack On FreeRTOS Kernel</title></head><body BGCOLOR="#CCCCFF"><font face="arial"><small><b><a href="http://www.freertos.org" target="_top">FreeRTOS Homepage</a></b></small><p><H1>AT91SAM7X Embedded WEB Server Demo<br><small>Using uIP and the FreeRTOS real time kernel</small></h1><p>These pages are being served by an Atmel AT91SAM7X256 microcontroller, using Adam Dunkels open source uIP TCP/IP stack.<p>The uIP stack is executing from a single task under control of the FreeRTOS real time kernel.  The table below shows the statistics for all the tasks in the demo applicaiton.<p><pre>Task          State  Priority  Stack	#<br>************************************************<br>
-c d
-t </pre></font></body></html>
-.
-
-

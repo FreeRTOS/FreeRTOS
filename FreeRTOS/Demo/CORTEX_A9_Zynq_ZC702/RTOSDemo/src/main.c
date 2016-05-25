@@ -85,12 +85,16 @@
  * !!! IMPORTANT NOTE !!!
  * The GCC libraries that ship with the Xilinx SDK make use of the floating
  * point registers.  To avoid this causing corruption it is necessary to avoid
- * their use.  For this reason main.c contains very basic C implementations of
- * the standard C library functions memset(), memcpy() and memcmp(), which are
- * are used by FreeRTOS itself.  Defining these functions in the project
- * prevents the linker pulling them in from the library.  Any other standard C
- * library functions that are used by the application must likewise be defined
- * in C.
+ * their use unless a task has been given a floating point context.  See
+ * http://www.freertos.org/Using-FreeRTOS-on-Cortex-A-Embedded-Processors.html
+ * for information on how to give a task a floating point context, and how to
+ * handle floating point operations in interrupts.  As this demo does not give
+ * all tasks a floating point context main.c contains very basic C
+ * implementations of the standard C library functions memset(), memcpy() and
+ * memcmp(), which are are used by FreeRTOS itself.  Defining these functions in
+ * the project prevents the linker pulling them in from the library.  Any other
+ * standard C library functions that are used by the application must likewise
+ * be defined in C.
  *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO

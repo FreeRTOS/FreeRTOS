@@ -89,6 +89,7 @@ task.h is included from an application file. */
 /* Constants required to access and manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL_REG				( * ( ( volatile uint32_t * ) 0xe000e010 ) )
 #define portNVIC_SYSTICK_LOAD_REG				( * ( ( volatile uint32_t * ) 0xe000e014 ) )
+#define portNVIC_SYSTICK_CURRENT_VALUE_REG		( * ( ( volatile uint32_t * ) 0xe000e018 ) )
 #define portNVIC_SYSPRI2_REG					( *	( ( volatile uint32_t * ) 0xe000ed20 ) )
 #define portNVIC_SYSPRI1_REG					( * ( ( volatile uint32_t * ) 0xe000ed1c ) )
 #define portNVIC_SYS_CTRL_STATE_REG				( * ( ( volatile uint32_t * ) 0xe000ed24 ) )
@@ -449,6 +450,7 @@ void xPortPendSVHandler( void )
 		"	mrs r1, control						\n"
 		"	stmdb r0!, {r1, r4-r11}				\n" /* Save the remaining registers. */
 		"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
+		"	clrex								\n" /* Ensure thread safety of atomic operations. */
 		"										\n"
 		"	stmdb sp!, {r3, r14}				\n"
 		"	mov r0, %0							\n"
@@ -500,6 +502,10 @@ uint32_t ulDummy;
  */
 static void prvSetupTimerInterrupt( void )
 {
+	/* Reset the SysTick timer. */
+	portNVIC_SYSTICK_CTRL_REG = 0UL;
+	portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
+
 	/* Configure SysTick to interrupt at the requested rate. */
 	portNVIC_SYSTICK_LOAD_REG = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;

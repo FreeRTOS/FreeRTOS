@@ -91,6 +91,7 @@ task.h is included from an application file. */
 /* Constants required to access and manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL_REG				( * ( ( volatile uint32_t * ) 0xe000e010 ) )
 #define portNVIC_SYSTICK_LOAD_REG				( * ( ( volatile uint32_t * ) 0xe000e014 ) )
+#define portNVIC_SYSTICK_CURRENT_VALUE_REG		( * ( ( volatile uint32_t * ) 0xe000e018 ) )
 #define portNVIC_SYSPRI2_REG					( *	( ( volatile uint32_t * ) 0xe000ed20 ) )
 #define portNVIC_SYSPRI1_REG					( * ( ( volatile uint32_t * ) 0xe000ed1c ) )
 #define portNVIC_SYS_CTRL_STATE_REG				( * ( ( volatile uint32_t * ) 0xe000ed24 ) )
@@ -196,7 +197,7 @@ static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) 
  * Function to enable the VFP.
  */
  static void vPortEnableVFP( void ) __attribute__ (( naked ));
- 
+
 /*
  * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
  * FreeRTOS API functions are not called from interrupts that have been assigned
@@ -225,12 +226,12 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	*pxTopOfStack = 0;	/* LR */
 	pxTopOfStack -= 5;	/* R12, R3, R2 and R1. */
 	*pxTopOfStack = ( StackType_t ) pvParameters;	/* R0 */
-	
+
 	/* A save method is being used that requires each task to maintain its
 	own exec return value. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_EXEC_RETURN;
-	
+
 	pxTopOfStack -= 9;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
 	if( xRunPrivileged == pdTRUE )
@@ -476,6 +477,7 @@ void xPortPendSVHandler( void )
 		"	mrs r1, control						\n"
 		"	stmdb r0!, {r1, r4-r11, r14}		\n" /* Save the remaining registers. */
 		"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
+		"	clrex								\n" /* Ensure thread safety of atomic operations. */
 		"										\n"
 		"	stmdb sp!, {r3}						\n"
 		"	mov r0, %0							\n"
@@ -533,6 +535,10 @@ uint32_t ulDummy;
  */
 static void prvSetupTimerInterrupt( void )
 {
+	/* Clear the SysTick. */
+	portNVIC_SYSTICK_CTRL_REG = 0UL;
+	portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
+
 	/* Configure SysTick to interrupt at the requested rate. */
 	portNVIC_SYSTICK_LOAD_REG = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;

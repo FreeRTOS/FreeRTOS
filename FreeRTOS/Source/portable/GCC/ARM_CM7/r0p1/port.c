@@ -437,8 +437,8 @@ void xPortPendSVHandler( void )
 	"	vstmdbeq r0!, {s16-s31}				\n"
 	"										\n"
 	"	stmdb r0!, {r4-r11, r14}			\n" /* Save the core registers. */
-	"										\n"
 	"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
+	"	clrex								\n" /* Ensure thread safety of atomic operations. */
 	"										\n"
 	"	stmdb sp!, {r3}						\n"
 	"	mov r0, %0 							\n"
@@ -668,6 +668,10 @@ __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 		ulStoppedTimerCompensation = portMISSED_COUNTS_FACTOR / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
 	}
 	#endif /* configUSE_TICKLESS_IDLE */
+
+	/* Stop and clear the SysTick. */
+	portNVIC_SYSTICK_CTRL_REG = 0UL;
+	portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
 
 	/* Configure SysTick to interrupt at the requested rate. */
 	portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;

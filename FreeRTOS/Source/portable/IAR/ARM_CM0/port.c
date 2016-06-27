@@ -79,8 +79,9 @@
 #include "task.h"
 
 /* Constants required to manipulate the NVIC. */
-#define portNVIC_SYSTICK_CTRL		( ( volatile uint32_t *) 0xe000e010 )
-#define portNVIC_SYSTICK_LOAD		( ( volatile uint32_t *) 0xe000e014 )
+#define portNVIC_SYSTICK_CTRL			( ( volatile uint32_t * ) 0xe000e010 )
+#define portNVIC_SYSTICK_LOAD			( ( volatile uint32_t * ) 0xe000e014 )
+#define portNVIC_SYSTICK_CURRENT_VALUE	( ( volatile uint32_t * ) 0xe000e018 )
 #define portNVIC_SYSPRI2			( ( volatile uint32_t *) 0xe000ed20 )
 #define portNVIC_SYSTICK_CLK		0x00000004
 #define portNVIC_SYSTICK_INT		0x00000002
@@ -247,6 +248,10 @@ uint32_t ulPreviousMask;
  */
 static void prvSetupTimerInterrupt( void )
 {
+	/* Stop and reset the SysTick. */
+	*(portNVIC_SYSTICK_CTRL) = 0UL;
+	*(portNVIC_SYSTICK_CURRENT_VALUE) = 0UL;
+
 	/* Configure SysTick to interrupt at the requested rate. */
 	*(portNVIC_SYSTICK_LOAD) = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	*(portNVIC_SYSTICK_CTRL) = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;

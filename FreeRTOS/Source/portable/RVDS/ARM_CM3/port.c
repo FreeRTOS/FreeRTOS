@@ -407,6 +407,7 @@ __asm void xPortPendSVHandler( void )
 
 	stmdb r0!, {r4-r11}			/* Save the remaining registers. */
 	str r0, [r2]				/* Save the new top of stack into the first member of the TCB. */
+	clrex						/* Ensure thread safety of atomic operations. */
 
 	stmdb sp!, {r3, r14}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
@@ -620,6 +621,10 @@ void xPortSysTickHandler( void )
 			ulStoppedTimerCompensation = portMISSED_COUNTS_FACTOR / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
 		}
 		#endif /* configUSE_TICKLESS_IDLE */
+
+		/* Stop and clear the SysTick. */
+		portNVIC_SYSTICK_CTRL_REG = 0UL;
+		portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
 
 		/* Configure SysTick to interrupt at the requested rate. */
 		portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;

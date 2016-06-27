@@ -1901,7 +1901,10 @@ BaseType_t xReturn;
 
 		/* If configGENERATE_RUN_TIME_STATS is defined then the following
 		macro must be defined to configure the timer/counter used to generate
-		the run time counter time base. */
+		the run time counter time base.   NOTE:  If configGENERATE_RUN_TIME_STATS
+		is set to 0 and the following line fails to build then ensure you do not
+		have portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() defined in your
+		FreeRTOSConfig.h file. */
 		portCONFIGURE_TIMER_FOR_RUN_TIME_STATS();
 
 		/* Setting up the timer tick is hardware specific and thus in the

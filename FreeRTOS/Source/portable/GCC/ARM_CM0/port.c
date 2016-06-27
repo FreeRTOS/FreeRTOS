@@ -76,8 +76,9 @@
 #include "task.h"
 
 /* Constants required to manipulate the NVIC. */
-#define portNVIC_SYSTICK_CTRL		( ( volatile uint32_t *) 0xe000e010 )
-#define portNVIC_SYSTICK_LOAD		( ( volatile uint32_t *) 0xe000e014 )
+#define portNVIC_SYSTICK_CTRL			( ( volatile uint32_t * ) 0xe000e010 )
+#define portNVIC_SYSTICK_LOAD			( ( volatile uint32_t * ) 0xe000e014 )
+#define portNVIC_SYSTICK_CURRENT_VALUE	( ( volatile uint32_t * ) 0xe000e018 )
 #define portNVIC_INT_CTRL			( ( volatile uint32_t *) 0xe000ed04 )
 #define portNVIC_SYSPRI2			( ( volatile uint32_t *) 0xe000ed20 )
 #define portNVIC_SYSTICK_CLK		0x00000004
@@ -310,7 +311,7 @@ void xPortPendSVHandler( void )
 	" 	mov r5, r9							\n"
 	" 	mov r6, r10							\n"
 	" 	mov r7, r11							\n"
-	" 	stmia r0!, {r4-r7}              	\n"
+	" 	stmia r0!, {r4-r7}					\n"
 	"										\n"
 	"	push {r3, r14}						\n"
 	"	cpsid i								\n"
@@ -330,7 +331,7 @@ void xPortPendSVHandler( void )
 	"	msr psp, r0							\n" /* Remember the new top of stack for the task. */
 	"										\n"
 	"	sub r0, r0, #32						\n" /* Go back for the low registers that are not automatically restored. */
-	" 	ldmia r0!, {r4-r7}              	\n" /* Pop low registers.  */
+	" 	ldmia r0!, {r4-r7}					\n" /* Pop low registers.  */
 	"										\n"
 	"	bx r3								\n"
 	"										\n"
@@ -363,6 +364,10 @@ uint32_t ulPreviousMask;
  */
 void prvSetupTimerInterrupt( void )
 {
+	/* Stop and reset the SysTick. */
+	*(portNVIC_SYSTICK_CTRL) = 0UL;
+	*(portNVIC_SYSTICK_CURRENT_VALUE) = 0UL;
+
 	/* Configure SysTick to interrupt at the requested rate. */
 	*(portNVIC_SYSTICK_LOAD) = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	*(portNVIC_SYSTICK_CTRL) = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;

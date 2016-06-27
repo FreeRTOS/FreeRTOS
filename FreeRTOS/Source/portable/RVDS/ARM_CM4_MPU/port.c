@@ -91,6 +91,7 @@ task.h is included from an application file. */
 /* Constants required to access and manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL_REG				( * ( ( volatile uint32_t * ) 0xe000e010 ) )
 #define portNVIC_SYSTICK_LOAD_REG				( * ( ( volatile uint32_t * ) 0xe000e014 ) )
+#define portNVIC_SYSTICK_CURRENT_VALUE_REG		( * ( ( volatile uint32_t * ) 0xe000e018 ) )
 #define portNVIC_SYSPRI2_REG					( *	( ( volatile uint32_t * ) 0xe000ed20 ) )
 #define portNVIC_SYSPRI1_REG					( * ( ( volatile uint32_t * ) 0xe000ed1c ) )
 #define portNVIC_SYS_CTRL_STATE_REG				( * ( ( volatile uint32_t * ) 0xe000ed24 ) )
@@ -206,7 +207,7 @@ static void vPortEnableVFP( void );
  * Utility function.
  */
 static uint32_t prvPortGetIPSR( void );
-	
+
 /*
  * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
  * FreeRTOS API functions are not called from interrupts that have been assigned
@@ -297,7 +298,7 @@ uint32_t ulReg;
 __asm void vPortSVCHandler( void )
 {
 	extern prvSVCHandler
-		
+
 	PRESERVE8
 
 	/* Assumes psp was in use. */
@@ -424,7 +425,7 @@ BaseType_t xPortStartScheduler( void )
 __asm void prvStartFirstTask( void )
 {
 	PRESERVE8
-	
+
 	ldr r0, =0xE000ED08	/* Use the NVIC offset register to locate the stack. */
 	ldr r0, [r0]
 	ldr r0, [r0]
@@ -491,6 +492,7 @@ __asm void xPortPendSVHandler( void )
 	mrs r1, control
 	stmdb r0!, {r1, r4-r11, r14}	/* Save the remaining registers. */
 	str r0, [r2]					/* Save the new top of stack into the first member of the TCB. */
+	clrex							/* Ensure thread safety of atomic operations. */
 
 	stmdb sp!, {r3}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
@@ -544,6 +546,10 @@ uint32_t ulDummy;
  */
 static void prvSetupTimerInterrupt( void )
 {
+	/* Reset the SysTick. */
+	portNVIC_SYSTICK_CTRL_REG = 0UL;
+	portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
+
 	/* Configure SysTick to interrupt at the requested rate. */
 	portNVIC_SYSTICK_LOAD_REG = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
 	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
@@ -553,18 +559,18 @@ static void prvSetupTimerInterrupt( void )
 __asm void vPortSwitchToUserMode( void )
 {
 	PRESERVE8
-	
+
 	mrs r0, control
 	orr r0, #1
 	msr control, r0
 	bx r14
 }
 /*-----------------------------------------------------------*/
-	
+
 __asm void vPortEnableVFP( void )
 {
 	PRESERVE8
-	
+
 	ldr.w r0, =0xE000ED88		/* The FPU enable bits are in the CPACR. */
 	ldr r1, [r0]
 
@@ -682,7 +688,7 @@ extern uint32_t __SRAM_segment_end__;
 extern uint32_t __privileged_data_start__;
 extern uint32_t __privileged_data_end__;
 
-	
+
 int32_t lIndex;
 uint32_t ul;
 

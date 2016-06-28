@@ -450,7 +450,6 @@ void xPortPendSVHandler( void )
 	"										\n"
 	"	stmdb r0!, {r4-r11, r14}			\n" /* Save the core registers. */
 	"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
-	"	clrex								\n" /* Ensure thread safety of atomic operations. */
 	"										\n"
 	"	stmdb sp!, {r3}						\n"
 	"	mov r0, %0 							\n"

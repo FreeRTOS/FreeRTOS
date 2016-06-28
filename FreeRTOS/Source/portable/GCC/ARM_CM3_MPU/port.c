@@ -450,7 +450,6 @@ void xPortPendSVHandler( void )
 		"	mrs r1, control						\n"
 		"	stmdb r0!, {r1, r4-r11}				\n" /* Save the remaining registers. */
 		"	str r0, [r2]						\n" /* Save the new top of stack into the first member of the TCB. */
-		"	clrex								\n" /* Ensure thread safety of atomic operations. */
 		"										\n"
 		"	stmdb sp!, {r3, r14}				\n"
 		"	mov r0, %0							\n"

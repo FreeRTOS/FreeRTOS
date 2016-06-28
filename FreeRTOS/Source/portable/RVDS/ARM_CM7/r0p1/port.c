@@ -463,9 +463,6 @@ __asm void xPortPendSVHandler( void )
 	/* Save the new top of stack into the first member of the TCB. */
 	str r0, [r2]
 
-	/* Ensure thread safety of atomic operations. */
-	clrex
-
 	stmdb sp!, {r3}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	cpsid i

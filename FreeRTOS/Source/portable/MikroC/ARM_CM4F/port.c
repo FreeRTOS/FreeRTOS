@@ -458,8 +458,6 @@ void xPortPendSVHandler( void ) iv IVT_INT_PendSV ics ICS_OFF
 
 	str r0, [r2]			 /* Save the new top of stack into the first member of the TCB. */
 
-	clrex					/* Ensure thread safety of atomic operations. */
-
 	stmdb sp!, (r3)
 	ldr r0, =_ucMaxSyscallInterruptPriority
 	ldr r1, [r0]

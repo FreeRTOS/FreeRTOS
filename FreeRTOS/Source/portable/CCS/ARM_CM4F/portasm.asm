@@ -123,9 +123,6 @@ xPortPendSVHandler: .asmfunc
 	;/* Save the new top of stack into the first member of the TCB. */
 	str r0, [r2]
 
-	;/* Ensure thread safety of atomic operations. */
-	clrex
-
 	stmdb sp!, {r3}
 	ldr r0, ulMaxSyscallInterruptPriorityConst
 	ldr r1, [r0]

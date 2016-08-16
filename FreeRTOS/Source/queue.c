@@ -567,6 +567,32 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( ( configUSE_MUTEXES == 1 ) && ( INCLUDE_xSemaphoreGetMutexHolder == 1 ) )
+
+	void* xQueueGetMutexHolderFromISR( QueueHandle_t xSemaphore )
+	{
+	void *pxReturn;
+
+		configASSERT( xSemaphore );
+
+		/* Mutexes cannot be used in interrupt service routines, so the mutex
+		holder should not change in an ISR, and therefore a critical section is
+		not required here. */
+		if( ( ( Queue_t * ) xSemaphore )->uxQueueType == queueQUEUE_IS_MUTEX )
+		{
+			pxReturn = ( void * ) ( ( Queue_t * ) xSemaphore )->pxMutexHolder;
+		}
+		else
+		{
+			pxReturn = NULL;
+		}
+
+		return pxReturn;
+	} /*lint !e818 xSemaphore cannot be a pointer to const because it is a typedef. */
+
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( configUSE_RECURSIVE_MUTEXES == 1 )
 
 	BaseType_t xQueueGiveMutexRecursive( QueueHandle_t xMutex )

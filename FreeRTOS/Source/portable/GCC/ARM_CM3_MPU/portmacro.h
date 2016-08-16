@@ -173,7 +173,7 @@ typedef struct MPU_SETTINGS
 
 #define portNVIC_INT_CTRL_REG		( * ( ( volatile uint32_t * ) 0xe000ed04 ) )
 #define portNVIC_PENDSVSET_BIT		( 1UL << 28UL )
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
@@ -246,7 +246,7 @@ not necessary for to use this port.  They are defined so the common demo files
 /* Set the privilege level to user mode if xRunningPrivileged is false. */
 portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged )
 {
-	if( xRunningPrivileged != pdTRUE ) 
+	if( xRunningPrivileged != pdTRUE )
 	{
 		__asm volatile ( " mrs r0, control 	\n" \
 						 " orr r0, #1 		\n" \

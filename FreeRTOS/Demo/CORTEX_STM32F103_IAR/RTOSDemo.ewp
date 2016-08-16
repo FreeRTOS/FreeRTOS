@@ -12,7 +12,7 @@
       <name>General</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>24</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -26,11 +26,6 @@
         <option>
           <name>ListPath</name>
           <state>Debug\List</state>
-        </option>
-        <option>
-          <name>Variant</name>
-          <version>19</version>
-          <state>37</state>
         </option>
         <option>
           <name>GEndianMode</name>
@@ -59,11 +54,6 @@
           <state>0</state>
         </option>
         <option>
-          <name>FPU</name>
-          <version>2</version>
-          <state>0</state>
-        </option>
-        <option>
           <name>OGCoreOrChip</name>
           <state>1</state>
         </option>
@@ -87,7 +77,7 @@
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.30.7.53437</state>
+          <state>7.60.1.11206</state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -99,7 +89,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>STM32F10xxB	ST STM32F10xxB</state>
+          <state>STM32F103ZG	ST STM32F103ZG</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -136,14 +126,9 @@
           <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Full.h</state>
         </option>
         <option>
-          <name>GFPUCoreSlave</name>
-          <version>19</version>
-          <state>37</state>
-        </option>
-        <option>
           <name>GBECoreSlave</name>
-          <version>19</version>
-          <state>37</state>
+          <version>24</version>
+          <state>38</state>
         </option>
         <option>
           <name>OGUseCmsis</name>
@@ -153,15 +138,51 @@
           <name>OGUseCmsisDspLib</name>
           <state>0</state>
         </option>
+        <option>
+          <name>GRuntimeLibThreads</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CoreVariant</name>
+          <version>24</version>
+          <state>38</state>
+        </option>
+        <option>
+          <name>GFPUDeviceSlave</name>
+          <state>STM32F103ZG	ST STM32F103ZG</state>
+        </option>
+        <option>
+          <name>FPU2</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NrRegs</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>NEON</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>GFPUCoreSlave2</name>
+          <version>24</version>
+          <state>38</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>ICCARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>28</version>
+        <version>31</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>CCOptimizationNoSizeConstraints</name>
+          <state>0</state>
+        </option>
         <option>
           <name>CCDefines</name>
           <state>VECT_TAB_FLASH</state>
@@ -226,7 +247,7 @@
         <option>
           <name>CCAllowList</name>
           <version>1</version>
-          <state>0000000</state>
+          <state>00000000</state>
         </option>
         <option>
           <name>CCDebugInfo</name>
@@ -390,13 +411,26 @@
           <name>IccFloatSemantics</name>
           <state>0</state>
         </option>
+        <option>
+          <name>CCNoLiteralPool</name>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCOptStrategySlave</name>
+          <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>CCGuardCalls</name>
+          <state>1</state>
+        </option>
       </data>
     </settings>
     <settings>
       <name>AARM</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>8</version>
+        <version>9</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -552,6 +586,10 @@
           <name>AExtraOptionsV2</name>
           <state></state>
         </option>
+        <option>
+          <name>AsmNoLiteralPool</name>
+          <state>0</state>
+        </option>
       </data>
     </settings>
     <settings>
@@ -563,7 +601,7 @@
         <debug>1</debug>
         <option>
           <name>OOCOutputFormat</name>
-          <version>2</version>
+          <version>3</version>
           <state>0</state>
         </option>
         <option>
@@ -590,6 +628,7 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
+        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -609,7 +648,7 @@
       <name>ILINK</name>
       <archiveVersion>0</archiveVersion>
       <data>
-        <version>15</version>
+        <version>17</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -887,6 +926,14 @@
         <option>
           <name>CrcUnitSize</name>
           <version>0</version>
+          <state>0</state>
+        </option>
+        <option>
+          <name>IlinkThreadsSlave</name>
+          <state>1</state>
+        </option>
+        <option>
+          <name>IlinkLogCallGraph</name>
           <state>0</state>
         </option>
       </data>

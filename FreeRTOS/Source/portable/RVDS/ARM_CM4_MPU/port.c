@@ -381,6 +381,24 @@ BaseType_t xPortStartScheduler( void )
 			ucMaxPriorityValue <<= ( uint8_t ) 0x01;
 		}
 
+		#ifdef __NVIC_PRIO_BITS
+		{
+			/* Check the CMSIS configuration that defines the number of
+			priority bits matches the number of priority bits actually queried
+			from the hardware. */
+			configASSERT( ( portMAX_PRIGROUP_BITS - ulMaxPRIGROUPValue ) == __NVIC_PRIO_BITS );
+		}
+		#endif
+
+		#ifdef configPRIO_BITS
+		{
+			/* Check the FreeRTOS configuration that defines the number of
+			priority bits matches the number of priority bits actually queried
+			from the hardware. */
+			configASSERT( ( portMAX_PRIGROUP_BITS - ulMaxPRIGROUPValue ) == configPRIO_BITS );
+		}
+		#endif
+
 		/* Shift the priority group value back to its position within the AIRCR
 		register. */
 		ulMaxPRIGROUPValue <<= portPRIGROUP_SHIFT;
@@ -426,11 +444,20 @@ __asm void prvStartFirstTask( void )
 {
 	PRESERVE8
 
-	ldr r0, =0xE000ED08	/* Use the NVIC offset register to locate the stack. */
+	/* Use the NVIC offset register to locate the stack. */
+	ldr r0, =0xE000ED08
 	ldr r0, [r0]
 	ldr r0, [r0]
-	msr msp, r0			/* Set the msp back to the start of the stack. */
-	cpsie i				/* Globally enable interrupts. */
+	/* Set the msp back to the start of the stack. */
+	msr msp, r0
+	/* Clear the bit that indicates the FPU is in use in case the FPU was used
+	before the scheduler was started - which would otherwise result in the
+	unnecessary leaving of space in the SVC stack for lazy saving of FPU
+	registers. */
+	mov r0, #0
+	msr control, r0
+	/* Globally enable interrupts. */
+	cpsie i
 	cpsie f
 	dsb
 	isb

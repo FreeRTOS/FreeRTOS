@@ -137,7 +137,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
@@ -148,7 +148,7 @@ FreeRTOS/Source/tasks.c for limitations. */
 #ifdef __NVIC_PRIO_BITS
 	#define configPRIO_BITS       __NVIC_PRIO_BITS
 #else
-	#define configPRIO_BITS       5        /* 15 priority levels */
+	#define configPRIO_BITS       5        /* 31 priority levels */
 #endif
 
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY			0x1f
@@ -160,9 +160,9 @@ FreeRTOS/Source/tasks.c for limitations. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
-	
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }	
-	
+
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
 #define vPortSVCHandler SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 #define vPortSVCHandler SVC_Handler

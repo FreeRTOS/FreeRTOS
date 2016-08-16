@@ -324,6 +324,24 @@ BaseType_t xPortStartScheduler( void )
 			ucMaxPriorityValue <<= ( uint8_t ) 0x01;
 		}
 
+		#ifdef __NVIC_PRIO_BITS
+		{
+			/* Check the CMSIS configuration that defines the number of
+			priority bits matches the number of priority bits actually queried
+			from the hardware. */
+			configASSERT( ( portMAX_PRIGROUP_BITS - ulMaxPRIGROUPValue ) == __NVIC_PRIO_BITS );
+		}
+		#endif
+
+		#ifdef configPRIO_BITS
+		{
+			/* Check the FreeRTOS configuration that defines the number of
+			priority bits matches the number of priority bits actually queried
+			from the hardware. */
+			configASSERT( ( portMAX_PRIGROUP_BITS - ulMaxPRIGROUPValue ) == configPRIO_BITS );
+		}
+		#endif
+
 		/* Shift the priority group value back to its position within the AIRCR
 		register. */
 		ulMaxPRIGROUPValue <<= portPRIGROUP_SHIFT;

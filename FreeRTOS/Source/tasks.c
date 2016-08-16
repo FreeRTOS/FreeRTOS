@@ -2491,7 +2491,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
-		xTaskResumeAll();
+		( void ) xTaskResumeAll();
 
 		return xReturn;
 	}
@@ -2962,10 +2962,9 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem, const TickType_t xItemValue )
+void vTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem, const TickType_t xItemValue )
 {
 TCB_t *pxUnblockedTCB;
-BaseType_t xReturn;
 
 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED.  It is used by
 	the event flags implementation. */
@@ -2988,22 +2987,12 @@ BaseType_t xReturn;
 
 	if( pxUnblockedTCB->uxPriority > pxCurrentTCB->uxPriority )
 	{
-		/* Return true if the task removed from the event list has
-		a higher priority than the calling task.  This allows
-		the calling task to know if it should force a context
-		switch now. */
-		xReturn = pdTRUE;
-
-		/* Mark that a yield is pending in case the user is not using the
-		"xHigherPriorityTaskWoken" parameter to an ISR safe FreeRTOS function. */
+		/* The unblocked task has a priority above that of the calling task, so
+		a context switch is required.  This function is called with the
+		scheduler suspended so xYieldPending is set so the context switch
+		occurs immediately that the scheduler is resumed (unsuspended). */
 		xYieldPending = pdTRUE;
 	}
-	else
-	{
-		xReturn = pdFALSE;
-	}
-
-	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
@@ -3438,7 +3427,7 @@ static void prvCheckTasksWaitingTermination( void )
 						pxTaskStatus->eCurrentState = eBlocked;
 					}
 				}
-				xTaskResumeAll();
+				( void ) xTaskResumeAll();
 			}
 		}
 		#endif /* INCLUDE_vTaskSuspend */
@@ -3502,7 +3491,7 @@ static void prvCheckTasksWaitingTermination( void )
 
 	static UBaseType_t prvListTasksWithinSingleList( TaskStatus_t *pxTaskStatusArray, List_t *pxList, eTaskState eState )
 	{
-	volatile TCB_t *pxNextTCB, *pxFirstTCB;
+	configLIST_VOLATILE TCB_t *pxNextTCB, *pxFirstTCB;
 	UBaseType_t uxTask = 0;
 
 		if( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 )

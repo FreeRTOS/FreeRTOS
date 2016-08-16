@@ -375,4 +375,3 @@ const HeapRegion_t xHeapRegions[] =
 	vPortDefineHeapRegions( xHeapRegions );
 }
 /*-----------------------------------------------------------*/
-

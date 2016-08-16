@@ -162,6 +162,12 @@ vPortStartFirstTask
 	ldr r0, [r0]
 	/* Set the msp back to the start of the stack. */
 	msr msp, r0
+	/* Clear the bit that indicates the FPU is in use in case the FPU was used
+	before the scheduler was started - which would otherwise result in the
+	unnecessary leaving of space in the SVC stack for lazy saving of FPU
+	registers. */
+	mov r0, #0
+	msr control, r0
 	/* Call SVC to start the first task. */
 	cpsie i
 	cpsie f

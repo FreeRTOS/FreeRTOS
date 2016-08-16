@@ -1156,6 +1156,17 @@ typedef QueueHandle_t SemaphoreHandle_t;
 
 /**
  * semphr.h
+ * <pre>TaskHandle_t xSemaphoreGetMutexHolderFromISR( SemaphoreHandle_t xMutex );</pre>
+ *
+ * If xMutex is indeed a mutex type semaphore, return the current mutex holder.
+ * If xMutex is not a mutex type semaphore, or the mutex is available (not held
+ * by a task), return NULL.
+ *
+ */
+#define xSemaphoreGetMutexHolderFromISR( xSemaphore ) xQueueGetMutexHolderFromISR( ( xSemaphore ) )
+
+/**
+ * semphr.h
  * <pre>UBaseType_t uxSemaphoreGetCount( SemaphoreHandle_t xSemaphore );</pre>
  *
  * If the semaphore is a counting semaphore then uxSemaphoreGetCount() returns

@@ -1153,7 +1153,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			can be assumed there is no mutex holder and no need to determine if
 			priority disinheritance is needed.  Simply increase the count of
 			messages (semaphores) available. */
-			pxQueue->uxMessagesWaiting = uxMessagesWaiting + 1;
+			pxQueue->uxMessagesWaiting = uxMessagesWaiting + ( UBaseType_t ) 1;
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
@@ -1300,7 +1300,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					traceQUEUE_RECEIVE( pxQueue );
 
 					/* Actually removing data, not just peeking. */
-					pxQueue->uxMessagesWaiting = uxMessagesWaiting - 1;
+					pxQueue->uxMessagesWaiting = uxMessagesWaiting - ( UBaseType_t ) 1;
 
 					#if ( configUSE_MUTEXES == 1 )
 					{
@@ -1494,7 +1494,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
 
 			prvCopyDataFromQueue( pxQueue, pvBuffer );
-			pxQueue->uxMessagesWaiting = uxMessagesWaiting - 1;
+			pxQueue->uxMessagesWaiting = uxMessagesWaiting - ( UBaseType_t ) 1;
 
 			/* If the queue is locked the event list will not be modified.
 			Instead update the lock count so the task that unlocks the queue
@@ -1793,7 +1793,7 @@ UBaseType_t uxMessagesWaiting;
 		}
 	}
 
-	pxQueue->uxMessagesWaiting = uxMessagesWaiting + 1;
+	pxQueue->uxMessagesWaiting = uxMessagesWaiting + ( UBaseType_t ) 1;
 
 	return xReturn;
 }
@@ -2342,7 +2342,7 @@ BaseType_t xReturn;
 		}
 
 		return pcReturn;
-	}
+	} /*lint !e818 xQueue cannot be a pointer to const because it is a typedef. */
 
 #endif /* configQUEUE_REGISTRY_SIZE */
 /*-----------------------------------------------------------*/
@@ -2421,7 +2421,7 @@ BaseType_t xReturn;
 	{
 	QueueSetHandle_t pxQueue;
 
-		pxQueue = xQueueGenericCreate( uxEventQueueLength, sizeof( Queue_t * ), queueQUEUE_TYPE_SET );
+		pxQueue = xQueueGenericCreate( uxEventQueueLength, ( UBaseType_t ) sizeof( Queue_t * ), queueQUEUE_TYPE_SET );
 
 		return pxQueue;
 	}

@@ -84,7 +84,8 @@
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
- * See http://www.freertos.org/a00110.html.
+ * See http://www.freertos.org/a00110.html for a full list of configuration
+ * options.
  *----------------------------------------------------------*/
 
 /*
@@ -93,8 +94,8 @@
  * Interrupts that are assigned a priority at or below
  * configMAX_API_CALL_INTERRUPT_PRIORITY (which counter-intuitively in the ARM
  * generic interrupt controller [GIC] means a priority that has a numerical
- * value above configMAX_API_CALL_INTERRUPT_PRIORITY) can call FreeRTOS safe API
- * functions and will nest.
+ * value above configMAX_API_CALL_INTERRUPT_PRIORITY) can call interrupt safe
+ * FreeRTOS API functions and will nest.
  *
  * Interrupts that are assigned a priority above
  * configMAX_API_CALL_INTERRUPT_PRIORITY (which in the GIC means a numerical
@@ -114,7 +115,7 @@
 #define configMAX_API_CALL_INTERRUPT_PRIORITY	18
 
 /* The application will define the array used as the RTOS heap to ensure it can
-be located in the (faster) on-chip RAM.  Whe this parameter is set to 1 the
+be located in the (faster) on-chip RAM.  When this parameter is set to 1 the
 application must define an array using the name and size as follows below, but
 is free to locate the array in any suitable RAM region (the faster the better as
 the stacks used by the tasks are allocated from this array):
@@ -124,13 +125,11 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 */
 #define configAPPLICATION_ALLOCATED_HEAP		1
 
-#define configCPU_CLOCK_HZ						/* Not used in this portabsciex.com. */
+#define configCPU_CLOCK_HZ						/* Not used in this demo. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configUSE_TICKLESS_IDLE					0
 #define configTICK_RATE_HZ						( ( TickType_t ) 1000 )
 #define configUSE_PREEMPTION					1
-#define configUSE_IDLE_HOOK						1
-#define configUSE_TICK_HOOK						1
 #define configMAX_PRIORITIES					( 7 )
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 200 )
 #define configTOTAL_HEAP_SIZE					( 50 * 1024 )
@@ -142,10 +141,15 @@ uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #define configQUEUE_REGISTRY_SIZE				8
 #define configCHECK_FOR_STACK_OVERFLOW			2
 #define configUSE_RECURSIVE_MUTEXES				1
-#define configUSE_MALLOC_FAILED_HOOK			1
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
 #define configUSE_QUEUE_SETS					1
+
+/* Hook/Callback related definitions. */
+#define configUSE_MALLOC_FAILED_HOOK			1
+#define configUSE_IDLE_HOOK						1
+#define configUSE_TICK_HOOK						1
+#define configUSE_DAEMON_TASK_STARTUP_HOOK		1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 					0

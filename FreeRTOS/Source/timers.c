@@ -158,8 +158,8 @@ typedef struct tmrTimerQueueMessage
 	} u;
 } DaemonTaskMessage_t;
 
-/*lint -e956 A manual analysis and inspection has been used to determine which
-static variables must be declared volatile. */
+/*lint -save -e956 A manual analysis and inspection has been used to determine
+which static variables must be declared volatile. */
 
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
@@ -173,7 +173,7 @@ PRIVILEGED_DATA static List_t *pxOverflowTimerList;
 PRIVILEGED_DATA static QueueHandle_t xTimerQueue = NULL;
 PRIVILEGED_DATA static TaskHandle_t xTimerTaskHandle = NULL;
 
-/*lint +e956 */
+/*lint -restore */
 
 /*-----------------------------------------------------------*/
 

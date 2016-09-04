@@ -137,6 +137,15 @@ a statically allocated stack and a dynamically allocated TCB. */
 #define tskSTATICALLY_ALLOCATED_STACK_ONLY 			( ( uint8_t ) 1 )
 #define tskSTATICALLY_ALLOCATED_STACK_AND_TCB		( ( uint8_t ) 2 )
 
+/* If any of the following are set then task stacks are filled with a known
+value so the high water mark can be determined.  If none of the following are
+set then don't fill the stack so there is no unnecessary dependency on memset. */
+#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
+	#define tskSET_NEW_STACKS_TO_KNOWN_VALUE	1
+#else
+	#define tskSET_NEW_STACKS_TO_KNOWN_VALUE	0
+#endif
+
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */
@@ -304,8 +313,8 @@ typedef struct tskTaskControlBlock
 	StackType_t			*pxStack;			/*< Points to the start of the stack. */
 	char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
-	#if ( portSTACK_GROWTH > 0 )
-		StackType_t		*pxEndOfStack;		/*< Points to the end of the stack on architectures where the stack grows up from low memory. */
+	#if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
+		StackType_t		*pxEndOfStack;		/*< Points to the highest valid address for the stack. */
 	#endif
 
 	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
@@ -327,7 +336,7 @@ typedef struct tskTaskControlBlock
 	#endif
 
 	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
-		void *pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+		void			*pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
 	#endif
 
 	#if( configGENERATE_RUN_TIME_STATS == 1 )
@@ -366,8 +375,8 @@ typedef struct tskTaskControlBlock
 below to enable the use of older kernel aware debuggers. */
 typedef tskTCB TCB_t;
 
-/*lint -e956 A manual analysis and inspection has been used to determine which
-static variables must be declared volatile. */
+/*lint -save -e956 A manual analysis and inspection has been used to determine
+which static variables must be declared volatile. */
 
 PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
 
@@ -421,7 +430,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 
 #endif
 
-/*lint +e956 */
+/*lint -restore */
 
 /*-----------------------------------------------------------*/
 
@@ -791,12 +800,12 @@ UBaseType_t x;
 	#endif /* portUSING_MPU_WRAPPERS == 1 */
 
 	/* Avoid dependency on memset() if it is not required. */
-	#if( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
+	#if( tskSET_NEW_STACKS_TO_KNOWN_VALUE == 1 )
 	{
 		/* Fill the stack with a known value to assist debugging. */
 		( void ) memset( pxNewTCB->pxStack, ( int ) tskSTACK_FILL_BYTE, ( size_t ) ulStackDepth * sizeof( StackType_t ) );
 	}
-	#endif /* ( ( configCHECK_FOR_STACK_OVERFLOW > 1 ) || ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) ) */
+	#endif /* tskSET_NEW_STACKS_TO_KNOWN_VALUE */
 
 	/* Calculate the top of stack address.  This depends on whether the stack
 	grows from high memory to low (as per the 80x86) or vice versa.
@@ -809,6 +818,14 @@ UBaseType_t x;
 
 		/* Check the alignment of the calculated top of stack is correct. */
 		configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
+
+		#if( configRECORD_STACK_HIGH_ADDRESS == 1 )
+		{
+			/* Also record the stack's high address, which may assist
+			debugging. */
+			pxNewTCB->pxEndOfStack = pxTopOfStack;
+		}
+		#endif /* configRECORD_STACK_HIGH_ADDRESS */
 	}
 	#else /* portSTACK_GROWTH */
 	{
@@ -936,7 +953,7 @@ UBaseType_t x;
 	/* Initialize the TCB stack to look as if the task was already running,
 	but had been interrupted by the scheduler.  The return address is set
 	to the start of the task function. Once the stack has been initialised
-	the	top of stack variable is updated. */
+	the top of stack variable is updated. */
 	#if( portUSING_MPU_WRAPPERS == 1 )
 	{
 		pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
@@ -4792,8 +4809,26 @@ const TickType_t xConstTickCount = xTickCount;
 	#endif /* INCLUDE_vTaskSuspend */
 }
 
+/* Code below here allows additional code to be inserted into this source file,
+especially where access to file scope functions and data is needed (for example
+when performing module tests). */
 
 #ifdef FREERTOS_MODULE_TEST
 	#include "tasks_test_access_functions.h"
 #endif
+
+
+#if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 )
+
+	#include "freertos_tasks_c_additions.h"
+
+	static void freertos_tasks_c_additions_init( void )
+	{
+		#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
+			FREERTOS_TASKS_C_ADDITIONS_INIT();
+		#endif
+	}
+
+#endif
+
 

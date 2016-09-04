@@ -408,6 +408,14 @@ extern "C" {
 	#define configCHECK_FOR_STACK_OVERFLOW 0
 #endif
 
+#ifndef configRECORD_STACK_HIGH_ADDRESS
+	#define configRECORD_STACK_HIGH_ADDRESS 0
+#endif
+
+#ifndef configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H
+	#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 0
+#endif
+
 /* The following event macros are embedded in the kernel API calls. */
 
 #ifndef traceMOVED_TASK_TO_READY_STATE
@@ -917,7 +925,7 @@ typedef struct xSTATIC_TCB
 	UBaseType_t			uxDummy5;
 	void				*pxDummy6;
 	uint8_t				ucDummy7[ configMAX_TASK_NAME_LEN ];
-	#if ( portSTACK_GROWTH > 0 )
+	#if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
 		void			*pxDummy8;
 	#endif
 	#if ( portCRITICAL_NESTING_IN_TCB == 1 )

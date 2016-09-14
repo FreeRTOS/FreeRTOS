@@ -356,7 +356,7 @@ BaseType_t xReturn = pdFAIL;
 		{
 			/* Sanity check that the size of the structure used to declare a
 			variable of type StaticTimer_t equals the size of the real timer
-			structures. */
+			structure. */
 			volatile size_t xSize = sizeof( StaticTimer_t );
 			configASSERT( xSize == sizeof( Timer_t ) );
 		}

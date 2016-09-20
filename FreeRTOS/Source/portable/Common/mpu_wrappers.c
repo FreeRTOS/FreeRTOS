@@ -96,15 +96,30 @@ extern BaseType_t xPortRaisePrivilege( void );
 
 /*-----------------------------------------------------------*/
 
-BaseType_t MPU_xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
-{
-BaseType_t xReturn;
-BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	BaseType_t MPU_xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
+	{
+	BaseType_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
-	xReturn = xTaskCreateRestricted( pxTaskDefinition, pxCreatedTask );
-	vPortResetPrivilege( xRunningPrivileged );
-	return xReturn;
-}
+		xReturn = xTaskCreateRestricted( pxTaskDefinition, pxCreatedTask );
+		vPortResetPrivilege( xRunningPrivileged );
+		return xReturn;
+	}
+#endif /* conifgSUPPORT_DYNAMIC_ALLOCATION */
+/*-----------------------------------------------------------*/
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	BaseType_t MPU_xTaskCreateRestrictedStatic( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
+	{
+	BaseType_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		xReturn = xTaskCreateRestrictedStatic( pxTaskDefinition, pxCreatedTask );
+		vPortResetPrivilege( xRunningPrivileged );
+		return xReturn;
+	}
+#endif /* conifgSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
@@ -337,7 +352,7 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
+#if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 	void MPU_vTaskList( char *pcWriteBuffer )
 	{
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
@@ -348,7 +363,7 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) )
+#if ( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 	void MPU_vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
@@ -726,7 +741,7 @@ void * xReturn;
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_QUEUE_SETS == 1 )
+#if( ( configUSE_QUEUE_SETS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 	QueueSetHandle_t MPU_xQueueCreateSet( UBaseType_t uxEventQueueLength )
 	{
 	QueueSetHandle_t xReturn;
@@ -827,7 +842,6 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-
 	void *MPU_pvPortMalloc( size_t xSize )
 	{
 	void *pvReturn;
@@ -839,12 +853,10 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
 		return pvReturn;
 	}
-
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
-
 	void MPU_vPortFree( void *pv )
 	{
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
@@ -853,31 +865,34 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
 		vPortResetPrivilege( xRunningPrivileged );
 	}
-
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-void MPU_vPortInitialiseBlocks( void )
-{
-BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	void MPU_vPortInitialiseBlocks( void )
+	{
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
-	vPortInitialiseBlocks();
+		vPortInitialiseBlocks();
 
-	vPortResetPrivilege( xRunningPrivileged );
-}
+		vPortResetPrivilege( xRunningPrivileged );
+	}
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-size_t MPU_xPortGetFreeHeapSize( void )
-{
-size_t xReturn;
-BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	size_t MPU_xPortGetFreeHeapSize( void )
+	{
+	size_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
-	xReturn = xPortGetFreeHeapSize();
+		xReturn = xPortGetFreeHeapSize();
 
-	vPortResetPrivilege( xRunningPrivileged );
+		vPortResetPrivilege( xRunningPrivileged );
 
-	return xReturn;
-}
+		return xReturn;
+	}
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
 #if( ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) && ( configUSE_TIMERS == 1 ) )

@@ -177,8 +177,11 @@ only for ports that are using the MPU. */
 		#define xEventGroupSync							MPU_xEventGroupSync
 		#define vEventGroupDelete						MPU_vEventGroupDelete
 
-		/* Remove the privileged function macro. */
+		/* Remove the privileged function macro, but keep the PRIVILEGED_DATA
+		macro so applications can place data in privileged access sections
+		(useful when using statically allocated objects). */
 		#define PRIVILEGED_FUNCTION
+		#define PRIVILEGED_DATA __attribute__((section("privileged_data")))
 
 	#else /* MPU_WRAPPERS_INCLUDED_FROM_API_FILE */
 

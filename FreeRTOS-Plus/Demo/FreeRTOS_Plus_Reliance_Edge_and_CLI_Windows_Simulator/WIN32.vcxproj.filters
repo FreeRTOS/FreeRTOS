@@ -209,9 +209,6 @@
     <ClInclude Include="ConfigurationFiles\FreeRTOSConfig.h">
       <Filter>Configuration Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Reliance-Edge\os\freertos\include\ostypes.h">
-      <Filter>FreeRTOS+\FreeRTOS+Reliance Edge\port</Filter>
-    </ClInclude>
     <ClInclude Include="ConfigurationFiles\redconf.h">
       <Filter>Configuration Files</Filter>
     </ClInclude>

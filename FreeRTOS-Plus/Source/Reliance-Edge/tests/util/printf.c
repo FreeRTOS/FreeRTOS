@@ -891,6 +891,7 @@ static PRINTTYPE ParseFormatType(
                         case 'u':
                             fmtType = MAPULONGLONG;
                             break;
+                        case 'x':
                         case 'X':
                             fmtType = MAPHEXULONGLONG;
                             break;

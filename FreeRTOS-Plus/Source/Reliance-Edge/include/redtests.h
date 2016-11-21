@@ -156,6 +156,22 @@ int RedPosixTestStart(const POSIXTESTPARAM *pParam);
 #endif
 
 
+#if POSIX_API_TEST_SUPPORTED
+typedef struct
+{
+    const char *pszVolume;      /**< Volume path prefix. */
+    bool        fQuick;         /**< --quick */
+    bool        fVerbose;       /**< --verbose */
+    bool        fQuitOnFailure; /**< --quit-on-failure */
+    bool        fDebugErrors;   /**< --debug */
+} OSAPITESTPARAM;
+
+PARAMSTATUS RedOsApiTestParseParams(int argc, char *argv[], OSAPITESTPARAM *pParam, const char **ppszDevice);
+void RedOsApiTestDefaultParams(OSAPITESTPARAM *pParam);
+int RedOsApiTestStart(const OSAPITESTPARAM *pParam);
+#endif
+
+
 #if FSE_API_TEST_SUPPORTED
 typedef struct
 {

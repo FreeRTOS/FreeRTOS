@@ -62,6 +62,13 @@ typedef struct
     */
     uint32_t    ulInodeCount;
 
+    /** This is the maximum number of times a block device I/O operation will
+        be retried.  If a block device read, write, or flush fails, Reliance
+        Edge will try again up to this number of times until the operation is
+        successful.  Set this to 0 to disable retries.
+    */
+    uint8_t     bBlockIoRetries;
+
   #if REDCONF_API_POSIX == 1
     /** The path prefix for the volume; for example, "VOL1:", "FlashDisk", etc.
     */

@@ -29,11 +29,15 @@
 #include <semphr.h>
 
 #include <redfs.h>
+#include <redosdeviations.h>
 
 #if REDCONF_TASK_COUNT > 1U
 
 
 static SemaphoreHandle_t xMutex;
+#if defined(configSUPPORT_STATIC_ALLOCATION) && (configSUPPORT_STATIC_ALLOCATION == 1)
+static StaticSemaphore_t xMutexBuffer;
+#endif
 
 
 /** @brief Initialize the mutex.
@@ -49,17 +53,27 @@ static SemaphoreHandle_t xMutex;
 */
 REDSTATUS RedOsMutexInit(void)
 {
-    REDSTATUS ret;
-
-    xMutex = xSemaphoreCreateMutex();
-    if(xMutex != NULL)
+    REDSTATUS ret = 0;
+    
+  #if defined(configSUPPORT_STATIC_ALLOCATION) && (configSUPPORT_STATIC_ALLOCATION == 1)
+    xMutex = xSemaphoreCreateMutexStatic(&xMutexBuffer);
+    
+    if(xMutex == NULL)
     {
-        ret = 0;
-    }
-    else
+        /*  The only error case for xSemaphoreCreateMutexStatic is that the mutex
+            buffer parameter is NULL, which is not the case.
+        */
+        REDERROR();
+        ret = -RED_EINVAL;
+    }        
+    
+  #else
+    xMutex = xSemaphoreCreateMutex();
+    if(xMutex == NULL)
     {
         ret = -RED_ENOMEM;
     }
+  #endif
 
     return ret;
 }
@@ -113,7 +127,7 @@ void RedOsMutexRelease(void)
 
     xSuccess = xSemaphoreGive(xMutex);
     REDASSERT(xSuccess == pdTRUE);
-    (void)xSuccess;
+    IGNORE_ERRORS(xSuccess);
 }
 
 #endif

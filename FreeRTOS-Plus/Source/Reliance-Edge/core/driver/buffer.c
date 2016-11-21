@@ -311,7 +311,7 @@ REDSTATUS RedBufferGet(
                                 mounted; that condition is expected and should
                                 not result in an assertion.
                             */
-                            CRITICAL_ASSERT((uFlags & BFLAG_META_MASTER) != 0U);
+                            CRITICAL_ASSERT((uFlags & BFLAG_META_MASTER) == BFLAG_META_MASTER);
                             ret = -RED_EIO;
                         }
                     }

@@ -189,7 +189,6 @@
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\task.h" />
     <ClInclude Include="..\..\..\FreeRTOS\Source\include\timers.h" />
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.h" />
-    <ClInclude Include="..\..\Source\Reliance-Edge\os\freertos\include\ostypes.h" />
     <ClInclude Include="ConfigurationFiles\FreeRTOSConfig.h" />
     <ClInclude Include="ConfigurationFiles\redconf.h" />
     <ClInclude Include="ConfigurationFiles\redtypes.h" />

@@ -28,6 +28,12 @@
     The OS block device implementations operate on sectors.  The core does I/O
     in terms of logical blocks: this module translates from logical blocks to
     sectors.
+
+    If bBlockIoRetries is greater than 0 for the current volume, then this
+    module will retry block device calls on failure up to the configured number
+    of times.  This behavior caters to the type of unreliable hardware and
+    drivers that are sometimes found in the IoT world, where one operation may
+    fail but the next may still succeed.
 */
 #include <redfs.h>
 #include <redcore.h>
@@ -52,7 +58,7 @@ REDSTATUS RedIoRead(
     uint32_t    ulBlockCount,
     void       *pBuffer)
 {
-    REDSTATUS   ret;
+    REDSTATUS   ret = 0;
 
     if(    (bVolNum >= REDCONF_VOLUME_COUNT)
         || (ulBlockStart >= gaRedVolume[bVolNum].ulBlockCount)
@@ -68,11 +74,20 @@ REDSTATUS RedIoRead(
         uint8_t  bSectorShift = gaRedVolume[bVolNum].bBlockSectorShift;
         uint64_t ullSectorStart = (uint64_t)ulBlockStart << bSectorShift;
         uint32_t ulSectorCount = ulBlockCount << bSectorShift;
+        uint8_t  bRetryIdx;
 
         REDASSERT(bSectorShift < 32U);
         REDASSERT((ulSectorCount >> bSectorShift) == ulBlockCount);
 
-        ret = RedOsBDevRead(bVolNum, ullSectorStart, ulSectorCount, pBuffer);
+        for(bRetryIdx = 0U; bRetryIdx <= gpRedVolConf->bBlockIoRetries; bRetryIdx++)
+        {
+            ret = RedOsBDevRead(bVolNum, ullSectorStart, ulSectorCount, pBuffer);
+
+            if(ret == 0)
+            {
+                break;
+            }
+        }
     }
 
     CRITICAL_ASSERT(ret == 0);
@@ -101,7 +116,7 @@ REDSTATUS RedIoWrite(
     uint32_t    ulBlockCount,
     const void *pBuffer)
 {
-    REDSTATUS   ret;
+    REDSTATUS   ret = 0;
 
     if(    (bVolNum >= REDCONF_VOLUME_COUNT)
         || (ulBlockStart >= gaRedVolume[bVolNum].ulBlockCount)
@@ -117,11 +132,20 @@ REDSTATUS RedIoWrite(
         uint8_t  bSectorShift = gaRedVolume[bVolNum].bBlockSectorShift;
         uint64_t ullSectorStart = (uint64_t)ulBlockStart << bSectorShift;
         uint32_t ulSectorCount = ulBlockCount << bSectorShift;
+        uint8_t  bRetryIdx;
 
         REDASSERT(bSectorShift < 32U);
         REDASSERT((ulSectorCount >> bSectorShift) == ulBlockCount);
 
-        ret = RedOsBDevWrite(bVolNum, ullSectorStart, ulSectorCount, pBuffer);
+        for(bRetryIdx = 0U; bRetryIdx <= gpRedVolConf->bBlockIoRetries; bRetryIdx++)
+        {
+            ret = RedOsBDevWrite(bVolNum, ullSectorStart, ulSectorCount, pBuffer);
+
+            if(ret == 0)
+            {
+                break;
+            }
+        }
     }
 
     CRITICAL_ASSERT(ret == 0);
@@ -144,7 +168,7 @@ REDSTATUS RedIoWrite(
 REDSTATUS RedIoFlush(
     uint8_t     bVolNum)
 {
-    REDSTATUS   ret;
+    REDSTATUS   ret = 0;
 
     if(bVolNum >= REDCONF_VOLUME_COUNT)
     {
@@ -153,7 +177,17 @@ REDSTATUS RedIoFlush(
     }
     else
     {
-        ret = RedOsBDevFlush(bVolNum);
+        uint8_t  bRetryIdx;
+
+        for(bRetryIdx = 0U; bRetryIdx <= gpRedVolConf->bBlockIoRetries; bRetryIdx++)
+        {
+            ret = RedOsBDevFlush(bVolNum);
+
+            if(ret == 0)
+            {
+                break;
+            }
+        }
     }
 
     CRITICAL_ASSERT(ret == 0);

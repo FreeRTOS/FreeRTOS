@@ -23,34 +23,16 @@
     more information.
 */
 /** @file
-    @brief Implements assertion handling.
+    @brief Interfaces of path utilities for the POSIX-like API layer.
 */
-#include <redfs.h>
-
-#if REDCONF_ASSERTS == 1
-
-#include <redosdeviations.h>
+#ifndef REDPATH_H
+#define REDPATH_H
 
 
-/** @brief Invoke the native assertion handler.
+REDSTATUS RedPathSplit(const char *pszPath, uint8_t *pbVolNum, const char **ppszLocalPath);
+REDSTATUS RedPathLookup(const char *pszLocalPath, uint32_t *pulInode);
+REDSTATUS RedPathToName(const char *pszLocalPath, uint32_t *pulPInode, const char **ppszName);
 
-    @param pszFileName  Null-terminated string containing the name of the file
-                        where the assertion fired.
-    @param ulLineNum    Line number in @p pszFileName where the assertion
-                        fired.
-*/
-void RedOsAssertFail(
-    const char *pszFileName,
-    uint32_t    ulLineNum)
-{
-  #if REDCONF_OUTPUT == 1
-    IGNORE_ERRORS(PRINT_ASSERT(pszFileName, ulLineNum));
-  #endif
-
-    while(true)
-    {
-    }
-}
 
 #endif
 

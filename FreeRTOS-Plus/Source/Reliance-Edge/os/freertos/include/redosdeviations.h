@@ -36,8 +36,7 @@
 #endif
 
 
-#if REDCONF_ASSERTS == 1
-#if REDCONF_OUTPUT == 1
+#if (REDCONF_ASSERTS == 1) && (REDCONF_OUTPUT == 1)
 /** Print a formatted message for an assertion.
 
     Usages of this macro deviate from MISRA C:2012 Rule 21.6 (required).  Using
@@ -50,11 +49,8 @@
     As Rule 21.6 is required, a separate deviation record is required.
 */
 #define PRINT_ASSERT(file, line) \
-    (void)printf("Assertion failed in \"%s\" at line %u\n\r", ((file) == NULL) ? "" : (file), (unsigned)(line))
-#else
-#define PRINT_ASSERT(file, line) do { (void)(file); (void)(line); } while(false)
-#endif /* REDCONF_OUTPUT == 1 */
-#endif /* REDCONF_ASSERTS == 1 */
+    printf("Assertion failed in \"%s\" at line %u\n\r", ((file) == NULL) ? "" : (file), (unsigned)(line))
+#endif
 
 
 /** Cast a value to unsigned long.
@@ -159,6 +155,89 @@
 */
 #define CAST_TASK_PTR_TO_UINTPTR(taskptr) ((uintptr_t)(taskptr))
 #endif
+
+
+/** Ignore the return value of a function (cast to void)
+
+    Usages of this macro deviate from MISRA C:2012 Directive 4.7, which states
+    that error information must be checked immediately after a function returns
+    potential error information.
+
+    If asserts and output are enabled, then this macro is used to document that
+    the return value of printf() is ignored.  A failure of printf() does not
+    impact the filesystem core, nor is there anything the filesystem can do to
+    respond to such an error (especially since it occurs within an assert).
+    Thus, the most reasonable action is to ignore the error.
+
+    In the STM32 SDIO block device implementation, errors are also ignored in an
+    IRQ interrupt handler.  This is the most reasonable action to take for two
+    reasons: (a) it would be dangerous to spend processor time responding to the
+    error inside the IRQ handler; (b) it has been verified that the same error
+    is propegated to the DiskRead/Write method, which does return the error to
+    the core.
+
+    In the Atmel SD/MMC block device implementation, error information from
+    sd_mmc_read_capacity() is ignored.  This is a reasonable action because all
+    of the possible error conditions were eliminated by a previous check.
+    sd_mmc_read_capacity() fails under the same conditions as
+    sd_mmc_test_unit_ready(), which was checked ealier in the same function.
+
+    In the mutex module, error information returned from the mutex release
+    function is ignored when asserts are disabled.  This is a reasonable action
+    because the mutex release function (xSemaphoreGive) is documented only to
+    fail if the mutex was not obtained correctly, which can be demonstrably
+    avoided.
+
+    As Directive 4.7 is required, a separate deviation record is required.
+*/
+#define IGNORE_ERRORS(fn) ((void) (fn))
+
+
+/** @brief Determine whether a pointer is aligned on a 32-bit boundary.
+
+    This is used to determine whether a data buffer meets the requirements of
+    the underlying block device implementation.  When transferring data via
+    DMA (Direct Memory Access) on an STM32 device, the data buffer must be cast
+    as a uint32 pointer, and unexpected behavior may occur if the buffer is not
+    aligned correctly.
+
+    There is no way to perform this check without deviating from MISRA C rules
+    against casting pointers to integer types.  Usage of this macro deviates
+    from MISRA C:2012 Rule 11.4 (advisory).  The main rationale the rule cites
+    against converting pointers to integers is that the chosen integer type may
+    not be able to represent the pointer; this is a non-issue here since we use
+    uintptr_t.  The text says the rule still applies when using uintptr_t due to
+    concern about unaligned pointers, but that is not an issue here since the
+    integer value of the pointer is not saved and not converted back into a
+    pointer and dereferenced.  The result of casting a pointer to a sufficiently
+    large integer is implementation-defined, but macros similar to this one have
+    been used by Datalight for a long time in a wide variety of environments and
+    they have always worked as expected.
+
+    This deviation only occurs when using the STM32 SDIO block device
+    implementation.
+
+    As Rule 11.4 is advisory, a deviation record is not required.  This notice
+    is the only record of deviation.
+*/
+#define IS_UINT32_ALIGNED_PTR(ptr) (((uintptr_t)(ptr) & (sizeof(uint32_t) - 1U)) == 0U)
+
+
+/** @brief Cast a 32-bit aligned void pointer to a uint32 pointer.
+
+    Usages of this macro deviate from MISRA C:2012 Rule 11.5 (advisory).  A
+    cast from a void pointer to an object pointer is discouraged because of
+    potential alignment issues.  However, this macro is only used to cast
+    pointers that have already been tested to be 32-bit aligned, so the
+    operation will be safe.
+
+    This deviation only occurs when using the STM32 SDIO block device
+    implementation.
+
+    As rule 11.5 is advisory, a deviation record is not required.  This notice
+    is the only record of the deviation.
+*/
+#define CAST_UINT32_PTR(ptr) ((uint32_t *) (ptr))
 
 
 #endif

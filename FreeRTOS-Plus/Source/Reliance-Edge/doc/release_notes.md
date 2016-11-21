@@ -5,6 +5,47 @@ recent releases and a list of known issues.
 
 ## Release History and Changes
 
+### Reliance Edge v1.0.4, July 2016
+
+- Added ARM mbed and ARM mbed OS support in the commercial kit, with an example
+  projects for ARM mbed OS on the NXP FRDM-K64F board.
+- Some minor deficiencies in the POSIX-like API test suite have been addressed.
+
+### Reliance Edge v1.0.3, June 2016
+
+- Added support for static memory allocation configuration in FreeRTOS
+  version 9.  No common code changes.
+  
+### Reliance Edge v1.0.2, February 2016
+
+#### Common Code Changes
+- A new per-volume configuration option has been added: users can specify a
+  number of times to retry a block device read, write or flush operation before
+  returning a failure.  The configuration tool has been updated to version 1.0.2
+  with this change.
+  - This added a new field to the volume configuration in to redconf.c: existing
+    redconf.c files from v1.0.1 and earlier must be updated to work with v1.0.2.
+    Open redconf.h and redconf.c with the configuration tool, enable
+    "Retry block device I/O on failure" for any volumes if desired, and save the
+    redconf files.
+
+#### FreeRTOS Port Changes
+- Added support for the STM32 HAL SD card driver in the FreeRTOS block device
+  interface.  Two boards are supported out-of-the-box: the STM324xG-EVAL and the
+  STM32F746NG-Discovery.  A sample project is included for the STM324xG-EVAL.
+
+#### MQX Port Changes
+- Fixed a bug which prevented Reliance Edge from compiling if the File System
+  Essentials API was selected in the configuration.
+- Fixed a bug which would have returned an uninitialized value from
+  `RedOsBDevFlush()` for block devices that support flushing.
+  
+### Reliance Edge v1.0.1, October 2015
+
+- Added MQX RTOS support in the commercial kit, with example projects for
+  the Kinetis Design Studio.
+- Bug fix in the F_DRIVER implementation of the FreeRTOS block device service.
+
 ### Reliance Edge v1.0, July 2015
 
 #### Common Code Changes

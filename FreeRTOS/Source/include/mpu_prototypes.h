@@ -125,7 +125,9 @@ BaseType_t MPU_xTaskGetSchedulerState( void );
 
 /* MPU versions of queue.h API function. */
 BaseType_t MPU_xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition );
-BaseType_t MPU_xQueueGenericReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait, const BaseType_t xJustPeek );
+BaseType_t MPU_xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait );
+BaseType_t xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait );
+BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait );
 UBaseType_t MPU_uxQueueMessagesWaiting( const QueueHandle_t xQueue );
 UBaseType_t MPU_uxQueueSpacesAvailable( const QueueHandle_t xQueue );
 void MPU_vQueueDelete( QueueHandle_t xQueue );

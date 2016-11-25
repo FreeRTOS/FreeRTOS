@@ -272,7 +272,7 @@ is used in assert() statements. */
  BaseType_t xTaskCreate(
 							  TaskFunction_t pvTaskCode,
 							  const char * const pcName,
-							  uint16_t usStackDepth,
+							  configSTACK_DEPTH_TYPE usStackDepth,
 							  void *pvParameters,
 							  UBaseType_t uxPriority,
 							  TaskHandle_t *pvCreatedTask
@@ -362,7 +362,7 @@ is used in assert() statements. */
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 	BaseType_t xTaskCreate(	TaskFunction_t pxTaskCode,
 							const char * const pcName,	/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-							const uint16_t usStackDepth,
+							const configSTACK_DEPTH_TYPE usStackDepth,
 							void * const pvParameters,
 							UBaseType_t uxPriority,
 							TaskHandle_t * const pxCreatedTask ) PRIVILEGED_FUNCTION;
@@ -2303,7 +2303,7 @@ BaseType_t xTaskGetSchedulerState( void ) PRIVILEGED_FUNCTION;
  * Raises the priority of the mutex holder to that of the calling task should
  * the mutex holder have a priority less than the calling task.
  */
-void vTaskPriorityInherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTION;
+BaseType_t xTaskPriorityInherit( TaskHandle_t const pxMutexHolder ) PRIVILEGED_FUNCTION;
 
 /*
  * Set the priority of a task back to its proper priority in the case that it

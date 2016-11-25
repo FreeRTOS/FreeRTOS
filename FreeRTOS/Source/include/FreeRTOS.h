@@ -716,6 +716,10 @@ extern "C" {
 	#define configUSE_TICKLESS_IDLE 0
 #endif
 
+#ifndef configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING
+	#define configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING( x )
+#endif
+
 #ifndef configPRE_SLEEP_PROCESSING
 	#define configPRE_SLEEP_PROCESSING( x )
 #endif
@@ -790,6 +794,12 @@ extern "C" {
 	#define configSUPPORT_DYNAMIC_ALLOCATION 1
 #endif
 
+#ifndef configSTACK_DEPTH_TYPE
+	/* Defaults to uint16_t for backward compatibility, but can be overridden
+	in FreeRTOSConfig.h if uint16_t is too restrictive. */
+	#define configSTACK_DEPTH_TYPE uint16_t
+#endif
+
 /* Sanity check the configuration. */
 #if( configUSE_TICKLESS_IDLE != 0 )
 	#if( INCLUDE_vTaskSuspend != 1 )
@@ -803,6 +813,10 @@ extern "C" {
 
 #if( ( configUSE_RECURSIVE_MUTEXES == 1 ) && ( configUSE_MUTEXES != 1 ) )
 	#error configUSE_MUTEXES must be set to 1 to use recursive mutexes
+#endif
+
+#ifndef configINITIAL_TICK_COUNT
+	#define configINITIAL_TICK_COUNT 0
 #endif
 
 #if( portTICK_TYPE_IS_ATOMIC == 0 )

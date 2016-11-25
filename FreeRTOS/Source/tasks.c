@@ -134,7 +134,7 @@ that if portUSING_MPU_WRAPPERS is 1 then a protected task can be created with
 a statically allocated stack and a dynamically allocated TCB.
 !!!NOTE!!! If the definition of tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE is
 changed then the definition of StaticTask_t must also be updated. */
-#define tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE   ( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+#define tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE	( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 #define tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB 		( ( uint8_t ) 0 )
 #define tskSTATICALLY_ALLOCATED_STACK_ONLY 			( ( uint8_t ) 1 )
 #define tskSTATICALLY_ALLOCATED_STACK_AND_TCB		( ( uint8_t ) 2 )
@@ -405,7 +405,7 @@ PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been r
 
 /* Other file private variables. --------------------------------*/
 PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseType_t ) 0U;
-PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) 0U;
+PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) configINITIAL_TICK_COUNT;
 PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
 PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
 PRIVILEGED_DATA static volatile UBaseType_t uxPendedTicks 			= ( UBaseType_t ) 0U;
@@ -694,7 +694,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 				pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_AND_TCB;
 			}
 			#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
-			
+
 			prvInitialiseNewTask(	pxTaskDefinition->pvTaskCode,
 									pxTaskDefinition->pcName,
 									( uint32_t ) pxTaskDefinition->usStackDepth,
@@ -762,7 +762,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 	BaseType_t xTaskCreate(	TaskFunction_t pxTaskCode,
 							const char * const pcName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-							const uint16_t usStackDepth,
+							const configSTACK_DEPTH_TYPE usStackDepth,
 							void * const pvParameters,
 							UBaseType_t uxPriority,
 							TaskHandle_t * const pxCreatedTask )
@@ -1692,6 +1692,17 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 			}
 
 			vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xStateListItem ) );
+
+			#if( configUSE_TASK_NOTIFICATIONS == 1 )
+			{
+				if( pxTCB->ucNotifyState == taskWAITING_NOTIFICATION )
+				{
+					/* The task was blocked to wait for a notification, but is
+					now suspended, so no notification was received. */
+					pxTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
+				}
+			}
+			#endif
 		}
 		taskEXIT_CRITICAL();
 
@@ -1811,12 +1822,12 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				{
 					traceTASK_RESUME( pxTCB );
 
-					/* As we are in a critical section we can access the ready
-					lists even if the scheduler is suspended. */
+					/* The ready list can be accessed even if the scheduler is
+					suspended because this is inside a critical section. */
 					( void ) uxListRemove(  &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
 
-					/* We may have just resumed a higher priority task. */
+					/* A higher priority task may have just been resumed. */
 					if( pxTCB->uxPriority >= pxCurrentTCB->uxPriority )
 					{
 						/* This yield may not cause the task just resumed to run,
@@ -3308,6 +3319,11 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 					configASSERT( xNextTaskUnblockTime >= xTickCount );
 					xExpectedIdleTime = prvGetExpectedIdleTime();
 
+					/* Define the following macro to set xExpectedIdleTime to 0
+					if the application does not want
+					portSUPPRESS_TICKS_AND_SLEEP() to be called. */
+					configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING( xExpectedIdleTime );
+
 					if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
 					{
 						traceLOW_POWER_IDLE_BEGIN();
@@ -3799,12 +3815,14 @@ TCB_t *pxTCB;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	void vTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
+	BaseType_t xTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
 	{
 	TCB_t * const pxTCB = ( TCB_t * ) pxMutexHolder;
+	BaseType_t xReturn = pdFALSE;
 
 		/* If the mutex was given back by an interrupt while the queue was
-		locked then the mutex holder might now be NULL. */
+		locked then the mutex holder might now be NULL.  _RB_ Is this still
+		needed as interrupt can no longer use mutexes? */
 		if( pxMutexHolder != NULL )
 		{
 			/* If the holder of the mutex has a priority below the priority of
@@ -3848,6 +3866,9 @@ TCB_t *pxTCB;
 				}
 
 				traceTASK_PRIORITY_INHERIT( pxTCB, pxCurrentTCB->uxPriority );
+
+				/* Inheritance occurred. */
+				xReturn = pdTRUE;
 			}
 			else
 			{
@@ -3858,6 +3879,8 @@ TCB_t *pxTCB;
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
+
+		return xReturn;
 	}
 
 #endif /* configUSE_MUTEXES */
@@ -4411,7 +4434,7 @@ TickType_t uxReturn;
 			blocked state (because a notification was already pending) or the
 			task unblocked because of a notification.  Otherwise the task
 			unblocked because of a timeout. */
-			if( pxCurrentTCB->ucNotifyState == taskWAITING_NOTIFICATION )
+			if( pxCurrentTCB->ucNotifyState != taskNOTIFICATION_RECEIVED )
 			{
 				/* A notification was not received. */
 				xReturn = pdFALSE;

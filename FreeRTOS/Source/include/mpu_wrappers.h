@@ -130,7 +130,9 @@ only for ports that are using the MPU. */
 
 		/* Map standard queue.h API functions to the MPU equivalents. */
 		#define xQueueGenericSend						MPU_xQueueGenericSend
-		#define xQueueGenericReceive					MPU_xQueueGenericReceive
+		#define xQueueReceive							MPU_xQueueReceive
+		#define xQueuePeek								MPU_xQueuePeek
+		#define xQueueSemaphoreTake						MPU_xQueueSemaphoreTake
 		#define uxQueueMessagesWaiting					MPU_uxQueueMessagesWaiting
 		#define uxQueueSpacesAvailable					MPU_uxQueueSpacesAvailable
 		#define vQueueDelete							MPU_vQueueDelete

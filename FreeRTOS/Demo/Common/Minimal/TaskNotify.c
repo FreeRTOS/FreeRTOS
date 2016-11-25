@@ -85,6 +85,8 @@
 
 #define notifyTASK_PRIORITY		( tskIDLE_PRIORITY )
 #define notifyUINT32_MAX	( ( uint32_t ) 0xffffffff )
+#define notifySUSPENDED_TEST_TIMER_PERIOD pdMS_TO_TICKS( 50 )
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -107,6 +109,14 @@ static void prvNotifyingTimer( TimerHandle_t xTimer );
  * Utility function to create pseudo random numbers.
  */
 static UBaseType_t prvRand( void );
+
+/*
+ * Callback for a timer that is used during preliminary testing.  The timer
+ * tests the behaviour when 1: a task waiting for a notification is suspended
+ * and then resumed without ever receiving a notification, and 2: when a task
+ * waiting for a notification receives a notification while it is suspended.
+ */
+static void prvSuspendedTaskTimerTestCallback( TimerHandle_t xExpiredTimer );
 
 /*-----------------------------------------------------------*/
 
@@ -151,8 +161,10 @@ uint32_t ulNotifiedValue, ulLoop, ulNotifyingValue, ulPreviousValue, ulExpectedV
 TickType_t xTimeOnEntering;
 const uint32_t ulFirstNotifiedConst = 100001UL, ulSecondNotifiedValueConst = 5555UL, ulMaxLoops = 5UL;
 const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
+TimerHandle_t xSingleTaskTimer;
 
-	/* -------------------------------------------------------------------------
+
+	/* ------------------------------------------------------------------------
 	Check blocking when there are no notifications. */
 	xTimeOnEntering = xTaskGetTickCount();
 	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
@@ -168,7 +180,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/* -------------------------------------------------------------------------
+	/* ------------------------------------------------------------------------
 	Check no blocking when notifications are pending.  First notify itself -
 	this would not be a normal thing to do and is done here for test purposes
 	only. */
@@ -202,7 +214,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Check the non-overwriting functionality.  The notification is done twice
 	using two different notification values.  The action says don't overwrite so
 	only the first notification should pass and the value read back should also
@@ -224,7 +236,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Do the same again, only this time use the overwriting version.  This time
 	both notifications should pass, and the value written the second time should
 	overwrite the value written the first time, and so be the value that is read
@@ -240,7 +252,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Check notifications with no action pass without updating the value.  Even
 	though ulFirstNotifiedConst is used as the value the value read back should
 	remain at ulSecondNotifiedConst. */
@@ -252,7 +264,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Check incrementing values.  Send ulMaxLoop increment notifications, then
 	ensure the received value is as expected - which should be
 	ulSecondNotificationValueConst plus how ever many times to loop iterated. */
@@ -273,7 +285,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Check all bits can be set by notifying the task with one additional bit	set
 	on each notification, and exiting the loop when all the bits are found to be
 	set.  As there are 32-bits the loop should execute 32 times before all the
@@ -309,7 +321,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Check bits are cleared on entry but not on exit when a notification fails
 	to arrive before timing out - both with and without a timeout value.  Wait
 	for the notification again - but this time it is not given by anything and
@@ -334,7 +346,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
+	/*-------------------------------------------------------------------------
 	Now try clearing the bit on exit.  For that to happen a notification must be
 	received, so the task is notified first. */
 	xTaskNotify( xTaskToNotify, 0, eNoAction );
@@ -355,8 +367,8 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/*--------------------------------------------------------------------------
-	Now try querying the previus value while notifying a task. */
+	/*-------------------------------------------------------------------------
+	Now try querying the previous value while notifying a task. */
 	xTaskNotifyAndQuery( xTaskToNotify, 0x00, eSetBits, &ulPreviousValue );
 	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~( ulBit0 | ulBit1 ) ) );
 
@@ -378,7 +390,7 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
-	/* -------------------------------------------------------------------------
+	/* ------------------------------------------------------------------------
 	Clear the previous notifications. */
 	xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 
@@ -397,12 +409,94 @@ const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
 
 
 
+	/* ------------------------------------------------------------------------
+	Create a timer that will try notifying this task while it is suspended. */
+	xSingleTaskTimer = xTimerCreate( "SingleNotify", notifySUSPENDED_TEST_TIMER_PERIOD, pdFALSE, NULL, prvSuspendedTaskTimerTestCallback );
+	configASSERT( xSingleTaskTimer );
+
+	/* Incremented to show the task is still running. */
+	ulNotifyCycleCount++;
+
+	/* Ensure no notifications are pending. */
+	xTaskNotifyWait( notifyUINT32_MAX, 0, NULL, 0 );
+
+	/* Raise the task's priority so it can suspend itself before the timer
+	expires. */
+	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
+
+	/* Start the timer that will try notifying this task while it is
+	suspended, then wait for a notification.  The first time the callback
+	executes the timer will suspend the task, then resume the task, without
+	ever sending a notification to the task. */
+	ulNotifiedValue = 0;
+	xTimerStart( xSingleTaskTimer, portMAX_DELAY );
+
+	/* Check a notification is not received. */
+	xReturned = xTaskNotifyWait( 0, 0, &ulNotifiedValue, portMAX_DELAY );
+	configASSERT( xReturned == pdFALSE );
+	configASSERT( ulNotifiedValue == 0 );
+
+	/* Incremented to show the task is still running. */
+	ulNotifyCycleCount++;
+
+	/* Start the timer that will try notifying this task while it is
+	suspended, then wait for a notification.  The second time the callback
+	executes the timer will suspend the task, notify the task, then resume the
+	task (previously it was suspended and resumed without being notified). */
+	xTimerStart( xSingleTaskTimer, portMAX_DELAY );
+
+	/* Check a notification is received. */
+	xReturned = xTaskNotifyWait( 0, 0, &ulNotifiedValue, portMAX_DELAY );
+	configASSERT( xReturned == pdPASS );
+	configASSERT( ulNotifiedValue != 0 );
+
+	/* Return the task to its proper priority and delete the timer as it is
+	not used again. */
+	vTaskPrioritySet( NULL, notifyTASK_PRIORITY );
+	xTimerDelete( xSingleTaskTimer, portMAX_DELAY );
 
 	/* Incremented to show the task is still running. */
 	ulNotifyCycleCount++;
 
 	/* Leave all bits cleared. */
 	xTaskNotifyWait( notifyUINT32_MAX, 0, NULL, 0 );
+}
+/*-----------------------------------------------------------*/
+
+static void prvSuspendedTaskTimerTestCallback( TimerHandle_t xExpiredTimer )
+{
+static uint32_t ulCallCount = 0;
+
+	/* Remove compiler warnings about unused parameters. */
+	( void ) xExpiredTimer;
+
+	/* Callback for a timer that is used during preliminary testing.  The timer
+	tests the behaviour when 1: a task waiting for a notification is suspended
+	and then resumed without ever receiving a notification, and 2: when a task
+	waiting for a notification receives a notification while it is suspended. */
+
+	if( ulCallCount == 0 )
+	{
+		vTaskSuspend( xTaskToNotify );
+		configASSERT( eTaskGetState( xTaskToNotify ) == eSuspended );
+		vTaskResume( xTaskToNotify );
+	}
+	else
+	{
+		vTaskSuspend( xTaskToNotify );
+
+		/* Sending a notification while the task is suspended should pass, but
+		not cause the task to resume.  ulCallCount is just used as a convenient
+		non-zero value. */
+		xTaskNotify( xTaskToNotify, ulCallCount, eSetValueWithOverwrite );
+
+		/* Make sure giving the notification didn't resume the task. */
+		configASSERT( eTaskGetState( xTaskToNotify ) == eSuspended );
+
+		vTaskResume( xTaskToNotify );
+	}
+
+	ulCallCount++;
 }
 /*-----------------------------------------------------------*/
 
@@ -441,8 +535,8 @@ const uint32_t ulCyclesToRaisePriority = 50UL;
 	for( ;; )
 	{
 		/* Start the timer again with a different period.  Sometimes the period
-		will be higher than the tasks block time, sometimes it will be lower
-		than the tasks block time. */
+		will be higher than the task's block time, sometimes it will be lower
+		than the task's block time. */
 		xPeriod = prvRand() % xMaxPeriod;
 		if( xPeriod < xMinPeriod )
 		{
@@ -453,8 +547,8 @@ const uint32_t ulCyclesToRaisePriority = 50UL;
 		xTimerChangePeriod( xTimer, xPeriod, portMAX_DELAY );
 
 		/* Block waiting for the notification again with a different period.
-		Sometimes the period will be higher than the tasks block time, sometimes
-		it will be lower than the tasks block time. */
+		Sometimes the period will be higher than the task's block time,
+		sometimes it will be lower than the task's block time. */
 		xPeriod = prvRand() % xMaxPeriod;
 		if( xPeriod < xMinPeriod )
 		{
@@ -487,13 +581,13 @@ const uint32_t ulCyclesToRaisePriority = 50UL;
 		the path where the task is notified from an ISR and becomes the highest
 		priority ready state task, but the pxHigherPriorityTaskWoken parameter
 		is NULL (which it is in the tick hook that sends notifications to this
-		task. */
+		task). */
 		if( ( ulNotifyCycleCount % ulCyclesToRaisePriority ) == 0 )
 		{
 			vTaskPrioritySet( xTaskToNotify, configMAX_PRIORITIES - 1 );
 
-			/* Wait for the next notification again, clearing all notifications if
-			one is received, but this time blocking indefinitely. */
+			/* Wait for the next notification again, clearing all notifications
+			if one is received, but this time blocking indefinitely. */
 			ulTimerNotificationsReceived += ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
 
 			/* Reset the priority. */
@@ -501,8 +595,8 @@ const uint32_t ulCyclesToRaisePriority = 50UL;
 		}
 		else
 		{
-			/* Wait for the next notification again, clearing all notifications if
-			one is received, but this time blocking indefinitely. */
+			/* Wait for the next notification again, clearing all notifications
+			if one is received, but this time blocking indefinitely. */
 			ulTimerNotificationsReceived += ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
 		}
 

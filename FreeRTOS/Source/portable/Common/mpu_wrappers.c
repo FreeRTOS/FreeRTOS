@@ -629,12 +629,34 @@ UBaseType_t uxReturn;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t MPU_xQueueGenericReceive( QueueHandle_t pxQueue, void * const pvBuffer, TickType_t xTicksToWait, BaseType_t xJustPeeking )
+BaseType_t MPU_xQueueReceive( QueueHandle_t pxQueue, void * const pvBuffer, TickType_t xTicksToWait )
 {
 BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 BaseType_t xReturn;
 
-	xReturn = xQueueGenericReceive( pxQueue, pvBuffer, xTicksToWait, xJustPeeking );
+	xReturn = xQueueReceive( pxQueue, pvBuffer, xTicksToWait );
+	vPortResetPrivilege( xRunningPrivileged );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
+{
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+BaseType_t xReturn;
+
+	xReturn = xQueuePeek( xQueue, pvBuffer, xTicksToWait );
+	vPortResetPrivilege( xRunningPrivileged );
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait )
+{
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+BaseType_t xReturn;
+
+	xReturn = xQueueSemaphoreTake( xQueue, xTicksToWait );
 	vPortResetPrivilege( xRunningPrivileged );
 	return xReturn;
 }

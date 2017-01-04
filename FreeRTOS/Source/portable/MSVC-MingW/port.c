@@ -83,21 +83,12 @@
 #define portMAX_INTERRUPTS				( ( uint32_t ) sizeof( uint32_t ) * 8UL ) /* The number of bits in an uint32_t. */
 #define portNO_CRITICAL_NESTING 		( ( uint32_t ) 0 )
 
-/* The priorities at which the various components of the simulation execute.
-Priorities are higher when a soak test is performed to lessen the effect of
-Windows interfering with the timing. */
-#define portSOAK_TEST
-#ifndef portSOAK_TEST
-	#define portDELETE_SELF_THREAD_PRIORITY			 THREAD_PRIORITY_HIGHEST /* Must be highest. */
-	#define portSIMULATED_INTERRUPTS_THREAD_PRIORITY THREAD_PRIORITY_NORMAL
-	#define portSIMULATED_TIMER_THREAD_PRIORITY		 THREAD_PRIORITY_BELOW_NORMAL
-	#define portTASK_THREAD_PRIORITY				 THREAD_PRIORITY_IDLE
-#else
-	#define portDELETE_SELF_THREAD_PRIORITY			 THREAD_PRIORITY_TIME_CRITICAL /* Must be highest. */
-	#define portSIMULATED_INTERRUPTS_THREAD_PRIORITY THREAD_PRIORITY_HIGHEST
-	#define portSIMULATED_TIMER_THREAD_PRIORITY		 THREAD_PRIORITY_ABOVE_NORMAL
-	#define portTASK_THREAD_PRIORITY				 THREAD_PRIORITY_NORMAL
-#endif
+/* The priorities at which the various components of the simulation execute. */
+#define portDELETE_SELF_THREAD_PRIORITY			 THREAD_PRIORITY_TIME_CRITICAL /* Must be highest. */
+#define portSIMULATED_INTERRUPTS_THREAD_PRIORITY THREAD_PRIORITY_TIME_CRITICAL
+#define portSIMULATED_TIMER_THREAD_PRIORITY		 THREAD_PRIORITY_HIGHEST
+#define portTASK_THREAD_PRIORITY				 THREAD_PRIORITY_ABOVE_NORMAL
+
 /*
  * Created as a high priority thread, this function uses a timer to simulate
  * a tick interrupt being generated on an embedded target.  In this Windows
@@ -264,16 +255,6 @@ xThreadState *pxThreadState = NULL;
 int8_t *pcTopOfStack = ( int8_t * ) pxTopOfStack;
 const SIZE_T xStackSize = 1024; /* Set the size to a small number which will get rounded up to the minimum possible. */
 
-	#ifdef portSOAK_TEST
-	{
-		/* Ensure highest priority class is inherited. */
-		if( !SetPriorityClass( GetCurrentProcess(), REALTIME_PRIORITY_CLASS ) )
-		{
-			printf( "SetPriorityClass() failed\r\n" );
-		}
-	}
-	#endif
-
 	/* In this simulated case a stack is not initialised, but instead a thread
 	is created that will execute the task being created.  The thread handles
 	the context switching itself.  The xThreadState object is placed onto
@@ -295,31 +276,53 @@ const SIZE_T xStackSize = 1024; /* Set the size to a small number which will get
 
 BaseType_t xPortStartScheduler( void )
 {
-void *pvHandle;
-int32_t lSuccess = pdPASS;
-xThreadState *pxThreadState;
+void *pvHandle = NULL;
+int32_t lSuccess;
+xThreadState *pxThreadState = NULL;
+SYSTEM_INFO xSystemInfo;
 
-	/* Install the interrupt handlers used by the scheduler itself. */
-	vPortSetInterruptHandler( portINTERRUPT_YIELD, prvProcessYieldInterrupt );
-	vPortSetInterruptHandler( portINTERRUPT_TICK, prvProcessTickInterrupt );
-
-	/* Create the events and mutexes that are used to synchronise all the
-	threads. */
-	pvInterruptEventMutex = CreateMutex( NULL, FALSE, NULL );
-	pvInterruptEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
-
-	if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) )
+	/* This port runs windows threads with extremely high priority.  All the
+	threads execute on the same core - to prevent locking up the host only start
+	if the host has multiple cores. */
+	GetSystemInfo( &xSystemInfo );
+	if( xSystemInfo.dwNumberOfProcessors <= 1 )
 	{
+		printf( "This version of the FreeRTOS Windows port can only be used on multi-core hosts.\r\n" );
 		lSuccess = pdFAIL;
 	}
-
-	/* Set the priority of this thread such that it is above the priority of
-	the threads that run tasks.  This higher priority is required to ensure
-	simulated interrupts take priority over tasks. */
-	pvHandle = GetCurrentThread();
-	if( pvHandle == NULL )
+	else
 	{
-		lSuccess = pdFAIL;
+		lSuccess = pdPASS;
+
+		/* The highest priority class is used to [try to] prevent other Windows
+		activity interfering with FreeRTOS timing too much. */
+		if( SetPriorityClass( GetCurrentProcess(), REALTIME_PRIORITY_CLASS ) == 0 )
+		{
+			printf( "SetPriorityClass() failed\r\n" );
+		}
+
+		/* Install the interrupt handlers used by the scheduler itself. */
+		vPortSetInterruptHandler( portINTERRUPT_YIELD, prvProcessYieldInterrupt );
+		vPortSetInterruptHandler( portINTERRUPT_TICK, prvProcessTickInterrupt );
+
+		/* Create the events and mutexes that are used to synchronise all the
+		threads. */
+		pvInterruptEventMutex = CreateMutex( NULL, FALSE, NULL );
+		pvInterruptEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+
+		if( ( pvInterruptEventMutex == NULL ) || ( pvInterruptEvent == NULL ) )
+		{
+			lSuccess = pdFAIL;
+		}
+
+		/* Set the priority of this thread such that it is above the priority of
+		the threads that run tasks.  This higher priority is required to ensure
+		simulated interrupts take priority over tasks. */
+		pvHandle = GetCurrentThread();
+		if( pvHandle == NULL )
+		{
+			lSuccess = pdFAIL;
+		}
 	}
 
 	if( lSuccess == pdPASS )

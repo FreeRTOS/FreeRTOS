@@ -71,6 +71,7 @@
 #define PORTMACRO_H
 
 #include <Windows.h>
+#include <WinBase.h>
 
 /******************************************************************************
 	Defines

@@ -619,8 +619,9 @@ uint32_t ulReceived;
 static void prvSendToQueueInSetFromISR( void )
 {
 static BaseType_t xQueueToWriteTo = 0;
+uint32_t ulTxValueSnapshot = ulISRTxValue;
 
-	if( xQueueSendFromISR( xQueues[ xQueueToWriteTo ], ( void * ) &ulISRTxValue, NULL ) == pdPASS )
+	if( xQueueSendFromISR( xQueues[ xQueueToWriteTo ], ( void * ) &ulTxValueSnapshot, NULL ) == pdPASS )
 	{
 		ulISRTxValue++;
 

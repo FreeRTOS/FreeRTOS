@@ -106,7 +106,7 @@ static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 
 /* These variables are used to check that all the tasks are still running.  If a
 task gets a calculation wrong it will stop setting its check variable. */
-static volatile uint16_t usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
+static uint16_t usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
 
 /*-----------------------------------------------------------*/
 
@@ -139,7 +139,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+	pusTaskCheckVariable = ( volatile uint16_t * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for(;;)
@@ -198,7 +198,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+	pusTaskCheckVariable = ( volatile uint16_t * ) pvParameters;
 
 	/* Keep performing a calculation and checking the result against a constant. */
 	for( ;; )
@@ -250,7 +250,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+	pusTaskCheckVariable = ( volatile uint16_t * ) pvParameters;
 
 	pdArray = ( portDOUBLE * ) pvPortMalloc( xArraySize * sizeof( portDOUBLE ) );
 
@@ -313,7 +313,7 @@ short sError = pdFALSE;
 
 	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
-	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
+	pusTaskCheckVariable = ( volatile uint16_t * ) pvParameters;
 
 	pdArray = ( portDOUBLE * ) pvPortMalloc( xArraySize * sizeof( portDOUBLE ) );
 

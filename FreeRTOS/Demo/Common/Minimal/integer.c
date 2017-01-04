@@ -104,7 +104,7 @@ static portTASK_FUNCTION_PROTO( vCompeteingIntMathTask, pvParameters );
 that the task is still executing.  The check task sets the variable back to
 false, flagging an error if the variable is still false the next time it
 is called. */
-static volatile BaseType_t xTaskCheck[ intgNUMBER_OF_TASKS ] = { ( BaseType_t ) pdFALSE };
+static BaseType_t xTaskCheck[ intgNUMBER_OF_TASKS ] = { ( BaseType_t ) pdFALSE };
 
 /*-----------------------------------------------------------*/
 

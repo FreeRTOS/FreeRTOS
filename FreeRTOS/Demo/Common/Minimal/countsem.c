@@ -115,13 +115,13 @@ static void prvCountingSemaphoreTask( void *pvParameters );
  * Utility function to increment the semaphore count value up from zero to
  * countMAX_COUNT_VALUE.
  */
-static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter );
+static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, volatile UBaseType_t *puxLoopCounter );
 
 /*
  * Utility function to decrement the semaphore count value up from
  * countMAX_COUNT_VALUE to zero.
  */
-static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter );
+static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, volatile UBaseType_t *puxLoopCounter );
 
 /*-----------------------------------------------------------*/
 
@@ -138,11 +138,11 @@ typedef struct COUNT_SEM_STRUCT
 
 	/* Incremented on each cycle of the demo task.  Used to detect a stalled
 	task. */
-	UBaseType_t uxLoopCounter;
+	volatile UBaseType_t uxLoopCounter;
 } xCountSemStruct;
 
 /* Two structures are defined, one is passed to each test task. */
-static volatile xCountSemStruct xParameters[ countNUM_TEST_TASKS ];
+static xCountSemStruct xParameters[ countNUM_TEST_TASKS ];
 
 /*-----------------------------------------------------------*/
 
@@ -178,7 +178,7 @@ void vStartCountingSemaphoreTasks( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter )
+static void prvDecrementSemaphoreCount( SemaphoreHandle_t xSemaphore, volatile UBaseType_t *puxLoopCounter )
 {
 UBaseType_t ux;
 
@@ -217,7 +217,7 @@ UBaseType_t ux;
 }
 /*-----------------------------------------------------------*/
 
-static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, UBaseType_t *puxLoopCounter )
+static void prvIncrementSemaphoreCount( SemaphoreHandle_t xSemaphore, volatile UBaseType_t *puxLoopCounter )
 {
 UBaseType_t ux;
 

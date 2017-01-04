@@ -162,7 +162,7 @@ static TaskHandle_t xContinuousIncrementHandle, xLimitedIncrementHandle;
 
 /* The shared counter variable.  This is passed in as a parameter to the two
 counter variables for demonstration purposes. */
-static volatile uint32_t ulCounter;
+static uint32_t ulCounter;
 
 /* Variables used to check that the tasks are still operating without error.
 Each complete iteration of the controller task increments this variable
@@ -214,11 +214,11 @@ void vStartDynamicPriorityTasks( void )
  */
 static portTASK_FUNCTION( vLimitedIncrementTask, pvParameters )
 {
-uint32_t *pulCounter;
+volatile uint32_t *pulCounter;
 
 	/* Take a pointer to the shared variable from the parameters passed into
 	the task. */
-	pulCounter = ( uint32_t * ) pvParameters;
+	pulCounter = ( volatile uint32_t * ) pvParameters;
 
 	/* This will run before the control task, so the first thing it does is
 	suspend - the control task will resume it when ready. */
@@ -248,7 +248,7 @@ UBaseType_t uxOurPriority;
 
 	/* Take a pointer to the shared variable from the parameters passed into
 	the task. */
-	pulCounter = ( uint32_t * ) pvParameters;
+	pulCounter = ( volatile uint32_t * ) pvParameters;
 
 	/* Query our priority so we can raise it when exclusive access to the
 	shared variable is required. */

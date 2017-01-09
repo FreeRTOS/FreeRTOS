@@ -205,7 +205,10 @@ const TickType_t xStartMargin = 2UL;
 		task to minimise discrepancies. */
 		vTaskPrioritySet( NULL, abtBLOCKING_PRIORITY );
 		vTaskDelay( xMaxBlockTime + xHalfMaxBlockTime + xStartMargin );
-		xTaskAbortDelay( xBlockingTask );
+		if( xTaskAbortDelay( xBlockingTask ) != pdPASS )
+		{
+			xErrorOccurred = pdTRUE;
+		}
 
 		/* Reset the priority to the normal controlling priority. */
 		vTaskPrioritySet( NULL, abtCONTROLLING_PRIORITY );

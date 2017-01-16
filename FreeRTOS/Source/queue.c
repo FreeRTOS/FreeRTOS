@@ -255,6 +255,16 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 	static void prvInitialiseMutex( Queue_t *pxNewQueue ) PRIVILEGED_FUNCTION;
 #endif
 
+#if( configUSE_MUTEXES == 1 )
+	/*
+	 * If a task waiting for a mutex causes the mutex holder to inherit a
+	 * priority, but the waiting task times out, then the holder should
+	 * disinherit the priority - but only down to the highest priority of any
+	 * other tasks that are waiting for the same mutex.  This function returns
+	 * that priority.
+	 */
+	static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+#endif
 /*-----------------------------------------------------------*/
 
 /*
@@ -1408,6 +1418,10 @@ BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
 Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
+#if( configUSE_MUTEXES == 1 )
+	BaseType_t xInheritanceOccurred = pdFALSE;
+#endif
+
 	/* Check the queue pointer is not NULL. */
 	configASSERT( ( pxQueue ) );
 
@@ -1485,6 +1499,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			{
 				if( xTicksToWait == ( TickType_t ) 0 )
 				{
+					/* For inheritance to have occurred there must have been an
+					initial timeout, and an adjusted timeout cannot become 0, as
+					if it were 0 the function would have exited. */
+					configASSERT( xInheritanceOccurred == pdFALSE );
+
 					/* The semaphore count was 0 and no block time is specified
 					(or the block time has expired) so exit now. */
 					taskEXIT_CRITICAL();
@@ -1530,7 +1549,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					{
 						taskENTER_CRITICAL();
 						{
-							xTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+							xInheritanceOccurred = xTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
 						}
 						taskEXIT_CRITICAL();
 					}
@@ -1572,6 +1591,30 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			queue being empty is equivalent to the semaphore count being 0. */
 			if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
 			{
+				#if ( configUSE_MUTEXES == 1 )
+				{
+					/* xInheritanceOccurred could only have be set if
+					pxQueue->uxQueueType == queueQUEUE_IS_MUTEX so no need to
+					test the mutex type again to check it is actually a mutex. */
+					if( xInheritanceOccurred != pdFALSE )
+					{
+						taskENTER_CRITICAL();
+						{
+							UBaseType_t uxHighestWaitingPriority;
+
+							/* This task blocking on the mutex caused another
+							task to inherit this task's priority.  Now this task
+							has timed out the priority should be disinherited
+							again, but only as low as the next highest priority
+							task that is waiting for the same mutex. */
+							uxHighestWaitingPriority = prvGetDisinheritPriorityAfterTimeout( pxQueue );
+							vTaskPriorityDisinheritAfterTimeout( ( void * ) pxQueue->pxMutexHolder, uxHighestWaitingPriority );
+						}
+						taskEXIT_CRITICAL();
+					}
+				}
+				#endif /* configUSE_MUTEXES */
+
 				traceQUEUE_RECEIVE_FAILED( pxQueue );
 				return errQUEUE_EMPTY;
 			}
@@ -1995,6 +2038,33 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
+/*-----------------------------------------------------------*/
+
+#if( configUSE_MUTEXES == 1 )
+
+	static UBaseType_t prvGetDisinheritPriorityAfterTimeout( const Queue_t * const pxQueue )
+	{
+	UBaseType_t uxHighestPriorityOfWaitingTasks;
+
+		/* If a task waiting for a mutex causes the mutex holder to inherit a
+		priority, but the waiting task times out, then the holder should
+		disinherit the priority - but only down to the highest priority of any
+		other tasks that are waiting for the same mutex.  For this purpose,
+		return the priority of the highest priority task that is waiting for the
+		mutex. */
+		if( listCURRENT_LIST_LENGTH( &( pxQueue->xTasksWaitingToReceive ) ) > 0 )
+		{
+			uxHighestPriorityOfWaitingTasks = configMAX_PRIORITIES - listGET_ITEM_VALUE_OF_HEAD_ENTRY( &( pxQueue->xTasksWaitingToReceive ) );
+		}
+		else
+		{
+			uxHighestPriorityOfWaitingTasks = tskIDLE_PRIORITY;
+		}
+
+		return uxHighestPriorityOfWaitingTasks;
+	}
+
+#endif /* configUSE_MUTEXES */
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )

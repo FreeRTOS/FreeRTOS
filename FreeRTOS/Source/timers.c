@@ -100,6 +100,12 @@ configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 /* Misc definitions. */
 #define tmrNO_DELAY		( TickType_t ) 0U
 
+/* The name assigned to the timer service task.  This can be overridden by
+defining trmTIMER_SERVICE_TASK_NAME in FreeRTOSConfig.h. */
+#ifndef tmrTIMER_SERVICE_TASK_NAME
+	#define tmrTIMER_SERVICE_TASK_NAME "Tmr Svc"
+#endif
+
 /* The definition of the timers themselves. */
 typedef struct tmrTimerControl
 {
@@ -276,7 +282,7 @@ BaseType_t xReturn = pdFAIL;
 
 			vApplicationGetTimerTaskMemory( &pxTimerTaskTCBBuffer, &pxTimerTaskStackBuffer, &ulTimerTaskStackSize );
 			xTimerTaskHandle = xTaskCreateStatic(	prvTimerTask,
-													"Tmr Svc",
+													tmrTIMER_SERVICE_TASK_NAME,
 													ulTimerTaskStackSize,
 													NULL,
 													( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
@@ -291,7 +297,7 @@ BaseType_t xReturn = pdFAIL;
 		#else
 		{
 			xReturn = xTaskCreate(	prvTimerTask,
-									"Tmr Svc",
+									tmrTIMER_SERVICE_TASK_NAME,
 									configTIMER_TASK_STACK_DEPTH,
 									NULL,
 									( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,

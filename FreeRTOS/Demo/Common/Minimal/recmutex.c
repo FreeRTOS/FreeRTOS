@@ -314,7 +314,7 @@ static void prvRecursiveMutexPollingTask( void *pvParameters )
 
 	for( ;; )
 	{
-		/* Keep attempting to obtain the mutex.  We should only obtain it when
+		/* Keep attempting to obtain the mutex.  It should only be obtained when
 		the blocking task has suspended itself, which in turn should only
 		happen when the controlling task is also suspended. */
 		if( xSemaphoreTakeRecursive( xMutex, recmuNO_DELAY ) == pdPASS )

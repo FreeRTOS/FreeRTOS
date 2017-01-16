@@ -91,6 +91,7 @@
 
 #define genqQUEUE_LENGTH		( 5 )
 #define intsemNO_BLOCK			( 0 )
+#define genqSHORT_BLOCK			( pdMS_TO_TICKS( 2 ) )
 
 #define genqMUTEX_LOW_PRIORITY		( tskIDLE_PRIORITY )
 #define genqMUTEX_TEST_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -125,6 +126,27 @@ static void prvLowPriorityMutexTask( void *pvParameters );
 static void prvMediumPriorityMutexTask( void *pvParameters );
 static void prvHighPriorityMutexTask( void *pvParameters );
 
+/*
+ * Tests the behaviour when a low priority task inherits the priority of a
+ * higher priority task when taking two mutexes, and returns the mutexes in
+ * first the same order as the two mutexes were obtained, and second the
+ * opposite order as the two mutexes were obtained.
+ */
+static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex );
+static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex );
+
+#if( INCLUDE_xTaskAbortDelay == 1 )
+
+	#if( configUSE_PREEMPTION == 0 )
+		#error The additional tests included when INCLUDE_xTaskAbortDelay is 1 expect preemption to be used.
+	#endif
+
+	/* Tests the behaviour when a low priority task inherits the priority of a
+	high priority task only for the high priority task to timeout before
+	obtaining the mutex. */
+	static void prvHighPriorityTimeout( SemaphoreHandle_t xMutex );
+#endif
+
 /*-----------------------------------------------------------*/
 
 /* Flag that will be latched to pdTRUE should any unexpected behaviour be
@@ -142,6 +164,17 @@ static volatile uint32_t ulGuardedVariable = 0;
 /* Handles used in the mutex test to suspend and resume the high and medium
 priority mutex test tasks. */
 static TaskHandle_t xHighPriorityMutexTask, xMediumPriorityMutexTask;
+
+/* If INCLUDE_xTaskAbortDelay is 1 additional tests are performed, requiring an
+additional task. */
+#if( INCLUDE_xTaskAbortDelay == 1 )
+	static TaskHandle_t xSecondMediumPriorityMutexTask;
+#endif
+
+/* Lets the high priority semaphore task know that its wait for the semaphore
+was aborted, in which case not being able to obtain the semaphore is not to be
+considered an error. */
+static volatile BaseType_t xBlockWasAborted = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
@@ -189,13 +222,21 @@ SemaphoreHandle_t xMutex;
 		xTaskCreate( prvLowPriorityMutexTask, "MuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
 		xTaskCreate( prvMediumPriorityMutexTask, "MuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
 		xTaskCreate( prvHighPriorityMutexTask, "MuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
+
+		/* If INCLUDE_xTaskAbortDelay is set then additional tests are performed,
+		requiring two instances of prvHighPriorityMutexTask(). */
+		#if( INCLUDE_xTaskAbortDelay == 1 )
+		{
+			xTaskCreate( prvHighPriorityMutexTask, "MuHigh2", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_MEDIUM_PRIORITY, &xSecondMediumPriorityMutexTask );
+		}
+		#endif /* INCLUDE_xTaskAbortDelay */
 	}
 }
 /*-----------------------------------------------------------*/
 
 static void prvSendFrontAndBackTest( void *pvParameters )
 {
-uint32_t ulData, ulData2;
+uint32_t ulData, ulData2, ulLoopCounterSnapshot;
 QueueHandle_t xQueue;
 
 	#ifdef USE_STDIO
@@ -215,7 +256,8 @@ QueueHandle_t xQueue;
 		should have the same efect as sending it to the front of the queue.
 
 		First send to the front and check everything is as expected. */
-		xQueueSendToFront( xQueue, ( void * ) &ulLoopCounter, intsemNO_BLOCK );
+		ulLoopCounterSnapshot = ulLoopCounter;
+		xQueueSendToFront( xQueue, ( void * ) &ulLoopCounterSnapshot, intsemNO_BLOCK );
 
 		if( uxQueueMessagesWaiting( xQueue ) != 1 )
 		{
@@ -241,7 +283,8 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 
-		xQueueSendToBack( xQueue, ( void * ) &ulLoopCounter, intsemNO_BLOCK );
+		ulLoopCounterSnapshot = ulLoopCounter;
+		xQueueSendToBack( xQueue, ( void * ) &ulLoopCounterSnapshot, intsemNO_BLOCK );
 
 		if( uxQueueMessagesWaiting( xQueue ) != 1 )
 		{
@@ -258,8 +301,8 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 
-		/* The data we sent to the queue should equal the data we just received
-		from the queue. */
+		/* The data sent to the queue should equal the data just received from
+		the queue. */
 		if( ulLoopCounter != ulData )
 		{
 			xErrorDetected = pdTRUE;
@@ -416,9 +459,202 @@ QueueHandle_t xQueue;
 			xErrorDetected = pdTRUE;
 		}
 
+		/* Increment the loop counter to indicate these tasks are still
+		executing. */
 		ulLoopCounter++;
 	}
 }
+/*-----------------------------------------------------------*/
+
+#if( INCLUDE_xTaskAbortDelay == 1 )
+
+	static void prvHighPriorityTimeout( SemaphoreHandle_t xMutex )
+	{
+	static UBaseType_t uxLoopCount = 0;
+
+		/* The tests in this function are very similar, the slight variations
+		are for code coverage purposes. */
+
+		/* Take the mutex.  It should be available now. */
+		if( xSemaphoreTake( xMutex, intsemNO_BLOCK ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* This task's priority should be as per that assigned when the task was
+		created. */
+		if( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* Now unsuspend the high priority task.  This will attempt to take the
+		mutex, and block when it finds it cannot obtain it. */
+		vTaskResume( xHighPriorityMutexTask );
+
+		/* This task should now have inherited the priority of the high priority
+		task as by now the high priority task will have attempted to obtain the
+		mutex. */
+		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* Unblock a second medium priority task.  It too will attempt to take
+		the mutex and enter the Blocked state - it won't run yet though as this
+		task has inherited a priority above it. */
+		vTaskResume( xSecondMediumPriorityMutexTask );
+
+		/* This task should still have the priority of the high priority task as
+		that had already been inherited as is the highest priority of the three
+		tasks using the mutex. */
+		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* On some loops, block for a short while to provide additional
+		code coverage.  Blocking here will allow the medium priority task to
+		execute and so also block on the mutex so when the high priority task
+		causes this task to disinherit the high priority it is inherited down to
+		the priority of the medium priority task.  When there is no delay the
+		medium priority task will not run until after the disinheritance, so
+		this task will disinherit back to its base priority, then only up to the
+		medium priority after the medium priority has executed. */
+		vTaskDelay( uxLoopCount & ( UBaseType_t ) 0x07 );
+
+		/* Now force the high priority task to unblock.  It will fail to obtain
+		the mutex and go back to the suspended state - allowing this task to
+		execute again.  xBlockWasAborted is set to pdTRUE so the higher priority
+		task knows that its failure to obtain the semaphore is not an error. */
+		xBlockWasAborted = pdTRUE;
+		if( xTaskAbortDelay( xHighPriorityMutexTask ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* This task has inherited the priority of xHighPriorityMutexTask so
+		could still be running even though xHighPriorityMutexTask is no longer
+		blocked.  Delay for a short while to ensure xHighPriorityMutexTask gets
+		a chance to run - indicated by this task changing priority.  It should
+		disinherit the high priority task, but then inherit the priority of the
+		medium priority task that is waiting for the same mutex. */
+		while( uxTaskPriorityGet( NULL ) != genqMUTEX_MEDIUM_PRIORITY )
+		{
+			/* If this task gets stuck here then the check variables will stop
+			incrementing and the check task will detect the error. */
+			vTaskDelay( genqSHORT_BLOCK );
+		}
+
+		/* Now force the medium priority task to unblock.  xBlockWasAborted is
+		set to pdTRUE so the medium priority task knows that its failure to
+		obtain the semaphore is not an error. */
+		xBlockWasAborted = pdTRUE;
+		if( xTaskAbortDelay( xSecondMediumPriorityMutexTask ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* This time no other tasks are waiting for the mutex, so this task
+		should return to its base priority.  This might not happen straight
+		away as it is running at the same priority as the task it just
+		unblocked. */
+		while( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+		{
+			/* If this task gets stuck here then the check variables will stop
+			incrementing and the check task will detect the error. */
+			vTaskDelay( genqSHORT_BLOCK );
+		}
+
+		/* Give the semaphore back ready for the next test. */
+		xSemaphoreGive( xMutex );
+
+		configASSERT( xErrorDetected == pdFALSE );
+
+
+
+		/* Now do the same again, but this time unsuspend the tasks in the
+		opposite order.  This takes a different path though the code because
+		when the high priority task has its block aborted there is already
+		another task in the list of tasks waiting for the mutex, and the
+		low priority task drops down to that priority, rather than dropping
+		down to its base priority before inheriting the priority of the medium
+		priority task. */
+		if( xSemaphoreTake( xMutex, intsemNO_BLOCK ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		if( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* This time unsuspend the medium priority task first.  This will
+		attempt to take the mutex, and block when it finds it cannot obtain it. */
+		vTaskResume( xSecondMediumPriorityMutexTask );
+
+		/* This time this task should now have inherited the priority of the
+		medium task. */
+		if( uxTaskPriorityGet( NULL ) != genqMUTEX_MEDIUM_PRIORITY )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* This time the high priority task in unsuspended second. */
+		vTaskResume( xHighPriorityMutexTask );
+
+		/* The high priority task should already have run, causing this task to
+		inherit a priority for the second time. */
+		if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		/* This time, when the high priority task has its delay aborted and it
+		fails to obtain the mutex this task will immediately have its priority
+		lowered down to that of the highest priority task waiting on the mutex,
+		which is the medium priority task. */
+		xBlockWasAborted = pdTRUE;
+		if( xTaskAbortDelay( xHighPriorityMutexTask ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		while( uxTaskPriorityGet( NULL ) != genqMUTEX_MEDIUM_PRIORITY )
+		{
+			/* If this task gets stuck here then the check variables will stop
+			incrementing and the check task will detect the error. */
+			vTaskDelay( genqSHORT_BLOCK );
+		}
+
+		/* And finally, when the medium priority task also have its delay
+		aborted there are no other tasks waiting for the mutex so this task
+		returns to its base priority. */
+		xBlockWasAborted = pdTRUE;
+		if( xTaskAbortDelay( xSecondMediumPriorityMutexTask ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+
+		while( uxTaskPriorityGet( NULL ) != genqMUTEX_LOW_PRIORITY )
+		{
+			/* If this task gets stuck here then the check variables will stop
+			incrementing and the check task will detect the error. */
+			vTaskDelay( genqSHORT_BLOCK );
+		}
+
+		/* Give the semaphore back ready for the next test. */
+		xSemaphoreGive( xMutex );
+
+		configASSERT( xErrorDetected == pdFALSE );
+
+		/* uxLoopCount is used to add a variable delay, and in-so-doing provide
+		additional code coverage. */
+		uxLoopCount++;
+	}
+
+#endif /* INCLUDE_xTaskAbortDelay == 1 */
 /*-----------------------------------------------------------*/
 
 static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, SemaphoreHandle_t xLocalMutex )
@@ -455,15 +691,16 @@ static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex, S
 	}
 	#endif /* INCLUDE_eTaskGetState */
 
-	/* The priority of the high priority task should now have been inherited
-	as by now it will have attempted to get the mutex. */
+	/* This task should now have inherited the priority of the high priority
+	task as by now the high priority task will have attempted to obtain the
+	mutex. */
 	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
 	{
 		xErrorDetected = pdTRUE;
 	}
 
 	/* Attempt to set the priority of this task to the test priority -
-	between the	idle priority and the medium/high test priorities, but the
+	between the idle priority and the medium/high test priorities, but the
 	actual priority should remain at the high priority. */
 	vTaskPrioritySet( NULL, genqMUTEX_TEST_PRIORITY );
 	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
@@ -585,8 +822,9 @@ static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, Semaph
 	}
 	#endif /* INCLUDE_eTaskGetState */
 
-	/* The priority of the high priority task should now have been inherited
-	as by now it will have attempted to get the mutex. */
+	/* This task should now have inherited the priority of the high priority
+	task as by now the high priority task will have attempted to obtain the
+	mutex. */
 	if( uxTaskPriorityGet( NULL ) != genqMUTEX_HIGH_PRIORITY )
 	{
 		xErrorDetected = pdTRUE;
@@ -708,6 +946,15 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters, xLocalMutex;
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
 		#endif
+
+		#if( INCLUDE_xTaskAbortDelay == 1 )
+		{
+			/* Tests the behaviour when a low priority task inherits the
+			priority of a high priority task only for the high priority task to
+			timeout before obtaining the mutex. */
+			prvHighPriorityTimeout( xMutex );
+		}
+		#endif
 	}
 }
 /*-----------------------------------------------------------*/
@@ -740,19 +987,30 @@ SemaphoreHandle_t xMutex = ( SemaphoreHandle_t ) pvParameters;
 		priority task will unsuspend this task when required. */
 		vTaskSuspend( NULL );
 
-		/* When this task unsuspends all it does is attempt to obtain
-		the mutex.  It should find the mutex is not available so a
-		block time is specified. */
+		/* When this task unsuspends all it does is attempt to obtain the
+		mutex.  It should find the mutex is not available so a block time is
+		specified. */
 		if( xSemaphoreTake( xMutex, portMAX_DELAY ) != pdPASS )
 		{
-			xErrorDetected = pdTRUE;
+			/* This task would expect to obtain the mutex unless its wait for
+			the mutex was aborted. */
+			if( xBlockWasAborted == pdFALSE )
+			{
+				xErrorDetected = pdTRUE;
+			}
+			else
+			{
+				xBlockWasAborted = pdFALSE;
+			}
 		}
-
-		/* When the mutex is eventually obtained it is just given back before
-		returning to suspend ready for the next cycle. */
-		if( xSemaphoreGive( xMutex ) != pdPASS )
+		else
 		{
-			xErrorDetected = pdTRUE;
+			/* When the mutex is eventually obtained it is just given back before
+			returning to suspend ready for the next cycle. */
+			if( xSemaphoreGive( xMutex ) != pdPASS )
+			{
+				xErrorDetected = pdTRUE;
+			}
 		}
 	}
 }

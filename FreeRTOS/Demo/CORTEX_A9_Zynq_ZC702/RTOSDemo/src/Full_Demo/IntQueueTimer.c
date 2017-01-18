@@ -224,6 +224,12 @@ uint32_t ulInterruptStatus;
 XTtcPs *pxTimer = ( XTtcPs * ) pvCallBackRef;
 BaseType_t xYieldRequired;
 
+#if( configASSERT_DEFINED == 1 )
+	/* Test floating point access within nested interrupts. */
+	volatile long double d1, d2;
+#endif
+
+
 	/* Read the interrupt status, then write it back to clear the interrupt. */
 	ulInterruptStatus = XTtcPs_GetInterruptStatus( pxTimer );
 	XTtcPs_ClearInterruptStatus( pxTimer, ulInterruptStatus );
@@ -234,11 +240,37 @@ BaseType_t xYieldRequired;
 	/* Check the device ID to know which IntQueue demo to call. */
 	if( pxTimer->Config.DeviceId == xDeviceIDs[ 0 ] )
 	{
+		#if( configASSERT_DEFINED == 1 )
+		{
+			/* Test floating point access within nested interrupts. */
+			d1 = 1.5L;
+			d2 = 5.25L;
+		}
+		#endif /* configASSERT_DEFINED */
+
 		xYieldRequired = xFirstTimerHandler();
+
+		/* Will fail eventually if flop context switch is not correct in
+		interrupts.  Keep calculation simple so the answer is exact even when
+		using flop. */
+		configASSERT( ( d1 * d2 ) == ( 1.5L * 5.25L ) );
 	}
 	else if( pxTimer->Config.DeviceId == xDeviceIDs[ 1 ] )
 	{
+		#if( configASSERT_DEFINED == 1 )
+		{
+			/* Test floating point access within nested interrupts. */
+			d1 = 10.5L;
+			d2 = 5.5L;
+		}
+		#endif /* configASSERT_DEFINED */
+
 		xYieldRequired = xSecondTimerHandler();
+
+		/* Will fail eventually if flop context switch is not correct in
+		interrupts.  Keep calculation simple so the answer is exact even when
+		using flop. */
+		configASSERT( ( d1 / d2 ) == ( 10.5L / 5.5L ) );
 	}
 	else
 	{

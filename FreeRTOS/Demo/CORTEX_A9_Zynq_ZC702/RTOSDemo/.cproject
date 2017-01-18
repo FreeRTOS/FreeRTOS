@@ -83,6 +83,9 @@
 							<tool id="xilinx.gnu.armv7.size.debug.922806469" name="ARM v7 Print Size" superClass="xilinx.gnu.armv7.size.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="xilinx.gnu.armv7.exe.debug.42884744.1294115727" name="printf-stdarg.c" rcbsApplicability="disable" resourcePath="src/printf-stdarg.c" toolsToInvoke="xilinx.gnu.armv7.c.toolchain.compiler.debug.2006913865.2055003215">
+						<tool id="xilinx.gnu.armv7.c.toolchain.compiler.debug.2006913865.2055003215" name="ARM v7 gcc compiler" superClass="xilinx.gnu.armv7.c.toolchain.compiler.debug.2006913865"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry excluding="src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c|src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/makefsdata" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

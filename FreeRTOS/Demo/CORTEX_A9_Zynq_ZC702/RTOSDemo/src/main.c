@@ -334,6 +334,23 @@ void vApplicationTickHook( void )
 
 		/* Use mutexes from interrupts. */
 		vInterruptSemaphorePeriodicTest();
+
+		/* Test flop alignment in interrupts - calling printf from an interrupt
+		is BAD! */
+		#if( configASSERT_DEFINED == 1 )
+		{
+		char cBuf[ 20 ];
+		UBaseType_t uxSavedInterruptStatus;
+
+			uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+			{
+				sprintf( cBuf, "%1.3f", 1.234 );
+			}
+			portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+
+			configASSERT( strcmp( cBuf, "1.234" ) == 0 );
+		}
+		#endif /* configASSERT_DEFINED */
 	}
 	#endif
 }

@@ -217,16 +217,17 @@ FreeRTOS_IRQ_Handler:
 	LDR		r0, [r2]
 
 	/* Ensure bit 2 of the stack pointer is clear.  r2 holds the bit 2 value for
-	future use. */
+	future use.  _RB_ Does this ever actually need to be done provided the start
+	of the stack is 8-byte aligned? */
 	MOV		r2, sp
 	AND		r2, r2, #4
 	SUB		sp, sp, r2
 
-	/* Call the interrupt handler. */
-	PUSH	{r0-r3, lr}
+	/* Call the interrupt handler.  r4 pushed to maintain alignment. */
+	PUSH	{r0-r4, lr}
 	LDR		r1, vApplicationIRQHandlerConst
 	BLX		r1
-	POP		{r0-r3, lr}
+	POP		{r0-r4, lr}
 	ADD		sp, sp, r2
 
 	CPSID	i

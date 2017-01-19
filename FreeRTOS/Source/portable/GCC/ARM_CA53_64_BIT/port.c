@@ -136,12 +136,18 @@ context. */
 #define portNO_FLOATING_POINT_CONTEXT	( ( StackType_t ) 0 )
 
 /* Constants required to setup the initial task context. */
-#define portEL3							( ( StackType_t ) 0x0c )
 #define portSP_ELx						( ( StackType_t ) 0x01 )
 #define portSP_EL0						( ( StackType_t ) 0x00 )
 
-/* At the time of writing, the BSP only supports EL3. */
-#define portINITIAL_PSTATE				( portEL3 | portSP_EL0 )
+#if GUEST
+	#define portEL1						( ( StackType_t ) 0x04 )
+	#define portINITIAL_PSTATE				( portEL1 | portSP_EL0 )
+#else
+	#define portEL3						( ( StackType_t ) 0x0c )
+	/* At the time of writing, the BSP only supports EL3. */
+	#define portINITIAL_PSTATE			( portEL3 | portSP_EL0 )
+#endif
+
 
 /* Used by portASSERT_IF_INTERRUPT_PRIORITY_INVALID() when ensuring the binary
 point is zero. */
@@ -329,7 +335,9 @@ uint32_t ulAPSR;
 
 		/* Sanity check configUNIQUE_INTERRUPT_PRIORITIES matches the read
 		value. */
-		configASSERT( ucMaxPriorityValue == portLOWEST_INTERRUPT_PRIORITY );
+
+		configASSERT( ucMaxPriorityValue >= portLOWEST_INTERRUPT_PRIORITY );
+
 
 		/* Restore the clobbered interrupt priority register to its original
 		value. */
@@ -341,9 +349,13 @@ uint32_t ulAPSR;
 	/* At the time of writing, the BSP only supports EL3. */
 	__asm volatile ( "MRS %0, CurrentEL" : "=r" ( ulAPSR ) );
 	ulAPSR &= portAPSR_MODE_BITS_MASK;
+#if GUEST
+	configASSERT( ulAPSR == portEL1 );
+	if( ulAPSR == portEL1 )
+#else
 	configASSERT( ulAPSR == portEL3 );
-
 	if( ulAPSR == portEL3 )
+#endif
 	{
 		/* Only continue if the binary point value is set to its lowest possible
 		setting.  See the comments in vPortValidateInterruptPriority() below for
@@ -423,7 +435,11 @@ void vPortExitCritical( void )
 void FreeRTOS_Tick_Handler( void )
 {
 	/* Must be the lowest possible priority. */
-	configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER == ( uint32_t ) ( portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
+	#if( !QEMU )
+	{
+		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER == ( uint32_t ) ( portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
+	}
+	#endif
 
 	/* Interrupts should not be enabled before this point. */
 	#if( configASSERT_DEFINED == 1 )

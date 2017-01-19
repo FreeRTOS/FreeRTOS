@@ -128,8 +128,11 @@ extern uint64_t ullPortYieldRequired;			\
 }
 
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
-#define portYIELD() __asm volatile ( "SMC 0" )
-
+#if GUEST
+	#define portYIELD() __asm volatile ( "SVC 0" )
+#else
+	#define portYIELD() __asm volatile ( "SMC 0" )
+#endif
 /*-----------------------------------------------------------
  * Critical section control
  *----------------------------------------------------------*/

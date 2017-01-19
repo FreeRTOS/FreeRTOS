@@ -288,64 +288,6 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 }
 /*-----------------------------------------------------------*/
 
-void *memcpy( void *pvDest, const void *pvSource, size_t xBytes )
-{
-/* The compiler used during development seems to err unless these volatiles are
-included at -O3 optimisation.  */
-volatile unsigned char *pcDest = ( volatile unsigned char * ) pvDest, *pcSource = ( volatile unsigned char * ) pvSource;
-size_t x;
-
-	/* Extremely crude standard library implementations in lieu of having a C
-	library. */
-	if( pvDest != pvSource )
-	{
-		for( x = 0; x < xBytes; x++ )
-		{
-			pcDest[ x ] = pcSource[ x ];
-		}
-	}
-
-	return pvDest;
-}
-/*-----------------------------------------------------------*/
-
-void *memset( void *pvDest, int iValue, size_t xBytes )
-{
-/* The compiler used during development seems to err unless these volatiles are
-included at -O3 optimisation.  */
-volatile unsigned char * volatile pcDest = ( volatile unsigned char * volatile ) pvDest;
-volatile size_t x;
-
-	/* Extremely crude standard library implementations in lieu of having a C
-	library. */
-	for( x = 0; x < xBytes; x++ )
-	{
-		pcDest[ x ] = ( unsigned char ) iValue;
-	}
-
-	return pvDest;
-}
-/*-----------------------------------------------------------*/
-
-int memcmp( const void *pvMem1, const void *pvMem2, size_t xBytes )
-{
-const volatile unsigned char *pucMem1 = pvMem1, *pucMem2 = pvMem2;
-volatile size_t x;
-
-	/* Extremely crude standard library implementations in lieu of having a C
-	library. */
-    for( x = 0; x < xBytes; x++ )
-    {
-        if( pucMem1[ x ] != pucMem2[ x ] )
-        {
-            break;
-        }
-    }
-
-    return xBytes - x;
-}
-/*-----------------------------------------------------------*/
-
 void vMainAssertCalled( const char *pcFileName, uint32_t ulLineNumber )
 {
 	xil_printf( "ASSERT!  Line %lu of file %s\r\n", ulLineNumber, pcFileName );

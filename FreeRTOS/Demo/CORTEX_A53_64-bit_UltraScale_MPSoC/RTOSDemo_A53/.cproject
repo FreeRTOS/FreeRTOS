@@ -20,7 +20,7 @@
 							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.arm.a53" id="xilinx.arm.a53.target.gnu.base.debug.565045804" isAbstract="false" name="Debug Platform" superClass="xilinx.arm.a53.target.gnu.base.debug"/>
 							<builder buildPath="${workspace_loc:/RTOSDemo_A53}/Debug" enableAutoBuild="true" id="xilinx.gnu.arm.a53.toolchain.builder.debug.1503003921" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GNU make" superClass="xilinx.gnu.arm.a53.toolchain.builder.debug"/>
 							<tool id="xilinx.gnu.arm.a53.c.toolchain.assembler.debug.1142300561" name="ARM A53 gcc assembler" superClass="xilinx.gnu.arm.a53.c.toolchain.assembler.debug">
-								<option id="xilinx.gnu.both.assembler.option.flags.139020974" superClass="xilinx.gnu.both.assembler.option.flags" value="-Wa, --gdwarf2" valueType="string"/>
+								<option id="xilinx.gnu.both.assembler.option.flags.139020974" name="Assembler Flags" superClass="xilinx.gnu.both.assembler.option.flags" value="-Wa, --gdwarf2" valueType="string"/>
 								<inputType id="xilinx.gnu.assembler.input.478741574" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.arm.a53.c.toolchain.compiler.debug.587400676" name="ARM A53 gcc compiler" superClass="xilinx.gnu.arm.a53.c.toolchain.compiler.debug">
@@ -29,14 +29,15 @@
 								<option id="xilinx.gnu.compiler.inferred.swplatform.includes.1218722002" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../RTOSDemo_A53_bsp/psu_cortexa53_0/include"/>
 								</option>
-								<option id="xilinx.gnu.compiler.dircategory.includes.959905810" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
+								<option id="xilinx.gnu.compiler.dircategory.includes.959905810" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Source/portable/GCC/ARM_CA53_64_BIT}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 								</option>
-								<option id="xilinx.gnu.compiler.misc.other.1651312713" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -MT&quot;$@&quot; -fno-builtin" valueType="string"/>
+								<option id="xilinx.gnu.compiler.misc.other.1651312713" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -MT&quot;$@&quot; -fno-builtin" valueType="string"/>
+								<option id="xilinx.gnu.compiler.symbols.defined.890730491" name="Defined symbols (-D)" superClass="xilinx.gnu.compiler.symbols.defined" valueType="definedSymbols"/>
 								<inputType id="xilinx.gnu.arm.a53.c.compiler.input.1725216366" name="C source files" superClass="xilinx.gnu.arm.a53.c.compiler.input"/>
 							</tool>
 							<tool id="xilinx.gnu.arm.a53.cxx.toolchain.compiler.debug.986847379" name="ARM A53 g++ compiler" superClass="xilinx.gnu.arm.a53.cxx.toolchain.compiler.debug">
@@ -55,6 +56,7 @@
 									<listOptionValue builtIn="false" value="-Wl,--start-group,-lxil,-lgcc,-lc,--end-group"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.210457854" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
+								<option id="xilinx.gnu.c.link.option.other.791632065" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other" valueType="stringList"/>
 								<inputType id="xilinx.gnu.linker.input.294386883" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -164,4 +166,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
 </cproject>

@@ -140,6 +140,7 @@
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 #include "IntSemTest.h"
+#include "AbortDelay.h"
 
 /* Priorities for the demo application tasks. */
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1UL )
@@ -251,6 +252,7 @@ void main_full( void )
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 	vStartInterruptSemaphoreTasks();
+	vCreateAbortDelayTasks();
 
 	/* Note - the set of standard demo tasks contains two versions of
 	vStartMathTasks.c.  One is defined in flop.c, and uses double precision
@@ -371,17 +373,22 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound |= 1UL << 14UL;
 		}
 
+		if( xAreAbortDelayTestTasksStillRunning() != pdTRUE )
+		{
+			ulErrorFound |= 1UL << 15UL;
+		}
+
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			ulErrorFound |= 1UL << 15UL;
+			ulErrorFound |= 1UL << 16UL;
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			ulErrorFound |= 1UL << 16UL;
+			ulErrorFound |= 1UL << 17UL;
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 

@@ -116,7 +116,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c|src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/makefsdata|src/platform.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/printf-stdarg.c|src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/fsdata.c|src/lwIP_Demo/lwIP_Apps/apps/httpserver_raw_from_lwIP_download/makefsdata|src/platform.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

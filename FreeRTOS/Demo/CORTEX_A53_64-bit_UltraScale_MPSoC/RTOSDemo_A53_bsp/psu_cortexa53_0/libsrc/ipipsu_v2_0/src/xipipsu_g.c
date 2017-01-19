@@ -5,7 +5,7 @@
 * Version: 
 * DO NOT EDIT.
 *
-* Copyright (C) 2010-2016 Xilinx, Inc. All Rights Reserved.*
+* Copyright (C) 2010-2017 Xilinx, Inc. All Rights Reserved.*
 *Permission is hereby granted, free of charge, to any person obtaining a copy
 *of this software and associated documentation files (the Software), to deal
 *in the Software without restriction, including without limitation the rights
@@ -53,6 +53,118 @@ XIpiPsu_Config XIpiPsu_ConfigTable[] =
 		XPAR_PSU_IPI_0_BIT_MASK,
 		XPAR_PSU_IPI_0_BUFFER_INDEX,
 		XPAR_PSU_IPI_0_INT_ID,
+		XPAR_XIPIPSU_NUM_TARGETS,
+		{
+
+			{
+				XPAR_PSU_IPI_0_BIT_MASK,
+				XPAR_PSU_IPI_0_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_1_BIT_MASK,
+				XPAR_PSU_IPI_1_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_2_BIT_MASK,
+				XPAR_PSU_IPI_2_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_3_BIT_MASK,
+				XPAR_PSU_IPI_3_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_4_BIT_MASK,
+				XPAR_PSU_IPI_4_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_5_BIT_MASK,
+				XPAR_PSU_IPI_5_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_6_BIT_MASK,
+				XPAR_PSU_IPI_6_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_7_BIT_MASK,
+				XPAR_PSU_IPI_7_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_8_BIT_MASK,
+				XPAR_PSU_IPI_8_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_9_BIT_MASK,
+				XPAR_PSU_IPI_9_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_10_BIT_MASK,
+				XPAR_PSU_IPI_10_BUFFER_INDEX
+			}
+		}
+	},
+
+	{
+		XPAR_PSU_IPI_1_DEVICE_ID,
+		XPAR_PSU_IPI_1_BASE_ADDRESS,
+		XPAR_PSU_IPI_1_BIT_MASK,
+		XPAR_PSU_IPI_1_BUFFER_INDEX,
+		XPAR_PSU_IPI_1_INT_ID,
+		XPAR_XIPIPSU_NUM_TARGETS,
+		{
+
+			{
+				XPAR_PSU_IPI_0_BIT_MASK,
+				XPAR_PSU_IPI_0_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_1_BIT_MASK,
+				XPAR_PSU_IPI_1_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_2_BIT_MASK,
+				XPAR_PSU_IPI_2_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_3_BIT_MASK,
+				XPAR_PSU_IPI_3_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_4_BIT_MASK,
+				XPAR_PSU_IPI_4_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_5_BIT_MASK,
+				XPAR_PSU_IPI_5_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_6_BIT_MASK,
+				XPAR_PSU_IPI_6_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_7_BIT_MASK,
+				XPAR_PSU_IPI_7_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_8_BIT_MASK,
+				XPAR_PSU_IPI_8_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_9_BIT_MASK,
+				XPAR_PSU_IPI_9_BUFFER_INDEX
+			},
+			{
+				XPAR_PSU_IPI_10_BIT_MASK,
+				XPAR_PSU_IPI_10_BUFFER_INDEX
+			}
+		}
+	},
+
+	{
+		XPAR_PSU_IPI_2_DEVICE_ID,
+		XPAR_PSU_IPI_2_BASE_ADDRESS,
+		XPAR_PSU_IPI_2_BIT_MASK,
+		XPAR_PSU_IPI_2_BUFFER_INDEX,
+		XPAR_PSU_IPI_2_INT_ID,
 		XPAR_XIPIPSU_NUM_TARGETS,
 		{
 

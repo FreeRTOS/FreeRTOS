@@ -56,7 +56,7 @@
 									<listOptionValue builtIn="false" value="-Wl,--start-group,-lxil,-lgcc,-lc,--end-group"/>
 								</option>
 								<option id="xilinx.gnu.c.linker.option.lscript.210457854" name="Linker Script" superClass="xilinx.gnu.c.linker.option.lscript" value="../src/lscript.ld" valueType="string"/>
-								<option id="xilinx.gnu.c.link.option.other.791632065" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other" valueType="stringList"/>
+								<option id="xilinx.gnu.c.link.option.other.791632065" name="Other options (-XLinker [option])" superClass="xilinx.gnu.c.link.option.other"/>
 								<inputType id="xilinx.gnu.linker.input.294386883" superClass="xilinx.gnu.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

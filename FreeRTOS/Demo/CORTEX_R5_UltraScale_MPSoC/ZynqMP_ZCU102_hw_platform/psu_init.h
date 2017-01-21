@@ -784,26 +784,14 @@
 #define CRF_APB_VPLL_FRAC_CFG_DATA_DEFVAL                                          0x00000000
 #define CRF_APB_VPLL_FRAC_CFG_DATA_SHIFT                                           0
 #define CRF_APB_VPLL_FRAC_CFG_DATA_MASK                                            0x0000FFFFU
-#undef CRL_APB_GEM0_REF_CTRL_OFFSET 
-#define CRL_APB_GEM0_REF_CTRL_OFFSET                                               0XFF5E0050
-#undef CRL_APB_GEM1_REF_CTRL_OFFSET 
-#define CRL_APB_GEM1_REF_CTRL_OFFSET                                               0XFF5E0054
-#undef CRL_APB_GEM2_REF_CTRL_OFFSET 
-#define CRL_APB_GEM2_REF_CTRL_OFFSET                                               0XFF5E0058
 #undef CRL_APB_GEM3_REF_CTRL_OFFSET 
 #define CRL_APB_GEM3_REF_CTRL_OFFSET                                               0XFF5E005C
-#undef CRL_APB_GEM_TSU_REF_CTRL_OFFSET 
-#define CRL_APB_GEM_TSU_REF_CTRL_OFFSET                                            0XFF5E0100
 #undef CRL_APB_USB0_BUS_REF_CTRL_OFFSET 
 #define CRL_APB_USB0_BUS_REF_CTRL_OFFSET                                           0XFF5E0060
-#undef CRL_APB_USB1_BUS_REF_CTRL_OFFSET 
-#define CRL_APB_USB1_BUS_REF_CTRL_OFFSET                                           0XFF5E0064
 #undef CRL_APB_USB3_DUAL_REF_CTRL_OFFSET 
 #define CRL_APB_USB3_DUAL_REF_CTRL_OFFSET                                          0XFF5E004C
 #undef CRL_APB_QSPI_REF_CTRL_OFFSET 
 #define CRL_APB_QSPI_REF_CTRL_OFFSET                                               0XFF5E0068
-#undef CRL_APB_SDIO0_REF_CTRL_OFFSET 
-#define CRL_APB_SDIO0_REF_CTRL_OFFSET                                              0XFF5E006C
 #undef CRL_APB_SDIO1_REF_CTRL_OFFSET 
 #define CRL_APB_SDIO1_REF_CTRL_OFFSET                                              0XFF5E0070
 #undef IOU_SLCR_SDIO_CLK_CTRL_OFFSET 
@@ -816,20 +804,12 @@
 #define CRL_APB_I2C0_REF_CTRL_OFFSET                                               0XFF5E0120
 #undef CRL_APB_I2C1_REF_CTRL_OFFSET 
 #define CRL_APB_I2C1_REF_CTRL_OFFSET                                               0XFF5E0124
-#undef CRL_APB_SPI0_REF_CTRL_OFFSET 
-#define CRL_APB_SPI0_REF_CTRL_OFFSET                                               0XFF5E007C
-#undef CRL_APB_SPI1_REF_CTRL_OFFSET 
-#define CRL_APB_SPI1_REF_CTRL_OFFSET                                               0XFF5E0080
-#undef CRL_APB_CAN0_REF_CTRL_OFFSET 
-#define CRL_APB_CAN0_REF_CTRL_OFFSET                                               0XFF5E0084
 #undef CRL_APB_CAN1_REF_CTRL_OFFSET 
 #define CRL_APB_CAN1_REF_CTRL_OFFSET                                               0XFF5E0088
 #undef CRL_APB_CPU_R5_CTRL_OFFSET 
 #define CRL_APB_CPU_R5_CTRL_OFFSET                                                 0XFF5E0090
 #undef CRL_APB_IOU_SWITCH_CTRL_OFFSET 
 #define CRL_APB_IOU_SWITCH_CTRL_OFFSET                                             0XFF5E009C
-#undef CRL_APB_CSU_PLL_CTRL_OFFSET 
-#define CRL_APB_CSU_PLL_CTRL_OFFSET                                                0XFF5E00A0
 #undef CRL_APB_PCAP_CTRL_OFFSET 
 #define CRL_APB_PCAP_CTRL_OFFSET                                                   0XFF5E00A4
 #undef CRL_APB_LPD_SWITCH_CTRL_OFFSET 
@@ -838,8 +818,6 @@
 #define CRL_APB_LPD_LSBUS_CTRL_OFFSET                                              0XFF5E00AC
 #undef CRL_APB_DBG_LPD_CTRL_OFFSET 
 #define CRL_APB_DBG_LPD_CTRL_OFFSET                                                0XFF5E00B0
-#undef CRL_APB_NAND_REF_CTRL_OFFSET 
-#define CRL_APB_NAND_REF_CTRL_OFFSET                                               0XFF5E00B4
 #undef CRL_APB_ADMA_REF_CTRL_OFFSET 
 #define CRL_APB_ADMA_REF_CTRL_OFFSET                                               0XFF5E00B8
 #undef CRL_APB_PL0_REF_CTRL_OFFSET 
@@ -884,8 +862,6 @@
 #define CRF_APB_TOPSW_MAIN_CTRL_OFFSET                                             0XFD1A00C0
 #undef CRF_APB_TOPSW_LSBUS_CTRL_OFFSET 
 #define CRF_APB_TOPSW_LSBUS_CTRL_OFFSET                                            0XFD1A00C4
-#undef CRF_APB_GTGREF0_REF_CTRL_OFFSET 
-#define CRF_APB_GTGREF0_REF_CTRL_OFFSET                                            0XFD1A00C8
 #undef CRF_APB_DBG_TSTMP_CTRL_OFFSET 
 #define CRF_APB_DBG_TSTMP_CTRL_OFFSET                                              0XFD1A00F8
 #undef IOU_SLCR_IOU_TTC_APB_CLK_OFFSET 
@@ -896,129 +872,6 @@
 #define IOU_SLCR_WDT_CLK_SEL_OFFSET                                                0XFF180300
 #undef LPD_SLCR_CSUPMU_WDT_CLK_SEL_OFFSET 
 #define LPD_SLCR_CSUPMU_WDT_CLK_SEL_OFFSET                                         0XFF410050
-
-/*Clock active for the RX channel*/
-#undef CRL_APB_GEM0_REF_CTRL_RX_CLKACT_DEFVAL 
-#undef CRL_APB_GEM0_REF_CTRL_RX_CLKACT_SHIFT 
-#undef CRL_APB_GEM0_REF_CTRL_RX_CLKACT_MASK 
-#define CRL_APB_GEM0_REF_CTRL_RX_CLKACT_DEFVAL                                     0x00002500
-#define CRL_APB_GEM0_REF_CTRL_RX_CLKACT_SHIFT                                      26
-#define CRL_APB_GEM0_REF_CTRL_RX_CLKACT_MASK                                       0x04000000U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_GEM0_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_GEM0_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_GEM0_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_GEM0_REF_CTRL_CLKACT_DEFVAL                                        0x00002500
-#define CRL_APB_GEM0_REF_CTRL_CLKACT_SHIFT                                         25
-#define CRL_APB_GEM0_REF_CTRL_CLKACT_MASK                                          0x02000000U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM0_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_GEM0_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_GEM0_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_GEM0_REF_CTRL_DIVISOR1_DEFVAL                                      0x00002500
-#define CRL_APB_GEM0_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_GEM0_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM0_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_GEM0_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_GEM0_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_GEM0_REF_CTRL_DIVISOR0_DEFVAL                                      0x00002500
-#define CRL_APB_GEM0_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_GEM0_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_GEM0_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_GEM0_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_GEM0_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_GEM0_REF_CTRL_SRCSEL_DEFVAL                                        0x00002500
-#define CRL_APB_GEM0_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_GEM0_REF_CTRL_SRCSEL_MASK                                          0x00000007U
-
-/*Clock active for the RX channel*/
-#undef CRL_APB_GEM1_REF_CTRL_RX_CLKACT_DEFVAL 
-#undef CRL_APB_GEM1_REF_CTRL_RX_CLKACT_SHIFT 
-#undef CRL_APB_GEM1_REF_CTRL_RX_CLKACT_MASK 
-#define CRL_APB_GEM1_REF_CTRL_RX_CLKACT_DEFVAL                                     0x00002500
-#define CRL_APB_GEM1_REF_CTRL_RX_CLKACT_SHIFT                                      26
-#define CRL_APB_GEM1_REF_CTRL_RX_CLKACT_MASK                                       0x04000000U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_GEM1_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_GEM1_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_GEM1_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_GEM1_REF_CTRL_CLKACT_DEFVAL                                        0x00002500
-#define CRL_APB_GEM1_REF_CTRL_CLKACT_SHIFT                                         25
-#define CRL_APB_GEM1_REF_CTRL_CLKACT_MASK                                          0x02000000U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM1_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_GEM1_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_GEM1_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_GEM1_REF_CTRL_DIVISOR1_DEFVAL                                      0x00002500
-#define CRL_APB_GEM1_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_GEM1_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM1_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_GEM1_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_GEM1_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_GEM1_REF_CTRL_DIVISOR0_DEFVAL                                      0x00002500
-#define CRL_APB_GEM1_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_GEM1_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_GEM1_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_GEM1_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_GEM1_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_GEM1_REF_CTRL_SRCSEL_DEFVAL                                        0x00002500
-#define CRL_APB_GEM1_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_GEM1_REF_CTRL_SRCSEL_MASK                                          0x00000007U
-
-/*Clock active for the RX channel*/
-#undef CRL_APB_GEM2_REF_CTRL_RX_CLKACT_DEFVAL 
-#undef CRL_APB_GEM2_REF_CTRL_RX_CLKACT_SHIFT 
-#undef CRL_APB_GEM2_REF_CTRL_RX_CLKACT_MASK 
-#define CRL_APB_GEM2_REF_CTRL_RX_CLKACT_DEFVAL                                     0x00002500
-#define CRL_APB_GEM2_REF_CTRL_RX_CLKACT_SHIFT                                      26
-#define CRL_APB_GEM2_REF_CTRL_RX_CLKACT_MASK                                       0x04000000U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_GEM2_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_GEM2_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_GEM2_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_GEM2_REF_CTRL_CLKACT_DEFVAL                                        0x00002500
-#define CRL_APB_GEM2_REF_CTRL_CLKACT_SHIFT                                         25
-#define CRL_APB_GEM2_REF_CTRL_CLKACT_MASK                                          0x02000000U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM2_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_GEM2_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_GEM2_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_GEM2_REF_CTRL_DIVISOR1_DEFVAL                                      0x00002500
-#define CRL_APB_GEM2_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_GEM2_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM2_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_GEM2_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_GEM2_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_GEM2_REF_CTRL_DIVISOR0_DEFVAL                                      0x00002500
-#define CRL_APB_GEM2_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_GEM2_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_GEM2_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_GEM2_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_GEM2_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_GEM2_REF_CTRL_SRCSEL_DEFVAL                                        0x00002500
-#define CRL_APB_GEM2_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_GEM2_REF_CTRL_SRCSEL_MASK                                          0x00000007U
 
 /*Clock active for the RX channel*/
 #undef CRL_APB_GEM3_REF_CTRL_RX_CLKACT_DEFVAL 
@@ -1061,39 +914,6 @@
 #define CRL_APB_GEM3_REF_CTRL_SRCSEL_SHIFT                                         0
 #define CRL_APB_GEM3_REF_CTRL_SRCSEL_MASK                                          0x00000007U
 
-/*6 bit divider*/
-#undef CRL_APB_GEM_TSU_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_GEM_TSU_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_GEM_TSU_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_GEM_TSU_REF_CTRL_DIVISOR0_DEFVAL                                   0x00051000
-#define CRL_APB_GEM_TSU_REF_CTRL_DIVISOR0_SHIFT                                    8
-#define CRL_APB_GEM_TSU_REF_CTRL_DIVISOR0_MASK                                     0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_GEM_TSU_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_GEM_TSU_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_GEM_TSU_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_GEM_TSU_REF_CTRL_SRCSEL_DEFVAL                                     0x00051000
-#define CRL_APB_GEM_TSU_REF_CTRL_SRCSEL_SHIFT                                      0
-#define CRL_APB_GEM_TSU_REF_CTRL_SRCSEL_MASK                                       0x00000007U
-
-/*6 bit divider*/
-#undef CRL_APB_GEM_TSU_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_GEM_TSU_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_GEM_TSU_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_GEM_TSU_REF_CTRL_DIVISOR1_DEFVAL                                   0x00051000
-#define CRL_APB_GEM_TSU_REF_CTRL_DIVISOR1_SHIFT                                    16
-#define CRL_APB_GEM_TSU_REF_CTRL_DIVISOR1_MASK                                     0x003F0000U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_GEM_TSU_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_GEM_TSU_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_GEM_TSU_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_GEM_TSU_REF_CTRL_CLKACT_DEFVAL                                     0x00051000
-#define CRL_APB_GEM_TSU_REF_CTRL_CLKACT_SHIFT                                      24
-#define CRL_APB_GEM_TSU_REF_CTRL_CLKACT_MASK                                       0x01000000U
-
 /*Clock active signal. Switch to 0 to disable the clock*/
 #undef CRL_APB_USB0_BUS_REF_CTRL_CLKACT_DEFVAL 
 #undef CRL_APB_USB0_BUS_REF_CTRL_CLKACT_SHIFT 
@@ -1126,39 +946,6 @@
 #define CRL_APB_USB0_BUS_REF_CTRL_SRCSEL_DEFVAL                                    0x00052000
 #define CRL_APB_USB0_BUS_REF_CTRL_SRCSEL_SHIFT                                     0
 #define CRL_APB_USB0_BUS_REF_CTRL_SRCSEL_MASK                                      0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_USB1_BUS_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_USB1_BUS_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_USB1_BUS_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_USB1_BUS_REF_CTRL_CLKACT_DEFVAL                                    0x00052000
-#define CRL_APB_USB1_BUS_REF_CTRL_CLKACT_SHIFT                                     25
-#define CRL_APB_USB1_BUS_REF_CTRL_CLKACT_MASK                                      0x02000000U
-
-/*6 bit divider*/
-#undef CRL_APB_USB1_BUS_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_USB1_BUS_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_USB1_BUS_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_USB1_BUS_REF_CTRL_DIVISOR1_DEFVAL                                  0x00052000
-#define CRL_APB_USB1_BUS_REF_CTRL_DIVISOR1_SHIFT                                   16
-#define CRL_APB_USB1_BUS_REF_CTRL_DIVISOR1_MASK                                    0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_USB1_BUS_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_USB1_BUS_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_USB1_BUS_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_USB1_BUS_REF_CTRL_DIVISOR0_DEFVAL                                  0x00052000
-#define CRL_APB_USB1_BUS_REF_CTRL_DIVISOR0_SHIFT                                   8
-#define CRL_APB_USB1_BUS_REF_CTRL_DIVISOR0_MASK                                    0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_USB1_BUS_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_USB1_BUS_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_USB1_BUS_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_USB1_BUS_REF_CTRL_SRCSEL_DEFVAL                                    0x00052000
-#define CRL_APB_USB1_BUS_REF_CTRL_SRCSEL_SHIFT                                     0
-#define CRL_APB_USB1_BUS_REF_CTRL_SRCSEL_MASK                                      0x00000007U
 
 /*Clock active signal. Switch to 0 to disable the clock*/
 #undef CRL_APB_USB3_DUAL_REF_CTRL_CLKACT_DEFVAL 
@@ -1225,39 +1012,6 @@
 #define CRL_APB_QSPI_REF_CTRL_SRCSEL_DEFVAL                                        0x01000800
 #define CRL_APB_QSPI_REF_CTRL_SRCSEL_SHIFT                                         0
 #define CRL_APB_QSPI_REF_CTRL_SRCSEL_MASK                                          0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_SDIO0_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_SDIO0_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_SDIO0_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_SDIO0_REF_CTRL_CLKACT_DEFVAL                                       0x01000F00
-#define CRL_APB_SDIO0_REF_CTRL_CLKACT_SHIFT                                        24
-#define CRL_APB_SDIO0_REF_CTRL_CLKACT_MASK                                         0x01000000U
-
-/*6 bit divider*/
-#undef CRL_APB_SDIO0_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_SDIO0_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_SDIO0_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_SDIO0_REF_CTRL_DIVISOR1_DEFVAL                                     0x01000F00
-#define CRL_APB_SDIO0_REF_CTRL_DIVISOR1_SHIFT                                      16
-#define CRL_APB_SDIO0_REF_CTRL_DIVISOR1_MASK                                       0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_SDIO0_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_SDIO0_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_SDIO0_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_SDIO0_REF_CTRL_DIVISOR0_DEFVAL                                     0x01000F00
-#define CRL_APB_SDIO0_REF_CTRL_DIVISOR0_SHIFT                                      8
-#define CRL_APB_SDIO0_REF_CTRL_DIVISOR0_MASK                                       0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = VPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_SDIO0_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_SDIO0_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_SDIO0_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_SDIO0_REF_CTRL_SRCSEL_DEFVAL                                       0x01000F00
-#define CRL_APB_SDIO0_REF_CTRL_SRCSEL_SHIFT                                        0
-#define CRL_APB_SDIO0_REF_CTRL_SRCSEL_MASK                                         0x00000007U
 
 /*Clock active signal. Switch to 0 to disable the clock*/
 #undef CRL_APB_SDIO1_REF_CTRL_CLKACT_DEFVAL 
@@ -1433,105 +1187,6 @@
 #define CRL_APB_I2C1_REF_CTRL_SRCSEL_MASK                                          0x00000007U
 
 /*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_SPI0_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_SPI0_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_SPI0_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_SPI0_REF_CTRL_CLKACT_DEFVAL                                        0x01001800
-#define CRL_APB_SPI0_REF_CTRL_CLKACT_SHIFT                                         24
-#define CRL_APB_SPI0_REF_CTRL_CLKACT_MASK                                          0x01000000U
-
-/*6 bit divider*/
-#undef CRL_APB_SPI0_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_SPI0_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_SPI0_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_SPI0_REF_CTRL_DIVISOR1_DEFVAL                                      0x01001800
-#define CRL_APB_SPI0_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_SPI0_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_SPI0_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_SPI0_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_SPI0_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_SPI0_REF_CTRL_DIVISOR0_DEFVAL                                      0x01001800
-#define CRL_APB_SPI0_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_SPI0_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_SPI0_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_SPI0_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_SPI0_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_SPI0_REF_CTRL_SRCSEL_DEFVAL                                        0x01001800
-#define CRL_APB_SPI0_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_SPI0_REF_CTRL_SRCSEL_MASK                                          0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_SPI1_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_SPI1_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_SPI1_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_SPI1_REF_CTRL_CLKACT_DEFVAL                                        0x01001800
-#define CRL_APB_SPI1_REF_CTRL_CLKACT_SHIFT                                         24
-#define CRL_APB_SPI1_REF_CTRL_CLKACT_MASK                                          0x01000000U
-
-/*6 bit divider*/
-#undef CRL_APB_SPI1_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_SPI1_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_SPI1_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_SPI1_REF_CTRL_DIVISOR1_DEFVAL                                      0x01001800
-#define CRL_APB_SPI1_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_SPI1_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_SPI1_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_SPI1_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_SPI1_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_SPI1_REF_CTRL_DIVISOR0_DEFVAL                                      0x01001800
-#define CRL_APB_SPI1_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_SPI1_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_SPI1_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_SPI1_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_SPI1_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_SPI1_REF_CTRL_SRCSEL_DEFVAL                                        0x01001800
-#define CRL_APB_SPI1_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_SPI1_REF_CTRL_SRCSEL_MASK                                          0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_CAN0_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_CAN0_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_CAN0_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_CAN0_REF_CTRL_CLKACT_DEFVAL                                        0x01001800
-#define CRL_APB_CAN0_REF_CTRL_CLKACT_SHIFT                                         24
-#define CRL_APB_CAN0_REF_CTRL_CLKACT_MASK                                          0x01000000U
-
-/*6 bit divider*/
-#undef CRL_APB_CAN0_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_CAN0_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_CAN0_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_CAN0_REF_CTRL_DIVISOR1_DEFVAL                                      0x01001800
-#define CRL_APB_CAN0_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_CAN0_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_CAN0_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_CAN0_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_CAN0_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_CAN0_REF_CTRL_DIVISOR0_DEFVAL                                      0x01001800
-#define CRL_APB_CAN0_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_CAN0_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_CAN0_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_CAN0_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_CAN0_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_CAN0_REF_CTRL_SRCSEL_DEFVAL                                        0x01001800
-#define CRL_APB_CAN0_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_CAN0_REF_CTRL_SRCSEL_MASK                                          0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
 #undef CRL_APB_CAN1_REF_CTRL_CLKACT_DEFVAL 
 #undef CRL_APB_CAN1_REF_CTRL_CLKACT_SHIFT 
 #undef CRL_APB_CAN1_REF_CTRL_CLKACT_MASK 
@@ -1614,31 +1269,6 @@
 #define CRL_APB_IOU_SWITCH_CTRL_SRCSEL_DEFVAL                                      0x00001500
 #define CRL_APB_IOU_SWITCH_CTRL_SRCSEL_SHIFT                                       0
 #define CRL_APB_IOU_SWITCH_CTRL_SRCSEL_MASK                                        0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_CSU_PLL_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_CSU_PLL_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_CSU_PLL_CTRL_CLKACT_MASK 
-#define CRL_APB_CSU_PLL_CTRL_CLKACT_DEFVAL                                         0x01001500
-#define CRL_APB_CSU_PLL_CTRL_CLKACT_SHIFT                                          24
-#define CRL_APB_CSU_PLL_CTRL_CLKACT_MASK                                           0x01000000U
-
-/*6 bit divider*/
-#undef CRL_APB_CSU_PLL_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_CSU_PLL_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_CSU_PLL_CTRL_DIVISOR0_MASK 
-#define CRL_APB_CSU_PLL_CTRL_DIVISOR0_DEFVAL                                       0x01001500
-#define CRL_APB_CSU_PLL_CTRL_DIVISOR0_SHIFT                                        8
-#define CRL_APB_CSU_PLL_CTRL_DIVISOR0_MASK                                         0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_CSU_PLL_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_CSU_PLL_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_CSU_PLL_CTRL_SRCSEL_MASK 
-#define CRL_APB_CSU_PLL_CTRL_SRCSEL_DEFVAL                                         0x01001500
-#define CRL_APB_CSU_PLL_CTRL_SRCSEL_SHIFT                                          0
-#define CRL_APB_CSU_PLL_CTRL_SRCSEL_MASK                                           0x00000007U
 
 /*Clock active signal. Switch to 0 to disable the clock*/
 #undef CRL_APB_PCAP_CTRL_CLKACT_DEFVAL 
@@ -1739,39 +1369,6 @@
 #define CRL_APB_DBG_LPD_CTRL_SRCSEL_DEFVAL                                         0x01002000
 #define CRL_APB_DBG_LPD_CTRL_SRCSEL_SHIFT                                          0
 #define CRL_APB_DBG_LPD_CTRL_SRCSEL_MASK                                           0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRL_APB_NAND_REF_CTRL_CLKACT_DEFVAL 
-#undef CRL_APB_NAND_REF_CTRL_CLKACT_SHIFT 
-#undef CRL_APB_NAND_REF_CTRL_CLKACT_MASK 
-#define CRL_APB_NAND_REF_CTRL_CLKACT_DEFVAL                                        0x00052000
-#define CRL_APB_NAND_REF_CTRL_CLKACT_SHIFT                                         24
-#define CRL_APB_NAND_REF_CTRL_CLKACT_MASK                                          0x01000000U
-
-/*6 bit divider*/
-#undef CRL_APB_NAND_REF_CTRL_DIVISOR1_DEFVAL 
-#undef CRL_APB_NAND_REF_CTRL_DIVISOR1_SHIFT 
-#undef CRL_APB_NAND_REF_CTRL_DIVISOR1_MASK 
-#define CRL_APB_NAND_REF_CTRL_DIVISOR1_DEFVAL                                      0x00052000
-#define CRL_APB_NAND_REF_CTRL_DIVISOR1_SHIFT                                       16
-#define CRL_APB_NAND_REF_CTRL_DIVISOR1_MASK                                        0x003F0000U
-
-/*6 bit divider*/
-#undef CRL_APB_NAND_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRL_APB_NAND_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRL_APB_NAND_REF_CTRL_DIVISOR0_MASK 
-#define CRL_APB_NAND_REF_CTRL_DIVISOR0_DEFVAL                                      0x00052000
-#define CRL_APB_NAND_REF_CTRL_DIVISOR0_SHIFT                                       8
-#define CRL_APB_NAND_REF_CTRL_DIVISOR0_MASK                                        0x00003F00U
-
-/*000 = IOPLL; 010 = RPLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of the new
-		clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRL_APB_NAND_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRL_APB_NAND_REF_CTRL_SRCSEL_SHIFT 
-#undef CRL_APB_NAND_REF_CTRL_SRCSEL_MASK 
-#define CRL_APB_NAND_REF_CTRL_SRCSEL_DEFVAL                                        0x00052000
-#define CRL_APB_NAND_REF_CTRL_SRCSEL_SHIFT                                         0
-#define CRL_APB_NAND_REF_CTRL_SRCSEL_MASK                                          0x00000007U
 
 /*Clock active signal. Switch to 0 to disable the clock*/
 #undef CRL_APB_ADMA_REF_CTRL_CLKACT_DEFVAL 
@@ -2389,31 +1986,6 @@
 #define CRF_APB_TOPSW_LSBUS_CTRL_CLKACT_MASK                                       0x01000000U
 
 /*6 bit divider*/
-#undef CRF_APB_GTGREF0_REF_CTRL_DIVISOR0_DEFVAL 
-#undef CRF_APB_GTGREF0_REF_CTRL_DIVISOR0_SHIFT 
-#undef CRF_APB_GTGREF0_REF_CTRL_DIVISOR0_MASK 
-#define CRF_APB_GTGREF0_REF_CTRL_DIVISOR0_DEFVAL                                   0x00000800
-#define CRF_APB_GTGREF0_REF_CTRL_DIVISOR0_SHIFT                                    8
-#define CRF_APB_GTGREF0_REF_CTRL_DIVISOR0_MASK                                     0x00003F00U
-
-/*000 = IOPLL_TO_FPD; 010 = APLL; 011 = DPLL; (This signal may only be toggled after 4 cycles of the old clock and 4 cycles of 
-		he new clock. This is not usually an issue, but designers must be aware.)*/
-#undef CRF_APB_GTGREF0_REF_CTRL_SRCSEL_DEFVAL 
-#undef CRF_APB_GTGREF0_REF_CTRL_SRCSEL_SHIFT 
-#undef CRF_APB_GTGREF0_REF_CTRL_SRCSEL_MASK 
-#define CRF_APB_GTGREF0_REF_CTRL_SRCSEL_DEFVAL                                     0x00000800
-#define CRF_APB_GTGREF0_REF_CTRL_SRCSEL_SHIFT                                      0
-#define CRF_APB_GTGREF0_REF_CTRL_SRCSEL_MASK                                       0x00000007U
-
-/*Clock active signal. Switch to 0 to disable the clock*/
-#undef CRF_APB_GTGREF0_REF_CTRL_CLKACT_DEFVAL 
-#undef CRF_APB_GTGREF0_REF_CTRL_CLKACT_SHIFT 
-#undef CRF_APB_GTGREF0_REF_CTRL_CLKACT_MASK 
-#define CRF_APB_GTGREF0_REF_CTRL_CLKACT_DEFVAL                                     0x00000800
-#define CRF_APB_GTGREF0_REF_CTRL_CLKACT_SHIFT                                      24
-#define CRF_APB_GTGREF0_REF_CTRL_CLKACT_MASK                                       0x01000000U
-
-/*6 bit divider*/
 #undef CRF_APB_DBG_TSTMP_CTRL_DIVISOR0_DEFVAL 
 #undef CRF_APB_DBG_TSTMP_CTRL_DIVISOR0_SHIFT 
 #undef CRF_APB_DBG_TSTMP_CTRL_DIVISOR0_MASK 
@@ -2714,6 +2286,8 @@
 #define DDR_PHY_PGCR0_OFFSET                                                       0XFD080010
 #undef DDR_PHY_PGCR2_OFFSET 
 #define DDR_PHY_PGCR2_OFFSET                                                       0XFD080018
+#undef DDR_PHY_PGCR3_OFFSET 
+#define DDR_PHY_PGCR3_OFFSET                                                       0XFD08001C
 #undef DDR_PHY_PGCR5_OFFSET 
 #define DDR_PHY_PGCR5_OFFSET                                                       0XFD080024
 #undef DDR_PHY_PTR0_OFFSET 
@@ -2742,6 +2316,8 @@
 #define DDR_PHY_RDIMMGCR0_OFFSET                                                   0XFD080140
 #undef DDR_PHY_RDIMMGCR1_OFFSET 
 #define DDR_PHY_RDIMMGCR1_OFFSET                                                   0XFD080144
+#undef DDR_PHY_RDIMMCR0_OFFSET 
+#define DDR_PHY_RDIMMCR0_OFFSET                                                    0XFD080150
 #undef DDR_PHY_RDIMMCR1_OFFSET 
 #define DDR_PHY_RDIMMCR1_OFFSET                                                    0XFD080154
 #undef DDR_PHY_MR0_OFFSET 
@@ -2774,6 +2350,8 @@
 #define DDR_PHY_DTCR1_OFFSET                                                       0XFD080204
 #undef DDR_PHY_CATR0_OFFSET 
 #define DDR_PHY_CATR0_OFFSET                                                       0XFD080240
+#undef DDR_PHY_BISTLSR_OFFSET 
+#define DDR_PHY_BISTLSR_OFFSET                                                     0XFD080414
 #undef DDR_PHY_RIOCR5_OFFSET 
 #define DDR_PHY_RIOCR5_OFFSET                                                      0XFD0804F4
 #undef DDR_PHY_ACIOCR0_OFFSET 
@@ -2790,12 +2368,18 @@
 #define DDR_PHY_VTCR0_OFFSET                                                       0XFD080528
 #undef DDR_PHY_VTCR1_OFFSET 
 #define DDR_PHY_VTCR1_OFFSET                                                       0XFD08052C
+#undef DDR_PHY_ACBDLR1_OFFSET 
+#define DDR_PHY_ACBDLR1_OFFSET                                                     0XFD080544
+#undef DDR_PHY_ACBDLR2_OFFSET 
+#define DDR_PHY_ACBDLR2_OFFSET                                                     0XFD080548
 #undef DDR_PHY_ACBDLR6_OFFSET 
 #define DDR_PHY_ACBDLR6_OFFSET                                                     0XFD080558
 #undef DDR_PHY_ACBDLR7_OFFSET 
 #define DDR_PHY_ACBDLR7_OFFSET                                                     0XFD08055C
 #undef DDR_PHY_ACBDLR8_OFFSET 
 #define DDR_PHY_ACBDLR8_OFFSET                                                     0XFD080560
+#undef DDR_PHY_ACBDLR9_OFFSET 
+#define DDR_PHY_ACBDLR9_OFFSET                                                     0XFD080564
 #undef DDR_PHY_ZQCR_OFFSET 
 #define DDR_PHY_ZQCR_OFFSET                                                        0XFD080680
 #undef DDR_PHY_ZQ0PR0_OFFSET 
@@ -2928,30 +2512,40 @@
 #define DDR_PHY_DX8LCDLR2_OFFSET                                                   0XFD080F88
 #undef DDR_PHY_DX8GTR0_OFFSET 
 #define DDR_PHY_DX8GTR0_OFFSET                                                     0XFD080FC0
+#undef DDR_PHY_DX8SL0OSC_OFFSET 
+#define DDR_PHY_DX8SL0OSC_OFFSET                                                   0XFD081400
 #undef DDR_PHY_DX8SL0DQSCTL_OFFSET 
 #define DDR_PHY_DX8SL0DQSCTL_OFFSET                                                0XFD08141C
 #undef DDR_PHY_DX8SL0DXCTL2_OFFSET 
 #define DDR_PHY_DX8SL0DXCTL2_OFFSET                                                0XFD08142C
 #undef DDR_PHY_DX8SL0IOCR_OFFSET 
 #define DDR_PHY_DX8SL0IOCR_OFFSET                                                  0XFD081430
+#undef DDR_PHY_DX8SL1OSC_OFFSET 
+#define DDR_PHY_DX8SL1OSC_OFFSET                                                   0XFD081440
 #undef DDR_PHY_DX8SL1DQSCTL_OFFSET 
 #define DDR_PHY_DX8SL1DQSCTL_OFFSET                                                0XFD08145C
 #undef DDR_PHY_DX8SL1DXCTL2_OFFSET 
 #define DDR_PHY_DX8SL1DXCTL2_OFFSET                                                0XFD08146C
 #undef DDR_PHY_DX8SL1IOCR_OFFSET 
 #define DDR_PHY_DX8SL1IOCR_OFFSET                                                  0XFD081470
+#undef DDR_PHY_DX8SL2OSC_OFFSET 
+#define DDR_PHY_DX8SL2OSC_OFFSET                                                   0XFD081480
 #undef DDR_PHY_DX8SL2DQSCTL_OFFSET 
 #define DDR_PHY_DX8SL2DQSCTL_OFFSET                                                0XFD08149C
 #undef DDR_PHY_DX8SL2DXCTL2_OFFSET 
 #define DDR_PHY_DX8SL2DXCTL2_OFFSET                                                0XFD0814AC
 #undef DDR_PHY_DX8SL2IOCR_OFFSET 
 #define DDR_PHY_DX8SL2IOCR_OFFSET                                                  0XFD0814B0
+#undef DDR_PHY_DX8SL3OSC_OFFSET 
+#define DDR_PHY_DX8SL3OSC_OFFSET                                                   0XFD0814C0
 #undef DDR_PHY_DX8SL3DQSCTL_OFFSET 
 #define DDR_PHY_DX8SL3DQSCTL_OFFSET                                                0XFD0814DC
 #undef DDR_PHY_DX8SL3DXCTL2_OFFSET 
 #define DDR_PHY_DX8SL3DXCTL2_OFFSET                                                0XFD0814EC
 #undef DDR_PHY_DX8SL3IOCR_OFFSET 
 #define DDR_PHY_DX8SL3IOCR_OFFSET                                                  0XFD0814F0
+#undef DDR_PHY_DX8SL4OSC_OFFSET 
+#define DDR_PHY_DX8SL4OSC_OFFSET                                                   0XFD081500
 #undef DDR_PHY_DX8SL4DQSCTL_OFFSET 
 #define DDR_PHY_DX8SL4DQSCTL_OFFSET                                                0XFD08151C
 #undef DDR_PHY_DX8SL4DXCTL2_OFFSET 
@@ -6676,6 +6270,102 @@
 #define DDR_PHY_PGCR2_TREFPRD_SHIFT                                                0
 #define DDR_PHY_PGCR2_TREFPRD_MASK                                                 0x0003FFFFU
 
+/*CKN Enable*/
+#undef DDR_PHY_PGCR3_CKNEN_DEFVAL 
+#undef DDR_PHY_PGCR3_CKNEN_SHIFT 
+#undef DDR_PHY_PGCR3_CKNEN_MASK 
+#define DDR_PHY_PGCR3_CKNEN_DEFVAL                                                 0x55AA0080
+#define DDR_PHY_PGCR3_CKNEN_SHIFT                                                  24
+#define DDR_PHY_PGCR3_CKNEN_MASK                                                   0xFF000000U
+
+/*CK Enable*/
+#undef DDR_PHY_PGCR3_CKEN_DEFVAL 
+#undef DDR_PHY_PGCR3_CKEN_SHIFT 
+#undef DDR_PHY_PGCR3_CKEN_MASK 
+#define DDR_PHY_PGCR3_CKEN_DEFVAL                                                  0x55AA0080
+#define DDR_PHY_PGCR3_CKEN_SHIFT                                                   16
+#define DDR_PHY_PGCR3_CKEN_MASK                                                    0x00FF0000U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_PGCR3_RESERVED_15_DEFVAL 
+#undef DDR_PHY_PGCR3_RESERVED_15_SHIFT 
+#undef DDR_PHY_PGCR3_RESERVED_15_MASK 
+#define DDR_PHY_PGCR3_RESERVED_15_DEFVAL                                           0x55AA0080
+#define DDR_PHY_PGCR3_RESERVED_15_SHIFT                                            15
+#define DDR_PHY_PGCR3_RESERVED_15_MASK                                             0x00008000U
+
+/*Enable Clock Gating for AC [0] ctl_rd_clk*/
+#undef DDR_PHY_PGCR3_GATEACRDCLK_DEFVAL 
+#undef DDR_PHY_PGCR3_GATEACRDCLK_SHIFT 
+#undef DDR_PHY_PGCR3_GATEACRDCLK_MASK 
+#define DDR_PHY_PGCR3_GATEACRDCLK_DEFVAL                                           0x55AA0080
+#define DDR_PHY_PGCR3_GATEACRDCLK_SHIFT                                            13
+#define DDR_PHY_PGCR3_GATEACRDCLK_MASK                                             0x00006000U
+
+/*Enable Clock Gating for AC [0] ddr_clk*/
+#undef DDR_PHY_PGCR3_GATEACDDRCLK_DEFVAL 
+#undef DDR_PHY_PGCR3_GATEACDDRCLK_SHIFT 
+#undef DDR_PHY_PGCR3_GATEACDDRCLK_MASK 
+#define DDR_PHY_PGCR3_GATEACDDRCLK_DEFVAL                                          0x55AA0080
+#define DDR_PHY_PGCR3_GATEACDDRCLK_SHIFT                                           11
+#define DDR_PHY_PGCR3_GATEACDDRCLK_MASK                                            0x00001800U
+
+/*Enable Clock Gating for AC [0] ctl_clk*/
+#undef DDR_PHY_PGCR3_GATEACCTLCLK_DEFVAL 
+#undef DDR_PHY_PGCR3_GATEACCTLCLK_SHIFT 
+#undef DDR_PHY_PGCR3_GATEACCTLCLK_MASK 
+#define DDR_PHY_PGCR3_GATEACCTLCLK_DEFVAL                                          0x55AA0080
+#define DDR_PHY_PGCR3_GATEACCTLCLK_SHIFT                                           9
+#define DDR_PHY_PGCR3_GATEACCTLCLK_MASK                                            0x00000600U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_PGCR3_RESERVED_8_DEFVAL 
+#undef DDR_PHY_PGCR3_RESERVED_8_SHIFT 
+#undef DDR_PHY_PGCR3_RESERVED_8_MASK 
+#define DDR_PHY_PGCR3_RESERVED_8_DEFVAL                                            0x55AA0080
+#define DDR_PHY_PGCR3_RESERVED_8_SHIFT                                             8
+#define DDR_PHY_PGCR3_RESERVED_8_MASK                                              0x00000100U
+
+/*Controls DDL Bypass Modes*/
+#undef DDR_PHY_PGCR3_DDLBYPMODE_DEFVAL 
+#undef DDR_PHY_PGCR3_DDLBYPMODE_SHIFT 
+#undef DDR_PHY_PGCR3_DDLBYPMODE_MASK 
+#define DDR_PHY_PGCR3_DDLBYPMODE_DEFVAL                                            0x55AA0080
+#define DDR_PHY_PGCR3_DDLBYPMODE_SHIFT                                             6
+#define DDR_PHY_PGCR3_DDLBYPMODE_MASK                                              0x000000C0U
+
+/*IO Loop-Back Select*/
+#undef DDR_PHY_PGCR3_IOLB_DEFVAL 
+#undef DDR_PHY_PGCR3_IOLB_SHIFT 
+#undef DDR_PHY_PGCR3_IOLB_MASK 
+#define DDR_PHY_PGCR3_IOLB_DEFVAL                                                  0x55AA0080
+#define DDR_PHY_PGCR3_IOLB_SHIFT                                                   5
+#define DDR_PHY_PGCR3_IOLB_MASK                                                    0x00000020U
+
+/*AC Receive FIFO Read Mode*/
+#undef DDR_PHY_PGCR3_RDMODE_DEFVAL 
+#undef DDR_PHY_PGCR3_RDMODE_SHIFT 
+#undef DDR_PHY_PGCR3_RDMODE_MASK 
+#define DDR_PHY_PGCR3_RDMODE_DEFVAL                                                0x55AA0080
+#define DDR_PHY_PGCR3_RDMODE_SHIFT                                                 3
+#define DDR_PHY_PGCR3_RDMODE_MASK                                                  0x00000018U
+
+/*Read FIFO Reset Disable*/
+#undef DDR_PHY_PGCR3_DISRST_DEFVAL 
+#undef DDR_PHY_PGCR3_DISRST_SHIFT 
+#undef DDR_PHY_PGCR3_DISRST_MASK 
+#define DDR_PHY_PGCR3_DISRST_DEFVAL                                                0x55AA0080
+#define DDR_PHY_PGCR3_DISRST_SHIFT                                                 2
+#define DDR_PHY_PGCR3_DISRST_MASK                                                  0x00000004U
+
+/*Clock Level when Clock Gating*/
+#undef DDR_PHY_PGCR3_CLKLEVEL_DEFVAL 
+#undef DDR_PHY_PGCR3_CLKLEVEL_SHIFT 
+#undef DDR_PHY_PGCR3_CLKLEVEL_MASK 
+#define DDR_PHY_PGCR3_CLKLEVEL_DEFVAL                                              0x55AA0080
+#define DDR_PHY_PGCR3_CLKLEVEL_SHIFT                                               0
+#define DDR_PHY_PGCR3_CLKLEVEL_MASK                                                0x00000003U
+
 /*Frequency B Ratio Term*/
 #undef DDR_PHY_PGCR5_FRQBT_DEFVAL 
 #undef DDR_PHY_PGCR5_FRQBT_SHIFT 
@@ -7685,6 +7375,72 @@
 #define DDR_PHY_RDIMMGCR1_TBCSTAB_SHIFT                                            0
 #define DDR_PHY_RDIMMGCR1_TBCSTAB_MASK                                             0x00003FFFU
 
+/*DDR4/DDR3 Control Word 7*/
+#undef DDR_PHY_RDIMMCR0_RC7_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC7_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC7_MASK 
+#define DDR_PHY_RDIMMCR0_RC7_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC7_SHIFT                                                 28
+#define DDR_PHY_RDIMMCR0_RC7_MASK                                                  0xF0000000U
+
+/*DDR4 Control Word 6 (Comman space Control Word) / DDR3 Reserved*/
+#undef DDR_PHY_RDIMMCR0_RC6_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC6_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC6_MASK 
+#define DDR_PHY_RDIMMCR0_RC6_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC6_SHIFT                                                 24
+#define DDR_PHY_RDIMMCR0_RC6_MASK                                                  0x0F000000U
+
+/*DDR4/DDR3 Control Word 5 (CK Driver Characteristics Control Word)*/
+#undef DDR_PHY_RDIMMCR0_RC5_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC5_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC5_MASK 
+#define DDR_PHY_RDIMMCR0_RC5_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC5_SHIFT                                                 20
+#define DDR_PHY_RDIMMCR0_RC5_MASK                                                  0x00F00000U
+
+/*DDR4 Control Word 4 (ODT and CKE Signals Driver Characteristics Control Word) / DDR3 Control Word 4 (Control Signals Driver C
+		aracteristics Control Word)*/
+#undef DDR_PHY_RDIMMCR0_RC4_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC4_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC4_MASK 
+#define DDR_PHY_RDIMMCR0_RC4_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC4_SHIFT                                                 16
+#define DDR_PHY_RDIMMCR0_RC4_MASK                                                  0x000F0000U
+
+/*DDR4 Control Word 3 (CA and CS Signals Driver Characteristics Control Word) / DDR3 Control Word 3 (Command/Address Signals Dr
+		ver Characteristrics Control Word)*/
+#undef DDR_PHY_RDIMMCR0_RC3_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC3_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC3_MASK 
+#define DDR_PHY_RDIMMCR0_RC3_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC3_SHIFT                                                 12
+#define DDR_PHY_RDIMMCR0_RC3_MASK                                                  0x0000F000U
+
+/*DDR4 Control Word 2 (Timing and IBT Control Word) / DDR3 Control Word 2 (Timing Control Word)*/
+#undef DDR_PHY_RDIMMCR0_RC2_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC2_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC2_MASK 
+#define DDR_PHY_RDIMMCR0_RC2_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC2_SHIFT                                                 8
+#define DDR_PHY_RDIMMCR0_RC2_MASK                                                  0x00000F00U
+
+/*DDR4/DDR3 Control Word 1 (Clock Driver Enable Control Word)*/
+#undef DDR_PHY_RDIMMCR0_RC1_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC1_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC1_MASK 
+#define DDR_PHY_RDIMMCR0_RC1_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC1_SHIFT                                                 4
+#define DDR_PHY_RDIMMCR0_RC1_MASK                                                  0x000000F0U
+
+/*DDR4/DDR3 Control Word 0 (Global Features Control Word)*/
+#undef DDR_PHY_RDIMMCR0_RC0_DEFVAL 
+#undef DDR_PHY_RDIMMCR0_RC0_SHIFT 
+#undef DDR_PHY_RDIMMCR0_RC0_MASK 
+#define DDR_PHY_RDIMMCR0_RC0_DEFVAL                                                0x00000000
+#define DDR_PHY_RDIMMCR0_RC0_SHIFT                                                 0
+#define DDR_PHY_RDIMMCR0_RC0_MASK                                                  0x0000000FU
+
 /*Control Word 15*/
 #undef DDR_PHY_RDIMMCR1_RC15_DEFVAL 
 #undef DDR_PHY_RDIMMCR1_RC15_SHIFT 
@@ -8672,6 +8428,14 @@
 #define DDR_PHY_CATR0_CA1BYTE0_SHIFT                                               0
 #define DDR_PHY_CATR0_CA1BYTE0_MASK                                                0x0000000FU
 
+/*LFSR seed for pseudo-random BIST patterns*/
+#undef DDR_PHY_BISTLSR_SEED_DEFVAL 
+#undef DDR_PHY_BISTLSR_SEED_SHIFT 
+#undef DDR_PHY_BISTLSR_SEED_MASK 
+#define DDR_PHY_BISTLSR_SEED_DEFVAL                                                
+#define DDR_PHY_BISTLSR_SEED_SHIFT                                                 0
+#define DDR_PHY_BISTLSR_SEED_MASK                                                  0xFFFFFFFFU
+
 /*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_RIOCR5_RESERVED_31_16_DEFVAL 
 #undef DDR_PHY_RIOCR5_RESERVED_31_16_SHIFT 
@@ -9233,6 +8997,134 @@
 #define DDR_PHY_VTCR1_HVIO_MASK                                                    0x00000001U
 
 /*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR1_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_ACBDLR1_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_ACBDLR1_RESERVED_31_30_MASK 
+#define DDR_PHY_ACBDLR1_RESERVED_31_30_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR1_RESERVED_31_30_SHIFT                                       30
+#define DDR_PHY_ACBDLR1_RESERVED_31_30_MASK                                        0xC0000000U
+
+/*Delay select for the BDL on Parity.*/
+#undef DDR_PHY_ACBDLR1_PARBD_DEFVAL 
+#undef DDR_PHY_ACBDLR1_PARBD_SHIFT 
+#undef DDR_PHY_ACBDLR1_PARBD_MASK 
+#define DDR_PHY_ACBDLR1_PARBD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR1_PARBD_SHIFT                                                24
+#define DDR_PHY_ACBDLR1_PARBD_MASK                                                 0x3F000000U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR1_RESERVED_23_22_DEFVAL 
+#undef DDR_PHY_ACBDLR1_RESERVED_23_22_SHIFT 
+#undef DDR_PHY_ACBDLR1_RESERVED_23_22_MASK 
+#define DDR_PHY_ACBDLR1_RESERVED_23_22_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR1_RESERVED_23_22_SHIFT                                       22
+#define DDR_PHY_ACBDLR1_RESERVED_23_22_MASK                                        0x00C00000U
+
+/*Delay select for the BDL on Address A[16]. In DDR3 mode this pin is connected to WE.*/
+#undef DDR_PHY_ACBDLR1_A16BD_DEFVAL 
+#undef DDR_PHY_ACBDLR1_A16BD_SHIFT 
+#undef DDR_PHY_ACBDLR1_A16BD_MASK 
+#define DDR_PHY_ACBDLR1_A16BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR1_A16BD_SHIFT                                                16
+#define DDR_PHY_ACBDLR1_A16BD_MASK                                                 0x003F0000U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR1_RESERVED_15_14_DEFVAL 
+#undef DDR_PHY_ACBDLR1_RESERVED_15_14_SHIFT 
+#undef DDR_PHY_ACBDLR1_RESERVED_15_14_MASK 
+#define DDR_PHY_ACBDLR1_RESERVED_15_14_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR1_RESERVED_15_14_SHIFT                                       14
+#define DDR_PHY_ACBDLR1_RESERVED_15_14_MASK                                        0x0000C000U
+
+/*Delay select for the BDL on Address A[17]. When not in DDR4 modemode this pin is connected to CAS.*/
+#undef DDR_PHY_ACBDLR1_A17BD_DEFVAL 
+#undef DDR_PHY_ACBDLR1_A17BD_SHIFT 
+#undef DDR_PHY_ACBDLR1_A17BD_MASK 
+#define DDR_PHY_ACBDLR1_A17BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR1_A17BD_SHIFT                                                8
+#define DDR_PHY_ACBDLR1_A17BD_MASK                                                 0x00003F00U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR1_RESERVED_7_6_DEFVAL 
+#undef DDR_PHY_ACBDLR1_RESERVED_7_6_SHIFT 
+#undef DDR_PHY_ACBDLR1_RESERVED_7_6_MASK 
+#define DDR_PHY_ACBDLR1_RESERVED_7_6_DEFVAL                                        0x00000000
+#define DDR_PHY_ACBDLR1_RESERVED_7_6_SHIFT                                         6
+#define DDR_PHY_ACBDLR1_RESERVED_7_6_MASK                                          0x000000C0U
+
+/*Delay select for the BDL on ACTN.*/
+#undef DDR_PHY_ACBDLR1_ACTBD_DEFVAL 
+#undef DDR_PHY_ACBDLR1_ACTBD_SHIFT 
+#undef DDR_PHY_ACBDLR1_ACTBD_MASK 
+#define DDR_PHY_ACBDLR1_ACTBD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR1_ACTBD_SHIFT                                                0
+#define DDR_PHY_ACBDLR1_ACTBD_MASK                                                 0x0000003FU
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR2_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_ACBDLR2_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_ACBDLR2_RESERVED_31_30_MASK 
+#define DDR_PHY_ACBDLR2_RESERVED_31_30_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR2_RESERVED_31_30_SHIFT                                       30
+#define DDR_PHY_ACBDLR2_RESERVED_31_30_MASK                                        0xC0000000U
+
+/*Delay select for the BDL on BG[1].*/
+#undef DDR_PHY_ACBDLR2_BG1BD_DEFVAL 
+#undef DDR_PHY_ACBDLR2_BG1BD_SHIFT 
+#undef DDR_PHY_ACBDLR2_BG1BD_MASK 
+#define DDR_PHY_ACBDLR2_BG1BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR2_BG1BD_SHIFT                                                24
+#define DDR_PHY_ACBDLR2_BG1BD_MASK                                                 0x3F000000U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR2_RESERVED_23_22_DEFVAL 
+#undef DDR_PHY_ACBDLR2_RESERVED_23_22_SHIFT 
+#undef DDR_PHY_ACBDLR2_RESERVED_23_22_MASK 
+#define DDR_PHY_ACBDLR2_RESERVED_23_22_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR2_RESERVED_23_22_SHIFT                                       22
+#define DDR_PHY_ACBDLR2_RESERVED_23_22_MASK                                        0x00C00000U
+
+/*Delay select for the BDL on BG[0].*/
+#undef DDR_PHY_ACBDLR2_BG0BD_DEFVAL 
+#undef DDR_PHY_ACBDLR2_BG0BD_SHIFT 
+#undef DDR_PHY_ACBDLR2_BG0BD_MASK 
+#define DDR_PHY_ACBDLR2_BG0BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR2_BG0BD_SHIFT                                                16
+#define DDR_PHY_ACBDLR2_BG0BD_MASK                                                 0x003F0000U
+
+/*Reser.ved Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR2_RESERVED_15_14_DEFVAL 
+#undef DDR_PHY_ACBDLR2_RESERVED_15_14_SHIFT 
+#undef DDR_PHY_ACBDLR2_RESERVED_15_14_MASK 
+#define DDR_PHY_ACBDLR2_RESERVED_15_14_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR2_RESERVED_15_14_SHIFT                                       14
+#define DDR_PHY_ACBDLR2_RESERVED_15_14_MASK                                        0x0000C000U
+
+/*Delay select for the BDL on BA[1].*/
+#undef DDR_PHY_ACBDLR2_BA1BD_DEFVAL 
+#undef DDR_PHY_ACBDLR2_BA1BD_SHIFT 
+#undef DDR_PHY_ACBDLR2_BA1BD_MASK 
+#define DDR_PHY_ACBDLR2_BA1BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR2_BA1BD_SHIFT                                                8
+#define DDR_PHY_ACBDLR2_BA1BD_MASK                                                 0x00003F00U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR2_RESERVED_7_6_DEFVAL 
+#undef DDR_PHY_ACBDLR2_RESERVED_7_6_SHIFT 
+#undef DDR_PHY_ACBDLR2_RESERVED_7_6_MASK 
+#define DDR_PHY_ACBDLR2_RESERVED_7_6_DEFVAL                                        0x00000000
+#define DDR_PHY_ACBDLR2_RESERVED_7_6_SHIFT                                         6
+#define DDR_PHY_ACBDLR2_RESERVED_7_6_MASK                                          0x000000C0U
+
+/*Delay select for the BDL on BA[0].*/
+#undef DDR_PHY_ACBDLR2_BA0BD_DEFVAL 
+#undef DDR_PHY_ACBDLR2_BA0BD_SHIFT 
+#undef DDR_PHY_ACBDLR2_BA0BD_MASK 
+#define DDR_PHY_ACBDLR2_BA0BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR2_BA0BD_SHIFT                                                0
+#define DDR_PHY_ACBDLR2_BA0BD_MASK                                                 0x0000003FU
+
+/*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_ACBDLR6_RESERVED_31_30_DEFVAL 
 #undef DDR_PHY_ACBDLR6_RESERVED_31_30_SHIFT 
 #undef DDR_PHY_ACBDLR6_RESERVED_31_30_MASK 
@@ -9423,6 +9315,70 @@
 #define DDR_PHY_ACBDLR8_A08BD_DEFVAL                                               0x00000000
 #define DDR_PHY_ACBDLR8_A08BD_SHIFT                                                0
 #define DDR_PHY_ACBDLR8_A08BD_MASK                                                 0x0000003FU
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR9_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_ACBDLR9_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_ACBDLR9_RESERVED_31_30_MASK 
+#define DDR_PHY_ACBDLR9_RESERVED_31_30_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR9_RESERVED_31_30_SHIFT                                       30
+#define DDR_PHY_ACBDLR9_RESERVED_31_30_MASK                                        0xC0000000U
+
+/*Delay select for the BDL on Address A[15].*/
+#undef DDR_PHY_ACBDLR9_A15BD_DEFVAL 
+#undef DDR_PHY_ACBDLR9_A15BD_SHIFT 
+#undef DDR_PHY_ACBDLR9_A15BD_MASK 
+#define DDR_PHY_ACBDLR9_A15BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR9_A15BD_SHIFT                                                24
+#define DDR_PHY_ACBDLR9_A15BD_MASK                                                 0x3F000000U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR9_RESERVED_23_22_DEFVAL 
+#undef DDR_PHY_ACBDLR9_RESERVED_23_22_SHIFT 
+#undef DDR_PHY_ACBDLR9_RESERVED_23_22_MASK 
+#define DDR_PHY_ACBDLR9_RESERVED_23_22_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR9_RESERVED_23_22_SHIFT                                       22
+#define DDR_PHY_ACBDLR9_RESERVED_23_22_MASK                                        0x00C00000U
+
+/*Delay select for the BDL on Address A[14].*/
+#undef DDR_PHY_ACBDLR9_A14BD_DEFVAL 
+#undef DDR_PHY_ACBDLR9_A14BD_SHIFT 
+#undef DDR_PHY_ACBDLR9_A14BD_MASK 
+#define DDR_PHY_ACBDLR9_A14BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR9_A14BD_SHIFT                                                16
+#define DDR_PHY_ACBDLR9_A14BD_MASK                                                 0x003F0000U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR9_RESERVED_15_14_DEFVAL 
+#undef DDR_PHY_ACBDLR9_RESERVED_15_14_SHIFT 
+#undef DDR_PHY_ACBDLR9_RESERVED_15_14_MASK 
+#define DDR_PHY_ACBDLR9_RESERVED_15_14_DEFVAL                                      0x00000000
+#define DDR_PHY_ACBDLR9_RESERVED_15_14_SHIFT                                       14
+#define DDR_PHY_ACBDLR9_RESERVED_15_14_MASK                                        0x0000C000U
+
+/*Delay select for the BDL on Address A[13].*/
+#undef DDR_PHY_ACBDLR9_A13BD_DEFVAL 
+#undef DDR_PHY_ACBDLR9_A13BD_SHIFT 
+#undef DDR_PHY_ACBDLR9_A13BD_MASK 
+#define DDR_PHY_ACBDLR9_A13BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR9_A13BD_SHIFT                                                8
+#define DDR_PHY_ACBDLR9_A13BD_MASK                                                 0x00003F00U
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_ACBDLR9_RESERVED_7_6_DEFVAL 
+#undef DDR_PHY_ACBDLR9_RESERVED_7_6_SHIFT 
+#undef DDR_PHY_ACBDLR9_RESERVED_7_6_MASK 
+#define DDR_PHY_ACBDLR9_RESERVED_7_6_DEFVAL                                        0x00000000
+#define DDR_PHY_ACBDLR9_RESERVED_7_6_SHIFT                                         6
+#define DDR_PHY_ACBDLR9_RESERVED_7_6_MASK                                          0x000000C0U
+
+/*Delay select for the BDL on Address A[12].*/
+#undef DDR_PHY_ACBDLR9_A12BD_DEFVAL 
+#undef DDR_PHY_ACBDLR9_A12BD_SHIFT 
+#undef DDR_PHY_ACBDLR9_A12BD_MASK 
+#define DDR_PHY_ACBDLR9_A12BD_DEFVAL                                               0x00000000
+#define DDR_PHY_ACBDLR9_A12BD_SHIFT                                                0
+#define DDR_PHY_ACBDLR9_A12BD_MASK                                                 0x0000003FU
 
 /*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_ZQCR_RESERVED_31_26_DEFVAL 
@@ -14465,6 +14421,158 @@
 #define DDR_PHY_DX8GTR0_DGSL_MASK                                                  0x0000001FU
 
 /*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_DX8SL0OSC_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_RESERVED_31_30_MASK 
+#define DDR_PHY_DX8SL0OSC_RESERVED_31_30_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL0OSC_RESERVED_31_30_SHIFT                                     30
+#define DDR_PHY_DX8SL0OSC_RESERVED_31_30_MASK                                      0xC0000000U
+
+/*Enable Clock Gating for DX ddr_clk*/
+#undef DDR_PHY_DX8SL0OSC_GATEDXRDCLK_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_GATEDXRDCLK_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_GATEDXRDCLK_MASK 
+#define DDR_PHY_DX8SL0OSC_GATEDXRDCLK_DEFVAL                                       0x00019FFE
+#define DDR_PHY_DX8SL0OSC_GATEDXRDCLK_SHIFT                                        28
+#define DDR_PHY_DX8SL0OSC_GATEDXRDCLK_MASK                                         0x30000000U
+
+/*Enable Clock Gating for DX ctl_rd_clk*/
+#undef DDR_PHY_DX8SL0OSC_GATEDXDDRCLK_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_GATEDXDDRCLK_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_GATEDXDDRCLK_MASK 
+#define DDR_PHY_DX8SL0OSC_GATEDXDDRCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL0OSC_GATEDXDDRCLK_SHIFT                                       26
+#define DDR_PHY_DX8SL0OSC_GATEDXDDRCLK_MASK                                        0x0C000000U
+
+/*Enable Clock Gating for DX ctl_clk*/
+#undef DDR_PHY_DX8SL0OSC_GATEDXCTLCLK_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_GATEDXCTLCLK_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_GATEDXCTLCLK_MASK 
+#define DDR_PHY_DX8SL0OSC_GATEDXCTLCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL0OSC_GATEDXCTLCLK_SHIFT                                       24
+#define DDR_PHY_DX8SL0OSC_GATEDXCTLCLK_MASK                                        0x03000000U
+
+/*Selects the level to which clocks will be stalled when clock gating is enabled.*/
+#undef DDR_PHY_DX8SL0OSC_CLKLEVEL_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_CLKLEVEL_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_CLKLEVEL_MASK 
+#define DDR_PHY_DX8SL0OSC_CLKLEVEL_DEFVAL                                          0x00019FFE
+#define DDR_PHY_DX8SL0OSC_CLKLEVEL_SHIFT                                           22
+#define DDR_PHY_DX8SL0OSC_CLKLEVEL_MASK                                            0x00C00000U
+
+/*Loopback Mode*/
+#undef DDR_PHY_DX8SL0OSC_LBMODE_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_LBMODE_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_LBMODE_MASK 
+#define DDR_PHY_DX8SL0OSC_LBMODE_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL0OSC_LBMODE_SHIFT                                             21
+#define DDR_PHY_DX8SL0OSC_LBMODE_MASK                                              0x00200000U
+
+/*Load GSDQS LCDL with 2x the calibrated GSDQSPRD value*/
+#undef DDR_PHY_DX8SL0OSC_LBGSDQS_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_LBGSDQS_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_LBGSDQS_MASK 
+#define DDR_PHY_DX8SL0OSC_LBGSDQS_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL0OSC_LBGSDQS_SHIFT                                            20
+#define DDR_PHY_DX8SL0OSC_LBGSDQS_MASK                                             0x00100000U
+
+/*Loopback DQS Gating*/
+#undef DDR_PHY_DX8SL0OSC_LBGDQS_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_LBGDQS_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_LBGDQS_MASK 
+#define DDR_PHY_DX8SL0OSC_LBGDQS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL0OSC_LBGDQS_SHIFT                                             18
+#define DDR_PHY_DX8SL0OSC_LBGDQS_MASK                                              0x000C0000U
+
+/*Loopback DQS Shift*/
+#undef DDR_PHY_DX8SL0OSC_LBDQSS_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_LBDQSS_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_LBDQSS_MASK 
+#define DDR_PHY_DX8SL0OSC_LBDQSS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL0OSC_LBDQSS_SHIFT                                             17
+#define DDR_PHY_DX8SL0OSC_LBDQSS_MASK                                              0x00020000U
+
+/*PHY High-Speed Reset*/
+#undef DDR_PHY_DX8SL0OSC_PHYHRST_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_PHYHRST_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_PHYHRST_MASK 
+#define DDR_PHY_DX8SL0OSC_PHYHRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL0OSC_PHYHRST_SHIFT                                            16
+#define DDR_PHY_DX8SL0OSC_PHYHRST_MASK                                             0x00010000U
+
+/*PHY FIFO Reset*/
+#undef DDR_PHY_DX8SL0OSC_PHYFRST_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_PHYFRST_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_PHYFRST_MASK 
+#define DDR_PHY_DX8SL0OSC_PHYFRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL0OSC_PHYFRST_SHIFT                                            15
+#define DDR_PHY_DX8SL0OSC_PHYFRST_MASK                                             0x00008000U
+
+/*Delay Line Test Start*/
+#undef DDR_PHY_DX8SL0OSC_DLTST_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_DLTST_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_DLTST_MASK 
+#define DDR_PHY_DX8SL0OSC_DLTST_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL0OSC_DLTST_SHIFT                                              14
+#define DDR_PHY_DX8SL0OSC_DLTST_MASK                                               0x00004000U
+
+/*Delay Line Test Mode*/
+#undef DDR_PHY_DX8SL0OSC_DLTMODE_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_DLTMODE_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_DLTMODE_MASK 
+#define DDR_PHY_DX8SL0OSC_DLTMODE_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL0OSC_DLTMODE_SHIFT                                            13
+#define DDR_PHY_DX8SL0OSC_DLTMODE_MASK                                             0x00002000U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL0OSC_RESERVED_12_11_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_RESERVED_12_11_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_RESERVED_12_11_MASK 
+#define DDR_PHY_DX8SL0OSC_RESERVED_12_11_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL0OSC_RESERVED_12_11_SHIFT                                     11
+#define DDR_PHY_DX8SL0OSC_RESERVED_12_11_MASK                                      0x00001800U
+
+/*Oscillator Mode Write-Data Delay Line Select*/
+#undef DDR_PHY_DX8SL0OSC_OSCWDDL_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_OSCWDDL_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_OSCWDDL_MASK 
+#define DDR_PHY_DX8SL0OSC_OSCWDDL_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL0OSC_OSCWDDL_SHIFT                                            9
+#define DDR_PHY_DX8SL0OSC_OSCWDDL_MASK                                             0x00000600U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL0OSC_RESERVED_8_7_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_RESERVED_8_7_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_RESERVED_8_7_MASK 
+#define DDR_PHY_DX8SL0OSC_RESERVED_8_7_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL0OSC_RESERVED_8_7_SHIFT                                       7
+#define DDR_PHY_DX8SL0OSC_RESERVED_8_7_MASK                                        0x00000180U
+
+/*Oscillator Mode Write-Leveling Delay Line Select*/
+#undef DDR_PHY_DX8SL0OSC_OSCWDL_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_OSCWDL_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_OSCWDL_MASK 
+#define DDR_PHY_DX8SL0OSC_OSCWDL_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL0OSC_OSCWDL_SHIFT                                             5
+#define DDR_PHY_DX8SL0OSC_OSCWDL_MASK                                              0x00000060U
+
+/*Oscillator Mode Division*/
+#undef DDR_PHY_DX8SL0OSC_OSCDIV_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_OSCDIV_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_OSCDIV_MASK 
+#define DDR_PHY_DX8SL0OSC_OSCDIV_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL0OSC_OSCDIV_SHIFT                                             1
+#define DDR_PHY_DX8SL0OSC_OSCDIV_MASK                                              0x0000001EU
+
+/*Oscillator Enable*/
+#undef DDR_PHY_DX8SL0OSC_OSCEN_DEFVAL 
+#undef DDR_PHY_DX8SL0OSC_OSCEN_SHIFT 
+#undef DDR_PHY_DX8SL0OSC_OSCEN_MASK 
+#define DDR_PHY_DX8SL0OSC_OSCEN_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL0OSC_OSCEN_SHIFT                                              0
+#define DDR_PHY_DX8SL0OSC_OSCEN_MASK                                               0x00000001U
+
+/*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_DX8SL0DQSCTL_RESERVED_31_25_DEFVAL 
 #undef DDR_PHY_DX8SL0DQSCTL_RESERVED_31_25_SHIFT 
 #undef DDR_PHY_DX8SL0DQSCTL_RESERVED_31_25_MASK 
@@ -14751,6 +14859,158 @@
 #define DDR_PHY_DX8SL0IOCR_DXRXM_DEFVAL                                            0x00000000
 #define DDR_PHY_DX8SL0IOCR_DXRXM_SHIFT                                             0
 #define DDR_PHY_DX8SL0IOCR_DXRXM_MASK                                              0x000007FFU
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_DX8SL1OSC_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_RESERVED_31_30_MASK 
+#define DDR_PHY_DX8SL1OSC_RESERVED_31_30_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL1OSC_RESERVED_31_30_SHIFT                                     30
+#define DDR_PHY_DX8SL1OSC_RESERVED_31_30_MASK                                      0xC0000000U
+
+/*Enable Clock Gating for DX ddr_clk*/
+#undef DDR_PHY_DX8SL1OSC_GATEDXRDCLK_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_GATEDXRDCLK_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_GATEDXRDCLK_MASK 
+#define DDR_PHY_DX8SL1OSC_GATEDXRDCLK_DEFVAL                                       0x00019FFE
+#define DDR_PHY_DX8SL1OSC_GATEDXRDCLK_SHIFT                                        28
+#define DDR_PHY_DX8SL1OSC_GATEDXRDCLK_MASK                                         0x30000000U
+
+/*Enable Clock Gating for DX ctl_rd_clk*/
+#undef DDR_PHY_DX8SL1OSC_GATEDXDDRCLK_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_GATEDXDDRCLK_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_GATEDXDDRCLK_MASK 
+#define DDR_PHY_DX8SL1OSC_GATEDXDDRCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL1OSC_GATEDXDDRCLK_SHIFT                                       26
+#define DDR_PHY_DX8SL1OSC_GATEDXDDRCLK_MASK                                        0x0C000000U
+
+/*Enable Clock Gating for DX ctl_clk*/
+#undef DDR_PHY_DX8SL1OSC_GATEDXCTLCLK_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_GATEDXCTLCLK_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_GATEDXCTLCLK_MASK 
+#define DDR_PHY_DX8SL1OSC_GATEDXCTLCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL1OSC_GATEDXCTLCLK_SHIFT                                       24
+#define DDR_PHY_DX8SL1OSC_GATEDXCTLCLK_MASK                                        0x03000000U
+
+/*Selects the level to which clocks will be stalled when clock gating is enabled.*/
+#undef DDR_PHY_DX8SL1OSC_CLKLEVEL_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_CLKLEVEL_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_CLKLEVEL_MASK 
+#define DDR_PHY_DX8SL1OSC_CLKLEVEL_DEFVAL                                          0x00019FFE
+#define DDR_PHY_DX8SL1OSC_CLKLEVEL_SHIFT                                           22
+#define DDR_PHY_DX8SL1OSC_CLKLEVEL_MASK                                            0x00C00000U
+
+/*Loopback Mode*/
+#undef DDR_PHY_DX8SL1OSC_LBMODE_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_LBMODE_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_LBMODE_MASK 
+#define DDR_PHY_DX8SL1OSC_LBMODE_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL1OSC_LBMODE_SHIFT                                             21
+#define DDR_PHY_DX8SL1OSC_LBMODE_MASK                                              0x00200000U
+
+/*Load GSDQS LCDL with 2x the calibrated GSDQSPRD value*/
+#undef DDR_PHY_DX8SL1OSC_LBGSDQS_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_LBGSDQS_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_LBGSDQS_MASK 
+#define DDR_PHY_DX8SL1OSC_LBGSDQS_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL1OSC_LBGSDQS_SHIFT                                            20
+#define DDR_PHY_DX8SL1OSC_LBGSDQS_MASK                                             0x00100000U
+
+/*Loopback DQS Gating*/
+#undef DDR_PHY_DX8SL1OSC_LBGDQS_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_LBGDQS_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_LBGDQS_MASK 
+#define DDR_PHY_DX8SL1OSC_LBGDQS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL1OSC_LBGDQS_SHIFT                                             18
+#define DDR_PHY_DX8SL1OSC_LBGDQS_MASK                                              0x000C0000U
+
+/*Loopback DQS Shift*/
+#undef DDR_PHY_DX8SL1OSC_LBDQSS_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_LBDQSS_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_LBDQSS_MASK 
+#define DDR_PHY_DX8SL1OSC_LBDQSS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL1OSC_LBDQSS_SHIFT                                             17
+#define DDR_PHY_DX8SL1OSC_LBDQSS_MASK                                              0x00020000U
+
+/*PHY High-Speed Reset*/
+#undef DDR_PHY_DX8SL1OSC_PHYHRST_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_PHYHRST_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_PHYHRST_MASK 
+#define DDR_PHY_DX8SL1OSC_PHYHRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL1OSC_PHYHRST_SHIFT                                            16
+#define DDR_PHY_DX8SL1OSC_PHYHRST_MASK                                             0x00010000U
+
+/*PHY FIFO Reset*/
+#undef DDR_PHY_DX8SL1OSC_PHYFRST_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_PHYFRST_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_PHYFRST_MASK 
+#define DDR_PHY_DX8SL1OSC_PHYFRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL1OSC_PHYFRST_SHIFT                                            15
+#define DDR_PHY_DX8SL1OSC_PHYFRST_MASK                                             0x00008000U
+
+/*Delay Line Test Start*/
+#undef DDR_PHY_DX8SL1OSC_DLTST_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_DLTST_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_DLTST_MASK 
+#define DDR_PHY_DX8SL1OSC_DLTST_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL1OSC_DLTST_SHIFT                                              14
+#define DDR_PHY_DX8SL1OSC_DLTST_MASK                                               0x00004000U
+
+/*Delay Line Test Mode*/
+#undef DDR_PHY_DX8SL1OSC_DLTMODE_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_DLTMODE_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_DLTMODE_MASK 
+#define DDR_PHY_DX8SL1OSC_DLTMODE_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL1OSC_DLTMODE_SHIFT                                            13
+#define DDR_PHY_DX8SL1OSC_DLTMODE_MASK                                             0x00002000U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL1OSC_RESERVED_12_11_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_RESERVED_12_11_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_RESERVED_12_11_MASK 
+#define DDR_PHY_DX8SL1OSC_RESERVED_12_11_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL1OSC_RESERVED_12_11_SHIFT                                     11
+#define DDR_PHY_DX8SL1OSC_RESERVED_12_11_MASK                                      0x00001800U
+
+/*Oscillator Mode Write-Data Delay Line Select*/
+#undef DDR_PHY_DX8SL1OSC_OSCWDDL_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_OSCWDDL_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_OSCWDDL_MASK 
+#define DDR_PHY_DX8SL1OSC_OSCWDDL_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL1OSC_OSCWDDL_SHIFT                                            9
+#define DDR_PHY_DX8SL1OSC_OSCWDDL_MASK                                             0x00000600U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL1OSC_RESERVED_8_7_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_RESERVED_8_7_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_RESERVED_8_7_MASK 
+#define DDR_PHY_DX8SL1OSC_RESERVED_8_7_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL1OSC_RESERVED_8_7_SHIFT                                       7
+#define DDR_PHY_DX8SL1OSC_RESERVED_8_7_MASK                                        0x00000180U
+
+/*Oscillator Mode Write-Leveling Delay Line Select*/
+#undef DDR_PHY_DX8SL1OSC_OSCWDL_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_OSCWDL_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_OSCWDL_MASK 
+#define DDR_PHY_DX8SL1OSC_OSCWDL_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL1OSC_OSCWDL_SHIFT                                             5
+#define DDR_PHY_DX8SL1OSC_OSCWDL_MASK                                              0x00000060U
+
+/*Oscillator Mode Division*/
+#undef DDR_PHY_DX8SL1OSC_OSCDIV_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_OSCDIV_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_OSCDIV_MASK 
+#define DDR_PHY_DX8SL1OSC_OSCDIV_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL1OSC_OSCDIV_SHIFT                                             1
+#define DDR_PHY_DX8SL1OSC_OSCDIV_MASK                                              0x0000001EU
+
+/*Oscillator Enable*/
+#undef DDR_PHY_DX8SL1OSC_OSCEN_DEFVAL 
+#undef DDR_PHY_DX8SL1OSC_OSCEN_SHIFT 
+#undef DDR_PHY_DX8SL1OSC_OSCEN_MASK 
+#define DDR_PHY_DX8SL1OSC_OSCEN_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL1OSC_OSCEN_SHIFT                                              0
+#define DDR_PHY_DX8SL1OSC_OSCEN_MASK                                               0x00000001U
 
 /*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_DX8SL1DQSCTL_RESERVED_31_25_DEFVAL 
@@ -15041,6 +15301,158 @@
 #define DDR_PHY_DX8SL1IOCR_DXRXM_MASK                                              0x000007FFU
 
 /*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_DX8SL2OSC_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_RESERVED_31_30_MASK 
+#define DDR_PHY_DX8SL2OSC_RESERVED_31_30_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL2OSC_RESERVED_31_30_SHIFT                                     30
+#define DDR_PHY_DX8SL2OSC_RESERVED_31_30_MASK                                      0xC0000000U
+
+/*Enable Clock Gating for DX ddr_clk*/
+#undef DDR_PHY_DX8SL2OSC_GATEDXRDCLK_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_GATEDXRDCLK_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_GATEDXRDCLK_MASK 
+#define DDR_PHY_DX8SL2OSC_GATEDXRDCLK_DEFVAL                                       0x00019FFE
+#define DDR_PHY_DX8SL2OSC_GATEDXRDCLK_SHIFT                                        28
+#define DDR_PHY_DX8SL2OSC_GATEDXRDCLK_MASK                                         0x30000000U
+
+/*Enable Clock Gating for DX ctl_rd_clk*/
+#undef DDR_PHY_DX8SL2OSC_GATEDXDDRCLK_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_GATEDXDDRCLK_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_GATEDXDDRCLK_MASK 
+#define DDR_PHY_DX8SL2OSC_GATEDXDDRCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL2OSC_GATEDXDDRCLK_SHIFT                                       26
+#define DDR_PHY_DX8SL2OSC_GATEDXDDRCLK_MASK                                        0x0C000000U
+
+/*Enable Clock Gating for DX ctl_clk*/
+#undef DDR_PHY_DX8SL2OSC_GATEDXCTLCLK_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_GATEDXCTLCLK_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_GATEDXCTLCLK_MASK 
+#define DDR_PHY_DX8SL2OSC_GATEDXCTLCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL2OSC_GATEDXCTLCLK_SHIFT                                       24
+#define DDR_PHY_DX8SL2OSC_GATEDXCTLCLK_MASK                                        0x03000000U
+
+/*Selects the level to which clocks will be stalled when clock gating is enabled.*/
+#undef DDR_PHY_DX8SL2OSC_CLKLEVEL_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_CLKLEVEL_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_CLKLEVEL_MASK 
+#define DDR_PHY_DX8SL2OSC_CLKLEVEL_DEFVAL                                          0x00019FFE
+#define DDR_PHY_DX8SL2OSC_CLKLEVEL_SHIFT                                           22
+#define DDR_PHY_DX8SL2OSC_CLKLEVEL_MASK                                            0x00C00000U
+
+/*Loopback Mode*/
+#undef DDR_PHY_DX8SL2OSC_LBMODE_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_LBMODE_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_LBMODE_MASK 
+#define DDR_PHY_DX8SL2OSC_LBMODE_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL2OSC_LBMODE_SHIFT                                             21
+#define DDR_PHY_DX8SL2OSC_LBMODE_MASK                                              0x00200000U
+
+/*Load GSDQS LCDL with 2x the calibrated GSDQSPRD value*/
+#undef DDR_PHY_DX8SL2OSC_LBGSDQS_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_LBGSDQS_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_LBGSDQS_MASK 
+#define DDR_PHY_DX8SL2OSC_LBGSDQS_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL2OSC_LBGSDQS_SHIFT                                            20
+#define DDR_PHY_DX8SL2OSC_LBGSDQS_MASK                                             0x00100000U
+
+/*Loopback DQS Gating*/
+#undef DDR_PHY_DX8SL2OSC_LBGDQS_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_LBGDQS_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_LBGDQS_MASK 
+#define DDR_PHY_DX8SL2OSC_LBGDQS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL2OSC_LBGDQS_SHIFT                                             18
+#define DDR_PHY_DX8SL2OSC_LBGDQS_MASK                                              0x000C0000U
+
+/*Loopback DQS Shift*/
+#undef DDR_PHY_DX8SL2OSC_LBDQSS_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_LBDQSS_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_LBDQSS_MASK 
+#define DDR_PHY_DX8SL2OSC_LBDQSS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL2OSC_LBDQSS_SHIFT                                             17
+#define DDR_PHY_DX8SL2OSC_LBDQSS_MASK                                              0x00020000U
+
+/*PHY High-Speed Reset*/
+#undef DDR_PHY_DX8SL2OSC_PHYHRST_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_PHYHRST_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_PHYHRST_MASK 
+#define DDR_PHY_DX8SL2OSC_PHYHRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL2OSC_PHYHRST_SHIFT                                            16
+#define DDR_PHY_DX8SL2OSC_PHYHRST_MASK                                             0x00010000U
+
+/*PHY FIFO Reset*/
+#undef DDR_PHY_DX8SL2OSC_PHYFRST_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_PHYFRST_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_PHYFRST_MASK 
+#define DDR_PHY_DX8SL2OSC_PHYFRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL2OSC_PHYFRST_SHIFT                                            15
+#define DDR_PHY_DX8SL2OSC_PHYFRST_MASK                                             0x00008000U
+
+/*Delay Line Test Start*/
+#undef DDR_PHY_DX8SL2OSC_DLTST_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_DLTST_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_DLTST_MASK 
+#define DDR_PHY_DX8SL2OSC_DLTST_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL2OSC_DLTST_SHIFT                                              14
+#define DDR_PHY_DX8SL2OSC_DLTST_MASK                                               0x00004000U
+
+/*Delay Line Test Mode*/
+#undef DDR_PHY_DX8SL2OSC_DLTMODE_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_DLTMODE_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_DLTMODE_MASK 
+#define DDR_PHY_DX8SL2OSC_DLTMODE_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL2OSC_DLTMODE_SHIFT                                            13
+#define DDR_PHY_DX8SL2OSC_DLTMODE_MASK                                             0x00002000U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL2OSC_RESERVED_12_11_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_RESERVED_12_11_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_RESERVED_12_11_MASK 
+#define DDR_PHY_DX8SL2OSC_RESERVED_12_11_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL2OSC_RESERVED_12_11_SHIFT                                     11
+#define DDR_PHY_DX8SL2OSC_RESERVED_12_11_MASK                                      0x00001800U
+
+/*Oscillator Mode Write-Data Delay Line Select*/
+#undef DDR_PHY_DX8SL2OSC_OSCWDDL_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_OSCWDDL_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_OSCWDDL_MASK 
+#define DDR_PHY_DX8SL2OSC_OSCWDDL_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL2OSC_OSCWDDL_SHIFT                                            9
+#define DDR_PHY_DX8SL2OSC_OSCWDDL_MASK                                             0x00000600U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL2OSC_RESERVED_8_7_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_RESERVED_8_7_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_RESERVED_8_7_MASK 
+#define DDR_PHY_DX8SL2OSC_RESERVED_8_7_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL2OSC_RESERVED_8_7_SHIFT                                       7
+#define DDR_PHY_DX8SL2OSC_RESERVED_8_7_MASK                                        0x00000180U
+
+/*Oscillator Mode Write-Leveling Delay Line Select*/
+#undef DDR_PHY_DX8SL2OSC_OSCWDL_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_OSCWDL_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_OSCWDL_MASK 
+#define DDR_PHY_DX8SL2OSC_OSCWDL_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL2OSC_OSCWDL_SHIFT                                             5
+#define DDR_PHY_DX8SL2OSC_OSCWDL_MASK                                              0x00000060U
+
+/*Oscillator Mode Division*/
+#undef DDR_PHY_DX8SL2OSC_OSCDIV_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_OSCDIV_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_OSCDIV_MASK 
+#define DDR_PHY_DX8SL2OSC_OSCDIV_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL2OSC_OSCDIV_SHIFT                                             1
+#define DDR_PHY_DX8SL2OSC_OSCDIV_MASK                                              0x0000001EU
+
+/*Oscillator Enable*/
+#undef DDR_PHY_DX8SL2OSC_OSCEN_DEFVAL 
+#undef DDR_PHY_DX8SL2OSC_OSCEN_SHIFT 
+#undef DDR_PHY_DX8SL2OSC_OSCEN_MASK 
+#define DDR_PHY_DX8SL2OSC_OSCEN_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL2OSC_OSCEN_SHIFT                                              0
+#define DDR_PHY_DX8SL2OSC_OSCEN_MASK                                               0x00000001U
+
+/*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_DX8SL2DQSCTL_RESERVED_31_25_DEFVAL 
 #undef DDR_PHY_DX8SL2DQSCTL_RESERVED_31_25_SHIFT 
 #undef DDR_PHY_DX8SL2DQSCTL_RESERVED_31_25_MASK 
@@ -15329,6 +15741,158 @@
 #define DDR_PHY_DX8SL2IOCR_DXRXM_MASK                                              0x000007FFU
 
 /*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_DX8SL3OSC_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_RESERVED_31_30_MASK 
+#define DDR_PHY_DX8SL3OSC_RESERVED_31_30_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL3OSC_RESERVED_31_30_SHIFT                                     30
+#define DDR_PHY_DX8SL3OSC_RESERVED_31_30_MASK                                      0xC0000000U
+
+/*Enable Clock Gating for DX ddr_clk*/
+#undef DDR_PHY_DX8SL3OSC_GATEDXRDCLK_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_GATEDXRDCLK_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_GATEDXRDCLK_MASK 
+#define DDR_PHY_DX8SL3OSC_GATEDXRDCLK_DEFVAL                                       0x00019FFE
+#define DDR_PHY_DX8SL3OSC_GATEDXRDCLK_SHIFT                                        28
+#define DDR_PHY_DX8SL3OSC_GATEDXRDCLK_MASK                                         0x30000000U
+
+/*Enable Clock Gating for DX ctl_rd_clk*/
+#undef DDR_PHY_DX8SL3OSC_GATEDXDDRCLK_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_GATEDXDDRCLK_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_GATEDXDDRCLK_MASK 
+#define DDR_PHY_DX8SL3OSC_GATEDXDDRCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL3OSC_GATEDXDDRCLK_SHIFT                                       26
+#define DDR_PHY_DX8SL3OSC_GATEDXDDRCLK_MASK                                        0x0C000000U
+
+/*Enable Clock Gating for DX ctl_clk*/
+#undef DDR_PHY_DX8SL3OSC_GATEDXCTLCLK_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_GATEDXCTLCLK_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_GATEDXCTLCLK_MASK 
+#define DDR_PHY_DX8SL3OSC_GATEDXCTLCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL3OSC_GATEDXCTLCLK_SHIFT                                       24
+#define DDR_PHY_DX8SL3OSC_GATEDXCTLCLK_MASK                                        0x03000000U
+
+/*Selects the level to which clocks will be stalled when clock gating is enabled.*/
+#undef DDR_PHY_DX8SL3OSC_CLKLEVEL_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_CLKLEVEL_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_CLKLEVEL_MASK 
+#define DDR_PHY_DX8SL3OSC_CLKLEVEL_DEFVAL                                          0x00019FFE
+#define DDR_PHY_DX8SL3OSC_CLKLEVEL_SHIFT                                           22
+#define DDR_PHY_DX8SL3OSC_CLKLEVEL_MASK                                            0x00C00000U
+
+/*Loopback Mode*/
+#undef DDR_PHY_DX8SL3OSC_LBMODE_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_LBMODE_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_LBMODE_MASK 
+#define DDR_PHY_DX8SL3OSC_LBMODE_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL3OSC_LBMODE_SHIFT                                             21
+#define DDR_PHY_DX8SL3OSC_LBMODE_MASK                                              0x00200000U
+
+/*Load GSDQS LCDL with 2x the calibrated GSDQSPRD value*/
+#undef DDR_PHY_DX8SL3OSC_LBGSDQS_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_LBGSDQS_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_LBGSDQS_MASK 
+#define DDR_PHY_DX8SL3OSC_LBGSDQS_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL3OSC_LBGSDQS_SHIFT                                            20
+#define DDR_PHY_DX8SL3OSC_LBGSDQS_MASK                                             0x00100000U
+
+/*Loopback DQS Gating*/
+#undef DDR_PHY_DX8SL3OSC_LBGDQS_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_LBGDQS_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_LBGDQS_MASK 
+#define DDR_PHY_DX8SL3OSC_LBGDQS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL3OSC_LBGDQS_SHIFT                                             18
+#define DDR_PHY_DX8SL3OSC_LBGDQS_MASK                                              0x000C0000U
+
+/*Loopback DQS Shift*/
+#undef DDR_PHY_DX8SL3OSC_LBDQSS_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_LBDQSS_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_LBDQSS_MASK 
+#define DDR_PHY_DX8SL3OSC_LBDQSS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL3OSC_LBDQSS_SHIFT                                             17
+#define DDR_PHY_DX8SL3OSC_LBDQSS_MASK                                              0x00020000U
+
+/*PHY High-Speed Reset*/
+#undef DDR_PHY_DX8SL3OSC_PHYHRST_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_PHYHRST_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_PHYHRST_MASK 
+#define DDR_PHY_DX8SL3OSC_PHYHRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL3OSC_PHYHRST_SHIFT                                            16
+#define DDR_PHY_DX8SL3OSC_PHYHRST_MASK                                             0x00010000U
+
+/*PHY FIFO Reset*/
+#undef DDR_PHY_DX8SL3OSC_PHYFRST_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_PHYFRST_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_PHYFRST_MASK 
+#define DDR_PHY_DX8SL3OSC_PHYFRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL3OSC_PHYFRST_SHIFT                                            15
+#define DDR_PHY_DX8SL3OSC_PHYFRST_MASK                                             0x00008000U
+
+/*Delay Line Test Start*/
+#undef DDR_PHY_DX8SL3OSC_DLTST_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_DLTST_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_DLTST_MASK 
+#define DDR_PHY_DX8SL3OSC_DLTST_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL3OSC_DLTST_SHIFT                                              14
+#define DDR_PHY_DX8SL3OSC_DLTST_MASK                                               0x00004000U
+
+/*Delay Line Test Mode*/
+#undef DDR_PHY_DX8SL3OSC_DLTMODE_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_DLTMODE_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_DLTMODE_MASK 
+#define DDR_PHY_DX8SL3OSC_DLTMODE_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL3OSC_DLTMODE_SHIFT                                            13
+#define DDR_PHY_DX8SL3OSC_DLTMODE_MASK                                             0x00002000U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL3OSC_RESERVED_12_11_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_RESERVED_12_11_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_RESERVED_12_11_MASK 
+#define DDR_PHY_DX8SL3OSC_RESERVED_12_11_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL3OSC_RESERVED_12_11_SHIFT                                     11
+#define DDR_PHY_DX8SL3OSC_RESERVED_12_11_MASK                                      0x00001800U
+
+/*Oscillator Mode Write-Data Delay Line Select*/
+#undef DDR_PHY_DX8SL3OSC_OSCWDDL_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_OSCWDDL_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_OSCWDDL_MASK 
+#define DDR_PHY_DX8SL3OSC_OSCWDDL_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL3OSC_OSCWDDL_SHIFT                                            9
+#define DDR_PHY_DX8SL3OSC_OSCWDDL_MASK                                             0x00000600U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL3OSC_RESERVED_8_7_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_RESERVED_8_7_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_RESERVED_8_7_MASK 
+#define DDR_PHY_DX8SL3OSC_RESERVED_8_7_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL3OSC_RESERVED_8_7_SHIFT                                       7
+#define DDR_PHY_DX8SL3OSC_RESERVED_8_7_MASK                                        0x00000180U
+
+/*Oscillator Mode Write-Leveling Delay Line Select*/
+#undef DDR_PHY_DX8SL3OSC_OSCWDL_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_OSCWDL_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_OSCWDL_MASK 
+#define DDR_PHY_DX8SL3OSC_OSCWDL_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL3OSC_OSCWDL_SHIFT                                             5
+#define DDR_PHY_DX8SL3OSC_OSCWDL_MASK                                              0x00000060U
+
+/*Oscillator Mode Division*/
+#undef DDR_PHY_DX8SL3OSC_OSCDIV_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_OSCDIV_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_OSCDIV_MASK 
+#define DDR_PHY_DX8SL3OSC_OSCDIV_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL3OSC_OSCDIV_SHIFT                                             1
+#define DDR_PHY_DX8SL3OSC_OSCDIV_MASK                                              0x0000001EU
+
+/*Oscillator Enable*/
+#undef DDR_PHY_DX8SL3OSC_OSCEN_DEFVAL 
+#undef DDR_PHY_DX8SL3OSC_OSCEN_SHIFT 
+#undef DDR_PHY_DX8SL3OSC_OSCEN_MASK 
+#define DDR_PHY_DX8SL3OSC_OSCEN_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL3OSC_OSCEN_SHIFT                                              0
+#define DDR_PHY_DX8SL3OSC_OSCEN_MASK                                               0x00000001U
+
+/*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_DX8SL3DQSCTL_RESERVED_31_25_DEFVAL 
 #undef DDR_PHY_DX8SL3DQSCTL_RESERVED_31_25_SHIFT 
 #undef DDR_PHY_DX8SL3DQSCTL_RESERVED_31_25_MASK 
@@ -15615,6 +16179,158 @@
 #define DDR_PHY_DX8SL3IOCR_DXRXM_DEFVAL                                            0x00000000
 #define DDR_PHY_DX8SL3IOCR_DXRXM_SHIFT                                             0
 #define DDR_PHY_DX8SL3IOCR_DXRXM_MASK                                              0x000007FFU
+
+/*Reserved. Return zeroes on reads.*/
+#undef DDR_PHY_DX8SL4OSC_RESERVED_31_30_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_RESERVED_31_30_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_RESERVED_31_30_MASK 
+#define DDR_PHY_DX8SL4OSC_RESERVED_31_30_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL4OSC_RESERVED_31_30_SHIFT                                     30
+#define DDR_PHY_DX8SL4OSC_RESERVED_31_30_MASK                                      0xC0000000U
+
+/*Enable Clock Gating for DX ddr_clk*/
+#undef DDR_PHY_DX8SL4OSC_GATEDXRDCLK_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_GATEDXRDCLK_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_GATEDXRDCLK_MASK 
+#define DDR_PHY_DX8SL4OSC_GATEDXRDCLK_DEFVAL                                       0x00019FFE
+#define DDR_PHY_DX8SL4OSC_GATEDXRDCLK_SHIFT                                        28
+#define DDR_PHY_DX8SL4OSC_GATEDXRDCLK_MASK                                         0x30000000U
+
+/*Enable Clock Gating for DX ctl_rd_clk*/
+#undef DDR_PHY_DX8SL4OSC_GATEDXDDRCLK_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_GATEDXDDRCLK_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_GATEDXDDRCLK_MASK 
+#define DDR_PHY_DX8SL4OSC_GATEDXDDRCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL4OSC_GATEDXDDRCLK_SHIFT                                       26
+#define DDR_PHY_DX8SL4OSC_GATEDXDDRCLK_MASK                                        0x0C000000U
+
+/*Enable Clock Gating for DX ctl_clk*/
+#undef DDR_PHY_DX8SL4OSC_GATEDXCTLCLK_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_GATEDXCTLCLK_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_GATEDXCTLCLK_MASK 
+#define DDR_PHY_DX8SL4OSC_GATEDXCTLCLK_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL4OSC_GATEDXCTLCLK_SHIFT                                       24
+#define DDR_PHY_DX8SL4OSC_GATEDXCTLCLK_MASK                                        0x03000000U
+
+/*Selects the level to which clocks will be stalled when clock gating is enabled.*/
+#undef DDR_PHY_DX8SL4OSC_CLKLEVEL_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_CLKLEVEL_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_CLKLEVEL_MASK 
+#define DDR_PHY_DX8SL4OSC_CLKLEVEL_DEFVAL                                          0x00019FFE
+#define DDR_PHY_DX8SL4OSC_CLKLEVEL_SHIFT                                           22
+#define DDR_PHY_DX8SL4OSC_CLKLEVEL_MASK                                            0x00C00000U
+
+/*Loopback Mode*/
+#undef DDR_PHY_DX8SL4OSC_LBMODE_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_LBMODE_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_LBMODE_MASK 
+#define DDR_PHY_DX8SL4OSC_LBMODE_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL4OSC_LBMODE_SHIFT                                             21
+#define DDR_PHY_DX8SL4OSC_LBMODE_MASK                                              0x00200000U
+
+/*Load GSDQS LCDL with 2x the calibrated GSDQSPRD value*/
+#undef DDR_PHY_DX8SL4OSC_LBGSDQS_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_LBGSDQS_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_LBGSDQS_MASK 
+#define DDR_PHY_DX8SL4OSC_LBGSDQS_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL4OSC_LBGSDQS_SHIFT                                            20
+#define DDR_PHY_DX8SL4OSC_LBGSDQS_MASK                                             0x00100000U
+
+/*Loopback DQS Gating*/
+#undef DDR_PHY_DX8SL4OSC_LBGDQS_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_LBGDQS_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_LBGDQS_MASK 
+#define DDR_PHY_DX8SL4OSC_LBGDQS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL4OSC_LBGDQS_SHIFT                                             18
+#define DDR_PHY_DX8SL4OSC_LBGDQS_MASK                                              0x000C0000U
+
+/*Loopback DQS Shift*/
+#undef DDR_PHY_DX8SL4OSC_LBDQSS_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_LBDQSS_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_LBDQSS_MASK 
+#define DDR_PHY_DX8SL4OSC_LBDQSS_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL4OSC_LBDQSS_SHIFT                                             17
+#define DDR_PHY_DX8SL4OSC_LBDQSS_MASK                                              0x00020000U
+
+/*PHY High-Speed Reset*/
+#undef DDR_PHY_DX8SL4OSC_PHYHRST_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_PHYHRST_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_PHYHRST_MASK 
+#define DDR_PHY_DX8SL4OSC_PHYHRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL4OSC_PHYHRST_SHIFT                                            16
+#define DDR_PHY_DX8SL4OSC_PHYHRST_MASK                                             0x00010000U
+
+/*PHY FIFO Reset*/
+#undef DDR_PHY_DX8SL4OSC_PHYFRST_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_PHYFRST_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_PHYFRST_MASK 
+#define DDR_PHY_DX8SL4OSC_PHYFRST_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL4OSC_PHYFRST_SHIFT                                            15
+#define DDR_PHY_DX8SL4OSC_PHYFRST_MASK                                             0x00008000U
+
+/*Delay Line Test Start*/
+#undef DDR_PHY_DX8SL4OSC_DLTST_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_DLTST_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_DLTST_MASK 
+#define DDR_PHY_DX8SL4OSC_DLTST_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL4OSC_DLTST_SHIFT                                              14
+#define DDR_PHY_DX8SL4OSC_DLTST_MASK                                               0x00004000U
+
+/*Delay Line Test Mode*/
+#undef DDR_PHY_DX8SL4OSC_DLTMODE_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_DLTMODE_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_DLTMODE_MASK 
+#define DDR_PHY_DX8SL4OSC_DLTMODE_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL4OSC_DLTMODE_SHIFT                                            13
+#define DDR_PHY_DX8SL4OSC_DLTMODE_MASK                                             0x00002000U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL4OSC_RESERVED_12_11_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_RESERVED_12_11_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_RESERVED_12_11_MASK 
+#define DDR_PHY_DX8SL4OSC_RESERVED_12_11_DEFVAL                                    0x00019FFE
+#define DDR_PHY_DX8SL4OSC_RESERVED_12_11_SHIFT                                     11
+#define DDR_PHY_DX8SL4OSC_RESERVED_12_11_MASK                                      0x00001800U
+
+/*Oscillator Mode Write-Data Delay Line Select*/
+#undef DDR_PHY_DX8SL4OSC_OSCWDDL_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_OSCWDDL_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_OSCWDDL_MASK 
+#define DDR_PHY_DX8SL4OSC_OSCWDDL_DEFVAL                                           0x00019FFE
+#define DDR_PHY_DX8SL4OSC_OSCWDDL_SHIFT                                            9
+#define DDR_PHY_DX8SL4OSC_OSCWDDL_MASK                                             0x00000600U
+
+/*Reserved. Caution, do not write to this register field.*/
+#undef DDR_PHY_DX8SL4OSC_RESERVED_8_7_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_RESERVED_8_7_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_RESERVED_8_7_MASK 
+#define DDR_PHY_DX8SL4OSC_RESERVED_8_7_DEFVAL                                      0x00019FFE
+#define DDR_PHY_DX8SL4OSC_RESERVED_8_7_SHIFT                                       7
+#define DDR_PHY_DX8SL4OSC_RESERVED_8_7_MASK                                        0x00000180U
+
+/*Oscillator Mode Write-Leveling Delay Line Select*/
+#undef DDR_PHY_DX8SL4OSC_OSCWDL_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_OSCWDL_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_OSCWDL_MASK 
+#define DDR_PHY_DX8SL4OSC_OSCWDL_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL4OSC_OSCWDL_SHIFT                                             5
+#define DDR_PHY_DX8SL4OSC_OSCWDL_MASK                                              0x00000060U
+
+/*Oscillator Mode Division*/
+#undef DDR_PHY_DX8SL4OSC_OSCDIV_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_OSCDIV_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_OSCDIV_MASK 
+#define DDR_PHY_DX8SL4OSC_OSCDIV_DEFVAL                                            0x00019FFE
+#define DDR_PHY_DX8SL4OSC_OSCDIV_SHIFT                                             1
+#define DDR_PHY_DX8SL4OSC_OSCDIV_MASK                                              0x0000001EU
+
+/*Oscillator Enable*/
+#undef DDR_PHY_DX8SL4OSC_OSCEN_DEFVAL 
+#undef DDR_PHY_DX8SL4OSC_OSCEN_SHIFT 
+#undef DDR_PHY_DX8SL4OSC_OSCEN_MASK 
+#define DDR_PHY_DX8SL4OSC_OSCEN_DEFVAL                                             0x00019FFE
+#define DDR_PHY_DX8SL4OSC_OSCEN_SHIFT                                              0
+#define DDR_PHY_DX8SL4OSC_OSCEN_MASK                                               0x00000001U
 
 /*Reserved. Return zeroes on reads.*/
 #undef DDR_PHY_DX8SL4DQSCTL_RESERVED_31_25_DEFVAL 
@@ -22022,208 +22738,208 @@
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_SHIFT                               0
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_MASK                                0x00000001U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_SHIFT                               12
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_0_MASK                                0x00001000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_SHIFT                               1
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_MASK                                0x00000002U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_SHIFT                               13
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_1_MASK                                0x00002000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_SHIFT                               2
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_MASK                                0x00000004U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_SHIFT                               14
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_2_MASK                                0x00004000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_SHIFT                               3
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_MASK                                0x00000008U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_SHIFT                               15
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_3_MASK                                0x00008000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_SHIFT                               4
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_MASK                                0x00000010U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_SHIFT                               16
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_4_MASK                                0x00010000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_SHIFT                               5
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_MASK                                0x00000020U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_SHIFT                               17
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_5_MASK                                0x00020000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_SHIFT                               6
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_MASK                                0x00000040U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_SHIFT                               18
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_6_MASK                                0x00040000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_SHIFT                               7
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_MASK                                0x00000080U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_SHIFT                               19
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_7_MASK                                0x00080000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_SHIFT                               8
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_MASK                                0x00000100U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_SHIFT                               20
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_8_MASK                                0x00100000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_DEFVAL                              
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_SHIFT                               9
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_MASK                                0x00000200U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_SHIFT                               21
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_9_MASK                                0x00200000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_SHIFT                              10
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_MASK                               0x00000400U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_SHIFT                              22
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_10_MASK                               0x00400000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_SHIFT                              11
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_MASK                               0x00000800U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_SHIFT                              23
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_11_MASK                               0x00800000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_SHIFT                              12
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_MASK                               0x00001000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_SHIFT                              24
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_12_MASK                               0x01000000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_SHIFT                              13
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_MASK                               0x00002000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_SHIFT                              25
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_13_MASK                               0x02000000U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_SHIFT                              14
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_MASK                               0x00004000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_SHIFT                              0
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_14_MASK                               0x00000001U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_SHIFT                              15
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_MASK                               0x00008000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_SHIFT                              1
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_15_MASK                               0x00000002U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_SHIFT                              16
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_MASK                               0x00010000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_SHIFT                              2
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_16_MASK                               0x00000004U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_SHIFT                              17
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_MASK                               0x00020000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_SHIFT                              3
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_17_MASK                               0x00000008U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_SHIFT                              18
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_MASK                               0x00040000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_SHIFT                              4
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_18_MASK                               0x00000010U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_SHIFT                              19
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_MASK                               0x00080000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_SHIFT                              5
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_19_MASK                               0x00000020U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_SHIFT                              20
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_MASK                               0x00100000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_SHIFT                              6
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_20_MASK                               0x00000040U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_SHIFT                              21
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_MASK                               0x00200000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_SHIFT                              7
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_21_MASK                               0x00000080U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_SHIFT                              22
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_MASK                               0x00400000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_SHIFT                              8
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_22_MASK                               0x00000100U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_SHIFT                              23
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_MASK                               0x00800000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_SHIFT                              9
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_23_MASK                               0x00000200U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_SHIFT                              24
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_MASK                               0x01000000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_SHIFT                              10
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_24_MASK                               0x00000400U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_DEFVAL 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_SHIFT 
 #undef IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_MASK 
 #define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_DEFVAL                             
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_SHIFT                              25
-#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_MASK                               0x02000000U
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_SHIFT                              11
+#define IOU_SLCR_BANK1_CTRL5_PULL_ENABLE_BIT_25_MASK                               0x00000800U
 
 /*Each bit applies to a single IO. Bit 0 for MIO[26].*/
 #undef IOU_SLCR_BANK1_CTRL6_SLOW_FAST_SLEW_N_BIT_0_DEFVAL 
@@ -23716,10 +24432,14 @@
 #define IOU_SLCR_MIO_LOOPBACK_SPI0_LOOP_SPI1_DEFVAL                                0x00000000
 #define IOU_SLCR_MIO_LOOPBACK_SPI0_LOOP_SPI1_SHIFT                                 0
 #define IOU_SLCR_MIO_LOOPBACK_SPI0_LOOP_SPI1_MASK                                  0x00000001U
+#undef CRL_APB_RST_LPD_IOU2_OFFSET 
+#define CRL_APB_RST_LPD_IOU2_OFFSET                                                0XFF5E0238
 #undef CRL_APB_RST_LPD_IOU0_OFFSET 
 #define CRL_APB_RST_LPD_IOU0_OFFSET                                                0XFF5E0230
 #undef CRL_APB_RST_LPD_IOU2_OFFSET 
 #define CRL_APB_RST_LPD_IOU2_OFFSET                                                0XFF5E0238
+#undef IOU_SLCR_IOU_TAPDLY_BYPASS_OFFSET 
+#define IOU_SLCR_IOU_TAPDLY_BYPASS_OFFSET                                          0XFF180390
 #undef CRL_APB_RST_LPD_TOP_OFFSET 
 #define CRL_APB_RST_LPD_TOP_OFFSET                                                 0XFF5E023C
 #undef CRF_APB_RST_FPD_TOP_OFFSET 
@@ -23732,6 +24452,8 @@
 #define IOU_SLCR_SD_CONFIG_REG2_OFFSET                                             0XFF180320
 #undef IOU_SLCR_SD_CONFIG_REG1_OFFSET 
 #define IOU_SLCR_SD_CONFIG_REG1_OFFSET                                             0XFF18031C
+#undef IOU_SLCR_SD_CONFIG_REG3_OFFSET 
+#define IOU_SLCR_SD_CONFIG_REG3_OFFSET                                             0XFF180324
 #undef CRL_APB_RST_LPD_IOU2_OFFSET 
 #define CRL_APB_RST_LPD_IOU2_OFFSET                                                0XFF5E0238
 #undef CRL_APB_RST_LPD_IOU2_OFFSET 
@@ -23766,6 +24488,18 @@
 #define APU_ACE_CTRL_OFFSET                                                        0XFD5C0060
 #undef RTC_CONTROL_OFFSET 
 #define RTC_CONTROL_OFFSET                                                         0XFFA60040
+#undef IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_OFFSET 
+#define IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_OFFSET                               0XFF260020
+#undef IOU_SCNTRS_COUNTER_CONTROL_REGISTER_OFFSET 
+#define IOU_SCNTRS_COUNTER_CONTROL_REGISTER_OFFSET                                 0XFF260000
+
+/*Block level reset*/
+#undef CRL_APB_RST_LPD_IOU2_TIMESTAMP_RESET_DEFVAL 
+#undef CRL_APB_RST_LPD_IOU2_TIMESTAMP_RESET_SHIFT 
+#undef CRL_APB_RST_LPD_IOU2_TIMESTAMP_RESET_MASK 
+#define CRL_APB_RST_LPD_IOU2_TIMESTAMP_RESET_DEFVAL                                0x0017FFFF
+#define CRL_APB_RST_LPD_IOU2_TIMESTAMP_RESET_SHIFT                                 20
+#define CRL_APB_RST_LPD_IOU2_TIMESTAMP_RESET_MASK                                  0x00100000U
 
 /*GEM 3 reset*/
 #undef CRL_APB_RST_LPD_IOU0_GEM3_RESET_DEFVAL 
@@ -23782,6 +24516,14 @@
 #define CRL_APB_RST_LPD_IOU2_QSPI_RESET_DEFVAL                                     0x0017FFFF
 #define CRL_APB_RST_LPD_IOU2_QSPI_RESET_SHIFT                                      0
 #define CRL_APB_RST_LPD_IOU2_QSPI_RESET_MASK                                       0x00000001U
+
+/*0: Do not by pass the tap delays on the Rx clock signal of LQSPI 1: Bypass the Tap delay on the Rx clock signal of LQSPI*/
+#undef IOU_SLCR_IOU_TAPDLY_BYPASS_LQSPI_RX_DEFVAL 
+#undef IOU_SLCR_IOU_TAPDLY_BYPASS_LQSPI_RX_SHIFT 
+#undef IOU_SLCR_IOU_TAPDLY_BYPASS_LQSPI_RX_MASK 
+#define IOU_SLCR_IOU_TAPDLY_BYPASS_LQSPI_RX_DEFVAL                                 0x00000007
+#define IOU_SLCR_IOU_TAPDLY_BYPASS_LQSPI_RX_SHIFT                                  2
+#define IOU_SLCR_IOU_TAPDLY_BYPASS_LQSPI_RX_MASK                                   0x00000004U
 
 /*USB 0 reset for control registers*/
 #undef CRL_APB_RST_LPD_TOP_USB0_APB_RESET_DEFVAL 
@@ -23951,6 +24693,16 @@
 #define IOU_SLCR_SD_CONFIG_REG1_SD1_BASECLK_DEFVAL                                 0x32403240
 #define IOU_SLCR_SD_CONFIG_REG1_SD1_BASECLK_SHIFT                                  23
 #define IOU_SLCR_SD_CONFIG_REG1_SD1_BASECLK_MASK                                   0x7F800000U
+
+/*This is the Timer Count for Re-Tuning Timer for Re-Tuning Mode 1 to 3. Setting to 4'b0 disables Re-Tuning Timer. 0h - Get inf
+		rmation via other source 1h = 1 seconds 2h = 2 seconds 3h = 4 seconds 4h = 8 seconds -- n = 2(n-1) seconds -- Bh = 1024 secon
+		s Fh - Ch = Reserved*/
+#undef IOU_SLCR_SD_CONFIG_REG3_SD1_RETUNETMR_DEFVAL 
+#undef IOU_SLCR_SD_CONFIG_REG3_SD1_RETUNETMR_SHIFT 
+#undef IOU_SLCR_SD_CONFIG_REG3_SD1_RETUNETMR_MASK 
+#define IOU_SLCR_SD_CONFIG_REG3_SD1_RETUNETMR_DEFVAL                               0x06070607
+#define IOU_SLCR_SD_CONFIG_REG3_SD1_RETUNETMR_SHIFT                                22
+#define IOU_SLCR_SD_CONFIG_REG3_SD1_RETUNETMR_MASK                                 0x03C00000U
 
 /*Block level reset*/
 #undef CRL_APB_RST_LPD_IOU2_CAN1_RESET_DEFVAL 
@@ -24442,6 +25194,80 @@
 #define RTC_CONTROL_BATTERY_DISABLE_DEFVAL                                         0x01000000
 #define RTC_CONTROL_BATTERY_DISABLE_SHIFT                                          31
 #define RTC_CONTROL_BATTERY_DISABLE_MASK                                           0x80000000U
+
+/*Frequency in number of ticks per second. Valid range from 10 MHz to 100 MHz.*/
+#undef IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_FREQ_DEFVAL 
+#undef IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_FREQ_SHIFT 
+#undef IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_FREQ_MASK 
+#define IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_FREQ_DEFVAL                          
+#define IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_FREQ_SHIFT                           0
+#define IOU_SCNTRS_BASE_FREQUENCY_ID_REGISTER_FREQ_MASK                            0xFFFFFFFFU
+
+/*Enable 0: The counter is disabled and not incrementing. 1: The counter is enabled and is incrementing.*/
+#undef IOU_SCNTRS_COUNTER_CONTROL_REGISTER_EN_DEFVAL 
+#undef IOU_SCNTRS_COUNTER_CONTROL_REGISTER_EN_SHIFT 
+#undef IOU_SCNTRS_COUNTER_CONTROL_REGISTER_EN_MASK 
+#define IOU_SCNTRS_COUNTER_CONTROL_REGISTER_EN_DEFVAL                              0x00000000
+#define IOU_SCNTRS_COUNTER_CONTROL_REGISTER_EN_SHIFT                               0
+#define IOU_SCNTRS_COUNTER_CONTROL_REGISTER_EN_MASK                                0x00000001U
+#undef LPD_XPPU_CFG_IEN_OFFSET 
+#define LPD_XPPU_CFG_IEN_OFFSET                                                    0XFF980018
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_APER_PARITY_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_APER_PARITY_SHIFT 
+#undef LPD_XPPU_CFG_IEN_APER_PARITY_MASK 
+#define LPD_XPPU_CFG_IEN_APER_PARITY_DEFVAL                                        0x00000000
+#define LPD_XPPU_CFG_IEN_APER_PARITY_SHIFT                                         7
+#define LPD_XPPU_CFG_IEN_APER_PARITY_MASK                                          0x00000080U
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_APER_TZ_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_APER_TZ_SHIFT 
+#undef LPD_XPPU_CFG_IEN_APER_TZ_MASK 
+#define LPD_XPPU_CFG_IEN_APER_TZ_DEFVAL                                            0x00000000
+#define LPD_XPPU_CFG_IEN_APER_TZ_SHIFT                                             6
+#define LPD_XPPU_CFG_IEN_APER_TZ_MASK                                              0x00000040U
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_APER_PERM_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_APER_PERM_SHIFT 
+#undef LPD_XPPU_CFG_IEN_APER_PERM_MASK 
+#define LPD_XPPU_CFG_IEN_APER_PERM_DEFVAL                                          0x00000000
+#define LPD_XPPU_CFG_IEN_APER_PERM_SHIFT                                           5
+#define LPD_XPPU_CFG_IEN_APER_PERM_MASK                                            0x00000020U
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_MID_PARITY_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_MID_PARITY_SHIFT 
+#undef LPD_XPPU_CFG_IEN_MID_PARITY_MASK 
+#define LPD_XPPU_CFG_IEN_MID_PARITY_DEFVAL                                         0x00000000
+#define LPD_XPPU_CFG_IEN_MID_PARITY_SHIFT                                          3
+#define LPD_XPPU_CFG_IEN_MID_PARITY_MASK                                           0x00000008U
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_MID_RO_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_MID_RO_SHIFT 
+#undef LPD_XPPU_CFG_IEN_MID_RO_MASK 
+#define LPD_XPPU_CFG_IEN_MID_RO_DEFVAL                                             0x00000000
+#define LPD_XPPU_CFG_IEN_MID_RO_SHIFT                                              2
+#define LPD_XPPU_CFG_IEN_MID_RO_MASK                                               0x00000004U
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_MID_MISS_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_MID_MISS_SHIFT 
+#undef LPD_XPPU_CFG_IEN_MID_MISS_MASK 
+#define LPD_XPPU_CFG_IEN_MID_MISS_DEFVAL                                           0x00000000
+#define LPD_XPPU_CFG_IEN_MID_MISS_SHIFT                                            1
+#define LPD_XPPU_CFG_IEN_MID_MISS_MASK                                             0x00000002U
+
+/*See Interuppt Status Register for details*/
+#undef LPD_XPPU_CFG_IEN_INV_APB_DEFVAL 
+#undef LPD_XPPU_CFG_IEN_INV_APB_SHIFT 
+#undef LPD_XPPU_CFG_IEN_INV_APB_MASK 
+#define LPD_XPPU_CFG_IEN_INV_APB_DEFVAL                                            0x00000000
+#define LPD_XPPU_CFG_IEN_INV_APB_SHIFT                                             0
+#define LPD_XPPU_CFG_IEN_INV_APB_MASK                                              0x00000001U
 #undef SERDES_PLL_REF_SEL0_OFFSET 
 #define SERDES_PLL_REF_SEL0_OFFSET                                                 0XFD410000
 #undef SERDES_PLL_REF_SEL1_OFFSET 
@@ -24508,6 +25334,126 @@
 #define SERDES_L3_TX_DIG_TM_61_OFFSET                                              0XFD40C0F4
 #undef SERDES_L3_TXPMA_ST_0_OFFSET 
 #define SERDES_L3_TXPMA_ST_0_OFFSET                                                0XFD40CB00
+#undef SERDES_L0_TM_AUX_0_OFFSET 
+#define SERDES_L0_TM_AUX_0_OFFSET                                                  0XFD4010CC
+#undef SERDES_L2_TM_AUX_0_OFFSET 
+#define SERDES_L2_TM_AUX_0_OFFSET                                                  0XFD4090CC
+#undef SERDES_L0_TM_DIG_8_OFFSET 
+#define SERDES_L0_TM_DIG_8_OFFSET                                                  0XFD401074
+#undef SERDES_L1_TM_DIG_8_OFFSET 
+#define SERDES_L1_TM_DIG_8_OFFSET                                                  0XFD405074
+#undef SERDES_L2_TM_DIG_8_OFFSET 
+#define SERDES_L2_TM_DIG_8_OFFSET                                                  0XFD409074
+#undef SERDES_L3_TM_DIG_8_OFFSET 
+#define SERDES_L3_TM_DIG_8_OFFSET                                                  0XFD40D074
+#undef SERDES_L0_TM_MISC2_OFFSET 
+#define SERDES_L0_TM_MISC2_OFFSET                                                  0XFD40189C
+#undef SERDES_L0_TM_IQ_ILL1_OFFSET 
+#define SERDES_L0_TM_IQ_ILL1_OFFSET                                                0XFD4018F8
+#undef SERDES_L0_TM_IQ_ILL2_OFFSET 
+#define SERDES_L0_TM_IQ_ILL2_OFFSET                                                0XFD4018FC
+#undef SERDES_L0_TM_ILL12_OFFSET 
+#define SERDES_L0_TM_ILL12_OFFSET                                                  0XFD401990
+#undef SERDES_L0_TM_E_ILL1_OFFSET 
+#define SERDES_L0_TM_E_ILL1_OFFSET                                                 0XFD401924
+#undef SERDES_L0_TM_E_ILL2_OFFSET 
+#define SERDES_L0_TM_E_ILL2_OFFSET                                                 0XFD401928
+#undef SERDES_L0_TM_IQ_ILL3_OFFSET 
+#define SERDES_L0_TM_IQ_ILL3_OFFSET                                                0XFD401900
+#undef SERDES_L0_TM_E_ILL3_OFFSET 
+#define SERDES_L0_TM_E_ILL3_OFFSET                                                 0XFD40192C
+#undef SERDES_L0_TM_ILL8_OFFSET 
+#define SERDES_L0_TM_ILL8_OFFSET                                                   0XFD401980
+#undef SERDES_L0_TM_IQ_ILL8_OFFSET 
+#define SERDES_L0_TM_IQ_ILL8_OFFSET                                                0XFD401914
+#undef SERDES_L0_TM_IQ_ILL9_OFFSET 
+#define SERDES_L0_TM_IQ_ILL9_OFFSET                                                0XFD401918
+#undef SERDES_L0_TM_E_ILL8_OFFSET 
+#define SERDES_L0_TM_E_ILL8_OFFSET                                                 0XFD401940
+#undef SERDES_L0_TM_E_ILL9_OFFSET 
+#define SERDES_L0_TM_E_ILL9_OFFSET                                                 0XFD401944
+#undef SERDES_L2_TM_MISC2_OFFSET 
+#define SERDES_L2_TM_MISC2_OFFSET                                                  0XFD40989C
+#undef SERDES_L2_TM_IQ_ILL1_OFFSET 
+#define SERDES_L2_TM_IQ_ILL1_OFFSET                                                0XFD4098F8
+#undef SERDES_L2_TM_IQ_ILL2_OFFSET 
+#define SERDES_L2_TM_IQ_ILL2_OFFSET                                                0XFD4098FC
+#undef SERDES_L2_TM_ILL12_OFFSET 
+#define SERDES_L2_TM_ILL12_OFFSET                                                  0XFD409990
+#undef SERDES_L2_TM_E_ILL1_OFFSET 
+#define SERDES_L2_TM_E_ILL1_OFFSET                                                 0XFD409924
+#undef SERDES_L2_TM_E_ILL2_OFFSET 
+#define SERDES_L2_TM_E_ILL2_OFFSET                                                 0XFD409928
+#undef SERDES_L2_TM_IQ_ILL3_OFFSET 
+#define SERDES_L2_TM_IQ_ILL3_OFFSET                                                0XFD409900
+#undef SERDES_L2_TM_E_ILL3_OFFSET 
+#define SERDES_L2_TM_E_ILL3_OFFSET                                                 0XFD40992C
+#undef SERDES_L2_TM_ILL8_OFFSET 
+#define SERDES_L2_TM_ILL8_OFFSET                                                   0XFD409980
+#undef SERDES_L2_TM_IQ_ILL8_OFFSET 
+#define SERDES_L2_TM_IQ_ILL8_OFFSET                                                0XFD409914
+#undef SERDES_L2_TM_IQ_ILL9_OFFSET 
+#define SERDES_L2_TM_IQ_ILL9_OFFSET                                                0XFD409918
+#undef SERDES_L2_TM_E_ILL8_OFFSET 
+#define SERDES_L2_TM_E_ILL8_OFFSET                                                 0XFD409940
+#undef SERDES_L2_TM_E_ILL9_OFFSET 
+#define SERDES_L2_TM_E_ILL9_OFFSET                                                 0XFD409944
+#undef SERDES_L3_TM_MISC2_OFFSET 
+#define SERDES_L3_TM_MISC2_OFFSET                                                  0XFD40D89C
+#undef SERDES_L3_TM_IQ_ILL1_OFFSET 
+#define SERDES_L3_TM_IQ_ILL1_OFFSET                                                0XFD40D8F8
+#undef SERDES_L3_TM_IQ_ILL2_OFFSET 
+#define SERDES_L3_TM_IQ_ILL2_OFFSET                                                0XFD40D8FC
+#undef SERDES_L3_TM_ILL12_OFFSET 
+#define SERDES_L3_TM_ILL12_OFFSET                                                  0XFD40D990
+#undef SERDES_L3_TM_E_ILL1_OFFSET 
+#define SERDES_L3_TM_E_ILL1_OFFSET                                                 0XFD40D924
+#undef SERDES_L3_TM_E_ILL2_OFFSET 
+#define SERDES_L3_TM_E_ILL2_OFFSET                                                 0XFD40D928
+#undef SERDES_L3_TM_ILL11_OFFSET 
+#define SERDES_L3_TM_ILL11_OFFSET                                                  0XFD40D98C
+#undef SERDES_L3_TM_IQ_ILL3_OFFSET 
+#define SERDES_L3_TM_IQ_ILL3_OFFSET                                                0XFD40D900
+#undef SERDES_L3_TM_E_ILL3_OFFSET 
+#define SERDES_L3_TM_E_ILL3_OFFSET                                                 0XFD40D92C
+#undef SERDES_L3_TM_ILL8_OFFSET 
+#define SERDES_L3_TM_ILL8_OFFSET                                                   0XFD40D980
+#undef SERDES_L3_TM_IQ_ILL8_OFFSET 
+#define SERDES_L3_TM_IQ_ILL8_OFFSET                                                0XFD40D914
+#undef SERDES_L3_TM_IQ_ILL9_OFFSET 
+#define SERDES_L3_TM_IQ_ILL9_OFFSET                                                0XFD40D918
+#undef SERDES_L3_TM_E_ILL8_OFFSET 
+#define SERDES_L3_TM_E_ILL8_OFFSET                                                 0XFD40D940
+#undef SERDES_L3_TM_E_ILL9_OFFSET 
+#define SERDES_L3_TM_E_ILL9_OFFSET                                                 0XFD40D944
+#undef SERDES_L0_TM_DIG_21_OFFSET 
+#define SERDES_L0_TM_DIG_21_OFFSET                                                 0XFD4010A8
+#undef SERDES_L0_TM_DIG_10_OFFSET 
+#define SERDES_L0_TM_DIG_10_OFFSET                                                 0XFD40107C
+#undef SERDES_L0_TM_RST_DLY_OFFSET 
+#define SERDES_L0_TM_RST_DLY_OFFSET                                                0XFD4019A4
+#undef SERDES_L0_TM_ANA_BYP_15_OFFSET 
+#define SERDES_L0_TM_ANA_BYP_15_OFFSET                                             0XFD401038
+#undef SERDES_L0_TM_ANA_BYP_12_OFFSET 
+#define SERDES_L0_TM_ANA_BYP_12_OFFSET                                             0XFD40102C
+#undef SERDES_L1_TM_RST_DLY_OFFSET 
+#define SERDES_L1_TM_RST_DLY_OFFSET                                                0XFD4059A4
+#undef SERDES_L1_TM_ANA_BYP_15_OFFSET 
+#define SERDES_L1_TM_ANA_BYP_15_OFFSET                                             0XFD405038
+#undef SERDES_L1_TM_ANA_BYP_12_OFFSET 
+#define SERDES_L1_TM_ANA_BYP_12_OFFSET                                             0XFD40502C
+#undef SERDES_L2_TM_RST_DLY_OFFSET 
+#define SERDES_L2_TM_RST_DLY_OFFSET                                                0XFD4099A4
+#undef SERDES_L2_TM_ANA_BYP_15_OFFSET 
+#define SERDES_L2_TM_ANA_BYP_15_OFFSET                                             0XFD409038
+#undef SERDES_L2_TM_ANA_BYP_12_OFFSET 
+#define SERDES_L2_TM_ANA_BYP_12_OFFSET                                             0XFD40902C
+#undef SERDES_L3_TM_RST_DLY_OFFSET 
+#define SERDES_L3_TM_RST_DLY_OFFSET                                                0XFD40D9A4
+#undef SERDES_L3_TM_ANA_BYP_15_OFFSET 
+#define SERDES_L3_TM_ANA_BYP_15_OFFSET                                             0XFD40D038
+#undef SERDES_L3_TM_ANA_BYP_12_OFFSET 
+#define SERDES_L3_TM_ANA_BYP_12_OFFSET                                             0XFD40D02C
 #undef SERDES_ICM_CFG0_OFFSET 
 #define SERDES_ICM_CFG0_OFFSET                                                     0XFD410010
 #undef SERDES_ICM_CFG1_OFFSET 
@@ -24516,10 +25462,22 @@
 #define SERDES_L1_TXPMD_TM_45_OFFSET                                               0XFD404CB4
 #undef SERDES_L1_TX_ANA_TM_118_OFFSET 
 #define SERDES_L1_TX_ANA_TM_118_OFFSET                                             0XFD4041D8
+#undef SERDES_L3_TX_ANA_TM_118_OFFSET 
+#define SERDES_L3_TX_ANA_TM_118_OFFSET                                             0XFD40C1D8
+#undef SERDES_L3_TM_CDR5_OFFSET 
+#define SERDES_L3_TM_CDR5_OFFSET                                                   0XFD40DC14
+#undef SERDES_L3_TM_CDR16_OFFSET 
+#define SERDES_L3_TM_CDR16_OFFSET                                                  0XFD40DC40
+#undef SERDES_L3_TM_EQ0_OFFSET 
+#define SERDES_L3_TM_EQ0_OFFSET                                                    0XFD40D94C
+#undef SERDES_L3_TM_EQ1_OFFSET 
+#define SERDES_L3_TM_EQ1_OFFSET                                                    0XFD40D950
 #undef SERDES_L1_TXPMD_TM_48_OFFSET 
 #define SERDES_L1_TXPMD_TM_48_OFFSET                                               0XFD404CC0
 #undef SERDES_L1_TX_ANA_TM_18_OFFSET 
 #define SERDES_L1_TX_ANA_TM_18_OFFSET                                              0XFD404048
+#undef SERDES_L3_TX_ANA_TM_18_OFFSET 
+#define SERDES_L3_TX_ANA_TM_18_OFFSET                                              0XFD40C048
 
 /*PLL0 Reference Selection. 0x0 - 5MHz, 0x1 - 9.6MHz, 0x2 - 10MHz, 0x3 - 12MHz, 0x4 - 13MHz, 0x5 - 19.2MHz, 0x6 - 20MHz, 0x7 - 
 		4MHz, 0x8 - 26MHz, 0x9 - 27MHz, 0xA - 38.4MHz, 0xB - 40MHz, 0xC - 52MHz, 0xD - 100MHz, 0xE - 108MHz, 0xF - 125MHz, 0x10 - 135
@@ -24921,6 +25879,486 @@
 #define SERDES_L3_TXPMA_ST_0_TX_PHY_MODE_SHIFT                                     4
 #define SERDES_L3_TXPMA_ST_0_TX_PHY_MODE_MASK                                      0x000000F0U
 
+/*Spare- not used*/
+#undef SERDES_L0_TM_AUX_0_BIT_2_DEFVAL 
+#undef SERDES_L0_TM_AUX_0_BIT_2_SHIFT 
+#undef SERDES_L0_TM_AUX_0_BIT_2_MASK 
+#define SERDES_L0_TM_AUX_0_BIT_2_DEFVAL                                            0x00000000
+#define SERDES_L0_TM_AUX_0_BIT_2_SHIFT                                             5
+#define SERDES_L0_TM_AUX_0_BIT_2_MASK                                              0x00000020U
+
+/*Spare- not used*/
+#undef SERDES_L2_TM_AUX_0_BIT_2_DEFVAL 
+#undef SERDES_L2_TM_AUX_0_BIT_2_SHIFT 
+#undef SERDES_L2_TM_AUX_0_BIT_2_MASK 
+#define SERDES_L2_TM_AUX_0_BIT_2_DEFVAL                                            0x00000000
+#define SERDES_L2_TM_AUX_0_BIT_2_SHIFT                                             5
+#define SERDES_L2_TM_AUX_0_BIT_2_MASK                                              0x00000020U
+
+/*Enable Eye Surf*/
+#undef SERDES_L0_TM_DIG_8_EYESURF_ENABLE_DEFVAL 
+#undef SERDES_L0_TM_DIG_8_EYESURF_ENABLE_SHIFT 
+#undef SERDES_L0_TM_DIG_8_EYESURF_ENABLE_MASK 
+#define SERDES_L0_TM_DIG_8_EYESURF_ENABLE_DEFVAL                                   0x00000000
+#define SERDES_L0_TM_DIG_8_EYESURF_ENABLE_SHIFT                                    4
+#define SERDES_L0_TM_DIG_8_EYESURF_ENABLE_MASK                                     0x00000010U
+
+/*Enable Eye Surf*/
+#undef SERDES_L1_TM_DIG_8_EYESURF_ENABLE_DEFVAL 
+#undef SERDES_L1_TM_DIG_8_EYESURF_ENABLE_SHIFT 
+#undef SERDES_L1_TM_DIG_8_EYESURF_ENABLE_MASK 
+#define SERDES_L1_TM_DIG_8_EYESURF_ENABLE_DEFVAL                                   0x00000000
+#define SERDES_L1_TM_DIG_8_EYESURF_ENABLE_SHIFT                                    4
+#define SERDES_L1_TM_DIG_8_EYESURF_ENABLE_MASK                                     0x00000010U
+
+/*Enable Eye Surf*/
+#undef SERDES_L2_TM_DIG_8_EYESURF_ENABLE_DEFVAL 
+#undef SERDES_L2_TM_DIG_8_EYESURF_ENABLE_SHIFT 
+#undef SERDES_L2_TM_DIG_8_EYESURF_ENABLE_MASK 
+#define SERDES_L2_TM_DIG_8_EYESURF_ENABLE_DEFVAL                                   0x00000000
+#define SERDES_L2_TM_DIG_8_EYESURF_ENABLE_SHIFT                                    4
+#define SERDES_L2_TM_DIG_8_EYESURF_ENABLE_MASK                                     0x00000010U
+
+/*Enable Eye Surf*/
+#undef SERDES_L3_TM_DIG_8_EYESURF_ENABLE_DEFVAL 
+#undef SERDES_L3_TM_DIG_8_EYESURF_ENABLE_SHIFT 
+#undef SERDES_L3_TM_DIG_8_EYESURF_ENABLE_MASK 
+#define SERDES_L3_TM_DIG_8_EYESURF_ENABLE_DEFVAL                                   0x00000000
+#define SERDES_L3_TM_DIG_8_EYESURF_ENABLE_SHIFT                                    4
+#define SERDES_L3_TM_DIG_8_EYESURF_ENABLE_MASK                                     0x00000010U
+
+/*ILL calib counts BYPASSED with calcode bits*/
+#undef SERDES_L0_TM_MISC2_ILL_CAL_BYPASS_COUNTS_DEFVAL 
+#undef SERDES_L0_TM_MISC2_ILL_CAL_BYPASS_COUNTS_SHIFT 
+#undef SERDES_L0_TM_MISC2_ILL_CAL_BYPASS_COUNTS_MASK 
+#define SERDES_L0_TM_MISC2_ILL_CAL_BYPASS_COUNTS_DEFVAL                            0x00000000
+#define SERDES_L0_TM_MISC2_ILL_CAL_BYPASS_COUNTS_SHIFT                             7
+#define SERDES_L0_TM_MISC2_ILL_CAL_BYPASS_COUNTS_MASK                              0x00000080U
+
+/*IQ ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , USB3 : SS*/
+#undef SERDES_L0_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_DEFVAL 
+#undef SERDES_L0_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_SHIFT 
+#undef SERDES_L0_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_MASK 
+#define SERDES_L0_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_DEFVAL                       0x00000000
+#define SERDES_L0_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_SHIFT                        0
+#define SERDES_L0_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_MASK                         0x000000FFU
+
+/*IQ ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2*/
+#undef SERDES_L0_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_DEFVAL 
+#undef SERDES_L0_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_SHIFT 
+#undef SERDES_L0_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_MASK 
+#define SERDES_L0_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_DEFVAL                       0x00000000
+#define SERDES_L0_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_SHIFT                        0
+#define SERDES_L0_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_MASK                         0x000000FFU
+
+/*G1A pll ctr bypass value*/
+#undef SERDES_L0_TM_ILL12_G1A_PLL_CTR_BYP_VAL_DEFVAL 
+#undef SERDES_L0_TM_ILL12_G1A_PLL_CTR_BYP_VAL_SHIFT 
+#undef SERDES_L0_TM_ILL12_G1A_PLL_CTR_BYP_VAL_MASK 
+#define SERDES_L0_TM_ILL12_G1A_PLL_CTR_BYP_VAL_DEFVAL                              0x00000000
+#define SERDES_L0_TM_ILL12_G1A_PLL_CTR_BYP_VAL_SHIFT                               0
+#define SERDES_L0_TM_ILL12_G1A_PLL_CTR_BYP_VAL_MASK                                0x000000FFU
+
+/*E ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , USB3 : SS*/
+#undef SERDES_L0_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_DEFVAL 
+#undef SERDES_L0_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_SHIFT 
+#undef SERDES_L0_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_MASK 
+#define SERDES_L0_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_DEFVAL                         0x00000000
+#define SERDES_L0_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_SHIFT                          0
+#define SERDES_L0_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_MASK                           0x000000FFU
+
+/*E ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2*/
+#undef SERDES_L0_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_DEFVAL 
+#undef SERDES_L0_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_SHIFT 
+#undef SERDES_L0_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_MASK 
+#define SERDES_L0_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_DEFVAL                         0x00000000
+#define SERDES_L0_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_SHIFT                          0
+#define SERDES_L0_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_MASK                           0x000000FFU
+
+/*IQ ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3*/
+#undef SERDES_L0_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_DEFVAL 
+#undef SERDES_L0_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_SHIFT 
+#undef SERDES_L0_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_MASK 
+#define SERDES_L0_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_DEFVAL                       0x00000000
+#define SERDES_L0_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_SHIFT                        0
+#define SERDES_L0_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_MASK                         0x000000FFU
+
+/*E ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3*/
+#undef SERDES_L0_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_DEFVAL 
+#undef SERDES_L0_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_SHIFT 
+#undef SERDES_L0_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_MASK 
+#define SERDES_L0_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_DEFVAL                         0x00000000
+#define SERDES_L0_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_SHIFT                          0
+#define SERDES_L0_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_MASK                           0x000000FFU
+
+/*ILL calibration code change wait time*/
+#undef SERDES_L0_TM_ILL8_ILL_CAL_ITER_WAIT_DEFVAL 
+#undef SERDES_L0_TM_ILL8_ILL_CAL_ITER_WAIT_SHIFT 
+#undef SERDES_L0_TM_ILL8_ILL_CAL_ITER_WAIT_MASK 
+#define SERDES_L0_TM_ILL8_ILL_CAL_ITER_WAIT_DEFVAL                                 0x00000002
+#define SERDES_L0_TM_ILL8_ILL_CAL_ITER_WAIT_SHIFT                                  0
+#define SERDES_L0_TM_ILL8_ILL_CAL_ITER_WAIT_MASK                                   0x000000FFU
+
+/*IQ ILL polytrim bypass value*/
+#undef SERDES_L0_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_DEFVAL 
+#undef SERDES_L0_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_SHIFT 
+#undef SERDES_L0_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_MASK 
+#define SERDES_L0_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_DEFVAL                     0x00000000
+#define SERDES_L0_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_SHIFT                      0
+#define SERDES_L0_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_MASK                       0x000000FFU
+
+/*bypass IQ polytrim*/
+#undef SERDES_L0_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_DEFVAL 
+#undef SERDES_L0_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_SHIFT 
+#undef SERDES_L0_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_MASK 
+#define SERDES_L0_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_DEFVAL                          0x00000000
+#define SERDES_L0_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_SHIFT                           0
+#define SERDES_L0_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_MASK                            0x00000001U
+
+/*E ILL polytrim bypass value*/
+#undef SERDES_L0_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_DEFVAL 
+#undef SERDES_L0_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_SHIFT 
+#undef SERDES_L0_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_MASK 
+#define SERDES_L0_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_DEFVAL                       0x00000000
+#define SERDES_L0_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_SHIFT                        0
+#define SERDES_L0_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_MASK                         0x000000FFU
+
+/*bypass E polytrim*/
+#undef SERDES_L0_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_DEFVAL 
+#undef SERDES_L0_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_SHIFT 
+#undef SERDES_L0_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_MASK 
+#define SERDES_L0_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_DEFVAL                            0x00000000
+#define SERDES_L0_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_SHIFT                             0
+#define SERDES_L0_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_MASK                              0x00000001U
+
+/*ILL calib counts BYPASSED with calcode bits*/
+#undef SERDES_L2_TM_MISC2_ILL_CAL_BYPASS_COUNTS_DEFVAL 
+#undef SERDES_L2_TM_MISC2_ILL_CAL_BYPASS_COUNTS_SHIFT 
+#undef SERDES_L2_TM_MISC2_ILL_CAL_BYPASS_COUNTS_MASK 
+#define SERDES_L2_TM_MISC2_ILL_CAL_BYPASS_COUNTS_DEFVAL                            0x00000000
+#define SERDES_L2_TM_MISC2_ILL_CAL_BYPASS_COUNTS_SHIFT                             7
+#define SERDES_L2_TM_MISC2_ILL_CAL_BYPASS_COUNTS_MASK                              0x00000080U
+
+/*IQ ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , USB3 : SS*/
+#undef SERDES_L2_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_DEFVAL 
+#undef SERDES_L2_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_SHIFT 
+#undef SERDES_L2_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_MASK 
+#define SERDES_L2_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_DEFVAL                       0x00000000
+#define SERDES_L2_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_SHIFT                        0
+#define SERDES_L2_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_MASK                         0x000000FFU
+
+/*IQ ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2*/
+#undef SERDES_L2_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_DEFVAL 
+#undef SERDES_L2_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_SHIFT 
+#undef SERDES_L2_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_MASK 
+#define SERDES_L2_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_DEFVAL                       0x00000000
+#define SERDES_L2_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_SHIFT                        0
+#define SERDES_L2_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_MASK                         0x000000FFU
+
+/*G1A pll ctr bypass value*/
+#undef SERDES_L2_TM_ILL12_G1A_PLL_CTR_BYP_VAL_DEFVAL 
+#undef SERDES_L2_TM_ILL12_G1A_PLL_CTR_BYP_VAL_SHIFT 
+#undef SERDES_L2_TM_ILL12_G1A_PLL_CTR_BYP_VAL_MASK 
+#define SERDES_L2_TM_ILL12_G1A_PLL_CTR_BYP_VAL_DEFVAL                              0x00000000
+#define SERDES_L2_TM_ILL12_G1A_PLL_CTR_BYP_VAL_SHIFT                               0
+#define SERDES_L2_TM_ILL12_G1A_PLL_CTR_BYP_VAL_MASK                                0x000000FFU
+
+/*E ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , USB3 : SS*/
+#undef SERDES_L2_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_DEFVAL 
+#undef SERDES_L2_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_SHIFT 
+#undef SERDES_L2_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_MASK 
+#define SERDES_L2_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_DEFVAL                         0x00000000
+#define SERDES_L2_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_SHIFT                          0
+#define SERDES_L2_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_MASK                           0x000000FFU
+
+/*E ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2*/
+#undef SERDES_L2_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_DEFVAL 
+#undef SERDES_L2_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_SHIFT 
+#undef SERDES_L2_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_MASK 
+#define SERDES_L2_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_DEFVAL                         0x00000000
+#define SERDES_L2_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_SHIFT                          0
+#define SERDES_L2_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_MASK                           0x000000FFU
+
+/*IQ ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3*/
+#undef SERDES_L2_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_DEFVAL 
+#undef SERDES_L2_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_SHIFT 
+#undef SERDES_L2_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_MASK 
+#define SERDES_L2_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_DEFVAL                       0x00000000
+#define SERDES_L2_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_SHIFT                        0
+#define SERDES_L2_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_MASK                         0x000000FFU
+
+/*E ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3*/
+#undef SERDES_L2_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_DEFVAL 
+#undef SERDES_L2_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_SHIFT 
+#undef SERDES_L2_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_MASK 
+#define SERDES_L2_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_DEFVAL                         0x00000000
+#define SERDES_L2_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_SHIFT                          0
+#define SERDES_L2_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_MASK                           0x000000FFU
+
+/*ILL calibration code change wait time*/
+#undef SERDES_L2_TM_ILL8_ILL_CAL_ITER_WAIT_DEFVAL 
+#undef SERDES_L2_TM_ILL8_ILL_CAL_ITER_WAIT_SHIFT 
+#undef SERDES_L2_TM_ILL8_ILL_CAL_ITER_WAIT_MASK 
+#define SERDES_L2_TM_ILL8_ILL_CAL_ITER_WAIT_DEFVAL                                 0x00000002
+#define SERDES_L2_TM_ILL8_ILL_CAL_ITER_WAIT_SHIFT                                  0
+#define SERDES_L2_TM_ILL8_ILL_CAL_ITER_WAIT_MASK                                   0x000000FFU
+
+/*IQ ILL polytrim bypass value*/
+#undef SERDES_L2_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_DEFVAL 
+#undef SERDES_L2_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_SHIFT 
+#undef SERDES_L2_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_MASK 
+#define SERDES_L2_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_DEFVAL                     0x00000000
+#define SERDES_L2_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_SHIFT                      0
+#define SERDES_L2_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_MASK                       0x000000FFU
+
+/*bypass IQ polytrim*/
+#undef SERDES_L2_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_DEFVAL 
+#undef SERDES_L2_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_SHIFT 
+#undef SERDES_L2_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_MASK 
+#define SERDES_L2_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_DEFVAL                          0x00000000
+#define SERDES_L2_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_SHIFT                           0
+#define SERDES_L2_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_MASK                            0x00000001U
+
+/*E ILL polytrim bypass value*/
+#undef SERDES_L2_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_DEFVAL 
+#undef SERDES_L2_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_SHIFT 
+#undef SERDES_L2_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_MASK 
+#define SERDES_L2_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_DEFVAL                       0x00000000
+#define SERDES_L2_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_SHIFT                        0
+#define SERDES_L2_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_MASK                         0x000000FFU
+
+/*bypass E polytrim*/
+#undef SERDES_L2_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_DEFVAL 
+#undef SERDES_L2_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_SHIFT 
+#undef SERDES_L2_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_MASK 
+#define SERDES_L2_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_DEFVAL                            0x00000000
+#define SERDES_L2_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_SHIFT                             0
+#define SERDES_L2_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_MASK                              0x00000001U
+
+/*ILL calib counts BYPASSED with calcode bits*/
+#undef SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS_DEFVAL 
+#undef SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS_SHIFT 
+#undef SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS_MASK 
+#define SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS_DEFVAL                            0x00000000
+#define SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS_SHIFT                             7
+#define SERDES_L3_TM_MISC2_ILL_CAL_BYPASS_COUNTS_MASK                              0x00000080U
+
+/*IQ ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , USB3 : SS*/
+#undef SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_DEFVAL 
+#undef SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_SHIFT 
+#undef SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_MASK 
+#define SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_DEFVAL                       0x00000000
+#define SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_SHIFT                        0
+#define SERDES_L3_TM_IQ_ILL1_ILL_BYPASS_IQ_CALCODE_F0_MASK                         0x000000FFU
+
+/*IQ ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2*/
+#undef SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_DEFVAL 
+#undef SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_SHIFT 
+#undef SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_MASK 
+#define SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_DEFVAL                       0x00000000
+#define SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_SHIFT                        0
+#define SERDES_L3_TM_IQ_ILL2_ILL_BYPASS_IQ_CALCODE_F1_MASK                         0x000000FFU
+
+/*G1A pll ctr bypass value*/
+#undef SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL_DEFVAL 
+#undef SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL_SHIFT 
+#undef SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL_MASK 
+#define SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL_DEFVAL                              0x00000000
+#define SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL_SHIFT                               0
+#define SERDES_L3_TM_ILL12_G1A_PLL_CTR_BYP_VAL_MASK                                0x000000FFU
+
+/*E ILL F0 CALCODE bypass value. MPHY : G1a, PCIE : Gen 1, SATA : Gen1 , USB3 : SS*/
+#undef SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_DEFVAL 
+#undef SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_SHIFT 
+#undef SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_MASK 
+#define SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_DEFVAL                         0x00000000
+#define SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_SHIFT                          0
+#define SERDES_L3_TM_E_ILL1_ILL_BYPASS_E_CALCODE_F0_MASK                           0x000000FFU
+
+/*E ILL F1 CALCODE bypass value. MPHY : G1b, PCIE : Gen2, SATA: Gen2*/
+#undef SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_DEFVAL 
+#undef SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_SHIFT 
+#undef SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_MASK 
+#define SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_DEFVAL                         0x00000000
+#define SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_SHIFT                          0
+#define SERDES_L3_TM_E_ILL2_ILL_BYPASS_E_CALCODE_F1_MASK                           0x000000FFU
+
+/*G2A_PCIe1 PLL ctr bypass value*/
+#undef SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL_DEFVAL 
+#undef SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL_SHIFT 
+#undef SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL_MASK 
+#define SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL_DEFVAL                  0x00000000
+#define SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL_SHIFT                   4
+#define SERDES_L3_TM_ILL11_G2A_PCIEG1_PLL_CTR_11_8_BYP_VAL_MASK                    0x000000F0U
+
+/*IQ ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3*/
+#undef SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_DEFVAL 
+#undef SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_SHIFT 
+#undef SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_MASK 
+#define SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_DEFVAL                       0x00000000
+#define SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_SHIFT                        0
+#define SERDES_L3_TM_IQ_ILL3_ILL_BYPASS_IQ_CALCODE_F2_MASK                         0x000000FFU
+
+/*E ILL F2CALCODE bypass value. MPHY : G2a, SATA : Gen3*/
+#undef SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_DEFVAL 
+#undef SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_SHIFT 
+#undef SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_MASK 
+#define SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_DEFVAL                         0x00000000
+#define SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_SHIFT                          0
+#define SERDES_L3_TM_E_ILL3_ILL_BYPASS_E_CALCODE_F2_MASK                           0x000000FFU
+
+/*ILL calibration code change wait time*/
+#undef SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT_DEFVAL 
+#undef SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT_SHIFT 
+#undef SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT_MASK 
+#define SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT_DEFVAL                                 0x00000002
+#define SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT_SHIFT                                  0
+#define SERDES_L3_TM_ILL8_ILL_CAL_ITER_WAIT_MASK                                   0x000000FFU
+
+/*IQ ILL polytrim bypass value*/
+#undef SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_DEFVAL 
+#undef SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_SHIFT 
+#undef SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_MASK 
+#define SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_DEFVAL                     0x00000000
+#define SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_SHIFT                      0
+#define SERDES_L3_TM_IQ_ILL8_ILL_BYPASS_IQ_POLYTRIM_VAL_MASK                       0x000000FFU
+
+/*bypass IQ polytrim*/
+#undef SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_DEFVAL 
+#undef SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_SHIFT 
+#undef SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_MASK 
+#define SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_DEFVAL                          0x00000000
+#define SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_SHIFT                           0
+#define SERDES_L3_TM_IQ_ILL9_ILL_BYPASS_IQ_POLYTIM_MASK                            0x00000001U
+
+/*E ILL polytrim bypass value*/
+#undef SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_DEFVAL 
+#undef SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_SHIFT 
+#undef SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_MASK 
+#define SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_DEFVAL                       0x00000000
+#define SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_SHIFT                        0
+#define SERDES_L3_TM_E_ILL8_ILL_BYPASS_E_POLYTRIM_VAL_MASK                         0x000000FFU
+
+/*bypass E polytrim*/
+#undef SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_DEFVAL 
+#undef SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_SHIFT 
+#undef SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_MASK 
+#define SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_DEFVAL                            0x00000000
+#define SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_SHIFT                             0
+#define SERDES_L3_TM_E_ILL9_ILL_BYPASS_E_POLYTIM_MASK                              0x00000001U
+
+/*pre lock comma count threshold. 2'b 00 : 3, 2'b 01 : 5, 2'b 10 : 10, 2'b 11 : 20*/
+#undef SERDES_L0_TM_DIG_21_COMMA_PRE_LOCK_THRESH_DEFVAL 
+#undef SERDES_L0_TM_DIG_21_COMMA_PRE_LOCK_THRESH_SHIFT 
+#undef SERDES_L0_TM_DIG_21_COMMA_PRE_LOCK_THRESH_MASK 
+#define SERDES_L0_TM_DIG_21_COMMA_PRE_LOCK_THRESH_DEFVAL                           0x00000000
+#define SERDES_L0_TM_DIG_21_COMMA_PRE_LOCK_THRESH_SHIFT                            0
+#define SERDES_L0_TM_DIG_21_COMMA_PRE_LOCK_THRESH_MASK                             0x00000003U
+
+/*CDR lock wait time. (1-16 us). cdr_lock_wait_time = 4'b xxxx + 4'b 0001*/
+#undef SERDES_L0_TM_DIG_10_CDR_BIT_LOCK_TIME_DEFVAL 
+#undef SERDES_L0_TM_DIG_10_CDR_BIT_LOCK_TIME_SHIFT 
+#undef SERDES_L0_TM_DIG_10_CDR_BIT_LOCK_TIME_MASK 
+#define SERDES_L0_TM_DIG_10_CDR_BIT_LOCK_TIME_DEFVAL                               0x00000001
+#define SERDES_L0_TM_DIG_10_CDR_BIT_LOCK_TIME_SHIFT                                0
+#define SERDES_L0_TM_DIG_10_CDR_BIT_LOCK_TIME_MASK                                 0x0000000FU
+
+/*Delay apb reset by specified amount*/
+#undef SERDES_L0_TM_RST_DLY_APB_RST_DLY_DEFVAL 
+#undef SERDES_L0_TM_RST_DLY_APB_RST_DLY_SHIFT 
+#undef SERDES_L0_TM_RST_DLY_APB_RST_DLY_MASK 
+#define SERDES_L0_TM_RST_DLY_APB_RST_DLY_DEFVAL                                    0x00000000
+#define SERDES_L0_TM_RST_DLY_APB_RST_DLY_SHIFT                                     0
+#define SERDES_L0_TM_RST_DLY_APB_RST_DLY_MASK                                      0x000000FFU
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_15*/
+#undef SERDES_L0_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL 
+#undef SERDES_L0_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT 
+#undef SERDES_L0_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK 
+#define SERDES_L0_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL               0x00000000
+#define SERDES_L0_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT                6
+#define SERDES_L0_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK                 0x00000040U
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_12*/
+#undef SERDES_L0_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL 
+#undef SERDES_L0_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT 
+#undef SERDES_L0_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK 
+#define SERDES_L0_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL                      0x00000000
+#define SERDES_L0_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT                       6
+#define SERDES_L0_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK                        0x00000040U
+
+/*Delay apb reset by specified amount*/
+#undef SERDES_L1_TM_RST_DLY_APB_RST_DLY_DEFVAL 
+#undef SERDES_L1_TM_RST_DLY_APB_RST_DLY_SHIFT 
+#undef SERDES_L1_TM_RST_DLY_APB_RST_DLY_MASK 
+#define SERDES_L1_TM_RST_DLY_APB_RST_DLY_DEFVAL                                    0x00000000
+#define SERDES_L1_TM_RST_DLY_APB_RST_DLY_SHIFT                                     0
+#define SERDES_L1_TM_RST_DLY_APB_RST_DLY_MASK                                      0x000000FFU
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_15*/
+#undef SERDES_L1_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL 
+#undef SERDES_L1_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT 
+#undef SERDES_L1_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK 
+#define SERDES_L1_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL               0x00000000
+#define SERDES_L1_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT                6
+#define SERDES_L1_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK                 0x00000040U
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_12*/
+#undef SERDES_L1_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL 
+#undef SERDES_L1_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT 
+#undef SERDES_L1_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK 
+#define SERDES_L1_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL                      0x00000000
+#define SERDES_L1_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT                       6
+#define SERDES_L1_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK                        0x00000040U
+
+/*Delay apb reset by specified amount*/
+#undef SERDES_L2_TM_RST_DLY_APB_RST_DLY_DEFVAL 
+#undef SERDES_L2_TM_RST_DLY_APB_RST_DLY_SHIFT 
+#undef SERDES_L2_TM_RST_DLY_APB_RST_DLY_MASK 
+#define SERDES_L2_TM_RST_DLY_APB_RST_DLY_DEFVAL                                    0x00000000
+#define SERDES_L2_TM_RST_DLY_APB_RST_DLY_SHIFT                                     0
+#define SERDES_L2_TM_RST_DLY_APB_RST_DLY_MASK                                      0x000000FFU
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_15*/
+#undef SERDES_L2_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL 
+#undef SERDES_L2_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT 
+#undef SERDES_L2_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK 
+#define SERDES_L2_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL               0x00000000
+#define SERDES_L2_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT                6
+#define SERDES_L2_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK                 0x00000040U
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_12*/
+#undef SERDES_L2_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL 
+#undef SERDES_L2_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT 
+#undef SERDES_L2_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK 
+#define SERDES_L2_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL                      0x00000000
+#define SERDES_L2_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT                       6
+#define SERDES_L2_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK                        0x00000040U
+
+/*Delay apb reset by specified amount*/
+#undef SERDES_L3_TM_RST_DLY_APB_RST_DLY_DEFVAL 
+#undef SERDES_L3_TM_RST_DLY_APB_RST_DLY_SHIFT 
+#undef SERDES_L3_TM_RST_DLY_APB_RST_DLY_MASK 
+#define SERDES_L3_TM_RST_DLY_APB_RST_DLY_DEFVAL                                    0x00000000
+#define SERDES_L3_TM_RST_DLY_APB_RST_DLY_SHIFT                                     0
+#define SERDES_L3_TM_RST_DLY_APB_RST_DLY_MASK                                      0x000000FFU
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_15*/
+#undef SERDES_L3_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL 
+#undef SERDES_L3_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT 
+#undef SERDES_L3_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK 
+#define SERDES_L3_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_DEFVAL               0x00000000
+#define SERDES_L3_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_SHIFT                6
+#define SERDES_L3_TM_ANA_BYP_15_FORCE_UPHY_ENABLE_LOW_LEAKAGE_MASK                 0x00000040U
+
+/*Enable Bypass for <7> of TM_ANA_BYPS_12*/
+#undef SERDES_L3_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL 
+#undef SERDES_L3_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT 
+#undef SERDES_L3_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK 
+#define SERDES_L3_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_DEFVAL                      0x00000000
+#define SERDES_L3_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_SHIFT                       6
+#define SERDES_L3_TM_ANA_BYP_12_FORCE_UPHY_PSO_HSRXDIG_MASK                        0x00000040U
+
 /*Controls UPHY Lane 0 protocol configuration. 0 - PowerDown, 1 - PCIe .0, 2 - Sata0, 3 - USB0, 4 - DP.1, 5 - SGMII0, 6 - Unuse
 		, 7 - Unused*/
 #undef SERDES_ICM_CFG0_L0_ICM_CFG_DEFVAL 
@@ -25005,6 +26443,62 @@
 #define SERDES_L1_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_SHIFT                         0
 #define SERDES_L1_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_MASK                          0x00000001U
 
+/*Test register force for enabling/disablign TX deemphasis bits <17:0>*/
+#undef SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_DEFVAL 
+#undef SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_SHIFT 
+#undef SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_MASK 
+#define SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_DEFVAL                        0x00000000
+#define SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_SHIFT                         0
+#define SERDES_L3_TX_ANA_TM_118_FORCE_TX_DEEMPH_17_0_MASK                          0x00000001U
+
+/*FPHL FSM accumulate cycles*/
+#undef SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES_DEFVAL 
+#undef SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES_SHIFT 
+#undef SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES_MASK 
+#define SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES_DEFVAL                               0x00000000
+#define SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES_SHIFT                                5
+#define SERDES_L3_TM_CDR5_FPHL_FSM_ACC_CYCLES_MASK                                 0x000000E0U
+
+/*FFL Phase0 int gain aka 2ol SD update rate*/
+#undef SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN_DEFVAL 
+#undef SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN_SHIFT 
+#undef SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN_MASK 
+#define SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN_DEFVAL                                  0x00000000
+#define SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN_SHIFT                                   0
+#define SERDES_L3_TM_CDR5_FFL_PH0_INT_GAIN_MASK                                    0x0000001FU
+
+/*FFL Phase0 prop gain aka 1ol SD update rate*/
+#undef SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN_DEFVAL 
+#undef SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN_SHIFT 
+#undef SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN_MASK 
+#define SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN_DEFVAL                                0x00000000
+#define SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN_SHIFT                                 0
+#define SERDES_L3_TM_CDR16_FFL_PH0_PROP_GAIN_MASK                                  0x0000001FU
+
+/*EQ stg 2 controls BYPASSED*/
+#undef SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP_DEFVAL 
+#undef SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP_SHIFT 
+#undef SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP_MASK 
+#define SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP_DEFVAL                                   0x00000000
+#define SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP_SHIFT                                    5
+#define SERDES_L3_TM_EQ0_EQ_STG2_CTRL_BYP_MASK                                     0x00000020U
+
+/*EQ STG2 RL PROG*/
+#undef SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG_DEFVAL 
+#undef SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG_SHIFT 
+#undef SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG_MASK 
+#define SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG_DEFVAL                                    0x00000000
+#define SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG_SHIFT                                     0
+#define SERDES_L3_TM_EQ1_EQ_STG2_RL_PROG_MASK                                      0x00000003U
+
+/*EQ stg 2 preamp mode val*/
+#undef SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL_DEFVAL 
+#undef SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL_SHIFT 
+#undef SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL_MASK 
+#define SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL_DEFVAL                            0x00000000
+#define SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL_SHIFT                             2
+#define SERDES_L3_TM_EQ1_EQ_STG2_PREAMP_MODE_VAL_MASK                              0x00000004U
+
 /*Margining factor value*/
 #undef SERDES_L1_TXPMD_TM_48_TM_RESULTANT_MARGINING_FACTOR_DEFVAL 
 #undef SERDES_L1_TXPMD_TM_48_TM_RESULTANT_MARGINING_FACTOR_SHIFT 
@@ -25020,10 +26514,20 @@
 #define SERDES_L1_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_DEFVAL                           0x00000002
 #define SERDES_L1_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_SHIFT                            0
 #define SERDES_L1_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_MASK                             0x000000FFU
+
+/*pipe_TX_Deemph. 0: -6dB de-emphasis, 1: -3.5dB de-emphasis, 2 : No de-emphasis, Others: reserved*/
+#undef SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_DEFVAL 
+#undef SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_SHIFT 
+#undef SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_MASK 
+#define SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_DEFVAL                           0x00000002
+#define SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_SHIFT                            0
+#define SERDES_L3_TX_ANA_TM_18_PIPE_TX_DEEMPH_7_0_MASK                             0x000000FFU
 #undef CRL_APB_RST_LPD_TOP_OFFSET 
 #define CRL_APB_RST_LPD_TOP_OFFSET                                                 0XFF5E023C
 #undef USB3_0_FPD_POWER_PRSNT_OFFSET 
 #define USB3_0_FPD_POWER_PRSNT_OFFSET                                              0XFF9D0080
+#undef USB3_0_FPD_PIPE_CLK_OFFSET 
+#define USB3_0_FPD_PIPE_CLK_OFFSET                                                 0XFF9D007C
 #undef CRL_APB_RST_LPD_TOP_OFFSET 
 #define CRL_APB_RST_LPD_TOP_OFFSET                                                 0XFF5E023C
 #undef CRL_APB_RST_LPD_IOU0_OFFSET 
@@ -25044,8 +26548,6 @@
 #define USB3_0_XHCI_GUSB2PHYCFG_OFFSET                                             0XFE20C200
 #undef USB3_0_XHCI_GFLADJ_OFFSET 
 #define USB3_0_XHCI_GFLADJ_OFFSET                                                  0XFE20C630
-#undef PCIE_ATTRIB_ATTR_37_OFFSET 
-#define PCIE_ATTRIB_ATTR_37_OFFSET                                                 0XFD480094
 #undef PCIE_ATTRIB_ATTR_25_OFFSET 
 #define PCIE_ATTRIB_ATTR_25_OFFSET                                                 0XFD480064
 #undef PCIE_ATTRIB_ATTR_7_OFFSET 
@@ -25120,6 +26622,30 @@
 #define PCIE_ATTRIB_ATTR_79_OFFSET                                                 0XFD48013C
 #undef PCIE_ATTRIB_ATTR_43_OFFSET 
 #define PCIE_ATTRIB_ATTR_43_OFFSET                                                 0XFD4800AC
+#undef PCIE_ATTRIB_ATTR_48_OFFSET 
+#define PCIE_ATTRIB_ATTR_48_OFFSET                                                 0XFD4800C0
+#undef PCIE_ATTRIB_ATTR_46_OFFSET 
+#define PCIE_ATTRIB_ATTR_46_OFFSET                                                 0XFD4800B8
+#undef PCIE_ATTRIB_ATTR_47_OFFSET 
+#define PCIE_ATTRIB_ATTR_47_OFFSET                                                 0XFD4800BC
+#undef PCIE_ATTRIB_ATTR_44_OFFSET 
+#define PCIE_ATTRIB_ATTR_44_OFFSET                                                 0XFD4800B0
+#undef PCIE_ATTRIB_ATTR_45_OFFSET 
+#define PCIE_ATTRIB_ATTR_45_OFFSET                                                 0XFD4800B4
+#undef PCIE_ATTRIB_CB_OFFSET 
+#define PCIE_ATTRIB_CB_OFFSET                                                      0XFD48031C
+#undef PCIE_ATTRIB_ATTR_35_OFFSET 
+#define PCIE_ATTRIB_ATTR_35_OFFSET                                                 0XFD48008C
+#undef CRF_APB_RST_FPD_TOP_OFFSET 
+#define CRF_APB_RST_FPD_TOP_OFFSET                                                 0XFD1A0100
+#undef SATA_AHCI_VENDOR_PP2C_OFFSET 
+#define SATA_AHCI_VENDOR_PP2C_OFFSET                                               0XFD0C00AC
+#undef SATA_AHCI_VENDOR_PP3C_OFFSET 
+#define SATA_AHCI_VENDOR_PP3C_OFFSET                                               0XFD0C00B0
+#undef SATA_AHCI_VENDOR_PP4C_OFFSET 
+#define SATA_AHCI_VENDOR_PP4C_OFFSET                                               0XFD0C00B4
+#undef SATA_AHCI_VENDOR_PP5C_OFFSET 
+#define SATA_AHCI_VENDOR_PP5C_OFFSET                                               0XFD0C00B8
 
 /*USB 0 reset for control registers*/
 #undef CRL_APB_RST_LPD_TOP_USB0_APB_RESET_DEFVAL 
@@ -25136,6 +26662,14 @@
 #define USB3_0_FPD_POWER_PRSNT_OPTION_DEFVAL                                       
 #define USB3_0_FPD_POWER_PRSNT_OPTION_SHIFT                                        0
 #define USB3_0_FPD_POWER_PRSNT_OPTION_MASK                                         0x00000001U
+
+/*This bit is used to choose between PIPE clock coming from SerDes and the suspend clk*/
+#undef USB3_0_FPD_PIPE_CLK_OPTION_DEFVAL 
+#undef USB3_0_FPD_PIPE_CLK_OPTION_SHIFT 
+#undef USB3_0_FPD_PIPE_CLK_OPTION_MASK 
+#define USB3_0_FPD_PIPE_CLK_OPTION_DEFVAL                                          
+#define USB3_0_FPD_PIPE_CLK_OPTION_SHIFT                                           0
+#define USB3_0_FPD_PIPE_CLK_OPTION_MASK                                            0x00000001U
 
 /*USB 0 sleep circuit reset*/
 #undef CRL_APB_RST_LPD_TOP_USB0_HIBERRESET_DEFVAL 
@@ -25184,14 +26718,6 @@
 #define CRF_APB_RST_FPD_TOP_PCIE_CFG_RESET_DEFVAL                                  0x000F9FFE
 #define CRF_APB_RST_FPD_TOP_PCIE_CFG_RESET_SHIFT                                   19
 #define CRF_APB_RST_FPD_TOP_PCIE_CFG_RESET_MASK                                    0x00080000U
-
-/*PCIE control block level reset*/
-#undef CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_DEFVAL 
-#undef CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_SHIFT 
-#undef CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_MASK 
-#define CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_DEFVAL                                 0x000F9FFE
-#define CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_SHIFT                                  17
-#define CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_MASK                                   0x00020000U
 
 /*PCIE bridge block level reset (AXI interface)*/
 #undef CRF_APB_RST_FPD_TOP_PCIE_BRIDGE_RESET_DEFVAL 
@@ -25278,20 +26804,6 @@
 #define USB3_0_XHCI_GUSB2PHYCFG_PHYSEL_SHIFT                                       7
 #define USB3_0_XHCI_GUSB2PHYCFG_PHYSEL_MASK                                        0x00000080U
 
-/*Suspend USB2.0 HS/FS/LS PHY (SusPHY) When set, USB2.0 PHY enters Suspend mode if Suspend conditions are valid. For DRD/OTG co
-		figurations, it is recommended that this bit is set to 0 during coreConsultant configuration. If it is set to 1, then the app
-		ication must clear this bit after power-on reset. Application needs to set it to 1 after the core initialization completes. F
-		r all other configurations, this bit can be set to 1 during core configuration. Note: - In host mode, on reset, this bit is s
-		t to 1. Software can override this bit after reset. - In device mode, before issuing any device endpoint command when operati
-		g in 2.0 speeds, disable this bit and enable it after the command completes. If you issue a command without disabling this bi
-		 when the device is in L2 state and if mac2_clk (utmi_clk/ulpi_clk) is gated off, the command will not get completed.*/
-#undef USB3_0_XHCI_GUSB2PHYCFG_SUSPENDUSB20_DEFVAL 
-#undef USB3_0_XHCI_GUSB2PHYCFG_SUSPENDUSB20_SHIFT 
-#undef USB3_0_XHCI_GUSB2PHYCFG_SUSPENDUSB20_MASK 
-#define USB3_0_XHCI_GUSB2PHYCFG_SUSPENDUSB20_DEFVAL                                0x00000000
-#define USB3_0_XHCI_GUSB2PHYCFG_SUSPENDUSB20_SHIFT                                 6
-#define USB3_0_XHCI_GUSB2PHYCFG_SUSPENDUSB20_MASK                                  0x00000040U
-
 /*Full-Speed Serial Interface Select (FSIntf) The application uses this bit to select a unidirectional or bidirectional USB 1.1
 		full-speed serial transceiver interface. - 1'b0: 6-pin unidirectional full-speed serial interface. This bit is set to 0 with 
 		ead Only access. - 1'b1: 3-pin bidirectional full-speed serial interface. This bit is set to 0 with Read Only access. Note: U
@@ -25356,51 +26868,6 @@
 #define USB3_0_XHCI_GFLADJ_GFLADJ_REFCLK_FLADJ_DEFVAL                              0x00000000
 #define USB3_0_XHCI_GFLADJ_GFLADJ_REFCLK_FLADJ_SHIFT                               8
 #define USB3_0_XHCI_GFLADJ_GFLADJ_REFCLK_FLADJ_MASK                                0x003FFF00U
-
-/*Status Read value of PLL Lock*/
-#undef SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
-#undef SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
-#undef SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
-#define SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
-#define SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
-#define SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
-#define SERDES_L0_PLL_STATUS_READ_1_OFFSET                                         0XFD4023E4
-
-/*Status Read value of PLL Lock*/
-#undef SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
-#undef SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
-#undef SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
-#define SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
-#define SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
-#define SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
-#define SERDES_L1_PLL_STATUS_READ_1_OFFSET                                         0XFD4063E4
-
-/*Status Read value of PLL Lock*/
-#undef SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
-#undef SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
-#undef SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
-#define SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
-#define SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
-#define SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
-#define SERDES_L2_PLL_STATUS_READ_1_OFFSET                                         0XFD40A3E4
-
-/*Status Read value of PLL Lock*/
-#undef SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
-#undef SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
-#undef SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
-#define SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
-#define SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
-#define SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
-#define SERDES_L3_PLL_STATUS_READ_1_OFFSET                                         0XFD40E3E4
-
-/*Sets the ASPM Optionality Compliance bit, to comply with the 2.1 ASPM Optionality ECN. Transferred to the Link Capabilities r
-		gister.; EP=0x0001; RP=0x0001*/
-#undef PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_DEFVAL 
-#undef PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_SHIFT 
-#undef PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_MASK 
-#define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_DEFVAL                  0x000009FF
-#define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_SHIFT                   14
-#define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_MASK                    0x00004000U
 
 /*If TRUE Completion Timeout Disable is supported. This is required to be TRUE for Endpoint and either setting allowed for Root
 		ports. Drives Device Capability 2 [4]; EP=0x0001; RP=0x0001*/
@@ -25827,6 +27294,15 @@
 #define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_LINK_BANDWIDTH_NOTIFICATION_CAP_SHIFT    9
 #define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_LINK_BANDWIDTH_NOTIFICATION_CAP_MASK     0x00000200U
 
+/*Sets the ASPM Optionality Compliance bit, to comply with the 2.1 ASPM Optionality ECN. Transferred to the Link Capabilities r
+		gister.; EP=0x0001; RP=0x0001*/
+#undef PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_SHIFT 
+#undef PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_MASK 
+#define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_DEFVAL                  0x000009FF
+#define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_SHIFT                   14
+#define PCIE_ATTRIB_ATTR_37_ATTR_LINK_CAP_ASPM_OPTIONALITY_MASK                    0x00004000U
+
 /*Enables the Replay Timer to use the user-defined LL_REPLAY_TIMEOUT value (or combined with the built-in value, depending on L
 		_REPLAY_TIMEOUT_FUNC). If FALSE, the built-in value is used.; EP=0x0000; RP=0x0000*/
 #undef PCIE_ATTRIB_ATTR_93_ATTR_LL_REPLAY_TIMEOUT_EN_DEFVAL 
@@ -25957,6 +27433,229 @@
 #define PCIE_ATTRIB_ATTR_43_ATTR_MSIX_CAP_ON_DEFVAL                                0x00000100
 #define PCIE_ATTRIB_ATTR_43_ATTR_MSIX_CAP_ON_SHIFT                                 8
 #define PCIE_ATTRIB_ATTR_43_ATTR_MSIX_CAP_ON_MASK                                  0x00000100U
+
+/*MSI-X Table Size. This value is transferred to the MSI-X Message Control[10:0] field. Set to 0 if MSI-X is not enabled. Note 
+		hat the core does not implement the table; that must be implemented in user logic.; EP=0x0003; RP=0x0000*/
+#undef PCIE_ATTRIB_ATTR_48_ATTR_MSIX_CAP_TABLE_SIZE_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_48_ATTR_MSIX_CAP_TABLE_SIZE_SHIFT 
+#undef PCIE_ATTRIB_ATTR_48_ATTR_MSIX_CAP_TABLE_SIZE_MASK 
+#define PCIE_ATTRIB_ATTR_48_ATTR_MSIX_CAP_TABLE_SIZE_DEFVAL                        
+#define PCIE_ATTRIB_ATTR_48_ATTR_MSIX_CAP_TABLE_SIZE_SHIFT                         0
+#define PCIE_ATTRIB_ATTR_48_ATTR_MSIX_CAP_TABLE_SIZE_MASK                          0x000007FFU
+
+/*MSI-X Table Offset. This value is transferred to the MSI-X Table Offset field. Set to 0 if MSI-X is not enabled.; EP=0x0001; 
+		P=0x0000*/
+#undef PCIE_ATTRIB_ATTR_46_ATTR_MSIX_CAP_TABLE_OFFSET_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_46_ATTR_MSIX_CAP_TABLE_OFFSET_SHIFT 
+#undef PCIE_ATTRIB_ATTR_46_ATTR_MSIX_CAP_TABLE_OFFSET_MASK 
+#define PCIE_ATTRIB_ATTR_46_ATTR_MSIX_CAP_TABLE_OFFSET_DEFVAL                      
+#define PCIE_ATTRIB_ATTR_46_ATTR_MSIX_CAP_TABLE_OFFSET_SHIFT                       0
+#define PCIE_ATTRIB_ATTR_46_ATTR_MSIX_CAP_TABLE_OFFSET_MASK                        0x0000FFFFU
+
+/*MSI-X Table Offset. This value is transferred to the MSI-X Table Offset field. Set to 0 if MSI-X is not enabled.; EP=0x0000; 
+		P=0x0000*/
+#undef PCIE_ATTRIB_ATTR_47_ATTR_MSIX_CAP_TABLE_OFFSET_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_47_ATTR_MSIX_CAP_TABLE_OFFSET_SHIFT 
+#undef PCIE_ATTRIB_ATTR_47_ATTR_MSIX_CAP_TABLE_OFFSET_MASK 
+#define PCIE_ATTRIB_ATTR_47_ATTR_MSIX_CAP_TABLE_OFFSET_DEFVAL                      
+#define PCIE_ATTRIB_ATTR_47_ATTR_MSIX_CAP_TABLE_OFFSET_SHIFT                       0
+#define PCIE_ATTRIB_ATTR_47_ATTR_MSIX_CAP_TABLE_OFFSET_MASK                        0x00001FFFU
+
+/*MSI-X Pending Bit Array Offset This value is transferred to the MSI-X PBA Offset field. Set to 0 if MSI-X is not enabled.; EP
+		0x0001; RP=0x0000*/
+#undef PCIE_ATTRIB_ATTR_44_ATTR_MSIX_CAP_PBA_OFFSET_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_44_ATTR_MSIX_CAP_PBA_OFFSET_SHIFT 
+#undef PCIE_ATTRIB_ATTR_44_ATTR_MSIX_CAP_PBA_OFFSET_MASK 
+#define PCIE_ATTRIB_ATTR_44_ATTR_MSIX_CAP_PBA_OFFSET_DEFVAL                        
+#define PCIE_ATTRIB_ATTR_44_ATTR_MSIX_CAP_PBA_OFFSET_SHIFT                         0
+#define PCIE_ATTRIB_ATTR_44_ATTR_MSIX_CAP_PBA_OFFSET_MASK                          0x0000FFFFU
+
+/*MSI-X Pending Bit Array Offset This value is transferred to the MSI-X PBA Offset field. Set to 0 if MSI-X is not enabled.; EP
+		0x1000; RP=0x0000*/
+#undef PCIE_ATTRIB_ATTR_45_ATTR_MSIX_CAP_PBA_OFFSET_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_45_ATTR_MSIX_CAP_PBA_OFFSET_SHIFT 
+#undef PCIE_ATTRIB_ATTR_45_ATTR_MSIX_CAP_PBA_OFFSET_MASK 
+#define PCIE_ATTRIB_ATTR_45_ATTR_MSIX_CAP_PBA_OFFSET_DEFVAL                        0x00008000
+#define PCIE_ATTRIB_ATTR_45_ATTR_MSIX_CAP_PBA_OFFSET_SHIFT                         3
+#define PCIE_ATTRIB_ATTR_45_ATTR_MSIX_CAP_PBA_OFFSET_MASK                          0x0000FFF8U
+
+/*DT837748 Enable*/
+#undef PCIE_ATTRIB_CB_CB1_DEFVAL 
+#undef PCIE_ATTRIB_CB_CB1_SHIFT 
+#undef PCIE_ATTRIB_CB_CB1_MASK 
+#define PCIE_ATTRIB_CB_CB1_DEFVAL                                                  0x00000001
+#define PCIE_ATTRIB_CB_CB1_SHIFT                                                   1
+#define PCIE_ATTRIB_CB_CB1_MASK                                                    0x00000002U
+
+/*Active State PM Support. Indicates the level of active state power management supported by the selected PCI Express Link, enc
+		ded as follows: 0 Reserved, 1 L0s entry supported, 2 Reserved, 3 L0s and L1 entry supported.; EP=0x0001; RP=0x0001*/
+#undef PCIE_ATTRIB_ATTR_35_ATTR_LINK_CAP_ASPM_SUPPORT_DEFVAL 
+#undef PCIE_ATTRIB_ATTR_35_ATTR_LINK_CAP_ASPM_SUPPORT_SHIFT 
+#undef PCIE_ATTRIB_ATTR_35_ATTR_LINK_CAP_ASPM_SUPPORT_MASK 
+#define PCIE_ATTRIB_ATTR_35_ATTR_LINK_CAP_ASPM_SUPPORT_DEFVAL                      0x00001FFD
+#define PCIE_ATTRIB_ATTR_35_ATTR_LINK_CAP_ASPM_SUPPORT_SHIFT                       12
+#define PCIE_ATTRIB_ATTR_35_ATTR_LINK_CAP_ASPM_SUPPORT_MASK                        0x00003000U
+
+/*PCIE control block level reset*/
+#undef CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_DEFVAL 
+#undef CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_SHIFT 
+#undef CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_MASK 
+#define CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_DEFVAL                                 0x000F9FFE
+#define CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_SHIFT                                  17
+#define CRF_APB_RST_FPD_TOP_PCIE_CTRL_RESET_MASK                                   0x00020000U
+
+/*Status Read value of PLL Lock*/
+#undef SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
+#undef SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
+#undef SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
+#define SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
+#define SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
+#define SERDES_L0_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
+#define SERDES_L0_PLL_STATUS_READ_1_OFFSET                                         0XFD4023E4
+
+/*Status Read value of PLL Lock*/
+#undef SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
+#undef SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
+#undef SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
+#define SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
+#define SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
+#define SERDES_L1_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
+#define SERDES_L1_PLL_STATUS_READ_1_OFFSET                                         0XFD4063E4
+
+/*Status Read value of PLL Lock*/
+#undef SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
+#undef SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
+#undef SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
+#define SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
+#define SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
+#define SERDES_L2_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
+#define SERDES_L2_PLL_STATUS_READ_1_OFFSET                                         0XFD40A3E4
+
+/*Status Read value of PLL Lock*/
+#undef SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL 
+#undef SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT 
+#undef SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK 
+#define SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_DEFVAL                    0x00000001
+#define SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_SHIFT                     4
+#define SERDES_L3_PLL_STATUS_READ_1_PLL_LOCK_STATUS_READ_MASK                      0x00000010U
+#define SERDES_L3_PLL_STATUS_READ_1_OFFSET                                         0XFD40E3E4
+
+/*CIBGMN: COMINIT Burst Gap Minimum.*/
+#undef SATA_AHCI_VENDOR_PP2C_CIBGMN_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP2C_CIBGMN_SHIFT 
+#undef SATA_AHCI_VENDOR_PP2C_CIBGMN_MASK 
+#define SATA_AHCI_VENDOR_PP2C_CIBGMN_DEFVAL                                        0x28184D1B
+#define SATA_AHCI_VENDOR_PP2C_CIBGMN_SHIFT                                         0
+#define SATA_AHCI_VENDOR_PP2C_CIBGMN_MASK                                          0x000000FFU
+
+/*CIBGMX: COMINIT Burst Gap Maximum.*/
+#undef SATA_AHCI_VENDOR_PP2C_CIBGMX_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP2C_CIBGMX_SHIFT 
+#undef SATA_AHCI_VENDOR_PP2C_CIBGMX_MASK 
+#define SATA_AHCI_VENDOR_PP2C_CIBGMX_DEFVAL                                        0x28184D1B
+#define SATA_AHCI_VENDOR_PP2C_CIBGMX_SHIFT                                         8
+#define SATA_AHCI_VENDOR_PP2C_CIBGMX_MASK                                          0x0000FF00U
+
+/*CIBGN: COMINIT Burst Gap Nominal.*/
+#undef SATA_AHCI_VENDOR_PP2C_CIBGN_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP2C_CIBGN_SHIFT 
+#undef SATA_AHCI_VENDOR_PP2C_CIBGN_MASK 
+#define SATA_AHCI_VENDOR_PP2C_CIBGN_DEFVAL                                         0x28184D1B
+#define SATA_AHCI_VENDOR_PP2C_CIBGN_SHIFT                                          16
+#define SATA_AHCI_VENDOR_PP2C_CIBGN_MASK                                           0x00FF0000U
+
+/*CINMP: COMINIT Negate Minimum Period.*/
+#undef SATA_AHCI_VENDOR_PP2C_CINMP_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP2C_CINMP_SHIFT 
+#undef SATA_AHCI_VENDOR_PP2C_CINMP_MASK 
+#define SATA_AHCI_VENDOR_PP2C_CINMP_DEFVAL                                         0x28184D1B
+#define SATA_AHCI_VENDOR_PP2C_CINMP_SHIFT                                          24
+#define SATA_AHCI_VENDOR_PP2C_CINMP_MASK                                           0xFF000000U
+
+/*CWBGMN: COMWAKE Burst Gap Minimum.*/
+#undef SATA_AHCI_VENDOR_PP3C_CWBGMN_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP3C_CWBGMN_SHIFT 
+#undef SATA_AHCI_VENDOR_PP3C_CWBGMN_MASK 
+#define SATA_AHCI_VENDOR_PP3C_CWBGMN_DEFVAL                                        0x0E081906
+#define SATA_AHCI_VENDOR_PP3C_CWBGMN_SHIFT                                         0
+#define SATA_AHCI_VENDOR_PP3C_CWBGMN_MASK                                          0x000000FFU
+
+/*CWBGMX: COMWAKE Burst Gap Maximum.*/
+#undef SATA_AHCI_VENDOR_PP3C_CWBGMX_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP3C_CWBGMX_SHIFT 
+#undef SATA_AHCI_VENDOR_PP3C_CWBGMX_MASK 
+#define SATA_AHCI_VENDOR_PP3C_CWBGMX_DEFVAL                                        0x0E081906
+#define SATA_AHCI_VENDOR_PP3C_CWBGMX_SHIFT                                         8
+#define SATA_AHCI_VENDOR_PP3C_CWBGMX_MASK                                          0x0000FF00U
+
+/*CWBGN: COMWAKE Burst Gap Nominal.*/
+#undef SATA_AHCI_VENDOR_PP3C_CWBGN_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP3C_CWBGN_SHIFT 
+#undef SATA_AHCI_VENDOR_PP3C_CWBGN_MASK 
+#define SATA_AHCI_VENDOR_PP3C_CWBGN_DEFVAL                                         0x0E081906
+#define SATA_AHCI_VENDOR_PP3C_CWBGN_SHIFT                                          16
+#define SATA_AHCI_VENDOR_PP3C_CWBGN_MASK                                           0x00FF0000U
+
+/*CWNMP: COMWAKE Negate Minimum Period.*/
+#undef SATA_AHCI_VENDOR_PP3C_CWNMP_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP3C_CWNMP_SHIFT 
+#undef SATA_AHCI_VENDOR_PP3C_CWNMP_MASK 
+#define SATA_AHCI_VENDOR_PP3C_CWNMP_DEFVAL                                         0x0E081906
+#define SATA_AHCI_VENDOR_PP3C_CWNMP_SHIFT                                          24
+#define SATA_AHCI_VENDOR_PP3C_CWNMP_MASK                                           0xFF000000U
+
+/*BMX: COM Burst Maximum.*/
+#undef SATA_AHCI_VENDOR_PP4C_BMX_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP4C_BMX_SHIFT 
+#undef SATA_AHCI_VENDOR_PP4C_BMX_MASK 
+#define SATA_AHCI_VENDOR_PP4C_BMX_DEFVAL                                           0x064A0813
+#define SATA_AHCI_VENDOR_PP4C_BMX_SHIFT                                            0
+#define SATA_AHCI_VENDOR_PP4C_BMX_MASK                                             0x000000FFU
+
+/*BNM: COM Burst Nominal.*/
+#undef SATA_AHCI_VENDOR_PP4C_BNM_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP4C_BNM_SHIFT 
+#undef SATA_AHCI_VENDOR_PP4C_BNM_MASK 
+#define SATA_AHCI_VENDOR_PP4C_BNM_DEFVAL                                           0x064A0813
+#define SATA_AHCI_VENDOR_PP4C_BNM_SHIFT                                            8
+#define SATA_AHCI_VENDOR_PP4C_BNM_MASK                                             0x0000FF00U
+
+/*SFD: Signal Failure Detection, if the signal detection de-asserts for a time greater than this then the OOB detector will det
+		rmine this is a line idle and cause the PhyInit state machine to exit the Phy Ready State. A value of zero disables the Signa
+		 Failure Detector. The value is based on the OOB Detector Clock typically (PMCLK Clock Period) * SFD giving a nominal time of
+		500ns based on a 150MHz PMCLK.*/
+#undef SATA_AHCI_VENDOR_PP4C_SFD_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP4C_SFD_SHIFT 
+#undef SATA_AHCI_VENDOR_PP4C_SFD_MASK 
+#define SATA_AHCI_VENDOR_PP4C_SFD_DEFVAL                                           0x064A0813
+#define SATA_AHCI_VENDOR_PP4C_SFD_SHIFT                                            16
+#define SATA_AHCI_VENDOR_PP4C_SFD_MASK                                             0x00FF0000U
+
+/*PTST: Partial to Slumber timer value, specific delay the controller should apply while in partial before entering slumber. Th
+		 value is bases on the system clock divided by 128, total delay = (Sys Clock Period) * PTST * 128*/
+#undef SATA_AHCI_VENDOR_PP4C_PTST_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP4C_PTST_SHIFT 
+#undef SATA_AHCI_VENDOR_PP4C_PTST_MASK 
+#define SATA_AHCI_VENDOR_PP4C_PTST_DEFVAL                                          0x064A0813
+#define SATA_AHCI_VENDOR_PP4C_PTST_SHIFT                                           24
+#define SATA_AHCI_VENDOR_PP4C_PTST_MASK                                            0xFF000000U
+
+/*RIT: Retry Interval Timer. The calculated value divided by two, the lower digit of precision is not needed.*/
+#undef SATA_AHCI_VENDOR_PP5C_RIT_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP5C_RIT_SHIFT 
+#undef SATA_AHCI_VENDOR_PP5C_RIT_MASK 
+#define SATA_AHCI_VENDOR_PP5C_RIT_DEFVAL                                           0x3FFC96A4
+#define SATA_AHCI_VENDOR_PP5C_RIT_SHIFT                                            0
+#define SATA_AHCI_VENDOR_PP5C_RIT_MASK                                             0x000FFFFFU
+
+/*RCT: Rate Change Timer, a value based on the 54.2us for which a SATA device will transmit at a fixed rate ALIGNp after OOB ha
+		 completed, for a fast SERDES it is suggested that this value be 54.2us / 4*/
+#undef SATA_AHCI_VENDOR_PP5C_RCT_DEFVAL 
+#undef SATA_AHCI_VENDOR_PP5C_RCT_SHIFT 
+#undef SATA_AHCI_VENDOR_PP5C_RCT_MASK 
+#define SATA_AHCI_VENDOR_PP5C_RCT_DEFVAL                                           0x3FFC96A4
+#define SATA_AHCI_VENDOR_PP5C_RCT_SHIFT                                            20
+#define SATA_AHCI_VENDOR_PP5C_RCT_MASK                                             0xFFF00000U
 #undef CRL_APB_RST_LPD_TOP_OFFSET 
 #define CRL_APB_RST_LPD_TOP_OFFSET                                                 0XFF5E023C
 #undef CRL_APB_RST_LPD_IOU0_OFFSET 
@@ -26155,6 +27854,13 @@ extern "C" {
  int psu_init (); 
  unsigned long psu_ps_pl_isolation_removal_data(); 
  unsigned long psu_ps_pl_reset_config_data(); 
+ int psu_protection(); 
+ int psu_fpd_protection(); 
+ int psu_ocm_protection(); 
+ int psu_ddr_protection(); 
+ int psu_lpd_protection(); 
+ int psu_protection_lock(); 
+ unsigned long psu_apply_master_tz(); 
 #ifdef __cplusplus
 }
 #endif

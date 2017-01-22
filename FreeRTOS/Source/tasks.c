@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -165,9 +165,9 @@ set then don't fill the stack so there is no unnecessary dependency on memset. *
 #endif
 
 /* The name allocated to the Idle task.  This can be overridden by defining
-tskIDLE_TASK_NAME in FreeRTOSConfig.h. */
-#ifndef tskIDLE_TASK_NAME
-	#define tskIDLE_TASK_NAME "IDLE"
+configIDLE_TASK_NAME in FreeRTOSConfig.h. */
+#ifndef configIDLE_TASK_NAME
+	#define configIDLE_TASK_NAME "IDLE"
 #endif
 
 #if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 0 )
@@ -1950,7 +1950,7 @@ BaseType_t xReturn;
 		address of the RAM then create the idle task. */
 		vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &ulIdleTaskStackSize );
 		xIdleTaskHandle = xTaskCreateStatic(	prvIdleTask,
-												tskIDLE_TASK_NAME,
+												configIDLE_TASK_NAME,
 												ulIdleTaskStackSize,
 												( void * ) NULL, /*lint !e961.  The cast is not redundant for all compilers. */
 												( tskIDLE_PRIORITY | portPRIVILEGE_BIT ),
@@ -1970,7 +1970,7 @@ BaseType_t xReturn;
 	{
 		/* The Idle task is being created using dynamically allocated RAM. */
 		xReturn = xTaskCreate(	prvIdleTask,
-								tskIDLE_TASK_NAME,
+								configIDLE_TASK_NAME,
 								configMINIMAL_STACK_SIZE,
 								( void * ) NULL,
 								( tskIDLE_PRIORITY | portPRIVILEGE_BIT ),

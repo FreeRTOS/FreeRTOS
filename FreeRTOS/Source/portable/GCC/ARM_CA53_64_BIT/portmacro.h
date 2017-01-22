@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -128,7 +128,7 @@ extern uint64_t ullPortYieldRequired;			\
 }
 
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
-#if GUEST
+#if defined( GUEST )
 	#define portYIELD() __asm volatile ( "SVC 0" )
 #else
 	#define portYIELD() __asm volatile ( "SMC 0" )

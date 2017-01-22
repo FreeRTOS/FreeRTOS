@@ -40,6 +40,9 @@
 								<option id="gnu.c.compiler.option.warnings.extrawarn.1804262134" name="Extra warnings (-Wextra)" superClass="gnu.c.compiler.option.warnings.extrawarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.c.compiler.option.misc.other.1931924410" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Wcast-qual" valueType="string"/>
 								<option id="gnu.c.compiler.option.debugging.gprof.444112294" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1757027831" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="_WIN32_WINNT=0x0601"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.974248912" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool command="gcc" id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.2080839343" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug">
@@ -85,4 +88,5 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

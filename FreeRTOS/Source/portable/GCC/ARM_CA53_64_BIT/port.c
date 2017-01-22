@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -139,7 +139,7 @@ context. */
 #define portSP_ELx						( ( StackType_t ) 0x01 )
 #define portSP_EL0						( ( StackType_t ) 0x00 )
 
-#if GUEST
+#if defined( GUEST )
 	#define portEL1						( ( StackType_t ) 0x04 )
 	#define portINITIAL_PSTATE				( portEL1 | portSP_EL0 )
 #else
@@ -349,7 +349,9 @@ uint32_t ulAPSR;
 	/* At the time of writing, the BSP only supports EL3. */
 	__asm volatile ( "MRS %0, CurrentEL" : "=r" ( ulAPSR ) );
 	ulAPSR &= portAPSR_MODE_BITS_MASK;
-#if GUEST
+
+#if defined( GUEST )
+	#warning Building for execution as a guest under XEN. THIS IS NOT A FULLY TESTED PATH.
 	configASSERT( ulAPSR == portEL1 );
 	if( ulAPSR == portEL1 )
 #else
@@ -435,7 +437,7 @@ void vPortExitCritical( void )
 void FreeRTOS_Tick_Handler( void )
 {
 	/* Must be the lowest possible priority. */
-	#if( !QEMU )
+	#if !defined( QEMU )
 	{
 		configASSERT( portICCRPR_RUNNING_PRIORITY_REGISTER == ( uint32_t ) ( portLOWEST_USABLE_INTERRUPT_PRIORITY << portPRIORITY_SHIFT ) );
 	}

@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -102,8 +102,8 @@ configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 
 /* The name assigned to the timer service task.  This can be overridden by
 defining trmTIMER_SERVICE_TASK_NAME in FreeRTOSConfig.h. */
-#ifndef tmrTIMER_SERVICE_TASK_NAME
-	#define tmrTIMER_SERVICE_TASK_NAME "Tmr Svc"
+#ifndef configTIMER_SERVICE_TASK_NAME
+	#define configTIMER_SERVICE_TASK_NAME "Tmr Svc"
 #endif
 
 /* The definition of the timers themselves. */
@@ -282,7 +282,7 @@ BaseType_t xReturn = pdFAIL;
 
 			vApplicationGetTimerTaskMemory( &pxTimerTaskTCBBuffer, &pxTimerTaskStackBuffer, &ulTimerTaskStackSize );
 			xTimerTaskHandle = xTaskCreateStatic(	prvTimerTask,
-													tmrTIMER_SERVICE_TASK_NAME,
+													configTIMER_SERVICE_TASK_NAME,
 													ulTimerTaskStackSize,
 													NULL,
 													( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
@@ -297,7 +297,7 @@ BaseType_t xReturn = pdFAIL;
 		#else
 		{
 			xReturn = xTaskCreate(	prvTimerTask,
-									tmrTIMER_SERVICE_TASK_NAME,
+									configTIMER_SERVICE_TASK_NAME,
 									configTIMER_TASK_STACK_DEPTH,
 									NULL,
 									( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,

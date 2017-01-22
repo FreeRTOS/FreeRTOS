@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -111,7 +111,7 @@
 	STP 	X30, XZR, [SP, #-0x10]!
 
 	/* Save the SPSR. */
-#if GUEST
+#if defined( GUEST )
 	MRS		X3, SPSR_EL1
 	MRS		X2, ELR_EL1
 #else
@@ -221,7 +221,7 @@
 1:
 	LDP 	X2, X3, [SP], #0x10  /* SPSR and ELR. */
 
-#if GUEST
+#if defined( GUEST )
 	/* Restore the SPSR. */
 	MSR		SPSR_EL1, X3
 	/* Restore the ELR. */
@@ -266,7 +266,7 @@
 FreeRTOS_SWI_Handler:
 	/* Save the context of the current task and select a new task to run. */
 	portSAVE_CONTEXT
-#if GUEST
+#if defined( GUEST )
 	MRS		X0, ESR_EL1
 #else
 	MRS		X0, ESR_EL3
@@ -274,7 +274,7 @@ FreeRTOS_SWI_Handler:
 
 	LSR		X1, X0, #26
 
-#if GUEST
+#if defined( GUEST )
 	CMP		X1, #0x15 	/* 0x15 = SVC instruction. */
 #else
 	CMP		X1, #0x17 	/* 0x17 = SMC instruction. */
@@ -298,7 +298,7 @@ vPortRestoreTaskContext:
 
 	/* Install the FreeRTOS interrupt handlers. */
 	LDR		X1, =freertos_vector_base
-#if GUEST
+#if defined( GUEST )
 	MSR		VBAR_EL1, X1
 #else
 	MSR		VBAR_EL3, X1
@@ -330,7 +330,7 @@ FreeRTOS_IRQ_Handler:
 	STP		X29, X30, [SP, #-0x10]!
 
 	/* Save the SPSR and ELR. */
-#if GUEST
+#if defined( GUEST )
 	MRS		X3, SPSR_EL1
 	MRS		X2, ELR_EL1
 #else
@@ -393,7 +393,7 @@ FreeRTOS_IRQ_Handler:
 
 	/* Restore volatile registers. */
 	LDP 	X4, X5, [SP], #0x10  /* SPSR and ELR. */
-#if GUEST
+#if defined( GUEST )
 	MSR		SPSR_EL1, X5
 	MSR		ELR_EL1, X4
 #else
@@ -423,7 +423,7 @@ FreeRTOS_IRQ_Handler:
 Exit_IRQ_No_Context_Switch:
 	/* Restore volatile registers. */
 	LDP 	X4, X5, [SP], #0x10  /* SPSR and ELR. */
-#if GUEST
+#if defined( GUEST )
 	MSR		SPSR_EL1, X5
 	MSR		ELR_EL1, X4
 #else

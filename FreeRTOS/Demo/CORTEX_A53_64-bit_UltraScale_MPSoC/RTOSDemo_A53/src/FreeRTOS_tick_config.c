@@ -1,5 +1,5 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
+    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -85,7 +85,7 @@ void vConfigureTickInterrupt( void )
 {
 BaseType_t xStatus;
 XTtcPs_Config *pxTimerConfiguration;
-uint16_t usInterval;
+XInterval usInterval;
 uint8_t ucPrescale;
 const uint8_t ucLevelSensitive = 1;
 extern XScuGic xInterruptController;

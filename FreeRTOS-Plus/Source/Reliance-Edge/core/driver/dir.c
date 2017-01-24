@@ -199,21 +199,23 @@ REDSTATUS RedDirEntryDelete(
     }
     else if((DirEntryIndexToOffset(ulDeleteIdx) + DIRENT_SIZE) == pPInode->pInodeBuf->ullSize)
     {
-        uint32_t ulTruncIdx = ulDeleteIdx;
+        /*  Start searching one behind the index to be deleted.
+        */
+        uint32_t ulTruncIdx = ulDeleteIdx - 1U;
         bool     fDone = false;
 
         /*  We are deleting the last dirent in the directory, so search
             backwards to find the last populated dirent, allowing us to truncate
             the directory to that point.
         */
-        while((ret == 0) && (ulTruncIdx > 0U) && !fDone)
+        while((ret == 0) && (ulTruncIdx != UINT32_MAX) && !fDone)
         {
             ret = RedInodeDataSeekAndRead(pPInode, ulTruncIdx / DIRENTS_PER_BLOCK);
 
             if(ret == 0)
             {
                 const DIRENT *pDirents = CAST_CONST_DIRENT_PTR(pPInode->pbData);
-                uint32_t      ulBlockIdx = (ulTruncIdx - 1U) % DIRENTS_PER_BLOCK;
+                uint32_t      ulBlockIdx = ulTruncIdx % DIRENTS_PER_BLOCK;
 
                 do
                 {
@@ -241,6 +243,12 @@ REDSTATUS RedDirEntryDelete(
                 */
             }
         }
+
+        /*  Currently ulTruncIdx represents the last valid dirent index, or
+            UINT32_MAX if the directory is now empty.  Increment it so that it
+            represents the first invalid entry, which will be truncated.
+        */
+        ulTruncIdx++;
 
         /*  Truncate the directory, deleting the requested entry and any empty
             dirents at the end of the directory.
@@ -449,7 +457,7 @@ REDSTATUS RedDirEntryLookup(
 #if (REDCONF_API_POSIX_READDIR == 1) || (REDCONF_CHECKER == 1)
 /** @brief Read the next entry from a directory, given a starting index.
 
-    @param pInode   A pointer to the cached inode structure of the directory to
+    @param pPInode  A pointer to the cached inode structure of the directory to
                     read from.
     @param pulIdx   On entry, the directory index to start reading from.  On
                     successful return, populated with the directory index to use

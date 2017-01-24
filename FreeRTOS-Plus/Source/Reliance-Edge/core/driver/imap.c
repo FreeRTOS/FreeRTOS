@@ -158,6 +158,7 @@ REDSTATUS RedImapBlockSet(
     }
 
     /*  Adjust the free/almost free block count if the block was allocable.
+        Discard the block if required.
     */
     if((ret == 0) && (ulBlock >= gpRedCoreVol->ulFirstAllocableBN))
     {

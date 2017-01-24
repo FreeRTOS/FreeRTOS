@@ -222,7 +222,7 @@ static void vInitStartMarkers()
 volatile int recorder_busy = 0;
 
 /* Gives the last error message of the recorder. NULL if no error message. */
-char* traceErrorMessage = NULL;
+const char* traceErrorMessage = NULL;
 
 void* xTraceNextFreeEventBufferSlot(void)
 {
@@ -468,7 +468,7 @@ void vTraceError(const char* msg)
 
 	if (traceErrorMessage == NULL)
 	{
-		traceErrorMessage = (char*)msg;
+		traceErrorMessage = msg;
 		(void)strncpy(RecorderDataPtr->systemInfo, traceErrorMessage, 80);
 		RecorderDataPtr->internalErrorOccured = 1;
 	}

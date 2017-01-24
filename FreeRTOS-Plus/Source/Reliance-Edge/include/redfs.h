@@ -29,6 +29,7 @@
 
 
 #include <redconf.h>
+#include "redver.h"
 #include "redconfigchk.h"
 #include <redtypes.h>
 #include "rederrno.h"
@@ -38,7 +39,6 @@
 #include "redutils.h"
 #include "redosserv.h"
 #include "redmisc.h"
-#include "redver.h"
 #include "redexclude.h"
 
 

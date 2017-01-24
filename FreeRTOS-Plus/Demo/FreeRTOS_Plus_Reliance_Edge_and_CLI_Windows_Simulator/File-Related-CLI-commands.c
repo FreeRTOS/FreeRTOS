@@ -1563,5 +1563,5 @@ const char *pcAttrib;
 
 	/* Create a string that includes the file name, the file size and the
 	attributes string. */
-	sprintf( pcBuffer, "%s [%s] [size=%d]", pxDirent->d_name, pcAttrib, pxDirent->d_stat.st_size );
+	sprintf( pcBuffer, "%s [%s] [size=%lld]", pxDirent->d_name, pcAttrib, pxDirent->d_stat.st_size );
 }

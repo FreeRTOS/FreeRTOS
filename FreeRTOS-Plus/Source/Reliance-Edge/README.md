@@ -7,6 +7,14 @@ in your application; or an alternate minimalist API if your application has
 simple storage needs.  Reliance Edge is highly configurable and can be tuned to
 the precise needs of your application.
 
+## Getting Help
+
+You will find this section later in our readme as well - but we wanted to tell
+you up front: DATALIGHT WANTS TO HEAR FROM YOU!  Whether it's just to make
+comments about the product, to suggest new features, or to tell us what you
+don't like - reach out!  All comments and inquiries can be directed to
+<RelianceEdgeSupport@datalight.com>.
+
 ## Documentation
 
 The complete documentation for Reliance Edge is distributed separately.  It
@@ -17,10 +25,10 @@ from here:
 
 <http://www.datalight.com/reliance-edge>
 
-In addition this README, see [doc/release_notes.md](doc/release_notes.md) for a
-list of updates to Reliance Edge and a list of known issues.  There is also a
-quick-start guide in the doc/ directory that describes step-by-step how to
-compile and run Reliance Edge in a simulated Windows environment.
+In addition this README, see doc/release_notes.md for a list of updates
+to Reliance Edge and a list of known issues. There is also a quick-start
+guide in the doc/ directory that describes step-by-step how to compile
+and run Reliance Edge in a simulated Windows environment.
 
 ## Why Use Reliance Edge?
 

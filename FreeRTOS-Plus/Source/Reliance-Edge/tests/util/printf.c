@@ -143,7 +143,7 @@ typedef struct
 
 
 static uint32_t ProcessFormatSegment(char *pcBuffer, uint32_t ulBufferLen, const char *pszFormat, PRINTFORMAT *pFormat, uint32_t *pulSpecifierLen);
-static uint32_t ParseFormatSpecifier(char const *pszFomat, PRINTFORMAT *pFormatType);
+static uint32_t ParseFormatSpecifier(char const *pszFormat, PRINTFORMAT *pFormatType);
 static PRINTTYPE ParseFormatType(const char *pszFormat, uint32_t *pulTypeLen);
 static uint32_t LtoA(char *pcBuffer, uint32_t ulBufferLen, int32_t lNum, uint32_t ulFillLen, char cFill);
 static uint32_t LLtoA(char *pcBuffer, uint32_t ulBufferLen, int64_t llNum, uint32_t ulFillLen, char cFill);
@@ -719,20 +719,20 @@ static uint32_t ProcessFormatSegment(
             not found.
 */
 static uint32_t ParseFormatSpecifier(
-    char const     *pszFomat,
+    char const     *pszFormat,
     PRINTFORMAT    *pFormatType)
 {
     bool            fContainsIllegalSequence = false;
     uint32_t        ulLen = 0U;
     uint32_t        ulIdx = 0U;
 
-    while(pszFomat[ulIdx] != '\0')
+    while(pszFormat[ulIdx] != '\0')
     {
         uint32_t    ulTypeLen;
 
         /*  general output
         */
-        if(pszFomat[ulIdx] != '%')
+        if(pszFormat[ulIdx] != '%')
         {
             ulIdx++;
         }
@@ -745,15 +745,15 @@ static uint32_t ParseFormatSpecifier(
             pFormatType->ulSpecifierIdx = ulIdx;
             ulIdx++;
 
-            if(pszFomat[ulIdx] == '-')
+            if(pszFormat[ulIdx] == '-')
             {
                 pFormatType->fLeftJustified = true;
                 ulIdx++;
             }
 
-            if((pszFomat[ulIdx] == '0') || (pszFomat[ulIdx] == '_'))
+            if((pszFormat[ulIdx] == '0') || (pszFormat[ulIdx] == '_'))
             {
-                pFormatType->cFillChar = pszFomat[ulIdx];
+                pFormatType->cFillChar = pszFormat[ulIdx];
                 ulIdx++;
             }
             else
@@ -761,15 +761,15 @@ static uint32_t ParseFormatSpecifier(
                 pFormatType->cFillChar = ' ';
             }
 
-            if(pszFomat[ulIdx] == '*')
+            if(pszFormat[ulIdx] == '*')
             {
                 pFormatType->fHasVarWidth = true;
                 ulIdx++;
             }
-            else if(ISDIGIT(pszFomat[ulIdx]))
+            else if(ISDIGIT(pszFormat[ulIdx]))
             {
-                pFormatType->ulFillLen = (uint32_t)RedAtoI(&pszFomat[ulIdx]);
-                while(ISDIGIT(pszFomat[ulIdx]))
+                pFormatType->ulFillLen = (uint32_t)RedAtoI(&pszFormat[ulIdx]);
+                while(ISDIGIT(pszFormat[ulIdx]))
                 {
                     ulIdx++;
                 }
@@ -780,7 +780,7 @@ static uint32_t ParseFormatSpecifier(
                 */
             }
 
-            pFormatType->type = ParseFormatType(&pszFomat[ulIdx], &ulTypeLen);
+            pFormatType->type = ParseFormatType(&pszFormat[ulIdx], &ulTypeLen);
             if(pFormatType->type != PRFMT_UNKNOWN)
             {
                 /*  Even though we are returning successfully, keep track of

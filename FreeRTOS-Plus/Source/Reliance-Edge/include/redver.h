@@ -33,7 +33,7 @@
 
     <!-- This macro is updated automatically: do not edit! -->
 */
-#define RED_BUILD_NUMBER "677"
+#define RED_BUILD_NUMBER "700"
 
 #define RED_KIT_GPL         0U  /* Open source GPL kit. */
 #define RED_KIT_COMMERCIAL  1U  /* Commercially-licensed kit. */
@@ -48,8 +48,13 @@
 
 /** @brief Version number to display in output.
 */
-#define RED_VERSION "v1.0.4"
+#define RED_VERSION "v2.0"
 
+/** @brief Version number in hex.
+
+    The most significant byte is the major version number, etc.
+*/
+#define RED_VERSION_VAL 0x02000000U
 
 /** @brief On-disk version number.
 
@@ -67,7 +72,7 @@
 /*  Specifies whether the product is in alpha stage, beta stage, or neither.
 */
 #if 0
-  #if 1
+  #if 0
     #define ALPHABETA   " (Alpha)"
   #else
     #define ALPHABETA   " (Beta)"
@@ -83,7 +88,7 @@
 
 /** @brief Product copyright.
 */
-#define RED_PRODUCT_LEGAL "Copyright (c) 2014-2016 Datalight, Inc.  All Rights Reserved Worldwide."
+#define RED_PRODUCT_LEGAL "Copyright (c) 2014-2017 Datalight, Inc.  All Rights Reserved Worldwide."
 
 
 /** @brief Product patents.

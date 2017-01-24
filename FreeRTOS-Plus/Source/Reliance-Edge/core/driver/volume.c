@@ -63,6 +63,10 @@ REDSTATUS RedVolMount(void)
 
         if(ret != 0)
         {
+            /*  If we fail to mount, invalidate the buffers to prevent any
+                confusion that could be caused by stale or corrupt metadata.
+            */
+            (void)RedBufferDiscardRange(0U, gpRedVolume->ulBlockCount);
             (void)RedOsBDevClose(gbRedVolNum);
         }
     }

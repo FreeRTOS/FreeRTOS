@@ -1061,6 +1061,7 @@ static REDSTATUS DiskFlush(
   #error "The STM32 StdPeriph driver is not supported. Please use the HAL driver or modify the Reliance Edge block device interface."
 #endif
 
+
 /** @brief Number of times to call BSP_SD_GetStatus() before timing out and
            returning an error.
 

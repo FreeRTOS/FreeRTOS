@@ -45,9 +45,6 @@
 /* If Win32 port */
 #ifdef WIN32
 
-	#undef _WIN32_WINNT
-	#define _WIN32_WINNT 0x0600
-
 	/* Standard includes. */
 	#include <stdio.h>
 	#include <windows.h>
@@ -237,9 +234,9 @@
     #define HWTC_COUNT (*((uint32_t*)0xE000E018))
     #define HWTC_PERIOD ((*(uint32_t*)0xE000E014) + 1)
     #define HWTC_DIVISOR 2
-	
+
     #define IRQ_PRIORITY_ORDER 0 // lower IRQ priority values are more significant
-	
+
 #elif (SELECTED_PORT == PORT_Renesas_RX600)
 
 	#include "iodefine.h"

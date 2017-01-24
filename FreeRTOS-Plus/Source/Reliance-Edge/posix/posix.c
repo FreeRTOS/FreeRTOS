@@ -37,7 +37,7 @@
 #include <redvolume.h>
 #include <redcoreapi.h>
 #include <redposix.h>
-#include "redpath.h"
+#include <redpath.h>
 
 
 /*-------------------------------------------------------------------

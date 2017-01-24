@@ -49,6 +49,5 @@
            || ((REDCONF_API_FSE == 1) && (REDCONF_API_FSE_FORMAT == 1)) \
            || (REDCONF_IMAGE_BUILDER == 1)))
 
-
 #endif
 

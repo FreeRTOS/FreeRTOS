@@ -12,6 +12,15 @@ highly configurable and can be tuned to the precise needs of your
 application.
 
 
+Getting Help
+
+You will find this section later in our readme as well - but we wanted
+to tell you up front: DATALIGHT WANTS TO HEAR FROM YOU! Whether it's
+just to make comments about the product, to suggest new features, or to
+tell us what you don't like - reach out! All comments and inquiries can
+be directed to RelianceEdgeSupport@datalight.com.
+
+
 Documentation
 
 The complete documentation for Reliance Edge is distributed separately.

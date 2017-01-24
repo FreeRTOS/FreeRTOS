@@ -93,7 +93,7 @@ int32_t RedAtoI(
           significant digits than can be represented in a uint32_t variable, the
           output is unspecified.
 
-    @param pachNum  A pointer to a constant array of hex characters.
+    @param pszNum   A pointer to a constant array of hex characters.
     @param pulNum   A pointer to the location in which to store the uint32_t
                     result.  Upon return, this value will be modified ONLY if
                     the function succeeds and the returned pointer is valid (not

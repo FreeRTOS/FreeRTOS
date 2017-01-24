@@ -65,7 +65,7 @@ VOLUME         * CONST_IF_ONE_VOLUME gpRedVolume = &gaRedVolume[0U];
 COREVOLUME     * CONST_IF_ONE_VOLUME gpRedCoreVol = &gaCoreVol[0U];
 METAROOT       *gpRedMR = &gaCoreVol[0U].aMR[0U];
 
-CONST_IF_ONE_VOLUME uint8_t gbRedVolNum;
+CONST_IF_ONE_VOLUME uint8_t gbRedVolNum = 0;
 
 
 /** @brief Initialize the Reliance Edge file system driver.
@@ -1235,7 +1235,7 @@ REDSTATUS RedCoreLookup(
     @param pszSrcName   The name of the file or directory to rename.
     @param ulDstPInode  The new parent directory inode number of the file or
                         directory after the rename.
-    @param pszNewPath   The new name of the file or directory after the rename.
+    @param pszDstName   The new name of the file or directory after the rename.
 
     @return A negated ::REDSTATUS code indicating the operation result.
 
@@ -1314,7 +1314,7 @@ REDSTATUS RedCoreRename(
     @param pszSrcName   The name of the file or directory to rename.
     @param ulDstPInode  The new parent directory inode number of the file or
                         directory after the rename.
-    @param pszNewPath   The new name of the file or directory after the rename.
+    @param pszDstName   The new name of the file or directory after the rename.
 
     @return A negated ::REDSTATUS code indicating the operation result.
 

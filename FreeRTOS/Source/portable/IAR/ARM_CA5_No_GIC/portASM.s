@@ -132,12 +132,12 @@ FreeRTOS_IRQ_Handler
 	AND		r2, r2, #4
 	SUB		sp, sp, r2
 
-	PUSH	{r0-r3, lr}
+	PUSH	{r0-r4, lr}
 
 	; Call the port part specific handler.
 	LDR		r0, =vApplicationIRQHandler
 	BLX		r0
-	POP		{r0-r3, lr}
+	POP		{r0-r4, lr}
 	ADD		sp, sp, r2
 
 	CPSID	i

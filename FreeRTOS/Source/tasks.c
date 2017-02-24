@@ -3123,6 +3123,18 @@ TCB_t *pxUnblockedTCB;
 void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
 {
 	configASSERT( pxTimeOut );
+	taskENTER_CRITICAL();
+	{
+		pxTimeOut->xOverflowCount = xNumOfOverflows;
+		pxTimeOut->xTimeOnEntering = xTickCount;
+	}
+	taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
+void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut )
+{
+	/* For internal use only as it does not use a critical section. */
 	pxTimeOut->xOverflowCount = xNumOfOverflows;
 	pxTimeOut->xTimeOnEntering = xTickCount;
 }
@@ -3176,7 +3188,7 @@ BaseType_t xReturn;
 		{
 			/* Not a genuine timeout. Adjust parameters for time remaining. */
 			*pxTicksToWait -= xElapsedTime;
-			vTaskSetTimeOutState( pxTimeOut );
+			vTaskInternalSetTimeOutState( pxTimeOut );
 			xReturn = pdFALSE;
 		}
 		else

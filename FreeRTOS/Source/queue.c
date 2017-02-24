@@ -891,7 +891,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				{
 					/* The queue was full and a block time was specified so
 					configure the timeout structure. */
-					vTaskSetTimeOutState( &xTimeOut );
+					vTaskInternalSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
 				else
@@ -1346,7 +1346,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				{
 					/* The queue was empty and a block time was specified so
 					configure the timeout structure. */
-					vTaskSetTimeOutState( &xTimeOut );
+					vTaskInternalSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
 				else
@@ -1502,7 +1502,11 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					/* For inheritance to have occurred there must have been an
 					initial timeout, and an adjusted timeout cannot become 0, as
 					if it were 0 the function would have exited. */
-					configASSERT( xInheritanceOccurred == pdFALSE );
+					#if( configUSE_MUTEXES == 1 )
+					{
+						configASSERT( xInheritanceOccurred == pdFALSE );
+					}
+					#endif /* configUSE_MUTEXES */
 
 					/* The semaphore count was 0 and no block time is specified
 					(or the block time has expired) so exit now. */
@@ -1514,7 +1518,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				{
 					/* The semaphore count was 0 and a block time was specified
 					so configure the timeout structure ready to block. */
-					vTaskSetTimeOutState( &xTimeOut );
+					vTaskInternalSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
 				else
@@ -1711,7 +1715,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 					/* The queue was empty and a block time was specified so
 					configure the timeout structure ready to enter the blocked
 					state. */
-					vTaskSetTimeOutState( &xTimeOut );
+					vTaskInternalSetTimeOutState( &xTimeOut );
 					xEntryTimeSet = pdTRUE;
 				}
 				else

@@ -2364,6 +2364,13 @@ eSleepModeStatus eTaskConfirmSleepModeStatus( void ) PRIVILEGED_FUNCTION;
  */
 void *pvTaskIncrementMutexHeldCount( void ) PRIVILEGED_FUNCTION;
 
+/*
+ * For internal use only.  Same as vTaskSetTimeOutState(), but without a critial
+ * section.
+ */
+void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut ) PRIVILEGED_FUNCTION;
+
+
 #ifdef __cplusplus
 }
 #endif

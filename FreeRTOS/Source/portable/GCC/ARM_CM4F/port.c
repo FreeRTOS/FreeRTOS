@@ -563,7 +563,7 @@ void xPortSysTickHandler( void )
 
 		/* Enter a critical section but don't use the taskENTER_CRITICAL()
 		method as that will mask interrupts that should exit sleep mode. */
-		__asm volatile( "cpsid i" );
+		__asm volatile( "cpsid i" ::: "memory" );
 		__asm volatile( "dsb" );
 		__asm volatile( "isb" );
 
@@ -584,7 +584,7 @@ void xPortSysTickHandler( void )
 
 			/* Re-enable interrupts - see comments above the cpsid instruction()
 			above. */
-			__asm volatile( "cpsie i" );
+			__asm volatile( "cpsie i" ::: "memory" );
 		}
 		else
 		{
@@ -607,7 +607,7 @@ void xPortSysTickHandler( void )
 			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
 			if( xModifiableIdleTime > 0 )
 			{
-				__asm volatile( "dsb" );
+				__asm volatile( "dsb" ::: "memory" );
 				__asm volatile( "wfi" );
 				__asm volatile( "isb" );
 			}
@@ -622,7 +622,7 @@ void xPortSysTickHandler( void )
 
 			/* Re-enable interrupts - see comments above the cpsid instruction()
 			above. */
-			__asm volatile( "cpsie i" );
+			__asm volatile( "cpsie i" ::: "memory" );
 
 			if( ( ulSysTickCTRL & portNVIC_SYSTICK_COUNT_FLAG_BIT ) != 0 )
 			{
@@ -735,7 +735,7 @@ static void vPortEnableVFP( void )
 	uint8_t ucCurrentPriority;
 
 		/* Obtain the number of the currently executing interrupt. */
-		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) :: "memory" );
 
 		/* Is the interrupt number a user defined interrupt? */
 		if( ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER )

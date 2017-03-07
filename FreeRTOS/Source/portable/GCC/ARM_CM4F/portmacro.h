@@ -125,7 +125,7 @@ typedef unsigned long UBaseType_t;
 																				\
 	/* Barriers are normally not required but do ensure the code is completely	\
 	within the specified behaviour for the architecture. */						\
-	__asm volatile( "dsb" );													\
+	__asm volatile( "dsb" ::: "memory" );										\
 	__asm volatile( "isb" );													\
 }
 
@@ -173,7 +173,7 @@ not necessary for to use this port.  They are defined so the common demo files
 	{
 	uint8_t ucReturn;
 
-		__asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) );
+		__asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) : "memory" );
 		return ucReturn;
 	}
 
@@ -214,7 +214,7 @@ uint32_t ulCurrentInterrupt;
 BaseType_t xReturn;
 
 	/* Obtain the number of the currently executing interrupt. */
-	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) :: "memory" );
 
 	if( ulCurrentInterrupt == 0 )
 	{
@@ -240,7 +240,7 @@ uint32_t ulNewBASEPRI;
 		"	msr basepri, %0											\n" \
 		"	isb														\n" \
 		"	dsb														\n" \
-		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 }
 
@@ -257,7 +257,7 @@ uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
 		"	msr basepri, %1											\n" \
 		"	isb														\n" \
 		"	dsb														\n" \
-		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 
 	/* This return will not be reached but is necessary to prevent compiler
@@ -270,7 +270,7 @@ portFORCE_INLINE static void vPortSetBASEPRI( uint32_t ulNewMaskValue )
 {
 	__asm volatile
 	(
-		"	msr basepri, %0	" :: "r" ( ulNewMaskValue )
+		"	msr basepri, %0	" :: "r" ( ulNewMaskValue ) : "memory"
 	);
 }
 /*-----------------------------------------------------------*/

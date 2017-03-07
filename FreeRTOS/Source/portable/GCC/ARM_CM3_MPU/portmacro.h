@@ -132,7 +132,7 @@ typedef unsigned long UBaseType_t;
 #define portNUM_CONFIGURABLE_REGIONS		( ( portLAST_CONFIGURABLE_REGION - portFIRST_CONFIGURABLE_REGION ) + 1 )
 #define portTOTAL_NUM_REGIONS				( portNUM_CONFIGURABLE_REGIONS + 1 ) /* Plus one to make space for the stack region. */
 
-#define portSWITCH_TO_USER_MODE() __asm volatile ( " mrs r0, control \n orr r0, #1 \n msr control, r0 " :::"r0" )
+#define portSWITCH_TO_USER_MODE() __asm volatile ( " mrs r0, control \n orr r0, #1 \n msr control, r0 " ::: "r0", "memory" )
 
 typedef struct MPU_REGION_REGISTERS
 {
@@ -159,7 +159,7 @@ typedef struct MPU_SETTINGS
 
 /* Scheduler utilities. */
 
-#define portYIELD()				__asm volatile ( "	SVC	%0	\n" :: "i" (portSVC_YIELD) )
+#define portYIELD()				__asm volatile ( "	SVC	%0	\n" :: "i" (portSVC_YIELD) : "memory" )
 #define portYIELD_WITHIN_API() 													\
 {																				\
 	/* Set a PendSV to request a context switch. */								\
@@ -167,7 +167,7 @@ typedef struct MPU_SETTINGS
 																				\
 	/* Barriers are normally not required but do ensure the code is completely	\
 	within the specified behaviour for the architecture. */						\
-	__asm volatile( "dsb" );													\
+	__asm volatile( "dsb" ::: "memory" );										\
 	__asm volatile( "isb" );													\
 }
 
@@ -208,7 +208,7 @@ not necessary for to use this port.  They are defined so the common demo files
 	{
 	uint8_t ucReturn;
 
-		__asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) );
+		__asm volatile ( "clz %0, %1" : "=r" ( ucReturn ) : "r" ( ulBitmap ) : "memory" );
 		return ucReturn;
 	}
 
@@ -251,7 +251,7 @@ portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged 
 		__asm volatile ( " mrs r0, control 	\n" \
 						 " orr r0, #1 		\n" \
 						 " msr control, r0	\n"	\
-						 :::"r0" );
+						 :::"r0", "memory" );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -262,7 +262,7 @@ uint32_t ulCurrentInterrupt;
 BaseType_t xReturn;
 
 	/* Obtain the number of the currently executing interrupt. */
-	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) :: "memory" );
 
 	if( ulCurrentInterrupt == 0 )
 	{
@@ -288,7 +288,7 @@ uint32_t ulNewBASEPRI;
 		"	msr basepri, %0											\n" \
 		"	isb														\n" \
 		"	dsb														\n" \
-		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+		:"=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 }
 
@@ -305,7 +305,7 @@ uint32_t ulOriginalBASEPRI, ulNewBASEPRI;
 		"	msr basepri, %1											\n" \
 		"	isb														\n" \
 		"	dsb														\n" \
-		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY )
+		:"=r" (ulOriginalBASEPRI), "=r" (ulNewBASEPRI) : "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 
 	/* This return will not be reached but is necessary to prevent compiler
@@ -318,7 +318,7 @@ portFORCE_INLINE static void vPortSetBASEPRI( uint32_t ulNewMaskValue )
 {
 	__asm volatile
 	(
-		"	msr basepri, %0	" :: "r" ( ulNewMaskValue )
+		"	msr basepri, %0	" :: "r" ( ulNewMaskValue ) : "memory"
 	);
 }
 /*-----------------------------------------------------------*/

@@ -129,9 +129,9 @@ extern uint64_t ullPortYieldRequired;			\
 
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 #if defined( GUEST )
-	#define portYIELD() __asm volatile ( "SVC 0" )
+	#define portYIELD() __asm volatile ( "SVC 0" ::: "memory" )
 #else
-	#define portYIELD() __asm volatile ( "SMC 0" )
+	#define portYIELD() __asm volatile ( "SMC 0" ::: "memory" )
 #endif
 /*-----------------------------------------------------------
  * Critical section control
@@ -144,12 +144,12 @@ extern void vPortClearInterruptMask( UBaseType_t uxNewMaskValue );
 extern void vPortInstallFreeRTOSVectorTable( void );
 
 #define portDISABLE_INTERRUPTS()									\
-	__asm volatile ( "MSR DAIFSET, #2" );							\
+	__asm volatile ( "MSR DAIFSET, #2" ::: "memory" );				\
 	__asm volatile ( "DSB SY" );									\
 	__asm volatile ( "ISB SY" );
 
 #define portENABLE_INTERRUPTS()										\
-	__asm volatile ( "MSR DAIFCLR, #2" );							\
+	__asm volatile ( "MSR DAIFCLR, #2" ::: "memory" );				\
 	__asm volatile ( "DSB SY" );									\
 	__asm volatile ( "ISB SY" );
 

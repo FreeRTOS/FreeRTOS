@@ -156,12 +156,12 @@ mode. */
 determined priority level.  Sometimes it is necessary to turn interrupt off in
 the CPU itself before modifying certain hardware registers. */
 #define portCPU_IRQ_DISABLE()										\
-	__asm volatile ( "CPSID i" );									\
+	__asm volatile ( "CPSID i" ::: "memory" );						\
 	__asm volatile ( "DSB" );										\
 	__asm volatile ( "ISB" );
 
 #define portCPU_IRQ_ENABLE()										\
-	__asm volatile ( "CPSIE i" );									\
+	__asm volatile ( "CPSIE i" ::: "memory" );						\
 	__asm volatile ( "DSB" );										\
 	__asm volatile ( "ISB" );
 
@@ -171,8 +171,8 @@ the CPU itself before modifying certain hardware registers. */
 {																	\
 	portCPU_IRQ_DISABLE();											\
 	portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;			\
-	__asm(	"DSB		\n"											\
-			"ISB		\n" );										\
+	__asm volatile (	"DSB		\n"								\
+						"ISB		\n" );							\
 	portCPU_IRQ_ENABLE();											\
 }
 
@@ -367,7 +367,7 @@ uint32_t ulAPSR, ulCycles = 8; /* 8 bits per byte. */
 
 	/* Only continue if the CPU is not in User mode.  The CPU must be in a
 	Privileged mode for the scheduler to start. */
-	__asm volatile ( "MRS %0, APSR" : "=r" ( ulAPSR ) );
+	__asm volatile ( "MRS %0, APSR" : "=r" ( ulAPSR ) :: "memory" );
 	ulAPSR &= portAPSR_MODE_BITS_MASK;
 	configASSERT( ulAPSR != portAPSR_USER_MODE );
 
@@ -464,7 +464,7 @@ void FreeRTOS_Tick_Handler( void )
 	portCPU_IRQ_DISABLE();
 	portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 	__asm volatile (	"dsb		\n"
-						"isb		\n" );
+						"isb		\n" ::: "memory" );
 	portCPU_IRQ_ENABLE();
 
 	/* Increment the RTOS tick. */
@@ -488,7 +488,7 @@ uint32_t ulInitialFPSCR = 0;
 	ulPortTaskHasFPUContext = pdTRUE;
 
 	/* Initialise the floating point status register. */
-	__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) );
+	__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) : "memory" );
 }
 /*-----------------------------------------------------------*/
 
@@ -518,7 +518,7 @@ uint32_t ulReturn;
 		ulReturn = pdFALSE;
 		portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 		__asm volatile (	"dsb		\n"
-							"isb		\n" );
+							"isb		\n" ::: "memory" );
 	}
 	portCPU_IRQ_ENABLE();
 

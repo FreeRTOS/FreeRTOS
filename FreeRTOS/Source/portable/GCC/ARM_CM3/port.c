@@ -436,7 +436,7 @@ void xPortPendSVHandler( void )
 	"	mov r0, #0							\n"
 	"	msr basepri, r0						\n"
 	"	ldmia sp!, {r3, r14}				\n"
-	"										\n"	/* Restore the context, including the critical nesting count. */
+	"										\n" /* Restore the context, including the critical nesting count. */
 	"	ldr r1, [r3]						\n"
 	"	ldr r0, [r1]						\n" /* The first item in pxCurrentTCB is the task top of stack. */
 	"	ldmia r0!, {r4-r11}					\n" /* Pop the registers. */
@@ -501,7 +501,7 @@ void xPortSysTickHandler( void )
 
 		/* Enter a critical section but don't use the taskENTER_CRITICAL()
 		method as that will mask interrupts that should exit sleep mode. */
-		__asm volatile( "cpsid i" );
+		__asm volatile( "cpsid i" ::: "memory" );
 		__asm volatile( "dsb" );
 		__asm volatile( "isb" );
 
@@ -522,7 +522,7 @@ void xPortSysTickHandler( void )
 
 			/* Re-enable interrupts - see comments above the cpsid instruction()
 			above. */
-			__asm volatile( "cpsie i" );
+			__asm volatile( "cpsie i" ::: "memory" );
 		}
 		else
 		{
@@ -545,7 +545,7 @@ void xPortSysTickHandler( void )
 			configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
 			if( xModifiableIdleTime > 0 )
 			{
-				__asm volatile( "dsb" );
+				__asm volatile( "dsb" ::: "memory" );
 				__asm volatile( "wfi" );
 				__asm volatile( "isb" );
 			}
@@ -553,10 +553,10 @@ void xPortSysTickHandler( void )
 
 			/* Re-enable interrupts - see comments above the cpsid instruction()
 			above. */
-			__asm volatile( "cpsie i" );
-			
-			/* Disable the SysTick clock without reading the 
-			portNVIC_SYSTICK_CTRL_REG register to ensure the 
+			__asm volatile( "cpsie i" ::: "memory" );
+
+			/* Disable the SysTick clock without reading the
+			portNVIC_SYSTICK_CTRL_REG register to ensure the
 			portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set. */
 			portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT );
 
@@ -661,7 +661,7 @@ __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 	uint8_t ucCurrentPriority;
 
 		/* Obtain the number of the currently executing interrupt. */
-		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) :: "memory" );
 
 		/* Is the interrupt number a user defined interrupt? */
 		if( ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER )

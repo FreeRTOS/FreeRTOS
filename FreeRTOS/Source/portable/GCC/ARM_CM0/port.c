@@ -79,15 +79,15 @@
 #define portNVIC_SYSTICK_CTRL			( ( volatile uint32_t * ) 0xe000e010 )
 #define portNVIC_SYSTICK_LOAD			( ( volatile uint32_t * ) 0xe000e014 )
 #define portNVIC_SYSTICK_CURRENT_VALUE	( ( volatile uint32_t * ) 0xe000e018 )
-#define portNVIC_INT_CTRL			( ( volatile uint32_t *) 0xe000ed04 )
-#define portNVIC_SYSPRI2			( ( volatile uint32_t *) 0xe000ed20 )
-#define portNVIC_SYSTICK_CLK		0x00000004
-#define portNVIC_SYSTICK_INT		0x00000002
-#define portNVIC_SYSTICK_ENABLE		0x00000001
-#define portNVIC_PENDSVSET			0x10000000
-#define portMIN_INTERRUPT_PRIORITY	( 255UL )
-#define portNVIC_PENDSV_PRI			( portMIN_INTERRUPT_PRIORITY << 16UL )
-#define portNVIC_SYSTICK_PRI		( portMIN_INTERRUPT_PRIORITY << 24UL )
+#define portNVIC_INT_CTRL				( ( volatile uint32_t *) 0xe000ed04 )
+#define portNVIC_SYSPRI2				( ( volatile uint32_t *) 0xe000ed20 )
+#define portNVIC_SYSTICK_CLK			0x00000004
+#define portNVIC_SYSTICK_INT			0x00000002
+#define portNVIC_SYSTICK_ENABLE			0x00000001
+#define portNVIC_PENDSVSET				0x10000000
+#define portMIN_INTERRUPT_PRIORITY		( 255UL )
+#define portNVIC_PENDSV_PRI				( portMIN_INTERRUPT_PRIORITY << 16UL )
+#define portNVIC_SYSTICK_PRI			( portMIN_INTERRUPT_PRIORITY << 24UL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
@@ -243,7 +243,7 @@ void vPortYield( void )
 
 	/* Barriers are normally not required but do ensure the code is completely
 	within the specified behaviour for the architecture. */
-	__asm volatile( "dsb" );
+	__asm volatile( "dsb" ::: "memory" );
 	__asm volatile( "isb" );
 }
 /*-----------------------------------------------------------*/
@@ -252,7 +252,7 @@ void vPortEnterCritical( void )
 {
     portDISABLE_INTERRUPTS();
     uxCriticalNesting++;
-	__asm volatile( "dsb" );
+	__asm volatile( "dsb" ::: "memory" );
 	__asm volatile( "isb" );
 }
 /*-----------------------------------------------------------*/
@@ -274,6 +274,7 @@ uint32_t ulSetInterruptMaskFromISR( void )
 					" mrs r0, PRIMASK	\n"
 					" cpsid i			\n"
 					" bx lr				  "
+					::: "memory"
 				  );
 
 	/* To avoid compiler warnings.  This line will never be reached. */
@@ -286,6 +287,7 @@ void vClearInterruptMaskFromISR( uint32_t ulMask )
 	__asm volatile(
 					" msr PRIMASK, r0	\n"
 					" bx lr				  "
+					::: "memory"
 				  );
 
 	/* Just to avoid compiler warning. */

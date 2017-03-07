@@ -448,7 +448,7 @@ void FreeRTOS_Tick_Handler( void )
 	{
 		uint32_t ulMaskBits;
 
-		__asm volatile( "mrs %0, daif" : "=r"( ulMaskBits ) );
+		__asm volatile( "mrs %0, daif" : "=r"( ulMaskBits ) :: "memory" );
 		configASSERT( ( ulMaskBits & portDAIF_I ) != 0 );
 	}
 	#endif /* configASSERT_DEFINED */
@@ -460,7 +460,7 @@ void FreeRTOS_Tick_Handler( void )
 	updated. */
 	portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 	__asm volatile (	"dsb sy		\n"
-						"isb sy		\n" );
+						"isb sy		\n" ::: "memory" );
 
 	/* Ok to enable interrupts after the interrupt source has been cleared. */
 	configCLEAR_TICK_INTERRUPT();
@@ -514,7 +514,7 @@ uint32_t ulReturn;
 		ulReturn = pdFALSE;
 		portICCPMR_PRIORITY_MASK_REGISTER = ( uint32_t ) ( configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT );
 		__asm volatile (	"dsb sy		\n"
-							"isb sy		\n" );
+							"isb sy		\n" ::: "memory" );
 	}
 	portENABLE_INTERRUPTS();
 

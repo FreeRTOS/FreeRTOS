@@ -849,7 +849,7 @@ static void prvTakeTwoMutexesReturnInSameOrder( SemaphoreHandle_t xMutex, Semaph
 	}
 
 	/* When the local semaphore is given back the priority of this task should
-	not	yet be disinherited because the shared mutex is still held.  This is a
+	not yet be disinherited because the shared mutex is still held.  This is a
 	simplification to allow FreeRTOS to be integrated with middleware that
 	attempts to hold multiple mutexes without bloating the code with complex
 	algorithms.  It is possible that the high priority mutex task will

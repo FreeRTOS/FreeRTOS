@@ -75,15 +75,15 @@
  * described in main_blinky.c.  The more comprehensive test and demo application
  * is implemented and described in main_full.c.
  *
- * The comprehensive demo uses FreeRTOS+CLI to create a simple command line 
+ * The comprehensive demo uses FreeRTOS+CLI to create a simple command line
  * interface through a UART.
  *
- * The blinky demo uses FreeRTOS's tickless idle mode to reduce power 
+ * The blinky demo uses FreeRTOS's tickless idle mode to reduce power
  * consumption.  See the notes on the web page below regarding the difference
  * in power saving that can be achieved between using the generic tickless
  * implementation (as used by the blinky demo) and a tickless implementation
  * that is tailored specifically to the MSP432.
- * 
+ *
  * This file implements the code that is not demo specific.
  *
  * See http://www.FreeRTOS.org/TI_MSP432_Free_RTOS_Demo.html for instructions.
@@ -98,6 +98,10 @@
 #include "task.h"
 
 /*-----------------------------------------------------------*/
+
+/* NOTE: If an IAR build results in an undefined "reference to __write" linker
+error then set the printf formatter project option to "tiny" and the scanf
+formatter project option to "small". */
 
 /*
  * Set up the hardware ready to run this demo.
@@ -116,7 +120,7 @@ extern void main_full( void );
 int main( void )
 {
 	/* See http://www.FreeRTOS.org/TI_MSP432_Free_RTOS_Demo.html for instructions. */
-	
+
 	/* Prepare the hardware to run this demo. */
 	prvSetupHardware();
 
@@ -139,14 +143,14 @@ int main( void )
 static void prvSetupHardware( void )
 {
 extern void FPU_enableModule( void );
-	
+
 	/* The clocks are not configured here, but inside main_full() and
 	main_blinky() as the full demo uses a fast clock and the blinky demo uses
 	a slow clock. */
 
 	/* Stop the watchdog timer. */
 	MAP_WDT_A_holdTimer();
-	
+
 	/* Ensure the FPU is enabled. */
 	FPU_enableModule();
 
@@ -209,4 +213,5 @@ void *malloc( size_t xSize )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
+
 

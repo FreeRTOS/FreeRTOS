@@ -10,13 +10,13 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
+      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>MSP432P401R</Device>
           <Vendor>Texas Instruments</Vendor>
-          <PackID>TexasInstruments.MSP432P4xx_DFP.2.1.1</PackID>
-          <PackURL>http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/mspkeil/latest/exports</PackURL>
+          <PackID>TexasInstruments.MSP432P4xx_DFP.3.0.0</PackID>
+          <PackURL>http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/msp432cmsis/latest/exports</PackURL>
           <Cpu>IROM(0x00000000,0x00040000) IROM2(0x00200000,0x00004000) IRAM(0x20000000,0x00010000) IRAM2(0x01000000,0x00010000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -330,6 +330,7 @@
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
+            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>keil __MSP432P401R__ NO_MSP_CLASSIC_DEFINES</Define>
@@ -347,6 +348,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>

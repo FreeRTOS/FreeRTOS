@@ -3555,25 +3555,6 @@ static void prvCheckTasksWaitingTermination( void )
 		pxTaskStatus->pxStackBase = pxTCB->pxStack;
 		pxTaskStatus->xTaskNumber = pxTCB->uxTCBNumber;
 
-		#if ( INCLUDE_vTaskSuspend == 1 )
-		{
-			/* If the task is in the suspended list then there is a chance it is
-			actually just blocked indefinitely - so really it should be reported as
-			being in the Blocked state. */
-			if( pxTaskStatus->eCurrentState == eSuspended )
-			{
-				vTaskSuspendAll();
-				{
-					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
-					{
-						pxTaskStatus->eCurrentState = eBlocked;
-					}
-				}
-				( void ) xTaskResumeAll();
-			}
-		}
-		#endif /* INCLUDE_vTaskSuspend */
-
 		#if ( configUSE_MUTEXES == 1 )
 		{
 			pxTaskStatus->uxBasePriority = pxTCB->uxBasePriority;
@@ -3594,12 +3575,38 @@ static void prvCheckTasksWaitingTermination( void )
 		}
 		#endif
 
-		/* Obtaining the task state is a little fiddly, so is only done if the value
-		of eState passed into this function is eInvalid - otherwise the state is
-		just set to whatever is passed in. */
+		/* Obtaining the task state is a little fiddly, so is only done if the
+		value of eState passed into this function is eInvalid - otherwise the
+		state is just set to whatever is passed in. */
 		if( eState != eInvalid )
 		{
-			pxTaskStatus->eCurrentState = eState;
+			if( pxTCB == pxCurrentTCB )
+			{
+				pxTaskStatus->eCurrentState = eRunning;
+			}
+			else
+			{
+				pxTaskStatus->eCurrentState = eState;
+
+				#if ( INCLUDE_vTaskSuspend == 1 )
+				{
+					/* If the task is in the suspended list then there is a
+					chance it is actually just blocked indefinitely - so really
+					it should be reported as being in the Blocked state. */
+					if( eState == eSuspended )
+					{
+						vTaskSuspendAll();
+						{
+							if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
+							{
+								pxTaskStatus->eCurrentState = eBlocked;
+							}
+						}
+						( void ) xTaskResumeAll();
+					}
+				}
+				#endif /* INCLUDE_vTaskSuspend */
+			}
 		}
 		else
 		{

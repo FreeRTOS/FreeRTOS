@@ -85,6 +85,9 @@ extern "C" {
  *-----------------------------------------------------------
  */
 
+/* IAR includes. */
+#include <intrinsics.h>
+
 /* Type definitions. */
 #define portCHAR		char
 #define portFLOAT		float
@@ -138,7 +141,7 @@ typedef unsigned long UBaseType_t;
 	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #endif
 
-#if configUSE_PORT_OPTIMISED_TASK_SELECTION == 1
+#if( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 )
 
 	/* Check the configuration. */
 	#if( configMAX_PRIORITIES > 32 )
@@ -151,7 +154,6 @@ typedef unsigned long UBaseType_t;
 
 	/*-----------------------------------------------------------*/
 
-	#include <intrinsics.h>
 	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( ( uint32_t ) __CLZ( ( uxReadyPriorities ) ) ) )
 
 #endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */

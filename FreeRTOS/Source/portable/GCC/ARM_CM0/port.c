@@ -101,10 +101,6 @@ debugger. */
 	#define portTASK_RETURN_ADDRESS	prvTaskExitError
 #endif
 
-/* Each task maintains its own interrupt status in the critical nesting
-variable. */
-static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
-
 /*
  * Setup the timer to generate the tick interrupts.
  */
@@ -126,6 +122,12 @@ static void vPortStartFirstTask( void ) __attribute__ (( naked ));
  * Used to catch tasks that attempt to return from their implementing function.
  */
 static void prvTaskExitError( void );
+
+/*-----------------------------------------------------------*/
+
+/* Each task maintains its own interrupt status in the critical nesting
+variable. */
+static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 
 /*-----------------------------------------------------------*/
 
@@ -220,8 +222,11 @@ BaseType_t xPortStartScheduler( void )
 	/* Should never get here as the tasks will now be executing!  Call the task
 	exit error function to prevent compiler warnings about a static function
 	not being called in the case that the application writer overrides this
-	functionality by defining configTASK_RETURN_ADDRESS. */
+	functionality by defining configTASK_RETURN_ADDRESS.  Call
+	vTaskSwitchContext() so link time optimisation does not remove the
+	symbol. */
 	prvTaskExitError();
+	vTaskSwitchContext();
 
 	/* Should not get here! */
 	return 0;

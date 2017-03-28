@@ -100,6 +100,7 @@ extern void SVC_Handler( void );
 extern void vUART_Handler( void );
 extern void vT32_0_Handler( void );
 extern void vT32_1_Handler( void );
+extern void PORT1_IRQHandler( void );
 //*****************************************************************************
 //
 // The entry point for the application startup code.
@@ -188,7 +189,7 @@ __root const uVectorEntry __vector_table[] @ ".intvec" =
     IntDefaultHandler,                      // DMA_INT2 ISR
     IntDefaultHandler,                       // DMA_INT1 ISR
     IntDefaultHandler,                      // DMA_INT0 ISR
-    IntDefaultHandler,                      // PORT1 ISR
+    PORT1_IRQHandler,                      // PORT1 ISR
     IntDefaultHandler,                      // PORT2 ISR
     IntDefaultHandler,                      // PORT3 ISR
     IntDefaultHandler,                      // PORT4 ISR

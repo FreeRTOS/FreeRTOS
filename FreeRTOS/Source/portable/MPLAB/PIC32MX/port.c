@@ -188,11 +188,11 @@ volatile UBaseType_t uxInterruptNesting = 0x01;
 UBaseType_t uxSavedTaskStackPointer = 0;
 
 /* The stack used by interrupt service routines that cause a context switch. */
-StackType_t xISRStack[ configISR_STACK_SIZE ] = { 0 };
+__attribute__ ((aligned(8))) StackType_t xISRStack[ configISR_STACK_SIZE ] = { 0 };
 
 /* The top of stack value ensures there is enough space to store 6 registers on
 the callers stack, as some functions seem to want to do this. */
-const StackType_t * const xISRStackTop = &( xISRStack[ configISR_STACK_SIZE - 7 ] );
+const StackType_t * const xISRStackTop = &( xISRStack[ ( configISR_STACK_SIZE & ~portBYTE_ALIGNMENT_MASK ) - 8 ] );
 
 /*-----------------------------------------------------------*/
 

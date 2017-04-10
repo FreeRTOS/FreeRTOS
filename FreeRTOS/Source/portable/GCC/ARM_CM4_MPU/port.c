@@ -88,6 +88,16 @@ task.h is included from an application file. */
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
+#ifndef configSYSTICK_CLOCK_HZ
+	#define configSYSTICK_CLOCK_HZ configCPU_CLOCK_HZ
+	/* Ensure the SysTick is clocked at the same frequency as the core. */
+	#define portNVIC_SYSTICK_CLK	( 1UL << 2UL )
+#else
+	/* The way the SysTick is clocked is not modified in case it is not the same
+	as the core. */
+	#define portNVIC_SYSTICK_CLK	( 0 )
+#endif
+
 /* Constants required to access and manipulate the NVIC. */
 #define portNVIC_SYSTICK_CTRL_REG				( * ( ( volatile uint32_t * ) 0xe000e010 ) )
 #define portNVIC_SYSTICK_LOAD_REG				( * ( ( volatile uint32_t * ) 0xe000e014 ) )
@@ -112,7 +122,6 @@ task.h is included from an application file. */
 #define portPERIPHERALS_END_ADDRESS				0x5FFFFFFFUL
 
 /* Constants required to access and manipulate the SysTick. */
-#define portNVIC_SYSTICK_CLK					( 0x00000004UL )
 #define portNVIC_SYSTICK_INT					( 0x00000002UL )
 #define portNVIC_SYSTICK_ENABLE					( 0x00000001UL )
 #define portNVIC_PENDSV_PRI						( ( ( uint32_t ) configKERNEL_INTERRUPT_PRIORITY ) << 16UL )
@@ -146,16 +155,6 @@ task.h is included from an application file. */
 have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
 #define portSTART_ADDRESS_MASK				( ( StackType_t ) 0xfffffffeUL )
 
-/* Each task maintains its own interrupt status in the critical nesting
-variable.  Note this is not saved as part of the task context as context
-switches can only occur when uxCriticalNesting is zero. */
-static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
-
-/*
- * Setup the timer to generate the tick interrupts.
- */
-static void prvSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
-
 /*
  * Configure a number of standard MPU regions that are used by all tasks.
  */
@@ -174,6 +173,13 @@ static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes ) PRIVI
  * other than return true.
  */
 BaseType_t xPortRaisePrivilege( void ) __attribute__(( naked ));
+
+/*
+ * Setup the timer to generate the tick interrupts.  The implementation in this
+ * file is weak to allow application writers to change the timer used to
+ * generate the tick interrupt.
+ */
+void vPortSetupTimerInterrupt( void );
 
 /*
  * Standard FreeRTOS exception handlers.
@@ -197,6 +203,13 @@ static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) 
  * Function to enable the VFP.
  */
  static void vPortEnableVFP( void ) __attribute__ (( naked ));
+
+/*-----------------------------------------------------------*/
+
+/* Each task maintains its own interrupt status in the critical nesting
+variable.  Note this is not saved as part of the task context as context
+switches can only occur when uxCriticalNesting is zero. */
+static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 
 /*
  * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
@@ -261,7 +274,7 @@ void vPortSVCHandler( void )
 			"	mrs r0, psp						\n"
 		#endif
 			"	b %0							\n"
-			::"i"(prvSVCHandler):"r0"
+			::"i"(prvSVCHandler):"r0", "memory"
 	);
 }
 /*-----------------------------------------------------------*/
@@ -284,7 +297,7 @@ uint8_t ucSVCNumber;
 											but do ensure the code is completely
 											within the specified behaviour for the
 											architecture. */
-											__asm volatile( "dsb" );
+											__asm volatile( "dsb" ::: "memory" );
 											__asm volatile( "isb" );
 
 											break;
@@ -294,7 +307,7 @@ uint8_t ucSVCNumber;
 												"	mrs r1, control		\n" /* Obtain current control value. */
 												"	bic r1, #1			\n" /* Set privilege bit. */
 												"	msr control, r1		\n" /* Write back new control value. */
-												:::"r1"
+												::: "r1", "memory"
 											);
 											break;
 
@@ -414,7 +427,7 @@ BaseType_t xPortStartScheduler( void )
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
@@ -425,9 +438,9 @@ BaseType_t xPortStartScheduler( void )
 	/* Lazy save always. */
 	*( portFPCCR ) |= portASPEN_AND_LSPEN_BITS;
 
-	/* Start the first task.  This also clears the bit that indicates the FPU is 
-	in use in case the FPU was used before the scheduler was started - which 
-	would otherwise result in the unnecessary leaving of space in the SVC stack 
+	/* Start the first task.  This also clears the bit that indicates the FPU is
+	in use in case the FPU was used before the scheduler was started - which
+	would otherwise result in the unnecessary leaving of space in the SVC stack
 	for lazy saving of FPU registers. */
 	__asm volatile(
 					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
@@ -442,7 +455,7 @@ BaseType_t xPortStartScheduler( void )
 					" isb					\n"
 					" svc %0				\n" /* System call to start first task. */
 					" nop					\n"
-					:: "i" (portSVC_START_SCHEDULER) );
+					:: "i" (portSVC_START_SCHEDULER) : "memory" );
 
 	/* Should not get here! */
 	return 0;
@@ -555,15 +568,15 @@ uint32_t ulDummy;
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-static void prvSetupTimerInterrupt( void )
+__attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 {
-	/* Clear the SysTick. */
+	/* Stop and clear the SysTick. */
 	portNVIC_SYSTICK_CTRL_REG = 0UL;
 	portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
 
 	/* Configure SysTick to interrupt at the requested rate. */
-	portNVIC_SYSTICK_LOAD_REG = ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
-	portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE;
+	portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
+	portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK | portNVIC_SYSTICK_INT | portNVIC_SYSTICK_ENABLE );
 }
 /*-----------------------------------------------------------*/
 
@@ -680,7 +693,7 @@ BaseType_t xPortRaisePrivilege( void )
 		"	svcne %0							\n" /* Switch to privileged. */
 		"	moveq r0, #1						\n" /* CONTROL[0]==0, return true. */
 		"	bx lr								\n"
-		:: "i" (portSVC_RAISE_PRIVILEGE) : "r0"
+		:: "i" (portSVC_RAISE_PRIVILEGE) : "r0", "memory"
 	);
 
 	return 0;
@@ -791,7 +804,7 @@ uint32_t ul;
 	uint8_t ucCurrentPriority;
 
 		/* Obtain the number of the currently executing interrupt. */
-		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) );
+		__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) :: "memory" );
 
 		/* Is the interrupt number a user defined interrupt? */
 		if( ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER )

@@ -384,6 +384,10 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 			prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );
 		}
+		else
+		{
+			traceQUEUE_CREATE_FAILED( ucQueueType );
+		}
 
 		return pxNewQueue;
 	}
@@ -431,6 +435,10 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 			prvInitialiseNewQueue( uxQueueLength, uxItemSize, pucQueueStorage, ucQueueType, pxNewQueue );
+		}
+		else
+		{
+			traceQUEUE_CREATE_FAILED( ucQueueType );
 		}
 
 		return pxNewQueue;

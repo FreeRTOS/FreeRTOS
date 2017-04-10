@@ -252,6 +252,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 
 static void prvTaskExitError( void )
 {
+volatile uint32_t ulDummy = 0;
+
 	/* A function that implements a task must not exit or attempt to return to
 	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
@@ -260,7 +262,16 @@ static void prvTaskExitError( void )
 	defined, then stop here so application writers can catch the error. */
 	configASSERT( uxCriticalNesting == ~0UL );
 	portDISABLE_INTERRUPTS();
-	for( ;; );
+	while( ulDummy == 0 )
+	{
+		/* This file calls prvTaskExitError() after the scheduler has been
+		started to remove a compiler warning about the function being defined
+		but never called.  ulDummy is used purely to quieten other warnings
+		about code appearing after this function is called - making ulDummy
+		volatile makes the compiler think the function could return and
+		therefore not output an 'unreachable code' warning for code that appears
+		after it. */
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -403,8 +414,8 @@ BaseType_t xPortStartScheduler( void )
 	functionality by defining configTASK_RETURN_ADDRESS.  Call
 	vTaskSwitchContext() so link time optimisation does not remove the
 	symbol. */
-	prvTaskExitError();
 	vTaskSwitchContext();
+	prvTaskExitError();
 
 	/* Should not get here! */
 	return 0;

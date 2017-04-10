@@ -154,6 +154,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 
 static void prvTaskExitError( void )
 {
+volatile uint32_t ulDummy = 0UL;
+
 	/* A function that implements a task must not exit or attempt to return to
 	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
@@ -162,7 +164,16 @@ static void prvTaskExitError( void )
 	defined, then stop here so application writers can catch the error. */
 	configASSERT( uxCriticalNesting == ~0UL );
 	portDISABLE_INTERRUPTS();
-	for( ;; );
+	while( ulDummy == 0 )
+	{
+		/* This file calls prvTaskExitError() after the scheduler has been
+		started to remove a compiler warning about the function being defined
+		but never called.  ulDummy is used purely to quieten other warnings
+		about code appearing after this function is called - making ulDummy
+		volatile makes the compiler think the function could return and
+		therefore not output an 'unreachable code' warning for code that appears
+		after it. */
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -179,20 +190,21 @@ void vPortStartFirstTask( void )
 	table offset register that can be used to locate the initial stack value.
 	Not all M0 parts have the application vector table at address 0. */
 	__asm volatile(
-	"	ldr	r2, pxCurrentTCBConst2	\n" /* Obtain location of pxCurrentTCB. */
-	"	ldr r3, [r2]				\n"
-	"	ldr r0, [r3]				\n" /* The first item in pxCurrentTCB is the task top of stack. */
-	"	add r0, #32					\n" /* Discard everything up to r0. */
-	"	msr psp, r0					\n" /* This is now the new top of stack to use in the task. */
+	"	.syntax unified				\n"
+	"	ldr  r2, pxCurrentTCBConst2	\n" /* Obtain location of pxCurrentTCB. */
+	"	ldr  r3, [r2]				\n"
+	"	ldr  r0, [r3]				\n" /* The first item in pxCurrentTCB is the task top of stack. */
+	"	adds r0, #32					\n" /* Discard everything up to r0. */
+	"	msr  psp, r0					\n" /* This is now the new top of stack to use in the task. */
 	"	movs r0, #2					\n" /* Switch to the psp stack. */
-	"	msr CONTROL, r0				\n"
+	"	msr  CONTROL, r0				\n"
 	"	isb							\n"
-	"	pop {r0-r5}					\n" /* Pop the registers that are saved automatically. */
-	"	mov lr, r5					\n" /* lr is now in r5. */
-	"	pop {r3}					\n" /* Return address is now in r3. */
-	"	pop {r2}					\n" /* Pop and discard XPSR. */
+	"	pop  {r0-r5}					\n" /* Pop the registers that are saved automatically. */
+	"	mov  lr, r5					\n" /* lr is now in r5. */
+	"	pop  {r3}					\n" /* Return address is now in r3. */
+	"	pop  {r2}					\n" /* Pop and discard XPSR. */
 	"	cpsie i						\n" /* The first task has its context and interrupts can be enabled. */
-	"	bx r3						\n" /* Finally, jump to the user defined task code. */
+	"	bx   r3						\n" /* Finally, jump to the user defined task code. */
 	"								\n"
 	"	.align 4					\n"
 	"pxCurrentTCBConst2: .word pxCurrentTCB	  "
@@ -225,8 +237,8 @@ BaseType_t xPortStartScheduler( void )
 	functionality by defining configTASK_RETURN_ADDRESS.  Call
 	vTaskSwitchContext() so link time optimisation does not remove the
 	symbol. */
-	prvTaskExitError();
 	vTaskSwitchContext();
+	prvTaskExitError();
 
 	/* Should not get here! */
 	return 0;
@@ -282,12 +294,16 @@ uint32_t ulSetInterruptMaskFromISR( void )
 					::: "memory"
 				  );
 
-	/* To avoid compiler warnings.  This line will never be reached. */
+#if !defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+	/* To avoid compiler warnings.  The return statement will nevere be reached,
+	but some compilers warn if it is not included, while others won't compile if
+	it is. */
 	return 0;
+#endif
 }
 /*-----------------------------------------------------------*/
 
-void vClearInterruptMaskFromISR( uint32_t ulMask )
+void vClearInterruptMaskFromISR( __attribute__( ( unused ) ) uint32_t ulMask )
 {
 	__asm volatile(
 					" msr PRIMASK, r0	\n"
@@ -295,8 +311,12 @@ void vClearInterruptMaskFromISR( uint32_t ulMask )
 					::: "memory"
 				  );
 
-	/* Just to avoid compiler warning. */
+#if !defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+	/* Just to avoid compiler warning.  ulMask is used from the asm code but
+	the compiler can't see that.  Some compilers generate warnings without the
+	following line, while others generate warnings if the line is included. */
 	( void ) ulMask;
+#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -306,12 +326,13 @@ void xPortPendSVHandler( void )
 
 	__asm volatile
 	(
+	"	.syntax unified						\n"
 	"	mrs r0, psp							\n"
 	"										\n"
 	"	ldr	r3, pxCurrentTCBConst			\n" /* Get the location of the current TCB. */
 	"	ldr	r2, [r3]						\n"
 	"										\n"
-	"	sub r0, r0, #32						\n" /* Make space for the remaining low registers. */
+	"	subs r0, r0, #32						\n" /* Make space for the remaining low registers. */
 	"	str r0, [r2]						\n" /* Save the new top of stack. */
 	"	stmia r0!, {r4-r7}					\n" /* Store the low registers that are not saved automatically. */
 	" 	mov r4, r8							\n" /* Store the high registers. */
@@ -328,7 +349,7 @@ void xPortPendSVHandler( void )
 	"										\n"
 	"	ldr r1, [r2]						\n"
 	"	ldr r0, [r1]						\n" /* The first item in pxCurrentTCB is the task top of stack. */
-	"	add r0, r0, #16						\n" /* Move to the high registers. */
+	"	adds r0, r0, #16						\n" /* Move to the high registers. */
 	"	ldmia r0!, {r4-r7}					\n" /* Pop the high registers. */
 	" 	mov r8, r4							\n"
 	" 	mov r9, r5							\n"
@@ -337,7 +358,7 @@ void xPortPendSVHandler( void )
 	"										\n"
 	"	msr psp, r0							\n" /* Remember the new top of stack for the task. */
 	"										\n"
-	"	sub r0, r0, #32						\n" /* Go back for the low registers that are not automatically restored. */
+	"	subs r0, r0, #32					\n" /* Go back for the low registers that are not automatically restored. */
 	" 	ldmia r0!, {r4-r7}					\n" /* Pop low registers.  */
 	"										\n"
 	"	bx r3								\n"

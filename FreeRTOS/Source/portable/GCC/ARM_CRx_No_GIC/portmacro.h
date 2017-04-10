@@ -128,7 +128,7 @@ extern volatile uint32_t ulPortYieldRequired;	\
 
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 #define portYIELD() __asm volatile ( "SWI 0		\n"				\
-									 "ISB		  " );
+									 "ISB		  " ::: "memory" );
 
 
 /*-----------------------------------------------------------
@@ -148,16 +148,16 @@ extern void vPortInstallFreeRTOSVectorTable( void );
 globally enable and disable interrupts. */
 #define portENTER_CRITICAL()		vPortEnterCritical();
 #define portEXIT_CRITICAL()			vPortExitCritical();
-#define portENABLE_INTERRUPTS()		__asm volatile ( "CPSIE i 	\n"	);
+#define portENABLE_INTERRUPTS()		__asm volatile ( "CPSIE i 	\n"	::: "memory" );
 #define portDISABLE_INTERRUPTS()	__asm volatile ( "CPSID i 	\n"		\
 													 "DSB		\n"		\
-													 "ISB		  " );
+													 "ISB		  " ::: "memory" );
 
 __attribute__( ( always_inline ) ) static __inline uint32_t portINLINE_SET_INTERRUPT_MASK_FROM_ISR( void )
 {
 volatile uint32_t ulCPSR;
 
-	__asm volatile ( "MRS %0, CPSR" : "=r" (ulCPSR) );
+	__asm volatile ( "MRS %0, CPSR" : "=r" (ulCPSR) :: "memory" );
 	ulCPSR &= portINTERRUPT_ENABLE_BIT;
 	portDISABLE_INTERRUPTS();
 	return ulCPSR;

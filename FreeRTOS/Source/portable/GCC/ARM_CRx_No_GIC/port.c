@@ -254,7 +254,7 @@ uint32_t ulAPSR;
 
 	/* Only continue if the CPU is not in User mode.  The CPU must be in a
 	Privileged mode for the scheduler to start. */
-	__asm volatile ( "MRS %0, APSR" : "=r" ( ulAPSR ) );
+	__asm volatile ( "MRS %0, APSR" : "=r" ( ulAPSR ) :: "memory" );
 	ulAPSR &= portAPSR_MODE_BITS_MASK;
 	configASSERT( ulAPSR != portAPSR_USER_MODE );
 
@@ -354,7 +354,7 @@ uint32_t ulInitialFPSCR = 0;
 	ulPortTaskHasFPUContext = pdTRUE;
 
 	/* Initialise the floating point status register. */
-	__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) );
+	__asm volatile ( "FMXR 	FPSCR, %0" :: "r" (ulInitialFPSCR) : "memory" );
 }
 /*-----------------------------------------------------------*/
 

@@ -69,7 +69,7 @@
 
 /*
  * Creates one or more tasks that repeatedly perform a set of integer
- * calculations.  The result of each run-time calculation is compared to the 
+ * calculations.  The result of each run-time calculation is compared to the
  * known expected result - with a mismatch being indicative of an error in the
  * context switch mechanism.
  */
@@ -151,8 +151,8 @@ volatile BaseType_t *pxTaskHasExecuted;
 		lValue *= intgCONST3;
 		lValue /= intgCONST4;
 
-		/* If the calculation is found to be incorrect we stop setting the 
-		TaskHasExecuted variable so the check task can see an error has 
+		/* If the calculation is found to be incorrect we stop setting the
+		TaskHasExecuted variable so the check task can see an error has
 		occurred. */
 		if( lValue != intgEXPECTED_ANSWER ) /*lint !e774 volatile used to prevent this being optimised out. */
 		{
@@ -185,7 +185,7 @@ BaseType_t xAreIntegerMathsTaskStillRunning( void )
 BaseType_t xReturn = pdTRUE;
 short sTask;
 
-	/* Check the maths tasks are still running by ensuring their check variables 
+	/* Check the maths tasks are still running by ensuring their check variables
 	are still being set to true. */
 	for( sTask = 0; sTask < intgNUMBER_OF_TASKS; sTask++ )
 	{

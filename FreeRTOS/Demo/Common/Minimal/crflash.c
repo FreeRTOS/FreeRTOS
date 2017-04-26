@@ -218,11 +218,11 @@ UBaseType_t uxLEDToFlash;
 	/* Co-routines MUST start with a call to crSTART. */
 	crSTART( xHandle );
 	( void ) uxIndex;
-	
+
 	for( ;; )
 	{
 		/* Block to wait for the number of the LED to flash. */
-		crQUEUE_RECEIVE( xHandle, xFlashQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );		
+		crQUEUE_RECEIVE( xHandle, xFlashQueue, &uxLEDToFlash, portMAX_DELAY, &xResult );
 
 		if( xResult != pdPASS )
 		{

@@ -139,12 +139,12 @@ const TickType_t xBlockTime = ( TickType_t ) 100;
 	if( pxFirstSemaphoreParameters != NULL )
 	{
 		/* Create the semaphore used by the first two tasks. */
-		pxFirstSemaphoreParameters->xSemaphore = xSemaphoreCreateBinary();		
+		pxFirstSemaphoreParameters->xSemaphore = xSemaphoreCreateBinary();
 
 		if( pxFirstSemaphoreParameters->xSemaphore != NULL )
 		{
 			xSemaphoreGive( pxFirstSemaphoreParameters->xSemaphore );
-			
+
 			/* Create the variable which is to be shared by the first two tasks. */
 			pxFirstSemaphoreParameters->pulSharedVariable = ( uint32_t * ) pvPortMalloc( sizeof( uint32_t ) );
 
@@ -173,12 +173,12 @@ const TickType_t xBlockTime = ( TickType_t ) 100;
 	pxSecondSemaphoreParameters = ( xSemaphoreParameters * ) pvPortMalloc( sizeof( xSemaphoreParameters ) );
 	if( pxSecondSemaphoreParameters != NULL )
 	{
-		pxSecondSemaphoreParameters->xSemaphore = xSemaphoreCreateBinary();		
+		pxSecondSemaphoreParameters->xSemaphore = xSemaphoreCreateBinary();
 
 		if( pxSecondSemaphoreParameters->xSemaphore != NULL )
 		{
 			xSemaphoreGive( pxSecondSemaphoreParameters->xSemaphore );
-			
+
 			pxSecondSemaphoreParameters->pulSharedVariable = ( uint32_t * ) pvPortMalloc( sizeof( uint32_t ) );
 			*( pxSecondSemaphoreParameters->pulSharedVariable ) = semtstBLOCKING_EXPECTED_VALUE;
 			pxSecondSemaphoreParameters->xBlockTime = xBlockTime / portTICK_PERIOD_MS;

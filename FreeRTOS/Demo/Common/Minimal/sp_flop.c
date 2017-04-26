@@ -68,15 +68,15 @@
 */
 
 /*
- * Creates eight tasks, each of which loops continuously performing a floating 
+ * Creates eight tasks, each of which loops continuously performing a floating
  * point calculation - using single precision variables.
  *
- * All the tasks run at the idle priority and never block or yield.  This causes 
- * all eight tasks to time slice with the idle task.  Running at the idle priority 
+ * All the tasks run at the idle priority and never block or yield.  This causes
+ * all eight tasks to time slice with the idle task.  Running at the idle priority
  * means that these tasks will get pre-empted any time another task is ready to run
- * or a time slice occurs.  More often than not the pre-emption will occur mid 
- * calculation, creating a good test of the schedulers context switch mechanism - a 
- * calculation producing an unexpected result could be a symptom of a corruption in 
+ * or a time slice occurs.  More often than not the pre-emption will occur mid
+ * calculation, creating a good test of the schedulers context switch mechanism - a
+ * calculation producing an unexpected result could be a symptom of a corruption in
  * the context of a task.
  */
 
@@ -93,14 +93,14 @@
 #define mathSTACK_SIZE		configMINIMAL_STACK_SIZE
 #define mathNUMBER_OF_TASKS  ( 8 )
 
-/* Four tasks, each of which performs a different floating point calculation.  
+/* Four tasks, each of which performs a different floating point calculation.
 Each of the four is created twice. */
 static portTASK_FUNCTION_PROTO( vCompetingMathTask1, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask2, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask3, pvParameters );
 static portTASK_FUNCTION_PROTO( vCompetingMathTask4, pvParameters );
 
-/* These variables are used to check that all the tasks are still running.  If a 
+/* These variables are used to check that all the tasks are still running.  If a
 task gets a calculation wrong it will
 stop incrementing its check variable. */
 static volatile uint16_t usTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
@@ -133,7 +133,7 @@ short sError = pdFALSE;
 
 	fAnswer = ( f1 + f2 ) * f3;
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
@@ -150,7 +150,7 @@ short sError = pdFALSE;
 			taskYIELD();
 		#endif
 
-		/* If the calculation does not match the expected constant, stop the 
+		/* If the calculation does not match the expected constant, stop the
 		increment of the check variable. */
 		if( fabs( f4 - fAnswer ) > 0.001F )
 		{
@@ -159,7 +159,7 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know this task is still running okay. */
 			( *pusTaskCheckVariable )++;
 		}
@@ -186,7 +186,7 @@ short sError = pdFALSE;
 	fAnswer = ( f1 / f2 ) * f3;
 
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
@@ -202,8 +202,8 @@ short sError = pdFALSE;
 		#if configUSE_PREEMPTION == 0
 			taskYIELD();
 		#endif
-		
-		/* If the calculation does not match the expected constant, stop the 
+
+		/* If the calculation does not match the expected constant, stop the
 		increment of the check variable. */
 		if( fabs( f4 - fAnswer ) > 0.001F )
 		{
@@ -212,7 +212,7 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know
 			this task is still running okay. */
 			( *pusTaskCheckVariable )++;
@@ -233,25 +233,25 @@ const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
 	pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
 
-	/* Keep filling an array, keeping a running total of the values placed in the 
-	array.  Then run through the array adding up all the values.  If the two totals 
+	/* Keep filling an array, keeping a running total of the values placed in the
+	array.  Then run through the array adding up all the values.  If the two totals
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
 		fTotal1 = 0.0F;
 		fTotal2 = 0.0F;
 		fPosition = 0.0F;
-		
+
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
 			pfArray[ xPosition ] = fPosition + 5.5F;
-			fTotal1 += fPosition + 5.5F;	
+			fTotal1 += fPosition + 5.5F;
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -275,7 +275,7 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know	this task is still running okay. */
 			( *pusTaskCheckVariable )++;
 		}
@@ -291,14 +291,14 @@ const size_t xArraySize = 10;
 size_t xPosition;
 short sError = pdFALSE;
 
-	/* The variable this task increments to show it is still running is passed in 
+	/* The variable this task increments to show it is still running is passed in
 	as the parameter. */
 	pusTaskCheckVariable = ( uint16_t * ) pvParameters;
 
 	pfArray = ( float * ) pvPortMalloc( xArraySize * sizeof( float ) );
 
-	/* Keep filling an array, keeping a running total of the values placed in the 
-	array.  Then run through the array adding up all the values.  If the two totals 
+	/* Keep filling an array, keeping a running total of the values placed in the
+	array.  Then run through the array adding up all the values.  If the two totals
 	do not match, stop the check variable from incrementing. */
 	for( ;; )
 	{
@@ -309,7 +309,7 @@ short sError = pdFALSE;
 		for( xPosition = 0; xPosition < xArraySize; xPosition++ )
 		{
 			pfArray[ xPosition ] = fPosition * 12.123F;
-			fTotal1 += fPosition * 12.123F;	
+			fTotal1 += fPosition * 12.123F;
 		}
 
 		#if configUSE_PREEMPTION == 0
@@ -333,23 +333,23 @@ short sError = pdFALSE;
 
 		if( sError == pdFALSE )
 		{
-			/* If the calculation has always been correct, increment the check 
+			/* If the calculation has always been correct, increment the check
 			variable so we know	this task is still running okay. */
 			( *pusTaskCheckVariable )++;
 		}
 	}
-}				 
+}
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
 BaseType_t xAreMathsTaskStillRunning( void )
 {
-/* Keep a history of the check variables so we know if they have been incremented 
+/* Keep a history of the check variables so we know if they have been incremented
 since the last call. */
 static uint16_t usLastTaskCheck[ mathNUMBER_OF_TASKS ] = { ( uint16_t ) 0 };
 BaseType_t xReturn = pdTRUE, xTask;
 
-	/* Check the maths tasks are still running by ensuring their check variables 
+	/* Check the maths tasks are still running by ensuring their check variables
 	are still incrementing. */
 	for( xTask = 0; xTask < mathNUMBER_OF_TASKS; xTask++ )
 	{

@@ -69,13 +69,13 @@
 
 /**
  * This version of flash .c is for use on systems that have limited stack space
- * and no display facilities.  The complete version can be found in the 
+ * and no display facilities.  The complete version can be found in the
  * Demo/Common/Full directory.
- * 
- * Three tasks are created, each of which flash an LED at a different rate.  The first 
+ *
+ * Three tasks are created, each of which flash an LED at a different rate.  The first
  * LED flashes every 200ms, the second every 400ms, the third every 600ms.
  *
- * The LED flash tasks provide instant visual feedback.  They show that the scheduler 
+ * The LED flash tasks provide instant visual feedback.  They show that the scheduler
  * is still operational.
  *
  */
@@ -143,7 +143,7 @@ UBaseType_t uxLED;
 	delay is only half the total period. */
 	xFlashRate /= ( TickType_t ) 2;
 
-	/* We need to initialise xLastFlashTime prior to the first call to 
+	/* We need to initialise xLastFlashTime prior to the first call to
 	vTaskDelayUntil(). */
 	xLastFlashTime = xTaskGetTickCount();
 

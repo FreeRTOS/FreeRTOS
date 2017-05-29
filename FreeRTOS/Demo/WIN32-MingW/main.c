@@ -109,7 +109,7 @@ mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
 The simply blinky demo is implemented and described in main_blinky.c.  The more
 comprehensive test and demo application is implemented and described in
 main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /* This demo uses heap_5.c, and these constants define the sizes of the regions
 that make up the total heap.  This is only done to provide an example of heap_5
@@ -160,12 +160,8 @@ void vApplicationTickHook( void );
  */
 static void prvSaveTraceFile( void );
 
-/* The user trace event posted to the trace recording on each tick interrupt.
-Note tick events will not appear in the trace recording with regular period
-because this project runs in a Windows simulator, and does not therefore
-exhibit deterministic behaviour. */
-traceLabel xTickTraceUserEvent;
-static portBASE_TYPE xTraceRunning = pdTRUE;
+/* Notes if the trace is running or not. */
+static BaseType_t xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
@@ -178,16 +174,9 @@ int main( void )
 	required when heap_4.c is used. */
 	prvInitialiseHeap();
 
-	/* Initialise the trace recorder and create the label used to post user
-	events to the trace recording on each tick interrupt. */
-	vTraceInitTraceData();
-	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
-
-	/* Start the trace recording - the recording is written to a file if
-	configASSERT() is called. */
-	printf( "\r\nTrace started.  Hit a key to dump trace file to disk (does not work from Eclipse console).\r\n" );
-	fflush( stdout );
-	uiTraceStart();
+	/* Initialise the trace recorder.  Use of the trace recorder is optional.
+	See http://www.FreeRTOS.org/trace for more information. */
+	vTraceEnable( TRC_START );
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -197,6 +186,12 @@ int main( void )
 	}
 	#else
 	{
+		/* Start the trace recording - the recording is written to a file if
+		configASSERT() is called. */
+		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
+		uiTraceStart();
+
 		main_full();
 	}
 	#endif
@@ -236,7 +231,7 @@ void vApplicationIdleHook( void )
 	/* Uncomment the following code to allow the trace to be stopped with any 
 	key press.  The code is commented out by default as the kbhit() function
 	interferes with the run time behaviour. */
-	/* 
+	/*
 		if( _kbhit() != pdFALSE )
 		{
 			if( xTraceRunning == pdTRUE )
@@ -283,19 +278,12 @@ void vApplicationTickHook( void )
 		vFullDemoTickHookFunction();
 	}
 	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
-
-	/* Write a user event to the trace log.
-	Note tick events will not appear in the trace recording with regular period
-	because this project runs in a Windows simulator, and does not therefore
-	exhibit deterministic behaviour.  Windows will run the simulator in
-	bursts. */
-	vTraceUserEvent( xTickTraceUserEvent );
 }
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
-static portBASE_TYPE xPrinted = pdFALSE;
+static BaseType_t xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
 	/* Parameters are not used. */

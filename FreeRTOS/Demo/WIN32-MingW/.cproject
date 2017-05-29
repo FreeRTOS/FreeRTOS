@@ -40,7 +40,7 @@
 								<option id="gnu.c.compiler.option.warnings.extrawarn.1804262134" name="Extra warnings (-Wextra)" superClass="gnu.c.compiler.option.warnings.extrawarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.c.compiler.option.misc.other.1931924410" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -Wcast-qual" valueType="string"/>
 								<option id="gnu.c.compiler.option.debugging.gprof.444112294" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false" value="false" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1757027831" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1757027831" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_WIN32_WINNT=0x0601"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.974248912" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -64,8 +64,18 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.500696043" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.396692239.363521217" name="/" resourcePath="FreeRTOS+Trace Recorder/streamports">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.2001714173" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.484223068" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2050893079"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1176918279" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.867063893"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1512464009" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1190873987"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.666862055" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1285167012"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1503833368" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.2080839343"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.2108315890" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.500696043"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="FreeRTOS+Trace Recorder/streamports" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

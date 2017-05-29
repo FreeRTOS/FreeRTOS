@@ -143,11 +143,11 @@ functions anyway. */
 #define INCLUDE_xTaskGetSchedulerState			1
 #define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
 #define INCLUDE_xTaskGetIdleTaskHandle			1
+#define INCLUDE_xTaskGetHandle					1
 #define INCLUDE_eTaskGetState					1
 #define INCLUDE_xSemaphoreGetMutexHolder		1
 #define INCLUDE_xTimerPendFunctionCall			1
 #define INCLUDE_xTaskAbortDelay					1
-#define INCLUDE_xTaskGetHandle					1
 
 /* It is a good idea to define configASSERT() while developing.  configASSERT()
 uses the same semantics as the standard C assert() macro. */
@@ -155,8 +155,6 @@ extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-#define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
-#define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
-#include "trcKernelPort.h"
+#include "trcRecorder.h"
 
 #endif /* FREERTOS_CONFIG_H */

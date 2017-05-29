@@ -82,10 +82,7 @@
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 
-/* FreeRTOS+Trace includes. */
-#include "trcUser.h"
-
-/* Variables used in the creation of the run time stats time base.  Run time 
+/* Variables used in the creation of the run time stats time base.  Run time
 stats record how much time each task spends in the Running state. */
 static long long llInitialRunTimeCounterValue = 0LL, llTicksPerHundedthMillisecond = 0LL;
 
@@ -96,7 +93,7 @@ void vConfigureTimerForRunTimeStats( void )
 LARGE_INTEGER liPerformanceCounterFrequency, liInitialRunTimeValue;
 
 	/* Initialise the variables used to create the run time stats time base.
-	Run time stats record how much time each task spends in the Running 
+	Run time stats record how much time each task spends in the Running
 	state. */
 
 	if( QueryPerformanceFrequency( &liPerformanceCounterFrequency ) == 0 )
@@ -125,7 +122,7 @@ unsigned long ulReturn;
 	/* What is the performance counter value now? */
 	QueryPerformanceCounter( &liCurrentCount );
 
-	/* Subtract the performance counter value reading taken when the 
+	/* Subtract the performance counter value reading taken when the
 	application started to get a count from that reference point, then
 	scale to (simulated) 1/100ths of a millisecond. */
 	if( llTicksPerHundedthMillisecond == 0 )

@@ -103,21 +103,6 @@
     <ClCompile Include="..\..\Source\croutine.c">
       <Filter>FreeRTOS Source\Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernel.c">
-      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcUser.c">
-      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcBase.c">
-      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernelPort.c">
-      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcHardwarePort.c">
-      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\Minimal\QueueOverwrite.c">
       <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
     </ClCompile>
@@ -153,6 +138,12 @@
     </ClCompile>
     <ClCompile Include="..\Common\Minimal\AbortDelay.c">
       <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcKernelPort.c">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c">
+      <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

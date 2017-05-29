@@ -172,12 +172,8 @@ declared here, as a global, so it can be checked by a test that is implemented
 in a different file. */
 StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
-/* The user trace event posted to the trace recording on each tick interrupt.
-Note:  This project runs under Windows, and Windows will not be executing the
-RTOS threads continuously.  Therefore tick events will not appear with a regular
-interval within the trace recording. */
-traceLabel xTickTraceUserEvent;
-static portBASE_TYPE xTraceRunning = pdTRUE;
+/* Notes if the trace is running or not. */
+static BaseType_t xTraceRunning = pdTRUE;
 
 /*-----------------------------------------------------------*/
 
@@ -188,12 +184,9 @@ int main( void )
 	http://www.freertos.org/a00111.html for an explanation. */
 	prvInitialiseHeap();
 
-	/* Initialise the trace recorder and create the label used to post user
-	events to the trace recording on each tick interrupt.  Use of the trace
-	recorder is optional.  See http://www.FreeRTOS.org/trace for more
-	information. */
-	vTraceInitTraceData();
-	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
+	/* Initialise the trace recorder.  Use of the trace recorder is optional.
+	See http://www.FreeRTOS.org/trace for more information. */
+	vTraceEnable( TRC_START );
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -299,12 +292,6 @@ void vApplicationTickHook( void )
 		vFullDemoTickHookFunction();
 	}
 	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
-
-	/* Write a user event to the trace log.  Note:  This project runs under
-	Windows, and Windows will not be executing the RTOS threads continuously.
-	Therefore tick events will not appear with a regular interval within the the
-	trace recording. */
-	vTraceUserEvent( xTickTraceUserEvent );
 }
 /*-----------------------------------------------------------*/
 
@@ -319,7 +306,7 @@ void vApplicationDaemonTaskStartupHook( void )
 
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
-static portBASE_TYPE xPrinted = pdFALSE;
+static BaseType_t xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
 	/* Called if an assertion passed to configASSERT() fails.  See

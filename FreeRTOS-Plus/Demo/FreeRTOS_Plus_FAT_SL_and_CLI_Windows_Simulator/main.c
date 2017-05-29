@@ -164,7 +164,7 @@ const uint32_t ulLongTime_ms = 250UL;
 	line will never be reached.  If the following line does execute, then
 	there was insufficient FreeRTOS heap memory available for the idle and/or
 	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not not
+	FreeRTOS web site for more details (this is standard text that is not
 	really applicable to the Win32 simulator port). */
 	for( ;; )
 	{

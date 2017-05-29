@@ -3265,6 +3265,11 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 	/** THIS IS THE RTOS IDLE TASK - WHICH IS CREATED AUTOMATICALLY WHEN THE
 	SCHEDULER IS STARTED. **/
 
+	/* In case a task that has a secure context deletes itself, in which case
+	the idle task is responsible for deleting the task's secure context, if
+	any. */
+	portTASK_CALLS_SECURE_FUNCTIONS();
+	
 	for( ;; )
 	{
 		/* See if any tasks have deleted themselves - if so then the idle task
@@ -3503,37 +3508,22 @@ static void prvCheckTasksWaitingTermination( void )
 
 	#if ( INCLUDE_vTaskDelete == 1 )
 	{
-		BaseType_t xListIsEmpty;
+		TCB_t *pxTCB;
 
-		/* ucTasksDeleted is used to prevent vTaskSuspendAll() being called
-		too often in the idle task. */
+		/* uxDeletedTasksWaitingCleanUp is used to prevent vTaskSuspendAll()
+		being called too often in the idle task. */
 		while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
 		{
-			vTaskSuspendAll();
+			taskENTER_CRITICAL();
 			{
-				xListIsEmpty = listLIST_IS_EMPTY( &xTasksWaitingTermination );
+				pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
+				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
+				--uxCurrentNumberOfTasks;
+				--uxDeletedTasksWaitingCleanUp;
 			}
-			( void ) xTaskResumeAll();
+			taskEXIT_CRITICAL();
 
-			if( xListIsEmpty == pdFALSE )
-			{
-				TCB_t *pxTCB;
-
-				taskENTER_CRITICAL();
-				{
-					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
-					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
-					--uxCurrentNumberOfTasks;
-					--uxDeletedTasksWaitingCleanUp;
-				}
-				taskEXIT_CRITICAL();
-
-				prvDeleteTCB( pxTCB );
-			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
+			prvDeleteTCB( pxTCB );
 		}
 	}
 	#endif /* INCLUDE_vTaskDelete */
@@ -3763,7 +3753,7 @@ static void prvCheckTasksWaitingTermination( void )
 			{
 				/* Neither the stack nor the TCB were allocated dynamically, so
 				nothing needs to be freed. */
-				configASSERT( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_AND_TCB	)
+				configASSERT( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_AND_TCB	);
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}

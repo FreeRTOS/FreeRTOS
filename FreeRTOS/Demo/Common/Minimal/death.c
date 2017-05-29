@@ -159,6 +159,9 @@ volatile long l1, l2;
 TaskHandle_t xTaskToKill;
 const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 200 );
 
+	/* Test deletion of a task's secure context, if any. */
+	portTASK_CALLS_SECURE_FUNCTIONS();
+
 	if( pvParameters != NULL )
 	{
 		/* This task is periodically created four times.  Two created tasks are

@@ -736,6 +736,10 @@ extern "C" {
 	#define portTASK_USES_FLOATING_POINT()
 #endif
 
+#ifndef portTASK_CALLS_SECURE_FUNCTIONS
+	#define portTASK_CALLS_SECURE_FUNCTIONS()
+#endif
+
 #ifndef configUSE_TIME_SLICING
 	#define configUSE_TIME_SLICING 1
 #endif

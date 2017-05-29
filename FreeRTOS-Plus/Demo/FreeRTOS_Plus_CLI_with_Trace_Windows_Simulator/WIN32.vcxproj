@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,11 +19,13 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -135,11 +137,9 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-CLI\FreeRTOS_CLI.c" />
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcBase.c" />
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcHardwarePort.c" />
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcKernel.c" />
     <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcKernelPort.c" />
-    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcUser.c" />
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c" />
+    <ClCompile Include="..\..\Source\FreeRTOS-Plus-Trace\trcStreamingRecorder.c" />
     <ClCompile Include="CLI-commands.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -150,13 +150,9 @@
     <ClCompile Include="UDPCommandServer.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcBase.h" />
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernel.h" />
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcKernelPort.h" />
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcTypes.h" />
-    <ClInclude Include="..\..\Source\FreeRTOS-Plus-Trace\Include\trcUser.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
+    <ClInclude Include="Trace_Recorder_Configuration\trcSnapshotConfig.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

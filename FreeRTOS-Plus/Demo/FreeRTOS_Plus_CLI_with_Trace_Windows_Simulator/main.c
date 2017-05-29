@@ -121,9 +121,6 @@
 #include "task.h"
 #include "queue.h"
 
-/* FreeRTOS+Trace includes. */
-#include "trcUser.h"
-
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
@@ -161,12 +158,6 @@ extern void vRegisterCLICommands( void );
 /* The queue used by both tasks. */
 static xQueueHandle xQueue = NULL;
 
-/* The user trace event posted to the trace recording on each tick interrupt.
-Note tick events will not appear in the trace recording with regular period
-because this project runs in a Windows simulator, and does not therefore
-exhibit deterministic behaviour. */
-traceLabel xTickTraceUserEvent;
-
 /*-----------------------------------------------------------*/
 
 int main( void )
@@ -175,8 +166,7 @@ const uint32_t ulLongTime_ms = 250UL;
 
 	/* Initialise the trace recorder and create the label used to post user
 	events to the trace recording on each tick interrupt. */
-	vTraceInitTraceData();
-	xTickTraceUserEvent = xTraceOpenLabel( "tick" );
+	vTraceEnable( TRC_START );
 
 	/* Create the queue used to pass messages from the queue send task to the
 	queue receive task. */
@@ -210,7 +200,7 @@ const uint32_t ulLongTime_ms = 250UL;
 	line will never be reached.  If the following line does execute, then
 	there was insufficient FreeRTOS heap memory available for the idle and/or
 	timer tasks	to be created.  See the memory management section on the
-	FreeRTOS web site for more details (this is standard text that is not not
+	FreeRTOS web site for more details (this is standard text that is not
 	really applicable to the Win32 simulator port). */
 	for( ;; )
 	{
@@ -295,12 +285,4 @@ const unsigned long ulLongSleep = 1000UL;
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationTickHook( void )
-{
-	/* Write a user event to the trace log.
-	Note tick events will not appear in the trace recording with regular period
-	because this project runs in a Windows simulator, and does not therefore
-	exhibit deterministic behaviour. */
-	vTraceUserEvent( xTickTraceUserEvent );
-}
 

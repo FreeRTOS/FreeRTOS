@@ -82,9 +82,6 @@
 /* FreeRTOS includes. */
 #include <FreeRTOS.h>
 
-/* FreeRTOS+Trace includes. */
-#include "trcUser.h"
-
 /* Variables used in the creation of the run time stats time base.  Run time
 stats record how much time each task spends in the Running state. */
 static long long llInitialRunTimeCounterValue = 0LL, llTicksPerHundedthMillisecond = 0LL;

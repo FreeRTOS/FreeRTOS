@@ -86,7 +86,7 @@
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
-#define configUSE_TICK_HOOK				1
+#define configUSE_TICK_HOOK				0
 #define configTICK_RATE_HZ				( 1000 ) /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 0 ) /* This parameter has no effect when heap_3.c is included in the project. */
@@ -132,7 +132,7 @@ to exclude the API function. */
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
-readable ASCII form.  See the notes in the implementation of vTaskList() within 
+readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
@@ -161,8 +161,6 @@ take up unnecessary RAM. */
 
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-#define TRACE_ENTER_CRITICAL_SECTION() portENTER_CRITICAL()
-#define TRACE_EXIT_CRITICAL_SECTION() portEXIT_CRITICAL()
-#include "trcKernelPort.h"
+#include "trcRecorder.h"
 
 #endif /* FREERTOS_CONFIG_H */

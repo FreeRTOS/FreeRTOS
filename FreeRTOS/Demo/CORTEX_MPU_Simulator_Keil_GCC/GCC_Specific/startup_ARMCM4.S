@@ -39,7 +39,7 @@
 	.align	4
 	.globl	__isr_vector
 __isr_vector:
-	.long	__SRAM_segment_end__ - 4  /* Top of Stack at top of RAM*/
+	.long	__SRAM_segment_end__ - 8  /* Top of Stack at top of RAM*/
 	.long	Reset_Handler         /* Reset Handler */
 	.long	NMI_Handler           /* NMI Handler */
 	.long	HardFault_Handler     /* Hard Fault Handler */

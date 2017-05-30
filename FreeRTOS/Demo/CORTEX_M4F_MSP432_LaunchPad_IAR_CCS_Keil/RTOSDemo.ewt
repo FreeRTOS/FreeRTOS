@@ -24,7 +24,7 @@
                     <messagesLimit>100</messagesLimit>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>1.4.3</cstat_version>
+                    <cstat_version>1.4.4</cstat_version>
                     <checks_tree>
                         <package enabled="true" name="STDCHECKS">
                             <group enabled="true" name="ARR">
@@ -1180,7 +1180,7 @@
                     <messagesLimit>100</messagesLimit>
                 </cstatargs>
                 <cstat_settings>
-                    <cstat_version>1.4.3</cstat_version>
+                    <cstat_version>1.4.4</cstat_version>
                     <checks_tree>
                         <package enabled="true" name="STDCHECKS">
                             <group enabled="true" name="ARR">

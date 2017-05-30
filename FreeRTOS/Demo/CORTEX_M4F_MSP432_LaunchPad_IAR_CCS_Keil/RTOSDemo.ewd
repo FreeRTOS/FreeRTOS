@@ -88,7 +88,7 @@
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>
-                    <state>8.0.5.12717</state>
+                    <state>8.11.1.13270</state>
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
@@ -1351,18 +1351,6 @@
         </settings>
         <debuggerPlugins>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\middleware\HCCWare\HCCWare.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\middleware\PercepioTraceExporter\PercepioTraceExportPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\AVIX\AVIX.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
@@ -1375,15 +1363,7 @@
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\MQX\MQXRtosPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\Quadros\Quadros_EWB7_Plugin.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
@@ -2774,18 +2754,6 @@
         </settings>
         <debuggerPlugins>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\middleware\HCCWare\HCCWare.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\middleware\PercepioTraceExporter\PercepioTraceExportPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\AVIX\AVIX.ENU.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\CMX\CmxArmPlugin.ENU.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
@@ -2798,15 +2766,7 @@
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\MQX\MQXRtosPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
                 <file>$TOOLKIT_DIR$\plugins\rtos\OpenRTOS\OpenRTOSPlugin.ewplugin</file>
-                <loadFlag>0</loadFlag>
-            </plugin>
-            <plugin>
-                <file>$TOOLKIT_DIR$\plugins\rtos\Quadros\Quadros_EWB7_Plugin.ewplugin</file>
                 <loadFlag>0</loadFlag>
             </plugin>
             <plugin>

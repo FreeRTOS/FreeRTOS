@@ -123,7 +123,7 @@ xPortPendSVHandler: .asmfunc
 	;/* Save the new top of stack into the first member of the TCB. */
 	str r0, [r2]
 
-	stmdb sp!, {r3}
+	stmdb sp!, {r0, r3}
 	ldr r0, ulMaxSyscallInterruptPriorityConst
 	ldr r1, [r0]
 	msr basepri, r1
@@ -132,7 +132,7 @@ xPortPendSVHandler: .asmfunc
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
-	ldmia sp!, {r3}
+	ldmia sp!, {r0, r3}
 
 	;/* The first item in pxCurrentTCB is the task top of stack. */
 	ldr r1, [r3]

@@ -136,7 +136,7 @@ r0p1 port. */
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR					( 0x01000000 )
-#define portINITIAL_EXEC_RETURN				( 0xfffffffd )
+#define portINITIAL_EXC_RETURN				( 0xfffffffd )
 
 /* The systick is a 24-bit counter. */
 #define portMAX_24_BIT_NUMBER				( 0xffffffUL )
@@ -244,7 +244,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* A save method is being used that requires each task to maintain its
 	own exec return value. */
 	pxTopOfStack--;
-	*pxTopOfStack = portINITIAL_EXEC_RETURN;
+	*pxTopOfStack = portINITIAL_EXC_RETURN;
 
 	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 

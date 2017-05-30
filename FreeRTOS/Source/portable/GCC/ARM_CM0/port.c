@@ -332,7 +332,7 @@ void xPortPendSVHandler( void )
 	"	ldr	r3, pxCurrentTCBConst			\n" /* Get the location of the current TCB. */
 	"	ldr	r2, [r3]						\n"
 	"										\n"
-	"	subs r0, r0, #32						\n" /* Make space for the remaining low registers. */
+	"	subs r0, r0, #32					\n" /* Make space for the remaining low registers. */
 	"	str r0, [r2]						\n" /* Save the new top of stack. */
 	"	stmia r0!, {r4-r7}					\n" /* Store the low registers that are not saved automatically. */
 	" 	mov r4, r8							\n" /* Store the high registers. */
@@ -349,7 +349,7 @@ void xPortPendSVHandler( void )
 	"										\n"
 	"	ldr r1, [r2]						\n"
 	"	ldr r0, [r1]						\n" /* The first item in pxCurrentTCB is the task top of stack. */
-	"	adds r0, r0, #16						\n" /* Move to the high registers. */
+	"	adds r0, r0, #16					\n" /* Move to the high registers. */
 	"	ldmia r0!, {r4-r7}					\n" /* Pop the high registers. */
 	" 	mov r8, r4							\n"
 	" 	mov r9, r5							\n"

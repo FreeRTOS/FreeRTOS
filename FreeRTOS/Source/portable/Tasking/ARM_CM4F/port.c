@@ -94,7 +94,7 @@
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
-#define portINITIAL_EXEC_RETURN		( 0xfffffffd )
+#define portINITIAL_EXC_RETURN		( 0xfffffffd )
 
 /* Let the user override the pre-loading of the initial LR with the address of
 prvTaskExitError() in case it messes up unwinding of the stack in the
@@ -169,7 +169,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* A save method is being used that requires each task to maintain its
 	own exec return value. */
 	pxTopOfStack--;
-	*pxTopOfStack = portINITIAL_EXEC_RETURN;
+	*pxTopOfStack = portINITIAL_EXC_RETURN;
 
 	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 

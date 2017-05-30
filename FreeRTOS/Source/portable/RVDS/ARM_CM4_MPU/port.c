@@ -125,7 +125,7 @@ task.h is included from an application file. */
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR						( 0x01000000UL )
-#define portINITIAL_EXEC_RETURN					( 0xfffffffdUL )
+#define portINITIAL_EXC_RETURN					( 0xfffffffdUL )
 #define portINITIAL_CONTROL_IF_UNPRIVILEGED		( 0x03 )
 #define portINITIAL_CONTROL_IF_PRIVILEGED		( 0x02 )
 
@@ -240,7 +240,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* A save method is being used that requires each task to maintain its
 	own exec return value. */
 	pxTopOfStack--;
-	*pxTopOfStack = portINITIAL_EXEC_RETURN;
+	*pxTopOfStack = portINITIAL_EXC_RETURN;
 
 	pxTopOfStack -= 9;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
@@ -509,8 +509,8 @@ __asm void xPortPendSVHandler( void )
 
 	mrs r0, psp
 
-	ldr	r3, =pxCurrentTCB			/* Get the location of the current TCB. */
-	ldr	r2, [r3]
+	ldr r3, =pxCurrentTCB			/* Get the location of the current TCB. */
+	ldr r2, [r3]
 
 	tst r14, #0x10					/* Is the task using the FPU context?  If so, push high vfp registers. */
 	it eq
@@ -520,7 +520,7 @@ __asm void xPortPendSVHandler( void )
 	stmdb r0!, {r1, r4-r11, r14}	/* Save the remaining registers. */
 	str r0, [r2]					/* Save the new top of stack into the first member of the TCB. */
 
-	stmdb sp!, {r3}
+	stmdb sp!, {r0, r3}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
 	dsb
@@ -528,7 +528,7 @@ __asm void xPortPendSVHandler( void )
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
-	ldmia sp!, {r3}
+	ldmia sp!, {r0, r3}
 									/* Restore the context. */
 	ldr r1, [r3]
 	ldr r0, [r1]					/* The first item in the TCB is the task top of stack. */

@@ -142,7 +142,7 @@ r0p1 port. */
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR			( 0x01000000 )
-#define portINITIAL_EXEC_RETURN		( 0xfffffffd )
+#define portINITIAL_EXC_RETURN		( 0xfffffffd )
 
 /* The systick is a 24-bit counter. */
 #define portMAX_24_BIT_NUMBER		( 0xffffffUL )
@@ -252,7 +252,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* A save method is being used that requires each task to maintain its
 	own exec return value. */
 	pxTopOfStack--;
-	*pxTopOfStack = portINITIAL_EXEC_RETURN;
+	*pxTopOfStack = portINITIAL_EXC_RETURN;
 
 	pxTopOfStack -= 8;	/* R11, R10, R9, R8, R7, R6, R5 and R4. */
 
@@ -503,7 +503,7 @@ __asm void xPortPendSVHandler( void )
 	/* Save the new top of stack into the first member of the TCB. */
 	str r0, [r2]
 
-	stmdb sp!, {r3}
+	stmdb sp!, {r0, r3}
 	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
 	msr basepri, r0
 	dsb
@@ -511,7 +511,7 @@ __asm void xPortPendSVHandler( void )
 	bl vTaskSwitchContext
 	mov r0, #0
 	msr basepri, r0
-	ldmia sp!, {r3}
+	ldmia sp!, {r0, r3}
 
 	/* The first item in pxCurrentTCB is the task top of stack. */
 	ldr r1, [r3]
@@ -655,13 +655,13 @@ void xPortSysTickHandler( void )
 			__disable_irq();
 			__dsb( portSY_FULL_READ_WRITE );
 			__isb( portSY_FULL_READ_WRITE );
-			
-			/* Disable the SysTick clock without reading the 
+
+			/* Disable the SysTick clock without reading the
 			portNVIC_SYSTICK_CTRL_REG register to ensure the
-			portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set.  Again, 
-			the time the SysTick is stopped for is accounted for as best it can 
-			be, but using the tickless mode will inevitably result in some tiny 
-			drift of the time maintained by the kernel with respect to calendar 
+			portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set.  Again,
+			the time the SysTick is stopped for is accounted for as best it can
+			be, but using the tickless mode will inevitably result in some tiny
+			drift of the time maintained by the kernel with respect to calendar
 			time*/
 			portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT );
 

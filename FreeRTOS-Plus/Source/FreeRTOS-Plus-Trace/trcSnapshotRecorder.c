@@ -1868,8 +1868,8 @@ static uint32_t prvTraceGetParam(uint32_t param_max, uint32_t param)
 		if (xps != NULL)
 		{
 			xps->type = DIV_XPS;
-			xps->xps_8 = (uint8_t)(param & (0xFF00 & ~param_max)) >> 8;
-			xps->xps_16 = (uint16_t)(param & (0xFFFF0000 & ~param_max)) >> 16;
+			xps->xps_8 = (uint8_t)((param & (0xFF00 & ~param_max)) >> 8);
+			xps->xps_16 = (uint16_t)((param & (0xFFFF0000 & ~param_max)) >> 16);
 			prvTraceUpdateCounters();
 		}
 

@@ -234,7 +234,7 @@ void vInternalProtectionTrap( int iTrapIdentification )
 			
 		default:
 		
-			pxCurrentTCB[ 0 ] = _mfcr( $PCXI );
+			pxCurrentTCB[ 0 ] = __MFCR( $PCXI );
 			_debug();
 			break;
 	}

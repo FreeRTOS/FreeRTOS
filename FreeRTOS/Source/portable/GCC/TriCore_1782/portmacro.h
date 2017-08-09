@@ -155,7 +155,7 @@ extern void vTaskExitCritical( void );
 #define portDISABLE_INTERRUPTS()	{																									\
 										uint32_t ulICR;																			\
 										_disable();																						\
-										ulICR = _mfcr( $ICR ); 		/* Get current ICR value. */										\
+										ulICR = __MFCR( $ICR ); 		/* Get current ICR value. */										\
 										ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */											\
 										ulICR |= configMAX_SYSCALL_INTERRUPT_PRIORITY; /* Set mask bits to required priority mask. */	\
 										_mtcr( $ICR, ulICR );		/* Write back updated ICR. */										\
@@ -167,7 +167,7 @@ extern void vTaskExitCritical( void );
 #define portENABLE_INTERRUPTS()		{																	\
 										uint32_t ulICR;											\
 										_disable();														\
-										ulICR = _mfcr( $ICR );		/* Get current ICR value. */		\
+										ulICR = __MFCR( $ICR );		/* Get current ICR value. */		\
 										ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */			\
 										_mtcr( $ICR, ulICR );		/* Write back updated ICR. */		\
 										_isync();														\
@@ -178,7 +178,7 @@ extern void vTaskExitCritical( void );
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedMaskValue ) 	{																						\
 																	uint32_t ulICR;																\
 																	_disable();																			\
-																	ulICR = _mfcr( $ICR );		/* Get current ICR value. */							\
+																	ulICR = __MFCR( $ICR );		/* Get current ICR value. */							\
 																	ulICR &= ~portCCPN_MASK;	/* Clear down mask bits. */								\
 																	ulICR |= uxSavedMaskValue;	/* Set mask bits to previously saved mask value. */		\
 																	_mtcr( $ICR, ulICR );		/* Write back updated ICR. */							\

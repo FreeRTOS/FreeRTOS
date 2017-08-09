@@ -167,7 +167,7 @@ uint32_t *pulLowerCSA = NULL;
 		_dsync();
 
 		/* Consume two free CSAs. */
-		pulLowerCSA = portCSA_TO_ADDRESS( _mfcr( $FCX ) );
+		pulLowerCSA = portCSA_TO_ADDRESS( __MFCR( $FCX ) );
 		if( NULL != pulLowerCSA )
 		{
 			/* The Lower Links to the Upper. */
@@ -261,7 +261,7 @@ uint32_t *pulLowerCSA = NULL;
 
 	/* Clear the PSW.CDC to enable the use of an RFE without it generating an
 	exception because this code is not genuinely in an exception. */
-	ulMFCR = _mfcr( $PSW );
+	ulMFCR = __MFCR( $PSW );
 	ulMFCR &= portRESTORE_PSW_MASK;
 	_dsync();
 	_mtcr( $PSW, ulMFCR );
@@ -388,7 +388,7 @@ int32_t lYieldRequired;
 		enabled/disabled. */
 		_disable();
 		_dsync();
-		xUpperCSA = _mfcr( $PCXI );
+		xUpperCSA = __MFCR( $PCXI );
 		pxUpperCSA = portCSA_TO_ADDRESS( xUpperCSA );
 		*pxCurrentTCB = pxUpperCSA[ 0 ];
 		vTaskSwitchContext();
@@ -458,7 +458,7 @@ uint32_t *pulNextCSA;
 	{
 		/* Look up the current free CSA head. */
 		_dsync();
-		pxFreeCSA = _mfcr( $FCX );
+		pxFreeCSA = __MFCR( $FCX );
 
 		/* Join the current Free onto the Tail of what is being reclaimed. */
 		portCSA_TO_ADDRESS( pxTailCSA )[ 0 ] = pxFreeCSA;
@@ -508,7 +508,7 @@ extern volatile uint32_t *pxCurrentTCB;
 			enabled/disabled. */
 			_disable();
 			_dsync();
-			xUpperCSA = _mfcr( $PCXI );
+			xUpperCSA = __MFCR( $PCXI );
 			pxUpperCSA = portCSA_TO_ADDRESS( xUpperCSA );
 			*pxCurrentTCB = pxUpperCSA[ 0 ];
 			vTaskSwitchContext();
@@ -555,7 +555,7 @@ extern volatile uint32_t *pxCurrentTCB;
 	enabled/disabled. */
 	_disable();
 	_dsync();
-	xUpperCSA = _mfcr( $PCXI );
+	xUpperCSA = __MFCR( $PCXI );
 	pxUpperCSA = portCSA_TO_ADDRESS( xUpperCSA );
 	*pxCurrentTCB = pxUpperCSA[ 0 ];
 	vTaskSwitchContext();
@@ -570,7 +570,7 @@ uint32_t uxPortSetInterruptMaskFromISR( void )
 uint32_t uxReturn = 0UL;
 
 	_disable();
-	uxReturn = _mfcr( $ICR );
+	uxReturn = __MFCR( $ICR );
 	_mtcr( $ICR, ( ( uxReturn & ~portCCPN_MASK ) | configMAX_SYSCALL_INTERRUPT_PRIORITY ) );
 	_isync();
 	_enable();

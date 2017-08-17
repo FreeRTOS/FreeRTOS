@@ -78,6 +78,7 @@
 #include "FreeRTOS_DNS.h"
 #include "NetworkBufferManagement.h"
 #include "NetworkInterface.h"
+
 #include "phyHandling.h"
 
 /* ST includes. */
@@ -155,6 +156,13 @@ and the index of the PHY in use ( between 0 and 31 ). */
 	#endif /* STM32F7xx */
 #endif /* ipconfigUSE_RMII */
 
+#ifndef ipconfigPHY_INDEX
+	#ifdef STM32F7xx
+		#define ipconfigPHY_INDEX	0
+	#else
+		#define ipconfigPHY_INDEX	1
+	#endif /* STM32F7xx */
+#endif /* ipconfigPHY_INDEX */
 
 
 /*-----------------------------------------------------------*/
@@ -398,11 +406,12 @@ BaseType_t xResult;
 		/* Initialise ETH */
 
 		xETH.Instance = ETH;
+//#warning Enable auto-nego again
 		xETH.Init.AutoNegotiation = ETH_AUTONEGOTIATION_ENABLE;
+//		xETH.Init.AutoNegotiation = ETH_AUTONEGOTIATION_DISABLE;
 		xETH.Init.Speed = ETH_SPEED_100M;
 		xETH.Init.DuplexMode = ETH_MODE_FULLDUPLEX;
-		/* Value of PhyAddress doesn't matter, will be probed for. */
-		xETH.Init.PhyAddress = 0;
+		xETH.Init.PhyAddress = ipconfigPHY_INDEX;
 
 		xETH.Init.MACAddr = ( uint8_t *) ucMACAddress;
 		xETH.Init.RxMode = ETH_RXINTERRUPT_MODE;
@@ -1001,7 +1010,7 @@ void vMACBProbePhy( void )
 
 static void prvEthernetUpdateConfig( BaseType_t xForce )
 {
-	FreeRTOS_printf( ( "prvEthernetUpdateConfig: LS mask %02lX Force %d\n",
+	FreeRTOS_printf( ( "prvEthernetUpdateConfig: LS mask %02X Force %d\n",
 		xPhyObject.ulLinkStatusMask,
 		( int )xForce ) );
 
@@ -1095,9 +1104,6 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-/* Uncomment this in case BufferAllocation_1.c is used. */
-
-/*
 #define niBUFFER_1_PACKET_SIZE		1536
 
 static __attribute__ ((section(".first_data"))) uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * niBUFFER_1_PACKET_SIZE ] __attribute__ ( ( aligned( 32 ) ) );
@@ -1115,7 +1121,6 @@ uint32_t ul;
 		ucRAMBuffer += niBUFFER_1_PACKET_SIZE;
 	}
 }
-*/
 /*-----------------------------------------------------------*/
 
 static void prvEMACHandlerTask( void *pvParameters )

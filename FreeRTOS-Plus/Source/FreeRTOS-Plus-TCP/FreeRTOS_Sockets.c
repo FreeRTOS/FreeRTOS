@@ -2893,11 +2893,26 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		creation, it could still be changed with setsockopt(). */
 		if( xIsInputStream != pdFALSE )
 		{
+			/* Flow control for input streams works with a low- and a high-water mark.
+			1) If the RX-space becomes less than uxLittleSpace, the flag 'bLowWater' will
+			be set,  and a TCP window update message will be sent to the peer.
+			2) The data will be read from the socket by recv() and when RX-space becomes
+			larger than or equal to than 'uxEnoughSpace',  a new TCP window update
+			message will be sent to the peer,  and 'bLowWater' will get cleared again.
+			By default:
+			    uxLittleSpace == 1/5 x uxRxStreamSize
+			    uxEnoughSpace == 4/5 x uxRxStreamSize
+			How-ever it is very inefficient to make 'uxLittleSpace' smaller than the actual MSS.
+			*/
 			uxLength = pxSocket->u.xTCP.uxRxStreamSize;
 
 			if( pxSocket->u.xTCP.uxLittleSpace == 0ul )
 			{
 				pxSocket->u.xTCP.uxLittleSpace  = ( 1ul * pxSocket->u.xTCP.uxRxStreamSize ) / 5u; /*_RB_ Why divide by 5?  Can this be changed to a #define? */
+				if( (pxSocket->u.xTCP.uxLittleSpace < pxSocket->u.xTCP.usCurMSS ) && ( pxSocket->u.xTCP.uxRxStreamSize >= 2 * pxSocket->u.xTCP.usCurMSS ) )
+				{
+					pxSocket->u.xTCP.uxLittleSpace = pxSocket->u.xTCP.usCurMSS;
+				}
 			}
 
 			if( pxSocket->u.xTCP.uxEnoughSpace == 0ul )

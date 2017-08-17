@@ -72,7 +72,7 @@
 #include "FreeRTOS_server_private.h"
 
 /* Remove the entire file if TCP is not being used. */
-#if( ipconfigUSE_TCP == 1 )
+#if( ipconfigUSE_TCP == 1 ) && ( ( ipconfigUSE_HTTP == 1 ) || ( ipconfigUSE_FTP == 1 ) )
 
 #if !defined( ARRAY_SIZE )
 	#define ARRAY_SIZE(x) ( BaseType_t ) (sizeof( x ) / sizeof( x )[ 0 ] )
@@ -238,8 +238,11 @@ const char *pcType = "Unknown";
 		pcType = "closed";
 		FreeRTOS_closesocket( xNexSocket );
 	}
-
-	FreeRTOS_printf( ( "TPC-server: new %s client\n", pcType ) );
+	{
+	struct freertos_sockaddr xRemoteAddress;
+		FreeRTOS_GetRemoteAddress( pxClient->xSocket, &xRemoteAddress );
+		FreeRTOS_printf( ( "TPC-server: new %s client %xip\n", pcType, (unsigned)FreeRTOS_ntohl( xRemoteAddress.sin_addr ) ) );
+	}
 
 	/* Remove compiler warnings in case FreeRTOS_printf() is not used. */
 	( void ) pcType;
@@ -379,4 +382,4 @@ BaseType_t xLength = strlen( pcDir );
 #endif /* ipconfigSUPPORT_SIGNALS */
 /*-----------------------------------------------------------*/
 
-#endif /* ipconfigUSE_TCP != 1 */
+#endif /* ( ipconfigUSE_TCP == 1 ) && ( ( ipconfigUSE_HTTP == 1 ) || ( ipconfigUSE_FTP == 1 ) ) */

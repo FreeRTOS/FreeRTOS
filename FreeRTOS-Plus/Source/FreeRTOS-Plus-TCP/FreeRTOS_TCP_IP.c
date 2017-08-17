@@ -744,6 +744,8 @@ NetworkBufferDescriptor_t xTempBuffer;
 
 		xTempBuffer.pucEthernetBuffer = pxSocket->u.xTCP.xPacket.u.ucLastPacket;
 		xTempBuffer.xDataLength = sizeof( pxSocket->u.xTCP.xPacket.u.ucLastPacket );
+		/* A pseudo network buffer can not be released. */
+		xReleaseAfterSend = pdFALSE;
 	}
 
 	#if( ipconfigZERO_COPY_TX_DRIVER != 0 )

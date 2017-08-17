@@ -72,6 +72,9 @@
 #include "FreeRTOS_TCP_server.h"
 #include "FreeRTOS_server_private.h"
 
+/* Remove the whole file if HTTP is not supported. */
+#if( ipconfigUSE_HTTP == 1 )
+
 /* FreeRTOS+FAT includes. */
 #include "ff_stdio.h"
 
@@ -452,4 +455,6 @@ static const char *pcGetContentsType (const char *apFname)
 	}
 	return pcResult;
 }
+
+#endif /* ipconfigUSE_HTTP */
 

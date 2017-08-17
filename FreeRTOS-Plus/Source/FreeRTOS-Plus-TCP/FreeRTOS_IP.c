@@ -97,7 +97,9 @@ a constant. */
 
 
 /* Time delay between repeated attempts to initialise the network hardware. */
-#define ipINITIALISATION_RETRY_DELAY	( pdMS_TO_TICKS( 3000 ) )
+#ifndef ipINITIALISATION_RETRY_DELAY
+	#define ipINITIALISATION_RETRY_DELAY	( pdMS_TO_TICKS( 3000 ) )
+#endif
 
 /* Defines how often the ARP timer callback function is executed.  The time is
 shorted in the Windows simulator as simulated time is not real time. */
@@ -1027,7 +1029,10 @@ BaseType_t xReturn = pdFALSE;
 
 				/* Added to prevent ARP flood to gateway.  Ensure the
 				gateway is on the same subnet as the IP	address. */
-				configASSERT( ( ( *ipLOCAL_IP_ADDRESS_POINTER ) & xNetworkAddressing.ulNetMask ) == ( xNetworkAddressing.ulGatewayAddress & xNetworkAddressing.ulNetMask ) );
+				if( xNetworkAddressing.ulGatewayAddress != 0ul )
+				{
+					configASSERT( ( ( *ipLOCAL_IP_ADDRESS_POINTER ) & xNetworkAddressing.ulNetMask ) == ( xNetworkAddressing.ulGatewayAddress & xNetworkAddressing.ulNetMask ) );
+				}
 			}
 			#endif /* ipconfigUSE_DHCP == 1 */
 

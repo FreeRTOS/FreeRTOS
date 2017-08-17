@@ -189,7 +189,7 @@ standard names. */
 
 /* Set to 1 to include "trace start" and "trace stop" CLI commands.  These
 commands start and stop the FreeRTOS+Trace recording. */
-#define configINCLUDE_TRACE_RELATED_CLI_COMMANDS 1
+#define configINCLUDE_TRACE_RELATED_CLI_COMMANDS 0
 
 /* Dimensions a buffer that can be used by the FreeRTOS+CLI command
 interpreter.  See the FreeRTOS+CLI documentation for more information:
@@ -277,10 +277,8 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configNET_MASK2		255
 #define configNET_MASK3		0
 
-#if configINCLUDE_TRACE_RELATED_CLI_COMMANDS == 1
-	/* Only include the trace macro definitions required by FreeRTOS+Trace if
-	the trace start and trace stop CLI commands are included. */
-	#include "trcKernelPort.h"
-#endif
+/* Only include the trace macro definitions required by FreeRTOS+Trace if
+the trace start and trace stop CLI commands are included. */
+#include "trcRecorder.h"
 
 #endif /* FREERTOS_CONFIG_H */

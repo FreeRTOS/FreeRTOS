@@ -5,14 +5,14 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.56486929" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings/>
 				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -79,11 +79,29 @@
 								<option id="gnu.c.link.option.nodeflibs.2072403274" name="Do not use default libraries (-nodefaultlibs)" superClass="gnu.c.link.option.nodeflibs" value="false" valueType="boolean"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.1911982348" name="Multicore slave" superClass="com.crt.advproject.link.gcc.multicore.slave"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.userobjs.502901386" superClass="com.crt.advproject.link.gcc.multicore.master.userobjs" valueType="userObjs"/>
+								<option id="com.crt.advproject.link.memory.heapAndStack.1733504656" superClass="com.crt.advproject.link.memory.heapAndStack" value="&amp;Heap:Default;Post Data;Default&amp;Stack:Default;End;Default" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.1085761099" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
+						</toolChain>
+					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.56486929.src/cr_startup_lpc18xx.cpp" name="cr_startup_lpc18xx.cpp" rcbsApplicability="disable" resourcePath="src/cr_startup_lpc18xx.cpp" toolsToInvoke=""/>
+					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.2106668528" name="/" resourcePath="ThirdParty/USB_CDC">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1865989435" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
+							<tool id="com.crt.advproject.cpp.exe.debug.1158267972" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1784372430" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
+								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.369260631" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
+								<inputType id="com.crt.advproject.compiler.input.466388069" superClass="com.crt.advproject.compiler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.gas.exe.debug.401476199" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1255426283" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="com.crt.advproject.assembler.input.882456885" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.2009352548" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
+							<tool id="com.crt.advproject.link.exe.debug.1734116997" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.1781697322" name="/" resourcePath="ThirdParty/CMSISv2p10_LPC18xx_DriverLib">
@@ -102,23 +120,6 @@
 							<tool id="com.crt.advproject.link.exe.debug.536813209" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.56486929.2106668528" name="/" resourcePath="ThirdParty/USB_CDC">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1865989435" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
-							<tool id="com.crt.advproject.cpp.exe.debug.1158267972" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.359174792"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1784372430" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.517029683">
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.369260631" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.size" valueType="enumerated"/>
-								<inputType id="com.crt.advproject.compiler.input.466388069" superClass="com.crt.advproject.compiler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.gas.exe.debug.401476199" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.281614531">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1255426283" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-								<inputType id="com.crt.advproject.assembler.input.882456885" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.2009352548" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1490011469"/>
-							<tool id="com.crt.advproject.link.exe.debug.1734116997" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1212311005"/>
-						</toolChain>
-					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.56486929.src/cr_startup_lpc18xx.cpp" name="cr_startup_lpc18xx.cpp" rcbsApplicability="disable" resourcePath="src/cr_startup_lpc18xx.cpp" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_wwdt.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_utils.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_uart.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_timer.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_ssp.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_sct.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_rtc.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_rit.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_qei.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_pwr.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_nvic.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_mcpwm.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_libcfg_default.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_lcd.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_i2s.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_i2c.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_gpdma.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_evrt.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_emc.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_dac.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_can.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_atimer.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/lpc18xx_adc.c|ThirdParty/CMSISv2p10_LPC18xx_DriverLib/src/debug_frmwrk.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
@@ -134,7 +135,7 @@
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
-&lt;Properties property_0="" property_2="LPC1850A_4350A_SPIFI.cfx" property_3="NXP" property_4="LPC1830" property_count="5" version="70200"/&gt;&#13;
+&lt;Properties property_2="LPC1850A_4350A_SPIFI.cfx" property_3="NXP" property_4="LPC1830" property_count="5" version="70200"/&gt;&#13;
 &lt;infoList vendor="NXP"&gt;&lt;info chip="LPC1830" match_id="0x0" name="LPC1830" resetscript="LPC18LPC43ExternalFLASHBootResetscript.scp" stub="crt_emu_lpc18_43_nxp"&gt;&lt;chip&gt;&lt;name&gt;LPC1830&lt;/name&gt;&#13;
 &lt;family&gt;LPC18xx&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP (formerly Philips)&lt;/vendor&gt;&#13;
@@ -227,4 +228,6 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="com.crt.advproject"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

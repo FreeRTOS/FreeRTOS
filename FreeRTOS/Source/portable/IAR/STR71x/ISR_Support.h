@@ -1,56 +1,31 @@
 ;/*
-;    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
-;    All rights reserved
-;
-;
-;    ***************************************************************************
-;     *                                                                       *
-;     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-;     *    Complete, revised, and edited pdf reference manuals are also       *
-;     *    available.                                                         *
-;     *                                                                       *
-;     *    Purchasing FreeRTOS documentation will not only help you, by       *
-;     *    ensuring you get running as quickly as possible and with an        *
-;     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-;     *    the FreeRTOS project to continue with its mission of providing     *
-;     *    professional grade, cross platform, de facto standard solutions    *
-;     *    for microcontrollers - completely free of charge!                  *
-;     *                                                                       *
-;     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-;     *                                                                       *
-;     *    Thank you for using FreeRTOS, and thank you for your support!      *
-;     *                                                                       *
-;    ***************************************************************************
-;
-;
-;    This file is part of the FreeRTOS distribution.
-;
-;    FreeRTOS is free software; you can redistribute it and/or modify it under
-;    the terms of the GNU General Public License (version 2) as published by the
-;    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-;    >>>NOTE<<< The modification to the GPL is included to allow you to
-;    distribute a combined work that includes FreeRTOS without being obliged to
-;    provide the source code for proprietary components outside of the FreeRTOS
-;    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-;    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-;    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-;    more details. You should have received a copy of the GNU General Public
-;    License and the FreeRTOS license exception along with FreeRTOS; if not it
-;    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-;    by writing to Richard Barry, contact details for whom are available on the
-;    FreeRTOS WEB site.
-;
-;    1 tab == 4 spaces!
-;
-;    http://www.FreeRTOS.org - Documentation, latest information, license and
-;    contact details.
-;
-;    http://www.SafeRTOS.com - A version that is certified for use in safety
-;    critical systems.
-;
-;    http://www.OpenRTOS.com - Commercial support, development, porting,
-;    licensing and training services.
-;*/
+; * FreeRTOS Kernel V10.0.0
+; * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+; *
+; * Permission is hereby granted, free of charge, to any person obtaining a copy of
+; * this software and associated documentation files (the "Software"), to deal in
+; * the Software without restriction, including without limitation the rights to
+; * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+; * the Software, and to permit persons to whom the Software is furnished to do so,
+; * subject to the following conditions:
+; *
+; * The above copyright notice and this permission notice shall be included in all
+; * copies or substantial portions of the Software. If you wish to use our Amazon
+; * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+; *
+; * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+; * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+; * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+; * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+; * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+; * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+; *
+; * http://www.FreeRTOS.org
+; * http://aws.amazon.com/freertos
+; *
+; * 1 tab == 4 spaces!
+; */
+
 	EXTERN pxCurrentTCB
 	EXTERN ulCriticalNesting
 
@@ -60,38 +35,38 @@
 
 portSAVE_CONTEXT MACRO
 
-	; Push R0 as we are going to use the register. 					
+	; Push R0 as we are going to use the register.
 	STMDB	SP!, {R0}
 
-	; Set R0 to point to the task stack pointer. 					
+	; Set R0 to point to the task stack pointer.
 	STMDB	SP, {SP}^
 	NOP
 	SUB		SP, SP, #4
 	LDMIA	SP!, {R0}
 
-	; Push the return address onto the stack. 						
+	; Push the return address onto the stack.
 	STMDB	R0!, {LR}
 
-	; Now we have saved LR we can use it instead of R0. 				
+	; Now we have saved LR we can use it instead of R0.
 	MOV		LR, R0
 
-	; Pop R0 so we can save it onto the system mode stack. 			
+	; Pop R0 so we can save it onto the system mode stack.
 	LDMIA	SP!, {R0}
 
-	; Push all the system mode registers onto the task stack. 		
+	; Push all the system mode registers onto the task stack.
 	STMDB	LR, {R0-LR}^
 	NOP
 	SUB		LR, LR, #60
 
-	; Push the SPSR onto the task stack. 							
+	; Push the SPSR onto the task stack.
 	MRS		R0, SPSR
 	STMDB	LR!, {R0}
 
-	LDR		R0, =ulCriticalNesting 
+	LDR		R0, =ulCriticalNesting
 	LDR		R0, [R0]
 	STMDB	LR!, {R0}
 
-	; Store the new top of stack for the task. 						
+	; Store the new top of stack for the task.
 	LDR		R1, =pxCurrentTCB
 	LDR		R0, [R1]
 	STR		LR, [R0]
@@ -101,30 +76,30 @@ portSAVE_CONTEXT MACRO
 
 portRESTORE_CONTEXT MACRO
 
-	; Set the LR to the task stack. 									
+	; Set the LR to the task stack.
 	LDR		R1, =pxCurrentTCB
 	LDR		R0, [R1]
 	LDR		LR, [R0]
 
-	; The critical nesting depth is the first item on the stack. 	
-	; Load it into the ulCriticalNesting variable. 					
+	; The critical nesting depth is the first item on the stack.
+	; Load it into the ulCriticalNesting variable.
 	LDR		R0, =ulCriticalNesting
 	LDMFD	LR!, {R1}
 	STR		R1, [R0]
 
-	; Get the SPSR from the stack. 									
+	; Get the SPSR from the stack.
 	LDMFD	LR!, {R0}
 	MSR		SPSR_cxsf, R0
 
-	; Restore all system mode registers for the task. 				
+	; Restore all system mode registers for the task.
 	LDMFD	LR, {R0-R14}^
 	NOP
 
-	; Restore the return address. 									
+	; Restore the return address.
 	LDR		LR, [LR, #+60]
 
-	; And return - correcting the offset in the LR to obtain the 	
-	; correct address. 												
+	; And return - correcting the offset in the LR to obtain the
+	; correct address.
 	SUBS	PC, LR, #4
 
 	ENDM

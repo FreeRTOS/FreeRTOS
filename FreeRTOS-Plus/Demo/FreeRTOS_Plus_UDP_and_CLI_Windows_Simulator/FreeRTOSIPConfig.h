@@ -1,38 +1,29 @@
 /*
- * FreeRTOS+UDP V1.0.0 (C) 2012 Real Time Engineers ltd.
+ * FreeRTOS+UDP V1.0.4
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
- * FreeRTOS+UDP is an add-on component to FreeRTOS.  It is not, in itself, part
- * of the FreeRTOS kernel.  FreeRTOS+UDP is licensed separately from FreeRTOS,
- * and uses a different license to FreeRTOS.  FreeRTOS+UDP uses a dual license
- * model, information on which is provided below:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
  *
- * - Open source licensing -
- * FreeRTOS+UDP is a free download and may be used, modified and distributed
- * without charge provided the user adheres to version two of the GNU General
- * Public license (GPL) and does not remove the copyright notice or this text.
- * The GPL V2 text is available on the gnu.org web site, and on the following
- * URL: http://www.FreeRTOS.org/gpl-2.0.txt
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
  *
- * - Commercial licensing -
- * Businesses and individuals who wish to incorporate FreeRTOS+UDP into
- * proprietary software for redistribution in any form must first obtain a
- * (very) low cost commercial license - and in-so-doing support the maintenance,
- * support and further development of the FreeRTOS+UDP product.  Commercial
- * licenses can be obtained from http://shop.freertos.org and do not require any
- * source files to be changed.
- *
- * FreeRTOS+UDP is distributed in the hope that it will be useful.  You cannot
- * use FreeRTOS+UDP unless you agree that you use the software 'as is'.
- * FreeRTOS+UDP is provided WITHOUT ANY WARRANTY; without even the implied
- * warranties of NON-INFRINGEMENT, MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE. Real Time Engineers Ltd. disclaims all conditions and terms, be they
- * implied, expressed, or statutory.
- *
- * 1 tab == 4 spaces!
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * http://www.FreeRTOS.org
- * http://www.FreeRTOS.org/FreeRTOS-Plus
+ * http://aws.amazon.com/freertos
  *
+ * 1 tab == 4 spaces!
  */
 
 /*****************************************************************************

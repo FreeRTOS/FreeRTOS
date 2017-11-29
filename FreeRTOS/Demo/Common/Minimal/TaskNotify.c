@@ -1,71 +1,30 @@
 /*
-    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.0.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 
 /*
@@ -168,6 +127,7 @@ TimerHandle_t xSingleTaskTimer;
 	Check blocking when there are no notifications. */
 	xTimeOnEntering = xTaskGetTickCount();
 	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 	/* Should have blocked for the entire block time. */
 	if( ( xTaskGetTickCount() - xTimeOnEntering ) < xTicksToWait )
@@ -176,6 +136,8 @@ TimerHandle_t xSingleTaskTimer;
 	}
 	configASSERT( xReturned == pdFAIL );
 	configASSERT( ulNotifiedValue == 0UL );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
+	( void ) ulNotifiedValue;
 
 
 
@@ -189,9 +151,11 @@ TimerHandle_t xSingleTaskTimer;
 	/* Even through the 'without overwrite' action was used the update should
 	have been successful. */
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 	/* No bits should have been pending previously. */
 	configASSERT( ulPreviousValue == 0 );
+	( void ) ulPreviousValue;
 
 	/* The task should now have a notification pending, and so not time out. */
 	xTimeOnEntering = xTaskGetTickCount();
@@ -206,6 +170,8 @@ TimerHandle_t xSingleTaskTimer;
 	be equal to ulFirstNotifiedConst. */
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
+	( void ) ulNotifiedValue;
 
 	/* Incremented to show the task is still running. */
 	ulNotifyCycleCount++;
@@ -221,9 +187,11 @@ TimerHandle_t xSingleTaskTimer;
 	be that used with the first notification. */
 	xReturned = xTaskNotify( xTaskToNotify, ulFirstNotifiedConst, eSetValueWithoutOverwrite );
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 	xReturned = xTaskNotify( xTaskToNotify, ulSecondNotifiedValueConst, eSetValueWithoutOverwrite );
 	configASSERT( xReturned == pdFAIL );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 	/* Waiting for the notification should now return immediately so a block
 	time of zero is used. */
@@ -231,6 +199,8 @@ TimerHandle_t xSingleTaskTimer;
 
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
+	( void ) ulNotifiedValue;
 
 
 
@@ -243,11 +213,15 @@ TimerHandle_t xSingleTaskTimer;
 	back. */
 	xReturned = xTaskNotify( xTaskToNotify, ulFirstNotifiedConst, eSetValueWithOverwrite );
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 	xReturned = xTaskNotify( xTaskToNotify, ulSecondNotifiedValueConst, eSetValueWithOverwrite );
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 	configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
+	( void ) ulNotifiedValue;
 
 
 
@@ -258,8 +232,10 @@ TimerHandle_t xSingleTaskTimer;
 	remain at ulSecondNotifiedConst. */
 	xReturned = xTaskNotify( xTaskToNotify, ulFirstNotifiedConst, eNoAction );
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
+	( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
 
 
 
@@ -272,15 +248,20 @@ TimerHandle_t xSingleTaskTimer;
 	{
 		xReturned = xTaskNotify( xTaskToNotify, 0, eIncrement );
 		configASSERT( xReturned == pdPASS );
+		( void ) xReturned; /* In case configASSERT() is not defined. */
 	}
 
 	xReturned = xTaskNotifyWait( notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ( ulSecondNotifiedValueConst + ulMaxLoops ) );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
+	( void ) ulNotifiedValue;
 
 	/* Should not be any notifications pending now. */
 	xReturned = xTaskNotifyWait( 0, 0, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdFAIL );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
+	( void ) ulNotifiedValue;
 
 
 
@@ -306,6 +287,7 @@ TimerHandle_t xSingleTaskTimer;
 		when all the bits are set. */
 		xReturned = xTaskNotifyWait( 0, 0, &ulNotifiedValue, 0 );
 		configASSERT( xReturned == pdPASS );
+		( void ) xReturned; /* In case configASSERT() is not defined. */
 
 		ulLoop++;
 
@@ -330,6 +312,7 @@ TimerHandle_t xSingleTaskTimer;
 	entry should actually get cleared. */
 	xReturned = xTaskNotifyWait( ulBit0, ulBit1, &ulNotifiedValue, xTicksToWait );
 	configASSERT( xReturned == pdFAIL );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 	/* Notify the task with no action so as not to update the bits even though
 	notifyUINT32_MAX is used as the notification value. */
@@ -341,6 +324,7 @@ TimerHandle_t xSingleTaskTimer;
 	xReturned = xTaskNotifyWait( 0x00UL, 0x00UL, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdPASS );
 	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~ulBit0 ) );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 
 
@@ -363,6 +347,7 @@ TimerHandle_t xSingleTaskTimer;
 	xReturned = xTaskNotifyWait( 0x00, 0x00, &ulNotifiedValue, 0 );
 	configASSERT( xReturned == pdFAIL );
 	configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~( ulBit0 | ulBit1 ) ) );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 
 
@@ -435,6 +420,7 @@ TimerHandle_t xSingleTaskTimer;
 	xReturned = xTaskNotifyWait( 0, 0, &ulNotifiedValue, portMAX_DELAY );
 	configASSERT( xReturned == pdFALSE );
 	configASSERT( ulNotifiedValue == 0 );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 
 	/* Incremented to show the task is still running. */
 	ulNotifyCycleCount++;
@@ -448,6 +434,7 @@ TimerHandle_t xSingleTaskTimer;
 	/* Check a notification is received. */
 	xReturned = xTaskNotifyWait( 0, 0, &ulNotifiedValue, portMAX_DELAY );
 	configASSERT( xReturned == pdPASS );
+	( void ) xReturned; /* In case configASSERT() is not defined. */
 	configASSERT( ulNotifiedValue != 0 );
 
 	/* Return the task to its proper priority and delete the timer as it is

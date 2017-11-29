@@ -40,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="main.c" />
     <ClCompile Include="..\Common\Minimal\StaticAllocation.c" />
+    <ClCompile Include="..\..\Source\stream_buffer.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\include\croutine.h">

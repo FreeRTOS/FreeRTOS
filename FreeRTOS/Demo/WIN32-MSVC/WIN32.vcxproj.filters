@@ -145,6 +145,21 @@
     <ClCompile Include="..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-Trace\trcSnapshotRecorder.c">
       <Filter>Demo App Source\FreeRTOS+Trace Recorder</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\stream_buffer.c">
+      <Filter>FreeRTOS Source\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\MessageBufferDemo.c">
+      <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\StreamBufferDemo.c">
+      <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\StreamBufferInterrupt.c">
+      <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\Minimal\MessageBufferAMP.c">
+      <Filter>Demo App Source\Full_Demo\Common Demo Tasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">
@@ -186,5 +201,14 @@
     <ClInclude Include="..\..\Source\include\event_groups.h">
       <Filter>FreeRTOS Source\Include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\include\message_buffer.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\include\stream_buffer.h">
+      <Filter>FreeRTOS Source\Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

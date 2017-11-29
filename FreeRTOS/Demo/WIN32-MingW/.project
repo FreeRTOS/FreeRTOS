@@ -56,7 +56,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605399</id>
+			<id>1507735156304</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -65,7 +65,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605404</id>
+			<id>1507735156307</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -74,7 +74,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605410</id>
+			<id>1507735156310</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -83,7 +83,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605415</id>
+			<id>1507735156313</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -92,7 +92,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605421</id>
+			<id>1507735156316</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -101,7 +101,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605427</id>
+			<id>1507735156319</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -110,7 +110,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605434</id>
+			<id>1507735156323</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -119,7 +119,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605441</id>
+			<id>1507735156327</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -128,7 +128,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605450</id>
+			<id>1507735156330</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -137,7 +137,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605458</id>
+			<id>1507735156333</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -146,7 +146,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605463</id>
+			<id>1507735156337</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -155,7 +155,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605473</id>
+			<id>1507735156340</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -164,7 +164,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605490</id>
+			<id>1507735156343</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -173,7 +173,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605514</id>
+			<id>1507735156347</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -182,7 +182,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605524</id>
+			<id>1507735156350</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -191,7 +191,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605530</id>
+			<id>1507735156353</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -200,7 +200,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605535</id>
+			<id>1507735156356</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -209,7 +209,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605540</id>
+			<id>1507735156359</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -218,12 +218,30 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1458581605547</id>
+			<id>1507735156362</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-AbortDelay.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1507735156366</id>
+			<name>Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-StreamBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1507735156369</id>
+			<name>Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MessageBufferDemo.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

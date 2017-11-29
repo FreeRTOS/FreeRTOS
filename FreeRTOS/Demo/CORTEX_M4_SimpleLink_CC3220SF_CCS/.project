@@ -61,7 +61,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524146</id>
+			<id>1507220670909</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -70,7 +70,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524146</id>
+			<id>1507220670913</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -79,7 +79,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524146</id>
+			<id>1507220670916</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -88,7 +88,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524146</id>
+			<id>1507220670919</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -97,7 +97,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524162</id>
+			<id>1507220670922</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -106,7 +106,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524177</id>
+			<id>1507220670926</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -115,7 +115,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524177</id>
+			<id>1507220670929</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -124,7 +124,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524177</id>
+			<id>1507220670932</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -133,7 +133,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524193</id>
+			<id>1507220670936</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -142,12 +142,30 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1487441524193</id>
+			<id>1507220670939</id>
 			<name>Full_Demo/Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-StaticAllocation.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1507220670943</id>
+			<name>Full_Demo/Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-StreamBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1507220670946</id>
+			<name>Full_Demo/Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MessageBufferDemo.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

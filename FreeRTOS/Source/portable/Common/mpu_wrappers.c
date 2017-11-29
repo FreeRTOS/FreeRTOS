@@ -1,71 +1,30 @@
 /*
-    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.0.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 /*
  * Implementation of the wrapper functions used to raise the processor privilege
@@ -83,6 +42,7 @@ task.h is included from an application file. */
 #include "queue.h"
 #include "timers.h"
 #include "event_groups.h"
+#include "stream_buffer.h"
 #include "mpu_prototypes.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
@@ -1153,8 +1113,162 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
+size_t MPU_xStreamBufferSend( StreamBufferHandle_t xStreamBuffer, const void *pvTxData, size_t xDataLengthBytes, TickType_t xTicksToWait )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
+	xReturn = xStreamBufferSend( xStreamBuffer, pvTxData, xDataLengthBytes, xTicksToWait );
+	vPortResetPrivilege( xRunningPrivileged );
 
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+size_t MPU_xStreamBufferSendFromISR( StreamBufferHandle_t xStreamBuffer, const void *pvTxData, size_t xDataLengthBytes, BaseType_t * const pxHigherPriorityTaskWoken )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferSendFromISR( xStreamBuffer, pvTxData, xDataLengthBytes, pxHigherPriorityTaskWoken );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+size_t MPU_xStreamBufferReceive( StreamBufferHandle_t xStreamBuffer, void *pvRxData, size_t xBufferLengthBytes, TickType_t xTicksToWait )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferReceive( xStreamBuffer, pvRxData, xBufferLengthBytes, xTicksToWait );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+size_t MPU_xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer, void *pvRxData, size_t xBufferLengthBytes, BaseType_t * const pxHigherPriorityTaskWoken )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferReceiveFromISR( xStreamBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+void MPU_vStreamBufferDelete( StreamBufferHandle_t xStreamBuffer )
+{
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	vStreamBufferDelete( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xStreamBufferIsFull( StreamBufferHandle_t xStreamBuffer )
+{
+BaseType_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferIsFull( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xStreamBufferIsEmpty( StreamBufferHandle_t xStreamBuffer )
+{
+BaseType_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferIsEmpty( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xStreamBufferReset( StreamBufferHandle_t xStreamBuffer )
+{
+BaseType_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferReset( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+size_t MPU_xStreamBufferSpacesAvailable( StreamBufferHandle_t xStreamBuffer )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferSpacesAvailable( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+size_t MPU_xStreamBufferBytesAvailable( StreamBufferHandle_t xStreamBuffer )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferBytesAvailable( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xStreamBufferSetTriggerLevel( StreamBufferHandle_t xStreamBuffer, size_t xTriggerLevel )
+{
+BaseType_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferSetTriggerLevel( xStreamBuffer, xTriggerLevel );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
+#if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
+	StreamBufferHandle_t MPU_xStreamBufferGenericCreate( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer )
+	{
+	StreamBufferHandle_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		xReturn = xStreamBufferGenericCreate( xBufferSizeBytes, xTriggerLevelBytes, xIsMessageBuffer );
+		vPortResetPrivilege( xRunningPrivileged );
+
+		return xReturn;
+	}
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
+/*-----------------------------------------------------------*/
+
+#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	StreamBufferHandle_t MPU_xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer, uint8_t * const pucStreamBufferStorageArea, StaticStreamBuffer_t * const pxStaticStreamBuffer )
+	{
+	StreamBufferHandle_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		xReturn = xStreamBufferGenericCreateStatic( xBufferSizeBytes, xTriggerLevelBytes, xIsMessageBuffer, pucStreamBufferStorageArea, pxStaticStreamBuffer );
+		vPortResetPrivilege( xRunningPrivileged );
+
+		return xReturn;
+	}
+#endif /* configSUPPORT_STATIC_ALLOCATION */
+/*-----------------------------------------------------------*/
 
 
 /* Functions that the application writer wants to execute in privileged mode

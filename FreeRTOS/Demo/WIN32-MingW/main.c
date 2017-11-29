@@ -1,71 +1,30 @@
 /*
-    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.0.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
@@ -79,19 +38,16 @@
  * hardware setup and FreeRTOS hook functions.
  *
  *******************************************************************************
- * -NOTE- The Win32 port is a simulation (or is that emulation?) only!  Do not
- * expect to get real time behaviour from the Win32 port or this demo
- * application.  It is provided as a convenient development and demonstration
- * test bed only.  This was tested using Windows XP on a dual core laptop.
- *
- * Windows will not be running the FreeRTOS simulator threads continuously, so
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.
- * See the documentation page for the Windows simulator for an explanation of
- * the slow timing:
+ * NOTE: Windows will not be running the FreeRTOS demo threads continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * this demo application.  Also, the timing information in the FreeRTOS+Trace
+ * logs have no meaningful units.  See the documentation page for the Windows
+ * port for further information:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
- * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
- *******************************************************************************
  *
+
+ *
+ *******************************************************************************
  */
 
 /* Standard includes. */
@@ -103,22 +59,28 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* This project provides two demo applications.  A simple blinky style project,
-and a more comprehensive test and demo application.  The
+/* This project provides two demo applications.  A simple blinky style demo
+application, and a more comprehensive test and demo application.  The
 mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
-The simply blinky demo is implemented and described in main_blinky.c.  The more
-comprehensive test and demo application is implemented and described in
-main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 then the blinky demo will be built.
+The blinky demo is implemented and described in main_blinky.c.
+
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
+demo application will be built.  The comprehensive test and demo application is
+implemented and described in main_full.c. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /* This demo uses heap_5.c, and these constants define the sizes of the regions
-that make up the total heap.  This is only done to provide an example of heap_5
-being used as this demo could easily create one large heap region instead of
-multiple smaller heap regions - in which case heap_4.c would be the more
-appropriate choice. */
-#define mainREGION_1_SIZE	7001
-#define mainREGION_2_SIZE	18105
-#define mainREGION_3_SIZE	2807
+that make up the total heap.  heap_5 is only used for test and example purposes
+as this demo could easily create one large heap region instead of multiple
+smaller heap regions - in which case heap_4.c would be the more appropriate
+choice.  See http://www.freertos.org/a00111.html for an explanation. */
+#define mainREGION_1_SIZE	7201
+#define mainREGION_2_SIZE	29905
+#define mainREGION_3_SIZE	6407
+
+/*-----------------------------------------------------------*/
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -128,26 +90,23 @@ extern void main_blinky( void );
 extern void main_full( void );
 
 /*
- * Some of the RTOS hook (callback) functions only need special processing when
- * the full demo is being used.  The simply blinky demo has no special
- * requirements, so these functions are called from the hook functions defined
- * in this file, but are defined in main_full.c.
+ * Only the comprehensive demo uses application hook (callback) functions.  See
+ * http://www.freertos.org/a00016.html for more information.
  */
 void vFullDemoTickHookFunction( void );
 void vFullDemoIdleFunction( void );
 
 /*
- * This demo uses heap_5.c, so start by defining some heap regions.  This is
- * only done to provide an example as this demo could easily create one large
- * heap region instead of multiple smaller heap regions - in which case heap_4.c
- * would be the more appropriate choice.  No initialisation is required when
- * heap_4.c is used.
+ * This demo uses heap_5.c, so start by defining some heap regions.  It is not
+ * necessary for this demo to use heap_5, as it could define one large heap
+ * region.  Heap_5 is only used for test and example purposes.  See
+ * http://www.freertos.org/a00111.html for an explanation.
  */
 static void  prvInitialiseHeap( void );
 
 /*
- * Prototypes for the standard FreeRTOS callback/hook functions implemented
- * within this file.
+ * Prototypes for the standard FreeRTOS application hook (callback) functions
+ * implemented within this file.  See http://www.freertos.org/a00016.html .
  */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
@@ -167,11 +126,9 @@ static BaseType_t xTraceRunning = pdTRUE;
 
 int main( void )
 {
-	/* This demo uses heap_5.c, so start by defining some heap regions.  This
-	is only done to provide an example as this demo could easily create one
-	large heap region instead of multiple smaller heap regions - in which case
-	heap_4.c would be the more appropriate choice.  No initialisation is
-	required when heap_4.c is used. */
+	/* This demo uses heap_5.c, so start by defining some heap regions.  heap_5
+	is only used for test and example reasons.  Heap_4 is more appropriate.  See
+	http://www.freertos.org/a00111.html for an explanation. */
 	prvInitialiseHeap();
 
 	/* Initialise the trace recorder.  Use of the trace recorder is optional.
@@ -207,11 +164,13 @@ void vApplicationMallocFailedHook( void )
 	function that will get called if a call to pvPortMalloc() fails.
 	pvPortMalloc() is called internally by the kernel whenever a task, queue,
 	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c or heap_2.c are used, then the size of the
-	heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE in
-	FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
-	to query the size of free heap space that remains (although it does not
-	provide information on how the remaining heap might be fragmented). */
+	demo application.  If heap_1.c, heap_2.c or heap_4.c is being used, then the
+	size of the	heap available to pvPortMalloc() is defined by
+	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+	API function can be used to query the size of free heap space that remains
+	(although it does not provide information on how the remaining heap might be
+	fragmented).  See http://www.freertos.org/a00111.html for more
+	information. */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -222,13 +181,13 @@ void vApplicationIdleHook( void )
 	to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the idle
 	task.  It is essential that code added to this hook function never attempts
 	to block in any way (for example, call xQueueReceive() with a block time
-	specified, or call vTaskDelay()).  If the application makes use of the
-	vTaskDelete() API function (as this demo application does) then it is also
-	important that vApplicationIdleHook() is permitted to return to its calling
-	function, because it is the responsibility of the idle task to clean up
-	memory allocated by the kernel to any task that has since been deleted. */
+	specified, or call vTaskDelay()).  If application tasks make use of the
+	vTaskDelete() API function to delete themselves then it is also important
+	that vApplicationIdleHook() is permitted to return to its calling function,
+	because it is the responsibility of the idle task to clean up memory
+	allocated by the kernel to any task that has since deleted itself. */
 
-	/* Uncomment the following code to allow the trace to be stopped with any 
+	/* Uncomment the following code to allow the trace to be stopped with any
 	key press.  The code is commented out by default as the kbhit() function
 	interferes with the run time behaviour. */
 	/*
@@ -260,7 +219,9 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 	/* Run time stack overflow checking is performed if
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+	function is called if a stack overflow is detected.  This function is
+	provided as an example only as stack overflow checking does not function
+	when running the FreeRTOS Windows port. */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -281,14 +242,27 @@ void vApplicationTickHook( void )
 }
 /*-----------------------------------------------------------*/
 
+void vApplicationDaemonTaskStartupHook( void )
+{
+	/* This function will be called once only, when the daemon task starts to
+	execute	(sometimes called the timer task).  This is useful if the
+	application includes initialisation code that would benefit from executing
+	after the scheduler has been started. */
+}
+/*-----------------------------------------------------------*/
+
 void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
 {
 static BaseType_t xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
+	/* Called if an assertion passed to configASSERT() fails.  See
+	http://www.freertos.org/a00110.html#configASSERT for more information. */
+
 	/* Parameters are not used. */
 	( void ) ulLine;
 	( void ) pcFileName;
+
 
  	taskENTER_CRITICAL();
 	{
@@ -337,13 +311,15 @@ FILE* pxOutputFile;
 
 static void  prvInitialiseHeap( void )
 {
-/* This demo uses heap_5.c, so start by defining some heap regions.  This is
-only done to provide an example as this demo could easily create one large heap
-region instead of multiple smaller heap regions - in which case heap_4.c would
-be the more appropriate choice.  No initialisation is required when heap_4.c is
-used.  The xHeapRegions structure requires the regions to be defined in order,
-so this just creates one big array, then populates the structure with offsets
-into the array - with gaps in between and messy alignment just for test
+/* The Windows demo could create one large heap region, in which case it would
+be appropriate to use heap_4.  However, purely for demonstration purposes,
+heap_5 is used instead, so start by defining some heap regions.  No
+initialisation is required when any other heap implementation is used.  See
+http://www.freertos.org/a00111.html for more information.
+
+The xHeapRegions structure requires the regions to be defined in start address
+order, so this just creates one big array, then populates the structure with
+offsets into the array - with gaps in between and messy alignment just for test
 purposes. */
 static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 volatile uint32_t ulAdditionalOffset = 19; /* Just to prevent 'condition is always true' warnings in configASSERT(). */
@@ -359,6 +335,9 @@ const HeapRegion_t xHeapRegions[] =
 	/* Sanity check that the sizes and offsets defined actually fit into the
 	array. */
 	configASSERT( ( ulAdditionalOffset + mainREGION_1_SIZE + mainREGION_2_SIZE + mainREGION_3_SIZE ) < configTOTAL_HEAP_SIZE );
+
+	/* Prevent compiler warnings when configASSERT() is not defined. */
+	( void ) ulAdditionalOffset;
 
 	vPortDefineHeapRegions( xHeapRegions );
 }

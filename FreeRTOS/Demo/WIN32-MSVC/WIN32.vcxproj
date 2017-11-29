@@ -48,11 +48,12 @@
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
       <ObjectFileName>.\Debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <AdditionalOptions>/wd4210 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/wd4210 /wc4574 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4574;4820;4668;4255;4710;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -79,6 +80,7 @@
     <ClCompile Include="..\..\Source\croutine.c" />
     <ClCompile Include="..\..\Source\event_groups.c" />
     <ClCompile Include="..\..\Source\portable\MemMang\heap_5.c" />
+    <ClCompile Include="..\..\Source\stream_buffer.c" />
     <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\AbortDelay.c" />
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />
@@ -91,6 +93,7 @@
     <ClCompile Include="..\Common\Minimal\GenQTest.c" />
     <ClCompile Include="..\Common\Minimal\integer.c" />
     <ClCompile Include="..\Common\Minimal\IntSemTest.c" />
+    <ClCompile Include="..\Common\Minimal\MessageBufferAMP.c" />
     <ClCompile Include="..\Common\Minimal\PollQ.c" />
     <ClCompile Include="..\Common\Minimal\QPeek.c" />
     <ClCompile Include="..\Common\Minimal\QueueOverwrite.c" />
@@ -99,6 +102,9 @@
     <ClCompile Include="..\Common\Minimal\recmutex.c" />
     <ClCompile Include="..\Common\Minimal\semtest.c" />
     <ClCompile Include="..\Common\Minimal\StaticAllocation.c" />
+    <ClCompile Include="..\Common\Minimal\MessageBufferDemo.c" />
+    <ClCompile Include="..\Common\Minimal\StreamBufferDemo.c" />
+    <ClCompile Include="..\Common\Minimal\StreamBufferInterrupt.c" />
     <ClCompile Include="..\Common\Minimal\TaskNotify.c" />
     <ClCompile Include="..\Common\Minimal\timerdemo.c" />
     <ClCompile Include="main.c">
@@ -127,6 +133,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\include\event_groups.h" />
+    <ClInclude Include="..\..\Source\include\message_buffer.h" />
+    <ClInclude Include="..\..\Source\include\stream_buffer.h" />
     <ClInclude Include="..\..\Source\include\timers.h" />
     <ClInclude Include="..\..\Source\portable\MSVC-MingW\portmacro.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
@@ -139,6 +147,9 @@
     <ClInclude Include="..\..\Source\include\semphr.h" />
     <ClInclude Include="..\..\Source\include\task.h" />
     <ClInclude Include="Trace_Recorder_Configuration\trcConfig.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" --backend -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\temp\rc\FreeRTOSv10.0.0\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" --backend -f "C:\temp\rc\FreeRTOSv10.0.0\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\DevTools\IAR Systems\Embedded Workbench 7.4\common\bin\cspybat" -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\temp\rc\FreeRTOSv10.0.0\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\temp\rc\FreeRTOSv10.0.0\FreeRTOS\Demo\CORTEX_M7_SAMV71_Xplained_IAR_Keil\settings\RTOSDemo.Debug.driver.xcl" 
 
 @echo off 
 :end

@@ -1,71 +1,30 @@
 /*
-    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.0.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 
 /*
@@ -91,6 +50,7 @@
 #include "semphr.h"
 #include "timers.h"
 #include "event_groups.h"
+#include "stream_buffer.h"
 
 /*-----------------------------------------------------------*/
 
@@ -198,6 +158,7 @@ static void prvTaskToDelete( void *pvParameters );
 static void prvExerciseEventGroupAPI( void );
 static void prvExerciseSemaphoreAPI( void );
 static void prvExerciseTaskNotificationAPI( void );
+static void prvExerciseStreamBufferAPI( void );
 
 /*
  * Just configures any clocks and IO necessary.
@@ -252,7 +213,11 @@ static TaskHandle_t xTaskToDelete = NULL;
 /* The timer that periodically sends data to the check task on the queue. */
 static TimerHandle_t xTimer = NULL;
 
+/* Just used to check start up code for initialised an uninitialised data. */
+volatile uint32_t ul1 = 0x123, ul2 = 0;
+
 #if defined ( __GNUC__ )
+	/* Memory map read directl from linker variables. */
 	extern uint32_t __FLASH_segment_start__[];
 	extern uint32_t __FLASH_segment_end__[];
 	extern uint32_t __SRAM_segment_start__[];
@@ -264,6 +229,7 @@ static TimerHandle_t xTimer = NULL;
 	extern uint32_t __privileged_functions_actual_end__[];
 	extern uint32_t __privileged_data_actual_end__[];
 #else
+	/* Must be set manually to match memory map. */
 	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x00UL;
 	const uint32_t * __FLASH_segment_end__ = ( uint32_t * ) 0x00080000UL;
 	const uint32_t * __SRAM_segment_start__ = ( uint32_t * ) 0x20000000UL;
@@ -428,10 +394,9 @@ static TaskParameters_t xTaskToDeleteParameters =
 
 /*-----------------------------------------------------------*/
 
-volatile uint32_t ul1 = 0x123, ul2 = 0;
-
 int main( void )
 {
+	/* Used to check linker configuration. */
 	configASSERT( ul1 == 0x123 );
 	configASSERT( ul2 == 0 );
 	prvSetupHardware();
@@ -515,7 +480,7 @@ a counter on each iteration of their loop.  The counters are inside the array
 that this task has access to. */
 volatile uint32_t *pulOverlaidCounter3 = ( uint32_t * ) &( cReadWriteArray[ 0 ] ), *pulOverlaidCounter4 = ( uint32_t * ) &( cReadWriteArray[ 4 ] );
 
-/* ulCycleCount is incremented on each cycle of the check task.  It can be 
+/* ulCycleCount is incremented on each cycle of the check task.  It can be
 viewed updating in the Keil watch window as the simulator does not print to
 the ITM port. */
 volatile uint32_t ulCycleCount = 0;
@@ -585,7 +550,7 @@ volatile uint32_t ulCycleCount = 0;
 
 					/**** Print pcStatusMessage here. ****/
 					( void ) pcStatusMessage;
-					
+
 					/* The cycle count can be viewed updating in the Keil watch
 					window if ITM printf is not being used. */
 					ulCycleCount++;
@@ -798,10 +763,66 @@ static void prvTaskToDelete( void *pvParameters )
 	prvExerciseEventGroupAPI();
 	prvExerciseSemaphoreAPI();
 	prvExerciseTaskNotificationAPI();
+	prvExerciseStreamBufferAPI();
 
 	/* For code coverage test purposes it is deleted by the Idle task. */
 	configASSERT( uxTaskGetStackHighWaterMark( NULL ) > 0 );
 	vTaskSuspend( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExerciseStreamBufferAPI( void )
+{
+uint8_t ucBuffer[ 10 ];
+BaseType_t x, xRead;
+size_t xReturned;
+StreamBufferHandle_t xStreamBuffer;
+
+	/* Just makes API calls to ensure the MPU versions are used. */
+
+	xStreamBuffer = xStreamBufferCreate( sizeof( ucBuffer ) , 1 );
+	configASSERT( xStreamBuffer );
+
+	for( x = 0; x < ( sizeof( ucBuffer ) * 2 ); x++ )
+	{
+		/* Write and check the value is written, then read and check the value
+		read is expected. */
+		xReturned = xStreamBufferSend( xStreamBuffer,
+									   ( void * ) &x,
+									   sizeof( x ),
+									   0 );
+		configASSERT( xReturned == sizeof( x ) );
+
+		xReturned = xStreamBufferReceive( xStreamBuffer,
+										  ( void * ) &xRead,
+										  sizeof( xRead ),
+										  0 );
+		configASSERT( xReturned == sizeof( xRead ) );
+		configASSERT( xRead == x );
+
+		xStreamBufferSendFromISR( xStreamBuffer,
+								 ( void * ) &x,
+								 sizeof( x ),
+								 NULL );
+		configASSERT( xReturned == sizeof( x ) );
+
+		xReturned = xStreamBufferReceiveFromISR( xStreamBuffer,
+												 ( void * ) &xRead,
+												 sizeof( xRead ),
+												 NULL );
+		configASSERT( xReturned == sizeof( xRead ) );
+		configASSERT( xRead == x );
+		configASSERT( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
+		configASSERT( xStreamBufferIsEmpty( xStreamBuffer ) == pdTRUE );
+		configASSERT( xStreamBufferSpacesAvailable( xStreamBuffer ) == sizeof( ucBuffer ) );
+		configASSERT( xStreamBufferBytesAvailable( xStreamBuffer ) == 0 );
+	}
+
+	/* Call the functions that have not been exercised yet before finishing by
+	deleting the stream buffer. */
+	configASSERT( xStreamBufferSetTriggerLevel( xStreamBuffer, 0 ) == pdTRUE );
+	configASSERT( xStreamBufferReset( xStreamBuffer ) == pdPASS );
+	vStreamBufferDelete( xStreamBuffer );
 }
 /*-----------------------------------------------------------*/
 

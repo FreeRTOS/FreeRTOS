@@ -188,6 +188,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\event_groups.c" />
+    <ClCompile Include="..\..\Source\stream_buffer.c" />
     <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\StaticAllocation.c" />
     <ClCompile Include="main.c">

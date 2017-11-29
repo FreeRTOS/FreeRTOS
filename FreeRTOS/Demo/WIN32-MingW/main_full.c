@@ -1,78 +1,37 @@
 /*
-    FreeRTOS V9.0.1 - Copyright (C) 2017 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.0.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 /*
  *******************************************************************************
  * NOTE 1: The Win32 port is a simulation (or is that emulation?) only!  Do not
  * expect to get real time behaviour from the Win32 port or this demo
  * application.  It is provided as a convenient development and demonstration
- * test bed only.  This was tested using Windows XP on a dual core laptop.
+ * test bed only.
  *
  * Windows will not be running the FreeRTOS simulator threads continuously, so
  * the timing information in the FreeRTOS+Trace logs have no meaningful units.
@@ -142,6 +101,8 @@
 #include "QueueSetPolling.h"
 #include "blocktim.h"
 #include "AbortDelay.h"
+#include "MessageBufferDemo.h"
+#include "StreamBufferDemo.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -183,14 +144,29 @@ static void prvDemonstratePendingFunctionCall( void );
 static void prvPendedFunction( void *pvParameter1, uint32_t ulParameter2 );
 
 /*
+ * prvDemonstrateTimerQueryFunctions() is called from the idle task hook
+ * function to demonstrate the use of functions that query information about a
+ * software timer.  prvTestTimerCallback() is the callback function for the
+ * timer being queried.
+ */
+static void prvDemonstrateTimerQueryFunctions( void );
+static void prvTestTimerCallback( TimerHandle_t xTimer );
+
+/*
  * A task to demonstrate the use of the xQueueSpacesAvailable() function.
  */
 static void prvDemoQueueSpaceFunctions( void *pvParameters );
 
+/*
+ * Tasks that ensure indefinite delays are truly indefinite.
+ */
+static void prvPermanentlyBlockingSemaphoreTask( void *pvParameters );
+static void prvPermanentlyBlockingNotificationTask( void *pvParameters );
+
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
-static char *pcStatusMessage = "OK";
+static char *pcStatusMessage = "No errors";
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
 semaphore tracing API functions.  It has no other purpose. */
@@ -223,6 +199,12 @@ int main_full( void )
 	vStartQueueSetPollingTask();
 	vCreateBlockTimeTasks();
 	vCreateAbortDelayTasks();
+	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+
+	vStartMessageBufferTasks();
+	vStartStreamBufferTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -277,12 +259,19 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		}
 		#endif
 
-		if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
+		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error:  StreamBuffer";
+		}
+		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error:  MessageBuffer";
+		}
+		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error:  Notification";
 		}
-
-		if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
+		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: IntSem";
 		}
@@ -290,10 +279,10 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: EventGroup";
 		}
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
+		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: IntMath";
-	    }
+		}
 		else if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: GenQueue";
@@ -306,20 +295,20 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: BlockQueue";
 		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: SemTest";
-	    }
-	    else if( xArePollingQueuesStillRunning() != pdTRUE )
-	    {
+		}
+		else if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: PollQueue";
-	    }
+		}
 		else if( xAreMathsTaskStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Flop";
 		}
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
 			pcStatusMessage = "Error: RecMutex";
 		}
 		else if( xAreCountingSemaphoreTasksStillRunning() != pdTRUE )
@@ -399,19 +388,34 @@ void *pvAllocated;
 	demonstrated by any of the standard demo tasks. */
 	prvDemonstratePendingFunctionCall();
 
+	/* Demonstrate the use of functions that query information about a software
+	timer. */
+	prvDemonstrateTimerQueryFunctions();
+
+
 	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the
 	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
 	that has tasks blocked on it. */
 	if( xMutexToDelete != NULL )
 	{
+		/* For test purposes, add the mutex to the registry, then remove it
+		again, before it is deleted - checking its name is as expected before
+		and after the assertion into the registry and its removal from the
+		registry. */
+		configASSERT( pcQueueGetName( xMutexToDelete ) == NULL );
+		vQueueAddToRegistry( xMutexToDelete, "Test_Mutex" );
+		configASSERT( strcmp( pcQueueGetName( xMutexToDelete ), "Test_Mutex" ) == 0 );
+		vQueueUnregisterQueue( xMutexToDelete );
+		configASSERT( pcQueueGetName( xMutexToDelete ) == NULL );
+
 		vSemaphoreDelete( xMutexToDelete );
 		xMutexToDelete = NULL;
 	}
 
 	/* Exercise heap_5 a bit.  The malloc failed hook will trap failed
 	allocations so there is no need to test here. */
-	pvAllocated = pvPortMalloc( ( rand() % 100 ) + 1 );
+	pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
 	vPortFree( pvAllocated );
 }
 /*-----------------------------------------------------------*/
@@ -419,6 +423,8 @@ void *pvAllocated;
 /* Called by vApplicationTickHook(), which is defined in main.c. */
 void vFullDemoTickHookFunction( void )
 {
+TaskHandle_t xTimerTask;
+
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
 	#if( configUSE_PREEMPTION != 0 )
@@ -444,6 +450,15 @@ void vFullDemoTickHookFunction( void )
 
 	/* Exercise using task notifications from an interrupt. */
 	xNotifyTaskFromISR();
+
+	/* Writes to stream buffer byte by byte to test the stream buffer trigger
+	level functionality. */
+	vPeriodicStreamBufferProcessing();
+
+	/* For code coverage purposes. */
+	xTimerTask = xTimerGetTimerDaemonTaskHandle();
+	configASSERT( uxTaskPriorityGetFromISR( xTimerTask ) == configTIMER_TASK_PRIORITY );
+	( void ) xTimerTask; /* In case configASSERT() is not defined. */
 }
 /*-----------------------------------------------------------*/
 
@@ -461,6 +476,57 @@ uint32_t ulParameter1;
 	/* Remember the parameters for the next time the function is called. */
 	ulLastParameter1 = ulParameter1;
 	ulLastParameter2 = ulParameter2;
+
+	/* Remove compiler warnings in case configASSERT() is not defined. */
+	( void ) ulLastParameter1;
+	( void ) ulLastParameter2;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTestTimerCallback( TimerHandle_t xTimer )
+{
+	/* This is the callback function for the timer accessed by
+	prvDemonstrateTimerQueryFunctions().  The callback does not do anything. */
+	( void ) xTimer;
+}
+/*-----------------------------------------------------------*/
+
+static void prvDemonstrateTimerQueryFunctions( void )
+{
+static TimerHandle_t xTimer = NULL;
+const char *pcTimerName = "TestTimer";
+volatile TickType_t xExpiryTime;
+const TickType_t xDontBlock = 0;
+
+	if( xTimer == NULL )
+	{
+		xTimer = xTimerCreate( pcTimerName, portMAX_DELAY, pdTRUE, NULL, prvTestTimerCallback );
+
+		if( xTimer != NULL )
+		{
+			/* Called from the idle task so a block time must not be
+			specified. */
+			xTimerStart( xTimer, xDontBlock );
+		}
+	}
+
+	if( xTimer != NULL )
+	{
+		/* Demonstrate querying a timer's name. */
+		configASSERT( strcmp( pcTimerGetName( xTimer ), pcTimerName ) == 0 );
+
+		/* Demonstrate querying a timer's period. */
+		configASSERT( xTimerGetPeriod( xTimer ) == portMAX_DELAY );
+
+		/* Demonstrate querying a timer's next expiry time, although nothing is
+		done with the returned value.  Note if the expiry time is less than the
+		maximum tick count then the expiry time has overflowed from the current
+		time.  In this case the expiry time was set to portMAX_DELAY, so it is
+		expected to be less than the current time until the current time has
+		itself overflowed. */
+		xExpiryTime = xTimerGetExpiryTime( xTimer );
+		( void ) xExpiryTime;
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -485,6 +551,7 @@ TaskHandle_t xIdleTaskHandle, xTimerTaskHandle;
 char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
+TaskStatus_t xTaskInfo;
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -499,11 +566,28 @@ TaskHandle_t xTestTask;
 		pcStatusMessage = "Error:  Returned idle task handle was incorrect";
 	}
 
+	/* Check the same handle is obtained using the idle task's name.  First try
+	with the wrong name, then the right name. */
+	if( xTaskGetHandle( "Idle" ) == xIdleTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
+	}
+
+	if( xTaskGetHandle( "IDLE" ) != xIdleTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned handle for name Idle was incorrect";
+	}
+
 	/* Check the timer task handle was returned correctly. */
 	pcTaskName = pcTaskGetName( xTimerTaskHandle );
 	if( strcmp( pcTaskName, "Tmr Svc" ) != 0 )
 	{
 		pcStatusMessage = "Error:  Returned timer task handle was incorrect";
+	}
+
+	if( xTaskGetHandle( "Tmr Svc" ) != xTimerTaskHandle )
+	{
+		pcStatusMessage = "Error:  Returned handle for name Tmr Svc was incorrect";
 	}
 
 	/* This task is running, make sure it's state is returned as running. */
@@ -516,6 +600,21 @@ TaskHandle_t xTestTask;
 	if( eTaskStateGet( xTimerTaskHandle ) != eBlocked )
 	{
 		pcStatusMessage = "Error:  Returned timer task state was incorrect";
+	}
+
+	/* Also with the vTaskGetInfo() function. */
+	vTaskGetInfo( xTimerTaskHandle, /* The task being queried. */
+					  &xTaskInfo,		/* The structure into which information on the task will be written. */
+					  pdTRUE,			/* Include the task's high watermark in the structure. */
+					  eInvalid );		/* Include the task state in the structure. */
+
+	/* Check the information returned by vTaskGetInfo() is as expected. */
+	if( ( xTaskInfo.eCurrentState != eBlocked )						 ||
+		( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 )			 ||
+		( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
+		( xTaskInfo.xHandle != xTimerTaskHandle ) )
+	{
+		pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";
 	}
 
 	/* Other tests that should only be performed once follow.  The test task
@@ -620,6 +719,43 @@ unsigned portBASE_TYPE uxReturn, x;
 			taskYIELD();
 		#endif
 	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvPermanentlyBlockingSemaphoreTask( void *pvParameters )
+{
+SemaphoreHandle_t xSemaphore;
+
+	/* Prevent compiler warning about unused parameter in the case that
+	configASSERT() is not defined. */
+	( void ) pvParameters;
+
+	/* This task should block on a semaphore, and never return. */
+	xSemaphore = xSemaphoreCreateBinary();
+	configASSERT( xSemaphore );
+
+	xSemaphoreTake( xSemaphore, portMAX_DELAY );
+
+	/* The above xSemaphoreTake() call should never return, force an assert if
+	it does. */
+	configASSERT( pvParameters != NULL );
+	vTaskDelete( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvPermanentlyBlockingNotificationTask( void *pvParameters )
+{
+	/* Prevent compiler warning about unused parameter in the case that
+	configASSERT() is not defined. */
+	( void ) pvParameters;
+
+	/* This task should block on a task notification, and never return. */
+	ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+
+	/* The above ulTaskNotifyTake() call should never return, force an assert
+	if it does. */
+	configASSERT( pvParameters != NULL );
+	vTaskDelete( NULL );
 }
 
 

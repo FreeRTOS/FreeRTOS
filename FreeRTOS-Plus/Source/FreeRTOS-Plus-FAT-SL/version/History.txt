@@ -1,9 +1,0 @@
-Changes between V1.0.0 and V1.0.1
-
-	+ Fix seeking beyond the end of file when the offset was not multiple of
-	  the sector size, or when the file was empty.
-
-	+ Seeking test extended to validate seeking/writing on sector boundaries.
-
-
-

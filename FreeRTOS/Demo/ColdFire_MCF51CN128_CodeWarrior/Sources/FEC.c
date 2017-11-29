@@ -1,66 +1,3 @@
-/*
-    This file is part of the FreeRTOS.org distribution.
-
-    FreeRTOS.org is free software; you can redistribute it and/or modify it 
-    under the terms of the GNU General Public License (version 2) as published
-    by the Free Software Foundation and modified by the FreeRTOS exception.
-
-    FreeRTOS.org is distributed in the hope that it will be useful,    but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
-    more details.
-
-    You should have received a copy of the GNU General Public License along 
-    with FreeRTOS.org; if not, write to the Free Software Foundation, Inc., 59 
-    Temple Place, Suite 330, Boston, MA  02111-1307  USA.
-
-    A special exception to the GPL is included to allow you to distribute a 
-    combined work that includes FreeRTOS.org without being obliged to provide
-    the source code for any proprietary components.  See the licensing section
-    of http://www.FreeRTOS.org for full details.
-
-
-    ***************************************************************************
-    *                                                                         *
-    * Get the FreeRTOS eBook!  See http://www.FreeRTOS.org/Documentation      *
-    *                                                                         *
-    * This is a concise, step by step, 'hands on' guide that describes both   *
-    * general multitasking concepts and FreeRTOS specifics. It presents and   *
-    * explains numerous examples that are written using the FreeRTOS API.     *
-    * Full source code for all the examples is provided in an accompanying    *
-    * .zip file.                                                              *
-    *                                                                         *
-    ***************************************************************************
-
-    1 tab == 4 spaces!
-
-    Please ensure to read the configuration and relevant port sections of the
-    online documentation.
-    
-    ***************************************************************************
-     *                                                                       *
-     *    Having a problem?  Start by reading the FAQ "My application does   *
-     *    not run, what could be wrong?                                      *
-     *                                                                       *
-     *    http://www.FreeRTOS.org/FAQHelp.html                               *
-     *                                                                       *
-    ***************************************************************************
-
-    
-    http://www.FreeRTOS.org - Documentation, training, latest information, 
-    license and contact details.
-    
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool.
-
-    Real Time Engineers ltd license FreeRTOS to High Integrity Systems, who sell 
-    the code with commercial support, indemnification, and middleware, under 
-    the OpenRTOS brand: http://www.OpenRTOS.com.  High Integrity Systems also
-    provide a safety engineered and independently SIL3 certified version under 
-    the SafeRTOS brand: http://www.SafeRTOS.com.
-*/
-
-
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -107,15 +44,15 @@ number of Rx descriptors. */
 
 /*-----------------------------------------------------------*/
 
-/* 
- * Return an unused buffer to the pool of free buffers. 
+/*
+ * Return an unused buffer to the pool of free buffers.
  */
 static void prvReturnBuffer( unsigned char *pucBuffer );
 
 /*
  * Find and return the next buffer that is not in use by anything else.
  */
-static unsigned char *prvGetFreeBuffer( void ); 
+static unsigned char *prvGetFreeBuffer( void );
 /*-----------------------------------------------------------*/
 
 /* The semaphore used to wake the uIP task when data arrives. */
@@ -126,7 +63,7 @@ point to one of the Rx buffers to avoid having to copy the Rx buffer into
 the uIP buffer. */
 unsigned char *uip_buf;
 
-/* The DMA descriptors.  These are char arrays to allow us to align them 
+/* The DMA descriptors.  These are char arrays to allow us to align them
 correctly. */
 static unsigned char xFECTxDescriptors_unaligned[ ( fecNUM_TX_DESCRIPTORS * sizeof( FECBD ) ) + 16 ];
 static unsigned char xFECRxDescriptors_unaligned[ ( configNUM_FEC_RX_DESCRIPTORS * sizeof( FECBD ) ) + 16 ];
@@ -139,12 +76,12 @@ static unsigned char ucFECRxBuffers[ ( fecNUM_BUFFERS * configFEC_BUFFER_SIZE ) 
 /* Index to the next descriptor to be inspected for received data. */
 static unsigned long ulNextRxDescriptor = 0;
 
-/* Contains the start address of each Rx buffer, after it has been correctly 
+/* Contains the start address of each Rx buffer, after it has been correctly
 aligned. */
 static unsigned char *pucAlignedBufferStartAddresses[ fecNUM_BUFFERS ] = { 0 };
 
 /* Each ucBufferInUse index corresponds to a position in the same index in the
-pucAlignedBufferStartAddresses array.  If the index contains a 1 then the 
+pucAlignedBufferStartAddresses array.  If the index contains a 1 then the
 buffer within pucAlignedBufferStartAddresses is in use, if it contains a 0 then
 the buffer is free. */
 static unsigned char ucBufferInUse[ fecNUM_BUFFERS ] = { 0 };
@@ -166,8 +103,8 @@ static unsigned char ucBufferInUse[ fecNUM_BUFFERS ] = { 0 };
  *  1 on success.
  *
  * Please refer to your PHY manual for registers and their meanings.
- * mii_write() polls for the FEC's MII interrupt event and clears it. 
- * If after a suitable amount of time the event isn't triggered, a 
+ * mii_write() polls for the FEC's MII interrupt event and clears it.
+ * If after a suitable amount of time the event isn't triggered, a
  * value of 0 is returned.
  */
 static int fec_mii_write( int phy_addr, int reg_addr, int data )
@@ -224,8 +161,8 @@ unsigned long eimr;
  *  1 on success.
  *
  * Please refer to your PHY manual for registers and their meanings.
- * mii_read() polls for the FEC's MII interrupt event and clears it. 
- * If after a suitable amount of time the event isn't triggered, a 
+ * mii_read() polls for the FEC's MII interrupt event and clears it.
+ * If after a suitable amount of time the event isn't triggered, a
  * value of 0 is returned.
  */
 static int fec_mii_read( int phy_addr, int reg_addr, unsigned short* data )
@@ -354,16 +291,16 @@ unsigned char *pcBufPointer;
 	{
 		pcBufPointer++;
 	}
-	
-	pxFECTxDescriptor = ( FECBD * ) pcBufPointer;	
 
-	/* Likewise the pointer to the Rx descriptor. */	
+	pxFECTxDescriptor = ( FECBD * ) pcBufPointer;
+
+	/* Likewise the pointer to the Rx descriptor. */
 	pcBufPointer = &( xFECRxDescriptors_unaligned[ 0 ] );
 	while( ( ( unsigned long ) pcBufPointer & 0x0fUL ) != 0 )
 	{
 		pcBufPointer++;
 	}
-	
+
 	xFECRxDescriptors = ( FECBD * ) pcBufPointer;
 
 	/* There is no Tx buffer as the Rx buffer is reused. */
@@ -376,28 +313,28 @@ unsigned char *pcBufPointer;
 	{
 		pcBufPointer++;
 	}
-	
+
 	/* Then fill in the Rx descriptors. */
 	for( ux = 0; ux < configNUM_FEC_RX_DESCRIPTORS; ux++ )
 	{
 	    xFECRxDescriptors[ ux ].status = RX_BD_E;
 	    xFECRxDescriptors[ ux ].length = configFEC_BUFFER_SIZE;
 	    xFECRxDescriptors[ ux ].data = pcBufPointer;
-		
+
 		/* Note the start address of the buffer now that it is correctly
 		aligned. */
 		pucAlignedBufferStartAddresses[ ux ] = pcBufPointer;
-		
+
 		/* The buffer is in use by the descriptor. */
 		ucBufferInUse[ ux ] = pdTRUE;
-		
+
 	    pcBufPointer += configFEC_BUFFER_SIZE;
 	}
-	
+
 	/* Note the start address of the last buffer as one more buffer is
 	allocated than there are Rx descriptors. */
 	pucAlignedBufferStartAddresses[ ux ] = pcBufPointer;
-	
+
 	/* Set uip_buf to point to the last buffer. */
 	uip_buf = pcBufPointer;
 	ucBufferInUse[ ux ] = pdTRUE;
@@ -414,7 +351,7 @@ void vInitFEC( void )
 {
 unsigned short usData;
 struct uip_eth_addr xAddr;
-const unsigned char ucMACAddress[6] = 
+const unsigned char ucMACAddress[6] =
 {
 	configMAC_0, configMAC_1,configMAC_2,configMAC_3,configMAC_4,configMAC_5
 };
@@ -423,17 +360,17 @@ const unsigned char ucMACAddress[6] =
 
 	/* Create the semaphore used to wake the uIP task when data arrives. */
 	vSemaphoreCreateBinary( xFECSemaphore );
-	
+
 	/* Set the MAC address within the stack. */
 	for( usData = 0; usData < 6; usData++ )
 	{
 		xAddr.addr[ usData ] = ucMACAddress[ usData ];
 	}
-	uip_setethaddr( xAddr );	
+	uip_setethaddr( xAddr );
 
 	/* Set the Reset bit and clear the Enable bit */
 	ECR_RESET = 1;
-	
+
 	/* Enable the clock. */
 	SCGC4 |= SCGC4_FEC_MASK;
 
@@ -456,16 +393,16 @@ const unsigned char ucMACAddress[6] =
     PTAPF2 = 0x55;
     PTBPF1 = 0x55;
     PTBPF2 = 0x55;
-    
+
     /* Set all pins to full drive with no filter. */
     PTADS = 0x06;
     PTAIFE = 0x06;
     PTBDS = 0xf4;
     PTBIFE = 0xf4;
     PTCDS = 0;
-    PTCIFE = 0;				
+    PTCIFE = 0;
 
-    
+
 	/* Can we talk to the PHY? */
 	do
 	{
@@ -488,7 +425,7 @@ const unsigned char ucMACAddress[6] =
 
 	/* When we get here we have a link - find out what has been negotiated. */
 	usData = 0;
-	fec_mii_read( configPHY_ADDRESS, PHY_STATUS, &usData );	
+	fec_mii_read( configPHY_ADDRESS, PHY_STATUS, &usData );
 
 	/* Setup half or full duplex. */
 	if( usData & PHY_DUPLEX_STATUS )
@@ -501,7 +438,7 @@ const unsigned char ucMACAddress[6] =
 		RCR |= RCR_DRT;
 		TCR &= (unsigned long)~TCR_FDEN;
 	}
-	
+
 	/* Clear the Individual and Group Address Hash registers */
 	IALR = 0;
 	IAUR = 0;
@@ -555,7 +492,7 @@ unsigned long ulLen = 0UL;
 		/* uip_buf is about to be set to a new buffer, so return the buffer it
 		is already pointing to. */
 		prvReturnBuffer( uip_buf );
-	
+
 		/* Obtain the size of the packet and put it into the "len" variable. */
 		ulLen = xFECRxDescriptors[ ulNextRxDescriptor ].length;
 		uip_buf = xFECRxDescriptors[ ulNextRxDescriptor ].data;
@@ -564,9 +501,9 @@ unsigned long ulLen = 0UL;
 		TCP/IP stack, so allocate it a new buffer. */
 		xFECRxDescriptors[ ulNextRxDescriptor ].data = prvGetFreeBuffer();
 
-		/* Doing this here could cause corruption! */		
-		xFECRxDescriptors[ ulNextRxDescriptor ].status |= RX_BD_E;		
-		
+		/* Doing this here could cause corruption! */
+		xFECRxDescriptors[ ulNextRxDescriptor ].status |= RX_BD_E;
+
 		portENTER_CRITICAL();
 		{
 			ulNextRxDescriptor++;
@@ -575,10 +512,10 @@ unsigned long ulLen = 0UL;
 				ulNextRxDescriptor = 0;
 			}
 		}
-		portEXIT_CRITICAL();	
+		portEXIT_CRITICAL();
 
 		/* Tell the DMA a new buffer is available. */
-		RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;		
+		RDAR = MCF_FEC_RDAR_R_DES_ACTIVE;
 	}
 
     return ulLen;
@@ -598,18 +535,18 @@ void vFECTx( void )
 		/* To maintain the zero copy implementation, point the Tx descriptor
 		to the data from the Rx buffer. */
 		pxFECTxDescriptor->data = uip_buf;
-		
+
 		/* Setup the buffer descriptor for transmission */
 		pxFECTxDescriptor->length = uip_len;
-		
+
 		/* NB this assumes only one Tx descriptor! */
 		pxFECTxDescriptor->status = ( TX_BD_R | TX_BD_L | TX_BD_TC | TX_BD_W );
 	}
 	portEXIT_CRITICAL();
-	
+
 	/* Continue the Tx DMA task (in case it was waiting for a new TxBD) */
 	TDAR = MCF_FEC_TDAR_X_DES_ACTIVE;
-	
+
 	/* uip_buf is being used by the Tx descriptor.  Allocate a new buffer to
 	uip_buf. */
 	uip_buf = prvGetFreeBuffer();
@@ -675,18 +612,18 @@ void interrupt 86 vFECISRHandler( void )
 {
 unsigned long ulEvent;
 portBASE_TYPE xHighPriorityTaskWoken = pdFALSE;
-   
+
 	/* Determine the cause of the interrupt. */
 	ulEvent = EIR & EIMR;
 	EIR = ulEvent;
 
 	if( ulEvent & EIR_RXF_MASK )
 	{
-		/* A packet has been received.  Wake the handler task in case it is 
+		/* A packet has been received.  Wake the handler task in case it is
 		blocked. */
 		xSemaphoreGiveFromISR( xFECSemaphore, &xHighPriorityTaskWoken );
 	}
-	
+
 	if( ulEvent & EIR_TXF_MASK )
 	{
 		/* The Tx has completed.  Mark the buffer it was using as free again. */

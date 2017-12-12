@@ -110,6 +110,7 @@ set then don't fill the stack so there is no unnecessary dependency on memset. *
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */
+#define tskRUNNING_CHAR		( 'X' )
 #define tskBLOCKED_CHAR		( 'B' )
 #define tskREADY_CHAR		( 'R' )
 #define tskDELETED_CHAR		( 'D' )
@@ -4209,6 +4210,9 @@ TCB_t *pxTCB;
 			{
 				switch( pxTaskStatusArray[ x ].eCurrentState )
 				{
+					case eRunning:		cStatus = tskRUNNING_CHAR;
+										break;
+
 					case eReady:		cStatus = tskREADY_CHAR;
 										break;
 

@@ -52,6 +52,10 @@
 #ifndef STREAM_BUFFER_H
 #define STREAM_BUFFER_H
 
+#if defined( __cplusplus )
+extern "C" {
+#endif
+
 /**
  * Type by which stream buffers are referenced.  For example, a call to
  * xStreamBufferCreate() returns an StreamBufferHandle_t variable that can
@@ -843,7 +847,7 @@ StreamBufferHandle_t xStreamBufferGenericCreateStatic( size_t xBufferSizeBytes,
 #endif
 
 #if defined( __cplusplus )
-extern "C" {
+}
 #endif
 
 #endif	/* !defined( STREAM_BUFFER_H ) */

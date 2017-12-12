@@ -44,8 +44,8 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V9.0.0"
-#define tskKERNEL_VERSION_MAJOR 9
+#define tskKERNEL_VERSION_NUMBER "V10.0.0"
+#define tskKERNEL_VERSION_MAJOR 10
 #define tskKERNEL_VERSION_MINOR 0
 #define tskKERNEL_VERSION_BUILD 0
 

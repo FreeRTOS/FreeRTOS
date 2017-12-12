@@ -502,6 +502,10 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigSOCKET_HAS_USER_SEMAPHORE 0
 #endif
 
+#ifndef ipconfigSOCKET_HAS_USER_WAKE_CALLBACK
+	#define ipconfigSOCKET_HAS_USER_WAKE_CALLBACK 0
+#endif
+
 #ifndef ipconfigSUPPORT_SELECT_FUNCTION
 	#define ipconfigSUPPORT_SELECT_FUNCTION 0
 #endif

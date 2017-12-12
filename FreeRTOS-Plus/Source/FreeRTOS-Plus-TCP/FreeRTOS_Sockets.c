@@ -1438,10 +1438,23 @@ FreeRTOS_Socket_t *pxSocket;
 				case FREERTOS_SO_SET_SEMAPHORE:
 					{
 						pxSocket->pxUserSemaphore = *( ( SemaphoreHandle_t * ) pvOptionValue );
+						xReturn = 0;
 					}
-					xReturn = 0;
 					break;
 			#endif /* ipconfigSOCKET_HAS_USER_SEMAPHORE */
+
+			#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK != 0 )
+				case FREERTOS_SO_WAKEUP_CALLBACK:
+				{
+					/* Each socket can have a callback function that is executed
+					when there is an event the socket's owner might want to
+					process. */
+					pxSocket->pxUserWakeCallback = ( SocketWakeupCallback_t ) pvOptionValue;
+					xReturn = 0;
+				}
+				break;
+			#endif /* ipconfigSOCKET_HAS_USER_WAKE_CALLBACK */
+
 			case FREERTOS_SO_SNDBUF:	/* Set the size of the send buffer, in units of MSS (TCP only) */
 			case FREERTOS_SO_RCVBUF:	/* Set the size of the receive buffer, in units of MSS (TCP only) */
 				{
@@ -1835,6 +1848,15 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		if( pxSocket->pxUserSemaphore != NULL )
 		{
 			xSemaphoreGive( pxSocket->pxUserSemaphore );
+		}
+	}
+	#endif /* ipconfigSOCKET_HAS_USER_SEMAPHORE */
+
+	#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 )
+	{
+		if( pxSocket->pxUserWakeCallback != NULL )
+		{
+			pxSocket->pxUserWakeCallback( pxSocket );
 		}
 	}
 	#endif /* ipconfigSOCKET_HAS_USER_SEMAPHORE */
@@ -2854,7 +2876,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 #if( ipconfigUSE_TCP == 1 )
 
-	static StreamBuffer_t *prvTCPCreateStream ( FreeRTOS_Socket_t *pxSocket, BaseType_t xIsInputStream )
+	static StreamBuffer_t *prvTCPCreateStream( FreeRTOS_Socket_t *pxSocket, BaseType_t xIsInputStream )
 	{
 	StreamBuffer_t *pxBuffer;
 	size_t uxLength;
@@ -2880,7 +2902,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 			if( pxSocket->u.xTCP.uxLittleSpace == 0ul )
 			{
 				pxSocket->u.xTCP.uxLittleSpace  = ( 1ul * pxSocket->u.xTCP.uxRxStreamSize ) / 5u; /*_RB_ Why divide by 5?  Can this be changed to a #define? */
-				if( (pxSocket->u.xTCP.uxLittleSpace < pxSocket->u.xTCP.usCurMSS ) && ( pxSocket->u.xTCP.uxRxStreamSize >= 2 * pxSocket->u.xTCP.usCurMSS ) )
+				if( ( pxSocket->u.xTCP.uxLittleSpace < pxSocket->u.xTCP.usCurMSS ) && ( pxSocket->u.xTCP.uxRxStreamSize >= 2u * pxSocket->u.xTCP.usCurMSS ) )
 				{
 					pxSocket->u.xTCP.uxLittleSpace = pxSocket->u.xTCP.usCurMSS;
 				}

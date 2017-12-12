@@ -1,37 +1,81 @@
-Changes since the 160112 release
+Changes since V2.0.0 release
 
-FTP : now has ipconfigFTP_HAS_USER_PROPERTIES_HOOK
-Each user can be assigned a different root directory and different access rights.
-Read-only access for FTP is now possible.
+	+ Added FREERTOS_SO_WAKEUP_CALLBACK option so a callback can be executed
+	  when data arrives.
+	+ Improve print output when using WinPCap to assist in selecting the
+	  correct network interface.
 
-Adapted to comply a bit more to MISRA rules.
-The introduction of unsigned true/false, e.g. pdTRUE_UNSIGNED.
+Changes between 160908 and 160919 releases:
 
-'ipBUFFER_PADDING' now configurable (expert option).
+	+ Add a NULL check before attempting to close the DHCP socket.  [Prior to
+	  160823 the IP task closed the DHCP socket by calling a public API function
+	  - which checked for the socket being NULL.  This was changed to call a
+	  local private function, which did not have a NULL check, in place of the
+	  public API function.]
+	+ Various [internal only] naming changes to better comply with the FreeRTOS
+	  naming conventions.
+	+ Improvements to the Zynq network driver.  DMA transmission buffers now use
+	  a counting semaphore. When all TX-buffers are in-use, the IP-task will
+	  block momentarily until a TX-buffer becomes available.
+	+ Experimental implementation of the TCP window scaling protocol.  The
+	  scaling option will always be offered, at least with a factor 1. If the
+	  TCP sliding window size becomes more than 64KB, the factor will increase
+	  automatically.
+	+ ipconfigETHERNET_MINIMUM_PACKET_BYTES is now applied for every protocol:
+	  TCP, UDP, and ARP.
+	+ Updated the Zynq project to use BufferAllocation_1.c rather than
+	  BufferAllocation_2.c - which is a requirement with its current
+	  configuration (due to the alignment requirements on the combined cache and
+	  DMA configuration).
 
-Added ipconfigFTP_HAS_USER_PROPERTIES_HOOK.
-ipconfigHAS_TX_CRC_OFFLOADING
-Improve support for read only file systems in the FTP server.
+Changes between 160823 and 160908 releases:
 
-Depending on priorities: FreeRTOS_accept() could fail if the priority of the application task is higher than the priority of the IP-task. Now with a higher priority FreeRTOS_accept() will still work correctly.
+	+ Use ipconfigZERO_COPY_TX_DRIVER as the xReleaseAfterSend() parameter where
+	  prvTCPReturnPacket() is called in prvSendData() to prevent unnecessary
+	  copying of data.
+	+ Remove the use of the uxGetRxEventCount variable, which was used to give
+	  priority to incoming messages, but could result in the IP task starving
+	  application tasks of processing time.
 
-Depending on the tick rate: A TCP socket could freeze (stop working) when the FreeRTOS tick rate was lower than 1,000 Hz. Now also tested with 100 Hz.
+Changes between 160112 and 160823 releases
 
-When "ipconfigZERO_COPY_TX_DRIVER = 0", sometime xNetworkInterfaceOutput() was called to send out a small TCP ACK. The network buffer would refer to space on the TCP socket ("lastPacket"), which was not 8-byte aligned. Repaired: from now on the buffer will have a proper 8-byte alignment.
+	NOTE:  The 160908 release is a maintenance release for the 160112 single
+	interface labs release - not a release of the current development branch.
 
-"#if __cplusplus" is been replaced with the more proper test "#ifdef __cplusplus".
-
-
-
-These are the recent commits:
-565 Initial check-in of +TCP/multi
-566 LPC18xx : updated and re-tested the TCP and FAT drivers
-569 +TCP : protocols: Added an installable application hook: "CheckDrivesHook"
-570 +TCP : will now work properly when configTICK_RATE_HZ < 1000
-571 +TCP : will now work properly when configTICK_RATE_HZ < 1000
-572 +TCP : FreeRTOS_recvfrom now recognises "FREERTOS_MSG_PEEK"
-573 +FAT : Zynq : writing may fail if it goes too fast. Introduced pauses but not yet satisfied
-
+	+ Various minor stability enhancements, including the ability to work with
+	  configTICK_RATE_HZ set to less than 1KHz, closing DHCP sockets directly
+	  rather than via FreeRTOS_closesocket(), and better handling of unknown
+	  TCP packets before an IP address has been assigned.
+	+ ipBUFFER_PADDING is now configurable through the ipconfigBUFFER_PADDING
+	  constant to improve network buffer alignment handling capabilities (expert
+	  users/driver writers only).
+	+ Multiple improvements to the FTP server, including to how read only and
+	  zero length files are handled.
+	+ ipconfigFTP_HAS_USER_PROPERTIES_HOOK (to allow each user to have a
+	  different root directory and access rights) and
+	  ipconfigHTTP_HAS_HANDLE_REQUEST_HOOK (to handle AJAX style data)
+	  introduced, although these are not yet fully tested and the constant names
+	  are likely to change.
+	+ Introduce ipconfigHAS_TX_CRC_OFFLOADING.
+	+ ipconfigUSE_DHCP_HOOK is now called ipconfigUSE_DHCP_HOOK, and the name
+	  of the callback function has also changed.  See the web documentation for
+	  details.
+	+ ipconfigTCP_RX_BUF_LEN is now ipconfigTCP_RX_BUFFER_LENGTH, and
+	  ipconfigTCP_TX_BUF_LEN is now ipconfigTCP_TX_BUFFER_LENGTH, which is
+	  actually how they have always been documented.
+	+ Added example TFTP server capable of receiving (not sending) files.
+	  Intended for bootloader type functionality.
+	+ Various variable name changes for consistency (mainly ensuring UDP, TCP,
+	  DNS, etc. always use the same case letters, and type prefixes are correct).
+	+ Various minor edits to improve types used by internal variables.
+	+ Simplified mapping of standard library functions to their Visual Studio
+	  equivalents.
+	+ Improve robustness of network drivers.
+	+ Introduce pxResizeNetworkBufferWithDescriptor().
+	+ Removed obsolete FreeRTOSIPConfig.h constants from
+	  FreeRTOSIPConfigDefaults.h.
+	+ Added additional asserts() - predominantly to catch incorrect structure
+	  packing.
 
 Changes between 160112 and 160111 releases
 

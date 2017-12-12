@@ -236,50 +236,65 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void )
 pcap_if_t * pxAllNetworkInterfaces = NULL, *xInterface;
 int32_t lInterfaceNumber = 1;
 char cBuffer[ 512 ];
+static BaseType_t xInvalidInterfaceDetected = pdFALSE;
 
-	if( pcap_findalldevs_ex( PCAP_SRC_IF_STRING, NULL, &pxAllNetworkInterfaces, cErrorBuffer ) == -1 )
+	if( xInvalidInterfaceDetected == pdFALSE )
 	{
-		printf( "Could not obtain a list of network interfaces\n%s\n", cErrorBuffer );
-		pxAllNetworkInterfaces = NULL;
-	}
-
-	if( pxAllNetworkInterfaces != NULL )
-	{
-		/* Print out the list of network interfaces.  The first in the list
-		is interface '1', not interface '0'. */
-		for( xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next )
+		if( pcap_findalldevs_ex( PCAP_SRC_IF_STRING, NULL, &pxAllNetworkInterfaces, cErrorBuffer ) == -1 )
 		{
-			/* The descriptions of the devices can be full of spaces, clean them
-			a little.  printf() can only be used here because the network is not
-			up yet - so no other network tasks will be running. */
-			printf( "%d. %s\n", lInterfaceNumber, prvRemoveSpaces( cBuffer, sizeof( cBuffer ), xInterface->name ) );
-			printf( "   (%s)\n", prvRemoveSpaces(cBuffer, sizeof( cBuffer ), xInterface->description ? xInterface->description : "No description" ) );
-			printf( "\n" );
-			lInterfaceNumber++;
+			printf( "Could not obtain a list of network interfaces\n%s\n", cErrorBuffer );
+			pxAllNetworkInterfaces = NULL;
 		}
-	}
-
-	if( lInterfaceNumber == 1 )
-	{
-		/* The interface number was never incremented, so the above for() loop
-		did not execute meaning no interfaces were found. */
-		printf( " \nNo network interfaces were found.\n" );
-		pxAllNetworkInterfaces = NULL;
-	}
-
-	printf( "The interface that will be opened is set by\n" );
-	printf( "\"configNETWORK_INTERFACE_TO_USE\" which should be defined in FreeRTOSConfig.h\n" );
-	printf( "Attempting to open interface number %d.\n", xConfigNextworkInterfaceToUse );
-
-	if( ( xConfigNextworkInterfaceToUse < 1L ) || ( xConfigNextworkInterfaceToUse > lInterfaceNumber ) )
-	{
-		printf( "configNETWORK_INTERFACE_TO_USE is not in the valid range.\n" );
+		else
+		{
+			printf( "\r\n\r\nThe following network interfaces are available:\r\n\r\n" );
+		}
 
 		if( pxAllNetworkInterfaces != NULL )
 		{
-			/* Free the device list, as no devices are going to be opened. */
-			pcap_freealldevs( pxAllNetworkInterfaces );
+			/* Print out the list of network interfaces.  The first in the list
+			is interface '1', not interface '0'. */
+			for( xInterface = pxAllNetworkInterfaces; xInterface != NULL; xInterface = xInterface->next )
+			{
+				/* The descriptions of the devices can be full of spaces, clean them
+				a little.  printf() can only be used here because the network is not
+				up yet - so no other network tasks will be running. */
+				printf( "Interface %d - %s\n", lInterfaceNumber, prvRemoveSpaces( cBuffer, sizeof( cBuffer ), xInterface->name ) );
+				printf( "              (%s)\n", prvRemoveSpaces(cBuffer, sizeof( cBuffer ), xInterface->description ? xInterface->description : "No description" ) );
+				printf( "\n" );
+				lInterfaceNumber++;
+			}
+		}
+
+		if( lInterfaceNumber == 1 )
+		{
+			/* The interface number was never incremented, so the above for() loop
+			did not execute meaning no interfaces were found. */
+			printf( " \nNo network interfaces were found.\n" );
 			pxAllNetworkInterfaces = NULL;
+		}
+
+		printf( "\r\nThe interface that will be opened is set by " );
+		printf( "\"configNETWORK_INTERFACE_TO_USE\", which\r\nshould be defined in FreeRTOSConfig.h\r\n" );
+
+		if( ( xConfigNextworkInterfaceToUse < 1L ) || ( xConfigNextworkInterfaceToUse >= lInterfaceNumber ) )
+		{
+			printf( "\r\nERROR:  configNETWORK_INTERFACE_TO_USE is set to %d, which is an invalid value.\r\n", xConfigNextworkInterfaceToUse );
+			printf( "Please set configNETWORK_INTERFACE_TO_USE to one of the interface numbers listed above,\r\n" );
+			printf( "then re-compile and re-start the application.  Only Ethernet (as opposed to WiFi)\r\n" );
+			printf( "interfaces are supported.\r\n\r\nHALTING\r\n\r\n\r\n" );
+			xInvalidInterfaceDetected = pdTRUE;
+
+			if( pxAllNetworkInterfaces != NULL )
+			{
+				/* Free the device list, as no devices are going to be opened. */
+				pcap_freealldevs( pxAllNetworkInterfaces );
+				pxAllNetworkInterfaces = NULL;
+			}
+		}
+		else
+		{
+			printf( "Attempting to open interface number %d.\n", xConfigNextworkInterfaceToUse );
 		}
 	}
 

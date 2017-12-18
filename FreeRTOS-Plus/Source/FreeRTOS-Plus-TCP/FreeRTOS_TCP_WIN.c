@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.0
+ * FreeRTOS+TCP V2.0.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -10,8 +10,7 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software. If you wish to use our Amazon
- * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -202,7 +201,7 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
 
 /*-----------------------------------------------------------*/
 
-/* TCP segement pool. */
+/* TCP segment pool. */
 #if( ipconfigUSE_TCP_WIN == 1 )
 	static TCPSegment_t *xTCPSegments = NULL;
 #endif /* ipconfigUSE_TCP_WIN == 1 */

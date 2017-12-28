@@ -233,7 +233,7 @@ typedef void * QueueSetMemberHandle_t;
 /**
  * queue. h
  * <pre>
- BaseType_t xQueueSendToToFront(
+ BaseType_t xQueueSendToFront(
 								   QueueHandle_t	xQueue,
 								   const void		*pvItemToQueue,
 								   TickType_t		xTicksToWait

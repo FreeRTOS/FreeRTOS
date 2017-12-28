@@ -3474,7 +3474,7 @@ static void prvCheckTasksWaitingTermination( void )
 	{
 		TCB_t *pxTCB;
 
-		/* uxDeletedTasksWaitingCleanUp is used to prevent vTaskSuspendAll()
+		/* uxDeletedTasksWaitingCleanUp is used to prevent taskENTER_CRITICAL()
 		being called too often in the idle task. */
 		while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
 		{

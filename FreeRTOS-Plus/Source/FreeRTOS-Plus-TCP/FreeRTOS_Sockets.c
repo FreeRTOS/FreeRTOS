@@ -2376,7 +2376,9 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		{
 			xResult = -pdFREERTOS_ERRNO_ENOMEM;
 		}
-		else if( pxSocket->u.xTCP.ucTCPState == eCLOSED )
+		else if( ( pxSocket->u.xTCP.ucTCPState == eCLOSED ) ||
+				 ( pxSocket->u.xTCP.ucTCPState == eCLOSE_WAIT ) ||
+				 ( pxSocket->u.xTCP.ucTCPState == eCLOSING ) )
 		{
 			xResult = -pdFREERTOS_ERRNO_ENOTCONN;
 		}

@@ -540,7 +540,7 @@ TimeOut_t xTimeOut;
 			taskEXIT_CRITICAL();
 
 			traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer );
-			( void ) xTaskNotifyWait( ( uint32_t ) 0, UINT32_MAX, NULL, xTicksToWait );
+			( void ) xTaskNotifyWait( ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
 			pxStreamBuffer->xTaskWaitingToSend = NULL;
 
 		} while( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE );
@@ -746,7 +746,7 @@ size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 		{
 			/* Wait for data to be available. */
 			traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer );
-			( void ) xTaskNotifyWait( ( uint32_t ) 0, UINT32_MAX, NULL, xTicksToWait );
+			( void ) xTaskNotifyWait( ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
 			pxStreamBuffer->xTaskWaitingToReceive = NULL;
 
 			/* Recheck the data available after blocking. */

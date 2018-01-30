@@ -47,7 +47,7 @@ the scheduler being commenced interrupts should not be enabled, so the critical
 nesting variable is initialised to a non-zero value. */
 #define portINITIAL_NESTING_VALUE	( 0xff )
 
-/* The bit within the MSR register that enabled/disables interrupts and 
+/* The bit within the MSR register that enabled/disables interrupts and
 exceptions respectively. */
 #define portMSR_IE					( 0x02U )
 #define portMSR_EE					( 0x100U )
@@ -131,7 +131,7 @@ extern void _start1( void );
 	disabled.  Each task will enable interrupts automatically when it enters
 	the running state for the first time. */
 	*pxTopOfStack = mfmsr() & ~portMSR_IE;
-	
+
 	#if( MICROBLAZE_EXCEPTIONS_ENABLED == 1 )
 	{
 		/* Ensure exceptions are enabled for the task. */
@@ -305,7 +305,13 @@ int32_t lReturn;
 	lReturn = prvEnsureInterruptControllerIsInitialised();
 	if( lReturn == pdPASS )
 	{
-		XIntc_Enable( &xInterruptControllerInstance, ucInterruptID );
+		/* Critical section protects read/modify/writer operation inside
+		XIntc_Enable(). */
+		portENTER_CRITICAL();
+		{
+			XIntc_Enable( &xInterruptControllerInstance, ucInterruptID );
+		}
+		portEXIT_CRITICAL();
 	}
 
 	configASSERT( lReturn );

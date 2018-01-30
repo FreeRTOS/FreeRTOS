@@ -210,7 +210,7 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 static void prvTxHandler( void *pvUnused, unsigned portBASE_TYPE uxUnused )
 {
-BaseType_t xHigherPriorityTaskWoken = NULL;
+BaseType_t xHigherPriorityTaskWoken = ( BaseType_t ) NULL;
 
 	( void ) pvUnused;
 	( void ) uxUnused;

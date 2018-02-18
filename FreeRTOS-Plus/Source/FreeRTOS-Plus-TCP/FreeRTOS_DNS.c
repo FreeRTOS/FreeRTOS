@@ -404,18 +404,29 @@ TickType_t xReadTimeOut_ms = 1200U;
  as gethostbyname() may be called from different threads */
 TickType_t xIdentifier = ( TickType_t )usIdentifier++;
 
+	/* If the supplied hostname is IP address, convert it to uint32_t
+	and return. */
+	#if( ipconfigINCLUDE_FULL_INET_ADDR == 1 )
+	{
+		ulIPAddress = FreeRTOS_inet_addr( pcHostName );
+	}
+	#endif /* ipconfigINCLUDE_FULL_INET_ADDR == 1 */
+
 	/* If a DNS cache is used then check the cache before issuing another DNS
 	request. */
 	#if( ipconfigUSE_DNS_CACHE == 1 )
 	{
-		ulIPAddress = FreeRTOS_dnslookup( pcHostName );
-		if( ulIPAddress != 0 )
+		if( ulIPAddress == 0UL )
 		{
-			FreeRTOS_debug_printf( ( "FreeRTOS_gethostbyname: found '%s' in cache: %lxip\n", pcHostName, ulIPAddress ) );
-		}
-		else
-		{
-			/* prvGetHostByName will be called to start a DNS lookup. */
+			ulIPAddress = FreeRTOS_dnslookup( pcHostName );
+			if( ulIPAddress != 0 )
+			{
+				FreeRTOS_debug_printf( ( "FreeRTOS_gethostbyname: found '%s' in cache: %lxip\n", pcHostName, ulIPAddress ) );
+			}
+			else
+			{
+				/* prvGetHostByName will be called to start a DNS lookup */
+			}
 		}
 	}
 	#endif /* ipconfigUSE_DNS_CACHE == 1 */

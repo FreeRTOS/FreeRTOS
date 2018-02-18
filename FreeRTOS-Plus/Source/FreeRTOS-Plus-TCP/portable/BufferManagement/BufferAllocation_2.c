@@ -103,24 +103,25 @@ BaseType_t xReturn, x;
 	{
 		xNetworkBufferSemaphore = xSemaphoreCreateCounting( ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS, ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS );
 		configASSERT( xNetworkBufferSemaphore );
-		#if ( configQUEUE_REGISTRY_SIZE > 0 )
-		{
-			vQueueAddToRegistry( xNetworkBufferSemaphore, "NetBufSem" );
-		}
-		#endif /* configQUEUE_REGISTRY_SIZE */
-
-		/* If the trace recorder code is included name the semaphore for viewing
-		in FreeRTOS+Trace.  */
-		#if( ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 )
-		{
-			extern QueueHandle_t xNetworkEventQueue;
-			vTraceSetQueueName( xNetworkEventQueue, "IPStackEvent" );
-			vTraceSetQueueName( xNetworkBufferSemaphore, "NetworkBufferCount" );
-		}
-		#endif /*  ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 */
 
 		if( xNetworkBufferSemaphore != NULL )
 		{
+			#if ( configQUEUE_REGISTRY_SIZE > 0 )
+			{
+				vQueueAddToRegistry( xNetworkBufferSemaphore, "NetBufSem" );
+			}
+			#endif /* configQUEUE_REGISTRY_SIZE */
+
+			/* If the trace recorder code is included name the semaphore for viewing
+			in FreeRTOS+Trace.  */
+			#if( ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 )
+			{
+				extern QueueHandle_t xNetworkEventQueue;
+				vTraceSetQueueName( xNetworkEventQueue, "IPStackEvent" );
+				vTraceSetQueueName( xNetworkBufferSemaphore, "NetworkBufferCount" );
+			}
+			#endif /*  ipconfigINCLUDE_EXAMPLE_FREERTOS_PLUS_TRACE_CALLS == 1 */
+
 			vListInitialise( &xFreeBuffersList );
 
 			/* Initialise all the network buffers.  No storage is allocated to
@@ -374,7 +375,7 @@ uint8_t *pucBuffer;
 		vReleaseNetworkBuffer( pxNetworkBuffer->pucEthernetBuffer );
 		pxNetworkBuffer->pucEthernetBuffer = pucBuffer;
 	}
-	
+
 	return pxNetworkBuffer;
 }
 

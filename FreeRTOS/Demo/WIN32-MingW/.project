@@ -56,7 +56,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156304</id>
+			<id>1519407948166</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -65,7 +65,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156307</id>
+			<id>1519407948169</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -74,7 +74,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156310</id>
+			<id>1519407948172</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -83,7 +83,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156313</id>
+			<id>1519407948176</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -92,7 +92,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156316</id>
+			<id>1519407948179</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -101,7 +101,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156319</id>
+			<id>1519407948183</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -110,7 +110,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156323</id>
+			<id>1519407948186</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -119,7 +119,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156327</id>
+			<id>1519407948190</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -128,7 +128,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156330</id>
+			<id>1519407948195</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -137,7 +137,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156333</id>
+			<id>1519407948199</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -146,7 +146,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156337</id>
+			<id>1519407948202</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -155,7 +155,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156340</id>
+			<id>1519407948213</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -164,7 +164,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156343</id>
+			<id>1519407948216</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -173,7 +173,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156347</id>
+			<id>1519407948224</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -182,7 +182,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156350</id>
+			<id>1519407948228</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -191,7 +191,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156353</id>
+			<id>1519407948231</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -200,7 +200,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156356</id>
+			<id>1519407948235</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -209,7 +209,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156359</id>
+			<id>1519407948237</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -218,7 +218,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156362</id>
+			<id>1519407948240</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -227,7 +227,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156366</id>
+			<id>1519407948242</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
@@ -236,12 +236,48 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1507735156369</id>
+			<id>1519407948269</id>
 			<name>Standard_Demo_Tasks</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-MessageBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1519407948274</id>
+			<name>Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-StreamBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1519407948277</id>
+			<name>Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-StreamBufferInterrupt.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1519407948281</id>
+			<name>Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MessageBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1519407948286</id>
+			<name>Standard_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MessageBufferAMP.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

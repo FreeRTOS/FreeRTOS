@@ -172,7 +172,7 @@ BaseType_t xNextByte = 0;
 				continuing to look for the end of the string. */
 				xNextByte++;
 
-				configASSERT( xNextByte < sizeof( cRxBuffer ) );
+				configASSERT( ( size_t ) xNextByte < sizeof( cRxBuffer ) );
 			}
 		}
 	}
@@ -193,7 +193,7 @@ static BaseType_t xCallCount = 0;
 
 		/* Send the next four bytes to the stream buffer. */
 		xStreamBufferSendFromISR( xStreamBuffer,
-								  ( void * ) ( pcStringToSend + xNextByteToSend ),
+								  ( const void * ) ( pcStringToSend + xNextByteToSend ),
 								  xBytesToSend,
 								  NULL );
 

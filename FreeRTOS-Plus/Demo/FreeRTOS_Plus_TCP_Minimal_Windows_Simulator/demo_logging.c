@@ -296,8 +296,8 @@ HANDLE xCurrentTask;
 		if( xLength2 <  0 )
 		{
 			/* Clean up. */
-			xLength2 = sizeof( cPrintString ) - 1 - xLength;
-			cPrintString[ sizeof( cPrintString ) - 1 ] = '\0';
+			xLength2 = dlMAX_PRINT_STRING_LENGTH - 1 - xLength;
+			cPrintString[ dlMAX_PRINT_STRING_LENGTH - 1 ] = '\0';
 		}
 
 		xLength += xLength2;

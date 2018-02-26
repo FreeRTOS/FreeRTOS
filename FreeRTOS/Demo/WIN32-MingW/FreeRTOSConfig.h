@@ -114,6 +114,12 @@ uses the same semantics as the standard C assert() macro. */
 extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
+#define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO	1
+#if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
+	extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
+	#define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
+#endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #include "trcRecorder.h"
 

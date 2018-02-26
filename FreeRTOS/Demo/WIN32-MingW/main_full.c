@@ -102,6 +102,8 @@
 #include "AbortDelay.h"
 #include "MessageBufferDemo.h"
 #include "StreamBufferDemo.h"
+#include "StreamBufferInterrupt.h"
+#include "MessageBufferAMP.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -204,6 +206,8 @@ int main_full( void )
 
 	vStartMessageBufferTasks();
 	vStartStreamBufferTasks();
+	vStartStreamBufferInterruptDemo();
+	vStartMessageBufferAMPTasks();
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -342,10 +346,28 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: Abort delay";
 		}
+		else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Stream buffer interrupt";
+		}
+		else if( xAreMessageBufferAMPTasksStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Message buffer AMP";
+		}
+
+		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+			else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "Error: Static allocation";
+			}
+		#endif /* configSUPPORT_STATIC_ALLOCATION */
 
 		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
-		printf( ( char * ) "%s - %u\r\n", pcStatusMessage, ( unsigned int ) xTaskGetTickCount() );
+		printf( "%s - tick count %u - free heap %u - min free heap %u\r\n", pcStatusMessage,
+																			   xTaskGetTickCount(),
+																			   xPortGetFreeHeapSize(),
+																			   xPortGetMinimumEverFreeHeapSize() );
 		fflush( stdout );
 	}
 }
@@ -453,6 +475,10 @@ TaskHandle_t xTimerTask;
 	/* Writes to stream buffer byte by byte to test the stream buffer trigger
 	level functionality. */
 	vPeriodicStreamBufferProcessing();
+
+	/* Writes a string to a string buffer four bytes at a time to demonstrate
+	a stream being sent from an interrupt to a task. */
+	vBasicStreamBufferSendFromISR();
 
 	/* For code coverage purposes. */
 	xTimerTask = xTimerGetTimerDaemonTaskHandle();

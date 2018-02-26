@@ -26,81 +26,87 @@
  */
 
 /******************************************************************************
- * NOTE 1: The Win32 port is a simulation (or is that emulation?) only!  Do not
- * expect to get real time behaviour from the Win32 port or this demo
- * application.  It is provided as a convenient development and demonstration
- * test bed only.  This was tested using Windows XP on a dual core laptop.
- *
- * Windows will not be running the FreeRTOS simulator threads continuously, so
- * the timing information in the FreeRTOS+Trace logs have no meaningful units.
- * See the documentation page for the Windows simulator for an explanation of
- * the slow timing:
+ * NOTE 1: Windows will not be running the FreeRTOS demo threads continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * this demo application.  Also, the timing information in the FreeRTOS+Trace
+ * logs have no meaningful units.  See the documentation page for the Windows
+ * port for further information:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
- * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The
  * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting in main.c is used to select
  * between the two.  See the notes on using mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
- * in main.c.  This file implements the simply blinky style version.
+ * in main.c.  This file implements the simply blinky version.  Console output
+ * is used in place of the normal LED toggling.
  *
  * NOTE 3:  This file only contains the source code that is specific to the
  * basic demo.  Generic functions, such FreeRTOS hook functions, are defined
  * in main.c.
  ******************************************************************************
  *
- * main_blinky() creates one queue, and two tasks.  It then starts the
- * scheduler.
+ * main_blinky() creates one queue, one software timer, and two tasks.  It then
+ * starts the scheduler.
  *
  * The Queue Send Task:
  * The queue send task is implemented by the prvQueueSendTask() function in
- * this file.  prvQueueSendTask() sits in a loop that causes it to repeatedly
- * block for 200 (simulated as far as the scheduler is concerned, but in
- * reality much longer - see notes above) milliseconds, before sending the
- * value 100 to the queue that was created within main_blinky().  Once the
- * value is sent, the task loops back around to block for another 200
- * (simulated) milliseconds.
+ * this file.  It uses vTaskDelayUntil() to create a periodic task that sends
+ * the value 100 to the queue every 200 milliseconds (please read the notes
+ * above regarding the accuracy of timing under Windows).
+ *
+ * The Queue Send Software Timer:
+ * The timer is an auto-reload timer with a period of two seconds.  The timer's
+ * callback function writes the value 200 to the queue.  The callback function
+ * is implemented by prvQueueSendTimerCallback() within this file.
  *
  * The Queue Receive Task:
  * The queue receive task is implemented by the prvQueueReceiveTask() function
- * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
- * blocks on attempts to read data from the queue that was created within
- * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, outputs a message.  The
- * 'block time' parameter passed to the queue receive function specifies that
- * the task should be held in the Blocked state indefinitely to wait for data
- * to be available on the queue.  The queue receive task will only leave the
- * Blocked state when the queue send task writes to the queue.  As the queue
- * send task writes to the queue every 200 (simulated - see notes above)
- * milliseconds, the queue receive task leaves the Blocked state every 200
- * milliseconds, and therefore outputs a message every 200 milliseconds.
+ * in this file.  prvQueueReceiveTask() waits for data to arrive on the queue.
+ * When data is received, the task checks the value of the data, then outputs a
+ * message to indicate if the data came from the queue send task or the queue
+ * send software timer.
+ *
+ * Expected Behaviour:
+ * - The queue send task writes to the queue every 200ms, so every 200ms the
+ *   queue receive task will output a message indicating that data was received
+ *   on the queue from the queue send task.
+ * - The queue send software timer has a period of two seconds, and is reset
+ *   each time a key is pressed.  So if two seconds expire without a key being
+ *   pressed then the queue receive task will output a message indicating that
+ *   data was received on the queue from the queue send software timer.
+ *
+ * NOTE:  Console input and output relies on Windows system calls, which can
+ * interfere with the execution of the FreeRTOS Windows port.  This demo only
+ * uses Windows system call occasionally.  Heavier use of Windows system calls
+ * can crash the port.
  */
 
 /* Standard includes. */
 #include <stdio.h>
+#include <conio.h>
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "timers.h"
 #include "semphr.h"
 
 /* Priorities at which the tasks are created. */
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )
 #define	mainQUEUE_SEND_TASK_PRIORITY		( tskIDLE_PRIORITY + 1 )
 
-/* The rate at which data is sent to the queue.  The 200ms value is converted
-to ticks using the portTICK_PERIOD_MS constant. */
-#define mainQUEUE_SEND_FREQUENCY_MS			( 200 / portTICK_PERIOD_MS )
+/* The rate at which data is sent to the queue.  The times are converted from
+milliseconds to ticks using the pdMS_TO_TICKS() macro. */
+#define mainTASK_SEND_FREQUENCY_MS			pdMS_TO_TICKS( 200UL )
+#define mainTIMER_SEND_FREQUENCY_MS			pdMS_TO_TICKS( 2000UL )
 
-/* The number of items the queue can hold.  This is 1 as the receive task
-will remove items as they are added, meaning the send task should always find
-the queue empty. */
-#define mainQUEUE_LENGTH					( 1 )
+/* The number of items the queue can hold at once. */
+#define mainQUEUE_LENGTH					( 2 )
 
-/* Values passed to the two tasks just to check the task parameter
-functionality. */
-#define mainQUEUE_SEND_PARAMETER			( 0x1111UL )
-#define mainQUEUE_RECEIVE_PARAMETER			( 0x22UL )
+/* The values sent to the queue receive task from the queue send task and the
+queue send software timer respectively. */
+#define mainVALUE_SENT_FROM_TASK			( 100UL )
+#define mainVALUE_SENT_FROM_TIMER			( 200UL )
 
 /*-----------------------------------------------------------*/
 
@@ -110,30 +116,53 @@ functionality. */
 static void prvQueueReceiveTask( void *pvParameters );
 static void prvQueueSendTask( void *pvParameters );
 
+/*
+ * The callback function executed when the software timer expires.
+ */
+static void prvQueueSendTimerCallback( TimerHandle_t xTimerHandle );
+
 /*-----------------------------------------------------------*/
 
 /* The queue used by both tasks. */
 static QueueHandle_t xQueue = NULL;
 
+/* A software timer that is started from the tick hook. */
+static TimerHandle_t xTimer = NULL;
+
 /*-----------------------------------------------------------*/
 
+/*** SEE THE COMMENTS AT THE TOP OF THIS FILE ***/
 void main_blinky( void )
 {
+const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
+
 	/* Create the queue. */
-	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( unsigned long ) );
+	xQueue = xQueueCreate( mainQUEUE_LENGTH, sizeof( uint32_t ) );
 
 	if( xQueue != NULL )
 	{
 		/* Start the two tasks as described in the comments at the top of this
 		file. */
-		xTaskCreate( prvQueueReceiveTask,					/* The function that implements the task. */
-					"Rx", 									/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-					configMINIMAL_STACK_SIZE, 				/* The size of the stack to allocate to the task. */
-					( void * ) mainQUEUE_RECEIVE_PARAMETER, /* The parameter passed to the task - just to check the functionality. */
-					mainQUEUE_RECEIVE_TASK_PRIORITY, 		/* The priority assigned to the task. */
-					NULL );									/* The task handle is not required, so NULL is passed. */
+		xTaskCreate( prvQueueReceiveTask,			/* The function that implements the task. */
+					"Rx", 							/* The text name assigned to the task - for debug only as it is not used by the kernel. */
+					configMINIMAL_STACK_SIZE, 		/* The size of the stack to allocate to the task. */
+					NULL, 							/* The parameter passed to the task - not used in this simple case. */
+					mainQUEUE_RECEIVE_TASK_PRIORITY,/* The priority assigned to the task. */
+					NULL );							/* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, ( void * ) mainQUEUE_SEND_PARAMETER, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+
+		/* Create the software timer, but don't start it yet. */
+		xTimer = xTimerCreate( "Timer",				/* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
+								xTimerPeriod,		/* The period of the software timer in ticks. */
+								pdTRUE,				/* xAutoReload is set to pdTRUE. */
+								NULL,				/* The timer's ID is not used. */
+								prvQueueSendTimerCallback );/* The function executed when the timer expires. */
+
+		if( xTimer != NULL )
+		{
+			xTimerStart( xTimer, 0 );
+		}
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -151,15 +180,11 @@ void main_blinky( void )
 static void prvQueueSendTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const unsigned long ulValueToSend = 100UL;
-const TickType_t xBlockTime = pdMS_TO_TICKS( mainQUEUE_SEND_FREQUENCY_MS );
+const TickType_t xBlockTime = mainTASK_SEND_FREQUENCY_MS;
+const uint32_t ulValueToSend = mainVALUE_SENT_FROM_TASK;
 
-	/* Remove compiler warning in the case that configASSERT() is not
-	defined. */
+	/* Prevent the compiler warning about the unused parameter. */
 	( void ) pvParameters;
-
-	/* Check the task parameter is as expected. */
-	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_SEND_PARAMETER );
 
 	/* Initialise xNextWakeTime - this only needs to be done once. */
 	xNextWakeTime = xTaskGetTickCount();
@@ -167,49 +192,74 @@ const TickType_t xBlockTime = pdMS_TO_TICKS( mainQUEUE_SEND_FREQUENCY_MS );
 	for( ;; )
 	{
 		/* Place this task in the blocked state until it is time to run again.
-		The block time is specified in ticks, the constant used converts ticks
-		to ms.  While in the Blocked state this task will not consume any CPU
-		time. */
+		The block time is specified in ticks, pdMS_TO_TICKS() was used to
+		convert a time specified in milliseconds into a time specified in ticks.
+		While in the Blocked state this task will not consume any CPU time. */
 		vTaskDelayUntil( &xNextWakeTime, xBlockTime );
 
 		/* Send to the queue - causing the queue receive task to unblock and
-		toggle the LED.  0 is used as the block time so the sending operation
+		write to the console.  0 is used as the block time so the send operation
 		will not block - it shouldn't need to block as the queue should always
-		be empty at this point in the code. */
+		have at least one space at this point in the code. */
 		xQueueSend( xQueue, &ulValueToSend, 0U );
 	}
 }
 /*-----------------------------------------------------------*/
 
+static void prvQueueSendTimerCallback( TimerHandle_t xTimerHandle )
+{
+const uint32_t ulValueToSend = mainVALUE_SENT_FROM_TIMER;
+
+	/* This is the software timer callback function.  The software timer has a
+	period of two seconds and is reset each time a key is pressed.  This
+	callback function will execute if the timer expires, which will only happen
+	if a key is not pressed for two seconds. */
+
+	/* Avoid compiler warnings resulting from the unused parameter. */
+	( void ) xTimerHandle;
+
+	/* Send to the queue - causing the queue receive task to unblock and
+	write out a message.  This function is called from the timer/daemon task, so
+	must not block.  Hence the block time is set to 0. */
+	xQueueSend( xQueue, &ulValueToSend, 0U );
+}
+/*-----------------------------------------------------------*/
+
 static void prvQueueReceiveTask( void *pvParameters )
 {
-unsigned long ulReceivedValue;
+uint32_t ulReceivedValue;
 
-	/* Remove compiler warning in the case that configASSERT() is not
-	defined. */
+	/* Prevent the compiler warning about the unused parameter. */
 	( void ) pvParameters;
-
-	/* Check the task parameter is as expected. */
-	configASSERT( ( ( unsigned long ) pvParameters ) == mainQUEUE_RECEIVE_PARAMETER );
 
 	for( ;; )
 	{
 		/* Wait until something arrives in the queue - this task will block
 		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
-		FreeRTOSConfig.h. */
+		FreeRTOSConfig.h.  It will not use any CPU time while it is in the
+		Blocked state. */
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		/*  To get here something must have been received from the queue, but
-		is it the expected value?  If it is, toggle the LED. */
-		if( ulReceivedValue == 100UL )
+		/* To get here something must have been received from the queue, but
+		is it an expected value?  Normally calling printf() from a task is not
+		a good idea.  Here there is lots of stack space and only one task is
+		using console IO so it is ok.  However, note the comments at the top of
+		this file about the risks of making Windows system calls (such as 
+		console output) from a FreeRTOS task. */
+		if( ulReceivedValue == mainVALUE_SENT_FROM_TASK )
 		{
-			/* Normally calling printf() from a task is not a good idea.  Here
-			there is lots of stack space and only one task is using console  IO
-			so it is ok. */
-			printf( "Message received\r\n" );
-			fflush( stdout );
-			ulReceivedValue = 0U;
+			printf( "Message received from task\r\n" );
 		}
+		else if( ulReceivedValue == mainVALUE_SENT_FROM_TIMER )
+		{
+			printf( "Message received from software timer\r\n" );
+		}
+		else
+		{
+			printf( "Unexpected message\r\n" );
+		}
+
+		fflush( stdout );
 	}
 }
 /*-----------------------------------------------------------*/

@@ -138,8 +138,16 @@ static BaseType_t prvCheckReceivedValueWithinExpectedRange( uint32_t ulReceived,
 
 /*
  * Increase test coverage by occasionally change the priorities of the two tasks
- * relative to each other. */
+ * relative to each other.
+ */
 static void prvChangeRelativePriorities( void );
+
+/*
+ * Queue overwrites can only be performed on queues of length of one, requiring
+ * a special test function so a queue of length 1 can temporarily be added to a
+ * set.
+ */
+static void prvTestQueueOverwriteWithQueueSet( void );
 
 /*
  * Local pseudo random number seed and return functions.  Used to avoid calls
@@ -599,6 +607,71 @@ uint32_t ulTxValueSnapshot = ulISRTxValue;
 }
 /*-----------------------------------------------------------*/
 
+static void prvTestQueueOverwriteWithQueueSet( void )
+{
+uint32_t ulValueToSend = 0, ulValueReceived = 0;
+QueueHandle_t xQueueHandle = NULL, xReceivedHandle = NULL;
+const UBaseType_t xLengthOfOne = ( UBaseType_t ) 1;
+
+	/* Create a queue that has a length of one - a requirement in order to call
+	xQueueOverwrite.  This will get deleted again when this test completes. */
+	xQueueHandle = xQueueCreate( xLengthOfOne, sizeof( uint32_t ) );
+
+	if( xQueueHandle != NULL )
+	{
+		xQueueAddToSet( xQueueHandle, xQueueSet );
+
+		/* Add an item to the queue then ensure the queue set correctly
+		indicates that one item is available, and that that item is indeed the
+		queue written to. */
+		xQueueSend( xQueueHandle, ( void * ) &ulValueToSend, 0 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
+		{
+			/* Expected one item in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueuePeek( xQueueSet, &xReceivedHandle, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle )
+		{
+			/* Wrote to xQueueHandle so expected xQueueHandle to be the handle
+			held in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Now overwrite the value in the queue and ensure the queue set state
+		doesn't change as the number of items in the queues within the set have
+		not changed. */
+		ulValueToSend++;
+		xQueueOverwrite( xQueueHandle, ( void * ) &ulValueToSend );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
+		{
+			/* Still expected one item in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle )
+		{
+			/* Wrote to xQueueHandle so expected xQueueHandle to be the handle
+			held in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Also ensure the value received from the queue is the overwritten
+		value, not the value originally written. */
+		xQueueReceive( xQueueHandle, &ulValueReceived, queuesetDONT_BLOCK );
+		if( ulValueReceived != ulValueToSend )
+		{
+			/* Unexpected value recevied from the queue. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Clean up. */
+		xQueueRemoveFromSet( xQueueHandle, xQueueSet );
+		vQueueDelete( xQueueHandle );
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupTest( void )
 {
 BaseType_t x;
@@ -674,6 +747,11 @@ uint32_t ulValueToSend = 0;
 	{
 		xQueueSetTasksStatus = pdFAIL;
 	}
+
+	/* Testing the behaviour of queue sets when a queue overwrite operation is
+	performed on a set member requires a special test as overwrites can only
+	be performed on queues that have a length of 1. */
+	prvTestQueueOverwriteWithQueueSet();
 
 	/* Resume the task that writes to the queues. */
 	vTaskResume( xQueueSetSendingTask );

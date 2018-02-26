@@ -141,8 +141,8 @@ static void prvDemonstrateTaskStateAndHandleGetFunctions( void );
 static void prvDemonstratePendingFunctionCall( void );
 
 /*
-* The function that is pended by prvDemonstratePendingFunctionCall().
-*/
+ * The function that is pended by prvDemonstratePendingFunctionCall().
+ */
 static void prvPendedFunction( void *pvParameter1, uint32_t ulParameter2 );
 
 /*

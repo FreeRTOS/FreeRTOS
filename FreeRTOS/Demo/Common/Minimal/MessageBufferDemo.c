@@ -156,7 +156,7 @@ MessageBufferHandle_t xMessageBuffer;
 
 static void prvSingleTaskTests( MessageBufferHandle_t xMessageBuffer )
 {
-size_t xReturned, xItem, xExpectedSpace;
+size_t xReturned, xItem, xExpectedSpace, xNextLength;
 const size_t xMax6ByteMessages = mbMESSAGE_BUFFER_LENGTH_BYTES / ( 6 + mbBYTES_TO_STORE_MESSAGE_LENGTH );
 const size_t x6ByteLength = 6, x17ByteLength = 17;
 uint8_t *pucFullBuffer, *pucData, *pucReadData;
@@ -177,11 +177,15 @@ UBaseType_t uxOriginalPriority;
 	pucReadData = pucData + x17ByteLength;
 
 	/* Nothing has been added or removed yet, so expect the free space to be
-	exactly as created. */
+	exactly as created and the length of the next message to be 0. */
 	xExpectedSpace = xMessageBufferSpaceAvailable( xMessageBuffer );
 	configASSERT( xExpectedSpace == mbMESSAGE_BUFFER_LENGTH_BYTES );
 	configASSERT( xMessageBufferIsEmpty( xMessageBuffer ) == pdTRUE );
-
+	xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+	configASSERT( xNextLength == 0 );
+	/* In case configASSERT() is not define. */
+	( void ) xExpectedSpace;
+	( void ) xNextLength;
 
 	/* The buffer is 50 bytes long.  When an item is added to the buffer an
 	additional 4 bytes are added to hold the item's size.  That means adding
@@ -215,6 +219,11 @@ UBaseType_t uxOriginalPriority;
 		xReturned = xMessageBufferSpaceAvailable( xMessageBuffer );
 		configASSERT( xReturned == xExpectedSpace );
 		( void ) xReturned; /* In case configASSERT() is not defined. */
+
+		/* Only 6 byte messages are written. */
+		xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+		configASSERT( xNextLength == x6ByteLength );
+		( void ) xNextLength; /* In case configASSERT() is not defined. */
 	}
 
 	/* Now the buffer should be full, and attempting to add anything will should
@@ -255,6 +264,11 @@ UBaseType_t uxOriginalPriority;
 		configASSERT( xReturned == 0 );
 		( void ) xReturned; /* In case configASSERT() is not defined. */
 
+		/* Should still be at least one 6 byte message still available. */
+		xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+		configASSERT( xNextLength == x6ByteLength );
+		( void ) xNextLength; /* In case configASSERT() is not defined. */
+
 		/* Read the next 6 bytes out.  The 'FromISR' version is used to give it
 		some exercise as a block time is not used.  THa requires the code to be
 		in a critical section so this test can be run with FreeRTOS ports that
@@ -284,6 +298,11 @@ UBaseType_t uxOriginalPriority;
 	configASSERT( xMessageBufferIsEmpty( xMessageBuffer ) == pdTRUE );
 	xExpectedSpace = xMessageBufferSpaceAvailable( xMessageBuffer );
 	configASSERT( xExpectedSpace == mbMESSAGE_BUFFER_LENGTH_BYTES );
+	( void ) xExpectedSpace; /* In case configASSERT() is not defined. */
+	xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+	configASSERT( xNextLength == 0 );
+	( void ) xNextLength; /* In case configASSERT() is not defined. */
+
 
 	/* Reading with a timeout should also fail after the appropriate time.  The
 	priority is temporarily boosted in this part of the test to keep the
@@ -320,6 +339,11 @@ UBaseType_t uxOriginalPriority;
 		configASSERT( xReturned == x17ByteLength );
 		( void ) xReturned; /* In case configASSERT() is not defined. */
 
+		/* Only 17 byte messages are written. */
+		xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+		configASSERT( xNextLength == x17ByteLength );
+		( void ) xNextLength; /* In case configASSERT() is not defined. */
+
 		/* The space in the buffer will have reduced by the amount of user data
 		written into the buffer and the amount of space used to store the length
 		of the data written into the buffer. */
@@ -334,6 +358,12 @@ UBaseType_t uxOriginalPriority;
 
 		/* Does the data read out match that expected? */
 		configASSERT( memcmp( ( void * ) pucData, ( void * ) pucReadData, x17ByteLength ) == 0 );
+
+		/* Don't expect any messages to be available as the data was read out
+		again. */
+		xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+		configASSERT( xNextLength == 0 );
+		( void ) xNextLength; /* In case configASSERT() is not defined. */
 	}
 
 	/* The buffer should be empty again. */
@@ -357,10 +387,19 @@ UBaseType_t uxOriginalPriority;
 	configASSERT( xReturned == 0 );
 	( void ) xReturned; /* In case configASSERT() is not defined. */
 
+	/* Don't expect any messages to be available as the above were too large to
+	get written. */
+	xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+	configASSERT( xNextLength == 0 );
+	( void ) xNextLength; /* In case configASSERT() is not defined. */
+
 	/* Can write mbMESSAGE_BUFFER_LENGTH_BYTES - sizeof( size_t ) bytes though. */
 	xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - sizeof( size_t ), mbDONT_BLOCK );
 	configASSERT( xReturned == mbMESSAGE_BUFFER_LENGTH_BYTES - sizeof( size_t ) );
 	( void ) xReturned; /* In case configASSERT() is not defined. */
+	xNextLength = xMessageBufferNextLengthBytes( xMessageBuffer );
+	configASSERT( xNextLength == ( mbMESSAGE_BUFFER_LENGTH_BYTES - sizeof( size_t ) ) );
+	( void ) xNextLength; /* In case configASSERT() is not defined. */
 	xReturned = xMessageBufferReceive( xMessageBuffer, ( void * ) pucFullBuffer, mbMESSAGE_BUFFER_LENGTH_BYTES - sizeof( size_t ), mbDONT_BLOCK );
 	configASSERT( xReturned == ( mbMESSAGE_BUFFER_LENGTH_BYTES - sizeof( size_t ) ) );
 	( void ) xReturned; /* In case configASSERT() is not defined. */

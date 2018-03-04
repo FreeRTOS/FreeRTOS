@@ -142,6 +142,7 @@ only for ports that are using the MPU. */
 		#define xStreamBufferSend						MPU_xStreamBufferSend
 		#define xStreamBufferSendFromISR				MPU_xStreamBufferSendFromISR
 		#define xStreamBufferReceive					MPU_xStreamBufferReceive
+		#define xStreamBufferNextMessageLengthBytes		MPU_xStreamBufferNextMessageLengthBytes
 		#define xStreamBufferReceiveFromISR				MPU_xStreamBufferReceiveFromISR
 		#define vStreamBufferDelete						MPU_vStreamBufferDelete
 		#define xStreamBufferIsFull						MPU_xStreamBufferIsFull

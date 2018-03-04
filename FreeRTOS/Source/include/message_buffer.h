@@ -695,6 +695,25 @@ size_t xMessageBufferSpaceAvailable( MessageBufferHandle_t xMessageBuffer ) );
 
 /**
  * message_buffer.h
+ <pre>
+ size_t xMessageBufferNextLengthBytes( MessageBufferHandle_t xMessageBuffer ) );
+ </pre>
+ * Returns the length (in bytes) of the next message in a message buffer.
+ * Useful if xMessageBufferReceive() returned 0 because the size of the buffer
+ * passed into xMessageBufferReceive() was too small to hold the next message.
+ *
+ * @param xMessageBuffer The handle of the message buffer being queried.
+ *
+ * @return The length (in bytes) of the next message in the message buffer, or 0
+ * if the message buffer is empty.
+ *
+ * \defgroup xMessageBufferNextLengthBytes xMessageBufferNextLengthBytes
+ * \ingroup MessageBufferManagement
+ */
+#define xMessageBufferNextLengthBytes( xMessageBuffer ) xStreamBufferNextMessageLengthBytes( ( StreamBufferHandle_t ) xMessageBuffer ) PRIVILEGED_FUNCTION;
+
+/**
+ * message_buffer.h
  *
 <pre>
 BaseType_t xMessageBufferSendCompletedFromISR( MessageBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken );

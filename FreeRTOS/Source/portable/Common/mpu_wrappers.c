@@ -1136,6 +1136,18 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
+size_t MPU_xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
+{
+size_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xStreamBufferNextMessageLengthBytes( xStreamBuffer );
+	vPortResetPrivilege( xRunningPrivileged );
+
+	return xReturn;
+}
+/*-----------------------------------------------------------*/
+
 size_t MPU_xStreamBufferReceive( StreamBufferHandle_t xStreamBuffer, void *pvRxData, size_t xBufferLengthBytes, TickType_t xTicksToWait )
 {
 size_t xReturn;

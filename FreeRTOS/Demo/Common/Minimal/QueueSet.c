@@ -624,7 +624,7 @@ const UBaseType_t xLengthOfOne = ( UBaseType_t ) 1;
 		/* Add an item to the queue then ensure the queue set correctly
 		indicates that one item is available, and that that item is indeed the
 		queue written to. */
-		xQueueSend( xQueueHandle, ( void * ) &ulValueToSend, 0 );
+		xQueueOverwrite( xQueueHandle, ( void * ) &ulValueToSend );
 		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
 		{
 			/* Expected one item in the queue set. */

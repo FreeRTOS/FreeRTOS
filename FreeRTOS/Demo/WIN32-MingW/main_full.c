@@ -74,10 +74,10 @@
 
 /* Kernel includes. */
 #include <FreeRTOS.h>
-#include "task.h"
-#include "queue.h"
-#include "timers.h"
-#include "semphr.h"
+#include <task.h>
+#include <queue.h>
+#include <timers.h>
+#include <semphr.h>
 
 /* Standard demo includes. */
 #include "BlockQ.h"
@@ -98,6 +98,7 @@
 #include "IntSemTest.h"
 #include "TaskNotify.h"
 #include "QueueSetPolling.h"
+#include "StaticAllocation.h"
 #include "blocktim.h"
 #include "AbortDelay.h"
 #include "MessageBufferDemo.h"
@@ -208,6 +209,12 @@ int main_full( void )
 	vStartStreamBufferTasks();
 	vStartStreamBufferInterruptDemo();
 	vStartMessageBufferAMPTasks();
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		vStartStaticallyAllocatedTasks();
+	}
+	#endif
 
 	#if( configUSE_PREEMPTION != 0  )
 	{
@@ -577,6 +584,7 @@ char *pcTaskName;
 static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
 TaskStatus_t xTaskInfo;
+extern StackType_t uxTimerTaskStack[];
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -637,6 +645,7 @@ TaskStatus_t xTaskInfo;
 	if( ( xTaskInfo.eCurrentState != eBlocked )						 ||
 		( strcmp( xTaskInfo.pcTaskName, "Tmr Svc" ) != 0 )			 ||
 		( xTaskInfo.uxCurrentPriority != configTIMER_TASK_PRIORITY ) ||
+		( xTaskInfo.pxStackBase != uxTimerTaskStack )				 ||
 		( xTaskInfo.xHandle != xTimerTaskHandle ) )
 	{
 		pcStatusMessage = "Error:  vTaskGetInfo() returned incorrect information about the timer task";

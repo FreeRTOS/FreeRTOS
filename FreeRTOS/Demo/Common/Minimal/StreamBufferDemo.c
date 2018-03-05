@@ -600,7 +600,7 @@ BaseType_t xNonBlockingReceiveError = pdFALSE;
 			xBytesToSend = xStringLength - xNextChar;
 
 			/* Attempt to send right up to the end of the string. */
-			xBytesActuallySent = xStreamBufferSend( xStreamBuffer, ( void * ) &( pc55ByteString[ xNextChar ] ), xBytesToSend, xTicksToWait );
+			xBytesActuallySent = xStreamBufferSend( xStreamBuffer, ( const void * ) &( pc55ByteString[ xNextChar ] ), xBytesToSend, xTicksToWait );
 			configASSERT( xBytesActuallySent <= xBytesToSend );
 
 			/* Move the index up the string to the next character to be sent,
@@ -661,7 +661,7 @@ BaseType_t xNonBlockingReceiveError = pdFALSE;
 			} while( xReceivedLength == 0 );
 
 			/* Ensure the received string matches the expected string. */
-			configASSERT( memcmp( ( void * ) cRxString, ( void * ) &( pc55ByteString[ xNextChar ] ), xReceivedLength ) == 0 );
+			configASSERT( memcmp( ( void * ) cRxString, ( const void * ) &( pc55ByteString[ xNextChar ] ), xReceivedLength ) == 0 );
 
 			/* Move the index into the string up to the end of the bytes
 			received so far - wrapping if the end of the string has been

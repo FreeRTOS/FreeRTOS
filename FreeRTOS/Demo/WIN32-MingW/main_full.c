@@ -445,6 +445,19 @@ void *pvAllocated;
 	allocations so there is no need to test here. */
 	pvAllocated = pvPortMalloc( ( rand() % 500 ) + 1 );
 	vPortFree( pvAllocated );
+
+	/* Exit after a fixed time so code coverage results are written to the
+	disk. */
+	#if( configCOVERAGE_TEST == 1 )
+	{
+		const TickType_t xMaxRunTime = pdMS_TO_TICKS( 60000UL );
+
+		if( xTaskGetTickCount() >= xMaxRunTime )
+		{
+			exit( 0 );
+		}
+	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 

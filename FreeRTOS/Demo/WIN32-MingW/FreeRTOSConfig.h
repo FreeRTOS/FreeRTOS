@@ -109,16 +109,26 @@ functions anyway. */
 #define INCLUDE_xTimerPendFunctionCall			1
 #define INCLUDE_xTaskAbortDelay					1
 
-/* It is a good idea to define configASSERT() while developing.  configASSERT()
-uses the same semantics as the standard C assert() macro. */
-extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
-#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
-
 #define configINCLUDE_MESSAGE_BUFFER_AMP_DEMO	0
 #if ( configINCLUDE_MESSAGE_BUFFER_AMP_DEMO == 1 )
 	extern void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
 	#define sbSEND_COMPLETED( pxStreamBuffer ) vGenerateCoreBInterrupt( pxStreamBuffer )
 #endif /* configINCLUDE_MESSAGE_BUFFER_AMP_DEMO */
+
+extern void vAssertCalled( unsigned long ulLine, const char * const pcFileName );
+#define configCOVERAGE_TEST 1
+#if( configCOVERAGE_TEST == 1 )
+	/* Insert NOPs in empty decision paths to ensure both true and false paths
+	are being tested. */
+	#define mtCOVERAGE_TEST_MARKER() __asm volatile( "NOP" )
+#else
+	/* It is a good idea to define configASSERT() while developing.  configASSERT()
+	uses the same semantics as the standard C assert() macro.  Don't define
+	configASSERT() when performing code coverage tests though, as it is not
+	intended to asserts() to fail, some some code is intended not to run if no
+	errors are present. */
+	#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
+#endif
 
 /* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
 #include "trcRecorder.h"

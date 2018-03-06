@@ -114,7 +114,7 @@ const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 	/* Insert the new list item into the list, sorted in xItemValue order.
 
 	If the list already contains a list item with the same item value then the
-	new list item should be placed after it.  This ensures that TCB's which are
+	new list item should be placed after it.  This ensures that TCBs which are
 	stored in ready lists (all of which have the same xItemValue value) get a
 	share of the CPU.  However, if the xItemValue is the same as the back marker
 	the iteration loop below will not end.  Therefore the value is checked

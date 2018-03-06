@@ -230,6 +230,7 @@ char cReceivedString[ 15 ];
 
 		/* Check the number of bytes received was as expected. */
 		configASSERT( xReceivedBytes == strlen( cExpectedString ) );
+		( void ) xReceivedBytes; /* Incase configASSERT() is not defined. */
 
 		/* If the received string matches that expected then increment the loop
 		counter so the check task knows this task is still running. */

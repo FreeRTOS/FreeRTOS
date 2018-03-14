@@ -301,7 +301,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	QueueHandle_t xQueueGenericCreateStatic( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
 	{
-	Queue_t *pxNewQueue;
+	Queue_t *pxNewQueue = NULL;
 
 		configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
 
@@ -345,6 +345,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		else
 		{
 			traceQUEUE_CREATE_FAILED( ucQueueType );
+			mtCOVERAGE_TEST_MARKER();
 		}
 
 		return pxNewQueue;
@@ -397,6 +398,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		else
 		{
 			traceQUEUE_CREATE_FAILED( ucQueueType );
+			mtCOVERAGE_TEST_MARKER();
 		}
 
 		return pxNewQueue;

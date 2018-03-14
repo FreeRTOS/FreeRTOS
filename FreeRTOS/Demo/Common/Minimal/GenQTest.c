@@ -433,8 +433,17 @@ QueueHandle_t xQueue;
 		/* The tests in this function are very similar, the slight variations
 		are for code coverage purposes. */
 
-		/* Take the mutex.  It should be available now. */
+		/* Take the mutex.  It should be available now.  Check before and after
+		taking that the holder is reported correctly. */
+		if( xSemaphoreGetMutexHolder( xMutex ) != NULL )
+		{
+			xErrorDetected = pdTRUE;
+		}
 		if( xSemaphoreTake( xMutex, intsemNO_BLOCK ) != pdPASS )
+		{
+			xErrorDetected = pdTRUE;
+		}
+		if( xSemaphoreGetMutexHolder( xMutex ) != xTaskGetCurrentTaskHandle() )
 		{
 			xErrorDetected = pdTRUE;
 		}
@@ -524,8 +533,17 @@ QueueHandle_t xQueue;
 			vTaskDelay( genqSHORT_BLOCK );
 		}
 
-		/* Give the semaphore back ready for the next test. */
+		/* Give the semaphore back ready for the next test.  Check the mutex
+		holder before and after using the "FromISR" version for code coverage. */
+		if( xSemaphoreGetMutexHolderFromISR( xMutex ) != xTaskGetCurrentTaskHandle() )
+		{
+			xErrorDetected = pdTRUE;
+		}
 		xSemaphoreGive( xMutex );
+		if( xSemaphoreGetMutexHolderFromISR( xMutex ) != NULL )
+		{
+			xErrorDetected = pdTRUE;
+		}
 
 		configASSERT( xErrorDetected == pdFALSE );
 

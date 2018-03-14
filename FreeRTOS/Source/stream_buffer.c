@@ -1234,7 +1234,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 
 	uint8_t ucStreamBufferGetStreamBufferType( StreamBufferHandle_t xStreamBuffer )
 	{
-		return ( ( StreamBuffer_t * )xStreamBuffer )->ucFlags | sbFLAGS_IS_MESSAGE_BUFFER;
+		return ( ( StreamBuffer_t * )xStreamBuffer )->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */

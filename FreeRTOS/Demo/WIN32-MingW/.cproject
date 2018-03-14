@@ -42,6 +42,7 @@
 								<option id="gnu.c.compiler.option.debugging.gprof.444112294" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1757027831" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_WIN32_WINNT=0x0601"/>
+									<listOptionValue builtIn="false" value="projCOVERAGE_TEST=0"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.974248912" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -112,6 +113,7 @@
 								<option id="gnu.c.compiler.option.debugging.gprof.1677007018" name="Generate gprof information (-pg)" superClass="gnu.c.compiler.option.debugging.gprof" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.175065197" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_WIN32_WINNT=0x0601"/>
+									<listOptionValue builtIn="false" value="projCOVERAGE_TEST=1"/>
 								</option>
 								<option id="gnu.c.compiler.option.debugging.codecov.1668225592" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.132282928" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -137,7 +139,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="FreeRTOS+Trace Recorder/streamports" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="FreeRTOS+Trace Recorder|FreeRTOS+Trace Recorder/streamports" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

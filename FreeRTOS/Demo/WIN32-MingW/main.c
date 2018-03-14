@@ -75,7 +75,7 @@ that make up the total heap.  heap_5 is only used for test and example purposes
 as this demo could easily create one large heap region instead of multiple
 smaller heap regions - in which case heap_4.c would be the more appropriate
 choice.  See http://www.freertos.org/a00111.html for an explanation. */
-#define mainREGION_1_SIZE	8201
+#define mainREGION_1_SIZE	10801
 #define mainREGION_2_SIZE	29905
 #define mainREGION_3_SIZE	6007
 
@@ -141,10 +141,6 @@ int main( void )
 	http://www.freertos.org/a00111.html for an explanation. */
 	prvInitialiseHeap();
 
-	/* Initialise the trace recorder.  Use of the trace recorder is optional.
-	See http://www.FreeRTOS.org/trace for more information. */
-	vTraceEnable( TRC_START );
-
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
@@ -153,11 +149,20 @@ int main( void )
 	}
 	#else
 	{
-		/* Start the trace recording - the recording is written to a file if
-		configASSERT() is called. */
-		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
-		uiTraceStart();
+		/* Do not include trace code when performing a code coverage analysis. */
+		#if( projCOVERAGE_TEST != 1 )
+		{
+			/* Initialise the trace recorder.  Use of the trace recorder is optional.
+			See http://www.FreeRTOS.org/trace for more information. */
+			vTraceEnable( TRC_START );
+
+			/* Start the trace recording - the recording is written to a file if
+			configASSERT() is called. */
+			printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+			printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
+			uiTraceStart();
+		}
+		#endif
 
 		main_full();
 	}
@@ -282,7 +287,6 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 			xPrinted = pdTRUE;
 			if( xTraceRunning == pdTRUE )
 			{
-				vTraceStop();
 				prvSaveTraceFile();
 			}
 		}
@@ -302,20 +306,27 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
 static void prvSaveTraceFile( void )
 {
-FILE* pxOutputFile;
-
-	pxOutputFile = fopen( "Trace.dump", "wb");
-
-	if( pxOutputFile != NULL )
+	/* Tracing is not used when code coverage analysis is being performed. */
+	#if( projCOVERAGE_TEST != 1 )
 	{
-		fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
-		fclose( pxOutputFile );
-		printf( "\r\nTrace output saved to Trace.dump\r\n" );
+		FILE* pxOutputFile;
+
+		vTraceStop();
+
+		pxOutputFile = fopen( "Trace.dump", "wb");
+
+		if( pxOutputFile != NULL )
+		{
+			fwrite( RecorderDataPtr, sizeof( RecorderDataType ), 1, pxOutputFile );
+			fclose( pxOutputFile );
+			printf( "\r\nTrace output saved to Trace.dump\r\n" );
+		}
+		else
+		{
+			printf( "\r\nFailed to create trace dump file\r\n" );
+		}
 	}
-	else
-	{
-		printf( "\r\nFailed to create trace dump file\r\n" );
-	}
+	#endif
 }
 /*-----------------------------------------------------------*/
 

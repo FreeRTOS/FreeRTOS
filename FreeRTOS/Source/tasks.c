@@ -1984,7 +1984,7 @@ BaseType_t xReturn;
 
 		xNextTaskUnblockTime = portMAX_DELAY;
 		xSchedulerRunning = pdTRUE;
-		xTickCount = ( TickType_t ) 0U;
+		xTickCount = ( TickType_t ) configINITIAL_TICK_COUNT;
 
 		/* If configGENERATE_RUN_TIME_STATS is defined then the following
 		macro must be defined to configure the timer/counter used to generate
@@ -2782,7 +2782,9 @@ BaseType_t xSwitchRequired = pdFALSE;
 		/* Save the hook function in the TCB.  A critical section is required as
 		the value can be accessed from an interrupt. */
 		taskENTER_CRITICAL();
+		{
 			xTCB->pxTaskTag = pxHookFunction;
+		}
 		taskEXIT_CRITICAL();
 	}
 

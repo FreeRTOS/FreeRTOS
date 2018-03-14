@@ -508,8 +508,7 @@ uint32_t ulErrorCode;
 
 void vPortEndScheduler( void )
 {
-	/* This function IS NOT TESTED! */
-	TerminateProcess( GetCurrentProcess(), 0 );
+	exit( 0 );
 }
 /*-----------------------------------------------------------*/
 

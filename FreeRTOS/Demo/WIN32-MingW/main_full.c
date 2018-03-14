@@ -120,6 +120,12 @@
 
 #define mainTIMER_TEST_PERIOD			( 50 )
 
+/*
+ * Exercises code that is not otherwise covered by the standard demo/test
+ * tasks.
+ */
+extern BaseType_t xRunCodeCoverageTestAdditions( void );
+
 /* Task function prototypes. */
 static void prvCheckTask( void *pvParameters );
 
@@ -420,7 +426,6 @@ void *pvAllocated;
 	timer. */
 	prvDemonstrateTimerQueryFunctions();
 
-
 	/* If xMutexToDelete has not already been deleted, then delete it now.
 	This is done purely to demonstrate the use of, and test, the
 	vSemaphoreDelete() macro.  Care must be taken not to delete a semaphore
@@ -448,13 +453,19 @@ void *pvAllocated;
 
 	/* Exit after a fixed time so code coverage results are written to the
 	disk. */
-	#if( configCOVERAGE_TEST == 1 )
+	#if( projCOVERAGE_TEST == 1 )
 	{
-		const TickType_t xMaxRunTime = pdMS_TO_TICKS( 60000UL );
+		const TickType_t xMaxRunTime = pdMS_TO_TICKS( 30000UL );
 
-		if( xTaskGetTickCount() >= xMaxRunTime )
+		/* Exercise code not otherwise executed by standard demo/test tasks. */
+		if( xRunCodeCoverageTestAdditions() != pdPASS )
 		{
-			exit( 0 );
+			pcStatusMessage = "Code coverage additions failed.\r\n";
+		}
+
+		if( ( xTaskGetTickCount() - configINITIAL_TICK_COUNT ) >= xMaxRunTime )
+		{
+			vTaskEndScheduler();
 		}
 	}
 	#endif

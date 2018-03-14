@@ -695,8 +695,7 @@ StaticEventGroup_t xEventGroupBuffer;
 	/* Create the event group.  xEventGroupCreateStatic() has an extra parameter
 	than the normal xEventGroupCreate() API function.  The parameter is a
 	pointer to the StaticEventGroup_t structure that will hold the event group
-	structure.  If the parameter is passed as NULL then the structure will be
-	allocated dynamically, just as if xEventGroupCreate() had been called. */
+	structure. */
 	xEventGroup = xEventGroupCreateStatic( &xEventGroupBuffer );
 
 	/* The event group handle should equal the static event group structure

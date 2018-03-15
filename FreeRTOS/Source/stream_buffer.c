@@ -129,7 +129,7 @@ that uses task notifications. */
 /*lint -restore (9026) */
 
 /* The number of bytes used to hold the length of a message in the buffer. */
-#define sbBYTES_TO_STORE_MESSAGE_LENGTH ( sizeof( size_t ) )
+#define sbBYTES_TO_STORE_MESSAGE_LENGTH ( sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) )
 
 /* Bits stored in the ucFlags field of the stream buffer. */
 #define sbFLAGS_IS_MESSAGE_BUFFER		( ( uint8_t ) 1 ) /* Set if the stream buffer was created as a message buffer, in which case it holds discrete messages rather than a stream. */
@@ -504,6 +504,9 @@ TimeOut_t xTimeOut;
 	if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
 	{
 		xRequiredSpace += sbBYTES_TO_STORE_MESSAGE_LENGTH;
+
+		/* Overflow? */
+		configASSERT( xRequiredSpace > xDataLengthBytes );
 	}
 	else
 	{
@@ -906,6 +909,9 @@ size_t xOriginalTail, xReceivedLength, xNextMessageLength;
 		returned to its prior state if the length of the message is too
 		large for the provided buffer. */
 		xOriginalTail = pxStreamBuffer->xTail;
+		/* Ensure xNextMessageLength is cleared to 0 in case
+		sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) != sizeof( size_t ). */
+		xNextMessageLength = 0;
 		( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xNextMessageLength, xBytesToStoreMessageLength, xBytesAvailable );
 
 		/* Reduce the number of bytes available by the number of bytes just

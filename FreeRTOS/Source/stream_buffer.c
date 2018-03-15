@@ -799,6 +799,7 @@ size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
 {
 StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xReturn, xBytesAvailable, xOriginalTail;
+configMESSAGE_BUFFER_LENGTH_TYPE xTempReturn;
 
 	configASSERT( pxStreamBuffer );
 
@@ -815,7 +816,8 @@ size_t xReturn, xBytesAvailable, xOriginalTail;
 			returned to its prior state as the message is not actually being
 			removed from the buffer. */
 			xOriginalTail = pxStreamBuffer->xTail;
-			( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xReturn, sbBYTES_TO_STORE_MESSAGE_LENGTH, xBytesAvailable );
+			( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempReturn, sbBYTES_TO_STORE_MESSAGE_LENGTH, xBytesAvailable );
+			xReturn = ( size_t ) xTempReturn;
 			pxStreamBuffer->xTail = xOriginalTail;
 		}
 		else
@@ -901,6 +903,7 @@ static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxStreamBuffer,
 										size_t xBytesToStoreMessageLength )
 {
 size_t xOriginalTail, xReceivedLength, xNextMessageLength;
+configMESSAGE_BUFFER_LENGTH_TYPE xTempNextMessageLength;
 
 	if( xBytesToStoreMessageLength != ( size_t ) 0 )
 	{
@@ -909,10 +912,8 @@ size_t xOriginalTail, xReceivedLength, xNextMessageLength;
 		returned to its prior state if the length of the message is too
 		large for the provided buffer. */
 		xOriginalTail = pxStreamBuffer->xTail;
-		/* Ensure xNextMessageLength is cleared to 0 in case
-		sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) != sizeof( size_t ). */
-		xNextMessageLength = 0;
-		( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xNextMessageLength, xBytesToStoreMessageLength, xBytesAvailable );
+		( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempNextMessageLength, xBytesToStoreMessageLength, xBytesAvailable );
+		xNextMessageLength = ( size_t ) xTempNextMessageLength;
 
 		/* Reduce the number of bytes available by the number of bytes just
 		read out. */

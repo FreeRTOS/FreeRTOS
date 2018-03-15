@@ -41,7 +41,7 @@
 #define mbMESSAGE_BUFFER_LENGTH_BYTES	( ( size_t ) 50 )
 
 /* The number of additional bytes used to store the length of each message. */
-#define mbBYTES_TO_STORE_MESSAGE_LENGTH ( sizeof( size_t ) )
+#define mbBYTES_TO_STORE_MESSAGE_LENGTH ( sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) )
 
 /* Start and end ASCII characters used in messages sent to the buffers. */
 #define mbASCII_SPACE					32
@@ -191,7 +191,8 @@ UBaseType_t uxOriginalPriority;
 	additional 4 bytes are added to hold the item's size.  That means adding
 	6 bytes to the buffer will actually add 10 bytes to the buffer.  Therefore,
 	with a 50 byte buffer, a maximum of 5 6 bytes items can be added before the
-	buffer is completely full. */
+	buffer is completely full.  NOTE:  The numbers in this paragraph assume
+	sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) == 4. */
 	for( xItem = 0; xItem < xMax6ByteMessages; xItem++ )
 	{
 		configASSERT( xMessageBufferIsFull( xMessageBuffer ) == pdFALSE );
@@ -377,15 +378,21 @@ UBaseType_t uxOriginalPriority;
 	xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES, mbDONT_BLOCK );
 	configASSERT( xReturned == 0 );
 	( void ) xReturned; /* In case configASSERT() is not defined. */
-	xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 1, mbDONT_BLOCK );
-	configASSERT( xReturned == 0 );
-	( void ) xReturned; /* In case configASSERT() is not defined. */
-	xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 2, mbDONT_BLOCK );
-	configASSERT( xReturned == 0 );
-	( void ) xReturned; /* In case configASSERT() is not defined. */
-	xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 3, mbDONT_BLOCK );
-	configASSERT( xReturned == 0 );
-	( void ) xReturned; /* In case configASSERT() is not defined. */
+	#ifndef configMESSAGE_BUFFER_LENGTH_TYPE
+	{
+		/* The following will fail if configMESSAGE_BUFFER_LENGTH_TYPE is set
+		to a non 32-bit type. */
+		xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 1, mbDONT_BLOCK );
+		configASSERT( xReturned == 0 );
+		( void ) xReturned; /* In case configASSERT() is not defined. */
+		xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 2, mbDONT_BLOCK );
+		configASSERT( xReturned == 0 );
+		( void ) xReturned; /* In case configASSERT() is not defined. */
+		xReturned = xMessageBufferSend( xMessageBuffer, ( const void * ) pc55ByteString, mbMESSAGE_BUFFER_LENGTH_BYTES - 3, mbDONT_BLOCK );
+		configASSERT( xReturned == 0 );
+		( void ) xReturned; /* In case configASSERT() is not defined. */
+	}
+	#endif
 
 	/* Don't expect any messages to be available as the above were too large to
 	get written. */

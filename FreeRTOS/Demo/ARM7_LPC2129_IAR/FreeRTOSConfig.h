@@ -29,7 +29,9 @@
 #define FREERTOS_CONFIG_H
 
 /* Hardware specifics. */
-#include <NXP/iolpc2129.h>
+#ifdef __ICCARM__
+	#include <NXP/iolpc2129.h>
+#endif
 
 /*-----------------------------------------------------------
  * Application specific definitions.
@@ -38,7 +40,7 @@
  * application requirements.
  *
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
- * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE. 
+ * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/

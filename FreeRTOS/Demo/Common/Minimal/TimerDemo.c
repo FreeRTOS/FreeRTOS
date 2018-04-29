@@ -218,7 +218,6 @@ static TickType_t xIterationsWithoutCounterIncrement = ( TickType_t ) 0, xLastCy
 		{
 			/* The tests appear to be no longer running (stalled). */
 			xTestStatus = pdFAIL;
-			configASSERT( xTestStatus );
 		}
 	}
 	else

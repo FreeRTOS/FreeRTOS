@@ -46,7 +46,7 @@
  * in main.c.  This file implements the comprehensive test and demo version.
  *
  * NOTE 3:  This file only contains the source code that is specific to the
- * basic demo.  Generic functions, such FreeRTOS hook functions, are defined in
+ * full demo.  Generic functions, such FreeRTOS hook functions, are defined in
  * main.c.
  *******************************************************************************
  *

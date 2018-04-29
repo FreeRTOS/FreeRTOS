@@ -200,7 +200,7 @@ static size_t prvWriteMessageToBuffer(  StreamBuffer_t * const pxStreamBuffer,
 static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStreamBuffer,
 									  uint8_t *pucData,
 									  size_t xMaxCount,
-									  size_t xBytesAvailable ); PRIVILEGED_FUNCTION
+									  size_t xBytesAvailable ) PRIVILEGED_FUNCTION;
 
 /*
  * Called by both pxStreamBufferCreate() and pxStreamBufferCreateStatic() to

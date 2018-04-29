@@ -1364,11 +1364,30 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				else if( pxStateList == &xSuspendedTaskList )
 				{
 					/* The task being queried is referenced from the suspended
-					list.  Is it genuinely suspended or is it block
+					list.  Is it genuinely suspended or is it blocked
 					indefinitely? */
 					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL )
 					{
-						eReturn = eSuspended;
+						#if( configUSE_TASK_NOTIFICATIONS == 1 )
+						{
+							/* The task does not appear on the vent list item of
+							and of the RTOS objects, but could still be in the
+							blocked state if it is waiting on its notification
+							rather than waiting on an object. */
+							if( pxTCB->ucNotifyState == taskWAITING_NOTIFICATION )
+							{
+								eReturn = eBlocked;
+							}
+							else
+							{
+								eReturn = eSuspended;
+							}
+						}
+						#else
+						{
+							eReturn = eSuspended;
+						}
+						#endif
 					}
 					else
 					{
@@ -4772,13 +4791,11 @@ TickType_t uxReturn;
 					{
 						*pxHigherPriorityTaskWoken = pdTRUE;
 					}
-					else
-					{
-						/* Mark that a yield is pending in case the user is not
-						using the "xHigherPriorityTaskWoken" parameter to an ISR
-						safe FreeRTOS function. */
-						xYieldPending = pdTRUE;
-					}
+
+					/* Mark that a yield is pending in case the user is not
+					using the "xHigherPriorityTaskWoken" parameter to an ISR
+					safe FreeRTOS function. */
+					xYieldPending = pdTRUE;
 				}
 				else
 				{
@@ -4862,13 +4879,11 @@ TickType_t uxReturn;
 					{
 						*pxHigherPriorityTaskWoken = pdTRUE;
 					}
-					else
-					{
-						/* Mark that a yield is pending in case the user is not
-						using the "xHigherPriorityTaskWoken" parameter in an ISR
-						safe FreeRTOS function. */
-						xYieldPending = pdTRUE;
-					}
+
+					/* Mark that a yield is pending in case the user is not
+					using the "xHigherPriorityTaskWoken" parameter in an ISR
+					safe FreeRTOS function. */
+					xYieldPending = pdTRUE;
 				}
 				else
 				{

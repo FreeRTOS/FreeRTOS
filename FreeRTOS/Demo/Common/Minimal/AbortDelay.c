@@ -27,7 +27,9 @@
 
 /*
  * This file contains some test scenarios that ensure tasks respond correctly
- * to xTaskAbortDelay() calls.
+ * to xTaskAbortDelay() calls.  It also ensures tasks return the correct state
+ * of eBlocked when blocked indefinitely in both the case where a task is
+ * blocked on an object and when a task is blocked on a notification.
  */
 
 /* Standard includes. */
@@ -39,6 +41,7 @@
 #include "queue.h"
 #include "semphr.h"
 #include "event_groups.h"
+#include "stream_buffer.h"
 
 /* Demo includes. */
 #include "AbortDelay.h"
@@ -68,7 +71,8 @@ build.  Remove the whole file if this is not the case. */
 #define abtSEMAPHORE_TAKE_ABORTS	4
 #define abtEVENT_GROUP_ABORTS		5
 #define abtQUEUE_SEND_ABORTS		6
-#define abtMAX_TESTS				7
+#define abtSTREAM_BUFFER_RECEIVE	7
+#define abtMAX_TESTS				8
 
 /*-----------------------------------------------------------*/
 
@@ -95,6 +99,7 @@ static void prvTestAbortingTaskDelayUntil( void );
 static void prvTestAbortingSemaphoreTake( void );
 static void prvTestAbortingEventGroupWait( void );
 static void prvTestAbortingQueueSend( void );
+static void prvTestAbortingStreamBufferReceive( void );
 
 /*
  * Checks the amount of time a task spent in the Blocked state is within the
@@ -239,6 +244,10 @@ const uint32_t ulMax = 0xffffffffUL;
 
 			case abtQUEUE_SEND_ABORTS:
 				prvTestAbortingQueueSend();
+				break;
+
+			case abtSTREAM_BUFFER_RECEIVE:
+				prvTestAbortingStreamBufferReceive();
 				break;
 
 			default:
@@ -417,6 +426,75 @@ EventBits_t xBitsToWaitFor = ( EventBits_t ) 0x01, xReturn;
 }
 /*-----------------------------------------------------------*/
 
+static void prvTestAbortingStreamBufferReceive( void )
+{
+TickType_t xTimeAtStart;
+StreamBufferHandle_t xStreamBuffer;
+EventBits_t xReturn;
+const size_t xTriggerLevelBytes = ( size_t ) 1;
+uint8_t uxRxData;
+
+	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+	{
+		/* Defines the memory that will actually hold the streams within the
+		stream buffer. */
+		static uint8_t ucStorageBuffer[ sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) + 1 ];
+
+		/* The variable used to hold the stream buffer structure. */
+		StaticStreamBuffer_t xStreamBufferStruct;
+
+
+	    xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
+	    										   xTriggerLevelBytes,
+												   ucStorageBuffer,
+	                                               &xStreamBufferStruct );
+	}
+	#else
+	{
+		xStreamBuffer = xStreamBufferCreate( sizeof( uint8_t ), xTriggerLevelBytes );
+		configASSERT( xStreamBuffer );
+	}
+	#endif
+
+	/* Note the time before the delay so the length of the delay is known. */
+	xTimeAtStart = xTaskGetTickCount();
+
+	/* This first delay should just time out. */
+	xReturn = xStreamBufferReceive( xStreamBuffer, &uxRxData, sizeof( uxRxData ), xMaxBlockTime );
+	if( xReturn != 0x00 )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
+
+	/* Note the time before the delay so the length of the delay is known. */
+	xTimeAtStart = xTaskGetTickCount();
+
+	/* This second delay should be aborted by the primary task half way
+	through xMaxBlockTime. */
+	xReturn = xStreamBufferReceive( xStreamBuffer, &uxRxData, sizeof( uxRxData ), xMaxBlockTime );
+	if( xReturn != 0x00 )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xHalfMaxBlockTime );
+
+	/* Note the time before the delay so the length of the delay is known. */
+	xTimeAtStart = xTaskGetTickCount();
+
+	/* This third delay should just time out again. */
+	xReturn = xStreamBufferReceive( xStreamBuffer, &uxRxData, sizeof( uxRxData ), xMaxBlockTime );
+	if( xReturn != 0x00 )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+	prvCheckExpectedTimeIsWithinAnAcceptableMargin( xTimeAtStart, xMaxBlockTime );
+
+	/* Not really necessary in this case, but for completeness. */
+	vStreamBufferDelete( xStreamBuffer );
+}
+/*-----------------------------------------------------------*/
+
 static void prvTestAbortingQueueSend( void )
 {
 TickType_t xTimeAtStart;
@@ -523,8 +601,8 @@ SemaphoreHandle_t xSemaphore;
 	xTimeAtStart = xTaskGetTickCount();
 
 	/* This second delay should be aborted by the primary task half way
-	through. */
-	xReturn = xSemaphoreTake( xSemaphore, xMaxBlockTime );
+	through xMaxBlockTime. */
+	xReturn = xSemaphoreTake( xSemaphore, portMAX_DELAY );
 	if( xReturn != pdFALSE )
 	{
 		xErrorOccurred = pdTRUE;
@@ -567,8 +645,8 @@ BaseType_t xReturn;
 	xTimeAtStart = xTaskGetTickCount();
 
 	/* This second delay should be aborted by the primary task half way
-	through. */
-	xReturn = xTaskNotifyWait( 0, 0, NULL, xMaxBlockTime );
+	through xMaxBlockTime. */
+	xReturn = xTaskNotifyWait( 0, 0, NULL, portMAX_DELAY );
 	if( xReturn != pdFALSE )
 	{
 		xErrorOccurred = pdTRUE;

@@ -33,7 +33,7 @@
 /**
 *
 * @file xcanps_selftest.c
-* @addtogroup canps_v3_0
+* @addtogroup canps_v3_2
 * @{
 *
 * This file contains a diagnostic self-test function for the XCanPs driver.

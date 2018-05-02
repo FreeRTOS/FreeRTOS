@@ -88,6 +88,8 @@
 *						for CR 658287
 * 3.0	pkp	   12/09/14 Added support for Zynq Ultrascale Mp.Also
 *			modified code for MISRA-C:2012 compliance.
+*       ms     03/17/17 Added readme.txt file in examples folder for doxygen
+*                       generation.
 * </pre>
 *
 ******************************************************************************/

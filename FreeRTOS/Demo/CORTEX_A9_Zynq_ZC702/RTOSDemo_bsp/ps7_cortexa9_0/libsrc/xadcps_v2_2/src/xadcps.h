@@ -170,7 +170,15 @@
 *			xadcps.c to fix CR #807563.
 * 2.2   bss    04/27/14 Modified to use correct Device Config base address in
 *						xadcps.c (CR#854437).
-*
+*       ms     01/23/17 Added xil_printf statement in main function for all
+*                       examples to ensure that "Successfully ran" and "Failed"
+*                       strings are available in all examples. This is a fix
+*                       for CR-965028.
+*       ms     03/17/17 Added readme.txt file in examples folder for doxygen
+*                       generation.
+*       ms     04/05/17 Modified Comment lines in functions of xadcps
+*                       examples to recognize it as documentation block
+*                       for doxygen generation.
 *
 * </pre>
 *

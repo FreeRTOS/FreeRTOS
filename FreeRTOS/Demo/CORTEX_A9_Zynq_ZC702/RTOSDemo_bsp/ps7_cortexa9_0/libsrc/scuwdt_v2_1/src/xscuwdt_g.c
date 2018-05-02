@@ -5,7 +5,7 @@
 * Version: 
 * DO NOT EDIT.
 *
-* Copyright (C) 2010-2017 Xilinx, Inc. All Rights Reserved.*
+* Copyright (C) 2010-2018 Xilinx, Inc. All Rights Reserved.*
 *Permission is hereby granted, free of charge, to any person obtaining a copy
 *of this software and associated documentation files (the Software), to deal
 *in the Software without restriction, including without limitation the rights
@@ -44,7 +44,7 @@
 * The configuration table for devices
 */
 
-XScuWdt_Config XScuWdt_ConfigTable[] =
+XScuWdt_Config XScuWdt_ConfigTable[XPAR_XSCUWDT_NUM_INSTANCES] =
 {
 	{
 		XPAR_PS7_SCUWDT_0_DEVICE_ID,

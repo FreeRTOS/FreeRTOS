@@ -33,7 +33,7 @@
 /**
 *
 * @file xcanps_intr.c
-* @addtogroup canps_v3_0
+* @addtogroup canps_v3_2
 * @{
 *
 * This file contains functions related to CAN interrupt handling.

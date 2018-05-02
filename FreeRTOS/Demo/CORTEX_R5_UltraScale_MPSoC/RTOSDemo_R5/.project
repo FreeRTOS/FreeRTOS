@@ -42,7 +42,7 @@
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1462455164616</id>
+			<id>1525195743708</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>5</type>
 			<matcher>
@@ -51,7 +51,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1462455164616</id>
+			<id>1525195743711</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>5</type>
 			<matcher>
@@ -60,7 +60,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1462455164726</id>
+			<id>1525195743715</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>5</type>
 			<matcher>
@@ -69,7 +69,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1462455164766</id>
+			<id>1525195743718</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>5</type>
 			<matcher>
@@ -78,12 +78,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1462455164786</id>
+			<id>1525195743721</id>
 			<name>src/FreeRTOS_Source</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-timers.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1525195743725</id>
+			<name>src/FreeRTOS_Source</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-stream_buffer.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

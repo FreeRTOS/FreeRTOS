@@ -40,6 +40,7 @@ SECTIONS
 {
 .text : {
    KEEP (*(.vectors))
+   KEEP (*(.freertos_vectors))
    *(.boot)
    *(.text)
    *(.text.*)

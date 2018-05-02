@@ -33,7 +33,7 @@
 /**
 *
 * @file xcanps.h
-* @addtogroup canps_v3_0
+* @addtogroup canps_v3_2
 * @{
 * @details
 *
@@ -204,6 +204,8 @@
 *			Data mismatch while sending data less than 8 bytes.
 * 3.1 nsk     12/21/15  Updated XCanPs_IntrHandler in xcanps_intr.c to handle
 *			error interrupts correctly. CR#925615
+*     ms      03/17/17  Added readme.txt file in examples folder for doxygen
+*                       generation.
 * </pre>
 *
 ******************************************************************************/

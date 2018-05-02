@@ -5,7 +5,7 @@
 * Version: 
 * DO NOT EDIT.
 *
-* Copyright (C) 2010-2017 Xilinx, Inc. All Rights Reserved.*
+* Copyright (C) 2010-2018 Xilinx, Inc. All Rights Reserved.*
 *Permission is hereby granted, free of charge, to any person obtaining a copy
 *of this software and associated documentation files (the Software), to deal
 *in the Software without restriction, including without limitation the rights
@@ -44,7 +44,7 @@
 * The configuration table for devices
 */
 
-XAdcPs_Config XAdcPs_ConfigTable[] =
+XAdcPs_Config XAdcPs_ConfigTable[XPAR_XADCPS_NUM_INSTANCES] =
 {
 	{
 		XPAR_PS7_XADC_0_DEVICE_ID,

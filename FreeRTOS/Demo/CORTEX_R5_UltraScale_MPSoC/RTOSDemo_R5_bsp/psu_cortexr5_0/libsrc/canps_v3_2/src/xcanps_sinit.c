@@ -33,7 +33,7 @@
 /**
 *
 * @file xcanps_sinit.c
-* @addtogroup canps_v3_0
+* @addtogroup canps_v3_2
 * @{
 *
 * This file contains the implementation of the XCanPs driver's static

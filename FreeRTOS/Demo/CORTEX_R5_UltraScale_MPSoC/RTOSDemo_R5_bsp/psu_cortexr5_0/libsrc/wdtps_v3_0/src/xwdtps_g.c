@@ -5,7 +5,7 @@
 * Version: 
 * DO NOT EDIT.
 *
-* Copyright (C) 2010-2017 Xilinx, Inc. All Rights Reserved.*
+* Copyright (C) 2010-2018 Xilinx, Inc. All Rights Reserved.*
 *Permission is hereby granted, free of charge, to any person obtaining a copy
 *of this software and associated documentation files (the Software), to deal
 *in the Software without restriction, including without limitation the rights
@@ -44,8 +44,12 @@
 * The configuration table for devices
 */
 
-XWdtPs_Config XWdtPs_ConfigTable[] =
+XWdtPs_Config XWdtPs_ConfigTable[XPAR_XWDTPS_NUM_INSTANCES] =
 {
+	{
+		XPAR_PSU_CSU_WDT_DEVICE_ID,
+		XPAR_PSU_CSU_WDT_BASEADDR
+	},
 	{
 		XPAR_PSU_WDT_0_DEVICE_ID,
 		XPAR_PSU_WDT_0_BASEADDR

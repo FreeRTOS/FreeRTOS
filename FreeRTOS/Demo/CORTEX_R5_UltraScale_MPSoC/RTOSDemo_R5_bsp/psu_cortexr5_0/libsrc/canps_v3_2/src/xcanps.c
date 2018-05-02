@@ -33,7 +33,7 @@
 /**
 *
 * @file xcanps.c
-* @addtogroup canps_v3_0
+* @addtogroup canps_v3_2
 * @{
 *
 * Functions in this file are the minimum required functions for the XCanPs

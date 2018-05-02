@@ -309,4 +309,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 #define LWIP_NETIF_STATUS_CALLBACK 1
 
+/* Prevent conflict with struct timeval from compiler's library. */
+#define LWIP_TIMEVAL_PRIVATE 0
+
 #endif /* __LWIPOPTS_H__ */

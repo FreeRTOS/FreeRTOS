@@ -103,6 +103,8 @@
 *		     the xstatus.h of the standalone BSP during the
 *		     libgen.
 * 2.1 	sk  02/26/15 Modified the code for MISRA-C:2012 compliance.
+*       ms  03/17/17 Added readme.txt file in examples folder for doxygen
+*                    generation.
 * </pre>
 *
 ******************************************************************************/

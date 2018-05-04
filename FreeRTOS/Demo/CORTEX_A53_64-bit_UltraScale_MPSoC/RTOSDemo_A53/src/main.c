@@ -26,6 +26,10 @@
  */
 
 /******************************************************************************
+ *
+ * See http://www.FreeRTOS.org/RTOS-Xilinx-UltraScale_MPSoC_64-bit.html for
+ * additional information on this demo.
+ *
  * NOTE 1:  This project provides two demo applications.  A simple blinky
  * style project, and a more comprehensive test and demo application.  The
  * mainSELECTED_APPLICATION setting in main.c is used to select between the two.
@@ -34,6 +38,12 @@
  * NOTE 2:  This file only contains the source code that is not specific to
  * either the simply blinky or full demos - this includes initialisation code
  * and callback functions.
+ *
+ * NOTE 3:  This project builds the FreeRTOS source code, so is expecting the
+ * BSP project to be configured as a 'standalone' bsp project rather than a
+ * 'FreeRTOS' bsp project.  However the BSP project MUST still be build with
+ * the FREERTOS_BSP symbol defined (-DFREERTOS_BSP must be added to the
+ * command line in the BSP configuration).
  */
 
 /* Standard includes. */
@@ -95,6 +105,9 @@ XScuGic xInterruptController;
 
 int main( void )
 {
+	/* See http://www.FreeRTOS.org/RTOS-Xilinx-UltraScale_MPSoC_64-bit.html for
+	additional information on this demo. */
+
 	/* Configure the hardware ready to run the demo. */
 	prvSetupHardware();
 
@@ -253,3 +266,15 @@ void vMainAssertCalled( const char *pcFileName, uint32_t ulLineNumber )
 	for( ;; );
 }
 
+void *____memset(void *str, int c, size_t n)
+{
+size_t x;
+uint8_t *puc = ( uint8_t * ) str;
+
+	for( x = 0; x < c; x++ )
+	{
+		puc[ x ] = ( uint8_t ) c;
+	}
+
+	return str;
+}

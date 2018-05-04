@@ -68,8 +68,14 @@ enable_caches()
 void
 disable_caches()
 {
+#ifdef __MICROBLAZE__
+#ifdef XPAR_MICROBLAZE_USE_DCACHE
     Xil_DCacheDisable();
+#endif
+#ifdef XPAR_MICROBLAZE_USE_ICACHE
     Xil_ICacheDisable();
+#endif
+#endif
 }
 
 void

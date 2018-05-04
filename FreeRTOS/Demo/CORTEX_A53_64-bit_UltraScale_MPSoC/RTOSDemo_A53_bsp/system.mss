@@ -15,6 +15,7 @@ BEGIN PROCESSOR
  PARAMETER DRIVER_NAME = cpu_cortexa53
  PARAMETER DRIVER_VER = 1.5
  PARAMETER HW_INSTANCE = psu_cortexa53_0
+ PARAMETER extra_compiler_flags = -g -Wall -Wextra -DFREERTOS_BSP
 END
 
 

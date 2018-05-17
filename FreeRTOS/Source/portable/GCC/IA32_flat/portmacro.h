@@ -244,19 +244,19 @@ BaseType_t xPortInstallInterruptHandler( ISR_Handler_t pxHandler, uint32_t ulVec
 
 		This method can always be used.  It is slightly more complex than
 		method 1 but benefits from a faster interrupt entry time. */
-	#warning config_USE_COMMON_INTERRUPT_ENTRY_POINT was not defined in FreeRTOSConfig.h and has been defaulted to 1.
+	#warning configUSE_COMMON_INTERRUPT_ENTRY_POINT was not defined in FreeRTOSConfig.h and has been defaulted to 1.
 	#define configUSE_COMMON_INTERRUPT_ENTRY_POINT	1
 #endif
 
 #ifndef configISR_STACK_SIZE
-	/* Interrupt entry code will switch the stack in use to a dedicated system 
+	/* Interrupt entry code will switch the stack in use to a dedicated system
 	stack.
 
 	configISR_STACK_SIZE defines the number of 32-bit values that can be stored
 	on the system stack, and must be large enough to hold a potentially nested
 	interrupt stack frame. */
 
-	#error configISE_STACK_SIZE was not defined in FreeRTOSConfig.h.
+	#error configISR_STACK_SIZE was not defined in FreeRTOSConfig.h.
 #endif
 
 #ifndef configMAX_API_CALL_INTERRUPT_PRIORITY

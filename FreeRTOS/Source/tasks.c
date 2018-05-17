@@ -1370,7 +1370,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 					{
 						#if( configUSE_TASK_NOTIFICATIONS == 1 )
 						{
-							/* The task does not appear on the vent list item of
+							/* The task does not appear on the event list item of
 							and of the RTOS objects, but could still be in the
 							blocked state if it is waiting on its notification
 							rather than waiting on an object. */

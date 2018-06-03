@@ -260,7 +260,7 @@ CRCB_t *pxCRCB;
 				( void ) uxListRemove( &( pxCRCB->xGenericListItem ) );
 
 				/* Is the co-routine waiting on an event also? */
-				if( pxCRCB->xEventListItem.pvContainer )
+				if( pxCRCB->xEventListItem.pxContainer )
 				{
 					( void ) uxListRemove( &( pxCRCB->xEventListItem ) );
 				}

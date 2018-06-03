@@ -47,7 +47,7 @@ void MPU_vTaskDelete( TaskHandle_t xTaskToDelete );
 void MPU_vTaskDelay( const TickType_t xTicksToDelay );
 void MPU_vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xTimeIncrement );
 BaseType_t MPU_xTaskAbortDelay( TaskHandle_t xTask );
-UBaseType_t MPU_uxTaskPriorityGet( TaskHandle_t xTask );
+UBaseType_t MPU_uxTaskPriorityGet( const TaskHandle_t xTask );
 eTaskState MPU_eTaskGetState( TaskHandle_t xTask );
 void MPU_vTaskGetInfo( TaskHandle_t xTask, TaskStatus_t *pxTaskStatus, BaseType_t xGetFreeStackSpace, eTaskState eState );
 void MPU_vTaskPrioritySet( TaskHandle_t xTask, UBaseType_t uxNewPriority );

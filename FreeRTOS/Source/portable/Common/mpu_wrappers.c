@@ -163,7 +163,7 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
-	UBaseType_t MPU_uxTaskPriorityGet( TaskHandle_t pxTask )
+	UBaseType_t MPU_uxTaskPriorityGet( const TaskHandle_t pxTask )
 	{
 	UBaseType_t uxReturn;
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();

@@ -444,10 +444,10 @@ uint8_t uxRxData;
 		StaticStreamBuffer_t xStreamBufferStruct;
 
 
-	    xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
-	    										   xTriggerLevelBytes,
+		xStreamBuffer = xStreamBufferCreateStatic( sizeof( ucStorageBuffer ),
+												   xTriggerLevelBytes,
 												   ucStorageBuffer,
-	                                               &xStreamBufferStruct );
+												   &xStreamBufferStruct );
 	}
 	#else
 	{

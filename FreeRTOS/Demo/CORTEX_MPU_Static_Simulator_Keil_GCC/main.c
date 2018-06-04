@@ -1048,7 +1048,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvTimerCallback( TaskHandle_t xExpiredTimer )
+static void prvTimerCallback( TimerHandle_t xExpiredTimer )
 {
 uint32_t ulCount;
 

@@ -60,7 +60,7 @@ taskEVENT_LIST_ITEM_VALUE_IN_USE definition. */
 	#define eventEVENT_BITS_CONTROL_BYTES	0xff000000UL
 #endif
 
-typedef struct xEventGroup
+typedef struct EventGroupDef_t
 {
 	EventBits_t uxEventBits;
 	List_t xTasksWaitingForBits;		/*< List of tasks waiting for a bit to be set. */
@@ -134,7 +134,7 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 			traceEVENT_GROUP_CREATE_FAILED();
 		}
 
-		return ( EventGroupHandle_t ) pxEventBits; /*lint !e9087 EventGroup_t and StaticEventGroup_t are deliberately aliased for data hiding purposes and guaranteed to have the same size and alignment requirement - checked by configASSERT(). */
+		return pxEventBits;
 	}
 
 #endif /* configSUPPORT_STATIC_ALLOCATION */
@@ -182,7 +182,7 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 			traceEVENT_GROUP_CREATE_FAILED(); /*lint !e9063 Else branch only exists to allow tracing and does not generate code if trace macros are not defined. */
 		}
 
-		return ( EventGroupHandle_t ) pxEventBits; /*lint !e9087 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
+		return pxEventBits;
 	}
 
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
@@ -191,7 +191,7 @@ static BaseType_t prvTestWaitCondition( const EventBits_t uxCurrentEventBits, co
 EventBits_t xEventGroupSync( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, const EventBits_t uxBitsToWaitFor, TickType_t xTicksToWait )
 {
 EventBits_t uxOriginalBitValue, uxReturn;
-EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t.  It is opaque outside of this file for data hiding purposes. */
+EventGroup_t *pxEventBits = xEventGroup;
 BaseType_t xAlreadyYielded;
 BaseType_t xTimeoutOccurred = pdFALSE;
 
@@ -310,7 +310,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 
 EventBits_t xEventGroupWaitBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait )
 {
-EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t.  It is opaque outside of this file for data hiding purposes. */
+EventGroup_t *pxEventBits = xEventGroup;
 EventBits_t uxReturn, uxControlBits = 0;
 BaseType_t xWaitConditionMet, xAlreadyYielded;
 BaseType_t xTimeoutOccurred = pdFALSE;
@@ -460,7 +460,7 @@ BaseType_t xTimeoutOccurred = pdFALSE;
 
 EventBits_t xEventGroupClearBits( EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToClear )
 {
-EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
+EventGroup_t *pxEventBits = xEventGroup;
 EventBits_t uxReturn;
 
 	/* Check the user is not attempting to clear the bits used by the kernel
@@ -503,7 +503,7 @@ EventBits_t uxReturn;
 EventBits_t xEventGroupGetBitsFromISR( EventGroupHandle_t xEventGroup )
 {
 UBaseType_t uxSavedInterruptStatus;
-EventGroup_t const * const pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
+EventGroup_t const * const pxEventBits = xEventGroup;
 EventBits_t uxReturn;
 
 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -522,7 +522,7 @@ ListItem_t *pxListItem, *pxNext;
 ListItem_t const *pxListEnd;
 List_t const * pxList;
 EventBits_t uxBitsToClear = 0, uxBitsWaitedFor, uxControlBits;
-EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
+EventGroup_t *pxEventBits = xEventGroup;
 BaseType_t xMatchFound = pdFALSE;
 
 	/* Check the user is not attempting to set the bits used by the kernel
@@ -612,7 +612,7 @@ BaseType_t xMatchFound = pdFALSE;
 
 void vEventGroupDelete( EventGroupHandle_t xEventGroup )
 {
-EventGroup_t *pxEventBits = ( EventGroup_t * ) xEventGroup; /*lint !e9087 !e9079 EventGroupHandle_t is a pointer to an EventGroup_t, but EventGroupHandle_t is kept opaque outside of this file for data hiding purposes. */
+EventGroup_t *pxEventBits = xEventGroup;
 const List_t *pxTasksWaitingForBits = &( pxEventBits->xTasksWaitingForBits );
 
 	vTaskSuspendAll();

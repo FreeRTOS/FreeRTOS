@@ -78,8 +78,8 @@ extern "C" {
  * \defgroup EventGroupHandle_t EventGroupHandle_t
  * \ingroup EventGroup
  */
-struct xEventGroup;
-typedef struct xEventGroup * EventGroupHandle_t;
+struct EventGroupDef_t;
+typedef struct EventGroupDef_t * EventGroupHandle_t;
 
 /*
  * The type that holds event bits always matches TickType_t - therefore the

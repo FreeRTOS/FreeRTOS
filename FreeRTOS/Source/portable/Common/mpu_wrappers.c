@@ -632,12 +632,12 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-void* MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore )
+TaskHandle_t MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore )
 {
 BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 void * xReturn;
 
-	xReturn = ( void * ) xQueueGetMutexHolder( xSemaphore );
+	xReturn = xQueueGetMutexHolder( xSemaphore );
 	vPortResetPrivilege( xRunningPrivileged );
 	return xReturn;
 }

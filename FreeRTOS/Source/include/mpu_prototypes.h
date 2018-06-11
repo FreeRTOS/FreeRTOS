@@ -93,7 +93,7 @@ QueueHandle_t MPU_xQueueCreateMutex( const uint8_t ucQueueType );
 QueueHandle_t MPU_xQueueCreateMutexStatic( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue );
 QueueHandle_t MPU_xQueueCreateCountingSemaphore( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount );
 QueueHandle_t MPU_xQueueCreateCountingSemaphoreStatic( const UBaseType_t uxMaxCount, const UBaseType_t uxInitialCount, StaticQueue_t *pxStaticQueue );
-void* MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore );
+TaskHandle_t MPU_xQueueGetMutexHolder( QueueHandle_t xSemaphore );
 BaseType_t MPU_xQueueTakeMutexRecursive( QueueHandle_t xMutex, TickType_t xTicksToWait );
 BaseType_t MPU_xQueueGiveMutexRecursive( QueueHandle_t pxMutex );
 void MPU_vQueueAddToRegistry( QueueHandle_t xQueue, const char *pcName );

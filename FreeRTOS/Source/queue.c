@@ -56,16 +56,25 @@ correct privileged Vs unprivileged linkage and placement. */
 pcTail members are used as pointers into the queue storage area.  When the
 Queue_t structure is used to represent a mutex pcHead and pcTail pointers are
 not necessary, and the pcHead pointer is set to NULL to indicate that the
-pcTail pointer actually points to the mutex holder (if any).  Map alternative
-names to the pcHead and pcTail structure members to ensure the readability of
-the code is maintained despite this dual use of two structure members.  An
-alternative implementation would be to use a union, but use of a union is
-against the coding standard (although an exception to the standard has been
-permitted where the dual use also significantly changes the type of the
-structure member). */
-#define pxMutexHolder					pcTail
+structure instead holds a pointer to the mutex holder (if any).  Map alternative
+names to the pcHead and structure member to ensure the readability of the code
+is maintained.  The QueuePointers_t and SemaphoreData_t types are used to form
+a union as their usage is mutually exclusive dependent on what the queue is
+being used for. */
 #define uxQueueType						pcHead
 #define queueQUEUE_IS_MUTEX				NULL
+
+typedef struct QueuePointers
+{
+	int8_t *pcTail;					/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
+	int8_t *pcReadFrom;				/*< Points to the last place that a queued item was read from when the structure is used as a queue. */
+} QueuePointers_t;
+
+typedef struct SemaphoreData
+{
+	TaskHandle_t xMutexHolder;		 /*< The handle of the task that holds the mutex. */
+	UBaseType_t uxRecursiveCallCount;/*< Maintains a count of the number of times a recursive mutex has been recursively 'taken' when the structure is used as a mutex. */
+} SemaphoreData_t;
 
 /* Semaphores do not actually store or copy data, so have an item size of
 zero. */
@@ -88,13 +97,12 @@ zero. */
 typedef struct QueueDef_t
 {
 	int8_t *pcHead;					/*< Points to the beginning of the queue storage area. */
-	int8_t *pcTail;					/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
 	int8_t *pcWriteTo;				/*< Points to the free next place in the storage area. */
 
-	union							/* Use of a union is an exception to the coding standard to ensure two mutually exclusive structure members don't appear simultaneously (wasting RAM). */
+	union
 	{
-		int8_t *pcReadFrom;			/*< Points to the last place that a queued item was read from when the structure is used as a queue. */
-		UBaseType_t uxRecursiveCallCount;/*< Maintains a count of the number of times a recursive mutex has been recursively 'taken' when the structure is used as a mutex. */
+		QueuePointers_t xQueue;		/*< Data required exclusively when this structure is used as a queue. */
+		SemaphoreData_t xSemaphore; /*< Data required exclusively when this structure is used as a semaphore. */
 	} u;
 
 	List_t xTasksWaitingToSend;		/*< List of tasks that are blocked waiting to post onto this queue.  Stored in priority order. */
@@ -252,10 +260,10 @@ Queue_t * const pxQueue = xQueue;
 
 	taskENTER_CRITICAL();
 	{
-		pxQueue->pcTail = pxQueue->pcHead + ( pxQueue->uxLength * pxQueue->uxItemSize );
+		pxQueue->u.xQueue.pcTail = pxQueue->pcHead + ( pxQueue->uxLength * pxQueue->uxItemSize ); /*lint !e9016 Pointer arithmetic allowed on char types, especially when it assists conveying intent. */
 		pxQueue->uxMessagesWaiting = ( UBaseType_t ) 0U;
 		pxQueue->pcWriteTo = pxQueue->pcHead;
-		pxQueue->u.pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - 1U ) * pxQueue->uxItemSize );
+		pxQueue->u.xQueue.pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - 1U ) * pxQueue->uxItemSize ); /*lint !e9016 Pointer arithmetic allowed on char types, especially when it assists conveying intent. */
 		pxQueue->cRxLock = queueUNLOCKED;
 		pxQueue->cTxLock = queueUNLOCKED;
 
@@ -392,7 +400,8 @@ Queue_t * const pxQueue = xQueue;
 		{
 			/* Jump past the queue structure to find the location of the queue
 			storage area. */
-			pucQueueStorage = ( ( uint8_t * ) pxNewQueue ) + sizeof( Queue_t );
+			pucQueueStorage = ( uint8_t * ) pxNewQueue;
+			pucQueueStorage += sizeof( Queue_t ); /*lint !e9016 Pointer arithmetic allowed on char types, especially when it assists conveying intent. */
 
 			#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			{
@@ -469,11 +478,11 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 			correctly for a generic queue, but this function is creating a
 			mutex.  Overwrite those members that need to be set differently -
 			in particular the information required for priority inheritance. */
-			pxNewQueue->pxMutexHolder = NULL;
+			pxNewQueue->u.xSemaphore.xMutexHolder = NULL;
 			pxNewQueue->uxQueueType = queueQUEUE_IS_MUTEX;
 
 			/* In case this is a recursive mutex. */
-			pxNewQueue->u.uxRecursiveCallCount = 0;
+			pxNewQueue->u.xSemaphore.uxRecursiveCallCount = 0;
 
 			traceCREATE_MUTEX( pxNewQueue );
 
@@ -527,9 +536,9 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 #if ( ( configUSE_MUTEXES == 1 ) && ( INCLUDE_xSemaphoreGetMutexHolder == 1 ) )
 
-	void* xQueueGetMutexHolder( QueueHandle_t xSemaphore )
+	TaskHandle_t xQueueGetMutexHolder( QueueHandle_t xSemaphore )
 	{
-	void *pxReturn;
+	TaskHandle_t pxReturn;
 	Queue_t * const pxSemaphore = ( Queue_t * ) xSemaphore;
 
 		/* This function is called by xSemaphoreGetMutexHolder(), and should not
@@ -541,7 +550,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 		{
 			if( pxSemaphore->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
-				pxReturn = ( void * ) pxSemaphore->pxMutexHolder;
+				pxReturn = pxSemaphore->u.xSemaphore.xMutexHolder;
 			}
 			else
 			{
@@ -558,9 +567,9 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 #if ( ( configUSE_MUTEXES == 1 ) && ( INCLUDE_xSemaphoreGetMutexHolder == 1 ) )
 
-	void* xQueueGetMutexHolderFromISR( QueueHandle_t xSemaphore )
+	TaskHandle_t xQueueGetMutexHolderFromISR( QueueHandle_t xSemaphore )
 	{
-	void *pxReturn;
+	TaskHandle_t pxReturn;
 
 		configASSERT( xSemaphore );
 
@@ -569,7 +578,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 		not required here. */
 		if( ( ( Queue_t * ) xSemaphore )->uxQueueType == queueQUEUE_IS_MUTEX )
 		{
-			pxReturn = ( void * ) ( ( Queue_t * ) xSemaphore )->pxMutexHolder;
+			pxReturn = ( ( Queue_t * ) xSemaphore )->u.xSemaphore.xMutexHolder;
 		}
 		else
 		{
@@ -591,25 +600,25 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 		configASSERT( pxMutex );
 
-		/* If this is the task that holds the mutex then pxMutexHolder will not
+		/* If this is the task that holds the mutex then xMutexHolder will not
 		change outside of this task.  If this task does not hold the mutex then
 		pxMutexHolder can never coincidentally equal the tasks handle, and as
 		this is the only condition we are interested in it does not matter if
 		pxMutexHolder is accessed simultaneously by another task.  Therefore no
 		mutual exclusion is required to test the pxMutexHolder variable. */
-		if( pxMutex->pxMutexHolder == ( void * ) xTaskGetCurrentTaskHandle() ) /*lint !e961 Not a redundant cast as TaskHandle_t is a typedef. */
+		if( pxMutex->u.xSemaphore.xMutexHolder == xTaskGetCurrentTaskHandle() )
 		{
 			traceGIVE_MUTEX_RECURSIVE( pxMutex );
 
-			/* uxRecursiveCallCount cannot be zero if pxMutexHolder is equal to
+			/* uxRecursiveCallCount cannot be zero if xMutexHolder is equal to
 			the task handle, therefore no underflow check is required.  Also,
 			uxRecursiveCallCount is only modified by the mutex holder, and as
 			there can only be one, no mutual exclusion is required to modify the
 			uxRecursiveCallCount member. */
-			( pxMutex->u.uxRecursiveCallCount )--;
+			( pxMutex->u.xSemaphore.uxRecursiveCallCount )--;
 
 			/* Has the recursive call count unwound to 0? */
-			if( pxMutex->u.uxRecursiveCallCount == ( UBaseType_t ) 0 )
+			if( pxMutex->u.xSemaphore.uxRecursiveCallCount == ( UBaseType_t ) 0 )
 			{
 				/* Return the mutex.  This will automatically unblock any other
 				task that might be waiting to access the mutex. */
@@ -651,9 +660,9 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 		traceTAKE_MUTEX_RECURSIVE( pxMutex );
 
-		if( pxMutex->pxMutexHolder == ( void * ) xTaskGetCurrentTaskHandle() ) /*lint !e961 Cast is not redundant as TaskHandle_t is a typedef. */
+		if( pxMutex->u.xSemaphore.xMutexHolder == xTaskGetCurrentTaskHandle() )
 		{
-			( pxMutex->u.uxRecursiveCallCount )++;
+			( pxMutex->u.xSemaphore.uxRecursiveCallCount )++;
 			xReturn = pdPASS;
 		}
 		else
@@ -665,7 +674,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 			before reaching here. */
 			if( xReturn != pdFAIL )
 			{
-				( pxMutex->u.uxRecursiveCallCount )++;
+				( pxMutex->u.xSemaphore.uxRecursiveCallCount )++;
 			}
 			else
 			{
@@ -1117,7 +1126,7 @@ Queue_t * const pxQueue = xQueue;
 	/* Normally a mutex would not be given from an interrupt, especially if
 	there is a mutex holder, as priority inheritance makes no sense for an
 	interrupts, only tasks. */
-	configASSERT( !( ( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX ) && ( pxQueue->pxMutexHolder != NULL ) ) );
+	configASSERT( !( ( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX ) && ( pxQueue->u.xSemaphore.xMutexHolder != NULL ) ) );
 
 	/* RTOS ports that support interrupt nesting have the concept of a maximum
 	system call (or maximum API call) interrupt priority.  Interrupts that are
@@ -1454,7 +1463,7 @@ Queue_t * const pxQueue = xQueue;
 					{
 						/* Record the information required to implement
 						priority inheritance should it become necessary. */
-						pxQueue->pxMutexHolder = ( int8_t * ) pvTaskIncrementMutexHeldCount(); /*lint !e961 Cast is not redundant as TaskHandle_t is a typedef. */
+						pxQueue->u.xSemaphore.xMutexHolder = pvTaskIncrementMutexHeldCount();
 					}
 					else
 					{
@@ -1542,7 +1551,7 @@ Queue_t * const pxQueue = xQueue;
 					{
 						taskENTER_CRITICAL();
 						{
-							xInheritanceOccurred = xTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+							xInheritanceOccurred = xTaskPriorityInherit( pxQueue->u.xSemaphore.xMutexHolder );
 						}
 						taskEXIT_CRITICAL();
 					}
@@ -1601,7 +1610,7 @@ Queue_t * const pxQueue = xQueue;
 							again, but only as low as the next highest priority
 							task that is waiting for the same mutex. */
 							uxHighestWaitingPriority = prvGetDisinheritPriorityAfterTimeout( pxQueue );
-							vTaskPriorityDisinheritAfterTimeout( ( void * ) pxQueue->pxMutexHolder, uxHighestWaitingPriority );
+							vTaskPriorityDisinheritAfterTimeout( pxQueue->u.xSemaphore.xMutexHolder, uxHighestWaitingPriority );
 						}
 						taskEXIT_CRITICAL();
 					}
@@ -1642,10 +1651,9 @@ Queue_t * const pxQueue = xQueue;
 	#endif
 
 
-	/* This function relaxes the coding standard somewhat to allow return
-	statements within the function itself.  This is done in the interest
-	of execution time efficiency. */
-
+	/*lint -save -e904  This function relaxes the coding standard somewhat to
+	allow return statements within the function itself.  This is done in the
+	interest of execution time efficiency. */
 	for( ;; )
 	{
 		taskENTER_CRITICAL();
@@ -1659,13 +1667,13 @@ Queue_t * const pxQueue = xQueue;
 				/* Remember the read position so it can be reset after the data
 				is read from the queue as this function is only peeking the
 				data, not removing it. */
-				pcOriginalReadPosition = pxQueue->u.pcReadFrom;
+				pcOriginalReadPosition = pxQueue->u.xQueue.pcReadFrom;
 
 				prvCopyDataFromQueue( pxQueue, pvBuffer );
 				traceQUEUE_PEEK( pxQueue );
 
 				/* The data is not being removed, so reset the read pointer. */
-				pxQueue->u.pcReadFrom = pcOriginalReadPosition;
+				pxQueue->u.xQueue.pcReadFrom = pcOriginalReadPosition;
 
 				/* The data is being left in the queue, so see if there are
 				any other tasks waiting for the data. */
@@ -1766,7 +1774,7 @@ Queue_t * const pxQueue = xQueue;
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
-	}
+	} /*lint -restore */
 }
 /*-----------------------------------------------------------*/
 
@@ -1897,9 +1905,9 @@ Queue_t * const pxQueue = xQueue;
 
 			/* Remember the read position so it can be reset as nothing is
 			actually being removed from the queue. */
-			pcOriginalReadPosition = pxQueue->u.pcReadFrom;
+			pcOriginalReadPosition = pxQueue->u.xQueue.pcReadFrom;
 			prvCopyDataFromQueue( pxQueue, pvBuffer );
-			pxQueue->u.pcReadFrom = pcOriginalReadPosition;
+			pxQueue->u.xQueue.pcReadFrom = pcOriginalReadPosition;
 
 			xReturn = pdPASS;
 		}
@@ -2075,8 +2083,8 @@ UBaseType_t uxMessagesWaiting;
 			if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
 				/* The mutex is no longer being held. */
-				xReturn = xTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
-				pxQueue->pxMutexHolder = NULL;
+				xReturn = xTaskPriorityDisinherit( pxQueue->u.xSemaphore.xMutexHolder );
+				pxQueue->u.xSemaphore.xMutexHolder = NULL;
 			}
 			else
 			{
@@ -2089,7 +2097,7 @@ UBaseType_t uxMessagesWaiting;
 	{
 		( void ) memcpy( ( void * ) pxQueue->pcWriteTo, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 !e9087 MISRA exception as the casts are only redundant for some ports, plus previous logic ensures a null pointer can only be passed to memcpy() if the copy size is 0.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
 		pxQueue->pcWriteTo += pxQueue->uxItemSize; /*lint !e9016 Pointer arithmetic on char types ok, especially in this use case where it is the clearest way of conveying intent. */
-		if( pxQueue->pcWriteTo >= pxQueue->pcTail ) /*lint !e946 MISRA exception justified as comparison of pointers is the cleanest solution. */
+		if( pxQueue->pcWriteTo >= pxQueue->u.xQueue.pcTail ) /*lint !e946 MISRA exception justified as comparison of pointers is the cleanest solution. */
 		{
 			pxQueue->pcWriteTo = pxQueue->pcHead;
 		}
@@ -2100,11 +2108,11 @@ UBaseType_t uxMessagesWaiting;
 	}
 	else
 	{
-		( void ) memcpy( ( void * ) pxQueue->u.pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e9087 MISRA exception as the casts are only redundant for some ports.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
-		pxQueue->u.pcReadFrom -= pxQueue->uxItemSize;
-		if( pxQueue->u.pcReadFrom < pxQueue->pcHead ) /*lint !e946 MISRA exception justified as comparison of pointers is the cleanest solution. */
+		( void ) memcpy( ( void * ) pxQueue->u.xQueue.pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e9087 !e418 MISRA exception as the casts are only redundant for some ports.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes.  Assert checks null pointer only used when length is 0. */
+		pxQueue->u.xQueue.pcReadFrom -= pxQueue->uxItemSize;
+		if( pxQueue->u.xQueue.pcReadFrom < pxQueue->pcHead ) /*lint !e946 MISRA exception justified as comparison of pointers is the cleanest solution. */
 		{
-			pxQueue->u.pcReadFrom = ( pxQueue->pcTail - pxQueue->uxItemSize );
+			pxQueue->u.xQueue.pcReadFrom = ( pxQueue->u.xQueue.pcTail - pxQueue->uxItemSize );
 		}
 		else
 		{
@@ -2142,16 +2150,16 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 {
 	if( pxQueue->uxItemSize != ( UBaseType_t ) 0 )
 	{
-		pxQueue->u.pcReadFrom += pxQueue->uxItemSize; /*lint !e9016 Pointer arithmetic on char types ok, especially in this use case where it is the clearest way of conveying intent. */
-		if( pxQueue->u.pcReadFrom >= pxQueue->pcTail ) /*lint !e946 MISRA exception justified as use of the relational operator is the cleanest solutions. */
+		pxQueue->u.xQueue.pcReadFrom += pxQueue->uxItemSize; /*lint !e9016 Pointer arithmetic on char types ok, especially in this use case where it is the clearest way of conveying intent. */
+		if( pxQueue->u.xQueue.pcReadFrom >= pxQueue->u.xQueue.pcTail ) /*lint !e946 MISRA exception justified as use of the relational operator is the cleanest solutions. */
 		{
-			pxQueue->u.pcReadFrom = pxQueue->pcHead;
+			pxQueue->u.xQueue.pcReadFrom = pxQueue->pcHead;
 		}
 		else
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
-		( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 !e9087 MISRA exception as the casts are only redundant for some ports.  Also previous logic ensures a null pointer can only be passed to memcpy() when the count is 0.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
+		( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.xQueue.pcReadFrom, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 !e9087 MISRA exception as the casts are only redundant for some ports.  Also previous logic ensures a null pointer can only be passed to memcpy() when the count is 0.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
 	}
 }
 /*-----------------------------------------------------------*/
@@ -2475,17 +2483,17 @@ Queue_t * const pxQueue = xQueue;
 			if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
 			{
 				/* Data is available from the queue. */
-				pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
-				if( pxQueue->u.pcReadFrom >= pxQueue->pcTail )
+				pxQueue->u.xQueue.pcReadFrom += pxQueue->uxItemSize;
+				if( pxQueue->u.xQueue.pcReadFrom >= pxQueue->u.xQueue.pcTail )
 				{
-					pxQueue->u.pcReadFrom = pxQueue->pcHead;
+					pxQueue->u.xQueue.pcReadFrom = pxQueue->pcHead;
 				}
 				else
 				{
 					mtCOVERAGE_TEST_MARKER();
 				}
 				--( pxQueue->uxMessagesWaiting );
-				( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+				( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.xQueue.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
 
 				xReturn = pdPASS;
 
@@ -2583,17 +2591,17 @@ Queue_t * const pxQueue = xQueue;
 		if( pxQueue->uxMessagesWaiting > ( UBaseType_t ) 0 )
 		{
 			/* Copy the data from the queue. */
-			pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
-			if( pxQueue->u.pcReadFrom >= pxQueue->pcTail )
+			pxQueue->u.xQueue.pcReadFrom += pxQueue->uxItemSize;
+			if( pxQueue->u.xQueue.pcReadFrom >= pxQueue->u.xQueue.pcTail )
 			{
-				pxQueue->u.pcReadFrom = pxQueue->pcHead;
+				pxQueue->u.xQueue.pcReadFrom = pxQueue->pcHead;
 			}
 			else
 			{
 				mtCOVERAGE_TEST_MARKER();
 			}
 			--( pxQueue->uxMessagesWaiting );
-			( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+			( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.xQueue.pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
 
 			if( ( *pxCoRoutineWoken ) == pdFALSE )
 			{

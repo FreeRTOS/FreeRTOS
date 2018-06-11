@@ -4267,7 +4267,7 @@ TCB_t *pxTCB;
 
 				/* Write the rest of the string. */
 				sprintf( pcWriteBuffer, "\t%c\t%u\t%u\t%u\r\n", cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber ); /*lint !e586 sprintf() allowed as this is compiled with many compilers and this is a utility function only - not part of the core kernel implementation. */
-				pcWriteBuffer += strlen( pcWriteBuffer ); /*lint !e9016 Pointer arithmetic ok on char pointers. */
+				pcWriteBuffer += strlen( pcWriteBuffer ); /*lint !e9016 Pointer arithmetic ok on char pointers especially as in this case where it best denotes the intent of the code. */
 			}
 
 			/* Free the array again.  NOTE!  If configSUPPORT_DYNAMIC_ALLOCATION
@@ -4389,7 +4389,7 @@ TCB_t *pxTCB;
 						#endif
 					}
 
-					pcWriteBuffer += strlen( pcWriteBuffer ); /*lint !e9016 Pointer arithmetic ok on char pointers. */
+					pcWriteBuffer += strlen( pcWriteBuffer ); /*lint !e9016 Pointer arithmetic ok on char pointers especially as in this case where it best denotes the intent of the code. */
 				}
 			}
 			else
@@ -4644,8 +4644,9 @@ TickType_t uxReturn;
 
 				default:
 					/* Should not get here if all enums are handled.
-					Artificially force an assert. */
-					configASSERT( ( volatile uint32_t ) 0 );
+					Artificially force an assert by testing a value the
+					compiler can't assume is const. */
+					configASSERT( pxTCB->ulNotifiedValue == ~0UL );
 
 					break;
 			}
@@ -4776,8 +4777,9 @@ TickType_t uxReturn;
 
 				default:
 					/* Should not get here if all enums are handled.
-					Artificially force an assert. */
-					configASSERT( ( volatile uint32_t ) 0 );
+					Artificially force an assert by testing a value the
+					compiler can't assume is const. */
+					configASSERT( pxTCB->ulNotifiedValue == ~0UL );
 					break;
 			}
 

@@ -41,11 +41,11 @@ task.h is included from an application file. */
 	#include "croutine.h"
 #endif
 
-/* Lint e961 and e750 are suppressed as a MISRA exception justified because the
-MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
-header files above, but not in this file, in order to generate the correct
-privileged Vs unprivileged linkage and placement. */
-#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
+/* Lint e9021, e961 and e750 are suppressed as a MISRA exception justified
+because the MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined
+for the header files above, but not in this file, in order to generate the
+correct privileged Vs unprivileged linkage and placement. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750 !e9021. */
 
 
 /* Constants used with the cRxLock and cTxLock structure members. */
@@ -83,9 +83,9 @@ zero. */
 /*
  * Definition of the queue used by the scheduler.
  * Items are queued by copy, not reference.  See the following link for the
- * rationale: http://www.freertos.org/Embedded-RTOS-Queues.html
+ * rationale: https://www.freertos.org/Embedded-RTOS-Queues.html
  */
-typedef struct QueueDefinition
+typedef struct QueueDef_t
 {
 	int8_t *pcHead;					/*< Points to the beginning of the queue storage area. */
 	int8_t *pcTail;					/*< Points to the byte at the end of the queue storage area.  Once more byte is allocated than necessary to store the queue items, this is used as a marker. */
@@ -112,7 +112,7 @@ typedef struct QueueDefinition
 	#endif
 
 	#if ( configUSE_QUEUE_SETS == 1 )
-		struct QueueDefinition *pxQueueSetContainer;
+		struct QueueDef_t *pxQueueSetContainer;
 	#endif
 
 	#if ( configUSE_TRACE_FACILITY == 1 )
@@ -246,7 +246,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 BaseType_t xQueueGenericReset( QueueHandle_t xQueue, BaseType_t xNewQueue )
 {
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	configASSERT( pxQueue );
 
@@ -255,7 +255,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		pxQueue->pcTail = pxQueue->pcHead + ( pxQueue->uxLength * pxQueue->uxItemSize );
 		pxQueue->uxMessagesWaiting = ( UBaseType_t ) 0U;
 		pxQueue->pcWriteTo = pxQueue->pcHead;
-		pxQueue->u.pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - ( UBaseType_t ) 1U ) * pxQueue->uxItemSize );
+		pxQueue->u.pcReadFrom = pxQueue->pcHead + ( ( pxQueue->uxLength - 1U ) * pxQueue->uxItemSize );
 		pxQueue->cRxLock = queueUNLOCKED;
 		pxQueue->cTxLock = queueUNLOCKED;
 
@@ -301,7 +301,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 
 	QueueHandle_t xQueueGenericCreateStatic( const UBaseType_t uxQueueLength, const UBaseType_t uxItemSize, uint8_t *pucQueueStorage, StaticQueue_t *pxStaticQueue, const uint8_t ucQueueType )
 	{
-	Queue_t *pxNewQueue = NULL;
+	Queue_t *pxNewQueue;
 
 		configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
 
@@ -321,13 +321,14 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			the real queue and semaphore structures. */
 			volatile size_t xSize = sizeof( StaticQueue_t );
 			configASSERT( xSize == sizeof( Queue_t ) );
+			( void ) xSize; /* Keeps lint quiet when configASSERT() is not defined. */
 		}
 		#endif /* configASSERT_DEFINED */
 
 		/* The address of a statically allocated queue was passed in, use it.
 		The address of a statically allocated storage area was also passed in
 		but is already set. */
-		pxNewQueue = ( Queue_t * ) pxStaticQueue; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+		pxNewQueue = ( Queue_t * ) pxStaticQueue; /*lint !e740 !e9087 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
 
 		if( pxNewQueue != NULL )
 		{
@@ -376,7 +377,16 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 		}
 
-		pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) + xQueueSizeInBytes );
+		/* Allocate the queue and storage area.  Justification for MISRA
+		deviation as follows:  pvPortMalloc() always ensures returned memory
+		blocks are aligned per the requirements of the MCU stack.  In this case
+		pvPortMalloc() must return a pointer that is guaranteed to meet the
+		alignment requirements of the Queue_t structure - which in this case
+		is an int8_t *.  Therefore, whenever the stack alignment requirements
+		are greater than or equal to the pointer to char requirements the cast
+		is safe.  In other cases alignment requirements are not strict (one or
+		two bytes). */
+		pxNewQueue = ( Queue_t * ) pvPortMalloc( sizeof( Queue_t ) + xQueueSizeInBytes ); /*lint !e9087 !e9079 see comment above. */
 
 		if( pxNewQueue != NULL )
 		{
@@ -483,13 +493,13 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 	QueueHandle_t xQueueCreateMutex( const uint8_t ucQueueType )
 	{
-	Queue_t *pxNewQueue;
+	QueueHandle_t xNewQueue;
 	const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
 
-		pxNewQueue = ( Queue_t * ) xQueueGenericCreate( uxMutexLength, uxMutexSize, ucQueueType );
-		prvInitialiseMutex( pxNewQueue );
+		xNewQueue = xQueueGenericCreate( uxMutexLength, uxMutexSize, ucQueueType );
+		prvInitialiseMutex( ( Queue_t * ) xNewQueue );
 
-		return pxNewQueue;
+		return xNewQueue;
 	}
 
 #endif /* configUSE_MUTEXES */
@@ -499,17 +509,17 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 
 	QueueHandle_t xQueueCreateMutexStatic( const uint8_t ucQueueType, StaticQueue_t *pxStaticQueue )
 	{
-	Queue_t *pxNewQueue;
+	QueueHandle_t xNewQueue;
 	const UBaseType_t uxMutexLength = ( UBaseType_t ) 1, uxMutexSize = ( UBaseType_t ) 0;
 
 		/* Prevent compiler warnings about unused parameters if
 		configUSE_TRACE_FACILITY does not equal 1. */
 		( void ) ucQueueType;
 
-		pxNewQueue = ( Queue_t * ) xQueueGenericCreateStatic( uxMutexLength, uxMutexSize, NULL, pxStaticQueue, ucQueueType );
-		prvInitialiseMutex( pxNewQueue );
+		xNewQueue = xQueueGenericCreateStatic( uxMutexLength, uxMutexSize, NULL, pxStaticQueue, ucQueueType );
+		prvInitialiseMutex( ( Queue_t * ) xNewQueue );
 
-		return pxNewQueue;
+		return xNewQueue;
 	}
 
 #endif /* configUSE_MUTEXES */
@@ -520,6 +530,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 	void* xQueueGetMutexHolder( QueueHandle_t xSemaphore )
 	{
 	void *pxReturn;
+	Queue_t * const pxSemaphore = ( Queue_t * ) xSemaphore;
 
 		/* This function is called by xSemaphoreGetMutexHolder(), and should not
 		be called directly.  Note:  This is a good way of determining if the
@@ -528,9 +539,9 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 		following critical section exiting and the function returning. */
 		taskENTER_CRITICAL();
 		{
-			if( ( ( Queue_t * ) xSemaphore )->uxQueueType == queueQUEUE_IS_MUTEX )
+			if( pxSemaphore->uxQueueType == queueQUEUE_IS_MUTEX )
 			{
-				pxReturn = ( void * ) ( ( Queue_t * ) xSemaphore )->pxMutexHolder;
+				pxReturn = ( void * ) pxSemaphore->pxMutexHolder;
 			}
 			else
 			{
@@ -728,7 +739,7 @@ BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQ
 {
 BaseType_t xEntryTimeSet = pdFALSE, xYieldRequired;
 TimeOut_t xTimeOut;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
@@ -740,9 +751,9 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	#endif
 
 
-	/* This function relaxes the coding standard somewhat to allow return
-	statements within the function itself.  This is done in the interest
-	of execution time efficiency. */
+	/*lint -save -e904 This function relaxes the coding standard somewhat to
+	allow return statements within the function itself.  This is done in the
+	interest of execution time efficiency. */
 	for( ;; )
 	{
 		taskENTER_CRITICAL();
@@ -930,7 +941,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 			traceQUEUE_SEND_FAILED( pxQueue );
 			return errQUEUE_FULL;
 		}
-	}
+	} /*lint -restore */
 }
 /*-----------------------------------------------------------*/
 
@@ -938,7 +949,7 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue, const void * const pv
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
@@ -1089,7 +1100,7 @@ BaseType_t xQueueGiveFromISR( QueueHandle_t xQueue, BaseType_t * const pxHigherP
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	/* Similar to xQueueGenericSendFromISR() but used with semaphores where the
 	item size is 0.  Don't directly wake a task that was blocked on a queue
@@ -1254,7 +1265,7 @@ BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	/* Check the pointer is not NULL. */
 	configASSERT( ( pxQueue ) );
@@ -1271,10 +1282,9 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	#endif
 
 
-	/* This function relaxes the coding standard somewhat to allow return
-	statements within the function itself.  This is done in the interest
-	of execution time efficiency. */
-
+	/*lint -save -e904  This function relaxes the coding standard somewhat to
+	allow return statements within the function itself.  This is done in the
+	interest of execution time efficiency. */
 	for( ;; )
 	{
 		taskENTER_CRITICAL();
@@ -1388,7 +1398,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
-	}
+	} /*lint -restore */
 }
 /*-----------------------------------------------------------*/
 
@@ -1396,7 +1406,7 @@ BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait )
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 #if( configUSE_MUTEXES == 1 )
 	BaseType_t xInheritanceOccurred = pdFALSE;
@@ -1417,10 +1427,9 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 	#endif
 
 
-	/* This function relaxes the coding standard somewhat to allow return
+	/*lint -save -e904 This function relaxes the coding standard somewhat to allow return
 	statements within the function itself.  This is done in the interest
 	of execution time efficiency. */
-
 	for( ;; )
 	{
 		taskENTER_CRITICAL();
@@ -1607,7 +1616,7 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
-	}
+	} /*lint -restore */
 }
 /*-----------------------------------------------------------*/
 
@@ -1616,7 +1625,7 @@ BaseType_t xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t x
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
 int8_t *pcOriginalReadPosition;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	/* Check the pointer is not NULL. */
 	configASSERT( ( pxQueue ) );
@@ -1765,7 +1774,7 @@ BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue, void * const pvBuffer, Ba
 {
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
@@ -1857,7 +1866,7 @@ BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,  void * const pvBuffer )
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
 int8_t *pcOriginalReadPosition;
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	configASSERT( pxQueue );
 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
@@ -1925,9 +1934,8 @@ UBaseType_t uxReturn;
 UBaseType_t uxQueueSpacesAvailable( const QueueHandle_t xQueue )
 {
 UBaseType_t uxReturn;
-Queue_t *pxQueue;
+Queue_t * const pxQueue = xQueue;
 
-	pxQueue = ( Queue_t * ) xQueue;
 	configASSERT( pxQueue );
 
 	taskENTER_CRITICAL();
@@ -1943,10 +1951,10 @@ Queue_t *pxQueue;
 UBaseType_t uxQueueMessagesWaitingFromISR( const QueueHandle_t xQueue )
 {
 UBaseType_t uxReturn;
+Queue_t * const pxQueue = xQueue;
 
-	configASSERT( xQueue );
-
-	uxReturn = ( ( Queue_t * ) xQueue )->uxMessagesWaiting;
+	configASSERT( pxQueue );
+	uxReturn = pxQueue->uxMessagesWaiting;
 
 	return uxReturn;
 } /*lint !e818 Pointer cannot be declared const as xQueue is a typedef not pointer. */
@@ -1954,7 +1962,7 @@ UBaseType_t uxReturn;
 
 void vQueueDelete( QueueHandle_t xQueue )
 {
-Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+Queue_t * const pxQueue = xQueue;
 
 	configASSERT( pxQueue );
 	traceQUEUE_DELETE( pxQueue );
@@ -2036,9 +2044,9 @@ Queue_t * const pxQueue = ( Queue_t * ) xQueue;
 		other tasks that are waiting for the same mutex.  For this purpose,
 		return the priority of the highest priority task that is waiting for the
 		mutex. */
-		if( listCURRENT_LIST_LENGTH( &( pxQueue->xTasksWaitingToReceive ) ) > 0 )
+		if( listCURRENT_LIST_LENGTH( &( pxQueue->xTasksWaitingToReceive ) ) > 0U )
 		{
-			uxHighestPriorityOfWaitingTasks = configMAX_PRIORITIES - listGET_ITEM_VALUE_OF_HEAD_ENTRY( &( pxQueue->xTasksWaitingToReceive ) );
+			uxHighestPriorityOfWaitingTasks = ( UBaseType_t ) configMAX_PRIORITIES - ( UBaseType_t ) listGET_ITEM_VALUE_OF_HEAD_ENTRY( &( pxQueue->xTasksWaitingToReceive ) );
 		}
 		else
 		{
@@ -2079,8 +2087,8 @@ UBaseType_t uxMessagesWaiting;
 	}
 	else if( xPosition == queueSEND_TO_BACK )
 	{
-		( void ) memcpy( ( void * ) pxQueue->pcWriteTo, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 MISRA exception as the casts are only redundant for some ports, plus previous logic ensures a null pointer can only be passed to memcpy() if the copy size is 0. */
-		pxQueue->pcWriteTo += pxQueue->uxItemSize;
+		( void ) memcpy( ( void * ) pxQueue->pcWriteTo, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 !e9087 MISRA exception as the casts are only redundant for some ports, plus previous logic ensures a null pointer can only be passed to memcpy() if the copy size is 0.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
+		pxQueue->pcWriteTo += pxQueue->uxItemSize; /*lint !e9016 Pointer arithmetic on char types ok, especially in this use case where it is the clearest way of conveying intent. */
 		if( pxQueue->pcWriteTo >= pxQueue->pcTail ) /*lint !e946 MISRA exception justified as comparison of pointers is the cleanest solution. */
 		{
 			pxQueue->pcWriteTo = pxQueue->pcHead;
@@ -2092,7 +2100,7 @@ UBaseType_t uxMessagesWaiting;
 	}
 	else
 	{
-		( void ) memcpy( ( void * ) pxQueue->u.pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+		( void ) memcpy( ( void * ) pxQueue->u.pcReadFrom, pvItemToQueue, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e9087 MISRA exception as the casts are only redundant for some ports.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
 		pxQueue->u.pcReadFrom -= pxQueue->uxItemSize;
 		if( pxQueue->u.pcReadFrom < pxQueue->pcHead ) /*lint !e946 MISRA exception justified as comparison of pointers is the cleanest solution. */
 		{
@@ -2134,7 +2142,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 {
 	if( pxQueue->uxItemSize != ( UBaseType_t ) 0 )
 	{
-		pxQueue->u.pcReadFrom += pxQueue->uxItemSize;
+		pxQueue->u.pcReadFrom += pxQueue->uxItemSize; /*lint !e9016 Pointer arithmetic on char types ok, especially in this use case where it is the clearest way of conveying intent. */
 		if( pxQueue->u.pcReadFrom >= pxQueue->pcTail ) /*lint !e946 MISRA exception justified as use of the relational operator is the cleanest solutions. */
 		{
 			pxQueue->u.pcReadFrom = pxQueue->pcHead;
@@ -2143,7 +2151,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
-		( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 MISRA exception as the casts are only redundant for some ports.  Also previous logic ensures a null pointer can only be passed to memcpy() when the count is 0. */
+		( void ) memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->u.pcReadFrom, ( size_t ) pxQueue->uxItemSize ); /*lint !e961 !e418 !e9087 MISRA exception as the casts are only redundant for some ports.  Also previous logic ensures a null pointer can only be passed to memcpy() when the count is 0.  Cast to void required by function signature and safe as no alignment requirement and copy length specified in bytes. */
 	}
 }
 /*-----------------------------------------------------------*/
@@ -2292,9 +2300,10 @@ BaseType_t xReturn;
 BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue )
 {
 BaseType_t xReturn;
+Queue_t * const pxQueue = xQueue;
 
-	configASSERT( xQueue );
-	if( ( ( Queue_t * ) xQueue )->uxMessagesWaiting == ( UBaseType_t ) 0 )
+	configASSERT( pxQueue );
+	if( pxQueue->uxMessagesWaiting == ( UBaseType_t ) 0 )
 	{
 		xReturn = pdTRUE;
 	}
@@ -2331,9 +2340,10 @@ BaseType_t xReturn;
 BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
 {
 BaseType_t xReturn;
+Queue_t * const pxQueue = xQueue;
 
-	configASSERT( xQueue );
-	if( ( ( Queue_t * ) xQueue )->uxMessagesWaiting == ( ( Queue_t * ) xQueue )->uxLength )
+	configASSERT( pxQueue );
+	if( pxQueue->uxMessagesWaiting == pxQueue->uxLength )
 	{
 		xReturn = pdTRUE;
 	}
@@ -2351,7 +2361,7 @@ BaseType_t xReturn;
 	BaseType_t xQueueCRSend( QueueHandle_t xQueue, const void *pvItemToQueue, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
-	Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+	Queue_t * const pxQueue = xQueue;
 
 		/* If the queue is already full we may have to block.  A critical section
 		is required to prevent an interrupt removing something from the queue
@@ -2428,7 +2438,7 @@ BaseType_t xReturn;
 	BaseType_t xQueueCRReceive( QueueHandle_t xQueue, void *pvBuffer, TickType_t xTicksToWait )
 	{
 	BaseType_t xReturn;
-	Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+	Queue_t * const pxQueue = xQueue;
 
 		/* If the queue is already empty we may have to block.  A critical section
 		is required to prevent an interrupt adding something to the queue
@@ -2517,7 +2527,7 @@ BaseType_t xReturn;
 
 	BaseType_t xQueueCRSendFromISR( QueueHandle_t xQueue, const void *pvItemToQueue, BaseType_t xCoRoutinePreviouslyWoken )
 	{
-	Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+	Queue_t * const pxQueue = xQueue;
 
 		/* Cannot block within an ISR so if there is no space on the queue then
 		exit without doing anything. */
@@ -2566,7 +2576,7 @@ BaseType_t xReturn;
 	BaseType_t xQueueCRReceiveFromISR( QueueHandle_t xQueue, void *pvBuffer, BaseType_t *pxCoRoutineWoken )
 	{
 	BaseType_t xReturn;
-	Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+	Queue_t * const pxQueue = xQueue;
 
 		/* We cannot block from an ISR, so check there is data available. If
 		not then just leave without doing anything. */
@@ -2714,7 +2724,7 @@ BaseType_t xReturn;
 
 	void vQueueWaitForMessageRestricted( QueueHandle_t xQueue, TickType_t xTicksToWait, const BaseType_t xWaitIndefinitely )
 	{
-	Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+	Queue_t * const pxQueue = xQueue;
 
 		/* This function should not be called by application code hence the
 		'Restricted' in its name.  It is not part of the public API.  It is

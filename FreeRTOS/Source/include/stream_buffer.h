@@ -61,7 +61,8 @@ extern "C" {
  * then be used as a parameter to xStreamBufferSend(), xStreamBufferReceive(),
  * etc.
  */
-typedef void * StreamBufferHandle_t;
+struct StreamBufferDef_t;
+typedef struct StreamBufferDef_t * StreamBufferHandle_t;
 
 
 /**

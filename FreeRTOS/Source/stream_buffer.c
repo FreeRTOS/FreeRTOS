@@ -367,7 +367,7 @@ StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
 
 BaseType_t xStreamBufferReset( StreamBufferHandle_t xStreamBuffer )
 {
-StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
+StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 BaseType_t xReturn = pdFAIL, xIsMessageBuffer;
 
 #if( configUSE_TRACE_FACILITY == 1 )

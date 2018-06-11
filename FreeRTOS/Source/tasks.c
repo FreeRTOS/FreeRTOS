@@ -2824,7 +2824,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 		}
 		else
 		{
-			xTCB = ( TCB_t * ) xTask;
+			xTCB = xTask;
 		}
 
 		/* Save the hook function in the TCB.  A critical section is required as
@@ -2851,7 +2851,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 		/* If xTask is NULL then we are calling our own task hook. */
 		if( xTask == NULL )
 		{
-			xTCB = ( TCB_t * ) pxCurrentTCB;
+			xTCB = pxCurrentTCB;
 		}
 		else
 		{
@@ -3209,7 +3209,7 @@ void vTaskMissedYield( void )
 
 		if( xTask != NULL )
 		{
-			pxTCB = ( TCB_t * ) xTask;
+			pxTCB = xTask;
 			uxReturn = pxTCB->uxTaskNumber;
 		}
 		else
@@ -3231,7 +3231,7 @@ void vTaskMissedYield( void )
 
 		if( xTask != NULL )
 		{
-			pxTCB = ( TCB_t * ) xTask;
+			pxTCB = xTask;
 			pxTCB->uxTaskNumber = uxHandle;
 		}
 	}
@@ -4598,7 +4598,7 @@ TickType_t uxReturn;
 	uint8_t ucOriginalNotifyState;
 
 		configASSERT( xTaskToNotify );
-		pxTCB = ( TCB_t * ) xTaskToNotify;
+		pxTCB = xTaskToNotify;
 
 		taskENTER_CRITICAL();
 		{
@@ -4732,7 +4732,7 @@ TickType_t uxReturn;
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-		pxTCB = ( TCB_t * ) xTaskToNotify;
+		pxTCB = xTaskToNotify;
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
@@ -4860,7 +4860,7 @@ TickType_t uxReturn;
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
-		pxTCB = ( TCB_t * ) xTaskToNotify;
+		pxTCB = xTaskToNotify;
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{

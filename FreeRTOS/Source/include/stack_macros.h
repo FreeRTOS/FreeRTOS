@@ -82,10 +82,10 @@
 		const uint32_t * const pulStack = ( uint32_t * ) pxCurrentTCB->pxStack;							\
 		const uint32_t ulCheckValue = ( uint32_t ) 0xa5a5a5a5;											\
 																										\
-		if( ( pulStack[ 0 ] != ulCheckValue ) ||												\
-			( pulStack[ 1 ] != ulCheckValue ) ||												\
-			( pulStack[ 2 ] != ulCheckValue ) ||												\
-			( pulStack[ 3 ] != ulCheckValue ) )												\
+		if( ( pulStack[ 0 ] != ulCheckValue ) ||														\
+			( pulStack[ 1 ] != ulCheckValue ) ||														\
+			( pulStack[ 2 ] != ulCheckValue ) ||														\
+			( pulStack[ 3 ] != ulCheckValue ) )															\
 		{																								\
 			vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB->pcTaskName );	\
 		}																								\

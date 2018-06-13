@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.1
+ * FreeRTOS+TCP V2.0.3
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
+ * http://www.FreeRTOS.org
  */
 
 /*
@@ -901,7 +899,7 @@ NetworkBufferDescriptor_t xTempBuffer;
 		{
 			/* calculate the IP header checksum, in case the driver won't do that. */
 			pxIPHeader->usHeaderChecksum = 0x00u;
-			pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0u, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
+			pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0UL, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
 			pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
 
 			/* calculate the TCP checksum for an outgoing packet. */
@@ -1026,7 +1024,7 @@ BaseType_t xReturn = pdTRUE;
 		default:
 			/* Count the number of times it couldn't find the ARP address. */
 			pxSocket->u.xTCP.ucRepCount++;
-	
+
 			FreeRTOS_debug_printf( ( "ARP for %lxip (using %lxip): rc=%d %02X:%02X:%02X %02X:%02X:%02X\n",
 				pxSocket->u.xTCP.ulRemoteIP,
 				FreeRTOS_htonl( ulRemoteIP ),
@@ -1037,10 +1035,10 @@ BaseType_t xReturn = pdTRUE;
 				xEthAddress.ucBytes[ 3 ],
 				xEthAddress.ucBytes[ 4 ],
 				xEthAddress.ucBytes[ 5 ] ) );
-	
+
 			/* And issue a (new) ARP request */
 			FreeRTOS_OutputARPRequest( ulRemoteIP );
-	
+
 			xReturn = pdFALSE;
 			break;
 	}

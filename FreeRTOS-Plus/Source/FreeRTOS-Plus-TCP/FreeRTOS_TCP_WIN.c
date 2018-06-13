@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.1
+ * FreeRTOS+TCP V2.0.3
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
+ * http://www.FreeRTOS.org
  */
 
 /*
@@ -790,16 +788,23 @@ const int32_t l500ms = 500;
 				{
 					ulSavedSequenceNumber = ulCurrentSequenceNumber;
 
-					/* See if (part of) this segment has been stored already,
-					but this rarely happens. */
-					pxFound = xTCPWindowRxConfirm( pxWindow, ulSequenceNumber, ulLength );
-					if( pxFound != NULL )
+					/* Clean up all sequence received between ulSequenceNumber 
+					and ulSequenceNumber + ulLength since they are duplicated.
+					If the server is forced to retransmit packets several time 
+					in a row it might send a batch of concatenated packet for 
+					speed.  So we cannot rely on the packets between 
+					ulSequenceNumber and ulSequenceNumber + ulLength to be 
+					sequential and it is better to just clean them out. */
+					do
 					{
-						ulCurrentSequenceNumber = pxFound->ulSequenceNumber + ( ( uint32_t ) pxFound->lDataLength );
+						pxFound = xTCPWindowRxConfirm( pxWindow, ulSequenceNumber, ulLength );
 
-						/* Remove it because it will be passed to user directly. */
-						vTCPWindowFree( pxFound );
-					}
+						if ( pxFound != NULL )
+						{
+							/* Remove it because it will be passed to user directly. */
+							vTCPWindowFree( pxFound );
+						}
+					} while ( pxFound );
 
 					/*  Check for following segments that are already in the
 					queue and increment ulCurrentSequenceNumber. */

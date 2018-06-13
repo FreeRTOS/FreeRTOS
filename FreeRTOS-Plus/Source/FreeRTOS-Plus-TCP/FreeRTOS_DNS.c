@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.1
+ * FreeRTOS+TCP V2.0.3
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
+ * http://www.FreeRTOS.org
  */
 
 /* Standard includes. */
@@ -465,7 +463,7 @@ struct freertos_sockaddr xAddress;
 Socket_t xDNSSocket;
 uint32_t ulIPAddress = 0UL;
 uint8_t *pucUDPPayloadBuffer;
-static uint32_t ulAddressLength;
+uint32_t ulAddressLength = sizeof( struct freertos_sockaddr );
 BaseType_t xAttempt;
 int32_t lBytes;
 size_t xPayloadLength, xExpectedPayloadLength;
@@ -1069,7 +1067,7 @@ uint16_t x, usDataLength, usQuestions;
 
 static Socket_t prvCreateDNSSocket( void )
 {
-static Socket_t xSocket = NULL;
+Socket_t xSocket = NULL;
 struct freertos_sockaddr xAddress;
 BaseType_t xReturn;
 TickType_t xTimeoutTime = pdMS_TO_TICKS( 200 );

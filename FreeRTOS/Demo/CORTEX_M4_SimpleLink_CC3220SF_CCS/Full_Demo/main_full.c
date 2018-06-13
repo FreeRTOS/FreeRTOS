@@ -191,7 +191,7 @@ void main_full( void )
 	vStartTaskNotifyTask();
 	vStartInterruptSemaphoreTasks();
 	vStartStreamBufferTasks();
-	vStartMessageBufferTasks();
+	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 
 	/* Create the register check tasks, as described at the top of this	file */
 	xTaskCreate( prvRegTestTaskEntry1, "Reg1", configMINIMAL_STACK_SIZE, mainREG_TEST_TASK_1_PARAMETER, tskIDLE_PRIORITY, NULL );

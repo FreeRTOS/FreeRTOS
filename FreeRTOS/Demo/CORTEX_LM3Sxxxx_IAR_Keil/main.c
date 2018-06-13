@@ -220,7 +220,7 @@ int main( void )
 	vStartQueuePeekTasks();
 	vStartQueueSetTasks();
 	vStartEventGroupTasks();
-	vStartMessageBufferTasks();
+	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 	vStartStreamBufferTasks();
 
 	/* Exclude some tasks if using the kickstart version to ensure we stay within
@@ -244,8 +244,8 @@ int main( void )
 	or not the correct/expected number of tasks are running at any given time. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
-	/* Uncomment the following line to configure the high frequency interrupt 
-	used to measure the interrupt jitter time. 
+	/* Uncomment the following line to configure the high frequency interrupt
+	used to measure the interrupt jitter time.
 	vSetupHighFrequencyTimer(); */
 
 	/* Start the scheduler. */
@@ -497,7 +497,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
 function then they must be declared static - otherwise they will be allocated on
 the stack and so not exists after this function exits. */
 static StaticTask_t xTimerTaskTCB;
-static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];	
+static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 	/* Pass out a pointer to the StaticTask_t structure in which the Timer
 	task's state will be stored. */

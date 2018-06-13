@@ -211,10 +211,10 @@ int main_full( void )
 	xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
-	vStartMessageBufferTasks();
+	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 	vStartStreamBufferTasks();
 	vStartStreamBufferInterruptDemo();
-	vStartMessageBufferAMPTasks();
+	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{

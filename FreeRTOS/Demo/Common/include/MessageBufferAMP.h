@@ -28,7 +28,7 @@
 #ifndef MESSAGE_BUFFER_AMP_H
 #define MESSAGE_BUFFER_AMP_H
 
-void vStartMessageBufferAMPTasks( void );
+void vStartMessageBufferAMPTasks( configSTACK_DEPTH_TYPE xStackSize );
 BaseType_t xAreMessageBufferAMPTasksStillRunning( void );
 void vGenerateCoreBInterrupt( void * xUpdatedMessageBuffer );
 

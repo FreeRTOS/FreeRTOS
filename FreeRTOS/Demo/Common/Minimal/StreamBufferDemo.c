@@ -652,7 +652,7 @@ BaseType_t xNonBlockingReceiveError = pdFALSE;
 
 	static void prvReceiverTask( void *pvParameters )
 	{
-	StreamBufferHandle_t * const pxStreamBuffer = ( StreamBufferHandle_t * ) pvParameters;
+	StreamBufferHandle_t const pxStreamBuffer = ( StreamBufferHandle_t ) pvParameters;
 	char cRxString[ 12 ]; /* Large enough to hold a 32-bit number in ASCII. */
 	const TickType_t xTicksToWait = pdMS_TO_TICKS( 5UL );
 	const size_t xStringLength = strlen( pc55ByteString );

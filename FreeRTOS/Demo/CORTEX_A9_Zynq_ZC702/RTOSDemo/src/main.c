@@ -76,6 +76,8 @@
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
 #include "IntSemTest.h"
+#include "StreamBufferInterrupt.h"
+#include "StreamBufferDemo.h"
 
 /* Xilinx includes. */
 #include "platform.h"
@@ -292,6 +294,14 @@ void vApplicationTickHook( void )
 
 		/* Use mutexes from interrupts. */
 		vInterruptSemaphorePeriodicTest();
+
+		/* Writes to stream buffer byte by byte to test the stream buffer trigger
+		level functionality. */
+		vPeriodicStreamBufferProcessing();
+
+		/* Writes a string to a string buffer four bytes at a time to demonstrate
+		a stream being sent from an interrupt to a task. */
+		vBasicStreamBufferSendFromISR();
 
 		/* Test flop alignment in interrupts - calling printf from an interrupt
 		is BAD! */

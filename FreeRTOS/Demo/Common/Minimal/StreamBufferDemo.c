@@ -40,6 +40,9 @@
 /* The number of bytes of storage in the stream buffers used in this test. */
 #define sbSTREAM_BUFFER_LENGTH_BYTES	( ( size_t ) 30 )
 
+/* Stream buffer length one. */
+#define sbSTREAM_BUFFER_LENGTH_ONE		( ( size_t ) 1 )
+
 /* Start and end ASCII characters used in data sent to the buffers. */
 #define sbASCII_SPACE					32
 #define sbASCII_TILDA					126
@@ -768,6 +771,51 @@ EchoStreamBuffers_t *pxStreamBuffers = ( EchoStreamBuffers_t * ) pvParameters;
 		xTempStreamBuffer = xStreamBufferCreate( sbSTREAM_BUFFER_LENGTH_BYTES, sbTRIGGER_LEVEL_1 );
 		prvSingleTaskTests( xTempStreamBuffer );
 		vStreamBufferDelete( xTempStreamBuffer );
+
+		/* The following are tests for a stream buffer of size one. */
+		/* Create a buffer of size one. */
+		xTempStreamBuffer = xStreamBufferCreate( sbSTREAM_BUFFER_LENGTH_ONE, sbTRIGGER_LEVEL_1 );
+		/* Ensure that the buffer was created successfully. */
+		configASSERT( xTempStreamBuffer );
+
+		/* Send one byte to the buffer. */
+		ux = xStreamBufferSend( xTempStreamBuffer, ( void * ) pcStringToSend, ( size_t ) 1, sbDONT_BLOCK );
+		/* Ensure that the byte was sent successfully. */
+		configASSERT( ux == 1 );
+		/* Try sending another byte to the buffer. */
+		ux = xStreamBufferSend( xTempStreamBuffer, ( void * ) pcStringToSend, ( size_t ) 1, sbDONT_BLOCK );
+		/* Make sure that send failed as the buffer is full. */
+		configASSERT( ux == 0 );
+
+		/* Receive one byte from the buffer. */
+		memset( pcStringReceived, 0x00, sbSTREAM_BUFFER_LENGTH_BYTES );
+		ux = xStreamBufferReceive( xTempStreamBuffer, ( void * ) pcStringReceived, ( size_t ) 1, sbDONT_BLOCK );
+		/* Ensure that the receive was successful. */
+		configASSERT( ux == 1 );
+		/* Ensure that the correct data was received. */
+		configASSERT( pcStringToSend[ 0 ] == pcStringReceived[ 0 ] );
+		/* Try receiving another byte from the buffer. */
+		ux = xStreamBufferReceive( xTempStreamBuffer, ( void * ) pcStringReceived, ( size_t ) 1, sbDONT_BLOCK );
+		/* Ensure that the receive failed as the buffer is empty. */
+		configASSERT( ux == 0 );
+
+		/* Try sending two bytes to the buffer. Since the size of the
+		 * buffer is one, we must not be able to send more than one. */
+		ux = xStreamBufferSend( xTempStreamBuffer, ( void * ) pcStringToSend, ( size_t ) 2, sbDONT_BLOCK );
+		/* Ensure that only one byte was sent. */
+		configASSERT( ux == 1 );
+
+		/* Try receiving two bytes from the buffer. Since the size of the
+		 * buffer is one, we must not be able to get more than one. */
+		memset( pcStringReceived, 0x00, sbSTREAM_BUFFER_LENGTH_BYTES );
+		ux = xStreamBufferReceive( xTempStreamBuffer, ( void * ) pcStringReceived, ( size_t ) 2, sbDONT_BLOCK );
+		/* Ensure that only one byte was received. */
+		configASSERT( ux == 1 );
+		/* Ensure that the correct data was received. */
+		configASSERT( pcStringToSend[ 0 ] == pcStringReceived[ 0 ] );
+
+		/* Delete the buffer. */
+		vStreamBufferDelete( xTempStreamBuffer );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -822,9 +870,9 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 350UL );
 		memset( pcReceivedString, 0x00, sbSTREAM_BUFFER_LENGTH_BYTES );
 
 		/* Has any data been sent by the client? */
-		xReceivedLength = xStreamBufferReceive( xStreamBuffers.xEchoClientBuffer, ( void * ) pcReceivedString, sbSTREAM_BUFFER_LENGTH_BYTES, xTicksToBlock );
+		xReceivedLength = xStreamBufferReceive( xStreamBuffers.xEchoClientBuffer, ( void * ) pcReceivedString, sbSTREAM_BUFFER_LENGTH_BYTES, portMAX_DELAY );
 
-		/* Should always receive data as a delay was used. */
+		/* Should always receive data as max delay was used. */
 		prvCheckExpectedState( xReceivedLength > 0 );
 
 		/* Echo the received data back to the client. */

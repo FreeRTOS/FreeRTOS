@@ -224,7 +224,14 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 		(that is, it will hold discrete messages with a little meta data that
 		says how big the next message is) check the buffer will be large enough
 		to hold at least one message. */
-		configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
+		if( xIsMessageBuffer == pdTRUE )
+		{
+			configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
+		}
+		else
+		{
+			configASSERT( xBufferSizeBytes > 0 );
+		}
 		configASSERT( xTriggerLevelBytes <= xBufferSizeBytes );
 
 		/* A trigger level of 0 would cause a waiting task to unblock even when

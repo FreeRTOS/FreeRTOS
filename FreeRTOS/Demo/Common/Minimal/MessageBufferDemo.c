@@ -783,9 +783,9 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 250UL );
 		memset( pcReceivedString, 0x00, mbMESSAGE_BUFFER_LENGTH_BYTES );
 
 		/* Has any data been sent by the client? */
-		xReceivedLength = xMessageBufferReceive( xMessageBuffers.xEchoClientBuffer, ( void * ) pcReceivedString, mbMESSAGE_BUFFER_LENGTH_BYTES, xTicksToBlock );
+		xReceivedLength = xMessageBufferReceive( xMessageBuffers.xEchoClientBuffer, ( void * ) pcReceivedString, mbMESSAGE_BUFFER_LENGTH_BYTES, portMAX_DELAY );
 
-		/* Should always receive data as a delay was used. */
+		/* Should always receive data as max delay was used. */
 		configASSERT( xReceivedLength > 0 );
 
 		/* Echo the received data back to the client. */

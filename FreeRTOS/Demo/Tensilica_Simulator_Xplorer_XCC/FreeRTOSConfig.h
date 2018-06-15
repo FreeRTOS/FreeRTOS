@@ -137,10 +137,10 @@
 #endif
 
 #define configMAX_TASK_NAME_LEN			( 8 )
-#define configUSE_TRACE_FACILITY		1			/* Used by vTaskList in main.c */
+#define configUSE_TRACE_FACILITY		0		/* Used by vTaskList in main.c */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	0	/* Used by vTaskList in main.c */
-#define configUSE_TRACE_FACILITY_2      0			/* Provided by Xtensa port patch */
-#define configBENCHMARK					0			/* Provided by Xtensa port patch */
+#define configUSE_TRACE_FACILITY_2      0		/* Provided by Xtensa port patch */
+#define configBENCHMARK					0		/* Provided by Xtensa port patch */
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configQUEUE_REGISTRY_SIZE		0
@@ -245,6 +245,6 @@ uses the same semantics as the standard C assert() macro. */
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __LINE__, __FILE__ )
 
 #define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN ( 2 )
-#define configCHECK_FOR_STACK_OVERFLOW 2
+
 #endif /* FREERTOS_CONFIG_H */
 

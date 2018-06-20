@@ -210,7 +210,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  uint8_t * const pucBuffer,
 										  size_t xBufferSizeBytes,
 										  size_t xTriggerLevelBytes,
-										  BaseType_t xIsMessageBuffer ) PRIVILEGED_FUNCTION;
+										  uint8_t ucFlags ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -219,6 +219,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 	StreamBufferHandle_t xStreamBufferGenericCreate( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer )
 	{
 	uint8_t *pucAllocatedMemory;
+	uint8_t ucFlags;
 
 		/* In case the stream buffer is going to be used as a message buffer
 		(that is, it will hold discrete messages with a little meta data that
@@ -226,10 +227,14 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 		to hold at least one message. */
 		if( xIsMessageBuffer == pdTRUE )
 		{
+			/* Is a message buffer but not statically allocated. */
+			ucFlags = sbFLAGS_IS_MESSAGE_BUFFER;
 			configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
 		}
 		else
 		{
+			/* Not a message buffer and not statically allocated. */
+			ucFlags = 0;
 			configASSERT( xBufferSizeBytes > 0 );
 		}
 		configASSERT( xTriggerLevelBytes <= xBufferSizeBytes );
@@ -258,7 +263,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										   pucAllocatedMemory + sizeof( StreamBuffer_t ),  /* Storage area follows. */ /*lint !e9016 Indexing past structure valid for uint8_t pointer, also storage area has no alignment requirement. */
 										   xBufferSizeBytes,
 										   xTriggerLevelBytes,
-										   xIsMessageBuffer );
+										   ucFlags );
 
 			traceSTREAM_BUFFER_CREATE( ( ( StreamBuffer_t * ) pucAllocatedMemory ), xIsMessageBuffer );
 		}
@@ -283,6 +288,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 	{
 	StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) pxStaticStreamBuffer; /*lint !e740 !e9087 Safe cast as StaticStreamBuffer_t is opaque Streambuffer_t. */
 	StreamBufferHandle_t xReturn;
+	uint8_t ucFlags;
 
 		configASSERT( pucStreamBufferStorageArea );
 		configASSERT( pxStaticStreamBuffer );
@@ -293,6 +299,17 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 		if( xTriggerLevelBytes == ( size_t ) 0 )
 		{
 			xTriggerLevelBytes = ( size_t ) 1;
+		}
+
+		if( xIsMessageBuffer != pdFALSE )
+		{
+			/* Statically allocated message buffer. */
+			ucFlags = sbFLAGS_IS_MESSAGE_BUFFER | sbFLAGS_IS_STATICALLY_ALLOCATED;
+		}
+		else
+		{
+			/* Statically allocated stream buffer. */
+			ucFlags = sbFLAGS_IS_STATICALLY_ALLOCATED;
 		}
 
 		/* In case the stream buffer is going to be used as a message buffer
@@ -317,7 +334,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  pucStreamBufferStorageArea,
 										  xBufferSizeBytes,
 										  xTriggerLevelBytes,
-										  xIsMessageBuffer );
+										  ucFlags );
 
 			/* Remember this was statically allocated in case it is ever deleted
 			again. */
@@ -375,7 +392,7 @@ StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
 BaseType_t xStreamBufferReset( StreamBufferHandle_t xStreamBuffer )
 {
 StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
-BaseType_t xReturn = pdFAIL, xIsMessageBuffer;
+BaseType_t xReturn = pdFAIL;
 
 #if( configUSE_TRACE_FACILITY == 1 )
 	UBaseType_t uxStreamBufferNumber;
@@ -398,20 +415,11 @@ BaseType_t xReturn = pdFAIL, xIsMessageBuffer;
 		{
 			if( pxStreamBuffer->xTaskWaitingToSend == NULL )
 			{
-				if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
-				{
-					xIsMessageBuffer = pdTRUE;
-				}
-				else
-				{
-					xIsMessageBuffer = pdFALSE;
-				}
-
 				prvInitialiseNewStreamBuffer( pxStreamBuffer,
 											  pxStreamBuffer->pucBuffer,
 											  pxStreamBuffer->xLength,
 											  pxStreamBuffer->xTriggerLevelBytes,
-											  xIsMessageBuffer );
+											  pxStreamBuffer->ucFlags );
 				xReturn = pdPASS;
 
 				#if( configUSE_TRACE_FACILITY == 1 )
@@ -1202,7 +1210,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  uint8_t * const pucBuffer,
 										  size_t xBufferSizeBytes,
 										  size_t xTriggerLevelBytes,
-										  BaseType_t xIsMessageBuffer )
+										  uint8_t ucFlags )
 {
 	/* Assert here is deliberately writing to the entire buffer to ensure it can
 	be written to without generating exceptions, and is setting the buffer to a
@@ -1221,11 +1229,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 	pxStreamBuffer->pucBuffer = pucBuffer;
 	pxStreamBuffer->xLength = xBufferSizeBytes;
 	pxStreamBuffer->xTriggerLevelBytes = xTriggerLevelBytes;
-
-	if( xIsMessageBuffer != pdFALSE )
-	{
-		pxStreamBuffer->ucFlags |= sbFLAGS_IS_MESSAGE_BUFFER;
-	}
+	pxStreamBuffer->ucFlags = ucFlags;
 }
 
 #if ( configUSE_TRACE_FACILITY == 1 )

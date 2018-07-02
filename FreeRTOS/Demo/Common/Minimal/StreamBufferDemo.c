@@ -644,6 +644,7 @@ BaseType_t xNonBlockingReceiveError = pdFALSE;
 			string, but no data is written into the buffer so any valid address
 			will do. */
 			xTempStreamBuffer = xStreamBufferCreateStatic( sizeof( ucTempBuffer ), sbTRIGGER_LEVEL_1, ucTempBuffer, &xStaticStreamBuffer );
+			xStreamBufferReset( xTempStreamBuffer );
 			vStreamBufferDelete( xTempStreamBuffer );
 		}
 	}

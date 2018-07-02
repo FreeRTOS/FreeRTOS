@@ -1,7 +1,8 @@
+
 #include "trcRecorder.h"
 
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
-#if(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
+#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
 
 #include "stdint.h"
 
@@ -29,8 +30,8 @@ uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
 uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 extern USBD_HandleTypeDef hUsbDeviceFS;
-extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
+extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 recBuf commandBuffer;
 
@@ -186,6 +187,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
   return result;
 }
 
+/* The READ function, used in trcStreamingPort.h */
 int32_t trcCDCReceive(void *data, uint32_t size, int32_t* NumBytes)
 {
 	uint32_t i,diff;
@@ -217,13 +219,18 @@ int32_t trcCDCReceive(void *data, uint32_t size, int32_t* NumBytes)
 	return 0;
 }
 
+/* The WRITE function, used in trcStreamingPort.h */
 int32_t trcCDCTransmit(void* data, uint32_t size, int32_t * noOfBytesSent )
 {
 	int32_t result;
-	result=CDC_Transmit_FS(data,size);
-	*noOfBytesSent=size;
-
-	return result;
+	result=CDC_Transmit_FS(data, size);
+	*noOfBytesSent = size;
+	
+	/* Return value should be 0 on success (not sure what the value of USBD_OK is) */
+	if (result == USBD_OK)
+		return 0;
+	else
+		return -1;
 }
 
 /**

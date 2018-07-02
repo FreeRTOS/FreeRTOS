@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.2
+ * Trace Recorder Library for Tracealyzer v4.1.1
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2017.
+ * Copyright Percepio AB, 2018.
  * www.percepio.com
  ******************************************************************************/
 
@@ -344,7 +344,22 @@
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Altera_NiosII)
+
+    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
+    
+    #include "system.h"
+    #include "sys/alt_timestamp.h"
+
+    #define TRC_HWTC_TYPE          TRC_OS_TIMER_INCR
+    #define TRC_HWTC_COUNT         (uint32_t)alt_timestamp()
+    #define TRC_HWTC_PERIOD        0xFFFFFFFF
+    #define TRC_HWTC_FREQ_HZ       TIMESTAMP_TIMER_FREQ
+    #define TRC_HWTC_DIVISOR       1
+    #define TRC_IRQ_PRIORITY_ORDER 0
+
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_CORTEX_A9)
+	
 	/* INPUT YOUR PERIPHERAL BASE ADDRESS HERE */
 	#define TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS	0xSOMETHING
 	

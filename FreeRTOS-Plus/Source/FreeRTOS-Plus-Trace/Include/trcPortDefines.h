@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.2
+ * Trace Recorder Library for Tracealyzer v4.1.1
  * Percepio AB, www.percepio.com
  *
  * trcPortDefines.h
@@ -38,7 +38,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2017.
+ * Copyright Percepio AB, 2018.
  * www.percepio.com
  ******************************************************************************/
 
@@ -70,6 +70,23 @@
 #define TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC  (0x01)
 #define TRC_RECORDER_BUFFER_ALLOCATION_CUSTOM   (0x02)
 
+/* Filter Groups */
+#define FilterGroup0 (uint16_t)0x0001
+#define FilterGroup1 (uint16_t)0x0002
+#define FilterGroup2 (uint16_t)0x0004
+#define FilterGroup3 (uint16_t)0x0008
+#define FilterGroup4 (uint16_t)0x0010
+#define FilterGroup5 (uint16_t)0x0020
+#define FilterGroup6 (uint16_t)0x0040
+#define FilterGroup7 (uint16_t)0x0080
+#define FilterGroup8 (uint16_t)0x0100
+#define FilterGroup9 (uint16_t)0x0200
+#define FilterGroup10 (uint16_t)0x0400
+#define FilterGroup11 (uint16_t)0x0800
+#define FilterGroup12 (uint16_t)0x1000
+#define FilterGroup13 (uint16_t)0x2000
+#define FilterGroup14 (uint16_t)0x4000
+#define FilterGroup15 (uint16_t)0x8000
 
 /******************************************************************************
  * Supported ports
@@ -116,5 +133,5 @@
 #define TRC_HARDWARE_PORT_NXP_LPC210X					14	/*	No			Any					*/
 #define TRC_HARDWARE_PORT_ARM_CORTEX_A9					15	/*	Yes			Any					*/
 #define TRC_HARDWARE_PORT_POWERPC_Z4                    16  /*  No          FreeRTOS            */
-
+#define TRC_HARDWARE_PORT_Altera_NiosII					17  /*  No          Any                 */
 #endif /*TRC_PORTDEFINES_H*/

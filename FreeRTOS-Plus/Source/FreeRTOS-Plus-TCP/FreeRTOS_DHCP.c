@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.1
+ * FreeRTOS+TCP V2.0.3
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -19,10 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
+ * http://www.FreeRTOS.org
  */
 
 /* Standard includes. */
@@ -597,15 +595,19 @@ static void prvInitialiseDHCP( void )
 		xDHCPData.ulTransactionId++;
 	}
 
-	xDHCPData.xUseBroadcast = 0;
-	xDHCPData.ulOfferedIPAddress = 0UL;
-	xDHCPData.ulDHCPServerAddress = 0UL;
-	xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
+	/* Check for random number generator API failure. */
+	if( 0 != xDHCPData.ulTransactionId )
+	{
+		xDHCPData.xUseBroadcast = 0;
+		xDHCPData.ulOfferedIPAddress = 0UL;
+		xDHCPData.ulDHCPServerAddress = 0UL;
+		xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
 
-	/* Create the DHCP socket if it has not already been created. */
-	prvCreateDHCPSocket();
-	FreeRTOS_debug_printf( ( "prvInitialiseDHCP: start after %lu ticks\n", dhcpINITIAL_TIMER_PERIOD ) );
-	vIPReloadDHCPTimer( dhcpINITIAL_TIMER_PERIOD );
+		/* Create the DHCP socket if it has not already been created. */
+		prvCreateDHCPSocket();
+		FreeRTOS_debug_printf( ( "prvInitialiseDHCP: start after %lu ticks\n", dhcpINITIAL_TIMER_PERIOD ) );
+		vIPReloadDHCPTimer( dhcpINITIAL_TIMER_PERIOD );
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -675,18 +677,17 @@ const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct
 								state machine is expecting. */
 								ulProcessed++;
 							}
+							else if( *pucByte == ( uint8_t ) dhcpMESSAGE_TYPE_NACK )
+							{
+								if( xExpectedMessageType == ( BaseType_t ) dhcpMESSAGE_TYPE_ACK )
+								{
+									/* Start again. */
+									xDHCPData.eDHCPState = eWaitingSendFirstDiscover;
+								}
+							}
 							else
 							{
-								if( *pucByte == ( uint8_t ) dhcpMESSAGE_TYPE_NACK )
-								{
-									if( xExpectedMessageType == ( BaseType_t ) dhcpMESSAGE_TYPE_ACK )
-									{
-										/* Start again. */
-										xDHCPData.eDHCPState = eWaitingSendFirstDiscover;
-									}
-								}
-								/* Stop processing further options. */
-								ucLength = 0;
+								/* Don't process other message types. */
 							}
 							break;
 

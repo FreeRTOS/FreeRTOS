@@ -97,6 +97,9 @@
       <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
     </ClCompile>
     <ClCompile Include="demo_logging.c" />
+    <ClCompile Include="DemoTasks\SimpleTCPEchoServer.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">

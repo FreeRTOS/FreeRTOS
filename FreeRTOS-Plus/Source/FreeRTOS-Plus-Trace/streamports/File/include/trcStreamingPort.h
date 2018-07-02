@@ -5,8 +5,7 @@
  * trcStreamingPort.h
  *
  * The interface definitions for trace streaming ("stream ports").
- * This "stream port" sets up the recorder to use USB CDC as streaming channel.
- * The example is for STM32 using STM32Cube.
+ * This "stream port" sets up the recorder to stream the trace to file.
  *
  * Terms of Use
  * This file is part of the trace recorder library (RECORDER), which is the 
@@ -47,34 +46,39 @@
 #ifndef TRC_STREAMING_PORT_H
 #define TRC_STREAMING_PORT_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Include files as needed, in this case it is files from STM32Cube FW_F7 V1.4.1 */
-#include "usb_device.h"
-#include "usbd_cdc.h"
-#include "usbd_CDC_if.h"
-#include "usb_device.h"
+int32_t writeToFile(void* data, uint32_t size, int32_t *ptrBytesWritten);
 
-/* Tested on STM32 devices using Keil/CMSIS USB stack */
+void closeFile(void);
 
-extern USBD_CDC_ItfTypeDef  USBD_Interface_fops_FS;
+void openFile(char* fileName);
 
-uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+/* This define will determine whether to use the internal PagedEventBuffer or not.
+If file writing creates additional trace events (i.e. it uses semaphores or mutexes), 
+then the paged event buffer must be enabled to avoid infinite recursion. */
+#define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 1
 
-int32_t trcCDCReceive(void *data, uint32_t size, int32_t* NumBytes);
+#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) 0 /* Does not read commands from Tz (yet) */
 
-int32_t trcCDCTransmit(void* data, uint32_t size, int32_t * noOfBytesSent );
+#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesSent) writeToFile(_ptrData, _size, _ptrBytesSent)
 
+#if (TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC)
+#define TRC_STREAM_PORT_MALLOC() \
+			_TzTraceData = TRC_PORT_MALLOC((TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT) * (TRC_CFG_PAGED_EVENT_BUFFER_PAGE_SIZE));
+extern char* _TzTraceData;
+#else
+#define TRC_STREAM_PORT_MALLOC()  /* Custom or static allocation. Not used. */
+#endif
 #define TRC_STREAM_PORT_INIT() \
-        MX_USB_DEVICE_Init(); \
-        TRC_STREAM_PORT_MALLOC(); /*Dynamic allocation or empty if static */
+		TRC_STREAM_PORT_MALLOC(); \
+		openFile("trace.psf")
 
-#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) trcCDCReceive(_ptrData, _size, _ptrBytesRead)
-
-#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesSent) trcCDCTransmit(_ptrData, _size, _ptrBytesSent)
-
+#define TRC_STREAM_PORT_ON_TRACE_END() closeFile()
 
 #ifdef __cplusplus
 }

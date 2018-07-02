@@ -49,137 +49,54 @@
 
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)  
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
-	
-/* TCP/IP includes - for lwIP in this case */
-#include "lwip/tcpip.h"
-#include "lwip/sockets.h"
 
-int errno;
+FILE* traceFile = NULL;
 
-#define TRC_TCPIP_PORT 12000
-
-int sock = -1, new_sd = -1;
-int flags = 0;
-int remoteSize;
-struct sockaddr_in address, remote;
-
-int32_t trcSocketSend( void* data, int32_t size, int32_t* bytesWritten )
+void openFile(char* fileName)
 {
-  if (new_sd < 0)
-    return -1;
-  
-  if (bytesWritten == NULL)
-	return -1;
-  
-  *bytesWritten = send( new_sd, data, size, 0 );
-  if (*bytesWritten < 0)
-  {
-    /* EWOULDBLOCK may be expected when buffers are full */
-    if (errno != 0 && errno != EWOULDBLOCK)
-    {
-      closesocket(new_sd);
-      new_sd = -1;
-      return -1;
-    }
-    else
-        *bytesWritten = 0;
-  }
-  
-  return 0;
+	if (traceFile == NULL)
+	{
+		errno_t err = fopen_s(&traceFile, fileName, "wb");
+		if (err != 0)
+		{
+			printf("Could not open trace file, error code %d.\n", err);
+			exit(-1);
+		}
+		else {
+			printf("Trace file created.\n");
+		}
+	}
 }
 
-int32_t trcSocketReceive( void* data, int32_t size, int32_t* bytesRead )
+int32_t writeToFile(void* data, uint32_t size, int32_t *ptrBytesWritten)
 {
-  if (new_sd < 0)
-    return -1;
-  
-  *bytesRead = recv( new_sd, data, size, 0 );
-  if ( *bytesRead < 0 )
-  {
-    /* EWOULDBLOCK may be expected when there is no data to receive */
-    if (errno != 0 && errno != EWOULDBLOCK)
-    {
-      closesocket(new_sd);
-      new_sd = -1;
-      return -1;
-    }
-    else
-        *bytesRead = 0;
-  }
+	int32_t written = 0;
+	if (traceFile != NULL)
+	{
+		written = fwrite(data, 1, size, traceFile);
+	}
+	else
+	{
+		written = 0;
+	}
 
-  return 0;
+	if (ptrBytesWritten != 0)
+		*ptrBytesWritten = written;
+
+	if ((int32_t)size == written)
+		return 0;
+	else
+		return -1;
 }
 
-int32_t trcSocketInitializeListener()
+void closeFile(void)
 {
-  if (sock >= 0)
-	return 0;
-  
-  sock = lwip_socket(AF_INET, SOCK_STREAM, 0);
-
-  if (sock < 0)
-    return -1;
-
-  address.sin_family = AF_INET;
-  address.sin_port = htons( TRC_TCPIP_PORT );
-  address.sin_addr.s_addr = INADDR_ANY;
-
-  if (bind(sock, (struct sockaddr *)&address, sizeof (address)) < 0)
-  {
-    closesocket(sock);
-    sock = -1;
-    return -1;
-  }
-
-  if (lwip_listen(sock, 5) < 0)
-  {
-    closesocket(sock);
-    sock = -1;
-    return -1;
-  }
-
-  return 0;
-}
-
-int32_t trcSocketAccept()
-{
-  if (sock < 0)
-      return -1;
-  
-  if (new_sd >= 0)
-      return 0;
-  
-  remoteSize = sizeof( remote );
-  new_sd = accept( sock, (struct sockaddr *)&remote, (socklen_t*)&remoteSize );
-
-  flags = fcntl( new_sd, F_GETFL, 0 );
-  fcntl( new_sd, F_SETFL, flags | O_NONBLOCK );
-
-  if( new_sd < 0 )
-  {
-   	closesocket(new_sd);
-    new_sd = -1;
-   	closesocket(sock);
-    sock = -1;
-    return -1;
-  }
-
-  return 0;
-}
-/************** MODIFY THE ABOVE PART TO USE YOUR TPC/IP STACK ****************/
-
-int32_t trcTcpWrite(void* data, uint32_t size, int32_t *ptrBytesWritten)
-{
-    return trcSocketSend(data, size, ptrBytesWritten);
-}
-
-int32_t trcTcpRead(void* data, uint32_t size, int32_t *ptrBytesRead)
-{
-    trcSocketInitializeListener();
-        
-    trcSocketAccept();
-      
-    return trcSocketReceive(data, size, ptrBytesRead);
+	if (traceFile != NULL)
+	{
+		fclose(traceFile);
+		traceFile = NULL;
+		printf("Trace file closed.\n");
+	}
 }
 
 #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/

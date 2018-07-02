@@ -44,6 +44,7 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 #include "SimpleUDPClientAndServer.h"
+#include "SimpleTCPEchoServer.h"
 #include "TCPEchoClient_SingleTasks.h"
 #include "demo_logging.h"
 
@@ -54,6 +55,10 @@
 /* Echo client task parameters - used for both TCP and UDP echo clients. */
 #define mainECHO_CLIENT_TASK_STACK_SIZE 				( configMINIMAL_STACK_SIZE * 2 )	/* Not used in the Windows port. */
 #define mainECHO_CLIENT_TASK_PRIORITY					( tskIDLE_PRIORITY + 1 )
+
+/* Echo server task parameters. */
+#define mainECHO_SERVER_TASK_STACK_SIZE					( configMINIMAL_STACK_SIZE * 2 )	/* Not used in the Windows port. */
+#define mainECHO_SERVER_TASK_PRIORITY					( tskIDLE_PRIORITY + 1 )
 
 /* Define a name that will be used for LLMNR and NBNS searches. */
 #define mainHOST_NAME				"RTOSDemo"
@@ -77,10 +82,14 @@ verify the echo reply, from within the same task (Tx and Rx are performed in the
 same RTOS task).  The IP address of the echo server must be configured using the
 configECHO_SERVER_ADDR0 to configECHO_SERVER_ADDR3 constants in
 FreeRTOSConfig.h.
+
+mainCREATE_TCP_ECHO_SERVER_TASK:  When set to 1 a task is created that accepts
+connections on the standard echo port (port 7), then echos back any data
+received on that connection.
 */
 #define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS	1
 #define mainCREATE_TCP_ECHO_TASKS_SINGLE			1
-
+#define mainCREATE_TCP_ECHO_SERVER_TASK				0
 /*-----------------------------------------------------------*/
 
 /*
@@ -230,6 +239,12 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 				vStartTCPEchoClientTasks_SingleTasks( mainECHO_CLIENT_TASK_STACK_SIZE, mainECHO_CLIENT_TASK_PRIORITY );
 			}
 			#endif /* mainCREATE_TCP_ECHO_TASKS_SINGLE */
+
+			#if( mainCREATE_TCP_ECHO_SERVER_TASK == 1 )
+			{
+				vStartSimpleTCPServerTasks( mainECHO_SERVER_TASK_STACK_SIZE, mainECHO_SERVER_TASK_PRIORITY );
+			}
+			#endif
 
 			xTasksAlreadyCreated = pdTRUE;
 		}

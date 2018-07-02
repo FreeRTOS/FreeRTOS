@@ -510,7 +510,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigTCP_KEEP_ALIVE
-	#define ipconfigTCP_KEEP_ALIVE 0
+	#define ipconfigTCP_KEEP_ALIVE 1
 #endif
 
 #ifndef ipconfigDNS_USE_CALLBACKS
@@ -526,7 +526,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigTCP_HANG_PROTECTION
-	#define ipconfigTCP_HANG_PROTECTION  0
+	#define ipconfigTCP_HANG_PROTECTION  1
 #endif
 
 #ifndef ipconfigTCP_IP_SANITY

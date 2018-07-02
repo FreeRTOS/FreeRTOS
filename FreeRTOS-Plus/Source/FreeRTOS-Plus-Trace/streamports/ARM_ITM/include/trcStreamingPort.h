@@ -5,8 +5,7 @@
  * trcStreamingPort.h
  *
  * The interface definitions for trace streaming ("stream ports").
- * This "stream port" sets up the recorder to use USB CDC as streaming channel.
- * The example is for STM32 using STM32Cube.
+ * This "stream port" sets up the recorder to use ARM ITM as streaming channel.
  *
  * Terms of Use
  * This file is part of the trace recorder library (RECORDER), which is the 
@@ -51,30 +50,39 @@
 extern "C" {
 #endif
 
-/* Include files as needed, in this case it is files from STM32Cube FW_F7 V1.4.1 */
-#include "usb_device.h"
-#include "usbd_cdc.h"
-#include "usbd_CDC_if.h"
-#include "usb_device.h"
 
-/* Tested on STM32 devices using Keil/CMSIS USB stack */
+int32_t itm_write(void* ptrData, uint32_t size, int32_t* ptrBytesWritten);
+int32_t read_from_host(void* ptrData, uint32_t size, int32_t* ptrBytesRead);
 
-extern USBD_CDC_ItfTypeDef  USBD_Interface_fops_FS;
+/*******************************************************************************
+ * TRC_CFG_ITM_PORT
+ *
+ * Possible values: 0 - 31
+ *
+ * What ITM port to use for the ITM software events. Make sure the IDE is
+ * configured for the same channel.
+ *
+ * Default: 1 (0 is typically terminal output and 31 is used by Keil)
+ *
+ ******************************************************************************/
+#define TRC_CFG_ITM_PORT 1
 
-uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+#if (TRC_CFG_ITM_PORT < 0) || (TRC_CFG_ITM_PORT > 31)
+#error "Bad ITM port selected."
+#endif
 
-int32_t trcCDCReceive(void *data, uint32_t size, int32_t* NumBytes);
+// Not used for ITM - no RAM buffer...
+#define TRC_STREAM_PORT_ALLOCATE_FIELDS()
 
-int32_t trcCDCTransmit(void* data, uint32_t size, int32_t * noOfBytesSent );
+// Not used for ITM - assume the IDE configures the ITM setup
+#define TRC_STREAM_PORT_INIT()
 
-#define TRC_STREAM_PORT_INIT() \
-        MX_USB_DEVICE_Init(); \
-        TRC_STREAM_PORT_MALLOC(); /*Dynamic allocation or empty if static */
+/* Important for the ITM port - no RAM buffer, direct writes. In most other ports this can be skipped (default is 1) */
+#define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 0
+  
+#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesWritten) itm_write(_ptrData, _size, _ptrBytesWritten)
 
-#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) trcCDCReceive(_ptrData, _size, _ptrBytesRead)
-
-#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesSent) trcCDCTransmit(_ptrData, _size, _ptrBytesSent)
-
+#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) read_from_host(_ptrData, _size, _ptrBytesRead)
 
 #ifdef __cplusplus
 }

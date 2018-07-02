@@ -292,7 +292,7 @@ void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem
 	pxWhere->pxPrevious = pxNewListItem;
 
 	/* Remember which list the item is in. */
-	pxNewListItem->pvContainer = ( void * ) pxList;
+	pxNewListItem->pxContainer = pxList; 
 
 	( pxList->uxNumberOfItems )++;
 }
@@ -788,12 +788,12 @@ const int32_t l500ms = 500;
 				{
 					ulSavedSequenceNumber = ulCurrentSequenceNumber;
 
-					/* Clean up all sequence received between ulSequenceNumber 
+					/* Clean up all sequence received between ulSequenceNumber
 					and ulSequenceNumber + ulLength since they are duplicated.
-					If the server is forced to retransmit packets several time 
-					in a row it might send a batch of concatenated packet for 
-					speed.  So we cannot rely on the packets between 
-					ulSequenceNumber and ulSequenceNumber + ulLength to be 
+					If the server is forced to retransmit packets several time
+					in a row it might send a batch of concatenated packet for
+					speed.  So we cannot rely on the packets between
+					ulSequenceNumber and ulSequenceNumber + ulLength to be
 					sequential and it is better to just clean them out. */
 					do
 					{

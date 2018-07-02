@@ -174,16 +174,16 @@ configure the real network connection to use. */
 
 /* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
-#define configIP_ADDR0		172
-#define configIP_ADDR1		25
-#define configIP_ADDR2		218
+#define configIP_ADDR0		10
+#define configIP_ADDR1		10
+#define configIP_ADDR2		10
 #define configIP_ADDR3		200
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
-#define configGATEWAY_ADDR0	172
-#define configGATEWAY_ADDR1	25
-#define configGATEWAY_ADDR2	218
+#define configGATEWAY_ADDR0	10
+#define configGATEWAY_ADDR1	10
+#define configGATEWAY_ADDR2	10
 #define configGATEWAY_ADDR3	1
 
 /* Default DNS server configuration.  OpenDNS addresses are 208.67.222.222 and
@@ -197,7 +197,7 @@ to 1 but a DNS server cannot be contacted.*/
 /* Default netmask configuration.  Used in ipconfigUSE_DNS is set to 0, or
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configNET_MASK0		255
-#define configNET_MASK1		255
+#define configNET_MASK1		0
 #define configNET_MASK2		0
 #define configNET_MASK3		0
 

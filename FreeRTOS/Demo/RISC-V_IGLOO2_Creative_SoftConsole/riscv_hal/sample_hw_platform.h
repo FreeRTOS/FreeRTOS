@@ -44,6 +44,7 @@
  * <corename>_<instance>_BASE_ADDR
  */
 #define COREUARTAPB0_BASE_ADDR          0x70001000UL
+#define COREGPIO_BASE_ADDR              0x70002000UL
 #define COREGPIO_IN_BASE_ADDR           0x70002000UL
 #define CORETIMER0_BASE_ADDR            0x70003000UL
 #define CORETIMER1_BASE_ADDR            0x70004000UL

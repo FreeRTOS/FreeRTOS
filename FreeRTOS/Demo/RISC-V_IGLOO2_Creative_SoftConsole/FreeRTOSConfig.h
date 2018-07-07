@@ -87,13 +87,12 @@
 #include <stdint.h>
 #include <string.h>
 #include "riscv_plic.h"
-
-extern uint32_t SystemCoreClock;
+#include "hw_platform.h"
 
 #define configUSE_PREEMPTION			1
-#define configUSE_IDLE_HOOK				1
+#define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				0
-#define configCPU_CLOCK_HZ			( ( unsigned long ) 83000000 )
+#define configCPU_CLOCK_HZ			( ( unsigned long ) ( SYS_CLK_FREQ / 100UL ) ) /*_RB_ Seems to be a factor of 100 between machine timer frequency and CPU frequency. */
 #define configTICK_RATE_HZ			( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES		( 5 )
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 1024 )
@@ -104,7 +103,7 @@ extern uint32_t SystemCoreClock;
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		8
-#define configCHECK_FOR_STACK_OVERFLOW	0 //2
+#define configCHECK_FOR_STACK_OVERFLOW	2
 #define configUSE_RECURSIVE_MUTEXES		1
 #define configUSE_MALLOC_FAILED_HOOK	1
 #define configUSE_APPLICATION_TASK_TAG	0

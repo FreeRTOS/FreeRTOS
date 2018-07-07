@@ -4,10 +4,23 @@
 #include "timers.h"
 
 #include "hw_platform.h"
+#include "riscv_hal.h"
+#include "hal.h"
+#include "core_gpio.h"
+#include "core_timer.h"
 #include "core_uart_apb.h"
-#include "task.h"
 
 const char * g_hello_msg = "\r\nFreeRTOS Example\r\n";
+
+
+/*
+ * Notes:
+ * + Program the device using the flash project in
+ *   MS-RISC-V\M2GL025-Creative-Board\Programming_The_Target_Device\PROC_SUBSYSTEM_MIV_RV32IMA_BaseDesign.
+ *   See https://github.com/RISCV-on-Microsemi-FPGA/M2GL025-Creative-Board.
+ * + Above referenced image sets the clock to 50MHz. *
+ * + Debug configuration is critical.
+ */
 
 
 /* A block time of zero simply means "don't block". */
@@ -37,11 +50,22 @@ void vApplicationIdleHook( void );
  */
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
+/*_RB_
+gpio_instance_t g_gpio0;
+gpio_instance_t g_gpio1;
+timer_instance_t g_timer0;
+timer_instance_t g_timer1;
+
+
 /*-----------------------------------------------------------*/
+extern uint32_t SysTick_Config(uint32_t ticks);
+extern void __enable_irq(void);
 
 int main( void )
 {
     PLIC_init();
+//_RB_    GPIO_init(&g_gpio0, COREGPIO_IN_BASE_ADDR, GPIO_APB_32_BITS_BUS);
+//_RB_    GPIO_init(&g_gpio1, COREGPIO_OUT_BASE_ADDR, GPIO_APB_32_BITS_BUS);
 
     /**************************************************************************
     * Initialize CoreUART with its base address, baud value, and line
@@ -55,7 +79,7 @@ int main( void )
 
     /* Create the two test tasks. */
 	xTaskCreate( vUartTestTask1, "UArt1", 1000, NULL, uartPRIMARY_PRIORITY, NULL );
-	xTaskCreate( vUartTestTask2, "UArt2", 1000, NULL, uartPRIMARY_PRIORITY, NULL );
+//	xTaskCreate( vUartTestTask2, "UArt2", 1000, NULL, uartPRIMARY_PRIORITY, NULL );
 
 	/* Start the kernel.  From here on, only tasks and interrupts will run. */
 	vTaskStartScheduler();
@@ -117,7 +141,7 @@ static void vUartTestTask1( void *pvParameters )
 	for( ;; )
 	{
 		UART_polled_tx_string( &g_uart, (const uint8_t *)"Task - 1\r\n" );
-	    vTaskDelay(10);
+	    vTaskDelay( pdMS_TO_TICKS( 100 ) );
 	}
 }
 
@@ -130,7 +154,7 @@ static void vUartTestTask2( void *pvParameters )
 
 	for( ;; )
 	{
-		UART_polled_tx_string( &g_uart, (const uint8_t *)"Task - 2\r\n" );
+//		UART_polled_tx_string( &g_uart, (const uint8_t *)"Task - 2\r\n" );
 	    vTaskDelay(5);
 	}
 }

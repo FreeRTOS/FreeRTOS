@@ -81,7 +81,7 @@ not need to be guarded with a critical section. */
 extern int vPortSetInterruptMask( void );
 extern void vPortClearInterruptMask( int );
 
-#define portSET_INTERRUPT_MASK_FROM_ISR()
+#define portSET_INTERRUPT_MASK_FROM_ISR() 0
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue )
 #define portDISABLE_INTERRUPTS()
 #define portENABLE_INTERRUPTS()

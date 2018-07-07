@@ -104,21 +104,30 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1529524475525</id>
+			<id>1531000165521</id>
 			<name>FreeRTOS_Source/portable</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-ThirdParty</arguments>
+				<arguments>1.0-name-matches-false-false-GCC</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1529524475530</id>
+			<id>1531000165526</id>
 			<name>FreeRTOS_Source/portable</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-MemMang</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1531000203197</id>
+			<name>FreeRTOS_Source/portable/GCC</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RISC-V-RV32</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -128,24 +137,6 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-heap_4.c</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1529524515837</id>
-			<name>FreeRTOS_Source/portable/ThirdParty</name>
-			<type>9</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-GCC</arguments>
-			</matcher>
-		</filter>
-		<filter>
-			<id>1529524627661</id>
-			<name>FreeRTOS_Source/portable/ThirdParty/GCC</name>
-			<type>9</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-RISC-V</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

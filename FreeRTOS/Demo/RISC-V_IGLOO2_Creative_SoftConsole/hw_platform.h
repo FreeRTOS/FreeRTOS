@@ -34,7 +34,7 @@
  * This is the only clock brought over from the Mi-V Soft processor Libero design.
  */
 #ifndef SYS_CLK_FREQ
-#define SYS_CLK_FREQ                    83000000UL
+#define SYS_CLK_FREQ                    50000000UL
 #endif
 
 /***************************************************************************//**

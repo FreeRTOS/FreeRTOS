@@ -50,13 +50,15 @@ static void prvTaskExitError( void );
 
 void prvTaskExitError( void )
 {
+volatile uint32_t ulx = 0;
+
 	/* A function that implements a task must not exit or attempt to return to
 	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
 
 	Artificially force an assert() to be triggered if configASSERT() is
 	defined, then stop here so application writers can catch the error. */
-	configASSERT( uxCriticalNesting == ~0UL );
+	configASSERT( ulx == ~0UL );
 	portDISABLE_INTERRUPTS();
 	for( ;; );
 }

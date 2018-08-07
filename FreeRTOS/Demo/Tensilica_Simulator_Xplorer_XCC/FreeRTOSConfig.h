@@ -112,18 +112,20 @@
 /* Minimal stack size. This may need to be increased for your application */
 /* NOTE: The FreeRTOS demos may not work reliably with stack size < 4KB.  */
 /* The Xtensa-specific examples should be fine with XT_STACK_MIN_SIZE.    */
+/* NOTE: the size is defined in terms of StackType_t units not bytes.     */
 #if !(defined XT_STACK_MIN_SIZE)
 #error XT_STACK_MIN_SIZE not defined, did you include xtensa_config.h ?
 #endif
 
 #ifdef SMALL_TEST
-#define configMINIMAL_STACK_SIZE		(XT_STACK_MIN_SIZE)
+#define configMINIMAL_STACK_SIZE		(XT_STACK_MIN_SIZE / sizeof(StackType_t))
 #else
-#define configMINIMAL_STACK_SIZE		(XT_STACK_MIN_SIZE > 4096 ? XT_STACK_MIN_SIZE : 4096)
+#define configMINIMAL_STACK_SIZE		(XT_STACK_MIN_SIZE > 1024 ? XT_STACK_MIN_SIZE : 1024)
 #endif
 
 /* The Xtensa port uses a separate interrupt stack. Adjust the stack size */
 /* to suit the needs of your specific application.                        */
+/* NOTE: the size is defined in bytes.                                    */
 #ifndef configISR_STACK_SIZE
 #define configISR_STACK_SIZE			2048
 #endif

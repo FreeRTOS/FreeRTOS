@@ -105,6 +105,8 @@ extern void _frxt_tick_timer_init(void);
 
 /* Defined in xtensa_context.S */
 extern void _xt_coproc_init(void);
+
+
 /*-----------------------------------------------------------*/
 
 /* We require the address of the pxCurrentTCB variable, but don't want to know
@@ -120,7 +122,7 @@ unsigned port_interruptNesting = 0;  // Interrupt nesting level
 // User exception dispatcher when exiting
 void _xt_user_exit(void);
 
-/*
+/* 
  * Stack initialization
  */
 #if portUSING_MPU_WRAPPERS
@@ -223,7 +225,7 @@ BaseType_t xPortStartScheduler( void )
 BaseType_t xPortSysTickHandler( void )
 {
 	BaseType_t ret;
-	unsigned interruptMask;
+	uint32_t interruptMask;
 
 	portbenchmarkIntLatency();
 
@@ -258,4 +260,4 @@ void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMOR
 	#endif
 }
 #endif
-/*-----------------------------------------------------------*/
+

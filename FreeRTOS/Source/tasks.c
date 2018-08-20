@@ -5075,12 +5075,12 @@ when performing module tests). */
 
 	#include "freertos_tasks_c_additions.h"
 
-	static void freertos_tasks_c_additions_init( void )
-	{
-		#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
+	#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
+		static void freertos_tasks_c_additions_init( void )
+		{
 			FREERTOS_TASKS_C_ADDITIONS_INIT();
-		#endif
-	}
+		}
+	#endif
 
 #endif
 

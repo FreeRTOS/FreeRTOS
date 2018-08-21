@@ -806,6 +806,10 @@ extern "C" {
 	#define configUSE_TASK_NOTIFICATIONS 1
 #endif
 
+#ifndef configUSE_POSIX_ERRNO
+	#define configUSE_POSIX_ERRNO 0
+#endif
+
 #ifndef portTICK_TYPE_IS_ATOMIC
 	#define portTICK_TYPE_IS_ATOMIC 0
 #endif
@@ -928,6 +932,10 @@ V8 if desired. */
 	#define pdTASK_CODE TaskFunction_t
 	#define xListItem ListItem_t
 	#define xList List_t
+
+	/* For libraries that break the list data hiding, and access list structure
+	members directly (which is not supposed to be done). */
+	#define pxContainer pvContainer
 #endif /* configENABLE_BACKWARD_COMPATIBILITY */
 
 #if( configUSE_ALTERNATIVE_API != 0 )
@@ -1033,7 +1041,9 @@ typedef struct xSTATIC_TCB
 	#if( INCLUDE_xTaskAbortDelay == 1 )
 		uint8_t ucDummy21;
 	#endif
-
+	#if ( configUSE_POSIX_ERRNO == 1 )
+		int				iDummy22;
+	#endif
 } StaticTask_t;
 
 /*

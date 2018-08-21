@@ -2,6 +2,18 @@
 <BuildTarget tool="xtensa" version="1.0">
     <BuildSettings>
         <BaseSettings path="project">
+            <PreprocessorOptions>
+                <StringListMapOptions>
+                    <StringListMapEntry>
+                        <key>Includes</key>
+                        <value flag="-I" inheritance="prepend">
+                            <ListEntry>${workspace_loc:RTOSDemo/FreeRTOS_Source/include}</ListEntry>
+                            <ListEntry>${workspace_loc:RTOSDemo/FreeRTOS_Source/portable/XCC}</ListEntry>
+                            <ListEntry>${workspace_loc:RTOSDemo}</ListEntry>
+                        </value>
+                    </StringListMapEntry>
+                </StringListMapOptions>
+            </PreprocessorOptions>
             <CompilerOptions>
                 <FlagValueMapOptions>
                     <FlagValueMapEntry>

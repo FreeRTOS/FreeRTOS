@@ -78,6 +78,12 @@ typedef unsigned long UBaseType_t;
 #define portBYTE_ALIGNMENT			8
 /*-----------------------------------------------------------*/
 
+/* Compiler directives. */
+#define portWEAK_SYMBOL				__attribute__( ( weak ) )
+
+/*-----------------------------------------------------------*/
+
+
 /* Scheduler utilities. */
 #define portYIELD()											\
 {															\

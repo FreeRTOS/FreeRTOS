@@ -18,16 +18,19 @@
 							<tool errorParsers="org.eclipse.cdt.core.VCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.cdt.build.core.settings.holder.libs.283188354" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool errorParsers="org.eclipse.cdt.core.VCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.cdt.build.core.settings.holder.1363672131" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.818579882" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Demo/Common/include"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Source/portable/ThirdParty/XCC/Xtensa"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/arch/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/lib/xcc/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/xtensa-elf/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++/xtensa-elf"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/arch/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/lib/xcc/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/xtensa-elf/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++/xtensa-elf"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/Common/include"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/include"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/portable/XCC/Xtensa"/>
+									<listOptionValue builtIn="false" value="&quot;../${workspace_loc:RTOSDemo\FreeRTOS_Source\include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../${workspace_loc:RTOSDemo\FreeRTOS_Source\portable\XCC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\Tensilica_Simulator_Xplorer_XCC&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1072492848" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__CHAR_BIT__=8"/>
@@ -72,16 +75,19 @@
 							</tool>
 							<tool errorParsers="org.eclipse.cdt.core.VCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.cdt.build.core.settings.holder.29534978" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1529034681" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Demo/Common/include"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Source/portable/ThirdParty/XCC/Xtensa"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/arch/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/lib/xcc/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/xtensa-elf/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++/xtensa-elf"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/arch/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/lib/xcc/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/xtensa-elf/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++/xtensa-elf"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/Common/include"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/include"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/portable/XCC/Xtensa"/>
+									<listOptionValue builtIn="false" value="&quot;../${workspace_loc:RTOSDemo\FreeRTOS_Source\include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../${workspace_loc:RTOSDemo\FreeRTOS_Source\portable\XCC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\Tensilica_Simulator_Xplorer_XCC&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.459736431" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__CHAR_BIT__=8"/>
@@ -126,16 +132,19 @@
 							</tool>
 							<tool errorParsers="org.eclipse.cdt.core.VCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.cdt.build.core.settings.holder.541186543" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.2101310742" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Demo/Common/include"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="C:/workplace/FreeRTOSSVN/FreeRTOS/Source/portable/ThirdParty/XCC/Xtensa"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/arch/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/lib/xcc/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/xtensa-elf/include"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++"/>
-									<listOptionValue builtIn="false" value="C:/usr/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++/xtensa-elf"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/arch/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/lib/xcc/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/tools/RG-2017.8-win32/XtensaTools/xtensa-elf/include"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++"/>
+									<listOptionValue builtIn="false" value="C:/devtools/xtensa/XtDevTools/install/builds/RG-2017.8-win32/sample_controller/xtensa-elf/include/xcc/c++/xtensa-elf"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/Tensilica_Simulator_Xplorer_XCC"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Demo/Common/include"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/include"/>
+									<listOptionValue builtIn="false" value="C:/Users/ribarry/Dev/FreeRTOS/WorkingCopy/FreeRTOS/Source/portable/XCC/Xtensa"/>
+									<listOptionValue builtIn="false" value="&quot;../${workspace_loc:RTOSDemo\FreeRTOS_Source\include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../${workspace_loc:RTOSDemo\FreeRTOS_Source\portable\XCC}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\Tensilica_Simulator_Xplorer_XCC&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.740810983" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__CHAR_BIT__=8"/>
@@ -207,8 +216,5 @@
 		<scannerConfigBuildInfo instanceId="Xtensa.600602548">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
 	</storageModule>
 </cproject>

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.0.1
+ * FreeRTOS Kernel V10.1.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -65,7 +65,7 @@ not need to be guarded with a critical section. */
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portBYTE_ALIGNMENT			4
+#define portBYTE_ALIGNMENT			16
 /*-----------------------------------------------------------*/
 
 

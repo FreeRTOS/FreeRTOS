@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.0.1
+ * FreeRTOS Kernel V10.1.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -69,7 +69,31 @@ volatile uint32_t ulx = 0;
  */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-	return pxTopOfStack;
+	/*
+	   X1 to X31 integer registers for the 'I' profile, X1 to X15 for the 'E' profile.
+
+		Register 	ABI Name 		Description 					Saver
+		x0 			zero 			Hard-wired zero 				-
+		x1 			ra 				Return address 					Caller
+		x2 			sp 				Stack pointer 					Callee
+		x3 			gp 				Global pointer 					-
+		x4 			tp 				Thread pointer 					-
+		x5-7 		t0-2 			Temporaries 					Caller
+		x8 			s0/fp 			Saved register/Frame pointer 	Callee
+		x9 			s1 				Saved register 					Callee
+		x10-11 		a0-1 			Function Arguments/return values Caller
+		x12-17 		a2-7 			Function arguments 				Caller
+		x18-27 		s2-11 			Saved registers 				Callee
+		x28-31 		t3-6 			Temporaries 					Caller
+	*/
+
+	pxTopOfStack--;
+	*pxTopOfStack = ( StackType_t ) pxCode; /* X1 */
+	pxTopOfStack--;
+	*pxTopOfStack =
+
+
+		return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 

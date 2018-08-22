@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.3
+ * FreeRTOS+TCP V2.0.7
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -389,11 +389,13 @@ from the FreeRTOSIPConfig.h configuration header file. */
 
 #if( ipconfigUSE_DNS_CACHE != 0 )
 	#ifndef ipconfigDNS_CACHE_NAME_LENGTH
-		#define ipconfigDNS_CACHE_NAME_LENGTH		( 16 )
+        /* Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
+        of a DNS name. The following default accounts for a null terminator. */
+        #define ipconfigDNS_CACHE_NAME_LENGTH   254
 	#endif
 
 	#ifndef ipconfigDNS_CACHE_ENTRIES
-		#define ipconfigDNS_CACHE_ENTRIES			0
+		#define ipconfigDNS_CACHE_ENTRIES			1
 	#endif
 #endif /* ipconfigUSE_DNS_CACHE != 0 */
 
@@ -510,7 +512,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigTCP_KEEP_ALIVE
-	#define ipconfigTCP_KEEP_ALIVE 1
+	#define ipconfigTCP_KEEP_ALIVE 0
 #endif
 
 #ifndef ipconfigDNS_USE_CALLBACKS
@@ -525,8 +527,15 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigUSE_NBNS 0
 #endif
 
+/* As an attack surface reduction for ports that listen for inbound 
+connections, hang protection can help reduce the impact of SYN floods. */
 #ifndef ipconfigTCP_HANG_PROTECTION
 	#define ipconfigTCP_HANG_PROTECTION  1
+#endif
+
+/* Non-activity timeout is expressed in seconds. */
+#ifndef ipconfigTCP_HANG_PROTECTION_TIME
+    #define ipconfigTCP_HANG_PROTECTION_TIME 30
 #endif
 
 #ifndef ipconfigTCP_IP_SANITY

@@ -1,4 +1,11 @@
-Changes since V2.0.0 release
+Changes between 160919 and 180821 releases:
+
+	+ Multiple security improvements and fixes in packet parsing routines, DNS
+	  caching, and TCP sequence number and ID generation.
+	+ Disable NBNS and LLMNR by default.
+	+ Add TCP hang protection by default.
+
+	We thank Ori Karliner of Zimperium zLabs Team for reporting these issues.
 
 	+ Update FreeRTOS_gethostbyname() to allow an IP address to be passed in -
 	  in which case it is just returned as a uint32_t.

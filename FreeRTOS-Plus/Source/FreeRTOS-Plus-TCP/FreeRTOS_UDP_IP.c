@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.3
+ * FreeRTOS+TCP V2.0.7
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -128,15 +128,16 @@ uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
 			and
 				xIPHeader.usHeaderChecksum
 			*/
-
 			/* Save options now, as they will be overwritten by memcpy */
 			#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
-			{
 				ucSocketOptions = pxNetworkBuffer->pucEthernetBuffer[ ipSOCKET_OPTIONS_OFFSET ];
-			}
 			#endif
-
-			memcpy( ( void *) &( pxUDPPacket->xEthernetHeader.xSourceAddress ), ( void * ) xDefaultPartUDPPacketHeader.ucBytes, sizeof( xDefaultPartUDPPacketHeader ) );
+			/*
+			 * Offset the memcpy by the size of a MAC address to start at the packet's
+			 * Ethernet header 'source' MAC address; the preceding 'destination' should not be altered.
+			 */
+			char *pxUdpSrcAddrOffset = ( char *) pxUDPPacket + sizeof( MACAddress_t );
+			memcpy( pxUdpSrcAddrOffset, xDefaultPartUDPPacketHeader.ucBytes, sizeof( xDefaultPartUDPPacketHeader ) );
 
 		#if ipconfigSUPPORT_OUTGOING_PINGS == 1
 			if( pxNetworkBuffer->usPort == ipPACKET_CONTAINS_ICMP_DATA )
@@ -153,6 +154,7 @@ uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
 			/* The total transmit size adds on the Ethernet header. */
 			pxNetworkBuffer->xDataLength = pxIPHeader->usLength + sizeof( EthernetHeader_t );
 			pxIPHeader->usLength = FreeRTOS_htons( pxIPHeader->usLength );
+			/* HT:endian: changed back to network endian */
 			pxIPHeader->ulDestinationIPAddress = pxNetworkBuffer->ulIPAddress;
 
 			#if( ipconfigUSE_LLMNR == 1 )
@@ -174,7 +176,7 @@ uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
 
 				if( ( ucSocketOptions & ( uint8_t ) FREERTOS_SO_UDPCKSUM_OUT ) != 0u )
 				{
-					usGenerateProtocolChecksum( (uint8_t*)pxUDPPacket, pdTRUE );
+					usGenerateProtocolChecksum( (uint8_t*)pxUDPPacket, pxNetworkBuffer->xDataLength, pdTRUE );
 				}
 				else
 				{
@@ -241,7 +243,8 @@ FreeRTOS_Socket_t *pxSocket;
 
 UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 
-	pxSocket = pxUDPSocketLookup( usPort );
+	/* Caller must check for minimum packet size. */
+    pxSocket = pxUDPSocketLookup( usPort );
 
 	if( pxSocket )
 	{
@@ -265,9 +268,9 @@ UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 				destinationAddress.sin_addr = pxUDPPacket->xIPHeader.ulDestinationIPAddress;
 
 				if( xHandler( ( Socket_t * ) pxSocket, ( void* ) pcData, ( size_t ) pxNetworkBuffer->xDataLength,
-					&xSourceAddress, &destinationAddress ) != pdFALSE )
+					&xSourceAddress, &destinationAddress ) )
 				{
-					xReturn = pdFAIL; /* xHandler has consumed the data, do not add it to .xWaitingPacketsList'. */
+					xReturn = pdFAIL; /* FAIL means that we did not consume or release the buffer */
 				}
 			}
 		}
@@ -344,21 +347,8 @@ UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 		/* There is no socket listening to the target port, but still it might
 		be for this node. */
 
-		#if( ipconfigUSE_DNS == 1 )
-			/* A DNS reply, check for the source port.  Although the DNS client
-			does open a UDP socket to send a messages, this socket will be
-			closed after a short timeout.  Messages that come late (after the
-			socket is closed) will be treated here. */
-			if( FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usSourcePort ) == ipDNS_PORT )
-			{
-				vARPRefreshCacheEntry( &( pxUDPPacket->xEthernetHeader.xSourceAddress ), pxUDPPacket->xIPHeader.ulSourceIPAddress );
-				xReturn = ( BaseType_t )ulDNSHandlePacket( pxNetworkBuffer );
-			}
-			else
-		#endif
-
 		#if( ipconfigUSE_LLMNR == 1 )
-			/* An LLMNR request, check for the destination port. */
+			/* a LLMNR request, check for the destination port. */
 			if( ( usPort == FreeRTOS_ntohs( ipLLMNR_PORT ) ) ||
 				( pxUDPPacket->xUDPHeader.usSourcePort == FreeRTOS_ntohs( ipLLMNR_PORT ) ) )
 			{

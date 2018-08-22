@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.3
+ * FreeRTOS+TCP V2.0.7
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -80,17 +80,9 @@ typedef struct xTCP_WINSIZE
  */
 /* Keep this as a multiple of 4 */
 #if( ipconfigUSE_TCP_WIN == 1 )
-	#if( ipconfigUSE_TCP_TIMESTAMPS == 1 )
-		#define ipSIZE_TCP_OPTIONS	( 16u + 12u )
-	#else
-		#define ipSIZE_TCP_OPTIONS	16u
-	#endif
+    #define ipSIZE_TCP_OPTIONS	16u
 #else
-	#if	ipconfigUSE_TCP_TIMESTAMPS == 1
-		#define ipSIZE_TCP_OPTIONS   ( 12u + 12u )
-	#else
-		#define ipSIZE_TCP_OPTIONS   12u
-	#endif
+    #define ipSIZE_TCP_OPTIONS   12u
 #endif
 
 /*
@@ -120,9 +112,6 @@ typedef struct xTCP_WINDOW
 										  * In other words: the sequence number of the left side of the sliding window */
 		uint32_t ulFINSequenceNumber;	 /* The sequence number which carried the FIN flag */
 		uint32_t ulHighestSequenceNumber;/* Sequence number of the right-most byte + 1 */
-#if( ipconfigUSE_TCP_TIMESTAMPS == 1 )
-		uint32_t ulTimeStamp;			 /* The value of the TCP timestamp, transmitted or received */
-#endif
 	} rx, tx;
 	uint32_t ulOurSequenceNumber;		/* The SEQ number we're sending out */
 	uint32_t ulUserDataLength;			/* Number of bytes in Rx buffer which may be passed to the user, after having received a 'missing packet' */

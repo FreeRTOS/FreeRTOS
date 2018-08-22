@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.3
+ * FreeRTOS+TCP V2.0.7
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -199,7 +199,7 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
 
 /*-----------------------------------------------------------*/
 
-/* TCP segment pool. */
+/* TCP segement pool. */
 #if( ipconfigUSE_TCP_WIN == 1 )
 	static TCPSegment_t *xTCPSegments = NULL;
 #endif /* ipconfigUSE_TCP_WIN == 1 */
@@ -292,7 +292,7 @@ void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem
 	pxWhere->pxPrevious = pxNewListItem;
 
 	/* Remember which list the item is in. */
-	pxNewListItem->pxContainer = pxList; 
+	pxNewListItem->pvContainer = ( void * ) pxList; /* If this line fails to build then ensure configENABLE_BACKWARD_COMPATIBILITY is set to 1 in FreeRTOSConfig.h. */
 
 	( pxList->uxNumberOfItems )++;
 }
@@ -597,12 +597,12 @@ void vTCPWindowCreate( TCPWindow_t *pxWindow, uint32_t ulRxWindowLength,
 			prvCreateSectors();
 		}
 
-		vListInitialise( &( pxWindow->xTxSegments ) );
-		vListInitialise( &( pxWindow->xRxSegments ) );
+		vListInitialise( &pxWindow->xTxSegments );
+		vListInitialise( &pxWindow->xRxSegments );
 
-		vListInitialise( &( pxWindow->xPriorityQueue ) );	/* Priority queue: segments which must be sent immediately */
-		vListInitialise( &( pxWindow->xTxQueue ) );			/* Transmit queue: segments queued for transmission */
-		vListInitialise( &( pxWindow->xWaitQueue ) );		/* Waiting queue:  outstanding segments */
+		vListInitialise( &pxWindow->xPriorityQueue );			/* Priority queue: segments which must be sent immediately */
+		vListInitialise( &pxWindow->xTxQueue   );			/* Transmit queue: segments queued for transmission */
+		vListInitialise( &pxWindow->xWaitQueue );			/* Waiting queue:  outstanding segments */
 	}
 	#endif /* ipconfigUSE_TCP_WIN == 1 */
 
@@ -788,23 +788,20 @@ const int32_t l500ms = 500;
 				{
 					ulSavedSequenceNumber = ulCurrentSequenceNumber;
 
-					/* Clean up all sequence received between ulSequenceNumber
-					and ulSequenceNumber + ulLength since they are duplicated.
-					If the server is forced to retransmit packets several time
-					in a row it might send a batch of concatenated packet for
-					speed.  So we cannot rely on the packets between
-					ulSequenceNumber and ulSequenceNumber + ulLength to be
-					sequential and it is better to just clean them out. */
-					do
-					{
-						pxFound = xTCPWindowRxConfirm( pxWindow, ulSequenceNumber, ulLength );
+                    /* Clean up all sequence received between ulSequenceNumber and ulSequenceNumber + ulLength since they are duplicated.
+                    If the server is forced to retransmit packets several time in a row it might send a batch of concatenated packet for speed.
+                    So we cannot rely on the packets between ulSequenceNumber and ulSequenceNumber + ulLength to be sequential and it is better to just
+                    clean them out. */
+                    do
+                    {
+                        pxFound = xTCPWindowRxConfirm( pxWindow, ulSequenceNumber, ulLength );
 
-						if ( pxFound != NULL )
-						{
-							/* Remove it because it will be passed to user directly. */
-							vTCPWindowFree( pxFound );
-						}
-					} while ( pxFound );
+                        if ( pxFound != NULL )
+                        {
+                            /* Remove it because it will be passed to user directly. */
+                            vTCPWindowFree( pxFound );
+                        }
+                    } while ( pxFound );
 
 					/*  Check for following segments that are already in the
 					queue and increment ulCurrentSequenceNumber. */

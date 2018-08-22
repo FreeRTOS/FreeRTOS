@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.3
+ * FreeRTOS+TCP V2.0.7
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -54,18 +54,16 @@ xBoundUDPSocketsList or xBoundTCPSocketsList */
 number then, depending on the FreeRTOSIPConfig.h settings, it might be that a
 port number is automatically generated for the socket.  Automatically generated
 port numbers will be between socketAUTO_PORT_ALLOCATION_START_NUMBER and
-0xffff. */
-/* _HT_ thinks that the default of 0xc000 is pretty high */
+0xffff. 
+
+Per https://tools.ietf.org/html/rfc6056, "the dynamic ports consist of the range
+49152-65535. However, ephemeral port selection algorithms should use the whole 
+range 1024-65535" excluding those already in use (inbound or outbound). */
 #if !defined( socketAUTO_PORT_ALLOCATION_START_NUMBER )
-	#define socketAUTO_PORT_ALLOCATION_START_NUMBER ( ( uint16_t ) 0xc000 )
+	#define socketAUTO_PORT_ALLOCATION_START_NUMBER ( ( uint16_t ) 0x0400 )
 #endif
 
-/* When the automatically generated port numbers overflow, the next value used
-is not set back to socketAUTO_PORT_ALLOCATION_START_NUMBER because it is likely
-that the first few automatically generated ports will still be in use.  Instead
-it is reset back to the value defined by this constant. */
-#define socketAUTO_PORT_ALLOCATION_RESET_NUMBER ( ( uint16_t ) 0xc100 )
-#define socketAUTO_PORT_ALLOCATION_MAX_NUMBER   ( ( uint16_t ) 0xff00 )
+#define socketAUTO_PORT_ALLOCATION_MAX_NUMBER   ( ( uint16_t ) 0xffff )
 
 /* The number of octets that make up an IP address. */
 #define socketMAX_IP_ADDRESS_OCTETS		4u
@@ -165,15 +163,6 @@ List_t xBoundUDPSocketsList;
 	List_t xBoundTCPSocketsList;
 #endif /* ipconfigUSE_TCP == 1 */
 
-/* Holds the next private port number to use when binding a client socket for
-UDP, and if ipconfigUSE_TCP is set to 1, also TCP.  UDP uses index
-socketNEXT_UDP_PORT_NUMBER_INDEX and TCP uses index
-socketNEXT_TCP_PORT_NUMBER_INDEX.  The initial value is set to be between
-socketAUTO_PORT_ALLOCATION_RESET_NUMBER and socketAUTO_PORT_ALLOCATION_MAX_NUMBER
-when the IP stack is initialised.  Note ipconfigRAND32() is used, which must be
-seeded prior to the IP task being started. */
-static uint16_t usNextPortToUse[ socketPROTOCOL_COUNT ] = { 0 };
-
 /*-----------------------------------------------------------*/
 
 static BaseType_t prvValidSocket( FreeRTOS_Socket_t *pxSocket, BaseType_t xProtocol, BaseType_t xIsBound )
@@ -199,35 +188,17 @@ BaseType_t xReturn = pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
-void vNetworkSocketsInit( void )
+BaseType_t vNetworkSocketsInit( void )
 {
-const uint32_t ulAutoPortRange = socketAUTO_PORT_ALLOCATION_MAX_NUMBER - socketAUTO_PORT_ALLOCATION_RESET_NUMBER;
-uint32_t ulRandomPort;
+    vListInitialise( &xBoundUDPSocketsList );
 
-	vListInitialise( &xBoundUDPSocketsList );
+    #if( ipconfigUSE_TCP == 1 )
+    {
+        vListInitialise( &xBoundTCPSocketsList );
+    }
+    #endif  /* ipconfigUSE_TCP == 1 */
 
-	/* Determine the first anonymous UDP port number to get assigned.  Give it
-	a random value in order to avoid confusion about port numbers being used
-	earlier, before rebooting the device.  Start with the first auto port
-	number, then add a random offset up to a maximum of the range of numbers. */
-	ulRandomPort = socketAUTO_PORT_ALLOCATION_START_NUMBER;
-	ulRandomPort += ( ipconfigRAND32() % ulAutoPortRange );
-	usNextPortToUse[ socketNEXT_UDP_PORT_NUMBER_INDEX ] = ( uint16_t ) ulRandomPort;
-
-	#if( ipconfigUSE_TCP == 1 )
-	{
-		extern uint32_t ulNextInitialSequenceNumber;
-
-		ulNextInitialSequenceNumber = ipconfigRAND32();
-
-		/* Determine the first anonymous TCP port number to get assigned. */
-		ulRandomPort = socketAUTO_PORT_ALLOCATION_START_NUMBER;
-		ulRandomPort += ( ipconfigRAND32() % ulAutoPortRange );
-		usNextPortToUse[ socketNEXT_TCP_PORT_NUMBER_INDEX ] = ( uint16_t ) ulRandomPort;
-
-		vListInitialise( &xBoundTCPSocketsList );
-	}
-	#endif  /* ipconfigUSE_TCP == 1 */
+    return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
@@ -261,6 +232,7 @@ FreeRTOS_Socket_t *pxSocket;
 			if( xType != FREERTOS_SOCK_DGRAM )
 			{
 				xReturn = pdFAIL;
+                configASSERT( xReturn );
 			}
 			/* In case a UDP socket is created, do not allocate space for TCP data. */
 			*pxSocketSize = ( sizeof( *pxSocket ) - sizeof( pxSocket->u ) ) + sizeof( pxSocket->u.xUDP );
@@ -271,6 +243,7 @@ FreeRTOS_Socket_t *pxSocket;
 			if( xType != FREERTOS_SOCK_STREAM )
 			{
 				xReturn = pdFAIL;
+                configASSERT( xReturn );
 			}
 
 			*pxSocketSize = ( sizeof( *pxSocket ) - sizeof( pxSocket->u ) ) + sizeof( pxSocket->u.xTCP );
@@ -279,6 +252,7 @@ FreeRTOS_Socket_t *pxSocket;
 		else
 		{
 			xReturn = pdFAIL;
+            configASSERT( xReturn );
 		}
 	}
 	/* In case configASSERT() is not used */
@@ -320,7 +294,7 @@ Socket_t xReturn;
 		}
 		else
 		{
-			/* Clear the entire space to avoid nulling individual entries. */
+			/* Clear the entire space to avoid nulling individual entries */
 			memset( pxSocket, '\0', uxSocketSize );
 
 			pxSocket->xEventGroup = xEventGroup;
@@ -1016,14 +990,12 @@ List_t *pxSocketList;
 	#if( ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND == 1 )
 	{
 		/* pxAddress will be NULL if sendto() was called on a socket without the
-		socket being bound to an address.  In this case, automatically allocate
-		an address to the socket.  There is a very tiny chance that the allocated
-		port will already be in use - if that is the case, then the check below
-		[pxListFindListItemWithValue()] will result in an error being returned. */
+		socket being bound to an address. In this case, automatically allocate
+		an address and port to the socket. */
 		if( pxAddress == NULL )
 		{
 			pxAddress = &xAddress;
-			/* For now, put it to zero, will be assigned later */
+			/* Put the port to zero to be assigned later. */
 			pxAddress->sin_port = 0u;
 		}
 	}
@@ -1037,7 +1009,11 @@ List_t *pxSocketList;
 	{
 		if( pxAddress->sin_port == 0u )
 		{
-			pxAddress->sin_port = prvGetPrivatePortNumber( ( BaseType_t ) pxSocket->ucProtocol );
+			pxAddress->sin_port = prvGetPrivatePortNumber( ( BaseType_t )pxSocket->ucProtocol );            
+            if( 0 == pxAddress->sin_port )
+            {
+                return -pdFREERTOS_ERRNO_EADDRNOTAVAIL;
+            }
 		}
 
 		/* If vSocketBind() is called from the API FreeRTOS_bind() it has been
@@ -1524,7 +1500,7 @@ FreeRTOS_Socket_t *pxSocket;
 					if( pxSocket->u.xTCP.xTCPWindow.u.bits.bHasInit != pdFALSE_UNSIGNED )
 					{
 						pxSocket->u.xTCP.xTCPWindow.xSize.ulRxWindowLength = pxSocket->u.xTCP.uxRxWinSize * pxSocket->u.xTCP.usInitMSS;
-						pxSocket->u.xTCP.xTCPWindow.xSize.ulRxWindowLength = pxSocket->u.xTCP.uxTxWinSize * pxSocket->u.xTCP.usInitMSS;
+						pxSocket->u.xTCP.xTCPWindow.xSize.ulTxWindowLength = pxSocket->u.xTCP.uxTxWinSize * pxSocket->u.xTCP.usInitMSS;
 					}
 				}
 
@@ -1631,54 +1607,77 @@ FreeRTOS_Socket_t *pxSocket;
 
 /*-----------------------------------------------------------*/
 
-/* Get a free private ('anonymous') port number */
+/* Find an available port number per https://tools.ietf.org/html/rfc6056. */
 static uint16_t prvGetPrivatePortNumber( BaseType_t xProtocol )
 {
-uint16_t usResult;
-BaseType_t xIndex;
+const uint16_t usEphemeralPortCount = 
+    socketAUTO_PORT_ALLOCATION_MAX_NUMBER - socketAUTO_PORT_ALLOCATION_START_NUMBER + 1;
+uint16_t usIterations = usEphemeralPortCount; 
+uint32_t ulRandomSeed = 0;
+uint16_t usResult = 0;
+BaseType_t xGotZeroOnce = pdFALSE;
 const List_t *pxList;
 
 #if ipconfigUSE_TCP == 1
 	if( xProtocol == ( BaseType_t ) FREERTOS_IPPROTO_TCP )
 	{
-		xIndex = socketNEXT_TCP_PORT_NUMBER_INDEX;
 		pxList = &xBoundTCPSocketsList;
 	}
 	else
 #endif
 	{
-		xIndex = socketNEXT_UDP_PORT_NUMBER_INDEX;
 		pxList = &xBoundUDPSocketsList;
 	}
 
 	/* Avoid compiler warnings if ipconfigUSE_TCP is not defined. */
 	( void ) xProtocol;
 
-	/* Assign the next port in the range.  Has it overflowed? */
-	/*_RB_ This needs to be randomised rather than sequential. */
-	/* _HT_ Agreed, although many OS's use sequential port numbers, see
-	https://www.cymru.com/jtk/misc/ephemeralports.html  */
-	for ( ;; )
-	{
-		++( usNextPortToUse[ xIndex ] );
+    /* Find the next available port using the random seed as a starting 
+    point. */
+    do
+    {
+        /* Generate a random seed. */
+        ulRandomSeed = ipconfigRAND32( );
 
-		if( usNextPortToUse[ xIndex ] >= socketAUTO_PORT_ALLOCATION_MAX_NUMBER )
-		{
-			/* Don't go right back to the start of the dynamic/private port
-			range numbers as any persistent sockets are likely to have been
-			create first so the early port numbers may still be in use. */
-			usNextPortToUse[ xIndex ] = socketAUTO_PORT_ALLOCATION_RESET_NUMBER;
-		}
+        /* Only proceed if the random number generator succeeded. */
+        if( 0 == ulRandomSeed )
+        {
+            if( pdFALSE == xGotZeroOnce )
+            {
+                xGotZeroOnce = pdTRUE;
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
 
-		usResult = FreeRTOS_htons( usNextPortToUse[ xIndex ] );
+        /* Map the random to a candidate port. */
+        usResult =
+            socketAUTO_PORT_ALLOCATION_START_NUMBER +
+            ( ( ( uint16_t )ulRandomSeed ) % usEphemeralPortCount );
 
-		if( pxListFindListItemWithValue( pxList, ( TickType_t ) usResult ) == NULL )
-		{
-			break;
-		}
-	}
-	return usResult;
-} /* Tested */
+        /* Check if there's already an open socket with the same protocol
+        and port. */
+        if( NULL == pxListFindListItemWithValue( 
+            pxList, 
+            ( TickType_t )FreeRTOS_htons( usResult ) ) )
+        {
+            usResult = FreeRTOS_htons( usResult );
+            break;
+        }
+        else
+        {
+            usResult = 0;
+        }
+
+        usIterations--;
+    }
+    while( usIterations > 0 );
+    
+    return usResult;
+} 
 /*-----------------------------------------------------------*/
 
 /* pxListFindListItemWithValue: find a list item in a bound socket list
@@ -1889,7 +1888,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	/* This define makes it possible for network-card drivers to inspect
 	 * UDP message and see if there is any UDP socket bound to a given port
 	 * number.
-	 * This is probably only useful in systems with a minimum of RAM and
+	 * This is probably only usefull in systems with a minimum of RAM and
 	 * when lots of anonymous broadcast messages come in
 	 */
 	BaseType_t xPortHasUDPSocket( uint16_t usPortNr )
@@ -2374,9 +2373,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		{
 			xResult = -pdFREERTOS_ERRNO_ENOMEM;
 		}
-		else if( ( pxSocket->u.xTCP.ucTCPState == eCLOSED ) ||
-				 ( pxSocket->u.xTCP.ucTCPState == eCLOSE_WAIT ) ||
-				 ( pxSocket->u.xTCP.ucTCPState == eCLOSING ) )
+		else if( pxSocket->u.xTCP.ucTCPState == eCLOSED )
 		{
 			xResult = -pdFREERTOS_ERRNO_ENOTCONN;
 		}
@@ -2875,7 +2872,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 #if( ipconfigUSE_TCP == 1 )
 
-	static StreamBuffer_t *prvTCPCreateStream( FreeRTOS_Socket_t *pxSocket, BaseType_t xIsInputStream )
+	static StreamBuffer_t *prvTCPCreateStream ( FreeRTOS_Socket_t *pxSocket, BaseType_t xIsInputStream )
 	{
 	StreamBuffer_t *pxBuffer;
 	size_t uxLength;
@@ -2885,26 +2882,11 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		creation, it could still be changed with setsockopt(). */
 		if( xIsInputStream != pdFALSE )
 		{
-			/* Flow control for input streams works with a low- and a high-water mark.
-			1) If the RX-space becomes less than uxLittleSpace, the flag 'bLowWater' will
-			be set,  and a TCP window update message will be sent to the peer.
-			2) The data will be read from the socket by recv() and when RX-space becomes
-			larger than or equal to than 'uxEnoughSpace',  a new TCP window update
-			message will be sent to the peer,  and 'bLowWater' will get cleared again.
-			By default:
-			    uxLittleSpace == 1/5 x uxRxStreamSize
-			    uxEnoughSpace == 4/5 x uxRxStreamSize
-			How-ever it is very inefficient to make 'uxLittleSpace' smaller than the actual MSS.
-			*/
 			uxLength = pxSocket->u.xTCP.uxRxStreamSize;
 
 			if( pxSocket->u.xTCP.uxLittleSpace == 0ul )
 			{
 				pxSocket->u.xTCP.uxLittleSpace  = ( 1ul * pxSocket->u.xTCP.uxRxStreamSize ) / 5u; /*_RB_ Why divide by 5?  Can this be changed to a #define? */
-				if( ( pxSocket->u.xTCP.uxLittleSpace < pxSocket->u.xTCP.usCurMSS ) && ( pxSocket->u.xTCP.uxRxStreamSize >= 2u * pxSocket->u.xTCP.usCurMSS ) )
-				{
-					pxSocket->u.xTCP.uxLittleSpace = pxSocket->u.xTCP.usCurMSS;
-				}
 			}
 
 			if( pxSocket->u.xTCP.uxEnoughSpace == 0ul )
@@ -3047,10 +3029,8 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 							break;
 						}
 
-						if( pxSocket->u.xTCP.pxHandleReceive( (Socket_t *)pxSocket, ( void* )ucReadPtr, ( size_t ) ulCount ) != pdFALSE )
-						{
-							uxStreamBufferGet( pxStream, 0ul, NULL, ( size_t ) ulCount, pdFALSE );
-						}
+						pxSocket->u.xTCP.pxHandleReceive( (Socket_t *)pxSocket, ( void* )ucReadPtr, ( size_t ) ulCount );
+						uxStreamBufferGet( pxStream, 0ul, NULL, ( size_t ) ulCount, pdFALSE );
 					}
 				} else
 			#endif /* ipconfigUSE_CALLBACKS */
@@ -3378,12 +3358,13 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 				char ucChildText[16] = "";
 				if (pxSocket->u.xTCP.ucTCPState == eTCP_LISTEN)
 				{
-					snprintf( ucChildText, sizeof( ucChildText ), " %d/%d",
-						pxSocket->u.xTCP.usChildCount,
-						pxSocket->u.xTCP.usBacklog);
+					const int32_t copied_len = snprintf( ucChildText, sizeof( ucChildText ), " %d/%d",
+						( int ) pxSocket->u.xTCP.usChildCount,
+						( int ) pxSocket->u.xTCP.usBacklog);
+					/* These should never evaluate to false since the buffers are both shorter than 5-6 characters (<=65535) */
+					configASSERT( copied_len >= 0 );
+					configASSERT( copied_len < sizeof( ucChildText ) );
 				}
-				if( age > 999999 )
-					age = 999999;
 				FreeRTOS_printf( ( "TCP %5d %-16lxip:%5d %d/%d %-13.13s %6lu %6u%s\n",
 					pxSocket->usLocalPort,		/* Local port on this machine */
 					pxSocket->u.xTCP.ulRemoteIP,	/* IP address of remote machine */
@@ -3391,7 +3372,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 					pxSocket->u.xTCP.rxStream != NULL,
 					pxSocket->u.xTCP.txStream != NULL,
 					FreeRTOS_GetTCPStateName( pxSocket->u.xTCP.ucTCPState ),
-					age,
+					(age > 999999 ? 999999 : age), /* Format 'age' for printing */
 					pxSocket->u.xTCP.usTimeout,
 					ucChildText ) );
 					/* Remove compiler warnings if FreeRTOS_debug_printf() is not defined. */

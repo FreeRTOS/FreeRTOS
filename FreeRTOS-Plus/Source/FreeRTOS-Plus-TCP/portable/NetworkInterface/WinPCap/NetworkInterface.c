@@ -1,28 +1,27 @@
 /*
- * FreeRTOS+TCP V2.0.3
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
- */
+FreeRTOS+TCP V2.0.7
+Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ http://aws.amazon.com/freertos
+ http://www.FreeRTOS.org
+*/
 
 /* WinPCap includes. */
 #define HAVE_REMOTE
@@ -80,7 +79,7 @@ static pcap_if_t * prvPrintAvailableNetworkInterfaces( void );
  * by the configNETWORK_INTERFACE_TO_USE constant in FreeRTOSConfig.h.
  */
 static void prvOpenSelectedNetworkInterface( pcap_if_t *pxAllNetworkInterfaces );
-static void prvOpenInterface( const char *pucName );
+static int prvOpenInterface( const char *pucName );
 
 /*
  * Configure the capture filter to allow blocking reads, and to filter out
@@ -275,7 +274,7 @@ static BaseType_t xInvalidInterfaceDetected = pdFALSE;
 		printf( "\r\nThe interface that will be opened is set by " );
 		printf( "\"configNETWORK_INTERFACE_TO_USE\", which\r\nshould be defined in FreeRTOSConfig.h\r\n" );
 
-		if( ( xConfigNextworkInterfaceToUse < 1L ) || ( xConfigNextworkInterfaceToUse >= lInterfaceNumber ) )
+		if( ( xConfigNextworkInterfaceToUse < 0L ) || ( xConfigNextworkInterfaceToUse >= lInterfaceNumber ) )
 		{
 			printf( "\r\nERROR:  configNETWORK_INTERFACE_TO_USE is set to %d, which is an invalid value.\r\n", xConfigNextworkInterfaceToUse );
 			printf( "Please set configNETWORK_INTERFACE_TO_USE to one of the interface numbers listed above,\r\n" );
@@ -300,7 +299,7 @@ static BaseType_t xInvalidInterfaceDetected = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-static void prvOpenInterface( const char *pucName )
+static int prvOpenInterface( const char *pucName )
 {
 static char pucInterfaceName[ 256 ];
 
@@ -326,6 +325,7 @@ static char pucInterfaceName[ 256 ];
 	if ( pxOpenedInterfaceHandle == NULL )
 	{
 		printf( "\n%s is not supported by WinPcap and cannot be opened\n", pucInterfaceName );
+		return 1;
 	}
 	else
 	{
@@ -333,6 +333,7 @@ static char pucInterfaceName[ 256 ];
 		out packets that are not of interest to this demo. */
 		prvConfigureCaptureBehaviour();
 	}
+	return 0;
 }
 /*-----------------------------------------------------------*/
 
@@ -343,13 +344,22 @@ int32_t x;
 
 	/* Walk the list of devices until the selected device is located. */
 	xInterface = pxAllNetworkInterfaces;
-	for( x = 0L; x < ( xConfigNextworkInterfaceToUse - 1L ); x++ )
-	{
-		xInterface = xInterface->next;
+	if (0 == xConfigNextworkInterfaceToUse) {
+		while (NULL != xInterface) {
+			xInterface = xInterface->next;
+			if (0 == prvOpenInterface(xInterface->name)) {
+				break;
+			}
+		}
 	}
-
-	/* Open the selected interface. */
-	prvOpenInterface( xInterface->name );
+	else {
+		for (x = 1L; x < xConfigNextworkInterfaceToUse; x++)
+		{
+			xInterface = xInterface->next;
+		}
+		/* Open the selected interface. */
+		(void) prvOpenInterface(xInterface->name);
+	}
 
 	/* The device list is no longer required. */
 	pcap_freealldevs( pxAllNetworkInterfaces );
@@ -514,7 +524,16 @@ eFrameProcessingResult_t eResult;
 
 			iptraceNETWORK_INTERFACE_RECEIVE();
 
-			eResult = ipCONSIDER_FRAME_FOR_PROCESSING( pucPacketData );
+            /* Check for minimal size. */
+            if( pxHeader->len >= sizeof( EthernetHeader_t ) )
+            {
+                eResult = ipCONSIDER_FRAME_FOR_PROCESSING( pucPacketData );
+            }
+            else
+            {
+                eResult = eReleaseBuffer;
+            }
+
 			if( eResult == eProcessBuffer )
 			{
 				/* Will the data fit into the frame buffer? */

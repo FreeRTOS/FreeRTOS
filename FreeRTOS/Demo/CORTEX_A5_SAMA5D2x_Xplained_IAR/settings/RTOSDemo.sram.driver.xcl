@@ -6,7 +6,7 @@
 
 "-p" 
 
-"C:\devtools\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\Atmel\ATSAMA5D27.ddf" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.0\arm\CONFIG\debugger\Microchip\ATSAMA5D27.ddf" 
 
 "--drv_verify_download" 
 

@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>29</version>
+                <version>30</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -198,6 +198,10 @@
                 </option>
                 <option>
                     <name>DSPExtension</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>TrustZone</name>
                     <state>0</state>
                 </option>
             </data>
@@ -1038,7 +1042,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>29</version>
+                <version>30</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1059,11 +1063,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state>No specifier n, no float nor long long, no scan set, no assignment suppressing.</state>
+                    <state>No specifier n, no float nor long long, no scan set, no assignment suppressing, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state>No specifier a, A, no specifier n, no float nor long long.</state>
+                    <state>No specifier a, A, no specifier n, no float nor long long, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -1093,7 +1097,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.20.1.14181</state>
+                    <state>8.22.1.15696</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1144,7 +1148,7 @@
                 <option>
                     <name>GBECoreSlave</name>
                     <version>26</version>
-                    <state>51</state>
+                    <state>50</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1226,6 +1230,10 @@
                 <option>
                     <name>DSPExtension</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>TrustZone</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -1644,6 +1652,7 @@
                     <name>AUserIncludes</name>
                     <state>$PROJ_DIR$\..\..\..\libraries</state>
                     <state>$PROJ_DIR$/.</state>
+                    <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

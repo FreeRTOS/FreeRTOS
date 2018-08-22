@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>29</version>
+                <version>30</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -36,7 +36,7 @@
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state>No specifier a, A, no specifier n, no float nor long long, no flags.</state>
+                    <state>No specifier a, A, no specifier n, no float nor long long, no flags, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.20.1.14181</state>
+                    <state>8.22.1.15696</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -199,6 +199,10 @@
                 <option>
                     <name>DSPExtension</name>
                     <state>0</state>
+                </option>
+                <option>
+                    <name>TrustZone</name>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -620,6 +624,7 @@
                 <option>
                     <name>AUserIncludes</name>
                     <state>$PROJ_DIR$/.</state>
+                    <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CA5_No_GIC</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>

@@ -128,6 +128,8 @@ which static variables must be declared volatile. */
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
 timer service task is allowed to access these lists. */
+PRIVILEGED_DATA static List_t xActiveTimerList1;
+PRIVILEGED_DATA static List_t xActiveTimerList2;
 PRIVILEGED_DATA static List_t *pxCurrentTimerList;
 PRIVILEGED_DATA static List_t *pxOverflowTimerList;
 
@@ -892,9 +894,6 @@ BaseType_t xResult;
 
 static void prvCheckForValidListAndQueue( void )
 {
-PRIVILEGED_DATA static List_t xActiveTimerList1;
-PRIVILEGED_DATA static List_t xActiveTimerList2;
-
 	/* Check that the list from which active timers are referenced, and the
 	queue used to communicate with the timer service, have been
 	initialised. */

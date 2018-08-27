@@ -191,18 +191,18 @@ unsigned long ulTicksToWait = mainCHECK_DELAY_NO_ERROR;
 		{
 			ulTicksToWait = mainCHECK_DELAY_ERROR;
 		}
-	    else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
-	    {
-	        ulTicksToWait = mainCHECK_DELAY_ERROR;
-	    }
-	    else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
-	    {
-	        ulTicksToWait = mainCHECK_DELAY_ERROR;
-	    }
-	    else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
-	    {
-	    	ulTicksToWait = mainCHECK_DELAY_ERROR;
-	    }
+		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainCHECK_DELAY_ERROR;
+		}
+		else if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainCHECK_DELAY_ERROR;
+		}
+		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		{
+			ulTicksToWait = mainCHECK_DELAY_ERROR;
+		}
 
 		vParTestToggleLED( mainCHECK_LED );
 	}

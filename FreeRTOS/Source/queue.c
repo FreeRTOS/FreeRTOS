@@ -94,7 +94,7 @@ zero. */
  * Items are queued by copy, not reference.  See the following link for the
  * rationale: https://www.freertos.org/Embedded-RTOS-Queues.html
  */
-typedef struct QueueDef_t
+typedef struct QueueDefinition
 {
 	int8_t *pcHead;					/*< Points to the beginning of the queue storage area. */
 	int8_t *pcWriteTo;				/*< Points to the free next place in the storage area. */
@@ -120,7 +120,7 @@ typedef struct QueueDef_t
 	#endif
 
 	#if ( configUSE_QUEUE_SETS == 1 )
-		struct QueueDef_t *pxQueueSetContainer;
+		struct QueueDefinition *pxQueueSetContainer;
 	#endif
 
 	#if ( configUSE_TRACE_FACILITY == 1 )

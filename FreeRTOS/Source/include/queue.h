@@ -44,22 +44,22 @@ extern "C" {
  * returns an QueueHandle_t variable that can then be used as a parameter to
  * xQueueSend(), xQueueReceive(), etc.
  */
-struct QueueDef_t;
-typedef struct QueueDef_t * QueueHandle_t;
+struct QueueDefinition;
+typedef struct QueueDefinition * QueueHandle_t;
 
 /**
  * Type by which queue sets are referenced.  For example, a call to
  * xQueueCreateSet() returns an xQueueSet variable that can then be used as a
  * parameter to xQueueSelectFromSet(), xQueueAddToSet(), etc.
  */
-typedef struct QueueDef_t * QueueSetHandle_t;
+typedef struct QueueDefinition * QueueSetHandle_t;
 
 /**
  * Queue sets can contain both queues and semaphores, so the
  * QueueSetMemberHandle_t is defined as a type to be used where a parameter or
  * return value can be either an QueueHandle_t or an SemaphoreHandle_t.
  */
-typedef struct QueueDef_t * QueueSetMemberHandle_t;
+typedef struct QueueDefinition * QueueSetMemberHandle_t;
 
 /* For internal use only. */
 #define	queueSEND_TO_BACK		( ( BaseType_t ) 0 )

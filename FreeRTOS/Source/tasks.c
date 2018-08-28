@@ -266,7 +266,7 @@ to its original value when it is released. */
  * and stores task state information, including a pointer to the task's context
  * (the task's run time environment, including register values)
  */
-typedef struct TaskControlBlock_t
+typedef struct tskTaskControlBlock
 {
 	volatile StackType_t	*pxTopOfStack;	/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
 

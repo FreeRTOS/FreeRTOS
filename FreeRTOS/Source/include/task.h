@@ -58,8 +58,8 @@ extern "C" {
  * \defgroup TaskHandle_t TaskHandle_t
  * \ingroup Tasks
  */
-struct TaskControlBlock_t;
-typedef struct TaskControlBlock_t* TaskHandle_t;
+struct tskTaskControlBlock;
+typedef struct tskTaskControlBlock* TaskHandle_t;
 
 /*
  * Defines the prototype to which the application task hook function must

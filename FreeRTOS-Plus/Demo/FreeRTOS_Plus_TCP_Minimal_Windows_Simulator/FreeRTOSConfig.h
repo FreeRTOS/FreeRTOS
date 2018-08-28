@@ -42,7 +42,7 @@
  * stack in this demo.  Constants specific to FreeRTOS+TCP itself (rather than
  * the demo) are contained in FreeRTOSIPConfig.h.
  *----------------------------------------------------------*/
-#define configENABLE_BACKWARD_COMPATIBILITY		0
+#define configENABLE_BACKWARD_COMPATIBILITY		1
 #define configUSE_PREEMPTION					1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION	1
 #define configMAX_PRIORITIES					( 7 )

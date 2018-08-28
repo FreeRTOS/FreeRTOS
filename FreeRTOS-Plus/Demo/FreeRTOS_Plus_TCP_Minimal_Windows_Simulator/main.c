@@ -351,3 +351,23 @@ uint32_t ulLoggingIPAddress;
 	}
 
 #endif
+
+/*
+ * Callback that provides the inputs necessary to generate a randomized TCP
+ * Initial Sequence Number per RFC 6528.  THIS IS ONLY A DUMMY IMPLEMENTATION
+ * THAT RETURNS A PSEUDO RANDOM NUMBER SO IS NOT INTENDED FOR USE IN PRODUCTION
+ * SYSTEMS.
+ */
+extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
+	uint16_t usSourcePort,
+	uint32_t ulDestinationAddress,
+	uint16_t usDestinationPort )
+{
+	( void ) ulSourceAddress;
+	( void ) usSourcePort;
+	( void ) ulDestinationAddress;
+	( void ) usDestinationPort;
+
+	return uxRand();
+}
+

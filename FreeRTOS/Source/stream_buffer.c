@@ -384,7 +384,7 @@ StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
 	{
 		/* The structure and buffer were not allocated dynamically and cannot be
 		freed - just scrub the structure so future use will assert. */
-		memset( pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) );
+		( void ) memset( pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -1100,7 +1100,7 @@ size_t xNextHead, xFirstLength;
 
 	/* Write as many bytes as can be written in the first write. */
 	configASSERT( ( xNextHead + xFirstLength ) <= pxStreamBuffer->xLength );
-	memcpy( ( void* ) ( &( pxStreamBuffer->pucBuffer[ xNextHead ] ) ), ( const void * ) pucData, xFirstLength ); /*lint !e9087 memcpy() requires void *. */
+	( void ) memcpy( ( void* ) ( &( pxStreamBuffer->pucBuffer[ xNextHead ] ) ), ( const void * ) pucData, xFirstLength ); /*lint !e9087 memcpy() requires void *. */
 
 	/* If the number of bytes written was less than the number that could be
 	written in the first write... */
@@ -1108,7 +1108,7 @@ size_t xNextHead, xFirstLength;
 	{
 		/* ...then write the remaining bytes to the start of the buffer. */
 		configASSERT( ( xCount - xFirstLength ) <= pxStreamBuffer->xLength );
-		memcpy( ( void * ) pxStreamBuffer->pucBuffer, ( const void * ) &( pucData[ xFirstLength ] ), xCount - xFirstLength ); /*lint !e9087 memcpy() requires void *. */
+		( void ) memcpy( ( void * ) pxStreamBuffer->pucBuffer, ( const void * ) &( pucData[ xFirstLength ] ), xCount - xFirstLength ); /*lint !e9087 memcpy() requires void *. */
 	}
 	else
 	{
@@ -1151,7 +1151,7 @@ size_t xCount, xFirstLength, xNextTail;
 		read.  Asserts check bounds of read and write. */
 		configASSERT( xFirstLength <= xMaxCount );
 		configASSERT( ( xNextTail + xFirstLength ) <= pxStreamBuffer->xLength );
-		memcpy( ( void * ) pucData, ( const void * ) &( pxStreamBuffer->pucBuffer[ xNextTail ] ), xFirstLength ); /*lint !e9087 memcpy() requires void *. */
+		( void ) memcpy( ( void * ) pucData, ( const void * ) &( pxStreamBuffer->pucBuffer[ xNextTail ] ), xFirstLength ); /*lint !e9087 memcpy() requires void *. */
 
 		/* If the total number of wanted bytes is greater than the number
 		that could be read in the first read... */
@@ -1159,7 +1159,7 @@ size_t xCount, xFirstLength, xNextTail;
 		{
 			/*...then read the remaining bytes from the start of the buffer. */
 			configASSERT( xCount <= xMaxCount );
-			memcpy( ( void * ) &( pucData[ xFirstLength ] ), ( void * ) ( pxStreamBuffer->pucBuffer ), xCount - xFirstLength ); /*lint !e9087 memcpy() requires void *. */
+			( void ) memcpy( ( void * ) &( pucData[ xFirstLength ] ), ( void * ) ( pxStreamBuffer->pucBuffer ), xCount - xFirstLength ); /*lint !e9087 memcpy() requires void *. */
 		}
 		else
 		{
@@ -1225,7 +1225,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 	} /*lint !e529 !e438 xWriteValue is only used if configASSERT() is defined. */
 	#endif
 
-	memset( ( void * ) pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) ); /*lint !e9087 memset() requires void *. */
+	( void ) memset( ( void * ) pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) ); /*lint !e9087 memset() requires void *. */
 	pxStreamBuffer->pucBuffer = pucBuffer;
 	pxStreamBuffer->xLength = xBufferSizeBytes;
 	pxStreamBuffer->xTriggerLevelBytes = xTriggerLevelBytes;

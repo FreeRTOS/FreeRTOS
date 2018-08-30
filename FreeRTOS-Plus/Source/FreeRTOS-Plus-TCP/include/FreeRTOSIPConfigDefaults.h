@@ -389,9 +389,9 @@ from the FreeRTOSIPConfig.h configuration header file. */
 
 #if( ipconfigUSE_DNS_CACHE != 0 )
 	#ifndef ipconfigDNS_CACHE_NAME_LENGTH
-        /* Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
-        of a DNS name. The following default accounts for a null terminator. */
-        #define ipconfigDNS_CACHE_NAME_LENGTH   254
+		/* Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
+		of a DNS name. The following default accounts for a null terminator. */
+		#define ipconfigDNS_CACHE_NAME_LENGTH   254
 	#endif
 
 	#ifndef ipconfigDNS_CACHE_ENTRIES
@@ -535,7 +535,7 @@ connections, hang protection can help reduce the impact of SYN floods. */
 
 /* Non-activity timeout is expressed in seconds. */
 #ifndef ipconfigTCP_HANG_PROTECTION_TIME
-    #define ipconfigTCP_HANG_PROTECTION_TIME 30
+	#define ipconfigTCP_HANG_PROTECTION_TIME 30
 #endif
 
 #ifndef ipconfigTCP_IP_SANITY

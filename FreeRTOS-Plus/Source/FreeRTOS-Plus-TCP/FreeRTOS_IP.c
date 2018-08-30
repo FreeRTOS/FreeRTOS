@@ -357,7 +357,8 @@ struct freertos_sockaddr xAddress;
 		/* Wait until there is something to do. If the following call exits
 		 * due to a time out rather than a message being received, set a
 		 * 'NoEvent' value. */
-		if ( xQueueReceive( xNetworkEventQueue, ( void * ) &xReceivedEvent, xNextIPSleep ) == pdFALSE ) {
+		if ( xQueueReceive( xNetworkEventQueue, ( void * ) &xReceivedEvent, xNextIPSleep ) == pdFALSE ) 
+		{
 			xReceivedEvent.eEventType = eNoEvent;
 		}
 
@@ -803,9 +804,8 @@ void *pvReturn;
 
 	if( pxNetworkBuffer != NULL )
 	{
-        /* Set the actual packet size in case a bigger buffer was returned. */
-        pxNetworkBuffer->xDataLength = 
-            sizeof( UDPPacket_t ) + xRequestedSizeBytes;
+		/* Set the actual packet size in case a bigger buffer was returned. */
+		pxNetworkBuffer->xDataLength = sizeof( UDPPacket_t ) + xRequestedSizeBytes;
 
 		/* Leave space for the UPD header. */
 		pvReturn = ( void * ) &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] );
@@ -831,11 +831,11 @@ NetworkBufferDescriptor_t * pxNewBuffer;
 
 	if( pxNewBuffer != NULL )
 	{
-        /* Set the actual packet size in case a bigger buffer than requested 
-        was returned. */
-        pxNewBuffer->xDataLength = xNewLength;
+		/* Set the actual packet size in case a bigger buffer than requested
+		was returned. */
+		pxNewBuffer->xDataLength = xNewLength;
 
-        /* Copy the original packet information. */
+		/* Copy the original packet information. */
 		pxNewBuffer->ulIPAddress = pxNetworkBuffer->ulIPAddress;
 		pxNewBuffer->usPort = pxNetworkBuffer->usPort;
 		pxNewBuffer->usBoundPort = pxNetworkBuffer->usBoundPort;
@@ -995,13 +995,13 @@ BaseType_t xReturn = pdFALSE;
 			memcpy( ( void * ) ipLOCAL_MAC_ADDRESS, ( void * ) ucMACAddress, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 			/* Prepare the sockets interface. */
-            xReturn = vNetworkSocketsInit();
-            
-            if( pdTRUE == xReturn )
-            {
-                /* Create the task that processes Ethernet and stack events. */
-                xReturn = xTaskCreate( prvIPTask, "IP-task", ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS, NULL, ( UBaseType_t )ipconfigIP_TASK_PRIORITY, &xIPTaskHandle );
-            }
+			xReturn = vNetworkSocketsInit();
+
+			if( pdTRUE == xReturn )
+			{
+				/* Create the task that processes Ethernet and stack events. */
+				xReturn = xTaskCreate( prvIPTask, "IP-task", ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS, NULL, ( UBaseType_t )ipconfigIP_TASK_PRIORITY, &xIPTaskHandle );
+			}
 		}
 		else
 		{
@@ -1350,47 +1350,47 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 	configASSERT( pxNetworkBuffer );
 
 	/* Interpret the Ethernet frame. */
-    if( pxNetworkBuffer->xDataLength >= sizeof( EthernetHeader_t ) )
-    {
-        eReturned = ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer );
-        pxEthernetHeader = ( EthernetHeader_t * )( pxNetworkBuffer->pucEthernetBuffer );
+	if( pxNetworkBuffer->xDataLength >= sizeof( EthernetHeader_t ) )
+	{
+		eReturned = ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer );
+		pxEthernetHeader = ( EthernetHeader_t * )( pxNetworkBuffer->pucEthernetBuffer );
 
-        if( eReturned == eProcessBuffer )
-        {
-            /* Interpret the received Ethernet packet. */
-            switch( pxEthernetHeader->usFrameType )
-            {
-            case ipARP_FRAME_TYPE:
-                /* The Ethernet frame contains an ARP packet. */
-                if( pxNetworkBuffer->xDataLength >= sizeof( ARPPacket_t ) )
-                {
-                    eReturned = eARPProcessPacket( ( ARPPacket_t * )pxNetworkBuffer->pucEthernetBuffer );
-                }
-                else
-                {
-                    eReturned = eReleaseBuffer;
-                }
-                break;
+		if( eReturned == eProcessBuffer )
+		{
+			/* Interpret the received Ethernet packet. */
+			switch( pxEthernetHeader->usFrameType )
+			{
+			case ipARP_FRAME_TYPE:
+				/* The Ethernet frame contains an ARP packet. */
+				if( pxNetworkBuffer->xDataLength >= sizeof( ARPPacket_t ) )
+				{
+					eReturned = eARPProcessPacket( ( ARPPacket_t * )pxNetworkBuffer->pucEthernetBuffer );
+				}
+				else
+				{
+					eReturned = eReleaseBuffer;
+				}
+				break;
 
-            case ipIPv4_FRAME_TYPE:
-                /* The Ethernet frame contains an IP packet. */
-                if( pxNetworkBuffer->xDataLength >= sizeof( IPPacket_t ) )
-                {
-                    eReturned = prvProcessIPPacket( ( IPPacket_t * )pxNetworkBuffer->pucEthernetBuffer, pxNetworkBuffer );
-                }
-                else
-                {
-                    eReturned = eReleaseBuffer;
-                }
-                break;
+			case ipIPv4_FRAME_TYPE:
+				/* The Ethernet frame contains an IP packet. */
+				if( pxNetworkBuffer->xDataLength >= sizeof( IPPacket_t ) )
+				{
+					eReturned = prvProcessIPPacket( ( IPPacket_t * )pxNetworkBuffer->pucEthernetBuffer, pxNetworkBuffer );
+				}
+				else
+				{
+					eReturned = eReleaseBuffer;
+				}
+				break;
 
-            default:
-                /* No other packet types are handled.  Nothing to do. */
-                eReturned = eReleaseBuffer;
-                break;
-            }
-        }
-    }
+			default:
+				/* No other packet types are handled.  Nothing to do. */
+				eReturned = eReleaseBuffer;
+				break;
+			}
+		}
+	}
 
 	/* Perform any actions that resulted from processing the Ethernet frame. */
 	switch( eReturned )
@@ -1513,14 +1513,14 @@ IPHeader_t * pxIPHeader = &( pxIPPacket->xIPHeader );
 UBaseType_t uxHeaderLength = ( UBaseType_t ) ( ( pxIPHeader->ucVersionHeaderLength & 0x0Fu ) << 2 );
 uint8_t ucProtocol;
 
-    /* Bound the calculated header length: take away the Ethernet header size,
-    then check if the IP header is claiming to be longer than the remaining
-    total packet size. Also check for minimal header field length. */
-    if( uxHeaderLength > pxNetworkBuffer->xDataLength - ipSIZE_OF_ETH_HEADER ||
-        uxHeaderLength < ipSIZE_OF_IPv4_HEADER )
-    {
-        return eReleaseBuffer;
-    }
+	/* Bound the calculated header length: take away the Ethernet header size,
+	then check if the IP header is claiming to be longer than the remaining
+	total packet size. Also check for minimal header field length. */
+	if( ( uxHeaderLength > ( pxNetworkBuffer->xDataLength - ipSIZE_OF_ETH_HEADER ) ) ||
+		( uxHeaderLength < ipSIZE_OF_IPv4_HEADER ) )
+	{
+		return eReleaseBuffer;
+	}
 
 	ucProtocol = pxIPPacket->xIPHeader.ucProtocol;
 	/* Check if the IP headers are acceptable and if it has our destination. */
@@ -1544,10 +1544,9 @@ uint8_t ucProtocol;
 			memmove( pucTarget, pucSource, xMoveLen );
 			pxNetworkBuffer->xDataLength -= optlen;
 
-            /* Fix-up new version/header length field in IP packet. */
-            pxIPHeader->ucVersionHeaderLength =
-                ( pxIPHeader->ucVersionHeaderLength & 0xF0 ) | /* High nibble is the version. */
-                ( ( ipSIZE_OF_IPv4_HEADER >> 2 ) & 0x0F ); /* Low nibble is the header size, in bytes, divided by four. */
+			/* Fix-up new version/header length field in IP packet. */
+			pxIPHeader->ucVersionHeaderLength = ( pxIPHeader->ucVersionHeaderLength & 0xF0 ) | /* High nibble is the version. */
+												( ( ipSIZE_OF_IPv4_HEADER >> 2 ) & 0x0F ); /* Low nibble is the header size, in bytes, divided by four. */
 		}
 
 		/* Add the IP and MAC addresses to the ARP table if they are not
@@ -1573,18 +1572,18 @@ uint8_t ucProtocol;
 				be able to validate what it receives. */
 				#if ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
 				{
-                    if( pxNetworkBuffer->xDataLength >= sizeof( ICMPPacket_t ) )
-                    {
-                        ICMPPacket_t *pxICMPPacket = ( ICMPPacket_t * )( pxNetworkBuffer->pucEthernetBuffer );
-                        if( pxIPHeader->ulDestinationIPAddress == *ipLOCAL_IP_ADDRESS_POINTER )
-                        {
-                            eReturn = prvProcessICMPPacket( pxICMPPacket );
-                        }
-                    }
-                    else
-                    {
-                        eReturn = eReleaseBuffer;
-                    }
+					if( pxNetworkBuffer->xDataLength >= sizeof( ICMPPacket_t ) )
+					{
+						ICMPPacket_t *pxICMPPacket = ( ICMPPacket_t * )( pxNetworkBuffer->pucEthernetBuffer );
+						if( pxIPHeader->ulDestinationIPAddress == *ipLOCAL_IP_ADDRESS_POINTER )
+						{
+							eReturn = prvProcessICMPPacket( pxICMPPacket );
+						}
+					}
+					else
+					{
+						eReturn = eReleaseBuffer;
+					}
 				}
 				#endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 				break;
@@ -1594,47 +1593,46 @@ uint8_t ucProtocol;
 					/* The IP packet contained a UDP frame. */
 					UDPPacket_t *pxUDPPacket = ( UDPPacket_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
 
-                    /* Only proceed if the payload length indicated in the header
-                    appears to be valid. */
-                    if ( pxNetworkBuffer->xDataLength >= sizeof( UDPPacket_t ) )
-                    {
-                        /* Ensure that downstream UDP packet handling has the lesser
-                         * of: the actual network buffer Ethernet frame length, or 
-                         * the sender's UDP packet header payload length, minus the
-                         * size of the UDP header. 
-                         *
-                         * The size of the UDP packet structure in this implementation 
-                         * includes the size of the Ethernet header, the size of 
-                         * the IP header, and the size of the UDP header.
-                         */
-                         
-                        pxNetworkBuffer->xDataLength -= sizeof( UDPPacket_t );
-                        if( ( FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) - sizeof( UDPHeader_t ) ) <
-                                pxNetworkBuffer->xDataLength )
-                        {
-                            pxNetworkBuffer->xDataLength = FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) - 
-                                    sizeof( UDPHeader_t );
-                        }
+					/* Only proceed if the payload length indicated in the header
+					appears to be valid. */
+					if ( pxNetworkBuffer->xDataLength >= sizeof( UDPPacket_t ) )
+					{
+						/* Ensure that downstream UDP packet handling has the lesser
+						 * of: the actual network buffer Ethernet frame length, or
+						 * the sender's UDP packet header payload length, minus the
+						 * size of the UDP header.
+						 *
+						 * The size of the UDP packet structure in this implementation
+						 * includes the size of the Ethernet header, the size of
+						 * the IP header, and the size of the UDP header.
+						 */
 
-                        /* Fields in pxNetworkBuffer (usPort, ulIPAddress) are network order. */
-                        pxNetworkBuffer->usPort = pxUDPPacket->xUDPHeader.usSourcePort;
-                        pxNetworkBuffer->ulIPAddress = pxUDPPacket->xIPHeader.ulSourceIPAddress;
+						pxNetworkBuffer->xDataLength -= sizeof( UDPPacket_t );
+						if( ( FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) - sizeof( UDPHeader_t ) ) <
+								pxNetworkBuffer->xDataLength )
+						{
+							pxNetworkBuffer->xDataLength = FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) - sizeof( UDPHeader_t );
+						}
 
-                        /* ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM:
-                         * In some cases, the upper-layer checksum has been calculated
-                         * by the NIC driver.
-                         * 
-                         * Pass the packet payload to the UDP sockets implementation. */
-                        if( xProcessReceivedUDPPacket( pxNetworkBuffer, 
-                                                       pxUDPPacket->xUDPHeader.usDestinationPort ) == pdPASS )
-                        {
-                            eReturn = eFrameConsumed;
-                        }
-                    }
-                    else
-                    {
-                        eReturn = eReleaseBuffer;
-                    }
+						/* Fields in pxNetworkBuffer (usPort, ulIPAddress) are network order. */
+						pxNetworkBuffer->usPort = pxUDPPacket->xUDPHeader.usSourcePort;
+						pxNetworkBuffer->ulIPAddress = pxUDPPacket->xIPHeader.ulSourceIPAddress;
+
+						/* ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM:
+						 * In some cases, the upper-layer checksum has been calculated
+						 * by the NIC driver.
+						 *
+						 * Pass the packet payload to the UDP sockets implementation. */
+						if( xProcessReceivedUDPPacket( pxNetworkBuffer,
+													   pxUDPPacket->xUDPHeader.usDestinationPort ) == pdPASS )
+						{
+							eReturn = eFrameConsumed;
+						}
+					}
+					else
+					{
+						eReturn = eReleaseBuffer;
+					}
 				}
 				break;
 
@@ -1803,47 +1801,46 @@ uint8_t ucProtocol;
 	const char *pcType;
 #endif
 
-    /* Check for minimum packet size. */
-    if( uxBufferLength < sizeof( IPPacket_t ) )
-    {
-        return ipINVALID_LENGTH;
-    }
+	/* Check for minimum packet size. */
+	if( uxBufferLength < sizeof( IPPacket_t ) )
+	{
+		return ipINVALID_LENGTH;
+	}
 
-    /* Parse the packet length. */
+	/* Parse the packet length. */
 	pxIPPacket = ( const IPPacket_t * ) pucEthernetBuffer;
-    
-    /* Per https://tools.ietf.org/html/rfc791, the four-bit Internet Header 
-    Length field contains the length of the internet header in 32-bit words. */
-	uxIPHeaderLength = ( UBaseType_t ) 
-        ( sizeof( uint32_t ) * ( pxIPPacket->xIPHeader.ucVersionHeaderLength & 0x0Fu ) ); 
 
-    /* Check for minimum packet size. */
-    if( uxBufferLength < sizeof( IPPacket_t ) + uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER )
-    {
-        return ipINVALID_LENGTH;
-    }
-    if( uxBufferLength < FreeRTOS_ntohs( pxIPPacket->xIPHeader.usLength ) )
-    {
-        return ipINVALID_LENGTH;
-    }
+	/* Per https://tools.ietf.org/html/rfc791, the four-bit Internet Header
+	Length field contains the length of the internet header in 32-bit words. */
+	uxIPHeaderLength = ( UBaseType_t ) ( sizeof( uint32_t ) * ( pxIPPacket->xIPHeader.ucVersionHeaderLength & 0x0Fu ) );
 
-    /* Identify the next protocol. */
-    ucProtocol = pxIPPacket->xIPHeader.ucProtocol; 
+	/* Check for minimum packet size. */
+	if( uxBufferLength < sizeof( IPPacket_t ) + uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER )
+	{
+		return ipINVALID_LENGTH;
+	}
+	if( uxBufferLength < FreeRTOS_ntohs( pxIPPacket->xIPHeader.usLength ) )
+	{
+		return ipINVALID_LENGTH;
+	}
 
-    /* N.B., if this IP packet header includes Options, then the following 
-    assignment results in a pointer into the protocol packet with the Ethernet 
-    and IP headers incorrectly aligned. However, either way, the "third"
-    protocol (Layer 3 or 4) header will be aligned, which is the convenience 
-    of this calculation. */
-    pxProtPack = ( ProtocolPacket_t * ) ( pucEthernetBuffer + ( uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ) );
+	/* Identify the next protocol. */
+	ucProtocol = pxIPPacket->xIPHeader.ucProtocol;
 
-    /* Switch on the Layer 3/4 protocol. */
+	/* N.B., if this IP packet header includes Options, then the following
+	assignment results in a pointer into the protocol packet with the Ethernet
+	and IP headers incorrectly aligned. However, either way, the "third"
+	protocol (Layer 3 or 4) header will be aligned, which is the convenience
+	of this calculation. */
+	pxProtPack = ( ProtocolPacket_t * ) ( pucEthernetBuffer + ( uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ) );
+
+	/* Switch on the Layer 3/4 protocol. */
 	if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
 	{
-        if( uxBufferLength < uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_UDP_HEADER )
-        {
-            return ipINVALID_LENGTH;
-        }
+		if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_UDP_HEADER ) )
+		{
+			return ipINVALID_LENGTH;
+		}
 
 		pusChecksum = ( uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
 		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
@@ -1854,12 +1851,12 @@ uint8_t ucProtocol;
 	}
 	else if( ucProtocol == ( uint8_t ) ipPROTOCOL_TCP )
 	{
-        if( uxBufferLength < uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_TCP_HEADER )
-        {
-            return ipINVALID_LENGTH;
-        }
-        
-        pusChecksum = ( uint16_t * ) ( &( pxProtPack->xTCPPacket.xTCPHeader.usChecksum ) );
+		if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_TCP_HEADER ) )
+		{
+			return ipINVALID_LENGTH;
+		}
+
+		pusChecksum = ( uint16_t * ) ( &( pxProtPack->xTCPPacket.xTCPHeader.usChecksum ) );
 		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 		{
 			pcType = "TCP";
@@ -1869,12 +1866,12 @@ uint8_t ucProtocol;
 	else if( ( ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP ) ||
 			( ucProtocol == ( uint8_t ) ipPROTOCOL_IGMP ) )
 	{
-        if( uxBufferLength < uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_ICMP_HEADER )
-        {
-            return ipINVALID_LENGTH;
-        }
-        
-        pusChecksum = ( uint16_t * ) ( &( pxProtPack->xICMPPacket.xICMPHeader.usChecksum ) );
+		if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_ICMP_HEADER ) )
+		{
+			return ipINVALID_LENGTH;
+		}
+
+		pusChecksum = ( uint16_t * ) ( &( pxProtPack->xICMPPacket.xICMPHeader.usChecksum ) );
 		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 		{
 			if( ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP )
@@ -1894,8 +1891,8 @@ uint8_t ucProtocol;
 		return ipUNHANDLED_PROTOCOL;
 	}
 
-    /* The protocol and checksum field have been identified. Check the direction
-    of the packet. */
+	/* The protocol and checksum field have been identified. Check the direction
+	of the packet. */
 	if( xOutgoingPacket != pdFALSE )
 	{
 		/* This is an outgoing packet. Before calculating the checksum, set it
@@ -2021,12 +2018,12 @@ uint8_t ucProtocol;
  *
  * Arguments:
  *   ulSum: This argument provides a value to initialize the progressive summation
- *     of the header's values to. It is often 0, but protocols like TCP or UDP
- *     can have pseudo-header fields which need to be included in the checksum.
+ *	 of the header's values to. It is often 0, but protocols like TCP or UDP
+ *	 can have pseudo-header fields which need to be included in the checksum.
  *   pucNextData: This argument contains the address of the first byte which this
- *     method should process. The method's memory iterator is initialized to this value.
+ *	 method should process. The method's memory iterator is initialized to this value.
  *   uxDataLengthBytes: This argument contains the number of bytes that this method
- *     should process.
+ *	 should process.
  */
 uint16_t usGenerateChecksum( uint32_t ulSum, const uint8_t * pucNextData, size_t uxDataLengthBytes )
 {
@@ -2226,8 +2223,8 @@ uint32_t FreeRTOS_GetNetmask( void )
 
 void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ipMAC_ADDRESS_LENGTH_BYTES] )
 {
-    /* Copy the MAC address at the start of the default packet header fragment. */
-    memcpy( ( void * )ipLOCAL_MAC_ADDRESS, ( void * )ucMACAddress, ( size_t )ipMAC_ADDRESS_LENGTH_BYTES );
+	/* Copy the MAC address at the start of the default packet header fragment. */
+	memcpy( ( void * )ipLOCAL_MAC_ADDRESS, ( void * )ucMACAddress, ( size_t )ipMAC_ADDRESS_LENGTH_BYTES );
 }
 /*-----------------------------------------------------------*/
 

@@ -244,7 +244,7 @@ FreeRTOS_Socket_t *pxSocket;
 UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 
 	/* Caller must check for minimum packet size. */
-    pxSocket = pxUDPSocketLookup( usPort );
+	pxSocket = pxUDPSocketLookup( usPort );
 
 	if( pxSocket )
 	{

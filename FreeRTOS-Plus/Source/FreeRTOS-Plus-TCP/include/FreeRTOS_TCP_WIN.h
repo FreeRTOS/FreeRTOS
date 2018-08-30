@@ -80,9 +80,9 @@ typedef struct xTCP_WINSIZE
  */
 /* Keep this as a multiple of 4 */
 #if( ipconfigUSE_TCP_WIN == 1 )
-    #define ipSIZE_TCP_OPTIONS	16u
+	#define ipSIZE_TCP_OPTIONS	16u
 #else
-    #define ipSIZE_TCP_OPTIONS   12u
+	#define ipSIZE_TCP_OPTIONS   12u
 #endif
 
 /*

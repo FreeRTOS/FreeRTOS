@@ -48,16 +48,16 @@ port number. */
 
 /* Test if a socket it bound which means it is either included in
 xBoundUDPSocketsList or xBoundTCPSocketsList */
-#define socketSOCKET_IS_BOUND( pxSocket )      ( listLIST_ITEM_CONTAINER( & ( pxSocket )->xBoundSocketListItem ) != NULL )
+#define socketSOCKET_IS_BOUND( pxSocket )	  ( listLIST_ITEM_CONTAINER( & ( pxSocket )->xBoundSocketListItem ) != NULL )
 
 /* If FreeRTOS_sendto() is called on a socket that is not bound to a port
 number then, depending on the FreeRTOSIPConfig.h settings, it might be that a
 port number is automatically generated for the socket.  Automatically generated
 port numbers will be between socketAUTO_PORT_ALLOCATION_START_NUMBER and
-0xffff. 
+0xffff.
 
 Per https://tools.ietf.org/html/rfc6056, "the dynamic ports consist of the range
-49152-65535. However, ephemeral port selection algorithms should use the whole 
+49152-65535. However, ephemeral port selection algorithms should use the whole
 range 1024-65535" excluding those already in use (inbound or outbound). */
 #if !defined( socketAUTO_PORT_ALLOCATION_START_NUMBER )
 	#define socketAUTO_PORT_ALLOCATION_START_NUMBER ( ( uint16_t ) 0x0400 )
@@ -190,15 +190,15 @@ BaseType_t xReturn = pdTRUE;
 
 BaseType_t vNetworkSocketsInit( void )
 {
-    vListInitialise( &xBoundUDPSocketsList );
+	vListInitialise( &xBoundUDPSocketsList );
 
-    #if( ipconfigUSE_TCP == 1 )
-    {
-        vListInitialise( &xBoundTCPSocketsList );
-    }
-    #endif  /* ipconfigUSE_TCP == 1 */
+	#if( ipconfigUSE_TCP == 1 )
+	{
+		vListInitialise( &xBoundTCPSocketsList );
+	}
+	#endif  /* ipconfigUSE_TCP == 1 */
 
-    return pdTRUE;
+	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
@@ -232,7 +232,7 @@ FreeRTOS_Socket_t *pxSocket;
 			if( xType != FREERTOS_SOCK_DGRAM )
 			{
 				xReturn = pdFAIL;
-                configASSERT( xReturn );
+				configASSERT( xReturn );
 			}
 			/* In case a UDP socket is created, do not allocate space for TCP data. */
 			*pxSocketSize = ( sizeof( *pxSocket ) - sizeof( pxSocket->u ) ) + sizeof( pxSocket->u.xUDP );
@@ -243,7 +243,7 @@ FreeRTOS_Socket_t *pxSocket;
 			if( xType != FREERTOS_SOCK_STREAM )
 			{
 				xReturn = pdFAIL;
-                configASSERT( xReturn );
+				configASSERT( xReturn );
 			}
 
 			*pxSocketSize = ( sizeof( *pxSocket ) - sizeof( pxSocket->u ) ) + sizeof( pxSocket->u.xTCP );
@@ -252,7 +252,7 @@ FreeRTOS_Socket_t *pxSocket;
 		else
 		{
 			xReturn = pdFAIL;
-            configASSERT( xReturn );
+			configASSERT( xReturn );
 		}
 	}
 	/* In case configASSERT() is not used */
@@ -317,9 +317,9 @@ Socket_t xReturn;
 			listSET_LIST_ITEM_OWNER( &( pxSocket->xBoundSocketListItem ), ( void * ) pxSocket );
 
 			pxSocket->xReceiveBlockTime = ipconfigSOCK_DEFAULT_RECEIVE_BLOCK_TIME;
-			pxSocket->xSendBlockTime    = ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME;
+			pxSocket->xSendBlockTime	= ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME;
 			pxSocket->ucSocketOptions   = ( uint8_t ) FREERTOS_SO_UDPCKSUM_OUT;
-			pxSocket->ucProtocol        = ( uint8_t ) xProtocol; /* protocol: UDP or TCP */
+			pxSocket->ucProtocol		= ( uint8_t ) xProtocol; /* protocol: UDP or TCP */
 
 			#if( ipconfigUSE_TCP == 1 )
 			{
@@ -327,7 +327,7 @@ Socket_t xReturn;
 				{
 					/* StreamSize is expressed in number of bytes */
 					/* Round up buffer sizes to nearest multiple of MSS */
-					pxSocket->u.xTCP.usInitMSS    = pxSocket->u.xTCP.usCurMSS = ipconfigTCP_MSS;
+					pxSocket->u.xTCP.usInitMSS	= pxSocket->u.xTCP.usCurMSS = ipconfigTCP_MSS;
 					pxSocket->u.xTCP.uxRxStreamSize = ( size_t ) ipconfigTCP_RX_BUFFER_LENGTH;
 					pxSocket->u.xTCP.uxTxStreamSize = ( size_t ) FreeRTOS_round_up( ipconfigTCP_TX_BUFFER_LENGTH, ipconfigTCP_MSS );
 					/* Use half of the buffer size of the TCP windows */
@@ -1009,11 +1009,11 @@ List_t *pxSocketList;
 	{
 		if( pxAddress->sin_port == 0u )
 		{
-			pxAddress->sin_port = prvGetPrivatePortNumber( ( BaseType_t )pxSocket->ucProtocol );            
-            if( 0 == pxAddress->sin_port )
-            {
-                return -pdFREERTOS_ERRNO_EADDRNOTAVAIL;
-            }
+			pxAddress->sin_port = prvGetPrivatePortNumber( ( BaseType_t )pxSocket->ucProtocol );
+			if( 0 == pxAddress->sin_port )
+			{
+				return -pdFREERTOS_ERRNO_EADDRNOTAVAIL;
+			}
 		}
 
 		/* If vSocketBind() is called from the API FreeRTOS_bind() it has been
@@ -1610,9 +1610,9 @@ FreeRTOS_Socket_t *pxSocket;
 /* Find an available port number per https://tools.ietf.org/html/rfc6056. */
 static uint16_t prvGetPrivatePortNumber( BaseType_t xProtocol )
 {
-const uint16_t usEphemeralPortCount = 
-    socketAUTO_PORT_ALLOCATION_MAX_NUMBER - socketAUTO_PORT_ALLOCATION_START_NUMBER + 1;
-uint16_t usIterations = usEphemeralPortCount; 
+const uint16_t usEphemeralPortCount =
+	socketAUTO_PORT_ALLOCATION_MAX_NUMBER - socketAUTO_PORT_ALLOCATION_START_NUMBER + 1;
+uint16_t usIterations = usEphemeralPortCount;
 uint32_t ulRandomSeed = 0;
 uint16_t usResult = 0;
 BaseType_t xGotZeroOnce = pdFALSE;
@@ -1632,52 +1632,52 @@ const List_t *pxList;
 	/* Avoid compiler warnings if ipconfigUSE_TCP is not defined. */
 	( void ) xProtocol;
 
-    /* Find the next available port using the random seed as a starting 
-    point. */
-    do
-    {
-        /* Generate a random seed. */
-        ulRandomSeed = ipconfigRAND32( );
+	/* Find the next available port using the random seed as a starting
+	point. */
+	do
+	{
+		/* Generate a random seed. */
+		ulRandomSeed = ipconfigRAND32( );
 
-        /* Only proceed if the random number generator succeeded. */
-        if( 0 == ulRandomSeed )
-        {
-            if( pdFALSE == xGotZeroOnce )
-            {
-                xGotZeroOnce = pdTRUE;
-                continue;
-            }
-            else
-            {
-                break;
-            }
-        }
+		/* Only proceed if the random number generator succeeded. */
+		if( 0 == ulRandomSeed )
+		{
+			if( pdFALSE == xGotZeroOnce )
+			{
+				xGotZeroOnce = pdTRUE;
+				continue;
+			}
+			else
+			{
+				break;
+			}
+		}
 
-        /* Map the random to a candidate port. */
-        usResult =
-            socketAUTO_PORT_ALLOCATION_START_NUMBER +
-            ( ( ( uint16_t )ulRandomSeed ) % usEphemeralPortCount );
+		/* Map the random to a candidate port. */
+		usResult =
+			socketAUTO_PORT_ALLOCATION_START_NUMBER +
+			( ( ( uint16_t )ulRandomSeed ) % usEphemeralPortCount );
 
-        /* Check if there's already an open socket with the same protocol
-        and port. */
-        if( NULL == pxListFindListItemWithValue( 
-            pxList, 
-            ( TickType_t )FreeRTOS_htons( usResult ) ) )
-        {
-            usResult = FreeRTOS_htons( usResult );
-            break;
-        }
-        else
-        {
-            usResult = 0;
-        }
+		/* Check if there's already an open socket with the same protocol
+		and port. */
+		if( NULL == pxListFindListItemWithValue(
+			pxList,
+			( TickType_t )FreeRTOS_htons( usResult ) ) )
+		{
+			usResult = FreeRTOS_htons( usResult );
+			break;
+		}
+		else
+		{
+			usResult = 0;
+		}
 
-        usIterations--;
-    }
-    while( usIterations > 0 );
-    
-    return usResult;
-} 
+		usIterations--;
+	}
+	while( usIterations > 0 );
+
+	return usResult;
+}
 /*-----------------------------------------------------------*/
 
 /* pxListFindListItemWithValue: find a list item in a bound socket list
@@ -3339,7 +3339,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		}
 		else
 		{
-			FreeRTOS_printf( ( "Prot Port IP-Remote       : Port  R/T Status       Alive  tmout Child\n" ) );
+			FreeRTOS_printf( ( "Prot Port IP-Remote	   : Port  R/T Status	   Alive  tmout Child\n" ) );
 			for( pxIterator  = ( ListItem_t * ) listGET_HEAD_ENTRY( &xBoundTCPSocketsList );
 				 pxIterator != ( ListItem_t * ) listGET_END_MARKER( &xBoundTCPSocketsList );
 				 pxIterator  = ( ListItem_t * ) listGET_NEXT( pxIterator ) )

@@ -73,8 +73,8 @@ or interrupt version of the queue send function should be used. */
  * reference the subject timer in calls to other software timer API functions
  * (for example, xTimerStart(), xTimerReset(), etc.).
  */
-struct TimerDef_t;
-typedef struct TimerDef_t * TimerHandle_t;
+struct tmrTimerControl;
+typedef struct tmrTimerControl * TimerHandle_t;
 
 /*
  * Defines the prototype to which timer callback functions must conform.

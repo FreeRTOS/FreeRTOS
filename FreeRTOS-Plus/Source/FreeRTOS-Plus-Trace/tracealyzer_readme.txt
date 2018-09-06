@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-          Tracealyzer Recorder Library v4.1.0 for FreeRTOS
+          Tracealyzer Recorder Library for FreeRTOS
 -------------------------------------------------------------------------------
 
 Tracealyzer is a sophisticated tool for tracing and visualization
@@ -21,6 +21,26 @@ To learn more, see these links.
 In case you have any questions, don't hesitate to contact support@percepio.com
 
 Tracealyzer supports FreeRTOS v7.3 and newer, including Amazon FreeRTOS.
+
+-------------------------------------------------------------------------------
+Changes, v4.1.4 -> v4.1.5
+
+- Fixed a bug in the ITM stream port, that required Port 0 to be enabled.
+- Added missing include of stdio.h (needed by vTraceConsoleChannelPrintF).
+- Moved standard includes from trcRecorder.h into the .c files needing them.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.2 -> v4.1.4
+
+- Fixed a compile error when certain FreeRTOS settings were used
+- Disabled filter support for FreeRTOS v7.3 since it uses "char" for object id
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.0 -> v4.1.2
+
+- Added vTraceConsoleChannelPrintF(...)
 
 -------------------------------------------------------------------------------
 

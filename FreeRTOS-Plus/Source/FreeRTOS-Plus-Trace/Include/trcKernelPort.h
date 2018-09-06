@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.1
+ * Trace Recorder Library for Tracealyzer v4.1.5
  * Percepio AB, www.percepio.com
  *
  * Terms of Use
@@ -357,8 +357,14 @@ void prvTraceSetStreamBufferNumberHigh16(void* handle, uint16_t value);
 #define TRACE_GET_STREAMBUFFER_FILTER(pxObject) prvTraceGetStreamBufferNumberHigh16((void*)pxObject)
 #define TRACE_SET_STREAMBUFFER_FILTER(pxObject, group) prvTraceSetStreamBufferNumberHigh16((void*)pxObject, group)
 
+/* We can only support filtering if FreeRTOS is at least v7.4 */
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4)
 #define TRACE_GET_OBJECT_FILTER(CLASS, pxObject) TRACE_GET_##CLASS##_FILTER(pxObject)
 #define TRACE_SET_OBJECT_FILTER(CLASS, pxObject, group) TRACE_SET_##CLASS##_FILTER(pxObject, group)
+#else /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4) */
+#define TRACE_GET_OBJECT_FILTER(CLASS, pxObject) 1
+#define TRACE_SET_OBJECT_FILTER(CLASS, pxObject, group) 
+#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4) */
 
 /******************************************************************************/
 /*** Definitions for Snapshot mode ********************************************/
@@ -1262,7 +1268,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 #undef traceTASK_NOTIFY_WAIT
 #if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0)
 #define traceTASK_NOTIFY_WAIT() \
-	if (TRACE_GET_TASK_FILTER(pxCurrentTCB) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 	{ \
 		if (pxCurrentTCB->eNotifyState == eNotified) \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
@@ -1271,7 +1277,7 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 	}
 #else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
 #define traceTASK_NOTIFY_WAIT() \
-	if (TRACE_GET_TASK_FILTER(pxCurrentTCB) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 	{ \
 		if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
@@ -1282,24 +1288,24 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 
 #undef traceTASK_NOTIFY_WAIT_BLOCK
 #define traceTASK_NOTIFY_WAIT_BLOCK() \
-	if (TRACE_GET_TASK_FILTER(pxCurrentTCB) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 		prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCBLOCK, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	trcKERNEL_HOOKS_SET_TASK_INSTANCE_FINISHED();
 
 #undef traceTASK_NOTIFY
 #define traceTASK_NOTIFY() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(xTaskToNotify) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 			prvTraceStoreKernelCall(TRACE_TASK_NOTIFY, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
 
 #undef traceTASK_NOTIFY_FROM_ISR
 #define traceTASK_NOTIFY_FROM_ISR() \
-	if (TRACE_GET_TASK_FILTER(xTaskToNotify) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
 	
 #undef traceTASK_NOTIFY_GIVE_FROM_ISR
 #define traceTASK_NOTIFY_GIVE_FROM_ISR() \
-	if (TRACE_GET_TASK_FILTER(xTaskToNotify) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(TRACE_TASK_NOTIFY_GIVE_FROM_ISR, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(xTaskToNotify));
 
 #if (TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS == 1)
@@ -1311,12 +1317,10 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 #undef traceSTREAM_BUFFER_CREATE_FAILED
 #define traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer ) \
 	trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY(TRACE_GET_CLASS_EVENT_CODE(CREATE_OBJ, TRCFAILED, STREAMBUFFER, xIsMessageBuffer), 0);
-
-#if 0 /*_RB_ Not defined anywhere*/
+	
 #undef traceSTREAM_BUFFER_CREATE_STATIC_FAILED
 #define traceSTREAM_BUFFER_CREATE_STATIC_FAILED( xReturn, xIsMessageBuffer ) \
-	traceSTREAM_BUFFER_CREATE_TRCFAILED( xIsMessageBuffer )
-#endif
+	traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer )
 
 #undef traceSTREAM_BUFFER_DELETE
 #define traceSTREAM_BUFFER_DELETE( xStreamBuffer ) \
@@ -1639,7 +1643,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called on each task-switch */
 #undef traceTASK_SWITCHED_IN
 #define traceTASK_SWITCHED_IN() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 	{ \
 		if (prvIsNewTCB(pxCurrentTCB)) \
 		{ \
@@ -1651,7 +1655,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #if (TRC_CFG_INCLUDE_READY_EVENTS == 1)
 #undef traceMOVED_TASK_TO_READY_STATE
 #define traceMOVED_TASK_TO_READY_STATE( pxTCB ) \
-	if (TRACE_GET_TASK_FILTER(pxTCB) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, pxTCB) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_READY, (uint32_t)pxTCB);
 #endif
 
@@ -1663,9 +1667,9 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 		prvTraceSaveSymbol(pxNewTCB, pxNewTCB->pcTaskName); \
 		prvTraceSaveObjectData(pxNewTCB, pxNewTCB->uxPriority); \
 		prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, pxNewTCB->pcTaskName, pxNewTCB); \
-		TRACE_SET_TASK_FILTER(pxNewTCB, CurrentFilterGroup); \
-		if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-			if (TRACE_GET_TASK_FILTER(pxNewTCB) & CurrentFilterMask) \
+		TRACE_SET_OBJECT_FILTER(TASK, pxNewTCB, CurrentFilterGroup); \
+		if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+			if (TRACE_GET_OBJECT_FILTER(TASK, pxNewTCB) & CurrentFilterMask) \
 				prvTraceStoreEvent2(PSF_EVENT_TASK_CREATE, (uint32_t)pxNewTCB, pxNewTCB->uxPriority); \
 	}
 #else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
@@ -1675,9 +1679,9 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 		prvTraceSaveSymbol(pxNewTCB, (const char*)pcName); \
 		prvTraceSaveObjectData(pxNewTCB, uxPriority); \
 		prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, (const char*)pcName, pxNewTCB); \
-		TRACE_SET_TASK_FILTER(pxNewTCB, CurrentFilterGroup); \
-		if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-			if (TRACE_GET_TASK_FILTER(pxNewTCB) & CurrentFilterMask) \
+		TRACE_SET_OBJECT_FILTER(TASK, pxNewTCB, CurrentFilterGroup); \
+		if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+			if (TRACE_GET_OBJECT_FILTER(TASK, pxNewTCB) & CurrentFilterMask) \
 				prvTraceStoreEvent2(PSF_EVENT_TASK_CREATE, (uint32_t)pxNewTCB, uxPriority); \
 	}
 #endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
@@ -1685,14 +1689,14 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called in vTaskCreate, if it fails (typically if the stack can not be allocated) */
 #undef traceTASK_CREATE_FAILED
 #define traceTASK_CREATE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent0(PSF_EVENT_TASK_CREATE_FAILED);
 
 /* Called on vTaskDelete */
 #undef traceTASK_DELETE				// We don't allow for filtering out "delete" events. They are important and not very frequent. Moreover, we can't exclude create events, so this should be symmetrical.
 #define traceTASK_DELETE( pxTaskToDelete ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(pxTaskToDelete) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToDelete) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_DELETE, (uint32_t)pxTaskToDelete, (pxTaskToDelete != NULL) ? (pxTaskToDelete->uxPriority) : 0); \
 	prvTraceDeleteSymbol(pxTaskToDelete); \
 	prvTraceDeleteObjectData(pxTaskToDelete);
@@ -1718,25 +1722,25 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called on vTaskSuspend */
 #undef traceTASK_SUSPEND
 #define traceTASK_SUSPEND( pxTaskToSuspend ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(pxTaskToSuspend) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToSuspend) & CurrentFilterMask) \
 			prvTraceStoreEvent1(PSF_EVENT_TASK_SUSPEND, (uint32_t)pxTaskToSuspend);
 
 /* Called on vTaskDelay - note the use of FreeRTOS variable xTicksToDelay */
 #undef traceTASK_DELAY
 #define traceTASK_DELAY() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_DELAY, xTicksToDelay);
 
 /* Called on vTaskDelayUntil - note the use of FreeRTOS variable xTimeToWake */
 #undef traceTASK_DELAY_UNTIL
 #if TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0
 #define traceTASK_DELAY_UNTIL(xTimeToWake) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_DELAY_UNTIL, (uint32_t)xTimeToWake);
 #else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
 #define traceTASK_DELAY_UNTIL() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_DELAY_UNTIL, (uint32_t)xTimeToWake);
 #endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
 
@@ -1756,7 +1760,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #undef traceQUEUE_CREATE
 #define traceQUEUE_CREATE( pxNewQueue )\
 	TRACE_SET_OBJECT_FILTER(QUEUE, pxNewQueue, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 	{ \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxNewQueue) & CurrentFilterMask) \
 		{ \
@@ -1788,7 +1792,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called in xQueueCreate, if the queue creation fails */
 #undef traceQUEUE_CREATE_FAILED
 #define traceQUEUE_CREATE_FAILED( queueType ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 	{ \
 		switch (queueType) \
 		{ \
@@ -1804,7 +1808,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 
 #undef traceQUEUE_DELETE			// We don't allow for filtering out "delete" events. They are important and not very frequent. Moreover, we can't exclude create events, so this should be symmetrical.
 #define traceQUEUE_DELETE( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 	{ \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 		{ \
@@ -1831,25 +1835,25 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
 #define traceCREATE_COUNTING_SEMAPHORE() \
 	TRACE_SET_OBJECT_FILTER(QUEUE, xHandle, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, xHandle) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)xHandle, uxMaxCount)
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_5_OR_7_6)
 #define traceCREATE_COUNTING_SEMAPHORE() \
 	TRACE_SET_OBJECT_FILTER(QUEUE, xHandle, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, xHandle) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)xHandle, uxInitialCount);
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4)
 #define traceCREATE_COUNTING_SEMAPHORE() \
 	TRACE_SET_OBJECT_FILTER(QUEUE, xHandle, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, xHandle) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)xHandle, uxCountValue);
 #else
 #define traceCREATE_COUNTING_SEMAPHORE() \
 	TRACE_SET_OBJECT_FILTER(QUEUE, pxHandle, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxHandle) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE, (uint32_t)pxHandle, uxCountValue);
 #endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X */
@@ -1857,19 +1861,19 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #undef traceCREATE_COUNTING_SEMAPHORE_FAILED
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxMaxCount);
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_5_OR_7_6)
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxInitialCount);
 #elif (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_7_4)
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxCountValue);
 #else
 #define traceCREATE_COUNTING_SEMAPHORE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_COUNTING_CREATE_FAILED, 0, uxCountValue);
 #endif /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X */
 
@@ -1880,7 +1884,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 #undef traceCREATE_MUTEX
 #define traceCREATE_MUTEX( pxNewQueue ) \
 	TRACE_SET_OBJECT_FILTER(QUEUE, pxNewQueue, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 	{ \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxNewQueue) & CurrentFilterMask) \
 		{ \
@@ -1899,14 +1903,14 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called in xQueueCreateMutex when the operation fails (when memory allocation fails) */
 #undef traceCREATE_MUTEX_FAILED
 #define traceCREATE_MUTEX_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE_FAILED, 0);
 #endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0) */
 
 /* Called when a message is sent to a queue */	/* CS IS NEW ! */
 #undef traceQUEUE_SEND
 #define traceQUEUE_SEND( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -1926,7 +1930,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called when a message failed to be sent to a queue (timeout) */
 #undef traceQUEUE_SEND_FAILED
 #define traceQUEUE_SEND_FAILED( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -1946,7 +1950,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 /* Called when the task is blocked due to a send operation on a full queue */
 #undef traceBLOCKING_ON_QUEUE_SEND
 #define traceBLOCKING_ON_QUEUE_SEND( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2018,7 +2022,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Called when a message is received from a queue */
 #undef traceQUEUE_RECEIVE
 #define traceQUEUE_RECEIVE( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2047,7 +2051,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Called when a receive operation on a queue fails (timeout) */
 #undef traceQUEUE_RECEIVE_FAILED
 #define traceQUEUE_RECEIVE_FAILED( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2067,7 +2071,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Called when the task is blocked due to a receive operation on an empty queue */
 #undef traceBLOCKING_ON_QUEUE_RECEIVE
 #define traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2088,7 +2092,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Called when a peek operation on a queue fails (timeout) */
 #undef traceQUEUE_PEEK_FAILED
 #define traceQUEUE_PEEK_FAILED( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2108,7 +2112,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Called when the task is blocked due to a peek operation on an empty queue */
 #undef traceBLOCKING_ON_QUEUE_PEEK
 #define traceBLOCKING_ON_QUEUE_PEEK( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2160,7 +2164,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Called on xQueuePeek */
 #undef traceQUEUE_PEEK
 #define traceQUEUE_PEEK( pxQueue ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
 			switch (pxQueue->ucQueueType) \
 			{ \
@@ -2181,47 +2185,47 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 #undef traceTASK_PRIORITY_SET
 #define traceTASK_PRIORITY_SET( pxTask, uxNewPriority ) \
 	prvTraceSaveObjectData(pxTask, uxNewPriority); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(pxTask) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, pxTask) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_PRIORITY, (uint32_t)pxTask, uxNewPriority);
 	
 /* Called in vTaskPriorityInherit, which is called by Mutex operations */
 #undef traceTASK_PRIORITY_INHERIT
 #define traceTASK_PRIORITY_INHERIT( pxTask, uxNewPriority ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(pxTask) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, pxTask) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_PRIO_INHERIT, (uint32_t)pxTask, uxNewPriority);
 
 /* Called in vTaskPriorityDisinherit, which is called by Mutex operations */
 #undef traceTASK_PRIORITY_DISINHERIT
 #define traceTASK_PRIORITY_DISINHERIT( pxTask, uxNewPriority ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(pxTask) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, pxTask) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_PRIO_DISINHERIT, (uint32_t)pxTask, uxNewPriority);
 
 /* Called in vTaskResume */
 #undef traceTASK_RESUME
 #define traceTASK_RESUME( pxTaskToResume ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(pxTaskToResume) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToResume) & CurrentFilterMask) \
 			prvTraceStoreEvent1(PSF_EVENT_TASK_RESUME, (uint32_t)pxTaskToResume);
 
 /* Called in vTaskResumeFromISR */
 #undef traceTASK_RESUME_FROM_ISR
 #define traceTASK_RESUME_FROM_ISR( pxTaskToResume ) \
-	if (TRACE_GET_TASK_FILTER(pxTaskToResume) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, pxTaskToResume) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_RESUME_FROMISR, (uint32_t)pxTaskToResume);
 
 #if (TRC_CFG_INCLUDE_MEMMANG_EVENTS == 1)
 
 #undef traceMALLOC
 #define traceMALLOC( pvAddress, uiSize ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_MALLOC, (uint32_t)pvAddress, uiSize);
 
 #undef traceFREE
 #define traceFREE( pvAddress, uiSize ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_FREE, (uint32_t)pvAddress, (uint32_t)(0 - uiSize)); /* "0 -" instead of just "-" to get rid of a warning... */
 
 #endif /* (TRC_CFG_INCLUDE_MEMMANG_EVENTS == 1) */
@@ -2234,13 +2238,13 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 	TRACE_SET_OBJECT_FILTER(TIMER, tmr, CurrentFilterGroup); \
 	prvTraceSaveSymbol(tmr, tmr->pcTimerName); \
 	prvTraceStoreStringEvent(1, PSF_EVENT_OBJ_NAME, tmr->pcTimerName, tmr); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(TIMER, tmr) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_TIMER_CREATE, (uint32_t)tmr, tmr->xTimerPeriodInTicks);
 
 #undef traceTIMER_CREATE_FAILED
 #define traceTIMER_CREATE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent0(PSF_EVENT_TIMER_CREATE_FAILED);
 
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
@@ -2267,7 +2271,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /* Note that xCommandID can never be tmrCOMMAND_EXECUTE_CALLBACK (-1) since the trace macro is not called in that case */
 #undef traceTIMER_COMMAND_SEND
 #define traceTIMER_COMMAND_SEND(tmr, xCommandID, xOptionalValue, xReturn) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(TIMER, tmr) & CurrentFilterMask) \
 			switch(xCommandID) \
 			{ \
@@ -2288,7 +2292,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 
 #undef traceTIMER_EXPIRED
 #define traceTIMER_EXPIRED(tmr) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(TIMER, tmr) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_TIMER_EXPIRED, (uint32_t)tmr->pxCallbackFunction, (uint32_t)tmr->pvTimerID);
 
@@ -2312,49 +2316,49 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 #undef traceEVENT_GROUP_CREATE
 #define traceEVENT_GROUP_CREATE(eg) \
 	TRACE_SET_OBJECT_FILTER(EVENTGROUP, eg, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent1(PSF_EVENT_EVENTGROUP_CREATE, (uint32_t)eg);
 
 #undef traceEVENT_GROUP_DELETE
 #define traceEVENT_GROUP_DELETE(eg) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent1(PSF_EVENT_EVENTGROUP_DELETE, (uint32_t)eg); \
 	prvTraceDeleteSymbol(eg);
 
 #undef traceEVENT_GROUP_CREATE_FAILED
 #define traceEVENT_GROUP_CREATE_FAILED() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent0(PSF_EVENT_EVENTGROUP_CREATE_FAILED);
 
 #undef traceEVENT_GROUP_SYNC_BLOCK
 #define traceEVENT_GROUP_SYNC_BLOCK(eg, bitsToSet, bitsToWaitFor) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_SYNC_BLOCK, (uint32_t)eg, bitsToWaitFor);
 
 #undef traceEVENT_GROUP_SYNC_END
 #define traceEVENT_GROUP_SYNC_END(eg, bitsToSet, bitsToWaitFor, wasTimeout) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent2((wasTimeout != pdTRUE) ? PSF_EVENT_EVENTGROUP_SYNC : PSF_EVENT_EVENTGROUP_SYNC_FAILED, (uint32_t)eg, bitsToWaitFor);
 
 #undef traceEVENT_GROUP_WAIT_BITS_BLOCK
 #define traceEVENT_GROUP_WAIT_BITS_BLOCK(eg, bitsToWaitFor) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_WAITBITS_BLOCK, (uint32_t)eg, bitsToWaitFor);
 
 #undef traceEVENT_GROUP_WAIT_BITS_END
 #define traceEVENT_GROUP_WAIT_BITS_END(eg, bitsToWaitFor, wasTimeout) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent2((wasTimeout != pdTRUE) ? PSF_EVENT_EVENTGROUP_WAITBITS : PSF_EVENT_EVENTGROUP_WAITBITS_FAILED, (uint32_t)eg, bitsToWaitFor);
 
 #undef traceEVENT_GROUP_CLEAR_BITS
 #define traceEVENT_GROUP_CLEAR_BITS(eg, bitsToClear) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_CLEARBITS, (uint32_t)eg, bitsToClear);
 
@@ -2365,7 +2369,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 
 #undef traceEVENT_GROUP_SET_BITS
 #define traceEVENT_GROUP_SET_BITS(eg, bitsToSet) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(EVENTGROUP, eg) & CurrentFilterMask) \
 			prvTraceStoreEvent2(PSF_EVENT_EVENTGROUP_SETBITS, (uint32_t)eg, bitsToSet);
 
@@ -2379,14 +2383,14 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 #undef traceTASK_NOTIFY_TAKE
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
 #define traceTASK_NOTIFY_TAKE() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
 		if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE, (uint32_t)pxCurrentTCB, xTicksToWait); \
 		else \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
 #else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
 #define traceTASK_NOTIFY_TAKE() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
 		if (pxCurrentTCB->eNotifyState == eNotified) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE, (uint32_t)pxCurrentTCB, xTicksToWait); \
 		else \
@@ -2395,20 +2399,20 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 
 #undef traceTASK_NOTIFY_TAKE_BLOCK
 #define traceTASK_NOTIFY_TAKE_BLOCK() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_TAKE_BLOCK, (uint32_t)pxCurrentTCB, xTicksToWait);
 
 #undef traceTASK_NOTIFY_WAIT
 #if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0)
 #define traceTASK_NOTIFY_WAIT() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
 		if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT, (uint32_t)pxCurrentTCB, xTicksToWait); \
 		else \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_FAILED, (uint32_t)pxCurrentTCB, xTicksToWait);}
 #else /* TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_9_0_0 */
 #define traceTASK_NOTIFY_WAIT() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask){ \
 		if (pxCurrentTCB->eNotifyState == eNotified) \
 			prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT, (uint32_t)pxCurrentTCB, xTicksToWait); \
 		else \
@@ -2417,23 +2421,23 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 
 #undef traceTASK_NOTIFY_WAIT_BLOCK
 #define traceTASK_NOTIFY_WAIT_BLOCK() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(PSF_EVENT_TASK_NOTIFY_WAIT_BLOCK, (uint32_t)pxCurrentTCB, xTicksToWait);
 
 #undef traceTASK_NOTIFY
 #define traceTASK_NOTIFY() \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
-		if (TRACE_GET_TASK_FILTER(xTaskToNotify) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+		if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 			prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY, (uint32_t)xTaskToNotify);
 
 #undef traceTASK_NOTIFY_FROM_ISR
 #define traceTASK_NOTIFY_FROM_ISR() \
-	if (TRACE_GET_TASK_FILTER(xTaskToNotify) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_FROM_ISR, (uint32_t)xTaskToNotify);
 	
 #undef traceTASK_NOTIFY_GIVE_FROM_ISR
 #define traceTASK_NOTIFY_GIVE_FROM_ISR() \
-	if (TRACE_GET_TASK_FILTER(xTaskToNotify) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, xTaskToNotify) & CurrentFilterMask) \
 		prvTraceStoreEvent1(PSF_EVENT_TASK_NOTIFY_GIVE_FROM_ISR, (uint32_t)xTaskToNotify);
 
 #undef traceQUEUE_REGISTRY_ADD
@@ -2446,13 +2450,13 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 #undef traceSTREAM_BUFFER_CREATE
 #define traceSTREAM_BUFFER_CREATE( pxStreamBuffer, xIsMessageBuffer ) \
 	TRACE_SET_OBJECT_FILTER(STREAMBUFFER, pxStreamBuffer, CurrentFilterGroup); \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, pxStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent2(xIsMessageBuffer == 1 ? PSF_EVENT_MESSAGEBUFFER_CREATE : PSF_EVENT_STREAMBUFFER_CREATE, (uint32_t)pxStreamBuffer, xBufferSizeBytes);
 
 #undef traceSTREAM_BUFFER_CREATE_FAILED
 #define traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		prvTraceStoreEvent2(xIsMessageBuffer == 1 ? PSF_EVENT_MESSAGEBUFFER_CREATE_FAILED : PSF_EVENT_STREAMBUFFER_CREATE_FAILED, 0 , xBufferSizeBytes);
 
 #undef traceSTREAM_BUFFER_CREATE_STATIC_FAILED
@@ -2461,50 +2465,50 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 
 #undef traceSTREAM_BUFFER_DELETE
 #define traceSTREAM_BUFFER_DELETE( xStreamBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, pxStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_DELETE : PSF_EVENT_STREAMBUFFER_DELETE, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer)); \
 	prvTraceDeleteSymbol(xStreamBuffer);
 
 #undef traceSTREAM_BUFFER_RESET
 #define traceSTREAM_BUFFER_RESET( xStreamBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RESET : PSF_EVENT_STREAMBUFFER_RESET, (uint32_t)xStreamBuffer, 0);
 
 #undef traceSTREAM_BUFFER_SEND
 #define traceSTREAM_BUFFER_SEND( xStreamBuffer, xReturn ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND : PSF_EVENT_STREAMBUFFER_SEND, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer));
 
 #undef traceBLOCKING_ON_STREAM_BUFFER_SEND
 #define traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_BLOCK : PSF_EVENT_STREAMBUFFER_SEND_BLOCK, (uint32_t)xStreamBuffer);
 
 #undef traceSTREAM_BUFFER_SEND_FAILED
 #define traceSTREAM_BUFFER_SEND_FAILED( xStreamBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_SEND_FAILED : PSF_EVENT_STREAMBUFFER_SEND_FAILED, (uint32_t)xStreamBuffer);
 
 #undef traceSTREAM_BUFFER_RECEIVE
 #define traceSTREAM_BUFFER_RECEIVE( xStreamBuffer, xReceivedLength ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent2(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE: PSF_EVENT_STREAMBUFFER_RECEIVE, (uint32_t)xStreamBuffer, prvBytesInBuffer(xStreamBuffer));
 
 #undef traceBLOCKING_ON_STREAM_BUFFER_RECEIVE
 #define traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_BLOCK: PSF_EVENT_STREAMBUFFER_RECEIVE_BLOCK, (uint32_t)xStreamBuffer);
 
 #undef traceSTREAM_BUFFER_RECEIVE_FAILED
 #define traceSTREAM_BUFFER_RECEIVE_FAILED( xStreamBuffer ) \
-	if (TRACE_GET_TASK_FILTER(TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
+	if (TRACE_GET_OBJECT_FILTER(TASK, TRACE_GET_CURRENT_TASK()) & CurrentFilterMask) \
 		if (TRACE_GET_OBJECT_FILTER(STREAMBUFFER, xStreamBuffer) & CurrentFilterMask) \
 			prvTraceStoreEvent1(prvGetStreamBufferType(xStreamBuffer) > 0 ? PSF_EVENT_MESSAGEBUFFER_RECEIVE_FAILED: PSF_EVENT_STREAMBUFFER_RECEIVE_FAILED, (uint32_t)xStreamBuffer);
 

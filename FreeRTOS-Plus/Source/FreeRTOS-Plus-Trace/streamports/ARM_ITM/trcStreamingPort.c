@@ -40,7 +40,7 @@ static void itm_write_32(uint32_t data)
 {	
      if   ((CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk)  &&      // Trace enabled
            (ITM->TCR & ITM_TCR_ITMENA_Msk)                  &&      // ITM enabled
-           (ITM->TER & (1UL << 0)))                                  // ITM Port #0 enabled
+           (ITM->TER & (1UL << TRC_CFG_ITM_PORT)))                  // ITM port enabled
     {
         while (ITM->PORT[TRC_CFG_ITM_PORT].u32 == 0);     // Block until room in ITM FIFO - This stream port is always in "blocking mode", since intended for high-speed ITM!
         ITM->PORT[TRC_CFG_ITM_PORT].u32 = data;           // Write the data

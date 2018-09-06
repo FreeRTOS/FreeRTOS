@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.1
+ * Trace Recorder Library for Tracealyzer v4.1.5
  * Percepio AB, www.percepio.com
  *
  * trcStreamingRecorder.c
@@ -47,6 +47,9 @@
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
 
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
+
+#include <stdio.h>
+#include <stdarg.h>
 
 typedef struct{
 	uint16_t EventID;
@@ -173,9 +176,6 @@ static uint16_t FormatVersion = 0x0004;
 
 /* The number of events stored. Used as event sequence number. */
 static uint32_t eventCounter = 0;
-
-/* The user event channel for recorder warnings, defined in trcKernelPort.c */
-extern char* trcWarningChannel;
 
 /* Remembers if an earlier ISR in a sequence of adjacent ISRs has triggered a task switch.
 In that case, vTraceStoreISREnd does not store a return to the previously executing task. */
@@ -397,6 +397,37 @@ traceString xTraceRegisterString(const char* name)
 void vTracePrint(traceString chn, const char* str)
 {
 	prvTraceStoreSimpleStringEventHelper(chn, str);
+}
+
+
+/*******************************************************************************
+* vTraceConsoleChannelPrintF
+*
+* Wrapper for vTracePrint, using the default channel. Can be used as a drop-in
+* replacement for printf and similar functions, e.g. in a debug logging macro.
+*
+* Example:
+*
+*	 // Old: #define LogString debug_console_printf
+*
+*    // New, log to Tracealyzer instead:
+*	 #define LogString vTraceConsoleChannelPrintF
+*	 ...
+*	 LogString("My value is: %d", myValue);
+******************************************************************************/
+void vTraceConsoleChannelPrintF(const char* fmt, ...)
+{
+		va_list vl;
+		char tempBuf[60];
+		static traceString consoleChannel = NULL;
+
+		if (consoleChannel == NULL)
+			consoleChannel = xTraceRegisterString("Debug Console");
+
+		va_start(vl, fmt);
+		vsnprintf(tempBuf, 60, fmt, vl);
+		vTracePrint(consoleChannel, tempBuf);
+		va_end(vl);
 }
 
 /******************************************************************************

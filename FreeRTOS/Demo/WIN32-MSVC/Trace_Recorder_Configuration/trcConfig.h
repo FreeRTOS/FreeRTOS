@@ -1,5 +1,5 @@
 ﻿/*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.2
+ * Trace Recorder Library for Tracealyzer v4.1.4
  * Percepio AB, www.percepio.com
  *
  * trcConfig.h
@@ -41,7 +41,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2016.
+ * Copyright Percepio AB, 2018.
  * www.percepio.com
  ******************************************************************************/
 
@@ -105,7 +105,7 @@ extern "C" {
  * trace recorder library with an older version of FreeRTOS).
  *
  * TRC_FREERTOS_VERSION_7_3						If using FreeRTOS v7.3.x
- * TRC_FREERTOS_VERSION_7_4						If using FreeRTOS v7.4.x 
+ * TRC_FREERTOS_VERSION_7_4						If using FreeRTOS v7.4.x
  * TRC_FREERTOS_VERSION_7_5_OR_7_6				If using FreeRTOS v7.5.0 - v7.6.0
  * TRC_FREERTOS_VERSION_8_X						If using FreeRTOS v8.X.X
  * TRC_FREERTOS_VERSION_9_0_0					If using FreeRTOS v9.0.0
@@ -144,13 +144,13 @@ extern "C" {
  *
  * Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), all code related to User Events is excluded in order 
+ * If this is zero (0), all code related to User Events is excluded in order
  * to reduce code size. Any attempts of storing User Events are then silently
  * ignored.
  *
- * User Events are application-generated events, like "printf" but for the 
- * trace log, generated using vTracePrint and vTracePrintF. 
- * The formatting is done on host-side, by Tracealyzer. User Events are 
+ * User Events are application-generated events, like "printf" but for the
+ * trace log, generated using vTracePrint and vTracePrintF.
+ * The formatting is done on host-side, by Tracealyzer. User Events are
  * therefore much faster than a console printf and can often be used
  * in timing critical code without problems.
  *
@@ -234,7 +234,7 @@ extern "C" {
  *
  * Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), the trace will exclude any "pending function call" 
+ * If this is zero (0), the trace will exclude any "pending function call"
  * events, such as xTimerPendFunctionCall().
  *
  * Default value is 0 since dependent on timers.c

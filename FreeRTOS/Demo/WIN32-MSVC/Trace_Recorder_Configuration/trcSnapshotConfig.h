@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.2
+ * Trace Recorder Library for Tracealyzer v4.1.4
  * Percepio AB, www.percepio.com
  *
  * trcSnapshotConfig.h
@@ -39,7 +39,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2017.
+ * Copyright Percepio AB, 2018.
  * www.percepio.com
  ******************************************************************************/
 
@@ -113,8 +113,8 @@
 #define TRC_CFG_NMUTEX			90
 #define TRC_CFG_NTIMER			250
 #define TRC_CFG_NEVENTGROUP		90
-#define TRC_CFG_NSTREAMBUFFER	5
-#define TRC_CFG_NMESSAGEBUFFER	5
+#define TRC_CFG_NSTREAMBUFFER	50
+#define TRC_CFG_NMESSAGEBUFFER	50
 
 
 /******************************************************************************

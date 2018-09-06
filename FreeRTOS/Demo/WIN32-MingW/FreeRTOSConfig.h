@@ -24,8 +24,6 @@
  *
  * 1 tab == 4 spaces!
  */
-
-
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -140,6 +138,9 @@ used with multiple project configurations.  If it is
 
 	/* Allows tests of trying to allocate more than the heap has free. */
 	#define configUSE_MALLOC_FAILED_HOOK			0
+
+	/* To test builds that remove the static qualifier for debug builds. */
+	#define portREMOVE_STATIC_QUALIFIER
 #else
 	/* It is a good idea to define configASSERT() while developing.  configASSERT()
 	uses the same semantics as the standard C assert() macro.  Don't define

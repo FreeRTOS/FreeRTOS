@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.2
+ * Trace Recorder Library for Tracealyzer v4.1.4
  * Percepio AB, www.percepio.com
  *
  * trcSnapshotConfig.h
@@ -39,7 +39,7 @@
  *
  * Tabs are used for indent in this file (1 tab = 4 spaces)
  *
- * Copyright Percepio AB, 2017.
+ * Copyright Percepio AB, 2018.
  * www.percepio.com
  ******************************************************************************/
 
@@ -68,22 +68,6 @@
  * recording events following a specific state, e.g., the startup sequence.
  *****************************************************************************/
 #define TRC_CFG_SNAPSHOT_MODE TRC_SNAPSHOT_MODE_RING_BUFFER
-
-/*******************************************************************************
- * TRC_CFG_SCHEDULING_ONLY
- *
- * Macro which should be defined as an integer value.
- *
- * If this setting is enabled (= 1), only scheduling events are recorded.
- * If disabled (= 0), all events are recorded.
- *
- * For users of Tracealyzer Free Edition, that only displays scheduling events, this
- * option can be used to avoid storing other events.
- *
- * Default value is 0 (store all enabled events).
- *
- ******************************************************************************/
-#define TRC_CFG_SCHEDULING_ONLY 0
 
 /*******************************************************************************
  * TRC_CFG_EVENT_BUFFER_SIZE
@@ -129,76 +113,9 @@
 #define TRC_CFG_NMUTEX			90
 #define TRC_CFG_NTIMER			250
 #define TRC_CFG_NEVENTGROUP		90
+#define TRC_CFG_NSTREAMBUFFER	50
+#define TRC_CFG_NMESSAGEBUFFER	50
 
-/******************************************************************************
- * TRC_CFG_INCLUDE_MEMMANG_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * This controls if malloc and free calls should be traced. Set this to zero (0)
- * to exclude malloc/free calls, or one (1) to include such events in the trace.
- *
- * Default value is 1.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_MEMMANG_EVENTS 1
-
-/******************************************************************************
- * TRC_CFG_INCLUDE_USER_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0) the code for creating User Events is excluded to
- * reduce code size. User Events are application-generated events, like
- * "printf" but for the trace log and the formatting is done offline, by the
- * Tracealyzer visualization tool. User Events are much faster than a printf
- * and can therefore be used in timing critical code.
- *
- * Default value is 1.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_USER_EVENTS 1
-
-/*****************************************************************************
- * TRC_CFG_INCLUDE_ISR_TRACING
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is zero (0), the code for recording Interrupt Service Routines is
- * excluded, in order to reduce code size.
- *
- * Default value is 1.
- *
- * Note: tracing ISRs requires that you insert calls to vTraceStoreISRBegin
- * and vTraceStoreISREnd in your interrupt handlers.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_ISR_TRACING 1
-
-/*****************************************************************************
- * TRC_CFG_INCLUDE_READY_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If one (1), events are recorded when tasks enter scheduling state "ready".
- * This allows Tracealyzer to show the initial pending time before tasks enter
- * the execution state, and present accurate response times.
- * If zero (0), "ready events" are not created, which allows for recording
- * longer traces in the same amount of RAM.
- *
- * Default value is 1.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_READY_EVENTS 1
-
-/*****************************************************************************
- * TRC_CFG_INCLUDE_OSTICK_EVENTS
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * If this is one (1), events will be generated whenever the OS clock is
- * increased. If zero (0), OS tick events are not generated, which allows for
- * recording longer traces in the same amount of RAM.
- *
- * Default value is 0.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_OSTICK_EVENTS 1
 
 /******************************************************************************
  * TRC_CFG_INCLUDE_FLOAT_SUPPORT
@@ -217,19 +134,6 @@
  * Default value is 0.
  *****************************************************************************/
 #define TRC_CFG_INCLUDE_FLOAT_SUPPORT 0
-
-/******************************************************************************
- * TRC_CFG_INCLUDE_OBJECT_DELETE
- *
- * Macro which should be defined as either zero (0) or one (1).
- *
- * This must be enabled (1) if tasks, queues or other
- * traced kernel objects are deleted at runtime. If no deletes are made, this
- * can be set to 0 in order to exclude the delete-handling code.
- *
- * Default value is 1.
- *****************************************************************************/
-#define TRC_CFG_INCLUDE_OBJECT_DELETE 1
 
 /*******************************************************************************
  * TRC_CFG_SYMBOL_TABLE_SIZE
@@ -265,6 +169,8 @@
 #define TRC_CFG_NAME_LEN_MUTEX			15
 #define TRC_CFG_NAME_LEN_TIMER			15
 #define TRC_CFG_NAME_LEN_EVENTGROUP 	15
+#define TRC_CFG_NAME_LEN_STREAMBUFFER 	15
+#define TRC_CFG_NAME_LEN_MESSAGEBUFFER 	15
 
 /******************************************************************************
  *** ADVANCED SETTINGS ********************************************************

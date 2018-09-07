@@ -1,0 +1,12 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+EXTRA_DIST+= \
+	     swig/PythonBuild.sh \
+	     swig/README \
+	     swig/wolfssl.i \
+	     swig/wolfssl_adds.c \
+	     swig/python_wolfssl.vcproj \
+	     swig/rsasign.py \
+	     swig/runme.py
+

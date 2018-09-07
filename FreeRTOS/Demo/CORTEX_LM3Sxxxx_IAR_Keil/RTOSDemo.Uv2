@@ -1,0 +1,139 @@
+### uVision2 Project, (C) Keil Software
+### Do not modify !
+
+Target (FreeRTOS_Demo), 0x0004 // Tools: 'ARM-ADS'
+
+Group (Demo_Source)
+Group (Libraries)
+Group (RTOS_Source)
+Group (uIP_Source)
+
+File 1,1,<..\Common\Minimal\BlockQ.c><BlockQ.c>
+File 1,1,<..\Common\Minimal\blocktim.c><blocktim.c>
+File 1,1,<..\Common\Minimal\death.c><death.c>
+File 1,1,<..\Common\Minimal\integer.c><integer.c>
+File 1,1,<.\main.c><main.c>
+File 1,1,<.\ParTest\ParTest.c><ParTest.c>
+File 1,1,<..\Common\Minimal\PollQ.c><PollQ.c>
+File 1,1,<..\Common\Minimal\semtest.c><semtest.c>
+File 1,2,<.\startup_rvmdk.S><startup_rvmdk.S>
+File 1,1,<.\timertest.c><timertest.c>
+File 1,5,<.\FreeRTOSConfig.h><FreeRTOSConfig.h>
+File 1,1,<..\Common\Minimal\GenQTest.c><GenQTest.c>
+File 1,1,<..\Common\Minimal\QPeek.c><QPeek.c>
+File 1,1,<.\IntQueueTimer.c><IntQueueTimer.c>
+File 1,1,<..\Common\Minimal\IntQueue.c><IntQueue.c>
+File 1,1,<..\Common\Minimal\recmutex.c><recmutex.c>
+File 1,1,<..\Common\Minimal\QueueSet.c><QueueSet.c>
+File 2,1,<.\rit128x96x4.c><rit128x96x4.c>
+File 2,1,<.\osram128x64x4.c><osram128x64x4.c>
+File 2,4,<..\Common\drivers\LuminaryMicro\Keil\driverlib.lib><driverlib.lib>
+File 2,1,<.\formike128x128x16.c><formike128x128x16.c>
+File 2,4,<..\Common\drivers\LuminaryMicro\Keil\grlib.lib><grlib.lib>
+File 3,1,<..\..\Source\tasks.c><tasks.c>
+File 3,1,<..\..\Source\list.c><list.c>
+File 3,1,<..\..\Source\queue.c><queue.c>
+File 3,1,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c>
+File 3,1,<..\..\Source\portable\MemMang\heap_2.c><heap_2.c>
+File 4,1,<.\webserver\uIP_Task.c><uIP_Task.c>
+File 4,1,<.\webserver\emac.c><emac.c>
+File 4,1,<.\webserver\httpd.c><httpd.c>
+File 4,1,<.\webserver\httpd-cgi.c><httpd-cgi.c>
+File 4,1,<.\webserver\httpd-fs.c><httpd-fs.c>
+File 4,1,<.\webserver\http-strings.c><http-strings.c>
+File 4,1,<..\Common\ethernet\uIP\uip-1.0\uip\uip_arp.c><uip_arp.c>
+File 4,1,<..\Common\ethernet\uIP\uip-1.0\uip\psock.c><psock.c>
+File 4,1,<..\Common\ethernet\uIP\uip-1.0\uip\timer.c><timer.c>
+File 4,1,<..\Common\ethernet\uIP\uip-1.0\uip\uip.c><uip.c>
+
+
+Options 1,0,0  // Target 'FreeRTOS_Demo'
+ Device (LM3S8962)
+ Vendor (Luminary Micro)
+ Cpu (IRAM(0x20000000-0x2000FFFF) IROM(0-0x3FFFF) CLOCK(8000000) CPUTYPE("Cortex-M3"))
+ FlashUt ()
+ StupF ("STARTUP\Luminary\Startup.s" ("Luminary Startup Code"))
+ FlashDR (UL2CM3(-UU0101L5E -O14 -S0 -C0 -N00("ARM Cortex-M3") -D00(1BA00477) -L00(4) -FO7 -FD20000000 -FC800 -FN1 -FF0LM3S_256 -FS00 -FL040000))
+ DevID (4285)
+ Rgf (LM3Sxxx.H)
+ Mem ()
+ C ()
+ A ()
+ RL ()
+ OH ()
+ DBC_IFX ()
+ DBC_CMS ()
+ DBC_AMS ()
+ DBC_LMS ()
+ UseEnv=0
+ EnvBin ()
+ EnvInc ()
+ EnvLib ()
+ EnvReg (ÿLuminary\)
+ OrgReg (ÿLuminary\)
+ TgStat=16
+ OutDir (.\rvmdk\)
+ OutName (RTOSDemo)
+ GenApp=1
+ GenLib=0
+ GenHex=0
+ Debug=1
+ Browse=1
+ LstDir (.\rvmdk\)
+ HexSel=1
+ MG32K=0
+ TGMORE=0
+ RunUsr 0 1 <fromelf --bin --output .\rvmdk\RTOSDemo.bin .\rvmdk\RTOSDemo.axf>
+ RunUsr 1 0 <>
+ BrunUsr 0 0 <>
+ BrunUsr 1 0 <>
+ CrunUsr 0 0 <>
+ CrunUsr 1 0 <>
+ SVCSID <>
+ GLFLAGS=1790
+ ADSFLGA { 16,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ACPUTYP ("Cortex-M3")
+ RVDEV ()
+ ADSTFLGA { 0,12,0,2,99,0,0,66,0,0,0,0,0,0,0,0,0,0,0,0 }
+ OCMADSOCM { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ OCMADSIRAM { 0,0,0,0,32,0,0,1,0 }
+ OCMADSIROM { 1,0,0,0,0,0,0,4,0 }
+ OCMADSXRAM { 0,0,0,0,0,0,0,0,0 }
+ OCR_RVCT { 1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,0,1,0,0,0,0,0,0,0,0,0,0 }
+ RV_STAVEC ()
+ ADSCCFLG { 5,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSCMISC (--diag_suppress 191,550,513,167,177,144)
+ ADSCDEFN (RVDS_ARMCM3_LM3S102, "PACK_STRUCT_END=","ALIGN_STRUCT_END=")
+ ADSCUDEF ()
+ ADSCINCD (.;.\..\Common\drivers\LuminaryMicro;..\..\Source\portable\RVDS\ARM_CM3;..\..\Source\include;..\Common\include;..\Common\ethernet\uIP\uip-1.0\uip;.\webserver)
+ ADSASFLG { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSAMISC ()
+ ADSADEFN ()
+ ADSAUDEF ()
+ ADSAINCD ()
+ PropFld { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ IncBld=1
+ AlwaysBuild=0
+ GenAsm=0
+ AsmAsm=0
+ PublicsOnly=0
+ StopCode=3
+ CustArgs ()
+ LibMods ()
+ ADSLDFG { 17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }
+ ADSLDTA (0x00000000)
+ ADSLDDA (0x20000000)
+ ADSLDSC ()
+ ADSLDIB ()
+ ADSLDIC ()
+ ADSLDMC (--entry Reset_Handler)
+ ADSLDIF ()
+ ADSLDDW ()
+  OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S8962)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S8962)
+  OPTDBG 48126,4,()()()()()()()()()() (BIN\lmidk-agdi.dll)()()()
+ FLASH1 { 1,0,0,0,1,0,0,0,3,16,0,0,0,0,0,0,0,0,0,0 }
+ FLASH2 (BIN\lmidk-agdi.dll)
+ FLASH3 ("" ())
+ FLASH4 ()
+EndOpt
+

@@ -1,0 +1,81 @@
+/*
+ *
+ *   C-SPY macro information
+ *
+ *    __jtagCP15ReadReg(CRn, CRm, op1, op2)
+ *    __jtagCP15WriteReg(CRn, CRm, op1, op2, value)
+ *    __readMemory8(address, zone)
+ *    __writeMemory8(value, address, zone)
+ *    __writeMemory32(value, address, zone)
+ *
+ *
+ */
+
+__init_TCM()
+{
+__var v_reg;
+
+  __message "Initialize ATCM";
+  /*
+  MRC p15, 0, <Rd>, c1, c0, 1 ; Read ACTLR
+  MCR p15, 0, <Rd>, c1, c0, 1 ; Write ACTLR
+  */
+
+  /* enable ECC in ACTLR */
+  v_reg = __jtagCP15ReadReg(1, 0, 0, 1);
+  v_reg =  v_reg | 0x06000000; // set 26 and 25 bits for enabling  ECC
+  __message "ACTRL: ", v_reg:%x; // output ACTRL value for check
+  __jtagCP15WriteReg(1, 0, 0, 1, v_reg);
+
+  __fillMemory32(0x0, 0x00000000, "Memory", 0x20000, "Copy");
+  __message "ATCM initialization finished";
+}
+
+
+__init_VIC_ProvideHandler()
+{
+__var v_reg;
+
+  __message "Initialize VIC provide handler \n";
+  /*
+  MRC p15, 0, <Rd>, c1, c0, 0 ; Read SCTLR
+  MCR p15, 0, <Rd>, c1, c0, 0 ; Write SCTLR
+  */
+
+  /* Set VIC to provide handler address */
+  v_reg = __jtagCP15ReadReg(1, 0, 0, 0);
+  v_reg =  v_reg | 0x01000000; // set 24 bit for setting VE bit
+  __jtagCP15WriteReg(1, 0, 0, 0, v_reg);
+
+}
+
+execUserPreload()
+{
+__var t ;
+
+  __message "Executing execUserPreload() function";
+
+  __hwReset(0);
+  __delay(100);
+  __init_TCM();
+
+  __message "FINISH Executing execUserPreload() function";
+}
+
+
+execUserReset()
+{
+__var t;
+  __message "Executing execUserReset() function";
+
+  __init_VIC_ProvideHandler();
+
+  t = #CPSR;                // Clear CPSR.F bit
+  __message "CPSR ",t:%x;
+  t = t & 0xFFFFFFBF;
+  #CPSR = t;
+  t = #CPSR;
+  __message "CPSR ",t:%x;
+
+  __message "FINISH Executing execUserReset() function";
+}

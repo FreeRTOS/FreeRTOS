@@ -1,0 +1,45 @@
+; $Id: 6119.inf,v 1.1.2.1 2006/12/05 08:33:25 danielru Exp $
+
+[Version]                                                       ; Version section
+Signature="$Chicago$"                                           ; All Windows versions
+Class=Ports                                                     ; This is a serial port driver
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}                ; Associated GUID
+Provider=%ATMEL%                                                ; Driver is provided by ATMEL
+DriverVer=09/12/2006,1.1.1.5                                    ; Driver version 1.1.1.5 published on 23 February 2007
+
+[DestinationDirs]                                               ; DestinationDirs section
+DefaultDestDir=12                                               ; Default install directory is \drivers or \IOSubSys
+
+[Manufacturer]                                                  ; Manufacturer section
+%ATMEL%=AtmelMfg                                                ; Only one manufacturer (ATMEL), models section is named
+                                                                ; AtmelMfg
+
+[AtmelMfg]                                                      ; Models section corresponding to ATMEL
+%USBtoSerialConverter%=USBtoSer.Install,USB\VID_03EB&PID_6119   ; Identifies a device with ATMEL Vendor ID (03EBh) and
+                                                                ; Product ID equal to 6119h. Corresponding Install section
+                                                                ; is named USBtoSer.Install
+
+[USBtoSer.Install]                                              ; Install section
+include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection
+AddReg=USBtoSer.AddReg                                          ; Registry keys to add are listed in USBtoSer.AddReg
+
+[USBtoSer.AddReg]                                               ; AddReg section
+HKR,,DevLoader,,*ntkern                                         ;
+HKR,,NTMPDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[USBtoSer.Install.Services]                                     ; Services section
+AddService=usbser,0x00000002,USBtoSer.AddService                ; Assign usbser as the PnP driver for the device
+
+[USBtoSer.AddService]                                           ; Service install section
+DisplayName=%USBSer%                                            ; Name of the serial driver
+ServiceType=1                                                   ; Service kernel driver
+StartType=3                                                     ; Driver is started by the PnP manager
+ErrorControl=1                                                  ; Warn about errors
+ServiceBinary=%12%\usbser.sys                                   ; Driver filename
+
+[Strings]                                                       ; Strings section
+ATMEL="ATMEL Corp."                                             ; String value for the ATMEL symbol
+USBtoSerialConverter="AT91 USB to Serial Converter"             ; String value for the USBtoSerialConverter symbol
+USBSer="USB Serial Driver"                                      ; String value for the USBSer symbol

@@ -1,0 +1,36 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+nobase_include_HEADERS+= \
+                         wolfssl/openssl/asn1.h \
+                         wolfssl/openssl/bio.h \
+                         wolfssl/openssl/bn.h \
+                         wolfssl/openssl/conf.h \
+                         wolfssl/openssl/crypto.h \
+                         wolfssl/openssl/des.h \
+                         wolfssl/openssl/dh.h \
+                         wolfssl/openssl/dsa.h \
+                         wolfssl/openssl/ecdsa.h \
+                         wolfssl/openssl/ec.h \
+                         wolfssl/openssl/engine.h \
+                         wolfssl/openssl/err.h \
+                         wolfssl/openssl/evp.h \
+                         wolfssl/openssl/hmac.h \
+                         wolfssl/openssl/lhash.h \
+                         wolfssl/openssl/md4.h \
+                         wolfssl/openssl/md5.h \
+                         wolfssl/openssl/ripemd.h \
+                         wolfssl/openssl/ocsp.h \
+                         wolfssl/openssl/opensslconf.h \
+                         wolfssl/openssl/opensslv.h \
+                         wolfssl/openssl/ossl_typ.h \
+                         wolfssl/openssl/pem.h \
+                         wolfssl/openssl/pkcs12.h \
+                         wolfssl/openssl/rand.h \
+                         wolfssl/openssl/rsa.h \
+                         wolfssl/openssl/sha.h \
+                         wolfssl/openssl/ssl.h \
+                         wolfssl/openssl/stack.h \
+                         wolfssl/openssl/ui.h \
+                         wolfssl/openssl/x509.h \
+                         wolfssl/openssl/x509v3.h

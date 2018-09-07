@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>1022944783</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\Debug\Obj\reg_test.o</file>
+      <file>$PROJ_DIR$\..\..\Source\include\queue.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\FreeRTOS.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\projdefs.h</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\RX100\port.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\port.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\heap_4.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\blocktim.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\queue.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\port_asm.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\ParTest.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\GenQTest.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\list.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\blocktim.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\death.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\hardware_setup.o</file>
+      <file>$PROJ_DIR$\FreeRTOSConfig.h</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\main_full.c</file>
+      <file>$PROJ_DIR$\main_low_power.c</file>
+      <file>$PROJ_DIR$\ParTest.c</file>
+      <file>$PROJ_DIR$\reg_test.s</file>
+      <file>$PROJ_DIR$\Debug\Obj\main_low_power.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\timers.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\list.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+      <file>$TOOLKIT_DIR$\inc\DLib_Product.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\platform.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\board\rskrx111\r_bsp.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stddef.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\r_bsp_config.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\mcu\rx111\mcu_info.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\board\rskrx111\lcd.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\portable.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\tasks.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\timers.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\lcd.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\queue.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\main_full.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\main_low_power.pbi</file>
+      <file>$PROJ_DIR$\Debug\Exe\templproj.out</file>
+      <file>$PROJ_DIR$\Debug\Obj\RTOSDemo_IAR.pbd</file>
+      <file>$TOOLKIT_DIR$\inc\c\limits.h</file>
+      <file>$PROJ_DIR$\PriorityDefinitions.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\board\rskrx111\rskrx111.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\heap_4.o</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$TOOLKIT_DIR$\inc\iorx111.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\port.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\hardware_setup.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\r_switches.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\death.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\GenQTest.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\recmutex.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\main_full.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\ParTest.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\tasks.o</file>
+      <file>$TOOLKIT_DIR$\lib\dlrxfllsn.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\mpu_wrappers.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\list.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\recmutex.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+      <file>$TOOLKIT_DIR$\inc\machine.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\task.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\timers.h</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\RX100\port_asm.s</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\IAR\RX100\portmacro.h</file>
+      <file>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</file>
+      <file>$PROJ_DIR$\..\..\Source\list.c</file>
+      <file>$PROJ_DIR$\..\..\Source\queue.c</file>
+      <file>$PROJ_DIR$\..\..\Source\tasks.c</file>
+      <file>$PROJ_DIR$\..\..\Source\timers.c</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\board\user\hardware_setup.c</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_switches\src\r_switches.c</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_bsp\board\rskrx111\lcd.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\blocktim.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\death.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</file>
+      <file>$PROJ_DIR$\..\Common\Minimal\recmutex.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\r_switches.o</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_switches\r_switches_if.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ystdio.h</file>
+      <file>$PROJ_DIR$\..\..\Source\include\StackMacros.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdio.h</file>
+      <file>$PROJ_DIR$\Renesas_Files\r_switches\r_switches_config.h</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\RX100\port.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 56</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 50 30 12 28 66 29 31 32 2 35 36 3 19 33 34 38 55 39 52 40 37 51 41 76 54 72 67 73 69 68</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 63</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main_full.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 62</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 46</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main_low_power.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 25</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 47</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ParTest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 10</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 64</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\reg_test.s</name>
+      <outputs>
+        <tool>
+          <name>ARX</name>
+          <file> 0</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 48</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\IAR\RX100\port_asm.s</name>
+      <outputs>
+        <tool>
+          <name>ARX</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_4.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 6</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71 30 12 28 66 29 31 32 36 2 35 3 19 33 34 38 55 39 52 40 37 51 41 76 54 72 67 73 69</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\list.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 27</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 15</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71 30 12 28 66 29 31 32 36 2 35 3 19 33 34 38 55 39 52 40 37 51 41 76 54 72 67 69</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 45</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 71 30 12 28 66 29 31 32 36 68 2 35 3 19 33 34 38 55 39 52 40 37 51 41 76 54 72 67 73 69 1</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 65</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 42</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 93 30 12 28 66 29 31 32 36 91 71 68 2 35 3 19 33 34 38 55 39 52 40 37 51 41 76 54 72 67 73 69 74 92</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 26</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2 35 30 12 28 66 29 31 32 36 3 19 33 34 38 55 39 52 40 37 51 41 76 54 72 67 73 69 1 74</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Renesas_Files\r_bsp\board\user\hardware_setup.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 18</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 57</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 33 34 38 55 39 52 40 37 30 12 28 66 29 31 32 90 94</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Renesas_Files\r_switches\src\r_switches.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 89</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 58</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Renesas_Files\r_bsp\board\rskrx111\lcd.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 14</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 44</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\blocktim.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 7</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\death.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 17</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 59</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\GenQTest.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 11</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 60</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+      <outputs>
+        <tool>
+          <name>ICCRX</name>
+          <file> 70</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 61</file>
+        </tool>
+      </outputs>
+    </file>
+  </configuration>
+</project>
+
+

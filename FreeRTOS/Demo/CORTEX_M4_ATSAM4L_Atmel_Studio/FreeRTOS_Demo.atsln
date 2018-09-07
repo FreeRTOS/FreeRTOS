@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FreeRTOS_Demo", ".\FreeRTOS_Demo.cproj", "{DFC77570-BC67-4EE7-8143-C34E75167169}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFC77570-BC67-4EE7-8143-C34E75167169}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DFC77570-BC67-4EE7-8143-C34E75167169}.Debug|ARM.Build.0 = Debug|ARM
+		{DFC77570-BC67-4EE7-8143-C34E75167169}.Release|ARM.ActiveCfg = Release|ARM
+		{DFC77570-BC67-4EE7-8143-C34E75167169}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

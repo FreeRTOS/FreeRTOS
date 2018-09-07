@@ -1,0 +1,48 @@
+; memory map assignment
+; check with platform_config.h header
+; check the ranges
+
+; #define M4_ROM_START	0x1C000000
+; #define M4_ROM_LEN	0x400000	/* 4 Mbytes */
+LR_IROM1 0x1C000000 0x400000  {    ; load region size_region
+
+  ER_IROM1 0x1C000000 0x400000  {  ; load address = execution address
+
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+  }
+
+; #define M4_RAM_START	0x10000000	/* 96 Kbytes */
+; #define M4_RAM_LEN		0x18000
+  
+  ; this region includes just the relocated vector table
+  ; not used by anything else
+  ER_RELOCIRQ 0x10000000 0xC0 {
+  }
+  
+  RW_IRAM1 +0 (0x18000 - 0xC0) {  ; RW data
+
+   .ANY (+RW +ZI)
+   Hitex_Fast_Startup.o (+RO +ZI +RW)
+   lpc43xx_cgu.o (+RO +ZI +RW)
+  }
+
+; #define M4_BUF_START	0x20000000
+; #define M4_BUF_LEN		0x4000
+  RW_IRAM_BUFFERS 0x20000000 0x4000 { ; rw buffers
+
+  }
+
+; #define M4_MBX_START	0x20008000
+; #define M4_MBX_LEN		0x2000
+  RW_IRAM_MBX 0x20008000 0x2000  {
+
+
+  }
+}
+
+
+
+
+

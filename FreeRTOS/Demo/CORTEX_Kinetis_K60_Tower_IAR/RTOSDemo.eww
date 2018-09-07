@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\RTOSDemo.ewp</path>
+  </project>
+  <batchBuild>
+    <batchDefinition>
+      <name>All</name>
+      <member>
+        <project>gpio_k40_tower</project>
+        <configuration>FLASH_128KB_PFLASH</configuration>
+      </member>
+      <member>
+        <project>gpio_k40_tower</project>
+        <configuration>FLASH_64KB_PFLASH_64KB_DFLASH</configuration>
+      </member>
+      <member>
+        <project>gpio_k40_tower</project>
+        <configuration>RAM_128KB</configuration>
+      </member>
+      <member>
+        <project>RTOSDemo</project>
+        <configuration>FLASH_128KB_PFLASH</configuration>
+      </member>
+      <member>
+        <project>RTOSDemo</project>
+        <configuration>FLASH_64KB_PFLASH_64KB_DFLASH</configuration>
+      </member>
+      <member>
+        <project>RTOSDemo</project>
+        <configuration>RAM_128KB</configuration>
+      </member>
+      <member>
+        <project>gpio_k53_tower</project>
+        <configuration>FLASH_128KB_PFLASH</configuration>
+      </member>
+      <member>
+        <project>gpio_k53_tower</project>
+        <configuration>FLASH_64KB_PFLASH_64KB_DFLASH</configuration>
+      </member>
+      <member>
+        <project>gpio_k53_tower</project>
+        <configuration>RAM_128KB</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
+</workspace>
+
+

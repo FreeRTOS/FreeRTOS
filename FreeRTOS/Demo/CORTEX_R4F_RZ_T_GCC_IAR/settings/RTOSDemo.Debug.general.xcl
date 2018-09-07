@@ -1,0 +1,15 @@
+"C:\DevTools\IAR Systems\Embedded Workbench 7.2\arm\bin\armproc.dll" 
+
+"C:\DevTools\IAR Systems\Embedded Workbench 7.2\arm\bin\armJET.dll" 
+
+"C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_R4F_RZ_T_GCC_IAR\Debug\Exe\c.out" 
+
+--plugin "C:\DevTools\IAR Systems\Embedded Workbench 7.2\arm\bin\armbat.dll" 
+
+--device_macro "C:\DevTools\IAR Systems\Embedded Workbench 7.2\arm\config\debugger\Renesas\Trace_RZT1.dmac" 
+
+--macro "C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_R4F_RZ_T_GCC_IAR\System\IAR\RZT1_init_RAM.mac" 
+
+
+
+

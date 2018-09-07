@@ -1,0 +1,48 @@
+/**** start of ICF editor section. ###ICF###*/
+
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__    = 0x000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__     = 0x00000000;
+define symbol __ICFEDIT_region_ROM_end__       = 0x0000FFFF;
+define symbol __ICFEDIT_region_SRAM0_start__   = 0x00300000;
+define symbol __ICFEDIT_region_SRAM0_end__     = 0x0030FFFF;
+define symbol __ICFEDIT_region_SRAM1_start__   = 0x00310000;
+define symbol __ICFEDIT_region_SRAM1_end__     = 0x0031FFFF;
+
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__   = 0x1000;
+define symbol __ICFEDIT_size_svcstack__ = 0x40;
+define symbol __ICFEDIT_size_irqstack__ = 0x100;
+define symbol __ICFEDIT_size_fiqstack__ = 0x40;
+define symbol __ICFEDIT_size_undstack__ = 0x40;
+define symbol __ICFEDIT_size_abtstack__ = 0x40;
+define symbol __ICFEDIT_size_heap__     = 0x400;
+
+/**** End of ICF editor section. ###ICF###*/
+
+
+define memory mem with size = 4G;
+define region ROM    = mem:[from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
+define region SRAM0  = mem:[from __ICFEDIT_region_SRAM0_start__ to __ICFEDIT_region_SRAM0_end__];
+define region SRAM1  = mem:[from __ICFEDIT_region_SRAM1_start__ to __ICFEDIT_region_SRAM1_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block SVC_STACK with alignment = 8, size = __ICFEDIT_size_svcstack__ { };
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block FIQ_STACK with alignment = 8, size = __ICFEDIT_size_fiqstack__ { };
+define block UND_STACK with alignment = 8, size = __ICFEDIT_size_undstack__ { };
+define block ABT_STACK with alignment = 8, size = __ICFEDIT_size_abtstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+place at address mem:__ICFEDIT_intvec_start__    { readonly section .vectors };
+
+place in ROM     { readonly };
+place in SRAM0   { readwrite,
+                   block CSTACK, block SVC_STACK, block IRQ_STACK, block FIQ_STACK,
+                   block UND_STACK, block ABT_STACK, block HEAP };
+
+define exported symbol fl_ram_end = (__ICFEDIT_region_SRAM0_end__ & 0xFFFFFFF8);

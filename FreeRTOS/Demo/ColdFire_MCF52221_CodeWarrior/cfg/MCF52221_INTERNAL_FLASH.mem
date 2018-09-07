@@ -1,0 +1,31 @@
+// Memory Configuration File
+//
+// Description:
+//  A memory configuration file contains commands that define the legally accessible
+//  areas of memory for your specific board. Useful for example when the debugger
+//  tries to display the content of a "char *" variable, that has not yet been initialized.
+//  In this case the debugger may try to read from a bogus address, which could cause a
+//  bus error.
+//
+// Board:
+//  Freescale M52221DEMO
+//
+// Reference:
+//  Kirin2u_SoC_Guide.pdf - KIRIN2U_SG V0.7
+
+
+// All reserved ranges read back 0xBABA...
+reservedchar 0xBA
+
+address IPSBAR_BASE 0x40000000
+
+usederivative "MCF52221"
+
+//         Memory Map:
+//         ----------------------------------------------------------------------
+range      0x00000000 0x0001FFFF 4 Read				// 128 KByte Internal Flash Memory
+reserved   0x00020000 0x1FFFFFFF
+range      0x20000000 0x20003FFF 4 ReadWrite                	// 16 Kbytes Internal SRAM
+reserved   0x20004000 0x40000007
+//         $IPSBAR_BASE 		$IPSBAR_BASE + 0x1FFFFF	// Memory Mapped Registers
+reserved   $IPSBAR_BASE + 0x001D004C 0xFFFFFFFF

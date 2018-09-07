@@ -1,0 +1,23 @@
+# vim:ft=automake
+# included from Top Level Makefile.am
+# All paths should be given relative to the root
+
+
+if BUILD_EXAMPLES
+check_PROGRAMS += tests/unit.test
+noinst_PROGRAMS += tests/unit.test
+tests_unit_test_SOURCES = \
+                  tests/unit.c \
+                  tests/api.c \
+                  tests/suites.c \
+                  tests/hash.c \
+                  examples/client/client.c \
+                  examples/server/server.c
+tests_unit_test_CFLAGS       = -DNO_MAIN_DRIVER $(AM_CFLAGS)
+tests_unit_test_LDADD        = src/libwolfssl.la
+tests_unit_test_DEPENDENCIES = src/libwolfssl.la
+endif
+EXTRA_DIST += tests/unit.h
+EXTRA_DIST += tests/test.conf \
+              tests/test-dtls.conf
+DISTCLEANFILES+= tests/.libs/unit.test

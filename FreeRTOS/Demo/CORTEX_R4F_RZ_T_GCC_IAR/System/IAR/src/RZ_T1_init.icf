@@ -1,0 +1,163 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\a_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x00000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__   = 0x40020040;
+define symbol __ICFEDIT_region_ROM_end__     = 0x4008FFFF;
+define symbol __ICFEDIT_region_RAM_start__   = 0x00070000;
+define symbol __ICFEDIT_region_RAM_end__     = 0x0007FFFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__   = 0x2000;
+define symbol __ICFEDIT_size_svcstack__ = 0x200;
+define symbol __ICFEDIT_size_irqstack__ = 0x100;
+define symbol __ICFEDIT_size_fiqstack__ = 0x100;
+define symbol __ICFEDIT_size_undstack__ = 0x100;
+define symbol __ICFEDIT_size_abtstack__ = 0x100;
+define symbol __ICFEDIT_size_heap__     = 0x1000;
+/**** End of ICF editor section. ###ICF###*/
+
+
+define memory mem with size = 4G;
+define region ROM_region   = mem:[from __ICFEDIT_region_ROM_start__   to __ICFEDIT_region_ROM_end__];
+define region RAM_region   = mem:[from __ICFEDIT_region_RAM_start__   to __ICFEDIT_region_RAM_end__];
+
+define symbol __region_USER_PRG_start__      = 0x00000040;
+define symbol __region_USER_PRG_end__        = 0x0006FFFF;
+
+define symbol __region_D_LDR_DATA_start__    = 0x00800000;
+define symbol __region_D_LDR_DATA_end__      = 0x00801FFF;
+define symbol __region_D_LDR_PRG_start__     = 0x00802000;
+define symbol __region_D_LDR_PRG_end__       = 0x00807FFF;
+
+define symbol __region_D_LDR_M3PRG_start__   = 0x04000000;
+define symbol __region_D_LDR_M3PRG_end__     = 0x0407FFFF;
+
+define symbol __region_S_LDR_M3PRG_start__   = 0x00050000;
+define symbol __region_S_LDR_M3PRG_end__     = 0x0006FFFF;
+
+define symbol __region_EXT_RAM1_start__      = 0x22000000;
+define symbol __region_EXT_RAM1_end__        = 0x2207FFFF;
+define symbol __region_EXT_RAM2_start__      = 0x24000000;
+define symbol __region_EXT_RAM2_end__        = 0x2407FFFF;
+define symbol __region_SPIBSC_start__        = 0x30000000;
+define symbol __region_SPIBSC_end__          = 0x33FFFFFF;
+
+define symbol __region_CS0_start__           = 0x40000000;
+define symbol __region_CS0_end__             = 0x43FFFFFF;
+define symbol __region_CS1_start__           = 0x44000000;
+define symbol __region_CS1_end__             = 0x47FFFFFF;
+define symbol __region_CS2_start__           = 0x48000000;
+define symbol __region_CS2_end__             = 0x4BFFFFFF;
+define symbol __region_CS3_start__           = 0x4C000000;
+define symbol __region_CS3_end__             = 0x4FFFFFFF;
+define symbol __region_CS4_start__           = 0x50000000;
+define symbol __region_CS4_end__             = 0x53FFFFFF;
+define symbol __region_CS5_start__           = 0x54000000;
+define symbol __region_CS5_end__             = 0x57FFFFFF;
+
+define region USER_PRG_region  = mem:[from __region_USER_PRG_start__   to __region_USER_PRG_end__];
+define region D_LDR_DATA_region  = mem:[from __region_D_LDR_DATA_start__   to __region_D_LDR_DATA_end__];
+define region D_LDR_PRG_region  = mem:[from __region_D_LDR_PRG_start__   to __region_D_LDR_PRG_end__];
+
+define region D_LDR_M3PRG_region = mem:[from __region_D_LDR_M3PRG_start__   to __region_D_LDR_M3PRG_end__];
+define region S_LDR_M3PRG_region = mem:[from __region_S_LDR_M3PRG_start__   to __region_S_LDR_M3PRG_end__];
+
+define region EXT_RAM1_region = mem:[from __region_EXT_RAM1_start__ to __region_EXT_RAM1_end__];
+define region EXT_RAM2_region = mem:[from __region_EXT_RAM2_start__ to __region_EXT_RAM2_end__];
+define region SPIBSC_region = mem:[from __region_SPIBSC_start__ to __region_SPIBSC_end__];
+define region CS0_region = mem:[from __region_CS0_start__ to __region_CS0_end__];
+define region CS1_region = mem:[from __region_CS1_start__ to __region_CS1_end__];
+define region CS2_region = mem:[from __region_CS2_start__ to __region_CS2_end__];
+define region CS3_region = mem:[from __region_CS3_start__ to __region_CS3_end__];
+define region CS4_region = mem:[from __region_CS4_start__ to __region_CS4_end__];
+define region CS5_region = mem:[from __region_CS5_start__ to __region_CS5_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block SVC_STACK with alignment = 8, size = __ICFEDIT_size_svcstack__ { };
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block FIQ_STACK with alignment = 8, size = __ICFEDIT_size_fiqstack__ { };
+define block UND_STACK with alignment = 8, size = __ICFEDIT_size_undstack__ { };
+define block ABT_STACK with alignment = 8, size = __ICFEDIT_size_abtstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+
+define block LDR_PRG_RBLOCK with fixed order
+                            { ro code object loader_init.o,
+                              ro code object loader_init2.o,
+                              ro code object r_atcm_init.o,
+                              ro code object r_cpg.o,
+                              ro code object r_ram_init.o,
+                              ro code object r_mpc.o,
+                              ro code object r_reset.o,
+                              ro code object data_init.o,
+                              ro code object copy_init3.o };
+define block LDR_DATA_ZBLOCK { section .bss object loader_init.o,
+                               section .bss object loader_init2.o,
+                               section .bss object r_atcm_init.o,
+                               section .bss object r_cpg.o,
+                               section .bss object r_ram_init.o,
+                               section .bss object r_mpc.o,
+                               section .bss object r_reset.o,
+                               section .bss object data_init.o,
+                               section .bss object copy_init3.o };
+define block LDR_DATA_RBLOCK { section .data_init object loader_init.o,
+                               section .data_init object loader_init2.o,
+                               section .data_init object r_atcm_init.o,
+                               section .data_init object r_cpg.o,
+                               section .data_init object r_ram_init.o,
+                               section .data_init object r_mpc.o,
+                               section .data_init object r_reset.o,
+                               section .data_init object data_init.o,
+                               section .data_init object copy_init3.o };
+define block LDR_DATA_WBLOCK { section .data object loader_init.o,
+                               section .data object loader_init2.o,
+                               section .data object r_atcm_init.o,
+                               section .data object r_cpg.o,
+                               section .data object r_ram_init.o,
+                               section .data object r_mpc.o,
+                               section .data object r_reset.o,
+                               section .data object data_init.o,
+                               section .data object copy_init3.o };
+define block VECTOR_RBLOCK { ro code object vector.o };
+define block USER_PRG_RBLOCK { ro code };
+define block USER_DATA_ZBLOCK { section .bss };
+define block USER_DATA_RBLOCK { section .data_init };
+define block USER_DATA_WBLOCK { section .data };
+
+define block M3_PRG_RBLOCK { section __M3prg_init };
+define block M3_PRG_WBLOCK { section __M3prg };
+
+initialize by copy { readwrite };
+
+do not initialize  { section .noinit, section .bss };
+
+initialize manually { section __M3prg };
+
+place at address mem:__ICFEDIT_intvec_start__ { block VECTOR_RBLOCK };
+
+place in USER_PRG_region { block USER_PRG_RBLOCK,
+                           block USER_DATA_RBLOCK,
+                           readonly };
+place in RAM_region   { readwrite };
+place in RAM_region   { block USER_DATA_WBLOCK,
+                        block USER_DATA_ZBLOCK,
+                        block CSTACK, block SVC_STACK, block IRQ_STACK, block FIQ_STACK,
+                        block UND_STACK, block ABT_STACK, block HEAP };
+place in D_LDR_DATA_region { block LDR_DATA_WBLOCK, block LDR_DATA_ZBLOCK };
+place in D_LDR_PRG_region { block LDR_PRG_RBLOCK,
+                            block LDR_DATA_RBLOCK };
+
+place in S_LDR_M3PRG_region { block M3_PRG_RBLOCK };
+place in D_LDR_M3PRG_region { block M3_PRG_WBLOCK };
+
+place in EXT_RAM1_region {};
+place in EXT_RAM2_region {};
+place in SPIBSC_region {};
+place in CS0_region {};
+place in CS1_region {};
+place in CS2_region {};
+place in CS3_region {};
+place in CS4_region {};
+place in CS5_region {};

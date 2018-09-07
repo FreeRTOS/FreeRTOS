@@ -46,7 +46,7 @@ extern "C" {
 #define tskKERNEL_VERSION_NUMBER "V10.1.1"
 #define tskKERNEL_VERSION_MAJOR 10
 #define tskKERNEL_VERSION_MINOR 1
-#define tskKERNEL_VERSION_BUILD 0
+#define tskKERNEL_VERSION_BUILD 1
 
 /**
  * task. h
@@ -58,7 +58,7 @@ extern "C" {
  * \defgroup TaskHandle_t TaskHandle_t
  * \ingroup Tasks
  */
-struct tskTaskControlBlock; /* Using old naming convention so as not to break kernel aware debuggers. */
+struct tskTaskControlBlock; /* The old naming convention is used to prevent breaking kernel aware debuggers. */
 typedef struct tskTaskControlBlock* TaskHandle_t;
 
 /*

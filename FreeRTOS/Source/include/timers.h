@@ -73,7 +73,7 @@ or interrupt version of the queue send function should be used. */
  * reference the subject timer in calls to other software timer API functions
  * (for example, xTimerStart(), xTimerReset(), etc.).
  */
-struct tmrTimerControl; /* Using old naming convention so as not to break kernel aware debuggers. */
+struct tmrTimerControl; /* The old naming convention is used to prevent breaking kernel aware debuggers. */
 typedef struct tmrTimerControl * TimerHandle_t;
 
 /*

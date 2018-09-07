@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.1.0
+ * FreeRTOS Kernel V10.1.1
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -43,7 +43,7 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V10.1.0"
+#define tskKERNEL_VERSION_NUMBER "V10.1.1"
 #define tskKERNEL_VERSION_MAJOR 10
 #define tskKERNEL_VERSION_MINOR 1
 #define tskKERNEL_VERSION_BUILD 0
@@ -58,7 +58,7 @@ extern "C" {
  * \defgroup TaskHandle_t TaskHandle_t
  * \ingroup Tasks
  */
-struct tskTaskControlBlock;
+struct tskTaskControlBlock; /* Using old naming convention so as not to break kernel aware debuggers. */
 typedef struct tskTaskControlBlock* TaskHandle_t;
 
 /*

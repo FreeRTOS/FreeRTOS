@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.1.0
+ * FreeRTOS Kernel V10.1.1
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -65,7 +65,7 @@ defining trmTIMER_SERVICE_TASK_NAME in FreeRTOSConfig.h. */
 #endif
 
 /* The definition of the timers themselves. */
-typedef struct tmrTimerControl
+typedef struct tmrTimerControl /* Using old naming convention so as not to break kernel aware debuggers. */
 {
 	const char				*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	ListItem_t				xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
@@ -127,7 +127,10 @@ which static variables must be declared volatile. */
 
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
-timer service task is allowed to access these lists. */
+timer service task is allowed to access these lists.  NOTE:  xActiveTimerList1
+and xActiveTimerList2 could move to be function scope, however doing so breaks
+kernel aware debuggers, and debug scenarios that require the static qualifier
+to be removed. */
 PRIVILEGED_DATA static List_t xActiveTimerList1;
 PRIVILEGED_DATA static List_t xActiveTimerList2;
 PRIVILEGED_DATA static List_t *pxCurrentTimerList;

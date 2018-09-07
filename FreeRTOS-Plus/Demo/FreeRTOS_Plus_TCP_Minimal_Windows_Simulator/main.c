@@ -359,9 +359,9 @@ uint32_t ulLoggingIPAddress;
  * SYSTEMS.
  */
 extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
-	uint16_t usSourcePort,
-	uint32_t ulDestinationAddress,
-	uint16_t usDestinationPort )
+													uint16_t usSourcePort,
+													uint32_t ulDestinationAddress,
+													uint16_t usDestinationPort )
 {
 	( void ) ulSourceAddress;
 	( void ) usSourcePort;

@@ -1197,7 +1197,7 @@ UBaseType_t uxNewMSS;
 		else if( pucPtr[ 0 ] == TCP_OPT_MSS )
 		{
 			/* Confirm that the option fits in the remaining buffer space. */
-			if( ( xRemainingOptionsBytes < TCP_OPT_MSS_LEN )|| ( pucPtr[ 1 ] != TCP_OPT_MSS_LEN ) )
+			if( ( xRemainingOptionsBytes < TCP_OPT_MSS_LEN ) || ( pucPtr[ 1 ] != TCP_OPT_MSS_LEN ) )
 			{
 				break;
 			}

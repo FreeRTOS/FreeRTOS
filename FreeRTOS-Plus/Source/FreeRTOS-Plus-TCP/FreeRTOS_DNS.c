@@ -1340,7 +1340,7 @@ TickType_t xTimeoutTime = pdMS_TO_TICKS( 200 );
 	{
 	BaseType_t x;
 	BaseType_t xFound = pdFALSE;
-	uint32_t ulCurrentTimeSeconds = ( xTaskGetTickCount() / portTICK_PERIOD_MS ) / 1000;
+	uint32_t ulCurrentTimeSeconds = ( xTaskGetTickCount() / portTICK_PERIOD_MS ) / 1000UL;
 	static BaseType_t xFreeEntry = 0;
 
 		/* For each entry in the DNS cache table. */

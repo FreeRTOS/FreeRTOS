@@ -3339,7 +3339,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		}
 		else
 		{
-			FreeRTOS_printf( ( "Prot Port IP-Remote	   : Port  R/T Status	   Alive  tmout Child\n" ) );
+			FreeRTOS_printf( ( "Prot Port IP-Remote       : Port  R/T Status       Alive  tmout Child\n" ) );
 			for( pxIterator  = ( ListItem_t * ) listGET_HEAD_ENTRY( &xBoundTCPSocketsList );
 				 pxIterator != ( ListItem_t * ) listGET_END_MARKER( &xBoundTCPSocketsList );
 				 pxIterator  = ( ListItem_t * ) listGET_NEXT( pxIterator ) )

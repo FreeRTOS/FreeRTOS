@@ -39,7 +39,7 @@
  * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
  */
-void vPortSetupTimerInterrupt( void );
+void vPortSetupTimerInterrupt( void ) __attribute__(( weak ));
 
 /*
  * Used to catch tasks that attempt to return from their implementing function.
@@ -48,10 +48,16 @@ static void prvTaskExitError( void );
 
 /*-----------------------------------------------------------*/
 
+/* Used to program the machine timer compare register. */
+static uint64_t ullNextTime = 0ULL;
+static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) 0x2004000;
+
+/*-----------------------------------------------------------*/
+
 void prvTaskExitError( void )
 {
 volatile uint32_t ulx = 0;
-
+#warning prvTaskExitError not used yet.
 	/* A function that implements a task must not exit or attempt to return to
 	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
@@ -154,6 +160,29 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 }
 /*-----------------------------------------------------------*/
 
+void vPortSetupTimerInterrupt( void )
+{
+uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
+volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) 0x200BFF8;
+volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) 0x200BFFc;
+
+	do
+	{
+		ulCurrentTimeHigh = *pulTimeHigh;
+		ulCurrentTimeLow = *pulTimeLow;
+	} while( ulCurrentTimeHigh != *pulTimeHigh );
+
+	ullNextTime = ( uint64_t ) ulCurrentTimeHigh;
+	ullNextTime <<= 32ULL;
+	ullNextTime |= ( uint64_t ) ulCurrentTimeLow;
+	ullNextTime += ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
+	*pullMachineTimerCompareRegister = ullNextTime;
+
+	/* Enable timer interrupt */
+	__asm volatile( "csrs mie, %0" :: "r"(0x80) );
+}
+/*-----------------------------------------------------------*/
+
 BaseType_t xPortStartScheduler( void )
 {
 	__asm volatile
@@ -189,6 +218,7 @@ BaseType_t xPortStartScheduler( void )
 		"lw		x6, 100( sp )			\r\n" /* X6 */
 		"lw		x5, 104( sp )			\r\n" /* X5 */
 		"lw		x1, 108( sp )			\r\n" /* X1 */
+		"csrs	mie, 8					\r\n" /* Enable soft interrupt. */
 		"csrs 	mstatus, 8				\r\n" /* Enable interrupts. */
 		"ret								"
 	);
@@ -198,8 +228,5 @@ BaseType_t xPortStartScheduler( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortYield( void )
-{
-}
 
 

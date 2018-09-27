@@ -50,14 +50,14 @@ static void prvTaskExitError( void );
 
 /* Used to program the machine timer compare register. */
 static uint64_t ullNextTime = 0ULL;
-static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) 0x2004000;
+static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCTRL_BASE + 0x4000 );
 
 /*-----------------------------------------------------------*/
 
 void prvTaskExitError( void )
 {
 volatile uint32_t ulx = 0;
-#warning prvTaskExitError not used yet.
+
 	/* A function that implements a task must not exit or attempt to return to
 	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
@@ -154,6 +154,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 //	pxTopOfStack--;
 //	*pxTopOfStack = ( StackType_t ) 2;  /* Stack pointer. */
 //	pxTopOfStack--;
+	*pxTopOfStack = ( StackType_t ) prvTaskExitError;
+	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) pxCode;
 
 	return pxTopOfStack;
@@ -163,8 +165,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 void vPortSetupTimerInterrupt( void )
 {
 uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
-volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) 0x200BFF8;
-volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) 0x200BFFc;
+volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFF8 );
+volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFFc );
 
 	do
 	{
@@ -185,9 +187,13 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) 0x200BFFc;
 
 void Software_IRQHandler( void )
 {
+volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCTRL_BASE;
+
 	vTaskSwitchContext();
+
+	/* Clear software interrupt. */
+	*ulSoftInterrupt = 0UL;
 }
-
-
+/*-----------------------------------------------------------*/
 
 

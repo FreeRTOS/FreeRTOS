@@ -70,7 +70,7 @@ not need to be guarded with a critical section. */
 
 
 /* Scheduler utilities. */
-#define portYIELD() {  volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) 0x2000000;	*ulSoftInterrupt = 1UL; }
+#define portYIELD() {  volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCTRL_BASE;	*ulSoftInterrupt = 1UL; }
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYield()
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/

@@ -766,6 +766,7 @@ static void prvTaskToDelete( void *pvParameters )
 
 	/* For code coverage test purposes it is deleted by the Idle task. */
 	configASSERT( uxTaskGetStackHighWaterMark( NULL ) > 0 );
+	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/
@@ -1057,7 +1058,7 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvTimerCallback( TaskHandle_t xExpiredTimer )
+static void prvTimerCallback( TimerHandle_t xExpiredTimer )
 {
 uint32_t ulCount;
 

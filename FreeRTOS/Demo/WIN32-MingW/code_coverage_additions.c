@@ -381,6 +381,11 @@ const uint32_t ulRunTimeTollerance = ( uint32_t ) 0xfff;
 		xReturn = pdFAIL;
 	}
 
+	if( uxTaskGetStackHighWaterMark2( NULL ) != ( configSTACK_DEPTH_TYPE ) xStatus.usStackHighWaterMark )
+	{
+		xReturn = pdFAIL;
+	}
+
 	/* Now obtain a task status without the high water mark but with the state,
 	which in the case of the idle task should be Read. */
 	xTimerTask = xTimerGetTimerDaemonTaskHandle();
@@ -405,6 +410,10 @@ const uint32_t ulRunTimeTollerance = ( uint32_t ) 0xfff;
 		xReturn = pdFAIL;
 	}
 	if( uxTaskGetStackHighWaterMark( xTimerTask ) != xStatus.usStackHighWaterMark )
+	{
+		xReturn = pdFAIL;
+	}
+	if( uxTaskGetStackHighWaterMark2( xTimerTask ) != ( configSTACK_DEPTH_TYPE ) xStatus.usStackHighWaterMark )
 	{
 		xReturn = pdFAIL;
 	}

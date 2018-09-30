@@ -201,7 +201,7 @@ int main_full( void )
 	vStartDynamicPriorityTasks();
 	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvDemoQueueSpaceFunctions, NULL, configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL ); /* Name is null for code coverage. */
 	vStartEventGroupTasks();
 	vStartInterruptSemaphoreTasks();
 	vStartQueueSetPollingTask();

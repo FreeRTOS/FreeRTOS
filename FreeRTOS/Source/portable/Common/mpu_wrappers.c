@@ -420,6 +420,19 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( INCLUDE_uxTaskGetStackHighWaterMark2 == 1 )
+	configSTACK_DEPTH_TYPE MPU_uxTaskGetStackHighWaterMark2( TaskHandle_t xTask )
+	{
+	configSTACK_DEPTH_TYPE uxReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		uxReturn = uxTaskGetStackHighWaterMark2( xTask );
+		vPortResetPrivilege( xRunningPrivileged );
+		return uxReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( INCLUDE_xTaskGetCurrentTaskHandle == 1 )
 	TaskHandle_t MPU_xTaskGetCurrentTaskHandle( void )
 	{

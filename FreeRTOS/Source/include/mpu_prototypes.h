@@ -61,6 +61,7 @@ UBaseType_t MPU_uxTaskGetNumberOfTasks( void );
 char * MPU_pcTaskGetName( TaskHandle_t xTaskToQuery );
 TaskHandle_t MPU_xTaskGetHandle( const char *pcNameToQuery );
 UBaseType_t MPU_uxTaskGetStackHighWaterMark( TaskHandle_t xTask );
+configSTACK_DEPTH_TYPE MPU_uxTaskGetStackHighWaterMark2( TaskHandle_t xTask );
 void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction );
 TaskHookFunction_t MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask );
 void MPU_vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue );

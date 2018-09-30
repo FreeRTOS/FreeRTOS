@@ -131,7 +131,7 @@
 	STORE	x29, 28 * REGBYTES(sp)
 	STORE	x30, 29 * REGBYTES(sp)
 	STORE	x31, 30 * REGBYTES(sp)
-	
+
 	/* Store current stackpointer in task control block (TCB) */
 	LOAD	t0, pxCurrentTCB	//pointer
 	STORE	sp, 0x0(t0)

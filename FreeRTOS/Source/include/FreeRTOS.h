@@ -156,6 +156,10 @@ extern "C" {
 	#define INCLUDE_uxTaskGetStackHighWaterMark 0
 #endif
 
+#ifndef INCLUDE_uxTaskGetStackHighWaterMark2
+	#define INCLUDE_uxTaskGetStackHighWaterMark2 0
+#endif
+
 #ifndef INCLUDE_eTaskGetState
 	#define INCLUDE_eTaskGetState 0
 #endif

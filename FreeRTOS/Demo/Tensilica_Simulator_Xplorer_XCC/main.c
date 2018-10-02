@@ -26,15 +26,17 @@
  */
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
- * The simply blinky demo is implemented and described in main_blinky.c.  The
- * more comprehensive test and demo application is implemented and described in
- * main_full.c.
+ * This project provides two demo applications:
+ * - A simple blinky style demo application.
+ * - A more comprehensive test and demo application.
+ * The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY macro is used to select between the two.
  *
- * This file implements the code that is not demo specific, including the
- * hardware setup and FreeRTOS hook functions.
+ * The simply blinky demo is implemented and described in the file main_blinky.c.
+ * The more comprehensive test and demo application is implemented and described
+ * in the file main_full.c.
+ *
+ * This file implements the code that is not demo specific, including the FreeRTOS
+ * hook functions.
  *
  *******************************************************************************
  */
@@ -47,48 +49,60 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* This project provides two demo applications.  A simple blinky style demo
-application, and a more comprehensive test and demo application.  The
-mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
-
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 then the blinky demo will be built.
-The blinky demo is implemented and described in main_blinky.c.
-
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
-demo application will be built.  The comprehensive test and demo application is
-implemented and described in main_full.c. */
+/**
+ * This project provides two demo applications:
+ * - A simple blinky style demo application.
+ * - A more comprehensive test and demo application.
+ * The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY macro is used to select between the two.
+ *
+ * If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1 then the blinky demo will be
+ * built. The blinky demo is implemented and described in main_blinky.c.
+ *
+ * If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0 then the comprehensive test
+ * and demo application will be built. The comprehensive test and demo application
+ * is implemented and described in main_full.c.
+ */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
-
 /*-----------------------------------------------------------*/
 
-/*
- * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+/**
+ * The entry function for the blinky demo application.
+ *
+ * This is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  */
 extern void main_blinky( void );
+
+/**
+ * The entry function for the comprehensive test and demo application.
+ *
+ * This is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ */
 extern void main_full( void );
 
-/*
+/**
  * Prototypes for the standard FreeRTOS application hook (callback) functions
- * implemented within this file.  See http://www.freertos.org/a00016.html .
+ * implemented within this file.
+ *
+ * @see http://www.freertos.org/a00016.html
  */
 void vApplicationMallocFailedHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/*
- * Only the comprehensive demo uses application hook (callback) functions.  See
- * http://www.freertos.org/a00016.html for more information.
+/**
+ * The function called from the tick hook.
+ *
+ * @note Only the comprehensive demo uses application hook (callback) functions.
+ *
+ * @see http://www.freertos.org/a00016.html
  */
 void vFullDemoTickHookFunction( void );
-
-
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
-	of this file. */
+	 * of this file. */
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
 	{
 		main_blinky();
@@ -106,17 +120,17 @@ int main( void )
 void vApplicationMallocFailedHook( void )
 {
 	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is a hook
-	function that will get called if a call to pvPortMalloc() fails.
-	pvPortMalloc() is called internally by the kernel whenever a task, queue,
-	timer or semaphore is created.  It is also called by various parts of the
-	demo application.  If heap_1.c, heap_2.c or heap_4.c is being used, then the
-	size of the	heap available to pvPortMalloc() is defined by
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
-	API function can be used to query the size of free heap space that remains
-	(although it does not provide information on how the remaining heap might be
-	fragmented).  See http://www.freertos.org/a00111.html for more
-	information. */
+	 * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h. It is a hook
+	 * function that will get called if a call to pvPortMalloc() fails.
+	 * pvPortMalloc() is called internally by the kernel whenever a task, queue,
+	 * timer or semaphore is created.  It is also called by various parts of the
+	 * demo application.  If heap_1.c, heap_2.c or heap_4.c is being used, then
+	 * the size of the	heap available to pvPortMalloc() is defined by
+	 * configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the xPortGetFreeHeapSize()
+	 * API function can be used to query the size of free heap space that remains
+	 * (although it does not provide information on how the remaining heap might be
+	 * fragmented). See http://www.freertos.org/a00111.html for more information.
+	 */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -127,10 +141,8 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	( void ) pxTask;
 
 	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected.  This function is
-	provided as an example only as stack overflow checking does not function
-	when running the FreeRTOS Windows port. */
+	 * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	 * function is called if a stack overflow is detected. */
 	vAssertCalled( __LINE__, __FILE__ );
 }
 /*-----------------------------------------------------------*/
@@ -138,11 +150,10 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 void vApplicationTickHook( void )
 {
 	/* This function will be called by each tick interrupt if
-	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-	added here, but the tick hook is called from an interrupt context, so
-	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
-
+	 * configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
+	 * added here, but the tick hook is called from an interrupt context, so
+	 * code must not attempt to block, and only the interrupt safe FreeRTOS API
+	 * functions can be used (those that end in FromISR()). */
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
 	{
 		vFullDemoTickHookFunction();
@@ -157,19 +168,17 @@ static BaseType_t xPrinted = pdFALSE;
 volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
 	/* Called if an assertion passed to configASSERT() fails.  See
-	http://www.freertos.org/a00110.html#configASSERT for more information. */
+	 * http://www.freertos.org/a00110.html#configASSERT for more information. */
 
 	/* Parameters are not used. */
 	( void ) ulLine;
 	( void ) pcFileName;
 
-	printf( "ASSERT! Line %ld, file %s\r\n", ulLine, pcFileName );
-
- 	taskENTER_CRITICAL();
+	taskENTER_CRITICAL();
 	{
 		/* You can step out of this function to debug the assertion by using
-		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
-		value. */
+		 * the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
+		 * value. */
 		while( ulSetToNonZeroInDebuggerToContinue == 0 )
 		{
 			__asm volatile( "NOP" );

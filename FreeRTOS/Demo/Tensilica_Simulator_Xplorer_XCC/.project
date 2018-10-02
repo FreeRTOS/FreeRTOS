@@ -59,6 +59,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/GenQTest.c</locationURI>
 		</link>
 		<link>
+			<name>CommonDemoTasks/IntQueue.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/IntQueue.c</locationURI>
+		</link>
+		<link>
 			<name>CommonDemoTasks/IntSemTest.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/IntSemTest.c</locationURI>
@@ -132,11 +137,6 @@
 			<name>CommonDemoTasks/death.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/death.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/dynamic.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/dynamic.c</locationURI>
 		</link>
 		<link>
 			<name>CommonDemoTasks/flop.c</name>
@@ -291,92 +291,92 @@
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/port.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/port.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/port.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/portasm.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/portasm.S</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/portasm.S</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/portbenchmark.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/portbenchmark.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/portbenchmark.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/portclib.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/portclib.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/portclib.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/portmacro.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/portmacro.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/portmacro.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/porttrace.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/porttrace.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/porttrace.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/readme_xtensa.txt</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/readme_xtensa.txt</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/readme_xtensa.txt</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_api.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_api.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_api.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_config.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_config.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_config.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_context.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_context.S</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_context.S</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_context.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_context.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_context.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_init.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_init.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_init.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_intr.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_intr.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_intr.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_intr_asm.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_intr_asm.S</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_intr_asm.S</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_overlay_os_hook.c</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_overlay_os_hook.c</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_overlay_os_hook.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_rtos.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_rtos.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_rtos.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_timer.h</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_timer.h</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_timer.h</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/XCC/xtensa_vectors.S</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/XCC/Xtensa/xtensa_vectors.S</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/ThirdParty/XCC/Xtensa/xtensa_vectors.S</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

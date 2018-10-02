@@ -43,32 +43,38 @@
 
 /* Check if Timer1 is available. */
 #if XCHAL_TIMER1_INTERRUPT != XTHAL_TIMER_UNCONFIGURED
-	#if XCHAL_INT_LEVEL(XCHAL_TIMER1_INTERRUPT) <= XCHAL_EXCM_LEVEL
-		#define SECOND_TIMER_AVAILABLE    1
+	#if XCHAL_INT_LEVEL( XCHAL_TIMER1_INTERRUPT ) <= XCHAL_EXCM_LEVEL
+		#define SECOND_TIMER_AVAILABLE		1
 	#endif
 #endif
 
 #ifndef SECOND_TIMER_AVAILABLE
-	#define SECOND_TIMER_AVAILABLE 0
+	#define SECOND_TIMER_AVAILABLE			0
 #endif
 
-/* Timer0 is used to drive systick and therefore we use Timer1
+/**
+ * Timer0 is used to drive systick and therefore we use Timer1
  * as second interrupt which runs on a higher priority than
  * Timer0. This ensures that systick will get interrupted by
- * this timer and hence we can test interrupt nesting. */
-#define SECOND_TIMER_INDEX          1
+ * this timer and hence we can test interrupt nesting.
+ */
+#define SECOND_TIMER_INDEX					1
 
-/* Frequency of the second timer - This timer is configured at
- * a frequency offset of 17 from the systick timer. */
-#define SECOND_TIMER_TICK_RATE_HZ   ( configTICK_RATE_HZ + 17 )
-#define SECOND_TIMER_TICK_DIVISOR   ( configCPU_CLOCK_HZ / SECOND_TIMER_TICK_RATE_HZ )
+/**
+ * Frequency of the second timer - This timer is configured at
+ * a frequency offset of 17 from the systick timer.
+ */
+#define SECOND_TIMER_TICK_RATE_HZ			( configTICK_RATE_HZ + 17 )
+#define SECOND_TIMER_TICK_DIVISOR			( configCPU_CLOCK_HZ / SECOND_TIMER_TICK_RATE_HZ )
 /*-----------------------------------------------------------*/
 
 /* Defined in main_full.c. */
 extern BaseType_t xTimerForQueueTestInitialized;
 /*-----------------------------------------------------------*/
 
-/* Interrupt handler for timer interrupt. */
+/**
+ * Interrupt handler for timer interrupt.
+ */
 #if( SECOND_TIMER_AVAILABLE == 1 )
 	static void prvTimer2Handler( void *arg );
 #endif /* SECOND_TIMER_AVAILABLE */
@@ -103,13 +109,15 @@ unsigned currentCycleCount, firstComparatorValue;
 /*-----------------------------------------------------------*/
 
 /*
- * Xtensa timers work by comparing a cycle counter with a preset value.  Once the match occurs
- * an interrupt is generated, and the handler has to set a new cycle count into the comparator.
- * To avoid clock drift due to interrupt latency, the new cycle count is computed from the old,
- * not the time the interrupt was serviced. However if a timer interrupt is ever serviced more
- * than one tick late, it is necessary to process multiple ticks until the new cycle count is
- * in the future, otherwise the next timer interrupt would not occur until after the cycle
- * counter had wrapped (2^32 cycles later).
+ * Xtensa timers work by comparing a cycle counter with a preset value.
+ * Once the match occurs an interrupt is generated, and the handler has
+ * to set a new cycle count into the comparator. To avoid clock drift
+ * due to interrupt latency, the new cycle count is computed from the
+ * old, not the time the interrupt was serviced. However if a timer
+ * interrupt is ever serviced more than one tick late, it is necessary
+ * to process multiple ticks until the new cycle count is in the future,
+ * otherwise the next timer interrupt would not occur until after the
+ * cycle counter had wrapped (2^32 cycles later).
 
 do {
     ticks++;

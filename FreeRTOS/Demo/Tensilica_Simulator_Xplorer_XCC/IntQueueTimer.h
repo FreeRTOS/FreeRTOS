@@ -29,8 +29,9 @@
 #ifndef INT_QUEUE_TIMER_H
 #define INT_QUEUE_TIMER_H
 
+/**
+ * The function called from interrupt tests to initialise timer.
+ */
 void vInitialiseTimerForIntQueueTest( void );
-void vTimer2Handler_C( void );
 
 #endif /* INT_QUEUE_TIMER_H */
-

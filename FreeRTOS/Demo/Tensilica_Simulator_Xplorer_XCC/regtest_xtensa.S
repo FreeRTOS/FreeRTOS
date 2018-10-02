@@ -43,15 +43,15 @@
 
 vRegTest1:
 
-	/* Set initial values into the general purpose registers. */
-	/* a0 = return address, a1 = stack pointer.               */
+	/* Set initial values into the general purpose registers.
+	 * a0 = return address, a1 = stack pointer. */
 #ifdef __XTENSA_WINDOWED_ABI__
 	entry	a1, 64
-	s32i	a0, a1, 0		/* Save return address */
+	s32i	a0, a1, 0		/* Save return address. */
 #else
 	addi	a1, a1, -64
-	s32i	a0, a1, 0		/* Save return address */
-	s32i	a12, a1, 4		/* Save callee-saved regs if call0 ABI */
+	s32i	a0, a1, 0		/* Save return address. */
+	s32i	a12, a1, 4		/* Save callee-saved regs if call0 ABI. */
 	s32i	a13, a1, 8
 	s32i	a14, a1, 12
 	s32i	a15, a1, 16
@@ -74,7 +74,7 @@ vRegTest1:
 _RegTest1Loop:
 
 	/* Loop checking the values originally loaded into the general purpose
-	registers remain through the life of the task. */
+	 * registers remain through the life of the task. */
 	movi	a0, 0x11111111
 	bne		a0, a2, _RegTest1Error
 	movi	a0, 0x22222222
@@ -105,7 +105,7 @@ _RegTest1Loop:
 	bne		a0, a15, _RegTest1Error
 
 	/* Incrememnt the loop counter to prove this task has not gone into the
-	error null loop. */
+	 * error null loop. */
 	s32i	a2, a1, 20
 	movi	a2, ulRegTest1Counter
 	l32i	a0, a2, 0
@@ -127,15 +127,15 @@ _RegTest1Error:
 
 vRegTest2:
 
-	/* Set initial values into the general purpose registers. */
-	/* a0 = return address, a1 = stack pointer.               */
+	/* Set initial values into the general purpose registers.
+	 * a0 = return address, a1 = stack pointer. */
 #ifdef __XTENSA_WINDOWED_ABI__
 	entry	a1, 64
-	s32i	a0, a1, 0		/* Save return address */
+	s32i	a0, a1, 0		/* Save return address. */
 #else
 	addi	a1, a1, -64
-	s32i	a0, a1, 0		/* Save return address */
-	s32i	a12, a1, 4		/* Save callee-saved regs if call0 ABI */
+	s32i	a0, a1, 0		/* Save return address. */
+	s32i	a12, a1, 4		/* Save callee-saved regs if call0 ABI. */
 	s32i	a13, a1, 8
 	s32i	a14, a1, 12
 	s32i	a15, a1, 16
@@ -161,7 +161,7 @@ _ReInit:
 _RegTest2Loop:
 
 	/* Loop checking the values originally loaded into the general purpose
-	registers remain through the life of the task. */
+	 * registers remain through the life of the task. */
 	movi	a0, 0x01010101
 	bne		a0, a2, _RegTest1Error
 	movi	a0, 0x02020202
@@ -191,9 +191,9 @@ _RegTest2Loop:
 	movi	a0, 0x0e0e0e0e
 	bne		a0, a15, _RegTest1Error
 
-	/* Force a yield from one of the reg test tasks to increase coverage. */
-	/* IMPORTANT: this call will trash some number of registers. Branch   */
-	/* to _ReInit to set things up again.                                 */
+	/* Force a yield from one of the reg test tasks to increase coverage.
+	 * IMPORTANT: this call will trash some number of registers. Branch
+	 * to _ReInit to set things up again. */
 #ifdef __XTENSA_WINDOWED_ABI__
 	call8	vPortYield
 #else
@@ -201,7 +201,7 @@ _RegTest2Loop:
 #endif
 
 	/* Increment the loop counter to prove this task has not gone into the
-	error null loop. */
+	 * error null loop. */
 	s32i	a2, a1, 20
 	movi	a2, ulRegTest2Counter
 	l32i	a0, a2, 0
@@ -210,10 +210,8 @@ _RegTest2Loop:
 	l32i	a2, a1, 20
 
 	/* Loop again. */
-	j		_ReInit			/* See comments above */
-	/* j		_RegTest2Loop */
+	j		_ReInit			/* See comments above about not using  j _RegTest2Loop.  */
 
 _RegTest2Error:
 .L2:
 	j		.L2
-

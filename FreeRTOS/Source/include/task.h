@@ -1477,9 +1477,20 @@ constant. */
 		 * task.h
 		 * <pre>void xTaskGetApplicationTaskTag( TaskHandle_t xTask );</pre>
 		 *
-		 * Returns the pxHookFunction value assigned to the task xTask.
+		 * Returns the pxHookFunction value assigned to the task xTask.  Do not
+		 * call from an interrupt service routine - call
+		 * xTaskGetApplicationTaskTagFromISR() instead.
 		 */
 		TaskHookFunction_t xTaskGetApplicationTaskTag( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
+
+		/**
+		 * task.h
+		 * <pre>void xTaskGetApplicationTaskTagFromISR( TaskHandle_t xTask );</pre>
+		 *
+		 * Returns the pxHookFunction value assigned to the task xTask.  Can
+		 * be called from an interrupt service routine.
+		 */
+		TaskHookFunction_t xTaskGetApplicationTaskTagFromISR( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 	#endif /* configUSE_APPLICATION_TASK_TAG ==1 */
 #endif /* ifdef configUSE_APPLICATION_TASK_TAG */
 

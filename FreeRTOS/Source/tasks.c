@@ -2845,26 +2845,44 @@ BaseType_t xSwitchRequired = pdFALSE;
 
 	TaskHookFunction_t xTaskGetApplicationTaskTag( TaskHandle_t xTask )
 	{
-	TCB_t *xTCB;
+	TCB_t *pxTCB;
 	TaskHookFunction_t xReturn;
 
-		/* If xTask is NULL then we are setting our own task hook. */
-		if( xTask == NULL )
-		{
-			xTCB = ( TCB_t * ) pxCurrentTCB;
-		}
-		else
-		{
-			xTCB = xTask;
-		}
+		/* If xTask is NULL then set the calling task's hook. */
+		pxTCB = prvGetTCBFromHandle( xTask );
 
 		/* Save the hook function in the TCB.  A critical section is required as
 		the value can be accessed from an interrupt. */
 		taskENTER_CRITICAL();
 		{
-			xReturn = xTCB->pxTaskTag;
+			xReturn = pxTCB->pxTaskTag;
 		}
 		taskEXIT_CRITICAL();
+
+		return xReturn;
+	}
+
+#endif /* configUSE_APPLICATION_TASK_TAG */
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+
+	TaskHookFunction_t xTaskGetApplicationTaskTagFromISR( TaskHandle_t xTask )
+	{
+	TCB_t *pxTCB;
+	TaskHookFunction_t xReturn;
+	UBaseType_t uxSavedInterruptStatus;
+
+		/* If xTask is NULL then set the calling task's hook. */
+		pxTCB = prvGetTCBFromHandle( xTask );
+
+		/* Save the hook function in the TCB.  A critical section is required as
+		the value can be accessed from an interrupt. */
+		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+		{
+			xReturn = pxTCB->pxTaskTag;
+		}
+		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
 
 		return xReturn;
 	}

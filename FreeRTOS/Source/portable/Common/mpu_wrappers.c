@@ -357,6 +357,19 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
+#if ( configUSE_APPLICATION_TASK_TAG == 1 )
+	TaskHookFunction_t MPU_xTaskGetApplicationTaskTagFromISR( TaskHandle_t xTask )
+	{
+	TaskHookFunction_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		xReturn = xTaskGetApplicationTaskTagFromISR( xTask );
+		vPortResetPrivilege( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
 	void MPU_vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
 	{

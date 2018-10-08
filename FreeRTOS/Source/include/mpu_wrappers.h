@@ -70,6 +70,7 @@ only for ports that are using the MPU. */
 		#define uxTaskGetStackHighWaterMark2			MPU_uxTaskGetStackHighWaterMark2
 		#define vTaskSetApplicationTaskTag				MPU_vTaskSetApplicationTaskTag
 		#define xTaskGetApplicationTaskTag				MPU_xTaskGetApplicationTaskTag
+		#define xTaskGetApplicationTaskTagFromISR		MPU_xTaskGetApplicationTaskTagFromISR
 		#define vTaskSetThreadLocalStoragePointer		MPU_vTaskSetThreadLocalStoragePointer
 		#define pvTaskGetThreadLocalStoragePointer		MPU_pvTaskGetThreadLocalStoragePointer
 		#define xTaskCallApplicationTaskHook			MPU_xTaskCallApplicationTaskHook

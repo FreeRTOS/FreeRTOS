@@ -508,9 +508,19 @@ TaskHandle_t xTask;
 		}
 	}
 
+	/* Try FromISR version too. */
+	if( xTaskGetApplicationTaskTagFromISR( xTask ) != prvDummyTagFunction )
+	{
+		xReturn = pdFAIL;
+	}
+
 	/* Now try with a NULL handle, so using this task. */
 	vTaskSetApplicationTaskTag( NULL, NULL );
 	if( xTaskGetApplicationTaskTag( NULL ) != NULL )
+	{
+		xReturn = pdFAIL;
+	}
+	if( xTaskGetApplicationTaskTagFromISR( NULL ) != NULL )
 	{
 		xReturn = pdFAIL;
 	}
@@ -530,6 +540,12 @@ TaskHandle_t xTask;
 		{
 			xReturn = pdFAIL;
 		}
+	}
+
+	/* Try FromISR version too. */
+	if( xTaskGetApplicationTaskTagFromISR( NULL ) != prvDummyTagFunction )
+	{
+		xReturn = pdFAIL;
 	}
 
 	vTaskSetApplicationTaskTag( NULL, NULL );

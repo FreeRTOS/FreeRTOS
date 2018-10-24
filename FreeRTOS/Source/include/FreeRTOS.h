@@ -1142,16 +1142,12 @@ typedef struct xSTATIC_TIMER
 	void				*pvDummy1;
 	StaticListItem_t	xDummy2;
 	TickType_t			xDummy3;
-	UBaseType_t			uxDummy4;
 	void 				*pvDummy5;
 	TaskFunction_t		pvDummy6;
 	#if( configUSE_TRACE_FACILITY == 1 )
 		UBaseType_t		uxDummy7;
 	#endif
-
-	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
-		uint8_t 		ucDummy8;
-	#endif
+	uint8_t 			ucDummy8;
 
 } StaticTimer_t;
 

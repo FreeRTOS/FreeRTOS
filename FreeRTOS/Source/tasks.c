@@ -3095,6 +3095,20 @@ BaseType_t xReturn;
 	{
 		( void ) uxListRemove( &( pxUnblockedTCB->xStateListItem ) );
 		prvAddTaskToReadyList( pxUnblockedTCB );
+
+		#if( configUSE_TICKLESS_IDLE != 0 )
+		{
+			/* If a task is blocked on a kernel object then xNextTaskUnblockTime
+			might be set to the blocked task's time out time.  If the task is
+			unblocked for a reason other than a timeout xNextTaskUnblockTime is
+			normally left unchanged, because it is automatically reset to a new
+			value when the tick count equals xNextTaskUnblockTime.  However if
+			tickless idling is used it might be more important to enter sleep mode
+			at the earliest possible time - so reset xNextTaskUnblockTime here to
+			ensure it is updated at the earliest possible time. */
+			prvResetNextTaskUnblockTime();
+		}
+		#endif
 	}
 	else
 	{
@@ -3118,20 +3132,6 @@ BaseType_t xReturn;
 	{
 		xReturn = pdFALSE;
 	}
-
-	#if( configUSE_TICKLESS_IDLE != 0 )
-	{
-		/* If a task is blocked on a kernel object then xNextTaskUnblockTime
-		might be set to the blocked task's time out time.  If the task is
-		unblocked for a reason other than a timeout xNextTaskUnblockTime is
-		normally left unchanged, because it is automatically reset to a new
-		value when the tick count equals xNextTaskUnblockTime.  However if
-		tickless idling is used it might be more important to enter sleep mode
-		at the earliest possible time - so reset xNextTaskUnblockTime here to
-		ensure it is updated at the earliest possible time. */
-		prvResetNextTaskUnblockTime();
-	}
-	#endif
 
 	return xReturn;
 }

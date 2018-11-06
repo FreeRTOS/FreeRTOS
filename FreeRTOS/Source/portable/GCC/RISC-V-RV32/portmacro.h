@@ -70,7 +70,7 @@ not need to be guarded with a critical section. */
 
 
 /* Scheduler utilities. */
-#define portYIELD() {  volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCTRL_BASE;	*ulSoftInterrupt = 1UL; }
+#define portYIELD() *( ( uint32_t * ) configCTRL_BASE ) = 1UL
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYield()
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
@@ -80,13 +80,15 @@ not need to be guarded with a critical section. */
 #define portCRITICAL_NESTING_IN_TCB					1
 extern int vPortSetInterruptMask( void );
 extern void vPortClearInterruptMask( int );
+extern void vTaskEnterCritical( void );
+extern void vTaskExitCritical( void );
 
 #define portSET_INTERRUPT_MASK_FROM_ISR() 0
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue )
-#define portDISABLE_INTERRUPTS()
-#define portENABLE_INTERRUPTS()
-#define portENTER_CRITICAL()
-#define portEXIT_CRITICAL()
+#define portDISABLE_INTERRUPTS()	__asm volatile( "csrc mstatus, 8" )
+#define portENABLE_INTERRUPTS()		__asm volatile( "csrs mstatus, 8" )
+#define portENTER_CRITICAL()	vTaskEnterCritical()
+#define portEXIT_CRITICAL()		vTaskExitCritical()
 
 /*-----------------------------------------------------------*/
 

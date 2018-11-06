@@ -50,6 +50,7 @@ static void prvTaskExitError( void );
 
 /* Used to program the machine timer compare register. */
 static uint64_t ullNextTime = 0ULL;
+static const uint64_t ullTimerIncrementsForOneTick = ( uint64_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
 static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCTRL_BASE + 0x4000 );
 
 /*-----------------------------------------------------------*/
@@ -165,8 +166,8 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 void vPortSetupTimerInterrupt( void )
 {
 uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
-volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFF8 );
-volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFFc );
+volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFFC );
+volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFF8 );
 
 	do
 	{
@@ -177,8 +178,11 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTR
 	ullNextTime = ( uint64_t ) ulCurrentTimeHigh;
 	ullNextTime <<= 32ULL;
 	ullNextTime |= ( uint64_t ) ulCurrentTimeLow;
-	ullNextTime += ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
+	ullNextTime += ullTimerIncrementsForOneTick;
 	*pullMachineTimerCompareRegister = ullNextTime;
+
+	/* Prepare the time to use after the next tick interrupt. */
+	ullNextTime += ullTimerIncrementsForOneTick;
 
 	/* Enable timer interrupt */
 	__asm volatile( "csrs mie, %0" :: "r"(0x80) );
@@ -192,8 +196,34 @@ volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCTRL_BASE;
 	vTaskSwitchContext();
 
 	/* Clear software interrupt. */
-	*ulSoftInterrupt = 0UL;
+	*( ( uint32_t * ) configCTRL_BASE ) = 0UL;
 }
 /*-----------------------------------------------------------*/
+
+void Timer_IRQHandler( void )
+{
+	/* Reload for the next timer interrupt. */
+	*pullMachineTimerCompareRegister = ullNextTime;
+	ullNextTime += ullTimerIncrementsForOneTick;
+
+	if( xTaskIncrementTick() != pdFALSE )
+	{
+		portYIELD();
+	}
+}
+/*-----------------------------------------------------------*/
+
+BaseType_t xPortStartScheduler( void )
+{
+extern void xPortStartFirstTask( void );
+
+	vPortSetupTimerInterrupt();
+	xPortStartFirstTask();
+
+	/* Should not get here as after calling xPortStartFirstTask() only tasks
+	should be executing. */
+	return pdFAIL;
+}
+
 
 

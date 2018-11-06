@@ -38,7 +38,7 @@
 
 #define CONTEXT_SIZE ( 28 * WORD_SIZE )
 
-.global xPortStartScheduler
+.global xPortStartFirstTask
 .global vPortTrapHandler
 .extern pxCurrentTCB
 .extern handle_trap
@@ -46,7 +46,8 @@
 /*-----------------------------------------------------------*/
 
 .align 8
-xPortStartScheduler:
+xPortStartFirstTask:
+
     lw  sp, pxCurrentTCB            /* Load pxCurrentTCB. */
     lw  sp, 0( sp )                 /* Read sp from first TCB member. */
 
@@ -81,7 +82,7 @@ xPortStartScheduler:
     addi    sp, sp, CONTEXT_SIZE
     csrs    mstatus, 8              /* Enable machine interrupts. */
     csrs    mie, 8                  /* Enable soft interrupt. */
-    ret
+     ret
 
 /*-----------------------------------------------------------*/
 

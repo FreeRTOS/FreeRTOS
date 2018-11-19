@@ -82,14 +82,14 @@ xPortStartFirstTask:
     addi    sp, sp, CONTEXT_SIZE
     csrs    mstatus, 8              /* Enable machine interrupts. */
     csrs    mie, 8                  /* Enable soft interrupt. */
-     ret
+    ret
 
 /*-----------------------------------------------------------*/
 
 .align 8
 vPortTrapHandler:
 	addi sp, sp, -CONTEXT_SIZE
-	sw x1, 1( sp )
+	sw x1, 1 * WORD_SIZE( sp )
 	sw x5, 2 * WORD_SIZE( sp )
 	sw x6, 3 * WORD_SIZE( sp )
 	sw x7, 4 * WORD_SIZE( sp )
@@ -118,10 +118,6 @@ vPortTrapHandler:
 	sw x30, 27 * WORD_SIZE( sp )
 	sw x31, 28 * WORD_SIZE( sp )
 
-    /* Save exception return address. */
-    csrr t0, mepc
-    sw t0, 0( sp )
-
     lw  t0, pxCurrentTCB            /* Load pxCurrentTCB. */
     sw  sp, 0( t0 )                 /* Write sp from first TCB member. */
 
@@ -130,6 +126,9 @@ vPortTrapHandler:
 	mv a2, sp
 	jal handle_trap
 	csrw mepc, a0
+	/* Save exception return address. */
+	sw a0, 0( sp )
+
 
 	# Remain in M-mode after mret
 	li t0, 0x00001800 /* MSTATUS MPP */
@@ -138,11 +137,11 @@ vPortTrapHandler:
     lw  sp, pxCurrentTCB            /* Load pxCurrentTCB. */
     lw  sp, 0( sp )                 /* Read sp from first TCB member. */
 
-    /* Load mret with the address of the first task. */
+    /* Load mret with the address of the next task. */
     lw t0, 0( sp )
     csrw mepc, t0
 
-    lw  x1, 1( sp )
+    lw  x1, 1 * WORD_SIZE( sp )
     lw  x5, 2 * WORD_SIZE( sp )     /* t0 */
     lw  x6, 3 * WORD_SIZE( sp )     /* t1 */
     lw  x7, 4 * WORD_SIZE( sp )     /* t2 */

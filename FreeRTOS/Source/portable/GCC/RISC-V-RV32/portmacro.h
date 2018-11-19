@@ -70,7 +70,7 @@ not need to be guarded with a critical section. */
 
 
 /* Scheduler utilities. */
-#define portYIELD() *( ( uint32_t * ) configCTRL_BASE ) = 1UL
+#define portYIELD() __asm volatile( "ecall" ); // software interrupt alternative *( ( uint32_t * ) configCTRL_BASE ) |= 0x08UL
 #define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYield()
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/

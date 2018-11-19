@@ -94,6 +94,12 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 		x28-31 		t3-6 			Temporaries 					Caller
 	*/
 
+	/* To ensure alignment. */
+	//_RB_	pxTopOfStack--;
+	//_RB_	pxTopOfStack--;
+	//_RB_pxTopOfStack--;
+
+	/* Numbers correspond to the x register number. */
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) 31;
 	pxTopOfStack--;
@@ -185,7 +191,7 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTR
 	ullNextTime += ullTimerIncrementsForOneTick;
 
 	/* Enable timer interrupt */
-	__asm volatile( "csrs mie, %0" :: "r"(0x80) );
+	__asm volatile( "csrs mie, %0" :: "r"(0x80) ); /* 1<<7 for timer interrupt. */
 }
 /*-----------------------------------------------------------*/
 
@@ -196,19 +202,21 @@ volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCTRL_BASE;
 	vTaskSwitchContext();
 
 	/* Clear software interrupt. */
-	*( ( uint32_t * ) configCTRL_BASE ) = 0UL;
+	*( ( uint32_t * ) configCTRL_BASE ) &= 0x08UL;
 }
 /*-----------------------------------------------------------*/
 
 void Timer_IRQHandler( void )
 {
+extern void vTaskSwitchContext( void );
+
 	/* Reload for the next timer interrupt. */
 	*pullMachineTimerCompareRegister = ullNextTime;
 	ullNextTime += ullTimerIncrementsForOneTick;
 
 	if( xTaskIncrementTick() != pdFALSE )
 	{
-		portYIELD();
+		vTaskSwitchContext();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -216,6 +224,17 @@ void Timer_IRQHandler( void )
 BaseType_t xPortStartScheduler( void )
 {
 extern void xPortStartFirstTask( void );
+
+	#if( configASSERT_DEFINED == 1 )
+	{
+		volatile uint32_t mtvec = 0;
+
+		/* Check the least significant two bits of mtvec are 00 - indicating single
+		vector mode. */
+		__asm volatile( "csrr %0, mtvec" : "=r"( mtvec ) );
+		configASSERT( ( mtvec & 0x03UL ) == 0 );
+	}
+	#endif
 
 	vPortSetupTimerInterrupt();
 	xPortStartFirstTask();

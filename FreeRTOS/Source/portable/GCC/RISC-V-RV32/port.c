@@ -76,6 +76,8 @@ volatile uint32_t ulx = 0;
  */
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
+uint32_t mstatus;
+const uint32_t ulMPIE_Bit = 0x80, ulMPP_Bits = 0x1800;
 	/*
 	   X1 to X31 integer registers for the 'I' profile, X1 to X15 for the 'E' profile.
 
@@ -94,10 +96,11 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 		x28-31 		t3-6 			Temporaries 					Caller
 	*/
 
-	/* To ensure alignment. */
-	//_RB_	pxTopOfStack--;
-	//_RB_	pxTopOfStack--;
-	//_RB_pxTopOfStack--;
+	/* Start task with interrupt enabled. */
+	__asm volatile ("csrr %0, mstatus" : "=r"(mstatus));
+	mstatus |= ulMPIE_Bit | ulMPP_Bits;
+	pxTopOfStack--;
+	*pxTopOfStack = mstatus;
 
 	/* Numbers correspond to the x register number. */
 	pxTopOfStack--;

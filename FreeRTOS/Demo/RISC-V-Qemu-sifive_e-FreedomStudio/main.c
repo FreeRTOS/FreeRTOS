@@ -30,247 +30,99 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 
 
-void reset_demo (void);
 
-// Structures for registering different interrupt handlers
-// for different parts of the application.
-typedef void (*function_ptr_t) (void);
-
-void no_interrupt_handler (void) {};
-
-function_ptr_t g_ext_interrupt_handlers[PLIC_NUM_INTERRUPTS];
+void vRegTest1Task( void *pvParameters );
+void vRegTest2Task( void *pvParameters );
 
 
-// Instance data for the PLIC.
-
+const char * const pcStartMessage = "FreeRTOS demo\r\n";
+volatile uint32_t ulRegTest1LoopCounter = 0, ulRegTest2LoopCounter = 0;
+static void prvCheckTask( void *pvParameters );
 plic_instance_t g_plic;
+uint32_t bitbang_mask = 0;
 
-
-/*Entry Point for PLIC Interrupt Handler*/
-void handle_m_ext_interrupt(){
-  plic_source int_num  = PLIC_claim_interrupt(&g_plic);
-  if ((int_num >=1 ) && (int_num < PLIC_NUM_INTERRUPTS)) {
-    g_ext_interrupt_handlers[int_num]();
-  }
-  else {
-    exit(1 + (uintptr_t) int_num);
-  }
-  PLIC_complete_interrupt(&g_plic, int_num);
-}
-
-
-/*Entry Point for Machine Timer Interrupt Handler*/
-void handle_m_time_interrupt(){
-
-  clear_csr(mie, MIP_MTIP);
-
-  // Reset the timer for 3s in the future.
-  // This also clears the existing timer interrupt.
-
-  volatile uint64_t * mtime       = (uint64_t*) (CLINT_CTRL_ADDR + CLINT_MTIME);
-  volatile uint64_t * mtimecmp    = (uint64_t*) (CLINT_CTRL_ADDR + CLINT_MTIMECMP);
-  uint64_t now = *mtime;
-  uint64_t then = now + 2 * RTC_FREQ;
-  *mtimecmp = then;
-
-  // read the current value of the LEDS and invert them.
-  uint32_t leds = GPIO_REG(GPIO_OUTPUT_VAL);
-
-  GPIO_REG(GPIO_OUTPUT_VAL) ^= ((0x1 << RED_LED_OFFSET)   |
-				(0x1 << GREEN_LED_OFFSET) |
-				(0x1 << BLUE_LED_OFFSET));
-  
-  // Re-enable the timer interrupt.
-  set_csr(mie, MIP_MTIP);
-
-}
-
-
-const char * instructions_msg = " \
-\n\
-                SIFIVE, INC.\n\
-\n\
-         5555555555555555555555555\n\
-        5555                   5555\n\
-       5555                     5555\n\
-      5555                       5555\n\
-     5555       5555555555555555555555\n\
-    5555       555555555555555555555555\n\
-   5555                             5555\n\
-  5555                               5555\n\
- 5555                                 5555\n\
-5555555555555555555555555555          55555\n\
- 55555           555555555           55555\n\
-   55555           55555           55555\n\
-     55555           5           55555\n\
-       55555                   55555\n\
-         55555               55555\n\
-           55555           55555\n\
-             55555       55555\n\
-               55555   55555\n\
-                 555555555\n\
-                   55555\n\
-                     5\n\
-\n\
-SiFive E-Series Software Development Kit 'demo_gpio' program.\n\
-Every 2 second, the Timer Interrupt will invert the LEDs.\n\
-(Arty Dev Kit Only): Press Buttons 0, 1, 2 to Set the LEDs.\n\
-Pin 19 (HiFive1) or A5 (Arty Dev Kit) is being bit-banged\n\
-for GPIO speed demonstration.\n\
-\n\
- ";
-
-void print_instructions() {
-
-  write (STDOUT_FILENO, instructions_msg, strlen(instructions_msg));
-
-}
-
-#ifdef HAS_BOARD_BUTTONS
-void button_0_handler(void) {
-
-  // Red LED on
-  GPIO_REG(GPIO_OUTPUT_VAL) |= (0x1 << RED_LED_OFFSET);
-
-  // Clear the GPIO Pending interrupt by writing 1.
-  GPIO_REG(GPIO_RISE_IP) = (0x1 << BUTTON_0_OFFSET);
-
-};
-
-void button_1_handler(void) {
-
-  // Green LED On
-  GPIO_REG(GPIO_OUTPUT_VAL) |= (1 << GREEN_LED_OFFSET);
-
-  // Clear the GPIO Pending interrupt by writing 1.
-  GPIO_REG(GPIO_RISE_IP) = (0x1 << BUTTON_1_OFFSET);
-
-};
-
-
-void button_2_handler(void) {
-
-  // Blue LED On
-  GPIO_REG(GPIO_OUTPUT_VAL) |= (1 << BLUE_LED_OFFSET);
-
-  GPIO_REG(GPIO_RISE_IP) = (0x1 << BUTTON_2_OFFSET);
-
-};
-#endif
-
-void reset_demo (){
-
-  // Disable the machine & timer interrupts until setup is done.
-
-  clear_csr(mie, MIP_MEIP);
-  clear_csr(mie, MIP_MTIP);
-
-  for (int ii = 0; ii < PLIC_NUM_INTERRUPTS; ii ++){
-    g_ext_interrupt_handlers[ii] = no_interrupt_handler;
-  }
-
-#ifdef HAS_BOARD_BUTTONS
-  g_ext_interrupt_handlers[INT_DEVICE_BUTTON_0] = button_0_handler;
-  g_ext_interrupt_handlers[INT_DEVICE_BUTTON_1] = button_1_handler;
-  g_ext_interrupt_handlers[INT_DEVICE_BUTTON_2] = button_2_handler;
-#endif
-
-  print_instructions();
-
-#ifdef HAS_BOARD_BUTTONS
-
-  // Have to enable the interrupt both at the GPIO level,
-  // and at the PLIC level.
-  PLIC_enable_interrupt (&g_plic, INT_DEVICE_BUTTON_0);
-  PLIC_enable_interrupt (&g_plic, INT_DEVICE_BUTTON_1);
-  PLIC_enable_interrupt (&g_plic, INT_DEVICE_BUTTON_2);
-
-  // Priority must be set > 0 to trigger the interrupt.
-  PLIC_set_priority(&g_plic, INT_DEVICE_BUTTON_0, 1);
-  PLIC_set_priority(&g_plic, INT_DEVICE_BUTTON_1, 1);
-  PLIC_set_priority(&g_plic, INT_DEVICE_BUTTON_2, 1);
-
-  GPIO_REG(GPIO_RISE_IE) |= (1 << BUTTON_0_OFFSET);
-  GPIO_REG(GPIO_RISE_IE) |= (1 << BUTTON_1_OFFSET);
-  GPIO_REG(GPIO_RISE_IE) |= (1 << BUTTON_2_OFFSET);
-
-#endif
-
-    // Set the machine timer to go off in 3 seconds.
-    // The
-    volatile uint64_t * mtime       = (uint64_t*) (CLINT_CTRL_ADDR + CLINT_MTIME);
-    volatile uint64_t * mtimecmp    = (uint64_t*) (CLINT_CTRL_ADDR + CLINT_MTIMECMP);
-    uint64_t now = *mtime;
-    uint64_t then = now + 2*RTC_FREQ;
-    *mtimecmp = then;
-
-    // Enable the Machine-External bit in MIE
-    set_csr(mie, MIP_MEIP);
-
-    // Enable the Machine-Timer bit in MIE
-    set_csr(mie, MIP_MTIP);
-
-    // Enable interrupts in general.
-    set_csr(mstatus, MSTATUS_MIE);
-}
-
-int main(int argc, char **argv)
+int main( void )
 {
-  // Set up the GPIOs such that the LED GPIO
-  // can be used as both Inputs and Outputs.
-  
+	#ifdef HAS_BOARD_BUTTONS
+		GPIO_REG(GPIO_OUTPUT_EN)  &= ~((0x1 << BUTTON_0_OFFSET) | (0x1 << BUTTON_1_OFFSET) | (0x1 << BUTTON_2_OFFSET));
+		GPIO_REG(GPIO_PULLUP_EN)  &= ~((0x1 << BUTTON_0_OFFSET) | (0x1 << BUTTON_1_OFFSET) | (0x1 << BUTTON_2_OFFSET));
+		GPIO_REG(GPIO_INPUT_EN)   |=  ((0x1 << BUTTON_0_OFFSET) | (0x1 << BUTTON_1_OFFSET) | (0x1 << BUTTON_2_OFFSET));
+	#endif
 
-#ifdef HAS_BOARD_BUTTONS
-  GPIO_REG(GPIO_OUTPUT_EN)  &= ~((0x1 << BUTTON_0_OFFSET) | (0x1 << BUTTON_1_OFFSET) | (0x1 << BUTTON_2_OFFSET));
-  GPIO_REG(GPIO_PULLUP_EN)  &= ~((0x1 << BUTTON_0_OFFSET) | (0x1 << BUTTON_1_OFFSET) | (0x1 << BUTTON_2_OFFSET));
-  GPIO_REG(GPIO_INPUT_EN)   |=  ((0x1 << BUTTON_0_OFFSET) | (0x1 << BUTTON_1_OFFSET) | (0x1 << BUTTON_2_OFFSET));
-#endif
+	GPIO_REG(GPIO_INPUT_EN)    &= ~((0x1<< RED_LED_OFFSET) | (0x1<< GREEN_LED_OFFSET) | (0x1 << BLUE_LED_OFFSET)) ;
+	GPIO_REG(GPIO_OUTPUT_EN)   |=  ((0x1<< RED_LED_OFFSET)| (0x1<< GREEN_LED_OFFSET) | (0x1 << BLUE_LED_OFFSET)) ;
+	GPIO_REG(GPIO_OUTPUT_VAL)  |=   (0x1 << BLUE_LED_OFFSET) ;
+	GPIO_REG(GPIO_OUTPUT_VAL)  &=  ~((0x1<< RED_LED_OFFSET) | (0x1<< GREEN_LED_OFFSET)) ;
 
-  GPIO_REG(GPIO_INPUT_EN)    &= ~((0x1<< RED_LED_OFFSET) | (0x1<< GREEN_LED_OFFSET) | (0x1 << BLUE_LED_OFFSET)) ;
-  GPIO_REG(GPIO_OUTPUT_EN)   |=  ((0x1<< RED_LED_OFFSET)| (0x1<< GREEN_LED_OFFSET) | (0x1 << BLUE_LED_OFFSET)) ;
-  GPIO_REG(GPIO_OUTPUT_VAL)  |=   (0x1 << BLUE_LED_OFFSET) ;
-  GPIO_REG(GPIO_OUTPUT_VAL)  &=  ~((0x1<< RED_LED_OFFSET) | (0x1<< GREEN_LED_OFFSET)) ;
+	/* For Bit-banging with Atomics demo. */
+	#ifdef _SIFIVE_HIFIVE1_H
+		bitbang_mask = (1 << PIN_19_OFFSET);
+	#else
+		#ifdef _SIFIVE_COREPLEXIP_ARTY_H
+			bitbang_mask = (0x1 << JA_0_OFFSET);
+		#endif
+	#endif
 
-  
-  // For Bit-banging with Atomics demo.
-  
-  uint32_t bitbang_mask = 0;
-#ifdef _SIFIVE_HIFIVE1_H
-  bitbang_mask = (1 << PIN_19_OFFSET);
-#else
-#ifdef _SIFIVE_COREPLEXIP_ARTY_H
-  bitbang_mask = (0x1 << JA_0_OFFSET);
-#endif
-#endif
+	GPIO_REG(GPIO_OUTPUT_EN) |= bitbang_mask;
 
-  GPIO_REG(GPIO_OUTPUT_EN) |= bitbang_mask;
-  
-  /**************************************************************************
-   * Set up the PLIC
-   *
-   *************************************************************************/
-  PLIC_init(&g_plic,
-	    PLIC_CTRL_ADDR,
-	    PLIC_NUM_INTERRUPTS,
-	    PLIC_NUM_PRIORITIES);
+//	xTaskCreate( vRegTest1Task, "RegTest1", 1000, NULL, tskIDLE_PRIORITY, NULL );
+//	xTaskCreate( vRegTest2Task, "RegTest2", 1000, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", 1000, NULL, configMAX_PRIORITIES - 1, NULL );
 
-  reset_demo();
-
-  /**************************************************************************
-   * Demonstrate fast GPIO bit-banging.
-   * One can bang it faster than this if you know
-   * the entire OUTPUT_VAL that you want to write, but 
-   * Atomics give a quick way to control a single bit.
-   *************************************************************************/
-  // For Bit-banging with Atomics demo.
-  
-  while (1){
-    atomic_fetch_xor_explicit(&GPIO_REG(GPIO_OUTPUT_VAL), bitbang_mask, memory_order_relaxed);
-  }
-
-  return 0;
-
+	vTaskStartScheduler();
 }
+/*-----------------------------------------------------------*/
+
+static void prvCheckTask( void *pvParameters )
+{
+const char *pcMessage = "PASS\r\n";
+const TickType_t xCheckPeriod = pdMS_TO_TICKS( 3000UL );
+uint32_t ulLastRegTest1LoopCounter = 0, ulLastRegTest2LoopCounter = 0;
+volatile uintptr_t mstatus;
+
+volatile uint32_t ulx;
+__asm volatile ("csrr %0, mstatus" : "=r"(mstatus));
+portENABLE_INTERRUPTS();
+__asm volatile ("csrr %0, mstatus" : "=r"(mstatus));
+for( ;; )
+{
+//	for( ulx = 0; ulx < 0xffff; ulx++ ) __asm volatile( "NOP" );
+//	vPortSetupTimerInterrupt();
+	vTaskDelay( xCheckPeriod );
+	write( STDOUT_FILENO, "Blip\r\n", strlen( "Blip\r\n" ) );
+}
+#if 0
+	for( ;; )
+	{
+		vTaskDelay( xCheckPeriod );
+
+		if( ulLastRegTest1LoopCounter == ulRegTest1LoopCounter )
+		{
+			/* The RegTest1 loop counter is no longer incrementing, indicating
+			the task failed its self check. */
+			pcMessage = "FAIL: RegTest1\r\n";
+		}
+		else
+		{
+			ulLastRegTest1LoopCounter = ulRegTest1LoopCounter;
+		}
+
+		if( ulLastRegTest2LoopCounter == ulRegTest2LoopCounter )
+		{
+			/* The RegTest1 loop counter is no longer incrementing, indicating
+			the task failed its self check. */
+			pcMessage = "FAIL: RegTest2\r\n";
+		}
+		else
+		{
+			ulLastRegTest2LoopCounter = ulRegTest2LoopCounter;
+		}
+
+		vUARTWriteString( pcMessage );
+	}
+#endif
+}
+/*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
@@ -316,11 +168,35 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 }
 /*-----------------------------------------------------------*/
 
+#define mainINTERRUPT_BIT_SET 0x80000000UL
+#define mainENVIRONMENT_CALL	11UL
+#define mainEXTERNAL_INTERRRUPT ( mainINTERRUPT_BIT_SET | 11UL )
+#define mainTIMER_INTERRUPT		( mainINTERRUPT_BIT_SET | 7UL )
+#define mainSOFTWARE_INTERRUPT	( mainINTERRUPT_BIT_SET | 3UL )
 
+extern void Timer_IRQHandler( void );
 
-void trap_entry( void )
+uint32_t ulPortTrapHandler( uint32_t mcause, uint32_t mepc )
 {
-#warning Dummy until kernel code is incldued.
+	if( mcause == mainENVIRONMENT_CALL )
+	{
+		vTaskSwitchContext();
+
+		/* Ensure not to return to the instruction that generated the exception. */
+		mepc += 4;
+	}
+	else if( mcause == mainEXTERNAL_INTERRRUPT )
+	{
+		for( ;; );
+	}
+	else if( mcause == mainTIMER_INTERRUPT )
+	{
+		Timer_IRQHandler();
+	}
+	else if( mcause == mainSOFTWARE_INTERRUPT )
+	{
+		for( ;; );
+	}
+
+	return mepc;
 }
-
-

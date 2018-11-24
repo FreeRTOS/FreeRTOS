@@ -41,12 +41,15 @@
 .global xPortStartFirstTask
 .global vPortTrapHandler
 .extern pxCurrentTCB
-.extern handle_trap
+.extern ulPortTrapHandler
 
 /*-----------------------------------------------------------*/
 
 .align 8
 xPortStartFirstTask:
+
+	la t0, vPortTrapHandler
+	csrw mtvec, t0
 
 	lw  sp, pxCurrentTCB            /* Load pxCurrentTCB. */
 	lw  sp, 0( sp )                 /* Read sp from first TCB member. */
@@ -127,7 +130,7 @@ vPortTrapHandler:
 	csrr a1, mepc
 	mv a2, sp
 /*_RB_ Does stack need aligning here? */
-	jal handle_trap
+	jal ulPortTrapHandler
 	csrw mepc, a0
 	/* Save exception return address. */
 	sw a0, 0( sp )

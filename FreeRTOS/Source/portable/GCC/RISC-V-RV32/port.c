@@ -51,7 +51,7 @@ static void prvTaskExitError( void );
 /* Used to program the machine timer compare register. */
 static uint64_t ullNextTime = 0ULL;
 static const uint64_t ullTimerIncrementsForOneTick = ( uint64_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
-static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCTRL_BASE + 0x4000 );
+static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
 
 /*-----------------------------------------------------------*/
 
@@ -175,8 +175,8 @@ const uint32_t ulMPIE_Bit = 0x80, ulMPP_Bits = 0x1800;
 void vPortSetupTimerInterrupt( void )
 {
 uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
-volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFFC );
-volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTRL_BASE + 0xBFF8 );
+volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFFC );
+volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFF8 );
 
 	do
 	{
@@ -200,12 +200,12 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCTR
 
 void Software_IRQHandler( void )
 {
-volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCTRL_BASE;
+volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCLINT_BASE_ADDRESS;
 
 	vTaskSwitchContext();
 
 	/* Clear software interrupt. */
-	*( ( uint32_t * ) configCTRL_BASE ) &= 0x08UL;
+	*( ( uint32_t * ) configCLINT_BASE_ADDRESS ) &= 0x08UL;
 }
 /*-----------------------------------------------------------*/
 
@@ -246,6 +246,14 @@ extern void xPortStartFirstTask( void );
 	should be executing. */
 	return pdFAIL;
 }
+/*-----------------------------------------------------------*/
+
+void vPortEndScheduler( void )
+{
+	/* Not implemented. */
+	for( ;; );
+}
+
 
 
 

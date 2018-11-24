@@ -2937,28 +2937,28 @@ void vTaskSwitchContext( void )
 
 		#if ( configGENERATE_RUN_TIME_STATS == 1 )
 		{
-				#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
-					portALT_GET_RUN_TIME_COUNTER_VALUE( ulTotalRunTime );
-				#else
-					ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
-				#endif
+			#ifdef portALT_GET_RUN_TIME_COUNTER_VALUE
+				portALT_GET_RUN_TIME_COUNTER_VALUE( ulTotalRunTime );
+			#else
+				ulTotalRunTime = portGET_RUN_TIME_COUNTER_VALUE();
+			#endif
 
-				/* Add the amount of time the task has been running to the
-				accumulated time so far.  The time the task started running was
-				stored in ulTaskSwitchedInTime.  Note that there is no overflow
-				protection here so count values are only valid until the timer
-				overflows.  The guard against negative values is to protect
-				against suspect run time stat counter implementations - which
-				are provided by the application, not the kernel. */
-				if( ulTotalRunTime > ulTaskSwitchedInTime )
-				{
-					pxCurrentTCB->ulRunTimeCounter += ( ulTotalRunTime - ulTaskSwitchedInTime );
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-				ulTaskSwitchedInTime = ulTotalRunTime;
+			/* Add the amount of time the task has been running to the
+			accumulated time so far.  The time the task started running was
+			stored in ulTaskSwitchedInTime.  Note that there is no overflow
+			protection here so count values are only valid until the timer
+			overflows.  The guard against negative values is to protect
+			against suspect run time stat counter implementations - which
+			are provided by the application, not the kernel. */
+			if( ulTotalRunTime > ulTaskSwitchedInTime )
+			{
+				pxCurrentTCB->ulRunTimeCounter += ( ulTotalRunTime - ulTaskSwitchedInTime );
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+			ulTaskSwitchedInTime = ulTotalRunTime;
 		}
 		#endif /* configGENERATE_RUN_TIME_STATS */
 

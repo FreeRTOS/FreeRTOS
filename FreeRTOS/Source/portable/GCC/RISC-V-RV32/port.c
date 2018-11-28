@@ -49,9 +49,10 @@ static void prvTaskExitError( void );
 /*-----------------------------------------------------------*/
 
 /* Used to program the machine timer compare register. */
-static uint64_t ullNextTime = 0ULL;
-static const uint64_t ullTimerIncrementsForOneTick = ( uint64_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ );
-static volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+uint64_t ullNextTime = 0ULL;
+const uint64_t *pullNextTime = &ullNextTime;
+const uint32_t ulTimerIncrementsForOneTick = ( uint32_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ); /* Assumes increment won't go over 32-bits. */
+volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
 
 /*-----------------------------------------------------------*/
 
@@ -187,11 +188,11 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLI
 	ullNextTime = ( uint64_t ) ulCurrentTimeHigh;
 	ullNextTime <<= 32ULL;
 	ullNextTime |= ( uint64_t ) ulCurrentTimeLow;
-	ullNextTime += ullTimerIncrementsForOneTick;
+	ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
 	*pullMachineTimerCompareRegister = ullNextTime;
 
 	/* Prepare the time to use after the next tick interrupt. */
-	ullNextTime += ullTimerIncrementsForOneTick;
+	ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
 
 	/* Enable timer interrupt */
 	__asm volatile( "csrs mie, %0" :: "r"(0x80) ); /* 1<<7 for timer interrupt. */
@@ -206,21 +207,6 @@ volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCLINT_BASE_ADDR
 
 	/* Clear software interrupt. */
 	*( ( uint32_t * ) configCLINT_BASE_ADDRESS ) &= 0x08UL;
-}
-/*-----------------------------------------------------------*/
-
-void Timer_IRQHandler( void )
-{
-extern void vTaskSwitchContext( void );
-
-	/* Reload for the next timer interrupt. */
-	*pullMachineTimerCompareRegister = ullNextTime;
-	ullNextTime += ullTimerIncrementsForOneTick;
-
-	if( xTaskIncrementTick() != pdFALSE )
-	{
-		vTaskSwitchContext();
-	}
 }
 /*-----------------------------------------------------------*/
 

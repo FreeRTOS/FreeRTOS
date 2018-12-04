@@ -1,3 +1,4 @@
+#if 0
 /*******************************************************************************
  * (c) Copyright 2016-2018 Microsemi SoC Products Group. All rights reserved.
  *
@@ -63,6 +64,7 @@ uint8_t External_31_IRQHandler(void);
  *
  */
 extern void Software_IRQHandler(void);
+extern void Timer_IRQHandle( void );
 
 /*------------------------------------------------------------------------------
  * Increment value for the mtimecmp register in order to achieve a system tick
@@ -115,15 +117,17 @@ uint32_t SysTick_Config(uint32_t ticks)
 /*------------------------------------------------------------------------------
  * RISC-V interrupt handler for machine timer interrupts.
  */
+volatile uint32_t ulTimerInterrupts = 0;
+extern void Timer_IRQHandler( void );
 static void handle_m_timer_interrupt(void)
 {
-    clear_csr(mie, MIP_MTIP);
+//    clear_csr(mie, MIP_MTIP);
 
-    SysTick_Handler();
+    Timer_IRQHandler();
 
-    PRCI->MTIMECMP[read_csr(mhartid)] = PRCI->MTIME + g_systick_increment;
+//    PRCI->MTIMECMP[read_csr(mhartid)] = PRCI->MTIME + g_systick_increment;
 
-    set_csr(mie, MIP_MTIP);
+//    set_csr(mie, MIP_MTIP);
 }
 
 /*------------------------------------------------------------------------------
@@ -194,8 +198,20 @@ static void handle_m_soft_interrupt(void)
 /*------------------------------------------------------------------------------
  * Trap/Interrupt handler
  */
+#define ENV_CALL_FROM_M_MODE 11
+extern void vTaskSwitchContext( void );
+
 uintptr_t handle_trap(uintptr_t mcause, uintptr_t mepc)
 {
+	/*_RB_*/
+	if( mcause == ENV_CALL_FROM_M_MODE )
+	{
+		vTaskSwitchContext();
+
+		/* Ensure not to return to the instruction that generated the exception. */
+		mepc += 4;
+	} else
+	/*end _RB_*/
     if ((mcause & MCAUSE_INT) && ((mcause & MCAUSE_CAUSE)  == IRQ_M_EXT))
     {
         handle_m_ext_interrupt();
@@ -248,4 +264,5 @@ uintptr_t handle_trap(uintptr_t mcause, uintptr_t mepc)
 
 #ifdef __cplusplus
 }
+#endif
 #endif

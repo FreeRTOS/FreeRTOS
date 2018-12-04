@@ -132,6 +132,7 @@ SECTIONS
     __stack_bottom = .;
     . += STACK_SIZE;
     __stack_top = .;
+    _sp = .;
   } > ram
 }
 

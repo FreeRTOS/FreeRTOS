@@ -1,93 +1,129 @@
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "timers.h"
-
-#include "hw_platform.h"
-#include "riscv_hal.h"
-#include "hal.h"
-#include "core_gpio.h"
-#include "core_timer.h"
-#include "core_uart_apb.h"
-
-const char * g_hello_msg = "\r\nFreeRTOS Example\r\n";
-
-
 /*
- * Notes:
- * + Program the device using the flash project in
- *   MS-RISC-V\M2GL025-Creative-Board\Programming_The_Target_Device\PROC_SUBSYSTEM_MIV_RV32IMA_BaseDesign.
- *   See https://github.com/RISCV-on-Microsemi-FPGA/M2GL025-Creative-Board.
- * + Above referenced image sets the clock to 50MHz. *
- * + Debug configuration is critical.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
  */
 
+/* FreeRTOS kernel includes. */
+#include <FreeRTOS.h>
+#include <task.h>
 
-/* A block time of zero simply means "don't block". */
-#define mainDONT_BLOCK						( 0UL )
+/* Microsemi includes. */
+#include "core_uart_apb.h"
+#include "core_gpio.h"
 
 /******************************************************************************
- * CoreUARTapb instance data.
- *****************************************************************************/
-UART_instance_t g_uart;
-/*-----------------------------------------------------------*/
+ * This project provides two demo applications.  A simple blinky style project,
+ * and a more comprehensive test and demo application.  The
+ * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
+ * select between the two.  The simply blinky demo is implemented and described
+ * in main_blinky.c.  The more comprehensive test and demo application is
+ * implemented and described in main_full.c.
+ *
+ * This file implements the code that is not demo specific, including the
+ * hardware setup and standard FreeRTOS hook functions.
+ *
+ * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
+ * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
+ * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
+ *
+ */
 
-static void vUartTestTask1( void *pvParameters );
-static void vUartTestTask2( void *pvParameters );
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*
- * FreeRTOS hook for when malloc fails, enable in FreeRTOSConfig.
+ * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
+ * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
+#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+	extern void main_blinky( void );
+#else
+	extern void main_full( void );
+#endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
+
+/* Prototypes for the standard FreeRTOS callback/hook functions implemented
+within this file.  See https://www.freertos.org/a00016.html */
 void vApplicationMallocFailedHook( void );
-
-/*
- * FreeRTOS hook for when FreeRtos is idling, enable in FreeRTOSConfig.
- */
 void vApplicationIdleHook( void );
-
-/*
- * FreeRTOS hook for when a stack overflow occurs, enable in FreeRTOSConfig.
- */
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationTickHook( void );
 
-/*_RB_
-gpio_instance_t g_gpio0;
-gpio_instance_t g_gpio1;
-timer_instance_t g_timer0;
-timer_instance_t g_timer1;
+/* Prepare haredware to run the demo. */
+static void prvSetupHardware( void );
 
+/* Send a messaage to the UART initialised in prvSetupHardware. */
+void vSendString( const char * const pcString );
 
 /*-----------------------------------------------------------*/
-extern uint32_t SysTick_Config(uint32_t ticks);
-extern void __enable_irq(void);
+
+/* The UART to which strings are output, and the GPIO used to toggle the LED. */
+static UART_instance_t g_uart;
+static gpio_instance_t g_gpio_out;
+
+/*-----------------------------------------------------------*/
 
 int main( void )
 {
-    PLIC_init();
-//_RB_    GPIO_init(&g_gpio0, COREGPIO_IN_BASE_ADDR, GPIO_APB_32_BITS_BUS);
-//_RB_    GPIO_init(&g_gpio1, COREGPIO_OUT_BASE_ADDR, GPIO_APB_32_BITS_BUS);
+	prvSetupHardware();
 
-    /**************************************************************************
-    * Initialize CoreUART with its base address, baud value, and line
-    * configuration.
-    *************************************************************************/
-    UART_init(&g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200,
-             (DATA_8_BITS | NO_PARITY) );
-
-    UART_polled_tx_string( &g_uart, (const uint8_t *)"\r\n\r\n		Sample Demonstration of FreeRTOS port for Mi-V processor.\r\n\r\n" );
-    UART_polled_tx_string( &g_uart, (const uint8_t *)"		This project creates  two tasks and runs them at regular intervals.\r\n" );
-
-    /* Create the two test tasks. */
-	xTaskCreate( vUartTestTask1, "UArt1", 1000, NULL, uartPRIMARY_PRIORITY, NULL );
-//	xTaskCreate( vUartTestTask2, "UArt2", 1000, NULL, uartPRIMARY_PRIORITY, NULL );
-
-	/* Start the kernel.  From here on, only tasks and interrupts will run. */
-	vTaskStartScheduler();
-
-	/* Exit FreeRTOS */
-	return 0;
+	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
+	of this file. */
+	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	{
+		main_blinky();
+	}
+	#else
+	{
+		main_full();
+	}
+	#endif
 }
+/*-----------------------------------------------------------*/
 
+static void prvSetupHardware( void )
+{
+	PLIC_init();
+	UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
+	GPIO_init( &g_gpio_out, COREGPIO_OUT_BASE_ADDR, GPIO_APB_32_BITS_BUS );
+}
+/*-----------------------------------------------------------*/
+
+void vToggleLED( void )
+{
+static uint32_t ulLEDState = 0;
+
+	GPIO_set_outputs( &g_gpio_out, ulLEDState );
+	ulLEDState = !ulLEDState;
+}
+/*-----------------------------------------------------------*/
+
+void vSendString( const char * const pcString )
+{
+	UART_polled_tx_string( &g_uart, pcString );
+}
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
@@ -103,6 +139,7 @@ void vApplicationMallocFailedHook( void )
 	to query the size of free heap space that remains (although it does not
 	provide information on how the remaining heap might be fragmented). */
 	taskDISABLE_INTERRUPTS();
+	__asm volatile( "ebreak" );
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
@@ -130,31 +167,18 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
+	__asm volatile( "ebreak" );
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
 
-static void vUartTestTask1( void *pvParameters )
+void vApplicationTickHook( void )
 {
-	( void ) pvParameters;
-
-	for( ;; )
+	/* The tests in the full demo expect some interaction with interrupts. */
+	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
 	{
-		UART_polled_tx_string( &g_uart, (const uint8_t *)"Task - 1\r\n" );
-	    vTaskDelay( pdMS_TO_TICKS( 100 ) );
+		extern void vFullDemoTickHook( void );
+		vFullDemoTickHook();
 	}
-}
-
-
-/*-----------------------------------------------------------*/
-
-static void vUartTestTask2( void *pvParameters )
-{
-	( void ) pvParameters;
-
-	for( ;; )
-	{
-//		UART_polled_tx_string( &g_uart, (const uint8_t *)"Task - 2\r\n" );
-	    vTaskDelay(5);
-	}
+	#endif
 }

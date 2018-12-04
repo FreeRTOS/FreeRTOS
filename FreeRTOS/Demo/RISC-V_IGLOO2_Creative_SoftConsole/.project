@@ -29,6 +29,51 @@
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
+		<link>
+			<name>full_demo/common_demo_tasks</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/EventGroupsDemo.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/GenQTest.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/GenQTest.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/TaskNotify.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TaskNotify.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/TimerDemo.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TimerDemo.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/blocktim.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/blocktim.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/dynamic.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/dynamic.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/include</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/recmutex.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/recmutex.c</locationURI>
+		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>

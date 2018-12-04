@@ -24,6 +24,7 @@
 #endif
 
   .section      .text.entry
+  .extern vPortTrapHandler
   .globl _start
 
 _start:
@@ -33,10 +34,10 @@ nmi_vector:
   j nmi_vector
 
 trap_vector:
-  j trap_entry
+  j vPortTrapHandler
 
 handle_reset:
-  la t0, trap_entry
+  la t0, vPortTrapHandler
   csrw mtvec, t0
   csrwi mstatus, 0
   csrwi mie, 0
@@ -71,7 +72,7 @@ handle_reset:
   # perform the rest of initialization in C
   j _init
 
-
+#if 0
 trap_entry:
   addi sp, sp, -32*REGBYTES
 
@@ -155,6 +156,7 @@ trap_entry:
 
   addi sp, sp, 32*REGBYTES
   mret
+#endif /* 0 */
 
 #endif
 

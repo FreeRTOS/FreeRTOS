@@ -88,14 +88,14 @@
 #define configCLINT_BASE_ADDRESS		CLINT_CTRL_ADDR
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
-#define configUSE_TICK_HOOK				0
+#define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( 10000000 ) /*QEMU*/
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 512 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 8 * 1024 ) )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 85 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) 14300 )
 #define configMAX_TASK_NAME_LEN			( 16 )
-#define configUSE_TRACE_FACILITY		1
+#define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_MUTEXES				1
@@ -112,10 +112,10 @@
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 
 /* Software timer definitions. */
-#define configUSE_TIMERS				0
-#define configTIMER_TASK_PRIORITY		( 2 )
-#define configTIMER_QUEUE_LENGTH		2
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
+#define configUSE_TIMERS				1
+#define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
+#define configTIMER_QUEUE_LENGTH		7
+#define configTIMER_TASK_STACK_DEPTH	( 120 )
 
 /* Task priorities.  Allow these to be overridden. */
 #ifndef uartPRIMARY_PRIORITY
@@ -132,20 +132,21 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil			1
 #define INCLUDE_vTaskDelay				1
 #define INCLUDE_eTaskGetState			1
+#define INCLUDE_xTimerPendFunctionCall	1
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+void vAssertCalled( void );
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled()
 
-/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
-standard names - or at least those used in the unmodified vector table. */
-//#define vPortSVCHandler SVCall_Handler
-//#define xPortPendSVHandler PendSV_Handler
-//#define vPortSysTickHandler SysTick_Handler
+/* Overwrite some of the stack sizes allocated to various test and demo tasks.
+Like all task stack sizes, the value is the number of words, not bytes. */
+#define configTIMER_TEST_TASK_STACK_SIZE 150
+#define configNOTIFIED_TEST_TASK_STACK_SIZE 120
+#define configEVENT_GROUP_SET_BIT_TEST_TASK_STACK_SIZE 110
+#define configEVENT_GROUP_RENDEZVOUS_TASK_STACK_SIZE 100
+#define configRECURSIVE_MUTEX_TASK_STACK_SIZE 100
 
-extern void vApplicationMallocFailedHook();
-
-
-extern void vUARTWriteString( const char * const pcString );
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 
 #endif /* FREERTOS_CONFIG_H */

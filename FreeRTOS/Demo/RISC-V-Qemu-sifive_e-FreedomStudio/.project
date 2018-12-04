@@ -32,17 +32,17 @@
 		<link>
 			<name>FreeRTOS_Source/event_groups.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/event_groups.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/event_groups.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/include</name>
 			<type>2</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/include</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/include</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/list.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/list.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/list.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable</name>
@@ -52,22 +52,27 @@
 		<link>
 			<name>FreeRTOS_Source/queue.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/queue.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/queue.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/stream_buffer.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/stream_buffer.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/stream_buffer.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/tasks.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/tasks.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/tasks.c</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/timers.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/timers.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/timers.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/GCC</name>
@@ -80,19 +85,59 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>full_demo/common_demo_tasks/EventGroupsDemo.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/GenQTest.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/GenQTest.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/TaskNotify.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TaskNotify.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/TimerDemo.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TimerDemo.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/blocktim.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/blocktim.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/dynamic.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/dynamic.c</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/include</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
+		</link>
+		<link>
+			<name>full_demo/common_demo_tasks/recmutex.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/recmutex.c</locationURI>
+		</link>
+		<link>
 			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32</name>
 			<type>2</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/portable/GCC/RISC-V-RV32</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/portable/GCC/RISC-V-RV32</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/MemMang/heap_4.c</name>
 			<type>1</type>
-			<locationURI>FREERTOS_ROUTE/FreeRTOS/Source/portable/MemMang/heap_4.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/portable/MemMang/heap_4.c</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
-			<name>FREERTOS_ROUTE</name>
+			<name>FREERTOS_ROOT</name>
 			<value>$%7BPARENT-3-PROJECT_LOC%7D</value>
 		</variable>
 	</variableList>

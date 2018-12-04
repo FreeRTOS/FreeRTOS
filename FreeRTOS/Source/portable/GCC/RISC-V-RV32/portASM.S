@@ -49,7 +49,7 @@
 .extern pullMachineTimerCompareRegister
 .extern pullNextTime
 .extern ulTimerIncrementsForOneTick
-
+.extern xISRStackTop
 
 /*-----------------------------------------------------------*/
 
@@ -136,14 +136,13 @@ vPortTrapHandler:
 
 	csrr a0, mcause
 	csrr a1, mepc
-	mv a2, sp
 
 test_if_environment_call:
 	li t0, 11 								/* 11 == environment call when using qemu. */
 	bne a0, t0, test_if_timer
 	addi a1, a1, 4 							/* Synchronous so return to the instruction after the environment call. */
 	sw a1, 0( sp ) 							/* Save updated exception return address. */
-/*_RB_ Does stack need aligning here? */
+	lw sp, xISRStackTop						/* Switch to ISR stack before function call. */
 	jal vTaskSwitchContext
 	j processed_source
 
@@ -167,13 +166,15 @@ test_if_timer:
 	add t6, t3, t5							/* Add overflow to high word of ullNextTime. */
 	sw t4, 0(t1)							/* Store new low word of ullNextTime. */
 	sw t6, 4(t1)							/* Store new high word of ullNextTime. */
+	lw sp, xISRStackTop						/* Switch to ISR stack before function call. */
 	jal xTaskIncrementTick
 	beqz a0, processed_source				/* Don't switch context if incrementing tick didn't unblock a task. */
 	jal vTaskSwitchContext
 	j processed_source
 
 as_yet_unhandled:
-	j as_yet_unhandled 						/* External interrupt? */
+//	ebreak 						/* External interrupt? */
+	j as_yet_unhandled
 
 processed_source:
 	lw  sp, pxCurrentTCB					/* Load pxCurrentTCB. */

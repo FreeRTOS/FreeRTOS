@@ -70,8 +70,9 @@ not need to be guarded with a critical section. */
 
 
 /* Scheduler utilities. */
-#define portYIELD() __asm volatile( "ecall" ); // software interrupt alternative *( ( uint32_t * ) configCLINT_BASE_ADDRESS ) |= 0x08UL
-#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vPortYield()
+extern void vTaskSwitchContext( void );
+#define portYIELD() __asm volatile( "ecall" );
+#define portEND_SWITCHING_ISR( xSwitchRequired ) if( xSwitchRequired ) vTaskSwitchContext()
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
@@ -84,11 +85,36 @@ extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
 
 #define portSET_INTERRUPT_MASK_FROM_ISR() 0
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue )
-#define portDISABLE_INTERRUPTS()	__asm volatile( "csrc mstatus, 8" )
-#define portENABLE_INTERRUPTS()		__asm volatile( "csrs mstatus, 8" )
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) ( void ) uxSavedStatusValue
+#define portDISABLE_INTERRUPTS()	__asm volatile( "csrc mstatus, 8" ); __asm volatile( "fence" )
+#define portENABLE_INTERRUPTS()		__asm volatile( "csrs mstatus, 8" ); __asm volatile( "fence" )
 #define portENTER_CRITICAL()	vTaskEnterCritical()
 #define portEXIT_CRITICAL()		vTaskExitCritical()
+
+/*-----------------------------------------------------------*/
+
+/* Architecture specific optimisations. */
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+	#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+#endif
+
+#if( configUSE_PORT_OPTIMISED_TASK_SELECTION == 1 )
+
+	/* Check the configuration. */
+	#if( configMAX_PRIORITIES > 32 )
+		#error configUSE_PORT_OPTIMISED_TASK_SELECTION can only be set to 1 when configMAX_PRIORITIES is less than or equal to 32.  It is very rare that a system requires more than 10 to 15 difference priorities as tasks that share a priority will time slice.
+	#endif
+
+	/* Store/clear the ready priorities in a bit map. */
+	#define portRECORD_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) |= ( 1UL << ( uxPriority ) )
+	#define portRESET_READY_PRIORITY( uxPriority, uxReadyPriorities ) ( uxReadyPriorities ) &= ~( 1UL << ( uxPriority ) )
+
+	/*-----------------------------------------------------------*/
+
+	#define portGET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - __builtin_clz( uxReadyPriorities ) )
+
+#endif /* configUSE_PORT_OPTIMISED_TASK_SELECTION */
+
 
 /*-----------------------------------------------------------*/
 
@@ -107,7 +133,6 @@ not necessary for to use this port.  They are defined so the common demo files
 #ifndef portFORCE_INLINE
 	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
-portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void ) {}
 
 #ifdef __cplusplus
 }

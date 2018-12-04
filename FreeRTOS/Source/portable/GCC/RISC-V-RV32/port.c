@@ -34,6 +34,16 @@
 #include "task.h"
 #include "portmacro.h"
 
+#ifdef configISR_STACK_SIZE
+	/* The stack used by interrupt service routines. */
+	static __attribute__ ((aligned(16))) StackType_t xISRStack[ configISR_STACK_SIZE ] = { 0 };
+	const StackType_t * const xISRStackTop = &( xISRStack[ ( configISR_STACK_SIZE & ~portBYTE_ALIGNMENT_MASK ) - 1 ] );
+#else
+#warning What should _sp be named?
+	extern const uint32_t _sp[];
+	const uint32_t xISRStackTop = ( uint32_t ) _sp;
+#endif
+
 /*
  * Setup the timer to generate the tick interrupts.  The implementation in this
  * file is weak to allow application writers to change the timer used to
@@ -53,6 +63,30 @@ uint64_t ullNextTime = 0ULL;
 const uint64_t *pullNextTime = &ullNextTime;
 const uint32_t ulTimerIncrementsForOneTick = ( uint32_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ); /* Assumes increment won't go over 32-bits. */
 volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+
+/* Set configCHECK_FOR_STACK_OVERFLOW to 3 to add ISR stack checking to task
+stack checking.  A problem in the ISR stack will trigger an assert, not call the
+stack overflow hook function (because the stack overflow hook is specific to a
+task stack, not the ISR stack). */
+#if( configCHECK_FOR_STACK_OVERFLOW > 2 )
+	#warning This path not tested, or even compiled yet.
+	/* Don't use 0xa5 as the stack fill bytes as that is used by the kernerl for
+	the task stacks, and so will legitimately appear in many positions within
+	the ISR stack. */
+	#define portISR_STACK_FILL_BYTE	0xee
+
+	static const uint8_t ucExpectedStackBytes[] = {
+									portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE,		\
+									portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE,		\
+									portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE,		\
+									portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE,		\
+									portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE };	\
+
+	#define portCHECK_ISR_STACK() configASSERT( ( memcmp( ( void * ) xISRStack, ( void * ) ucExpectedStackBytes, sizeof( ucExpectedStackBytes ) ) == 0 ) )
+#else
+	/* Define the function away. */
+	#define portCHECK_ISR_STACK()
+#endif /* configCHECK_FOR_STACK_OVERFLOW > 2 */
 
 /*-----------------------------------------------------------*/
 
@@ -194,19 +228,8 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLI
 	/* Prepare the time to use after the next tick interrupt. */
 	ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
 
-	/* Enable timer interrupt */
+	/* Enable timer interrupt. */
 	__asm volatile( "csrs mie, %0" :: "r"(0x80) ); /* 1<<7 for timer interrupt. */
-}
-/*-----------------------------------------------------------*/
-
-void Software_IRQHandler( void )
-{
-volatile uint32_t * const ulSoftInterrupt = ( uint32_t * ) configCLINT_BASE_ADDRESS;
-
-	vTaskSwitchContext();
-
-	/* Clear software interrupt. */
-	*( ( uint32_t * ) configCLINT_BASE_ADDRESS ) &= 0x08UL;
 }
 /*-----------------------------------------------------------*/
 
@@ -218,10 +241,15 @@ extern void xPortStartFirstTask( void );
 	{
 		volatile uint32_t mtvec = 0;
 
-		/* Check the least significant two bits of mtvec are 00 - indicating single
-		vector mode. */
+		/* Check the least significant two bits of mtvec are 00 - indicating
+		single vector mode. */
 		__asm volatile( "csrr %0, mtvec" : "=r"( mtvec ) );
 		configASSERT( ( mtvec & 0x03UL ) == 0 );
+
+		/* Check alignment of the interrupt stack - which is the same as the
+		stack that was being used by main() prior to the scheduler being
+		started. */
+		configASSERT( ( xISRStackTop & portBYTE_ALIGNMENT_MASK ) == 0 );
 	}
 	#endif
 

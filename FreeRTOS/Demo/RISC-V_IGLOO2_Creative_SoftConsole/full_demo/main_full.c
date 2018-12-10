@@ -78,9 +78,16 @@
 #include "TimerDemo.h"
 #include "EventGroupsDemo.h"
 #include "TaskNotify.h"
+#include "AbortDelay.h"
+#include "countsem.h"
+#include "death.h"
+#include "MessageBufferDemo.h"
+#include "StreamBufferDemo.h"
+#include "StreamBufferInterrupt.h"
 
 /* Priorities for the demo application tasks. */
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
+#define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 
 /* The period of the check task, in ms, converted to ticks using the
 pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors have
@@ -155,6 +162,11 @@ void main_full( void )
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
+	vCreateAbortDelayTasks();
+	vStartCountingSemaphoreTasks();
+	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE  );
+	vStartStreamBufferTasks();
+	vStartStreamBufferInterruptDemo();
 
 	/* Create the register check tasks, as described at the top of this	file.
 	Use xTaskCreateStatic() to create a task using only statically allocated
@@ -171,6 +183,11 @@ void main_full( void )
 	the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
+	/* The set of tasks created by the following function call have to be
+	created last as they keep account of the number of tasks they expect to see
+	running. */
+	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -183,7 +200,7 @@ void main_full( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-//int count = 0;
+
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
@@ -209,55 +226,74 @@ extern void vToggleLED( void );
 	doing gives visual feedback of the system status. */
 	for( ;; )
 	{
-//		if( ++count == 5 ) {taskENTER_CRITICAL();for(;;);}
 		/* Delay until it is time to execute again. */
 		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
 
-//		taskENTER_CRITICAL();
-//		for( int i = 0; i < 100; i++ )
-//		{
-//			for( int j = 0; j < 1000; j++ ) taskYIELD();
-//			taskEXIT_CRITICAL();
-//			vTaskDelay( 1 );
-//			taskENTER_CRITICAL();
-//		}
-//		taskEXIT_CRITICAL();
-
 		/* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
-		if( xAreDynamicPriorityTasksStillRunning() != pdTRUE )
+		if( xAreDynamicPriorityTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Dynamic priority demo/tests.\r\n";
 		}
 
-		if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
+		if ( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
 		}
 
-		if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
+		if ( xAreGenericQueueTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
 		}
 
-		if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
+		if ( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Recursive mutex demo/tests.\r\n";
 		}
 
-		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) != pdPASS )
+		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
 		}
 
-		if( xAreEventGroupTasksStillRunning() != pdPASS )
+		if( xAreEventGroupTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
 		}
 
-		if( xAreTaskNotificationTasksStillRunning() != pdPASS )
+		if( xAreTaskNotificationTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
+		}
+
+		if( xAreAbortDelayTestTasksStillRunning() == pdFALSE )
+		{
+			pcStatusMessage = "ERROR: Abort delay.\r\n";
+		}
+
+		if( xAreCountingSemaphoreTasksStillRunning() == pdFALSE )
+		{
+			pcStatusMessage = "ERROR: Counting semaphores.\r\n";
+		}
+
+		if( xIsCreateTaskStillRunning() == pdFALSE )
+		{
+			pcStatusMessage = "ERROR: Suicide tasks.\r\n";
+		}
+
+		if( xAreMessageBufferTasksStillRunning() == pdFALSE )
+		{
+			pcStatusMessage = "ERROR: Message buffer.\r\n";
+		}
+
+		if( xAreStreamBufferTasksStillRunning() == pdFALSE )
+		{
+			pcStatusMessage = "ERROR: Stream buffer.\r\n";
+		}
+
+		if( xIsInterruptStreamBufferDemoStillRunning() == pdFALSE )
+		{
+			pcStatusMessage = "ERROR: Stream buffer interrupt.\r\n";
 		}
 
 		/* Check that the register test 1 task is still running. */
@@ -275,7 +311,7 @@ extern void vToggleLED( void );
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
 		/* Write the status message to the UART. */
-//		vSendString( pcStatusMessage );
+		vSendString( pcStatusMessage );
 		vToggleLED();
 
 		/* If an error has been found then increase the LED toggle rate by
@@ -326,9 +362,24 @@ static void prvRegTestTaskEntry2( void *pvParameters )
 
 void vFullDemoTickHook( void )
 {
-	/* Called from vApplicationTickHook() when the project is configured to
-	build the full demo. */
+	/* The full demo includes a software timer demo/test that requires
+	prodding periodically from the tick interrupt. */
 	vTimerPeriodicISRTests();
+
+	/* Call the periodic event group from ISR demo. */
 	vPeriodicEventGroupsProcessing();
+
+	/* Use task notifications from an interrupt. */
 	xNotifyTaskFromISR();
+
+	/* Writes to stream buffer byte by byte to test the stream buffer trigger
+	level functionality. */
+	vPeriodicStreamBufferProcessing();
+
+	/* Writes a string to a string buffer four bytes at a time to demonstrate
+	a stream being sent from an interrupt to a task. */
+	vBasicStreamBufferSendFromISR();
+
+	/* Called from vApplicationTickHook() when the project is configured to
+	build the full test/demo applications. */
 }

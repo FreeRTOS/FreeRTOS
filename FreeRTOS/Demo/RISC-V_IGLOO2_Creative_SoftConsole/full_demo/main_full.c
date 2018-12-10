@@ -101,7 +101,7 @@ comments at the top of this file. */
 #define mainCHECK_TASK_STACK_SIZE_WORDS 100
 
 /* Size of the stacks to allocated for the register check tasks. */
-#define mainREG_TEST_STACK_SIZE_WORDS 60
+#define mainREG_TEST_STACK_SIZE_WORDS 70
 
 /*-----------------------------------------------------------*/
 
@@ -150,22 +150,22 @@ void main_full( void )
 	kernel port. */
 	vStartDynamicPriorityTasks();
 	vCreateBlockTimeTasks();
-//	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-//	vStartRecursiveMutexTasks();
-//	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-//	vStartEventGroupTasks();
-//	vStartTaskNotifyTask();
+	vStartGenericQueueTasks( tskIDLE_PRIORITY );
+	vStartRecursiveMutexTasks();
+	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartEventGroupTasks();
+	vStartTaskNotifyTask();
 
 	/* Create the register check tasks, as described at the top of this	file.
 	Use xTaskCreateStatic() to create a task using only statically allocated
 	memory. */
-//	xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
-//				 "Reg1", 						/* The name of the task. */
-//				 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
-//				 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
-//				 tskIDLE_PRIORITY, 				/* Priority of the task. */
-//				 NULL );						/* Can be used to pass out a handle to the created task. */
-//	xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegTestTaskEntry1, 			/* The function that implements the task. */
+				 "Reg1", 						/* The name of the task. */
+				 mainREG_TEST_STACK_SIZE_WORDS, /* Size of stack to allocate for the task - in words not bytes!. */
+				 mainREG_TEST_TASK_1_PARAMETER, /* Parameter passed into the task. */
+				 tskIDLE_PRIORITY, 				/* Priority of the task. */
+				 NULL );						/* Can be used to pass out a handle to the created task. */
+	xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
 	/* Create the task that performs the 'check' functionality,	as described at
 	the top of this file. */
@@ -183,7 +183,7 @@ void main_full( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-
+//int count = 0;
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
@@ -209,8 +209,19 @@ extern void vToggleLED( void );
 	doing gives visual feedback of the system status. */
 	for( ;; )
 	{
+//		if( ++count == 5 ) {taskENTER_CRITICAL();for(;;);}
 		/* Delay until it is time to execute again. */
 		vTaskDelayUntil( &xLastExecutionTime, xDelayPeriod );
+
+//		taskENTER_CRITICAL();
+//		for( int i = 0; i < 100; i++ )
+//		{
+//			for( int j = 0; j < 1000; j++ ) taskYIELD();
+//			taskEXIT_CRITICAL();
+//			vTaskDelay( 1 );
+//			taskENTER_CRITICAL();
+//		}
+//		taskEXIT_CRITICAL();
 
 		/* Check all the demo tasks (other than the flash tasks) to ensure
 		that they are all still running, and that none have detected an error. */
@@ -226,40 +237,40 @@ extern void vToggleLED( void );
 
 		if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
-//			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
 		}
 
 		if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
-//			pcStatusMessage = "ERROR: Recursive mutex demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Recursive mutex demo/tests.\r\n";
 		}
 
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) != pdPASS )
 		{
-//			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
-//			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() != pdPASS )
 		{
-//			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
 		}
 
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-//			pcStatusMessage = "ERROR: Register test 1.\r\n";
+			pcStatusMessage = "ERROR: Register test 1.\r\n";
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-//			pcStatusMessage = "ERROR: Register test 2.\r\n";
+			pcStatusMessage = "ERROR: Register test 2.\r\n";
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
@@ -317,6 +328,7 @@ void vFullDemoTickHook( void )
 {
 	/* Called from vApplicationTickHook() when the project is configured to
 	build the full demo. */
-//	vTimerPeriodicISRTests();
-//	vPeriodicEventGroupsProcessing();
+	vTimerPeriodicISRTests();
+	vPeriodicEventGroupsProcessing();
+	xNotifyTaskFromISR();
 }

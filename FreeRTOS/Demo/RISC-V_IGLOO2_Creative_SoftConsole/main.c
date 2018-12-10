@@ -87,7 +87,7 @@ static gpio_instance_t g_gpio_out;
 
 int main( void )
 {
-	prvSetupHardware();
+//	prvSetupHardware();
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
@@ -144,6 +144,11 @@ void vApplicationMallocFailedHook( void )
 }
 /*-----------------------------------------------------------*/
 
+volatile uint64_t mtimer = 0, mcompare = 0;
+volatile uint32_t mstatus;
+static volatile uint64_t * const pulCompareLow = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+static volatile uint64_t * const pulTimeLow = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFF8 );
+
 void vApplicationIdleHook( void )
 {
 	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
@@ -155,6 +160,9 @@ void vApplicationIdleHook( void )
 	important that vApplicationIdleHook() is permitted to return to its calling
 	function, because it is the responsibility of the idle task to clean up
 	memory allocated by the kernel to any task that has since been deleted. */
+	mstatus = read_csr( mstatus );
+	mtimer = *pulTimeLow;
+	mcompare = *pulCompareLow;
 }
 /*-----------------------------------------------------------*/
 

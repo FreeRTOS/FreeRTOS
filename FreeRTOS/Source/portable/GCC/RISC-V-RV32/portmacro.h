@@ -43,10 +43,6 @@ extern "C" {
  *-----------------------------------------------------------
  */
 
-#ifdef __riscv64
-	#error This is the RV32 port that supports 32-bit cores only.
-#endif
-
 /* Type definitions. */
 #define portSTACK_TYPE	uint32_t
 #define portBASE_TYPE	long
@@ -65,7 +61,12 @@ not need to be guarded with a critical section. */
 /* Architecture specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portBYTE_ALIGNMENT			16
+#ifdef __riscv64
+	#error This is the RV32 port that has not yet been adapted for 64.
+	#define portBYTE_ALIGNMENT			16
+#else
+	#define portBYTE_ALIGNMENT 8
+#endif
 /*-----------------------------------------------------------*/
 
 
@@ -79,15 +80,13 @@ extern void vTaskSwitchContext( void );
 
 /* Critical section management. */
 #define portCRITICAL_NESTING_IN_TCB					1
-extern int vPortSetInterruptMask( void );
-extern void vPortClearInterruptMask( int );
 extern void vTaskEnterCritical( void );
 extern void vTaskExitCritical( void );
 
 #define portSET_INTERRUPT_MASK_FROM_ISR() 0
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue ) ( void ) uxSavedStatusValue
-#define portDISABLE_INTERRUPTS()	__asm volatile( "csrc mstatus, 8" ); __asm volatile( "fence" )
-#define portENABLE_INTERRUPTS()		__asm volatile( "csrs mstatus, 8" ); __asm volatile( "fence" )
+#define portDISABLE_INTERRUPTS()	__asm volatile( "csrc mstatus, 8" )
+#define portENABLE_INTERRUPTS()		__asm volatile( "csrs mstatus, 8" )
 #define portENTER_CRITICAL()	vTaskEnterCritical()
 #define portEXIT_CRITICAL()		vTaskExitCritical()
 

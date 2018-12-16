@@ -39,9 +39,8 @@
 	static __attribute__ ((aligned(16))) StackType_t xISRStack[ configISR_STACK_SIZE ] = { 0 };
 	const StackType_t * const xISRStackTop = &( xISRStack[ ( configISR_STACK_SIZE & ~portBYTE_ALIGNMENT_MASK ) - 1 ] );
 #else
-#warning What should _sp be named?
-	extern const uint32_t _sp[];
-	const uint32_t xISRStackTop = ( uint32_t ) _sp;
+	extern const uint32_t __freertos_irq_stack_top[];
+	const uint32_t xISRStackTop = ( uint32_t ) __freertos_irq_stack_top;
 #endif
 
 /*
@@ -227,9 +226,6 @@ volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLI
 
 	/* Prepare the time to use after the next tick interrupt. */
 	ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
-
-	/* Enable timer interrupt. */
-	__asm volatile( "csrs mie, %0" :: "r"(0x80) ); /* 1<<7 for timer interrupt. */
 }
 /*-----------------------------------------------------------*/
 
@@ -254,6 +250,12 @@ extern void xPortStartFirstTask( void );
 	#endif
 
 	vPortSetupTimerInterrupt();
+
+	/* Enable mtime and external interrupts.  1<<7 for timer interrupt, 1<<11
+	for external interrupt.  _RB_ What happens here when mtime is not present as
+	with pulpino? */
+	__asm volatile( "csrs mie, %0" :: "r"(0x880) );
+
 	xPortStartFirstTask();
 
 	/* Should not get here as after calling xPortStartFirstTask() only tasks
@@ -267,6 +269,7 @@ void vPortEndScheduler( void )
 	/* Not implemented. */
 	for( ;; );
 }
+
 
 
 

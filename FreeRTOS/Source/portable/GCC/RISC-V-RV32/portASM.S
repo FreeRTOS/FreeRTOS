@@ -50,49 +50,7 @@
 .extern pullNextTime
 .extern ulTimerIncrementsForOneTick
 .extern xISRStackTop
-
-/*-----------------------------------------------------------*/
-
-.align 8
-xPortStartFirstTask:
-
-	la t0, vPortTrapHandler
-	csrw mtvec, t0
-
-	lw  sp, pxCurrentTCB			/* Load pxCurrentTCB. */
-	lw  sp, 0( sp )				 	/* Read sp from first TCB member. */
-
-	lw  x1, 0( sp ) /* Note for starting the scheduler the exception return address is used as the function return address. */
-	lw  x5, 2 * WORD_SIZE( sp )	 	/* t0 */
-	lw  x6, 3 * WORD_SIZE( sp )	 	/* t1 */
-	lw  x7, 4 * WORD_SIZE( sp )	 	/* t2 */
-	lw  x8, 5 * WORD_SIZE( sp )	 	/* s0/fp */
-	lw  x9, 6 * WORD_SIZE( sp )	 	/* s1 */
-	lw  x10, 7 * WORD_SIZE( sp )	/* a0 */
-	lw  x11, 8 * WORD_SIZE( sp )	/* a1 */
-	lw  x12, 9 * WORD_SIZE( sp )	/* a2 */
-	lw  x13, 10 * WORD_SIZE( sp )   /* a3 */
-	lw  x14, 11 * WORD_SIZE( sp )   /* a4 */
-	lw  x15, 12 * WORD_SIZE( sp )   /* a5 */
-	lw  x16, 13 * WORD_SIZE( sp )   /* a6 */
-	lw  x17, 14 * WORD_SIZE( sp )   /* a7 */
-	lw  x18, 15 * WORD_SIZE( sp )   /* s2 */
-	lw  x19, 16 * WORD_SIZE( sp )   /* s3 */
-	lw  x20, 17 * WORD_SIZE( sp )   /* s4 */
-	lw  x21, 18 * WORD_SIZE( sp )   /* s5 */
-	lw  x22, 19 * WORD_SIZE( sp )   /* s6 */
-	lw  x23, 20 * WORD_SIZE( sp )   /* s7 */
-	lw  x24, 21 * WORD_SIZE( sp )   /* s8 */
-	lw  x25, 22 * WORD_SIZE( sp )   /* s9 */
-	lw  x26, 23 * WORD_SIZE( sp )   /* s10 */
-	lw  x27, 24 * WORD_SIZE( sp )   /* s11 */
-	lw  x28, 25 * WORD_SIZE( sp )   /* t3 */
-	lw  x29, 26 * WORD_SIZE( sp )   /* t4 */
-	lw  x30, 27 * WORD_SIZE( sp )   /* t5 */
-	lw  x31, 28 * WORD_SIZE( sp )   /* t6 */
-	addi	sp, sp, CONTEXT_SIZE
-	csrs	mstatus, 8			  /* Enable machine interrupts. */
-	ret
+.extern vPortHandleInterrupt
 
 /*-----------------------------------------------------------*/
 
@@ -152,7 +110,7 @@ test_if_timer:
 
 	lui t0, 0x80000
 	addi t1,t0, 7 							/* 0x80000007 == machine timer interrupt. */
-	bne a0, t1, as_yet_unhandled
+	bne a0, t1, test_if_external_interrupt
 
 	lw t0, pullMachineTimerCompareRegister 	/* Load address of compare register into t0. */
 	lw t1, pullNextTime 					/* Load the address of ullNextTime into t1. */
@@ -172,9 +130,15 @@ test_if_timer:
 	jal vTaskSwitchContext
 	j processed_source
 
-as_yet_unhandled:
-//	ebreak 						/* External interrupt? */
-	j as_yet_unhandled
+test_if_external_interrupt:
+	addi t1, t1, 4                          /* 0x80000007 + 4 = 0x8000000b == Machine external interrupt. */
+	bne a0, t1, is_exception                /* Only thing left it can be. */
+	jal vPortHandleInterrupt
+	j processed_source
+
+is_exception:
+	ebreak
+	j is_exception
 
 processed_source:
 	lw  sp, pxCurrentTCB					/* Load pxCurrentTCB. */
@@ -219,5 +183,48 @@ processed_source:
 	addi	sp, sp, CONTEXT_SIZE
 
 	mret
+/*-----------------------------------------------------------*/
 
+.align 8
+xPortStartFirstTask:
+
+	la t0, vPortTrapHandler
+	csrw mtvec, t0
+
+	lw  sp, pxCurrentTCB			/* Load pxCurrentTCB. */
+	lw  sp, 0( sp )				 	/* Read sp from first TCB member. */
+
+	lw  x1, 0( sp ) /* Note for starting the scheduler the exception return address is used as the function return address. */
+	lw  x5, 2 * WORD_SIZE( sp )	 	/* t0 */
+	lw  x6, 3 * WORD_SIZE( sp )	 	/* t1 */
+	lw  x7, 4 * WORD_SIZE( sp )	 	/* t2 */
+	lw  x8, 5 * WORD_SIZE( sp )	 	/* s0/fp */
+	lw  x9, 6 * WORD_SIZE( sp )	 	/* s1 */
+	lw  x10, 7 * WORD_SIZE( sp )	/* a0 */
+	lw  x11, 8 * WORD_SIZE( sp )	/* a1 */
+	lw  x12, 9 * WORD_SIZE( sp )	/* a2 */
+	lw  x13, 10 * WORD_SIZE( sp )   /* a3 */
+	lw  x14, 11 * WORD_SIZE( sp )   /* a4 */
+	lw  x15, 12 * WORD_SIZE( sp )   /* a5 */
+	lw  x16, 13 * WORD_SIZE( sp )   /* a6 */
+	lw  x17, 14 * WORD_SIZE( sp )   /* a7 */
+	lw  x18, 15 * WORD_SIZE( sp )   /* s2 */
+	lw  x19, 16 * WORD_SIZE( sp )   /* s3 */
+	lw  x20, 17 * WORD_SIZE( sp )   /* s4 */
+	lw  x21, 18 * WORD_SIZE( sp )   /* s5 */
+	lw  x22, 19 * WORD_SIZE( sp )   /* s6 */
+	lw  x23, 20 * WORD_SIZE( sp )   /* s7 */
+	lw  x24, 21 * WORD_SIZE( sp )   /* s8 */
+	lw  x25, 22 * WORD_SIZE( sp )   /* s9 */
+	lw  x26, 23 * WORD_SIZE( sp )   /* s10 */
+	lw  x27, 24 * WORD_SIZE( sp )   /* s11 */
+	lw  x28, 25 * WORD_SIZE( sp )   /* t3 */
+	lw  x29, 26 * WORD_SIZE( sp )   /* t4 */
+	lw  x30, 27 * WORD_SIZE( sp )   /* t5 */
+	lw  x31, 28 * WORD_SIZE( sp )   /* t6 */
+	addi	sp, sp, CONTEXT_SIZE
+	csrs	mstatus, 8			  /* Enable machine interrupts. */
+	ret
+
+/*-----------------------------------------------------------*/
 

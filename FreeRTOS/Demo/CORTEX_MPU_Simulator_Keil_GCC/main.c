@@ -783,7 +783,7 @@ static void prvTaskToDelete( void *pvParameters )
 static void prvPendedFunctionCall( void *pvParameter1, uint32_t ulParameter2 )
 {
 uint32_t *pulCounter = ( uint32_t * ) pvParameter1;
-	
+
 	/* Increment the paramater to show the pended function has executed. */
 	( *pulCounter )++;
 }
@@ -792,7 +792,7 @@ uint32_t *pulCounter = ( uint32_t * ) pvParameter1;
 static void prvTestTimerCallback( TimerHandle_t xTimer )
 {
 uint32_t ulTimerID;
-	
+
 	/* Increment the timer's ID to show the callback has executed. */
 	ulTimerID = ( uint32_t ) pvTimerGetTimerID( xTimer );
 	ulTimerID++;
@@ -804,43 +804,42 @@ static void prvExerciseTimerAPI( void )
 {
 TimerHandle_t xTimer;
 const char * const pcTimerName = "TestTimer";
-const TickType_t x10ms = pdMS_TO_TICKS( 3 );
+const TickType_t x3ms = pdMS_TO_TICKS( 3 );
 uint32_t ulValueForTesting = 0;
-	
-	xTimer = xTimerCreate( 	pcTimerName, 
-							x10ms,
+
+	xTimer = xTimerCreate( 	pcTimerName,
+							x3ms,
 							pdFALSE, /* Created as a one shot timer. */
 							0,
 							prvTestTimerCallback );
-	configASSERT( xTimer );	
+	configASSERT( xTimer );
 	configASSERT( xTimerIsTimerActive( xTimer ) == pdFALSE );
 	configASSERT( xTimerGetTimerDaemonTaskHandle() != NULL );
 	configASSERT( strcmp( pcTimerName, pcTimerGetName( xTimer ) ) == 0 );
-	configASSERT( xTimerGetPeriod( xTimer ) == x10ms );
-	configASSERT( xTimerGetExpiryTime( xTimer ) == 0 ); /* The timer has been created only. */
-	
+	configASSERT( xTimerGetPeriod( xTimer ) == x3ms );
+
 	/* Pend a function then wait for it to execute.  All it does is increment
 	its parameter. */
 	xTimerPendFunctionCall( prvPendedFunctionCall, &ulValueForTesting, 0, 0 );
-	vTaskDelay( x10ms );
+	vTaskDelay( x3ms );
 	configASSERT( ulValueForTesting == 1 );
-	
+
 	/* Timer was created as a one shot timer.  Its callback just increments the
 	timer's ID - so set the ID to 0, let the timer run for a number of timeout
 	periods, then check the timer has only executed once. */
 	vTimerSetTimerID( xTimer, ( void * ) 0 );
 	xTimerStart( xTimer, 0 );
-	vTaskDelay( 3UL * x10ms );
+	vTaskDelay( 3UL * x3ms );
 	configASSERT( ( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
-	
+
 	/* Now change the timer to be an autoreload timer and check it executes
 	the expected number of times. */
 	vTimerSetReloadMode( xTimer, pdTRUE );
 	xTimerStart( xTimer, 0 );
-	vTaskDelay( 3UL * x10ms );
+	vTaskDelay( 3UL * x3ms );
 	configASSERT( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) > 3UL );
 	configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
-	
+
 	/* Clean up at the end. */
 	xTimerDelete( xTimer, portMAX_DELAY );
 }

@@ -158,6 +158,7 @@ static void prvExerciseEventGroupAPI( void );
 static void prvExerciseSemaphoreAPI( void );
 static void prvExerciseTaskNotificationAPI( void );
 static void prvExerciseStreamBufferAPI( void );
+static void prvExerciseTimerAPI( void );
 
 /*
  * Just configures any clocks and IO necessary.
@@ -195,6 +196,13 @@ static void prvTestMemoryRegions( void );
  * to the check task.
  */
 static void prvTimerCallback( TimerHandle_t xExpiredTimer );
+
+/*
+ * The callback function and a function that is pended used when exercising the
+ * timer API.
+ */
+static void prvPendedFunctionCall( void *pvParameter1, uint32_t ulParameter2 );
+static void prvTestTimerCallback( TimerHandle_t xTimer );
 
 /*-----------------------------------------------------------*/
 
@@ -763,11 +771,78 @@ static void prvTaskToDelete( void *pvParameters )
 	prvExerciseSemaphoreAPI();
 	prvExerciseTaskNotificationAPI();
 	prvExerciseStreamBufferAPI();
+	prvExerciseTimerAPI();
 
 	/* For code coverage test purposes it is deleted by the Idle task. */
 	configASSERT( uxTaskGetStackHighWaterMark( NULL ) > 0 );
 	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
 	vTaskSuspend( NULL );
+}
+/*-----------------------------------------------------------*/
+
+static void prvPendedFunctionCall( void *pvParameter1, uint32_t ulParameter2 )
+{
+uint32_t *pulCounter = ( uint32_t * ) pvParameter1;
+	
+	/* Increment the paramater to show the pended function has executed. */
+	( *pulCounter )++;
+}
+/*-----------------------------------------------------------*/
+
+static void prvTestTimerCallback( TimerHandle_t xTimer )
+{
+uint32_t ulTimerID;
+	
+	/* Increment the timer's ID to show the callback has executed. */
+	ulTimerID = ( uint32_t ) pvTimerGetTimerID( xTimer );
+	ulTimerID++;
+	vTimerSetTimerID( xTimer, ( void * ) ulTimerID );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExerciseTimerAPI( void )
+{
+TimerHandle_t xTimer;
+const char * const pcTimerName = "TestTimer";
+const TickType_t x10ms = pdMS_TO_TICKS( 3 );
+uint32_t ulValueForTesting = 0;
+	
+	xTimer = xTimerCreate( 	pcTimerName, 
+							x10ms,
+							pdFALSE, /* Created as a one shot timer. */
+							0,
+							prvTestTimerCallback );
+	configASSERT( xTimer );	
+	configASSERT( xTimerIsTimerActive( xTimer ) == pdFALSE );
+	configASSERT( xTimerGetTimerDaemonTaskHandle() != NULL );
+	configASSERT( strcmp( pcTimerName, pcTimerGetName( xTimer ) ) == 0 );
+	configASSERT( xTimerGetPeriod( xTimer ) == x10ms );
+	configASSERT( xTimerGetExpiryTime( xTimer ) == 0 ); /* The timer has been created only. */
+	
+	/* Pend a function then wait for it to execute.  All it does is increment
+	its parameter. */
+	xTimerPendFunctionCall( prvPendedFunctionCall, &ulValueForTesting, 0, 0 );
+	vTaskDelay( x10ms );
+	configASSERT( ulValueForTesting == 1 );
+	
+	/* Timer was created as a one shot timer.  Its callback just increments the
+	timer's ID - so set the ID to 0, let the timer run for a number of timeout
+	periods, then check the timer has only executed once. */
+	vTimerSetTimerID( xTimer, ( void * ) 0 );
+	xTimerStart( xTimer, 0 );
+	vTaskDelay( 3UL * x10ms );
+	configASSERT( ( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
+	
+	/* Now change the timer to be an autoreload timer and check it executes
+	the expected number of times. */
+	vTimerSetReloadMode( xTimer, pdTRUE );
+	xTimerStart( xTimer, 0 );
+	vTaskDelay( 3UL * x10ms );
+	configASSERT( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) > 3UL );
+	configASSERT( xTimerStop( xTimer, 0 ) != pdFAIL );
+	
+	/* Clean up at the end. */
+	xTimerDelete( xTimer, portMAX_DELAY );
 }
 /*-----------------------------------------------------------*/
 
@@ -797,19 +872,6 @@ StreamBufferHandle_t xStreamBuffer;
 										  ( void * ) &xRead,
 										  sizeof( xRead ),
 										  0 );
-		configASSERT( xReturned == sizeof( xRead ) );
-		configASSERT( xRead == x );
-
-		xStreamBufferSendFromISR( xStreamBuffer,
-								 ( void * ) &x,
-								 sizeof( x ),
-								 NULL );
-		configASSERT( xReturned == sizeof( x ) );
-
-		xReturned = xStreamBufferReceiveFromISR( xStreamBuffer,
-												 ( void * ) &xRead,
-												 sizeof( xRead ),
-												 NULL );
 		configASSERT( xReturned == sizeof( xRead ) );
 		configASSERT( xRead == x );
 		configASSERT( xStreamBufferIsFull( xStreamBuffer ) == pdFALSE );
@@ -865,8 +927,12 @@ volatile uint32_t ulReadData;
 	test purposes. */
 	if( xTaskToDelete != NULL )
 	{
-		vTaskDelete( xTaskToDelete );
-		xTaskToDelete = NULL;
+		if( eTaskGetState( xTaskToDelete ) == eSuspended )
+		{
+			/* The task has finished its tests and can be deleted. */
+			vTaskDelete( xTaskToDelete );
+			xTaskToDelete = NULL;
+		}
 	}
 
 	( void ) ulReadData;

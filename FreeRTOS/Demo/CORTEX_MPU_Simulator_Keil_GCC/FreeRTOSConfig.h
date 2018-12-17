@@ -105,7 +105,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil				1
 #define INCLUDE_vTaskDelay					1
 #define INCLUDE_eTaskGetState				1
-#define INCLUDE_xTimerPendFunctionCall		0
+#define INCLUDE_xTimerPendFunctionCall		1
 #define INCLUDE_xSemaphoreGetMutexHolder	1
 #define INCLUDE_xTaskGetHandle				1
 #define INCLUDE_xTaskGetCurrentTaskHandle	1

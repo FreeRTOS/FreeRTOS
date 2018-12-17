@@ -143,7 +143,7 @@ static inline void PLIC_init(void)
     PLIC->TARGET[hart_id].PRIORITY_THRESHOLD = 0;
 
     /* Enable machine external interrupts. */
-//    set_csr(mie, MIP_MEIP);
+    set_csr(mie, MIP_MEIP);
 }
 
 /*==============================================================================

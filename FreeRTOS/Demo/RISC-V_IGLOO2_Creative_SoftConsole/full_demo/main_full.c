@@ -70,6 +70,10 @@
 #include "timers.h"
 #include "semphr.h"
 
+/* Microsemi incldues. */
+#include "core_timer.h"
+#include "riscv_hal.h"
+
 /* Standard demo application includes. */
 #include "dynamic.h"
 #include "blocktim.h"
@@ -124,6 +128,12 @@ void main_full( void );
 static void prvCheckTask( void *pvParameters );
 
 /*
+ * Initialise and start the peripheral timers that are used to exercise external
+ * interrupt processing.
+ */
+static void prvSetupPeripheralTimers( void );
+
+/*
  * Register check tasks as described at the top of this file.  The nature of
  * these files necessitates that they are written in an assembly file, but the
  * entry points are kept in the C file for the convenience of checking the task
@@ -141,6 +151,13 @@ extern void vRegTest2Implementation( void );
 void vFullDemoTickHook( void );
 
 /*-----------------------------------------------------------*/
+
+/* Timers used to exercise external interrupt processing. */
+static timer_instance_t g_timer0, g_timer1;
+
+/* Variables incremented by the peripheral timers used to exercise external
+interrupts. */
+volatile uint32_t ulTimer0Interrupts = 0, ulTimer1Interrupts = 0;
 
 /* The following two variables are used to communicate the status of the
 register check tasks to the check task.  If the variables keep incrementing,
@@ -188,6 +205,9 @@ void main_full( void )
 	running. */
 	vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
 
+	/* Start the timers that are used to exercise external interrupt handling. */
+	prvSetupPeripheralTimers();
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -205,7 +225,8 @@ static void prvCheckTask( void *pvParameters )
 {
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
-static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
+uint32_t ulLastTimer0Interrupts = 0, ulLastTimer1Interrupts = 0;
 char * const pcPassMessage = "Pass.\r\n";
 char * pcStatusMessage = pcPassMessage;
 extern void vSendString( const char * const pcString );
@@ -310,9 +331,21 @@ extern void vToggleLED( void );
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
+		/* Check interrupts from the peripheral timers are being handled. */
+		if( ulLastTimer0Interrupts == ulTimer0Interrupts )
+		{
+			pcStatusMessage = "ERROR: Peripheral timer 0.\r\n";
+		}
+		ulLastTimer0Interrupts = ulTimer0Interrupts;
+
+		if( ulLastTimer1Interrupts == ulTimer1Interrupts )
+		{
+			pcStatusMessage = "ERROR: Peripheral timer 1.\r\n";
+		}
+		ulLastTimer1Interrupts = ulTimer1Interrupts;
+
 		/* Write the status message to the UART. */
 		vSendString( pcStatusMessage );
-		vToggleLED();
 
 		/* If an error has been found then increase the LED toggle rate by
 		increasing the cycle frequency. */
@@ -382,4 +415,61 @@ void vFullDemoTickHook( void )
 
 	/* Called from vApplicationTickHook() when the project is configured to
 	build the full test/demo applications. */
+}
+/*-----------------------------------------------------------*/
+
+static void prvSetupPeripheralTimers( void )
+{
+	TMR_init( 	&g_timer0,
+				CORETIMER0_BASE_ADDR,
+				TMR_CONTINUOUS_MODE,
+				PRESCALER_DIV_1024,
+				83000 );
+
+    TMR_init( 	&g_timer1,
+				CORETIMER1_BASE_ADDR,
+				TMR_CONTINUOUS_MODE,
+				PRESCALER_DIV_512,
+				42000 );
+
+	/* In this version of the PLIC, the priorities are fixed at 1.
+	Lower numbered devices have higher priorities. But this code is given as
+	an example.
+	*/
+	PLIC_SetPriority( External_30_IRQn, 1 );
+	PLIC_SetPriority( External_31_IRQn, 1 );
+
+	/*Enable Timer 1 & 0 Interrupt*/
+	PLIC_EnableIRQ( External_30_IRQn );
+	PLIC_EnableIRQ( External_31_IRQn );
+
+	/* Enable the timers */
+	TMR_enable_int( &g_timer0 );
+	TMR_enable_int( &g_timer1 );
+
+	/* Make sure timers don't interrupt until the scheduler is running. */
+	portDISABLE_INTERRUPTS();
+
+	/*Start the timer*/
+	TMR_start( &g_timer0 );
+	TMR_start( &g_timer1 );
+}
+/*-----------------------------------------------------------*/
+
+/*Core Timer 0 Interrupt Handler*/
+uint8_t External_30_IRQHandler( void )
+{
+	ulTimer0Interrupts++;
+    TMR_clear_int(&g_timer0);
+    return( EXT_IRQ_KEEP_ENABLED );
+}
+/*-----------------------------------------------------------*/
+
+/*Core Timer 1 Interrupt Handler*/
+uint8_t External_31_IRQHandler( void )
+{
+	ulTimer1Interrupts++;
+    TMR_clear_int(&g_timer1);
+
+    return( EXT_IRQ_KEEP_ENABLED );
 }

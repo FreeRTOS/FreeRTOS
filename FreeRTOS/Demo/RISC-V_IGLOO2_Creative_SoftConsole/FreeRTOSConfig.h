@@ -144,4 +144,8 @@ header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+
+#define handle_m_ext_interrupt vPortHandleInterrupt
+
+
 #endif /* FREERTOS_CONFIG_H */

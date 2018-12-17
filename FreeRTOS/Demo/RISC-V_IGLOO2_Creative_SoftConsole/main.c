@@ -107,7 +107,6 @@ static void prvSetupHardware( void )
 {
 	PLIC_init();
 	UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
-	GPIO_init( &g_gpio_out, COREGPIO_OUT_BASE_ADDR, GPIO_APB_32_BITS_BUS );
 }
 /*-----------------------------------------------------------*/
 
@@ -182,3 +181,5 @@ void vApplicationTickHook( void )
 	}
 	#endif
 }
+
+

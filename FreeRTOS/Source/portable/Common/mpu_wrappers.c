@@ -357,19 +357,6 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
-#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-	TaskHookFunction_t MPU_xTaskGetApplicationTaskTagFromISR( TaskHandle_t xTask )
-	{
-	TaskHookFunction_t xReturn;
-	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
-
-		xReturn = xTaskGetApplicationTaskTagFromISR( xTask );
-		vPortResetPrivilege( xRunningPrivileged );
-		return xReturn;
-	}
-#endif
-/*-----------------------------------------------------------*/
-
 #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
 	void MPU_vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue )
 	{
@@ -642,17 +629,6 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 BaseType_t xReturn;
 
 	xReturn = xQueueSemaphoreTake( xQueue, xTicksToWait );
-	vPortResetPrivilege( xRunningPrivileged );
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-BaseType_t MPU_xQueuePeekFromISR( QueueHandle_t pxQueue, void * const pvBuffer )
-{
-BaseType_t xRunningPrivileged = xPortRaisePrivilege();
-BaseType_t xReturn;
-
-	xReturn = xQueuePeekFromISR( pxQueue, pvBuffer );
 	vPortResetPrivilege( xRunningPrivileged );
 	return xReturn;
 }
@@ -998,6 +974,17 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if( configUSE_TIMERS == 1 )
+	void MPU_vTimerSetReloadMode( TimerHandle_t xTimer, const UBaseType_t uxAutoReload )
+	{
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		vTimerSetReloadMode( xTimer, uxAutoReload );
+		vPortResetPrivilege( xRunningPrivileged );
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if( configUSE_TIMERS == 1 )
 	const char * MPU_pcTimerGetName( TimerHandle_t xTimer )
 	{
 	const char * pcReturn;
@@ -1150,18 +1137,6 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 }
 /*-----------------------------------------------------------*/
 
-size_t MPU_xStreamBufferSendFromISR( StreamBufferHandle_t xStreamBuffer, const void *pvTxData, size_t xDataLengthBytes, BaseType_t * const pxHigherPriorityTaskWoken )
-{
-size_t xReturn;
-BaseType_t xRunningPrivileged = xPortRaisePrivilege();
-
-	xReturn = xStreamBufferSendFromISR( xStreamBuffer, pvTxData, xDataLengthBytes, pxHigherPriorityTaskWoken );
-	vPortResetPrivilege( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
 size_t MPU_xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
 {
 size_t xReturn;
@@ -1180,18 +1155,6 @@ size_t xReturn;
 BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
 	xReturn = xStreamBufferReceive( xStreamBuffer, pvRxData, xBufferLengthBytes, xTicksToWait );
-	vPortResetPrivilege( xRunningPrivileged );
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-size_t MPU_xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer, void *pvRxData, size_t xBufferLengthBytes, BaseType_t * const pxHigherPriorityTaskWoken )
-{
-size_t xReturn;
-BaseType_t xRunningPrivileged = xPortRaisePrivilege();
-
-	xReturn = xStreamBufferReceiveFromISR( xStreamBuffer, pvRxData, xBufferLengthBytes, pxHigherPriorityTaskWoken );
 	vPortResetPrivilege( xRunningPrivileged );
 
 	return xReturn;

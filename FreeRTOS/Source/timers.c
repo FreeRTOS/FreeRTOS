@@ -439,6 +439,26 @@ Timer_t *pxTimer = xTimer;
 }
 /*-----------------------------------------------------------*/
 
+void vTimerSetReloadMode( TimerHandle_t xTimer, const UBaseType_t uxAutoReload )
+{
+Timer_t * pxTimer =  xTimer;
+
+	configASSERT( xTimer );
+	taskENTER_CRITICAL();
+	{
+		if( uxAutoReload != pdFALSE )
+		{
+			pxTimer->ucStatus |= tmrSTATUS_IS_AUTORELOAD;
+		}
+		else
+		{
+			pxTimer->ucStatus &= ~tmrSTATUS_IS_AUTORELOAD;
+		}
+	}
+	taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
 TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
 {
 Timer_t * pxTimer =  xTimer;

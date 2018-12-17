@@ -64,7 +64,6 @@ UBaseType_t MPU_uxTaskGetStackHighWaterMark( TaskHandle_t xTask );
 configSTACK_DEPTH_TYPE MPU_uxTaskGetStackHighWaterMark2( TaskHandle_t xTask );
 void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxHookFunction );
 TaskHookFunction_t MPU_xTaskGetApplicationTaskTag( TaskHandle_t xTask );
-TaskHookFunction_t MPU_xTaskGetApplicationTaskTagFromISR( TaskHandle_t xTask );
 void MPU_vTaskSetThreadLocalStoragePointer( TaskHandle_t xTaskToSet, BaseType_t xIndex, void *pvValue );
 void * MPU_pvTaskGetThreadLocalStoragePointer( TaskHandle_t xTaskToQuery, BaseType_t xIndex );
 BaseType_t MPU_xTaskCallApplicationTaskHook( TaskHandle_t xTask, void *pvParameter );
@@ -121,6 +120,7 @@ BaseType_t MPU_xTimerIsTimerActive( TimerHandle_t xTimer );
 TaskHandle_t MPU_xTimerGetTimerDaemonTaskHandle( void );
 BaseType_t MPU_xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait );
 const char * MPU_pcTimerGetName( TimerHandle_t xTimer );
+void MPU_vTimerSetReloadMode( TimerHandle_t xTimer, const UBaseType_t uxAutoReload );
 TickType_t MPU_xTimerGetPeriod( TimerHandle_t xTimer );
 TickType_t MPU_xTimerGetExpiryTime( TimerHandle_t xTimer );
 BaseType_t MPU_xTimerCreateTimerTask( void );
@@ -138,10 +138,8 @@ UBaseType_t MPU_uxEventGroupGetNumber( void* xEventGroup );
 
 /* MPU versions of message/stream_buffer.h API functions. */
 size_t MPU_xStreamBufferSend( StreamBufferHandle_t xStreamBuffer, const void *pvTxData, size_t xDataLengthBytes, TickType_t xTicksToWait );
-size_t MPU_xStreamBufferSendFromISR( StreamBufferHandle_t xStreamBuffer, const void *pvTxData, size_t xDataLengthBytes, BaseType_t * const pxHigherPriorityTaskWoken );
 size_t MPU_xStreamBufferReceive( StreamBufferHandle_t xStreamBuffer, void *pvRxData, size_t xBufferLengthBytes, TickType_t xTicksToWait );
 size_t MPU_xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer );
-size_t MPU_xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer, void *pvRxData, size_t xBufferLengthBytes, BaseType_t * const pxHigherPriorityTaskWoken );
 void MPU_vStreamBufferDelete( StreamBufferHandle_t xStreamBuffer );
 BaseType_t MPU_xStreamBufferIsFull( StreamBufferHandle_t xStreamBuffer );
 BaseType_t MPU_xStreamBufferIsEmpty( StreamBufferHandle_t xStreamBuffer );

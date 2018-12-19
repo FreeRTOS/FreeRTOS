@@ -90,12 +90,12 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( ( unsigned long ) ( SYS_CLK_FREQ ) )
-//#define configCPU_CLOCK_HZ				( ( unsigned long ) ( SYS_CLK_FREQ / 100 ) ) /*_RB_ Seems to be a factor of 100 between machine timer frequency and CPU frequency. */
+//#define configCPU_CLOCK_HZ				( ( unsigned long ) ( SYS_CLK_FREQ ) )
+#define configCPU_CLOCK_HZ				( ( unsigned long ) ( SYS_CLK_FREQ / 100 ) ) /*_RB_ Seems to be a factor of 100 between machine timer frequency and CPU frequency. */
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 200 ) /* Can be as low as 60 but some of the demo tasks that use this constant require it to be higher. */
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 300 * 1024 ) )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 150 ) /* Can be as low as 60 but some of the demo tasks that use this constant require it to be higher. */
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 280 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0
@@ -144,8 +144,6 @@ header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
-
-#define handle_m_ext_interrupt vPortHandleInterrupt
 
 
 #endif /* FREERTOS_CONFIG_H */

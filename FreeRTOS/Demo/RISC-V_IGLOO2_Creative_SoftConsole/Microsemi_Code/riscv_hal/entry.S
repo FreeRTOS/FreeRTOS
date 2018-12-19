@@ -24,7 +24,7 @@
 #endif
 
   .section      .text.entry
-  .extern vPortTrapHandler
+  .extern vFreeRTOSPortTrapHandler
   .globl _start
 
 _start:
@@ -34,10 +34,10 @@ nmi_vector:
   j nmi_vector
 
 trap_vector:
-  j vPortTrapHandler
+  j vFreeRTOSPortTrapHandler
 
 handle_reset:
-  la t0, vPortTrapHandler
+  la t0, vFreeRTOSPortTrapHandler
   csrw mtvec, t0
   csrwi mstatus, 0
   csrwi mie, 0

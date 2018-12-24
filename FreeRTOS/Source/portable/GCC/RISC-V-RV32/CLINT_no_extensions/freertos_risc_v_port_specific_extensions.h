@@ -61,14 +61,6 @@
 #ifndef __FREERTOS_RISC_V_EXTENSIONS_H__
 #define __FREERTOS_RISC_V_EXTENSIONS_H__
 
-.macro portSAVE_ADDITIONAL_REGISTERS
-	/* This file is for use with chips that do not add to the standard RISC-V
-	 * register set, so there is nothing to do here. */
-	.endm
-
-.macro portRESTORE_ADDITIONAL_REGISTERS
-	/* This file is for use with chips that do not add to the standard RISC-V
-	 * register set, so there is nothing to do here. */
-	.endm
+#define portasmHAS_CLINT 1
 
 #endif /* __FREERTOS_RISC_V_EXTENSIONS_H__ */

@@ -206,27 +206,31 @@ const uint32_t ulMPIE_Bit = 0x80, ulMPP_Bits = 0x1800;
 }
 /*-----------------------------------------------------------*/
 
-void vPortSetupTimerInterrupt( void )
-{
-uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
-volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFFC );
-volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFF8 );
+#if( configCLINT_BASE_ADDRESS != 0 )
 
-	do
+	void vPortSetupTimerInterrupt( void )
 	{
-		ulCurrentTimeHigh = *pulTimeHigh;
-		ulCurrentTimeLow = *pulTimeLow;
-	} while( ulCurrentTimeHigh != *pulTimeHigh );
+	uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
+	volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFFC );
+	volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFF8 );
 
-	ullNextTime = ( uint64_t ) ulCurrentTimeHigh;
-	ullNextTime <<= 32ULL;
-	ullNextTime |= ( uint64_t ) ulCurrentTimeLow;
-	ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
-	*pullMachineTimerCompareRegister = ullNextTime;
+		do
+		{
+			ulCurrentTimeHigh = *pulTimeHigh;
+			ulCurrentTimeLow = *pulTimeLow;
+		} while( ulCurrentTimeHigh != *pulTimeHigh );
 
-	/* Prepare the time to use after the next tick interrupt. */
-	ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
-}
+		ullNextTime = ( uint64_t ) ulCurrentTimeHigh;
+		ullNextTime <<= 32ULL;
+		ullNextTime |= ( uint64_t ) ulCurrentTimeLow;
+		ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
+		*pullMachineTimerCompareRegister = ullNextTime;
+
+		/* Prepare the time to use after the next tick interrupt. */
+		ullNextTime += ( uint64_t ) ulTimerIncrementsForOneTick;
+	}
+
+#endif /* ( configCLINT_BASE_ADDRESS != 0 ) */
 /*-----------------------------------------------------------*/
 
 BaseType_t xPortStartScheduler( void )
@@ -247,14 +251,26 @@ extern void xPortStartFirstTask( void );
 		started. */
 		configASSERT( ( xISRStackTop & portBYTE_ALIGNMENT_MASK ) == 0 );
 	}
-	#endif
+	#endif /* configASSERT_DEFINED */
 
+	/* If there is a CLINT then it is ok to use the default implementation
+	in this file, otherwise vPortSetupTimerInterrupt() must be implemented to
+	configure whichever clock is to be used to generate the tick interrupt. */
 	vPortSetupTimerInterrupt();
 
-	/* Enable mtime and external interrupts.  1<<7 for timer interrupt, 1<<11
-	for external interrupt.  _RB_ What happens here when mtime is not present as
-	with pulpino? */
-	__asm volatile( "csrs mie, %0" :: "r"(0x880) );
+	#if( configCLINT_BASE_ADDRESS != 0 )
+	{
+		/* Enable mtime and external interrupts.  1<<7 for timer interrupt, 1<<11
+		for external interrupt.  _RB_ What happens here when mtime is not present as
+		with pulpino? */
+		__asm volatile( "csrs mie, %0" :: "r"(0x880) );
+	}
+	#else
+	{
+		/* Enable external interrupts. */
+		__asm volatile( "csrs mie, %0" :: "r"(0x800) );
+	}
+	#endif /* configCLINT_BASE_ADDRESS */
 
 	xPortStartFirstTask();
 

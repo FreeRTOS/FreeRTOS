@@ -24,8 +24,8 @@ MEMORY
 
 RAM_START_ADDRESS   = 0x80000000;       /* Must be the same value MEMORY region ram ORIGIN above. */
 RAM_SIZE            = 512k;              /* Must be the same value MEMORY region ram LENGTH above. */
-STACK_SIZE          = 64k;               /* needs to be calculated for your application */
-HEAP_SIZE           = 64k;               /* needs to be calculated for your application */
+STACK_SIZE          = 2k;               /* needs to be calculated for your application */
+HEAP_SIZE           = 4;               /* needs to be calculated for your application */
 
 SECTIONS
 {

@@ -227,13 +227,17 @@ TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 uint32_t ulLastTimer0Interrupts = 0, ulLastTimer1Interrupts = 0;
-char * const pcPassMessage = "Pass.\r\n";
+char * const pcPassMessage = ".";
 char * pcStatusMessage = pcPassMessage;
 extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
+
+	/* Start with a pass message, after which a '.' character will be printed
+	out on each successful loop. */
+	vSendString( "Pass" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */

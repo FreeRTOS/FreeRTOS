@@ -90,11 +90,10 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-//#define configCPU_CLOCK_HZ				( ( unsigned long ) ( SYS_CLK_FREQ ) )
-#define configCPU_CLOCK_HZ				( ( unsigned long ) ( SYS_CLK_FREQ / 100 ) ) /*_RB_ Seems to be a factor of 100 between machine timer frequency and CPU frequency. */
+#define configCPU_CLOCK_HZ				( ( uint32_t ) ( SYS_CLK_FREQ ) )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 150 ) /* Can be as low as 60 but some of the demo tasks that use this constant require it to be higher. */
+#define configMINIMAL_STACK_SIZE		( ( uint32_t ) 170 ) /* Can be as low as 60 but some of the demo tasks that use this constant require it to be higher. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 280 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0

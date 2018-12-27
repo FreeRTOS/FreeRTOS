@@ -101,10 +101,10 @@ purpose of ensuring parameters are passed into tasks correctl5. */
 
 /* The size of the stack allocated to the check task (as described in the
 comments at the top of this file. */
-#define mainCHECK_TASK_STACK_SIZE_WORDS 100
+#define mainCHECK_TASK_STACK_SIZE_WORDS 110
 
 /* Size of the stacks to allocated for the register check tasks. */
-#define mainREG_TEST_STACK_SIZE_WORDS 60
+#define mainREG_TEST_STACK_SIZE_WORDS 70
 
 /*-----------------------------------------------------------*/
 
@@ -155,8 +155,8 @@ void main_full( void )
 	vCreateBlockTimeTasks();
 	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartRecursiveMutexTasks();
-	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-	vStartEventGroupTasks();
+//	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+//	vStartEventGroupTasks();
 	vStartTaskNotifyTask();
 
 	/* Create the register check tasks, as described at the top of this	file.
@@ -194,7 +194,7 @@ const TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 const char * const pcPassMessage = "Pass.\r\n";
-char * pcStatusMessage = pcPassMessage;
+const char * pcStatusMessage = pcPassMessage;
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
@@ -243,7 +243,7 @@ char * pcStatusMessage = pcPassMessage;
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
-			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
+//			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() != pdPASS )
@@ -312,6 +312,6 @@ void vFullDemoTickHook( void )
 	/* Called from vApplicationTickHook() when the project is configured to
 	build the full demo. */
 //	vTimerPeriodicISRTests();
-	vPeriodicEventGroupsProcessing();
+//	vPeriodicEventGroupsProcessing();
 	xNotifyTaskFromISR();
 }

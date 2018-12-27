@@ -91,8 +91,8 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( 10000000 ) /*QEMU*/
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES			( 5 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 85 )
+#define configMAX_PRIORITIES			( 7 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 95 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 14300 )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
@@ -114,7 +114,7 @@
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
-#define configTIMER_QUEUE_LENGTH		7
+#define configTIMER_QUEUE_LENGTH		4
 #define configTIMER_TASK_STACK_DEPTH	( 120 )
 
 /* Task priorities.  Allow these to be overridden. */
@@ -142,11 +142,12 @@ void vAssertCalled( void );
 /* Overwrite some of the stack sizes allocated to various test and demo tasks.
 Like all task stack sizes, the value is the number of words, not bytes. */
 #define configTIMER_TEST_TASK_STACK_SIZE 150
-#define configNOTIFIED_TEST_TASK_STACK_SIZE 120
+#define configNOTIFIED_TEST_TASK_STACK_SIZE 130
 #define configEVENT_GROUP_SET_BIT_TEST_TASK_STACK_SIZE 110
 #define configEVENT_GROUP_RENDEZVOUS_TASK_STACK_SIZE 100
-#define configRECURSIVE_MUTEX_TASK_STACK_SIZE 100
+#define configRECURSIVE_MUTEX_TASK_STACK_SIZE 110
+#define configBLOCK_TIME_TEST_TASK_STACK_SIZE 110
 
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
 #endif /* FREERTOS_CONFIG_H */

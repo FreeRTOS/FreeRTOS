@@ -157,5 +157,6 @@ SECTIONS
     PROVIDE( _heap_end = . );
     . = __stack_size;
     PROVIDE( _sp = . );
+    __freertos_irq_stack_top = .;
   } >ram AT>ram :ram
 }

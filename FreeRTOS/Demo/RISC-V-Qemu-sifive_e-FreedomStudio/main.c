@@ -48,7 +48,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -145,7 +145,12 @@ void vApplicationTickHook( void )
 
 void vAssertCalled( void )
 {
+volatile uint32_t ulSetTo1ToExitFunction = 0;
+
 	taskDISABLE_INTERRUPTS();
 //	__asm volatile( "ebreak" );
-	for( ;; );
+	while( ulSetTo1ToExitFunction != 1 )
+	{
+		__asm volatile( "NOP" );
+	}
 }

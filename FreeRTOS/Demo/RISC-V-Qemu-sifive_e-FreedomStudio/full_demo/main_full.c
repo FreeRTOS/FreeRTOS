@@ -57,7 +57,9 @@
  * the standard demo tasks, and the register check tasks, are not only still
  * executing, but are executing without reporting any errors.  If the check task
  * discovers that a task has either stalled, or reported an error, then it
- * prints an error message to the UART, otherwise it prints "Pass.".
+ * prints an error message to the UART, otherwise it prints "Pass" followed
+ * by an additional period (".") after each successful loop of its implementing
+ * function.
  */
 
 /* Standard includes. */
@@ -89,7 +91,7 @@
 
 /* The period of the check task, in ms, converted to ticks using the
 pdMS_TO_TICKS() macro. */
-#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000UL )
+#define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 5000UL )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctl5. */
@@ -101,10 +103,10 @@ purpose of ensuring parameters are passed into tasks correctl5. */
 
 /* The size of the stack allocated to the check task (as described in the
 comments at the top of this file. */
-#define mainCHECK_TASK_STACK_SIZE_WORDS 110
+#define mainCHECK_TASK_STACK_SIZE_WORDS 85
 
 /* Size of the stacks to allocated for the register check tasks. */
-#define mainREG_TEST_STACK_SIZE_WORDS 70
+#define mainREG_TEST_STACK_SIZE_WORDS 50
 
 /*-----------------------------------------------------------*/
 
@@ -148,17 +150,6 @@ volatile uint32_t ulRegTest1LoopCounter = 0UL, ulRegTest2LoopCounter = 0UL;
 
 void main_full( void )
 {
-	/* Start all the other standard demo/test tasks.  They have no particular
-	functionality, but do demonstrate how to use the FreeRTOS API and test the
-	kernel port. */
-	vStartDynamicPriorityTasks();
-	vCreateBlockTimeTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
-	vStartRecursiveMutexTasks();
-//	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
-//	vStartEventGroupTasks();
-	vStartTaskNotifyTask();
-
 	/* Create the register check tasks, as described at the top of this	file.
 	Use xTaskCreateStatic() to create a task using only statically allocated
 	memory. */
@@ -170,10 +161,20 @@ void main_full( void )
 				 NULL );						/* Can be used to pass out a handle to the created task. */
 	xTaskCreate( prvRegTestTaskEntry2, "Reg2", mainREG_TEST_STACK_SIZE_WORDS, mainREG_TEST_TASK_2_PARAMETER, tskIDLE_PRIORITY, NULL );
 
+	/* Start all the other standard demo/test tasks.  They have no particular
+	functionality, but do demonstrate how to use the FreeRTOS API and test the
+	kernel port. */
+	vStartDynamicPriorityTasks();
+	vCreateBlockTimeTasks();
+	vStartGenericQueueTasks( tskIDLE_PRIORITY );
+	vStartRecursiveMutexTasks();
+	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+	vStartEventGroupTasks();
+	vStartTaskNotifyTask();
+
 	/* Create the task that performs the 'check' functionality,	as described at
 	the top of this file. */
-//	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
-	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvCheckTask, "Check", mainCHECK_TASK_STACK_SIZE_WORDS, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -193,11 +194,13 @@ static void prvCheckTask( void *pvParameters )
 const TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-const char * const pcPassMessage = "Pass.\r\n";
-const char * pcStatusMessage = pcPassMessage;
+const char * const pcPassMessage = "Pass";
+const char * pcStatusMessage = ".";
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
+
+	write( STDOUT_FILENO, pcPassMessage, strlen( pcPassMessage ) );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -238,12 +241,12 @@ const char * pcStatusMessage = pcPassMessage;
 
 		if( xAreTimerDemoTasksStillRunning( ( TickType_t ) xDelayPeriod ) != pdPASS )
 		{
-//			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Timer demo/tests.\r\n";
 		}
 
 		if( xAreEventGroupTasksStillRunning() != pdPASS )
 		{
-//			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
+			pcStatusMessage = "ERROR: Event group demo/tests.\r\n";
 		}
 
 		if( xAreTaskNotificationTasksStillRunning() != pdPASS )
@@ -311,7 +314,7 @@ void vFullDemoTickHook( void )
 {
 	/* Called from vApplicationTickHook() when the project is configured to
 	build the full demo. */
-//	vTimerPeriodicISRTests();
-//	vPeriodicEventGroupsProcessing();
+	vTimerPeriodicISRTests();
+	vPeriodicEventGroupsProcessing();
 	xNotifyTaskFromISR();
 }

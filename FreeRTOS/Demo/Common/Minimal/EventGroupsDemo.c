@@ -88,6 +88,14 @@ event bits in a group are unblocked as appropriate as different bits get set. */
 #define ebSELECTIVE_BITS_1		0x03
 #define ebSELECTIVE_BITS_2		0x05
 
+#ifndef ebRENDESVOUS_TEST_TASK_STACK_SIZE
+	#define ebRENDESVOUS_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+#endif
+
+#ifndef ebEVENT_GROUP_SET_BITS_TEST_TASK_STACK_SIZE
+	#define ebEVENT_GROUP_SET_BITS_TEST_TASK_STACK_SIZE	configMINIMAL_STACK_SIZE
+#endif
+
 /*-----------------------------------------------------------*/
 
 /*
@@ -179,10 +187,10 @@ TaskHandle_t xTestSlaveTaskHandle;
 	 *
 	 * Create the test tasks as described at the top of this file.
 	 */
-	xTaskCreate( prvTestSlaveTask, "WaitO", configMINIMAL_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xTestSlaveTaskHandle );
-	xTaskCreate( prvTestMasterTask, "SetB", configMINIMAL_STACK_SIZE, ( void * ) xTestSlaveTaskHandle, ebSET_BIT_TASK_PRIORITY, NULL );
-	xTaskCreate( prvSyncTask, "Rndv", configMINIMAL_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_1_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask1 );
-	xTaskCreate( prvSyncTask, "Rndv", configMINIMAL_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_2_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask2 );
+	xTaskCreate( prvTestSlaveTask, "WaitO", ebRENDESVOUS_TEST_TASK_STACK_SIZE, NULL, ebWAIT_BIT_TASK_PRIORITY, &xTestSlaveTaskHandle );
+	xTaskCreate( prvTestMasterTask, "SetB", ebEVENT_GROUP_SET_BITS_TEST_TASK_STACK_SIZE, ( void * ) xTestSlaveTaskHandle, ebSET_BIT_TASK_PRIORITY, NULL );
+	xTaskCreate( prvSyncTask, "Rndv", ebRENDESVOUS_TEST_TASK_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_1_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask1 );
+	xTaskCreate( prvSyncTask, "Rndv", ebRENDESVOUS_TEST_TASK_STACK_SIZE, ( void * ) ebRENDESVOUS_TASK_2_SYNC_BIT, ebWAIT_BIT_TASK_PRIORITY, &xSyncTask2 );
 
 	/* If the last task was created then the others will have been too. */
 	configASSERT( xSyncTask2 );

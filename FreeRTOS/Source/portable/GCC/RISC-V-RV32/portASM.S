@@ -64,7 +64,7 @@ definitions. */
 #endif
 
 #ifndef portasmHANDLE_INTERRUPT
-	#error portasmHANDLE_INTERRUPT must be defined to the function to be called to handle external/peripheral interrupts.  portASM_HANDLE_INTERRUPT can be defined on the assmbler command line or in the appropriate freertos_risc_v_port_specific_extensions.h header file.
+	#error portasmHANDLE_INTERRUPT must be defined to the function to be called to handle external/peripheral interrupts.  portasmHANDLE_INTERRUPT can be defined on the assmbler command line or in the appropriate freertos_risc_v_port_specific_extensions.h header file.
 #endif
 
 #ifndef portasmSAVE_ADDITIONAL_REGISTERS

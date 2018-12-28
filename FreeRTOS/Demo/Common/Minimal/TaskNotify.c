@@ -41,6 +41,11 @@
 /* Demo program include files. */
 #include "TaskNotify.h"
 
+/* Allow parameters to be overridden on a demo by demo basis. */
+#ifndef notifyNOTIFIED_TASK_STACK_SIZE
+	#define notifyNOTIFIED_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+#endif
+
 #define notifyTASK_PRIORITY		( tskIDLE_PRIORITY )
 #define notifyUINT32_MAX	( ( uint32_t ) 0xffffffff )
 #define notifySUSPENDED_TEST_TIMER_PERIOD pdMS_TO_TICKS( 50 )
@@ -104,7 +109,12 @@ void vStartTaskNotifyTask( void  )
 {
 	/* Create the task that performs some tests by itself, then loops around
 	being notified by both a software timer and an interrupt. */
-	xTaskCreate( prvNotifiedTask, "Notified", configMINIMAL_STACK_SIZE, NULL, notifyTASK_PRIORITY, &xTaskToNotify );
+	xTaskCreate( prvNotifiedTask, /* Function that implements the task. */
+				 "Notified", /* Text name for the task - for debugging only - not used by the kernel. */
+				 notifyNOTIFIED_TASK_STACK_SIZE, /* Task's stack size in words, not bytes!. */
+				 NULL, /* Task parameter, not used in this case. */
+				 notifyTASK_PRIORITY, /* Task priority, 0 is the lowest. */
+				 &xTaskToNotify ); /* Used to pass a handle to the task out is needed, otherwise set to NULL. */
 
 	/* Pseudo seed the random number generator. */
 	uxNextRand = ( size_t ) prvRand;

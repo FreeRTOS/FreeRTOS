@@ -56,6 +56,13 @@
 #define genqMUTEX_MEDIUM_PRIORITY	( tskIDLE_PRIORITY + 2 )
 #define genqMUTEX_HIGH_PRIORITY		( tskIDLE_PRIORITY + 3 )
 
+#ifndef genqMUTEX_TEST_TASK_STACK_SIZE
+	#define configMINIMAL_STACK_SIZE
+#endif
+
+#ifndef genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE
+	#define genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+#endif
 /*-----------------------------------------------------------*/
 
 /*
@@ -158,7 +165,7 @@ SemaphoreHandle_t xMutex;
 		/* Create the demo task and pass it the queue just created.  We are
 		passing the queue handle by value so it does not matter that it is
 		declared on the stack here. */
-		xTaskCreate( prvSendFrontAndBackTest, "GenQ", configMINIMAL_STACK_SIZE, ( void * ) xQueue, uxPriority, NULL );
+		xTaskCreate( prvSendFrontAndBackTest, "GenQ", genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE, ( void * ) xQueue, uxPriority, NULL );
 	}
 
 	/* Create the mutex used by the prvMutexTest task. */
@@ -177,9 +184,9 @@ SemaphoreHandle_t xMutex;
 		/* Create the mutex demo tasks and pass it the mutex just created.  We
 		are passing the mutex handle by value so it does not matter that it is
 		declared on the stack here. */
-		xTaskCreate( prvLowPriorityMutexTask, "MuLow", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
+		xTaskCreate( prvLowPriorityMutexTask, "MuLow", genqMUTEX_TEST_TASK_STACK_SIZE, ( void * ) xMutex, genqMUTEX_LOW_PRIORITY, NULL );
 		xTaskCreate( prvMediumPriorityMutexTask, "MuMed", configMINIMAL_STACK_SIZE, NULL, genqMUTEX_MEDIUM_PRIORITY, &xMediumPriorityMutexTask );
-		xTaskCreate( prvHighPriorityMutexTask, "MuHigh", configMINIMAL_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
+		xTaskCreate( prvHighPriorityMutexTask, "MuHigh", genqMUTEX_TEST_TASK_STACK_SIZE, ( void * ) xMutex, genqMUTEX_HIGH_PRIORITY, &xHighPriorityMutexTask );
 
 		/* If INCLUDE_xTaskAbortDelay is set then additional tests are performed,
 		requiring two instances of prvHighPriorityMutexTask(). */

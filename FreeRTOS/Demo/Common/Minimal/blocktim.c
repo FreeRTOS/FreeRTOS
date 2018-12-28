@@ -39,13 +39,17 @@
 /* Demo includes. */
 #include "blocktim.h"
 
-/* Task priorities.  Allow these to be overridden. */
+/* Task priorities and stack sizes.  Allow these to be overridden. */
 #ifndef bktPRIMARY_PRIORITY
 	#define bktPRIMARY_PRIORITY		( configMAX_PRIORITIES - 3 )
 #endif
 
 #ifndef bktSECONDARY_PRIORITY
 	#define bktSECONDARY_PRIORITY	( configMAX_PRIORITIES - 4 )
+#endif
+
+#ifndef bktBLOCK_TIME_TASK_STACK_SIZE
+	#define bktBLOCK_TIME_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 #endif
 
 /* Task behaviour. */
@@ -111,8 +115,8 @@ void vCreateBlockTimeTasks( void )
 		vQueueAddToRegistry( xTestQueue, "Block_Time_Queue" );
 
 		/* Create the two test tasks. */
-		xTaskCreate( vPrimaryBlockTimeTestTask, "BTest1", configMINIMAL_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
-		xTaskCreate( vSecondaryBlockTimeTestTask, "BTest2", configMINIMAL_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
+		xTaskCreate( vPrimaryBlockTimeTestTask, "BTest1", bktBLOCK_TIME_TASK_STACK_SIZE, NULL, bktPRIMARY_PRIORITY, NULL );
+		xTaskCreate( vSecondaryBlockTimeTestTask, "BTest2", bktBLOCK_TIME_TASK_STACK_SIZE, NULL, bktSECONDARY_PRIORITY, &xSecondary );
 	}
 }
 /*-----------------------------------------------------------*/

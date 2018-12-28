@@ -48,7 +48,11 @@
 
 #define tmrdemoDONT_BLOCK				( ( TickType_t ) 0 )
 #define tmrdemoONE_SHOT_TIMER_PERIOD	( xBasePeriod * ( TickType_t ) 3 )
-#define trmdemoNUM_TIMER_RESETS			( ( uint8_t ) 10 )
+#define tmrdemoNUM_TIMER_RESETS			( ( uint8_t ) 10 )
+
+#ifndef tmrTIMER_TEST_TASK_STACK_SIZE
+	#define tmrTIMER_TEST_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -137,7 +141,7 @@ void vStartTimerDemoTask( TickType_t xBasePeriodIn )
 	task, which will then preempt this task). */
 	if( xTestStatus != pdFAIL )
 	{
-		xTaskCreate( prvTimerTestTask, "Tmr Tst", configMINIMAL_STACK_SIZE, NULL, configTIMER_TASK_PRIORITY - 1, NULL );
+		xTaskCreate( prvTimerTestTask, "Tmr Tst", tmrTIMER_TEST_TASK_STACK_SIZE, NULL, configTIMER_TASK_PRIORITY - 1, NULL );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -546,7 +550,7 @@ uint8_t ucTimer;
 		configASSERT( xTestStatus );
 	}
 
-	for( ucTimer = 0; ucTimer < trmdemoNUM_TIMER_RESETS; ucTimer++ )
+	for( ucTimer = 0; ucTimer < tmrdemoNUM_TIMER_RESETS; ucTimer++ )
 	{
 		/* Delay for half as long as the one shot timer period, then reset it.
 		It should never expire while this is done, so its callback count should

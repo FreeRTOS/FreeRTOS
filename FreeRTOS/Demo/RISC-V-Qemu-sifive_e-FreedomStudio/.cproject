@@ -56,7 +56,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/freedom-e-sdk/drivers}&quot;"/>
 								</option>
 								<option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.other.855588508" name="Other assembler flags" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.other" useByScannerDiscovery="false" value="-c" valueType="string"/>
-								<option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.flags.179185022" name="Assembler flags" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.flags" useByScannerDiscovery="false" valueType="stringList"/>
+								<option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.flags.179185022" name="Assembler flags" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.flags" useByScannerDiscovery="false"/>
 								<option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.defs.1636772541" name="Defined symbols (-D)" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.assembler.defs" useByScannerDiscovery="true" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="portasmHANDLE_INTERRUPT=handle_trap"/>
 								</option>

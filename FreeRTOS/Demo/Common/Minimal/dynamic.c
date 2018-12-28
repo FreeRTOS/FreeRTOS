@@ -105,6 +105,9 @@ static portTASK_FUNCTION_PROTO( vQueueReceiveWhenSuspendedTask, pvParameters );
 static portTASK_FUNCTION_PROTO( vQueueSendWhenSuspendedTask, pvParameters );
 
 /* Demo task specific constants. */
+#ifndef priSUSPENDED_RX_TASK_STACK_SIZE
+	#define priSUSPENDED_RX_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE )
+#endif
 #define priSTACK_SIZE				( configMINIMAL_STACK_SIZE )
 #define priSLEEP_TIME				pdMS_TO_TICKS( 128 )
 #define priLOOPS					( 5 )
@@ -159,9 +162,9 @@ void vStartDynamicPriorityTasks( void )
 
 		xTaskCreate( vContinuousIncrementTask, "CNT_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY, &xContinuousIncrementHandle );
 		xTaskCreate( vLimitedIncrementTask, "LIM_INC", priSTACK_SIZE, ( void * ) &ulCounter, tskIDLE_PRIORITY + 1, &xLimitedIncrementHandle );
-		xTaskCreate( vCounterControlTask, "C_CTRL", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( vCounterControlTask, "C_CTRL", priSUSPENDED_RX_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 		xTaskCreate( vQueueSendWhenSuspendedTask, "SUSP_TX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-		xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RX", priSTACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+		xTaskCreate( vQueueReceiveWhenSuspendedTask, "SUSP_RX", priSUSPENDED_RX_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	}
 }
 /*-----------------------------------------------------------*/

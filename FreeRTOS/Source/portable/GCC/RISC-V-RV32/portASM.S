@@ -363,22 +363,13 @@ xPortStartFirstTask:
  * x6
  * x5
  * portTASK_RETURN_ADDRESS
+ * [chip specific registers go here]
  * pxCode
  */
 .align 8
 .func
 pxPortInitialiseStack:
 
-	addi t0, x0, portasmADDITIONAL_CONTEXT_SIZE /* The number of chip specific additional registers. */
-
-chip_specific_stack_frame:				/* First add any chip specific registers to the stack frame being created. */
-	beq t0, x0, standard_stack_frame	/* No more chip specific registers to save. */
-	addi a0, a0, -portWORD_SIZE			/* Make space for chip specific register. */
-	sw x0, 0(a0)						/* Give the chip specific register an initial value of zero. */
-	addi t0, t0, -1						/* Decrement the count of chip specific registers remaining. */
-	j chip_specific_stack_frame			/* Until no more chip specific registers. */
-
-standard_stack_frame:					/* Now create the stack frame for the standard registers. */
 	csrr t0, mstatus					/* Obtain current mstatus value. */
 	addi t1, x0, 0x188					/* Generate the value 0x1880, which are the MPIE and MPP bits to set in mstatus. */
 	slli t1, t1, 4
@@ -390,6 +381,14 @@ standard_stack_frame:					/* Now create the stack frame for the standard registe
 	sw a2, 0(a0)						/* Task parameters (pvParameters parameter) goes into register X10/a0 on the stack. */
 	addi a0, a0, -(6 * portWORD_SIZE)	/* Space for registers x5-x9. */
 	sw x0, 0(a0)						/* Return address onto the stack, could be portTASK_RETURN_ADDRESS */
+	addi t0, x0, portasmADDITIONAL_CONTEXT_SIZE /* The number of chip specific additional registers. */
+chip_specific_stack_frame:				/* First add any chip specific registers to the stack frame being created. */
+	beq t0, x0, 1f						/* No more chip specific registers to save. */
+	addi a0, a0, -portWORD_SIZE			/* Make space for chip specific register. */
+	sw x0, 0(a0)						/* Give the chip specific register an initial value of zero. */
+	addi t0, t0, -1						/* Decrement the count of chip specific registers remaining. */
+	j chip_specific_stack_frame			/* Until no more chip specific registers. */
+1:
 	addi a0, a0, -portWORD_SIZE
 	sw a1, 0(a0)						/* mret value (pxCode parameter) onto the stack. */
 	ret

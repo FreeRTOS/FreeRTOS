@@ -34,13 +34,28 @@
 #include "task.h"
 #include "portmacro.h"
 
-#ifdef configISR_STACK_SIZE
-	/* The stack used by interrupt service routines. */
-	static __attribute__ ((aligned(16))) StackType_t xISRStack[ configISR_STACK_SIZE ] = { 0 };
-	const StackType_t * const xISRStackTop = &( xISRStack[ ( configISR_STACK_SIZE & ~portBYTE_ALIGNMENT_MASK ) - 1 ] );
+/* Let the user override the pre-loading of the initial LR with the address of
+prvTaskExitError() in case it messes up unwinding of the stack in the
+debugger. */
+#ifdef configTASK_RETURN_ADDRESS
+	#define portTASK_RETURN_ADDRESS	configTASK_RETURN_ADDRESS
+#else
+	#define portTASK_RETURN_ADDRESS	prvTaskExitError
+#endif
+
+/* The stack used by interrupt service routines.  Set configISR_STACK_SIZE_WORDS
+to use a statically allocated array as the interrupt stack.  Alternative leave
+configISR_STACK_SIZE_WORDS undefined and update the linker script so that a
+linker variable names __freertos_irq_stack_top has the same value as the top
+of the stack used by main.  Using the linker script method will repurpose the
+stack that was used by main before the scheduler was started for use as the
+interrupt stack after the scheduler has started. */
+#ifdef configISR_STACK_SIZE_WORDS
+	static __attribute__ ((aligned(16))) StackType_t xISRStack[ configISR_STACK_SIZE_WORDS ] = { 0 };
+	const StackType_t xISRStackTop = ( StackType_t ) &( xISRStack[ ( configISR_STACK_SIZE_WORDS & ~portBYTE_ALIGNMENT_MASK ) - 1 ] );
 #else
 	extern const uint32_t __freertos_irq_stack_top[];
-	const uint32_t xISRStackTop = ( uint32_t ) __freertos_irq_stack_top;
+	const StackType_t xISRStackTop = ( StackType_t ) __freertos_irq_stack_top;
 #endif
 
 /*
@@ -89,10 +104,10 @@ task stack, not the ISR stack). */
 
 /*-----------------------------------------------------------*/
 
-void prvTaskExitError( void )
+static void prvTaskExitError( void )
 {
 volatile uint32_t ulx = 0;
-
+#warning Not currently used
 	/* A function that implements a task must not exit or attempt to return to
 	its caller as there is nothing to return to.  If a task wants to exit it
 	should instead call vTaskDelete( NULL ).
@@ -102,107 +117,6 @@ volatile uint32_t ulx = 0;
 	configASSERT( ulx == ~0UL );
 	portDISABLE_INTERRUPTS();
 	for( ;; );
-}
-/*-----------------------------------------------------------*/
-
-/*
- * See header file for description.
- */
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
-{
-uint32_t mstatus;
-const uint32_t ulMPIE_Bit = 0x80, ulMPP_Bits = 0x1800;
-	/*
-	   X1 to X31 integer registers for the 'I' profile, X1 to X15 for the 'E' profile.
-
-		Register 	ABI Name 		Description 					Saver
-		x0 			zero 			Hard-wired zero 				-
-		x1 			ra 				Return address 					Caller
-		x2 			sp 				Stack pointer 					Callee
-		x3 			gp 				Global pointer 					-
-		x4 			tp 				Thread pointer 					-
-		x5-7 		t0-2 			Temporaries 					Caller
-		x8 			s0/fp 			Saved register/Frame pointer 	Callee
-		x9 			s1 				Saved register 					Callee
-		x10-11 		a0-1 			Function Arguments/return values Caller
-		x12-17 		a2-7 			Function arguments 				Caller
-		x18-27 		s2-11 			Saved registers 				Callee
-		x28-31 		t3-6 			Temporaries 					Caller
-	*/
-
-	/* Start task with interrupt enabled. */
-	__asm volatile ("csrr %0, mstatus" : "=r"(mstatus));
-	mstatus |= ulMPIE_Bit | ulMPP_Bits;
-	pxTopOfStack--;
-	*pxTopOfStack = mstatus;
-
-	/* Numbers correspond to the x register number. */
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 31;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 30;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 29;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 28;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 27;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 26;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 25;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 24;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 23;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 22;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 21;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 20;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 19;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 18;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 17;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 16;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 15;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 14;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 13;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 12;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 11;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) pvParameters;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 9;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 8;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 7;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 6;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) 5;
-	pxTopOfStack--;
-//	*pxTopOfStack = ( StackType_t ) 4;  /* Thread pointer. */
-//	pxTopOfStack--;
-//	*pxTopOfStack = ( StackType_t ) 3;  /* Global pointer. */
-//	pxTopOfStack--;
-//	*pxTopOfStack = ( StackType_t ) 2;  /* Stack pointer. */
-//	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) prvTaskExitError;
-	pxTopOfStack--;
-	*pxTopOfStack = ( StackType_t ) pxCode;
-
-	return pxTopOfStack;
 }
 /*-----------------------------------------------------------*/
 

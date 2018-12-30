@@ -25,6 +25,15 @@
  * 1 tab == 4 spaces!
  */
 
+#if __riscv_xlen == 64
+	#error Not implemented yet - change lw to ld, and sw to sd.
+	#define portWORD_SIZE 8
+#elif __riscv_xlen == 32
+	#define portWORD_SIZE 4
+#else
+	#error Assembler did not define __riscv_xlen
+#endif
+
 /*
  * The FreeRTOS kernel's RISC-V port is split between the the code that is
  * common across all currently supported RISC-V chips (implementations of the
@@ -42,7 +51,7 @@
  *   base set of RISC-V registers.  There are additional
  *   freertos_risc_v_port_specific_extensions.h files for RISC-V implementations
  *   that do not include a standard CLINT or do add to the base set of RISC-V
- *   regiters.
+ *   registers.
  *
  * CARE MUST BE TAKEN TO INCLDUE THE CORRECT
  * freertos_risc_v_port_specific_extensions.h HEADER FILE FOR THE CHIP
@@ -67,27 +76,6 @@ definitions. */
 	#error portasmHANDLE_INTERRUPT must be defined to the function to be called to handle external/peripheral interrupts.  portasmHANDLE_INTERRUPT can be defined on the assmbler command line or in the appropriate freertos_risc_v_port_specific_extensions.h header file.
 #endif
 
-#ifndef portasmSAVE_ADDITIONAL_REGISTERS
-	/* portasmSAVE_ADDITIONAL_REGISTERS is not defined so assume no additional
-	registers need to be saved. */
-	#define portasmSAVE_ADDITIONAL_REGISTERS
-#endif
-
-#ifndef portasmRESTORE_ADDITIONAL_REGISTERS
-	/* portasmRESTORE_ADDITIONAL_REGISTERS is not defined so assume no
-	additional registers need to be restored. */
-	#define portasmRESTORE_ADDITIONAL_REGISTERS
-#endif
-
-#if __riscv_xlen == 64
-	#error Not implemented yet - change lw to ld, and sw to sd.
-	#define portWORD_SIZE 8
-#elif __riscv_xlen == 32
-	#define portWORD_SIZE 4
-#else
-	#error Assembler did not define __riscv_xlen
-#endif
-
 /* Only the standard core registers are stored by default.  Any additional
 registers must be saved by the portasmSAVE_ADDITIONAL_REGISTERS and
 portasmRESTORE_ADDITIONAL_REGISTERS macros - which can be defined in a chip
@@ -97,6 +85,7 @@ at the top of this file. */
 
 .global xPortStartFirstTask
 .global vFreeRTOSPortTrapHandler
+.global pxPortInitialiseStack
 .extern pxCurrentTCB
 .extern ulPortTrapHandler
 .extern vTaskSwitchContext
@@ -105,11 +94,11 @@ at the top of this file. */
 .extern pullNextTime
 .extern ulTimerIncrementsForOneTick
 .extern xISRStackTop
-.extern vPortHandleInterrupt
 
 /*-----------------------------------------------------------*/
 
-.align 16
+.align 8
+.func
 vFreeRTOSPortTrapHandler:
 	addi sp, sp, -portCONTEXT_SIZE
 	sw x1, 1 * portWORD_SIZE( sp )
@@ -141,10 +130,10 @@ vFreeRTOSPortTrapHandler:
 	sw x30, 27 * portWORD_SIZE( sp )
 	sw x31, 28 * portWORD_SIZE( sp )
 
-	portasmSAVE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to save any registers unique to the RISC-V implementation. */
-
 	csrr t0, mstatus					/* Required for MPIE bit. */
 	sw t0, 29 * portWORD_SIZE( sp )
+
+	portasmSAVE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to save any registers unique to the RISC-V implementation. */
 
 	lw  t0, pxCurrentTCB				/* Load pxCurrentTCB. */
 	sw  sp, 0( t0 )				 		/* Write sp to first TCB member. */
@@ -217,15 +206,15 @@ processed_source:
 	lw  sp, pxCurrentTCB				/* Load pxCurrentTCB. */
 	lw  sp, 0( sp )				 		/* Read sp from first TCB member. */
 
-	/* Load mret with the address of the next task. */
+	/* Load mret with the address of the next instruction in the task to run next. */
 	lw t0, 0( sp )
 	csrw mepc, t0
+
+	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
 
 	/* Load mstatus with the interrupt enable bits used by the task. */
 	lw  t0, 29 * portWORD_SIZE( sp )
 	csrw mstatus, t0					/* Required for MPIE bit. */
-
-	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
 
 	lw  x1, 1 * portWORD_SIZE( sp )
 	lw  x5, 2 * portWORD_SIZE( sp )		/* t0 */
@@ -255,12 +244,14 @@ processed_source:
 	lw  x29, 26 * portWORD_SIZE( sp )	/* t4 */
 	lw  x30, 27 * portWORD_SIZE( sp )	/* t5 */
 	lw  x31, 28 * portWORD_SIZE( sp )	/* t6 */
-	addi	sp, sp, portCONTEXT_SIZE
+	addi sp, sp, portCONTEXT_SIZE
 
 	mret
+	.endfunc
 /*-----------------------------------------------------------*/
 
-.align 16
+.align 8
+.func
 xPortStartFirstTask:
 
 #if( portasmHAS_CLINT != 0 )
@@ -275,6 +266,12 @@ xPortStartFirstTask:
 	lw  sp, 0( sp )				 	/* Read sp from first TCB member. */
 
 	lw  x1, 0( sp ) /* Note for starting the scheduler the exception return address is used as the function return address. */
+
+	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
+
+    lw  t0, 29 * portWORD_SIZE( sp )    /* mstatus */
+    csrrw  x0, mstatus, t0              /* Interrupts enabled from here! */
+
 	lw  x5, 2 * portWORD_SIZE( sp )		/* t0 */
 	lw  x6, 3 * portWORD_SIZE( sp )		/* t1 */
 	lw  x7, 4 * portWORD_SIZE( sp )		/* t2 */
@@ -303,8 +300,98 @@ xPortStartFirstTask:
 	lw  x30, 27 * portWORD_SIZE( sp )	/* t5 */
 	lw  x31, 28 * portWORD_SIZE( sp )	/* t6 */
 	addi	sp, sp, portCONTEXT_SIZE
-	csrs	mstatus, 8					/* Enable machine interrupts. */
 	ret
-
+	.endfunc
 /*-----------------------------------------------------------*/
 
+/*
+ * Unlike other ports pxPortInitialiseStack() is written in assembly code as it
+ * needs access to the portasmADDITIONAL_CONTEXT_SIZE constant.  The prototype
+ * for the function is as per the other ports:
+ * StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters );
+ *
+ * As per the standard RISC-V ABI pxTopcOfStack is passed in in a0, pxCode in
+ * a1, and pvParameters in a2.  The new top of stack is passed out in a0.
+ *
+ * RISC-V maps registers to ABI names as follows (X1 to X31 integer registers
+ * for the 'I' profile, X1 to X15 for the 'E' profile, currently I assumed).
+ *
+ * Register		ABI Name	Description						Saver
+ * x0			zero		Hard-wired zero					-
+ * x1			ra			Return address					Caller
+ * x2			sp			Stack pointer					Callee
+ * x3			gp			Global pointer					-
+ * x4			tp			Thread pointer					-
+ * x5-7			t0-2		Temporaries						Caller
+ * x8			s0/fp		Saved register/Frame pointer	Callee
+ * x9			s1			Saved register					Callee
+ * x10-11		a0-1		Function Arguments/return values Caller
+ * x12-17		a2-7		Function arguments				Caller
+ * x18-27		s2-11		Saved registers					Callee
+ * x28-31		t3-6		Temporaries						Caller
+ *
+ * The RISC-V context is saved t FreeRTOS tasks in the following stack frame,
+ * where the global and thread pointers are currently assumed to be constant so
+ * are not saved:
+ *
+ * mstatus
+ * x31
+ * x30
+ * x29
+ * x28
+ * x27
+ * x26
+ * x25
+ * x24
+ * x23
+ * x22
+ * x21
+ * x20
+ * x19
+ * x18
+ * x17
+ * x16
+ * x15
+ * x14
+ * x13
+ * x12
+ * x11
+ * pvParameters
+ * x9
+ * x8
+ * x7
+ * x6
+ * x5
+ * portTASK_RETURN_ADDRESS
+ * pxCode
+ */
+.align 8
+.func
+pxPortInitialiseStack:
+
+	addi t0, x0, portasmADDITIONAL_CONTEXT_SIZE /* The number of chip specific additional registers. */
+
+chip_specific_stack_frame:				/* First add any chip specific registers to the stack frame being created. */
+	beq t0, x0, standard_stack_frame	/* No more chip specific registers to save. */
+	addi a0, a0, -portWORD_SIZE			/* Make space for chip specific register. */
+	sw x0, 0(a0)						/* Give the chip specific register an initial value of zero. */
+	addi t0, t0, -1						/* Decrement the count of chip specific registers remaining. */
+	j chip_specific_stack_frame			/* Until no more chip specific registers. */
+
+standard_stack_frame:					/* Now create the stack frame for the standard registers. */
+	csrr t0, mstatus					/* Obtain current mstatus value. */
+	addi t1, x0, 0x188					/* Generate the value 0x1880, which are the MPIE and MPP bits to set in mstatus. */
+	slli t1, t1, 4
+	or t0, t0, t1						/* Set MPIE and MPP bits in mstatus value. */
+
+	addi a0, a0, -portWORD_SIZE
+	sw t0, 0(a0)						/* mstatus onto the stack. */
+	addi a0, a0, -(22 * portWORD_SIZE)	/* Space for registers x11-x31. */
+	sw a2, 0(a0)						/* Task parameters (pvParameters parameter) goes into register X10/a0 on the stack. */
+	addi a0, a0, -(6 * portWORD_SIZE)	/* Space for registers x5-x9. */
+	sw x0, 0(a0)						/* Return address onto the stack, could be portTASK_RETURN_ADDRESS */
+	addi a0, a0, -portWORD_SIZE
+	sw a1, 0(a0)						/* mret value (pxCode parameter) onto the stack. */
+	ret
+	.endfunc
+/*-----------------------------------------------------------*/

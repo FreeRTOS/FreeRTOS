@@ -44,7 +44,7 @@
  *   base set of RISC-V registers.  There are additional
  *   freertos_risc_v_port_specific_extensions.h files for RISC-V implementations
  *   that do not include a standard CLINT or do add to the base set of RISC-V
- *   regiters.
+ *   registers.
  *
  * CARE MUST BE TAKEN TO INCLDUE THE CORRECT
  * freertos_risc_v_port_specific_extensions.h HEADER FILE FOR THE CHIP
@@ -62,5 +62,15 @@
 #define __FREERTOS_RISC_V_EXTENSIONS_H__
 
 #define portasmHAS_CLINT 1
+#define portasmADDITIONAL_CONTEXT_SIZE 0 /* Must be even number on 32-bit cores. */
+
+.macro portasmSAVE_ADDITIONAL_REGISTERS
+	/* No additional registers to save, so this macro does nothing. */
+	.endm
+
+/* Restore the additional registers found on the Pulpino. */
+.macro portasmRESTORE_ADDITIONAL_REGISTERS
+	/* No additional registers to restore, so this macro does nothing. */
+	.endm
 
 #endif /* __FREERTOS_RISC_V_EXTENSIONS_H__ */

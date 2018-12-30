@@ -107,6 +107,7 @@
 #define configUSE_APPLICATION_TASK_TAG	0
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configGENERATE_RUN_TIME_STATS	0
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -141,8 +142,5 @@ to exclude the API function. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
-
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
-
 
 #endif /* FREERTOS_CONFIG_H */

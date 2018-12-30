@@ -6,9 +6,7 @@
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and t
-
- o permit persons to whom the Software is furnished to do so,
+ * the Software, and to permit persons to whom the Software is furnished to do so,
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
@@ -32,29 +30,27 @@
  * common across all currently supported RISC-V chips (implementations of the
  * RISC-V ISA), and code which tailors the port to a specific RISC-V chip:
  *
- * + The code that is common to all RISC-V chips is implemented in
- *   FreeRTOS\Source\portable\GCC\RISC-V-RV32\portASM.S.  There is only one
- *   portASM.S file because the same file is used no matter which RISC-V chip is
- *   in use.
+ * + FreeRTOS\Source\portable\GCC\RISC-V-RV32\portASM.S contains the code that
+ *   is common to all currently supported RISC-V chips.  There is only one
+ *   portASM.S file because the same file is built for all RISC-V target chips.
  *
- * + The code that tailors the kernel's RISC-V port to a specific RISC-V
- *   chip is implemented in freertos_risc_v_port_specific_extensions.h.  There
- *   is one freertos_risc_v_port_specific_extensions.h that can be used with any
- *   RISC-V chip that both includes a standard CLINT and does not add to the
- *   base set of RISC-V registers.  There are additional
- *   freertos_risc_v_port_specific_extensions.h files for RISC-V implementations
- *   that do not include a standard CLINT or do add to the base set of RISC-V
- *   registers.
+ * + Header files called freertos_risc_v_chip_specific_extensions.h contain the
+ *   code that tailors the FreeRTOS kernel's RISC-V port to a specific RISC-V
+ *   chip.  There are multiple freertos_risc_v_chip_specific_extensions.h files
+ *   as there are multiple RISC-V chip implementations.
  *
- * CARE MUST BE TAKEN TO INCLDUE THE CORRECT
- * freertos_risc_v_port_specific_extensions.h HEADER FILE FOR THE CHIP
- * IN USE.  To include the correct freertos_risc_v_port_specific_extensions.h
- * header file ensure the path to the correct header file is in the assembler's
- * include path.
- *
- * This freertos_risc_v_port_specific_extensions.h is for use on RISC-V chips
- * that include a standard CLINT and do not add to the base set of RISC-V
- * registers.
+ * !!!NOTE!!!
+ * CARE MUST BE TAKEN TO INCLUDE THE CORRECT
+ * freertos_risc_v_chip_specific_extensions.h HEADER FILE FOR THE CHIP IN USE.
+ * If the chip in use includes a core local interrupter (CLINT) and does not
+ * include any chip specific register extensions then set the GNU assembler's
+ * include path such that the header file contained in the
+ * FreeRTOS\Source\portable\GCC\RISC-V-RV32 directory is the header file that is
+ * actually inlcuded.  Otherwise set the assembler's include patch to the
+ * sub-directory off of the
+ * FreeRTOS\Source\portable\GCC\RISC-V-RV32\chip_specific_extensions directory
+ * that contains the freertos_risc_v_chip_specific_extensions.h specific to the
+ * target chip.
  *
  */
 

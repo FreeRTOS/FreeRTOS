@@ -45,46 +45,46 @@
  *   in use.
  *
  * + The code that tailors the kernel's RISC-V port to a specific RISC-V
- *   chip is implemented in freertos_risc_v_port_specific_extensions.h.  There
- *   is one freertos_risc_v_port_specific_extensions.h that can be used with any
+ *   chip is implemented in freertos_risc_v_chip_specific_extensions.h.  There
+ *   is one freertos_risc_v_chip_specific_extensions.h that can be used with any
  *   RISC-V chip that both includes a standard CLINT and does not add to the
  *   base set of RISC-V registers.  There are additional
- *   freertos_risc_v_port_specific_extensions.h files for RISC-V implementations
+ *   freertos_risc_v_chip_specific_extensions.h files for RISC-V implementations
  *   that do not include a standard CLINT or do add to the base set of RISC-V
  *   registers.
  *
  * CARE MUST BE TAKEN TO INCLDUE THE CORRECT
- * freertos_risc_v_port_specific_extensions.h HEADER FILE FOR THE CHIP
- * IN USE.  To include the correct freertos_risc_v_port_specific_extensions.h
+ * freertos_risc_v_chip_specific_extensions.h HEADER FILE FOR THE CHIP
+ * IN USE.  To include the correct freertos_risc_v_chip_specific_extensions.h
  * header file ensure the path to the correct header file is in the assembler's
  * include path.
  *
- * This freertos_risc_v_port_specific_extensions.h is for use on RISC-V chips
+ * This freertos_risc_v_chip_specific_extensions.h is for use on RISC-V chips
  * that include a standard CLINT and do not add to the base set of RISC-V
  * registers.
  *
  */
-#include "freertos_risc_v_port_specific_extensions.h"
+#include "freertos_risc_v_chip_specific_extensions.h"
 
-/* Check the freertos_risc_v_port_specific_extensions.h and/or command line
+/* Check the freertos_risc_v_chip_specific_extensions.h and/or command line
 definitions. */
 #ifndef portasmHAS_CLINT
-	#error freertos_risc_v_port_specific_extensions.h must define portasmHAS_CLINT to either 1 (CLINT present) or 0 (clint not present).
+	#error freertos_risc_v_chip_specific_extensions.h must define portasmHAS_CLINT to either 1 (CLINT present) or 0 (clint not present).
 #endif
 
 #ifndef portasmHANDLE_INTERRUPT
-	#error portasmHANDLE_INTERRUPT must be defined to the function to be called to handle external/peripheral interrupts.  portasmHANDLE_INTERRUPT can be defined on the assmbler command line or in the appropriate freertos_risc_v_port_specific_extensions.h header file.
+	#error portasmHANDLE_INTERRUPT must be defined to the function to be called to handle external/peripheral interrupts.  portasmHANDLE_INTERRUPT can be defined on the assmbler command line or in the appropriate freertos_risc_v_chip_specific_extensions.h header file.
 #endif
 
 /* Only the standard core registers are stored by default.  Any additional
 registers must be saved by the portasmSAVE_ADDITIONAL_REGISTERS and
 portasmRESTORE_ADDITIONAL_REGISTERS macros - which can be defined in a chip
-specific version of freertos_risc_v_port_specific_extensions.h.  See the notes
+specific version of freertos_risc_v_chip_specific_extensions.h.  See the notes
 at the top of this file. */
 #define portCONTEXT_SIZE ( 30 * portWORD_SIZE )
 
 .global xPortStartFirstTask
-.global vFreeRTOSPortTrapHandler
+.global freertos_risc_v_trap_handler
 .global pxPortInitialiseStack
 .extern pxCurrentTCB
 .extern ulPortTrapHandler
@@ -99,7 +99,7 @@ at the top of this file. */
 
 .align 8
 .func
-vFreeRTOSPortTrapHandler:
+freertos_risc_v_trap_handler:
 	addi sp, sp, -portCONTEXT_SIZE
 	sw x1, 1 * portWORD_SIZE( sp )
 	sw x5, 2 * portWORD_SIZE( sp )
@@ -133,7 +133,7 @@ vFreeRTOSPortTrapHandler:
 	csrr t0, mstatus					/* Required for MPIE bit. */
 	sw t0, 29 * portWORD_SIZE( sp )
 
-	portasmSAVE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to save any registers unique to the RISC-V implementation. */
+	portasmSAVE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_chip_specific_extensions.h to save any registers unique to the RISC-V implementation. */
 
 	lw  t0, pxCurrentTCB				/* Load pxCurrentTCB. */
 	sw  sp, 0( t0 )				 		/* Write sp to first TCB member. */
@@ -210,7 +210,7 @@ processed_source:
 	lw t0, 0( sp )
 	csrw mepc, t0
 
-	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
+	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_chip_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
 
 	/* Load mstatus with the interrupt enable bits used by the task. */
 	lw  t0, 29 * portWORD_SIZE( sp )
@@ -258,7 +258,7 @@ xPortStartFirstTask:
 	/* If there is a clint then interrupts can branch directly to the FreeRTOS
 	trap handler.  Otherwise the interrupt controller will need to be configured
 	outside of this file. */
-	la t0, vFreeRTOSPortTrapHandler
+	la t0, freertos_risc_v_trap_handler
 	csrw mtvec, t0
 #endif /* portasmHAS_CLILNT */
 
@@ -267,7 +267,7 @@ xPortStartFirstTask:
 
 	lw  x1, 0( sp ) /* Note for starting the scheduler the exception return address is used as the function return address. */
 
-	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_port_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
+	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_chip_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
 
     lw  t0, 29 * portWORD_SIZE( sp )    /* mstatus */
     csrrw  x0, mstatus, t0              /* Interrupts enabled from here! */

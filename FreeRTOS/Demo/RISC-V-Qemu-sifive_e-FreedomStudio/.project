@@ -135,6 +135,17 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/portable/MemMang/heap_4.c</locationURI>
 		</link>
 	</linkedResources>
+	<filteredResources>
+		<filter>
+			<id>1546280186727</id>
+			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32/chip_specific_extensions</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-RV32I_CLINT_no_extensions</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 	<variableList>
 		<variable>
 			<name>FREERTOS_ROOT</name>

@@ -215,12 +215,12 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545005412575</id>
-			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32</name>
+			<id>1546279974088</id>
+			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32/chip_specific_extensions</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-CLINT_no_extensions</arguments>
+				<arguments>1.0-name-matches-false-false-RV32I_CLINT_no_extensions</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

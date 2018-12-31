@@ -2367,6 +2367,10 @@ eSleepModeStatus eTaskConfirmSleepModeStatus( void ) PRIVILEGED_FUNCTION;
  */
 TaskHandle_t pvTaskIncrementMutexHeldCount( void ) PRIVILEGED_FUNCTION;
 
+#if( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
+	TickType_t xTaskGetIdleRunTimeCounter( void );
+#endif
+
 /*
  * For internal use only.  Same as vTaskSetTimeOutState(), but without a critial
  * section.

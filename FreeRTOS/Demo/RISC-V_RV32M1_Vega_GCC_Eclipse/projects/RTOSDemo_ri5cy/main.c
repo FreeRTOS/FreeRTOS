@@ -226,4 +226,27 @@ void vTaskSwitchContext( void );
 	/* Clear LPIT0 interrupt. */
 	LPIT0->MSR = 1U;
 }
+/*-----------------------------------------------------------*/
+
+/* At the time of writing, interrupt nesting is not supported, so do not use
+the default SystemIrqHandler() implementation as that enables interrupts.  A
+version that does not enable interrupts is provided below.  THIS INTERRUPT
+HANDLER IS SPECIFIC TO THE VEGA BOARD WHICH DOES NOT INCLUDE A CLINT! */
+void SystemIrqHandler( uint32_t mcause )
+{
+uint32_t ulInterruptNumber;
+typedef void ( * irq_handler_t )( void );
+extern const irq_handler_t isrTable[];
+
+	ulInterruptNumber = mcause & 0x1FUL;
+
+	/* Clear pending flag in EVENT unit .*/
+	EVENT_UNIT->INTPTPENDCLEAR = ( 1U << ulInterruptNumber );
+
+	/* Read back to make sure write finished. */
+	(void)(EVENT_UNIT->INTPTPENDCLEAR);
+
+	/* Now call the real irq handler for ulInterruptNumber */
+	isrTable[ ulInterruptNumber ]();
+}
 

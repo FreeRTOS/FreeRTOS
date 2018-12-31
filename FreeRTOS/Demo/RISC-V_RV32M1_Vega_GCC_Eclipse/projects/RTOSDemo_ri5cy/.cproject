@@ -181,6 +181,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="ilg.gnumcueclipse.managedbuild.cross.riscv.config.elf.debug.2124579326.468406560" name="fsl_lpuart.c" rcbsApplicability="disable" resourcePath="common/rv32m1_sdk_riscv/devices/RV32M1/drivers/fsl_lpuart.c" toolsToInvoke="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.compiler.906968630.2006953853">
+						<tool id="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.compiler.906968630.2006953853" name="GNU RISC-V Cross C Compiler" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.compiler.906968630"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

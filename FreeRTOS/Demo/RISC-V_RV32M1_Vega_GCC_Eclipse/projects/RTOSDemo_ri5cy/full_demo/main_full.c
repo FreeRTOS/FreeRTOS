@@ -93,7 +93,7 @@
 pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors have
 been found, mainERROR_CHECK_TASK_PERIOD is used if an error has been found. */
 #define mainNO_ERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 3000UL )
-#define mainERROR_CHECK_TASK_PERIOD		pdMS_TO_TICKS( 500UL )
+#define mainERROR_CHECK_TASK_PERIOD			pdMS_TO_TICKS( 500UL )
 
 /* Parameters that are passed into the register check tasks solely for the
 purpose of ensuring parameters are passed into tasks correctly. */
@@ -104,7 +104,9 @@ purpose of ensuring parameters are passed into tasks correctly. */
 #define mainTIMER_TEST_PERIOD				( 50 )
 
 /* The size of the stack allocated to the check task (as described in the
-comments at the top of this file. */
+comments at the top of this file.  This is surprisingly large as it calls
+the logging library's print function, which allocates a 128 byte buffer on its
+stack. */
 #define mainCHECK_TASK_STACK_SIZE_WORDS 200
 
 /* Size of the stacks to allocated for the register check tasks. */

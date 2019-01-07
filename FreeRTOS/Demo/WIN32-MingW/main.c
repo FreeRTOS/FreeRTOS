@@ -141,6 +141,21 @@ int main( void )
 	http://www.freertos.org/a00111.html for an explanation. */
 	prvInitialiseHeap();
 
+	/* Do not include trace code when performing a code coverage analysis. */
+	#if( projCOVERAGE_TEST != 1 )
+	{
+		/* Initialise the trace recorder.  Use of the trace recorder is optional.
+		See http://www.FreeRTOS.org/trace for more information. */
+		vTraceEnable( TRC_START );
+
+		/* Start the trace recording - the recording is written to a file if
+		configASSERT() is called. */
+		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
+		uiTraceStart();
+	}
+	#endif
+
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
 	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
@@ -149,21 +164,6 @@ int main( void )
 	}
 	#else
 	{
-		/* Do not include trace code when performing a code coverage analysis. */
-		#if( projCOVERAGE_TEST != 1 )
-		{
-			/* Initialise the trace recorder.  Use of the trace recorder is optional.
-			See http://www.FreeRTOS.org/trace for more information. */
-			vTraceEnable( TRC_START );
-
-			/* Start the trace recording - the recording is written to a file if
-			configASSERT() is called. */
-			printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-			printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
-			uiTraceStart();
-		}
-		#endif
-
 		main_full();
 	}
 	#endif

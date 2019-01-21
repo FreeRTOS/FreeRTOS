@@ -333,6 +333,19 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 #endif
 /*-----------------------------------------------------------*/
 
+#if( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
+	TickType_t MPU_xTaskGetIdleRunTimeCounter( void )
+	{
+	TickType_t xReturn;
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+		xReturn = xTaskGetIdleRunTimeCounter();
+		vPortResetPrivilege( xRunningPrivileged );
+		return xReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
 #if ( configUSE_APPLICATION_TASK_TAG == 1 )
 	void MPU_vTaskSetApplicationTaskTag( TaskHandle_t xTask, TaskHookFunction_t pxTagValue )
 	{

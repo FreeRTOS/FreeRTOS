@@ -776,6 +776,9 @@ static void prvTaskToDelete( void *pvParameters )
 	/* For code coverage test purposes it is deleted by the Idle task. */
 	configASSERT( uxTaskGetStackHighWaterMark( NULL ) > 0 );
 	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
+	/* Run time stats are not being gathered - this is just to exercise
+	API. */
+	configASSERT( xTaskGetIdleRunTimeCounter() == 0 ); 
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/

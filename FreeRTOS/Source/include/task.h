@@ -1729,6 +1729,36 @@ void vTaskList( char * pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unquali
 void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
 /**
+* task. h
+* <PRE>TickType_t xTaskGetIdleRunTimeCounter( void );</PRE>
+*
+* configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
+* must both be defined as 1 for this function to be available.  The application
+* must also then provide definitions for
+* portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and portGET_RUN_TIME_COUNTER_VALUE()
+* to configure a peripheral timer/counter and return the timers current count
+* value respectively.  The counter should be at least 10 times the frequency of
+* the tick count.
+*
+* Setting configGENERATE_RUN_TIME_STATS to 1 will result in a total
+* accumulated execution time being stored for each task.  The resolution
+* of the accumulated time value depends on the frequency of the timer
+* configured by the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro.
+* While uxTaskGetSystemState() and vTaskGetRunTimeStats() writes the total
+* execution time of each task into a buffer, xTaskGetIdleRunTimeCounter()
+* returns the total execution time of just the idle task.
+*
+* @return The total run time of the idle task.  This is the amount of time the
+* idle task has actually been executing.  The unit of time is dependent on the
+* frequency configured using the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and
+* portGET_RUN_TIME_COUNTER_VALUE() macros.
+*
+* \defgroup xTaskGetIdleRunTimeCounter xTaskGetIdleRunTimeCounter
+* \ingroup TaskUtils
+*/
+TickType_t xTaskGetIdleRunTimeCounter( void ) PRIVILEGED_FUNCTION;
+
+/**
  * task. h
  * <PRE>BaseType_t xTaskNotify( TaskHandle_t xTaskToNotify, uint32_t ulValue, eNotifyAction eAction );</PRE>
  *
@@ -2346,7 +2376,7 @@ void vTaskSetTaskNumber( TaskHandle_t xTask, const UBaseType_t uxHandle ) PRIVIL
 void vTaskStepTick( const TickType_t xTicksToJump ) PRIVILEGED_FUNCTION;
 
 /*
- * Only avilable when configUSE_TICKLESS_IDLE is set to 1.
+ * Only available when configUSE_TICKLESS_IDLE is set to 1.
  * Provided for use within portSUPPRESS_TICKS_AND_SLEEP() to allow the port
  * specific sleep function to determine if it is ok to proceed with the sleep,
  * and if it is ok to proceed, if it is ok to sleep indefinitely.
@@ -2366,10 +2396,6 @@ eSleepModeStatus eTaskConfirmSleepModeStatus( void ) PRIVILEGED_FUNCTION;
  * taken and return the handle of the task that has taken the mutex.
  */
 TaskHandle_t pvTaskIncrementMutexHeldCount( void ) PRIVILEGED_FUNCTION;
-
-#if( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
-	TickType_t xTaskGetIdleRunTimeCounter( void );
-#endif
 
 /*
  * For internal use only.  Same as vTaskSetTimeOutState(), but without a critial

@@ -34,6 +34,10 @@
 #include "task.h"
 #include "portmacro.h"
 
+#ifndef configCLINT_BASE_ADDRESS
+	#warning configCLINT_BASE_ADDRESS must be defined in FreeRTOSConfig.h.  If the target chip includes a Core Local Interrupter (CLINT) then set configCLINT_BASE_ADDRESS to the CLINT's base address.  Otherwise set configCLINT_BASE_ADDRESS to 0.
+#endif
+
 /* Let the user override the pre-loading of the initial LR with the address of
 prvTaskExitError() in case it messes up unwinding of the stack in the
 debugger. */

@@ -150,13 +150,6 @@ void vFullDemoTickHook( void );
 
 /*-----------------------------------------------------------*/
 
-/* Timers used to exercise external interrupt processing. */
-//static timer_instance_t g_timer0, g_timer1;
-
-/* Variables incremented by the peripheral timers used to exercise external
-interrupts. */
-volatile uint32_t ulTimer0Interrupts = 0, ulTimer1Interrupts = 0;
-
 /* The following two variables are used to communicate the status of the
 register check tasks to the check task.  If the variables keep incrementing,
 then the register check tasks have not discovered any errors.  If a variable
@@ -224,7 +217,6 @@ static void prvCheckTask( void *pvParameters )
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-uint32_t ulLastTimer0Interrupts = 0, ulLastTimer1Interrupts = 0;
 char * const pcPassMessage = ".";
 char * pcStatusMessage = pcPassMessage;
 extern void vSendString( const char * const pcString );
@@ -259,17 +251,17 @@ extern void vToggleLED( void );
 			pcStatusMessage = "ERROR: Dynamic priority demo/tests.\r\n";
 		}
 
-		if ( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
+		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
 		}
 
-		if ( xAreGenericQueueTasksStillRunning() == pdFALSE )
+		if( xAreGenericQueueTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
 		}
 
-		if ( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
+		if( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Recursive mutex demo/tests.\r\n";
 		}
@@ -332,19 +324,6 @@ extern void vToggleLED( void );
 			pcStatusMessage = "ERROR: Register test 2.\r\n";
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
-
-		/* Check interrupts from the peripheral timers are being handled. */
-		if( ulLastTimer0Interrupts == ulTimer0Interrupts )
-		{
-//			pcStatusMessage = "ERROR: Peripheral timer 0.\r\n";
-		}
-		ulLastTimer0Interrupts = ulTimer0Interrupts;
-
-		if( ulLastTimer1Interrupts == ulTimer1Interrupts )
-		{
-//			pcStatusMessage = "ERROR: Peripheral timer 1.\r\n";
-		}
-		ulLastTimer1Interrupts = ulTimer1Interrupts;
 
 		/* Write the status message to the UART. */
 		vToggleLED();
@@ -426,17 +405,3 @@ static void prvSetupPeripheralTimers( void )
 }
 /*-----------------------------------------------------------*/
 
-/*Core Timer 0 Interrupt Handler*/
-uint8_t External_30_IRQHandler( void )
-{
-	ulTimer0Interrupts++;
-	return 0;
-}
-/*-----------------------------------------------------------*/
-
-/*Core Timer 1 Interrupt Handler*/
-uint8_t External_31_IRQHandler( void )
-{
-	ulTimer1Interrupts++;
-	return 0;
-}

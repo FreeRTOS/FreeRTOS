@@ -166,7 +166,7 @@ static void prvCheckForValidListAndQueue( void ) PRIVILEGED_FUNCTION;
  * task.  Other tasks communicate with the timer service task using the
  * xTimerQueue queue.
  */
-static void prvTimerTask( void *pvParameters ) PRIVILEGED_FUNCTION;
+static portTASK_FUNCTION_PROTO( prvTimerTask, pvParameters ) PRIVILEGED_FUNCTION;
 
 /*
  * Called by the timer service task to interpret and process a command it
@@ -520,7 +520,7 @@ Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTi
 }
 /*-----------------------------------------------------------*/
 
-static void prvTimerTask( void *pvParameters )
+static portTASK_FUNCTION( prvTimerTask, pvParameters )
 {
 TickType_t xNextExpireTime;
 BaseType_t xListWasEmpty;

@@ -261,17 +261,17 @@ extern void vToggleLED( void );
 			pcStatusMessage = "ERROR: Dynamic priority demo/tests.\r\n";
 		}
 
-		if ( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
+		if( xAreBlockTimeTestTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
 		}
 
-		if ( xAreGenericQueueTasksStillRunning() == pdFALSE )
+		if( xAreGenericQueueTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
 		}
 
-		if ( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
+		if( xAreRecursiveMutexTasksStillRunning() == pdFALSE )
 		{
 			pcStatusMessage = "ERROR: Recursive mutex demo/tests.\r\n";
 		}

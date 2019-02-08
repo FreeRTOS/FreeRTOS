@@ -121,7 +121,7 @@ void main_blinky( void )
 		file. */
 		xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
 					"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-					configMINIMAL_STACK_SIZE * 2U, 			/* The size of the stack to allocate to the task. */
+					configMINIMAL_STACK_SIZE * 2U, 		/* The size of the stack to allocate to the task. */
 					NULL, 								/* The parameter passed to the task - not used in this case. */
 					mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
 					NULL );								/* The task handle is not required, so NULL is passed. */

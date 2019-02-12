@@ -1,3 +1,8 @@
+#
+# File: BuildEnvironment.mk
+# Copyright (c) 2019, Dornerworks Ltd.
+#
+
 BUILD_DIR = ./build
 CROSS_COMPILE_PREFIX = riscv32-unknown-elf
 

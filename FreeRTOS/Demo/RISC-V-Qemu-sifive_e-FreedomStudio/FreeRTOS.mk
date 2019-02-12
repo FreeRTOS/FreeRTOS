@@ -1,3 +1,8 @@
+#
+# File: FreeRTOS.mk
+# Copyright (c) 2019, Dornerworks Ltd.
+#
+
 -include BuildEnvironment.mk
 
 FREERTOS_DIR = ../..

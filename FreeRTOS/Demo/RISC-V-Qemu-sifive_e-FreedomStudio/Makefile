@@ -1,3 +1,8 @@
+#
+# File: Makefile
+# Copyright (c) 2019, Dornerworks Ltd.
+#
+
 PROJ_NAME ?= simple
 
 include BuildEnvironment.mk

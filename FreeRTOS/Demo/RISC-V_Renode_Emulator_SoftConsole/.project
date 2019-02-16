@@ -202,7 +202,7 @@
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-RISC-V-RV32</arguments>
+				<arguments>1.0-name-matches-false-false-RISC-V</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -216,7 +216,7 @@
 		</filter>
 		<filter>
 			<id>1546279974088</id>
-			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32/chip_specific_extensions</name>
+			<name>FreeRTOS_Source/portable/GCC/RISC-V/chip_specific_extensions</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>

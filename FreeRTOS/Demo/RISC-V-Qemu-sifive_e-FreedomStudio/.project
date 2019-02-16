@@ -125,9 +125,9 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/recmutex.c</locationURI>
 		</link>
 		<link>
-			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32</name>
+			<name>FreeRTOS_Source/portable/GCC/RISC-V</name>
 			<type>2</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/portable/GCC/RISC-V-RV32</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/portable/GCC/RISC-V</locationURI>
 		</link>
 		<link>
 			<name>FreeRTOS_Source/portable/MemMang/heap_4.c</name>
@@ -138,7 +138,7 @@
 	<filteredResources>
 		<filter>
 			<id>1546280186727</id>
-			<name>FreeRTOS_Source/portable/GCC/RISC-V-RV32/chip_specific_extensions</name>
+			<name>FreeRTOS_Source/portable/GCC/RISC-V/chip_specific_extensions</name>
 			<type>9</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>

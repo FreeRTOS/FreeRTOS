@@ -10,7 +10,7 @@ include FreeRTOS.mk
 -include $(wildcard $(OUTDIR)/*.d)
 # Platform spcific settings for this application _____________________________________________
 
-ARCH = RISC-V-RV32
+ARCH = RISC-V
 ARCH_PORTABLE_INC = $(FREERTOS_SOURCE_DIR)/portable/GCC/$(ARCH)/
 ARCH_PORTABLE_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/$(ARCH)/port.c
 ARCH_PORTABLE_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/$(ARCH)/portASM.S
@@ -113,7 +113,7 @@ FREERTOS_INCLUDES += \
 	-I $(SDK_DIR)/env \
 	-I $(SDK_DIR)/drivers \
 	-I $(FREERTOS_DIR)/Demo/Common/include \
-	-I $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/chip_specific_extensions/RV32I_CLINT_no_extensions
+	-I $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V/chip_specific_extensions/RV32I_CLINT_no_extensions
 
 # List of object files to compile for the system:
 OUT_OBJS = \

@@ -222,7 +222,7 @@ void _init()
   use_pll(0, 0, 1, 31, 1);
   uart_init(115200);
 
-  printf("core freq at %d Hz\n", get_cpu_freq());
+  printf("core freq at %d Hz\n", (int)get_cpu_freq());
 
   write_csr(mtvec, &trap_entry);
   if (read_csr(misa) & (1 << ('F' - 'A'))) { // if F extension is present

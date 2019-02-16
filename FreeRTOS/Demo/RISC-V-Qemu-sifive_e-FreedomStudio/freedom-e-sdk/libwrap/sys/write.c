@@ -11,7 +11,7 @@
 
 ssize_t __wrap_write(int fd, const void* ptr, size_t len)
 {
-  const uint8_t * current = (const char *)ptr;
+  const uint8_t * current = (const uint8_t *)ptr;
 
   if (isatty(fd)) {
     for (size_t jj = 0; jj < len; jj++) {

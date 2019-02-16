@@ -301,7 +301,7 @@ BaseType_t xReturn = pdFAIL;
 		return pxNewTimer;
 	}
 
-#endif /* configSUPPORT_STATIC_ALLOCATION */
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
@@ -820,17 +820,29 @@ TickType_t xTimeNow;
 					break;
 
 				case tmrCOMMAND_DELETE :
-					/* The timer has already been removed from the active list,
-					just free up the memory if the memory was dynamically
-					allocated. */
-					if( ( pxTimer->ucStatus & tmrSTATUS_IS_STATICALLY_ALLOCATED ) == ( uint8_t ) 0 )
+					#if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 					{
-						vPortFree( pxTimer );
+						/* The timer has already been removed from the active list,
+						just free up the memory if the memory was dynamically
+						allocated. */
+						if( ( pxTimer->ucStatus & tmrSTATUS_IS_STATICALLY_ALLOCATED ) == ( uint8_t ) 0 )
+						{
+							vPortFree( pxTimer );
+						}
+						else
+						{
+							pxTimer->ucStatus &= ~tmrSTATUS_IS_ACTIVE;
+						}
 					}
-					else
+					#else
 					{
+						/* If dynamic allocation is not enabled, the memory
+						could not have been dynamically allocated. So there is
+						no need to free the memory - just mark the timer as
+						"not active". */
 						pxTimer->ucStatus &= ~tmrSTATUS_IS_ACTIVE;
 					}
+					#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 					break;
 
 				default	:

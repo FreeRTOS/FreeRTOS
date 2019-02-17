@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.1
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.2.0
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,7 +31,7 @@
  * executed from within CCS4!  Once it has been executed, re-open or refresh 
  * the CCS4 project and remove the #error line below.
  */
-//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
 
 #ifndef FREERTOS_CONFIG_H

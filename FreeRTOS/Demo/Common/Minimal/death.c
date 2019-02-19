@@ -98,7 +98,7 @@ TaskHandle_t xTaskToKill;
 const TickType_t xDelay = pdMS_TO_TICKS( ( TickType_t ) 200 );
 
 	/* Test deletion of a task's secure context, if any. */
-	portTASK_CALLS_SECURE_FUNCTIONS();
+	portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE );
 
 	if( pvParameters != NULL )
 	{

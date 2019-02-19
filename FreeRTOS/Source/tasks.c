@@ -1010,11 +1010,49 @@ UBaseType_t x;
 	the top of stack variable is updated. */
 	#if( portUSING_MPU_WRAPPERS == 1 )
 	{
-		pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
+		/* If the port has capability to detect stack overflow,
+		pass the stack end address to the stack initialization
+		function as well. */
+		#if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
+		{
+			#if( portSTACK_GROWTH < 0 )
+			{
+				pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxNewTCB->pxStack, pxTaskCode, pvParameters, xRunPrivileged );
+			}
+			#else /* portSTACK_GROWTH */
+			{
+				pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxNewTCB->pxEndOfStack, pxTaskCode, pvParameters, xRunPrivileged );
+			}
+			#endif /* portSTACK_GROWTH */
+		}
+		#else /* portHAS_STACK_OVERFLOW_CHECKING */
+		{
+			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
+		}
+		#endif /* portHAS_STACK_OVERFLOW_CHECKING */
 	}
 	#else /* portUSING_MPU_WRAPPERS */
 	{
-		pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+		/* If the port has capability to detect stack overflow,
+		pass the stack end address to the stack initialization
+		function as well. */
+		#if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
+		{
+			#if( portSTACK_GROWTH < 0 )
+			{
+				pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxNewTCB->pxStack, pxTaskCode, pvParameters );
+			}
+			#else /* portSTACK_GROWTH */
+			{
+				pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxNewTCB->pxEndOfStack, pxTaskCode, pvParameters );
+			}
+			#endif /* portSTACK_GROWTH */
+		}
+		#else /* portHAS_STACK_OVERFLOW_CHECKING */
+		{
+			pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );
+		}
+		#endif /* portHAS_STACK_OVERFLOW_CHECKING */
 	}
 	#endif /* portUSING_MPU_WRAPPERS */
 
@@ -3303,7 +3341,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 	/* In case a task that has a secure context deletes itself, in which case
 	the idle task is responsible for deleting the task's secure context, if
 	any. */
-	portTASK_CALLS_SECURE_FUNCTIONS();
+	portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE );
 
 	for( ;; )
 	{

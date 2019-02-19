@@ -124,13 +124,6 @@ static void prvSetupMPU( void ) PRIVILEGED_FUNCTION;
 static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes ) PRIVILEGED_FUNCTION;
 
 /*
- * Checks to see if being called from the context of an unprivileged task, and
- * if so raises the privilege level and returns false - otherwise does nothing
- * other than return true.
- */
-BaseType_t xPortRaisePrivilege( void ) __attribute__(( naked ));
-
-/*
  * Setup the timer to generate the tick interrupts.  The implementation in this
  * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
@@ -160,6 +153,35 @@ static void prvSVCHandler( uint32_t *pulRegisters ) __attribute__(( noinline )) 
  */
  static void vPortEnableVFP( void ) __attribute__ (( naked ));
 
+/**
+ * @brief Checks whether or not the processor is privileged.
+ *
+ * @return 1 if the processor is already privileged, 0 otherwise.
+ */
+BaseType_t xIsPrivileged( void ) __attribute__ (( naked ));
+
+/**
+ * @brief Lowers the privilege level by setting the bit 0 of the CONTROL
+ * register.
+ *
+ * Bit 0 of the CONTROL register defines the privilege level of Thread Mode.
+ *  Bit[0] = 0 --> The processor is running privileged
+ *  Bit[0] = 1 --> The processor is running unprivileged.
+ */
+void vResetPrivilege( void ) __attribute__ (( naked ));
+
+/**
+ * @brief Calls the port specific code to raise the privilege.
+ *
+ * @return pdFALSE if privilege was raised, pdTRUE otherwise.
+ */
+extern BaseType_t xPortRaisePrivilege( void );
+
+/**
+ * @brief If xRunningPrivileged is not pdTRUE, calls the port specific
+ * code to reset the privilege, otherwise does nothing.
+ */
+extern void vPortResetPrivilege( BaseType_t xRunningPrivileged );
 /*-----------------------------------------------------------*/
 
 /* Each task maintains its own interrupt status in the critical nesting
@@ -639,21 +661,33 @@ uint32_t ulRegionSize, ulReturnValue = 4;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xPortRaisePrivilege( void )
+BaseType_t xIsPrivileged( void ) /* __attribute__ (( naked )) */
 {
 	__asm volatile
 	(
-		"	mrs r0, control						\n"
-		"	tst r0, #1							\n" /* Is the task running privileged? */
-		"	itte ne								\n"
-		"	movne r0, #0						\n" /* CONTROL[0]!=0, return false. */
-		"	svcne %0							\n" /* Switch to privileged. */
-		"	moveq r0, #1						\n" /* CONTROL[0]==0, return true. */
-		"	bx lr								\n"
-		:: "i" (portSVC_RAISE_PRIVILEGE) : "r0", "memory"
+	"	mrs r0, control							\n" /* r0 = CONTROL. */
+	"	tst r0, #1								\n" /* Perform r0 & 1 (bitwise AND) and update the conditions flag. */
+	"	ite ne									\n"
+	"	movne r0, #0							\n" /* CONTROL[0]!=0. Return false to indicate that the processor is not privileged. */
+	"	moveq r0, #1							\n" /* CONTROL[0]==0. Return true to indicate that the processor is privileged. */
+	"	bx lr									\n" /* Return. */
+	"											\n"
+	"	.align 4								\n"
+	::: "r0", "memory"
 	);
+}
+/*-----------------------------------------------------------*/
 
-	return 0;
+void vResetPrivilege( void ) /* __attribute__ (( naked )) */
+{
+	__asm volatile
+	(
+	"	mrs r0, control							\n" /* r0 = CONTROL. */
+	"	orr r0, #1								\n" /* r0 = r0 | 1. */
+	"	msr control, r0							\n" /* CONTROL = r0. */
+	"	bx lr									\n" /* Return to the caller. */
+	:::"r0", "memory"
+	);
 }
 /*-----------------------------------------------------------*/
 

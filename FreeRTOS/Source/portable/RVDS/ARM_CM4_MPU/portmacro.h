@@ -85,7 +85,7 @@ typedef unsigned long UBaseType_t;
 #define portPRIVILEGED_RAM_REGION			( 2UL )
 #define portGENERAL_PERIPHERALS_REGION		( 3UL )
 #define portSTACK_REGION					( 4UL )
-#define portFIRST_CONFIGURABLE_REGION	    ( 5UL )
+#define portFIRST_CONFIGURABLE_REGION		( 5UL )
 #define portLAST_CONFIGURABLE_REGION		( 7UL )
 #define portNUM_CONFIGURABLE_REGIONS		( ( portLAST_CONFIGURABLE_REGION - portFIRST_CONFIGURABLE_REGION ) + 1 )
 #define portTOTAL_NUM_REGIONS				( portNUM_CONFIGURABLE_REGIONS + 1 ) /* Plus one to make space for the stack region. */
@@ -197,7 +197,28 @@ not necessary for to use this port.  They are defined so the common demo files
 #ifndef portFORCE_INLINE
 	#define portFORCE_INLINE __forceinline
 #endif
+/*-----------------------------------------------------------*/
 
+extern BaseType_t xIsPrivileged( void );
+extern void vResetPrivilege( void );
+
+/**
+ * @brief Checks whether or not the processor is privileged.
+ *
+ * @return 1 if the processor is already privileged, 0 otherwise.
+ */
+#define portIS_PRIVILEGED()			xIsPrivileged()
+
+/**
+ * @brief Raise an SVC request to raise privilege.
+ */
+#define portRAISE_PRIVILEGE()		__asm { svc portSVC_RAISE_PRIVILEGE }
+
+/**
+ * @brief Lowers the privilege level by setting the bit 0 of the CONTROL
+ * register.
+ */
+#define portRESET_PRIVILEGE()		vResetPrivilege()
 /*-----------------------------------------------------------*/
 
 static portFORCE_INLINE void vPortSetBASEPRI( uint32_t ulBASEPRI )
@@ -280,27 +301,8 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-/* Set the privilege level to user mode if xRunningPrivileged is false. */
-portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged )
-{
-uint32_t ulReg;
-
-	if( xRunningPrivileged != pdTRUE )
-	{
-		__asm
-		{
-			mrs ulReg, control
-			orr ulReg, #1
-			msr control, ulReg
-		}
-	}
-}
-/*-----------------------------------------------------------*/
-
-
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* PORTMACRO_H */
-

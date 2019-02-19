@@ -200,18 +200,28 @@ not necessary for to use this port.  They are defined so the common demo files
 #ifndef portFORCE_INLINE
 	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
+/*-----------------------------------------------------------*/
 
-/* Set the privilege level to user mode if xRunningPrivileged is false. */
-portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged )
-{
-	if( xRunningPrivileged != pdTRUE )
-	{
-		__asm volatile ( " mrs r0, control 	\n" \
-						 " orr r0, #1 		\n" \
-						 " msr control, r0	\n"	\
-						 :::"r0", "memory" );
-	}
-}
+extern BaseType_t xIsPrivileged( void );
+extern void vResetPrivilege( void );
+
+/**
+ * @brief Checks whether or not the processor is privileged.
+ *
+ * @return 1 if the processor is already privileged, 0 otherwise.
+ */
+#define portIS_PRIVILEGED()			xIsPrivileged()
+
+/**
+ * @brief Raise an SVC request to raise privilege.
+*/
+#define portRAISE_PRIVILEGE()		__asm volatile ( "svc %0 \n" :: "i" ( portSVC_RAISE_PRIVILEGE ) : "memory" );
+
+/**
+ * @brief Lowers the privilege level by setting the bit 0 of the CONTROL
+ * register.
+ */
+#define portRESET_PRIVILEGE()		vResetPrivilege()
 /*-----------------------------------------------------------*/
 
 portFORCE_INLINE static BaseType_t xPortIsInsideInterrupt( void )

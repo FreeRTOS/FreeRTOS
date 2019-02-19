@@ -130,13 +130,6 @@ static void prvStartFirstTask( void ) PRIVILEGED_FUNCTION;
 static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes ) PRIVILEGED_FUNCTION;
 
 /*
- * Checks to see if being called from the context of an unprivileged task, and
- * if so raises the privilege level and returns false - otherwise does nothing
- * other than return true.
- */
-BaseType_t xPortRaisePrivilege( void );
-
-/*
  * Standard FreeRTOS exception handlers.
  */
 void xPortPendSVHandler( void ) PRIVILEGED_FUNCTION;
@@ -175,6 +168,35 @@ static uint32_t prvPortGetIPSR( void );
 	 static const volatile uint8_t * const pcInterruptPriorityRegisters = ( const uint8_t * ) portNVIC_IP_REGISTERS_OFFSET_16;
 #endif /* configASSERT_DEFINED */
 
+/**
+ * @brief Checks whether or not the processor is privileged.
+ *
+ * @return 1 if the processor is already privileged, 0 otherwise.
+ */
+BaseType_t xIsPrivileged( void );
+
+/**
+ * @brief Lowers the privilege level by setting the bit 0 of the CONTROL
+ * register.
+ *
+ * Bit 0 of the CONTROL register defines the privilege level of Thread Mode.
+ *  Bit[0] = 0 --> The processor is running privileged
+ *  Bit[0] = 1 --> The processor is running unprivileged.
+ */
+void vResetPrivilege( void );
+
+/**
+ * @brief Calls the port specific code to raise the privilege.
+ *
+ * @return pdFALSE if privilege was raised, pdTRUE otherwise.
+ */
+extern BaseType_t xPortRaisePrivilege( void );
+
+/**
+ * @brief If xRunningPrivileged is not pdTRUE, calls the port specific
+ * code to reset the privilege, otherwise does nothing.
+ */
+extern void vPortResetPrivilege( BaseType_t xRunningPrivileged );
 /*-----------------------------------------------------------*/
 
 /*
@@ -651,15 +673,27 @@ uint32_t ulRegionSize, ulReturnValue = 4;
 }
 /*-----------------------------------------------------------*/
 
-__asm BaseType_t xPortRaisePrivilege( void )
+__asm BaseType_t xIsPrivileged( void )
 {
-	mrs r0, control
-	tst r0, #1						/* Is the task running privileged? */
-	itte ne
-	movne r0, #0					/* CONTROL[0]!=0, return false. */
-	svcne portSVC_RAISE_PRIVILEGE	/* Switch to privileged. */
-	moveq r0, #1					/* CONTROL[0]==0, return true. */
-	bx lr
+	PRESERVE8
+
+	mrs r0, control		/* r0 = CONTROL. */
+	tst r0, #1			/* Perform r0 & 1 (bitwise AND) and update the conditions flag. */
+	ite ne
+	movne r0, #0		/* CONTROL[0]!=0. Return false to indicate that the processor is not privileged. */
+	moveq r0, #1		/* CONTROL[0]==0. Return true to indicate that the processor is privileged. */
+	bx lr				/* Return. */
+}
+/*-----------------------------------------------------------*/
+
+__asm void vResetPrivilege( void )
+{
+	PRESERVE8
+
+	mrs r0, control		/* r0 = CONTROL. */
+	orrs r0, #1			/* r0 = r0 | 1. */
+	msr control, r0		/* CONTROL = r0. */
+	bx lr				/* Return. */
 }
 /*-----------------------------------------------------------*/
 

@@ -762,8 +762,12 @@ extern "C" {
 	#define portTASK_USES_FLOATING_POINT()
 #endif
 
-#ifndef portTASK_CALLS_SECURE_FUNCTIONS
-	#define portTASK_CALLS_SECURE_FUNCTIONS()
+#ifndef portALLOCATE_SECURE_CONTEXT
+	#define portALLOCATE_SECURE_CONTEXT( ulSecureStackSize )
+#endif
+
+#ifndef portHAS_STACK_OVERFLOW_CHECKING
+	#define portHAS_STACK_OVERFLOW_CHECKING 0
 #endif
 
 #ifndef configUSE_TIME_SLICING
@@ -952,6 +956,24 @@ This constant is not supported by all FreeRTOS ports that include floating
 point support. */
 #ifndef configUSE_TASK_FPU_SUPPORT
 	#define configUSE_TASK_FPU_SUPPORT 1
+#endif
+
+/* Set configENABLE_MPU to 1 to enable MPU support and 0 to disable it. This is
+currently used in ARMv8M ports. */
+#ifndef configENABLE_MPU
+	#define configENABLE_MPU 0
+#endif
+
+/* Set configENABLE_FPU to 1 to enable FPU support and 0 to disable it. This is
+currently used in ARMv8M ports. */
+#ifndef configENABLE_FPU
+	#define configENABLE_FPU 1
+#endif
+
+/* Set configENABLE_TRUSTZONE to 1 enable TrustZone support and 0 to disable it.
+This is currently used in ARMv8M ports. */
+#ifndef configENABLE_TRUSTZONE
+	#define configENABLE_TRUSTZONE 1
 #endif
 
 /* Sometimes the FreeRTOSConfig.h settings only allow a task to be created using

@@ -154,13 +154,6 @@ static void prvSetupMPU( void ) PRIVILEGED_FUNCTION;
 static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes ) PRIVILEGED_FUNCTION;
 
 /*
- * Checks to see if being called from the context of an unprivileged task, and
- * if so raises the privilege level and returns false - otherwise does nothing
- * other than return true.
- */
-extern BaseType_t xPortRaisePrivilege( void );
-
-/*
  * Setup the timer to generate the tick interrupts.  The implementation in this
  * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
@@ -192,6 +185,18 @@ void vPortSVCHandler_C( uint32_t *pulParam );
  */
 extern void vPortRestoreContextOfFirstTask( void ) PRIVILEGED_FUNCTION;
 
+/**
+ * @brief Calls the port specific code to raise the privilege.
+ *
+ * @return pdFALSE if privilege was raised, pdTRUE otherwise.
+ */
+extern BaseType_t xPortRaisePrivilege( void );
+
+/**
+ * @brief If xRunningPrivileged is not pdTRUE, calls the port specific
+ * code to reset the privilege, otherwise does nothing.
+ */
+extern void vPortResetPrivilege( BaseType_t xRunningPrivileged );
 /*-----------------------------------------------------------*/
 
 /* Each task maintains its own interrupt status in the critical nesting
@@ -561,18 +566,6 @@ uint32_t ulRegionSize, ulReturnValue = 4;
 	/* Shift the code by one before returning so it can be written directly
 	into the the correct bit position of the attribute register. */
 	return ( ulReturnValue << 1UL );
-}
-/*-----------------------------------------------------------*/
-
-void vPortResetPrivilege( BaseType_t xRunningPrivileged )
-{
-	if( xRunningPrivileged != pdTRUE )
-	{
-		__asm volatile ( " mrs r0, control 	\n" \
-						 " orr r0, r0, #1	\n" \
-						 " msr control, r0	\n"	\
-						 :::"r0", "memory" );
-	}
 }
 /*-----------------------------------------------------------*/
 

@@ -152,7 +152,7 @@ standard names. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
-#define configASSERT( x ) if( ( x ) == 0UL ) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+#define configASSERT( x ) if( ( x ) == 0UL ) { portDISABLE_INTERRUPTS(); for( ;; ); }
 
 /* LED not used at present, so just increment a variable to keep a count of the
 number of times the LED would otherwise have been toggled. */

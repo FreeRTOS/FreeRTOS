@@ -53,6 +53,7 @@ extern "C" {
 #ifndef configENABLE_TRUSTZONE
 	#error configENABLE_TRUSTZONE must be defined in FreeRTOSConfig.h.  Set configENABLE_TRUSTZONE to 1 to enable TrustZone or 0 to disable TrustZone.
 #endif /* configENABLE_TRUSTZONE */
+
 /*-----------------------------------------------------------*/
 
 /**

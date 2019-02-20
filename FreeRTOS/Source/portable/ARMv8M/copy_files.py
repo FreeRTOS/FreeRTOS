@@ -53,7 +53,7 @@ _NONSECURE_FILE_PATHS_ = [
 def copy_files_in_dir(src_abs_path, dst_abs_path):
     for src_file in os.listdir(src_abs_path):
         src_file_abs_path = os.path.join(src_abs_path, src_file)
-        if os.path.isfile(src_file_abs_path):
+        if os.path.isfile(src_file_abs_path) and src_file != 'ReadMe.txt':
             if not os.path.exists(dst_abs_path):
                 os.makedirs(dst_abs_path)
             print('Copying {}...'.format(os.path.basename(src_file_abs_path)))

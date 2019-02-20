@@ -6,5 +6,6 @@ FreeRTOS release.
 If your Cortex-M33 application uses TrustZone then use the files from the
 FreeRTOS/Source/portable/[compiler]/ARM_CM33 directories.
 
-If you Cortex-M33 application is not going to use TrustZone then use the files
-from the FreeRTOS/Source/portable/[compiler]/ARM_CM33_NTZ directories.
+If you Cortex-M33 application does not use TrustZone then use the files from
+the FreeRTOS/Source/portable/[compiler]/ARM_CM33_NTZ directories.
+

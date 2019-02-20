@@ -976,6 +976,12 @@ This is currently used in ARMv8M ports. */
 	#define configENABLE_TRUSTZONE 1
 #endif
 
+/* Set configRUN_FREERTOS_SECURE_ONLY to 1 to run the FreeRTOS ARMv8M port on
+the Secure Side only. */
+#ifndef configRUN_FREERTOS_SECURE_ONLY
+	#define configRUN_FREERTOS_SECURE_ONLY 0
+#endif
+
 /* Sometimes the FreeRTOSConfig.h settings only allow a task to be created using
  * dynamically allocated RAM, in which case when any task is deleted it is known
  * that both the task's stack and TCB need to be freed.  Sometimes the

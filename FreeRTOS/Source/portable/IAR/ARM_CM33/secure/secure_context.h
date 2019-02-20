@@ -37,13 +37,13 @@
 /**
  * @brief PSP value when no task's context is loaded.
  */
-#define securecontextNO_STACK   0x0
+#define securecontextNO_STACK	0x0
 
 /**
  * @brief Opaque handle.
  */
 struct SecureContext;
-typedef struct SecureContext*   SecureContextHandle_t;
+typedef struct SecureContext*	SecureContextHandle_t;
 /*-----------------------------------------------------------*/
 
 /**
@@ -70,9 +70,9 @@ void SecureContext_Init( void );
  * otherwise.
  */
 #if( configENABLE_MPU == 1 )
-    SecureContextHandle_t SecureContext_AllocateContext( uint32_t ulSecureStackSize, uint32_t ulIsTaskPrivileged );
+	SecureContextHandle_t SecureContext_AllocateContext( uint32_t ulSecureStackSize, uint32_t ulIsTaskPrivileged );
 #else /* configENABLE_MPU */
-    SecureContextHandle_t SecureContext_AllocateContext( uint32_t ulSecureStackSize );
+	SecureContextHandle_t SecureContext_AllocateContext( uint32_t ulSecureStackSize );
 #endif /* configENABLE_MPU */
 
 /**

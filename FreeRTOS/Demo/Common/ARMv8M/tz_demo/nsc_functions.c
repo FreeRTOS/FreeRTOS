@@ -44,16 +44,16 @@ secureportNON_SECURE_CALLABLE uint32_t NSCFunction( Callback_t pxCallback )
 {
 NonSecureCallback_t pxNonSecureCallback;
 
-    /* Return function pointer with cleared LSB. */
-    pxNonSecureCallback = ( NonSecureCallback_t ) cmse_nsfptr_create( pxCallback );
+	/* Return function pointer with cleared LSB. */
+	pxNonSecureCallback = ( NonSecureCallback_t ) cmse_nsfptr_create( pxCallback );
 
-    /* Invoke the supplied callback. */
-    pxNonSecureCallback();
+	/* Invoke the supplied callback. */
+	pxNonSecureCallback();
 
-    /* Increment the secure side counter. */
-    ulSecureCounter += 1;
+	/* Increment the secure side counter. */
+	ulSecureCounter += 1;
 
-    /* Return the secure side counter. */
-    return ulSecureCounter;
+	/* Return the secure side counter. */
+	return ulSecureCounter;
 }
 /*-----------------------------------------------------------*/

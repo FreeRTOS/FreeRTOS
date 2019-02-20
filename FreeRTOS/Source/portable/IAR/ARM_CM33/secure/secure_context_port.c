@@ -37,12 +37,12 @@ extern void SecureContext_SaveContextAsm( SecureContextHandle_t xSecureContextHa
 
 secureportNON_SECURE_CALLABLE void SecureContext_LoadContext( SecureContextHandle_t xSecureContextHandle )
 {
-    SecureContext_LoadContextAsm( xSecureContextHandle );
+	SecureContext_LoadContextAsm( xSecureContextHandle );
 }
 /*-----------------------------------------------------------*/
 
 secureportNON_SECURE_CALLABLE void SecureContext_SaveContext( SecureContextHandle_t xSecureContextHandle )
 {
-    SecureContext_SaveContextAsm( xSecureContextHandle );
+	SecureContext_SaveContextAsm( xSecureContextHandle );
 }
 /*-----------------------------------------------------------*/

@@ -34,10 +34,10 @@
 #include "secure_port_macros.h"
 
 /* Start address of non-secure application. */
-#define mainNONSECURE_APP_START_ADDRESS     ( 0x200000U )
+#define mainNONSECURE_APP_START_ADDRESS		( 0x200000U )
 
 /* typedef for non-secure Reset Handler. */
-typedef void ( *NonSecureResetHandler_t )   ( void ) __attribute__( ( cmse_nonsecure_call ) );
+typedef void ( *NonSecureResetHandler_t )	( void ) __attribute__( ( cmse_nonsecure_call ) );
 /*-----------------------------------------------------------*/
 
 /* Boot into the non-secure code. */
@@ -46,34 +46,34 @@ void BootNonSecure( uint32_t ulNonSecureStartAddress );
 
 void BootNonSecure( uint32_t ulNonSecureStartAddress )
 {
-    NonSecureResetHandler_t pxNonSecureResetHandler;
+	NonSecureResetHandler_t pxNonSecureResetHandler;
 
-    /* Main Stack Pointer value for the non-secure side is the first entry in
-     * the non-secure vector table. Read the first entry and assign the same to
-     * the non-secure main stack pointer(MSP_NS). */
-    secureportSET_MSP_NS( *( ( uint32_t * )( ulNonSecureStartAddress ) ) );
+	/* Main Stack Pointer value for the non-secure side is the first entry in
+	 * the non-secure vector table. Read the first entry and assign the same to
+	 * the non-secure main stack pointer(MSP_NS). */
+	secureportSET_MSP_NS( *( ( uint32_t * )( ulNonSecureStartAddress ) ) );
 
-    /* Non secure Reset Handler is the second entry in the non-secure vector
-     * table. Read the non-secure reset handler.
-     */
-    pxNonSecureResetHandler = ( NonSecureResetHandler_t )( * ( ( uint32_t * ) ( ( ulNonSecureStartAddress ) + 4U ) ) );
+	/* Non secure Reset Handler is the second entry in the non-secure vector
+	 * table. Read the non-secure reset handler.
+	 */
+	pxNonSecureResetHandler = ( NonSecureResetHandler_t )( * ( ( uint32_t * ) ( ( ulNonSecureStartAddress ) + 4U ) ) );
 
-    /* Start non-secure software application by jumping to the non-secure Reset
-     * Handler. */
-    pxNonSecureResetHandler();
+	/* Start non-secure software application by jumping to the non-secure Reset
+	 * Handler. */
+	pxNonSecureResetHandler();
 }
 /*-----------------------------------------------------------*/
 
 /* Secure main() */
 int main( void )
 {
-    /* Boot the non-secure code. */
-    BootNonSecure( mainNONSECURE_APP_START_ADDRESS );
+	/* Boot the non-secure code. */
+	BootNonSecure( mainNONSECURE_APP_START_ADDRESS );
 
-    /* Non-secure software does not return, this code is not executed. */
-    for( ; ; )
-    {
-        /* Should not reach here. */
-    }
+	/* Non-secure software does not return, this code is not executed. */
+	for( ; ; )
+	{
+		/* Should not reach here. */
+	}
 }
 /*-----------------------------------------------------------*/

@@ -71,30 +71,30 @@ void vStartTZDemo( void )
 static StackType_t xSecureCallingTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__( ( aligned( 32 ) ) );
 TaskParameters_t xSecureCallingTaskParameters =
 {
-    .pvTaskCode     = prvSecureCallingTask,
-    .pcName         = "SecCalling",
-    .usStackDepth   = configMINIMAL_STACK_SIZE,
-    .pvParameters   = NULL,
-    .uxPriority     = tskIDLE_PRIORITY,
-    .puxStackBuffer = xSecureCallingTaskStack,
-    .xRegions       = {
-                        { ulNonSecureCounter, 32, tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER },
-                        { 0,                  0,  0                                                      },
-                        { 0,                  0,  0                                                      },
-                      }
+	.pvTaskCode		= prvSecureCallingTask,
+	.pcName			= "SecCalling",
+	.usStackDepth	= configMINIMAL_STACK_SIZE,
+	.pvParameters	= NULL,
+	.uxPriority		= tskIDLE_PRIORITY,
+	.puxStackBuffer	= xSecureCallingTaskStack,
+	.xRegions		=	{
+							{ ulNonSecureCounter,	32,	tskMPU_REGION_READ_WRITE | tskMPU_REGION_EXECUTE_NEVER	},
+							{ 0,					0,	0														},
+							{ 0,					0,	0														},
+						}
 };
 
-    /* Create an unprivileged task which calls secure functions. */
-    xTaskCreateRestricted( &( xSecureCallingTaskParameters ), NULL );
+	/* Create an unprivileged task which calls secure functions. */
+	xTaskCreateRestricted( &( xSecureCallingTaskParameters ), NULL );
 }
 /*-----------------------------------------------------------*/
 
 static void prvCallback( void )
 {
-    /* This function is called from the secure side. Just increment the counter
-     * here. The check that this counter keeps incrementing is performed in the
-     * prvSecureCallingTask. */
-    ulNonSecureCounter[ 0 ] += 1;
+	/* This function is called from the secure side. Just increment the counter
+	 * here. The check that this counter keeps incrementing is performed in the
+	 * prvSecureCallingTask. */
+	ulNonSecureCounter[ 0 ] += 1;
 }
 /*-----------------------------------------------------------*/
 
@@ -103,31 +103,31 @@ static void prvSecureCallingTask( void * pvParameters )
 uint32_t ulLastSecureCounter = 0, ulLastNonSecureCounter = 0;
 uint32_t ulCurrentSecureCounter = 0;
 
-    /* This task calls secure side functions. So allocate a secure context for
-     * it. */
-    portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE );
+	/* This task calls secure side functions. So allocate a secure context for
+	 * it. */
+	portALLOCATE_SECURE_CONTEXT( configMINIMAL_SECURE_STACK_SIZE );
 
-    for( ; ; )
-    {
-        /* Call the secure side function. It does two things:
-         * - It calls the supplied function (prvCallback) which in turn
-         *   increments the non-secure counter.
-         * - It increments the secure counter and returns the incremented value.
-         * Therefore at the end of this function call both the secure and
-         * non-secure counters must have been incremented.
-         */
-        ulCurrentSecureCounter = NSCFunction( prvCallback );
+	for( ; ; )
+	{
+		/* Call the secure side function. It does two things:
+		 * - It calls the supplied function (prvCallback) which in turn
+		 *   increments the non-secure counter.
+		 * - It increments the secure counter and returns the incremented value.
+		 * Therefore at the end of this function call both the secure and
+		 * non-secure counters must have been incremented.
+		 */
+		ulCurrentSecureCounter = NSCFunction( prvCallback );
 
-        /* Make sure that both the counters are incremented. */
-        configASSERT( ulCurrentSecureCounter == ulLastSecureCounter + 1 );
-        configASSERT( ulNonSecureCounter[ 0 ] == ulLastNonSecureCounter + 1 );
+		/* Make sure that both the counters are incremented. */
+		configASSERT( ulCurrentSecureCounter == ulLastSecureCounter + 1 );
+		configASSERT( ulNonSecureCounter[ 0 ] == ulLastNonSecureCounter + 1 );
 
-        /* Update the last values for both the counters. */
-        ulLastSecureCounter = ulCurrentSecureCounter;
-        ulLastNonSecureCounter = ulNonSecureCounter[ 0 ];
+		/* Update the last values for both the counters. */
+		ulLastSecureCounter = ulCurrentSecureCounter;
+		ulLastNonSecureCounter = ulNonSecureCounter[ 0 ];
 
-        /* Wait for a second. */
-        vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-    }
+		/* Wait for a second. */
+		vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+	}
 }
 /*-----------------------------------------------------------*/

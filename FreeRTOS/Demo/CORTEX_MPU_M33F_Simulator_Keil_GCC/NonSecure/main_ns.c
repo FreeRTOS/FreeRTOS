@@ -36,27 +36,27 @@
 /* Externs needed by the MPU setup code. These must match the memory map as
  * specified in Scatter-Loading description file (FreeRTOSDemo_ns.sct). */
 /* Privileged flash. */
-const uint32_t * __privileged_functions_start__     = ( uint32_t * ) ( 0x00200000 );
-const uint32_t * __privileged_functions_end__       = ( uint32_t * ) ( 0x00208000 - 0x1 );  /* Last address in privileged Flash region. */
+const uint32_t * __privileged_functions_start__		= ( uint32_t * ) ( 0x00200000 );
+const uint32_t * __privileged_functions_end__		= ( uint32_t * ) ( 0x00208000 - 0x1 );  /* Last address in privileged Flash region. */
 
 /* Flash containing system calls. */
-const uint32_t * __syscalls_flash_start__           = ( uint32_t * ) ( 0x00208000 );
-const uint32_t * __syscalls_flash_end__             = ( uint32_t * ) ( 0x00209000 - 0x1 );  /* Last address in Flash region containing system calls. */
+const uint32_t * __syscalls_flash_start__			= ( uint32_t * ) ( 0x00208000 );
+const uint32_t * __syscalls_flash_end__				= ( uint32_t * ) ( 0x00209000 - 0x1 );  /* Last address in Flash region containing system calls. */
 
 /* Unprivileged flash. Note that the section containing
  * system calls is unprivilged so that unprivleged tasks
  * can make system calls. */
-const uint32_t * __unprivileged_flash_start__       = ( uint32_t * ) ( 0x00209000 );
-const uint32_t * __unprivileged_flash_end__         = ( uint32_t * ) ( 0x00400000 - 0x1 );  /* Last address in un-privileged Flash region. */
+const uint32_t * __unprivileged_flash_start__		= ( uint32_t * ) ( 0x00209000 );
+const uint32_t * __unprivileged_flash_end__			= ( uint32_t * ) ( 0x00400000 - 0x1 );  /* Last address in un-privileged Flash region. */
 
 /* 512 bytes (0x200) of RAM starting at 0x30008000 is
  * priviledged access only. This contains kernel data. */
-const uint32_t * __privileged_sram_start__          = ( uint32_t * ) ( 0x20200000 );
-const uint32_t * __privileged_sram_end__            = ( uint32_t * ) ( 0x20201000 - 0x1 ); /* Last address in privileged RAM. */
+const uint32_t * __privileged_sram_start__			= ( uint32_t * ) ( 0x20200000 );
+const uint32_t * __privileged_sram_end__			= ( uint32_t * ) ( 0x20201000 - 0x1 ); /* Last address in privileged RAM. */
 ;
 /* Unprivileged RAM. */
-const uint32_t * __unprivileged_sram_start__        = ( uint32_t * ) ( 0x20201000 );
-const uint32_t * __unprivileged_sram_end__          = ( uint32_t * ) ( 0x20220000 - 0x1 ); /* Last address in un-privileged RAM. */
+const uint32_t * __unprivileged_sram_start__		= ( uint32_t * ) ( 0x20201000 );
+const uint32_t * __unprivileged_sram_end__			= ( uint32_t * ) ( 0x20220000 - 0x1 ); /* Last address in un-privileged RAM. */
 /*-----------------------------------------------------------*/
 
 /**
@@ -67,11 +67,11 @@ static void prvCreateTasks( void );
 
 static void prvCreateTasks( void )
 {
-    /* Create tasks for the MPU Demo. */
-    vStartMPUDemo();
+	/* Create tasks for the MPU Demo. */
+	vStartMPUDemo();
 
-    /* Create tasks for the TZ Demo. */
-    vStartTZDemo();
+	/* Create tasks for the TZ Demo. */
+	vStartTZDemo();
 
 }
 /*-----------------------------------------------------------*/
@@ -79,51 +79,51 @@ static void prvCreateTasks( void )
 /* Stack overflow hook. */
 void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
 {
-    /* Force an assert. */
-    configASSERT( pcTaskName == 0 );
+	/* Force an assert. */
+	configASSERT( pcTaskName == 0 );
 }
 /*-----------------------------------------------------------*/
 
 /* Non-Secure main. */
 int main( void )
 {
-    /* Create tasks. */
-    prvCreateTasks();
+	/* Create tasks. */
+	prvCreateTasks();
 
-    /* Start scheduler. */
-    vTaskStartScheduler();
+	/* Start scheduler. */
+	vTaskStartScheduler();
 
-    /* Should not reach here as the schedular is already started. */
-    for( ; ; )
-    {
-    }
+	/* Should not reach here as the schedular is already started. */
+	for( ; ; )
+	{
+	}
 }
 /*-----------------------------------------------------------*/
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
  * implementation of vApplicationGetIdleTaskMemory() to provide the memory that
  * is used by the Idle task. */
-void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
-                                    StackType_t ** ppxIdleTaskStackBuffer,
-                                    uint32_t * pulIdleTaskStackSize )
+void vApplicationGetIdleTaskMemory(	StaticTask_t ** ppxIdleTaskTCBBuffer,
+									StackType_t ** ppxIdleTaskStackBuffer,
+									uint32_t * pulIdleTaskStackSize )
 {
-    /* If the buffers to be provided to the Idle task are declared inside this
-     * function then they must be declared static - otherwise they will be
-     * allocated on the stack and so not exists after this function exits. */
-    static StaticTask_t xIdleTaskTCB;
-    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__((aligned(32)));
+	/* If the buffers to be provided to the Idle task are declared inside this
+	 * function then they must be declared static - otherwise they will be
+	 * allocated on the stack and so not exists after this function exits. */
+	static StaticTask_t xIdleTaskTCB;
+	static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ] __attribute__((aligned(32)));
 
-    /* Pass out a pointer to the StaticTask_t structure in which the Idle
-     * task's state will be stored. */
-    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+	/* Pass out a pointer to the StaticTask_t structure in which the Idle
+	 * task's state will be stored. */
+	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
-    /* Pass out the array that will be used as the Idle task's stack. */
-    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
+	/* Pass out the array that will be used as the Idle task's stack. */
+	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
 
-    /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
-     * Note that, as the array is necessarily of type StackType_t,
-     * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+	/* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
+	 * Note that, as the array is necessarily of type StackType_t,
+	 * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
+	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
@@ -131,26 +131,26 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
  * application must provide an implementation of vApplicationGetTimerTaskMemory()
  * to provide the memory that is used by the Timer service task. */
 void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
-                                     StackType_t ** ppxTimerTaskStackBuffer,
-                                     uint32_t * pulTimerTaskStackSize )
+									 StackType_t ** ppxTimerTaskStackBuffer,
+									 uint32_t * pulTimerTaskStackSize )
 {
-    /* If the buffers to be provided to the Timer task are declared inside this
-     * function then they must be declared static - otherwise they will be
-     * allocated on the stack and so not exists after this function exits. */
-    static StaticTask_t xTimerTaskTCB;
-    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ] __attribute__((aligned(32)));
+	/* If the buffers to be provided to the Timer task are declared inside this
+	 * function then they must be declared static - otherwise they will be
+	 * allocated on the stack and so not exists after this function exits. */
+	static StaticTask_t xTimerTaskTCB;
+	static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ] __attribute__((aligned(32)));
 
-    /* Pass out a pointer to the StaticTask_t structure in which the Timer
-     * task's state will be stored. */
-    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
+	/* Pass out a pointer to the StaticTask_t structure in which the Timer
+	 * task's state will be stored. */
+	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
 
-    /* Pass out the array that will be used as the Timer task's stack. */
-    *ppxTimerTaskStackBuffer = uxTimerTaskStack;
+	/* Pass out the array that will be used as the Timer task's stack. */
+	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
 
-    /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
-     * Note that, as the array is necessarily of type StackType_t,
-     * configTIMER_TASK_STACK_DEPTH is specified in words, not bytes. */
-    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+	/* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
+	 * Note that, as the array is necessarily of type StackType_t,
+	 * configTIMER_TASK_STACK_DEPTH is specified in words, not bytes. */
+	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/
 
@@ -160,16 +160,16 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
  */
 void MemManage_Handler( void )
 {
-    __asm volatile
-    (
-        " tst lr, #4                                        \n"
-        " ite eq                                            \n"
-        " mrseq r0, msp                                     \n"
-        " mrsne r0, psp                                     \n"
-        " ldr r1, handler_address_const                     \n"
-        " bx r1                                             \n"
-        "                                                   \n"
-        " handler_address_const: .word vHandleMemoryFault   \n"
-    );
+	__asm volatile
+	(
+		" tst lr, #4										\n"
+		" ite eq											\n"
+		" mrseq r0, msp										\n"
+		" mrsne r0, psp										\n"
+		" ldr r1, handler_address_const						\n"
+		" bx r1												\n"
+		"													\n"
+		" handler_address_const: .word vHandleMemoryFault	\n"
+	);
 }
 /*-----------------------------------------------------------*/

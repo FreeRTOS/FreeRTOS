@@ -44,6 +44,36 @@ typedef void ( *NonSecureResetHandler_t )	( void ) __attribute__( ( cmse_nonsecu
 void BootNonSecure( uint32_t ulNonSecureStartAddress );
 /*-----------------------------------------------------------*/
 
+/*
+	Instructions to Build and Run:
+	 - The Keil multi-project workspace FreeRTOSDemo.uvmpw contains projects for
+	   both the secure project, and non secure project.
+	 - Set the FreeRTOSDemo_s project as Active - Right click on
+	   "Project: FreeRTOSDemo_s" and select "Set as Active Project".
+	 - Build the FreeRTOSDemo_s project using "Project --> Build" or by pressing
+	   F7.
+	 - Set the FreeRTOSDemo_ns project as Active – Right click on
+	   "Project: FreeRTOSDemo_ns" and select "Set as Active Project".
+	 - Build the FreeRTOSDemo_ns project using "Project --> Build" or by
+	   pressing "F7".
+	 - Start Debug Session using "Debug -> Start/Stop Debug Session" or by
+	   pressing "Ctrl+F5".
+*/
+
+/* Secure main() */
+int main( void )
+{
+	/* Boot the non-secure code. */
+	BootNonSecure( mainNONSECURE_APP_START_ADDRESS );
+
+	/* Non-secure software does not return, this code is not executed. */
+	for( ; ; )
+	{
+		/* Should not reach here. */
+	}
+}
+/*-----------------------------------------------------------*/
+
 void BootNonSecure( uint32_t ulNonSecureStartAddress )
 {
 	NonSecureResetHandler_t pxNonSecureResetHandler;
@@ -64,16 +94,3 @@ void BootNonSecure( uint32_t ulNonSecureStartAddress )
 }
 /*-----------------------------------------------------------*/
 
-/* Secure main() */
-int main( void )
-{
-	/* Boot the non-secure code. */
-	BootNonSecure( mainNONSECURE_APP_START_ADDRESS );
-
-	/* Non-secure software does not return, this code is not executed. */
-	for( ; ; )
-	{
-		/* Should not reach here. */
-	}
-}
-/*-----------------------------------------------------------*/

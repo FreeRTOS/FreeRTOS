@@ -65,6 +65,38 @@ const uint32_t * __unprivileged_sram_end__			= ( uint32_t * ) ( 0x20220000 - 0x1
 static void prvCreateTasks( void );
 /*-----------------------------------------------------------*/
 
+/*
+	Instructions to Build and Run:
+	 - The Keil multi-project workspace FreeRTOSDemo.uvmpw contains projects for
+	   both the secure project, and non secure project.
+	 - Set the FreeRTOSDemo_s project as Active - Right click on
+	   "Project: FreeRTOSDemo_s" and select "Set as Active Project".
+	 - Build the FreeRTOSDemo_s project using "Project --> Build" or by pressing
+	   F7.
+	 - Set the FreeRTOSDemo_ns project as Active – Right click on
+	   "Project: FreeRTOSDemo_ns" and select "Set as Active Project".
+	 - Build the FreeRTOSDemo_ns project using "Project --> Build" or by
+	   pressing "F7".
+	 - Start Debug Session using "Debug -> Start/Stop Debug Session" or by
+	   pressing "Ctrl+F5".
+*/
+
+/* Non-Secure main. */
+int main( void )
+{
+	/* Create tasks. */
+	prvCreateTasks();
+
+	/* Start scheduler. */
+	vTaskStartScheduler();
+
+	/* Should not reach here as the scheduler is already started. */
+	for( ; ; )
+	{
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvCreateTasks( void )
 {
 	/* Create tasks for the MPU Demo. */
@@ -81,22 +113,6 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName 
 {
 	/* Force an assert. */
 	configASSERT( pcTaskName == 0 );
-}
-/*-----------------------------------------------------------*/
-
-/* Non-Secure main. */
-int main( void )
-{
-	/* Create tasks. */
-	prvCreateTasks();
-
-	/* Start scheduler. */
-	vTaskStartScheduler();
-
-	/* Should not reach here as the schedular is already started. */
-	for( ; ; )
-	{
-	}
 }
 /*-----------------------------------------------------------*/
 

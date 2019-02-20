@@ -64,7 +64,7 @@
  *		configRUN_FREERTOS_SECURE_ONLY = 0 and configENABLE_TRUSTZONE = 0
  */
 #if( ( configRUN_FREERTOS_SECURE_ONLY == 1 ) && ( configENABLE_TRUSTZONE == 1 ) )
-	#error Trust Zone needs to be disabled in order to run FreeRTOS on the Secure Side.
+	#error TrustZone needs to be disabled in order to run FreeRTOS on the Secure Side.
 #endif
 /*-----------------------------------------------------------*/
 

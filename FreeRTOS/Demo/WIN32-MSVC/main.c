@@ -75,9 +75,9 @@ that make up the total heap.  heap_5 is only used for test and example purposes
 as this demo could easily create one large heap region instead of multiple
 smaller heap regions - in which case heap_4.c would be the more appropriate
 choice.  See http://www.freertos.org/a00111.html for an explanation. */
-#define mainREGION_1_SIZE	7201
+#define mainREGION_1_SIZE	8201
 #define mainREGION_2_SIZE	29905
-#define mainREGION_3_SIZE	6407
+#define mainREGION_3_SIZE	7607
 
 /*-----------------------------------------------------------*/
 

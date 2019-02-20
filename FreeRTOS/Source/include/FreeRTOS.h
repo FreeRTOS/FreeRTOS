@@ -1039,25 +1039,40 @@ the Secure Side only. */
  */
 struct xSTATIC_LIST_ITEM
 {
-	TickType_t xDummy1;
-	void *pvDummy2[ 4 ];
+	#if( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
+		TickType_t xDummy1;
+	#endif
+	TickType_t xDummy2;
+	void *pvDummy3[ 4 ];
+	#if( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
+		TickType_t xDummy4;
+	#endif
 };
 typedef struct xSTATIC_LIST_ITEM StaticListItem_t;
 
 /* See the comments above the struct xSTATIC_LIST_ITEM definition. */
 struct xSTATIC_MINI_LIST_ITEM
 {
-	TickType_t xDummy1;
-	void *pvDummy2[ 2 ];
+	#if( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
+		TickType_t xDummy1;
+	#endif
+	TickType_t xDummy2;
+	void *pvDummy3[ 2 ];
 };
 typedef struct xSTATIC_MINI_LIST_ITEM StaticMiniListItem_t;
 
 /* See the comments above the struct xSTATIC_LIST_ITEM definition. */
 typedef struct xSTATIC_LIST
 {
-	UBaseType_t uxDummy1;
-	void *pvDummy2;
-	StaticMiniListItem_t xDummy3;
+	#if( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
+		TickType_t xDummy1;
+	#endif
+	UBaseType_t uxDummy2;
+	void *pvDummy3;
+	StaticMiniListItem_t xDummy4;
+	#if( configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES == 1 )
+		TickType_t xDummy5;
+	#endif
 } StaticList_t;
 
 /*

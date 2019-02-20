@@ -43,15 +43,15 @@ extern "C" {
  */
 
 #ifndef configENABLE_FPU
-	#error configENABLE_FPU must be defined in FreeRTOSConfig.h.
+	#error configENABLE_FPU must be defined in FreeRTOSConfig.h.  Set configENABLE_FPU to 1 to enable the FPU or 0 to disable the FPU.
 #endif /* configENABLE_FPU */
 
 #ifndef configENABLE_MPU
-	#error configENABLE_MPU must be defined in FreeRTOSConfig.h.
+	#error configENABLE_MPU must be defined in FreeRTOSConfig.h.  Set configENABLE_MPU to 1 to enable the MPU or 0 to disable the MPU.
 #endif /* configENABLE_MPU */
 
 #ifndef configENABLE_TRUSTZONE
-	#error configENABLE_TRUSTZONE must be defined in FreeRTOSConfig.h.
+	#error configENABLE_TRUSTZONE must be defined in FreeRTOSConfig.h.  Set configENABLE_TRUSTZONE to 1 to enable TrustZone or 0 to disable TrustZone.
 #endif /* configENABLE_TRUSTZONE */
 /*-----------------------------------------------------------*/
 

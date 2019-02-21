@@ -1,5 +1,3 @@
-#warning Temoporary file and a dependent on the Zynq network interface.
-
 /*
  * uncached_memory.c
  *
@@ -19,6 +17,21 @@
  * uncached memory.
  */
 
+/* Standard includes. */
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+/* FreeRTOS includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
+#include "FreeRTOS_IP_Private.h"
+
 #include "Zynq/x_emacpsif.h"
 #include "Zynq/x_topology.h"
 #include "xstatus.h"
@@ -28,11 +41,7 @@
 #include "xil_exception.h"
 #include "xil_mmu.h"
 
-#include "FreeRTOS.h"
-
 #include "uncached_memory.h"
-
-#include "Demo_Logging.h"
 
 #define UNCACHED_MEMORY_SIZE	0x100000ul
 
@@ -100,7 +109,7 @@ static void vInitialiseUncachedMemory( )
 
 	if( ( ( u32 )pucStartOfMemory ) + UNCACHED_MEMORY_SIZE > DDR_MEMORY_END )
 	{
-		vLoggingPrintf("vInitialiseUncachedMemory: Can not allocate uncached memory\n" );
+//		vLoggingPrintf("vInitialiseUncachedMemory: Can not allocate uncached memory\n" );
 	}
 	else
 	{
@@ -109,7 +118,11 @@ static void vInitialiseUncachedMemory( )
 		 * address range that starts after "_end" is made uncached
 		 * by setting appropriate attributes in the translation table.
 		 */
-		Xil_SetTlbAttributes( ( uint32_t )pucStartOfMemory, 0xc02 ); // addr, attr
+		/* FIXME claudio rossi. Modified to prevent data abort exception (misaligned access)
+		 * when application is compiled with -O1 or more optimization flag.
+		 */
+/*		Xil_SetTlbAttributes( ( uint32_t )pucStartOfMemory, 0xc02 ); // addr, attr */
+		Xil_SetTlbAttributes( ( uint32_t )pucStartOfMemory, 0x1c02 ); // addr, attr
 
 		/* For experiments in the SDIO driver, make the remaining uncached memory public */
 		pucHeadOfMemory = pucStartOfMemory;

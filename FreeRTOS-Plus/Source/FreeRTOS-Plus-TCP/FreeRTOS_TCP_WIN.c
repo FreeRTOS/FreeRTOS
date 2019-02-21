@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.7
+ * FreeRTOS+TCP V2.0.11
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -199,7 +199,7 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
 
 /*-----------------------------------------------------------*/
 
-/* TCP segement pool. */
+/* TCP segment pool. */
 #if( ipconfigUSE_TCP_WIN == 1 )
 	static TCPSegment_t *xTCPSegments = NULL;
 #endif /* ipconfigUSE_TCP_WIN == 1 */
@@ -671,6 +671,23 @@ const int32_t l500ms = 500;
 	pxWindow->tx.ulHighestSequenceNumber = ulSequenceNumber;
 	pxWindow->ulOurSequenceNumber = ulSequenceNumber;
 }
+/*-----------------------------------------------------------*/
+
+#if( ipconfigUSE_TCP_WIN == 1 )
+
+    void vTCPSegmentCleanup( void )
+    {
+        /* Free and clear the TCP segments pointer. This function should only be called
+         * once FreeRTOS+TCP will no longer be used. No thread-safety is provided for this
+         * function. */
+        if( xTCPSegments != NULL )
+        {
+            vPortFreeLarge( xTCPSegments );
+            xTCPSegments = NULL;
+        }
+    }
+
+#endif /* ipconfgiUSE_TCP_WIN == 1 */
 /*-----------------------------------------------------------*/
 
 /*=============================================================================

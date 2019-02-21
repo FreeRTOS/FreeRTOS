@@ -1,28 +1,27 @@
 /*
- * FreeRTOS+TCP V2.0.3
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
- */
+FreeRTOS+TCP V2.0.11
+Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ http://aws.amazon.com/freertos
+ http://www.FreeRTOS.org
+*/
 
 /* Standard includes. */
 #include <stdint.h>
@@ -230,119 +229,103 @@ static SemaphoreHandle_t xTXDescriptorSemaphore = NULL;
 BaseType_t xNetworkInterfaceInitialise( void )
 {
 BaseType_t xReturn = pdPASS;
-static BaseType_t xHasInitialised = pdFALSE;
 
-	if( xHasInitialised == pdFALSE )
+	/* The interrupt will be turned on when a link is established. */
+	NVIC_DisableIRQ( ETHERNET_IRQn );
+
+	/* Disable receive and transmit DMA processes. */
+	LPC_ETHERNET->DMA_OP_MODE &= ~( DMA_OM_ST | DMA_OM_SR );
+
+	/* Disable packet reception. */
+	LPC_ETHERNET->MAC_CONFIG &= ~( MAC_CFG_RE | MAC_CFG_TE );
+
+	/* Call the LPCOpen function to initialise the hardware. */
+	Chip_ENET_Init( LPC_ETHERNET );
+
+	/* Save MAC address. */
+	Chip_ENET_SetADDR( LPC_ETHERNET, ucMACAddress );
+
+	/* Clear all MAC address hash entries. */
+	LPC_ETHERNET->MAC_HASHTABLE_HIGH = 0;
+	LPC_ETHERNET->MAC_HASHTABLE_LOW = 0;
+
+	#if( ipconfigUSE_LLMNR == 1 )
 	{
-		xHasInitialised = pdTRUE;
+		prvAddMACAddress( xLLMNR_MACAddress );
+	}
+	#endif /* ipconfigUSE_LLMNR == 1 */
 
-		/* The interrupt will be turned on when a link is established. */
-		NVIC_DisableIRQ( ETHERNET_IRQn );
+	/* Promiscuous flag (PR) and Receive All flag (RA) set to zero.  The
+	registers MAC_HASHTABLE_[LOW|HIGH] will be loaded to allow certain
+	multi-cast addresses. */
+	LPC_ETHERNET->MAC_FRAME_FILTER = MAC_FF_HMC;
 
-		/* Disable receive and transmit DMA processes. */
-		LPC_ETHERNET->DMA_OP_MODE &= ~( DMA_OM_ST | DMA_OM_SR );
-
-		/* Disable packet reception. */
-		LPC_ETHERNET->MAC_CONFIG &= ~( MAC_CFG_RE | MAC_CFG_TE );
-
-		/* Call the LPCOpen function to initialise the hardware. */
-		Chip_ENET_Init( LPC_ETHERNET );
-
-		/* Save MAC address. */
-		Chip_ENET_SetADDR( LPC_ETHERNET, ucMACAddress );
-
-		/* Clear all MAC address hash entries. */
-		LPC_ETHERNET->MAC_HASHTABLE_HIGH = 0;
-		LPC_ETHERNET->MAC_HASHTABLE_LOW = 0;
-
-		#if( ipconfigUSE_LLMNR == 1 )
+	#if( configUSE_RMII == 1 )
+	{
+		if( lpc_phy_init( pdTRUE, prvDelay ) != SUCCESS )
 		{
-			prvAddMACAddress( xLLMNR_MACAddress );
+			xReturn = pdFAIL;
 		}
-		#endif /* ipconfigUSE_LLMNR == 1 */
-
-		/* Promiscuous flag (PR) and Receive All flag (RA) set to zero.  The
-		registers MAC_HASHTABLE_[LOW|HIGH] will be loaded to allow certain
-		multi-cast addresses. */
-		LPC_ETHERNET->MAC_FRAME_FILTER = MAC_FF_HMC;
-
-		#if( configUSE_RMII == 1 )
+	}
+	#else
+	{
+		#warning This path has not been tested.
+		if( lpc_phy_init( pdFALSE, prvDelay ) != SUCCESS )
 		{
-			if( lpc_phy_init( pdTRUE, prvDelay ) != SUCCESS )
-			{
-				xReturn = pdFAIL;
-			}
+			xReturn = pdFAIL;
 		}
-		#else
+	}
+	#endif
+
+	if( xReturn == pdPASS )
+	{
+		/* Guard against the task being created more than once and the
+		descriptors being initialised more than once. */
+		if( xRxHanderTask == NULL )
 		{
-			#warning This path has not been tested.
-			if( lpc_phy_init( pdFALSE, prvDelay ) != SUCCESS )
-			{
-				xReturn = pdFAIL;
-			}
+			xReturn = xTaskCreate( prvEMACHandlerTask, "EMAC", nwRX_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xRxHanderTask );
+			configASSERT( xReturn );
 		}
-		#endif
+
+		if( xTXDescriptorSemaphore == NULL )
+		{
+			/* Create a counting semaphore, with a value of 'configNUM_TX_DESCRIPTORS'
+			and a maximum of 'configNUM_TX_DESCRIPTORS'. */
+			xTXDescriptorSemaphore = xSemaphoreCreateCounting( ( UBaseType_t ) configNUM_TX_DESCRIPTORS, ( UBaseType_t ) configNUM_TX_DESCRIPTORS );
+			configASSERT( xTXDescriptorSemaphore );
+		}
+
+		/* Enable MAC interrupts. */
+		LPC_ETHERNET->DMA_INT_EN = nwDMA_INTERRUPT_MASK;
+	}
+
+	if( xReturn != pdFAIL )
+	{
+		/* Auto-negotiate was already started.  Wait for it to complete. */
+		xReturn = prvSetLinkSpeed();
 
 		if( xReturn == pdPASS )
 		{
-			if( xTXDescriptorSemaphore == NULL )
-			{
-				/* Create a counting semaphore, with a value of 'configNUM_TX_DESCRIPTORS'
-				and a maximum of 'configNUM_TX_DESCRIPTORS'. */
-				xTXDescriptorSemaphore = xSemaphoreCreateCounting( ( UBaseType_t ) configNUM_TX_DESCRIPTORS, ( UBaseType_t ) configNUM_TX_DESCRIPTORS );
-				configASSERT( xTXDescriptorSemaphore );
-			}
+       		/* Initialise the descriptors. */
+			prvSetupTxDescriptors();
+			prvSetupRxDescriptors();
 
-			/* Enable MAC interrupts. */
-			LPC_ETHERNET->DMA_INT_EN = nwDMA_INTERRUPT_MASK;
+			/* Clear all interrupts. */
+			LPC_ETHERNET->DMA_STAT = DMA_ST_ALL;
 
-			/* Auto-negotiate was already started.  Wait for it to complete. */
-			xReturn = prvSetLinkSpeed();
+			/* Enable receive and transmit DMA processes. */
+			LPC_ETHERNET->DMA_OP_MODE |= DMA_OM_ST | DMA_OM_SR;
 
-			if( xReturn == pdPASS )
-			{
-				/* Initialise the descriptors. */
-				prvSetupTxDescriptors();
-				prvSetupRxDescriptors();
+			/* Set Receiver / Transmitter Enable. */
+			LPC_ETHERNET->MAC_CONFIG |= MAC_CFG_RE | MAC_CFG_TE;
 
-				/* Clear all interrupts. */
-				LPC_ETHERNET->DMA_STAT = DMA_ST_ALL;
+			/* Start receive polling. */
+			LPC_ETHERNET->DMA_REC_POLL_DEMAND = 1;
 
-				/* Enable receive and transmit DMA processes. */
-				LPC_ETHERNET->DMA_OP_MODE |= DMA_OM_ST | DMA_OM_SR;
-
-				/* Set Receiver / Transmitter Enable. */
-				LPC_ETHERNET->MAC_CONFIG |= MAC_CFG_RE | MAC_CFG_TE;
-
-				/* Start receive polling. */
-				LPC_ETHERNET->DMA_REC_POLL_DEMAND = 1;
-
-				/* Enable interrupts in the NVIC. */
-				NVIC_SetPriority( ETHERNET_IRQn, configMAC_INTERRUPT_PRIORITY );
-				NVIC_EnableIRQ( ETHERNET_IRQn );
-			}
-			/* Guard against the task being created more than once and the
-			descriptors being initialised more than once. */
-			if( xRxHanderTask == NULL )
-			{
-				xReturn = xTaskCreate( prvEMACHandlerTask, "EMAC", nwRX_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xRxHanderTask );
-				configASSERT( xReturn );
-			}
+			/* Enable interrupts in the NVIC. */
+			NVIC_SetPriority( ETHERNET_IRQn, configMAC_INTERRUPT_PRIORITY );
+			NVIC_EnableIRQ( ETHERNET_IRQn );
 		}
-	}
-
-	/* Once prvEMACHandlerTask() has started, the variable
-	'ulPHYLinkStatus' will be updated by that task. 
-	The IP-task will keep on calling this function untill
-	it finally returns pdPASS.
-	Only then can the DHCP-procedure start (if configured). */
-	if( ( ulPHYLinkStatus & PHY_LINK_CONNECTED ) != 0 )
-	{
-		xReturn = pdPASS;
-	}
-	else
-	{
-		xReturn = pdFAIL;
 	}
 
 	return xReturn;
@@ -461,7 +444,7 @@ const TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 50 );
 
 				/* The DMA descriptor will 'own' this Network Buffer,
 				until it has been sent.  So don't release it now. */
-				bReleaseAfterSend = pdFALSE;
+				bReleaseAfterSend = false;
 			}
 			#else
 			{
@@ -667,6 +650,8 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
+uint32_t ulDataAvailable;
+
 configPLACE_IN_SECTION_RAM
 static BaseType_t prvNetworkInterfaceInput()
 {
@@ -680,7 +665,9 @@ NetworkBufferDescriptor_t *pxDescriptor;
 #if( ipconfigZERO_COPY_RX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNewDescriptor;
 #endif /* ipconfigZERO_COPY_RX_DRIVER */
-IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
+#if( ipconfigUSE_LINKED_RX_MESSAGES == 0 )
+	IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
+#endif
 
 	/* Process each descriptor that is not still in use by the DMA. */
 	ulStatus = xDMARxDescriptors[ ulNextRxDescriptorToProcess ].STATUS;
@@ -690,6 +677,7 @@ IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
 		if( ( ulStatus & nwRX_STATUS_ERROR_BITS ) != 0 )
 		{
 			/* There is some reception error. */
+			intCount[ 3 ]++;
 			/* Clear error bits. */
 			ulStatus &= ~( ( uint32_t )nwRX_STATUS_ERROR_BITS );
 		}
@@ -775,9 +763,18 @@ IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
 						else
 						{
 							iptraceNETWORK_INTERFACE_RECEIVE();
+
+							/* The data that was available at the top of this
+							loop has been sent, so is no longer available. */
+							ulDataAvailable = pdFALSE;
 						}
 					}
 				}
+			}
+			else
+			{
+				/* The packet is discarded as uninteresting. */
+				ulDataAvailable = pdFALSE;
 			}
 			/* Got here because received data was sent to the IP task or the
 			data contained an error and was discarded.  Give the descriptor
@@ -825,6 +822,7 @@ const uint32_t ulTxInterruptMask =
 		/* Remember that an RX event has happened. */
 		ulISREvents |= EMAC_IF_RX_EVENT;
 		vTaskNotifyGiveFromISR( xRxHanderTask, &xHigherPriorityTaskWoken );
+		intCount[ 0 ]++;
 	}
 
 	/* TX group interrupt(s). */
@@ -833,6 +831,7 @@ const uint32_t ulTxInterruptMask =
 		/* Remember that a TX event has happened. */
 		ulISREvents |= EMAC_IF_TX_EVENT;
 		vTaskNotifyGiveFromISR( xRxHanderTask, &xHigherPriorityTaskWoken );
+		intCount[ 1 ]++;
 	}
 
 	/* Test for 'Abnormal interrupt summary'. */
@@ -880,11 +879,11 @@ const TickType_t xAutoNegotiateDelay = pdMS_TO_TICKS( 5000UL );
 
 			if( ( ulPhyStatus & PHY_LINK_FULLDUPLX ) != 0x00 )
 			{
-				Chip_ENET_SetDuplex( LPC_ETHERNET, pdTRUE );
+				Chip_ENET_SetDuplex( LPC_ETHERNET, true );
 			}
 			else
 			{
-				Chip_ENET_SetDuplex( LPC_ETHERNET, pdFALSE );
+				Chip_ENET_SetDuplex( LPC_ETHERNET, false );
 			}
 
 			xReturn = pdPASS;

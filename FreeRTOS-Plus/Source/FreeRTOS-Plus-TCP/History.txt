@@ -1,3 +1,7 @@
+Changes in V2.0.11
+
+	+ Updates some drivers in the portable layer.
+
 Changes between 160919 and 180821 releases:
 
 	+ Multiple security improvements and fixes in packet parsing routines, DNS

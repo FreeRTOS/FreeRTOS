@@ -4,7 +4,7 @@
  */
 
 /*
- * FreeRTOS+TCP V2.0.3
+ * FreeRTOS+TCP V2.0.11
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -26,8 +26,7 @@
  *
  * http://aws.amazon.com/freertos
  * http://www.FreeRTOS.org
- */
-
+*/
 
 /* Standard includes. */
 #include <stdint.h>
@@ -49,12 +48,20 @@
 #include "NetworkInterface.h"
 #include "phyHandling.h"
 
+#define __STM32_HAL_LEGACY   1
+
 /* ST includes. */
-#ifdef STM32F7xx
+#if defined( STM32F7xx )
 	#include "stm32f7xx_hal.h"
-#else
+#elif defined( STM32F4xx )
 	#include "stm32f4xx_hal.h"
+#elif defined( STM32F2xx )
+	#include "stm32f2xx_hal.h"
+#else
+	#error What part?
 #endif
+
+#include "stm32fxx_hal_eth.h"
 
 /* Interrupt events to process.  Currently only the Rx event is processed
 although code for other events is included to allow for possible future
@@ -69,7 +76,9 @@ expansion. */
 	  ETH_DMA_IT_FBE | ETH_DMA_IT_RWT | ETH_DMA_IT_RPS | ETH_DMA_IT_RBU | ETH_DMA_IT_R | \
 	  ETH_DMA_IT_TU | ETH_DMA_IT_RO | ETH_DMA_IT_TJT | ETH_DMA_IT_TPS | ETH_DMA_IT_T )
 
-
+#ifndef niEMAC_HANDLER_TASK_PRIORITY
+	#define niEMAC_HANDLER_TASK_PRIORITY	configMAX_PRIORITIES - 1
+#endif
 
 #define ipFRAGMENT_OFFSET_BIT_MASK		( ( uint16_t ) 0x0fff ) /* The bits in the two byte IP header field that make up the fragment offset value. */
 
@@ -124,7 +133,11 @@ and the index of the PHY in use ( between 0 and 31 ). */
 	#endif /* STM32F7xx */
 #endif /* ipconfigUSE_RMII */
 
-
+#if( ipconfigUSE_RMII != 0 )
+	#warning Using RMII, make sure if this is correct
+#else
+	#warning Using MII, make sure if this is correct
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -166,9 +179,9 @@ static void prvDMATxDescListInit( void );
  */
 static void prvDMARxDescListInit( void );
 
-/* After packets have been sent, the network
-buffers will be released. */
-static void vClearTXBuffers( void );
+	/* After packets have been sent, the network
+	buffers will be released. */
+	static void vClearTXBuffers( void );
 
 /*-----------------------------------------------------------*/
 
@@ -186,10 +199,10 @@ static EthernetPhy_t xPhyObject;
 /* Ethernet handle. */
 static ETH_HandleTypeDef xETH;
 
-/* xTXDescriptorSemaphore is a counting semaphore with
-a maximum count of ETH_TXBUFNB, which is the number of
-DMA TX descriptors. */
-static SemaphoreHandle_t xTXDescriptorSemaphore = NULL;
+	/* xTXDescriptorSemaphore is a counting semaphore with
+	a maximum count of ETH_TXBUFNB, which is the number of
+	DMA TX descriptors. */
+	static SemaphoreHandle_t xTXDescriptorSemaphore = NULL;
 
 /*
  * Note: it is adviced to define both
@@ -234,9 +247,6 @@ __attribute__ ((section(".first_data")))
 	that must be cleared by vClearTXBuffers(). */
 	static __IO ETH_DMADescTypeDef  *DMATxDescToClear;
 #endif
-
-/* ucMACAddress as it appears in main.c */
-extern const uint8_t ucMACAddress[ 6 ];
 
 /* Holds the handle of the task used as a deferred interrupt processor.  The
 handle is used so direct notifications can be sent to the task for all EMAC/DMA
@@ -289,43 +299,43 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void HAL_ETH_TxCpltCallback( ETH_HandleTypeDef *heth )
-{
-BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-	/* This call-back is only useful in case packets are being sent
-	zero-copy.  Once they're sent, the buffers will be released
-	by the function vClearTXBuffers(). */
-	ulISREvents |= EMAC_IF_TX_EVENT;
-	/* Wakeup the prvEMACHandlerTask. */
-	if( xEMACTaskHandle != NULL )
+	void HAL_ETH_TxCpltCallback( ETH_HandleTypeDef *heth )
 	{
-		vTaskNotifyGiveFromISR( xEMACTaskHandle, &xHigherPriorityTaskWoken );
-		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
-	}
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-}
+		/* This call-back is only useful in case packets are being sent
+		zero-copy.  Once they're sent, the buffers will be released
+		by the function vClearTXBuffers(). */
+		ulISREvents |= EMAC_IF_TX_EVENT;
+		/* Wakeup the prvEMACHandlerTask. */
+		if( xEMACTaskHandle != NULL )
+		{
+			vTaskNotifyGiveFromISR( xEMACTaskHandle, &xHigherPriorityTaskWoken );
+			portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+		}
+
+	}
 /*-----------------------------------------------------------*/
 
-static void vClearTXBuffers()
-{
-__IO ETH_DMADescTypeDef  *txLastDescriptor = xETH.TxDesc;
+	static void vClearTXBuffers()
+	{
+	__IO ETH_DMADescTypeDef  *txLastDescriptor = xETH.TxDesc;
 size_t uxCount = ( ( UBaseType_t ) ETH_TXBUFNB ) - uxSemaphoreGetCount( xTXDescriptorSemaphore );
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNetworkBuffer;
 	uint8_t *ucPayLoad;
 #endif
 
-	/* This function is called after a TX-completion interrupt.
-	It will release each Network Buffer used in xNetworkInterfaceOutput().
-	'uxCount' represents the number of descriptors given to DMA for transmission.
-	After sending a packet, the DMA will clear the 'ETH_DMATXDESC_OWN' bit. */
-	while( ( uxCount > 0 ) && ( ( DMATxDescToClear->Status & ETH_DMATXDESC_OWN ) == 0 ) )
-	{
-		if( ( DMATxDescToClear == txLastDescriptor ) && ( uxCount != ETH_TXBUFNB ) )
+		/* This function is called after a TX-completion interrupt.
+		It will release each Network Buffer used in xNetworkInterfaceOutput().
+		'uxCount' represents the number of descriptors given to DMA for transmission.
+		After sending a packet, the DMA will clear the 'ETH_DMATXDESC_OWN' bit. */
+		while( ( uxCount > 0 ) && ( ( DMATxDescToClear->Status & ETH_DMATXDESC_OWN ) == 0 ) )
 		{
-			break;
-		}
+			if( ( DMATxDescToClear == txLastDescriptor ) && ( uxCount != ETH_TXBUFNB ) )
+			{
+				break;
+			}
 		#if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 		{
 			ucPayLoad = ( uint8_t * )DMATxDescToClear->Buffer1Addr;
@@ -342,13 +352,13 @@ size_t uxCount = ( ( UBaseType_t ) ETH_TXBUFNB ) - uxSemaphoreGetCount( xTXDescr
 		}
 		#endif /* ipconfigZERO_COPY_TX_DRIVER */
 
-		DMATxDescToClear = ( ETH_DMADescTypeDef * )( DMATxDescToClear->Buffer2NextDescAddr );
+			DMATxDescToClear = ( ETH_DMADescTypeDef * )( DMATxDescToClear->Buffer2NextDescAddr );
 
-		uxCount--;
-		/* Tell the counting semaphore that one more TX descriptor is available. */
-		xSemaphoreGive( xTXDescriptorSemaphore );
+			uxCount--;
+			/* Tell the counting semaphore that one more TX descriptor is available. */
+			xSemaphoreGive( xTXDescriptorSemaphore );
+		}
 	}
-}
 /*-----------------------------------------------------------*/
 
 BaseType_t xNetworkInterfaceInitialise( void )
@@ -358,11 +368,11 @@ BaseType_t xResult;
 
 	if( xEMACTaskHandle == NULL )
 	{
-		if( xTXDescriptorSemaphore == NULL )
-		{
-			xTXDescriptorSemaphore = xSemaphoreCreateCounting( ( UBaseType_t ) ETH_TXBUFNB, ( UBaseType_t ) ETH_TXBUFNB );
-			configASSERT( xTXDescriptorSemaphore );
-		}
+			if( xTXDescriptorSemaphore == NULL )
+			{
+				xTXDescriptorSemaphore = xSemaphoreCreateCounting( ( UBaseType_t ) ETH_TXBUFNB, ( UBaseType_t ) ETH_TXBUFNB );
+				configASSERT( xTXDescriptorSemaphore );
+			}
 
 		/* Initialise ETH */
 
@@ -373,7 +383,7 @@ BaseType_t xResult;
 		/* Value of PhyAddress doesn't matter, will be probed for. */
 		xETH.Init.PhyAddress = 0;
 
-		xETH.Init.MACAddr = ( uint8_t *) ucMACAddress;
+		xETH.Init.MACAddr = ( uint8_t *)FreeRTOS_GetMACAddress();
 		xETH.Init.RxMode = ETH_RXINTERRUPT_MODE;
 
 		/* using the ETH_CHECKSUM_BY_HARDWARE option:
@@ -387,7 +397,7 @@ BaseType_t xResult;
 		}
 		#else
 		{
-			xETH.Init.MediaInterface = ETH_MEDIA_INTERFACE_MII;
+		xETH.Init.MediaInterface = ETH_MEDIA_INTERFACE_MII;
 		}
 		#endif /* ipconfigUSE_RMII */
 
@@ -404,8 +414,8 @@ BaseType_t xResult;
 		memset( &DMATxDscrTab, '\0', sizeof( DMATxDscrTab ) );
 		memset( &DMARxDscrTab, '\0', sizeof( DMARxDscrTab ) );
 
-		/* Initialize Tx Descriptors list: Chain Mode */
-		DMATxDescToClear = DMATxDscrTab;
+			/* Initialize Tx Descriptors list: Chain Mode */
+			DMATxDescToClear = DMATxDscrTab;
 
 		/* Initialise TX-descriptors. */
 		prvDMATxDescListInit();
@@ -427,7 +437,7 @@ BaseType_t xResult;
 		possible priority to ensure the interrupt handler can return directly
 		to it.  The task's handle is stored in xEMACTaskHandle so interrupts can
 		notify the task when there is something to process. */
-		xTaskCreate( prvEMACHandlerTask, "EMAC", configEMAC_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xEMACTaskHandle );
+		xTaskCreate( prvEMACHandlerTask, "EMAC", configEMAC_TASK_STACK_SIZE, NULL, niEMAC_HANDLER_TASK_PRIORITY, &xEMACTaskHandle );
 	} /* if( xEMACTaskHandle == NULL ) */
 
 	if( xPhyObject.ulLinkStatusMask != 0 )
@@ -580,30 +590,37 @@ __IO ETH_DMADescTypeDef *pxDmaTxDesc;
 /* Do not wait too long for a free TX DMA buffer. */
 const TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 50u );
 
-	#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM != 0 )
-	{
-	ProtocolPacket_t *pxPacket;
-
-		#if( ipconfigZERO_COPY_RX_DRIVER != 0 )
-		{
-			configASSERT( bReleaseAfterSend != 0 );
-		}
-		#endif /* ipconfigZERO_COPY_RX_DRIVER */
-
-		/* If the peripheral must calculate the checksum, it wants
-		the protocol checksum to have a value of zero. */
-		pxPacket = ( ProtocolPacket_t * ) ( pxDescriptor->pucEthernetBuffer );
-
-		if( pxPacket->xICMPPacket.xIPHeader.ucProtocol == ipPROTOCOL_ICMP )
-		{
-			pxPacket->xICMPPacket.xICMPHeader.usChecksum = ( uint16_t )0u;
-		}
-	}
-	#endif
-
 	/* Open a do {} while ( 0 ) loop to be able to call break. */
 	do
 	{
+		if( xCheckLoopback( pxDescriptor, bReleaseAfterSend ) != 0 )
+		{
+			/* The packet has been sent back to the IP-task.
+			The IP-task will further handle it.
+			Do not release the descriptor. */
+			bReleaseAfterSend = pdFALSE;
+			break;
+		}
+		#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM != 0 )
+		{
+		ProtocolPacket_t *pxPacket;
+
+			#if( ipconfigZERO_COPY_RX_DRIVER != 0 )
+			{
+				configASSERT( bReleaseAfterSend != 0 );
+			}
+			#endif /* ipconfigZERO_COPY_RX_DRIVER */
+
+			/* If the peripheral must calculate the checksum, it wants
+			the protocol checksum to have a value of zero. */
+			pxPacket = ( ProtocolPacket_t * ) ( pxDescriptor->pucEthernetBuffer );
+
+			if( pxPacket->xICMPPacket.xIPHeader.ucProtocol == ipPROTOCOL_ICMP )
+			{
+				pxPacket->xICMPPacket.xICMPHeader.usChecksum = ( uint16_t )0u;
+			}
+		}
+		#endif /* ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM */
 		if( xPhyObject.ulLinkStatusMask != 0 )
 		{
 			if( xSemaphoreTake( xTXDescriptorSemaphore, xBlockTimeTicks ) != pdPASS )
@@ -653,6 +670,15 @@ const TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 50u );
 				pxDmaTxDesc->Status |= ETH_DMATXDESC_FS | ETH_DMATXDESC_LS;
 				/* Set frame size */
 				pxDmaTxDesc->ControlBufferSize = ( ulTransmitSize & ETH_DMATXDESC_TBS1 );
+
+				#if( NETWORK_BUFFERS_CACHED	!= 0 )
+				{
+				BaseType_t xlength = CACHE_LINE_SIZE * ( ( ulTransmitSize + NETWORK_BUFFER_HEADER_SIZE + CACHE_LINE_SIZE - 1 ) / CACHE_LINE_SIZE );
+				uint32_t *pulBuffer = ( uint32_t )( pxDescriptor->pucEthernetBuffer - NETWORK_BUFFER_HEADER_SIZE );
+					cache_clean_invalidate_by_addr( pulBuffer, xlength );
+				}
+				#endif
+
 				/* Set Own bit of the Tx descriptor Status: gives the buffer back to ETHERNET DMA */
 				pxDmaTxDesc->Status |= ETH_DMATXDESC_OWN;
 
@@ -787,11 +813,16 @@ uint8_t *pucBuffer;
 	}
 
 	/* Obtain the size of the packet and put it into the "usReceivedLength" variable. */
-	/* In order to make the code easier and faster, only packets in a single buffer
-	will be accepted.  This can be done by making the buffers large enough to
-	hold a complete Ethernet packet (1536 bytes). */
-	if( xReceivedLength > 0ul && xReceivedLength < ETH_RX_BUF_SIZE ) 
+
+	/* get received frame */
+	if( xReceivedLength > 0ul )
 	{
+        /* In order to make the code easier and faster, only packets in a single buffer
+        will be accepted.  This can be done by making the buffers large enough to
+		hold a complete Ethernet packet (1536 bytes).
+		Therefore, two sanity checks: */
+		configASSERT( xReceivedLength <= ETH_RX_BUF_SIZE );
+
 		if( ( pxDMARxDescriptor->Status & ( ETH_DMARXDESC_CE | ETH_DMARXDESC_IPV4HCE | ETH_DMARXDESC_FT ) ) != ETH_DMARXDESC_FT )
 		{
 			/* Not an Ethernet frame-type or a checmsum error. */
@@ -893,7 +924,7 @@ uint8_t *pucBuffer;
 
 
 BaseType_t xSTM32_PhyRead( BaseType_t xAddress, BaseType_t xRegister, uint32_t *pulValue )
-{
+		{
 uint16_t usPrevAddress = xETH.Init.PhyAddress;
 BaseType_t xResult;
 HAL_StatusTypeDef xHALResult;
@@ -911,11 +942,11 @@ HAL_StatusTypeDef xHALResult;
 		xResult = -1;
 	}
 	return xResult;
-}
+	}
 /*-----------------------------------------------------------*/
 
 BaseType_t xSTM32_PhyWrite( BaseType_t xAddress, BaseType_t xRegister, uint32_t ulValue )
-{
+	{
 uint16_t usPrevAddress = xETH.Init.PhyAddress;
 BaseType_t xResult;
 HAL_StatusTypeDef xHALResult;
@@ -925,35 +956,16 @@ HAL_StatusTypeDef xHALResult;
 	xETH.Init.PhyAddress = usPrevAddress;
 
 	if( xHALResult == HAL_OK )
-	{
+		{
 		xResult = 0;
-	}
-	else
-	{
+		}
+		else
+		{
 		xResult = -1;
-	}
+		}
 	return xResult;
-}
-/*-----------------------------------------------------------*/
-
-void phy_test()
-{
-BaseType_t xPhyCount;
-BaseType_t xPhyIndex;
-
-	vPhyInitialise( &xPhyObject, xSTM32_PhyRead, xSTM32_PhyWrite );
-	xPhyCount = xPhyDiscover( &xPhyObject );
-	FreeRTOS_printf( ( "PHY count %ld\n", xPhyCount ) );
-	for( xPhyIndex = 0; xPhyIndex < xPhyCount; xPhyIndex++ )
-	{
-		FreeRTOS_printf( ( "PHY[%d] at address %d ( 0x%08X )\n",
-			xPhyIndex,
-			xPhyObject.ucPhyIndexes[ xPhyIndex ],
-			xPhyObject.ulPhyIDs[ xPhyIndex ] ) );
-
 	}
-	
-}
+/*-----------------------------------------------------------*/
 
 void vMACBProbePhy( void )
 {
@@ -976,27 +988,27 @@ static void prvEthernetUpdateConfig( BaseType_t xForce )
 		{
 			xPhyStartAutoNegotiation( &xPhyObject, xPhyGetMask( &xPhyObject ) );
 
-			/* Configure the MAC with the Duplex Mode fixed by the
-			auto-negotiation process. */
+				/* Configure the MAC with the Duplex Mode fixed by the
+				auto-negotiation process. */
 			if( xPhyObject.xPhyProperties.ucDuplex == PHY_DUPLEX_FULL )
-			{
-				xETH.Init.DuplexMode = ETH_MODE_FULLDUPLEX;
-			}
-			else
-			{
-				xETH.Init.DuplexMode = ETH_MODE_HALFDUPLEX;
-			}
+				{
+					xETH.Init.DuplexMode = ETH_MODE_FULLDUPLEX;
+				}
+				else
+				{
+					xETH.Init.DuplexMode = ETH_MODE_HALFDUPLEX;
+				}
 
-			/* Configure the MAC with the speed fixed by the
-			auto-negotiation process. */
+				/* Configure the MAC with the speed fixed by the
+				auto-negotiation process. */
 			if( xPhyObject.xPhyProperties.ucSpeed == PHY_SPEED_10 )
-			{
-				xETH.Init.Speed = ETH_SPEED_10M;
-			}
-			else
-			{
-				xETH.Init.Speed = ETH_SPEED_100M;
-			}
+				{
+					xETH.Init.Speed = ETH_SPEED_10M;
+				}
+				else
+				{
+					xETH.Init.Speed = ETH_SPEED_100M;
+				}
 		}
 		else /* AutoNegotiation Disable */
 		{
@@ -1061,14 +1073,11 @@ BaseType_t xReturn;
 
 /* Uncomment this in case BufferAllocation_1.c is used. */
 
-/*
 #define niBUFFER_1_PACKET_SIZE		1536
-
-static __attribute__ ((section(".first_data"))) uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * niBUFFER_1_PACKET_SIZE ] __attribute__ ( ( aligned( 32 ) ) );
 
 void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ] )
 {
-
+static __attribute__ ((section(".first_data"))) uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * niBUFFER_1_PACKET_SIZE ] __attribute__ ( ( aligned( 32 ) ) );
 uint8_t *ucRAMBuffer = ucNetworkPackets;
 uint32_t ul;
 
@@ -1079,7 +1088,6 @@ uint32_t ul;
 		ucRAMBuffer += niBUFFER_1_PACKET_SIZE;
 	}
 }
-*/
 /*-----------------------------------------------------------*/
 
 static void prvEMACHandlerTask( void *pvParameters )
@@ -1157,9 +1165,9 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
 		{
 			/* Code to release TX buffers if zero-copy is used. */
 			ulISREvents &= ~EMAC_IF_TX_EVENT;
-			/* Check if DMA packets have been delivered. */
-			vClearTXBuffers();
-		}
+				/* Check if DMA packets have been delivered. */
+				vClearTXBuffers();
+			}
 
 		if( ( ulISREvents & EMAC_IF_ERR_EVENT ) != 0 )
 		{
@@ -1167,10 +1175,10 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
 			ulISREvents &= ~EMAC_IF_ERR_EVENT;
 		}
 		if( xPhyCheckLinkStatus( &xPhyObject, xResult ) != 0 )
-		{
+			{
 			/* Something has changed to a Link Status, need re-check. */
-			prvEthernetUpdateConfig( pdFALSE );
-		}
+				prvEthernetUpdateConfig( pdFALSE );
+			}
 	}
 }
 /*-----------------------------------------------------------*/

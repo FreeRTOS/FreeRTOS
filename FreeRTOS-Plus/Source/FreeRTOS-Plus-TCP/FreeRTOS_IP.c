@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.7
+ * FreeRTOS+TCP V2.0.11
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -1287,6 +1287,11 @@ static void prvProcessNetworkDownEvent( void )
 		xCallEventHook = pdTRUE;
 	}
 	#endif
+
+	/* Per the ARP Cache Validation section of https://tools.ietf.org/html/rfc1122, 
+	treat network down as a "delivery problem" and flush the ARP cache for this
+	interface. */
+	FreeRTOS_ClearARP( );
 
 	/* The network has been disconnected (or is being initialised for the first
 	time).  Perform whatever hardware processing is necessary to bring it up

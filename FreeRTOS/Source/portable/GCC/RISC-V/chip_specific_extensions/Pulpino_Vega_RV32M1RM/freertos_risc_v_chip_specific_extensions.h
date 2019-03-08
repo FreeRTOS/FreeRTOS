@@ -75,7 +75,7 @@
 /* Save additional registers found on the Pulpino. */
 .macro portasmSAVE_ADDITIONAL_REGISTERS
 	addi sp, sp, -(portasmADDITIONAL_CONTEXT_SIZE * portWORD_SIZE) /* Make room for the additional registers. */
-	csrr t0, lpstart0							 /* Load additional registers into accessable temporary registers. */
+	csrr t0, lpstart0							 /* Load additional registers into accessible temporary registers. */
 	csrr t1, lpend0
 	csrr t2, lpcount0
 	csrr t3, lpstart1
@@ -91,7 +91,7 @@
 
 /* Restore the additional registers found on the Pulpino. */
 .macro portasmRESTORE_ADDITIONAL_REGISTERS
-	lw t0, 1 * portWORD_SIZE( sp )			/* Load additional registers into accessable temporary registers. */
+	lw t0, 1 * portWORD_SIZE( sp )			/* Load additional registers into accessible temporary registers. */
 	lw t1, 2 * portWORD_SIZE( sp )
 	lw t2, 3 * portWORD_SIZE( sp )
 	lw t3, 4 * portWORD_SIZE( sp )

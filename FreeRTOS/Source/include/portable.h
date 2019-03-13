@@ -84,6 +84,10 @@ must be set in the compiler's include path. */
 	#define portNUM_CONFIGURABLE_REGIONS 1
 #endif
 
+#ifndef portHAS_STACK_OVERFLOW_CHECKING
+	#define portHAS_STACK_OVERFLOW_CHECKING 0
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

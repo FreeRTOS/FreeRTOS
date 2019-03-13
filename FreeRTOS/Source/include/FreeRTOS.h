@@ -766,10 +766,6 @@ extern "C" {
 	#define portALLOCATE_SECURE_CONTEXT( ulSecureStackSize )
 #endif
 
-#ifndef portHAS_STACK_OVERFLOW_CHECKING
-	#define portHAS_STACK_OVERFLOW_CHECKING 0
-#endif
-
 #ifndef configUSE_TIME_SLICING
 	#define configUSE_TIME_SLICING 1
 #endif

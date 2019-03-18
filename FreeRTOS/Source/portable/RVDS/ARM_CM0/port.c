@@ -157,7 +157,7 @@ __asm void prvPortStartFirstTask( void )
  */
 BaseType_t xPortStartScheduler( void )
 {
-	/* Make PendSV, CallSV and SysTick the same priroity as the kernel. */
+	/* Make PendSV, CallSV and SysTick the same priority as the kernel. */
 	*(portNVIC_SYSPRI2) |= portNVIC_PENDSV_PRI;
 	*(portNVIC_SYSPRI2) |= portNVIC_SYSTICK_PRI;
 

@@ -88,6 +88,10 @@ must be set in the compiler's include path. */
 	#define portHAS_STACK_OVERFLOW_CHECKING 0
 #endif
 
+#ifndef portARCH_NAME
+	#define portARCH_NAME NULL
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

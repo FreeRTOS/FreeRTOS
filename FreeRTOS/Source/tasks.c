@@ -2104,6 +2104,7 @@ void vTaskSuspendAll( void )
 	post in the FreeRTOS support forum before reporting this as a bug! -
 	http://goo.gl/wu4acr */
 	++uxSchedulerSuspended;
+	portMEMORY_BARRIER();
 }
 /*----------------------------------------------------------*/
 

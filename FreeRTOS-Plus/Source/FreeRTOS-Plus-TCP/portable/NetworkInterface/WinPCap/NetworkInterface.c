@@ -389,6 +389,8 @@ uint32_t ulNetMask;
 		{
 			printf( "\nAn error occurred setting the packet filter.\n" );
 		}
+
+		pcap_freecode( &xFilterCode );
 	}
 
 	/* Create the buffers used to pass packets between the FreeRTOS simulator

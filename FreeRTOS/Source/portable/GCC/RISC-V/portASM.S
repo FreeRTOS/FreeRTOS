@@ -25,19 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-#if __riscv_xlen == 64
-	#error Not implemented yet - change lw to ld, and sw to sd.
-	#define portWORD_SIZE 8
-	#define store_x sd
-	#define load_x ld
-#elif __riscv_xlen == 32
-	#define portWORD_SIZE 4
-	#define store_x sw
-	#define load_x lw
-#else
-	#error Assembler did not define __riscv_xlen
-#endif
-
 /*
  * The FreeRTOS kernel's RISC-V port is split between the the code that is
  * common across all currently supported RISC-V chips (implementations of the
@@ -68,6 +55,18 @@
  * registers.
  *
  */
+#if __riscv_xlen == 64
+    #define portWORD_SIZE 8
+    #define store_x sd
+    #define load_x ld
+#elif __riscv_xlen == 32
+    #define store_x sw
+    #define load_x lw
+    #define portWORD_SIZE 4
+#else
+    #error Assembler did not define __riscv_xlen
+#endif
+
 #include "freertos_risc_v_chip_specific_extensions.h"
 
 /* Check the freertos_risc_v_chip_specific_extensions.h and/or command line

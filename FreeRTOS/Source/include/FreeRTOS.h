@@ -241,6 +241,10 @@ extern "C" {
 	#define configASSERT_DEFINED 1
 #endif
 
+#ifndef portMEMORY_BARRIER
+	#define portMEMORY_BARRIER()
+#endif
+
 /* The timers module relies on xTaskGetSchedulerState(). */
 #if configUSE_TIMERS == 1
 

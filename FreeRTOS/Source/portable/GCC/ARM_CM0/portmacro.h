@@ -107,6 +107,8 @@ extern void vClearInterruptMaskFromISR( uint32_t ulMask )  __attribute__((naked)
 
 #define portNOP()
 
+#define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
+
 #ifdef __cplusplus
 }
 #endif

@@ -144,6 +144,8 @@ not necessary for to use this port.  They are defined so the common demo files
 	#define portFORCE_INLINE inline __attribute__(( always_inline))
 #endif
 
+#define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
+
 #ifdef __cplusplus
 }
 #endif

@@ -164,6 +164,8 @@ void vPortTaskUsesFPU( void );
 #define portNOP() __asm volatile( "NOP" )
 #define portINLINE __inline
 
+#define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
+
 #ifdef __cplusplus
 	} /* extern C */
 #endif

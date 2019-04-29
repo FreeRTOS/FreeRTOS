@@ -56,15 +56,15 @@
  *
  */
 #if __riscv_xlen == 64
-    #define portWORD_SIZE 8
-    #define store_x sd
-    #define load_x ld
+	#define portWORD_SIZE 8
+	#define store_x sd
+	#define load_x ld
 #elif __riscv_xlen == 32
-    #define store_x sw
-    #define load_x lw
-    #define portWORD_SIZE 4
+	#define store_x sw
+	#define load_x lw
+	#define portWORD_SIZE 4
 #else
-    #error Assembler did not define __riscv_xlen
+	#error Assembler did not define __riscv_xlen
 #endif
 
 #include "freertos_risc_v_chip_specific_extensions.h"
@@ -95,7 +95,7 @@ at the top of this file. */
 .extern Timer_IRQHandler
 .extern pullMachineTimerCompareRegister
 .extern pullNextTime
-.extern ulTimerIncrementsForOneTick
+.extern uxTimerIncrementsForOneTick /* size_t type so 32-bit on 32-bit core and 64-bits on 64-bit core. */
 .extern xISRStackTop
 
 /*-----------------------------------------------------------*/
@@ -145,7 +145,7 @@ freertos_risc_v_trap_handler:
 	csrr a1, mepc
 
 test_if_asynchronous:
-	srli a2, a0, 0x1f					/* MSB of mcause is 1 if handing an asynchronous interrupt - shift to LSB to clear other bits. */
+	srli a2, a0, __riscv_xlen - 1		/* MSB of mcause is 1 if handing an asynchronous interrupt - shift to LSB to clear other bits. */
 	beq a2, x0, handle_synchronous		/* Branch past interrupt handing if not asynchronous. */
 	store_x a1, 0( sp )					/* Asynch so save unmodified exception return address. */
 
@@ -157,24 +157,39 @@ handle_asynchronous:
 
 		addi t0, x0, 1
 
-		#if( __riscv_xlen == 32 )
-			slli t0, t0, 31				/* LSB is already set, shift into MSB. */
-			addi t1, t0, 7				/* 0x80000007 == machine timer interrupt. */
-			bne a0, t1, test_if_external_interrupt
+		slli t0, t0, __riscv_xlen - 1   /* LSB is already set, shift into MSB.  Shift 31 on 32-bit or 63 on 64-bit cores. */
+		addi t1, t0, 7					/* 0x8000[]0007 == machine timer interrupt. */
+		bne a0, t1, test_if_external_interrupt
 
-			lw t0, pullMachineTimerCompareRegister	/* Load address of compare register into t0. */
-			lw t1, pullNextTime			/* Load the address of ullNextTime into t1. */
+		load_x t0, pullMachineTimerCompareRegister  /* Load address of compare register into t0. */
+		load_x t1, pullNextTime  		/* Load the address of ullNextTime into t1. */
+
+		#if( __riscv_xlen == 32 )
+
+			/* Update the 64-bit mtimer compare match value in two 32-bit writes. */
 			lw t2, 0(t1)				/* Load the low word of ullNextTime into t2. */
 			lw t3, 4(t1)				/* Load the high word of ullNextTime into t3. */
 			sw t2, 0(t0)				/* Store low word of ullNextTime into compare register. */
 			sw t3, 4(t0)				/* Store high word of ullNextTime into compare register. */
-			lw t0, ulTimerIncrementsForOneTick	/* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
-			add t4, t0, t2				/* Add the low word of ullNextTime to the timer increments for one tick (assumes timer increment for one tick fits in 32-bits. */
+			lw t0, uxTimerIncrementsForOneTick	/* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
+			add t4, t0, t2				/* Add the low word of ullNextTime to the timer increments for one tick (assumes timer increment for one tick fits in 32-bits). */
 			sltu t5, t4, t2				/* See if the sum of low words overflowed (what about the zero case?). */
 			add t6, t3, t5				/* Add overflow to high word of ullNextTime. */
 			sw t4, 0(t1)				/* Store new low word of ullNextTime. */
 			sw t6, 4(t1)				/* Store new high word of ullNextTime. */
+
 		#endif /* __riscv_xlen == 32 */
+
+		#if( __riscv_xlen == 64 )
+
+			/* Update the 64-bit mtimer compare match value. */
+			ld t2, 0(t1)			 	/* Load ullNextTime into t2. */
+			sd t2, 0(t0)				/* Store ullNextTime into compare register. */
+			ld t0, uxTimerIncrementsForOneTick  /* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
+			add t4, t0, t2				/* Add ullNextTime to the timer increments for one tick. */
+			sd t4, 0(t1)				/* Store ullNextTime. */
+
+		#endif /* __riscv_xlen == 64 */
 
 		load_x sp, xISRStackTop			/* Switch to ISR stack before function call. */
 		jal xTaskIncrementTick
@@ -212,8 +227,8 @@ as_yet_unhandled:
 	j as_yet_unhandled
 
 processed_source:
-	load_x  sp, pxCurrentTCB			/* Load pxCurrentTCB. */
-	load_x  sp, 0( sp )				 	/* Read sp from first TCB member. */
+	load_x  t1, pxCurrentTCB			/* Load pxCurrentTCB. */
+	load_x  sp, 0( t1 )				 	/* Read sp from first TCB member. */
 
 	/* Load mret with the address of the next instruction in the task to run next. */
 	load_x t0, 0( sp )

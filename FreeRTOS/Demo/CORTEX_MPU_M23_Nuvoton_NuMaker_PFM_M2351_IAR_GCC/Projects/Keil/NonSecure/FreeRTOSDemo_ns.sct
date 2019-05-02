@@ -1,0 +1,59 @@
+
+; Privileged Code:
+;   Start   : 0x10040000
+;   End     : 0x10047000 - 1
+;   Size    : 28 Kbytes
+;
+; Privileged Data:
+;   Start   : 0x30008000
+;   End     : 0x30009000 - 1
+;   Size    : 4 Kbytes
+LR_IROM_NS_PRIVILEGED 0x10040000 0x00007000 ; load region size_region
+{
+    ER_IROM_NS_PRIVILEGED +0 ; load address = execution address
+    {
+        *.o(RESET, +First)
+        *(InRoot$$Sections) ; All sections that must be in a root region
+        *(privileged_functions)
+    }
+
+    ER_IRAM_NS_PRIVILEGED 0x30008000 0x00001000
+    {
+        *(privileged_data)
+    }
+}
+
+; System Calls:
+;   Start   : 0x10047000
+;   End     : 0x10048000 - 1
+;   Size    : 4 Kbytes
+LR_IROM_NS_SYSTEM_CALLS 0x10047000 0x00001000 ; load region size_region
+{
+    ER_IROM_NS_SYSTEM_CALLS +0 ; load address = execution address
+    {
+         *(freertos_system_calls)
+    }
+}
+
+; Unprivileged Code:
+;   Start   : 0x10048000
+;   End     : 0x10080000 - 1
+;   Size    : 224 Kbytes
+;
+; Unprivileged Data:
+;   Start   : 0x30009000
+;   End     : 0x30018000 - 1
+;   Size    : 60 Kbytes
+LR_IROM_NS_UNPRIVILEGED 0x10048000 0x00038000 ; load region size_region
+{
+    ER_IROM_NS_UNPRIVILEGED +0 ; load address = execution address
+    {
+         *(+RO)
+    }
+
+    ER_IRAM_NS_UNPRIVILEGED 0x30009000 0x0000F000
+    {
+        *(+RW, +ZI)
+    }
+}
+

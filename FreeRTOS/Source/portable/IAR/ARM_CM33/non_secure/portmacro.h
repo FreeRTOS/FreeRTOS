@@ -135,17 +135,13 @@ extern void vClearInterruptMaskFromISR( uint32_t ulMask ) /* __attribute__(( nak
 /* MPU regions. */
 #define portPRIVILEGED_FLASH_REGION							( 0UL )
 #define portUNPRIVILEGED_FLASH_REGION						( 1UL )
-#define portPRIVILEGED_RAM_REGION							( 2UL )
-#define portUNPRIVILEGED_DEVICE_REGION						( 3UL )
+#define portUNPRIVILEGED_SYSCALLS_REGION					( 2UL )
+#define portPRIVILEGED_RAM_REGION							( 3UL )
 #define portSTACK_REGION									( 4UL )
 #define portFIRST_CONFIGURABLE_REGION						( 5UL )
 #define portLAST_CONFIGURABLE_REGION						( 7UL )
 #define portNUM_CONFIGURABLE_REGIONS						( ( portLAST_CONFIGURABLE_REGION - portFIRST_CONFIGURABLE_REGION ) + 1 )
 #define portTOTAL_NUM_REGIONS								( portNUM_CONFIGURABLE_REGIONS + 1 ) /* Plus one to make space for the stack region. */
-
-/* Devices Region. */
-#define portDEVICE_REGION_START_ADDRESS						( 0x50000000 )
-#define portDEVICE_REGION_END_ADDRESS						( 0x5FFFFFFF )
 
 /* Device memory attributes used in MPU_MAIR registers.
  *
@@ -287,6 +283,12 @@ typedef struct MPU_SETTINGS
 	#define portRAISE_PRIVILEGE()
 	#define portRESET_PRIVILEGE()
 #endif /* configENABLE_MPU */
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Barriers.
+ */
+#define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
 /*-----------------------------------------------------------*/
 
 #ifdef __cplusplus

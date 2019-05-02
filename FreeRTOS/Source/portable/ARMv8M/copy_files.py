@@ -32,8 +32,13 @@ _THIS_FILE_DIRECTORY_ = os.path.dirname(os.path.realpath(__file__))
 _FREERTOS_PORTABLE_DIRECTORY_ = os.path.dirname(_THIS_FILE_DIRECTORY_)
 
 _COMPILERS_ = ['GCC', 'IAR']
-_ARCH_NS_ = ['ARM_CM33', 'ARM_CM33_NTZ']
-_ARCH_S_ = ['ARM_CM33']
+_ARCH_NS_ = ['ARM_CM33', 'ARM_CM33_NTZ', 'ARM_CM23', 'ARM_CM23_NTZ']
+_ARCH_S_ = ['ARM_CM33', 'ARM_CM23']
+
+_SUPPORTED_CONFIGS_ =   {
+                            'GCC' : ['ARM_CM33', 'ARM_CM33_NTZ', 'ARM_CM23', 'ARM_CM23_NTZ'],
+                            'IAR' : ['ARM_CM33', 'ARM_CM33_NTZ', 'ARM_CM23', 'ARM_CM23_NTZ']
+                        }
 
 # Files to be complied in the Secure Project
 _SECURE_FILE_PATHS_ = [
@@ -49,6 +54,11 @@ _NONSECURE_FILE_PATHS_ = [
     'non_secure',
     os.path.join('non_secure', 'portable', '_COMPILER_ARCH_')
 ]
+
+
+def is_supported_config(compiler, arch):
+    return arch in _SUPPORTED_CONFIGS_[compiler]
+
 
 def copy_files_in_dir(src_abs_path, dst_abs_path):
     for src_file in os.listdir(src_abs_path):
@@ -75,12 +85,14 @@ def copy_files():
     # Copy Secure Files
     for compiler in _COMPILERS_:
         for arch in _ARCH_S_:
-            copy_files_for_compiler_and_arch(compiler, arch, _SECURE_FILE_PATHS_, 'secure')
+            if is_supported_config(compiler, arch):
+                copy_files_for_compiler_and_arch(compiler, arch, _SECURE_FILE_PATHS_, 'secure')
 
     # Copy Non-Secure Files
     for compiler in _COMPILERS_:
         for arch in _ARCH_NS_:
-            copy_files_for_compiler_and_arch(compiler, arch, _NONSECURE_FILE_PATHS_, 'non_secure')
+            if is_supported_config(compiler, arch):
+                copy_files_for_compiler_and_arch(compiler, arch, _NONSECURE_FILE_PATHS_, 'non_secure')
 
 
 def main():

@@ -28,8 +28,16 @@
 /* Standard includes. */
 #include <stdint.h>
 
+/* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE ensures that PRIVILEGED_FUNCTION
+ * is defined correctly and privileged functions are placed in correct sections. */
+#define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+
 /* Portasm includes. */
 #include "portasm.h"
+
+/* MPU_WRAPPERS_INCLUDED_FROM_API_FILE is needed to be defined only for the
+ * header files. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 {
@@ -42,6 +50,12 @@ void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_
 	"	ldr  r0, [r1]									\n" /* Read top of stack from TCB - The first item in pxCurrentTCB is the task top of stack. */
 	"													\n"
 	#if( configENABLE_MPU == 1 )
+	"	dmb												\n" /* Complete outstanding transfers before disabling MPU. */
+	"	ldr r2, xMPUCTRLConst2							\n" /* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	"	ldr r4, [r2]									\n" /* Read the value of MPU_CTRL. */
+	"	bic r4, #1										\n" /* r4 = r4 & ~1 i.e. Clear the bit 0 in r4. */
+	"	str r4, [r2]									\n" /* Disable MPU. */
+	"													\n"
 	"	adds r1, #4										\n" /* r1 = r1 + 4. r1 now points to MAIR0 in TCB. */
 	"	ldr  r3, [r1]									\n" /* r3 = *r1 i.e. r3 = MAIR0. */
 	"	ldr  r2, xMAIR0Const2							\n" /* r2 = 0xe000edc0 [Location of MAIR0]. */
@@ -53,6 +67,12 @@ void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_
 	"	ldr  r2, xRBARConst2							\n" /* r2 = 0xe000ed9c [Location of RBAR]. */
 	"	ldmia r1!, {r4-r11}								\n" /* Read 4 set of RBAR/RLAR registers from TCB. */
 	"	stmia r2!, {r4-r11}								\n" /* Write 4 set of RBAR/RLAR registers using alias registers. */
+	"													\n"
+	"	ldr r2, xMPUCTRLConst2							\n" /* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	"	ldr r4, [r2]									\n" /* Read the value of MPU_CTRL. */
+	"	orr r4, #1										\n" /* r4 = r4 | 1 i.e. Set the bit 0 in r4. */
+	"	str r4, [r2]									\n" /* Enable MPU. */
+	"	dsb												\n" /* Force memory writes before continuing. */
 	#endif /* configENABLE_MPU */
 	"													\n"
 	#if( configENABLE_MPU == 1 )
@@ -77,6 +97,7 @@ void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_
 	"	.align 4										\n"
 	"pxCurrentTCBConst2: .word pxCurrentTCB				\n"
 	#if( configENABLE_MPU == 1 )
+	"xMPUCTRLConst2: .word 0xe000ed94					\n"
 	"xMAIR0Const2: .word 0xe000edc0						\n"
 	"xRNRConst2: .word 0xe000ed98						\n"
 	"xRBARConst2: .word 0xe000ed9c						\n"
@@ -224,6 +245,12 @@ void PendSV_Handler( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 	"	ldr r0, [r1]									\n" /* The first item in pxCurrentTCB is the task top of stack. r0 now points to the top of stack. */
 	"													\n"
 	#if( configENABLE_MPU == 1 )
+	"	dmb												\n" /* Complete outstanding transfers before disabling MPU. */
+	"	ldr r2, xMPUCTRLConst							\n" /* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	"	ldr r4, [r2]									\n" /* Read the value of MPU_CTRL. */
+	"	bic r4, #1										\n" /* r4 = r4 & ~1 i.e. Clear the bit 0 in r4. */
+	"	str r4, [r2]									\n" /* Disable MPU. */
+	"													\n"
 	"	adds r1, #4										\n" /* r1 = r1 + 4. r1 now points to MAIR0 in TCB. */
 	"	ldr r3, [r1]									\n" /* r3 = *r1 i.e. r3 = MAIR0. */
 	"	ldr r2, xMAIR0Const								\n" /* r2 = 0xe000edc0 [Location of MAIR0]. */
@@ -235,6 +262,12 @@ void PendSV_Handler( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 	"	ldr r2, xRBARConst								\n" /* r2 = 0xe000ed9c [Location of RBAR]. */
 	"	ldmia r1!, {r4-r11}								\n" /* Read 4 sets of RBAR/RLAR registers from TCB. */
 	"	stmia r2!, {r4-r11}								\n" /* Write 4 set of RBAR/RLAR registers using alias registers. */
+	"													\n"
+	"	ldr r2, xMPUCTRLConst							\n" /* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	"	ldr r4, [r2]									\n" /* Read the value of MPU_CTRL. */
+	"	orr r4, #1										\n" /* r4 = r4 | 1 i.e. Set the bit 0 in r4. */
+	"	str r4, [r2]									\n" /* Enable MPU. */
+	"	dsb												\n" /* Force memory writes before continuing. */
 	#endif /* configENABLE_MPU */
 	"													\n"
 	#if( configENABLE_MPU == 1 )
@@ -260,9 +293,12 @@ void PendSV_Handler( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 	"													\n"
 	"	.align 4										\n"
 	"pxCurrentTCBConst: .word pxCurrentTCB				\n"
+	#if( configENABLE_MPU == 1 )
+	"xMPUCTRLConst: .word 0xe000ed94					\n"
 	"xMAIR0Const: .word 0xe000edc0						\n"
 	"xRNRConst: .word 0xe000ed98						\n"
 	"xRBARConst: .word 0xe000ed9c						\n"
+	#endif /* configENABLE_MPU */
 	);
 }
 /*-----------------------------------------------------------*/
@@ -271,14 +307,14 @@ void SVC_Handler( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 {
 	__asm volatile
 	(
-	"	 tst lr, #4										\n"
-	"	 ite eq											\n"
-	"	 mrseq r0, msp									\n"
-	"	 mrsne r0, psp									\n"
-	"	 ldr r1, svchandler_address_const				\n"
-	"	 bx r1											\n"
+	"	tst lr, #4										\n"
+	"	ite eq											\n"
+	"	mrseq r0, msp									\n"
+	"	mrsne r0, psp									\n"
+	"	ldr r1, svchandler_address_const				\n"
+	"	bx r1											\n"
 	"													\n"
-	"	 .align 4										\n"
+	"	.align 4										\n"
 	"svchandler_address_const: .word vPortSVCHandler_C	\n"
 	);
 }

@@ -88,6 +88,12 @@ vRestoreContextOfFirstTask:
 	ldr  r0, [r3]							/* Read top of stack from TCB - The first item in pxCurrentTCB is the task top of stack. */
 
 #if ( configENABLE_MPU == 1 )
+	dmb										/* Complete outstanding transfers before disabling MPU. */
+	ldr r2, =0xe000ed94						/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	ldr r4, [r2]							/* Read the value of MPU_CTRL. */
+	bic r4, r4, #1							/* r4 = r4 & ~1 i.e. Clear the bit 0 in r4. */
+	str r4, [r2]							/* Disable MPU. */
+
 	adds r3, #4								/* r3 = r3 + 4. r3 now points to MAIR0 in TCB. */
 	ldr  r4, [r3]							/* r4 = *r3 i.e. r4 = MAIR0. */
 	ldr  r2, =0xe000edc0					/* r2 = 0xe000edc0 [Location of MAIR0]. */
@@ -99,6 +105,12 @@ vRestoreContextOfFirstTask:
 	ldr  r2, =0xe000ed9c					/* r2 = 0xe000ed9c [Location of RBAR]. */
 	ldmia r3!, {r4-r11}						/* Read 4 set of RBAR/RLAR registers from TCB. */
 	stmia r2!, {r4-r11}						/* Write 4 set of RBAR/RLAR registers using alias registers. */
+
+	ldr r2, =0xe000ed94						/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	ldr r4, [r2]							/* Read the value of MPU_CTRL. */
+	orr r4, r4, #1							/* r4 = r4 | 1 i.e. Set the bit 0 in r4. */
+	str r4, [r2]							/* Enable MPU. */
+	dsb										/* Force memory writes before continuing. */
 #endif /* configENABLE_MPU */
 
 #if ( configENABLE_MPU == 1 )
@@ -224,6 +236,12 @@ PendSV_Handler:
 		ldr r1, [r3]						/* The first item in pxCurrentTCB is the task top of stack. r1 now points to the top of stack. */
 
 	#if ( configENABLE_MPU == 1 )
+		dmb									/* Complete outstanding transfers before disabling MPU. */
+		ldr r2, =0xe000ed94					/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+		ldr r4, [r2]						/* Read the value of MPU_CTRL. */
+		bic r4, r4, #1						/* r4 = r4 & ~1 i.e. Clear the bit 0 in r4. */
+		str r4, [r2]						/* Disable MPU. */
+
 		adds r3, #4							/* r3 = r3 + 4. r3 now points to MAIR0 in TCB. */
 		ldr r4, [r3]						/* r4 = *r3 i.e. r4 = MAIR0. */
 		ldr r2, =0xe000edc0					/* r2 = 0xe000edc0 [Location of MAIR0]. */
@@ -235,6 +253,12 @@ PendSV_Handler:
 		ldr  r2, =0xe000ed9c				/* r2 = 0xe000ed9c [Location of RBAR]. */
 		ldmia r3!, {r4-r11}					/* Read 4 sets of RBAR/RLAR registers from TCB. */
 		stmia r2!, {r4-r11}					/* Write 4 set of RBAR/RLAR registers using alias registers. */
+
+		ldr r2, =0xe000ed94					/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+		ldr r4, [r2]						/* Read the value of MPU_CTRL. */
+		orr r4, r4, #1						/* r4 = r4 | 1 i.e. Set the bit 0 in r4. */
+		str r4, [r2]						/* Enable MPU. */
+		dsb									/* Force memory writes before continuing. */
 	#endif /* configENABLE_MPU */
 
 	#if ( configENABLE_MPU == 1 )

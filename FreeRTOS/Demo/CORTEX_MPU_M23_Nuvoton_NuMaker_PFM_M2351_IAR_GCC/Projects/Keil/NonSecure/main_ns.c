@@ -65,6 +65,13 @@ const uint32_t * __unprivileged_sram_end__			= ( uint32_t * ) ( 0x30018000 - 0x1
  * @brief Create all demo tasks.
  */
 static void prvCreateTasks( void );
+
+/**
+ * @brief The hard fault handler.
+ *
+ * It calls a function called vHandleMemoryFault.
+ */
+void HardFault_Handler( void ) __attribute__ ( ( naked ) );
 /*-----------------------------------------------------------*/
 
 static void prvCreateTasks( void )
@@ -166,10 +173,6 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
 }
 /*-----------------------------------------------------------*/
 
-/**
- * @brief The fault handler implementation calls a function called
- * vHandleMemoryFault.
- */
 void HardFault_Handler( void )
 {
 	__asm volatile

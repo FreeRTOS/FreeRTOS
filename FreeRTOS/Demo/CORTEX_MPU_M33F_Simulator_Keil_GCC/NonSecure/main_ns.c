@@ -63,6 +63,13 @@ const uint32_t * __unprivileged_sram_end__			= ( uint32_t * ) ( 0x20220000 - 0x1
  * @brief Create all demo tasks.
  */
 static void prvCreateTasks( void );
+
+/**
+ * @brief The mem fault handler.
+ *
+ * It calls a function called vHandleMemoryFault.
+ */
+void MemManage_Handler( void ) __attribute__ ( ( naked ) );
 /*-----------------------------------------------------------*/
 
 /*
@@ -170,10 +177,6 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
 }
 /*-----------------------------------------------------------*/
 
-/**
- * @brief The mem fault handler implementation calls a function called
- * vHandleMemoryFault.
- */
 void MemManage_Handler( void )
 {
 	__asm volatile

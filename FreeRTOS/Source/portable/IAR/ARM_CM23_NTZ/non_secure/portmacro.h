@@ -87,7 +87,7 @@ typedef unsigned long										UBaseType_t;
 /**
  * Architecture specifics.
  */
-#define portARCH_NAME										"Cortex-M33"
+#define portARCH_NAME										"Cortex-M23"
 #define portSTACK_GROWTH									( -1 )
 #define portTICK_PERIOD_MS									( ( TickType_t ) 1000 / configTICK_RATE_HZ )
 #define portBYTE_ALIGNMENT									8
@@ -97,6 +97,7 @@ typedef unsigned long										UBaseType_t;
 	#define portFORCE_INLINE								inline __attribute__(( always_inline ))
 #endif
 #define portHAS_STACK_OVERFLOW_CHECKING						1
+#define portDONT_DISCARD									__root
 /*-----------------------------------------------------------*/
 
 /**
@@ -111,8 +112,8 @@ extern uint32_t ulSetInterruptMaskFromISR( void ) /* __attribute__(( naked )) PR
 extern void vClearInterruptMaskFromISR( uint32_t ulMask ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */;
 
 #if( configENABLE_TRUSTZONE == 1 )
-	extern void vPortAllocateSecureContext( uint32_t ulSecureStackSize );
-	extern void vPortFreeSecureContext( uint32_t *pulTCB ) /* PRIVILEGED_FUNCTION */;
+	extern void vPortAllocateSecureContext( uint32_t ulSecureStackSize ); /* __attribute__ (( naked )) */
+	extern void vPortFreeSecureContext( uint32_t *pulTCB ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */;
 #endif /* configENABLE_TRUSTZONE */
 
 #if( configENABLE_MPU == 1 )

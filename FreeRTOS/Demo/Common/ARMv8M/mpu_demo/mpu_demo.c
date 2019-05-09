@@ -162,9 +162,10 @@ TaskParameters_t xRWAccessTaskParameters =
 }
 /*-----------------------------------------------------------*/
 
-void vHandleMemoryFault( uint32_t * pulFaultStackAddress )
+portDONT_DISCARD void vHandleMemoryFault( uint32_t * pulFaultStackAddress )
 {
 uint32_t ulPC;
+uint16_t usOffendingInstruction;
 
 	/* Is this an expected fault? */
 	if( ucROTaskFaultTracker[ 0 ] == 1 )
@@ -172,8 +173,41 @@ uint32_t ulPC;
 		/* Read program counter. */
 		ulPC = pulFaultStackAddress[ 6 ];
 
-		/* Increment the program counter by 2 to move to the next instruction. */
-		ulPC += 2;
+		/* Read the offending instruction. */
+		usOffendingInstruction = *( uint16_t * )ulPC;
+
+		/* From ARM docs:
+		 * If the value of bits[15:11] of the halfword being decoded is one of
+		 * the following, the halfword is the first halfword of a 32-bit
+		 * instruction:
+		 * - 0b11101.
+		 * - 0b11110.
+		 * - 0b11111.
+		 * Otherwise, the halfword is a 16-bit instruction.
+		 */
+
+		/* Extract bits[15:11] of the offending instruction. */
+		usOffendingInstruction = usOffendingInstruction & 0xF800;
+		usOffendingInstruction = ( usOffendingInstruction >> 11 );
+
+		/* Determine if the offending instruction is a 32-bit instruction or
+		 * a 16-bit instruction. */
+		if( usOffendingInstruction == 0x001F ||
+			usOffendingInstruction == 0x001E ||
+			usOffendingInstruction == 0x001D )
+		{
+			/* Since the offending instruction is a 32-bit instruction,
+			 * increment the program counter by 4 to move to the next
+			 * instruction. */
+			ulPC += 4;
+		}
+		else
+		{
+			/* Since the offending instruction is a 16-bit instruction,
+			 * increment the program counter by 2 to move to the next
+			 * instruction. */
+			ulPC += 2;
+		}
 
 		/* Save the new program counter on the stack. */
 		pulFaultStackAddress[ 6 ] = ulPC;

@@ -420,6 +420,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\Nuvoton_Code\StdDriver\src\retarget.c</FilePath>
             </File>
+            <File>
+              <FileName>clk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Nuvoton_Code\StdDriver\src\clk.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

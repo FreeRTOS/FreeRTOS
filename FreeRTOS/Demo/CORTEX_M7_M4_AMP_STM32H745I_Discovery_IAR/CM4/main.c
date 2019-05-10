@@ -264,7 +264,7 @@ uint32_t ulNextValue = 0;
 char cExpectedString[ 15 ];
 char cReceivedString[ 15 ];
 char cMessage;
-const TickType_t xShortBlockTime = pdMS_TO_TICKS( 5 );
+const TickType_t xShortBlockTime = pdMS_TO_TICKS( 150 );
 
 	/* This task is created more than once so the task's parameter is used to
 	pass in a task number, which is then used as an index into the message
@@ -332,28 +332,9 @@ const TickType_t xShortBlockTime = pdMS_TO_TICKS( 5 );
 
 void vGenerateM4ToM7Interrupt( void * xUpdatedMessageBuffer )
 {
-MessageBufferHandle_t xUpdatedBuffer = ( MessageBufferHandle_t ) xUpdatedMessageBuffer;
-const char cMessage[] = "\r\nvGenerateM4ToM7Interrupt\r\n";
-
 	/* Called by the implementation of sbRECEIVE_COMPLETED() in FreeRTOSConfig.h.
 	See the comments at the top of this file.  Write the handle of the data
 	message buffer to which data was written to the control message buffer. */
-#if 0
-	if( xUpdatedBuffer != xControlMessageBuffer )
-	{
-		while( xMessageBufferSend( xControlMessageBuffer, &xUpdatedBuffer, sizeof( xUpdatedBuffer ), mbaDONT_BLOCK ) != sizeof( xUpdatedBuffer ) )
-		{
-			/* Nothing to do here.  Note it is very bad to loop in an interrupt
-			service routine.  If a loop is really required then defer the
-			routine to a task. */
-		}
-
-		/* Generate interrupt in the M4 core. */
-		HAL_EXTI_D1_EventInputConfig( EXTI_LINE0, EXTI_MODE_IT, DISABLE );
-		HAL_EXTI_D2_EventInputConfig( EXTI_LINE0, EXTI_MODE_IT, ENABLE );
-		HAL_EXTI_GenerateSWInterrupt( EXTI_LINE0 );
-	}
-#endif
 
 	/* Generate interrupt in the M7 core. */
 	HAL_EXTI_D2_EventInputConfig( EXTI_LINE1, EXTI_MODE_IT, DISABLE );

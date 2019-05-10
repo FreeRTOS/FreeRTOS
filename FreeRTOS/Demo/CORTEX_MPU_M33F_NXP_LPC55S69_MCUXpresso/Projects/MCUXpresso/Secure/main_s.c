@@ -64,6 +64,31 @@ static void prvBootNonSecure( uint32_t ulNonSecureStartAddress );
 void SystemInitHook( void );
 /*-----------------------------------------------------------*/
 
+/* Secure main(). */
+int main(void)
+{
+	PRINTF( "Booting Secure World.\r\n" );
+
+	/* Attach main clock divide to FLEXCOMM0 (debug console). */
+	CLOCK_AttachClk( BOARD_DEBUG_UART_CLK_ATTACH );
+
+	/* Init board hardware. */
+	BOARD_InitPins();
+	BOARD_BootClockFROHF96M();
+	BOARD_InitDebugConsole();
+
+	/* Boot the non-secure code. */
+	PRINTF( "Booting Non-Secure World.\r\n" );
+	prvBootNonSecure( mainNONSECURE_APP_START_ADDRESS );
+
+	/* Non-secure software does not return, this code is not executed. */
+	for( ; ; )
+	{
+		/* Should not reach here. */
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvBootNonSecure( uint32_t ulNonSecureStartAddress )
 {
 	NonSecureResetHandler_t pxNonSecureResetHandler;
@@ -100,27 +125,3 @@ void SystemInitHook( void )
 }
 /*-----------------------------------------------------------*/
 
-/* Secure main(). */
-int main(void)
-{
-	PRINTF( "Booting Secure World.\r\n" );
-
-	/* Attach main clock divide to FLEXCOMM0 (debug console). */
-	CLOCK_AttachClk( BOARD_DEBUG_UART_CLK_ATTACH );
-
-	/* Init board hardware. */
-	BOARD_InitPins();
-	BOARD_BootClockFROHF96M();
-	BOARD_InitDebugConsole();
-
-	/* Boot the non-secure code. */
-	PRINTF( "Booting Non-Secure World.\r\n" );
-	prvBootNonSecure( mainNONSECURE_APP_START_ADDRESS );
-
-	/* Non-secure software does not return, this code is not executed. */
-	for( ; ; )
-	{
-		/* Should not reach here. */
-	}
-}
-/*-----------------------------------------------------------*/

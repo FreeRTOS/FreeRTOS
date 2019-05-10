@@ -244,7 +244,6 @@ static void prvM7CoreTasks( void *pvParameters )
 {
 BaseType_t x;
 uint32_t ulNextValue = 0;
-const TickType_t xDelay = pdMS_TO_TICKS( 25 );
 char cString[ 15 ];
 size_t xStringLength;
 
@@ -270,9 +269,6 @@ size_t xStringLength;
 									  	( void * ) cString,
 										xStringLength,
 										portMAX_DELAY ) != xStringLength );
-
-			/* Delay before repeating */
-//			vTaskDelay( xDelay );
 		}
 
 		ulNextValue++;

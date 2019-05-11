@@ -60,6 +60,26 @@ void SystemInit( void );
 void MemManage_Handler( void ) __attribute__ ( ( naked ) );
 /*-----------------------------------------------------------*/
 
+/* For instructions on how to build and run this demo, visit the following link:
+ * https://www.freertos.org/RTOS-Cortex-M33-LPC55S69-MCUXpresso-GCC.html
+ */
+
+/* Non-Secure main. */
+int main( void )
+{
+	/* Create tasks. */
+	prvCreateTasks();
+
+	/* Start scheduler. */
+	vTaskStartScheduler();
+
+	/* Should not reach here as the scheduler is already started. */
+	for( ; ; )
+	{
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvCreateTasks( void )
 {
 	/* Create tasks for the MPU Demo. */
@@ -82,22 +102,6 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName 
 {
 	/* Force an assert. */
 	configASSERT( pcTaskName == 0 );
-}
-/*-----------------------------------------------------------*/
-
-/* Non-Secure main. */
-int main( void )
-{
-	/* Create tasks. */
-	prvCreateTasks();
-
-	/* Start scheduler. */
-	vTaskStartScheduler();
-
-	/* Should not reach here as the scheduler is already started. */
-	for( ; ; )
-	{
-	}
 }
 /*-----------------------------------------------------------*/
 

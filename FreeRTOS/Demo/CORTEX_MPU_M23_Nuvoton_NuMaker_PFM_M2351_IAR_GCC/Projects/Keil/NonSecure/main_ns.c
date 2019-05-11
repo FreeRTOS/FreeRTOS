@@ -74,24 +74,9 @@ static void prvCreateTasks( void );
 void HardFault_Handler( void ) __attribute__ ( ( naked ) );
 /*-----------------------------------------------------------*/
 
-static void prvCreateTasks( void )
-{
-	/* Create tasks for the MPU Demo. */
-	vStartMPUDemo();
-
-	/* Create tasks for the TZ Demo. */
-	vStartTZDemo();
-
-}
-/*-----------------------------------------------------------*/
-
-/* Stack overflow hook. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
-{
-	/* Force an assert. */
-	configASSERT( pcTaskName == 0 );
-}
-/*-----------------------------------------------------------*/
+/* For instructions on how to build and run this demo, visit the following link:
+ * https://www.freertos.org/RTOS-Cortex-M23-NuMaker-PFM-M2351-Keil.html
+ */
 
 /* Non-Secure main. */
 int main( void )
@@ -116,6 +101,25 @@ int main( void )
 	for( ; ; )
 	{
 	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvCreateTasks( void )
+{
+	/* Create tasks for the MPU Demo. */
+	vStartMPUDemo();
+
+	/* Create tasks for the TZ Demo. */
+	vStartTZDemo();
+
+}
+/*-----------------------------------------------------------*/
+
+/* Stack overflow hook. */
+void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
+{
+	/* Force an assert. */
+	configASSERT( pcTaskName == 0 );
 }
 /*-----------------------------------------------------------*/
 

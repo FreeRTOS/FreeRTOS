@@ -64,6 +64,10 @@ static void prvBootNonSecure( uint32_t ulNonSecureStartAddress );
 void SystemInitHook( void );
 /*-----------------------------------------------------------*/
 
+/* For instructions on how to build and run this demo, visit the following link:
+ * https://www.freertos.org/RTOS-Cortex-M33-LPC55S69-MCUXpresso-GCC.html
+ */
+
 /* Secure main(). */
 int main(void)
 {
@@ -124,4 +128,3 @@ void SystemInitHook( void )
 	BOARD_InitTrustZone();
 }
 /*-----------------------------------------------------------*/
-

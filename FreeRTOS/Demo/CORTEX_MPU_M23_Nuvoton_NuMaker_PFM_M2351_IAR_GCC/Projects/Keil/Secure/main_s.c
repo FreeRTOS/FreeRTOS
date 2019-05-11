@@ -56,6 +56,10 @@ static void prvSetupHardware( void );
 static void prvBootNonSecure( uint32_t ulNonSecureStartAddress );
 /*-----------------------------------------------------------*/
 
+/* For instructions on how to build and run this demo, visit the following link:
+ * https://www.freertos.org/RTOS-Cortex-M23-NuMaker-PFM-M2351-Keil.html
+ */
+
 /* Secure main. */
 int main(void)
 {
@@ -165,4 +169,3 @@ static void prvBootNonSecure( uint32_t ulNonSecureStartAddress )
 	pxNonSecureResetHandler();
 }
 /*-----------------------------------------------------------*/
-

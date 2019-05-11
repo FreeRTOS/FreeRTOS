@@ -56,6 +56,50 @@ static void prvSetupHardware( void );
 static void prvBootNonSecure( uint32_t ulNonSecureStartAddress );
 /*-----------------------------------------------------------*/
 
+/* For instructions on how to build and run this demo, visit the following link:
+ * https://www.freertos.org/RTOS-Cortex-M23-NuMaker-PFM-M2351-Keil.html
+ */
+
+/* Secure main. */
+int main(void)
+{
+	/* Unlock protected registers. */
+	SYS_UnlockReg();
+
+	/* Initialize the hardware. */
+	prvSetupHardware();
+
+	/* Print banner. */
+	printf( "\n" );
+	printf( "+---------------------------------------------+\n" );
+	printf( "|            Secure is running ...            |\n" );
+	printf( "+---------------------------------------------+\n" );
+
+	/* Do not generate Systick interrupt on secure side. */
+	SysTick_Config( 1 );
+
+	/* Set GPIO Port A to non-secure for controlling LEDs from the non-secure
+	 * side . */
+	SCU_SET_IONSSET( SCU_IONSSET_PA_Msk );
+
+	/* Set UART0 to non-secure for debug output from non-secure side. */
+	SCU_SET_PNSSET( UART0_Attr );
+
+	/* Lock protected registers before booting non-secure code. */
+	SYS_LockReg();
+
+	/* Boot the non-secure code. */
+	printf( "Entering non-secure world ...\n" );
+	prvBootNonSecure( mainNONSECURE_APP_START_ADDRESS );
+
+	/* Non-secure software does not return, this code is not executed. */
+	for( ; ; )
+	{
+		/* Should not reach here. */
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvSetupHardware( void )
 {
 	/* Init System Clock. */
@@ -123,45 +167,5 @@ static void prvBootNonSecure( uint32_t ulNonSecureStartAddress )
 	/* Start non-secure state software application by jumping to the non-secure
 	 * Reset Handler. */
 	pxNonSecureResetHandler();
-}
-/*-----------------------------------------------------------*/
-
-/* Secure main. */
-int main(void)
-{
-	/* Unlock protected registers. */
-	SYS_UnlockReg();
-
-	/* Initialize the hardware. */
-	prvSetupHardware();
-
-	/* Print banner. */
-	printf( "\n" );
-	printf( "+---------------------------------------------+\n" );
-	printf( "|            Secure is running ...            |\n" );
-	printf( "+---------------------------------------------+\n" );
-
-	/* Do not generate Systick interrupt on secure side. */
-	SysTick_Config( 1 );
-
-	/* Set GPIO Port A to non-secure for controlling LEDs from the non-secure
-	 * side . */
-	SCU_SET_IONSSET( SCU_IONSSET_PA_Msk );
-
-	/* Set UART0 to non-secure for debug output from non-secure side. */
-	SCU_SET_PNSSET( UART0_Attr );
-
-	/* Lock protected registers before booting non-secure code. */
-	SYS_LockReg();
-
-	/* Boot the non-secure code. */
-	printf( "Entering non-secure world ...\n" );
-	prvBootNonSecure( mainNONSECURE_APP_START_ADDRESS );
-
-	/* Non-secure software does not return, this code is not executed. */
-	for( ; ; )
-	{
-		/* Should not reach here. */
-	}
 }
 /*-----------------------------------------------------------*/

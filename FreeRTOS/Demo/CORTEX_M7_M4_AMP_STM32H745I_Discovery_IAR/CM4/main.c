@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.2.0
+ * FreeRTOS Kernel V10.2.1
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -264,7 +264,7 @@ uint32_t ulNextValue = 0;
 char cExpectedString[ 15 ];
 char cReceivedString[ 15 ];
 char cMessage;
-const TickType_t xShortBlockTime = pdMS_TO_TICKS( 150 );
+const TickType_t xShortBlockTime = pdMS_TO_TICKS( 200 );
 
 	/* This task is created more than once so the task's parameter is used to
 	pass in a task number, which is then used as an index into the message

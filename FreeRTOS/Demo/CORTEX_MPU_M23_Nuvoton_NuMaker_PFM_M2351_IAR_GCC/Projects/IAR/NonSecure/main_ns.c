@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.2.0
+ * FreeRTOS Kernel V10.2.1
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -66,7 +66,10 @@ int main( void )
 	/* Start scheduler. */
 	vTaskStartScheduler();
 
-	/* Should not reach here as the schedular is already started. */
+	/* Will not get here if the scheduler starts successfully.  If you do end up
+	here then there wasn't enough heap memory available to start either the idle
+	task or the timer/daemon task.  https://www.freertos.org/a00111.html */
+
 	for( ; ; )
 	{
 	}

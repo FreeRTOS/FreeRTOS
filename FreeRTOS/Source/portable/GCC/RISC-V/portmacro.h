@@ -45,10 +45,11 @@ extern "C" {
 
 /* Type definitions. */
 #if __riscv_xlen == 64
-	#define portSTACK_TYPE	uint64_t
-	#define portBASE_TYPE	int64_t
-	#define portUBASE_TYPE	uint64_t
-	#define portMAX_DELAY ( TickType_t ) 0xffffffffffffffffUL
+	#define portSTACK_TYPE			uint64_t
+	#define portBASE_TYPE			int64_t
+	#define portUBASE_TYPE			uint64_t
+	#define portMAX_DELAY 			( TickType_t ) 0xffffffffffffffffUL
+	#define portPOINTER_SIZE_TYPE 	uint64_t
 #elif __riscv_xlen == 32
 	#define portSTACK_TYPE	uint32_t
 	#define portBASE_TYPE	int32_t

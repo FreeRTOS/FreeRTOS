@@ -2,15 +2,125 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* IoT SDK includes. */
+#include "iot_taskpool.h"
+
+/*
+ * Prototypes for the functions that demonstrate the task pool API.
+ */
+static void prvExample_BasicSingleJob( void );
+
+/* Prototypes of the callback functions used in the examples. */
+static void prvSimpleTaskNotifyCallback( IotTaskPool_t pTaskPool, IotTaskPoolJob_t pJob, void *pUserContext );
+
+/*
+ * Prototypes for the standard FreeRTOS application hook (callback) functions
+ * implemented within this file.  See http://www.freertos.org/a00016.html .
+ */
+void vApplicationMallocFailedHook( void );
+void vApplicationIdleHook( void );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
+void vApplicationTickHook( void );
 void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
 void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize );
 
+/*
+ * The task used to demonstrate the task pool API.
+ */
+static void prvTaskPoolDemoTask( void *pvParameters );
+
+static const IotTaskPoolInfo_t xTaskPoolParameters = {
+														/* Minimum number of threads in a task pool. */
+														2,
+														/* Maximum number of threads in a task pool. */
+														2,
+														/* Stack size for every task pool thread - in words, not bytes. */
+														configMINIMAL_STACK_SIZE,
+														/* Priority for every task pool thread. */
+														tskIDLE_PRIORITY,
+													 };
+
+/*-----------------------------------------------------------*/
 
 int main( void )
 {
+	/* This example uses a single application task, which in turn is used to
+	create and send jobs to task pool tasks. */
+	xTaskCreate( prvTaskPoolDemoTask,
+				 "PoolDemo",
+				 configMINIMAL_STACK_SIZE,
+				 NULL,
+				 tskIDLE_PRIORITY,
+				 NULL );
+
+	vTaskStartScheduler();
+
+	/* Should not reach here as vTaskStartScheduler() will only return if there
+	was insufficient FreeRTOS heap memory to create the Idle or Timer
+	Daemon task. */
 	return 0;
 }
+/*-----------------------------------------------------------*/
 
+static void prvSimpleTaskNotifyCallback( IotTaskPool_t pTaskPool, IotTaskPoolJob_t pJob, void *pUserContext )
+{
+TaskHandle_t xTaskToNotify = ( TaskHandle_t ) pUserContext;
+
+	/* Remove warnings about unused parameters. */
+	( void ) pTaskPool;
+	( void ) pJob;
+
+	/* Notify the task that created this job. */
+	xTaskNotifyGive( xTaskToNotify );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExample_BasicSingleJob( void )
+{
+IotTaskPoolJobStorage_t xJobStorage;
+IotTaskPoolJob_t xJob;
+IotTaskPoolError_t xResult;
+
+	/* Ensure the notification count is 0 before scheduling the job. */
+	while( ulTaskNotifyTake( pdTRUE, 0 ) != 0 );
+
+	/* Create and schedule a job using the handle of this task as the job's
+	context and the function that sends a notification to the task handle as
+	the jobs callback function.   */
+	xResult = IotTaskPool_CreateJob(  prvSimpleTaskNotifyCallback, /* Callback function. */
+									  ( void * ) xTaskGetCurrentTaskHandle(), /* Job context. */
+									  &xJobStorage,
+									  &xJob );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+	IotTaskPool_ScheduleSystem( xJob, 0 );
+
+	/* Wait for the notification coming from the job's callback function. */
+	ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+}
+/*-----------------------------------------------------------*/
+
+static void prvTaskPoolDemoTask( void *pvParameters )
+{
+IotTaskPoolError_t xResult;
+
+	/* Remove compiler warnings about unused parameters. */
+	( void ) pvParameters;
+
+	/* The task pool must be created before it can be used. */
+	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+	for( ;; )
+	{
+		/* Run through each task pool example in turn.  See the comments in the
+		below functions for details of their behaviour. */
+		prvExample_BasicSingleJob();
+
+
+
+		vTaskDelete( NULL );
+	}
+}
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )

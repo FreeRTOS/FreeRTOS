@@ -411,6 +411,87 @@ IotTaskPoolError_t IotTaskPool_RecycleJob( IotTaskPool_t taskPool,
 IotTaskPoolError_t IotTaskPool_Schedule( IotTaskPool_t taskPool,
                                          IotTaskPoolJob_t job,
                                          uint32_t flags );
+
+/**
+ * @brief This function schedules a job created with @ref IotTaskPool_CreateJob or @ref IotTaskPool_CreateRecyclableJob
+ * against the system task pool.  The system task pool is the task pool created by @ref IotTaskPool_CreateSystemTaskPool.
+ *
+ * See @ref taskpool_design for a description of the jobs lifetime and interaction with the threads used in the task pool
+ * library.
+ *
+ * @param[in] job A job to schedule for execution. This must be first initialized with a call to @ref IotTaskPool_CreateJob.
+ * @param[in] flags Flags to be passed by the user, e.g. to identify the job as high priority by specifying #IOT_TASKPOOL_JOB_HIGH_PRIORITY.
+ *
+ * @return One of the following:
+ * - #IOT_TASKPOOL_SUCCESS
+ * - #IOT_TASKPOOL_BAD_PARAMETER
+ * - #IOT_TASKPOOL_ILLEGAL_OPERATION
+ * - #IOT_TASKPOOL_NO_MEMORY
+ * - #IOT_TASKPOOL_SHUTDOWN_IN_PROGRESS
+ *
+ *
+ * @note This function will not allocate memory, so it is guaranteed to succeed if the parameters are correct and the task pool
+ * was correctly initialized, and not yet destroyed.
+ *
+ * <b>Example</b>
+ * @code{c}
+ * // An example of a user context to pass to a callback through a task pool thread.
+ * typedef struct JobUserContext
+ * {
+ *     uint32_t counter;
+ * } JobUserContext_t;
+ *
+ * // An example of a user callback to invoke through a task pool thread.
+ * static void ExecutionCb( IotTaskPool_t taskPool, IotTaskPoolJob_t job, void * context )
+ * {
+ *     ( void )taskPool;
+ *     ( void )job;
+ *
+ *     JobUserContext_t * pUserContext = ( JobUserContext_t * )context;
+ *
+ *     pUserContext->counter++;
+ * }
+ *
+ * void TaskPoolExample( )
+ * {
+ *     JobUserContext_t userContext = { 0 };
+ *     IotTaskPoolJob_t job;
+ *
+ *     // Create the system task pool.  This example assumes the task pool is created successfully.
+ *     // It is recommended to test the function's return value in production code.
+ *     IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+ *
+ *     // Statically allocate one job, schedule it.
+ *     IotTaskPool_CreateJob( &ExecutionCb, &userContext, &job );
+ *
+ *     IotTaskPoolError_t errorSchedule = IotTaskPool_ScheduleSystem( &job, 0 );
+ *
+ *     switch ( errorSchedule )
+ *     {
+ *     case IOT_TASKPOOL_SUCCESS:
+ *         break;
+ *     case IOT_TASKPOOL_BAD_PARAMETER:          // Invalid parameters, such as a NULL handle, can trigger this error.
+ *     case IOT_TASKPOOL_ILLEGAL_OPERATION:      // Scheduling a job that was previously scheduled or destroyed could trigger this error.
+ *     case IOT_TASKPOOL_NO_MEMORY:              // Scheduling a with flag #IOT_TASKPOOL_JOB_HIGH_PRIORITY could trigger this error.
+ *     case IOT_TASKPOOL_SHUTDOWN_IN_PROGRESS:   // Scheduling a job after trying to destroy the task pool could trigger this error.
+ *         // ASSERT
+ *         break;
+ *     default:
+ *         // ASSERT
+ *     }
+ *
+ *     //
+ *     // ... Perform other operations ...
+ *     //
+ *
+ *     IotTaskPool_Destroy( taskPool );
+ * }
+ * @endcode
+ */
+/* @[declare_taskpool_schedule] */
+IotTaskPoolError_t IotTaskPool_ScheduleSystem( IotTaskPoolJob_t pJob,
+                                               uint32_t flags );
+
 /* @[declare_taskpool_schedule] */
 
 /**

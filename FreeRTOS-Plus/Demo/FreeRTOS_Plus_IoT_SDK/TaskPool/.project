@@ -147,7 +147,7 @@
 		<link>
 			<name>FreeRTOS-Plus-IoT-SDK/c_sdk/standard/common/taskpool/iot_taskpool.c</name>
 			<type>1</type>
-			<locationURI>PARENT-5-FREERTOS_ROOT/T/amazon-freertos-master_fr_task_pool/libraries/c_sdk/standard/common/taskpool/iot_taskpool.c</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Source/FreeRTOS-Plus-IoT-SDK/c_sdk/standard/common/taskpool/iot_taskpool.c</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

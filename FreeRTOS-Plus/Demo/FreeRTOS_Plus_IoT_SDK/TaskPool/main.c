@@ -1,3 +1,30 @@
+/*
+ * FreeRTOS Kernel V10.2.1
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -9,6 +36,7 @@
  * Prototypes for the functions that demonstrate the task pool API.
  */
 static void prvExample_BasicSingleJob( void );
+static void prvExample_BasicRecyclableJob( void );
 
 /* Prototypes of the callback functions used in the examples. */
 static void prvSimpleTaskNotifyCallback( IotTaskPool_t pTaskPool, IotTaskPoolJob_t pJob, void *pUserContext );
@@ -62,6 +90,34 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
+static void prvTaskPoolDemoTask( void *pvParameters )
+{
+IotTaskPoolError_t xResult;
+
+	/* Remove compiler warnings about unused parameters. */
+	( void ) pvParameters;
+
+	/* The task pool must be created before it can be used. */
+//	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+//	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+	/* Attempting to create the task pool again should then appear to succeed
+	(in case it is initialised by more than one library), but have no effect. */
+//	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+//	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+	for( ;; )
+	{
+		/* Run through each task pool example in turn.  See the comments in the
+		below functions for details of their behaviour. */
+		prvExample_BasicSingleJob();
+		prvExample_BasicRecyclableJob();
+
+		vTaskDelete( NULL );
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvSimpleTaskNotifyCallback( IotTaskPool_t pTaskPool, IotTaskPoolJob_t pJob, void *pUserContext )
 {
 TaskHandle_t xTaskToNotify = ( TaskHandle_t ) pUserContext;
@@ -80,46 +136,57 @@ static void prvExample_BasicSingleJob( void )
 IotTaskPoolJobStorage_t xJobStorage;
 IotTaskPoolJob_t xJob;
 IotTaskPoolError_t xResult;
+uint32_t ulReturn;
+const TickType_t xShortDelay = pdMS_TO_TICKS( 200 );
 
 	/* Ensure the notification count is 0 before scheduling the job. */
 	while( ulTaskNotifyTake( pdTRUE, 0 ) != 0 );
 
 	/* Create and schedule a job using the handle of this task as the job's
 	context and the function that sends a notification to the task handle as
-	the jobs callback function.   */
+	the jobs callback function.  The job is created using storage allocated on
+	the stack of this function - so no memory is allocated. */
 	xResult = IotTaskPool_CreateJob(  prvSimpleTaskNotifyCallback, /* Callback function. */
 									  ( void * ) xTaskGetCurrentTaskHandle(), /* Job context. */
 									  &xJobStorage,
 									  &xJob );
 	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
-	IotTaskPool_ScheduleSystem( xJob, 0 );
+
+	xResult = IotTaskPool_ScheduleSystemJob( xJob, 0 );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
 	/* Wait for the notification coming from the job's callback function. */
-	ulTaskNotifyTake( pdTRUE, portMAX_DELAY );
+	ulReturn = ulTaskNotifyTake( pdTRUE, xShortDelay );
+	configASSERT( ulReturn );
 }
 /*-----------------------------------------------------------*/
 
-static void prvTaskPoolDemoTask( void *pvParameters )
+static void prvExample_BasicRecyclableJob( void )
 {
+IotTaskPoolJob_t xJob;
 IotTaskPoolError_t xResult;
+uint32_t ulReturn;
+const TickType_t xShortDelay = pdMS_TO_TICKS( 200 );
 
-	/* Remove compiler warnings about unused parameters. */
-	( void ) pvParameters;
+	/* Ensure the notification count is 0 before scheduling the job. */
+	while( ulTaskNotifyTake( pdTRUE, 0 ) != 0 );
 
-	/* The task pool must be created before it can be used. */
-	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+	/* Create and schedule a job using the handle of this task as the job's
+	context and the function that sends a notification to the task handle as
+	the jobs callback function.  The job is created as a recyclable job - so it
+	is allocated inside the create function, but can then be used again and
+	again. */
+	xResult = IotTaskPool_CreateRecyclableSystemJob(  prvSimpleTaskNotifyCallback,
+											 	 	 ( void * ) xTaskGetCurrentTaskHandle(),
+													 &xJob );
 	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
-	for( ;; )
-	{
-		/* Run through each task pool example in turn.  See the comments in the
-		below functions for details of their behaviour. */
-		prvExample_BasicSingleJob();
+	xResult = IotTaskPool_ScheduleSystemJob( xJob, 0 );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
-
-
-		vTaskDelete( NULL );
-	}
+	/* Wait for the notification coming from the job's callback function. */
+	ulReturn = ulTaskNotifyTake( pdTRUE, xShortDelay );
+	configASSERT( ulReturn );
 }
 /*-----------------------------------------------------------*/
 

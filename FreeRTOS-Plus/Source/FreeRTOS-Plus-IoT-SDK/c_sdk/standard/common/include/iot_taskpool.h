@@ -53,9 +53,11 @@
  * - @functionname{taskpool_function_setmaxthreads}
  * - @functionname{taskpool_function_createjob}
  * - @functionname{taskpool_function_createrecyclablejob}
+ * - @functionname{taskpool_function_createrecyclablesystemjob}
  * - @functionname{taskpool_function_destroyrecyclablejob}
  * - @functionname{taskpool_function_recyclejob}
  * - @functionname{taskpool_function_schedule}
+ * - @functionname{taskpool_function_schedulesystemjob}
  * - @functionname{taskpool_function_scheduledeferred}
  * - @functionname{taskpool_function_getstatus}
  * - @functionname{taskpool_function_trycancel}
@@ -71,9 +73,11 @@
  * @functionpage{IotTaskPool_SetMaxThreads,taskpool,setmaxthreads}
  * @functionpage{IotTaskPool_CreateJob,taskpool,createjob}
  * @functionpage{IotTaskPool_CreateRecyclableJob,taskpool,createrecyclablejob}
+ * @functionpage{IotTaskPool_CreateRecyclableSystemJob,taskpool,createrecyclablesystemjob}
  * @functionpage{IotTaskPool_DestroyRecyclableJob,taskpool,destroyrecyclablejob}
  * @functionpage{IotTaskPool_RecycleJob,taskpool,recyclejob}
  * @functionpage{IotTaskPool_Schedule,taskpool,schedule}
+ * @functionpage{IotTaskPool_ScheduleSystemJob,taskpool,schedule}
  * @functionpage{IotTaskPool_ScheduleDeferred,taskpool,scheduledeferred}
  * @functionpage{IotTaskPool_GetStatus,taskpool,getstatus}
  * @functionpage{IotTaskPool_TryCancel,taskpool,trycancel}
@@ -256,6 +260,36 @@ IotTaskPoolError_t IotTaskPool_CreateRecyclableJob( IotTaskPool_t taskPool,
 /* @[declare_taskpool_createrecyclablejob] */
 
 /**
+ * brief Creates a job for the system task pool by allocating the job dynamically.
+ * The system task pool is the task pool created by @ref IotTaskPool_CreateSystemTaskPool.
+ *
+ * A recyclable job does not need to be allocated twice, but it can rather be reused through
+ * subsequent calls to @ref IotTaskPool_CreateRecyclableJob.
+ *
+ * @param[in] userCallback A user-specified callback for the job.
+ * @param[in] pUserContext A user-specified context for the callback.
+ * @param[out] pJob A pointer to an instance of @ref IotTaskPoolJob_t that will be initialized when this
+ * function returns successfully. This handle can be used to inspect the job status with
+ * @ref IotTaskPool_GetStatus or cancel the job with @ref IotTaskPool_TryCancel, etc....
+ *
+ * @return One of the following:
+ * - #IOT_TASKPOOL_SUCCESS
+ * - #IOT_TASKPOOL_BAD_PARAMETER
+ * - #IOT_TASKPOOL_NO_MEMORY
+ * - #IOT_TASKPOOL_SHUTDOWN_IN_PROGRESS
+ *
+ * @note This function will not allocate memory.
+ *
+ * @warning A recyclable job should be recycled with a call to @ref IotTaskPool_RecycleJob rather than destroyed.
+ *
+ */
+/* @[declare_taskpool_createrecyclablesystemjob] */
+IotTaskPoolError_t IotTaskPool_CreateRecyclableSystemJob( IotTaskPoolRoutine_t userCallback,
+                                                          void * pUserContext,
+                                                          IotTaskPoolJob_t * const pJob );
+/* @[declare_taskpool_createrecyclablesystemjob] */
+
+/**
  * @brief This function un-initializes a job.
  *
  * This function will destroy a job created with @ref IotTaskPool_CreateRecyclableJob.
@@ -413,7 +447,7 @@ IotTaskPoolError_t IotTaskPool_Schedule( IotTaskPool_t taskPool,
                                          uint32_t flags );
 
 /**
- * @brief This function schedules a job created with @ref IotTaskPool_CreateJob or @ref IotTaskPool_CreateRecyclableJob
+ * @brief This function schedules a job created with @ref IotTaskPool_CreateJob or @ref IotTaskPool_CreateRecyclableJob @ref IotTaskPool_CreateRecyclableSystemJob
  * against the system task pool.  The system task pool is the task pool created by @ref IotTaskPool_CreateSystemTaskPool.
  *
  * See @ref taskpool_design for a description of the jobs lifetime and interaction with the threads used in the task pool
@@ -464,7 +498,7 @@ IotTaskPoolError_t IotTaskPool_Schedule( IotTaskPool_t taskPool,
  *     // Statically allocate one job, schedule it.
  *     IotTaskPool_CreateJob( &ExecutionCb, &userContext, &job );
  *
- *     IotTaskPoolError_t errorSchedule = IotTaskPool_ScheduleSystem( &job, 0 );
+ *     IotTaskPoolError_t errorSchedule = IotTaskPool_ScheduleSystemJob( &job, 0 );
  *
  *     switch ( errorSchedule )
  *     {
@@ -488,11 +522,11 @@ IotTaskPoolError_t IotTaskPool_Schedule( IotTaskPool_t taskPool,
  * }
  * @endcode
  */
-/* @[declare_taskpool_schedule] */
-IotTaskPoolError_t IotTaskPool_ScheduleSystem( IotTaskPoolJob_t pJob,
+/* @[declare_taskpool_schedulesystemjob] */
+IotTaskPoolError_t IotTaskPool_ScheduleSystemJob( IotTaskPoolJob_t pJob,
                                                uint32_t flags );
 
-/* @[declare_taskpool_schedule] */
+/* @[declare_taskpool_schedulesystemjob] */
 
 /**
  * @brief This function schedules a job created with @ref IotTaskPool_CreateJob against the task pool

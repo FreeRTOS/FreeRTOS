@@ -1164,7 +1164,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 			being deleted. */
 			pxTCB = prvGetTCBFromHandle( xTaskToDelete );
 
-			/* Remove task from the ready list. */
+			/* Remove task from the ready/delayed list. */
 			if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 			{
 				taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -3981,7 +3981,10 @@ TCB_t *pxTCB;
 				{
 					if( uxListRemove( &( pxMutexHolderTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
-						taskRESET_READY_PRIORITY( pxMutexHolderTCB->uxPriority );
+						/* It is known that the task is in its ready list so
+						there is no need to check again and the port level
+						reset macro can be called directly. */
+						portRESET_READY_PRIORITY( pxMutexHolderTCB->uxPriority, uxTopReadyPriority );
 					}
 					else
 					{
@@ -4061,7 +4064,7 @@ TCB_t *pxTCB;
 					the mutex.  If the mutex is held by a task then it cannot be
 					given from an interrupt, and if a mutex is given by the
 					holding task then it must be the running state task.  Remove
-					the holding task from the ready list. */
+					the holding task from the ready/delayed list. */
 					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -4182,7 +4185,10 @@ TCB_t *pxTCB;
 					{
 						if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 						{
-							taskRESET_READY_PRIORITY( pxTCB->uxPriority );
+							/* It is known that the task is in its ready list so
+							there is no need to check again and the port level
+							reset macro can be called directly. */
+							portRESET_READY_PRIORITY( pxTCB->uxPriority, uxTopReadyPriority );
 						}
 						else
 						{

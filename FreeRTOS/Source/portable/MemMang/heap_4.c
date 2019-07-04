@@ -97,10 +97,12 @@ static const size_t xHeapStructSize	= ( sizeof( BlockLink_t ) + ( ( size_t ) ( p
 /* Create a couple of list links to mark the start and end of the list. */
 static BlockLink_t xStart, *pxEnd = NULL;
 
-/* Keeps track of the number of free bytes remaining, but says nothing about
-fragmentation. */
+/* Keeps track of the number of calls to allocate and free memory as well as the
+number of free bytes remaining, but says nothing about fragmentation. */
 static size_t xFreeBytesRemaining = 0U;
 static size_t xMinimumEverFreeBytesRemaining = 0U;
+static size_t xNumberOfSuccessfulAllocations = 0;
+static size_t xNumberOfSuccessfulFrees = 0;
 
 /* Gets set to the top bit of an size_t type.  When this bit in the xBlockSize
 member of an BlockLink_t structure is set then the block belongs to the
@@ -221,6 +223,7 @@ void *pvReturn = NULL;
 					by the application and has no "next" block. */
 					pxBlock->xBlockSize |= xBlockAllocatedBit;
 					pxBlock->pxNextFreeBlock = NULL;
+					xNumberOfSuccessfulAllocations++;
 				}
 				else
 				{
@@ -292,6 +295,7 @@ BlockLink_t *pxLink;
 					xFreeBytesRemaining += pxLink->xBlockSize;
 					traceFREE( pv, pxLink->xBlockSize );
 					prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
+					xNumberOfSuccessfulFrees++;
 				}
 				( void ) xTaskResumeAll();
 			}
@@ -323,6 +327,58 @@ size_t xPortGetMinimumEverFreeHeapSize( void )
 void vPortInitialiseBlocks( void )
 {
 	/* This just exists to keep the linker quiet. */
+}
+/*-----------------------------------------------------------*/
+
+void vPortGetHeapStats( HeapStats_t *pxHeapStats )
+{
+BlockLink_t *pxBlock;
+size_t xBlocks = 0, xMaxSize = 0, xMinSize = 0;
+
+	vTaskSuspendAll();
+	{
+		pxBlock = xStart.pxNextFreeBlock;
+
+		/* pxBlock will be NULL if the heap has not been initialised.  The heap
+		is initialised automatically when the first allocation is made. */
+		if( pxBlock != NULL )
+		{
+			do
+			{
+				/* Increment the number of blocks and record the largest block seen
+				so far. */
+				xBlocks++;
+
+				if( pxBlock->xBlockSize > xMaxSize )
+				{
+					xMaxSize = pxBlock->xBlockSize;
+				}
+
+				if( pxBlock->xBlockSize < xMinSize )
+				{
+					xMinSize = pxBlock->xBlockSize;
+				}
+
+				/* Move to the next block in the chain until the last block is
+				reached. */
+				pxBlock = pxBlock->pxNextFreeBlock;
+			} while( pxBlock != pxEnd );
+		}
+	}
+	xTaskResumeAll();
+
+	pxHeapStats->xSizeOfLargestFreeBlockInBytes = xMaxSize;
+	pxHeapStats->xSizeOfSmallestFreeBlockInBytes = xMinSize;
+	pxHeapStats->xNumberOfFreeBlocks = xBlocks;
+
+	taskENTER_CRITICAL();
+	{
+		pxHeapStats->xAvailableHeapSpaceInBytes = xFreeBytesRemaining;
+		pxHeapStats->xNumberOfSuccessfulAllocations = xNumberOfSuccessfulAllocations;
+		pxHeapStats->xNumberOfSuccessfulFrees = xNumberOfSuccessfulFrees;
+		pxHeapStats->xMinimumEverFreeBytesRemaining = xMinimumEverFreeBytesRemaining;
+	}
+	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 

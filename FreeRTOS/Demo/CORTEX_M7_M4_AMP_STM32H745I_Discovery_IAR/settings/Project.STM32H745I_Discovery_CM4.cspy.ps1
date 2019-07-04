@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\devtools\IAR Systems\Embedded Workbench 8.2\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\Trial\Active\STM32H7_dual_core\WorkingCopy\Demo\CORTEX_M7_M4_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.general.xcl" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\Trial\Active\STM32H7_dual_core\WorkingCopy\Demo\CORTEX_M7_M4_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.driver.xcl" 
+& "C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.general.xcl" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.driver.xcl" 
 }
 else
 {
-& "C:\devtools\IAR Systems\Embedded Workbench 8.2\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\Trial\Active\STM32H7_dual_core\WorkingCopy\Demo\CORTEX_M7_M4_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\ribarry\Dev\FreeRTOS\Trial\Active\STM32H7_dual_core\WorkingCopy\Demo\CORTEX_M7_M4_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.driver.xcl" 
+& "C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\settings\Project.STM32H745I_Discovery_CM4.driver.xcl" 
 }

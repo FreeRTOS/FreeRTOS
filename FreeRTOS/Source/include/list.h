@@ -183,7 +183,7 @@ typedef struct xLIST
  * Access macro to get the owner of a list item.  The owner of a list item
  * is the object (usually a TCB) that contains the list item.
  *
- * \page listSET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
+ * \page listGET_LIST_ITEM_OWNER listSET_LIST_ITEM_OWNER
  * \ingroup LinkedList
  */
 #define listGET_LIST_ITEM_OWNER( pxListItem )	( ( pxListItem )->pvOwner )
@@ -225,7 +225,7 @@ typedef struct xLIST
 #define listGET_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext )
 
 /*
- * Return the list item at the head of the list.
+ * Return the next list item.
  *
  * \page listGET_NEXT listGET_NEXT
  * \ingroup LinkedList

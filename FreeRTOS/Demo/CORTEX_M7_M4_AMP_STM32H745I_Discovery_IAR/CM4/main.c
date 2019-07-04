@@ -27,7 +27,8 @@
 
 /*
  * See https://www.freertos.org/STM32H7_Dual_Core_AMP_RTOS_demo.html for usage
- * instructions (TBD, not available at the time of writing).
+ * instructions, and the following blog post for a more detailed explanation
+ * https://www.freertos.org/articles/001_simple_freertos_core_to_core_communication/simple_freertos_core_to_core_communication_AMP.html
  *
  * Behavior
  * --------
@@ -382,7 +383,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	}
 
 	/* Normal FreeRTOS "yield from interrupt" semantics, where
-	xHigherPriorityTaskWoken is initialzed to pdFALSE and will then get set to
+	xHigherPriorityTaskWoken is initialised to pdFALSE and will then get set to
 	pdTRUE if the interrupt unblocks a task that has a priority above that of
 	the currently executing task. */
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );

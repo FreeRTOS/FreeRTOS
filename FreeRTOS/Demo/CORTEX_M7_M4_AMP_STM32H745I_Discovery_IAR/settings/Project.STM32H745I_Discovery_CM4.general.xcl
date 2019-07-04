@@ -1,12 +1,20 @@
-"C:\devtools\IAR Systems\Embedded Workbench 8.2\arm\bin\armproc.dll" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\bin\armproc.dll" 
 
-"C:\devtools\IAR Systems\Embedded Workbench 8.2\arm\bin\armJET.dll" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\bin\armstlink2.dll" 
 
-"C:\Users\ribarry\Dev\FreeRTOS\Trial\Active\STM32H7_dual_core\WorkingCopy\Demo\CORTEX_M7_M4_STM32H745I_Discovery_IAR\STM32H745I_Discovery_CM4\Exe\STM32H745I_Discovery_CM4.out" 
+"C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\CORTEX_M7_M4_AMP_STM32H745I_Discovery_IAR\STM32H745I_Discovery_CM4\Exe\STM32H745I_Discovery_CM4.out" 
 
---plugin="C:\devtools\IAR Systems\Embedded Workbench 8.2\arm\bin\armbat.dll" 
+--plugin="C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\bin\armbat.dll" 
 
---flash_loader="C:\devtools\IAR Systems\Embedded Workbench 8.2\arm\config\flashloader\ST\FlashSTM32H7xxx_CM4.board" 
+--device_macro="C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\config\debugger\ST\STM32H7xx_M4.dmac" 
+
+--device_macro="C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\config\debugger\ST\STM32H7xx_DBG.dmac" 
+
+--device_macro="C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\config\debugger\ST\STM32H7xx_OB.dmac" 
+
+--device_macro="C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\config\debugger\ST\STM32H7xx_TRACE.dmac" 
+
+--flash_loader="C:\devtools\IAR Systems\Embedded Workbench 8.3\arm\config\flashloader\ST\FlashSTM32H7xxxI.board" 
 
 
 

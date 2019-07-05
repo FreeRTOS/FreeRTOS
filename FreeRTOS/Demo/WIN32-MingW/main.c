@@ -104,6 +104,12 @@ void vFullDemoIdleFunction( void );
 static void  prvInitialiseHeap( void );
 
 /*
+ * Performs a few sanity checks on the behaviour of the vPortGetHeapStats()
+ * function.
+ */
+static void prvExerciseHeapStats( void );
+
+/*
  * Prototypes for the standard FreeRTOS application hook (callback) functions
  * implemented within this file.  See http://www.freertos.org/a00016.html .
  */
@@ -344,6 +350,8 @@ offsets into the array - with gaps in between and messy alignment just for test
 purposes. */
 static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 volatile uint32_t ulAdditionalOffset = 19; /* Just to prevent 'condition is always true' warnings in configASSERT(). */
+HeapStats_t xHeapStats;
+const HeapStats_t xZeroHeapStats = { 0 };
 const HeapRegion_t xHeapRegions[] =
 {
 	/* Start address with dummy offsets						Size */
@@ -360,7 +368,80 @@ const HeapRegion_t xHeapRegions[] =
 	/* Prevent compiler warnings when configASSERT() is not defined. */
 	( void ) ulAdditionalOffset;
 
+	/* The heap has not been initialised yet so expect stats to all be zero. */
+	vPortGetHeapStats( &xHeapStats );
+	configASSERT( memcmp( &xHeapStats, &xZeroHeapStats, sizeof( HeapStats_t ) ) == 0 );
+
 	vPortDefineHeapRegions( xHeapRegions );
+
+	/* Sanity check vTaskGetHeapStats(). */
+	prvExerciseHeapStats();
+}
+/*-----------------------------------------------------------*/
+
+static void prvExerciseHeapStats( void )
+{
+HeapStats_t xHeapStats;
+size_t xInitialFreeSpace = xPortGetFreeHeapSize(), xMinimumFreeBytes;
+size_t xMetaDataOverhead, i;
+void *pvAllocatedBlock;
+const size_t xArraySize = 5, xBlockSize = 1000UL;
+void *pvAllocatedBlocks[ xArraySize ];
+
+	/* Check heap stats are as expected after initialisation but before any
+	allocations. */
+	vPortGetHeapStats( &xHeapStats );
+
+	/* Minimum ever free bytes remaining should be the same as the total number
+	of bytes as nothing has been allocated yet. */
+	configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xHeapStats.xAvailableHeapSpaceInBytes );
+	configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xInitialFreeSpace );
+
+	/* Nothing has been allocated or freed yet. */
+	configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == 0 );
+	configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 0 );
+
+	/* Allocate a 1000 byte block then measure what the overhead of the
+	allocation in regards to how many bytes more than 1000 were actually
+	removed from the heap in order to store metadata about the allocation. */
+	pvAllocatedBlock = pvPortMalloc( xBlockSize );
+	configASSERT( pvAllocatedBlock );
+	xMetaDataOverhead = ( xInitialFreeSpace - xPortGetFreeHeapSize() ) - xBlockSize;
+
+	/* Free the block again to get back to where we started. */
+	vPortFree( pvAllocatedBlock );
+	vPortGetHeapStats( &xHeapStats );
+	configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xInitialFreeSpace );
+	configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == 1 );
+	configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 1 );
+
+	/* Allocate blocks checking some stats value on each allocation. */
+	for( i = 0; i < xArraySize; i++ )
+	{
+		pvAllocatedBlocks[ i ] = pvPortMalloc( xBlockSize );
+		configASSERT( pvAllocatedBlocks[ i ] );
+		vPortGetHeapStats( &xHeapStats );
+		configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == ( xInitialFreeSpace - ( ( i + 1 ) * ( xBlockSize + xMetaDataOverhead ) ) ) );
+		configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xHeapStats.xAvailableHeapSpaceInBytes );
+		configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == ( 2Ul + i ) );
+		configASSERT( xHeapStats.xNumberOfSuccessfulFrees == 1 ); /* Does not increase during allocations. */
+	}
+
+	configASSERT( xPortGetFreeHeapSize() == xPortGetMinimumEverFreeHeapSize() );
+	xMinimumFreeBytes = xPortGetFreeHeapSize();
+
+	/* Free the blocks again. */
+	for( i = 0; i < xArraySize; i++ )
+	{
+		vPortFree( pvAllocatedBlocks[ i ] );
+		vPortGetHeapStats( &xHeapStats );
+		configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == ( xInitialFreeSpace - ( ( ( xArraySize - i - 1 ) * ( xBlockSize + xMetaDataOverhead ) ) ) ) );
+		configASSERT( xHeapStats.xNumberOfSuccessfulAllocations == ( xArraySize + 1 ) ); /* Does not increase during frees. */
+		configASSERT( xHeapStats.xNumberOfSuccessfulFrees == ( 2UL + i ) );
+	}
+
+	/* The minimum ever free heap size should not change as blocks are freed. */
+	configASSERT( xMinimumFreeBytes == xPortGetMinimumEverFreeHeapSize() );
 }
 /*-----------------------------------------------------------*/
 

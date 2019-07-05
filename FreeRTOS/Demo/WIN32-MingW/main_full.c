@@ -260,6 +260,7 @@ static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
 const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
+HeapStats_t xHeapStats;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -385,10 +386,19 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 
 		/* This is the only task that uses stdout so its ok to call printf()
 		directly. */
-		printf( "%s - tick count %u - free heap %u - min free heap %u\r\n", pcStatusMessage,
-																			   xTaskGetTickCount(),
-																			   xPortGetFreeHeapSize(),
-																			   xPortGetMinimumEverFreeHeapSize() );
+		vPortGetHeapStats( &xHeapStats );
+
+		configASSERT( xHeapStats.xAvailableHeapSpaceInBytes == xPortGetFreeHeapSize() );
+		configASSERT( xHeapStats.xMinimumEverFreeBytesRemaining == xPortGetMinimumEverFreeHeapSize() );
+
+		printf( "%s - tick count %u - free heap %u - min free heap %u - largest free block %u - number of free blocks %u\r\n",
+					pcStatusMessage,
+					xTaskGetTickCount(),
+					xHeapStats.xAvailableHeapSpaceInBytes,
+					xHeapStats.xMinimumEverFreeBytesRemaining,
+					xHeapStats.xSizeOfLargestFreeBlockInBytes,
+					xHeapStats.xNumberOfFreeBlocks );
+
 		fflush( stdout );
 	}
 }

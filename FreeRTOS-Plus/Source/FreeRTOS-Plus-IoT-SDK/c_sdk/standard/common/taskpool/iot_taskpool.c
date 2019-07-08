@@ -32,6 +32,7 @@
 
 /* Standard includes. */
 #include <stdbool.h>
+#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -490,15 +491,6 @@ IotTaskPoolError_t IotTaskPool_CreateJob( IotTaskPoolRoutine_t userCallback,
 
 /*-----------------------------------------------------------*/
 
-IotTaskPoolError_t IotTaskPool_CreateRecyclableSystemJob( IotTaskPoolRoutine_t userCallback,
-                                                          void * pUserContext,
-                                                          IotTaskPoolJob_t * const pJob )
-{
-    return IotTaskPool_CreateRecyclableJob ( &_IotSystemTaskPool, userCallback, pUserContext, pJob );
-}
-
-/*-----------------------------------------------------------*/
-
 IotTaskPoolError_t IotTaskPool_CreateRecyclableJob( IotTaskPool_t taskPoolHandle,
                                                     IotTaskPoolRoutine_t userCallback,
                                                     void * pUserContext,
@@ -506,11 +498,21 @@ IotTaskPoolError_t IotTaskPool_CreateRecyclableJob( IotTaskPool_t taskPoolHandle
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
+    _taskPool_t * const pTaskPool = &_IotSystemTaskPool;
     _taskPoolJob_t * pTempJob = NULL;
 
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
+
+    /* Avoid compiler warnings about unused parameters if configASSERT() is not
+    defined. */
+    ( void ) taskPoolHandle;
+
     /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( userCallback );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( ppJob );
 
@@ -542,12 +544,21 @@ IotTaskPoolError_t IotTaskPool_DestroyRecyclableJob( IotTaskPool_t taskPoolHandl
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    ( void ) taskPoolHandle;
-
     _taskPoolJob_t * pJob = ( _taskPoolJob_t * ) pJobHandle;
 
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+#warning could use a TASKPOOL macro to check value and return error.
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
+
+    /* Avoid compiler warnings about unused parameters if configASSERT() is not
+    defined. */
+    ( void ) taskPoolHandle;
+
     /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pJobHandle );
 
     IotTaskPool_Assert( IotLink_IsLinked( &pJob->link ) == false );
@@ -564,10 +575,19 @@ IotTaskPoolError_t IotTaskPool_RecycleJob( IotTaskPool_t taskPoolHandle,
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
+    _taskPool_t * pTaskPool = ( _taskPool_t * ) &_IotSystemTaskPool;
 
-    /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
+
+    /* Ensure unused parameters do not cause compiler warnings in case
+    configASSERT() is not defined. */
+    ( void ) taskPoolHandle;
+
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pJob );
 
     taskENTER_CRITICAL();
@@ -589,12 +609,23 @@ IotTaskPoolError_t IotTaskPool_Schedule( IotTaskPool_t taskPoolHandle,
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
+    _taskPool_t * const pTaskPool = &_IotSystemTaskPool;
 
+    /* Task pool must have been created. */
     configASSERT( pTaskPool->running != false );
 
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
+
+    /* Avoid compiler warnings about unused parameters if configASSERT() is not
+    defined. */
+    ( void ) taskPoolHandle;
+
     /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pJob );
     TASKPOOL_ON_ARG_ERROR_GOTO_CLEANUP( ( flags != 0UL ) && ( flags != IOT_TASKPOOL_JOB_HIGH_PRIORITY ) );
 
@@ -609,24 +640,21 @@ IotTaskPoolError_t IotTaskPool_Schedule( IotTaskPool_t taskPoolHandle,
 
 /*-----------------------------------------------------------*/
 
-IotTaskPoolError_t IotTaskPool_ScheduleSystemJob( IotTaskPoolJob_t pJob,
-                                                  uint32_t flags )
-{
-    return IotTaskPool_Schedule( &_IotSystemTaskPool, pJob, flags );
-}
-
-/*-----------------------------------------------------------*/
-
 IotTaskPoolError_t IotTaskPool_ScheduleDeferred( IotTaskPool_t taskPoolHandle,
                                                  IotTaskPoolJob_t job,
                                                  uint32_t timeMs )
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
+    _taskPool_t * pTaskPool = &_IotSystemTaskPool;
 
-    /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
+
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( job );
 
     if( timeMs == 0UL )
@@ -688,7 +716,8 @@ IotTaskPoolError_t IotTaskPool_GetStatus( IotTaskPool_t taskPoolHandle,
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
     /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
+//_RB_    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle ); /* What is the point of this parameter? */
+    ( void ) taskPoolHandle;
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( job );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pStatus );
     *pStatus = IOT_TASKPOOL_STATUS_UNDEFINED;
@@ -710,10 +739,14 @@ IotTaskPoolError_t IotTaskPool_TryCancel( IotTaskPool_t taskPoolHandle,
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
+    _taskPool_t * pTaskPool = &_IotSystemTaskPool;
 
-    /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle );
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( job );
 
     if( pStatus != NULL )
@@ -859,6 +892,7 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 
     uint32_t count;
     uint32_t threadsCreated;
+    char cTaskName[ 10 ];
 
     /* Check input values for consistency. */
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pTaskPool );
@@ -887,10 +921,12 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
     /* Create the minimum number of threads specified by the user, and if one fails shutdown and return error. */
     for( threadsCreated = 0; threadsCreated < pInfo->minThreads; )
     {
-        TaskHandle_t task = NULL;
+        TaskHandle_t task = NULL; //_RB_ need to check compiles with C89
+
+        snprintf( cTaskName, sizeof( cTaskName ), "pool%d", ( int ) threadsCreated );
 
         BaseType_t res = xTaskCreate( _taskPoolWorker,
-                                      NULL,
+                                      cTaskName,
                                       pInfo->stackSize,
                                       pTaskPool,
                                       pInfo->priority,
@@ -1019,7 +1055,7 @@ static void _taskPoolWorker( void * pUserContext )
                 pJob = IotLink_Container( _taskPoolJob_t, pFirst, link );
 
                 /* Update status to 'executing'. */
-                pJob->status = IOT_TASKPOOL_STATUS_COMPLETED;
+                pJob->status = IOT_TASKPOOL_STATUS_COMPLETED; /*_RB_ Should this be 'executing'? */
                 userCallback = pJob->userCallback;
             }
         }
@@ -1156,7 +1192,7 @@ static void _recycleJob( _taskPoolCache_t * const pCache,
                          _taskPoolJob_t * const pJob )
 {
     /* We should never try and recycling a job that is linked into some queue. */
-    IotTaskPool_Assert( IotLink_IsLinked( &pJob->link ) == false );
+    IotTaskPool_Assert( IotLink_IsLinked( &pJob->link ) == false );//_RB_ Seems to be duplicate of test before this is called.
 
     /* We will recycle the job if there is space in the cache. */
     if( pCache->freeCount < IOT_TASKPOOL_JOBS_RECYCLE_LIMIT )
@@ -1232,15 +1268,11 @@ static IotTaskPoolError_t _scheduleInternal( _taskPool_t * const pTaskPool,
     /* Update the job status to 'scheduled'. */
     pJob->status = IOT_TASKPOOL_STATUS_SCHEDULED;
 
-    BaseType_t higherPriorityTaskWoken;
-
     /* Append the job to the dispatch queue. */
     IotDeQueue_EnqueueTail( &pTaskPool->dispatchQueue, &pJob->link );
 
     /* Signal a worker to pick up the job. */
-    ( void ) xSemaphoreGiveFromISR( pTaskPool->dispatchSignal, &higherPriorityTaskWoken );
-
-    portYIELD_FROM_ISR( higherPriorityTaskWoken );
+    xSemaphoreGive( pTaskPool->dispatchSignal );
 
     TASKPOOL_NO_FUNCTION_CLEANUP_NOLABEL();
 }
@@ -1333,7 +1365,7 @@ static IotTaskPoolError_t _tryCancelInternal( _taskPool_t * const pTaskPool,
             {
                 bool shouldReschedule = false;
 
-                /* If the job being cancelled was at the head of the timeouts queue, then we need to reschedule the timer
+                /* If the job being canceled was at the head of the timeouts queue, then we need to reschedule the timer
                  * with the next job timeout */
                 IotLink_t * pHeadLink = IotListDouble_PeekHead( &pTaskPool->timerEventsList );
 

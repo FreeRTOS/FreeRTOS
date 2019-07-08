@@ -29,14 +29,24 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* Standard includes. */
+#include <stdio.h>
+
 /* IoT SDK includes. */
 #include "iot_taskpool.h"
+
+/* The priority at which that tasks in the task pool (the worker tasks) get
+created. */
+#define tpTASK_POOL_WORKER_PRIORITY		1
 
 /*
  * Prototypes for the functions that demonstrate the task pool API.
  */
 static void prvExample_BasicSingleJob( void );
+static void prvExample_DeferredSingleJob( void );
 static void prvExample_BasicRecyclableJob( void );
+static void prvExample_ReuseRecyclableJobFromLowPriorityTask( void );
+static void prvExample_ReuseRecyclableJobFromHighPriorityTask( void );
 
 /* Prototypes of the callback functions used in the examples. */
 static void prvSimpleTaskNotifyCallback( IotTaskPool_t pTaskPool, IotTaskPoolJob_t pJob, void *pUserContext );
@@ -65,7 +75,7 @@ static const IotTaskPoolInfo_t xTaskPoolParameters = {
 														/* Stack size for every task pool thread - in words, not bytes. */
 														configMINIMAL_STACK_SIZE,
 														/* Priority for every task pool thread. */
-														tskIDLE_PRIORITY,
+														tpTASK_POOL_WORKER_PRIORITY,
 													 };
 
 /*-----------------------------------------------------------*/
@@ -74,12 +84,12 @@ int main( void )
 {
 	/* This example uses a single application task, which in turn is used to
 	create and send jobs to task pool tasks. */
-	xTaskCreate( prvTaskPoolDemoTask,
-				 "PoolDemo",
-				 configMINIMAL_STACK_SIZE,
-				 NULL,
-				 tskIDLE_PRIORITY,
-				 NULL );
+	xTaskCreate( prvTaskPoolDemoTask,		/* Function that implements the task. */
+				 "PoolDemo",				/* Text name for the task - only used for debugging. */
+				 configMINIMAL_STACK_SIZE,	/* Size of stack (in words, not bytes) to allocate for the task. */
+				 NULL,						/* Task parameter - not used in this case. */
+				 tskIDLE_PRIORITY,			/* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+				 NULL );					/* Used to pass out a handle to the created tsak - not used in this case. */
 
 	vTaskStartScheduler();
 
@@ -93,27 +103,61 @@ int main( void )
 static void prvTaskPoolDemoTask( void *pvParameters )
 {
 IotTaskPoolError_t xResult;
+uint32_t ulLoops;
 
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
 
 	/* The task pool must be created before it can be used. */
-//	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
-//	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
 	/* Attempting to create the task pool again should then appear to succeed
 	(in case it is initialised by more than one library), but have no effect. */
-//	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
-//	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+	xResult = IotTaskPool_CreateSystemTaskPool( &xTaskPoolParameters );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
 	for( ;; )
 	{
-		/* Run through each task pool example in turn.  See the comments in the
-		below functions for details of their behaviour. */
+		/* Demonstrate the most basic use case where a non persistent job is
+		created and scheduled to run immediately.  The task pool worker tasks
+		(in which the job callback function executes) have a priority above the
+		priority of this task so the job's callback executes as soon as it is
+		scheduled. */
 		prvExample_BasicSingleJob();
+
+		/* Demonstrate a job being scheduled to run at some time in the
+		future, and how a job scheduled to run in the future can be cancelled if
+		it has not yet started executing.  */
+		prvExample_DeferredSingleJob();
+
+		/* Demonstrate the most basic use of a recyclable job.  This is similar
+		to prvExample_BasicSingleJob() but using a recyclable job.  Creating a
+		recyclable job will re-use a previously created and now spare job from
+		the task pool's job cache if one is available, or otherwise dynamically
+		create a new job if a spare job is not available in the cache but space
+		remains in the cache. */
 		prvExample_BasicRecyclableJob();
 
-		vTaskDelete( NULL );
+		/* Demonstrate multiple recyclable jobs being created, used, and then
+		re-used.  In this the task pool worker tasks (in which the job callback
+		functions execute) have a priority above the priority of this task so
+		the job's callback functions execute as soon as they are scheduled. */
+		prvExample_ReuseRecyclableJobFromLowPriorityTask();
+
+		/* Again demonstrate multiple recyclable jobs being used, but this time
+		the priority of the task pool worker tasks (in which the job callback
+		functions execute) are lower than the priority of this task so the job's
+		callback functions don't execute until this task enteres the blocked
+		state. */
+		prvExample_ReuseRecyclableJobFromHighPriorityTask();
+
+		ulLoops++;
+		if( ( ulLoops % 10UL ) == 0 )
+		{
+			printf( "Performed %u successful iterations.\r\n", ulLoops );
+			fflush( stdout );
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -137,10 +181,13 @@ IotTaskPoolJobStorage_t xJobStorage;
 IotTaskPoolJob_t xJob;
 IotTaskPoolError_t xResult;
 uint32_t ulReturn;
-const TickType_t xShortDelay = pdMS_TO_TICKS( 200 );
+const uint32_t ulNoFlags = 0UL;
+const TickType_t xNoDelay = ( TickType_t ) 0;
+size_t xFreeHeapBeforeCreatingJob = xPortGetFreeHeapSize();
+IotTaskPoolJobStatus_t xJobStatus;
 
-	/* Ensure the notification count is 0 before scheduling the job. */
-	while( ulTaskNotifyTake( pdTRUE, 0 ) != 0 );
+	/* Don't expect any notifications to be pending yet. */
+	configASSERT( ulTaskNotifyTake( pdTRUE, 0 ) == 0 );
 
 	/* Create and schedule a job using the handle of this task as the job's
 	context and the function that sends a notification to the task handle as
@@ -152,12 +199,111 @@ const TickType_t xShortDelay = pdMS_TO_TICKS( 200 );
 									  &xJob );
 	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
-	xResult = IotTaskPool_ScheduleSystemJob( xJob, 0 );
+	/* The job has been created but not scheduled so is now ready. */
+	IotTaskPool_GetStatus( NULL, xJob, &xJobStatus );
+	configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_READY );
+
+	/* This is not a persistent (recyclable) job and its storage is on the
+	stack of this function, so the amount of heap space available should not
+	have chanced since entering this function. */
+	configASSERT( xFreeHeapBeforeCreatingJob == xPortGetFreeHeapSize() );
+
+	/* In the full task pool implementation the first parameter is used to
+	pass the handle of the task pool to schedule.  The lean task pool
+	implementation used in this demo only supports a single task pool, which
+	is created internally within the library, so the first parameter is NULL. */
+	xResult = IotTaskPool_Schedule( NULL, xJob, ulNoFlags );
 	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
-	/* Wait for the notification coming from the job's callback function. */
-	ulReturn = ulTaskNotifyTake( pdTRUE, xShortDelay );
+	/* Look for the notification coming from the job's callback function.  The
+	priority of the task pool worker task that executes the callback is higher
+	than the priority of this task so a block time is not needed - the task pool
+	worker task	pre-empts this task and sends the notification (from the job's
+	callback) as soon as the job is scheduled. */
+	ulReturn = ulTaskNotifyTake( pdTRUE, xNoDelay );
 	configASSERT( ulReturn );
+
+	/* The job's callback has executed so the job has now completed. */
+	IotTaskPool_GetStatus( NULL, xJob, &xJobStatus );
+	configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_COMPLETED );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExample_DeferredSingleJob( void )
+{
+IotTaskPoolJobStorage_t xJobStorage;
+IotTaskPoolJob_t xJob;
+IotTaskPoolError_t xResult;
+uint32_t ulReturn;
+const uint32_t ulShortDelay_ms = 100UL;
+const TickType_t xNoDelay = ( TickType_t ) 0, xAllowableMargin = ( TickType_t ) 5; /* Large margin for Windows port, which is not real time. */
+TickType_t xTimeBefore, xElapsedTime, xShortDelay_ticks;
+size_t xFreeHeapBeforeCreatingJob = xPortGetFreeHeapSize();
+IotTaskPoolJobStatus_t xJobStatus;
+
+	/* Don't expect any notifications to be pending yet. */
+	configASSERT( ulTaskNotifyTake( pdTRUE, 0 ) == 0 );
+
+	/* Create a job using the handle of this task as the job's context and the
+	function that sends a notification to the task handle as the jobs callback
+	function.  The job is created using storage allocated on the stack of this
+	function - so no memory is allocated. */
+	xResult = IotTaskPool_CreateJob(  prvSimpleTaskNotifyCallback, /* Callback function. */
+									  ( void * ) xTaskGetCurrentTaskHandle(), /* Job context. */
+									  &xJobStorage,
+									  &xJob );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+	/* The job has been created but not scheduled so is now ready. */
+	IotTaskPool_GetStatus( NULL, xJob, &xJobStatus );
+	configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_READY );
+
+	/* This is not a persistent (recyclable) job and its storage is on the
+	stack of this function, so the amount of heap space available should not
+	have chanced since entering this function. */
+	configASSERT( xFreeHeapBeforeCreatingJob == xPortGetFreeHeapSize() );
+
+	/* Schedule the job to run its callback in xShortDelay_ms milliseconds time.
+	In the full task pool implementation the first parameter is used to	pass the
+	handle of the task pool to schedule.  The lean task pool implementation used
+	in this demo only supports a single task pool, which is created internally
+	within the library, so the first parameter is NULL. */
+	xResult = IotTaskPool_ScheduleDeferred( NULL, xJob, ulShortDelay_ms );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+	/* The scheduled job should not have executed yet, so don't expect any
+	notifications and expect the job's status to be 'deferred'. */
+	ulReturn = ulTaskNotifyTake( pdTRUE, xNoDelay );
+	configASSERT( ulReturn == 0 );
+	IotTaskPool_GetStatus( NULL, xJob, &xJobStatus );
+	configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_DEFERRED );
+
+	/* As the job has not yet been executed it can be stopped. */
+	xResult = IotTaskPool_TryCancel( NULL, xJob, &xJobStatus );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+	IotTaskPool_GetStatus( NULL, xJob, &xJobStatus );
+	configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_CANCELED );
+
+	/* Schedule the job again, and this time wait until its callback is
+	executed (the callback function sends a notification to this task) to see
+	that it executes at the right time. */
+	xTimeBefore = xTaskGetTickCount();
+	xResult = IotTaskPool_ScheduleDeferred( NULL, xJob, ulShortDelay_ms );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+	/* Wait twice the deferred execution time to ensure the callback is executed
+	before the call below times out. */
+	ulReturn = ulTaskNotifyTake( pdTRUE, pdMS_TO_TICKS( ulShortDelay_ms * 2UL ) );
+	xElapsedTime = xTaskGetTickCount() - xTimeBefore;
+
+	/* A single notification should not have been received... */
+	configASSERT( ulReturn == 1 );
+
+	/* ...and the time since scheduling the job should be greater than or
+	equal to the deferred execution time - which is converted to ticks for
+	comparison. */
+	xShortDelay_ticks = pdMS_TO_TICKS( ulShortDelay_ms );
+	configASSERT( ( xElapsedTime >= xShortDelay_ticks ) && ( xElapsedTime  < ( xShortDelay_ticks + xAllowableMargin ) ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -166,27 +312,269 @@ static void prvExample_BasicRecyclableJob( void )
 IotTaskPoolJob_t xJob;
 IotTaskPoolError_t xResult;
 uint32_t ulReturn;
-const TickType_t xShortDelay = pdMS_TO_TICKS( 200 );
+const uint32_t ulNoFlags = 0UL;
+const TickType_t xNoDelay = ( TickType_t ) 0;
+size_t xFreeHeapBeforeCreatingJob = xPortGetFreeHeapSize();
 
-	/* Ensure the notification count is 0 before scheduling the job. */
-	while( ulTaskNotifyTake( pdTRUE, 0 ) != 0 );
+	/* Don't expect any notifications to be pending yet. */
+	configASSERT( ulTaskNotifyTake( pdTRUE, 0 ) == 0 );
 
 	/* Create and schedule a job using the handle of this task as the job's
 	context and the function that sends a notification to the task handle as
-	the jobs callback function.  The job is created as a recyclable job - so it
-	is allocated inside the create function, but can then be used again and
-	again. */
-	xResult = IotTaskPool_CreateRecyclableSystemJob(  prvSimpleTaskNotifyCallback,
-											 	 	 ( void * ) xTaskGetCurrentTaskHandle(),
-													 &xJob );
+	the jobs callback function.  The job is created as a recyclable job and in
+	this case the memory used to hold the job status is allocated inside the
+	create function.  As the job is persistent it can be used multiple times,
+	as demonstrated in other examples within this demo.  In the full task pool
+	implementation the first parameter is used to pass the handle of the task
+	pool this recyclable job is to be associated with.  In the lean
+	implementation of the task pool used by this demo there	is only one task
+	pool (the system task pool created within the task pool library) so the
+	first parameter is NULL. */
+	xResult = IotTaskPool_CreateRecyclableJob( NULL,
+											   prvSimpleTaskNotifyCallback,
+											   (void * ) xTaskGetCurrentTaskHandle(),
+											   &xJob );
 	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
-	xResult = IotTaskPool_ScheduleSystemJob( xJob, 0 );
+	/* This recyclable job is persistent, and in this case created dynamically,
+	so expect there to be less heap space then when entering the function. */
+	configASSERT( xPortGetFreeHeapSize() < xFreeHeapBeforeCreatingJob );
+
+	/* In the full task pool implementation the first parameter is used to
+	pass the handle of the task pool to schedule.  The lean task pool
+	implementation used in this demo only supports a single task pool, which
+	is created internally within the library, so the first parameter is NULL. */
+	xResult = IotTaskPool_Schedule( NULL, xJob, ulNoFlags );
 	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
 
-	/* Wait for the notification coming from the job's callback function. */
-	ulReturn = ulTaskNotifyTake( pdTRUE, xShortDelay );
+	/* Look for the notification coming from the job's callback function.  The
+	priority of the task pool worker task that executes the callback is higher
+	than the priority of this task so a block time is not needed - the task pool
+	worker task	pre-empts this task and sends the notification (from the job's
+	callback) as soon as the job is scheduled. */
+	ulReturn = ulTaskNotifyTake( pdTRUE, xNoDelay );
 	configASSERT( ulReturn );
+
+	/* Clean up recyclable job.  In the full implementation of the task pool
+	the first parameter is used to pass a handle to the task pool the job is
+	associated with.  In the lean implementation of the task pool used by this
+	demo there is only one task pool (the system task pool created in the
+	task pool library itself) so the first parameter is NULL. */
+	IotTaskPool_DestroyRecyclableJob( NULL, xJob );
+
+	/* Once the job has been deleted the memory used to hold the job is
+	returned, so the available heap should be exactly as when entering this
+	function. */
+	configASSERT( xPortGetFreeHeapSize() == xFreeHeapBeforeCreatingJob );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExample_ReuseRecyclableJobFromLowPriorityTask( void )
+{
+IotTaskPoolError_t xResult;
+uint32_t x, xIndex, ulNotificationValue;
+const uint32_t ulJobsToCreate = 5UL, ulNoFlags = 0UL;
+IotTaskPoolJob_t xJobs[ ulJobsToCreate ];
+size_t xFreeHeapBeforeCreatingJob = xPortGetFreeHeapSize();
+IotTaskPoolJobStatus_t xJobStatus;
+
+	/* Don't expect any notifications to be pending yet. */
+	configASSERT( ulTaskNotifyTake( pdTRUE, 0 ) == 0 );
+
+	/* Create ulJobsToCreate jobs using the handle of this task as the job's
+	context and the function that sends a notification to the task handle as
+	the jobs callback function.  The jobs are created as a recyclable job and
+	in this case the memory to store the job information is allocated within
+	the create function as at this time there are no recyclable jobs in the
+	task pool jobs cache. As the jobs are persistent they can be used multiple
+	times.  In the full task pool implementation the first parameter is used to
+	pass the handle of the task pool this recyclable job is to be associated
+	with.  In the lean implementation of the task pool used by this demo there
+	is only one task pool (the system task pool created within the task pool
+	library) so the first parameter is NULL. */
+	for( x = 0; x < ulJobsToCreate; x++ )
+	{
+		xResult = IotTaskPool_CreateRecyclableJob( NULL,
+												   prvSimpleTaskNotifyCallback,
+												   (void * ) xTaskGetCurrentTaskHandle(),
+												   &( xJobs[ x ] ) );
+		configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+		/* The job has been created but not scheduled so is now ready. */
+		IotTaskPool_GetStatus( NULL, xJobs[ x ], &xJobStatus );
+		configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_READY );
+	}
+
+	/* Demonstrate that the jobs can be recycled by performing twice the number
+	of iterations of scheduling jobs than there actually are created jobs.  This
+	works because the task pool task priorities are above the priority of this
+	task, so the tasks that run the jobs pre-empt this task as soon as a job is
+	ready. */
+	for( x = 0; x < ( ulJobsToCreate * 2UL ); x++ )
+	{
+		/* Make sure array index does not go out of bounds. */
+		xIndex = x % ulJobsToCreate;
+
+		xResult = IotTaskPool_Schedule( NULL, xJobs[ xIndex ], ulNoFlags );
+		configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+		/* The priority of the task pool task(s) is higher than the priority
+		of this task, so the job's callback function should have already
+		executed, sending a notification to this task, and incrementing this
+		task's notification value. */
+		xTaskNotifyWait( 0UL, /* Don't clear any bits on entry. */
+						 0UL, /* Don't clear any bits on exit. */
+						 &ulNotificationValue, /* Obtain the notification value. */
+						 0UL ); /* No block time, return immediately. */
+		configASSERT( ulNotificationValue == ( x + 1 ) );
+
+		/* The job's callback has executed so the job is now completed. */
+		IotTaskPool_GetStatus( NULL, xJobs[ xIndex ], &xJobStatus );
+		configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_COMPLETED );
+
+		/* To leave the list of jobs empty we can stop re-creating jobs half
+		way through iterations of this loop. */
+		if( x < ulJobsToCreate )
+		{
+			/* Recycle the job so it can be used again.  In the full task pool
+			implementation the first parameter is used to pass the handle of the
+			task pool this job will be associated with.  In this lean task pool
+			implementation only the system task pool exists (the task pool created
+			internally to the task pool library) so the first parameter is just
+			passed as NULL. *//*_RB_ Why not recycle it automatically? */
+			IotTaskPool_RecycleJob( NULL, xJobs[ xIndex ] );
+			xResult = IotTaskPool_CreateRecyclableJob( NULL,
+													   prvSimpleTaskNotifyCallback,
+													   (void * ) xTaskGetCurrentTaskHandle(),
+													   &( xJobs[ xIndex ] ) );
+		}
+	}
+
+	/* Clear all the notification value bits again. */
+	xTaskNotifyWait( portMAX_DELAY, /* Clear all bits on entry - portMAX_DELAY is used as it is a portable way of having all bits set. */
+					 0UL, /* Don't clear any bits on exit. */
+					 NULL, /* Don't need the notification value this time. */
+					 0UL ); /* No block time, return immediately. */
+	configASSERT( ulTaskNotifyTake( pdTRUE, 0 ) == 0 );
+
+	/* Clean up all the recyclable job.  In the full implementation of the task
+	pool the first parameter is used to pass a handle to the task pool the job
+	is associated with.  In the lean implementation of the task pool used by
+	this demo there is only one task pool (the system task pool created in the
+	task pool library itself) so the first parameter is NULL. */
+	for( x = 0; x < ulJobsToCreate; x++ )
+	{
+		xResult = IotTaskPool_DestroyRecyclableJob( NULL, xJobs[ x ] );
+		configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+		/* Attempting to destroy the same job twice will fail. */
+//_RB_ vPortFree() asserts because it attempts to free memory again.		xResult = IotTaskPool_DestroyRecyclableJob( NULL, xJobs[ x ] );
+//		configASSERT( xResult != IOT_TASKPOOL_SUCCESS );
+	}
+
+	/* Once the job has been deleted the memory used to hold the job is
+	returned, so the available heap should be exactly as when entering this
+	function. */
+	configASSERT( xPortGetFreeHeapSize() == xFreeHeapBeforeCreatingJob );
+}
+/*-----------------------------------------------------------*/
+
+static void prvExample_ReuseRecyclableJobFromHighPriorityTask( void )
+{
+IotTaskPoolError_t xResult;
+uint32_t x, ulNotificationValue;
+const uint32_t ulJobsToCreate = 5UL;
+const uint32_t ulNoFlags = 0UL;
+IotTaskPoolJob_t xJobs[ ulJobsToCreate ];
+IotTaskPoolJobStorage_t xJobStorage[ ulJobsToCreate ];
+size_t xFreeHeapBeforeCreatingJob = xPortGetFreeHeapSize();
+TickType_t xShortDelay = pdMS_TO_TICKS( 150 );
+IotTaskPoolJobStatus_t xJobStatus;
+
+	/* Don't expect any notifications to be pending yet. */
+	configASSERT( ulTaskNotifyTake( pdTRUE, 0 ) == 0 );
+
+	/* prvExample_ReuseRecyclableJobFromLowPriorityTask() executes in a task
+	that has a lower [task] priority than the task pool's worker tasks.
+	Therefore a talk pool worker preempts the task that calls
+	prvExample_ReuseRecyclableJobFromHighPriorityTask() as soon as the job is
+	scheduled.  prvExample_ReuseRecyclableJobFromHighPriorityTask() reverses the
+	priorities - prvExample_ReuseRecyclableJobFromHighPriorityTask() raises its
+	priority to above the task pool's worker tasks, so the worker tasks do not
+	execute until the calling task enters the blocked state.  First raise the
+	priority - passing NULL means raise the priority of the calling task. */
+	vTaskPrioritySet( NULL, tpTASK_POOL_WORKER_PRIORITY + 1 );
+
+	/* Create ulJobsToCreate jobs using the handle of this task as the job's
+	context and the function that sends a notification to the task handle as
+	the jobs callback function. */
+	for( x = 0; x < ulJobsToCreate; x++ )
+	{
+		xResult = IotTaskPool_CreateJob(  prvSimpleTaskNotifyCallback, /* Callback function. */
+										  ( void * ) xTaskGetCurrentTaskHandle(), /* Job context. */
+										  &( xJobStorage[ x ] ),
+										  &( xJobs[ x ] ) );
+		configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+		/* This is not a persistent (recyclable) job and its storage is on the
+		stack of this function, so the amount of heap space available should not
+		have chanced since entering this function. */
+		configASSERT( xFreeHeapBeforeCreatingJob == xPortGetFreeHeapSize() );
+	}
+
+	for( x = 0; x < ulJobsToCreate; x++ )
+	{
+		/* Schedule the next job. */
+		xResult = IotTaskPool_Schedule( NULL, xJobs[ x ], ulNoFlags );
+		configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
+		/* Although scheduled, the job's callback has not executed, so the job
+		reports itself as scheduled. */
+		IotTaskPool_GetStatus( NULL, xJobs[ x ], &xJobStatus );
+		configASSERT( xJobStatus == IOT_TASKPOOL_STATUS_SCHEDULED );
+
+		/* The priority of the task pool task(s) is lower than the priority
+		of this task, so the job's callback function should not have executed
+		yes, so don't expect the notification value for this task to have
+		changed. */
+		xTaskNotifyWait( 0UL, /* Don't clear any bits on entry. */
+						 0UL, /* Don't clear any bits on exit. */
+						 &ulNotificationValue, /* Obtain the notification value. */
+						 0UL ); /* No block time, return immediately. */
+		configASSERT( ulNotificationValue == 0 );
+	}
+
+	/* At this point there are ulJobsToCreate scheduled, but none have executed
+	their callbacks because the priority of this task is higher than the
+	priority of the task pool worker threads.  When this task blocks to wait for
+	a notification a worker thread will be able to executes - but as soon as its
+	callback function sends a notification to this task this task will
+	preempt it (because it has a higher priority) so this task only expects to
+	receive one notification at a time. */
+	for( x = 0; x < ulJobsToCreate; x++ )
+	{
+		xTaskNotifyWait( 0UL, /* Don't clear any bits on entry. */
+						 0UL, /* Don't clear any bits on exit. */
+						 &ulNotificationValue, /* Obtain the notification value. */
+						 xShortDelay ); /* Short delay to allow a task pool worker to execute. */
+		configASSERT( ulNotificationValue == ( x + 1 ) );
+	}
+
+	/* All the scheduled jobs have now executed, so waiting for another
+	notification should timeout without the notification value changing. */
+	xTaskNotifyWait( 0UL, /* Don't clear any bits on entry. */
+					 0UL, /* Don't clear any bits on exit. */
+					 &ulNotificationValue, /* Obtain the notification value. */
+					 xShortDelay ); /* Short delay to allow a task pool worker to execute. */
+	configASSERT( ulNotificationValue == x );
+
+	/* Reset the priority of this task and clear the notifications ready for the
+	next example. */
+	vTaskPrioritySet( NULL, tskIDLE_PRIORITY );
+	xTaskNotifyWait( portMAX_DELAY, /* Clear all bits on entry - portMAX_DELAY is used as it is a portable way of having all bits set. */
+					 0UL, /* Don't clear any bits on exit. */
+					 NULL, /* Don't need the notification value this time. */
+					 0UL ); /* No block time, return immediately. */
 }
 /*-----------------------------------------------------------*/
 
@@ -269,6 +657,9 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 
  	taskENTER_CRITICAL();
 	{
+ 		printf( "Assert hit on line %lu of %s\r\n", ulLine, pcFileName );
+ 		fflush( stdout );
+
 		/* You can step out of this function to debug the assertion by using
 		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero
 		value. */

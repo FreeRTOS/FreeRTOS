@@ -86,7 +86,11 @@ typedef struct
 	/* Handle of the thread that executes the task. */
 	void *pvThread;
 
-} xThreadState;
+	/* Event used to makes sure the thread does not execute past a yield point
+	between the call to SuspendThread() to suspend the thread and the
+	asynchronous SuspendThread() operation actually being performed. */
+	void *pvYieldEvent;
+} ThreadState_t;
 
 /* Simulated interrupts waiting to be processed.  This is a bit mask where each
 bit represents one interrupt, so a maximum of 32 interrupts can be simulated. */
@@ -108,7 +112,7 @@ ulCriticalNesting will get set to zero when the first task runs.  This
 initialisation is probably not critical in this simulated environment as the
 simulated interrupt handlers do not get created until the FreeRTOS scheduler is
 started anyway. */
-static uint32_t ulCriticalNesting = 9999UL;
+static volatile uint32_t ulCriticalNesting = 9999UL;
 
 /* Handlers for all the simulated software interrupts.  The first two positions
 are used for the Yield and Tick interrupts so are handled slightly differently,
@@ -116,7 +120,7 @@ all the other interrupts can be user defined. */
 static uint32_t (*ulIsrHandler[ portMAX_INTERRUPTS ])( void ) = { 0 };
 
 /* Pointer to the TCB of the currently executing task. */
-extern void *pxCurrentTCB;
+extern void * volatile pxCurrentTCB;
 
 /* Used to ensure nothing is processed during the startup sequence. */
 static BaseType_t xPortRunning = pdFALSE;
@@ -172,7 +176,7 @@ TIMECAPS xTimeCaps;
 
 		/* The interrupt is now pending - notify the simulated interrupt
 		handler thread. */
-		if( ulCriticalNesting == 0 )
+		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
 			SetEvent( pvInterruptEvent );
 		}
@@ -209,17 +213,25 @@ TIMECAPS xTimeCaps;
 
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-xThreadState *pxThreadState = NULL;
+ThreadState_t *pxThreadState = NULL;
 int8_t *pcTopOfStack = ( int8_t * ) pxTopOfStack;
 const SIZE_T xStackSize = 1024; /* Set the size to a small number which will get rounded up to the minimum possible. */
 
 	/* In this simulated case a stack is not initialised, but instead a thread
 	is created that will execute the task being created.  The thread handles
-	the context switching itself.  The xThreadState object is placed onto
+	the context switching itself.  The ThreadState_t object is placed onto
 	the stack that was created for the task - so the stack buffer is still
 	used, just not in the conventional way.  It will not be used for anything
 	other than holding this structure. */
-	pxThreadState = ( xThreadState * ) ( pcTopOfStack - sizeof( xThreadState ) );
+	pxThreadState = ( ThreadState_t * ) ( pcTopOfStack - sizeof( ThreadState_t ) );
+
+	/* Create the event used to prevent the thread from executing past its yield
+	point if the SuspendThread() call that suspends the thread does not take
+	effect immediately (it is an asynchronous call). */
+	pxThreadState->pvYieldEvent = CreateEvent(  NULL,  /* Default security attributes. */
+												FALSE, /* Auto reset. */
+												FALSE, /* Start not signalled. */
+												NULL );/* No name. */
 
 	/* Create the thread itself. */
 	pxThreadState->pvThread = CreateThread( NULL, xStackSize, ( LPTHREAD_START_ROUTINE ) pxCode, pvParameters, CREATE_SUSPENDED | STACK_SIZE_PARAM_IS_A_RESERVATION, NULL );
@@ -236,7 +248,7 @@ BaseType_t xPortStartScheduler( void )
 {
 void *pvHandle = NULL;
 int32_t lSuccess;
-xThreadState *pxThreadState = NULL;
+ThreadState_t *pxThreadState = NULL;
 SYSTEM_INFO xSystemInfo;
 
 	/* This port runs windows threads with extremely high priority.  All the
@@ -310,12 +322,10 @@ SYSTEM_INFO xSystemInfo;
 
 		/* Start the highest priority task by obtaining its associated thread
 		state structure, in which is stored the thread handle. */
-		pxThreadState = ( xThreadState * ) *( ( size_t * ) pxCurrentTCB );
+		pxThreadState = ( ThreadState_t * ) *( ( size_t * ) pxCurrentTCB );
 		ulCriticalNesting = portNO_CRITICAL_NESTING;
 
-		/* Bump up the priority of the thread that is going to run, in the
-		hope that this will assist in getting the Windows thread scheduler to
-		behave as an embedded engineer might expect. */
+		/* Start the first task. */
 		ResumeThread( pxThreadState->pvThread );
 
 		/* Handle all simulated interrupts - including yield requests and
@@ -350,7 +360,7 @@ uint32_t ulSwitchRequired;
 static void prvProcessSimulatedInterrupts( void )
 {
 uint32_t ulSwitchRequired, i;
-xThreadState *pxThreadState;
+ThreadState_t *pxThreadState;
 void *pvObjectList[ 2 ];
 CONTEXT xContext;
 
@@ -411,23 +421,39 @@ CONTEXT xContext;
 			if( pvOldCurrentTCB != pxCurrentTCB )
 			{
 				/* Suspend the old thread. */
-				pxThreadState = ( xThreadState *) *( ( size_t * ) pvOldCurrentTCB );
+				pxThreadState = ( ThreadState_t *) *( ( size_t * ) pvOldCurrentTCB );
 				SuspendThread( pxThreadState->pvThread );
 
 				/* Ensure the thread is actually suspended by performing a
 				synchronous operation that can only complete when the thread is
 				actually suspended.  The below code asks for dummy register
-				data. */
+				data.  Experimentation shows that these two lines don't appear
+				to do anything now, but according to
+				https://devblogs.microsoft.com/oldnewthing/20150205-00/?p=44743
+				they do - so as they do not harm (slight run-time hit) they have
+				been left it. */
 				xContext.ContextFlags = CONTEXT_INTEGER;
 				( void ) GetThreadContext( pxThreadState->pvThread, &xContext );
 
 				/* Obtain the state of the task now selected to enter the
 				Running state. */
-				pxThreadState = ( xThreadState * ) ( *( size_t *) pxCurrentTCB );
+				pxThreadState = ( ThreadState_t * ) ( *( size_t *) pxCurrentTCB );
+
+				/* pxThreadState->pvThread can be NULL if the task deleted
+				itself - but a deleted task should never be resumed here. */
+				configASSERT( pxThreadState->pvThread != NULL );
 				ResumeThread( pxThreadState->pvThread );
 			}
 		}
 
+		/* If the thread that is about to be resumed stopped running
+		because it yielded then it will wait on an event when it resumed
+		(to ensure it does not continue running after the call to
+		SuspendThread() above as SuspendThread() is asynchronous).
+		Signal the event to ensure the thread can proceed now it is
+		valid for it to do so. */
+		pxThreadState = ( ThreadState_t * ) ( *( size_t *) pxCurrentTCB );
+		SetEvent( pxThreadState->pvYieldEvent );
 		ReleaseMutex( pvInterruptEventMutex );
 	}
 }
@@ -435,14 +461,14 @@ CONTEXT xContext;
 
 void vPortDeleteThread( void *pvTaskToDelete )
 {
-xThreadState *pxThreadState;
+ThreadState_t *pxThreadState;
 uint32_t ulErrorCode;
 
 	/* Remove compiler warnings if configASSERT() is not defined. */
 	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
-	pxThreadState = ( xThreadState * ) ( *( size_t *) pvTaskToDelete );
+	pxThreadState = ( ThreadState_t * ) ( *( size_t *) pvTaskToDelete );
 
 	/* Check that the thread is still valid, it might have been closed by
 	vPortCloseRunningThread() - which will be the case if the task associated
@@ -469,7 +495,7 @@ uint32_t ulErrorCode;
 
 void vPortCloseRunningThread( void *pvTaskToDelete, volatile BaseType_t *pxPendYield )
 {
-xThreadState *pxThreadState;
+ThreadState_t *pxThreadState;
 void *pvThread;
 uint32_t ulErrorCode;
 
@@ -477,7 +503,7 @@ uint32_t ulErrorCode;
 	( void ) ulErrorCode;
 
 	/* Find the handle of the thread being deleted. */
-	pxThreadState = ( xThreadState * ) ( *( size_t *) pvTaskToDelete );
+	pxThreadState = ( ThreadState_t * ) ( *( size_t *) pvTaskToDelete );
 	pvThread = pxThreadState->pvThread;
 
 	/* Raise the Windows priority of the thread to ensure the FreeRTOS scheduler
@@ -514,6 +540,8 @@ void vPortEndScheduler( void )
 
 void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber )
 {
+ThreadState_t *pxThreadState = ( ThreadState_t *) *( ( size_t * ) pxCurrentTCB );
+
 	configASSERT( xPortRunning );
 
 	if( ( ulInterruptNumber < portMAX_INTERRUPTS ) && ( pvInterruptEventMutex != NULL ) )
@@ -527,12 +555,31 @@ void vPortGenerateSimulatedInterrupt( uint32_t ulInterruptNumber )
 		process it yet if this call is within a critical section.  It is
 		possible for this to be in a critical section as calls to wait for
 		mutexes are accumulative. */
-		if( ulCriticalNesting == 0 )
+		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
 			SetEvent( pvInterruptEvent );
+
+			if( ulInterruptNumber == portINTERRUPT_YIELD )
+			{
+				/* Going to wait for an event - make sure the event is not already
+				signaled. */
+				ResetEvent( pxThreadState->pvYieldEvent );
+			}
 		}
 
 		ReleaseMutex( pvInterruptEventMutex );
+
+		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
+		{
+			if( ulInterruptNumber == portINTERRUPT_YIELD )
+			{
+				/* The task was yielding so will be suspended however the
+				SuspendThread() function is asynchronous so this event is used to
+				prevent the task executing further if SuspendThread() does not take
+				effect immediately. */
+				WaitForSingleObject( pxThreadState->pvYieldEvent, INFINITE );
+			}
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -562,18 +609,15 @@ void vPortEnterCritical( void )
 		/* The interrupt event mutex is held for the entire critical section,
 		effectively disabling (simulated) interrupts. */
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
-		ulCriticalNesting++;
 	}
-	else
-	{
-		ulCriticalNesting++;
-	}
+
+	ulCriticalNesting++;
 }
 /*-----------------------------------------------------------*/
 
 void vPortExitCritical( void )
 {
-int32_t lMutexNeedsReleasing;
+int32_t lMutexNeedsReleasing, lWaitForYield = pdFALSE;
 
 	/* The interrupt event mutex should already be held by this thread as it was
 	obtained on entry to the critical section. */
@@ -590,13 +634,32 @@ int32_t lMutexNeedsReleasing;
 			(simulated) disabled? */
 			if( ulPendingInterrupts != 0UL )
 			{
+				ThreadState_t *pxThreadState = ( ThreadState_t *) *( ( size_t * ) pxCurrentTCB );
+
 				configASSERT( xPortRunning );
 				SetEvent( pvInterruptEvent );
+
+				if( ( ulPendingInterrupts & ( 1 << portINTERRUPT_YIELD ) ) != 0 )
+				{
+					/* Going to wait for an event - make sure the event is not already
+					signaled. */
+					ResetEvent( pxThreadState->pvYieldEvent );
+					lWaitForYield = pdTRUE;
+				}
 
 				/* Mutex will be released now, so does not require releasing
 				on function exit. */
 				lMutexNeedsReleasing = pdFALSE;
 				ReleaseMutex( pvInterruptEventMutex );
+
+				if( lWaitForYield != pdFALSE )
+				{
+					/* The task was yielding so will be suspended however the
+					SuspendThread() function is asynchronous so this event is
+					used to prevent the task executing further if
+					SuspendThread() does not take effect immediately. */
+					WaitForSingleObject( pxThreadState->pvYieldEvent, INFINITE );
+				}
 			}
 		}
 		else

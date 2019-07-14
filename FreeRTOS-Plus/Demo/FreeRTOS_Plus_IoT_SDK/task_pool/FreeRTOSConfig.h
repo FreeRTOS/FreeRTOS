@@ -61,6 +61,7 @@
 #define configUSE_ALTERNATIVE_API				0
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS	0
 #define configENABLE_BACKWARD_COMPATIBILITY		1
+#define configSUPPORT_STATIC_ALLOCATION			1
 
 /* Hook function related definitions. */
 #define configUSE_TICK_HOOK				0

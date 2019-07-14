@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\Source\FreeRTOS-Plus-FAT\include;..\..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;.\DemoTasks\include;..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\FreeRTOS-Plus-CLI;.\TraceMacros\Example1;..\..\..\Source\FreeRTOS-Plus-TCP\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Source\FreeRTOS-Plus-TCP\include;..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\DemoTasks\include;.\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\freertos\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\queue.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\timers.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\taskpool\iot_taskpool.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c" />
@@ -174,6 +175,14 @@
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\task.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\timers.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\freertos\include\platform\iot_platform_types_afr.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\include\types\iot_platform_types.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\iot_taskpool.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\private\iot_error.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\private\iot_logging.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\private\iot_static_memory.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\private\iot_taskpool_internal.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\types\iot_taskpool_types.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h" />
@@ -190,6 +199,8 @@
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="iot_config.h" />
+    <ClInclude Include="iot_config_common.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

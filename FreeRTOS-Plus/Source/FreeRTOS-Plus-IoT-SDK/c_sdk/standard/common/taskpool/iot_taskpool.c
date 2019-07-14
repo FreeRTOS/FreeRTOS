@@ -27,7 +27,11 @@
  * @brief Implements the task pool functions in iot_taskpool.h
  */
 
-/* The config header is always included first. */
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+/* IoT libraries includes. */
 #include "iot_config.h"
 
 /* Standard includes. */
@@ -37,9 +41,13 @@
 #include <stdint.h>
 #include <string.h>
 
+#if !defined( configSUPPORT_STATIC_ALLOCATION ) || ( configSUPPORT_STATIC_ALLOCATION != 1 )
+	#error configSUPPORT_STATIC_ALLOCATION must be set to 1 in FreeRTOSConfig.h to build this file.
+#endif
+
 /* Platform layer includes. */
-#include "platform/iot_threads.h"
-#include "platform/iot_clock.h"
+//_RB_#include "platform/iot_threads.h"
+//_RB_#include "platform/iot_clock.h"
 
 /* Task pool internal include. */
 #include "private/iot_taskpool_internal.h"
@@ -551,7 +559,7 @@ IotTaskPoolError_t IotTaskPool_DestroyRecyclableJob( IotTaskPool_t taskPoolHandl
     pool - no other values are allowed.  Use the full implementation of this
     library if you want multiple task pools (there is more than one task in
     each pool. */
-#warning could use a TASKPOOL macro to check value and return error.
+//_RB_could use a TASKPOOL macro to check value and return error.
     configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
 
     /* Avoid compiler warnings about unused parameters if configASSERT() is not
@@ -891,7 +899,7 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
     uint32_t count;
-    uint32_t threadsCreated;
+    uint32_t threadsCreated = 0; /* Although initialised before use removing the initialiser here results in compiler warnings. */
     char cTaskName[ 10 ];
 
     /* Check input values for consistency. */

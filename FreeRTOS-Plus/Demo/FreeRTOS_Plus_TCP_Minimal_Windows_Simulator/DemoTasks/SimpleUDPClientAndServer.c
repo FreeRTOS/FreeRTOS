@@ -92,7 +92,7 @@ static void prvSimpleClientTask( void *pvParameters )
 {
 Socket_t xClientSocket;
 struct freertos_sockaddr xDestinationAddress;
-uint8_t cString[ 50 ];
+uint8_t cString[ 65 ];
 BaseType_t lReturned;
 uint32_t ulCount = 0UL, ulIPAddress;
 const uint32_t ulLoopsPerSocket = 10UL;

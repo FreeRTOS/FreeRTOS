@@ -157,6 +157,7 @@
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
+    <ClCompile Include="DemoTasks\SimpleTaskPoolExamples.c" />
     <ClCompile Include="DemoTasks\SimpleUDPClientAndServer.c" />
     <ClCompile Include="demo_logging.c" />
     <ClCompile Include="main.c">

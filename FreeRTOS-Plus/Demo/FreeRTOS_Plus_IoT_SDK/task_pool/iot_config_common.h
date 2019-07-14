@@ -29,10 +29,10 @@
 #define IOT_CONFIG_COMMON_H_
 
 /* FreeRTOS include. */
-#include "FreeRTOS.h"
+#include "FreeRTOS.h" //_RB_Makes common config file FreeRTOS specific
 
 /* Use platform types on FreeRTOS. */
-#include "platform/iot_platform_types_afr.h"
+#include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
 
 /* Used to get the cloud broker endpoint for FreeRTOS. */
 //_RB_#include "aws_clientcredential.h"

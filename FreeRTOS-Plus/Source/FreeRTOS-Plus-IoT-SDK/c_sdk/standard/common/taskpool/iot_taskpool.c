@@ -935,7 +935,7 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 
         BaseType_t res = xTaskCreate( _taskPoolWorker,
                                       cTaskName,
-                                      pInfo->stackSize,
+                                      pInfo->stackSize / sizeof( portSTACK_TYPE ), /* xTaskCreate() expects the stack size to be specified in words. */
                                       pTaskPool,
                                       pInfo->priority,
                                       &task );

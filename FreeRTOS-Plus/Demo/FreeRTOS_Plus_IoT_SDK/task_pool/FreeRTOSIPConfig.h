@@ -53,7 +53,7 @@ out the debugging messages. */
 FreeRTOS_netstat() command, and ping replies.  If ipconfigHAS_PRINTF is set to 1
 then FreeRTOS_printf should be set to the function used to print out the
 messages. */
-#define ipconfigHAS_PRINTF			1
+#define ipconfigHAS_PRINTF			0
 #if( ipconfigHAS_PRINTF == 1 )
 	#define FreeRTOS_printf(X)			vLoggingPrintf X
 #endif
@@ -76,10 +76,10 @@ used as defaults. */
 
 /* Include support for LLMNR: Link-local Multicast Name Resolution
 (non-Microsoft) */
-#define ipconfigUSE_LLMNR					( 1 )
+#define ipconfigUSE_LLMNR					( 0 )
 
 /* Include support for NBNS: NetBIOS Name Service (Microsoft) */
-#define ipconfigUSE_NBNS					( 1 )
+#define ipconfigUSE_NBNS					( 0 )
 
 /* Include support for DNS caching.  For TCP, having a small DNS cache is very
 useful.  When a cache is present, ipconfigDNS_REQUEST_ATTEMPTS can be kept low

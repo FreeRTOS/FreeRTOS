@@ -145,6 +145,9 @@
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\taskpool\iot_taskpool.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\task_pool</Filter>
     </ClCompile>
+    <ClCompile Include="DemoTasks\SimpleTaskPoolExamples.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">

@@ -115,7 +115,7 @@ static void *pvSendEvent = NULL;
 
 /* _HT_ made the PCAP interface number configurable through the program's
 parameters in order to test in different machines. */
-static BaseType_t xConfigNextworkInterfaceToUse = configNETWORK_INTERFACE_TO_USE;
+static BaseType_t xConfigNetworkInterfaceToUse = configNETWORK_INTERFACE_TO_USE;
 
 /* Handles to the Windows threads that handle the PCAP IO. */
 static HANDLE vWinPcapRecvThreadHandle = NULL;
@@ -274,9 +274,9 @@ static BaseType_t xInvalidInterfaceDetected = pdFALSE;
 		printf( "\r\nThe interface that will be opened is set by " );
 		printf( "\"configNETWORK_INTERFACE_TO_USE\", which\r\nshould be defined in FreeRTOSConfig.h\r\n" );
 
-		if( ( xConfigNextworkInterfaceToUse < 0L ) || ( xConfigNextworkInterfaceToUse >= lInterfaceNumber ) )
+		if( ( xConfigNetworkInterfaceToUse < 1L ) || ( xConfigNetworkInterfaceToUse >= lInterfaceNumber ) )
 		{
-			printf( "\r\nERROR:  configNETWORK_INTERFACE_TO_USE is set to %d, which is an invalid value.\r\n", xConfigNextworkInterfaceToUse );
+			printf( "\r\nERROR:  configNETWORK_INTERFACE_TO_USE is set to %d, which is an invalid value.\r\n", xConfigNetworkInterfaceToUse );
 			printf( "Please set configNETWORK_INTERFACE_TO_USE to one of the interface numbers listed above,\r\n" );
 			printf( "then re-compile and re-start the application.  Only Ethernet (as opposed to WiFi)\r\n" );
 			printf( "interfaces are supported.\r\n\r\nHALTING\r\n\r\n\r\n" );
@@ -291,7 +291,7 @@ static BaseType_t xInvalidInterfaceDetected = pdFALSE;
 		}
 		else
 		{
-			printf( "Attempting to open interface number %d.\n", xConfigNextworkInterfaceToUse );
+			printf( "Attempting to open interface number %d.\n", xConfigNetworkInterfaceToUse );
 		}
 	}
 
@@ -339,26 +339,24 @@ static char pucInterfaceName[ 256 ];
 
 static void prvOpenSelectedNetworkInterface( pcap_if_t *pxAllNetworkInterfaces )
 {
-pcap_if_t *xInterface;
+pcap_if_t *pxInterface;
 int32_t x;
 
 	/* Walk the list of devices until the selected device is located. */
-	xInterface = pxAllNetworkInterfaces;
-	if (0 == xConfigNextworkInterfaceToUse) {
-		while (NULL != xInterface) {
-			xInterface = xInterface->next;
-			if (0 == prvOpenInterface(xInterface->name)) {
-				break;
-			}
-		}
+	pxInterface = pxAllNetworkInterfaces;
+	for( x = 0L; x < ( xConfigNetworkInterfaceToUse - 1L ); x++ )
+	{
+		pxInterface = pxInterface->next;
 	}
-	else {
-		for (x = 1L; x < xConfigNextworkInterfaceToUse; x++)
-		{
-			xInterface = xInterface->next;
-		}
-		/* Open the selected interface. */
-		(void) prvOpenInterface(xInterface->name);
+
+	/* Open the selected interface. */
+	if( prvOpenInterface( pxInterface->name ) == 0 )
+	{
+		printf( "Successfully opened interface number %d.\n", x + 1 );
+	}
+	else
+	{
+		printf( "Failed to open interface number %d.\n", x + 1 );
 	}
 
 	/* The device list is no longer required. */
@@ -389,7 +387,8 @@ uint32_t ulNetMask;
 		{
 			printf( "\nAn error occurred setting the packet filter.\n" );
 		}
-
+		/* When pcap_compile() succeeds, it allocates memory for the memory pointed to by the bpf_program struct 
+		parameter.pcap_freecode() will free that memory. */
 		pcap_freecode( &xFilterCode );
 	}
 
@@ -526,15 +525,15 @@ eFrameProcessingResult_t eResult;
 
 			iptraceNETWORK_INTERFACE_RECEIVE();
 
-            /* Check for minimal size. */
-            if( pxHeader->len >= sizeof( EthernetHeader_t ) )
-            {
-                eResult = ipCONSIDER_FRAME_FOR_PROCESSING( pucPacketData );
-            }
-            else
-            {
-                eResult = eReleaseBuffer;
-            }
+			/* Check for minimal size. */
+			if( pxHeader->len >= sizeof( EthernetHeader_t ) )
+			{
+				eResult = ipCONSIDER_FRAME_FOR_PROCESSING( pucPacketData );
+			}
+			else
+			{
+				eResult = eReleaseBuffer;
+			}
 
 			if( eResult == eProcessBuffer )
 			{
@@ -633,4 +632,3 @@ static const char *prvRemoveSpaces( char *pcBuffer, int aBuflen, const char *pcM
 
 	return pcBuffer;
 }
-

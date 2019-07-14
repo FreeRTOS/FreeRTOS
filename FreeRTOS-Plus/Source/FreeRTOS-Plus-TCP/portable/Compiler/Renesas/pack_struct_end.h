@@ -37,6 +37,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#pragma unpack
 	#endif
 #endif
+#ifdef __RX
+	#ifdef __CCRX__
+		;
+		#pragma packoption
+	#endif
+#endif
 
 
 

@@ -130,6 +130,7 @@ FreeRTOS_setsockopt(). */
 	#define FREERTOS_SO_WAKEUP_CALLBACK	( 17 )
 #endif
 
+#define FREERTOS_SO_SET_LOW_HIGH_WATER	( 18 )
 
 #define FREERTOS_NOT_LAST_IN_FRAGMENTED_PACKET 	( 0x80 )  /* For internal use only, but also part of an 8-bit bitwise value. */
 #define FREERTOS_FRAGMENTED_PACKET				( 0x40 )  /* For internal use only, but also part of an 8-bit bitwise value. */
@@ -154,6 +155,12 @@ typedef struct xWIN_PROPS {
 	int32_t lRxBufSize;	/* Unit: bytes */
 	int32_t lRxWinSize;	/* Unit: MSS */
 } WinProperties_t;
+
+typedef struct xLOW_HIGH_WATER {
+	/* Structure to pass for the 'FREERTOS_SO_SET_LOW_HIGH_WATER' option */
+	size_t uxLittleSpace;	/* Send a STOP when buffer space drops below X bytes */
+	size_t uxEnoughSpace;	/* Send a GO when buffer space grows above X bytes */
+} LowHighWater_t;
 
 /* For compatibility with the expected Berkeley sockets naming. */
 #define socklen_t uint32_t

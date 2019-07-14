@@ -1,4 +1,29 @@
 /*
+ * FreeRTOS+TCP V2.0.11
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
+ */
+
+/*
  * Handling of Ethernet PHY's
  * PHY's communicate with an EMAC either through
  * a Media-Independent Interface (MII), or a Reduced Media-Independent Interface (RMII).
@@ -23,8 +48,6 @@
 #include "FreeRTOS_Sockets.h"
 
 #include "phyHandling.h"
-
-#include "eventLogging.h"
 
 #define phyMIN_PHY_ADDRESS		0
 #define phyMAX_PHY_ADDRESS		31
@@ -59,6 +82,7 @@
 /* Bit fields for 'phyREG_00_BMCR', the 'Basic Mode Control Register'. */
 #define phyBMCR_FULL_DUPLEX			0x0100u	/* Full duplex. */
 #define phyBMCR_AN_RESTART			0x0200u	/* Auto negotiation restart. */
+#define phyBMCR_ISOLATE				0x0400u /* 1 = Isolates 0 = Normal operation. */
 #define phyBMCR_AN_ENABLE			0x1000u	/* Enable auto negotiation. */
 #define phyBMCR_SPEED_100			0x2000u	/* Select 100Mbps. */
 #define phyBMCR_RESET				0x8000u	/* Reset the PHY. */
@@ -114,6 +138,8 @@ BaseType_t xResult;
 		case PHY_ID_KSZ8051: // same ID as 8041
 		case PHY_ID_KSZ8081: // same ID as 8041
 */
+		case PHY_ID_KSZ8081MNXIA:
+
 		case PHY_ID_KSZ8863:
 		default:
 			/* Most PHY's have a 1F_PHYSPCS */
@@ -192,7 +218,6 @@ BaseType_t xPhyAddress;
 	if( pxPhyObject->xPortCount > 0 )
 	{
 		FreeRTOS_printf( ( "PHY ID %lX\n", pxPhyObject->ulPhyIDs[ 0 ] ) );
-		eventLogAdd( "PHY ID 0x%lX", pxPhyObject->ulPhyIDs[ 0 ] );
 	}
 
 	return pxPhyObject->xPortCount;
@@ -246,6 +271,8 @@ BaseType_t xPhyIndex;
 			FreeRTOS_printf( ( "xPhyReset: phyBMCR_RESET timed out ( done 0x%02lX )\n", ulDoneMask ) );
 			break;
 		}
+		/* Block for a while */
+		vTaskDelay( pdMS_TO_TICKS( 50ul ) );
 	}
 
 	/* Clear the reset bits. */
@@ -258,7 +285,7 @@ BaseType_t xPhyIndex;
 	}
 
 	vTaskDelay( pdMS_TO_TICKS( 50ul ) );
-	eventLogAdd( "PHY reset %d ports", (int)pxPhyObject->xPortCount );
+
 	return ulDoneMask;
 }
 /*-----------------------------------------------------------*/
@@ -367,7 +394,7 @@ BaseType_t xPhyIndex;
 
 		ulConfig |= phyBMCR_AN_ENABLE;
 
-		if( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_100 )
+		if( ( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_100 ) || ( pxPhyProperties->ucSpeed == ( uint8_t )PHY_SPEED_AUTO ) )
 		{
 			ulConfig |= phyBMCR_SPEED_100;
 		}
@@ -376,7 +403,7 @@ BaseType_t xPhyIndex;
 			ulConfig &= ~phyBMCR_SPEED_100;
 		}
 
-		if( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_FULL )
+		if( ( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_FULL ) || ( pxPhyProperties->ucDuplex == ( uint8_t )PHY_DUPLEX_AUTO ) )
 		{
 			ulConfig |= phyBMCR_FULL_DUPLEX;
 		}
@@ -413,11 +440,10 @@ BaseType_t xPhyIndex;
 		}
 
 		FreeRTOS_printf( ( "+TCP: advertise: %04lX config %04lX\n", ulAdvertise, ulConfig ) );
-		eventLogAdd( "adv: %04lX config %04lX", ulAdvertise, ulConfig );
 	}
 
 	/* Keep these values for later use. */
-	pxPhyObject->ulBCRValue = ulConfig;
+	pxPhyObject->ulBCRValue = ulConfig & ~phyBMCR_ISOLATE;
 	pxPhyObject->ulACRValue = ulAdvertise;
 
 	return 0;
@@ -476,7 +502,6 @@ TimeOut_t xTimer;
 			pxPhyObject->fnPhyWrite( xPhyAddress, phyREG_00_BMCR, pxPhyObject->ulBCRValue | phyBMCR_AN_RESTART );
 		}
 	}
-eventLogAdd( "AN start" );
 	xRemainingTime = ( TickType_t ) pdMS_TO_TICKS( 3000UL );
 	vTaskSetTimeOutState( &xTimer );
 	ulDoneMask = 0;
@@ -507,11 +532,10 @@ eventLogAdd( "AN start" );
 		if( xTaskCheckForTimeOut( &xTimer, &xRemainingTime ) != pdFALSE )
 		{
 			FreeRTOS_printf( ( "xPhyReset: phyBMCR_RESET timed out ( done 0x%02lX )\n", ulDoneMask ) );
-			eventLogAdd( "ANtimed out");
 			break;
 		}
+		vTaskDelay( pdMS_TO_TICKS( 50 ) );
 	}
-eventLogAdd( "AN done %02lX / %02lX", ulDoneMask, ulPhyMask );
 
 	if( ulDoneMask != ( uint32_t)0u )
 	{
@@ -541,7 +565,43 @@ eventLogAdd( "AN done %02lX / %02lX", ulDoneMask, ulPhyMask );
 				ulPHYLinkStatus &= ~( phyBMSR_LINK_STATUS );
 			}
 
-			if( xHas_1F_PHYSPCS( ulPhyID ) )
+			if( ulPhyID == PHY_ID_KSZ8081MNXIA )
+			{
+			uint32_t ulControlStatus;
+
+				pxPhyObject->fnPhyRead( xPhyAddress, 0x1E, &ulControlStatus);
+				switch( ulControlStatus & 0x07 )
+				{
+				case 0x01:
+				case 0x05:
+//	[001] = 10BASE-T half-duplex
+//	[101] = 10BASE-T full-duplex
+					/* 10 Mbps. */
+					ulRegValue |= phyPHYSTS_SPEED_STATUS;
+					break;
+				case 0x02:
+				case 0x06:
+//	[010] = 100BASE-TX half-duplex
+//	[110] = 100BASE-TX full-duplex
+					break;
+				}
+				switch( ulControlStatus & 0x07 )
+				{
+				case 0x05:
+				case 0x06:
+//	[101] = 10BASE-T full-duplex
+//	[110] = 100BASE-TX full-duplex
+					/* Full duplex. */
+					ulRegValue |= phyPHYSTS_DUPLEX_STATUS;
+					break;
+				case 0x01:
+				case 0x02:
+//	[001] = 10BASE-T half-duplex
+//	[010] = 100BASE-TX half-duplex
+					break;
+				}
+			}
+			else if( xHas_1F_PHYSPCS( ulPhyID ) )
 			{
 			/* 31 RW PHY Special Control Status */
 			uint32_t ulControlStatus;
@@ -556,7 +616,6 @@ eventLogAdd( "AN done %02lX / %02lX", ulDoneMask, ulPhyMask );
 				{
 					ulRegValue |= phyPHYSTS_SPEED_STATUS;
 				}
-
 			}
 			else
 			{
@@ -569,25 +628,6 @@ eventLogAdd( "AN done %02lX / %02lX", ulDoneMask, ulPhyMask );
 				( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) ? "full" : "half",
 				( ulRegValue & phyPHYSTS_SPEED_STATUS ) ? 10 : 100,
 				( ( ulPHYLinkStatus |= phyBMSR_LINK_STATUS ) != 0) ? "high" : "low" ) );
-			eventLogAdd( "%s duplex %u mbit %s st",
-				( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) ? "full" : "half",
-				( ulRegValue & phyPHYSTS_SPEED_STATUS ) ? 10 : 100,
-				( ( ulPHYLinkStatus |= phyBMSR_LINK_STATUS ) != 0) ? "high" : "low" );
-{
-	uint32_t regs[4];
-	int i,j;
-	int address = 0x10;
-	for (i = 0; i < 4; i++)
-	{
-		for (j = 0; j < 4; j++)
-		{
-			pxPhyObject->fnPhyRead( xPhyAddress, address, regs + j );
-			address++;
-		}
-		eventLogAdd("%04lX %04lX %04lX %04lX",
-			regs[0], regs[1], regs[2], regs[3]);
-	}
-}
 			if( ( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) != ( uint32_t )0u )
 			{
 				pxPhyObject->xPhyProperties.ucDuplex = PHY_DUPLEX_FULL;
@@ -624,6 +664,15 @@ BaseType_t xNeedCheck = pdFALSE;
 		but set a timer to check it later on. */
 		vTaskSetTimeOutState( &( pxPhyObject->xLinkStatusTimer ) );
 		pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );
+		for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
+		{
+			if( ( pxPhyObject->ulLinkStatusMask & ulBitMask ) == 0ul )
+			{
+				pxPhyObject->ulLinkStatusMask |= ulBitMask;
+				FreeRTOS_printf( ( "xPhyCheckLinkStatus: PHY LS now %02lX\n", pxPhyObject->ulLinkStatusMask ) );
+				xNeedCheck = pdTRUE;
+			}
+		}
 	}
 	else if( xTaskCheckForTimeOut( &( pxPhyObject->xLinkStatusTimer ), &( pxPhyObject->xLinkStatusRemaining ) ) != pdFALSE )
 	{
@@ -644,7 +693,6 @@ BaseType_t xNeedCheck = pdFALSE;
 						pxPhyObject->ulLinkStatusMask &= ~( ulBitMask );
 					}
 					FreeRTOS_printf( ( "xPhyCheckLinkStatus: PHY LS now %02lX\n", pxPhyObject->ulLinkStatusMask ) );
-					eventLogAdd( "PHY LS now %02lX", pxPhyObject->ulLinkStatusMask );
 					xNeedCheck = pdTRUE;
 				}
 			}

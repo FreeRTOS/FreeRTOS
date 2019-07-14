@@ -239,7 +239,7 @@ const TickType_t x5_Seconds = 5000UL;
 		configASSERT( xTXDescriptorSemaphore );
 	}
 	/* When returning non-zero, the stack will become active and
-    start DHCP (in configured) */
+	start DHCP (in configured) */
 	return ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != 0;
 }
 /*-----------------------------------------------------------*/

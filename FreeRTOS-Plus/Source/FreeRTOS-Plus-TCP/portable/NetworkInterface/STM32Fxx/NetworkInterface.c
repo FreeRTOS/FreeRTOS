@@ -451,7 +451,6 @@ BaseType_t xResult;
 		/* For now pdFAIL will be returned. But prvEMACHandlerTask() is running
 		and it will keep on checking the PHY and set 'ulLinkStatusMask' when necessary. */
 		xResult = pdFAIL;
-		FreeRTOS_printf( ( "Link Status still low\n" ) ) ;
 	}
 	/* When returning non-zero, the stack will become active and
     start DHCP (in configured) */
@@ -593,14 +592,6 @@ const TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 50u );
 	/* Open a do {} while ( 0 ) loop to be able to call break. */
 	do
 	{
-		if( xCheckLoopback( pxDescriptor, bReleaseAfterSend ) != 0 )
-		{
-			/* The packet has been sent back to the IP-task.
-			The IP-task will further handle it.
-			Do not release the descriptor. */
-			bReleaseAfterSend = pdFALSE;
-			break;
-		}
 		#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM != 0 )
 		{
 		ProtocolPacket_t *pxPacket;

@@ -1,26 +1,26 @@
 /*
-FreeRTOS+TCP V2.0.11
-Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
- http://aws.amazon.com/freertos
- http://www.FreeRTOS.org
+ * FreeRTOS+TCP V2.0.11
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
  */
 
 #include "FreeRTOS.h"
@@ -119,7 +119,6 @@ size_t uxCount = ( ( UBaseType_t ) ipconfigNIC_N_TX_DESC ) - uxSemaphoreGetCount
 			break;
 		}
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
-#warning ipconfigZERO_COPY_TX_DRIVER is defined
 		{
 		void *pvBuffer = pxDMA_tx_buffers[ tail ];
 		NetworkBufferDescriptor_t *pxBuffer;
@@ -201,7 +200,6 @@ BaseType_t xReturn;
 XStatus emacps_send_message(xemacpsif_s *xemacpsif, NetworkBufferDescriptor_t *pxBuffer, int iReleaseAfterSend )
 {
 int head = xemacpsif->txHead;
-//int tail = xemacpsif->txTail;
 int iHasSent = 0;
 uint32_t ulBaseAddress = xemacpsif->emacps.Config.BaseAddress;
 TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 5000u );
@@ -291,6 +289,8 @@ TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 5000u );
 		/* Start transmit */
 		xemacpsif->txBusy = pdTRUE;
 		XEmacPs_WriteReg( ulBaseAddress, XEMACPS_NWCTRL_OFFSET, ( ulValue | XEMACPS_NWCTRL_STARTTX_MASK ) );
+		/* Reading it back is important compiler is optimised. */
+		XEmacPs_ReadReg( ulBaseAddress, XEMACPS_NWCTRL_OFFSET );
 	}
 	dsb();
 
@@ -313,31 +313,36 @@ void emacps_recv_handler(void *arg)
 	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 }
 
-static void passEthMessages( NetworkBufferDescriptor_t *ethMsg )
+static void prvPassEthMessages( NetworkBufferDescriptor_t *pxDescriptor )
 {
 IPStackEvent_t xRxEvent;
 
 	xRxEvent.eEventType = eNetworkRxEvent;
-	xRxEvent.pvData = ( void * ) ethMsg;
+	xRxEvent.pvData = ( void * ) pxDescriptor;
 
 	if( xSendEventStructToIPTask( &xRxEvent, ( TickType_t ) 1000 ) != pdPASS )
 	{
 		/* The buffer could not be sent to the stack so	must be released again.
 		This is a deferred handler taskr, not a real interrupt, so it is ok to
 		use the task level function here. */
-		do
+		#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
 		{
-			NetworkBufferDescriptor_t *xNext = ethMsg->pxNextBuffer;
-			vReleaseNetworkBufferAndDescriptor( ethMsg );
-			ethMsg = xNext;
-		} while( ethMsg != NULL );
-
+			do
+			{
+				NetworkBufferDescriptor_t *pxNext = pxDescriptor->pxNextBuffer;
+				vReleaseNetworkBufferAndDescriptor( pxDescriptor );
+				pxDescriptor = pxNext;
+			} while( pxDescriptor != NULL );
+		}
+		#else
+		{
+			vReleaseNetworkBufferAndDescriptor( pxDescriptor );
+		}
+		#endif	/* ipconfigUSE_LINKED_RX_MESSAGES */
 		iptraceETHERNET_RX_EVENT_LOST();
-		FreeRTOS_printf( ( "passEthMessages: Can not queue return packet!\n" ) );
+		FreeRTOS_printf( ( "prvPassEthMessages: Can not queue return packet!\n" ) );
 	}
 }
-
-TickType_t ack_reception_delay = 10;
 
 int emacps_check_rx( xemacpsif_s *xemacpsif )
 {
@@ -345,39 +350,13 @@ NetworkBufferDescriptor_t *pxBuffer, *pxNewBuffer;
 int rx_bytes;
 volatile int msgCount = 0;
 int head = xemacpsif->rxHead;
-BaseType_t bHasDataPacket = pdFALSE;
-NetworkBufferDescriptor_t *ethMsg = NULL;
-NetworkBufferDescriptor_t *ethLast = NULL;
+#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
+	NetworkBufferDescriptor_t *pxFirstDescriptor = NULL;
+	NetworkBufferDescriptor_t *pxLastDescriptor = NULL;
+#endif	/* ipconfigUSE_LINKED_RX_MESSAGES */
 
 	/* There seems to be an issue (SI# 692601), see comments below. */
 	resetrx_on_no_rxdata(xemacpsif);
-
-	{
-		static int maxcount = 0;
-		int count = 0;
-		for( ;; )
-		{
-			if( ( ( xemacpsif->rxSegments[ head ].address & XEMACPS_RXBUF_NEW_MASK ) == 0 ) ||
-				( pxDMA_rx_buffers[ head ] == NULL ) )
-			{
-				break;
-			}
-			count++;
-			if( ++head == ipconfigNIC_N_RX_DESC )
-			{
-				head = 0;
-			}
-			if( head == xemacpsif->rxHead )
-			{
-				break;
-			}
-		}
-		if (maxcount < count) {
-			maxcount = count;
-			FreeRTOS_printf( ( "emacps_check_rx: %d packets\n", maxcount ) );
-		}
-		head = xemacpsif->rxHead;
-	}
 
 	/* This FreeRTOS+TCP driver shall be compiled with the option
 	"ipconfigUSE_LINKED_RX_MESSAGES" enabled.  It allows the driver to send a
@@ -411,10 +390,6 @@ NetworkBufferDescriptor_t *ethLast = NULL;
 			rx_bytes = xemacpsif->rxSegments[ head ].flags & XEMACPS_RXBUF_LEN_MASK;
 
 			pxBuffer->xDataLength = rx_bytes;
-if( rx_bytes > 60 )
-{
-	bHasDataPacket = 1;
-}
 			if( ucIsCachedMemory( pxBuffer->pucEthernetBuffer ) != 0 )
 			{
 				Xil_DCacheInvalidateRange( ( ( uint32_t )pxBuffer->pucEthernetBuffer ) - ipconfigPACKET_FILLER_SIZE, (unsigned)rx_bytes );
@@ -423,20 +398,29 @@ if( rx_bytes > 60 )
 			/* store it in the receive queue, where it'll be processed by a
 			different handler. */
 			iptraceNETWORK_INTERFACE_RECEIVE();
-			pxBuffer->pxNextBuffer = NULL;
-
-			if( ethMsg == NULL )
+			#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
 			{
-				// Becomes the first message
-				ethMsg = pxBuffer;
-			}
-			else if( ethLast != NULL )
-			{
-				// Add to the tail
-				ethLast->pxNextBuffer = pxBuffer;
-			}
+				pxBuffer->pxNextBuffer = NULL;
 
-			ethLast = pxBuffer;
+				if( pxFirstDescriptor == NULL )
+				{
+					// Becomes the first message
+					pxFirstDescriptor = pxBuffer;
+				}
+				else if( pxLastDescriptor != NULL )
+				{
+					// Add to the tail
+					pxLastDescriptor->pxNextBuffer = pxBuffer;
+				}
+
+				pxLastDescriptor = pxBuffer;
+			}
+			#else
+			{
+				prvPassEthMessages( pxBuffer );
+			}
+			#endif	/* ipconfigUSE_LINKED_RX_MESSAGES */
+
 			msgCount++;
 		}
 		{
@@ -453,7 +437,8 @@ if( rx_bytes > 60 )
 				/* Clearing 'XEMACPS_RXBUF_NEW_MASK'       0x00000001 *< Used bit.. */
 				xemacpsif->rxSegments[ head ].flags = 0;
 				xemacpsif->rxSegments[ head ].address = addr;
-				if (xemacpsif->rxSegments[ head ].address) {
+				if (xemacpsif->rxSegments[ head ].address)
+				{
 					// Just to read it
 				}
 			}
@@ -466,14 +451,14 @@ if( rx_bytes > 60 )
 		xemacpsif->rxHead = head;
 	}
 
-	if( ethMsg != NULL )
+	#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
 	{
-		if( bHasDataPacket == pdFALSE )
+		if( pxFirstDescriptor != NULL )
 		{
-//			vTaskDelay( ack_reception_delay );
+			prvPassEthMessages( pxFirstDescriptor );
 		}
-		passEthMessages( ethMsg );
 	}
+	#endif	/* ipconfigUSE_LINKED_RX_MESSAGES */
 
 	return msgCount;
 }
@@ -638,7 +623,6 @@ void resetrx_on_no_rxdata(xemacpsif_s *xemacpsif)
 	tempcntr = XEmacPs_ReadReg( xemacpsif->emacps.Config.BaseAddress, XEMACPS_RXCNT_OFFSET );
 	if ( ( tempcntr == 0 ) && ( xemacpsif->last_rx_frms_cntr == 0 ) )
 	{
-FreeRTOS_printf( ( "resetrx_on_no_rxdata: RESET~\n" ) );
 		regctrl = XEmacPs_ReadReg(xemacpsif->emacps.Config.BaseAddress,
 				XEMACPS_NWCTRL_OFFSET);
 		regctrl &= (~XEMACPS_NWCTRL_RXEN_MASK);

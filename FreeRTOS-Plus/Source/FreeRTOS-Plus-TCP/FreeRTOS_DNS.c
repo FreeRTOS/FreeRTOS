@@ -151,6 +151,11 @@ static uint32_t prvGetHostByName( const char *pcHostName, TickType_t xIdentifier
 	} DNSCacheRow_t;
 
 	static DNSCacheRow_t xDNSCache[ ipconfigDNS_CACHE_ENTRIES ];
+
+	void FreeRTOS_dnsclear()
+	{
+		memset( xDNSCache, 0x0, sizeof( xDNSCache ) );
+	}
 #endif /* ipconfigUSE_DNS_CACHE == 1 */
 
 #if( ipconfigUSE_LLMNR == 1 )
@@ -809,24 +814,16 @@ static uint8_t *prvSkipNameField( uint8_t *pucByte, size_t xSourceLen )
 
 uint32_t ulDNSHandlePacket( NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
-uint8_t *pucUDPPayloadBuffer;
-size_t xPlayloadBufferLength;
 DNSMessage_t *pxDNSMessageHeader;
 
-	xPlayloadBufferLength = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
-	if ( xPlayloadBufferLength < sizeof( DNSMessage_t ) )
+	if( pxNetworkBuffer->xDataLength >= sizeof( DNSMessage_t ) )
 	{
-		return pdFAIL;
-	}
+		pxDNSMessageHeader = 
+			( DNSMessage_t * )( pxNetworkBuffer->pucEthernetBuffer + sizeof( UDPPacket_t ) );
 
-	pucUDPPayloadBuffer = pxNetworkBuffer->pucEthernetBuffer + sizeof( UDPPacket_t );
-	pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
-
-	if( pxNetworkBuffer->xDataLength > sizeof( UDPPacket_t ) )
-	{
-		prvParseDNSReply( pucUDPPayloadBuffer,
-			xPlayloadBufferLength,
-			( uint32_t )pxDNSMessageHeader->usIdentifier );
+		prvParseDNSReply( ( uint8_t * )pxDNSMessageHeader,
+						  pxNetworkBuffer->xDataLength,
+						  ( uint32_t )pxDNSMessageHeader->usIdentifier );
 	}
 
 	/* The packet was not consumed. */
@@ -841,12 +838,11 @@ DNSMessage_t *pxDNSMessageHeader;
 	UDPPacket_t *pxUDPPacket = ( UDPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer;
 	uint8_t *pucUDPPayloadBuffer = pxNetworkBuffer->pucEthernetBuffer + sizeof( UDPPacket_t );
 
-		if( pxNetworkBuffer->xDataLength > sizeof( UDPPacket_t) )
-		{
-			prvTreatNBNS( pucUDPPayloadBuffer,
-						  pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t ),
-						  pxUDPPacket->xIPHeader.ulSourceIPAddress );
-		}
+		/* The network buffer data length has already been set to the 
+		length of the UDP payload. */
+		prvTreatNBNS( pucUDPPayloadBuffer,
+					  pxNetworkBuffer->xDataLength,
+					  pxUDPPacket->xIPHeader.ulSourceIPAddress );
 
 		/* The packet was not consumed. */
 		return pdFAIL;
@@ -1312,6 +1308,9 @@ TickType_t xTimeoutTime = pdMS_TO_TICKS( 200 );
 		pxUDPHeader->usLength			   = FreeRTOS_htons( lNetLength + ipSIZE_OF_UDP_HEADER );
 		vFlip_16( pxUDPPacket->xUDPHeader.usSourcePort, pxUDPPacket->xUDPHeader.usDestinationPort );
 
+		/* Important: tell NIC driver how many bytes must be sent */
+		pxNetworkBuffer->xDataLength = ( size_t ) ( lNetLength + ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_UDP_HEADER + ipSIZE_OF_ETH_HEADER );
+
 		#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
 		{
 			/* calculate the IP header checksum */
@@ -1320,12 +1319,9 @@ TickType_t xTimeoutTime = pdMS_TO_TICKS( 200 );
 			pxIPHeader->usHeaderChecksum	   = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
 
 			/* calculate the UDP checksum for outgoing package */
-			usGenerateProtocolChecksum( ( uint8_t* ) pxUDPPacket, lNetLength, pdTRUE );
+			usGenerateProtocolChecksum( ( uint8_t* ) pxUDPPacket, pxNetworkBuffer->xDataLength, pdTRUE );
 		}
 		#endif
-
-		/* Important: tell NIC driver how many bytes must be sent */
-		pxNetworkBuffer->xDataLength = ( size_t ) ( lNetLength + ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_UDP_HEADER + ipSIZE_OF_ETH_HEADER );
 
 		/* This function will fill in the eth addresses and send the packet */
 		vReturnEthernetFrame( pxNetworkBuffer, pdFALSE );
@@ -1342,13 +1338,15 @@ TickType_t xTimeoutTime = pdMS_TO_TICKS( 200 );
 	BaseType_t xFound = pdFALSE;
 	uint32_t ulCurrentTimeSeconds = ( xTaskGetTickCount() / portTICK_PERIOD_MS ) / 1000;
 	static BaseType_t xFreeEntry = 0;
+	configASSERT(pcName);
+
 
 		/* For each entry in the DNS cache table. */
 		for( x = 0; x < ipconfigDNS_CACHE_ENTRIES; x++ )
 		{
 			if( xDNSCache[ x ].pcName[ 0 ] == 0 )
 			{
-				break;
+				continue;
 			}
 
 			if( 0 == strcmp( xDNSCache[ x ].pcName, pcName ) )
@@ -1419,6 +1417,6 @@ TickType_t xTimeoutTime = pdMS_TO_TICKS( 200 );
 
 /* Provide access to private members for testing. */
 #ifdef AMAZON_FREERTOS_ENABLE_UNIT_TESTS
-	#include "aws_freertos_tcp_test_access_dns_define.h"
+	#include "iot_freertos_tcp_test_access_dns_define.h"
 #endif
 

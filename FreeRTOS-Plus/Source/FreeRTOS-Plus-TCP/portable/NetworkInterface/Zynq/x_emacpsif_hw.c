@@ -214,8 +214,6 @@ static void emacps_handle_error(void *arg, u8 Direction, u32 ErrorWord)
 	}
 }
 
-extern XEmacPs_Config mac_config;
-
 void HandleTxErrors(xemacpsif_s *xemacpsif)
 {
 	u32 netctrlreg;

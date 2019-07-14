@@ -84,8 +84,12 @@ uint32_t ulDNSHandlePacket( NetworkBufferDescriptor_t *pxNetworkBuffer );
 
 #if( ipconfigUSE_DNS_CACHE != 0 )
 
+	/* Look for the indicated host name in the DNS cache. Returns the IPv4 
+	address if present, or 0x0 otherwise. */
 	uint32_t FreeRTOS_dnslookup( const char *pcHostName );
 
+	/* Remove all entries from the DNS cache. */
+	void FreeRTOS_dnsclear();
 #endif /* ipconfigUSE_DNS_CACHE != 0 */
 
 #if( ipconfigDNS_USE_CALLBACKS != 0 )

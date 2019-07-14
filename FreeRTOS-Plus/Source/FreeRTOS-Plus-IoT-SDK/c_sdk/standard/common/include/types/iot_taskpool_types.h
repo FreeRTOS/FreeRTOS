@@ -73,7 +73,7 @@ typedef enum IotTaskPoolError
     IOT_TASKPOOL_SUCCESS = 0,
 
     /**
-     * @brief Task pool operation failed because at laest one parameter is invalid.
+     * @brief Task pool operation failed because at least one parameter is invalid.
      *
      * Functions that may return this value:
      * - @ref taskpool_function_createsystemtaskpool

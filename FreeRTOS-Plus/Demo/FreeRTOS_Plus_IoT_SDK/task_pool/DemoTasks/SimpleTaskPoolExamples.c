@@ -52,7 +52,7 @@ one job. */
  * any of the demos encounter any unexpected behaviour.
  */
 static void prvExample_BasicSingleJob( void );
-static void prvExample_DeferredSingleJob( void );
+static void prvExample_DeferredJobAndCancellingJobs( void );
 static void prvExample_BasicRecyclableJob( void );
 static void prvExample_ReuseRecyclableJobFromLowPriorityTask( void );
 static void prvExample_ReuseRecyclableJobFromHighPriorityTask( void );
@@ -147,7 +147,7 @@ uint32_t ulLoops = 0;
 		/* Demonstrate a job being scheduled to run at some time in the
 		future, and how a job scheduled to run in the future can be cancelled if
 		it has not yet started executing.  */
-		prvExample_DeferredSingleJob();
+		prvExample_DeferredJobAndCancellingJobs();
 
 		/* Demonstrate the most basic use of a recyclable job.  This is similar
 		to prvExample_BasicSingleJob() but using a recyclable job.  Creating a
@@ -250,7 +250,7 @@ IotTaskPoolJobStatus_t xJobStatus;
 }
 /*-----------------------------------------------------------*/
 
-static void prvExample_DeferredSingleJob( void )
+static void prvExample_DeferredJobAndCancellingJobs( void )
 {
 IotTaskPoolJobStorage_t xJobStorage;
 IotTaskPoolJob_t xJob;

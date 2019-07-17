@@ -53,7 +53,7 @@ out the debugging messages. */
 FreeRTOS_netstat() command, and ping replies.  If ipconfigHAS_PRINTF is set to 1
 then FreeRTOS_printf should be set to the function used to print out the
 messages. */
-#define ipconfigHAS_PRINTF			0
+#define ipconfigHAS_PRINTF			1
 #if( ipconfigHAS_PRINTF == 1 )
 	#define FreeRTOS_printf(X)			vLoggingPrintf X
 #endif

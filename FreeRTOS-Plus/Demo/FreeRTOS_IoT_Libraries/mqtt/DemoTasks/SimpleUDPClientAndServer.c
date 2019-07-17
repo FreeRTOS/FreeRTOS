@@ -47,6 +47,10 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
+#if( configASSERT_DEFINED == 0 )
+	#error This demo uses configASSERT() to trap errors.  configASSERT() must be defined in FreeRTOSConfig.h https://www.freertos.org/a00110.html#configASSERT
+#endif
+
 #define simpTINY_DELAY	( ( TickType_t ) 2 )
 
 /*
@@ -100,6 +104,8 @@ const TickType_t x150ms = 150UL / portTICK_PERIOD_MS;
 
 	/* Remove compiler warning about unused parameters. */
 	( void ) pvParameters;
+
+	FreeRTOS_printf( ( "Starting prvSimpleClientTask\r\n" ) );
 
 	/* It is assumed that this task is not created until the network is up,
 	so the IP address can be obtained immediately.  store the IP address being
@@ -161,6 +167,8 @@ Socket_t xListeningSocket;
 	/* Just to prevent compiler warnings. */
 	( void ) pvParameters;
 
+	FreeRTOS_printf( ( "Starting prvSimpleServerTask\r\n" ) );
+
 	/* Attempt to open the socket. */
 	xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
 	configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
@@ -191,6 +199,7 @@ Socket_t xListeningSocket;
 
 		/* Error check. */
 		configASSERT( lBytes == ( BaseType_t ) strlen( ( const char * ) cReceivedString ) );
+		FreeRTOS_printf( ( "prvSimpleServerTask() recieved %s\r\n", ( const char * ) cReceivedString ) );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -210,6 +219,8 @@ const size_t xStringLength = strlen( pcStringToSend ) + 15;
 
 	/* Remove compiler warning about unused parameters. */
 	( void ) pvParameters;
+
+	FreeRTOS_printf( ( "Starting prvSimpleZeroCopyUDPClientTask\r\n" ) );
 
 	/* It is assumed that this task is not created until the network is up,
 	so the IP address can be obtained immediately.  store the IP address being
@@ -309,6 +320,8 @@ Socket_t xListeningSocket;
 	/* Just to prevent compiler warnings. */
 	( void ) pvParameters;
 
+	FreeRTOS_printf( ( "Starting prvSimpleZeroCopyServerTask\r\n" ) );
+
 	/* Attempt to open the socket. */
 	xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
 	configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
@@ -343,6 +356,7 @@ Socket_t xListeningSocket;
 			/* It is expected to receive one more byte than the string length as
 			the NULL terminator is also transmitted. */
 			configASSERT( lBytes == ( ( BaseType_t ) strlen( ( const char * ) pucUDPPayloadBuffer ) + 1 ) );
+			FreeRTOS_printf( ( "prvSimpleZeroCopyServerTask() recieved %s\r\n", ( const char * ) pucUDPPayloadBuffer ) );
 		}
 
 		if( lBytes >= 0 )

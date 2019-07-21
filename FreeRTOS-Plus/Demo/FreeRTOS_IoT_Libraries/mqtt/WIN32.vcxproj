@@ -60,7 +60,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\mqtt\include;..\..\..\Source\FreeRTOS-Plus-TCP\include;..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\DemoTasks\include;.\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include\private;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\freertos\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\secure_sockets\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>

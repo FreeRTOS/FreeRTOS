@@ -27,15 +27,15 @@
 
 /* Standard inclues. */
 #include <string.h>
+#include <stdio.h>
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* MQTT include. */
+/* IoT SDK includes. */
 #include "iot_mqtt.h"
-
-/* Platform FreeRTOS network include. */
+#include "iot_taskpool.h"
 #include "platform/iot_network_freertos.h"
 
 /**
@@ -59,8 +59,9 @@
  * @brief Details of the MQTT broker to connect to.
  *
  * @note This example does not use TLS and therefore won't work with AWS IoT.
+ *
  */
-#define mqttexampleMQTT_BROKER_ENDPOINT		"10.60.214.105"
+#define mqttexampleMQTT_BROKER_ENDPOINT		"test.mosquitto.org"
 #define mqttexampleMQTT_BROKER_PORT			1883
 
 /**
@@ -100,6 +101,32 @@
  * @brief The MQTT connection handle used in this example.
  */
 static IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
+
+/**
+ * @brief Parameters used to create the system task pool.
+ */
+static const IotTaskPoolInfo_t xTaskPoolParameters = {
+														/* Minimum number of threads in a task pool.
+														 * Note the slimmed down version of the task
+														 * pool used by this library does not autoscale
+														 * the number of tasks in the pool so in this
+														 * case this sets the number of tasks in the
+														 * pool. */
+														2,
+														/* Maximum number of threads in a task pool.
+														 * Note the slimmed down version of the task
+														 * pool used by this library does not autoscale
+														 * the number of tasks in the pool so in this
+														 * case this parameter is just ignored. */
+														2,
+														/* Stack size for every task pool thread - in
+														 * bytes, hence multiplying by the number of bytes
+														 * in a word as configMINIMAL_STACK_SIZE is
+														 * specified in words. */
+														configMINIMAL_STACK_SIZE * sizeof( portSTACK_TYPE ),
+														/* Priority for every task pool thread. */
+														tskIDLE_PRIORITY,
+													 };
 /*-----------------------------------------------------------*/
 
 /**
@@ -231,6 +258,10 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
 
+	/* The MQTT library needs a task pool, so create the system task pool. */
+	xResult = IotTaskPool_CreateSystemTaskPool( &( xTaskPoolParameters ) );
+	configASSERT( xResult == IOT_TASKPOOL_SUCCESS );
+
 	/* MQTT library must be initialized before it can be used. This is just one
 	 * time initialization. */
 	xResult = IotMqtt_Init();
@@ -284,6 +315,13 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 						 &( ulNotificationValue ), /* Obtain the notification value. */
 						 pdMS_TO_TICKS( mqttexampleMQTT_TIMEOUT_MS ) );
 		configASSERT( ( ulNotificationValue & mqttexampleDISCONNECTED_BIT ) == mqttexampleDISCONNECTED_BIT );
+
+		printf( "prvMQTTDemoTask() completed an iteration without hitting an assert.\r\n" );
+		fflush( stdout );
+
+		/* Wait for some time between two iterations to ensure that we do not
+		 * bombard the public test mosquitto broker. */
+		vTaskDelay( pdMS_TO_TICKS( 5000 ) );
 	}
 }
 /*-----------------------------------------------------------*/

@@ -229,8 +229,8 @@ TaskHandle_t xDemoTaskHandle = ( TaskHandle_t ) pvCallbackContext;
 
 	/* Inform the demo task about the message received from the MQTT broker. */
 	xTaskNotify( xDemoTaskHandle,
-				mqttexampleMESSAGE_RECEIVED_BIT,
-				eSetBits /* Set the mqttexampleMESSAGE_RECEIVED_BIT in the demo task's notification value. */
+				 mqttexampleMESSAGE_RECEIVED_BIT,
+				 eSetBits /* Set the mqttexampleMESSAGE_RECEIVED_BIT in the demo task's notification value. */
 				);
 }
 /*-----------------------------------------------------------*/

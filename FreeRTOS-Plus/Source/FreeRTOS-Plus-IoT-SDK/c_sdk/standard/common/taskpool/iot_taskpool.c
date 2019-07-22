@@ -45,10 +45,6 @@
 	#error configSUPPORT_STATIC_ALLOCATION must be set to 1 in FreeRTOSConfig.h to build this file.
 #endif
 
-/* Platform layer includes. */
-//_RB_#include "platform/iot_threads.h"
-//_RB_#include "platform/iot_clock.h"
-
 /* Task pool internal include. */
 #include "private/iot_taskpool_internal.h"
 
@@ -72,7 +68,7 @@
  * the system libraries as well. The system task pool needs to be initialized before any library is used or
  * before any code that posts jobs to the task pool runs.
  */
-_taskPool_t _IotSystemTaskPool = { .dispatchQueue = IOT_DEQUEUE_INITIALIZER };
+static _taskPool_t _IotSystemTaskPool = { .dispatchQueue = IOT_DEQUEUE_INITIALIZER };
 
 /* -------------- Convenience functions to create/recycle/destroy jobs -------------- */
 
@@ -171,12 +167,10 @@ static IotTaskPoolError_t _performTaskPoolParameterValidation( const IotTaskPool
 /**
  * Initializes a pre-allocated instance of a task pool.
  *
- * @param[in] pInfo The initialization information for the task pool.
  * @param[in] pTaskPool The pre-allocated instance of the task pool to initialize.
  *
  */
-static IotTaskPoolError_t _initTaskPoolControlStructures( const IotTaskPoolInfo_t * const pInfo,
-                                                          _taskPool_t * const pTaskPool );
+static void _initTaskPoolControlStructures( _taskPool_t * const pTaskPool );
 
 /**
  * Initializes a pre-allocated instance of a task pool.
@@ -195,14 +189,6 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
  *
  */
 static void _destroyTaskPool( _taskPool_t * const pTaskPool );
-
-/**
- * Check for the exit condition.
- *
- * @param[in] pTaskPool The task pool to destroy.
- *
- */
-static bool _IsShutdownStarted( const _taskPool_t * const pTaskPool );
 
 /**
  * Set the exit condition.
@@ -224,7 +210,6 @@ static void _signalShutdown( _taskPool_t * const pTaskPool,
  */
 static IotTaskPoolError_t _scheduleInternal( _taskPool_t * const pTaskPool,
                                              _taskPoolJob_t * const pJob );
-
 /**
  * Matches a deferred job in the timer queue with its timer event wrapper.
  *
@@ -249,12 +234,27 @@ static IotTaskPoolError_t _tryCancelInternal( _taskPool_t * const pTaskPool,
 
 /* ---------------------------------------------------------------------------------------------- */
 
-IotTaskPool_t IotTaskPool_GetSystemTaskPool( void )
-{
-    return &_IotSystemTaskPool;
-}
-
-/*-----------------------------------------------------------*/
+/*
+ * The full IoT Task Pool Library has many use cases, including Linux
+ * development.  Typical FreeRTOS use cases do not require the full
+ * functionality so optimised version is provided specifically for use with
+ * FreeRTOS.  Unlike the full version, this optimised version:
+ *   + Only supports a single task pool (system task pool) at a time.
+ *   + Does not auto-scale by dynamically adding more tasks if the number of
+ *   + tasks in the pool becomes exhausted.  The number of tasks in the pool
+ *     are fixed at compile time.  See the task pool configuration options for
+ *     more information.
+ *   + Cannot be shut down - it exists for the lifetime of the application.
+ *
+ * As such this file does not implement the following API functions:
+ *   + IotTaskPool_GetSystemTaskPool()
+ *   + IotTaskPool_Create()
+ *   + IotTaskPool_Destroy()
+ *   + IotTaskPool_SetMaxThreads()
+ *
+ * Users who are interested in the functionality of the full IoT Task Pool
+ * library can us it in place of this optimised version.
+ */
 
 IotTaskPoolError_t IotTaskPool_CreateSystemTaskPool( const IotTaskPoolInfo_t * const pInfo )
 {
@@ -278,203 +278,6 @@ IotTaskPoolError_t IotTaskPool_CreateSystemTaskPool( const IotTaskPoolInfo_t * c
 
     TASKPOOL_NO_FUNCTION_CLEANUP();
 }
-
-/*-----------------------------------------------------------*/
-
-IotTaskPoolError_t IotTaskPool_Create( const IotTaskPoolInfo_t * const pInfo,
-                                       IotTaskPool_t * const pTaskPool )
-{
-    TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
-
-    _taskPool_t * pTempTaskPool = NULL;
-
-    /* Verify that the task pool storage is valid. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pTaskPool );
-
-    /* Parameter checking. */
-    TASKPOOL_ON_ERROR_GOTO_CLEANUP( _performTaskPoolParameterValidation( pInfo ) );
-
-    /* Allocate the memory for the task pool */
-    pTempTaskPool = ( _taskPool_t * ) IotTaskPool_MallocTaskPool( sizeof( _taskPool_t ) );
-
-    if( pTempTaskPool == NULL )
-    {
-        TASKPOOL_SET_AND_GOTO_CLEANUP( IOT_TASKPOOL_NO_MEMORY );
-    }
-
-    memset( pTempTaskPool, 0x00, sizeof( _taskPool_t ) );
-
-    TASKPOOL_SET_AND_GOTO_CLEANUP( _createTaskPool( pInfo, pTempTaskPool ) );
-
-    TASKPOOL_FUNCTION_CLEANUP();
-
-    if( TASKPOOL_FAILED( status ) )
-    {
-        if( pTempTaskPool != NULL )
-        {
-            IotTaskPool_FreeTaskPool( pTempTaskPool );
-        }
-    }
-    else
-    {
-        *pTaskPool = pTempTaskPool;
-    }
-
-    TASKPOOL_FUNCTION_CLEANUP_END();
-}
-
-/*-----------------------------------------------------------*/
-
-IotTaskPoolError_t IotTaskPool_Destroy( IotTaskPool_t taskPoolHandle )
-{
-    TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
-
-    uint32_t count;
-    bool completeShutdown = true;
-
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
-
-    /* Track how many threads the task pool owns. */
-    uint32_t activeThreads;
-
-    /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pTaskPool );
-
-    /* Destroying the task pool should be safe, and therefore we will grab the task pool lock.
-     * No worker thread or application thread should access any data structure
-     * in the task pool while the task pool is being destroyed. */
-    taskENTER_CRITICAL();
-    {
-        IotLink_t * pItemLink;
-
-        /* Record how many active threads in the task pool. */
-        activeThreads = pTaskPool->activeThreads;
-
-        /* Destroying a Task pool happens in six (6) stages: First, (1) we clear the job queue and (2) the timer queue.
-         * Then (3) we clear the jobs cache. We will then (4) wait for all worker threads to signal exit,
-         * before (5) setting the exit condition and wake up all active worker threads. Finally (6) destroying
-         * all task pool data structures and release the associated memory.
-         */
-
-        /* (1) Clear the job queue. */
-        do
-        {
-            pItemLink = NULL;
-
-            pItemLink = IotDeQueue_DequeueHead( &pTaskPool->dispatchQueue );
-
-            if( pItemLink != NULL )
-            {
-                _taskPoolJob_t * pJob = IotLink_Container( _taskPoolJob_t, pItemLink, link );
-
-                _destroyJob( pJob );
-            }
-        } while( pItemLink );
-
-        /* (2) Clear the timer queue. */
-        {
-            _taskPoolTimerEvent_t * pTimerEvent;
-
-            /* A deferred job may have fired already. Since deferred jobs will go through the same mutex
-             * the shutdown sequence is holding at this stage, there is no risk for race conditions. Yet, we
-             * need to let the deferred job to destroy the task pool. */
-
-            pItemLink = IotListDouble_PeekHead( &pTaskPool->timerEventsList );
-
-            if( pItemLink != NULL )
-            {
-                TickType_t now = xTaskGetTickCount();
-
-                pTimerEvent = IotLink_Container( _taskPoolTimerEvent_t, pItemLink, link );
-
-                if( pTimerEvent->expirationTime <= now )
-                {
-                    IotLogDebug( "Shutdown will be deferred to the timer thread" );
-
-                    /* Timer may have fired already! Let the timer thread destroy
-                     * complete the taskpool destruction sequence. */
-                    completeShutdown = false;
-                }
-
-                /* Remove all timers from the timeout list. */
-                for( ; ; )
-                {
-                    pItemLink = IotListDouble_RemoveHead( &pTaskPool->timerEventsList );
-
-                    if( pItemLink == NULL )
-                    {
-                        break;
-                    }
-
-                    pTimerEvent = IotLink_Container( _taskPoolTimerEvent_t, pItemLink, link );
-
-                    _destroyJob( pTimerEvent->job );
-
-                    IotTaskPool_FreeTimerEvent( pTimerEvent );
-                }
-            }
-        }
-
-        /* (3) Clear the job cache. */
-        do
-        {
-            pItemLink = NULL;
-
-            pItemLink = IotListDouble_RemoveHead( &pTaskPool->jobsCache.freeList );
-
-            if( pItemLink != NULL )
-            {
-                _taskPoolJob_t * pJob = IotLink_Container( _taskPoolJob_t, pItemLink, link );
-
-                _destroyJob( pJob );
-            }
-        } while( pItemLink );
-
-        /* (4) Set the exit condition. */
-        _signalShutdown( pTaskPool, activeThreads );
-    }
-    taskEXIT_CRITICAL();
-
-    /* (5) Wait for all active threads to reach the end of their life-span. */
-    for( count = 0; count < activeThreads; ++count )
-    {
-        xSemaphoreTake( pTaskPool->startStopSignal, portMAX_DELAY );
-    }
-
-    IotTaskPool_Assert( uxSemaphoreGetCount( pTaskPool->startStopSignal ) == 0 );
-    IotTaskPool_Assert( pTaskPool->activeThreads == 0 );
-
-    /* (6) Destroy all signaling objects. */
-    if( completeShutdown == true )
-    {
-        _destroyTaskPool( pTaskPool );
-
-        /* Do not free the system task pool which is statically allocated. */
-        if( pTaskPool != &_IotSystemTaskPool )
-        {
-            IotTaskPool_FreeTaskPool( pTaskPool );
-        }
-    }
-
-    TASKPOOL_NO_FUNCTION_CLEANUP();
-}
-
-/*-----------------------------------------------------------*/
-
-IotTaskPoolError_t IotTaskPool_SetMaxThreads( IotTaskPool_t taskPoolHandle,
-                                              uint32_t maxThreads )
-{
-    TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
-
-    _taskPool_t * pTaskPool = ( _taskPool_t * ) taskPoolHandle;
-
-    /* Parameter checking. */
-    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pTaskPool );
-    TASKPOOL_ON_ARG_ERROR_GOTO_CLEANUP( maxThreads < 1UL );
-
-    TASKPOOL_NO_FUNCTION_CLEANUP();
-}
-
 /*-----------------------------------------------------------*/
 
 IotTaskPoolError_t IotTaskPool_CreateJob( IotTaskPoolRoutine_t userCallback,
@@ -559,7 +362,6 @@ IotTaskPoolError_t IotTaskPool_DestroyRecyclableJob( IotTaskPool_t taskPoolHandl
     pool - no other values are allowed.  Use the full implementation of this
     library if you want multiple task pools (there is more than one task in
     each pool. */
-//_RB_could use a TASKPOOL macro to check value and return error.
     configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
 
     /* Avoid compiler warnings about unused parameters if configASSERT() is not
@@ -688,7 +490,7 @@ IotTaskPoolError_t IotTaskPool_ScheduleDeferred( IotTaskPool_t taskPoolHandle,
         pTimerEvent->link.pNext = NULL;
         pTimerEvent->link.pPrevious = NULL;
         pTimerEvent->expirationTime = now + pdMS_TO_TICKS( timeMs );
-        pTimerEvent->job = job;
+        pTimerEvent->job = job; //_RB_ Think up to here can be outside the critical section.
 
         /* Append the timer event to the timer list. */
         IotListDouble_InsertSorted( &pTaskPool->timerEventsList, &pTimerEvent->link, _timerEventCompare );
@@ -723,9 +525,15 @@ IotTaskPoolError_t IotTaskPool_GetStatus( IotTaskPool_t taskPoolHandle,
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    /* Parameter checking. */
-//_RB_    TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( taskPoolHandle ); /* What is the point of this parameter? */
+    /* This lean version of the task pool only supports the task pool created
+    by this library (the system task pool).  NULL means use the system task
+    pool - no other values are allowed.  Use the full implementation of this
+    library if you want multiple task pools (there is more than one task in
+    each pool. */
+    configASSERT( ( taskPoolHandle == NULL ) || ( taskPoolHandle == &_IotSystemTaskPool ) );
     ( void ) taskPoolHandle;
+
+    /* Parameter checking. */
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( job );
     TASKPOOL_ON_NULL_ARG_GOTO_CLEANUP( pStatus );
     *pStatus = IOT_TASKPOOL_STATUS_UNDEFINED;
@@ -747,7 +555,7 @@ IotTaskPoolError_t IotTaskPool_TryCancel( IotTaskPool_t taskPoolHandle,
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    _taskPool_t * pTaskPool = &_IotSystemTaskPool;
+    _taskPool_t * const pTaskPool = &_IotSystemTaskPool;
 
     /* This lean version of the task pool only supports the task pool created
     by this library (the system task pool).  NULL means use the system task
@@ -835,14 +643,8 @@ static IotTaskPoolError_t _performTaskPoolParameterValidation( const IotTaskPool
     TASKPOOL_NO_FUNCTION_CLEANUP();
 }
 
-static IotTaskPoolError_t _initTaskPoolControlStructures( const IotTaskPoolInfo_t * const pInfo,
-                                                          _taskPool_t * const pTaskPool )
+static void _initTaskPoolControlStructures( _taskPool_t * const pTaskPool )
 {
-    TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
-
-    bool semStartStopInit = false;
-    bool semDispatchInit = false;
-
     /* Initialize a job data structures that require no de-initialization.
      * All other data structures carry a value of 'NULL' before initailization.
      */
@@ -851,46 +653,9 @@ static IotTaskPoolError_t _initTaskPoolControlStructures( const IotTaskPoolInfo_
 
     _initJobsCache( &pTaskPool->jobsCache );
 
-    /* Initialize the semaphore to ensure all threads have started. */
-    pTaskPool->startStopSignal = xSemaphoreCreateCountingStatic( pInfo->minThreads, 0, &pTaskPool->startStopSignalBuffer );
-
-    if( pTaskPool->startStopSignal != NULL )
-    {
-        semStartStopInit = true;
-
-        /* Initialize the semaphore for waiting for incoming work. */
-        pTaskPool->dispatchSignal = xSemaphoreCreateCountingStatic( TASKPOOL_MAX_SEM_VALUE, 0, &pTaskPool->dispatchSignalBuffer );
-
-        if( pTaskPool->dispatchSignal != NULL )
-        {
-            semDispatchInit = true;
-        }
-        else
-        {
-            TASKPOOL_SET_AND_GOTO_CLEANUP( IOT_TASKPOOL_NO_MEMORY );
-        }
-    }
-    else
-    {
-        TASKPOOL_SET_AND_GOTO_CLEANUP( IOT_TASKPOOL_NO_MEMORY );
-    }
-
-    TASKPOOL_FUNCTION_CLEANUP();
-
-    if( TASKPOOL_FAILED( status ) )
-    {
-        if( semStartStopInit )
-        {
-            vSemaphoreDelete( &pTaskPool->startStopSignal );
-        }
-
-        if( semDispatchInit )
-        {
-            vSemaphoreDelete( &pTaskPool->dispatchSignal );
-        }
-    }
-
-    TASKPOOL_FUNCTION_CLEANUP_END();
+    /* Initialize the semaphore for waiting for incoming work.  Cannot fail as
+    statically allocated. */
+    pTaskPool->dispatchSignal = xSemaphoreCreateCountingStatic( TASKPOOL_MAX_SEM_VALUE, 0, &pTaskPool->dispatchSignalBuffer );
 }
 
 static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo,
@@ -898,7 +663,6 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 {
     TASKPOOL_FUNCTION_ENTRY( IOT_TASKPOOL_SUCCESS );
 
-    uint32_t count;
     uint32_t threadsCreated = 0; /* Although initialised before use removing the initialiser here results in compiler warnings. */
     char cTaskName[ 10 ];
 
@@ -909,7 +673,7 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
     memset( ( void * ) pTaskPool, 0x00, sizeof( _taskPool_t ) );
 
     /* Initialize all internal data structure prior to creating all threads. */
-    TASKPOOL_ON_ERROR_GOTO_CLEANUP( _initTaskPoolControlStructures( pInfo, pTaskPool ) );
+    _initTaskPoolControlStructures( pTaskPool );
 
     /* Create the timer for a new connection. */
     pTaskPool->timer = xTimerCreate( NULL, portMAX_DELAY, pdFALSE, ( void * ) pTaskPool, _timerCallback );
@@ -921,16 +685,15 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
         TASKPOOL_SET_AND_GOTO_CLEANUP( IOT_TASKPOOL_NO_MEMORY );
     }
 
-    /* The task pool will initialize the minimum number of threads requested by the user upon start. */
-    /* When a thread is created, it will signal a semaphore to signify that it is about to wait on incoming */
-    /* jobs. A thread can be woken up for exit or for new jobs only at that point in time.  */
-    /* The exit condition is setting the maximum number of threads to 0. */
-
+    /* The task pool will initialize the minimum number of threads requested by the user upon start.
+    Note this tailored version of the task pool does not autoscale, but fixes the number of tasks
+    in the pool to the originally specified minimum, and the specified maximum value is ignored. */
     /* Create the minimum number of threads specified by the user, and if one fails shutdown and return error. */
     for( threadsCreated = 0; threadsCreated < pInfo->minThreads; )
     {
-        TaskHandle_t task = NULL; //_RB_ need to check compiles with C89
+        TaskHandle_t task = NULL;
 
+        /* Generate a unique name for the task. */
         snprintf( cTaskName, sizeof( cTaskName ), "pool%d", ( int ) threadsCreated );
 
         BaseType_t res = xTaskCreate( _taskPoolWorker,
@@ -941,7 +704,7 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
                                       &task );
 
         /* Create one thread. */
-        if( res == pdFALSE )
+        if( res == pdFALSE ) //_RB_ would not be needed if tasks are created statically.
         {
             IotLogError( "Could not create worker thread! Exiting..." );
 
@@ -958,24 +721,11 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 
     TASKPOOL_FUNCTION_CLEANUP();
 
-    /* Wait for threads to be ready to wait on the condition, so that threads are actually able to receive messages. */
-    for( count = 0; count < threadsCreated; ++count )
-    {
-        xSemaphoreTake( pTaskPool->startStopSignal, portMAX_DELAY ); /*_RB_ Is waiting necessary, and if so, is a semaphore necessary? */
-    }
-
     /* In case of failure, wait on the created threads to exit. */
     if( TASKPOOL_FAILED( status ) )
     {
         /* Set the exit condition for the newly created threads. */
         _signalShutdown( pTaskPool, threadsCreated );
-
-        /* Signal all threads to exit. */
-        for( count = 0; count < threadsCreated; ++count )
-        {
-            xSemaphoreTake( pTaskPool->startStopSignal, portMAX_DELAY );
-        }
-
         _destroyTaskPool( pTaskPool );
     }
 
@@ -997,11 +747,6 @@ static void _destroyTaskPool( _taskPool_t * const pTaskPool )
     {
         vSemaphoreDelete( pTaskPool->dispatchSignal );
     }
-
-    if( pTaskPool->startStopSignal != NULL )
-    {
-        vSemaphoreDelete( pTaskPool->startStopSignal );
-    }
 }
 
 /* ---------------------------------------------------------------------------------------------- */
@@ -1015,9 +760,6 @@ static void _taskPoolWorker( void * pUserContext )
 
     /* Extract pTaskPool pointer from context. */
     _taskPool_t * pTaskPool = ( _taskPool_t * ) pUserContext;
-
-    /* Signal that this worker completed initialization and it is ready to receive notifications. */
-    ( void ) xSemaphoreGive( pTaskPool->startStopSignal );
 
     /* OUTER LOOP: it controls the lifetiem of the worker thread: exit condition for a worker thread
      * is setting maxThreads to zero. A worker thread is running until the maximum number of allowed
@@ -1036,23 +778,6 @@ static void _taskPoolWorker( void * pUserContext )
          */
         taskENTER_CRITICAL();
         {
-            /* If the exit condition is verified, update the number of active threads and exit the loop. */
-            if( _IsShutdownStarted( pTaskPool ) )
-            {
-                IotLogDebug( "Worker thread exiting because exit condition was set." );
-
-                /* Decrease the number of active threads. */
-                pTaskPool->activeThreads--;
-
-                taskEXIT_CRITICAL();
-
-                /* Signal that this worker is exiting. */
-                xSemaphoreGive( pTaskPool->startStopSignal );
-
-                /* On shutdown, abandon the OUTER LOOP immediately. */
-                break;
-            }
-
             /* Dequeue the first job in FIFO order. */
             pFirst = IotDeQueue_DequeueHead( &pTaskPool->dispatchQueue );
 
@@ -1476,17 +1201,6 @@ static void _timerCallback( TimerHandle_t xTimer )
      */
     taskENTER_CRITICAL();
     {
-        /* Check again for shutdown and bail out early in case. */
-        if( _IsShutdownStarted( pTaskPool ) )
-        {
-            taskEXIT_CRITICAL();
-
-            /* Complete the shutdown sequence. */
-            _destroyTaskPool( pTaskPool );
-
-            return;
-        }
-
         /* Dispatch all deferred job whose timer expired, then reset the timer for the next
          * job down the line. */
         for( ; ; )

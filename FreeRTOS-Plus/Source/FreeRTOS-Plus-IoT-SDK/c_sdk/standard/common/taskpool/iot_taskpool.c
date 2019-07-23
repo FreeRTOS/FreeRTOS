@@ -191,16 +191,6 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 static void _destroyTaskPool( _taskPool_t * const pTaskPool );
 
 /**
- * Set the exit condition.
- *
- * @param[in] pTaskPool The task pool to destroy.
- * @param[in] threads The number of threads active in the task pool at shutdown time.
- *
- */
-static void _signalShutdown( _taskPool_t * const pTaskPool,
-                             uint32_t threads );
-
-/**
  * Places a job in the dispatch queue.
  *
  * @param[in] pTaskPool The task pool to scheduel the job with.
@@ -725,7 +715,7 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
     if( TASKPOOL_FAILED( status ) )
     {
         /* Set the exit condition for the newly created threads. */
-        _signalShutdown( pTaskPool, threadsCreated );
+#pragma message( "Threads need to be created statically here to ensure creation cannot fail as there is no shutdown mechanism." )
         _destroyTaskPool( pTaskPool );
     }
 
@@ -742,11 +732,6 @@ static void _destroyTaskPool( _taskPool_t * const pTaskPool )
     {
         xTimerDelete( pTaskPool->timer, 0 );
     }
-
-    if( pTaskPool->dispatchSignal != NULL )
-    {
-        vSemaphoreDelete( pTaskPool->dispatchSignal );
-    }
 }
 
 /* ---------------------------------------------------------------------------------------------- */
@@ -756,26 +741,21 @@ static void _taskPoolWorker( void * pUserContext )
     IotTaskPool_Assert( pUserContext != NULL );
 
     IotTaskPoolRoutine_t userCallback = NULL;
-    bool running = true;
 
     /* Extract pTaskPool pointer from context. */
     _taskPool_t * pTaskPool = ( _taskPool_t * ) pUserContext;
 
-    /* OUTER LOOP: it controls the lifetiem of the worker thread: exit condition for a worker thread
-     * is setting maxThreads to zero. A worker thread is running until the maximum number of allowed
-     * threads is not zero and the active threads are less than the maximum number of allowed threads.
-     */
-    do
+    /* OUTER LOOP: it controls the lifetime of the worker thread. */
+    for( ;; )
     {
         IotLink_t * pFirst = NULL;
         _taskPoolJob_t * pJob = NULL;
 
         /* Wait on incoming notifications... */
+        configASSERT( pTaskPool->dispatchSignal );
         xSemaphoreTake( pTaskPool->dispatchSignal, portMAX_DELAY );
 
-        /* Acquire the lock to check the exit condition, and release the lock if the exit condition is verified,
-         * or before waiting for incoming notifications.
-         */
+        /* Acquire the lock to check for incoming notifications. */
         taskENTER_CRITICAL();
         {
             /* Dequeue the first job in FIFO order. */
@@ -809,13 +789,6 @@ static void _taskPoolWorker( void * pUserContext )
                 /* This job is finished, clear its pointer. */
                 pJob = NULL;
                 userCallback = NULL;
-
-                /* If this thread exceeded the quota, then let it terminate. */
-                if( running == false )
-                {
-                    /* Abandon the INNER LOOP. Execution will tranfer back to the OUTER LOOP condition. */
-                    break;
-                }
             }
 
             /* Acquire the lock before updating the job status. */
@@ -832,7 +805,7 @@ static void _taskPoolWorker( void * pUserContext )
                 {
                     taskEXIT_CRITICAL();
 
-                    /* Abandon the INNER LOOP. Execution will tranfer back to the OUTER LOOP condition. */
+                    /* Abandon the INNER LOOP. Execution will transfer back to the OUTER LOOP condition. */
                     break;
                 }
                 else
@@ -846,9 +819,7 @@ static void _taskPoolWorker( void * pUserContext )
             }
             taskEXIT_CRITICAL();
         }
-    } while( running == true );
-
-    vTaskDelete( NULL );
+    }
 }
 
 /* ---------------------------------------------------------------------------------------------- */
@@ -904,7 +875,7 @@ static _taskPoolJob_t * _fetchOrAllocateJob( _taskPoolCache_t * const pCache )
         }
         else
         {
-            /* Log alocation failure for troubleshooting purposes. */
+            /* Log allocation failure for troubleshooting purposes. */
             IotLogInfo( "Failed to allocate job." );
         }
     }
@@ -969,30 +940,6 @@ static void _destroyJob( _taskPoolJob_t * const pJob )
 
 /* ---------------------------------------------------------------------------------------------- */
 
-static bool _IsShutdownStarted( const _taskPool_t * const pTaskPool )
-{
-    return( pTaskPool->running == false );
-}
-
-/*-----------------------------------------------------------*/
-
-static void _signalShutdown( _taskPool_t * const pTaskPool,
-                             uint32_t threads )
-{
-    uint32_t count;
-
-    /* Set the exit condition. */
-    pTaskPool->running = false;
-
-    /* Broadcast to all active threads to wake-up. Active threads do check the exit condition right after wakein up. */
-    for( count = 0; count < threads; ++count )
-    {
-        ( void ) xSemaphoreGive( pTaskPool->dispatchSignal );
-    }
-}
-
-/* ---------------------------------------------------------------------------------------------- */
-
 static IotTaskPoolError_t _scheduleInternal( _taskPool_t * const pTaskPool,
                                              _taskPoolJob_t * const pJob )
 {
@@ -1051,12 +998,12 @@ static IotTaskPoolError_t _tryCancelInternal( _taskPool_t * const pTaskPool,
             break;
 
         case IOT_TASKPOOL_STATUS_COMPLETED:
-            /* Log mesggesong purposes. */
+            /* Log message for debug purposes. */
             IotLogWarn( "Attempt to cancel a job that is already executing, or canceled." );
             break;
 
         default:
-            /* Log mesggesong purposes. */
+            /* Log message for debug purposes purposes. */
             IotLogError( "Attempt to cancel a job with an undefined state." );
             break;
     }
@@ -1199,7 +1146,7 @@ static void _timerCallback( TimerHandle_t xTimer )
      * If this mutex cannot be locked it means that another thread is manipulating the
      * timeouts list, and will reset the timer to fire again, although it will be late.
      */
-    taskENTER_CRITICAL();
+    taskENTER_CRITICAL(); //_RB_ Critical section is too long.
     {
         /* Dispatch all deferred job whose timer expired, then reset the timer for the next
          * job down the line. */

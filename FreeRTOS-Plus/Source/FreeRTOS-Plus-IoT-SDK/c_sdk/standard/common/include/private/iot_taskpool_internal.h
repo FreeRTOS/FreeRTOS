@@ -255,7 +255,6 @@ typedef struct _taskPool
     int32_t priority;                        /**< @brief The priority for all task pool threads. */
     SemaphoreHandle_t dispatchSignal;        /**< @brief The synchronization object on which threads are waiting for incoming jobs. */
     StaticSemaphore_t dispatchSignalBuffer;  /**< @brief The semaphore buffer. */
-    SemaphoreHandle_t startStopSignal;       /**< @brief The synchronization object for threads to signal start and stop condition. */
     StaticSemaphore_t startStopSignalBuffer; /**< @brief The semaphore buffer. */
     TimerHandle_t timer;                     /**< @brief The timer for deferred jobs. */
     StaticTimer_t timerBuffer;               /**< @brief The timer buffer. */

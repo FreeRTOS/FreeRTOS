@@ -60,7 +60,6 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\Source\FreeRTOS-Plus-TCP\include;..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\DemoTasks\include;.\WinPCap;..\..\..\..\FreeRTOS\Source\include;..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\include;..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\freertos\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>.\Debug/WIN32.pch</PrecompiledHeaderOutputFile>
@@ -145,6 +144,8 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\queue.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\timers.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\freertos\iot_clock_freertos.c" />
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\logging\iot_logging.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\taskpool\iot_taskpool.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />

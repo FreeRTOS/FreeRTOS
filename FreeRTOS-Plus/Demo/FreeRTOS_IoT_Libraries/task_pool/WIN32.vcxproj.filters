@@ -81,6 +81,9 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos\include\platform\types">
       <UniqueIdentifier>{35ce7745-52a2-4220-be31-50dfaa35c0ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\common\logging">
+      <UniqueIdentifier>{6c8bc003-a388-4666-99f4-a31faa932a36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -147,6 +150,12 @@
     </ClCompile>
     <ClCompile Include="DemoTasks\SimpleTaskPoolExamples.c">
       <Filter>DemoTasks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\c_sdk\standard\common\logging\iot_logging.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-IoT-SDK\abstractions\platform\freertos\iot_clock_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

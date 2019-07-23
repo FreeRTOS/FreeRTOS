@@ -28,15 +28,6 @@
 #ifndef IOT_CONFIG_COMMON_H_
 #define IOT_CONFIG_COMMON_H_
 
-/* FreeRTOS include. */
-#include "FreeRTOS.h" //_RB_Makes common config file FreeRTOS specific
-
-/* Use platform types on FreeRTOS. */
-#include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
-
-/* Used to get the cloud broker endpoint for FreeRTOS. */
-//_RB_#include "aws_clientcredential.h"
-
 /* SDK version. */
 #define IOT_SDK_VERSION    "4.0.0"
 
@@ -196,8 +187,5 @@ extern uint16_t getDeviceMetricsLength( void );
 
 /* Configuration for defender demo: use long tag for readable output. Please use short tag for the real application. */
 #define AWS_IOT_DEFENDER_USE_LONG_TAG       ( 1 )
-
-/* Demo runner configuration. */
-//_RB_#include "aws_demo_config.h"
 
 #endif /* ifndef IOT_CONFIG_COMMON_H_ */

@@ -169,7 +169,7 @@ uint32_t ulLoops = 0;
 		ulLoops++;
 		if( ( ulLoops % 10UL ) == 0 )
 		{
-			printf( "prvTaskPoolDemoTask() performed %u iterations without hitting an assert.\r\n", ulLoops );
+			configPRINTF( ( "prvTaskPoolDemoTask() performed %u iterations without hitting an assert.\r\n", ulLoops ) );
 			fflush( stdout );
 		}
 	}

@@ -202,5 +202,7 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define strncasecmp _strnicmp
 #define strcmpi _strcmpi
 
+#define configPRINTF( X )    printf X
+
 #endif /* FREERTOS_CONFIG_H */
 

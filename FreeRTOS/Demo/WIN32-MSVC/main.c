@@ -54,6 +54,10 @@
 #include <stdlib.h>
 #include <conio.h>
 
+/* Visual studio intrinsics used so the __debugbreak() function is available
+should an assert get hit. */
+#include <intrin.h>
+
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -287,6 +291,9 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 				prvSaveTraceFile();
 			}
 		}
+
+		/* Cause debugger break point if being debugged. */
+		__debugbreak();
 
 		/* You can step out of this function to debug the assertion by using
 		the debugger to set ulSetToNonZeroInDebuggerToContinue to a non-zero

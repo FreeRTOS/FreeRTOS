@@ -81,7 +81,6 @@
     <ClCompile Include="..\..\Source\event_groups.c" />
     <ClCompile Include="..\..\Source\portable\MemMang\heap_5.c" />
     <ClCompile Include="..\..\Source\stream_buffer.c" />
-    <ClCompile Include="..\..\Source\task_pool.c" />
     <ClCompile Include="..\..\Source\timers.c" />
     <ClCompile Include="..\Common\Minimal\AbortDelay.c" />
     <ClCompile Include="..\Common\Minimal\BlockQ.c" />

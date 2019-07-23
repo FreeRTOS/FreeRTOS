@@ -89,7 +89,7 @@ SocketSet_t xSocketSet;
 					xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
 					FreeRTOS_printf( ( "TCP socket on port %d\n", ( int )xPortNumber ) );
 
-					if( xSocket != FREERTOS_NO_SOCKET )
+					if( xSocket != FREERTOS_INVALID_SOCKET )
 					{
 						xAddress.sin_addr = FreeRTOS_GetIPAddress(); // Single NIC, currently not used
 						xAddress.sin_port = FreeRTOS_htons( xPortNumber );

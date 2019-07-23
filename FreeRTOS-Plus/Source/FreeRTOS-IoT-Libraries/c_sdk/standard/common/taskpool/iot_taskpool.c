@@ -27,6 +27,35 @@
  * @brief Implements the task pool functions in iot_taskpool.h
  */
 
+
+/*
+ * The full IoT Task Pool Library has many use cases, including Linux
+ * development.  Typical FreeRTOS use cases do not require the full
+ * functionality so an optimised implementation is provided specifically for use
+ * with FreeRTOS.  The optimised version has a fixed number of tasks in the
+ * pool, each of which uses statically allocated memory to ensure creation of
+ * the pool is guaranteed (it does not run out of heap space).  The constant
+ * IOT_TASKPOOL_NUMBER_OF_WORKERS sets the number of tasks in the pool.
+ *
+ * Unlike the full version, this optimised version:
+ *   + Only supports a single task pool (system task pool) at a time.
+ *   + Does not auto-scale by dynamically adding more tasks if the number of
+ *   + tasks in the pool becomes exhausted.  The number of tasks in the pool
+ *     are fixed at compile time.  See the task pool configuration options for
+ *     more information.
+ *   + Cannot be shut down - it exists for the lifetime of the application.
+ *
+ * As such this file does not implement the following API functions:
+ *   + IotTaskPool_GetSystemTaskPool()
+ *   + IotTaskPool_Create()
+ *   + IotTaskPool_Destroy()
+ *   + IotTaskPool_SetMaxThreads()
+ *
+ * Users who are interested in the functionality of the full IoT Task Pool
+ * library can us it in place of this optimised version.
+ */
+
+
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -223,28 +252,6 @@ static IotTaskPoolError_t _tryCancelInternal( _taskPool_t * const pTaskPool,
                                               IotTaskPoolJobStatus_t * const pStatus );
 
 /* ---------------------------------------------------------------------------------------------- */
-
-/*
- * The full IoT Task Pool Library has many use cases, including Linux
- * development.  Typical FreeRTOS use cases do not require the full
- * functionality so optimised version is provided specifically for use with
- * FreeRTOS.  Unlike the full version, this optimised version:
- *   + Only supports a single task pool (system task pool) at a time.
- *   + Does not auto-scale by dynamically adding more tasks if the number of
- *   + tasks in the pool becomes exhausted.  The number of tasks in the pool
- *     are fixed at compile time.  See the task pool configuration options for
- *     more information.
- *   + Cannot be shut down - it exists for the lifetime of the application.
- *
- * As such this file does not implement the following API functions:
- *   + IotTaskPool_GetSystemTaskPool()
- *   + IotTaskPool_Create()
- *   + IotTaskPool_Destroy()
- *   + IotTaskPool_SetMaxThreads()
- *
- * Users who are interested in the functionality of the full IoT Task Pool
- * library can us it in place of this optimised version.
- */
 
 IotTaskPoolError_t IotTaskPool_CreateSystemTaskPool( const IotTaskPoolInfo_t * const pInfo )
 {

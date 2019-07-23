@@ -61,7 +61,18 @@
  */
 #define IOT_TASKPOOL_ENABLE_ASSERTS                 1
 
-/**
+/*
+ * The full IoT Task Pool Library has many use cases, including Linux
+ * development.  Typical FreeRTOS use cases do not require the full
+ * functionality so an optimised implementation is provided specifically for use
+ * with FreeRTOS.  The optimised version has a fixed number of tasks in the
+ * pool, each of which uses statically allocated memory to ensure creation of
+ * the pool is guaranteed (it does not run out of heap space).
+ * IOT_TASKPOOL_NUMBER_OF_WORKERS sets the number of tasks in the pool.
+ */
+#define IOT_TASKPOOL_NUMBER_OF_WORKERS               3
+
+/*
  * @brief Set the log level of the task pool library.
  *
  * Log messages from the task pool library at or below this setting will be
@@ -73,13 +84,6 @@
  */
 #define IOT_LOG_LEVEL_TASKPOOL                      IOT_LOG_INFO
 
-/**
- * @brief The number of worker tasks in the task pool.
- * 
- * The minimal version of the of task pool library only supports one task pool
- * and the number of the worker tasks is fixed at the compile time.
- */
-#define IOT_TASKPOOL_NUMBER_OF_WORKERS              3
 
 /**
  * @brief The stack size (in bytes) for each worker task in the task pool.
@@ -98,7 +102,7 @@
 /**
  * @brief Enable/Disable anonymous metrics collection when using AWS IoT.
  *
- * This demo does not support TLS and so does not work with AWS IoT. Therefore,
+ * This demo does not use TLS and so does not work with AWS IoT. Therefore,
  * the metric collection must be disabled.
  */
 #define AWS_IOT_MQTT_ENABLE_METRICS                 0

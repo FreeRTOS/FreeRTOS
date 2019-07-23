@@ -348,7 +348,7 @@ IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 	xNetworkInfo.u.setup.pNetworkCredentialInfo = NULL;
 
 	/* Use FreeRTOS+TCP network. */
-	xNetworkInfo.pNetworkInterface = IOT_NETWORK_INTERFACE_AFR;
+	xNetworkInfo.pNetworkInterface = IOT_NETWORK_INTERFACE_FREERTOS;
 
 	/* Setup the callback which is called when the MQTT connection is disconnected. */
 	xNetworkInfo.disconnectCallback.pCallbackContext = ( void * ) xTaskGetCurrentTaskHandle();

@@ -148,7 +148,6 @@
     <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_clock_freertos.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_network_freertos.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_threads_freertos.c" />
-    <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\secure_sockets\freertos_plus_tcp\iot_secure_sockets.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\logging\iot_logging.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\taskpool\iot_taskpool.c" />
     <ClCompile Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_api.c" />
@@ -193,12 +192,8 @@
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\include\platform\iot_network.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\include\platform\iot_threads.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\include\types\iot_platform_types.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\secure_sockets\include\iot_secure_sockets.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\secure_sockets\include\iot_secure_sockets_config_defaults.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\secure_sockets\include\iot_secure_sockets_wrapper_metrics.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_taskpool.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\private\iot_error.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\private\iot_lib_init.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\private\iot_logging.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\private\iot_static_memory.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\private\iot_taskpool_internal.h" />

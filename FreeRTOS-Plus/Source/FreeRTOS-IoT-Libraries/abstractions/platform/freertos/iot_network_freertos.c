@@ -26,7 +26,7 @@
 /**
  * @file iot_network_freertos.c
  * @brief Implementation of the network-related functions from iot_network_freertos.h
- * for Amazon FreeRTOS secure sockets.
+ * for FreeRTOS+TCP sockets.
  */
 
 /* The config header is always included first. */
@@ -36,13 +36,16 @@
 #include <string.h>
 
 /* FreeRTOS includes. */
+#include "FreeRTOS.h"
 #include "semphr.h"
 #include "event_groups.h"
 
-/* Error handling include. */
-#include "private/iot_error.h"
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
 
-/* Amazon FreeRTOS network include. */
+/* FreeRTOS-IoT-Libraries includes. */
+#include "private/iot_error.h"
 #include "platform/iot_network_freertos.h"
 
 /* Configure logs for the functions in this file. */
@@ -62,54 +65,61 @@
 /* Provide a default value for the number of milliseconds for a socket poll.
  * This is a temporary workaround to deal with the lack of poll(). */
 #ifndef IOT_NETWORK_SOCKET_POLL_MS
-    #define IOT_NETWORK_SOCKET_POLL_MS    ( 1000 )
+    #define IOT_NETWORK_SOCKET_POLL_MS      ( 1000 )
 #endif
 
 /**
  * @brief The event group bit to set when a connection's socket is shut down.
  */
-#define _FLAG_SHUTDOWN                ( 1 )
+#define _SHUTDOWN_BITMASK                   ( 1UL << 0UL )
 
 /**
  * @brief The event group bit to set when a connection's receive task exits.
  */
-#define _FLAG_RECEIVE_TASK_EXITED     ( 2 )
+#define _RECEIVE_TASK_EXITED_BITMASK        ( 1UL << 1UL )
 
 /**
  * @brief The event group bit to set when the connection is destroyed from the
  * receive task.
  */
-#define _FLAG_CONNECTION_DESTROYED    ( 4 )
+#define _CONNECTION_DESTROYED_BITMASK       ( 1UL << 2UL )
 
+/**
+ * @brief Maximum length of a DNS name.
+ *
+ * Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
+ * of a DNS name.
+ */
+#define _MAX_DNS_NAME_LENGTH                ( 253 )
 /*-----------------------------------------------------------*/
 
 typedef struct _networkConnection
 {
-    Socket_t socket;                             /**< @brief Amazon FreeRTOS Secure Sockets handle. */
-    StaticSemaphore_t socketMutex;               /**< @brief Prevents concurrent threads from sending on a socket. */
-    StaticEventGroup_t connectionFlags;          /**< @brief Synchronizes with the receive task. */
-    TaskHandle_t receiveTask;                    /**< @brief Handle of the receive task, if any. */
-    IotNetworkReceiveCallback_t receiveCallback; /**< @brief Network receive callback, if any. */
-    void * pReceiveContext;                      /**< @brief The context for the receive callback. */
-    bool bufferedByteValid;                      /**< @brief Used to determine if the buffered byte is valid. */
-    uint8_t bufferedByte;                        /**< @brief A single byte buffered from a receive, since AFR Secure Sockets does not have poll(). */
+    Socket_t socket;                                /**< @brief FreeRTOS+TCP sockets handle. */
+    SemaphoreHandle_t socketMutex;                  /**< @brief Prevents concurrent threads from sending on a socket. */
+    StaticSemaphore_t socketMutexStorage;           /**< @brief Storage space for socketMutex. */
+    EventGroupHandle_t connectionEventGroup;        /**< @brief Synchronizes with the receive task. */
+    StaticEventGroup_t connectionEventGroupStorage; /**< @brief Storage space for connectionEventGroup. */
+    TaskHandle_t receiveTask;                       /**< @brief Handle of the receive task, if any. */
+    IotNetworkReceiveCallback_t receiveCallback;    /**< @brief Network receive callback, if any. */
+    void * pReceiveContext;                         /**< @brief The context for the receive callback. */
+    bool bufferedByteValid;                         /**< @brief Used to determine if the buffered byte is valid. */
+    uint8_t bufferedByte;                           /**< @brief A single byte buffered from a receive, since FreeRTOS+TCP sockets does not have poll(). */
 } _networkConnection_t;
-
 /*-----------------------------------------------------------*/
 
 /**
  * @brief An #IotNetworkInterface_t that uses the functions in this file.
  */
-const IotNetworkInterface_t IotNetworkAfr =
+const IotNetworkInterface_t IotNetworkFreeRTOS =
 {
-    .create             = IotNetworkAfr_Create,
-    .setReceiveCallback = IotNetworkAfr_SetReceiveCallback,
-    .send               = IotNetworkAfr_Send,
-    .receive            = IotNetworkAfr_Receive,
-    .close              = IotNetworkAfr_Close,
-    .destroy            = IotNetworkAfr_Destroy
+    .create             = IotNetworkFreeRTOS_Create,
+    .setReceiveCallback = IotNetworkFreeRTOS_SetReceiveCallback,
+    .send               = IotNetworkFreeRTOS_Send,
+    .receive            = IotNetworkFreeRTOS_Receive,
+    .close              = IotNetworkFreeRTOS_Close,
+    .destroy            = IotNetworkFreeRTOS_Destroy
 };
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -119,18 +129,12 @@ const IotNetworkInterface_t IotNetworkAfr =
  */
 static void _destroyConnection( _networkConnection_t * pNetworkConnection )
 {
-    /* Call Secure Sockets close function to free resources. */
-    int32_t socketStatus = SOCKETS_Close( pNetworkConnection->socket );
-
-    if( socketStatus != SOCKETS_ERROR_NONE )
-    {
-        IotLogWarn( "Failed to destroy connection." );
-    }
+    /* Call FreeRTOS+TCP close function to free resources. */
+    ( void ) FreeRTOS_closesocket( pNetworkConnection->socket  );
 
     /* Free the network connection. */
     vPortFree( pNetworkConnection );
 }
-
 /*-----------------------------------------------------------*/
 
 /**
@@ -142,7 +146,7 @@ static void _networkReceiveTask( void * pArgument )
 {
     bool destroyConnection = false;
     int32_t socketStatus = 0;
-    EventBits_t connectionFlags = 0;
+    EventBits_t connectionEventGroupBits = 0;
 
     /* Cast network connection to the correct type. */
     _networkConnection_t * pNetworkConnection = pArgument;
@@ -157,20 +161,20 @@ static void _networkReceiveTask( void * pArgument )
          * MULTIPLE CALLS OF RECEIVE. */
         do
         {
-            socketStatus = SOCKETS_Recv( pNetworkConnection->socket,
-                                         &( pNetworkConnection->bufferedByte ),
-                                         1,
-                                         0 );
+            socketStatus = FreeRTOS_recv( pNetworkConnection->socket,
+                                          &( pNetworkConnection->bufferedByte ),
+                                          1,
+                                          0 );
 
-            connectionFlags = xEventGroupGetBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ) );
+            connectionEventGroupBits = xEventGroupGetBits( pNetworkConnection->connectionEventGroup );
 
-            if( ( connectionFlags & _FLAG_SHUTDOWN ) == _FLAG_SHUTDOWN )
+            if( ( connectionEventGroupBits & _SHUTDOWN_BITMASK ) == _SHUTDOWN_BITMASK )
             {
-                socketStatus = SOCKETS_ECLOSED;
+                socketStatus = FREERTOS_ECLOSED;
             }
 
             /* Check for timeout. Some ports return 0, some return EWOULDBLOCK. */
-        } while( ( socketStatus == 0 ) || ( socketStatus == SOCKETS_EWOULDBLOCK ) );
+        } while( ( socketStatus == 0 ) || ( socketStatus == FREERTOS_EWOULDBLOCK ) );
 
         if( socketStatus <= 0 )
         {
@@ -186,9 +190,9 @@ static void _networkReceiveTask( void * pArgument )
         /* Check if the connection was destroyed by the receive callback. This
          * does not need to be thread-safe because the destroy connection function
          * may only be called once (per its API doc). */
-        connectionFlags = xEventGroupGetBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ) );
+        connectionEventGroupBits = xEventGroupGetBits( pNetworkConnection->connectionEventGroup );
 
-        if( ( connectionFlags & _FLAG_CONNECTION_DESTROYED ) == _FLAG_CONNECTION_DESTROYED )
+        if( ( connectionEventGroupBits & _CONNECTION_DESTROYED_BITMASK ) == _CONNECTION_DESTROYED_BITMASK )
         {
             destroyConnection = true;
             break;
@@ -204,129 +208,40 @@ static void _networkReceiveTask( void * pArgument )
     }
     else
     {
-        /* Set the flag to indicate that the receive task has exited. */
-        ( void ) xEventGroupSetBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ),
-                                     _FLAG_RECEIVE_TASK_EXITED );
+        /* Set the bit to indicate that the receive task has exited. */
+        ( void ) xEventGroupSetBits( pNetworkConnection->connectionEventGroup,
+                                     _RECEIVE_TASK_EXITED_BITMASK );
     }
 
     vTaskDelete( NULL );
 }
-
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Set up a secured TLS connection.
- *
- * @param[in] pAfrCredentials Credentials for the secured connection.
- * @param[in] tcpSocket An initialized socket to secure.
- * @param[in] pHostName Remote server name for SNI.
- * @param[in] hostnameLength The length of `pHostName`.
- *
- * @return #IOT_NETWORK_SUCCESS or #IOT_NETWORK_SYSTEM_ERROR.
- */
-static IotNetworkError_t _tlsSetup( const IotNetworkCredentials_t * pAfrCredentials,
-                                    Socket_t tcpSocket,
-                                    const char * pHostName,
-                                    size_t hostnameLength )
+IotNetworkError_t IotNetworkFreeRTOS_Create( void * pConnectionInfo,
+                                             void * pCredentialInfo,
+                                             void ** pConnection )
 {
     IOT_FUNCTION_ENTRY( IotNetworkError_t, IOT_NETWORK_SUCCESS );
-    int32_t socketStatus = SOCKETS_ERROR_NONE;
-
-    /* ALPN options for AWS IoT. */
-    const char * ppcALPNProtos[] = { socketsAWS_IOT_ALPN_MQTT };
-
-    /* Set secured option. */
-    socketStatus = SOCKETS_SetSockOpt( tcpSocket,
-                                       0,
-                                       SOCKETS_SO_REQUIRE_TLS,
-                                       NULL,
-                                       0 );
-
-    if( socketStatus != SOCKETS_ERROR_NONE )
-    {
-        IotLogError( "Failed to set secured option for new connection." );
-        IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
-    }
-
-    /* Set ALPN option. */
-    if( pAfrCredentials->pAlpnProtos != NULL )
-    {
-        socketStatus = SOCKETS_SetSockOpt( tcpSocket,
-                                           0,
-                                           SOCKETS_SO_ALPN_PROTOCOLS,
-                                           ppcALPNProtos,
-                                           sizeof( ppcALPNProtos ) / sizeof( ppcALPNProtos[ 0 ] ) );
-
-        if( socketStatus != SOCKETS_ERROR_NONE )
-        {
-            IotLogError( "Failed to set ALPN option for new connection." );
-            IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
-        }
-    }
-
-    /* Set SNI option. */
-    if( pAfrCredentials->disableSni == false )
-    {
-        socketStatus = SOCKETS_SetSockOpt( tcpSocket,
-                                           0,
-                                           SOCKETS_SO_SERVER_NAME_INDICATION,
-                                           pHostName,
-                                           hostnameLength + 1 );
-
-        if( socketStatus != SOCKETS_ERROR_NONE )
-        {
-            IotLogError( "Failed to set SNI option for new connection." );
-            IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
-        }
-    }
-
-    /* Set custom server certificate. */
-    if( pAfrCredentials->pRootCa != NULL )
-    {
-        socketStatus = SOCKETS_SetSockOpt( tcpSocket,
-                                           0,
-                                           SOCKETS_SO_TRUSTED_SERVER_CERTIFICATE,
-                                           pAfrCredentials->pRootCa,
-                                           pAfrCredentials->rootCaSize );
-
-        if( socketStatus != SOCKETS_ERROR_NONE )
-        {
-            IotLogError( "Failed to set server certificate option for new connection." );
-            IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
-        }
-    }
-
-    IOT_FUNCTION_EXIT_NO_CLEANUP();
-}
-
-/*-----------------------------------------------------------*/
-
-IotNetworkError_t IotNetworkAfr_Create( void * pConnectionInfo,
-                                        void * pCredentialInfo,
-                                        void ** pConnection )
-{
-    IOT_FUNCTION_ENTRY( IotNetworkError_t, IOT_NETWORK_SUCCESS );
-    Socket_t tcpSocket = SOCKETS_INVALID_SOCKET;
-    int32_t socketStatus = SOCKETS_ERROR_NONE;
-    SocketsSockaddr_t serverAddress = { 0 };
-    EventGroupHandle_t pConnectionFlags = NULL;
-    SemaphoreHandle_t pConnectionMutex = NULL;
+    Socket_t tcpSocket = FREERTOS_INVALID_SOCKET;
+    int32_t socketStatus = 0;
+    struct freertos_sockaddr serverAddress = { 0 };
     const TickType_t receiveTimeout = pdMS_TO_TICKS( IOT_NETWORK_SOCKET_POLL_MS );
     _networkConnection_t * pNewNetworkConnection = NULL;
 
+    /* TLS is not supported yet and therefore pCredentialInfo must be NULL. */
+    configASSERT( pCredentialInfo == NULL );
+
     /* Cast function parameters to correct types. */
     const IotNetworkServerInfo_t * pServerInfo = pConnectionInfo;
-    const IotNetworkCredentials_t * pAfrCredentials = pCredentialInfo;
     _networkConnection_t ** pNetworkConnection = ( _networkConnection_t ** ) pConnection;
 
-    /* Check host name length against the maximum length allowed by Secure
-     * Sockets. */
+    /* Check host name length against the maximum length allowed. */
     const size_t hostnameLength = strlen( pServerInfo->pHostName );
 
-    if( hostnameLength > ( size_t ) securesocketsMAX_DNS_NAME_LENGTH )
+    if( hostnameLength > ( size_t ) _MAX_DNS_NAME_LENGTH )
     {
         IotLogError( "Host name length exceeds %d, which is the maximum allowed.",
-                     securesocketsMAX_DNS_NAME_LENGTH );
+                     _MAX_DNS_NAME_LENGTH );
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_BAD_PARAMETER );
     }
 
@@ -342,57 +257,47 @@ IotNetworkError_t IotNetworkAfr_Create( void * pConnectionInfo,
     ( void ) memset( pNewNetworkConnection, 0x00, sizeof( _networkConnection_t ) );
 
     /* Create a new TCP socket. */
-    tcpSocket = SOCKETS_Socket( SOCKETS_AF_INET,
-                                SOCKETS_SOCK_STREAM,
-                                SOCKETS_IPPROTO_TCP );
+    tcpSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+                                 FREERTOS_SOCK_STREAM,
+                                 FREERTOS_IPPROTO_TCP );
 
-    if( tcpSocket == SOCKETS_INVALID_SOCKET )
+    if( tcpSocket == FREERTOS_INVALID_SOCKET )
     {
         IotLogError( "Failed to create new socket." );
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
     }
 
-    /* Set up connection encryption if credentials are provided. */
-    if( pAfrCredentials != NULL )
-    {
-        status = _tlsSetup( pAfrCredentials, tcpSocket, pServerInfo->pHostName, hostnameLength );
-
-        if( status != IOT_NETWORK_SUCCESS )
-        {
-            IOT_GOTO_CLEANUP();
-        }
-    }
-
     /* Establish connection. */
-    serverAddress.ucSocketDomain = SOCKETS_AF_INET;
-    serverAddress.usPort = SOCKETS_htons( pServerInfo->port );
-    serverAddress.ulAddress = SOCKETS_GetHostByName( pServerInfo->pHostName );
+    serverAddress.sin_family = FREERTOS_AF_INET;
+    serverAddress.sin_port = FreeRTOS_htons( pServerInfo->port );
+    serverAddress.sin_addr = FreeRTOS_gethostbyname( pServerInfo->pHostName );
+    serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
 
     /* Check for errors from DNS lookup. */
-    if( serverAddress.ulAddress == 0 )
+    if( serverAddress.sin_addr == 0 )
     {
         IotLogError( "Failed to resolve %s.", pServerInfo->pHostName );
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
     }
 
-    socketStatus = SOCKETS_Connect( tcpSocket,
-                                    &serverAddress,
-                                    sizeof( SocketsSockaddr_t ) );
+    socketStatus = FreeRTOS_connect( tcpSocket,
+                                     &serverAddress,
+                                     sizeof( serverAddress ) );
 
-    if( socketStatus != SOCKETS_ERROR_NONE )
+    if( socketStatus != 0 )
     {
         IotLogError( "Failed to establish new connection." );
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
     }
 
     /* Set a long timeout for receive. */
-    socketStatus = SOCKETS_SetSockOpt( tcpSocket,
-                                       0,
-                                       SOCKETS_SO_RCVTIMEO,
-                                       &receiveTimeout,
-                                       sizeof( TickType_t ) );
+    socketStatus = FreeRTOS_setsockopt( tcpSocket,
+                                        0,
+                                        FREERTOS_SO_RCVTIMEO,
+                                        &receiveTimeout,
+                                        sizeof( TickType_t ) );
 
-    if( socketStatus != SOCKETS_ERROR_NONE )
+    if( socketStatus != 0 )
     {
         IotLogError( "Failed to set socket receive timeout." );
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
@@ -403,9 +308,9 @@ IotNetworkError_t IotNetworkAfr_Create( void * pConnectionInfo,
     /* Clean up on failure. */
     if( status != IOT_NETWORK_SUCCESS )
     {
-        if( tcpSocket != SOCKETS_INVALID_SOCKET )
+        if( tcpSocket != FREERTOS_INVALID_SOCKET )
         {
-            SOCKETS_Close( tcpSocket );
+            FreeRTOS_closesocket( tcpSocket );
         }
 
         /* Clear the connection information. */
@@ -419,14 +324,9 @@ IotNetworkError_t IotNetworkAfr_Create( void * pConnectionInfo,
         /* Set the socket. */
         pNewNetworkConnection->socket = tcpSocket;
 
-        /* Create the connection event flags and mutex. */
-        pConnectionFlags = xEventGroupCreateStatic( &( pNewNetworkConnection->connectionFlags ) );
-        pConnectionMutex = xSemaphoreCreateMutexStatic( &( pNewNetworkConnection->socketMutex ) );
-
-        /* Static event flags and mutex creation should never fail. The handles
-         * should point inside the connection object. */
-        configASSERT( pConnectionFlags == ( EventGroupHandle_t ) &( pNewNetworkConnection->connectionFlags ) );
-        configASSERT( pConnectionMutex == ( SemaphoreHandle_t ) &( pNewNetworkConnection->socketMutex ) );
+        /* Create the connection event group and socket mutex. */
+        pNewNetworkConnection->connectionEventGroup = xEventGroupCreateStatic( &( pNewNetworkConnection->connectionEventGroupStorage ) );
+        pNewNetworkConnection->socketMutex = xSemaphoreCreateMutexStatic( &( pNewNetworkConnection->socketMutexStorage ) );
 
         /* Set the output parameter. */
         *pNetworkConnection = pNewNetworkConnection;
@@ -434,12 +334,11 @@ IotNetworkError_t IotNetworkAfr_Create( void * pConnectionInfo,
 
     IOT_FUNCTION_CLEANUP_END();
 }
-
 /*-----------------------------------------------------------*/
 
-IotNetworkError_t IotNetworkAfr_SetReceiveCallback( void * pConnection,
-                                                    IotNetworkReceiveCallback_t receiveCallback,
-                                                    void * pContext )
+IotNetworkError_t IotNetworkFreeRTOS_SetReceiveCallback( void * pConnection,
+                                                         IotNetworkReceiveCallback_t receiveCallback,
+                                                         void * pContext )
 {
     IotNetworkError_t status = IOT_NETWORK_SUCCESS;
 
@@ -450,8 +349,8 @@ IotNetworkError_t IotNetworkAfr_SetReceiveCallback( void * pConnection,
     pNetworkConnection->receiveCallback = receiveCallback;
     pNetworkConnection->pReceiveContext = pContext;
 
-    /* No flags should be set. */
-    configASSERT( xEventGroupGetBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ) ) == 0 );
+    /* No bit should be set in the connection event group. */
+    configASSERT( xEventGroupGetBits( pNetworkConnection->connectionEventGroup ) == 0 );
 
     /* Create task that waits for incoming data. */
     if( xTaskCreate( _networkReceiveTask,
@@ -468,45 +367,42 @@ IotNetworkError_t IotNetworkAfr_SetReceiveCallback( void * pConnection,
 
     return status;
 }
-
 /*-----------------------------------------------------------*/
 
-size_t IotNetworkAfr_Send( void * pConnection,
-                           const uint8_t * pMessage,
-                           size_t messageLength )
+size_t IotNetworkFreeRTOS_Send( void * pConnection,
+                                const uint8_t * pMessage,
+                                size_t messageLength )
 {
     size_t bytesSent = 0;
-    int32_t socketStatus = SOCKETS_ERROR_NONE;
+    int32_t socketStatus = 0;
 
     /* Cast network connection to the correct type. */
     _networkConnection_t * pNetworkConnection = ( _networkConnection_t * ) pConnection;
 
     /* Only one thread at a time may send on the connection. Lock the socket
      * mutex to prevent other threads from sending. */
-    if( xSemaphoreTake( ( QueueHandle_t ) &( pNetworkConnection->socketMutex ),
-                        portMAX_DELAY ) == pdTRUE )
+    if( xSemaphoreTake( pNetworkConnection->socketMutex, portMAX_DELAY ) == pdTRUE )
     {
-        socketStatus = SOCKETS_Send( pNetworkConnection->socket,
-                                     pMessage,
-                                     messageLength,
-                                     0 );
+        socketStatus = FreeRTOS_send( pNetworkConnection->socket,
+                                      pMessage,
+                                      messageLength,
+                                      0 );
 
         if( socketStatus > 0 )
         {
             bytesSent = ( size_t ) socketStatus;
         }
 
-        xSemaphoreGive( ( QueueHandle_t ) &( pNetworkConnection->socketMutex ) );
+        xSemaphoreGive( pNetworkConnection->socketMutex );
     }
 
     return bytesSent;
 }
-
 /*-----------------------------------------------------------*/
 
-size_t IotNetworkAfr_Receive( void * pConnection,
-                              uint8_t * pBuffer,
-                              size_t bytesRequested )
+size_t IotNetworkFreeRTOS_Receive( void * pConnection,
+                                   uint8_t * pBuffer,
+                                   size_t bytesRequested )
 {
     int32_t socketStatus = 0;
     size_t bytesReceived = 0, bytesRemaining = bytesRequested;
@@ -527,12 +423,12 @@ size_t IotNetworkAfr_Receive( void * pConnection,
     /* Block and wait for incoming data. */
     while( bytesRemaining > 0 )
     {
-        socketStatus = SOCKETS_Recv( pNetworkConnection->socket,
-                                     pBuffer + bytesReceived,
-                                     bytesRemaining,
-                                     0 );
+        socketStatus = FreeRTOS_recv( pNetworkConnection->socket,
+                                      pBuffer + bytesReceived,
+                                      bytesRemaining,
+                                      0 );
 
-        if( socketStatus == SOCKETS_EWOULDBLOCK )
+        if( socketStatus == FREERTOS_EWOULDBLOCK )
         {
             /* The return value EWOULDBLOCK means no data was received within
              * the socket timeout. Ignore it and try again. */
@@ -566,35 +462,33 @@ size_t IotNetworkAfr_Receive( void * pConnection,
 
     return bytesReceived;
 }
-
 /*-----------------------------------------------------------*/
 
-IotNetworkError_t IotNetworkAfr_Close( void * pConnection )
+IotNetworkError_t IotNetworkFreeRTOS_Close( void * pConnection )
 {
-    int32_t socketStatus = SOCKETS_ERROR_NONE;
+    int32_t socketStatus = 0;
 
     /* Cast network connection to the correct type. */
     _networkConnection_t * pNetworkConnection = ( _networkConnection_t * ) pConnection;
 
-    /* Call Secure Sockets shutdown function to close connection. */
-    socketStatus = SOCKETS_Shutdown( pNetworkConnection->socket,
-                                     SOCKETS_SHUT_RDWR );
+    /* Call socket shutdown function to close connection. */
+    socketStatus = FreeRTOS_shutdown( pNetworkConnection->socket,
+                                      FREERTOS_SHUT_RDWR );
 
-    if( socketStatus != SOCKETS_ERROR_NONE )
+    if( socketStatus != 0 )
     {
         IotLogWarn( "Failed to close connection." );
     }
 
-    /* Set the shutdown flag. */
-    ( void ) xEventGroupSetBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ),
-                                 _FLAG_SHUTDOWN );
+    /* Set the shutdown bit in the connection event group. */
+    ( void ) xEventGroupSetBits( pNetworkConnection->connectionEventGroup,
+                                 _SHUTDOWN_BITMASK );
 
     return IOT_NETWORK_SUCCESS;
 }
-
 /*-----------------------------------------------------------*/
 
-IotNetworkError_t IotNetworkAfr_Destroy( void * pConnection )
+IotNetworkError_t IotNetworkFreeRTOS_Destroy( void * pConnection )
 {
     /* Cast network connection to the correct type. */
     _networkConnection_t * pNetworkConnection = ( _networkConnection_t * ) pConnection;
@@ -602,17 +496,17 @@ IotNetworkError_t IotNetworkAfr_Destroy( void * pConnection )
     /* Check if this function is being called from the receive task. */
     if( xTaskGetCurrentTaskHandle() == pNetworkConnection->receiveTask )
     {
-        /* Set the flag specifying that the connection is destroyed. */
-        ( void ) xEventGroupSetBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ),
-                                     _FLAG_CONNECTION_DESTROYED );
+        /* Set the bit specifying that the connection is destroyed. */
+        ( void ) xEventGroupSetBits( pNetworkConnection->connectionEventGroup,
+                                     _CONNECTION_DESTROYED_BITMASK );
     }
     else
     {
         /* If a receive task was created, wait for it to exit. */
         if( pNetworkConnection->receiveTask != NULL )
         {
-            ( void ) xEventGroupWaitBits( ( EventGroupHandle_t ) &( pNetworkConnection->connectionFlags ),
-                                          _FLAG_RECEIVE_TASK_EXITED,
+            ( void ) xEventGroupWaitBits( pNetworkConnection->connectionEventGroup,
+                                          _RECEIVE_TASK_EXITED_BITMASK,
                                           pdTRUE,
                                           pdTRUE,
                                           portMAX_DELAY );
@@ -623,5 +517,4 @@ IotNetworkError_t IotNetworkAfr_Destroy( void * pConnection )
 
     return IOT_NETWORK_SUCCESS;
 }
-
 /*-----------------------------------------------------------*/

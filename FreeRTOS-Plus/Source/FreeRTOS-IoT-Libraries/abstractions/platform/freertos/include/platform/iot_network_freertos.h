@@ -25,12 +25,12 @@
 
 /**
  * @file iot_network_freertos.h
- * @brief Declares the network stack functions specified in aws_iot_network.h for
- * Amazon FreeRTOS Secure Sockets.
+ * @brief Declares the network stack functions specified in iot_network.h for
+ * FreeRTOS+TCP.
  */
 
-#ifndef _IOT_NETWORK_AFR_H_
-#define _IOT_NETWORK_AFR_H_
+#ifndef _IOT_NETWORK_FREERTOS_H_
+#define _IOT_NETWORK_FREERTOS_H_
 
 /* Standard includes. */
 #include <stdbool.h>
@@ -38,29 +38,26 @@
 /* Platform network include. */
 #include "platform/iot_network.h"
 
-/* Amazon FreeRTOS Secure Sockets include. */
-#include "iot_secure_sockets.h"
-
 /**
- * @brief Represents a network connection that uses Amazon FreeRTOS Secure Sockets.
+ * @brief Represents a network connection that uses FreeRTOS+TCP sockets.
  *
  * This is an incomplete type. In application code, only pointers to this type
  * should be used.
  */
-typedef struct _networkConnection IotNetworkConnectionAfr_t;
+typedef struct _networkConnection IotNetworkConnectionFreeRTOS_t;
 
 /**
- * @brief Provides a default value for an #IotNetworkConnectionAfr_t.
+ * @brief Provides a default value for an #IotNetworkConnectionFreeRTOS_t.
  *
- * All instances of #IotNetworkConnectionAfr_t should be initialized with
+ * All instances of #IotNetworkConnectionFreeRTOS_t should be initialized with
  * this constant.
  *
- * @warning Failing to initialize an #IotNetworkConnectionAfr_t with this
+ * @warning Failing to initialize an #IotNetworkConnectionFreeRTOS_t with this
  * initializer may result in undefined behavior!
  * @note This initializer may change at any time in future versions, but its
  * name will remain the same.
  */
-#define IOT_NETWORK_CONNECTION_AFR_INITIALIZER     { 0 }
+#define IOT_NETWORK_CONNECTION_FREERTOS_INITIALIZER     { 0 }
 
 /**
  * @brief Generic initializer for an #IotNetworkServerInfo_t.
@@ -68,7 +65,7 @@ typedef struct _networkConnection IotNetworkConnectionAfr_t;
  * @note This initializer may change at any time in future versions, but its
  * name will remain the same.
  */
-#define IOT_NETWORK_SERVER_INFO_AFR_INITIALIZER    { 0 }
+#define IOT_NETWORK_SERVER_INFO_FREERTOS_INITIALIZER    { 0 }
 
 /**
  * @brief Generic initializer for an #IotNetworkCredentials_t.
@@ -76,57 +73,57 @@ typedef struct _networkConnection IotNetworkConnectionAfr_t;
  * @note This initializer may change at any time in future versions, but its
  * name will remain the same.
  */
-#define IOT_NETWORK_CREDENTIALS_AFR_INITIALIZER    { 0 }
+#define IOT_NETWORK_CREDENTIALS_FREERTOS_INITIALIZER    { 0 }
 
 /**
  * @brief Provides a pointer to an #IotNetworkInterface_t that uses the functions
  * declared in this file.
  */
-#define IOT_NETWORK_INTERFACE_AFR    ( &( IotNetworkAfr ) )
+#define IOT_NETWORK_INTERFACE_FREERTOS                  ( &( IotNetworkFreeRTOS ) )
 
 /**
- * @brief An implementation of #IotNetworkInterface_t::create for Amazon FreeRTOS
- * Secure Sockets.
+ * @brief An implementation of #IotNetworkInterface_t::create for FreeRTOS+TCP
+ * sockets.
  */
-IotNetworkError_t IotNetworkAfr_Create( void * pConnectionInfo,
-                                        void * pCredentialInfo,
-                                        void ** const pConnection );
+IotNetworkError_t IotNetworkFreeRTOS_Create( void * pConnectionInfo,
+                                             void * pCredentialInfo,
+                                             void ** const pConnection );
 
 /**
  * @brief An implementation of #IotNetworkInterface_t::setReceiveCallback for
- * Amazon FreeRTOS Secure Sockets.
+ * FreeRTOS+TCP sockets.
  */
-IotNetworkError_t IotNetworkAfr_SetReceiveCallback( void * pConnection,
-                                                    IotNetworkReceiveCallback_t receiveCallback,
-                                                    void * pContext );
+IotNetworkError_t IotNetworkFreeRTOS_SetReceiveCallback( void * pConnection,
+                                                         IotNetworkReceiveCallback_t receiveCallback,
+                                                         void * pContext );
 
 /**
- * @brief An implementation of #IotNetworkInterface_t::send for Amazon FreeRTOS
- * Secure Sockets.
+ * @brief An implementation of #IotNetworkInterface_t::send for FreeRTOS+TCP
+ * sockets.
  */
-size_t IotNetworkAfr_Send( void * pConnection,
-                           const uint8_t * pMessage,
-                           size_t messageLength );
+size_t IotNetworkFreeRTOS_Send( void * pConnection,
+                                const uint8_t * pMessage,
+                                size_t messageLength );
 
 /**
- * @brief An implementation of #IotNetworkInterface_t::receive for Amazon FreeRTOS
- * Secure Sockets.
+ * @brief An implementation of #IotNetworkInterface_t::receive for FreeRTOS+TCP
+ * sockets.
  */
-size_t IotNetworkAfr_Receive( void * pConnection,
-                              uint8_t * pBuffer,
-                              size_t bytesRequested );
+size_t IotNetworkFreeRTOS_Receive( void * pConnection,
+                                   uint8_t * pBuffer,
+                                   size_t bytesRequested );
 
 /**
- * @brief An implementation of #IotNetworkInterface_t::close for Amazon FreeRTOS
- * Secure Sockets.
+ * @brief An implementation of #IotNetworkInterface_t::close for FreeRTOS+TCP
+ * sockets.
  */
-IotNetworkError_t IotNetworkAfr_Close( void * pConnection );
+IotNetworkError_t IotNetworkFreeRTOS_Close( void * pConnection );
 
 /**
- * @brief An implementation of #IotNetworkInterface_t::destroy for Amazon FreeRTOS
- * Secure Sockets.
+ * @brief An implementation of #IotNetworkInterface_t::destroy for FreeRTOS+TCP
+ * sockets.
  */
-IotNetworkError_t IotNetworkAfr_Destroy( void * pConnection );
+IotNetworkError_t IotNetworkFreeRTOS_Destroy( void * pConnection );
 
 /**
  * @cond DOXYGEN_IGNORE
@@ -134,7 +131,7 @@ IotNetworkError_t IotNetworkAfr_Destroy( void * pConnection );
  *
  * Declaration of a network interface struct using the functions in this file.
  */
-extern const IotNetworkInterface_t IotNetworkAfr;
+extern const IotNetworkInterface_t IotNetworkFreeRTOS;
 /** @endcond */
 
-#endif /* ifndef _IOT_NETWORK_AFR_H_ */
+#endif /* ifndef _IOT_NETWORK_FREERTOS_H_ */

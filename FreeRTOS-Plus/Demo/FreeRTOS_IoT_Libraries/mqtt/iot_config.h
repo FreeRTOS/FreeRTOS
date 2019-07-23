@@ -28,27 +28,29 @@
 #include "FreeRTOS.h"
 #include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
 
-/*
- * Set this to the number of recyclable tasks for the task pool to cache.
+/**
+ * @brief The number of recyclable jobs for the task pool to cache.
  *
- * Caching dynamically allocated tasks (recyclable tasks) helps the application
- * to limit the number of allocations at runtime. Caching recyclable tasks may
+ * Caching dynamically allocated jobs (recyclable jobs) helps the application
+ * to limit the number of allocations at runtime. Caching recyclable jobs may
  * help making the application more responsive and predictable, by removing a
  * potential for memory allocation failures, but it may also have negative
  * repercussions on the amount of memory available at any given time. It is up
- * to the application developer to strike the correct balance these competing
- * needs. The task pool will cache when the application calling
- * IotTaskPool_RecycleJob. Any recycled tasks in excess of
+ * to the application developer to strike the correct balance among these
+ * competing needs. The task pool will cache a job when the application calls
+ * IotTaskPool_RecycleJob on a job which was created using
+ * IotTaskPool_CreateRecyclableJob API. Any recycled jobs in excess of
  * IOT_TASKPOOL_JOBS_RECYCLE_LIMIT will be destroyed and its memory will be
- * release.
+ * released.
  *
  * Default value (if undefined): 8
  */
-#define IOT_TASKPOOL_JOBS_RECYCLE_LIMIT 8
+#define IOT_TASKPOOL_JOBS_RECYCLE_LIMIT             8
 
-/*
+/**
+ * @brief Enable/Disable asserts for the task pool library.
+ * 
  * Set this to 1 to perform sanity checks when using the task pool library.
- *
  * Asserts are useful for debugging, but should be disabled in production code.
  * If this is set to 1, IotTaskPool_Assert can be defined to set the assertion
  * function; otherwise, the standard library's assert function will be used.
@@ -57,10 +59,10 @@
  * Recommended values: 1 when debugging; 0 in production code.
  * Default value (if undefined): 0
  */
-#define IOT_TASKPOOL_ENABLE_ASSERTS 1
+#define IOT_TASKPOOL_ENABLE_ASSERTS                 1
 
-/*
- * Set the log level of the task pool library.
+/**
+ * @brief Set the log level of the task pool library.
  *
  * Log messages from the task pool library at or below this setting will be
  * printed.
@@ -69,22 +71,37 @@
  * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,
  * then IOT_LOG_NONE.
  */
-#define IOT_LOG_LEVEL_TASKPOOL IOT_LOG_INFO
+#define IOT_LOG_LEVEL_TASKPOOL                      IOT_LOG_INFO
 
-/*
- *
+/**
+ * @brief The number of worker tasks in the task pool.
+ * 
+ * The minimal version of the of task pool library only supports one task pool
+ * and the number of the worker tasks is fixed at the compile time.
  */
-#define IOT_TASKPOOL_NUMBER_OF_WORKERS 3
+#define IOT_TASKPOOL_NUMBER_OF_WORKERS              3
 
-/*
- *
+/**
+ * @brief The stack size (in bytes) for each worker task in the task pool.
+ * 
+ * The minimal version of the of task pool library only supports one task pool
+ * and the configuration of each worker task fixed at the compile time.
  */
-#define IOT_TASKPOOL_WORKER_STACK_SIZE_BYTES 2048
+#define IOT_TASKPOOL_WORKER_STACK_SIZE_BYTES        2048
 
-/* How long the MQTT library will wait for PINGRESPs or PUBACKs. */
-#define IOT_MQTT_RESPONSE_WAIT_MS ( 10000 )
+/**
+ * @brief The amount of time the MQTT library waits for responses (PINGRESPs or
+ * PUBACKs) from the MQTT broker.
+ */
+#define IOT_MQTT_RESPONSE_WAIT_MS                   ( 10000 )
 
-#define AWS_IOT_MQTT_ENABLE_METRICS 0
+/**
+ * @brief Enable/Disable anonymous metrics collection when using AWS IoT.
+ *
+ * This demo does not support TLS and so does not work with AWS IoT. Therefore,
+ * the metric collection must be disabled.
+ */
+#define AWS_IOT_MQTT_ENABLE_METRICS                 0
 
 /* Include the common configuration file for FreeRTOS. */
 #include "iot_config_common.h"

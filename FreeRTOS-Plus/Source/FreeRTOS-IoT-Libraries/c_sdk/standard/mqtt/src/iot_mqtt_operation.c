@@ -1105,7 +1105,10 @@ _mqttOperation_t * _IotMqtt_FindOperation( _mqttConnection_t * pMqttConnection,
     IotTaskPoolError_t taskPoolStatus = IOT_TASKPOOL_SUCCESS;
     _mqttOperation_t * pResult = NULL;
     IotLink_t * pResultLink = NULL;
-    _operationMatchParam_t param = { .type = type, .pPacketIdentifier = pPacketIdentifier };
+    _operationMatchParam_t param = { 0 };
+
+    param.type = type;
+    param.pPacketIdentifier = pPacketIdentifier;
 
     if( pPacketIdentifier != NULL )
     {

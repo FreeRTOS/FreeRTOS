@@ -352,11 +352,11 @@ typedef struct IotTaskPoolInfo
 #define IOT_TASKPOOL_JOB_HIGH_PRIORITY    ( ( uint32_t ) 0x00000001 )
 
 /**
- * @brief Allows the use of the handle to the system task pool.
+ * @brief Allows the use of the system task pool.
  *
- * @warning The task pool handle is not valid unless @ref IotTaskPool_CreateSystemTaskPool is
+ * @warning The system task pool handle is not valid unless @ref IotTaskPool_CreateSystemTaskPool is
  * called before the handle is used.
  */
-#define IOT_SYSTEM_TASKPOOL               ( IotTaskPool_GetSystemTaskPool() )
+#define IOT_SYSTEM_TASKPOOL               ( NULL )
 
 #endif /* ifndef IOT_TASKPOOL_TYPES_H_ */

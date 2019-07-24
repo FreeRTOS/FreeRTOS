@@ -28,6 +28,12 @@
 #ifndef IOT_CONFIG_COMMON_H_
 #define IOT_CONFIG_COMMON_H_
 
+/* FreeRTOS include. */
+#include "FreeRTOS.h" //_RB_Makes common config file FreeRTOS specific
+
+/* Use platform types on FreeRTOS. */
+#include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
+
 /* SDK version. */
 #define IOT_SDK_VERSION    "4.0.0"
 

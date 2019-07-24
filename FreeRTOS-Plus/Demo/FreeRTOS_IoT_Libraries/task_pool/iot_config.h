@@ -24,9 +24,6 @@
 #ifndef IOT_CONFIG_H_
 #define IOT_CONFIG_H_
 
-/* Use platform types on FreeRTOS. */
-#include "FreeRTOS.h"
-#include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
 
 /*
  * Set this to the number of recyclable tasks for the task pool to cache.

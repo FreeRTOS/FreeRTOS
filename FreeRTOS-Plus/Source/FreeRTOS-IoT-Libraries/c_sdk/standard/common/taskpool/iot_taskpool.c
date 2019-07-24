@@ -665,8 +665,8 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
     static StaticTask_t workerTaskTCBs[ IOT_TASKPOOL_NUMBER_OF_WORKERS ];
     static StackType_t workerTaskStacks[ IOT_TASKPOOL_NUMBER_OF_WORKERS ][ IOT_TASKPOOL_WORKER_STACK_SIZE_BYTES / sizeof( portSTACK_TYPE ) ];
 
-	/* Static structure to hold te software timer. */
-	static StaticTimer_t staticTimer;
+    /* Static structure to hold te software timer. */
+    static StaticTimer_t staticTimer;
 
     uint32_t threadsCreated = 0; /* Although initialised before use removing the initialiser here results in compiler warnings. */
     char taskName[ 10 ];
@@ -682,11 +682,11 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 
     /* Create the timer for a new connection. */
     pTaskPool->timer = xTimerCreateStatic( NULL, /* Text name for the timer, only used for debugging. */
-		                                   portMAX_DELAY, /* Timer period in ticks. */
-		                                   pdFALSE, /* pdFALSE means its a one-shot timer. */
-		                                  ( void * ) pTaskPool, /* Parameter passed into callback. */
-		                                  _timerCallback, /* Callback that executes when the timer expires. */
-		                                  &staticTimer ); /* Static storage for the timer's data structure. */
+                                           portMAX_DELAY, /* Timer period in ticks. */
+                                           pdFALSE, /* pdFALSE means its a one-shot timer. */
+                                          ( void * ) pTaskPool, /* Parameter passed into callback. */
+                                          _timerCallback, /* Callback that executes when the timer expires. */
+                                          &staticTimer ); /* Static storage for the timer's data structure. */
 
     /* The task pool will initialize the minimum number of threads requested by the user upon start.
     Note this tailored version of the task pool does not autoscale, but fixes the number of tasks
@@ -699,17 +699,17 @@ static IotTaskPoolError_t _createTaskPool( const IotTaskPoolInfo_t * const pInfo
 
         xTaskCreateStatic( _taskPoolWorker, /* Function that implements the task. */
                            taskName,       /* Text name for the task, used for debugging only. */
-			               IOT_TASKPOOL_WORKER_STACK_SIZE_BYTES / sizeof( portSTACK_TYPE ), /* xTaskCreate() expects the stack size to be specified in words. */
+                           IOT_TASKPOOL_WORKER_STACK_SIZE_BYTES / sizeof( portSTACK_TYPE ), /* xTaskCreate() expects the stack size to be specified in words. */
                            pTaskPool,       /* Parameter passed into the task. */
                            pInfo->priority, /* Priority at which the task starts running. */
                            &( workerTaskStacks[ threadsCreated ][ 0 ] ), /* Pointer to static storage for the task's stack. */
-						   &( workerTaskTCBs[ threadsCreated ] ) ); /* Pointer to static storage for te task's TCB. */
+                           &( workerTaskTCBs[ threadsCreated ] ) ); /* Pointer to static storage for te task's TCB. */
 
-		/* Upon successful thread creation, increase the number of active threads. */
+        /* Upon successful thread creation, increase the number of active threads. */
         pTaskPool->activeThreads++;
         ++threadsCreated;
     }
-	pTaskPool->running = true;
+    pTaskPool->running = true;
 
     TASKPOOL_FUNCTION_CLEANUP();
 

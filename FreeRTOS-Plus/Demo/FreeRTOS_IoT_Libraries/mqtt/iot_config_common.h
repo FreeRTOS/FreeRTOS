@@ -34,9 +34,6 @@
 /* Use platform types on FreeRTOS. */
 #include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
 
-/* Used to get the cloud broker endpoint for FreeRTOS. */
-//_RB_#include "aws_clientcredential.h"
-
 /* SDK version. */
 #define IOT_SDK_VERSION    "4.0.0"
 

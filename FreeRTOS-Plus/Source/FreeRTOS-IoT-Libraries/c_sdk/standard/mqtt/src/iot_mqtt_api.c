@@ -853,7 +853,7 @@ IotMqttError_t IotMqtt_Init( void )
     #endif /* if IOT_MQTT_ENABLE_SERIALIZER_OVERRIDES == 1 */
 
     /* Log initialization status. */
-    if( status != IOT_MQTT_SUCCESS )
+    if( status != IOT_MQTT_SUCCESS ) //_RB_ This will generate compiler warnings if IOT_MQTT_ENABLE_SERIALIZER_OVERRIDES != 0
     {
         IotLogError( "Failed to initialize MQTT library serializer. " );
     }
@@ -896,7 +896,7 @@ IotMqttError_t IotMqtt_Connect( const IotMqttNetworkInfo_t * pNetworkInfo,
     _mqttConnection_t * pNewMqttConnection = NULL;
 
     /* Default CONNECT serializer function. */
-    IotMqttError_t ( * serializeConnect )( const IotMqttConnectInfo_t *,
+    IotMqttError_t ( * serializeConnect )( const IotMqttConnectInfo_t *, //_RB_ Needs to be a typedef to make it easier to rease and more maintainable should the prototype change.
                                            uint8_t **,
                                            size_t * ) = _IotMqtt_SerializeConnect;
 
@@ -911,7 +911,7 @@ IotMqttError_t IotMqtt_Connect( const IotMqttNetworkInfo_t * pNetworkInfo,
     }
 
     /* Validate network interface and connect info. */
-    if( _IotMqtt_ValidateConnect( pConnectInfo ) == false )
+    if( _IotMqtt_ValidateConnect( pConnectInfo ) == false ) //_RB_ A lot of code in here that could be replaced by asserts().
     {
         IOT_SET_AND_GOTO_CLEANUP( IOT_MQTT_BAD_PARAMETER );
     }
@@ -1002,7 +1002,7 @@ IotMqttError_t IotMqtt_Connect( const IotMqttNetworkInfo_t * pNetworkInfo,
 
     IotLogInfo( "Establishing new MQTT connection." );
 
-    /* Initialize a new MQTT connection object. */
+    /* Initialize a new MQTT connection object. *///_RB_ Initialise, as per the comment, or create, as per the function name?  I don't think this does create a connection as that happens below.
     pNewMqttConnection = _createMqttConnection( pConnectInfo->awsIotMqttMode,
                                                 pNetworkInfo,
                                                 pConnectInfo->keepAliveSeconds );
@@ -1127,7 +1127,7 @@ IotMqttError_t IotMqtt_Connect( const IotMqttNetworkInfo_t * pNetworkInfo,
     IotMqtt_Assert( pOperation->u.operation.packetSize > 0 );
 
     /* Add the CONNECT operation to the send queue for network transmission. */
-    status = _IotMqtt_ScheduleOperation( pOperation,
+    status = _IotMqtt_ScheduleOperation( pOperation, // Why schedule a job if going to wait for comletion?
                                          _IotMqtt_ProcessSend,
                                          0 );
 

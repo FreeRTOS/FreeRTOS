@@ -136,30 +136,6 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char *pcFile, uint32_t ulLine )
-{
-volatile uint32_t ulBlockVariable = 0UL;
-volatile char *pcFileName = ( volatile char *  ) pcFile;
-volatile uint32_t ulLineNumber = ulLine;
-
-	( void ) pcFileName;
-	( void ) ulLineNumber;
-
-	printf( "vAssertCalled( %s, %u\n", pcFile, ulLine );
-
-	/* Setting ulBlockVariable to a non-zero value in the debugger will allow
-	this function to be exited. */
-	taskDISABLE_INTERRUPTS();
-	{
-		while( ulBlockVariable == 0UL )
-		{
-			__debugbreak();
-		}
-	}
-	taskENABLE_INTERRUPTS();
-}
-/*-----------------------------------------------------------*/
-
 /* Called by FreeRTOS+TCP when the network connects or disconnects.  Disconnect
 events are only received if implemented in the MAC driver. */
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
@@ -199,6 +175,30 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
+void vAssertCalled( const char *pcFile, uint32_t ulLine )
+{
+	volatile uint32_t ulBlockVariable = 0UL;
+	volatile char *pcFileName = ( volatile char *  ) pcFile;
+	volatile uint32_t ulLineNumber = ulLine;
+
+	( void ) pcFileName;
+	( void ) ulLineNumber;
+
+	printf( "vAssertCalled( %s, %u\n", pcFile, ulLine );
+
+	/* Setting ulBlockVariable to a non-zero value in the debugger will allow
+	this function to be exited. */
+	taskDISABLE_INTERRUPTS();
+	{
+		while( ulBlockVariable == 0UL )
+		{
+			__debugbreak();
+		}
+	}
+	taskENABLE_INTERRUPTS();
+}
+/*-----------------------------------------------------------*/
+
 UBaseType_t uxRand( void )
 {
 const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
@@ -230,7 +230,13 @@ uint32_t ulLoggingIPAddress;
 	ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
 	vLoggingInit( xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress, configPRINT_PORT );
 
-	/* Seed the random number generator. */
+	/*
+	* Seed random number generator.
+	*
+	* !!!NOTE!!!
+	* This is not a secure method of generating a random number.  Production
+	* devices should use a True Random Number Generator (TRNG).
+	*/
 	time( &xTimeNow );
 	FreeRTOS_debug_printf( ( "Seed for randomiser: %lu\n", xTimeNow ) );
 	prvSRand( ( uint32_t ) xTimeNow );

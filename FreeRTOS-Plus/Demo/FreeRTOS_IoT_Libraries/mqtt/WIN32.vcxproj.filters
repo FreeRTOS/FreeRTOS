@@ -110,9 +110,6 @@
     <ClCompile Include="..\..\..\..\FreeRTOS\Source\tasks.c">
       <Filter>FreeRTOS\Source</Filter>
     </ClCompile>
-    <ClCompile Include="DemoTasks\SimpleUDPClientAndServer.c">
-      <Filter>DemoTasks</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c">
       <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
     </ClCompile>

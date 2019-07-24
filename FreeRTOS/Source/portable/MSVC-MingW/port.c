@@ -639,7 +639,7 @@ int32_t lMutexNeedsReleasing, lWaitForYield = pdFALSE;
 				configASSERT( xPortRunning );
 				SetEvent( pvInterruptEvent );
 
-				if( ( ulPendingInterrupts & ( 1 << portINTERRUPT_YIELD ) ) != 0 )
+				if( ulPendingInterrupts != 0 )
 				{
 					/* Going to wait for an event - make sure the event is not already
 					signaled. */

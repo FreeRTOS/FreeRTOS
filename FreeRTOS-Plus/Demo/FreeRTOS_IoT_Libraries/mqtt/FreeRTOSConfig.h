@@ -138,10 +138,8 @@ configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
 used. */
 #define configNETWORK_INTERFACE_TO_USE 3L
 
-/* The address of an echo server that will be used by the two demo echo client
-tasks.
-http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_Echo_Clients.html
-http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/UDP_Echo_Clients.html */
+/* The address of an echo server is only left in this project as it douples as
+the address to which logging is sent should UDP logging be enabled. */
 #define configECHO_SERVER_ADDR0	192
 #define configECHO_SERVER_ADDR1 168
 #define configECHO_SERVER_ADDR2 0
@@ -154,9 +152,9 @@ configNETWORK_INTERFACE_TO_USE definition above for information on how to
 configure the real network connection to use. */
 #define configMAC_ADDR0		0x00
 #define configMAC_ADDR1		0x11
-#define configMAC_ADDR2		0x22
-#define configMAC_ADDR3		0x33
-#define configMAC_ADDR4		0x44
+#define configMAC_ADDR2		0x11
+#define configMAC_ADDR3		0x11
+#define configMAC_ADDR4		0x11
 #define configMAC_ADDR5		0x41
 
 /* Default IP address configuration.  Used in ipconfigUSE_DNS is set to 0, or
@@ -201,6 +199,12 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define strcasecmp _stricmp
 #define strncasecmp _strnicmp
 #define strcmpi _strcmpi
+
+/* Prototype for the function used to print out.  In this case it prints to the
+console before the network is connected then a UDP port after the network has
+connected. */
+extern void vLoggingPrintf( const char *pcFormatString, ... );
+#define configPRINTF( X )    vLoggingPrintf X
 
 #endif /* FREERTOS_CONFIG_H */
 

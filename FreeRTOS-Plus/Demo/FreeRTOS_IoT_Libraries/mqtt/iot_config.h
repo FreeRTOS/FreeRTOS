@@ -24,9 +24,6 @@
 #ifndef IOT_CONFIG_H_
 #define IOT_CONFIG_H_
 
-/* Use platform types on FreeRTOS. */
-#include "FreeRTOS.h"
-#include "platform/iot_platform_types_freertos.h" //_RB_Makes common config file FreeRTOS specific
 
 /**
  * @brief The number of recyclable jobs for the task pool to cache.
@@ -49,7 +46,7 @@
 
 /**
  * @brief Enable/Disable asserts for the task pool library.
- * 
+ *
  * Set this to 1 to perform sanity checks when using the task pool library.
  * Asserts are useful for debugging, but should be disabled in production code.
  * If this is set to 1, IotTaskPool_Assert can be defined to set the assertion
@@ -82,12 +79,12 @@
  * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,
  * then IOT_LOG_NONE.
  */
-#define IOT_LOG_LEVEL_TASKPOOL                      IOT_LOG_INFO
+#define IOT_LOG_LEVEL_TASKPOOL                      IOT_LOG_WARN
 
 
 /**
  * @brief The stack size (in bytes) for each worker task in the task pool.
- * 
+ *
  * The minimal version of the of task pool library only supports one task pool
  * and the configuration of each worker task fixed at the compile time.
  */
@@ -106,6 +103,18 @@
  * the metric collection must be disabled.
  */
 #define AWS_IOT_MQTT_ENABLE_METRICS                 0
+
+/*
+ * @brief Set the log level of the task pool library.
+ *
+ * Log messages from the task pool library at or below this setting will be
+ * printed.
+ *
+ * Possible values: One of the Log levels.
+ * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,
+ * then IOT_LOG_NONE.
+ */
+#define IOT_LOG_LEVEL_MQTT                          IOT_LOG_WARN
 
 /* Include the common configuration file for FreeRTOS. */
 #include "iot_config_common.h"

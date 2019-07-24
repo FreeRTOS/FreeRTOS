@@ -219,7 +219,7 @@ static void _networkReceiveTask( void * pArgument )
 
 IotNetworkError_t IotNetworkFreeRTOS_Create( void * pConnectionInfo,
                                              void * pCredentialInfo,
-                                             void ** pConnection )
+                                             void ** pConnection ) //_RB_ Why all void* and why a void**?
 {
     IOT_FUNCTION_ENTRY( IotNetworkError_t, IOT_NETWORK_SUCCESS );
     Socket_t tcpSocket = FREERTOS_INVALID_SOCKET;
@@ -228,7 +228,8 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( void * pConnectionInfo,
     const TickType_t receiveTimeout = pdMS_TO_TICKS( IOT_NETWORK_SOCKET_POLL_MS );
     _networkConnection_t * pNewNetworkConnection = NULL;
 
-    /* TLS is not supported yet and therefore pCredentialInfo must be NULL. */
+    /* TLS is not enabled in this version and therefore pCredentialInfo
+    must be NULL. */
     configASSERT( pCredentialInfo == NULL );
 
     /* Cast function parameters to correct types. */
@@ -279,7 +280,7 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( void * pConnectionInfo,
         IotLogError( "Failed to resolve %s.", pServerInfo->pHostName );
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
     }
-
+    //_RB_ Connects without setting a read block time.
     socketStatus = FreeRTOS_connect( tcpSocket,
                                      &serverAddress,
                                      sizeof( serverAddress ) );

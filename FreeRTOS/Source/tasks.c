@@ -5077,10 +5077,12 @@ TickType_t uxReturn;
 /*-----------------------------------------------------------*/
 
 #if( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
+
 	TickType_t xTaskGetIdleRunTimeCounter( void )
 	{
 		return xIdleTaskHandle->ulRunTimeCounter;
 	}
+
 #endif
 /*-----------------------------------------------------------*/
 

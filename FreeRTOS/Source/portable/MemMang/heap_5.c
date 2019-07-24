@@ -490,8 +490,8 @@ const HeapRegion_t *pxHeapRegion;
 
 void vPortGetHeapStats( HeapStats_t *pxHeapStats )
 {
-	BlockLink_t *pxBlock;
-	size_t xBlocks = 0, xMaxSize = 0, xMinSize = 0;
+BlockLink_t *pxBlock;
+size_t xBlocks = 0, xMaxSize = 0, xMinSize = portMAX_DELAY; /* portMAX_DELAY used as a portable way of getting the maximum value. */
 
 	vTaskSuspendAll();
 	{
@@ -512,9 +512,15 @@ void vPortGetHeapStats( HeapStats_t *pxHeapStats )
 					xMaxSize = pxBlock->xBlockSize;
 				}
 
-				if( pxBlock->xBlockSize < xMinSize )
+				/* Heap five will have a zero sized block at the end of each
+				each region - the block is only used to link to the next
+				heap region so it not a real block. */
+				if( pxBlock->xBlockSize != 0 )
 				{
-					xMinSize = pxBlock->xBlockSize;
+					if( pxBlock->xBlockSize < xMinSize )
+					{
+						xMinSize = pxBlock->xBlockSize;
+					}
 				}
 
 				/* Move to the next block in the chain until the last block is

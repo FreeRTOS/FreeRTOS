@@ -330,58 +330,6 @@ void vPortInitialiseBlocks( void )
 }
 /*-----------------------------------------------------------*/
 
-void vPortGetHeapStats( HeapStats_t *pxHeapStats )
-{
-BlockLink_t *pxBlock;
-size_t xBlocks = 0, xMaxSize = 0, xMinSize = 0;
-
-	vTaskSuspendAll();
-	{
-		pxBlock = xStart.pxNextFreeBlock;
-
-		/* pxBlock will be NULL if the heap has not been initialised.  The heap
-		is initialised automatically when the first allocation is made. */
-		if( pxBlock != NULL )
-		{
-			do
-			{
-				/* Increment the number of blocks and record the largest block seen
-				so far. */
-				xBlocks++;
-
-				if( pxBlock->xBlockSize > xMaxSize )
-				{
-					xMaxSize = pxBlock->xBlockSize;
-				}
-
-				if( pxBlock->xBlockSize < xMinSize )
-				{
-					xMinSize = pxBlock->xBlockSize;
-				}
-
-				/* Move to the next block in the chain until the last block is
-				reached. */
-				pxBlock = pxBlock->pxNextFreeBlock;
-			} while( pxBlock != pxEnd );
-		}
-	}
-	xTaskResumeAll();
-
-	pxHeapStats->xSizeOfLargestFreeBlockInBytes = xMaxSize;
-	pxHeapStats->xSizeOfSmallestFreeBlockInBytes = xMinSize;
-	pxHeapStats->xNumberOfFreeBlocks = xBlocks;
-
-	taskENTER_CRITICAL();
-	{
-		pxHeapStats->xAvailableHeapSpaceInBytes = xFreeBytesRemaining;
-		pxHeapStats->xNumberOfSuccessfulAllocations = xNumberOfSuccessfulAllocations;
-		pxHeapStats->xNumberOfSuccessfulFrees = xNumberOfSuccessfulFrees;
-		pxHeapStats->xMinimumEverFreeBytesRemaining = xMinimumEverFreeBytesRemaining;
-	}
-	taskEXIT_CRITICAL();
-}
-/*-----------------------------------------------------------*/
-
 static void prvHeapInit( void )
 {
 BlockLink_t *pxFirstFreeBlock;
@@ -488,5 +436,57 @@ uint8_t *puc;
 	{
 		mtCOVERAGE_TEST_MARKER();
 	}
+}
+/*-----------------------------------------------------------*/
+
+void vPortGetHeapStats( HeapStats_t *pxHeapStats )
+{
+BlockLink_t *pxBlock;
+size_t xBlocks = 0, xMaxSize = 0, xMinSize = portMAX_DELAY; /* portMAX_DELAY used as a portable way of getting the maximum value. */
+
+	vTaskSuspendAll();
+	{
+		pxBlock = xStart.pxNextFreeBlock;
+
+		/* pxBlock will be NULL if the heap has not been initialised.  The heap
+		is initialised automatically when the first allocation is made. */
+		if( pxBlock != NULL )
+		{
+			do
+			{
+				/* Increment the number of blocks and record the largest block seen
+				so far. */
+				xBlocks++;
+
+				if( pxBlock->xBlockSize > xMaxSize )
+				{
+					xMaxSize = pxBlock->xBlockSize;
+				}
+
+				if( pxBlock->xBlockSize < xMinSize )
+				{
+					xMinSize = pxBlock->xBlockSize;
+				}
+
+				/* Move to the next block in the chain until the last block is
+				reached. */
+				pxBlock = pxBlock->pxNextFreeBlock;
+			} while( pxBlock != pxEnd );
+		}
+	}
+	xTaskResumeAll();
+
+	pxHeapStats->xSizeOfLargestFreeBlockInBytes = xMaxSize;
+	pxHeapStats->xSizeOfSmallestFreeBlockInBytes = xMinSize;
+	pxHeapStats->xNumberOfFreeBlocks = xBlocks;
+
+	taskENTER_CRITICAL();
+	{
+		pxHeapStats->xAvailableHeapSpaceInBytes = xFreeBytesRemaining;
+		pxHeapStats->xNumberOfSuccessfulAllocations = xNumberOfSuccessfulAllocations;
+		pxHeapStats->xNumberOfSuccessfulFrees = xNumberOfSuccessfulFrees;
+		pxHeapStats->xMinimumEverFreeBytesRemaining = xMinimumEverFreeBytesRemaining;
+	}
+	taskEXIT_CRITICAL();
 }
 

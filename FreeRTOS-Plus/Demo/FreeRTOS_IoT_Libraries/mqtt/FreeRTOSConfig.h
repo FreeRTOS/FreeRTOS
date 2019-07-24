@@ -138,7 +138,7 @@ configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
 used. */
 #define configNETWORK_INTERFACE_TO_USE 3L
 
-/* The address of an echo server is only left in this project as it douples as
+/* The address of an echo server is only left in this project as it doubles as
 the address to which logging is sent should UDP logging be enabled. */
 #define configECHO_SERVER_ADDR0	192
 #define configECHO_SERVER_ADDR1 168

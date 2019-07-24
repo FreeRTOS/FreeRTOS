@@ -228,10 +228,10 @@ TaskHandle_t xDemoTaskHandle = ( TaskHandle_t ) pvCallbackContext;
 	configASSERT( pxCallbackParams->u.message.info.qos == IOT_MQTT_QOS_1 );
 
 	/* Although this print uses the constants rather than the data from the
-	message payload the asserts above have already checked the message payload
-	equals the constants, and it is more efficient not to have to worry about
-	lengths in the print. */
-	configPRINTF( ( "Received %s from topic %s\r\n", mqttexampleMESSAGE, mqttexampleTOPIC ) );
+	 * message payload the asserts above have already checked the message
+	 * payload equals the constants, and it is more efficient not to have to
+	 * worry about lengths in the print. */
+	configPRINTF( ( "Received %s on the topic %s\r\n", mqttexampleMESSAGE, mqttexampleTOPIC ) );
 
 	/* Inform the demo task about the message received from the MQTT broker. */
 	xTaskNotify( xDemoTaskHandle,
@@ -258,8 +258,8 @@ void vStartSimpleMQTTDemo( void )
 static void prvMQTTDemoTask( void *pvParameters )
 {
 IotMqttError_t xResult;
-uint32_t ulNotificationValue = 0, ulIterations;
-const uint32_t ulMaxIterations = 5UL;
+uint32_t ulNotificationValue = 0, ulPublishCount;
+const uint32_t ulMaxPublishCount = 5UL;
 const TickType_t xNoDelay = ( TickType_t ) 0;
 
 	/* Remove compiler warnings about unused parameters. */
@@ -280,7 +280,7 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 		configASSERT( ulTaskNotifyTake( pdTRUE, xNoDelay ) == 0 );
 
 
-		/******************** CONNECT ****************************************/
+		/****************************** Connect. ******************************/
 
 		/* Establish a connection to the MQTT broker. This example connects to
 		 * the MQTT broker as specified in mqttexampleMQTT_BROKER_ENDPOINT and
@@ -291,33 +291,34 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 		configPRINTF( ( "Connected to %s\r\n", mqttexampleMQTT_BROKER_ENDPOINT ) );
 
 
-		/******************* SUBSCRIBE ***************************************/
+		/**************************** Subscribe. ******************************/
 
-		/* The client is now connected to the broker.  Subscribe to the topic
-		as specified in mqttexampleTOPIC at the top of this file.  This client
-		will then publish to the same topic it subscribed to, so will expect
-		all the messages it sends to the broker to be sent back to it from the
-		broker. */
+		/* The client is now connected to the broker. Subscribe to the topic
+		 * as specified in mqttexampleTOPIC at the top of this file.  This
+		 * client will then publish to the same topic it subscribed to, so will
+		 * expect all the messages it sends to the broker to be sent back to it
+		 * from the broker. */
 		prvMQTTSubscribe();
-		configPRINTF( ( "Subscribed to %s\r\n", mqttexampleTOPIC ) );
+		configPRINTF( ( "Subscribed to the topic %s\r\n", mqttexampleTOPIC ) );
 
 
-		/******************* PUBLISH 5 TIMES *********************************/
+		/*********************** Publish 5 messages. **************************/
 
 		/* Publish a few messages while connected. */
-		for( ulIterations = 0; ulIterations < ulMaxIterations; ulIterations++ )
+		for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
 		{
-			/* Publish a message on the mqttexampleTOPIC topic as specified at the
-			 * top of this file. */
+			/* Publish a message on the mqttexampleTOPIC topic as specified at
+			 * the top of this file. */
 			prvMQTTPublish();
-			configPRINTF( ( "Published %s to %s\r\n", mqttexampleMESSAGE, mqttexampleTOPIC ) );
+			configPRINTF( ( "Published %s on the topic %s\r\n", mqttexampleMESSAGE, mqttexampleTOPIC ) );
 
-			/* Since we are subscribed on the same topic, we will get the same
-			 * message back from the MQTT broker. Wait for the message to be
-			 * received which is informed to us by the publish callback
-			 * (prvExample_OnMessageReceived) by setting the
+			/* Since we are subscribed to the same topic as we published on, we
+			 * will get the same message back from the MQTT broker. Wait for the
+			 * message to be received which is informed to us by the publish
+			 * callback (prvExample_OnMessageReceived) by setting the
 			 * mqttexampleMESSAGE_RECEIVED_BIT in this task's notification
-			 value. */
+			 * value. Note that the bit is cleared in the task's notification
+			 * value to ensure that it is ready for next message. */
 			xTaskNotifyWait( 0UL, /* Don't clear any bits on entry. */
 							 mqttexampleMESSAGE_RECEIVED_BIT, /* Clear bit on exit. */
 							 &( ulNotificationValue ), /* Obtain the notification value. */
@@ -326,30 +327,28 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 		}
 
 
-		/******************* UNSUBSCRIBE AND DISCONNECT **********************/
+		/******************* Unsubscribe and Disconnect. **********************/
 
-		/* Unsubscribe from the topic mqttexampleTOPIC the disconnect
-		gracefully. */
+		/* Unsubscribe from the topic mqttexampleTOPIC and disconnect
+		 * gracefully. */
 		prvMQTTUnsubscribe();
 		prvMQTTDisconnect();
-		configPRINTF( ( "Disconnected from from %s\r\n\r\n", mqttexampleMQTT_BROKER_ENDPOINT ) );
+		configPRINTF( ( "Disconnected from %s\r\n\r\n", mqttexampleMQTT_BROKER_ENDPOINT ) );
 
 		/* Wait for the disconnect operation to complete which is informed to us
 		 * by the disconnect callback (prvExample_OnDisconnect)by setting
 		 * the mqttexampleDISCONNECTED_BIT in this task's notification value.
-		 * Note that all bits are cleared in the task's notification value to
+		 * Note that the bit is cleared in the task's notification value to
 		 * ensure that it is ready for the next run. */
 		xTaskNotifyWait( 0UL, /* Don't clear any bits on entry. */
-						 mqttexampleDISCONNECTED_BIT, /* Clear bit again on exit. */
+						 mqttexampleDISCONNECTED_BIT, /* Clear bit on exit. */
 						 &( ulNotificationValue ), /* Obtain the notification value. */
 						 pdMS_TO_TICKS( mqttexampleMQTT_TIMEOUT_MS ) );
 		configASSERT( ( ulNotificationValue & mqttexampleDISCONNECTED_BIT ) == mqttexampleDISCONNECTED_BIT );
 
-
-
 		/* Wait for some time between two iterations to ensure that we do not
 		 * bombard the public test mosquitto broker. */
-		configPRINTF( ( "prvMQTTDemoTask() completed an iteration without hitting an assert.  Total free heap is %u\r\n\r\n", xPortGetFreeHeapSize() ) );
+		configPRINTF( ( "prvMQTTDemoTask() completed an iteration without hitting an assert. Total free heap is %u\r\n\r\n", xPortGetFreeHeapSize() ) );
 		vTaskDelay( pdMS_TO_TICKS( 5000 ) );
 	}
 }
@@ -362,11 +361,15 @@ IotNetworkServerInfo_t xMQTTBrokerInfo;
 IotMqttNetworkInfo_t xNetworkInfo = IOT_MQTT_NETWORK_INFO_INITIALIZER;
 IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 
+
 	/******************* Broker information setup. **********************/
+
 	xMQTTBrokerInfo.pHostName = mqttexampleMQTT_BROKER_ENDPOINT;
 	xMQTTBrokerInfo.port = mqttexampleMQTT_BROKER_PORT;
 
+
 	/******************* Network information setup. **********************/
+
 	/* No connection to the MQTT broker has been established yet and we want to
 	 * establish a new connection. */
 	xNetworkInfo.createNetworkConnection = true;
@@ -379,13 +382,17 @@ IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 	/* Use FreeRTOS+TCP network. */
 	xNetworkInfo.pNetworkInterface = IOT_NETWORK_INTERFACE_FREERTOS;
 
-	/* Setup the callback which is called when the MQTT connection is disconnected. */
-	xNetworkInfo.disconnectCallback.pCallbackContext = ( void * ) xTaskGetCurrentTaskHandle();//_RB_ Why the task handle?
+	/* Setup the callback which is called when the MQTT connection is
+	 * disconnected. The task handle is passed as the callback context which
+	 * is used by the callback to send a task notification to this task.*/
+	xNetworkInfo.disconnectCallback.pCallbackContext = ( void * ) xTaskGetCurrentTaskHandle();
 	xNetworkInfo.disconnectCallback.function = prvExample_OnDisconnect;
 
+
 	/****************** MQTT Connection information setup. ********************/
-	/* Set this flag to true if connecting to the AWS IoT MQTT broker.  This
-	example does not use TLS and therefore won't work with AWS IoT. */
+
+	/* Set this flag to true if connecting to the AWS IoT MQTT broker. This
+	 * example does not use TLS and therefore won't work with AWS IoT. */
 	xConnectInfo.awsIotMqttMode = false;
 
 	/* Start with a clean session i.e. direct the MQTT broker to discard any
@@ -404,12 +411,12 @@ IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 	xConnectInfo.pWillInfo = NULL;
 
 	/* Send an MQTT PING request every minute to keep the connection open if
-	there is no other MQTT trafic. */
+	there is no other MQTT traffic. */
 	xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_SECONDS;
 
 	/* The client identifier is used to uniquely identify this MQTT client to
 	 * the MQTT broker.  In a production device the identifier can be something
-	 unique, such as a device serial number. */
+	 * unique, such as a device serial number. */
 	xConnectInfo.pClientIdentifier = mqttexampleCLIENT_IDENTIFIER;
 	xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( mqttexampleCLIENT_IDENTIFIER );
 
@@ -421,7 +428,7 @@ IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 	xConnectInfo.passwordLength = 0;
 
 	/* Establish the connection to the MQTT broker - It is a blocking call and
-	will return only when connection is complete or a timeout occurrs. */
+	will return only when connection is complete or a timeout occurs. */
 	xResult = IotMqtt_Connect( &( xNetworkInfo ),
 							   &( xConnectInfo ),
 							   mqttexampleMQTT_TIMEOUT_MS,
@@ -435,7 +442,9 @@ static void prvMQTTSubscribe( void )
 IotMqttError_t xResult;
 IotMqttSubscription_t xMQTTSubscription;
 
-	/* Subscribe to the mqttexampleTOPIC topic filter. */
+	/* Subscribe to the mqttexampleTOPIC topic filter. The task handle is passed
+	 * as the callback context which is used by the callback to send a task
+	 * notification to this task.*/
 	xMQTTSubscription.qos = IOT_MQTT_QOS_1;
 	xMQTTSubscription.pTopicFilter = mqttexampleTOPIC;
 	xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
@@ -443,7 +452,7 @@ IotMqttSubscription_t xMQTTSubscription;
 	xMQTTSubscription.callback.function = prvExample_OnMessageReceived;
 
 	/* Use the synchronous API to subscribe - It is a blocking call and only
-	 * returns when the subscribe operation is complete. */
+	 * returns when the subscribe operation is complete or a timeout occurs. */
 	xResult = IotMqtt_TimedSubscribe( xMQTTConnection,
 									  &( xMQTTSubscription ),
 									  1, /* We are subscribing to one topic filter. */
@@ -471,7 +480,7 @@ IotMqttPublishInfo_t xMQTTPublishInfo;
 	xMQTTPublishInfo.retryLimit = mqttexamplePUBLISH_RETRY_LIMIT;
 
 	/* Use the synchronous API to publish - It is a blocking call and only
-	 * returns when the publish operation is complete. */
+	 * returns when the publish operation is complete or a timeout occurs. */
 	xResult = IotMqtt_TimedPublish( xMQTTConnection,
 									&( xMQTTPublishInfo ),
 									0, /* flags - currently ignored. */
@@ -496,7 +505,7 @@ IotMqttSubscription_t xMQTTSubscription;
 	xMQTTSubscription.callback.function = NULL;
 
 	/* Use the synchronous API to unsubscribe - It is a blocking call and only
-	 * returns when the unsubscribe operation is complete. */
+	 * returns when the unsubscribe operation is complete or a timeout occurs. */
 	xResult = IotMqtt_TimedUnsubscribe( xMQTTConnection,
 										&( xMQTTSubscription ),
 										1, /* We are unsubscribing from one topic filter. */

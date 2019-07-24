@@ -58,14 +58,15 @@
  */
 #define IOT_TASKPOOL_ENABLE_ASSERTS                 1
 
-/*
+/**
+ * @brief The numer of worker tasks in the task pool.
+ *
  * The full IoT Task Pool Library has many use cases, including Linux
- * development.  Typical FreeRTOS use cases do not require the full
- * functionality so an optimised implementation is provided specifically for use
- * with FreeRTOS.  The optimised version has a fixed number of tasks in the
- * pool, each of which uses statically allocated memory to ensure creation of
- * the pool is guaranteed (it does not run out of heap space).
- * IOT_TASKPOOL_NUMBER_OF_WORKERS sets the number of tasks in the pool.
+ * development. Typical FreeRTOS use cases do not require the full
+ * functionality so an optimized implementation is provided specifically for use
+ * with FreeRTOS. The optimized version has a fixed number of tasks in the
+ * task pool, each of which uses statically allocated memory to ensure creation
+ * of the task pool is guaranteed (it does not run out of heap space).
  */
 #define IOT_TASKPOOL_NUMBER_OF_WORKERS               3
 
@@ -104,11 +105,10 @@
  */
 #define AWS_IOT_MQTT_ENABLE_METRICS                 0
 
-/*
- * @brief Set the log level of the task pool library.
+/**
+ * @brief Set the log level of the MQTT library.
  *
- * Log messages from the task pool library at or below this setting will be
- * printed.
+ * Log messages from the MQTT library at or below this setting will be printed.
  *
  * Possible values: One of the Log levels.
  * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,

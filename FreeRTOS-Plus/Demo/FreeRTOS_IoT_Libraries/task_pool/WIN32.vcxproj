@@ -177,7 +177,7 @@
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\task.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\timers.h" />
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\platform\iot_platform_types_afr.h" />
+    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\platform\iot_platform_types_freertos.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\include\types\iot_platform_types.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_taskpool.h" />
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\private\iot_error.h" />

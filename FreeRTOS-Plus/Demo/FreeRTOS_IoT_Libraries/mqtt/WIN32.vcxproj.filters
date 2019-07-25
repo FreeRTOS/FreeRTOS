@@ -286,18 +286,6 @@
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt_agent.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt_agent_config_defaults.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt_config_defaults.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt_lib.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\types\iot_mqtt_types.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include\types</Filter>
     </ClInclude>

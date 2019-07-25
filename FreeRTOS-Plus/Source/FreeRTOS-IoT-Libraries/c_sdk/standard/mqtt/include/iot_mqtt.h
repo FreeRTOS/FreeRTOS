@@ -427,7 +427,7 @@ IotMqttError_t IotMqtt_Subscribe( IotMqttConnection_t mqttConnection,
                                   size_t subscriptionCount,
                                   uint32_t flags,
                                   const IotMqttCallbackInfo_t * pCallbackInfo,
-                                  IotMqttOperation_t * pSubscribeOperation );
+                                  IotMqttOperation_t * const pSubscribeOperation );
 /* @[declare_mqtt_subscribe] */
 
 /**
@@ -512,7 +512,7 @@ IotMqttError_t IotMqtt_Unsubscribe( IotMqttConnection_t mqttConnection,
                                     size_t subscriptionCount,
                                     uint32_t flags,
                                     const IotMqttCallbackInfo_t * pCallbackInfo,
-                                    IotMqttOperation_t * pUnsubscribeOperation );
+                                    IotMqttOperation_t * const pUnsubscribeOperation );
 /* @[declare_mqtt_unsubscribe] */
 
 /**
@@ -642,7 +642,7 @@ IotMqttError_t IotMqtt_Publish( IotMqttConnection_t mqttConnection,
                                 const IotMqttPublishInfo_t * pPublishInfo,
                                 uint32_t flags,
                                 const IotMqttCallbackInfo_t * pCallbackInfo,
-                                IotMqttOperation_t * pPublishOperation );
+                                IotMqttOperation_t * const pPublishOperation );
 /* @[declare_mqtt_publish] */
 
 /**
@@ -817,7 +817,7 @@ const char * IotMqtt_OperationType( IotMqttOperationType_t operation );
 bool IotMqtt_IsSubscribed( IotMqttConnection_t mqttConnection,
                            const char * pTopicFilter,
                            uint16_t topicFilterLength,
-                           IotMqttSubscription_t * pCurrentSubscription );
+                           IotMqttSubscription_t * const pCurrentSubscription );
 /* @[declare_mqtt_issubscribed] */
 
 #endif /* ifndef IOT_MQTT_H_ */

@@ -25,6 +25,11 @@
  * 1 tab == 4 spaces!
  */
 
+	/***
+	 * See https://www.FreeRTOS.org/task-pool/ for configuration and usage instructions.
+	 ***/
+
+
 /* Standard includes. */
 #include <stdio.h>
 #include <time.h>
@@ -55,10 +60,9 @@ const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_
 
 int main( void )
 {
-	/*
-	 * Instructions for using this project are provided on:
-	 * TBD
-	 */
+	/***
+	 * See https://www.FreeRTOS.org/task-pool/ for configuration and usage instructions.
+	 ***/
 
 	/* Create the example that demonstrates task pool functionality.  Examples
 	that demonstrate networking connectivity will be added in future projects

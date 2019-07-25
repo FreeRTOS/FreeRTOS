@@ -250,11 +250,11 @@
     </ClInclude>
     <ClInclude Include="iot_config.h" />
     <ClInclude Include="iot_config_common.h" />
-    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\platform\iot_platform_types_afr.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos\include\platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\include\types\iot_platform_types.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\include\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\platform\iot_platform_types_freertos.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos\include\platform\types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

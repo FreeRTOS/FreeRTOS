@@ -25,7 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-//_RB_ Add link to docs here.
 
 /* Kernel includes. */
 #include "FreeRTOS.h"

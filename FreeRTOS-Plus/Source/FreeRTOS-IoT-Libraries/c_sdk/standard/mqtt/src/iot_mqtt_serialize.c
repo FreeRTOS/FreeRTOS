@@ -1375,12 +1375,12 @@ IotMqttError_t _IotMqtt_DeserializePublish( _mqttPacket_t * pPublish )
      * a packet identifer, but QoS 0 PUBLISH packets do not. */
     if( pOutput->qos == IOT_MQTT_QOS_0 )
     {
-        pOutput->payloadLength = ( uint16_t ) ( pPublish->remainingLength - pOutput->topicNameLength - sizeof( uint16_t ) );
+        pOutput->payloadLength = ( pPublish->remainingLength - pOutput->topicNameLength - sizeof( uint16_t ) );
         pOutput->pPayload = pPacketIdentifierHigh;
     }
     else
     {
-        pOutput->payloadLength = ( uint16_t ) ( pPublish->remainingLength - pOutput->topicNameLength - 2 * sizeof( uint16_t ) );
+        pOutput->payloadLength = ( pPublish->remainingLength - pOutput->topicNameLength - 2 * sizeof( uint16_t ) );
         pOutput->pPayload = pPacketIdentifierHigh + sizeof( uint16_t );
     }
 

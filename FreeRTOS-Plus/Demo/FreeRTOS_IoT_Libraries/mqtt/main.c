@@ -25,9 +25,9 @@
  * 1 tab == 4 spaces!
  */
 
-/*
- * TBD
- */
+ /***
+  * See https://www.FreeRTOS.org/mqtt/index.html for configuration and usage instructions.
+  ***/
 
 /* Standard includes. */
 #include <stdio.h>
@@ -102,10 +102,9 @@ static UBaseType_t ulNextRand;
 
 int main( void )
 {
-	/*
-	 * Instructions for using this project are provided on:
-	 * TBD
-	 */
+	/***
+	 * See https://www.FreeRTOS.org/mqtt/index.html for configuration and usage instructions.
+	 ***/
 
 	/* Miscellaneous initialisation including preparing the logging and seeding
 	the random number generator. */

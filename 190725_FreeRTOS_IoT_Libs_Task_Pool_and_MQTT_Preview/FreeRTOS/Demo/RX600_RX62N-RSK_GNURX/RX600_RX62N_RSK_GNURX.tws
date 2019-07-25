@@ -1,0 +1,17 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"1.2" 
+[CURRENT_PROJECT]
+"RTOSDemo" 
+[GENERAL_DATA]
+[BREAKPOINTS]
+[OPEN_WORKSPACE_FILES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX600_RX62N-RSK_GNURX\RTOSDemo\main-blinky.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX600_RX62N-RSK_GNURX\RTOSDemo\main-full.c" 
+[WORKSPACE_FILE_STATES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX600_RX62N-RSK_GNURX\RTOSDemo\main-blinky.c" 0 0 792 235 0 0 
+"C:\E\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RX600_RX62N-RSK_GNURX\RTOSDemo\main-full.c" 22 22 792 235 0 1 
+[LOADED_PROJECTS]
+"RTOSDemo" 
+[END]

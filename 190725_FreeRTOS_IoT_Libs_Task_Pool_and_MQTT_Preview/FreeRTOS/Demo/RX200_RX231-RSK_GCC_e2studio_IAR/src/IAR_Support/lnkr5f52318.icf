@@ -1,0 +1,47 @@
+//-----------------------------------------------------------------------------
+// ILINK command file template for the Renesas RX microcontroller R5F52318
+//-----------------------------------------------------------------------------
+define memory mem with size = 4G;
+
+define region ROM_region16 = mem:[from 0xFFFF8000 to 0xFFFFFFFF];
+define region RAM_region16 = mem:[from 0x00000004 to 0x00007FFF];
+define region ROM_region24 = mem:[from 0xFFF80000 to 0xFFFFFFFF];
+define region RAM_region24 = mem:[from 0x00000004 to 0x0000FFFF];
+define region ROM_region32 = mem:[from 0xFFF80000 to 0xFFFFFFFF];
+define region RAM_region32 = mem:[from 0x00000004 to 0x0000FFFF];
+define region DATA_FLASH_region = mem:[from 0x00100000 to 0x00101FFF];
+
+initialize by copy { rw, ro section D, ro section D_1, ro section D_2 };
+initialize by copy with packing = none { section __DLIB_PERTHREAD };
+do not initialize  { section .*.noinit };
+
+define block HEAP     with alignment = 4, size = _HEAP_SIZE { };
+define block USTACK   with alignment = 4, size = _USTACK_SIZE { };
+define block ISTACK   with alignment = 4, size = _ISTACK_SIZE { };
+
+define block STACKS with fixed order { block ISTACK,
+                                       block USTACK };
+
+
+place at address mem:0x00120040 { ro section .option_rom };
+place at address mem:0xFFFFFF80 { ro section .exceptvect };
+place at address mem:0xFFFFFFFC { ro section .resetvect };
+
+"ROM16":place in ROM_region16        { ro section .code16*,
+                                       ro section .data16* };
+"RAM16":place in RAM_region16        { rw section .data16*,
+                                       rw section __DLIB_PERTHREAD };
+"ROM24":place in ROM_region24        { ro section .code24*,
+                                       ro section .data24* };
+"RAM24":place in RAM_region24        { rw section .data24* };
+"ROM32":place in ROM_region32        { ro };
+"RAM32":place in RAM_region32        { rw,
+                                       ro section D,
+                                       ro section D_1,
+                                       ro section D_2,
+                                       block HEAP,
+                                       block STACKS };
+
+"DATAFLASH":place in DATA_FLASH_region
+                                     { ro section .dataflash* };
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+	<configuration id="%com.renesas.cdt.rx.hardwaredebug.win32.configuration.Id.485661513" name="HardwareDebug">
+		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
+			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
+			<provider class="com.renesas.cdt.common.build.spec.RXGCCBuiltinSpecsDetector" console="false" env-hash="738196985922260309" id="RXGCCBuiltinSpecsDetector" keep-relative-paths="false" name="Renesas GCCBuildinCompilerSettings" options-hash="-645709713" parameter="rx-elf-gcc -E -P -v -dD ${INPUTS}" prefer-non-shared="true">
+				<language-scope id="org.eclipse.cdt.core.gcc"/>
+				<language-scope id="org.eclipse.cdt.core.g++"/>
+			</provider>
+			<provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
+		</extension>
+	</configuration>
+</project>

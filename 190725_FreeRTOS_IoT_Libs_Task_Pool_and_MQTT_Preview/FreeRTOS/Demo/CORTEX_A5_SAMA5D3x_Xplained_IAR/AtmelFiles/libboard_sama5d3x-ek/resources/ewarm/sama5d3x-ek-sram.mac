@@ -1,0 +1,108 @@
+// ---------------------------------------------------------
+//   ATMEL Microcontroller Software Support
+// ---------------------------------------------------------
+// The software is delivered "AS IS" without warranty or
+// condition of any  kind, either express, implied or
+// statutory. This includes without limitation any warranty
+// or condition with respect to merchantability or fitness
+// for any particular purpose, or against the infringements of
+// intellectual property rights of others.
+// ---------------------------------------------------------
+//  File: sama5d3x-ek-sram.mac
+//  User setup file for CSPY debugger.
+//  
+// ---------------------------------------------------------
+
+__var __tempo_var;
+__var __dummy_read;
+__var __data_test;
+__var __mac_i;
+
+/*********************************************************************
+*
+*       execUserReset() : JTAG set initially to Full Speed
+*/
+execUserReset()
+{
+    __message "------------------------------ execUserReset ---------------------------------";
+    //CheckNoRemap();
+    __message "-------------------------------Set PC Reset ----------------------------------";
+    __writeMemory32(0xD3,0x98,"Register");        //*  Set CPSR
+}
+
+/*********************************************************************
+*
+*       execUserPreload() : JTAG set initially to 32kHz
+*/
+execUserPreload()
+{
+    __message "------------------------------ execUserPreload ---------------------------------";
+    //__hwReset(0);                     //* Hardware Reset: CPU is automatically halted after the reset (JTAG is already configured to 32kHz)
+    
+    __writeMemory32(0xD3,0x98,"Register"); //*  Set CPSR
+    //CheckNoRemap();                   //* Set the RAM memory at 0x0020 0000 & 0x0000 0000
+    Watchdog();                       //* Watchdog Disable
+
+    //*  Get the Chip ID  (AT91C_DBGU_C1R & AT91C_DBGU_C2R
+    __mac_i=__readMemory32(0xFFFFEE40,"Memory");
+    __message " ---------------------------------------- Chip ID   0x",__mac_i:%X;
+}
+
+
+/*********************************************************************
+*
+*       CheckRemap()
+*
+* Function description
+*   Check the Remap.
+*/
+
+CheckNoRemap()
+{
+    __tempo_var = __readMemory32(0x00000000,"Memory");
+    
+    if (__tempo_var == 0xAA55AA55) 
+    {
+       __data_test = 0x55AA55AA;
+    }
+    else
+      {
+         __data_test = 0xAA55AA55;
+      }
+      
+    __writeMemory32(__data_test,0x00000000,"Memory");
+      
+    __dummy_read = __readMemory32(0x00000000,"Memory");
+
+    __writeMemory32(__tempo_var,0x00000000,"Memory");
+   
+    if (__dummy_read == __data_test) 
+    {
+       __message " ------------------------ The Remap is already done ------------------------";
+    }
+    else
+      {
+         __message " ------------------------ The Remap is not DONE ------------------------";
+         __writeMemory32(0x00000001,0xFFFFED00,"Memory");
+         __delay(2);
+         __writeMemory32(0x00000001,0x00800000,"Memory");
+         __delay(50);
+         __message "------------ The Remap was executed ------------";
+      }
+}
+
+/*********************************************************************
+*
+*       _Watchdog()
+*
+* Function description
+*   Clear Watchdog
+*/
+
+Watchdog()
+{
+   // Watchdog Disable
+   __writeMemory32(0x00008000,0xFFFFFE44,"Memory");
+   __message " ------------------------ Watchdog Disable ------------------------";
+}
+

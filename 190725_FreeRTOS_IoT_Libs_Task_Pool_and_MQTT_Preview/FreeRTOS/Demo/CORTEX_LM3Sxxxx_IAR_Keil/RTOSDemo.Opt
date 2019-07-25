@@ -1,0 +1,77 @@
+### uVision2 Project, (C) Keil Software
+### Do not modify !
+
+ cExt (*.c)
+ aExt (*.s*; *.src; *.a*)
+ oExt (*.obj)
+ lExt (*.lib)
+ tExt (*.txt; *.h; *.inc)
+ pExt (*.plm)
+ CppX (*.cpp)
+ DaveTm { 0,0,0,0,0,0,0,0 }
+
+Target (FreeRTOS_Demo), 0x0004 // Tools: 'ARM-ADS'
+GRPOPT 1,(Demo_Source),1,0,0
+GRPOPT 2,(Libraries),0,0,0
+GRPOPT 3,(RTOS_Source),0,0,0
+GRPOPT 4,(uIP_Source),0,0,0
+
+OPTFFF 1,1,1,0,0,0,0,0,<..\Common\Minimal\BlockQ.c><BlockQ.c> 
+OPTFFF 1,2,1,0,0,0,0,0,<..\Common\Minimal\blocktim.c><blocktim.c> 
+OPTFFF 1,3,1,0,0,0,0,0,<..\Common\Minimal\death.c><death.c> 
+OPTFFF 1,4,1,0,0,0,0,0,<..\Common\Minimal\integer.c><integer.c> 
+OPTFFF 1,5,1,553648128,0,67,67,0,<.\main.c><main.c> 
+OPTFFF 1,6,1,0,0,0,0,0,<.\ParTest\ParTest.c><ParTest.c> 
+OPTFFF 1,7,1,0,0,0,0,0,<..\Common\Minimal\PollQ.c><PollQ.c> 
+OPTFFF 1,8,1,0,0,0,0,0,<..\Common\Minimal\semtest.c><semtest.c> 
+OPTFFF 1,9,2,0,0,0,0,0,<.\startup_rvmdk.S><startup_rvmdk.S> 
+OPTFFF 1,10,1,0,0,0,0,0,<.\timertest.c><timertest.c> 
+OPTFFF 1,11,5,822083584,0,0,0,0,<.\FreeRTOSConfig.h><FreeRTOSConfig.h> 
+OPTFFF 1,12,1,0,0,0,0,0,<..\Common\Minimal\GenQTest.c><GenQTest.c> 
+OPTFFF 1,13,1,1,0,0,0,0,<..\Common\Minimal\QPeek.c><QPeek.c> 
+OPTFFF 1,14,1,0,0,0,0,0,<.\IntQueueTimer.c><IntQueueTimer.c> 
+OPTFFF 1,15,1,0,0,0,0,0,<..\Common\Minimal\IntQueue.c><IntQueue.c> 
+OPTFFF 1,16,1,0,0,0,0,0,<..\Common\Minimal\recmutex.c><recmutex.c> 
+OPTFFF 2,17,1,0,0,0,0,0,<.\rit128x96x4.c><rit128x96x4.c> 
+OPTFFF 2,18,1,0,0,0,0,0,<.\osram128x64x4.c><osram128x64x4.c> 
+OPTFFF 2,19,4,0,0,0,0,0,<..\Common\drivers\LuminaryMicro\Keil\driverlib.lib><driverlib.lib> 
+OPTFFF 2,20,1,0,0,0,0,0,<.\formike128x128x16.c><formike128x128x16.c> 
+OPTFFF 2,21,4,0,0,0,0,0,<..\Common\drivers\LuminaryMicro\Keil\grlib.lib><grlib.lib> 
+OPTFFF 3,22,1,0,0,0,0,0,<..\..\Source\tasks.c><tasks.c> 
+OPTFFF 3,23,1,0,0,0,0,0,<..\..\Source\list.c><list.c> 
+OPTFFF 3,24,1,0,0,0,0,0,<..\..\Source\queue.c><queue.c> 
+OPTFFF 3,25,1,0,0,0,0,0,<..\..\Source\portable\RVDS\ARM_CM3\port.c><port.c> 
+OPTFFF 3,26,1,0,0,0,0,0,<..\..\Source\portable\MemMang\heap_2.c><heap_2.c> 
+OPTFFF 4,27,1,0,0,0,0,0,<.\webserver\uIP_Task.c><uIP_Task.c> 
+OPTFFF 4,28,1,0,0,0,0,0,<.\webserver\emac.c><emac.c> 
+OPTFFF 4,29,1,0,0,0,0,0,<.\webserver\httpd.c><httpd.c> 
+OPTFFF 4,30,1,0,0,0,0,0,<.\webserver\httpd-cgi.c><httpd-cgi.c> 
+OPTFFF 4,31,1,0,0,0,0,0,<.\webserver\httpd-fs.c><httpd-fs.c> 
+OPTFFF 4,32,1,0,0,0,0,0,<.\webserver\http-strings.c><http-strings.c> 
+OPTFFF 4,33,1,0,0,0,0,0,<..\Common\ethernet\uIP\uip-1.0\uip\uip_arp.c><uip_arp.c> 
+OPTFFF 4,34,1,0,0,0,0,0,<..\Common\ethernet\uIP\uip-1.0\uip\psock.c><psock.c> 
+OPTFFF 4,35,1,0,0,0,0,0,<..\Common\ethernet\uIP\uip-1.0\uip\timer.c><timer.c> 
+OPTFFF 4,36,1,0,0,0,0,0,<..\Common\ethernet\uIP\uip-1.0\uip\uip.c><uip.c> 
+
+
+TARGOPT 1, (FreeRTOS_Demo)
+ ADSCLK=8000000
+  OPTTT 0,1,1,0
+  OPTHX 1,65535,0,0,0
+  OPTLX 79,66,8,<.\rvmdk\>
+  OPTOX 16
+  OPTLT 1,1,1,0,1,1,0,1,0,0,0,0
+  OPTXL 1,1,1,1,1,1,1,0,0
+  OPTFL 1,0,1
+  OPTAX 0
+  OPTDL (SARMCM3.DLL)()(DLM.DLL)(-pLM3S8962)(SARMCM3.DLL)()(TLM.DLL)(-pLM3S8962)
+  OPTDBG 48126,4,()()()()()()()()()() (BIN\lmidk-agdi.dll)()()()
+  OPTKEY 0,(DLGTARM)((1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(110=-1,-1,-1,-1,0)(100=-1,-1,-1,-1,0)(101=-1,-1,-1,-1,0)(102=-1,-1,-1,-1,0)(103=-1,-1,-1,-1,0)(104=-1,-1,-1,-1,0)(105=-1,-1,-1,-1,0)(106=-1,-1,-1,-1,0)(161=-1,-1,-1,-1,0)(162=-1,-1,-1,-1,0)(163=-1,-1,-1,-1,0)(164=-1,-1,-1,-1,0)(150=-1,-1,-1,-1,0)(151=-1,-1,-1,-1,0)(1011=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)(1013=-1,-1,-1,-1,0)(171=-1,-1,-1,-1,0)(172=-1,-1,-1,-1,0)(173=-1,-1,-1,-1,0)(1014=-1,-1,-1,-1,0)(1016=-1,-1,-1,-1,0)(136=-1,-1,-1,-1,0))
+  OPTKEY 0,(ARMDBGFLAGS)()
+  OPTKEY 0,(lmidk-agdi)(-U -O4622 -S3 -FO29)
+  OPTKEY 0,(DLGUARM)(ллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллхp╤{жДЖ)
+  OPTDF 0x80
+  OPTLE <>
+  OPTLC <>
+EndOpt
+

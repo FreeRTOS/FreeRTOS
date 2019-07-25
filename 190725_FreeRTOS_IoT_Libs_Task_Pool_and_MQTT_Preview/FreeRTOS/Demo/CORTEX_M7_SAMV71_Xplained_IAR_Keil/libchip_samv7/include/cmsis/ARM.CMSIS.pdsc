@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<package schemaVersion="1.2" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="PACK.xsd">
+  <name>CMSIS</name>
+  <description>CMSIS (Cortex Microcontroller Software Interface Standard)</description>
+  <vendor>ARM</vendor>
+  <!-- <license>CMSIS\CMSIS_END_USER_LICENCE_AGREEMENT.rtf</license> -->
+  <url>http://www.keil.com/pack/</url>
+
+  <taxonomy>
+    <description Cclass="Board Support">Generic Interfaces for Evaluation and Development Boards</description>
+    <description Cclass="CMSIS" doc="CMSIS\Documentation\General\html\index.html">Cortex Microcontroller Software Interface Components</description>
+    <description Cclass="Device" doc="CMSIS\Documentation\Core\html\index.html">Startup, System Setup</description>
+    <description Cclass="CMSIS Driver" doc="CMSIS\Documentation\Driver\html\index.html">Unified Device Drivers compliant to CMSIS-Driver Specifications</description>
+    <description Cclass="File System">File Drive Support and File System</description>
+    <description Cclass="Graphics">Graphical User Interface</description>
+    <description Cclass="Network">Network Stack using Internet Protocols</description>
+    <description Cclass="USB">Universal Serial Bus Stack</description>
+  </taxonomy>
+
+  <releases>
+    <release version="4.1.0" date="2014-06-12">
+      - CMSIS-Driver   2.02  (incompatible update)
+      - CMSIS-Pack     1.3   (see revision history for details)
+      - CMSIS-DSP      1.4.2 (unchanged)
+      - CMSIS-Core     3.30  (unchanged)
+      - CMSIS-RTOS RTX 4.74  (unchanged)
+      - CMSIS-RTOS API 1.02  (unchanged)
+      - CMSIS-SVD      1.10  (unchanged)
+      PACK:
+      - removed G++ specific files from PACK
+      - added Component Startup variant "C Startup"
+      - added Pack Checking Utility 
+      - updated conditions to reflect tool-chain dependency
+      - added Taxonomy for Graphics
+      - updated Taxonomy for unified drivers from "Drivers" to "CMSIS Drivers"
+    </release>
+    <release version="4.0.0">
+      - CMSIS-Driver   2.00  Preliminary (incompatible update)
+      - CMSIS-Pack     1.1   Preliminary
+      - CMSIS-DSP      1.4.2 (see revision history for details)
+      - CMSIS-Core     3.30  (see revision history for details)
+      - CMSIS-RTOS RTX 4.74  (see revision history for details)
+      - CMSIS-RTOS API 1.02  (unchanged)
+      - CMSIS-SVD      1.10  (unchanged)
+    </release>
+    <release version="3.20.4">
+      - CMSIS-RTOS 4.74 (see revision history for details)
+      - PACK Extensions (Boards, Device Features, Flash Programming, Generators, Configuration Wizard). Schema version 1.1.
+    </release>
+    <release version="3.20.3">
+      - CMSIS-Driver API Version 1.10 ARM prefix added (incompatible change)
+      - CMSIS-RTOS 4.73 (see revision history for details)
+    </release>
+    <release version="3.20.2">
+      - CMSIS-Pack documentation has been added
+      - CMSIS-Drivers header and documentation have been added to PACK
+      - CMSIS-CORE, CMSIS-DSP, CMSIS-RTOS API and CMSIS-SVD remain unchanged
+    </release>
+    <release version="3.20.1">
+      - CMSIS-RTOS Keil RTX V4.72 has been added to PACK
+      - CMSIS-CORE, CMSIS-DSP, CMSIS-RTOS API and CMSIS-SVD remain unchanged
+    </release>
+    <release version="3.20.0">
+      The software portions that are deployed in the application program are now under a BSD license which allows usage
+      of CMSIS components in any commercial or open source projects.  The Pack Description file Arm.CMSIS.pdsc describes the use cases
+      The individual components have been update as listed below:
+      - CMSIS-CORE adds functions for setting breakpoints, supports the latest GCC Compiler, and contains several corrections.
+      - CMSIS-DSP library is optimized for more performance and contains several bug fixes.
+      - CMSIS-RTOS API is extended with capabilities for short timeouts, Kernel initialization, and prepared for a C++ interface.
+      - CMSIS-SVD is unchanged.
+    </release>
+  </releases>
+
+  <devices>
+    <!-- ******************************  Cortex-M0  ****************************** -->
+    <family Dfamily="ARM Cortex M0" Dvendor="ARM:82">
+      <device Dname="ARMCM0">
+        <processor Dcore="Cortex-M0" DcoreVersion="r0p0" Dfpu="0" Dmpu="0" Dendian="Configurable" Dclock="10000000"/>
+        <compile   header="Device\ARM\ARMCM0\Include\ARMCM0.h"/>
+        <debug     svd="Device\ARM\SVD\ARMCM0.svd"/>
+        <algorithm name="Device\ARM\Flash\NEW_DEVICE.FLM"               start="0x00000000"  size="0x00040000" default="1"/>
+        <book      name="Device\ARM\Documents\cortex_m0_dgug.pdf"       title="Cortex-M4 Device Generic Users Guide"/>
+
+        <description>
+          The Cortex-M0 processor is an entry-level 32-bit ARM Cortex processor designed
+          for a broad range of embedded applications. It offers significant benefits to developers,
+          including:
+          • simple, easy-to-use programmers model
+          • highly efficient ultra-low power operation
+          • excellent code density
+          • deterministic, high-performance interrupt handling
+          • upward compatibility with the rest of the Cortex-M processor family.
+        </description>
+      </device>
+    </family>
+
+    <!-- ******************************  Cortex-M0P  ****************************** -->
+    <family Dfamily="ARM Cortex M0 plus" Dvendor="ARM:82">
+      <device Dname="ARMCM0P">
+        <processor Dcore="Cortex-M0+" DcoreVersion="r0p1" Dfpu="0" Dmpu="0" Dendian="Configurable" Dclock="10000000"/>
+        <compile   header="Device\ARM\ARMCM0plus\Include\ARMCM0plus.h"/>
+        <debug     svd="Device\ARM\SVD\ARMCM0P.svd"/>
+        <algorithm name="Device\ARM\Flash\NEW_DEVICE.FLM"               start="0x00000000"  size="0x00040000" default="1"/>
+        <book      name="Device\ARM\Documents\cortex_m0p_dgug.pdf"       title="Cortex-M4 Device Generic Users Guide"/>
+        <description>
+          The Cortex-M0+ processor is an entry-level 32-bit ARM Cortex processor designed
+          for a broad range of embedded applications. It offers significant benefits to developers,
+          including:
+          • simple, easy-to-use programmers model
+          • highly efficient ultra-low power operation
+          • excellent code density
+          • deterministic, high-performance interrupt handling
+          • upward compatibility with the rest of the Cortex-M processor family.
+        </description>
+      </device>
+    </family>
+
+    <!-- ******************************  Cortex-M3  ****************************** -->
+    <family Dfamily="ARM Cortex M3" Dvendor="ARM:82">
+      <device Dname="ARMCM3">
+        <processor Dcore="Cortex-M3" DcoreVersion="r2p1" Dfpu="0" Dmpu="0" Dendian="Configurable" Dclock="10000000"/>
+        <compile   header="Device\ARM\ARMCM3\Include\ARMCM3.h"/>
+        <debug     svd="Device\ARM\SVD\ARMCM3.svd"/>
+        <algorithm name="Device\ARM\Flash\NEW_DEVICE.FLM"               start="0x00000000"  size="0x00040000" default="1"/>
+        <book      name="Device\ARM\Documents\cortex_m3_dgug.pdf"       title="Cortex-M3 Device Generic Users Guide"/>
+        <description>
+          The Cortex-M3 processor is an entry-level 32-bit ARM Cortex processor designed
+          for a broad range of embedded applications. It offers significant benefits to developers,
+          including:
+          • simple, easy-to-use programmers model
+          • highly efficient ultra-low power operation
+          • excellent code density
+          • deterministic, high-performance interrupt handling
+          • upward compatibility with the rest of the Cortex-M processor family.
+        </description>
+      </device>
+    </family>
+
+    <!-- ******************************  Cortex-M4  ****************************** -->
+    <family Dfamily="ARM Cortex M4" Dvendor="ARM:82">
+      <device Dname="ARMCM4">
+        <processor Dcore="Cortex-M4" DcoreVersion="r0p1" Dfpu="1" Dmpu="0" Dendian="Configurable" Dclock="10000000"/>
+        <compile   header="Device\ARM\ARMCM4\Include\ARMCM4.h"/>
+        <debug     svd="Device\ARM\SVD\ARMCM4.svd"/>
+        <algorithm name="Device\ARM\Flash\NEW_DEVICE.FLM"               start="0x00000000"  size="0x00040000" default="1"/>
+        <book      name="Device\ARM\Documents\cortex_m4_dgug.pdf"       title="Cortex-M4 Device Generic Users Guide"/>
+        <description>
+          The Cortex-M4 processor is an entry-level 32-bit ARM Cortex processor designed
+          for a broad range of embedded applications. It offers significant benefits to developers,
+          including:
+          • simple, easy-to-use programmers model
+          • highly efficient ultra-low power operation
+          • excellent code density
+          • deterministic, high-performance interrupt handling
+          • upward compatibility with the rest of the Cortex-M processor family.
+        </description>
+      </device>
+    </family>
+
+
+    <!-- ******************************  ARMSC000  ****************************** -->
+    <family Dfamily="ARM SC000" Dvendor="ARM:82">
+      <device Dname="ARMSC000">
+        <processor Dcore="SC000" DcoreVersion="r0p1" Dfpu="0" Dmpu="0" Dendian="Configurable" Dclock="10000000"/>
+        <compile   header="Device\ARM\ARMSC000\Include\ARMSC000.h"/>
+        <debug     svd="Device\ARM\SVD\ARMSC000.svd"/>
+        <algorithm name="Device\ARM\Flash\NEW_DEVICE.FLM"               start="0x00000000"  size="0x00040000" default="1"/>
+        <description>
+          The ARM SC000 processor is an entry-level 32-bit ARM Cortex processor designed
+          for a broad range of secure embedded applications. It offers significant benefits to developers,
+          including:
+          • simple, easy-to-use programmers model
+          • highly efficient ultra-low power operation
+          • excellent code density
+          • deterministic, high-performance interrupt handling
+        </description>
+      </device>
+    </family>
+
+
+    <!-- ******************************  ARMSC300  ****************************** -->
+    <family Dfamily="ARM SC300" Dvendor="ARM:82">
+      <device Dname="ARMSC300">
+        <processor Dcore="SC300" DcoreVersion="r0p1" Dfpu="0" Dmpu="0" Dendian="Configurable" Dclock="10000000"/>
+        <compile   header="Device\ARM\ARMSC300\Include\ARMSC300.h"/>
+        <debug     svd="Device\ARM\SVD\ARMSC300.svd"/>
+        <algorithm name="Device\ARM\Flash\NEW_DEVICE.FLM"               start="0x00000000"  size="0x00040000" default="1"/>
+
+        <description>
+          The ARM SC300 processor is an entry-level 32-bit ARM Cortex processor designed
+          for a broad range of secure embedded applications. It offers significant benefits to developers,
+          including:
+          • simple, easy-to-use programmers model
+          • highly efficient ultra-low power operation
+          • excellent code density
+          • deterministic, high-performance interrupt handling
+        </description>
+      </device>
+    </family>
+
+  </devices>
+
+
+  <apis>
+    <!-- CMSIS-RTOS API -->
+    <api Cclass="CMSIS" Cgroup="RTOS" Capiversion="1.0" exclusive="1">
+      <description>CMSIS-RTOS API for Cortex-M, SC000, and SC300</description>
+      <files>
+        <file category="doc" name="CMSIS\Documentation\RTOS\html\index.html"/>
+      </files>
+    </api>
+    <api Cclass="CMSIS Driver" Cgroup="USART" Capiversion="2.01" exclusive="0">
+        <description>USART Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__usart__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_USART.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="SPI" Capiversion="2.01" exclusive="0">
+        <description>SPI Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__spi__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_SPI.h" />
+        </files>
+      </api>
+      <api Cclass="CMSIS Driver" Cgroup="I2C" Capiversion="2.02" exclusive="0">
+        <description>I2C Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__i2c__interface__gr.html"/>
+          <file category="header" name="CMSIS\Driver\Include\Driver_I2C.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="Flash" Capiversion="2.00" exclusive="0">
+        <description>Flash Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__flash__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_Flash.h" />
+        </files>
+      </api>
+      <api Cclass="CMSIS Driver" Cgroup="MCI" Capiversion="2.02" exclusive="0">
+        <description>MCI Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__mci__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_MCI.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="NAND" Capiversion="2.01" exclusive="0">
+        <description>NAND Flash Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__nand__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_NAND.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="Ethernet" Capiversion="2.01" exclusive="0">
+        <description>Ethernet MAC and PHY Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__eth__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_ETH_MAC.h" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_ETH_PHY.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="Ethernet MAC" Capiversion="2.01" exclusive="0">
+        <description>Ethernet MAC Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__eth__mac__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_ETH_MAC.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="Ethernet PHY" Capiversion="2.00" exclusive="0">
+        <description>Ethernet PHY Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__eth__phy__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_ETH_PHY.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="USB Device" Capiversion="2.01" exclusive="0">
+        <description>USB Device Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__usbd__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_USBD.h" />
+        </files>
+      </api>
+    <api Cclass="CMSIS Driver" Cgroup="USB Host" Capiversion="2.00" exclusive="0">
+        <description>USB Host Driver API for Cortex-M</description>
+        <files>
+          <file category="doc" name="CMSIS\Documentation\Driver\html\group__usbh__interface__gr.html" />
+          <file category="header" name="CMSIS\Driver\Include\Driver_USBH.h" />
+        </files>
+      </api>
+  </apis>
+
+  <!-- conditions are dependency rules that can apply to a component or an individual file -->
+  <conditions>
+    <condition id="ARMCC">
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="GCC">
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="IAR">
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="Cortex-M Device">
+      <description>Cortex-M processor based device: one of CM0, CM0+, CM3, CM4, SC000, SC3000</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="Cortex-M4"/>
+      <accept Dcore="SC000"/>
+      <accept Dcore="SC300"/>
+    </condition>
+
+    <condition id="Cortex-M CMSIS Device">
+      <description>ARM Cortex-M device</description>
+      <require condition="Cortex-M Device"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="CMSIS Core">
+      <description>CMSIS CORE processor and device specific Startup files</description>
+      <require condition="Cortex-M Device"/>
+      <require Cclass="Device" Cgroup="Startup"/>
+    </condition>
+
+    <condition id="ARMCM0 CMSIS">
+      <!-- conditions selecting Devices -->
+      <description>Generic ARM Cortex-M0 device and CMSIS Core</description>
+      <require Dvendor="ARM:82" Dname="ARMCM0"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="ARMCM0 CMSIS GCC">
+      <!-- conditions selecting Devices -->
+      <description>Generic ARM Cortex-M0 device and CMSIS Core requiring GCC</description>
+      <require condition="ARMCM0 CMSIS"/>
+      <require condition="GCC"/>
+    </condition>
+
+    <condition id="ARMCM0+ CMSIS">
+      <description>Generic ARM Cortex-M0+ device and CMSIS Core</description>
+      <require Dvendor="ARM:82" Dname="ARMCM0P"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="ARMCM0+ CMSIS GCC">
+      <description>Generic ARM Cortex-M0+ device and CMSIS Core requiring GCC</description>
+      <require condition="ARMCM0+ CMSIS"/>
+      <require condition="GCC"/>
+    </condition>
+
+    <condition id="ARMCM3 CMSIS">
+      <description>Generic ARM Cortex-M3 device and CMSIS Core</description>
+      <require Dvendor="ARM:82" Dname="ARMCM3"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="ARMCM3 CMSIS GCC">
+      <description>Generic ARM Cortex-M3 device and CMSIS Core requiring GCC</description>
+      <require condition="ARMCM3 CMSIS"/>
+      <require condition="GCC"/>
+    </condition>
+
+    <condition id="ARMCM4 CMSIS">
+      <description>Generic ARM Cortex-M4 device and CMSIS Core</description>
+      <require Dvendor="ARM:82" Dname="ARMCM4"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="ARMCM4 CMSIS GCC">
+      <description>Generic ARM Cortex-M4 device and CMSIS Core requiring GCC</description>
+      <require condition="ARMCM4 CMSIS"/>
+      <require condition="GCC"/>
+    </condition>
+
+    <condition id="ARMSC000 CMSIS">
+      <description>Generic ARM SC000 device and CMSIS Core</description>
+      <require Dvendor="ARM:82" Dname="ARMSC000"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="ARMSC000 CMSIS GCC">
+      <description>Generic ARM SC000 device and CMSIS Core requiring GCC</description>
+      <require condition="ARMSC000 CMSIS"/>
+      <require condition="GCC"/>
+    </condition>
+
+    <condition id="ARMSC300 CMSIS">
+      <description>Generic ARM SC300 device and CMSIS Core</description>
+      <require Dvendor="ARM:82" Dname="ARMSC300"/>
+      <require Cclass="CMSIS" Cgroup="CORE"/>
+    </condition>
+
+    <condition id="ARMSC300 CMSIS GCC">
+      <description>Generic ARM SC300 device and CMSIS Core requiring GCC</description>
+      <require condition="ARMSC300 CMSIS"/>
+      <require condition="GCC"/>
+    </condition>
+
+    <condition id="CMSIS DSP">
+      <description>CMSIS DSP Library is for ARM Cortex-M Devices only and is prebuild for one of the compilers ARMCC, GCC or IAR</description>
+      <require condition="Cortex-M CMSIS Device"/>
+      <accept Tcompiler="GCC"/>
+      <accept Tcompiler="ARMCC"/>
+      <accept Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM0_LE_ARMCC">
+      <description>Cortex-M0 or Cortex-M0+ or SC000 processor based device in little endian mode for the ARM Compiler</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="SC000"/>
+      <require Dendian="Little-endian"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM0_BE_ARMCC">
+      <description>Cortex-M0 or Cortex-M0+ or SC000 processor based device in big endian mode for the ARM Compiler</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="SC000"/>
+      <require Dendian="Big-endian"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM3_LE_ARMCC">
+      <description>Cortex-M3 or SC300 processor based device in little endian mode for the ARM Compiler</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="SC300"/>
+      <require Dendian="Little-endian"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM3_BE_ARMCC">
+      <description>Cortex-M3 or SC300 processor based device in big endian mode for the ARM Compiler</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="SC300"/>
+      <require Dendian="Big-endian"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM4_LE_ARMCC">
+      <description>Cortex-M4 processor based device in little endian mode for the ARM Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Little-endian"/>
+      <deny Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM4_BE_ARMCC">
+      <description>Cortex-M4 processor based device in big endian mode for the ARM Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Big-endian"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM4F_LE_ARMCC">
+      <description>Cortex-M4 processor based device using Floating Point Unit in little endian mode for the ARM Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Little-endian"/>
+      <deny Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+    
+    <!-- XMC 4000 Series devices from Infineon require a special library -->
+    <condition id="CM4_LE_ARMCC_IFX">
+      <description>Cortex-M4 processor based device in little endian mode for the ARM Compiler and Infineon devices</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Little-endian" Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+    <condition id="CM4F_LE_ARMCC_IFX">
+      <description>Cortex-M4 processor based device using Floating Point Unit in little endian mode for the ARM Compiler and Infineon devices</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Little-endian" Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM4F_BE_ARMCC">
+      <description>Cortex-M4 processor based device using Floating Point Unit in big endian mode for the ARM Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Big-endian"/>
+      <require Tcompiler="ARMCC"/>
+    </condition>
+
+    <condition id="CM0_LE_GCC">
+      <description>Cortex-M0 or Cortex-M0+ or SC000 processor based device in little endian mode for the GCC Compiler</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="SC000"/>
+      <require Dendian="Little-endian"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM0_BE_GCC">
+      <description>Cortex-M0 or Cortex-M0+ or SC000 processor based device in big endian mode for the GCC Compiler</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="SC000"/>
+      <require Dendian="Big-endian"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM3_LE_GCC">
+      <description>Cortex-M3 or SC300 processor based device in little endian mode for the GCC Compiler</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="SC300"/>
+      <require Dendian="Little-endian"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM3_BE_GCC">
+      <description>Cortex-M3 or SC300 processor based device in big endian mode for the GCC Compiler</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="SC300"/>
+      <require Dendian="Big-endian"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM4_LE_GCC">
+      <description>Cortex-M4 processor based device in little endian mode for the GCC Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Little-endian"/>
+      <deny Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM4_BE_GCC">
+      <description>Cortex-M4 processor based device in big endian mode for the GCC Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Big-endian"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM4F_LE_GCC">
+      <description>Cortex-M4 processor based device using Floating Point Unit in little endian mode for the GCC Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Little-endian"/>
+      <deny Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <!-- XMC 4000 Series devices from Infineon require a special library -->
+    <condition id="CM4_LE_GCC_IFX">
+      <description>Cortex-M4 processor based device in little endian mode for the GCC Compiler and Infineon devices</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Little-endian" Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+    <condition id="CM4F_LE_GCC_IFX">
+      <description>Cortex-M4 processor based device using Floating Point Unit in little endian mode for the GCC Compiler and Infineon devices</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Little-endian" Dvendor="Infineon:7" Dname="XMC4*"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <condition id="CM4F_BE_GCC">
+      <description>Cortex-M4 processor based device using Floating Point Unit in big endian mode for the GCC Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Big-endian"/>
+      <require Tcompiler="GCC"/>
+    </condition>
+
+    <!-- IAR compiler -->
+    <condition id="CM0_LE_IAR">
+      <description>Cortex-M0 or Cortex-M0+ or SC000 processor based device in little endian mode for the IAR Compiler</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="SC000"/>
+      <require Dendian="Little-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM0_BE_IAR">
+      <description>Cortex-M0 or Cortex-M0+ or SC000 processor based device in big endian mode for the IAR Compiler</description>
+      <accept Dcore="Cortex-M0"/>
+      <accept Dcore="Cortex-M0+"/>
+      <accept Dcore="SC000"/>
+      <require Dendian="Big-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM3_LE_IAR">
+      <description>Cortex-M3 or SC300 processor based device in little endian mode for the IAR Compiler</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="SC300"/>
+      <require Dendian="Little-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM3_BE_IAR">
+      <description>Cortex-M3 or SC300 processor based device in big endian mode for the IAR Compiler</description>
+      <accept Dcore="Cortex-M3"/>
+      <accept Dcore="SC300"/>
+      <require Dendian="Big-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM4_LE_IAR">
+      <description>Cortex-M4 processor based device in little endian mode for the IAR Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Little-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM4_BE_IAR">
+      <description>Cortex-M4 processor based device in big endian mode for the IAR Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="NO_FPU" Dendian="Big-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM4F_LE_IAR">
+      <description>Cortex-M4 processor based device using Floating Point Unit in little endian mode for the IAR Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Little-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+
+    <condition id="CM4F_BE_IAR">
+      <description>Cortex-M4 processor based device using Floating Point Unit in big endian mode for the IAR Compiler</description>
+      <require Dcore="Cortex-M4" Dfpu="FPU" Dendian="Big-endian"/>
+      <require Tcompiler="IAR"/>
+    </condition>
+  </conditions>
+  
+  <components>
+    <!-- CMSIS-Core component -->
+    <component Cclass="CMSIS" Cgroup="CORE" Cversion="3.30.0" condition="CMSIS Core">
+      <description>CMSIS-CORE for Cortex-M, SC000, and SC300</description>
+      <files>
+        <!-- templates -->
+        <file category="source" attr="template" name="CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c" select="CMSIS-CORE 'ITM Printf Debug'" condition="ARMCC"/>
+        <!-- CPU independent -->
+        <file category="doc"     name="CMSIS\Documentation\Core\html\index.html"/>
+        <file category="include" name="CMSIS\Include\"/>
+      </files>
+    </component>
+
+    <!-- CMSIS-Startup components -->
+    <!-- Cortex-M0 -->
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.1" condition="ARMCM0 CMSIS">
+      <description>System and Startup for Generic ARM Cortex-M0 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM0\Include\ARMCM0.h"/>
+        <!-- startup file -->
+        <!-- for ARMCC -->
+        <file category="source"       name="Device\ARM\ARMCM0\Source\ARM\startup_ARMCM0.s" version="1.0.0" attr="config" condition="ARMCC"/>
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM0\Source\GCC\startup_ARMCM0.S" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM0\Source\GCC\gcc_arm.ld"       version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM0\Source\system_ARMCM0.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup"   Cversion="1.0.1" condition="ARMCM0 CMSIS GCC">
+      <description>System and Startup for Generic ARM Cortex-M0 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM0\Include\ARMCM0.h"/>
+        <!-- startup file -->
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM0\Source\GCC\startup_ARMCM0.c" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM0\Source\GCC\gcc_arm.ld"       version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM0\Source\system_ARMCM0.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+
+    <!-- Cortex-M0+ -->
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.1" condition="ARMCM0+ CMSIS">
+      <description>System and Startup for Generic ARM Cortex-M0+ device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM0plus\Include\ARMCM0plus.h"/>
+        <!-- startup file -->
+        <!-- for ARMCC -->
+        <file category="source"       name="Device\ARM\ARMCM0plus\Source\ARM\startup_ARMCM0plus.s" version="1.0.0" attr="config" condition="ARMCC"/>
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM0plus\Source\GCC\startup_ARMCM0plus.S" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM0plus\Source\GCC\gcc_arm.ld"           version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM0plus\Source\system_ARMCM0plus.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup"   Cversion="1.0.1" condition="ARMCM0+ CMSIS GCC">
+      <description>System and Startup for Generic ARM Cortex-M0+ device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM0plus\Include\ARMCM0plus.h"/>
+        <!-- startup file -->
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM0plus\Source\GCC\startup_ARMCM0plus.c" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM0plus\Source\GCC\gcc_arm.ld"           version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM0plus\Source\system_ARMCM0plus.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+
+    <!-- Cortex-M3 -->
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.1" condition="ARMCM3 CMSIS">
+      <description>System and Startup for Generic ARM Cortex-M3 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM3\Include\ARMCM3.h"/>
+        <!-- startup file -->
+        <!-- for ARMCC -->
+        <file category="source"       name="Device\ARM\ARMCM3\Source\ARM\startup_ARMCM3.s" version="1.0.0" attr="config" condition="ARMCC"/>
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM3\Source\GCC\startup_ARMCM3.S" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM3\Source\GCC\gcc_arm.ld"       version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM3\Source\system_ARMCM3.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup"   Cversion="1.0.1" condition="ARMCM3 CMSIS GCC">
+      <description>System and Startup for Generic ARM Cortex-M3 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM3\Include\ARMCM3.h"/>
+        <!-- startup file -->
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM3\Source\GCC\startup_ARMCM3.c" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM3\Source\GCC\gcc_arm.ld"       version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM3\Source\system_ARMCM3.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+
+    <!-- Cortex-M4 -->
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.1" condition="ARMCM4 CMSIS">
+      <description>System and Startup for Generic ARM Cortex-M4 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM4\Include\ARMCM4.h"/>
+        <!-- startup file -->
+        <!-- for ARMCC -->
+        <file category="source"       name="Device\ARM\ARMCM4\Source\ARM\startup_ARMCM4.s" version="1.0.0" attr="config" condition="ARMCC"/>
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM4\Source\GCC\startup_ARMCM4.S" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM4\Source\GCC\gcc_arm.ld"       version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM4\Source\system_ARMCM4.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup"   Cversion="1.0.1" condition="ARMCM4 CMSIS GCC">
+      <description>System and Startup for Generic ARM Cortex-M4 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMCM4\Include\ARMCM4.h"/>
+        <!-- startup file -->
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMCM4\Source\GCC\startup_ARMCM4.c" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMCM4\Source\GCC\gcc_arm.ld"       version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMCM4\Source\system_ARMCM4.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+
+    <!-- Cortex-SC000 -->
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.1" condition="ARMSC000 CMSIS">
+      <description>System and Startup for Generic ARM SC000 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMSC000\Include\ARMSC000.h"/>
+        <!-- startup file -->
+        <!-- for ARMCC -->
+        <file category="source"       name="Device\ARM\ARMSC000\Source\ARM\startup_ARMSC000.s" version="1.0.0" attr="config" condition="ARMCC"/>
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMSC000\Source\GCC\startup_ARMSC000.S" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMSC000\Source\GCC\gcc_arm.ld"         version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMSC000\Source\system_ARMSC000.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup"   Cversion="1.0.1" condition="ARMSC000 CMSIS GCC">
+      <description>System and Startup for Generic ARM SC000 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMSC000\Include\ARMSC000.h"/>
+        <!-- startup file -->
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMSC000\Source\GCC\startup_ARMSC000.c" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMSC000\Source\GCC\gcc_arm.ld"         version="1.0.0" attr="config" condition="GCC"/>
+       <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMSC000\Source\system_ARMSC000.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+
+    <!-- Cortex-SC300 -->
+    <component Cclass="Device" Cgroup="Startup" Cversion="1.0.1" condition="ARMSC300 CMSIS">
+      <description>System and Startup for Generic ARM SC300 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMSC300\Include\ARMSC300.h"/>
+        <!-- startup file -->
+        <!-- for ARMCC -->
+        <file category="source"       name="Device\ARM\ARMSC300\Source\ARM\startup_ARMSC300.s" version="1.0.0" attr="config" condition="ARMCC"/>
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMSC300\Source\GCC\startup_ARMSC300.S" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMSC300\Source\GCC\gcc_arm.ld"         version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMSC300\Source\system_ARMSC300.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+    <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup"   Cversion="1.0.1" condition="ARMSC300 CMSIS GCC">
+      <description>System and Startup for Generic ARM SC300 device</description>
+      <files>
+        <!--  device header file -->
+        <file category="header"       name="Device\ARM\ARMSC300\Include\ARMSC300.h"/>
+        <!-- startup file -->
+        <!-- for GCC -->
+        <file category="source"       name="Device\ARM\ARMSC300\Source\GCC\startup_ARMSC300.c" version="1.0.0" attr="config" condition="GCC"/>
+        <file category="doc" name="Device\ARM\ARMSC300\Source\GCC\gcc_arm.ld"         version="1.0.0" attr="config" condition="GCC"/>
+        <!-- system file (system header not specified, as the path is already set by device header) -->
+        <file category="source"       name="Device\ARM\ARMSC300\Source\system_ARMSC300.c"      version="1.0.0" attr="config"/>
+      </files>
+    </component>
+
+    <!-- CMSIS-DSP component -->
+    <component Cclass="CMSIS" Cgroup="DSP" Cversion="1.4.2" condition="CMSIS DSP">
+      <description>CMSIS-DSP Library for Cortex-M, SC000, and SC300</description>
+      <files>
+        <!-- CPU independent -->
+        <file category="doc" name="CMSIS\Documentation\DSP\html\index.html"/>
+        <!-- <file category="header" name="CMSIS\Include\arm_common_tables.h"/> -->
+        <file category="header" name="CMSIS\Include\arm_math.h"/>
+        <!-- CPU and Compiler dependent -->
+        <!-- ARMCC -->
+        <file category="library" condition="CM0_LE_ARMCC"  name="CMSIS\Lib\ARM\arm_cortexM0l_math.lib"   src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM0_BE_ARMCC"  name="CMSIS\Lib\ARM\arm_cortexM0b_math.lib"   src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM3_LE_ARMCC"  name="CMSIS\Lib\ARM\arm_cortexM3l_math.lib"   src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM3_BE_ARMCC"  name="CMSIS\Lib\ARM\arm_cortexM3b_math.lib"   src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM4_LE_ARMCC"  name="CMSIS\Lib\ARM\arm_cortexM4l_math.lib"   src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM4_BE_ARMCC"  name="CMSIS\Lib\ARM\arm_cortexM4b_math.lib"   src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM4F_LE_ARMCC" name="CMSIS\Lib\ARM\arm_cortexM4lf_math.lib"  src="CMSIS\DSP_Lib\Source\ARM"/>
+        <file category="library" condition="CM4F_BE_ARMCC" name="CMSIS\Lib\ARM\arm_cortexM4bf_math.lib"  src="CMSIS\DSP_Lib\Source\ARM"/>
+        <!-- GCC -->
+        <file category="library" condition="CM0_LE_GCC"    name="CMSIS\Lib\GCC\libarm_cortexM0l_math.a"  src="CMSIS\DSP_Lib\Source\GCC"/>
+        <file category="library" condition="CM3_LE_GCC"    name="CMSIS\Lib\GCC\libarm_cortexM3l_math.a"  src="CMSIS\DSP_Lib\Source\GCC"/>
+        <file category="library" condition="CM4_LE_GCC"    name="CMSIS\Lib\GCC\libarm_cortexM4l_math.a"  src="CMSIS\DSP_Lib\Source\GCC"/>
+        <file category="library" condition="CM4F_LE_GCC"   name="CMSIS\Lib\GCC\libarm_cortexM4lf_math.a" src="CMSIS\DSP_Lib\Source\GCC"/>
+      </files>
+    </component>
+
+    <!-- CMSIS-RTOS Keil RTX component -->
+    <component Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX" Cversion="4.74.0" condition="CMSIS Core">
+      <description>CMSIS-RTOS RTX implementation for Cortex-M, SC000, and SC300</description>
+      <RTE_Components_h>
+        <!-- the following content goes into file 'RTE_Components.h' -->
+        #define RTE_CMSIS_RTOS                  /* CMSIS-RTOS */
+        #define RTE_CMSIS_RTOS_RTX              /* CMSIS-RTOS Keil RTX */
+      </RTE_Components_h>
+      <files>
+        <!-- CPU independent -->
+        <file category="doc" name="CMSIS_RTX\Doc\index.html"/>
+        <file category="header" name="CMSIS_RTX\INC\cmsis_os.h"/>
+        <file category="source" attr="config"   name="CMSIS_RTX\Templates\RTX_Conf_CM.c" version="4.70"/>
+        
+        <!-- RTX templates -->
+        <file category="header" attr="template" name="CMSIS_RTX\UserCodeTemplates\osObjects.h" select="CMSIS-RTOS 'main' function"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\main.c"      select="CMSIS-RTOS 'main' function"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\MailQueue.c" select="CMSIS-RTOS Mail Queue"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\MemPool.c"   select="CMSIS-RTOS Memory Pool"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\MsgQueue.c"  select="CMSIS-RTOS Message Queue"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\Mutex.c"     select="CMSIS-RTOS Mutex"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\Semaphore.c" select="CMSIS-RTOS Semaphore"/>
+        <file category="source" attr="template" name="CMSIS_RTX\UserCodeTemplates\Thread.c"    select="CMSIS-RTOS Thread"/>
+        <!-- tool-chain specific template file -->
+        <file category="source" attr="template" condition="ARMCC" name="CMSIS_RTX\SRC\ARM\SVC_Table.s" select="CMSIS-RTOS User SVC"/>
+        <file category="source" attr="template" condition="GCC"   name="CMSIS_RTX\SRC\GCC\SVC_Table.s" select="CMSIS-RTOS User SVC"/>
+        <file category="source" attr="template" condition="IAR"   name="CMSIS_RTX\SRC\IAR\SVC_Table.s" select="CMSIS-RTOS User SVC"/>
+
+        <!-- CPU and Compiler dependent -->
+        <!-- ARMCC -->
+        <file category="library" condition="CM0_LE_ARMCC"      name="CMSIS_RTX\LIB\ARM\RTX_CM0.lib"     src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM0_BE_ARMCC"      name="CMSIS_RTX\LIB\ARM\RTX_CM0_B.lib"   src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM3_LE_ARMCC"      name="CMSIS_RTX\LIB\ARM\RTX_CM3.lib"     src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM3_BE_ARMCC"      name="CMSIS_RTX\LIB\ARM\RTX_CM3_B.lib"   src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM4_LE_ARMCC"      name="CMSIS_RTX\LIB\ARM\RTX_CM3.lib"     src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM4_BE_ARMCC"      name="CMSIS_RTX\LIB\ARM\RTX_CM3_B.lib"   src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM4_LE_ARMCC_IFX"  name="CMSIS_RTX\LIB\ARM\RTX_CM3_IFX.lib" src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM4F_LE_ARMCC"     name="CMSIS_RTX\LIB\ARM\RTX_CM4.lib"     src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM4F_BE_ARMCC"     name="CMSIS_RTX\LIB\ARM\RTX_CM4_B.lib"   src="CMSIS_RTX\SRC\ARM"/>
+        <file category="library" condition="CM4F_LE_ARMCC_IFX" name="CMSIS_RTX\LIB\ARM\RTX_CM4_IFX.lib" src="CMSIS_RTX\SRC\ARM"/>
+        <!-- GCC -->
+        <file category="library" condition="CM0_LE_GCC"      name="CMSIS_RTX\LIB\GCC\libRTX_CM0.a"     src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM0_BE_GCC"      name="CMSIS_RTX\LIB\GCC\libRTX_CM0_B.a"   src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM3_LE_GCC"      name="CMSIS_RTX\LIB\GCC\libRTX_CM3.a"     src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM3_BE_GCC"      name="CMSIS_RTX\LIB\GCC\libRTX_CM3_B.a"   src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM4_LE_GCC"      name="CMSIS_RTX\LIB\GCC\libRTX_CM3.a"     src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM4_BE_GCC"      name="CMSIS_RTX\LIB\GCC\libRTX_CM3_B.a"   src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM4_LE_GCC_IFX"  name="CMSIS_RTX\LIB\GCC\libRTX_CM3_IFX.a" src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM4F_LE_GCC"     name="CMSIS_RTX\LIB\GCC\libRTX_CM4.a"     src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM4F_BE_GCC"     name="CMSIS_RTX\LIB\GCC\libRTX_CM4_B.a"   src="CMSIS_RTX\SRC\GCC"/>
+        <file category="library" condition="CM4F_LE_GCC_IFX" name="CMSIS_RTX\LIB\GCC\libRTX_CM4_IFX.a" src="CMSIS_RTX\SRC\GCC"/>
+        <!-- IAR -->
+        <file category="library" condition="CM0_LE_IAR"  name="CMSIS_RTX\LIB\IAR\RTX_CM0.a"   src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM0_BE_IAR"  name="CMSIS_RTX\LIB\IAR\RTX_CM0_B.a" src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM3_LE_IAR"  name="CMSIS_RTX\LIB\IAR\RTX_CM3.a"   src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM3_BE_IAR"  name="CMSIS_RTX\LIB\IAR\RTX_CM3_B.a" src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM4_LE_IAR"  name="CMSIS_RTX\LIB\IAR\RTX_CM3.a"   src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM4_BE_IAR"  name="CMSIS_RTX\LIB\IAR\RTX_CM3_B.a" src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM4F_LE_IAR" name="CMSIS_RTX\LIB\IAR\RTX_CM4.a"   src="CMSIS_RTX\SRC\IAR"/>
+        <file category="library" condition="CM4F_BE_IAR" name="CMSIS_RTX\LIB\IAR\RTX_CM4_B.a" src="CMSIS_RTX\SRC\IAR"/>
+      </files>
+    </component>
+  </components>
+ 
+  <boards>
+    <board name="uVision Simulator" vendor="Keil">
+      <description>uVision Simulator</description>
+      <mountedDevice    deviceIndex="0" Dvendor="ARM:82" Dname="ARMCM0"/>
+      <compatibleDevice deviceIndex="0" Dvendor="ARM:82" Dname="ARMCM3"/>
+      <compatibleDevice deviceIndex="0" Dvendor="ARM:82" Dname="ARMCM4"/>
+    </board>
+  </boards>
+
+  <examples>
+    <example name="DSP_Lib Class Marks example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_class_marks_example\ARM">
+      <description>DSP_Lib Class Marks example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_class_marks_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Convolution example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_convolution_example\ARM">
+      <description>DSP_Lib Convolution example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_convolution_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Dotproduct example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_dotproduct_example\ARM">
+      <description>DSP_Lib Dotproduct example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_dotproduct_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib FFT Bin example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_fft_bin_example\ARM">
+      <description>DSP_Lib FFT Bin example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_fft_bin_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib FIR example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_fir_example\ARM">
+      <description>DSP_Lib FIR example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_fir_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Graphic Equalizer example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_graphic_equalizer_example\ARM">
+      <description>DSP_Lib Graphic Equalizer example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_graphic_equalizer_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Linear Interpolation example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_linear_interp_example\ARM">
+      <description>DSP_Lib Linear Interpolation example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_linear_interp_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Matrix example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_matrix_example\ARM">
+      <description>DSP_Lib Matrix example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_matrix_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Signal Convergence example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_signal_converge_example\ARM">
+      <description>DSP_Lib Signal Convergence example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_signal_converge_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+    <example name="DSP_Lib Sinus/Cosinus example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_sin_cos_example\ARM">
+      <description>DSP_Lib Sinus/Cosinus example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_sin_cos_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+
+
+    <example name="DSP_Lib Variance example" doc="Abstract.txt" folder="CMSIS\DSP_Lib\Examples\arm_variance_example\ARM">
+      <description>DSP_Lib Variance example</description>
+      <board name="uVision Simulator" vendor="Keil"/>
+      <project>
+        <environment name="uv" load="arm_variance_example.uvprojx"/>
+      </project>
+      <attributes>
+        <component Cclass="CMSIS" Cgroup="CORE"/>
+        <component Cclass="CMSIS" Cgroup="DSP"/>
+        <component Cclass="Device" Cgroup="Startup"/>
+        <category>Getting Started</category>
+      </attributes>
+    </example>
+  </examples>
+
+</package>

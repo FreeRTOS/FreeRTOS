@@ -1,0 +1,22 @@
+
+LR_IROM_S 0x00000000 0x0003F000 ; load region size_region
+{
+    ER_IROM_S +0 ; load address = execution address
+    {
+        *.o(RESET, +First)
+        *(+RO)
+    }
+
+    RW_IRAM_S 0x20000000 0x00008000 ; RW data
+    {
+        *(+RW, +ZI)
+    }
+}
+
+LR_IROM_NSC 0x0003F000 0x00001000
+{
+    ER_IROM_NSC +0 ; load address = execution address
+    {
+        *(Veneer$$CMSE)
+    }
+}

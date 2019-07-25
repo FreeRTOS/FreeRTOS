@@ -1,0 +1,7 @@
++ mqtt
+Contains the implementation of the MQTT library.
+
++ common
+Contains the implementation of utility functions used by other IoT libraries.
+
+Further libraries will be rolled out soon.

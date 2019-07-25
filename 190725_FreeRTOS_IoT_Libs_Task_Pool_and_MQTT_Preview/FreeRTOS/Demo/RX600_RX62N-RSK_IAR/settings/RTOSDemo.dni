@@ -1,0 +1,80 @@
+[E20]
+TimeConnected=1305306678
+ComuniDllSave=82903040
+FfwnsdDllSave=303890432
+ChipName=R5F562N8
+CpuMode=0
+InputClock=12.500000
+WorkRamStart=12288
+JtagClock=10
+DebugFlags=0,0
+EmulatorMode=0
+NeedInit=1
+BlockBits=0
+B0=0,0
+B1=0,0
+B2=0,0
+B3=0,0
+TraceMode=0
+TraceOutput=2
+TraceCapacity=0
+TraceRestart=0
+OperatingFrequency=12.500000
+[DebugChecksum]
+Checksum=-127835808
+[DisAssemblyWindow]
+NumStates=_ 1
+State 1=_ 1
+[InstructionProfiling]
+Enabled=_ 0
+[CodeCoverage]
+Enabled=_ 0
+[Profiling]
+Enabled=0
+[StackPlugin]
+Enabled=1
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=0
+WarnHow=0
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[CallStack]
+ShowArgs=0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=3
+Graph=0
+Symbiont=0
+[Breakpoints]
+Count=0
+[Monitor Execution]
+Leave target running=0
+Release target=0
+[Aliases]
+Count=0
+SuppressDialog=0
+[TraceHelper]
+Enabled=0
+ShowSource=1

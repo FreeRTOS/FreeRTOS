@@ -1,0 +1,48 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+EXTRA_DIST += wolfcrypt/src/misc.c
+EXTRA_DIST += wolfcrypt/src/asm.c
+EXTRA_DIST += wolfcrypt/src/aes_asm.asm
+
+EXTRA_DIST += \
+              wolfcrypt/src/ecc_fp.c \
+              wolfcrypt/src/fp_mont_small.i \
+              wolfcrypt/src/fp_mul_comba_12.i \
+              wolfcrypt/src/fp_mul_comba_17.i \
+              wolfcrypt/src/fp_mul_comba_20.i \
+              wolfcrypt/src/fp_mul_comba_24.i \
+              wolfcrypt/src/fp_mul_comba_28.i \
+              wolfcrypt/src/fp_mul_comba_32.i \
+              wolfcrypt/src/fp_mul_comba_3.i \
+              wolfcrypt/src/fp_mul_comba_48.i \
+              wolfcrypt/src/fp_mul_comba_4.i \
+              wolfcrypt/src/fp_mul_comba_64.i \
+              wolfcrypt/src/fp_mul_comba_6.i \
+              wolfcrypt/src/fp_mul_comba_7.i \
+              wolfcrypt/src/fp_mul_comba_8.i \
+              wolfcrypt/src/fp_mul_comba_9.i \
+              wolfcrypt/src/fp_mul_comba_small_set.i \
+              wolfcrypt/src/fp_sqr_comba_12.i \
+              wolfcrypt/src/fp_sqr_comba_17.i \
+              wolfcrypt/src/fp_sqr_comba_20.i \
+              wolfcrypt/src/fp_sqr_comba_24.i \
+              wolfcrypt/src/fp_sqr_comba_28.i \
+              wolfcrypt/src/fp_sqr_comba_32.i \
+              wolfcrypt/src/fp_sqr_comba_3.i \
+              wolfcrypt/src/fp_sqr_comba_48.i \
+              wolfcrypt/src/fp_sqr_comba_4.i \
+              wolfcrypt/src/fp_sqr_comba_64.i \
+              wolfcrypt/src/fp_sqr_comba_6.i \
+              wolfcrypt/src/fp_sqr_comba_7.i \
+              wolfcrypt/src/fp_sqr_comba_8.i \
+              wolfcrypt/src/fp_sqr_comba_9.i \
+              wolfcrypt/src/fp_sqr_comba_small_set.i
+
+EXTRA_DIST += wolfcrypt/src/port/ti/ti-aes.c \
+              wolfcrypt/src/port/ti/ti-des3.c \
+              wolfcrypt/src/port/ti/ti-hash.c \
+              wolfcrypt/src/port/ti/ti-ccm.c \
+              wolfcrypt/src/port/pic32/pic32mz-hash.c
+
+

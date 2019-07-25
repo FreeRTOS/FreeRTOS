@@ -1,0 +1,28 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"1.0" 
+[CURRENT_PROJECT]
+"RTOSDemo" 
+[GENERAL_DATA]
+"EDITOR_WINDOWS_MAXIMISED" "1" 
+[BREAKPOINTS]
+[OPEN_WORKSPACE_FILES]
+"C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\partest\partest.c" 
+"c:\e\Dev\FreeRTOS\Source\queue.c" 
+"C:\E\Dev\FreeRTOS\Source\portable\GCC\H8S2329\portmacro.h" 
+"C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\serial\serial.c" 
+"c:\e\Dev\FreeRTOS\Source\portable\GCC\H8S2329\port.c" 
+"C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\main.c" 
+"C:\E\Dev\FreeRTOS\Source\include\portable.h" 
+"c:\e\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" 
+[WORKSPACE_FILE_STATES]
+"c:\e\Dev\FreeRTOS\Demo\Common\Minimal\BlockQ.c" "0,0,954,459,0" 
+"C:\E\Dev\FreeRTOS\Source\include\portable.h" "44,66,958,463,0" 
+"C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\partest\partest.c" "-4,-34,1098,699,1" 
+"C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\main.c" "66,99,958,463,0" 
+"c:\e\Dev\FreeRTOS\Source\portable\GCC\H8S2329\port.c" "88,132,958,463,0" 
+"C:\E\Dev\FreeRTOS\Demo\H8S\rtosdemo\serial\serial.c" "110,165,958,463,0" 
+"C:\E\Dev\FreeRTOS\Source\portable\GCC\H8S2329\portmacro.h" "132,198,958,463,0" 
+"c:\e\Dev\FreeRTOS\Source\queue.c" "0,0,958,463,0" 
+[END]

@@ -1,0 +1,477 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"2.8" 
+[PROJECT_DETAILS]
+"RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\RTOSDemo.hwp" "RX" "Renesas RX Standard" "Application" "RX600" "Other" 
+[INFORMATION]
+"No project information available" 
+[TOOL_CHAIN]
+"Renesas RX Standard Toolchain" "1.2.0.0" 
+[CONFIGURATIONS]
+"Blinky" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Blinky" 
+"Debug" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Debug" 
+"Debug-with-optimisation" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Debug-with-optimisation" 
+[BUILD_PHASES]
+"Renesas OptLinker" 1 
+"Renesas RX Assembler" 1 
+"Renesas RX C/C++ Compiler" 1 
+"Renesas RX C/C++ Library Generator" 1 
+"Renesas RX Configurator" 1 
+[TOOL_ENVIRONMENT]
+[EXTENSIONS]
+"Absolute file" "ABS" 
+"Assembly include file" "INC" 
+"Assembly list file" "LST" 
+"Assembly source file" "S" 
+"Assembly source file" "SRC" 
+"Binary file" "BIN" 
+"C header file" "H" 
+"C source file" "C" 
+"C++ header file" "HPP" 
+"C++ source file" "CC" 
+"C++ source file" "CP" 
+"C++ source file" "CPP" 
+"CPU information file" "CPU" 
+"Calling information file" "CAL" 
+"Configuration file" "CFG" 
+"Debug information file" "DBG" 
+"Hex file" "HEX" 
+"Library file" "LIB" 
+"Library information file" "LBP" 
+"Linkage map file" "MAP" 
+"Linkage symbol file" "FSY" 
+"Object file" "OBJ" 
+"Optimize map file" "bls" 
+"Preprocessed C source file" "P" 
+"Preprocessed C++ source file" "PP" 
+"Relocatable file" "REL" 
+"Rts information file" "RTS" 
+"S-Record file" "MOT" 
+"Stack information file" "SNI" 
+"TD include object file" "RTI" 
+[FILE_GROUPS]
+"Absolute file" "BIN" "NONE" "" 
+"Assembly include file" "TEXT" "EDITOR" "" 
+"Assembly list file" "TEXT" "EDITOR" "" 
+"Assembly source file" "TEXT" "EDITOR" "" 
+"Binary file" "BIN" "NONE" "" 
+"C header file" "TEXT" "EDITOR" "" 
+"C source file" "TEXT" "EDITOR" "" 
+"C++ header file" "TEXT" "EDITOR" "" 
+"C++ source file" "TEXT" "EDITOR" "" 
+"CPU information file" "BIN" "NONE" "" 
+"Calling information file" "BIN" "NONE" "" 
+"Configuration file" "TEXT" "EDITOR" "" 
+"Debug information file" "BIN" "NONE" "" 
+"Hex file" "TEXT" "EDITOR" "" 
+"Library file" "BIN" "NONE" "" 
+"Library information file" "TEXT" "EDITOR" "" 
+"Linkage map file" "TEXT" "EDITOR" "" 
+"Linkage symbol file" "TEXT" "EDITOR" "" 
+"Object file" "BIN" "NONE" "" 
+"Optimize map file" "BIN" "NONE" "" 
+"Preprocessed C source file" "TEXT" "EDITOR" "" 
+"Preprocessed C++ source file" "TEXT" "EDITOR" "" 
+"Relocatable file" "BIN" "NONE" "" 
+"Rts information file" "BIN" "NONE" "" 
+"S-Record file" "TEXT" "EDITOR" "" 
+"Stack information file" "BIN" "NONE" "" 
+"TD include object file" "BIN" "NONE" "" 
+[ASSOCIATED_APPLICATIONS]
+[TOOLCHAIN_PHASE]
+"Renesas OptLinker" 
+"Renesas RX Assembler" 
+"Renesas RX C/C++ Compiler" 
+"Renesas RX C/C++ Library Generator" 
+"Renesas RX Configurator" 
+[UTILITY_PHASE]
+[CUSTOM_PHASES]
+[CUSTOM_PHASE_INPUT_GROUP]
+[CUSTOM_PHASE_OUTPUT_SYNTAX]
+[BUILD_ORDER]
+"Renesas RX C/C++ Library Generator" 1 
+"Renesas RX C/C++ Compiler" 1 
+"Renesas RX Assembler" 1 
+"Renesas OptLinker" 1 
+"Renesas RX Configurator" 0 
+[BUILD_PHASE_DETAILS]
+"Renesas OptLinker" "Object file|Library file|Relocatable file" 0 
+"Renesas RX Assembler" "Assembly source file|Linkage symbol file" 1 
+"Renesas RX C/C++ Compiler" "C source file|C++ source file" 1 
+"Renesas RX C/C++ Library Generator" "" 0 
+"Renesas RX Configurator" "Configuration file" 0 
+[BUILD_FILE_ORDER_Assembly source file]
+"Renesas RX Assembler" 1 
+[BUILD_FILE_ORDER_C source file]
+"Renesas RX C/C++ Compiler" 1 
+[BUILD_FILE_ORDER_C++ source file]
+"Renesas RX C/C++ Compiler" 1 
+[BUILD_FILE_ORDER_Linkage symbol file]
+"Renesas RX Assembler" 1 
+[SCRAP]
+"Project Generator Setup File" "" 
+[MAPPINGS]
+"Assembly source file" "Renesas RX Assembler" "Renesas RX C/C++ Compiler" 
+"Library file" "Renesas OptLinker" "Renesas RX C/C++ Library Generator" 
+"Object file" "Renesas OptLinker" "Renesas RX Assembler" 
+"Object file" "Renesas OptLinker" "Renesas RX C/C++ Compiler" 
+[PROJECT_FILES]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\BlockQ.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\GenQTest.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\IntQueue.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\QPeek.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\blocktim.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\flash_timer.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\sp_flop.c" "User" "C source file|Common demo tasks" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c" "User" "C source file|FreeTCP (Based on uIP)|Common" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c" "User" "C source file|FreeTCP (Based on uIP)|Common" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c" "User" "C source file|FreeTCP (Based on uIP)|Common" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\psock.c" "User" "C source file|FreeTCP (Based on uIP)" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\timer.c" "User" "C source file|FreeTCP (Based on uIP)" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" "User" "C source file|FreeTCP (Based on uIP)" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip_arp.c" "User" "C source file|FreeTCP (Based on uIP)" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\HighFrequencyTimerTest.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\IntQueueTimer.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\ParTest.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\dbsct.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\flash_options.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\hwsetup.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowlvl.src" "User" "Assembly source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowsrc.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\resetprg.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\sbrk.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\vecttbl.c" "User" "C source file|Renesas Files" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-full.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\uIP_Task.c" "User" "C source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\EMAC.c" "User" "C source file|FreeTCP (Based on uIP)|Port Specific" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\httpd-cgi.c" "User" "C source file|FreeTCP (Based on uIP)|Port Specific" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\phy.c" "User" "C source file|FreeTCP (Based on uIP)|Port Specific" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\list.c" "User" "C source file|FreeRTOS" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\MemMang\heap_2.c" "User" "C source file|FreeRTOS|Portable layer" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port.c" "User" "C source file|FreeRTOS|Portable layer" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port_asm.src" "User" "Assembly source file" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" "User" "C source file|FreeRTOS" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" "User" "C source file|FreeRTOS" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\timers.c" "User" "C source file|FreeRTOS" 2 
+[FOLDER]
+"Assembly source file" "Assembly source file" 
+"C header file" "C header file" 
+"C source file" "C source file" 
+"C source file|Common demo tasks" "" 
+"C source file|FreeRTOS" "" 
+"C source file|FreeRTOS|Portable layer" "" 
+"C source file|FreeTCP (Based on uIP)" "" 
+"C source file|FreeTCP (Based on uIP)|Common" "" 
+"C source file|FreeTCP (Based on uIP)|Port Specific" "" 
+"C source file|Renesas Files" "" 
+[GENERAL_DATA_PROJECT]
+"FDT_AutoConnect" "0" 
+"FDT_BaseDevice" "" 
+"FDT_BaudRate" "" 
+"FDT_BlockLockConnect" "1" 
+"FDT_BlockLockDisconnect" "1" 
+"FDT_BootMode" "FALSE" 
+"FDT_CKM" "0" 
+"FDT_CKP" "0" 
+"FDT_ClockMode" "0" 
+"FDT_ClockSync" "00000000" 
+"FDT_Comments" "" 
+"FDT_ConnectionResetSuppression" "FFFFFFFF" 
+"FDT_Device" "" 
+"FDT_DoReadbackVerification" "" 
+"FDT_DoSecurityProtection" "" 
+"FDT_DoSecurityProtectionLevel" "" 
+"FDT_Frequency" "0.0000" 
+"FDT_Interface" "" 
+"FDT_InternalClock" "FALSE" 
+"FDT_KernelPath" "" 
+"FDT_KernelResident" "FALSE" 
+"FDT_McuId" "0" 
+"FDT_MessageLevel" "0" 
+"FDT_PinOutputs" "00000000" 
+"FDT_PinSettings" "00000000" 
+"FDT_Port" "" 
+"FDT_Protection" "0" 
+"FDT_Protocol" "" 
+"FDT_ReinterrogateGenericDevice" "" 
+"FDT_ResetOnDisconnect" "" 
+"FDT_ResetPinOutputs" "00000000" 
+"FDT_ResetPinSettings" "00000000" 
+"FDT_SerNumConfigString" "" 
+"FDT_SerNumDllFunction" "" 
+"FDT_SerNumDllLocation" "" 
+"FDT_SerNumEnabled" "FALSE" 
+"FDT_SerNumMemArea" "" 
+"FDT_UPMPinSettings" "00000000" 
+"FDT_UseDefaultBaudRate" "FALSE" 
+"FDT_UseInternalKernel" "TRUE" 
+"FDT_UserPinOutputs" "00000000" 
+"FDT_UserPinSettings" "00000000" 
+"MAKEGEN_GENERATE_MAKEFILE_FOR" "0" 
+"MAKEGEN_MAKEFILE_FORMAT" "2" 
+"MAKEGEN_MAKEFILE_RELATIVITY" "1" 
+"MAKEGEN_SCAN_DEPENDENCIES_WHILST_BUILDING_MAKEFILE" "1" 
+"MAKEGEN_USE_STATIC_SUBCOMMAND_FILES" "1" 
+"USE_CUSTOM_LINKAGE_ORDER" "0" 
+[ON_DEMAND_COMPONENTS_LOADED]
+[SYNC_SESSION_NAMES]
+[SESSIONS]
+"RDK_Jlink" "C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\RDK_Jlink.hsf" 0 
+[GENERAL_DATA_SESSION_RDK_Jlink]
+[OPTIONS_Blinky_Renesas OptLinker]
+"Single Shot" "0ffc161d9412dc10" 5 
+[OPTIONS_Blinky_Renesas RX Assembler]
+"Assembly source file" "0ffc161d9412dc10" 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowlvl.src" "0ffc161d9412dc10" 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port_asm.src" "0ffc161d9412dc10" 4 
+"Linkage symbol file" "0ffc161d9412dc10" 4 
+[OPTIONS_Blinky_Renesas RX C/C++ Compiler]
+"C source file" "02499bb90612dc10" 2 
+"C++ source file" "02499bb90612dc10" 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\BlockQ.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\GenQTest.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\IntQueue.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\QPeek.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\blocktim.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\flash_timer.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\sp_flop.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\psock.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\timer.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip_arp.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\HighFrequencyTimerTest.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\IntQueueTimer.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\ParTest.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\dbsct.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\flash_options.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\hwsetup.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowsrc.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\resetprg.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\sbrk.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\vecttbl.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-full.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\uIP_Task.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\EMAC.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\httpd-cgi.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\phy.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\list.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\MemMang\heap_2.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" "02499bb90612dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\timers.c" "02499bb90612dc10" 2 
+[OPTIONS_Blinky_Renesas RX C/C++ Library Generator]
+"Single Shot" "0fe5f51d9412dc10" 1 
+[OPTIONS_Blinky_Renesas RX Configurator]
+"Single Shot" "0ffc161d9412dc10" 6 
+[OPTIONS_Blinky]
+"" 0 
+"[V|VERSION|1] [B|COMMAND|1] [S|SPEC|UITRON4] [S|OUTPUTPATH|^"$(CONFIGDIR)^"] [S|CPU|RX600] [S|ENDIAN|LITTLE] [S|FINT_REGISTER|0]" 6 
+"[V|VERSION|1] [B|SJIS|1] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [B|SKIPDEPENDENCY|1]
+" 4 
+"[V|VERSION|1] [S|LANG|CPP] [B|SJIS|1] [S|INCLUDE|^"$(PROJDIR)\..\..\..\Source\portable\Renesas\RX600^"|^"$(PROJDIR)\..\..\..\Source\include^"|^"$(PROJDIR)\.^"|^"$(PROJDIR)\..\..\include^"|^"$(PROJDIR)\..\..\Common\include^"|^"$(PROJDIR)\webserver^"|^"$(PROJDIR)\Renesas-Files^"|^"$(PROJDIR)\Renesas-Files\mcu\rx63n^"] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [S|OPTIMIZE|0] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004|ALL] [S|MISRA2004RULEFILE|^"$(CONFIGDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1] [N|DEPENDSCAN|1]
+" 3 
+"[V|VERSION|1] [S|LANG|C] [B|SJIS|1] [S|INCLUDE|^"$(PROJDIR)\..\..\..\Source\portable\Renesas\RX600^"|^"$(PROJDIR)\..\..\..\Source\include^"|^"$(PROJDIR)\.^"|^"$(PROJDIR)\..\..\include^"|^"$(PROJDIR)\..\..\Common\include^"|^"$(PROJDIR)\webserver^"|^"$(PROJDIR)\Renesas-Files^"|^"$(PROJDIR)\Renesas-Files\mcu\rx63n^"] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [S|OPTIMIZE|0] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004|ALL] [S|MISRA2004RULEFILE|^"$(CONFIGDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1] [N|DEPENDSCAN|1]
+" 2 
+"[V|VERSION|1] [S|MODE|BUILD/CHANGED] [S|EXISTOUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|RUNTIME|1] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [B|NOFLOAT|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|SIZE|1] [I|INLINE|100] [I|LOOP|2] [S|CPU|RX600] [S|BASE|00000000=NONE] [B|SKIPDEPENDENCY|1]
+" 1 
+"[V|VERSION|6] [S|FORM|STYPE] [S|BYTE_COUNT_VALUE|FF] [B|DEBUG|1] [S|ROM|(D,R)|(D_1,R_1)|(D_2,R_2)] [S|CRC|NONE|DEFAULT|00000000] [B|LIST|1] [S|LIST|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|SHOW|METHODCUSTOM|] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).mot^"] [I|SPACE|^"FF^"] [B|OPTIMIZE|0] [S|START|SI,SU,B_1,R_1,B_2,R_2,B,R(00)|C_1,C_2,C,C$*,L*,D*,P,W*(0FFF80000)|FIXEDVECT(0FFFFFF90)] [S|MEMORY|HIGH] [B|SKIPDEPENDENCY|1] " 5 
+[EXCLUDED_FILES_Blinky]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\psock.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\timer.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip_arp.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\BlockQ.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\blocktim.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\GenQTest.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\IntQueue.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\QPeek.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\sp_flop.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\HighFrequencyTimerTest.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\IntQueueTimer.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-full.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\uIP_Task.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\EMAC.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\httpd-cgi.c" 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\phy.c" 
+[LINKAGE_ORDER_Blinky]
+[GENERAL_DATA_CONFIGURATION_Blinky]
+[OPTIONS_Debug_Renesas OptLinker]
+"Single Shot" "0f04461d9412dc10" 5 
+[OPTIONS_Debug_Renesas RX Assembler]
+"Assembly source file" "0f04461d9412dc10" 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowlvl.src" "0f04461d9412dc10" 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port_asm.src" "0f04461d9412dc10" 4 
+"Linkage symbol file" "0f04461d9412dc10" 4 
+[OPTIONS_Debug_Renesas RX C/C++ Compiler]
+"C source file" "0ffc161d9412dc10" 2 
+"C++ source file" "0ffc161d9412dc10" 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\BlockQ.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\GenQTest.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\IntQueue.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\QPeek.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\blocktim.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\flash_timer.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\sp_flop.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\psock.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\timer.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip_arp.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\HighFrequencyTimerTest.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\IntQueueTimer.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\ParTest.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\dbsct.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\flash_options.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\hwsetup.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowsrc.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\resetprg.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\sbrk.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\vecttbl.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-full.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\uIP_Task.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\EMAC.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\httpd-cgi.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\phy.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\list.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\MemMang\heap_2.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" "0ffc161d9412dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\timers.c" "0ffc161d9412dc10" 2 
+[OPTIONS_Debug_Renesas RX C/C++ Library Generator]
+"Single Shot" "0df08616c512dc10" 1 
+[OPTIONS_Debug_Renesas RX Configurator]
+"Single Shot" "0f04461d9412dc10" 6 
+[OPTIONS_Debug]
+"" 0 
+"[V|VERSION|1] [B|COMMAND|1] [S|SPEC|UITRON4] [S|OUTPUTPATH|^"$(CONFIGDIR)^"] [S|CPU|RX600] [S|ENDIAN|LITTLE] [S|FINT_REGISTER|0]" 6 
+"[V|VERSION|1] [B|SJIS|1] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [B|SKIPDEPENDENCY|1]
+" 4 
+"[V|VERSION|1] [S|LANG|CPP] [B|SJIS|1] [S|INCLUDE|^"$(PROJDIR)\..\..\..\Source\portable\Renesas\RX600^"|^"$(PROJDIR)\..\..\..\Source\include^"|^"$(PROJDIR)\.^"|^"$(PROJDIR)\..\..\include^"|^"$(PROJDIR)\..\..\Common\include^"|^"$(PROJDIR)\webserver^"|^"$(PROJDIR)\Renesas-Files^"|^"$(PROJDIR)\..\..\Common\ethernet\FreeTCPIP^"|^"$(PROJDIR)\Renesas-Files\mcu\rx63n^"] [S|CHANGE_MESSAGE|INFORMATION|] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [S|OPTIMIZE|0] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004|ALL] [S|MISRA2004RULEFILE|^"$(CONFIGDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1] [N|DEPENDSCAN|1]
+" 3 
+"[V|VERSION|1] [S|LANG|C] [B|SJIS|1] [S|INCLUDE|^"$(PROJDIR)\..\..\..\Source\portable\Renesas\RX600^"|^"$(PROJDIR)\..\..\..\Source\include^"|^"$(PROJDIR)\.^"|^"$(PROJDIR)\..\..\include^"|^"$(PROJDIR)\..\..\Common\include^"|^"$(PROJDIR)\webserver^"|^"$(PROJDIR)\Renesas-Files^"|^"$(PROJDIR)\..\..\Common\ethernet\FreeTCPIP^"|^"$(PROJDIR)\Renesas-Files\mcu\rx63n^"] [S|CHANGE_MESSAGE|INFORMATION|] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [S|OPTIMIZE|0] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004|ALL] [S|MISRA2004RULEFILE|^"$(CONFIGDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1] [N|DEPENDSCAN|1]
+" 2 
+"[V|VERSION|1] [S|MODE|BUILD/CHANGED] [S|EXISTOUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|RUNTIME|1] [B|MATH|1] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [B|NOFLOAT|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|SIZE|1] [I|INLINE|100] [I|LOOP|2] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1]
+" 1 
+"[V|VERSION|6] [S|FORM|STYPE] [S|BYTE_COUNT_VALUE|FF] [B|DEBUG|1] [S|ROM|(D,R)|(D_1,R_1)|(D_2,R_2)] [S|CRC|NONE|DEFAULT|00000000] [B|LIST|1] [S|LIST|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|SHOW|METHODCUSTOM|] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).mot^"] [I|SPACE|^"FF^"] [B|OPTIMIZE|0] [S|START|B_RX_DESC,B_TX_DESC,B_ETHERNET_BUFFERS,SI,SU,B_1,R_1,B_2,R_2,B,R(00)|C_1,C_2,C,C$*,L*,D*,P,W*(0FFF80000)|FIXEDVECT(0FFFFFF90)] [S|MEMORY|HIGH] [B|SKIPDEPENDENCY|1] " 5 
+[EXCLUDED_FILES_Debug]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" 
+[LINKAGE_ORDER_Debug]
+[GENERAL_DATA_CONFIGURATION_Debug]
+[OPTIONS_Debug-with-optimisation_Renesas OptLinker]
+"Single Shot" "06023eccf122dc10" 5 
+[OPTIONS_Debug-with-optimisation_Renesas RX Assembler]
+"Assembly source file" "0f04461d9412dc10" 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowlvl.src" "0f04461d9412dc10" 4 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port_asm.src" "0f04461d9412dc10" 4 
+"Linkage symbol file" "0f04461d9412dc10" 4 
+[OPTIONS_Debug-with-optimisation_Renesas RX C/C++ Compiler]
+"C source file" "06023eccf122dc10" 2 
+"C++ source file" "06023eccf122dc10" 3 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\BlockQ.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\GenQTest.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\IntQueue.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\PollQ.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\QPeek.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\blocktim.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\death.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\flash_timer.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\integer.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\recmutex.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\semtest.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\Minimal\sp_flop.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\http-strings.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd-fs.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\apps\httpd\httpd.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\psock.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\timer.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\Common\ethernet\FreeTCPIP\uip_arp.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\HighFrequencyTimerTest.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\IntQueueTimer.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\ParTest.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\dbsct.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\flash_options.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\hwsetup.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\lowsrc.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\resetprg.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\sbrk.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\Renesas-Files\board\rdkrx63n\vecttbl.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-full.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\uIP_Task.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\EMAC.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\httpd-cgi.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\webserver\phy.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\list.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\MemMang\heap_2.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\portable\Renesas\RX600\port.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\queue.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\tasks.c" "06023eccf122dc10" 2 
+"C:\E\Dev\FreeRTOS\WorkingCopy\Source\timers.c" "06023eccf122dc10" 2 
+[OPTIONS_Debug-with-optimisation_Renesas RX C/C++ Library Generator]
+"Single Shot" "0df08616c512dc10" 1 
+[OPTIONS_Debug-with-optimisation_Renesas RX Configurator]
+"Single Shot" "0f04461d9412dc10" 6 
+[OPTIONS_Debug-with-optimisation]
+"" 0 
+"[V|VERSION|1] [B|COMMAND|1] [S|SPEC|UITRON4] [S|OUTPUTPATH|^"$(CONFIGDIR)^"] [S|CPU|RX600] [S|ENDIAN|LITTLE] [S|FINT_REGISTER|0]" 6 
+"[V|VERSION|1] [B|SJIS|1] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [B|SKIPDEPENDENCY|1]
+" 4 
+"[V|VERSION|1] [S|LANG|CPP] [B|SJIS|1] [S|INCLUDE|^"$(PROJDIR)\..\..\..\Source\portable\Renesas\RX600^"|^"$(PROJDIR)\..\..\..\Source\include^"|^"$(PROJDIR)\.^"|^"$(PROJDIR)\..\..\include^"|^"$(PROJDIR)\..\..\Common\include^"|^"$(PROJDIR)\webserver^"|^"$(PROJDIR)\Renesas-Files^"|^"$(PROJDIR)\..\..\Common\ethernet\FreeTCPIP^"|^"$(PROJDIR)\Renesas-Files\mcu\rx63n^"] [S|DEFINE|INCLUDE_HIGH_FREQUENCY_TIMER_TEST] [S|CHANGE_MESSAGE|INFORMATION|] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [S|OPTIMIZE|MAX] [B|SIZE|1] [B|MAP|1] [S|MAPPATH|^"$(CONFIGDIR)\$(PROJECTNAME).bls^"] [I|INLINE|100] [I|LOOP|2] [B|MAPOPTIMIZATION|1] [S|MISRA2004|ALL] [S|MISRA2004RULEFILE|^"$(CONFIGDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1] [N|DEPENDSCAN|1]
+" 3 
+"[V|VERSION|1] [S|LANG|C] [B|SJIS|1] [S|INCLUDE|^"$(PROJDIR)\..\..\..\Source\portable\Renesas\RX600^"|^"$(PROJDIR)\..\..\..\Source\include^"|^"$(PROJDIR)\.^"|^"$(PROJDIR)\..\..\include^"|^"$(PROJDIR)\..\..\Common\include^"|^"$(PROJDIR)\webserver^"|^"$(PROJDIR)\Renesas-Files^"|^"$(PROJDIR)\..\..\Common\ethernet\FreeTCPIP^"|^"$(PROJDIR)\Renesas-Files\mcu\rx63n^"] [S|DEFINE|INCLUDE_HIGH_FREQUENCY_TIMER_TEST] [S|CHANGE_MESSAGE|INFORMATION|] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [S|OPTIMIZE|MAX] [B|SIZE|1] [B|MAP|1] [S|MAPPATH|^"$(CONFIGDIR)\$(PROJECTNAME).bls^"] [I|INLINE|100] [I|LOOP|2] [B|MAPOPTIMIZATION|1] [S|MISRA2004|ALL] [S|MISRA2004RULEFILE|^"$(CONFIGDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1] [N|DEPENDSCAN|1]
+" 2 
+"[V|VERSION|1] [S|MODE|BUILD/CHANGED] [S|EXISTOUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|RUNTIME|1] [B|MATH|1] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [B|NOFLOAT|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|SIZE|1] [I|INLINE|100] [I|LOOP|2] [S|CPU|RX600] [S|BASE|00000000=NONE] [I|PID|16] [B|SKIPDEPENDENCY|1]
+" 1 
+"[V|VERSION|6] [S|FORM|STYPE] [S|BYTE_COUNT_VALUE|FF] [B|DEBUG|1] [S|ROM|(D,R)|(D_1,R_1)|(D_2,R_2)] [S|CRC|NONE|DEFAULT|00000000] [B|LIST|1] [S|LIST|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|SHOW|METHODCUSTOM|] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).mot^"] [B|MAP|1] [S|MAPPATH|^"$(CONFIGDIR)\$(PROJECTNAME).bls^"] [I|SPACE|^"FF^"] [B|MAPOPTIMIZATION|1] [B|OPTIMIZE|0] [S|START|B_RX_DESC,B_TX_DESC,B_ETHERNET_BUFFERS,SI,SU,B_1,R_1,B_2,R_2,B,R(00)|C_1,C_2,C,C$*,L*,D*,P,W*(0FFF80000)|FIXEDVECT(0FFFFFF90)] [S|MEMORY|HIGH] [B|SKIPDEPENDENCY|1]
+" 5 
+[EXCLUDED_FILES_Debug-with-optimisation]
+"C:\E\Dev\FreeRTOS\WorkingCopy\Demo\RX600_RX63N-RDK_Renesas\RTOSDemo\main-blinky.c" 
+[LINKAGE_ORDER_Debug-with-optimisation]
+[GENERAL_DATA_CONFIGURATION_Debug-with-optimisation]
+[GENERAL_DATA_CONFIGURATION_SESSION_Blinky_RDK_Jlink]
+[SESSION_DATA_CONFIGURATION_SESSION_Blinky_RDK_Jlink]
+"MEMORY_MAPPING_OPTIONS" "" 
+[GENERAL_DATA_CONFIGURATION_SESSION_Debug_RDK_Jlink]
+[SESSION_DATA_CONFIGURATION_SESSION_Debug_RDK_Jlink]
+"MEMORY_MAPPING_OPTIONS" "" 
+[GENERAL_DATA_CONFIGURATION_SESSION_Debug-with-optimisation_RDK_Jlink]
+[SESSION_DATA_CONFIGURATION_SESSION_Debug-with-optimisation_RDK_Jlink]
+"MEMORY_MAPPING_OPTIONS" "" 
+[EXT_DEBUGGER_INFO]
+0 "" "" "" "" 
+[END]

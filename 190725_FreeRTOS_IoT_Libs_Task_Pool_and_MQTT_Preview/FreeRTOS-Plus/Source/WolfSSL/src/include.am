@@ -1,0 +1,222 @@
+# vim:ft=automake
+# included from Top Level Makefile.am
+# All paths should be given relative to the root
+
+lib_LTLIBRARIES+= src/libwolfssl.la
+src_libwolfssl_la_SOURCES =
+
+src_libwolfssl_la_LDFLAGS = ${AM_LDFLAGS} -no-undefined -version-info ${WOLFSSL_LIBRARY_VERSION}
+src_libwolfssl_la_LIBADD = $(LIBM)
+src_libwolfssl_la_CFLAGS = -DBUILDING_WOLFSSL $(AM_CFLAGS)
+src_libwolfssl_la_CPPFLAGS = -DBUILDING_WOLFSSL $(AM_CPPFLAGS)
+
+# fips first  file
+if BUILD_FIPS
+src_libwolfssl_la_SOURCES += ctaocrypt/src/wolfcrypt_first.c
+
+src_libwolfssl_la_SOURCES += \
+               ctaocrypt/src/hmac.c \
+               ctaocrypt/src/random.c \
+               ctaocrypt/src/sha256.c
+
+if BUILD_RSA
+src_libwolfssl_la_SOURCES += ctaocrypt/src/rsa.c
+endif
+
+if BUILD_AES
+src_libwolfssl_la_SOURCES += ctaocrypt/src/aes.c
+endif
+
+if BUILD_DES3
+src_libwolfssl_la_SOURCES += ctaocrypt/src/des3.c
+endif
+
+if BUILD_SHA
+src_libwolfssl_la_SOURCES += ctaocrypt/src/sha.c
+endif
+
+if BUILD_SHA512
+src_libwolfssl_la_SOURCES += ctaocrypt/src/sha512.c
+endif
+
+src_libwolfssl_la_SOURCES += ctaocrypt/src/fips.c
+src_libwolfssl_la_SOURCES += ctaocrypt/src/fips_test.c
+
+# fips last file
+src_libwolfssl_la_SOURCES += ctaocrypt/src/wolfcrypt_last.c
+endif
+
+src_libwolfssl_la_SOURCES += \
+               wolfcrypt/src/hmac.c \
+               wolfcrypt/src/random.c \
+               wolfcrypt/src/sha256.c \
+               wolfcrypt/src/hash.c
+
+if BUILD_RSA
+src_libwolfssl_la_SOURCES += wolfcrypt/src/rsa.c
+endif
+
+if BUILD_AES
+src_libwolfssl_la_SOURCES += wolfcrypt/src/aes.c
+endif
+
+if BUILD_DES3
+src_libwolfssl_la_SOURCES += wolfcrypt/src/des3.c
+endif
+
+if BUILD_SHA
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sha.c
+endif
+
+if BUILD_SHA512
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sha512.c
+endif
+
+src_libwolfssl_la_SOURCES += \
+               wolfcrypt/src/logging.c \
+               wolfcrypt/src/wc_port.c \
+               wolfcrypt/src/error.c
+
+if BUILD_MEMORY
+src_libwolfssl_la_SOURCES += wolfcrypt/src/memory.c
+endif
+
+if BUILD_DH
+src_libwolfssl_la_SOURCES += wolfcrypt/src/dh.c
+endif
+
+if BUILD_ASN
+src_libwolfssl_la_SOURCES += wolfcrypt/src/asn.c
+endif
+
+if BUILD_CODING
+src_libwolfssl_la_SOURCES += wolfcrypt/src/coding.c
+endif
+
+if BUILD_POLY1305
+src_libwolfssl_la_SOURCES += wolfcrypt/src/poly1305.c
+endif
+
+if BUILD_RC4
+src_libwolfssl_la_SOURCES += wolfcrypt/src/arc4.c
+endif
+
+if BUILD_MD4
+src_libwolfssl_la_SOURCES += wolfcrypt/src/md4.c
+endif
+
+if BUILD_MD5
+src_libwolfssl_la_SOURCES += wolfcrypt/src/md5.c
+endif
+
+if BUILD_PWDBASED
+src_libwolfssl_la_SOURCES += wolfcrypt/src/pwdbased.c
+endif
+
+if BUILD_DSA
+src_libwolfssl_la_SOURCES += wolfcrypt/src/dsa.c
+endif
+
+if BUILD_AESNI
+src_libwolfssl_la_SOURCES += wolfcrypt/src/aes_asm.s
+endif
+
+if BUILD_CAMELLIA
+src_libwolfssl_la_SOURCES += wolfcrypt/src/camellia.c
+endif
+
+if BUILD_MD2
+src_libwolfssl_la_SOURCES += wolfcrypt/src/md2.c
+endif
+
+if BUILD_RIPEMD
+src_libwolfssl_la_SOURCES += wolfcrypt/src/ripemd.c
+endif
+
+if BUILD_BLAKE2
+src_libwolfssl_la_SOURCES += wolfcrypt/src/blake2b.c
+endif
+
+if BUILD_HC128
+src_libwolfssl_la_SOURCES += wolfcrypt/src/hc128.c
+endif
+
+if BUILD_RABBIT
+src_libwolfssl_la_SOURCES += wolfcrypt/src/rabbit.c
+endif
+
+if BUILD_CHACHA
+src_libwolfssl_la_SOURCES += wolfcrypt/src/chacha.c
+if BUILD_POLY1305
+src_libwolfssl_la_SOURCES += wolfcrypt/src/chacha20_poly1305.c
+endif
+endif
+
+if !BUILD_INLINE
+src_libwolfssl_la_SOURCES += wolfcrypt/src/misc.c
+endif
+
+if BUILD_FASTMATH
+src_libwolfssl_la_SOURCES += wolfcrypt/src/tfm.c
+endif
+
+if BUILD_SLOWMATH
+src_libwolfssl_la_SOURCES += wolfcrypt/src/integer.c
+endif
+
+if BUILD_ECC
+src_libwolfssl_la_SOURCES += wolfcrypt/src/ecc.c
+endif
+
+if BUILD_CURVE25519
+src_libwolfssl_la_SOURCES += wolfcrypt/src/curve25519.c
+endif
+
+if BUILD_ED25519
+src_libwolfssl_la_SOURCES += wolfcrypt/src/ed25519.c
+endif
+
+if BUILD_FEMATH
+if BUILD_CURVED25519_SMALL
+src_libwolfssl_la_SOURCES += wolfcrypt/src/fe_low_mem.c
+else
+src_libwolfssl_la_SOURCES += wolfcrypt/src/fe_operations.c
+endif
+endif
+
+if BUILD_GEMATH
+if BUILD_CURVED25519_SMALL
+src_libwolfssl_la_SOURCES += wolfcrypt/src/ge_low_mem.c
+else
+src_libwolfssl_la_SOURCES += wolfcrypt/src/ge_operations.c
+endif
+endif
+
+if BUILD_LIBZ
+src_libwolfssl_la_SOURCES += wolfcrypt/src/compress.c
+endif
+
+if BUILD_PKCS7
+src_libwolfssl_la_SOURCES += wolfcrypt/src/pkcs7.c
+endif
+
+# ssl files
+src_libwolfssl_la_SOURCES += \
+               src/internal.c \
+               src/io.c \
+               src/keys.c \
+               src/ssl.c \
+               src/tls.c
+
+if BUILD_OCSP
+src_libwolfssl_la_SOURCES += src/ocsp.c
+endif
+
+if BUILD_CRL
+src_libwolfssl_la_SOURCES += src/crl.c
+endif
+
+if BUILD_SNIFFER
+src_libwolfssl_la_SOURCES += src/sniffer.c
+endif
+

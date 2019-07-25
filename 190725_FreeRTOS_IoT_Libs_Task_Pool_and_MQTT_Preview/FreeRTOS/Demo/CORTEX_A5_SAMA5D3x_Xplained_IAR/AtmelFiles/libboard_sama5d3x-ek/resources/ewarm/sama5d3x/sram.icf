@@ -1,0 +1,38 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\a_v1_0.xml" */
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_RAM_start__ = 0x300000;
+define symbol __ICFEDIT_region_RAM_end__   = 0x31FFFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_vectors__  = 0x100;
+define symbol __ICFEDIT_size_cstack__   = 0x400;
+/*define symbol __ICFEDIT_size_sysstack__ = 0x600; Not used. */
+define symbol __ICFEDIT_size_irqstack__ = 0x600;
+define symbol __ICFEDIT_size_heap__     = 0x0;
+/*-Exports-*/
+export symbol __ICFEDIT_region_RAM_start__;
+export symbol __ICFEDIT_region_RAM_end__;
+export symbol __ICFEDIT_size_vectors__;
+export symbol __ICFEDIT_size_cstack__;
+/*export symbol __ICFEDIT_size_sysstack__; Not used. */
+export symbol __ICFEDIT_size_irqstack__;
+export symbol __ICFEDIT_size_heap__;
+/**** End of ICF editor section. ###ICF###*/
+
+define memory mem with size = 4G;
+define region VEC_region = mem:[from __ICFEDIT_region_RAM_start__ size __ICFEDIT_size_vectors__];
+define region RAM_region = mem:[from __ICFEDIT_region_RAM_start__+__ICFEDIT_size_vectors__ to __ICFEDIT_region_RAM_end__];
+
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+/* define block SYS_STACK with alignment = 8, size = __ICFEDIT_size_sysstack__ { }; not used. */
+define block IRQ_STACK with alignment = 8, size = __ICFEDIT_size_irqstack__ { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+initialize by copy with packing=none { readwrite };
+do not initialize  { readonly section .noinit };
+
+place in VEC_region { section .vectors };
+place in RAM_region { readonly };
+place in RAM_region { section .cstartup };
+place in RAM_region { readwrite, block IRQ_STACK, /* block SYS_STACK not used, */ block CSTACK, block HEAP };

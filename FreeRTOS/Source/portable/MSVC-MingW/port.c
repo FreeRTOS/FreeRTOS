@@ -69,6 +69,15 @@ static uint32_t prvProcessYieldInterrupt( void );
 static uint32_t prvProcessTickInterrupt( void );
 
 /*
+ * Exiting a critical section will cause the calling task to block on yield
+ * event to wait for an interrupt to process if an interrupt was pended while
+ * inside the critical section.  This variable protects against a recursive
+ * attempt to obtain pvInterruptEventMutex if a critical section is used inside
+ * an interrupt handler itself.
+ */
+static volatile BaseType_t xInsideInterrupt = pdFALSE;
+
+/*
  * Called when the process exits to let Windows know the high timer resolution
  * is no longer required.
  */
@@ -169,20 +178,22 @@ TIMECAPS xTimeCaps;
 
 		configASSERT( xPortRunning );
 
+		/* Can't proceed if in a critical section as pvInterruptEventMutex won't
+		be available. */
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 
 		/* The timer has expired, generate the simulated tick event. */
 		ulPendingInterrupts |= ( 1 << portINTERRUPT_TICK );
 
 		/* The interrupt is now pending - notify the simulated interrupt
-		handler thread. */
-		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
-		{
-			SetEvent( pvInterruptEvent );
-		}
+		handler thread.  Must be outside of a critical section to get here so
+		the handler thread can execute immediately pvInterruptEventMutex is
+		released. */
+		configASSERT( ulCriticalNesting == 0UL );
+		SetEvent( pvInterruptEvent );
 
 		/* Give back the mutex so the simulated interrupt handler unblocks
-		and can	access the interrupt handler variables. */
+		and can access the interrupt handler variables. */
 		ReleaseMutex( pvInterruptEventMutex );
 	}
 
@@ -341,6 +352,7 @@ SYSTEM_INFO xSystemInfo;
 
 static uint32_t prvProcessYieldInterrupt( void )
 {
+	/* Always return true as this is a yield. */
 	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
@@ -379,7 +391,15 @@ CONTEXT xContext;
 
 	for(;;)
 	{
+		xInsideInterrupt = pdFALSE;
 		WaitForMultipleObjects( sizeof( pvObjectList ) / sizeof( void * ), pvObjectList, TRUE, INFINITE );
+
+		/* /* Cannot be in a critical section to get here.  Tasks that exist a
+		critical section will block on a yield mutex to wait for an interrupt to
+		process if an interrupt was set pending while the task was inside the
+		critical section.  xInsideInterrupt prevents interrupts that contain
+		critical sections from doing the same. */
+		xInsideInterrupt = pdTRUE;
 
 		/* Used to indicate whether the simulated interrupt processing has
 		necessitated a context switch to another task/thread. */
@@ -390,14 +410,16 @@ CONTEXT xContext;
 		for( i = 0; i < portMAX_INTERRUPTS; i++ )
 		{
 			/* Is the simulated interrupt pending? */
-			if( ulPendingInterrupts & ( 1UL << i ) )
+			if( ( ulPendingInterrupts & ( 1UL << i ) ) != 0 )
 			{
 				/* Is a handler installed? */
 				if( ulIsrHandler[ i ] != NULL )
 				{
-					/* Run the actual handler. */
+					/* Run the actual handler.  Handlers return pdTRUE if they
+					necessitate a context switch. */
 					if( ulIsrHandler[ i ]() != pdFALSE )
 					{
+						/* A bit mask is used purely to help debugging. */
 						ulSwitchRequired |= ( 1 << i );
 					}
 				}
@@ -420,7 +442,15 @@ CONTEXT xContext;
 			that is already in the running state. */
 			if( pvOldCurrentTCB != pxCurrentTCB )
 			{
-				/* Suspend the old thread. */
+				/* Suspend the old thread.  In the cases where the (simulated)
+				interrupt is asynchronous (tick event swapping a task out rather
+				than a task blocking or yielding) it doesn't matter if the
+				'suspend' operation doesn't take effect immediately - if it
+				doesn't it would just be like the interrupt occurring slightly
+				later.  In cases where the yield was caused by a task blocking
+				or yielding then the task will block on a yield event after the
+				yield operation in case the 'suspend' operation doesn't take
+				effect immediately.  */
 				pxThreadState = ( ThreadState_t *) *( ( size_t * ) pvOldCurrentTCB );
 				SuspendThread( pxThreadState->pvThread );
 
@@ -451,7 +481,9 @@ CONTEXT xContext;
 		(to ensure it does not continue running after the call to
 		SuspendThread() above as SuspendThread() is asynchronous).
 		Signal the event to ensure the thread can proceed now it is
-		valid for it to do so. */
+		valid for it to do so.  Signaling the event is benign in the case that
+		the task was switched out asynchronously by an interrupt as the event
+		is reset before the task blocks on it. */
 		pxThreadState = ( ThreadState_t * ) ( *( size_t *) pxCurrentTCB );
 		SetEvent( pxThreadState->pvYieldEvent );
 		ReleaseMutex( pvInterruptEventMutex );
@@ -527,7 +559,7 @@ uint32_t ulErrorCode;
 	/* This is called from a critical section, which must be exited before the
 	thread stops. */
 	taskEXIT_CRITICAL();
-
+	CloseHandle( pxThreadState->pvYieldEvent );
 	ExitThread( 0 );
 }
 /*-----------------------------------------------------------*/
@@ -546,39 +578,32 @@ ThreadState_t *pxThreadState = ( ThreadState_t *) *( ( size_t * ) pxCurrentTCB )
 
 	if( ( ulInterruptNumber < portMAX_INTERRUPTS ) && ( pvInterruptEventMutex != NULL ) )
 	{
-		/* Yield interrupts are processed even when critical nesting is
-		non-zero. */
 		WaitForSingleObject( pvInterruptEventMutex, INFINITE );
 		ulPendingInterrupts |= ( 1 << ulInterruptNumber );
 
 		/* The simulated interrupt is now held pending, but don't actually
 		process it yet if this call is within a critical section.  It is
 		possible for this to be in a critical section as calls to wait for
-		mutexes are accumulative. */
+		mutexes are accumulative.  If in a critical section then the event
+		will get set when the critical section nesting count is wound back
+		down to zero. */
 		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
 			SetEvent( pvInterruptEvent );
 
-			if( ulInterruptNumber == portINTERRUPT_YIELD )
-			{
-				/* Going to wait for an event - make sure the event is not already
-				signaled. */
-				ResetEvent( pxThreadState->pvYieldEvent );
-			}
+			/* Going to wait for an event - make sure the event is not already
+			signaled. */
+			ResetEvent( pxThreadState->pvYieldEvent );
 		}
 
 		ReleaseMutex( pvInterruptEventMutex );
-
 		if( ulCriticalNesting == portNO_CRITICAL_NESTING )
 		{
-			if( ulInterruptNumber == portINTERRUPT_YIELD )
-			{
-				/* The task was yielding so will be suspended however the
-				SuspendThread() function is asynchronous so this event is used to
-				prevent the task executing further if SuspendThread() does not take
-				effect immediately. */
-				WaitForSingleObject( pxThreadState->pvYieldEvent, INFINITE );
-			}
+			/* An interrupt was pended so ensure to block to alow it to
+			execute.  In most cases the (simulated) interrupt will have
+			executed before the next line is reached - so this is just to make
+			sure. */
+			WaitForSingleObject( pxThreadState->pvYieldEvent, INFINITE );
 		}
 	}
 }
@@ -626,10 +651,12 @@ int32_t lMutexNeedsReleasing, lWaitForYield = pdFALSE;
 
 	if( ulCriticalNesting > portNO_CRITICAL_NESTING )
 	{
-		if( ulCriticalNesting == ( portNO_CRITICAL_NESTING + 1 ) )
-		{
-			ulCriticalNesting--;
+		ulCriticalNesting--;
 
+		/* Don't need to wait for any pending interrupts to execute if the
+		critical section was exited from inside an interrupt. */
+		if( ( ulCriticalNesting == portNO_CRITICAL_NESTING ) && ( xInsideInterrupt == pdFALSE ) )
+		{
 			/* Were any interrupts set to pending while interrupts were
 			(simulated) disabled? */
 			if( ulPendingInterrupts != 0UL )
@@ -637,36 +664,28 @@ int32_t lMutexNeedsReleasing, lWaitForYield = pdFALSE;
 				ThreadState_t *pxThreadState = ( ThreadState_t *) *( ( size_t * ) pxCurrentTCB );
 
 				configASSERT( xPortRunning );
+
+				/* The interrupt won't actually executed until
+				pvInterruptEventMutex is released as it waits on both
+				pvInterruptEventMutex and pvInterruptEvent.
+				pvInterruptEvent is only set when the simulated
+				interrupt is pendeded if the interrupt is pended
+				from outside a critical section - hence it is set
+				here. */
 				SetEvent( pvInterruptEvent );
+				/* The calling task is going to wait for an event to ensure the
+				interrupt that is pending executes immediately after the
+				critical section is exited - so make sure the event is not
+				already signaled. */
+				ResetEvent( pxThreadState->pvYieldEvent );
+				lWaitForYield = pdTRUE;
 
-				if( ulPendingInterrupts != 0 )
-				{
-					/* Going to wait for an event - make sure the event is not already
-					signaled. */
-					ResetEvent( pxThreadState->pvYieldEvent );
-					lWaitForYield = pdTRUE;
-				}
-
-				/* Mutex will be released now, so does not require releasing
-				on function exit. */
+				/* Mutex will be released now so the (simulated) interrupt can
+				execute, so does not require releasing on function exit. */
 				lMutexNeedsReleasing = pdFALSE;
 				ReleaseMutex( pvInterruptEventMutex );
-
-				if( lWaitForYield != pdFALSE )
-				{
-					/* The task was yielding so will be suspended however the
-					SuspendThread() function is asynchronous so this event is
-					used to prevent the task executing further if
-					SuspendThread() does not take effect immediately. */
-					WaitForSingleObject( pxThreadState->pvYieldEvent, INFINITE );
-				}
+				WaitForSingleObject( pxThreadState->pvYieldEvent, INFINITE );
 			}
-		}
-		else
-		{
-			/* Tick interrupts will still not be processed as the critical
-			nesting depth will not be zero. */
-			ulCriticalNesting--;
 		}
 	}
 

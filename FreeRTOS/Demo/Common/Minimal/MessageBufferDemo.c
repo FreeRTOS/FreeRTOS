@@ -57,7 +57,7 @@ priority tasks, and from high to low priority tasks. */
 #define mbHIGHER_PRIORITY			( tskIDLE_PRIORITY + 1 )
 
 /* Block times used when sending and receiving from the message buffers. */
-#define mbRX_TX_BLOCK_TIME			pdMS_TO_TICKS( 125UL )
+#define mbRX_TX_BLOCK_TIME			pdMS_TO_TICKS( 175UL )
 
 /* A block time of 0 means "don't block". */
 #define mbDONT_BLOCK				( 0 )
@@ -245,8 +245,8 @@ UBaseType_t uxOriginalPriority;
 	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, sizeof( pucData[ 0 ] ), xBlockTime );
 	xTimeAfterCall = xTaskGetTickCount();
 	vTaskPrioritySet( NULL, uxOriginalPriority );
-	configASSERT( ( xTimeAfterCall - xTimeBeforeCall ) >= xBlockTime );
-	configASSERT( ( xTimeAfterCall - xTimeBeforeCall ) < ( xBlockTime + xAllowableMargin ) );
+	configASSERT( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) >= xBlockTime );
+	configASSERT( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) < ( xBlockTime + xAllowableMargin ) );
 	configASSERT( xReturned == 0 );
 	( void ) xReturned; /* In case configASSERT() is not defined. */
 	( void ) xTimeBeforeCall;
@@ -758,7 +758,7 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 250UL );
 	/* Don't expect to receive anything yet! */
 	xTimeOnEntering = xTaskGetTickCount();
 	xReceivedLength = xMessageBufferReceive( xMessageBuffers.xEchoClientBuffer, ( void * ) pcReceivedString, mbMESSAGE_BUFFER_LENGTH_BYTES, xTicksToBlock );
-	configASSERT( ( xTaskGetTickCount() - xTimeOnEntering ) >= xTicksToBlock );
+	configASSERT( ( ( TickType_t ) ( xTaskGetTickCount() - xTimeOnEntering ) ) >= xTicksToBlock );
 	configASSERT( xReceivedLength == 0 );
 	( void ) xTimeOnEntering; /* In case configASSERT() is not defined. */
 

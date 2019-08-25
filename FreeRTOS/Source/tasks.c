@@ -368,7 +368,7 @@ PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseTyp
 PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) configINITIAL_TICK_COUNT;
 PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
 PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
-PRIVILEGED_DATA static volatile UBaseType_t uxPendedTicks 			= ( UBaseType_t ) 0U;
+PRIVILEGED_DATA static volatile TickType_t xPendedTicks 			= ( TickType_t ) 0U;
 PRIVILEGED_DATA static volatile BaseType_t xYieldPending 			= pdFALSE;
 PRIVILEGED_DATA static volatile BaseType_t xNumOfOverflows 			= ( BaseType_t ) 0;
 PRIVILEGED_DATA static UBaseType_t uxTaskNumber 					= ( UBaseType_t ) 0U;
@@ -2175,6 +2175,7 @@ BaseType_t xTaskResumeAll( void )
 {
 TCB_t *pxTCB = NULL;
 BaseType_t xAlreadyYielded = pdFALSE;
+TickType_t xTicksToNextUnblockTime;
 
 	/* If uxSchedulerSuspended is zero then this function does not match a
 	previous call to vTaskSuspendAll(). */
@@ -2229,30 +2230,51 @@ BaseType_t xAlreadyYielded = pdFALSE;
 				they should be processed now.  This ensures the tick count does
 				not	slip, and that any delayed tasks are resumed at the correct
 				time. */
+				while( xPendedTicks > ( TickType_t ) 0 )
 				{
-					UBaseType_t uxPendedCounts = uxPendedTicks; /* Non-volatile copy. */
+					/* Calculate how far into the future the next task will
+					leave the Blocked state because its timeout expired.  If
+					there are no tasks due to leave	the blocked state between
+					the time now and the time at which the tick count overflows
+					then xNextTaskUnblockTime will the tick overflow time.
+					This means xNextTaskUnblockTime can never be less than
+					xTickCount, and the following can therefore not
+					underflow. */
+					configASSERT( xNextTaskUnblockTime >= xTickCount );
+					xTicksToNextUnblockTime = xNextTaskUnblockTime - xTickCount;
 
-					if( uxPendedCounts > ( UBaseType_t ) 0U )
+					/* Don't want to move the tick count more than the number
+					of ticks that are pending, so cap if necessary. */
+					if( xTicksToNextUnblockTime > xPendedTicks )
 					{
-						do
-						{
-							if( xTaskIncrementTick() != pdFALSE )
-							{
-								xYieldPending = pdTRUE;
-							}
-							else
-							{
-								mtCOVERAGE_TEST_MARKER();
-							}
-							--uxPendedCounts;
-						} while( uxPendedCounts > ( UBaseType_t ) 0U );
+						xTicksToNextUnblockTime = xPendedTicks;
+					}
 
-						uxPendedTicks = 0;
-					}
-					else
+					if( xTicksToNextUnblockTime == 0 )
 					{
-						mtCOVERAGE_TEST_MARKER();
+						/* xTicksToNextUnblockTime could be zero if the tick
+						count is about to overflow and xTicksToNetUnblockTime
+						holds the time at which the tick count will overflow
+						(rather than the time at which the next task will
+						unblock).  Set to 1 otherwise xPendedTicks won't be
+						decremented below. */
+						xTicksToNextUnblockTime = ( TickType_t ) 1;
 					}
+					else if( xTicksToNextUnblockTime > ( TickType_t ) 1 )
+					{
+						/* Move the tick count one short of the next unblock
+						time, then call xTaskIncrementTick() to move the tick
+						count up to the next unblock time to unblock the task,
+						if any.  This will also swap the blocked task and
+						overflow blocked task lists if necessary. */
+						xTickCount += ( xTicksToNextUnblockTime - ( TickType_t ) 1 );
+					}
+					xYieldPending |= xTaskIncrementTick();
+
+					/* Adjust for the number of ticks just added to
+					xTickCount and go around the loop again if
+					xTicksToCatchUp is still greater than 0. */
+					xPendedTicks -= xTicksToNextUnblockTime;
 				}
 
 				if( xYieldPending != pdFALSE )
@@ -2586,6 +2608,24 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 #endif /* configUSE_TICKLESS_IDLE */
 /*----------------------------------------------------------*/
 
+BaseType_t xTaskCatchUpTicks( TickType_t xTicksToCatchUp )
+{
+BaseType_t xYieldRequired = pdFALSE;
+
+	/* Must not be called with the scheduler suspended as the implementation
+	relies on xPendedTicks being wound down to 0 in xTaskResumeAll(). */
+	configASSERT( uxSchedulerSuspended == 0 );
+
+	/* Use xPendedTicks to mimic xTicksToCatchUp number of ticks occuring when
+	the scheduler is suspended so the ticks are executed in xTaskResumeAll(). */
+	vTaskSuspendAll();
+	xPendedTicks += xTicksToCatchUp;
+	xYieldRequired = xTaskResumeAll();
+
+	return xYieldRequired;
+}
+/*----------------------------------------------------------*/
+
 #if ( INCLUDE_xTaskAbortDelay == 1 )
 
 	BaseType_t xTaskAbortDelay( TaskHandle_t xTask )
@@ -2793,7 +2833,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 		{
 			/* Guard against the tick hook being called when the pended tick
 			count is being unwound (when the scheduler is being unlocked). */
-			if( uxPendedTicks == ( UBaseType_t ) 0U )
+			if( xPendedTicks == ( TickType_t ) 0 )
 			{
 				vApplicationTickHook();
 			}
@@ -2806,7 +2846,7 @@ BaseType_t xSwitchRequired = pdFALSE;
 	}
 	else
 	{
-		++uxPendedTicks;
+		++xPendedTicks;
 
 		/* The tick hook gets called at regular intervals, even if the
 		scheduler is locked. */
@@ -5078,7 +5118,7 @@ TickType_t uxReturn;
 
 #if( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
 
-	TickType_t xTaskGetIdleRunTimeCounter( void )
+	uint32_t ulTaskGetIdleRunTimeCounter( void )
 	{
 		return xIdleTaskHandle->ulRunTimeCounter;
 	}

@@ -283,8 +283,8 @@ UBaseType_t uxOriginalPriority;
 	xReturned = xStreamBufferSend( xStreamBuffer, ( void * ) pucData, sizeof( pucData[ 0 ] ), xBlockTime );
 	xTimeAfterCall = xTaskGetTickCount();
 	vTaskPrioritySet( NULL, uxOriginalPriority );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) >= xBlockTime );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) < ( xBlockTime + xAllowableMargin ) );
+	prvCheckExpectedState( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) >= xBlockTime );
+	prvCheckExpectedState( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) < ( xBlockTime + xAllowableMargin ) );
 	prvCheckExpectedState( xReturned == 0 );
 
 	/* The buffer is now full of data in the form "000000", "111111", etc.  Make
@@ -331,8 +331,8 @@ UBaseType_t uxOriginalPriority;
 	xReturned = xStreamBufferReceive( xStreamBuffer, ( void * ) pucReadData, x6ByteLength, xBlockTime );
 	xTimeAfterCall = xTaskGetTickCount();
 	vTaskPrioritySet( NULL, uxOriginalPriority );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) >= xBlockTime );
-	prvCheckExpectedState( ( xTimeAfterCall - xTimeBeforeCall ) < ( xBlockTime + xAllowableMargin ) );
+	prvCheckExpectedState( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) >= xBlockTime );
+	prvCheckExpectedState( ( ( TickType_t ) ( xTimeAfterCall - xTimeBeforeCall ) ) < ( xBlockTime + xAllowableMargin ) );
 	prvCheckExpectedState( xReturned == 0 );
 
 
@@ -847,7 +847,7 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 350UL );
 	/* Don't expect to receive anything yet! */
 	xTimeOnEntering = xTaskGetTickCount();
 	xReceivedLength = xStreamBufferReceive( xStreamBuffers.xEchoClientBuffer, ( void * ) pcReceivedString, sbSTREAM_BUFFER_LENGTH_BYTES, xTicksToBlock );
-	prvCheckExpectedState( ( xTaskGetTickCount() - xTimeOnEntering ) >= xTicksToBlock );
+	prvCheckExpectedState( ( ( TickType_t ) ( xTaskGetTickCount() - xTimeOnEntering ) ) >= xTicksToBlock );
 	prvCheckExpectedState( xReceivedLength == 0 );
 
 	/* Now the stream buffers have been created the echo client task can be
@@ -933,6 +933,7 @@ BaseType_t xErrorDetected = pdFALSE;
 		{
 			/* Create the stream buffer that will be used from inside the tick
 			interrupt. */
+			memset( ucRxData, 0x00, sizeof( ucRxData ) );
 			xStreamBuffer = xStreamBufferCreate( xStreamBufferSizeBytes, xTriggerLevel );
 			configASSERT( xStreamBuffer );
 
@@ -958,21 +959,34 @@ BaseType_t xErrorDetected = pdFALSE;
 			/* Now check the number of bytes received equals the trigger level,
 			except in the case that the read timed out before the trigger level
 			was reached. */
-			if( xBytesReceived < xTriggerLevel )
+			if( xTriggerLevel > xReadBlockTime )
 			{
-				/* This should only happen if the trigger level was greater than
-				the block time. */
-				if( xTriggerLevel < xReadBlockTime )
+				/* Trigger level was greater than the block time so expect to
+				time out having received xReadBlockTime bytes. */
+				if( ( xReadBlockTime - xBytesReceived ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}
 			}
-			else if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
+			else if( xTriggerLevel < xReadBlockTime )
 			{
-				/* A margin may be required here if there are other high priority
-				tasks prevent the task that reads from the message buffer running
-				immediately. */
-				xErrorDetected = pdTRUE;
+				/* Trigger level was less than the block time so we expect to
+				have received the trigger level number of bytes. */
+				if( ( xTriggerLevel - xBytesReceived ) > xAllowableMargin )
+				{
+					xErrorDetected = pdTRUE;
+				}
+			}
+			else
+			{
+				/* The trigger level equaled the block time, so expect to
+				receive no greater than the block time, but one or two less is
+				ok due to variations in how far through the time slice the
+				functions get executed. */
+				if( xBytesReceived > xReadBlockTime )
+				{
+					xErrorDetected = pdTRUE;
+				}
 			}
 
 			if( xBytesReceived > sizeof( ucRxData ) )

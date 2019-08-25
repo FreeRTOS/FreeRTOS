@@ -77,11 +77,12 @@ only for ports that are using the MPU. */
 		#define uxTaskGetSystemState					MPU_uxTaskGetSystemState
 		#define vTaskList								MPU_vTaskList
 		#define vTaskGetRunTimeStats					MPU_vTaskGetRunTimeStats
-		#define xTaskGetIdleRunTimeCounter				MPU_xTaskGetIdleRunTimeCounter
+		#define ulTaskGetIdleRunTimeCounter				MPU_ulTaskGetIdleRunTimeCounter
 		#define xTaskGenericNotify						MPU_xTaskGenericNotify
 		#define xTaskNotifyWait							MPU_xTaskNotifyWait
 		#define ulTaskNotifyTake						MPU_ulTaskNotifyTake
 		#define xTaskNotifyStateClear					MPU_xTaskNotifyStateClear
+		#define xTaskCatchUpTicks						MPU_xTaskCatchUpTicks
 
 		#define xTaskGetCurrentTaskHandle				MPU_xTaskGetCurrentTaskHandle
 		#define vTaskSetTimeOutState					MPU_vTaskSetTimeOutState

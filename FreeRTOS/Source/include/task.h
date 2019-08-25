@@ -1738,7 +1738,7 @@ void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e9
 
 /**
 * task. h
-* <PRE>TickType_t xTaskGetIdleRunTimeCounter( void );</PRE>
+* <PRE>uint32_t ulTaskGetIdleRunTimeCounter( void );</PRE>
 *
 * configGENERATE_RUN_TIME_STATS and configUSE_STATS_FORMATTING_FUNCTIONS
 * must both be defined as 1 for this function to be available.  The application
@@ -1753,7 +1753,7 @@ void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e9
 * of the accumulated time value depends on the frequency of the timer
 * configured by the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() macro.
 * While uxTaskGetSystemState() and vTaskGetRunTimeStats() writes the total
-* execution time of each task into a buffer, xTaskGetIdleRunTimeCounter()
+* execution time of each task into a buffer, ulTaskGetIdleRunTimeCounter()
 * returns the total execution time of just the idle task.
 *
 * @return The total run time of the idle task.  This is the amount of time the
@@ -1761,10 +1761,10 @@ void vTaskGetRunTimeStats( char *pcWriteBuffer ) PRIVILEGED_FUNCTION; /*lint !e9
 * frequency configured using the portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() and
 * portGET_RUN_TIME_COUNTER_VALUE() macros.
 *
-* \defgroup xTaskGetIdleRunTimeCounter xTaskGetIdleRunTimeCounter
+* \defgroup ulTaskGetIdleRunTimeCounter ulTaskGetIdleRunTimeCounter
 * \ingroup TaskUtils
 */
-TickType_t xTaskGetIdleRunTimeCounter( void ) PRIVILEGED_FUNCTION;
+uint32_t ulTaskGetIdleRunTimeCounter( void ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h
@@ -2382,6 +2382,19 @@ void vTaskSetTaskNumber( TaskHandle_t xTask, const UBaseType_t uxHandle ) PRIVIL
  * equal to the idle period.
  */
 void vTaskStepTick( const TickType_t xTicksToJump ) PRIVILEGED_FUNCTION;
+
+/* Correct the tick count value after the application code has held
+interrupts disabled for an extended period.  xTicksToCatchUp is the number
+of tick interrupts that have been missed due to interrupts being disabled.
+Its value is not computed automatically, so must be computed by the
+application writer.
+
+This function is similar to vTaskStepTick(), however, unlike
+vTaskStepTick(), xTaskCatchUpTicks() may move the tick count forward past a
+time at which a task should be removed from the blocked state.  That means
+tasks may have to be removed from the blocked state as the tick count is
+moved. */
+BaseType_t xTaskCatchUpTicks( TickType_t xTicksToCatchUp ) PRIVILEGED_FUNCTION;
 
 /*
  * Only available when configUSE_TICKLESS_IDLE is set to 1.

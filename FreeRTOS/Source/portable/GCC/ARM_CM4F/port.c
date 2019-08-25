@@ -664,7 +664,7 @@ void xPortSysTickHandler( void )
 			vTaskStepTick( ulCompleteTickPeriods );
 			portNVIC_SYSTICK_LOAD_REG = ulTimerCountsForOneTick - 1UL;
 
-			/* Exit with interrpts enabled. */
+			/* Exit with interrupts enabled. */
 			__asm volatile( "cpsie i" ::: "memory" );
 		}
 	}

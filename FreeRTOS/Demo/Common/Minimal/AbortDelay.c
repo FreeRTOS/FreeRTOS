@@ -430,7 +430,7 @@ static void prvTestAbortingStreamBufferReceive( void )
 {
 TickType_t xTimeAtStart;
 StreamBufferHandle_t xStreamBuffer;
-EventBits_t xReturn;
+size_t xReturn;
 const size_t xTriggerLevelBytes = ( size_t ) 1;
 uint8_t uxRxData;
 

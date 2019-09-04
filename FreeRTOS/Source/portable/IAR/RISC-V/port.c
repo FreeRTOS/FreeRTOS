@@ -56,7 +56,7 @@ stack that was used by main before the scheduler was started for use as the
 interrupt stack after the scheduler has started. */
 #ifdef configISR_STACK_SIZE_WORDS
 	static __attribute__ ((aligned(16))) StackType_t xISRStack[ configISR_STACK_SIZE_WORDS ] = { 0 };
-	StackType_t xISRStackTop = ( StackType_t ) 0;
+	const StackType_t xISRStackTop = ( StackType_t ) &( xISRStack[ configISR_STACK_SIZE_WORDS & ~portBYTE_ALIGNMENT_MASK ] );
 #else
 	extern const uint32_t __freertos_irq_stack_top[];
 	const StackType_t xISRStackTop = ( StackType_t ) __freertos_irq_stack_top;
@@ -75,7 +75,8 @@ void vPortSetupTimerInterrupt( void ) __attribute__(( weak ));
 uint64_t ullNextTime = 0ULL;
 const uint64_t *pullNextTime = &ullNextTime;
 const size_t uxTimerIncrementsForOneTick = ( size_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ); /* Assumes increment won't go over 32-bits. */
-volatile uint64_t * const pullMachineTimerCompareRegister = ( uint64_t * ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+volatile uint64_t * const pullMachineTimerCompareRegisterBase = ( uint64_t * ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+volatile uint64_t * pullMachineTimerCompareRegister = 0;
 
 /* Set configCHECK_FOR_STACK_OVERFLOW to 3 to add ISR stack checking to task
 stack checking.  A problem in the ISR stack will trigger an assert, not call the
@@ -110,6 +111,10 @@ task stack, not the ISR stack). */
 	uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
 	volatile uint32_t * const pulTimeHigh = ( uint32_t * ) ( configCLINT_BASE_ADDRESS + 0xBFFC );
 	volatile uint32_t * const pulTimeLow = ( uint32_t * ) ( configCLINT_BASE_ADDRESS + 0xBFF8 );
+	volatile uint32_t ulHartId = 0;
+
+		__asm volatile( "csrr %0, 0xf14" : "=r"( ulHartId ) ); /* 0xf14 is hartid. */
+		pullMachineTimerCompareRegister  = &( pullMachineTimerCompareRegisterBase[ ulHartId ] );
 
 		do
 		{
@@ -133,10 +138,6 @@ task stack, not the ISR stack). */
 BaseType_t xPortStartScheduler( void )
 {
 extern void xPortStartFirstTask( void );
-#warning Replicate this change in the GCC version.
-	#ifdef configISR_STACK_SIZE_WORDS
-		xISRStackTop = ( ( StackType_t ) &( xISRStack[ configISR_STACK_SIZE_WORDS - 1 ] ) & ~portBYTE_ALIGNMENT_MASK );
-	#endif
 
 	#if( configASSERT_DEFINED == 1 )
 	{

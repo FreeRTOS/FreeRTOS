@@ -75,7 +75,8 @@ void vPortSetupTimerInterrupt( void ) __attribute__(( weak ));
 uint64_t ullNextTime = 0ULL;
 const uint64_t *pullNextTime = &ullNextTime;
 const size_t uxTimerIncrementsForOneTick = ( size_t ) ( configCPU_CLOCK_HZ / configTICK_RATE_HZ ); /* Assumes increment won't go over 32-bits. */
-volatile uint64_t * const pullMachineTimerCompareRegister = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+volatile uint64_t * const pullMachineTimerCompareRegisterBase = ( volatile uint64_t * const ) ( configCLINT_BASE_ADDRESS + 0x4000 );
+volatile uint64_t * pullMachineTimerCompareRegister = 0;
 
 /* Set configCHECK_FOR_STACK_OVERFLOW to 3 to add ISR stack checking to task
 stack checking.  A problem in the ISR stack will trigger an assert, not call the
@@ -110,6 +111,10 @@ task stack, not the ISR stack). */
 	uint32_t ulCurrentTimeHigh, ulCurrentTimeLow;
 	volatile uint32_t * const pulTimeHigh = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFFC );
 	volatile uint32_t * const pulTimeLow = ( volatile uint32_t * const ) ( configCLINT_BASE_ADDRESS + 0xBFF8 );
+	volatile uint32_t ulHartId = 0;
+
+		__asm volatile( "csrr %0, mhartid" : "=r"( ulHartId ) );
+		pullMachineTimerCompareRegister  = &( pullMachineTimerCompareRegisterBase[ ulHartId ] );
 
 		do
 		{

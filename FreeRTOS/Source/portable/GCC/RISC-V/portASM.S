@@ -92,11 +92,13 @@ at the top of this file. */
 .extern pxCurrentTCB
 .extern ulPortTrapHandler
 .extern vTaskSwitchContext
+.extern xTaskIncrementTick
 .extern Timer_IRQHandler
 .extern pullMachineTimerCompareRegister
 .extern pullNextTime
 .extern uxTimerIncrementsForOneTick /* size_t type so 32-bit on 32-bit core and 64-bits on 64-bit core. */
 .extern xISRStackTop
+.extern portasmHANDLE_INTERRUPT
 
 /*-----------------------------------------------------------*/
 
@@ -167,10 +169,12 @@ handle_asynchronous:
 		#if( __riscv_xlen == 32 )
 
 			/* Update the 64-bit mtimer compare match value in two 32-bit writes. */
+			li t4, -1
 			lw t2, 0(t1)				/* Load the low word of ullNextTime into t2. */
 			lw t3, 4(t1)				/* Load the high word of ullNextTime into t3. */
+			sw t4, 0(t0)				/* Low word no smaller than old value. */
+			sw t3, 4(t0)				/* Store high word of ullNextTime into compare register.  No smaller than new value. */
 			sw t2, 0(t0)				/* Store low word of ullNextTime into compare register. */
-			sw t3, 4(t0)				/* Store high word of ullNextTime into compare register. */
 			lw t0, uxTimerIncrementsForOneTick	/* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
 			add t4, t0, t2				/* Add the low word of ullNextTime to the timer increments for one tick (assumes timer increment for one tick fits in 32-bits). */
 			sltu t5, t4, t2				/* See if the sum of low words overflowed (what about the zero case?). */

@@ -88,7 +88,7 @@ connections on the standard echo port (port 7), then echos back any data
 received on that connection.
 */
 #define mainCREATE_SIMPLE_UDP_CLIENT_SERVER_TASKS	1
-#define mainCREATE_TCP_ECHO_TASKS_SINGLE			1
+#define mainCREATE_TCP_ECHO_TASKS_SINGLE			0
 #define mainCREATE_TCP_ECHO_SERVER_TASK				0
 /*-----------------------------------------------------------*/
 
@@ -292,7 +292,7 @@ const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
 static void prvSRand( UBaseType_t ulSeed )
 {
 	/* Utility function to seed the pseudo random number generator. */
-    ulNextRand = ulSeed;
+	ulNextRand = ulSeed;
 }
 /*-----------------------------------------------------------*/
 

@@ -365,12 +365,12 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if( ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
-	TickType_t MPU_xTaskGetIdleRunTimeCounter( void ) /* FREERTOS_SYSTEM_CALL */
+	uint32_t MPU_ulTaskGetIdleRunTimeCounter( void ) /* FREERTOS_SYSTEM_CALL */
 	{
-	TickType_t xReturn;
+	uint32_t xReturn;
 	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 
-		xReturn = xTaskGetIdleRunTimeCounter();
+		xReturn = ulTaskGetIdleRunTimeCounter();
 		vPortResetPrivilege( xRunningPrivileged );
 		return xReturn;
 	}
@@ -449,6 +449,17 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 		return uxReturn;
 	}
 #endif
+/*-----------------------------------------------------------*/
+
+BaseType_t MPU_xTaskCatchUpTicks( TickType_t xTicksToCatchUp ) /* FREERTOS_SYSTEM_CALL */
+{
+BaseType_t xReturn;
+BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+
+	xReturn = xTaskCatchUpTicks( xTicksToCatchUp );
+	vPortResetPrivilege( xRunningPrivileged );
+	return xReturn;
+}
 /*-----------------------------------------------------------*/
 
 #if ( INCLUDE_uxTaskGetStackHighWaterMark == 1 )

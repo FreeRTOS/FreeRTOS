@@ -135,7 +135,7 @@ void vStartNTPTask( uint16_t usTaskStackSize, UBaseType_t uxTaskPriority )
 	else
 	{
 		xUDPSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-		if( xUDPSocket != NULL )
+		if( xUDPSocket != FREERTOS_INVALID_SOCKET )
 		{
 		struct freertos_sockaddr xAddress;
 		#if( ipconfigUSE_CALLBACKS != 0 )

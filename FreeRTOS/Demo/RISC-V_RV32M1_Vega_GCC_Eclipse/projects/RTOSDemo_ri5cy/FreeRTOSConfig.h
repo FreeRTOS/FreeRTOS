@@ -86,6 +86,9 @@
  *----------------------------------------------------------*/
 
 #define configCLINT_BASE_ADDRESS		0 /* There is no CLINT so the base address must be set to 0. */
+
+
+
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1

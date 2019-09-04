@@ -63,6 +63,8 @@
 #define configUSE_QUEUE_SETS					1
 #define configUSE_TASK_NOTIFICATIONS			1
 #define configSUPPORT_STATIC_ALLOCATION			1
+#define configINITIAL_TICK_COUNT				( ( TickType_t ) 0 ) /* For test. */
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN 1 /* As there are a lot of tasks running. */
 
 /* Software timer related configuration options. */
 #define configUSE_TIMERS						1

@@ -296,7 +296,7 @@ static void prvStartFirstTask( void )
 }
 /*-----------------------------------------------------------*/
 
-#pragma interrupt ( prvTickISR( vect = configTICK_VECTOR, enable ) )
+#pragma interrupt ( prvTickISR( vect = _VECT( configTICK_VECTOR ), enable ) )
 void prvTickISR( void )
 {
 	/* Increment the tick, and perform any processing the new tick value

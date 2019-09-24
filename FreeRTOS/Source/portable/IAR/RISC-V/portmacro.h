@@ -79,7 +79,7 @@ not need to be guarded with a critical section. */
 	#error This is the RV32 port that has not yet been adapted for 64.
 	#define portBYTE_ALIGNMENT			16
 #else
-	#define portBYTE_ALIGNMENT 8
+	#define portBYTE_ALIGNMENT 			16
 #endif
 /*-----------------------------------------------------------*/
 

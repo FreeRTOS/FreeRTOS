@@ -1284,7 +1284,7 @@ uint32_t ulVarToSend, ulValReceived;
 	// name of the yield function required is port specific.
 	if( xHigherPriorityTaskWokenByPost )
 	{
-		taskYIELD_YIELD_FROM_ISR();
+		portYIELD_FROM_ISR();
 	}
  }
  </pre>

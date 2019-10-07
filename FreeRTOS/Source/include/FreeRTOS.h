@@ -242,10 +242,10 @@ extern "C" {
 #endif
 
 /* configPRECONDITION should be resolve to configASSERT.
-   The CBMC proofs need a way to track assumptions and assertions.
-   A configPRECONDITION statement should express an implicit invariant or assumption made.
-   A configASSERT statement should express an invariant that must hold explicit before calling
-   the code. */
+The CBMC proofs need a way to track assumptions and assertions.
+A configPRECONDITION statement should express an implicit invariant or
+assumption made.  A configASSERT statement should express an invariant that must
+hold explicit before calling the code. */
 #ifndef configPRECONDITION
 	#define configPRECONDITION( X ) configASSERT(X)
 	#define configPRECONDITION_DEFINED 0

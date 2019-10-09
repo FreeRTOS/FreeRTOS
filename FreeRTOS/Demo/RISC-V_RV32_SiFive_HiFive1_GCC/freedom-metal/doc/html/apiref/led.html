@@ -1,0 +1,224 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>LEDs &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Locks" href="lock.html" />
+    <link rel="prev" title="ITIM" href="itim.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="leds">
+<h1>LEDs<a class="headerlink" href="#leds" title="Permalink to this headline">¶</a></h1>
+<p>API for manipulating LEDs. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv313metal_led_getPc">
+<span id="_CPPv213metal_led_getPc"></span><span id="metal_led_get__cP"></span><span class="target" id="led_8h_1a84ec9ffca3148bebf6436bc35fcc9b27"></span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_led" title="metal_led">metal_led</a> *<code class="descname">metal_led_get</code><span class="sig-paren">(</span>char *<em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv313metal_led_getPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get a handle for an LED. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A handle to the LED, or NULL if none is found for the requested label </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">label</span></code>: The DeviceTree label for the desired LED </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv317metal_led_get_rgbPcPc">
+<span id="_CPPv217metal_led_get_rgbPcPc"></span><span id="metal_led_get_rgb__cP.cP"></span><span class="target" id="led_8h_1a56adcb4db1ca4bce31b564609109e083"></span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_led" title="metal_led">metal_led</a> *<code class="descname">metal_led_get_rgb</code><span class="sig-paren">(</span>char *<em>label</em>, char *<em>color</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv317metal_led_get_rgbPcPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get a handle for a channel of an RGB LED. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A handle to the LED, or NULL if none is found for the requested label and color </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">label</span></code>: The DeviceTree label for the desired LED </li>
+<li><code class="docutils literal notranslate"><span class="pre">color</span></code>: The color for the LED in the DeviceTree </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv316metal_led_enableP9metal_led">
+<span id="_CPPv216metal_led_enableP9metal_led"></span><span id="metal_led_enable__metal_ledP"></span><span class="target" id="led_8h_1a80ad9e2858859ceef3924225fa38b64d"></span>void <code class="descname">metal_led_enable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_led" title="metal_led">metal_led</a> *<em>led</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv316metal_led_enableP9metal_led" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable an LED. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">led</span></code>: The handle for the LED </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv312metal_led_onP9metal_led">
+<span id="_CPPv212metal_led_onP9metal_led"></span><span id="metal_led_on__metal_ledP"></span><span class="target" id="led_8h_1ac03219b31d86e12ede1fa52ba203c2e4"></span>void <code class="descname">metal_led_on</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_led" title="metal_led">metal_led</a> *<em>led</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv312metal_led_onP9metal_led" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Turn an LED on. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">led</span></code>: The handle for the LED </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv313metal_led_offP9metal_led">
+<span id="_CPPv213metal_led_offP9metal_led"></span><span id="metal_led_off__metal_ledP"></span><span class="target" id="led_8h_1a259212ddf02bdc1f36e09ef9b35ccb54"></span>void <code class="descname">metal_led_off</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_led" title="metal_led">metal_led</a> *<em>led</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv313metal_led_offP9metal_led" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Turn an LED off. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">led</span></code>: The handle for the LED </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv316metal_led_toggleP9metal_led">
+<span id="_CPPv216metal_led_toggleP9metal_led"></span><span id="metal_led_toggle__metal_ledP"></span><span class="target" id="led_8h_1a812579af2379fc1c3b5e0285e76c4f5c"></span>void <code class="descname">metal_led_toggle</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_led" title="metal_led">metal_led</a> *<em>led</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv316metal_led_toggleP9metal_led" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Toggle the on/off state of an LED. </p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">led</span></code>: The handle for the LED </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv39metal_led">
+<span id="_CPPv29metal_led"></span><span id="metal_led"></span><span class="target" id="structmetal__led"></span><em class="property">struct </em><code class="descname">metal_led</code><a class="headerlink" href="#_CPPv39metal_led" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;led.h&gt;</em><p>A handle for an LED. </p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Caches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clock.html">Clocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu.html">CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpio.html">GPIO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interrupt.html">Interrupts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">ITIM</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">LEDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lock.html">Locks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory Enumeration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmp.html">PMPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shutdown.html">Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spi.html">SPIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switch.html">Switches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timer.html">Timer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">TTY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uart.html">UARTs</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Reference</a><ul>
+      <li>Previous: <a href="itim.html" title="previous chapter">ITIM</a></li>
+      <li>Next: <a href="lock.html" title="next chapter">Locks</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/apiref/led.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

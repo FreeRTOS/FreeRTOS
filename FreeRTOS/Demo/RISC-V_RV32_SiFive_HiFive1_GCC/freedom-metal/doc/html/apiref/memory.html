@@ -1,0 +1,216 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Memory Enumeration &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PMPs" href="pmp.html" />
+    <link rel="prev" title="Locks" href="lock.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="memory-enumeration">
+<h1>Memory Enumeration<a class="headerlink" href="#memory-enumeration" title="Permalink to this headline">¶</a></h1>
+<p>API for enumerating memory blocks. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv329metal_get_memory_from_addressK9uintptr_t">
+<span id="_CPPv229metal_get_memory_from_addressK9uintptr_t"></span><span id="metal_get_memory_from_address__uintptr_tC"></span><span class="target" id="memory_8h_1ad491f569f50de727a0093a835c56df35"></span><em class="property">struct</em> <a class="reference internal" href="#_CPPv312metal_memory" title="metal_memory">metal_memory</a> *<code class="descname">metal_get_memory_from_address</code><span class="sig-paren">(</span><em class="property">const</em> uintptr_t <em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv329metal_get_memory_from_addressK9uintptr_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the memory block which services the given address. </p>
+<p>Given a physical memory address, get a handle for the memory block to which that address is mapped.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The memory block handle, or NULL if the address is not mapped to a memory block </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The address to query </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv329metal_memory_get_base_addressPK12metal_memory">
+<span id="_CPPv229metal_memory_get_base_addressPK12metal_memory"></span><span id="metal_memory_get_base_address__metal_memoryCP"></span><span class="target" id="memory_8h_1a7843783cc7e8077104bdc299d4b430a2"></span>uintptr_t <code class="descname">metal_memory_get_base_address</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">struct</em> <a class="reference internal" href="#_CPPv312metal_memory" title="metal_memory">metal_memory</a> *<em>memory</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv329metal_memory_get_base_addressPK12metal_memory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the base address for a memory block. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The base address of the memory block </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">memory</span></code>: The handle for the memory block </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv321metal_memory_get_sizePK12metal_memory">
+<span id="_CPPv221metal_memory_get_sizePK12metal_memory"></span><span id="metal_memory_get_size__metal_memoryCP"></span><span class="target" id="memory_8h_1a737f5bd1821cd23e76a97c36b46e05bc"></span>size_t <code class="descname">metal_memory_get_size</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">struct</em> <a class="reference internal" href="#_CPPv312metal_memory" title="metal_memory">metal_memory</a> *<em>memory</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv321metal_memory_get_sizePK12metal_memory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the size of a memory block. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The size of the memory block </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">memory</span></code>: The handle for the memory block </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv329metal_memory_supports_atomicsPK12metal_memory">
+<span id="_CPPv229metal_memory_supports_atomicsPK12metal_memory"></span><span id="metal_memory_supports_atomics__metal_memoryCP"></span><span class="target" id="memory_8h_1a021b73d7b895d82d7028e71a8d35a762"></span>int <code class="descname">metal_memory_supports_atomics</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">struct</em> <a class="reference internal" href="#_CPPv312metal_memory" title="metal_memory">metal_memory</a> *<em>memory</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv329metal_memory_supports_atomicsPK12metal_memory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Query if a memory block supports atomic operations. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>nonzero if the memory block supports atomic operations </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">memory</span></code>: The handle for the memory block </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_memory_is_cachablePK12metal_memory">
+<span id="_CPPv224metal_memory_is_cachablePK12metal_memory"></span><span id="metal_memory_is_cachable__metal_memoryCP"></span><span class="target" id="memory_8h_1a115334c01896b5e4594ce31a84c882c0"></span>int <code class="descname">metal_memory_is_cachable</code><span class="sig-paren">(</span><em class="property">const</em> <em class="property">struct</em> <a class="reference internal" href="#_CPPv312metal_memory" title="metal_memory">metal_memory</a> *<em>memory</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_memory_is_cachablePK12metal_memory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Query if a memory block is cacheable. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>nonzero if the memory block is cachable </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">memory</span></code>: The handle for the memory block </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv312metal_memory">
+<span id="_CPPv212metal_memory"></span><span id="metal_memory"></span><span class="target" id="structmetal__memory"></span><em class="property">struct </em><code class="descname">metal_memory</code><a class="headerlink" href="#_CPPv312metal_memory" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;memory.h&gt;</em><p>A handle for a memory block. </p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Caches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clock.html">Clocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu.html">CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpio.html">GPIO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interrupt.html">Interrupts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">ITIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="led.html">LEDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lock.html">Locks</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Memory Enumeration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmp.html">PMPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shutdown.html">Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spi.html">SPIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switch.html">Switches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timer.html">Timer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">TTY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uart.html">UARTs</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Reference</a><ul>
+      <li>Previous: <a href="lock.html" title="previous chapter">Locks</a></li>
+      <li>Next: <a href="pmp.html" title="next chapter">PMPs</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/apiref/memory.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,481 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>PMPs &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Shutdown" href="shutdown.html" />
+    <link rel="prev" title="Memory Enumeration" href="memory.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pmps">
+<h1>PMPs<a class="headerlink" href="#pmps" title="Permalink to this headline">¶</a></h1>
+<p>API for Configuring Physical Memory Protection on RISC-V Cores. </p>
+<p>The Physical Memory Protection (PMP) interface on RISC-V cores is a form of memory protection unit which allows for a finite number of physical memory regions to be configured with certain access permissions.</p>
+<p>Additional information about the use and configuration rules for PMPs can be found by reading the RISC-V Privileged Architecture Specification. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Enums</p>
+<dl class="type">
+<dt id="_CPPv322metal_pmp_address_mode">
+<span id="_CPPv222metal_pmp_address_mode"></span><span id="metal_pmp_address_mode"></span><span class="target" id="pmp_8h_1a5a253e3e28b6e55a3340924161611437"></span><em class="property">enum </em><code class="descname">metal_pmp_address_mode</code><a class="headerlink" href="#_CPPv322metal_pmp_address_mode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set of available PMP addressing modes. </p>
+<p><em>Values:</em></p>
+<dl class="enumerator">
+<dt id="_CPPv313METAL_PMP_OFF">
+<span id="_CPPv213METAL_PMP_OFF"></span><span class="target" id="pmp_8h_1a5a253e3e28b6e55a3340924161611437ae577426e9497040f7937944ae5ae6a40"></span><code class="descname">METAL_PMP_OFF</code> = 0<a class="headerlink" href="#_CPPv313METAL_PMP_OFF" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Disable the PMP region. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv313METAL_PMP_TOR">
+<span id="_CPPv213METAL_PMP_TOR"></span><span class="target" id="pmp_8h_1a5a253e3e28b6e55a3340924161611437aabb496bcbbde420b39e6ff7c39b3280a"></span><code class="descname">METAL_PMP_TOR</code> = 1<a class="headerlink" href="#_CPPv313METAL_PMP_TOR" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use Top-of-Range mode. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv313METAL_PMP_NA4">
+<span id="_CPPv213METAL_PMP_NA4"></span><span class="target" id="pmp_8h_1a5a253e3e28b6e55a3340924161611437a6a5c13be0ca5ad62ec720aed29bca8fb"></span><code class="descname">METAL_PMP_NA4</code> = 2<a class="headerlink" href="#_CPPv313METAL_PMP_NA4" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use naturally-aligned 4-byte region mode. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv315METAL_PMP_NAPOT">
+<span id="_CPPv215METAL_PMP_NAPOT"></span><span class="target" id="pmp_8h_1a5a253e3e28b6e55a3340924161611437ab0439f955da13acbabbc2d370e6b5d21"></span><code class="descname">METAL_PMP_NAPOT</code> = 3<a class="headerlink" href="#_CPPv315METAL_PMP_NAPOT" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Use naturally-aligned power-of-two mode. </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv320metal_pmp_get_devicev">
+<span id="_CPPv220metal_pmp_get_devicev"></span><span id="metal_pmp_get_device__void"></span><span class="target" id="pmp_8h_1a285362cb084160ce14af26d75f9116f5"></span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<code class="descname">metal_pmp_get_device</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv320metal_pmp_get_devicev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the PMP device handle. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv314metal_pmp_initP9metal_pmp">
+<span id="_CPPv214metal_pmp_initP9metal_pmp"></span><span id="metal_pmp_init__metal_pmpP"></span><span class="target" id="pmp_8h_1a27f187e13bd7100571a7a404bd0a0f06"></span>void <code class="descname">metal_pmp_init</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv314metal_pmp_initP9metal_pmp" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize the PMP. </p>
+<p><p>The PMP initialization routine is optional and may be called as many times as is desired. The effect of the initialization routine is to attempt to set all regions to unlocked and disabled, as well as to clear the X, W, and R bits. Only the pmp configuration of the hart which executes the routine will be affected.</p>
+<dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle to be initialized</li>
+</ul>
+</dd>
+</dl>
+</p>
+<p>If any regions are fused to preset values by the implementation or locked, those PMP regions will silently remain uninitialized. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv320metal_pmp_set_regionP9metal_pmpj16metal_pmp_config6size_t">
+<span id="_CPPv220metal_pmp_set_regionP9metal_pmpj16metal_pmp_config6size_t"></span><span id="metal_pmp_set_region__metal_pmpP.unsigned-i.metal_pmp_config.s"></span><span class="target" id="pmp_8h_1acdbdbc7cc2727d4ae10205617aee3013"></span>int <code class="descname">metal_pmp_set_region</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, <em class="property">struct</em> <a class="reference internal" href="#_CPPv316metal_pmp_config" title="metal_pmp_config">metal_pmp_config</a> <em>config</em>, size_t <em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv320metal_pmp_set_regionP9metal_pmpj16metal_pmp_config6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Configure a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 upon success </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to configure </li>
+<li><code class="docutils literal notranslate"><span class="pre">config</span></code>: The desired configuration of the PMP region </li>
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The desired address of the PMP region </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv320metal_pmp_get_regionP9metal_pmpjP16metal_pmp_configP6size_t">
+<span id="_CPPv220metal_pmp_get_regionP9metal_pmpjP16metal_pmp_configP6size_t"></span><span id="metal_pmp_get_region__metal_pmpP.unsigned-i.metal_pmp_configP.sP"></span><span class="target" id="pmp_8h_1a638771730de250707e03355a20eba302"></span>int <code class="descname">metal_pmp_get_region</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, <em class="property">struct</em> <a class="reference internal" href="#_CPPv316metal_pmp_config" title="metal_pmp_config">metal_pmp_config</a> *<em>config</em>, size_t *<em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv320metal_pmp_get_regionP9metal_pmpjP16metal_pmp_configP6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the configuration for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the region is read successfully </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to read </li>
+<li><code class="docutils literal notranslate"><span class="pre">config</span></code>: Variable to store the PMP region configuration </li>
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: Variable to store the PMP region address </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv314metal_pmp_lockP9metal_pmpj">
+<span id="_CPPv214metal_pmp_lockP9metal_pmpj"></span><span id="metal_pmp_lock__metal_pmpP.unsigned-i"></span><span class="target" id="pmp_8h_1a6a3fa4e30f321f322e5327c5626298a6"></span>int <code class="descname">metal_pmp_lock</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv314metal_pmp_lockP9metal_pmpj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lock a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the region is successfully locked </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to lock </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv321metal_pmp_set_addressP9metal_pmpj6size_t">
+<span id="_CPPv221metal_pmp_set_addressP9metal_pmpj6size_t"></span><span id="metal_pmp_set_address__metal_pmpP.unsigned-i.s"></span><span class="target" id="pmp_8h_1a813aa0c76c58567d72d742ae26413d43"></span>int <code class="descname">metal_pmp_set_address</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, size_t <em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv321metal_pmp_set_addressP9metal_pmpj6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the address for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the address is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to set </li>
+<li><code class="docutils literal notranslate"><span class="pre">address</span></code>: The desired address of the PMP region </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv321metal_pmp_get_addressP9metal_pmpj">
+<span id="_CPPv221metal_pmp_get_addressP9metal_pmpj"></span><span id="metal_pmp_get_address__metal_pmpP.unsigned-i"></span><span class="target" id="pmp_8h_1acd173df5015b18af2a24c18db8b4e29d"></span>size_t <code class="descname">metal_pmp_get_address</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv321metal_pmp_get_addressP9metal_pmpj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the address of a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The address of the PMP region, or 0 if the region could not be read </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to read </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv326metal_pmp_set_address_modeP9metal_pmpj22metal_pmp_address_mode">
+<span id="_CPPv226metal_pmp_set_address_modeP9metal_pmpj22metal_pmp_address_mode"></span><span id="metal_pmp_set_address_mode__metal_pmpP.unsigned-i.metal_pmp_address_mode"></span><span class="target" id="pmp_8h_1af437f62af730b1ced6b024320224b44f"></span>int <code class="descname">metal_pmp_set_address_mode</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, <em class="property">enum</em> <a class="reference internal" href="#_CPPv322metal_pmp_address_mode" title="metal_pmp_address_mode">metal_pmp_address_mode</a> <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv326metal_pmp_set_address_modeP9metal_pmpj22metal_pmp_address_mode" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the addressing mode of a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the addressing mode is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to set </li>
+<li><code class="docutils literal notranslate"><span class="pre">mode</span></code>: The PMP addressing mode to set </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv326metal_pmp_get_address_modeP9metal_pmpj">
+<span id="_CPPv226metal_pmp_get_address_modeP9metal_pmpj"></span><span id="metal_pmp_get_address_mode__metal_pmpP.unsigned-i"></span><span class="target" id="pmp_8h_1ae8bf626c403ce2f5d9647e900becc479"></span><em class="property">enum</em> <a class="reference internal" href="#_CPPv322metal_pmp_address_mode" title="metal_pmp_address_mode">metal_pmp_address_mode</a> <code class="descname">metal_pmp_get_address_mode</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv326metal_pmp_get_address_modeP9metal_pmpj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the addressing mode of a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The address mode of the PMP region </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to read </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_pmp_set_executableP9metal_pmpji">
+<span id="_CPPv224metal_pmp_set_executableP9metal_pmpji"></span><span id="metal_pmp_set_executable__metal_pmpP.unsigned-i.i"></span><span class="target" id="pmp_8h_1a7ca9b72029d7ece4c1f0411fa30ce200"></span>int <code class="descname">metal_pmp_set_executable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, int <em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_pmp_set_executableP9metal_pmpji" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the executable bit for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the executable bit is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to set </li>
+<li><code class="docutils literal notranslate"><span class="pre">X</span></code>: The desired value of the executable bit </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_pmp_get_executableP9metal_pmpj">
+<span id="_CPPv224metal_pmp_get_executableP9metal_pmpj"></span><span id="metal_pmp_get_executable__metal_pmpP.unsigned-i"></span><span class="target" id="pmp_8h_1a25cca706020249225e12244146ae561b"></span>int <code class="descname">metal_pmp_get_executable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_pmp_get_executableP9metal_pmpj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the executable bit for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the value of the executable bit </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to read </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv323metal_pmp_set_writeableP9metal_pmpji">
+<span id="_CPPv223metal_pmp_set_writeableP9metal_pmpji"></span><span id="metal_pmp_set_writeable__metal_pmpP.unsigned-i.i"></span><span class="target" id="pmp_8h_1a64007037321db518728f354a3517ef30"></span>int <code class="descname">metal_pmp_set_writeable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, int <em>W</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv323metal_pmp_set_writeableP9metal_pmpji" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the writable bit for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the writable bit is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to set </li>
+<li><code class="docutils literal notranslate"><span class="pre">W</span></code>: The desired value of the writable bit </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv323metal_pmp_get_writeableP9metal_pmpj">
+<span id="_CPPv223metal_pmp_get_writeableP9metal_pmpj"></span><span id="metal_pmp_get_writeable__metal_pmpP.unsigned-i"></span><span class="target" id="pmp_8h_1a53515b1abf4a9738170747b17d9415e1"></span>int <code class="descname">metal_pmp_get_writeable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv323metal_pmp_get_writeableP9metal_pmpj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the writable bit for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the value of the writable bit </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to read </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv322metal_pmp_set_readableP9metal_pmpji">
+<span id="_CPPv222metal_pmp_set_readableP9metal_pmpji"></span><span id="metal_pmp_set_readable__metal_pmpP.unsigned-i.i"></span><span class="target" id="pmp_8h_1a6bd197dc75911ef545ee9ba434a147fc"></span>int <code class="descname">metal_pmp_set_readable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em>, int <em>R</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv322metal_pmp_set_readableP9metal_pmpji" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the readable bit for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the readable bit is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to set </li>
+<li><code class="docutils literal notranslate"><span class="pre">R</span></code>: The desired value of the readable bit </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv322metal_pmp_get_readableP9metal_pmpj">
+<span id="_CPPv222metal_pmp_get_readableP9metal_pmpj"></span><span id="metal_pmp_get_readable__metal_pmpP.unsigned-i"></span><span class="target" id="pmp_8h_1a7962720fc55049422ae70a58c3bf30a1"></span>int <code class="descname">metal_pmp_get_readable</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv39metal_pmp" title="metal_pmp">metal_pmp</a> *<em>pmp</em>, unsigned int <em>region</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv322metal_pmp_get_readableP9metal_pmpj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the readable bit for a PMP region. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the value of the readable bit </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pmp</span></code>: The PMP device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">region</span></code>: The PMP region to read </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv316metal_pmp_config">
+<span id="_CPPv216metal_pmp_config"></span><span id="metal_pmp_config"></span><span class="target" id="structmetal__pmp__config"></span><em class="property">struct </em><code class="descname">metal_pmp_config</code><a class="headerlink" href="#_CPPv316metal_pmp_config" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;pmp.h&gt;</em><p>Configuration for a PMP region. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv316metal_pmp_locked">
+<span id="_CPPv216metal_pmp_locked"></span><span id="metal_pmp_locked"></span><span class="target" id="structmetal__pmp__config_1ae58135921201a45e356316894ea415e1"></span><em class="property">enum </em><code class="descname">metal_pmp_locked</code><a class="headerlink" href="#_CPPv316metal_pmp_locked" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets whether the PMP region is locked. </p>
+<p><em>Values:</em></p>
+<dl class="enumerator">
+<dt id="_CPPv318METAL_PMP_UNLOCKED">
+<span id="_CPPv218METAL_PMP_UNLOCKED"></span><span class="target" id="structmetal__pmp__config_1ae58135921201a45e356316894ea415e1a47f6f950ceb2afeb7e712f6ea7c74167"></span><code class="descname">METAL_PMP_UNLOCKED</code> = 0<a class="headerlink" href="#_CPPv318METAL_PMP_UNLOCKED" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv316METAL_PMP_LOCKED">
+<span id="_CPPv216METAL_PMP_LOCKED"></span><span class="target" id="structmetal__pmp__config_1ae58135921201a45e356316894ea415e1ab5f8338bd1b8d19ae7a46491cf90c47d"></span><code class="descname">METAL_PMP_LOCKED</code> = 1<a class="headerlink" href="#_CPPv316METAL_PMP_LOCKED" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv3N16metal_pmp_config1RE">
+<span id="_CPPv2N16metal_pmp_config1RE"></span><span id="metal_pmp_config::R__i"></span><span class="target" id="structmetal__pmp__config_1ae7a18f7b2449ed6502e7b2ac6418d0b9"></span>int <code class="descname">R</code><a class="headerlink" href="#_CPPv3N16metal_pmp_config1RE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets whether reads to the PMP region succeed. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv3N16metal_pmp_config1WE">
+<span id="_CPPv2N16metal_pmp_config1WE"></span><span id="metal_pmp_config::W__i"></span><span class="target" id="structmetal__pmp__config_1ad625b6d3fccc337da37e79bb61b6505b"></span>int <code class="descname">W</code><a class="headerlink" href="#_CPPv3N16metal_pmp_config1WE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets whether writes to the PMP region succeed. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv3N16metal_pmp_config1XE">
+<span id="_CPPv2N16metal_pmp_config1XE"></span><span id="metal_pmp_config::X__i"></span><span class="target" id="structmetal__pmp__config_1adff0ca4e2efb45e8734ab747bb6e44b3"></span>int <code class="descname">X</code><a class="headerlink" href="#_CPPv3N16metal_pmp_config1XE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets whether the PMP region is executable. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv3N16metal_pmp_config1AE">
+<span id="_CPPv2N16metal_pmp_config1AE"></span><span id="metal_pmp_config::A__metal_pmp_address_mode"></span><span class="target" id="structmetal__pmp__config_1a2c3377be13c911aa3a245213818faed5"></span><a class="reference internal" href="#_CPPv322metal_pmp_address_mode" title="metal_pmp_address_mode">metal_pmp_address_mode</a> <code class="descname">A</code><a class="headerlink" href="#_CPPv3N16metal_pmp_config1AE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the addressing mode of the PMP region. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv3N16metal_pmp_config1LE">
+<span id="_CPPv2N16metal_pmp_config1LE"></span><span id="metal_pmp_config::L__metal_pmp_config::metal_pmp_locked"></span><span class="target" id="structmetal__pmp__config_1a246339508928c4362075bb549f00be89"></span><a class="reference internal" href="#_CPPv316metal_pmp_config" title="metal_pmp_config">metal_pmp_config</a>::<a class="reference internal" href="../devguide/pmps.html#_CPPv3N16metal_pmp_config16metal_pmp_lockedE" title="metal_pmp_config::metal_pmp_locked">metal_pmp_locked</a> <code class="descname">L</code><a class="headerlink" href="#_CPPv3N16metal_pmp_config1LE" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="_CPPv39metal_pmp">
+<span id="_CPPv29metal_pmp"></span><span id="metal_pmp"></span><span class="target" id="structmetal__pmp"></span><em class="property">struct </em><code class="descname">metal_pmp</code><a class="headerlink" href="#_CPPv39metal_pmp" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;pmp.h&gt;</em><p>A handle for the PMP device. </p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Caches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clock.html">Clocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu.html">CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpio.html">GPIO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interrupt.html">Interrupts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">ITIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="led.html">LEDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lock.html">Locks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory Enumeration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PMPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shutdown.html">Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spi.html">SPIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switch.html">Switches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timer.html">Timer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">TTY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uart.html">UARTs</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Reference</a><ul>
+      <li>Previous: <a href="memory.html" title="previous chapter">Memory Enumeration</a></li>
+      <li>Next: <a href="shutdown.html" title="next chapter">Shutdown</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/apiref/pmp.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

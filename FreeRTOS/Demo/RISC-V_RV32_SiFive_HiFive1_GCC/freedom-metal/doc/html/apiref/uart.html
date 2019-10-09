@@ -1,0 +1,249 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>UARTs &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="TTY" href="tty.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="uarts">
+<h1>UARTs<a class="headerlink" href="#uarts" title="Permalink to this headline">¶</a></h1>
+<p>API for UART serial ports. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv315metal_uart_initP10metal_uarti">
+<span id="_CPPv215metal_uart_initP10metal_uarti"></span><span id="metal_uart_init__metal_uartP.i"></span><span class="target" id="uart_8h_1adbf9256d85888e26836baba4a51fc1e4"></span>void <code class="descname">metal_uart_init</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em>, int <em>baud_rate</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv315metal_uart_initP10metal_uarti" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Initialize UART device. </p>
+<p>Initialize the UART device described by the UART handle. This function must be called before any other method on the UART can be invoked. It is invalid to initialize a UART more than once.</p>
+<p><dl class="docutils">
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">baud_rate</span></code>: the baud rate to set the UART to </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv315metal_uart_putcP10metal_uarth">
+<span id="_CPPv215metal_uart_putcP10metal_uarth"></span><span id="metal_uart_putc__metal_uartP.unsigned-c"></span><span class="target" id="uart_8h_1aed0d369d1bccd7703496b85e4a660e9c"></span>int <code class="descname">metal_uart_putc</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em>, unsigned char <em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv315metal_uart_putcP10metal_uarth" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Output a character over the UART. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 upon success </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">c</span></code>: The character to send over the UART </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv315metal_uart_getcP10metal_uartPh">
+<span id="_CPPv215metal_uart_getcP10metal_uartPh"></span><span id="metal_uart_getc__metal_uartP.unsigned-cP"></span><span class="target" id="uart_8h_1a8bb43c693eaef1b3a50f7f90da319723"></span>int <code class="descname">metal_uart_getc</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em>, unsigned char *<em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv315metal_uart_getcP10metal_uartPh" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read a character sent over the UART. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 upon success </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">c</span></code>: The varible to hold the read character </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_uart_get_baud_rateP10metal_uart">
+<span id="_CPPv224metal_uart_get_baud_rateP10metal_uart"></span><span id="metal_uart_get_baud_rate__metal_uartP"></span><span class="target" id="uart_8h_1a9ad40970f7ddee96d8742262108bace7"></span>int <code class="descname">metal_uart_get_baud_rate</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_uart_get_baud_rateP10metal_uart" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the baud rate of the UART peripheral. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The current baud rate of the UART </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_uart_set_baud_rateP10metal_uarti">
+<span id="_CPPv224metal_uart_set_baud_rateP10metal_uarti"></span><span id="metal_uart_set_baud_rate__metal_uartP.i"></span><span class="target" id="uart_8h_1a1dfd8db9befd5a70a1575a78c7b2be9b"></span>int <code class="descname">metal_uart_set_baud_rate</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em>, int <em>baud_rate</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_uart_set_baud_rateP10metal_uarti" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the baud rate of the UART peripheral. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>the new baud rate of the UART </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+<li><code class="docutils literal notranslate"><span class="pre">baud_rate</span></code>: The baud rate to configure </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv331metal_uart_interrupt_controllerP10metal_uart">
+<span id="_CPPv231metal_uart_interrupt_controllerP10metal_uart"></span><span id="metal_uart_interrupt_controller__metal_uartP"></span><span class="target" id="uart_8h_1ab18c5494323eafd1fb571f4f0a870d7f"></span><em class="property">struct</em> <a class="reference internal" href="interrupt.html#_CPPv315metal_interrupt" title="metal_interrupt">metal_interrupt</a> *<code class="descname">metal_uart_interrupt_controller</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv331metal_uart_interrupt_controllerP10metal_uart" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the interrupt controller of the UART peripheral. </p>
+<p>Get the interrupt controller for the UART peripheral. The interrupt controller must be initialized before any interrupts can be registered or enabled with it.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The handle for the UART interrupt controller </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv327metal_uart_get_interrupt_idP10metal_uart">
+<span id="_CPPv227metal_uart_get_interrupt_idP10metal_uart"></span><span id="metal_uart_get_interrupt_id__metal_uartP"></span><span class="target" id="uart_8h_1a785bd006fa3262d19cb54fc2e88a6a57"></span>int <code class="descname">metal_uart_get_interrupt_id</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_uart" title="metal_uart">metal_uart</a> *<em>uart</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv327metal_uart_get_interrupt_idP10metal_uart" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the interrupt ID of the UART controller. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The UART interrupt id </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">uart</span></code>: The UART device handle </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv310metal_uart">
+<span id="_CPPv210metal_uart"></span><span id="metal_uart"></span><span class="target" id="structmetal__uart"></span><em class="property">struct </em><code class="descname">metal_uart</code><a class="headerlink" href="#_CPPv310metal_uart" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;uart.h&gt;</em><p>Handle for a UART serial device. </p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Caches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clock.html">Clocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu.html">CPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpio.html">GPIO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interrupt.html">Interrupts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">ITIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="led.html">LEDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lock.html">Locks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory Enumeration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmp.html">PMPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shutdown.html">Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spi.html">SPIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switch.html">Switches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timer.html">Timer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">TTY</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">UARTs</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Reference</a><ul>
+      <li>Previous: <a href="tty.html" title="previous chapter">TTY</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/apiref/uart.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

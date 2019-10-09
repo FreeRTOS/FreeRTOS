@@ -1,0 +1,272 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>GPIO &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Interrupts" href="interrupt.html" />
+    <link rel="prev" title="CPU" href="cpu.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="gpio">
+<h1>GPIO<a class="headerlink" href="#gpio" title="Permalink to this headline">¶</a></h1>
+<p>API for manipulating general-purpose input/output. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv321metal_gpio_get_devicei">
+<span id="_CPPv221metal_gpio_get_devicei"></span><span id="metal_gpio_get_device__i"></span><span class="target" id="gpio_8h_1aeab9188ec903fe358808eb9730074b9e"></span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<code class="descname">metal_gpio_get_device</code><span class="sig-paren">(</span>int <em>device_num</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv321metal_gpio_get_devicei" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get a GPIO device handle. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The GPIO device handle, or NULL if there is no device at that index </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">device_num</span></code>: The GPIO device index </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_gpio_disable_inputP10metal_gpioi">
+<span id="_CPPv224metal_gpio_disable_inputP10metal_gpioi"></span><span id="metal_gpio_disable_input__metal_gpioP.i"></span><span class="target" id="gpio_8h_1a319ab9fa1996f01d50946589fd5143fc"></span>int <code class="descname">metal_gpio_disable_input</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_gpio_disable_inputP10metal_gpioi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Disable input on a pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the input is successfully disabled </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The pin number indexed from 0 </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_gpio_enable_outputP10metal_gpioi">
+<span id="_CPPv224metal_gpio_enable_outputP10metal_gpioi"></span><span id="metal_gpio_enable_output__metal_gpioP.i"></span><span class="target" id="gpio_8h_1a66f67e5425645d42a4c2bc92ecdff46e"></span>int <code class="descname">metal_gpio_enable_output</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_gpio_enable_outputP10metal_gpioi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enable output on a pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the output is successfully enabled </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The pin number indexed from 0 </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv318metal_gpio_set_pinP10metal_gpioii">
+<span id="_CPPv218metal_gpio_set_pinP10metal_gpioii"></span><span id="metal_gpio_set_pin__metal_gpioP.i.i"></span><span class="target" id="gpio_8h_1aa6c411fb729c3508f6838f34f566ff99"></span>int <code class="descname">metal_gpio_set_pin</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em>, int <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv318metal_gpio_set_pinP10metal_gpioii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the output value of a GPIO pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the output is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The pin number indexed from 0 </li>
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The value to set the pin to </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv318metal_gpio_get_pinP10metal_gpioi">
+<span id="_CPPv218metal_gpio_get_pinP10metal_gpioi"></span><span id="metal_gpio_get_pin__metal_gpioP.i"></span><span class="target" id="gpio_8h_1a9d10fba8c4db0f3b43190cf4308e42e4"></span>int <code class="descname">metal_gpio_get_pin</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv318metal_gpio_get_pinP10metal_gpioi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the value of the GPIO pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The value of the GPIO pin </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The pin number indexed from 0 </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv320metal_gpio_clear_pinP10metal_gpioi">
+<span id="_CPPv220metal_gpio_clear_pinP10metal_gpioi"></span><span id="metal_gpio_clear_pin__metal_gpioP.i"></span><span class="target" id="gpio_8h_1a96c95efe0291a1e7b1d518041bb734f6"></span>int <code class="descname">metal_gpio_clear_pin</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv320metal_gpio_clear_pinP10metal_gpioi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the value of the GPIO pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the pin is successfully cleared </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The pin number indexed from 0 </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv321metal_gpio_toggle_pinP10metal_gpioi">
+<span id="_CPPv221metal_gpio_toggle_pinP10metal_gpioi"></span><span id="metal_gpio_toggle_pin__metal_gpioP.i"></span><span class="target" id="gpio_8h_1a99eec4021f85f7876aa8cacdca3f4713"></span>int <code class="descname">metal_gpio_toggle_pin</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv321metal_gpio_toggle_pinP10metal_gpioi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Toggles the value of the GPIO pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the pin is successfully toggled </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The pin number indexed from 0 </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv324metal_gpio_enable_pinmuxP10metal_gpioii">
+<span id="_CPPv224metal_gpio_enable_pinmuxP10metal_gpioii"></span><span id="metal_gpio_enable_pinmux__metal_gpioP.i.i"></span><span class="target" id="gpio_8h_1a15aac32c5cf9d1aac02e0ae56b42bfe3"></span>int <code class="descname">metal_gpio_enable_pinmux</code><span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="#_CPPv310metal_gpio" title="metal_gpio">metal_gpio</a> *<em>gpio</em>, int <em>pin</em>, int <em>io_function</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv324metal_gpio_enable_pinmuxP10metal_gpioii" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enables and sets the pinmux for a GPIO pin. </p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>0 if the pinmux is successfully set </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">gpio</span></code>: The handle for the GPIO interface </li>
+<li><code class="docutils literal notranslate"><span class="pre">pin</span></code>: The bitmask for the pin to enable pinmux on </li>
+<li><code class="docutils literal notranslate"><span class="pre">io_function</span></code>: The IO function to set </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv310metal_gpio">
+<span id="_CPPv210metal_gpio"></span><span id="metal_gpio"></span><span class="target" id="structmetal__gpio"></span><em class="property">struct </em><code class="descname">metal_gpio</code><a class="headerlink" href="#_CPPv310metal_gpio" title="Permalink to this definition">¶</a><br /></dt>
+<dd><em>#include &lt;gpio.h&gt;</em><p>The handle for a GPIO interface. </p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devguide.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="button.html">Buttons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cache.html">Caches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clock.html">Clocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu.html">CPU</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GPIO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interrupt.html">Interrupts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">ITIM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="led.html">LEDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lock.html">Locks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory Enumeration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmp.html">PMPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shutdown.html">Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spi.html">SPIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="switch.html">Switches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timer.html">Timer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">TTY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uart.html">UARTs</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Reference</a><ul>
+      <li>Previous: <a href="cpu.html" title="previous chapter">CPU</a></li>
+      <li>Next: <a href="interrupt.html" title="next chapter">Interrupts</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/apiref/gpio.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

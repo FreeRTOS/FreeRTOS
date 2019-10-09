@@ -1,0 +1,201 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Exception Handlers &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FE310-G00 PLL" href="fe310-g000-pll.html" />
+    <link rel="prev" title="Developer Guide" href="../devguide.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="exception-handlers">
+<h1>Exception Handlers<a class="headerlink" href="#exception-handlers" title="Permalink to this headline">¶</a></h1>
+<p>CPU exceptions are the mechanism by which various execution and memory system
+errors are handled. When an exception occurs, Freedom Metal will call the
+corresponding exception handler function, if one has been registered by the
+application.</p>
+<div class="section" id="initializing-the-cpu">
+<h2>Initializing the CPU<a class="headerlink" href="#initializing-the-cpu" title="Permalink to this headline">¶</a></h2>
+<p>When the user application enters the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function, the Freedom Metal
+framework has not yet performed the initialization necessary to register
+exception handlers. If this initialization is not performed before an exception
+occurs, any exception will cause the CPU to spin in a tight loop until reset.</p>
+<p>To initialize the Freedom Metal exception handlers, initialize CPU interrupts:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">metal_cpu</span> <span class="o">*</span><span class="n">cpu0</span> <span class="o">=</span> <span class="n">metal_get_cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cpu</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* There was an error acquiring the CPU hart 0 handle */</span>
+<span class="p">}</span>
+
+<span class="k">struct</span> <span class="n">metal_interrupt</span> <span class="o">*</span><span class="n">cpu_int</span> <span class="o">=</span> <span class="n">metal_cpu_interrupt_controller</span><span class="p">(</span><span class="n">cpu0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cpu_int</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* There was an error acquiring the CPU interrupt controller */</span>
+<span class="p">}</span>
+
+<span class="n">metal_interrupt_init</span><span class="p">(</span><span class="n">cpu_int</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The Freedom Metal interrupt API is further documented in <a class="reference internal" href="interrupts.html"><span class="doc">Interrupt Handlers</span></a>
+and <a class="reference internal" href="../apiref/interrupt.html"><span class="doc">Interrupts</span></a>.</p>
+</div>
+<div class="section" id="defining-an-exception-handler">
+<h2>Defining an Exception Handler<a class="headerlink" href="#defining-an-exception-handler" title="Permalink to this headline">¶</a></h2>
+<p>Exception handlers must conform to the following function signature:</p>
+<dl class="type">
+<dt>
+<em class="property">typedef </em>void (*<code class="descname">metal_exception_handler_t</code>)<span class="sig-paren">(</span><em class="property">struct</em> <a class="reference internal" href="../apiref/cpu.html#_CPPv39metal_cpu" title="metal_cpu">metal_cpu</a> *cpu, int ecode<span class="sig-paren">)</span><br /></dt>
+<dd><p>Function signature for exception handlers. </p>
+</dd></dl>
+
+<p>Therefore, an example exception handler might look like:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">my_exception_handler</span><span class="p">(</span><span class="k">struct</span> <span class="n">metal_cpu</span> <span class="o">*</span><span class="n">cpu</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ecode</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Contents of handler */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="registering-an-exception-handler">
+<h2>Registering an Exception Handler<a class="headerlink" href="#registering-an-exception-handler" title="Permalink to this headline">¶</a></h2>
+<p>Exception handlers are registered with a given CPU hart for an individual exception
+code.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/* CPU Hart 0&#39;s interrupt controller must be initialized</span>
+<span class="cm"> * if it is not already */</span>
+<span class="k">struct</span> <span class="n">metal_cpu</span> <span class="o">*</span><span class="n">cpu0</span> <span class="o">=</span> <span class="n">metal_get_cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">metal_cpu_exception_register</span><span class="p">(</span><span class="n">cpu0</span><span class="p">,</span>
+            <span class="o">&lt;</span><span class="n">my_ecode</span><span class="o">&gt;</span><span class="p">,</span> <span class="cm">/* Set to your desired value */</span>
+            <span class="n">my_exception_handler</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Failed to register exception handler */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A single exception handler may be used for multiple exception codes. For this reason,
+exception handlers receive the exception code as the <code class="docutils literal notranslate"><span class="pre">ecode</span></code> parameter and may use
+this to determine how to handle the exception.</p>
+</div>
+<div class="section" id="returing-execution-after-a-faulting-instruction">
+<h2>Returing Execution after a Faulting Instruction<a class="headerlink" href="#returing-execution-after-a-faulting-instruction" title="Permalink to this headline">¶</a></h2>
+<p>The default behavior of a RISC-V CPU is to return execution to the faulting instruction.
+If this is not the desired behavior, execution can be returned to the instruction after
+the faulting instruction using the following method:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">return_after_fault</span><span class="p">(</span><span class="k">struct</span> <span class="n">metal_cpu</span> <span class="o">*</span><span class="n">cpu</span><span class="p">,</span> <span class="kt">int</span> <span class="n">ecode</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="cm">/* Get the faulting instruction address */</span>
+   <span class="kt">uintptr_t</span> <span class="n">epc</span> <span class="o">=</span> <span class="n">metal_cpu_get_exception_pc</span><span class="p">(</span><span class="n">cpu</span><span class="p">);</span>
+
+   <span class="cm">/* Get the length of the faulting instruction */</span>
+   <span class="kt">size_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">metal_cpu_get_instruction_length</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span> <span class="n">epc</span><span class="p">);</span>
+
+   <span class="cm">/* Advance stored exception program counter by the</span>
+<span class="cm">    * instruction length */</span>
+   <span class="n">metal_cpu_set_exception_pc</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span> <span class="n">epc</span> <span class="o">+</span> <span class="n">len</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-documentation">
+<h2>Additional Documentation<a class="headerlink" href="#additional-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Additional documentation for the exception handler API can be found in <a class="reference internal" href="../apiref/cpu.html"><span class="doc">The CPU API Reference</span></a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../devguide.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Exception Handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fe310-g000-pll.html">FE310-G00 PLL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interrupts.html">Interrupt Handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">Instruction Tightly Integrated Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmps.html">Physical Memory Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">Standard I/O</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../devguide.html">Developer Guide</a><ul>
+      <li>Previous: <a href="../devguide.html" title="previous chapter">Developer Guide</a></li>
+      <li>Next: <a href="fe310-g000-pll.html" title="next chapter">FE310-G00 PLL</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/devguide/exceptions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

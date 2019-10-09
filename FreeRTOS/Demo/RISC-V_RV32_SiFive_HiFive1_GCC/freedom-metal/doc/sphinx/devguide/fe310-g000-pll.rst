@@ -1,0 +1,29 @@
+FE310-G00 PLL
+=============
+
+On targets with a PLL compatible with the FE310-G000 SoC, the PLL is configured
+at program initialization with a constructor. This PLL sets the clock frequency
+of the RISC-V CPU, and users of Freedom Metal who wish to set a specific clock
+rate can use Freedom Metal to request that the PLL take on a certain output rate.
+
+In the DeviceTree for your target, there should be a node like the following
+(example taken from the SiFive HiFive1):
+
+.. code-block:: DeviceTree
+
+	hfclk: clock@4 {
+		compatible = "sifive,fe310-g000,pll";
+		clocks = <&hfxoscout &hfroscout>;
+		clock-names = "pllref", "pllsel0";
+		reg = <&prci 0x8 &prci 0xc>;
+		reg-names = "config", "divider";
+		clock-frequency = <16000000>;
+	};
+
+The ``clock-frequency`` property of the node sets the requested clock rate of
+the FE310-G000 PLL. The PLL driver will attempt to configure the PLL to achieve
+this clock rate.
+
+Users should note that the FE310-G000 PLL only supports certain input/output
+clock rate ratios, and so the effective output rate of the PLL may differ from
+the requested rate.

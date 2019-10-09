@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Interrupt Handlers &#8212; Freedom Metal v201905 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Instruction Tightly Integrated Memory" href="itim.html" />
+    <link rel="prev" title="FE310-G00 PLL" href="fe310-g000-pll.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="interrupt-handlers">
+<h1>Interrupt Handlers<a class="headerlink" href="#interrupt-handlers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-interrupt-heirarchy">
+<h2>The Interrupt Heirarchy<a class="headerlink" href="#the-interrupt-heirarchy" title="Permalink to this headline">¶</a></h2>
+<p>Freedom Metal conceptualizes interrupts as a heirarchy of interrupt controllers.
+This heirarchy is established by the interrupt heirarchy of the target platform
+itself. Presently, the interrupt heirarchy for a given platform is best documented
+by the target’s DeviceTree representation, which can be found in
+<code class="docutils literal notranslate"><span class="pre">bsp/&lt;target-name&gt;/design.dts</span></code>.</p>
+<p>In Freedom Metal, the heirarchy is a tree. The nodes of the tree consist of
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">metal_interrupt</span></code>:</p>
+<dl class="class">
+<dt id="_CPPv315metal_interrupt">
+<span id="_CPPv215metal_interrupt"></span><span id="metal_interrupt"></span><span class="target" id="structmetal__interrupt"></span><em class="property">struct </em><code class="descname">metal_interrupt</code><br /></dt>
+<dd><p>A handle for an interrupt. </p>
+</dd></dl>
+
+<p>And the vertices of the tree consist of interrupt <code class="docutils literal notranslate"><span class="pre">id</span></code>.</p>
+<img src="../_images/graphviz-4e69a35c14995622b7f966825bca72b81124fc03.png" alt="digraph int_heirarchy_graph {
+cpu [label=&quot;CPU&quot;];
+cpu_int [label=&quot;CPU Interrupt Controller&quot;, shape=box];
+timer_int [label=&quot;Timer Interrupt Controller&quot;, shape=box];
+soft_int [label=&quot;Software Interrupt Controller&quot;, shape=box];
+
+cpu -&gt; cpu_int [label=&quot;ID = 0&quot;];
+cpu_int -&gt; timer_int [label=&quot;ID = timer_id&quot;];
+cpu_int -&gt; soft_int [label=&quot;ID = software_id&quot;];
+}" />
+</div>
+<div class="section" id="the-cpu-interrupt-controller">
+<h2>The CPU Interrupt Controller<a class="headerlink" href="#the-cpu-interrupt-controller" title="Permalink to this headline">¶</a></h2>
+<p>The CPU interrupt controller is the top of the interrupt heirarchy. It must be
+initialized before any other interrupt controllers are initialized. In example:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">metal_cpu</span> <span class="o">*</span><span class="n">cpu0</span> <span class="o">=</span> <span class="n">metal_get_cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cpu</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Unable to get CPU handle */</span>
+<span class="p">}</span>
+<span class="k">struct</span> <span class="n">metal_interrupt</span> <span class="o">*</span><span class="n">cpu_int</span> <span class="o">=</span> <span class="n">metal_cpu_interrupt_controller</span><span class="p">(</span><span class="n">cpu0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">cpu_int</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Unable to get CPU interrupt handle */</span>
+<span class="p">}</span>
+<span class="n">metal_interrupt_init</span><span class="p">(</span><span class="n">cpu_int</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The CPU interrupt must be enabled for the CPU to receive any interrupts, and any
+enabled interrupts can be masked by disabling the CPU interrupt.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="cm">/* Enable the CPU interrupt */</span>
+<span class="n">rc</span> <span class="o">=</span> <span class="n">metal_interrupt_enable</span><span class="p">(</span><span class="n">cpu_int</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Failed to enable the CPU interrupt */</span>
+<span class="p">}</span>
+
+<span class="cm">/* Disable the CPU interrupt */</span>
+<span class="n">rc</span> <span class="o">=</span> <span class="n">metal_interrupt_disable</span><span class="p">(</span><span class="n">cpu_int</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Failed to disable the CPU interrupt */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Interrupt Handlers<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Interrupt handlers must conform to the following function signature:</p>
+<dl class="type">
+<dt id="_CPPv325metal_interrupt_handler_t">
+<span id="_CPPv225metal_interrupt_handler_t"></span><span id="metal_interrupt_handler_t"></span><span class="target" id="interrupt_8h_1acf581f8608907e67e50300eef23a130b"></span><em class="property">typedef </em>void (*<code class="descname">metal_interrupt_handler_t</code>)<span class="sig-paren">(</span>int, void *<span class="sig-paren">)</span><br /></dt>
+<dd><p>Function signature for interrupt callback handlers. </p>
+</dd></dl>
+
+<p>Therefore, an interrupt handler might look like:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">my_interrupt_handler</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">priv_data</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Contents of handler */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="registering-an-interrupt-handler">
+<h2>Registering an Interrupt Handler<a class="headerlink" href="#registering-an-interrupt-handler" title="Permalink to this headline">¶</a></h2>
+<p>Interrupt handlers are registered with the interrupt controller for the interrupt
+they are servicing. For example, if we want to register a CPU timer interrupt:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">metal_interrupt</span> <span class="o">*</span><span class="n">timer_int</span> <span class="o">=</span> <span class="n">metal_cpu_timer_interrupt_controller</span><span class="p">(</span><span class="n">cpu0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">timer_int</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Failed to get timer interrupt controller */</span>
+<span class="p">}</span>
+<span class="n">metal_interrupt_init</span><span class="p">(</span><span class="n">timer_int</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">timer_id</span> <span class="o">=</span> <span class="n">metal_cpu_timer_get_interrupt_id</span><span class="p">(</span><span class="n">cpu0</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">rc</span> <span class="o">=</span> <span class="n">metal_interrupt_register_handler</span><span class="p">(</span><span class="n">timer_int</span><span class="p">,</span> <span class="n">timer_id</span><span class="p">,</span> <span class="n">my_interrupt_handler</span><span class="p">,</span> <span class="n">cpu0</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">rc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Failed to register interrupt handler */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-documentation">
+<h2>Additional Documentation<a class="headerlink" href="#additional-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Additional documentation for the interrupt handler API can be found in
+<a class="reference internal" href="../apiref/cpu.html"><span class="doc">the CPU API reference</span></a> and
+<a class="reference internal" href="../apiref/interrupt.html"><span class="doc">the Interrupt API reference</span></a>.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Freedom Metal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction to Freedom Metal</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../devguide.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exception Handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fe310-g000-pll.html">FE310-G00 PLL</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Interrupt Handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itim.html">Instruction Tightly Integrated Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmps.html">Physical Memory Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tty.html">Standard I/O</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../devguide.html">Developer Guide</a><ul>
+      <li>Previous: <a href="fe310-g000-pll.html" title="previous chapter">FE310-G00 PLL</a></li>
+      <li>Next: <a href="itim.html" title="next chapter">Instruction Tightly Integrated Memory</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, SiFive Inc..
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/devguide/interrupts.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

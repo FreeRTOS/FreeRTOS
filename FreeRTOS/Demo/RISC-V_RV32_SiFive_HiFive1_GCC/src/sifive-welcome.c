@@ -80,7 +80,7 @@ void wait_for_timer(struct metal_led *which_led) {
     metal_led_off(which_led);
 }
 
-int main (void)
+int original_main (void)
 {
     int rc, up_cnt, dn_cnt;
     struct metal_led *led0_red, *led0_green, *led0_blue;

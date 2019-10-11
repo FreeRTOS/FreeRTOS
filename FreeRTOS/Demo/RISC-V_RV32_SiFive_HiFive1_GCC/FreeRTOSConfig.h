@@ -71,16 +71,6 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-/*
- * For some reason the standard demo timer demo/test tasks fail when executing
- * in QEMU, although they pass on other RISC-V platforms.  This requires
- * further investigation, but for now, defining _WINDOWS_ has the effect of
- * using the wider timer test thresholds that are normally only used when the
- * tests are used with the FreeRTOS Windows port (which is not deterministic
- * and therefore requires wider margins).
- */
-#define _WINDOWS_
-
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -97,11 +87,11 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 10000000 ) /*QEMU*/
+#define configCPU_CLOCK_HZ				( 32768 ) /*QEMU*/
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 7 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) 14100 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) 10000 )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
 #define configUSE_16_BIT_TICKS			0

@@ -211,13 +211,14 @@ SECTIONS
 	PROVIDE( end = . );
 	PROVIDE( metal_segment_bss_target_end = . );
 
-
 	.stack :
 	{
-		PROVIDE(metal_segment_stack_begin = .);
-		. = __stack_size;
-		PROVIDE( _sp = . );
+		. = ALIGN(16);
+		metal_segment_stack_begin = .;
+		. += __stack_size;
+		_sp = .;
 		PROVIDE(metal_segment_stack_end = .);
+		__freertos_irq_stack_top = .;
 	} >ram AT>ram :ram
 
 

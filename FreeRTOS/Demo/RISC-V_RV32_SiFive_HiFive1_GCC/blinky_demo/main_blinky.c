@@ -191,13 +191,8 @@ extern void vToggleLED( void );
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			write( STDOUT_FILENO, pcPassMessage, strlen( pcPassMessage ) );
 			vToggleLED();
 			ulReceivedValue = 0U;
-		}
-		else
-		{
-			write( STDOUT_FILENO, pcFailMessage, strlen( pcFailMessage ) );
 		}
 	}
 }

@@ -125,7 +125,7 @@ _start:
   /* The RISC-V port only uses new-style constructors and destructors. */
   la a0, __libc_fini_array
   call atexit
-  call __libc_init_array
+/*_RB_  call __libc_init_array */
 
 _skip_init:
 

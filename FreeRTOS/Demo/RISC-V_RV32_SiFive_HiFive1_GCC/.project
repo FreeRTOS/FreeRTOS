@@ -29,6 +29,16 @@
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
 		</link>
+		<link>
+			<name>full_demo/Common_Demo_Tasks</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
+			<name>full_demo/Common_Demo_Tasks/include</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
+		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
@@ -176,6 +186,42 @@
 			</matcher>
 		</filter>
 		<filter>
+			<id>1571005814144</id>
+			<name>full_demo/Common_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TimerDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005814150</id>
+			<name>full_demo/Common_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-blocktim.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005814159</id>
+			<name>full_demo/Common_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-dynamic.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005814167</id>
+			<name>full_demo/Common_Demo_Tasks</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TaskNotify.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
 			<id>1570727992991</id>
 			<name>FreeRTOS_Source/portable/GCC</name>
 			<type>9</type>
@@ -191,6 +237,51 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-heap_4.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005832815</id>
+			<name>full_demo/Common_Demo_Tasks/include</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TimerDemo.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005832820</id>
+			<name>full_demo/Common_Demo_Tasks/include</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-blocktim.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005832824</id>
+			<name>full_demo/Common_Demo_Tasks/include</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-dynamic.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005832829</id>
+			<name>full_demo/Common_Demo_Tasks/include</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MessageBufferDemo.h</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1571005832835</id>
+			<name>full_demo/Common_Demo_Tasks/include</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TaskNotify.h</arguments>
 			</matcher>
 		</filter>
 		<filter>

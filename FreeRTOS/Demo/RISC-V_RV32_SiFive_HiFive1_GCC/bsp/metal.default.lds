@@ -26,7 +26,7 @@ SECTIONS
 {
 	__stack_size = DEFINED(__stack_size) ? __stack_size : 0x400;
 	PROVIDE(__stack_size = __stack_size);
-	__heap_size = DEFINED(__heap_size) ? __heap_size : 0x400;
+	__heap_size = DEFINED(__heap_size) ? __heap_size : 0x4;
 	PROVIDE(__metal_boot_hart = 0);
 	PROVIDE(__metal_chicken_bit = 0);
 
@@ -216,7 +216,8 @@ SECTIONS
 		. = ALIGN(16);
 		metal_segment_stack_begin = .;
 		. += __stack_size;
-		_sp = .;
+		. = ALIGN(16);
+		_sp = .;		
 		PROVIDE(metal_segment_stack_end = .);
 		__freertos_irq_stack_top = .;
 	} >ram AT>ram :ram

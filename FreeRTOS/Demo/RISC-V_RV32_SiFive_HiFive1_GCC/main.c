@@ -1,4 +1,3 @@
-#if 1
 /*
  * FreeRTOS Kernel V10.2.1
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
@@ -35,7 +34,6 @@
 #include <metal/led.h>
 #include <metal/button.h>
 
-
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
  * and a more comprehensive test and demo application.  The
@@ -56,12 +54,18 @@
 
 #warning Also test in QEMU and add instructions above.
 
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
+or 0 to run the more comprehensive test and demo application. */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+
 /* Index to first HART (there is only one). */
 #define mainHART_0 		0
 
-/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+/* Register addresses within the PLIC. */
+#define mainPLIC_PENDING_0 ( * ( ( volatile uint32_t * ) 0x0C001000UL ) )
+#define mainPLIC_PENDING_1 ( * ( ( volatile uint32_t * ) 0x0C001004UL ) )
+#define mainPLIC_ENABLE_0  ( * ( ( volatile uint32_t * ) 0x0C002000UL ) )
+#define mainPLIC_ENABLE_1  ( * ( ( volatile uint32_t * ) 0x0C002004UL ) )
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -111,8 +115,8 @@ static void prvSetupHardware( void )
 struct metal_cpu *pxCPU;
 struct metal_interrupt *pxInterruptController;
 
-	/* Initialise the red LED. */
-	pxLED = metal_led_get_rgb( "LD0", "red" );
+	/* Initialise the blue LED. */
+	pxLED = metal_led_get_rgb( "LD0", "blue" );
 	configASSERT( pxLED );
 	metal_led_enable( pxLED );
 	metal_led_off( pxLED );
@@ -123,6 +127,14 @@ struct metal_interrupt *pxInterruptController;
 	pxInterruptController = metal_cpu_interrupt_controller( pxCPU );
 	configASSERT( pxInterruptController );
 	metal_interrupt_init( pxInterruptController );
+
+	/* Set all interrupt enable bits to 0. */
+	mainPLIC_ENABLE_0 = 0UL;
+	mainPLIC_ENABLE_1 = 0UL;
+
+	/* Clear all pending interrupts. */
+	mainPLIC_PENDING_0 = 0UL;
+	mainPLIC_PENDING_1 = 0UL;
 }
 /*-----------------------------------------------------------*/
 
@@ -184,15 +196,41 @@ void vApplicationTickHook( void )
 
 void vAssertCalled( void )
 {
+static struct metal_led *pxRedLED = NULL;
+volatile uint32_t ul;
+
 	taskDISABLE_INTERRUPTS();
-	for( ;; );
+
+	/* Initialise the red LED. */
+	pxRedLED = metal_led_get_rgb( "LD0", "red" );
+	configASSERT( pxRedLED );
+	metal_led_enable( pxRedLED );
+	metal_led_off( pxRedLED );
+
+	/* Flash the red LED to indicate that assert was hit - interrupts are off
+	here to prevent any further tick interrupts or context switches, so the
+	delay is implemented as a crude loop. */
+	for( ;; )
+	{
+		for( ul = 0; ul < 0x1ffff; ul++ )
+		{
+			__asm volatile( "nop" );
+		}
+		metal_led_toggle( pxRedLED );
+	}
 }
 /*-----------------------------------------------------------*/
+
+volatile uint32_t ulMEPC = 0UL, ulMCAUSE = 0UL, ulPending0Register = 0UL, ulPending1Register = 0UL;
 
 void handle_trap( void )
 {
 #warning Not implemented.
 
+	__asm volatile( "csrr %0, mepc" : "=r"( ulMEPC ) );
+	__asm volatile( "csrr %0, mcause" : "=r"( ulMCAUSE ) );
+	ulPending0Register = mainPLIC_PENDING_0;
+	ulPending1Register = mainPLIC_PENDING_1;
 	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
 }
 /*-----------------------------------------------------------*/
@@ -201,103 +239,13 @@ void vToggleLED( void )
 {
 	metal_led_toggle( pxLED );
 }
-
-
-
-
-#else
-
-static void prvSetupTimerInterrupt( void )
-{
-	int rc, up_cnt, dn_cnt;
-
-    // Setup Timer and its interrupt so we can toggle LEDs on 1s cadence
-    tmr_intr = metal_cpu_timer_interrupt_controller(pxCPU);
-    if (tmr_intr == NULL) {
-        printf("TIMER interrupt controller is  null.\n");
-        return 4;
-    }
-    metal_interrupt_init(tmr_intr);
-    tmr_id = metal_cpu_timer_get_interrupt_id(pxCPU);
-    rc = metal_interrupt_register_handler(tmr_intr, tmr_id, timer_isr, pxCPU);
-    if (rc < 0) {
-        printf("TIMER interrupt handler registration failed\n");
-        return (rc * -1);
-    }
-
-    // Lastly CPU interrupt
-    if (metal_interrupt_enable(pxInterruptController, 0) == -1) {
-        printf("CPU interrupt enable failed\n");
-        return 6;
-    }
-
-    // Red -> Green -> Blue, repeat
-    while (1) {
-
-        // Turn on RED
-        wait_for_timer(pxLED);
-
-        // Turn on Green
-        wait_for_timer(led0_green);
-
-        // Turn on Blue
-        wait_for_timer(led0_blue);
-    }
-
-    // return
-    return 0;
-}
 /*-----------------------------------------------------------*/
 
-
-#include <stdio.h>
-#include <metal/cpu.h>
-#include <metal/led.h>
-#include <metal/button.h>
-#include <metal/switch.h>
-
-#define RTC_FREQ    32768
-
-struct metal_cpu *pxCPU;
-struct metal_interrupt *pxInterruptController, *tmr_intr;
-int tmr_id;
-volatile uint32_t timer_isr_flag;
-
-
-void timer_isr (int id, void *data) {
-
-    // Disable Timer interrupt
-    metal_interrupt_disable(tmr_intr, tmr_id);
-
-    // Flag showing we hit timer isr
-    timer_isr_flag = 1;
+void *malloc( size_t xSize )
+{
+	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
+	return NULL;
 }
-
-void wait_for_timer(struct metal_led *which_led) {
-
-    // clear global timer isr flag
-    timer_isr_flag = 0;
-
-    // Turn on desired LED
-    metal_led_on(which_led);
-
-    // Set timer
-    metal_cpu_set_mtimecmp(pxCPU, metal_cpu_get_mtime(pxCPU) + RTC_FREQ);
-
-    // Enable Timer interrupt
-    metal_interrupt_enable(tmr_intr, tmr_id);
-
-    // wait till timer triggers and isr is hit
-    while (timer_isr_flag == 0){};
-
-    timer_isr_flag = 0;
-
-    // Turn off this LED
-    metal_led_off(which_led);
-}
-
-
-
-#endif
+/*-----------------------------------------------------------*/
 
 

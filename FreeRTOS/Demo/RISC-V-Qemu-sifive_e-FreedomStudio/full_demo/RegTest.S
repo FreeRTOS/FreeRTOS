@@ -38,6 +38,7 @@
  * main_full.c.
  */
 
+.align( 8 )
 vRegTest1Implementation:
 
 	/* Fill the core registers with known values. */
@@ -144,13 +145,15 @@ reg1_loop:
 reg1_error_loop:
 	/* Jump here if a register contains an uxpected value.  This stops the loop
 	counter being incremented so the check task knows an error was found. */
-//	ebreak
+	ebreak
 	jal reg1_error_loop
 
+.align( 16 )
 ulRegTest1LoopCounterConst: .word ulRegTest1LoopCounter
 
 /*-----------------------------------------------------------*/
 
+.align( 8 )
 vRegTest2Implementation:
 
 	/* Fill the core registers with known values. */
@@ -254,9 +257,10 @@ Reg2_loop:
 reg2_error_loop:
 	/* Jump here if a register contains an uxpected value.  This stops the loop
 	counter being incremented so the check task knows an error was found. */
-//	ebreak
+	ebreak
 	jal reg2_error_loop
 
+.align( 16 )
 ulRegTest2LoopCounterConst: .word ulRegTest2LoopCounter
 
 

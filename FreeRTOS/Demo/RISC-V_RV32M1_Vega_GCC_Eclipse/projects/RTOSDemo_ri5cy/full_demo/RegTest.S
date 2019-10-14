@@ -47,6 +47,8 @@
  * The register check tasks are described in the comments at the top of
  * main_full.c.
  */
+
+.align( 8 )
 vRegTest1Implementation:
 
 	/* Fill the additional registers with known values. */
@@ -191,10 +193,12 @@ reg1_error_loop:
 	ebreak
 	jal reg1_error_loop
 
+.align( 16 )
 ulRegTest1LoopCounterConst: .word ulRegTest1LoopCounter
 
 /*-----------------------------------------------------------*/
 
+.align( 8 )
 vRegTest2Implementation:
 
 	/* Fill the additional registers with known values. */
@@ -336,6 +340,7 @@ reg2_error_loop:
 	ebreak
 	jal reg2_error_loop
 
+.align( 16 )
 ulRegTest2LoopCounterConst: .word ulRegTest2LoopCounter
 
 

@@ -25,15 +25,6 @@
  * 1 tab == 4 spaces!
  */
 
-/* FreeRTOS kernel includes. */
-#include <FreeRTOS.h>
-#include <task.h>
-
-/* Freedom metal driver includes. */
-#include <metal/cpu.h>
-#include <metal/led.h>
-#include <metal/button.h>
-
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
  * and a more comprehensive test and demo application.  The
@@ -45,27 +36,40 @@
  * This file implements the code that is not demo specific, including the
  * hardware setup and standard FreeRTOS hook functions.
  *
+ * When running on the HiFive Rev B hardware:
+ * When executing correctly the blue LED will toggle every three seconds.  If
+ * the blue LED toggles every 500ms then one of the self-monitoring test tasks
+ * discovered a potential issue.  If the red led toggles rapidly then a hardware
+ * exception occurred.
+ *
  * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
  * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
  * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
  *
- *
  */
 
-#warning Also test in QEMU and add instructions above.
+/* FreeRTOS kernel includes. */
+#include <FreeRTOS.h>
+#include <task.h>
+
+/* Freedom metal driver includes. */
+#include <metal/cpu.h>
+#include <metal/led.h>
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /* Index to first HART (there is only one). */
 #define mainHART_0 		0
 
-/* Register addresses within the PLIC. */
+/* Registers used to initialise the PLIC. */
 #define mainPLIC_PENDING_0 ( * ( ( volatile uint32_t * ) 0x0C001000UL ) )
 #define mainPLIC_PENDING_1 ( * ( ( volatile uint32_t * ) 0x0C001004UL ) )
 #define mainPLIC_ENABLE_0  ( * ( ( volatile uint32_t * ) 0x0C002000UL ) )
 #define mainPLIC_ENABLE_1  ( * ( ( volatile uint32_t * ) 0x0C002004UL ) )
+
+/*-----------------------------------------------------------*/
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -77,18 +81,24 @@ or 0 to run the more comprehensive test and demo application. */
 	extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
-/* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file.  See https://www.freertos.org/a00016.html */
+/*
+ * Prototypes for the standard FreeRTOS callback/hook functions implemented
+ * within this file.  See https://www.freertos.org/a00016.html
+ */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* Setup the hardware to run this demo. */
+/*
+ * Setup the hardware to run this demo.
+ */
 static void prvSetupHardware( void );
 
-/* Used by the Freedom Metal drivers. */
-static struct metal_led *pxLED = NULL;
+/*
+ * Used by the Freedom Metal drivers.
+ */
+static struct metal_led *pxBlueLED = NULL;
 
 /*-----------------------------------------------------------*/
 
@@ -116,10 +126,10 @@ struct metal_cpu *pxCPU;
 struct metal_interrupt *pxInterruptController;
 
 	/* Initialise the blue LED. */
-	pxLED = metal_led_get_rgb( "LD0", "blue" );
-	configASSERT( pxLED );
-	metal_led_enable( pxLED );
-	metal_led_off( pxLED );
+	pxBlueLED = metal_led_get_rgb( "LD0", "blue" );
+	configASSERT( pxBlueLED );
+	metal_led_enable( pxBlueLED );
+	metal_led_off( pxBlueLED );
 
 	/* Initialise the interrupt controller. */
 	pxCPU = metal_cpu_get( mainHART_0 );
@@ -198,6 +208,7 @@ void vAssertCalled( void )
 {
 static struct metal_led *pxRedLED = NULL;
 volatile uint32_t ul;
+const uint32_t ulNullLoopDelay = 0x1ffffUL;
 
 	taskDISABLE_INTERRUPTS();
 
@@ -209,10 +220,10 @@ volatile uint32_t ul;
 
 	/* Flash the red LED to indicate that assert was hit - interrupts are off
 	here to prevent any further tick interrupts or context switches, so the
-	delay is implemented as a crude loop. */
+	delay is implemented as a crude loop instead of a peripheral timer. */
 	for( ;; )
 	{
-		for( ul = 0; ul < 0x1ffff; ul++ )
+		for( ul = 0; ul < ulNullLoopDelay; ul++ )
 		{
 			__asm volatile( "nop" );
 		}
@@ -221,28 +232,38 @@ volatile uint32_t ul;
 }
 /*-----------------------------------------------------------*/
 
-volatile uint32_t ulMEPC = 0UL, ulMCAUSE = 0UL, ulPending0Register = 0UL, ulPending1Register = 0UL;
-
 void handle_trap( void )
 {
-#warning Not implemented.
+volatile uint32_t ulMEPC = 0UL, ulMCAUSE = 0UL, ulPLICPending0Register = 0UL, ulPLICPending1Register = 0UL;
 
+	/* Store a few register values that might be useful when determining why this
+	function was called. */
 	__asm volatile( "csrr %0, mepc" : "=r"( ulMEPC ) );
 	__asm volatile( "csrr %0, mcause" : "=r"( ulMCAUSE ) );
-	ulPending0Register = mainPLIC_PENDING_0;
-	ulPending1Register = mainPLIC_PENDING_1;
+	ulPLICPending0Register = mainPLIC_PENDING_0;
+	ulPLICPending1Register = mainPLIC_PENDING_1;
+
+	/* Prevent compiler warnings about unused variables. */
+	( void ) ulPLICPending0Register;
+	( void ) ulPLICPending1Register;
+
+	/* Force an assert as this function has not been implemented as the demo
+	does not use external interrupts. */
 	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
 }
 /*-----------------------------------------------------------*/
 
 void vToggleLED( void )
 {
-	metal_led_toggle( pxLED );
+	metal_led_toggle( pxBlueLED );
 }
 /*-----------------------------------------------------------*/
 
 void *malloc( size_t xSize )
 {
+	/* The linker script does not define a heap so artificially force an assert()
+	if something unexpectedly uses the C library heap.  See
+	https://www.freertos.org/a00111.html for more information. */
 	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
 	return NULL;
 }

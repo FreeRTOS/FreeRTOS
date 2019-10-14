@@ -33,7 +33,7 @@
  * in main.c.  This file implements the simply blinky style version.
  *
  * NOTE 2:  This file only contains the source code that is specific to the
- * basic demo.  Generic functions, such FreeRTOS hook functions, and functions
+ * blinky demo.  Generic functions, such FreeRTOS hook functions, and functions
  * required to configure the hardware are defined in main.c.
  ******************************************************************************
  *
@@ -52,15 +52,14 @@
  * in this file.  prvQueueReceiveTask() sits in a loop where it repeatedly
  * blocks on attempts to read data from the queue that was created within
  * main_blinky().  When data is received, the task checks the value of the
- * data, and if the value equals the expected 100, writes 'Blink' to the UART
- * (the UART is used in place of the LED to allow easy execution in QEMU).  The
- * 'block time' parameter passed to the queue receive function specifies that
- * the task should be held in the Blocked state indefinitely to wait for data to
- * be available on the queue.  The queue receive task will only leave the
- * Blocked state when the queue send task writes to the queue.  As the queue
- * send task writes to the queue every 1000 milliseconds, the queue receive
- * task leaves the Blocked state every 1000 milliseconds, and therefore toggles
- * the LED every 200 milliseconds.
+ * data, and if the value equals the expected 100, toggles an LED.  The 'block
+ * time' parameter passed to the queue receive function specifies that the task
+ * should be held in the Blocked state indefinitely to wait for data to be
+ * available on the queue.  The queue receive task will only leave the Blocked
+ * state when the queue send task writes to the queue.  As the queue send task
+ * writes to the queue every 1000 milliseconds, the queue receive task leaves
+ * the Blocked state every 1000 milliseconds, and therefore toggles the LED
+ * every 200 milliseconds.
  */
 
 /* Standard includes. */
@@ -121,12 +120,12 @@ void main_blinky( void )
 		file. */
 		xTaskCreate( prvQueueReceiveTask,				/* The function that implements the task. */
 					"Rx", 								/* The text name assigned to the task - for debug only as it is not used by the kernel. */
-					configMINIMAL_STACK_SIZE * 2U, 			/* The size of the stack to allocate to the task. */
+					configMINIMAL_STACK_SIZE, 			/* The size of the stack to allocate to the task. */
 					NULL, 								/* The parameter passed to the task - not used in this case. */
 					mainQUEUE_RECEIVE_TASK_PRIORITY, 	/* The priority assigned to the task. */
 					NULL );								/* The task handle is not required, so NULL is passed. */
 
-		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE * 2U, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
+		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
@@ -173,8 +172,6 @@ static void prvQueueReceiveTask( void *pvParameters )
 {
 unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
-const char * const pcPassMessage = "Blink\r\n";
-const char * const pcFailMessage = "Unexpected value received\r\n";
 extern void vToggleLED( void );
 
 	/* Remove compiler warning about unused parameter. */

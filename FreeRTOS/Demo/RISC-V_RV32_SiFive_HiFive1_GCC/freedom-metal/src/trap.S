@@ -28,12 +28,12 @@ _metal_trap:
 
     /* Set MIE=0 */
     li t1, -1
-    xori t1, t1, 8 /*_RB_ METAL_MSTATUS_MIE_SHIFT*/
+    xori t1, t1, METAL_MSTATUS_MIE_SHIFT
     and t0, t0, t1
 
     /* Set MPP=M */
-    li t1, 3 /*_RB_ METAL_MSTATUS_MPP_M*/
-    slli t1, t1, 11 /*_RB_METAL_MSTATUS_MPP_SHIFT*/
+    li t1, METAL_MSTATUS_MPP_M
+    slli t1, t1, METAL_MSTATUS_MPP_SHIFT
     or t0, t0, t1
 
     /* Write mstatus */
@@ -46,7 +46,7 @@ _metal_trap:
      * Mask the mtvec MODE bits
      * Exceptions always jump to mtvec.BASE regradless of the vectoring mode.
      */
-    andi t0, t0, 3 /*_RB_METAL_MTVEC_MODE_MASK*/
+    andi t0, t0, METAL_MTVEC_MODE_MASK
 
     /* Jump to mtvec */
     jr t0

@@ -55,9 +55,10 @@
  *
  * "Check" task - The check executes every three seconds.  It checks that all
  * the standard demo tasks, and the register check tasks, are not only still
- * executing, but are executing without reporting any errors.  If the check task
- * discovers that a task has either stalled, or reported an error, then it
- * prints an error message to the UART, otherwise it prints "Pass.".
+ * executing, but are executing without reporting any errors.  The check task
+ * toggles the LED every three seconds if all the standard demo tasks are
+ * executing as expected, or every 500ms if a potential error is discovered in
+ * any task.
  */
 
 /* Standard includes. */
@@ -74,21 +75,11 @@
 /* Standard demo application includes. */
 #include "dynamic.h"
 #include "blocktim.h"
-#include "GenQTest.h"
-#include "recmutex.h"
 #include "TimerDemo.h"
-#include "EventGroupsDemo.h"
 #include "TaskNotify.h"
-#include "AbortDelay.h"
-#include "countsem.h"
-#include "death.h"
-#include "MessageBufferDemo.h"
-#include "StreamBufferDemo.h"
-#include "StreamBufferInterrupt.h"
 
 /* Priorities for the demo application tasks. */
 #define mainCHECK_TASK_PRIORITY				( configMAX_PRIORITIES - 1 )
-#define mainCREATOR_TASK_PRIORITY			( tskIDLE_PRIORITY + 3UL )
 
 /* The period of the check task, in ms, converted to ticks using the
 pdMS_TO_TICKS() macro.  mainNO_ERROR_CHECK_TASK_PERIOD is used if no errors have
@@ -160,7 +151,6 @@ void main_full( void )
 	vCreateBlockTimeTasks();
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartDynamicPriorityTasks();
-//	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 	vStartTaskNotifyTask();
 
 	/* Create the register check tasks, as described at the top of this	file.
@@ -190,8 +180,7 @@ void main_full( void )
 	for( ;; );
 }
 /*-----------------------------------------------------------*/
-volatile uint32_t ulCheckTaskCycles = 0;
-static volatile TaskStatus_t xTaskStatus[ 15 ];
+
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
@@ -241,11 +230,6 @@ extern void vToggleLED( void );
 			pcStatusMessage = "ERROR: Task notification demo/tests.\r\n";
 		}
 
-//		if( xAreMessageBufferTasksStillRunning() == pdFALSE )
-		{
-//			pcStatusMessage = "ERROR: Message buffer.\r\n";
-		}
-
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
@@ -269,13 +253,7 @@ extern void vToggleLED( void );
 		if( pcStatusMessage != pcPassMessage )
 		{
 			xDelayPeriod = mainERROR_CHECK_TASK_PERIOD;
-			write( STDOUT_FILENO, pcStatusMessage, strlen( pcStatusMessage ) );
 		}
-
-		ulCheckTaskCycles++;
-
-//		uxTaskGetSystemState( xTaskStatus, sizeof( xTaskStatus ) / sizeof( TaskStatus_t ), NULL );
-		__asm volatile( "NOP" );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -320,10 +298,6 @@ void vFullDemoTickHook( void )
 {
 	/* Called from vApplicationTickHook() when the project is configured to
 	build the full test/demo applications. */
-
-	/* The full demo includes a software timer demo/test that requires
-	prodding periodically from the tick interrupt. */
-//	vTimerPeriodicISRTests();
 
 	/* Use task notifications from an interrupt. */
 	xNotifyTaskFromISR();

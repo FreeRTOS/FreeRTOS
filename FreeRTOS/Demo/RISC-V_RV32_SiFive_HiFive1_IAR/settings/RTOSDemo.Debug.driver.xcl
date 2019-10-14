@@ -1,0 +1,21 @@
+"--core=RV32IMAC" 
+
+"-p" 
+
+"C:\devtools\IAR Systems\Embedded Workbench 8.3\riscv\config\debugger\SiFive\hifive1.ddf" 
+
+"--drv_verify_download" 
+
+"--jet_standard_reset=2,300,1500" 
+
+"--reset_style=\"0,-,0,Disabled__no_reset_\"" 
+
+"--reset_style=\"1,-,0,Software\"" 
+
+"--reset_style=\"2,-,1,Hardware\"" 
+
+"--jet_emu_param=cJtagOpt=Fmt:OScan1" 
+
+
+
+

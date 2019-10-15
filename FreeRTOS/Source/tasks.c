@@ -1204,6 +1204,10 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				check the xTasksWaitingTermination list. */
 				++uxDeletedTasksWaitingCleanUp;
 
+				/* Call the delete hook before portPRE_TASK_DELETE_HOOK() as
+				portPRE_TASK_DELETE_HOOK() does not return in the Win32 port. */
+				traceTASK_DELETE( pxTCB );
+
 				/* The pre-delete hook is primarily for the Windows simulator,
 				in which Windows specific clean up operations are performed,
 				after which it is not possible to yield away from this task -
@@ -1219,9 +1223,8 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				/* Reset the next expected unblock time in case it referred to
 				the task that has just been deleted. */
 				prvResetNextTaskUnblockTime();
+				traceTASK_DELETE( pxTCB );
 			}
-
-			traceTASK_DELETE( pxTCB );
 		}
 		taskEXIT_CRITICAL();
 

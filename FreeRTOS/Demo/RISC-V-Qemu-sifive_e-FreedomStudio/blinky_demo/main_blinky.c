@@ -175,6 +175,7 @@ unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 const char * const pcPassMessage = "Blink\r\n";
 const char * const pcFailMessage = "Unexpected value received\r\n";
+extern void vSendString( const char * pcString );
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -190,12 +191,12 @@ const char * const pcFailMessage = "Unexpected value received\r\n";
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			write( STDOUT_FILENO, pcPassMessage, strlen( pcPassMessage ) );
+			vSendString( pcPassMessage );
 			ulReceivedValue = 0U;
 		}
 		else
 		{
-			write( STDOUT_FILENO, pcFailMessage, strlen( pcFailMessage ) );
+			vSendString( pcFailMessage );
 		}
 	}
 }

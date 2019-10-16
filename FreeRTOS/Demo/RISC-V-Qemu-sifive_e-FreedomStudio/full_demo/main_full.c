@@ -196,11 +196,10 @@ TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 const char * const pcPassMessage = "Pass";
 const char * pcStatusMessage = ".";
+extern void vSendString( const char * pcString );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
-
-	write( STDOUT_FILENO, pcPassMessage, strlen( pcPassMessage ) );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */
@@ -269,7 +268,7 @@ const char * pcStatusMessage = ".";
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 
 		/* Write the status message to the UART. */
-		write( STDOUT_FILENO, pcStatusMessage, strlen( pcStatusMessage ) );
+		vSendString( pcStatusMessage );
 	}
 }
 /*-----------------------------------------------------------*/

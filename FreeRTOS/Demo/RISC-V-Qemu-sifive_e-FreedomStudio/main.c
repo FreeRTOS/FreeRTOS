@@ -73,7 +73,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -85,17 +85,28 @@ or 0 to run the more comprehensive test and demo application. */
 	extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
-/* Prototypes for the standard FreeRTOS callback/hook functions implemented
-within this file.  See https://www.freertos.org/a00016.html */
+/*
+ * Prototypes for the standard FreeRTOS callback/hook functions implemented
+ * within this file.  See https://www.freertos.org/a00016.html
+ */
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
+/*
+ * Very simply polling write to the UART.  The full demo only writes single
+ * characters at a time so as not to disrupt the timing of the test and demo
+ * tasks.
+ */
+void vSendString( const char * pcString );
+
 /*-----------------------------------------------------------*/
 
 int main( void )
 {
+	vSendString( "Starting" );
+
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
 	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
@@ -176,3 +187,15 @@ volatile uint32_t ulSetTo1ToExitFunction = 0;
 		__asm volatile( "NOP" );
 	}
 }
+/*-----------------------------------------------------------*/
+
+void vSendString( const char * pcString )
+{
+	while( *pcString != 0x00 )
+	{
+		while( UART0_REG( UART_REG_TXFIFO ) & 0x80000000 );
+		UART0_REG( UART_REG_TXFIFO ) = *pcString;
+		*pcString++;
+	}
+}
+

@@ -478,7 +478,8 @@ const TickType_t xPeriod = 75, xCycles = 5, xAllowableMargin = ( bktALLOWABLE_MA
 	high as to disrupt the timer tests. */
 	vTaskPrioritySet( NULL, configTIMER_TASK_PRIORITY - 1 );
 
-	/* Crude check to too that vTaskDelay() blocks for the expected period. */
+	/* Crude check to too see that vTaskDelay() blocks for the expected
+	period. */
 	xPreTime = xTaskGetTickCount();
 	vTaskDelay( bktTIME_TO_BLOCK );
 	xPostTime = xTaskGetTickCount();

@@ -609,6 +609,9 @@ const BaseType_t xCallInterval = pdMS_TO_TICKS( 50 );
 uint32_t ulPreviousValue;
 const uint32_t ulUnexpectedValue = 0xff;
 
+	/* Check the task notification demo tasks were actually created. */
+	configASSERT( xTaskToNotify );
+
 	/* The task performs some tests before starting the timer that gives the
 	notification from this interrupt.  If the timer has not been created yet
 	then the initial tests have not yet completed and the notification should

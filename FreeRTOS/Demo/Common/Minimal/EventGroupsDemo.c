@@ -976,6 +976,9 @@ BaseType_t xMessagePosted;
 	/* Called periodically from the tick hook to exercise the "FromISR"
 	functions. */
 
+	/* Check the even group tasks were actually created. */
+	configASSERT( xISREventGroup );
+
 	xCallCount++;
 
 	if( xCallCount == xSetBitCount )

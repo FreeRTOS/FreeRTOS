@@ -38,7 +38,7 @@
  * main_full.c.
  */
 
-.align( 8 )
+.align( 4 )
 vRegTest1Implementation:
 
 	/* Fill the core registers with known values. */
@@ -148,12 +148,12 @@ reg1_error_loop:
 	ebreak
 	jal reg1_error_loop
 
-.align( 16 )
+.align( 4 )
 ulRegTest1LoopCounterConst: .word ulRegTest1LoopCounter
 
 /*-----------------------------------------------------------*/
 
-.align( 8 )
+.align( 4 )
 vRegTest2Implementation:
 
 	/* Fill the core registers with known values. */
@@ -260,7 +260,7 @@ reg2_error_loop:
 	ebreak
 	jal reg2_error_loop
 
-.align( 16 )
+.align( 4 )
 ulRegTest2LoopCounterConst: .word ulRegTest2LoopCounter
 
 

@@ -209,6 +209,7 @@ void main_full( void )
 	prvSetupPeripheralTimers();
 
 	/* Start the scheduler. */
+	vSendString( "Starting" );
 	vTaskStartScheduler();
 
 	/* If all is well, the scheduler will now be running, and the following
@@ -234,10 +235,6 @@ extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
-
-	/* Start with a pass message, after which a '.' character will be printed
-	out on each successful loop. */
-	vSendString( "Pass" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */

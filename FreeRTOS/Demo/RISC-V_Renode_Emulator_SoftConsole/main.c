@@ -71,10 +71,10 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* Prepare haredware to run the demo. */
+/* Prepare hardware to run the demo. */
 static void prvSetupHardware( void );
 
-/* Send a messaage to the UART initialised in prvSetupHardware. */
+/* Send a message to the UART initialised in prvSetupHardware. */
 void vSendString( const char * const pcString );
 
 /*-----------------------------------------------------------*/

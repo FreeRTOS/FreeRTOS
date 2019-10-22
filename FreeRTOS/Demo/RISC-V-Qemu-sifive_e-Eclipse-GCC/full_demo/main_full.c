@@ -75,7 +75,6 @@
 /* Standard demo application includes. */
 #include "dynamic.h"
 #include "blocktim.h"
-#include "GenQTest.h"
 #include "recmutex.h"
 #include "TimerDemo.h"
 #include "EventGroupsDemo.h"
@@ -166,7 +165,6 @@ void main_full( void )
 	kernel port. */
 	vStartDynamicPriorityTasks();
 	vCreateBlockTimeTasks();
-	vStartGenericQueueTasks( tskIDLE_PRIORITY );
 	vStartRecursiveMutexTasks();
 	vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	vStartEventGroupTasks();
@@ -194,7 +192,6 @@ static void prvCheckTask( void *pvParameters )
 const TickType_t xDelayPeriod = mainNO_ERROR_CHECK_TASK_PERIOD;
 TickType_t xLastExecutionTime;
 static unsigned long ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
-const char * const pcPassMessage = "Pass";
 const char * pcStatusMessage = ".";
 extern void vSendString( const char * pcString );
 
@@ -226,11 +223,6 @@ extern void vSendString( const char * pcString );
 		if ( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "ERROR: Block time demo/tests.\r\n";
-		}
-
-		if ( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			pcStatusMessage = "ERROR: Generic queue demo/tests.\r\n";
 		}
 
 		if ( xAreRecursiveMutexTasksStillRunning() != pdTRUE )

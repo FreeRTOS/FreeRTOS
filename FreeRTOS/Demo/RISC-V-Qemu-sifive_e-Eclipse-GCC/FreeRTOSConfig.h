@@ -102,7 +102,7 @@
 #define configCPU_CLOCK_HZ				( 10000000 ) /*QEMU*/
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 7 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 105 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) 14500 )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
@@ -126,7 +126,7 @@
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		( configMAX_PRIORITIES - 1 )
 #define configTIMER_QUEUE_LENGTH		4
-#define configTIMER_TASK_STACK_DEPTH	( 120 )
+#define configTIMER_TASK_STACK_DEPTH	( 110 )
 
 /* Task priorities.  Allow these to be overridden. */
 #ifndef uartPRIMARY_PRIORITY
@@ -156,13 +156,12 @@ void vAssertCalled( void );
 /* Overwrite some of the stack sizes allocated to various test and demo tasks.
 Like all task stack sizes, the value is the number of words, not bytes. */
 #define bktBLOCK_TIME_TASK_STACK_SIZE 100
-#define notifyNOTIFIED_TASK_STACK_SIZE 120
+#define notifyNOTIFIED_TASK_STACK_SIZE 110
 #define priSUSPENDED_RX_TASK_STACK_SIZE 90
 #define tmrTIMER_TEST_TASK_STACK_SIZE 100
 #define ebRENDESVOUS_TEST_TASK_STACK_SIZE 100
 #define ebEVENT_GROUP_SET_BITS_TEST_TASK_STACK_SIZE 115
 #define genqMUTEX_TEST_TASK_STACK_SIZE 90
-#define genqGENERIC_QUEUE_TEST_TASK_STACK_SIZE 100
-#define recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE 90
+#define recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE 110
 
 #endif /* FREERTOS_CONFIG_H */

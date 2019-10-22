@@ -50,7 +50,8 @@
  * This project has only been tested in the QEMU emulation of the HiFive board
  * from SiFive.
  *
- * Start QEMU using the following command line:
+ * NOTE - Requires QEMU 1908xx or higher.  Start QEMU using the following command 
+ * line:
  *
  * [your_path_1]\qemu-system-riscv32 -kernel [your_path_2]\FreeRTOS\Demo\RISC-V-Qemu-sifive_e-FreedomStudio\Debug\RTOSDemo.elf -S -s -machine sifive_e
  *
@@ -191,11 +192,13 @@ volatile uint32_t ulSetTo1ToExitFunction = 0;
 
 void vSendString( const char * pcString )
 {
+const uint32_t ulTxFifoFullBit = 0x80000000UL;
+
 	while( *pcString != 0x00 )
 	{
-		while( UART0_REG( UART_REG_TXFIFO ) & 0x80000000 );
+		while( ( UART0_REG( UART_REG_TXFIFO ) & ulTxFifoFullBit ) != 0UL );
 		UART0_REG( UART_REG_TXFIFO ) = *pcString;
-		*pcString++;
+		pcString++;
 	}
 }
 

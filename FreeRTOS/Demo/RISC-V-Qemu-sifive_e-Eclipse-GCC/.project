@@ -90,11 +90,6 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c</locationURI>
 		</link>
 		<link>
-			<name>full_demo/standard_demo_tasks/GenQTest.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/GenQTest.c</locationURI>
-		</link>
-		<link>
 			<name>full_demo/standard_demo_tasks/TaskNotify.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/TaskNotify.c</locationURI>

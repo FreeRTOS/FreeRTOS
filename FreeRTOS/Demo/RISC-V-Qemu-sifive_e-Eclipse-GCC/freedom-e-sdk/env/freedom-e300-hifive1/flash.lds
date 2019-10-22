@@ -17,7 +17,7 @@ PHDRS
 
 SECTIONS
 {
-  __stack_size = DEFINED(__stack_size) ? __stack_size : 400;
+  __stack_size = DEFINED(__stack_size) ? __stack_size : 350;
 
   .init           :
   {

@@ -230,7 +230,6 @@ uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 uint32_t ulLastTimer0Interrupts = 0, ulLastTimer1Interrupts = 0;
 char * const pcPassMessage = ".";
 char * pcStatusMessage = pcPassMessage;
-extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */

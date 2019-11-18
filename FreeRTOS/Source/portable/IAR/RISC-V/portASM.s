@@ -99,12 +99,12 @@ at the top of this file. */
 	EXTERN pxCurrentTCB
 	EXTERN ulPortTrapHandler
 	EXTERN vTaskSwitchContext
+	EXTERN xTaskIncrementTick
 	EXTERN Timer_IRQHandler
 	EXTERN pullMachineTimerCompareRegister
 	EXTERN pullNextTime
 	EXTERN uxTimerIncrementsForOneTick /* size_t type so 32-bit on 32-bit core and 64-bits on 64-bit core. */
 	EXTERN xISRStackTop
-	EXTERN xTaskIncrementTick
 	EXTERN portasmHANDLE_INTERRUPT
 
 /*-----------------------------------------------------------*/
@@ -231,11 +231,13 @@ test_if_environment_call:
 	j processed_source
 
 is_exception:
-	ebreak
-	j is_exception
+	csrr t0, CSR_MCAUSE					/* For viewing in the debugger only. */
+	csrr t1, CSR_MEPC					/* For viewing in the debugger only */
+	csrr t2, CSR_MSTATUS
+	j is_exception						/* No other exceptions handled yet. */
 
 as_yet_unhandled:
-	ebreak
+	csrr t0, mcause						/* For viewing in the debugger only. */
 	j as_yet_unhandled
 
 processed_source:

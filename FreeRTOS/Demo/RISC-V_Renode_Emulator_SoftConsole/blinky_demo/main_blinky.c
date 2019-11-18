@@ -175,7 +175,6 @@ unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 const char * const pcPassMessage = "Blink\r\n";
 const char * const pcFailMessage = "Unexpected value received\r\n";
-extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Remove compiler warning about unused parameter. */

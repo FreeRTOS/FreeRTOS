@@ -172,7 +172,7 @@ handle_asynchronous:
 			li t4, -1
 			lw t2, 0(t1)				/* Load the low word of ullNextTime into t2. */
 			lw t3, 4(t1)				/* Load the high word of ullNextTime into t3. */
-			sw t4, 0(t0)				/* Low word no smaller than old value. */
+			sw t4, 0(t0)				/* Low word no smaller than old value to start with - will be overwritten below. */
 			sw t3, 4(t0)				/* Store high word of ullNextTime into compare register.  No smaller than new value. */
 			sw t2, 0(t0)				/* Store low word of ullNextTime into compare register. */
 			lw t0, uxTimerIncrementsForOneTick	/* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
@@ -226,7 +226,7 @@ is_exception:
 	csrr t0, mcause						/* For viewing in the debugger only. */
 	csrr t1, mepc						/* For viewing in the debugger only */
 	csrr t2, mstatus
-	j is_exception
+	j is_exception						/* No other exceptions handled yet. */
 
 as_yet_unhandled:
 	csrr t0, mcause						/* For viewing in the debugger only. */

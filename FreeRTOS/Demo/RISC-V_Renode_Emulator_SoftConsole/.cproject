@@ -153,6 +153,10 @@
                                 								
                                 <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.other.458885637" name="Other compiler flags" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.other" useByScannerDiscovery="true" value="" valueType="string"/>
                                 								
+                                <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.otherwarnings.501755172" name="Other warning flags" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.otherwarnings" useByScannerDiscovery="true" value="-Wall -Wextra" valueType="string"/>
+                                								
+                                <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.otheroptimizations.161916863" name="Other optimization flags" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.otheroptimizations" useByScannerDiscovery="true" value="" valueType="string"/>
+                                								
                                 <inputType id="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.compiler.input.1901773760" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.compiler.input"/>
                                 							
                             </tool>

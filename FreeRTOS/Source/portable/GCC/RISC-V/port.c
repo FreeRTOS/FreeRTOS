@@ -34,6 +34,9 @@
 #include "task.h"
 #include "portmacro.h"
 
+/* Standard includes. */
+#include "string.h"
+
 #ifndef configCLINT_BASE_ADDRESS
 	#warning configCLINT_BASE_ADDRESS must be defined in FreeRTOSConfig.h.  If the target chip includes a Core Local Interrupter (CLINT) then set configCLINT_BASE_ADDRESS to the CLINT base address.  Otherwise set configCLINT_BASE_ADDRESS to 0.
 #endif
@@ -57,6 +60,11 @@ interrupt stack after the scheduler has started. */
 #ifdef configISR_STACK_SIZE_WORDS
 	static __attribute__ ((aligned(16))) StackType_t xISRStack[ configISR_STACK_SIZE_WORDS ] = { 0 };
 	const StackType_t xISRStackTop = ( StackType_t ) &( xISRStack[ configISR_STACK_SIZE_WORDS & ~portBYTE_ALIGNMENT_MASK ] );
+
+	/* Don't use 0xa5 as the stack fill bytes as that is used by the kernerl for
+	the task stacks, and so will legitimately appear in many positions within
+	the ISR stack. */
+	#define portISR_STACK_FILL_BYTE	0xee	
 #else
 	extern const uint32_t __freertos_irq_stack_top[];
 	const StackType_t xISRStackTop = ( StackType_t ) __freertos_irq_stack_top;
@@ -82,12 +90,8 @@ volatile uint64_t * pullMachineTimerCompareRegister = 0;
 stack checking.  A problem in the ISR stack will trigger an assert, not call the
 stack overflow hook function (because the stack overflow hook is specific to a
 task stack, not the ISR stack). */
-#if( configCHECK_FOR_STACK_OVERFLOW > 2 )
+#if defined( configISR_STACK_SIZE_WORDS ) && ( configCHECK_FOR_STACK_OVERFLOW > 2 )
 	#warning This path not tested, or even compiled yet.
-	/* Don't use 0xa5 as the stack fill bytes as that is used by the kernerl for
-	the task stacks, and so will legitimately appear in many positions within
-	the ISR stack. */
-	#define portISR_STACK_FILL_BYTE	0xee
 
 	static const uint8_t ucExpectedStackBytes[] = {
 									portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE, portISR_STACK_FILL_BYTE,		\
@@ -152,6 +156,12 @@ extern void xPortStartFirstTask( void );
 		stack that was being used by main() prior to the scheduler being
 		started. */
 		configASSERT( ( xISRStackTop & portBYTE_ALIGNMENT_MASK ) == 0 );
+
+		#ifdef configISR_STACK_SIZE_WORDS
+		{
+			memset( ( void * ) xISRStack, portISR_STACK_FILL_BYTE, sizeof( xISRStack ) );
+		}
+		#endif	 /* configISR_STACK_SIZE_WORDS */
 	}
 	#endif /* configASSERT_DEFINED */
 

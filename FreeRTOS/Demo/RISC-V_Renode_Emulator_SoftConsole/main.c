@@ -121,7 +121,7 @@ static uint32_t ulLEDState = 0;
 
 void vSendString( const char * const pcString )
 {
-	UART_polled_tx_string( &g_uart, pcString );
+	UART_polled_tx_string( &g_uart, ( const uint8_t * ) pcString );
 }
 /*-----------------------------------------------------------*/
 
@@ -181,5 +181,13 @@ void vApplicationTickHook( void )
 	}
 	#endif
 }
+/*-----------------------------------------------------------*/
 
+void *_sbrk( ptrdiff_t incr )
+{
+	/* Required to link, but force an assert to ensure it is never actually
+	called. */
+	configASSERT( ( void * ) incr == NULL );
+	return NULL;
+}
 

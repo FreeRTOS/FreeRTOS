@@ -160,6 +160,8 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 								NULL,				/* The timer's ID is not used. */
 								prvQueueSendTimerCallback );/* The function executed when the timer expires. */
 
+		xTimerStart( xTimer, 0 ); /* The scheduler has not started so use a block time of 0. */
+
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();
 	}

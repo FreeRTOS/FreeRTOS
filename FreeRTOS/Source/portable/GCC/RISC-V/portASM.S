@@ -172,7 +172,7 @@ handle_asynchronous:
 			li t4, -1
 			lw t2, 0(t1)				/* Load the low word of ullNextTime into t2. */
 			lw t3, 4(t1)				/* Load the high word of ullNextTime into t3. */
-			sw t4, 0(t0)				/* Low word no smaller than old value to start with - will be overwritten below. */
+			sw t4, 0(t0)				/* Low word no smaller than old value. */
 			sw t3, 4(t0)				/* Store high word of ullNextTime into compare register.  No smaller than new value. */
 			sw t2, 0(t0)				/* Store low word of ullNextTime into compare register. */
 			lw t0, uxTimerIncrementsForOneTick	/* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
@@ -402,7 +402,7 @@ xPortStartFirstTask:
 pxPortInitialiseStack:
 
 	csrr t0, mstatus					/* Obtain current mstatus value. */
-	addi t1, x0, 0x188					/* Generate the value 0x1888, which are the MIE, MPIE and privilege bits to set in mstatus. */
+	addi t1, x0, 0x188					/* Generate the value 0x1880, which are the MPIE and MPP bits to set in mstatus. */
 	slli t1, t1, 4
 	or t0, t0, t1						/* Set MPIE and MPP bits in mstatus value. */
 

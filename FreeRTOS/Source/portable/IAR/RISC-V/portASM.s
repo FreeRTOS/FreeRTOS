@@ -180,7 +180,7 @@ handle_asynchronous:
 			li t4, -1
 			lw t2, 0(t1)				/* Load the low word of ullNextTime into t2. */
 			lw t3, 4(t1)				/* Load the high word of ullNextTime into t3. */
-			sw t4, 0(t0)				/* Low word no smaller than old value. */
+			sw t4, 0(t0)				/* Low word no smaller than old value to start with - will be overwritten below. */
 			sw t3, 4(t0)				/* Store high word of ullNextTime into compare register.  No smaller than new value. */
 			sw t2, 0(t0)				/* Store low word of ullNextTime into compare register. */
 			lw t0, uxTimerIncrementsForOneTick	/* Load the value of ullTimerIncrementForOneTick into t0 (could this be optimized by storing in an array next to pullNextTime?). */
@@ -304,6 +304,7 @@ xPortStartFirstTask:
 	portasmRESTORE_ADDITIONAL_REGISTERS	/* Defined in freertos_risc_v_chip_specific_extensions.h to restore any registers unique to the RISC-V implementation. */
 
 	load_x  t0, 29 * portWORD_SIZE( sp )	/* mstatus */
+	addi t0, t0, 0x08						/* Set MIE bit so the first task starts with interrupts enabled - required as returns with ret not eret. */
 	csrrw  x0, CSR_MSTATUS, t0					/* Interrupts enabled from here! */
 
 	load_x  x5, 2 * portWORD_SIZE( sp )		/* t0 */

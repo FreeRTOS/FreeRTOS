@@ -65,6 +65,13 @@ typedef portBASE_TYPE BaseType_t;
 typedef portUBASE_TYPE UBaseType_t;
 typedef portUBASE_TYPE TickType_t;
 
+/* Legacy type definitions. */
+#define portCHAR		char
+#define portFLOAT		float
+#define portDOUBLE		double
+#define portLONG		long
+#define portSHORT		short
+
 /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
 not need to be guarded with a critical section. */
 #define portTICK_TYPE_IS_ATOMIC 1

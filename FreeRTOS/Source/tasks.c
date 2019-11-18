@@ -300,7 +300,10 @@ typedef struct tskTaskControlBlock 			/* The old naming convention is used to pr
 		responsible for resulting newlib operation.  User must be familiar with
 		newlib and must provide system-wide implementations of the necessary
 		stubs. Be warned that (at the time of writing) the current newlib design
-		implements a system-wide malloc() that must be provided with locks. */
+		implements a system-wide malloc() that must be provided with locks.
+
+		See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+		for additional information. */
 		struct	_reent xNewLib_reent;
 	#endif
 
@@ -993,7 +996,9 @@ UBaseType_t x;
 
 	#if ( configUSE_NEWLIB_REENTRANT == 1 )
 	{
-		/* Initialise this task's Newlib reent structure. */
+		/* Initialise this task's Newlib reent structure.
+		See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+		for additional information. */
 		_REENT_INIT_PTR( ( &( pxNewTCB->xNewLib_reent ) ) );
 	}
 	#endif
@@ -1218,12 +1223,12 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 			else
 			{
 				--uxCurrentNumberOfTasks;
+				traceTASK_DELETE( pxTCB );
 				prvDeleteTCB( pxTCB );
 
 				/* Reset the next expected unblock time in case it referred to
 				the task that has just been deleted. */
 				prvResetNextTaskUnblockTime();
-				traceTASK_DELETE( pxTCB );
 			}
 		}
 		taskEXIT_CRITICAL();
@@ -2044,7 +2049,9 @@ BaseType_t xReturn;
 		#if ( configUSE_NEWLIB_REENTRANT == 1 )
 		{
 			/* Switch Newlib's _impure_ptr variable to point to the _reent
-			structure specific to the task that will run first. */
+			structure specific to the task that will run first.
+			See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+			for additional information. */
 			_impure_ptr = &( pxCurrentTCB->xNewLib_reent );
 		}
 		#endif /* configUSE_NEWLIB_REENTRANT */
@@ -2846,6 +2853,19 @@ BaseType_t xSwitchRequired = pdFALSE;
 			}
 		}
 		#endif /* configUSE_TICK_HOOK */
+
+		#if ( configUSE_PREEMPTION == 1 )
+		{
+			if( xYieldPending != pdFALSE )
+			{
+				xSwitchRequired = pdTRUE;
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+		#endif /* configUSE_PREEMPTION */
 	}
 	else
 	{
@@ -2859,19 +2879,6 @@ BaseType_t xSwitchRequired = pdFALSE;
 		}
 		#endif
 	}
-
-	#if ( configUSE_PREEMPTION == 1 )
-	{
-		if( xYieldPending != pdFALSE )
-		{
-			xSwitchRequired = pdTRUE;
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
-	}
-	#endif /* configUSE_PREEMPTION */
 
 	return xSwitchRequired;
 }
@@ -3052,7 +3059,9 @@ void vTaskSwitchContext( void )
 		#if ( configUSE_NEWLIB_REENTRANT == 1 )
 		{
 			/* Switch Newlib's _impure_ptr variable to point to the _reent
-			structure specific to this task. */
+			structure specific to this task.
+			See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+			for additional information. */
 			_impure_ptr = &( pxCurrentTCB->xNewLib_reent );
 		}
 		#endif /* configUSE_NEWLIB_REENTRANT */
@@ -3874,7 +3883,9 @@ static void prvCheckTasksWaitingTermination( void )
 		portCLEAN_UP_TCB( pxTCB );
 
 		/* Free up the memory allocated by the scheduler for the task.  It is up
-		to the task to free any memory allocated at the application level. */
+		to the task to free any memory allocated at the application level.
+		See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+		for additional information. */
 		#if ( configUSE_NEWLIB_REENTRANT == 1 )
 		{
 			_reclaim_reent( &( pxTCB->xNewLib_reent ) );

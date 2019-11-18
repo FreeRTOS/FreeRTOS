@@ -152,6 +152,12 @@ extern void xPortStartFirstTask( void );
 		stack that was being used by main() prior to the scheduler being
 		started. */
 		configASSERT( ( xISRStackTop & portBYTE_ALIGNMENT_MASK ) == 0 );
+
+		#ifdef configISR_STACK_SIZE_WORDS
+		{
+			memset( ( void * ) xISRStack, portISR_STACK_FILL_BYTE, sizeof( xISRStack ) );
+		}
+		#endif	 /* configISR_STACK_SIZE_WORDS */
 	}
 	#endif /* configASSERT_DEFINED */
 

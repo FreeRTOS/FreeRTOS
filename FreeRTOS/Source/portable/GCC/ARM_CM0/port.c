@@ -225,8 +225,8 @@ void vPortYield( void )
 
 void vPortEnterCritical( void )
 {
-    portDISABLE_INTERRUPTS();
-    uxCriticalNesting++;
+	portDISABLE_INTERRUPTS();
+	uxCriticalNesting++;
 	__asm volatile( "dsb" ::: "memory" );
 	__asm volatile( "isb" );
 }
@@ -235,11 +235,11 @@ void vPortEnterCritical( void )
 void vPortExitCritical( void )
 {
 	configASSERT( uxCriticalNesting );
-    uxCriticalNesting--;
-    if( uxCriticalNesting == 0 )
-    {
-        portENABLE_INTERRUPTS();
-    }
+	uxCriticalNesting--;
+	if( uxCriticalNesting == 0 )
+	{
+		portENABLE_INTERRUPTS();
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -251,13 +251,6 @@ uint32_t ulSetInterruptMaskFromISR( void )
 					" bx lr				  "
 					::: "memory"
 				  );
-
-#if !defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-	/* To avoid compiler warnings.  The return statement will nevere be reached,
-	but some compilers warn if it is not included, while others won't compile if
-	it is. */
-	return 0;
-#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -268,13 +261,6 @@ void vClearInterruptMaskFromISR( __attribute__( ( unused ) ) uint32_t ulMask )
 					" bx lr				  "
 					::: "memory"
 				  );
-
-#if !defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-	/* Just to avoid compiler warning.  ulMask is used from the asm code but
-	the compiler can't see that.  Some compilers generate warnings without the
-	following line, while others generate warnings if the line is included. */
-	( void ) ulMask;
-#endif
 }
 /*-----------------------------------------------------------*/
 

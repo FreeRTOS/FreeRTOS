@@ -46,7 +46,7 @@
 
 /* Tasks should start with interrupts enabled and in Supervisor mode, therefore
 PSW is set with U and I set, and PM and IPL clear. */
-#define portINITIAL_PSW     ( ( StackType_t ) 0x00030000 )
+#define portINITIAL_PSW	 ( ( StackType_t ) 0x00030000 )
 
 /* The peripheral clock is divided by this value before being supplying the
 CMT. */
@@ -105,7 +105,7 @@ void vPortTickISR( void ) __attribute__((interrupt));
 static void prvSetupTimerInterrupt( void );
 #ifndef configSETUP_TICK_INTERRUPT
 	/* The user has not provided their own tick interrupt configuration so use
-    the definition in this file (which uses the interval timer). */
+	the definition in this file (which uses the interval timer). */
 	#define configSETUP_TICK_INTERRUPT() prvSetupTimerInterrupt()
 #endif /* configSETUP_TICK_INTERRUPT */
 
@@ -162,7 +162,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	/* R0 is not included as it is the stack pointer. */
 	*pxTopOfStack = 0x00;
 	pxTopOfStack--;
-    *pxTopOfStack = 0x00;
+	*pxTopOfStack = 0x00;
 	pxTopOfStack--;
  	*pxTopOfStack = portINITIAL_PSW;
 	pxTopOfStack--;
@@ -284,22 +284,22 @@ static void prvStartFirstTask( void )
 
 		/* Restore the registers from the stack of the task pointed to by
 		pxCurrentTCB. */
-	    "POP		R15						\n" \
+		"POP		R15						\n" \
 
 		/* Accumulator low 32 bits. */
-	    "MVTACLO	R15 					\n" \
-	    "POP		R15						\n" \
+		"MVTACLO	R15 					\n" \
+		"POP		R15						\n" \
 
 		/* Accumulator high 32 bits. */
-	    "MVTACHI	R15 					\n" \
+		"MVTACHI	R15 					\n" \
 
 		/* R1 to R15 - R0 is not included as it is the SP. */
-	    "POPM		R1-R15 					\n" \
+		"POPM		R1-R15 					\n" \
 
 		/* This pops the remaining registers. */
-	    "RTE								\n" \
-	    "NOP								\n" \
-	    "NOP								\n"
+		"RTE								\n" \
+		"NOP								\n" \
+		"NOP								\n"
 	);
 }
 /*-----------------------------------------------------------*/
@@ -573,14 +573,14 @@ static void prvSetupTimerInterrupt( void )
 		}
 		else if( eSleepAction == eNoTasksWaitingTimeout )
 		{
-		    /* Protection off. */
-		    SYSTEM.PRCR.WORD = portUNLOCK_KEY;
+			/* Protection off. */
+			SYSTEM.PRCR.WORD = portUNLOCK_KEY;
 
-		    /* Ready for software standby with all clocks stopped. */
+			/* Ready for software standby with all clocks stopped. */
 			SYSTEM.SBYCR.BIT.SSBY = 1;
 
-		    /* Protection on. */
-		    SYSTEM.PRCR.WORD = portLOCK_KEY;
+			/* Protection on. */
+			SYSTEM.PRCR.WORD = portLOCK_KEY;
 
 			/* Sleep until something happens.  Calling prvSleep() will
 			automatically reset the i bit in the PSW. */
@@ -591,18 +591,18 @@ static void prvSetupTimerInterrupt( void )
 		}
 		else
 		{
-		    /* Protection off. */
-		    SYSTEM.PRCR.WORD = portUNLOCK_KEY;
+			/* Protection off. */
+			SYSTEM.PRCR.WORD = portUNLOCK_KEY;
 
-		    /* Ready for deep sleep mode. */
+			/* Ready for deep sleep mode. */
 			SYSTEM.MSTPCRC.BIT.DSLPE = 1;
 			SYSTEM.MSTPCRA.BIT.MSTPA28 = 1;
 			SYSTEM.SBYCR.BIT.SSBY = 0;
 
-		    /* Protection on. */
-		    SYSTEM.PRCR.WORD = portLOCK_KEY;
+			/* Protection on. */
+			SYSTEM.PRCR.WORD = portLOCK_KEY;
 
-		    /* Adjust the match value to take into account that the current
+			/* Adjust the match value to take into account that the current
 			time slice is already partially complete. */
 			ulMatchValue -= ( uint32_t ) CMT0.CMCNT;
 			CMT0.CMCOR = ( uint16_t ) ulMatchValue;

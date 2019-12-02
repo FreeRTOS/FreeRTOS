@@ -1,0 +1,786 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="FreeRTOS">
+      <UniqueIdentifier>{af3445a1-4908-4170-89ed-39345d90d30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS\Source">
+      <UniqueIdentifier>{f32be356-4763-4cae-9020-974a2638cb08}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\Portable">
+      <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+">
+      <UniqueIdentifier>{e5ad4ec7-23dc-4295-8add-2acaee488f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\include">
+      <UniqueIdentifier>{d2dcd641-8d91-492b-852f-5563ffadaec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+TCP">
+      <UniqueIdentifier>{8672fa26-b119-481f-8b8d-086419c01a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+TCP\portable">
+      <UniqueIdentifier>{4570be11-ec96-4b55-ac58-24b50ada980a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+TCP\include">
+      <UniqueIdentifier>{5d93ed51-023a-41ad-9243-8d230165d34b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DemoTasks">
+      <UniqueIdentifier>{b71e974a-9f28-4815-972b-d930ba8a34d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries">
+      <UniqueIdentifier>{60717407-397f-4ea5-8492-3314acdd25f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard">
+      <UniqueIdentifier>{8a90222f-d723-4b4e-8e6e-c57afaf7fa92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\common">
+      <UniqueIdentifier>{7c995f05-2a10-4771-ad77-18a755876e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include">
+      <UniqueIdentifier>{9a636cc3-ebc6-48c5-8c18-c72494686e81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include\types">
+      <UniqueIdentifier>{29376c48-bc8b-4624-ad59-16807874c9f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions">
+      <UniqueIdentifier>{91ef4008-de51-4b41-ba5e-bf24d8cda378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform">
+      <UniqueIdentifier>{ade43c6c-04c5-4897-abdb-91af2df04e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos">
+      <UniqueIdentifier>{08a4e35c-19ca-4b1e-af24-bac368c2bf7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos\include">
+      <UniqueIdentifier>{1e324500-91b4-4c76-b699-59ba75691760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos\include\platform">
+      <UniqueIdentifier>{bdcbc1ec-99b8-4c72-9075-49035c115488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\https">
+      <UniqueIdentifier>{2d17d5e6-ed70-4e42-9693-f7a63baf4948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\https\src">
+      <UniqueIdentifier>{7158b0be-01e7-42d1-8d3f-c75118a596a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\https\include">
+      <UniqueIdentifier>{6ad56e6d-c330-4830-8f4b-c75b05dfa866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\https\include\types">
+      <UniqueIdentifier>{1d80b387-5a86-4744-a4cc-930033a52e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\http-parser">
+      <UniqueIdentifier>{3dc958a5-cd64-4a6a-af27-beba20339e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\mbedtls">
+      <UniqueIdentifier>{1cecca7f-60cd-4d8d-8123-f00aa75af147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\mbedtls\include">
+      <UniqueIdentifier>{f9a2e0a1-ed56-4ca7-b8b2-d694a94c78c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\mbedtls\library">
+      <UniqueIdentifier>{61ac8e2c-8fd1-44a0-a7a9-0326bc190426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\abstractions\mbedtls">
+      <UniqueIdentifier>{b53bfe50-b4d9-4b78-b7bb-ae90e4d25615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\platform">
+      <UniqueIdentifier>{d5bf72d9-1e71-4a65-ac2f-5f28a99b0796}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\common\src">
+      <UniqueIdentifier>{b0616e09-2c08-40a1-aa2d-5cbd592e4451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\platform\types">
+      <UniqueIdentifier>{f1ad002c-d40b-465f-b648-17cedba667d1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\timers.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\list.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\queue.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\tasks.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_Sockets.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_IP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_IP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_WIN.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\event_groups.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_Stream_Buffer.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\https\src\iot_https_client.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\https\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\https\src\iot_https_utils.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\https\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_clock_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_threads_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_network_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\http-parser\http_parser.c">
+      <Filter>FreeRTOS+\http-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\aes.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\aesni.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\arc4.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\aria.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\asn1parse.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\asn1write.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\base64.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\bignum.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\blowfish.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\camellia.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ccm.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\certs.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\chacha20.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\chachapoly.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\cipher.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\cipher_wrap.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\cmac.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ctr_drbg.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\debug.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\des.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\dhm.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ecdh.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ecdsa.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ecjpake.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ecp.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ecp_curves.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\entropy.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\entropy_poll.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\error.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\gcm.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\havege.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\hkdf.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\hmac_drbg.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\md.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\md_wrap.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\md2.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\md4.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\md5.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\memory_buffer_alloc.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\net_sockets.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\nist_kw.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\oid.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\padlock.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pem.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pk.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pk_wrap.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pkcs5.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pkcs11.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pkcs12.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pkparse.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\pkwrite.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\platform.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\platform_util.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\poly1305.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ripemd160.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\rsa.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\rsa_internal.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\sha1.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\sha256.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\sha512.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_cache.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_ciphersuites.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_cli.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_cookie.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_srv.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_ticket.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\ssl_tls.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\threading.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\timing.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\version.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\version_features.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509_create.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509_crl.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509_crt.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509_csr.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509write_crt.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\x509write_csr.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls\library\xtea.c">
+      <Filter>FreeRTOS+\mbedtls\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\mbedtls\mbedtls_platform_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\mbedtls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_taskpool_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\src\iot_logging.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\demo_logging.c" />
+    <ClCompile Include="..\common\main.c" />
+    <ClCompile Include="..\common\DemoTasks\SimpleHTTPSExamples.c">
+      <Filter>DemoTasks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DNS.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Sockets.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_UDP_IP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\timers.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\event_groups.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\FreeRTOS.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\queue.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\semphr.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\task.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP_Private.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_IP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_WIN.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeRTOSConfig.h" />
+    <ClInclude Include="FreeRTOSIPConfig.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Stream_Buffer.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\portable.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\projdefs.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\iot_taskpool_freertos.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\types\iot_taskpool_types_freertos.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_error.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_logging.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_static_memory.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\src\private\iot_taskpool_internal.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\common\include</Filter>
+    </ClInclude>
+    <ClInclude Include="iot_config.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\https\include\iot_https_client.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\https\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\https\include\types\iot_https_types.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\https\include\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\platform\iot_platform_types_freertos.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos\include\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\http-parser\http_parser.h">
+      <Filter>FreeRTOS+\http-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aes.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aesni.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\arc4.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aria.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\asn1.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\asn1write.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\base64.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\bignum.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\blowfish.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\bn_mul.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\camellia.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ccm.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\certs.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\chacha20.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\chachapoly.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\check_config.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\cipher.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\cipher_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\cmac.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\compat-1.3.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\config.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ctr_drbg.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\debug.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\des.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\dhm.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ecdh.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ecdsa.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ecjpake.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ecp.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ecp_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\entropy.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\entropy_poll.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\error.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\gcm.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\havege.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\hkdf.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\hmac_drbg.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\md.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\md_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\md2.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\md4.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\md5.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\memory_buffer_alloc.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\net.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\net_sockets.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\nist_kw.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\oid.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\padlock.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\pem.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\pk.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\pk_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\pkcs5.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\pkcs11.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\pkcs12.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\platform.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\platform_time.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\platform_util.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\poly1305.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\psa_util.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ripemd160.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\rsa.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\rsa_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\sha1.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\sha256.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\sha512.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ssl.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ssl_cache.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ssl_ciphersuites.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ssl_cookie.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ssl_internal.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\ssl_ticket.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\threading.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\timing.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\version.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\x509.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\x509_crl.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\x509_crt.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\x509_csr.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\xtea.h">
+      <Filter>FreeRTOS+\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\mbedtls\threading_alt.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\mbedtls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\types\iot_platform_types.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\platform\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_clock.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_metrics.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_network.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_threads.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\mbedtls_config.h" />
+    <ClInclude Include="demo_config.h" />
+    <ClInclude Include="..\..\include\https_demo_profile.h" />
+  </ItemGroup>
+</Project>

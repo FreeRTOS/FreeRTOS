@@ -1,0 +1,10 @@
++ common
+Contains the implementation of utility functions used by other AWS IoT libraries.
+
++ shadow
+Contains the implementation of the AWS IoT Shadow client library.
+
++ jobs
+Contain the implementation of the AWS IoT Jobs client library.
+
+Further libraries will be rolled out soon.

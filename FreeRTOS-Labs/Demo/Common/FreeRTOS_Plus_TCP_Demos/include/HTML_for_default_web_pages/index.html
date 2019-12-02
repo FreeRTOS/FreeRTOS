@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>
+			FreeRTOS+TCP and FreeRTOS+FAT HTTP Web Server Default Web Page
+		</title>
+		<style>
+			H1 {color: #1a3065; font-size:27px; line-height: 30px;}
+			H1 small {font-size:16px;}
+			H2 {color: #1a3065; font-size:22px;}
+			H3 {color: #1a3065; font-size:18px; line-height: normal;}
+			H3 small {color: #1a3065; font-size:15px;}
+			H4 {color: #1a3065}
+			TABLE { font-size: 14px; line-height: 1.5em; }
+			TABLE.text_ad { line-height: normal; }
+			A:visited {text-decoration: none; color: #0000ee}
+			A:hover { text-decoration: none; }
+			a {text-decoration: none;}
+			BODY {
+			   color: #202020;
+			   font-family: arial, helvetica, serif;
+			   font-size: 14px;
+			   line-height: 1.5em;
+			   margin-left: 0px;
+			   margin-right: 0px;
+			   margin-top:0px;
+			   background: white;
+			}
+		</style>
+	</head>
+	<body>
+		<table style="height:100%; width:1008px; background:white; border-right:solid 1px #e6e6e6; border-left:solid 1px #e6e6e6;" cellpadding="5" cellspacing="0" align="center">
+			<tr valign="top">
+				<td style="width:100%; height:100px;"> <!-- Spans the left menu, blank line, and main content columns of the next row. -->
+					<font face="Arial, Helvetica">
+						<table style="width:100%;" cellspacing="2" cellpadding="0" border="0"> <!-- Rows for logos and banners, blue lines with menu. -->
+							<tr  style="padding: 0px 0px 0px 0px;"> <!-- Top row, banner and logo. -->
+								<td>
+									<table width="100%" cellpadding="0" cellspacing="5px">
+										<tr>
+											<td style="line-height:normal;" valign="middle" width="174px">
+												<div style="float:left;">
+													<img src="logo.jpg" alt="Free RTOS logo" width="164px" border="0" style="padding: 0 0 0 5px;">
+												</div>
+											</td>
+											<td style="width:5px; border-top:solid 2px #e6e6e6; border-left:solid 2px #e6e6e6; border-bottom:solid 2px #e6e6e6;">
+												&nbsp;
+											</td>
+											<td valign="middle" style="line-height:normal;">
+												<h3>
+													Default Web Page
+												</h3>
+											</td>
+											<td>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr style="height:5px;" bgcolor="#7095d3"> <!-- Blank line. -->
+								<td>
+								</td>
+							</tr>
+							<tr style="height:19px;" bgcolor="#b6cffe"> <!-- Horizontal menu. -->
+								<td valign="middle" bgcolor="#b6cffe">
+								</td>
+							</tr>
+						</table>
+					</font>
+				</td>
+			</tr>
+			<tr valign="top"> <!-- Main content row with menu and content area columns. -->
+				<td style="padding: 20px 20px 20px 20px;">
+					<div style="float:right;" align="center">
+						<img src="ftp.png">
+						<small>
+							<br>
+							<b>
+								FTP'ing web content into /ram/websrc
+							</b>
+						</small>
+					</div>
+					<h1>
+						FreeRTOS+TCP Web Server
+					</h1>
+					This is the default page being served by the FreeRTOS+TCP
+					web server, with files served from a disk implemented
+					using FreeRTOS+FAT.
+					<p>
+					The HTTP root directory is set by the configHTTP_ROOT constant
+					in FreeRTOSConfig.h.  These default web pages can be replaced
+					with new web content by FTP'ing files into that directory.
+					<p>
+					<b>NOTE:</b> Performance will be limited when using the
+					FreeRTOS Windows port.
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

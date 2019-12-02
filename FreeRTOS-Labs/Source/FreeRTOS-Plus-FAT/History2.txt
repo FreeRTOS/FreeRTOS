@@ -1,0 +1,66 @@
+> is there a repository I should be aware of when it comes to FreeRTOS Labs? 
+
+Unfortunately there isn't. FreeRTOS+FAT has become a bit of an orphan. All time and energy goes to the products in the [AWS/FreeRTOS release](https://github.com/aws/amazon-freertos)
+But I am still actively maintaining FreeRTOS+FAT: implementing requests and fixes.
+
+Please comment your findings with the above +FAT release.
+
+Here is a complete list of all changes since the 160919 Labs release:
+
+● `ff_dir.c : FF_MkDir()`
+refuse to create a directory with an empty name
+
+● `ff_fat.c : FF_GetFreeSize()`
+in case of an error, return 0
+
+● `ff_file.c : FF_FileSize()`
+This function returns the size of a file, or a negative number in case of an error.
+Hence, the maximum size returned was returned is 2 GB.
+We've added a new function:
+`FF_Error_t FF_GetFileSize( FF_FILE *pxFile, uint32_t *pulSize );`
+which separates the length from the error code.
+
+● `ff_file.c : FF_ExtendFile()`
+Sometimes while building up a file, it may be more efficient not to flush the changes immediately. When defining `ffconfigFILE_EXTEND_FLUSHES_BUFFERS` as `0`, there is no immediate flushing.
+
+● `ff_file.c : FF_Seek()`
+Seeking didn't work for sizes larger than 2 GB. Although the parameter `int32_t lOffset` is signed, it will now be casted to 32-bits unsigned:
+`ulPosition = ( uint32_t )lOffset;`
+All options (`SET`, `CUR`, and `END` ) re-tested.
+
+● `ff_file.c : FF_Close()`
+`FF_FlushCache()` is now called at the end of the function in order to also write the last changes.
+
+● `ff_format.c : FF_Format()`
+A variable `lRemaining` should have been declared unsigned: `uint32_t`.
+Also: a small optimisation for large SD-cards:
+"Putting the FAT-table into the second 4MB erase block gives a higher performance and a longer life-time"
+
+● `ff_format.c : FF_Partition()`
+`ulHiddenSectors` must be at least `1`
+( see [this post](https://sourceforge.net/p/freertos/discussion/382005/thread/d2b6524a/?limit=250#e1ea) )
+
+● `ff_ioman.c : FF_CreateIOManger()`
+`FF_CreateEvents` shall only be called in case an `pxIOManager` was successfully created.
+
+● `ff_ioman.c : FF_DeleteIOManager()`
+Added a call to `FF_DeleteEvents()`, which will delete the event group belonging to the I/O manager.
+
+● `ff_ioman.c : FF_FlushCache()`
+Added a user application hook per disk: `fnFlushApplicationHook()`. This is useful for e.g. NAND-drivers.
+
+● `ff_ioman.c : FF_Mount()`
+Make sure that `pcVolumeLabel` is null-terminated.
+
+● `ff_ioman.c : FF_IncreaseFreeClusters()`
+A lock is needed before `ulLastFreeCluster` can be changed. But before taking this lock, check if has already been taken to avoid a dead lock.
+
+● `ff_locking.c : FF_DeleteEvents`
+This is a new function which deletes ( frees up ) the event group belonging to an I/O manager.
+
+● `ff_stdio.c : ff_filelength()`
+This function will now call `FF_GetFileSize()` in order to get the `unsigned` length of a file, increasing the maximum reported size from 2 to 4 GB.
+
+● `ff_sys.c : *`
+This module combines several I/O managers ( = disks ) into a single file system that starts with a root `"/"`.
+All code has been re-written ( re-styled ) and re-tested.

@@ -1,0 +1,4 @@
++ platform
+Contains FreeRTOS specific implementations of abstractions used within the IoT
+libraries.
+

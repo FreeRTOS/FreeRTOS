@@ -203,7 +203,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
 	 * Checks to see if a queue is a member of a queue set, and if so, notifies
 	 * the queue set that the queue contains data.
 	 */
-	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition ) PRIVILEGED_FUNCTION;
+	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
 #endif
 
 /*
@@ -373,17 +373,10 @@ Queue_t * const pxQueue = xQueue;
 
 		configASSERT( uxQueueLength > ( UBaseType_t ) 0 );
 
-		if( uxItemSize == ( UBaseType_t ) 0 )
-		{
-			/* There is not going to be a queue storage area. */
-			xQueueSizeInBytes = ( size_t ) 0;
-		}
-		else
-		{
-			/* Allocate enough space to hold the maximum number of items that
-			can be in the queue at any time. */
-			xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-		}
+		/* Allocate enough space to hold the maximum number of items that
+		can be in the queue at any time.  It is valid for uxItemSize to be
+		zero in the case the queue is used as a semaphore. */
+		xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 
 		/* Allocate the queue and storage area.  Justification for MISRA
 		deviation as follows:  pvPortMalloc() always ensures returned memory
@@ -777,7 +770,7 @@ Queue_t * const pxQueue = xQueue;
 
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
-				UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
+				const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
 
 					xYieldRequired = prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
@@ -790,7 +783,7 @@ Queue_t * const pxQueue = xQueue;
 							in the queue has not changed. */
 							mtCOVERAGE_TEST_MARKER();
 						}
-						else if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) != pdFALSE )
+						else if( prvNotifyQueueSetContainer( pxQueue ) != pdFALSE )
 						{
 							/* The queue is a member of a queue set, and posting
 							to the queue set caused a higher priority task to
@@ -993,22 +986,31 @@ Queue_t * const pxQueue = xQueue;
 
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
 
-			/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
-			semaphore or mutex.  That means prvCopyDataToQueue() cannot result
-			in a task disinheriting a priority and prvCopyDataToQueue() can be
-			called here even though the disinherit function does not check if
-			the scheduler is suspended before accessing the ready lists. */
-			( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
 			if( cTxLock == queueUNLOCKED )
 			{
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
+					const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
+
+					/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
+					semaphore or mutex.  That means prvCopyDataToQueue() cannot result
+					in a task disinheriting a priority and prvCopyDataToQueue() can be
+					called here even though the disinherit function does not check if
+					the scheduler is suspended before accessing the ready lists. */
+					( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+
 					if( pxQueue->pxQueueSetContainer != NULL )
 					{
-						if( prvNotifyQueueSetContainer( pxQueue, xCopyPosition ) != pdFALSE )
+						if( ( xCopyPosition == queueOVERWRITE ) && ( uxPreviousMessagesWaiting != ( UBaseType_t ) 0 ) )
+						{
+							/* Do not notify the queue set as an existing item
+							was overwritten in the queue so the number of items
+							in the queue has not changed. */
+							mtCOVERAGE_TEST_MARKER();
+						}
+						else if( prvNotifyQueueSetContainer( pxQueue ) != pdFALSE )
 						{
 							/* The queue is a member of a queue set, and posting
 							to the queue set caused a higher priority task to
@@ -1057,6 +1059,13 @@ Queue_t * const pxQueue = xQueue;
 				}
 				#else /* configUSE_QUEUE_SETS */
 				{
+					/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
+					semaphore or mutex.  That means prvCopyDataToQueue() cannot result
+					in a task disinheriting a priority and prvCopyDataToQueue() can be
+					called here even though the disinherit function does not check if
+					the scheduler is suspended before accessing the ready lists. */
+					( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+
 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 					{
 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
@@ -1173,7 +1182,7 @@ Queue_t * const pxQueue = xQueue;
 				{
 					if( pxQueue->pxQueueSetContainer != NULL )
 					{
-						if( prvNotifyQueueSetContainer( pxQueue, queueSEND_TO_BACK ) != pdFALSE )
+						if( prvNotifyQueueSetContainer( pxQueue ) != pdFALSE )
 						{
 							/* The semaphore is a member of a queue set, and
 							posting	to the queue set caused a higher priority
@@ -2185,7 +2194,7 @@ static void prvUnlockQueue( Queue_t * const pxQueue )
 			{
 				if( pxQueue->pxQueueSetContainer != NULL )
 				{
-					if( prvNotifyQueueSetContainer( pxQueue, queueSEND_TO_BACK ) != pdFALSE )
+					if( prvNotifyQueueSetContainer( pxQueue ) != pdFALSE )
 					{
 						/* The queue is a member of a queue set, and posting to
 						the queue set caused a higher priority task to unblock.
@@ -2875,7 +2884,7 @@ Queue_t * const pxQueue = xQueue;
 
 #if ( configUSE_QUEUE_SETS == 1 )
 
-	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue, const BaseType_t xCopyPosition )
+	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue )
 	{
 	Queue_t *pxQueueSetContainer = pxQueue->pxQueueSetContainer;
 	BaseType_t xReturn = pdFALSE;
@@ -2892,7 +2901,7 @@ Queue_t * const pxQueue = xQueue;
 			traceQUEUE_SEND( pxQueueSetContainer );
 
 			/* The data copied is the handle of the queue that contains data. */
-			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, xCopyPosition );
+			xReturn = prvCopyDataToQueue( pxQueueSetContainer, &pxQueue, queueSEND_TO_BACK );
 
 			if( cTxLock == queueUNLOCKED )
 			{

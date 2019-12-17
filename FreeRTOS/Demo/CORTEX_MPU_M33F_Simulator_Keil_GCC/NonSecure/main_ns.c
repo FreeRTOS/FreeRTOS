@@ -33,30 +33,40 @@
 #include "tz_demo.h"
 #include "mpu_demo.h"
 
-/* Externs needed by the MPU setup code. These must match the memory map as
- * specified in Scatter-Loading description file (FreeRTOSDemo_ns.sct). */
+/* Externs needed by the MPU setup code. These are defined in Scatter-Loading
+ * description file (FreeRTOSDemo_ns.sct). */
+extern uint32_t Image$$ER_IROM_NS_PRIVILEGED$$Base;
+extern uint32_t Image$$ER_IROM_NS_PRIVILEGED_ALIGN$$Limit;
+extern uint32_t Image$$ER_IROM_NS_FREERTOS_SYSTEM_CALLS$$Base;
+extern uint32_t Image$$ER_IROM_NS_FREERTOS_SYSTEM_CALLS_ALIGN$$Limit;
+extern uint32_t Image$$ER_IROM_NS_UNPRIVILEGED$$Base;
+extern uint32_t Image$$ER_IROM_NS_UNPRIVILEGED_ALIGN$$Limit;
+
+extern uint32_t Image$$ER_IRAM_NS_PRIVILEGED$$Base;
+extern uint32_t Image$$ER_IRAM_NS_PRIVILEGED_ALIGN$$Limit;
+extern uint32_t Image$$ER_IRAM_NS_UNPRIVILEGED$$Base;
+extern uint32_t Image$$ER_IRAM_NS_UNPRIVILEGED_ALIGN$$Limit;
+
 /* Privileged flash. */
-const uint32_t * __privileged_functions_start__		= ( uint32_t * ) ( 0x00200000 );
-const uint32_t * __privileged_functions_end__		= ( uint32_t * ) ( 0x00208000 - 0x1 );  /* Last address in privileged Flash region. */
+const uint32_t * __privileged_functions_start__		= ( uint32_t * ) &( Image$$ER_IROM_NS_PRIVILEGED$$Base );
+const uint32_t * __privileged_functions_end__		= ( uint32_t * ) ( ( uint32_t ) &( Image$$ER_IROM_NS_PRIVILEGED_ALIGN$$Limit ) - 0x1 ); /* Last address in privileged Flash region. */
 
 /* Flash containing system calls. */
-const uint32_t * __syscalls_flash_start__			= ( uint32_t * ) ( 0x00208000 );
-const uint32_t * __syscalls_flash_end__				= ( uint32_t * ) ( 0x00209000 - 0x1 );  /* Last address in Flash region containing system calls. */
+const uint32_t * __syscalls_flash_start__			= ( uint32_t * ) &( Image$$ER_IROM_NS_FREERTOS_SYSTEM_CALLS$$Base );
+const uint32_t * __syscalls_flash_end__				= ( uint32_t * ) ( ( uint32_t ) &( Image$$ER_IROM_NS_FREERTOS_SYSTEM_CALLS_ALIGN$$Limit ) - 0x1 ); /* Last address in Flash region containing system calls. */
 
-/* Unprivileged flash. Note that the section containing
- * system calls is unprivilged so that unprivleged tasks
- * can make system calls. */
-const uint32_t * __unprivileged_flash_start__		= ( uint32_t * ) ( 0x00209000 );
-const uint32_t * __unprivileged_flash_end__			= ( uint32_t * ) ( 0x00400000 - 0x1 );  /* Last address in un-privileged Flash region. */
+/* Unprivileged flash. Note that the section containing system calls is
+ * unprivileged so that unprivileged tasks can make system calls. */
+const uint32_t * __unprivileged_flash_start__		= ( uint32_t * ) &( Image$$ER_IROM_NS_UNPRIVILEGED$$Base );
+const uint32_t * __unprivileged_flash_end__			= ( uint32_t * ) ( ( uint32_t ) &( Image$$ER_IROM_NS_UNPRIVILEGED_ALIGN$$Limit ) - 0x1 ); /* Last address in un-privileged Flash region. */
 
-/* 512 bytes (0x200) of RAM starting at 0x30008000 is
- * priviledged access only. This contains kernel data. */
-const uint32_t * __privileged_sram_start__			= ( uint32_t * ) ( 0x20200000 );
-const uint32_t * __privileged_sram_end__			= ( uint32_t * ) ( 0x20201000 - 0x1 ); /* Last address in privileged RAM. */
+/* RAM with priviledged access only. This contains kernel data. */
+const uint32_t * __privileged_sram_start__			= ( uint32_t * ) &( Image$$ER_IRAM_NS_PRIVILEGED$$Base );
+const uint32_t * __privileged_sram_end__			= ( uint32_t * ) ( ( uint32_t ) &( Image$$ER_IRAM_NS_PRIVILEGED_ALIGN$$Limit ) - 0x1 ); /* Last address in privileged RAM. */
 ;
 /* Unprivileged RAM. */
-const uint32_t * __unprivileged_sram_start__		= ( uint32_t * ) ( 0x20201000 );
-const uint32_t * __unprivileged_sram_end__			= ( uint32_t * ) ( 0x20220000 - 0x1 ); /* Last address in un-privileged RAM. */
+const uint32_t * __unprivileged_sram_start__		= ( uint32_t * ) &( Image$$ER_IRAM_NS_UNPRIVILEGED$$Base );
+const uint32_t * __unprivileged_sram_end__			= ( uint32_t * ) ( ( uint32_t ) &( Image$$ER_IRAM_NS_UNPRIVILEGED_ALIGN$$Limit ) - 0x1 ); /* Last address in un-privileged RAM. */
 /*-----------------------------------------------------------*/
 
 /**

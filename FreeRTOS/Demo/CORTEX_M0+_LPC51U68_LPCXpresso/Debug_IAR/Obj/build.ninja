@@ -1,0 +1,71 @@
+#Generating source browse information for project CORTEX_M0+_LPC51U68_IAR
+
+
+#Abbreviations
+cc = C$:\Program$ Files$ (x86)\IAR$ Systems\Embedded$ Workbench$ 8.3\common\bin\SourceIndexer.exe
+ll = C$:\Program$ Files$ (x86)\IAR$ Systems\Embedded$ Workbench$ 8.3\common\bin\PbdLink.exe
+bd = C$:\Program$ Files$ (x86)\IAR$ Systems\Embedded$ Workbench$ 8.3\common\bin\makeBrowseData.exe
+
+
+
+#Rules
+rule index
+  depfile = $out.dep
+  command = $cc -out=$out -f $in
+rule link
+  command = $ll -M $out $in
+rule browsedata
+  command = $bd $in -output  $out
+
+
+
+#Build steps
+build IntQueueTimer.pbi : index IntQueueTimer.xcl
+build main.pbi : index main.xcl
+build main_blinky.pbi : index main_blinky.xcl
+build main_full.pbi : index main_full.xcl
+build board.pbi : index board.xcl
+build clock_config.pbi : index clock_config.xcl
+build peripherals.pbi : index peripherals.xcl
+build pin_mux.pbi : index pin_mux.xcl
+build generic_list.pbi : index generic_list.xcl
+build serial_manager.pbi : index serial_manager.xcl
+build serial_port_uart.pbi : index serial_port_uart.xcl
+build usart_adapter.pbi : index usart_adapter.xcl
+build system_LPC51U68.pbi : index system_LPC51U68.xcl
+build fsl_clock.pbi : index fsl_clock.xcl
+build fsl_common.pbi : index fsl_common.xcl
+build fsl_ctimer.pbi : index fsl_ctimer.xcl
+build fsl_flexcomm.pbi : index fsl_flexcomm.xcl
+build fsl_gpio.pbi : index fsl_gpio.xcl
+build fsl_pint.pbi : index fsl_pint.xcl
+build fsl_power.pbi : index fsl_power.xcl
+build fsl_reset.pbi : index fsl_reset.xcl
+build fsl_usart.pbi : index fsl_usart.xcl
+build port.pbi : index port.xcl
+build heap_5.pbi : index heap_5.xcl
+build croutine.pbi : index croutine.xcl
+build event_groups.pbi : index event_groups.xcl
+build list.pbi : index list.xcl
+build queue.pbi : index queue.xcl
+build stream_buffer.pbi : index stream_buffer.xcl
+build tasks.pbi : index tasks.xcl
+build timers.pbi : index timers.xcl
+build blocktim.pbi : index blocktim.xcl
+build countsem.pbi : index countsem.xcl
+build IntQueue.pbi : index IntQueue.xcl
+build recmutex.pbi : index recmutex.xcl
+build fsl_assert.pbi : index fsl_assert.xcl
+build fsl_debug_console.pbi : index fsl_debug_console.xcl
+build fsl_str.pbi : index fsl_str.xcl
+build CORTEX_M0+_LPC51U68_IAR_part0.pbi : link IntQueueTimer.pbi main.pbi main_blinky.pbi main_full.pbi board.pbi clock_config.pbi
+build CORTEX_M0+_LPC51U68_IAR_part1.pbi : link peripherals.pbi pin_mux.pbi generic_list.pbi serial_manager.pbi serial_port_uart.pbi usart_adapter.pbi
+build CORTEX_M0+_LPC51U68_IAR_part2.pbi : link system_LPC51U68.pbi fsl_clock.pbi fsl_common.pbi fsl_ctimer.pbi fsl_flexcomm.pbi fsl_gpio.pbi
+build CORTEX_M0+_LPC51U68_IAR_part3.pbi : link fsl_pint.pbi fsl_power.pbi fsl_reset.pbi fsl_usart.pbi port.pbi heap_5.pbi
+build CORTEX_M0+_LPC51U68_IAR_part4.pbi : link croutine.pbi event_groups.pbi list.pbi queue.pbi stream_buffer.pbi tasks.pbi
+build CORTEX_M0+_LPC51U68_IAR_part5.pbi : link timers.pbi blocktim.pbi countsem.pbi IntQueue.pbi recmutex.pbi fsl_assert.pbi
+build CORTEX_M0+_LPC51U68_IAR_part6.pbi : link fsl_debug_console.pbi fsl_str.pbi
+build CORTEX_M0+_LPC51U68_IAR.pbd : link CORTEX_M0+_LPC51U68_IAR_part0.pbi CORTEX_M0+_LPC51U68_IAR_part1.pbi CORTEX_M0+_LPC51U68_IAR_part2.pbi CORTEX_M0+_LPC51U68_IAR_part3.pbi CORTEX_M0+_LPC51U68_IAR_part4.pbi CORTEX_M0+_LPC51U68_IAR_part5.pbi CORTEX_M0+_LPC51U68_IAR_part6.pbi
+build CORTEX_M0+_LPC51U68_IAR.pbw : browsedata CORTEX_M0+_LPC51U68_IAR.pbd
+
+

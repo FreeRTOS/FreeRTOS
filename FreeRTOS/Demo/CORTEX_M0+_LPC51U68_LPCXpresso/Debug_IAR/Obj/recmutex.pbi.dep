@@ -1,0 +1,23 @@
+recmutex.pbi: \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\Common\Minimal\recmutex.c \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include\FreeRTOS.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\stddef.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\ycheck.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\yvals.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\DLib_Defaults.h \
+  C:\\Program\ Files\ (x86)\\IAR\ Systems\\Embedded\ Workbench\ 8.3\\arm\\inc\\c\\DLib_Config_Normal.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\DLib_Product.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\ysizet.h \
+  C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\arm\inc\c\stdint.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\CORTEX_M0+_LPC51U68_LPCXpresso\app\FreeRTOSConfig.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/projdefs.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/portable.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/deprecated_definitions.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\portable\IAR\ARM_CM0\portmacro.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/mpu_wrappers.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include\task.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/list.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include\semphr.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/queue.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\..\Source\include/task.h \
+  C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\..\Common\include\recmutex.h

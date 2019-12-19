@@ -1,0 +1,25 @@
+choice
+    prompt "select usart type "
+        help
+          select usart type
+config USART_DW
+    bool "designware usart"
+    help
+        select the dw usart driver
+
+config USART_CK
+    bool "csky usart"
+    help
+        select the ck usart driver
+        
+config USART_SILAN
+    bool "silan usart"
+    help
+        select the silan usart driver
+
+config USART_ZX29
+    bool "zx29 usart"
+    help
+        select the zx29 usart driver
+endchoice
+

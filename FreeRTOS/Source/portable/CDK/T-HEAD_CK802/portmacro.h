@@ -32,7 +32,9 @@
 #include <stdint.h>
 #include <csi_core.h>
 
+extern void vPortYield(void);
 #ifdef __cplusplus
+class vPortYield;
 extern "C" {
 #endif
 
@@ -74,6 +76,8 @@ typedef void (*portvectorfunc)(void);
 #define portBYTE_ALIGNMENT          8
 #define portSTACK_GROWTH            -1
 #define portMS_PERIOD_TICK          10
+#define portTICK_PERIOD_MS	        ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+
 
 static inline void vPortEnableInterrupt( void )
 {
@@ -123,7 +127,14 @@ extern __attribute__((naked)) void cpu_yeild(void);
 extern portLONG ulCriticalNesting;
 extern portLONG pendsvflag;
 
-#define portYIELD()                 cpu_yeild(); \
+#define portYIELD()                 if (ulCriticalNesting == 0) \
+                                    {   \
+                                        vPortYield();   \
+                                    }   \
+                                    else \
+                                    {   \
+                                        pendsvflag = 1; \
+                                    }   \
                                     portNOP();portNOP()
 
 /*-----------------------------------------------------------*/
@@ -140,7 +151,7 @@ extern portLONG pendsvflag;
                                                             }   \
                                                     }while(0)
 
-#define portYIELD_FROM_ISR( a )     portEND_SWITCHING_ISR( a )
+#define portYIELD_FROM_ISR( a )     vTaskSwitchContext()
 
 
 

@@ -134,7 +134,7 @@ void vPortSetupTimerInterrupt( void );
  * Standard FreeRTOS exception handlers.
  */
 void xPortPendSVHandler( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
-void xPortSysTickHandler( void )  __attribute__ ((optimize("3"))) PRIVILEGED_FUNCTION;
+void xPortSysTickHandler( void ) PRIVILEGED_FUNCTION;
 void vPortSVCHandler( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
 
 /*
@@ -260,10 +260,25 @@ void vPortSVCHandler( void )
 static void prvSVCHandler(	uint32_t *pulParam )
 {
 uint8_t ucSVCNumber;
+uint32_t ulPC;
+#if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 )
+	#if defined( __ARMCC_VERSION )
+		/* Declaration when these variable are defined in code instead of being
+		* exported from linker scripts. */
+		extern uint32_t * __syscalls_flash_start__;
+		extern uint32_t * __syscalls_flash_end__;
+	#else
+		/* Declaration when these variable are exported from linker scripts. */
+		extern uint32_t __syscalls_flash_start__[];
+		extern uint32_t __syscalls_flash_end__[];
+	#endif /* #if defined( __ARMCC_VERSION ) */
+#endif /* #if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 ) */
 
-	/* The stack contains: r0, r1, r2, r3, r12, r14, the return address and
-	xPSR.  The first argument (r0) is pulParam[ 0 ]. */
-	ucSVCNumber = ( ( uint8_t * ) pulParam[ portOFFSET_TO_PC ] )[ -2 ];
+	/* The stack contains: r0, r1, r2, r3, r12, LR, PC and xPSR.  The first
+	argument (r0) is pulParam[ 0 ]. */
+	ulPC = pulParam[ portOFFSET_TO_PC ];
+	ucSVCNumber = ( ( uint8_t * ) ulPC )[ -2 ];
+
 	switch( ucSVCNumber )
 	{
 		case portSVC_START_SCHEDULER	:	portNVIC_SYSPRI1_REG |= portNVIC_SVC_PRI;
@@ -280,6 +295,23 @@ uint8_t ucSVCNumber;
 
 											break;
 
+	#if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 )
+		case portSVC_RAISE_PRIVILEGE	:	/* Only raise the privilege, if the
+											 * svc was raised from any of the
+											 * system calls. */
+											if( ulPC >= ( uint32_t ) __syscalls_flash_start__ &&
+												ulPC <= ( uint32_t ) __syscalls_flash_end__ )
+											{
+												__asm volatile
+												(
+													"	mrs r1, control		\n" /* Obtain current control value. */
+													"	bic r1, #1			\n" /* Set privilege bit. */
+													"	msr control, r1		\n" /* Write back new control value. */
+													::: "r1", "memory"
+												);
+											}
+											break;
+	#else
 		case portSVC_RAISE_PRIVILEGE	:	__asm volatile
 											(
 												"	mrs r1, control		\n" /* Obtain current control value. */
@@ -288,6 +320,7 @@ uint8_t ucSVCNumber;
 												::: "r1", "memory"
 											);
 											break;
+	#endif /* #if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 ) */
 
 		default							:	/* Unknown SVC call. */
 											break;
@@ -307,9 +340,23 @@ static void prvRestoreContextOfFirstTask( void )
 		"	ldr r1, [r3]					\n"
 		"	ldr r0, [r1]					\n" /* The first item in the TCB is the task top of stack. */
 		"	add r1, r1, #4					\n" /* Move onto the second item in the TCB... */
+		"									\n"
+		"	dmb								\n" /* Complete outstanding transfers before disabling MPU. */
+		"	ldr r2, =0xe000ed94				\n" /* MPU_CTRL register. */
+		"	ldr r3, [r2]					\n" /* Read the value of MPU_CTRL. */
+		"	bic r3, #1						\n" /* r3 = r3 & ~1 i.e. Clear the bit 0 in r3. */
+		"	str r3, [r2]					\n" /* Disable MPU. */
+		"									\n"
 		"	ldr r2, =0xe000ed9c				\n" /* Region Base Address register. */
-		"	ldmia r1!, {r4-r11}				\n" /* Read 4 sets of MPU registers. */
+		"	ldmia r1!, {r4-r11}				\n" /* Read 4 sets of MPU registers from TCB. */
 		"	stmia r2!, {r4-r11}				\n" /* Write 4 sets of MPU registers. */
+		"									\n"
+		"	ldr r2, =0xe000ed94				\n" /* MPU_CTRL register. */
+		"	ldr r3, [r2]					\n" /* Read the value of MPU_CTRL. */
+		"	orr r3, #1						\n" /* r3 = r3 | 1 i.e. Set the bit 0 in r3. */
+		"	str r3, [r2]					\n" /* Enable MPU. */
+		"	dsb								\n" /* Force memory writes before continuing. */
+		"									\n"
 		"	ldmia r0!, {r3-r11, r14}		\n" /* Pop the registers that are not automatically saved on exception entry. */
 		"	msr control, r3					\n"
 		"	msr psp, r0						\n" /* Restore the task stack pointer. */
@@ -506,9 +553,23 @@ void xPortPendSVHandler( void )
 		"	ldr r1, [r3]						\n"
 		"	ldr r0, [r1]						\n" /* The first item in the TCB is the task top of stack. */
 		"	add r1, r1, #4						\n" /* Move onto the second item in the TCB... */
+		"										\n"
+		"	dmb									\n" /* Complete outstanding transfers before disabling MPU. */
+		"	ldr r2, =0xe000ed94					\n" /* MPU_CTRL register. */
+		"	ldr r3, [r2]						\n" /* Read the value of MPU_CTRL. */
+		"	bic r3, #1							\n" /* r3 = r3 & ~1 i.e. Clear the bit 0 in r3. */
+		"	str r3, [r2]						\n" /* Disable MPU. */
+		"										\n"
 		"	ldr r2, =0xe000ed9c					\n" /* Region Base Address register. */
-		"	ldmia r1!, {r4-r11}					\n" /* Read 4 sets of MPU registers. */
+		"	ldmia r1!, {r4-r11}					\n" /* Read 4 sets of MPU registers from TCB. */
 		"	stmia r2!, {r4-r11}					\n" /* Write 4 sets of MPU registers. */
+		"										\n"
+		"	ldr r2, =0xe000ed94					\n" /* MPU_CTRL register. */
+		"	ldr r3, [r2]						\n" /* Read the value of MPU_CTRL. */
+		"	orr r3, #1							\n" /* r3 = r3 | 1 i.e. Set the bit 0 in r3. */
+		"	str r3, [r2]						\n" /* Enable MPU. */
+		"	dsb									\n" /* Force memory writes before continuing. */
+		"										\n"
 		"	ldmia r0!, {r3-r11, r14}			\n" /* Pop the registers that are not automatically saved on exception entry. */
 		"	msr control, r3						\n"
 		"										\n"
@@ -576,12 +637,22 @@ static void vPortEnableVFP( void )
 
 static void prvSetupMPU( void )
 {
-extern uint32_t __privileged_functions_end__[];
-extern uint32_t __FLASH_segment_start__[];
-extern uint32_t __FLASH_segment_end__[];
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
-
+#if defined( __ARMCC_VERSION )
+	/* Declaration when these variable are defined in code instead of being
+	 * exported from linker scripts. */
+	extern uint32_t * __privileged_functions_end__;
+	extern uint32_t * __FLASH_segment_start__;
+	extern uint32_t * __FLASH_segment_end__;
+	extern uint32_t * __privileged_data_start__;
+	extern uint32_t * __privileged_data_end__;
+#else
+	/* Declaration when these variable are exported from linker scripts. */
+	extern uint32_t __privileged_functions_end__[];
+	extern uint32_t __FLASH_segment_start__[];
+	extern uint32_t __FLASH_segment_end__[];
+	extern uint32_t __privileged_data_start__[];
+	extern uint32_t __privileged_data_end__[];
+#endif
 	/* Check the expected MPU is present. */
 	if( portMPU_TYPE_REG == portEXPECTED_MPU_TYPE_VALUE )
 	{
@@ -693,10 +764,21 @@ void vResetPrivilege( void ) /* __attribute__ (( naked )) */
 
 void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint32_t ulStackDepth )
 {
-extern uint32_t __SRAM_segment_start__[];
-extern uint32_t __SRAM_segment_end__[];
-extern uint32_t __privileged_data_start__[];
-extern uint32_t __privileged_data_end__[];
+#if defined( __ARMCC_VERSION )
+	/* Declaration when these variable are defined in code instead of being
+	 * exported from linker scripts. */
+	extern uint32_t * __SRAM_segment_start__;
+	extern uint32_t * __SRAM_segment_end__;
+	extern uint32_t * __privileged_data_start__;
+	extern uint32_t * __privileged_data_end__;
+#else
+	/* Declaration when these variable are exported from linker scripts. */
+	extern uint32_t __SRAM_segment_start__[];
+	extern uint32_t __SRAM_segment_end__[];
+	extern uint32_t __privileged_data_start__[];
+	extern uint32_t __privileged_data_end__[];
+#endif
+
 int32_t lIndex;
 uint32_t ul;
 

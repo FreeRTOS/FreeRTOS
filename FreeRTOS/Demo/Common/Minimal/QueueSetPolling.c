@@ -51,6 +51,8 @@
 /* Demo includes. */
 #include "QueueSetPolling.h"
 
+#if( configUSE_QUEUE_SETS == 1 )  /* Remove tests if queue sets are not defined. */
+
 /* The length of each created queue. */
 #define setpollQUEUE_LENGTH	10
 
@@ -177,3 +179,4 @@ static uint32_t ulLastCycleCounter = 0;
 /*-----------------------------------------------------------*/
 
 
+#endif /* ( configUSE_QUEUE_SETS == 1 ) */

@@ -51,6 +51,10 @@
 /* Demo includes. */
 #include "QueueSet.h"
 
+
+#if( configUSE_QUEUE_SETS == 1 ) /* Remove the tests if queue sets are not defined. */
+
+
 /* The number of queues that are created and added to the queue set. */
 #define queuesetNUM_QUEUES_IN_SET 3
 
@@ -148,6 +152,13 @@ static void prvChangeRelativePriorities( void );
  * set.
  */
 static void prvTestQueueOverwriteWithQueueSet( void );
+
+/*
+ * Test the case where two queues within a set are written to with
+ * xQueueOverwrite().
+ */
+static void prvTestQueueOverwriteOnTwoQueusInQueueSet( void );
+static void prvTestQueueOverwriteFromISROnTwoQueusInQueueSet( void );
 
 /*
  * Local pseudo random number seed and return functions.  Used to avoid calls
@@ -616,13 +627,14 @@ const UBaseType_t xLengthOfOne = ( UBaseType_t ) 1;
 	/* Create a queue that has a length of one - a requirement in order to call
 	xQueueOverwrite.  This will get deleted again when this test completes. */
 	xQueueHandle = xQueueCreate( xLengthOfOne, sizeof( uint32_t ) );
+	configASSERT( xQueueHandle );
 
 	if( xQueueHandle != NULL )
 	{
 		xQueueAddToSet( xQueueHandle, xQueueSet );
 
 		/* Add an item to the queue then ensure the queue set correctly
-		indicates that one item is available, and that that item is indeed the
+		indicates that one item is available, and that item is indeed the
 		queue written to. */
 		xQueueOverwrite( xQueueHandle, ( void * ) &ulValueToSend );
 		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
@@ -661,13 +673,334 @@ const UBaseType_t xLengthOfOne = ( UBaseType_t ) 1;
 		xQueueReceive( xQueueHandle, &ulValueReceived, queuesetDONT_BLOCK );
 		if( ulValueReceived != ulValueToSend )
 		{
-			/* Unexpected value recevied from the queue. */
+			/* Unexpected value received from the queue. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Should be anything in the queue set now. */
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 0 )
+		{
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != NULL )
+		{
 			xQueueSetTasksStatus = pdFAIL;
 		}
 
 		/* Clean up. */
 		xQueueRemoveFromSet( xQueueHandle, xQueueSet );
 		vQueueDelete( xQueueHandle );
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvTestQueueOverwriteOnTwoQueusInQueueSet( void )
+{
+uint32_t ulValueToSend1 = 1, ulValueToSend2 = 2UL, ulValueReceived = 0;
+QueueHandle_t xQueueHandle1 = NULL, xQueueHandle2 = NULL, xReceivedHandle = NULL;
+const UBaseType_t xLengthOfOne = ( UBaseType_t ) 1;
+
+	/* Create two queues that have a length of one - a requirement in order to call
+	xQueueOverwrite.  These will get deleted again when this test completes. */
+	xQueueHandle1 = xQueueCreate( xLengthOfOne, sizeof( uint32_t ) );
+	configASSERT( xQueueHandle1 );
+	xQueueHandle2 = xQueueCreate( xLengthOfOne, sizeof( uint32_t ) );
+	configASSERT( xQueueHandle2 );
+
+	if( ( xQueueHandle1 != NULL ) && ( xQueueHandle2 != NULL ) )
+	{
+		/* Add both queues to the queue set. */
+		xQueueAddToSet( xQueueHandle1, xQueueSet );
+		xQueueAddToSet( xQueueHandle2, xQueueSet );
+
+		/* Add an item using the first queue. */
+		xQueueOverwrite( xQueueHandle1, ( void * ) &ulValueToSend1 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
+		{
+			/* Expected one item in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		xQueuePeek( xQueueSet, &xReceivedHandle, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle1 )
+		{
+			/* Wrote to xQueueHandle so expected xQueueHandle to be the handle
+			held in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+		/* Next add an item to the second queue. */
+		xQueueOverwrite( xQueueHandle2, ( void * ) &ulValueToSend2 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* The head of the queue set should not have changed though. */
+		xQueuePeek( xQueueSet, &xReceivedHandle, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle1 )
+		{
+			/* Wrote to xQueueHandle so expected xQueueHandle to be the handle
+			held in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+
+
+		/* Now overwrite the value in the queue and ensure the queue set state
+		doesn't change as the number of items in the queues within the set have
+		not changed.  NOTE:  after this queue 1 should hold ulValueToSend2 and queue
+		2 should hold the value ulValueToSend1. */
+		xQueueOverwrite( xQueueHandle1, ( void * ) &ulValueToSend2 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueOverwrite( xQueueHandle2, ( void * ) &ulValueToSend1 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+		/* Repeat the above to ensure the queue set state doesn't change. */
+		xQueueOverwrite( xQueueHandle1, ( void * ) &ulValueToSend2 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueOverwrite( xQueueHandle2, ( void * ) &ulValueToSend1 );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+		/* Now when reading from the queue set we expect the handle to the first
+		queue to be received first, and for that queue to hold ulValueToSend2 as the
+		originally written value was overwritten.  Likewise the second handle received
+		from the set should be that of the second queue, and that queue should hold
+		ulValueToSend1 as the originally written value was overwritten. */
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle1 )
+		{
+			/* Wrote to xQueueHandle1 first so expected that handle to be read from
+			the set first. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
+		{
+			/* One value was read from the set, so now only expect a single value
+			in the set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueReceive( xReceivedHandle, &ulValueReceived, queuesetDONT_BLOCK );
+		if( ulValueReceived != ulValueToSend2 )
+		{
+			/* Unexpected value received from the queue.  ulValueToSend1 was written
+			first, but then overwritten with ulValueToSend2; */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle2 )
+		{
+			/* xQueueHandle1 has already been removed from the set so expect only
+			xQueueHandle2 to be left. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 0 )
+		{
+			/* The last value was read from the set so don't expect any more. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueReceive( xReceivedHandle, &ulValueReceived, queuesetDONT_BLOCK );
+		if( ulValueReceived != ulValueToSend1 )
+		{
+			/* Unexpected value received from the queue.  ulValueToSend2 was written
+			first, but then overwritten with ulValueToSend1. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+
+
+		/* Should be anything in the queue set now. */
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != NULL )
+		{
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Clean up. */
+		xQueueRemoveFromSet( xQueueHandle1, xQueueSet );
+		xQueueRemoveFromSet( xQueueHandle2, xQueueSet );
+		vQueueDelete( xQueueHandle1 );
+		vQueueDelete( xQueueHandle2 );
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvTestQueueOverwriteFromISROnTwoQueusInQueueSet( void )
+{
+uint32_t ulValueToSend1 = 1, ulValueToSend2 = 2UL, ulValueReceived = 0;
+QueueHandle_t xQueueHandle1 = NULL, xQueueHandle2 = NULL, xReceivedHandle = NULL;
+const UBaseType_t xLengthOfOne = ( UBaseType_t ) 1;
+
+	/* Create two queues that have a length of one - a requirement in order to call
+	xQueueOverwrite.  These will get deleted again when this test completes. */
+	xQueueHandle1 = xQueueCreate( xLengthOfOne, sizeof( uint32_t ) );
+	configASSERT( xQueueHandle1 );
+	xQueueHandle2 = xQueueCreate( xLengthOfOne, sizeof( uint32_t ) );
+	configASSERT( xQueueHandle2 );
+
+	if( ( xQueueHandle1 != NULL ) && ( xQueueHandle2 != NULL ) )
+	{
+		/* Add both queues to the queue set. */
+		xQueueAddToSet( xQueueHandle1, xQueueSet );
+		xQueueAddToSet( xQueueHandle2, xQueueSet );
+
+		/* Add an item using the first queue using the 'FromISR' version of the
+		overwrite function. */
+		xQueueOverwriteFromISR( xQueueHandle1, ( void * ) &ulValueToSend1, NULL );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
+		{
+			/* Expected one item in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		xQueuePeek( xQueueSet, &xReceivedHandle, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle1 )
+		{
+			/* Wrote to xQueueHandle so expected xQueueHandle to be the handle
+			held in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+		/* Next add an item to the second queue using the 'FromISR' version of the
+		overwrite function. */
+		xQueueOverwriteFromISR( xQueueHandle2, ( void * ) &ulValueToSend2, NULL );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* The head of the queue set should not have changed though. */
+		xQueuePeek( xQueueSet, &xReceivedHandle, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle1 )
+		{
+			/* Wrote to xQueueHandle so expected xQueueHandle to be the handle
+			held in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+
+
+		/* Now overwrite the value in the queue and ensure the queue set state
+		doesn't change as the number of items in the queues within the set have
+		not changed.  NOTE:  after this queue 1 should hold ulValueToSend2 and queue
+		2 should hold the value ulValueToSend1. */
+		xQueueOverwriteFromISR( xQueueHandle1, ( void * ) &ulValueToSend2, NULL );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueOverwriteFromISR( xQueueHandle2, ( void * ) &ulValueToSend1, NULL );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+		/* Repeat the above to ensure the queue set state doesn't change. */
+		xQueueOverwriteFromISR( xQueueHandle1, ( void * ) &ulValueToSend2, NULL );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueOverwriteFromISR( xQueueHandle2, ( void * ) &ulValueToSend1, NULL );
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 2 )
+		{
+			/* Still expected two items in the queue set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+		/* Now when reading from the queue set we expect the handle to the first
+		queue to be received first, and for that queue to hold ulValueToSend2 as the
+		originally written value was overwritten.  Likewise the second handle received
+		from the set should be that of the second queue, and that queue should hold
+		ulValueToSend1 as the originally written value was overwritten. */
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle1 )
+		{
+			/* Wrote to xQueueHandle1 first so expected that handle to be read from
+			the set first. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 1 )
+		{
+			/* One value was read from the set, so now only expect a single value
+			in the set. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueReceive( xReceivedHandle, &ulValueReceived, queuesetDONT_BLOCK );
+		if( ulValueReceived != ulValueToSend2 )
+		{
+			/* Unexpected value received from the queue.  ulValueToSend1 was written
+			first, but then overwritten with ulValueToSend2; */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != xQueueHandle2 )
+		{
+			/* xQueueHandle1 has already been removed from the set so expect only
+			xQueueHandle2 to be left. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		if( uxQueueMessagesWaiting( xQueueSet ) != ( UBaseType_t ) 0 )
+		{
+			/* The last value was read from the set so don't expect any more. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+		xQueueReceive( xReceivedHandle, &ulValueReceived, queuesetDONT_BLOCK );
+		if( ulValueReceived != ulValueToSend1 )
+		{
+			/* Unexpected value received from the queue.  ulValueToSend2 was written
+			first, but then overwritten with ulValueToSend1. */
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+
+
+
+		/* Should be anything in the queue set now. */
+		xReceivedHandle = xQueueSelectFromSet( xQueueSet, queuesetDONT_BLOCK );
+		if( xReceivedHandle != NULL )
+		{
+			xQueueSetTasksStatus = pdFAIL;
+		}
+
+		/* Clean up. */
+		xQueueRemoveFromSet( xQueueHandle1, xQueueSet );
+		xQueueRemoveFromSet( xQueueHandle2, xQueueSet );
+		vQueueDelete( xQueueHandle1 );
+		vQueueDelete( xQueueHandle2 );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -753,6 +1086,14 @@ uint32_t ulValueToSend = 0;
 	be performed on queues that have a length of 1. */
 	prvTestQueueOverwriteWithQueueSet();
 
+	/* Test the case where two queues within a set are written to with
+	xQueueOverwrite(). */
+	prvTestQueueOverwriteOnTwoQueusInQueueSet();
+	prvTestQueueOverwriteFromISROnTwoQueusInQueueSet();
+
+	/* In case any of the above have already indicated a failure. */
+	configASSERT( xQueueSetTasksStatus != pdFAIL );
+
 	/* Resume the task that writes to the queues. */
 	vTaskResume( xQueueSetSendingTask );
 
@@ -773,3 +1114,4 @@ static void prvSRand( size_t uxSeed )
 	uxNextRand = uxSeed;
 }
 
+#endif /* ( configUSE_QUEUE_SETS == 1 ) */

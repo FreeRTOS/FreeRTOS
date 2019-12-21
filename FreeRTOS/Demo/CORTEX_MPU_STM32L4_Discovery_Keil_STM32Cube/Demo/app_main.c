@@ -34,33 +34,6 @@
 /* Demo includes. */
 #include "mpu_demo.h"
 
-#if defined( __ARMCC_VERSION )
-	extern uint32_t Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Base;
-	extern uint32_t Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Limit;
-
-	/* Memory map needed for MPU setup. Must must match the one defined in
-	 * the scatter-loading file (MPUDemo.sct). */
-	const uint32_t * __FLASH_segment_start__ = ( uint32_t * ) 0x08000000;
-	const uint32_t * __FLASH_segment_end__ = ( uint32_t * ) 0x08100000;
-	const uint32_t * __SRAM_segment_start__ = ( uint32_t * ) 0x20000000;
-	const uint32_t * __SRAM_segment_end__ = ( uint32_t * ) 0x20018000;
-
-	const uint32_t * __privileged_functions_start__ = ( uint32_t * ) 0x08000000;
-	const uint32_t * __privileged_functions_end__ = ( uint32_t * ) 0x08008000;
-	const uint32_t * __privileged_data_start__ = ( uint32_t * ) 0x20000000;
-	const uint32_t * __privileged_data_end__ = ( uint32_t * ) 0x20000400;
-
-	const uint32_t * __syscalls_flash_start__ = ( uint32_t * ) &( Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Base );
-	const uint32_t * __syscalls_flash_end__ = ( uint32_t * ) &( Image$$ER_IROM_FREERTOS_SYSTEM_CALLS$$Limit );
-#endif /* #if defined( __ARMCC_VERSION ) */
-/*-----------------------------------------------------------*/
-
-/**
- * @brief Mem fault handler.
- */
-void MemManage_Handler( void ) __attribute__ (( naked ));
-/*-----------------------------------------------------------*/
-
 void app_main( void )
 {
 	/* Start the MPU demo. */
@@ -140,21 +113,5 @@ static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 	Note that, as the array is necessarily of type StackType_t,
 	configMINIMAL_STACK_SIZE is specified in words, not bytes. */
 	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
-}
-/*-----------------------------------------------------------*/
-
-void MemManage_Handler( void )
-{
-	__asm volatile
-	(
-		" tst lr, #4										\n"
-		" ite eq											\n"
-		" mrseq r0, msp										\n"
-		" mrsne r0, psp										\n"
-		" ldr r1, handler_address_const						\n"
-		" bx r1												\n"
-		"													\n"
-		" handler_address_const: .word vHandleMemoryFault	\n"
-	);
 }
 /*-----------------------------------------------------------*/

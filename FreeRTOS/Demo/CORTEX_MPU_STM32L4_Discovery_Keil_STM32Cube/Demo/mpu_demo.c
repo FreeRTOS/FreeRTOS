@@ -60,7 +60,7 @@ static uint8_t ucSharedMemory[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( SH
  * @note We are declaring a region of 32 bytes even though we need only one.
  * The reason is that the smallest supported MPU region size is 32 bytes.
  */
-static uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) ) = { 0 };
+static volatile uint8_t ucROTaskFaultTracker[ SHARED_MEMORY_SIZE ] __attribute__( ( aligned( SHARED_MEMORY_SIZE ) ) ) = { 0 };
 /*-----------------------------------------------------------*/
 
 /**
@@ -209,9 +209,9 @@ TaskParameters_t xROAccessTaskParameters =
 	.uxPriority		= tskIDLE_PRIORITY,
 	.puxStackBuffer	= xROAccessTaskStack,
 	.xRegions		=	{
-							{ ucSharedMemory,		SHARED_MEMORY_SIZE,	portMPU_REGION_PRIVILEGED_READ_WRITE_UNPRIV_READ_ONLY | portMPU_REGION_EXECUTE_NEVER	},
-							{ ucROTaskFaultTracker,	SHARED_MEMORY_SIZE,	portMPU_REGION_READ_WRITE | portMPU_REGION_EXECUTE_NEVER},
-							{ 0,					0,					0														},
+							{ ucSharedMemory,					SHARED_MEMORY_SIZE,	portMPU_REGION_PRIVILEGED_READ_WRITE_UNPRIV_READ_ONLY | portMPU_REGION_EXECUTE_NEVER	},
+							{ ( void * ) ucROTaskFaultTracker,	SHARED_MEMORY_SIZE,	portMPU_REGION_READ_WRITE | portMPU_REGION_EXECUTE_NEVER								},
+							{ 0,								0,					0																						},
 						}
 };
 TaskParameters_t xRWAccessTaskParameters =

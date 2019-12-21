@@ -387,6 +387,11 @@
               <FileType>2</FileType>
               <FilePath>startup_stm32l475xx.s</FilePath>
             </File>
+            <File>
+              <FileName>memfault_handler.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\memfault_handler.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

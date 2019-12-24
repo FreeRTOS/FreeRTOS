@@ -73,12 +73,13 @@ typedef unsigned long UBaseType_t;
 #define portUSING_MPU_WRAPPERS		1
 #define portPRIVILEGE_BIT			( 0x80000000UL )
 
-#define portMPU_REGION_READ_WRITE				( 0x03UL << 24UL )
-#define portMPU_REGION_PRIVILEGED_READ_ONLY		( 0x05UL << 24UL )
-#define portMPU_REGION_READ_ONLY				( 0x06UL << 24UL )
-#define portMPU_REGION_PRIVILEGED_READ_WRITE	( 0x01UL << 24UL )
-#define portMPU_REGION_CACHEABLE_BUFFERABLE		( 0x07UL << 16UL )
-#define portMPU_REGION_EXECUTE_NEVER			( 0x01UL << 28UL )
+#define portMPU_REGION_READ_WRITE								( 0x03UL << 24UL )
+#define portMPU_REGION_PRIVILEGED_READ_ONLY						( 0x05UL << 24UL )
+#define portMPU_REGION_READ_ONLY								( 0x06UL << 24UL )
+#define portMPU_REGION_PRIVILEGED_READ_WRITE					( 0x01UL << 24UL )
+#define portMPU_REGION_PRIVILEGED_READ_WRITE_UNPRIV_READ_ONLY	( 0x02UL << 24UL )
+#define portMPU_REGION_CACHEABLE_BUFFERABLE						( 0x07UL << 16UL )
+#define portMPU_REGION_EXECUTE_NEVER							( 0x01UL << 28UL )
 
 #define portUNPRIVILEGED_FLASH_REGION		( 0UL )
 #define portPRIVILEGED_FLASH_REGION			( 1UL )
@@ -299,6 +300,12 @@ BaseType_t xReturn;
 
 	return xReturn;
 }
+/*-----------------------------------------------------------*/
+
+#ifndef configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY
+	#warning "configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY is not defined. We recommend defining it to 1 in FreeRTOSConfig.h for better security."
+	#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY 0
+#endif
 /*-----------------------------------------------------------*/
 
 #ifdef __cplusplus

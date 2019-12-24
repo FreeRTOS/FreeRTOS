@@ -30,8 +30,8 @@
  *----------------------------------------------------------*/
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
-all the API functions to use the MPU wrappers.  That should only be done when
-task.h is included from an application file. */
+ * all the API functions to use the MPU wrappers.  That should only be done when
+ * task.h is included from an application file. */
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 /* Scheduler includes. */
@@ -99,12 +99,12 @@ task.h is included from an application file. */
 #define portOFFSET_TO_PC						( 6 )
 
 /* For strict compliance with the Cortex-M spec the task start address should
-have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
+ * have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
 #define portSTART_ADDRESS_MASK				( ( StackType_t ) 0xfffffffeUL )
 
 /* Each task maintains its own interrupt status in the critical nesting
-variable.  Note this is not saved as part of the task context as context
-switches can only occur when uxCriticalNesting is zero. */
+ * variable.  Note this is not saved as part of the task context as context
+ * switches can only occur when uxCriticalNesting is zero. */
 static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 
 /*
@@ -205,7 +205,7 @@ extern void vPortResetPrivilege( BaseType_t xRunningPrivileged );
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged )
 {
 	/* Simulate the stack frame as it would be created by a context switch
-	interrupt. */
+	 * interrupt. */
 	pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
 	*pxTopOfStack = portINITIAL_XPSR;	/* xPSR */
 	pxTopOfStack--;
@@ -216,7 +216,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 	*pxTopOfStack = ( StackType_t ) pvParameters;	/* R0 */
 
 	/* A save method is being used that requires each task to maintain its
-	own exec return value. */
+	 * own exec return value. */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_EXC_RETURN;
 
@@ -238,11 +238,16 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 void prvSVCHandler( uint32_t *pulParam )
 {
 uint8_t ucSVCNumber;
-uint32_t ulReg;
+uint32_t ulReg, ulPC;
+#if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 )
+	extern uint32_t __syscalls_flash_start__;
+	extern uint32_t __syscalls_flash_end__;
+#endif /* #if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 ) */
 
-	/* The stack contains: r0, r1, r2, r3, r12, r14, the return address and
-	xPSR.  The first argument (r0) is pulParam[ 0 ]. */
-	ucSVCNumber = ( ( uint8_t * ) pulParam[ portOFFSET_TO_PC ] )[ -2 ];
+	/* The stack contains: r0, r1, r2, r3, r12, LR, PC and xPSR. The first
+	 * argument (r0) is pulParam[ 0 ]. */
+	ulPC = pulParam[ portOFFSET_TO_PC ];
+	ucSVCNumber = ( ( uint8_t * ) ulPC )[ -2 ];
 	switch( ucSVCNumber )
 	{
 		case portSVC_START_SCHEDULER	:	portNVIC_SYSPRI1_REG |= portNVIC_SVC_PRI;
@@ -251,14 +256,30 @@ uint32_t ulReg;
 
 		case portSVC_YIELD				:	portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
 											/* Barriers are normally not required
-											but do ensure the code is completely
-											within the specified behaviour for the
-											architecture. */
+											 * but do ensure the code is completely
+											 * within the specified behaviour for the
+											 * architecture. */
 											__asm volatile( "dsb" );
 											__asm volatile( "isb" );
 
 											break;
 
+	#if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 )
+		case portSVC_RAISE_PRIVILEGE	:	/* Only raise the privilege, if the
+											 * svc was raised from any of the
+											 * system calls. */
+											if( ulPC >= ( uint32_t ) __syscalls_flash_start__ &&
+												ulPC <= ( uint32_t ) __syscalls_flash_end__ )
+											{
+												__asm
+												{
+													mrs ulReg, control	/* Obtain current control value. */
+													bic ulReg, #1		/* Set privilege bit. */
+													msr control, ulReg	/* Write back new control value. */
+												}
+											}
+											break;
+	#else
 		case portSVC_RAISE_PRIVILEGE	:	__asm
 											{
 												mrs ulReg, control	/* Obtain current control value. */
@@ -266,6 +287,7 @@ uint32_t ulReg;
 												msr control, ulReg	/* Write back new control value. */
 											}
 											break;
+	#endif /* #if( configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY == 1 ) */
 
 		default							:	/* Unknown SVC call. */
 											break;
@@ -304,10 +326,24 @@ __asm void prvRestoreContextOfFirstTask( void )
 	ldr r1, [r3]
 	ldr r0, [r1]					/* The first item in the TCB is the task top of stack. */
 	add r1, r1, #4					/* Move onto the second item in the TCB... */
+
+	dmb								/* Complete outstanding transfers before disabling MPU. */
+	ldr r2, =0xe000ed94				/* MPU_CTRL register. */
+	ldr r3, [r2]					/* Read the value of MPU_CTRL. */
+	bic r3, r3, #1					/* r3 = r3 & ~1 i.e. Clear the bit 0 in r3. */
+	str r3, [r2]					/* Disable MPU. */
+
 	ldr r2, =0xe000ed9c				/* Region Base Address register. */
 	ldmia r1!, {r4-r11}				/* Read 4 sets of MPU registers. */
 	stmia r2!, {r4-r11}				/* Write 4 sets of MPU registers. */
-	ldmia r0!, {r3-r11, r14}	/* Pop the registers that are not automatically saved on exception entry. */
+
+	ldr r2, =0xe000ed94				/* MPU_CTRL register. */
+	ldr r3, [r2]					/* Read the value of MPU_CTRL. */
+	orr r3, r3, #1					/* r3 = r3 | 1 i.e. Set the bit 0 in r3. */
+	str r3, [r2]					/* Enable MPU. */
+	dsb								/* Force memory writes before continuing. */
+
+	ldmia r0!, {r3-r11, r14}		/* Pop the registers that are not automatically saved on exception entry. */
 	msr control, r3
 	msr psp, r0						/* Restore the task stack pointer. */
 	mov r0, #0
@@ -323,7 +359,7 @@ __asm void prvRestoreContextOfFirstTask( void )
 BaseType_t xPortStartScheduler( void )
 {
 	/* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.  See
-	http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
+	 * http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
 	configASSERT( ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) );
 
 	#if( configASSERT_DEFINED == 1 )
@@ -333,15 +369,15 @@ BaseType_t xPortStartScheduler( void )
 		volatile uint8_t ucMaxPriorityValue;
 
 		/* Determine the maximum priority from which ISR safe FreeRTOS API
-		functions can be called.  ISR safe functions are those that end in
-		"FromISR".  FreeRTOS maintains separate thread and ISR API functions to
-		ensure interrupt entry is as fast and simple as possible.
+		 * functions can be called.  ISR safe functions are those that end in
+		 * "FromISR".  FreeRTOS maintains separate thread and ISR API functions to
+		 * ensure interrupt entry is as fast and simple as possible.
 
-		Save the interrupt priority value that is about to be clobbered. */
+		 * Save the interrupt priority value that is about to be clobbered. */
 		ulOriginalPriority = *pucFirstUserPriorityRegister;
 
 		/* Determine the number of priority bits available.  First write to all
-		possible bits. */
+		 * possible bits. */
 		*pucFirstUserPriorityRegister = portMAX_8_BIT_VALUE;
 
 		/* Read the value back to see how many bits stuck. */
@@ -351,7 +387,7 @@ BaseType_t xPortStartScheduler( void )
 		ucMaxSysCallPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY & ucMaxPriorityValue;
 
 		/* Calculate the maximum acceptable priority group value for the number
-		of bits read back. */
+		 * of bits read back. */
 		ulMaxPRIGROUPValue = portMAX_PRIGROUP_BITS;
 		while( ( ucMaxPriorityValue & portTOP_BIT_OF_BYTE ) == portTOP_BIT_OF_BYTE )
 		{
@@ -362,8 +398,8 @@ BaseType_t xPortStartScheduler( void )
 		#ifdef __NVIC_PRIO_BITS
 		{
 			/* Check the CMSIS configuration that defines the number of
-			priority bits matches the number of priority bits actually queried
-			from the hardware. */
+			 * priority bits matches the number of priority bits actually queried
+			 * from the hardware. */
 			configASSERT( ( portMAX_PRIGROUP_BITS - ulMaxPRIGROUPValue ) == __NVIC_PRIO_BITS );
 		}
 		#endif
@@ -371,26 +407,26 @@ BaseType_t xPortStartScheduler( void )
 		#ifdef configPRIO_BITS
 		{
 			/* Check the FreeRTOS configuration that defines the number of
-			priority bits matches the number of priority bits actually queried
-			from the hardware. */
+			 * priority bits matches the number of priority bits actually queried
+			 * from the hardware. */
 			configASSERT( ( portMAX_PRIGROUP_BITS - ulMaxPRIGROUPValue ) == configPRIO_BITS );
 		}
 		#endif
 
 		/* Shift the priority group value back to its position within the AIRCR
-		register. */
+		 * register. */
 		ulMaxPRIGROUPValue <<= portPRIGROUP_SHIFT;
 		ulMaxPRIGROUPValue &= portPRIORITY_GROUP_MASK;
 
 		/* Restore the clobbered interrupt priority register to its original
-		value. */
+		 * value. */
 		*pucFirstUserPriorityRegister = ulOriginalPriority;
 	}
 	#endif /* conifgASSERT_DEFINED */
 
 	/* Make PendSV and SysTick the same priority as the kernel, and the SVC
-	handler higher priority so it can be used to exit a critical section (where
-	lower priorities are masked). */
+	 * handler higher priority so it can be used to exit a critical section (where
+	 * lower priorities are masked). */
 	portNVIC_SYSPRI2_REG |= portNVIC_PENDSV_PRI;
 	portNVIC_SYSPRI2_REG |= portNVIC_SYSTICK_PRI;
 
@@ -398,7 +434,7 @@ BaseType_t xPortStartScheduler( void )
 	prvSetupMPU();
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
-	here already. */
+	 * here already. */
 	prvSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
@@ -429,9 +465,9 @@ __asm void prvStartFirstTask( void )
 	/* Set the msp back to the start of the stack. */
 	msr msp, r0
 	/* Clear the bit that indicates the FPU is in use in case the FPU was used
-	before the scheduler was started - which would otherwise result in the
-	unnecessary leaving of space in the SVC stack for lazy saving of FPU
-	registers. */
+	 * before the scheduler was started - which would otherwise result in the
+	 * unnecessary leaving of space in the SVC stack for lazy saving of FPU
+	 * registers. */
 	mov r0, #0
 	msr control, r0
 	/* Globally enable interrupts. */
@@ -447,7 +483,7 @@ __asm void prvStartFirstTask( void )
 void vPortEndScheduler( void )
 {
 	/* Not implemented in ports where there is nothing to return to.
-	Artificially force an assert. */
+	 * Artificially force an assert. */
 	configASSERT( uxCriticalNesting == 1000UL );
 }
 /*-----------------------------------------------------------*/
@@ -511,9 +547,23 @@ __asm void xPortPendSVHandler( void )
 	ldr r1, [r3]
 	ldr r0, [r1]					/* The first item in the TCB is the task top of stack. */
 	add r1, r1, #4					/* Move onto the second item in the TCB... */
+
+	dmb								/* Complete outstanding transfers before disabling MPU. */
+	ldr r2, =0xe000ed94				/* MPU_CTRL register. */
+	ldr r3, [r2]					/* Read the value of MPU_CTRL. */
+	bic r3, r3, #1					/* r3 = r3 & ~1 i.e. Clear the bit 0 in r3. */
+	str r3, [r2]					/* Disable MPU. */
+
 	ldr r2, =0xe000ed9c				/* Region Base Address register. */
 	ldmia r1!, {r4-r11}				/* Read 4 sets of MPU registers. */
 	stmia r2!, {r4-r11}				/* Write 4 sets of MPU registers. */
+
+	ldr r2, =0xe000ed94				/* MPU_CTRL register. */
+	ldr r3, [r2]					/* Read the value of MPU_CTRL. */
+	orr r3, r3, #1					/* r3 = r3 | 1 i.e. Set the bit 0 in r3. */
+	str r3, [r2]					/* Enable MPU. */
+	dsb								/* Force memory writes before continuing. */
+
 	ldmia r0!, {r3-r11, r14}		/* Pop the registers that are not automatically saved on exception entry. */
 	msr control, r3
 
@@ -608,8 +658,8 @@ extern uint32_t __privileged_data_end__;
 										( portMPU_REGION_ENABLE );
 
 		/* Setup the first 16K for privileged only access (even though less
-		than 10K is actually being used).  This is where the kernel code is
-		placed. */
+		 * than 10K is actually being used).  This is where the kernel code is
+		 * placed. */
 		portMPU_REGION_BASE_ADDRESS_REG =	( ( uint32_t ) __FLASH_segment_start__ ) | /* Base address. */
 											( portMPU_REGION_VALID ) |
 											( portPRIVILEGED_FLASH_REGION );
@@ -620,7 +670,7 @@ extern uint32_t __privileged_data_end__;
 										( portMPU_REGION_ENABLE );
 
 		/* Setup the privileged data RAM region.  This is where the kernel data
-		is placed. */
+		 * is placed. */
 		portMPU_REGION_BASE_ADDRESS_REG =	( ( uint32_t ) __privileged_data_start__ ) | /* Base address. */
 											( portMPU_REGION_VALID ) |
 											( portPRIVILEGED_RAM_REGION );
@@ -631,7 +681,7 @@ extern uint32_t __privileged_data_end__;
 										( portMPU_REGION_ENABLE );
 
 		/* By default allow everything to access the general peripherals.  The
-		system peripherals and registers are protected. */
+		 * system peripherals and registers are protected. */
 		portMPU_REGION_BASE_ADDRESS_REG =	( portPERIPHERALS_START_ADDRESS ) |
 											( portMPU_REGION_VALID ) |
 											( portGENERAL_PERIPHERALS_REGION );
@@ -654,7 +704,7 @@ static uint32_t prvGetMPURegionSizeSetting( uint32_t ulActualSizeInBytes )
 uint32_t ulRegionSize, ulReturnValue = 4;
 
 	/* 32 is the smallest region size, 31 is the largest valid value for
-	ulReturnValue. */
+	 * ulReturnValue. */
 	for( ulRegionSize = 32UL; ulReturnValue < 31UL; ( ulRegionSize <<= 1UL ) )
 	{
 		if( ulActualSizeInBytes <= ulRegionSize )
@@ -668,7 +718,7 @@ uint32_t ulRegionSize, ulReturnValue = 4;
 	}
 
 	/* Shift the code by one before returning so it can be written directly
-	into the the correct bit position of the attribute register. */
+	 * into the the correct bit position of the attribute register. */
 	return ( ulReturnValue << 1UL );
 }
 /*-----------------------------------------------------------*/
@@ -723,7 +773,7 @@ uint32_t ul;
 				( portMPU_REGION_ENABLE );
 
 		/* Re-instate the privileged only RAM region as xRegion[ 0 ] will have
-		just removed the privileged only parameters. */
+		 * just removed the privileged only parameters. */
 		xMPUSettings->xRegion[ 1 ].ulRegionBaseAddress =
 				( ( uint32_t ) __privileged_data_start__ ) | /* Base address. */
 				( portMPU_REGION_VALID ) |
@@ -745,9 +795,9 @@ uint32_t ul;
 	else
 	{
 		/* This function is called automatically when the task is created - in
-		which case the stack region parameters will be valid.  At all other
-		times the stack parameters will not be valid and it is assumed that the
-		stack region has already been configured. */
+		 * which case the stack region parameters will be valid.  At all other
+		 * times the stack parameters will not be valid and it is assumed that the
+		 * stack region has already been configured. */
 		if( ulStackDepth > 0 )
 		{
 			/* Define the region that allows access to the stack. */
@@ -770,8 +820,8 @@ uint32_t ul;
 			if( ( xRegions[ lIndex ] ).ulLengthInBytes > 0UL )
 			{
 				/* Translate the generic region definition contained in
-				xRegions into the CM3 specific MPU settings that are then
-				stored in xMPUSettings. */
+				 * xRegions into the CM3 specific MPU settings that are then
+				 * stored in xMPUSettings. */
 				xMPUSettings->xRegion[ ul ].ulRegionBaseAddress =
 						( ( uint32_t ) xRegions[ lIndex ].pvBaseAddress ) |
 						( portMPU_REGION_VALID ) |
@@ -821,47 +871,46 @@ __asm uint32_t prvPortGetIPSR( void )
 			ucCurrentPriority = pcInterruptPriorityRegisters[ ulCurrentInterrupt ];
 
 			/* The following assertion will fail if a service routine (ISR) for
-			an interrupt that has been assigned a priority above
-			configMAX_SYSCALL_INTERRUPT_PRIORITY calls an ISR safe FreeRTOS API
-			function.  ISR safe FreeRTOS API functions must *only* be called
-			from interrupts that have been assigned a priority at or below
-			configMAX_SYSCALL_INTERRUPT_PRIORITY.
+			 * an interrupt that has been assigned a priority above
+			 * configMAX_SYSCALL_INTERRUPT_PRIORITY calls an ISR safe FreeRTOS API
+			 * function.  ISR safe FreeRTOS API functions must *only* be called
+			 * from interrupts that have been assigned a priority at or below
+			 * configMAX_SYSCALL_INTERRUPT_PRIORITY.
 
-			Numerically low interrupt priority numbers represent logically high
-			interrupt priorities, therefore the priority of the interrupt must
-			be set to a value equal to or numerically *higher* than
-			configMAX_SYSCALL_INTERRUPT_PRIORITY.
+			 * Numerically low interrupt priority numbers represent logically high
+			 * interrupt priorities, therefore the priority of the interrupt must
+			 * be set to a value equal to or numerically *higher* than
+			 * configMAX_SYSCALL_INTERRUPT_PRIORITY.
 
-			Interrupts that	use the FreeRTOS API must not be left at their
-			default priority of	zero as that is the highest possible priority,
-			which is guaranteed to be above configMAX_SYSCALL_INTERRUPT_PRIORITY,
-			and	therefore also guaranteed to be invalid.
+			 * Interrupts that	use the FreeRTOS API must not be left at their
+			 * default priority of	zero as that is the highest possible priority,
+			 * which is guaranteed to be above configMAX_SYSCALL_INTERRUPT_PRIORITY,
+			 * and	therefore also guaranteed to be invalid.
 
-			FreeRTOS maintains separate thread and ISR API functions to ensure
-			interrupt entry is as fast and simple as possible.
+			 * FreeRTOS maintains separate thread and ISR API functions to ensure
+			 * interrupt entry is as fast and simple as possible.
 
-			The following links provide detailed information:
-			http://www.freertos.org/RTOS-Cortex-M3-M4.html
-			http://www.freertos.org/FAQHelp.html */
+			 * The following links provide detailed information:
+			 * http://www.freertos.org/RTOS-Cortex-M3-M4.html
+			 * http://www.freertos.org/FAQHelp.html */
 			configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
 		}
 
 		/* Priority grouping:  The interrupt controller (NVIC) allows the bits
-		that define each interrupt's priority to be split between bits that
-		define the interrupt's pre-emption priority bits and bits that define
-		the interrupt's sub-priority.  For simplicity all bits must be defined
-		to be pre-emption priority bits.  The following assertion will fail if
-		this is not the case (if some bits represent a sub-priority).
+		 * that define each interrupt's priority to be split between bits that
+		 * define the interrupt's pre-emption priority bits and bits that define
+		 * the interrupt's sub-priority.  For simplicity all bits must be defined
+		 * to be pre-emption priority bits.  The following assertion will fail if
+		 * this is not the case (if some bits represent a sub-priority).
 
-		If the application only uses CMSIS libraries for interrupt
-		configuration then the correct setting can be achieved on all Cortex-M
-		devices by calling NVIC_SetPriorityGrouping( 0 ); before starting the
-		scheduler.  Note however that some vendor specific peripheral libraries
-		assume a non-zero priority group setting, in which cases using a value
-		of zero will result in unpredicable behaviour. */
+		 * If the application only uses CMSIS libraries for interrupt
+		 * configuration then the correct setting can be achieved on all Cortex-M
+		 * devices by calling NVIC_SetPriorityGrouping( 0 ); before starting the
+		 * scheduler.  Note however that some vendor specific peripheral libraries
+		 * assume a non-zero priority group setting, in which cases using a value
+		 * of zero will result in unpredicable behaviour. */
 		configASSERT( ( portAIRCR_REG & portPRIORITY_GROUP_MASK ) <= ulMaxPRIGROUPValue );
 	}
 
 #endif /* configASSERT_DEFINED */
-
-
+/*-----------------------------------------------------------*/

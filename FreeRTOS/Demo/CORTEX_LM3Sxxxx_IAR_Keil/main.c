@@ -56,10 +56,11 @@
  *
  * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
  * processing is performed in this task.
+ *
+ * Use the following command to execute in QEMU from the IAR IDE:
+ * qemu-system-arm -machine lm3s6965evb -s -S -kernel [pat_to]\RTOSDemo.out
+ * and set IAR connect GDB server to "localhost,1234" in project debug options.
  */
-
-
-
 
 /*************************************************************************
  * Please ensure to read http://www.freertos.org/portlm3sx965.html
@@ -89,12 +90,14 @@ and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
 #include "hw_memmap.h"
 #include "hw_types.h"
 #include "hw_sysctl.h"
+#include "hw_uart.h"
 #include "sysctl.h"
 #include "gpio.h"
 #include "grlib.h"
 #include "rit128x96x4.h"
 #include "osram128x64x4.h"
 #include "formike128x128x16.h"
+#include "uart.h"
 
 /* Demo app includes. */
 #include "death.h"
@@ -185,6 +188,7 @@ extern void vSetupHighFrequencyTimer( void );
 void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
+static void prvPrintString( const char * pcString );
 
 /*-----------------------------------------------------------*/
 
@@ -277,6 +281,11 @@ void prvSetupHardware( void )
 	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
 
 	vParTestInitialise();
+
+	/* Initialise the UART - QEMU usage does not seem to require this
+	initialisation. */
+	SysCtlPeripheralEnable( SYSCTL_PERIPH_UART0 );
+	UARTEnable( UART0_BASE );
 }
 /*-----------------------------------------------------------*/
 
@@ -343,8 +352,6 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 			xMessage.pcMessage = "ERROR IN EVNT GRP";
 		}
 
-		configASSERT( strcmp( ( const char * ) xMessage.pcMessage, "PASS" ) == 0 );
-
 		/* Send the message to the OLED gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
 		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
@@ -356,6 +363,16 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Call the event group ISR tests. */
 	vPeriodicEventGroupsProcessing();
+}
+/*-----------------------------------------------------------*/
+
+static void prvPrintString( const char * pcString )
+{
+	while( *pcString != 0x00 )
+	{
+		UARTCharPut( UART0_BASE, *pcString );
+		pcString++;
+	}
 }
 /*-----------------------------------------------------------*/
 
@@ -431,6 +448,7 @@ void ( *vOLEDClear )( void ) = NULL;
 		high priority time test. */
 		sprintf( cMessage, "%s [%uns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
 		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );
+		prvPrintString( cMessage );
 	}
 }
 /*-----------------------------------------------------------*/

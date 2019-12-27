@@ -46,7 +46,7 @@
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 50000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 70 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 27000 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
@@ -101,6 +101,11 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* Use the Cortex-M3 optimised task selection rather than the generic C code
 version. */
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+
+/* The test that checks the trigger level on stream buffers requires an
+allowable margin of error on slower processors (slower than the Win32
+machine on which the test is developed). */
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
 
 #ifdef __ICCARM__
 	void vAssertCalled( const char *pcFile, unsigned long ulLine );

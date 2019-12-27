@@ -439,13 +439,13 @@ void xPortSysTickHandler( void )
 			__disable_interrupt();
 			__DSB();
 			__ISB();
-			
-			/* Disable the SysTick clock without reading the 
+
+			/* Disable the SysTick clock without reading the
 			portNVIC_SYSTICK_CTRL_REG register to ensure the
-			portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set.  Again, 
-			the time the SysTick is stopped for is accounted for as best it can 
-			be, but using the tickless mode will inevitably result in some tiny 
-			drift of the time maintained by the kernel with respect to calendar 
+			portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set.  Again,
+			the time the SysTick is stopped for is accounted for as best it can
+			be, but using the tickless mode will inevitably result in some tiny
+			drift of the time maintained by the kernel with respect to calendar
 			time*/
 			portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT );
 

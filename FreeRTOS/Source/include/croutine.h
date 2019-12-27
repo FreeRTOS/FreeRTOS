@@ -157,7 +157,7 @@ BaseType_t xCoRoutineCreate( crCOROUTINE_CODE pxCoRoutineCode, UBaseType_t uxPri
  }
 
  // Alternatively, if you do not require any other part of the idle task to
- // execute, the idle task hook can call vCoRoutineScheduler() within an
+ // execute, the idle task hook can call vCoRoutineSchedule() within an
  // infinite loop.
  void vApplicationIdleHook( void )
  {

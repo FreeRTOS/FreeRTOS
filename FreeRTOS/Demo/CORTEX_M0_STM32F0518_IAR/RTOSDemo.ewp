@@ -311,7 +311,7 @@
                 </option>
                 <option>
                     <name>CCLangConformance</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCSignedPlainChar</name>

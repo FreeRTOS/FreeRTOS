@@ -96,6 +96,7 @@ power functionality only. */
  * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
  */
+#pragma weak vPortSetupTimerInterrupt
 void vPortSetupTimerInterrupt( void );
 
 /*
@@ -235,7 +236,7 @@ uint32_t ulPreviousMask;
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-__weak void vPortSetupTimerInterrupt( void )
+void vPortSetupTimerInterrupt( void )
 {
 	/* Calculate the constants required to configure the tick interrupt. */
 	#if( configUSE_TICKLESS_IDLE == 1 )

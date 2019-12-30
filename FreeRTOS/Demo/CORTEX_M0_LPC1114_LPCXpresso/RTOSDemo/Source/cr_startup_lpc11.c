@@ -357,6 +357,16 @@ volatile unsigned int stacked_psr;
 	stacked_pc = ((unsigned long) hardfault_args[6]);
 	stacked_psr = ((unsigned long) hardfault_args[7]);
 
+	/* Remove compiler warnings about variables being set but not used. */
+	( void ) stacked_r0;
+	( void ) stacked_r1;
+	( void ) stacked_r2;
+	( void ) stacked_r3;
+	( void ) stacked_r12;
+	( void ) stacked_lr;
+	( void ) stacked_pc;
+	( void ) stacked_psr;
+
 	/* Inspect stacked_pc to locate the offending instruction. */
 	for( ;; )
 	{

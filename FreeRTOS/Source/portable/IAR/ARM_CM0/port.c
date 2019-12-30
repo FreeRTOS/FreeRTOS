@@ -92,9 +92,11 @@ power functionality only. */
 #endif /* configUSE_TICKLESS_IDLE */
 
 /*
- * Setup the timer to generate the tick interrupts.
+ * Setup the timer to generate the tick interrupts.  The implementation in this
+ * file is weak to allow application writers to change the timer used to
+ * generate the tick interrupt.
  */
-static void prvSetupTimerInterrupt( void );
+void vPortSetupTimerInterrupt( void );
 
 /*
  * Exception handlers.
@@ -159,7 +161,7 @@ BaseType_t xPortStartScheduler( void )
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
@@ -233,7 +235,7 @@ uint32_t ulPreviousMask;
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-static void prvSetupTimerInterrupt( void )
+__weak void vPortSetupTimerInterrupt( void )
 {
 	/* Calculate the constants required to configure the tick interrupt. */
 	#if( configUSE_TICKLESS_IDLE == 1 )
@@ -243,7 +245,7 @@ static void prvSetupTimerInterrupt( void )
 		ulStoppedTimerCompensation = portMISSED_COUNTS_FACTOR;
 	}
 	#endif /* configUSE_TICKLESS_IDLE */
-        
+
 	/* Stop and reset the SysTick. */
 	portNVIC_SYSTICK_CTRL_REG = 0UL;
 	portNVIC_SYSTICK_CURRENT_VALUE_REG = 0UL;
@@ -349,12 +351,12 @@ TickType_t xModifiableIdleTime;
 		__DSB();
 		__ISB();
 
-		/* Disable the SysTick clock without reading the 
+		/* Disable the SysTick clock without reading the
 		portNVIC_SYSTICK_CTRL_REG register to ensure the
-		portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set.  Again, 
-		the time the SysTick is stopped for is accounted for as best it can 
-		be, but using the tickless mode will inevitably result in some tiny 
-		drift of the time maintained by the kernel with respect to calendar 
+		portNVIC_SYSTICK_COUNT_FLAG_BIT is not cleared if it is set.  Again,
+		the time the SysTick is stopped for is accounted for as best it can
+		be, but using the tickless mode will inevitably result in some tiny
+		drift of the time maintained by the kernel with respect to calendar
 		time*/
 		portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT );
 

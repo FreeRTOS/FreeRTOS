@@ -51,11 +51,11 @@
 	#define portNVIC_SYSTICK_CLK_BIT	( 0 )
 #endif
 
-/* The __weak attribute does not work as you might expect with the Keil tools
-so the configOVERRIDE_DEFAULT_TICK_CONFIGURATION constant must be set to 1 if
-the application writer wants to provide their own implementation of
-vPortSetupTimerInterrupt().  Ensure configOVERRIDE_DEFAULT_TICK_CONFIGURATION
-is defined. */
+/* Legacy macro for backward compatibility only.  This macro used to be used to
+replace the function that configures the clock used to generate the tick
+interrupt (prvSetupTimerInterrupt()), but now the function is declared weak so
+the application writer can override it by simply defining a function of the
+same name (vApplicationSetupTickInterrupt()). */
 #ifndef configOVERRIDE_DEFAULT_TICK_CONFIGURATION
 	#define configOVERRIDE_DEFAULT_TICK_CONFIGURATION 0
 #endif

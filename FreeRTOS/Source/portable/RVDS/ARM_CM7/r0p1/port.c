@@ -679,7 +679,7 @@ void xPortSysTickHandler( void )
  */
 #if( configOVERRIDE_DEFAULT_TICK_CONFIGURATION == 0 )
 
-	void vPortSetupTimerInterrupt( void )
+	__weak void vPortSetupTimerInterrupt( void )
 	{
 		/* Calculate the constants required to configure the tick interrupt. */
 		#if( configUSE_TICKLESS_IDLE == 1 )

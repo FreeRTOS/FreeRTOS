@@ -2428,9 +2428,6 @@
             <name>$PROJ_DIR$\CMSIS\arm_const_structs.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\CMSIS\arm_math.h</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\CMSIS\cmsis_armcc.h</name>
         </file>
         <file>

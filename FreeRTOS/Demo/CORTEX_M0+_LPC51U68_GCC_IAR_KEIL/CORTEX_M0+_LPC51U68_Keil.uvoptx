@@ -210,7 +210,7 @@
 
   <Group>
     <GroupName>Application_Code</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -221,7 +221,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\main_full.c</PathWithFileName>
+      <PathWithFileName>.\app\main_full.c</PathWithFileName>
       <FilenameWithoutPath>main_full.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -233,7 +233,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\main_blinky.c</PathWithFileName>
+      <PathWithFileName>.\app\main_blinky.c</PathWithFileName>
       <FilenameWithoutPath>main_blinky.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -245,7 +245,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\main.c</PathWithFileName>
+      <PathWithFileName>.\app\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -257,7 +257,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\IntQueueTimer.h</PathWithFileName>
+      <PathWithFileName>.\app\IntQueueTimer.h</PathWithFileName>
       <FilenameWithoutPath>IntQueueTimer.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -269,7 +269,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\IntQueueTimer.c</PathWithFileName>
+      <PathWithFileName>.\app\IntQueueTimer.c</PathWithFileName>
       <FilenameWithoutPath>IntQueueTimer.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -281,7 +281,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\FreeRTOSConfig.h</PathWithFileName>
+      <PathWithFileName>.\app\FreeRTOSConfig.h</PathWithFileName>
       <FilenameWithoutPath>FreeRTOSConfig.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -325,7 +325,7 @@
       <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\board.c</PathWithFileName>
+      <PathWithFileName>.\board\boards\board.c</PathWithFileName>
       <FilenameWithoutPath>board.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -337,7 +337,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\board.h</PathWithFileName>
+      <PathWithFileName>.\board\boards\board.h</PathWithFileName>
       <FilenameWithoutPath>board.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -349,7 +349,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\clock_config.c</PathWithFileName>
+      <PathWithFileName>.\board\boards\clock_config.c</PathWithFileName>
       <FilenameWithoutPath>clock_config.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -361,7 +361,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\clock_config.h</PathWithFileName>
+      <PathWithFileName>.\board\boards\clock_config.h</PathWithFileName>
       <FilenameWithoutPath>clock_config.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -373,7 +373,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\peripherals.c</PathWithFileName>
+      <PathWithFileName>.\board\boards\peripherals.c</PathWithFileName>
       <FilenameWithoutPath>peripherals.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -385,7 +385,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\peripherals.h</PathWithFileName>
+      <PathWithFileName>.\board\boards\peripherals.h</PathWithFileName>
       <FilenameWithoutPath>peripherals.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -397,7 +397,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\pin_mux.c</PathWithFileName>
+      <PathWithFileName>.\board\boards\pin_mux.c</PathWithFileName>
       <FilenameWithoutPath>pin_mux.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -409,7 +409,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\pin_mux.h</PathWithFileName>
+      <PathWithFileName>.\board\boards\pin_mux.h</PathWithFileName>
       <FilenameWithoutPath>pin_mux.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -429,7 +429,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\lists\generic_list.h</PathWithFileName>
+      <PathWithFileName>.\component\lists\generic_list.h</PathWithFileName>
       <FilenameWithoutPath>generic_list.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -441,7 +441,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\lists\generic_list.c</PathWithFileName>
+      <PathWithFileName>.\component\lists\generic_list.c</PathWithFileName>
       <FilenameWithoutPath>generic_list.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -461,7 +461,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_manager.c</PathWithFileName>
+      <PathWithFileName>.\component\serial_manager\serial_manager.c</PathWithFileName>
       <FilenameWithoutPath>serial_manager.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -473,7 +473,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_manager.h</PathWithFileName>
+      <PathWithFileName>.\component\serial_manager\serial_manager.h</PathWithFileName>
       <FilenameWithoutPath>serial_manager.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -485,7 +485,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_port_internal.h</PathWithFileName>
+      <PathWithFileName>.\component\serial_manager\serial_port_internal.h</PathWithFileName>
       <FilenameWithoutPath>serial_port_internal.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -497,7 +497,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_port_uart.c</PathWithFileName>
+      <PathWithFileName>.\component\serial_manager\serial_port_uart.c</PathWithFileName>
       <FilenameWithoutPath>serial_port_uart.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -509,7 +509,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_port_uart.h</PathWithFileName>
+      <PathWithFileName>.\component\serial_manager\serial_port_uart.h</PathWithFileName>
       <FilenameWithoutPath>serial_port_uart.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -529,7 +529,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\uart\uart.h</PathWithFileName>
+      <PathWithFileName>.\component\uart\uart.h</PathWithFileName>
       <FilenameWithoutPath>uart.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -541,7 +541,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\uart\usart_adapter.c</PathWithFileName>
+      <PathWithFileName>.\component\uart\usart_adapter.c</PathWithFileName>
       <FilenameWithoutPath>usart_adapter.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -561,7 +561,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\fsl_device_registers.h</PathWithFileName>
+      <PathWithFileName>.\device\fsl_device_registers.h</PathWithFileName>
       <FilenameWithoutPath>fsl_device_registers.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -573,7 +573,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\LPC51U68.h</PathWithFileName>
+      <PathWithFileName>.\device\LPC51U68.h</PathWithFileName>
       <FilenameWithoutPath>LPC51U68.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -585,7 +585,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\LPC51U68_features.h</PathWithFileName>
+      <PathWithFileName>.\device\LPC51U68_features.h</PathWithFileName>
       <FilenameWithoutPath>LPC51U68_features.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -597,7 +597,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\system_LPC51U68.c</PathWithFileName>
+      <PathWithFileName>.\device\system_LPC51U68.c</PathWithFileName>
       <FilenameWithoutPath>system_LPC51U68.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -609,7 +609,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\system_LPC51U68.h</PathWithFileName>
+      <PathWithFileName>.\device\system_LPC51U68.h</PathWithFileName>
       <FilenameWithoutPath>system_LPC51U68.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -629,7 +629,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_clock.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_clock.c</PathWithFileName>
       <FilenameWithoutPath>fsl_clock.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -641,7 +641,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_clock.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_clock.h</PathWithFileName>
       <FilenameWithoutPath>fsl_clock.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -653,7 +653,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_common.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_common.c</PathWithFileName>
       <FilenameWithoutPath>fsl_common.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -665,7 +665,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_common.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_common.h</PathWithFileName>
       <FilenameWithoutPath>fsl_common.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -677,7 +677,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_ctimer.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_ctimer.c</PathWithFileName>
       <FilenameWithoutPath>fsl_ctimer.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -689,7 +689,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_ctimer.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_ctimer.h</PathWithFileName>
       <FilenameWithoutPath>fsl_ctimer.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -701,7 +701,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_flexcomm.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_flexcomm.c</PathWithFileName>
       <FilenameWithoutPath>fsl_flexcomm.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -713,7 +713,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_flexcomm.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_flexcomm.h</PathWithFileName>
       <FilenameWithoutPath>fsl_flexcomm.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -725,7 +725,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_gpio.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_gpio.c</PathWithFileName>
       <FilenameWithoutPath>fsl_gpio.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -737,7 +737,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_gpio.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_gpio.h</PathWithFileName>
       <FilenameWithoutPath>fsl_gpio.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -749,7 +749,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_iocon.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_iocon.h</PathWithFileName>
       <FilenameWithoutPath>fsl_iocon.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -761,7 +761,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_pint.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_pint.c</PathWithFileName>
       <FilenameWithoutPath>fsl_pint.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -773,7 +773,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_pint.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_pint.h</PathWithFileName>
       <FilenameWithoutPath>fsl_pint.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -785,7 +785,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_power.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_power.c</PathWithFileName>
       <FilenameWithoutPath>fsl_power.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -797,7 +797,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_power.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_power.h</PathWithFileName>
       <FilenameWithoutPath>fsl_power.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -809,7 +809,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_reset.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_reset.c</PathWithFileName>
       <FilenameWithoutPath>fsl_reset.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -821,7 +821,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_reset.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_reset.h</PathWithFileName>
       <FilenameWithoutPath>fsl_reset.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -833,7 +833,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_usart.c</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_usart.c</PathWithFileName>
       <FilenameWithoutPath>fsl_usart.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -845,7 +845,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_usart.h</PathWithFileName>
+      <PathWithFileName>.\drivers\fsl_usart.h</PathWithFileName>
       <FilenameWithoutPath>fsl_usart.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -885,7 +885,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_assert.c</PathWithFileName>
+      <PathWithFileName>.\utilities\fsl_assert.c</PathWithFileName>
       <FilenameWithoutPath>fsl_assert.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -897,7 +897,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_debug_console.c</PathWithFileName>
+      <PathWithFileName>.\utilities\fsl_debug_console.c</PathWithFileName>
       <FilenameWithoutPath>fsl_debug_console.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -909,7 +909,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_debug_console.h</PathWithFileName>
+      <PathWithFileName>.\utilities\fsl_debug_console.h</PathWithFileName>
       <FilenameWithoutPath>fsl_debug_console.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -921,7 +921,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_debug_console_conf.h</PathWithFileName>
+      <PathWithFileName>.\utilities\fsl_debug_console_conf.h</PathWithFileName>
       <FilenameWithoutPath>fsl_debug_console_conf.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -933,7 +933,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_str.c</PathWithFileName>
+      <PathWithFileName>.\utilities\fsl_str.c</PathWithFileName>
       <FilenameWithoutPath>fsl_str.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -945,7 +945,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_str.h</PathWithFileName>
+      <PathWithFileName>.\utilities\fsl_str.h</PathWithFileName>
       <FilenameWithoutPath>fsl_str.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -965,7 +965,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\arm_common_tables.h</PathWithFileName>
+      <PathWithFileName>.\CMSIS\arm_common_tables.h</PathWithFileName>
       <FilenameWithoutPath>arm_common_tables.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -977,7 +977,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\arm_const_structs.h</PathWithFileName>
+      <PathWithFileName>.\CMSIS\arm_const_structs.h</PathWithFileName>
       <FilenameWithoutPath>arm_const_structs.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -989,8 +989,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\arm_math.h</PathWithFileName>
-      <FilenameWithoutPath>arm_math.h</FilenameWithoutPath>
+      <PathWithFileName>.\CMSIS\cmsis_armcc.h</PathWithFileName>
+      <FilenameWithoutPath>cmsis_armcc.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1001,8 +1001,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_armcc.h</PathWithFileName>
-      <FilenameWithoutPath>cmsis_armcc.h</FilenameWithoutPath>
+      <PathWithFileName>.\CMSIS\cmsis_armclang.h</PathWithFileName>
+      <FilenameWithoutPath>cmsis_armclang.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1013,8 +1013,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_armclang.h</PathWithFileName>
-      <FilenameWithoutPath>cmsis_armclang.h</FilenameWithoutPath>
+      <PathWithFileName>.\CMSIS\cmsis_compiler.h</PathWithFileName>
+      <FilenameWithoutPath>cmsis_compiler.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1025,8 +1025,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_compiler.h</PathWithFileName>
-      <FilenameWithoutPath>cmsis_compiler.h</FilenameWithoutPath>
+      <PathWithFileName>.\CMSIS\cmsis_gcc.h</PathWithFileName>
+      <FilenameWithoutPath>cmsis_gcc.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1037,8 +1037,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_gcc.h</PathWithFileName>
-      <FilenameWithoutPath>cmsis_gcc.h</FilenameWithoutPath>
+      <PathWithFileName>.\CMSIS\cmsis_iccarm.h</PathWithFileName>
+      <FilenameWithoutPath>cmsis_iccarm.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1049,8 +1049,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_iccarm.h</PathWithFileName>
-      <FilenameWithoutPath>cmsis_iccarm.h</FilenameWithoutPath>
+      <PathWithFileName>.\CMSIS\cmsis_version.h</PathWithFileName>
+      <FilenameWithoutPath>cmsis_version.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1061,19 +1061,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_version.h</PathWithFileName>
-      <FilenameWithoutPath>cmsis_version.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>10</GroupNumber>
-      <FileNumber>66</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\core_cm0plus.h</PathWithFileName>
+      <PathWithFileName>.\CMSIS\core_cm0plus.h</PathWithFileName>
       <FilenameWithoutPath>core_cm0plus.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1088,7 +1076,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>67</FileNumber>
+      <FileNumber>66</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1100,7 +1088,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>68</FileNumber>
+      <FileNumber>67</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1112,7 +1100,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>69</FileNumber>
+      <FileNumber>68</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1124,7 +1112,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>70</FileNumber>
+      <FileNumber>69</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1136,7 +1124,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>71</FileNumber>
+      <FileNumber>70</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1148,7 +1136,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>72</FileNumber>
+      <FileNumber>71</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1160,7 +1148,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>73</FileNumber>
+      <FileNumber>72</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1172,7 +1160,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>74</FileNumber>
+      <FileNumber>73</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1184,7 +1172,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>75</FileNumber>
+      <FileNumber>74</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1196,7 +1184,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>76</FileNumber>
+      <FileNumber>75</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1208,7 +1196,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>77</FileNumber>
+      <FileNumber>76</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1220,7 +1208,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>78</FileNumber>
+      <FileNumber>77</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1232,7 +1220,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>79</FileNumber>
+      <FileNumber>78</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1244,7 +1232,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>80</FileNumber>
+      <FileNumber>79</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1256,7 +1244,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>81</FileNumber>
+      <FileNumber>80</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1268,7 +1256,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>82</FileNumber>
+      <FileNumber>81</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1280,7 +1268,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>83</FileNumber>
+      <FileNumber>82</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1292,7 +1280,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>84</FileNumber>
+      <FileNumber>83</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1304,7 +1292,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>85</FileNumber>
+      <FileNumber>84</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1316,7 +1304,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>86</FileNumber>
+      <FileNumber>85</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1328,7 +1316,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>87</FileNumber>
+      <FileNumber>86</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1340,7 +1328,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>88</FileNumber>
+      <FileNumber>87</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1352,7 +1340,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>89</FileNumber>
+      <FileNumber>88</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1364,7 +1352,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>90</FileNumber>
+      <FileNumber>89</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1376,7 +1364,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>91</FileNumber>
+      <FileNumber>90</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1388,7 +1376,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>92</FileNumber>
+      <FileNumber>91</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1400,7 +1388,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>93</FileNumber>
+      <FileNumber>92</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1412,7 +1400,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>94</FileNumber>
+      <FileNumber>93</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1432,7 +1420,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>95</FileNumber>
+      <FileNumber>94</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1444,7 +1432,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>96</FileNumber>
+      <FileNumber>95</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1456,7 +1444,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>97</FileNumber>
+      <FileNumber>96</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1468,7 +1456,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>98</FileNumber>
+      <FileNumber>97</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1480,7 +1468,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>99</FileNumber>
+      <FileNumber>98</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1492,7 +1480,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>100</FileNumber>
+      <FileNumber>99</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1504,7 +1492,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>101</FileNumber>
+      <FileNumber>100</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1516,7 +1504,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>102</FileNumber>
+      <FileNumber>101</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1530,13 +1518,13 @@
 
   <Group>
     <GroupName>libs</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>13</GroupNumber>
-      <FileNumber>103</FileNumber>
+      <FileNumber>102</FileNumber>
       <FileType>4</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

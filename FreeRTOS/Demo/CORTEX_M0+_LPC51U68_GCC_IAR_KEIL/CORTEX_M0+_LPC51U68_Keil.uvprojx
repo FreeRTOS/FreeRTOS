@@ -385,32 +385,32 @@
             <File>
               <FileName>main_full.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\main_full.c</FilePath>
+              <FilePath>.\app\main_full.c</FilePath>
             </File>
             <File>
               <FileName>main_blinky.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\main_blinky.c</FilePath>
+              <FilePath>.\app\main_blinky.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\main.c</FilePath>
+              <FilePath>.\app\main.c</FilePath>
             </File>
             <File>
               <FileName>IntQueueTimer.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\IntQueueTimer.h</FilePath>
+              <FilePath>.\app\IntQueueTimer.h</FilePath>
             </File>
             <File>
               <FileName>IntQueueTimer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\IntQueueTimer.c</FilePath>
+              <FilePath>.\app\IntQueueTimer.c</FilePath>
             </File>
             <File>
               <FileName>FreeRTOSConfig.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\app\FreeRTOSConfig.h</FilePath>
+              <FilePath>.\app\FreeRTOSConfig.h</FilePath>
             </File>
             <File>
               <FileName>RegTest_Keil.s</FileName>
@@ -430,42 +430,42 @@
             <File>
               <FileName>board.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\board.c</FilePath>
+              <FilePath>.\board\boards\board.c</FilePath>
             </File>
             <File>
               <FileName>board.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\board.h</FilePath>
+              <FilePath>.\board\boards\board.h</FilePath>
             </File>
             <File>
               <FileName>clock_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\clock_config.c</FilePath>
+              <FilePath>.\board\boards\clock_config.c</FilePath>
             </File>
             <File>
               <FileName>clock_config.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\clock_config.h</FilePath>
+              <FilePath>.\board\boards\clock_config.h</FilePath>
             </File>
             <File>
               <FileName>peripherals.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\peripherals.c</FilePath>
+              <FilePath>.\board\boards\peripherals.c</FilePath>
             </File>
             <File>
               <FileName>peripherals.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\peripherals.h</FilePath>
+              <FilePath>.\board\boards\peripherals.h</FilePath>
             </File>
             <File>
               <FileName>pin_mux.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\pin_mux.c</FilePath>
+              <FilePath>.\board\boards\pin_mux.c</FilePath>
             </File>
             <File>
               <FileName>pin_mux.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards\pin_mux.h</FilePath>
+              <FilePath>.\board\boards\pin_mux.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -475,12 +475,12 @@
             <File>
               <FileName>generic_list.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\lists\generic_list.h</FilePath>
+              <FilePath>.\component\lists\generic_list.h</FilePath>
             </File>
             <File>
               <FileName>generic_list.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\lists\generic_list.c</FilePath>
+              <FilePath>.\component\lists\generic_list.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -490,27 +490,27 @@
             <File>
               <FileName>serial_manager.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_manager.c</FilePath>
+              <FilePath>.\component\serial_manager\serial_manager.c</FilePath>
             </File>
             <File>
               <FileName>serial_manager.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_manager.h</FilePath>
+              <FilePath>.\component\serial_manager\serial_manager.h</FilePath>
             </File>
             <File>
               <FileName>serial_port_internal.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_port_internal.h</FilePath>
+              <FilePath>.\component\serial_manager\serial_port_internal.h</FilePath>
             </File>
             <File>
               <FileName>serial_port_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_port_uart.c</FilePath>
+              <FilePath>.\component\serial_manager\serial_port_uart.c</FilePath>
             </File>
             <File>
               <FileName>serial_port_uart.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager\serial_port_uart.h</FilePath>
+              <FilePath>.\component\serial_manager\serial_port_uart.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -520,12 +520,12 @@
             <File>
               <FileName>uart.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\uart\uart.h</FilePath>
+              <FilePath>.\component\uart\uart.h</FilePath>
             </File>
             <File>
               <FileName>usart_adapter.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\component\uart\usart_adapter.c</FilePath>
+              <FilePath>.\component\uart\usart_adapter.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -535,27 +535,27 @@
             <File>
               <FileName>fsl_device_registers.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\fsl_device_registers.h</FilePath>
+              <FilePath>.\device\fsl_device_registers.h</FilePath>
             </File>
             <File>
               <FileName>LPC51U68.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\LPC51U68.h</FilePath>
+              <FilePath>.\device\LPC51U68.h</FilePath>
             </File>
             <File>
               <FileName>LPC51U68_features.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\LPC51U68_features.h</FilePath>
+              <FilePath>.\device\LPC51U68_features.h</FilePath>
             </File>
             <File>
               <FileName>system_LPC51U68.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\system_LPC51U68.c</FilePath>
+              <FilePath>.\device\system_LPC51U68.c</FilePath>
             </File>
             <File>
               <FileName>system_LPC51U68.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\device\system_LPC51U68.h</FilePath>
+              <FilePath>.\device\system_LPC51U68.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -565,97 +565,97 @@
             <File>
               <FileName>fsl_clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_clock.c</FilePath>
+              <FilePath>.\drivers\fsl_clock.c</FilePath>
             </File>
             <File>
               <FileName>fsl_clock.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_clock.h</FilePath>
+              <FilePath>.\drivers\fsl_clock.h</FilePath>
             </File>
             <File>
               <FileName>fsl_common.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_common.c</FilePath>
+              <FilePath>.\drivers\fsl_common.c</FilePath>
             </File>
             <File>
               <FileName>fsl_common.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_common.h</FilePath>
+              <FilePath>.\drivers\fsl_common.h</FilePath>
             </File>
             <File>
               <FileName>fsl_ctimer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_ctimer.c</FilePath>
+              <FilePath>.\drivers\fsl_ctimer.c</FilePath>
             </File>
             <File>
               <FileName>fsl_ctimer.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_ctimer.h</FilePath>
+              <FilePath>.\drivers\fsl_ctimer.h</FilePath>
             </File>
             <File>
               <FileName>fsl_flexcomm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_flexcomm.c</FilePath>
+              <FilePath>.\drivers\fsl_flexcomm.c</FilePath>
             </File>
             <File>
               <FileName>fsl_flexcomm.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_flexcomm.h</FilePath>
+              <FilePath>.\drivers\fsl_flexcomm.h</FilePath>
             </File>
             <File>
               <FileName>fsl_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_gpio.c</FilePath>
+              <FilePath>.\drivers\fsl_gpio.c</FilePath>
             </File>
             <File>
               <FileName>fsl_gpio.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_gpio.h</FilePath>
+              <FilePath>.\drivers\fsl_gpio.h</FilePath>
             </File>
             <File>
               <FileName>fsl_iocon.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_iocon.h</FilePath>
+              <FilePath>.\drivers\fsl_iocon.h</FilePath>
             </File>
             <File>
               <FileName>fsl_pint.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_pint.c</FilePath>
+              <FilePath>.\drivers\fsl_pint.c</FilePath>
             </File>
             <File>
               <FileName>fsl_pint.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_pint.h</FilePath>
+              <FilePath>.\drivers\fsl_pint.h</FilePath>
             </File>
             <File>
               <FileName>fsl_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_power.c</FilePath>
+              <FilePath>.\drivers\fsl_power.c</FilePath>
             </File>
             <File>
               <FileName>fsl_power.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_power.h</FilePath>
+              <FilePath>.\drivers\fsl_power.h</FilePath>
             </File>
             <File>
               <FileName>fsl_reset.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_reset.c</FilePath>
+              <FilePath>.\drivers\fsl_reset.c</FilePath>
             </File>
             <File>
               <FileName>fsl_reset.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_reset.h</FilePath>
+              <FilePath>.\drivers\fsl_reset.h</FilePath>
             </File>
             <File>
               <FileName>fsl_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_usart.c</FilePath>
+              <FilePath>.\drivers\fsl_usart.c</FilePath>
             </File>
             <File>
               <FileName>fsl_usart.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers\fsl_usart.h</FilePath>
+              <FilePath>.\drivers\fsl_usart.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -675,32 +675,32 @@
             <File>
               <FileName>fsl_assert.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_assert.c</FilePath>
+              <FilePath>.\utilities\fsl_assert.c</FilePath>
             </File>
             <File>
               <FileName>fsl_debug_console.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_debug_console.c</FilePath>
+              <FilePath>.\utilities\fsl_debug_console.c</FilePath>
             </File>
             <File>
               <FileName>fsl_debug_console.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_debug_console.h</FilePath>
+              <FilePath>.\utilities\fsl_debug_console.h</FilePath>
             </File>
             <File>
               <FileName>fsl_debug_console_conf.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_debug_console_conf.h</FilePath>
+              <FilePath>.\utilities\fsl_debug_console_conf.h</FilePath>
             </File>
             <File>
               <FileName>fsl_str.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_str.c</FilePath>
+              <FilePath>.\utilities\fsl_str.c</FilePath>
             </File>
             <File>
               <FileName>fsl_str.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities\fsl_str.h</FilePath>
+              <FilePath>.\utilities\fsl_str.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -710,52 +710,47 @@
             <File>
               <FileName>arm_common_tables.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\arm_common_tables.h</FilePath>
+              <FilePath>.\CMSIS\arm_common_tables.h</FilePath>
             </File>
             <File>
               <FileName>arm_const_structs.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\arm_const_structs.h</FilePath>
-            </File>
-            <File>
-              <FileName>arm_math.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\arm_math.h</FilePath>
+              <FilePath>.\CMSIS\arm_const_structs.h</FilePath>
             </File>
             <File>
               <FileName>cmsis_armcc.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_armcc.h</FilePath>
+              <FilePath>.\CMSIS\cmsis_armcc.h</FilePath>
             </File>
             <File>
               <FileName>cmsis_armclang.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_armclang.h</FilePath>
+              <FilePath>.\CMSIS\cmsis_armclang.h</FilePath>
             </File>
             <File>
               <FileName>cmsis_compiler.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_compiler.h</FilePath>
+              <FilePath>.\CMSIS\cmsis_compiler.h</FilePath>
             </File>
             <File>
               <FileName>cmsis_gcc.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_gcc.h</FilePath>
+              <FilePath>.\CMSIS\cmsis_gcc.h</FilePath>
             </File>
             <File>
               <FileName>cmsis_iccarm.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_iccarm.h</FilePath>
+              <FilePath>.\CMSIS\cmsis_iccarm.h</FilePath>
             </File>
             <File>
               <FileName>cmsis_version.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\cmsis_version.h</FilePath>
+              <FilePath>.\CMSIS\cmsis_version.h</FilePath>
             </File>
             <File>
               <FileName>core_cm0plus.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS\core_cm0plus.h</FilePath>
+              <FilePath>.\CMSIS\core_cm0plus.h</FilePath>
             </File>
           </Files>
         </Group>

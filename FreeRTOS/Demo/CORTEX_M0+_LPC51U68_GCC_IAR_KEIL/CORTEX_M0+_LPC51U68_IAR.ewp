@@ -353,16 +353,16 @@
                     <state>$PROJ_DIR$\..\..\Source\include</state>
                     <state>$PROJ_DIR$\..\..\Source\portable\IAR\ARM_CM0</state>
                     <state>$PROJ_DIR$\..\Common\include</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\app</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\board\boards</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\CMSIS</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\component\lists</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\component\serial_manager</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\component\uart</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\device</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\drivers</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\IAR_specific</state>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\utilities</state>
+                    <state>$PROJ_DIR$\app</state>
+                    <state>$PROJ_DIR$\board\boards</state>
+                    <state>$PROJ_DIR$\CMSIS</state>
+                    <state>$PROJ_DIR$\component\lists</state>
+                    <state>$PROJ_DIR$\component\serial_manager</state>
+                    <state>$PROJ_DIR$\component\uart</state>
+                    <state>$PROJ_DIR$\device</state>
+                    <state>$PROJ_DIR$\drivers</state>
+                    <state>$PROJ_DIR$\IAR_specific</state>
+                    <state>$PROJ_DIR$\utilities</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -378,7 +378,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -387,7 +387,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -628,7 +628,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\CORTEX_M0+_LPC51U68_LPCXpresso\app</state>
+                    <state>$PROJ_DIR$\app</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -829,7 +829,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state>C:\Users\yuhzheng\Documents\FreeRTOS\FreeRTOS\Demo\CORTEX_M0+_LPC51U68_LPCXpresso\IAR_specific\iar_lib_power.a</state>
+                    <state>$PROJ_DIR$\IAR_specific\iar_lib_power.a</state>
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -2171,9 +2171,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\CMSIS\arm_const_structs.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\CMSIS\arm_math.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\CMSIS\cmsis_armcc.h</name>

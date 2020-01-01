@@ -110,7 +110,7 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 /*
  * Setup the timer to generate the tick interrupts.
  */
-static void prvSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
+void vSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
 
 /*
  * Configure a number of standard MPU regions that are used by all tasks.
@@ -435,7 +435,7 @@ BaseType_t xPortStartScheduler( void )
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	 * here already. */
-	prvSetupTimerInterrupt();
+	vSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
@@ -598,7 +598,7 @@ uint32_t ulDummy;
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-static void prvSetupTimerInterrupt( void )
+__weak void vSetupTimerInterrupt( void )
 {
 	/* Reset the SysTick. */
 	portNVIC_SYSTICK_CTRL_REG = 0UL;

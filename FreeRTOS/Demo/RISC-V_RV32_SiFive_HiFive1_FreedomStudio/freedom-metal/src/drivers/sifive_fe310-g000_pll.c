@@ -133,7 +133,7 @@ void __metal_driver_sifive_fe310_g000_pll_init(struct __metal_driver_sifive_fe31
  * Returns:
  *  - PLL_CONFIG_NOT_VALID if the configuration is not valid for the input frequency
  *  - the output frequency, in hertz */
-static long get_pll_config_freq(long pll_input_rate, const struct pll_config_t *config)
+static long get_pll_config_freq(unsigned long pll_input_rate, const struct pll_config_t *config)
 {
     if(pll_input_rate < config->min_input_rate || pll_input_rate > config->max_input_rate)
         return PLL_CONFIG_NOT_VALID;
@@ -162,8 +162,7 @@ void __metal_driver_sifive_fe310_g000_pll_init(struct __metal_driver_sifive_fe31
     __metal_io_u32 *pllcfg = (__metal_io_u32 *) (base + config_offset);
 
     /* If the PLL clock has had a _pre_rate_change_callback configured, call it */
-    if(pll->clock._pre_rate_change_callback != NULL)
-        pll->clock._pre_rate_change_callback(pll->clock._pre_rate_change_callback_priv);
+    _metal_clock_call_all_callbacks(pll->clock._pre_rate_change_callback);
 
     /* If we're running off of the PLL, switch off before we start configuring it*/
     if((__METAL_ACCESS_ONCE(pllcfg) & PLL_SEL) == 0)
@@ -179,8 +178,7 @@ void __metal_driver_sifive_fe310_g000_pll_init(struct __metal_driver_sifive_fe31
     pll->clock.vtable->set_rate_hz(&(pll->clock), init_rate);
 
     /* If the PLL clock has had a rate_change_callback configured, call it */
-    if(pll->clock._post_rate_change_callback != NULL)
-        pll->clock._post_rate_change_callback(pll->clock._post_rate_change_callback_priv);
+    _metal_clock_call_all_callbacks(pll->clock._post_rate_change_callback);
 }
 
 long __metal_driver_sifive_fe310_g000_pll_get_rate_hz(const struct metal_clock *clock)
@@ -358,3 +356,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_sifive_fe310_g000_pll) = {
 };
 
 #endif /* METAL_SIFIVE_FE310_G000_PLL */
+
+typedef int no_empty_translation_units;

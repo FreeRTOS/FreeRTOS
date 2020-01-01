@@ -58,7 +58,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
 
 /* Index to first HART (there is only one). */
 #define mainHART_0 		0
@@ -265,6 +265,9 @@ void *malloc( size_t xSize )
 	if something unexpectedly uses the C library heap.  See
 	https://www.freertos.org/a00111.html for more information. */
 	configASSERT( metal_cpu_get( mainHART_0 ) == 0x00 );
+
+	/* Remove warnings about unused parameter. */
+	( void ) xSize;
 	return NULL;
 }
 /*-----------------------------------------------------------*/

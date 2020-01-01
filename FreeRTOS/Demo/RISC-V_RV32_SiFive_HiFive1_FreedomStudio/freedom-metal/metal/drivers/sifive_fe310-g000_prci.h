@@ -17,6 +17,7 @@ struct __metal_driver_vtable_sifive_fe310_g000_prci {
 __METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_fe310_g000_prci)
 
 struct __metal_driver_sifive_fe310_g000_prci {
+    const struct __metal_driver_vtable_sifive_fe310_g000_prci *vtable;
 };
 
 #endif

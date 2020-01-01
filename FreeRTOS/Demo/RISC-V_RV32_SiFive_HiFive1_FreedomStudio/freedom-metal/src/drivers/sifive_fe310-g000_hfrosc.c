@@ -23,9 +23,9 @@ long __metal_driver_sifive_fe310_g000_hfrosc_get_rate_hz(const struct metal_cloc
       __metal_driver_sifive_fe310_g000_prci_vtable();
     long cfg = vtable->get_reg(config_base, config_offset);
 
-    if (cfg & CONFIG_ENABLE == 0)
+    if ((cfg & CONFIG_ENABLE) == 0)
         return -1;
-    if (cfg & CONFIG_READY == 0)
+    if ((cfg & CONFIG_READY) == 0)
         return -1;
     return metal_clock_get_rate_hz(ref) / ((cfg & CONFIG_DIVIDER) + 1);
 }
@@ -40,3 +40,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_sifive_fe310_g000_hfrosc) = {
     .clock.set_rate_hz = &__metal_driver_sifive_fe310_g000_hfrosc_set_rate_hz,
 };
 #endif /* METAL_SIFIVE_FE310_G000_HFROSC */
+
+typedef int no_empty_translation_units;

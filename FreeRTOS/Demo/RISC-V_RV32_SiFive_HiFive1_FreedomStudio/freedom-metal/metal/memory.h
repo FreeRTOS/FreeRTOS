@@ -14,11 +14,11 @@
  */
 
 struct _metal_memory_attributes {
-	int R : 1;
-	int W : 1;
-	int X : 1;
-	int C : 1;
-	int A : 1;
+	unsigned int R : 1;
+	unsigned int W : 1;
+	unsigned int X : 1;
+	unsigned int C : 1;
+	unsigned int A : 1;
 };
 
 /*!
@@ -46,7 +46,7 @@ struct metal_memory *metal_get_memory_from_address(const uintptr_t address);
  * @param memory The handle for the memory block
  * @return The base address of the memory block
  */
-inline uintptr_t metal_memory_get_base_address(const struct metal_memory *memory) {
+__inline__ uintptr_t metal_memory_get_base_address(const struct metal_memory *memory) {
 	return memory->_base_address;
 }
 
@@ -55,7 +55,7 @@ inline uintptr_t metal_memory_get_base_address(const struct metal_memory *memory
  * @param memory The handle for the memory block
  * @return The size of the memory block
  */
-inline size_t metal_memory_get_size(const struct metal_memory *memory) {
+__inline__ size_t metal_memory_get_size(const struct metal_memory *memory) {
 	return memory->_size;
 }
 
@@ -64,7 +64,7 @@ inline size_t metal_memory_get_size(const struct metal_memory *memory) {
  * @param memory The handle for the memory block
  * @return nonzero if the memory block supports atomic operations
  */
-inline int metal_memory_supports_atomics(const struct metal_memory *memory) {
+__inline__ int metal_memory_supports_atomics(const struct metal_memory *memory) {
 	return memory->_attrs.A;
 }
 
@@ -73,7 +73,7 @@ inline int metal_memory_supports_atomics(const struct metal_memory *memory) {
  * @param memory The handle for the memory block
  * @return nonzero if the memory block is cachable
  */
-inline int metal_memory_is_cachable(const struct metal_memory *memory) {
+__inline__ int metal_memory_is_cachable(const struct metal_memory *memory) {
 	return memory->_attrs.C;
 }
 

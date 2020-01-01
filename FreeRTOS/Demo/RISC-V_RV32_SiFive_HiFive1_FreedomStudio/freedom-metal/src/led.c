@@ -32,7 +32,7 @@ struct metal_led* metal_led_get (char *label)
     return metal_led_get_rgb(label, "");
 }
 
-extern inline void metal_led_enable(struct metal_led *led);
-extern inline void metal_led_on(struct metal_led *led);
-extern inline void metal_led_off(struct metal_led *led);
-extern inline void metal_led_toggle(struct metal_led *led);
+extern __inline__ void metal_led_enable(struct metal_led *led);
+extern __inline__ void metal_led_on(struct metal_led *led);
+extern __inline__ void metal_led_off(struct metal_led *led);
+extern __inline__ void metal_led_toggle(struct metal_led *led);

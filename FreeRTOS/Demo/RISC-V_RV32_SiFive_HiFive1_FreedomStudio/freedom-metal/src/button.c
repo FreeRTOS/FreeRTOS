@@ -22,6 +22,6 @@ struct metal_button* metal_button_get (char *label)
     return NULL;
 }
 
-extern inline struct metal_interrupt*
+extern __inline__ struct metal_interrupt*
     metal_button_interrupt_controller(struct metal_button *button);
-extern inline int metal_button_get_interrupt_id(struct metal_button *button);
+extern __inline__ int metal_button_get_interrupt_id(struct metal_button *button);

@@ -86,6 +86,9 @@
 #define METAL_LOCAL_INTERRUPT(X)  (0x10000 << X) /* Bit16+ Start of Custom Local Interrupt */
 #define METAL_MIE_INTERRUPT        METAL_MSTATUS_MIE
 
+#define METAL_INSN_LENGTH_MASK     3
+#define METAL_INSN_NOT_COMPRESSED  3
+
 typedef enum {
   METAL_MACHINE_PRIVILEGE_MODE,
   METAL_SUPERVISOR_PRIVILEGE_MODE,
@@ -97,6 +100,7 @@ typedef enum {
   METAL_INTERRUPT_ID_SW   = (METAL_INTERRUPT_ID_BASE + 3),
   METAL_INTERRUPT_ID_TMR  = (METAL_INTERRUPT_ID_BASE + 7),
   METAL_INTERRUPT_ID_EXT  = (METAL_INTERRUPT_ID_BASE + 11),
+  METAL_INTERRUPT_ID_CSW  = (METAL_INTERRUPT_ID_BASE + 12),
   METAL_INTERRUPT_ID_LC0  = (METAL_INTERRUPT_ID_BASE + METAL_LOCAL_INTR(0)),
   METAL_INTERRUPT_ID_LC1  = (METAL_INTERRUPT_ID_BASE + METAL_LOCAL_INTR(1)),
   METAL_INTERRUPT_ID_LC2  = (METAL_INTERRUPT_ID_BASE + METAL_LOCAL_INTR(2)),
@@ -154,15 +158,6 @@ typedef struct __metal_interrupt_data {
 
 uintptr_t __metal_myhart_id(void);
 
-struct __metal_driver_interrupt_controller_vtable {
-    void (*interrupt_init)(struct metal_interrupt *controller);
-    int (*interrupt_register)(struct metal_interrupt *controller,
-			      int id, metal_interrupt_handler_t isr, void *priv_data);
-    int (*interrupt_enable)(struct metal_interrupt *controller, int id);
-    int (*interrupt_disable)(struct metal_interrupt *controller, int id);
-    int (*command_request)(struct metal_interrupt *intr, int cmd, void *data);
-};
-
 struct __metal_driver_vtable_riscv_cpu_intc {
   struct metal_interrupt_vtable controller_vtable;
 };
@@ -170,14 +165,8 @@ struct __metal_driver_vtable_riscv_cpu_intc {
 
 void __metal_interrupt_global_enable(void);
 void __metal_interrupt_global_disable(void);
+metal_vector_mode __metal_controller_interrupt_vector_mode(void);
 void __metal_controller_interrupt_vector(metal_vector_mode mode, void *vec_table);
-inline int __metal_controller_interrupt_is_selective_vectored (void)
-{
-    uintptr_t val;
-
-    asm volatile ("csrr %0, mtvec" : "=r"(val));
-    return ((val & METAL_MTVEC_CLIC_VECTORED) == METAL_MTVEC_CLIC);
-}
 
 __METAL_DECLARE_VTABLE(__metal_driver_vtable_riscv_cpu_intc)
 

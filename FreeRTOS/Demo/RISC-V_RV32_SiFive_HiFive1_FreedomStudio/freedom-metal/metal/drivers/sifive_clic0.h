@@ -34,7 +34,8 @@ __METAL_DECLARE_VTABLE(__metal_driver_vtable_sifive_clic0)
 struct __metal_driver_sifive_clic0 {
     struct metal_interrupt controller;
     int init_done;
-    metal_interrupt_handler_t metal_mtvt_table[__METAL_CLIC_SUBINTERRUPTS];
+    int pad[14];
+    metal_interrupt_vector_handler_t metal_mtvt_table[__METAL_CLIC_SUBINTERRUPTS];
     __metal_interrupt_data metal_exint_table[__METAL_CLIC_SUBINTERRUPTS];
 };
 #undef __METAL_MACHINE_MACROS

@@ -25,3 +25,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_fixed_clock) = {
 };
 
 #endif /* METAL_FIXED_CLOCK */
+
+typedef int no_empty_translation_units;

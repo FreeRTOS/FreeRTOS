@@ -22,6 +22,6 @@ struct metal_switch* metal_switch_get (char *label)
     return NULL;
 }
 
-extern inline struct metal_interrupt*
+extern __inline__ struct metal_interrupt*
     metal_switch_interrupt_controller(struct metal_switch *flip);
-extern inline int metal_switch_get_interrupt_id(struct metal_switch *flip);
+extern __inline__ int metal_switch_get_interrupt_id(struct metal_switch *flip);

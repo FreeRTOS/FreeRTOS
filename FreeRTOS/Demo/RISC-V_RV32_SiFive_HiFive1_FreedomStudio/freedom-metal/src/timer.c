@@ -65,15 +65,15 @@ int nop_tick(int second) __attribute__((section(".text.metal.nop.tick")));
 int nop_tick(int second) { return -1; }
 int metal_timer_get_cyclecount(int hartid, unsigned long long *c) __attribute__((weak, alias("nop_cyclecount")))
 {
-#warning "There is no default timer device, metal_timer_get_cyclecount() will always return cyclecount -1."
+#pragma message("There is no default timer device, metal_timer_get_cyclecount() will always return cyclecount -1.")
 }
 int metal_timer_get_timebase_frequency(unsigned long long *t) __attribute__((weak, alias("nop_timebase")))
 {
-#warning "There is no default timer device, metal_timer_get_timebase_frequency() will always return timebase -1."
+#pragma message("There is no default timer device, metal_timer_get_timebase_frequency() will always return timebase -1.")
 }
 int metal_timer_set_tick(int second) __attribute__((weak, alias("nop_tick")))
 {
-#warning "There is no default timer device, metal_timer_set_tick) will always return -1."
+#pragma message("There is no default timer device, metal_timer_set_tick) will always return -1.")
 }
 
 #endif

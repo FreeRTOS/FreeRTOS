@@ -80,11 +80,19 @@ _start:
   bge t1, t2, 2f
 
 1:
+#if __riscv_xlen == 32
   lw   a0, 0(t0)
   addi t0, t0, 4
   sw   a0, 0(t1)
   addi t1, t1, 4
   blt  t1, t2, 1b
+#else
+  ld   a0, 0(t0)
+  addi t0, t0, 8
+  sd   a0, 0(t1)
+  addi t1, t1, 8
+  blt  t1, t2, 1b
+#endif
 2:
 
   /* Copy the ITIM section */
@@ -96,12 +104,24 @@ _start:
   bge t1, t2, 2f
 
 1:
+#if __riscv_xlen == 32
   lw   a0, 0(t0)
   addi t0, t0, 4
   sw   a0, 0(t1)
   addi t1, t1, 4
   blt  t1, t2, 1b
+#else
+  ld   a0, 0(t0)
+  addi t0, t0, 8
+  sd   a0, 0(t1)
+  addi t1, t1, 8
+  blt  t1, t2, 1b
+#endif
 2:
+
+  /* Fence all subsequent instruction fetches until after the ITIM writes
+     complete */
+  fence.i
 
   /* Zero the BSS segment. */
   la t1, metal_segment_bss_target_start
@@ -110,9 +130,15 @@ _start:
   bge t1, t2, 2f
 
 1:
+#if __riscv_xlen == 32
   sw   x0, 0(t1)
   addi t1, t1, 4
   blt  t1, t2, 1b
+#else
+  sd   x0, 0(t1)
+  addi t1, t1, 8
+  blt  t1, t2, 1b
+#endif
 2:
 
   /* At this point we're in an environment that can execute C code.  The first
@@ -131,7 +157,7 @@ _skip_init:
 
   /* Synchronize harts so that secondary harts wait until hart 0 finishes
      initializing */
-  call _synchronize_harts
+  call __metal_synchronize_harts
 
   /* Check RISC-V isa and enable FS bits if Floating Point architecture. */
   csrr a5, misa

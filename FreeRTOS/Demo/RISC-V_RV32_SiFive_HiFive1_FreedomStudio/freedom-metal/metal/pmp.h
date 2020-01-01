@@ -42,11 +42,11 @@ enum metal_pmp_address_mode {
  */
 struct metal_pmp_config {
     /*! @brief Sets whether reads to the PMP region succeed */
-    int R : 1;
+    unsigned int R : 1;
     /*! @brief Sets whether writes to the PMP region succeed */
-    int W : 1;
+    unsigned int W : 1;
     /*! @brief Sets whether the PMP region is executable */
-    int X : 1;
+    unsigned int X : 1;
 
     /*! @brief Sets the addressing mode of the PMP region */
     enum metal_pmp_address_mode A : 2;
@@ -72,6 +72,11 @@ struct metal_pmp {
  * @brief Get the PMP device handle
  */
 struct metal_pmp *metal_pmp_get_device(void);
+
+/*!
+ * @brief Get the number of pmp regions for the hartid
+ */
+int metal_pmp_num_regions(int hartid);
 
 /*!
  * @brief Initialize the PMP

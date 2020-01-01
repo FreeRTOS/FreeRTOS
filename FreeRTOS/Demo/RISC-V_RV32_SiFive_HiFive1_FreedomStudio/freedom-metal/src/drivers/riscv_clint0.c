@@ -76,10 +76,14 @@ int __metal_driver_riscv_clint0_register (struct metal_interrupt *controller,
                                         void *priv)
 {
     int rc = -1;
-
+    metal_vector_mode mode = __metal_controller_interrupt_vector_mode();
     struct metal_interrupt *intc = NULL;
     struct metal_interrupt *cpu_intc = _get_cpu_intc();
     int num_interrupts = __metal_driver_sifive_clint0_num_interrupts(controller);
+
+    if ( (mode != METAL_VECTOR_MODE) && (mode != METAL_DIRECT_MODE) ) {
+        return rc;
+    }
 
     for(int i = 0; i < num_interrupts; i++) {
 	int line = __metal_driver_sifive_clint0_interrupt_lines(controller, i);
@@ -93,6 +97,41 @@ int __metal_driver_riscv_clint0_register (struct metal_interrupt *controller,
     /* Register its interrupts with parent controller */
     if (intc) {
         rc = intc->vtable->interrupt_register(intc, id, isr, priv);
+    }
+    return rc;
+}
+
+int __metal_driver_riscv_clint0_vector_register (struct metal_interrupt *controller,
+                                                 int id, metal_interrupt_vector_handler_t isr,
+                                                 void *priv)
+{   
+    /* Not supported. User can override the 'weak' handler with their own */
+    int rc = -1;
+    return rc;
+}
+
+metal_vector_mode __metal_driver_riscv_clint0_get_vector_mode (struct metal_interrupt *controller)
+{
+    return __metal_controller_interrupt_vector_mode();
+}
+
+int __metal_driver_riscv_clint0_set_vector_mode (struct metal_interrupt *controller, metal_vector_mode mode)
+{
+    int rc = -1;
+    struct metal_interrupt *intc = _get_cpu_intc();
+
+    if (intc) {
+	/* Valid vector modes are VECTOR and DIRECT, anything else is invalid (-1) */
+        switch (mode) {
+        case METAL_VECTOR_MODE:
+        case METAL_DIRECT_MODE:
+            rc = intc->vtable->interrupt_set_vector_mode(intc, mode);
+            break;
+        case METAL_HARDWARE_VECTOR_MODE:
+        case METAL_SELECTIVE_NONVECTOR_MODE:
+        case METAL_SELECTIVE_VECTOR_MODE:
+        break;
+        }
     }
     return rc;
 }
@@ -120,6 +159,8 @@ int __metal_driver_riscv_clint0_enable (struct metal_interrupt *controller, int 
             rc = intc->vtable->interrupt_enable(intc, id);
         }
     }
+
+    return rc;
 }
 
 int __metal_driver_riscv_clint0_disable (struct metal_interrupt *controller, int id)
@@ -145,6 +186,8 @@ int __metal_driver_riscv_clint0_disable (struct metal_interrupt *controller, int
             rc = intc->vtable->interrupt_disable(intc, id);
         }
     }
+
+    return rc;
 }
 
 int __metal_driver_riscv_clint0_command_request (struct metal_interrupt *controller,
@@ -206,13 +249,35 @@ int __metal_driver_riscv_clint0_command_request (struct metal_interrupt *control
     return rc;
 }
 
+int __metal_driver_riscv_clint0_clear_interrupt (struct metal_interrupt *controller, int id)
+{
+    int hartid = metal_cpu_get_current_hartid();
+    return __metal_driver_riscv_clint0_command_request(controller,
+						METAL_SOFTWARE_IPI_CLEAR, &hartid);
+}
+
+int __metal_driver_riscv_clint0_set_interrupt (struct metal_interrupt *controller, int id)
+{
+    int hartid = metal_cpu_get_current_hartid();
+    return __metal_driver_riscv_clint0_command_request(controller,
+						METAL_SOFTWARE_IPI_SET, &hartid);
+}
+
+
 __METAL_DEFINE_VTABLE(__metal_driver_vtable_riscv_clint0) = {
     .clint_vtable.interrupt_init     = __metal_driver_riscv_clint0_init,
     .clint_vtable.interrupt_register = __metal_driver_riscv_clint0_register,
+    .clint_vtable.interrupt_vector_register = __metal_driver_riscv_clint0_vector_register,
     .clint_vtable.interrupt_enable   = __metal_driver_riscv_clint0_enable,
     .clint_vtable.interrupt_disable  = __metal_driver_riscv_clint0_disable,
+    .clint_vtable.interrupt_get_vector_mode = __metal_driver_riscv_clint0_get_vector_mode,
+    .clint_vtable.interrupt_set_vector_mode = __metal_driver_riscv_clint0_set_vector_mode,
+    .clint_vtable.interrupt_clear    = __metal_driver_riscv_clint0_clear_interrupt,
+    .clint_vtable.interrupt_set      = __metal_driver_riscv_clint0_set_interrupt,
     .clint_vtable.command_request    = __metal_driver_riscv_clint0_command_request,
     .clint_vtable.mtimecmp_set       = __metal_driver_riscv_clint0_mtimecmp_set,
 };
 
 #endif /* METAL_RISCV_CLINT0 */
+
+typedef int no_empty_translation_units;

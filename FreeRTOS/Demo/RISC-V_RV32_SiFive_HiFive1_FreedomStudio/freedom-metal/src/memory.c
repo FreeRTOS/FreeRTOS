@@ -19,8 +19,8 @@ struct metal_memory *metal_get_memory_from_address(const uintptr_t address) {
 	return NULL;
 }
 
-extern inline uintptr_t metal_memory_get_base_address(const struct metal_memory *memory);
-extern inline size_t metal_memory_get_size(const struct metal_memory *memory);
-extern inline int metal_memory_supports_atomics(const struct metal_memory *memory);
-extern inline int metal_memory_is_cachable(const struct metal_memory *memory);
+extern __inline__ uintptr_t metal_memory_get_base_address(const struct metal_memory *memory);
+extern __inline__ size_t metal_memory_get_size(const struct metal_memory *memory);
+extern __inline__ int metal_memory_supports_atomics(const struct metal_memory *memory);
+extern __inline__ int metal_memory_is_cachable(const struct metal_memory *memory);
 

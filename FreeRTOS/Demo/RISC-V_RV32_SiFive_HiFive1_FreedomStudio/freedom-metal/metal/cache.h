@@ -9,6 +9,7 @@
  *
  * @brief API for configuring caches
  */
+#include <stdint.h>
 
 struct metal_cache;
 
@@ -32,8 +33,8 @@ struct metal_cache {
  *
  * Initializes a cache with the requested number of ways enabled.
  */
-inline void metal_cache_init(struct metal_cache *cache, int ways) {
-	return cache->vtable->init(cache, ways);
+__inline__ void metal_cache_init(struct metal_cache *cache, int ways) {
+	cache->vtable->init(cache, ways);
 }
 
 /*!
@@ -41,7 +42,7 @@ inline void metal_cache_init(struct metal_cache *cache, int ways) {
  * @param cache The handle for the cache
  * @return The current number of enabled cache ways
  */
-inline int metal_cache_get_enabled_ways(struct metal_cache *cache) {
+__inline__ int metal_cache_get_enabled_ways(struct metal_cache *cache) {
 	return cache->vtable->get_enabled_ways(cache);
 }
 
@@ -51,8 +52,45 @@ inline int metal_cache_get_enabled_ways(struct metal_cache *cache) {
  * @param ways The number of ways to enabled
  * @return 0 if the ways are successfully enabled
  */
-inline int metal_cache_set_enabled_ways(struct metal_cache *cache, int ways) {
+__inline__ int metal_cache_set_enabled_ways(struct metal_cache *cache, int ways) {
 	return cache->vtable->set_enabled_ways(cache, ways);
 }
+
+/*!
+ * @brief Check if dcache is supported on the core
+ * @param hartid The core to check
+ * @return 1 if dcache is present
+ */
+int metal_dcache_l1_available(int hartid);
+
+/*!
+ * @brief Flush dcache for L1 on the requested core with write back
+ * @param hartid  The core to flush
+ * @param address The virtual address of cacheline to invalidate
+ * @return None
+ */
+void metal_dcache_l1_flush(int hartid, uintptr_t address);
+
+/*!
+ * @brief Discard dcache for L1 on the requested core with no write back
+ * @param hartid  The core to discard
+ * @param address The virtual address of cacheline to invalidate
+ * @return None
+ */
+void metal_dcache_l1_discard(int hartid, uintptr_t address);
+
+/*!
+ * @brief Check if icache is supported on the core
+ * @param hartid The core to check
+ * @return 1 if icache is present
+ */
+int metal_icache_l1_available(int hartid);
+
+/*!
+ * @brief Flush icache for L1 on the requested core
+ * @param hartid  The core to flush
+ * @return None
+ */
+void metal_icache_l1_flush(int hartid);
 
 #endif

@@ -24,7 +24,7 @@ _sbrk(ptrdiff_t incr)
 
   /* If __heap_size == 0, we can't allocate memory on the heap */
   if(&metal_segment_heap_target_start == &metal_segment_heap_target_end) {
-    return NULL;
+    return (void *)-1;
   }
 
   /* Don't move the break past the end of the heap */
@@ -32,6 +32,7 @@ _sbrk(ptrdiff_t incr)
     brk += incr;
   } else {
     brk = &metal_segment_heap_target_end;
+    return (void *)-1;
   }
 
   return old;

@@ -38,26 +38,41 @@ int __metal_driver_sifive_uart0_get_interrupt_id(struct metal_uart *uart)
     return (__metal_driver_sifive_uart0_interrupt_line(uart) + METAL_INTERRUPT_ID_GL0);
 }
 
-int __metal_driver_sifive_uart0_putc(struct metal_uart *uart, unsigned char c)
+
+int __metal_driver_sifive_uart0_txready(struct metal_uart *uart)
+{
+  long control_base = __metal_driver_sifive_uart0_control_base(uart);
+
+  return !((UART_REGW(METAL_SIFIVE_UART0_TXDATA) & UART_TXFULL));
+}
+
+
+int __metal_driver_sifive_uart0_putc(struct metal_uart *uart, int c)
 {
     long control_base = __metal_driver_sifive_uart0_control_base(uart);
 
-    while ((UART_REGW(METAL_SIFIVE_UART0_TXDATA) & UART_TXFULL) != 0) { }
+    while (!__metal_driver_sifive_uart0_txready(uart)) {
+		/* wait */
+    }
     UART_REGW(METAL_SIFIVE_UART0_TXDATA) = c;
     return 0;
 }
 
-int __metal_driver_sifive_uart0_getc(struct metal_uart *uart, unsigned char *c)
-{
-    uint32_t ch = UART_RXEMPTY;
-    long control_base = __metal_driver_sifive_uart0_control_base(uart);
 
-    while (ch & UART_RXEMPTY) {
-        ch = UART_REGW(METAL_SIFIVE_UART0_RXDATA);
+int __metal_driver_sifive_uart0_getc(struct metal_uart *uart, int *c)
+{
+    uint32_t ch;
+    long control_base = __metal_driver_sifive_uart0_control_base(uart);
+    /* No seperate status register, we get status and the byte at same time */
+    ch = UART_REGW(METAL_SIFIVE_UART0_RXDATA);;
+    if( ch & UART_RXEMPTY ){
+      *c = -1; /* aka: EOF in most of the world */
+    } else {
+      *c = ch & 0x0ff;
     }
-    *c = ch & 0xff;
     return 0;
 }
+
 
 int __metal_driver_sifive_uart0_get_baud_rate(struct metal_uart *guart)
 {
@@ -82,7 +97,7 @@ int __metal_driver_sifive_uart0_set_baud_rate(struct metal_uart *guart, int baud
     return 0;
 }
 
-static void pre_rate_change_callback(void *priv)
+static void pre_rate_change_callback_func(void *priv)
 {
     struct __metal_driver_sifive_uart0 *uart = priv;
     long control_base = __metal_driver_sifive_uart0_control_base((struct metal_uart *)priv);
@@ -105,10 +120,10 @@ static void pre_rate_change_callback(void *priv)
     long cycles_to_wait = bits_per_symbol * clk_freq / uart->baud_rate;
 
     for(volatile long x = 0; x < cycles_to_wait; x++)
-        asm("nop");
+        __asm__("nop");
 }
 
-static void post_rate_change_callback(void *priv)
+static void post_rate_change_callback_func(void *priv)
 {
     struct __metal_driver_sifive_uart0 *uart = priv;
     metal_uart_set_baud_rate(&uart->uart, uart->baud_rate);
@@ -121,8 +136,13 @@ void __metal_driver_sifive_uart0_init(struct metal_uart *guart, int baud_rate)
     struct __metal_driver_sifive_gpio0 *pinmux = __metal_driver_sifive_uart0_pinmux(guart);
 
     if(clock != NULL) {
-        metal_clock_register_pre_rate_change_callback(clock, &pre_rate_change_callback, guart);
-        metal_clock_register_post_rate_change_callback(clock, &post_rate_change_callback, guart);
+        uart->pre_rate_change_callback.callback = &pre_rate_change_callback_func;
+        uart->pre_rate_change_callback.priv = guart;
+        metal_clock_register_pre_rate_change_callback(clock, &(uart->pre_rate_change_callback));
+
+        uart->post_rate_change_callback.callback = &post_rate_change_callback_func;
+        uart->post_rate_change_callback.priv = guart;
+        metal_clock_register_post_rate_change_callback(clock, &(uart->post_rate_change_callback));
     }
 
     metal_uart_set_baud_rate(&(uart->uart), baud_rate);
@@ -149,3 +169,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_sifive_uart0) = {
 };
 
 #endif /* METAL_SIFIVE_UART0 */
+
+typedef int no_empty_translation_units;

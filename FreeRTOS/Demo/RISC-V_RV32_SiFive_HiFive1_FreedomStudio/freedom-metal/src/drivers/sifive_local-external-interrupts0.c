@@ -82,6 +82,33 @@ int __metal_driver_sifive_local_external_interrupt_disable(struct metal_interrup
     return rc;
 }
 
+int __metal_driver_sifive_local_external_interrupt_set_threshold(struct metal_interrupt *controller,
+                                                                  unsigned int threshold)
+{
+    /* Core controller does not support threshold configuration */
+    return -1;
+}
+
+unsigned int __metal_driver_sifive_local_external_interrupt_get_threshold(struct metal_interrupt *controller)
+{
+    /* Core controller does not support threshold configuration */
+    return 0;
+}
+
+
+int __metal_driver_sifive_local_external_interrupt_set_priority(struct metal_interrupt *controller,
+                                                                int id, unsigned int priority)
+{
+    /* Core controller does not support priority configuration */
+    return -1;
+}
+
+unsigned int __metal_driver_sifive_local_external_interrupt_get_priority(struct metal_interrupt *controller, int id)
+{
+    /* Core controller does not support priority configuration */
+    return 0;
+}
+
 int __metal_driver_sifive_local_external_command_request (struct metal_interrupt *controller,
                                                         int command, void *data)
 {
@@ -111,7 +138,14 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_sifive_local_external_interrupts0) =
     .local0_vtable.interrupt_register = __metal_driver_sifive_local_external_interrupt_register,
     .local0_vtable.interrupt_enable   = __metal_driver_sifive_local_external_interrupt_enable,
     .local0_vtable.interrupt_disable  = __metal_driver_sifive_local_external_interrupt_disable,
+    .local0_vtable.interrupt_get_threshold  = __metal_driver_sifive_local_external_interrupt_get_threshold,
+    .local0_vtable.interrupt_set_threshold  = __metal_driver_sifive_local_external_interrupt_set_threshold,
+    .local0_vtable.interrupt_get_priority   = __metal_driver_sifive_local_external_interrupt_get_priority,
+    .local0_vtable.interrupt_set_priority   = __metal_driver_sifive_local_external_interrupt_set_priority,
     .local0_vtable.command_request    = __metal_driver_sifive_local_external_command_request,
 };
 
 #endif
+
+typedef int no_empty_translation_units;
+

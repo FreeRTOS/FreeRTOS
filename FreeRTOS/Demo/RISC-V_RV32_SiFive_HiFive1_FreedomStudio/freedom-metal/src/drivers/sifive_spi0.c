@@ -7,6 +7,7 @@
 #include <metal/drivers/sifive_spi0.h>
 #include <metal/io.h>
 #include <metal/machine.h>
+#include <metal/time.h>
 #include <time.h>
 
 /* Register fields */
@@ -54,19 +55,25 @@ static int configure_spi(struct __metal_driver_sifive_spi0 *spi, struct metal_sp
     long control_base = __metal_driver_sifive_spi0_control_base((struct metal_spi *)spi);
     /* Set protocol */
     METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) &= ~(METAL_SPI_PROTO_MASK);
-    switch(config->protocol) {
-        case METAL_SPI_SINGLE:
-            METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_SINGLE;
-            break;
-        case METAL_SPI_DUAL:
+    switch (config->protocol) {
+    case METAL_SPI_SINGLE:
+        METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_SINGLE;
+        break;
+    case METAL_SPI_DUAL:
+        if (config->multi_wire == MULTI_WIRE_ALL)
             METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_DUAL;
-            break;
-        case METAL_SPI_QUAD:
+        else
+            METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_SINGLE;
+        break;
+    case METAL_SPI_QUAD:
+        if (config->multi_wire == MULTI_WIRE_ALL)
             METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_QUAD;
-            break;
-        default:
-            /* Unsupported value */
-            return -1;
+        else
+            METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_SINGLE;
+        break;
+    default:
+        /* Unsupported value */
+        return -1;
     }
 
     /* Set Polarity */
@@ -107,7 +114,7 @@ static int configure_spi(struct __metal_driver_sifive_spi0 *spi, struct metal_sp
     }
 
     /* Set CS line */
-    METAL_SPI_REGW(METAL_SIFIVE_SPI0_CSID) = config->csid;
+    METAL_SPI_REGW(METAL_SIFIVE_SPI0_CSID) = 1 << (config->csid);
 
     /* Toggle off memory-mapped SPI flash mode, toggle on programmable IO mode
      * It seems that with this line uncommented, the debugger cannot have access 
@@ -121,6 +128,28 @@ static int configure_spi(struct __metal_driver_sifive_spi0 *spi, struct metal_sp
     return 0;
 }
 
+static void spi_mode_switch(struct __metal_driver_sifive_spi0 *spi,
+                            struct metal_spi_config *config,
+                            unsigned int trans_stage) {
+    long control_base =
+        __metal_driver_sifive_spi0_control_base((struct metal_spi *)spi);
+
+    if (config->multi_wire == trans_stage) {
+        METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) &= ~(METAL_SPI_PROTO_MASK);
+        switch (config->protocol) {
+        case METAL_SPI_DUAL:
+            METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_DUAL;
+            break;
+        case METAL_SPI_QUAD:
+            METAL_SPI_REGW(METAL_SIFIVE_SPI0_FMT) |= METAL_SPI_PROTO_QUAD;
+            break;
+        default:
+            /* Unsupported value */
+            return;
+        }
+    }
+}
+
 int __metal_driver_sifive_spi0_transfer(struct metal_spi *gspi,
                                       struct metal_spi_config *config,
                                       size_t len,
@@ -130,6 +159,7 @@ int __metal_driver_sifive_spi0_transfer(struct metal_spi *gspi,
     struct __metal_driver_sifive_spi0 *spi = (void *)gspi;
     long control_base = __metal_driver_sifive_spi0_control_base(gspi);
     int rc = 0;
+    size_t i = 0;
 
     rc = configure_spi(spi, config);
     if(rc != 0) {
@@ -145,7 +175,97 @@ int __metal_driver_sifive_spi0_transfer(struct metal_spi *gspi,
     /* Declare time_t variables to break out of infinite while loop */
     time_t endwait;
 
-    for(int i = 0; i < len; i++) {
+    for (i = 0; i < config->cmd_num; i++) {
+
+        while (METAL_SPI_REGW(METAL_SIFIVE_SPI0_TXDATA) & METAL_SPI_TXDATA_FULL)
+            ;
+
+        if (tx_buf) {
+            METAL_SPI_REGB(METAL_SIFIVE_SPI0_TXDATA) = tx_buf[i];
+        } else {
+            METAL_SPI_REGB(METAL_SIFIVE_SPI0_TXDATA) = 0;
+        }
+
+        endwait = metal_time() + METAL_SPI_RXDATA_TIMEOUT;
+
+        while ((rxdata = METAL_SPI_REGW(METAL_SIFIVE_SPI0_RXDATA)) &
+               METAL_SPI_RXDATA_EMPTY) {
+            if (metal_time() > endwait) {
+                METAL_SPI_REGW(METAL_SIFIVE_SPI0_CSMODE) &=
+                    ~(METAL_SPI_CSMODE_MASK);
+
+                return 1;
+            }
+        }
+
+        if (rx_buf) {
+            rx_buf[i] = (char)(rxdata & METAL_SPI_TXRXDATA_MASK);
+        }
+    }
+
+    /* switch to Dual/Quad mode */
+    spi_mode_switch(spi, config, MULTI_WIRE_ADDR_DATA);
+
+    /* Send Addr data */
+    for (; i < (config->cmd_num + config->addr_num); i++) {
+
+        while (METAL_SPI_REGW(METAL_SIFIVE_SPI0_TXDATA) & METAL_SPI_TXDATA_FULL)
+            ;
+
+        if (tx_buf) {
+            METAL_SPI_REGB(METAL_SIFIVE_SPI0_TXDATA) = tx_buf[i];
+        } else {
+            METAL_SPI_REGB(METAL_SIFIVE_SPI0_TXDATA) = 0;
+        }
+
+        endwait = metal_time() + METAL_SPI_RXDATA_TIMEOUT;
+
+        while ((rxdata = METAL_SPI_REGW(METAL_SIFIVE_SPI0_RXDATA)) &
+               METAL_SPI_RXDATA_EMPTY) {
+            if (metal_time() > endwait) {
+                METAL_SPI_REGW(METAL_SIFIVE_SPI0_CSMODE) &=
+                    ~(METAL_SPI_CSMODE_MASK);
+
+                return 1;
+            }
+        }
+
+        if (rx_buf) {
+            rx_buf[i] = (char)(rxdata & METAL_SPI_TXRXDATA_MASK);
+        }
+    }
+
+    /* Send Dummy data */
+    for (; i < (config->cmd_num + config->addr_num + config->dummy_num); i++) {
+
+        while (METAL_SPI_REGW(METAL_SIFIVE_SPI0_TXDATA) & METAL_SPI_TXDATA_FULL)
+            ;
+
+        if (tx_buf) {
+            METAL_SPI_REGB(METAL_SIFIVE_SPI0_TXDATA) = tx_buf[i];
+        } else {
+            METAL_SPI_REGB(METAL_SIFIVE_SPI0_TXDATA) = 0;
+        }
+
+        endwait = metal_time() + METAL_SPI_RXDATA_TIMEOUT;
+
+        while ((rxdata = METAL_SPI_REGW(METAL_SIFIVE_SPI0_RXDATA)) &
+               METAL_SPI_RXDATA_EMPTY) {
+            if (metal_time() > endwait) {
+                METAL_SPI_REGW(METAL_SIFIVE_SPI0_CSMODE) &=
+                    ~(METAL_SPI_CSMODE_MASK);
+                return 1;
+            }
+        }
+        if (rx_buf) {
+            rx_buf[i] = (char)(rxdata & METAL_SPI_TXRXDATA_MASK);
+        }
+    }
+
+    /* switch to Dual/Quad mode */
+    spi_mode_switch(spi, config, MULTI_WIRE_DATA_ONLY);
+
+    for (; i < len; i++) {
         /* Master send bytes to the slave */
 
         /* Wait for TXFIFO to not be full */
@@ -164,10 +284,10 @@ int __metal_driver_sifive_spi0_transfer(struct metal_spi *gspi,
         /* Wait for RXFIFO to not be empty, but break the nested loops if timeout
          * this timeout method  needs refining, preferably taking into account 
          * the device specs */
-        endwait = time(NULL) + METAL_SPI_RXDATA_TIMEOUT;
+        endwait = metal_time() + METAL_SPI_RXDATA_TIMEOUT;
 
         while ((rxdata = METAL_SPI_REGW(METAL_SIFIVE_SPI0_RXDATA)) & METAL_SPI_RXDATA_EMPTY) {
-            if (time(NULL) > endwait) {
+            if (metal_time() > endwait) {
                 /* If timeout, deassert the CS */
                 METAL_SPI_REGW(METAL_SIFIVE_SPI0_CSMODE) &= ~(METAL_SPI_CSMODE_MASK);
 
@@ -227,18 +347,19 @@ int __metal_driver_sifive_spi0_set_baud_rate(struct metal_spi *gspi, int baud_ra
     return 0;
 }
 
-static void pre_rate_change_callback(void *priv)
+static void pre_rate_change_callback_func(void *priv)
 {
     long control_base = __metal_driver_sifive_spi0_control_base((struct metal_spi *)priv);
 
     /* Detect when the TXDATA is empty by setting the transmit watermark count
-     * to zero and waiting until an interrupt is pending */
+     * to one and waiting until an interrupt is pending (indicating an empty TXFIFO) */
     METAL_SPI_REGW(METAL_SIFIVE_SPI0_TXMARK) &= ~(METAL_SPI_TXMARK_MASK);
+    METAL_SPI_REGW(METAL_SIFIVE_SPI0_TXMARK) |= (METAL_SPI_TXMARK_MASK & 1);
 
     while((METAL_SPI_REGW(METAL_SIFIVE_SPI0_IP) & METAL_SPI_TXWM) == 0) ;
 }
 
-static void post_rate_change_callback(void *priv)
+static void post_rate_change_callback_func(void *priv)
 {
     struct __metal_driver_sifive_spi0 *spi = priv;
     metal_spi_set_baud_rate(&spi->spi, spi->baud_rate);
@@ -251,8 +372,13 @@ void __metal_driver_sifive_spi0_init(struct metal_spi *gspi, int baud_rate)
     struct __metal_driver_sifive_gpio0 *pinmux = __metal_driver_sifive_spi0_pinmux(gspi);
 
     if(clock != NULL) {
-        metal_clock_register_pre_rate_change_callback(clock, &pre_rate_change_callback, spi);
-        metal_clock_register_post_rate_change_callback(clock, &post_rate_change_callback, spi);
+        spi->pre_rate_change_callback.callback = &pre_rate_change_callback_func;
+        spi->pre_rate_change_callback.priv = spi;
+        metal_clock_register_pre_rate_change_callback(clock, &(spi->pre_rate_change_callback));
+
+        spi->post_rate_change_callback.callback = &post_rate_change_callback_func;
+        spi->post_rate_change_callback.priv = spi;
+        metal_clock_register_post_rate_change_callback(clock, &(spi->post_rate_change_callback));
     }
 
     metal_spi_set_baud_rate(&(spi->spi), baud_rate);
@@ -275,3 +401,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_sifive_spi0) = {
     .spi.set_baud_rate = __metal_driver_sifive_spi0_set_baud_rate,
 };
 #endif /* METAL_SIFIVE_SPI0 */
+
+typedef int no_empty_translation_units;

@@ -8,7 +8,6 @@
  * defined to have the first address being where execution should start. */
 .section .text.metal.init.enter
 .global _enter
-
 _enter:
     .cfi_startproc
 

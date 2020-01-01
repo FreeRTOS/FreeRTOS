@@ -30,3 +30,5 @@ __METAL_DEFINE_VTABLE(__metal_driver_vtable_fixed_factor_clock) = {
     .clock.set_rate_hz = __metal_driver_fixed_factor_clock_set_rate_hz,
 };
 #endif /* METAL_FIXED_FACTOR_CLOCK */
+
+typedef int no_empty_translation_units;   

@@ -3,6 +3,6 @@
 
 #include <metal/lock.h>
 
-extern inline int metal_lock_init(struct metal_lock *lock);
-extern inline int metal_lock_take(struct metal_lock *lock);
-extern inline int metal_lock_give(struct metal_lock *lock);
+extern __inline__ int metal_lock_init(struct metal_lock *lock);
+extern __inline__ int metal_lock_take(struct metal_lock *lock);
+extern __inline__ int metal_lock_give(struct metal_lock *lock);

@@ -2201,6 +2201,103 @@ uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait
  */
 BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask );
 
+/**
+ * task.h
+ * <pre>void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )</pre>
+ *
+ * Capture the current time for future use with xTaskCheckForTimeOut().
+ *
+ * @param pxTimeOut Pointer to a timeout object into which the current time
+ * is to be captured.  The captured time includes the tick count and the number
+ * of times the tick count has overflowed since the system first booted.
+ * \defgroup vTaskSetTimeOutState vTaskSetTimeOutState
+ * \ingroup TaskCtrl
+ */
+void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut ) PRIVILEGED_FUNCTION;
+
+/**
+ * task.h
+ * <pre>BaseType_t xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait );</pre>
+ *
+ * Determines if pxTicksToWait ticks has passed since a time was captured
+ * using a call to vTaskSetTimeOutState().  The captured time includes the tick
+ * count and the number of times the tick count has overflowed.
+ *
+ * @param pxTimeOut The time status as captured previously using
+ * vTaskSetTimeOutState. If the timeout has not yet occurred, it is updated
+ * to reflect the current time status.
+ * @param pxTicksToWait The number of ticks to check for timeout i.e. if
+ * pxTicksToWait ticks have passed since pxTimeOut was last updated (either by
+ * vTaskSetTimeOutState() or xTaskCheckForTimeOut()), the timeout has occurred.
+ * If the timeout has not occurred, pxTIcksToWait is updated to reflect the
+ * number of remaining ticks.
+ *
+ * @return If timeout has occurred, pdTRUE is returned. Otherwise pdFALSE is
+ * returned and pxTicksToWait is updated to reflect the number of remaining
+ * ticks.
+ *
+ * @see https://www.freertos.org/xTaskCheckForTimeOut.html
+ *
+ * Example Usage:
+ * <pre>
+	// Driver library function used to receive uxWantedBytes from an Rx buffer
+	// that is filled by a UART interrupt. If there are not enough bytes in the
+	// Rx buffer then the task enters the Blocked state until it is notified that
+	// more data has been placed into the buffer. If there is still not enough
+	// data then the task re-enters the Blocked state, and xTaskCheckForTimeOut()
+	// is used to re-calculate the Block time to ensure the total amount of time
+	// spent in the Blocked state does not exceed MAX_TIME_TO_WAIT. This
+	// continues until either the buffer contains at least uxWantedBytes bytes,
+	// or the total amount of time spent in the Blocked state reaches
+	// MAX_TIME_TO_WAIT – at which point the task reads however many bytes are
+	// available up to a maximum of uxWantedBytes.
+
+	size_t xUART_Receive( uint8_t *pucBuffer, size_t uxWantedBytes )
+	{
+	size_t uxReceived = 0;
+	TickType_t xTicksToWait = MAX_TIME_TO_WAIT;
+	TimeOut_t xTimeOut;
+
+		// Initialize xTimeOut.  This records the time at which this function
+		// was entered.
+		vTaskSetTimeOutState( &xTimeOut );
+
+		// Loop until the buffer contains the wanted number of bytes, or a
+		// timeout occurs.
+		while( UART_bytes_in_rx_buffer( pxUARTInstance ) < uxWantedBytes )
+		{
+			// The buffer didn't contain enough data so this task is going to
+			// enter the Blocked state. Adjusting xTicksToWait to account for
+			// any time that has been spent in the Blocked state within this
+			// function so far to ensure the total amount of time spent in the
+			// Blocked state does not exceed MAX_TIME_TO_WAIT.
+			if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) != pdFALSE )
+			{
+				//Timed out before the wanted number of bytes were available,
+				// exit the loop.
+				break;
+			}
+
+			// Wait for a maximum of xTicksToWait ticks to be notified that the
+			// receive interrupt has placed more data into the buffer.
+			ulTaskNotifyTake( pdTRUE, xTicksToWait );
+		}
+
+		// Attempt to read uxWantedBytes from the receive buffer into pucBuffer.
+		// The actual number of bytes read (which might be less than
+		// uxWantedBytes) is returned.
+		uxReceived = UART_read_from_receive_buffer( pxUARTInstance,
+													pucBuffer,
+													uxWantedBytes );
+
+		return uxReceived;
+	}
+ </pre>
+ * \defgroup xTaskCheckForTimeOut xTaskCheckForTimeOut
+ * \ingroup TaskCtrl
+ */
+BaseType_t xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait ) PRIVILEGED_FUNCTION;
+
 /*-----------------------------------------------------------
  * SCHEDULER INTERNALS AVAILABLE FOR PORTING PURPOSES
  *----------------------------------------------------------*/
@@ -2316,90 +2413,6 @@ TickType_t uxTaskResetEventItemValue( void ) PRIVILEGED_FUNCTION;
  * Return the handle of the calling task.
  */
 TaskHandle_t xTaskGetCurrentTaskHandle( void ) PRIVILEGED_FUNCTION;
-
-/*
- * Capture the current time status for future reference.
- *
- * @param[out] pxTimeOut Pointer to a timeout object into which the current
- * time status is to be captured.
- */
-void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut ) PRIVILEGED_FUNCTION;
-
-/*
- * Compare the time status now with the one previously captured using
- * vTaskSetTimeOutState to check if the timeout has occurred.
- *
- * @param[in/out] pxTimeOut The time status as captured previously using
- * vTaskSetTimeOutState. If the timeout has not yet occurred, it is updated
- * to reflect the current time status.
- * @param[in/out] pxTicksToWait The number of ticks to check for timeout i.e. if
- * pxTicksToWait ticks have passed since pxTimeOut was last updated (either by
- * vTaskSetTimeOutState or xTaskCheckForTimeOut), the timeout has occurred. If
- * the timeout has not occurred, it is updated to reflect the number of
- * reamaining ticks.
- *
- * @return If timeout has occurred, pdTRUE is returned. Otherwise pdFALSE is
- * returned and pxTicksToWait is updated to reflect the number of remaining
- * ticks.
- *
- * @see https://www.freertos.org/xTaskCheckForTimeOut.html
- *
- * Example Usage:
- *
- * // Driver library function used to receive uxWantedBytes from an Rx buffer
- * // that is filled by a UART interrupt. If there are not enough bytes in the
- * // Rx buffer then the task enters the Blocked state until it is notified that
- * // more data has been placed into the buffer. If there is still not enough
- * // data then the task re-enters the Blocked state, and xTaskCheckForTimeOut()
- * // is used to re-calculate the Block time to ensure the total amount of time
- * // spent in the Blocked state does not exceed MAX_TIME_TO_WAIT. This
- * // continues until either the buffer contains at least uxWantedBytes bytes,
- * // or the total amount of time spent in the Blocked state reaches
- * // MAX_TIME_TO_WAIT – at which point the task reads however many bytes are
- * // available up to a maximum of uxWantedBytes.
- *
- * size_t xUART_Receive( uint8_t *pucBuffer, size_t uxWantedBytes )
- * {
- * size_t uxReceived = 0;
- * TickType_t xTicksToWait = MAX_TIME_TO_WAIT;
- * TimeOut_t xTimeOut;
- * 
- * 		// Initialize xTimeOut.  This records the time at which this function
- * 		// was entered.
- * 		vTaskSetTimeOutState( &xTimeOut );
- * 
- * 		// Loop until the buffer contains the wanted number of bytes, or a
- * 		// timeout occurs.
- * 		while( UART_bytes_in_rx_buffer( pxUARTInstance ) < uxWantedBytes )
- * 		{
- * 			// The buffer didn't contain enough data so this task is going to
- * 			// enter the Blocked state. Adjusting xTicksToWait to account for
- * 			// any time that has been spent in the Blocked state within this
- * 			// function so far to ensure the total amount of time spent in the
- * 			// Blocked state does not exceed MAX_TIME_TO_WAIT.
- *			if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) != pdFALSE )
- * 			{
- * 				//Timed out before the wanted number of bytes were available,
- * 				// exit the loop.
- * 				break;
- * 			}
- *
- * 			// Wait for a maximum of xTicksToWait ticks to be notified that the
- * 			// receive interrupt has placed more data into the buffer.
- * 			ulTaskNotifyTake( pdTRUE, xTicksToWait );
- * 		}
- * 
- * 		// Attempt to read uxWantedBytes from the receive buffer into pucBuffer.
- * 		// The actual number of bytes read (which might be less than
- * 		// uxWantedBytes) is returned.
- * 		uxReceived = UART_read_from_receive_buffer( pxUARTInstance,
- * 													pucBuffer,
- * 													uxWantedBytes );
- *
- * 		return uxReceived;
- * }
- */
-BaseType_t xTaskCheckForTimeOut( TimeOut_t * const pxTimeOut, TickType_t * const pxTicksToWait ) PRIVILEGED_FUNCTION;
 
 /*
  * Shortcut used by the queue implementation to prevent unnecessary call to

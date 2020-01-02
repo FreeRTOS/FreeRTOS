@@ -47,7 +47,12 @@
 #endif
 
 #define notifyTASK_PRIORITY		( tskIDLE_PRIORITY )
-#define notifyUINT32_MAX	( ( uint32_t ) 0xffffffff )
+
+/* Constants used in tests when setting/clearing bits. */
+#define notifyUINT32_MAX		( ( uint32_t ) 0xffffffff )
+#define notifyUINT32_HIGH_BYTE	( ( uint32_t ) 0xff000000 )
+#define notifyUINT32_LOW_BYTE	( ( uint32_t ) 0x000000ff )
+
 #define notifySUSPENDED_TEST_TIMER_PERIOD pdMS_TO_TICKS( 50 )
 
 /*-----------------------------------------------------------*/
@@ -395,6 +400,37 @@ TimerHandle_t xSingleTaskTimer;
 	/* Get the task to notify itself.  This is not a normal thing to do, and is
 	only done here for test purposes. */
 	xTaskNotifyAndQuery( xTaskToNotify, ulFirstNotifiedConst, eSetValueWithoutOverwrite, &ulPreviousValue );
+
+	/* Now the notification state should be eNotified, so it should now be
+	possible to clear the notification state. */
+	configASSERT( xTaskNotifyStateClear( NULL ) == pdTRUE );
+	configASSERT( xTaskNotifyStateClear( NULL ) == pdFALSE );
+
+
+
+	/* ------------------------------------------------------------------------
+	Clear bits in the notification value. */
+
+	/* Get the task to set all bits its own notification value.  This is not a
+	normal thing to do, and is only done here for test purposes. */
+	xTaskNotify( xTaskToNotify, notifyUINT32_MAX, eSetBits );
+
+	/* Now clear the top bytes - the returned value from the first call should
+	indicate that previously all bits were set. */
+	configASSERT( ulTaskNotifyValueClear( xTaskToNotify, notifyUINT32_HIGH_BYTE ) == notifyUINT32_MAX );
+
+	/* Next clear the bottom bytes - the returned value this time should indicate
+	that the top byte was clear (before the bottom byte was cleared. */
+	configASSERT( ulTaskNotifyValueClear( xTaskToNotify, notifyUINT32_LOW_BYTE ) == ( notifyUINT32_MAX & ~notifyUINT32_HIGH_BYTE ) );
+
+	/* Next clear all bytes - the returned value should indicate that previously the
+	high and low bytes were clear. */
+	configASSERT( ulTaskNotifyValueClear( xTaskToNotify, notifyUINT32_MAX ) == ( notifyUINT32_MAX & ~notifyUINT32_HIGH_BYTE & ~notifyUINT32_LOW_BYTE ) );
+
+	/* Now all bits should be clear. */
+	configASSERT( ulTaskNotifyValueClear( xTaskToNotify, notifyUINT32_MAX ) == 0 );
+	configASSERT( ulTaskNotifyValueClear( xTaskToNotify, 0UL ) == 0 );
+	configASSERT( ulTaskNotifyValueClear( xTaskToNotify, notifyUINT32_MAX ) == 0 );
 
 	/* Now the notification state should be eNotified, so it should now be
 	possible to clear the notification state. */

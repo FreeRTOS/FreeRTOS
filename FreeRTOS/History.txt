@@ -17,6 +17,21 @@ Changes since the last release:
 	  the variable xPendingTicks.
 	+ Correct alignment of stack top in RISC-V port when
 	  configISR_STACK_SIZE_WORDS is defined to a non zero value.
+	+ RISC-V port updates:  The machine timer compare register can now be for
+	  any HART, and correct the sequence used to update the 64-bit machine timer
+	  compare register on 32-bit cores.
+	+ Update Keil projects that use the MPU so memory regions come from linker
+	  script (scatter file) variables instead of being hard coded.
+	+ Added tickless low power modes into the ARM, IAR and GCC Cortex-M0 compiler
+	  ports.
+	+ Updated the behaviour of the ARMv7-M MPU (Memory Protection Unit) ports to
+	  match that of the ARMv8-M ports whereby privilege escalations can only
+	  originate from within the kernel's own memory segment.
+	+ Added LPC51U68 Cortex-M0+ port for GCC (MCUXpresso), Keil and IAR
+	  compilers.
+	+ Added CORTEX_MPU_STM32L4_Discovery_Keil_STM32Cube demo.
+	+ Added xTaskAbortDelayFromISR() API function.
+	+ Added xTaskNotifyValueClear() API function.
 
 
 Changes between FreeRTOS V10.2.1 and FreeRTOS V10.2.0 released May 13 2019:
@@ -515,6 +530,8 @@ Changes between V8.2.0 and V8.2.1 released 24th March 2015.
 	  Windows port.
 	+ Update the PIC32 port to remove deprecation warnings output by the latest
 	  XC32 compilers.
+	+ Fix bug when xQueueOverwrite() and xQueueOverwrite() from ISR are used to
+	  overwrite items in two queues that are part of the same set.
 
 	Demo application updates:
 

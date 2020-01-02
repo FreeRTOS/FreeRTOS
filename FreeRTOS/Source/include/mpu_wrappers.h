@@ -82,6 +82,7 @@ only for ports that are using the MPU. */
 		#define xTaskNotifyWait							MPU_xTaskNotifyWait
 		#define ulTaskNotifyTake						MPU_ulTaskNotifyTake
 		#define xTaskNotifyStateClear					MPU_xTaskNotifyStateClear
+		#define ulTaskNotifyValueClear					MPU_ulTaskNotifyValueClear
 		#define xTaskCatchUpTicks						MPU_xTaskCatchUpTicks
 
 		#define xTaskGetCurrentTaskHandle				MPU_xTaskGetCurrentTaskHandle

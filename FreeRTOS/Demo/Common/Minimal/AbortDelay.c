@@ -102,6 +102,12 @@ static void prvTestAbortingQueueSend( void );
 static void prvTestAbortingStreamBufferReceive( void );
 
 /*
+ * Performs a few tests to cover code paths not otherwise covered by the continuous
+ * tests.
+ */
+static void prvPerformSingleTaskTests( void );
+
+/*
  * Checks the amount of time a task spent in the Blocked state is within the
  * expected bounds.
  */
@@ -143,6 +149,10 @@ uint32_t ulTestToPerform = abtNOTIFY_WAIT_ABORTS;
 TickType_t xTimeAtStart;
 const TickType_t xStartMargin = 2UL;
 
+/* Used to control whether to use xTaskAbortDelay() or xTaskAbortDelayFromISR() so
+both are used with all the tests. */
+BaseType_t xUseFromISRVersion = pdFALSE, xHigherPriorityTaskWoken;
+
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
 
@@ -167,10 +177,46 @@ const TickType_t xStartMargin = 2UL;
 		raise the priority of the controlling task to that of the blocking
 		task to minimise discrepancies. */
 		vTaskPrioritySet( NULL, abtBLOCKING_PRIORITY );
+
 		vTaskDelay( xMaxBlockTime + xHalfMaxBlockTime + xStartMargin );
-		if( xTaskAbortDelay( xBlockingTask ) != pdPASS )
+
+		/* For test coverage sometimes xTaskAbortDelay() is used and sometimes
+		xTaskAbortDelayFromISR() is used. */
+		if( xUseFromISRVersion == pdFALSE )
 		{
-			xErrorOccurred = pdTRUE;
+			if( xTaskAbortDelay( xBlockingTask ) != pdPASS )
+			{
+				xErrorOccurred = pdTRUE;
+			}
+		}
+		else
+		{
+			xHigherPriorityTaskWoken = pdFALSE;
+
+			/* For test coverage, sometimes xHigherPriorityTaskWoken is used, and
+			sometimes NULL is used. */
+
+			if( ( xControllingCycles % 2 ) == 0 )
+			{
+				if( xTaskAbortDelayFromISR( xBlockingTask, &xHigherPriorityTaskWoken ) != pdPASS )
+				{
+					xErrorOccurred = pdTRUE;
+				}
+			}
+			else
+			{
+				if( xTaskAbortDelayFromISR( xBlockingTask, NULL ) != pdPASS )
+				{
+					xErrorOccurred = pdTRUE;
+				}
+			}
+
+			/* The tasks have the same priority so xHigherPriorityTaskWoken should
+			never get set. */
+			if( xHigherPriorityTaskWoken != pdFALSE )
+			{
+				xErrorOccurred = pdTRUE;
+			}
 		}
 
 		/* Reset the priority to the normal controlling priority. */
@@ -195,6 +241,13 @@ const TickType_t xStartMargin = 2UL;
 
 		/* To indicate this task is still executing. */
 		xControllingCycles++;
+
+		if( ( xControllingCycles % abtMAX_TESTS ) == 0 )
+		{
+			/* Looped through all the tests.  Switch between using xTaskAbortDelay()
+			and xTaskAbortDelayFromISR() for the next round of tests. */
+			xUseFromISRVersion = !xUseFromISRVersion;
+		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -207,6 +260,10 @@ const uint32_t ulMax = 0xffffffffUL;
 
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
+
+	/* Start by performing a few tests to cover code not exercised in the loops
+	below. */
+	prvPerformSingleTaskTests();
 
 	xControllingTask = xTaskGetHandle( pcControllingTaskName );
 	configASSERT( xControllingTask );
@@ -260,6 +317,29 @@ const uint32_t ulMax = 0xffffffffUL;
 
 		/* To indicate this task is still executing. */
 		xBlockingCycles++;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvPerformSingleTaskTests( void )
+{
+TaskHandle_t xThisTask;
+BaseType_t xReturned;
+
+	/* Try unblocking this task using both the task and ISR versions of the API -
+	both should return false as this task is not blocked. */
+	xThisTask = xTaskGetCurrentTaskHandle();
+
+	xReturned = xTaskAbortDelay( xThisTask );
+	if( xReturned != pdFALSE )
+	{
+		xErrorOccurred = pdTRUE;
+	}
+
+	xReturned = xTaskAbortDelayFromISR( xThisTask, NULL );
+	if( xReturned != pdFALSE )
+	{
+		xErrorOccurred = pdTRUE;
 	}
 }
 /*-----------------------------------------------------------*/

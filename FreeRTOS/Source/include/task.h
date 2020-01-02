@@ -842,6 +842,39 @@ void vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xT
 BaseType_t xTaskAbortDelay( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
 
 /**
+* task. h
+* <pre>BaseType_t xTaskAbortDelayFromISR( TaskHandle_t xTask, BaseType_t * const pxHigherPriorityTaskWoken )</pre>
+*
+* INCLUDE_xTaskAbortDelay must be defined as 1 in FreeRTOSConfig.h for this
+* function to be available.
+*
+* A version of xTaskAbortDelay() that can be used from an interrupt service routine.
+*
+* A task will enter the Blocked state when it is waiting for an event.  The
+* event it is waiting for can be a temporal event (waiting for a time), such
+* as when vTaskDelay() is called, or an event on an object, such as when
+* xQueueReceive() or ulTaskNotifyTake() is called.  If the handle of a task
+* that is in the Blocked state is used in a call to xTaskAbortDelay() then the
+* task will leave the Blocked state, and return from whichever function call
+* placed the task into the Blocked state.
+*
+* @param xTask The handle of the task to remove from the Blocked state.
+*
+* @param pxHigherPriorityTaskWoken xTaskAbortDelayFromISR() will set
+* *pxHigherPriorityTaskWoken to pdTRUE if a task was removed from the Blocked state,
+* and the task that was removed from the Blocked state has a priority higher than the
+* currently running task.  If xTaskAbortDelayFromISR() sets this value to pdTRUE then
+* a context switch should be requested before the interrupt is exited.
+*
+* @return If the task referenced by xTask was not in the Blocked state then
+* pdFAIL is returned.  Otherwise pdPASS is returned.
+*
+* \defgroup xTaskAbortDelay xTaskAbortDelayFromISR
+* \ingroup TaskCtrl
+*/
+BaseType_t xTaskAbortDelayFromISR( TaskHandle_t xTask, BaseType_t * const pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
+
+/**
  * task. h
  * <pre>UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask );</pre>
  *
@@ -2200,6 +2233,24 @@ uint32_t ulTaskNotifyTake( BaseType_t xClearCountOnExit, TickType_t xTicksToWait
  * \ingroup TaskNotifications
  */
 BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask );
+
+/**
+* task. h
+* <PRE>uint32_t ulTaskNotifyValueClear( TaskHandle_t xTask, uint32_t ulBitsToClear );</pre>
+*
+* Clears the bits specified by the ulBitsToClear bit mask in the notification
+* value of the task referenced by xTask.
+*
+* Set ulBitsToClear to to 0xffffffff (UINT_MAX on 32-bit architectures) to clear
+* the notification value to 0.  Set ulBitsToClear to 0 to query the task's
+* notification value without clearing any bits.
+*
+* @return The value of the target task's notification value before the bits
+* specified by ulBitsToClear were cleared.
+* \defgroup ulTaskNotifyValueClear ulTaskNotifyValueClear
+* \ingroup TaskNotifications
+*/
+uint32_t ulTaskNotifyValueClear( TaskHandle_t xTask, uint32_t ulBitsToClear ) PRIVILEGED_FUNCTION;
 
 /**
  * task.h

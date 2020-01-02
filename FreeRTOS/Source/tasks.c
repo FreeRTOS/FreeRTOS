@@ -2626,7 +2626,7 @@ BaseType_t xYieldRequired = pdFALSE;
 	relies on xPendedTicks being wound down to 0 in xTaskResumeAll(). */
 	configASSERT( uxSchedulerSuspended == 0 );
 
-	/* Use xPendedTicks to mimic xTicksToCatchUp number of ticks occuring when
+	/* Use xPendedTicks to mimic xTicksToCatchUp number of ticks occurring when
 	the scheduler is suspended so the ticks are executed in xTaskResumeAll(). */
 	vTaskSuspendAll();
 	xPendedTicks += xTicksToCatchUp;
@@ -2634,6 +2634,91 @@ BaseType_t xYieldRequired = pdFALSE;
 
 	return xYieldRequired;
 }
+/*----------------------------------------------------------*/
+
+#if ( INCLUDE_xTaskAbortDelay == 1 )
+
+	BaseType_t xTaskAbortDelayFromISR( TaskHandle_t xTask, BaseType_t * const pxHigherPriorityTaskWoken )
+	{
+	TCB_t *pxTCB = xTask;
+	BaseType_t xReturn;
+	UBaseType_t uxSavedInterruptStatus;
+
+		configASSERT( pxTCB );
+
+		/* RTOS ports that support interrupt nesting have the concept of a maximum
+		system call (or maximum API call) interrupt priority.  Interrupts that are
+		above the maximum system call priority are kept permanently enabled, even
+		when the RTOS kernel is in a critical section, but cannot make any calls to
+		FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
+		then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
+		failure if a FreeRTOS API function is called from an interrupt that has been
+		assigned a priority above the configured maximum system call priority.
+		Only FreeRTOS functions that end in FromISR can be called from interrupts
+		that have been assigned a priority at or (logically) below the maximum
+		system call	interrupt priority.  FreeRTOS maintains a separate interrupt
+		safe API to ensure interrupt entry is as fast and as simple as possible.
+		More information (albeit Cortex-M specific) is provided on the following
+		link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
+
+		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+		{
+			/* A task can only be prematurely removed from the Blocked state if
+			it is actually in the Blocked state. */
+			if( eTaskGetState( xTask ) == eBlocked )
+			{
+				xReturn = pdPASS;
+
+				/* Remove the reference to the task from the blocked list.  A higher
+				priority interrupt won't touch the xStateListItem because of the
+				critical section. */
+				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
+
+				/* Is the task waiting on an event also?  If so remove it from
+				the event list too. */
+				if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
+				{
+					( void ) uxListRemove( &( pxTCB->xEventListItem ) );
+
+					/* This lets the task know it was forcibly removed from the
+					blocked state so it should not re-evaluate its block time and
+					then block again. */
+					pxTCB->ucDelayAborted = pdTRUE;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+
+				/* Place the unblocked task into the appropriate ready list. */
+				prvAddTaskToReadyList( pxTCB );
+
+				if( pxTCB->uxPriority > pxCurrentTCB->uxPriority )
+				{
+					if( pxHigherPriorityTaskWoken != NULL )
+					{
+						/* Pend the yield to be performed when the scheduler
+						is unsuspended. */
+						*pxHigherPriorityTaskWoken = pdTRUE;
+					}
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			else
+			{
+				xReturn = pdFAIL;
+			}
+		}
+		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+
+		return xReturn;
+	}
+
+#endif
 /*----------------------------------------------------------*/
 
 #if ( INCLUDE_xTaskAbortDelay == 1 )
@@ -2667,6 +2752,10 @@ BaseType_t xYieldRequired = pdFALSE;
 					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
 					{
 						( void ) uxListRemove( &( pxTCB->xEventListItem ) );
+
+						/* This lets the task know it was forcibly removed from the
+						blocked state so it should not re-evaluate its block time and
+						then block again. */
 						pxTCB->ucDelayAborted = pdTRUE;
 					}
 					else
@@ -5096,7 +5185,6 @@ TickType_t uxReturn;
 	}
 
 #endif /* configUSE_TASK_NOTIFICATIONS */
-
 /*-----------------------------------------------------------*/
 
 #if( configUSE_TASK_NOTIFICATIONS == 1 )
@@ -5125,6 +5213,32 @@ TickType_t uxReturn;
 		taskEXIT_CRITICAL();
 
 		return xReturn;
+	}
+
+#endif /* configUSE_TASK_NOTIFICATIONS */
+/*-----------------------------------------------------------*/
+
+#if( configUSE_TASK_NOTIFICATIONS == 1 )
+
+	uint32_t ulTaskNotifyValueClear( TaskHandle_t xTask, uint32_t ulBitsToClear )
+	{
+	TCB_t *pxTCB;
+	uint32_t ulReturn;
+
+		/* If null is passed in here then it is the calling task that is having
+		its notification state cleared. */
+		pxTCB = prvGetTCBFromHandle( xTask );
+
+		taskENTER_CRITICAL();
+		{
+			/* Return the notification as it was before the bits were cleared,
+			then clear the bit mask. */
+			ulReturn = pxCurrentTCB->ulNotifiedValue;
+			pxTCB->ulNotifiedValue &= ~ulBitsToClear;
+		}
+		taskEXIT_CRITICAL();
+
+		return ulReturn;
 	}
 
 #endif /* configUSE_TASK_NOTIFICATIONS */

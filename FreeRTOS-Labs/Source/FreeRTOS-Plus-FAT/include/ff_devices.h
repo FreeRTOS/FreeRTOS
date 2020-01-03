@@ -31,7 +31,7 @@
 #define FF_DEVICES_H
 
 #ifndef PLUS_FAT_H
-	#error this header will be included from "plusfat.h"
+	#error this header will be included from "ff_headers.h"
 #endif
 
 #ifdef __cplusplus

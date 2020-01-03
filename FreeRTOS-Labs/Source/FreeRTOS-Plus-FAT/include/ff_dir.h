@@ -33,7 +33,7 @@
 #define _FF_DIR_H_
 
 #ifndef PLUS_FAT_H
-	#error this header will be included from "plusfat.h"
+	#error this header will be included from "ff_headers.h"
 #endif
 
 #define FIND_FLAG_SHORTNAME_SET		0x01u

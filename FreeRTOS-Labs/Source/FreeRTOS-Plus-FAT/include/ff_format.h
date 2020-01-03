@@ -40,7 +40,7 @@ extern "C" {
 
 
 #ifndef PLUS_FAT_H
-	#error this header will be included from "plusfat.h"
+	#error this header will be included from "ff_headers.h"
 #endif
 
 /*---------- PROTOTYPES */

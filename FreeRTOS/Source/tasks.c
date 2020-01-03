@@ -3317,6 +3317,20 @@ TCB_t *pxUnblockedTCB;
 	configASSERT( pxUnblockedTCB );
 	( void ) uxListRemove( pxEventListItem );
 
+	#if( configUSE_TICKLESS_IDLE != 0 )
+	{
+		/* If a task is blocked on a kernel object then xNextTaskUnblockTime
+		might be set to the blocked task's time out time.  If the task is
+		unblocked for a reason other than a timeout xNextTaskUnblockTime is
+		normally left unchanged, because it is automatically reset to a new
+		value when the tick count equals xNextTaskUnblockTime.  However if
+		tickless idling is used it might be more important to enter sleep mode
+		at the earliest possible time - so reset xNextTaskUnblockTime here to
+		ensure it is updated at the earliest possible time. */
+		prvResetNextTaskUnblockTime();
+	}
+	#endif
+
 	/* Remove the task from the delayed list and add it to the ready list.  The
 	scheduler is suspended so interrupts will not be accessing the ready
 	lists. */
@@ -3596,6 +3610,8 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 	/* The idle task exists in addition to the application tasks. */
 	const UBaseType_t uxNonApplicationTasks = 1;
 	eSleepModeStatus eReturn = eStandardSleep;
+
+		/* This function must be called from a critical section. */
 
 		if( listCURRENT_LIST_LENGTH( &xPendingReadyList ) != 0 )
 		{

@@ -153,6 +153,21 @@ not necessary for to use this port.  They are defined so the common demo files
 #endif
 
 #define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
+/*-----------------------------------------------------------*/
+
+
+/* configCLINT_BASE_ADDRESS is a legacy definition that was replaced by the
+configMTIME_BASE_ADDRESS and configMTIMECMP_BASE_ADDRESS definitions.  For
+backward compatibility derive the newer definitions from the old if the old
+definition is found. */
+#if defined( configCLINT_BASE_ADDRESS ) && !defined( configMTIME_BASE_ADDRESS )
+	#define configMTIME_BASE_ADDRESS 	( ( configCLINT_BASE_ADDRESS ) + 0xBFF8UL )
+	#define configMTIMECMP_BASE_ADDRESS ( ( configCLINT_BASE_ADDRESS ) + 0x4000UL )
+#elif !defined( configMTIME_BASE_ADDRESS ) || !defined( configMTIMECMP_BASE_ADDRESS )
+	#error configMTIME_BASE_ADDRESS and configMTIMECMP_BASE_ADDRESS must be defined in FreeRTOSConfig.h.  See https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html
+#endif
+
+
 
 #ifdef __cplusplus
 }

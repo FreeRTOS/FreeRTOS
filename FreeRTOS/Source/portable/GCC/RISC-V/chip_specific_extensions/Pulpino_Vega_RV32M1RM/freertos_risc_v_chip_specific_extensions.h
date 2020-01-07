@@ -59,7 +59,7 @@
 #ifndef __FREERTOS_RISC_V_EXTENSIONS_H__
 #define __FREERTOS_RISC_V_EXTENSIONS_H__
 
-#define portasmHAS_CLINT 0
+#define portasmHAS_MTIME 0
 
 /* Constants to define the additional registers found on the Pulpino RI5KY. */
 #define lpstart0 	0x7b0

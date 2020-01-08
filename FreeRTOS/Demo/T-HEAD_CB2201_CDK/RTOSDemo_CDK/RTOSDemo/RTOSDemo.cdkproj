@@ -296,7 +296,7 @@
         <Undefine/>
         <Optim>Optimize size (-Os)</Optim>
         <DebugLevel>Default (-g)</DebugLevel>
-        <IncludePath>$(ProjectPath);$(ProjectPath)/../../include/cb2201;$(ProjectPath)/../../driver;$(ProjectPath)/../../csi/csi_driver/include;$(ProjectPath)/../../csi/csi_driver/csky/hobbit1_2/include;$(ProjectPath)/../../csi/csi_driver/csky/common/usart;$(ProjectPath)/../../csi/csi_core/include;$(ProjectPath)/../../csi/csi_core/include/csi-gcc;$(ProjectPath)/../../csi/csi_core/ck802;$(ProjectPath)/../../;$(ProjectPath)/../../../../Source/include;$(ProjectPath)/../../../../Source/portable/CDK/T-HEAD_CK802;$(ProjectPath)/../../../../Demo/Common/include</IncludePath>
+        <IncludePath>$(ProjectPath);$(ProjectPath)/../../driver;$(ProjectPath)/../../csi/csi_driver/include;$(ProjectPath)/../../csi/csi_driver/csky/hobbit1_2/include;$(ProjectPath)/../../csi/csi_driver/csky/common/usart;$(ProjectPath)/../../csi/csi_core/include;$(ProjectPath)/../../csi/csi_core/include/csi-gcc;$(ProjectPath)/../../csi/csi_core/ck802;$(ProjectPath)/../../;$(ProjectPath)/../../../../Source/include;$(ProjectPath)/../../../../Source/portable/CDK/T-HEAD_CK802;$(ProjectPath)/../../../../Demo/Common/include</IncludePath>
         <OtherFlags>-ffunction-sections -fdata-sections -mistack</OtherFlags>
         <Verbose>no</Verbose>
         <Ansi>no</Ansi>

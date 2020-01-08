@@ -37,10 +37,7 @@ extern void dw_wdt_irqhandler(int32_t idx);
 extern void ck_dma_irqhandler(int32_t idx);
 extern void ck_aes_irqhandler(int32_t idx);
 extern void ck_sha_irqhandler(int32_t idx);
-#ifdef CONFIG_KERNEL_FREERTOS
-extern void CoretimeIsr(void);
-extern void CKPendSVIsr(void);
-#endif
+extern void xPortSysTickHandler( void );
 
 #define readl(addr) \
     ({ unsigned int __v = (*(volatile unsigned int *) (addr)); __v; })

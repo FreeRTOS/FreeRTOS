@@ -30,7 +30,9 @@
     <File Name="../../driver/uart.c">
       <FileOption/>
     </File>
-    <File Name="../../Readme.txt"/>
+    <File Name="../../Readme.txt">
+      <FileOption/>
+    </File>
   </VirtualDirectory>
   <MonitorProgress>
     <FlashOperate>37</FlashOperate>
@@ -185,6 +187,16 @@
       </File>
     </VirtualDirectory>
   </VirtualDirectory>
+  <DebugSessions>
+    <watchExpressions>uxDeletedTasksWaitingCleanUp:0</watchExpressions>
+    <memoryExpressions>0xe000e100;;;</memoryExpressions>
+    <statistics>;;MHZ</statistics>
+    <peripheralTabs/>
+    <WatchDisplayFormat>0</WatchDisplayFormat>
+    <LocalDisplayFormat>0</LocalDisplayFormat>
+    <debugLayout/>
+    <memoryTabColSizeExpressions>100:8;100:8;100:8;100:8;</memoryTabColSizeExpressions>
+  </DebugSessions>
   <BuildConfigs>
     <BuildConfig Name="BuildSet">
       <Target>
@@ -292,7 +304,7 @@
         <Pedantic>no</Pedantic>
         <PedanticErr>no</PedanticErr>
         <InhibitWarn>no</InhibitWarn>
-        <AllWarn>no</AllWarn>
+        <AllWarn>yes</AllWarn>
         <WarnErr>no</WarnErr>
         <OneElfS>no</OneElfS>
         <Fstrict>no</Fstrict>
@@ -366,14 +378,4 @@
       </Flash>
     </BuildConfig>
   </BuildConfigs>
-  <DebugSessions>
-    <watchExpressions>uxDeletedTasksWaitingCleanUp:0</watchExpressions>
-    <memoryExpressions>0xe000e100;;;</memoryExpressions>
-    <statistics>;;MHZ</statistics>
-    <peripheralTabs/>
-    <WatchDisplayFormat>0</WatchDisplayFormat>
-    <LocalDisplayFormat>0</LocalDisplayFormat>
-    <debugLayout/>
-    <memoryTabColSizeExpressions>100:8;100:8;100:8;100:8;</memoryTabColSizeExpressions>
-  </DebugSessions>
 </Project>

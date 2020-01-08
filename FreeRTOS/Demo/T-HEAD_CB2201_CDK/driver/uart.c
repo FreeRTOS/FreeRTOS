@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <stdio.h>
 #include <stdint.h>
 #include "soc.h"
 #include "pin_name.h"
@@ -36,7 +36,7 @@ int putchar(int ch)
     return 0;
 }
 
-int fputc(int ch)
+int fputc(int ch, FILE *fp)
 {
     if (ch == '\n') {
         csi_usart_putchar(console_handle, '\r');

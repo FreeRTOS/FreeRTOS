@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <soc.h>
+#include <csi_core.h>
 
 extern void CORET_IRQHandler(void);
 extern void Default_handler(void);

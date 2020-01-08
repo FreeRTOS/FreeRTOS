@@ -82,7 +82,7 @@ static void prvQueueSendTask( void *pvParameters )
 
 static void prvQueueReceiveTask( void *pvParameters )
 {
-	unsigned long ulReceivedValue;
+	unsigned int ulReceivedValue;
 
 	for( ;; )
 	{

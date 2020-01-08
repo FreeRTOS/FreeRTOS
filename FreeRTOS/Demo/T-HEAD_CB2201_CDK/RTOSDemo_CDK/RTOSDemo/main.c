@@ -12,16 +12,6 @@
 #include "task.h"
 #include "queue.h"
 
-#include "partest.h"
-#include "integer.h"
-#include "PollQ.h"
-#include "comtest2.h"
-#include "semtest.h"
-#include "flop.h"
-#include "dynamic.h"
-#include "BlockQ.h"
-#include "serial.h"
-
 extern void SystemInit(void);
 
 #define mainQUEUE_RECEIVE_TASK_PRIORITY		( tskIDLE_PRIORITY + 2 )

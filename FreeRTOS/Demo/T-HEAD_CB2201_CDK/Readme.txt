@@ -1,17 +1,19 @@
 # T-HEAD CB2201 Demo Project
 
-The demo show a two task commmunication with Queue structio provided by FreeRTOS. The Send task keeps
-sending a Queue with const value(100) to other task, the Receive Task will dump some message once it 
-receives expected value.
+The demo shows inter-task communication using a queue. 
+The sender periodically sends a constant value to the queue. The receiver blocks until 
+the next value is received and validates it. Receiver prints evaluation result to output. 
 
-## CDK software
-The demo project is build with CDK, you can download the latst version at 
-https://occ.t-head.cn/community/download_detail?spm=a2oza.cdk.0.0.413b180fZ5hVxQ&id=575997419775328256
 
-## Build
+## References
+CB2201 development board: https://occ.t-head.cn/#/vendor_product_detail?id=635878225301471232&vendorId=3706716635429273600&module=4
+The latest version of CDK: https://occ.t-head.cn/community/download_detail?spm=a2oza.cdk.0.0.413b180fZ5hVxQ&id=575997419775328256
 
-1. Install CDK correctly
-2. Open RTOSDemo.cdkproj and rebuild it by pressing F7
-3. Connect to T-HEAD Cb2201 board and make sure serial cable is plugged correctly.
-4. Run it by Press CTRL+F5
-5. Check serial windows message
+
+## Getting started
+1. Download the latest version of CDK and follow CDK installation wizard to intall. 
+2. Open RTOSDemo.cdkproj under ./RTOSDemo_CDK/RTOSDemo/
+3. Build project.
+4. Connect to T-HEAD Cb2201 board. (Make sure serial cable is connected correctly.)
+5. Run. 
+6. Check messages in serial window. 

@@ -26,197 +26,197 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Minimal</name>
+			<name>Demo_tasks</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source</name>
+			<name>FreeRTOS_source</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Minimal/IntQueue.c</name>
+			<name>Demo_tasks/IntQueue.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/IntQueue.c</locationURI>
 		</link>
 		<link>
-			<name>Minimal/blocktim.c</name>
+			<name>Demo_tasks/blocktim.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/blocktim.c</locationURI>
 		</link>
 		<link>
-			<name>Minimal/countsem.c</name>
+			<name>Demo_tasks/countsem.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/countsem.c</locationURI>
 		</link>
 		<link>
-			<name>Minimal/recmutex.c</name>
+			<name>Demo_tasks/recmutex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/recmutex.c</locationURI>
 		</link>
 		<link>
-			<name>Source/croutine.c</name>
+			<name>FreeRTOS_source/croutine.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/croutine.c</locationURI>
 		</link>
 		<link>
-			<name>Source/event_groups.c</name>
+			<name>FreeRTOS_source/event_groups.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/event_groups.c</locationURI>
 		</link>
 		<link>
-			<name>Source/include</name>
+			<name>FreeRTOS_source/include</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/list.c</name>
+			<name>FreeRTOS_source/list.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/list.c</locationURI>
 		</link>
 		<link>
-			<name>Source/portable</name>
+			<name>FreeRTOS_source/portable</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/queue.c</name>
+			<name>FreeRTOS_source/queue.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/queue.c</locationURI>
 		</link>
 		<link>
-			<name>Source/stream_buffer.c</name>
+			<name>FreeRTOS_source/stream_buffer.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/stream_buffer.c</locationURI>
 		</link>
 		<link>
-			<name>Source/tasks.c</name>
+			<name>FreeRTOS_source/tasks.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/tasks.c</locationURI>
 		</link>
 		<link>
-			<name>Source/timers.c</name>
+			<name>FreeRTOS_source/timers.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/timers.c</locationURI>
 		</link>
 		<link>
-			<name>Source/include/FreeRTOS.h</name>
+			<name>FreeRTOS_source/include/FreeRTOS.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/FreeRTOS.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/StackMacros.h</name>
+			<name>FreeRTOS_source/include/StackMacros.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/StackMacros.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/atomic.h</name>
+			<name>FreeRTOS_source/include/atomic.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/atomic.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/croutine.h</name>
+			<name>FreeRTOS_source/include/croutine.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/croutine.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/deprecated_definitions.h</name>
+			<name>FreeRTOS_source/include/deprecated_definitions.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/deprecated_definitions.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/event_groups.h</name>
+			<name>FreeRTOS_source/include/event_groups.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/event_groups.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/list.h</name>
+			<name>FreeRTOS_source/include/list.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/list.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/message_buffer.h</name>
+			<name>FreeRTOS_source/include/message_buffer.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/message_buffer.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/mpu_prototypes.h</name>
+			<name>FreeRTOS_source/include/mpu_prototypes.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/mpu_prototypes.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/mpu_wrappers.h</name>
+			<name>FreeRTOS_source/include/mpu_wrappers.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/mpu_wrappers.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/portable.h</name>
+			<name>FreeRTOS_source/include/portable.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/portable.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/projdefs.h</name>
+			<name>FreeRTOS_source/include/projdefs.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/projdefs.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/queue.h</name>
+			<name>FreeRTOS_source/include/queue.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/queue.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/semphr.h</name>
+			<name>FreeRTOS_source/include/semphr.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/semphr.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/stack_macros.h</name>
+			<name>FreeRTOS_source/include/stack_macros.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/stack_macros.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/stream_buffer.h</name>
+			<name>FreeRTOS_source/include/stream_buffer.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/stream_buffer.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/task.h</name>
+			<name>FreeRTOS_source/include/task.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/task.h</locationURI>
 		</link>
 		<link>
-			<name>Source/include/timers.h</name>
+			<name>FreeRTOS_source/include/timers.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/include/timers.h</locationURI>
 		</link>
 		<link>
-			<name>Source/portable/GCC</name>
+			<name>FreeRTOS_source/portable/GCC</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/portable/MemMang</name>
+			<name>FreeRTOS_source/portable/MemMang</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/portable/GCC/ARM_CM0</name>
+			<name>FreeRTOS_source/portable/GCC/ARM_CM0</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/portable/MemMang/heap_5.c</name>
+			<name>FreeRTOS_source/portable/MemMang/heap_5.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/MemMang/heap_5.c</locationURI>
 		</link>
 		<link>
-			<name>Source/portable/GCC/ARM_CM0/port.c</name>
+			<name>FreeRTOS_source/portable/GCC/ARM_CM0/port.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/GCC/ARM_CM0/port.c</locationURI>
 		</link>
 		<link>
-			<name>Source/portable/GCC/ARM_CM0/portmacro.h</name>
+			<name>FreeRTOS_source/portable/GCC/ARM_CM0/portmacro.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Source/portable/GCC/ARM_CM0/portmacro.h</locationURI>
 		</link>

@@ -341,9 +341,9 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Demo_tasks"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS_source"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="GCC_specific"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Minimal"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="app"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="component"/>
@@ -718,8 +718,8 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Minimal"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Source"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Demo_tasks"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS_source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="app"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="component"/>
@@ -738,7 +738,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso51U68</sdkName>
-		<sdkVersion>2.6.0</sdkVersion>
+		<sdkVersion>2.7.0</sdkVersion>
 		<sdkComponents>middleware.baremetal.LPC51U68;platform.drivers.clock.LPC51U68;device.LPC51U68_CMSIS.LPC51U68;platform.Include_common.LPC51U68;platform.Include_core_cm0plus.LPC51U68;platform.drivers.common.LPC51U68;platform.drivers.power.LPC51U68;platform.drivers.reset.LPC51U68;platform.drivers.flexcomm.LPC51U68;platform.drivers.flexcomm_usart.LPC51U68;platform.drivers.lpc_gpio.LPC51U68;platform.drivers.lpc_iocon.LPC51U68;platform.drivers.pint.LPC51U68;component.serial_manager.LPC51U68;component.lists.LPC51U68;component.serial_manager_uart.LPC51U68;component.usart_adapter.LPC51U68;platform.utilities.assert.LPC51U68;utility.debug_console.LPC51U68;device.LPC51U68_startup.LPC51U68;project_template.lpcxpresso51u68.LPC51U68;platform.drivers.ctimer.LPC51U68;</sdkComponents>
 		<boardId>lpcxpresso51u68</boardId>
 		<package>LPC51U68JBD64</package>

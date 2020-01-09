@@ -12,7 +12,7 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <DebugChecksum>
-        <Checksum>2321671989</Checksum>
+        <Checksum>93930437</Checksum>
     </DebugChecksum>
     <Disassembly>
         <InstrCount>0</InstrCount>
@@ -41,7 +41,7 @@
     </Jet>
     <PlDriver>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>C:\devtools\IAR Systems\Embedded Workbench 8.3\riscv\config\debugger\SiFive\hifive1.ddf</MemConfigValue>
+        <MemConfigValue>C:\devtools\IAR Systems\Embedded Workbench 8.4\riscv\config\debugger\SiFive\hifive1.ddf</MemConfigValue>
     </PlDriver>
     <RiscvDriver>
         <EnableCache>1</EnableCache>

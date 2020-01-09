@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1_IAR\settings\RTOSDemo.Debug.general.xcl" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1_IAR\settings\RTOSDemo.Debug.driver.xcl" 
+& "C:\devtools\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1-RevB_IAR\settings\RTOSDemo.Debug.general.xcl" --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1-RevB_IAR\settings\RTOSDemo.Debug.driver.xcl" 
 }
 else
 {
-& "C:\devtools\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1_IAR\settings\RTOSDemo.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1_IAR\settings\RTOSDemo.Debug.driver.xcl" 
+& "C:\devtools\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1-RevB_IAR\settings\RTOSDemo.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1-RevB_IAR\settings\RTOSDemo.Debug.driver.xcl" 
 }

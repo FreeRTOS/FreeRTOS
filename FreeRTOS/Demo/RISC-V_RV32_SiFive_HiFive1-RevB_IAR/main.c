@@ -270,23 +270,11 @@ void vApplicationHandleTrap( uint32_t mcause )
 {
 char pcCause[ 20 ];
 
-	/* Not implemented yet. */
+	#warning vApplicationHandleTrap not implemented.
+	/* Not implemented yet! */
 	sprintf( pcCause, "%u", mcause );
 	vSendString( pcCause );
 	configASSERT( mcause == 0 );
-#warning vApplicationHandleTrap not implemented.
-#if 0
-uint32_t ulInterruptNumber;
-typedef void ( * irq_handler_t )( void );
-extern const irq_handler_t isrTable[];
-
-	ulInterruptNumber = PLIC->TARGET[ 0 ].CLAIM_COMPLETE;
-
-	/* Read handler from table. */
-	/* Call handler. */
-
-	PLIC->TARGET[ 0 ].CLAIM_COMPLETE = ulInterruptNumber;
-#endif
 }
 
 /*-----------------------------------------------------------*/
@@ -300,3 +288,4 @@ void *malloc( size_t xSize )
 	return NULL;
 }
 /*-----------------------------------------------------------*/
+

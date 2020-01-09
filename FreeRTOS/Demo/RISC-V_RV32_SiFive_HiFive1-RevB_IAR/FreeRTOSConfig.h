@@ -41,7 +41,9 @@
  *----------------------------------------------------------*/
 
 #define configISR_STACK_SIZE_WORDS ( 200 )
-#define configCLINT_BASE_ADDRESS	0x2000000
+#define CLINT_CTRL_ADDR 				( 0x02000000UL )
+#define configMTIME_BASE_ADDRESS		( CLINT_CTRL_ADDR + 0xBFF8UL )
+#define configMTIMECMP_BASE_ADDRESS		( CLINT_CTRL_ADDR + 0x4000UL )
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0

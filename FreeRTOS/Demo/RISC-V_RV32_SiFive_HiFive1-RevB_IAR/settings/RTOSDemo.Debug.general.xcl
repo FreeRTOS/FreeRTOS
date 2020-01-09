@@ -1,12 +1,12 @@
-"C:\devtools\IAR Systems\Embedded Workbench 8.3\riscv\bin\riscvproc.dll" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.4\riscv\bin\riscvproc.dll" 
 
-"C:\devtools\IAR Systems\Embedded Workbench 8.3\riscv\bin\riscvijet.dll" 
+"C:\devtools\IAR Systems\Embedded Workbench 8.4\riscv\bin\riscvijet.dll" 
 
-"C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1_IAR\Debug\Exe\RTOSDemo.out" 
+"C:\Users\ribarry\Dev\FreeRTOS\WorkingCopy\FreeRTOS\Demo\RISC-V_RV32_SiFive_HiFive1-RevB_IAR\Debug\Exe\RTOSDemo.out" 
 
---plugin="C:\devtools\IAR Systems\Embedded Workbench 8.3\riscv\bin\riscvbat.dll" 
+--plugin="C:\devtools\IAR Systems\Embedded Workbench 8.4\riscv\bin\riscvbat.dll" 
 
---flash_loader="C:\devtools\IAR Systems\Embedded Workbench 8.3\riscv\config\flashloader\SiFive\hifive1.board" 
+--flash_loader="C:\devtools\IAR Systems\Embedded Workbench 8.4\riscv\config\flashloader\SiFive\hifive1.board" 
 
 
 

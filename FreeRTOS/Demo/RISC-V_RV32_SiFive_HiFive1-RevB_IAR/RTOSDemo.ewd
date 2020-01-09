@@ -9,9 +9,9 @@
         <debug>1</debug>
         <settings>
             <name>C-SPY</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -138,13 +138,45 @@
                     <name>MassEraseBeforeFlashing</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OCMulticoreNrOfCores</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OCMulticoreWorkspace</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCMulticoreSlaveProject</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCMulticoreSlaveConfiguration</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCAttachSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OCMulticoreNrOfCoresSlave</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OCMulticoreAMPConfigType</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OCMulticoreSessionFile</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>IJETRISCV</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -277,11 +309,87 @@
                     <name>FlashBoardPathSlave</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>RDICatchNmi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchInstrMis</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchInstrFault</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchIllegalInstr</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchLoadMis</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchLoadFault</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchStoreAddr</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchStoreAccess</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchEnvironment</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchInstrPage</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchLoadPage</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchStorePage</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchExternal</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchTimer</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchSoftware</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchModeM</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchModeS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchModeU</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDelayAfterOverride</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>SIMRISCV</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -323,9 +431,9 @@
         <debug>0</debug>
         <settings>
             <name>C-SPY</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -452,13 +560,45 @@
                     <name>MassEraseBeforeFlashing</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>OCMulticoreNrOfCores</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCMulticoreWorkspace</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCMulticoreSlaveProject</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCMulticoreSlaveConfiguration</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>OCAttachSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OCMulticoreNrOfCoresSlave</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>OCMulticoreAMPConfigType</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>OCMulticoreSessionFile</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>IJETRISCV</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -591,11 +731,87 @@
                     <name>FlashBoardPathSlave</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>RDICatchNmi</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchInstrMis</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchInstrFault</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchIllegalInstr</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchLoadMis</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchLoadFault</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchStoreAddr</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchStoreAccess</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchEnvironment</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchInstrPage</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchLoadPage</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchStorePage</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchExternal</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchTimer</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchSoftware</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchModeM</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchModeS</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>RDICatchModeU</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDelayAfterOverride</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>SIMRISCV</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>

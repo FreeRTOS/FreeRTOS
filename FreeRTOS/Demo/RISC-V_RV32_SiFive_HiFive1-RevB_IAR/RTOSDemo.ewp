@@ -9,7 +9,7 @@
         <debug>1</debug>
         <settings>
             <name>General</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -149,7 +149,7 @@
         </settings>
         <settings>
             <name>ICCRISCV</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>6</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -362,7 +362,7 @@
         </settings>
         <settings>
             <name>IASMRISCV</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -500,7 +500,7 @@
         </settings>
         <settings>
             <name>OBJCOPY</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -552,9 +552,9 @@
         </settings>
         <settings>
             <name>ILINK</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -846,11 +846,27 @@
                     <name>IlinkThreadsSlave</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>IARCHIVE</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -883,7 +899,7 @@
         <debug>0</debug>
         <settings>
             <name>General</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -1023,7 +1039,7 @@
         </settings>
         <settings>
             <name>ICCRISCV</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>6</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -1232,7 +1248,7 @@
         </settings>
         <settings>
             <name>IASMRISCV</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -1370,7 +1386,7 @@
         </settings>
         <settings>
             <name>OBJCOPY</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>
@@ -1422,9 +1438,9 @@
         </settings>
         <settings>
             <name>ILINK</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1716,11 +1732,27 @@
                     <name>IlinkThreadsSlave</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>IARCHIVE</name>
-            <archiveVersion>1</archiveVersion>
+            <archiveVersion>2</archiveVersion>
             <data>
                 <version>0</version>
                 <wantNonLocal>1</wantNonLocal>

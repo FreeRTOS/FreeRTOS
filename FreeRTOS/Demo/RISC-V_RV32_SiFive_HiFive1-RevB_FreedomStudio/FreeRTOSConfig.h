@@ -40,7 +40,8 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 #define CLINT_CTRL_ADDR 				( 0x02000000UL )
-#define configCLINT_BASE_ADDRESS		CLINT_CTRL_ADDR
+#define configMTIME_BASE_ADDRESS		( CLINT_CTRL_ADDR + 0xBFF8UL )
+#define configMTIMECMP_BASE_ADDRESS		( CLINT_CTRL_ADDR + 0x4000UL )
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
 #define configUSE_TICK_HOOK				1

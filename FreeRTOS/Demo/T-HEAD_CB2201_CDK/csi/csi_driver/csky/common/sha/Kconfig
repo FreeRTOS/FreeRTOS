@@ -1,0 +1,20 @@
+choice
+    prompt "select sha type "
+        help
+          select sha type
+config SHA_CK_V2
+    bool "csky v2 sha"
+    help
+        select the ck sha driver
+
+config SHA_CK_V1
+    bool "csky v1 sha"
+    help
+        select the ck sha driver
+
+config SHA_ZX29
+    bool "csky zx29 sha"
+    help
+        select the zx29 sha driver
+
+endchoice

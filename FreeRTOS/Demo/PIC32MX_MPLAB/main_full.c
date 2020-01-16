@@ -236,7 +236,7 @@ TimerHandle_t xTimer = NULL;
 
 	/* A software timer is also used to start the high frequency timer test.
 	This is to ensure the test does not start before the kernel.  This time a
-	one shot software timer is used. */
+	one-shot software timer is used. */
 	xTimer = xTimerCreate( "HighHzTimerSetup", 1, pdFALSE, ( void * ) 0, prvSetupHighFrequencyTimerTest );
 	if( xTimer != NULL )
 	{
@@ -369,7 +369,7 @@ static void prvSetupHighFrequencyTimerTest( TimerHandle_t xTimer )
 {
 	/* Setup the high frequency, high priority, timer test.  It is setup in this
 	software timer callback to ensure it does not start before the kernel does.
-	This is a one shot timer - so the setup routine will only be executed once. */
+	This is a one-shot timer - so the setup routine will only be executed once. */
 	vSetupTimerTest( mainTEST_INTERRUPT_FREQUENCY );
 }
 

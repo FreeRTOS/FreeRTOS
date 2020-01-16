@@ -812,7 +812,7 @@ uint32_t ulValueForTesting = 0;
 
 	xTimer = xTimerCreate( 	pcTimerName,
 							x3ms,
-							pdFALSE, /* Created as a one shot timer. */
+							pdFALSE, /* Created as a one-shot timer. */
 							0,
 							prvTestTimerCallback );
 	configASSERT( xTimer );
@@ -827,7 +827,7 @@ uint32_t ulValueForTesting = 0;
 	vTaskDelay( x3ms );
 	configASSERT( ulValueForTesting == 1 );
 
-	/* Timer was created as a one shot timer.  Its callback just increments the
+	/* Timer was created as a one-shot timer.  Its callback just increments the
 	timer's ID - so set the ID to 0, let the timer run for a number of timeout
 	periods, then check the timer has only executed once. */
 	vTimerSetTimerID( xTimer, ( void * ) 0 );
@@ -835,7 +835,7 @@ uint32_t ulValueForTesting = 0;
 	vTaskDelay( 3UL * x3ms );
 	configASSERT( ( ( uint32_t ) ( pvTimerGetTimerID( xTimer ) ) ) == 1UL );
 
-	/* Now change the timer to be an autoreload timer and check it executes
+	/* Now change the timer to be an auto-reload timer and check it executes
 	the expected number of times. */
 	vTimerSetReloadMode( xTimer, pdTRUE );
 	xTimerStart( xTimer, 0 );

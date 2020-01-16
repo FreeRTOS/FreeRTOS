@@ -32,6 +32,12 @@ Changes since the last release:
 	+ Added CORTEX_MPU_STM32L4_Discovery_Keil_STM32Cube demo.
 	+ Added xTaskAbortDelayFromISR() API function.
 	+ Added xTaskNotifyValueClear() API function.
+	+ Improve timing accuracy (reduce clock slippage when compared to real time)
+	  in the Windows simulator port by using a waitable timer to determine the
+	  next time slice in place of calls to sleep().
+	+ Added T-Head demo.
+	+ Added LPC54018 MPU demo.
+	+ Added uxTimerGetReloadMode() API function.
 
 
 Changes between FreeRTOS V10.2.1 and FreeRTOS V10.2.0 released May 13 2019:

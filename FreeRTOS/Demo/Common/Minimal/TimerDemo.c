@@ -70,7 +70,7 @@ static void prvISRAutoReloadTimerCallback( TimerHandle_t pxExpiredTimer );
 static void prvISROneShotTimerCallback( TimerHandle_t pxExpiredTimer );
 
 /* The test functions used by the timer test task.  These manipulate the auto
-reload and one shot timers in various ways, then delay, then inspect the timers
+reload and one-shot timers in various ways, then delay, then inspect the timers
 to ensure they have behaved as expected. */
 static void prvTest1_CreateTimersWithoutSchedulerRunning( void );
 static void prvTest2_CheckTaskAndTimersInitialState( void );
@@ -90,14 +90,14 @@ static volatile BaseType_t xTestStatus = pdPASS;
 detect a stalled task - a test that is no longer running. */
 static volatile uint32_t ulLoopCounter = 0;
 
-/* A set of auto reload timers - each of which use the same callback function.
+/* A set of auto-reload timers - each of which use the same callback function.
 The callback function uses the timer ID to index into, and then increment, a
-counter in the ucAutoReloadTimerCounters[] array.  The auto reload timers
+counter in the ucAutoReloadTimerCounters[] array.  The auto-reload timers
 referenced from xAutoReloadTimers[] are used by the prvTimerTestTask task. */
 static TimerHandle_t xAutoReloadTimers[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
 static uint8_t ucAutoReloadTimerCounters[ configTIMER_QUEUE_LENGTH + 1 ] = { 0 };
 
-/* The one shot timer is configured to use a callback function that increments
+/* The one-shot timer is configured to use a callback function that increments
 ucOneShotTimerCounter each time it gets called. */
 static TimerHandle_t xOneShotTimer = NULL;
 static uint8_t ucOneShotTimerCounter = ( uint8_t ) 0;
@@ -108,7 +108,7 @@ ucISRReloadTimerCounter each time its callback function is executed. */
 static TimerHandle_t xISRAutoReloadTimer = NULL;
 static uint8_t ucISRAutoReloadTimerCounter = ( uint8_t ) 0;
 
-/* The ISR one shot timer is controlled from the tick hook to exercise the timer
+/* The ISR one-shot timer is controlled from the tick hook to exercise the timer
 API functions that can be used from an ISR.  It is configured to increment
 ucISRReloadTimerCounter each time its callback function is executed. */
 static TimerHandle_t xISROneShotTimer = NULL;
@@ -150,10 +150,11 @@ static void prvTimerTestTask( void *pvParameters )
 {
 	( void ) pvParameters;
 
-	/* Create a one-shot timer for use later on in this test. */
+	/* Create a one-shot timer for use later on in this test.  For test purposes it
+	is created as an auto-reload timer then converted to a one-shot timer. */
 	xOneShotTimer = xTimerCreate(	"Oneshot Timer",				/* Text name to facilitate debugging.  The kernel does not use this itself. */
 									tmrdemoONE_SHOT_TIMER_PERIOD,	/* The period for the timer. */
-									pdFALSE,						/* Don't auto-reload - hence a one shot timer. */
+									pdFALSE,						/* Autorealod is false, so created as a one-shot timer. */
 									( void * ) 0,					/* The timer identifier.  Initialise to 0, then increment each time it is called. */
 									prvOneShotTimerCallback );		/* The callback to be called when the timer expires. */
 
@@ -163,6 +164,20 @@ static void prvTimerTestTask( void *pvParameters )
 		configASSERT( xTestStatus );
 	}
 
+	/* Purely for test coverage purposes - change and query the reload mode to
+	auto-reload then back to one-shot. */
+
+	/* Change timer to auto-reload. */
+	vTimerSetReloadMode( xOneShotTimer, pdTRUE );
+
+	/* Timer should now be auto-reload. */
+	configASSERT( uxTimerGetReloadMode( xOneShotTimer ) == pdTRUE );
+
+	/* Change timer to one-shot, which is what is needed for this test. */
+	vTimerSetReloadMode( xOneShotTimer, pdFALSE );
+
+	/* Check change to one-shot was successful. */
+	configASSERT( uxTimerGetReloadMode( xOneShotTimer ) == pdFALSE );
 
 	/* Ensure all the timers are in their expected initial state.  This
 	depends on the timer service task having a higher priority than this task. */
@@ -170,14 +185,14 @@ static void prvTimerTestTask( void *pvParameters )
 
 	for( ;; )
 	{
-		/* Check the auto reload timers expire at the expected/correct rates. */
+		/* Check the auto-reload timers expire at the expected/correct rates. */
 		prvTest3_CheckAutoReloadExpireRates();
 
-		/* Check the auto reload timers can be stopped correctly, and correctly
+		/* Check the auto-reload timers can be stopped correctly, and correctly
 		report their state. */
 		prvTest4_CheckAutoReloadTimersCanBeStopped();
 
-		/* Check the one shot timer only calls its callback once after it has been
+		/* Check the one-shot timer only calls its callback once after it has been
 		started, and that it reports its state correctly. */
 		prvTest5_CheckBasicOneShotTimerBehaviour();
 
@@ -253,7 +268,7 @@ TickType_t xTimer;
 		xAutoReloadTimers[ xTimer ] = xTimerCreate( "FR Timer",							/* Text name to facilitate debugging.  The kernel does not use this itself. */
 													( ( xTimer + ( TickType_t ) 1 ) * xBasePeriod ),/* The period for the timer.  The plus 1 ensures a period of zero is not specified. */
 													pdTRUE,								/* Auto-reload is set to true. */
-													( void * ) xTimer,					/* An identifier for the timer as all the auto reload timers use the same callback. */
+													( void * ) xTimer,					/* An identifier for the timer as all the auto-reload timers use the same callback. */
 													prvAutoReloadTimerCallback );		/* The callback to be called when the timer expires. */
 
 		if( xAutoReloadTimers[ xTimer ] == NULL )
@@ -283,7 +298,7 @@ TickType_t xTimer;
 	xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] = xTimerCreate( "FR Timer",					/* Text name to facilitate debugging.  The kernel does not use this itself. */
 													( configTIMER_QUEUE_LENGTH * xBasePeriod ),	/* The period for the timer. */
 													pdTRUE,										/* Auto-reload is set to true. */
-													( void * ) xTimer,							/* An identifier for the timer as all the auto reload timers use the same callback. */
+													( void * ) xTimer,							/* An identifier for the timer as all the auto-reload timers use the same callback. */
 													prvAutoReloadTimerCallback );				/* The callback executed when the timer expires. */
 
 	if( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH ] == NULL )
@@ -306,13 +321,13 @@ TickType_t xTimer;
 	API functions that can be called from an ISR. */
 	xISRAutoReloadTimer = xTimerCreate( "ISR AR",							/* The text name given to the timer. */
 										0xffff,								/* The timer is not given a period yet - this will be done from the tick hook, but a period of 0 is invalid. */
-										pdTRUE,								/* This is an auto reload timer. */
+										pdTRUE,								/* This is an auto-reload timer. */
 										( void * ) NULL,					/* The identifier is not required. */
 										prvISRAutoReloadTimerCallback );	/* The callback that is executed when the timer expires. */
 
 	xISROneShotTimer = xTimerCreate( 	"ISR OS",							/* The text name given to the timer. */
 										0xffff,								/* The timer is not given a period yet - this will be done from the tick hook, but a period of 0 is invalid. */
-										pdFALSE,							/* This is a one shot timer. */
+										pdFALSE,							/* This is a one-shot timer. */
 										( void * ) NULL,					/* The identifier is not required. */
 										prvISROneShotTimerCallback );		/* The callback that is executed when the timer expires. */
 
@@ -331,8 +346,8 @@ uint8_t ucTimer;
 	/* Ensure all the timers are in their expected initial state.  This	depends
 	on the timer service task having a higher priority than this task.
 
-	auto reload timers 0 to ( configTIMER_QUEUE_LENGTH - 1 ) should now be active,
-	and auto reload timer configTIMER_QUEUE_LENGTH should not yet be active (it
+	auto-reload timers 0 to ( configTIMER_QUEUE_LENGTH - 1 ) should now be active,
+	and auto-reload timer configTIMER_QUEUE_LENGTH should not yet be active (it
 	could not be started prior to the scheduler being started when it was
 	created). */
 	for( ucTimer = 0; ucTimer < ( uint8_t ) configTIMER_QUEUE_LENGTH; ucTimer++ )
@@ -358,18 +373,18 @@ uint8_t ucMaxAllowableValue, ucMinAllowableValue, ucTimer;
 TickType_t xBlockPeriod, xTimerPeriod, xExpectedNumber;
 UBaseType_t uxOriginalPriority;
 
-	/* Check the auto reload timers expire at the expected rates.  Do this at a
+	/* Check the auto-reload timers expire at the expected rates.  Do this at a
 	high priority for maximum accuracy.  This is ok as most of the time is spent
 	in the Blocked state. */
 	uxOriginalPriority = uxTaskPriorityGet( NULL );
 	vTaskPrioritySet( NULL, ( configMAX_PRIORITIES - 1 ) );
 
 	/* Delaying for configTIMER_QUEUE_LENGTH * xBasePeriod ticks should allow
-	all the auto reload timers to expire at least once. */
+	all the auto-reload timers to expire at least once. */
 	xBlockPeriod = ( ( TickType_t ) configTIMER_QUEUE_LENGTH ) * xBasePeriod;
 	vTaskDelay( xBlockPeriod );
 
-	/* Check that all the auto reload timers have called their callback
+	/* Check that all the auto-reload timers have called their callback
 	function the expected number of times. */
 	for( ucTimer = 0; ucTimer < ( uint8_t ) configTIMER_QUEUE_LENGTH; ucTimer++ )
 	{
@@ -406,7 +421,7 @@ static void prvTest4_CheckAutoReloadTimersCanBeStopped( void )
 {
 uint8_t ucTimer;
 
-	/* Check the auto reload timers can be stopped correctly, and correctly
+	/* Check the auto-reload timers can be stopped correctly, and correctly
 	report their state. */
 
 	/* Stop all the active timers. */
@@ -472,10 +487,10 @@ uint8_t ucTimer;
 
 static void prvTest5_CheckBasicOneShotTimerBehaviour( void )
 {
-	/* Check the one shot timer only calls its callback once after it has been
+	/* Check the one-shot timer only calls its callback once after it has been
 	started, and that it reports its state correctly. */
 
-	/* The one shot timer should not be active yet. */
+	/* The one-shot timer should not be active yet. */
 	if( xTimerIsTimerActive( xOneShotTimer ) != pdFALSE )
 	{
 		xTestStatus = pdFAIL;
@@ -488,7 +503,7 @@ static void prvTest5_CheckBasicOneShotTimerBehaviour( void )
 		configASSERT( xTestStatus );
 	}
 
-	/* Start the one shot timer and check that it reports its state correctly. */
+	/* Start the one-shot timer and check that it reports its state correctly. */
 	xTimerStart( xOneShotTimer, tmrdemoDONT_BLOCK );
 	if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
 	{
@@ -496,7 +511,7 @@ static void prvTest5_CheckBasicOneShotTimerBehaviour( void )
 		configASSERT( xTestStatus );
 	}
 
-	/* Delay for three times as long as the one shot timer period, then check
+	/* Delay for three times as long as the one-shot timer period, then check
 	to ensure it has only called its callback once, and is now not in the
 	active state. */
 	vTaskDelay( tmrdemoONE_SHOT_TIMER_PERIOD * ( TickType_t ) 3 );
@@ -514,7 +529,7 @@ static void prvTest5_CheckBasicOneShotTimerBehaviour( void )
 	}
 	else
 	{
-		/* Reset the one shot timer callback count. */
+		/* Reset the one-shot timer callback count. */
 		ucOneShotTimerCounter = ( uint8_t ) 0;
 	}
 
@@ -533,7 +548,7 @@ uint8_t ucTimer;
 
 	/* Check timer reset behaviour. */
 
-	/* Restart the one shot timer and check it reports its status correctly. */
+	/* Restart the one-shot timer and check it reports its status correctly. */
 	xTimerStart( xOneShotTimer, tmrdemoDONT_BLOCK );
 	if( xTimerIsTimerActive( xOneShotTimer ) == pdFALSE )
 	{
@@ -541,7 +556,7 @@ uint8_t ucTimer;
 		configASSERT( xTestStatus );
 	}
 
-	/* Restart one of the auto reload timers and check that it reports its
+	/* Restart one of the auto-reload timers and check that it reports its
 	status correctly. */
 	xTimerStart( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
 	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
@@ -552,7 +567,7 @@ uint8_t ucTimer;
 
 	for( ucTimer = 0; ucTimer < tmrdemoNUM_TIMER_RESETS; ucTimer++ )
 	{
-		/* Delay for half as long as the one shot timer period, then reset it.
+		/* Delay for half as long as the one-shot timer period, then reset it.
 		It should never expire while this is done, so its callback count should
 		never increment. */
 		vTaskDelay( tmrdemoONE_SHOT_TIMER_PERIOD / 2 );
@@ -612,7 +627,7 @@ uint8_t ucTimer;
 		configASSERT( xTestStatus );
 	}
 
-	/* The one shot timer should no longer be active, while the auto reload
+	/* The one-shot timer should no longer be active, while the auto-reload
 	timer should still be active. */
 	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) == pdFALSE )
 	{
@@ -626,7 +641,7 @@ uint8_t ucTimer;
 		configASSERT( xTestStatus );
 	}
 
-	/* Stop the auto reload timer again. */
+	/* Stop the auto-reload timer again. */
 	xTimerStop( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ], tmrdemoDONT_BLOCK );
 
 	if( xTimerIsTimerActive( xAutoReloadTimers[ configTIMER_QUEUE_LENGTH - 1 ] ) != pdFALSE )
@@ -770,8 +785,8 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( xBasePeriod + xMargin ) )
 	{
-		/* Both timers should now have expired once.  The auto reload timer will
-		still be active, but the one shot timer should now have stopped. */
+		/* Both timers should now have expired once.  The auto-reload timer will
+		still be active, but the one-shot timer should now have stopped. */
 		if( ( ucISRAutoReloadTimerCounter != 1 ) || ( ucISROneShotTimerCounter != 1 ) )
 		{
 			xTestStatus = pdFAIL;
@@ -780,7 +795,7 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 2 * xBasePeriod ) - xMargin ) )
 	{
-		/* The auto reload timer will still be active, but the one shot timer
+		/* The auto-reload timer will still be active, but the one-shot timer
 		should now have stopped - however, at this time neither of the timers
 		should have expired again since the last test. */
 		if( ( ucISRAutoReloadTimerCounter != 1 ) || ( ucISROneShotTimerCounter != 1 ) )
@@ -791,9 +806,9 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 2 * xBasePeriod ) + xMargin ) )
 	{
-		/* The auto reload timer will still be active, but the one shot timer
-		should now have stopped.  At this time the auto reload timer should have
-		expired again, but the one shot timer count should not have changed. */
+		/* The auto-reload timer will still be active, but the one-shot timer
+		should now have stopped.  At this time the auto-reload timer should have
+		expired again, but the one-shot timer count should not have changed. */
 		if( ucISRAutoReloadTimerCounter != 2 )
 		{
 			xTestStatus = pdFAIL;
@@ -808,7 +823,7 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 2 * xBasePeriod ) + ( xBasePeriod >> ( TickType_t ) 2U ) ) )
 	{
-		/* The auto reload timer will still be active, but the one shot timer
+		/* The auto-reload timer will still be active, but the one-shot timer
 		should now have stopped.  Again though, at this time, neither timer call
 		back should have been called since the last test. */
 		if( ucISRAutoReloadTimerCounter != 2 )
@@ -825,13 +840,13 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( 3 * xBasePeriod ) )
 	{
-		/* Start the one shot timer again. */
+		/* Start the one-shot timer again. */
 		xTimerStartFromISR( xISROneShotTimer, NULL );
 	}
 	else if( uxTick == ( ( 3 * xBasePeriod ) + xMargin ) )
 	{
-		/* The auto reload timer and one shot timer will be active.  At
-		this time the auto reload timer should have	expired again, but the one
+		/* The auto-reload timer and one-shot timer will be active.  At
+		this time the auto-reload timer should have	expired again, but the one
 		shot timer count should not have changed yet. */
 		if( ucISRAutoReloadTimerCounter != 3 )
 		{
@@ -845,13 +860,13 @@ static TickType_t uxTick = ( TickType_t ) -1;
 			configASSERT( xTestStatus );
 		}
 
-		/* Now stop the auto reload timer.  The one shot timer was started
+		/* Now stop the auto-reload timer.  The one-shot timer was started
 		a few ticks ago. */
 		xTimerStopFromISR( xISRAutoReloadTimer, NULL );
 	}
 	else if( uxTick == ( 4 * ( xBasePeriod - xMargin ) ) )
 	{
-		/* The auto reload timer is now stopped, and the one shot timer is
+		/* The auto-reload timer is now stopped, and the one-shot timer is
 		active, but at this time neither timer should have expired since the
 		last test. */
 		if( ucISRAutoReloadTimerCounter != 3 )
@@ -868,8 +883,8 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 4 * xBasePeriod ) + xMargin ) )
 	{
-		/* The auto reload timer is now stopped, and the one shot timer is
-		active.  The one shot timer should have expired again, but the auto
+		/* The auto-reload timer is now stopped, and the one-shot timer is
+		active.  The one-shot timer should have expired again, but the auto
 		reload timer should not have executed its callback. */
 		if( ucISRAutoReloadTimerCounter != 3 )
 		{
@@ -885,7 +900,7 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( 8 * xBasePeriod ) )
 	{
-		/* The auto reload timer is now stopped, and the one shot timer has
+		/* The auto-reload timer is now stopped, and the one-shot timer has
 		already expired and then stopped itself.  Both callback counters should
 		not have incremented since the last test. */
 		if( ucISRAutoReloadTimerCounter != 3 )
@@ -900,14 +915,14 @@ static TickType_t uxTick = ( TickType_t ) -1;
 			configASSERT( xTestStatus );
 		}
 
-		/* Now reset the one shot timer. */
+		/* Now reset the one-shot timer. */
 		xTimerResetFromISR( xISROneShotTimer, NULL );
 	}
 	else if( uxTick == ( ( 9 * xBasePeriod ) - xMargin ) )
 	{
-		/* Only the one shot timer should be running, but it should not have
+		/* Only the one-shot timer should be running, but it should not have
 		expired since the last test.  Check the callback counters have not
-		incremented, then reset the one shot timer again. */
+		incremented, then reset the one-shot timer again. */
 		if( ucISRAutoReloadTimerCounter != 3 )
 		{
 			xTestStatus = pdFAIL;
@@ -924,9 +939,9 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 10 * xBasePeriod ) - ( 2 * xMargin ) ) )
 	{
-		/* Only the one shot timer should be running, but it should not have
+		/* Only the one-shot timer should be running, but it should not have
 		expired since the last test.  Check the callback counters have not
-		incremented, then reset the one shot timer again. */
+		incremented, then reset the one-shot timer again. */
 		if( ucISRAutoReloadTimerCounter != 3 )
 		{
 			xTestStatus = pdFAIL;
@@ -943,9 +958,9 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 11 * xBasePeriod ) - ( 3 * xMargin ) ) )
 	{
-		/* Only the one shot timer should be running, but it should not have
+		/* Only the one-shot timer should be running, but it should not have
 		expired since the last test.  Check the callback counters have not
-		incremented, then reset the one shot timer once again. */
+		incremented, then reset the one-shot timer once again. */
 		if( ucISRAutoReloadTimerCounter != 3 )
 		{
 			xTestStatus = pdFAIL;
@@ -962,10 +977,10 @@ static TickType_t uxTick = ( TickType_t ) -1;
 	}
 	else if( uxTick == ( ( 12 * xBasePeriod ) - ( 2 * xMargin ) ) )
 	{
-		/* Only the one shot timer should have been running and this time it
+		/* Only the one-shot timer should have been running and this time it
 		should have	expired.  Check its callback count has been incremented.
-		The auto reload	timer is still not running so should still have the same
-		count value.  This time the one shot timer is not reset so should not
+		The auto-reload	timer is still not running so should still have the same
+		count value.  This time the one-shot timer is not reset so should not
 		restart from its expiry period again. */
 		if( ucISRAutoReloadTimerCounter != 3 )
 		{

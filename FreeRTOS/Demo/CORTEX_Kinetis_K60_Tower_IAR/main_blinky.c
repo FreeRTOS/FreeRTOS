@@ -166,7 +166,7 @@ void main( void )
 		this file. */
 		xButtonLEDTimer = xTimerCreate( "ButtonLEDTimer", 			/* A text name, purely to help debugging. */
 									mainBUTTON_LED_TIMER_PERIOD_MS,	/* The timer period, in this case 5000ms (5s). */
-									pdFALSE,						/* This is a one shot timer, so xAutoReload is set to pdFALSE. */
+									pdFALSE,						/* This is a one-shot timer, so xAutoReload is set to pdFALSE. */
 									( void * ) 0,					/* The ID is not used, so can be set to anything. */
 									prvButtonLEDTimerCallback		/* The callback function that switches the LED off. */
 								);

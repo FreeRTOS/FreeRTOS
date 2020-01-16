@@ -182,7 +182,7 @@ static BaseType_t prvInsertTimerInActiveList( Timer_t * const pxTimer, const Tic
 
 /*
  * An active timer has reached its expire time.  Reload the timer if it is an
- * auto reload timer, then call its callback.
+ * auto-reload timer, then call its callback.
  */
 static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow ) PRIVILEGED_FUNCTION;
 
@@ -292,7 +292,7 @@ BaseType_t xReturn = pdFAIL;
 		if( pxNewTimer != NULL )
 		{
 			/* Status is thus far zero as the timer is not created statically
-			and has not been started.  The autoreload bit may get set in
+			and has not been started.  The auto-reload bit may get set in
 			prvInitialiseNewTimer. */
 			pxNewTimer->ucStatus = 0x00;
 			prvInitialiseNewTimer( pcTimerName, xTimerPeriodInTicks, uxAutoReload, pvTimerID, pxCallbackFunction, pxNewTimer );
@@ -334,7 +334,7 @@ BaseType_t xReturn = pdFAIL;
 		{
 			/* Timers can be created statically or dynamically so note this
 			timer was created statically in case it is later deleted.  The
-			autoreload bit may get set in prvInitialiseNewTimer(). */
+			auto-reload bit may get set in prvInitialiseNewTimer(). */
 			pxNewTimer->ucStatus = tmrSTATUS_IS_STATICALLY_ALLOCATED;
 
 			prvInitialiseNewTimer( pcTimerName, xTimerPeriodInTicks, uxAutoReload, pvTimerID, pxCallbackFunction, pxNewTimer );
@@ -459,6 +459,31 @@ Timer_t * pxTimer =  xTimer;
 }
 /*-----------------------------------------------------------*/
 
+UBaseType_t uxTimerGetReloadMode( TimerHandle_t xTimer )
+{
+Timer_t * pxTimer =  xTimer;
+UBaseType_t uxReturn;
+
+	configASSERT( xTimer );
+	taskENTER_CRITICAL();
+	{
+		if( ( pxTimer->ucStatus & tmrSTATUS_IS_AUTORELOAD ) == 0 )
+		{
+			/* Not an auto-reload timer. */
+			uxReturn = ( UBaseType_t ) pdFALSE;
+		}
+		else
+		{
+			/* Is an auto-reload timer. */
+			uxReturn = ( UBaseType_t ) pdTRUE;
+		}
+	}
+	taskEXIT_CRITICAL();
+
+	return uxReturn;
+}
+/*-----------------------------------------------------------*/
+
 TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
 {
 Timer_t * pxTimer =  xTimer;
@@ -489,7 +514,7 @@ Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTi
 	( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 	traceTIMER_EXPIRED( pxTimer );
 
-	/* If the timer is an auto reload timer then calculate the next
+	/* If the timer is an auto-reload timer then calculate the next
 	expiry time and re-insert the timer in the list of active timers. */
 	if( ( pxTimer->ucStatus & tmrSTATUS_IS_AUTORELOAD ) != 0 )
 	{

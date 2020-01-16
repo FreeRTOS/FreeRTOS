@@ -124,6 +124,7 @@ TaskHandle_t MPU_xTimerGetTimerDaemonTaskHandle( void ) FREERTOS_SYSTEM_CALL;
 BaseType_t MPU_xTimerPendFunctionCall( PendedFunction_t xFunctionToPend, void *pvParameter1, uint32_t ulParameter2, TickType_t xTicksToWait ) FREERTOS_SYSTEM_CALL;
 const char * MPU_pcTimerGetName( TimerHandle_t xTimer ) FREERTOS_SYSTEM_CALL;
 void MPU_vTimerSetReloadMode( TimerHandle_t xTimer, const UBaseType_t uxAutoReload ) FREERTOS_SYSTEM_CALL;
+UBaseType_t MPU_uxTimerGetReloadMode( TimerHandle_t xTimer ) FREERTOS_SYSTEM_CALL;
 TickType_t MPU_xTimerGetPeriod( TimerHandle_t xTimer ) FREERTOS_SYSTEM_CALL;
 TickType_t MPU_xTimerGetExpiryTime( TimerHandle_t xTimer ) FREERTOS_SYSTEM_CALL;
 BaseType_t MPU_xTimerCreateTimerTask( void ) FREERTOS_SYSTEM_CALL;

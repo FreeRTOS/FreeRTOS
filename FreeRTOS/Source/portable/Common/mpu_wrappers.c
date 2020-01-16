@@ -1055,6 +1055,19 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 /*-----------------------------------------------------------*/
 
 #if( configUSE_TIMERS == 1 )
+	UBaseType_t MPU_uxTimerGetReloadMode( TimerHandle_t xTimer )
+	{
+	BaseType_t xRunningPrivileged = xPortRaisePrivilege();
+	UBaseType_t uxReturn;
+
+		uxReturn = uxTimerGetReloadMode( xTimer );
+		vPortResetPrivilege( xRunningPrivileged );
+		return uxReturn;
+	}
+#endif
+/*-----------------------------------------------------------*/
+
+#if( configUSE_TIMERS == 1 )
 	const char * MPU_pcTimerGetName( TimerHandle_t xTimer ) /* FREERTOS_SYSTEM_CALL */
 	{
 	const char * pcReturn;

@@ -3654,6 +3654,7 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 		if( xIndex < configNUM_THREAD_LOCAL_STORAGE_POINTERS )
 		{
 			pxTCB = prvGetTCBFromHandle( xTaskToSet );
+			configASSERT( pxTCB != NULL );
 			pxTCB->pvThreadLocalStoragePointers[ xIndex ] = pvValue;
 		}
 	}

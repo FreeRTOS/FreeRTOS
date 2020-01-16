@@ -129,6 +129,7 @@ only for ports that are using the MPU. */
 		#define xTimerPendFunctionCall					MPU_xTimerPendFunctionCall
 		#define pcTimerGetName							MPU_pcTimerGetName
 		#define vTimerSetReloadMode						MPU_vTimerSetReloadMode
+		#define uxTimerGetReloadMode					MPU_uxTimerGetReloadMode
 		#define xTimerGetPeriod							MPU_xTimerGetPeriod
 		#define xTimerGetExpiryTime						MPU_xTimerGetExpiryTime
 		#define xTimerGenericCommand					MPU_xTimerGenericCommand

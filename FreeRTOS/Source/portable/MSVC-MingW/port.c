@@ -75,7 +75,7 @@ static uint32_t prvProcessTickInterrupt( void );
  * attempt to obtain pvInterruptEventMutex if a critical section is used inside
  * an interrupt handler itself.
  */
-static volatile BaseType_t xInsideInterrupt = pdFALSE;
+volatile BaseType_t xInsideInterrupt = pdFALSE;
 
 /*
  * Called when the process exits to let Windows know the high timer resolution
@@ -394,7 +394,7 @@ CONTEXT xContext;
 		xInsideInterrupt = pdFALSE;
 		WaitForMultipleObjects( sizeof( pvObjectList ) / sizeof( void * ), pvObjectList, TRUE, INFINITE );
 
-		/* /* Cannot be in a critical section to get here.  Tasks that exist a
+		/* Cannot be in a critical section to get here.  Tasks that exist a
 		critical section will block on a yield mutex to wait for an interrupt to
 		process if an interrupt was set pending while the task was inside the
 		critical section.  xInsideInterrupt prevents interrupts that contain

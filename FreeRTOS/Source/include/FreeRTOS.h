@@ -257,6 +257,10 @@ hold explicit before calling the code. */
 	#define portMEMORY_BARRIER()
 #endif
 
+#ifndef portSOFTWARE_BARRIER
+	#define portSOFTWARE_BARRIER()
+#endif
+
 /* The timers module relies on xTaskGetSchedulerState(). */
 #if configUSE_TIMERS == 1
 

@@ -48,12 +48,6 @@
 
 #include "compiler_attributes.h"
 
-/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to
- * 0 -- to run the more comprehensive test and demo application,
- * 1 -- to run the simple blinky demo.
- */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
-
 /*-----------------------------------------------------------*/
 typedef enum LED_STATE {
 	LED_RED_BLINK_ON = 1,

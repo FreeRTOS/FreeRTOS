@@ -41,6 +41,22 @@
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
+/* Demo related settings. */
+
+/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to
+ * 0 -- to run the more comprehensive test and demo application,
+ * 1 -- to run the simple blinky demo.
+ */
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
+
+/* When mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0,
+ * set mainNO_TASK_NO_CHECK to
+ * 0 -- to include all predefined test tasks and checks,
+ * 1 -- to exclude all predefined test tasks and checks.
+ * When set to 1 (with few tasks in system), user could observe
+ * fewer tick interrupts thus reduce overall MCU power consumption. */
+#define mainNO_TASK_NO_CHECK				0
+
 /* Prevent C code being included by the IAR assembler. */
 #ifndef __IASMARM__
   #include <stdint.h>
@@ -52,8 +68,8 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( SystemCoreClock )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configMAX_PRIORITIES			( 5 )
-#define configMAX_TASK_NAME_LEN			( 5 )
+#define configMAX_PRIORITIES			5
+#define configMAX_TASK_NAME_LEN			8
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
@@ -80,7 +96,7 @@
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1
-#define configTIMER_TASK_PRIORITY		( 2 )
+#define configTIMER_TASK_PRIORITY		2
 #define configTIMER_QUEUE_LENGTH		2
 #define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
 

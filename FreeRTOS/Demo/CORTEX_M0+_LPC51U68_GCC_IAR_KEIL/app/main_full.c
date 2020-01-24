@@ -83,8 +83,6 @@
 #include "blocktim.h"
 #include "countsem.h"
 #include "recmutex.h"
-#include "IntQueue.h"
-
 
 /* The period after which the check timer will expire provided no errors have
 been reported by any of the standard demo tasks.  ms are converted to the
@@ -99,12 +97,6 @@ in ticks using the portTICK_PERIOD_MS constant. */
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
 
-/* Set mainNO_TASK_NO_CHECK to
- * 0 -- to include all predefined test tasks and checks,
- * 1 -- to exclude all predefined test tasks and checks.
- * When set to 1 (with few tasks in system), user could observe how tickless
- * idle could minimize tick interrupt. */
-#define mainNO_TASK_NO_CHECK				( 1 )
 /*-----------------------------------------------------------*/
 
 /*
@@ -155,7 +147,6 @@ TimerHandle_t xCheckTimer = NULL;
 #if ( mainNO_TASK_NO_CHECK == 0 )
 	/* Create the standard demo tasks, including the interrupt nesting test
 	tasks. */
-	vStartInterruptQueueTasks();
 	vCreateBlockTimeTasks();
 	vStartCountingSemaphoreTasks();
 	vStartRecursiveMutexTasks();
@@ -222,11 +213,6 @@ unsigned long ulErrorFound = pdFALSE;
 	
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
-	if( xAreIntQueueTasksStillRunning() != pdPASS )
-	{
-		ulErrorFound |= ( 0x01UL << 0UL );
-	}
-
 	if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 	{
 		ulErrorFound |= ( 0x01UL << 1UL );

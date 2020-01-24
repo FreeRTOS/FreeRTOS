@@ -1,6 +1,9 @@
-This directory contains projects for GCC/IAR/Keil compilers. The targeted MCU is NXP LPC51U68, which is CM0+. 
+This directory contains three projects for LPCXpresso board for LPC51U68. 
 
-todo:
-- clean up IAR compiler warnings. (Though the warnings are in vendor's driver code, see if we can clean it up. )
-- finalize Keil linker script.(Two heap blocks shall be placed in intended RAM banks. Currently, both goes to a same RAM bank.)
-- GCC project folder directory name is not consistent with the other two. 
+MCUXpresso IDE (GCC compiler) -- .cproject and .project. 
+IAR for ARM IDE (IAR compiler) -- CORTEX_M0+_LPC51U68_IAR.*
+Keil uVision (ARM Keil compiler) -- CORTEX_M0+_LPC51U68_Keil.*
+
+Known facts:
+- IAR compiler shows Pa082 warning with SDK provided system_LPC51U68.c and fsl_usart.c. Since the warnings are legitimate, they are not ignored. 
+  Refer to https://www.iar.com/support/tech-notes/compiler/warningpa082-undefined-behavior-the-order-of-volatile-accesses-is-undefined-in-this-statement/

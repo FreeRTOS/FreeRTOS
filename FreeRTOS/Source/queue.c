@@ -983,8 +983,16 @@ Queue_t * const pxQueue = xQueue;
 		if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
 		{
 			const int8_t cTxLock = pxQueue->cTxLock;
+			const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
 
 			traceQUEUE_SEND_FROM_ISR( pxQueue );
+
+			/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
+			semaphore or mutex.  That means prvCopyDataToQueue() cannot result
+			in a task disinheriting a priority and prvCopyDataToQueue() can be
+			called here even though the disinherit function does not check if
+			the scheduler is suspended before accessing the ready lists. */
+			( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
 
 			/* The event list is not altered if the queue is locked.  This will
 			be done when the queue is unlocked later. */
@@ -992,15 +1000,6 @@ Queue_t * const pxQueue = xQueue;
 			{
 				#if ( configUSE_QUEUE_SETS == 1 )
 				{
-					const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
-
-					/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
-					semaphore or mutex.  That means prvCopyDataToQueue() cannot result
-					in a task disinheriting a priority and prvCopyDataToQueue() can be
-					called here even though the disinherit function does not check if
-					the scheduler is suspended before accessing the ready lists. */
-					( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-
 					if( pxQueue->pxQueueSetContainer != NULL )
 					{
 						if( ( xCopyPosition == queueOVERWRITE ) && ( uxPreviousMessagesWaiting != ( UBaseType_t ) 0 ) )
@@ -1059,13 +1058,6 @@ Queue_t * const pxQueue = xQueue;
 				}
 				#else /* configUSE_QUEUE_SETS */
 				{
-					/* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
-					semaphore or mutex.  That means prvCopyDataToQueue() cannot result
-					in a task disinheriting a priority and prvCopyDataToQueue() can be
-					called here even though the disinherit function does not check if
-					the scheduler is suspended before accessing the ready lists. */
-					( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
-
 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
 					{
 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
@@ -1090,6 +1082,9 @@ Queue_t * const pxQueue = xQueue;
 					{
 						mtCOVERAGE_TEST_MARKER();
 					}
+					
+					/* Not used in this path. */
+					( void ) uxPreviousMessagesWaiting;
 				}
 				#endif /* configUSE_QUEUE_SETS */
 			}

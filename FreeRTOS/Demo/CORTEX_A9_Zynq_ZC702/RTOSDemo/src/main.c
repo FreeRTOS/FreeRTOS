@@ -78,6 +78,7 @@
 #include "IntSemTest.h"
 #include "StreamBufferInterrupt.h"
 #include "StreamBufferDemo.h"
+#include "QueueSet.h"
 
 /* Xilinx includes. */
 #include "platform.h"
@@ -302,6 +303,12 @@ void vApplicationTickHook( void )
 		/* Writes a string to a string buffer four bytes at a time to demonstrate
 		a stream being sent from an interrupt to a task. */
 		vBasicStreamBufferSendFromISR();
+
+		#if( configUSE_QUEUE_SETS == 1 )
+		{
+			vQueueSetAccessQueueSetFromISR();
+		}
+		#endif
 
 		/* Test flop alignment in interrupts - calling printf from an interrupt
 		is BAD! */

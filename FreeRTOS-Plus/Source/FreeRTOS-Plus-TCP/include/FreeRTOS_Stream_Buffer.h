@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.11
+ * FreeRTOS+TCP V2.2.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -155,31 +155,6 @@ size_t uxSize = uxStreamBufferMidSpace( pxBuffer );
 	{
 		pxBuffer->uxMid -= pxBuffer->LENGTH;
 	}
-}
-/*-----------------------------------------------------------*/
-static portINLINE BaseType_t xStreamBufferIsEmpty( const StreamBuffer_t *pxBuffer );
-static portINLINE BaseType_t xStreamBufferIsEmpty( const StreamBuffer_t *pxBuffer )
-{
-BaseType_t xReturn;
-
-	/* True if no item is available */
-	if( pxBuffer->uxHead == pxBuffer->uxTail )
-	{
-		xReturn = pdTRUE;
-	}
-	else
-	{
-		xReturn = pdFALSE;
-	}
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
-static portINLINE BaseType_t xStreamBufferIsFull( const StreamBuffer_t *pxBuffer );
-static portINLINE BaseType_t xStreamBufferIsFull( const StreamBuffer_t *pxBuffer )
-{
-	/* True if the available space equals zero. */
-	return ( BaseType_t ) ( uxStreamBufferGetSpace( pxBuffer ) == 0u );
 }
 /*-----------------------------------------------------------*/
 

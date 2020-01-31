@@ -53,22 +53,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Zynq/x_emacpsif.h"
+//#include "lwipopts.h"
+#include "xparameters_ps.h"
+#include "xparameters.h"
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
 
+///* FreeRTOS+TCP includes. */
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 #include "NetworkBufferManagement.h"
-
-#include "Zynq/x_emacpsif.h"
-#include "xparameters_ps.h"
-#include "xparameters.h"
-
 
 int phy_detected = 0;
 
@@ -98,8 +99,6 @@ int phy_detected = 0;
 
 #define IEEE_CONTROL_REG_OFFSET				0
 #define IEEE_STATUS_REG_OFFSET				1
-#define IEEE_PHYSID1_OFFSET					2
-#define IEEE_PHYSID2_OFFSET					3
 #define IEEE_AUTONEGO_ADVERTISE_REG			4
 #define IEEE_PARTNER_ABILITIES_1_REG_OFFSET	5
 #define IEEE_1000_ADVERTISE_REG_OFFSET		9
@@ -136,6 +135,9 @@ int phy_detected = 0;
 #define IEEE_PAUSE_MASK						0x0400
 #define IEEE_AUTONEG_ERROR_MASK				0x8000
 
+#define PHY_DETECT_REG  1
+#define PHY_DETECT_MASK 0x1808
+
 #define XEMACPS_GMII2RGMII_SPEED1000_FD		0x140
 #define XEMACPS_GMII2RGMII_SPEED100_FD		0x2100
 #define XEMACPS_GMII2RGMII_SPEED10_FD		0x100
@@ -161,17 +163,19 @@ int phy_detected = 0;
 
 static int detect_phy(XEmacPs *xemacpsp)
 {
-	u16 id_lower, id_upper;
-	u32 phy_addr, id;
+	u16 phy_reg;
+	u32 phy_addr;
 
-	for (phy_addr = 0; phy_addr < 32; phy_addr++) {
-		XEmacPs_PhyRead(xemacpsp, phy_addr, IEEE_PHYSID1_OFFSET, &id_lower);
+	for (phy_addr = 31; phy_addr > 0; phy_addr--) {
+		XEmacPs_PhyRead(xemacpsp, phy_addr, PHY_DETECT_REG,
+							&phy_reg);
 
-		if ((id_lower != ( u16 )0xFFFFu) && (id_lower != ( u16 )0x0u)) {
-
-			XEmacPs_PhyRead(xemacpsp, phy_addr, IEEE_PHYSID2_OFFSET, &id_upper);
-			id = ( ( ( uint32_t ) id_upper ) << 16 ) | ( id_lower & 0xFFF0 );
-			FreeRTOS_printf( ("XEmacPs detect_phy: %04lX at address %d.\n", id, phy_addr ) );
+		if ((phy_reg != 0xFFFF) &&
+			((phy_reg & PHY_DETECT_MASK) == PHY_DETECT_MASK)) {
+			/* Found a valid PHY address */
+			FreeRTOS_printf( ("XEmacPs detect_phy: PHY detected at address %d.\r\n",
+																	phy_addr));
+			FreeRTOS_printf( ("XEmacPs detect_phy: PHY detected.\n" ) );
 			phy_detected = phy_addr;
 			return phy_addr;
 		}
@@ -234,8 +238,8 @@ unsigned get_IEEE_phy_speed(XEmacPs *xemacpsp)
 		if (partner_capabilities & IEEE_AN1_ABILITY_MASK_10MBPS)
 			return 10;
 
-		FreeRTOS_printf( ( "%s: unknown PHY link speed, setting TEMAC speed to be 10 Mbps\n",
-				__FUNCTION__ ) );
+		xil_printf("%s: unknown PHY link speed, setting TEMAC speed to be 10 Mbps\r\n",
+				__FUNCTION__);
 		return 10;
 
 	} else {
@@ -253,8 +257,8 @@ unsigned get_IEEE_phy_speed(XEmacPs *xemacpsp)
 				case (IEEE_CTRL_LINKSPEED_10M):
 					return 10;
 				default:
-					FreeRTOS_printf( ( "%s: unknown PHY link speed (%d), setting TEMAC speed to be 10 Mbps\n",
-							__FUNCTION__, phylinkspeed ) );
+					xil_printf("%s: unknown PHY link speed (%d), setting TEMAC speed to be 10 Mbps\r\n",
+							__FUNCTION__, phylinkspeed);
 					return 10;
 			}
 
@@ -278,7 +282,7 @@ unsigned get_IEEE_phy_speed(XEmacPs *xemacpsp)
 #else
 	u32 phy_addr = detect_phy(xemacpsp);
 #endif
-	FreeRTOS_printf( ( "Start PHY autonegotiation \n" ) );
+	xil_printf("Start PHY autonegotiation \r\n");
 
 #if XPAR_GIGE_PCS_PMA_CORE_PRESENT == 1
 #else
@@ -334,24 +338,24 @@ unsigned get_IEEE_phy_speed(XEmacPs *xemacpsp)
 			break;
 	}
 #endif
-	FreeRTOS_printf( ( "Waiting for PHY to complete autonegotiation.\n" ) );
+	xil_printf("Waiting for PHY to complete autonegotiation.\r\n");
 
 	XEmacPs_PhyRead(xemacpsp, phy_addr, IEEE_STATUS_REG_OFFSET, &status);
 	while ( !(status & IEEE_STAT_AUTONEGOTIATE_COMPLETE) ) {
-		vTaskDelay(1);
+		sleep(1);
 #if XPAR_GIGE_PCS_PMA_CORE_PRESENT == 1
 #else
 		XEmacPs_PhyRead(xemacpsp, phy_addr, IEEE_COPPER_SPECIFIC_STATUS_REG_2,
 																	&temp);
 		if (temp & IEEE_AUTONEG_ERROR_MASK) {
-			FreeRTOS_printf( ( "Auto negotiation error \n" ) );
+			xil_printf("Auto negotiation error \r\n");
 		}
 #endif
 		XEmacPs_PhyRead(xemacpsp, phy_addr, IEEE_STATUS_REG_OFFSET,
 																&status);
 		}
 
-	FreeRTOS_printf( ( "autonegotiation complete \n" ) );
+	xil_printf("autonegotiation complete \r\n");
 
 #if XPAR_GIGE_PCS_PMA_CORE_PRESENT == 1
 #else
@@ -359,7 +363,7 @@ unsigned get_IEEE_phy_speed(XEmacPs *xemacpsp)
 #endif
 
 #if XPAR_GIGE_PCS_PMA_CORE_PRESENT == 1
-	FreeRTOS_printf( ( "Waiting for Link to be up; Polling for SGMII core Reg \n" ) );
+	xil_printf("Waiting for Link to be up; Polling for SGMII core Reg \r\n");
 	XEmacPs_PhyRead(xemacpsp, phy_addr, 5, &temp);
 	while(!(temp & 0x8000)) {
 		XEmacPs_PhyRead(xemacpsp, phy_addr, 5, &temp);
@@ -376,7 +380,7 @@ unsigned get_IEEE_phy_speed(XEmacPs *xemacpsp)
 		XEmacPs_PhyRead(xemacpsp, phy_addr, 0, &temp);
 		return 10;
 	} else {
-		FreeRTOS_printf( ( "get_IEEE_phy_speed(): Invalid speed bit value, Deafulting to Speed = 10 Mbps\n" ) );
+		xil_printf("get_IEEE_phy_speed(): Invalid speed bit value, Deafulting to Speed = 10 Mbps\r\n");
 		XEmacPs_PhyRead(xemacpsp, phy_addr, 0, &temp);
 		XEmacPs_PhyWrite(xemacpsp, phy_addr, 0, 0x0100);
 		return 10;
@@ -556,26 +560,26 @@ unsigned Phy_Setup (XEmacPs *xemacpsp)
 	link_speed = 1000;
 	configure_IEEE_phy_speed(xemacpsp, link_speed);
 	convspeeddupsetting = XEMACPS_GMII2RGMII_SPEED1000_FD;
-	vTaskDelay(1);
+	sleep(1);
 #elif	defined(ipconfigNIC_LINKSPEED100)
 	SetUpSLCRDivisors(xemacpsp->Config.BaseAddress,100);
 	link_speed = 100;
 	configure_IEEE_phy_speed(xemacpsp, link_speed);
 	convspeeddupsetting = XEMACPS_GMII2RGMII_SPEED100_FD;
-	vTaskDelay(1);
+	sleep(1);
 #elif	defined(ipconfigNIC_LINKSPEED10)
 	SetUpSLCRDivisors(xemacpsp->Config.BaseAddress,10);
 	link_speed = 10;
 	configure_IEEE_phy_speed(xemacpsp, link_speed);
 	convspeeddupsetting = XEMACPS_GMII2RGMII_SPEED10_FD;
-	vTaskDelay(1);
+	sleep(1);
 #endif
 	if (conv_present) {
 		XEmacPs_PhyWrite(xemacpsp, convphyaddr,
 		XEMACPS_GMII2RGMII_REG_NUM, convspeeddupsetting);
 	}
 
-	FreeRTOS_printf( ( "link speed: %d\n", link_speed ) );
+	xil_printf("link speed: %d\r\n", link_speed);
 	return link_speed;
 }
 

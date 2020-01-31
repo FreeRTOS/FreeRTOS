@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.11
+ * FreeRTOS+TCP V2.2.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -42,9 +42,9 @@ extern "C" {
 typedef struct xARP_CACHE_TABLE_ROW
 {
 	uint32_t ulIPAddress;		/* The IP address of an ARP cache entry. */
-	MACAddress_t xMACAddress;	/* The MAC address of an ARP cache entry. */
+	MACAddress_t xMACAddress;  /* The MAC address of an ARP cache entry. */
 	uint8_t ucAge;				/* A value that is periodically decremented but can also be refreshed by active communication.  The ARP cache entry is removed if the value reaches zero. */
-	uint8_t ucValid;			/* pdTRUE: xMACAddress is valid, pdFALSE: waiting for ARP reply */
+    uint8_t ucValid;			/* pdTRUE: xMACAddress is valid, pdFALSE: waiting for ARP reply */
 } ARPCacheRow_t;
 
 typedef enum

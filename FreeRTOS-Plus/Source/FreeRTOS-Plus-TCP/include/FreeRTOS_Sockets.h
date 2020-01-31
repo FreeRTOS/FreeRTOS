@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.11
+ * FreeRTOS+TCP V2.2.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -55,7 +55,7 @@ extern "C" {
 
 /* Assigned to an Socket_t variable when the socket is not valid, probably
 because it could not be created. */
-#define FREERTOS_INVALID_SOCKET	( ( void * ) ~0U )
+#define FREERTOS_INVALID_SOCKET	( ( Socket_t ) ~0U )
 
 /* API function error values.  As errno is supported, the FreeRTOS sockets
 functions return error codes rather than just a pass or fail indication. */
@@ -213,11 +213,13 @@ struct freertos_sockaddr
 #endif /* ipconfigBYTE_ORDER */
 
 /* The socket type itself. */
-typedef void *Socket_t;
+struct xSOCKET;
+typedef struct xSOCKET *Socket_t;
 
 /* The SocketSet_t type is the equivalent to the fd_set type used by the
 Berkeley API. */
-typedef void *SocketSet_t;
+struct xSOCKET_SET;
+typedef struct xSOCKET_SET *SocketSet_t;
 
 /**
  * FULL, UP-TO-DATE AND MAINTAINED REFERENCE DOCUMENTATION FOR ALL THESE

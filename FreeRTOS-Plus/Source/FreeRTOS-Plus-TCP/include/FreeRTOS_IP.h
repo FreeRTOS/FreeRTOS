@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.11
+ * FreeRTOS+TCP V2.2.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -274,6 +274,15 @@ void FreeRTOS_ClearARP( void );
 
 #endif /* ipconfigDHCP_REGISTER_HOSTNAME */
 
+
+/* This xApplicationGetRandomNumber() will set *pulNumber to a random number,
+and return pdTRUE. When the random number generator is broken, it shall return
+pdFALSE.
+The function is defined in 'iot_secure_sockets.c'.
+If that module is not included in the project, the application must provide an
+implementation of it.
+The macro's ipconfigRAND32() and configRAND32() are not in use anymore. */
+BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber );
 
 /* For backward compatibility define old structure names to the newer equivalent
 structure name. */

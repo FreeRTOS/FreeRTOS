@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.11
+ * FreeRTOS+TCP V2.2.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -169,6 +169,14 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define	ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME	portMAX_DELAY
 #endif
 
+
+#ifndef	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS
+	#define	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS	pdMS_TO_TICKS( 500u )
+#endif
+
+#ifndef	ipconfigDNS_SEND_BLOCK_TIME_TICKS
+	#define	ipconfigDNS_SEND_BLOCK_TIME_TICKS		pdMS_TO_TICKS( 500u )
+#endif
 /*
  * FreeRTOS debug logging routine (proposal)
  * The macro will be called in the printf() style. Users can define
@@ -375,6 +383,14 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#endif /* _WINDOWS_ */
 #endif /* ipconfigMAXIMUM_DISCOVER_TX_PERIOD */
 
+#if( ipconfigUSE_DNS == 0 )
+	/* The DNS module will not be included. */
+	#if( ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) )
+		/* LLMNR and NBNS depend on DNS because those protocols share a lot of code. */
+		#error When either LLMNR or NBNS is used, ipconfigUSE_DNS must be defined
+	#endif
+#endif
+
 #ifndef ipconfigUSE_DNS
 	#define ipconfigUSE_DNS						1
 #endif
@@ -406,13 +422,6 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #ifndef ipconfigUSE_LLMNR
 	/* Include support for LLMNR: Link-local Multicast Name Resolution (non-Microsoft) */
 	#define ipconfigUSE_LLMNR					( 0 )
-#endif
-
-#if( !defined( ipconfigUSE_DNS ) )
-	#if( ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) )
-		/* LLMNR and NBNS depend on DNS because those protocols share a lot of code. */
-		#error When either LLMNR or NBNS is used, ipconfigUSE_DNS must be defined
-	#endif
 #endif
 
 #ifndef ipconfigREPLY_TO_INCOMING_PINGS

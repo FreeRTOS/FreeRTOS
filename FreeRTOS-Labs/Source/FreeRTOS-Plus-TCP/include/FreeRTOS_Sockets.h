@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS+TCP V2.2.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -55,7 +55,7 @@ extern "C" {
 
 /* Assigned to an Socket_t variable when the socket is not valid, probably
 because it could not be created. */
-#define FREERTOS_INVALID_SOCKET	( ( void * ) ~0U )
+#define FREERTOS_INVALID_SOCKET	( ( Socket_t ) ~0U )
 
 /* API function error values.  As errno is supported, the FreeRTOS sockets
 functions return error codes rather than just a pass or fail indication. */
@@ -126,15 +126,11 @@ FreeRTOS_setsockopt(). */
 	#define FREERTOS_SO_UDP_MAX_RX_PACKETS	( 16 )		/* This option helps to limit the maximum number of packets a UDP socket will buffer */
 #endif
 
-#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 ) || ( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT == 1 )
+#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 )
 	#define FREERTOS_SO_WAKEUP_CALLBACK	( 17 )
 #endif
 
 #define FREERTOS_SO_SET_LOW_HIGH_WATER	( 18 )
-
-#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT == 1 )
-	#define FREERTOS_SO_WAKE_CALLBACK_CONTEXT ( 19 )
-#endif
 
 #define FREERTOS_NOT_LAST_IN_FRAGMENTED_PACKET 	( 0x80 )  /* For internal use only, but also part of an 8-bit bitwise value. */
 #define FREERTOS_FRAGMENTED_PACKET				( 0x40 )  /* For internal use only, but also part of an 8-bit bitwise value. */
@@ -217,11 +213,13 @@ struct freertos_sockaddr
 #endif /* ipconfigBYTE_ORDER */
 
 /* The socket type itself. */
-typedef void *Socket_t;
+struct xSOCKET;
+typedef struct xSOCKET *Socket_t;
 
 /* The SocketSet_t type is the equivalent to the fd_set type used by the
 Berkeley API. */
-typedef void *SocketSet_t;
+struct xSOCKET_SET;
+typedef struct xSOCKET_SET *SocketSet_t;
 
 /**
  * FULL, UP-TO-DATE AND MAINTAINED REFERENCE DOCUMENTATION FOR ALL THESE
@@ -389,3 +387,16 @@ void FreeRTOS_netstat( void );
 #endif
 
 #endif /* FREERTOS_SOCKETS_H */
+
+
+
+
+
+
+
+
+
+
+
+
+

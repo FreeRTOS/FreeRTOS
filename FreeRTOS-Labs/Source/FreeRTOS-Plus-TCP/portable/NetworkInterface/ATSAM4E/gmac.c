@@ -429,7 +429,6 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 	 * GMAC_DCFGR_TXCOEN: (GMAC_DCFGR) Transmitter Checksum Generation Offload Enable.
 	 * Note: tha SAM4E does have RX checksum offloading
 	 * but TX checksum offloading has NOT been implemented.
-	 * http://community.atmel.com/forum/sam4e-gmac-transmit-checksum-offload-enablesolved
 	 */
 
 	gmac_set_dma(p_gmac,
@@ -658,7 +657,7 @@ uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 		}
 		#else
 		{
-			/* Or memcopy... */
+			/* Or Memcopy... */
 			memcpy((void *)p_tx_td->addr, p_buffer, ul_size);
 		}
 		#endif /* ipconfigZERO_COPY_TX_DRIVER */

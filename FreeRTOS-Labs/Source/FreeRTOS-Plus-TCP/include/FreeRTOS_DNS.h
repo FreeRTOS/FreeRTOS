@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS+TCP V2.2.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -84,12 +84,12 @@ uint32_t ulDNSHandlePacket( NetworkBufferDescriptor_t *pxNetworkBuffer );
 
 #if( ipconfigUSE_DNS_CACHE != 0 )
 
-	/* Look for the indicated host name in the DNS cache. Returns the IPv4 
-	address if present, or 0x0 otherwise. */
+    /* Look for the indicated host name in the DNS cache. Returns the IPv4 
+    address if present, or 0x0 otherwise. */
 	uint32_t FreeRTOS_dnslookup( const char *pcHostName );
 
-	/* Remove all entries from the DNS cache. */
-	void FreeRTOS_dnsclear();
+    /* Remove all entries from the DNS cache. */
+    void FreeRTOS_dnsclear();
 #endif /* ipconfigUSE_DNS_CACHE != 0 */
 
 #if( ipconfigDNS_USE_CALLBACKS != 0 )

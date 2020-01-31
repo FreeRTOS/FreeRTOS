@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS+TCP V2.2.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -47,7 +47,7 @@ UBaseType_t uxGetMinimumFreeNetworkBuffers( void );
 
 /* Copy a network buffer into a bigger buffer. */
 NetworkBufferDescriptor_t *pxDuplicateNetworkBufferWithDescriptor( NetworkBufferDescriptor_t * const pxNetworkBuffer,
-	BaseType_t xNewLength);
+	size_t uxNewLength);
 
 /* Increase the size of a Network Buffer.
 In case BufferAllocation_2.c is used, the new space must be allocated. */

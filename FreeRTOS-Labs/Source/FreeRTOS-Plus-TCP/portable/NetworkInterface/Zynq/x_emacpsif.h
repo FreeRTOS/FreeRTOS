@@ -35,6 +35,7 @@ extern "C" {
 #include "xil_exception.h"
 #include "xpseudo_asm.h"
 #include "xil_cache.h"
+#include "xil_printf.h"
 #include "xuartps.h"
 #include "xscugic.h"
 #include "xemacps.h"		/* defines XEmacPs API */

@@ -44,6 +44,14 @@
 #define __STM32F4xx_HAL_ETH_H
 #define __STM32F7xx_HAL_ETH_H
 
+#if defined(STM32F7xx)
+	#include "stm32f7xx_hal_def.h"
+#elif defined(STM32F407xx) || defined(STM32F417xx) || defined(STM32F427xx) || defined(STM32F437xx) || defined(STM32F429xx) || defined(STM32F439xx)
+	#include "stm32f4xx_hal_def.h"
+#elif defined(STM32F2xx)
+	#include "stm32f2xx_hal_def.h"
+#endif
+
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -366,6 +374,33 @@
  /**
   * @}
   */
+
+#ifdef _lint
+	#ifdef __IO
+		#undef __IO
+	#endif
+	#define __IO
+
+	#ifdef ETH_TypeDef
+		#undef ETH_TypeDef
+	#endif
+	#define ETH_TypeDef	void
+
+	#ifdef HAL_LockTypeDef
+		#undef HAL_LockTypeDef
+	#endif
+	#define HAL_LockTypeDef	unsigned
+
+	#ifdef ETH_RX_BUF_SIZE
+		#undef ETH_RX_BUF_SIZE
+	#endif
+	#define ETH_RX_BUF_SIZE	1536
+
+	#ifdef ETH_TX_BUF_SIZE
+		#undef ETH_TX_BUF_SIZE
+	#endif
+	#define ETH_TX_BUF_SIZE	1536
+#endif
 
 /* Exported types ------------------------------------------------------------*/
 /** @defgroup ETH_Exported_Types ETH Exported Types
@@ -1244,33 +1279,37 @@ typedef struct
 /** @defgroup ETH_MAC_Debug_flags ETH MAC Debug flags
   * @{
   */
-#define ETH_MAC_TXFIFO_FULL          ((uint32_t)0x02000000)  /* Tx FIFO full */
-#define ETH_MAC_TXFIFONOT_EMPTY      ((uint32_t)0x01000000)  /* Tx FIFO not empty */
-#define ETH_MAC_TXFIFO_WRITE_ACTIVE  ((uint32_t)0x00400000)  /* Tx FIFO write active */
-#define ETH_MAC_TXFIFO_IDLE     ((uint32_t)0x00000000)  /* Tx FIFO read status: Idle */
-#define ETH_MAC_TXFIFO_READ     ((uint32_t)0x00100000)  /* Tx FIFO read status: Read (transferring data to the MAC transmitter) */
-#define ETH_MAC_TXFIFO_WAITING  ((uint32_t)0x00200000)  /* Tx FIFO read status: Waiting for TxStatus from MAC transmitter */
-#define ETH_MAC_TXFIFO_WRITING  ((uint32_t)0x00300000)  /* Tx FIFO read status: Writing the received TxStatus or flushing the TxFIFO */
-#define ETH_MAC_TRANSMISSION_PAUSE     ((uint32_t)0x00080000)  /* MAC transmitter in pause */
-#define ETH_MAC_TRANSMITFRAMECONTROLLER_IDLE            ((uint32_t)0x00000000)  /* MAC transmit frame controller: Idle */
-#define ETH_MAC_TRANSMITFRAMECONTROLLER_WAITING         ((uint32_t)0x00020000)  /* MAC transmit frame controller: Waiting for Status of previous frame or IFG/backoff period to be over */
-#define ETH_MAC_TRANSMITFRAMECONTROLLER_GENRATING_PCF   ((uint32_t)0x00040000)  /* MAC transmit frame controller: Generating and transmitting a Pause control frame (in full duplex mode) */
-#define ETH_MAC_TRANSMITFRAMECONTROLLER_TRANSFERRING    ((uint32_t)0x00060000)  /* MAC transmit frame controller: Transferring input frame for transmission */
-#define ETH_MAC_MII_TRANSMIT_ACTIVE      ((uint32_t)0x00010000)  /* MAC MII transmit engine active */
-#define ETH_MAC_RXFIFO_EMPTY             ((uint32_t)0x00000000)  /* Rx FIFO fill level: empty */
-#define ETH_MAC_RXFIFO_BELOW_THRESHOLD   ((uint32_t)0x00000100)  /* Rx FIFO fill level: fill-level below flow-control de-activate threshold */
-#define ETH_MAC_RXFIFO_ABOVE_THRESHOLD   ((uint32_t)0x00000200)  /* Rx FIFO fill level: fill-level above flow-control activate threshold */
-#define ETH_MAC_RXFIFO_FULL              ((uint32_t)0x00000300)  /* Rx FIFO fill level: full */
-#define ETH_MAC_READCONTROLLER_IDLE            ((uint32_t)0x00000060)  /* Rx FIFO read controller IDLE state */
-#define ETH_MAC_READCONTROLLER_READING_DATA    ((uint32_t)0x00000060)  /* Rx FIFO read controller Reading frame data */
-#define ETH_MAC_READCONTROLLER_READING_STATUS  ((uint32_t)0x00000060)  /* Rx FIFO read controller Reading frame status (or time-stamp) */
-#define ETH_MAC_READCONTROLLER_ FLUSHING       ((uint32_t)0x00000060)  /* Rx FIFO read controller Flushing the frame data and status */
-#define ETH_MAC_RXFIFO_WRITE_ACTIVE     ((uint32_t)0x00000010)  /* Rx FIFO write controller active */
-#define ETH_MAC_SMALL_FIFO_NOTACTIVE    ((uint32_t)0x00000000)  /* MAC small FIFO read / write controllers not active */
-#define ETH_MAC_SMALL_FIFO_READ_ACTIVE  ((uint32_t)0x00000002)  /* MAC small FIFO read controller active */
-#define ETH_MAC_SMALL_FIFO_WRITE_ACTIVE ((uint32_t)0x00000004)  /* MAC small FIFO write controller active */
-#define ETH_MAC_SMALL_FIFO_RW_ACTIVE    ((uint32_t)0x00000006)  /* MAC small FIFO read / write controllers active */
-#define ETH_MAC_MII_RECEIVE_PROTOCOL_ACTIVE   ((uint32_t)0x00000001)  /* MAC MII receive protocol engine active */
+#ifndef ETH_MAC_TXFIFO_FULL
+	#define ETH_MAC_TXFIFO_FULL          ((uint32_t)0x02000000)  /* Tx FIFO full */
+	#define ETH_MAC_TXFIFONOT_EMPTY      ((uint32_t)0x01000000)  /* Tx FIFO not empty */
+	#define ETH_MAC_TXFIFO_WRITE_ACTIVE  ((uint32_t)0x00400000)  /* Tx FIFO write active */
+	#define ETH_MAC_TXFIFO_IDLE     ((uint32_t)0x00000000)  /* Tx FIFO read status: Idle */
+	#define ETH_MAC_TXFIFO_READ     ((uint32_t)0x00100000)  /* Tx FIFO read status: Read (transferring data to the MAC transmitter) */
+	#define ETH_MAC_TXFIFO_WAITING  ((uint32_t)0x00200000)  /* Tx FIFO read status: Waiting for TxStatus from MAC transmitter */
+	#define ETH_MAC_TXFIFO_WRITING  ((uint32_t)0x00300000)  /* Tx FIFO read status: Writing the received TxStatus or flushing the TxFIFO */
+	#define ETH_MAC_TRANSMISSION_PAUSE     ((uint32_t)0x00080000)  /* MAC transmitter in pause */
+	#define ETH_MAC_TRANSMITFRAMECONTROLLER_IDLE            ((uint32_t)0x00000000)  /* MAC transmit frame controller: Idle */
+	#define ETH_MAC_TRANSMITFRAMECONTROLLER_WAITING         ((uint32_t)0x00020000)  /* MAC transmit frame controller: Waiting for Status of previous frame or IFG/backoff period to be over */
+	#define ETH_MAC_TRANSMITFRAMECONTROLLER_GENRATING_PCF   ((uint32_t)0x00040000)  /* MAC transmit frame controller: Generating and transmitting a Pause control frame (in full duplex mode) */
+	#define ETH_MAC_TRANSMITFRAMECONTROLLER_TRANSFERRING    ((uint32_t)0x00060000)  /* MAC transmit frame controller: Transferring input frame for transmission */
+	#define ETH_MAC_MII_TRANSMIT_ACTIVE      ((uint32_t)0x00010000)  /* MAC MII transmit engine active */
+	#define ETH_MAC_RXFIFO_EMPTY             ((uint32_t)0x00000000)  /* Rx FIFO fill level: empty */
+	#define ETH_MAC_RXFIFO_BELOW_THRESHOLD   ((uint32_t)0x00000100)  /* Rx FIFO fill level: fill-level below flow-control de-activate threshold */
+	#define ETH_MAC_RXFIFO_ABOVE_THRESHOLD   ((uint32_t)0x00000200)  /* Rx FIFO fill level: fill-level above flow-control activate threshold */
+	#define ETH_MAC_RXFIFO_FULL              ((uint32_t)0x00000300)  /* Rx FIFO fill level: full */
+	#define ETH_MAC_READCONTROLLER_IDLE            ((uint32_t)0x00000060)  /* Rx FIFO read controller IDLE state */
+	#define ETH_MAC_READCONTROLLER_READING_DATA    ((uint32_t)0x00000060)  /* Rx FIFO read controller Reading frame data */
+	#define ETH_MAC_READCONTROLLER_READING_STATUS  ((uint32_t)0x00000060)  /* Rx FIFO read controller Reading frame status (or time-stamp) */
+	#define ETH_MAC_READCONTROLLER_ FLUSHING       ((uint32_t)0x00000060)  /* Rx FIFO read controller Flushing the frame data and status */
+	#define ETH_MAC_RXFIFO_WRITE_ACTIVE     ((uint32_t)0x00000010)  /* Rx FIFO write controller active */
+	#define ETH_MAC_SMALL_FIFO_NOTACTIVE    ((uint32_t)0x00000000)  /* MAC small FIFO read / write controllers not active */
+	#define ETH_MAC_SMALL_FIFO_READ_ACTIVE  ((uint32_t)0x00000002)  /* MAC small FIFO read controller active */
+	#define ETH_MAC_SMALL_FIFO_WRITE_ACTIVE ((uint32_t)0x00000004)  /* MAC small FIFO write controller active */
+	#define ETH_MAC_SMALL_FIFO_RW_ACTIVE    ((uint32_t)0x00000006)  /* MAC small FIFO read / write controllers active */
+	#define ETH_MAC_MII_RECEIVE_PROTOCOL_ACTIVE   ((uint32_t)0x00000001)  /* MAC MII receive protocol engine active */
+#else
+	/* stm32_hal_legacy.h has probably been included. That file defines 'ETH_MAC_TXFIFO_FULL' and all macro's here below. */
+#endif
 /**
   * @}
   */

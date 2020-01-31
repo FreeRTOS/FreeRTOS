@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS+TCP V2.2.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -169,6 +169,14 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define	ipconfigSOCK_DEFAULT_SEND_BLOCK_TIME	portMAX_DELAY
 #endif
 
+
+#ifndef	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS
+	#define	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS	pdMS_TO_TICKS( 500u )
+#endif
+
+#ifndef	ipconfigDNS_SEND_BLOCK_TIME_TICKS
+	#define	ipconfigDNS_SEND_BLOCK_TIME_TICKS		pdMS_TO_TICKS( 500u )
+#endif
 /*
  * FreeRTOS debug logging routine (proposal)
  * The macro will be called in the printf() style. Users can define
@@ -375,6 +383,14 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#endif /* _WINDOWS_ */
 #endif /* ipconfigMAXIMUM_DISCOVER_TX_PERIOD */
 
+#if( ipconfigUSE_DNS == 0 )
+	/* The DNS module will not be included. */
+	#if( ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) )
+		/* LLMNR and NBNS depend on DNS because those protocols share a lot of code. */
+		#error When either LLMNR or NBNS is used, ipconfigUSE_DNS must be defined
+	#endif
+#endif
+
 #ifndef ipconfigUSE_DNS
 	#define ipconfigUSE_DNS						1
 #endif
@@ -406,13 +422,6 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #ifndef ipconfigUSE_LLMNR
 	/* Include support for LLMNR: Link-local Multicast Name Resolution (non-Microsoft) */
 	#define ipconfigUSE_LLMNR					( 0 )
-#endif
-
-#if( !defined( ipconfigUSE_DNS ) )
-	#if( ( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) )
-		/* LLMNR and NBNS depend on DNS because those protocols share a lot of code. */
-		#error When either LLMNR or NBNS is used, ipconfigUSE_DNS must be defined
-	#endif
 #endif
 
 #ifndef ipconfigREPLY_TO_INCOMING_PINGS
@@ -507,14 +516,6 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigSOCKET_HAS_USER_WAKE_CALLBACK 0
 #endif
 
-#ifndef ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT
-	#define ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT 0
-#endif
-
-#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK != 0 ) && ( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT != 0 )
-	#error ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT cannot be used with ipconfigSOCKET_HAS_USER_WAKE_CALLBACK - undefine one of them
-#endif
-
 #ifndef ipconfigSUPPORT_SELECT_FUNCTION
 	#define ipconfigSUPPORT_SELECT_FUNCTION 0
 #endif
@@ -535,7 +536,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigUSE_NBNS 0
 #endif
 
-/* As an attack surface reduction for ports that listen for inbound
+/* As an attack surface reduction for ports that listen for inbound 
 connections, hang protection can help reduce the impact of SYN floods. */
 #ifndef ipconfigTCP_HANG_PROTECTION
 	#define ipconfigTCP_HANG_PROTECTION  1

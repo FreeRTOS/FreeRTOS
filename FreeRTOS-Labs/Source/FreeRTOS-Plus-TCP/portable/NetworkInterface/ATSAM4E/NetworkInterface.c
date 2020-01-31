@@ -1,28 +1,27 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
- */
+FreeRTOS+TCP V2.0.11
+Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ http://aws.amazon.com/freertos
+ http://www.FreeRTOS.org
+*/
 
 /* Standard includes. */
 #include <stdint.h>
@@ -81,10 +80,6 @@ expansion. */
 
 #if !defined( GMAC_USES_TX_CALLBACK ) || ( GMAC_USES_TX_CALLBACK != 1 )
 	#error Please define GMAC_USES_TX_CALLBACK as 1
-#endif
-
-#if( ipconfigZERO_COPY_RX_DRIVER != 0 )
-	#warning The EMAC of SAM4E has fixed-size RX buffers so ZERO_COPY_RX is not possible
 #endif
 
 /* Default the size of the stack used by the EMAC deferred handler task to 4x
@@ -239,7 +234,7 @@ const TickType_t x5_Seconds = 5000UL;
 		configASSERT( xTXDescriptorSemaphore );
 	}
 	/* When returning non-zero, the stack will become active and
-	start DHCP (in configured) */
+    start DHCP (in configured) */
 	return ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != 0;
 }
 /*-----------------------------------------------------------*/
@@ -418,11 +413,11 @@ const TickType_t xShortTime = pdMS_TO_TICKS( 100UL );
 
 		if ( xProtPacket->xTCPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE )
 		{
-			IPHeader_t *pxIPHeader = &( xProtPacket->xTCPPacket.xIPHeader );
+			IPHeader_t *pxIPHeader = &(xProtPacket->xTCPPacket.xIPHeader);
 
 			/* Calculate the IP header checksum. */
 			pxIPHeader->usHeaderChecksum = 0x00;
-			pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0u, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
+			pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
 			pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
 
 			/* Calculate the TCP checksum for an outgoing packet. */
@@ -504,43 +499,15 @@ static IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
 }
 /*-----------------------------------------------------------*/
 
-void vCheckBuffersAndQueue( void )
-{
-static UBaseType_t uxLastMinBufferCount = 0;
-#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-	static UBaseType_t uxLastMinQueueSpace;
-#endif
-static UBaseType_t uxCurrentCount;
-
-	#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-	{
-		uxCurrentCount = uxGetMinimumIPQueueSpace();
-		if( uxLastMinQueueSpace != uxCurrentCount )
-		{
-			/* The logging produced below may be helpful
-			while tuning +TCP: see how many buffers are in use. */
-			uxLastMinQueueSpace = uxCurrentCount;
-			FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
-		}
-	}
-	#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
-	uxCurrentCount = uxGetMinimumFreeNetworkBuffers();
-	if( uxLastMinBufferCount != uxCurrentCount )
-	{
-		/* The logging produced below may be helpful
-		while tuning +TCP: see how many buffers are in use. */
-		uxLastMinBufferCount = uxCurrentCount;
-		FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
-			uxGetNumberOfFreeNetworkBuffers(), uxCurrentCount ) );
-	}
-
-}
-
 static void prvEMACHandlerTask( void *pvParameters )
 {
 TimeOut_t xPhyTime;
 TickType_t xPhyRemTime;
-UBaseType_t uxCount;
+UBaseType_t uxLastMinBufferCount = 0, uxCount;
+UBaseType_t uxCurrentCount;
+#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+	UBaseType_t uxLastMinQueueSpace;
+#endif
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxBuffer;
 #endif
@@ -559,7 +526,28 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( EMAC_MAX_BLOCK_TIME_MS );
 
 	for( ;; )
 	{
-		vCheckBuffersAndQueue();
+		uxCurrentCount = uxGetMinimumFreeNetworkBuffers();
+		if( uxLastMinBufferCount != uxCurrentCount )
+		{
+			/* The logging produced below may be helpful
+			while tuning +TCP: see how many buffers are in use. */
+			uxLastMinBufferCount = uxCurrentCount;
+			FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
+				uxGetNumberOfFreeNetworkBuffers(), uxCurrentCount ) );
+		}
+
+		#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+		{
+			uxCurrentCount = uxGetMinimumIPQueueSpace();
+			if( uxLastMinQueueSpace != uxCurrentCount )
+			{
+				/* The logging produced below may be helpful
+				while tuning +TCP: see how many buffers are in use. */
+				uxLastMinQueueSpace = uxCurrentCount;
+				FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
+			}
+		}
+		#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
 
 		if( ( ulISREvents & EMAC_IF_ALL_EVENT ) == 0 )
 		{

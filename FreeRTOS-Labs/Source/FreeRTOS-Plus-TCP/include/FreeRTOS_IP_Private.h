@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS+TCP V2.2.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -39,10 +39,6 @@ extern "C" {
 #if( ipconfigUSE_TCP == 1 )
 	#include "FreeRTOS_TCP_WIN.h"
 	#include "FreeRTOS_TCP_IP.h"
-#endif
-
-#if( ipconfigSOCKET_HAS_USER_SEMAPHORE == 1 )
-	#include "semphr.h"
 #endif
 
 #include "event_groups.h"
@@ -248,16 +244,17 @@ typedef enum
 	eNoEvent = -1,
 	eNetworkDownEvent,		/* 0: The network interface has been lost and/or needs [re]connecting. */
 	eNetworkRxEvent,		/* 1: The network interface has queued a received Ethernet frame. */
-	eARPTimerEvent,			/* 2: The ARP timer expired. */
-	eStackTxEvent,			/* 3: The software stack has queued a packet to transmit. */
-	eDHCPEvent,				/* 4: Process the DHCP state machine. */
-	eTCPTimerEvent,			/* 5: See if any TCP socket needs attention. */
-	eTCPAcceptEvent,		/* 6: Client API FreeRTOS_accept() waiting for client connections. */
-	eTCPNetStat,			/* 7: IP-task is asked to produce a netstat listing. */
-	eSocketBindEvent,		/* 8: Send a message to the IP-task to bind a socket to a port. */
-	eSocketCloseEvent,		/* 9: Send a message to the IP-task to close a socket. */
-	eSocketSelectEvent,		/*10: Send a message to the IP-task for select(). */
-	eSocketSignalEvent,		/*11: A socket must be signalled. */
+	eNetworkTxEvent,		/* 2: Let the IP-task send a network packet. */
+	eARPTimerEvent,			/* 3: The ARP timer expired. */
+	eStackTxEvent,			/* 4: The software stack has queued a packet to transmit. */
+	eDHCPEvent,				/* 5: Process the DHCP state machine. */
+	eTCPTimerEvent,			/* 6: See if any TCP socket needs attention. */
+	eTCPAcceptEvent,		/* 7: Client API FreeRTOS_accept() waiting for client connections. */
+	eTCPNetStat,			/* 8: IP-task is asked to produce a netstat listing. */
+	eSocketBindEvent,		/* 9: Send a message to the IP-task to bind a socket to a port. */
+	eSocketCloseEvent,		/*10: Send a message to the IP-task to close a socket. */
+	eSocketSelectEvent,		/*11: Send a message to the IP-task for select(). */
+	eSocketSignalEvent,		/*12: A socket must be signalled. */
 } eIPEvent_t;
 
 typedef struct IP_TASK_COMMANDS
@@ -441,15 +438,15 @@ uint16_t usGenerateChecksum( uint32_t ulSum, const uint8_t * pucNextData, size_t
 
 /* Socket related private functions. */
 
-/*
- * The caller must ensure that pxNetworkBuffer->xDataLength is the UDP packet
- * payload size (excluding packet headers) and that the packet in pucEthernetBuffer
- * is at least the size of UDPPacket_t.
+/* 
+ * The caller must ensure that pxNetworkBuffer->xDataLength is the UDP packet 
+ * payload size (excluding packet headers) and that the packet in pucEthernetBuffer 
+ * is at least the size of UDPPacket_t. 
  */
 BaseType_t xProcessReceivedUDPPacket( NetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort );
 
 /*
- * Initialize the socket list data structures for TCP and UDP.
+ * Initialize the socket list data structures for TCP and UDP. 
  */
 BaseType_t vNetworkSocketsInit( void );
 
@@ -460,13 +457,8 @@ BaseType_t vNetworkSocketsInit( void );
 BaseType_t xIPIsNetworkTaskReady( void );
 
 #if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 )
-	struct XSOCKET;
-	typedef void (*SocketWakeupCallback_t)( struct XSOCKET * pxSocket );
-#endif
-
-#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT == 1 )
-	struct XSOCKET;
-	typedef void( *SocketWakeupCallback_t )( struct XSOCKET * pxSocket, void * pvContext );
+	struct xSOCKET;
+	typedef void (*SocketWakeupCallback_t)( struct xSOCKET * pxSocket );
 #endif
 
 #if( ipconfigUSE_TCP == 1 )
@@ -553,7 +545,7 @@ BaseType_t xIPIsNetworkTaskReady( void );
 								 * This counter is separate from the xmitCount in the
 								 * TCP win segments */
 		uint8_t ucTCPState;		/* TCP state: see eTCP_STATE */
-		struct XSOCKET *pxPeerSocket;	/* for server socket: child, for child socket: parent */
+		struct xSOCKET *pxPeerSocket;	/* for server socket: child, for child socket: parent */
 		#if( ipconfigTCP_KEEP_ALIVE == 1 )
 			uint8_t ucKeepRepCount;
 			TickType_t xLastAliveTime;
@@ -620,7 +612,7 @@ typedef enum eSOCKET_EVENT {
 	eSOCKET_ALL		= 0x007F,
 } eSocketEvent_t;
 
-typedef struct XSOCKET
+typedef struct xSOCKET
 {
 	EventBits_t xEventBits;
 	EventGroupHandle_t xEventGroup;
@@ -635,12 +627,9 @@ typedef struct XSOCKET
 	#if( ipconfigSOCKET_HAS_USER_SEMAPHORE == 1 )
 		SemaphoreHandle_t pxUserSemaphore;
 	#endif /* ipconfigSOCKET_HAS_USER_SEMAPHORE */
-	#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 ) || ( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT == 1 )
+	#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 )
 		SocketWakeupCallback_t pxUserWakeCallback;
 	#endif /* ipconfigSOCKET_HAS_USER_WAKE_CALLBACK */
-	#if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT == 1 )
-		void * pvUserWakeCallbackContext;
-	#endif /* ipconfigSOCKET_HAS_USER_WAKE_CALLBACK_WITH_CONTEXT */
 
 	#if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
 		struct xSOCKET_SET *pxSocketSet;
@@ -823,3 +812,16 @@ void vIPNetworkUpCalls( void );
 #endif
 
 #endif /* FREERTOS_IP_PRIVATE_H */
+
+
+
+
+
+
+
+
+
+
+
+
+

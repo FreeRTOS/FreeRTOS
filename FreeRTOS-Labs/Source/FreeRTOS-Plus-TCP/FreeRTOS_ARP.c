@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP 191100 experimental
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS+TCP V2.2.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -580,14 +580,36 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 			}
 		}
 		#endif
+		if( xIsCallingFromIPTask() != 0 )
+		{
+			/* Only the IP-task is allowed to call this function directly. */
+			xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
+		}
+		else
+		{
+		IPStackEvent_t xSendEvent;
 
-		xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
+			/* Send a message to the IP-task to send this ARP packet. */
+			xSendEvent.eEventType = eNetworkTxEvent;
+			xSendEvent.pvData = ( void * ) pxNetworkBuffer;
+			if( xSendEventStructToIPTask( &xSendEvent, ( TickType_t ) portMAX_DELAY ) == pdFAIL )
+			{
+				/* Failed to send the message, so release the network buffer. */
+				vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
+			}
+		}
 	}
 }
 
 void vARPGenerateRequestPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 ARPPacket_t *pxARPPacket;
+
+	/* Buffer allocation ensures that buffers always have space
+	for an ARP packet. See buffer allocation implementations 1
+	and 2 under portable/BufferManagement. */
+	configASSERT( pxNetworkBuffer );
+	configASSERT( pxNetworkBuffer->xDataLength >= sizeof(ARPPacket_t) );
 
 	pxARPPacket = ( ARPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer;
 

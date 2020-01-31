@@ -22,25 +22,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Zynq/x_emacpsif.h"
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 
+///* FreeRTOS+TCP includes. */
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 #include "NetworkBufferManagement.h"
-#include "NetworkInterface.h"
-
-#include "Zynq/x_emacpsif.h"
 
 extern TaskHandle_t xEMACTaskHandle;
 
 /*** IMPORTANT: Define PEEP in xemacpsif.h and sys_arch_raw.c
  *** to run it on a PEEP board
  ***/
+
+unsigned int link_speed = 100;
 
 void setup_isr( xemacpsif_s *xemacpsif )
 {
@@ -139,6 +141,8 @@ int xResult;
 	return xResult;
 }
 
+BaseType_t xNetworkInterfaceInitialise( void );
+
 static void emacps_handle_error(void *arg, u8 Direction, u32 ErrorWord)
 {
 	xemacpsif_s   *xemacpsif;
@@ -213,6 +217,8 @@ static void emacps_handle_error(void *arg, u8 Direction, u32 ErrorWord)
 		FreeRTOS_printf( ( "emacps_handle_error: %s\n", last_err_msg ) );
 	}
 }
+
+extern XEmacPs_Config mac_config;
 
 void HandleTxErrors(xemacpsif_s *xemacpsif)
 {

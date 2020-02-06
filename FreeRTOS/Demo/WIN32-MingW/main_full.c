@@ -627,8 +627,8 @@ static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
 TaskStatus_t xTaskInfo;
 extern StackType_t uxTimerTaskStack[];
-static TickType_t xLastIdleExecutionTime = 0;
-TickType_t xIdleExecutionTime;
+static uint32_t ulLastIdleExecutionTime = 0;
+uint32_t ulIdleExecutionTime;
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -728,12 +728,12 @@ TickType_t xIdleExecutionTime;
 		}
 	}
 
-	xIdleExecutionTime = xTaskGetIdleRunTimeCounter();
-	if( xIdleExecutionTime == xLastIdleExecutionTime )
+	ulIdleExecutionTime = ulTaskGetIdleRunTimeCounter();
+	if( ulIdleExecutionTime == ulLastIdleExecutionTime )
 	{
 		pcStatusMessage = "Error: Total amount of Idle task execution time did not change";
 	}
-	xLastIdleExecutionTime = xIdleExecutionTime;
+	ulLastIdleExecutionTime = ulIdleExecutionTime;
 }
 /*-----------------------------------------------------------*/
 

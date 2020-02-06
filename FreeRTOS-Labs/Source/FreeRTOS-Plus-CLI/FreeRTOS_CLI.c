@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+CLI V1.0.4
+ * FreeRTOS+CLI V1.0.x Labs copy
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of

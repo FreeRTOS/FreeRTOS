@@ -831,6 +831,11 @@ void vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xT
  * task will leave the Blocked state, and return from whichever function call
  * placed the task into the Blocked state.
  *
+ * There is no 'FromISR' version of this function as an interrupt would need to
+ * know which object a task was blocked on in order to know which actions to
+ * take.  For example, if the task was blocked on a queue the interrupt handler
+ * would then need to know if the queue was locked.
+ *
  * @param xTask The handle of the task to remove from the Blocked state.
  *
  * @return If the task referenced by xTask was not in the Blocked state then
@@ -840,39 +845,6 @@ void vTaskDelayUntil( TickType_t * const pxPreviousWakeTime, const TickType_t xT
  * \ingroup TaskCtrl
  */
 BaseType_t xTaskAbortDelay( TaskHandle_t xTask ) PRIVILEGED_FUNCTION;
-
-/**
-* task. h
-* <pre>BaseType_t xTaskAbortDelayFromISR( TaskHandle_t xTask, BaseType_t * const pxHigherPriorityTaskWoken )</pre>
-*
-* INCLUDE_xTaskAbortDelay must be defined as 1 in FreeRTOSConfig.h for this
-* function to be available.
-*
-* A version of xTaskAbortDelay() that can be used from an interrupt service routine.
-*
-* A task will enter the Blocked state when it is waiting for an event.  The
-* event it is waiting for can be a temporal event (waiting for a time), such
-* as when vTaskDelay() is called, or an event on an object, such as when
-* xQueueReceive() or ulTaskNotifyTake() is called.  If the handle of a task
-* that is in the Blocked state is used in a call to xTaskAbortDelay() then the
-* task will leave the Blocked state, and return from whichever function call
-* placed the task into the Blocked state.
-*
-* @param xTask The handle of the task to remove from the Blocked state.
-*
-* @param pxHigherPriorityTaskWoken xTaskAbortDelayFromISR() will set
-* *pxHigherPriorityTaskWoken to pdTRUE if a task was removed from the Blocked state,
-* and the task that was removed from the Blocked state has a priority higher than the
-* currently running task.  If xTaskAbortDelayFromISR() sets this value to pdTRUE then
-* a context switch should be requested before the interrupt is exited.
-*
-* @return If the task referenced by xTask was not in the Blocked state then
-* pdFAIL is returned.  Otherwise pdPASS is returned.
-*
-* \defgroup xTaskAbortDelay xTaskAbortDelayFromISR
-* \ingroup TaskCtrl
-*/
-BaseType_t xTaskAbortDelayFromISR( TaskHandle_t xTask, BaseType_t * const pxHigherPriorityTaskWoken ) PRIVILEGED_FUNCTION;
 
 /**
  * task. h

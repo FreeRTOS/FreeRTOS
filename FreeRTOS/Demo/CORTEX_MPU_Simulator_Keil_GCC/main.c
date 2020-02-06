@@ -778,7 +778,7 @@ static void prvTaskToDelete( void *pvParameters )
 	configASSERT( uxTaskGetStackHighWaterMark2( NULL ) > 0 );
 	/* Run time stats are not being gathered - this is just to exercise
 	API. */
-	configASSERT( xTaskGetIdleRunTimeCounter() == 0 ); 
+	configASSERT( ulTaskGetIdleRunTimeCounter() == 0 ); 
 	vTaskSuspend( NULL );
 }
 /*-----------------------------------------------------------*/

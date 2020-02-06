@@ -26,11 +26,13 @@ Changes since the last release:
 	  ports.
 	+ Updated the behaviour of the ARMv7-M MPU (Memory Protection Unit) ports to
 	  match that of the ARMv8-M ports whereby privilege escalations can only
-	  originate from within the kernel's own memory segment.
+	  originate from within the kernel's own memory segment.  Added
+	  configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY configuration constant.
+	+  Update existing MPU ports to correctly disable the MPU before it is
+	   updated.
 	+ Added LPC51U68 Cortex-M0+ port for GCC (MCUXpresso), Keil and IAR
 	  compilers.
 	+ Added CORTEX_MPU_STM32L4_Discovery_Keil_STM32Cube demo.
-	+ Added xTaskAbortDelayFromISR() API function.
 	+ Added xTaskNotifyValueClear() API function.
 	+ Improve timing accuracy (reduce clock slippage when compared to real time)
 	  in the Windows simulator port by using a waitable timer to determine the
@@ -38,6 +40,8 @@ Changes since the last release:
 	+ Added T-Head demo.
 	+ Added LPC54018 MPU demo.
 	+ Added uxTimerGetReloadMode() API function.
+	+ Rename xTaskGetIdleRunTimeCounter() to ulTaskGetIdleRunTimeCounter().
+	+ Added RISC-V port for IAR compiler.
 
 
 Changes between FreeRTOS V10.2.1 and FreeRTOS V10.2.0 released May 13 2019:

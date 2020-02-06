@@ -85,8 +85,9 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#define configCLINT_BASE_ADDRESS		0 /* There is no CLINT so the base address must be set to 0. */
-
+/* See https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html */
+#define configMTIME_BASE_ADDRESS 	( 0 )
+#define configMTIMECMP_BASE_ADDRESS ( 0 )
 
 
 #define configUSE_PREEMPTION			1

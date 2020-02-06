@@ -74,7 +74,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -83,6 +83,7 @@ or 0 to run the more comprehensive test and demo application. */
 #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
 	extern void main_blinky( void );
 #else
+	#warning At the time of writing the QEMU MTIME behaviour is erratic, resulting in test failures.
 	extern void main_full( void );
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 

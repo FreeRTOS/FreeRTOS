@@ -371,3 +371,14 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 	return uxRand();
 }
 
+/*
+ * Supply a random number to FreeRTOS+TCP stack. 
+ * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER 
+ * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
+ */
+BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
+{
+	*(pulNumber) = uxRand();
+	return pdTRUE;
+}
+

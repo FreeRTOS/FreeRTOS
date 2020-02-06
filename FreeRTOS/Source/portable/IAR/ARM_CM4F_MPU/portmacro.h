@@ -246,7 +246,7 @@ extern void vResetPrivilege( void );
 /*-----------------------------------------------------------*/
 
 #ifndef configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY
-	#warning "configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY is not defined. We recommend defining it to 1 in FreeRTOSConfig.h for better security."
+	#warning "configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY is not defined. We recommend defining it to 1 in FreeRTOSConfig.h for better security. https://www.freertos.org/FreeRTOS-V10.3.x.html"
 	#define configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY 0
 #endif
 /*-----------------------------------------------------------*/

@@ -74,6 +74,11 @@
 #include "hw_platform.h"
 #include "riscv_plic.h"
 
+/* See https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html */
+#define configMTIME_BASE_ADDRESS 	( ( PRCI_BASE ) + 0xBFF8UL )
+#define configMTIMECMP_BASE_ADDRESS ( ( PRCI_BASE ) + 0x4000UL )
+
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -85,7 +90,7 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-#define configCLINT_BASE_ADDRESS		PRCI_BASE
+
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1

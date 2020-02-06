@@ -48,12 +48,14 @@
 /**
  * @brief The timeout for MQTT operations in this example.
  */
-#define mqttexampleMQTT_TIMEOUT_MS			( 5000 )
+#define mqttexampleMQTT_TIMEOUT_MS			( 50000 )
 
 /**
  * @brief The MQTT client identifier used in this example.
  */
 #define mqttexampleCLIENT_IDENTIFIER		"mqttexampleclient"
+
+const char *pcClientIdentifiers[] = { "AAA" };//, "BBB", "CCC", "DDD", "EEE", "FFF", "GGG", "HHH", "III", "JJJ" };
 
 /**
  * @brief Details of the MQTT broker to connect to.
@@ -96,11 +98,6 @@
  */
 #define mqttexampleMESSAGE_RECEIVED_BIT		( 1UL << 1UL )
 /*-----------------------------------------------------------*/
-
-/**
- * @brief The MQTT connection handle used in this example.
- */
-static IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
 
 /**
  * @brief Parameters used to create the system task pool.
@@ -167,28 +164,28 @@ static void prvExample_OnMessageReceived( void * pvCallbackContext,
  *
  * @note This example does not use TLS and therefore will not work with MQTT.
  */
-static void prvMQTTConnect( void );
+static void prvMQTTConnect( IotMqttConnection_t *xMQTTConnection, const char *pcClientID );
 
 /**
- * @brief Subscribes to the topic as specified in mqttexampleTOPIC.
+ * @brief Subscribes to pcTopicString.
  */
-static void prvMQTTSubscribe( void );
+static void prvMQTTSubscribe( IotMqttConnection_t xMQTTConnection, const char * const pcTopicString );
 
 /**
  * @brief Publishes a messages mqttexampleMESSAGE on mqttexampleTOPIC topic.
  */
-static void prvMQTTPublish( void );
+static void prvMQTTPublish( IotMqttConnection_t xMQTTConnection, const char * const pcTopicString );
 
 /**
  * @brief Unsubscribes from the mqttexampleTOPIC topic.
  */
-static void prvMQTTUnsubscribe( void );
+static void prvMQTTUnsubscribe( IotMqttConnection_t xMQTTConnection, const char * const pcTopicString );
 
 /**
  * @brief Disconnects from the MQTT broker gracefully by sending an MQTT
  * DISCONNECT message.
  */
-static void prvMQTTDisconnect( void );
+static void prvMQTTDisconnect( IotMqttConnection_t xMQTTConnection );
 /*-----------------------------------------------------------*/
 
 static void prvExample_OnDisconnect( void * pvCallbackContext,
@@ -213,10 +210,10 @@ static void prvExample_OnMessageReceived( void * pvCallbackContext,
 TaskHandle_t xDemoTaskHandle = ( TaskHandle_t ) pvCallbackContext;
 
 	/* Ensure that the message is received on the expected topic. */
-	configASSERT( pxCallbackParams->u.message.info.topicNameLength == strlen( mqttexampleTOPIC ) );
-	configASSERT( strncmp( pxCallbackParams->u.message.info.pTopicName,
-						   mqttexampleTOPIC,
-						   strlen( mqttexampleTOPIC ) ) == 0 );
+//	configASSERT( pxCallbackParams->u.message.info.topicNameLength == strlen( mqttexampleTOPIC ) );
+//	configASSERT( strncmp( pxCallbackParams->u.message.info.pTopicName,
+//						   mqttexampleTOPIC,
+//						   strlen( mqttexampleTOPIC ) ) == 0 );
 
 	/* Ensure that the expected message is received. */
 	configASSERT( pxCallbackParams->u.message.info.payloadLength == strlen( mqttexampleMESSAGE ) );
@@ -243,15 +240,21 @@ TaskHandle_t xDemoTaskHandle = ( TaskHandle_t ) pvCallbackContext;
 
 void vStartSimpleMQTTDemo( void )
 {
+uint32_t x;
+const uint32_t ulMax_x = sizeof( pcClientIdentifiers ) / sizeof( char * );
+
 	/* This example uses a single application task, which in turn is used to
 	 * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
 	 * broker. */
+for( x = 0; x < ulMax_x; x++ )
+{
 	xTaskCreate( prvMQTTDemoTask,			/* Function that implements the task. */
 				 "MQTTDemo",				/* Text name for the task - only used for debugging. */
 				 configMINIMAL_STACK_SIZE,	/* Size of stack (in words, not bytes) to allocate for the task. */
-				 NULL,						/* Task parameter - not used in this case. */
+				 ( void * ) x,						/* Task parameter - not used in this case. */
 				 tskIDLE_PRIORITY,			/* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
 				 NULL );					/* Used to pass out a handle to the created task - not used in this case. */
+}
 }
 /*-----------------------------------------------------------*/
 
@@ -259,8 +262,12 @@ static void prvMQTTDemoTask( void *pvParameters )
 {
 IotMqttError_t xResult;
 uint32_t ulNotificationValue = 0, ulPublishCount;
-const uint32_t ulMaxPublishCount = 5UL;
-const TickType_t xNoDelay = ( TickType_t ) 0;
+uint32_t ulMaxPublishCount = 0UL;
+const TickType_t xNoDelay = ( TickType_t ) 1;
+IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
+uint32_t ulTaskNumber = ( uint32_t ) pvParameters, x;
+char cTopicString[ sizeof( mqttexampleTOPIC ) + 5 ];//_RB_ Access by other tasks so must be persistant and will cause memory faults on memory protected systems.
+#pragma message ("Access by other tasks so must be persistant and will cause memory faults on memory protected systems.")
 
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
@@ -274,10 +281,15 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 	xResult = IotMqtt_Init();
 	configASSERT( xResult == IOT_MQTT_SUCCESS );
 
+	/* Create a topic string that is unique to the MQTT connection created by
+	this task. */
+	snprintf( cTopicString, sizeof( cTopicString ), "%s/%s", mqttexampleTOPIC, pcClientIdentifiers[ ulTaskNumber ] );
+
 	for( ; ; )
 	{
 		/* Don't expect any notifications to be pending yet. */
-		configASSERT( ulTaskNotifyTake( pdTRUE, xNoDelay ) == 0 );
+		ulNotificationValue = ulTaskNotifyTake( pdTRUE, xNoDelay );
+		configASSERT( ulNotificationValue == 0 );
 
 
 		/****************************** Connect. ******************************/
@@ -287,7 +299,7 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 		 * mqttexampleMQTT_BROKER_PORT at the top of this file. Please change
 		 * it to the MQTT broker you want to connect to. Note that this example
 		 * does not use TLS and therefore will not work with AWS IoT. */
-		prvMQTTConnect();
+		prvMQTTConnect( &xMQTTConnection, pcClientIdentifiers[ ulTaskNumber ] );
 		configPRINTF( ( "Connected to %s\r\n", mqttexampleMQTT_BROKER_ENDPOINT ) );
 
 
@@ -298,19 +310,28 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 		 * client will then publish to the same topic it subscribed to, so will
 		 * expect all the messages it sends to the broker to be sent back to it
 		 * from the broker. */
-		prvMQTTSubscribe();
-		configPRINTF( ( "Subscribed to the topic %s\r\n", mqttexampleTOPIC ) );
+		prvMQTTSubscribe( xMQTTConnection, cTopicString );
+		configPRINTF( ( "Subscribed to the topic %s\r\n", cTopicString ) );
 
 
 		/*********************** Publish 5 messages. **************************/
 
 		/* Publish a few messages while connected. */
+		for( x = 0; x < ( ulTaskNumber + 1UL ); x++ )
+		{
+			ulMaxPublishCount = uxRand();
+		}
+
+		/* Cap ulMaxPublishCount but ensure it is not zero. */
+		ulMaxPublishCount %= 10UL;
+		ulMaxPublishCount++;
+
 		for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
 		{
 			/* Publish a message on the mqttexampleTOPIC topic as specified at
 			 * the top of this file. */
-			prvMQTTPublish();
-			configPRINTF( ( "Published %s on the topic %s\r\n", mqttexampleMESSAGE, mqttexampleTOPIC ) );
+			prvMQTTPublish( xMQTTConnection, cTopicString );
+			configPRINTF( ( "Published %s on the topic %s\r\n", mqttexampleMESSAGE, cTopicString ) );
 
 			/* Since we are subscribed to the same topic as we published on, we
 			 * will get the same message back from the MQTT broker. Wait for the
@@ -331,8 +352,8 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 
 		/* Unsubscribe from the topic mqttexampleTOPIC and disconnect
 		 * gracefully. */
-		prvMQTTUnsubscribe();
-		prvMQTTDisconnect();
+		prvMQTTUnsubscribe( xMQTTConnection, cTopicString );
+		prvMQTTDisconnect( xMQTTConnection );
 		configPRINTF( ( "Disconnected from %s\r\n\r\n", mqttexampleMQTT_BROKER_ENDPOINT ) );
 
 		/* Wait for the disconnect operation to complete which is informed to us
@@ -349,18 +370,19 @@ const TickType_t xNoDelay = ( TickType_t ) 0;
 		/* Wait for some time between two iterations to ensure that we do not
 		 * bombard the public test mosquitto broker. */
 		configPRINTF( ( "prvMQTTDemoTask() completed an iteration without hitting an assert. Total free heap is %u\r\n\r\n", xPortGetFreeHeapSize() ) );
-		vTaskDelay( pdMS_TO_TICKS( 5000 ) );
+//		vTaskDelay( pdMS_TO_TICKS( 5000 ) );
 	}
 }
 /*-----------------------------------------------------------*/
 
-static void prvMQTTConnect( void )
+static void prvMQTTConnect( IotMqttConnection_t *xMQTTConnection, const char *pcClientID )
 {
 IotMqttError_t xResult;
 IotNetworkServerInfo_t xMQTTBrokerInfo;
 IotMqttNetworkInfo_t xNetworkInfo = IOT_MQTT_NETWORK_INFO_INITIALIZER;
 IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
-
+static char c[ 10 ];
+static int id = 0;
 
 	/******************* Broker information setup. **********************/
 
@@ -417,8 +439,8 @@ IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 	/* The client identifier is used to uniquely identify this MQTT client to
 	 * the MQTT broker.  In a production device the identifier can be something
 	 * unique, such as a device serial number. */
-	xConnectInfo.pClientIdentifier = mqttexampleCLIENT_IDENTIFIER;
-	xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( mqttexampleCLIENT_IDENTIFIER );
+	xConnectInfo.pClientIdentifier = pcClientID;
+	xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( pcClientID );
 
 	/* This example does not use any authentication and therefore username and
 	 * password fields are not used. */
@@ -432,12 +454,12 @@ IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 	xResult = IotMqtt_Connect( &( xNetworkInfo ),
 							   &( xConnectInfo ),
 							   mqttexampleMQTT_TIMEOUT_MS,
-							   &( xMQTTConnection ) );
+							   xMQTTConnection );
 	configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
 /*-----------------------------------------------------------*/
 
-static void prvMQTTSubscribe( void )
+static void prvMQTTSubscribe( IotMqttConnection_t xMQTTConnection, const char * const pcTopicString )
 {
 IotMqttError_t xResult;
 IotMqttSubscription_t xMQTTSubscription;
@@ -446,8 +468,8 @@ IotMqttSubscription_t xMQTTSubscription;
 	 * as the callback context which is used by the callback to send a task
 	 * notification to this task.*/
 	xMQTTSubscription.qos = IOT_MQTT_QOS_1;
-	xMQTTSubscription.pTopicFilter = mqttexampleTOPIC;
-	xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+	xMQTTSubscription.pTopicFilter = pcTopicString;
+	xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( pcTopicString );
 	xMQTTSubscription.callback.pCallbackContext = ( void * ) xTaskGetCurrentTaskHandle();
 	xMQTTSubscription.callback.function = prvExample_OnMessageReceived;
 
@@ -462,7 +484,7 @@ IotMqttSubscription_t xMQTTSubscription;
 }
 /*-----------------------------------------------------------*/
 
-static void prvMQTTPublish( void )
+static void prvMQTTPublish( IotMqttConnection_t xMQTTConnection, const char * const pcTopicString )
 {
 IotMqttError_t xResult;
 IotMqttPublishInfo_t xMQTTPublishInfo;
@@ -472,8 +494,8 @@ IotMqttPublishInfo_t xMQTTPublishInfo;
 	 * back to us. It is verified in the publish callback. */
 	xMQTTPublishInfo.qos = IOT_MQTT_QOS_1;
 	xMQTTPublishInfo.retain = false;
-	xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
-	xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+	xMQTTPublishInfo.pTopicName = pcTopicString;
+	xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( pcTopicString );
 	xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
 	xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
 	xMQTTPublishInfo.retryMs = mqttexamplePUBLISH_RETRY_MS;
@@ -489,14 +511,14 @@ IotMqttPublishInfo_t xMQTTPublishInfo;
 }
 /*-----------------------------------------------------------*/
 
-static void prvMQTTUnsubscribe( void )
+static void prvMQTTUnsubscribe( IotMqttConnection_t xMQTTConnection, const char * const pcTopicString )
 {
 IotMqttError_t xResult;
 IotMqttSubscription_t xMQTTSubscription;
 
 	/* Unsubscribe from the mqttexampleTOPIC topic filter. */
-	xMQTTSubscription.pTopicFilter = mqttexampleTOPIC;
-	xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+	xMQTTSubscription.pTopicFilter = pcTopicString;
+	xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( pcTopicString );
 	/* The following members of the IotMqttSubscription_t are ignored by the
 	 * unsubscribe operation. Just initialize them to avoid "use of uninitialized
 	 * variable" warnings. */
@@ -515,7 +537,7 @@ IotMqttSubscription_t xMQTTSubscription;
 }
 /*-----------------------------------------------------------*/
 
-static void prvMQTTDisconnect( void )
+static void prvMQTTDisconnect( IotMqttConnection_t xMQTTConnection )
 {
 	/* Send a MQTT DISCONNECT packet to the MQTT broker to do a graceful
 	 * disconnect. */

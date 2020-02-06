@@ -268,8 +268,8 @@ uint32_t ulReg, ulPC;
 		case portSVC_RAISE_PRIVILEGE	:	/* Only raise the privilege, if the
 											 * svc was raised from any of the
 											 * system calls. */
-											if( ulPC >= ( uint32_t ) __syscalls_flash_start__ &&
-												ulPC <= ( uint32_t ) __syscalls_flash_end__ )
+											if( ( ulPC >= ( uint32_t ) __syscalls_flash_start__ ) &&
+												( ulPC <= ( uint32_t ) __syscalls_flash_end__ ) )
 											{
 												__asm
 												{

@@ -814,6 +814,19 @@ extern uint32_t ulApplicationGetNextSequenceNumber(uint32_t ulSourceAddress,
 }
 /*-----------------------------------------------------------*/
 
+/*
+ * Supply a random number to FreeRTOS+TCP stack. 
+ * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER 
+ * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
+ */
+BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
+{
+	*(pulNumber) = uxRand();
+	return pdTRUE;
+}
+
+/*-----------------------------------------------------------*/
+
 #if( ipconfigUSE_LLMNR != 0 ) || ( ipconfigUSE_NBNS != 0 ) || ( ipconfigDHCP_REGISTER_HOSTNAME != 0 )
 
 	const char *pcApplicationHostnameHook( void )

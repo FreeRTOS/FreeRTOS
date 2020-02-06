@@ -218,7 +218,7 @@ QueueHandle_t xQueue;
 	for( ;; )
 	{
 		/* The queue is empty, so sending an item to the back of the queue
-		should have the same efect as sending it to the front of the queue.
+		should have the same effect as sending it to the front of the queue.
 
 		First send to the front and check everything is as expected. */
 		ulLoopCounterSnapshot = ulLoopCounter;

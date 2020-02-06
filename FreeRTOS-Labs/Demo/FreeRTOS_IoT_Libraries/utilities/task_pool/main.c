@@ -146,6 +146,23 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 }
 /*-----------------------------------------------------------*/
 
+/*
+ * Supply a random number to FreeRTOS+TCP stack.
+ * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
+ * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
+ */
+BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
+{
+	/* This example is the first in a sequence that adds IoT functionality into
+	an existing TCP / IP project.In this first project the TCP / IP stack is not
+	actually used, but it is still built, which requires this function to be
+	present.For now this function does not need to do anything. */
+	__debugbreak();
+	*(pulNumber) = 0;
+	return pdFALSE;
+}
+/*-----------------------------------------------------------*/
+
 UBaseType_t uxRand( void )
 {
 	/* This example is the first in a sequence that adds IoT functionality into

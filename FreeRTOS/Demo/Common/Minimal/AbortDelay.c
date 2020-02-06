@@ -149,10 +149,6 @@ uint32_t ulTestToPerform = abtNOTIFY_WAIT_ABORTS;
 TickType_t xTimeAtStart;
 const TickType_t xStartMargin = 2UL;
 
-/* Used to control whether to use xTaskAbortDelay() or xTaskAbortDelayFromISR() so
-both are used with all the tests. */
-BaseType_t xUseFromISRVersion = pdFALSE, xHigherPriorityTaskWoken;
-
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
 
@@ -177,46 +173,10 @@ BaseType_t xUseFromISRVersion = pdFALSE, xHigherPriorityTaskWoken;
 		raise the priority of the controlling task to that of the blocking
 		task to minimise discrepancies. */
 		vTaskPrioritySet( NULL, abtBLOCKING_PRIORITY );
-
 		vTaskDelay( xMaxBlockTime + xHalfMaxBlockTime + xStartMargin );
-
-		/* For test coverage sometimes xTaskAbortDelay() is used and sometimes
-		xTaskAbortDelayFromISR() is used. */
-		if( xUseFromISRVersion == pdFALSE )
+		if( xTaskAbortDelay( xBlockingTask ) != pdPASS )
 		{
-			if( xTaskAbortDelay( xBlockingTask ) != pdPASS )
-			{
-				xErrorOccurred = pdTRUE;
-			}
-		}
-		else
-		{
-			xHigherPriorityTaskWoken = pdFALSE;
-
-			/* For test coverage, sometimes xHigherPriorityTaskWoken is used, and
-			sometimes NULL is used. */
-
-			if( ( xControllingCycles % 2 ) == 0 )
-			{
-				if( xTaskAbortDelayFromISR( xBlockingTask, &xHigherPriorityTaskWoken ) != pdPASS )
-				{
-					xErrorOccurred = pdTRUE;
-				}
-			}
-			else
-			{
-				if( xTaskAbortDelayFromISR( xBlockingTask, NULL ) != pdPASS )
-				{
-					xErrorOccurred = pdTRUE;
-				}
-			}
-
-			/* The tasks have the same priority so xHigherPriorityTaskWoken should
-			never get set. */
-			if( xHigherPriorityTaskWoken != pdFALSE )
-			{
-				xErrorOccurred = pdTRUE;
-			}
+			xErrorOccurred = pdTRUE;
 		}
 
 		/* Reset the priority to the normal controlling priority. */
@@ -241,13 +201,6 @@ BaseType_t xUseFromISRVersion = pdFALSE, xHigherPriorityTaskWoken;
 
 		/* To indicate this task is still executing. */
 		xControllingCycles++;
-
-		if( ( xControllingCycles % abtMAX_TESTS ) == 0 )
-		{
-			/* Looped through all the tests.  Switch between using xTaskAbortDelay()
-			and xTaskAbortDelayFromISR() for the next round of tests. */
-			xUseFromISRVersion = !xUseFromISRVersion;
-		}
 	}
 }
 /*-----------------------------------------------------------*/
@@ -331,12 +284,6 @@ BaseType_t xReturned;
 	xThisTask = xTaskGetCurrentTaskHandle();
 
 	xReturned = xTaskAbortDelay( xThisTask );
-	if( xReturned != pdFALSE )
-	{
-		xErrorOccurred = pdTRUE;
-	}
-
-	xReturned = xTaskAbortDelayFromISR( xThisTask, NULL );
 	if( xReturned != pdFALSE )
 	{
 		xErrorOccurred = pdTRUE;

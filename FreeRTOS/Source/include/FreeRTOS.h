@@ -953,6 +953,7 @@ V8 if desired. */
 	#define pcTimerGetTimerName pcTimerGetName
 	#define pcQueueGetQueueName pcQueueGetName
 	#define vTaskGetTaskInfo vTaskGetInfo
+	#define xTaskGetIdleRunTimeCounter ulTaskGetIdleRunTimeCounter
 
 	/* Backward compatibility within the scheduler code only - these definitions
 	are not really required but are included for completeness. */

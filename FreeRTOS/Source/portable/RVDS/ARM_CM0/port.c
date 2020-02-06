@@ -248,11 +248,11 @@ void vPortEnterCritical( void )
 void vPortExitCritical( void )
 {
 	configASSERT( uxCriticalNesting );
-    uxCriticalNesting--;
-    if( uxCriticalNesting == 0 )
-    {
-        portENABLE_INTERRUPTS();
-    }
+	uxCriticalNesting--;
+	if( uxCriticalNesting == 0 )
+	{
+		portENABLE_INTERRUPTS();
+	}
 }
 /*-----------------------------------------------------------*/
 

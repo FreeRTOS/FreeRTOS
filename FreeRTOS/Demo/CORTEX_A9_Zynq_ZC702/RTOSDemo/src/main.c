@@ -86,6 +86,7 @@
 #include "xscutimer.h"
 #include "xscugic.h"
 #include "xil_exception.h"
+#include "xuartps_hw.h"
 
 /* mainSELECTED_APPLICATION is used to select between three demo applications,
  * as described at the top of this file.
@@ -208,6 +209,12 @@ XScuGic_Config *pxGICConfig;
 	FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
 	FreeRTOS vector table. */
 	vPortInstallFreeRTOSVectorTable();
+
+	/* Initialise UART for use with QEMU. */
+	XUartPs_ResetHw( 0xE0000000 );
+	XUartPs_WriteReg(0xE0000000, XUARTPS_CR_OFFSET,
+				((u32)XUARTPS_CR_RX_DIS | (u32)XUARTPS_CR_TX_EN |
+						(u32)XUARTPS_CR_STOPBRK));
 }
 /*-----------------------------------------------------------*/
 

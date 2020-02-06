@@ -2195,7 +2195,6 @@ BaseType_t xTaskResumeAll( void )
 {
 TCB_t *pxTCB = NULL;
 BaseType_t xAlreadyYielded = pdFALSE;
-TickType_t xTicksToNextUnblockTime;
 
 	/* If uxSchedulerSuspended is zero then this function does not match a
 	previous call to vTaskSuspendAll(). */
@@ -2250,51 +2249,30 @@ TickType_t xTicksToNextUnblockTime;
 				they should be processed now.  This ensures the tick count does
 				not	slip, and that any delayed tasks are resumed at the correct
 				time. */
-				while( xPendedTicks > ( TickType_t ) 0 )
 				{
-					/* Calculate how far into the future the next task will
-					leave the Blocked state because its timeout expired.  If
-					there are no tasks due to leave	the blocked state between
-					the time now and the time at which the tick count overflows
-					then xNextTaskUnblockTime will the tick overflow time.
-					This means xNextTaskUnblockTime can never be less than
-					xTickCount, and the following can therefore not
-					underflow. */
-					configASSERT( xNextTaskUnblockTime >= xTickCount );
-					xTicksToNextUnblockTime = xNextTaskUnblockTime - xTickCount;
+					TickType_t xPendedCounts = xPendedTicks; /* Non-volatile copy. */
 
-					/* Don't want to move the tick count more than the number
-					of ticks that are pending, so cap if necessary. */
-					if( xTicksToNextUnblockTime > xPendedTicks )
+					if( xPendedCounts > ( TickType_t ) 0U )
 					{
-						xTicksToNextUnblockTime = xPendedTicks;
-					}
+						do
+						{
+							if( xTaskIncrementTick() != pdFALSE )
+							{
+								xYieldPending = pdTRUE;
+							}
+							else
+							{
+								mtCOVERAGE_TEST_MARKER();
+							}
+							--xPendedCounts;
+						} while( xPendedCounts > ( TickType_t ) 0U );
 
-					if( xTicksToNextUnblockTime == 0 )
-					{
-						/* xTicksToNextUnblockTime could be zero if the tick
-						count is about to overflow and xTicksToNetUnblockTime
-						holds the time at which the tick count will overflow
-						(rather than the time at which the next task will
-						unblock).  Set to 1 otherwise xPendedTicks won't be
-						decremented below. */
-						xTicksToNextUnblockTime = ( TickType_t ) 1;
+						xPendedTicks = 0;
 					}
-					else if( xTicksToNextUnblockTime > ( TickType_t ) 1 )
+					else
 					{
-						/* Move the tick count one short of the next unblock
-						time, then call xTaskIncrementTick() to move the tick
-						count up to the next unblock time to unblock the task,
-						if any.  This will also swap the blocked task and
-						overflow blocked task lists if necessary. */
-						xTickCount += ( xTicksToNextUnblockTime - ( TickType_t ) 1 );
+						mtCOVERAGE_TEST_MARKER();
 					}
-					xYieldPending |= xTaskIncrementTick();
-
-					/* Adjust for the number of ticks just added to
-					xTickCount and go around the loop again if
-					xTicksToCatchUp is still greater than 0. */
-					xPendedTicks -= xTicksToNextUnblockTime;
 				}
 
 				if( xYieldPending != pdFALSE )
@@ -2644,91 +2622,6 @@ BaseType_t xYieldRequired = pdFALSE;
 
 	return xYieldRequired;
 }
-/*----------------------------------------------------------*/
-
-#if ( INCLUDE_xTaskAbortDelay == 1 )
-
-	BaseType_t xTaskAbortDelayFromISR( TaskHandle_t xTask, BaseType_t * const pxHigherPriorityTaskWoken )
-	{
-	TCB_t *pxTCB = xTask;
-	BaseType_t xReturn;
-	UBaseType_t uxSavedInterruptStatus;
-
-		configASSERT( pxTCB );
-
-		/* RTOS ports that support interrupt nesting have the concept of a maximum
-		system call (or maximum API call) interrupt priority.  Interrupts that are
-		above the maximum system call priority are kept permanently enabled, even
-		when the RTOS kernel is in a critical section, but cannot make any calls to
-		FreeRTOS API functions.  If configASSERT() is defined in FreeRTOSConfig.h
-		then portASSERT_IF_INTERRUPT_PRIORITY_INVALID() will result in an assertion
-		failure if a FreeRTOS API function is called from an interrupt that has been
-		assigned a priority above the configured maximum system call priority.
-		Only FreeRTOS functions that end in FromISR can be called from interrupts
-		that have been assigned a priority at or (logically) below the maximum
-		system call	interrupt priority.  FreeRTOS maintains a separate interrupt
-		safe API to ensure interrupt entry is as fast and as simple as possible.
-		More information (albeit Cortex-M specific) is provided on the following
-		link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
-		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
-
-		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
-		{
-			/* A task can only be prematurely removed from the Blocked state if
-			it is actually in the Blocked state. */
-			if( eTaskGetState( xTask ) == eBlocked )
-			{
-				xReturn = pdPASS;
-
-				/* Remove the reference to the task from the blocked list.  A higher
-				priority interrupt won't touch the xStateListItem because of the
-				critical section. */
-				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
-
-				/* Is the task waiting on an event also?  If so remove it from
-				the event list too. */
-				if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
-				{
-					( void ) uxListRemove( &( pxTCB->xEventListItem ) );
-
-					/* This lets the task know it was forcibly removed from the
-					blocked state so it should not re-evaluate its block time and
-					then block again. */
-					pxTCB->ucDelayAborted = pdTRUE;
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-
-				/* Place the unblocked task into the appropriate ready list. */
-				prvAddTaskToReadyList( pxTCB );
-
-				if( pxTCB->uxPriority > pxCurrentTCB->uxPriority )
-				{
-					if( pxHigherPriorityTaskWoken != NULL )
-					{
-						/* Pend the yield to be performed when the scheduler
-						is unsuspended. */
-						*pxHigherPriorityTaskWoken = pdTRUE;
-					}
-				}
-				else
-				{
-					mtCOVERAGE_TEST_MARKER();
-				}
-			}
-			else
-			{
-				xReturn = pdFAIL;
-			}
-		}
-		portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
-
-		return xReturn;
-	}
-
-#endif
 /*----------------------------------------------------------*/
 
 #if ( INCLUDE_xTaskAbortDelay == 1 )

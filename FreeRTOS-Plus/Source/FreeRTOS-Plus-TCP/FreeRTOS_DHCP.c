@@ -84,9 +84,9 @@
 
 /* Offsets into the transmitted DHCP options fields at which various parameters
 are located. */
-#define dhcpCLIENT_IDENTIFIER_OFFSET			( 6 )
-#define dhcpREQUESTED_IP_ADDRESS_OFFSET			( 14 )
-#define dhcpDHCP_SERVER_IP_ADDRESS_OFFSET		( 20 )
+#define dhcpCLIENT_IDENTIFIER_OFFSET			( 5 )
+#define dhcpREQUESTED_IP_ADDRESS_OFFSET			( 13 )
+#define dhcpDHCP_SERVER_IP_ADDRESS_OFFSET		( 19 )
 
 /* Values used in the DHCP packets. */
 #define dhcpREQUEST_OPCODE						( 1 )
@@ -905,7 +905,7 @@ static const uint8_t ucDHCPRequestOptions[] =
 	dhcpCLIENT_IDENTIFIER_OFFSET, dhcpREQUESTED_IP_ADDRESS_OFFSET and
 	dhcpDHCP_SERVER_IP_ADDRESS_OFFSET. */
 	dhcpMESSAGE_TYPE_OPTION_CODE, 1, dhcpMESSAGE_TYPE_REQUEST,		/* Message type option. */
-	dhcpCLIENT_IDENTIFIER_OPTION_CODE, 7, 1, 0, 0, 0, 0, 0, 0,			/* Client identifier. */
+	dhcpCLIENT_IDENTIFIER_OPTION_CODE, 6, 0, 0, 0, 0, 0, 0,			/* Client identifier. */
 	dhcpREQUEST_IP_ADDRESS_OPTION_CODE, 4, 0, 0, 0, 0,				/* The IP address being requested. */
 	dhcpSERVER_IP_ADDRESS_OPTION_CODE, 4, 0, 0, 0, 0,				/* The IP address of the DHCP server. */
 	dhcpOPTION_END_BYTE
@@ -943,7 +943,7 @@ static const uint8_t ucDHCPDiscoverOptions[] =
 {
 	/* Do not change the ordering without also changing dhcpCLIENT_IDENTIFIER_OFFSET. */
 	dhcpMESSAGE_TYPE_OPTION_CODE, 1, dhcpMESSAGE_TYPE_DISCOVER,					/* Message type option. */
-	dhcpCLIENT_IDENTIFIER_OPTION_CODE, 7, 1, 0, 0, 0, 0, 0, 0,						/* Client identifier. */
+	dhcpCLIENT_IDENTIFIER_OPTION_CODE, 6, 0, 0, 0, 0, 0, 0,						/* Client identifier. */
 	dhcpPARAMETER_REQUEST_OPTION_CODE, 3, dhcpSUBNET_MASK_OPTION_CODE, dhcpGATEWAY_OPTION_CODE, dhcpDNS_SERVER_OPTIONS_CODE,	/* Parameter request option. */
 	dhcpOPTION_END_BYTE
 };

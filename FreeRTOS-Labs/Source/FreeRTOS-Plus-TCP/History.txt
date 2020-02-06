@@ -1,3 +1,8 @@
+Changes between 180821 and TBD.
+	Currently FreeRTOS+TCP files under this directory have version number "2.2.x Labs copy". 
+	Please be aware that the projects under FreeRTOS-Labs are experimental and in working 
+	progress. 
+
 Changes between 160919 and 180821 releases:
 
 	+ Multiple security improvements and fixes in packet parsing routines, DNS

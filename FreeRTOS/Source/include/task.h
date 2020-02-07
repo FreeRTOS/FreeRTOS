@@ -2213,7 +2213,7 @@ BaseType_t xTaskNotifyStateClear( TaskHandle_t xTask );
 * Clears the bits specified by the ulBitsToClear bit mask in the notification
 * value of the task referenced by xTask.
 *
-* Set ulBitsToClear to to 0xffffffff (UINT_MAX on 32-bit architectures) to clear
+* Set ulBitsToClear to 0xffffffff (UINT_MAX on 32-bit architectures) to clear
 * the notification value to 0.  Set ulBitsToClear to 0 to query the task's
 * notification value without clearing any bits.
 *

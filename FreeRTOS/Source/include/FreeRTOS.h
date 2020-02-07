@@ -241,7 +241,7 @@ extern "C" {
 	#define configASSERT_DEFINED 1
 #endif
 
-/* configPRECONDITION should be resolve to configASSERT.
+/* configPRECONDITION should be defined as configASSERT.
 The CBMC proofs need a way to track assumptions and assertions.
 A configPRECONDITION statement should express an implicit invariant or
 assumption made.  A configASSERT statement should express an invariant that must

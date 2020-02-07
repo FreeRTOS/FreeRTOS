@@ -1,47 +1,55 @@
 Documentation and download available at http://www.FreeRTOS.org/
 
-Changes since the last release:
-	+ Added xTaskCatchUpTicks() which corrects the tick count value after the
-	  application code has held interrupts disabled for an extended period.
-	+ Updated the xTaskResumeAll() implementation so it uses the new
-	  xTaskCatchUpTicks() function mentioned above to unwind ticks that were
-	  pended while the scheduler was suspended.
+Changes between FreeRTOS V10.2.1 and FreeRTOS V10.3.0 released TBD
+
+	See http://www.FreeRTOS.org/FreeRTOS-V10.3.x.html
+
+	New and updated kernel ports:
+
+	+ Added RISC-V port for the IAR compiler.
 	+ Update the Windows simulator port to use a synchronous object to prevent
 	  a user reported error whereby a task continues to run for a short time
 	  after being moved to the Blocked state.  Note we were not able to
-	  replicate the reported error.
-	+ Added the vPortGetHeapStats() API function which returns information on
-	  the heap_4 and heap_5 state.
-	+ Change type of uxPendedTicks from UBaseType_t to TickType_t to ensure it
-	  has same type as variables it is compared to, and therefore also rename
-	  the variable xPendingTicks.
+	  replicate the reported issue and it likely depends on your CPU model.
 	+ Correct alignment of stack top in RISC-V port when
-	  configISR_STACK_SIZE_WORDS is defined to a non zero value.
-	+ RISC-V port updates:  The machine timer compare register can now be for
-	  any HART, and correct the sequence used to update the 64-bit machine timer
-	  compare register on 32-bit cores.
-	+ Update Keil projects that use the MPU so memory regions come from linker
-	  script (scatter file) variables instead of being hard coded.
+	  configISR_STACK_SIZE_WORDS is defined to a non zero value, which causes
+	  the interrupt stack to be statically allocated.
+	+ The RISC-V machine timer compare register can now be for any HART, whereas
+	  previously it was always assumed FreeRTOS was running on HART 0.
+	+ Update the sequence used to update the 64-bit machine timer
+	  compare register on 32-bit cores to match that suggested in RISC-V
+	  documentation.
 	+ Added tickless low power modes into the ARM, IAR and GCC Cortex-M0 compiler
 	  ports.
 	+ Updated the behaviour of the ARMv7-M MPU (Memory Protection Unit) ports to
 	  match that of the ARMv8-M ports whereby privilege escalations can only
 	  originate from within the kernel's own memory segment.  Added
 	  configENFORCE_SYSTEM_CALLS_FROM_KERNEL_ONLY configuration constant.
-	+  Update existing MPU ports to correctly disable the MPU before it is
-	   updated.
-	+ Added LPC51U68 Cortex-M0+ port for GCC (MCUXpresso), Keil and IAR
+	+ Update existing MPU ports to correctly disable the MPU before it is
+	  updated.
+	+ Added contributed port and demo application for a T-Head (formally C-SKY)
+	  microcontroller.
+
+	New API functions:
+
+	+ Added the vPortGetHeapStats() API function which returns information on
+	  the heap_4 and heap_5 state.
+	+ Added xTaskCatchUpTicks(), which corrects the tick count value after the
+	  application code has held interrupts disabled for an extended period.
+	+ Added xTaskNotifyValueClear() API function.
+	+ Added uxTimerGetReloadMode() API function.
+
+	Other miscellaneous changes:
+	+ Change type of uxPendedTicks from UBaseType_t to TickType_t to ensure it
+	  has the same type as variables with which it is compared to, and therefore
+	  also renamed the variable xPendingTicks.
+	+ Update Keil projects that use the MPU so memory regions come from linker
+	  script (scatter file) variables instead of being hard coded.
+	+ Added LPC51U68 Cortex-M0+ demos for GCC (MCUXpresso), Keil and IAR
 	  compilers.
 	+ Added CORTEX_MPU_STM32L4_Discovery_Keil_STM32Cube demo.
-	+ Added xTaskNotifyValueClear() API function.
-	+ Improve timing accuracy (reduce clock slippage when compared to real time)
-	  in the Windows simulator port by using a waitable timer to determine the
-	  next time slice in place of calls to sleep().
-	+ Added T-Head demo.
 	+ Added LPC54018 MPU demo.
-	+ Added uxTimerGetReloadMode() API function.
 	+ Rename xTaskGetIdleRunTimeCounter() to ulTaskGetIdleRunTimeCounter().
-	+ Added RISC-V port for IAR compiler.
 
 
 Changes between FreeRTOS V10.2.1 and FreeRTOS V10.2.0 released May 13 2019:

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -456,8 +456,8 @@ CONTEXT xContext;
 
 				/* Ensure the thread is actually suspended by performing a
 				synchronous operation that can only complete when the thread is
-				actually suspended.  The code below asks for dummy register
-				data. Experimentation shows that these two lines don't appear
+				actually suspended.  The below code asks for dummy register
+				data.  Experimentation shows that these two lines don't appear
 				to do anything now, but according to
 				https://devblogs.microsoft.com/oldnewthing/20150205-00/?p=44743
 				they do - so as they do not harm (slight run-time hit). */

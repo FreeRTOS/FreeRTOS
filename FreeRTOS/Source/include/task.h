@@ -43,10 +43,10 @@ extern "C" {
  * MACROS AND DEFINITIONS
  *----------------------------------------------------------*/
 
-#define tskKERNEL_VERSION_NUMBER "V10.2.1"
+#define tskKERNEL_VERSION_NUMBER "V10.3.0"
 #define tskKERNEL_VERSION_MAJOR 10
-#define tskKERNEL_VERSION_MINOR 2
-#define tskKERNEL_VERSION_BUILD 1
+#define tskKERNEL_VERSION_MINOR 3
+#define tskKERNEL_VERSION_BUILD 0
 
 /* MPU region parameters passed in ulParameters
  * of MemoryRegion_t struct. */

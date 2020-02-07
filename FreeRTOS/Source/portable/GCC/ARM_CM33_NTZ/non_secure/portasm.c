@@ -171,24 +171,29 @@ void vStartFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 }
 /*-----------------------------------------------------------*/
 
-uint32_t ulSetInterruptMaskFromISR( void ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */
+uint32_t ulSetInterruptMask( void ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */
 {
 	__asm volatile
 	(
-	"	mrs r0, PRIMASK									\n"
-	"	cpsid i											\n"
-	"	bx lr											\n"
-	::: "memory"
+	"	mrs r0, basepri									\n" /* r0 = basepri. Return original basepri value. */
+	"	mov r1, %0										\n" /* r1 = configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	"	msr basepri, r1									\n" /* Disable interrupts upto configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	"	dsb												\n"
+	"	isb												\n"
+	"	bx lr											\n" /* Return. */
+	:: "i" ( configMAX_SYSCALL_INTERRUPT_PRIORITY ) : "memory"
 	);
 }
 /*-----------------------------------------------------------*/
 
-void vClearInterruptMaskFromISR( __attribute__( ( unused ) ) uint32_t ulMask ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */
+void vClearInterruptMask( __attribute__( ( unused ) ) uint32_t ulMask ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */
 {
 	__asm volatile
 	(
-	"	msr PRIMASK, r0									\n"
-	"	bx lr											\n"
+	"	msr basepri, r0									\n" /* basepri = ulMask. */
+	"	dsb												\n"
+	"	isb												\n"
+	"	bx lr											\n" /* Return. */
 	::: "memory"
 	);
 }
@@ -221,9 +226,13 @@ void PendSV_Handler( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 	"	ldr r1, [r2]									\n" /* Read pxCurrentTCB. */
 	"	str r0, [r1]									\n" /* Save the new top of stack in TCB. */
 	"													\n"
-	"	cpsid i											\n"
+	"	mov r0, %0										\n" /* r0 = configMAX_SYSCALL_INTERRUPT_PRIORITY */
+	"	msr basepri, r0									\n" /* Disable interrupts upto configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	"	dsb												\n"
+	"	isb												\n"
 	"	bl vTaskSwitchContext							\n"
-	"	cpsie i											\n"
+	"	mov r0, #0										\n" /* r0 = 0. */
+	"	msr basepri, r0									\n" /* Enable interrupts. */
 	"													\n"
 	"	ldr r2, pxCurrentTCBConst						\n" /* Read the location of pxCurrentTCB i.e. &( pxCurrentTCB ). */
 	"	ldr r1, [r2]									\n" /* Read pxCurrentTCB. */
@@ -284,6 +293,7 @@ void PendSV_Handler( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 	"xRNRConst: .word 0xe000ed98						\n"
 	"xRBARConst: .word 0xe000ed9c						\n"
 	#endif /* configENABLE_MPU */
+	:: "i"( configMAX_SYSCALL_INTERRUPT_PRIORITY )
 	);
 }
 /*-----------------------------------------------------------*/

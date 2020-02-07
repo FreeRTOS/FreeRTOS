@@ -38,8 +38,8 @@
 	PUBLIC vRestoreContextOfFirstTask
 	PUBLIC vRaisePrivilege
 	PUBLIC vStartFirstTask
-	PUBLIC ulSetInterruptMaskFromISR
-	PUBLIC vClearInterruptMaskFromISR
+	PUBLIC ulSetInterruptMask
+	PUBLIC vClearInterruptMask
 	PUBLIC PendSV_Handler
 	PUBLIC SVC_Handler
 	PUBLIC vPortFreeSecureContext
@@ -181,13 +181,13 @@ vStartFirstTask:
 	svc 2									/* System call to start the first task. portSVC_START_SCHEDULER = 2. */
 /*-----------------------------------------------------------*/
 
-ulSetInterruptMaskFromISR:
+ulSetInterruptMask:
 	mrs r0, PRIMASK
 	cpsid i
 	bx lr
 /*-----------------------------------------------------------*/
 
-vClearInterruptMaskFromISR:
+vClearInterruptMask:
 	msr PRIMASK, r0
 	bx lr
 /*-----------------------------------------------------------*/

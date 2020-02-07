@@ -103,13 +103,15 @@ typedef unsigned long										UBaseType_t;
 /**
  * @brief Extern declarations.
  */
+extern BaseType_t xPortIsInsideInterrupt( void );
+
 extern void vPortYield( void ) /* PRIVILEGED_FUNCTION */;
 
 extern void vPortEnterCritical( void ) /* PRIVILEGED_FUNCTION */;
 extern void vPortExitCritical( void ) /* PRIVILEGED_FUNCTION */;
 
-extern uint32_t ulSetInterruptMaskFromISR( void ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */;
-extern void vClearInterruptMaskFromISR( uint32_t ulMask ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */;
+extern uint32_t ulSetInterruptMask( void ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */;
+extern void vClearInterruptMask( uint32_t ulMask ) /* __attribute__(( naked )) PRIVILEGED_FUNCTION */;
 
 #if( configENABLE_TRUSTZONE == 1 )
 	extern void vPortAllocateSecureContext( uint32_t ulSecureStackSize ); /* __attribute__ (( naked )) */
@@ -217,8 +219,8 @@ typedef struct MPU_SETTINGS
 /**
  * @brief Critical section management.
  */
-#define portSET_INTERRUPT_MASK_FROM_ISR()					ulSetInterruptMaskFromISR()
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)				vClearInterruptMaskFromISR( x )
+#define portSET_INTERRUPT_MASK_FROM_ISR()					ulSetInterruptMask()
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)				vClearInterruptMask( x )
 #define portDISABLE_INTERRUPTS()							__asm volatile ( " cpsid i " ::: "memory" )
 #define portENABLE_INTERRUPTS()								__asm volatile ( " cpsie i " ::: "memory" )
 #define portENTER_CRITICAL()								vPortEnterCritical()

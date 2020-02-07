@@ -78,12 +78,12 @@ void vStartFirstTask( void ) __attribute__ (( naked )) PRIVILEGED_FUNCTION;
 /**
  * @brief Disables interrupts.
  */
-uint32_t ulSetInterruptMaskFromISR( void ) __attribute__(( naked )) PRIVILEGED_FUNCTION;
+uint32_t ulSetInterruptMask( void ) __attribute__(( naked )) PRIVILEGED_FUNCTION;
 
 /**
  * @brief Enables interrupts.
  */
-void vClearInterruptMaskFromISR( uint32_t ulMask ) __attribute__(( naked )) PRIVILEGED_FUNCTION;
+void vClearInterruptMask( uint32_t ulMask ) __attribute__(( naked )) PRIVILEGED_FUNCTION;
 
 /**
  * @brief PendSV Exception handler.

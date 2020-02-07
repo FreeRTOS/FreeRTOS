@@ -24,6 +24,12 @@
  *
  * 1 tab == 4 spaces!
  */
+/* Including FreeRTOSConfig.h here will cause build errors if the header file
+contains code not understood by the assembler - for example the 'extern' keyword.
+To avoid errors place any such code inside a #ifdef __ICCARM__/#endif block so
+the code is included in C files but excluded by the preprocessor in assembly
+files (__ICCARM__ is defined by the IAR C compiler but not by the IAR assembler. */
+#include "FreeRTOSConfig.h"
 
 	EXTERN pxCurrentTCB
 	EXTERN xSecureContext
@@ -38,8 +44,8 @@
 	PUBLIC vRestoreContextOfFirstTask
 	PUBLIC vRaisePrivilege
 	PUBLIC vStartFirstTask
-	PUBLIC ulSetInterruptMaskFromISR
-	PUBLIC vClearInterruptMaskFromISR
+	PUBLIC ulSetInterruptMask
+	PUBLIC vClearInterruptMask
 	PUBLIC PendSV_Handler
 	PUBLIC SVC_Handler
 	PUBLIC vPortFreeSecureContext
@@ -156,15 +162,20 @@ vStartFirstTask:
 	svc 2									/* System call to start the first task. portSVC_START_SCHEDULER = 2. */
 /*-----------------------------------------------------------*/
 
-ulSetInterruptMaskFromISR:
-	mrs r0, PRIMASK
-	cpsid i
-	bx lr
+ulSetInterruptMask:
+	mrs r0, basepri							/* r0 = basepri. Return original basepri value. */
+	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r1							/* Disable interrupts upto configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	dsb
+	isb
+	bx lr									/* Return. */
 /*-----------------------------------------------------------*/
 
-vClearInterruptMaskFromISR:
-	msr PRIMASK, r0
-	bx lr
+vClearInterruptMask:
+	msr basepri, r0							/* basepri = ulMask. */
+	dsb
+	isb
+	bx lr									/* Return. */
 /*-----------------------------------------------------------*/
 
 PendSV_Handler:
@@ -227,9 +238,13 @@ PendSV_Handler:
 	#endif /* configENABLE_MPU */
 
 	select_next_task:
-		cpsid i
+		mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+		msr basepri, r0						/* Disable interrupts upto configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+		dsb
+		isb
 		bl vTaskSwitchContext
-		cpsie i
+		mov r0, #0							/* r0 = 0. */
+		msr basepri, r0						/* Enable interrupts. */
 
 		ldr r2, =pxCurrentTCB				/* Read the location of pxCurrentTCB i.e. &( pxCurrentTCB ). */
 		ldr r3, [r2]						/* Read pxCurrentTCB. */

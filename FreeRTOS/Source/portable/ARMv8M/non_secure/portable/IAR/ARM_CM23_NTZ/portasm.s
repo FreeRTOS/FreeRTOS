@@ -34,8 +34,8 @@
 	PUBLIC vRestoreContextOfFirstTask
 	PUBLIC vRaisePrivilege
 	PUBLIC vStartFirstTask
-	PUBLIC ulSetInterruptMaskFromISR
-	PUBLIC vClearInterruptMaskFromISR
+	PUBLIC ulSetInterruptMask
+	PUBLIC vClearInterruptMask
 	PUBLIC PendSV_Handler
 	PUBLIC SVC_Handler
 
@@ -169,13 +169,13 @@ vStartFirstTask:
 	nop
 /*-----------------------------------------------------------*/
 
-ulSetInterruptMaskFromISR:
+ulSetInterruptMask:
 	mrs r0, PRIMASK
 	cpsid i
 	bx lr
 /*-----------------------------------------------------------*/
 
-vClearInterruptMaskFromISR:
+vClearInterruptMask:
 	msr PRIMASK, r0
 	bx lr
 /*-----------------------------------------------------------*/

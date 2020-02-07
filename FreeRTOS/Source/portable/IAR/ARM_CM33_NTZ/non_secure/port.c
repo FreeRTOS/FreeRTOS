@@ -258,11 +258,6 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief Setup the timer to generate the tick interrupts.
- */
-static void prvSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
-
-/**
  * @brief Used to catch tasks that attempt to return from their implementing
  * function.
  */
@@ -281,6 +276,22 @@ static void prvTaskExitError( void );
 	 */
 	static void prvSetupFPU( void ) PRIVILEGED_FUNCTION;
 #endif /* configENABLE_FPU */
+
+/**
+ * @brief Setup the timer to generate the tick interrupts.
+ *
+ * The implementation in this file is weak to allow application writers to
+ * change the timer used to generate the tick interrupt.
+ */
+void vPortSetupTimerInterrupt( void ) PRIVILEGED_FUNCTION;
+
+/**
+ * @brief Checks whether the current execution context is interrupt.
+ *
+ * @return pdTRUE if the current execution context is interrupt, pdFALSE
+ * otherwise.
+ */
+BaseType_t xPortIsInsideInterrupt( void );
 
 /**
  * @brief Yield the processor.
@@ -323,7 +334,7 @@ static volatile uint32_t ulCriticalNesting = 0xaaaaaaaaUL;
 #endif /* configENABLE_TRUSTZONE */
 /*-----------------------------------------------------------*/
 
-static void prvSetupTimerInterrupt( void ) /* PRIVILEGED_FUNCTION */
+__attribute__(( weak )) void vPortSetupTimerInterrupt( void ) /* PRIVILEGED_FUNCTION */
 {
 	/* Stop and reset the SysTick. */
 	*( portNVIC_SYSTICK_CTRL ) = 0UL;
@@ -773,7 +784,7 @@ BaseType_t xPortStartScheduler( void ) /* PRIVILEGED_FUNCTION */
 
 	/* Start the timer that generates the tick ISR. Interrupts are disabled
 	 * here already. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Initialize the critical nesting count ready for the first task. */
 	ulCriticalNesting = 0;
@@ -896,4 +907,27 @@ void vPortEndScheduler( void ) /* PRIVILEGED_FUNCTION */
 		}
 	}
 #endif /* configENABLE_MPU */
+/*-----------------------------------------------------------*/
+
+BaseType_t xPortIsInsideInterrupt( void )
+{
+uint32_t ulCurrentInterrupt;
+BaseType_t xReturn;
+
+	/* Obtain the number of the currently executing interrupt. Interrupt Program
+	 * Status Register (IPSR) holds the exception number of the currently-executing
+	 * exception or zero for Thread mode.*/
+	__asm volatile( "mrs %0, ipsr" : "=r"( ulCurrentInterrupt ) :: "memory" );
+
+	if( ulCurrentInterrupt == 0 )
+	{
+		xReturn = pdFALSE;
+	}
+	else
+	{
+		xReturn = pdTRUE;
+	}
+
+	return xReturn;
+}
 /*-----------------------------------------------------------*/

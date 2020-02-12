@@ -18,7 +18,7 @@ Directories:
   FreeRTOS windows simulator.  These are documented on the FreeRTOS web site 
   http://www.FreeRTOS.org/plus
 
-Further readme files are contains in sub-directories as appropriate.
+Further readme files are contained in sub-directories as appropriate.
   
 The easiest way to use FreeRTOS is to start with one of the pre-configured demo 
 application projects (found in the FreeRTOS/Demo directory).  That way you will

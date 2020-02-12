@@ -31,8 +31,7 @@ To send us a pull request, please:
 
 1. Fork the repository.
 1. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-1. Make sure to follow the coding style guide.
-1. Ensure local tests pass.
+1. Make sure to follow the [coding style guide](https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html).
 1. Commit to your fork using clear commit messages.
 1. Send us a pull request, answering any default questions in the pull request interface.    
    NOTE: Please make sure the default option (Allow edits from maintainers) is left checked.    
@@ -42,7 +41,7 @@ GitHub provides additional document on [forking a repository](https://help.githu
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
 ## Coding Style
-* Please ensure that your code complies to the FreeRTOS coding style guidelines, https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html
+* Please ensure that your code complies to the [FreeRTOS coding style guidelines](https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html)
 
 
 ## Getting Your Pull Request Merged
@@ -64,7 +63,8 @@ If you discover a potential security issue in this project we ask that you notif
 
 
 ## Licensing
+The FreeRTOS kernel is released under the MIT open source license, the text of which can be found [here](https://github.com/FreeRTOS/FreeRTOS/blob/master/FreeRTOS/License/license.txt)
 
-See the LICENSE file for our project's licensing. We will ask you to confirm the licensing of your contribution.
+As this repository also contains other 
 
 We may ask you to sign a [Contributor License Agreement (CLA)](http://en.wikipedia.org/wiki/Contributor_License_Agreement) for larger changes.

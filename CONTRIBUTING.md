@@ -9,11 +9,13 @@ information to effectively respond to your bug report or contribution.
 
 ## Reporting Bugs/Feature Requests
 
-We welcome you to use the GitHub issue tracker to report bugs or suggest features.
+We recommend using the [FreeRTOS support forum](https://forums.freertos.org/) to discuss and clarify issues before raising a GitHub issue in this repository. 
 
-When filing an issue, please check existing open, or recently closed, issues to make sure somebody else hasn't already
-reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
+Once it has been discussed we welcome you to use the GitHub issue tracker to report bugs or suggest features.
 
+When filing an issue, please check discussions on the support forum, existing open and recently closed issues to make sure somebody else hasn't already reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
+
+* A clear description of the expected behavior, what you are observing instead and how it differs from what you observe.
 * A reproducible test case or series of steps
 * The version of our code being used
 * Any modifications you've made relevant to the bug
@@ -31,8 +33,7 @@ To send us a pull request, please:
 
 1. Fork the repository.
 1. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-1. Make sure to follow the coding style guide.
-1. Ensure local tests pass.
+1. Make sure to follow the [coding style guide](https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html).
 1. Commit to your fork using clear commit messages.
 1. Send us a pull request, answering any default questions in the pull request interface.    
    NOTE: Please make sure the default option (Allow edits from maintainers) is left checked.    
@@ -42,7 +43,7 @@ GitHub provides additional document on [forking a repository](https://help.githu
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
 ## Coding Style
-* Please ensure that your code complies to the FreeRTOS coding style guidelines, https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html
+* Please ensure that your code complies to the [FreeRTOS coding style guidelines](https://www.freertos.org/FreeRTOS-Coding-Standard-and-Style-Guide.html)
 
 
 ## Getting Your Pull Request Merged
@@ -64,7 +65,8 @@ If you discover a potential security issue in this project we ask that you notif
 
 
 ## Licensing
+The FreeRTOS kernel is released under the MIT open source license, the text of which can be found [here](https://github.com/FreeRTOS/FreeRTOS/blob/master/FreeRTOS/License/license.txt)
 
-See the LICENSE file for our project's licensing. We will ask you to confirm the licensing of your contribution.
+Additional license files can be found in the folders containing any supplementary libraries licensed by their respective copyright owners where applicable.
 
 We may ask you to sign a [Contributor License Agreement (CLA)](http://en.wikipedia.org/wiki/Contributor_License_Agreement) for larger changes.

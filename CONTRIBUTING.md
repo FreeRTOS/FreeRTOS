@@ -9,11 +9,13 @@ information to effectively respond to your bug report or contribution.
 
 ## Reporting Bugs/Feature Requests
 
-We welcome you to use the GitHub issue tracker to report bugs or suggest features.
+We recommend using the [FreeRTOS support forum](https://forums.freertos.org/) to discuss and clarify issues before raising a GitHub issue in this repository. 
 
-When filing an issue, please check existing open, or recently closed, issues to make sure somebody else hasn't already
-reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
+Once it has been discussed we welcome you to use the GitHub issue tracker to report bugs or suggest features.
 
+When filing an issue, please check discussions on the support forum, existing open and recently closed issues to make sure somebody else hasn't already reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
+
+* A clear description of the expected behavior, what you are observing instead and how it differs from what you observe.
 * A reproducible test case or series of steps
 * The version of our code being used
 * Any modifications you've made relevant to the bug
@@ -65,6 +67,6 @@ If you discover a potential security issue in this project we ask that you notif
 ## Licensing
 The FreeRTOS kernel is released under the MIT open source license, the text of which can be found [here](https://github.com/FreeRTOS/FreeRTOS/blob/master/FreeRTOS/License/license.txt)
 
-As this repository also contains other 
+Additional license files can be found in the folders containing any supplementary libraries licensed by their respective copyright owners where applicable.
 
 We may ask you to sign a [Contributor License Agreement (CLA)](http://en.wikipedia.org/wiki/Contributor_License_Agreement) for larger changes.

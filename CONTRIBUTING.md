@@ -1,7 +1,7 @@
 # Contributing guidelines
 
 Thank you for your interest in contributing to our project. Whether it's a bug report, new feature, code, or
-documentation, we welcome the desire from our community to be involved in this project.
+documentation, we welcome our community to be involved in this project.
 
 Please read through this document before submitting any issues or pull requests to ensure we are able to help you and all members of the community as effectively as possible.
 

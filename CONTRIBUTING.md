@@ -1,4 +1,4 @@
-# Contributing guidelines
+# Contribution guidelines
 
 Thank you for your interest in contributing to our project. Whether it's a bug report, new feature, code, or
 documentation, we welcome our community to be involved in this project.

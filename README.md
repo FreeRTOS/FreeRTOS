@@ -41,5 +41,5 @@ If you have downloaded the repo without using the `--recurse-submodules` argumen
 git submodule update --init --recursive
 ```
 
-## Getting released versions
-Working snapshots of released versions could be downloaded under [releases](https://github.com/FreeRTOS/FreeRTOS/releases). 
+## Previous releases
+Previous releases are available for download under [releases](https://github.com/FreeRTOS/FreeRTOS/releases).

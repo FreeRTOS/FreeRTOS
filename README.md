@@ -23,11 +23,23 @@ The [FreeRTOS-Plus/Source](https://github.com/FreeRTOS/FreeRTOS/tree/master/Free
 documentation, demo usability, or test coverage.  At this time the projects ARE A WORK IN PROGRESS and will be released in the main FreeRTOS directories of the download following full review and completion of the documentation.
 
 ## Cloning this repository
+This repo uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to bring in dependent components.
+
+Note: If you download the ZIP file provided by GitHub UI, you will not get the contents of the submodules. (The ZIP file is also not a valid git repository)
+
 To clone using HTTPS:
 ```
-git clone https://github.com/FreeRTOS/FreeRTOS.git
+git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
 ```
 Using SSH:
 ```
-git clone git@github.com:FreeRTOS/FreeRTOS.git
+git clone git@github.com:FreeRTOS/FreeRTOS.git --recurse-submodules
 ```
+
+If you have downloaded the repo without using the `--recurse-submodules` argument, you need to run:
+```
+git submodule update --init --recursive
+```
+
+## Getting released versions
+Working snapshots of released versions could be downloaded under [releases](https://github.com/FreeRTOS/FreeRTOS/releases). 

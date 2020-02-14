@@ -40,7 +40,7 @@ git clone https://github.com/FreeRTOS/FreeRTOS
 ```
 Using SSH:
 ```
-git clone https://github.com/FreeRTOS/FreeRTOS.git
+git clone git@github.com:FreeRTOS/FreeRTOS.git
 ```
 
 

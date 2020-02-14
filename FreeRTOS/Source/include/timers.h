@@ -121,7 +121,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * after 100 ticks, then xTimerPeriodInTicks should be set to 100.
  * Alternatively, if the timer must expire after 500ms, then xPeriod can be set
  * to ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than or
- * equal to 1000.
+ * equal to 1000.  Time timer period must be greater than 0.
  *
  * @param uxAutoReload If uxAutoReload is set to pdTRUE then the timer will
  * expire repeatedly with a frequency set by the xTimerPeriodInTicks parameter.
@@ -138,9 +138,9 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * which is	"void vCallbackFunction( TimerHandle_t xTimer );".
  *
  * @return If the timer is successfully created then a handle to the newly
- * created timer is returned.  If the timer cannot be created (because either
- * there is insufficient FreeRTOS heap remaining to allocate the timer
- * structures, or the timer period was set to 0) then NULL is returned.
+ * created timer is returned.  If the timer cannot be created because there is
+ * insufficient FreeRTOS heap remaining to allocate the timer
+ * structures then NULL is returned.
  *
  * Example usage:
  * @verbatim
@@ -267,7 +267,7 @@ typedef void (*PendedFunction_t)( void *, uint32_t );
  * after 100 ticks, then xTimerPeriodInTicks should be set to 100.
  * Alternatively, if the timer must expire after 500ms, then xPeriod can be set
  * to ( 500 / portTICK_PERIOD_MS ) provided configTICK_RATE_HZ is less than or
- * equal to 1000.
+ * equal to 1000.  The timer period must be greater than 0.
  *
  * @param uxAutoReload If uxAutoReload is set to pdTRUE then the timer will
  * expire repeatedly with a frequency set by the xTimerPeriodInTicks parameter.

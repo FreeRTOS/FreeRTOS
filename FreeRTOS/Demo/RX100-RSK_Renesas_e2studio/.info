@@ -1,5 +1,0 @@
-TOOL_CHAIN=Renesas RXC Toolchain
-VERSION=v1.02.01
-TC_INSTALL=C:\Devtools\Renesas\Hew\Tools\Renesas\RX\1_2_1\
-VERSION_IDE=3.06.02.080
-E2STUDIO_VERSION=1.1.1.7

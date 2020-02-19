@@ -1,7 +1,0 @@
-[Header]
-MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
-Version=1.0
-[TOOL_LOC_STAMPS]
-tool_loc{DE18EB1A-B46B-486B-B96F-A811A635DFAC}=C:\devtools\Microchip\mplabc30\v3.25\bin\pic30-as.exe
-tool_loc{069BD372-6CA0-40D4-BF2F-5DC806D05083}=C:\devtools\Microchip\mplabc30\v3.25\bin\pic30-gcc.exe
-tool_loc{433C3D55-811D-409D-A6BF-159CF9355B42}=C:\devtools\Microchip\mplabc30\v3.25\bin\pic30-ld.exe

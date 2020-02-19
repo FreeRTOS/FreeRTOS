@@ -1,9 +1,0 @@
-execUserReset()
-{
-    __writeMemory32(0x1FFF8000, 0xE000ED08, "Memory"); //Vector table remap at 0x1FFF8000
-}
-
-execUserPreload()
-{
-    __writeMemory32(0x1FFF8000, 0xE000ED08, "Memory"); //Vector table remap at 0x1FFF8000
-}

@@ -1,4 +1,0 @@
-
-2006-08-31 (REL_1_2) Christian Walter <wolti@sil.at>:
- Notes: Recreated from lwIP port.
-

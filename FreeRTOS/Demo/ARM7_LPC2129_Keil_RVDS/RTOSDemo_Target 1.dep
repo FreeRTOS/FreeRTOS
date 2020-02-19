@@ -1,2 +1,0 @@
-Dependencies for Project 'RTOSDemo', Target 'Target 1': (DO NOT MODIFY !)
-F (.\Startup.s)(0x47F4A5D0)(--device DARMP -g --apcs=interwork -I "C:\Devtools\Keil305_2\ARM\INC\Philips" --list "Startup.lst" --xref -o "Startup.o")

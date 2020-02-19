@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<stf>
-	<project sdk="RTOSDemo_syslib" target="Nios II Application">
-	</project>
-</stf>

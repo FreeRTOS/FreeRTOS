@@ -1,8 +1,0 @@
-Base directory for the FreeRTOS IoT Libraries.
-
-+ abstractions
-Contains FreeRTOS specific implementations of abstractions used within the IoT
-libraries.
-
-+ c_sdk
-Contains the implementations of the IoT libraries - more will be rolled out soon.

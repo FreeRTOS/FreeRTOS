@@ -1,7 +1,0 @@
-if CONFIG_CSKY
-source "../../csi/csi_driver/csky/Kconfig"
-endif
-
-if CONFIG_SANECHIPS
-source "../../csi/csi_driver/sanechips/Kconfig"
-endif

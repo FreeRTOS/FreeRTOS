@@ -1,7 +1,0 @@
-+ standard
-Contains the implementation of IoT libraries that implement standard protocols
-and interfaces, such as MQTT.
-
-+ aws
-Contains the implementation of AWS IoT libraries that implement device side
-interfaces for using AWS IoT services such as Shadow, Jobs.

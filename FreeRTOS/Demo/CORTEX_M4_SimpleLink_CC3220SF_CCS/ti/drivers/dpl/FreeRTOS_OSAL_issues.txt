@@ -1,6 +1,0 @@
-1.  For UART drivers in blocking mode, the readCancel() and writeCancel()
-post the UART object's readSem and writeSem.  In FreeRTOS, there doesn't
-seem to be a way to know if we're in ISR context or not.  In ISR context,
-SemOSAL_postFromISR() must be used instead of SemOSAL_post().
-So we'll assume writeCancel() and readCancel() are not being called from
-ISR context and use SemOSAL_post().

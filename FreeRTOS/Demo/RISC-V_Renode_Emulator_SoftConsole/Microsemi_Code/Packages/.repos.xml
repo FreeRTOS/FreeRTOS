@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<repositories>
-  <repository>
-    <type>CMSIS Pack</type>
-    <name>Keil</name>
-    <url>http://www.keil.com/pack/index.pidx</url>
-  </repository>
-</repositories>

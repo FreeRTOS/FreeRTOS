@@ -38,7 +38,7 @@
 		<link>
 			<name>Demo_tasks/IntQueue.c</name>
 			<type>1</type>
-			<location>C:/Users/yuhzheng/Documents/freertos-code/FreeRTOS/Demo/Common/Minimal/IntQueue.c</location>
+			<locationURI>PARENT-1-PROJECT_LOC/Common/Minimal/IntQueue.c</locationURI>
 		</link>
 		<link>
 			<name>Demo_tasks/blocktim.c</name>

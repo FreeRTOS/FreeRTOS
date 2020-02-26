@@ -1,0 +1,68 @@
+From 18ca738652bd0ce0a1345cb3dcd7ffacbc196bfa Mon Sep 17 00:00:00 2001
+From: "Mark R. Tuttle" <mrtuttle@amazon.com>
+Date: Wed, 30 Oct 2019 09:38:56 -0400
+Subject: [PATCH] Remove static attributes from functions implementing
+ prvCheckOptions for CBMC proofs.
+
+---
+ .../freertos_plus_tcp/source/FreeRTOS_TCP_IP.c       | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.c
+index 4378e28de..2cd072d24 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.c
+@@ -225,20 +225,20 @@ static BaseType_t prvTCPPrepareConnect( FreeRTOS_Socket_t *pxSocket );
+ /*
+  * Parse the TCP option(s) received, if present.
+  */
+-static void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, NetworkBufferDescriptor_t *pxNetworkBuffer );
++void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, NetworkBufferDescriptor_t *pxNetworkBuffer );
+ 
+ /*
+  * Identify and deal with a single TCP header option, advancing the pointer to
+  * the header. This function returns pdTRUE or pdFALSE depending on whether the
+  * caller should continue to parse more header options or break the loop.
+  */
+-static BaseType_t prvSingleStepTCPHeaderOptions( const unsigned char ** const ppucPtr, const unsigned char ** const ppucLast, FreeRTOS_Socket_t ** const ppxSocket, TCPWindow_t ** const ppxTCPWindow);
++BaseType_t prvSingleStepTCPHeaderOptions( const unsigned char ** const ppucPtr, const unsigned char ** const ppucLast, FreeRTOS_Socket_t ** const ppxSocket, TCPWindow_t ** const ppxTCPWindow);
+ 
+ /*
+  * Skip past TCP header options when doing Selective ACK, until there are no
+  * more options left.
+  */
+-static void prvSkipPastRemainingOptions( const unsigned char ** const ppucPtr, FreeRTOS_Socket_t ** const ppxSocket, unsigned char * const ppucLen );
++void prvSkipPastRemainingOptions( const unsigned char ** const ppucPtr, FreeRTOS_Socket_t ** const ppxSocket, unsigned char * const ppucLen );
+ 
+ /*
+  * Set the initial properties in the options fields, like the preferred
+@@ -1157,7 +1157,7 @@ uint32_t ulInitialSequenceNumber = 0;
+  * that: ((pxTCPHeader->ucTCPOffset & 0xf0) > 0x50), meaning that the TP header
+  * is longer than the usual 20 (5 x 4) bytes.
+  */
+-static void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, NetworkBufferDescriptor_t *pxNetworkBuffer )
++void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, NetworkBufferDescriptor_t *pxNetworkBuffer )
+ {
+ TCPPacket_t * pxTCPPacket;
+ TCPHeader_t * pxTCPHeader;
+@@ -1191,7 +1191,7 @@ BaseType_t xShouldContinueLoop;
+ 
+ /*-----------------------------------------------------------*/
+ 
+-static BaseType_t prvSingleStepTCPHeaderOptions( const unsigned char ** const ppucPtr, const unsigned char ** const ppucLast, FreeRTOS_Socket_t ** const ppxSocket, TCPWindow_t ** const ppxTCPWindow)
++BaseType_t prvSingleStepTCPHeaderOptions( const unsigned char ** const ppucPtr, const unsigned char ** const ppucLast, FreeRTOS_Socket_t ** const ppxSocket, TCPWindow_t ** const ppxTCPWindow)
+ {
+ 	UBaseType_t uxNewMSS;
+ 	UBaseType_t xRemainingOptionsBytes = ( *ppucLast ) - ( *ppucPtr );
+@@ -1319,7 +1319,7 @@ static BaseType_t prvSingleStepTCPHeaderOptions( const unsigned char ** const pp
+ 
+ /*-----------------------------------------------------------*/
+ 
+-static void prvSkipPastRemainingOptions( const unsigned char ** const ppucPtr, FreeRTOS_Socket_t ** const ppxSocket, unsigned char * const pucLen )
++void prvSkipPastRemainingOptions( const unsigned char ** const ppucPtr, FreeRTOS_Socket_t ** const ppxSocket, unsigned char * const pucLen )
+ {
+ uint32_t ulFirst = ulChar2u32( ( *ppucPtr ) );
+ uint32_t ulLast  = ulChar2u32( ( *ppucPtr ) + 4 );
+-- 
+2.20.1 (Apple Git-117)
+

@@ -1,0 +1,26 @@
+From b7fbcc3979324838ec240b28717bfd7918bbb388 Mon Sep 17 00:00:00 2001
+From: Kareem Khazem <karkhaz@amazon.com>
+Date: Thu, 31 Jan 2019 15:07:52 -0800
+Subject: [PATCH 2/4] Change FreeRTOS_IP_Private.h union to struct
+
+This patch should be removed soon: It is for a CBMC issue being fixed now.
+---
+ libraries/freertos_plus/standard/freertos_plus_tcp/include/FreeRTOS_IP_Private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/include/FreeRTOS_IP_Private.h b/libraries/freertos_plus/standard/freertos_plus_tcp/include/FreeRTOS_IP_Private.h
+index 6006f89f0..d1a0cf898 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/include/FreeRTOS_IP_Private.h
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/include/FreeRTOS_IP_Private.h
+@@ -643,7 +643,7 @@ typedef struct XSOCKET
+ 	/* Before accessing any member of this structure, it should be confirmed */
+ 	/* that the protocol corresponds with the type of structure */
+ 
+-	union
++	struct
+ 	{
+ 		IPUDPSocket_t xUDP;
+ 		#if( ipconfigUSE_TCP == 1 )
+-- 
+2.21.0
+

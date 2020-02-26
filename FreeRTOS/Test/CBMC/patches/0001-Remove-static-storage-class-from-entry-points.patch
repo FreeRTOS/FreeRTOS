@@ -1,0 +1,121 @@
+From 884e69144abac08d203bbf8257c6b4a96a2a91ea Mon Sep 17 00:00:00 2001
+From: "Mark R. Tuttle" <mrtuttle@amazon.com>
+Date: Mon, 21 Oct 2019 14:17:50 -0400
+Subject: [PATCH] Remove static storage class from entry points
+
+Many of the entry points we wish to test are marked as being static.
+This commit removes the static keyword from all entry points that we
+test.
+
+Patch revised on October 21, 2019.
+---
+ .../freertos_plus_tcp/source/FreeRTOS_DHCP.c         |  6 +++---
+ .../standard/freertos_plus_tcp/source/FreeRTOS_DNS.c | 12 ++++++------
+ .../freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c      |  2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+index c4f79e8e7..d8089a5e7 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+@@ -198,7 +198,7 @@ static void prvSendDHCPDiscover( void );
+ /*
+  * Interpret message received on the DHCP socket.
+  */
+-static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
++BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
+
+ /*
+  * Generate a DHCP request packet, and send it on the DHCP socket.
+@@ -234,7 +234,7 @@ static void prvCreateDHCPSocket( void );
+ /*-----------------------------------------------------------*/
+
+ /* The next DHCP transaction Id to be used. */
+-static DHCPData_t xDHCPData;
++DHCPData_t xDHCPData;
+
+ /*-----------------------------------------------------------*/
+
+@@ -607,7 +607,7 @@ static void prvInitialiseDHCP( void )
+ }
+ /*-----------------------------------------------------------*/
+
+-static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
++BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
+ {
+ uint8_t *pucUDPPayload, *pucLastByte;
+ struct freertos_sockaddr xClient;
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+index e511ca324..d6f335304 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+@@ -116,7 +116,7 @@ static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
+ /*
+  * Simple routine that jumps over the NAME field of a resource record.
+  */
+-static uint8_t * prvSkipNameField( uint8_t *pucByte,
++uint8_t * prvSkipNameField( uint8_t *pucByte,
+ 								   size_t uxSourceLen );
+
+ /*
+@@ -124,7 +124,7 @@ static uint8_t * prvSkipNameField( uint8_t *pucByte,
+  * The parameter 'xExpected' indicates whether the identifier in the reply
+  * was expected, and thus if the DNS cache may be updated with the reply.
+  */
+-static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
++uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
+ 								  size_t uxBufferLength,
+ 								  BaseType_t xExpected );
+
+@@ -152,7 +152,7 @@ static uint32_t prvGetHostByName( const char *pcHostName,
+
+
+ #if( ipconfigUSE_DNS_CACHE == 1 ) || ( ipconfigDNS_USE_CALLBACKS == 1 )
+-	static uint8_t * prvReadNameField( uint8_t *pucByte,
++	uint8_t * prvReadNameField( uint8_t *pucByte,
+ 									   size_t uxSourceLen,
+ 									   char *pcName,
+ 									   size_t uxLen );
+@@ -765,7 +765,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
+
+ #if( ipconfigUSE_DNS_CACHE == 1 ) || ( ipconfigDNS_USE_CALLBACKS == 1 )
+
+-	static uint8_t * prvReadNameField( uint8_t *pucByte,
++	uint8_t * prvReadNameField( uint8_t *pucByte,
+ 									   size_t uxSourceLen,
+ 									   char *pcName,
+ 									   size_t uxDestLen )
+@@ -843,7 +843,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
+ #endif /* ipconfigUSE_DNS_CACHE || ipconfigDNS_USE_CALLBACKS */
+ /*-----------------------------------------------------------*/
+
+-static uint8_t * prvSkipNameField( uint8_t *pucByte,
++uint8_t * prvSkipNameField( uint8_t *pucByte,
+ 								   size_t uxSourceLen )
+ {
+ size_t uxChunkLength;
+@@ -949,7 +949,7 @@ DNSMessage_t *pxDNSMessageHeader;
+ #endif /* ipconfigUSE_NBNS */
+ /*-----------------------------------------------------------*/
+
+-static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
++uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
+ 								  size_t uxBufferLength,
+ 								  BaseType_t xExpected )
+ {
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
+index 1f5a845fa..1a69807c0 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
+@@ -206,7 +206,7 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
+
+ /* List of free TCP segments. */
+ #if( ipconfigUSE_TCP_WIN == 1 )
+-	static List_t xSegmentList;
++	List_t xSegmentList;
+ #endif
+
+ /* Logging verbosity level. */
+--
+2.20.1 (Apple Git-117)
+

@@ -1,0 +1,43 @@
+# The proof depends on one parameter:
+#   BUFFER_SIZE is the size of the buffer being parsed
+# The buffer size must be bounded because we must bound the number of
+# iterations loops iterating over the buffer.
+
+{
+  "ENTRY": "ProcessDHCPReplies",
+
+################################################################
+# Buffer size
+# Reasonable sizes are  BUFFER_SIZE > 241 = sizeof(DHCHMessage_t))
+# Sizes smaller than this causes CBMC to fail in simplify_byte_extract
+  "BUFFER_SIZE": 300,
+
+################################################################
+# Buffer header: sizeof(DHCHMessage_t) = 241
+  "BUFFER_HEADER": 241,
+
+################################################################
+# Buffer payload
+  "BUFFER_PAYLOAD": "__eval 1 if {BUFFER_SIZE} <= {BUFFER_HEADER} else {BUFFER_SIZE} - {BUFFER_HEADER} + 2",
+
+################################################################
+
+  "CBMCFLAGS": [
+      "--unwind 1",
+      "--unwindset memcmp.0:7,prvProcessDHCPReplies.0:{BUFFER_PAYLOAD}"
+  ],
+
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/portable/BufferManagement/BufferAllocation_2.goto",
+    "$(FREERTOS)/freertos_kernel/event_groups.goto",
+    "$(FREERTOS)/freertos_kernel/list.goto"
+  ],
+
+  "DEF":
+  [
+    "BUFFER_SIZE={BUFFER_SIZE}"
+  ]
+}

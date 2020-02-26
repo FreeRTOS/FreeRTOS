@@ -1,0 +1,51 @@
+{
+    "FREERTOS": [ " ../../.." ],
+    "PROOFS": [ "." ],
+
+    "DEF ": [
+	"_DEBUG",
+	"__free_rtos__",
+	"_CONSOLE",
+	"_WIN32_WINNT=0x0500",
+	"WINVER=0x400",
+	"_CRT_SECURE_NO_WARNINGS",
+	"__PRETTY_FUNCTION__=__FUNCTION__",
+	"'configASSERT(X)=__CPROVER_assert(X,\"Assertion Error\")'",
+    "'configPRECONDITION(X)=__CPROVER_assume(X)'"
+    ],
+
+    "INC ": [
+	"$(FREERTOS)/vendors/pc/boards/windows/aws_demos/config_files",
+	"$(FREERTOS)/vendors/pc/boards/windows/aws_demos/application_code",
+	"$(FREERTOS)/demos/include",
+	"$(FREERTOS)/freertos_kernel/include",
+	"$(FREERTOS)/freertos_kernel/portable/MSVC-MingW",
+	"$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/include",
+	"$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/portable/BufferManagement",
+	"$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/portable/Compiler/MSVC",
+	"$(FREERTOS)/libraries/freertos_plus/aws/ota/include",
+	"$(FREERTOS)/libraries/3rdparty/mbedtls/include/mbedtls",
+	"$(FREERTOS)/libraries/3rdparty/tracealyzer_recorder/Include",
+	"$(FREERTOS)/libraries/3rdparty/jsmn",
+	"$(FREERTOS)/libraries/3rdparty/pkcs11",
+	"$(FREERTOS)/libraries/3rdparty/tinycbor",
+	"$(FREERTOS)/libraries/3rdparty/win_pcap",
+	"$(FREERTOS)/libraries/c_sdk/standard/serializer/src/cbor",
+	"$(FREERTOS)/libraries/c_sdk/aws/defender/include",
+	"$(FREERTOS)/tools/cbmc/include"
+    ],
+
+    "CBMCFLAGS ": [
+	"--object-bits 7",
+	"--32",
+	"--bounds-check",
+	"--pointer-check"
+    ],
+
+    "FORWARD_SLASH": ["/"],
+
+    "TYPE_HEADERS": [
+        "$(FREERTOS)/freertos_kernel/queue.c"
+    ]
+}
+

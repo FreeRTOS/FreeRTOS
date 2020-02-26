@@ -1,0 +1,36 @@
+{
+    "GOTO_CC": [
+	"goto-cc"
+    ],
+    "COMPILE_LINK": [
+	"-o"
+    ],
+    "COMPILE_ONLY": [
+	"-c",
+	"-o"
+    ],
+    "RULE_INPUT": [
+	"$<"
+    ],
+    "RULE_OUTPUT": [
+	"$@"
+    ],
+    "RULE_GOTO": [
+	"%.goto : %.c"
+    ],
+    "INC": [
+	"$(PROOFS)/../windows"
+    ],
+    "RM": [
+	"$(RM)"
+    ],
+    "RM_RECURSIVE": [
+	"$(RM) -r"
+    ],
+    "CP": [
+	"cp"
+    ],
+    "TYPE_HEADER_SCRIPT": [
+      "$(PROOFS)/make_type_header_files.py"
+    ]
+}

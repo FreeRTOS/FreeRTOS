@@ -1,0 +1,17 @@
+{
+  "ENTRY": "ARPGetCacheEntryByMac",
+  "CBMCFLAGS":
+  [
+      "--unwind 7",
+      "--nondet-static"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_ARP.goto"
+  ],
+  "DEF":
+  [
+    "ipconfigUSE_ARP_REVERSED_LOOKUP=1", "ipconfigARP_CACHE_ENTRIES=6"
+  ]
+}

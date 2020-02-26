@@ -1,0 +1,44 @@
+{
+    "DEF": [
+	"WIN32"
+    ],
+    "GOTO_CC": [
+	"goto-cl"
+    ],
+    "COMPILE_LINK": [
+	"/Fe"
+    ],
+    "COMPILE_ONLY": [
+	"/c",
+	"/Fo"
+    ],
+    "RULE_INPUT": [
+	"$**"
+    ],
+    "RULE_OUTPUT": [
+	"$@"
+    ],
+    "RULE_GOTO": [
+	".c.goto:"
+    ],
+    "OPT": [
+	"/wd4210",
+	"/wd4127",
+	"/wd4214",
+	"/wd4201",
+	"/wd4244",
+	"/wd4310"
+    ],
+    "RM": [
+	"del"
+    ],
+    "RM_RECURSIVE": [
+	"del /s"
+    ],
+    "CP": [
+	"copy"
+    ],
+    "TYPE_HEADER_SCRIPT": [
+    "$(PROOFS)\\make_type_header_files.py"
+    ]
+}

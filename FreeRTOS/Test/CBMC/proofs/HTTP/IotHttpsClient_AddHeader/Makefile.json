@@ -1,0 +1,50 @@
+{
+  "ENTRY": "IotHttpsClient_AddHeader",
+
+  # A CBMC pointer is an object id followed by an offset into the object.
+  # The size of the offset is limited by the size of the object id.
+  "CBMC_OBJECTID_BITS": "7",
+  "CBMC_MAX_OBJECT_SIZE": "\"((UINT32_MAX>>CBMC_OBJECTID_BITS)>>1)\"",
+
+  "CBMCFLAGS":
+  [
+    "--unwind 1",
+    "--unwindset strlen.0:5,strncmp.0:20",
+
+    # uninitialized global variables have arbitrary values
+    "--nondet-static",
+
+    # interesting checks in addtion to memory safety
+    "--div-by-zero-check",
+    "--float-overflow-check",
+    "--nan-check",
+    "--pointer-overflow-check",
+    "--undefined-shift-check",
+    "--signed-overflow-check",
+    "--unsigned-overflow-check"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/libraries/c_sdk/standard/https/src/iot_https_client.goto"
+  ],
+  "INSTFLAGS":
+  [
+    "--remove-function-body IotLogError"
+  ],
+  "INC":
+  [
+    "$(FREERTOS)/libraries/c_sdk/standard/https/include",
+    "$(FREERTOS)/libraries/c_sdk/standard/https/src/private",
+    "$(FREERTOS)/libraries/3rdparty/http_parser",
+    "$(FREERTOS)/libraries/c_sdk/standard/common/include/",
+    "$(FREERTOS)/libraries/abstractions/platform/include/",
+    "$(FREERTOS)/libraries/abstractions/platform/freertos/include/",
+    "../../include"
+  ],
+  "DEF":
+  [
+    "CBMC_OBJECTID_BITS={CBMC_OBJECTID_BITS}",
+    "CBMC_MAX_OBJECT_SIZE={CBMC_MAX_OBJECT_SIZE}"
+  ]
+}

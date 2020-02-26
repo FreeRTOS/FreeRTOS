@@ -1,0 +1,20 @@
+{
+  "ENTRY": "CheckOptions",
+  "CBMCFLAGS": "--unwind 1 --unwindset prvCheckOptions.0:41",
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_Stream_Buffer.goto",
+    "$(FREERTOS)/freertos_kernel/tasks.goto",
+    "$(FREERTOS)/freertos_kernel/list.goto"
+  ],
+  "ABSTRACTIONS": "",
+  "BUFFER_SIZE": 100,
+  "UNWIND_GOTO": 0,
+  "DEF":
+  [
+    "BUFFER_SIZE={BUFFER_SIZE}"
+  ]
+}

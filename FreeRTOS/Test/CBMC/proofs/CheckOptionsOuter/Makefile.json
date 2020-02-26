@@ -1,0 +1,22 @@
+{
+  "ENTRY": "CheckOptionsOuter",
+  "BUFFER_SIZE": 100,
+  "CBMCFLAGS":
+  [
+      "--unwind 1",
+      "--unwindset prvSingleStepTCPHeaderOptions.2:32"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_Stream_Buffer.goto",
+    "$(FREERTOS)/freertos_kernel/tasks.goto",
+    "$(FREERTOS)/freertos_kernel/list.goto"
+  ],
+  "DEF":
+  [
+    "BUFFER_SIZE={BUFFER_SIZE}"
+  ]
+}

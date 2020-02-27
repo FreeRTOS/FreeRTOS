@@ -51,8 +51,12 @@
 #define configUSE_16_BIT_TICKS                     0
 #define configIDLE_SHOULD_YIELD                    1
 #define configUSE_CO_ROUTINES                      0
-#define configUSE_MUTEXES                          1
-#define configUSE_RECURSIVE_MUTEXES                1
+#ifndef configUSE_MUTEXES
+    #define configUSE_MUTEXES                          1
+#endif
+#ifndef configUSE_RECURSIVE_MUTEXES
+    #define configUSE_RECURSIVE_MUTEXES                1
+#endif
 #define configQUEUE_REGISTRY_SIZE                  0
 #define configUSE_APPLICATION_TASK_TAG             1
 #define configUSE_COUNTING_SEMAPHORES              1
@@ -61,7 +65,9 @@
 #define configRECORD_STACK_HIGH_ADDRESS            1
 
 /* Hook function related definitions. */
-#define configUSE_TICK_HOOK                        0
+#ifndef configUSE_TICK_HOOK
+    #define configUSE_TICK_HOOK                        0
+#endif
 #define configUSE_IDLE_HOOK                        1
 #define configUSE_MALLOC_FAILED_HOOK               1
 #define configCHECK_FOR_STACK_OVERFLOW             0      /* Not applicable to the Win32 port. */
@@ -80,8 +86,12 @@
 #define configMAX_CO_ROUTINE_PRIORITIES         ( 2 )
 
 /* Memory allocation strategy. */
-#define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configSUPPORT_STATIC_ALLOCATION         1
+#ifndef configSUPPORT_DYNAMIC_ALLOCATION
+    #define configSUPPORT_DYNAMIC_ALLOCATION        1
+#endif
+#ifndef configSUPPORT_STATIC_ALLOCATION
+    #define configSUPPORT_STATIC_ALLOCATION         1
+#endif
 
 
 /* Set the following definitions to 1 to include the API function, or zero
@@ -90,11 +100,15 @@
 #define INCLUDE_uxTaskPriorityGet               1
 #define INCLUDE_vTaskDelete                     1
 #define INCLUDE_vTaskCleanUpResources           0
-#define INCLUDE_vTaskSuspend                    1
+#ifndef INCLUDE_vTaskSuspend
+    #define INCLUDE_vTaskSuspend                    1
+#endif
 #define INCLUDE_vTaskDelayUntil                 1
 #define INCLUDE_vTaskDelay                      1
 #define INCLUDE_uxTaskGetStackHighWaterMark     1
-#define INCLUDE_xTaskGetSchedulerState          1
+#ifndef INCLUDE_xTaskGetSchedulerState
+    #define INCLUDE_xTaskGetSchedulerState          1
+#endif
 #define INCLUDE_xTimerGetTimerTaskHandle        0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
 #define INCLUDE_xQueueGetMutexHolder            1

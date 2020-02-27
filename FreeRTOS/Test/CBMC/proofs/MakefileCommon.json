@@ -15,7 +15,6 @@
     ],
 
     "INC ": [
-	"$(FREERTOS)/demos/include",
 	"$(FREERTOS)/Source/include",
 	"$(FREERTOS)/Source/portable/MSVC-MingW",
 	"$(FREERTOS)/Test/CBMC/include",

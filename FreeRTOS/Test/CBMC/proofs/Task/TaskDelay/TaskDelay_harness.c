@@ -32,10 +32,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_IP_Private.h"
-
 void vSetGlobalVariables( void );
 BaseType_t xPrepareTaskLists( void );
 BaseType_t xTaskResumeAllStub( void );

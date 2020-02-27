@@ -41,10 +41,10 @@ Here, `uxPendedTicks` could return any value, making it impossible to unwind
 as a regular variable so that the loop can be unwound.
 
 ---
-diff --git a/freertos_kernel/tasks.c b/freertos_kernel/tasks.c
+diff --git a/FreeRTOS/Source/tasks.c b/FreeRTOS/Source/tasks.c
 index ff657733..8b57d198 100644
---- a/freertos_kernel/tasks.c
-+++ b/freertos_kernel/tasks.c
+--- a/FreeRTOS/Source/tasks.c
++++ b/FreeRTOS/Source/tasks.c
 @@ -331,7 +331,7 @@ typedef tskTCB TCB_t;
  
  /*lint -save -e956 A manual analysis and inspection has been used to determine

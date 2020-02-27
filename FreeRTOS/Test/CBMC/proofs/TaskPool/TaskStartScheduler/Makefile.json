@@ -43,10 +43,10 @@
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/freertos_kernel/tasks.goto",
-    "$(FREERTOS)/freertos_kernel/list.goto",
-    "$(FREERTOS)/freertos_kernel/timers.goto",
-    "$(FREERTOS)/freertos_kernel/queue.goto"
+    "$(FREERTOS)/Source/tasks.goto",
+    "$(FREERTOS)/Source/list.goto",
+    "$(FREERTOS)/Source/timers.goto",
+    "$(FREERTOS)/Source/queue.goto"
   ],
   "INC":
   [

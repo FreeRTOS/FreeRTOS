@@ -40,12 +40,12 @@
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/freertos_kernel/tasks.goto",
-    "$(FREERTOS)/freertos_kernel/list.goto"
+    "$(FREERTOS)/Source/tasks.goto",
+    "$(FREERTOS)/Source/list.goto"
   ],
   "INC":
   [
-    "$(FREERTOS)/freertos_kernel/",
+    "$(FREERTOS)/Source/",
     "$(FREERTOS)/tools/cbmc/proofs/TaskPool/TaskGetCurrentTaskHandle/"
   ]
 }

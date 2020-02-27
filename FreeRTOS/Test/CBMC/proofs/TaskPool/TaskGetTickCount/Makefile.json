@@ -35,6 +35,6 @@
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/freertos_kernel/tasks.goto"
+    "$(FREERTOS)/Source/tasks.goto"
   ]
 }

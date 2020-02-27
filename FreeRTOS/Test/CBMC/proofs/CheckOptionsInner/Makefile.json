@@ -11,8 +11,8 @@
     "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.goto",
     "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.goto",
     "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_Stream_Buffer.goto",
-    "$(FREERTOS)/freertos_kernel/tasks.goto",
-    "$(FREERTOS)/freertos_kernel/list.goto"
+    "$(FREERTOS)/Source/tasks.goto",
+    "$(FREERTOS)/Source/list.goto"
   ],
   "DEF":
   [

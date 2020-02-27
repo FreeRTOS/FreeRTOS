@@ -18,8 +18,8 @@
 	"$(FREERTOS)/vendors/pc/boards/windows/aws_demos/config_files",
 	"$(FREERTOS)/vendors/pc/boards/windows/aws_demos/application_code",
 	"$(FREERTOS)/demos/include",
-	"$(FREERTOS)/freertos_kernel/include",
-	"$(FREERTOS)/freertos_kernel/portable/MSVC-MingW",
+	"$(FREERTOS)/Source/include",
+	"$(FREERTOS)/Source/portable/MSVC-MingW",
 	"$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/include",
 	"$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/portable/BufferManagement",
 	"$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/portable/Compiler/MSVC",
@@ -45,7 +45,7 @@
     "FORWARD_SLASH": ["/"],
 
     "TYPE_HEADERS": [
-        "$(FREERTOS)/freertos_kernel/queue.c"
+        "$(FREERTOS)/Source/queue.c"
     ]
 }
 

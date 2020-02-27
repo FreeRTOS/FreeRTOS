@@ -63,6 +63,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/Test/CBMC/proofs/TaskPool/TaskDelay/"
+    "$(FREERTOS)/Test/CBMC/proofs/Task/TaskDelay/"
   ]
 }

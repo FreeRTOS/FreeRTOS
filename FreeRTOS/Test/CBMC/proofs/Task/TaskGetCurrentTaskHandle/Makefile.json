@@ -46,6 +46,6 @@
   "INC":
   [
     "$(FREERTOS)/Source/",
-    "$(FREERTOS)/Test/CBMC/proofs/TaskPool/TaskGetCurrentTaskHandle/"
+    "$(FREERTOS)/Test/CBMC/proofs/Task/TaskGetCurrentTaskHandle/"
   ]
 }

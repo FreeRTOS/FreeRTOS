@@ -49,6 +49,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/Test/CBMC/proofs/TaskPool/TaskPrioritySet/"
+    "$(FREERTOS)/Test/CBMC/proofs/Task/TaskPrioritySet/"
   ]
 }

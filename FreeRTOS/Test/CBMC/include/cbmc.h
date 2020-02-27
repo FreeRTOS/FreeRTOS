@@ -35,7 +35,7 @@ enum CBMC_LOOP_CONDITION { CBMC_LOOP_BREAK, CBMC_LOOP_CONTINUE, CBMC_LOOP_RETURN
 
 /*
  * An assertion that pvPortMalloc returns NULL when asked to allocate 0 bytes.
- * This assertion is used in some of the TaskPool proofs.
+ * This assertion is used in some of the Task proofs.
  */
 #define __CPROVER_assert_zero_allocation() \
         __CPROVER_assert( pvPortMalloc(0) == NULL, \
@@ -45,7 +45,7 @@ enum CBMC_LOOP_CONDITION { CBMC_LOOP_BREAK, CBMC_LOOP_CONTINUE, CBMC_LOOP_RETURN
  * A stub for pvPortMalloc that nondeterministically chooses to return
  * either NULL or an allocation of the requested space.  The stub is
  * guaranteed to return NULL when asked to allocate 0 bytes.
- * This stub is used in some of the TaskPool proofs.
+ * This stub is used in some of the Task proofs.
  */
 void *pvPortMalloc( size_t xWantedSize )
 {

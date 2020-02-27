@@ -42,8 +42,8 @@
   ],
   "OBJS": [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/freertos_kernel/queue.goto",
-    "$(FREERTOS)/freertos_kernel/list.goto"
+    "$(FREERTOS)/Source/queue.goto",
+    "$(FREERTOS)/Source/list.goto"
   ],
   "DEF": [
     {

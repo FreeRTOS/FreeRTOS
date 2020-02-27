@@ -249,7 +249,4 @@ extern uint32_t ulRand();
 /* The platform that FreeRTOS is running on. */
 #define configPLATFORM_NAME    "WinSim"
 
-/* Header required for the tracealyzer recorder library. */
-#include "trcRecorder.h"
-
 #endif /* FREERTOS_CONFIG_H */

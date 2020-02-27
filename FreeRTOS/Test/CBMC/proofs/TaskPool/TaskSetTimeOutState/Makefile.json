@@ -43,6 +43,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/tools/cbmc/proofs/TaskPool/TaskSetTimeOutState/"
+    "$(FREERTOS)/Test/CBMC/proofs/TaskPool/TaskSetTimeOutState/"
   ]
 }

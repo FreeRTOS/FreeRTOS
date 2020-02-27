@@ -47,6 +47,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/tools/cbmc/proofs/TaskPool/TaskSwitchContext/"
+    "$(FREERTOS)/Test/CBMC/proofs/TaskPool/TaskSwitchContext/"
   ]
 }

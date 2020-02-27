@@ -58,6 +58,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/tools/cbmc/proofs/TaskPool/TaskIncrementTick/"
+    "$(FREERTOS)/Test/CBMC/proofs/TaskPool/TaskIncrementTick/"
   ]
 }

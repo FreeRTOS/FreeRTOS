@@ -44,7 +44,7 @@
     "$(ENTRY)_harness.goto",
     "$(FREERTOS)/Source/queue.goto",
     "$(FREERTOS)/Source/list.goto",
-    "$(FREERTOS)/tools/cbmc/proofs/CBMCStubLibrary/tasksStubs.goto"
+    "$(FREERTOS)/Test/CBMC/proofs/CBMCStubLibrary/tasksStubs.goto"
   ],
   "DEF": [
     "configUSE_TRACE_FACILITY=0",

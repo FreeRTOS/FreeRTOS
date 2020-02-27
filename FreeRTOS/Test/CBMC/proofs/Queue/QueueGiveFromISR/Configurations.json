@@ -63,7 +63,7 @@
     }
   ],
   "INC": [
-    "$(FREERTOS)/tools/cbmc/proofs/CBMCStubLibrary/",
+    "$(FREERTOS)/Test/CBMC/proofs/CBMCStubLibrary/",
     "."
   ],
   "GENERATE_HEADER": [

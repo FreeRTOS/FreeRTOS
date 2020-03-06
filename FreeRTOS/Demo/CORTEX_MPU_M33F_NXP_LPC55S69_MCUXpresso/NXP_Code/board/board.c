@@ -12,21 +12,10 @@
 #if defined(SDK_I2C_BASED_COMPONENT_USED) && SDK_I2C_BASED_COMPONENT_USED
 #include "fsl_i2c.h"
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
-#if defined BOARD_USE_CODEC
-#include "fsl_wm8904.h"
-#endif
 
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-
-#if defined BOARD_USE_CODEC
-codec_config_t boardCodecConfig = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
-                                   .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
-                                   .op.Init = WM8904_Init,
-                                   .op.Deinit = WM8904_Deinit,
-                                   .op.SetFormat = WM8904_SetAudioFormat};
-#endif
 
 /*******************************************************************************
  * Code
@@ -36,7 +25,7 @@ void BOARD_InitDebugConsole(void)
 {
     /* attach 12 MHz clock to FLEXCOMM0 (debug console) */
     CLOCK_AttachClk(BOARD_DEBUG_UART_CLK_ATTACH);
-    
+
     RESET_ClearPeripheralReset(BOARD_DEBUG_UART_RST);
 
     uint32_t uartClkSrcFreq = BOARD_DEBUG_UART_CLK_FREQ;
@@ -46,6 +35,9 @@ void BOARD_InitDebugConsole(void)
 
 void BOARD_InitDebugConsole_Core1(void)
 {
+    /* attach 12 MHz clock to FLEXCOMM1 (debug console) */
+    CLOCK_AttachClk(BOARD_DEBUG_UART_CLK_ATTACH_CORE1);
+
     RESET_ClearPeripheralReset(BOARD_DEBUG_UART_RST_CORE1);
 
     uint32_t uartClkSrcFreq = BOARD_DEBUG_UART_CLK_FREQ_CORE1;
@@ -73,13 +65,13 @@ status_t BOARD_I2C_Send(I2C_Type *base,
     i2c_master_transfer_t masterXfer;
 
     /* Prepare transfer structure. */
-    masterXfer.slaveAddress = deviceAddress;
-    masterXfer.direction = kI2C_Write;
-    masterXfer.subaddress = subAddress;
+    masterXfer.slaveAddress   = deviceAddress;
+    masterXfer.direction      = kI2C_Write;
+    masterXfer.subaddress     = subAddress;
     masterXfer.subaddressSize = subaddressSize;
-    masterXfer.data = txBuff;
-    masterXfer.dataSize = txBuffSize;
-    masterXfer.flags = kI2C_TransferDefaultFlag;
+    masterXfer.data           = txBuff;
+    masterXfer.dataSize       = txBuffSize;
+    masterXfer.flags          = kI2C_TransferDefaultFlag;
 
     return I2C_MasterTransferBlocking(base, &masterXfer);
 }
@@ -94,13 +86,13 @@ status_t BOARD_I2C_Receive(I2C_Type *base,
     i2c_master_transfer_t masterXfer;
 
     /* Prepare transfer structure. */
-    masterXfer.slaveAddress = deviceAddress;
-    masterXfer.subaddress = subAddress;
+    masterXfer.slaveAddress   = deviceAddress;
+    masterXfer.subaddress     = subAddress;
     masterXfer.subaddressSize = subaddressSize;
-    masterXfer.data = rxBuff;
-    masterXfer.dataSize = rxBuffSize;
-    masterXfer.direction = kI2C_Read;
-    masterXfer.flags = kI2C_TransferDefaultFlag;
+    masterXfer.data           = rxBuff;
+    masterXfer.dataSize       = rxBuffSize;
+    masterXfer.direction      = kI2C_Read;
+    masterXfer.flags          = kI2C_TransferDefaultFlag;
 
     return I2C_MasterTransferBlocking(base, &masterXfer);
 }

@@ -1,16 +1,17 @@
 /*
 ** ###################################################################
 **     Processors:          LPC55S69JBD100_cm33_core0
-**                          LPC55S69JET98_cm33_core0
+**                          LPC55S69JBD64_cm33_core0
+**                          LPC55S69JEV98_cm33_core0
 **
 **     Compilers:           GNU C Compiler
 **                          IAR ANSI C/C++ Compiler for ARM
 **                          Keil ARM C/C++ Compiler
 **                          MCUXpresso Compiler
 **
-**     Reference manual:    LPC55xx/LPC55Sxx User manual Rev.0.4  25 Sep 2018
-**     Version:             rev. 1.0, 2018-08-22
-**     Build:               b181219
+**     Reference manual:    LPC55S6x/LPC55S2x/LPC552x User manual(UM11126) Rev.1.3  16 May 2019
+**     Version:             rev. 1.1, 2019-05-16
+**     Build:               b190830
 **
 **     Abstract:
 **         Provides a system configuration function and a global variable that
@@ -18,7 +19,7 @@
 **         the oscillator (PLL) that is part of the microcontroller device.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2018 NXP
+**     Copyright 2016-2019 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -29,14 +30,16 @@
 **     Revisions:
 **     - rev. 1.0 (2018-08-22)
 **         Initial version based on v0.2UM
+**     - rev. 1.1 (2019-05-16)
+**         Initial A1 version based on v1.3UM
 **
 ** ###################################################################
 */
 
 /*!
  * @file LPC55S69_cm33_core0
- * @version 1.0
- * @date 2018-08-22
+ * @version 1.1
+ * @date 2019-05-16
  * @brief Device specific configuration file for LPC55S69_cm33_core0
  *        (implementation file)
  *
@@ -107,9 +110,10 @@ static float findPll0MMult(void)
     }
     else
     {
-        mMult_int = ((SYSCON->PLL0SSCG1 & SYSCON_PLL0SSCG1_MD_MBS_MASK) << 7U) | ((SYSCON->PLL0SSCG0) >> PLL_SSCG_MD_INT_P);
-        mMult_fract = ((float)((SYSCON->PLL0SSCG0) & PLL_SSCG_MD_FRACT_M)/(1 << PLL_SSCG_MD_INT_P));
-        mMult = (float)mMult_int + mMult_fract;
+        mMult_int =
+            ((SYSCON->PLL0SSCG1 & SYSCON_PLL0SSCG1_MD_MBS_MASK) << 7U) | ((SYSCON->PLL0SSCG0) >> PLL_SSCG_MD_INT_P);
+        mMult_fract = ((float)((SYSCON->PLL0SSCG0) & PLL_SSCG_MD_FRACT_M) / (1 << PLL_SSCG_MD_INT_P));
+        mMult       = (float)mMult_int + mMult_fract;
     }
     if (mMult == 0)
     {
@@ -178,9 +182,7 @@ static uint32_t findPll1MMult(void)
  */
 static uint32_t CLOCK_GetFro12MFreq(void)
 {
-    return (PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_FRO192M_MASK) ?
-               0 :
-               (ANACTRL->FRO192M_CTRL & ANACTRL_FRO192M_CTRL_ENA_12MHZCLK_MASK) ? 12000000U : 0U;
+    return (ANACTRL->FRO192M_CTRL & ANACTRL_FRO192M_CTRL_ENA_12MHZCLK_MASK) ? 12000000U : 0U;
 }
 
 /* Get FRO 1M Clk */
@@ -207,9 +209,7 @@ static uint32_t CLOCK_GetExtClkFreq(void)
  */
 static uint32_t CLOCK_GetFroHfFreq(void)
 {
-    return (PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_FRO192M_MASK) ?
-               0 :
-               (ANACTRL->FRO192M_CTRL & ANACTRL_FRO192M_CTRL_ENA_96MHZCLK_MASK) ? 96000000U : 0U;
+    return (ANACTRL->FRO192M_CTRL & ANACTRL_FRO192M_CTRL_ENA_96MHZCLK_MASK) ? 96000000U : 0U;
 }
 
 /* Get RTC OSC Clk */
@@ -218,14 +218,12 @@ static uint32_t CLOCK_GetFroHfFreq(void)
  */
 static uint32_t CLOCK_GetOsc32KFreq(void)
 {
-    return ((~(PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_FRO32K_MASK)) && (PMC->RTCOSC32K & PMC_RTCOSC32K_SEL(0))) ?
+    return ((!(PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_FRO32K_MASK)) && (!(PMC->RTCOSC32K & PMC_RTCOSC32K_SEL_MASK))) ?
                CLK_RTC_32K_CLK :
-               ((~(PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_XTAL32K_MASK)) && (PMC->RTCOSC32K & PMC_RTCOSC32K_SEL(1))) ?
+               ((!(PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_XTAL32K_MASK)) && (PMC->RTCOSC32K & PMC_RTCOSC32K_SEL_MASK)) ?
                CLK_RTC_32K_CLK :
                0U;
 }
-
-
 
 /* ----------------------------------------------------------------------------
    -- Core clock
@@ -237,36 +235,44 @@ uint32_t SystemCoreClock = DEFAULT_SYSTEM_CLOCK;
    -- SystemInit()
    ---------------------------------------------------------------------------- */
 
-__attribute__ ((weak)) void SystemInit (void) {
+__attribute__((weak)) void SystemInit(void)
+{
 #if ((__FPU_PRESENT == 1) && (__FPU_USED == 1))
-  SCB->CPACR |= ((3UL << 10*2) | (3UL << 11*2));    /* set CP10, CP11 Full Access */
-#endif /* ((__FPU_PRESENT == 1) && (__FPU_USED == 1)) */
+    SCB->CPACR |= ((3UL << 10 * 2) | (3UL << 11 * 2)); /* set CP10, CP11 Full Access in Secure mode */
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    SCB_NS->CPACR |= ((3UL << 10 * 2) | (3UL << 11 * 2)); /* set CP10, CP11 Full Access in Normal mode */
+#endif                                                    /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
+#endif                                                    /* ((__FPU_PRESENT == 1) && (__FPU_USED == 1)) */
 
-  SCB->CPACR |= ((3UL << 0*2) | (3UL << 1*2));    /* set CP0, CP1 Full Access (enable PowerQuad) */
+    SCB->CPACR |= ((3UL << 0 * 2) | (3UL << 1 * 2)); /* set CP0, CP1 Full Access in Secure mode (enable PowerQuad) */
+#if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    SCB_NS->CPACR |= ((3UL << 0 * 2) | (3UL << 1 * 2)); /* set CP0, CP1 Full Access in Normal mode (enable PowerQuad) */
+#endif                                                  /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
-  SCB->NSACR |= ((3UL << 0) | (3UL << 10));   /* enable CP0, CP1, CP10, CP11 Non-secure Access */
+    SCB->NSACR |= ((3UL << 0) | (3UL << 10)); /* enable CP0, CP1, CP10, CP11 Non-secure Access */
 
 #if defined(__MCUXPRESSO)
-    extern void(*const g_pfnVectors[]) (void);
-    SCB->VTOR = (uint32_t) &g_pfnVectors;
+    extern void (*const g_pfnVectors[])(void);
+    SCB->VTOR = (uint32_t)&g_pfnVectors;
 #else
     extern void *__Vectors;
-    SCB->VTOR = (uint32_t) &__Vectors;
+    SCB->VTOR = (uint32_t)&__Vectors;
 #endif
     SYSCON->TRACECLKDIV = 0;
 /* Optionally enable RAM banks that may be off by default at reset */
 #if !defined(DONT_ENABLE_DISABLED_RAMBANKS)
-    SYSCON->AHBCLKCTRLSET[0] = SYSCON_AHBCLKCTRL0_SRAM_CTRL1_MASK | SYSCON_AHBCLKCTRL0_SRAM_CTRL2_MASK
-                          | SYSCON_AHBCLKCTRL0_SRAM_CTRL3_MASK | SYSCON_AHBCLKCTRL0_SRAM_CTRL4_MASK;
+    SYSCON->AHBCLKCTRLSET[0] = SYSCON_AHBCLKCTRL0_SRAM_CTRL1_MASK | SYSCON_AHBCLKCTRL0_SRAM_CTRL2_MASK |
+                               SYSCON_AHBCLKCTRL0_SRAM_CTRL3_MASK | SYSCON_AHBCLKCTRL0_SRAM_CTRL4_MASK;
 #endif
-  SystemInitHook();
+    SystemInitHook();
 }
 
 /* ----------------------------------------------------------------------------
    -- SystemCoreClockUpdate()
    ---------------------------------------------------------------------------- */
 
-void SystemCoreClockUpdate (void) {
+void SystemCoreClockUpdate(void)
+{
     uint32_t clkRate = 0;
     uint32_t prediv, postdiv;
     float workRate;
@@ -309,15 +315,18 @@ void SystemCoreClockUpdate (void) {
                 default:
                     break;
             }
-            if (((SYSCON->PLL0CTRL & SYSCON_PLL0CTRL_BYPASSPLL_MASK) == 0) && (SYSCON->PLL0CTRL & SYSCON_PLL0CTRL_CLKEN_MASK) && ((PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_PLL0_MASK) == 0) && ((PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_PLL0_SSCG_MASK) == 0))
+            if (((SYSCON->PLL0CTRL & SYSCON_PLL0CTRL_BYPASSPLL_MASK) == 0) &&
+                (SYSCON->PLL0CTRL & SYSCON_PLL0CTRL_CLKEN_MASK) &&
+                ((PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_PLL0_MASK) == 0) &&
+                ((PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_PLL0_SSCG_MASK) == 0))
             {
-                prediv = findPll0PreDiv();
+                prediv  = findPll0PreDiv();
                 postdiv = findPll0PostDiv();
                 /* Adjust input clock */
                 clkRate = clkRate / prediv;
                 /* MDEC used for rate */
                 workRate = (float)clkRate * (float)findPll0MMult();
-                clkRate = (uint32_t)(workRate / ((float)postdiv));
+                clkRate  = (uint32_t)(workRate / ((float)postdiv));
             }
             break;
         case 0x02: /* PLL1 clock (pll1_clk)*/
@@ -338,17 +347,19 @@ void SystemCoreClockUpdate (void) {
                 default:
                     break;
             }
-            if (((SYSCON->PLL1CTRL & SYSCON_PLL1CTRL_BYPASSPLL_MASK) == 0) && (SYSCON->PLL1CTRL & SYSCON_PLL1CTRL_CLKEN_MASK) && ((PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_PLL1_MASK) == 0))
+            if (((SYSCON->PLL1CTRL & SYSCON_PLL1CTRL_BYPASSPLL_MASK) == 0) &&
+                (SYSCON->PLL1CTRL & SYSCON_PLL1CTRL_CLKEN_MASK) &&
+                ((PMC->PDRUNCFG0 & PMC_PDRUNCFG0_PDEN_PLL1_MASK) == 0))
             {
                 /* PLL is not in bypass mode, get pre-divider, post-divider, and M divider */
-                prediv = findPll1PreDiv();
+                prediv  = findPll1PreDiv();
                 postdiv = findPll1PostDiv();
                 /* Adjust input clock */
                 clkRate = clkRate / prediv;
 
                 /* MDEC used for rate */
                 workRate1 = (uint64_t)clkRate * (uint64_t)findPll1MMult();
-                clkRate = workRate1 / ((uint64_t)postdiv);
+                clkRate   = workRate1 / ((uint64_t)postdiv);
             }
             break;
         case 0x03: /* RTC oscillator 32 kHz output (32k_clk) */
@@ -364,6 +375,7 @@ void SystemCoreClockUpdate (void) {
    -- SystemInitHook()
    ---------------------------------------------------------------------------- */
 
-__attribute__ ((weak)) void SystemInitHook (void) {
-  /* Void implementation of the weak function. */
+__attribute__((weak)) void SystemInitHook(void)
+{
+    /* Void implementation of the weak function. */
 }

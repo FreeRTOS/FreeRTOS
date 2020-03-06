@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -21,36 +21,44 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief USART driver version 2.0.3. */
-#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 0, 3))
+/*! @brief USART driver version 2.1.1. */
+#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
 /*@}*/
 
 #define USART_FIFOTRIG_TXLVL_GET(base) (((base)->FIFOTRIG & USART_FIFOTRIG_TXLVL_MASK) >> USART_FIFOTRIG_TXLVL_SHIFT)
 #define USART_FIFOTRIG_RXLVL_GET(base) (((base)->FIFOTRIG & USART_FIFOTRIG_RXLVL_MASK) >> USART_FIFOTRIG_RXLVL_SHIFT)
 
 /*! @brief Error codes for the USART driver. */
-enum _usart_status
+enum
 {
-    kStatus_USART_TxBusy = MAKE_STATUS(kStatusGroup_LPC_USART, 0),              /*!< Transmitter is busy. */
-    kStatus_USART_RxBusy = MAKE_STATUS(kStatusGroup_LPC_USART, 1),              /*!< Receiver is busy. */
-    kStatus_USART_TxIdle = MAKE_STATUS(kStatusGroup_LPC_USART, 2),              /*!< USART transmitter is idle. */
-    kStatus_USART_RxIdle = MAKE_STATUS(kStatusGroup_LPC_USART, 3),              /*!< USART receiver is idle. */
-    kStatus_USART_TxError = MAKE_STATUS(kStatusGroup_LPC_USART, 7),             /*!< Error happens on txFIFO. */
-    kStatus_USART_RxError = MAKE_STATUS(kStatusGroup_LPC_USART, 9),             /*!< Error happens on rxFIFO. */
-    kStatus_USART_RxRingBufferOverrun = MAKE_STATUS(kStatusGroup_LPC_USART, 8), /*!< Error happens on rx ring buffer */
-    kStatus_USART_NoiseError = MAKE_STATUS(kStatusGroup_LPC_USART, 10),         /*!< USART noise error. */
-    kStatus_USART_FramingError = MAKE_STATUS(kStatusGroup_LPC_USART, 11),       /*!< USART framing error. */
-    kStatus_USART_ParityError = MAKE_STATUS(kStatusGroup_LPC_USART, 12),        /*!< USART parity error. */
+    kStatus_USART_TxBusy              = MAKE_STATUS(kStatusGroup_LPC_USART, 0),  /*!< Transmitter is busy. */
+    kStatus_USART_RxBusy              = MAKE_STATUS(kStatusGroup_LPC_USART, 1),  /*!< Receiver is busy. */
+    kStatus_USART_TxIdle              = MAKE_STATUS(kStatusGroup_LPC_USART, 2),  /*!< USART transmitter is idle. */
+    kStatus_USART_RxIdle              = MAKE_STATUS(kStatusGroup_LPC_USART, 3),  /*!< USART receiver is idle. */
+    kStatus_USART_TxError             = MAKE_STATUS(kStatusGroup_LPC_USART, 7),  /*!< Error happens on txFIFO. */
+    kStatus_USART_RxError             = MAKE_STATUS(kStatusGroup_LPC_USART, 9),  /*!< Error happens on rxFIFO. */
+    kStatus_USART_RxRingBufferOverrun = MAKE_STATUS(kStatusGroup_LPC_USART, 8),  /*!< Error happens on rx ring buffer */
+    kStatus_USART_NoiseError          = MAKE_STATUS(kStatusGroup_LPC_USART, 10), /*!< USART noise error. */
+    kStatus_USART_FramingError        = MAKE_STATUS(kStatusGroup_LPC_USART, 11), /*!< USART framing error. */
+    kStatus_USART_ParityError         = MAKE_STATUS(kStatusGroup_LPC_USART, 12), /*!< USART parity error. */
     kStatus_USART_BaudrateNotSupport =
         MAKE_STATUS(kStatusGroup_LPC_USART, 13), /*!< Baudrate is not support in current clock source */
 };
+
+/*! @brief USART synchronous mode. */
+typedef enum _usart_sync_mode
+{
+    kUSART_SyncModeDisabled = 0x0U, /*!< Asynchronous mode.       */
+    kUSART_SyncModeSlave    = 0x2U, /*!< Synchronous slave mode.  */
+    kUSART_SyncModeMaster   = 0x3U, /*!< Synchronous master mode. */
+} usart_sync_mode_t;
 
 /*! @brief USART parity mode. */
 typedef enum _usart_parity_mode
 {
     kUSART_ParityDisabled = 0x0U, /*!< Parity disabled */
-    kUSART_ParityEven = 0x2U,     /*!< Parity enabled, type even, bit setting: PE|PT = 10 */
-    kUSART_ParityOdd = 0x3U,      /*!< Parity enabled, type odd,  bit setting: PE|PT = 11 */
+    kUSART_ParityEven     = 0x2U, /*!< Parity enabled, type even, bit setting: PE|PT = 10 */
+    kUSART_ParityOdd      = 0x3U, /*!< Parity enabled, type odd,  bit setting: PE|PT = 11 */
 } usart_parity_mode_t;
 
 /*! @brief USART stop bit count. */
@@ -66,6 +74,13 @@ typedef enum _usart_data_len
     kUSART_7BitsPerChar = 0U, /*!< Seven bit mode */
     kUSART_8BitsPerChar = 1U, /*!< Eight bit mode */
 } usart_data_len_t;
+
+/*! @brief USART clock polarity configuration, used in sync mode.*/
+typedef enum _usart_clock_polarity
+{
+    kUSART_RxSampleOnFallingEdge = 0x0U, /*!< Un_RXD is sampled on the falling edge of SCLK. */
+    kUSART_RxSampleOnRisingEdge  = 0x1U, /*!< Un_RXD is sampled on the rising edge of SCLK. */
+} usart_clock_polarity_t;
 
 /*! @brief txFIFO watermark values */
 typedef enum _usart_txfifo_watermark
@@ -111,12 +126,12 @@ enum _usart_interrupt_enable
  */
 enum _usart_flags
 {
-    kUSART_TxError = (USART_FIFOSTAT_TXERR_MASK),                 /*!< TEERR bit, sets if TX buffer is error */
-    kUSART_RxError = (USART_FIFOSTAT_RXERR_MASK),                 /*!< RXERR bit, sets if RX buffer is error */
-    kUSART_TxFifoEmptyFlag = (USART_FIFOSTAT_TXEMPTY_MASK),       /*!< TXEMPTY bit, sets if TX buffer is empty */
-    kUSART_TxFifoNotFullFlag = (USART_FIFOSTAT_TXNOTFULL_MASK),   /*!< TXNOTFULL bit, sets if TX buffer is not full */
+    kUSART_TxError            = (USART_FIFOSTAT_TXERR_MASK),      /*!< TEERR bit, sets if TX buffer is error */
+    kUSART_RxError            = (USART_FIFOSTAT_RXERR_MASK),      /*!< RXERR bit, sets if RX buffer is error */
+    kUSART_TxFifoEmptyFlag    = (USART_FIFOSTAT_TXEMPTY_MASK),    /*!< TXEMPTY bit, sets if TX buffer is empty */
+    kUSART_TxFifoNotFullFlag  = (USART_FIFOSTAT_TXNOTFULL_MASK),  /*!< TXNOTFULL bit, sets if TX buffer is not full */
     kUSART_RxFifoNotEmptyFlag = (USART_FIFOSTAT_RXNOTEMPTY_MASK), /*!< RXNOEMPTY bit, sets if RX buffer is not empty */
-    kUSART_RxFifoFullFlag = (USART_FIFOSTAT_RXFULL_MASK),         /*!< RXFULL bit, sets if RX buffer is full */
+    kUSART_RxFifoFullFlag     = (USART_FIFOSTAT_RXFULL_MASK),     /*!< RXFULL bit, sets if RX buffer is full */
 };
 
 /*! @brief USART configuration structure. */
@@ -129,8 +144,11 @@ typedef struct _usart_config
     bool loopback;                        /*!< Enable peripheral loopback */
     bool enableRx;                        /*!< Enable RX */
     bool enableTx;                        /*!< Enable TX */
+    bool enableContinuousSCLK;            /*!< USART continuous Clock generation enable in synchronous master mode. */
     usart_txfifo_watermark_t txWatermark; /*!< txFIFO watermark */
     usart_rxfifo_watermark_t rxWatermark; /*!< rxFIFO watermark */
+    usart_sync_mode_t syncMode; /*!< Transfer mode select - asynchronous, synchronous master, synchronous slave. */
+    usart_clock_polarity_t clockPolarity; /*!< Selects the clock polarity and sampling edge in synchronous mode. */
 } usart_config_t;
 
 /*! @brief USART transfer structure. */
@@ -167,9 +185,12 @@ struct _usart_handle
     volatile uint8_t txState; /*!< TX transfer state. */
     volatile uint8_t rxState; /*!< RX transfer state */
 
-    usart_txfifo_watermark_t txWatermark; /*!< txFIFO watermark */
-    usart_rxfifo_watermark_t rxWatermark; /*!< rxFIFO watermark */
+    uint8_t txWatermark; /*!< txFIFO watermark */
+    uint8_t rxWatermark; /*!< rxFIFO watermark */
 };
+
+/*! @brief Typedef for usart interrupt handler. */
+typedef void (*flexcomm_usart_irq_handler_t)(USART_Type *base, usart_handle_t *handle);
 
 /*******************************************************************************
  * API
@@ -247,7 +268,7 @@ void USART_GetDefaultConfig(usart_config_t *config);
  *
  * @param base USART peripheral base address.
  * @param baudrate_Bps USART baudrate to be set.
- * @param srcClock_Hz USART clock source freqency in HZ.
+ * @param srcClock_Hz USART clock source frequency in HZ.
  * @retval kStatus_USART_BaudrateNotSupport Baudrate is not support in current clock source.
  * @retval kStatus_Success Set baudrate succeed.
  * @retval kStatus_InvalidArgument One or more arguments are invalid.
@@ -326,7 +347,7 @@ static inline void USART_ClearStatusFlags(USART_Type *base, uint32_t mask)
  */
 static inline void USART_EnableInterrupts(USART_Type *base, uint32_t mask)
 {
-    base->FIFOINTENSET = mask & 0xF;
+    base->FIFOINTENSET = mask & 0xFUL;
 }
 
 /*!
@@ -344,7 +365,7 @@ static inline void USART_EnableInterrupts(USART_Type *base, uint32_t mask)
  */
 static inline void USART_DisableInterrupts(USART_Type *base, uint32_t mask)
 {
-    base->FIFOINTENCLR = mask & 0xF;
+    base->FIFOINTENCLR = mask & 0xFUL;
 }
 
 /*!
@@ -360,8 +381,8 @@ static inline uint32_t USART_GetEnabledInterrupts(USART_Type *base)
 }
 
 /*!
-* @brief Enable DMA for Tx
-*/
+ * @brief Enable DMA for Tx
+ */
 static inline void USART_EnableTxDMA(USART_Type *base, bool enable)
 {
     if (enable)
@@ -375,8 +396,8 @@ static inline void USART_EnableTxDMA(USART_Type *base, bool enable)
 }
 
 /*!
-* @brief Enable DMA for Rx
-*/
+ * @brief Enable DMA for Rx
+ */
 static inline void USART_EnableRxDMA(USART_Type *base, bool enable)
 {
     if (enable)
@@ -408,6 +429,46 @@ static inline void USART_EnableCTS(USART_Type *base, bool enable)
     }
 }
 
+/*!
+ * @brief Continuous Clock generation.
+ * By default, SCLK is only output while data is being transmitted in synchronous mode.
+ * Enable this funciton, SCLK will run continuously in synchronous mode, allowing
+ * characters to be received on Un_RxD independently from transmission on Un_TXD).
+ *
+ * @param base    USART peripheral base address.
+ * @param enable  Enable Continuous Clock generation mode or not, true for enable and false for disable.
+ */
+static inline void USART_EnableContinuousSCLK(USART_Type *base, bool enable)
+{
+    if (enable)
+    {
+        base->CTL |= USART_CTL_CC_MASK;
+    }
+    else
+    {
+        base->CTL &= ~USART_CTL_CC_MASK;
+    }
+}
+
+/*!
+ * @brief Enable Continuous Clock generation bit auto clear.
+ * While enable this cuntion, the Continuous Clock bit is automatically cleared when a complete
+ * character has been received. This bit is cleared at the same time.
+ *
+ * @param base    USART peripheral base address.
+ * @param enable  Enable auto clear or not, true for enable and false for disable.
+ */
+static inline void USART_EnableAutoClearSCLK(USART_Type *base, bool enable)
+{
+    if (enable)
+    {
+        base->CTL |= USART_CTL_CLRCCONRX_MASK;
+    }
+    else
+    {
+        base->CTL &= ~USART_CTL_CLRCCONRX_MASK;
+    }
+}
 /* @} */
 
 /*!
@@ -440,7 +501,7 @@ static inline void USART_WriteByte(USART_Type *base, uint8_t data)
  */
 static inline uint8_t USART_ReadByte(USART_Type *base)
 {
-    return base->FIFORD;
+    return (uint8_t)base->FIFORD;
 }
 
 /*!

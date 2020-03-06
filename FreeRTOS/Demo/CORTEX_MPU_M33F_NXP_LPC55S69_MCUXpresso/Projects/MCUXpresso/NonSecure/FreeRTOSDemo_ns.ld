@@ -97,12 +97,12 @@ SECTIONS
         *(.ARM.extab* .gnu.linkonce.armextab.*)
     } > PROGRAM_FLASH
 
-    __exidx_start = .;
     .ARM.exidx : ALIGN(4)
     {
+        __exidx_start = .;
         *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+        __exidx_end = .;
     } > PROGRAM_FLASH
-    __exidx_end = .;
 
     /* Text Section End. */
     _etext = .;
@@ -120,6 +120,8 @@ SECTIONS
     {
         FILL(0xff)
         _data = .;
+        PROVIDE(__start_data_RAM = .);
+        PROVIDE(__start_data_Ram0 = .);
 
         /* Privileged data - It needs to be 32 byte aligned to satisfy MPU requirements. */
         . = ALIGN(32);
@@ -133,27 +135,37 @@ SECTIONS
         *(.ramfunc*)
         *(.data*)
         _edata = .;
+        PROVIDE(__end_data_RAM = .);
+        PROVIDE(__end_data_Ram0 = .);
     } > Ram0 AT>PROGRAM_FLASH
 
     /* Main BSS Section. */
     .bss : ALIGN(4)
     {
         _bss = .;
+        PROVIDE(__start_bss_RAM = .);
+        PROVIDE(__start_bss_Ram0 = .);
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
         _ebss = .;
+        PROVIDE(__end_bss_RAM = .);
+        PROVIDE(__end_bss_Ram0 = .);
         PROVIDE(end = .);
-    } > Ram0
+    } > Ram0 AT>Ram0
 
     /* Default Noinit Section. */
     .noinit (NOLOAD) : ALIGN(4)
     {
         _noinit = .;
+        PROVIDE(__start_noinit_RAM = .);
+        PROVIDE(__start_noinit_Ram0 = .);
         *(.noinit*)
         . = ALIGN(4);
         _end_noinit = .;
-    } > Ram0
+        PROVIDE(__end_noinit_RAM = .);
+        PROVIDE(__end_noinit_Ram0 = .);
+    } > Ram0 AT>Ram0
 
     /* Reserve space and place heap in memory map. */
     _HeapSize = 0x1000;

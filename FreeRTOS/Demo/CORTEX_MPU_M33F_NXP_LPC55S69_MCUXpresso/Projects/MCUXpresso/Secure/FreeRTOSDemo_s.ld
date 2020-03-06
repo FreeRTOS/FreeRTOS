@@ -9,7 +9,7 @@ MEMORY
 {
     /* Define each memory region. */
     PROGRAM_FLASH (rx)  : ORIGIN = 0x10000000, LENGTH = 0xfe00 /* 63.5K bytes (alias Flash). */
-    veneer_table (rx)   : ORIGIN = 0x1000fe00, LENGTH = 0x200  /* 0.5K bytes (alias Flash2). */
+    SG_veneer_table (rx): ORIGIN = 0x1000fe00, LENGTH = 0x200  /* 0.5K bytes (alias Flash2). */
     Ram0 (rwx)          : ORIGIN = 0x30000000, LENGTH = 0x8000 /* 32K bytes (alias RAM). */
 }
 
@@ -19,9 +19,9 @@ __base_Flash            = 0x10000000;           /* Flash. */
 __top_PROGRAM_FLASH     = 0x10000000 + 0xfe00;  /* 63.5K bytes */
 __top_Flash             = 0x10000000 + 0xfe00;  /* 63.5K bytes */
 
-__base_veneer_table     = 0x1000fe00;           /* veneer_table. */
+__base_SG_veneer_table  = 0x1000fe00;           /* SG_veneer_table. */
 __base_Flash2           = 0x1000fe00;           /* Flash2. */
-__top_veneer_table      = 0x1000fe00 + 0x200;   /* 0.5K bytes. */
+__top_SG_veneer_table   = 0x1000fe00 + 0x200;   /* 0.5K bytes. */
 __top_Flash2            = 0x1000fe00 + 0x200;   /* 0.5K bytes. */
 
 __base_Ram0             = 0x30000000;           /* Ram0. */
@@ -34,17 +34,34 @@ ENTRY(ResetISR)
 
 SECTIONS
 {
+    /* Place TrustZone Secure Gateway Stubs Section in SG_veneer_table'
+     * (Non-Secure Callable) memory. */
+    .gnu.sgstubs : ALIGN (32)
+    {
+        . = ALIGN(32);
+        _start_sg = .;
+        *(.gnu.sgstubs*)
+        . = ALIGN(32);
+        _end_sg = .;
+    } > SG_veneer_table
+
     /* Veneer Table Section (Non-Secure Callable). */
     .text_Flash2 : ALIGN(4)
     {
         FILL(0xff)
-        *(.text_Flash2*) /* For compatibility with previous releases. */
-        *(.text_veneer_table*) /* For compatibility with previous releases. */
-        *(.text.$Flash2*)
-        *(.text.$veneer_table*)
-        *(.rodata.$Flash2*)
-        *(.rodata.$veneer_table*)
-    } > veneer_table
+        *(.text_Flash2)             /* For compatibility with previous releases. */
+        *(.text_SG_veneer_table)    /* For compatibility with previous releases. */
+        *(.text.$Flash2)
+        *(.text.$SG_veneer_table)
+        *(.text_Flash2.*)           /* For compatibility with previous releases. */
+        *(.text_SG_veneer_table.*)  /* For compatibility with previous releases. */
+        *(.text.$Flash2.*)
+        *(.text.$SG_veneer_table.*)
+        *(.rodata.$Flash2)
+        *(.rodata.$SG_veneer_table)
+        *(.rodata.$Flash2.*)
+        *(.rodata.$SG_veneer_table.*)
+    } > SG_veneer_table
 
     /* Vector Table Section. */
     .text : ALIGN(4)
@@ -89,21 +106,11 @@ SECTIONS
         *(.ARM.extab* .gnu.linkonce.armextab.*)
     } > PROGRAM_FLASH
 
-    __exidx_start = .;
     .ARM.exidx : ALIGN(4)
     {
+        __exidx_start = .;
         *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > PROGRAM_FLASH
-    __exidx_end = .;
-
-    /* TrustZone Secure Gateway Stubs Section. */
-    .gnu.sgstubs : ALIGN (32)
-    {
-        . = ALIGN(32);
-        _start_sg = .;
-        *(.gnu.sgstubs*)
-        . = ALIGN(32);
-        _end_sg = .;
+        __exidx_end = .;
     } > PROGRAM_FLASH
 
     /* Text Section End. */
@@ -112,42 +119,55 @@ SECTIONS
     /* Uninit Reserved Section. */
     .uninit_RESERVED : ALIGN(4)
     {
+        _start_uninit_RESERVED = .;
         KEEP(*(.bss.$RESERVED*))
         . = ALIGN(4);
         _end_uninit_RESERVED = .;
-    } > Ram0
+    } > Ram0 AT>Ram0
 
     /* Main Data section (Ram0). */
     .data : ALIGN(4)
     {
         FILL(0xff)
         _data = .;
+        PROVIDE(__start_data_RAM = .);
+        PROVIDE(__start_data_Ram0 = .);
         *(vtable)
         *(.ramfunc*)
         *(.data*)
         . = ALIGN(4);
         _edata = .;
+        PROVIDE(__end_data_RAM = .);
+        PROVIDE(__end_data_Ram0 = .);
     } > Ram0 AT>PROGRAM_FLASH
 
     /* Main BSS Section. */
     .bss : ALIGN(4)
     {
         _bss = .;
+        PROVIDE(__start_bss_RAM = .);
+        PROVIDE(__start_bss_Ram0 = .);
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
         _ebss = .;
+        PROVIDE(__end_bss_RAM = .);
+        PROVIDE(__end_bss_Ram0 = .);
         PROVIDE(end = .);
-    } > Ram0
+    } > Ram0 AT>Ram0
 
     /* Default Noinit Section. */
     .noinit (NOLOAD) : ALIGN(4)
     {
         _noinit = .;
+        PROVIDE(__start_noinit_RAM = .);
+        PROVIDE(__start_noinit_Ram0 = .);
         *(.noinit*)
         . = ALIGN(4);
         _end_noinit = .;
-    } > Ram0
+        PROVIDE(__end_noinit_RAM = .);
+        PROVIDE(__end_noinit_Ram0 = .);
+    } > Ram0 AT>Ram0
 
     /* Reserve space and place heap in memory map. */
     _HeapSize = 0x800;

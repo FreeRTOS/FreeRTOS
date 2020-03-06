@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -29,8 +29,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief IOCON driver version 2.0.0. */
-#define FSL_IOCON_DRIVER_VERSION (MAKE_VERSION(2, 0, 0))
+/*! @brief IOCON driver version 2.1.1. */
+#define FSL_IOCON_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
 /*@}*/
 
 /**
@@ -134,13 +134,13 @@ typedef struct _iocon_group
 #define IOCON_S_MODE_0CLK (0x0 << IOCON_PIO_S_MODE_SHIFT) /*!< Bypass input filter */
 #define IOCON_S_MODE_1CLK                                                                              \
     (0x1 << IOCON_PIO_S_MODE_SHIFT) /*!< Input pulses shorter than 1 filter clock are rejected \ \ \ \ \
-                                           */
+                                     */
 #define IOCON_S_MODE_2CLK                                                                               \
     (0x2 << IOCON_PIO_S_MODE_SHIFT) /*!< Input pulses shorter than 2 filter clock2 are rejected \ \ \ \ \
-                                           */
+                                     */
 #define IOCON_S_MODE_3CLK                                                                               \
     (0x3 << IOCON_PIO_S_MODE_SHIFT) /*!< Input pulses shorter than 3 filter clock2 are rejected \ \ \ \ \
-                                           */
+                                     */
 #define IOCON_S_MODE(clks) ((clks) << IOCON_PIO_S_MODE_SHIFT) /*!< Select clocks for digital input filter mode */
 #endif
 
@@ -210,13 +210,13 @@ typedef struct _iocon_group
 #define IOCON_S_MODE_0CLK (0x0 << IOCON_PIO_S_MODE_SHIFT) /*!< Bypass input filter */
 #define IOCON_S_MODE_1CLK                                                                              \
     (0x1 << IOCON_PIO_S_MODE_SHIFT) /*!< Input pulses shorter than 1 filter clock are rejected \ \ \ \ \
-                                           */
+                                     */
 #define IOCON_S_MODE_2CLK                                                                               \
     (0x2 << IOCON_PIO_S_MODE_SHIFT) /*!< Input pulses shorter than 2 filter clock2 are rejected \ \ \ \ \
-                                           */
+                                     */
 #define IOCON_S_MODE_3CLK                                                                               \
     (0x3 << IOCON_PIO_S_MODE_SHIFT) /*!< Input pulses shorter than 3 filter clock2 are rejected \ \ \ \ \
-                                           */
+                                     */
 #define IOCON_S_MODE(clks) ((clks) << IOCON_PIO_S_MODE_SHIFT) /*!< Select clocks for digital input filter mode */
 #endif
 

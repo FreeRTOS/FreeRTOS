@@ -18,7 +18,7 @@
  * Definitions
  ******************************************************************************/
 /*! @brief The board name */
-#define BOARD_NAME "LPCXpresso5500"
+#define BOARD_NAME "LPCXpresso55S69"
 
 /*! @brief The UART to use for debug messages. */
 /* TODO: rename UART to USART */
@@ -55,7 +55,7 @@
 
 #define BOARD_CODEC_I2C_BASEADDR I2C4
 #define BOARD_CODEC_I2C_CLOCK_FREQ 12000000
-
+#define BOARD_CODEC_I2C_INSTANCE 4
 #ifndef BOARD_LED_RED_GPIO
 #define BOARD_LED_RED_GPIO GPIO
 #endif
@@ -117,7 +117,7 @@
 
 #define BOARD_SDIF_BASEADDR SDIF
 #define BOARD_SDIF_CLKSRC kCLOCK_SDio
-#define BOARD_SDIF_CLK_FREQ CLOCK_GetFreq(kCLOCK_SDio)
+#define BOARD_SDIF_CLK_FREQ CLOCK_GetSdioClkFreq()
 #define BOARD_SDIF_CLK_ATTACH kMAIN_CLK_to_SDIO_CLK
 #define BOARD_SDIF_IRQ SDIO_IRQn
 #define BOARD_MMC_VCC_SUPPLY kMMC_VoltageWindows270to360
@@ -141,12 +141,11 @@
 
 #define BOARD_SDIF_CLK_ATTACH kMAIN_CLK_to_SDIO_CLK
 
-#define LED_RED_INIT(output)                                                          \
-    {                                                                                 \
-    IOCON_PinMuxSet(IOCON, BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN,           \
-        (IOCON_PIO_FUNC0 |IOCON_PIO_MODE_INACT |IOCON_PIO_SLEW_STANDARD |IOCON_PIO_INV_DI |IOCON_PIO_DIGITAL_EN |IOCON_PIO_OPENDRAIN_DI));  \
-    GPIO_PinInit(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN, \
-                 &(gpio_pin_config_t){kGPIO_DigitalOutput, (output)}); /*!< Enable target LED1 */  \
+#define LED_RED_INIT(output)                                                                          \
+    {                                                                                                 \
+        IOCON_PinMuxSet(IOCON, BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN, IOCON_DIGITAL_EN);    \
+        GPIO_PinInit(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PORT, BOARD_LED_RED_GPIO_PIN,             \
+                     &(gpio_pin_config_t){kGPIO_DigitalOutput, (output)}); /*!< Enable target LED1 */ \
     }
 #define LED_RED_ON()                                            \
     GPIO_PortClear(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PORT, \
@@ -154,17 +153,16 @@
 #define LED_RED_OFF()                                                                        \
     GPIO_PortSet(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PORT,                                \
                  1U << BOARD_LED_RED_GPIO_PIN) /*!< Turn off target LED1 \ \ \ \ \ \ \ \ \ \ \
-                                                            */
+                                                */
 #define LED_RED_TOGGLE()                                         \
     GPIO_PortToggle(BOARD_LED_RED_GPIO, BOARD_LED_RED_GPIO_PORT, \
                     1U << BOARD_LED_RED_GPIO_PIN) /*!< Toggle on target LED1 */
 
-#define LED_BLUE_INIT(output)                                                            \
-    {                                                                                    \
-    IOCON_PinMuxSet(IOCON, BOARD_LED_BLUE_GPIO_PORT, BOARD_LED_BLUE_GPIO_PIN,            \
-        (IOCON_PIO_FUNC0 |IOCON_PIO_MODE_INACT |IOCON_PIO_SLEW_STANDARD |IOCON_PIO_INV_DI |IOCON_PIO_DIGITAL_EN |IOCON_PIO_OPENDRAIN_DI));  \
-    GPIO_PinInit(BOARD_LED_BLUE_GPIO, BOARD_LED_BLUE_GPIO_PORT, BOARD_LED_BLUE_GPIO_PIN, \
-                 &(gpio_pin_config_t){kGPIO_DigitalOutput, (output)}); /*!< Enable target LED1 */  \
+#define LED_BLUE_INIT(output)                                                                         \
+    {                                                                                                 \
+        IOCON_PinMuxSet(IOCON, BOARD_LED_BLUE_GPIO_PORT, BOARD_LED_BLUE_GPIO_PIN, IOCON_DIGITAL_EN);  \
+        GPIO_PinInit(BOARD_LED_BLUE_GPIO, BOARD_LED_BLUE_GPIO_PORT, BOARD_LED_BLUE_GPIO_PIN,          \
+                     &(gpio_pin_config_t){kGPIO_DigitalOutput, (output)}); /*!< Enable target LED1 */ \
     }
 #define LED_BLUE_ON()                                             \
     GPIO_PortClear(BOARD_LED_BLUE_GPIO, BOARD_LED_BLUE_GPIO_PORT, \
@@ -206,6 +204,20 @@
 #define BOARD_INITSILEX2401SHIELD_IRQ_GPIO GPIO
 #define BOARD_INITSILEX2401SHIELD_IRQ_PORT 0U
 #define BOARD_INITSILEX2401SHIELD_IRQ_GPIO_PIN 15U
+
+/*! @brief The WIFI-QCA shield pin. */
+#define BOARD_INITWIFI10CLICKSHIELD_PWRON_GPIO GPIO
+#define BOARD_INITWIFI10CLICKSHIELD_PWRON_PORT 1U
+#define BOARD_INITWIFI10CLICKSHIELD_PWRON_PIN 5U
+
+#define BOARD_INITWIFI10CLICKSHIELD_IRQ_GPIO GPIO
+#define BOARD_INITWIFI10CLICKSHIELD_IRQ_PORT 1U
+#define BOARD_INITWIFI10CLICKSHIELD_IRQ_GPIO_PIN 18U
+
+/* Display. */
+#define BOARD_LCD_DC_GPIO GPIO
+#define BOARD_LCD_DC_GPIO_PORT 1U
+#define BOARD_LCD_DC_GPIO_PIN 5U
 
 #if defined(__cplusplus)
 extern "C" {

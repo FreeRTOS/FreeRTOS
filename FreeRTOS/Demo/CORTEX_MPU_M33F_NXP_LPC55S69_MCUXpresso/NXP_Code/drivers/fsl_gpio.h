@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -24,14 +24,14 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief LPC GPIO driver version 2.1.3. */
-#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 1, 3))
+/*! @brief LPC GPIO driver version. */
+#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 1, 5))
 /*@}*/
 
 /*! @brief LPC GPIO direction definition */
 typedef enum _gpio_pin_direction
 {
-    kGPIO_DigitalInput = 0U,  /*!< Set current pin as digital input*/
+    kGPIO_DigitalInput  = 0U, /*!< Set current pin as digital input*/
     kGPIO_DigitalOutput = 1U, /*!< Set current pin as digital output*/
 } gpio_pin_direction_t;
 
@@ -47,6 +47,44 @@ typedef struct _gpio_pin_config
     /* Output configurations, please ignore if configured as a input one */
     uint8_t outputLogic; /*!< Set default output logic, no use in input */
 } gpio_pin_config_t;
+
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT) && FSL_FEATURE_GPIO_HAS_INTERRUPT)
+#define GPIO_PIN_INT_LEVEL 0x00U
+#define GPIO_PIN_INT_EDGE 0x01U
+
+#define PINT_PIN_INT_HIGH_OR_RISE_TRIGGER 0x00U
+#define PINT_PIN_INT_LOW_OR_FALL_TRIGGER 0x01U
+
+/*! @brief GPIO Pin Interrupt enable mode */
+typedef enum _gpio_pin_enable_mode
+{
+    kGPIO_PinIntEnableLevel = GPIO_PIN_INT_LEVEL, /*!< Generate Pin Interrupt on level mode */
+    kGPIO_PinIntEnableEdge  = GPIO_PIN_INT_EDGE   /*!< Generate Pin Interrupt on edge mode */
+} gpio_pin_enable_mode_t;
+
+/*! @brief GPIO Pin Interrupt enable polarity */
+typedef enum _gpio_pin_enable_polarity
+{
+    kGPIO_PinIntEnableHighOrRise =
+        PINT_PIN_INT_HIGH_OR_RISE_TRIGGER, /*!< Generate Pin Interrupt on high level or rising edge */
+    kGPIO_PinIntEnableLowOrFall =
+        PINT_PIN_INT_LOW_OR_FALL_TRIGGER /*!< Generate Pin Interrupt on low level or falling edge */
+} gpio_pin_enable_polarity_t;
+
+/*! @brief LPC GPIO interrupt index definition */
+typedef enum _gpio_interrupt_index
+{
+    kGPIO_InterruptA = 0U, /*!< Set current pin as interrupt A*/
+    kGPIO_InterruptB = 1U, /*!< Set current pin as interrupt B*/
+} gpio_interrupt_index_t;
+
+/*! @brief Configures the interrupt generation condition. */
+typedef struct _gpio_interrupt_config
+{
+    uint8_t mode;     /* The trigger mode of GPIO interrupts */
+    uint8_t polarity; /* The polarity of GPIO interrupts */
+} gpio_interrupt_config_t;
+#endif
 
 /*******************************************************************************
  * API
@@ -76,13 +114,13 @@ void GPIO_PortInit(GPIO_Type *base, uint32_t port);
  *
  * This is an example to define an input pin or output pin configuration:
  * @code
- * // Define a digital input pin configuration,
+ * Define a digital input pin configuration,
  * gpio_pin_config_t config =
  * {
  *   kGPIO_DigitalInput,
  *   0,
  * }
- * //Define a digital output pin configuration,
+ * Define a digital output pin configuration,
  * gpio_pin_config_t config =
  * {
  *   kGPIO_DigitalOutput,
@@ -227,6 +265,91 @@ static inline uint32_t GPIO_PortMaskedRead(GPIO_Type *base, uint32_t port)
 {
     return (uint32_t)base->MPIN[port];
 }
+
+#if defined(FSL_FEATURE_GPIO_HAS_INTERRUPT) && FSL_FEATURE_GPIO_HAS_INTERRUPT
+/*!
+ * @brief Configures the gpio pin interrupt.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number
+ * @param pin GPIO pin number.
+ * @param config GPIO pin interrupt configuration..
+ */
+void GPIO_SetPinInterruptConfig(GPIO_Type *base, uint32_t port, uint32_t pin, gpio_interrupt_config_t *config);
+
+/*!
+ * @brief Enables multiple pins interrupt.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number.
+ * @param index GPIO interrupt number.
+ * @param mask GPIO pin number macro.
+ */
+void GPIO_PortEnableInterrupts(GPIO_Type *base, uint32_t port, uint32_t index, uint32_t mask);
+
+/*!
+ * @brief Disables multiple pins interrupt.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number.
+ * @param index GPIO interrupt number.
+ * @param mask GPIO pin number macro.
+ */
+void GPIO_PortDisableInterrupts(GPIO_Type *base, uint32_t port, uint32_t index, uint32_t mask);
+
+/*!
+ * @brief Clears pin interrupt flag. Status flags are cleared by
+ *        writing a 1 to the corresponding bit position.
+ *
+ * @param base GPIO base pointer.
+ * @param port   GPIO port number.
+ * @param index GPIO interrupt number.
+ * @param mask GPIO pin number macro.
+ */
+void GPIO_PortClearInterruptFlags(GPIO_Type *base, uint32_t port, uint32_t index, uint32_t mask);
+
+/*!
+ * @ Read port interrupt status.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number
+ * @param index GPIO interrupt number.
+ * @retval masked GPIO status value
+ */
+uint32_t GPIO_PortGetInterruptStatus(GPIO_Type *base, uint32_t port, uint32_t index);
+
+/*!
+ * @brief Enables the specific pin interrupt.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number.
+ * @param pin GPIO pin number.
+ * @param index GPIO interrupt number.
+ */
+void GPIO_PinEnableInterrupt(GPIO_Type *base, uint32_t port, uint32_t pin, uint32_t index);
+
+/*!
+ * @brief Disables the specific pin interrupt.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number.
+ * @param pin GPIO pin number.
+ * @param index GPIO interrupt number.
+ */
+void GPIO_PinDisableInterrupt(GPIO_Type *base, uint32_t port, uint32_t pin, uint32_t index);
+
+/*!
+ * @brief Clears the specific pin interrupt flag. Status flags are cleared by
+ *        writing a 1 to the corresponding bit position.
+ *
+ * @param base GPIO base pointer.
+ * @param port GPIO port number.
+ * @param pin GPIO pin number.
+ * @param index GPIO interrupt number.
+ */
+void GPIO_PinClearInterruptFlag(GPIO_Type *base, uint32_t port, uint32_t pin, uint32_t index);
+
+#endif /* FSL_FEATURE_GPIO_HAS_INTERRUPT */
 
 /*@}*/
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2018-2019 NXP
  * All rights reserved.
  *
  *
@@ -8,6 +8,11 @@
 
 #ifndef _GENERIC_LIST_H_
 #define _GENERIC_LIST_H_
+
+/*!
+ * @addtogroup GenericList
+ * @{
+ */
 
 /*!*********************************************************************************
 *************************************************************************************
@@ -29,28 +34,29 @@
 /*! @brief The list status */
 typedef enum _list_status
 {
-    kLIST_Ok = kStatus_Success,                                  /*!< Success */
-    kLIST_Full = MAKE_STATUS(kStatusGroup_LIST, 1),              /*!< FULL */
-    kLIST_Empty = MAKE_STATUS(kStatusGroup_LIST, 2),             /*!< Empty */
-    kLIST_OrphanElement = MAKE_STATUS(kStatusGroup_LIST, 3),     /*!< Orphan Element */
-}list_status_t;
+    kLIST_Ok             = kStatus_Success,                   /*!< Success */
+    kLIST_DuplicateError = MAKE_STATUS(kStatusGroup_LIST, 1), /*!< Duplicate Error */
+    kLIST_Full           = MAKE_STATUS(kStatusGroup_LIST, 2), /*!< FULL */
+    kLIST_Empty          = MAKE_STATUS(kStatusGroup_LIST, 3), /*!< Empty */
+    kLIST_OrphanElement  = MAKE_STATUS(kStatusGroup_LIST, 4), /*!< Orphan Element */
+} list_status_t;
 
 /*! @brief The list structure*/
-typedef struct list_tag
+typedef struct list_label
 {
-    struct list_element_tag *head;     /*!< list head */
-    struct list_element_tag *tail;     /*!< list tail */
-    uint16_t size;                     /*!< list size */
-    uint16_t max;                      /*!< list max number of elements */
-}list_t, *list_handle_t;
+    struct list_element_tag *head; /*!< list head */
+    struct list_element_tag *tail; /*!< list tail */
+    uint16_t size;                 /*!< list size */
+    uint16_t max;                  /*!< list max number of elements */
+} list_label_t, *list_handle_t;
 
 /*! @brief The list element*/
 typedef struct list_element_tag
 {
-    struct list_element_tag *next;     /*!< next list element   */
-    struct list_element_tag *prev;     /*!< previous list element */
-    struct list_tag *list;             /*!< pointer to the list */
-}list_element_t, *list_element_handle_t;
+    struct list_element_tag *next; /*!< next list element   */
+    struct list_element_tag *prev; /*!< previous list element */
+    struct list_label *list;       /*!< pointer to the list */
+} list_element_t, *list_element_handle_t;
 
 /*! *********************************************************************************
 *************************************************************************************
@@ -181,5 +187,5 @@ uint32_t LIST_GetAvailableSize(list_handle_t list);
 #if defined(__cplusplus)
 }
 #endif
-
+/*! @}*/
 #endif /*_GENERIC_LIST_H_*/

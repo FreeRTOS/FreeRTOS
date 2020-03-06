@@ -173,6 +173,7 @@ void MemManage_Handler( void )
 		" ldr r1, handler_address_const						\n"
 		" bx r1												\n"
 		"													\n"
+		" .align 4											\n"
 		" handler_address_const: .word vHandleMemoryFault	\n"
 	);
 }

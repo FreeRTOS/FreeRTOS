@@ -3,6 +3,7 @@
 	<name>FreeRTOSDemo_ns</name>
 	<comment></comment>
 	<projects>
+		<project>FreeRTOSDemo_s</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

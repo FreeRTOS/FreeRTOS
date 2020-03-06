@@ -65,10 +65,9 @@ static USART_Type *const s_UsartAdapterBase[] = USART_BASE_PTRS;
 
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
 
+#if !(defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
 /* Array of USART IRQ number. */
 static const IRQn_Type s_UsartIRQ[] = USART_IRQS;
-
-#if !(defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
 #endif
 
 #endif
@@ -177,9 +176,9 @@ static void HAL_UartInterruptHandle(USART_Type *base, void *handle)
             {
                 USART_DisableInterrupts(s_UsartAdapterBase[instance],
                                         USART_FIFOINTENCLR_RXLVL_MASK | USART_FIFOINTENCLR_RXERR_MASK);
+                uartHandle->rx.buffer = NULL;
                 if (uartHandle->callback)
                 {
-                    uartHandle->rx.buffer = NULL;
                     uartHandle->callback(uartHandle, kStatus_HAL_UartRxIdle, uartHandle->callbackParam);
                 }
             }
@@ -196,9 +195,9 @@ static void HAL_UartInterruptHandle(USART_Type *base, void *handle)
             if (uartHandle->tx.bufferSofar >= uartHandle->tx.bufferLength)
             {
                 USART_DisableInterrupts(s_UsartAdapterBase[instance], USART_FIFOINTENCLR_TXLVL_MASK);
+                uartHandle->tx.buffer = NULL;
                 if (uartHandle->callback)
                 {
-                    uartHandle->tx.buffer = NULL;
                     uartHandle->callback(uartHandle, kStatus_HAL_UartTxIdle, uartHandle->callbackParam);
                 }
             }
@@ -252,8 +251,8 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, hal_uart_config_t *conf
     {
         usartConfig.stopBitCount = kUSART_OneStopBit;
     }
-    usartConfig.enableRx = config->enableRx;
-    usartConfig.enableTx = config->enableTx;
+    usartConfig.enableRx    = config->enableRx;
+    usartConfig.enableTx    = config->enableTx;
     usartConfig.txWatermark = kUSART_TxFifo0;
     usartConfig.rxWatermark = kUSART_RxFifo1;
 
@@ -264,7 +263,7 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, hal_uart_config_t *conf
         return HAL_UartGetStatus(status);
     }
 
-    uartHandle = (hal_uart_state_t *)handle;
+    uartHandle           = (hal_uart_state_t *)handle;
     uartHandle->instance = config->instance;
 
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
@@ -276,6 +275,7 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, hal_uart_config_t *conf
     /* Enable interrupt in NVIC. */
     FLEXCOMM_SetIRQHandler(s_UsartAdapterBase[config->instance], (flexcomm_irq_handler_t)HAL_UartInterruptHandle,
                            handle);
+    NVIC_SetPriority((IRQn_Type)s_UsartIRQ[config->instance], HAL_UART_ISR_PRIORITY);
     EnableIRQ(s_UsartIRQ[config->instance]);
 #endif
 
@@ -340,6 +340,20 @@ hal_uart_status_t HAL_UartSendBlocking(hal_uart_handle_t handle, const uint8_t *
     return kStatus_HAL_UartSuccess;
 }
 
+hal_uart_status_t HAL_UartEnterLowpower(hal_uart_handle_t handle)
+{
+    assert(handle);
+
+    return kStatus_HAL_UartSuccess;
+}
+
+hal_uart_status_t HAL_UartExitLowpower(hal_uart_handle_t handle)
+{
+    assert(handle);
+
+    return kStatus_HAL_UartSuccess;
+}
+
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
 
 #if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
@@ -356,7 +370,7 @@ hal_uart_status_t HAL_UartTransferInstallCallback(hal_uart_handle_t handle,
     uartHandle = (hal_uart_state_t *)handle;
 
     uartHandle->callbackParam = callbackParam;
-    uartHandle->callback = callback;
+    uartHandle->callback      = callback;
 
     return kStatus_HAL_UartSuccess;
 }
@@ -465,7 +479,7 @@ hal_uart_status_t HAL_UartInstallCallback(hal_uart_handle_t handle,
     uartHandle = (hal_uart_state_t *)handle;
 
     uartHandle->callbackParam = callbackParam;
-    uartHandle->callback = callback;
+    uartHandle->callback      = callback;
 
     return kStatus_HAL_UartSuccess;
 }
@@ -486,13 +500,13 @@ hal_uart_status_t HAL_UartReceiveNonBlocking(hal_uart_handle_t handle, uint8_t *
     }
 
     uartHandle->rx.bufferLength = length;
-    uartHandle->rx.bufferSofar = 0;
-    uartHandle->rx.buffer = data;
+    uartHandle->rx.bufferSofar  = 0;
+    uartHandle->rx.buffer       = data;
     USART_EnableInterrupts(s_UsartAdapterBase[uartHandle->instance], USART_FIFOINTENSET_RXLVL_MASK);
     return kStatus_HAL_UartSuccess;
 }
 
-hal_uart_status_t HAL_UartSendNonBlocking(hal_uart_handle_t handle, const uint8_t *data, size_t length)
+hal_uart_status_t HAL_UartSendNonBlocking(hal_uart_handle_t handle, uint8_t *data, size_t length)
 {
     hal_uart_state_t *uartHandle;
     assert(handle);
@@ -507,41 +521,41 @@ hal_uart_status_t HAL_UartSendNonBlocking(hal_uart_handle_t handle, const uint8_
         return kStatus_HAL_UartTxBusy;
     }
     uartHandle->tx.bufferLength = length;
-    uartHandle->tx.bufferSofar = 0;
-    uartHandle->tx.buffer = (volatile uint8_t *)data;
+    uartHandle->tx.bufferSofar  = 0;
+    uartHandle->tx.buffer       = (volatile uint8_t *)data;
     USART_EnableInterrupts(s_UsartAdapterBase[uartHandle->instance], USART_FIFOINTENSET_TXLVL_MASK);
     return kStatus_HAL_UartSuccess;
 }
 
-hal_uart_status_t HAL_UartGetReceiveCount(hal_uart_handle_t handle, uint32_t *count)
+hal_uart_status_t HAL_UartGetReceiveCount(hal_uart_handle_t handle, uint32_t *reCount)
 {
     hal_uart_state_t *uartHandle;
     assert(handle);
-    assert(count);
+    assert(reCount);
     assert(!HAL_UART_TRANSFER_MODE);
 
     uartHandle = (hal_uart_state_t *)handle;
 
     if (uartHandle->rx.buffer)
     {
-        *count = uartHandle->rx.bufferSofar;
+        *reCount = uartHandle->rx.bufferSofar;
         return kStatus_HAL_UartSuccess;
     }
     return kStatus_HAL_UartError;
 }
 
-hal_uart_status_t HAL_UartGetSendCount(hal_uart_handle_t handle, uint32_t *count)
+hal_uart_status_t HAL_UartGetSendCount(hal_uart_handle_t handle, uint32_t *seCount)
 {
     hal_uart_state_t *uartHandle;
     assert(handle);
-    assert(count);
+    assert(seCount);
     assert(!HAL_UART_TRANSFER_MODE);
 
     uartHandle = (hal_uart_state_t *)handle;
 
     if (uartHandle->tx.buffer)
     {
-        *count = uartHandle->tx.bufferSofar;
+        *seCount = uartHandle->tx.bufferSofar;
         return kStatus_HAL_UartSuccess;
     }
     return kStatus_HAL_UartError;
@@ -599,6 +613,7 @@ void HAL_UartIsrFunction(hal_uart_handle_t handle)
 #endif
     USART_TransferHandleIRQ(s_UsartAdapterBase[uartHandle->instance], &uartHandle->hardwareHandle);
 #if 0
+    NVIC_SetPriority((IRQn_Type)s_UsartIRQ[uartHandle->instance], HAL_UART_ISR_PRIORITY);
     EnableIRQ(s_UsartIRQ[uartHandle->instance]);
 #endif
 }
@@ -618,6 +633,7 @@ void HAL_UartIsrFunction(hal_uart_handle_t handle)
 #endif
     HAL_UartInterruptHandle(s_UsartAdapterBase[uartHandle->instance], (void *)uartHandle);
 #if 0
+    NVIC_SetPriority((IRQn_Type)s_UsartIRQ[uartHandle->instance], HAL_UART_ISR_PRIORITY);
     EnableIRQ(s_UsartIRQ[uartHandle->instance]);
 #endif
 }

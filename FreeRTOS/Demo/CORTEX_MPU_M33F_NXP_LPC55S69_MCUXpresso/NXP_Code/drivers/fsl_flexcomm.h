@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #ifndef _FSL_FLEXCOMM_H_
@@ -17,8 +17,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief FlexCOMM driver version 2.0.0. */
-#define FSL_FLEXCOMM_DRIVER_VERSION (MAKE_VERSION(2, 0, 0))
+/*! @brief FlexCOMM driver version 2.0.2. */
+#define FSL_FLEXCOMM_DRIVER_VERSION (MAKE_VERSION(2, 0, 2))
 /*@}*/
 
 /*! @brief FLEXCOMM peripheral modes. */
@@ -38,6 +38,13 @@ typedef void (*flexcomm_irq_handler_t)(void *base, void *handle);
 /*! @brief Array with IRQ number for each FLEXCOMM module. */
 extern IRQn_Type const kFlexcommIrqs[];
 
+/*******************************************************************************
+ * API
+ ******************************************************************************/
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /*! @brief Returns instance number for FLEXCOMM module with given base address. */
 uint32_t FLEXCOMM_GetInstance(void *base);
 
@@ -47,6 +54,10 @@ status_t FLEXCOMM_Init(void *base, FLEXCOMM_PERIPH_T periph);
 /*! @brief Sets IRQ handler for given FLEXCOMM module. It is used by drivers register IRQ handler according to FLEXCOMM
  * mode */
 void FLEXCOMM_SetIRQHandler(void *base, flexcomm_irq_handler_t handler, void *handle);
+
+#if defined(__cplusplus)
+}
+#endif
 
 /*@}*/
 

@@ -29,11 +29,11 @@ git submodule update --init --recursive
 This repository contains the FreeRTOS Kernel, a number of supplementary libraries, and a comprehensive set of example applications.
 
 ### Kernel sources
-The FreeRTOS Kernel Source is located under [FreeRTOS/Source](https://github.com/FreeRTOS/FreeRTOS/tree/master/FreeRTOS/Source)
+The FreeRTOS Kernel Source is in [FreeRTOS/FreeRTOS-Kernel repository](https://github.com/FreeRTOS/FreeRTOS-Kernel), and it is consumed as a submodule in this repository.
 
-Hardware specific ports can be found under [FreeRTOS/Source/portable](https://github.com/FreeRTOS/FreeRTOS/tree/master/FreeRTOS/Source/portable)
+The version of the FreeRTOS Kernel Source in use could be accessed at [```./FreeRTOS/Source```](https://github.com/FreeRTOS/FreeRTOS/tree/master/FreeRTOS/Source)
 
-A number of Demo projects can be found under [FreeRTOS/Demo](https://github.com/FreeRTOS/FreeRTOS/tree/master/FreeRTOS/Demo)
+A number of Demo projects can be found under [```./FreeRTOS/Demo```](https://github.com/FreeRTOS/FreeRTOS/tree/master/FreeRTOS/Demo)
 
 ### Supplementary library sources
 The [FreeRTOS-Plus/Source](https://github.com/FreeRTOS/FreeRTOS/tree/master/FreeRTOS-Plus/Source) directory contains source code for some of the FreeRTOS+ components, as well as select partner provided libraries. These subdirectories contain further readme files and links to documentation.

@@ -280,7 +280,8 @@ UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 				destinationAddress.sin_port = usPort;
 				destinationAddress.sin_addr = pxUDPPacket->xIPHeader.ulDestinationIPAddress;
 
-				if( xHandler( ( Socket_t ) pxSocket, ( void* ) pcData, ( size_t ) pxNetworkBuffer->xDataLength,
+				/* The value of 'xDataLength' was proven to be at least the size of a UDP packet in prvProcessIPPacket(). */
+				if( xHandler( ( Socket_t ) pxSocket, ( void* ) pcData, ( size_t ) ( pxNetworkBuffer->xDataLength - ipUDP_PAYLOAD_OFFSET_IPv4 ),
 					&xSourceAddress, &destinationAddress ) )
 				{
 					xReturn = pdFAIL; /* FAIL means that we did not consume or release the buffer */

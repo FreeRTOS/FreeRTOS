@@ -236,11 +236,14 @@ static SemaphoreHandle_t xTXDescriptorSemaphore = NULL;
 
 /* Put the DMA descriptors in '.first_data'.
 This is important for STM32F7, which has an L1 data cache.
-The first 64KB of the SRAM is not cached. */
+The first 64KB of the SRAM is not cached.
+See README.TXT in this folder. */
 
 /* Ethernet Rx MA Descriptor */
 __attribute__ ((aligned (32)))
-__attribute__ ((section(".first_data")))
+#if defined(STM32F7xx)
+	__attribute__ ((section(".first_data")))
+#endif
 	ETH_DMADescTypeDef  DMARxDscrTab[ ETH_RXBUFNB ];
 
 #if( ipconfigZERO_COPY_RX_DRIVER == 0 )
@@ -250,7 +253,9 @@ __attribute__ ((section(".first_data")))
 
 /* Ethernet Tx DMA Descriptor */
 __attribute__ ((aligned (32)))
-__attribute__ ((section(".first_data")))
+#if defined(STM32F7xx)
+	__attribute__ ((section(".first_data")))
+#endif
 	ETH_DMADescTypeDef  DMATxDscrTab[ ETH_TXBUFNB ];
 
 #if( ipconfigZERO_COPY_TX_DRIVER == 0 )
@@ -641,14 +646,6 @@ const TickType_t xBlockTimeTicks = pdMS_TO_TICKS( 50u );
 	/* Open a do {} while ( 0 ) loop to be able to call break. */
 	do
 	{
-		if( xCheckLoopback( pxDescriptor, bReleaseAfterSend ) != 0 )
-		{
-			/* The packet has been sent back to the IP-task.
-			The IP-task will further handle it.
-			Do not release the descriptor. */
-			bReleaseAfterSend = pdFALSE;
-			break;
-		}
 		#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM != 0 )
 		{
 		ProtocolPacket_t *pxPacket;
@@ -831,7 +828,7 @@ const ProtocolPacket_t *pxProtPacket = ( const ProtocolPacket_t * )pcBuffer;
 			#endif
 				) {
 				/* Drop this packet, not for this device. */
-				/* FreeRTOS_printf( ( "Drop: UDP port %d -> %d\n", usSourcePort, usDestinationPort ) ); */
+				FreeRTOS_printf( ( "Drop: UDP port %d -> %d\n", usSourcePort, usDestinationPort ) );
 				return pdFALSE;
 			}
 		}
@@ -1180,7 +1177,11 @@ BaseType_t xReturn;
 
 void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ] )
 {
-static __attribute__ ((section(".first_data"))) uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * ETH_MAX_PACKET_SIZE ] __attribute__ ( ( aligned( 32 ) ) );
+static
+#if defined(STM32F7xx)
+	__attribute__ ((section(".first_data")))
+#endif
+	uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * ETH_MAX_PACKET_SIZE ] __attribute__ ( ( aligned( 32 ) ) );
 uint8_t *ucRAMBuffer = ucNetworkPackets;
 uint32_t ul;
 

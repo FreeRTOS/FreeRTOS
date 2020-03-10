@@ -1,27 +1,27 @@
 /*
-FreeRTOS+TCP V2.0.11
-Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
- http://aws.amazon.com/freertos
- http://www.FreeRTOS.org
-*/
+ * FreeRTOS V202002.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://aws.amazon.com/freertos
+ * http://www.FreeRTOS.org
+ */
 
 /* Standard includes. */
 #include <stdint.h>
@@ -38,6 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
+#include "FreeRTOS_ARP.h"
 #include "NetworkBufferManagement.h"
 #include "NetworkInterface.h"
 
@@ -50,9 +51,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Provided memory configured as uncached. */
 #include "uncached_memory.h"
 
-#ifndef	BMSR_LINK_STATUS
-	#define BMSR_LINK_STATUS            0x0004UL
+#ifndef niEMAC_HANDLER_TASK_PRIORITY
+	/* Define the priority of the task prvEMACHandlerTask(). */
+	#define niEMAC_HANDLER_TASK_PRIORITY	configMAX_PRIORITIES - 1
 #endif
+
+#define niBMSR_LINK_STATUS         0x0004uL
 
 #ifndef	PHY_LS_HIGH_CHECK_TIME_MS
 	/* Check if the LinkSStatus in the PHY is still high after 15 seconds of not
@@ -83,6 +87,13 @@ FreeRTOSConfig.h as configMINIMAL_STACK_SIZE is a user definable constant. */
 	#define configEMAC_TASK_STACK_SIZE ( 2 * configMINIMAL_STACK_SIZE )
 #endif
 
+#if( ipconfigZERO_COPY_RX_DRIVER == 0 || ipconfigZERO_COPY_TX_DRIVER == 0 )
+	#error Please define both 'ipconfigZERO_COPY_RX_DRIVER' and 'ipconfigZERO_COPY_TX_DRIVER' as 1
+#endif
+
+#if( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 || ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
+	#warning Please define both 'ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM' and 'ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM' as 1
+#endif
 /*-----------------------------------------------------------*/
 
 /*
@@ -95,6 +106,10 @@ static BaseType_t prvGMACWaitLS( TickType_t xMaxTime );
  * A deferred interrupt handler for all MAC/DMA interrupt sources.
  */
 static void prvEMACHandlerTask( void *pvParameters );
+
+#if ( ipconfigHAS_PRINTF != 0 )
+	static void prvMonitorResources( void );
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -119,7 +134,7 @@ XEmacPs_Config mac_config =
 extern int phy_detected;
 
 /* A copy of PHY register 1: 'PHY_REG_01_BMSR' */
-static uint32_t ulPHYLinkStatus = 0;
+static uint32_t ulPHYLinkStatus = 0uL;
 
 #if( ipconfigUSE_LLMNR == 1 )
 	static const uint8_t xLLMNR_MACAddress[] = { 0x01, 0x00, 0x5E, 0x00, 0x00, 0xFC };
@@ -188,7 +203,7 @@ const TickType_t xWaitLinkDelay = pdMS_TO_TICKS( 7000UL ), xWaitRelinkDelay = pd
 		possible priority to ensure the interrupt handler can return directly
 		to it.  The task's handle is stored in xEMACTaskHandle so interrupts can
 		notify the task when there is something to process. */
-		xTaskCreate( prvEMACHandlerTask, "EMAC", configEMAC_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xEMACTaskHandle );
+		xTaskCreate( prvEMACHandlerTask, "EMAC", configEMAC_TASK_STACK_SIZE, NULL, niEMAC_HANDLER_TASK_PRIORITY, &xEMACTaskHandle );
 	}
 	else
 	{
@@ -206,7 +221,24 @@ const TickType_t xWaitLinkDelay = pdMS_TO_TICKS( 7000UL ), xWaitRelinkDelay = pd
 
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer, BaseType_t bReleaseAfterSend )
 {
-	if( ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != 0 )
+	#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM != 0 )
+	{
+	ProtocolPacket_t *pxPacket;
+
+		/* If the peripheral must calculate the checksum, it wants
+		the protocol checksum to have a value of zero. */
+		pxPacket = ( ProtocolPacket_t * ) ( pxBuffer->pucEthernetBuffer );
+		if( ( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
+			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_TCP ) )
+		{
+			/* The EMAC will calculate the checksum of the IP-header.
+			It can only calculate protocol checksums of UDP and TCP,
+			so for ICMP and other protocols it must be done manually. */
+			usGenerateProtocolChecksum( (uint8_t*)&( pxPacket->xUDPPacket ), pxBuffer->xDataLength, pdTRUE );
+		}
+	}
+	#endif /* ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM */
+	if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != 0uL )
 	{
 		iptraceNETWORK_INTERFACE_TRANSMIT();
 		emacps_send_message( &xEMACpsif, pxBuffer, bReleaseAfterSend );
@@ -249,7 +281,7 @@ BaseType_t xReturn;
 		}
 		ulPHYLinkStatus = ulReadMDIO( PHY_REG_01_BMSR );
 
-		if( ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != 0 )
+		if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != 0uL )
 		{
 			xReturn = pdTRUE;
 			break;
@@ -281,7 +313,7 @@ BaseType_t xGetPhyLinkStatus( void )
 {
 BaseType_t xReturn;
 
-	if( ( ulPHYLinkStatus & BMSR_LINK_STATUS ) == 0 )
+	if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) == 0uL )
 	{
 		xReturn = pdFALSE;
 	}
@@ -294,12 +326,58 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
+#if ( ipconfigHAS_PRINTF != 0 )
+	static void prvMonitorResources()
+	{
+	static UBaseType_t uxLastMinBufferCount = 0u;
+	static size_t uxMinLastSize = 0uL;
+	UBaseType_t uxCurrentBufferCount;
+	size_t uxMinSize;
+
+		uxCurrentBufferCount = uxGetMinimumFreeNetworkBuffers();
+
+		if( uxLastMinBufferCount != uxCurrentBufferCount )
+		{
+			/* The logging produced below may be helpful
+			 * while tuning +TCP: see how many buffers are in use. */
+			uxLastMinBufferCount = uxCurrentBufferCount;
+			FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
+							   uxGetNumberOfFreeNetworkBuffers(),
+							   uxCurrentBufferCount ) );
+		}
+
+		uxMinSize = xPortGetMinimumEverFreeHeapSize();
+
+		if( uxMinLastSize != uxMinSize )
+		{
+			uxMinLastSize = uxMinSize;
+			FreeRTOS_printf( ( "Heap: current %lu lowest %lu\n", xPortGetFreeHeapSize(), uxMinSize ) );
+		}
+
+		#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+			{
+				static UBaseType_t uxLastMinQueueSpace = 0;
+				UBaseType_t uxCurrentCount = 0u;
+
+				uxCurrentCount = uxGetMinimumIPQueueSpace();
+
+				if( uxLastMinQueueSpace != uxCurrentCount )
+				{
+					/* The logging produced below may be helpful
+					 * while tuning +TCP: see how many buffers are in use. */
+					uxLastMinQueueSpace = uxCurrentCount;
+					FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
+				}
+			}
+		#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
+	}
+#endif /* ( ipconfigHAS_PRINTF != 0 ) */
+/*-----------------------------------------------------------*/
+
 static void prvEMACHandlerTask( void *pvParameters )
 {
 TimeOut_t xPhyTime;
 TickType_t xPhyRemTime;
-UBaseType_t uxLastMinBufferCount = 0;
-UBaseType_t uxCurrentCount;
 BaseType_t xResult = 0;
 uint32_t xStatus;
 const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
@@ -316,30 +394,11 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
 
 	for( ;; )
 	{
-		uxCurrentCount = uxGetMinimumFreeNetworkBuffers();
-		if( uxLastMinBufferCount != uxCurrentCount )
-		{
-			/* The logging produced below may be helpful
-			while tuning +TCP: see how many buffers are in use. */
-			uxLastMinBufferCount = uxCurrentCount;
-			FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
-				uxGetNumberOfFreeNetworkBuffers(), uxCurrentCount ) );
-		}
-
-		#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-		{
-		static UBaseType_t uxLastMinQueueSpace = 0;
-
-			uxCurrentCount = uxGetMinimumIPQueueSpace();
-			if( uxLastMinQueueSpace != uxCurrentCount )
+		#if ( ipconfigHAS_PRINTF != 0 )
 			{
-				/* The logging produced below may be helpful
-				while tuning +TCP: see how many buffers are in use. */
-				uxLastMinQueueSpace = uxCurrentCount;
-				FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
+				prvMonitorResources();
 			}
-		}
-		#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
+		#endif /* ipconfigHAS_PRINTF != 0 ) */
 
 		if( ( xEMACpsif.isr_events & EMAC_IF_ALL_EVENT ) == 0 )
 		{
@@ -372,19 +431,26 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
 			vTaskSetTimeOutState( &xPhyTime );
 			xPhyRemTime = pdMS_TO_TICKS( PHY_LS_HIGH_CHECK_TIME_MS );
 			xResult = 0;
+			if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) == 0uL )
+			{
+				/* Indicate that the Link Status is high, so that
+				xNetworkInterfaceOutput() can send packets. */
+				ulPHYLinkStatus |= niBMSR_LINK_STATUS;
+				FreeRTOS_printf( ( "prvEMACHandlerTask: PHY LS assume 1\n" ) );
+			}
 		}
 		else if( xTaskCheckForTimeOut( &xPhyTime, &xPhyRemTime ) != pdFALSE )
 		{
 			xStatus = ulReadMDIO( PHY_REG_01_BMSR );
 
-			if( ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != ( xStatus & BMSR_LINK_STATUS ) )
+			if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != ( xStatus & niBMSR_LINK_STATUS ) )
 			{
 				ulPHYLinkStatus = xStatus;
-				FreeRTOS_printf( ( "prvEMACHandlerTask: PHY LS now %d\n", ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != 0 ) );
+				FreeRTOS_printf( ( "prvEMACHandlerTask: PHY LS now %d\n", ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != 0uL ) );
 			}
 
 			vTaskSetTimeOutState( &xPhyTime );
-			if( ( ulPHYLinkStatus & BMSR_LINK_STATUS ) != 0 )
+			if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != 0uL )
 			{
 				xPhyRemTime = pdMS_TO_TICKS( PHY_LS_HIGH_CHECK_TIME_MS );
 			}

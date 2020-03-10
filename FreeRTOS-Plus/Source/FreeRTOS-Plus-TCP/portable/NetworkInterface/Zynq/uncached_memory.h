@@ -20,4 +20,3 @@ uint8_t *pucGetUncachedMemory( uint32_t ulSize );
 uint8_t ucIsCachedMemory( const uint8_t *pucBuffer );
 
 #endif /* UNCACHEMEMORY_H */
-

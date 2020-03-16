@@ -1,0 +1,4 @@
+.sconsign.dblite
+build/
+src/FreeRTOS
+src/FreeRTOS-Plus

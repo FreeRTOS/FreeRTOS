@@ -1,7 +1,7 @@
 ---
 name: General inquiry
 about: Free form communication.
-title: ''
+title: "[Inquiry]"
 labels: question
 assignees: ''
 

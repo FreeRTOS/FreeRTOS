@@ -32,3 +32,5 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+e.g. code snippet to reproduce the issue.
+e.g. stack trace, memory dump, debugger log, and many etc.

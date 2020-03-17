@@ -1,7 +1,7 @@
 ---
 name: Documentation issue
 about: Create a report to help us improve our documentation.
-title: ''
+title: "[DOC]"
 labels: documentation
 assignees: ''
 

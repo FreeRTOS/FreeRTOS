@@ -35,13 +35,13 @@
                         						
                         <toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.1023181676" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug">
                             							
-                            <option id="cdt.managedbuild.option.gnu.cross.path.2116215758" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${eclipse_home}\SiFive\riscv64-unknown-elf-gcc-8.3.0-2019.08.0\bin" valueType="string"/>
+                            <option id="cdt.managedbuild.option.gnu.cross.path.2116215758" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" useByScannerDiscovery="false" value="${eclipse_home}/SiFive/riscv64-unknown-elf-gcc-8.3.0-2019.08.0/bin" valueType="string"/>
                             							
                             <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1119183919" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
                             							
                             <builder buildPath="${workspace_loc:/RTOSDemo}/Debug" id="cdt.managedbuild.builder.gnu.cross.1388532167" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
                             							
-                            <tool command="riscv64-unknown-elf-gcc.exe" id="cdt.managedbuild.tool.gnu.cross.c.compiler.1469975065" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+                            <tool command="riscv64-unknown-elf-gcc" id="cdt.managedbuild.tool.gnu.cross.c.compiler.1469975065" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
                                 								
                                 <option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.440219377" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
                                 								
@@ -83,7 +83,7 @@
                                 							
                             </tool>
                             							
-                            <tool command="riscv64-unknown-elf-gcc.exe" id="cdt.managedbuild.tool.gnu.cross.c.linker.558060359" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
+                            <tool command="riscv64-unknown-elf-gcc" id="cdt.managedbuild.tool.gnu.cross.c.linker.558060359" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker">
                                 								
                                 <option id="gnu.c.link.option.ldflags.46965227" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="-Xlinker --gc-sections -Wl,-Map,RTOSDemo.map -T../bsp/metal.default.lds -march=rv32imac -mabi=ilp32 -mcmodel=medlow -Wl,--start-group -lc -lgcc -Wl,--end-group --specs=nano.specs" valueType="string"/>
                                 								
@@ -107,7 +107,7 @@
                             							
                             <tool id="cdt.managedbuild.tool.gnu.cross.archiver.424513814" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
                             							
-                            <tool command="riscv64-unknown-elf-gcc.exe" id="cdt.managedbuild.tool.gnu.cross.assembler.825438707" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+                            <tool command="riscv64-unknown-elf-gcc" id="cdt.managedbuild.tool.gnu.cross.assembler.825438707" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
                                 								
                                 <option id="gnu.both.asm.option.flags.1946908814" name="Assembler flags" superClass="gnu.both.asm.option.flags" useByScannerDiscovery="false" value="-march=rv32imac -mabi=ilp32 -mcmodel=medlow -c -DportasmHANDLE_INTERRUPT=handle_trap -g3" valueType="string"/>
                                 								

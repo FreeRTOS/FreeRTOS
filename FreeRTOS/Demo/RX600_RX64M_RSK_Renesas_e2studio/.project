@@ -71,6 +71,11 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/queue.c</locationURI>
 		</link>
 		<link>
+			<name>Source/FreeRTOS_Source/stream_buffer.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/stream_buffer.c</locationURI>
+		</link>
+		<link>
 			<name>Source/FreeRTOS_Source/tasks.c</name>
 			<type>1</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/tasks.c</locationURI>

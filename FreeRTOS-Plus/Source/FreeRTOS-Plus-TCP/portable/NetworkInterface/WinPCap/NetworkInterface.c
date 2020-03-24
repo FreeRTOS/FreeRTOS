@@ -42,6 +42,10 @@ access functions. */
 #include "Win32-Extensions.h"
 #include "FreeRTOS_Stream_Buffer.h"
 
+/* A module that write network packets to a S source file.
+See tools/tcp_dump_packets.md. */
+#include "tcp_dump_packets.h"
+
 /* Sizes of the thread safe circular buffers used to pass data to and from the
 WinPCAP Windows threads. */
 #define xSEND_BUFFER_SIZE  32768
@@ -445,6 +449,11 @@ void pcap_callback( u_char *user, const struct pcap_pkthdr *pkt_header, const u_
 	if( ( pkt_header->caplen <= ( ipconfigNETWORK_MTU + ipSIZE_OF_ETH_HEADER ) ) &&
 		( uxStreamBufferGetSpace( xRecvBuffer ) >= ( ( ( size_t ) pkt_header->caplen ) + sizeof( *pkt_header ) ) ) )
 	{
+		/* The received packets will be written to a C source file,
+		only if 'ipconfigUSE_DUMP_PACKETS' is defined.
+		Otherwise, there is no action. */
+		iptraceDUMP_PACKET( ( const uint8_t* ) pkt_data, ( size_t ) pkt_header->caplen, pdTRUE );
+
 		uxStreamBufferAdd( xRecvBuffer, 0, ( const uint8_t* ) pkt_header, sizeof( *pkt_header ) );
 		uxStreamBufferAdd( xRecvBuffer, 0, ( const uint8_t* ) pkt_data, ( size_t ) pkt_header->caplen );
 	}
@@ -489,6 +498,10 @@ const DWORD xMaxMSToWait = 1000;
 		{
 			uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &xLength, sizeof( xLength ), pdFALSE );
 			uxStreamBufferGet( xSendBuffer, 0, ( uint8_t* ) ucBuffer, xLength, pdFALSE );
+			/* The packets sent will be written to a C source file,
+			only if 'ipconfigUSE_DUMP_PACKETS' is defined.
+			Otherwise, there is no action. */
+			iptraceDUMP_PACKET( ucBuffer, xLength, pdFALSE );
 			if( pcap_sendpacket( pxOpenedInterfaceHandle, ucBuffer, xLength  ) != 0 )
 			{
 				ulWinPCAPSendFailures++;

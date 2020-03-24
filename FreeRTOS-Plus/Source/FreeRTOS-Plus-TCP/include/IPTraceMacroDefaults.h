@@ -190,4 +190,32 @@ http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_IP_Trace.html */
 	#define iptraceSENDTO_DATA_TOO_LONG()
 #endif
 
+#if( ipconfigUSE_TCP_MEM_STATS == 0 )
+
+	/* See tools/tcp_mem_stat.c */
+
+	#ifndef iptraceMEM_STATS_CREATE
+		#define iptraceMEM_STATS_CREATE( xMemType, pxObject, uxSize )
+	#endif
+
+	#ifndef iptraceMEM_STATS_DELETE
+		#define iptraceMEM_STATS_DELETE( pxObject )
+	#endif
+
+	#ifndef iptraceMEM_STATS_CLOSE
+		#define iptraceMEM_STATS_CLOSE()
+	#endif
+
+#endif	/* ( ipconfigUSE_TCP_MEM_STATS != 0 ) */
+
+#if( ipconfigUSE_DUMP_PACKETS == 0 )
+
+	/* See tools/tcp_dump_packets.c */
+
+	#ifndef iptraceDUMP_PACKET
+		#define iptraceDUMP_PACKET( pucBuffer, uxLength, xIncoming )
+	#endif
+
+#endif	/* ( ipconfigUSE_DUMP_PACKETS != 0 ) */
+
 #endif /* UDP_TRACE_MACRO_DEFAULTS_H */

@@ -2983,15 +2983,6 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		}
 		else
 		{
-			if( xIsInputStream != 0 )
-			{
-				iptraceMEM_STATS_CREATE( tcpRX_STREAM_BUFFER, pxBuffer, uxSize );
-			}
-			else
-			{
-				iptraceMEM_STATS_CREATE( tcpTX_STREAM_BUFFER, pxBuffer, uxSize );
-			}
-
 			/* Clear the markers of the stream */
 			memset( pxBuffer, '\0', sizeof( *pxBuffer ) - sizeof( pxBuffer->ucArray ) );
 			pxBuffer->LENGTH = ( size_t ) uxLength ;
@@ -3001,12 +2992,14 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 				FreeRTOS_debug_printf( ( "prvTCPCreateStream: %cxStream created %lu bytes (total %lu)\n", xIsInputStream ? 'R' : 'T', uxLength, uxSize ) );
 			}
 
-			if( xIsInputStream != 0 )
+			if( xIsInputStream != pdFALSE )
 			{
+				iptraceMEM_STATS_CREATE( tcpRX_STREAM_BUFFER, pxBuffer, uxSize );
 				pxSocket->u.xTCP.rxStream = pxBuffer;
 			}
 			else
 			{
+				iptraceMEM_STATS_CREATE( tcpTX_STREAM_BUFFER, pxBuffer, uxSize );
 				pxSocket->u.xTCP.txStream = pxBuffer;
 			}
 		}

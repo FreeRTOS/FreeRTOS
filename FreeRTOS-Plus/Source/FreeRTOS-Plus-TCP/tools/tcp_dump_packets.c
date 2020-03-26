@@ -76,7 +76,7 @@ determines the number of full-size packets that can be stored in this stream buf
 
 /* A macro to add a type, both as a numeric value, as well as a string. */
 #define ADD_TYPE( FLAGS ) \
-	vAddType( flag_##FLAGS, #FLAGS )
+	prvAddType( flag_##FLAGS, #FLAGS )
 
 /*-----------------------------------------------------------*/
 
@@ -161,10 +161,10 @@ const char pcHeaderHeader[] =
 /* The Windows thread that actually writes the network packets to a C source and header file. */
 static DWORD WINAPI prvWritePackets( LPVOID lpParameter );
 
-static void vAddProtocolTags( uint8_t *pucEthernetBuffer, BaseType_t xIPType );
-static void vDetermineMessageType( uint8_t *pucBuffer, BaseType_t xIncoming );
-static void vActualDump( uint8_t *pucBuffer, size_t uxLength, BaseType_t xIncoming );
-static void vAddType( uint32_t ulFlags, const char *pcFlagName );
+static void prvAddProtocolTags( uint8_t *pucEthernetBuffer, BaseType_t xIPType );
+static void prvDetermineMessageType( uint8_t *pucBuffer, BaseType_t xIncoming );
+static void prvActualDump( uint8_t *pucBuffer, size_t uxLength, BaseType_t xIncoming );
+static void prvAddType( uint32_t ulFlags, const char *pcFlagName );
 
 /*-----------------------------------------------------------*/
 
@@ -276,7 +276,7 @@ static DWORD WINAPI prvWritePackets( LPVOID lpParameter )
 
 				uxStreamBufferGet( xPacketBuffer, 0u, NULL, sizeof( xHeader ), pdFALSE );
 				xActualCount = uxStreamBufferGet( xPacketBuffer, 0u, pcBuffer, xHeader.uxLength, pdFALSE );
-				vActualDump( pcBuffer, xActualCount, xHeader.bIncoming );
+				prvActualDump( pcBuffer, xActualCount, xHeader.bIncoming );
 			}
 		}
 	}
@@ -316,7 +316,7 @@ FILE *outfile;
 }
 /*-----------------------------------------------------------*/
 
-static void vAddType( uint32_t ulFlags, const char *pcFlagName )
+static void prvAddType( uint32_t ulFlags, const char *pcFlagName )
 {
 size_t uxLength = strlen( pcTypeString );
 char pcString[ 64 ];
@@ -335,7 +335,7 @@ BaseType_t iCount;
 }
 /*-----------------------------------------------------------*/
 
-static void vAddProtocolTags( uint8_t *pucEthernetBuffer, BaseType_t xIPType )
+static void prvAddProtocolTags( uint8_t *pucEthernetBuffer, BaseType_t xIPType )
 {
 ProtocolHeaders_t *pxProtocolHeaders;
 #if( ipconfigUSE_IPv6 != 0 )
@@ -427,7 +427,7 @@ IPHeader_t * pxIPHeader;
 }
 /*-----------------------------------------------------------*/
 
-static void vDetermineMessageType( uint8_t *pucBuffer, BaseType_t xIncoming )
+static void prvDetermineMessageType( uint8_t *pucBuffer, BaseType_t xIncoming )
 {
 EthernetHeader_t *pxEthernetHeader;
 
@@ -472,7 +472,7 @@ EthernetHeader_t *pxEthernetHeader;
 		case ipIPv4_FRAME_TYPE :
 			{
 				ADD_TYPE( FRAME_4 );
-				vAddProtocolTags( pucBuffer, 4 );
+				prvAddProtocolTags( pucBuffer, 4 );
 			}
 			break;
 			
@@ -480,7 +480,7 @@ EthernetHeader_t *pxEthernetHeader;
 		case ipIPv6_FRAME_TYPE :
 			{
 				ADD_TYPE( FRAME_6 );
-				vAddProtocolTags( pucBuffer, 6 );
+				prvAddProtocolTags( pucBuffer, 6 );
 			}
 			break;
 	#endif
@@ -492,7 +492,7 @@ EthernetHeader_t *pxEthernetHeader;
 }
 /*-----------------------------------------------------------*/
 
-static void vActualDump( uint8_t *pucBuffer, size_t uxLength, BaseType_t xIncoming )
+static void prvActualDump( uint8_t *pucBuffer, size_t uxLength, BaseType_t xIncoming )
 {
 char pcString[ 513 ];
 size_t uxOffset;
@@ -510,7 +510,7 @@ BaseType_t xUseIt = pdFALSE;
 		return;
 	}
 
-	vDetermineMessageType( pucBuffer, xIncoming );
+	prvDetermineMessageType( pucBuffer, xIncoming );
 
 	for( uxIndex = 0; uxIndex < pxCurrentEntries->uxEntryCount; uxIndex++ )
 	{

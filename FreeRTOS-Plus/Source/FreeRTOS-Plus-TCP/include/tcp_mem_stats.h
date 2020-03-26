@@ -26,7 +26,7 @@ typedef enum xTCP_MEMORY
 
 	void vTCPMemStatCreate( TCP_MEMORY_t xMemType, void *pxObject, size_t uxSize );
 
-	void vTCPMemStatRemove( void *pxObject );
+	void vTCPMemStatDelete( void *pxObject );
 
 	void vTCPMemStatClose( void );
 

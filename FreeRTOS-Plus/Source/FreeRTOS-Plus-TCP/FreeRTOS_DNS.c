@@ -155,7 +155,7 @@ static uint32_t prvGetHostByName( const char *pcHostName,
 	static uint8_t * prvReadNameField( uint8_t *pucByte,
 									   size_t uxSourceLen,
 									   char *pcName,
-									   size_t uxLen );
+									   size_t uxDestLen );
 #endif /* ipconfigUSE_DNS_CACHE || ipconfigDNS_USE_CALLBACKS */
 
 #if( ipconfigUSE_DNS_CACHE == 1 )
@@ -174,7 +174,9 @@ static uint32_t prvGetHostByName( const char *pcHostName,
 
 	static DNSCacheRow_t xDNSCache[ ipconfigDNS_CACHE_ENTRIES ];
 
-	void FreeRTOS_dnsclear()
+	/* MISRA c 2012 rule 8.7: Below function may be used by 
+	 * external callees as well			        */
+	void FreeRTOS_dnsclear( void )
 	{
 		memset( xDNSCache, 0x0, sizeof( xDNSCache ) );
 	}
@@ -280,6 +282,9 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 /*-----------------------------------------------------------*/
 
 #if( ipconfigUSE_DNS_CACHE == 1 )
+
+	/* MISRA c 2012 rule 8.7: Below function may be used by 
+	 * external callees as well			        */
 	uint32_t FreeRTOS_dnslookup( const char *pcHostName )
 	{
 	uint32_t ulIPAddress = 0uL;
@@ -460,6 +465,8 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 /*-----------------------------------------------------------*/
 
 #if( ipconfigDNS_USE_CALLBACKS == 0 )
+	/* MISRA c 2012 rule 8.7 ralxed since this function can
+	 * be called from external sources as well             */
 	uint32_t FreeRTOS_gethostbyname( const char *pcHostName )
 #else
 	uint32_t FreeRTOS_gethostbyname_a( const char *pcHostName,
@@ -487,11 +494,11 @@ BaseType_t xHasRandom = pdFALSE;
 		request. */
 		#if( ipconfigUSE_DNS_CACHE == 1 )
 		{
-			if( ulIPAddress == 0uL )
+			if( ulIPAddress == 0UL )
 			{
 				ulIPAddress = FreeRTOS_dnslookup( pcHostName );
 
-				if( ulIPAddress != 0 )
+				if( ulIPAddress != 0UL )
 				{
 					FreeRTOS_debug_printf( ( "FreeRTOS_gethostbyname: found '%s' in cache: %lxip\n", pcHostName, ulIPAddress ) );
 				}
@@ -635,7 +642,8 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 					if( lBytes > 0 )
 					{
 					BaseType_t xExpected;
-					DNSMessage_t *pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
+					/* Pointer does not modify the data it is pointing to */
+					const DNSMessage_t *pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
 
 						/* See if the identifiers match. */
 						if( uxIdentifier == ( TickType_t ) pxDNSMessageHeader->usIdentifier )
@@ -712,9 +720,12 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 };
 
 	/* Copy in the const part of the header. */
-	memcpy( ( void * ) pucUDPPayloadBuffer, ( void * ) &xDefaultPartDNSHeader, sizeof( xDefaultPartDNSHeader ) );
+	memcpy( ( void * ) pucUDPPayloadBuffer, ( const void * ) &xDefaultPartDNSHeader, sizeof( xDefaultPartDNSHeader ) );
 
 	/* Write in a unique identifier. */
+	/* MISRA c 2012 rule 11.3 relaxed. pucUDPPayloadBuffer is being used in
+	 * various locations. Defining this as DNSMessage_t* (in parameters) 
+	 * will make traversal difficut later.                               */
 	pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
 	pxDNSMessageHeader->usIdentifier = ( uint16_t ) uxIdentifier;
 
@@ -741,21 +752,28 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	{
 		pucByte++;
 
-		while( ( *pucByte != 0x00 ) && ( *pucByte != '.' ) )
+		/* MISRA c 2012 rule 10.4 relaxed for increased readability.
+		 * Not writing 46U instead of '.' */
+		while( ( *pucByte != 0x00U ) && ( *pucByte != '.' ) )
 		{
 			pucByte++;
 		}
 
 		/* Fill in the byte count, then move the pucStart pointer up to
 		the found byte position. */
+		/* MISRA c 2012 rule 11.4 relaxed since pointer to int
+		 * conversion is required to count the number of bytes.
+		 * Other ways to do this do exist. Code rework is required. */
 		*pucStart = ( uint8_t ) ( ( uint32_t ) pucByte - ( uint32_t ) pucStart );
 		( *pucStart )--;
 
 		pucStart = pucByte;
-	} while( *pucByte != 0x00 );
+	} while( *pucByte != 0x00U );
 
 	/* Finish off the record. */
-
+	/* pucByte is being used to modify certain bytes from the DNS message 
+	 * packet. Thereby, the MISRA c 2012 rule 11.3 reagrading conversion 
+	 * of one pointer to another is relaxed. */	
 	pxTail = ( DNSTail_t * ) ( pucByte + 1 );
 
 	vSetField16( pxTail, DNSTail_t, usType, dnsTYPE_A_HOST ); /* Type A: host */
@@ -763,7 +781,9 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Return the total size of the generated message, which is the space from
 	the last written byte to the beginning of the buffer. */
-	return ( ( uint32_t ) pucByte - ( uint32_t ) pucUDPPayloadBuffer + 1 ) + sizeof( *pxTail );
+	/* MISRA c 2012 rule 11.4 relaxed. The size needs to be calculted thereby 
+	 * pointers must be converted to integral values */
+	return ( ( uint32_t ) pucByte - ( uint32_t ) pucUDPPayloadBuffer + 1U ) + sizeof( *pxTail );
 }
 /*-----------------------------------------------------------*/
 
@@ -775,9 +795,12 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 									   size_t uxDestLen )
 	{
 	size_t uxNameLen = 0;
-	BaseType_t xCount;
 
-		if( 0 == uxSourceLen )
+	/* xCount gets the valus from pucByte and counts down to 0.
+	 * No need to have a different type than that of pucByte */
+	uint8_t xCount;  
+
+		if( uxSourceLen == ( size_t ) 0 )
 		{
 			return NULL;
 		}
@@ -799,21 +822,21 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 		else
 		{
 			/* pucByte points to the full name. Walk over the string. */
-			while( ( NULL != pucByte ) && ( *pucByte != 0x00u ) && ( uxSourceLen > 1u ) )
+			while( ( NULL != pucByte ) && ( *pucByte != 0x00u ) && ( uxSourceLen > 1U ) )
 			{
 				/* If this is not the first time through the loop, then add a
 				separator in the output. */
-				if( ( uxNameLen > 0 ) && ( uxNameLen < ( uxDestLen - 1u ) ) )
+				if( ( uxNameLen > 0U ) && ( uxNameLen < ( uxDestLen - 1U) ) )
 				{
 					pcName[ uxNameLen++ ] = '.';
 				}
 
 				/* Process the first/next sub-string. */
 				for( xCount = *( pucByte++ ), uxSourceLen--;
-					 xCount-- && uxSourceLen > 1u;
+					 ( xCount-- > 0 ) && ( uxSourceLen > 1U );
 					 pucByte++, uxSourceLen-- )
 				{
-					if( uxNameLen < uxDestLen - 1u )
+					if( uxNameLen < ( uxDestLen - 1U ) )
 					{
 						pcName[ uxNameLen++ ] = *( ( char * ) pucByte );
 					}
@@ -829,7 +852,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 			/* Confirm that a fully formed name was found. */
 			if( NULL != pucByte )
 			{
-				if( 0x00 == *pucByte )
+				if( 0x00U == *pucByte )
 				{
 					pucByte++;
 					uxSourceLen--;
@@ -876,7 +899,10 @@ size_t uxChunkLength;
 		/* pucByte points to the full name. Walk over the string. */
 		while( ( *pucByte != 0x00u ) && ( uxSourceLen > 1u ) )
 		{
-			uxChunkLength = *pucByte + 1u;
+			/* Conversion to size_t causes addition to be done
+			 * in size_t - in accodance with MISRA c 2012 rule
+			 * 10.6 					*/
+			uxChunkLength = ( ( size_t ) *pucByte ) + 1u;
 
 			if( uxSourceLen > uxChunkLength )
 			{
@@ -913,7 +939,10 @@ when ipconfigDNS_USE_CALLBACKS == 1
 when ipconfigUSE_LLMNR == 1
 for testing purposes, by the module iot_test_freertos_tcp.c
 */
-uint32_t ulDNSHandlePacket( NetworkBufferDescriptor_t *pxNetworkBuffer )
+
+/* MISRA c 2012 rule 8.7: Although highly unlikely, below 
+ * function may be used by external callees as well        */
+uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
 DNSMessage_t *pxDNSMessageHeader;
 size_t uxPayloadSize;
@@ -967,7 +996,8 @@ static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
 								  BaseType_t xExpected )
 {
 DNSMessage_t *pxDNSMessageHeader;
-DNSAnswerRecord_t *pxDNSAnswerRecord;
+/* This pointer is not used to modify anything */
+const DNSAnswerRecord_t *pxDNSAnswerRecord; 
 uint32_t ulIPAddress = 0uL;
 #if( ipconfigUSE_LLMNR == 1 )
 	char *pcRequestedName = NULL;
@@ -992,6 +1022,7 @@ BaseType_t xDoStore = xExpected;
 	uxSourceBytesRemaining = uxBufferLength;
 
 	/* Parse the DNS message header. */
+	/* MISRA c 2012 rule 11.3 ralexed to make byte by byte traversal easier */
 	pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
 
 	/* Introduce a do {} while (0) to allow the use of breaks. */
@@ -1016,7 +1047,7 @@ BaseType_t xDoStore = xExpected;
 			#endif
 
 #if( ipconfigUSE_DNS_CACHE == 1 ) || ( ipconfigDNS_USE_CALLBACKS == 1 )
-			if( x == 0 )
+			if( x == 0U )
 			{
 				pucByte = prvReadNameField( pucByte,
 											uxSourceBytesRemaining,
@@ -1029,7 +1060,8 @@ BaseType_t xDoStore = xExpected;
 					return dnsPARSE_ERROR;
 				}
 
-				uxSourceBytesRemaining = ( pucUDPPayloadBuffer + uxBufferLength ) - pucByte;
+				uxSourceBytesRemaining = ( size_t )
+					( ( pucUDPPayloadBuffer + uxBufferLength ) - pucByte );
 			}
 			else
 #endif /* ipconfigUSE_DNS_CACHE || ipconfigDNS_USE_CALLBACKS */
@@ -1086,6 +1118,9 @@ BaseType_t xDoStore = xExpected;
 					return dnsPARSE_ERROR;
 				}
 
+				/* MISRA c 2012 rule 10.8 relaxed. All the variables
+				 * are capable of handling the data. The should not be
+				 * any overflow 				    */
 				uxSourceBytesRemaining = ( size_t )
 					( pucUDPPayloadBuffer + uxBufferLength - pucByte );
 
@@ -1095,6 +1130,8 @@ BaseType_t xDoStore = xExpected;
 					( usChar2u16( pucByte ) == dnsTYPE_A_HOST ) )
 				{
 					/* This is the required record type and is of sufficient size. */
+					/* MISRA c 2012 rule 11.3 relaxed. pucByte is used for byte-by-byte
+					 * traversal. */
 					pxDNSAnswerRecord = ( DNSAnswerRecord_t * ) pucByte;
 
 					/* Sanity check the data length of an IPv4 answer. */
@@ -1143,7 +1180,11 @@ BaseType_t xDoStore = xExpected;
 				{
 					/* It's not an A record, so skip it. Get the header location
 					and then jump over the header. */
+
+					/* MISRA c 2012 rule 11.3 relaxed as pucByte is being used in
+					 * various places to point to various parts of the DNS records */
 					pxDNSAnswerRecord = ( DNSAnswerRecord_t * ) pucByte;
+
 					pucByte += sizeof( DNSAnswerRecord_t );
 					uxSourceBytesRemaining -= sizeof( DNSAnswerRecord_t );
 
@@ -1470,14 +1511,18 @@ BaseType_t xReturn;
 	{
 	BaseType_t x;
 	BaseType_t xFound = pdFALSE;
-	uint32_t ulCurrentTimeSeconds = ( xTaskGetTickCount() / portTICK_PERIOD_MS ) / 1000;
+	uint32_t ulCurrentTimeSeconds = ( xTaskGetTickCount() / portTICK_PERIOD_MS ) / 1000U;
 	static BaseType_t xFreeEntry = 0;
-		configASSERT(pcName);
+
+		/* MISRA advisory rule 1.2 Relaxed in case of 
+		 * configASSERT as using __FUNCTION__ makes 
+		 * debugging easier 			   */
+		configASSERT( ( pcName != NULL ) );
 
 		/* For each entry in the DNS cache table. */
 		for( x = 0; x < ipconfigDNS_CACHE_ENTRIES; x++ )
 		{
-			if( xDNSCache[ x ].pcName[ 0 ] == 0 )
+			if( xDNSCache[ x ].pcName[ 0 ] == '\0' )
 			{
 				continue;
 			}
@@ -1495,7 +1540,7 @@ BaseType_t xReturn;
 					else
 					{
 						/* Age out the old cached record. */
-						xDNSCache[ x ].pcName[ 0 ] = 0;
+						xDNSCache[ x ].pcName[ 0 ] = '\0';
 					}
 				}
 				else
@@ -1537,7 +1582,7 @@ BaseType_t xReturn;
 			}
 		}
 
-		if( ( xLookUp == 0 ) || ( *pulIP != 0 ) )
+		if( ( xLookUp == 0 ) || ( *pulIP != 0U ) )
 		{
 			FreeRTOS_debug_printf( ( "prvProcessDNSCache: %s: '%s' @ %lxip\n", xLookUp ? "look-up" : "add", pcName, FreeRTOS_ntohl( *pulIP ) ) );
 		}
@@ -1553,4 +1598,3 @@ BaseType_t xReturn;
 #ifdef AMAZON_FREERTOS_ENABLE_UNIT_TESTS
 	#include "iot_freertos_tcp_test_access_dns_define.h"
 #endif
-

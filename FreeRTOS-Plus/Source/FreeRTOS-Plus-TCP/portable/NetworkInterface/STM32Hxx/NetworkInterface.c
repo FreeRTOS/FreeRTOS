@@ -94,25 +94,26 @@ BaseType_t xReturn;
 	{
 	BaseType xResult;
 
-		xResult = xTaskCreate( prvEMACDeferredInterruptHandlerTask,
-							   niEMAC_TASK_NAME,
-							   niEMAC_TASK_STACK_SIZE,
-							   NULL,	/* pvParameter. */
-							   niEMAC_TASK_PRIORITY,
-							   &( xEMACTaskHandle ) );
-
-		/* Perform the hardware specific network initialisation here.  Typically
-		that will involve using the Ethernet driver library to initialise the
-		Ethernet (or other network) hardware, initialise DMA descriptors, and
-		perform a PHY auto-negotiation to obtain a network link. */
 		xMacInitStatus = eMACFailed;
 
-		if( xResult == pdPASS )
+		if( HAL_ETH_Start( &( heth ) ) == HAL_OK )
 		{
-			/* The task was created successfully. */
-			if( HAL_ETH_Start( &( heth ) ) == HAL_OK )
+			/* The ETH peripheral is initialised. */
+			xResult = xTaskCreate( prvEMACDeferredInterruptHandlerTask,
+								   niEMAC_TASK_NAME,
+								   niEMAC_TASK_STACK_SIZE,
+								   NULL,	/* pvParameter. */
+								   niEMAC_TASK_PRIORITY,
+								   &( xEMACTaskHandle ) );
+
+			/* Perform the hardware specific network initialisation here.  Typically
+			that will involve using the Ethernet driver library to initialise the
+			Ethernet (or other network) hardware, initialise DMA descriptors, and
+			perform a PHY auto-negotiation to obtain a network link. */
+
+			if( xResult == pdPASS )
 			{
-				/* The ETH peripheral is initialised. */
+				/* The task was created successfully. */
 				xMacInitStatus = eMACPass;
 			}
 		}
@@ -122,7 +123,18 @@ BaseType_t xReturn;
 	{
 		/* TODO here: Check if Link is up, making use of ../common/phyHandler.c
 		Only return pdPASS when the LinkStatus is up. */
-		xReturn = pdPASS;
+		if( xPhyObject.ulLinkStatusMask != 0uL )
+		{
+			xETH.Instance->DMAIER |= ETH_DMA_ALL_INTS;
+			xReturn = pdPASS;
+			FreeRTOS_printf( ( "Link Status is high\n" ) ) ;
+		}
+		else
+		{
+			/* For now pdFAIL will be returned. But prvEMACHandlerTask() is running
+			and it will keep on checking the PHY and set 'ulLinkStatusMask' when necessary. */
+			xReturn = pdFAIL;
+		}
 	}
 	else
 	{

@@ -141,10 +141,6 @@ struct metal_interrupt *pxInterruptController;
 	/* Set all interrupt enable bits to 0. */
 	mainPLIC_ENABLE_0 = 0UL;
 	mainPLIC_ENABLE_1 = 0UL;
-
-	/* Clear all pending interrupts. */
-	mainPLIC_PENDING_0 = 0UL;
-	mainPLIC_PENDING_1 = 0UL;
 }
 /*-----------------------------------------------------------*/
 

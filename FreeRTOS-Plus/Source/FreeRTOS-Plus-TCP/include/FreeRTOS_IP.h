@@ -35,6 +35,11 @@ extern "C" {
 #include "FreeRTOSIPConfigDefaults.h"
 #include "IPTraceMacroDefaults.h"
 
+
+/* This is a trick to get boolean values to be used in expressions */
+#define ipTRUE_BOOL			( 1 == 1 )
+#define ipFALSE_BOOL			( 1 != 1 )
+
 /* Some constants defining the sizes of several parts of a packet */
 #define ipSIZE_OF_ETH_HEADER			14u
 #define ipSIZE_OF_IPv4_HEADER			20u
@@ -322,16 +327,3 @@ structure name. */
 #endif
 
 #endif /* FREERTOS_IP_H */
-
-
-
-
-
-
-
-
-
-
-
-
-

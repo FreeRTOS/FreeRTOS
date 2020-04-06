@@ -51,8 +51,11 @@
 #define ipIP_VERSION_AND_HEADER_LENGTH_BYTE ( ( uint8_t ) 0x45 )
 
 /* Part of the Ethernet and IP headers are always constant when sending an IPv4
-UDP packet.  This array defines the constant parts, allowing this part of the
-packet to be filled in using a simple memcpy() instead of individual writes. */
+ * UDP packet.  This array defines the constant parts, allowing this part of the
+ * packet to be filled in using a simple memcpy() instead of individual writes.
+ *
+ * Also, the padding is predetermined and correct. Relaxing MISRA c 2012 rule
+ * 19.2 */
 UDPPacketHeader_t xDefaultPartUDPPacketHeader =
 {
 	/* .ucBytes : */
@@ -77,10 +80,15 @@ void vProcessGeneratedUDPPacket( NetworkBufferDescriptor_t * const pxNetworkBuff
 UDPPacket_t *pxUDPPacket;
 IPHeader_t *pxIPHeader;
 eARPLookupResult_t eReturned;
-uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
+uint32_t ulIPAddress;
 size_t uxPayloadSize;
 
+	configASSERT( pxNetworkBuffer );
+
+	ulIPAddress = pxNetworkBuffer->ulIPAddress;
+
 	/* Map the UDP packet onto the start of the frame. */
+	/* MISRA c 2012 rule 11.3 relaxed for better readability */
 	pxUDPPacket = ( UDPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer;
 
 #if ipconfigSUPPORT_OUTGOING_PINGS == 1
@@ -148,7 +156,7 @@ size_t uxPayloadSize;
 			 * Offset the memcpy by the size of a MAC address to start at the packet's
 			 * Ethernet header 'source' MAC address; the preceding 'destination' should not be altered.
 			 */
-			char *pxUdpSrcAddrOffset = ( char *) pxUDPPacket + sizeof( MACAddress_t );
+			uint8_t *pxUdpSrcAddrOffset = ( uint8_t *) pxUDPPacket + sizeof( MACAddress_t );
 			memcpy( pxUdpSrcAddrOffset, xDefaultPartUDPPacketHeader.ucBytes, sizeof( xDefaultPartUDPPacketHeader ) );
 
 		#if ipconfigSUPPORT_OUTGOING_PINGS == 1
@@ -186,7 +194,9 @@ size_t uxPayloadSize;
 
 				if( ( ucSocketOptions & ( uint8_t ) FREERTOS_SO_UDPCKSUM_OUT ) != 0u )
 				{
-					usGenerateProtocolChecksum( (uint8_t*)pxUDPPacket, pxNetworkBuffer->xDataLength, pdTRUE );
+					/* Setting the generated checksum in the packet itself. No need to
+					 * check the return value */
+					( void ) usGenerateProtocolChecksum( (uint8_t*)pxUDPPacket, pxNetworkBuffer->xDataLength, pdTRUE );
 				}
 				else
 				{
@@ -235,7 +245,9 @@ size_t uxPayloadSize;
 		}
 		#endif
 
-		xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
+		/* This is an internal call with correct and checked parameters, therefore
+		 * ignoring the return value of the function */
+		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE );
 	}
 	else
 	{
@@ -253,13 +265,14 @@ FreeRTOS_Socket_t *pxSocket;
 configASSERT(pxNetworkBuffer);
 configASSERT(pxNetworkBuffer->pucEthernetBuffer);
 
-
-UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
+/* MISRA c 2012 rule 11.3 relaxed for more read-ablity. Code rework might be
+ * required */
+const UDPPacket_t *pxUDPPacket = (const UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 
 	/* Caller must check for minimum packet size. */
 	pxSocket = pxUDPSocketLookup( usPort );
 
-	if( pxSocket )
+	if( pxSocket != NULL )
 	{
 
 		/* When refreshing the ARP cache with received UDP packets we must be
@@ -309,23 +322,22 @@ UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 		{
 			vTaskSuspendAll();
 			{
-				if( xReturn == pdPASS )
+				taskENTER_CRITICAL();
 				{
-					taskENTER_CRITICAL();
-					{
-						/* Add the network packet to the list of packets to be
-						processed by the socket. */
-						vListInsertEnd( &( pxSocket->u.xUDP.xWaitingPacketsList ), &( pxNetworkBuffer->xBufferListItem ) );
-					}
-					taskEXIT_CRITICAL();
+					/* Add the network packet to the list of packets to be
+					processed by the socket. */
+					vListInsertEnd( &( pxSocket->u.xUDP.xWaitingPacketsList ), &( pxNetworkBuffer->xBufferListItem ) );
 				}
+				taskEXIT_CRITICAL();
 			}
+			/* It does match a previous vTaskSuspendAll. Therefore the return value is
+			 * ignored */
 			xTaskResumeAll();
 
 			/* Set the socket's receive event */
 			if( pxSocket->xEventGroup != NULL )
 			{
-				xEventGroupSetBits( pxSocket->xEventGroup, eSOCKET_RECEIVE );
+				xEventGroupSetBits( pxSocket->xEventGroup, ( const EventBits_t ) eSOCKET_RECEIVE );
 			}
 
 			#if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
@@ -348,8 +360,10 @@ UDPPacket_t *pxUDPPacket = (UDPPacket_t *) pxNetworkBuffer->pucEthernetBuffer;
 
 			#if( ipconfigUSE_DHCP == 1 )
 			{
-				if( xIsDHCPSocket( pxSocket ) )
+				if( xIsDHCPSocket( pxSocket ) == pdTRUE )
 				{
+					/* The below call can fail, i.e. return pdFAIL. _HT_, _RB_ Is there no
+					 * need to check the return value? */
 					xSendEventToIPTask( eDHCPEvent );
 				}
 			}

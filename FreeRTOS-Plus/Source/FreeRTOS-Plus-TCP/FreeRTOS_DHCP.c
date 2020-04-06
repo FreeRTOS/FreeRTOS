@@ -106,21 +106,23 @@ are located. */
 
 /* Offset into a DHCP message at which the first byte of the options is
 located. */
-#define dhcpFIRST_OPTION_BYTE_OFFSET			( 0xf0 )
+#define dhcpFIRST_OPTION_BYTE_OFFSET			( 0xf0u )
 
 /* Standard DHCP port numbers and magic cookie value. */
 #if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
 	#define dhcpCLIENT_PORT 0x4400u
 	#define dhcpSERVER_PORT 0x4300u
-	#define dhcpCOOKIE		0x63538263ul
+	#define dhcpCOOKIE		0x63538263uL
 	#define dhcpBROADCAST	0x0080u
 #else
 	#define dhcpCLIENT_PORT 0x0044u
 	#define dhcpSERVER_PORT 0x0043u
-	#define dhcpCOOKIE		0x63825363ul
+	#define dhcpCOOKIE		0x63825363uL
 	#define dhcpBROADCAST	0x8000u
 #endif /* ipconfigBYTE_ORDER */
 
+/* These #includes just include #pragmas to pack the structures. Thus,
+ * MISRA c 2012 rule 20.1 is relaxed */
 #include "pack_struct_start.h"
 struct xDHCPMessage
 {
@@ -238,7 +240,7 @@ static DHCPData_t xDHCPData;
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xIsDHCPSocket( Socket_t xSocket )
+BaseType_t xIsDHCPSocket( const Socket_t xSocket )
 {
 BaseType_t xReturn;
 
@@ -357,7 +359,7 @@ BaseType_t xGivingUp = pdFALSE;
 					if( xApplicationGetRandomNumber( &( xDHCPData.ulTransactionId ) ) != pdFALSE )
 					{
 						xDHCPData.xDHCPTxTime = xTaskGetTickCount( );
-						xDHCPData.xUseBroadcast = !xDHCPData.xUseBroadcast;
+						xDHCPData.xUseBroadcast = ( xDHCPData.xUseBroadcast != 0 ) ? 0uL : 1uL;
 						prvSendDHCPDiscover( );
 						FreeRTOS_debug_printf( ( "vDHCPProcess: timeout %lu ticks\n", xDHCPData.xDHCPTxPeriod ) );
 					}
@@ -389,6 +391,10 @@ BaseType_t xGivingUp = pdFALSE;
 					#endif /* ipconfigDHCP_FALL_BACK_AUTO_IP */
 				}
 			}
+			else
+			{
+				/* Do Nothing */
+			}
 			break;
 
 		case eWaitingAcknowledge :
@@ -415,6 +421,8 @@ BaseType_t xGivingUp = pdFALSE;
 				vIPNetworkUpCalls( );
 
 				/* Close socket to ensure packets don't queue on it. */
+				/* MISRA c 2012 rule 17.7 relaxed. This is an internal call with
+				 * restricted input to the function. The output is not used */
 				vSocketClose( xDHCPData.xDHCPSocket );
 				xDHCPData.xDHCPSocket = NULL;
 
@@ -509,6 +517,7 @@ BaseType_t xGivingUp = pdFALSE;
 			break;
 
 		default:
+			/* Should not actually get here */
 			break;
 	}
 
@@ -538,6 +547,8 @@ BaseType_t xGivingUp = pdFALSE;
 		if( xDHCPData.xDHCPSocket != NULL )
 		{
 			/* Close socket to ensure packets don't queue on it. */
+			/* MISRA c 2012 rule 17.7 relaxed. This is an internal call with
+			 * restricted input to the function. The output is not used */
 			vSocketClose( xDHCPData.xDHCPSocket );
 			xDHCPData.xDHCPSocket = NULL;
 		}
@@ -560,6 +571,8 @@ TickType_t xTimeoutTime = ( TickType_t ) 0;
 
 			/* Ensure the Rx and Tx timeouts are zero as the DHCP executes in the
 			context of the IP task. */
+			/* MISRA c 2012 rule 17.7 relaxed. FreeRTOS_setsockopt used internally
+			 * with correct parameters and a valid socket */
 			FreeRTOS_setsockopt( xDHCPData.xDHCPSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
 			FreeRTOS_setsockopt( xDHCPData.xDHCPSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
 
@@ -569,6 +582,8 @@ TickType_t xTimeoutTime = ( TickType_t ) 0;
 			if( xReturn != 0 )
 			{
 				/* Binding failed, close the socket again. */
+				/* MISRA c 2012 rule 17.7 relaxed. vSocketClose used internally
+				 * with a valid socket. No need to get the result */
 				vSocketClose( xDHCPData.xDHCPSocket );
 				xDHCPData.xDHCPSocket = NULL;
 			}
@@ -610,21 +625,25 @@ static void prvInitialiseDHCP( void )
 
 static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
 {
-uint8_t *pucUDPPayload, *pucLastByte;
+uint8_t *pucUDPPayload;
+const uint8_t *pucLastByte;
 struct freertos_sockaddr xClient;
 uint32_t xClientLength = sizeof( xClient );
 int32_t lBytes;
 DHCPMessage_t *pxDHCPMessage;
-uint8_t *pucByte, ucOptionCode, ucLength;
+uint8_t ucOptionCode, ucLength;
+const uint8_t *pucByte;
 uint32_t ulProcessed, ulParameter;
 BaseType_t xReturn = pdFALSE;
-const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct DHCP message type must be present in the options. */
+const uint32_t ulMandatoryOptions = 2uL; /* DHCP server address, and the correct DHCP message type must be present in the options. */
 
-	lBytes = FreeRTOS_recvfrom( xDHCPData.xDHCPSocket, ( void * ) &pucUDPPayload, 0ul, FREERTOS_ZERO_COPY, &xClient, &xClientLength );
+	lBytes = FreeRTOS_recvfrom( xDHCPData.xDHCPSocket, ( void * ) &pucUDPPayload, 0uL, FREERTOS_ZERO_COPY, &xClient, &xClientLength );
 
 	if( lBytes > 0 )
 	{
 		/* Map a DHCP structure onto the received data. */
+		/* MISRA c 2012 rule 11.3 relaxed as this variableis being used at a lot of
+		 * places in the code with varying types */
 		pxDHCPMessage = ( DHCPMessage_t * ) ( pucUDPPayload );
 
 		/* Sanity check. */
@@ -638,7 +657,7 @@ const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct
 						sizeof( MACAddress_t ) ) == 0 )
 			{
 				/* None of the essential options have been processed yet. */
-				ulProcessed = 0ul;
+				ulProcessed = 0uL;
 
 				/* Walk through the options until the dhcpOPTION_END_BYTE byte
 				is found, taking care not to walk off the end of the options. */
@@ -670,7 +689,7 @@ const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct
 						ucLength = pucByte[ 1 ];
 						pucByte += 2;
 
-						if( pucByte + ucLength > pucLastByte )
+						if( ( pucByte + ucLength ) > pucLastByte )
 						{
 							break;
 						}
@@ -684,6 +703,9 @@ const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct
 					just get it once here and use later. */
 					if( ucLength >= sizeof( ulParameter ) )
 					{
+						/* MISRA c 2012 21.15 relaxed. pucByte is being used to modify
+						 * single bytes. Thereby, there is no smple way to get around
+						 * this */
 						memcpy( ( void * ) &( ulParameter ),
 								( void * ) pucByte,
 								( size_t ) sizeof( ulParameter ) );
@@ -833,7 +855,7 @@ uint8_t *pucUDPPayloadBuffer;
 	size_t xNameLength = strlen( pucHostName );
 	uint8_t *pucPtr;
 
-	xRequiredBufferSize += ( 2 + xNameLength );
+	xRequiredBufferSize += ( 2u + xNameLength );
 #endif
 
 	/* Get a buffer.  This uses a maximum delay, but the delay will be capped
@@ -841,8 +863,12 @@ uint8_t *pucUDPPayloadBuffer;
 	be test. */
 	do
 	{
-	} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xRequiredBufferSize, portMAX_DELAY ) ) == NULL );
+		pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xRequiredBufferSize, portMAX_DELAY );
+	} while( pucUDPPayloadBuffer == NULL );
 
+	/* MISRA c 2012 rule 11.3 relaxed with this variable since it is being used at a
+	 * lot of different places and this is the variable which is being returned by
+	 * the function*/
 	pxDHCPMessage = ( DHCPMessage_t * ) pucUDPPayloadBuffer;
 
 	/* Most fields need to be zero. */
@@ -866,7 +892,7 @@ uint8_t *pucUDPPayloadBuffer;
 	memcpy( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ), ( void * ) ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
 
 	/* Copy in the const part of the options options. */
-	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET ] ), ( void * ) pucOptionsArray, *pxOptionsArraySize );
+	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET ] ), ( const void * ) pucOptionsArray, *pxOptionsArraySize );
 
 	#if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 	{
@@ -874,12 +900,12 @@ uint8_t *pucUDPPayloadBuffer;
 		it easier to lookup a device in a router's list of DHCP clients. */
 
 		/* Point to where the OPTION_END was stored to add data. */
-		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1 ) ] );
+		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1u ) ] );
 		pucPtr[ 0 ] = dhcpDNS_HOSTNAME_OPTIONS_CODE;
 		pucPtr[ 1 ] = ( uint8_t ) xNameLength;
-		memcpy( ( void *) ( pucPtr + 2 ), pucHostName, xNameLength );
-		pucPtr[ 2 + xNameLength ] = dhcpOPTION_END_BYTE;
-		*pxOptionsArraySize += ( 2 + xNameLength );
+		memcpy( ( void *) ( pucPtr + 2u ), pucHostName, xNameLength );
+		pucPtr[ 2u + xNameLength ] = dhcpOPTION_END_BYTE;
+		*pxOptionsArraySize += ( 2u + xNameLength );
 	}
 	#endif
 
@@ -915,6 +941,8 @@ size_t xOptionsLength = sizeof( ucDHCPRequestOptions );
 	pucUDPPayloadBuffer = prvCreatePartDHCPMessage( &xAddress, dhcpREQUEST_OPCODE, ucDHCPRequestOptions, &xOptionsLength );
 
 	/* Copy in the IP address being requested. */
+	/* MISRA c 2012 rule 21.15 relaxed for this variable since it is being used to
+	 * get values from functions and to get this in sync, code rework is required */
 	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ),
 		( void * ) &( xDHCPData.ulOfferedIPAddress ), sizeof( xDHCPData.ulOfferedIPAddress ) );
 
@@ -926,7 +954,7 @@ size_t xOptionsLength = sizeof( ucDHCPRequestOptions );
 	iptraceSENDING_DHCP_REQUEST();
 
 	/* 'ucFirstOptionByte' is part of DHCP message struct, so subtract one byte. */
-	if( FreeRTOS_sendto( xDHCPData.xDHCPSocket, pucUDPPayloadBuffer, ( sizeof( DHCPMessage_t ) + xOptionsLength - 1 ), FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
+	if( FreeRTOS_sendto( xDHCPData.xDHCPSocket, pucUDPPayloadBuffer, ( sizeof( DHCPMessage_t ) + xOptionsLength - 1u ), FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
 	{
 		/* The packet was not successfully queued for sending and must be
 		returned to the stack. */
@@ -955,7 +983,7 @@ size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
 	iptraceSENDING_DHCP_DISCOVER();
 
 	/* 'ucFirstOptionByte' is part of DHCP message struct, so subtract one byte. */
-	if( FreeRTOS_sendto( xDHCPData.xDHCPSocket, pucUDPPayloadBuffer, ( sizeof( DHCPMessage_t ) + xOptionsLength - 1 ), FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
+	if( FreeRTOS_sendto( xDHCPData.xDHCPSocket, pucUDPPayloadBuffer, ( sizeof( DHCPMessage_t ) + xOptionsLength - 1u ), FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
 	{
 		/* The packet was not successfully queued for sending and must be
 		returned to the stack. */
@@ -980,7 +1008,7 @@ size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
 		ucLinkLayerIPAddress[ 0 ] = ( uint8_t )1 + ( uint8_t )( ulNumbers[ 0 ] % 0xFDu );		/* get value 1..254 for IP-address 3rd byte of IP address to try. */
 		ucLinkLayerIPAddress[ 1 ] = ( uint8_t )1 + ( uint8_t )( ulNumbers[ 1 ] % 0xFDu );		/* get value 1..254 for IP-address 4th byte of IP address to try. */
 
-		xNetworkAddressing.ulGatewayAddress = FreeRTOS_htonl( 0xA9FE0203 );
+		xNetworkAddressing.ulGatewayAddress = FreeRTOS_htonl( 0xA9FE0203u );
 
 		/* prepare xDHCPData with data to test. */
 		xDHCPData.ulOfferedIPAddress =
@@ -1007,7 +1035,7 @@ size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
 		}
 
 		xApplicationGetRandomNumber( &( ulNumbers[ 0 ] ) );
-		xDHCPData.xDHCPTxPeriod = pdMS_TO_TICKS( 3000ul + ( ulNumbers[ 0 ] & 0x3ffuL ) ); /*  do ARP test every (3 + 0-1024mS) seconds. */
+		xDHCPData.xDHCPTxPeriod = pdMS_TO_TICKS( 3000uL + ( ulNumbers[ 0 ] & 0x3ffuL ) ); /*  do ARP test every (3 + 0-1024mS) seconds. */
 
 		xARPHadIPClash = pdFALSE;	   /* reset flag that shows if have ARP clash. */
 		vARPSendGratuitous();
@@ -1017,5 +1045,3 @@ size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
 /*-----------------------------------------------------------*/
 
 #endif /* ipconfigUSE_DHCP != 0 */
-
-

@@ -174,8 +174,9 @@ static uint32_t prvGetHostByName( const char *pcHostName,
 
 	static DNSCacheRow_t xDNSCache[ ipconfigDNS_CACHE_ENTRIES ];
 
-	/* MISRA c 2012 rule 8.7: Below function may be used by 
-	 * external callees as well			        */
+	/* MISRA c 2012 rule 8.7 relaxed. Below function may be used by 
+	 * external callees as well, therefore not declaring this as 
+	 * static. */
 	void FreeRTOS_dnsclear( void )
 	{
 		memset( xDNSCache, 0x0, sizeof( xDNSCache ) );
@@ -188,8 +189,9 @@ static uint32_t prvGetHostByName( const char *pcHostName,
 
 /*-----------------------------------------------------------*/
 
-/* Below #include just tells the compiler to pack the structure. 
- * It is included in to make the code more readable */
+/* Below #include is used  to tell the compiler to pack the structure. 
+ * It includes the statement needed to do exactly that. But, the statement
+ * is compiler dependent. Therefore, it is abstracted in a file. */
 #include "pack_struct_start.h"
 struct xDNSMessage
 {
@@ -467,8 +469,8 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 /*-----------------------------------------------------------*/
 
 #if( ipconfigDNS_USE_CALLBACKS == 0 )
-	/* MISRA c 2012 rule 8.7 ralxed since this function can
-	 * be called from external sources as well             */
+	/* MISRA c 2012 rule 8.7 relaxed since this function can
+	 * be called from external sources as well.             */
 	uint32_t FreeRTOS_gethostbyname( const char *pcHostName )
 #else
 	uint32_t FreeRTOS_gethostbyname_a( const char *pcHostName,
@@ -598,7 +600,7 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 	if( xDNSSocket != NULL )
 	{
 		/* Ideally we should check for the return value. But since we are passing
-		 * correect parameters, and xDNSSocket is != NULL, the return value is 
+		 * correct parameters, and xDNSSocket is != NULL, the return value is 
 		 * going to be '0' i.e. success. Thus, return value is discarded */
 		( void ) FreeRTOS_setsockopt( xDNSSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &uxWriteTimeOut_ticks, sizeof( TickType_t ) );
 		( void ) FreeRTOS_setsockopt( xDNSSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &uxReadTimeOut_ticks,  sizeof( TickType_t ) );
@@ -777,7 +779,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Finish off the record. */
 	/* pucByte is being used to modify certain bytes from the DNS message 
-	 * packet. Thereby, the MISRA c 2012 rule 11.3 reagrading conversion 
+	 * packet. Thereby, the MISRA c 2012 rule 11.3 regarding conversion 
 	 * of one pointer to another is relaxed. */	
 	pxTail = ( DNSTail_t * ) ( pucByte + 1 );
 
@@ -961,8 +963,9 @@ when ipconfigUSE_LLMNR == 1
 for testing purposes, by the module iot_test_freertos_tcp.c
 */
 
-/* MISRA c 2012 rule 8.7: Although highly unlikely, below 
- * function may be used by external callees as well        */
+/* MISRA c 2012 rule 8.7 relaxed since the below function may
+ * be used by external callees as well. Thus, not defining it
+ * as static */
 uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
 DNSMessage_t *pxDNSMessageHeader;
@@ -1202,10 +1205,7 @@ BaseType_t xDoStore = xExpected;
 					}
 
 					pucByte += sizeof( DNSAnswerRecord_t ) + sizeof( uint32_t );
-					/* Commenting this out since this is not being used later anywhere. 
-					 * Being cautious by not removing it completely
-					 * uxSourceBytesRemaining -= ( sizeof( DNSAnswerRecord_t ) + sizeof( uint32_t ) );
-					 */
+					
 					break;
 				}
 				else if( uxSourceBytesRemaining >= sizeof( DNSAnswerRecord_t ) )
@@ -1551,9 +1551,6 @@ BaseType_t xReturn;
 	uint32_t ulCurrentTimeSeconds = ( xTaskGetTickCount() / portTICK_PERIOD_MS ) / 1000U;
 	static BaseType_t xFreeEntry = 0;
 
-		/* MISRA advisory rule 1.2 Relaxed in case of 
-		 * configASSERT as using __FUNCTION__ makes 
-		 * debugging easier 			   */
 		configASSERT( ( pcName != NULL ) );
 
 		/* For each entry in the DNS cache table. */

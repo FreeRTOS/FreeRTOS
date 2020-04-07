@@ -842,7 +842,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 				if( ( uxNameLen > 0U ) && ( uxNameLen < ( uxDestLen - 1U) ) )
 				{
 					pcName[ uxNameLen ] = '.';
-					uxNameLen++
+					uxNameLen++;
 				}
 
 				/* Skip over the '.' ? */

@@ -674,11 +674,7 @@ void vARPGenerateRequestPacket(NetworkBufferDescriptor_t* const pxNetworkBuffer)
 
 void FreeRTOS_ClearARP(void)
 {
-	/* Function requires the second argument to be an int.
-	 *
-	 * MISRA rule 17.7 relaxed. The return value is not
-	 * required to be used. Also improves readability    */
-	memset(xARPCache, (int)'\0', sizeof(xARPCache));
+	memset(xARPCache, 0, sizeof(xARPCache));
 }
 /*-----------------------------------------------------------*/
 

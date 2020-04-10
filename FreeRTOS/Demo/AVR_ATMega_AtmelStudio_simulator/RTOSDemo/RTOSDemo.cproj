@@ -184,6 +184,9 @@
       <Value>../utils/assembler</Value>
       <Value>../</Value>
       <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
+      <Value>../../../../Source/include</Value>
+      <Value>../../../../Source/portable/GCC/ATmegaxxxx</Value>
+      <Value>../demo</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -237,6 +240,7 @@
     <Folder Include="modules\wdt\" />
     <Folder Include="modules\wdt\doc\" />
     <Folder Include="FreeRTOS" />
+    <Folder Include="demo" />
     <Folder Include="src\" />
     <Folder Include="utils\" />
     <Folder Include="utils\assembler\" />
@@ -432,6 +436,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Config\RTE_Components.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="demo\FreeRTOSConfig.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="driver_isr.c">

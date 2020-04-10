@@ -169,7 +169,7 @@ size_t uxSize, uxCount, uxFirst, uxNextTail;
 
 			/* Obtain the number of bytes it is possible to obtain in the first
 			 * read. */
-			( void ) memcpy( ( void * ) pucData, ( const void * ) pxBuffer->ucArray + uxNextTail, uxFirst );
+			( void ) memcpy( ( void * ) pucData, ( const void * ) ( pxBuffer->ucArray + uxNextTail ), uxFirst );
 
 			/* If the total number of wanted bytes is greater than the number
 			 * that could be read in the first read... */

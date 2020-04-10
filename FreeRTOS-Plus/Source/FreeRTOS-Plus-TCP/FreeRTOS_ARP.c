@@ -604,7 +604,9 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 			if( xNetworkInterfaceOutput( pxNetworkBuffer, pdTRUE ) != pdTRUE )
 			{
 				/* Not sent? Bad news. Maybe link is down? */
-				FreeRTOS_printf( ( "xNetworkInterfaceOutput failed. Link down?\n" ) );
+				#if( ipconfigHAS_PRINTF != 0 ) || ( ipconfigHAS_DEBUG_PRINTF != 0 )
+					FreeRTOS_printf( ( "xNetworkInterfaceOutput failed. Link down?\n" ) );
+				#endif
 			}
 		}
 		else

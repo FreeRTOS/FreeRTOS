@@ -502,11 +502,11 @@ BaseType_t xHasRandom = pdFALSE;
 		 * request. */
 		#if( ipconfigUSE_DNS_CACHE == 1 )
 		{
-			if( ulIPAddress == 0UL )
+			if( ulIPAddress == 0uL )
 			{
 				ulIPAddress = FreeRTOS_dnslookup( pcHostName );
 
-				if( ulIPAddress != 0UL )
+				if( ulIPAddress != 0uL )
 				{
 					FreeRTOS_debug_printf( ( "FreeRTOS_gethostbyname: found '%s' in cache: %lxip\n", pcHostName, ulIPAddress ) );
 				}

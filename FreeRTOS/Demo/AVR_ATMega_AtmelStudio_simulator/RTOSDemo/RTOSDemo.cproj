@@ -83,8 +83,8 @@
           <AcmeProjectActionInfo Action="File" Source="src/nvmctrl_basic.c" IsConfig="false" Hash="3iWu68Q+WgQvx9MqUKFQ5w" />
           <AcmeProjectActionInfo Action="File" Source="src/protected_io.S" IsConfig="false" Hash="xMwVxkDny+gUjOkARvQSWA" />
           <AcmeProjectActionInfo Action="File" Source="src/spi_basic.c" IsConfig="false" Hash="AeqPwirKkAkCqVEzh+uqqw" />
-          <AcmeProjectActionInfo Action="File" Source="src/tc16.c" IsConfig="false" Hash="pPYUmnbd0mqi1ilelEZzTA" />
-          <AcmeProjectActionInfo Action="File" Source="src/tc8.c" IsConfig="false" Hash="DL54puuunEnduwj5AbOSnA" />
+          <AcmeProjectActionInfo Action="File" Source="src/tc16.c" IsConfig="false" Hash="Qlp6fJBAqdUmoLwwBNhPDQ" />
+          <AcmeProjectActionInfo Action="File" Source="src/tc8.c" IsConfig="false" Hash="oMxohvy8O7WvA8nJMXVH0g" />
           <AcmeProjectActionInfo Action="File" Source="src/usart_basic.c" IsConfig="false" Hash="pK3GDL9QEV+yFh++oF4HGw" />
           <AcmeProjectActionInfo Action="File" Source="src/wdt.c" IsConfig="false" Hash="keDnW5sivoYK1zzLTaXxrw" />
           <AcmeProjectActionInfo Action="File" Source="utils/assembler.h" IsConfig="false" Hash="jaaWqpCXnRJMciuXpjSfgQ" />
@@ -97,11 +97,24 @@
           <AcmeProjectActionInfo Action="File" Source="utils/utils_assert.h" IsConfig="false" Hash="lJZG/QWOeOnUhe4wcXVztA" />
           <AcmeProjectActionInfo Action="File" Source="atmel_start.h" IsConfig="false" Hash="ZPe6iT3s4OihW8t8wDF53g" />
           <AcmeProjectActionInfo Action="File" Source="atmel_start.c" IsConfig="false" Hash="1RHIE7zTtYK4DURNPUqF9w" />
-          <AcmeProjectActionInfo Action="File" Source="config/clock_config.h" IsConfig="true" Hash="rot6ZjMOlzx8qVklkFrpBg" />
+          <AcmeProjectActionInfo Action="File" Source="config/clock_config.h" IsConfig="true" Hash="3VaCbbaOyFny9nMKsaXG3w" />
         </AcmeActionInfos>
         <NonsecureFilesInfo />
       </AcmeProjectConfig>
     </AcmeProjectConfig>
+    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
+    <avrtoolserialnumber />
+    <avrdeviceexpectedsignature>0x1E9801</avrdeviceexpectedsignature>
+    <com_atmel_avrdbg_tool_simulator>
+      <ToolOptions xmlns="">
+        <InterfaceProperties>
+        </InterfaceProperties>
+      </ToolOptions>
+      <ToolType xmlns="">com.atmel.avrdbg.tool.simulator</ToolType>
+      <ToolNumber xmlns="">
+      </ToolNumber>
+      <ToolName xmlns="">Simulator</ToolName>
+    </com_atmel_avrdbg_tool_simulator>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>

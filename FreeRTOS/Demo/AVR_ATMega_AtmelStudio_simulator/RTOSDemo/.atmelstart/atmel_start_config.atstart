@@ -150,12 +150,11 @@ drivers:
           spi_clock_source: CLKio
   TIMER_0:
     user_label: TIMER_0
-    definition: Atmel:ATMega640_1280_2560_drivers:1.0.0::ATmega2560-16AU::TC2::driver_config_definition::TC8.Mode.0.Normal::Drivers:TC8:Init
+    definition: Atmel:ATMega640_1280_2560_drivers:1.0.0::ATmega2560-16AU::TC0::driver_config_definition::TC8.Mode.0.Normal::Drivers:TC8:Init
     functionality: Timer
     api: Drivers:TC8:Init
     configuration:
       inc_isr_harness: false
-      tc8_async_exclk: false
       tc8_coma: Normal port operation, OCA disconnected
       tc8_comb: Normal port operation, OCB disconnected
       tc8_cs: No clock source (Timer/Counter stopped)
@@ -172,15 +171,15 @@ drivers:
     clocks:
       domain_group:
         nodes:
-        - name: TC2
+        - name: TC8
           input: CLKio
           external: false
           external_frequency: 0
         configuration:
-          tc2_clock_source: CLKio
+          tc8_clock_source: CLKio
   TIMER_1:
     user_label: TIMER_1
-    definition: Atmel:ATMega640_1280_2560_drivers:1.0.0::ATmega2560-16AU::TC3::driver_config_definition::TC16.Mode.0.Normal::Drivers:TC16:Init
+    definition: Atmel:ATMega640_1280_2560_drivers:1.0.0::ATmega2560-16AU::TC1::driver_config_definition::TC16.Mode.0.Normal::Drivers:TC16:Init
     functionality: Timer
     api: Drivers:TC16:Init
     configuration:

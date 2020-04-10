@@ -607,7 +607,7 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 				#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
 					FreeRTOS_printf( ( "xNetworkInterfaceOutput failed. Link down?\n" ) );
 				#else
-					;
+					; /* Do nothing */
 				#endif
 			}
 		}

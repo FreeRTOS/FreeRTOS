@@ -100,6 +100,8 @@
 type. */
 #define dnsPARSE_ERROR						 0uL
 
+#define PERIOD_CHAR						 46uL
+
 /*
  * Create a socket and bind it to the standard DNS port number.  Return the
  * the created socket - or NULL if the socket could not be created or bound.
@@ -734,12 +736,9 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	/* Copy in the const part of the header. */
 	( void ) memcpy( ( void * ) pucUDPPayloadBuffer, ( const void * ) &xDefaultPartDNSHeader, sizeof( xDefaultPartDNSHeader ) );
 
-	/* Write in a unique identifier. */
-	/* MISRA c 2012 rule 11.3 relaxed. pucUDPPayloadBuffer is being used in
-	 * various locations. Defining this as DNSMessage_t* (in parameters) 
-	 * will make traversal difficut later.                               */
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
+	/* Write in a unique identifier. */	
+	void *tmp = ( void * ) pucUDPPayloadBuffer;
+	pxDNSMessageHeader = ( DNSMessage_t * ) tmp;
 	pxDNSMessageHeader->usIdentifier = ( uint16_t ) uxIdentifier;
 
 	/* Create the resource record at the end of the header.  First
@@ -764,23 +763,15 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	do
 	{
 		pucByte++;
-
-		/* MISRA c 2012 rule 10.4 relaxed for increased readability.
-		 * Not writing 46U instead of '.' */
-		/* coverity[misra_c_2012_rule_10_4_violation] */
-		while( ( *pucByte != 0x00U ) && ( *pucByte != '.' ) )
+		
+		while( ( *pucByte != 0x00U ) && ( *pucByte != PERIOD_CHAR ) )
 		{
 			pucByte++;
 		}
 
 		/* Fill in the byte count, then move the pucStart pointer up to
-		the found byte position.
-		
-		 * MISRA c 2012 rule 11.4 relaxed since pointer to int
-		 * conversion is required to count the number of bytes.
-		 * Other ways to do this do exist. Code rework is required. */
-		/* coverity[misra_c_2012_rule_11_4_violation] */
-		*pucStart = ( uint8_t ) ( ( uint32_t ) pucByte - ( uint32_t ) pucStart );
+		 * the found byte position. */		
+		*pucStart = ( uint8_t ) ( pucByte - pucStart );
 		( *pucStart )--;
 
 		pucStart = pucByte;
@@ -799,7 +790,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	/* Return the total size of the generated message, which is the space from
 	 * the last written byte to the beginning of the buffer. */	
 	/* coverity[misra_c_2012_rule_11_4_violation] */
-	return ( ( uint32_t ) pucByte - ( uint32_t ) pucUDPPayloadBuffer + 1U ) + sizeof( *pxTail );
+	return ( pucByte - pucUDPPayloadBuffer + 1U ) + sizeof( *pxTail );
 }
 /*-----------------------------------------------------------*/
 
@@ -1026,7 +1017,6 @@ static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
 								  BaseType_t xExpected )
 {
 DNSMessage_t *pxDNSMessageHeader;
-/* This pointer is not used to modify anything */
 const DNSAnswerRecord_t *pxDNSAnswerRecord; 
 uint32_t ulIPAddress = 0uL;
 #if( ipconfigUSE_LLMNR == 1 )

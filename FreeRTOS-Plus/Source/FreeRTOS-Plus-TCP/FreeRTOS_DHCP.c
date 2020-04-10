@@ -307,7 +307,9 @@ BaseType_t xGivingUp = pdFALSE;
 			{
 				if( eAnswer == eDHCPUseDefaults )
 				{
-					( void ) memcpy( &xNetworkAddressing, &xDefaultAddressing, sizeof( xNetworkAddressing ) );
+					( void ) memcpy( ( void * ) &( xNetworkAddressing ),
+							 ( const void * ) &( xDefaultAddressing ),
+							 sizeof( xNetworkAddressing ) );
 				}
 
 				/* The user indicates that the DHCP process does not continue. */
@@ -342,7 +344,9 @@ BaseType_t xGivingUp = pdFALSE;
 			#if( ipconfigUSE_DHCP_HOOK != 0 )
 				if( eAnswer == eDHCPUseDefaults )
 				{
-					( void ) memcpy( &xNetworkAddressing, &xDefaultAddressing, sizeof( xNetworkAddressing ) );
+					( void ) memcpy( ( void * ) &( xNetworkAddressing ),
+							 ( const void * ) &( xDefaultAddressing ),
+							 sizeof( xNetworkAddressing ) );
 				}
 
 				/* The user indicates that the DHCP process does not continue. */
@@ -705,8 +709,8 @@ const uint32_t ulMandatoryOptions = 2uL; /* DHCP server address, and the correct
 						 * this */
 						/* coverity[misra_c_2012_rule_21_15_violation] */
 						( void ) memcpy( ( void * ) &( ulParameter ),
-								( const void * ) pucByte,
-								( size_t ) sizeof( ulParameter ) );
+								 ( const void * ) pucByte,
+								 ( size_t ) sizeof( ulParameter ) );
 					}
 					else
 					{
@@ -888,10 +892,14 @@ uint8_t *pucUDPPayloadBuffer;
 		pxDHCPMessage->usFlags = 0u;
 	}
 
-	( void ) memcpy( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ), ( const void * ) ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
+	( void ) memcpy( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ),
+			 	( const void * ) ipLOCAL_MAC_ADDRESS,
+			 	sizeof( MACAddress_t ) );
 
 	/* Copy in the const part of the options options. */
-	( void ) memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET ] ), ( const void * ) pucOptionsArray, *pxOptionsArraySize );
+	( void ) memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET ] ),
+			 	( const void * ) pucOptionsArray,
+			 	*pxOptionsArraySize );
 
 	#if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 	{
@@ -902,7 +910,7 @@ uint8_t *pucUDPPayloadBuffer;
 		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1u ) ] );
 		pucPtr[ 0 ] = dhcpDNS_HOSTNAME_OPTIONS_CODE;
 		pucPtr[ 1 ] = ( uint8_t ) xNameLength;
-		( void ) memcpy( ( void *) ( pucPtr + 2u ), ( const void * )pucHostName, xNameLength );
+		( void ) memcpy( ( void *) ( pucPtr + 2u ), ( const void * ) pucHostName, xNameLength );
 		pucPtr[ 2u + xNameLength ] = dhcpOPTION_END_BYTE;
 		*pxOptionsArraySize += ( 2u + xNameLength );
 	}
@@ -910,7 +918,8 @@ uint8_t *pucUDPPayloadBuffer;
 
 	/* Map in the client identifier. */
 	( void ) memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpCLIENT_IDENTIFIER_OFFSET ] ),
-		( const void * ) ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
+			 	( const void * ) ipLOCAL_MAC_ADDRESS,
+			 	sizeof( MACAddress_t ) );
 
 	/* Set the addressing. */
 	pxAddress->sin_addr = ipBROADCAST_IP_ADDRESS;
@@ -944,11 +953,13 @@ size_t xOptionsLength = sizeof( ucDHCPRequestOptions );
 	 * get values from functions and to get this in sync, code rework is required */
 	/* coverity[misra_c_2012_rule_21_15_violation] */
 	( void ) memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ),
-		( const void * ) &( xDHCPData.ulOfferedIPAddress ), sizeof( xDHCPData.ulOfferedIPAddress ) );
+			 	( const void * ) &( xDHCPData.ulOfferedIPAddress ),
+			 	sizeof( xDHCPData.ulOfferedIPAddress ) );
 
 	/* Copy in the address of the DHCP server being used. */
 	( void ) memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ),
-		( const void * ) &( xDHCPData.ulDHCPServerAddress ), sizeof( xDHCPData.ulDHCPServerAddress ) );
+			 	( const void * ) &( xDHCPData.ulDHCPServerAddress ),
+			 	sizeof( xDHCPData.ulDHCPServerAddress ) );
 
 	FreeRTOS_debug_printf( ( "vDHCPProcess: reply %lxip\n", FreeRTOS_ntohl( xDHCPData.ulOfferedIPAddress ) ) );
 	iptraceSENDING_DHCP_REQUEST();

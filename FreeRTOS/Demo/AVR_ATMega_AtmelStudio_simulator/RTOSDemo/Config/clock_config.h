@@ -16,15 +16,6 @@
 
 // </h>
 
-// <h> TC0 Clock Settings
-// <y> TC0 Clock source
-// <CLKio"> CLKio
-// <i> This defines the clock source for the TC0 module
-// <id> tc8_clock_source
-#define CONF_TC0_SRC CLKio
-
-// </h>
-
 // <h> TC2 Clock Settings
 // <y> TC2 Clock source
 // <CLKio"> CLKio

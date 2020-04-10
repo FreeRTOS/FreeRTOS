@@ -148,34 +148,6 @@ drivers:
           external_frequency: 0
         configuration:
           spi_clock_source: CLKio
-  PWM_0:
-    user_label: PWM_0
-    definition: Atmel:ATMega640_1280_2560_drivers:1.0.0::ATmega2560-16AU::TC0::driver_config_definition::TC8.Mode.1.Phase.Correct::Drivers:PWM:Basic
-    functionality: PWM
-    api: Drivers:PWM:Basic
-    configuration:
-      callback_rate: 0
-      inc_overflow_irq: true
-      pwm_top: '0xff'
-      tc8_coma: Normal port operation, OCA disconnected
-      tc8_comb: Normal port operation, OCB disconnected
-      tc8_cs: No clock source (Timer/Counter stopped)
-      tc8_ociea: false
-      tc8_ocieb: false
-      tc8_ocra: 0
-      tc8_ocrb: 0
-      tc8_toie: false
-    optional_signals: []
-    variant: null
-    clocks:
-      domain_group:
-        nodes:
-        - name: TC8
-          input: CLKio
-          external: false
-          external_frequency: 0
-        configuration:
-          tc8_clock_source: CLKio
   TIMER_0:
     user_label: TIMER_0
     definition: Atmel:ATMega640_1280_2560_drivers:1.0.0::ATmega2560-16AU::TC2::driver_config_definition::TC8.Mode.0.Normal::Drivers:TC8:Init

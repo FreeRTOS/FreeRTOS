@@ -79,12 +79,6 @@ void SPI_0_initialization(void)
 	SPI_0_init();
 }
 
-void PWM_0_initialization(void)
-{
-
-	PWM_0_init();
-}
-
 void TIMER_0_initialization(void)
 {
 
@@ -140,8 +134,6 @@ void system_init()
 	I2C_0_initialization();
 
 	SPI_0_initialization();
-
-	PWM_0_initialization();
 
 	TIMER_0_initialization();
 

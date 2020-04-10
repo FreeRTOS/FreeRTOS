@@ -35,35 +35,6 @@
 #include <utils.h>
 
 /**
- * \brief Initialize PWM_0 interface
- *
- * \return Initialization status.
- */
-int8_t PWM_0_init()
-{
-
-	/* Enable TC0 */
-	PRR0 &= ~(1 << PRTIM0);
-
-	TCCR0A = (0 << COM0A1) | (0 << COM0A0)   /* Normal port operation, OCA disconnected */
-	         | (0 << COM0B1) | (0 << COM0B0) /* Normal port operation, OCB disconnected */
-	         | (0 << WGM01) | (1 << WGM00);  /* TC8 Mode 1 Phase Correct */
-
-	// TCCR0B = 0 /* TC8 Mode 1 Phase Correct */
-	//		 | (0 << CS02) | (0 << CS01) | (0 << CS00); /* No clock source (Timer/Counter stopped) */
-
-	// TIMSK0 = 0 << OCIE0B /* Output Compare B Match Interrupt Enable: disabled */
-	//		 | 0 << OCIE0A /* Output Compare A Match Interrupt Enable: disabled */
-	//		 | 0 << TOIE0; /* Overflow Interrupt Enable: disabled */
-
-	// OCR0A = 0x0; /* Output compare A: 0x0 */
-
-	// OCR0B = 0x0; /* Output compare B: 0x0 */
-
-	return 0;
-}
-
-/**
  * \brief Initialize TIMER_0 interface
  *
  * \return Initialization status.

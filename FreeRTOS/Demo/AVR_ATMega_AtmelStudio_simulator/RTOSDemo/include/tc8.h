@@ -32,8 +32,6 @@
 extern "C" {
 #endif
 
-int8_t PWM_0_init();
-
 int8_t TIMER_0_init();
 
 #ifdef __cplusplus

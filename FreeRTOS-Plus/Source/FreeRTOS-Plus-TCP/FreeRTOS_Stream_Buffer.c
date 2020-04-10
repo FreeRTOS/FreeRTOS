@@ -47,11 +47,8 @@
 size_t uxStreamBufferAdd( StreamBuffer_t *pxBuffer, size_t uxOffset, const uint8_t *pucData, size_t uxCount )
 {
 size_t uxSpace, uxNextHead, uxFirst, uxLocalCount;
-
-	/* Create a local copy of uxCount in accordance with
-	 * MISRA c 2012 rule 17.8 */
+	
 	uxLocalCount = uxCount;
-
 	uxSpace = uxStreamBufferGetSpace( pxBuffer );
 
 	/* If uxOffset > 0, items can be placed in front of uxHead */
@@ -65,7 +62,7 @@ size_t uxSpace, uxNextHead, uxFirst, uxLocalCount;
 	}
 
 	/* The number of bytes that can be written is the minimum of the number of
-	bytes requested and the number available. */
+	 * bytes requested and the number available. */
 	uxLocalCount = FreeRTOS_min_uint32( uxSpace, uxLocalCount );
 
 	if( uxLocalCount != 0u )
@@ -85,20 +82,20 @@ size_t uxSpace, uxNextHead, uxFirst, uxLocalCount;
 		if( pucData != NULL )
 		{
 			/* Calculate the number of bytes that can be added in the first
-			write - which may be less than the total number of bytes that need
-			to be added if the buffer will wrap back to the beginning. */
+			 * write - which may be less than the total number of bytes that need
+			 * to be added if the buffer will wrap back to the beginning. */
 			uxFirst = FreeRTOS_min_uint32( pxBuffer->LENGTH - uxNextHead, uxLocalCount );
 
 			/* Write as many bytes as can be written in the first write. */
-			( void ) memcpy( ( void* ) ( pxBuffer->ucArray + uxNextHead ), pucData, uxFirst );
+			( void ) memcpy( ( void * ) ( pxBuffer->ucArray + uxNextHead ), ( const void * ) pucData, uxFirst );
 
 			/* If the number of bytes written was less than the number that
-			could be written in the first write... */
+			 * could be written in the first write... */
 			if( uxLocalCount > uxFirst )
 			{
 				/* ...then write the remaining bytes to the start of the
-				buffer. */
-				( void ) memcpy( ( void * )pxBuffer->ucArray, pucData + uxFirst, uxLocalCount - uxFirst );
+				 * buffer. */
+				( void ) memcpy( ( void * ) pxBuffer->ucArray, ( const void * ) ( pucData + uxFirst ), uxLocalCount - uxFirst );
 			}
 		}
 
@@ -166,27 +163,27 @@ size_t uxSize, uxCount, uxFirst, uxNextTail;
 		if( pucData != NULL )
 		{
 			/* Calculate the number of bytes that can be read - which may be
-			less than the number wanted if the data wraps around to the start of
-			the buffer. */
+			 * less than the number wanted if the data wraps around to the start of
+			 * the buffer. */
 			uxFirst = FreeRTOS_min_uint32( pxBuffer->LENGTH - uxNextTail, uxCount );
 
 			/* Obtain the number of bytes it is possible to obtain in the first
-			read. */
-			( void ) memcpy( pucData, pxBuffer->ucArray + uxNextTail, uxFirst );
+			 * read. */
+			( void ) memcpy( ( void * ) pucData, ( const void * ) pxBuffer->ucArray + uxNextTail, uxFirst );
 
 			/* If the total number of wanted bytes is greater than the number
-			that could be read in the first read... */
+			 * that could be read in the first read... */
 			if( uxCount > uxFirst )
 			{
 				/*...then read the remaining bytes from the start of the buffer. */
-				( void ) memcpy( pucData + uxFirst, pxBuffer->ucArray, uxCount - uxFirst );
+				( void ) memcpy( ( void * ) ( pucData + uxFirst ), ( const void * ) pxBuffer->ucArray, uxCount - uxFirst );
 			}
 		}
 
 		if( ( xPeek == pdFALSE ) && ( uxOffset == 0UL ) )
 		{
 			/* Move the tail pointer to effecively remove the data read from
-			the buffer. */
+			 * the buffer. */
 			uxNextTail += uxCount;
 
 			if( uxNextTail >= pxBuffer->LENGTH )

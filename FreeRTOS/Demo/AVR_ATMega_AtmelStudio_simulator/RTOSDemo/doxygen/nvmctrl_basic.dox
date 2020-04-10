@@ -1,0 +1,207 @@
+/**
+\addtogroup doc_driver_nvmctrl_basic
+ 
+\brief Driver for basic NVM functionality
+
+The **NVMCTRL Basic** driver provides basic NVM programming functionality,
+that is:
+- Read and write to EEPROM
+- Read and write to Flash
+
+The NVMCTRL Basic driver has two modes of operation:
+- Blocking (polled) writing to EEPROM
+- Non-blocking (interrupt-driven) writing to EEPROM
+
+NVMCTRL Basic functions writing to flash are always blocking: Program 
+execution waits until write has completed, regardless of writing 
+to the read-while-write section or the non-read-while-write section.
+
+\section doc_driver_nvmctrl_basic_configuration Driver Configuration
+
+The NVMCTRL Basic driver is configured using START. The user can 
+choose from the two modes of EEPROM operation (polled/IRQ).
+START also allows the user to select other device-dependent features 
+such as setting Boot Lock bits etc.
+
+START allows the user to select whether or not to place Flash functions 
+in a separate segment. Some devices (e.g. Mega328PB) require the Flash 
+write functions to be located in a section separate from the section 
+being written. For these devices, the Flash write function should be 
+located in the *Boot Loader Section (BLS)*, while the data being programmed 
+should be in the *Application Section*. By placing flash write functions
+in a separate segment, it is easy to locate this segment in the BLS.
+The size of the BLS is device-dependent, and can often be controlled 
+by fuses (typically called BOOTSZ), see the device datasheet.
+
+By ticking the "Place Flash Functions in Separate Segment" check box 
+in START, all Flash write functions are placed in a segment called:
+
+- For the GCC compiler: .bootloader       
+- For the IAR compiler: BOOTLOADER_SEGMENT
+
+For the GCC compiler, the segment must be given a location in the 
+linker file or Toolchain->AVR/GNU Linker->Memory Settings in STUDIO. 
+Example: For a device with 32kb flash and 512 bytes BLS, write
+*.bootloader=0x3f00* in the *FLASH segment* box in Memory Settings 
+in STUDIO.
+
+For the IAR compiler, the segment must be described in the linker file.
+Example: For a device with 32kb flash and 512 bytes BLS, add
+*-Z(CODE)BOOTLOADER_SEGMENT=7e00-7FFF* to the linker file
+
+
+\section doc_driver_nvmctrl_basic_functional Functional Description
+
+
+\subsection doc_driver_nvmctrl_basic_polled Blocking/Polled EEPROM write
+
+In this mode, EEPROM writes of a byte or a block is performed in
+a blocking way, the write function does not return until all bytes 
+have been written.
+
+
+\subsection doc_driver_nvmctrl_basic_sync Non-blocking/IRQ-driven EEPROM write
+
+In this mode, EEPROM writes of a byte or a block are performed by an ISR.
+The ISR is called whenever the EEPROM is ready for another EEPROM write.
+The EEPROM byte or block write function returns immediately after setting
+up the data structures necessary for controlling the ISR. The application
+can then proceed to do other things (or go to sleep) while the EEPROM 
+write is being performed. A polling function <component_name>_is_EEPROM_ready() 
+is provided to check when the EEPROM write has completed.
+
+If an EEPROM write-function is called before the previous EEPROM 
+write-function has completed, the newest EEPROM write function will block 
+until the previous write has completed.
+
+If an EEPROM read-function is called before the previous EEPROM 
+write-function has completed, the EEPROM read function will block 
+until the previous write has completed.
+
+If the driver is configured to be Non-blocking, a function 
+<component_name>_register_callback() is provided. This function allows 
+registering a callback function to be called when all EEPROM writes 
+triggered by a call to an EEPROM write command have completed.
+
+
+\subsection doc_driver_nvmctrl_basic_flash Flash write
+
+All Flash write functions are blocking: They don't return until the 
+operation has completed. All Flash read and write functions address 
+the Flash using byte addresses.
+
+There may be device-dependent limitations on where the Flash write functions 
+may be located in Flash, see \ref doc_driver_nvmctrl_basic_configuration.
+In most devices, reading the Flash while it is being programmed will cause 
+instruction execution to freeze until the write has completed. This will 
+impact interrupt resonse time during Flash programming to the Application 
+Section, since the interrupt vectors are located in the Application Section. 
+
+Most flash write functions have an input parameter *uint8_t *ram_buffer*.
+This is a pointer to a buffer in RAM that must be at least as large as 
+a Flash page. This buffer is used when doing read-modify-write operations
+on flash: One Flash page is read from Flash into this buffer, then the 
+buffer is modified as desired, before the Flash page is erased and 
+written with the contents of the buffer. In some devices such as Tiny817
+the Flash page buffer is memory mapped. In the NVMCTRL Basic driver for
+these devices, the *ram_buffer* parameter is unused, but kept for API
+compatibility with other devices. When calling the Flash write functions 
+for these devices, the *ram_buffer* parameter is unused by the functions 
+and NULL can be passed as argument when calling them.
+
+A streaming flash write function is included, intended to be used in 
+devices where a lot of data is to be written contiguously to flash, and:
+
+- RAM resources are too limited to afford a buffer needed by the write 
+  and erase page functions
+- performance needs and code size concerns leaves the byte write and block 
+  write functions too expensive
+
+
+\section doc_driver_nvmctrl_basic_hardware Hardware Dependencies
+
+The NVMCTRL Basic driver uses the NVM controller hardware available 
+on all AVR devices. The driver does not use any I/O pins.
+
+The configuration options in START displays options that are 
+dependent on the hardware used to implement the NVMCTRL driver.
+For example, an option may allow setting the Boot Lock Bit 
+inhibiting writes to the BLS.
+
+
+\section doc_driver_nvmctrl_basic_software Software Dependencies
+
+The interrupt-driven configuration use the interrupt functionality 
+of the underlying NVMCTRL hardware. Make sure that global interrupts 
+are enabled (using sei()) and that the Interrupt Controller, if 
+present, is configured so that any interrupts are serviced 
+correctly.
+
+
+\section doc_driver_usart_basic_code Code example
+
+\code
+
+#include <atmel_start.h>
+
+uint8_t rambuf[PROGMEM_PAGE_SIZE];
+uint8_t wdata[]={0, 1, 2, 3};
+uint8_t rdata[4];
+volatile nvmctrl_status_t status;
+volatile uint8_t rb;
+
+
+void error()
+{
+	while(1);
+};
+
+int main(void)
+{
+	uint8_t i;
+	
+	/* Initializes MCU, drivers and middleware */
+	atmel_start_init();
+
+	//  Test EEPROM write, assume driver configured to be blocking 
+	FLASH_0_write_eeprom_byte(0, wdata[1]);
+	rdata[1] = FLASH_0_read_eeprom_byte(0);
+	if (rdata[1] != wdata[1])
+		error();
+
+	// Test flash write
+	for (i=0;i<2*PROGMEM_PAGE_SIZE;i++)
+	// Initialize two pages in flash, starting at address 2048-ONE_PAGE.
+	// Initialize them by writing one byte at a time, this is inefficient 
+	// but done to demonstrate usse of the bytewise write function.
+	status = FLASH_0_write_flash_byte(2048-PROGMEM_PAGE_SIZE+i, rambuf, i);
+
+	rb = FLASH_0_read_flash_byte(2048-PROGMEM_PAGE_SIZE);
+	if (rb != 0) error();
+	rb = FLASH_0_read_flash_byte(2048);
+	if (rb != PROGMEM_PAGE_SIZE) error();
+
+	// Write 4 bytes overlapping two pages
+	FLASH_0_write_flash_block(2048-2, wdata, 4, rambuf);
+
+    // Check that only the 4 bytes were altered
+	rb = FLASH_0_read_flash_byte(2048-PROGMEM_PAGE_SIZE);
+	if (rb != 0) error();
+	rb = FLASH_0_read_flash_byte(2048-2);
+	if (rb != wdata[0]) error();
+	rb = FLASH_0_read_flash_byte(2048-1);
+	if (rb != wdata[1]) error();
+	rb = FLASH_0_read_flash_byte(2048);
+	if (rb != wdata[2]) error();
+	rb = FLASH_0_read_flash_byte(2048+1);
+	if (rb != wdata[3]) error();
+
+	/* Replace with your application code */
+	while (1) {
+	}
+}
+
+
+\endcode
+
+*/

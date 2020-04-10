@@ -1,0 +1,17 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_i2c I2C Drivers
+
+
+\section doc_driver_i2c_master_basic_and_practice I2C Basics and Best Practice
+
+I2C (Inter-Integrated Circuit) is a two wire serial interface usually used
+for on-board low-speed bi-directional communication between controllers and
+peripherals. The master device is responsible for initiating and controlling
+all transfers on the I2C bus. Only one master device can be active on the I2C
+bus at the time, but the master role can be transferred between devices on the
+same I2C bus. I2C uses only two bidirectional open-drain lines, usually
+designated SDA (Serial Data Line) and SCL (Serial Clock Line), with pull up
+resistors.
+
+*/
+

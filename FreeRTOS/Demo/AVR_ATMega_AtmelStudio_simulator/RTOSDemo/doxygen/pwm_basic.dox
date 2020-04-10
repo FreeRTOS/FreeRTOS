@@ -1,0 +1,152 @@
+/*------------------------------------------------------------------------*/ /**
+\addtogroup doc_driver_pwm_basic PWM Basic Drivers
+
+\brief Driver for basic PWM functionality.
+
+The PWM Basic driver provides basic PWM functionality.
+The driver has the following features:
+- Initializing the hardware implementing the PWM as specified by the user in START
+- Supports the number of PWM channels provided by the underlying hardware
+- Enable and disable output of PWM channels on I/O pins
+- Setting duty cycle for each of the PWM channels
+- Load TOP value for the PWM, to specify resolution
+- Register ISR callback routine to be called on counter overflow
+
+The application can change the period or duty cycle when the PWM is running.
+Functions are provided to configure these two parameters.
+Note these are raw register values and the parameter duty_cycle means
+the period of first half during one cycle, which should not be larger than
+total period value.
+
+The user can hookup a callback to the Overflow ISR, specifying any actions to be 
+performed by the ISR. To generate code for including a callback handler,
+tick the "Include harness for IRQ on overflow"- box in START. START allows the
+user to specify the rate R at which to call the ISR callback function. The 
+callback function is called every R'th ISR execution. If R==0, the callback is 
+not called by the ISR.
+
+The PWM basic driver uses the same bit width as the Timer or PWM hardware
+the driver uses, typically 8 or 16 bits. The data types used in internal 
+variables and parametyers to functions reflect this bit width.
+
+\section doc_driver_pwm_basic_functional Functional Description
+
+The PWM Basic driver is built on top of a hardware resource providing 
+PWM functionality. This includes a counter counting from BOTTOM to TOP
+(or vice versa), and a compare register per channel. Everytime the value 
+of the counter matches the value of the compare register, a signal is sent 
+to an output pin waveform generator, generating an appropriate waveform 
+on the I/O pin mapped to that PWM channel. The functions 
+<component_name>_enable_output_chN and <component_name>_disable_output_chN 
+enables or disables PWM output in the I/O pin mapped 
+to PWM channel N. When output is enabled, the I/O pin output value is 
+controlled by the PWM module. When the PWM output is disabled, the I/O pin value 
+is not controlled by the PWM module, but by other modules or used as 
+generic I/O pin.
+
+The <component_name>__load_counter() function loads the counter in the Timer 
+module with the specified value. The <component_name>__load_top() function 
+loads the TOP value (sometimes called PERIOD) register with the specified 
+value. For each of the PWM channels 0 to N, a function 
+<component_name>_load_duty_cycle_chN() loads the duty cycle register of that
+PWM channel with the value specified. 
+
+The <component_name>_register_callback()-function allows the application to 
+hookup a callback function to the overflow ISR. 
+
+
+\section doc_driver_pwm_basic_hardware Hardware Dependencies
+
+The PWM Basic driver needs Timer or PWM hardware to be available on the device.
+When the user has selected a device and added a PWM component, 
+the Driver field in the Component Settings pane in START will 
+let the user select which timer driver to use, select *Drivers:PWM:Basic* 
+to use the PWM Basic driver.
+
+The Configuration Pane in START will display options that are 
+dependent on the hardware used to implement the PWM driver.
+For example, an option may allow changing the clock prescaling used 
+to drive the underlying timer hardware.
+
+Different Timer or PWM hardware offer a choice of different PWM modes, such as: 
+- Single slope
+- Dual slope (Phase Correct)
+- Dual slope (Phase and Frequency Correct)
+The choice of PWM mode is not visible to the PWM Basic driver other than for 
+initialization of the hardware. The user must make sure that a suitable mode
+is chosen when selecting a configuration in START.
+
+In some underlying hardware, the PWM channels are numbered differently from 0 to N.
+Frequently, timers with PWM support provides two PWM channels named A and B, where:
+- Hardware channel A is mapped to PWM Basic channel 0
+- Hardware channel B is mapped to PWM Basic channel 1
+
+In some underlying hardware, some of the PWM modes does not allow the TOP value to be
+changed, instead it is fixed at a value such as 0xff, 0x1ff or 0x3ff. For such hardware,
+the function <component_name>_load_top() does nothing.
+
+Some underlying hardware have both a buffered and unbuffered version of the Period 
+and the Compare registers. For these hardwares, the PWM Basic driver writes to 
+the *buffered* Period and Compare registers in the 
+<component_name>_load_duty_cycle_ch<n>() and <component_name>_load_period() functions.
+
+
+\section doc_driver_pwm_basic_software Software Dependencies
+
+The PWM Basic may be configured to use use the interrupt functionality 
+of the underlying timer or PWM hardware. Make sure that global interrupts 
+are enabled (using sei()) and that the Interrupt Controller, if 
+present, is configured so that the Overflow interrupt is serviced 
+correctly.
+
+\section doc_driver_adc_basic_code Code example
+
+\code
+#include <atmel_start.h>
+
+volatile bool isr_executed = false;
+volatile adc_result_t measurement;
+volatile uint8_t measurement_normalized;
+
+void adc_handler_cb(void){
+	measurement = ADC_0_get_conversion_result();
+	measurement_normalized = measurement>>(ADC_0_get_resolution()-8);
+	isr_executed = true;
+}
+
+
+int main(void)
+{
+	/* Initializes MCU, drivers and middleware */
+	atmel_start_init();
+
+	// Test polled mode
+
+	// Get conversion from ADC CH0
+	measurement = ADC_0_get_conversion(0);
+
+	// Get 8 MSB of conversion result
+	measurement_normalized = measurement>>(ADC_0_get_resolution()-8);
+
+	// Test IRQ mode
+
+	sei();
+
+	ADC_0_register_callback(adc_handler_cb);
+
+	// Start conversion from ADC CH0
+	ADC_0_start_conversion(0);
+
+	// Wait for ISR to be execued
+	while (!isr_executed);
+	
+	while (1);
+}
+\endcode
+
+
+
+*/
+
+
+

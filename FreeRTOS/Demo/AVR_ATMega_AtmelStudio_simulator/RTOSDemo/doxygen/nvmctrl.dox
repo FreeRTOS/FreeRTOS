@@ -1,0 +1,29 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_nvmctrl NVMCTRL Driver
+
+
+\section doc_driver_nvmctrl_basic_and_practice Flash Basics and Best Practice
+
+The NVM Controller (NVMCTRL) interfaces the device's non-volatile memories.
+Most AVR devices have two types of non-volatile memories: Flash and EEPROM.
+
+A non-volatile memory (NVM) is a reprogrammable memory block that 
+retains it's values even when the device is powered off or after reset. 
+The Flash is mainly used for program storage, but can also be used for 
+data storage. The EEPROM is used for data storage.
+
+The main differences between Flash and EEPROM are:
+- Flash has a large write and erase granularity: It can only be erased or 
+  written one page at a time, and one page is usually between 32-128 bytes.
+- Flash requires a page to be erased before it is written.
+- Writing to flash usually causes program execution to freeze while the 
+  write is ongoing. Some devices have a read-while-write capability that makes
+  it possible to execute code in one flash section while programming in another
+  section.
+- EEPROM can be written one byte at a time.
+- EEPROM does not require a byte to be erased before it is written.
+- EEPROM can be programmed while the CPU is executing a program from Flash.
+
+Devices typically have only one NVM Controller hardware instance.
+
+*/

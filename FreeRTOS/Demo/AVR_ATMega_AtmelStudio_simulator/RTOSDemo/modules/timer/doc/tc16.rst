@@ -1,0 +1,29 @@
+======================
+TC16 driver
+======================
+A 16-bit Timer/Counter is a general purpose Timer/Counter module, with two independent Output
+Compare Units, and PWM support. It allows accurate program execution timing (event management) and
+wave generation.
+
+Features
+--------
+* Initialization
+
+Applications
+------------
+* PWM/Frequency generation
+* Event counting/Input capture
+* Application timing, and scheduling
+
+Dependencies
+------------
+* clk\ :sub:`io` for clock
+* Module is enabled by setting PRR.PRTIMn to 0
+
+Note
+----
+* ISR will be generated only when Global Interrupt checkbox and driver_isr Harness checkbox are enabled
+
+Knows issues and workarounds
+----------------------------
+N/A

@@ -1,0 +1,240 @@
+/**
+\addtogroup doc_driver_i2c_master
+ 
+\brief Driver for I2C master functionality
+
+The **I2C Master** driver provides I2C master functionality,
+that is:
+- Addressing a slave on the I2C bus and writing a byte or block of bytes to it
+- Addressing a slave on the I2C bus and reading a byte or block of bytes from it
+- Chaining bus operations using repeated start
+- Handling bus contention/arbitration
+- Handling bus errors
+
+
+The I2C Master driver can operate in two modes:
+- Polled mode
+- Interrupt-driven mode
+
+
+\section doc_driver_i2c_master_configuration Driver Configuration
+
+The I2C Master driver is configured using START. The user can 
+choose from the two modes of operation (polled/IRQ).
+START also allows the user to select SCL frequency and possibly
+other parameters, depending on the underlying hardware.
+
+If several I2C hardware instances are available on the device, 
+the user can select which I2C instance the driver shall use.
+
+
+\section doc_driver_i2c_master_functional Functional Description
+
+The I2C Master driver is basically a finite state machine (FSM). This 
+state machine combines current state with I2C bus status received from the 
+underlying hardware module to generate the next state of the FSM and any 
+output to the application or the underlying hardware.
+
+The driver can receive I2C bus state information either by:
+- polling the underlying hardware for it
+- having the underlying hardware use interrupts to signal any bus events
+
+Some events require application-dependent input. This is handled by the 
+application hooking up callback functions. The I2C master driver allows
+hooking up callback functions for all bus events requiring application 
+feedback.
+
+\subsection doc_driver_i2c_master_callbacks Callback functions
+
+The I2C Master driver allows the application to provide callback functions 
+for the following events:
+- Data Complete: All specified data has been transmitted or received
+- Write Collision: Several I2C masters attempted to access the bus at the 
+  same time as us, and we lost the arbitration
+- Address NACK: We tried to address a slave, but did not receive any ACK
+- Data NACK: We tried to write a data byte to a slave, but received a NACK
+- Timeout: We tried to perform an operation on the bus, but did not receive 
+  any response within the expected time.
+
+Default callback functions are provided by the driver, doing nothing 
+but sending Stop for all these events, except for the Timeout event, 
+where the default callback handler resets the bus.
+
+The I2C Master API provides functions to hook up user-defined callback 
+functions along with parameters to these functions as callbacks to 
+these events. These callbacks are expected to return a data of type 
+i2c_operations_t, which instructs the I2C Master FSM of the next operation 
+to perform. The possible next operations are:
+- Send Stop
+- Send Repeated Start followed by SLA+R
+- Send Repeated Start followed by SLA+W
+- Continue the current operation, typically send the next byte in a 
+  transmission
+- Reset the link, resetting the I2C bus, the I2C Master FSM, and the 
+  underlying hardware. This is typically only done in response to an 
+  unrecoverable error.
+
+Note that calling the <component_name>_open() function initializes all 
+callback functions to the defaults specified in the previous section.
+This means that if the application wants to hookup user-defined callbacks, 
+this must be done *after* calling <component_name>_open().
+
+When transmitting data, a Data NACK can be received as a response to the 
+last byte to be transmitted. In this case, the "Data NACK" event and 
+the "Data Complete" event happens simultaneously. In this case, 
+only the "Data NACK"-callback handler will be called, and NOT the 
+"Data Complete"-callback.
+
+
+\subsection doc_driver_i2c_master_performing_a_transfer Performing a Transfer
+
+To perform an I2C transfer, do the following steps:
+1. Call <component_name>_open(SLA) with the slave address SLA as parameter. 
+   If the I2C Master interface is used by other threads, use 
+   while (!I2C_0_open(SLA)); to wait until it is free.
+2. Hookup any callback handlers, such as the Data Complete callback handler.
+3. Specify the buffer containing data to be transmitted or where 
+   read data should be placed using <component_name>_set_buffer(buffer, size);
+   The parameter buffer is a pointer to a buffer, size is the expected bytes to
+   receive or transmit. When this number of bytes have been received or 
+   transmitted, the Data Complete callback handler is called.
+4. Start the operation by calling <component_name>_master_operation(bool read);
+   whwere the parameter specifies whether to read or write to the bus.
+5. Wait for the operations to complete and then close the bus using:
+   while (I2C_BUSY == <component_name>_close());
+
+
+\subsection doc_driver_i2c_master_combining_transfers Combining Transfers
+
+The I2C Master driver allows the user to combine transfers. As an example,
+a bus write can be followed by a Repeated Start and a bus read and then 
+a Stop. This is done in the following way:
+- Use the I2C Master API functions to set up a Write to the bus. Set up the 
+  address to write to, the number of bytes to write, and the data to write.
+- Use the I2C Master API functions to set up a Data Complete callback called 
+  CB1. When the write operation has completed, CB1 will be called. This 
+  callback will set up the following Read operation (slave address, number 
+  of bytes to read), and return as next operation "Send Repeated Start 
+  followed by SLA+R". This callback should also hookup a new callback CB2, 
+  specifying the actions to take when the Read has completed. In this example, 
+  CB2 will do nothing other than instructing the FSM to send Stop.
+- Start the first Write operation. When it has completed, the Data Complete 
+  callback CB1 is called, setting up and performing the subsequent Read. When 
+  the Read has completed, the second callback CB2 is called, instructing the 
+  FSM to send Stop.
+
+
+
+
+\section doc_driver_i2c_master_hardware Hardware Dependencies
+
+The I2C Master driver usually uses some sort of hardware 
+that implements I2C functionality, even though it is 
+possible to implement a software I2C implemented by bit-banging 
+I/O pins.
+
+Different MCUs have I2C hardware with different names and 
+functionalities, such as TWI, I2C, USI etc. In START, the user 
+selects a device and adds the I2C Master driver. A device
+may have several possible hardware resources available for 
+the driver, such as I2C0, I2C1 etc. In this case the user 
+must select which one to use.
+
+The configuration options in START displays options that are 
+dependent on the hardware used to implement the I2C driver.
+For example, an option may allow changing the baud rate 
+used to drive the underlying I2C hardware.
+
+
+\section doc_driver_i2c_master_software Software Dependencies
+
+The interrupt-driven configurations use the interrupt functionality 
+of the underlying I2C hardware. Make sure that global interrupts 
+are enabled (using sei()) and that the Interrupt Controller, if 
+present, is configured so that any interrupts are serviced 
+correctly.
+
+
+\section doc_driver_i2c_master_code Code example
+
+\code
+
+#include <atmel_start.h>
+#include <i2c_types.h>
+
+
+#define slave_adr 0x4f
+#define slave_reg_adr 0x0
+
+
+uint8_t      read_data[2];
+
+/** Structure passed into read_handler to describe the actions to be performed by the handler */
+typedef struct {
+	uint8_t *data;
+	uint8_t  size;
+} transfer_descriptor_t;
+
+
+/** This callback is called when the initial write of the pointer register has finished.
+    This callback controls the second phase of the I2C transaction, the read of the 
+	targeted register after a REPEATED START.
+*/
+i2c_operations_t read_handler(void *d)
+{
+	transfer_descriptor_t *desc = (transfer_descriptor_t *)d;
+	I2C_0_set_buffer((void *)desc->data, desc->size);
+	// Set callback to terminate transfer and send STOP after read is complete
+	I2C_0_set_data_complete_callback(i2c_cb_return_stop, NULL); 
+	return i2c_restart_read;  // Send REPEATED START before read
+}
+
+/** Performs the following transfer sequence:
+1. Send SLA+W, Data1
+2. Send RepeatedStart, SLA+R, Read Data1, Read Data2
+3. Send Stop
+
+This transfer sequence is typically done to first write to the slave the address in 
+the slave to read from, thereafter to read N bytes from this address.
+*/
+void do_transfer(uint8_t adr, uint8_t *data, uint8_t size)
+{
+	transfer_descriptor_t d = {data, size};
+	while (!I2C_0_open(slave_adr))
+	; // sit here until we get the bus..
+	// This callback specifies what to do after the first write operation has completed
+	// The parameters to the callback are bundled together in the aggregate data type d.
+	I2C_0_set_data_complete_callback((void *)read_handler, &d);
+	// If we get an address NACK, then try again by sending SLA+W
+	I2C_0_set_address_nack_callback((void *)i2c_cb_restart_write, NULL);
+	// Transmit one byte
+	I2C_0_set_buffer((void *)&adr, 1);
+	// Start a Write operation
+	I2C_0_master_operation(false); 
+	while (I2C_BUSY == I2C_0_close())
+	; // sit here until the entire chained operation has finished
+}
+
+
+
+
+int main(void)
+{
+	/* Initializes MCU, drivers and middleware */
+	atmel_start_init();
+
+	sei();
+	
+	do_transfer(slave_reg_adr, read_data, 2);
+
+
+	/* Wait forever */
+	while (1) {
+	}
+}
+
+
+\endcode
+
+
+*/

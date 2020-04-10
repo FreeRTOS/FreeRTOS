@@ -1,0 +1,18 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_spi SPI Drivers
+
+
+
+\section doc_driver_spi_master_basic_and_practice SPI Basics and Best Practice
+
+The serial peripheral interface (SPI) is a synchronous serial communication
+interface.
+
+SPI devices communicate in full duplex mode using a master-slave
+architecture with a single master. The master device originates the frame for
+reading and writing. Multiple slave devices are supported through selection
+with individual slave select (SS) lines.
+
+*/
+
+

@@ -1,0 +1,44 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_usart USART Drivers
+
+
+
+\section doc_driver_usart_basic_and_practice USART Basics and Best Practice
+
+The universal synchronous and asynchronous receiver and transmitter
+(USART) is usually used to transfer data from one device to the other.
+A USART is able to transmit a byte stream on an I/O pin (the TX pin), 
+and receive a byte stream on another I/O pin (the RX pin). The rate 
+at which bits are shifted out on the I/O pins is called the baud rate.
+The baud rate can be selected by the user, and configured in START.
+
+In general, the USART can operate in:
+
+- Asynchronous mode (UART). The receiver uses the baud rate setting 
+to recover the individual bits.
+
+- Synchronous mode (USART). The transmitter uses an additional I/O 
+pin, the XCK pin, to transmit a bit clock. The receiver uses the
+XCK info to sample the incoming bits.
+
+The USARTs are able to generate interrupts when a byte has been 
+transmitter or received. A USART driver can therefore either be:
+
+- Polled: The driver must poll the USARTs status register to 
+detect when a byte has been received or transmitted. Based 
+on the result of the polling, the driver will write the next 
+byte to be transmitted (TX data) or read the received byte 
+(RX data) from the USART.
+
+- Interrupt-driven: The USART issues an interrupt when a byte 
+has been received or transmitted. The driver's Interrupt 
+Service Routine (ISR) will write TX the next data or read RX 
+data from the USART. The RX and TX data are typically placed 
+in circular buffers (ringbuffers).
+
+Some devices may have DMA controllers. In such devices, the 
+USART may also have a DMA-driven driver.
+
+*/
+
+

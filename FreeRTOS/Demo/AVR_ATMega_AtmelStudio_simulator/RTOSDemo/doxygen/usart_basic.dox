@@ -1,0 +1,196 @@
+/**
+\addtogroup doc_driver_usart_basic
+ 
+\brief Driver for basic USART functionality
+
+The **USART Basic** driver provides basic USART functionality,
+that is:
+- Transmission of a character
+- Reception of a character
+- Optional support for redirecting printf() output to USART
+
+The USART Basic driver has four modes of operation:
+- Asynchronous polled mode
+- Synchronous polled mode
+- Asynchronous interrupt-driven mode
+- Synchronous interrupt-driven mode
+
+
+\section doc_driver_usart_basic_configuration Driver Configuration
+
+The USART Basic driver is configured using START. The user can 
+choose from the four modes of operation (sync/async, polled/IRQ).
+START also allows the user to select desired baud rate, character 
+size, number of stop bits, parity etc.
+
+START allows the user to select whether or not to include 
+support for redirecting printf() output to the USART. Enabling
+this feature adds appropriate API functionality so that printf()
+in the user code redirects to the USART TXD I/O pin. 
+
+START allows the user to select size of buffers used in IRQ 
+driven mode, see \ref doc_driver_usart_basic_irq for details.
+
+If several USART hardware instances are available on the device, 
+the user can select which USART instance the driver shall use.
+
+
+\section doc_driver_usart_basic_functional Functional Description
+
+
+\subsection doc_driver_usart_basic_async Async mode
+
+When in asynchronous mode, the USART uses only the TXD and RXD I/O
+pins. The XCK I/O pin is not used. The receiver must be set up 
+with the same baud rate as the transmitter in order to be able 
+to receive data correctly.
+
+
+\subsection doc_driver_usart_basic_sync Sync mode
+
+When in synchronous mode, the USART uses the TXD, RXD and XCK 
+I/O pins. The receiver uses the signal received on the XCK pin
+as a clock to sample data received on the RXD pin, and to clock 
+data on the TXD pin. When synchronous mode is used, the XCK pin
+controls whether the transmission clock is input (slave
+mode) or output (master mode). The corresponding port pin must 
+be set to output for master mode or to input for slave mode.
+
+
+\subsection doc_driver_usart_basic_polled Polled mode
+
+The polled mode version of the driver provides functions 
+for transmitting and receiving one character of data.
+The read and write-functions are blocking: If the USART 
+is not able to execute the desired operation immediately, 
+the driver blocks until the operation has been performed.
+
+Functions are provided to check if:
+- a character has been received
+- the USART can accept a new character for transmission
+- the previous character has been completely 
+transmitted out of the USART shift register
+
+These functions can be used to check if the USART is ready 
+to process a <component_name>_read() or <component_name>_write() 
+immediately. In applications where blocking must be avoided, the 
+user must check the status of the USART hardware and call the 
+<component_name>_read() or <component_name>_write() only if they 
+will not block.
+
+
+\subsection doc_driver_usart_basic_irq IRQ mode
+
+The IRQ modes of the basic driver has the same API as the 
+polled modes. The difference is that the <component_name>_read()
+and <component_name>_write() functions access ringbuffers instead 
+of the USART data registers directly. The Interrupt Service 
+Routines provided by the driver transfers data between the ringbuffers 
+and the USART hardware whenever the hardware is ready to accept 
+it. The size of the RX and TX ringbuffers can be configured in START. 
+The optimal setting of the buffer size is dependent on the desired baud rate.
+
+The <component_name>_read() function will block if there is no data to be 
+read in the RX ringbuffer. The <component_name>_write()-function will block 
+there is no room for more data in the TX ringbuffer.
+
+Functions are provided to check if:
+- the RX ringbuffer contains received characters
+- the TX ringbuffer has room for a new character 
+- the previous character has been completely 
+transmitted out of the USART shift register
+
+These functions can be used to check if the ringbuffers are 
+ready to process a <component_name>_read() or <component_name>_write() 
+immediately. In applications where blocking must be avoided, the user 
+must check the status of the ringbuffers and call 
+the <component_name>_read() or <component_name>_write() only if 
+they will not block.
+
+
+\section doc_driver_usart_basic_hardware Hardware Dependencies
+
+The USART Basic driver usually uses some sort of hardware 
+that implements USART functionality, even though it is 
+possible to impement a software USART implemented by bit-banging 
+I/O pins.
+
+Different MCUs have USART hardware with different names and 
+functionalities, such as UART, USART, USI etc. In START, the user 
+selects a device and adds the USART Basic driver. A device
+may have several possible hardware resources available for 
+the driver, such as USART0, USART1 etc. In this case the user 
+must select which one to use.
+
+The configuration options in START displays options that are 
+dependent on the hardware used to implement the USART driver.
+For example, an option may allow changing the baud rate 
+used to drive the underlying USART hardware.
+
+
+\section doc_driver_usart_basic_software Software Dependencies
+
+The interrupt-driven configurations use the interrupt functionality 
+of the underlying USART hardware. Make sure that global interrupts 
+are enabled (using sei()) and that the Interrupt Controller, if 
+present, is configured so that any interrupts are serviced 
+correctly.
+
+
+\section doc_driver_usart_basic_code Code example
+
+\code
+
+#include <stdio.h>
+#include <string.h>
+#include <atmel_start.h>
+
+uint8_t tx[16] = "data"; 
+uint8_t rx[16];
+
+void fail(void);
+
+
+void fail(){
+	while(1);
+}
+
+int main(void)
+{
+	uint8_t i;
+	
+	/* Initializes MCU, drivers and middleware */
+	atmel_start_init();
+
+	// If USART Basic driver is in IRQ-mode, enable global interrupts.
+	sei();
+
+
+	// Test driver functions, assumes that the USART RX and 
+	// TX pins have been loopbacked, or that USART hardware 
+	// is configured in loopback mode
+
+	// Test printf() support
+	printf("hello");
+
+	// Check that "hello" was received on loopback RX.
+	// Initialize rx buffer so strncmp() check will work
+	memset(rx, 0, sizeof(rx));
+	for (i=0;i<strlen("hello");i++)
+		rx[i]=USART_0_read(); // Blocks until character is available
+
+	// Compare received and expected data
+	if (strncmp("hello", (char*)rx, strlen("hello")) != 0)
+		fail();
+
+	// If we get here, everything was OK
+	printf("ok");
+
+	/* Replace with your application code */
+	while (1) {
+	}
+}
+
+\endcode
+
+*/

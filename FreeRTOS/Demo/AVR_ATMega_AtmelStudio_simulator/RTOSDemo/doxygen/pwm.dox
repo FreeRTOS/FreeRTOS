@@ -1,0 +1,36 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_pwm PWM Drivers
+
+Pulse-width modulation (PWM) is used to create an analog behavior
+digitally by controlling the amount of power transferred to the
+connected peripheral.
+
+The following driver variants are available:
+
+- \ref doc_driver_pwm_basic : Provides basic functionality like:
+  - Initializing the hardware implementing the PWM as specified by the user in START
+  - Enable and disable output of PWM channels on I/O pins
+  - Setting duty cycle for each of the PWM channels
+  - Load TOP value for the PWM, to specify resolution
+  - Register ISR callback routine to be called on counter overflow
+  The driver allows optional hookup of a callback handler from 
+  the overflow ISR, allowing the user to specify any actions to be taken in 
+  the ISR.
+
+\section doc_driver_pwm_basic_and_practice PWM Basics and Best Practice
+
+Pulse-width modulation (PWM) is used to create an analog behavior
+digitally by controlling the amount of power transferred to the
+connected peripheral. This is achieved by controlling the high period
+(duty-cycle) of a periodic signal.
+
+The application can change the period or duty cycle when the PWM is running.
+Functions are provided to configure these two parameters.
+Note these are raw register values and the parameter duty_cycle means
+the period of first half during one cycle, which should not be larger than
+total period value.
+
+*/
+
+
+

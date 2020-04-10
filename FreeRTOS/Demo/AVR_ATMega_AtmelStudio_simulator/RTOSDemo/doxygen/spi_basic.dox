@@ -1,0 +1,264 @@
+/**
+\addtogroup doc_driver_spi_basic
+ 
+\brief Driver for SPI basic functionality
+
+The **SPI Basic** driver provides basic SPI functionality,
+that is:
+- Transmission of a byte or block of bytes
+- Reception of a byte or block of bytes
+- Optional support for open()/close() interface to allow multiple 
+processes share one SPI bus
+
+The SPI Basic driver has four modes of operation:
+- Master polled mode
+- Slave polled mode
+- Master interrupt-driven mode
+- Slave interrupt-driven mode
+
+
+\section doc_driver_spi_basic_configuration Driver Configuration
+
+The SPI Basic driver is configured using START. The user can 
+choose from the four modes of operation (master/slave, polled/IRQ).
+START also allows the user to select SCK frequency, data order, 
+data polarity and data phase.
+
+START allows the user to select whether or not to include 
+an open()/close() interface for the SPI. If this interface 
+is included, the SPI must be opened by calling <component_name>_open() before 
+it can be used. After use, the SPI is closed by calling 
+<component_name>_close(). A call to <component_name>_open() for a SPI 
+which is already open will return a *false* value, indicating that the 
+SPI is already busy on behalf of another process.
+
+If several SPI hardware instances are available on the device, 
+the user can select which SPI instance the driver shall use.
+
+
+\section doc_driver_spi_basic_functional Functional Description
+
+
+\subsection doc_driver_spi_basic_master Master mode
+
+When in master mode, the SPI generates the SCK clock. Data is 
+driven out on the MOSI I/O pin according to the configured phase and 
+polarity.
+
+
+\subsection doc_driver_spi_basic_slave Slave mode
+
+When in slave mode, the SPI receives the SCK clock from the 
+master and uses this to sample data on the MOSI I/O pin. The
+phase and polarity must be configured according to the values 
+used by the master.
+
+
+\subsection doc_driver_spi_basic_polled Polled mode
+
+The polled mode version of the driver provides functions for : 
+- transmitting and receiving one byte of data
+- transmitting and receiving one block of data. The same buffer holds both
+data to be transmitted abd received data. The received bytes overwrites the 
+transmitted bytes after they have been transmitted.
+- transmitting one block of data. Received bytes are discarded.
+- receiving one block of data. A number of bytes identical to the block size 
+is shifted out of the SPI. These bytes have the value 0x00.
+
+All these functions are blocking: The functions will not return 
+before the operations have completed.
+
+
+\subsection doc_driver_spi_basic_irq IRQ mode
+
+The IRQ mode version of the driver provides functions for : 
+- transmitting and receiving one byte of data
+- transmitting and receiving one block of data. The same buffer holds both
+data to be transmitted abd received data. The received bytes overwrites the 
+transmitted bytes after they have been transmitted.
+- transmitting one block of data. Received bytes are discarded.
+- receiving one block of data. A number of bytes identical to the block 
+size is shifted out of the SPI. These bytes have the value 0x00.
+- check if SPI bus is IDLE.
+- check if SPI bus is BUSY.
+- check if SPI bus is DONE.
+
+The functions checking the SPI bus status are included in the 
+interrupt driven driver to allow the application to know the state 
+of the SPI transfer. They are not needed in the polled driver since
+this driver blocks until the operation has completed. 
+
+\subsubsection doc_driver_spi_basic_state SPI bus state
+
+The SPI bus is in one of the states listed in \ref spi_transfer_status_t.
+The bus state is used by the exchange one byte function: This function 
+will wait until the SPI bus is no longer BUSY before exchanging a byte. 
+This allows the exchange byte function to work seamlessly with the 
+exchange, receive and transmit block functions.
+
+
+
+\subsubsection doc_driver_spi_basic_irq_callback IRQ callbacks
+
+In IRQ mode, the ISR can be configured to call a callback function 
+before exiting. This is done by calling the function 
+<component_name>_register_callback() with a pointer to the callback 
+function as parameter. Registering a NULL pointer as callback causes 
+no callback function to be called. NULL is the default value of the 
+callback function pointer.
+
+A callback function is typically used to:
+- In master mode: Release SS after transfer as finished.
+- In slave mode: Implement a chosen SPI protocol, setting up 
+  next transfer after the previous one (i.e. data transfer 
+  phase after control/command phase).
+
+
+\subsection doc_driver_spi_basic_ss Slave Select
+
+A SPI master usually controls a Slave Select pin to choose the 
+slave to communicate with. The SPI driver does not manipulate 
+the Slave Select (SS_bar) I/O pin. If the user wants to control 
+SS_bar before and after a transfer, this has to be done using 
+normal I/O port operations.
+
+
+\subsection doc_driver_spi_basic_configurations Using configurations
+
+The <component_name>_open()-function takes a parameter, namely the name 
+of the *configuration* to use when opening the SPI. A *configuration*
+is a set of SPI-related parameters such as SCK frequency, SPI 
+phase and polarity etc. The parameters controlled by a configuration
+depends on the underlying hardware the SPI Basic driver uses.
+
+Different configurations allows the SPI to use one setup when 
+communicating with one SPI slave, and another configuration 
+when communicating with another slave. As an example, assume
+a SPI system with one master and two slaves SLAVE_A and SLAVE_B.
+
+- SLAVE_A is slow, so requires a slow SCK rate for communication
+- SLAVE_B is fast, so can use a fast SCK rate for communication
+
+To open a connection to SLAVE_A, the master would call 
+<component_name>_open(SLAVE_A), to open a connection to SLAVE_B, 
+<component_name>_open(SLAVE_B) would be called.
+These calls would reconfigure the SPI hardware appropriately.
+
+The SPI Basic driver provides one configuration named DEFAULT. 
+This is the configuration that the user configured in START. 
+The user can provide additional configurations by modifying 
+spi_basic.c and spi_basic.h appropriately.
+
+
+
+
+\section doc_driver_spi_basic_hardware Hardware Dependencies
+
+The SPI Basic driver usually uses some sort of hardware 
+that implements SPI functionality, even though it is 
+possible to implement a software SPI implemented by bit-banging 
+I/O pins.
+
+Different MCUs have SPI hardware with different names and 
+functionalities, such as UART, SPI, USI etc. In START, the user 
+selects a device and adds the SPI Basic driver. A device
+may have several possible hardware resources available for 
+the driver, such as SPI0, SPI1 etc. In this case the user 
+must select which one to use.
+
+The configuration options in START displays options that are 
+dependent on the hardware used to implement the SPI driver.
+For example, an option may allow changing the baud rate 
+used to drive the underlying SPI hardware.
+
+
+\section doc_driver_spi_basic_software Software Dependencies
+
+The interrupt-driven configurations use the interrupt functionality 
+of the underlying SPI hardware. Make sure that global interrupts 
+are enabled (using sei()) and that the Interrupt Controller, if 
+present, is configured so that any interrupts are serviced 
+correctly.
+
+
+\section doc_driver_spi_basic_code Code example
+
+\code
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <atmel_start.h>
+
+
+uint8_t buffer[16] = "data";
+volatile int8_t status = 0; // Just to keep pass() and fail() from being optimized away
+
+void fail(void);
+void drive_slave_select(void);
+void release_slave_select(void);
+void fail(void);
+void pass(void);
+
+void drive_slave_select_low(){
+	// Control GPIO to drive SS_bar low
+}
+
+void drive_slave_select_high(){
+	// Control GPIO to drive SS_bar high
+}
+
+void fail(){
+	status = -1;
+	while(1);
+}
+
+void pass(){
+	status = 1;
+	while(1);
+}
+
+
+
+int main(void)
+{	
+	/* Initializes MCU, drivers and middleware */
+	atmel_start_init();
+
+	// Register callback function releasing SS when transfer is complete
+	SPI_0_register_callback(drive_slave_select_high);
+	
+	// If SPI Basic driver is in IRQ-mode, enable global interrupts.
+	sei();
+
+	// Test driver functions, assumes that the SPI MISO and MOSI pins
+	// have been looped back, and that the open/close interface was enabled
+	// during configuration in START
+	
+	if(!SPI_0_open(SPI_0_DEFAULT))
+		// Not able to open SPI, call fail() or optionally do something 
+		// else waiting for the SPI to become free
+		fail(); 
+	
+	drive_slave_select_low();
+	SPI_0_exchange_block(buffer, sizeof(buffer));
+	while(SPI_0_status_busy()); // Wait for the transfer to complete
+	SPI_0_close();
+	
+	// Check that the correct data was received
+	if (strncmp((char*)buffer, "data", strlen("data")))
+		fail();
+	
+	// If we get here, everything was OK
+	pass();
+
+	/* Replace with your application code */
+	while (1) {
+	}
+}
+
+\endcode
+
+
+*/

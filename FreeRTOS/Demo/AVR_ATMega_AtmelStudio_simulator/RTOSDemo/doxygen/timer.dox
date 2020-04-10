@@ -1,0 +1,18 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_timer Timer Drivers
+
+
+\section doc_driver_timer_basic_and_practice Timer Basics and Best Practice
+
+The Timer drivers provides means functionality related to time, typically 
+using a hardware timer to measure time, generate waveforms that are a 
+function of time, or timestamp events.
+
+Timers can be either:
+- Synchronous (being clocked by the peripheral clock or a prescaled version of it)
+- Asynchronous (being clocked by a clock generated outside the device, and input on an IO pin)
+
+
+*/
+
+

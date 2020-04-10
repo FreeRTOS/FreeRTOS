@@ -571,6 +571,7 @@ BaseType_t xAttempt;
 int32_t lBytes;
 size_t uxPayloadLength, uxExpectedPayloadLength;
 TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
+BaseType_t bSetSockOptSuccess;
 
 #if( ipconfigUSE_LLMNR == 1 )
 	BaseType_t bHasDot = pdFALSE;
@@ -604,8 +605,11 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 		/* Ideally we should check for the return value. But since we are passing
 		 * correct parameters, and xDNSSocket is != NULL, the return value is 
 		 * going to be '0' i.e. success. Thus, return value is discarded */
-		( void ) FreeRTOS_setsockopt( xDNSSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &uxWriteTimeOut_ticks, sizeof( TickType_t ) );
-		( void ) FreeRTOS_setsockopt( xDNSSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &uxReadTimeOut_ticks,  sizeof( TickType_t ) );
+		bSetSockOptSuccess = FreeRTOS_setsockopt( xDNSSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &uxWriteTimeOut_ticks, sizeof( TickType_t ) );
+		configASSERT( bSetSockOptSuccess == 0 );
+		
+		bSetSockOptSuccess = FreeRTOS_setsockopt( xDNSSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &uxReadTimeOut_ticks,  sizeof( TickType_t ) );
+		configASSERT( bSetSockOptSuccess == 0 );
 
 		for( xAttempt = 0; xAttempt < ipconfigDNS_REQUEST_ATTEMPTS; xAttempt++ )
 		{
@@ -650,8 +654,7 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 
 					if( lBytes > 0 )
 					{
-					BaseType_t xExpected;
-					/* Pointer does not modify the data it is pointing to */
+					BaseType_t xExpected;					
 					const DNSMessage_t *pxDNSMessageHeader = ( DNSMessage_t * ) pucUDPPayloadBuffer;
 
 						/* See if the identifiers match. */
@@ -1168,6 +1171,8 @@ BaseType_t xDoStore = xExpected;
 					if( FreeRTOS_ntohs( pxDNSAnswerRecord->usDataLength ) == sizeof( uint32_t ) )
 					{
 						/* Copy the IP address out of the record. */
+						/* MISRA c 2012 rule 21.15 relaxed here since this seems
+						 * to be the least cumbersome way to get the IP address */
 						/* coverity[misra_c_2012_rule_21_5_violation] */
 						( void ) memcpy( ( void * ) &ulIPAddress,
 								( const void * ) ( pucByte + sizeof( DNSAnswerRecord_t ) ),

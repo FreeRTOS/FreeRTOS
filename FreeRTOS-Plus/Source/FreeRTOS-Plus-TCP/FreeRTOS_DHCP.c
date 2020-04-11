@@ -488,18 +488,25 @@ BaseType_t xGivingUp = pdFALSE;
 
 		case eLeasedAddress :
 
-			/* Resend the request at the appropriate time to renew the lease. */
-			prvCreateDHCPSocket();
-
-			if( xDHCPData.xDHCPSocket != NULL )
+			if( FreeRTOS_IsNetworkUp() )
 			{
-				xDHCPData.xDHCPTxTime = xTaskGetTickCount();
-				xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
-				prvSendDHCPRequest( );
-				xDHCPData.eDHCPState = eWaitingAcknowledge;
+				/* Resend the request at the appropriate time to renew the lease. */
+				prvCreateDHCPSocket();
 
-				/* From now on, we should be called more often */
-				vIPReloadDHCPTimer( dhcpINITIAL_TIMER_PERIOD );
+				if( xDHCPData.xDHCPSocket != NULL )
+				{
+					xDHCPData.xDHCPTxTime = xTaskGetTickCount();
+					xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
+					prvSendDHCPRequest();
+					xDHCPData.eDHCPState = eWaitingAcknowledge;
+
+					/* From now on, we should be called more often */
+					vIPReloadDHCPTimer( dhcpINITIAL_TIMER_PERIOD );
+				}
+			}
+			else
+			{
+				vIPReloadDHCPTimer( pdMS_TO_TICKS( dhcpINITIAL_DHCP_TX_PERIOD ) );
 			}
 			break;
 

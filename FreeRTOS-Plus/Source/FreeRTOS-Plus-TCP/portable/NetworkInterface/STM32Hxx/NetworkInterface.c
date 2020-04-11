@@ -28,11 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  http://www.FreeRTOS.org
 */
 
-/* Standard includes. */
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <string.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -65,7 +61,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * TODO: Use ../Common/phyHandler to initialise the PHY and check its Link Status
  */
 
-extern ETH_HandleTypeDef	heth;
+extern ETH_HandleTypeDef	xEthHandle;
 extern ETH_TxPacketConfig   TxConfig;
 
 static TaskHandle_t xEMACTaskHandle;
@@ -96,7 +92,7 @@ BaseType_t xReturn;
 
 		xMacInitStatus = eMACFailed;
 
-		if( HAL_ETH_Start( &( heth ) ) == HAL_OK )
+		if( HAL_ETH_Start( &( xEthHandle ) ) == HAL_OK )
 		{
 			/* The ETH peripheral is initialised. */
 			xResult = xTaskCreate( prvEMACDeferredInterruptHandlerTask,
@@ -144,7 +140,7 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxDescriptor, BaseType_t bReleaseAfterSend )
+BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxDescriptor, BaseType_t xReleaseAfterSend )
 {
 /* Simple network interfaces (as opposed to more efficient zero copy network
 interfaces) just use Ethernet peripheral driver library functions to copy
@@ -163,7 +159,7 @@ BaseType_t xResult;
 	ETH_BufferTypeDef buf =
 	{
 		.buffer = Tx_Buff,
-		.len  = pxDescriptor->xDataLength,
+		.len = pxDescriptor->xDataLength,
 		.next = NULL
 	};
 
@@ -173,12 +169,12 @@ BaseType_t xResult;
 	/* TODO: Use SCB_InvalidateDCache_by_Addr 'SCB_CleanInvalidateDCache()'. */
 
 	HAL_StatusTypeDef status;
-	status = HAL_ETH_Transmit( &heth, &TxConfig, HAL_MAX_DELAY );
+	status = HAL_ETH_Transmit( &xEthHandle, &TxConfig, HAL_MAX_DELAY );
 
 	/* Call the standard trace macro to log the send event. */
 	iptraceNETWORK_INTERFACE_TRANSMIT();
 
-	if ( bReleaseAfterSend != pdFALSE )
+	if ( xReleaseAfterSend != pdFALSE )
 	{
 		/* It is assumed SendData() copies the data out of the FreeRTOS+TCP Ethernet
 		buffer.  The Ethernet buffer is therefore no longer needed, and must be
@@ -206,7 +202,7 @@ static void prvEMACPoll()
 {
 NetworkBufferDescriptor_t *pxBufferDescriptor;
 
-	if( HAL_ETH_IsRxDataAvailable( &heth ) == pdFALSE )
+	if( HAL_ETH_IsRxDataAvailable( &xEthHandle ) == pdFALSE )
 	{
 		return;
 	}
@@ -214,8 +210,8 @@ NetworkBufferDescriptor_t *pxBufferDescriptor;
 	ETH_BufferTypeDef	data_buffer;
 	uint32_t			data_length = 0;
 
-	HAL_ETH_GetRxDataBuffer( &heth, &data_buffer );
-	HAL_ETH_GetRxDataLength( &heth, &data_length );
+	HAL_ETH_GetRxDataBuffer( &xEthHandle, &data_buffer );
+	HAL_ETH_GetRxDataLength( &xEthHandle, &data_length );
 
 	/* Allocate a network buffer descriptor that points to a buffer
 	large enough to hold the received frame.  As this is the simple
@@ -243,7 +239,7 @@ NetworkBufferDescriptor_t *pxBufferDescriptor;
 	memcpy( pxBufferDescriptor->pucEthernetBuffer, data_buffer.buffer, data_length );
 	pxBufferDescriptor->xDataLength = data_length;
 
-	HAL_ETH_BuildRxDescriptors( &( heth ) );
+	HAL_ETH_BuildRxDescriptors( &( xEthHandle ) );
 
 	/* See if the data contained in the received Ethernet frame needs
 	to be processed.  NOTE! It is preferable to do this in
@@ -264,7 +260,7 @@ NetworkBufferDescriptor_t *pxBufferDescriptor;
 	IPStackEvent_t xRxEvent =
 	{
 		.eEventType = eNetworkRxEvent,
-		.pvData	 = (void *)pxBufferDescriptor
+		.pvData = (void *)pxBufferDescriptor
 	};
 
 	/* Send the data to the TCP/IP stack. */

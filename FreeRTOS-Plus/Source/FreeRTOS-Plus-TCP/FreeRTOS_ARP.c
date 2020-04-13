@@ -85,28 +85,6 @@ static TickType_t xLastGratuitousARPTime = ( TickType_t ) 0;
 	MACAddress_t xARPClashMacAddress;
 #endif /* ipconfigARP_USE_CLASH_DETECTION */
 
-/* Part of the Ethernet and ARP headers are always constant when sending an IPv4
- * ARP packet.  This array defines the constant parts, allowing this part of the
- * packet to be filled in using a simple memcpy() instead of individual writes. */
-
-/* Rule has been relaxed since this is a configuration parameter. And this location provides
- * more readability. */
-/* coverity[misra_c_2012_rule_8_9_violation] */
-static const uint8_t xDefaultPartARPPacketHeader[] =
-{
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 	/* Ethernet destination address. */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* Ethernet source address. */
-	0x08, 0x06, 							/* Ethernet frame type (ipARP_FRAME_TYPE). */
-	0x00, 0x01, 							/* usHardwareType (ipARP_HARDWARE_TYPE_ETHERNET). */
-	0x08, 0x00,								/* usProtocolType. */
-	ipMAC_ADDRESS_LENGTH_BYTES, 			/* ucHardwareAddressLength. */
-	ipIP_ADDRESS_LENGTH_BYTES, 				/* ucProtocolAddressLength. */
-	0x00, 0x01, 							/* usOperation (ipARP_REQUEST). */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* xSenderHardwareAddress. */
-	0x00, 0x00, 0x00, 0x00, 				/* ulSenderProtocolAddress. */
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00 		/* xTargetHardwareAddress. */
-};
-
 /*-----------------------------------------------------------*/
 
 eFrameProcessingResult_t eARPProcessPacket( ARPPacket_t * const pxARPFrame )
@@ -269,7 +247,7 @@ uint8_t ucMinAgeFound = 0U;
 				}
 
 				/* Found an entry containing ulIPAddress, but the MAC address
-				 * doesn't match.  Might be an entry with ucValid=pdFALSE, waiting
+				 * doesn't match.  Might be an entry with ucValid==pdFALSE, waiting
 				 * for an ARP reply.  Still want to see if there is match with the
 				 * given MAC address.ucBytes.  If found, either of the two entries
 				 * must be cleared. */
@@ -630,6 +608,24 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 void vARPGenerateRequestPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 ARPPacket_t *pxARPPacket;
+
+/* Part of the Ethernet and ARP headers are always constant when sending an IPv4
+ * ARP packet.  This array defines the constant parts, allowing this part of the
+ * packet to be filled in using a simple memcpy() instead of individual writes. */
+static const uint8_t xDefaultPartARPPacketHeader[] =
+{
+	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 	/* Ethernet destination address. */
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* Ethernet source address. */
+	0x08, 0x06, 				/* Ethernet frame type (ipARP_FRAME_TYPE). */
+	0x00, 0x01,				/* usHardwareType (ipARP_HARDWARE_TYPE_ETHERNET). */
+	0x08, 0x00,				/* usProtocolType. */
+	ipMAC_ADDRESS_LENGTH_BYTES,		/* ucHardwareAddressLength. */
+	ipIP_ADDRESS_LENGTH_BYTES,		/* ucProtocolAddressLength. */
+	0x00, 0x01,				/* usOperation (ipARP_REQUEST). */
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 	/* xSenderHardwareAddress. */
+	0x00, 0x00, 0x00, 0x00,			/* ulSenderProtocolAddress. */
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00	/* xTargetHardwareAddress. */
+};
 
 	/* Buffer allocation ensures that buffers always have space
 	 * for an ARP packet. See buffer allocation implementations 1

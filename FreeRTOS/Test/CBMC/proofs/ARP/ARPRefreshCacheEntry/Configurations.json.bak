@@ -1,0 +1,19 @@
+{
+  "ENTRY": "ARPRefreshCacheEntry",
+  "CBMCFLAGS":
+  [
+      "--unwind 1",
+      "--unwindset vARPRefreshCacheEntry.0:7,memcmp.0:17",
+      "--nondet-static"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS_PLUS_TCP)/FreeRTOS_ARP.goto"
+  ],
+  "DEF":
+  [
+    {"NOT_STORE_REMOTE":["ipconfigARP_STORES_REMOTE_ADDRESSES=0"]},
+    {"STORE_REMOTE":["ipconfigARP_STORES_REMOTE_ADDRESSES=1"]}
+  ]
+}

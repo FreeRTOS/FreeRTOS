@@ -1,0 +1,12 @@
+{
+  "ENTRY": "DNShandlePacket",
+  "CBMCFLAGS": "--unwind 1",
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS_PLUS_TCP)/FreeRTOS_DNS.goto"
+  ],
+  "DEF":
+  [
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "ENTRY": "ARPSendGratuitous",
+  "CBMCFLAGS":
+  [
+      "--unwind 1",
+      "--nondet-static"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS_PLUS_TCP)/FreeRTOS_ARP.goto",
+    "$(FREERTOS_PLUS_TCP)/FreeRTOS_IP.goto",
+    "$(FREERTOS)/Source/tasks.goto"
+  ],
+  "DEF":
+  [
+  ]
+}

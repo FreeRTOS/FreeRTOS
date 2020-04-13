@@ -18,9 +18,9 @@
     "INC ": [
 	"$(FREERTOS)/Source/include",
 	"$(FREERTOS)/Source/portable/MSVC-MingW",
-	"$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include",
-	"$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/BufferManagement",
-	"$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/MSVC",
+	"$(FREERTOS_PLUS_TCP)/include",
+	"$(FREERTOS_PLUS_TCP)/portable/BufferManagement",
+	"$(FREERTOS_PLUS_TCP)/portable/Compiler/MSVC",
 	"$(FREERTOS)/Test/CBMC/include",
 	"$(FREERTOS)/Test/CBMC/patches"
 	

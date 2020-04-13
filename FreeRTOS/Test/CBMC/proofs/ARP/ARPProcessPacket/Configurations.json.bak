@@ -1,0 +1,19 @@
+{
+  "ENTRY": "ARPProcessPacket",
+  "CBMCFLAGS":
+  [
+      "--unwind 1",
+      "--unwindset vARPRefreshCacheEntry.0:7,memcmp.0:17",
+      "--nondet-static"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS_PLUS_TCP)/FreeRTOS_ARP.goto"
+  ],
+  "DEF":
+  [
+    {"disableClashDetection": ["ipconfigARP_USE_CLASH_DETECTION=0"]},
+    {"enableClashDetection": ["ipconfigARP_USE_CLASH_DETECTION=1"]}
+  ]
+}

@@ -204,7 +204,7 @@ uint8_t ucMinAgeFound = 0U;
 		 * Unless: when '*ipLOCAL_IP_ADDRESS_POINTER' equals zero, the IP-address
 		 * and netmask are still unknown. */
 		if( ( ( ulIPAddress & xNetworkAddressing.ulNetMask ) == ( ( *ipLOCAL_IP_ADDRESS_POINTER ) & xNetworkAddressing.ulNetMask ) ) ||
-			( *ipLOCAL_IP_ADDRESS_POINTER == 0uL ) )
+			( *ipLOCAL_IP_ADDRESS_POINTER == 0UL ) )
 	#else
 		/* If ipconfigARP_STORES_REMOTE_ADDRESSES is non-zero, IP addresses with
 		 * a different netmask will also be stored.  After when replying to a UDP

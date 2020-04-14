@@ -1,0 +1,21 @@
+{
+  "ENTRY": "ProcessIPPacket",
+  "CBMCFLAGS":
+  [
+    "--unwind 1",
+    "--nondet-static"
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_IP.goto"
+  ],
+  "DEF":
+  [
+    "FREERTOS_TCP_ENABLE_VERIFICATION"
+  ],
+  "INC":
+  [
+    "$(FREERTOS)/tools/cbmc/include"
+  ]
+}

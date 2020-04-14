@@ -14,10 +14,10 @@ Patch revised on October 21, 2019.
  .../freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c      |  2 +-
  3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+diff --git a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
 index c4f79e8e7..d8089a5e7 100644
---- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
-+++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+--- a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
++++ b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
 @@ -198,7 +198,7 @@ static void prvSendDHCPDiscover( void );
  /*
   * Interpret message received on the DHCP socket.
@@ -45,10 +45,10 @@ index c4f79e8e7..d8089a5e7 100644
  {
  uint8_t *pucUDPPayload, *pucLastByte;
  struct freertos_sockaddr xClient;
-diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+diff --git a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
 index e511ca324..d6f335304 100644
---- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
-+++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+--- a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
++++ b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
 @@ -116,7 +116,7 @@ static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
  /*
   * Simple routine that jumps over the NAME field of a resource record.
@@ -103,10 +103,10 @@ index e511ca324..d6f335304 100644
  								  size_t uxBufferLength,
  								  BaseType_t xExpected )
  {
-diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
+diff --git a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c
 index 1f5a845fa..1a69807c0 100644
---- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
-+++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
+--- a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c
++++ b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c
 @@ -206,7 +206,7 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
 
  /* List of free TCP segments. */

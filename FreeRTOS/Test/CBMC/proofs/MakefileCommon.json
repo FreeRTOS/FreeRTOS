@@ -1,6 +1,5 @@
 {
     "FREERTOS": [ " ../../.." ],
-    "FREERTOS_PLUS_TCP": [ "../../../../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP" ],
     "PROOFS": [ "." ],
 
     "DEF ": [

@@ -1,0 +1,15 @@
+{
+  "ENTRY": "OutputARPRequest",
+  "CBMCFLAGS": [
+    "--unwind 20"
+  ],
+  "OBJS": [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.goto"
+  ],
+  "MINIMUM_PACKET_BYTES": 50,
+  "DEF": [
+    "CBMC_PROOF_ASSUMPTION_HOLDS=0"
+  ],
+  "EXPECTED": true
+}

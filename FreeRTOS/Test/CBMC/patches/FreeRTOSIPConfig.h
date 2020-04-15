@@ -73,7 +73,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * socket has been destroyed, the result will be stored into the cache.  The next
  * call to FreeRTOS_gethostbyname() will return immediately, without even creating
  * a socket. */
-#define ipconfigUSE_DNS_CACHE                      ( 1 )
+#ifndef ipconfigUSE_DNS_CACHE
+    #define ipconfigUSE_DNS_CACHE                      ( 1 )
+#endif
 #define ipconfigDNS_REQUEST_ATTEMPTS               ( 2 )
 
 /* The IP stack executes it its own task (although any application task can make
@@ -158,7 +160,9 @@ extern uint32_t ulRand();
  * cache then the UDP message is replaced by a ARP message that solicits the
  * required MAC address information.  ipconfigARP_CACHE_ENTRIES defines the maximum
  * number of entries that can exist in the ARP table at any one time. */
-#define ipconfigARP_CACHE_ENTRIES                 6
+#ifndef ipconfigARP_CACHE_ENTRIES
+    #define ipconfigARP_CACHE_ENTRIES                 6
+#endif
 
 /* ARP requests that do not result in an ARP response will be re-transmitted a
  * maximum of ipconfigMAX_ARP_RETRANSMISSIONS times before the ARP request is
@@ -188,7 +192,9 @@ extern uint32_t ulRand();
  * are available to the IP stack.  The total number of network buffers is limited
  * to ensure the total amount of RAM that can be consumed by the IP stack is capped
  * to a pre-determinable value. */
-#define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS    60
+#ifndef ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS
+    #define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS    60
+#endif
 
 /* A FreeRTOS queue is used to send events from application tasks to the IP
  * stack.  ipconfigEVENT_QUEUE_LENGTH sets the maximum number of events that can
@@ -217,7 +223,9 @@ extern uint32_t ulRand();
 #define ipconfigTCP_TIME_TO_LIVE                       128
 
 /* USE_TCP: Use TCP and all its features. */
-#define ipconfigUSE_TCP                                ( 1 )
+#ifndef ipconfigUSE_TCP
+    #define ipconfigUSE_TCP                                ( 1 )
+#endif
 
 /* USE_WIN: Let TCP use windowing mechanism. */
 #define ipconfigUSE_TCP_WIN                            ( 1 )

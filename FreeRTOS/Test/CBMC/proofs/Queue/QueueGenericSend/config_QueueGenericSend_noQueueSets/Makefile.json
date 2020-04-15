@@ -1,0 +1,34 @@
+{
+  "ENTRY": "QueueGenericSend",
+  "LOCK_BOUND": 2,
+  "QUEUE_SEND_BOUND": 3,
+  "CBMCFLAGS": [
+    "--unwind 1",
+    "--signed-overflow-check",
+    "--pointer-overflow-check",
+    "--unsigned-overflow-check",
+    "--unwindset xQueueGenericSend.0:{QUEUE_SEND_BOUND},prvUnlockQueue.0:{LOCK_BOUND},prvUnlockQueue.1:{LOCK_BOUND}",
+    "--nondet-static"
+  ],
+  "OBJS": [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/Source/queue.goto",
+    "$(FREERTOS)/Source/list.goto",
+    "$(FREERTOS)/Test/CBMC/proofs/CBMCStubLibrary/tasksStubs.goto"
+  ],
+  "DEF": [
+    "configUSE_TRACE_FACILITY=0",
+    "configGENERATE_RUN_TIME_STATS=0",
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+    "configUSE_QUEUE_SETS=0",
+    "LOCK_BOUND={LOCK_BOUND}",
+    "QUEUE_SEND_BOUND={QUEUE_SEND_BOUND}"
+  ],
+  "INC": [
+    "."
+  ],
+  "GENERATE_HEADER": [
+    "queue_datastructure.h"
+  ],
+  "EXPECTED": true
+}

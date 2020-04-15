@@ -1,0 +1,23 @@
+{
+  "ENTRY": "TaskDelay",
+  "DEF": [
+    "FREERTOS_MODULE_TEST",
+    "PENDED_TICKS=1",
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+    "configUSE_TRACE_FACILITY=0",
+    "configGENERATE_RUN_TIME_STATS=0"
+  ],
+  "CBMCFLAGS": [
+    "--unwind 1",
+    "--unwindset prvInitialiseTaskLists.0:8,vListInsert.0:4"
+  ],
+  "OBJS": [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/Source/tasks.goto",
+    "$(FREERTOS)/Source/list.goto"
+  ],
+  "INC": [
+    "$(FREERTOS)/Test/CBMC/proofs/Task/TaskDelay/"
+  ],
+  "EXPECTED": true
+}

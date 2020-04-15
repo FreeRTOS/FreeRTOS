@@ -1,0 +1,17 @@
+{
+  "ENTRY": "ARPGetCacheEntry",
+  "CBMCFLAGS": [
+    "--unwind 1",
+    "--unwindset prvCacheLookup.0:7",
+    "--nondet-static"
+  ],
+  "OBJS": [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.goto"
+  ],
+  "DEF": [
+    "ipconfigARP_STORES_REMOTE_ADDRESSES=0",
+    "ipconfigUSE_LLMNR=1"
+  ],
+  "EXPECTED": true
+}

@@ -1,0 +1,31 @@
+{
+  "ENTRY": "QueueGenericCreate",
+  "CBMC_OBJECT_BITS": "7",
+  "CBMC_OBJECT_MAX_SIZE": "\"((UINT32_MAX>>(CBMC_OBJECT_BITS+1))\"",
+  "CBMCFLAGS": [
+    "--unwind 1",
+    "--signed-overflow-check",
+    "--pointer-overflow-check",
+    "--unsigned-overflow-check"
+  ],
+  "OBJS": [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/Source/list.goto",
+    "$(FREERTOS)/Source/queue.goto"
+  ],
+  "DEF": [
+    "CBMC_OBJECT_BITS={CBMC_OBJECT_BITS}",
+    "CBMC_OBJECT_MAX_SIZE={CBMC_OBJECT_MAX_SIZE}",
+    "configUSE_TRACE_FACILITY=0",
+    "configGENERATE_RUN_TIME_STATS=0",
+    "configUSE_MUTEXES=1",
+    "'mtCOVERAGE_TEST_MARKER()=__CPROVER_assert(1, \"Coverage marker\")'",
+    "configSUPPORT_STATIC_ALLOCATION=1",
+    "configUSE_QUEUE_SETS=1",
+    "configSUPPORT_DYNAMIC_ALLOCATION=1"
+  ],
+  "GENERATE_HEADER": [
+    "queue_datastructure.h"
+  ],
+  "EXPECTED": true
+}

@@ -38,18 +38,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 1 then FreeRTOS_debug_printf should be defined to the function used to print
  * out the debugging messages. */
 #define ipconfigHAS_DEBUG_PRINTF    0
-#if ( ipconfigHAS_DEBUG_PRINTF == 1 )
-    #define FreeRTOS_debug_printf( X )    configPRINTF( X )
-#endif
 
 /* Set to 1 to print out non debugging messages, for example the output of the
  * FreeRTOS_netstat() command, and ping replies.  If ipconfigHAS_PRINTF is set to 1
  * then FreeRTOS_printf should be set to the function used to print out the
  * messages. */
 #define ipconfigHAS_PRINTF    1
-#if ( ipconfigHAS_PRINTF == 1 )
-    #define FreeRTOS_printf( X )    configPRINTF( X )
-#endif
 
 /* Define the byte order of the target MCU (the MCU FreeRTOS+TCP is executing
  * on).  Valid options are pdFREERTOS_BIG_ENDIAN and pdFREERTOS_LITTLE_ENDIAN. */
@@ -296,12 +290,5 @@ extern uint32_t ulRand();
 
 #define ipconfigSOCKET_HAS_USER_WAKE_CALLBACK    ( 1 )
 #define ipconfigUSE_CALLBACKS                    ( 0 )
-
-
-#define portINLINE                               __inline
-
-void vApplicationMQTTGetKeys( const char ** ppcRootCA,
-                              const char ** ppcClientCert,
-                              const char ** ppcClientPrivateKey );
 
 #endif /* FREERTOS_IP_CONFIG_H */

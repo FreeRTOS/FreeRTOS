@@ -16,8 +16,8 @@ def patch():
     failed_patches = []
     for tmpfile in glob(os.path.join(PATCHES_DIR, "*.patch")):
         print("patch", tmpfile)
-        result = subprocess.run(["git", "apply", "--ignore-whitespace", tmpfile],
-                                cwd=os.path.join("..", "..", ".."))
+        result = subprocess.run(["git", "apply", "--ignore-space-change", "--ignore-whitespace", tmpfile],
+                                cwd=os.path.join("..", "..", "..", ".."))
         if result.returncode:
             failed_patches.append(tmpfile)
             logging.error("patching failed: %s", tmpfile)

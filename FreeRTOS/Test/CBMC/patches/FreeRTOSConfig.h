@@ -134,14 +134,11 @@ extern void vAssertCalled( const char * pcFile,
 #define configASSERT( x )    if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )
 #endif
 
-/* The function that implements FreeRTOS printf style output, and the macro
- * that maps the configPRINTF() macros to that function. */
-extern void vLoggingPrintf( const char * pcFormat,
-                            ... );
-#define configPRINTF( X )    vLoggingPrintf X
+/* Remove logging in formal verification */
+#define configPRINTF( X )
 
 /* Non-format version thread-safe print. */
-#define configPRINT_STRING( X )    vLoggingPrint( X )
+#define configPRINT_STRING( X )
 
 /* Application specific definitions follow. **********************************/
 

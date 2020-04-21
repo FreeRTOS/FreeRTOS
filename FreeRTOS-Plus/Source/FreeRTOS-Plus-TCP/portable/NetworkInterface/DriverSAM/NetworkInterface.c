@@ -173,7 +173,7 @@ static BaseType_t xPHY_Read( BaseType_t xAddress, BaseType_t xRegister, uint32_t
 static BaseType_t xPHY_Write( BaseType_t xAddress, BaseType_t xRegister, uint32_t ulValue );
 
 #if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 1 ) && ( ipconfigHAS_TX_CRC_OFFLOADING == 0 )
-	void vGMACGenerateChecksum( uint8_t *apBuffer );
+	void vGMACGenerateChecksum( uint8_t *apBuffer, size_t uxLength );
 #endif
 
 /*
@@ -505,14 +505,6 @@ uint32_t ulTransmitSize;
 		ulTransmitSize = NETWORK_BUFFER_SIZE;
 	}
 	do {
-		if( xCheckLoopback( pxDescriptor, bReleaseAfterSend ) != 0 )
-		{
-            /* The packet has been sent back to the IP-task.
-            The IP-task will further handle it.
-            Do not release the descriptor. */
-            bReleaseAfterSend = pdFALSE;
-			break;
-		}
 		if( xPhyObject.ulLinkStatusMask == 0ul )
 		{
 			/* Do not attempt to send packets as long as the Link Status is low. */
@@ -711,9 +703,9 @@ static void prvEthernetUpdateConfig( BaseType_t xForce )
 
 //#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 1 ) && ( ipconfigHAS_TX_CRC_OFFLOADING == 0 )
 
-	void vGMACGenerateChecksum( uint8_t *apBuffer )
+	void vGMACGenerateChecksum( uint8_t *pucBuffer, size_t uxLength )
 	{
-	ProtocolPacket_t *xProtPacket = (ProtocolPacket_t *)apBuffer;
+	ProtocolPacket_t *xProtPacket = ( ProtocolPacket_t * ) pucBuffer;
 
 		if ( xProtPacket->xTCPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE )
 		{
@@ -725,7 +717,7 @@ static void prvEthernetUpdateConfig( BaseType_t xForce )
 			pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
 
 			/* Calculate the TCP checksum for an outgoing packet. */
-			usGenerateProtocolChecksum( ( uint8_t * ) apBuffer, pdTRUE );
+			usGenerateProtocolChecksum( pucBuffer, uxLength, pdTRUE );
 		}
 	}
 

@@ -641,7 +641,7 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 	return GMAC_OK;
 }
 
-extern void vGMACGenerateChecksum( uint8_t *apBuffer );
+extern void vGMACGenerateChecksum( uint8_t *apBuffer, size_t uxLength );
 
 /**
  * \brief Send ulLength bytes from pcFrom. This copies the buffer to one of the
@@ -693,7 +693,7 @@ uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 			memcpy((void *)p_tx_td->addr, p_buffer, ul_size);
 		}
 		#endif /* ipconfigZERO_COPY_TX_DRIVER */
-		vGMACGenerateChecksum( ( uint8_t * ) p_tx_td->addr );
+		vGMACGenerateChecksum( ( uint8_t * ) p_tx_td->addr, ( size_t ) ul_size );
 	}
 
 	//#warning Trying out

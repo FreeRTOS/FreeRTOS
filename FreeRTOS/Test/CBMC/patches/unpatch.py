@@ -36,7 +36,7 @@ except FileNotFoundError:
     sys.exit(0)
 for tmpfile in glob(os.path.join(PATCHES_DIR, "*.patch")):
     print("unpatch", tmpfile)
-    result = subprocess.run(["git", "apply", "-R", "--ignore-whitespace", tmpfile],
-                            cwd=os.path.join("..", "..", ".."))
+    result = subprocess.run(["git", "apply", "-R", "--ignore-space-change", "--ignore-whitespace", tmpfile],
+                            cwd=os.path.join("..", "..", "..", ".."))
     if result.returncode:
         print("Unpatching failed: {}".format(tmpfile))

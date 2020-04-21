@@ -8,7 +8,7 @@ default:
 patch:
 	if [ ! -f $(PATCHED) ]; then \
 	  for p in *.patch; do \
-	    (cd ../../..; patch -p1 < cbmc/patches/$${p}) \
+	    (cd ../../..; patch -p1 < CBMC/patches/$${p}) \
 	  done; \
 	  cat > $(PATCHED) < /dev/null; \
 	fi

@@ -115,7 +115,7 @@ programs.
 ### Running the proofs
 
 Each of the leaf directories under `proofs` is a proof of the memory
-safety of a single entry point in a:FR. The scripts that you ran in the
+safety of a single entry point in FreeRTOS. The scripts that you ran in the
 previous step will have left a Makefile in each of those directories. To
 run a proof, change into the directory for that proof and run `nmake` on
 Windows or `make` on Linux or macOS. The proofs may take some time to

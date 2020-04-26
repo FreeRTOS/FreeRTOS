@@ -29,7 +29,7 @@
 {
   "ENTRY": "QueueGenericSend",
   "LOCK_BOUND": 2,
-  "QUEUE_SEND_BOUND":3,
+  "QUEUE_SEND_BOUND":4,
   "CBMCFLAGS": [
     "--unwind 1",
     "--signed-overflow-check",

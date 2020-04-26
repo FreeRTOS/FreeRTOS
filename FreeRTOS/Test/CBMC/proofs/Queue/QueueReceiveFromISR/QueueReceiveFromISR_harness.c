@@ -38,16 +38,12 @@
 #endif
 
 void harness(){
-	QueueHandle_t xQueue =
-	xUnconstrainedQueueBoundedItemSize(MAX_ITEM_SIZE);
+	QueueHandle_t xQueue = xUnconstrainedQueueBoundedItemSize(MAX_ITEM_SIZE);
 
 	BaseType_t *xHigherPriorityTaskWoken = pvPortMalloc(sizeof(BaseType_t));
+	void *pvBuffer = pvPortMalloc(xQueue->uxItemSize);
+	__CPROVER_assume( pvBuffer || xQueue->uxItemSize == 0 );
 
-	if(xQueue){
-		void *pvBuffer = pvPortMalloc(xQueue->uxItemSize);
-		if(!pvBuffer){
-			xQueue->uxItemSize = 0;
-		}
-		xQueueReceiveFromISR( xQueue, pvBuffer, xHigherPriorityTaskWoken );
-	}
+	xQueueReceiveFromISR( xQueue, pvBuffer, xHigherPriorityTaskWoken );
+
 }

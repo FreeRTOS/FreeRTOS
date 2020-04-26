@@ -74,7 +74,9 @@ QueueHandle_t xUnconstrainedQueueBoundedItemSize( UBaseType_t uxItemSizeBound ) 
 	
 	xQueue->cTxLock = nondet_int8_t();
 	xQueue->cRxLock = nondet_int8_t();
+	xQueue->uxLength = nondet_UBaseType_t();
 	xQueue->uxMessagesWaiting = nondet_UBaseType_t();
+
 	/* This is an invariant checked with a couple of asserts in the code base.
 	If it is false from the beginning, the CBMC proofs are not able to succeed*/
 	__CPROVER_assume(xQueue->uxMessagesWaiting < xQueue->uxLength);

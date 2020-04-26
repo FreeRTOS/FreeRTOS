@@ -63,9 +63,7 @@ void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut ){
 }
 
 void harness(){
-
 	xQueue = xUnconstrainedQueueBoundedItemSize(MAX_ITEM_SIZE);
-	__CPROVER_assume( xQueue );
 
 	void *pvBuffer = pvPortMalloc( xQueue->uxItemSize );
 	__CPROVER_assume( pvBuffer || xQueue->uxItemSize == 0 );

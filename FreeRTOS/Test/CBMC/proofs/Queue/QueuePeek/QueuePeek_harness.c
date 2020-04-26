@@ -35,7 +35,6 @@
 
 void harness(){
 	QueueHandle_t xQueue = xUnconstrainedQueueBoundedItemSize(10);
-	__CPROVER_assume( xQueue );
 
 	void *pvItemToQueue = pvPortMalloc( xQueue->uxItemSize );
 	__CPROVER_assume( pvItemToQueue || xQueue->uxItemSize == 0 );

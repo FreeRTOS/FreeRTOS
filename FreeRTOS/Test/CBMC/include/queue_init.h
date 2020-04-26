@@ -124,20 +124,22 @@ QueueHandle_t xUnconstrainedQueue( void ) {
 /* Create a mostly unconstrained Mutex */
 QueueHandle_t xUnconstrainedMutex( void ) {
 	uint8_t ucQueueType;
-	QueueHandle_t xQueue =
-		xQueueCreateMutex(ucQueueType);
-	if(xQueue){
-		xQueue->cTxLock = nondet_int8_t();
-		xQueue->cRxLock = nondet_int8_t();
-		xQueue->uxMessagesWaiting = nondet_UBaseType_t();
-		/* This is an invariant checked with a couple of asserts in the code base.
-		   If it is false from the beginning, the CBMC proofs are not able to succeed*/
-		__CPROVER_assume(xQueue->uxMessagesWaiting < xQueue->uxLength);
-		xQueue->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
-		xQueue->xTasksWaitingToSend.uxNumberOfItems = nondet_UBaseType_t();
-		#if( configUSE_QUEUE_SETS == 1)
-			xQueueAddToSet(xQueue, xUnconstrainedQueueSet());
-		#endif
-	}
+	QueueHandle_t xQueue = xQueueCreateMutex(ucQueueType);
+	__CPROVER_assume(xQueue);
+
+	xQueue->cTxLock = nondet_int8_t();
+	xQueue->cRxLock = nondet_int8_t();
+	xQueue->uxLength = nondet_UBaseType_t();
+	xQueue->uxMessagesWaiting = nondet_UBaseType_t();
+
+	/* This is an invariant checked with a couple of asserts in the code base.
+	    If it is false from the beginning, the CBMC proofs are not able to succeed*/
+	__CPROVER_assume(xQueue->uxMessagesWaiting < xQueue->uxLength);
+	xQueue->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
+	xQueue->xTasksWaitingToSend.uxNumberOfItems = nondet_UBaseType_t();
+	#if( configUSE_QUEUE_SETS == 1)
+		xQueueAddToSet(xQueue, xUnconstrainedQueueSet());
+	#endif
+
 	return xQueue;
 }

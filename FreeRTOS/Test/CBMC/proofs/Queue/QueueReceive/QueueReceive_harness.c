@@ -60,29 +60,21 @@ QueueHandle_t xQueue;
 void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut ){
 	__CPROVER_assert(__CPROVER_w_ok(&(pxTimeOut->xOverflowCount), sizeof(BaseType_t)), "pxTimeOut should be a valid pointer and xOverflowCount writable");
 	__CPROVER_assert(__CPROVER_w_ok(&(pxTimeOut->xTimeOnEntering), sizeof(TickType_t)), "pxTimeOut should be a valid pointer and xTimeOnEntering writable");
-	xQueue->uxMessagesWaiting = nondet_BaseType_t();
 }
 
 void harness(){
-	vInitTaskCheckForTimeOut(0, QUEUE_RECEIVE_BOUND - 1);
 
 	xQueue = xUnconstrainedQueueBoundedItemSize(MAX_ITEM_SIZE);
+	__CPROVER_assume( xQueue );
 
+	void *pvBuffer = pvPortMalloc( xQueue->uxItemSize );
+	__CPROVER_assume( pvBuffer || xQueue->uxItemSize == 0 );
 
 	TickType_t xTicksToWait;
-	if(xState == taskSCHEDULER_SUSPENDED){
-		xTicksToWait = 0;
-	}
+	__CPROVER_assume( xState != taskSCHEDULER_SUSPENDED || xTicksToWait == 0 );
 
-    if(xQueue){
-		xQueue->cTxLock = LOCK_BOUND - 1;
-		xQueue->cRxLock = LOCK_BOUND - 1;
-
-    	void *pvBuffer = pvPortMalloc(xQueue->uxItemSize);
-    	if(!pvBuffer){
-    		xQueue->uxItemSize = 0;
-    	}
-    	xQueueReceive( xQueue, pvBuffer, xTicksToWait );
-    }
-
+	/* This is for loop unwinding. */
+	__CPROVER_assume( xQueue->cTxLock = LOCK_BOUND - 1 );
+	__CPROVER_assume( xQueue->cRxLock = LOCK_BOUND - 1 );
+	xQueueReceive( xQueue, pvBuffer, xTicksToWait );
 }

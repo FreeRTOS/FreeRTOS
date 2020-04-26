@@ -29,7 +29,7 @@
 {
   "ENTRY": "QueueReceive",
   "LOCK_BOUND": 2,
-  "QUEUE_RECEIVE_BOUND": 3,
+  "QUEUE_RECEIVE_BOUND": 4,
   "CBMCFLAGS": [
     "--unwind 1",
     "--signed-overflow-check",

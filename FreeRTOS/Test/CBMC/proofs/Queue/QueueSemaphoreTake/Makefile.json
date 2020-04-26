@@ -30,7 +30,8 @@
   "ENTRY": "QueueSemaphoreTake",
 
   # This bound on queue size is needed to bound a loop in prvUnlockQueue
-  "QUEUE_BOUND": 5,
+  "LOCK_BOUND":5,
+  "SEM_TAKE_BOUND" :4,
 
   "CBMCFLAGS": [
     "--unwind 2",
@@ -38,7 +39,7 @@
     "--pointer-overflow-check",
     "--unsigned-overflow-check",
     "--nondet-static",
-    "--unwindset prvUnlockQueue.0:{QUEUE_BOUND},prvUnlockQueue.1:{QUEUE_BOUND},xQueueSemaphoreTake.0:3"
+    "--unwindset prvUnlockQueue.0:{LOCK_BOUND},prvUnlockQueue.1:{LOCK_BOUND},xQueueSemaphoreTake.0:{SEM_TAKE_BOUND}"
   ],
   "OBJS": [
     "$(ENTRY)_harness.goto",
@@ -49,7 +50,7 @@
   "DEF": [
     "configUSE_TRACE_FACILITY=0",
     "configGENERATE_RUN_TIME_STATS=0",
-    "PRV_UNLOCK_QUEUE_BOUND={QUEUE_BOUND}"
+    "LOCK_BOUND={LOCK_BOUND}"
   ],
   "INC": [
     "."

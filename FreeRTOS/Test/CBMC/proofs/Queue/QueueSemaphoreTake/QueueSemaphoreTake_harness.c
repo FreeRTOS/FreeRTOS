@@ -73,9 +73,9 @@ void harness()
 		   positive 8-bit integer value. We subtract one,
 		   because the bound must be one greater than the
 		   amount of loop iterations. */
-		__CPROVER_assert(PRV_UNLOCK_QUEUE_BOUND > 0, "Make sure, a valid macro value is chosen.");
-		xQueue->cTxLock = PRV_UNLOCK_QUEUE_BOUND - 1;
-		xQueue->cRxLock = PRV_UNLOCK_QUEUE_BOUND - 1;
+		__CPROVER_assert(LOCK_BOUND > 0, "Make sure, a valid macro value is chosen.");
+		xQueue->cTxLock = LOCK_BOUND - 1;
+		xQueue->cRxLock = LOCK_BOUND - 1;
 		((&(xQueue->xTasksWaitingToReceive))->xListEnd).pxNext->xItemValue = nondet_ticktype();
 
 		/* This assumptions is required to prevent an overflow in l. 2057 of queue.c

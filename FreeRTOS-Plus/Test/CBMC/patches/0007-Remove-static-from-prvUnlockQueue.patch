@@ -1,0 +1,22 @@
+diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
+index 17a6964e..60ea3e69 100644
+--- a/FreeRTOS/Source/queue.c
++++ b/FreeRTOS/Source/queue.c
+@@ -175,7 +175,7 @@ typedef xQUEUE Queue_t;
+  * to indicate that a task may require unblocking.  When the queue in unlocked
+  * these lock counts are inspected, and the appropriate action taken.
+  */
+-static void prvUnlockQueue( Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
++void prvUnlockQueue( Queue_t * const pxQueue ) PRIVILEGED_FUNCTION;
+
+ /*
+  * Uses a critical section to determine if there is any data in a queue.
+@@ -2175,7 +2175,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
+ }
+ /*-----------------------------------------------------------*/
+
+-static void prvUnlockQueue( Queue_t * const pxQueue )
++void prvUnlockQueue( Queue_t * const pxQueue )
+ {
+ 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
+

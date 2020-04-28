@@ -135,7 +135,7 @@ report: cbmc.txt property.xml coverage.xml
 	--srcdir $(FREERTOS) \
 	--blddir $(FREERTOS) \
 	--htmldir html \
-	--srcexclude "(.@FORWARD_SLASH@doc|.@FORWARD_SLASH@tests|.@FORWARD_SLASH@vendors)" \
+	--srcexclude "(.@FORWARD_SLASH@Demo)" \
 	--result cbmc.txt \
 	--property property.xml \
 	--block coverage.xml

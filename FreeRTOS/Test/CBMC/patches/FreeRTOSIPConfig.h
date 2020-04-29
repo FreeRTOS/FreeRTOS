@@ -188,7 +188,9 @@ extern uint32_t ulRand();
  * are available to the IP stack.  The total number of network buffers is limited
  * to ensure the total amount of RAM that can be consumed by the IP stack is capped
  * to a pre-determinable value. */
-#define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS    60
+#ifndef ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS
+	#define ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS    60
+#endif
 
 /* A FreeRTOS queue is used to send events from application tasks to the IP
  * stack.  ipconfigEVENT_QUEUE_LENGTH sets the maximum number of events that can

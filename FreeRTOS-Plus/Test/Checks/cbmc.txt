@@ -1,0 +1,4 @@
+../../../FreeRTOS-Plus/Test/CBMC/patches/FreeRTOSConfig.h and ../../../FreeRTOS/Test/CBMC/patches/FreeRTOSConfig.h DO NOT match
+
+
+VERIFICATION FAILED

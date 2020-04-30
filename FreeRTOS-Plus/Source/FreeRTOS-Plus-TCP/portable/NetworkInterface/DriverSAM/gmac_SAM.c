@@ -261,6 +261,10 @@ void gmac_reset_tx_mem(gmac_device_t* p_dev)
 	{
 		gmac_set_tx_priority_queue(p_hw, (uint32_t)&gs_tx_desc_null, GMAC_QUE_1);
 		gmac_set_tx_priority_queue(p_hw, (uint32_t)&gs_tx_desc_null, GMAC_QUE_2);
+		/* Note that SAME70 REV B had 6 priority queues. */
+		gmac_set_tx_priority_queue(p_hw, (uint32_t)&gs_tx_desc_null, GMAC_QUE_3);
+		gmac_set_tx_priority_queue(p_hw, (uint32_t)&gs_tx_desc_null, GMAC_QUE_4);
+		gmac_set_tx_priority_queue(p_hw, (uint32_t)&gs_tx_desc_null, GMAC_QUE_5);
 	}
 	#endif
 }

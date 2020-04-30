@@ -121,6 +121,10 @@ FreeRTOSConfig.h as configMINIMAL_STACK_SIZE is a user definable constant. */
 	#define configEMAC_TASK_STACK_SIZE ( 4 * configMINIMAL_STACK_SIZE )
 #endif
 
+#ifndef niEMAC_HANDLER_TASK_PRIORITY
+	#define niEMAC_HANDLER_TASK_PRIORITY	configMAX_PRIORITIES - 1
+#endif
+
 #if( __DCACHE_PRESENT != 0 ) && defined( CONF_BOARD_ENABLE_CACHE )
 	#include "core_cm7.h"
 	#warning This driver assumes the presence of DCACHE
@@ -430,7 +434,7 @@ const TickType_t x5_Seconds = 5000UL;
 
 		/* The handler task is created at the highest possible priority to
 		ensure the interrupt handler can return directly to it. */
-		xTaskCreate( prvEMACHandlerTask, "EMAC", configEMAC_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xEMACTaskHandle );
+		xTaskCreate( prvEMACHandlerTask, "EMAC", configEMAC_TASK_STACK_SIZE, NULL, niEMAC_HANDLER_TASK_PRIORITY, &xEMACTaskHandle );
 		configASSERT( xEMACTaskHandle );
 	}
 

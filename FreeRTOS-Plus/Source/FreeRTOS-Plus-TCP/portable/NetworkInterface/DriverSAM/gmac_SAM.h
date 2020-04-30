@@ -161,6 +161,10 @@ typedef enum  {
 #if !(SAM4E)
 	GMAC_QUE_1 = 1,
 	GMAC_QUE_2 = 2,
+	/* Only SAM E70 Rev-B. */
+	GMAC_QUE_3 = 3,
+	GMAC_QUE_4 = 4,
+	GMAC_QUE_5 = 5,
 #endif
 #  if !defined(__DOXYGEN__)
 	GMAC_QUE_N,

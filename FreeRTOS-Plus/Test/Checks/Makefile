@@ -4,9 +4,9 @@ BASE_DIR=../../..
 FILE1=$(BASE_DIR)/FreeRTOS/Test/CBMC/patches/FreeRTOSConfig.h
 FILE2=$(BASE_DIR)/FreeRTOS-Plus/Test/CBMC/patches/FreeRTOSConfig.h
 
-.PHONY: Check clean
+.PHONY: report clean
 
-Check:
+report:
 	@rm -rf cbmc.txt
 	@cmp -s $(FILE1) $(FILE2);					\
 	RETVAL=$$?;							\

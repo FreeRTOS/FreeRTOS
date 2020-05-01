@@ -705,7 +705,7 @@ BaseType_t xNeedCheck = pdFALSE;
 			}
 		}
 		vTaskSetTimeOutState( &( pxPhyObject->xLinkStatusTimer ) );
-		if( ( pxPhyObject->ulLinkStatusMask & phyBMSR_LINK_STATUS ) != 0 )
+		if( ( pxPhyObject->ulLinkStatusMask & ( ulBitMask >> 1 ) ) != 0 )
 		{
 			/* The link status is high, so don't poll the PHY too often. */
 			pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );

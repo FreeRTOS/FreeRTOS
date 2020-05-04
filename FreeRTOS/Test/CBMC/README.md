@@ -2,7 +2,7 @@ CBMC Proof Infrastructure
 =========================
 
 This directory contains automated proofs of the memory safety of various parts
-of the amazon:FreeRTOS codebase. A continuous integration system validates every
+of the FreeRTOS codebase. A continuous integration system validates every
 pull request posted to the repository against these proofs, and developers can
 also run the proofs on their local machines.
 
@@ -27,16 +27,16 @@ CMake-based build
 
 Follow the CBMC installation instructions below.
 
-Suppose that the amazon-freertos source tree is located at
-`~/src/amazon-freertos` and you wish to build the proofs into
-`~/build/amazon-freertos`. The following three commands build and run
+Suppose that the freertos source tree is located at
+`~/src/freertos` and you wish to build the proofs into
+`~/build/freertos`. The following three commands build and run
 the proofs:
 
 ```sh
-cmake -S~/src/amazon-freertos -B~/build/amazon-freertos -DCOMPILER=cbmc
+cmake -S~/src/freertos -B~/build/freertos -DCOMPILER=cbmc
 -DBOARD=windows -DVENDOR=pc
-cmake --build ~/build/amazon-freertos --target all-proofs
-cd ~/build/amazon-freertos && ctest -L cbmc
+cmake --build ~/build/freertos --target all-proofs
+cd ~/build/freertos && ctest -L cbmc
 ```
 
 Alternatively, this single command does the same thing, assuming you
@@ -44,8 +44,8 @@ have the Ninja build tool installed:
 
 ```sh
 ctest --build-and-test                \
-    ~/src/amazon-freertos             \
-    ~/build/amazon-freertos           \
+    ~/src/freertos             \
+    ~/build/freertos           \
     --build-target cbmc               \
     --build-generator Ninja           \
     --build-options                   \
@@ -115,7 +115,7 @@ programs.
 ### Running the proofs
 
 Each of the leaf directories under `proofs` is a proof of the memory
-safety of a single entry point in a:FR. The scripts that you ran in the
+safety of a single entry point in FreeRTOS. The scripts that you ran in the
 previous step will have left a Makefile in each of those directories. To
 run a proof, change into the directory for that proof and run `nmake` on
 Windows or `make` on Linux or macOS. The proofs may take some time to

@@ -1,0 +1,22 @@
+diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
+index df2b9c8c..c2265c26 100644
+--- a/FreeRTOS/Source/queue.c
++++ b/FreeRTOS/Source/queue.c
+@@ -105,7 +105,7 @@ static BaseType_t prvIsQueueFull( const Queue_t *pxQueue ) PRIVILEGED_FUNCTION;
+  * Copies an item into the queue, either at the front of the queue or the
+  * back of the queue.
+  */
+-static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
++BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition ) PRIVILEGED_FUNCTION;
+
+ /*
+  * Copies an item out of a queue.
+@@ -1985,7 +1985,7 @@ Queue_t * const pxQueue = xQueue;
+ #endif /* configUSE_MUTEXES */
+ /*-----------------------------------------------------------*/
+
+-static BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
++BaseType_t prvCopyDataToQueue( Queue_t * const pxQueue, const void *pvItemToQueue, const BaseType_t xPosition )
+ {
+ BaseType_t xReturn = pdFALSE;
+ UBaseType_t uxMessagesWaiting;

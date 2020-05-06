@@ -25,14 +25,19 @@ Import("env")
 
 env.Append(CPPPATH = [
     ".",
+    "./utils",
     "FreeRTOS/Source/include",
     "FreeRTOS/Source/portable/ThirdParty/GCC/Posix",
     "FreeRTOS/Demo/Common/include",
     "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/Include",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/",
 ])
 
 env.Append(LIBS = [
     "pthread",
+    "pcap",
 ])
 
 src = [
@@ -40,7 +45,11 @@ src = [
     "main.c",
     "main_blinky.c",
     "main_full.c",
+    "main_networking.c",
     "run-time-stats-utils.c",
+    "utils/wait_for_event.c",
+    "SimpleTCPEchoServer.c",
+    "TCPEchoClient_SingleTasks.c",
 
     # FreeRTOS kernel
     "FreeRTOS/Source/event_groups.c",
@@ -55,6 +64,19 @@ src = [
 
     # Posix port.
     "FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c",
+
+    # FreeRTOS TCP
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_2.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_Sockets.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/NetworkInterface.c",
 
     # Demo library.
     "FreeRTOS/Demo/Common/Minimal/AbortDelay.c",
@@ -92,10 +114,14 @@ if GetOption("coverage"):
     env.Append(CFLAGS = [
         "-fprofile-arcs",
         "-ftest-coverage",
+        "-ggdb3",
+        "-Og",
     ])
     env.Append(LINKFLAGS = [
         "-fprofile-arcs",
         "-ftest-coverage",
+        "-ggdb3",
+        "-Og",
     ])
 
     src += [

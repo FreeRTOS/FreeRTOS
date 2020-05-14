@@ -170,56 +170,56 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
-        <avrgcc.common.Device>-mmcu=atmega2560 -B "%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\gcc\dev\atmega2560"</avrgcc.common.Device>
-        <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
-        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
-        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
-        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
-        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
-        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
-        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-        <avrgcc.compiler.symbols.DefSymbols>
-          <ListValues>
-            <Value>DEBUG</Value>
-          </ListValues>
-        </avrgcc.compiler.symbols.DefSymbols>
-        <avrgcc.compiler.directories.IncludePaths>
-          <ListValues>
-            <Value>../examples/include</Value>
-            <Value>../include</Value>
-            <Value>../utils</Value>
-            <Value>../utils/assembler</Value>
-            <Value>../</Value>
-            <Value>../../../../Source/include</Value>
-            <Value>../../../../Source/portable/GCC/ATmegaxxxx</Value>
-            <Value>../demo</Value>
-            <Value>../Config</Value>
-            <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
-          </ListValues>
-        </avrgcc.compiler.directories.IncludePaths>
-        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
-        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-        <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
-        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-        <avrgcc.linker.libraries.Libraries>
-          <ListValues>
-            <Value>libm</Value>
-          </ListValues>
-        </avrgcc.linker.libraries.Libraries>
-        <avrgcc.assembler.general.IncludePaths>
-          <ListValues>
-            <Value>../Config</Value>
-            <Value>../examples/include</Value>
-            <Value>../include</Value>
-            <Value>../utils</Value>
-            <Value>../utils/assembler</Value>
-            <Value>../</Value>
-            <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
-          </ListValues>
-        </avrgcc.assembler.general.IncludePaths>
-        <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
-      </AvrGcc>
+  <avrgcc.common.Device>-mmcu=atmega2560 -B "%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\gcc\dev\atmega2560"</avrgcc.common.Device>
+  <avrgcc.common.optimization.RelaxBranches>True</avrgcc.common.optimization.RelaxBranches>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+  <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>../examples/include</Value>
+      <Value>../include</Value>
+      <Value>../utils</Value>
+      <Value>../utils/assembler</Value>
+      <Value>../</Value>
+      <Value>../../../../Source/include</Value>
+      <Value>../../../../Source/portable/ThirdParty/GCC/ATmega</Value>
+      <Value>../demo</Value>
+      <Value>../Config</Value>
+      <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
+    </ListValues>
+  </avrgcc.compiler.directories.IncludePaths>
+  <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+  <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+  <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+  <avrgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libm</Value>
+    </ListValues>
+  </avrgcc.linker.libraries.Libraries>
+  <avrgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>../Config</Value>
+      <Value>../examples/include</Value>
+      <Value>../include</Value>
+      <Value>../utils</Value>
+      <Value>../utils/assembler</Value>
+      <Value>../</Value>
+      <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
+    </ListValues>
+  </avrgcc.assembler.general.IncludePaths>
+  <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
+</AvrGcc>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
@@ -232,9 +232,9 @@
     <Folder Include="FreeRTOS\include" />
     <Folder Include="FreeRTOS\portable" />
     <Folder Include="FreeRTOS\portable\MemMang" />
-    <Folder Include="FreeRTOS\portable\ATmega" />
     <Folder Include="FreeRTOS" />
     <Folder Include="demo" />
+    <Folder Include="FreeRTOS\portable\ATmega" />
     <Folder Include="include\" />
     <Folder Include="modules\" />
     <Folder Include="modules\nvmctrl\" />
@@ -338,17 +338,17 @@
       <SubType>compile</SubType>
       <Link>FreeRTOS\list.c</Link>
     </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\ATmegaxxxx\port.c">
-      <SubType>compile</SubType>
-      <Link>FreeRTOS\portable\ATmega\port.c</Link>
-    </Compile>
-    <Compile Include="..\..\..\Source\portable\GCC\ATmegaxxxx\portmacro.h">
-      <SubType>compile</SubType>
-      <Link>FreeRTOS\portable\ATmega\portmacro.h</Link>
-    </Compile>
     <Compile Include="..\..\..\Source\portable\MemMang\heap_4.c">
       <SubType>compile</SubType>
       <Link>FreeRTOS\portable\MemMang\heap_4.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\portable\ThirdParty\GCC\ATmega\port.c">
+      <SubType>compile</SubType>
+      <Link>FreeRTOS\portable\ATmega\port.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\Source\portable\ThirdParty\GCC\ATmega\portmacro.h">
+      <SubType>compile</SubType>
+      <Link>FreeRTOS\portable\ATmega\portmacro.h</Link>
     </Compile>
     <Compile Include="..\..\..\Source\queue.c">
       <SubType>compile</SubType>

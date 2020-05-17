@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.3.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -27,7 +27,8 @@
 
 
 /*
- * Tests the behaviour of direct task notifications.
+ * Tests the behaviour of arrays of task notifications per task.  This file is
+ * used in combination with TaskNotify.c.
  */
 
 /* Standard includes. */
@@ -57,65 +58,105 @@
 #define notifyUINT32_HIGH_BYTE	( ( uint32_t ) 0xff000000 )
 #define notifyUINT32_LOW_BYTE	( ( uint32_t ) 0x000000ff )
 
-#define notifySUSPENDED_TEST_TIMER_PERIOD pdMS_TO_TICKS( 50 )
-
 /*-----------------------------------------------------------*/
 
 /*
- * Implementation of the task that gets notified.
+ * Implementation of the task that runs the tests - the task runs some tests
+ * itself, and others where notifications are sent from a software timer or
+ * an interrupt (specifically the tick hook function).
  */
 static void prvNotifiedTask( void *pvParameters );
 
 /*
- * Performs a few initial tests that can be done prior to creating the second
- * task.
+ * Performs the tests that don't require notifications to be sent from a
+ * remote source.
  */
 static void prvSingleTaskTests( void );
 
 /*
- * Software timer callback function from which xTaskNotify() is called.
+ * Uses a software time to send notifications to the task while the task is
+ * suspended.
  */
-static void prvNotifyingTimer( TimerHandle_t xTimer );
+static void prvTestNotifyTaskWhileSuspended( void );
+
+/*
+ * Uses a software timer to send notifications to the index within the array of
+ * task notifications on which the task is blocked.  The task should unblock and
+ * the state of all the other task notifications within the array should remain
+ * unchanged.
+ */
+static void prvBlockOnTheNotifiedIndex( void );
+
+/*
+ * As per prvBlockOnTheNotifiedIndex(), but this time the notification comes from
+ * the tick hook function, so from an interrupt rather than from a software timer.
+ */
+static void prvBlockOnNotificationsComingFromInterrupts( void );
+
+/*
+ * As per prvBlockOnTheNotifiedIndex(), except this time the notification is
+ * sent to an index within the task notification array on which the task is not
+ * blocked, so this time the task should not unblock and the state of all the
+ * task notifications other than the one to which the notification was actually
+ * sent should remain unchanged.
+ */
+static void prvBlockOnANonNotifiedIndex( void );
+
+/*
+ * Callback of the software timer used to send notifications for the
+ * prvBlockOnTheNotifiedIndex() and prvBlockOnANonNotifiedIndex() tests.
+ */
+static void prvNotifyingTimerCallback( TimerHandle_t xTimer );
+
+/*
+ * Callback for a timer that is used by the prvTestNotifyTaskWhileSuspended()
+ * test.
+ */
+static void prvSuspendedTaskTimerTestCallback( TimerHandle_t xExpiredTimer );
 
 /*
  * Utility function to create pseudo random numbers.
  */
 static UBaseType_t prvRand( void );
 
-/*
- * Callback for a timer that is used during preliminary testing.  The timer
- * tests the behaviour when 1: a task waiting for a notification is suspended
- * and then resumed without ever receiving a notification, and 2: when a task
- * waiting for a notification receives a notification while it is suspended.
- */
-static void prvSuspendedTaskTimerTestCallback( TimerHandle_t xExpiredTimer );
 
 /*-----------------------------------------------------------*/
 
-/* Used to latch errors during the test's execution. */
-static BaseType_t xErrorStatus = pdPASS;
+/* Counters used to check the task has not stalled.  ulFineCycleCount is
+incremented within each test.  ulCourseCycleCounter is incremented one every
+loop of all the tests to ensure each test is actually executing.  The check task
+calls xAreTaskNotificationArrayTasksStillRunning() (implemented within this
+file) to check both counters are changing. */
+static volatile uint32_t ulFineCycleCount = 0, ulCourseCycleCounter = 0;
 
-/* Used to ensure the task has not stalled. */
-static volatile uint32_t ulNotifyCycleCount = 0;
-
-/* The handle of the task that receives the notifications. */
+/* The handle of the task that runs the tests and receives the notifications
+from the software timers and interrupts. */
 static TaskHandle_t xTaskToNotify = NULL;
 
-/* Used to count the notifications sent to the task from a software timer and
-the number of notifications received by the task from the software timer.  The
-two should stay synchronised. */
-static uint32_t ulTimerNotificationsReceived = 0UL, ulTimerNotificationsSent = 0UL;
-
-/* The timer used to notify the task. */
-static TimerHandle_t xTimer = NULL;
+/* The software timers used to send notifications to the main test task. */
+static TimerHandle_t xIncrementingIndexTimer = NULL;
+static TimerHandle_t xNotifyWhileSuspendedTimer = NULL;
 
 /* Used by the pseudo random number generating function. */
 static size_t uxNextRand = 0;
+
+/* Used to communicate when to send a task notification to the tick hook tests. */
+static volatile BaseType_t xSendNotificationFromISR = pdFALSE;
 
 /*-----------------------------------------------------------*/
 
 void vStartTaskNotifyArrayTask( void  )
 {
+const TickType_t xIncrementingIndexTimerPeriod = pdMS_TO_TICKS( 100 );
+const TickType_t xSuspendTimerPeriod = pdMS_TO_TICKS( 50 );
+
+	/* Create the software timers used for these tests.  The time callbacks send
+	notifications to this task. */
+	xNotifyWhileSuspendedTimer = xTimerCreate( "SingleNotify", xSuspendTimerPeriod, pdFALSE, NULL, prvSuspendedTaskTimerTestCallback );
+	xIncrementingIndexTimer = xTimerCreate( "Notifier", xIncrementingIndexTimerPeriod, pdFALSE, NULL, prvNotifyingTimerCallback );
+	configASSERT( xNotifyWhileSuspendedTimer );
+	configASSERT( xIncrementingIndexTimer );
+
 	/* Create the task that performs some tests by itself, then loops around
 	being notified by both a software timer and an interrupt. */
 	xTaskCreate( prvNotifiedTask, /* Function that implements the task. */
@@ -130,6 +171,25 @@ void vStartTaskNotifyArrayTask( void  )
 }
 /*-----------------------------------------------------------*/
 
+static void prvNotifiedTask( void *pvParameters )
+{
+	/* Remove compiler warnings about unused parameters. */
+	( void ) pvParameters;
+
+	/* Loop through each set of test functions in turn.  See the comments above
+	the respective function prototypes above for more details. */
+	for( ;; )
+	{
+		prvSingleTaskTests();
+		prvTestNotifyTaskWhileSuspended();
+		prvBlockOnTheNotifiedIndex();
+		prvBlockOnANonNotifiedIndex();
+		prvBlockOnNotificationsComingFromInterrupts();
+		ulCourseCycleCounter++;
+	}
+}
+/*-----------------------------------------------------------*/
+
 static void prvSingleTaskTests( void )
 {
 const TickType_t xTicksToWait = pdMS_TO_TICKS( 100UL );
@@ -138,7 +198,6 @@ uint32_t ulNotifiedValue, ulLoop, ulNotifyingValue, ulPreviousValue, ulExpectedV
 TickType_t xTimeOnEntering;
 const uint32_t ulFirstNotifiedConst = 100001UL, ulSecondNotifiedValueConst = 5555UL, ulMaxLoops = 5UL;
 const uint32_t ulBit0 = 0x01UL, ulBit1 = 0x02UL;
-TimerHandle_t xSingleTaskTimer;
 UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
@@ -146,8 +205,9 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	Check blocking when there are no notifications. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* Send notifications to all array indexes other than the one on which
-		this task will block. */
+		/* Send notifications to the task notification in each index of the
+		task notification array other than the one on which this task will
+		block. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
@@ -158,29 +218,27 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		xTimeOnEntering = xTaskGetTickCount();
 		xReturned = xTaskNotifyArrayWait( uxIndexToTest, notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		/* Should have blocked for the entire block time. */
-		if( ( xTaskGetTickCount() - xTimeOnEntering ) < xTicksToWait )
-		{
-			xErrorStatus = pdFAIL;
-		}
+		configASSERT( ( xTaskGetTickCount() - xTimeOnEntering ) >= xTicksToWait );
 		configASSERT( xReturned == pdFAIL );
 		configASSERT( ulNotifiedValue == 0UL );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		( void ) ulNotifiedValue;
 
-		/* Clear all the other notifications again ready for the next round. */
+		/* Clear all the other notifications within the array of task
+		notifications again ready for the next round. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
 				xReturned = xTaskNotifyArrayStateClear( xTaskToNotify, uxOtherIndexes );
 
-				/* The notification state was set in the outer loop so expect
-				it to still be set. */
+				/* The notification state was set above so expect it to still be
+				set. */
 				configASSERT( xReturned == pdTRUE );
-				( void ) xReturned; /* In case configASSERT() is not defined. */
+				( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 			}
 		}
 	}
@@ -191,37 +249,36 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	Check no blocking when notifications are pending. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* First notify itself - this would not be a normal thing to do and is
-		done here for test purposes only. */
+		/* First notify the task notification at index uxIndexToTest within this
+		task's own array of task notifications - this would not be a normal
+		thing to do and is done here for test purposes only. */
 		xReturned = xTaskNotifyArrayAndQuery( xTaskToNotify, uxIndexToTest, ulFirstNotifiedConst, eSetValueWithoutOverwrite, &ulPreviousValue );
 
 		/* Even through the 'without overwrite' action was used the update should
 		have been successful. */
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		/* No bits should have been pending previously. */
 		configASSERT( ulPreviousValue == 0 );
 		( void ) ulPreviousValue;
 
-		/* The task should now have a notification pending, and so not time out. */
+		/* The task should now have a notification pending in the task
+		notification at index uxIndexToTest within the task notification array,
+		and so not time out. */
 		xTimeOnEntering = xTaskGetTickCount();
 		xReturned = xTaskNotifyArrayWait( uxIndexToTest, notifyUINT32_MAX, 0, &ulNotifiedValue, xTicksToWait );
-
-		if( ( xTaskGetTickCount() - xTimeOnEntering ) >= xTicksToWait )
-		{
-			xErrorStatus = pdFAIL;
-		}
+		configASSERT( ( xTaskGetTickCount() - xTimeOnEntering ) < xTicksToWait );
 
 		/* The task should have been notified, and the notified value should
 		be equal to ulFirstNotifiedConst. */
 		configASSERT( xReturned == pdPASS );
 		configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		( void ) ulNotifiedValue;
 
 		/* Incremented to show the task is still running. */
-		ulNotifyCycleCount++;
+		ulFineCycleCount++;
 	}
 
 
@@ -231,8 +288,8 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	Check the non-overwriting functionality. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* Send notifications to all array indexes other than the one on which
-		this task will block. */
+		/* Send notifications to all indexes with the array of task
+		notificaitons other than the one on which this task will block. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
@@ -241,17 +298,18 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			}
 		}
 
-		/* The notification is done twice using two different notification
+		/* The notification is performed twice using two different notification
 		values.  The action says don't overwrite so only the first notification
 		should pass and the value read back should also be that used with the
-		first notification. */
+		first notification. The notification is sent to the task notification at
+		index uxIndexToTest within the array of task notifications. */
 		xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulFirstNotifiedConst, eSetValueWithoutOverwrite );
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulSecondNotifiedValueConst, eSetValueWithoutOverwrite );
 		configASSERT( xReturned == pdFAIL );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		/* Waiting for the notification should now return immediately so a block
 		time of zero is used. */
@@ -259,28 +317,25 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		configASSERT( xReturned == pdPASS );
 		configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		( void ) ulNotifiedValue;
 
-		/* Clear all the other notifications again ready for the next round. */
+		/* Clear all the other task notifications within the array of task
+		notifications again ready for the next round. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
 				xReturned = xTaskNotifyArrayStateClear( xTaskToNotify, uxOtherIndexes );
-
-				/* The notification state in all the other indexes was set at
-				the start of the outer loop, so expect it to still be set. */
 				configASSERT( xReturned == pdTRUE );
-				( void ) xReturned; /* In case configASSERT() is not defined. */
+				( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 				ulNotifiedValue = ulTaskNotifyArrayValueClear( xTaskToNotify, uxOtherIndexes, notifyUINT32_MAX );
 
 				/* The notification value was set to ulFirstNotifiedConst in all
-				the other indexes by the outer loop, so expect it to still have
-				that value. */
+				the other indexes, so expect it to still have that value. */
 				configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
-				( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+				( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 			}
 		}
 	}
@@ -305,13 +360,13 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulFirstNotifiedConst, eSetValueWithOverwrite );
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulSecondNotifiedValueConst, eSetValueWithOverwrite );
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, notifyUINT32_MAX, &ulNotifiedValue, 0 );
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
 		( void ) ulNotifiedValue;
 
@@ -321,10 +376,10 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			{
 				xReturned = xTaskNotifyArrayStateClear( xTaskToNotify, uxOtherIndexes );
 				configASSERT( xReturned == pdTRUE );
-				( void ) xReturned; /* In case configASSERT() is not defined. */
+				( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 				ulNotifiedValue = ulTaskNotifyArrayValueClear( xTaskToNotify, uxOtherIndexes, notifyUINT32_MAX );
 				configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
-				( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+				( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 			}
 		}
 	}
@@ -333,40 +388,45 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/*-------------------------------------------------------------------------
-	Check notifications with no action pass without updating the value. */
+	For each task notification within the array of task notifications, check
+	notifications with no action pass without updating the value. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* First the notification values to ulSecondNotifiedValueConst. */
+		/* First set the notification values of the task notification at index
+		uxIndexToTest of the array of task notification to
+		ulSecondNotifiedValueConst. */
 		xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulSecondNotifiedValueConst, eSetValueWithOverwrite );
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
-		/* Even though ulFirstNotifiedConst is used as the value next the value
-		read back should remain at ulSecondNotifiedConst. */
+		/* Even though ulFirstNotifiedConst is used as the value next, the value
+		read back should remain at ulSecondNotifiedConst as the action is set
+		to eNoAction. */
 		xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulFirstNotifiedConst, eNoAction );
 		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
-		/* All array indexes up to and including uxIndexToTest should still
-		contain the same value. */
+		/* All task notifications in the array of task notifications up to and
+		including index uxIndexToTest should still contain the same value. */
 		for( uxOtherIndexes = 0; uxOtherIndexes <= uxIndexToTest; uxOtherIndexes++ )
 		{
 			/* First zero is bits to clear on entry, the second is bits to clear on
 			exist, the last 0 is the block time. */
 			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
 			configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 
-		/* All array indexes after uxIndexToTest should still contain 0 as they
-		have not been set in this loop yet.  This time use xTaskNotifyValueClear()
-		instead of xTaskNotifyArrayWait(), just for test coverage. */
+		/* All array indexes in the array of task notifications after index
+		uxIndexToTest should still contain 0 as they have not been set in this
+		loop yet.  This time use xTaskNotifyValueClear() instead of
+		xTaskNotifyArrayWait(), just for test coverage. */
 		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyArrayValueClear( NULL, uxOtherIndexes, 0 );
 			configASSERT( ulNotifiedValue == 0 );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 	}
 
@@ -374,16 +434,19 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/*-------------------------------------------------------------------------
-	Check incrementing values.  Send ulMaxLoop increment notifications, then
-	ensure the received value is as expected - which should be
+	Check incrementing values.  For each task notification in the array of task
+	notifications in turn, send ulMaxLoop increment notifications, then ensure
+	the received value is as expected - which should be
 	ulSecondNotificationValueConst plus how ever many times to loop iterated. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
 		for( ulLoop = 0; ulLoop < ulMaxLoops; ulLoop++ )
 		{
+			/* Increment the value of the task notification at index
+			uxIndexToTest within the array of task notifications. */
 			xReturned = xTaskNotifyArray( xTaskToNotify, uxIndexToTest, 0, eIncrement );
 			configASSERT( xReturned == pdPASS );
-			( void ) xReturned; /* In case configASSERT() is not defined. */
+			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 
 		/* All array indexes up to and including uxIndexToTest should still
@@ -394,25 +457,26 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			exist, the last 0 is the block time. */
 			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
 			configASSERT( ulNotifiedValue == ( ulSecondNotifiedValueConst + ulMaxLoops ) );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 
 		/* Should not be any notifications pending now. */
 		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, 0, &ulNotifiedValue, 0 );
 		configASSERT( xReturned == pdFAIL );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		( void ) ulNotifiedValue;
 
-		/* All array indexes after uxIndexToTest should still contain the
-		un-incremented ulSecondNotifiedValueConst as they have not been set in
-		this loop yet.  This time use xTaskNotifyValueClear() instead of
-		xTaskNotifyArrayWait(), just for test coverage. */
+		/* All notifications values in the array of task notifications after
+		index uxIndexToTest should still contain the un-incremented
+		ulSecondNotifiedValueConst as they have not been set in this loop yet.
+		This time use xTaskNotifyValueClear() instead of xTaskNotifyArrayWait(),
+		just for test coverage. */
 		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyArrayValueClear( NULL, uxOtherIndexes, 0 );
 			configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 	}
 
@@ -426,10 +490,11 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/*-------------------------------------------------------------------------
-	Check all bits can be set by notifying the task with one additional bit	set
-	on each notification, and exiting the loop when all the bits are found to be
-	set.  As there are 32-bits the loop should execute 32 times before all the
-	bits are found to be set. */
+	For each task notification in the array of task notifications in turn, check
+	all bits in the notification's value can be set by notifying the task with
+	one additional bit set on each notification, and exiting the loop when all
+	the bits are found to be set.  As there are 32-bits the loop should execute
+	32 times before all the bits are found to be set. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
 		ulNotifyingValue = 0x01;
@@ -437,7 +502,8 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		do
 		{
-			/* Set the next bit in the task's notified value. */
+			/* Set the next bit in the value of the task notification at index
+			uxIndexToTest within the array of task notifications. */
 			xTaskNotifyArray( xTaskToNotify, uxIndexToTest, ulNotifyingValue, eSetBits );
 
 			/* Wait for the notified value - which of course will already be
@@ -445,7 +511,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			exited when all the bits are set. */
 			xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, 0, &ulNotifiedValue, 0 );
 			configASSERT( xReturned == pdPASS );
-			( void ) xReturned; /* In case configASSERT() is not defined. */
+			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 			ulLoop++;
 
@@ -458,18 +524,20 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		all the bits were set. */
 		configASSERT( ulLoop == 32 );
 
-		/* All array indexes up to and including uxIndexToTest should still
-		have all bits set. */
+		/* The value of each task notification within the array of task
+		notifications up to and including index uxIndexToTest should still have
+		all bits set. */
 		for( uxOtherIndexes = 0; uxOtherIndexes <= uxIndexToTest; uxOtherIndexes++ )
 		{
 			/* First zero is bits to clear on entry, the second is bits to clear on
 			exist, the last 0 is the block time. */
 			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
 			configASSERT( ulNotifiedValue == notifyUINT32_MAX );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 
-		/* All array indexes after uxIndexToTest should still contain 0 as they
+		/* The value of each task notification within the array of task
+		notifications after index uxIndexToTest should still contain 0 as they
 		have not been set in this loop yet.  This time use xTaskNotifyValueClear()
 		instead of xTaskNotifyArrayWait(), just for test coverage. */
 		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
@@ -477,31 +545,34 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyArrayValueClear( NULL, uxOtherIndexes, 0 );
 			configASSERT( ulNotifiedValue == 0 );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 	}
 
 
 
 	/*-------------------------------------------------------------------------
-	Check bits are cleared on entry but not on exit when a notification fails
+	For each task notification within the array of task notification sin turn,
+	check bits are cleared on entry but not on exit when a notification fails
 	to arrive before timing out - both with and without a timeout value. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* Wait for the notification again - but this time it is not given by
-		anything and should return pdFAIL.  The parameters are set to clear bit zero
-		on entry and bit one on exit.  As no notification was received only the bit
+		/* Wait for the notification - but this time it is not given by anything
+		and should return pdFAIL.  The parameters are set to clear bit zero on
+		entry and bit one on exit.  As no notification was received only the bit
 		cleared on entry should actually get cleared. */
 		xReturned = xTaskNotifyArrayWait( uxIndexToTest, ulBit0, ulBit1, &ulNotifiedValue, xTicksToWait );
 		configASSERT( xReturned == pdFAIL );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
-		/* Notify the task with no action so as not to update the bits even though
-		notifyUINT32_MAX is used as the notification value. */
+		/* Send a notification with no action to the task notification at index
+		uxIndexToTest within the array of task notifications.  This should not
+		update the bits even though notifyUINT32_MAX is used as the notification
+		value. */
 		xTaskNotifyArray( xTaskToNotify, uxIndexToTest, notifyUINT32_MAX, eNoAction );
 
-		/* All array indexes up to and including uxIndexToTest should have the
-		modified value.  */
+		/* All array indexes up to and including uxIndexToTest within the array
+		of task notifications should have the modified value.  */
 		for( uxOtherIndexes = 0; uxOtherIndexes <= uxIndexToTest; uxOtherIndexes++ )
 		{
 			/* Reading back the value should find bit 0 is clear, as this was cleared
@@ -521,7 +592,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			}
 
 			configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~ulBit0 ) );
-			( void ) xReturned; /* In case configASSERT() is not defined. */
+			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 
 		/* All array indexes after uxIndexToTest should still contain notifyUINT32_MAX
@@ -532,7 +603,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyArrayValueClear( NULL, uxOtherIndexes, 0 );
 			configASSERT( ulNotifiedValue == notifyUINT32_MAX );
-			( void ) ulNotifiedValue; /* In case configASSERT() is not defined. */
+			( void ) ulNotifiedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
 	}
 
@@ -543,7 +614,8 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	Now try clearing the bit on exit. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* The task is notified first. */
+		/* The task is notified first using the task notification at index
+		uxIndexToTest within the array of task notifications. */
 		xTaskNotifyArray( xTaskToNotify, uxIndexToTest, 0, eNoAction );
 		xTaskNotifyArrayWait( uxIndexToTest, 0x00, ulBit1, &ulNotifiedValue, 0 );
 
@@ -558,7 +630,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0x00, 0x00, &ulNotifiedValue, 0 );
 		configASSERT( xReturned == pdFAIL );
 		configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~( ulBit0 | ulBit1 ) ) );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		/* No other indexes should have a notification pending. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
@@ -567,7 +639,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 			{
 				xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0x00UL, 0x00UL, &ulNotifiedValue, 0 );
 				configASSERT( xReturned == pdFAIL );
-				( void ) xReturned; /* In case configASSERT() is not defined. */
+				( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 			}
 		}
 	}
@@ -575,7 +647,8 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/*-------------------------------------------------------------------------
-	Now try querying the previous value while notifying a task. */
+	For each task notification within the array of task notifications, try
+	querying the previous value while notifying a task. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
 		xTaskNotifyArrayAndQuery( xTaskToNotify, uxIndexToTest, 0x00, eSetBits, &ulPreviousValue );
@@ -608,15 +681,17 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* No task should not have any notifications pending, so an attempt to
-		clear the notification state should fail. */
+		/* No task notification within the array of task notifications should
+		not have any notifications pending, so an attempt to clear the
+		notification state should fail. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
 		{
 			configASSERT( xTaskNotifyArrayStateClear( NULL, uxOtherIndexes ) == pdFALSE );
 		}
 
-		/* Get the task to notify itself.  This is not a normal thing to do, and
-		is only done here for test purposes. */
+		/* Get the task to notify itself using the task notification at index
+		uxIndexToTest within the array of task notifications.  This is not a
+		normal thing to do, and is only done here for test purposes. */
 		xTaskNotifyArrayAndQuery( xTaskToNotify, uxIndexToTest, ulFirstNotifiedConst, eSetValueWithoutOverwrite, &ulPreviousValue );
 
 		/* Now the notification state should be eNotified, so it should now be
@@ -636,12 +711,13 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/* ------------------------------------------------------------------------
-	Clear bits in the notification value. */
-
+	For each task notification within the array of task notifications, clear
+	bits in the notification value. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
 	{
-		/* Get the task to set all bits its own notification value.  This is not
-		a normal thing to do, and is only done here for test purposes. */
+		/* Get the task to set all bits in its task notification at index
+		uxIndexToTest within its array of task notifications.  This is not a
+		normal thing to do, and is only done here for test purposes. */
 		xTaskNotifyArray( xTaskToNotify, uxIndexToTest, notifyUINT32_MAX, eSetBits );
 
 		/* Now clear the top bytes - the returned value from the first call
@@ -668,92 +744,11 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		configASSERT( xTaskNotifyArrayStateClear( NULL, uxIndexToTest ) == pdFALSE );
 	}
 
-	/* ------------------------------------------------------------------------
-	Create a timer that will try notifying this task while it is suspended. */
-	xSingleTaskTimer = xTimerCreate( "SingleNotify", notifySUSPENDED_TEST_TIMER_PERIOD, pdFALSE, NULL, prvSuspendedTaskTimerTestCallback );
-	configASSERT( xSingleTaskTimer );
 
-	/* Raise the task's priority so it can suspend itself before the timer
-	expires. */
-	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
 
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
-	{
-		/* Incremented to show the task is still running. */
-		ulNotifyCycleCount++;
-
-		/* Ensure no notifications are pending in any index. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
-		{
-			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, NULL, 0 );
-			configASSERT( xReturned == pdFALSE );
-			( void ) xReturned; /* In case configASSERT() is not defined. */
-		}
-
-		/* Start the timer that will try notifying this task while it is
-		suspended, then wait for a notification.  The first time the callback
-		executes the timer will suspend the task, then resume the task, without
-		ever sending a notification to the task. */
-		ulNotifiedValue = 0;
-		xTimerStart( xSingleTaskTimer, portMAX_DELAY );
-
-		/* Check a notification is not received. */
-		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, 0, &ulNotifiedValue, portMAX_DELAY );
-		configASSERT( xReturned == pdFALSE );
-		configASSERT( ulNotifiedValue == 0 );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
-
-		/* Check no index has been notified. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
-		{
-			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
-			configASSERT( xReturned == pdFALSE );
-			( void ) xReturned; /* In case configASSERT() is not defined. */
-		}
-
-		/* Incremented to show the task is still running. */
-		ulNotifyCycleCount++;
-
-		/* Start the timer that will try notifying this task while it is
-		suspended, then wait for a notification.  The second time the callback
-		executes the timer will suspend the task, notify the task, then resume the
-		task (previously it was suspended and resumed without being notified). */
-		xTimerStart( xSingleTaskTimer, portMAX_DELAY );
-
-		/* Check a notification is only received in the index under test. */
-		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, 0, &ulNotifiedValue, portMAX_DELAY );
-		configASSERT( xReturned == pdPASS );
-		( void ) xReturned; /* In case configASSERT() is not defined. */
-		configASSERT( ulNotifiedValue != 0 );
-
-		/* Check a notification is not received in any index, that indexes at and
-		below the index being tested have a notification value, and that indexes
-		above the index being tested to not have notification values. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
-		{
-			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
-			configASSERT( xReturned == pdFALSE );
-
-			if( uxOtherIndexes <= uxIndexToTest )
-			{
-				configASSERT( ulNotifiedValue == 1 );
-			}
-			else
-			{
-				configASSERT( ulNotifiedValue == 0 );
-			}
-			( void ) xReturned; /* In case configASSERT() is not defined. */
-			( void ) ulNotifiedValue;
-		}
-	}
-
-	/* Return the task to its proper priority and delete the timer as it is
-	not used again. */
-	vTaskPrioritySet( NULL, notifyTASK_PRIORITY );
-	xTimerDelete( xSingleTaskTimer, portMAX_DELAY );
 
 	/* Incremented to show the task is still running. */
-	ulNotifyCycleCount++;
+	ulFineCycleCount++;
 
 	/* Leave all bits cleared. */
 	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
@@ -771,11 +766,13 @@ static UBaseType_t uxIndexToNotify = 0;
 	/* Remove compiler warnings about unused parameters. */
 	( void ) xExpiredTimer;
 
-	/* Callback for a timer that is used during preliminary testing.  The timer
-	tests the behaviour when 1: a task waiting for a notification is suspended
-	and then resumed without ever receiving a notification, and 2: when a task
-	waiting for a notification receives a notification while it is suspended.  Run
-	one of two tests on every other invocation of this callback. */
+	/* Callback for a timer that is used to send notifications to a task while
+	it is suspended.  The timer tests the behaviour when 1: a task waiting for a
+	notification is suspended and then resumed without ever receiving a
+	notification, and 2: when a task waiting for a notification receives a
+	notification while it is suspended.  Run one of two tests on every other
+	invocation of this callback.  The notification is sent to the task
+	notification at index uxIndexToNotify. */
 	if( ( ulCallCount & 0x01 ) == 0 )
 	{
 		vTaskSuspend( xTaskToNotify );
@@ -790,7 +787,14 @@ static UBaseType_t uxIndexToNotify = 0;
 		not cause the task to resume.  ulCallCount is just used as a convenient
 		non-zero value. */
 		xTaskNotifyArray( xTaskToNotify, uxIndexToNotify, 1, eSetValueWithOverwrite );
+
+		/* Use the next task notification within the array of task notifications
+		the next time around. */
 		uxIndexToNotify++;
+		if( uxIndexToNotify >= configNUMBER_OF_TASK_NOTIFICATIONS )
+		{
+			uxIndexToNotify = 0;
+		}
 
 		/* Make sure giving the notification didn't resume the task. */
 		configASSERT( eTaskGetState( xTaskToNotify ) == eSuspended );
@@ -802,16 +806,19 @@ static UBaseType_t uxIndexToNotify = 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvNotifyingTimer( TimerHandle_t xNotUsed )
+static void prvNotifyingTimerCallback( TimerHandle_t xNotUsed )
 {
 static BaseType_t uxIndexToNotify = 0;
 
 	( void ) xNotUsed;
 
+	/* "Give" the task notification (which increments the target task
+	notification value) at index uxIndexToNotify within the array of task
+	notifications. */
 	xTaskNotifyArrayGive( xTaskToNotify, uxIndexToNotify );
 
-	/* Use the next notification index on the next invocation of this timer callback,
-	wrapping back to 0 when all indexes have been used. */
+	/* Use the next task notification within the array of task notifications the
+	next time around. */
 	uxIndexToNotify++;
 	if( uxIndexToNotify >= configNUMBER_OF_TASK_NOTIFICATIONS )
 	{
@@ -820,144 +827,313 @@ static BaseType_t uxIndexToNotify = 0;
 }
 /*-----------------------------------------------------------*/
 
-static void prvNotifiedTask( void *pvParameters )
+static void prvTestNotifyTaskWhileSuspended( void )
+{
+UBaseType_t uxIndexToTest, uxOtherIndexes;
+BaseType_t xReturned;
+uint32_t ulNotifiedValue;
+
+	/* Raise the task's priority so it can suspend itself before the timer
+	expires. */
+	vTaskPrioritySet( NULL, configMAX_PRIORITIES - 1 );
+
+	/* Perform the test on each task notification within the array or task
+	notifications. */
+	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	{
+		/* Incremented to show the task is still running. */
+		ulFineCycleCount++;
+
+		/* Ensure no notifications within the array of task notifications are
+		pending. */
+		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		{
+			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, NULL, 0 );
+			configASSERT( xReturned == pdFALSE );
+			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
+		}
+
+		/* Start the timer that will try notifying this task while it is
+		suspended, then wait for a notification.  The first time the callback
+		executes the timer will suspend the task, then resume the task, without
+		ever sending a notification to the task. */
+		ulNotifiedValue = 0;
+		xTimerStart( xNotifyWhileSuspendedTimer, portMAX_DELAY );
+
+		/* Check a notification is not received on the task notification at
+		index uxIndexToTest within the array of task notifications. */
+		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, 0, &ulNotifiedValue, portMAX_DELAY );
+		configASSERT( xReturned == pdFALSE );
+		configASSERT( ulNotifiedValue == 0 );
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
+
+		/* Check none of the task notifications within the array of task
+		notifications as been notified. */
+		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		{
+			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
+			configASSERT( xReturned == pdFALSE );
+			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
+		}
+
+		/* Incremented to show the task is still running. */
+		ulFineCycleCount++;
+
+		/* Start the timer that will try notifying this task while it is
+		suspended, then wait for a notification at index uxIndexToTest within
+		the array of task notifications.  The second time the callback executes
+		the timer will suspend the task, notify the task, then resume the task
+		(previously it was suspended and resumed without being notified). */
+		xTimerStart( xNotifyWhileSuspendedTimer, portMAX_DELAY );
+
+		/* Check a notification is only received in the index within the array
+		of task notifications under test. */
+		xReturned = xTaskNotifyArrayWait( uxIndexToTest, 0, 0, &ulNotifiedValue, portMAX_DELAY );
+		configASSERT( xReturned == pdPASS );
+		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
+		configASSERT( ulNotifiedValue != 0 );
+
+		/* Check a notification is not received in any index within the array
+		of task notifications at and below the index being tested have a notification
+		value, and that indexes above the index being tested to not have
+		notification values. */
+		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		{
+			xReturned = xTaskNotifyArrayWait( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
+			configASSERT( xReturned == pdFALSE );
+
+			if( uxOtherIndexes <= uxIndexToTest )
+			{
+				configASSERT( ulNotifiedValue == 1 );
+			}
+			else
+			{
+				configASSERT( ulNotifiedValue == 0 );
+			}
+			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
+			( void ) ulNotifiedValue;
+		}
+	}
+
+	/* Return the task to its proper priority */
+	vTaskPrioritySet( NULL, notifyTASK_PRIORITY );
+
+	/* Incremented to show the task is still running. */
+	ulFineCycleCount++;
+
+	/* Leave all bits cleared. */
+	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	{
+		xTaskNotifyArrayWait( uxIndexToTest, notifyUINT32_MAX, 0, NULL, 0 );
+	}
+}
+/* ------------------------------------------------------------------------ */
+
+static void prvBlockOnTheNotifiedIndex( void )
 {
 const TickType_t xTimerPeriod = pdMS_TO_TICKS( 100 ), xMargin = pdMS_TO_TICKS( 50 ), xDontBlock = 0;
-TickType_t xTimeBeforeBlocking;
-UBaseType_t uxIndexToNotify = 0, uxIndex;
+UBaseType_t uxIndex, uxIndexToNotify;
 uint32_t ulReceivedValue;
 BaseType_t xReturned;
 
-	/* Remove compiler warnings about unused parameters. */
-	( void ) pvParameters;
-
-	/* Run a few tests that can be done from a single task before entering the
-	main loop. */
-	prvSingleTaskTests();
-
-	/* Set the value of each notification in the array to the value of its index
-	position plus 1 so everything starts in a known state, then clear the
-	notification state ready for the next test.  Plus 1 is used because the index
-	under test will use 0. */
+	/* Set the value of each notification in the array of task notifications to
+	the value of its index position plus 1 so everything starts in a known
+	state, then clear the notification state ready for the next test.  Plus 1 is
+	used because the index under test will use 0. */
 	for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
 	{
 		xTaskNotifyArray( xTaskToNotify, uxIndex, uxIndex + 1, eSetValueWithOverwrite );
 		xTaskNotifyArrayStateClear( xTaskToNotify, uxIndex );
 	}
 
-	/* Create the software timer that is used to send notifications to this
-	task. */
-	xTimer = xTimerCreate( "Notifier", xTimerPeriod, pdFALSE, NULL, prvNotifyingTimer );
-
-	for( ;; )
+	/* Peform the test on each task notification within the array of task
+	notifications. */
+	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
 	{
-		for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+		/* Set the notification value of the index being tested to 0 so the
+		notification value increment/decrement functions can be tested. */
+		xTaskNotifyArray( xTaskToNotify, uxIndexToNotify, 0, eSetValueWithOverwrite );
+		xTaskNotifyArrayStateClear( xTaskToNotify, uxIndexToNotify );
+
+		/* Start the software timer then wait for it to notify this task.  Block
+		on the notification index we expect to receive the notification on.  The
+		margin is to ensure the task blocks longer than the timer period. */
+		xTimerStart( xIncrementingIndexTimer, portMAX_DELAY );
+		ulReceivedValue = ulTaskNotifyArrayTake( uxIndexToNotify, pdFALSE, xTimerPeriod + xMargin );
+
+		/* The notification value was initially zero, and should have been
+		incremented by the software timer, so now one.  It will also have been
+		decremented again by the call to ulTaskNotifyArrayTake() so gone back
+		to 0. */
+		configASSERT( ulReceivedValue == 1UL );
+		( void ) ulReceivedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
+
+		/* No other notification indexes should have changed, and therefore should
+		still have their value set to their index plus 1 within the array of
+		notifications. */
+		for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
 		{
-			/* Set the notification value of the index being tested to 0 so the
-			notification value increment/decrement functions can be tested. */
-			xTaskNotifyArray( xTaskToNotify, uxIndexToNotify, 0, eSetValueWithOverwrite );
-			xTaskNotifyArrayStateClear( xTaskToNotify, uxIndexToNotify );
-
-			/* Start the software timer then wait for it to notify this task.  Block
-			on the notification index we expect to receive the notification on.  The
-			margin is to ensure the task blocks longer than the timer period. */
-			xTimerStart( xTimer, portMAX_DELAY );
-			ulReceivedValue = ulTaskNotifyArrayTake( uxIndexToNotify, pdFALSE, xTimerPeriod + xMargin );
-
-			/* The notification value was initially zero, and should have been
-			incremented by the software timer, so now one.  It will also have been
-			decremented again by the call to ulTaskNotifyArrayTake() so gone back
-			to 0. */
-			configASSERT( ulReceivedValue == ( BaseType_t ) 1 );
-			( void ) ulReceivedValue; /* In case configASSERT() is not defined. */
-
-			/* No other notification indexes should have changed, and therefore should
-			still have their value set to their index plus 1 within the array of
-			notifications. */
-			for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+			if( uxIndex != uxIndexToNotify )
 			{
-				if( uxIndex != uxIndexToNotify )
-				{
-					xReturned = xTaskNotifyArrayWait( uxIndex, 0, 0, &ulReceivedValue, xDontBlock );
-					configASSERT( xReturned == pdFALSE );
-					configASSERT( ulReceivedValue == ( uxIndex + 1 ) );
-					( void ) ulReceivedValue; /* In case configASSERT() is not defined. */
-					( void ) xReturned;
-				}
+				xReturned = xTaskNotifyArrayWait( uxIndex, 0, 0, &ulReceivedValue, xDontBlock );
+				configASSERT( xReturned == pdFALSE );
+				configASSERT( ulReceivedValue == ( uxIndex + 1 ) );
+				( void ) ulReceivedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
+				( void ) xReturned;
 			}
-
-			/* Reset the notification value for the index just tested back to the
-			index value plus 1 ready for the next iteration around this loop. */
-			xTaskNotifyArray( xTaskToNotify, uxIndexToNotify, uxIndexToNotify + 1, eSetValueWithOverwrite );
-			xTaskNotifyArrayStateClear( xTaskToNotify, uxIndexToNotify );
 		}
 
-		/* Set all notify values to zero ready for the next test. */
-		for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+		/* Reset the notification value for the index just tested back to the
+		index value plus 1 ready for the next iteration around this loop. */
+		xTaskNotifyArray( xTaskToNotify, uxIndexToNotify, uxIndexToNotify + 1, eSetValueWithOverwrite );
+		xTaskNotifyArrayStateClear( xTaskToNotify, uxIndexToNotify );
+
+		/* Incremented to show the task is still running. */
+		ulFineCycleCount++;
+	}
+}
+/* ------------------------------------------------------------------------ */
+
+static void prvBlockOnANonNotifiedIndex( void )
+{
+const TickType_t xTimerPeriod = pdMS_TO_TICKS( 100 ), xMargin = pdMS_TO_TICKS( 50 ), xDontBlock = 0;
+UBaseType_t uxIndex, uxIndexToNotify;
+uint32_t ulReceivedValue;
+BaseType_t xReturned;
+TickType_t xTimeBeforeBlocking;
+
+	/* Set all notify values within the array of tasks notifications to zero
+	ready for the next test. */
+	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	{
+		ulTaskNotifyArrayValueClear( xTaskToNotify, uxIndexToNotify, notifyUINT32_MAX );
+	}
+
+	/* Perform the test for each notification within the array of task
+	notifications. */
+	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	{
+		/* Start the software timer then wait for it to notify this task.  Block
+		on a notification index that we do not expect to receive the notification
+		on.  The margin is to ensure the task blocks longer than the timer period. */
+		xTimerStart( xIncrementingIndexTimer, portMAX_DELAY );
+		xTimeBeforeBlocking = xTaskGetTickCount();
+
+
+		if( uxIndexToNotify == ( configNUMBER_OF_TASK_NOTIFICATIONS - 1 ) )
 		{
-			ulTaskNotifyArrayValueClear( xTaskToNotify, uxIndexToNotify, notifyUINT32_MAX );
+			/* configNUMBER_OF_TASK_NOTIFICATIONS - 1 is to be notified, so
+			block on index 0. */
+			uxIndex = 0;
+		}
+		else
+		{
+			/* The next index to get notified will be uxIndexToNotify, so block
+			on uxIndexToNotify + 1 */
+			uxIndex = uxIndexToNotify + 1;
 		}
 
-		for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+		xReturned = xTaskNotifyArrayWait( uxIndex, 0, 0, &ulReceivedValue, xTimerPeriod + xMargin );
+
+		/* The notification will have been sent to task notification at index
+		uxIndexUnder test in this task by the timer callback after
+		xTimerPeriodTicks.  The notification should not have woken this task, so
+		xReturned should be false and at least xTimerPeriod + xMargin ticks
+		should have passed. */
+		configASSERT( xReturned == pdFALSE );
+		configASSERT( ( xTaskGetTickCount() - xTimeBeforeBlocking ) >= ( xTimerPeriod + xMargin ) );
+		( void ) xReturned; /* Remove compiler warnings if configASSERT() is not defined. */
+		( void ) xTimeBeforeBlocking;
+
+		/* Only the notification at index position uxIndexToNotify() should be
+		set.  Calling this function will clear it again. */
+		for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
 		{
-			/* Start the software timer then wait for it to notify this task.  Block
-			on a notification index that we do not expect to receive the notification
-			on.  The margin is to ensure the task blocks longer than the timer period. */
-			xTimerStart( xTimer, portMAX_DELAY );
-			xTimeBeforeBlocking = xTaskGetTickCount();
+			xReturned = xTaskNotifyArrayWait( uxIndex, 0, 0, &ulReceivedValue, xDontBlock );
 
-
-			if( uxIndexToNotify == ( configNUMBER_OF_TASK_NOTIFICATIONS - 1 ) )
+			if( uxIndex == uxIndexToNotify )
 			{
-				/* configNUMBER_OF_TASK_NOTIFICATIONS - 1 is to be notified, so
-				block on index 0. */
-				uxIndex = 0;
+				/* Expect the notification state to be set and the notification
+				value to have been incremented. */
+				configASSERT( xReturned == pdTRUE );
+				configASSERT( ulReceivedValue == 1 );
+
+				/* Set the notification value for this array index back to 0. */
+				ulTaskNotifyArrayValueClear( xTaskToNotify, uxIndex, notifyUINT32_MAX );
 			}
 			else
 			{
-				/* The next index to get notified will be uxIndexToNotify, so block
-				on uxIndexToNotify + 1 */
-				uxIndex = uxIndexToNotify + 1;
-			}
-
-			xReturned = xTaskNotifyArrayWait( uxIndex, 0, 0, &ulReceivedValue, xTimerPeriod + xMargin );
-
-			/* The notification will have been sent to this task by the timer
-			callback after xTimerPeriodTicks.  The notification should not have
-			woken this task, so xReturned should be false and at least xTimerPeriod +
-			xMargin ticks should have passed. */
-			configASSERT( xReturned == pdFALSE );
-			configASSERT( ( xTaskGetTickCount() - xTimeBeforeBlocking ) >= ( xTimerPeriod + xMargin ) );
-			( void ) xReturned; /* Remove compiler warnings if configASSERT() is not defined. */
-			( void ) xTimeBeforeBlocking;
-
-			/* Only the notification at index position uxIndexToNotify() should be
-			set.  Calling this function will clear it again. */
-			for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
-			{
-				xReturned = xTaskNotifyArrayWait( uxIndex, 0, 0, &ulReceivedValue, xDontBlock );
-
-				if( uxIndex == uxIndexToNotify )
-				{
-					/* Expect the notification state to be set and the notification
-					value to have been incremented. */
-					configASSERT( xReturned == pdTRUE );
-					configASSERT( ulReceivedValue == 1 );
-
-					/* Set the notification value for this array index back to 0. */
-					ulTaskNotifyArrayValueClear( xTaskToNotify, uxIndex, notifyUINT32_MAX );
-				}
-				else
-				{
-					/* Expect the notification state to be clear and the notification
-					value to remain at zer0. */
-					configASSERT( xReturned == pdFALSE );
-					configASSERT( ulReceivedValue == 0 );
-				}
+				/* Expect the notification state to be clear and the notification
+				value to remain at zer0. */
+				configASSERT( xReturned == pdFALSE );
+				configASSERT( ulReceivedValue == 0 );
 			}
 		}
-			__asm { NOP };
 
+		/* Incremented to show the task is still running. */
+		ulFineCycleCount++;
+	}
+}
+/* ------------------------------------------------------------------------ */
+
+static void prvBlockOnNotificationsComingFromInterrupts( void )
+{
+UBaseType_t uxIndex, uxIndexToNotify;
+uint32_t ulReceivedValue;
+BaseType_t xReturned;
+const TickType_t xDontBlock = 0;
+
+	/* Set the value of each notification within the array of task notifications
+	to zero so the task can block on xTaskNotifyTake(). */
+	for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+	{
+		xTaskNotifyArray( xTaskToNotify, uxIndex, 0, eSetValueWithOverwrite );
+		xTaskNotifyArrayStateClear( xTaskToNotify, uxIndex );
+	}
+
+	/* Perform the test on each task notification within the array of task
+	notifications. */
+	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	{
+		/* Tell the interrupt to send the next notification. */
+		taskENTER_CRITICAL();
+		{
+			/* Don't expect to find xSendNotificationFromISR set at this time as
+			the interrupt should have cleared it back to pdFALSE last time it
+			executed. */
+			configASSERT( xSendNotificationFromISR == pdFALSE );
+			xSendNotificationFromISR = pdTRUE;
+		}
+		taskEXIT_CRITICAL();
+
+		/* Wait for a notification on the task notification at index
+		uxIndexToNotify within the array of task notifications. */
+		ulReceivedValue = ulTaskNotifyArrayTake( uxIndexToNotify, pdTRUE, portMAX_DELAY );
+
+		/* Interrupt should have reset xSendNotificationFromISR after it sent
+		the notificatino. */
+		configASSERT( xSendNotificationFromISR == pdFALSE );
+
+		/* The notification value was initially zero, and should have been
+		incremented by the interrupt, so now one. */
+		configASSERT( ulReceivedValue == 1UL );
+		( void ) ulReceivedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
+
+		/* No other notification indexes should have changed, and therefore should
+		still have their value set to 0.  The value in array index uxIndexToNotify
+		should also have been decremented back to zero by the call to
+		ulTaskNotifyArrayTake(). */
+		for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+		{
+			xReturned = xTaskNotifyArrayWait( uxIndexToNotify, 0, 0, &ulReceivedValue, xDontBlock );
+			configASSERT( xReturned == pdFALSE );
+			configASSERT( ulReceivedValue == 0 );
+			( void ) ulReceivedValue; /* Remove compiler warnings in case configASSERT() is not defined. */
+			( void ) xReturned;
+		}
+
+		/* Incremented to show the task is still running. */
+		ulFineCycleCount++;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -965,51 +1141,53 @@ BaseType_t xReturned;
 void xNotifyArrayTaskFromISR( void )
 {
 static BaseType_t xCallCount = 0, xAPIToUse = 0;
-const BaseType_t xCallInterval = pdMS_TO_TICKS( 50 );
 uint32_t ulPreviousValue;
 const uint32_t ulUnexpectedValue = 0xff;
+static UBaseType_t uxIndexToNotify = 0;
 
-return;
-
-	/* Check the task notification demo tasks were actually created. */
+	/* Check the task notification demo task was actually created. */
 	configASSERT( xTaskToNotify );
 
-	/* The task performs some tests before starting the timer that gives the
-	notification from this interrupt.  If the timer has not been created yet
-	then the initial tests have not yet completed and the notification should
-	not be sent. */
-	if( xTimer != NULL )
+	/* The task sets xSendNotificationFromISR to pdTRUE each time it wants this
+	interrupt (this function runs in the RTOS tick hook) to send the next
+	notification. */
+	if( xSendNotificationFromISR == pdTRUE )
 	{
-		xCallCount++;
+		xSendNotificationFromISR = pdFALSE;
 
-		if( xCallCount >= xCallInterval )
+		/* It is time to 'give' the notification again. */
+		xCallCount = 0;
+
+		/* Test using both vTaskNotifyGiveFromISR(), xTaskNotifyFromISR()
+		and xTaskNotifyAndQueryFromISR(). The notification is set to the task
+		notification at index uxIndexToNotify within the array of task
+		notifications. */
+		switch( xAPIToUse )
 		{
-			/* It is time to 'give' the notification again. */
-			xCallCount = 0;
+			case 0:	vTaskNotifyArrayGiveFromISR( xTaskToNotify, uxIndexToNotify, NULL );
+					xAPIToUse++;
+					break;
 
-			/* Test using both vTaskNotifyGiveFromISR(), xTaskNotifyFromISR()
-			and xTaskNotifyAndQueryFromISR(). */
-			switch( xAPIToUse )
-			{
-				case 0:	vTaskNotifyGiveFromISR( xTaskToNotify, NULL );
-						xAPIToUse++;
-						break;
+			case 1:	xTaskNotifyArrayFromISR( xTaskToNotify, uxIndexToNotify, 0, eIncrement, NULL );
+					xAPIToUse++;
+					break;
 
-				case 1:	xTaskNotifyFromISR( xTaskToNotify, 0, eIncrement, NULL );
-						xAPIToUse++;
-						break;
+			case 2: ulPreviousValue = ulUnexpectedValue;
+					xTaskNotifyArrayAndQueryFromISR( xTaskToNotify, uxIndexToNotify, 0, eIncrement, &ulPreviousValue, NULL );
+					configASSERT( ulPreviousValue == 0 );
+					xAPIToUse = 0;
+					break;
 
-				case 2: ulPreviousValue = ulUnexpectedValue;
-						xTaskNotifyAndQueryFromISR( xTaskToNotify, 0, eIncrement, &ulPreviousValue, NULL );
-						configASSERT( ulPreviousValue != ulUnexpectedValue );
-						xAPIToUse = 0;
-						break;
+			default:/* Should never get here!. */
+					break;
+		}
 
-				default:/* Should never get here!. */
-						break;
-			}
-
-			ulTimerNotificationsSent++;
+		/* Use the next index in the array of task notifications the next time
+		around. */
+		uxIndexToNotify++;
+		if( uxIndexToNotify >= configNUMBER_OF_TASK_NOTIFICATIONS )
+		{
+			uxIndexToNotify = 0;
 		}
 	}
 }
@@ -1019,27 +1197,34 @@ return;
 detected any errors. */
 BaseType_t xAreTaskNotificationArrayTasksStillRunning( void )
 {
-static uint32_t ulLastNotifyCycleCount = 0;
-const uint32_t ulMaxSendReceiveDeviation = 5UL;
+static uint32_t ulLastFineCycleCount = 0, ulLastCourseCycleCount = 0, ulCallCount = 0;
+const uint32_t ulCallsBetweenCourseCycleCountChecks = 3UL;
+static BaseType_t xErrorStatus = pdPASS;
 
 	/* Check the cycle count is still incrementing to ensure the task is still
-	actually running. */
-	if( ulLastNotifyCycleCount == ulNotifyCycleCount )
+	actually running.  The fine counter is incremented within individual test
+	functions.  The course counter is incremented one each time all the test
+	functions have been executed to ensure all the tests are running. */
+	if( ulLastFineCycleCount == ulFineCycleCount )
 	{
 		xErrorStatus = pdFAIL;
 	}
 	else
 	{
-		ulLastNotifyCycleCount = ulNotifyCycleCount;
+		ulLastFineCycleCount = ulFineCycleCount;
 	}
 
-	/* Check the count of 'takes' from the software timer is keeping track with
-	the amount of 'gives'. */
-	if( ulTimerNotificationsSent > ulTimerNotificationsReceived )
+	ulCallCount++;
+	if( ulCallCount >= ulCallsBetweenCourseCycleCountChecks )
 	{
-		if( ( ulTimerNotificationsSent - ulTimerNotificationsReceived ) > ulMaxSendReceiveDeviation )
+		ulCallCount = 0;
+		if( ulLastCourseCycleCount == ulCourseCycleCounter )
 		{
 			xErrorStatus = pdFAIL;
+		}
+		else
+		{
+			ulLastCourseCycleCount = ulCourseCycleCounter;
 		}
 	}
 

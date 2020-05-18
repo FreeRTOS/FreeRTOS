@@ -1,0 +1,197 @@
+/**
+\mainpage
+
+\section doc_driver_mainpage_intro Introduction
+
+AVR Code is a software library containing drivers, middleware and 
+applications for AVR microcontrollers. START, a web-based 
+GUI, is used to generate C-code according to the user's needs.
+
+In START, the user selects the device for which to generate code.
+Thereafter, the user selects the driver and middleware components
+that he wants to include in the project. As an example, the user 
+may choose the device Tiny817, and add the USART and SPI driver.
+The user can use START to configure the detailed behaviour of the
+drivers, and configure the device's clock system and I/O pins.
+Finally, the user exports the project as an atzip-file, which 
+can be opened in Studio or IAR Embedded Workbench. The 
+project contains:
+- C and assembly files that can be compiled using the GCC 
+or IAR compilers. 
+- A directory with doxygen-files documenting the drivers included in the project. 
+The doxygen-files can be built into a HTML-document by executing the 
+command *doxygen doxyfile.doxygen* on a computer where doxygen is installed. 
+The file *doxyfile.doxygen* is found in the *doxygen/generator* directory in 
+the atzip-file.
+- Example code documenting the usage of the configured drivers
+
+\section doc_driver_mainpage_driver_overview Driver Overview
+
+After the user has selected a device to configure, he will be able
+to add and configure drivers and middleware available for that 
+device. In START, drivers are grouped by functionality, such as 
+SPI, USART or Timer. After adding desired functionality, such as
+SPI, the user can configure the SPI function. This includes selecting:
+
+- which hardware instance to use for implementing the functionality
+- which driver to use for implementing the functionality
+
+The devices may have several SPI hardware modules, 
+or may implement SPI functions through other hardware modules, 
+such as USART.
+
+The combination of hardware and driver is given by the notation 
+
+Drivers:*Hardware*:*Driver_name*
+
+where *Hardware* identifies the hardware the driver uses, and *Driver_name*
+is the name of the driver. An example: *Drivers:TCB:Timeout* is the *Timeout*
+driver running on an instance of timer TCB.
+
+
+\section doc_driver_mainpage_configuring Configuring Drivers and Middleware
+
+In general, functionality such as SPI is supported through multiple drivers. 
+Providing multiple drivers allows the user to select the flavor best suited to
+his application: He may choose a simple but small SPI driver if this suits his
+application, or a more complex but larger SPI driver if advanced SPI 
+functionality is needed.
+
+In general, each peripheral has at least the following drivers:
+- Init: Performs device initialization only, based on the 
+  configuration the user selected in START. No API functions other 
+  than init() is provided
+- Basic : Basic functionality, provides an init-function and other 
+  functions allowing the user to use basic functionality of the peripheral.
+  The Basic drivers are intended to cover functionality commonly found on 
+  all hardware implementations, and are therefore very portable across 
+  different devices. Typical examples of basic functions for an USART is to send 
+  and receive bytes, either in polled or interrupt driven mode.
+  
+
+\section doc_driver_mainpage_usage Using the generated code
+
+A project exported from START contains the drivers that the user 
+configured, along with a main.c-file that only initializes the drivers and 
+peripherals. The user will usually have to add code to main() in main.c 
+in order for the code to do something useful.
+
+The example code in the examples directory can be used as a starting point in 
+order to learn how to use the drivers and their API. The examples are in the form 
+of functions that can be called directly from main(). 
+
+The generated drivers may use interrupt requests to communicate with hardware. 
+The user code must normally enable global interrupts (using ENABLE_INTERRUPTS()) 
+in order for these interrupts to be serviced. The drivers usually do not 
+enable global interrupts as part of their initialization.
+
+
+\section doc_driver_mainpage_documentation Documentation of Drivers and Middleware
+
+Drivers and middlewares are documented using Doxygen. Doxygen comments are
+embedded into the exported C-code. In addition, exported projects have 
+a *doxygen* folder containing doxygen files with additional documentation.
+
+The user must generate the doxygen documentation himself after exporting the
+project. This is done by going to the *doxygen/generator* directory and 
+issuing the command *doxygen doxyfile.doxygen*. The doxygen application may need 
+to be installed on your computer, the installer can be found on the internet.
+
+\subsection doc_driver_mainpage_documentation_user Documenting user code
+
+The user can use doxygen to document his own code together with the code 
+generated by START. The file *doxygen/generator/doxyfile.doxygen* can 
+be modified to include the user's own code in the generated documentation.
+Modify the tags *INPUT* and *FILE_PATTERNS* in the doxyfile to do this.
+Refer to the doxygen manual for more information.
+
+
+
+\section doc_driver_mainpage_output Generated Output
+
+START exports projects as an <PROJECTNAME>.atzip file. This is a regular 
+zip-file which can be unzipped using standard unzip-tools. The contents 
+of the atzip-file is of course dependent on the configuration done in START. 
+Assume a typical project configured with PWM, SPI, TIMEOUT, TIMER and USART 
+drivers. Unzipping the atzip-file, or opening it in one of the supported 
+IDEs will reveal the following directory structure:
+
+\code
+MyProject/
+|-- atmel_start.c               *Initializes MCU, drivers and middleware*
+|-- atmel_start_config.atstart  *START-internal info on configuration of the project*
+|-- AtmelStart.env_conf         *START-internal info on configuration of the project*
+|-- AtmelStart.gpdsc            *START-internal info on configuration of the project*
+|-- atmel_start.h               *Initializes MCU, drivers and middleware*
+|-- config
+|   `-- clock_config.h          *Definitions regarding the configured clock system*
+|-- doxygen                     *Doxygen-documentation of the project*
+|   |-- generator
+|   |   |-- doxyfile.doxygen    *Doxygen configuration information*
+|   |   `-- DoxygenLayout.xml   *Doxygen layout information*
+|   |-- mainpage.dox            *Doxygen-documentation of the project*
+|   |-- pwm.dox                 *Doxygen-documentation of the project*
+|   |-- pwm_basic.dox           *Doxygen-documentation of the project*
+|   |-- spi_basic.dox           *Doxygen-documentation of the project*
+|   |-- spi.dox                 *Doxygen-documentation of the project*
+|   |-- system.dox              *Doxygen-documentation of the project*
+|   |-- timeout.dox             *Doxygen-documentation of the project*
+|   |-- timer.dox               *Doxygen-documentation of the project*
+|   |-- usart_basic.dox         *Doxygen-documentation of the project*
+|   `-- usart.dox               *Doxygen-documentation of the project*
+|-- driver_isr.c                *Some drivers place their Interrupt Service Routines here*
+|-- examples                    *Code examples demonstrating using the drivers*
+|   |-- include
+|   |   |-- adc_basic_example.h *Example using basic ADC driver*
+|   |   |-- pwm_basic_example.h *Example using basic PWM driver*
+|   |   |-- spi_basic_example.h *Example using basic SPI driver*
+|   |   |-- timeout_example.h   *Example using timeout driver*
+|   |   `-- usart_basic_example.h *Example using basic USART driver*
+|   |-- src
+|   |   |-- adc_basic_example.c *Example using basic ADC driver*
+|   |   |-- pwm_basic_example.c *Example using basic PWM driver*
+|   |   |-- spi_basic_example.c *Example using basic SPI driver*
+|   |   |-- timeout_example.c   *Example using timeout driver*
+|   |   `-- usart_basic_example.c *Example using basic USART driver*
+|-- include
+|   |-- atmel_start_pins.h      *API for the I/O pins configured in START*
+|   |-- bod.h                   *API for the BOD*
+|   |-- ccp.h                   *API for the Configuration Change Protection*
+|   |-- clkctrl.h               *API for the Clock Controller*
+|   |-- cpuint.h                *API for the Interrupt Controller*
+|   |-- driver_init.h           *API for initialization of drivers and middleware*
+|   |-- port.h                  *API for general use of I/O ports*
+|   |-- pwm_basic.h             *API for PWM driver*
+|   |-- rstctrl.h               *API for Reset Controller*
+|   |-- slpctrl.h               *API for Sleep Controller*
+|   |-- spi_basic.h             *API for basic SPI driver*
+|   |-- system.h                *API for general system control functions*
+|   |-- timeout.h               *API for Timeout driver*
+|   `-- usart_basic.h           *API for basic USART driver*
+|-- main.c                      *Main application. User adds his own code here*
+|-- src
+|   |-- bod.c                   *API for the BOD*
+|   |-- ccp.S                   *API for the Configuration Change Protection*
+|   |-- clkctrl.c               *API for the Clock Controller*
+|   |-- cpuint.c                *API for the Interrupt Controller*
+|   |-- driver_init.c           *API for initialization of drivers and middleware*
+|   |-- pwm_basic.c             *API for PWM driver*
+|   |-- slpctrl.c               *API for Sleep Controller*
+|   |-- spi_basic.c             *API for basic SPI driver*
+|   |-- timeout.c               *API for Timeout driver*
+|   `-- usart_basic.c           *API for basic USART driver*
+`-- utils
+    |-- assembler
+    |   |-- gas.h               *GNU Assembler specifics*
+    |   `-- iar.h               *IAR Assembler specifics*
+    |-- assembler.h             *Assembler abstraction layer and utilities*
+    |-- atomic.h                *Macros used for atomic memory access*
+    |-- compiler.h              *Compiler abstraction layer and utilities*
+    |-- interrupt_avr8.h        *Interrupt abstraction layer and utilities*
+    |-- utils_assert.h          *Definitions for assert*
+    `-- utils.h                 *Various macros of general use*
+
+
+\endcode
+*/
+

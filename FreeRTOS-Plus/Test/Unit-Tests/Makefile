@@ -29,9 +29,6 @@ FREE_RTOS_INCLUDE_DIR ?= ${ROOT_DIR}/../../Source/FreeRTOS-Plus-TCP/include
 CONFIG_FILES_DIR ?= $(ROOT_DIR)/Config_files
 TEST_DIR ?= test
 
-TEMP = $(shell cp FREE_RTOS_INCLUDE_DIR/FreeRTOSIP.h .)
-TEMP = $(shell echo $(TEMP))
-
 # ${FREE_RTOS_INCLUDE_DIR}/FreeRTOS_IP.h
 
 INCLUDE_DIR ?= -I ${FREE_RTOS_INCLUDE_DIR} -I $(CONFIG_FILES_DIR) -I ${CMOCK_INCLUDE_DIR} -I ${UNITY_INCLUDE_DIR} -I ${FREE_RTOS_DIR} -I ${MOCKS_DIR}
@@ -73,7 +70,7 @@ ${BIN_DIR}/${EXECUTABLE}: ${GEN_DIR}/${EXECUTABLE}_test_runner.c ${SRC_DIR}/iot_
 clean:
 	-rm -rf build
 	-rm -f sys_arch.gcda  sys_arch.gcno
-	-rm FreeRTOS_IP.h
+	-rm -f FreeRTOS_IP.h
 
 copy:
 	cp ${FREE_RTOS_INCLUDE_DIR}/FreeRTOS_IP.h ./

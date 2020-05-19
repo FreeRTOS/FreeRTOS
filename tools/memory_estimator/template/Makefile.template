@@ -1,0 +1,25 @@
+# Source Files
+SOURCE_FILES
+
+# Include Directories
+INCLUDE_DIRECTORIES
+
+OBJS=$(SRCS:.c=.o)
+
+CFLAGS+=-std=gnu99 -Wall -Wextra -ggdb -OPTIMIZATION
+CFLAGS+=-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
+
+.DEFAULT_GOAL:=build
+
+build: $(OBJS)
+
+size:
+	$(SIZETOOL) $(OBJS)
+
+clean:
+	rm -rf $(OBJS)
+
+.PHONY: build size clean
+
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c $<  -o $@

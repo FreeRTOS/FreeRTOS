@@ -32,6 +32,16 @@
 /* Demo file headers. */
 #include "regtest.h"
 
+/* The minimum stack size required by a register test task. 
+ * 
+ * The value should be at least the sum of: 
+ * - Number of bytes used to save register context. 
+ *   Refer to port.c, r0-r31 and/or RAMPZ and/or EIND.
+ * - Number of bytes used in nested function call.
+ *   Refer to GCC Developer Option -fstack-usage. 
+ */
+#define REGTEST_MIN_STACK_SIZE		( ( unsigned short ) 50 )
+
 /*
  * Test tasks that sets registers to known values, then checks to ensure the
  * values remain as expected.  Test 1 and test 2 use different values.
@@ -53,8 +63,8 @@ void vStartRegTestTasks( void )
 	 * interrupted as much as possible by higher priority tasks. Thus if task
 	 * context is not restored correctly, error is more likely to be caught.
 	 */
-	xTaskCreate( prvRegisterCheck1, "Reg1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvRegisterCheck2, "Reg2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );		
+	xTaskCreate( prvRegisterCheck1, "Reg1", REGTEST_MIN_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvRegisterCheck2, "Reg2", REGTEST_MIN_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );		
 }
 /*-----------------------------------------------------------*/
 

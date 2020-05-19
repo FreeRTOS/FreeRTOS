@@ -51,7 +51,7 @@ directories:
 	mkdir -p ${GEN_DIR}
 
 mocks: directories
-	cd ${BUILD_DIR} && ruby  ${CMOCK_LIB_DIR}/cmock.rb -o${CONFIGURATION_DIR}/project.yml ${FREE_RTOS_INCLUDE_DIR}/FreeRTOS_DNS.h
+	cd ${BUILD_DIR} && ruby  ${CMOCK_LIB_DIR}/cmock.rb -o${CONFIGURATION_DIR}/project.yml ${FREE_RTOS_INCLUDE_DIR}/FreeRTOS_IP_Private.h
 
 ${LIB_DIR}/libcmock.so: ${CMOCK_SRC_DIR}/cmock.c ${CMOCK_SRC_DIR}/cmock.h Makefile ${LIB_DIR}/libunity.so
 	${CC} -o $@ -shared -fPIC  $<  ${INCLUDE_DIR}
@@ -59,11 +59,11 @@ ${LIB_DIR}/libcmock.so: ${CMOCK_SRC_DIR}/cmock.c ${CMOCK_SRC_DIR}/cmock.h Makefi
 ${LIB_DIR}/libunity.so: ${UNITY_SRC_DIR}/unity.c ${CMOCK_SRC_DIR}/cmock.h Makefile directories
 	${CC} -o $@ -shared -fPIC  $< -I ${UNITY_INCLUDE_DIR}
 
-${LIB_DIR}/mock_FreeRTOS_DNS.o: ${MOCKS_DIR}/mock_FreeRTOS_DNS.c mocks Makefile
-	${CC}  -c  $<  -o  $@ -DipconfigDNS_USE_CALLBACKS=1  ${INCLUDE_DIR}  -fPIC
+${LIB_DIR}/mock_FreeRTOS_IP_Private.o: ${MOCKS_DIR}/mock_FreeRTOS_IP_Private.c mocks Makefile
+	${CC}  -c  $<  -o  $@ -DipconfigSUPPORT_SELECT_FUNCTION=1  ${INCLUDE_DIR}  -fPIC
 
 #${LWIP_DIR}/sys_arch.c ${LIB_DIR}/mock_queue.o
-${LIB_DIR}/libsys_arch.so: ${LIB_DIR}/mock_FreeRTOS_DNS.o
+${LIB_DIR}/libsys_arch.so: ${LIB_DIR}/mock_FreeRTOS_IP_Private.o
 	${CC}  -o  $@  -shared  -fPIC  $+  ${INCLUDE_DIR}  ${CODE_COVERAGE}  -lgcov
 
 ${GEN_DIR}/${EXECUTABLE}_test_runner.c: mocks Makefile

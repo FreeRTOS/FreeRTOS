@@ -22,7 +22,7 @@
     <ProgFlashFromRam>true</ProgFlashFromRam>
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
-    <preserveEEPROM>true</preserveEEPROM>
+    <preserveEEPROM>false</preserveEEPROM>
     <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <ResetRule>0</ResetRule>

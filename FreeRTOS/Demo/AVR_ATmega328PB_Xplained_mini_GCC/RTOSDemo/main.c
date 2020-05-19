@@ -62,7 +62,6 @@ int main(void)
 }
 
 /*-----------------------------------------------------------*/
-
 static void vErrorChecks( void *pvParameters )
 {
 static UBaseType_t uxErrorHasOccurred = 0;
@@ -76,7 +75,7 @@ static UBaseType_t uxErrorHasOccurred = 0;
 	{
 		if( xAreRegTestTasksStillRunning() != pdTRUE )
 		{
-			uxErrorHasOccurred |= 0x0U;
+			uxErrorHasOccurred |= 0x01U;
 		}
 		
 		vTaskDelay( mainCHECK_PERIOD );

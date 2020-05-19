@@ -71,10 +71,10 @@
 #define configSUPPORT_STATIC_ALLOCATION		1
 
 /* FreeRTOS memory management. */
-#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 120 )
-#define configTOTAL_HEAP_SIZE		( (size_t ) ( 1500 ) )
+#define configMINIMAL_STACK_SIZE	( ( unsigned short ) 90 )
+#define configTOTAL_HEAP_SIZE		( (size_t ) ( 1000 ) )
 
-#define configCHECK_FOR_STACK_OVERFLOW		2
+#define configCHECK_FOR_STACK_OVERFLOW		1
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */

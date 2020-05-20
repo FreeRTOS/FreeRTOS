@@ -72,6 +72,7 @@ int main(void)
 static void vErrorChecks( void *pvParameters )
 {
 static UBaseType_t uxErrorHasOccurred = 0;
+BaseType_t xFirstTimeCheck = pdTRUE;
 
 	/* The parameters are not used. */
 	( void ) pvParameters;
@@ -91,6 +92,14 @@ static UBaseType_t uxErrorHasOccurred = 0;
 		if( xArePollingQueuesStillRunning() != pdTRUE )
 		{
 			uxErrorHasOccurred |= ( 0x01U << 2);
+		}
+		
+		/* When check task runs before any other tasks, all above checks shall fail.
+		To avoid false alarm, clear errors upon first entry. */
+		if ( xFirstTimeCheck == pdTRUE )
+		{
+			uxErrorHasOccurred = 0;
+			xFirstTimeCheck = pdFALSE;
 		}
 		
 		vTaskDelay( mainCHECK_PERIOD );

@@ -35,16 +35,24 @@
 #include "regtest.h"
 #include "integer.h"
 #include "PollQ.h"
+#include "partest.h"
 
 /* Priority definitions for most of the tasks in the demo application. */
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
 #define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 2 )
+#define mainLED_BLINK_PRIORITY			( tskIDLE_PRIORITY + 2 )
 
 /* The period between executions of the check task. */
 #define mainCHECK_PERIOD				( ( TickType_t ) 1000  )
 
+/* The period to toggle LED. */
+#define mainBLINK_LED_OK_HALF_PERIOD	( ( TickType_t ) 100 )
+
 /* The task function for the "Check" task. */
 static void vErrorChecks( void *pvParameters );
+
+/* The task function for blinking LED at a certain frequency. */
+static void vBlinkOnboardUserLED( void *pvParameters );
 
 int main(void)
 {
@@ -58,9 +66,10 @@ int main(void)
 	/* Optionally enable below test. This port only has 2KB RAM. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
+	xTaskCreate( vBlinkOnboardUserLED, "LED", 50, NULL, mainCHECK_TASK_PRIORITY, NULL );
 
 	/* Create the tasks defined within this file. */
-	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
+	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainLED_BLINK_PRIORITY, NULL );
 
 	/* In this port, to use preemptive scheduler define configUSE_PREEMPTION
 	as 1 in portmacro.h.  To use the cooperative scheduler define
@@ -104,6 +113,22 @@ BaseType_t xFirstTimeCheck = pdTRUE;
 		
 		vTaskDelay( mainCHECK_PERIOD );
 	}
+}
+
+/*-----------------------------------------------------------*/
+static void vBlinkOnboardUserLED( void *pvParameters )
+{
+	/* The parameters are not used. */
+	( void ) pvParameters;
+
+	/* Cycle for ever, blink onboard user LED at a certain frequency. */
+	for( ;; )
+	{
+		vParTestToggleLED( 0 );
+		
+		vTaskDelay( mainBLINK_LED_OK_HALF_PERIOD );
+	}
+
 }
 
 /*-----------------------------------------------------------*/

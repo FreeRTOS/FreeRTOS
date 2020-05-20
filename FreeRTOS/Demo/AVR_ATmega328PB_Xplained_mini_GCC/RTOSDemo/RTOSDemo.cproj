@@ -363,6 +363,9 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ParTest.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="regtest.c">
       <SubType>compile</SubType>
     </Compile>

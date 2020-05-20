@@ -51,6 +51,7 @@
 #define configMAX_TASK_NAME_LEN		( 8 )
 
 #define configUSE_PREEMPTION		1
+#define configUSE_TIME_SLICING		0
 #define configIDLE_SHOULD_YIELD		1
 
 #define configUSE_IDLE_HOOK			1

@@ -73,7 +73,15 @@ BaseType_t xAreRegTestTasksStillRunning( void )
 BaseType_t xReturn;
 
 	/* If a register was found to contain an unexpected value then the
-	uxRegTestError variable would have been set to a non zero value. */
+	 * uxRegTestError variable would have been set to a none zero value. 
+	 *
+	 * This check guarantees no false positive, but does not guarantee test
+	 * has actually run. Could have a counter to track how many times the loop
+	 * has been entered and ensure that the number is monotonically incrementing.  
+	 * And then it'll subject to integer overflow issue. To make things simple 
+	 * straight forward, set a breakpoint at the end of the loop in prvRegisterCheck1() 
+	 * and prvRegisterCheck2(). Make sure both can be hit. 
+	 */
 	if( uxRegTestError1 == 0 && uxRegTestError2 == 0 )
 	{
 		xReturn = pdTRUE;
@@ -243,6 +251,9 @@ static void prvRegisterCheck1( void *pvParameters )
 		asm(	"LDI	r31,	0x9E"			);
 		asm(	"CPSE	r31,	r30"			);
 		asm(	"STS	uxRegTestError1, r30"	);
+		
+		/* Give other tasks of the same priority a chance to run. */
+		taskYIELD();
 	}
 }
 /*-----------------------------------------------------------*/
@@ -403,5 +414,8 @@ static void prvRegisterCheck2( void *pvParameters )
 		asm(	"LDI	r31,	30"				);
 		asm(	"CPSE	r31,	r30"			);
 		asm(	"STS	uxRegTestError2, r30"	);
+		
+		/* Give other tasks of the same priority a chance to run. */
+		taskYIELD();
 	}
 }

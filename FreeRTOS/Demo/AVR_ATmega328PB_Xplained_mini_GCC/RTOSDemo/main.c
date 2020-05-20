@@ -33,12 +33,15 @@
 
 /* Tests. */
 #include "regtest.h"
+#include "integer.h"
+#include "PollQ.h"
 
 /* Priority definitions for most of the tasks in the demo application. */
 #define mainCHECK_TASK_PRIORITY			( tskIDLE_PRIORITY + 3 )
+#define mainQUEUE_POLL_PRIORITY			( tskIDLE_PRIORITY + 2 )
 
 /* The period between executions of the check task. */
-#define mainCHECK_PERIOD				( ( TickType_t ) 100 / portTICK_PERIOD_MS  )
+#define mainCHECK_PERIOD				( ( TickType_t ) 1000  )
 
 /* The task function for the "Check" task. */
 static void vErrorChecks( void *pvParameters );
@@ -49,8 +52,12 @@ int main(void)
 	   This is generated from Atmel START project. */
 	atmel_start_init();
 	
-	/* Standard tests. */
+	/* Standard register test. */
 	vStartRegTestTasks();
+	
+	/* Optionally enable below test. This port only has 2KB RAM. */
+	vStartIntegerMathTasks( tskIDLE_PRIORITY );
+	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 
 	/* Create the tasks defined within this file. */
 	xTaskCreate( vErrorChecks, "Check", configMINIMAL_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -75,7 +82,15 @@ static UBaseType_t uxErrorHasOccurred = 0;
 	{
 		if( xAreRegTestTasksStillRunning() != pdTRUE )
 		{
-			uxErrorHasOccurred |= 0x01U;
+			uxErrorHasOccurred |= 0x01U ;
+		}
+		if( xAreIntegerMathsTaskStillRunning() != pdTRUE )
+		{
+			uxErrorHasOccurred |= ( 0x01U << 1);
+		}
+		if( xArePollingQueuesStillRunning() != pdTRUE )
+		{
+			uxErrorHasOccurred |= ( 0x01U << 2);
 		}
 		
 		vTaskDelay( mainCHECK_PERIOD );

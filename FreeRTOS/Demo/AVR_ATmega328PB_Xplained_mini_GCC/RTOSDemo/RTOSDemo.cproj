@@ -176,12 +176,14 @@
       <Value>%24(PackRepoDir)\Atmel\ATmega_DFP\1.4.351\include</Value>
       <Value>../../../../Source/include</Value>
       <Value>../../../../Source/portable/ThirdParty/GCC/ATmega</Value>
+      <Value>../../../Common/include</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
   <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
-  <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+  <avrgcc.compiler.optimization.DebugLevel>Maximum (-g3)</avrgcc.compiler.optimization.DebugLevel>
   <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+  <avrgcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -fstack-usage</avrgcc.compiler.miscellaneous.OtherFlags>
   <avrgcc.linker.libraries.Libraries>
     <ListValues>
       <Value>libm</Value>
@@ -314,6 +316,14 @@
       <SubType>compile</SubType>
       <Link>FreeRTOS\timers.c</Link>
     </Compile>
+    <Compile Include="..\..\Common\Minimal\integer.c">
+      <SubType>compile</SubType>
+      <Link>Minimal\integer.c</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Minimal\PollQ.c">
+      <SubType>compile</SubType>
+      <Link>Minimal\PollQ.c</Link>
+    </Compile>
     <Compile Include="atmel_start.c">
       <SubType>compile</SubType>
     </Compile>
@@ -400,6 +410,7 @@
     <Folder Include="FreeRTOS\portable\ATmega" />
     <Folder Include="include\" />
     <Folder Include="FreeRTOS" />
+    <Folder Include="Minimal" />
     <Folder Include="src\" />
     <Folder Include="utils\" />
     <Folder Include="utils\assembler\" />

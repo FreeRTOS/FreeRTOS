@@ -123,10 +123,11 @@ static uint8_t * prvSkipNameField( uint8_t *pucByte,
  * Process a response packet from a DNS server.
  * The parameter 'xExpected' indicates whether the identifier in the reply
  * was expected, and thus if the DNS cache may be updated with the reply.
- */
-static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
+ *
+uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
 								  size_t uxBufferLength,
 								  BaseType_t xExpected );
+*/
 
 /*
  * Prepare and send a message to a DNS server.  'uxReadTimeOut_ticks' will be passed as
@@ -962,7 +963,7 @@ size_t uxPayloadSize;
 #endif /* ipconfigUSE_NBNS */
 /*-----------------------------------------------------------*/
 
-static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
+uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
 								  size_t uxBufferLength,
 								  BaseType_t xExpected )
 {

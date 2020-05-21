@@ -26,6 +26,13 @@
 #ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_DECLARE_H_
 #define _AWS_FREERTOS_TCP_TEST_ACCESS_DECLARE_H_
 
+#include <stdint.h>
+#include <FreeRTOS.h>
+#include <list.h>
+#include <portmacro.h>
+#include <FreeRTOS_IP.h>
+#include <FreeRTOS_IP_Private.h>
+
 uint32_t TEST_FreeRTOS_TCP_prvParseDNSReply( uint8_t * pucUDPPayloadBuffer,
                                              size_t xBufferLength,
                                              TickType_t xIdentifier );

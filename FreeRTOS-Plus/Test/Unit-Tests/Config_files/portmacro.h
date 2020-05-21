@@ -64,7 +64,7 @@ typedef unsigned long UBaseType_t;
 /* Hardware specifics. */
 #define portSTACK_GROWTH			( -1 )
 #define portTICK_PERIOD_MS			( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portINLINE __inline
+#define portINLINE
 
 #if defined( __x86_64__) || defined( _M_X64 )
 	#define portBYTE_ALIGNMENT		8

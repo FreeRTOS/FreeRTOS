@@ -1,0 +1,912 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - cmock_test.info - Test/Unit-Tests/Config_files/FreeRTOS_IP_Private.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">Test/Unit-Tests/Config_files</a> - FreeRTOS_IP_Private.h<span style="font-size: 80%;"> (source / <a href="FreeRTOS_IP_Private.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">cmock_test.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-05-21 10:22:30</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : /*</a>
+<span class="lineNum">       2 </span>                :            :  * FreeRTOS+TCP V2.2.0
+<span class="lineNum">       3 </span>                :            :  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+<span class="lineNum">       4 </span>                :            :  *
+<span class="lineNum">       5 </span>                :            :  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+<span class="lineNum">       6 </span>                :            :  * this software and associated documentation files (the &quot;Software&quot;), to deal in
+<span class="lineNum">       7 </span>                :            :  * the Software without restriction, including without limitation the rights to
+<span class="lineNum">       8 </span>                :            :  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+<span class="lineNum">       9 </span>                :            :  * the Software, and to permit persons to whom the Software is furnished to do so,
+<span class="lineNum">      10 </span>                :            :  * subject to the following conditions:
+<span class="lineNum">      11 </span>                :            :  *
+<span class="lineNum">      12 </span>                :            :  * The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      13 </span>                :            :  * copies or substantial portions of the Software.
+<span class="lineNum">      14 </span>                :            :  *
+<span class="lineNum">      15 </span>                :            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      16 </span>                :            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+<span class="lineNum">      17 </span>                :            :  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+<span class="lineNum">      18 </span>                :            :  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+<span class="lineNum">      19 </span>                :            :  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+<span class="lineNum">      20 </span>                :            :  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<span class="lineNum">      21 </span>                :            :  *
+<span class="lineNum">      22 </span>                :            :  * http://aws.amazon.com/freertos
+<span class="lineNum">      23 </span>                :            :  * http://www.FreeRTOS.org
+<span class="lineNum">      24 </span>                :            :  */
+<span class="lineNum">      25 </span>                :            : 
+<span class="lineNum">      26 </span>                :            : #ifndef FREERTOS_IP_PRIVATE_H
+<span class="lineNum">      27 </span>                :            : #define FREERTOS_IP_PRIVATE_H
+<span class="lineNum">      28 </span>                :            : 
+<span class="lineNum">      29 </span>                :            : #ifdef __cplusplus
+<span class="lineNum">      30 </span>                :            : extern &quot;C&quot; {
+<span class="lineNum">      31 </span>                :            : #endif
+<span class="lineNum">      32 </span>                :            : 
+<span class="lineNum">      33 </span>                :            : /* Application level configuration options. */
+<span class="lineNum">      34 </span>                :            : #include &quot;FreeRTOSIPConfig.h&quot;
+<span class="lineNum">      35 </span>                :            : #include &quot;FreeRTOSIPConfigDefaults.h&quot;
+<span class="lineNum">      36 </span>                :            : #include &quot;FreeRTOS_Sockets.h&quot;
+<span class="lineNum">      37 </span>                :            : #include &quot;IPTraceMacroDefaults.h&quot;
+<span class="lineNum">      38 </span>                :            : #include &quot;FreeRTOS_Stream_Buffer.h&quot;
+<span class="lineNum">      39 </span>                :            : #if( ipconfigUSE_TCP == 1 )
+<span class="lineNum">      40 </span>                :            :         #include &quot;FreeRTOS_TCP_WIN.h&quot;
+<span class="lineNum">      41 </span>                :            :         #include &quot;FreeRTOS_TCP_IP.h&quot;
+<span class="lineNum">      42 </span>                :            : #endif
+<span class="lineNum">      43 </span>                :            : 
+<span class="lineNum">      44 </span>                :            : #include &quot;event_groups.h&quot;
+<span class="lineNum">      45 </span>                :            : 
+<span class="lineNum">      46 </span>                :            : typedef struct xNetworkAddressingParameters
+<span class="lineNum">      47 </span>                :            : {
+<span class="lineNum">      48 </span>                :            :         uint32_t ulDefaultIPAddress;
+<span class="lineNum">      49 </span>                :            :         uint32_t ulNetMask;
+<span class="lineNum">      50 </span>                :            :         uint32_t ulGatewayAddress;
+<span class="lineNum">      51 </span>                :            :         uint32_t ulDNSServerAddress;
+<span class="lineNum">      52 </span>                :            :         uint32_t ulBroadcastAddress;
+<span class="lineNum">      53 </span>                :            : } NetworkAddressingParameters_t;
+<span class="lineNum">      54 </span>                :            : 
+<span class="lineNum">      55 </span>                :            : extern BaseType_t xTCPWindowLoggingLevel;
+<span class="lineNum">      56 </span>                :            : 
+<span class="lineNum">      57 </span>                :            : /*-----------------------------------------------------------*/
+<span class="lineNum">      58 </span>                :            : /* Protocol headers.                                         */
+<span class="lineNum">      59 </span>                :            : /*-----------------------------------------------------------*/
+<span class="lineNum">      60 </span>                :            : 
+<span class="lineNum">      61 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">      62 </span>                :            : struct xETH_HEADER
+<span class="lineNum">      63 </span>                :            : {
+<span class="lineNum">      64 </span>                :            :         MACAddress_t xDestinationAddress; /*  0 + 6 = 6  */
+<span class="lineNum">      65 </span>                :            :         MACAddress_t xSourceAddress;      /*  6 + 6 = 12 */
+<span class="lineNum">      66 </span>                :            :         uint16_t usFrameType;              /* 12 + 2 = 14 */
+<span class="lineNum">      67 </span>                :            : }
+<span class="lineNum">      68 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">      69 </span>                :            : typedef struct xETH_HEADER EthernetHeader_t;
+<span class="lineNum">      70 </span>                :            : 
+<span class="lineNum">      71 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">      72 </span>                :            : struct xARP_HEADER
+<span class="lineNum">      73 </span>                :            : {
+<span class="lineNum">      74 </span>                :            :         uint16_t usHardwareType;                                /*  0 +  2 =  2 */
+<span class="lineNum">      75 </span>                :            :         uint16_t usProtocolType;                                /*  2 +  2 =  4 */
+<span class="lineNum">      76 </span>                :            :         uint8_t ucHardwareAddressLength;                /*  4 +  1 =  5 */
+<span class="lineNum">      77 </span>                :            :         uint8_t ucProtocolAddressLength;                /*  5 +  1 =  6 */
+<span class="lineNum">      78 </span>                :            :         uint16_t usOperation;                                   /*  6 +  2 =  8 */
+<span class="lineNum">      79 </span>                :            :         MACAddress_t xSenderHardwareAddress;    /*  8 +  6 = 14 */
+<span class="lineNum">      80 </span>                :            :         uint8_t ucSenderProtocolAddress[ 4 ];   /* 14 +  4 = 18  */
+<span class="lineNum">      81 </span>                :            :         MACAddress_t xTargetHardwareAddress;    /* 18 +  6 = 24  */
+<span class="lineNum">      82 </span>                :            :         uint32_t ulTargetProtocolAddress;               /* 24 +  4 = 28  */
+<span class="lineNum">      83 </span>                :            : }
+<span class="lineNum">      84 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">      85 </span>                :            : typedef struct xARP_HEADER ARPHeader_t;
+<span class="lineNum">      86 </span>                :            : 
+<span class="lineNum">      87 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">      88 </span>                :            : struct xIP_HEADER
+<span class="lineNum">      89 </span>                :            : {
+<span class="lineNum">      90 </span>                :            :         uint8_t ucVersionHeaderLength;        /*  0 + 1 =  1 */
+<span class="lineNum">      91 </span>                :            :         uint8_t ucDifferentiatedServicesCode; /*  1 + 1 =  2 */
+<span class="lineNum">      92 </span>                :            :         uint16_t usLength;                    /*  2 + 2 =  4 */
+<span class="lineNum">      93 </span>                :            :         uint16_t usIdentification;            /*  4 + 2 =  6 */
+<span class="lineNum">      94 </span>                :            :         uint16_t usFragmentOffset;            /*  6 + 2 =  8 */
+<span class="lineNum">      95 </span>                :            :         uint8_t ucTimeToLive;                 /*  8 + 1 =  9 */
+<span class="lineNum">      96 </span>                :            :         uint8_t ucProtocol;                   /*  9 + 1 = 10 */
+<span class="lineNum">      97 </span>                :            :         uint16_t usHeaderChecksum;            /* 10 + 2 = 12 */
+<span class="lineNum">      98 </span>                :            :         uint32_t ulSourceIPAddress;           /* 12 + 4 = 16 */
+<span class="lineNum">      99 </span>                :            :         uint32_t ulDestinationIPAddress;      /* 16 + 4 = 20 */
+<span class="lineNum">     100 </span>                :            : }
+<span class="lineNum">     101 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     102 </span>                :            : typedef struct xIP_HEADER IPHeader_t;
+<span class="lineNum">     103 </span>                :            : 
+<span class="lineNum">     104 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     105 </span>                :            : struct xIGMP_HEADER
+<span class="lineNum">     106 </span>                :            : {
+<span class="lineNum">     107 </span>                :            :         uint8_t ucVersionType;     /* 0 + 1 = 1 */
+<span class="lineNum">     108 </span>                :            :         uint8_t ucMaxResponseTime; /* 1 + 1 = 2 */
+<span class="lineNum">     109 </span>                :            :         uint16_t usChecksum;       /* 2 + 2 = 4 */
+<span class="lineNum">     110 </span>                :            :         uint32_t usGroupAddress;   /* 4 + 4 = 8 */
+<span class="lineNum">     111 </span>                :            : }
+<span class="lineNum">     112 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     113 </span>                :            : typedef struct xIGMP_HEADER IGMPHeader_t;
+<span class="lineNum">     114 </span>                :            : 
+<span class="lineNum">     115 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     116 </span>                :            : struct xICMP_HEADER
+<span class="lineNum">     117 </span>                :            : {
+<span class="lineNum">     118 </span>                :            :         uint8_t ucTypeOfMessage;   /* 0 + 1 = 1 */
+<span class="lineNum">     119 </span>                :            :         uint8_t ucTypeOfService;   /* 1 + 1 = 2 */
+<span class="lineNum">     120 </span>                :            :         uint16_t usChecksum;       /* 2 + 2 = 4 */
+<span class="lineNum">     121 </span>                :            :         uint16_t usIdentifier;     /* 4 + 2 = 6 */
+<span class="lineNum">     122 </span>                :            :         uint16_t usSequenceNumber; /* 6 + 2 = 8 */
+<span class="lineNum">     123 </span>                :            : }
+<span class="lineNum">     124 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     125 </span>                :            : typedef struct xICMP_HEADER ICMPHeader_t;
+<span class="lineNum">     126 </span>                :            : 
+<span class="lineNum">     127 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     128 </span>                :            : struct xUDP_HEADER
+<span class="lineNum">     129 </span>                :            : {
+<span class="lineNum">     130 </span>                :            :         uint16_t usSourcePort;      /* 0 + 2 = 2 */
+<span class="lineNum">     131 </span>                :            :         uint16_t usDestinationPort; /* 2 + 2 = 4 */
+<span class="lineNum">     132 </span>                :            :         uint16_t usLength;          /* 4 + 2 = 6 */
+<span class="lineNum">     133 </span>                :            :         uint16_t usChecksum;        /* 6 + 2 = 8 */
+<span class="lineNum">     134 </span>                :            : }
+<span class="lineNum">     135 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     136 </span>                :            : typedef struct xUDP_HEADER UDPHeader_t;
+<span class="lineNum">     137 </span>                :            : 
+<span class="lineNum">     138 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     139 </span>                :            : struct xTCP_HEADER
+<span class="lineNum">     140 </span>                :            : {
+<span class="lineNum">     141 </span>                :            :         uint16_t usSourcePort;          /* +  2 =  2 */
+<span class="lineNum">     142 </span>                :            :         uint16_t usDestinationPort;     /* +  2 =  4 */
+<span class="lineNum">     143 </span>                :            :         uint32_t ulSequenceNumber;      /* +  4 =  8 */
+<span class="lineNum">     144 </span>                :            :         uint32_t ulAckNr;               /* +  4 = 12 */
+<span class="lineNum">     145 </span>                :            :         uint8_t  ucTCPOffset;           /* +  1 = 13 */
+<span class="lineNum">     146 </span>                :            :         uint8_t  ucTCPFlags;            /* +  1 = 14 */
+<span class="lineNum">     147 </span>                :            :         uint16_t usWindow;                      /* +  2 = 15 */
+<span class="lineNum">     148 </span>                :            :         uint16_t usChecksum;            /* +  2 = 18 */
+<span class="lineNum">     149 </span>                :            :         uint16_t usUrgent;                      /* +  2 = 20 */
+<span class="lineNum">     150 </span>                :            : #if ipconfigUSE_TCP == 1
+<span class="lineNum">     151 </span>                :            :         /* the option data is not a part of the TCP header */
+<span class="lineNum">     152 </span>                :            :         uint8_t  ucOptdata[ipSIZE_TCP_OPTIONS];         /* + 12 = 32 */
+<span class="lineNum">     153 </span>                :            : #endif
+<span class="lineNum">     154 </span>                :            : }
+<span class="lineNum">     155 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     156 </span>                :            : typedef struct xTCP_HEADER TCPHeader_t;
+<span class="lineNum">     157 </span>                :            : 
+<span class="lineNum">     158 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     159 </span>                :            : struct xPSEUDO_HEADER
+<span class="lineNum">     160 </span>                :            : {
+<span class="lineNum">     161 </span>                :            :         uint32_t ulSourceAddress;
+<span class="lineNum">     162 </span>                :            :         uint32_t ulDestinationAddress;
+<span class="lineNum">     163 </span>                :            :         uint8_t ucZeros;
+<span class="lineNum">     164 </span>                :            :         uint8_t ucProtocol;
+<span class="lineNum">     165 </span>                :            :         uint16_t usUDPLength;
+<span class="lineNum">     166 </span>                :            : }
+<span class="lineNum">     167 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     168 </span>                :            : typedef struct xPSEUDO_HEADER PseudoHeader_t;
+<span class="lineNum">     169 </span>                :            : 
+<span class="lineNum">     170 </span>                :            : /*-----------------------------------------------------------*/
+<span class="lineNum">     171 </span>                :            : /* Nested protocol packets.                                  */
+<span class="lineNum">     172 </span>                :            : /*-----------------------------------------------------------*/
+<span class="lineNum">     173 </span>                :            : 
+<span class="lineNum">     174 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     175 </span>                :            : struct xARP_PACKET
+<span class="lineNum">     176 </span>                :            : {
+<span class="lineNum">     177 </span>                :            :         EthernetHeader_t xEthernetHeader;       /*  0 + 14 = 14 */
+<span class="lineNum">     178 </span>                :            :         ARPHeader_t xARPHeader;                 /* 14 + 28 = 42 */
+<span class="lineNum">     179 </span>                :            : }
+<span class="lineNum">     180 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     181 </span>                :            : typedef struct xARP_PACKET ARPPacket_t;
+<span class="lineNum">     182 </span>                :            : 
+<span class="lineNum">     183 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     184 </span>                :            : struct xIP_PACKET
+<span class="lineNum">     185 </span>                :            : {
+<span class="lineNum">     186 </span>                :            :         EthernetHeader_t xEthernetHeader;
+<span class="lineNum">     187 </span>                :            :         IPHeader_t xIPHeader;
+<span class="lineNum">     188 </span>                :            : }
+<span class="lineNum">     189 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     190 </span>                :            : typedef struct xIP_PACKET IPPacket_t;
+<span class="lineNum">     191 </span>                :            : 
+<span class="lineNum">     192 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     193 </span>                :            : struct xICMP_PACKET
+<span class="lineNum">     194 </span>                :            : {
+<span class="lineNum">     195 </span>                :            :         EthernetHeader_t xEthernetHeader;
+<span class="lineNum">     196 </span>                :            :         IPHeader_t xIPHeader;
+<span class="lineNum">     197 </span>                :            :         ICMPHeader_t xICMPHeader;
+<span class="lineNum">     198 </span>                :            : }
+<span class="lineNum">     199 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     200 </span>                :            : typedef struct xICMP_PACKET ICMPPacket_t;
+<span class="lineNum">     201 </span>                :            : 
+<span class="lineNum">     202 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     203 </span>                :            : struct xUDP_PACKET
+<span class="lineNum">     204 </span>                :            : {
+<span class="lineNum">     205 </span>                :            :         EthernetHeader_t xEthernetHeader; /*  0 + 14 = 14 */
+<span class="lineNum">     206 </span>                :            :         IPHeader_t xIPHeader;             /* 14 + 20 = 34 */
+<span class="lineNum">     207 </span>                :            :         UDPHeader_t xUDPHeader;           /* 34 +  8 = 42 */
+<span class="lineNum">     208 </span>                :            : }
+<span class="lineNum">     209 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     210 </span>                :            : typedef struct xUDP_PACKET UDPPacket_t;
+<span class="lineNum">     211 </span>                :            : 
+<span class="lineNum">     212 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     213 </span>                :            : struct xTCP_PACKET
+<span class="lineNum">     214 </span>                :            : {
+<span class="lineNum">     215 </span>                :            :         EthernetHeader_t xEthernetHeader; /*  0 + 14 = 14 */
+<span class="lineNum">     216 </span>                :            :         IPHeader_t xIPHeader;             /* 14 + 20 = 34 */
+<span class="lineNum">     217 </span>                :            :         TCPHeader_t xTCPHeader;           /* 34 + 32 = 66 */
+<span class="lineNum">     218 </span>                :            : }
+<span class="lineNum">     219 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     220 </span>                :            : typedef struct xTCP_PACKET TCPPacket_t;
+<span class="lineNum">     221 </span>                :            : 
+<span class="lineNum">     222 </span>                :            : typedef union XPROT_PACKET
+<span class="lineNum">     223 </span>                :            : {
+<span class="lineNum">     224 </span>                :            :         ARPPacket_t xARPPacket;
+<span class="lineNum">     225 </span>                :            :         TCPPacket_t xTCPPacket;
+<span class="lineNum">     226 </span>                :            :         UDPPacket_t xUDPPacket;
+<span class="lineNum">     227 </span>                :            :         ICMPPacket_t xICMPPacket;
+<span class="lineNum">     228 </span>                :            : } ProtocolPacket_t;
+<span class="lineNum">     229 </span>                :            : 
+<span class="lineNum">     230 </span>                :            : 
+<span class="lineNum">     231 </span>                :            : /* The maximum UDP payload length. */
+<span class="lineNum">     232 </span>                :            : #define ipMAX_UDP_PAYLOAD_LENGTH ( ( ipconfigNETWORK_MTU - ipSIZE_OF_IPv4_HEADER ) - ipSIZE_OF_UDP_HEADER )
+<span class="lineNum">     233 </span>                :            : 
+<span class="lineNum">     234 </span>                :            : typedef enum
+<span class="lineNum">     235 </span>                :            : {
+<span class="lineNum">     236 </span>                :            :         eReleaseBuffer = 0,             /* Processing the frame did not find anything to do - just release the buffer. */
+<span class="lineNum">     237 </span>                :            :         eProcessBuffer,                 /* An Ethernet frame has a valid address - continue process its contents. */
+<span class="lineNum">     238 </span>                :            :         eReturnEthernetFrame,   /* The Ethernet frame contains an ARP or ICMP packet that can be returned to its source. */
+<span class="lineNum">     239 </span>                :            :         eFrameConsumed                  /* Processing the Ethernet packet contents resulted in the payload being sent to the stack. */
+<span class="lineNum">     240 </span>                :            : } eFrameProcessingResult_t;
+<span class="lineNum">     241 </span>                :            : 
+<span class="lineNum">     242 </span>                :            : typedef enum
+<span class="lineNum">     243 </span>                :            : {
+<span class="lineNum">     244 </span>                :            :         eNoEvent = -1,
+<span class="lineNum">     245 </span>                :            :         eNetworkDownEvent,              /* 0: The network interface has been lost and/or needs [re]connecting. */
+<span class="lineNum">     246 </span>                :            :         eNetworkRxEvent,                /* 1: The network interface has queued a received Ethernet frame. */
+<span class="lineNum">     247 </span>                :            :         eNetworkTxEvent,                /* 2: Let the IP-task send a network packet. */
+<span class="lineNum">     248 </span>                :            :         eARPTimerEvent,                 /* 3: The ARP timer expired. */
+<span class="lineNum">     249 </span>                :            :         eStackTxEvent,                  /* 4: The software stack has queued a packet to transmit. */
+<span class="lineNum">     250 </span>                :            :         eDHCPEvent,                             /* 5: Process the DHCP state machine. */
+<span class="lineNum">     251 </span>                :            :         eTCPTimerEvent,                 /* 6: See if any TCP socket needs attention. */
+<span class="lineNum">     252 </span>                :            :         eTCPAcceptEvent,                /* 7: Client API FreeRTOS_accept() waiting for client connections. */
+<span class="lineNum">     253 </span>                :            :         eTCPNetStat,                    /* 8: IP-task is asked to produce a netstat listing. */
+<span class="lineNum">     254 </span>                :            :         eSocketBindEvent,               /* 9: Send a message to the IP-task to bind a socket to a port. */
+<span class="lineNum">     255 </span>                :            :         eSocketCloseEvent,              /*10: Send a message to the IP-task to close a socket. */
+<span class="lineNum">     256 </span>                :            :         eSocketSelectEvent,             /*11: Send a message to the IP-task for select(). */
+<span class="lineNum">     257 </span>                :            :         eSocketSignalEvent,             /*12: A socket must be signalled. */
+<span class="lineNum">     258 </span>                :            : } eIPEvent_t;
+<span class="lineNum">     259 </span>                :            : 
+<span class="lineNum">     260 </span>                :            : typedef struct IP_TASK_COMMANDS
+<span class="lineNum">     261 </span>                :            : {
+<span class="lineNum">     262 </span>                :            :         eIPEvent_t eEventType;
+<span class="lineNum">     263 </span>                :            :         void *pvData;
+<span class="lineNum">     264 </span>                :            : } IPStackEvent_t;
+<span class="lineNum">     265 </span>                :            : 
+<span class="lineNum">     266 </span>                :            : #define ipBROADCAST_IP_ADDRESS 0xffffffffUL
+<span class="lineNum">     267 </span>                :            : 
+<span class="lineNum">     268 </span>                :            : /* Offset into the Ethernet frame that is used to temporarily store information
+<span class="lineNum">     269 </span>                :            : on the fragmentation status of the packet being sent.  The value is important,
+<span class="lineNum">     270 </span>                :            : as it is past the location into which the destination address will get placed. */
+<span class="lineNum">     271 </span>                :            : #define ipFRAGMENTATION_PARAMETERS_OFFSET               ( 6 )
+<span class="lineNum">     272 </span>                :            : #define ipSOCKET_OPTIONS_OFFSET                                 ( 6 )
+<span class="lineNum">     273 </span>                :            : 
+<span class="lineNum">     274 </span>                :            : /* Only used when outgoing fragmentation is being used (FreeRTOSIPConfig.h
+<span class="lineNum">     275 </span>                :            : setting. */
+<span class="lineNum">     276 </span>                :            : #define ipGET_UDP_PAYLOAD_OFFSET_FOR_FRAGMENT( usFragmentOffset ) ( ( ( usFragmentOffset ) == 0 ) ? ipUDP_PAYLOAD_OFFSET_IPv4 : ipIP_PAYLOAD_OFFSET )
+<span class="lineNum">     277 </span>                :            : 
+<span class="lineNum">     278 </span>                :            : /* The offset into a UDP packet at which the UDP data (payload) starts. */
+<span class="lineNum">     279 </span>                :            : #define ipUDP_PAYLOAD_OFFSET_IPv4       ( sizeof( UDPPacket_t ) )
+<span class="lineNum">     280 </span>                :            : 
+<span class="lineNum">     281 </span>                :            : /* The offset into an IP packet into which the IP data (payload) starts. */
+<span class="lineNum">     282 </span>                :            : #define ipIP_PAYLOAD_OFFSET             ( sizeof( IPPacket_t ) )
+<span class="lineNum">     283 </span>                :            : 
+<span class="lineNum">     284 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     285 </span>                :            : struct xUDP_IP_FRAGMENT_PARAMETERS
+<span class="lineNum">     286 </span>                :            : {
+<span class="lineNum">     287 </span>                :            :         uint8_t ucSocketOptions;
+<span class="lineNum">     288 </span>                :            :         uint8_t ucPadFor16BitAlignment;
+<span class="lineNum">     289 </span>                :            :         uint16_t usFragmentedPacketOffset;
+<span class="lineNum">     290 </span>                :            :         uint16_t usFragmentLength;
+<span class="lineNum">     291 </span>                :            :         uint16_t usPayloadChecksum;
+<span class="lineNum">     292 </span>                :            : }
+<span class="lineNum">     293 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     294 </span>                :            : typedef struct xUDP_IP_FRAGMENT_PARAMETERS IPFragmentParameters_t;
+<span class="lineNum">     295 </span>                :            : 
+<span class="lineNum">     296 </span>                :            : #if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+<span class="lineNum">     297 </span>                :            : 
+<span class="lineNum">     298 </span>                :            :         /* Ethernet frame types. */
+<span class="lineNum">     299 </span>                :            :         #define ipARP_FRAME_TYPE        ( 0x0608U )
+<span class="lineNum">     300 </span>                :            :         #define ipIPv4_FRAME_TYPE       ( 0x0008U )
+<span class="lineNum">     301 </span>                :            : 
+<span class="lineNum">     302 </span>                :            :         /* ARP related definitions. */
+<span class="lineNum">     303 </span>                :            :         #define ipARP_PROTOCOL_TYPE                             ( 0x0008U )
+<span class="lineNum">     304 </span>                :            :         #define ipARP_HARDWARE_TYPE_ETHERNET    ( 0x0100U )
+<span class="lineNum">     305 </span>                :            :         #define ipARP_REQUEST                                   ( 0x0100U )
+<span class="lineNum">     306 </span>                :            :         #define ipARP_REPLY                                             ( 0x0200U )
+<span class="lineNum">     307 </span>                :            : 
+<span class="lineNum">     308 </span>                :            : #else
+<span class="lineNum">     309 </span>                :            : 
+<span class="lineNum">     310 </span>                :            :         /* Ethernet frame types. */
+<span class="lineNum">     311 </span>                :            :         #define ipARP_FRAME_TYPE        ( 0x0806U )
+<span class="lineNum">     312 </span>                :            :         #define ipIPv4_FRAME_TYPE       ( 0x0800U )
+<span class="lineNum">     313 </span>                :            : 
+<span class="lineNum">     314 </span>                :            :         /* ARP related definitions. */
+<span class="lineNum">     315 </span>                :            :         #define ipARP_PROTOCOL_TYPE ( 0x0800U )
+<span class="lineNum">     316 </span>                :            :         #define ipARP_HARDWARE_TYPE_ETHERNET ( 0x0001U )
+<span class="lineNum">     317 </span>                :            :         #define ipARP_REQUEST ( 0x0001 )
+<span class="lineNum">     318 </span>                :            :         #define ipARP_REPLY ( 0x0002 )
+<span class="lineNum">     319 </span>                :            : 
+<span class="lineNum">     320 </span>                :            : #endif /* ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN */
+<span class="lineNum">     321 </span>                :            : 
+<span class="lineNum">     322 </span>                :            : 
+<span class="lineNum">     323 </span>                :            : /* For convenience, a MAC address of all zeros and another of all 0xffs are
+<span class="lineNum">     324 </span>                :            : defined const for quick reference. */
+<span class="lineNum">     325 </span>                :            : extern const MACAddress_t xBroadcastMACAddress; /* all 0xff's */
+<span class="lineNum">     326 </span>                :            : extern uint16_t usPacketIdentifier;
+<span class="lineNum">     327 </span>                :            : 
+<span class="lineNum">     328 </span>                :            : /* Define a default UDP packet header (declared in FreeRTOS_UDP_IP.c) */
+<span class="lineNum">     329 </span>                :            : typedef union xUDPPacketHeader
+<span class="lineNum">     330 </span>                :            : {
+<span class="lineNum">     331 </span>                :            :         uint8_t ucBytes[24];
+<span class="lineNum">     332 </span>                :            :         uint32_t ulWords[6];
+<span class="lineNum">     333 </span>                :            : } UDPPacketHeader_t;
+<span class="lineNum">     334 </span>                :            : extern UDPPacketHeader_t xDefaultPartUDPPacketHeader;
+<span class="lineNum">     335 </span>                :            : 
+<span class="lineNum">     336 </span>                :            : /* Structure that stores the netmask, gateway address and DNS server addresses. */
+<span class="lineNum">     337 </span>                :            : extern NetworkAddressingParameters_t xNetworkAddressing;
+<span class="lineNum">     338 </span>                :            : 
+<span class="lineNum">     339 </span>                :            : /* Structure that stores the defaults for netmask, gateway address and DNS.
+<span class="lineNum">     340 </span>                :            : These values will be copied to 'xNetworkAddressing' in case DHCP is not used,
+<span class="lineNum">     341 </span>                :            : and also in case DHCP does not lead to a confirmed request. */
+<span class="lineNum">     342 </span>                :            : extern NetworkAddressingParameters_t xDefaultAddressing;
+<span class="lineNum">     343 </span>                :            : 
+<span class="lineNum">     344 </span>                :            : /* True when BufferAllocation_1.c was included, false for BufferAllocation_2.c */
+<span class="lineNum">     345 </span>                :            : extern const BaseType_t xBufferAllocFixedSize;
+<span class="lineNum">     346 </span>                :            : 
+<span class="lineNum">     347 </span>                :            : /* Defined in FreeRTOS_Sockets.c */
+<span class="lineNum">     348 </span>                :            : #if ( ipconfigUSE_TCP == 1 )
+<span class="lineNum">     349 </span>                :            :         extern List_t xBoundTCPSocketsList;
+<span class="lineNum">     350 </span>                :            : #endif
+<span class="lineNum">     351 </span>                :            : 
+<span class="lineNum">     352 </span>                :            : /* The local IP address is accessed from within xDefaultPartUDPPacketHeader,
+<span class="lineNum">     353 </span>                :            : rather than duplicated in its own variable. */
+<span class="lineNum">     354 </span>                :            : #define ipLOCAL_IP_ADDRESS_POINTER ( ( uint32_t * ) &amp;( xDefaultPartUDPPacketHeader.ulWords[ 20u / sizeof(uint32_t) ] ) )
+<span class="lineNum">     355 </span>                :            : 
+<span class="lineNum">     356 </span>                :            : /* The local MAC address is accessed from within xDefaultPartUDPPacketHeader,
+<span class="lineNum">     357 </span>                :            : rather than duplicated in its own variable. */
+<span class="lineNum">     358 </span>                :            : #define ipLOCAL_MAC_ADDRESS ( &amp;xDefaultPartUDPPacketHeader.ucBytes[0] )
+<span class="lineNum">     359 </span>                :            : 
+<span class="lineNum">     360 </span>                :            : /* ICMP packets are sent using the same function as UDP packets.  The port
+<span class="lineNum">     361 </span>                :            : number is used to distinguish between the two, as 0 is an invalid UDP port. */
+<span class="lineNum">     362 </span>                :            : #define ipPACKET_CONTAINS_ICMP_DATA                                     ( 0 )
+<span class="lineNum">     363 </span>                :            : 
+<span class="lineNum">     364 </span>                :            : /* For now, the lower 8 bits in 'xEventBits' will be reserved for the above
+<span class="lineNum">     365 </span>                :            : socket events. */
+<span class="lineNum">     366 </span>                :            : #define SOCKET_EVENT_BIT_COUNT   8
+<span class="lineNum">     367 </span>                :            : 
+<span class="lineNum">     368 </span>                :            : #define vSetField16( pxBase, xType, xField, usValue ) \
+<span class="lineNum">     369 </span>                :            : { \
+<span class="lineNum">     370 </span>                :            :         ( ( uint8_t* )( pxBase ) ) [ offsetof( xType, xField ) + 0 ] = ( uint8_t ) ( ( usValue ) &gt;&gt; 8 ); \
+<span class="lineNum">     371 </span>                :            :         ( ( uint8_t* )( pxBase ) ) [ offsetof( xType, xField ) + 1 ] = ( uint8_t ) ( ( usValue ) &amp; 0xff ); \
+<span class="lineNum">     372 </span>                :            : }
+<span class="lineNum">     373 </span>                :            : 
+<span class="lineNum">     374 </span>                :            : #define vSetField32( pxBase, xType, xField, ulValue ) \
+<span class="lineNum">     375 </span>                :            : { \
+<span class="lineNum">     376 </span>                :            :         ( (uint8_t*)( pxBase ) ) [ offsetof( xType, xField ) + 0 ] = ( uint8_t )   ( ( ulValue ) &gt;&gt; 24 ); \
+<span class="lineNum">     377 </span>                :            :         ( (uint8_t*)( pxBase ) ) [ offsetof( xType, xField ) + 1 ] = ( uint8_t ) ( ( ( ulValue ) &gt;&gt; 16 ) &amp; 0xff ); \
+<span class="lineNum">     378 </span>                :            :         ( (uint8_t*)( pxBase ) ) [ offsetof( xType, xField ) + 2 ] = ( uint8_t ) ( ( ( ulValue ) &gt;&gt; 8 ) &amp; 0xff ); \
+<span class="lineNum">     379 </span>                :            :         ( (uint8_t*)( pxBase ) ) [ offsetof( xType, xField ) + 3 ] = ( uint8_t )   ( ( ulValue ) &amp; 0xff ); \
+<span class="lineNum">     380 </span>                :            : }
+<span class="lineNum">     381 </span>                :            : 
+<span class="lineNum">     382 </span>                :            : #define vFlip_16( left, right ) \
+<span class="lineNum">     383 </span>                :            :         do { \
+<span class="lineNum">     384 </span>                :            :                 uint16_t tmp = (left); \
+<span class="lineNum">     385 </span>                :            :                 (left) = (right); \
+<span class="lineNum">     386 </span>                :            :                 (right) = tmp; \
+<span class="lineNum">     387 </span>                :            :         } while (0)
+<span class="lineNum">     388 </span>                :            : 
+<span class="lineNum">     389 </span>                :            : #define vFlip_32( left, right ) \
+<span class="lineNum">     390 </span>                :            :         do { \
+<span class="lineNum">     391 </span>                :            :                 uint32_t tmp = (left); \
+<span class="lineNum">     392 </span>                :            :                 (left) = (right); \
+<span class="lineNum">     393 </span>                :            :                 (right) = tmp; \
+<span class="lineNum">     394 </span>                :            :         } while (0)
+<span class="lineNum">     395 </span>                :            : 
+<span class="lineNum">     396 </span>                :            : #ifndef ARRAY_SIZE
+<span class="lineNum">     397 </span>                :            :         #define ARRAY_SIZE(x)   (BaseType_t)(sizeof(x)/sizeof(x)[0])
+<span class="lineNum">     398 </span>                :            : #endif
+<span class="lineNum">     399 </span>                :            : 
+<span class="lineNum">     400 </span>                :            : /*
+<span class="lineNum">     401 </span>                :            :  * A version of FreeRTOS_GetReleaseNetworkBuffer() that can be called from an
+<span class="lineNum">     402 </span>                :            :  * interrupt.  If a non zero value is returned, then the calling ISR should
+<span class="lineNum">     403 </span>                :            :  * perform a context switch before exiting the ISR.
+<span class="lineNum">     404 </span>                :            :  */
+<span class="lineNum">     405 </span>                :            : BaseType_t FreeRTOS_ReleaseFreeNetworkBufferFromISR( void );
+<span class="lineNum">     406 </span>                :            : 
+<span class="lineNum">     407 </span>                :            : /*
+<span class="lineNum">     408 </span>                :            :  * Create a message that contains a command to initialise the network interface.
+<span class="lineNum">     409 </span>                :            :  * This is used during initialisation, and at any time the network interface
+<span class="lineNum">     410 </span>                :            :  * goes down thereafter.  The network interface hardware driver is responsible
+<span class="lineNum">     411 </span>                :            :  * for sending the message that contains the network interface down command/
+<span class="lineNum">     412 </span>                :            :  * event.
+<span class="lineNum">     413 </span>                :            :  *
+<span class="lineNum">     414 </span>                :            :  * Only use the FreeRTOS_NetworkDownFromISR() version if the function is to be
+<span class="lineNum">     415 </span>                :            :  * called from an interrupt service routine.  If FreeRTOS_NetworkDownFromISR()
+<span class="lineNum">     416 </span>                :            :  * returns a non-zero value then a context switch should be performed ebfore
+<span class="lineNum">     417 </span>                :            :  * the interrupt is exited.
+<span class="lineNum">     418 </span>                :            :  */
+<span class="lineNum">     419 </span>                :            : void FreeRTOS_NetworkDown( void );
+<span class="lineNum">     420 </span>                :            : BaseType_t FreeRTOS_NetworkDownFromISR( void );
+<span class="lineNum">     421 </span>                :            : 
+<span class="lineNum">     422 </span>                :            : /*
+<span class="lineNum">     423 </span>                :            :  * Processes incoming ARP packets.
+<span class="lineNum">     424 </span>                :            :  */
+<span class="lineNum">     425 </span>                :            : eFrameProcessingResult_t eARPProcessPacket( ARPPacket_t * const pxARPFrame );
+<span class="lineNum">     426 </span>                :            : 
+<span class="lineNum">     427 </span>                :            : /*
+<span class="lineNum">     428 </span>                :            :  * Inspect an Ethernet frame to see if it contains data that the stack needs to
+<span class="lineNum">     429 </span>                :            :  * process.  eProcessBuffer is returned if the frame should be processed by the
+<span class="lineNum">     430 </span>                :            :  * stack.  eReleaseBuffer is returned if the frame should be discarded.
+<span class="lineNum">     431 </span>                :            :  */
+<span class="lineNum">     432 </span>                :            : eFrameProcessingResult_t eConsiderFrameForProcessing( const uint8_t * const pucEthernetBuffer );
+<span class="lineNum">     433 </span>                :            : 
+<span class="lineNum">     434 </span>                :            : /*
+<span class="lineNum">     435 </span>                :            :  * Return the checksum generated over xDataLengthBytes from pucNextData.
+<span class="lineNum">     436 </span>                :            :  */
+<span class="lineNum">     437 </span>                :            : uint16_t usGenerateChecksum( uint32_t ulSum, const uint8_t * pucNextData, size_t uxDataLengthBytes );
+<span class="lineNum">     438 </span>                :            : 
+<span class="lineNum">     439 </span>                :            : /* Socket related private functions. */
+<span class="lineNum">     440 </span>                :            : 
+<span class="lineNum">     441 </span>                :            : /* 
+<span class="lineNum">     442 </span>                :            :  * The caller must ensure that pxNetworkBuffer-&gt;xDataLength is the UDP packet 
+<span class="lineNum">     443 </span>                :            :  * payload size (excluding packet headers) and that the packet in pucEthernetBuffer 
+<span class="lineNum">     444 </span>                :            :  * is at least the size of UDPPacket_t. 
+<span class="lineNum">     445 </span>                :            :  */
+<span class="lineNum">     446 </span>                :            : BaseType_t xProcessReceivedUDPPacket( NetworkBufferDescriptor_t *pxNetworkBuffer, uint16_t usPort );
+<span class="lineNum">     447 </span>                :            : 
+<span class="lineNum">     448 </span>                :            : /*
+<span class="lineNum">     449 </span>                :            :  * Initialize the socket list data structures for TCP and UDP. 
+<span class="lineNum">     450 </span>                :            :  */
+<span class="lineNum">     451 </span>                :            : BaseType_t vNetworkSocketsInit( void );
+<span class="lineNum">     452 </span>                :            : 
+<span class="lineNum">     453 </span>                :            : /*
+<span class="lineNum">     454 </span>                :            :  * Returns pdTRUE if the IP task has been created and is initialised.  Otherwise
+<span class="lineNum">     455 </span>                :            :  * returns pdFALSE.
+<span class="lineNum">     456 </span>                :            :  */
+<span class="lineNum">     457 </span>                :            : BaseType_t xIPIsNetworkTaskReady( void );
+<span class="lineNum">     458 </span>                :            : 
+<span class="lineNum">     459 </span>                :            : #if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 )
+<span class="lineNum">     460 </span>                :            :         struct xSOCKET;
+<span class="lineNum">     461 </span>                :            :         typedef void (*SocketWakeupCallback_t)( struct xSOCKET * pxSocket );
+<span class="lineNum">     462 </span>                :            : #endif
+<span class="lineNum">     463 </span>                :            : 
+<span class="lineNum">     464 </span>                :            : #if( ipconfigUSE_TCP == 1 )
+<span class="lineNum">     465 </span>                :            : 
+<span class="lineNum">     466 </span>                :            :         /*
+<span class="lineNum">     467 </span>                :            :          * Actually a user thing, but because xBoundTCPSocketsList, let it do by the
+<span class="lineNum">     468 </span>                :            :          * IP-task
+<span class="lineNum">     469 </span>                :            :          */
+<span class="lineNum">     470 </span>                :            :         void vTCPNetStat( void );
+<span class="lineNum">     471 </span>                :            : 
+<span class="lineNum">     472 </span>                :            :         /*
+<span class="lineNum">     473 </span>                :            :          * At least one socket needs to check for timeouts
+<span class="lineNum">     474 </span>                :            :          */
+<span class="lineNum">     475 </span>                :            :         TickType_t xTCPTimerCheck( BaseType_t xWillSleep );
+<span class="lineNum">     476 </span>                :            : 
+<span class="lineNum">     477 </span>                :            :         /* Every TCP socket has a buffer space just big enough to store
+<span class="lineNum">     478 </span>                :            :         the last TCP header received.
+<span class="lineNum">     479 </span>                :            :         As a reference of this field may be passed to DMA, force the
+<span class="lineNum">     480 </span>                :            :         alignment to 8 bytes. */
+<span class="lineNum">     481 </span>                :            :         typedef union
+<span class="lineNum">     482 </span>                :            :         {
+<span class="lineNum">     483 </span>                :            :                 struct
+<span class="lineNum">     484 </span>                :            :                 {
+<span class="lineNum">     485 </span>                :            :                         /* Increase the alignment of this union by adding a 64-bit variable. */
+<span class="lineNum">     486 </span>                :            :                         uint64_t ullAlignmentWord;
+<span class="lineNum">     487 </span>                :            :                 } a;
+<span class="lineNum">     488 </span>                :            :                 struct
+<span class="lineNum">     489 </span>                :            :                 {
+<span class="lineNum">     490 </span>                :            :                         /* The next field only serves to give 'ucLastPacket' a correct
+<span class="lineNum">     491 </span>                :            :                         alignment of 8 + 2.  See comments in FreeRTOS_IP.h */
+<span class="lineNum">     492 </span>                :            :                         uint8_t ucFillPacket[ ipconfigPACKET_FILLER_SIZE ];
+<span class="lineNum">     493 </span>                :            :                         uint8_t ucLastPacket[ sizeof( TCPPacket_t ) ];
+<span class="lineNum">     494 </span>                :            :                 } u;
+<span class="lineNum">     495 </span>                :            :         } LastTCPPacket_t;
+<span class="lineNum">     496 </span>                :            : 
+<span class="lineNum">     497 </span>                :            :         /*
+<span class="lineNum">     498 </span>                :            :          * Note that the values of all short and long integers in these structs
+<span class="lineNum">     499 </span>                :            :          * are being stored in the native-endian way
+<span class="lineNum">     500 </span>                :            :          * Translation should take place when accessing any structure which defines
+<span class="lineNum">     501 </span>                :            :          * network packets, such as IPHeader_t and TCPHeader_t
+<span class="lineNum">     502 </span>                :            :          */
+<span class="lineNum">     503 </span>                :            :         typedef struct TCPSOCKET
+<span class="lineNum">     504 </span>                :            :         {
+<span class="lineNum">     505 </span>                :            :                 uint32_t ulRemoteIP;            /* IP address of remote machine */
+<span class="lineNum">     506 </span>                :            :                 uint16_t usRemotePort;          /* Port on remote machine */
+<span class="lineNum">     507 </span>                :            :                 struct {
+<span class="lineNum">     508 </span>                :            :                         /* Most compilers do like bit-flags */
+<span class="lineNum">     509 </span>                :            :                         uint32_t
+<span class="lineNum">     510 </span>                :            :                                 bMssChange : 1,         /* This socket has seen a change in MSS */
+<span class="lineNum">     511 </span>                :            :                                 bPassAccept : 1,        /* when true, this socket may be returned in a call to accept() */
+<span class="lineNum">     512 </span>                :            :                                 bPassQueued : 1,        /* when true, this socket is an orphan until it gets connected
+<span class="lineNum">     513 </span>                :            :                                                                          * Why an orphan? Because it may not be returned in a accept() call until it
+<span class="lineNum">     514 </span>                :            :                                                                          * gets the state eESTABLISHED */
+<span class="lineNum">     515 </span>                :            :                                 bReuseSocket : 1,       /* When a listening socket gets a connection, do not create a new instance but keep on using it */
+<span class="lineNum">     516 </span>                :            :                                 bCloseAfterSend : 1,/* As soon as the last byte has been transmitted, finalise the connection
+<span class="lineNum">     517 </span>                :            :                                                                          * Useful in e.g. FTP connections, where the last data bytes are sent along with the FIN flag */
+<span class="lineNum">     518 </span>                :            :                                 bUserShutdown : 1,      /* User requesting a graceful shutdown */
+<span class="lineNum">     519 </span>                :            :                                 bCloseRequested : 1,/* Request to finalise the connection */
+<span class="lineNum">     520 </span>                :            :                                 bLowWater : 1,          /* high-water level has been reached. Cleared as soon as 'rx-count &lt; lo-water' */
+<span class="lineNum">     521 </span>                :            :                                 bWinChange : 1,         /* The value of bLowWater has changed, must send a window update */
+<span class="lineNum">     522 </span>                :            :                                 bSendKeepAlive : 1,     /* When this flag is true, a TCP keep-alive message must be send */
+<span class="lineNum">     523 </span>                :            :                                 bWaitKeepAlive : 1,     /* When this flag is true, a TCP keep-alive reply is expected */
+<span class="lineNum">     524 </span>                :            :                                 bConnPrepared : 1,      /* Connecting socket: Message has been prepared */
+<span class="lineNum">     525 </span>                :            :                                 #if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
+<span class="lineNum">     526 </span>                :            :                                         bConnPassed : 1,        /* Connecting socket: Socket has been passed in a successful select()  */
+<span class="lineNum">     527 </span>                :            :                                 #endif /* ipconfigSUPPORT_SELECT_FUNCTION */
+<span class="lineNum">     528 </span>                :            :                                 bFinAccepted : 1,       /* This socket has received (or sent) a FIN and accepted it */
+<span class="lineNum">     529 </span>                :            :                                 bFinSent : 1,           /* We've sent out a FIN */
+<span class="lineNum">     530 </span>                :            :                                 bFinRecv : 1,           /* We've received a FIN from our peer */
+<span class="lineNum">     531 </span>                :            :                                 bFinAcked : 1,          /* Our FIN packet has been acked */
+<span class="lineNum">     532 </span>                :            :                                 bFinLast : 1,           /* The last ACK (after FIN and FIN+ACK) has been sent or will be sent by the peer */
+<span class="lineNum">     533 </span>                :            :                                 bRxStopped : 1,         /* Application asked to temporarily stop reception */
+<span class="lineNum">     534 </span>                :            :                                 bMallocError : 1,       /* There was an error allocating a stream */
+<span class="lineNum">     535 </span>                :            :                                 bWinScaling : 1;        /* A TCP-Window Scaling option was offered and accepted in the SYN phase. */
+<span class="lineNum">     536 </span>                :            :                 } bits;
+<span class="lineNum">     537 </span>                :            :                 uint32_t ulHighestRxAllowed;
+<span class="lineNum">     538 </span>                :            :                                                                 /* The highest sequence number that we can receive at any moment */
+<span class="lineNum">     539 </span>                :            :                 uint16_t usTimeout;             /* Time (in ticks) after which this socket needs attention */
+<span class="lineNum">     540 </span>                :            :                 uint16_t usCurMSS;              /* Current Maximum Segment Size */
+<span class="lineNum">     541 </span>                :            :                 uint16_t usInitMSS;             /* Initial maximum segment Size */
+<span class="lineNum">     542 </span>                :            :                 uint16_t usChildCount;  /* In case of a listening socket: number of connections on this port number */
+<span class="lineNum">     543 </span>                :            :                 uint16_t usBacklog;             /* In case of a listening socket: maximum number of concurrent connections on this port number */
+<span class="lineNum">     544 </span>                :            :                 uint8_t ucRepCount;             /* Send repeat count, for retransmissions
+<span class="lineNum">     545 </span>                :            :                                                                  * This counter is separate from the xmitCount in the
+<span class="lineNum">     546 </span>                :            :                                                                  * TCP win segments */
+<span class="lineNum">     547 </span>                :            :                 uint8_t ucTCPState;             /* TCP state: see eTCP_STATE */
+<span class="lineNum">     548 </span>                :            :                 struct xSOCKET *pxPeerSocket;   /* for server socket: child, for child socket: parent */
+<span class="lineNum">     549 </span>                :            :                 #if( ipconfigTCP_KEEP_ALIVE == 1 )
+<span class="lineNum">     550 </span>                :            :                         uint8_t ucKeepRepCount;
+<span class="lineNum">     551 </span>                :            :                         TickType_t xLastAliveTime;
+<span class="lineNum">     552 </span>                :            :                 #endif /* ipconfigTCP_KEEP_ALIVE */
+<span class="lineNum">     553 </span>                :            :                 #if( ipconfigTCP_HANG_PROTECTION == 1 )
+<span class="lineNum">     554 </span>                :            :                         TickType_t xLastActTime;
+<span class="lineNum">     555 </span>                :            :                 #endif /* ipconfigTCP_HANG_PROTECTION */
+<span class="lineNum">     556 </span>                :            :                 size_t uxLittleSpace;
+<span class="lineNum">     557 </span>                :            :                 size_t uxEnoughSpace;
+<span class="lineNum">     558 </span>                :            :                 size_t uxRxStreamSize;
+<span class="lineNum">     559 </span>                :            :                 size_t uxTxStreamSize;
+<span class="lineNum">     560 </span>                :            :                 StreamBuffer_t *rxStream;
+<span class="lineNum">     561 </span>                :            :                 StreamBuffer_t *txStream;
+<span class="lineNum">     562 </span>                :            :                 #if( ipconfigUSE_TCP_WIN == 1 )
+<span class="lineNum">     563 </span>                :            :                         NetworkBufferDescriptor_t *pxAckMessage;
+<span class="lineNum">     564 </span>                :            :                 #endif /* ipconfigUSE_TCP_WIN */
+<span class="lineNum">     565 </span>                :            :                 /* Buffer space to store the last TCP header received. */
+<span class="lineNum">     566 </span>                :            :                 LastTCPPacket_t xPacket;
+<span class="lineNum">     567 </span>                :            :                 uint8_t tcpflags;               /* TCP flags */
+<span class="lineNum">     568 </span>                :            :                 #if( ipconfigUSE_TCP_WIN != 0 )
+<span class="lineNum">     569 </span>                :            :                         uint8_t ucMyWinScaleFactor;
+<span class="lineNum">     570 </span>                :            :                         uint8_t ucPeerWinScaleFactor;
+<span class="lineNum">     571 </span>                :            :                 #endif
+<span class="lineNum">     572 </span>                :            :                 #if( ipconfigUSE_CALLBACKS == 1 )
+<span class="lineNum">     573 </span>                :            :                         FOnTCPReceive_t pxHandleReceive;        /*
+<span class="lineNum">     574 </span>                :            :                                                                                                  * In case of a TCP socket:
+<span class="lineNum">     575 </span>                :            :                                                                                                  * typedef void (* FOnTCPReceive_t) (Socket_t xSocket, void *pData, size_t xLength );
+<span class="lineNum">     576 </span>                :            :                                                                                                  */
+<span class="lineNum">     577 </span>                :            :                         FOnTCPSent_t pxHandleSent;
+<span class="lineNum">     578 </span>                :            :                         FOnConnected_t pxHandleConnected;       /* Actually type: typedef void (* FOnConnected_t) (Socket_t xSocket, BaseType_t ulConnected ); */
+<span class="lineNum">     579 </span>                :            :                 #endif /* ipconfigUSE_CALLBACKS */
+<span class="lineNum">     580 </span>                :            :                 uint32_t ulWindowSize;          /* Current Window size advertised by peer */
+<span class="lineNum">     581 </span>                :            :                 size_t uxRxWinSize;     /* Fixed value: size of the TCP reception window */
+<span class="lineNum">     582 </span>                :            :                 size_t uxTxWinSize;     /* Fixed value: size of the TCP transmit window */
+<span class="lineNum">     583 </span>                :            : 
+<span class="lineNum">     584 </span>                :            :                 TCPWindow_t xTCPWindow;
+<span class="lineNum">     585 </span>                :            :         } IPTCPSocket_t;
+<span class="lineNum">     586 </span>                :            : 
+<span class="lineNum">     587 </span>                :            : #endif /* ipconfigUSE_TCP */
+<span class="lineNum">     588 </span>                :            : 
+<span class="lineNum">     589 </span>                :            : typedef struct UDPSOCKET
+<span class="lineNum">     590 </span>                :            : {
+<span class="lineNum">     591 </span>                :            :         List_t xWaitingPacketsList;     /* Incoming packets */
+<span class="lineNum">     592 </span>                :            :         #if( ipconfigUDP_MAX_RX_PACKETS &gt; 0 )
+<span class="lineNum">     593 </span>                :            :                 UBaseType_t uxMaxPackets; /* Protection: limits the number of packets buffered per socket */
+<span class="lineNum">     594 </span>                :            :         #endif /* ipconfigUDP_MAX_RX_PACKETS */
+<span class="lineNum">     595 </span>                :            :         #if( ipconfigUSE_CALLBACKS == 1 )
+<span class="lineNum">     596 </span>                :            :                 FOnUDPReceive_t pxHandleReceive;        /*
+<span class="lineNum">     597 </span>                :            :                                                                                          * In case of a UDP socket:
+<span class="lineNum">     598 </span>                :            :                                                                                          * typedef void (* FOnUDPReceive_t) (Socket_t xSocket, void *pData, size_t xLength, struct freertos_sockaddr *pxAddr );
+<span class="lineNum">     599 </span>                :            :                                                                                          */
+<span class="lineNum">     600 </span>                :            :                 FOnUDPSent_t pxHandleSent;
+<span class="lineNum">     601 </span>                :            :         #endif /* ipconfigUSE_CALLBACKS */
+<span class="lineNum">     602 </span>                :            : } IPUDPSocket_t;
+<span class="lineNum">     603 </span>                :            : 
+<span class="lineNum">     604 </span>                :            : typedef enum eSOCKET_EVENT {
+<span class="lineNum">     605 </span>                :            :         eSOCKET_RECEIVE = 0x0001,
+<span class="lineNum">     606 </span>                :            :         eSOCKET_SEND    = 0x0002,
+<span class="lineNum">     607 </span>                :            :         eSOCKET_ACCEPT  = 0x0004,
+<span class="lineNum">     608 </span>                :            :         eSOCKET_CONNECT = 0x0008,
+<span class="lineNum">     609 </span>                :            :         eSOCKET_BOUND   = 0x0010,
+<span class="lineNum">     610 </span>                :            :         eSOCKET_CLOSED  = 0x0020,
+<span class="lineNum">     611 </span>                :            :         eSOCKET_INTR    = 0x0040,
+<span class="lineNum">     612 </span>                :            :         eSOCKET_ALL             = 0x007F,
+<span class="lineNum">     613 </span>                :            : } eSocketEvent_t;
+<span class="lineNum">     614 </span>                :            : 
+<span class="lineNum">     615 </span>                :            : typedef struct xSOCKET
+<span class="lineNum">     616 </span>                :            : {
+<span class="lineNum">     617 </span>                :            :         EventBits_t xEventBits;
+<span class="lineNum">     618 </span>                :            :         EventGroupHandle_t xEventGroup;
+<span class="lineNum">     619 </span>                :            : 
+<span class="lineNum">     620 </span>                :            :         ListItem_t xBoundSocketListItem; /* Used to reference the socket from a bound sockets list. */
+<span class="lineNum">     621 </span>                :            :         TickType_t xReceiveBlockTime; /* if recv[to] is called while no data is available, wait this amount of time. Unit in clock-ticks */
+<span class="lineNum">     622 </span>                :            :         TickType_t xSendBlockTime; /* if send[to] is called while there is not enough space to send, wait this amount of time. Unit in clock-ticks */
+<span class="lineNum">     623 </span>                :            : 
+<span class="lineNum">     624 </span>                :            :         uint16_t usLocalPort;           /* Local port on this machine */
+<span class="lineNum">     625 </span>                :            :         uint8_t ucSocketOptions;
+<span class="lineNum">     626 </span>                :            :         uint8_t ucProtocol; /* choice of FREERTOS_IPPROTO_UDP/TCP */
+<span class="lineNum">     627 </span>                :            :         #if( ipconfigSOCKET_HAS_USER_SEMAPHORE == 1 )
+<span class="lineNum">     628 </span>                :            :                 SemaphoreHandle_t pxUserSemaphore;
+<span class="lineNum">     629 </span>                :            :         #endif /* ipconfigSOCKET_HAS_USER_SEMAPHORE */
+<span class="lineNum">     630 </span>                :            :         #if( ipconfigSOCKET_HAS_USER_WAKE_CALLBACK == 1 )
+<span class="lineNum">     631 </span>                :            :                 SocketWakeupCallback_t pxUserWakeCallback;
+<span class="lineNum">     632 </span>                :            :         #endif /* ipconfigSOCKET_HAS_USER_WAKE_CALLBACK */
+<span class="lineNum">     633 </span>                :            : 
+<span class="lineNum">     634 </span>                :            :         #if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
+<span class="lineNum">     635 </span>                :            :                 struct xSOCKET_SET *pxSocketSet;
+<span class="lineNum">     636 </span>                :            :                 /* User may indicate which bits are interesting for this socket. */
+<span class="lineNum">     637 </span>                :            :                 EventBits_t xSelectBits;
+<span class="lineNum">     638 </span>                :            :                 /* These bits indicate the events which have actually occurred.
+<span class="lineNum">     639 </span>                :            :                 They are maintained by the IP-task */
+<span class="lineNum">     640 </span>                :            :                 EventBits_t xSocketBits;
+<span class="lineNum">     641 </span>                :            :         #endif /* ipconfigSUPPORT_SELECT_FUNCTION */
+<span class="lineNum">     642 </span>                :            :         /* TCP/UDP specific fields: */
+<span class="lineNum">     643 </span>                :            :         /* Before accessing any member of this structure, it should be confirmed */
+<span class="lineNum">     644 </span>                :            :         /* that the protocol corresponds with the type of structure */
+<span class="lineNum">     645 </span>                :            : 
+<span class="lineNum">     646 </span>                :            :         union
+<span class="lineNum">     647 </span>                :            :         {
+<span class="lineNum">     648 </span>                :            :                 IPUDPSocket_t xUDP;
+<span class="lineNum">     649 </span>                :            :                 #if( ipconfigUSE_TCP == 1 )
+<span class="lineNum">     650 </span>                :            :                         IPTCPSocket_t xTCP;
+<span class="lineNum">     651 </span>                :            :                         /* Make sure that xTCP is 8-bytes aligned by
+<span class="lineNum">     652 </span>                :            :                         declaring a 64-bit variable in the same union */
+<span class="lineNum">     653 </span>                :            :                         uint64_t ullTCPAlignment;
+<span class="lineNum">     654 </span>                :            :                 #endif /* ipconfigUSE_TCP */
+<span class="lineNum">     655 </span>                :            :         } u;
+<span class="lineNum">     656 </span>                :            : } FreeRTOS_Socket_t;
+<span class="lineNum">     657 </span>                :            : 
+<span class="lineNum">     658 </span>                :            : #if( ipconfigUSE_TCP == 1 )
+<span class="lineNum">     659 </span>                :            :         /*
+<span class="lineNum">     660 </span>                :            :          * Lookup a TCP socket, using a multiple matching: both port numbers and
+<span class="lineNum">     661 </span>                :            :          * return IP address.
+<span class="lineNum">     662 </span>                :            :          */
+<span class="lineNum">     663 </span>                :            :         FreeRTOS_Socket_t *pxTCPSocketLookup( uint32_t ulLocalIP, UBaseType_t uxLocalPort, uint32_t ulRemoteIP, UBaseType_t uxRemotePort );
+<span class="lineNum">     664 </span>                :            : 
+<span class="lineNum">     665 </span>                :            : #endif /* ipconfigUSE_TCP */
+<span class="lineNum">     666 </span>                :            : 
+<span class="lineNum">     667 </span>                :            : /*
+<span class="lineNum">     668 </span>                :            :  * Look up a local socket by finding a match with the local port.
+<span class="lineNum">     669 </span>                :            :  */
+<span class="lineNum">     670 </span>                :            : FreeRTOS_Socket_t *pxUDPSocketLookup( UBaseType_t uxLocalPort );
+<span class="lineNum">     671 </span>                :            : 
+<span class="lineNum">     672 </span>                :            : /*
+<span class="lineNum">     673 </span>                :            :  * Called when the application has generated a UDP packet to send.
+<span class="lineNum">     674 </span>                :            :  */
+<span class="lineNum">     675 </span>                :            : void vProcessGeneratedUDPPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+<span class="lineNum">     676 </span>                :            : 
+<span class="lineNum">     677 </span>                :            : /*
+<span class="lineNum">     678 </span>                :            :  * Calculate the upper-layer checksum
+<span class="lineNum">     679 </span>                :            :  * Works both for UDP, ICMP and TCP packages
+<span class="lineNum">     680 </span>                :            :  * bOut = true: checksum will be set in outgoing packets
+<span class="lineNum">     681 </span>                :            :  * bOut = false: checksum will be calculated for incoming packets
+<span class="lineNum">     682 </span>                :            :  *     returning 0xffff means: checksum was correct
+<span class="lineNum">     683 </span>                :            :  */
+<span class="lineNum">     684 </span>                :            : uint16_t usGenerateProtocolChecksum( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength, BaseType_t xOutgoingPacket );
+<span class="lineNum">     685 </span>                :            : 
+<span class="lineNum">     686 </span>                :            : /*
+<span class="lineNum">     687 </span>                :            :  * An Ethernet frame has been updated (maybe it was an ARP request or a PING
+<span class="lineNum">     688 </span>                :            :  * request?) and is to be sent back to its source.
+<span class="lineNum">     689 </span>                :            :  */
+<span class="lineNum">     690 </span>                :            : void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend );
+<span class="lineNum">     691 </span>                :            : 
+<span class="lineNum">     692 </span>                :            : /*
+<span class="lineNum">     693 </span>                :            :  * The internal version of bind()
+<span class="lineNum">     694 </span>                :            :  * If 'ulInternal' is true, it is called by the driver
+<span class="lineNum">     695 </span>                :            :  * The TCP driver needs to bind a socket at the moment a listening socket
+<span class="lineNum">     696 </span>                :            :  * creates a new connected socket
+<span class="lineNum">     697 </span>                :            :  */
+<span class="lineNum">     698 </span>                :            : BaseType_t vSocketBind( FreeRTOS_Socket_t *pxSocket, struct freertos_sockaddr * pxAddress, size_t uxAddressLength, BaseType_t xInternal );
+<span class="lineNum">     699 </span>                :            : 
+<span class="lineNum">     700 </span>                :            : /*
+<span class="lineNum">     701 </span>                :            :  * Internal function to add streaming data to a TCP socket. If ulIn == true,
+<span class="lineNum">     702 </span>                :            :  * data will be added to the rxStream, otherwise to the tXStream.  Normally data
+<span class="lineNum">     703 </span>                :            :  * will be written with ulOffset == 0, meaning: at the end of the FIFO.  When
+<span class="lineNum">     704 </span>                :            :  * packet come in out-of-order, an offset will be used to put it in front and
+<span class="lineNum">     705 </span>                :            :  * the head will not change yet.
+<span class="lineNum">     706 </span>                :            :  */
+<span class="lineNum">     707 </span>                :            : int32_t lTCPAddRxdata(FreeRTOS_Socket_t *pxSocket, size_t uxOffset, const uint8_t *pcData, uint32_t ulByteCount);
+<span class="lineNum">     708 </span>                :            : 
+<span class="lineNum">     709 </span>                :            : /*
+<span class="lineNum">     710 </span>                :            :  * Currently called for any important event.
+<span class="lineNum">     711 </span>                :            :  */
+<span class="lineNum">     712 </span>                :            : void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket );
+<span class="lineNum">     713 </span>                :            : 
+<span class="lineNum">     714 </span>                :            : /*
+<span class="lineNum">     715 </span>                :            :  * Some helping function, their meaning should be clear
+<a name="716"><span class="lineNum">     716 </span>                :            :  */</a>
+<span class="lineNum">     717 </span>                :            : static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr);
+<span class="lineNum">     718 </span>                :<span class="lineNoCov">          0 : static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr)</span>
+<span class="lineNum">     719 </span>                :            : {
+<span class="lineNum">     720 </span>                :<span class="lineNoCov">          0 :         return  ( ( ( uint32_t )apChr[0] ) &lt;&lt; 24) |</span>
+<span class="lineNum">     721 </span>                :<span class="lineNoCov">          0 :                         ( ( ( uint32_t )apChr[1] ) &lt;&lt; 16) |</span>
+<span class="lineNum">     722 </span>                :<span class="lineNoCov">          0 :                         ( ( ( uint32_t )apChr[2] ) &lt;&lt; 8) |</span>
+<span class="lineNum">     723 </span>                :<span class="lineNoCov">          0 :                         ( ( ( uint32_t )apChr[3] ) );</span>
+<span class="lineNum">     724 </span>                :            : }
+<a name="725"><span class="lineNum">     725 </span>                :            : </a>
+<span class="lineNum">     726 </span>                :            : static portINLINE uint16_t usChar2u16 (const uint8_t *apChr);
+<span class="lineNum">     727 </span>                :<span class="lineNoCov">          0 : static portINLINE uint16_t usChar2u16 (const uint8_t *apChr)</span>
+<span class="lineNum">     728 </span>                :            : {
+<span class="lineNum">     729 </span>                :<span class="lineNoCov">          0 :         return ( uint16_t )</span>
+<span class="lineNum">     730 </span>                :<span class="lineNoCov">          0 :                         ( ( ( ( uint32_t )apChr[0] ) &lt;&lt; 8) |</span>
+<span class="lineNum">     731 </span>                :<span class="lineNoCov">          0 :                           ( ( ( uint32_t )apChr[1] ) ) );</span>
+<span class="lineNum">     732 </span>                :            : }
+<span class="lineNum">     733 </span>                :            : 
+<span class="lineNum">     734 </span>                :            : /* Check a single socket for retransmissions and timeouts */
+<span class="lineNum">     735 </span>                :            : BaseType_t xTCPSocketCheck( FreeRTOS_Socket_t *pxSocket );
+<span class="lineNum">     736 </span>                :            : 
+<span class="lineNum">     737 </span>                :            : BaseType_t xTCPCheckNewClient( FreeRTOS_Socket_t *pxSocket );
+<span class="lineNum">     738 </span>                :            : 
+<span class="lineNum">     739 </span>                :            : /* Defined in FreeRTOS_Sockets.c
+<span class="lineNum">     740 </span>                :            :  * Close a socket
+<span class="lineNum">     741 </span>                :            :  */
+<span class="lineNum">     742 </span>                :            : void *vSocketClose( FreeRTOS_Socket_t *pxSocket );
+<span class="lineNum">     743 </span>                :            : 
+<span class="lineNum">     744 </span>                :            : /*
+<span class="lineNum">     745 </span>                :            :  * Send the event eEvent to the IP task event queue, using a block time of
+<span class="lineNum">     746 </span>                :            :  * zero.  Return pdPASS if the message was sent successfully, otherwise return
+<span class="lineNum">     747 </span>                :            :  * pdFALSE.
+<span class="lineNum">     748 </span>                :            : */
+<span class="lineNum">     749 </span>                :            : BaseType_t xSendEventToIPTask( eIPEvent_t eEvent );
+<span class="lineNum">     750 </span>                :            : 
+<span class="lineNum">     751 </span>                :            : /*
+<span class="lineNum">     752 </span>                :            :  * The same as above, but a struct as a parameter, containing:
+<span class="lineNum">     753 </span>                :            :  *              eIPEvent_t eEventType;
+<span class="lineNum">     754 </span>                :            :  *              void *pvData;
+<span class="lineNum">     755 </span>                :            :  */
+<span class="lineNum">     756 </span>                :            : BaseType_t xSendEventStructToIPTask( const IPStackEvent_t *pxEvent, TickType_t xTimeout );
+<span class="lineNum">     757 </span>                :            : 
+<span class="lineNum">     758 </span>                :            : /*
+<span class="lineNum">     759 </span>                :            :  * Returns a pointer to the original NetworkBuffer from a pointer to a UDP
+<span class="lineNum">     760 </span>                :            :  * payload buffer.
+<span class="lineNum">     761 </span>                :            :  */
+<span class="lineNum">     762 </span>                :            : NetworkBufferDescriptor_t *pxUDPPayloadBuffer_to_NetworkBuffer( void *pvBuffer );
+<span class="lineNum">     763 </span>                :            : 
+<span class="lineNum">     764 </span>                :            : #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
+<span class="lineNum">     765 </span>                :            :         /*
+<span class="lineNum">     766 </span>                :            :          * For the case where the network driver passes a buffer directly to a DMA
+<span class="lineNum">     767 </span>                :            :          * descriptor, this function can be used to translate a 'network buffer' to
+<span class="lineNum">     768 </span>                :            :          * a 'network buffer descriptor'.
+<span class="lineNum">     769 </span>                :            :          */
+<span class="lineNum">     770 </span>                :            :         NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer );
+<span class="lineNum">     771 </span>                :            : #endif
+<span class="lineNum">     772 </span>                :            : 
+<span class="lineNum">     773 </span>                :            : /*
+<span class="lineNum">     774 </span>                :            :  * Internal: Sets a new state for a TCP socket and performs the necessary
+<span class="lineNum">     775 </span>                :            :  * actions like calling a OnConnected handler to notify the socket owner.
+<span class="lineNum">     776 </span>                :            :  */
+<span class="lineNum">     777 </span>                :            : #if( ipconfigUSE_TCP == 1 )
+<span class="lineNum">     778 </span>                :            :         void vTCPStateChange( FreeRTOS_Socket_t *pxSocket, enum eTCP_STATE eTCPState );
+<span class="lineNum">     779 </span>                :            : #endif /* ipconfigUSE_TCP */
+<span class="lineNum">     780 </span>                :            : 
+<span class="lineNum">     781 </span>                :            : /*_RB_ Should this be part of the public API? */
+<span class="lineNum">     782 </span>                :            : void FreeRTOS_netstat( void );
+<span class="lineNum">     783 </span>                :            : 
+<span class="lineNum">     784 </span>                :            : /* Returns pdTRUE is this function is called from the IP-task */
+<span class="lineNum">     785 </span>                :            : BaseType_t xIsCallingFromIPTask( void );
+<span class="lineNum">     786 </span>                :            : 
+<span class="lineNum">     787 </span>                :            : #if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
+<span class="lineNum">     788 </span>                :            : 
+<span class="lineNum">     789 </span>                :            : typedef struct xSOCKET_SET
+<span class="lineNum">     790 </span>                :            : {
+<span class="lineNum">     791 </span>                :            :         EventGroupHandle_t xSelectGroup;
+<span class="lineNum">     792 </span>                :            :         BaseType_t bApiCalled;  /* True if the API was calling  the private vSocketSelect */
+<span class="lineNum">     793 </span>                :            :         FreeRTOS_Socket_t *pxSocket;
+<span class="lineNum">     794 </span>                :            : } SocketSelect_t;
+<span class="lineNum">     795 </span>                :            : 
+<span class="lineNum">     796 </span>                :            : extern void vSocketSelect( SocketSelect_t *pxSocketSelect );
+<span class="lineNum">     797 </span>                :            : 
+<span class="lineNum">     798 </span>                :            : #endif /* ipconfigSUPPORT_SELECT_FUNCTION */
+<span class="lineNum">     799 </span>                :            : 
+<span class="lineNum">     800 </span>                :            : void vIPSetDHCPTimerEnableState( BaseType_t xEnableState );
+<span class="lineNum">     801 </span>                :            : void vIPReloadDHCPTimer( uint32_t ulLeaseTime );
+<span class="lineNum">     802 </span>                :            : #if( ipconfigDNS_USE_CALLBACKS != 0 )
+<span class="lineNum">     803 </span>                :            :         void vIPReloadDNSTimer( uint32_t ulCheckTime );
+<span class="lineNum">     804 </span>                :            :         void vIPSetDnsTimerEnableState( BaseType_t xEnableState );
+<span class="lineNum">     805 </span>                :            : #endif
+<span class="lineNum">     806 </span>                :            : 
+<span class="lineNum">     807 </span>                :            : /* Send the network-up event and start the ARP timer. */
+<span class="lineNum">     808 </span>                :            : void vIPNetworkUpCalls( void );
+<span class="lineNum">     809 </span>                :            : 
+<span class="lineNum">     810 </span>                :            : #ifdef __cplusplus
+<span class="lineNum">     811 </span>                :            : } /* extern &quot;C&quot; */
+<span class="lineNum">     812 </span>                :            : #endif
+<span class="lineNum">     813 </span>                :            : 
+<span class="lineNum">     814 </span>                :            : #endif /* FREERTOS_IP_PRIVATE_H */
+<span class="lineNum">     815 </span>                :            : 
+<span class="lineNum">     816 </span>                :            : 
+<span class="lineNum">     817 </span>                :            : 
+<span class="lineNum">     818 </span>                :            : 
+<span class="lineNum">     819 </span>                :            : 
+<span class="lineNum">     820 </span>                :            : 
+<span class="lineNum">     821 </span>                :            : 
+<span class="lineNum">     822 </span>                :            : 
+<span class="lineNum">     823 </span>                :            : 
+<span class="lineNum">     824 </span>                :            : 
+<span class="lineNum">     825 </span>                :            : 
+<span class="lineNum">     826 </span>                :            : 
+<span class="lineNum">     827 </span>                :            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

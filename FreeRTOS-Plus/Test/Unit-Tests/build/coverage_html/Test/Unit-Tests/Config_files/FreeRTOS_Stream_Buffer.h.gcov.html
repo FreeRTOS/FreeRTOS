@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - cmock_test.info - Test/Unit-Tests/Config_files/FreeRTOS_Stream_Buffer.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">Test/Unit-Tests/Config_files</a> - FreeRTOS_Stream_Buffer.h<span style="font-size: 80%;"> (source / <a href="FreeRTOS_Stream_Buffer.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">cmock_test.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-05-21 10:22:30</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : /*</a>
+<span class="lineNum">       2 </span>                :            :  * FreeRTOS+TCP V2.2.0
+<span class="lineNum">       3 </span>                :            :  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+<span class="lineNum">       4 </span>                :            :  *
+<span class="lineNum">       5 </span>                :            :  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+<span class="lineNum">       6 </span>                :            :  * this software and associated documentation files (the &quot;Software&quot;), to deal in
+<span class="lineNum">       7 </span>                :            :  * the Software without restriction, including without limitation the rights to
+<span class="lineNum">       8 </span>                :            :  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+<span class="lineNum">       9 </span>                :            :  * the Software, and to permit persons to whom the Software is furnished to do so,
+<span class="lineNum">      10 </span>                :            :  * subject to the following conditions:
+<span class="lineNum">      11 </span>                :            :  *
+<span class="lineNum">      12 </span>                :            :  * The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      13 </span>                :            :  * copies or substantial portions of the Software.
+<span class="lineNum">      14 </span>                :            :  *
+<span class="lineNum">      15 </span>                :            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      16 </span>                :            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+<span class="lineNum">      17 </span>                :            :  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+<span class="lineNum">      18 </span>                :            :  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+<span class="lineNum">      19 </span>                :            :  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+<span class="lineNum">      20 </span>                :            :  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<span class="lineNum">      21 </span>                :            :  *
+<span class="lineNum">      22 </span>                :            :  * http://aws.amazon.com/freertos
+<span class="lineNum">      23 </span>                :            :  * http://www.FreeRTOS.org
+<span class="lineNum">      24 </span>                :            :  */
+<span class="lineNum">      25 </span>                :            : 
+<span class="lineNum">      26 </span>                :            : /*
+<span class="lineNum">      27 </span>                :            :  *      FreeRTOS_Stream_Buffer.h
+<span class="lineNum">      28 </span>                :            :  *
+<span class="lineNum">      29 </span>                :            :  *      A cicular character buffer
+<span class="lineNum">      30 </span>                :            :  *      An implementation of a circular buffer without a length field
+<span class="lineNum">      31 </span>                :            :  *      If LENGTH defines the size of the buffer, a maximum of (LENGT-1) bytes can be stored
+<span class="lineNum">      32 </span>                :            :  *      In order to add or read data from the buffer, memcpy() will be called at most 2 times
+<span class="lineNum">      33 </span>                :            :  */
+<span class="lineNum">      34 </span>                :            : 
+<span class="lineNum">      35 </span>                :            : #ifndef FREERTOS_STREAM_BUFFER_H
+<span class="lineNum">      36 </span>                :            : #define FREERTOS_STREAM_BUFFER_H
+<span class="lineNum">      37 </span>                :            : 
+<span class="lineNum">      38 </span>                :            : #ifdef __cplusplus
+<span class="lineNum">      39 </span>                :            : extern &quot;C&quot; {
+<span class="lineNum">      40 </span>                :            : #endif
+<span class="lineNum">      41 </span>                :            : 
+<span class="lineNum">      42 </span>                :            : typedef struct xSTREAM_BUFFER {
+<span class="lineNum">      43 </span>                :            :         volatile size_t uxTail;         /* next item to read */
+<span class="lineNum">      44 </span>                :            :         volatile size_t uxMid;          /* iterator within the valid items */
+<span class="lineNum">      45 </span>                :            :         volatile size_t uxHead;         /* next position store a new item */
+<span class="lineNum">      46 </span>                :            :         volatile size_t uxFront;        /* iterator within the free space */
+<span class="lineNum">      47 </span>                :            :         size_t LENGTH;                          /* const value: number of reserved elements */
+<span class="lineNum">      48 </span>                :            :         uint8_t ucArray[ sizeof( size_t ) ];
+<span class="lineNum">      49 </span>                :            : } StreamBuffer_t;
+<a name="50"><span class="lineNum">      50 </span>                :            : </a>
+<span class="lineNum">      51 </span>                :            : static portINLINE void vStreamBufferClear( StreamBuffer_t *pxBuffer );
+<span class="lineNum">      52 </span>                :<span class="lineNoCov">          0 : static portINLINE void vStreamBufferClear( StreamBuffer_t *pxBuffer )</span>
+<span class="lineNum">      53 </span>                :            : {
+<span class="lineNum">      54 </span>                :            :         /* Make the circular buffer empty */
+<span class="lineNum">      55 </span>                :<span class="lineNoCov">          0 :         pxBuffer-&gt;uxHead = 0u;</span>
+<span class="lineNum">      56 </span>                :<span class="lineNoCov">          0 :         pxBuffer-&gt;uxTail = 0u;</span>
+<span class="lineNum">      57 </span>                :<span class="lineNoCov">          0 :         pxBuffer-&gt;uxFront = 0u;</span>
+<span class="lineNum">      58 </span>                :<span class="lineNoCov">          0 :         pxBuffer-&gt;uxMid = 0u;</span>
+<span class="lineNum">      59 </span>                :<span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      60 </span>                :            : /*-----------------------------------------------------------*/
+<a name="61"><span class="lineNum">      61 </span>                :            : </a>
+<span class="lineNum">      62 </span>                :            : static portINLINE size_t uxStreamBufferSpace( const StreamBuffer_t *pxBuffer, const size_t uxLower, const size_t uxUpper );
+<span class="lineNum">      63 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferSpace( const StreamBuffer_t *pxBuffer, const size_t uxLower, const size_t uxUpper )</span>
+<span class="lineNum">      64 </span>                :            : {
+<span class="lineNum">      65 </span>                :            : /* Returns the space between uxLower and uxUpper, which equals to the distance minus 1 */
+<span class="lineNum">      66 </span>                :            : size_t uxCount;
+<span class="lineNum">      67 </span>                :            : 
+<span class="lineNum">      68 </span>                :<span class="lineNoCov">          0 :         uxCount = pxBuffer-&gt;LENGTH + uxUpper - uxLower - 1u;</span>
+<span class="lineNum">      69 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if( uxCount &gt;= pxBuffer-&gt;LENGTH )</span>
+<span class="lineNum">      70 </span>                :            :         {
+<span class="lineNum">      71 </span>                :<span class="lineNoCov">          0 :                 uxCount -= pxBuffer-&gt;LENGTH;</span>
+<span class="lineNum">      72 </span>                :            :         }
+<span class="lineNum">      73 </span>                :            : 
+<span class="lineNum">      74 </span>                :<span class="lineNoCov">          0 :         return uxCount;</span>
+<span class="lineNum">      75 </span>                :            : }
+<span class="lineNum">      76 </span>                :            : /*-----------------------------------------------------------*/
+<a name="77"><span class="lineNum">      77 </span>                :            : </a>
+<span class="lineNum">      78 </span>                :            : static portINLINE size_t uxStreamBufferDistance( const StreamBuffer_t *pxBuffer, const size_t uxLower, const size_t uxUpper );
+<span class="lineNum">      79 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferDistance( const StreamBuffer_t *pxBuffer, const size_t uxLower, const size_t uxUpper )</span>
+<span class="lineNum">      80 </span>                :            : {
+<span class="lineNum">      81 </span>                :            : /* Returns the distance between uxLower and uxUpper */
+<span class="lineNum">      82 </span>                :            : size_t uxCount;
+<span class="lineNum">      83 </span>                :            : 
+<span class="lineNum">      84 </span>                :<span class="lineNoCov">          0 :         uxCount = pxBuffer-&gt;LENGTH + uxUpper - uxLower;</span>
+<span class="lineNum">      85 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if ( uxCount &gt;= pxBuffer-&gt;LENGTH )</span>
+<span class="lineNum">      86 </span>                :            :         {
+<span class="lineNum">      87 </span>                :<span class="lineNoCov">          0 :                 uxCount -= pxBuffer-&gt;LENGTH;</span>
+<span class="lineNum">      88 </span>                :            :         }
+<span class="lineNum">      89 </span>                :            : 
+<span class="lineNum">      90 </span>                :<span class="lineNoCov">          0 :         return uxCount;</span>
+<span class="lineNum">      91 </span>                :            : }
+<span class="lineNum">      92 </span>                :            : /*-----------------------------------------------------------*/
+<a name="93"><span class="lineNum">      93 </span>                :            : </a>
+<span class="lineNum">      94 </span>                :            : static portINLINE size_t uxStreamBufferGetSpace( const StreamBuffer_t *pxBuffer );
+<span class="lineNum">      95 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferGetSpace( const StreamBuffer_t *pxBuffer )</span>
+<span class="lineNum">      96 </span>                :            : {
+<span class="lineNum">      97 </span>                :            : /* Returns the number of items which can still be added to uxHead
+<span class="lineNum">      98 </span>                :            : before hitting on uxTail */
+<span class="lineNum">      99 </span>                :<span class="lineNoCov">          0 : size_t uxHead = pxBuffer-&gt;uxHead;</span>
+<span class="lineNum">     100 </span>                :<span class="lineNoCov">          0 : size_t uxTail = pxBuffer-&gt;uxTail;</span>
+<span class="lineNum">     101 </span>                :            : 
+<span class="lineNum">     102 </span>                :<span class="lineNoCov">          0 :         return uxStreamBufferSpace( pxBuffer, uxHead, uxTail );</span>
+<span class="lineNum">     103 </span>                :            : }
+<span class="lineNum">     104 </span>                :            : /*-----------------------------------------------------------*/
+<a name="105"><span class="lineNum">     105 </span>                :            : </a>
+<span class="lineNum">     106 </span>                :            : static portINLINE size_t uxStreamBufferFrontSpace( const StreamBuffer_t *pxBuffer );
+<span class="lineNum">     107 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferFrontSpace( const StreamBuffer_t *pxBuffer )</span>
+<span class="lineNum">     108 </span>                :            : {
+<span class="lineNum">     109 </span>                :            : /* Distance between uxFront and uxTail
+<span class="lineNum">     110 </span>                :            : or the number of items which can still be added to uxFront,
+<span class="lineNum">     111 </span>                :            : before hitting on uxTail */
+<span class="lineNum">     112 </span>                :            : 
+<span class="lineNum">     113 </span>                :<span class="lineNoCov">          0 : size_t uxFront = pxBuffer-&gt;uxFront;</span>
+<span class="lineNum">     114 </span>                :<span class="lineNoCov">          0 : size_t uxTail = pxBuffer-&gt;uxTail;</span>
+<span class="lineNum">     115 </span>                :            : 
+<span class="lineNum">     116 </span>                :<span class="lineNoCov">          0 :         return uxStreamBufferSpace( pxBuffer, uxFront, uxTail );</span>
+<span class="lineNum">     117 </span>                :            : }
+<span class="lineNum">     118 </span>                :            : /*-----------------------------------------------------------*/
+<a name="119"><span class="lineNum">     119 </span>                :            : </a>
+<span class="lineNum">     120 </span>                :            : static portINLINE size_t uxStreamBufferGetSize( const StreamBuffer_t *pxBuffer );
+<span class="lineNum">     121 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferGetSize( const StreamBuffer_t *pxBuffer )</span>
+<span class="lineNum">     122 </span>                :            : {
+<span class="lineNum">     123 </span>                :            : /* Returns the number of items which can be read from uxTail
+<span class="lineNum">     124 </span>                :            : before reaching uxHead */
+<span class="lineNum">     125 </span>                :<span class="lineNoCov">          0 : size_t uxHead = pxBuffer-&gt;uxHead;</span>
+<span class="lineNum">     126 </span>                :<span class="lineNoCov">          0 : size_t uxTail = pxBuffer-&gt;uxTail;</span>
+<span class="lineNum">     127 </span>                :            : 
+<span class="lineNum">     128 </span>                :<span class="lineNoCov">          0 :         return uxStreamBufferDistance( pxBuffer, uxTail, uxHead );</span>
+<span class="lineNum">     129 </span>                :            : }
+<span class="lineNum">     130 </span>                :            : /*-----------------------------------------------------------*/
+<a name="131"><span class="lineNum">     131 </span>                :            : </a>
+<span class="lineNum">     132 </span>                :            : static portINLINE size_t uxStreamBufferMidSpace( const StreamBuffer_t *pxBuffer );
+<span class="lineNum">     133 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferMidSpace( const StreamBuffer_t *pxBuffer )</span>
+<span class="lineNum">     134 </span>                :            : {
+<span class="lineNum">     135 </span>                :            : /* Returns the distance between uxHead and uxMid */
+<span class="lineNum">     136 </span>                :<span class="lineNoCov">          0 : size_t uxHead = pxBuffer-&gt;uxHead;</span>
+<span class="lineNum">     137 </span>                :<span class="lineNoCov">          0 : size_t uxMid = pxBuffer-&gt;uxMid;</span>
+<span class="lineNum">     138 </span>                :            : 
+<span class="lineNum">     139 </span>                :<span class="lineNoCov">          0 :         return uxStreamBufferDistance( pxBuffer, uxMid, uxHead );</span>
+<span class="lineNum">     140 </span>                :            : }
+<span class="lineNum">     141 </span>                :            : /*-----------------------------------------------------------*/
+<a name="142"><span class="lineNum">     142 </span>                :            : </a>
+<span class="lineNum">     143 </span>                :            : static portINLINE void vStreamBufferMoveMid( StreamBuffer_t *pxBuffer, size_t uxCount );
+<span class="lineNum">     144 </span>                :<span class="lineNoCov">          0 : static portINLINE void vStreamBufferMoveMid( StreamBuffer_t *pxBuffer, size_t uxCount )</span>
+<span class="lineNum">     145 </span>                :            : {
+<span class="lineNum">     146 </span>                :            : /* Increment uxMid, but no further than uxHead */
+<span class="lineNum">     147 </span>                :<span class="lineNoCov">          0 : size_t uxSize = uxStreamBufferMidSpace( pxBuffer );</span>
+<span class="lineNum">     148 </span>                :            : 
+<span class="lineNum">     149 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if( uxCount &gt; uxSize )</span>
+<span class="lineNum">     150 </span>                :            :         {
+<span class="lineNum">     151 </span>                :<span class="lineNoCov">          0 :                 uxCount = uxSize;</span>
+<span class="lineNum">     152 </span>                :            :         }
+<span class="lineNum">     153 </span>                :<span class="lineNoCov">          0 :         pxBuffer-&gt;uxMid += uxCount;</span>
+<span class="lineNum">     154 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if( pxBuffer-&gt;uxMid &gt;= pxBuffer-&gt;LENGTH )</span>
+<span class="lineNum">     155 </span>                :            :         {
+<span class="lineNum">     156 </span>                :<span class="lineNoCov">          0 :                 pxBuffer-&gt;uxMid -= pxBuffer-&gt;LENGTH;</span>
+<span class="lineNum">     157 </span>                :            :         }
+<span class="lineNum">     158 </span>                :<span class="lineNoCov">          0 : }</span>
+<span class="lineNum">     159 </span>                :            : /*-----------------------------------------------------------*/
+<a name="160"><span class="lineNum">     160 </span>                :            : </a>
+<span class="lineNum">     161 </span>                :            : static portINLINE BaseType_t xStreamBufferLessThenEqual( const StreamBuffer_t *pxBuffer, const size_t uxLeft, const size_t uxRight );
+<span class="lineNum">     162 </span>                :<span class="lineNoCov">          0 : static portINLINE BaseType_t xStreamBufferLessThenEqual( const StreamBuffer_t *pxBuffer, const size_t uxLeft, const size_t uxRight )</span>
+<span class="lineNum">     163 </span>                :            : {
+<span class="lineNum">     164 </span>                :            : BaseType_t xReturn;
+<span class="lineNum">     165 </span>                :<span class="lineNoCov">          0 : size_t uxTail = pxBuffer-&gt;uxTail;</span>
+<span class="lineNum">     166 </span>                :            : 
+<span class="lineNum">     167 </span>                :            :         /* Returns true if ( uxLeft &lt; uxRight ) */
+<span class="lineNum">     168 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if( ( uxLeft &lt; uxTail ) ^ ( uxRight &lt; uxTail ) )</span>
+<span class="lineNum">     169 </span>                :            :         {
+<span class="lineNum">     170 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 if( uxRight &lt; uxTail )</span>
+<span class="lineNum">     171 </span>                :            :                 {
+<span class="lineNum">     172 </span>                :<span class="lineNoCov">          0 :                         xReturn = pdTRUE;</span>
+<span class="lineNum">     173 </span>                :            :                 }
+<span class="lineNum">     174 </span>                :            :                 else
+<span class="lineNum">     175 </span>                :            :                 {
+<span class="lineNum">     176 </span>                :<span class="lineNoCov">          0 :                         xReturn = pdFALSE;</span>
+<span class="lineNum">     177 </span>                :            :                 }
+<span class="lineNum">     178 </span>                :            :         }
+<span class="lineNum">     179 </span>                :            :         else
+<span class="lineNum">     180 </span>                :            :         {
+<span class="lineNum">     181 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :                 if( uxLeft &lt;= uxRight )</span>
+<span class="lineNum">     182 </span>                :            :                 {
+<span class="lineNum">     183 </span>                :<span class="lineNoCov">          0 :                         xReturn = pdTRUE;</span>
+<span class="lineNum">     184 </span>                :            :                 }
+<span class="lineNum">     185 </span>                :            :                 else
+<span class="lineNum">     186 </span>                :            :                 {
+<span class="lineNum">     187 </span>                :<span class="lineNoCov">          0 :                         xReturn = pdFALSE;</span>
+<span class="lineNum">     188 </span>                :            :                 }
+<span class="lineNum">     189 </span>                :            :         }
+<span class="lineNum">     190 </span>                :<span class="lineNoCov">          0 :         return xReturn;</span>
+<span class="lineNum">     191 </span>                :            : }
+<span class="lineNum">     192 </span>                :            : /*-----------------------------------------------------------*/
+<a name="193"><span class="lineNum">     193 </span>                :            : </a>
+<span class="lineNum">     194 </span>                :            : static portINLINE size_t uxStreamBufferGetPtr( StreamBuffer_t *pxBuffer, uint8_t **ppucData );
+<span class="lineNum">     195 </span>                :<span class="lineNoCov">          0 : static portINLINE size_t uxStreamBufferGetPtr( StreamBuffer_t *pxBuffer, uint8_t **ppucData )</span>
+<span class="lineNum">     196 </span>                :            : {
+<span class="lineNum">     197 </span>                :<span class="lineNoCov">          0 : size_t uxNextTail = pxBuffer-&gt;uxTail;</span>
+<span class="lineNum">     198 </span>                :<span class="lineNoCov">          0 : size_t uxSize = uxStreamBufferGetSize( pxBuffer );</span>
+<span class="lineNum">     199 </span>                :            : 
+<span class="lineNum">     200 </span>                :<span class="lineNoCov">          0 :         *ppucData = pxBuffer-&gt;ucArray + uxNextTail;</span>
+<span class="lineNum">     201 </span>                :            : 
+<span class="lineNum">     202 </span>                :<span class="lineNoCov">          0 :         return FreeRTOS_min_uint32( uxSize, pxBuffer-&gt;LENGTH - uxNextTail );</span>
+<span class="lineNum">     203 </span>                :            : }
+<span class="lineNum">     204 </span>                :            : 
+<span class="lineNum">     205 </span>                :            : /*
+<span class="lineNum">     206 </span>                :            :  * Add bytes to a stream buffer.
+<span class="lineNum">     207 </span>                :            :  *
+<span class="lineNum">     208 </span>                :            :  * pxBuffer -   The buffer to which the bytes will be added.
+<span class="lineNum">     209 </span>                :            :  * uxOffset -   If uxOffset &gt; 0, data will be written at an offset from uxHead
+<span class="lineNum">     210 </span>                :            :  *                              while uxHead will not be moved yet.
+<span class="lineNum">     211 </span>                :            :  * pucData -    A pointer to the data to be added.
+<span class="lineNum">     212 </span>                :            :  * uxCount -    The number of bytes to add.
+<span class="lineNum">     213 </span>                :            :  */
+<span class="lineNum">     214 </span>                :            : size_t uxStreamBufferAdd( StreamBuffer_t *pxBuffer, size_t uxOffset, const uint8_t *pucData, size_t uxCount );
+<span class="lineNum">     215 </span>                :            : 
+<span class="lineNum">     216 </span>                :            : /*
+<span class="lineNum">     217 </span>                :            :  * Read bytes from a stream buffer.
+<span class="lineNum">     218 </span>                :            :  *
+<span class="lineNum">     219 </span>                :            :  * pxBuffer -   The buffer from which the bytes will be read.
+<span class="lineNum">     220 </span>                :            :  * uxOffset -   Can be used to read data located at a certain offset from 'uxTail'.
+<span class="lineNum">     221 </span>                :            :  * pucData -    A pointer to the buffer into which data will be read.
+<span class="lineNum">     222 </span>                :            :  * uxMaxCount - The number of bytes to read.
+<span class="lineNum">     223 </span>                :            :  * xPeek -              If set to pdTRUE the data will remain in the buffer.
+<span class="lineNum">     224 </span>                :            :  */
+<span class="lineNum">     225 </span>                :            : size_t uxStreamBufferGet( StreamBuffer_t *pxBuffer, size_t uxOffset, uint8_t *pucData, size_t uxMaxCount, BaseType_t xPeek );
+<span class="lineNum">     226 </span>                :            : 
+<span class="lineNum">     227 </span>                :            : #ifdef __cplusplus
+<span class="lineNum">     228 </span>                :            : } /* extern &quot;C&quot; */
+<span class="lineNum">     229 </span>                :            : #endif
+<span class="lineNum">     230 </span>                :            : 
+<span class="lineNum">     231 </span>                :            : #endif  /* !defined( FREERTOS_STREAM_BUFFER_H ) */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

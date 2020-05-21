@@ -1,0 +1,422 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - cmock_test.info - Test/Unit-Tests/Config_files/FreeRTOS_IP.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">Test/Unit-Tests/Config_files</a> - FreeRTOS_IP.h<span style="font-size: 80%;"> (source / <a href="FreeRTOS_IP.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">cmock_test.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-05-21 10:22:30</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : /*</a>
+<span class="lineNum">       2 </span>                :            :  * FreeRTOS+TCP V2.2.0
+<span class="lineNum">       3 </span>                :            :  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+<span class="lineNum">       4 </span>                :            :  *
+<span class="lineNum">       5 </span>                :            :  * Permission is hereby granted, free of charge, to any person obtaining a copy of
+<span class="lineNum">       6 </span>                :            :  * this software and associated documentation files (the &quot;Software&quot;), to deal in
+<span class="lineNum">       7 </span>                :            :  * the Software without restriction, including without limitation the rights to
+<span class="lineNum">       8 </span>                :            :  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+<span class="lineNum">       9 </span>                :            :  * the Software, and to permit persons to whom the Software is furnished to do so,
+<span class="lineNum">      10 </span>                :            :  * subject to the following conditions:
+<span class="lineNum">      11 </span>                :            :  *
+<span class="lineNum">      12 </span>                :            :  * The above copyright notice and this permission notice shall be included in all
+<span class="lineNum">      13 </span>                :            :  * copies or substantial portions of the Software.
+<span class="lineNum">      14 </span>                :            :  *
+<span class="lineNum">      15 </span>                :            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<span class="lineNum">      16 </span>                :            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+<span class="lineNum">      17 </span>                :            :  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+<span class="lineNum">      18 </span>                :            :  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+<span class="lineNum">      19 </span>                :            :  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+<span class="lineNum">      20 </span>                :            :  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+<span class="lineNum">      21 </span>                :            :  *
+<span class="lineNum">      22 </span>                :            :  * http://aws.amazon.com/freertos
+<span class="lineNum">      23 </span>                :            :  * http://www.FreeRTOS.org
+<span class="lineNum">      24 </span>                :            :  */
+<span class="lineNum">      25 </span>                :            : 
+<span class="lineNum">      26 </span>                :            : #ifndef FREERTOS_IP_H
+<span class="lineNum">      27 </span>                :            : #define FREERTOS_IP_H
+<span class="lineNum">      28 </span>                :            : 
+<span class="lineNum">      29 </span>                :            : #ifdef __cplusplus
+<span class="lineNum">      30 </span>                :            : extern &quot;C&quot; {
+<span class="lineNum">      31 </span>                :            : #endif
+<span class="lineNum">      32 </span>                :            : 
+<span class="lineNum">      33 </span>                :            : /* Application level configuration options. */
+<span class="lineNum">      34 </span>                :            : #include &quot;FreeRTOSIPConfig.h&quot;
+<span class="lineNum">      35 </span>                :            : #include &quot;FreeRTOSIPConfigDefaults.h&quot;
+<span class="lineNum">      36 </span>                :            : #include &quot;IPTraceMacroDefaults.h&quot;
+<span class="lineNum">      37 </span>                :            : 
+<span class="lineNum">      38 </span>                :            : /* Some constants defining the sizes of several parts of a packet */
+<span class="lineNum">      39 </span>                :            : #define ipSIZE_OF_ETH_HEADER                    14u
+<span class="lineNum">      40 </span>                :            : #define ipSIZE_OF_IPv4_HEADER                   20u
+<span class="lineNum">      41 </span>                :            : #define ipSIZE_OF_IGMP_HEADER                   8u
+<span class="lineNum">      42 </span>                :            : #define ipSIZE_OF_ICMP_HEADER                   8u
+<span class="lineNum">      43 </span>                :            : #define ipSIZE_OF_UDP_HEADER                    8u
+<span class="lineNum">      44 </span>                :            : #define ipSIZE_OF_TCP_HEADER                    20u
+<span class="lineNum">      45 </span>                :            : 
+<span class="lineNum">      46 </span>                :            : 
+<span class="lineNum">      47 </span>                :            : /* The number of octets in the MAC and IP addresses respectively. */
+<span class="lineNum">      48 </span>                :            : #define ipMAC_ADDRESS_LENGTH_BYTES ( 6 )
+<span class="lineNum">      49 </span>                :            : #define ipIP_ADDRESS_LENGTH_BYTES ( 4 )
+<span class="lineNum">      50 </span>                :            : 
+<span class="lineNum">      51 </span>                :            : /* IP protocol definitions. */
+<span class="lineNum">      52 </span>                :            : #define ipPROTOCOL_ICMP                 ( 1 )
+<span class="lineNum">      53 </span>                :            : #define ipPROTOCOL_IGMP         ( 2 )
+<span class="lineNum">      54 </span>                :            : #define ipPROTOCOL_TCP                  ( 6 )
+<span class="lineNum">      55 </span>                :            : #define ipPROTOCOL_UDP                  ( 17 )
+<span class="lineNum">      56 </span>                :            : 
+<span class="lineNum">      57 </span>                :            : /* Dimensions the buffers that are filled by received Ethernet frames. */
+<span class="lineNum">      58 </span>                :            : #define ipSIZE_OF_ETH_CRC_BYTES                                 ( 4UL )
+<span class="lineNum">      59 </span>                :            : #define ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES ( 4UL )
+<span class="lineNum">      60 </span>                :            : #define ipTOTAL_ETHERNET_FRAME_SIZE                             ( ( ( uint32_t ) ipconfigNETWORK_MTU ) + ( ( uint32_t ) ipSIZE_OF_ETH_HEADER ) + ipSIZE_OF_ETH_CRC_BYTES + ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES )
+<span class="lineNum">      61 </span>                :            : 
+<span class="lineNum">      62 </span>                :            : /*_RB_ Comment may need updating. */
+<span class="lineNum">      63 </span>                :            : /* Space left at the beginning of a network buffer storage area to store a
+<span class="lineNum">      64 </span>                :            : pointer back to the network buffer.  Should be a multiple of 8 to ensure 8 byte
+<span class="lineNum">      65 </span>                :            : alignment is maintained on architectures that require it.
+<span class="lineNum">      66 </span>                :            : 
+<span class="lineNum">      67 </span>                :            : In order to get a 32-bit alignment of network packets, an offset of 2 bytes
+<span class="lineNum">      68 </span>                :            : would be desirable, as defined by ipconfigPACKET_FILLER_SIZE.  So the malloc'd
+<span class="lineNum">      69 </span>                :            : buffer will have the following contents:
+<span class="lineNum">      70 </span>                :            :         uint32_t pointer;       // word-aligned
+<span class="lineNum">      71 </span>                :            :         uchar_8 filler[6];
+<span class="lineNum">      72 </span>                :            :         &lt;&lt; ETH-header &gt;&gt;    // half-word-aligned
+<span class="lineNum">      73 </span>                :            :         uchar_8 dest[6];    // start of pucEthernetBuffer
+<span class="lineNum">      74 </span>                :            :         uchar_8 dest[6];
+<span class="lineNum">      75 </span>                :            :         uchar16_t type;
+<span class="lineNum">      76 </span>                :            :         &lt;&lt; IP-header &gt;&gt;             // word-aligned
+<span class="lineNum">      77 </span>                :            :         uint8_t ucVersionHeaderLength;
+<span class="lineNum">      78 </span>                :            :         etc
+<span class="lineNum">      79 </span>                :            :  */
+<span class="lineNum">      80 </span>                :            : #if( ipconfigBUFFER_PADDING != 0 )
+<span class="lineNum">      81 </span>                :            :     #define ipBUFFER_PADDING    ipconfigBUFFER_PADDING
+<span class="lineNum">      82 </span>                :            : #else
+<span class="lineNum">      83 </span>                :            :     #define ipBUFFER_PADDING    ( 8u + ipconfigPACKET_FILLER_SIZE )
+<span class="lineNum">      84 </span>                :            : #endif
+<span class="lineNum">      85 </span>                :            : 
+<span class="lineNum">      86 </span>                :            : /* The structure used to store buffers and pass them around the network stack.
+<span class="lineNum">      87 </span>                :            : Buffers can be in use by the stack, in use by the network interface hardware
+<span class="lineNum">      88 </span>                :            : driver, or free (not in use). */
+<span class="lineNum">      89 </span>                :            : typedef struct xNETWORK_BUFFER
+<span class="lineNum">      90 </span>                :            : {
+<span class="lineNum">      91 </span>                :            :         ListItem_t xBufferListItem;     /* Used to reference the buffer form the free buffer list or a socket. */
+<span class="lineNum">      92 </span>                :            :         uint32_t ulIPAddress;                   /* Source or destination IP address, depending on usage scenario. */
+<span class="lineNum">      93 </span>                :            :         uint8_t *pucEthernetBuffer;     /* Pointer to the start of the Ethernet frame. */
+<span class="lineNum">      94 </span>                :            :         size_t xDataLength;                     /* Starts by holding the total Ethernet frame length, then the UDP/TCP payload length. */
+<span class="lineNum">      95 </span>                :            :         uint16_t usPort;                                /* Source or destination port, depending on usage scenario. */
+<span class="lineNum">      96 </span>                :            :         uint16_t usBoundPort;                   /* The port to which a transmitting socket is bound. */
+<span class="lineNum">      97 </span>                :            :         #if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
+<span class="lineNum">      98 </span>                :            :                 struct xNETWORK_BUFFER *pxNextBuffer; /* Possible optimisation for expert users - requires network driver support. */
+<span class="lineNum">      99 </span>                :            :         #endif
+<span class="lineNum">     100 </span>                :            : } NetworkBufferDescriptor_t;
+<span class="lineNum">     101 </span>                :            : 
+<span class="lineNum">     102 </span>                :            : #include &quot;pack_struct_start.h&quot;
+<span class="lineNum">     103 </span>                :            : struct xMAC_ADDRESS
+<span class="lineNum">     104 </span>                :            : {
+<span class="lineNum">     105 </span>                :            :         uint8_t ucBytes[ ipMAC_ADDRESS_LENGTH_BYTES ];
+<span class="lineNum">     106 </span>                :            : }
+<span class="lineNum">     107 </span>                :            : #include &quot;pack_struct_end.h&quot;
+<span class="lineNum">     108 </span>                :            : 
+<span class="lineNum">     109 </span>                :            : typedef struct xMAC_ADDRESS MACAddress_t;
+<span class="lineNum">     110 </span>                :            : 
+<span class="lineNum">     111 </span>                :            : typedef enum eNETWORK_EVENTS
+<span class="lineNum">     112 </span>                :            : {
+<span class="lineNum">     113 </span>                :            :         eNetworkUp,             /* The network is configured. */
+<span class="lineNum">     114 </span>                :            :         eNetworkDown    /* The network connection has been lost. */
+<span class="lineNum">     115 </span>                :            : } eIPCallbackEvent_t;
+<span class="lineNum">     116 </span>                :            : 
+<span class="lineNum">     117 </span>                :            : typedef enum ePING_REPLY_STATUS
+<span class="lineNum">     118 </span>                :            : {
+<span class="lineNum">     119 </span>                :            :         eSuccess = 0,           /* A correct reply has been received for an outgoing ping. */
+<span class="lineNum">     120 </span>                :            :         eInvalidChecksum,       /* A reply was received for an outgoing ping but the checksum of the reply was incorrect. */
+<span class="lineNum">     121 </span>                :            :         eInvalidData            /* A reply was received to an outgoing ping but the payload of the reply was not correct. */
+<span class="lineNum">     122 </span>                :            : } ePingReplyStatus_t;
+<span class="lineNum">     123 </span>                :            : 
+<span class="lineNum">     124 </span>                :            : typedef enum eNETWORK_ADDRESS_TYPE 
+<span class="lineNum">     125 </span>                :            : {
+<span class="lineNum">     126 </span>                :            :         eNetWorkAddressTypeIPV4,
+<span class="lineNum">     127 </span>                :            :         eNetWorkAddressTypeIPV6,
+<span class="lineNum">     128 </span>                :            :         eNetWorkAddressTypeHostName
+<span class="lineNum">     129 </span>                :            : } eNetWorkAddressType_t;
+<span class="lineNum">     130 </span>                :            : 
+<span class="lineNum">     131 </span>                :            : /* Endian related definitions. */
+<span class="lineNum">     132 </span>                :            : #if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+<span class="lineNum">     133 </span>                :            : 
+<span class="lineNum">     134 </span>                :            :         /* FreeRTOS_htons / FreeRTOS_htonl: some platforms might have built-in versions
+<span class="lineNum">     135 </span>                :            :         using a single instruction so allow these versions to be overridden. */
+<span class="lineNum">     136 </span>                :            :         #ifndef FreeRTOS_htons
+<span class="lineNum">     137 </span>                :            :                 #define FreeRTOS_htons( usIn ) ( (uint16_t) ( ( ( usIn ) &lt;&lt; 8U ) | ( ( usIn ) &gt;&gt; 8U ) ) )
+<span class="lineNum">     138 </span>                :            :         #endif
+<span class="lineNum">     139 </span>                :            : 
+<span class="lineNum">     140 </span>                :            :         #ifndef FreeRTOS_htonl
+<span class="lineNum">     141 </span>                :            :                 #define FreeRTOS_htonl( ulIn )                                                                                  \
+<span class="lineNum">     142 </span>                :            :                         (                                                                                                                                       \
+<span class="lineNum">     143 </span>                :            :                                 ( uint32_t )                                                                                                    \
+<span class="lineNum">     144 </span>                :            :                                 (                                                                                                                               \
+<span class="lineNum">     145 </span>                :            :                                         ( ( ( ( uint32_t ) ( ulIn ) )                ) &lt;&lt; 24  ) |         \
+<span class="lineNum">     146 </span>                :            :                                         ( ( ( ( uint32_t ) ( ulIn ) ) &amp; 0x0000ff00UL ) &lt;&lt;  8  ) |     \
+<span class="lineNum">     147 </span>                :            :                                         ( ( ( ( uint32_t ) ( ulIn ) ) &amp; 0x00ff0000UL ) &gt;&gt;  8  ) |     \
+<span class="lineNum">     148 </span>                :            :                                         ( ( ( ( uint32_t ) ( ulIn ) )                ) &gt;&gt; 24  )   \
+<span class="lineNum">     149 </span>                :            :                                 )                                                                                                                               \
+<span class="lineNum">     150 </span>                :            :                         )
+<span class="lineNum">     151 </span>                :            :         #endif
+<span class="lineNum">     152 </span>                :            : 
+<span class="lineNum">     153 </span>                :            : #else /* ipconfigBYTE_ORDER */
+<span class="lineNum">     154 </span>                :            : 
+<span class="lineNum">     155 </span>                :            :         #define FreeRTOS_htons( x ) ( ( uint16_t ) ( x ) )
+<span class="lineNum">     156 </span>                :            :         #define FreeRTOS_htonl( x ) ( ( uint32_t ) ( x ) )
+<span class="lineNum">     157 </span>                :            : 
+<span class="lineNum">     158 </span>                :            : #endif /* ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN */
+<span class="lineNum">     159 </span>                :            : 
+<span class="lineNum">     160 </span>                :            : #define FreeRTOS_ntohs( x ) FreeRTOS_htons( x )
+<span class="lineNum">     161 </span>                :            : #define FreeRTOS_ntohl( x ) FreeRTOS_htonl( x )
+<span class="lineNum">     162 </span>                :            : 
+<span class="lineNum">     163 </span>                :            : #if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+<span class="lineNum">     164 </span>                :            : 
+<span class="lineNum">     165 </span>                :            :         static portINLINE int32_t  FreeRTOS_max_int32  (int32_t  a, int32_t  b);
+<span class="lineNum">     166 </span>                :            :         static portINLINE uint32_t FreeRTOS_max_uint32 (uint32_t a, uint32_t b);
+<span class="lineNum">     167 </span>                :            :         static portINLINE int32_t  FreeRTOS_min_int32  (int32_t  a, int32_t  b);
+<span class="lineNum">     168 </span>                :            :         static portINLINE uint32_t FreeRTOS_min_uint32 (uint32_t a, uint32_t b);
+<span class="lineNum">     169 </span>                :            :         static portINLINE uint32_t FreeRTOS_round_up   (uint32_t a, uint32_t d);
+<span class="lineNum">     170 </span>                :            :         static portINLINE uint32_t FreeRTOS_round_down (uint32_t a, uint32_t d);
+<span class="lineNum">     171 </span>                :            :         static portINLINE BaseType_t  FreeRTOS_min_BaseType  (BaseType_t  a, BaseType_t  b);
+<span class="lineNum">     172 </span>                :            :         static portINLINE BaseType_t  FreeRTOS_max_BaseType  (BaseType_t  a, BaseType_t  b);
+<span class="lineNum">     173 </span>                :            :         static portINLINE UBaseType_t FreeRTOS_max_UBaseType (UBaseType_t a, UBaseType_t b);
+<span class="lineNum">     174 </span>                :            :         static portINLINE UBaseType_t   FreeRTOS_min_UBaseType (UBaseType_t  a, UBaseType_t  b);
+<a name="175"><span class="lineNum">     175 </span>                :            : </a>
+<a name="176"><span class="lineNum">     176 </span>                :            : </a>
+<a name="177"><span class="lineNum">     177 </span>                :<span class="lineNoCov">          0 :         static portINLINE int32_t  FreeRTOS_max_int32  (int32_t  a, int32_t  b) { return a &gt;= b ? a : b; }</span></a>
+<a name="178"><span class="lineNum">     178 </span>                :<span class="lineNoCov">          0 :         static portINLINE uint32_t FreeRTOS_max_uint32 (uint32_t a, uint32_t b) { return a &gt;= b ? a : b; }</span></a>
+<a name="179"><span class="lineNum">     179 </span>                :<span class="lineNoCov">          0 :         static portINLINE int32_t  FreeRTOS_min_int32  (int32_t  a, int32_t  b) { return a &lt;= b ? a : b; }</span></a>
+<a name="180"><span class="lineNum">     180 </span>                :<span class="lineNoCov">          0 :         static portINLINE uint32_t FreeRTOS_min_uint32 (uint32_t a, uint32_t b) { return a &lt;= b ? a : b; }</span></a>
+<span class="lineNum">     181 </span>                :<span class="lineNoCov">          0 :         static portINLINE uint32_t FreeRTOS_round_up   (uint32_t a, uint32_t d) { return d * ( ( a + d - 1u ) / d ); }</span>
+<a name="182"><span class="lineNum">     182 </span>                :<span class="lineNoCov">          0 :         static portINLINE uint32_t FreeRTOS_round_down (uint32_t a, uint32_t d) { return d * ( a / d ); }</span></a>
+<a name="183"><span class="lineNum">     183 </span>                :            : </a>
+<a name="184"><span class="lineNum">     184 </span>                :<span class="lineNoCov">          0 :         static portINLINE BaseType_t  FreeRTOS_max_BaseType  (BaseType_t  a, BaseType_t  b) { return a &gt;= b ? a : b; }</span></a>
+<a name="185"><span class="lineNum">     185 </span>                :<span class="lineNoCov">          0 :         static portINLINE UBaseType_t FreeRTOS_max_UBaseType (UBaseType_t a, UBaseType_t b) { return a &gt;= b ? a : b; }</span></a>
+<span class="lineNum">     186 </span>                :<span class="lineNoCov">          0 :         static portINLINE BaseType_t  FreeRTOS_min_BaseType  (BaseType_t  a, BaseType_t  b) { return a &lt;= b ? a : b; }</span>
+<span class="lineNum">     187 </span>                :<span class="lineNoCov">          0 :         static portINLINE UBaseType_t FreeRTOS_min_UBaseType (UBaseType_t  a, UBaseType_t  b) { return a &lt;= b ? a : b; }</span>
+<span class="lineNum">     188 </span>                :            : 
+<span class="lineNum">     189 </span>                :            : #else
+<span class="lineNum">     190 </span>                :            : 
+<span class="lineNum">     191 </span>                :            :         #define FreeRTOS_max_int32(a,b)  ( ( ( int32_t  ) ( a ) ) &gt;= ( ( int32_t  ) ( b ) ) ? ( ( int32_t  ) ( a ) ) : ( ( int32_t  ) ( b ) ) )
+<span class="lineNum">     192 </span>                :            :         #define FreeRTOS_max_uint32(a,b) ( ( ( uint32_t ) ( a ) ) &gt;= ( ( uint32_t ) ( b ) ) ? ( ( uint32_t ) ( a ) ) : ( ( uint32_t ) ( b ) ) )
+<span class="lineNum">     193 </span>                :            : 
+<span class="lineNum">     194 </span>                :            :         #define FreeRTOS_min_int32(a,b)  ( ( ( int32_t  ) a ) &lt;= ( ( int32_t  ) b ) ? ( ( int32_t  ) a ) : ( ( int32_t  ) b ) )
+<span class="lineNum">     195 </span>                :            :         #define FreeRTOS_min_uint32(a,b) ( ( ( uint32_t ) a ) &lt;= ( ( uint32_t ) b ) ? ( ( uint32_t ) a ) : ( ( uint32_t ) b ) )
+<span class="lineNum">     196 </span>                :            : 
+<span class="lineNum">     197 </span>                :            :         /*  Round-up: a = d * ( ( a + d - 1 ) / d ) */
+<span class="lineNum">     198 </span>                :            :         #define FreeRTOS_round_up(a,d)   ( ( ( uint32_t ) ( d ) ) * ( ( ( ( uint32_t ) ( a ) ) + ( ( uint32_t ) ( d ) ) - 1UL ) / ( ( uint32_t ) ( d ) ) ) )
+<span class="lineNum">     199 </span>                :            :         #define FreeRTOS_round_down(a,d) ( ( ( uint32_t ) ( d ) ) * ( ( ( uint32_t ) ( a ) ) / ( ( uint32_t ) ( d ) ) ) )
+<span class="lineNum">     200 </span>                :            : 
+<span class="lineNum">     201 </span>                :            :         #define FreeRTOS_ms_to_tick(ms)  ( ( ms * configTICK_RATE_HZ + 500 ) / 1000 )
+<span class="lineNum">     202 </span>                :            : 
+<span class="lineNum">     203 </span>                :            :         #define FreeRTOS_max_BaseType(a, b)  ( ( ( BaseType_t  ) ( a ) ) &gt;= ( ( BaseType_t  ) ( b ) ) ? ( ( BaseType_t  ) ( a ) ) : ( ( BaseType_t  ) ( b ) ) )
+<span class="lineNum">     204 </span>                :            :         #define FreeRTOS_max_UBaseType(a, b) ( ( ( UBaseType_t ) ( a ) ) &gt;= ( ( UBaseType_t ) ( b ) ) ? ( ( UBaseType_t ) ( a ) ) : ( ( UBaseType_t ) ( b ) ) )
+<span class="lineNum">     205 </span>                :            :         #define FreeRTOS_min_BaseType(a, b)  ( ( ( BaseType_t  ) ( a ) ) &lt;= ( ( BaseType_t  ) ( b ) ) ? ( ( BaseType_t  ) ( a ) ) : ( ( BaseType_t  ) ( b ) ) )
+<span class="lineNum">     206 </span>                :            :         #define FreeRTOS_min_UBaseType(a, b) ( ( ( UBaseType_t ) ( a ) ) &lt;= ( ( UBaseType_t ) ( b ) ) ? ( ( UBaseType_t ) ( a ) ) : ( ( UBaseType_t ) ( b ) ) )
+<span class="lineNum">     207 </span>                :            : 
+<span class="lineNum">     208 </span>                :            : #endif /* ipconfigHAS_INLINE_FUNCTIONS */
+<span class="lineNum">     209 </span>                :            : 
+<span class="lineNum">     210 </span>                :            : #define pdMS_TO_MIN_TICKS( xTimeInMs ) ( pdMS_TO_TICKS( ( xTimeInMs ) ) &lt; ( ( TickType_t ) 1 ) ? ( ( TickType_t ) 1 ) : pdMS_TO_TICKS( ( xTimeInMs ) ) )
+<span class="lineNum">     211 </span>                :            : 
+<span class="lineNum">     212 </span>                :            : #ifndef pdTRUE_SIGNED
+<span class="lineNum">     213 </span>                :            :         /* Temporary solution: eventually the defines below will appear in 'Source\include\projdefs.h' */
+<span class="lineNum">     214 </span>                :            :         #define pdTRUE_SIGNED           pdTRUE
+<span class="lineNum">     215 </span>                :            :         #define pdFALSE_SIGNED          pdFALSE
+<span class="lineNum">     216 </span>                :            :         #define pdTRUE_UNSIGNED         ( ( UBaseType_t ) 1u )
+<span class="lineNum">     217 </span>                :            :         #define pdFALSE_UNSIGNED        ( ( UBaseType_t ) 0u )
+<span class="lineNum">     218 </span>                :            : #endif
+<span class="lineNum">     219 </span>                :            : 
+<span class="lineNum">     220 </span>                :            : /*
+<span class="lineNum">     221 </span>                :            :  * FULL, UP-TO-DATE AND MAINTAINED REFERENCE DOCUMENTATION FOR ALL THESE
+<span class="lineNum">     222 </span>                :            :  * FUNCTIONS IS AVAILABLE ON THE FOLLOWING URL:
+<span class="lineNum">     223 </span>                :            :  * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/FreeRTOS_TCP_API_Functions.html
+<span class="lineNum">     224 </span>                :            :  */
+<span class="lineNum">     225 </span>                :            : BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
+<span class="lineNum">     226 </span>                :            :         const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ],
+<span class="lineNum">     227 </span>                :            :         const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
+<span class="lineNum">     228 </span>                :            :         const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
+<span class="lineNum">     229 </span>                :            :         const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
+<span class="lineNum">     230 </span>                :            : 
+<span class="lineNum">     231 </span>                :            : void * FreeRTOS_GetUDPPayloadBuffer( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks );
+<span class="lineNum">     232 </span>                :            : void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress, uint32_t *pulNetMask, uint32_t *pulGatewayAddress, uint32_t *pulDNSServerAddress );
+<span class="lineNum">     233 </span>                :            : void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress, const uint32_t *pulNetMask, const uint32_t *pulGatewayAddress, const uint32_t *pulDNSServerAddress );
+<span class="lineNum">     234 </span>                :            : BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t xNumberOfBytesToSend, TickType_t xBlockTimeTicks );
+<span class="lineNum">     235 </span>                :            : void FreeRTOS_ReleaseUDPPayloadBuffer( void *pvBuffer );
+<span class="lineNum">     236 </span>                :            : const uint8_t * FreeRTOS_GetMACAddress( void );
+<span class="lineNum">     237 </span>                :            : void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ipMAC_ADDRESS_LENGTH_BYTES] );
+<span class="lineNum">     238 </span>                :            : void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
+<span class="lineNum">     239 </span>                :            : void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier );
+<span class="lineNum">     240 </span>                :            : uint32_t FreeRTOS_GetIPAddress( void );
+<span class="lineNum">     241 </span>                :            : void FreeRTOS_SetIPAddress( uint32_t ulIPAddress );
+<span class="lineNum">     242 </span>                :            : void FreeRTOS_SetNetmask( uint32_t ulNetmask );
+<span class="lineNum">     243 </span>                :            : void FreeRTOS_SetGatewayAddress( uint32_t ulGatewayAddress );
+<span class="lineNum">     244 </span>                :            : uint32_t FreeRTOS_GetGatewayAddress( void );
+<span class="lineNum">     245 </span>                :            : uint32_t FreeRTOS_GetDNSServerAddress( void );
+<span class="lineNum">     246 </span>                :            : uint32_t FreeRTOS_GetNetmask( void );
+<span class="lineNum">     247 </span>                :            : void FreeRTOS_OutputARPRequest( uint32_t ulIPAddress );
+<span class="lineNum">     248 </span>                :            : BaseType_t FreeRTOS_IsNetworkUp( void );
+<span class="lineNum">     249 </span>                :            : 
+<span class="lineNum">     250 </span>                :            : #if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+<span class="lineNum">     251 </span>                :            :         UBaseType_t uxGetMinimumIPQueueSpace( void );
+<span class="lineNum">     252 </span>                :            : #endif
+<span class="lineNum">     253 </span>                :            : 
+<span class="lineNum">     254 </span>                :            : /*
+<span class="lineNum">     255 </span>                :            :  * Defined in FreeRTOS_Sockets.c
+<span class="lineNum">     256 </span>                :            :  * //_RB_ Don't think this comment is correct.  If this is for internal use only it should appear after all the public API functions and not start with FreeRTOS_.
+<span class="lineNum">     257 </span>                :            :  * Socket has had activity, reset the timer so it will not be closed
+<span class="lineNum">     258 </span>                :            :  * because of inactivity
+<span class="lineNum">     259 </span>                :            :  */
+<span class="lineNum">     260 </span>                :            : const char *FreeRTOS_GetTCPStateName( UBaseType_t ulState);
+<span class="lineNum">     261 </span>                :            : 
+<span class="lineNum">     262 </span>                :            : /* _HT_ Temporary: show all valid ARP entries
+<span class="lineNum">     263 </span>                :            :  */
+<span class="lineNum">     264 </span>                :            : void FreeRTOS_PrintARPCache( void );
+<span class="lineNum">     265 </span>                :            : void FreeRTOS_ClearARP( void );
+<span class="lineNum">     266 </span>                :            : 
+<span class="lineNum">     267 </span>                :            : #if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
+<span class="lineNum">     268 </span>                :            : 
+<span class="lineNum">     269 </span>                :            :         /* DHCP has an option for clients to register their hostname.  It doesn't
+<span class="lineNum">     270 </span>                :            :         have much use, except that a device can be found in a router along with its
+<span class="lineNum">     271 </span>                :            :         name. If this option is used the callback below must be provided by the
+<span class="lineNum">     272 </span>                :            :         application     writer to return a const string, denoting the device's name. */
+<span class="lineNum">     273 </span>                :            :         const char *pcApplicationHostnameHook( void );
+<span class="lineNum">     274 </span>                :            : 
+<span class="lineNum">     275 </span>                :            : #endif /* ipconfigDHCP_REGISTER_HOSTNAME */
+<span class="lineNum">     276 </span>                :            : 
+<span class="lineNum">     277 </span>                :            : 
+<span class="lineNum">     278 </span>                :            : /* This xApplicationGetRandomNumber() will set *pulNumber to a random number,
+<span class="lineNum">     279 </span>                :            : and return pdTRUE. When the random number generator is broken, it shall return
+<span class="lineNum">     280 </span>                :            : pdFALSE.
+<span class="lineNum">     281 </span>                :            : The function is defined in 'iot_secure_sockets.c'.
+<span class="lineNum">     282 </span>                :            : If that module is not included in the project, the application must provide an
+<span class="lineNum">     283 </span>                :            : implementation of it.
+<span class="lineNum">     284 </span>                :            : The macro's ipconfigRAND32() and configRAND32() are not in use anymore. */
+<span class="lineNum">     285 </span>                :            : BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber );
+<span class="lineNum">     286 </span>                :            : 
+<span class="lineNum">     287 </span>                :            : /* For backward compatibility define old structure names to the newer equivalent
+<span class="lineNum">     288 </span>                :            : structure name. */
+<span class="lineNum">     289 </span>                :            : #ifndef ipconfigENABLE_BACKWARD_COMPATIBILITY
+<span class="lineNum">     290 </span>                :            :         #define ipconfigENABLE_BACKWARD_COMPATIBILITY   1
+<span class="lineNum">     291 </span>                :            : #endif
+<span class="lineNum">     292 </span>                :            : 
+<span class="lineNum">     293 </span>                :            : #if( ipconfigENABLE_BACKWARD_COMPATIBILITY == 1 )
+<span class="lineNum">     294 </span>                :            :         #define xIPStackEvent_t                         IPStackEvent_t
+<span class="lineNum">     295 </span>                :            :         #define xNetworkBufferDescriptor_t      NetworkBufferDescriptor_t
+<span class="lineNum">     296 </span>                :            :         #define xMACAddress_t                           MACAddress_t
+<span class="lineNum">     297 </span>                :            :         #define xWinProperties_t                        WinProperties_t
+<span class="lineNum">     298 </span>                :            :         #define xSocket_t                                       Socket_t
+<span class="lineNum">     299 </span>                :            :         #define xSocketSet_t                            SocketSet_t
+<span class="lineNum">     300 </span>                :            :         #define ipSIZE_OF_IP_HEADER                     ipSIZE_OF_IPv4_HEADER
+<span class="lineNum">     301 </span>                :            : 
+<span class="lineNum">     302 </span>                :            :         /* Since August 2016, the public types and fields below have changed name:
+<span class="lineNum">     303 </span>                :            :         abbreviations TCP/UDP are now written in capitals, and type names now end with &quot;_t&quot;. */
+<span class="lineNum">     304 </span>                :            :         #define FOnConnected                            FOnConnected_t
+<span class="lineNum">     305 </span>                :            :         #define FOnTcpReceive                           FOnTCPReceive_t
+<span class="lineNum">     306 </span>                :            :         #define FOnTcpSent                                      FOnTCPSent_t
+<span class="lineNum">     307 </span>                :            :         #define FOnUdpReceive                           FOnUDPReceive_t
+<span class="lineNum">     308 </span>                :            :         #define FOnUdpSent                                      FOnUDPSent_t
+<span class="lineNum">     309 </span>                :            : 
+<span class="lineNum">     310 </span>                :            :         #define pOnTcpConnected                         pxOnTCPConnected
+<span class="lineNum">     311 </span>                :            :         #define pOnTcpReceive                           pxOnTCPReceive
+<span class="lineNum">     312 </span>                :            :         #define pOnTcpSent                                      pxOnTCPSent
+<span class="lineNum">     313 </span>                :            :         #define pOnUdpReceive                           pxOnUDPReceive
+<span class="lineNum">     314 </span>                :            :         #define pOnUdpSent                                      pxOnUDPSent
+<span class="lineNum">     315 </span>                :            : 
+<span class="lineNum">     316 </span>                :            :         #define FOnUdpSent                                      FOnUDPSent_t
+<span class="lineNum">     317 </span>                :            :         #define FOnTcpSent                                      FOnTCPSent_t
+<span class="lineNum">     318 </span>                :            : #endif /* ipconfigENABLE_BACKWARD_COMPATIBILITY */
+<span class="lineNum">     319 </span>                :            : 
+<span class="lineNum">     320 </span>                :            : #ifdef __cplusplus
+<span class="lineNum">     321 </span>                :            : } /* extern &quot;C&quot; */
+<span class="lineNum">     322 </span>                :            : #endif
+<span class="lineNum">     323 </span>                :            : 
+<span class="lineNum">     324 </span>                :            : #endif /* FREERTOS_IP_H */
+<span class="lineNum">     325 </span>                :            : 
+<span class="lineNum">     326 </span>                :            : 
+<span class="lineNum">     327 </span>                :            : 
+<span class="lineNum">     328 </span>                :            : 
+<span class="lineNum">     329 </span>                :            : 
+<span class="lineNum">     330 </span>                :            : 
+<span class="lineNum">     331 </span>                :            : 
+<span class="lineNum">     332 </span>                :            : 
+<span class="lineNum">     333 </span>                :            : 
+<span class="lineNum">     334 </span>                :            : 
+<span class="lineNum">     335 </span>                :            : 
+<span class="lineNum">     336 </span>                :            : 
+<span class="lineNum">     337 </span>                :            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -57,13 +57,13 @@ static void vBlinkOnboardUserLED( void *pvParameters );
 int main(void)
 {
 	/* Initializes MCU, drivers and middleware.
-	   This is generated from Atmel START project. */
+	This is generated from Atmel START project. */
 	atmel_start_init();
 	
 	/* Standard register test. */
 	vStartRegTestTasks();
 	
-	/* Optionally enable below test. This port only has 2KB RAM. */
+	/* Optionally enable below tests. This port only has 2KB RAM. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	xTaskCreate( vBlinkOnboardUserLED, "LED", 50, NULL, mainCHECK_TASK_PRIORITY, NULL );
@@ -111,6 +111,7 @@ BaseType_t xFirstTimeCheck = pdTRUE;
 			xFirstTimeCheck = pdFALSE;
 		}
 		
+		/* Could set break point at below line to verify uxErrorHasOccurred. */
 		vTaskDelay( mainCHECK_PERIOD );
 	}
 }
@@ -121,7 +122,7 @@ static void vBlinkOnboardUserLED( void *pvParameters )
 	/* The parameters are not used. */
 	( void ) pvParameters;
 
-	/* Cycle for ever, blink onboard user LED at a certain frequency. */
+	/* Cycle forever, blink onboard user LED at a certain frequency. */
 	for( ;; )
 	{
 		vParTestToggleLED( 0 );

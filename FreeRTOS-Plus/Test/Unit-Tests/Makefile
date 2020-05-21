@@ -106,7 +106,7 @@ ${BIN_DIR}/${EXECUTABLE}: ${UNITY_FIXTURE_DIR}/unity_fixture.c ${SRC_DIR}/iot_fr
 
 clean:
 	@rm -rf build
-	@rm -f sys_arch.gcda  sys_arch.gcno
+	@rm -f *.gcda  *.gcno
 	@echo "Cleaned...\n"
 
 copy:

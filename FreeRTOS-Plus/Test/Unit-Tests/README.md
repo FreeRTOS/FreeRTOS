@@ -6,14 +6,17 @@ This directory is made for the purpose of Unit testing and tries to provide the 
 You can run this on any GNU Make compatible systems. But in case of DOS based systems some tweaking is required with the makefile.
 To compile and run this project successfully, you must have the following:
 1. Make (You can check whether you have this by typing `make --version`)
+    - Not found? Try `apt-get install make`.
 2. Ruby (You can check whether you have this by typing `ruby --version`)
+    - Not found? Try `apt-get install ruby`.
 3. Downloaded the repo with --recurse-submodules option to include CMock (and by extension Unity) in the cloned repo.
+    - `git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules ./FreeRTOS_Dir`
 
 ### To run the Unit tests:
 Go to `FreeRTOS/FreeRTOS-Plus/Test/Unit-Tests`. Most probably you are in the mentioned directory already.
 Run:
-- make clean
-- make coverage
+- `make clean`
+- `make coverage`
 
 NOTE: after this point all directories mentioned in the README will be relative to this path: `FreeRTOS/FreeRTOS-Plus/Test/Unit-Tests`
 

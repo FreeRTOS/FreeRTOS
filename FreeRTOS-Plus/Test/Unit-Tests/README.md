@@ -18,6 +18,20 @@ Run:
 - `make clean`
 - `make coverage`
 
+You should see an output similar to this:
+```
+-----------------------
+3 Tests 0 Failures 0 Ignored 
+OK
+Capturing coverage data from .
+... <Skipped some lines here for the sake of brevity>
+Overall coverage rate:
+  lines......: 84.8% (56 of 66 lines)
+  functions..: 85.7% (12 of 14 functions)
+  branches...: 50.0% (2 of 4 branches)
+
+```
+
 NOTE: after this point all directories mentioned in the README will be relative to this path: `FreeRTOS/FreeRTOS-Plus/Test/Unit-Tests`
 
 ## Examples:

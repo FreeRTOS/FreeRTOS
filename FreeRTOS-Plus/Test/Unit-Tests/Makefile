@@ -54,7 +54,7 @@ directories:
 
 mocks: directories
 	cd ${BUILD_DIR} && ruby  ${CMOCK_LIB_DIR}/cmock.rb -o${CONFIGURATION_DIR}/project.yml ${MOCK_HEADERS}
-	#@echo "\n"
+	@echo "\n"
 
 ${LIB_DIR}/libcmock.so: ${CMOCK_SRC_DIR}/cmock.c ${CMOCK_SRC_DIR}/cmock.h Makefile ${LIB_DIR}/libunity.so
 	${CC} -o $@ -shared -fPIC  $<  ${INCLUDE_DIR}
@@ -108,4 +108,3 @@ coverage: run
 	lcov --base-directory . --directory . -c --rc lcov_branch_coverage=1 --rc genhtml_branch_coverage=1  -o build/cmock_test.info
 	genhtml build/cmock_test.info --branch-coverage --output-directory build/coverage_html
 
-#lcov --remove cmock_test.info "/usr*" --o cmock_test.info

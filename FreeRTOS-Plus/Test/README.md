@@ -10,4 +10,4 @@ This directory is in working progress -- we are migrating scattered test cases t
 
 - ```./CBMC```: This directory contains automated proofs of the memory safety of various parts of the FreeRTOS code base.
 - ```./CMock```: This directory has the submoduled version of CMock for providing basis Unit testing
-- ```./Unit-tests```: This directory has the Unit tests for FreeRTOS-Plus libraries. As of now, just Unit tests for +TCP (testing these).
+- ```./Unit-Tests```: This directory has the Unit tests for FreeRTOS-Plus libraries. As of now, just Unit tests for +TCP (testing these).

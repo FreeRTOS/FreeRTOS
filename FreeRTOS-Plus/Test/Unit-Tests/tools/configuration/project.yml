@@ -22,11 +22,6 @@
     - <stdbool.h>
     - <stdint.h>
     - <fcntl.h>
-    - "FreeRTOS.h"
-    - "task.h"
-    - "list.h"
-    - "queue.h"
-    - "FreeRTOS_IP.h"
   :weak: __attribute__((weak))
   :verbosity: 3
   :attributes:
@@ -37,9 +32,8 @@
     - portDONT_DISCARD
     - '(?:fcntl\s*\(+.*?\)+)' # this function is causing some trouble with code coverage as the annotations are calling the mocked one, so we won't mock it
 
-    #No need to mock below function as they don't do much (and are also declared & defined in header files)
-    #in FreeRTOS_IP.h
-    - '(?:FreeRTOS_max_int32\s*\(+.*?\)+)'
+    #No stop some functions from being mocked..
+    - '(?:<YOUR_FUNCTION_NAME>\s*\(+.*?\)+)'
     - '(?:FreeRTOS_max_uint32\s*\(+.*?\)+)'
     - '(?:FreeRTOS_min_int32\s*\(+.*?\)+)'
     - '(?:FreeRTOS_min_uint32\s*\(+.*?\)+)'
@@ -55,8 +49,7 @@
     #declared in multiple files
     - '(?:FreeRTOS_netstat\s*\(+.*?\)+)'
   :treat_externs: :include
-  :exclude:                   #exclude the below functions from the mock
-    - portINLINE uint16_t usChar2u16(const uint8_t* apChr)
+
 #  :includes_c_pre_header:
 #    - "portableDefs.h"
 #  :includes_h_pre_orig_headder:

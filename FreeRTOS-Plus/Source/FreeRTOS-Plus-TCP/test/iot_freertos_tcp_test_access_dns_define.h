@@ -34,7 +34,7 @@
 #define _AWS_FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
 
 #include "iot_freertos_tcp_test_access_declare.h"
-#include "FreeRTOS_DNS.h"
+
 /*-----------------------------------------------------------*/
 
 uint32_t TEST_FreeRTOS_TCP_prvParseDNSReply( uint8_t * pucUDPPayloadBuffer,

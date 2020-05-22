@@ -56,15 +56,6 @@ extern "C" {
 #define	ipNBDGM_PORT	138 /* Datagram Service, not included. */
 
 /*
- * Process a response packet from a DNS server.
- * The parameter 'xExpected' indicates whether the identifier in the reply
- * was expected, and thus if the DNS cache may be updated with the reply.
- */
-uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
-                                                                  size_t uxBufferLength,
-                                                                  BaseType_t xExpected );
-
-/*
  * The following function should be provided by the user and return true if it
  * matches the domain name.
  */

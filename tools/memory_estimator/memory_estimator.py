@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import io
 import os
 import re
@@ -8,7 +10,7 @@ from makefile_generator import generate_makefile_from_template
 
 __THIS_FILE_PATH__ = os.path.dirname(os.path.abspath(__file__))
 __MAKE_FILE_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'Makefile.template')
-__MAKE_FILE_OUTPUT__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
+__GENERATED_MAKE_FILE__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
 
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
 __FREERTOS_PLUS_SRC_DIR__ = os.path.join('FreeRTOS-Plus', 'Source')
@@ -89,7 +91,7 @@ def generate_makefile(freertos_lts, optimization, lib_name):
                                     include_dirs,
                                     optimization,
                                     __MAKE_FILE_TEMPLATE__,
-                                    __MAKE_FILE_OUTPUT__)
+                                    __GENERATED_MAKE_FILE__)
 
 
 def make(compiler):
@@ -97,11 +99,13 @@ def make(compiler):
 
     print('---- Starting Build. Compiler: {} ---- \n'.format(compiler))
 
-    proc = subprocess.Popen(["make", compiler_command], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    proc = subprocess.Popen(['make', '-f', __GENERATED_MAKE_FILE__, compiler_command],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
 
     warnings = []
     for line in iter(proc.stdout.readline, b''):
-        line = line.strip()
+        line = line.decode('utf-8').strip()
         print(line)
         if re.match('.*: warning: .*', line):
             warnings.append(line.strip())
@@ -113,24 +117,28 @@ def make(compiler):
 def calculate_size(sizetool):
     sizetool_command='SIZETOOL={}'.format(sizetool)
 
-    proc = subprocess.Popen(['make', 'size', sizetool_command], stdout=subprocess.PIPE)
+    proc = subprocess.Popen(['make', '-f', __GENERATED_MAKE_FILE__, 'size', sizetool_command],
+                            stdout=subprocess.PIPE)
 
     calculated_sizes = []
     for line in iter(proc.stdout.readline, b''):
-        calculated_sizes.append(line.rstrip())
+        line = line.decode('utf-8').strip()
+        calculated_sizes.append(line)
 
     return calculated_sizes
 
 
 def clean():
-    proc = subprocess.Popen(['make', 'clean'], stdout=subprocess.PIPE)
+    proc = subprocess.Popen(['make', '-f', __GENERATED_MAKE_FILE__, 'clean'],
+                            stdout=subprocess.PIPE)
 
     for line in iter(proc.stdout.readline, b''):
-        print(line.rstrip())
+        line = line.decode('utf-8').strip()
+        print(line)
 
 
 def remove_generated_makefile():
-    os.remove(__MAKE_FILE_OUTPUT__)
+    os.remove(__GENERATED_MAKE_FILE__)
 
 
 def pretty_print_warnings(warnings):
@@ -177,7 +185,7 @@ def main():
     calculated_sizes = calculate_size(args['sizetool'])
 
     # Remove the generated artifacts.
-    if args['dontclean'] == False:
+    if not args['dontclean']:
         clean()
         remove_generated_makefile()
 
@@ -188,5 +196,5 @@ def main():
     pretty_print_sizes(calculated_sizes)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

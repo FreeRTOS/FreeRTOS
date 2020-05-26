@@ -27,8 +27,8 @@
 
 
 /*
- * Tests the behaviour of arrays of task notifications per task.  This file is
- * used in combination with TaskNotify.c.
+ * Tests the behaviour of arrays of task notifications per task.  The tests in this
+ * file are additive to those implemented in FreeRTOS/Demo/Common/Minimal/TaskNotify.c.
  */
 
 /* Standard includes. */
@@ -42,8 +42,8 @@
 /* Demo program include files. */
 #include "TaskNotifyArray.h"
 
-#if( configNUMBER_OF_TASK_NOTIFICATIONS < 2 )
-	#error This file is intended to test direct to task notification arrays but the array does not contain more than one index.
+#if( configTASK_NOTIFICATION_ARRAY_ENTRIES < 3 )
+	#error This file tests direct to task notification arrays and needs configTASK_NOTIFICATION_ARRAY_ENTRIES to be at leat 3.
 #endif
 
 /* Allow parameters to be overridden on a demo by demo basis. */
@@ -203,12 +203,12 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 	/* ------------------------------------------------------------------------
 	Check blocking when there are no notifications. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Send notifications to the task notification in each index of the
 		task notification array other than the one on which this task will
 		block. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -229,7 +229,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		/* Clear all the other notifications within the array of task
 		notifications again ready for the next round. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -247,7 +247,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 	/* ------------------------------------------------------------------------
 	Check no blocking when notifications are pending. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* First notify the task notification at index uxIndexToTest within this
 		task's own array of task notifications - this would not be a normal
@@ -286,11 +286,11 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 	/*-------------------------------------------------------------------------
 	Check the non-overwriting functionality. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Send notifications to all indexes with the array of task
 		notificaitons other than the one on which this task will block. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -322,7 +322,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		/* Clear all the other task notifications within the array of task
 		notifications again ready for the next round. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -348,9 +348,9 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	both notifications should pass, and the value written the second time should
 	overwrite the value written the first time, and so be the value that is read
 	back. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -370,7 +370,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		configASSERT( ulNotifiedValue == ulSecondNotifiedValueConst );
 		( void ) ulNotifiedValue;
 
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -390,7 +390,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	/*-------------------------------------------------------------------------
 	For each task notification within the array of task notifications, check
 	notifications with no action pass without updating the value. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* First set the notification values of the task notification at index
 		uxIndexToTest of the array of task notification to
@@ -421,7 +421,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		uxIndexToTest should still contain 0 as they have not been set in this
 		loop yet.  This time use xTaskNotifyValueClear() instead of
 		xTaskNotifyWaitIndexed(), just for test coverage. */
-		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyValueClearIndexed( NULL, uxOtherIndexes, 0 );
@@ -438,7 +438,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	notifications in turn, send ulMaxLoop increment notifications, then ensure
 	the received value is as expected - which should be
 	ulSecondNotificationValueConst plus how ever many times to loop iterated. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		for( ulLoop = 0; ulLoop < ulMaxLoops; ulLoop++ )
 		{
@@ -471,7 +471,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		ulSecondNotifiedValueConst as they have not been set in this loop yet.
 		This time use xTaskNotifyValueClear() instead of xTaskNotifyWaitIndexed(),
 		just for test coverage. */
-		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyValueClearIndexed( NULL, uxOtherIndexes, 0 );
@@ -481,7 +481,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	}
 
 	/* Clear all bits ready for next test. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Start with all bits clear. */
 		ulTaskNotifyValueClearIndexed( NULL, uxIndexToTest, notifyUINT32_MAX );
@@ -495,7 +495,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	one additional bit set on each notification, and exiting the loop when all
 	the bits are found to be set.  As there are 32-bits the loop should execute
 	32 times before all the bits are found to be set. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		ulNotifyingValue = 0x01;
 		ulLoop = 0;
@@ -540,7 +540,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		notifications after index uxIndexToTest should still contain 0 as they
 		have not been set in this loop yet.  This time use xTaskNotifyValueClear()
 		instead of xTaskNotifyWaitIndexed(), just for test coverage. */
-		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyValueClearIndexed( NULL, uxOtherIndexes, 0 );
@@ -555,7 +555,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	For each task notification within the array of task notification sin turn,
 	check bits are cleared on entry but not on exit when a notification fails
 	to arrive before timing out - both with and without a timeout value. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Wait for the notification - but this time it is not given by anything
 		and should return pdFAIL.  The parameters are set to clear bit zero on
@@ -598,7 +598,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		/* All array indexes after uxIndexToTest should still contain notifyUINT32_MAX
 		left over from the previous test.  This time use xTaskNotifyValueClear()
 		instead of xTaskNotifyWaitIndexed(), just for test coverage. */
-		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			/* This time 0 is the bits to clear parameter - so clearing no bits. */
 			ulNotifiedValue = ulTaskNotifyValueClearIndexed( NULL, uxOtherIndexes, 0 );
@@ -612,7 +612,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 	/*-------------------------------------------------------------------------
 	Now try clearing the bit on exit. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* The task is notified first using the task notification at index
 		uxIndexToTest within the array of task notifications. */
@@ -633,7 +633,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 
 		/* No other indexes should have a notification pending. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
@@ -649,7 +649,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	/*-------------------------------------------------------------------------
 	For each task notification within the array of task notifications, try
 	querying the previous value while notifying a task. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		xTaskNotifyAndQueryIndexed( xTaskToNotify, uxIndexToTest, 0x00, eSetBits, &ulPreviousValue );
 		configASSERT( ulNotifiedValue == ( notifyUINT32_MAX & ~( ulBit0 | ulBit1 ) ) );
@@ -673,18 +673,18 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/* ---------------------------------------------------------------------- */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Clear the previous notifications. */
 		xTaskNotifyWaitIndexed( uxIndexToTest, notifyUINT32_MAX, 0, &ulNotifiedValue, 0 );
 	}
 
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* No task notification within the array of task notifications should
 		not have any notifications pending, so an attempt to clear the
 		notification state should fail. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			configASSERT( xTaskNotifyStateClearIndexed( NULL, uxOtherIndexes ) == pdFALSE );
 		}
@@ -698,7 +698,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		possible to clear the notification state.  Other indexes should still
 		not have a notification pending - likewise uxIndexToTest should not have
 		a notification pending once it has been cleared. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			if( uxOtherIndexes == uxIndexToTest )
 			{
@@ -713,7 +713,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	/* ------------------------------------------------------------------------
 	For each task notification within the array of task notifications, clear
 	bits in the notification value. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Get the task to set all bits in its task notification at index
 		uxIndexToTest within its array of task notifications.  This is not a
@@ -751,7 +751,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	ulFineCycleCount++;
 
 	/* Leave all bits cleared. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		xTaskNotifyWaitIndexed( uxIndexToTest, notifyUINT32_MAX, 0, NULL, 0 );
 	}
@@ -791,7 +791,7 @@ static UBaseType_t uxIndexToNotify = 0;
 		/* Use the next task notification within the array of task notifications
 		the next time around. */
 		uxIndexToNotify++;
-		if( uxIndexToNotify >= configNUMBER_OF_TASK_NOTIFICATIONS )
+		if( uxIndexToNotify >= configTASK_NOTIFICATION_ARRAY_ENTRIES )
 		{
 			uxIndexToNotify = 0;
 		}
@@ -820,7 +820,7 @@ static BaseType_t uxIndexToNotify = 0;
 	/* Use the next task notification within the array of task notifications the
 	next time around. */
 	uxIndexToNotify++;
-	if( uxIndexToNotify >= configNUMBER_OF_TASK_NOTIFICATIONS )
+	if( uxIndexToNotify >= configTASK_NOTIFICATION_ARRAY_ENTRIES )
 	{
 		uxIndexToNotify = 0;
 	}
@@ -839,14 +839,14 @@ uint32_t ulNotifiedValue;
 
 	/* Perform the test on each task notification within the array or task
 	notifications. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* Incremented to show the task is still running. */
 		ulFineCycleCount++;
 
 		/* Ensure no notifications within the array of task notifications are
 		pending. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			xReturned = xTaskNotifyWaitIndexed( uxOtherIndexes, 0, 0, NULL, 0 );
 			configASSERT( xReturned == pdFALSE );
@@ -869,7 +869,7 @@ uint32_t ulNotifiedValue;
 
 		/* Check none of the task notifications within the array of task
 		notifications as been notified. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			xReturned = xTaskNotifyWaitIndexed( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
 			configASSERT( xReturned == pdFALSE );
@@ -897,7 +897,7 @@ uint32_t ulNotifiedValue;
 		of task notifications at and below the index being tested have a notification
 		value, and that indexes above the index being tested to not have
 		notification values. */
-		for( uxOtherIndexes = 0; uxOtherIndexes < configNUMBER_OF_TASK_NOTIFICATIONS; uxOtherIndexes++ )
+		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			xReturned = xTaskNotifyWaitIndexed( uxOtherIndexes, 0, 0, &ulNotifiedValue, 0 );
 			configASSERT( xReturned == pdFALSE );
@@ -922,7 +922,7 @@ uint32_t ulNotifiedValue;
 	ulFineCycleCount++;
 
 	/* Leave all bits cleared. */
-	for( uxIndexToTest = 0; uxIndexToTest < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToTest++ )
+	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		xTaskNotifyWaitIndexed( uxIndexToTest, notifyUINT32_MAX, 0, NULL, 0 );
 	}
@@ -940,7 +940,7 @@ BaseType_t xReturned;
 	the value of its index position plus 1 so everything starts in a known
 	state, then clear the notification state ready for the next test.  Plus 1 is
 	used because the index under test will use 0. */
-	for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+	for( uxIndex = 0; uxIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndex++ )
 	{
 		xTaskNotifyIndexed( xTaskToNotify, uxIndex, uxIndex + 1, eSetValueWithOverwrite );
 		xTaskNotifyStateClearIndexed( xTaskToNotify, uxIndex );
@@ -948,7 +948,7 @@ BaseType_t xReturned;
 
 	/* Peform the test on each task notification within the array of task
 	notifications. */
-	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	for( uxIndexToNotify = 0; uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToNotify++ )
 	{
 		/* Set the notification value of the index being tested to 0 so the
 		notification value increment/decrement functions can be tested. */
@@ -971,7 +971,7 @@ BaseType_t xReturned;
 		/* No other notification indexes should have changed, and therefore should
 		still have their value set to their index plus 1 within the array of
 		notifications. */
-		for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+		for( uxIndex = 0; uxIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndex++ )
 		{
 			if( uxIndex != uxIndexToNotify )
 			{
@@ -1004,14 +1004,14 @@ TickType_t xTimeBeforeBlocking;
 
 	/* Set all notify values within the array of tasks notifications to zero
 	ready for the next test. */
-	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	for( uxIndexToNotify = 0; uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToNotify++ )
 	{
 		ulTaskNotifyValueClearIndexed( xTaskToNotify, uxIndexToNotify, notifyUINT32_MAX );
 	}
 
 	/* Perform the test for each notification within the array of task
 	notifications. */
-	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	for( uxIndexToNotify = 0; uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToNotify++ )
 	{
 		/* Start the software timer then wait for it to notify this task.  Block
 		on a notification index that we do not expect to receive the notification
@@ -1020,9 +1020,9 @@ TickType_t xTimeBeforeBlocking;
 		xTimeBeforeBlocking = xTaskGetTickCount();
 
 
-		if( uxIndexToNotify == ( configNUMBER_OF_TASK_NOTIFICATIONS - 1 ) )
+		if( uxIndexToNotify == ( configTASK_NOTIFICATION_ARRAY_ENTRIES - 1 ) )
 		{
-			/* configNUMBER_OF_TASK_NOTIFICATIONS - 1 is to be notified, so
+			/* configTASK_NOTIFICATION_ARRAY_ENTRIES - 1 is to be notified, so
 			block on index 0. */
 			uxIndex = 0;
 		}
@@ -1047,7 +1047,7 @@ TickType_t xTimeBeforeBlocking;
 
 		/* Only the notification at index position uxIndexToNotify() should be
 		set.  Calling this function will clear it again. */
-		for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+		for( uxIndex = 0; uxIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndex++ )
 		{
 			xReturned = xTaskNotifyWaitIndexed( uxIndex, 0, 0, &ulReceivedValue, xDontBlock );
 
@@ -1085,7 +1085,7 @@ const TickType_t xDontBlock = 0;
 
 	/* Set the value of each notification within the array of task notifications
 	to zero so the task can block on xTaskNotifyTake(). */
-	for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+	for( uxIndex = 0; uxIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndex++ )
 	{
 		xTaskNotifyIndexed( xTaskToNotify, uxIndex, 0, eSetValueWithOverwrite );
 		xTaskNotifyStateClearIndexed( xTaskToNotify, uxIndex );
@@ -1093,7 +1093,7 @@ const TickType_t xDontBlock = 0;
 
 	/* Perform the test on each task notification within the array of task
 	notifications. */
-	for( uxIndexToNotify = 0; uxIndexToNotify < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndexToNotify++ )
+	for( uxIndexToNotify = 0; uxIndexToNotify < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToNotify++ )
 	{
 		/* Tell the interrupt to send the next notification. */
 		taskENTER_CRITICAL();
@@ -1123,7 +1123,7 @@ const TickType_t xDontBlock = 0;
 		still have their value set to 0.  The value in array index uxIndexToNotify
 		should also have been decremented back to zero by the call to
 		ulTaskNotifyTakeIndexed(). */
-		for( uxIndex = 0; uxIndex < configNUMBER_OF_TASK_NOTIFICATIONS; uxIndex++ )
+		for( uxIndex = 0; uxIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndex++ )
 		{
 			xReturned = xTaskNotifyWaitIndexed( uxIndexToNotify, 0, 0, &ulReceivedValue, xDontBlock );
 			configASSERT( xReturned == pdFALSE );
@@ -1185,7 +1185,7 @@ static UBaseType_t uxIndexToNotify = 0;
 		/* Use the next index in the array of task notifications the next time
 		around. */
 		uxIndexToNotify++;
-		if( uxIndexToNotify >= configNUMBER_OF_TASK_NOTIFICATIONS )
+		if( uxIndexToNotify >= configTASK_NOTIFICATION_ARRAY_ENTRIES )
 		{
 			uxIndexToNotify = 0;
 		}

@@ -60,34 +60,33 @@ a constant. */
 
 
 /* ICMP protocol definitions. */
-#define ipICMP_ECHO_REQUEST	   ( ( uint8_t ) 8 )
-#define ipICMP_ECHO_REPLY	   ( ( uint8_t ) 0 )
+#define ipICMP_ECHO_REQUEST				( ( uint8_t ) 8 )
+#define ipICMP_ECHO_REPLY				( ( uint8_t ) 0 )
 
 
 /* Time delay between repeated attempts to initialise the network hardware. */
 #ifndef ipINITIALISATION_RETRY_DELAY
-	#define ipINITIALISATION_RETRY_DELAY    ( pdMS_TO_TICKS( 3000 ) )
+	#define ipINITIALISATION_RETRY_DELAY	( pdMS_TO_TICKS( 3000 ) )
 #endif
 
 /* Defines how often the ARP timer callback function is executed.  The time is
 shorted in the Windows simulator as simulated time is not real time. */
-#ifndef ipARP_TIMER_PERIOD_MS
+#ifndef	ipARP_TIMER_PERIOD_MS
 	#ifdef _WINDOWS_
-		#define ipARP_TIMER_PERIOD_MS	 ( 500 ) /* For windows simulator builds. */
+		#define ipARP_TIMER_PERIOD_MS	( 500 ) /* For windows simulator builds. */
 	#else
-		#define ipARP_TIMER_PERIOD_MS	 ( 10000 )
+		#define ipARP_TIMER_PERIOD_MS	( 10000 )
 	#endif
 #endif
 
 #ifndef iptraceIP_TASK_STARTING
-	#define iptraceIP_TASK_STARTING()    do {} while( 0 )
+	#define	iptraceIP_TASK_STARTING()	do {} while( 0 )
 #endif
 
-#if ( ( ipconfigUSE_TCP == 1 ) && !defined( ipTCP_TIMER_PERIOD_MS ) )
-
+#if( ( ipconfigUSE_TCP == 1 ) && !defined( ipTCP_TIMER_PERIOD_MS ) )
 	/* When initialising the TCP timer,
 	give it an initial time-out of 1 second. */
-	#define ipTCP_TIMER_PERIOD_MS    ( 1000 )
+	#define ipTCP_TIMER_PERIOD_MS	( 1000 )
 #endif
 
 /* If ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES is set to 1, then the Ethernet
@@ -98,27 +97,27 @@ then the Ethernet driver will pass all received packets to the stack, and the
 stack must do the filtering itself.  In this case ipCONSIDER_FRAME_FOR_PROCESSING
 needs to call eConsiderFrameForProcessing. */
 #if ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 0
-	#define ipCONSIDER_FRAME_FOR_PROCESSING( pucEthernetBuffer )	eConsiderFrameForProcessing( ( pucEthernetBuffer ) )
+	#define ipCONSIDER_FRAME_FOR_PROCESSING( pucEthernetBuffer ) eConsiderFrameForProcessing( ( pucEthernetBuffer ) )
 #else
-	#define ipCONSIDER_FRAME_FOR_PROCESSING( pucEthernetBuffer )	eProcessBuffer
+	#define ipCONSIDER_FRAME_FOR_PROCESSING( pucEthernetBuffer ) eProcessBuffer
 #endif
 
 /* The character used to fill ICMP echo requests, and therefore also the
 character expected to fill ICMP echo replies. */
-#define ipECHO_DATA_FILL_BYTE    'x'
+#define ipECHO_DATA_FILL_BYTE						'x'
 
-#if ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
+#if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
 	/* The bits in the two byte IP header field that make up the fragment offset value. */
-	#define ipFRAGMENT_OFFSET_BIT_MASK	  ( ( uint16_t ) 0xff0f )
+	#define ipFRAGMENT_OFFSET_BIT_MASK				( ( uint16_t ) 0xff0f )
 #else
 	/* The bits in the two byte IP header field that make up the fragment offset value. */
-	#define ipFRAGMENT_OFFSET_BIT_MASK	  ( ( uint16_t ) 0x0fff )
+	#define ipFRAGMENT_OFFSET_BIT_MASK				( ( uint16_t ) 0x0fff )
 #endif /* ipconfigBYTE_ORDER */
 
 /* The maximum time the IP task is allowed to remain in the Blocked state if no
 events are posted to the network event queue. */
-#ifndef ipconfigMAX_IP_TASK_SLEEP_TIME
-	#define ipconfigMAX_IP_TASK_SLEEP_TIME    ( pdMS_TO_TICKS( 10000UL ) )
+#ifndef	ipconfigMAX_IP_TASK_SLEEP_TIME
+	#define ipconfigMAX_IP_TASK_SLEEP_TIME ( pdMS_TO_TICKS( 10000UL ) )
 #endif
 
 /* When a new TCP connection is established, the value of
@@ -132,23 +131,23 @@ per ms: */
 
 /* Returned as the (invalid) checksum when the protocol being checked is not
 handled.  The value is chosen simply to be easy to spot when debugging. */
-#define ipUNHANDLED_PROTOCOL				0x4321u
+#define ipUNHANDLED_PROTOCOL		0x4321u
 
 /* Returned to indicate a valid checksum when the checksum does not need to be
 calculated. */
-#define ipCORRECT_CRC						0xffffu
+#define ipCORRECT_CRC				0xffffu
 
 /* Returned as the (invalid) checksum when the length of the data being checked
 had an invalid length. */
-#define ipINVALID_LENGTH					0x1234u
+#define ipINVALID_LENGTH			0x1234u
 
 /*-----------------------------------------------------------*/
 
 typedef struct xIP_TIMER
 {
-uint32_t
-		bActive : 1,  /* This timer is running and must be processed. */
-		bExpired : 1; /* Timer has expired and a task must be processed. */
+	uint32_t
+		bActive : 1,	/* This timer is running and must be processed. */
+		bExpired : 1;	/* Timer has expired and a task must be processed. */
 	TimeOut_t xTimeOut;
 	TickType_t ulRemainingTime;
 	TickType_t ulReloadTime;
@@ -157,17 +156,17 @@ uint32_t
 /* Used in checksum calculation. */
 typedef union _xUnion32
 {
-uint32_t u32;
-uint16_t u16[ 2 ];
-uint8_t u8[ 4 ];
+	uint32_t u32;
+	uint16_t u16[ 2 ];
+	uint8_t u8[ 4 ];
 } xUnion32;
 
 /* Used in checksum calculation. */
 typedef union _xUnionPtr
 {
-uint32_t *u32ptr;
-uint16_t *u16ptr;
-uint8_t *u8ptr;
+	uint32_t *u32ptr;
+	uint16_t *u16ptr;
+	uint8_t *u8ptr;
 } xUnionPtr;
 
 /*-----------------------------------------------------------*/
@@ -187,14 +186,12 @@ static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetwor
 /*
  * Process incoming IP packets.
  */
-static eFrameProcessingResult_t prvProcessIPPacket( IPPacket_t * const pxIPPacket,
-													NetworkBufferDescriptor_t * const pxNetworkBuffer );
+static eFrameProcessingResult_t prvProcessIPPacket( IPPacket_t * const pxIPPacket, NetworkBufferDescriptor_t * const pxNetworkBuffer );
 
 #if ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
-
 	/*
-	* Process incoming ICMP packets.
-	*/
+	 * Process incoming ICMP packets.
+	 */
 	static eFrameProcessingResult_t prvProcessICMPPacket( ICMPPacket_t * const pxICMPPacket );
 #endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 
@@ -240,15 +237,12 @@ static void prvHandleEthernetPacket( NetworkBufferDescriptor_t *pxBuffer );
 /*
  * Utility functions for the light weight IP timers.
  */
-static void prvIPTimerStart( IPTimer_t *pxTimer,
-							 TickType_t xTime );
+static void prvIPTimerStart( IPTimer_t *pxTimer, TickType_t xTime );
 static BaseType_t prvIPTimerCheck( IPTimer_t *pxTimer );
-static void prvIPTimerReload( IPTimer_t *pxTimer,
-							  TickType_t xTime );
+static void prvIPTimerReload( IPTimer_t *pxTimer, TickType_t xTime );
 
 static eFrameProcessingResult_t prvAllowIPPacket( const IPPacket_t * const pxIPPacket,
-												  NetworkBufferDescriptor_t * const pxNetworkBuffer,
-												  UBaseType_t uxHeaderLength );
+	NetworkBufferDescriptor_t * const pxNetworkBuffer, UBaseType_t uxHeaderLength );
 
 /*-----------------------------------------------------------*/
 
@@ -280,8 +274,7 @@ being called by a task (in which case it is ok to block) or by the IP task
 itself (in which case it is not ok to block). */
 static TaskHandle_t xIPTaskHandle = NULL;
 
-#if ( ipconfigUSE_TCP != 0 )
-
+#if( ipconfigUSE_TCP != 0 )
 	/* Set to a non-zero value if one or more TCP message have been processed
 	within the last round. */
 	static BaseType_t xProcessedTCPMessage;
@@ -294,26 +287,26 @@ static BaseType_t xNetworkUp = pdFALSE;
 /*
 A timer for each of the following processes, all of which need attention on a
 regular basis:
-    1. ARP, to check its table entries
-    2. DPHC, to send requests and to renew a reservation
-    3. TCP, to check for timeouts, resends
-    4. DNS, to check for timeouts when looking-up a domain.
+	1. ARP, to check its table entries
+	2. DPHC, to send requests and to renew a reservation
+	3. TCP, to check for timeouts, resends
+	4. DNS, to check for timeouts when looking-up a domain.
  */
 static IPTimer_t xARPTimer;
-#if ( ipconfigUSE_DHCP != 0 )
+#if( ipconfigUSE_DHCP != 0 )
 	static IPTimer_t xDHCPTimer;
 #endif
-#if ( ipconfigUSE_TCP != 0 )
+#if( ipconfigUSE_TCP != 0 )
 	static IPTimer_t xTCPTimer;
 #endif
-#if ( ipconfigDNS_USE_CALLBACKS != 0 )
+#if( ipconfigDNS_USE_CALLBACKS != 0 )
 	static IPTimer_t xDNSTimer;
 #endif
 
 /* Set to pdTRUE when the IP task is ready to start processing packets. */
 static BaseType_t xIPTaskInitialised = pdFALSE;
 
-#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
 	/* Keep track of the lowest amount of space in 'xNetworkEventQueue'. */
 	static UBaseType_t uxQueueMinimumSpace = ipconfigEVENT_QUEUE_LENGTH;
 #endif
@@ -325,7 +318,7 @@ static void prvIPTask( void *pvParameters )
 IPStackEvent_t xReceivedEvent;
 TickType_t xNextIPSleep;
 FreeRTOS_Socket_t *pxSocket;
-	struct freertos_sockaddr xAddress;
+struct freertos_sockaddr xAddress;
 
 	/* Just to prevent compiler warnings about unused parameters. */
 	( void ) pvParameters;
@@ -339,7 +332,7 @@ FreeRTOS_Socket_t *pxSocket;
 	send this message if a previously connected network is disconnected. */
 	FreeRTOS_NetworkDown();
 
-	#if ( ipconfigUSE_TCP == 1 )
+	#if( ipconfigUSE_TCP == 1 )
 	{
 		/* Initialise the TCP timer. */
 		prvIPTimerReload( &xTCPTimer, pdMS_TO_TICKS( ipTCP_TIMER_PERIOD_MS ) );
@@ -352,7 +345,7 @@ FreeRTOS_Socket_t *pxSocket;
 	FreeRTOS_debug_printf( ( "prvIPTask started\n" ) );
 
 	/* Loop, processing IP events. */
-	for( ; ; )
+	for( ;; )
 	{
 		ipconfigWATCHDOG_TIMER();
 
@@ -366,19 +359,18 @@ FreeRTOS_Socket_t *pxSocket;
 		/* Wait until there is something to do. If the following call exits
 		 * due to a time out rather than a message being received, set a
 		 * 'NoEvent' value. */
-		if( xQueueReceive( xNetworkEventQueue, ( void * ) &xReceivedEvent, xNextIPSleep ) == pdFALSE )
+		if ( xQueueReceive( xNetworkEventQueue, ( void * ) &xReceivedEvent, xNextIPSleep ) == pdFALSE ) 
 		{
 			xReceivedEvent.eEventType = eNoEvent;
 		}
 
-		#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+		#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
 		{
 			if( xReceivedEvent.eEventType != eNoEvent )
 			{
 			UBaseType_t uxCount;
 
 				uxCount = uxQueueSpacesAvailable( xNetworkEventQueue );
-
 				if( uxQueueMinimumSpace > uxCount )
 				{
 					uxQueueMinimumSpace = uxCount;
@@ -391,14 +383,13 @@ FreeRTOS_Socket_t *pxSocket;
 
 		switch( xReceivedEvent.eEventType )
 		{
-			case eNetworkDownEvent:
+			case eNetworkDownEvent :
 				/* Attempt to establish a connection. */
 				xNetworkUp = pdFALSE;
 				prvProcessNetworkDownEvent();
 				break;
 
 			case eNetworkRxEvent:
-
 				/* The network hardware driver has received a new packet.  A
 				pointer to the received buffer is located in the pvData member
 				of the received event structure. */
@@ -406,26 +397,24 @@ FreeRTOS_Socket_t *pxSocket;
 				break;
 
 			case eNetworkTxEvent:
-
 				/* Send a network packet. The ownership will  be transferred to
 				the driver, which will release it after delivery. */
 				xNetworkInterfaceOutput( ( NetworkBufferDescriptor_t * ) ( xReceivedEvent.pvData ), pdTRUE );
 				break;
 
-			case eARPTimerEvent:
+			case eARPTimerEvent :
 				/* The ARP timer has expired, process the ARP cache. */
 				vARPAgeCache();
 				break;
 
 			case eSocketBindEvent:
-
 				/* FreeRTOS_bind (a user API) wants the IP-task to bind a socket
 				to a port. The port number is communicated in the socket field
 				usLocalPort. vSocketBind() will actually bind the socket and the
 				API will unblock as soon as the eSOCKET_BOUND event is
 				triggered. */
 				pxSocket = ( FreeRTOS_Socket_t * ) ( xReceivedEvent.pvData );
-				xAddress.sin_addr = 0u; /* For the moment. */
+				xAddress.sin_addr = 0u;	/* For the moment. */
 				xAddress.sin_port = FreeRTOS_ntohs( pxSocket->usLocalPort );
 				pxSocket->usLocalPort = 0u;
 				vSocketBind( pxSocket, &xAddress, sizeof( xAddress ), pdFALSE );
@@ -437,8 +426,7 @@ FreeRTOS_Socket_t *pxSocket;
 				vSocketWakeUpUser( pxSocket );
 				break;
 
-			case eSocketCloseEvent:
-
+			case eSocketCloseEvent :
 				/* The user API FreeRTOS_closesocket() has sent a message to the
 				IP-task to actually close a socket. This is handled in
 				vSocketClose().  As the socket gets closed, there is no way to
@@ -446,8 +434,7 @@ FreeRTOS_Socket_t *pxSocket;
 				vSocketClose( ( FreeRTOS_Socket_t * ) ( xReceivedEvent.pvData ) );
 				break;
 
-			case eStackTxEvent:
-
+			case eStackTxEvent :
 				/* The network stack has generated a packet to send.  A
 				pointer to the generated buffer is located in the pvData
 				member of the received event structure. */
@@ -456,27 +443,26 @@ FreeRTOS_Socket_t *pxSocket;
 
 			case eDHCPEvent:
 				/* The DHCP state machine needs processing. */
-				#if ( ipconfigUSE_DHCP == 1 )
+				#if( ipconfigUSE_DHCP == 1 )
 				{
 					vDHCPProcess( pdFALSE );
 				}
 				#endif /* ipconfigUSE_DHCP */
 				break;
 
-			case eSocketSelectEvent:
-
+			case eSocketSelectEvent :
 				/* FreeRTOS_select() has got unblocked by a socket event,
 				vSocketSelect() will check which sockets actually have an event
 				and update the socket field xSocketBits. */
-				#if ( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
+				#if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
 				{
 					vSocketSelect( ( SocketSelect_t * ) ( xReceivedEvent.pvData ) );
 				}
 				#endif /* ipconfigSUPPORT_SELECT_FUNCTION == 1 */
 				break;
 
-			case eSocketSignalEvent:
-				#if ( ipconfigSUPPORT_SIGNALS != 0 )
+			case eSocketSignalEvent :
+				#if( ipconfigSUPPORT_SIGNALS != 0 )
 				{
 					/* Some task wants to signal the user of this socket in
 					order to interrupt a call to recv() or a call to select(). */
@@ -485,8 +471,8 @@ FreeRTOS_Socket_t *pxSocket;
 				#endif /* ipconfigSUPPORT_SIGNALS */
 				break;
 
-			case eTCPTimerEvent:
-				#if ( ipconfigUSE_TCP == 1 )
+			case eTCPTimerEvent :
+				#if( ipconfigUSE_TCP == 1 )
 				{
 					/* Simply mark the TCP timer as expired so it gets processed
 					the next time prvCheckNetworkTimers() is called. */
@@ -496,11 +482,10 @@ FreeRTOS_Socket_t *pxSocket;
 				break;
 
 			case eTCPAcceptEvent:
-
 				/* The API FreeRTOS_accept() was called, the IP-task will now
 				check if the listening socket (communicated in pvData) actually
 				received a new connection. */
-				#if ( ipconfigUSE_TCP == 1 )
+				#if( ipconfigUSE_TCP == 1 )
 				{
 					pxSocket = ( FreeRTOS_Socket_t * ) ( xReceivedEvent.pvData );
 
@@ -514,17 +499,16 @@ FreeRTOS_Socket_t *pxSocket;
 				break;
 
 			case eTCPNetStat:
-
 				/* FreeRTOS_netstat() was called to have the IP-task print an
 				overview of all sockets and their connections */
-				#if ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigHAS_PRINTF == 1 ) )
+				#if( ( ipconfigUSE_TCP == 1 ) && ( ipconfigHAS_PRINTF == 1 ) )
 				{
 					vTCPNetStat();
 				}
 				#endif /* ipconfigUSE_TCP */
 				break;
 
-			default:
+			default :
 				/* Should not get here. */
 				break;
 		}
@@ -558,7 +542,7 @@ BaseType_t xReturn;
 
 static void prvHandleEthernetPacket( NetworkBufferDescriptor_t *pxBuffer )
 {
-	#if ( ipconfigUSE_LINKED_RX_MESSAGES == 0 )
+	#if( ipconfigUSE_LINKED_RX_MESSAGES == 0 )
 	{
 		/* When ipconfigUSE_LINKED_RX_MESSAGES is not set to 0 then only one
 		buffer will be sent at a time.  This is the default way for +TCP to pass
@@ -586,7 +570,7 @@ static void prvHandleEthernetPacket( NetworkBufferDescriptor_t *pxBuffer )
 			prvProcessEthernetPacket( pxBuffer );
 			pxBuffer = pxNextBuffer;
 
-			/* While there is another packet in the chain. */
+		/* While there is another packet in the chain. */
 		} while( pxBuffer != NULL );
 	}
 	#endif /* ipconfigUSE_LINKED_RX_MESSAGES */
@@ -609,7 +593,7 @@ TickType_t xMaximumSleepTime;
 		}
 	}
 
-	#if ( ipconfigUSE_DHCP == 1 )
+	#if( ipconfigUSE_DHCP == 1 )
 	{
 		if( xDHCPTimer.bActive != pdFALSE_UNSIGNED )
 		{
@@ -621,7 +605,7 @@ TickType_t xMaximumSleepTime;
 	}
 	#endif /* ipconfigUSE_DHCP */
 
-	#if ( ipconfigUSE_TCP == 1 )
+	#if( ipconfigUSE_TCP == 1 )
 	{
 		if( xTCPTimer.ulRemainingTime < xMaximumSleepTime )
 		{
@@ -630,7 +614,7 @@ TickType_t xMaximumSleepTime;
 	}
 	#endif
 
-	#if ( ipconfigDNS_USE_CALLBACKS != 0 )
+	#if( ipconfigDNS_USE_CALLBACKS != 0 )
 	{
 		if( xDNSTimer.bActive != pdFALSE )
 		{
@@ -654,7 +638,7 @@ static void prvCheckNetworkTimers( void )
 		xSendEventToIPTask( eARPTimerEvent );
 	}
 
-	#if ( ipconfigUSE_DHCP == 1 )
+	#if( ipconfigUSE_DHCP == 1 )
 	{
 		/* Is it time for DHCP processing? */
 		if( prvIPTimerCheck( &xDHCPTimer ) != pdFALSE )
@@ -664,9 +648,9 @@ static void prvCheckNetworkTimers( void )
 	}
 	#endif /* ipconfigUSE_DHCP */
 
-	#if ( ipconfigDNS_USE_CALLBACKS != 0 )
+	#if( ipconfigDNS_USE_CALLBACKS != 0 )
 	{
-		extern void vDNSCheckCallBack( void *pvSearchID );
+	extern void vDNSCheckCallBack( void *pvSearchID );
 
 		/* Is it time for DNS processing? */
 		if( prvIPTimerCheck( &xDNSTimer ) != pdFALSE )
@@ -676,7 +660,7 @@ static void prvCheckNetworkTimers( void )
 	}
 	#endif /* ipconfigDNS_USE_CALLBACKS */
 
-	#if ( ipconfigUSE_TCP == 1 )
+	#if( ipconfigUSE_TCP == 1 )
 	{
 	BaseType_t xWillSleep;
 	TickType_t xNextTime;
@@ -714,8 +698,7 @@ static void prvCheckNetworkTimers( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvIPTimerStart( IPTimer_t *pxTimer,
-							 TickType_t xTime )
+static void prvIPTimerStart( IPTimer_t *pxTimer, TickType_t xTime )
 {
 	vTaskSetTimeOutState( &pxTimer->xTimeOut );
 	pxTimer->ulRemainingTime = xTime;
@@ -733,8 +716,7 @@ static void prvIPTimerStart( IPTimer_t *pxTimer,
 }
 /*-----------------------------------------------------------*/
 
-static void prvIPTimerReload( IPTimer_t *pxTimer,
-							  TickType_t xTime )
+static void prvIPTimerReload( IPTimer_t *pxTimer, TickType_t xTime )
 {
 	pxTimer->ulReloadTime = xTime;
 	prvIPTimerStart( pxTimer, xTime );
@@ -812,8 +794,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
-void * FreeRTOS_GetUDPPayloadBuffer( size_t xRequestedSizeBytes,
-									 TickType_t xBlockTimeTicks )
+void *FreeRTOS_GetUDPPayloadBuffer( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks )
 {
 NetworkBufferDescriptor_t *pxNetworkBuffer;
 void *pvReturn;
@@ -846,8 +827,8 @@ void *pvReturn;
 }
 /*-----------------------------------------------------------*/
 
-NetworkBufferDescriptor_t * pxDuplicateNetworkBufferWithDescriptor( NetworkBufferDescriptor_t * const pxNetworkBuffer,
-																	size_t uxNewLength )
+NetworkBufferDescriptor_t *pxDuplicateNetworkBufferWithDescriptor( NetworkBufferDescriptor_t * const pxNetworkBuffer,
+	size_t uxNewLength )
 {
 NetworkBufferDescriptor_t * pxNewBuffer;
 
@@ -873,9 +854,9 @@ NetworkBufferDescriptor_t * pxNewBuffer;
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigZERO_COPY_TX_DRIVER != 0 ) || ( ipconfigZERO_COPY_RX_DRIVER != 0 )
+#if( ipconfigZERO_COPY_TX_DRIVER != 0 ) || ( ipconfigZERO_COPY_RX_DRIVER != 0 )
 
-	NetworkBufferDescriptor_t * pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer )
+	NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer )
 	{
 	uint8_t *pucBuffer;
 	NetworkBufferDescriptor_t *pxResult;
@@ -897,7 +878,7 @@ NetworkBufferDescriptor_t * pxNewBuffer;
 			pointer is dereferenced, make sure it is well aligned. */
 			if( ( ( ( uint32_t ) pucBuffer ) & ( sizeof( pucBuffer ) - ( size_t ) 1 ) ) == ( uint32_t ) 0 )
 			{
-				pxResult = *( ( NetworkBufferDescriptor_t ** ) pucBuffer );
+				pxResult = * ( ( NetworkBufferDescriptor_t ** ) pucBuffer );
 			}
 			else
 			{
@@ -911,7 +892,7 @@ NetworkBufferDescriptor_t * pxNewBuffer;
 #endif /* ipconfigZERO_COPY_TX_DRIVER != 0 */
 /*-----------------------------------------------------------*/
 
-NetworkBufferDescriptor_t * pxUDPPayloadBuffer_to_NetworkBuffer( void *pvBuffer )
+NetworkBufferDescriptor_t *pxUDPPayloadBuffer_to_NetworkBuffer( void *pvBuffer )
 {
 uint8_t *pucBuffer;
 NetworkBufferDescriptor_t *pxResult;
@@ -937,7 +918,7 @@ NetworkBufferDescriptor_t *pxResult;
 			/* The following statement may trigger a:
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
-			pxResult = *( ( NetworkBufferDescriptor_t ** ) pucBuffer );
+			pxResult = * ( ( NetworkBufferDescriptor_t ** ) pucBuffer );
 		}
 		else
 		{
@@ -956,15 +937,10 @@ void FreeRTOS_ReleaseUDPPayloadBuffer( void *pvBuffer )
 /*-----------------------------------------------------------*/
 
 /*_RB_ Should we add an error or assert if the task priorities are set such that the servers won't function as expected? */
-
 /*_HT_ There was a bug in FreeRTOS_TCP_IP.c that only occurred when the applications' priority was too high.
  As that bug has been repaired, there is not an urgent reason to warn.
  It is better though to use the advised priority scheme. */
-BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-							const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ],
-							const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-							const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-							const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] )
+BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ], const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] )
 {
 BaseType_t xReturn = pdFALSE;
 
@@ -1002,7 +978,7 @@ BaseType_t xReturn = pdFALSE;
 			xNetworkAddressing.ulNetMask = FreeRTOS_inet_addr_quick( ucNetMask[ 0 ], ucNetMask[ 1 ], ucNetMask[ 2 ], ucNetMask[ 3 ] );
 			xNetworkAddressing.ulGatewayAddress = FreeRTOS_inet_addr_quick( ucGatewayAddress[ 0 ], ucGatewayAddress[ 1 ], ucGatewayAddress[ 2 ], ucGatewayAddress[ 3 ] );
 			xNetworkAddressing.ulDNSServerAddress = FreeRTOS_inet_addr_quick( ucDNSServerAddress[ 0 ], ucDNSServerAddress[ 1 ], ucDNSServerAddress[ 2 ], ucDNSServerAddress[ 3 ] );
-			xNetworkAddressing.ulBroadcastAddress = ( xNetworkAddressing.ulDefaultIPAddress & xNetworkAddressing.ulNetMask ) | ~xNetworkAddressing.ulNetMask;
+			xNetworkAddressing.ulBroadcastAddress = ( xNetworkAddressing.ulDefaultIPAddress & xNetworkAddressing.ulNetMask ) |  ~xNetworkAddressing.ulNetMask;
 
 			memcpy( &xDefaultAddressing, &xNetworkAddressing, sizeof( xDefaultAddressing ) );
 
@@ -1035,12 +1011,12 @@ BaseType_t xReturn = pdFALSE;
 			if( pdTRUE == xReturn )
 			{
 				/* Create the task that processes Ethernet and stack events. */
-				xReturn = xTaskCreate( prvIPTask, "IP-task", ( uint16_t ) ipconfigIP_TASK_STACK_SIZE_WORDS, NULL, ( UBaseType_t ) ipconfigIP_TASK_PRIORITY, &xIPTaskHandle );
+				xReturn = xTaskCreate( prvIPTask, "IP-task", ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS, NULL, ( UBaseType_t )ipconfigIP_TASK_PRIORITY, &xIPTaskHandle );
 			}
 		}
 		else
 		{
-			FreeRTOS_debug_printf( ( "FreeRTOS_IPInit: xNetworkBuffersInitialise() failed\n" ) );
+			FreeRTOS_debug_printf( ( "FreeRTOS_IPInit: xNetworkBuffersInitialise() failed\n") );
 
 			/* Clean up. */
 			vQueueDelete( xNetworkEventQueue );
@@ -1049,17 +1025,14 @@ BaseType_t xReturn = pdFALSE;
 	}
 	else
 	{
-		FreeRTOS_debug_printf( ( "FreeRTOS_IPInit: Network event queue could not be created\n" ) );
+		FreeRTOS_debug_printf( ( "FreeRTOS_IPInit: Network event queue could not be created\n") );
 	}
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress,
-									   uint32_t *pulNetMask,
-									   uint32_t *pulGatewayAddress,
-									   uint32_t *pulDNSServerAddress )
+void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress, uint32_t *pulNetMask, uint32_t *pulGatewayAddress, uint32_t *pulDNSServerAddress )
 {
 	/* Return the address configuration to the caller. */
 
@@ -1085,10 +1058,7 @@ void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress,
 }
 /*-----------------------------------------------------------*/
 
-void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
-									   const uint32_t *pulNetMask,
-									   const uint32_t *pulGatewayAddress,
-									   const uint32_t *pulDNSServerAddress )
+void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress, const uint32_t *pulNetMask, const uint32_t *pulGatewayAddress, const uint32_t *pulDNSServerAddress )
 {
 	/* Update the address configuration. */
 
@@ -1116,9 +1086,7 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 
 #if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
 
-	BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress,
-										 size_t xNumberOfBytesToSend,
-										 TickType_t xBlockTimeTicks )
+	BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t xNumberOfBytesToSend, TickType_t xBlockTimeTicks )
 	{
 	NetworkBufferDescriptor_t *pxNetworkBuffer;
 	ICMPHeader_t *pxICMPHeader;
@@ -1127,7 +1095,7 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 	uint8_t *pucChar;
 	IPStackEvent_t xStackTxEvent = { eStackTxEvent, NULL };
 
-		if( ( xNumberOfBytesToSend >= 1 ) && ( xNumberOfBytesToSend < ( ( ipconfigNETWORK_MTU - sizeof( IPHeader_t ) ) - sizeof( ICMPHeader_t ) ) ) && ( uxGetNumberOfFreeNetworkBuffers() >= 3 ) )
+		if( (xNumberOfBytesToSend >= 1 ) && ( xNumberOfBytesToSend < ( ( ipconfigNETWORK_MTU - sizeof( IPHeader_t ) ) - sizeof( ICMPHeader_t ) ) ) && ( uxGetNumberOfFreeNetworkBuffers() >= 3 ) )
 		{
 			pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( xNumberOfBytesToSend + sizeof( ICMPPacket_t ), xBlockTimeTicks );
 
@@ -1160,7 +1128,7 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 				/* Send to the stack. */
 				xStackTxEvent.pvData = pxNetworkBuffer;
 
-				if( xSendEventStructToIPTask( &xStackTxEvent, xBlockTimeTicks ) != pdPASS )
+				if( xSendEventStructToIPTask( &xStackTxEvent, xBlockTimeTicks) != pdPASS )
 				{
 					vReleaseNetworkBufferAndDescriptor( pxNetworkBuffer );
 					iptraceSTACK_TX_EVENT_LOST( ipSTACK_TX_EVENT );
@@ -1189,14 +1157,13 @@ IPStackEvent_t xEventMessage;
 const TickType_t xDontBlock = ( TickType_t ) 0;
 
 	xEventMessage.eEventType = eEvent;
-	xEventMessage.pvData = ( void * ) NULL;
+	xEventMessage.pvData = ( void* )NULL;
 
 	return xSendEventStructToIPTask( &xEventMessage, xDontBlock );
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xSendEventStructToIPTask( const IPStackEvent_t *pxEvent,
-									 TickType_t xTimeout )
+BaseType_t xSendEventStructToIPTask( const IPStackEvent_t *pxEvent, TickType_t xTimeout )
 {
 BaseType_t xReturn, xSendMessage;
 
@@ -1210,7 +1177,7 @@ BaseType_t xReturn, xSendMessage;
 	{
 		xSendMessage = pdTRUE;
 
-		#if ( ipconfigUSE_TCP == 1 )
+		#if( ipconfigUSE_TCP == 1 )
 		{
 			if( pxEvent->eEventType == eTCPTimerEvent )
 			{
@@ -1277,21 +1244,21 @@ const EthernetHeader_t *pxEthernetHeader;
 		eReturn = eProcessBuffer;
 	}
 	else
-	#if ( ipconfigUSE_LLMNR == 1 )
-		if( memcmp( ( void * ) xLLMNR_MacAdress.ucBytes, ( void * ) pxEthernetHeader->xDestinationAddress.ucBytes, sizeof( MACAddress_t ) ) == 0 )
-		{
-			/* The packet is a request for LLMNR - process it. */
-			eReturn = eProcessBuffer;
-		}
-		else
-	#endif /* ipconfigUSE_LLMNR */
+#if( ipconfigUSE_LLMNR == 1 )
+	if( memcmp( ( void * ) xLLMNR_MacAdress.ucBytes, ( void * ) pxEthernetHeader->xDestinationAddress.ucBytes, sizeof( MACAddress_t ) ) == 0 )
+	{
+		/* The packet is a request for LLMNR - process it. */
+		eReturn = eProcessBuffer;
+	}
+	else
+#endif /* ipconfigUSE_LLMNR */
 	{
 		/* The packet was not a broadcast, or for this node, just release
 		the buffer without taking any other action. */
 		eReturn = eReleaseBuffer;
 	}
 
-	#if ( ipconfigFILTER_OUT_NON_ETHERNET_II_FRAMES == 1 )
+	#if( ipconfigFILTER_OUT_NON_ETHERNET_II_FRAMES == 1 )
 	{
 	uint16_t usFrameType;
 
@@ -1320,7 +1287,7 @@ static void prvProcessNetworkDownEvent( void )
 
 	#if ipconfigUSE_NETWORK_EVENT_HOOK == 1
 	{
-	static BaseType_t xCallEventHook = pdFALSE;
+		static BaseType_t xCallEventHook = pdFALSE;
 
 		/* The first network down event is generated by the IP stack itself to
 		initialise the network hardware, so do not call the network down event
@@ -1329,15 +1296,14 @@ static void prvProcessNetworkDownEvent( void )
 		{
 			vApplicationIPNetworkEventHook( eNetworkDown );
 		}
-
 		xCallEventHook = pdTRUE;
 	}
-	#endif /* if ipconfigUSE_NETWORK_EVENT_HOOK == 1 */
+	#endif
 
-	/* Per the ARP Cache Validation section of https://tools.ietf.org/html/rfc1122,
+	/* Per the ARP Cache Validation section of https://tools.ietf.org/html/rfc1122, 
 	treat network down as a "delivery problem" and flush the ARP cache for this
 	interface. */
-	FreeRTOS_ClearARP();
+	FreeRTOS_ClearARP( );
 
 	/* The network has been disconnected (or is being initialised for the first
 	time).  Perform whatever hardware processing is necessary to bring it up
@@ -1373,13 +1339,13 @@ void vIPNetworkUpCalls( void )
 {
 	xNetworkUp = pdTRUE;
 
-	#if ( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
+	#if( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
 	{
 		vApplicationIPNetworkEventHook( eNetworkUp );
 	}
 	#endif /* ipconfigUSE_NETWORK_EVENT_HOOK */
 
-	#if ( ipconfigDNS_USE_CALLBACKS != 0 )
+	#if( ipconfigDNS_USE_CALLBACKS != 0 )
 	{
 		/* The following function is declared in FreeRTOS_DNS.c	and 'private' to
 		this library */
@@ -1404,45 +1370,41 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 	if( pxNetworkBuffer->xDataLength >= sizeof( EthernetHeader_t ) )
 	{
 		eReturned = ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer );
-		pxEthernetHeader = ( EthernetHeader_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
+		pxEthernetHeader = ( EthernetHeader_t * )( pxNetworkBuffer->pucEthernetBuffer );
 
 		if( eReturned == eProcessBuffer )
 		{
 			/* Interpret the received Ethernet packet. */
 			switch( pxEthernetHeader->usFrameType )
 			{
-				case ipARP_FRAME_TYPE:
-
-					/* The Ethernet frame contains an ARP packet. */
-					if( pxNetworkBuffer->xDataLength >= sizeof( ARPPacket_t ) )
-					{
-						eReturned = eARPProcessPacket( ( ARPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer );
-					}
-					else
-					{
-						eReturned = eReleaseBuffer;
-					}
-
-					break;
-
-				case ipIPv4_FRAME_TYPE:
-
-					/* The Ethernet frame contains an IP packet. */
-					if( pxNetworkBuffer->xDataLength >= sizeof( IPPacket_t ) )
-					{
-						eReturned = prvProcessIPPacket( ( IPPacket_t * ) pxNetworkBuffer->pucEthernetBuffer, pxNetworkBuffer );
-					}
-					else
-					{
-						eReturned = eReleaseBuffer;
-					}
-
-					break;
-
-				default:
-					/* No other packet types are handled.  Nothing to do. */
+			case ipARP_FRAME_TYPE:
+				/* The Ethernet frame contains an ARP packet. */
+				if( pxNetworkBuffer->xDataLength >= sizeof( ARPPacket_t ) )
+				{
+					eReturned = eARPProcessPacket( ( ARPPacket_t * )pxNetworkBuffer->pucEthernetBuffer );
+				}
+				else
+				{
 					eReturned = eReleaseBuffer;
-					break;
+				}
+				break;
+
+			case ipIPv4_FRAME_TYPE:
+				/* The Ethernet frame contains an IP packet. */
+				if( pxNetworkBuffer->xDataLength >= sizeof( IPPacket_t ) )
+				{
+					eReturned = prvProcessIPPacket( ( IPPacket_t * )pxNetworkBuffer->pucEthernetBuffer, pxNetworkBuffer );
+				}
+				else
+				{
+					eReturned = eReleaseBuffer;
+				}
+				break;
+
+			default:
+				/* No other packet types are handled.  Nothing to do. */
+				eReturned = eReleaseBuffer;
+				break;
 			}
 		}
 	}
@@ -1450,25 +1412,21 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 	/* Perform any actions that resulted from processing the Ethernet frame. */
 	switch( eReturned )
 	{
-		case eReturnEthernetFrame:
-
+		case eReturnEthernetFrame :
 			/* The Ethernet frame will have been updated (maybe it was
 			an ARP request or a PING request?) and should be sent back to
 			its source. */
 			vReturnEthernetFrame( pxNetworkBuffer, pdTRUE );
-
 			/* parameter pdTRUE: the buffer must be released once
 			the frame has been transmitted */
 			break;
 
-		case eFrameConsumed:
-
+		case eFrameConsumed :
 			/* The frame is in use somewhere, don't release the buffer
 			yet. */
 			break;
 
-		default:
-
+		default :
 			/* The frame is not being used anywhere, and the
 			NetworkBufferDescriptor_t structure containing the frame should
 			just be	released back to the list of free buffers. */
@@ -1479,67 +1437,64 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 /*-----------------------------------------------------------*/
 
 static eFrameProcessingResult_t prvAllowIPPacket( const IPPacket_t * const pxIPPacket,
-												  NetworkBufferDescriptor_t * const pxNetworkBuffer,
-												  UBaseType_t uxHeaderLength )
+	NetworkBufferDescriptor_t * const pxNetworkBuffer, UBaseType_t uxHeaderLength )
 {
 eFrameProcessingResult_t eReturn = eProcessBuffer;
 
-	#if ( ( ipconfigETHERNET_DRIVER_FILTERS_PACKETS == 0 ) || ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 ) )
-		const IPHeader_t * pxIPHeader = &( pxIPPacket->xIPHeader );
-	#else
+#if( ( ipconfigETHERNET_DRIVER_FILTERS_PACKETS == 0 ) || ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 ) )
+	const IPHeader_t * pxIPHeader = &( pxIPPacket->xIPHeader );
+#else
+	/* or else, the parameter won't be used and the function will be optimised
+	away */
+	( void ) pxIPPacket;
+#endif
 
-		/* or else, the parameter won't be used and the function will be optimised
-		away */
-		( void ) pxIPPacket;
-	#endif
-
-	#if ( ipconfigETHERNET_DRIVER_FILTERS_PACKETS == 0 )
+	#if( ipconfigETHERNET_DRIVER_FILTERS_PACKETS == 0 )
 	{
 		/* In systems with a very small amount of RAM, it might be advantageous
 		to have incoming messages checked earlier, by the network card driver.
 		This method may decrease the usage of sparse network buffers. */
 		uint32_t ulDestinationIPAddress = pxIPHeader->ulDestinationIPAddress;
 
-		/* Ensure that the incoming packet is not fragmented (only outgoing
-		packets can be fragmented) as these are the only handled IP frames
-		currently. */
-		if( ( pxIPHeader->usFragmentOffset & ipFRAGMENT_OFFSET_BIT_MASK ) != 0U )
-		{
-			/* Can not handle, fragmented packet. */
-			eReturn = eReleaseBuffer;
-		}
-
-		/* 0x45 means: IPv4 with an IP header of 5 x 4 = 20 bytes
-		 * 0x47 means: IPv4 with an IP header of 7 x 4 = 28 bytes */
-		else if( ( pxIPHeader->ucVersionHeaderLength < 0x45u ) || ( pxIPHeader->ucVersionHeaderLength > 0x4Fu ) )
-		{
-			/* Can not handle, unknown or invalid header version. */
-			eReturn = eReleaseBuffer;
-		}
-		/* Is the packet for this IP address? */
-		else if( ( ulDestinationIPAddress != *ipLOCAL_IP_ADDRESS_POINTER ) &&
-		         /* Is it the global broadcast address 255.255.255.255 ? */
-				 ( ulDestinationIPAddress != ipBROADCAST_IP_ADDRESS ) &&
-		         /* Is it a specific broadcast address 192.168.1.255 ? */
-				 ( ulDestinationIPAddress != xNetworkAddressing.ulBroadcastAddress ) &&
-				 #if ( ipconfigUSE_LLMNR == 1 )
-			         /* Is it the LLMNR multicast address? */
-					 ( ulDestinationIPAddress != ipLLMNR_IP_ADDR ) &&
-				 #endif
-		         /* Or (during DHCP negotiation) we have no IP-address yet? */
-				 ( *ipLOCAL_IP_ADDRESS_POINTER != 0UL ) )
-		{
-			/* Packet is not for this node, release it */
-			eReturn = eReleaseBuffer;
-		}
+			/* Ensure that the incoming packet is not fragmented (only outgoing
+			packets can be fragmented) as these are the only handled IP frames
+			currently. */
+			if( ( pxIPHeader->usFragmentOffset & ipFRAGMENT_OFFSET_BIT_MASK ) != 0U )
+			{
+				/* Can not handle, fragmented packet. */
+				eReturn = eReleaseBuffer;
+			}
+			/* 0x45 means: IPv4 with an IP header of 5 x 4 = 20 bytes
+			 * 0x47 means: IPv4 with an IP header of 7 x 4 = 28 bytes */
+			else if( ( pxIPHeader->ucVersionHeaderLength < 0x45u ) || ( pxIPHeader->ucVersionHeaderLength > 0x4Fu ) )
+			{
+				/* Can not handle, unknown or invalid header version. */
+				eReturn = eReleaseBuffer;
+			}
+				/* Is the packet for this IP address? */
+			else if( ( ulDestinationIPAddress != *ipLOCAL_IP_ADDRESS_POINTER ) &&
+				/* Is it the global broadcast address 255.255.255.255 ? */
+				( ulDestinationIPAddress != ipBROADCAST_IP_ADDRESS ) &&
+				/* Is it a specific broadcast address 192.168.1.255 ? */
+				( ulDestinationIPAddress != xNetworkAddressing.ulBroadcastAddress ) &&
+			#if( ipconfigUSE_LLMNR == 1 )
+				/* Is it the LLMNR multicast address? */
+				( ulDestinationIPAddress != ipLLMNR_IP_ADDR ) &&
+			#endif
+				/* Or (during DHCP negotiation) we have no IP-address yet? */
+				( *ipLOCAL_IP_ADDRESS_POINTER != 0UL ) )
+			{
+				/* Packet is not for this node, release it */
+				eReturn = eReleaseBuffer;
+			}
 	}
 	#endif /* ipconfigETHERNET_DRIVER_FILTERS_PACKETS */
 
-	#if ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 )
+	#if( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 )
 	{
 		/* Some drivers of NIC's with checksum-offloading will enable the above
 		define, so that the checksum won't be checked again here */
-		if( eReturn == eProcessBuffer )
+		if (eReturn == eProcessBuffer )
 		{
 			/* Is the IP header checksum correct? */
 			if( ( pxIPHeader->ucProtocol != ( uint8_t ) ipPROTOCOL_ICMP ) &&
@@ -1549,14 +1504,14 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 				eReturn = eReleaseBuffer;
 			}
 			/* Is the upper-layer checksum (TCP/UDP/ICMP) correct? */
-			else if( usGenerateProtocolChecksum( ( uint8_t * ) ( pxNetworkBuffer->pucEthernetBuffer ), pxNetworkBuffer->xDataLength, pdFALSE ) != ipCORRECT_CRC )
+			else if( usGenerateProtocolChecksum( ( uint8_t * )( pxNetworkBuffer->pucEthernetBuffer ), pxNetworkBuffer->xDataLength, pdFALSE ) != ipCORRECT_CRC )
 			{
 				/* Protocol checksum not accepted. */
 				eReturn = eReleaseBuffer;
 			}
 		}
 	}
-	#else /* if ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 ) */
+	#else
 	{
 		/* to avoid warning unused parameters */
 		( void ) pxNetworkBuffer;
@@ -1568,8 +1523,7 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 }
 /*-----------------------------------------------------------*/
 
-static eFrameProcessingResult_t prvProcessIPPacket( IPPacket_t * const pxIPPacket,
-													NetworkBufferDescriptor_t * const pxNetworkBuffer )
+static eFrameProcessingResult_t prvProcessIPPacket( IPPacket_t * const pxIPPacket, NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 eFrameProcessingResult_t eReturn;
 IPHeader_t * pxIPHeader = &( pxIPPacket->xIPHeader );
@@ -1598,18 +1552,18 @@ uint8_t ucProtocol;
 			 * Note: IP options are mostly use in Multi-cast protocols */
 			const size_t optlen = ( ( size_t ) uxHeaderLength ) - ipSIZE_OF_IPv4_HEADER;
 			/* From: the previous start of UDP/ICMP/TCP data */
-			uint8_t *pucSource = ( uint8_t * ) ( pxNetworkBuffer->pucEthernetBuffer + sizeof( EthernetHeader_t ) + uxHeaderLength );
+			uint8_t *pucSource = ( uint8_t* )(pxNetworkBuffer->pucEthernetBuffer + sizeof( EthernetHeader_t ) + uxHeaderLength);
 			/* To: the usual start of UDP/ICMP/TCP data at offset 20 from IP header */
-			uint8_t *pucTarget = ( uint8_t * ) ( pxNetworkBuffer->pucEthernetBuffer + sizeof( EthernetHeader_t ) + ipSIZE_OF_IPv4_HEADER );
+			uint8_t *pucTarget = ( uint8_t* )(pxNetworkBuffer->pucEthernetBuffer + sizeof( EthernetHeader_t ) + ipSIZE_OF_IPv4_HEADER);
 			/* How many: total length minus the options and the lower headers */
-			const size_t xMoveLen = pxNetworkBuffer->xDataLength - optlen - ipSIZE_OF_IPv4_HEADER - ipSIZE_OF_ETH_HEADER;
+			const size_t  xMoveLen = pxNetworkBuffer->xDataLength - optlen - ipSIZE_OF_IPv4_HEADER - ipSIZE_OF_ETH_HEADER;
 
 			memmove( pucTarget, pucSource, xMoveLen );
 			pxNetworkBuffer->xDataLength -= optlen;
 
 			/* Fix-up new version/header length field in IP packet. */
 			pxIPHeader->ucVersionHeaderLength = ( pxIPHeader->ucVersionHeaderLength & 0xF0 ) | /* High nibble is the version. */
-												( ( ipSIZE_OF_IPv4_HEADER >> 2 ) & 0x0F );     /* Low nibble is the header size, in bytes, divided by four. */
+												( ( ipSIZE_OF_IPv4_HEADER >> 2 ) & 0x0F ); /* Low nibble is the header size, in bytes, divided by four. */
 		}
 
 		/* Add the IP and MAC addresses to the ARP table if they are not
@@ -1625,11 +1579,9 @@ uint8_t ucProtocol;
 			 */
 			vARPRefreshCacheEntry( &( pxIPPacket->xEthernetHeader.xSourceAddress ), pxIPHeader->ulSourceIPAddress );
 		}
-
 		switch( ucProtocol )
 		{
-			case ipPROTOCOL_ICMP:
-
+			case ipPROTOCOL_ICMP :
 				/* The IP packet contained an ICMP frame.  Don't bother
 				checking the ICMP checksum, as if it is wrong then the
 				wrong data will also be returned, and the source of the
@@ -1639,8 +1591,7 @@ uint8_t ucProtocol;
 				{
 					if( pxNetworkBuffer->xDataLength >= sizeof( ICMPPacket_t ) )
 					{
-					ICMPPacket_t *pxICMPPacket = ( ICMPPacket_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
-
+						ICMPPacket_t *pxICMPPacket = ( ICMPPacket_t * )( pxNetworkBuffer->pucEthernetBuffer );
 						if( pxIPHeader->ulDestinationIPAddress == *ipLOCAL_IP_ADDRESS_POINTER )
 						{
 							eReturn = prvProcessICMPPacket( pxICMPPacket );
@@ -1654,71 +1605,71 @@ uint8_t ucProtocol;
 				#endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 				break;
 
-			case ipPROTOCOL_UDP:
-			   {
-				   /* The IP packet contained a UDP frame. */
-				   UDPPacket_t *pxUDPPacket = ( UDPPacket_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
+			case ipPROTOCOL_UDP :
+				{
+					/* The IP packet contained a UDP frame. */
+					UDPPacket_t *pxUDPPacket = ( UDPPacket_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
 
-				   /* Only proceed if the payload length indicated in the header
-				   appears to be valid. */
-				   if( ( pxNetworkBuffer->xDataLength >= sizeof( UDPPacket_t ) ) && ( FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) >= sizeof( UDPHeader_t ) ) )
-				   {
-				   size_t uxPayloadSize_1, uxPayloadSize_2;
+					/* Only proceed if the payload length indicated in the header
+					appears to be valid. */
+					if ( ( pxNetworkBuffer->xDataLength >= sizeof( UDPPacket_t ) ) && ( FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) >= sizeof( UDPHeader_t ) ) )
+					{
+					size_t uxPayloadSize_1, uxPayloadSize_2;
+						/* The UDP payload size can be calculated by subtracting the
+						 * header size from `xDataLength`.
+						 * However, the `xDataLength` may be longer that expected,
+						 * e.g. when a small packet is padded with zero's.
+						 * The UDP header contains a field `usLength` reflecting
+						 * the payload size plus the UDP header ( 8 bytes ).
+						 * Set `xDataLength` to the size of the headers,
+						 * plus the lower of the two calculated payload sizes.
+						 */
 
-					   /* The UDP payload size can be calculated by subtracting the
-					    * header size from `xDataLength`.
-					    * However, the `xDataLength` may be longer that expected,
-					    * e.g. when a small packet is padded with zero's.
-					    * The UDP header contains a field `usLength` reflecting
-					    * the payload size plus the UDP header ( 8 bytes ).
-					    * Set `xDataLength` to the size of the headers,
-					    * plus the lower of the two calculated payload sizes.
-					    */
+						uxPayloadSize_1 = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+						uxPayloadSize_2 = FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) - sizeof( UDPHeader_t );
+						if( uxPayloadSize_1 > uxPayloadSize_2 )
+						{
+							pxNetworkBuffer->xDataLength = uxPayloadSize_2 + sizeof( UDPPacket_t );
+						}
 
-					   uxPayloadSize_1 = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
-					   uxPayloadSize_2 = FreeRTOS_ntohs( pxUDPPacket->xUDPHeader.usLength ) - sizeof( UDPHeader_t );
+						/* Fields in pxNetworkBuffer (usPort, ulIPAddress) are network order. */
+						pxNetworkBuffer->usPort = pxUDPPacket->xUDPHeader.usSourcePort;
+						pxNetworkBuffer->ulIPAddress = pxUDPPacket->xIPHeader.ulSourceIPAddress;
 
-					   if( uxPayloadSize_1 > uxPayloadSize_2 )
-					   {
-						   pxNetworkBuffer->xDataLength = uxPayloadSize_2 + sizeof( UDPPacket_t );
-					   }
-
-					   /* Fields in pxNetworkBuffer (usPort, ulIPAddress) are network order. */
-					   pxNetworkBuffer->usPort = pxUDPPacket->xUDPHeader.usSourcePort;
-					   pxNetworkBuffer->ulIPAddress = pxUDPPacket->xIPHeader.ulSourceIPAddress;
-
-					   /* ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM:
-					    * In some cases, the upper-layer checksum has been calculated
-					    * by the NIC driver.
-					    *
-					    * Pass the packet payload to the UDP sockets implementation. */
-					   if( xProcessReceivedUDPPacket( pxNetworkBuffer,
-													  pxUDPPacket->xUDPHeader.usDestinationPort ) == pdPASS )
-					   {
-						   eReturn = eFrameConsumed;
-					   }
-				   }
-				   else
-				   {
-					   eReturn = eReleaseBuffer;
-				   }
-			   }
-			   break;
-
-				#if ipconfigUSE_TCP == 1
-					case ipPROTOCOL_TCP:
-
-						if( xProcessReceivedTCPPacket( pxNetworkBuffer ) == pdPASS )
+						/* ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM:
+						 * In some cases, the upper-layer checksum has been calculated
+						 * by the NIC driver.
+						 *
+						 * Pass the packet payload to the UDP sockets implementation. */
+						if( xProcessReceivedUDPPacket( pxNetworkBuffer,
+													   pxUDPPacket->xUDPHeader.usDestinationPort ) == pdPASS )
 						{
 							eReturn = eFrameConsumed;
 						}
+					}
+					else
+					{
+						eReturn = eReleaseBuffer;
+					}
+				}
+				break;
 
-						/* Setting this variable will cause xTCPTimerCheck()
-						to be called just before the IP-task blocks. */
-						xProcessedTCPMessage++;
-						break;
-				#endif /* if ipconfigUSE_TCP == 1 */
-			default:
+#if ipconfigUSE_TCP == 1
+			case ipPROTOCOL_TCP :
+				{
+
+					if( xProcessReceivedTCPPacket( pxNetworkBuffer ) == pdPASS )
+					{
+						eReturn = eFrameConsumed;
+					}
+
+					/* Setting this variable will cause xTCPTimerCheck()
+					to be called just before the IP-task blocks. */
+					xProcessedTCPMessage++;
+				}
+				break;
+#endif
+			default	:
 				/* Not a supported frame type. */
 				break;
 		}
@@ -1770,7 +1721,7 @@ uint8_t ucProtocol;
 		vApplicationPingReplyHook( eStatus, pxICMPPacket->xICMPHeader.usIdentifier );
 	}
 
-#endif /* if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
+#endif
 /*-----------------------------------------------------------*/
 
 #if ( ipconfigREPLY_TO_INCOMING_PINGS == 1 )
@@ -1801,21 +1752,20 @@ uint8_t ucProtocol;
 
 		/* due to compiler warning "integer operation result is out of range" */
 
-		usRequest = ( uint16_t ) ( ( uint16_t ) ipICMP_ECHO_REQUEST << 8 );
+		usRequest = ( uint16_t ) ( ( uint16_t )ipICMP_ECHO_REQUEST << 8 );
 
 		if( pxICMPHeader->usChecksum >= FreeRTOS_htons( 0xFFFFu - usRequest ) )
 		{
 			pxICMPHeader->usChecksum = ( uint16_t )
-									   ( ( ( uint32_t ) pxICMPHeader->usChecksum ) +
-										 FreeRTOS_htons( usRequest + 1UL ) );
+				( ( ( uint32_t ) pxICMPHeader->usChecksum ) +
+					FreeRTOS_htons( usRequest + 1UL ) );
 		}
 		else
 		{
 			pxICMPHeader->usChecksum = ( uint16_t )
-									   ( ( ( uint32_t ) pxICMPHeader->usChecksum ) +
-										 FreeRTOS_htons( usRequest ) );
+				( ( ( uint32_t ) pxICMPHeader->usChecksum ) +
+					FreeRTOS_htons( usRequest ) );
 		}
-
 		return eReturnEthernetFrame;
 	}
 
@@ -1829,10 +1779,9 @@ uint8_t ucProtocol;
 	eFrameProcessingResult_t eReturn = eReleaseBuffer;
 
 		iptraceICMP_PACKET_RECEIVED();
-
 		switch( pxICMPPacket->xICMPHeader.ucTypeOfMessage )
 		{
-			case ipICMP_ECHO_REQUEST:
+			case ipICMP_ECHO_REQUEST	:
 				#if ( ipconfigREPLY_TO_INCOMING_PINGS == 1 )
 				{
 					eReturn = prvProcessICMPEchoRequest( pxICMPPacket );
@@ -1840,7 +1789,7 @@ uint8_t ucProtocol;
 				#endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) */
 				break;
 
-			case ipICMP_ECHO_REPLY:
+			case ipICMP_ECHO_REPLY		:
 				#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
 				{
 					prvProcessICMPEchoReply( pxICMPPacket );
@@ -1848,7 +1797,7 @@ uint8_t ucProtocol;
 				#endif /* ipconfigSUPPORT_OUTGOING_PINGS */
 				break;
 
-			default:
+			default	:
 				break;
 		}
 
@@ -1858,9 +1807,7 @@ uint8_t ucProtocol;
 #endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 /*-----------------------------------------------------------*/
 
-uint16_t usGenerateProtocolChecksum( const uint8_t * const pucEthernetBuffer,
-									 size_t uxBufferLength,
-									 BaseType_t xOutgoingPacket )
+uint16_t usGenerateProtocolChecksum( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength, BaseType_t xOutgoingPacket )
 {
 uint32_t ulLength;
 uint16_t usChecksum, *pusChecksum;
@@ -1868,10 +1815,9 @@ const IPPacket_t * pxIPPacket;
 UBaseType_t uxIPHeaderLength;
 ProtocolPacket_t *pxProtPack;
 uint8_t ucProtocol;
-
-	#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
-		const char *pcType;
-	#endif
+#if( ipconfigHAS_DEBUG_PRINTF != 0 )
+	const char *pcType;
+#endif
 
 	/* Check for minimum packet size. */
 	if( uxBufferLength < sizeof( IPPacket_t ) )
@@ -1891,7 +1837,6 @@ uint8_t ucProtocol;
 	{
 		return ipINVALID_LENGTH;
 	}
-
 	if( uxBufferLength < ( size_t ) ( ipSIZE_OF_ETH_HEADER + FreeRTOS_ntohs( pxIPPacket->xIPHeader.usLength ) ) )
 	{
 		return ipINVALID_LENGTH;
@@ -1916,11 +1861,11 @@ uint8_t ucProtocol;
 		}
 
 		pusChecksum = ( uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
-		#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
+		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 		{
 			pcType = "UDP";
 		}
-		#endif /* ipconfigHAS_DEBUG_PRINTF != 0 */
+		#endif	/* ipconfigHAS_DEBUG_PRINTF != 0 */
 	}
 	else if( ucProtocol == ( uint8_t ) ipPROTOCOL_TCP )
 	{
@@ -1930,14 +1875,14 @@ uint8_t ucProtocol;
 		}
 
 		pusChecksum = ( uint16_t * ) ( &( pxProtPack->xTCPPacket.xTCPHeader.usChecksum ) );
-		#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
+		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 		{
 			pcType = "TCP";
 		}
-		#endif /* ipconfigHAS_DEBUG_PRINTF != 0 */
+		#endif	/* ipconfigHAS_DEBUG_PRINTF != 0 */
 	}
 	else if( ( ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP ) ||
-			 ( ucProtocol == ( uint8_t ) ipPROTOCOL_IGMP ) )
+			( ucProtocol == ( uint8_t ) ipPROTOCOL_IGMP ) )
 	{
 		if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_ICMP_HEADER ) )
 		{
@@ -1945,7 +1890,7 @@ uint8_t ucProtocol;
 		}
 
 		pusChecksum = ( uint16_t * ) ( &( pxProtPack->xICMPPacket.xICMPHeader.usChecksum ) );
-		#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
+		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 		{
 			if( ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP )
 			{
@@ -1956,7 +1901,7 @@ uint8_t ucProtocol;
 				pcType = "IGMP";
 			}
 		}
-		#endif /* ipconfigHAS_DEBUG_PRINTF != 0 */
+		#endif	/* ipconfigHAS_DEBUG_PRINTF != 0 */
 	}
 	else
 	{
@@ -1979,16 +1924,16 @@ uint8_t ucProtocol;
 	}
 
 	ulLength = ( uint32_t )
-			   ( FreeRTOS_ntohs( pxIPPacket->xIPHeader.usLength ) - ( ( uint16_t ) uxIPHeaderLength ) ); /* normally minus 20 */
+		( FreeRTOS_ntohs( pxIPPacket->xIPHeader.usLength ) - ( ( uint16_t ) uxIPHeaderLength ) ); /* normally minus 20 */
 
 	if( ( ulLength < sizeof( pxProtPack->xUDPPacket.xUDPHeader ) ) ||
-		( ulLength > ( uint32_t ) ( ipconfigNETWORK_MTU - uxIPHeaderLength ) ) )
+		( ulLength > ( uint32_t )( ipconfigNETWORK_MTU - uxIPHeaderLength ) ) )
 	{
-		#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
+		#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 		{
 			FreeRTOS_debug_printf( ( "usGenerateProtocolChecksum[%s]: len invalid: %lu\n", pcType, ulLength ) );
 		}
-		#endif /* ipconfigHAS_DEBUG_PRINTF != 0 */
+		#endif	/* ipconfigHAS_DEBUG_PRINTF != 0 */
 
 		/* Again, in a 16-bit return value there is no space to indicate an
 		error.  For incoming packets, 0x1234 will cause dropping of the packet.
@@ -1996,13 +1941,12 @@ uint8_t ucProtocol;
 		format/length */
 		return ipINVALID_LENGTH;
 	}
-
 	if( ucProtocol <= ( uint8_t ) ipPROTOCOL_IGMP )
 	{
 		/* ICMP/IGMP do not have a pseudo header for CRC-calculation. */
 		usChecksum = ( uint16_t )
-					 ( ~usGenerateChecksum( 0UL,
-											( uint8_t * ) &( pxProtPack->xTCPPacket.xTCPHeader ), ( size_t ) ulLength ) );
+			( ~usGenerateChecksum( 0UL,
+				( uint8_t * ) &( pxProtPack->xTCPPacket.xTCPHeader ), ( size_t ) ulLength ) );
 	}
 	else
 	{
@@ -2012,8 +1956,8 @@ uint8_t ucProtocol;
 
 		/* And then continue at the IPv4 source and destination addresses. */
 		usChecksum = ( uint16_t )
-					 ( ~usGenerateChecksum( ( uint32_t ) usChecksum, ( uint8_t * ) &( pxIPPacket->xIPHeader.ulSourceIPAddress ),
-											( 2u * sizeof( pxIPPacket->xIPHeader.ulSourceIPAddress ) + ulLength ) ) );
+			( ~usGenerateChecksum( ( uint32_t ) usChecksum, ( uint8_t * )&( pxIPPacket->xIPHeader.ulSourceIPAddress ),
+				( 2u * sizeof( pxIPPacket->xIPHeader.ulSourceIPAddress ) + ulLength ) ) );
 
 		/* Sum TCP header and data. */
 	}
@@ -2023,7 +1967,7 @@ uint8_t ucProtocol;
 		/* This is in incoming packet. If the CRC is correct, it should be zero. */
 		if( usChecksum == 0u )
 		{
-			usChecksum = ( uint16_t ) ipCORRECT_CRC;
+			usChecksum = ( uint16_t )ipCORRECT_CRC;
 		}
 	}
 	else
@@ -2032,37 +1976,35 @@ uint8_t ucProtocol;
 		{
 			/* In case of UDP, a calculated checksum of 0x0000 is transmitted
 			as 0xffff. A value of zero would mean that the checksum is not used. */
-			#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
+			#if( ipconfigHAS_DEBUG_PRINTF != 0 )
 			{
 				if( xOutgoingPacket != pdFALSE )
 				{
 					FreeRTOS_debug_printf( ( "usGenerateProtocolChecksum[%s]: crc swap: %04X\n", pcType, usChecksum ) );
 				}
 			}
-			#endif /* ipconfigHAS_DEBUG_PRINTF != 0 */
+			#endif	/* ipconfigHAS_DEBUG_PRINTF != 0 */
 
-			usChecksum = ( uint16_t ) 0xffffu;
+			usChecksum = ( uint16_t )0xffffu;
 		}
 	}
-
 	usChecksum = FreeRTOS_htons( usChecksum );
 
 	if( xOutgoingPacket != pdFALSE )
 	{
 		*( pusChecksum ) = usChecksum;
 	}
-
-	#if ( ipconfigHAS_DEBUG_PRINTF != 0 )
-		else if( ( xOutgoingPacket == pdFALSE ) && ( usChecksum != ipCORRECT_CRC ) )
-		{
-			FreeRTOS_debug_printf( ( "usGenerateProtocolChecksum[%s]: ID %04X: from %lxip to %lxip bad crc: %04X\n",
-									 pcType,
-									 FreeRTOS_ntohs( pxIPPacket->xIPHeader.usIdentification ),
-									 FreeRTOS_ntohl( pxIPPacket->xIPHeader.ulSourceIPAddress ),
-									 FreeRTOS_ntohl( pxIPPacket->xIPHeader.ulDestinationIPAddress ),
-									 FreeRTOS_ntohs( *pusChecksum ) ) );
-		}
-	#endif /* ipconfigHAS_DEBUG_PRINTF != 0 */
+	#if( ipconfigHAS_DEBUG_PRINTF != 0 )
+	else if( ( xOutgoingPacket == pdFALSE ) && ( usChecksum != ipCORRECT_CRC ) )
+	{
+		FreeRTOS_debug_printf( ( "usGenerateProtocolChecksum[%s]: ID %04X: from %lxip to %lxip bad crc: %04X\n",
+			pcType,
+			FreeRTOS_ntohs( pxIPPacket->xIPHeader.usIdentification ),
+			FreeRTOS_ntohl( pxIPPacket->xIPHeader.ulSourceIPAddress ),
+			FreeRTOS_ntohl( pxIPPacket->xIPHeader.ulDestinationIPAddress ),
+			FreeRTOS_ntohs( *pusChecksum ) ) );
+	}
+	#endif	/* ipconfigHAS_DEBUG_PRINTF != 0 */
 
 	return usChecksum;
 }
@@ -2101,13 +2043,11 @@ uint8_t ucProtocol;
  *   uxDataLengthBytes: This argument contains the number of bytes that this method
  *	 should process.
  */
-uint16_t usGenerateChecksum( uint32_t ulSum,
-							 const uint8_t * pucNextData,
-							 size_t uxDataLengthBytes )
+uint16_t usGenerateChecksum( uint32_t ulSum, const uint8_t * pucNextData, size_t uxDataLengthBytes )
 {
 xUnion32 xSum2, xSum, xTerm;
-xUnionPtr xSource;      /* Points to first byte */
-xUnionPtr xLastSource;  /* Points to last byte plus one */
+xUnionPtr xSource;		/* Points to first byte */
+xUnionPtr xLastSource;	/* Points to last byte plus one */
 uint32_t ulAlignBits, ulCarry = 0ul;
 
 	/* Small MCUs often spend up to 30% of the time doing checksum calculations
@@ -2133,7 +2073,7 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 	/* If half-word (16-bit) aligned... */
 	if( ( ( ulAlignBits == 1u ) || ( ulAlignBits == 2u ) ) && ( uxDataLengthBytes >= 2u ) )
 	{
-		xSum.u32 += *( xSource.u16ptr );
+		xSum.u32 += *(xSource.u16ptr);
 		( xSource.u16ptr )++;
 		uxDataLengthBytes -= 2u;
 		/* Now xSource is word (32-bit) aligned. */
@@ -2150,7 +2090,6 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 		/* Use a secondary Sum2, just to see if the addition produced an
 		overflow. */
 		xSum2.u32 = xSum.u32 + xSource.u32ptr[ 0 ];
-
 		if( xSum2.u32 < xSum.u32 )
 		{
 			ulCarry++;
@@ -2159,7 +2098,6 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 		/* Now add the secondary sum to the major sum, and remember if there was
 		a carry. */
 		xSum.u32 = xSum2.u32 + xSource.u32ptr[ 1 ];
-
 		if( xSum2.u32 > xSum.u32 )
 		{
 			ulCarry++;
@@ -2167,7 +2105,6 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 
 		/* And do the same trick once again for indexes 2 and 3 */
 		xSum2.u32 = xSum.u32 + xSource.u32ptr[ 2 ];
-
 		if( xSum2.u32 < xSum.u32 )
 		{
 			ulCarry++;
@@ -2185,7 +2122,7 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 	}
 
 	/* Now add all carries. */
-	xSum.u32 = ( uint32_t ) xSum.u16[ 0 ] + xSum.u16[ 1 ] + ulCarry;
+	xSum.u32 = ( uint32_t )xSum.u16[ 0 ] + xSum.u16[ 1 ] + ulCarry;
 
 	uxDataLengthBytes %= 16u;
 	xLastSource.u8ptr = ( uint8_t * ) ( xSource.u8ptr + ( uxDataLengthBytes & ~( ( size_t ) 1 ) ) );
@@ -2198,11 +2135,10 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 		xSource.u16ptr++;
 	}
 
-	if( ( uxDataLengthBytes & ( size_t ) 1 ) != 0u ) /* Maybe one more ? */
+	if( ( uxDataLengthBytes & ( size_t ) 1 ) != 0u )	/* Maybe one more ? */
 	{
 		xTerm.u8[ 0 ] = xSource.u8ptr[ 0 ];
 	}
-
 	xSum.u32 += xTerm.u32;
 
 	/* Now add all carries again. */
@@ -2219,18 +2155,17 @@ uint32_t ulAlignBits, ulCarry = 0ul;
 	}
 
 	/* swap the output (little endian platform only). */
-	return FreeRTOS_htons( ( ( uint16_t ) xSum.u32 ) );
+	return FreeRTOS_htons( ( (uint16_t) xSum.u32 ) );
 }
 /*-----------------------------------------------------------*/
 
-void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer,
-						   BaseType_t xReleaseAfterSend )
+void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
 EthernetHeader_t *pxEthernetHeader;
 
-	#if ( ipconfigZERO_COPY_TX_DRIVER != 0 )
-		NetworkBufferDescriptor_t *pxNewBuffer;
-	#endif
+#if( ipconfigZERO_COPY_TX_DRIVER != 0 )
+	NetworkBufferDescriptor_t *pxNewBuffer;
+#endif
 
 	#if defined( ipconfigETHERNET_MINIMUM_PACKET_BYTES )
 	{
@@ -2238,34 +2173,33 @@ EthernetHeader_t *pxEthernetHeader;
 		{
 		BaseType_t xIndex;
 
-			FreeRTOS_printf( ( "vReturnEthernetFrame: length %lu\n", ( uint32_t ) pxNetworkBuffer->xDataLength ) );
-
+			FreeRTOS_printf( ( "vReturnEthernetFrame: length %lu\n", ( uint32_t )pxNetworkBuffer->xDataLength ) );
 			for( xIndex = ( BaseType_t ) pxNetworkBuffer->xDataLength; xIndex < ( BaseType_t ) ipconfigETHERNET_MINIMUM_PACKET_BYTES; xIndex++ )
 			{
 				pxNetworkBuffer->pucEthernetBuffer[ xIndex ] = 0u;
 			}
-
 			pxNetworkBuffer->xDataLength = ( size_t ) ipconfigETHERNET_MINIMUM_PACKET_BYTES;
 		}
 	}
-	#endif /* if defined( ipconfigETHERNET_MINIMUM_PACKET_BYTES ) */
-
-	#if ( ipconfigZERO_COPY_TX_DRIVER != 0 )
-		if( xReleaseAfterSend == pdFALSE )
-		{
-			pxNewBuffer = pxDuplicateNetworkBufferWithDescriptor( pxNetworkBuffer, ( BaseType_t ) pxNetworkBuffer->xDataLength );
-			xReleaseAfterSend = pdTRUE;
-			pxNetworkBuffer = pxNewBuffer;
-		}
-
-		if( pxNetworkBuffer != NULL )
 	#endif
+
+#if( ipconfigZERO_COPY_TX_DRIVER != 0 )
+
+	if( xReleaseAfterSend == pdFALSE )
+	{
+		pxNewBuffer = pxDuplicateNetworkBufferWithDescriptor( pxNetworkBuffer, ( BaseType_t ) pxNetworkBuffer->xDataLength );
+		xReleaseAfterSend = pdTRUE;
+		pxNetworkBuffer = pxNewBuffer;
+	}
+
+	if( pxNetworkBuffer != NULL )
+#endif
 	{
 		pxEthernetHeader = ( EthernetHeader_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
 
 		/* Swap source and destination MAC addresses. */
 		memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( void * ) &( pxEthernetHeader->xSourceAddress ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress ), ( void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );
@@ -2305,10 +2239,10 @@ uint32_t FreeRTOS_GetNetmask( void )
 }
 /*-----------------------------------------------------------*/
 
-void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] )
+void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ipMAC_ADDRESS_LENGTH_BYTES] )
 {
 	/* Copy the MAC address at the start of the default packet header fragment. */
-	memcpy( ( void * ) ipLOCAL_MAC_ADDRESS, ( void * ) ucMACAddress, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+	memcpy( ( void * )ipLOCAL_MAC_ADDRESS, ( void * )ucMACAddress, ( size_t )ipMAC_ADDRESS_LENGTH_BYTES );
 }
 /*-----------------------------------------------------------*/
 
@@ -2318,19 +2252,19 @@ const uint8_t * FreeRTOS_GetMACAddress( void )
 }
 /*-----------------------------------------------------------*/
 
-void FreeRTOS_SetNetmask( uint32_t ulNetmask )
+void FreeRTOS_SetNetmask ( uint32_t ulNetmask )
 {
 	xNetworkAddressing.ulNetMask = ulNetmask;
 }
 /*-----------------------------------------------------------*/
 
-void FreeRTOS_SetGatewayAddress( uint32_t ulGatewayAddress )
+void FreeRTOS_SetGatewayAddress ( uint32_t ulGatewayAddress )
 {
 	xNetworkAddressing.ulGatewayAddress = ulGatewayAddress;
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigUSE_DHCP == 1 )
+#if( ipconfigUSE_DHCP == 1 )
 	void vIPSetDHCPTimerEnableState( BaseType_t xEnableState )
 	{
 		if( xEnableState != pdFALSE )
@@ -2345,7 +2279,7 @@ void FreeRTOS_SetGatewayAddress( uint32_t ulGatewayAddress )
 #endif /* ipconfigUSE_DHCP */
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigUSE_DHCP == 1 )
+#if( ipconfigUSE_DHCP == 1 )
 	void vIPReloadDHCPTimer( uint32_t ulLeaseTime )
 	{
 		prvIPTimerReload( &xDHCPTimer, ulLeaseTime );
@@ -2353,7 +2287,7 @@ void FreeRTOS_SetGatewayAddress( uint32_t ulGatewayAddress )
 #endif /* ipconfigUSE_DHCP */
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigDNS_USE_CALLBACKS == 1 )
+#if( ipconfigDNS_USE_CALLBACKS == 1 )
 	void vIPSetDnsTimerEnableState( BaseType_t xEnableState )
 	{
 		if( xEnableState != 0 )
@@ -2368,7 +2302,7 @@ void FreeRTOS_SetGatewayAddress( uint32_t ulGatewayAddress )
 #endif /* ipconfigUSE_DHCP */
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigDNS_USE_CALLBACKS != 0 )
+#if( ipconfigDNS_USE_CALLBACKS != 0 )
 	void vIPReloadDNSTimer( uint32_t ulCheckTime )
 	{
 		prvIPTimerReload( &xDNSTimer, ulCheckTime );
@@ -2388,7 +2322,7 @@ BaseType_t FreeRTOS_IsNetworkUp( void )
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+#if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
 	UBaseType_t uxGetMinimumIPQueueSpace( void )
 	{
 		return uxQueueMinimumSpace;
@@ -2400,3 +2334,4 @@ BaseType_t FreeRTOS_IsNetworkUp( void )
 #ifdef FREERTOS_TCP_ENABLE_VERIFICATION
 	#include "aws_freertos_ip_verification_access_ip_define.h"
 #endif
+

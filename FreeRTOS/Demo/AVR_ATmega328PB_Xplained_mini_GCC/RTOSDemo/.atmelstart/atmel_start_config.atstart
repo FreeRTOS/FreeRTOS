@@ -1,0 +1,69 @@
+format_version: '2'
+name: My Project
+versions:
+  api: '1.0'
+  backend: 1.7.303
+  commit: 1e07622763d149970fd8808a8f12ff3b1e84e0d7
+  content: unknown
+  content_pack_name: unknown
+  format: '2'
+  frontend: 1.7.303
+  packs_version_avr8: 1.0.1410
+  packs_version_qtouch: unknown
+  packs_version_sam: 1.0.1554
+  version_backend: 1.7.303
+  version_frontend: ''
+board:
+  identifier: ATmega328PBXplainedMini
+  device: ATmega328PB-MU
+details: null
+application: null
+middlewares: {}
+drivers:
+  CPU:
+    user_label: CPU
+    definition: 'Atmel:ATMega328PB_drivers:1.0.0::ATmega328PB-MU::CPU::driver_config_definition::SYSCTRL::Drivers:SYSCTRL:'
+    functionality: System
+    api: 'Drivers:SYSCTRL:'
+    configuration:
+      async_input_speed: 32768
+      clkadc_oscillator: Input clock
+      clkasy_oscillator: Async input clock
+      clkcpu_oscillator: Input clock
+      clkio_oscillator: Input clock
+      clkptc_oscillator: Input clock
+      cpu_clock_source: CLKcpu
+      cpu_sreg_i: false
+      enable_async_input: true
+      enable_clkadc: true
+      enable_clkasy: true
+      enable_clkcpu: true
+      enable_clkio: true
+      enable_clkptc: true
+      enable_core_clock: true
+      enable_input: true
+      input_speed: 8000000
+      pm_ivsel: Interrupt vector placed at the beginning of main FLASH memory
+      pm_pud: false
+      pm_se: false
+      pm_sm: Idle
+      prescaler_divider: '1'
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: Core
+          input: Core
+          external: false
+          external_frequency: 0
+        configuration: {}
+pads: {}
+toolchain_options:
+- definition:
+    identifier: Atmel:ATMega328PB_drivers:1.0.0::ATmega328PB-MU::environment_definition::All:Atmel.Studio:7.0.0
+  configuration:
+    compiler_config:
+      avrgcc_compiler_miscellaneous_OtherFlags: -std=gnu99
+    linker_config:
+      avrgcc_linker_miscellaneous_LinkerFlags: ''

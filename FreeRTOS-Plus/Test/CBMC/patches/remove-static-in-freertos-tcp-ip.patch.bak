@@ -9,8 +9,8 @@ Subject: [PATCH] modified lib
 
 diff --git a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c
 index dc58621..963b576 100644
---- a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c
-+++ b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_IP.c
 @@ -198,14 +198,22 @@ static BaseType_t prvTCPPrepareConnect( FreeRTOS_Socket_t *pxSocket );
  /*
   * Parse the TCP option(s) received, if present.

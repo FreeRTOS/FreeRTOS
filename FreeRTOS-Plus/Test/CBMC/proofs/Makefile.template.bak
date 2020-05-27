@@ -147,7 +147,7 @@ report: cbmc.txt property.xml coverage.xml
 clean:
 	@RM@ $(OBJS) $(ENTRY).goto
 	@RM@ $(ENTRY)[0-9].goto $(ENTRY)[0-9].txt
-	@RM@ cbmc.txt property.xml coverage.xml TAGS TAGS-*
+	@RM@ cbmc.txt property.xml coverage.xml TAGS-*
 	@RM@ *~ \#*
 	@RM@ queue_datastructure.h
 

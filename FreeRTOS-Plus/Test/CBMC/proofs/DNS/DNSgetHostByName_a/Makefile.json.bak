@@ -15,8 +15,8 @@
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs/cbmc.goto",
-    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs/freertos_api.goto",
+    "$(FREERTOS)/tools/cbmc/stubs/cbmc.goto",
+    "$(FREERTOS)/tools/cbmc/stubs/freertos_api.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.goto"
   ],

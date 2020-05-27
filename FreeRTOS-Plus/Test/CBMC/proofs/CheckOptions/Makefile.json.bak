@@ -1,19 +1,20 @@
 {
-  "ENTRY": "CheckOptionsInner",
-  "CBMCFLAGS": [
-      "--unwind 1",
-      "--unwindset prvTCPWindowTxCheckAck.1:2,prvTCPWindowFastRetransmit.2:2"
-  ],
+  "ENTRY": "CheckOptions",
+  "CBMCFLAGS": "--unwind 1 --unwindset prvCheckOptions.0:41",
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.goto",
     "$(FREERTOS)/Source/tasks.goto",
     "$(FREERTOS)/Source/list.goto"
   ],
+  "ABSTRACTIONS": "",
+  "BUFFER_SIZE": 100,
+  "UNWIND_GOTO": 0,
   "DEF":
   [
+    "BUFFER_SIZE={BUFFER_SIZE}"
   ]
 }

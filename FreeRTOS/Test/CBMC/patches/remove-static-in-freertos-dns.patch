@@ -1,7 +1,7 @@
-diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+diff --git a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
 index 480d50b..5557253 100644
---- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
-+++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+--- a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
++++ b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c
 @@ -114,7 +114,11 @@ static Socket_t prvCreateDNSSocket( void );
  /*
   * Create the DNS message in the zero copy buffer passed in the first parameter.

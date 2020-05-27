@@ -1,7 +1,7 @@
 diff --git a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
 index 04b0487..d6e74a9 100644
---- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
-+++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+--- a/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
++++ b/FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c
 @@ -156,7 +156,11 @@ struct xDHCPMessage_IPv4
  typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
  

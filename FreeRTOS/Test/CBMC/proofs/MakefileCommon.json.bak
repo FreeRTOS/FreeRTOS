@@ -10,7 +10,7 @@
 	"WINVER=0x400",
 	"_CRT_SECURE_NO_WARNINGS",
 	"__PRETTY_FUNCTION__=__FUNCTION__",
-         "CBMC",
+    "CBMC",
 	"'configASSERT(X)=__CPROVER_assert(X,\"Assertion Error\")'",
     "'configPRECONDITION(X)=__CPROVER_assume(X)'"
     ],

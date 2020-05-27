@@ -27,7 +27,7 @@
         "$(FREERTOS)/../FreeRTOS-Plus/Demo/FreeRTOS_Plus_TCP_Minimal_Windows_Simulator/WinPCap",
         "$(FREERTOS)/Demo/Common/include",
         "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/include",
-        "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/patches",
+        "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/patches"
         "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/windows",
         "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/windows2"
     ],

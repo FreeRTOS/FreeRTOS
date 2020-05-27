@@ -1,0 +1,64 @@
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+index 04b0487..d6e74a9 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DHCP.c
+@@ -156,7 +156,11 @@ struct xDHCPMessage_IPv4
+ typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
+ 
+ /* The UDP socket used for all incoming and outgoing DHCP traffic. */
++#ifdef CBMC
++Socket_t xDHCPSocket;
++#else
+ static Socket_t xDHCPSocket;
++#endif
+ 
+ #if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
+ 	/* Define the Link Layer IP address: 169.254.x.x */
+@@ -179,7 +183,11 @@ static void prvSendDHCPDiscover( void );
+ /*
+  * Interpret message received on the DHCP socket.
+  */
++#ifdef CBMC
++BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
++#else
+ static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
++#endif
+ 
+ /*
+  * Generate a DHCP request packet, and send it on the DHCP socket.
+@@ -204,7 +212,11 @@ static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress,
+ /*
+  * Create the DHCP socket, if it has not been created already.
+  */
++#ifdef CBMC
++void prvCreateDHCPSocket( void );
++#else
+ static void prvCreateDHCPSocket( void );
++#endif
+ 
+ /*
+  * Close the DHCP socket.
+@@ -223,7 +235,11 @@ static void prvCloseDHCPSocket( void );
+ /*-----------------------------------------------------------*/
+ 
+ /* Hold information in between steps in the DHCP state machine. */
++#ifdef CBMC
++DHCPData_t xDHCPData;
++#else
+ static DHCPData_t xDHCPData;
++#endif
+ 
+ /*-----------------------------------------------------------*/
+ 
+@@ -623,7 +639,11 @@ static void prvInitialiseDHCP( void )
+ }
+ /*-----------------------------------------------------------*/
+ 
++#ifdef CBMC
++BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
++#else
+ static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
++#endif
+ {
+ uint8_t *pucUDPPayload;
+ int32_t lBytes;

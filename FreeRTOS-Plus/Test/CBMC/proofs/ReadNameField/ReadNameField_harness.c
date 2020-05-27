@@ -20,80 +20,83 @@
 
 #include "cbmc.h"
 
-uint8_t *prvReadNameField( uint8_t *pucByte, size_t xSourceLen, char *pcName, size_t xDestLen );
+/****************************************************************
+ * Signature of function under test
+ ****************************************************************/
+
+size_t prvReadNameField( const uint8_t *pucByte,
+			 size_t uxRemainingBytes,
+			 char *pcName,
+			 size_t uxDestLen );
+
+/****************************************************************
+ * The function under test is not defined in all configurations
+ ****************************************************************/
+
+#if ( ipconfigUSE_DNS_CACHE == 1 ) || ( ipconfigDNS_USE_CALLBACKS == 1 )  
+
+/* prvReadNameField is defined in this configuration */
+
+#else
+
+/* prvReadNameField is not defined in this configuration, stub it. */
+
+size_t prvReadNameField( const uint8_t *pucByte,
+			 size_t uxRemainingBytes,
+			 char *pcName,
+			 size_t uxDestLen )
+{
+  return 0;
+}
+
+#endif
+
+
+/****************************************************************
+ * Proof of prvReadNameField function contract
+ ****************************************************************/
 
 void harness() {
 
-  // Choose arbitrary buffer of size at most NETWORK_BUFFER_SIZE
-  uint8_t my_buffer[NETWORK_BUFFER_SIZE];
-  size_t my_buffer_offset;
-  uint8_t *buffer = my_buffer + my_buffer_offset;
-  size_t buffer_size = NETWORK_BUFFER_SIZE - my_buffer_offset;
-  __CPROVER_assume(my_buffer_offset <= NETWORK_BUFFER_SIZE);
+  __CPROVER_assert(NETWORK_BUFFER_SIZE < CBMC_MAX_OBJECT_SIZE,
+		   "NETWORK_BUFFER_SIZE < CBMC_MAX_OBJECT_SIZE");
+  __CPROVER_assert(NAME_SIZE < CBMC_MAX_OBJECT_SIZE,
+		   "NAME_SIZE < CBMC_MAX_OBJECT_SIZE");
 
-  // Choose arbitrary name of size at most NAME_SIZE
-  char my_name[NAME_SIZE];
-  size_t my_name_offset;
-  char *name = my_name + my_name_offset;
-  size_t name_size = NAME_SIZE - my_name_offset;
-  __CPROVER_assume(my_name_offset <= NAME_SIZE);
+  __CPROVER_assert(NAME_SIZE >= 4,
+		   "NAME_SIZE >= 4 required for good coverage.");
 
-  // Choose arbitrary pointers into buffer and name
-  size_t buffer_offset;
-  size_t name_offset;
-  uint8_t *pucByte = buffer + buffer_offset;
-  char *pcName = name + name_offset;
-  __CPROVER_assume(buffer_offset <= NETWORK_BUFFER_SIZE);
-  __CPROVER_assume(name_offset <= NAME_SIZE);
 
-  // Choose arbitrary values for space remaining in the buffers
-  size_t xSourceLen;
-  size_t xDestLen;
+  size_t uxRemainingBytes;
+  size_t uxDestLen;
 
-  ////////////////////////////////////////////////////////////////
-  // Specification and proof of prvReadNameField
+  uint8_t *pucByte = malloc(uxRemainingBytes);
+  char *pcName = malloc(uxDestLen);
 
-  // CBMC pointer model (this is obviously true)
-  __CPROVER_assume(NETWORK_BUFFER_SIZE < CBMC_MAX_OBJECT_SIZE);
-  __CPROVER_assume(NAME_SIZE < CBMC_MAX_OBJECT_SIZE);
+  /* Preconditions */
 
-  // Preconditions
+  __CPROVER_assume(uxRemainingBytes < CBMC_MAX_OBJECT_SIZE);
+  __CPROVER_assume(uxDestLen < CBMC_MAX_OBJECT_SIZE);
 
-  // pointers are valid pointers into buffers
-  __CPROVER_assume(xSourceLen == 0 ||
-		   (buffer <= pucByte && pucByte < buffer + buffer_size));
-  __CPROVER_assume(name <= pcName && pcName < name + name_size);
+  __CPROVER_assume(uxRemainingBytes <= NETWORK_BUFFER_SIZE);
+  __CPROVER_assume(uxDestLen <= NAME_SIZE);
 
-  // lengths are valid values for space remaining in the buffers
-  __CPROVER_assume(pucByte + xSourceLen <= buffer + buffer_size);
-  __CPROVER_assume(pcName + xDestLen <= name + name_size);
+  __CPROVER_assume( pucByte != NULL );
+  __CPROVER_assume( pcName != NULL );
 
-  // CBMC loop unwinding: bounds depend on xSourceLen and xDestLen
-  __CPROVER_assume(xSourceLen <= NETWORK_BUFFER_SIZE);
-  __CPROVER_assume(xDestLen <= NAME_SIZE);
+  /* Avoid overflow on uxSourceLen - 1U with uxSourceLen == uxRemainingBytes */
+  //__CPROVER_assume(uxRemainingBytes > 0);
 
-  // Buffer overflow via integer overflow in comparison xNameLen < xDestLen - 1
-  // In actual code, xDestLen == 254
-  __CPROVER_assume(xDestLen > 0);
+  /* Avoid overflow on uxDestLen - 1U */
+  __CPROVER_assume(uxDestLen > 0);
 
-  // Save values before function call
-  SAVE_OLDVAL(pucByte, uint8_t *);
-  SAVE_OLDVAL(pcName, char *);
-  SAVE_OLDVAL(xSourceLen, size_t);
-  SAVE_OLDVAL(xDestLen, size_t);
+  size_t index = prvReadNameField( pucByte,
+				   uxRemainingBytes,
+				   pcName,
+				   uxDestLen );
 
-  // function return value is either NULL or the updated value of pucByte
-  uint8_t *rc = prvReadNameField(pucByte, xSourceLen, pcName, xDestLen);
+  /* Postconditions */
 
-  // Postconditions
-
-  // pucByte can be advanced one position past the end of the buffer
-  __CPROVER_assert((rc == 0) ||
-		   (rc - OLDVAL(pucByte) >= 1 &&
-		    rc - OLDVAL(pucByte) <= OLDVAL(xSourceLen) &&
-		    rc - OLDVAL(pucByte) <= OLDVAL(xDestLen)+2 &&
-		    pucByte == OLDVAL(pucByte) &&
-		    pcName == OLDVAL(pcName) &&
-		    buffer <= rc && rc <= buffer + buffer_size),
-		   "updated pucByte");
+  __CPROVER_assert( index <= uxDestLen+1 && index <= uxRemainingBytes,
+		    "prvReadNamefield: index <= uxDestLen+1");
 }

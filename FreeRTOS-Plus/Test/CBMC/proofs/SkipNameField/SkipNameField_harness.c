@@ -20,56 +20,35 @@
 
 #include "cbmc.h"
 
-uint8_t *prvSkipNameField( uint8_t *pucByte, size_t xSourceLen );
+/****************************************************************
+ * Signature of function under test
+ ****************************************************************/
+
+size_t prvSkipNameField( const uint8_t *pucByte, size_t uxLength );
+
+/****************************************************************
+ * Proof of prvSkipNameField function contract
+ ****************************************************************/
 
 void harness() {
 
-  // Choose arbitrary buffer of size at most NETWORK_BUFFER_SIZE
-  uint8_t my_buffer[NETWORK_BUFFER_SIZE];
-  size_t my_buffer_offset;
-  uint8_t *buffer = my_buffer + my_buffer_offset;
-  size_t buffer_size = NETWORK_BUFFER_SIZE - my_buffer_offset;
-  __CPROVER_assume(my_buffer_offset <= NETWORK_BUFFER_SIZE);
+  __CPROVER_assert(NETWORK_BUFFER_SIZE < CBMC_MAX_OBJECT_SIZE,
+		   "NETWORK_BUFFER_SIZE < CBMC_MAX_OBJECT_SIZE");
 
-  // Choose arbitrary pointer into buffer
-  size_t buffer_offset;
-  uint8_t *pucByte = buffer + buffer_offset;
-  __CPROVER_assume(buffer_offset <= NETWORK_BUFFER_SIZE);
+  size_t uxLength;
+  uint8_t *pucByte = malloc( uxLength );
 
-  // Choose arbitrary value for space remaining in the buffer
-  size_t xSourceLen;
+  /* Preconditions */
 
-  ////////////////////////////////////////////////////////////////
-  // Specification and proof of prvSkipNameField
+  __CPROVER_assume(uxLength < CBMC_MAX_OBJECT_SIZE);
+  __CPROVER_assume(uxLength <= NETWORK_BUFFER_SIZE);
+  __CPROVER_assume(pucByte != NULL);
 
-  // CBMC pointer model (this is obviously true)
-  __CPROVER_assume(NETWORK_BUFFER_SIZE < CBMC_MAX_OBJECT_SIZE);
+  size_t index = prvSkipNameField( pucByte, uxLength );
 
-  // Preconditions
+  /* Postconditions */
 
-  // pointer is valid pointer into buffer
-  __CPROVER_assume(xSourceLen == 0 ||
-		   (buffer <= pucByte && pucByte < buffer + buffer_size));
+  __CPROVER_assert(index <= uxLength,
+		   "prvSkipNameField: index <= uxLength");
 
-  // length is valid value for space remaining in the buffer
-  __CPROVER_assume(pucByte + xSourceLen <= buffer + buffer_size);
-
-  // CBMC loop unwinding: bound depend on xSourceLen
-  __CPROVER_assume(xSourceLen <= NETWORK_BUFFER_SIZE);
-
-  SAVE_OLDVAL(pucByte, uint8_t *);
-  SAVE_OLDVAL(xSourceLen, size_t);
-
-  // function return value is either NULL or the updated value of pucByte
-  uint8_t *rc = prvSkipNameField(pucByte, xSourceLen);
-
-  // Postconditions
-
-  // pucByte can be advanced one position past the end of the buffer
-  __CPROVER_assert((rc == 0) ||
-		   (rc - OLDVAL(pucByte) >= 1 &&
-		    rc - OLDVAL(pucByte) <= OLDVAL(xSourceLen) &&
-		    pucByte == OLDVAL(pucByte) &&
-		    buffer <= rc && rc <= buffer + buffer_size),
-		   "updated pucByte");
 }

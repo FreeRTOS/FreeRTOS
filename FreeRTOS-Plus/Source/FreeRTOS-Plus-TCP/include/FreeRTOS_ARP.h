@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.0
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -42,7 +42,7 @@ extern "C" {
 typedef struct xARP_CACHE_TABLE_ROW
 {
 	uint32_t ulIPAddress;		/* The IP address of an ARP cache entry. */
-	MACAddress_t xMACAddress;  /* The MAC address of an ARP cache entry. */
+	MACAddress_t xMACAddress;	/* The MAC address of an ARP cache entry. */
 	uint8_t ucAge;				/* A value that is periodically decremented but can also be refreshed by active communication.  The ARP cache entry is removed if the value reaches zero. */
     uint8_t ucValid;			/* pdTRUE: xMACAddress is valid, pdFALSE: waiting for ARP reply */
 } ARPCacheRow_t;
@@ -53,13 +53,6 @@ typedef enum
 	eARPCacheHit,				/* 1 An ARP table lookup found a valid entry. */
 	eCantSendPacket				/* 2 There is no IP address, or an ARP is still in progress, so the packet cannot be sent. */
 } eARPLookupResult_t;
-
-typedef enum
-{
-	eNotFragment = 0,			/* The IP packet being sent is not part of a fragment. */
-	eFirstFragment,				/* The IP packet being sent is the first in a set of fragmented packets. */
-	eFollowingFragment			/* The IP packet being sent is part of a set of fragmented packets. */
-} eIPFragmentStatus_t;
 
 /*
  * If ulIPAddress is already in the ARP cache table then reset the age of the
@@ -120,6 +113,23 @@ void vARPGenerateRequestPacket( NetworkBufferDescriptor_t * const pxNetworkBuffe
  * address
  */
 void vARPSendGratuitous( void );
+
+/* This function will check if the target IP-address belongs to this device.
+If so, the packet will be passed to the IP-stack, who will answer it.
+The function is to be called within the function xNetworkInterfaceOutput()
+in NetworkInterface.c as follows:
+
+	if( xCheckLoopback( pxDescriptor, bReleaseAfterSend ) != 0 )
+	{
+	   / * The packet has been sent back to the IP-task.
+		 * The IP-task will further handle it.
+		 * Do not release the descriptor.
+		 * /
+		return pdTRUE;
+	}
+	/ * Send the packet as usual. * /
+*/
+BaseType_t xCheckLoopback( NetworkBufferDescriptor_t * const pxDescriptor, BaseType_t bReleaseAfterSend );
 
 #ifdef __cplusplus
 } // extern "C"

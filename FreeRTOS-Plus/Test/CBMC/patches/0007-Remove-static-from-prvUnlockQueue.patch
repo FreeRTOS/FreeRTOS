@@ -1,7 +1,7 @@
-diff --git a/FreeRTOS/Source/queue.c b/FreeRTOS/Source/queue.c
+diff --git a/freertos_kernel/queue.c b/freertos_kernel/queue.c
 index 17a6964e..60ea3e69 100644
---- a/FreeRTOS/Source/queue.c
-+++ b/FreeRTOS/Source/queue.c
+--- a/freertos_kernel/queue.c
++++ b/freertos_kernel/queue.c
 @@ -175,7 +175,7 @@ typedef xQUEUE Queue_t;
   * to indicate that a task may require unblocking.  When the queue in unlocked
   * these lock counts are inspected, and the appropriate action taken.

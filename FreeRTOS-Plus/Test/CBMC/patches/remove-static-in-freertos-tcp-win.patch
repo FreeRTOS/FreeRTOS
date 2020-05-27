@@ -1,0 +1,17 @@
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
+index 0078ab313..b0cccbad8 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_TCP_WIN.c
+@@ -192,8 +192,12 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
+ 
+ /* List of free TCP segments. */
+ #if( ipconfigUSE_TCP_WIN == 1 )
++#ifdef CBMC
++	List_t xSegmentList;
++#else
+ 	static List_t xSegmentList;
+ #endif
++#endif
+ 
+ /* Logging verbosity level. */
+ BaseType_t xTCPWindowLoggingLevel = 0;

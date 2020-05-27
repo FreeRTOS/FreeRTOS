@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.0
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -30,13 +30,13 @@
 extern "C" {
 #endif
 
-BaseType_t xProcessReceivedTCPPacket( NetworkBufferDescriptor_t *pxNetworkBuffer );
+BaseType_t xProcessReceivedTCPPacket( NetworkBufferDescriptor_t *pxDescriptor );
 
 typedef enum eTCP_STATE {
 	/* Comments about the TCP states are borrowed from the very useful
 	 * Wiki page:
 	 * http://en.wikipedia.org/wiki/Transmission_Control_Protocol */
-	eCLOSED = 0u,	/* 0 (server + client) no connection state at all. */
+	eCLOSED = 0U,	/* 0 (server + client) no connection state at all. */
 	eTCP_LISTEN,	/* 1 (server) waiting for a connection request
 						 from any remote TCP and port. */
 	eCONNECT_SYN,	/* 2 (client) internal state: socket wants to send
@@ -50,11 +50,11 @@ typedef enum eTCP_STATE {
 						 or an acknowledgement of the connection termination request previously sent. */
 	eFIN_WAIT_2,	/* 7 (server + client) waiting for a connection termination request from the remote TCP. */
 	eCLOSE_WAIT,	/* 8 (server + client) waiting for a connection termination request from the local user. */
-	eCLOSING,		/*   (server + client) waiting for a connection termination request acknowledgement from the remote TCP. */
-	eLAST_ACK,		/* 9 (server + client) waiting for an acknowledgement of the connection termination request
+	eCLOSING,		/* 9 (server + client) waiting for a connection termination request acknowledgement from the remote TCP. */
+	eLAST_ACK,		/*10 (server + client) waiting for an acknowledgement of the connection termination request
 						 previously sent to the remote TCP
 						 (which includes an acknowledgement of its connection termination request). */
-	eTIME_WAIT,		/* 10 (either server or client) waiting for enough time to pass to be sure the remote TCP received the
+	eTIME_WAIT,		/*11 (either server or client) waiting for enough time to pass to be sure the remote TCP received the
 						 acknowledgement of its connection termination request. [According to RFC 793 a connection can
 						 stay in TIME-WAIT for a maximum of four minutes known as a MSL (maximum segment lifetime).] */
 } eIPTCPState_t;

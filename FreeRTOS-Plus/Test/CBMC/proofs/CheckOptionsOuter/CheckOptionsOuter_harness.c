@@ -13,111 +13,88 @@
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_UDP_IP.h"
-#include "FreeRTOS_TCP_IP.h"
 #include "FreeRTOS_DHCP.h"
 #include "NetworkInterface.h"
 #include "NetworkBufferManagement.h"
 #include "FreeRTOS_ARP.h"
-#include "FreeRTOS_TCP_WIN.h"
 
 #include "cbmc.h"
 
-BaseType_t prvSingleStepTCPHeaderOptions( const unsigned char ** const ppucPtr,
-					  const unsigned char ** const ppucLast,
-					  FreeRTOS_Socket_t ** const ppxSocket,
-					  TCPWindow_t ** const ppxTCPWindow);
+/****************************************************************
+ * Signature of the function under test
+ ****************************************************************/
 
-// Given unconstrained values in harness
+size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
+                                      size_t uxTotalLength,
+                                      FreeRTOS_Socket_t * const pxSocket,
+                                      BaseType_t xHasSYNFlag );
+
+/****************************************************************
+ * Declare the buffer size external to the harness so it can be
+ * accessed by the preconditions of prvReadSackOption, and give the
+ * buffer size an unconstrained value in the harness itself.
+ ****************************************************************/
+
 size_t buffer_size;
-uint8_t *EthernetBuffer;
 
-void prvSkipPastRemainingOptions( const unsigned char ** const ppucPtr,
-				  FreeRTOS_Socket_t ** const ppxSocket,
-				  unsigned char * const pucLen )
+/****************************************************************
+ * Function contract proved correct by CheckOptionsInner
+ ****************************************************************/
+
+void prvReadSackOption( const uint8_t * const pucPtr,
+                        size_t uxIndex,
+                        FreeRTOS_Socket_t * const pxSocket )
 {
-  // Preconditions
+    /* Preconditions */
+    __CPROVER_assert( buffer_size < CBMC_MAX_OBJECT_SIZE,
+                      "prvReadSackOption: buffer_size < CBMC_MAX_OBJECT_SIZE" );
+    __CPROVER_assert( uxIndex <= buffer_size,
+                      "prvReadSackOption: uxIndex <= buffer_size" );
+    __CPROVER_assert( uxIndex + 8 <= buffer_size,
+                      "prvReadSackOption: uxIndex + 8 <= buffer_size" );
+    __CPROVER_assert( pucPtr != NULL,
+                      "prvReadSackOption: pucPtr != NULL" );
+    __CPROVER_assert( pxSocket != NULL,
+                      "prvReadSackOption: pxSocket != NULL" );
 
-  // pucPtr is a valid pointer
-  __CPROVER_assert(EthernetBuffer <= OBJ(ppucPtr) &&
-		   OBJ(ppucPtr) < EthernetBuffer + buffer_size,
-		   "pucPtr is a valid pointer");
-  // pucPtr + 8 is a valid pointer
-  __CPROVER_assert(EthernetBuffer <= OBJ(ppucPtr) + 8 &&
-		   OBJ(ppucPtr) + 8 <= EthernetBuffer + buffer_size,
-		   "pucPtr+8 is a valid pointer");
-  // len >= 8
-  __CPROVER_assert(OBJ(pucLen) >= 8, "len >= 8");
-
-  // Record initial values
-  SAVE_OLDOBJ(ppucPtr, unsigned char *);
-  SAVE_OLDOBJ(pucLen, unsigned char);
-
-  // Model loop body
-  OBJ(ppucPtr) += 8;
-  OBJ(pucLen) -= 8;
-
-  // Postconditions
-
-  __CPROVER_assume(OBJ(ppucPtr) == OLDOBJ(ppucPtr) + 8);
-  __CPROVER_assume(OBJ(pucLen) == OLDOBJ(pucLen) - 8);
-  __CPROVER_assume(EthernetBuffer <= OBJ(ppucPtr) &&
-		   OBJ(ppucPtr) <= EthernetBuffer + buffer_size);
+    /* No postconditions required */
 }
 
-// Proof of CheckOptions outer loop
+/****************************************************************
+ * Proof of prvSingleStepTCPHeaderOptions function contract
+ ****************************************************************/
+
 void harness()
 {
-  // Buffer can be any buffer of size at most BUFFER_SIZE
-  size_t offset;
-  uint8_t buffer[BUFFER_SIZE];
-  buffer_size = BUFFER_SIZE - offset;
-  EthernetBuffer = buffer + offset;
+    /* Give buffer_size an unconstrained value */
+    size_t buf_size;
 
-  // pucPtr and pucLast can be any pointers into buffer
-  size_t pucPtr_offset;
-  size_t pucLast_offset;
-  unsigned char *pucPtr = EthernetBuffer + pucPtr_offset;
-  unsigned char *pucLast = EthernetBuffer + pucLast_offset;
+    buffer_size = buf_size;
 
-  // uxNewMSS can by any byte
-  UBaseType_t uxNewMSS;
+    uint8_t * pucPtr = malloc( buffer_size );
+    size_t uxTotalLength;
+    FreeRTOS_Socket_t * pxSocket = malloc( sizeof( FreeRTOS_Socket_t ) );
+    BaseType_t xHasSYNFlag;
 
-  // pxSocket can be any socket
-  FreeRTOS_Socket_t xSocket;
-  FreeRTOS_Socket_t *pxSocket = &xSocket;
+    /****************************************************************
+     * Specification and proof of CheckOptions outer loop
+     ****************************************************************/
 
-  // pxTCPWindow can be any window (points into socket)
-  TCPWindow_t *pxTCPWindow = &xSocket.u.xTCP.xTCPWindow;
+    /* CBMC model of pointers limits the size of the buffer */
+    __CPROVER_assume( buffer_size < CBMC_MAX_OBJECT_SIZE );
 
-  ////////////////////////////////////////////////////////////////
-  // Specification and proof of CheckOptions outer loop
+    /* Preconditions */
+    __CPROVER_assume( 8 <= buffer_size ); /* ulFirst and ulLast */
+    __CPROVER_assume( pucPtr != NULL );
+    __CPROVER_assume( uxTotalLength <= buffer_size );
+    __CPROVER_assume( pxSocket != NULL );
 
-  // CBMC pointer model (obviously true)
-  __CPROVER_assume(buffer_size < CBMC_MAX_OBJECT_SIZE);
+    size_t index = prvSingleStepTCPHeaderOptions( pucPtr,
+                                                  uxTotalLength,
+                                                  pxSocket,
+                                                  xHasSYNFlag );
 
-  // Preconditions
-
-  // pucPtr is a valid pointer
-  __CPROVER_assume(EthernetBuffer <= pucPtr &&
-		   pucPtr < EthernetBuffer + buffer_size);
-  // pucLast is a valid pointer (or one past)
-  __CPROVER_assume(EthernetBuffer <= pucLast &&
-		   pucLast <= EthernetBuffer + buffer_size);
-  // pucPtr is before pucLast
-  __CPROVER_assume(pucPtr < pucLast);
-
-  // Record initial values
-  SAVE_OLDVAL(pucPtr, uint8_t *);
-  SAVE_OLDVAL(pucLast, uint8_t *);
-
-  // Loop variables passed by reference
-  // Return value describes loop exit: break or continue
-  BaseType_t rc =
-    prvSingleStepTCPHeaderOptions(&pucPtr, &pucLast, &pxSocket, &pxTCPWindow);
-
-  // Postconditions
-  __CPROVER_assert(rc == pdFALSE || OLDVAL(pucPtr) < pucPtr, "pucPtr advanced");
-  __CPROVER_assert(pucLast == OLDVAL(pucLast), "pucLast unchanged");
-  __CPROVER_assert(pucPtr <= pucLast, "pucPtr <= pucLast");
-
+    /* Postconditions */
+    __CPROVER_assert( index == 1 || index <= uxTotalLength,
+                      "prvSingleStepTCPHeaderOptions: index <= uxTotalLength" );
 }

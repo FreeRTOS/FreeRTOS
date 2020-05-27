@@ -1,0 +1,100 @@
+diff --git a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+index 480d50b..5557253 100644
+--- a/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
++++ b/libraries/freertos_plus/standard/freertos_plus_tcp/source/FreeRTOS_DNS.c
+@@ -114,7 +114,11 @@ static Socket_t prvCreateDNSSocket( void );
+ /*
+  * Create the DNS message in the zero copy buffer passed in the first parameter.
+  */
++#ifdef CBMC
++size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
++#else
+ static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
++#endif
+ 								   const char *pcHostName,
+ 								   TickType_t uxIdentifier );
+ 
+@@ -122,7 +126,11 @@ static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
+  * Simple routine that jumps over the NAME field of a resource record.
+  * It returns the number of bytes read.
+  */
++#ifdef CBMC
++size_t prvSkipNameField( const uint8_t *pucByte,
++#else
+ static size_t prvSkipNameField( const uint8_t *pucByte,
++#endif
+ 								size_t uxLength );
+ 
+ /*
+@@ -130,7 +138,11 @@ static size_t prvSkipNameField( const uint8_t *pucByte,
+  * The parameter 'xExpected' indicates whether the identifier in the reply
+  * was expected, and thus if the DNS cache may be updated with the reply.
+  */
++#ifdef CBMC
++uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
++#else
+ static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
++#endif
+ 								  size_t uxBufferLength,
+ 								  BaseType_t xExpected );
+ 
+@@ -184,7 +196,11 @@ static uint32_t prvGetHostByName( const char *pcHostName,
+ 
+ 
+ #if( ipconfigUSE_DNS_CACHE == 1 ) || ( ipconfigDNS_USE_CALLBACKS == 1 )
++#ifdef CBMC
++	size_t prvReadNameField( const uint8_t *pucByte,
++#else
+ 	static size_t prvReadNameField( const uint8_t *pucByte,
++#endif
+ 									size_t uxRemainingBytes,
+ 									char *pcName,
+ 									size_t uxDestLen );
+@@ -758,7 +774,11 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
+ }
+ /*-----------------------------------------------------------*/
+ 
++#ifdef CBMC
++size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
++#else
+ static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
++#endif
+ 								   const char *pcHostName,
+ 								   TickType_t uxIdentifier )
+ {
+@@ -838,7 +858,11 @@ static const DNSMessage_t xDefaultPartDNSHeader =
+ 
+ #if( ipconfigUSE_DNS_CACHE == 1 ) || ( ipconfigDNS_USE_CALLBACKS == 1 )
+ 
++#ifdef CBMC
++	size_t prvReadNameField( const uint8_t *pucByte,
++#else
+ 	static size_t prvReadNameField( const uint8_t *pucByte,
++#endif
+ 									size_t uxRemainingBytes,
+ 									char *pcName,
+ 									size_t uxDestLen )
+@@ -932,7 +956,11 @@ static const DNSMessage_t xDefaultPartDNSHeader =
+ #endif	/* ipconfigUSE_DNS_CACHE || ipconfigDNS_USE_CALLBACKS */
+ /*-----------------------------------------------------------*/
+ 
++#ifdef CBMC
++size_t prvSkipNameField( const uint8_t *pucByte,
++#else
+ static size_t prvSkipNameField( const uint8_t *pucByte,
++#endif
+ 								size_t uxLength )
+ {
+ size_t uxChunkLength;
+@@ -1050,7 +1078,11 @@ size_t uxPayloadSize;
+ #endif /* ipconfigUSE_NBNS */
+ /*-----------------------------------------------------------*/
+ 
++#ifdef CBMC
++uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
++#else
+ static uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
++#endif
+ 								  size_t uxBufferLength,
+ 								  BaseType_t xExpected )
+ {

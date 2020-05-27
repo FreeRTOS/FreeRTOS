@@ -238,7 +238,7 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer, 
 		}
 	}
 	#endif /* ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM */
-	if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != 0uL )
+	if( ( ulPHYLinkStatus & niBMSR_LINK_STATUS ) != 0UL )
 	{
 		iptraceNETWORK_INTERFACE_TRANSMIT();
 		emacps_send_message( &xEMACpsif, pxBuffer, bReleaseAfterSend );

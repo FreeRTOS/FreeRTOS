@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.0
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -189,5 +189,45 @@ http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_IP_Trace.html */
 #ifndef iptraceSENDTO_DATA_TOO_LONG
 	#define iptraceSENDTO_DATA_TOO_LONG()
 #endif
+
+#ifndef ipconfigUSE_TCP_MEM_STATS
+	#define ipconfigUSE_TCP_MEM_STATS	0
+#endif
+
+#if( ipconfigUSE_TCP_MEM_STATS == 0 )
+
+	/* See tools/tcp_mem_stat.c */
+
+	#ifndef iptraceMEM_STATS_CREATE
+		#define iptraceMEM_STATS_CREATE( xMemType, pxObject, uxSize )
+	#endif
+
+	#ifndef iptraceMEM_STATS_DELETE
+		#define iptraceMEM_STATS_DELETE( pxObject )
+	#endif
+
+	#ifndef iptraceMEM_STATS_CLOSE
+		#define iptraceMEM_STATS_CLOSE()
+	#endif
+
+#endif	/* ( ipconfigUSE_TCP_MEM_STATS != 0 ) */
+
+#ifndef ipconfigUSE_DUMP_PACKETS
+	#define ipconfigUSE_DUMP_PACKETS	0
+#endif
+
+#if( ipconfigUSE_DUMP_PACKETS == 0 )
+
+	/* See tools/tcp_dump_packets.c */
+
+	#ifndef iptraceDUMP_INIT
+		#define iptraceDUMP_INIT( pcFileName, pxEntries )
+	#endif
+
+	#ifndef iptraceDUMP_PACKET
+		#define iptraceDUMP_PACKET( pucBuffer, uxLength, xIncoming )
+	#endif
+
+#endif	/* ( ipconfigUSE_DUMP_PACKETS != 0 ) */
 
 #endif /* UDP_TRACE_MACRO_DEFAULTS_H */

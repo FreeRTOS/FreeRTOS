@@ -12,6 +12,13 @@
   "NETWORK_BUFFER_SIZE": 40,
 
 ################################################################
+# This is the size of the buffer into which the name is copied.
+# Set to any positive value.
+# In the source, NAME_SIZE=254 and NETWORK_BUFFER_SIZE >> NAME_SIZE
+# In the proof, NAME_SIZE >= 4 required for good coverage.
+  "NAME_SIZE":  "10",
+
+################################################################
 # Loop prvParseDNSReply.0:
 # file lib/FreeRTOS-Plus-TCP/source/FreeRTOS_DNS.c line 915
   "PARSELOOP0": "prvParseDNSReply.0",
@@ -55,6 +62,7 @@
 
   "DEF":
   [
-    "NETWORK_BUFFER_SIZE={NETWORK_BUFFER_SIZE}"
+    "NETWORK_BUFFER_SIZE={NETWORK_BUFFER_SIZE}",
+    "NAME_SIZE={NAME_SIZE}"
   ]
 }

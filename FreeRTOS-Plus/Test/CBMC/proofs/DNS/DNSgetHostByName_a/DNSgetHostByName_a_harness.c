@@ -1,81 +1,110 @@
+/* Standard includes. */
+#include <stdint.h>
+#include <stdio.h>
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "queue.h"
-#include "list.h"
+#include "task.h"
+#include "semphr.h"
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
-#include "FreeRTOS_DNS.h"
+#include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
+#include "FreeRTOS_UDP_IP.h"
+#include "FreeRTOS_DNS.h"
+#include "FreeRTOS_DHCP.h"
+#include "NetworkBufferManagement.h"
+#include "NetworkInterface.h"
 
-/* This proof assumes the length of pcHostName is bounded by MAX_HOSTNAME_LEN and the size of UDPPayloadBuffer is bounded by
-MAX_REQ_SIZE. This also abstracts the concurrency. */
+#include "cbmc.h"
 
-void *safeMalloc(size_t xWantedSize) { /* This returns a NULL pointer if the requested size is 0.
-	The implementation of malloc does not return a NULL pointer instead returns a pointer for which there is no memory allocation. */
-	if(xWantedSize == 0) {
-		return NULL;
-	}
-	uint8_t byte;
-	return byte ? malloc(xWantedSize) : NULL;
+/****************************************************************
+ * We abstract:
+ *
+ *   All kernel task scheduling functions since we are doing
+ *   sequential verification and the sequential verification of these
+ *   sequential primitives is done elsewhere.
+ *
+ *   Many methods in the FreeRTOS TCP API in stubs/freertos_api.c
+ *
+ *   prvParseDNSReply proved memory safe elsewhere
+ *
+ *   prvCreateDNSMessage
+ *
+ * This proof assumes the length of pcHostName is bounded by
+ * MAX_HOSTNAME_LEN.  We have to bound this length because we have to
+ * bound the iterations of strcmp.
+ ****************************************************************/
+
+/****************************************************************
+ * Abstract prvParseDNSReply proved memory safe in ParseDNSReply.
+ *
+ * We stub out his function to fill the payload buffer with
+ * unconstrained data and return an unconstrained size.
+ *
+ * The function under test uses only the return value of this
+ * function.
+ ****************************************************************/
+
+uint32_t prvParseDNSReply( uint8_t * pucUDPPayloadBuffer,
+                           size_t xBufferLength,
+                           BaseType_t xExpected )
+{
+    __CPROVER_assert(pucUDPPayloadBuffer != NULL,
+		     "Precondition: pucUDPPayloadBuffer != NULL");
+
+    __CPROVER_havoc_object( pucUDPPayloadBuffer );
+    return nondet_uint32();
 }
 
-/* Abstraction of pvPortMalloc which calls safemalloc internally. */
-void *pvPortMalloc(size_t xWantedSize) {
-	return safeMalloc(xWantedSize);
+/****************************************************************
+ * Abstract prvCreateDNSMessage
+ *
+ * This function writes a header, a hostname, and a constant amount of
+ * data into the payload buffer, and returns the amount of data
+ * written.  This abstraction just fills the entire buffer with
+ * unconstrained data and returns and unconstrained length.
+ ****************************************************************/
+
+size_t prvCreateDNSMessage( uint8_t * pucUDPPayloadBuffer,
+                            const char * pcHostName,
+                            TickType_t uxIdentifier )
+{
+    __CPROVER_assert(pucUDPPayloadBuffer != NULL,
+		     "Precondition: pucUDPPayloadBuffer != NULL");
+    __CPROVER_assert(pcHostName != NULL,
+		     "Precondition: pcHostName != NULL");
+
+    __CPROVER_havoc_object( pucUDPPayloadBuffer );
+    return nondet_sizet();
 }
 
-/* Abstraction of FreeRTOS_GetUDPPayloadBuffer.
-We always return MAX_REQ_SIZE bytes to keep the proof performant.
-This is safe because:
-- If the caller requested more bytes, then there is a risk that they
-    will write past the end of the returned buffer. This proof
-    therefore shows that the code is memory safe even if
-    xRequestedSizeBytes > MAX_REQ_SIZE.
-- If the caller requested fewer bytes, then they will not be
-    iterating past the end of the buffer anyway.*/
-void * FreeRTOS_GetUDPPayloadBuffer(size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks ) {
-	void *pvReturn = safeMalloc(MAX_REQ_SIZE);
-	return pvReturn;
+/****************************************************************
+ * A stub for a function callback.
+ ****************************************************************/
+
+void func(const char * pcHostName, void * pvSearchID, uint32_t ulIPAddress)
+{
 }
 
-/* Abstraction of FreeRTOS_socket. This abstraction allocates a memory of size Socket_t. */
-Socket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol ){
-	Socket_t xCreatedSocket = safeMalloc(sizeof(Socket_t)); // replacing malloc with safeMalloc
-	return xCreatedSocket;
-}
-
-/* This function FreeRTOS_gethostbyname_a only uses the return value of prvParseDNSReply. Hence it returns an unconstrained uint32 value */
-uint32_t prvParseDNSReply( uint8_t *pucUDPPayloadBuffer,
-			   size_t xBufferLength,
-			   BaseType_t xExpected ) {}
-
-/* Abstraction of xTaskResumeAll from task pool. This also abstracts the concurrency. */
-BaseType_t xTaskResumeAll(void) { }
-
-/* The function func mimics the callback function.*/
-void func(const char * pcHostName, void * pvSearchID, uint32_t ulIPAddress) { }
-
-typedef struct xDNS_Callback {
-	TickType_t xRemaningTime;		/* Timeout in ms */
-	FOnDNSEvent pCallbackFunction;	/* Function to be called when the address has been found or when a timeout has beeen reached */
-	TimeOut_t xTimeoutState;
-	void *pvSearchID;
-	struct xLIST_ITEM xListItem;
-	char pcName[ 1 ];
-} DNSCallback_t;
+/****************************************************************
+ * The proof for FreeRTOS_gethostbyname_a.
+ ****************************************************************/
 
 void harness() {
-	FOnDNSEvent pCallback = func;
-	TickType_t xTimeout;
-	void *pvSearchID;
-	size_t len;
-	__CPROVER_assume(len >= 0 && len <= MAX_HOSTNAME_LEN);
-	char *pcHostName = safeMalloc(len); // replacing malloc with safeMalloc
-	if (len && pcHostName) {
-		pcHostName[len-1] = NULL;
-	}
-	if (pcHostName) { // Guarding against NULL pointer
-		FreeRTOS_gethostbyname_a(pcHostName, pCallback, pvSearchID, xTimeout);
-	}
+    size_t len;
+
+    __CPROVER_assume( len <= MAX_HOSTNAME_LEN );
+    char * pcHostName = safeMalloc( len );
+
+    __CPROVER_assume( len > 0 ); /* prvProcessDNSCache strcmp */
+    __CPROVER_assume( pcHostName != NULL );
+    pcHostName[ len - 1 ] = NULL;
+
+    FOnDNSEvent pCallback = func;
+    TickType_t xTimeout;
+    void *pvSearchID;
+
+    FreeRTOS_gethostbyname_a(pcHostName, pCallback, pvSearchID, xTimeout);
 }

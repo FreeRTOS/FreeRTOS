@@ -1,5 +1,5 @@
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -445,6 +445,11 @@ void pcap_callback( u_char *user, const struct pcap_pkthdr *pkt_header, const u_
 	if( ( pkt_header->caplen <= ( ipconfigNETWORK_MTU + ipSIZE_OF_ETH_HEADER ) ) &&
 		( uxStreamBufferGetSpace( xRecvBuffer ) >= ( ( ( size_t ) pkt_header->caplen ) + sizeof( *pkt_header ) ) ) )
 	{
+		/* The received packets will be written to a C source file,
+		only if 'ipconfigUSE_DUMP_PACKETS' is defined.
+		Otherwise, there is no action. */
+		iptraceDUMP_PACKET( ( const uint8_t* ) pkt_data, ( size_t ) pkt_header->caplen, pdTRUE );
+
 		uxStreamBufferAdd( xRecvBuffer, 0, ( const uint8_t* ) pkt_header, sizeof( *pkt_header ) );
 		uxStreamBufferAdd( xRecvBuffer, 0, ( const uint8_t* ) pkt_data, ( size_t ) pkt_header->caplen );
 	}
@@ -489,12 +494,41 @@ const DWORD xMaxMSToWait = 1000;
 		{
 			uxStreamBufferGet( xSendBuffer, 0, ( uint8_t * ) &xLength, sizeof( xLength ), pdFALSE );
 			uxStreamBufferGet( xSendBuffer, 0, ( uint8_t* ) ucBuffer, xLength, pdFALSE );
+			/* The packets sent will be written to a C source file,
+			only if 'ipconfigUSE_DUMP_PACKETS' is defined.
+			Otherwise, there is no action. */
+			iptraceDUMP_PACKET( ucBuffer, xLength, pdFALSE );
 			if( pcap_sendpacket( pxOpenedInterfaceHandle, ucBuffer, xLength  ) != 0 )
 			{
 				ulWinPCAPSendFailures++;
 			}
 		}
 	}
+}
+/*-----------------------------------------------------------*/
+
+static BaseType_t xPacketBouncedBack( const uint8_t *pucBuffer )
+{
+EthernetHeader_t *pxEtherHeader;
+BaseType_t xResult;
+
+	pxEtherHeader = ( EthernetHeader_t * ) pucBuffer;
+	if( memcmp( ucMACAddress, pxEtherHeader->xSourceAddress.ucBytes, ipMAC_ADDRESS_LENGTH_BYTES ) == 0 )
+	{
+		FreeRTOS_printf( ( "Bounced back: %02x:%02x:%02x:%02x:%02x:%02x\n",
+			pxEtherHeader->xSourceAddress.ucBytes[ 0 ],
+			pxEtherHeader->xSourceAddress.ucBytes[ 1 ],
+			pxEtherHeader->xSourceAddress.ucBytes[ 2 ],
+			pxEtherHeader->xSourceAddress.ucBytes[ 3 ],
+			pxEtherHeader->xSourceAddress.ucBytes[ 4 ],
+			pxEtherHeader->xSourceAddress.ucBytes[ 5 ] ) );
+		xResult = pdTRUE;
+	}
+	else
+	{
+		xResult = pdFALSE;
+	}
+	return xResult;
 }
 /*-----------------------------------------------------------*/
 
@@ -545,7 +579,14 @@ eFrameProcessingResult_t eResult;
 					is ok to call the task level function here, but note that
 					some buffer implementations cannot be called from a real
 					interrupt. */
-					pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( pxHeader->len, 0 );
+					if( xPacketBouncedBack( pucPacketData ) == pdFALSE )
+					{
+						pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( pxHeader->len, 0 );
+					}
+					else
+					{
+						pxNetworkBuffer = NULL;
+					}
 
 					if( pxNetworkBuffer != NULL )
 					{

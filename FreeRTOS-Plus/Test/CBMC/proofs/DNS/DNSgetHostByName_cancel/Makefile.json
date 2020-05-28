@@ -22,7 +22,8 @@
   "DEF":
   [
     "ipconfigDNS_USE_CALLBACKS={callback}",
-    "MAX_HOSTNAME_LEN={MAX_HOSTNAME_LEN}"
-  ],
-  "OPT" : "-m32"
+    "MAX_HOSTNAME_LEN={MAX_HOSTNAME_LEN}",
+    # This value is defined only when ipconfigUSE_DNS_CACHE==1
+    "ipconfigDNS_CACHE_NAME_LENGTH=254"
+  ]
 }

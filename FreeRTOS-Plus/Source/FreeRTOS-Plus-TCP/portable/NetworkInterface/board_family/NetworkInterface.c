@@ -1,5 +1,5 @@
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -41,23 +41,23 @@ considers need processing. */
 
 BaseType_t xNetworkInterfaceInitialise( void )
 {
-    /* FIX ME. */
-    return pdFALSE;
+	/* FIX ME. */
+	return pdFALSE;
 }
 
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
-    /* FIX ME. */
-    return pdFALSE;
+	/* FIX ME. */
+	return pdFALSE;
 }
 
 void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ] )
 {
-    /* FIX ME. */
+	/* FIX ME. */
 }
 
 BaseType_t xGetPhyLinkStatus( void )
 {
-    /* FIX ME. */
-    return pdFALSE;
+	/* FIX ME. */
+	return pdFALSE;
 }

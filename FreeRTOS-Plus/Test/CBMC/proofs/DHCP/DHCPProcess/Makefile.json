@@ -28,18 +28,29 @@
 
 {
   "ENTRY": "DHCPProcess",
-  "CBMCFLAGS": "--unwind 4 --unwindset strlen.0:11,memcmp.0:7,prvProcessDHCPReplies.0:8 --nondet-static",
+
+  # Minimal buffer size for maximum coverage, see harness for details.
+  "BUFFER_SIZE": 299,
+
+  # The number of times GetNetworkBufferWithDescriptor can be allowed to fail
+  # (plus 1).
+  "FAILURE_BOUND": 2,
+
+  "CBMCFLAGS": "--unwind 4 --unwindset strlen.0:11,memcmp.0:7,prvProcessDHCPReplies.0:8,prvCreatePartDHCPMessage.0:{FAILURE_BOUND} --nondet-static --flush",
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs/cbmc.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs/freertos_api.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.goto",
-    "$(FREERTOS)/Source/tasks.goto"
+    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.goto"
   ],
-# Minimal buffer size for maximum coverage, see harness for details.
-  "BUFFER_SIZE": 299,
+
   "DEF":
   [
-    "BUFFER_SIZE={BUFFER_SIZE}"
+    "BUFFER_SIZE={BUFFER_SIZE}",
+    "CBMC_REQUIRE_NETWORKBUFFER_ETHERNETBUFFER_NONNULL=1",
+    "CBMC_GETNETWORKBUFFER_FAILURE_BOUND={FAILURE_BOUND}"
   ]
 }

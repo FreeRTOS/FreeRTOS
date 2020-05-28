@@ -10,6 +10,11 @@ Please include the following source files:
 	$(PLUS_TCP_PATH)/portable/NetworkInterface/Zynq/x_emacpsif_physpeed.c
 	$(PLUS_TCP_PATH)/portable/NetworkInterface/Zynq/x_emacpsif_hw.c
 
+The file uncached_memory.c can also be found in:
+
+	vendors\xilinx\boards\microzed\aws_demos\application_code\xilinx_code
+	vendors\xilinx\boards\microzed\aws_tests\application_code\xilinx_code
+
 And include the following source files from the Xilinx library:
 
 	$(CPU_PATH)/$(PROCESSOR)/libsrc/emacps_v2_0/src/xemacps.c

@@ -10,9 +10,7 @@
     "$(FREERTOS)/Source/tasks.goto",
     "$(FREERTOS)/Source/list.goto"
   ],
-  "ABSTRACTIONS": "",
   "BUFFER_SIZE": 100,
-  "UNWIND_GOTO": 0,
   "DEF":
   [
     "BUFFER_SIZE={BUFFER_SIZE}"

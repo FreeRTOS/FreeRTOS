@@ -1,6 +1,5 @@
 {
   "ENTRY": "CheckOptionsInner",
-  "BUFFER_SIZE": 100,
   "CBMCFLAGS": [
       "--unwind 1",
       "--unwindset prvTCPWindowTxCheckAck.1:2,prvTCPWindowFastRetransmit.2:2"
@@ -16,6 +15,5 @@
   ],
   "DEF":
   [
-    "BUFFER_SIZE={BUFFER_SIZE}"
   ]
 }

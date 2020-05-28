@@ -7,22 +7,24 @@
   "ENTRY": "ProcessDHCPReplies",
 
 ################################################################
-# Buffer size
-# Reasonable sizes are  BUFFER_SIZE > 241 = sizeof(DHCHMessage_t))
-# Sizes smaller than this causes CBMC to fail in simplify_byte_extract
-  "BUFFER_SIZE": 300,
+# Buffer header: sizeof(DHCPMessage_t) = 241
+# Buffer header: sizeof(DHCPMessage_IPv4_t) = 240
+  "BUFFER_HEADER": 240,
 
 ################################################################
-# Buffer header: sizeof(DHCHMessage_t) = 241
-  "BUFFER_HEADER": 241,
+# Buffer size
+# Reasonable sizes are  BUFFER_SIZE > BUFFER_HEADER
+# Sizes smaller than this causes CBMC to fail in simplify_byte_extract
+  "BUFFER_SIZE": 252,
 
 ################################################################
 # Buffer payload
-  "BUFFER_PAYLOAD": "__eval 1 if {BUFFER_SIZE} <= {BUFFER_HEADER} else {BUFFER_SIZE} - {BUFFER_HEADER} + 2",
+  "BUFFER_PAYLOAD": "__eval 1 if {BUFFER_SIZE} <= {BUFFER_HEADER} else {BUFFER_SIZE} - {BUFFER_HEADER} + 1",
 
 ################################################################
 
   "CBMCFLAGS": [
+      # "--nondet-static",
       "--unwind 1",
       "--unwindset memcmp.0:7,prvProcessDHCPReplies.0:{BUFFER_PAYLOAD}"
   ],
@@ -30,6 +32,8 @@
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs/cbmc.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs/freertos_api.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_2.goto",
     "$(FREERTOS)/Source/event_groups.goto",
@@ -38,6 +42,7 @@
 
   "DEF":
   [
-    "BUFFER_SIZE={BUFFER_SIZE}"
+    "CBMC_DHCPMESSAGE_HEADER_SIZE={BUFFER_HEADER}",
+    "CBMC_FREERTOS_RECVFROM_BUFFER_BOUND={BUFFER_SIZE}"
   ]
 }

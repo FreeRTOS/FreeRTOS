@@ -51,7 +51,7 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\test;C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\;C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\CMock\vendor\unity\extras\memory\src;C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\CMock\vendor\unity\extras\fixture\src;C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\CMock\vendor\unity\src;C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\FreeRTOS_Plus_TCP_Minimal_Windows_Simulator;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\test;C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\;..\CMock\vendor\unity\extras\memory\src;..\CMock\vendor\unity\extras\fixture\src;..\CMock\vendor\unity\src;.;$(IncludePath)</IncludePath>
     <SourcePath>C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\CMock\vendor\unity\extras\memory\src;C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\CMock\vendor\unity\extras\fixture\src;C:\Users\kanherea\Desktop\New folder\freertos\FreeRTOS-Plus\Test\CMock\vendor\unity\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

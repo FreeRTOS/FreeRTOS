@@ -1,0 +1,18 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_system System drivers
+
+
+
+\section doc_driver_system_init_basic_and_practice System Drivers
+
+The system drivers controls various peripherals and systems such as
+- BOD
+- Interrupt Controller
+- Clock Controller
+- Configuration Change Protection Controller
+- Reset Controller
+- Sleep Controller
+
+*/
+
+

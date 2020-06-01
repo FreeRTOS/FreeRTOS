@@ -248,20 +248,23 @@ typedef struct
 
 xPacketData xAllPackets[] =
 {
+/* These comments below are there so that we may modify
+ * them as and when required. Keeping them unmodified.
+ * Might be removed in later incremental PRs */
 	{ pkt1, sizeof( pkt1 ) },
-//	{ pkt2, sizeof( pkt2 ) },
+/*	{ pkt2, sizeof( pkt2 ) },  */
 	{ pkt3, sizeof( pkt3 ) },
 	{ pkt4, sizeof( pkt4 ) },
-//	{ pkt5, sizeof( pkt5 ) },
+/*	{ pkt5, sizeof( pkt5 ) },  */
 	{ pkt6, sizeof( pkt6 ) },
 	{ pkt7, sizeof( pkt7 ) },
 	{ pkt8, sizeof( pkt8 ) },
 	{ pkt9, sizeof( pkt9 ) },
 	{ pkt10, sizeof( pkt10 ) },
-//	{ pkt11, sizeof( pkt11 ) },
-//	{ pkt12, sizeof( pkt12 ) },
-//	{ pkt13, sizeof( pkt13 ) },
-//	{ pkt14, sizeof( pkt14 ) },
-//	{ pkt15, sizeof( pkt15 ) },
-//	{ pkt16, sizeof( pkt16 ) },
+/*	{ pkt11, sizeof( pkt11 ) },  */
+/*	{ pkt12, sizeof( pkt12 ) },  */
+/*	{ pkt13, sizeof( pkt13 ) },  */
+/*	{ pkt14, sizeof( pkt14 ) },  */
+/*	{ pkt15, sizeof( pkt15 ) },  */
+/*	{ pkt16, sizeof( pkt16 ) },  */
 };

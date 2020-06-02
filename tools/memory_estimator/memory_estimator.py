@@ -5,6 +5,8 @@ import os
 import re
 import argparse
 import subprocess
+from shutil import copyfile
+from json_report_generator import update_json_report
 from makefile_generator import generate_makefile_from_template
 
 
@@ -12,10 +14,12 @@ __THIS_FILE_PATH__ = os.path.dirname(os.path.abspath(__file__))
 __MAKE_FILE_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'Makefile.template')
 __GENERATED_MAKE_FILE__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
 
+__JSON_REPORT_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report.json.template')
+__GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'report.json')
+
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
 __FREERTOS_PLUS_SRC_DIR__ = os.path.join('FreeRTOS-Plus', 'Source')
 __IOT_LIBS_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries')
-
 
 __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
     'light-mqtt' : [
@@ -37,7 +41,13 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'jobs', 'src'),
                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'common', 'src')
                    ],
-    'ota'        : [
+    'ota-mqtt'   : [
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_agent.c'),
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_interface.c'),
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_mqtt.c'),
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_cbor.c')
+                   ],
+    'ota-http'  :  [
                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src')
                    ],
     'kernel'     : [
@@ -50,6 +60,32 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
                         os.path.join(__FREERTOS_SRC_DIR__, 'portable', 'GCC', 'ARM_CM4F', 'port.c')
                    ]
 }
+
+__LIBS_IN_JSON_REPORT__ = ['light-mqtt', 'mqtt', 'https', 'shadow', 'jobs', 'ota-mqtt', 'ota-http']
+
+
+def calculate_sizes(freertos_lts, optimization, lib_name, compiler, sizetool, dontclean):
+    # Generate Makefile.
+    generate_makefile(freertos_lts, optimization, lib_name)
+
+    # Run make build.
+    warnings = make(compiler)
+
+    # Run make size.
+    calculated_sizes = calculate_size(sizetool)
+
+    # Remove the generated artifacts.
+    if not dontclean:
+        clean()
+        remove_generated_makefile()
+
+    # Print the generated warnings.
+    pretty_print_warnings(warnings)
+
+    # Print the calculated sizes.
+    pretty_print_sizes(calculated_sizes)
+
+    return calculated_sizes
 
 
 def generate_makefile(freertos_lts, optimization, lib_name):
@@ -167,6 +203,7 @@ def parse_arguments():
     parser.add_argument('-c', '--compiler', default='arm-none-eabi-gcc', help='Compiler to use.')
     parser.add_argument('-s', '--sizetool', default='arm-none-eabi-size', help='Size tool to use.')
     parser.add_argument('-d', '--dontclean', action='store_true', help='Do not clean the generated artifacts.')
+    parser.add_argument('-g', '--generate-report', action='store_true', help='Generate the JSON report.')
 
     return vars(parser.parse_args())
 
@@ -175,25 +212,39 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
-    # Generate Makefile.
-    generate_makefile(args['lts_path'], args['optimization'], args['lib'])
+    if args['generate_report']:
+        # Create a copy of the JSON report template. File sizes and total size
+        # sections for each library will be populated.
+        copyfile(__JSON_REPORT_TEMPLATE__, __GENERATED_JSON_REPORT__)
+        # JSON report has sizes for all the libraries and for both O1 and Os
+        # Optimizations. Therefore, values for --lib and --optimization are
+        # ignored.
+        # Compiled objects files for 'O1' optimization needs to be cleaned
+        # before 'Os' optimization and therefore, value for --dontclean is
+        # ignored.
+        for lib_name in __LIBS_IN_JSON_REPORT__:
+            o1_sizes = calculate_sizes(args['lts_path'],
+                                       'O1',
+                                        lib_name,
+                                        args['compiler'],
+                                        args['sizetool'],
+                                        False)
 
-    # Run make build.
-    warnings = make(args['compiler'])
+            os_sizes = calculate_sizes(args['lts_path'],
+                                       'Os',
+                                        lib_name,
+                                        args['compiler'],
+                                        args['sizetool'],
+                                        False)
 
-    # Run make size.
-    calculated_sizes = calculate_size(args['sizetool'])
-
-    # Remove the generated artifacts.
-    if not args['dontclean']:
-        clean()
-        remove_generated_makefile()
-
-    # Print the generated warnings.
-    pretty_print_warnings(warnings)
-
-    # Print the calculated sizes.
-    pretty_print_sizes(calculated_sizes)
+            update_json_report(lib_name, o1_sizes, os_sizes, __GENERATED_JSON_REPORT__)
+    else:
+        calculate_sizes(args['lts_path'],
+                        args['optimization'],
+                        args['lib'],
+                        args['compiler'],
+                        args['sizetool'],
+                        args['dontclean'])
 
 
 if __name__ == '__main__':

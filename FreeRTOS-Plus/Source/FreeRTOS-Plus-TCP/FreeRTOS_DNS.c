@@ -1766,6 +1766,6 @@ BaseType_t xReturn;
 /*-----------------------------------------------------------*/
 
 /* Provide access to private members for testing. */
-#ifdef AMAZON_FREERTOS_ENABLE_UNIT_TESTS
-	#include "iot_freertos_tcp_test_access_dns_define.h"
+#ifdef FREERTOS_ENABLE_UNIT_TESTS
+	#include "freertos_tcp_test_access_dns_define.h"
 #endif

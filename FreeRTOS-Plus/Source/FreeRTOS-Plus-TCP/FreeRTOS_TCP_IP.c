@@ -3494,8 +3494,8 @@ const ListItem_t *pxEndTCP = ipPOINTER_CAST( const ListItem_t *, listGET_END_MAR
 #endif /* ipconfigUSE_TCP == 1 */
 
 /* Provide access to private members for testing. */
-#ifdef AMAZON_FREERTOS_ENABLE_UNIT_TESTS
-	#include "iot_freertos_tcp_test_access_tcp_define.h"
+#ifdef FREERTOS_ENABLE_UNIT_TESTS
+	#include "freertos_tcp_test_access_tcp_define.h"
 #endif
 
 /* Provide access to private members for verification. */

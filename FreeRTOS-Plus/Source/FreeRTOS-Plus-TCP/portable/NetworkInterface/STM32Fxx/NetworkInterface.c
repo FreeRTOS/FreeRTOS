@@ -4,7 +4,7 @@
  */
 
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -828,7 +828,7 @@ const ProtocolPacket_t *pxProtPacket = ( const ProtocolPacket_t * )pcBuffer;
 			#endif
 				) {
 				/* Drop this packet, not for this device. */
-				FreeRTOS_printf( ( "Drop: UDP port %d -> %d\n", usSourcePort, usDestinationPort ) );
+				/* FreeRTOS_printf( ( "Drop: UDP port %d -> %d\n", usSourcePort, usDestinationPort ) ); */
 				return pdFALSE;
 			}
 		}
@@ -1178,9 +1178,9 @@ BaseType_t xReturn;
 void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS ] )
 {
 static
-#if defined(STM32F7xx)
-	__attribute__ ((section(".first_data")))
-#endif
+	#if defined(STM32F7xx)
+		__attribute__ ((section(".first_data")))
+	#endif
 	uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * ETH_MAX_PACKET_SIZE ] __attribute__ ( ( aligned( 32 ) ) );
 uint8_t *ucRAMBuffer = ucNetworkPackets;
 uint32_t ul;

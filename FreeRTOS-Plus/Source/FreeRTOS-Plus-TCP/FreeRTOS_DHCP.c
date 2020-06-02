@@ -36,16 +36,16 @@
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_UDP_IP.h"
-#include "FreeRTOS_TCP_IP.h"
 #include "FreeRTOS_DHCP.h"
 #include "FreeRTOS_ARP.h"
-#include "NetworkInterface.h"
-#include "NetworkBufferManagement.h"
 
 /* Exclude the entire file if DHCP is not enabled. */
 #if( ipconfigUSE_DHCP != 0 )
 
-#if ( ipconfigUSE_DHCP != 0 ) && ( ipconfigNETWORK_MTU < 586u )
+#include "NetworkInterface.h"
+#include "NetworkBufferManagement.h"
+
+#if ( ipconfigUSE_DHCP != 0 ) && ( ipconfigNETWORK_MTU < 586U )
 	/* DHCP must be able to receive an options field of 312 bytes, the fixed
 	part of the DHCP packet is 240 bytes, and the IP/UDP headers take 28 bytes. */
 	#error ipconfigNETWORK_MTU needs to be at least 586 to use DHCP
@@ -58,22 +58,22 @@
 
 /* Timer parameters */
 #ifndef dhcpINITIAL_DHCP_TX_PERIOD
-	#define dhcpINITIAL_TIMER_PERIOD			( pdMS_TO_TICKS( 250 ) )
-	#define dhcpINITIAL_DHCP_TX_PERIOD			( pdMS_TO_TICKS( 5000 ) )
+	#define dhcpINITIAL_TIMER_PERIOD			( pdMS_TO_TICKS( 250U ) )
+	#define dhcpINITIAL_DHCP_TX_PERIOD			( pdMS_TO_TICKS( 5000U ) )
 #endif
 
 /* Codes of interest found in the DHCP options field. */
-#define dhcpZERO_PAD_OPTION_CODE				( 0u )
-#define dhcpSUBNET_MASK_OPTION_CODE				( 1u )
-#define dhcpGATEWAY_OPTION_CODE					( 3u )
-#define dhcpDNS_SERVER_OPTIONS_CODE				( 6u )
-#define dhcpDNS_HOSTNAME_OPTIONS_CODE			( 12u )
-#define dhcpREQUEST_IP_ADDRESS_OPTION_CODE		( 50u )
-#define dhcpLEASE_TIME_OPTION_CODE				( 51u )
-#define dhcpMESSAGE_TYPE_OPTION_CODE			( 53u )
-#define dhcpSERVER_IP_ADDRESS_OPTION_CODE		( 54u )
-#define dhcpPARAMETER_REQUEST_OPTION_CODE		( 55u )
-#define dhcpCLIENT_IDENTIFIER_OPTION_CODE		( 61u )
+#define dhcpIPv4_ZERO_PAD_OPTION_CODE			( 0U )
+#define dhcpIPv4_SUBNET_MASK_OPTION_CODE		( 1U )
+#define dhcpIPv4_GATEWAY_OPTION_CODE			( 3U )
+#define dhcpIPv4_DNS_SERVER_OPTIONS_CODE		( 6U )
+#define dhcpIPv4_DNS_HOSTNAME_OPTIONS_CODE		( 12U )
+#define dhcpIPv4_REQUEST_IP_ADDRESS_OPTION_CODE	( 50U )
+#define dhcpIPv4_LEASE_TIME_OPTION_CODE			( 51U )
+#define dhcpIPv4_MESSAGE_TYPE_OPTION_CODE		( 53U )
+#define dhcpIPv4_SERVER_IP_ADDRESS_OPTION_CODE	( 54U )
+#define dhcpIPv4_PARAMETER_REQUEST_OPTION_CODE	( 55U )
+#define dhcpIPv4_CLIENT_IDENTIFIER_OPTION_CODE	( 61U )
 
 /* The four DHCP message types of interest. */
 #define dhcpMESSAGE_TYPE_DISCOVER				( 1 )
@@ -84,15 +84,21 @@
 
 /* Offsets into the transmitted DHCP options fields at which various parameters
 are located. */
-#define dhcpCLIENT_IDENTIFIER_OFFSET			( 6 )
-#define dhcpREQUESTED_IP_ADDRESS_OFFSET			( 14 )
-#define dhcpDHCP_SERVER_IP_ADDRESS_OFFSET		( 20 )
+#define dhcpCLIENT_IDENTIFIER_OFFSET			( 6U )
+#define dhcpREQUESTED_IP_ADDRESS_OFFSET			( 14U )
+#define dhcpDHCP_SERVER_IP_ADDRESS_OFFSET		( 20U )
 
 /* Values used in the DHCP packets. */
-#define dhcpREQUEST_OPCODE						( 1 )
-#define dhcpREPLY_OPCODE						( 2 )
-#define dhcpADDRESS_TYPE_ETHERNET				( 1 )
-#define dhcpETHERNET_ADDRESS_LENGTH				( 6 )
+#define dhcpREQUEST_OPCODE						( 1U )
+#define dhcpREPLY_OPCODE						( 2U )
+#define dhcpADDRESS_TYPE_ETHERNET				( 1U )
+#define dhcpETHERNET_ADDRESS_LENGTH				( 6U )
+
+/* The following define is temporary and serves to make the /single source
+code more similar to the /multi version. */
+
+#define	EP_DHCPData			xDHCPData
+#define	EP_IPv4_SETTINGS	xNetworkAddressing
 
 /* If a lease time is not received, use the default of two days. */
 /* 48 hours in ticks.  Can not use pdMS_TO_TICKS() as integer overflow can occur. */
@@ -106,23 +112,25 @@ are located. */
 
 /* Offset into a DHCP message at which the first byte of the options is
 located. */
-#define dhcpFIRST_OPTION_BYTE_OFFSET			( 0xf0 )
+#define dhcpFIRST_OPTION_BYTE_OFFSET			( 0xf0U )
 
-/* Standard DHCP port numbers and magic cookie value. */
+/* Standard DHCP port numbers and magic cookie value.
+DHCPv4 uses UDP port number  68 for clients and port number  67 for servers.
+*/
 #if( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN )
-	#define dhcpCLIENT_PORT 0x4400u
-	#define dhcpSERVER_PORT 0x4300u
-	#define dhcpCOOKIE		0x63538263ul
-	#define dhcpBROADCAST	0x0080u
+	#define dhcpCLIENT_PORT_IPv4	0x4400U
+	#define dhcpSERVER_PORT_IPv4	0x4300U
+	#define dhcpCOOKIE				0x63538263UL
+	#define dhcpBROADCAST			0x0080U
 #else
-	#define dhcpCLIENT_PORT 0x0044u
-	#define dhcpSERVER_PORT 0x0043u
-	#define dhcpCOOKIE		0x63825363ul
-	#define dhcpBROADCAST	0x8000u
-#endif /* ipconfigBYTE_ORDER */
+	#define dhcpCLIENT_PORT_IPv4	0x0044U
+	#define dhcpSERVER_PORT_IPv4	0x0043U
+	#define dhcpCOOKIE				0x63825363UL
+	#define dhcpBROADCAST			0x8000U
+#endif /* ( ipconfigBYTE_ORDER == pdFREERTOS_LITTLE_ENDIAN ) */
 
 #include "pack_struct_start.h"
-struct xDHCPMessage
+struct xDHCPMessage_IPv4
 {
 	uint8_t ucOpcode;
 	uint8_t ucAddressType;
@@ -139,43 +147,13 @@ struct xDHCPMessage
 	uint8_t ucServerHostName[ dhcpSERVER_HOST_NAME_LENGTH ];
 	uint8_t ucBootFileName[ dhcpBOOT_FILE_NAME_LENGTH ];
 	uint32_t ulDHCPCookie;
-	uint8_t ucFirstOptionByte;
+	/* Option bytes from here on. */
 }
 #include "pack_struct_end.h"
-typedef struct xDHCPMessage DHCPMessage_t;
+typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
 
-/* DHCP state machine states. */
-typedef enum
-{
-	eWaitingSendFirstDiscover = 0,	/* Initial state.  Send a discover the first time it is called, and reset all timers. */
-	eWaitingOffer,					/* Either resend the discover, or, if the offer is forthcoming, send a request. */
-	eWaitingAcknowledge,			/* Either resend the request. */
-	#if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
-		eGetLinkLayerAddress,		/* When DHCP didn't respond, try to obtain a LinkLayer address 168.254.x.x. */
-	#endif
-	eLeasedAddress,					/* Resend the request at the appropriate time to renew the lease. */
-	eNotUsingLeasedAddress			/* DHCP failed, and a default IP address is being used. */
-} eDHCPState_t;
-
-/* Hold information in between steps in the DHCP state machine. */
-struct xDHCP_DATA
-{
-	uint32_t ulTransactionId;
-	uint32_t ulOfferedIPAddress;
-	uint32_t ulDHCPServerAddress;
-	uint32_t ulLeaseTime;
-	/* Hold information on the current timer state. */
-	TickType_t xDHCPTxTime;
-	TickType_t xDHCPTxPeriod;
-	/* Try both without and with the broadcast flag */
-	BaseType_t xUseBroadcast;
-	/* Maintains the DHCP state machine state. */
-	eDHCPState_t eDHCPState;
-	/* The UDP socket used for all incoming and outgoing DHCP traffic. */
-	Socket_t xDHCPSocket;
-};
-
-typedef struct xDHCP_DATA DHCPData_t;
+/* The UDP socket used for all incoming and outgoing DHCP traffic. */
+static Socket_t xDHCPSocket;
 
 #if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
 	/* Define the Link Layer IP address: 169.254.x.x */
@@ -215,12 +193,20 @@ static void prvInitialiseDHCP( void );
  * Creates the part of outgoing DHCP messages that are common to all outgoing
  * DHCP messages.
  */
-static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress, BaseType_t xOpcode, const uint8_t * const pucOptionsArray, size_t *pxOptionsArraySize );
+static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress,
+										  BaseType_t xOpcode,
+										  const uint8_t * const pucOptionsArray,
+										  size_t *pxOptionsArraySize );
 
 /*
  * Create the DHCP socket, if it has not been created already.
  */
 static void prvCreateDHCPSocket( void );
+
+/*
+ * Close the DHCP socket.
+ */
+static void prvCloseDHCPSocket( void );
 
 /*
  * After DHCP has failed to answer, prepare everything to start searching
@@ -233,7 +219,7 @@ static void prvCreateDHCPSocket( void );
 
 /*-----------------------------------------------------------*/
 
-/* The next DHCP transaction Id to be used. */
+/* Hold information in between steps in the DHCP state machine. */
 static DHCPData_t xDHCPData;
 
 /*-----------------------------------------------------------*/
@@ -242,7 +228,7 @@ BaseType_t xIsDHCPSocket( Socket_t xSocket )
 {
 BaseType_t xReturn;
 
-	if( xDHCPData.xDHCPSocket == xSocket )
+	if( xDHCPSocket == xSocket )
 	{
 		xReturn = pdTRUE;
 	}
@@ -265,10 +251,10 @@ BaseType_t xGivingUp = pdFALSE;
 	/* Is DHCP starting over? */
 	if( xReset != pdFALSE )
 	{
-		xDHCPData.eDHCPState = eWaitingSendFirstDiscover;
+		EP_DHCPData.eDHCPState = eWaitingSendFirstDiscover;
 	}
 
-	switch( xDHCPData.eDHCPState )
+	switch( EP_DHCPData.eDHCPState )
 	{
 		case eWaitingSendFirstDiscover :
 			/* Ask the user if a DHCP discovery is required. */
@@ -282,20 +268,19 @@ BaseType_t xGivingUp = pdFALSE;
 				prvInitialiseDHCP();
 
 				/* See if prvInitialiseDHCP() has creates a socket. */
-				if( xDHCPData.xDHCPSocket == NULL )
+				if( xDHCPSocket == NULL )
 				{
 					xGivingUp = pdTRUE;
-					break;
 				}
-
-				*ipLOCAL_IP_ADDRESS_POINTER = 0UL;
-
-				/* Send the first discover request. */
-				if( xDHCPData.xDHCPSocket != NULL )
+				else
 				{
-					xDHCPData.xDHCPTxTime = xTaskGetTickCount();
-					prvSendDHCPDiscover( );
-					xDHCPData.eDHCPState = eWaitingOffer;
+
+					*ipLOCAL_IP_ADDRESS_POINTER = 0UL;
+
+					/* Send the first discover request. */
+					EP_DHCPData.xDHCPTxTime = xTaskGetTickCount();
+					prvSendDHCPDiscover();
+					EP_DHCPData.eDHCPState = eWaitingOffer;
 				}
 			}
 		#if( ipconfigUSE_DHCP_HOOK != 0 )
@@ -303,7 +288,7 @@ BaseType_t xGivingUp = pdFALSE;
 			{
 				if( eAnswer == eDHCPUseDefaults )
 				{
-					memcpy( &xNetworkAddressing, &xDefaultAddressing, sizeof( xNetworkAddressing ) );
+					( void ) memcpy( &( xNetworkAddressing ), &( xDefaultAddressing ), sizeof( xNetworkAddressing ) );
 				}
 
 				/* The user indicates that the DHCP process does not continue. */
@@ -321,45 +306,54 @@ BaseType_t xGivingUp = pdFALSE;
 			{
 			#if( ipconfigUSE_DHCP_HOOK != 0 )
 				/* Ask the user if a DHCP request is required. */
-				eAnswer = xApplicationDHCPHook( eDHCPPhasePreRequest, xDHCPData.ulOfferedIPAddress );
+				eAnswer = xApplicationDHCPHook( eDHCPPhasePreRequest, EP_DHCPData.ulOfferedIPAddress );
 
 				if( eAnswer == eDHCPContinue )
 			#endif	/* ipconfigUSE_DHCP_HOOK */
 				{
 					/* An offer has been made, the user wants to continue,
 					generate the request. */
-					xDHCPData.xDHCPTxTime = xTaskGetTickCount();
-					xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
-					prvSendDHCPRequest( );
-					xDHCPData.eDHCPState = eWaitingAcknowledge;
+					EP_DHCPData.xDHCPTxTime = xTaskGetTickCount();
+					EP_DHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
+					prvSendDHCPRequest();
+					EP_DHCPData.eDHCPState = eWaitingAcknowledge;
 					break;
 				}
 
 			#if( ipconfigUSE_DHCP_HOOK != 0 )
 				if( eAnswer == eDHCPUseDefaults )
 				{
-					memcpy( &xNetworkAddressing, &xDefaultAddressing, sizeof( xNetworkAddressing ) );
+					( void ) memcpy( &( xNetworkAddressing ), &( xDefaultAddressing ), sizeof( xNetworkAddressing ) );
 				}
 
 				/* The user indicates that the DHCP process does not continue. */
 				xGivingUp = pdTRUE;
 			#endif	/* ipconfigUSE_DHCP_HOOK */
 			}
-			else if( ( xTaskGetTickCount() - xDHCPData.xDHCPTxTime ) > xDHCPData.xDHCPTxPeriod )
+
+			/* Is it time to send another Discover? */
+			else if( ( xTaskGetTickCount() - EP_DHCPData.xDHCPTxTime ) > EP_DHCPData.xDHCPTxPeriod )
 			{
 				/* It is time to send another Discover.  Increase the time
 				period, and if it has not got to the point of giving up - send
 				another discovery. */
-				xDHCPData.xDHCPTxPeriod <<= 1;
+				EP_DHCPData.xDHCPTxPeriod <<= 1;
 
-				if( xDHCPData.xDHCPTxPeriod <= ipconfigMAXIMUM_DISCOVER_TX_PERIOD )
+				if( EP_DHCPData.xDHCPTxPeriod <= ( TickType_t ) ipconfigMAXIMUM_DISCOVER_TX_PERIOD )
 				{
-					if( xApplicationGetRandomNumber( &( xDHCPData.ulTransactionId ) ) != pdFALSE )
+					if( xApplicationGetRandomNumber( &( EP_DHCPData.ulTransactionId ) ) != pdFALSE )
 					{
-						xDHCPData.xDHCPTxTime = xTaskGetTickCount( );
-						xDHCPData.xUseBroadcast = !xDHCPData.xUseBroadcast;
-						prvSendDHCPDiscover( );
-						FreeRTOS_debug_printf( ( "vDHCPProcess: timeout %lu ticks\n", xDHCPData.xDHCPTxPeriod ) );
+						EP_DHCPData.xDHCPTxTime = xTaskGetTickCount();
+						if( EP_DHCPData.xUseBroadcast != pdFALSE )
+						{
+							EP_DHCPData.xUseBroadcast = pdFALSE;
+						}
+						else
+						{
+							EP_DHCPData.xUseBroadcast = pdTRUE;
+						}
+						prvSendDHCPDiscover();
+						FreeRTOS_debug_printf( ( "vDHCPProcess: timeout %lu ticks\n", EP_DHCPData.xDHCPTxPeriod ) );
 					}
 					else
 					{
@@ -368,7 +362,7 @@ BaseType_t xGivingUp = pdFALSE;
 				}
 				else
 				{
-					FreeRTOS_debug_printf( ( "vDHCPProcess: giving up %lu > %lu ticks\n", xDHCPData.xDHCPTxPeriod, ipconfigMAXIMUM_DISCOVER_TX_PERIOD ) );
+					FreeRTOS_debug_printf( ( "vDHCPProcess: giving up %lu > %lu ticks\n", EP_DHCPData.xDHCPTxPeriod, ipconfigMAXIMUM_DISCOVER_TX_PERIOD ) );
 
 					#if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
 					{
@@ -380,7 +374,7 @@ BaseType_t xGivingUp = pdFALSE;
 
 						/* Setting an IP address manually so set to not using
 						leased address mode. */
-						xDHCPData.eDHCPState = eGetLinkLayerAddress;
+						EP_DHCPData.eDHCPState = eGetLinkLayerAddress;
 					}
 					#else
 					{
@@ -389,6 +383,10 @@ BaseType_t xGivingUp = pdFALSE;
 					#endif /* ipconfigDHCP_FALL_BACK_AUTO_IP */
 				}
 			}
+			else
+			{
+				/* There was no DHCP reply, there was no time-out, just keep on waiting. */
+			}
 			break;
 
 		case eWaitingAcknowledge :
@@ -396,35 +394,34 @@ BaseType_t xGivingUp = pdFALSE;
 			/* Look for acks coming in. */
 			if( prvProcessDHCPReplies( dhcpMESSAGE_TYPE_ACK ) == pdPASS )
 			{
-				FreeRTOS_debug_printf( ( "vDHCPProcess: acked %lxip\n", FreeRTOS_ntohl( xDHCPData.ulOfferedIPAddress ) ) );
+				FreeRTOS_debug_printf( ( "vDHCPProcess: acked %lxip\n", FreeRTOS_ntohl( EP_DHCPData.ulOfferedIPAddress ) ) );
 
 				/* DHCP completed.  The IP address can now be used, and the
 				timer set to the lease timeout time. */
-				*ipLOCAL_IP_ADDRESS_POINTER = xDHCPData.ulOfferedIPAddress;
+				*ipLOCAL_IP_ADDRESS_POINTER = EP_DHCPData.ulOfferedIPAddress;
 
 				/* Setting the 'local' broadcast address, something like
 				'192.168.1.255'. */
-				xNetworkAddressing.ulBroadcastAddress = ( xDHCPData.ulOfferedIPAddress & xNetworkAddressing.ulNetMask ) |  ~xNetworkAddressing.ulNetMask;
-				xDHCPData.eDHCPState = eLeasedAddress;
+				EP_IPv4_SETTINGS.ulBroadcastAddress = ( EP_DHCPData.ulOfferedIPAddress & xNetworkAddressing.ulNetMask ) |  ~xNetworkAddressing.ulNetMask;
+				EP_DHCPData.eDHCPState = eLeasedAddress;
 
-				iptraceDHCP_SUCCEDEED( xDHCPData.ulOfferedIPAddress );
+				iptraceDHCP_SUCCEDEED( EP_DHCPData.ulOfferedIPAddress );
 
 				/* DHCP failed, the default configured IP-address will be used
 				Now call vIPNetworkUpCalls() to send the network-up event and
 				start the ARP timer. */
-				vIPNetworkUpCalls( );
+				vIPNetworkUpCalls();
 
 				/* Close socket to ensure packets don't queue on it. */
-				vSocketClose( xDHCPData.xDHCPSocket );
-				xDHCPData.xDHCPSocket = NULL;
+				prvCloseDHCPSocket();
 
-				if( xDHCPData.ulLeaseTime == 0UL )
+				if( EP_DHCPData.ulLeaseTime == 0UL )
 				{
-					xDHCPData.ulLeaseTime = dhcpDEFAULT_LEASE_TIME;
+					EP_DHCPData.ulLeaseTime = ( uint32_t ) dhcpDEFAULT_LEASE_TIME;
 				}
-				else if( xDHCPData.ulLeaseTime < dhcpMINIMUM_LEASE_TIME )
+				else if( EP_DHCPData.ulLeaseTime < dhcpMINIMUM_LEASE_TIME )
 				{
-					xDHCPData.ulLeaseTime = dhcpMINIMUM_LEASE_TIME;
+					EP_DHCPData.ulLeaseTime = dhcpMINIMUM_LEASE_TIME;
 				}
 				else
 				{
@@ -433,26 +430,26 @@ BaseType_t xGivingUp = pdFALSE;
 
 				/* Check for clashes. */
 				vARPSendGratuitous();
-				vIPReloadDHCPTimer( xDHCPData.ulLeaseTime );
+				vIPReloadDHCPTimer( EP_DHCPData.ulLeaseTime );
 			}
 			else
 			{
 				/* Is it time to send another Discover? */
-				if( ( xTaskGetTickCount() - xDHCPData.xDHCPTxTime ) > xDHCPData.xDHCPTxPeriod )
+				if( ( xTaskGetTickCount() - EP_DHCPData.xDHCPTxTime ) > EP_DHCPData.xDHCPTxPeriod )
 				{
 					/* Increase the time period, and if it has not got to the
 					point of giving up - send another request. */
-					xDHCPData.xDHCPTxPeriod <<= 1;
+					EP_DHCPData.xDHCPTxPeriod <<= 1;
 
-					if( xDHCPData.xDHCPTxPeriod <= ipconfigMAXIMUM_DISCOVER_TX_PERIOD )
+					if( EP_DHCPData.xDHCPTxPeriod <= ( TickType_t ) ipconfigMAXIMUM_DISCOVER_TX_PERIOD )
 					{
-						xDHCPData.xDHCPTxTime = xTaskGetTickCount();
-						prvSendDHCPRequest( );
+						EP_DHCPData.xDHCPTxTime = xTaskGetTickCount();
+						prvSendDHCPRequest();
 					}
 					else
 					{
 						/* Give up, start again. */
-						xDHCPData.eDHCPState = eWaitingSendFirstDiscover;
+						EP_DHCPData.eDHCPState = eWaitingSendFirstDiscover;
 					}
 				}
 			}
@@ -460,18 +457,18 @@ BaseType_t xGivingUp = pdFALSE;
 
 	#if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
 		case eGetLinkLayerAddress:
-			if( ( xTaskGetTickCount() - xDHCPData.xDHCPTxTime ) > xDHCPData.xDHCPTxPeriod )
+			if( ( xTaskGetTickCount() - EP_DHCPData.xDHCPTxTime ) > EP_DHCPData.xDHCPTxPeriod )
 			{
 				if( xARPHadIPClash == pdFALSE )
 				{
 					/* ARP OK. proceed. */
-					iptraceDHCP_SUCCEDEED( xDHCPData.ulOfferedIPAddress );
+					iptraceDHCP_SUCCEDEED( EP_DHCPData.ulOfferedIPAddress );
 
 					/* Auto-IP succeeded, the default configured IP-address will
 					be used.  Now call vIPNetworkUpCalls() to send the
 					network-up event and start the ARP timer. */
-					vIPNetworkUpCalls( );
-					xDHCPData.eDHCPState = eNotUsingLeasedAddress;
+					vIPNetworkUpCalls();
+					EP_DHCPData.eDHCPState = eNotUsingLeasedAddress;
 				}
 				else
 				{
@@ -480,7 +477,7 @@ BaseType_t xGivingUp = pdFALSE;
 
 					/* Setting an IP address manually so set to not using leased
 					address mode. */
-					xDHCPData.eDHCPState = eGetLinkLayerAddress;
+					EP_DHCPData.eDHCPState = eGetLinkLayerAddress;
 				}
 			}
 			break;
@@ -488,18 +485,27 @@ BaseType_t xGivingUp = pdFALSE;
 
 		case eLeasedAddress :
 
-			/* Resend the request at the appropriate time to renew the lease. */
-			prvCreateDHCPSocket();
-
-			if( xDHCPData.xDHCPSocket != NULL )
+			if( FreeRTOS_IsNetworkUp() != 0 )
 			{
-				xDHCPData.xDHCPTxTime = xTaskGetTickCount();
-				xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
-				prvSendDHCPRequest( );
-				xDHCPData.eDHCPState = eWaitingAcknowledge;
+				/* Resend the request at the appropriate time to renew the lease. */
+				prvCreateDHCPSocket();
 
-				/* From now on, we should be called more often */
-				vIPReloadDHCPTimer( dhcpINITIAL_TIMER_PERIOD );
+				if( xDHCPSocket != NULL )
+				{
+					EP_DHCPData.xDHCPTxTime = xTaskGetTickCount();
+					EP_DHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
+					prvSendDHCPRequest();
+					EP_DHCPData.eDHCPState = eWaitingAcknowledge;
+
+					/* From now on, we should be called more often */
+					vIPReloadDHCPTimer( dhcpINITIAL_TIMER_PERIOD );
+				}
+			}
+			else
+			{
+				/* See PR #53 on github/freertos/freertos */
+				FreeRTOS_printf( ( "DHCP: lease time finished but network is down\n" ) );
+				vIPReloadDHCPTimer( pdMS_TO_TICKS( 5000U ) );
 			}
 			break;
 
@@ -509,6 +515,7 @@ BaseType_t xGivingUp = pdFALSE;
 			break;
 
 		default:
+			/* Lint: all options are included. */
 			break;
 	}
 
@@ -516,7 +523,7 @@ BaseType_t xGivingUp = pdFALSE;
 	{
 		/* xGivingUp became true either because of a time-out, or because
 		xApplicationDHCPHook() returned another value than 'eDHCPContinue',
-		meaning that the conversion is canceled from here. */
+		meaning that the conversion is cancelled from here. */
 
 		/* Revert to static IP address. */
 		taskENTER_CRITICAL();
@@ -526,21 +533,27 @@ BaseType_t xGivingUp = pdFALSE;
 		}
 		taskEXIT_CRITICAL();
 
-		xDHCPData.eDHCPState = eNotUsingLeasedAddress;
+		EP_DHCPData.eDHCPState = eNotUsingLeasedAddress;
 		vIPSetDHCPTimerEnableState( pdFALSE );
 
 		/* DHCP failed, the default configured IP-address will be used.  Now
 		call vIPNetworkUpCalls() to send the network-up event and start the ARP
 		timer. */
-		vIPNetworkUpCalls( );
+		vIPNetworkUpCalls();
 
-		/* Test if socket was indeed created. */
-		if( xDHCPData.xDHCPSocket != NULL )
-		{
-			/* Close socket to ensure packets don't queue on it. */
-			vSocketClose( xDHCPData.xDHCPSocket );
-			xDHCPData.xDHCPSocket = NULL;
-		}
+		prvCloseDHCPSocket();
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvCloseDHCPSocket( void )
+{
+	if( xDHCPSocket != NULL )
+	{
+		/* This modules runs from the IP-task. Use the internal
+		function 'vSocketClose()` to close the socket. */
+		( void ) vSocketClose( xDHCPSocket );
+		xDHCPSocket = NULL;
 	}
 }
 /*-----------------------------------------------------------*/
@@ -552,31 +565,30 @@ BaseType_t xReturn;
 TickType_t xTimeoutTime = ( TickType_t ) 0;
 
 	/* Create the socket, if it has not already been created. */
-	if( xDHCPData.xDHCPSocket == NULL )
+	if( xDHCPSocket == NULL )
 	{
-		xDHCPData.xDHCPSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-		if( xDHCPData.xDHCPSocket != FREERTOS_INVALID_SOCKET )
+		xDHCPSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
+		if( xDHCPSocket != FREERTOS_INVALID_SOCKET )
 		{
 
 			/* Ensure the Rx and Tx timeouts are zero as the DHCP executes in the
 			context of the IP task. */
-			FreeRTOS_setsockopt( xDHCPData.xDHCPSocket, 0, FREERTOS_SO_RCVTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
-			FreeRTOS_setsockopt( xDHCPData.xDHCPSocket, 0, FREERTOS_SO_SNDTIMEO, ( void * ) &xTimeoutTime, sizeof( TickType_t ) );
+			( void ) FreeRTOS_setsockopt( xDHCPSocket, 0, FREERTOS_SO_RCVTIMEO, &( xTimeoutTime ), sizeof( TickType_t ) );
+			( void ) FreeRTOS_setsockopt( xDHCPSocket, 0, FREERTOS_SO_SNDTIMEO, &( xTimeoutTime ), sizeof( TickType_t ) );
 
 			/* Bind to the standard DHCP client port. */
-			xAddress.sin_port = ( uint16_t ) dhcpCLIENT_PORT;
-			xReturn = vSocketBind( xDHCPData.xDHCPSocket, &xAddress, sizeof( xAddress ), pdFALSE );
+			xAddress.sin_port = ( uint16_t ) dhcpCLIENT_PORT_IPv4;
+			xReturn = vSocketBind( xDHCPSocket, &xAddress, sizeof( xAddress ), pdFALSE );
 			if( xReturn != 0 )
 			{
 				/* Binding failed, close the socket again. */
-				vSocketClose( xDHCPData.xDHCPSocket );
-				xDHCPData.xDHCPSocket = NULL;
+				prvCloseDHCPSocket();
 			}
 		}
 		else
 		{
 			/* Change to NULL for easier testing. */
-			xDHCPData.xDHCPSocket = NULL;
+			xDHCPSocket = NULL;
 		}
 	}
 }
@@ -589,12 +601,12 @@ static void prvInitialiseDHCP( void )
 	value chosen by the client. */
 
 	/* Check for random number generator API failure. */
-	if( xApplicationGetRandomNumber( &( xDHCPData.ulTransactionId ) ) != pdFALSE )
+	if( xApplicationGetRandomNumber( &( EP_DHCPData.ulTransactionId ) ) != pdFALSE )
 	{
-		xDHCPData.xUseBroadcast = 0;
-		xDHCPData.ulOfferedIPAddress = 0UL;
-		xDHCPData.ulDHCPServerAddress = 0UL;
-		xDHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
+		EP_DHCPData.xUseBroadcast = 0;
+		EP_DHCPData.ulOfferedIPAddress = 0UL;
+		EP_DHCPData.ulDHCPServerAddress = 0UL;
+		EP_DHCPData.xDHCPTxPeriod = dhcpINITIAL_DHCP_TX_PERIOD;
 
 		/* Create the DHCP socket if it has not already been created. */
 		prvCreateDHCPSocket();
@@ -610,154 +622,180 @@ static void prvInitialiseDHCP( void )
 
 static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
 {
-uint8_t *pucUDPPayload, *pucLastByte;
-struct freertos_sockaddr xClient;
-uint32_t xClientLength = sizeof( xClient );
+uint8_t *pucUDPPayload;
 int32_t lBytes;
-DHCPMessage_t *pxDHCPMessage;
-uint8_t *pucByte, ucOptionCode, ucLength;
+const DHCPMessage_IPv4_t *pxDHCPMessage;
+const uint8_t *pucByte;
+uint8_t ucOptionCode;
 uint32_t ulProcessed, ulParameter;
 BaseType_t xReturn = pdFALSE;
-const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct DHCP message type must be present in the options. */
+const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct DHCP message type must be present in the options. */
 
-	lBytes = FreeRTOS_recvfrom( xDHCPData.xDHCPSocket, ( void * ) &pucUDPPayload, 0ul, FREERTOS_ZERO_COPY, &xClient, &xClientLength );
+	/* Passing the address of a pointer (pucUDPPayload) because FREERTOS_ZERO_COPY is used. */
+	lBytes = FreeRTOS_recvfrom( xDHCPSocket, &pucUDPPayload, 0UL, FREERTOS_ZERO_COPY, NULL, NULL );
 
 	if( lBytes > 0 )
 	{
 		/* Map a DHCP structure onto the received data. */
-		pxDHCPMessage = ( DHCPMessage_t * ) ( pucUDPPayload );
+		pxDHCPMessage = ipPOINTER_CAST( const DHCPMessage_IPv4_t *, pucUDPPayload );
 
 		/* Sanity check. */
-		if( ( lBytes >= sizeof( DHCPMessage_t ) ) &&
-			( pxDHCPMessage->ulDHCPCookie == ( uint32_t ) dhcpCOOKIE ) &&
-			( pxDHCPMessage->ucOpcode == ( uint8_t ) dhcpREPLY_OPCODE ) &&
-			( pxDHCPMessage->ulTransactionID == FreeRTOS_htonl( xDHCPData.ulTransactionId ) ) )
+		if( lBytes < ( int32_t ) sizeof( DHCPMessage_IPv4_t ) )
 		{
-			if( memcmp( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress ),
-						( void * ) ipLOCAL_MAC_ADDRESS,
-						sizeof( MACAddress_t ) ) == 0 )
+			/* Not enough bytes. */
+		}
+		else if( ( pxDHCPMessage->ulDHCPCookie != ( uint32_t ) dhcpCOOKIE ) ||
+			( pxDHCPMessage->ucOpcode != ( uint8_t ) dhcpREPLY_OPCODE ) )
+		{
+			/* Invalid cookie or unexpected opcode. */
+		}
+		else if( ( pxDHCPMessage->ulTransactionID != FreeRTOS_htonl( EP_DHCPData.ulTransactionId ) ) )
+		{
+			/* Transaction ID does not match. */
+		}
+		else /* Looks like a valid DHCP response, with the same transaction ID. */
+		{
+			if( memcmp( pxDHCPMessage->ucClientHardwareAddress,
+						ipLOCAL_MAC_ADDRESS,
+						sizeof( MACAddress_t ) ) != 0 )
 			{
+				/* Target MAC address doesn't match. */
+			}
+			else
+			{
+			size_t uxIndex, uxPayloadDataLength, uxLength;
+
 				/* None of the essential options have been processed yet. */
-				ulProcessed = 0ul;
+				ulProcessed = 0UL;
 
 				/* Walk through the options until the dhcpOPTION_END_BYTE byte
 				is found, taking care not to walk off the end of the options. */
-				pucByte = &( pxDHCPMessage->ucFirstOptionByte );
-                /* Maintain a pointer to the last valid byte (i.e. not the first
-                invalid byte). */
-				pucLastByte = pucUDPPayload + lBytes - 1;
+				pucByte = &( pucUDPPayload[ sizeof( DHCPMessage_IPv4_t ) ] );
+				uxIndex = 0;
+				uxPayloadDataLength = ( ( size_t ) lBytes ) - sizeof( DHCPMessage_IPv4_t );
 
-				while( pucByte <= pucLastByte )
+				while( uxIndex < uxPayloadDataLength )
 				{
-					ucOptionCode = pucByte[ 0 ];
-					if( ucOptionCode == dhcpOPTION_END_BYTE )
+					ucOptionCode = pucByte[ uxIndex ];
+					if( ucOptionCode == ( uint8_t ) dhcpOPTION_END_BYTE )
 					{
 						/* Ready, the last byte has been seen. */
+						/* coverity[break_stmt] : Break statement terminating the loop */
 						break;
 					}
-					if( ucOptionCode == dhcpZERO_PAD_OPTION_CODE )
+					if( ucOptionCode == ( uint8_t ) dhcpIPv4_ZERO_PAD_OPTION_CODE )
 					{
 						/* The value zero is used as a pad byte,
 						it is not followed by a length byte. */
-						pucByte += 1;
+						uxIndex = uxIndex + 1U;
 						continue;
 					}
 
 					/* Stop if the response is malformed. */
-					if( pucByte < pucLastByte )
+					if( ( uxIndex + 1U ) < uxPayloadDataLength )
 					{
-                        /* There are at least two bytes left. */
-						ucLength = pucByte[ 1 ];
-						pucByte += 2;
+						/* Fetch the length byte. */
+						uxLength = ( size_t ) pucByte[ uxIndex + 1U ];
+						uxIndex = uxIndex + 2U;
 
-						if( pucByte + ucLength > pucLastByte )
+						if( !( ( ( uxIndex + uxLength ) - 1U ) < uxPayloadDataLength ) )
 						{
+							/* There are not as many bytes left as there should be. */
 							break;
 						}
 					}
 					else
 					{
+						/* The length byte is missing. */
 						break;
 					}
 
 					/* In most cases, a 4-byte network-endian parameter follows,
 					just get it once here and use later. */
-					if( ucLength >= sizeof( ulParameter ) )
+					if( uxLength >= sizeof( ulParameter ) )
 					{
-						memcpy( ( void * ) &( ulParameter ),
-								( void * ) pucByte,
-								( size_t ) sizeof( ulParameter ) );
+						( void ) memcpy( &( ulParameter ),
+										 &( pucByte[ uxIndex ] ),
+										 ( size_t ) sizeof( ulParameter ) );
+						/* 'uxIndex' will be increased at the end of this loop. */
 					}
 					else
 					{
 						ulParameter = 0;
 					}
 
+					/* Confirm uxIndex is still a valid index after adjustments to uxIndex above */
+					if( !( uxIndex < uxPayloadDataLength ) )
+					{
+						break;
+					}
+
 					/* Option-specific handling. */
 					switch( ucOptionCode )
 					{
-						case dhcpMESSAGE_TYPE_OPTION_CODE	:
+						case dhcpIPv4_MESSAGE_TYPE_OPTION_CODE	:
 
-							if( *pucByte == ( uint8_t ) xExpectedMessageType )
+							if( pucByte[ uxIndex ] == ( uint8_t ) xExpectedMessageType )
 							{
 								/* The message type is the message type the
 								state machine is expecting. */
 								ulProcessed++;
 							}
-							else if( *pucByte == ( uint8_t ) dhcpMESSAGE_TYPE_NACK )
-							{
-								if( xExpectedMessageType == ( BaseType_t ) dhcpMESSAGE_TYPE_ACK )
-								{
-									/* Start again. */
-									xDHCPData.eDHCPState = eWaitingSendFirstDiscover;
-								}
-							}
 							else
 							{
-								/* Don't process other message types. */
+								if( pucByte[ uxIndex ] == ( uint8_t ) dhcpMESSAGE_TYPE_NACK )
+								{
+									if( xExpectedMessageType == ( BaseType_t ) dhcpMESSAGE_TYPE_ACK )
+									{
+										/* Start again. */
+										EP_DHCPData.eDHCPState = eWaitingSendFirstDiscover;
+									}
+								}
+								/* Stop processing further options. */
+								uxLength = 0;
 							}
 							break;
 
-						case dhcpSUBNET_MASK_OPTION_CODE :
+						case dhcpIPv4_SUBNET_MASK_OPTION_CODE :
 
-							if( ucLength == sizeof( uint32_t ) )
+							if( uxLength == sizeof( uint32_t ) )
 							{
-								xNetworkAddressing.ulNetMask = ulParameter;
+								EP_IPv4_SETTINGS.ulNetMask = ulParameter;
 							}
 							break;
 
-						case dhcpGATEWAY_OPTION_CODE :
-
-							if( ucLength == sizeof( uint32_t ) )
+						case dhcpIPv4_GATEWAY_OPTION_CODE :
+							/* The DHCP server may send more than 1 gateway addresses. */
+							if( uxLength >= sizeof( uint32_t ) )
 							{
 								/* ulProcessed is not incremented in this case
 								because the gateway is not essential. */
-								xNetworkAddressing.ulGatewayAddress = ulParameter;
+								EP_IPv4_SETTINGS.ulGatewayAddress = ulParameter;
 							}
 							break;
 
-						case dhcpDNS_SERVER_OPTIONS_CODE :
+						case dhcpIPv4_DNS_SERVER_OPTIONS_CODE :
 
 							/* ulProcessed is not incremented in this case
 							because the DNS server is not essential.  Only the
 							first DNS server address is taken. */
-							xNetworkAddressing.ulDNSServerAddress = ulParameter;
+							EP_IPv4_SETTINGS.ulDNSServerAddress = ulParameter;
 							break;
 
-						case dhcpSERVER_IP_ADDRESS_OPTION_CODE :
+						case dhcpIPv4_SERVER_IP_ADDRESS_OPTION_CODE :
 
-							if( ucLength == sizeof( uint32_t ) )
+							if( uxLength == sizeof( uint32_t ) )
 							{
 								if( xExpectedMessageType == ( BaseType_t ) dhcpMESSAGE_TYPE_OFFER )
 								{
 									/* Offers state the replying server. */
 									ulProcessed++;
-									xDHCPData.ulDHCPServerAddress = ulParameter;
+									EP_DHCPData.ulDHCPServerAddress = ulParameter;
 								}
 								else
 								{
 									/* The ack must come from the expected server. */
-									if( xDHCPData.ulDHCPServerAddress == ulParameter )
+									if( EP_DHCPData.ulDHCPServerAddress == ulParameter )
 									{
 										ulProcessed++;
 									}
@@ -765,24 +803,22 @@ const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct
 							}
 							break;
 
-						case dhcpLEASE_TIME_OPTION_CODE :
+						case dhcpIPv4_LEASE_TIME_OPTION_CODE :
 
-							if( ucLength == sizeof( xDHCPData.ulLeaseTime ) )
+							if( uxLength == sizeof( EP_DHCPData.ulLeaseTime ) )
 							{
 								/* ulProcessed is not incremented in this case
 								because the lease time is not essential. */
 								/* The DHCP parameter is in seconds, convert
 								to host-endian format. */
-								xDHCPData.ulLeaseTime = FreeRTOS_ntohl( ulParameter );
+								EP_DHCPData.ulLeaseTime = FreeRTOS_ntohl( ulParameter );
 
-								/* Divide the lease time by two to ensure a
-								renew request is sent before the lease actually
-								expires. */
-								xDHCPData.ulLeaseTime >>= 1UL;
+								/* Divide the lease time by two to ensure a renew
+								request is sent before the lease actually expires. */
+								EP_DHCPData.ulLeaseTime >>= 1UL;
 
-								/* Multiply with configTICK_RATE_HZ to get clock
-								ticks. */
-								xDHCPData.ulLeaseTime = configTICK_RATE_HZ * xDHCPData.ulLeaseTime;
+								/* Multiply with configTICK_RATE_HZ to get clock ticks. */
+								EP_DHCPData.ulLeaseTime = ( uint32_t ) configTICK_RATE_HZ * ( uint32_t ) EP_DHCPData.ulLeaseTime;
 							}
 							break;
 
@@ -794,46 +830,48 @@ const uint32_t ulMandatoryOptions = 2ul; /* DHCP server address, and the correct
 					}
 
 					/* Jump over the data to find the next option code. */
-					if( ucLength == 0u )
+					if( uxLength == 0U )
 					{
 						break;
 					}
-					else
-					{
-						pucByte += ucLength;
-					}
+					uxIndex = uxIndex + uxLength;
 				}
 
 				/* Were all the mandatory options received? */
 				if( ulProcessed >= ulMandatoryOptions )
 				{
 					/* HT:endian: used to be network order */
-					xDHCPData.ulOfferedIPAddress = pxDHCPMessage->ulYourIPAddress_yiaddr;
-					FreeRTOS_printf( ( "vDHCPProcess: offer %lxip\n", FreeRTOS_ntohl( xDHCPData.ulOfferedIPAddress ) ) );
+					EP_DHCPData.ulOfferedIPAddress = pxDHCPMessage->ulYourIPAddress_yiaddr;
+					FreeRTOS_printf( ( "vDHCPProcess: offer %lxip\n", FreeRTOS_ntohl( EP_DHCPData.ulOfferedIPAddress ) ) );
 					xReturn = pdPASS;
 				}
 			}
 		}
 
-		FreeRTOS_ReleaseUDPPayloadBuffer( ( void * ) pucUDPPayload );
-	}
+		FreeRTOS_ReleaseUDPPayloadBuffer( pucUDPPayload );
+	} /* if( lBytes > 0 ) */
 
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
-static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress, BaseType_t xOpcode, const uint8_t * const pucOptionsArray, size_t *pxOptionsArraySize )
+static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress,
+										  BaseType_t xOpcode,
+										  const uint8_t * const pucOptionsArray,
+										  size_t *pxOptionsArraySize )
 {
-DHCPMessage_t *pxDHCPMessage;
-size_t xRequiredBufferSize = sizeof( DHCPMessage_t ) + *pxOptionsArraySize;
+DHCPMessage_IPv4_t *pxDHCPMessage;
+size_t uxRequiredBufferSize = sizeof( DHCPMessage_IPv4_t ) + *pxOptionsArraySize;
+const NetworkBufferDescriptor_t *pxNetworkBuffer;
 uint8_t *pucUDPPayloadBuffer;
 
 #if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 	const char *pucHostName = pcApplicationHostnameHook ();
-	size_t xNameLength = strlen( pucHostName );
+	size_t uxNameLength = strlen( pucHostName );
 	uint8_t *pucPtr;
 
-	xRequiredBufferSize += ( 2 + xNameLength );
+	/* Two extra bytes for option code and length. */
+	uxRequiredBufferSize += ( 2U + uxNameLength );
 #endif
 
 	/* Get a buffer.  This uses a maximum delay, but the delay will be capped
@@ -841,32 +879,36 @@ uint8_t *pucUDPPayloadBuffer;
 	be test. */
 	do
 	{
-	} while( ( pucUDPPayloadBuffer = ( uint8_t * ) FreeRTOS_GetUDPPayloadBuffer( xRequiredBufferSize, portMAX_DELAY ) ) == NULL );
+		/* Obtain a network buffer with the required amount of storage. */
+		pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( sizeof( UDPPacket_t ) + uxRequiredBufferSize, portMAX_DELAY );
+	} while( pxNetworkBuffer == NULL );
 
-	pxDHCPMessage = ( DHCPMessage_t * ) pucUDPPayloadBuffer;
+	/* Leave space for the UPD header. */
+	pucUDPPayloadBuffer = &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] );
+	pxDHCPMessage = ipPOINTER_CAST( DHCPMessage_IPv4_t *, pucUDPPayloadBuffer );
 
 	/* Most fields need to be zero. */
-	memset( ( void * ) pxDHCPMessage, 0x00, sizeof( DHCPMessage_t ) );
+	( void ) memset( pxDHCPMessage, 0x00, sizeof( DHCPMessage_IPv4_t ) );
 
 	/* Create the message. */
 	pxDHCPMessage->ucOpcode = ( uint8_t ) xOpcode;
 	pxDHCPMessage->ucAddressType = ( uint8_t ) dhcpADDRESS_TYPE_ETHERNET;
 	pxDHCPMessage->ucAddressLength = ( uint8_t ) dhcpETHERNET_ADDRESS_LENGTH;
-	pxDHCPMessage->ulTransactionID = FreeRTOS_htonl( xDHCPData.ulTransactionId );
+	pxDHCPMessage->ulTransactionID = FreeRTOS_htonl( EP_DHCPData.ulTransactionId );
 	pxDHCPMessage->ulDHCPCookie = ( uint32_t ) dhcpCOOKIE;
-	if( xDHCPData.xUseBroadcast != pdFALSE )
+	if( EP_DHCPData.xUseBroadcast != pdFALSE )
 	{
 		pxDHCPMessage->usFlags = ( uint16_t ) dhcpBROADCAST;
 	}
 	else
 	{
-		pxDHCPMessage->usFlags = 0u;
+		pxDHCPMessage->usFlags = 0U;
 	}
 
-	memcpy( ( void * ) &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ), ( void * ) ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
+	( void ) memcpy( &( pxDHCPMessage->ucClientHardwareAddress[ 0 ] ), ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
 
 	/* Copy in the const part of the options options. */
-	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET ] ), ( void * ) pucOptionsArray, *pxOptionsArraySize );
+	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET ] ), pucOptionsArray, *pxOptionsArraySize );
 
 	#if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 	{
@@ -874,22 +916,22 @@ uint8_t *pucUDPPayloadBuffer;
 		it easier to lookup a device in a router's list of DHCP clients. */
 
 		/* Point to where the OPTION_END was stored to add data. */
-		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1 ) ] );
-		pucPtr[ 0 ] = dhcpDNS_HOSTNAME_OPTIONS_CODE;
-		pucPtr[ 1 ] = ( uint8_t ) xNameLength;
-		memcpy( ( void *) ( pucPtr + 2 ), pucHostName, xNameLength );
-		pucPtr[ 2 + xNameLength ] = dhcpOPTION_END_BYTE;
-		*pxOptionsArraySize += ( 2 + xNameLength );
+		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1U ) ] );
+		pucPtr[ 0U ] = dhcpIPv4_DNS_HOSTNAME_OPTIONS_CODE;
+		pucPtr[ 1U ] = ( uint8_t ) uxNameLength;
+		( void ) memcpy( &( pucPtr[ 2U ] ), pucHostName, uxNameLength );
+		pucPtr[ 2U + uxNameLength ] = ( uint8_t ) dhcpOPTION_END_BYTE;
+		*pxOptionsArraySize += ( size_t ) ( 2U + uxNameLength );
 	}
 	#endif
 
 	/* Map in the client identifier. */
-	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpCLIENT_IDENTIFIER_OFFSET ] ),
-		( void * ) ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
+	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpCLIENT_IDENTIFIER_OFFSET ] ),
+		ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
 
 	/* Set the addressing. */
 	pxAddress->sin_addr = ipBROADCAST_IP_ADDRESS;
-	pxAddress->sin_port = ( uint16_t ) dhcpSERVER_PORT;
+	pxAddress->sin_port = ( uint16_t ) dhcpSERVER_PORT_IPv4;
 
 	return pucUDPPayloadBuffer;
 }
@@ -904,29 +946,33 @@ static const uint8_t ucDHCPRequestOptions[] =
 	/* Do not change the ordering without also changing
 	dhcpCLIENT_IDENTIFIER_OFFSET, dhcpREQUESTED_IP_ADDRESS_OFFSET and
 	dhcpDHCP_SERVER_IP_ADDRESS_OFFSET. */
-	dhcpMESSAGE_TYPE_OPTION_CODE, 1, dhcpMESSAGE_TYPE_REQUEST,		/* Message type option. */
-	dhcpCLIENT_IDENTIFIER_OPTION_CODE, 7, 1, 0, 0, 0, 0, 0, 0,			/* Client identifier. */
-	dhcpREQUEST_IP_ADDRESS_OPTION_CODE, 4, 0, 0, 0, 0,				/* The IP address being requested. */
-	dhcpSERVER_IP_ADDRESS_OPTION_CODE, 4, 0, 0, 0, 0,				/* The IP address of the DHCP server. */
+	dhcpIPv4_MESSAGE_TYPE_OPTION_CODE, 1, dhcpMESSAGE_TYPE_REQUEST,		/* Message type option. */
+	dhcpIPv4_CLIENT_IDENTIFIER_OPTION_CODE, 7, 1, 0, 0, 0, 0, 0, 0,		/* Client identifier. */
+	dhcpIPv4_REQUEST_IP_ADDRESS_OPTION_CODE, 4, 0, 0, 0, 0,				/* The IP address being requested. */
+	dhcpIPv4_SERVER_IP_ADDRESS_OPTION_CODE, 4, 0, 0, 0, 0,				/* The IP address of the DHCP server. */
 	dhcpOPTION_END_BYTE
 };
-size_t xOptionsLength = sizeof( ucDHCPRequestOptions );
+size_t uxOptionsLength = sizeof( ucDHCPRequestOptions );
 
-	pucUDPPayloadBuffer = prvCreatePartDHCPMessage( &xAddress, dhcpREQUEST_OPCODE, ucDHCPRequestOptions, &xOptionsLength );
+	pucUDPPayloadBuffer = prvCreatePartDHCPMessage( &xAddress,
+													( BaseType_t ) dhcpREQUEST_OPCODE,
+													ucDHCPRequestOptions,
+													&( uxOptionsLength ) );
 
 	/* Copy in the IP address being requested. */
-	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ),
-		( void * ) &( xDHCPData.ulOfferedIPAddress ), sizeof( xDHCPData.ulOfferedIPAddress ) );
+	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ),
+					 &( EP_DHCPData.ulOfferedIPAddress ),
+					 sizeof( EP_DHCPData.ulOfferedIPAddress ) );
 
 	/* Copy in the address of the DHCP server being used. */
-	memcpy( ( void * ) &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ),
-		( void * ) &( xDHCPData.ulDHCPServerAddress ), sizeof( xDHCPData.ulDHCPServerAddress ) );
+	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ),
+					 &( EP_DHCPData.ulDHCPServerAddress ),
+					 sizeof( EP_DHCPData.ulDHCPServerAddress ) );
 
-	FreeRTOS_debug_printf( ( "vDHCPProcess: reply %lxip\n", FreeRTOS_ntohl( xDHCPData.ulOfferedIPAddress ) ) );
+	FreeRTOS_debug_printf( ( "vDHCPProcess: reply %lxip\n", FreeRTOS_ntohl( EP_DHCPData.ulOfferedIPAddress ) ) );
 	iptraceSENDING_DHCP_REQUEST();
 
-	/* 'ucFirstOptionByte' is part of DHCP message struct, so subtract one byte. */
-	if( FreeRTOS_sendto( xDHCPData.xDHCPSocket, pucUDPPayloadBuffer, ( sizeof( DHCPMessage_t ) + xOptionsLength - 1 ), FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
+	if( FreeRTOS_sendto( xDHCPSocket, pucUDPPayloadBuffer, sizeof( DHCPMessage_IPv4_t ) + uxOptionsLength, FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
 	{
 		/* The packet was not successfully queued for sending and must be
 		returned to the stack. */
@@ -937,25 +983,32 @@ size_t xOptionsLength = sizeof( ucDHCPRequestOptions );
 
 static void prvSendDHCPDiscover( void )
 {
-uint8_t *pucUDPPayloadBuffer;
+uint8_t const * pucUDPPayloadBuffer;
 struct freertos_sockaddr xAddress;
 static const uint8_t ucDHCPDiscoverOptions[] =
 {
 	/* Do not change the ordering without also changing dhcpCLIENT_IDENTIFIER_OFFSET. */
-	dhcpMESSAGE_TYPE_OPTION_CODE, 1, dhcpMESSAGE_TYPE_DISCOVER,					/* Message type option. */
-	dhcpCLIENT_IDENTIFIER_OPTION_CODE, 7, 1, 0, 0, 0, 0, 0, 0,						/* Client identifier. */
-	dhcpPARAMETER_REQUEST_OPTION_CODE, 3, dhcpSUBNET_MASK_OPTION_CODE, dhcpGATEWAY_OPTION_CODE, dhcpDNS_SERVER_OPTIONS_CODE,	/* Parameter request option. */
+	dhcpIPv4_MESSAGE_TYPE_OPTION_CODE, 1, dhcpMESSAGE_TYPE_DISCOVER,					/* Message type option. */
+	dhcpIPv4_CLIENT_IDENTIFIER_OPTION_CODE, 7, 1, 0, 0, 0, 0, 0, 0,						/* Client identifier. */
+	dhcpIPv4_PARAMETER_REQUEST_OPTION_CODE, 3, dhcpIPv4_SUBNET_MASK_OPTION_CODE, dhcpIPv4_GATEWAY_OPTION_CODE, dhcpIPv4_DNS_SERVER_OPTIONS_CODE,	/* Parameter request option. */
 	dhcpOPTION_END_BYTE
 };
-size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
+size_t uxOptionsLength = sizeof( ucDHCPDiscoverOptions );
 
-	pucUDPPayloadBuffer = prvCreatePartDHCPMessage( &xAddress, dhcpREQUEST_OPCODE, ucDHCPDiscoverOptions, &xOptionsLength );
+	pucUDPPayloadBuffer = prvCreatePartDHCPMessage( &xAddress,
+													( BaseType_t ) dhcpREQUEST_OPCODE,
+													ucDHCPDiscoverOptions,
+													&( uxOptionsLength ) );
 
 	FreeRTOS_debug_printf( ( "vDHCPProcess: discover\n" ) );
 	iptraceSENDING_DHCP_DISCOVER();
 
-	/* 'ucFirstOptionByte' is part of DHCP message struct, so subtract one byte. */
-	if( FreeRTOS_sendto( xDHCPData.xDHCPSocket, pucUDPPayloadBuffer, ( sizeof( DHCPMessage_t ) + xOptionsLength - 1 ), FREERTOS_ZERO_COPY, &xAddress, sizeof( xAddress ) ) == 0 )
+	if( FreeRTOS_sendto( xDHCPSocket,
+						 pucUDPPayloadBuffer,
+						 sizeof( DHCPMessage_IPv4_t ) + uxOptionsLength,
+						 FREERTOS_ZERO_COPY,
+						 &( xAddress ),
+						 sizeof( xAddress ) ) == 0 )
 	{
 		/* The packet was not successfully queued for sending and must be
 		returned to the stack. */
@@ -973,41 +1026,36 @@ size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
 
 		/* After DHCP has failed to answer, prepare everything to start
 		trying-out LinkLayer IP-addresses, using the random method. */
-		xDHCPData.xDHCPTxTime = xTaskGetTickCount();
+		EP_DHCPData.xDHCPTxTime = xTaskGetTickCount();
 
 		xApplicationGetRandomNumber( &( ulNumbers[ 0 ] ) );
 		xApplicationGetRandomNumber( &( ulNumbers[ 1 ] ) );
-		ucLinkLayerIPAddress[ 0 ] = ( uint8_t )1 + ( uint8_t )( ulNumbers[ 0 ] % 0xFDu );		/* get value 1..254 for IP-address 3rd byte of IP address to try. */
-		ucLinkLayerIPAddress[ 1 ] = ( uint8_t )1 + ( uint8_t )( ulNumbers[ 1 ] % 0xFDu );		/* get value 1..254 for IP-address 4th byte of IP address to try. */
+		ucLinkLayerIPAddress[ 0 ] = ( uint8_t )1 + ( uint8_t )( ulNumbers[ 0 ] % 0xFDU );		/* get value 1..254 for IP-address 3rd byte of IP address to try. */
+		ucLinkLayerIPAddress[ 1 ] = ( uint8_t )1 + ( uint8_t )( ulNumbers[ 1 ] % 0xFDU );		/* get value 1..254 for IP-address 4th byte of IP address to try. */
 
-		xNetworkAddressing.ulGatewayAddress = FreeRTOS_htonl( 0xA9FE0203 );
+		EP_IPv4_SETTINGS.ulGatewayAddress = 0UL;
 
 		/* prepare xDHCPData with data to test. */
-		xDHCPData.ulOfferedIPAddress =
+		EP_DHCPData.ulOfferedIPAddress =
 			FreeRTOS_inet_addr_quick( LINK_LAYER_ADDRESS_0, LINK_LAYER_ADDRESS_1, ucLinkLayerIPAddress[ 0 ], ucLinkLayerIPAddress[ 1 ] );
 
-		xDHCPData.ulLeaseTime = dhcpDEFAULT_LEASE_TIME;	 /*  don't care about lease time. just put anything. */
+		EP_DHCPData.ulLeaseTime = dhcpDEFAULT_LEASE_TIME;	 /*  don't care about lease time. just put anything. */
 
-		xNetworkAddressing.ulNetMask =
+		EP_IPv4_SETTINGS.ulNetMask =
 			FreeRTOS_inet_addr_quick( LINK_LAYER_NETMASK_0, LINK_LAYER_NETMASK_1, LINK_LAYER_NETMASK_2, LINK_LAYER_NETMASK_3 );
 
 		/* DHCP completed.  The IP address can now be used, and the
 		timer set to the lease timeout time. */
-		*ipLOCAL_IP_ADDRESS_POINTER = xDHCPData.ulOfferedIPAddress;
+		*( ipLOCAL_IP_ADDRESS_POINTER ) = EP_DHCPData.ulOfferedIPAddress;
 
 		/* Setting the 'local' broadcast address, something like 192.168.1.255' */
-		xNetworkAddressing.ulBroadcastAddress = ( xDHCPData.ulOfferedIPAddress & xNetworkAddressing.ulNetMask ) |  ~xNetworkAddressing.ulNetMask;
+		EP_IPv4_SETTINGS.ulBroadcastAddress = ( EP_DHCPData.ulOfferedIPAddress & EP_IPv4_SETTINGS.ulNetMask ) |  ~EP_IPv4_SETTINGS.ulNetMask;
 
 		/* Close socket to ensure packets don't queue on it. not needed anymore as DHCP failed. but still need timer for ARP testing. */
-		if( xDHCPData.xDHCPSocket != NULL )
-		{
-			/* Close socket to ensure packets don't queue on it. */
-			vSocketClose( xDHCPData.xDHCPSocket );
-		    xDHCPData.xDHCPSocket = NULL;
-		}
+		prvCloseDHCPSocket();
 
 		xApplicationGetRandomNumber( &( ulNumbers[ 0 ] ) );
-		xDHCPData.xDHCPTxPeriod = pdMS_TO_TICKS( 3000ul + ( ulNumbers[ 0 ] & 0x3ffuL ) ); /*  do ARP test every (3 + 0-1024mS) seconds. */
+		EP_DHCPData.xDHCPTxPeriod = pdMS_TO_TICKS( 3000UL + ( ulNumbers[ 0 ] & 0x3ffUL ) ); /*  do ARP test every (3 + 0-1024mS) seconds. */
 
 		xARPHadIPClash = pdFALSE;	   /* reset flag that shows if have ARP clash. */
 		vARPSendGratuitous();
@@ -1017,5 +1065,3 @@ size_t xOptionsLength = sizeof( ucDHCPDiscoverOptions );
 /*-----------------------------------------------------------*/
 
 #endif /* ipconfigUSE_DHCP != 0 */
-
-

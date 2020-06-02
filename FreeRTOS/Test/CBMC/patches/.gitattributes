@@ -1,0 +1,2 @@
+# It seems git apply does not want crlf line endings on Windows
+*.patch eol=lf

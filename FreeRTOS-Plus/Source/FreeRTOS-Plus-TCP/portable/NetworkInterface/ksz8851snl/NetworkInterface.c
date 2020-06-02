@@ -1,5 +1,5 @@
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -351,7 +351,7 @@ const TickType_t x5_Seconds = 5000UL;
 		/* The handler task is created at the highest possible priority to
 		ensure the interrupt handler can return directly to it. */
 		xTaskCreate( prvEMACHandlerTask, "KSZ8851", configEMAC_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xEMACTaskHandle );
-		configASSERT( xEMACTaskHandle );
+		configASSERT( xEMACTaskHandle != NULL );
 	}
 
 	/* When returning non-zero, the stack will become active and
@@ -1059,7 +1059,7 @@ static void ksz8851snl_low_level_init( void )
 	if( ksz8851snl_init() < 0 )
 	{
 		FreeRTOS_printf( ( "ksz8851snl_low_level_init: failed to initialize the Micrel driver!\n" ) );
-		configASSERT(0 == 1);
+		configASSERT( ipFALSE_BOOL );
 	}
 	memset( xMicrelDevice.pusHashTable, 255, sizeof( xMicrelDevice.pusHashTable ) );
 	ksz8851_reg_write( REG_MAC_HASH_0, FreeRTOS_htons( xMicrelDevice.pusHashTable[ 0 ] ) );
@@ -1166,7 +1166,7 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( EMAC_MAX_BLOCK_TIME_MS );
 	/* Remove compiler warnings about unused parameters. */
 	( void ) pvParameters;
 
-	configASSERT( xEMACTaskHandle );
+	configASSERT( xEMACTaskHandle != NULL );
 
 	vTaskSetTimeOutState( &xPhyTime );
 	xPhyRemTime = pdMS_TO_TICKS( PHY_LS_LOW_CHECK_TIME_MS );

@@ -1,0 +1,52 @@
+# FreeRTOS Kernel V10.3.0
+# Copyright (C) 2020 Cambridge Consultants Ltd.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of
+# this software and associated documentation files (the "Software"), to deal in
+# the Software without restriction, including without limitation the rights to
+# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+# the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+# http://www.FreeRTOS.org
+# http://aws.amazon.com/freertos
+#
+# This is the main SCons (https://scons.org/) build file for the
+# Posix/GCC demo application.
+
+import os
+
+# Create a symlink to the FreeRTOS sources.
+if not os.path.exists("src/FreeRTOS"):
+    os.symlink("../../..", "src/FreeRTOS")
+if not os.path.exists("src/FreeRTOS-Plus"):
+    os.symlink("../../../../FreeRTOS-Plus", "src/FreeRTOS-Plus")
+
+AddOption("--simple",
+          action='store_true',
+          help="build the simple 'blinky' demo application")
+
+AddOption("--coverage",
+          action='store_true',
+          help="enable code coverage")
+
+env = Environment()
+Export("env")
+
+env.Append(CFLAGS = [
+    "-g",
+    "-Wall",
+    "-O2",
+])
+
+SConscript("src/SConscript", variant_dir="build", duplicate=0)

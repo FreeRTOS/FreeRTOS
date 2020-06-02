@@ -1,0 +1,150 @@
+# FreeRTOS Kernel V10.3.0
+# Copyright (C) 2020 Cambridge Consultants Ltd.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of
+# this software and associated documentation files (the "Software"), to deal in
+# the Software without restriction, including without limitation the rights to
+# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+# the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+# http://www.FreeRTOS.org
+# http://aws.amazon.com/freertos
+
+Import("env")
+
+env.Append(CPPPATH = [
+    ".",
+    "./utils",
+    "FreeRTOS/Source/include",
+    "FreeRTOS/Source/portable/ThirdParty/GCC/Posix",
+    "FreeRTOS/Demo/Common/include",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/Include",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/include/",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/",
+])
+
+env.Append(LIBS = [
+    "pthread",
+    "pcap",
+])
+
+src = [
+    "console.c",
+    "main.c",
+    "main_blinky.c",
+    "main_full.c",
+    "main_networking.c",
+    "run-time-stats-utils.c",
+    "utils/wait_for_event.c",
+    "SimpleTCPEchoServer.c",
+    "TCPEchoClient_SingleTasks.c",
+
+    # FreeRTOS kernel
+    "FreeRTOS/Source/event_groups.c",
+    "FreeRTOS/Source/list.c",
+    "FreeRTOS/Source/queue.c",
+    "FreeRTOS/Source/stream_buffer.c",
+    "FreeRTOS/Source/tasks.c",
+    "FreeRTOS/Source/timers.c",
+
+    # Memory manager (use malloc()/free()).
+    "FreeRTOS/Source/portable/MemMang/heap_3.c",
+
+    # Posix port.
+    "FreeRTOS/Source/portable/ThirdParty/GCC/Posix/port.c",
+
+    # FreeRTOS TCP
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DNS.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_DHCP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_WIN.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_Stream_Buffer.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_2.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_TCP_IP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_Sockets.c",
+    "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/NetworkInterface.c",
+
+    # Demo library.
+    "FreeRTOS/Demo/Common/Minimal/AbortDelay.c",
+    "FreeRTOS/Demo/Common/Minimal/BlockQ.c",
+    "FreeRTOS/Demo/Common/Minimal/blocktim.c",
+    "FreeRTOS/Demo/Common/Minimal/countsem.c",
+    "FreeRTOS/Demo/Common/Minimal/death.c",
+    "FreeRTOS/Demo/Common/Minimal/dynamic.c",
+    "FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c",
+    "FreeRTOS/Demo/Common/Minimal/flop.c",
+    "FreeRTOS/Demo/Common/Minimal/GenQTest.c",
+    "FreeRTOS/Demo/Common/Minimal/integer.c",
+    "FreeRTOS/Demo/Common/Minimal/IntSemTest.c",
+    "FreeRTOS/Demo/Common/Minimal/MessageBufferAMP.c",
+    "FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.c",
+    "FreeRTOS/Demo/Common/Minimal/PollQ.c",
+    "FreeRTOS/Demo/Common/Minimal/QPeek.c",
+    "FreeRTOS/Demo/Common/Minimal/QueueOverwrite.c",
+    "FreeRTOS/Demo/Common/Minimal/QueueSet.c",
+    "FreeRTOS/Demo/Common/Minimal/QueueSetPolling.c",
+    "FreeRTOS/Demo/Common/Minimal/recmutex.c",
+    "FreeRTOS/Demo/Common/Minimal/semtest.c",
+    "FreeRTOS/Demo/Common/Minimal/StaticAllocation.c",
+    "FreeRTOS/Demo/Common/Minimal/StreamBufferDemo.c",
+    "FreeRTOS/Demo/Common/Minimal/StreamBufferInterrupt.c",
+    "FreeRTOS/Demo/Common/Minimal/TaskNotify.c",
+    "FreeRTOS/Demo/Common/Minimal/TimerDemo.c",
+]
+
+if GetOption("coverage"):
+    env.Append(CPPDEFINES = [
+        "projCOVERAGE_TEST=1",
+    ])
+
+    env.Append(CFLAGS = [
+        "-fprofile-arcs",
+        "-ftest-coverage",
+        "-ggdb3",
+        "-Og",
+    ])
+    env.Append(LINKFLAGS = [
+        "-fprofile-arcs",
+        "-ftest-coverage",
+        "-ggdb3",
+        "-Og",
+    ])
+
+    src += [
+        "code_coverage_additions.c",
+    ]
+else:
+    env.Append(CPPDEFINES = [
+        "projCOVERAGE_TEST=0",
+    ])
+
+    src += [
+        # Trace library.
+        "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcKernelPort.c",
+        "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcSnapshotRecorder.c",
+        "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/trcStreamingRecorder.c",
+        "FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c",
+    ]
+
+# Build the simple "blinky" demo application, or the full test
+# applicaton?
+if GetOption("simple"):
+    env.Append(CPPDEFINES = [
+        "mainCREATE_SIMPLE_BLINKY_DEMO_ONLY=1",
+    ])
+
+env.Program("posix_demo", src)

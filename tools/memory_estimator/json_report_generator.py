@@ -3,8 +3,9 @@ import json
 from operator import truediv
 
 
-# Some of the file names are modified when diplaying on the website. This dict
-# contains the mappings from file name to display name for those files.
+# Some of the file names are customized when diplaying on the website. This dict
+# contains the mappings of original file name to customized name with additional
+# information.
 __FILE_NAME_TO_DISPLAY_NAME__ = {
         "http_parser.c": "http_parser.c (third-party utility)"
     }

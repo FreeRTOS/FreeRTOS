@@ -66,6 +66,13 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
 def apply_patches(freertos_lts, lib_name):
     patches = {}
 
+    # This should ideally be empty as we should be able to control all the
+    # configurations via config files. However, OTA currently defines the
+    # logging level in a header file as opposed to taking it from a config file.
+    # As a result, we need to patch the header file before calculating the size
+    # as we want to turn off logging while calculating size. Later when logging
+    # level is moved to a config file, it will not be needed and we will turn
+    # off logging in the header file tools\memory_estimator\config_files\aws_ota_agent_config.h.
     if 'ota' in lib_name:
         ota_agent_header_file = os.path.join(freertos_lts, __IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'include', 'aws_iot_ota_agent.h')
 

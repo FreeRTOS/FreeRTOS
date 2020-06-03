@@ -30,24 +30,19 @@
  * Needed for testing private functions.
  */
 
-#ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_TCP_DEFINE_H_
-#define _AWS_FREERTOS_TCP_TEST_ACCESS_TCP_DEFINE_H_
+#ifndef _FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
+#define _FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
 
-#include "iot_freertos_tcp_test_access_declare.h"
+#include "freertos_tcp_test_access_declare.h"
 
 /*-----------------------------------------------------------*/
 
-void TEST_FreeRTOS_TCP_prvCheckOptions( FreeRTOS_Socket_t * pxSocket,
-                                        NetworkBufferDescriptor_t * pxNetworkBuffer )
+uint32_t TEST_FreeRTOS_TCP_prvParseDNSReply( uint8_t * pucUDPPayloadBuffer,
+                                             size_t xBufferLength,
+                                             TickType_t xIdentifier )
 {
-    prvCheckOptions( pxSocket, pxNetworkBuffer );
+    return prvParseDNSReply( pucUDPPayloadBuffer, xBufferLength, xIdentifier );
 }
 /*-----------------------------------------------------------*/
 
-void TEST_FreeRTOS_TCP_prvTCPCreateWindow( FreeRTOS_Socket_t * pxSocket )
-{
-    prvTCPCreateWindow( pxSocket );
-}
-/*-----------------------------------------------------------*/
-
-#endif /* ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_TCP_DEFINE_H_ */
+#endif /* ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_ */

@@ -3,9 +3,9 @@
 import io
 import os
 import re
+import json
 import argparse
 import subprocess
-from shutil import copyfile
 from json_report_generator import update_json_report
 from makefile_generator import generate_makefile_from_template
 
@@ -16,6 +16,7 @@ __GENERATED_MAKE_FILE__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
 
 __JSON_REPORT_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report.json.template')
 __GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'report.json')
+__REPORT_LIBS_JSON__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report_libs.json')
 
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
 __FREERTOS_PLUS_SRC_DIR__ = os.path.join('FreeRTOS-Plus', 'Source')
@@ -60,8 +61,6 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
                         os.path.join(__FREERTOS_SRC_DIR__, 'portable', 'GCC', 'ARM_CM4F', 'port.c')
                    ]
 }
-
-__LIBS_IN_JSON_REPORT__ = ['light-mqtt', 'mqtt', 'https', 'shadow', 'jobs', 'ota-mqtt', 'ota-http']
 
 
 def apply_patches(freertos_lts, lib_name):
@@ -246,16 +245,26 @@ def main():
     args = parse_arguments()
 
     if args['generate_report']:
-        # Create a copy of the JSON report template. File sizes and total size
-        # sections for each library will be populated.
-        copyfile(__JSON_REPORT_TEMPLATE__, __GENERATED_JSON_REPORT__)
+        # Start by creating an empty JSON file which is populated as sizes are
+        # calculated.
+        with open(__GENERATED_JSON_REPORT__, 'w') as json_report_file:
+            json_report_file.write(json.dumps({}))
+
+        # Read the libraries which are to be included in the report.
+        with open(__REPORT_LIBS_JSON__) as report_libs_file:
+            report_libs_json_data = json.load(report_libs_file)
+            report_libs = report_libs_json_data['libraries']
+
         # JSON report has sizes for all the libraries and for both O1 and Os
         # Optimizations. Therefore, values for --lib and --optimization are
         # ignored.
         # Compiled objects files for 'O1' optimization needs to be cleaned
         # before 'Os' optimization and therefore, value for --dontclean is
         # ignored.
-        for lib_name in __LIBS_IN_JSON_REPORT__:
+        for report_lib in report_libs:
+            lib_name = report_lib['lib_name']
+            size_description = report_lib['size_description']
+
             o1_sizes = calculate_sizes(args['lts_path'],
                                        'O1',
                                         lib_name,
@@ -270,7 +279,12 @@ def main():
                                         args['sizetool'],
                                         False)
 
-            update_json_report(lib_name, o1_sizes, os_sizes, __GENERATED_JSON_REPORT__)
+            update_json_report(lib_name,
+                               o1_sizes,
+                               os_sizes,
+                               size_description,
+                               __JSON_REPORT_TEMPLATE__,
+                               __GENERATED_JSON_REPORT__)
     else:
         calculate_sizes(args['lts_path'],
                         args['optimization'],

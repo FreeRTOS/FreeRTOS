@@ -64,7 +64,37 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
 __LIBS_IN_JSON_REPORT__ = ['light-mqtt', 'mqtt', 'https', 'shadow', 'jobs', 'ota-mqtt', 'ota-http']
 
 
+def apply_patches(freertos_lts, lib_name):
+    patches = {}
+
+    if 'ota' in lib_name:
+        ota_agent_header_file = os.path.join(freertos_lts, __IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'include', 'aws_iot_ota_agent.h')
+
+        with open(ota_agent_header_file) as ota_agent_header_file_handle:
+            original_content = ota_agent_header_file_handle.read()
+
+        # Turn off logging in the OTA code while calculating sizes.
+        patched_content = original_content.replace('#define OTA_DEBUG_LOG_LEVEL    1', '#define OTA_DEBUG_LOG_LEVEL    0')
+
+        with open(ota_agent_header_file, 'w') as ota_agent_header_file_handle:
+            ota_agent_header_file_handle.write(patched_content)
+
+        patches[ota_agent_header_file] = original_content
+
+    return patches
+
+
+def revert_patches(patches):
+    for patched_file in patches:
+        original_content = patches[patched_file]
+        with open(patched_file, 'w') as patched_file_handle:
+            patched_file_handle.write(original_content)
+
+
 def calculate_sizes(freertos_lts, optimization, lib_name, compiler, sizetool, dontclean):
+    # Apply the required patches to the source code.
+    patches = apply_patches(freertos_lts, lib_name)
+
     # Generate Makefile.
     generate_makefile(freertos_lts, optimization, lib_name)
 
@@ -84,6 +114,9 @@ def calculate_sizes(freertos_lts, optimization, lib_name, compiler, sizetool, do
 
     # Print the calculated sizes.
     pretty_print_sizes(calculated_sizes)
+
+    # Revert the applied patches to the source code.
+    revert_patches(patches)
 
     return calculated_sizes
 

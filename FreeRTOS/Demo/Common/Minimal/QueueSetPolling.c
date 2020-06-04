@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -50,6 +50,8 @@
 
 /* Demo includes. */
 #include "QueueSetPolling.h"
+
+#if( configUSE_QUEUE_SETS == 1 )  /* Remove tests if queue sets are not defined. */
 
 /* The length of each created queue. */
 #define setpollQUEUE_LENGTH	10
@@ -177,3 +179,4 @@ static uint32_t ulLastCycleCounter = 0;
 /*-----------------------------------------------------------*/
 
 
+#endif /* ( configUSE_QUEUE_SETS == 1 ) */

@@ -141,7 +141,7 @@ typedef struct gmac_dev_mem {
 /** Circular buffer is empty ? */
 #define CIRC_EMPTY( head, tail )			( head == tail )
 /** Clear circular buffer */
-#define CIRC_CLEAR( head, tail )			do { ( head ) = 0; ( tail ) = 0; } while( 0 )
+#define CIRC_CLEAR( head, tail )			do { ( head ) = 0; ( tail ) = 0; } while( ipFALSE_BOOL )
 
 /** Increment head or tail */
 static __inline void circ_inc32( int32_t *lHeadOrTail, uint32_t ulSize )
@@ -429,7 +429,6 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 	 * GMAC_DCFGR_TXCOEN: (GMAC_DCFGR) Transmitter Checksum Generation Offload Enable.
 	 * Note: tha SAM4E does have RX checksum offloading
 	 * but TX checksum offloading has NOT been implemented.
-	 * http://community.atmel.com/forum/sam4e-gmac-transmit-checksum-offload-enablesolved
 	 */
 
 	gmac_set_dma(p_gmac,
@@ -658,7 +657,7 @@ uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 		}
 		#else
 		{
-			/* Or memcopy... */
+			/* Or Memcopy... */
 			memcpy((void *)p_tx_td->addr, p_buffer, ul_size);
 		}
 		#endif /* ipconfigZERO_COPY_TX_DRIVER */

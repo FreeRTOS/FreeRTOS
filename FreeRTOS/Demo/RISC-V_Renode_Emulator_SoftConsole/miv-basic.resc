@@ -1,0 +1,7 @@
+logLevel 2
+mach create "Mi-V"
+machine LoadPlatformDescription @platforms/boards/miv-board.repl
+peripherals
+showAnalyzer sysbus.uart
+machine StartGdbServer 3333 true
+log "Renode has been started successfully and is ready for a gdb connection. (This is not an error)" 3

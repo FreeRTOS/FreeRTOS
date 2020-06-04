@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -175,7 +175,6 @@ unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 const char * const pcPassMessage = "Blink\r\n";
 const char * const pcFailMessage = "Unexpected value received\r\n";
-extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Remove compiler warning about unused parameter. */

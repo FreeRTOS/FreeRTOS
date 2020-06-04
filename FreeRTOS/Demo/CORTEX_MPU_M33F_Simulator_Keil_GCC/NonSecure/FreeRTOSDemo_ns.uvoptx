@@ -73,7 +73,7 @@
         <LExpSel>0</LExpSel>
       </OPTXL>
       <OPTFL>
-        <tvExp>0</tvExp>
+        <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>15</nTsel>
+        <nTsel>16</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -120,7 +120,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(6010=70,43,547,639,0)(6018=1091,145,1280,478,0)(6019=1091,137,1280,457,0)(6008=-1,-1,-1,-1,0)(6009=-1,-1,-1,-1,0)(6014=1022,0,1280,731,0)(6015=777,40,1035,662,1)(6003=207,84,780,620,1)(6000=-1,-1,-1,-1,0)</Name>
+          <Name>(6010=70,43,547,639,0)(6018=1091,145,1280,478,0)(6019=1091,137,1280,457,0)(6008=-1,-1,-1,-1,0)(6009=-1,-1,-1,-1,0)(6014=1022,0,1280,731,0)(6015=2837,586,3095,1208,1)(6003=2678,41,3260,577,1)(6000=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -143,7 +143,40 @@
           <Name>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC1000)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>105</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>2116472</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>&lt;2&gt;.\main_ns.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\FreeRTOSDemo_ns\main_ns.c\105</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>67</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>2044</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>&lt;1&gt;.\main_s.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\FreeRTOSDemo_s\main_s.c\67</Expression>
+        </Bp>
+      </Breakpoint>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -439,7 +472,7 @@
 
   <Group>
     <GroupName>User</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

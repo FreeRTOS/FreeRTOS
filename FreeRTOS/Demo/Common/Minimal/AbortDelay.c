@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -100,6 +100,12 @@ static void prvTestAbortingSemaphoreTake( void );
 static void prvTestAbortingEventGroupWait( void );
 static void prvTestAbortingQueueSend( void );
 static void prvTestAbortingStreamBufferReceive( void );
+
+/*
+ * Performs a few tests to cover code paths not otherwise covered by the continuous
+ * tests.
+ */
+static void prvPerformSingleTaskTests( void );
 
 /*
  * Checks the amount of time a task spent in the Blocked state is within the
@@ -208,6 +214,10 @@ const uint32_t ulMax = 0xffffffffUL;
 	/* Just to remove compiler warnings. */
 	( void ) pvParameters;
 
+	/* Start by performing a few tests to cover code not exercised in the loops
+	below. */
+	prvPerformSingleTaskTests();
+
 	xControllingTask = xTaskGetHandle( pcControllingTaskName );
 	configASSERT( xControllingTask );
 
@@ -260,6 +270,23 @@ const uint32_t ulMax = 0xffffffffUL;
 
 		/* To indicate this task is still executing. */
 		xBlockingCycles++;
+	}
+}
+/*-----------------------------------------------------------*/
+
+static void prvPerformSingleTaskTests( void )
+{
+TaskHandle_t xThisTask;
+BaseType_t xReturned;
+
+	/* Try unblocking this task using both the task and ISR versions of the API -
+	both should return false as this task is not blocked. */
+	xThisTask = xTaskGetCurrentTaskHandle();
+
+	xReturned = xTaskAbortDelay( xThisTask );
+	if( xReturned != pdFALSE )
+	{
+		xErrorOccurred = pdTRUE;
 	}
 }
 /*-----------------------------------------------------------*/

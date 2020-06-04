@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -218,7 +218,7 @@ QueueHandle_t xQueue;
 	for( ;; )
 	{
 		/* The queue is empty, so sending an item to the back of the queue
-		should have the same efect as sending it to the front of the queue.
+		should have the same effect as sending it to the front of the queue.
 
 		First send to the front and check everything is as expected. */
 		ulLoopCounterSnapshot = ulLoopCounter;

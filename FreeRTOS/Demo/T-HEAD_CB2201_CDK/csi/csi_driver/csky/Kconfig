@@ -1,0 +1,9 @@
+source "../../csi/csi_driver/csky/common/Kconfig"
+
+if CONFIG_PLATFORM_PHOBOS
+source "../../csi/csi_driver/csky/phobos/Kconfig"
+endif
+
+if CONFIG_PLATFORM_HOBBIT1_2
+source "../../csi/csi_driver/csky/hobbit1_2/Kconfig"
+endif

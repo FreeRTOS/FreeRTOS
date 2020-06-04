@@ -566,7 +566,7 @@ BaseType_t xResult = 0;
 		case ECMD_PASV: /* Enter passive mode. */
 			/* Connect passive: Server will listen() and wait for a connection.
 			Start up a new data connection with 'xDoListen' set to true. */
-			if( prvTransferConnect( pxClient, pdTRUE ) == pdFALSE )
+			if( prvTransferConnect( pxClient, pdTRUE ) != pdTRUE )
 			{
 				pcMyReply = REPL_502;
 			}
@@ -614,7 +614,7 @@ BaseType_t xResult = 0;
 				{
 					pcMyReply = REPL_501;
 				}
-				else if( prvTransferConnect( pxClient, pdFALSE ) == pdFALSE )
+				else if( prvTransferConnect( pxClient, pdFALSE ) != pdTRUE )
 				{
 					/* Call prvTransferConnect() with 'xDoListen' = false for an
 					active connect(). */
@@ -850,7 +850,13 @@ BaseType_t xResult;
 		xAddress.sin_addr = FreeRTOS_GetIPAddress( );	/* Single NIC, currently not used */
 		xAddress.sin_port = FreeRTOS_htons( 0 );		/* Bind to any available port number */
 
-		FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );
+		BaseType_t xBindResult;
+		xBindResult = FreeRTOS_bind( xSocket, &xAddress, sizeof( xAddress ) );
+		if ( xBindResult != 0 )
+		{
+			FreeRTOS_printf( ( "FreeRTOS_bind() failed\n" ) );
+			return xBindResult;
+		}
 
 		#if( ipconfigFTP_TX_BUFSIZE > 0 )
 		{

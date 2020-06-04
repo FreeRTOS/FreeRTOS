@@ -297,12 +297,11 @@
                 </option>
                 <option>
                     <name>IExtraOptionsCheck</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>IExtraOptions</name>
-                    <state>--diag_suppress Pa082</state>
-                    <state>--diag_suppress Be006</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCLangConformance</name>

@@ -1,3 +1,0 @@
-+ standard
-Contains the implementation of IoT libraries that implement standard protocols
-and interfaces, such a MQTT.

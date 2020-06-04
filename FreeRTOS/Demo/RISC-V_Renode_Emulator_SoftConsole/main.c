@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -52,7 +52,7 @@
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
 or 0 to run the more comprehensive test and demo application. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY	1
 
 /*
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
@@ -71,10 +71,10 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* Prepare haredware to run the demo. */
+/* Prepare hardware to run the demo. */
 static void prvSetupHardware( void );
 
-/* Send a messaage to the UART initialised in prvSetupHardware. */
+/* Send a message to the UART initialised in prvSetupHardware. */
 void vSendString( const char * const pcString );
 
 /*-----------------------------------------------------------*/
@@ -121,7 +121,7 @@ static uint32_t ulLEDState = 0;
 
 void vSendString( const char * const pcString )
 {
-	UART_polled_tx_string( &g_uart, pcString );
+	UART_polled_tx_string( &g_uart, ( const uint8_t * ) pcString );
 }
 /*-----------------------------------------------------------*/
 
@@ -181,5 +181,13 @@ void vApplicationTickHook( void )
 	}
 	#endif
 }
+/*-----------------------------------------------------------*/
 
+void *_sbrk( ptrdiff_t incr )
+{
+	/* Required to link, but force an assert to ensure it is never actually
+	called. */
+	configASSERT( ( void * ) incr == NULL );
+	return NULL;
+}
 

@@ -1,0 +1,160 @@
+default: report
+
+# ____________________________________________________________________
+# CBMC binaries
+#
+
+GOTO_CC = @GOTO_CC@
+GOTO_INSTRUMENT = goto-instrument
+GOTO_ANALYZER = goto-analyzer
+VIEWER = cbmc-viewer
+
+# ____________________________________________________________________
+# Variables
+#
+# Naming scheme:
+# ``````````````
+# FOO is the concatenation of the following:
+# FOO2: Set of command line
+# C_FOO: Value of $FOO common to all harnesses, set in this file
+# O_FOO: Value of $FOO specific to the OS we're running on, set in the
+#        makefile for the operating system
+# H_FOO: Value of $FOO specific to a particular harness, set in the
+#        makefile for that harness
+
+ENTRY = $(H_ENTRY)
+OBJS = $(H_OBJS)
+
+INC = \
+  $(INC2) \
+  $(C_INC) $(O_INC) $(H_INC) \
+  # empty
+
+CFLAGS = \
+  $(CFLAGS2) \
+  $(C_DEF) $(O_DEF) $(H_DEF) $(DEF) \
+  $(C_OPT) $(O_OPT) $(H_OPT) $(OPT) \
+  -m32 \
+  # empty
+
+CBMCFLAGS = \
+  $(CBMCFLAGS2) \
+  $(C_CBMCFLAGS) $(O_CBMCFLAGS) $(H_CBMCFLAGS) \
+  # empty
+
+INSTFLAGS = \
+  $(INSTFLAGS2) \
+  $(C_INSTFLAGS) $(O_INSTFLAGS) $(H_INSTFLAGS) \
+  # empty
+
+# ____________________________________________________________________
+# Rules
+#
+# Rules for building a:FR object files. These are not harness-specific,
+# and several harnesses might depend on a particular a:FR object, so
+# define them all once here.
+
+@RULE_GOTO@
+	$(GOTO_CC) @COMPILE_ONLY@ @RULE_OUTPUT@ $(INC) $(CFLAGS) @RULE_INPUT@
+
+# ____________________________________________________________________
+# Rules
+#
+# Rules for patching
+
+patch:
+	cd $(PROOFS)/../patches && ./patch.py
+
+unpatch:
+	cd $(PROOFS)/../patches && ./unpatch.py
+
+# ____________________________________________________________________
+# Rules
+#
+# Rules for building the CBMC harness
+
+queue_datastructure.h: $(H_OBJS_EXCEPT_HARNESS)
+	python3 @TYPE_HEADER_SCRIPT@ --binary $(FREERTOS)/Source/queue.goto --c-file $(FREERTOS)/Source/queue.c
+
+$(ENTRY)_harness.goto: $(ENTRY)_harness.c $(H_GENERATE_HEADER)
+	$(GOTO_CC) @COMPILE_ONLY@ @RULE_OUTPUT@ $(INC) $(CFLAGS) @RULE_INPUT@
+
+$(ENTRY)1.goto: $(OBJS)
+	$(GOTO_CC) @COMPILE_LINK@ @RULE_OUTPUT@ --function harness $(OBJS)
+
+$(ENTRY)2.goto: $(ENTRY)1.goto
+	 $(GOTO_INSTRUMENT) --add-library @RULE_INPUT@ @RULE_OUTPUT@ \
+		> $(ENTRY)2.txt 2>&1
+
+$(ENTRY)3.goto: $(ENTRY)2.goto
+	$(GOTO_INSTRUMENT) --drop-unused-functions @RULE_INPUT@ @RULE_OUTPUT@ \
+		> $(ENTRY)3.txt 2>&1
+
+$(ENTRY)4.goto: $(ENTRY)3.goto
+	$(GOTO_INSTRUMENT) $(INSTFLAGS) --slice-global-inits @RULE_INPUT@ @RULE_OUTPUT@ \
+		> $(ENTRY)4.txt 2>&1
+# ____________________________________________________________________
+# After running goto-instrument to remove function bodies the unused
+# functions need to be dropped again.
+
+$(ENTRY)5.goto: $(ENTRY)4.goto
+	$(GOTO_INSTRUMENT) --drop-unused-functions @RULE_INPUT@ @RULE_OUTPUT@ \
+		> $(ENTRY)5.txt 2>&1
+
+$(ENTRY).goto: $(ENTRY)5.goto
+	@CP@ @RULE_INPUT@ @RULE_OUTPUT@
+
+# ____________________________________________________________________
+# Rules
+#
+# Rules for running CBMC
+
+goto:
+	$(MAKE) patch
+	$(MAKE) $(ENTRY).goto
+
+cbmc.txt: $(ENTRY).goto
+	- cbmc $(CBMCFLAGS) --unwinding-assertions --trace @RULE_INPUT@ > $@ 2>&1
+
+property.xml: $(ENTRY).goto
+	cbmc $(CBMCFLAGS) --unwinding-assertions --show-properties --xml-ui @RULE_INPUT@ > $@ 2>&1
+
+coverage.xml: $(ENTRY).goto
+	cbmc $(CBMCFLAGS) --cover location --xml-ui @RULE_INPUT@ > $@ 2>&1
+
+cbmc: cbmc.txt
+
+property: property.xml
+
+coverage: coverage.xml
+
+report: cbmc.txt property.xml coverage.xml
+	$(VIEWER) \
+	--goto $(ENTRY).goto \
+	--srcdir $(FREERTOS) \
+	--blddir $(FREERTOS) \
+	--htmldir html \
+	--srcexclude "(.@FORWARD_SLASH@Demo)" \
+	--result cbmc.txt \
+	--property property.xml \
+	--block coverage.xml
+
+# ____________________________________________________________________
+# Rules
+#
+# Rules for cleaning up
+
+clean:
+	@RM@ $(OBJS) $(ENTRY).goto
+	@RM@ $(ENTRY)[0-9].goto $(ENTRY)[0-9].txt
+	@RM@ cbmc.txt property.xml coverage.xml TAGS TAGS-*
+	@RM@ *~ \#*
+	@RM@ queue_datastructure.h
+
+
+veryclean: clean
+	@RM_RECURSIVE@ html
+
+distclean: veryclean
+	cd $(PROOFS)/../patches && ./unpatch.py
+	cd $(PROOFS) && ./make-remove-makefiles.py

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -156,9 +156,11 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 		/* Create the software timer, but don't start it yet. */
 		xTimer = xTimerCreate( "Timer",				/* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
 								xTimerPeriod,		/* The period of the software timer in ticks. */
-								pdFALSE,			/* xAutoReload is set to pdFALSE, so this is a one shot timer. */
+								pdFALSE,			/* xAutoReload is set to pdFALSE, so this is a one-shot timer. */
 								NULL,				/* The timer's ID is not used. */
 								prvQueueSendTimerCallback );/* The function executed when the timer expires. */
+
+		xTimerStart( xTimer, 0 ); /* The scheduler has not started so use a block time of 0. */
 
 		/* Start the tasks and timer running. */
 		vTaskStartScheduler();

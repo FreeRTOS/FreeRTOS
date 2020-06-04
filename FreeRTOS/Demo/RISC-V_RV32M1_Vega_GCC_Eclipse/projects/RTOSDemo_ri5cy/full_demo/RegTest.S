@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -47,6 +47,8 @@
  * The register check tasks are described in the comments at the top of
  * main_full.c.
  */
+
+.align( 4 )
 vRegTest1Implementation:
 
 	/* Fill the additional registers with known values. */
@@ -191,10 +193,12 @@ reg1_error_loop:
 	ebreak
 	jal reg1_error_loop
 
+.align( 4 )
 ulRegTest1LoopCounterConst: .word ulRegTest1LoopCounter
 
 /*-----------------------------------------------------------*/
 
+.align( 4 )
 vRegTest2Implementation:
 
 	/* Fill the additional registers with known values. */
@@ -336,6 +340,7 @@ reg2_error_loop:
 	ebreak
 	jal reg2_error_loop
 
+.align( 4 )
 ulRegTest2LoopCounterConst: .word ulRegTest2LoopCounter
 
 

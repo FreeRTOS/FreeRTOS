@@ -1,0 +1,19 @@
+# Ignore MacOS file system related.  
+**/*.DS_Store*
+
+# Ignore build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Python Tools for Visual Studio (PTVS)
+__pycache__/
+*.pyc

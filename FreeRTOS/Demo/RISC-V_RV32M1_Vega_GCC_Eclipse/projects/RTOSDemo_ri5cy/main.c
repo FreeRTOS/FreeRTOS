@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -87,10 +87,10 @@ void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-/* Prepare haredware to run the demo. */
+/* Prepare hardware to run the demo. */
 static void prvSetupHardware( void );
 
-/* Send a messaage to the UART initialised in prvSetupHardware. */
+/* Send a message to the UART initialised in prvSetupHardware. */
 void vSendString( const char * const pcString );
 
 /*-----------------------------------------------------------*/

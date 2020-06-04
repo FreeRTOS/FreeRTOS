@@ -1,0 +1,13 @@
+{ "expected-missing-functions":
+  [
+    "vLoggingPrintf",
+    "xApplicationGetRandomNumber",
+    "vListInsertEnd",
+    "vTaskSetTimeOutState",
+    "vTaskSuspendAll",
+    "xTaskGetTickCount",
+    "xTaskResumeAll"
+  ],
+  "proof-name": "DNSgetHostByName_a",
+  "proof-root": "tools/cbmc/proofs"
+}

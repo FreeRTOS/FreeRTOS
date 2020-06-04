@@ -1,5 +1,5 @@
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -100,7 +100,7 @@ extern uint8_t ucMACAddress[ 6 ];
 	if( xStatus != ERROR )
 	{
 		vSemaphoreCreateBinary( xEMACRxEventSemaphore );
-		configASSERT( xEMACRxEventSemaphore );
+		configASSERT( xEMACRxEventSemaphore != NULL );
 
 		/* The handler task is created at the highest possible priority to
 		ensure the interrupt handler can return directly to it. */
@@ -212,7 +212,7 @@ IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
 extern uint8_t *EMAC_NextPacketToRead( void );
 
 	( void ) pvParameters;
-	configASSERT( xEMACRxEventSemaphore );
+	configASSERT( xEMACRxEventSemaphore != NULL );
 
 	for( ;; )
 	{

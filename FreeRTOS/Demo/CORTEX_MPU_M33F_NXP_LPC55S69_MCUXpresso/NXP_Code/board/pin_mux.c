@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 NXP
+ * Copyright 2017-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -14,11 +14,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v5.0
+product: Pins v6.0
 processor: LPC55S69
 package_id: LPC55S69JBD100
 mcu_data: ksdk2_0
-processor_version: 0.0.6
+processor_version: 0.0.0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -45,9 +45,9 @@ BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '92', peripheral: FLEXCOMM0, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/SD1_D2/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29,
-    mode: inactive, slew_rate: standard, invert: disabled, digi_mode: digital, open_drain: disabled}
+    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
   - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/SD1_D3/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, mode: inactive,
-    slew_rate: standard, invert: disabled, digi_mode: digital, open_drain: disabled}
+    slew_rate: standard, invert: disabled, open_drain: disabled}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */

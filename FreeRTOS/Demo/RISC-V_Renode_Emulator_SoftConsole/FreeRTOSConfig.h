@@ -74,6 +74,11 @@
 #include "hw_platform.h"
 #include "riscv_plic.h"
 
+/* See https://www.freertos.org/Using-FreeRTOS-on-RISC-V.html */
+#define configMTIME_BASE_ADDRESS 	( ( PRCI_BASE ) + 0xBFF8UL )
+#define configMTIMECMP_BASE_ADDRESS ( ( PRCI_BASE ) + 0x4000UL )
+
+
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -86,7 +91,6 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 
-#define configCLINT_BASE_ADDRESS		PRCI_BASE
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
@@ -142,5 +146,8 @@ to exclude the API function. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+
+/* Defined in main.c and used in main_blinky.c and main_full.c. */
+void vSendString( const char * const pcString );
 
 #endif /* FREERTOS_CONFIG_H */

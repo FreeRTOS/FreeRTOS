@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.2.1
+ * FreeRTOS Kernel V10.3.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -369,5 +369,16 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 	( void ) usDestinationPort;
 
 	return uxRand();
+}
+
+/*
+ * Supply a random number to FreeRTOS+TCP stack. 
+ * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER 
+ * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
+ */
+BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
+{
+	*(pulNumber) = uxRand();
+	return pdTRUE;
 }
 

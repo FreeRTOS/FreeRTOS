@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -209,6 +209,7 @@ void main_full( void )
 	prvSetupPeripheralTimers();
 
 	/* Start the scheduler. */
+	vSendString( "Starting" );
 	vTaskStartScheduler();
 
 	/* If all is well, the scheduler will now be running, and the following
@@ -229,15 +230,10 @@ uint32_t ulLastRegTest1Value = 0, ulLastRegTest2Value = 0;
 uint32_t ulLastTimer0Interrupts = 0, ulLastTimer1Interrupts = 0;
 char * const pcPassMessage = ".";
 char * pcStatusMessage = pcPassMessage;
-extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	/* Just to stop compiler warnings. */
 	( void ) pvParameters;
-
-	/* Start with a pass message, after which a '.' character will be printed
-	out on each successful loop. */
-	vSendString( "Pass" );
 
 	/* Initialise xLastExecutionTime so the first call to vTaskDelayUntil()
 	works correctly. */

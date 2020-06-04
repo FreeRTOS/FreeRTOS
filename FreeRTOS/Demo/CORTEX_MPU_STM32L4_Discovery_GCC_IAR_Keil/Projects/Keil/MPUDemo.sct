@@ -1,0 +1,45 @@
+; Flash Layout
+;
+;  ---------------------
+; |   Privileged Code   |
+;  ---------------------
+; |  Unprivileged Code  |
+;  ---------------------
+;
+; RAM Layout
+;
+;  ---------------------
+; |   Privileged Data   |
+;  ---------------------
+; |  Unprivileged Data  |
+;  ---------------------
+
+LR_APP 0x08000000 0x100000 ; load region size_region
+{
+    ER_IROM_PRIVILEGED 0x08000000
+    {
+        *.o (RESET, +First)
+        *(InRoot$$Sections)
+        *(privileged_functions)
+    }
+
+    ER_IROM_FREERTOS_SYSTEM_CALLS 0x08008000 FIXED
+    {
+        *(freertos_system_calls)
+    }
+
+    ER_IROM_UNPRIVILEGED +0
+    {
+        .ANY (+RO)
+    }
+
+    RW_IRAM_PRIVILEGED 0x20000000
+    {
+        *(privileged_data)
+    }
+
+    RW_IRAM_UNPRIVILEGED 0x20000400
+    {
+        .ANY (+RW +ZI)
+    }
+}

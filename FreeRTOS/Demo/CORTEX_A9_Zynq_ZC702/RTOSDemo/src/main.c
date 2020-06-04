@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -78,6 +78,7 @@
 #include "IntSemTest.h"
 #include "StreamBufferInterrupt.h"
 #include "StreamBufferDemo.h"
+#include "QueueSet.h"
 
 /* Xilinx includes. */
 #include "platform.h"
@@ -85,6 +86,7 @@
 #include "xscutimer.h"
 #include "xscugic.h"
 #include "xil_exception.h"
+#include "xuartps_hw.h"
 
 /* mainSELECTED_APPLICATION is used to select between three demo applications,
  * as described at the top of this file.
@@ -207,6 +209,12 @@ XScuGic_Config *pxGICConfig;
 	FreeRTOS_asm_vectors.S, which is part of this project.  Switch to use the
 	FreeRTOS vector table. */
 	vPortInstallFreeRTOSVectorTable();
+
+	/* Initialise UART for use with QEMU. */
+	XUartPs_ResetHw( 0xE0000000 );
+	XUartPs_WriteReg(0xE0000000, XUARTPS_CR_OFFSET,
+				((u32)XUARTPS_CR_RX_DIS | (u32)XUARTPS_CR_TX_EN |
+						(u32)XUARTPS_CR_STOPBRK));
 }
 /*-----------------------------------------------------------*/
 
@@ -302,6 +310,12 @@ void vApplicationTickHook( void )
 		/* Writes a string to a string buffer four bytes at a time to demonstrate
 		a stream being sent from an interrupt to a task. */
 		vBasicStreamBufferSendFromISR();
+
+		#if( configUSE_QUEUE_SETS == 1 )
+		{
+			vQueueSetAccessQueueSetFromISR();
+		}
+		#endif
 
 		/* Test flop alignment in interrupts - calling printf from an interrupt
 		is BAD! */

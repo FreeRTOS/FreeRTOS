@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -114,6 +114,7 @@
 #include "StreamBufferDemo.h"
 #include "StreamBufferInterrupt.h"
 #include "MessageBufferAMP.h"
+#include "QueueSet.h"
 
 
 /* Priorities for the demo application tasks. */
@@ -232,6 +233,12 @@ void main_full( void )
 	vStartStreamBufferTasks();
 	vStartStreamBufferInterruptDemo();
 	vStartMessageBufferAMPTasks( mainMESSAGE_BUFFER_STACK_SIZE );
+
+	#if( configUSE_QUEUE_SETS == 1 )
+	{
+		vStartQueueSetTasks();
+	}
+	#endif
 
 	/* Start the tasks that implements the command console on the UART, as
 	described above. */
@@ -403,17 +410,26 @@ unsigned long ulErrorFound = pdFALSE;
 			ulErrorFound |= 1UL << 20UL;
 		}
 
+		#if( configUSE_QUEUE_SETS == 1 )
+		{
+			if( xAreQueueSetTasksStillRunning() != pdPASS )
+			{
+				ulErrorFound |= 1UL << 21UL;
+			}
+		}
+		#endif
+
 		/* Check that the register test 1 task is still running. */
 		if( ulLastRegTest1Value == ulRegTest1LoopCounter )
 		{
-			ulErrorFound |= 1UL << 21UL;
+			ulErrorFound |= 1UL << 22UL;
 		}
 		ulLastRegTest1Value = ulRegTest1LoopCounter;
 
 		/* Check that the register test 2 task is still running. */
 		if( ulLastRegTest2Value == ulRegTest2LoopCounter )
 		{
-			ulErrorFound |= 1UL << 22UL;
+			ulErrorFound |= 1UL << 23UL;
 		}
 		ulLastRegTest2Value = ulRegTest2LoopCounter;
 

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.3.0
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -971,8 +971,10 @@ BaseType_t xErrorDetected = pdFALSE;
 			else if( xTriggerLevel < xReadBlockTime )
 			{
 				/* Trigger level was less than the block time so we expect to
-				have received the trigger level number of bytes. */
-				if( ( xTriggerLevel - xBytesReceived ) > xAllowableMargin )
+				have received the trigger level number of bytes - could be more
+				though depending on other activity between the task being
+				unblocked and the task reading the number of bytes received. */
+				if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}
@@ -983,7 +985,7 @@ BaseType_t xErrorDetected = pdFALSE;
 				receive no greater than the block time, but one or two less is
 				ok due to variations in how far through the time slice the
 				functions get executed. */
-				if( xBytesReceived > xReadBlockTime )
+				if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}

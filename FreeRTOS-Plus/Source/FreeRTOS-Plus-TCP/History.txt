@@ -1,7 +1,3 @@
-Changes in V2.0.11
-
-	+ Updates some drivers in the portable layer.
-
 Changes between 160919 and 180821 releases:
 
 	+ Multiple security improvements and fixes in packet parsing routines, DNS
@@ -9,17 +5,7 @@ Changes between 160919 and 180821 releases:
 	+ Disable NBNS and LLMNR by default.
 	+ Add TCP hang protection by default.
 
-	We thank Ori Karliner of Zimperium zLabs Team for reporting these issues.
-
-	+ Update FreeRTOS_gethostbyname() to allow an IP address to be passed in -
-	  in which case it is just returned as a uint32_t.
-	+ Introduce ipconfigSOCKET_HAS_USER_WAKE_CALLBACK to FreeRTOS_Sockets.c to
-	  allow a user supposed callback function to be executed when socket events
-	  occur in the same way that the socket semaphore is currently used.
-	+ Update xNetworkBuffersInitialise() to ensure the semaphore created by the
-	  function is not accessed until after the NULL check.
-	+ Improve print messages output by the Win32 port layer version of
-	  prvPrintAvailableNetworkInterfaces().
+We thank Ori Karliner of Zimperium zLabs Team for reporting these issues.
 
 Changes between 160908 and 160919 releases:
 

@@ -7,10 +7,10 @@
 ;*
 ;* $Revision: 64600 $
 ;*
-;******************* Version History **********************************************   
+;******************* Version History **********************************************
 ;
-;  V6, May, 16,2013 TYS:a) Add XMC1300_SCU.inc 
-;     
+;  V6, May, 16,2013 TYS:a) Add XMC1300_SCU.inc
+;
 ;**********************************************************************************
 ;
 ; The modules in this file are included in the libraries, and may be replaced
@@ -30,7 +30,7 @@
 #else
 #define CLKVAL1_SSW 0x00000100
 #define CLKVAL2_SSW 0x00000000
-#endif         
+#endif
 
         ;; Forward declaration of sections.
         SECTION CSTACK:DATA:NOROOT(3)
@@ -152,7 +152,7 @@ __vector_table
 
         THUMB
 
-        PUBWEAK Reset_Handler
+        PUBLIC Reset_Handler
         SECTION .text:CODE:REORDER(2)
 Reset_Handler
         LDR     R0, =SystemInit

@@ -1,29 +1,4 @@
 /*
- * FreeRTOS+TCP V2.0.11
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * http://aws.amazon.com/freertos
- * http://www.FreeRTOS.org
- */
-
-/*
  * Handling of Ethernet PHY's
  * PHY's communicate with an EMAC either through
  * a Media-Independent Interface (MII), or a Reduced Media-Independent Interface (RMII).
@@ -47,11 +22,11 @@ extern "C" {
 #endif
 
 /* A generic user-provided function that reads from the PHY-port at 'xAddress'( 0-based ). A 16-bit value shall be stored in
-  '*pusValue'. xRegister is the register number ( 0 .. 31 ). In fact all PHY registers are 16-bit.
+  '*pulValue'. xRegister is the register number ( 0 .. 31 ). In fact all PHY registers are 16-bit.
   Return non-zero in case the action failed. */
 typedef BaseType_t ( *xApplicationPhyReadHook_t )( BaseType_t xAddress, BaseType_t xRegister, uint32_t *pulValue );
 
-/* A generic user-provided function that writes 'usValue' to the
+/* A generic user-provided function that writes 'ulValue' to the
    PHY-port at 'xAddress' ( 0-based ). xRegister is the register number ( 0 .. 31 ).
    Return non-zero in case the action failed. */
 typedef BaseType_t ( *xApplicationPhyWriteHook_t )( BaseType_t xAddress, BaseType_t xRegister, uint32_t ulValue );
@@ -118,10 +93,10 @@ void vPhyInitialise( EthernetPhy_t *pxPhyObject, xApplicationPhyReadHook_t fnPhy
 /* Discover all PHY's connected by polling 32 indexes ( zero-based ) */
 BaseType_t xPhyDiscover( EthernetPhy_t *pxPhyObject );
 
-/* Send a reset commando to the connected PHY ports and send configuration. */
+/* Send a reset command to the connected PHY ports and send configuration. */
 BaseType_t xPhyConfigure( EthernetPhy_t *pxPhyObject, const PhyProperties_t *pxPhyProperties );
 
-/* Give a commando to start auto negotiation on a set of PHY port's. */
+/* Give a command to start auto negotiation on a set of PHY port's. */
 BaseType_t xPhyStartAutoNegotiation( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask );
 
 /* Do not use auto negotiation but use predefined values from 'pxPhyObject->xPhyPreferences'. */
@@ -132,10 +107,9 @@ BaseType_t xPhyFixedValue( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask );
 last call to this function. */
 BaseType_t xPhyCheckLinkStatus( EthernetPhy_t *pxPhyObject, BaseType_t xHadReception );
 
-static __inline uint32_t xPhyGetMask( EthernetPhy_t *pxPhyObject )
-{
-	return ( ( ( uint32_t ) 1u ) << pxPhyObject-> xPortCount ) - 1;
-}
+/* Get the bitmask of a given 'EthernetPhy_t'. */
+#define xPhyGetMask( pxPhyObject ) \
+	( ( ( ( uint32_t ) 1u ) << ( pxPhyObject )->xPortCount ) - 1u )
 
 #ifdef __cplusplus
 } /* extern "C" */

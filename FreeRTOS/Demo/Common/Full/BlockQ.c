@@ -170,8 +170,8 @@ const TickType_t xDontBlock = ( TickType_t ) 0;
 	pxQueueParameters4->xBlockTime = xBlockTime;
 	pxQueueParameters4->psCheckVariable = &( sBlockingConsumerCount[ 1 ] );
 
-	xTaskCreate( vBlockingQueueProducer, "QProdB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( vBlockingQueueConsumer, "QConsB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
+	xTaskCreate( vBlockingQueueConsumer, "QConsB3", blckqSTACK_SIZE, ( void * ) pxQueueParameters3, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( vBlockingQueueProducer, "QProdB4", blckqSTACK_SIZE, ( void * ) pxQueueParameters4, uxPriority, NULL );
 
 
 

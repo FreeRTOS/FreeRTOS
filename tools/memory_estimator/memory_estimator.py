@@ -15,7 +15,7 @@ __MAKE_FILE_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'Makefile.
 __GENERATED_MAKE_FILE__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
 
 __JSON_REPORT_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report.json.template')
-__GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'report.json')
+__GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'freertos_lts_memory_estimates.json')
 __REPORT_LIBS_JSON__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report_libs.json')
 
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
@@ -252,15 +252,19 @@ def main():
     args = parse_arguments()
 
     if args['generate_report']:
-        # Start by creating an empty JSON file which is populated as sizes are
+        # Start with an empty JSON report which is populated as sizes are
         # calculated.
-        with open(__GENERATED_JSON_REPORT__, 'w') as json_report_file:
-            json_report_file.write(json.dumps({}))
+        generated_json_report = {}
 
         # Read the libraries which are to be included in the report.
         with open(__REPORT_LIBS_JSON__) as report_libs_file:
             report_libs_json_data = json.load(report_libs_file)
             report_libs = report_libs_json_data['libraries']
+
+        # Read the template to obtain the library report format.
+        with open(__JSON_REPORT_TEMPLATE__) as json_report_template_handle:
+            json_report_template_data = json.load(json_report_template_handle)
+        lib_report_template = json_report_template_data['lib']
 
         # JSON report has sizes for all the libraries and for both O1 and Os
         # Optimizations. Therefore, values for --lib and --optimization are
@@ -290,8 +294,12 @@ def main():
                                o1_sizes,
                                os_sizes,
                                size_description,
-                               __JSON_REPORT_TEMPLATE__,
-                               __GENERATED_JSON_REPORT__)
+                               lib_report_template,
+                               generated_json_report)
+
+        # Write the generated report to the output file.
+        with open(__GENERATED_JSON_REPORT__, 'w') as json_report_file_handle:
+            json_report_file_handle.write(json.dumps(generated_json_report, indent=4, sort_keys=True))
     else:
         calculate_sizes(args['lts_path'],
                         args['optimization'],

@@ -1,5 +1,5 @@
 import os
-import json
+import copy
 from operator import truediv
 
 
@@ -32,6 +32,8 @@ def parse_sizes(sizes):
     '''
     filename_to_size_dict = {}
 
+    # The first line is the size tool command and the second line is the
+    # header. Therefore, we start from third line which contains actual sizes.
     for size in sizes[2:]:
         parts = size.split()
 
@@ -46,38 +48,28 @@ def parse_sizes(sizes):
     return filename_to_size_dict
 
 
-def update_json_report(lib_name, o1_sizes, os_sizes, size_description, json_report_template, generated_json_report):
+def update_json_report(lib_name, o1_sizes, os_sizes, size_description, lib_report_template, generated_json_report):
     filename_to_o1_size_dict = parse_sizes(o1_sizes)
     filename_to_os_size_dict = parse_sizes(os_sizes)
 
-    # Read the template to obtain the library report format.
-    with open(json_report_template) as json_report_template_handle:
-        json_report_template_data = json.load(json_report_template_handle)
-
-    lib_report = json_report_template_data['lib']
+    # Make a copy of the template.
+    lib_report = copy.deepcopy(lib_report_template)
 
     # Populate files in the library report.
     for filename in filename_to_o1_size_dict:
         file_report = {}
         file_report['file_name'] = __FILE_NAME_TO_DISPLAY_NAME__.get(filename, filename)
-        file_report['o1_size'] = str(filename_to_o1_size_dict[filename]) + 'K'
-        file_report['os_size']= str(filename_to_os_size_dict[filename]) + 'K'
+        file_report['o1_size'] = '{:.1f}K'.format(filename_to_o1_size_dict[filename])
+        file_report['os_size']= '{:.1f}K'.format(filename_to_os_size_dict[filename])
         lib_report['files'].append(file_report)
 
     # Update total size of the library.
-    lib_report['total']['total_o1'] = str(round(sum(filename_to_o1_size_dict.values()), 1)) + 'K'
-    lib_report['total']['total_os'] = str(round(sum(filename_to_os_size_dict.values()), 1)) + 'K'
+    lib_report['total']['total_o1'] = '{:.1f}K'.format(sum(filename_to_o1_size_dict.values()))
+    lib_report['total']['total_os'] = '{:.1f}K'.format(sum(filename_to_os_size_dict.values()))
 
     # Add the size description.
     lib_report['table_header'] = size_description
 
-    # Get the generated report so far.
-    with open(generated_json_report) as generated_json_report_handle:
-        generated_report_json_data = json.load(generated_json_report_handle)
-
     # Add the library report to the report.
-    generated_report_json_data[lib_name] = lib_report
+    generated_json_report[lib_name] = lib_report
 
-    # Write the updated report back to the report file.
-    with open(generated_json_report, 'w') as generated_json_report_handle:
-        generated_json_report_handle.write(json.dumps(generated_report_json_data, indent=4, sort_keys=True))

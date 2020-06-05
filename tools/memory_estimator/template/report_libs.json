@@ -1,0 +1,32 @@
+{
+    "libraries": [
+        {
+            "lib_name":"https",
+            "size_description":"Code Size of HTTPS (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"jobs",
+            "size_description":"Code Size of AWS IoT Jobs excluding dependencies (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"light-mqtt",
+            "size_description":"Code Size of Lightweight MQTT API (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"mqtt",
+            "size_description":"Code Size of MQTT (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"ota-http",
+            "size_description":"Code Size of OTA with HTTP excluding dependencies (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"ota-mqtt",
+            "size_description":"Code Size of OTA with MQTT excluding dependencies (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"shadow",
+            "size_description":"Code Size of AWS IoT Device Shadow excluding dependencies (example generated with GCC for ARM Cortex-M)"
+        }
+    ]
+}

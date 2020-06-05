@@ -3,8 +3,10 @@
 import io
 import os
 import re
+import json
 import argparse
 import subprocess
+from json_report_generator import update_json_report
 from makefile_generator import generate_makefile_from_template
 
 
@@ -12,10 +14,13 @@ __THIS_FILE_PATH__ = os.path.dirname(os.path.abspath(__file__))
 __MAKE_FILE_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'Makefile.template')
 __GENERATED_MAKE_FILE__ = os.path.join(__THIS_FILE_PATH__, 'Makefile')
 
+__JSON_REPORT_TEMPLATE__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report.json.template')
+__GENERATED_JSON_REPORT__ = os.path.join(__THIS_FILE_PATH__, 'freertos_lts_memory_estimates.json')
+__REPORT_LIBS_JSON__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report_libs.json')
+
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
 __FREERTOS_PLUS_SRC_DIR__ = os.path.join('FreeRTOS-Plus', 'Source')
 __IOT_LIBS_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries')
-
 
 __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
     'light-mqtt' : [
@@ -37,7 +42,13 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'jobs', 'src'),
                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'common', 'src')
                    ],
-    'ota'        : [
+    'ota-mqtt'   : [
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_agent.c'),
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_interface.c'),
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_mqtt.c'),
+                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_cbor.c')
+                   ],
+    'ota-http'  :  [
                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src')
                    ],
     'kernel'     : [
@@ -50,6 +61,70 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
                         os.path.join(__FREERTOS_SRC_DIR__, 'portable', 'GCC', 'ARM_CM4F', 'port.c')
                    ]
 }
+
+
+def apply_patches(freertos_lts, lib_name):
+    patches = {}
+
+    # This should ideally be empty as we should be able to control all the
+    # configurations via config files. However, OTA currently defines the
+    # logging level in a header file as opposed to taking it from a config file.
+    # As a result, we need to patch the header file before calculating the size
+    # as we want to turn off logging while calculating size. Later when logging
+    # level is moved to a config file, it will not be needed and we will turn
+    # off logging in the header file tools\memory_estimator\config_files\aws_ota_agent_config.h.
+    if 'ota' in lib_name:
+        ota_agent_header_file = os.path.join(freertos_lts, __IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'include', 'aws_iot_ota_agent.h')
+
+        with open(ota_agent_header_file) as ota_agent_header_file_handle:
+            original_content = ota_agent_header_file_handle.read()
+
+        # Turn off logging in the OTA code while calculating sizes.
+        patched_content = original_content.replace('#define OTA_DEBUG_LOG_LEVEL    1', '#define OTA_DEBUG_LOG_LEVEL    0')
+
+        with open(ota_agent_header_file, 'w') as ota_agent_header_file_handle:
+            ota_agent_header_file_handle.write(patched_content)
+
+        patches[ota_agent_header_file] = original_content
+
+    return patches
+
+
+def revert_patches(patches):
+    for patched_file in patches:
+        original_content = patches[patched_file]
+        with open(patched_file, 'w') as patched_file_handle:
+            patched_file_handle.write(original_content)
+
+
+def calculate_sizes(freertos_lts, optimization, lib_name, compiler, sizetool, dontclean):
+    # Apply the required patches to the source code.
+    patches = apply_patches(freertos_lts, lib_name)
+
+    # Generate Makefile.
+    generate_makefile(freertos_lts, optimization, lib_name)
+
+    # Run make build.
+    warnings = make(compiler)
+
+    # Run make size.
+    calculated_sizes = calculate_size(sizetool)
+
+    # Remove the generated artifacts.
+    if not dontclean:
+        clean()
+        remove_generated_makefile()
+
+    # Print the generated warnings.
+    pretty_print_warnings(warnings)
+
+    # Print the calculated sizes.
+    pretty_print_sizes(calculated_sizes)
+
+    # Revert the applied patches to the source code.
+    revert_patches(patches)
+
+    return calculated_sizes
 
 
 def generate_makefile(freertos_lts, optimization, lib_name):
@@ -167,6 +242,7 @@ def parse_arguments():
     parser.add_argument('-c', '--compiler', default='arm-none-eabi-gcc', help='Compiler to use.')
     parser.add_argument('-s', '--sizetool', default='arm-none-eabi-size', help='Size tool to use.')
     parser.add_argument('-d', '--dontclean', action='store_true', help='Do not clean the generated artifacts.')
+    parser.add_argument('-g', '--generate-report', action='store_true', help='Generate the JSON report.')
 
     return vars(parser.parse_args())
 
@@ -175,25 +251,62 @@ def parse_arguments():
 def main():
     args = parse_arguments()
 
-    # Generate Makefile.
-    generate_makefile(args['lts_path'], args['optimization'], args['lib'])
+    if args['generate_report']:
+        # Start with an empty JSON report which is populated as sizes are
+        # calculated.
+        generated_json_report = {}
 
-    # Run make build.
-    warnings = make(args['compiler'])
+        # Read the libraries which are to be included in the report.
+        with open(__REPORT_LIBS_JSON__) as report_libs_file:
+            report_libs_json_data = json.load(report_libs_file)
+            report_libs = report_libs_json_data['libraries']
 
-    # Run make size.
-    calculated_sizes = calculate_size(args['sizetool'])
+        # Read the template to obtain the library report format.
+        with open(__JSON_REPORT_TEMPLATE__) as json_report_template_handle:
+            json_report_template_data = json.load(json_report_template_handle)
+        lib_report_template = json_report_template_data['lib']
 
-    # Remove the generated artifacts.
-    if not args['dontclean']:
-        clean()
-        remove_generated_makefile()
+        # JSON report has sizes for all the libraries and for both O1 and Os
+        # Optimizations. Therefore, values for --lib and --optimization are
+        # ignored.
+        # Compiled objects files for 'O1' optimization needs to be cleaned
+        # before 'Os' optimization and therefore, value for --dontclean is
+        # ignored.
+        for report_lib in report_libs:
+            lib_name = report_lib['lib_name']
+            size_description = report_lib['size_description']
 
-    # Print the generated warnings.
-    pretty_print_warnings(warnings)
+            o1_sizes = calculate_sizes(args['lts_path'],
+                                       'O1',
+                                        lib_name,
+                                        args['compiler'],
+                                        args['sizetool'],
+                                        False)
 
-    # Print the calculated sizes.
-    pretty_print_sizes(calculated_sizes)
+            os_sizes = calculate_sizes(args['lts_path'],
+                                       'Os',
+                                        lib_name,
+                                        args['compiler'],
+                                        args['sizetool'],
+                                        False)
+
+            update_json_report(lib_name,
+                               o1_sizes,
+                               os_sizes,
+                               size_description,
+                               lib_report_template,
+                               generated_json_report)
+
+        # Write the generated report to the output file.
+        with open(__GENERATED_JSON_REPORT__, 'w') as json_report_file_handle:
+            json_report_file_handle.write(json.dumps(generated_json_report, indent=4, sort_keys=True))
+    else:
+        calculate_sizes(args['lts_path'],
+                        args['optimization'],
+                        args['lib'],
+                        args['compiler'],
+                        args['sizetool'],
+                        args['dontclean'])
 
 
 if __name__ == '__main__':

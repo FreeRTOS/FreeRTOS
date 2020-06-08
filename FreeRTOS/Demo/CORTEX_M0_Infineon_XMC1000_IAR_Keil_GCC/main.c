@@ -51,7 +51,7 @@
 #include "semphr.h"
 
 /* Demo application include. */
-#include "ParTest.h"
+#include "partest.h"
 #include "QueueSet.h"
 
 /* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,

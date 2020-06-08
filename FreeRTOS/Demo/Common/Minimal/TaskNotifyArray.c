@@ -43,7 +43,7 @@
 #include "TaskNotifyArray.h"
 
 #if( configTASK_NOTIFICATION_ARRAY_ENTRIES < 3 )
-	#error This file tests direct to task notification arrays and needs configTASK_NOTIFICATION_ARRAY_ENTRIES to be at leat 3.
+	#error This file tests direct to task notification arrays and needs configTASK_NOTIFICATION_ARRAY_ENTRIES to be at least 3.
 #endif
 
 /* Allow parameters to be overridden on a demo by demo basis. */
@@ -74,7 +74,7 @@ static void prvNotifiedTask( void *pvParameters );
 static void prvSingleTaskTests( void );
 
 /*
- * Uses a software time to send notifications to the task while the task is
+ * Uses a software timer to send notifications to the task while the task is
  * suspended.
  */
 static void prvTestNotifyTaskWhileSuspended( void );
@@ -150,7 +150,7 @@ void vStartTaskNotifyArrayTask( void  )
 const TickType_t xIncrementingIndexTimerPeriod = pdMS_TO_TICKS( 100 );
 const TickType_t xSuspendTimerPeriod = pdMS_TO_TICKS( 50 );
 
-	/* Create the software timers used for these tests.  The time callbacks send
+	/* Create the software timers used for these tests.  The timer callbacks send
 	notifications to this task. */
 	xNotifyWhileSuspendedTimer = xTimerCreate( "SingleNotify", xSuspendTimerPeriod, pdFALSE, NULL, prvSuspendedTaskTimerTestCallback );
 	xIncrementingIndexTimer = xTimerCreate( "Notifier", xIncrementingIndexTimerPeriod, pdFALSE, NULL, prvNotifyingTimerCallback );
@@ -164,7 +164,7 @@ const TickType_t xSuspendTimerPeriod = pdMS_TO_TICKS( 50 );
 				 notifyNOTIFY_ARRAY_TASK_STACK_SIZE, /* Task's stack size in words, not bytes!. */
 				 NULL, /* Task parameter, not used in this case. */
 				 notifyTASK_PRIORITY, /* Task priority, 0 is the lowest. */
-				 &xTaskToNotify ); /* Used to pass a handle to the task out is needed, otherwise set to NULL. */
+				 &xTaskToNotify ); /* Used to pass a handle to the task out if needed, otherwise set to NULL. */
 
 	/* Pseudo seed the random number generator. */
 	uxNextRand = ( size_t ) prvRand;
@@ -276,9 +276,6 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		configASSERT( ulNotifiedValue == ulFirstNotifiedConst );
 		( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		( void ) ulNotifiedValue;
-
-		/* Incremented to show the task is still running. */
-		ulFineCycleCount++;
 	}
 
 
@@ -294,7 +291,9 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		{
 			if( uxOtherIndexes != uxIndexToTest )
 			{
-				xTaskNotifyIndexed( xTaskToNotify, uxOtherIndexes, ulFirstNotifiedConst, eSetValueWithOverwrite );
+				xReturned = xTaskNotifyIndexed( xTaskToNotify, uxOtherIndexes, ulFirstNotifiedConst, eSetValueWithOverwrite );
+				configASSERT(xReturned == pdPASS);
+				(void)xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 			}
 		}
 
@@ -419,7 +418,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		/* All array indexes in the array of task notifications after index
 		uxIndexToTest should still contain 0 as they have not been set in this
-		loop yet.  This time use xTaskNotifyValueClear() instead of
+		loop yet.  This time use ulTaskNotifyValueClearIndexed() instead of
 		xTaskNotifyWaitIndexed(), just for test coverage. */
 		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
@@ -469,7 +468,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 		/* All notifications values in the array of task notifications after
 		index uxIndexToTest should still contain the un-incremented
 		ulSecondNotifiedValueConst as they have not been set in this loop yet.
-		This time use xTaskNotifyValueClear() instead of xTaskNotifyWaitIndexed(),
+		This time use ulTaskNotifyValueClearIndexed() instead of xTaskNotifyWaitIndexed(),
 		just for test coverage. */
 		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
@@ -538,7 +537,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 		/* The value of each task notification within the array of task
 		notifications after index uxIndexToTest should still contain 0 as they
-		have not been set in this loop yet.  This time use xTaskNotifyValueClear()
+		have not been set in this loop yet.  This time use ulTaskNotifyValueClearIndexed()
 		instead of xTaskNotifyWaitIndexed(), just for test coverage. */
 		for( uxOtherIndexes = uxIndexToTest + 1; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
@@ -552,7 +551,7 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 
 
 	/*-------------------------------------------------------------------------
-	For each task notification within the array of task notification sin turn,
+	For each task notification within the array of task notifications in turn,
 	check bits are cleared on entry but not on exit when a notification fails
 	to arrive before timing out - both with and without a timeout value. */
 	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
@@ -682,8 +681,8 @@ UBaseType_t uxIndexToTest, uxOtherIndexes;
 	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
 		/* No task notification within the array of task notifications should
-		not have any notifications pending, so an attempt to clear the
-		notification state should fail. */
+		have any notification pending, so an attempt to clear the notification
+		state should fail. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
 		{
 			configASSERT( xTaskNotifyStateClearIndexed( NULL, uxOtherIndexes ) == pdFALSE );
@@ -784,8 +783,7 @@ static UBaseType_t uxIndexToNotify = 0;
 		vTaskSuspend( xTaskToNotify );
 
 		/* Sending a notification while the task is suspended should pass, but
-		not cause the task to resume.  ulCallCount is just used as a convenient
-		non-zero value. */
+		not cause the task to resume. */
 		xTaskNotifyIndexed( xTaskToNotify, uxIndexToNotify, 1, eSetValueWithOverwrite );
 
 		/* Use the next task notification within the array of task notifications
@@ -841,9 +839,6 @@ uint32_t ulNotifiedValue;
 	notifications. */
 	for( uxIndexToTest = 0; uxIndexToTest < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndexToTest++ )
 	{
-		/* Incremented to show the task is still running. */
-		ulFineCycleCount++;
-
 		/* Ensure no notifications within the array of task notifications are
 		pending. */
 		for( uxOtherIndexes = 0; uxOtherIndexes < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxOtherIndexes++ )
@@ -875,9 +870,6 @@ uint32_t ulNotifiedValue;
 			configASSERT( xReturned == pdFALSE );
 			( void ) xReturned; /* Remove compiler warnings in case configASSERT() is not defined. */
 		}
-
-		/* Incremented to show the task is still running. */
-		ulFineCycleCount++;
 
 		/* Start the timer that will try notifying this task while it is
 		suspended, then wait for a notification at index uxIndexToTest within
@@ -1036,16 +1028,15 @@ TickType_t xTimeBeforeBlocking;
 		xReturned = xTaskNotifyWaitIndexed( uxIndex, 0, 0, &ulReceivedValue, xTimerPeriod + xMargin );
 
 		/* The notification will have been sent to task notification at index
-		uxIndexUnder test in this task by the timer callback after
-		xTimerPeriodTicks.  The notification should not have woken this task, so
-		xReturned should be false and at least xTimerPeriod + xMargin ticks
-		should have passed. */
+		uxIndexToNotify in this task by the timer callback after xTimerPeriodTicks.  
+		The notification should not have woken this task, so xReturned should 
+		be false and at least xTimerPeriod + xMargin ticks should have passed. */
 		configASSERT( xReturned == pdFALSE );
 		configASSERT( ( xTaskGetTickCount() - xTimeBeforeBlocking ) >= ( xTimerPeriod + xMargin ) );
 		( void ) xReturned; /* Remove compiler warnings if configASSERT() is not defined. */
 		( void ) xTimeBeforeBlocking;
 
-		/* Only the notification at index position uxIndexToNotify() should be
+		/* Only the notification at index position uxIndexToNotify should be
 		set.  Calling this function will clear it again. */
 		for( uxIndex = 0; uxIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES; uxIndex++ )
 		{

@@ -1253,8 +1253,8 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCFAILED, TASK, pxCurrentTCB, xTicksToWait); \
 	}
 #else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
-#define traceTASK_NOTIFY_TAKE() \
-	if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED){ \
+#define traceTASK_NOTIFY_TAKE( index ) \
+	if (pxCurrentTCB->ucNotifyState[ ( index ) ] == taskNOTIFICATION_RECEIVED){ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE, TASK, pxCurrentTCB, xTicksToWait); \
 	}else{ \
 		trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM(TRACE_TASK_NOTIFY_TAKE_TRCFAILED, TASK, pxCurrentTCB, xTicksToWait);}
@@ -1276,10 +1276,10 @@ extern void vTraceStoreMemMangEvent(uint32_t ecode, uint32_t address, int32_t si
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCFAILED, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 	}
 #else /* TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0 */
-#define traceTASK_NOTIFY_WAIT() \
+#define traceTASK_NOTIFY_WAIT( index ) \
 	if (TRACE_GET_OBJECT_FILTER(TASK, pxCurrentTCB) & CurrentFilterMask) \
 	{ \
-		if (pxCurrentTCB->ucNotifyState == taskNOTIFICATION_RECEIVED) \
+		if (pxCurrentTCB->ucNotifyState[ ( index ) ] == taskNOTIFICATION_RECEIVED) \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \
 		else \
 			prvTraceStoreKernelCallWithParam(TRACE_TASK_NOTIFY_WAIT_TRCFAILED, TRACE_CLASS_TASK, TRACE_GET_TASK_NUMBER(pxCurrentTCB), xTicksToWait); \

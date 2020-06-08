@@ -105,6 +105,7 @@
     <ClCompile Include="..\Common\Minimal\StreamBufferDemo.c" />
     <ClCompile Include="..\Common\Minimal\StreamBufferInterrupt.c" />
     <ClCompile Include="..\Common\Minimal\TaskNotify.c" />
+    <ClCompile Include="..\Common\Minimal\TaskNotifyArray.c" />
     <ClCompile Include="..\Common\Minimal\timerdemo.c" />
     <ClCompile Include="main.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

@@ -165,6 +165,7 @@ static void vAddProtocolTags( uint8_t *pucEthernetBuffer, BaseType_t xIPType );
 static void vDetermineMessageType( uint8_t *pucBuffer, BaseType_t xIncoming );
 static void vActualDump( uint8_t *pucBuffer, size_t uxLength, BaseType_t xIncoming );
 static void vAddType( uint32_t ulFlags, const char *pcFlagName );
+static void vWriteHeaderFile( void );
 
 /*-----------------------------------------------------------*/
 
@@ -298,7 +299,7 @@ BaseType_t iCount;
 }
 /*-----------------------------------------------------------*/
 
-static void vWriteHeaderFile()
+static void vWriteHeaderFile( void )
 {
 FILE *outfile;
 

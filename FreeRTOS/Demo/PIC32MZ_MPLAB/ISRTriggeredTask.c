@@ -55,7 +55,7 @@
 #include "semphr.h"
 
 /* Standard demo includes. */
-#include "ParTest.h"
+#include "partest.h"
 
 /*-----------------------------------------------------------*/
 

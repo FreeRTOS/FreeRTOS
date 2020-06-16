@@ -44,6 +44,14 @@ enum if_state_t {
 static const char *TAG = "NetInterface";
 volatile static uint32_t xInterfaceState = INTERFACE_DOWN;
 
+/* protect the function declaration itself instead of using
+   #if everywhere.                                        */
+#if ( ipconfigHAS_PRINTF != 0 )
+    static void prvPrintResourceStats();    
+#else
+    #define prvPrintResourceStats()
+#endif
+
 BaseType_t xNetworkInterfaceInitialise( void )
 {
     static BaseType_t xMACAdrInitialized = pdFALSE;
@@ -78,6 +86,8 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t *const pxNetworkBu
         }
     }
 
+    prvPrintResourceStats();
+    
     if (xReleaseAfterSend == pdTRUE) {
         vReleaseNetworkBufferAndDescriptor(pxNetworkBuffer);
     }
@@ -105,6 +115,8 @@ esp_err_t wlanif_input(void *netif, void *buffer, uint16_t len, void *eb)
     IPStackEvent_t xRxEvent = { eNetworkRxEvent, NULL };
     const TickType_t xDescriptorWaitTime = pdMS_TO_TICKS( 250 );
 
+    prvPrintResourceStats();
+
     if( eConsiderFrameForProcessing( buffer ) != eProcessBuffer ) {
         ESP_LOGD(TAG, "Dropping packet");
         esp_wifi_internal_free_rx_buffer(eb);
@@ -114,10 +126,10 @@ esp_err_t wlanif_input(void *netif, void *buffer, uint16_t len, void *eb)
     pxNetworkBuffer = pxGetNetworkBufferWithDescriptor(len, xDescriptorWaitTime);
     if (pxNetworkBuffer != NULL) {
 
-	/* Set the packet size, in case a larger buffer was returned. */
-	pxNetworkBuffer->xDataLength = len;
+        /* Set the packet size, in case a larger buffer was returned. */
+        pxNetworkBuffer->xDataLength = len;
 
-	/* Copy the packet data. */
+        /* Copy the packet data. */
         memcpy(pxNetworkBuffer->pucEthernetBuffer, buffer, len);
         xRxEvent.pvData = (void *) pxNetworkBuffer;
 
@@ -133,3 +145,50 @@ esp_err_t wlanif_input(void *netif, void *buffer, uint16_t len, void *eb)
         return ESP_FAIL;
     }
 }
+
+#if ( ipconfigHAS_PRINTF != 0 )
+    static void prvPrintResourceStats()
+    {
+        static UBaseType_t uxLastMinBufferCount = 0u;
+        static UBaseType_t uxCurrentBufferCount = 0u;
+        static size_t uxMinLastSize = 0uL;
+        size_t uxMinSize;
+
+        uxCurrentBufferCount = uxGetMinimumFreeNetworkBuffers();
+
+        if( uxLastMinBufferCount != uxCurrentBufferCount )
+        {
+            /* The logging produced below may be helpful
+             * while tuning +TCP: see how many buffers are in use. */
+            uxLastMinBufferCount = uxCurrentBufferCount;
+            FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
+                               uxGetNumberOfFreeNetworkBuffers(), uxCurrentBufferCount ) );
+        }
+
+        uxMinSize = xPortGetMinimumEverFreeHeapSize();
+
+        if( uxMinLastSize != uxMinSize )
+        {
+            uxMinLastSize = uxMinSize;
+            FreeRTOS_printf( ( "Heap: current %lu lowest %lu\n", xPortGetFreeHeapSize(), uxMinSize ) );
+        }
+
+        #if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+            {
+                static UBaseType_t uxLastMinQueueSpace = 0;
+                UBaseType_t uxCurrentCount = 0u;
+
+                uxCurrentCount = uxGetMinimumIPQueueSpace();
+
+                if( uxLastMinQueueSpace != uxCurrentCount )
+                {
+                    /* The logging produced below may be helpful
+                     * while tuning +TCP: see how many buffers are in use. */
+                    uxLastMinQueueSpace = uxCurrentCount;
+                    FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
+                }
+            }
+        #endif /* ipconfigCHECK_IP_QUEUE_SPACE */
+    }
+#endif /* ( ipconfigHAS_PRINTF != 0 ) */
+/*-----------------------------------------------------------*/

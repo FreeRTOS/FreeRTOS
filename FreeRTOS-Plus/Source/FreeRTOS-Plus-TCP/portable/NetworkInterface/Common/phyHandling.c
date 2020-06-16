@@ -34,60 +34,60 @@
 #ifndef	ipconfigPHY_LS_HIGH_CHECK_TIME_MS
 	/* Check if the LinkStatus in the PHY is still high after 15 seconds of not
 	receiving packets. */
-	#define ipconfigPHY_LS_HIGH_CHECK_TIME_MS	15000uL
+	#define ipconfigPHY_LS_HIGH_CHECK_TIME_MS	15000UL
 #endif
 
 #ifndef	ipconfigPHY_LS_LOW_CHECK_TIME_MS
 	/* Check if the LinkStatus in the PHY is still low every second. */
-	#define ipconfigPHY_LS_LOW_CHECK_TIME_MS	1000uL
+	#define ipconfigPHY_LS_LOW_CHECK_TIME_MS	1000UL
 #endif
 
 /* As the following 3 macro's are OK in most situations, and so they're not
 included in 'FreeRTOSIPConfigDefaults.h'.
 Users can change their values in the project's 'FreeRTOSIPConfig.h'. */
 #ifndef phyPHY_MAX_RESET_TIME_MS
-	#define phyPHY_MAX_RESET_TIME_MS			1000uL
+	#define phyPHY_MAX_RESET_TIME_MS			1000UL
 #endif
 
 #ifndef phyPHY_MAX_NEGOTIATE_TIME_MS
-	#define phyPHY_MAX_NEGOTIATE_TIME_MS		3000uL
+	#define phyPHY_MAX_NEGOTIATE_TIME_MS		3000UL
 #endif
 
 #ifndef phySHORT_DELAY_MS
-	#define phySHORT_DELAY_MS					50uL
+	#define phySHORT_DELAY_MS					50UL
 #endif
 
 /* Naming and numbering of basic PHY registers. */
-#define phyREG_00_BMCR				0x00u	/* Basic Mode Control Register. */
-#define phyREG_01_BMSR				0x01u	/* Basic Mode Status Register. */
-#define phyREG_02_PHYSID1			0x02u	/* PHYS ID 1 */
-#define phyREG_03_PHYSID2			0x03u	/* PHYS ID 2 */
-#define phyREG_04_ADVERTISE			0x04u	/* Advertisement control reg */
+#define phyREG_00_BMCR				0x00U	/* Basic Mode Control Register. */
+#define phyREG_01_BMSR				0x01U	/* Basic Mode Status Register. */
+#define phyREG_02_PHYSID1			0x02U	/* PHYS ID 1 */
+#define phyREG_03_PHYSID2			0x03U	/* PHYS ID 2 */
+#define phyREG_04_ADVERTISE			0x04U	/* Advertisement control reg */
 
 /* Naming and numbering of extended PHY registers. */
-#define PHYREG_10_PHYSTS			0x10u	/* 16 PHY status register Offset */
-#define	phyREG_19_PHYCR				0x19u	/* 25 RW PHY Control Register */
-#define	phyREG_1F_PHYSPCS			0x1Fu	/* 31 RW PHY Special Control Status */
+#define PHYREG_10_PHYSTS			0x10U	/* 16 PHY status register Offset */
+#define	phyREG_19_PHYCR				0x19U	/* 25 RW PHY Control Register */
+#define	phyREG_1F_PHYSPCS			0x1FU	/* 31 RW PHY Special Control Status */
 
 /* Bit fields for 'phyREG_00_BMCR', the 'Basic Mode Control Register'. */
-#define phyBMCR_FULL_DUPLEX			0x0100u	/* Full duplex. */
-#define phyBMCR_AN_RESTART			0x0200u	/* Auto negotiation restart. */
-#define phyBMCR_ISOLATE				0x0400u /* 1 = Isolates 0 = Normal operation. */
-#define phyBMCR_AN_ENABLE			0x1000u	/* Enable auto negotiation. */
-#define phyBMCR_SPEED_100			0x2000u	/* Select 100Mbps. */
-#define phyBMCR_RESET				0x8000u	/* Reset the PHY. */
+#define phyBMCR_FULL_DUPLEX			0x0100U	/* Full duplex. */
+#define phyBMCR_AN_RESTART			0x0200U	/* Auto negotiation restart. */
+#define phyBMCR_ISOLATE				0x0400U /* 1 = Isolates 0 = Normal operation. */
+#define phyBMCR_AN_ENABLE			0x1000U	/* Enable auto negotiation. */
+#define phyBMCR_SPEED_100			0x2000U	/* Select 100Mbps. */
+#define phyBMCR_RESET				0x8000U	/* Reset the PHY. */
 
 /* Bit fields for 'phyREG_19_PHYCR', the 'PHY Control Register'. */
-#define PHYCR_MDIX_EN				0x8000u	/* Enable Auto MDIX. */
-#define PHYCR_MDIX_FORCE			0x4000u	/* Force MDIX crossed. */
+#define PHYCR_MDIX_EN				0x8000U	/* Enable Auto MDIX. */
+#define PHYCR_MDIX_FORCE			0x4000U	/* Force MDIX crossed. */
 
-#define phyBMSR_AN_COMPLETE			0x0020u	/* Auto-Negotiation process completed */
+#define phyBMSR_AN_COMPLETE			0x0020U	/* Auto-Negotiation process completed */
 
-#define phyBMSR_LINK_STATUS			0x0004u
+#define phyBMSR_LINK_STATUS			0x0004U
 
-#define phyPHYSTS_LINK_STATUS		0x0001u	/* PHY Link mask */
-#define phyPHYSTS_SPEED_STATUS		0x0002u	/* PHY Speed mask */
-#define phyPHYSTS_DUPLEX_STATUS		0x0004u	/* PHY Duplex mask */
+#define phyPHYSTS_LINK_STATUS		0x0001U	/* PHY Link mask */
+#define phyPHYSTS_SPEED_STATUS		0x0002U	/* PHY Speed mask */
+#define phyPHYSTS_DUPLEX_STATUS		0x0004U	/* PHY Duplex mask */
 
 /* Bit fields for 'phyREG_1F_PHYSPCS
 	001 = 10BASE-T half-duplex
@@ -95,20 +95,20 @@ Users can change their values in the project's 'FreeRTOSIPConfig.h'. */
 	010 = 100BASE-TX half-duplex
 	110 = 100BASE-TX full-duplex
 */
-#define phyPHYSPCS_SPEED_MASK		0x000Cu
-#define phyPHYSPCS_SPEED_10			0x0004u
-#define phyPHYSPCS_FULL_DUPLEX		0x0010u
+#define phyPHYSPCS_SPEED_MASK		0x000CU
+#define phyPHYSPCS_SPEED_10			0x0004U
+#define phyPHYSPCS_FULL_DUPLEX		0x0010U
 
 /*
  * Description of all capabilities that can be advertised to
  * the peer (usually a switch or router).
  */
 
-#define phyADVERTISE_CSMA			0x0001u	/* Supports IEEE 802.3u: Fast Ethernet at 100 Mbit/s */
-#define phyADVERTISE_10HALF			0x0020u	/* Try for 10mbps half-duplex. */
-#define phyADVERTISE_10FULL			0x0040u	/* Try for 10mbps full-duplex. */
-#define phyADVERTISE_100HALF		0x0080u	/* Try for 100mbps half-duplex. */
-#define phyADVERTISE_100FULL		0x0100u	/* Try for 100mbps full-duplex. */
+#define phyADVERTISE_CSMA			0x0001U	/* Supports IEEE 802.3u: Fast Ethernet at 100 Mbit/s */
+#define phyADVERTISE_10HALF			0x0020U	/* Try for 10mbps half-duplex. */
+#define phyADVERTISE_10FULL			0x0040U	/* Try for 10mbps full-duplex. */
+#define phyADVERTISE_100HALF		0x0080U	/* Try for 100mbps half-duplex. */
+#define phyADVERTISE_100FULL		0x0100U	/* Try for 100mbps full-duplex. */
 
 #define phyADVERTISE_ALL			( phyADVERTISE_10HALF | phyADVERTISE_10FULL | \
 									  phyADVERTISE_100HALF | phyADVERTISE_100FULL | \
@@ -167,7 +167,7 @@ BaseType_t xResult;
 /* Initialise the struct and assign a PHY-read and -write function. */
 void vPhyInitialise( EthernetPhy_t *pxPhyObject, xApplicationPhyReadHook_t fnPhyRead, xApplicationPhyWriteHook_t fnPhyWrite )
 {
-	memset( ( void * )pxPhyObject, '\0', sizeof( *pxPhyObject ) );
+	memset( ( void * )pxPhyObject, 0, sizeof( *pxPhyObject ) );
 
 	pxPhyObject->fnPhyRead = fnPhyRead;
 	pxPhyObject->fnPhyWrite = fnPhyWrite;
@@ -187,7 +187,7 @@ BaseType_t xPhyAddress;
 
 		pxPhyObject->fnPhyRead( xPhyAddress, phyREG_03_PHYSID2, &ulLowerID );
 		/* A valid PHY id can not be all zeros or all ones. */
-		if( ( ulLowerID != ( uint16_t )~0u )  && ( ulLowerID != ( uint16_t )0u ) )
+		if( ( ulLowerID != ( uint16_t ) ~0U )  && ( ulLowerID != ( uint16_t ) 0U ) )
 		{
 		uint32_t ulUpperID;
 		uint32_t ulPhyID;
@@ -225,7 +225,7 @@ TimeOut_t xTimer;
 BaseType_t xPhyIndex;
 
 	/* A bit-mask of PHY ports that are ready. */
-	ulDoneMask = 0ul;
+	ulDoneMask = 0UL;
 
 	/* Set the RESET bits high. */
 	for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++ )
@@ -251,7 +251,7 @@ BaseType_t xPhyIndex;
 			if( ( ulConfig & phyBMCR_RESET ) == 0 )
 			{
 				FreeRTOS_printf( ( "xPhyReset: phyBMCR_RESET %d ready\n", (int)xPhyIndex ) );
-				ulDoneMask |= ( 1ul << xPhyIndex );
+				ulDoneMask |= ( 1UL << xPhyIndex );
 			}
 		}
 		if( ulDoneMask == ulPhyMask )
@@ -270,7 +270,7 @@ BaseType_t xPhyIndex;
 	/* Clear the reset bits. */
 	for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++ )
 	{
-		if( ( ulDoneMask & ( 1ul << xPhyIndex ) ) == 0uL )
+		if( ( ulDoneMask & ( 1UL << xPhyIndex ) ) == 0UL )
 		{
 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
 
@@ -454,9 +454,9 @@ with ulPhyMask. */
 BaseType_t xPhyFixedValue( EthernetPhy_t *pxPhyObject, uint32_t ulPhyMask )
 {
 BaseType_t xPhyIndex;
-uint32_t ulValue, ulBitMask = ( uint32_t )1u;
+uint32_t ulValue, ulBitMask = ( uint32_t )1U;
 
-	ulValue = ( uint32_t )0u;
+	ulValue = ( uint32_t ) 0U;
 
 	if( pxPhyObject->xPhyPreferences.ucDuplex == PHY_DUPLEX_FULL )
 	{
@@ -491,7 +491,7 @@ uint32_t ulPHYLinkStatus, ulRegValue;
 TickType_t xRemainingTime;
 TimeOut_t xTimer;
 
-	if( ulPhyMask == ( uint32_t )0u )
+	if( ulPhyMask == ( uint32_t ) 0U )
 	{
 		return 0;
 	}
@@ -512,7 +512,7 @@ TimeOut_t xTimer;
 	/* Wait until the auto-negotiation will be completed */
 	for( ;; )
 	{
-		ulBitMask = ( uint32_t )1u;
+		ulBitMask = ( uint32_t ) 1U;
 		for( xPhyIndex = 0; xPhyIndex < ( uint32_t ) pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
 		{
 			if( ( ulPhyMask & ulBitMask ) != 0lu )
@@ -541,16 +541,16 @@ TimeOut_t xTimer;
 		vTaskDelay( pdMS_TO_TICKS( phySHORT_DELAY_MS ) );
 	}
 
-	if( ulDoneMask != ( uint32_t)0u )
+	if( ulDoneMask != ( uint32_t) 0U )
 	{
-		ulBitMask = ( uint32_t )1u;
+		ulBitMask = ( uint32_t ) 1U;
 		pxPhyObject->ulLinkStatusMask &= ~( ulDoneMask );
 		for( xPhyIndex = 0; xPhyIndex < ( uint32_t ) pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
 		{
 		BaseType_t xPhyAddress = pxPhyObject->ucPhyIndexes[ xPhyIndex ];
 		uint32_t ulPhyID = pxPhyObject->ulPhyIDs[ xPhyIndex ];
 
-			if( ( ulDoneMask & ulBitMask ) == ( uint32_t )0u )
+			if( ( ulDoneMask & ulBitMask ) == ( uint32_t ) 0U )
 			{
 				continue;
 			}
@@ -632,7 +632,7 @@ TimeOut_t xTimer;
 				( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) ? "full" : "half",
 				( ulRegValue & phyPHYSTS_SPEED_STATUS ) ? 10 : 100,
 				( ( ulPHYLinkStatus |= phyBMSR_LINK_STATUS ) != 0) ? "high" : "low" ) );
-			if( ( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) != ( uint32_t )0u )
+			if( ( ulRegValue & phyPHYSTS_DUPLEX_STATUS ) != ( uint32_t ) 0U )
 			{
 				pxPhyObject->xPhyProperties.ucDuplex = PHY_DUPLEX_FULL;
 			}
@@ -650,7 +650,7 @@ TimeOut_t xTimer;
 				pxPhyObject->xPhyProperties.ucSpeed = PHY_SPEED_100;
 			}
 		}
-	}	/* if( ulDoneMask != ( uint32_t)0u ) */
+	}	/* if( ulDoneMask != ( uint32_t) 0U ) */
 
 	return 0;
 }
@@ -658,7 +658,7 @@ TimeOut_t xTimer;
 
 BaseType_t xPhyCheckLinkStatus( EthernetPhy_t *pxPhyObject, BaseType_t xHadReception )
 {
-uint32_t ulStatus, ulBitMask = 1u;
+uint32_t ulStatus, ulBitMask = 1U;
 BaseType_t xPhyIndex;
 BaseType_t xNeedCheck = pdFALSE;
 
@@ -670,7 +670,7 @@ BaseType_t xNeedCheck = pdFALSE;
 		pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );
 		for( xPhyIndex = 0; xPhyIndex < pxPhyObject->xPortCount; xPhyIndex++, ulBitMask <<= 1 )
 		{
-			if( ( pxPhyObject->ulLinkStatusMask & ulBitMask ) == 0ul )
+			if( ( pxPhyObject->ulLinkStatusMask & ulBitMask ) == 0UL )
 			{
 				pxPhyObject->ulLinkStatusMask |= ulBitMask;
 				FreeRTOS_printf( ( "xPhyCheckLinkStatus: PHY LS now %02lX\n", pxPhyObject->ulLinkStatusMask ) );
@@ -705,7 +705,7 @@ BaseType_t xNeedCheck = pdFALSE;
 			}
 		}
 		vTaskSetTimeOutState( &( pxPhyObject->xLinkStatusTimer ) );
-		if( ( pxPhyObject->ulLinkStatusMask & phyBMSR_LINK_STATUS ) != 0 )
+		if( ( pxPhyObject->ulLinkStatusMask & ( ulBitMask >> 1 ) ) != 0 )
 		{
 			/* The link status is high, so don't poll the PHY too often. */
 			pxPhyObject->xLinkStatusRemaining = pdMS_TO_TICKS( ipconfigPHY_LS_HIGH_CHECK_TIME_MS );

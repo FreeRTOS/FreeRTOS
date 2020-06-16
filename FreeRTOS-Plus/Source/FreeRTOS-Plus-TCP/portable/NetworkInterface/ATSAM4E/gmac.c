@@ -141,7 +141,7 @@ typedef struct gmac_dev_mem {
 /** Circular buffer is empty ? */
 #define CIRC_EMPTY( head, tail )			( head == tail )
 /** Clear circular buffer */
-#define CIRC_CLEAR( head, tail )			do { ( head ) = 0; ( tail ) = 0; } while( 0 )
+#define CIRC_CLEAR( head, tail )			do { ( head ) = 0; ( tail ) = 0; } while( ipFALSE_BOOL )
 
 /** Increment head or tail */
 static __inline void circ_inc32( int32_t *lHeadOrTail, uint32_t ulSize )

@@ -1,5 +1,5 @@
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -81,7 +81,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifndef iptraceEMAC_TASK_STARTING
-	#define iptraceEMAC_TASK_STARTING()	do { } while( 0 )
+	#define iptraceEMAC_TASK_STARTING()	do { } while( ipFALSE_BOOL )
 #endif
 
 /* Define the bits of .STATUS that indicate a reception error. */
@@ -284,7 +284,7 @@ BaseType_t xReturn = pdPASS;
 		if( xRxHanderTask == NULL )
 		{
 			xReturn = xTaskCreate( prvEMACHandlerTask, "EMAC", nwRX_TASK_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, &xRxHanderTask );
-			configASSERT( xReturn );
+			configASSERT( xReturn != NULL );
 		}
 
 		if( xTXDescriptorSemaphore == NULL )
@@ -292,7 +292,7 @@ BaseType_t xReturn = pdPASS;
 			/* Create a counting semaphore, with a value of 'configNUM_TX_DESCRIPTORS'
 			and a maximum of 'configNUM_TX_DESCRIPTORS'. */
 			xTXDescriptorSemaphore = xSemaphoreCreateCounting( ( UBaseType_t ) configNUM_TX_DESCRIPTORS, ( UBaseType_t ) configNUM_TX_DESCRIPTORS );
-			configASSERT( xTXDescriptorSemaphore );
+			configASSERT( xTXDescriptorSemaphore != NULL );
 		}
 
 		/* Enable MAC interrupts. */
@@ -526,7 +526,7 @@ BaseType_t x;
 			/* Use an assert to check the allocation as +TCP applications will
 			often not use a malloc() failed hook as the TCP stack will recover
 			from allocation failures. */
-			configASSERT( xDMATxDescriptors[ x ].B1ADD );
+			configASSERT( xDMATxDescriptors[ x ].B1ADD != 0U );
 		}
 		#endif
 
@@ -592,7 +592,7 @@ BaseType_t x;
 		/* Use an assert to check the allocation as +TCP applications will often
 		not use a malloc failed hook as the TCP stack will recover from
 		allocation failures. */
-		configASSERT( xDMARxDescriptors[ x ].B1ADD );
+		configASSERT( xDMARxDescriptors[ x ].B1ADD != 0U );
 
 		xDMARxDescriptors[ x ].B2ADD = ( uint32_t ) &( xDMARxDescriptors[ x + 1 ] );
 		xDMARxDescriptors[ x ].CTRL = ( uint32_t ) RDES_ENH_BS1( ipTOTAL_ETHERNET_FRAME_SIZE ) | RDES_ENH_RCH;

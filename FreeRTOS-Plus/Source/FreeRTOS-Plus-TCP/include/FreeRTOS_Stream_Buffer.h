@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.0
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -52,10 +52,10 @@ static portINLINE void vStreamBufferClear( StreamBuffer_t *pxBuffer );
 static portINLINE void vStreamBufferClear( StreamBuffer_t *pxBuffer )
 {
 	/* Make the circular buffer empty */
-	pxBuffer->uxHead = 0u;
-	pxBuffer->uxTail = 0u;
-	pxBuffer->uxFront = 0u;
-	pxBuffer->uxMid = 0u;
+	pxBuffer->uxHead = 0U;
+	pxBuffer->uxTail = 0U;
+	pxBuffer->uxFront = 0U;
+	pxBuffer->uxMid = 0U;
 }
 /*-----------------------------------------------------------*/
 
@@ -65,7 +65,7 @@ static portINLINE size_t uxStreamBufferSpace( const StreamBuffer_t *pxBuffer, co
 /* Returns the space between uxLower and uxUpper, which equals to the distance minus 1 */
 size_t uxCount;
 
-	uxCount = pxBuffer->LENGTH + uxUpper - uxLower - 1u;
+	uxCount = pxBuffer->LENGTH + uxUpper - uxLower - 1U;
 	if( uxCount >= pxBuffer->LENGTH )
 	{
 		uxCount -= pxBuffer->LENGTH;
@@ -145,12 +145,13 @@ static portINLINE void vStreamBufferMoveMid( StreamBuffer_t *pxBuffer, size_t ux
 {
 /* Increment uxMid, but no further than uxHead */
 size_t uxSize = uxStreamBufferMidSpace( pxBuffer );
+size_t uxMoveCount = uxCount;
 
-	if( uxCount > uxSize )
+	if( uxMoveCount > uxSize )
 	{
-		uxCount = uxSize;
+		uxMoveCount = uxSize;
 	}
-	pxBuffer->uxMid += uxCount;
+	pxBuffer->uxMid += uxMoveCount;
 	if( pxBuffer->uxMid >= pxBuffer->LENGTH )
 	{
 		pxBuffer->uxMid -= pxBuffer->LENGTH;
@@ -165,7 +166,7 @@ BaseType_t xReturn;
 size_t uxTail = pxBuffer->uxTail;
 
 	/* Returns true if ( uxLeft < uxRight ) */
-	if( ( uxLeft < uxTail ) ^ ( uxRight < uxTail ) )
+	if( ( ( ( uxLeft < uxTail ) ? 1U : 0U ) ^ ( ( uxRight < uxTail ) ? 1U : 0U )  ) != 0U )
 	{
 		if( uxRight < uxTail )
 		{
@@ -211,7 +212,7 @@ size_t uxSize = uxStreamBufferGetSize( pxBuffer );
  * pucData -	A pointer to the data to be added.
  * uxCount -	The number of bytes to add.
  */
-size_t uxStreamBufferAdd( StreamBuffer_t *pxBuffer, size_t uxOffset, const uint8_t *pucData, size_t uxCount );
+size_t uxStreamBufferAdd( StreamBuffer_t *pxBuffer, size_t uxOffset, const uint8_t *pucData, size_t uxByteCount );
 
 /*
  * Read bytes from a stream buffer.

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\standard\utils\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\pkcs11\include;..\..\..\..\Source\pkcs11;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\include\;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\standard\pkcs11\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\standard\tls\include;..\..\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\src;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\mbedtls;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\private\taskpool;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include;..\..\..\..\Source\mbedtls\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\standard\utils\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\pkcs11\include;..\..\..\..\Source\pkcs11;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\include\;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\standard\pkcs11\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos_plus\standard\tls\include;..\..\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;.\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\src;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\mbedtls;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\private\taskpool;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include;..\..\..\..\Source\mbedtls_utils;..\..\..\..\Source\mbedtls\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -492,6 +492,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls_utils\mbedtls_error.c" />
     <ClCompile Include="DemoTasks\PKCSMutualAuthExample.c" />
     <ClCompile Include="demo_logging.c" />
     <ClCompile Include="main.c" />
@@ -616,6 +617,7 @@
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\x509_crt.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\x509_csr.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\xtea.h" />
+    <ClInclude Include="..\..\..\..\Source\mbedtls_utils\mbedtls_error.h" />
     <ClInclude Include="..\..\..\..\Source\pkcs11\pkcs11.h" />
     <ClInclude Include="..\..\..\..\Source\pkcs11\pkcs11f.h" />
     <ClInclude Include="..\..\..\..\Source\pkcs11\pkcs11t.h" />

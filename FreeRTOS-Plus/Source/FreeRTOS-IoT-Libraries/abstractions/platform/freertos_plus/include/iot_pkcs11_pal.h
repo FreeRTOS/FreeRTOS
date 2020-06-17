@@ -1,5 +1,5 @@
 /*
- * FreeRTOS PKCS #11 V2.0.1
+ * FreeRTOS PKCS #11 V2.1.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -23,70 +23,141 @@
  * http://www.FreeRTOS.org
  */
 
-#ifndef AWS_PKCS11_PAL
-#define AWS_PKCS11_PAL
+#ifndef IOT_PKCS11_PAL
+#define IOT_PKCS11_PAL
+
+/**
+ * @file iot_pkcs11_pal.h
+ * @brief Port Specific File Access functions for PKCS #11
+ */
+
 /*-----------------------------------------------------------*/
 /*------------ Port Specific File Access API ----------------*/
-/*--------- See aws_pkcs11_pal.c for definitions ------------*/
+/*--------- See iot_pkcs11_pal.c for definitions ------------*/
 /*-----------------------------------------------------------*/
 
-/*------------------------ PKCS #11 library functions -------------------------*/
+/*------------------------ PKCS #11 PAL functions -------------------------*/
 
 /**
- * @functionspage{pkcs11_pal,PKCS #11 PAL, PKCS #11 PAL Layer}
- * - @functionname{pkcs11_pal_function_saveobject}
- * - @functionname{pkcs11_pal_function_findobject}
- * - @functionname{pkcs11_pal_function_getobjectvalue}
- * - @functionname{pkcs11_pal_function_getobjectvaluecleanup}
+ * @functions_page{pkcs11_pal,PKCS #11 PAL, PKCS #11 PAL}
+ * @functions_brief{PKCS #11 PAL Layer}
+ * - @function_name{pkcs11_pal_function_saveobject}
+ * @function_brief{pkcs11_pal_function_saveobject}
+ * - @function_name{pkcs11_pal_function_destroyobject}
+ * @function_brief{pkcs11_pal_function_destroyobject}
+ * - @function_name{pkcs11_pal_function_findobject}
+ * @function_brief{pkcs11_pal_function_findobject}
+ * - @function_name{pkcs11_pal_function_getobjectvalue}
+ * @function_brief{pkcs11_pal_function_getobjectvalue}
+ * - @function_name{pkcs11_pal_function_getobjectvaluecleanup}
+ * @function_brief{pkcs11_pal_function_getobjectvaluecleanup}
  */
 
 /**
- * @functionpage{PKCS11_PAL_SaveObject,pkcs11_pal,saveobject}
- * @functionpage{PKCS11_PAL_FindObject,pkcs11_pal,findobject}
- * @functionpage{PKCS11_PAL_GetObjectValue,pkcs11_pal,getobjectvalue}
- * @functionpage{PKCS11_PAL_GetObjectValueCleanup,pkcs11_pal,getobjectvaluecleanup}
+ * @function_page{PKCS11_PAL_SaveObject,pkcs11_pal,saveobject}
+ * @function_snippet{pkcs11_pal,saveobject,this}
+ * @copydoc PKCS11_PAL_SaveObject
+ * @function_page{PKCS11_PAL_DestroyObject,pkcs11_pal,destroyobject}
+ * @function_snippet{pkcs11_pal,destroyobject,this}
+ * @copydoc PKCS11_PAL_DestroyObject
+ * @function_page{PKCS11_PAL_FindObject,pkcs11_pal,findobject}
+ * @function_snippet{pkcs11_pal,findobject,this}
+ * @copydoc PKCS11_PAL_FindObject
+ * @function_page{PKCS11_PAL_GetObjectValue,pkcs11_pal,getobjectvalue}
+ * @function_snippet{pkcs11_pal,getobjectvalue,this}
+ * @copydoc PKCS11_PAL_GetObjectValue
+ * @function_page{PKCS11_PAL_GetObjectValueCleanup,pkcs11_pal,getobjectvaluecleanup}
+ * @function_snippet{pkcs11_pal,getobjectvaluecleanup,this}
+ * @copydoc PKCS11_PAL_GetObjectValueCleanup
  */
 
 /**
- *  @brief Save an object to storage.
+ * @brief Saves an object in non-volatile storage.
+ *
+ * Port-specific file write for cryptographic information.
+ *
+ * @param[in] pxLabel       Attribute containing label of the object to be stored.
+ * @param[in] pucData       The object data to be saved.
+ * @param[in] ulDataSize    Size (in bytes) of object data.
+ *
+ * @return The object handle if successful.
+ * eInvalidHandle = 0 if unsuccessful.
  */
-/* @[declare pkcs11_pal_saveobject] */
+/* @[declare_pkcs11_pal_saveobject] */
 CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
                                         uint8_t * pucData,
                                         uint32_t ulDataSize );
-/* @[declare pkcs11_pal_saveobject] */
+/* @[declare_pkcs11_pal_saveobject] */
 
 /**
  * @brief Delete an object from NVM.
+ *
+ * @param[in] xHandle       Handle to a PKCS #11 object.
  */
+/* @[declare_pkcs11_pal_destroyobject] */
 CK_RV PKCS11_PAL_DestroyObject( CK_OBJECT_HANDLE xHandle );
+/* @[declare_pkcs11_pal_destroyobject] */
 
 /**
- *   @brief Look up an object handle using it's attributes
+ * @brief Translates a PKCS #11 label into an object handle.
+ *
+ * Port-specific object handle retrieval.
+ *
+ *
+ * @param[in] pLabel         Pointer to the label of the object
+ *                           who's handle should be found.
+ * @param[in] usLength       The length of the label, in bytes.
+ *
+ * @return The object handle if operation was successful.
+ * Returns eInvalidHandle if unsuccessful.
  */
-/* @[declare pkcs11_pal_findobject] */
+/* @[declare_pkcs11_pal_findobject] */
 CK_OBJECT_HANDLE PKCS11_PAL_FindObject( uint8_t * pLabel,
                                         uint8_t usLength );
-/* @[declare pkcs11_pal_findobject] */
+/* @[declare_pkcs11_pal_findobject] */
+
 
 /**
- *   @brief Get the value of an object.
- *   @note  Buffers may be allocated by this call, and should be
- *          freed up by calling PKCS11_PAL_GetObjectValueCleanup().
+ * @brief Gets the value of an object in storage, by handle.
+ *
+ * Port-specific file access for cryptographic information.
+ *
+ * This call dynamically allocates the buffer which object value
+ * data is copied into.  PKCS11_PAL_GetObjectValueCleanup()
+ * should be called after each use to free the dynamically allocated
+ * buffer.
+ *
+ * @sa PKCS11_PAL_GetObjectValueCleanup
+ *
+ * @param[in]  xHandle      The PKCS #11 object handle of the object to get the value of.
+ * @param[out] ppucData     Pointer to buffer for file data.
+ * @param[out] pulDataSize  Size (in bytes) of data located in file.
+ * @param[out] pIsPrivate   Boolean indicating if value is private (CK_TRUE)
+ *                          or exportable (CK_FALSE)
+ *
+ * @return CKR_OK if operation was successful.  CKR_KEY_HANDLE_INVALID if
+ * no such object handle was found, CKR_DEVICE_MEMORY if memory for
+ * buffer could not be allocated, CKR_FUNCTION_FAILED for device driver
+ * error.
  */
-/* @[declare pkcs11_pal_getobjectvalue] */
+/* @[declare_pkcs11_pal_getobjectvalue] */
 BaseType_t PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
                                       uint8_t ** ppucData,
                                       uint32_t * pulDataSize,
-                                      CK_BBOOL * xIsPrivate );
-/* @[declare pkcs11_pal_getobjectvalue] */
+                                      CK_BBOOL * pIsPrivate );
+/* @[declare_pkcs11_pal_getobjectvalue] */
 
 /**
- *  @brief Free the buffer allocated in PKCS11_PAL_GetObjectValue() (see PAL).
+ * @brief Cleanup after PKCS11_GetObjectValue().
+ *
+ * @param[in] pucBuffer      The buffer to free.
+ *                          (*ppucData from PKCS11_PAL_GetObjectValue())
+ * @param[in] ulBufferSize   The length of the buffer to free.
+ *                          (*pulDataSize from PKCS11_PAL_GetObjectValue())
  */
-/* @[declare pkcs11_pal_getobjectvaluecleanup] */
+/* @[declare_pkcs11_pal_getobjectvaluecleanup] */
 void PKCS11_PAL_GetObjectValueCleanup( uint8_t * pucBuffer,
                                        uint32_t ulBufferSize );
-/* @[declare pkcs11_pal_getobjectvaluecleanup] */
+/* @[declare_pkcs11_pal_getobjectvaluecleanup] */
 
-#endif /* AWS_PKCS11_PAL include guard. */
+#endif /* IOT_PKCS11_PAL include guard. */

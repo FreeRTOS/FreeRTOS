@@ -44,26 +44,45 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * @ingroup pkcs11_macros
+ * @brief Macros for managing PKCS #11 objects in flash.
+ *
+ */
+#define pkcs11palFILE_NAME_CLIENT_CERTIFICATE    "FreeRTOS_P11_Certificate.dat"       /**< The file name of the Certificate object. */
+#define pkcs11palFILE_NAME_KEY                   "FreeRTOS_P11_Key.dat"               /**< The file name of the Key object. */
+#define pkcs11palFILE_CODE_SIGN_PUBLIC_KEY       "FreeRTOS_P11_CodeSignKey.dat"       /**< The file name of the Code Sign Key object. */
 
-#define pkcs11palFILE_NAME_CLIENT_CERTIFICATE    "FreeRTOS_P11_Certificate.dat"
-#define pkcs11palFILE_NAME_KEY                   "FreeRTOS_P11_Key.dat"
-#define pkcs11palFILE_CODE_SIGN_PUBLIC_KEY       "FreeRTOS_P11_CodeSignKey.dat"
-
+/**
+ * @ingroup pkcs11_macros
+ * @brief PKCS #11 logging macro.
+ *
+ */
 #define PKCS11_PAL_PRINT( X )    vLoggingPrintf X
 
-
+/**
+ * @ingroup pkcs11_enums
+ * @brief Enums for managing PKCS #11 object types.
+ *
+ */
 enum eObjectHandles
 {
-    eInvalidHandle = 0, /* According to PKCS #11 spec, 0 is never a valid object handle. */
-    eAwsDevicePrivateKey = 1,
-    eAwsDevicePublicKey,
-    eAwsDeviceCertificate,
-    eAwsCodeSigningKey
+    eInvalidHandle = 0,            /**< According to PKCS #11 spec, 0 is never a valid object handle. */
+    eAwsDevicePrivateKey = 1,      /**< Private Key. */
+    eAwsDevicePublicKey,           /**< Public Key. */
+    eAwsDeviceCertificate,         /**< Certificate. */
+    eAwsCodeSigningKey             /**< Code Signing Key. */
 };
 
 /*-----------------------------------------------------------*/
 
-/* Returns pdTRUE if the file exists, pdFALSE if not. */
+/**
+ * @brief Checks to see if a file exists
+ *
+ * @param[in] pcFileName         The name of the file to check for existance.
+ * 
+ * @returns pdTRUE if the file exists, pdFALSE if not.
+ */
 BaseType_t prvFileExists( const char * pcFileName )
 {
     DWORD xReturn;
@@ -80,7 +99,14 @@ BaseType_t prvFileExists( const char * pcFileName )
     }
 }
 
-/* Converts a label to its respective filename and handle. */
+/**
+ * @brief Checks to see if a file exists
+ *
+ * @param[in] pcLabel            The PKCS #11 label to convert to a file name
+ * @param[out] pcFileName        The name of the file to check for existance.
+ * @param[out] pHandle           The type of the PKCS #11 object.
+ * 
+ */
 void prvLabelToFilenameHandle( uint8_t * pcLabel,
                                char ** pcFileName,
                                CK_OBJECT_HANDLE_PTR pHandle )
@@ -124,19 +150,9 @@ void prvLabelToFilenameHandle( uint8_t * pcLabel,
     }
 }
 
+/*-----------------------------------------------------------*/
 
-/**
- * @brief Saves an object in non-volatile storage.
- *
- * Port-specific file write for cryptographic information.
- *
- * @param[in] pxLabel       Attribute containing label of the object to be stored.
- * @param[in] pucData       The object data to be saved
- * @param[in] pulDataSize   Size (in bytes) of object data.
- *
- * @return The object handle if successful.
- * eInvalidHandle = 0 if unsuccessful.
- */
+
 CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
                                         uint8_t * pucData,
                                         uint32_t ulDataSize )
@@ -192,22 +208,8 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
     return xHandle;
 }
 
-
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Translates a PKCS #11 label into an object handle.
- *
- * Port-specific object handle retrieval.
- *
- *
- * @param[in] pLabel         Pointer to the label of the object
- *                           who's handle should be found.
- * @param[in] usLength       The length of the label, in bytes.
- *
- * @return The object handle if operation was successful.
- * Returns eInvalidHandle if unsuccessful.
- */
 
 CK_OBJECT_HANDLE PKCS11_PAL_FindObject( uint8_t * pLabel,
                                         uint8_t usLength )
@@ -231,32 +233,8 @@ CK_OBJECT_HANDLE PKCS11_PAL_FindObject( uint8_t * pLabel,
 
     return xHandle;
 }
-
 /*-----------------------------------------------------------*/
 
-/**
- * @brief Gets the value of an object in storage, by handle.
- *
- * Port-specific file access for cryptographic information.
- *
- * This call dynamically allocates the buffer which object value
- * data is copied into.  PKCS11_PAL_GetObjectValueCleanup()
- * should be called after each use to free the dynamically allocated
- * buffer.
- *
- * @sa PKCS11_PAL_GetObjectValueCleanup
- *
- * @param[in] pcFileName    The name of the file to be read.
- * @param[out] ppucData     Pointer to buffer for file data.
- * @param[out] pulDataSize  Size (in bytes) of data located in file.
- * @param[out] pIsPrivate   Boolean indicating if value is private (CK_TRUE)
- *                          or exportable (CK_FALSE)
- *
- * @return CKR_OK if operation was successful.  CKR_KEY_HANDLE_INVALID if
- * no such object handle was found, CKR_DEVICE_MEMORY if memory for
- * buffer could not be allocated, CKR_FUNCTION_FAILED for device driver
- * error.
- */
 CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
                                  uint8_t ** ppucData,
                                  uint32_t * pulDataSize,
@@ -360,14 +338,8 @@ CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
     return ulReturn;
 }
 
-/**
- * @brief Cleanup after PKCS11_GetObjectValue().
- *
- * @param[in] pucData       The buffer to free.
- *                          (*ppucData from PKCS11_PAL_GetObjectValue())
- * @param[in] ulDataSize    The length of the buffer to free.
- *                          (*pulDataSize from PKCS11_PAL_GetObjectValue())
- */
+/*-----------------------------------------------------------*/
+
 void PKCS11_PAL_GetObjectValueCleanup( uint8_t * pucData,
                                        uint32_t ulDataSize )
 {
@@ -379,3 +351,5 @@ void PKCS11_PAL_GetObjectValueCleanup( uint8_t * pucData,
         vPortFree( pucData );
     }
 }
+
+/*-----------------------------------------------------------*/

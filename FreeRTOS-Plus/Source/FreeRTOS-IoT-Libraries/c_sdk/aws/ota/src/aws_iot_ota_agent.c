@@ -1,5 +1,5 @@
 /*
- * FreeRTOS OTA V1.1.1
+ * FreeRTOS OTA V1.2.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -74,16 +74,6 @@ typedef struct OTAStateTableEntry
     OTAEventHandler_t xHandler;
     OTA_State_t xNextState;
 } OTAStateTableEntry_t;
-
-/*
- * Returns the byte offset of the element 'e' in the typedef structure 't'.
- * Setting an arbitrarily large base of 0x10000 and masking off that base allows
- * us to do the same thing as a zero offset without the lint warnings of using a
- * null pointer. No structure is anywhere near 64K in size.
- */
-/*lint -emacro((923,9078),OFFSET_OF) Intentionally cast pointer to uint32_t because we are using it as an offset. */
-
-#define OFFSET_OF( t, e )    ( ( uint32_t ) ( &( ( t * ) 0x10000UL )->e ) & 0xffffUL )
 
 /*
  * This union allows us to access document model parameter addresses as their
@@ -250,6 +240,10 @@ static OTA_Err_t prvResetDevice( void );
 
 static bool_t prvInSelftest( void );
 
+/* Function to handle events that were unexpected in the current state. */
+
+static void prvHandleUnexpectedEvents( OTA_EventMsg_t * pxEventMsg );
+
 /* OTA state event handler functions. */
 
 static OTA_Err_t prvStartHandler( OTA_EventData_t * pxEventData );
@@ -262,6 +256,8 @@ static OTA_Err_t prvRequestDataHandler( OTA_EventData_t * pxEventData );
 static OTA_Err_t prvShutdownHandler( OTA_EventData_t * pxEventData );
 static OTA_Err_t prvCloseFileHandler( OTA_EventData_t * pxEventData );
 static OTA_Err_t prvUserAbortHandler( OTA_EventData_t * pxEventData );
+static OTA_Err_t prvSuspendHandler( OTA_EventData_t * pxEventData );
+static OTA_Err_t prvResumeHandler( OTA_EventData_t * pxEventData );
 
 /* OTA default callback initializer. */
 
@@ -318,6 +314,8 @@ OTAStateTableEntry_t OTATransitionTable[] =
     { eOTA_AgentState_WaitingForFileBlock, eOTA_AgentEvent_RequestFileBlock,    prvRequestDataHandler, eOTA_AgentState_WaitingForFileBlock },
     { eOTA_AgentState_WaitingForFileBlock, eOTA_AgentEvent_RequestJobDocument,  prvRequestJobHandler,  eOTA_AgentState_WaitingForJob       },
     { eOTA_AgentState_WaitingForFileBlock, eOTA_AgentEvent_CloseFile,           prvCloseFileHandler,   eOTA_AgentState_WaitingForJob       },
+    { eOTA_AgentState_Suspended,           eOTA_AgentEvent_Resume,              prvResumeHandler,      eOTA_AgentState_RequestingJob       },
+    { eOTA_AgentState_All,                 eOTA_AgentEvent_Suspend,             prvSuspendHandler,     eOTA_AgentState_Suspended           },
     { eOTA_AgentState_All,                 eOTA_AgentEvent_UserAbort,           prvUserAbortHandler,   eOTA_AgentState_WaitingForJob       },
     { eOTA_AgentState_All,                 eOTA_AgentEvent_Shutdown,            prvShutdownHandler,    eOTA_AgentState_ShuttingDown        },
 };
@@ -332,6 +330,7 @@ const char * pcOTA_AgentState_Strings[ eOTA_AgentState_All ] =
     "RequestingFileBlock",
     "WaitingForFileBlock",
     "ClosingFile",
+    "Suspended",
     "ShuttingDown",
     "Stopped"
 };
@@ -347,6 +346,8 @@ const char * pcOTA_Event_Strings[ eOTA_AgentEvent_Max ] =
     "ReceivedFileBlock",
     "RequestTimer",
     "CloseFile",
+    "Suspend",
+    "Resume",
     "UserAbort",
     "Shutdown"
 };
@@ -727,6 +728,8 @@ static OTA_Err_t prvStartHandler( OTA_EventData_t * pxEventData )
     OTA_Err_t xReturn = kOTA_Err_None;
     OTA_EventMsg_t xEventMsg = { 0 };
 
+    /* Start self-test timer, if platform is in self-test. */
+    prvStartSelfTestTimer();
 
     /* Send event to OTA task to get job document. */
     xEventMsg.xEventId = eOTA_AgentEvent_RequestJobDocument;
@@ -748,7 +751,7 @@ static OTA_Err_t prvInSelfTestHandler( OTA_EventData_t * pxEventData )
     OTA_LOG_L1( "[%s] prvInSelfTestHandler, platform is in self-test.\r\n", OTA_METHOD_NAME );
 
     /* Check the platform's OTA update image state. It should also be in self test. */
-    if( prvStartSelfTestTimer() == pdTRUE )
+    if( prvInSelftest() == true )
     {
         /* Callback for application specific self-test. */
         xOTA_Agent.xPALCallbacks.xCompleteCallback( eOTA_JobEvent_StartTest );
@@ -1109,6 +1112,7 @@ static OTA_Err_t prvUserAbortHandler( OTA_EventData_t * pxEventData )
 
 static OTA_Err_t prvShutdownHandler( OTA_EventData_t * pxEventData )
 {
+    DEFINE_OTA_METHOD_NAME( "prvShutdownHandler" );
     ( void ) pxEventData;
 
     OTA_LOG_L2( "[%s] Shutting Down OTA Agent. %d\r\n", OTA_METHOD_NAME );
@@ -1125,6 +1129,46 @@ static OTA_Err_t prvShutdownHandler( OTA_EventData_t * pxEventData )
     vTaskDelete( NULL );
 
     return kOTA_Err_None;
+}
+
+static OTA_Err_t prvSuspendHandler( OTA_EventData_t * pxEventData )
+{
+    DEFINE_OTA_METHOD_NAME( "prvSuspendHandler" );
+
+    ( void ) pxEventData;
+    OTA_Err_t xErr = kOTA_Err_None;
+
+    /* Log the state change to suspended state.*/
+    OTA_LOG_L1( "[%s] OTA Agent is suspended.\r\n", OTA_METHOD_NAME );
+
+    return xErr;
+}
+
+static OTA_Err_t prvResumeHandler( OTA_EventData_t * pxEventData )
+{
+    DEFINE_OTA_METHOD_NAME( "prvResumeHandler" )
+
+        ( void ) pxEventData;
+    OTA_Err_t xErr = kOTA_Err_None;
+
+    OTA_EventMsg_t xEventMsg = { 0 };
+
+    /*
+     * Update the connection handle before resuming the OTA process.
+     */
+
+    OTA_LOG_L2( "[%s] Updating the connection handle. %d\r\n", OTA_METHOD_NAME );
+
+    xOTA_Agent.pvConnectionContext = pxEventData;
+
+    /*
+     * Send signal to request job document.
+     */
+
+    xEventMsg.xEventId = eOTA_AgentEvent_RequestJobDocument;
+    OTA_SignalEvent( &xEventMsg );
+
+    return xErr;
 }
 
 /*
@@ -1156,6 +1200,8 @@ static OTA_Err_t prvResetDevice( void )
 
 void prvOTAEventBufferFree( OTA_EventData_t * const pxBuffer )
 {
+    DEFINE_OTA_METHOD_NAME( "prvOTAEventBufferFree" );
+
     if( xSemaphoreTake( xOTA_Agent.xOTA_ThreadSafetyMutex, portMAX_DELAY ) == pdPASS )
     {
         pxBuffer->bBufferUsed = false;
@@ -1169,6 +1215,8 @@ void prvOTAEventBufferFree( OTA_EventData_t * const pxBuffer )
 
 OTA_EventData_t * prvOTAEventBufferGet( void )
 {
+    DEFINE_OTA_METHOD_NAME( "prvOTAEventBufferGet" );
+
     uint32_t ulIndex = 0;
     OTA_EventData_t * pxOTAFreeMsg = NULL;
 
@@ -1770,32 +1818,29 @@ static OTA_FileContext_t * prvParseJobDoc( const char * pcJSON,
     {
         { pcOTA_JSON_ClientTokenKey,   OTA_JOB_PARAM_OPTIONAL, { ( uint32_t ) &xOTA_Agent.pcClientTokenFromJob }, eModelParamType_StringInDoc, JSMN_STRING    }, /*lint !e9078 !e923 Get address of token as value. */
         { pcOTA_JSON_ExecutionKey,     OTA_JOB_PARAM_REQUIRED, { OTA_DONT_STORE_PARAM                          }, eModelParamType_Object,      JSMN_OBJECT    },
-        { pcOTA_JSON_JobIDKey,         OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, pucJobName )    }, eModelParamType_StringCopy,  JSMN_STRING    },
+        { pcOTA_JSON_JobIDKey,         OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, pucJobName )     }, eModelParamType_StringCopy,  JSMN_STRING    },
         { pcOTA_JSON_StatusDetailsKey, OTA_JOB_PARAM_OPTIONAL, { OTA_DONT_STORE_PARAM                          }, eModelParamType_Object,      JSMN_OBJECT    },
-        { pcOTA_JSON_SelfTestKey,      OTA_JOB_PARAM_OPTIONAL, { OFFSET_OF( OTA_FileContext_t, xIsInSelfTest ) }, eModelParamType_Ident,       JSMN_STRING    },
-        { pcOTA_JSON_UpdatedByKey,     OTA_JOB_PARAM_OPTIONAL, { OFFSET_OF( OTA_FileContext_t, ulUpdaterVersion )}, eModelParamType_UInt32,      JSMN_STRING    },
+        { pcOTA_JSON_SelfTestKey,      OTA_JOB_PARAM_OPTIONAL, { offsetof( OTA_FileContext_t, xIsInSelfTest )  }, eModelParamType_Ident,       JSMN_STRING    },
+        { pcOTA_JSON_UpdatedByKey,     OTA_JOB_PARAM_OPTIONAL, { offsetof( OTA_FileContext_t, ulUpdaterVersion )}, eModelParamType_UInt32,      JSMN_STRING    },
         { pcOTA_JSON_JobDocKey,        OTA_JOB_PARAM_REQUIRED, { OTA_DONT_STORE_PARAM                          }, eModelParamType_Object,      JSMN_OBJECT    },
         { pcOTA_JSON_OTAUnitKey,       OTA_JOB_PARAM_REQUIRED, { OTA_DONT_STORE_PARAM                          }, eModelParamType_Object,      JSMN_OBJECT    },
-        { pcOTA_JSON_StreamNameKey,    OTA_JOB_PARAM_OPTIONAL, { OFFSET_OF( OTA_FileContext_t, pucStreamName ) }, eModelParamType_StringCopy,  JSMN_STRING    },
-        { pcOTA_JSON_ProtocolsKey,     OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, pucProtocols )  }, eModelParamType_ArrayCopy,   JSMN_ARRAY     },
+        { pcOTA_JSON_StreamNameKey,    OTA_JOB_PARAM_OPTIONAL, { offsetof( OTA_FileContext_t, pucStreamName )  }, eModelParamType_StringCopy,  JSMN_STRING    },
+        { pcOTA_JSON_ProtocolsKey,     OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, pucProtocols )   }, eModelParamType_ArrayCopy,   JSMN_ARRAY     },
         { pcOTA_JSON_FileGroupKey,     OTA_JOB_PARAM_REQUIRED, { OTA_DONT_STORE_PARAM                          }, eModelParamType_Array,       JSMN_ARRAY     },
-        { pcOTA_JSON_FilePathKey,      OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, pucFilePath )   }, eModelParamType_StringCopy,  JSMN_STRING    },
-        { pcOTA_JSON_FileSizeKey,      OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, ulFileSize )    }, eModelParamType_UInt32,      JSMN_PRIMITIVE },
-        { pcOTA_JSON_FileIDKey,        OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, ulServerFileID )}, eModelParamType_UInt32,      JSMN_PRIMITIVE },
-        { pcOTA_JSON_FileCertNameKey,  OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, pucCertFilepath )}, eModelParamType_StringCopy,  JSMN_STRING    },
-        { pcOTA_JSON_UpdateDataUrlKey, OTA_JOB_PARAM_OPTIONAL, { OFFSET_OF( OTA_FileContext_t, pucUpdateUrlPath )}, eModelParamType_StringCopy,  JSMN_STRING    },
-        { pcOTA_JSON_AuthSchemeKey,    OTA_JOB_PARAM_OPTIONAL, { OFFSET_OF( OTA_FileContext_t, pucAuthScheme ) }, eModelParamType_StringCopy,  JSMN_STRING    },
-        { cOTA_JSON_FileSignatureKey,  OTA_JOB_PARAM_REQUIRED, { OFFSET_OF( OTA_FileContext_t, pxSignature )   }, eModelParamType_SigBase64,   JSMN_STRING    },
-        { pcOTA_JSON_FileAttributeKey, OTA_JOB_PARAM_OPTIONAL, { OFFSET_OF( OTA_FileContext_t, ulFileAttributes )}, eModelParamType_UInt32,      JSMN_PRIMITIVE },
+        { pcOTA_JSON_FilePathKey,      OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, pucFilePath )    }, eModelParamType_StringCopy,  JSMN_STRING    },
+        { pcOTA_JSON_FileSizeKey,      OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, ulFileSize )     }, eModelParamType_UInt32,      JSMN_PRIMITIVE },
+        { pcOTA_JSON_FileIDKey,        OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, ulServerFileID ) }, eModelParamType_UInt32,      JSMN_PRIMITIVE },
+        { pcOTA_JSON_FileCertNameKey,  OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, pucCertFilepath )}, eModelParamType_StringCopy,  JSMN_STRING    },
+        { pcOTA_JSON_UpdateDataUrlKey, OTA_JOB_PARAM_OPTIONAL, { offsetof( OTA_FileContext_t, pucUpdateUrlPath )}, eModelParamType_StringCopy,  JSMN_STRING    },
+        { pcOTA_JSON_AuthSchemeKey,    OTA_JOB_PARAM_OPTIONAL, { offsetof( OTA_FileContext_t, pucAuthScheme )  }, eModelParamType_StringCopy,  JSMN_STRING    },
+        { cOTA_JSON_FileSignatureKey,  OTA_JOB_PARAM_REQUIRED, { offsetof( OTA_FileContext_t, pxSignature )    }, eModelParamType_SigBase64,   JSMN_STRING    },
+        { pcOTA_JSON_FileAttributeKey, OTA_JOB_PARAM_OPTIONAL, { offsetof( OTA_FileContext_t, ulFileAttributes )}, eModelParamType_UInt32,      JSMN_PRIMITIVE },
     };
 
     OTA_JobParseErr_t eErr = eOTA_JobParseErr_Unknown;
     OTA_FileContext_t * pxFinalFile = NULL;
     OTA_FileContext_t xFileContext = { 0 };
     OTA_FileContext_t * C = &xFileContext;
-
-    OTA_LOG_L1( "[%s] Size of OTA_FileContext_t [%d]\r\n", OTA_METHOD_NAME, sizeof( xFileContext ) );
-
 
     JSON_DocModel_t xOTA_JobDocModel;
 
@@ -2003,10 +2048,14 @@ static OTA_FileContext_t * prvParseJobDoc( const char * pcJSON,
         }
     }
 
-    /* If we failed, free the reserved file context (C) to make it available again. */
+    /* If we failed, close the open files. */
     if( pxFinalFile == NULL )
     {
-        ( void ) prvOTA_Close( C );
+        /* Free the current reserved file context. */
+        prvOTA_FreeContext( C );
+
+        /* Close any open files. */
+        ( void ) prvOTA_Close( &xOTA_Agent.pxOTA_Files[ xOTA_Agent.ulFileIndex ] );
     }
 
     /* Return pointer to populated file context or NULL if it failed. */
@@ -2350,6 +2399,44 @@ static void prvAgentShutdownCleanup( void )
     }
 }
 
+/*
+ * Handle any events that were unexpected in the current state.
+ */
+static void prvHandleUnexpectedEvents( OTA_EventMsg_t * pxEventMsg )
+{
+    DEFINE_OTA_METHOD_NAME( "prvHandleUnexpectedEvents" );
+
+    configASSERT( pxEventMsg );
+
+    OTA_LOG_L1( "[%s] Unexpected Event. Current State [%s] Received Event  [%s] \n",
+                OTA_METHOD_NAME,
+                pcOTA_AgentState_Strings[ xOTA_Agent.eState ],
+                pcOTA_Event_Strings[ pxEventMsg->xEventId ] );
+
+    /* Perform any cleanup operations required for specifc unhandled events.*/
+    switch( pxEventMsg->xEventId )
+    {
+        case eOTA_AgentEvent_ReceivedJobDocument:
+
+            /* Received job event is not handled , release the buffer.*/
+            prvOTAEventBufferFree( pxEventMsg->pxEventData );
+
+            break;
+
+        case eOTA_AgentEvent_ReceivedFileBlock:
+
+            /* Received file data event is not handled , release the buffer.*/
+            prvOTAEventBufferFree( pxEventMsg->pxEventData );
+
+            break;
+
+        default:
+
+            /* Nothing to do here.*/
+            break;
+    }
+}
+
 static void prvOTAAgentTask( void * pUnused )
 {
     DEFINE_OTA_METHOD_NAME( "prvOTAAgentTask" );
@@ -2417,10 +2504,10 @@ static void prvOTAAgentTask( void * pUnused )
 
             if( i == ulTransitionTableLen )
             {
-                OTA_LOG_L1( "[%s] Unexpected Event. Current State [%s] Event  [%s]  \n",
-                            OTA_METHOD_NAME,
-                            pcOTA_AgentState_Strings[ xOTA_Agent.eState ],
-                            pcOTA_Event_Strings[ xEventMsg.xEventId ] );
+                /*
+                 * Handle unexpected events.
+                 */
+                prvHandleUnexpectedEvents( &xEventMsg );
             }
         }
     }
@@ -2428,6 +2515,8 @@ static void prvOTAAgentTask( void * pUnused )
 
 BaseType_t OTA_SignalEvent( const OTA_EventMsg_t * const pxEventMsg )
 {
+    DEFINE_OTA_METHOD_NAME( "OTA_SignalEvent" );
+
     BaseType_t xErr = pdFALSE;
 
     /*
@@ -2940,6 +3029,73 @@ OTA_ImageState_t OTA_GetImageState( void )
      * Return the current OTA image state.
      */
     return xOTA_Agent.eImageState;
+}
+
+/*
+ * Suspend OTA Agent task.
+ */
+OTA_Err_t OTA_Suspend( void )
+{
+    DEFINE_OTA_METHOD_NAME( "OTA_Suspend" );
+
+    OTA_Err_t xErr = kOTA_Err_Uninitialized;
+    OTA_EventMsg_t xEventMsg = { 0 };
+
+    /* Stop the request timer. */
+    prvStopRequestTimer();
+
+    /* Check if OTA Agent is running. */
+    if( xOTA_Agent.eState != eOTA_AgentState_Stopped )
+    {
+        /*
+         * Send event to OTA agent task.
+         */
+        xEventMsg.xEventId = eOTA_AgentEvent_Suspend;
+        OTA_SignalEvent( &xEventMsg );
+
+        xErr = kOTA_Err_None;
+    }
+    else
+    {
+        OTA_LOG_L1( "[%s] Error: OTA Agent is not running, cannot suspend.\r\n", OTA_METHOD_NAME );
+
+        xErr = kOTA_Err_OTAAgentStopped;
+    }
+
+    return xErr;
+}
+
+/*
+ * Resume OTA Agent task.
+ */
+OTA_Err_t OTA_Resume( void * pxConnection )
+{
+    DEFINE_OTA_METHOD_NAME( "OTA_Resume" );
+
+    OTA_Err_t xErr = kOTA_Err_Uninitialized;
+    OTA_EventMsg_t xEventMsg = { 0 };
+
+    xEventMsg.pxEventData = pxConnection;
+
+    /* Check if OTA Agent is running. */
+    if( xOTA_Agent.eState != eOTA_AgentState_Stopped )
+    {
+        /*
+         * Send event to OTA agent task.
+         */
+        xEventMsg.xEventId = eOTA_AgentEvent_Resume;
+        OTA_SignalEvent( &xEventMsg );
+
+        xErr = kOTA_Err_None;
+    }
+    else
+    {
+        OTA_LOG_L1( "[%s] Error: OTA Agent is not running, cannot resume.\r\n", OTA_METHOD_NAME );
+
+        xErr = kOTA_Err_OTAAgentStopped;
+    }
+
+    return xErr;
 }
 
 /*-----------------------------------------------------------*/

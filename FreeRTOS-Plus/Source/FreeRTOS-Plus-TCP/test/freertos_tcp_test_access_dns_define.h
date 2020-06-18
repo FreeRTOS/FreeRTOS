@@ -1,6 +1,6 @@
 /*
  * FreeRTOS+TCP V2.2.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,34 +23,26 @@
  * http://www.FreeRTOS.org
  */
 
-#ifndef FREERTOS_UDP_IP_H
-#define FREERTOS_UDP_IP_H
+/**
+ * @file aws_ota_pal_test_access_define.h
+ * @brief Function wrappers that access private methods in aws_ota_pal.c.
+ *
+ * Needed for testing private functions.
+ */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef _FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
+#define _FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
 
-/* Application level configuration options. */
-#include "FreeRTOSIPConfig.h"
-#include "FreeRTOSIPConfigDefaults.h"
-#include "IPTraceMacroDefaults.h"
+#include "freertos_tcp_test_access_declare.h"
 
+/*-----------------------------------------------------------*/
 
-#ifdef __cplusplus
-} // extern "C"
-#endif
+uint32_t TEST_FreeRTOS_TCP_prvParseDNSReply( uint8_t * pucUDPPayloadBuffer,
+                                             size_t xBufferLength,
+                                             TickType_t xIdentifier )
+{
+    return prvParseDNSReply( pucUDPPayloadBuffer, xBufferLength, xIdentifier );
+}
+/*-----------------------------------------------------------*/
 
-#endif /* FREERTOS_UDP_IP_H */
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif /* ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_ */

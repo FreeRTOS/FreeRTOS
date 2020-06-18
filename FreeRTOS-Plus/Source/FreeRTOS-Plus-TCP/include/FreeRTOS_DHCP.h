@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.0
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -34,23 +34,53 @@ extern "C" {
 #include "FreeRTOSIPConfig.h"
 #include "IPTraceMacroDefaults.h"
 
-/* Used in the DHCP callback if ipconfigUSE_DHCP_HOOK is set to 1. */
-typedef enum eDHCP_PHASE
-{
-	eDHCPPhasePreDiscover,	/* Driver is about to send a DHCP discovery. */
-	eDHCPPhasePreRequest,	/* Driver is about to request DHCP an IP address. */
-#if( ipconfigDHCP_SEND_DISCOVER_AFTER_AUTO_IP != 0 )
-	eDHCPPhasePreLLA,		/* Driver is about to try get an LLA address */
-#endif /* ipconfigDHCP_SEND_DISCOVER_AFTER_AUTO_IP */
-} eDHCPCallbackPhase_t;
+#if( ipconfigUSE_DHCP_HOOK != 0 )
+	/* Used in the DHCP callback if ipconfigUSE_DHCP_HOOK is set to 1. */
+	typedef enum eDHCP_PHASE
+	{
+		eDHCPPhasePreDiscover,	/* Driver is about to send a DHCP discovery. */
+		eDHCPPhasePreRequest	/* Driver is about to request DHCP an IP address. */
+	} eDHCPCallbackPhase_t;
 
-/* Used in the DHCP callback if ipconfigUSE_DHCP_HOOK is set to 1. */
-typedef enum eDHCP_ANSWERS
+	/* Used in the DHCP callback if ipconfigUSE_DHCP_HOOK is set to 1. */
+	typedef enum eDHCP_ANSWERS
+	{
+		eDHCPContinue,			/* Continue the DHCP process */
+		eDHCPUseDefaults,		/* Stop DHCP and use the static defaults. */
+		eDHCPStopNoChanges,		/* Stop DHCP and continue with current settings. */
+	} eDHCPCallbackAnswer_t;
+#endif	/* #if( ipconfigUSE_DHCP_HOOK != 0 ) */
+
+/* DHCP state machine states. */
+typedef enum
 {
-	eDHCPContinue,			/* Continue the DHCP process */
-	eDHCPUseDefaults,		/* Stop DHCP and use the static defaults. */
-	eDHCPStopNoChanges,		/* Stop DHCP and continue with current settings. */
-} eDHCPCallbackAnswer_t;
+	eWaitingSendFirstDiscover = 0,	/* Initial state.  Send a discover the first time it is called, and reset all timers. */
+	eWaitingOffer,					/* Either resend the discover, or, if the offer is forthcoming, send a request. */
+	eWaitingAcknowledge,			/* Either resend the request. */
+	#if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
+		eGetLinkLayerAddress,		/* When DHCP didn't respond, try to obtain a LinkLayer address 168.254.x.x. */
+	#endif
+	eLeasedAddress,					/* Resend the request at the appropriate time to renew the lease. */
+	eNotUsingLeasedAddress			/* DHCP failed, and a default IP address is being used. */
+} eDHCPState_t;
+
+/* Hold information in between steps in the DHCP state machine. */
+struct xDHCP_DATA
+{
+	uint32_t ulTransactionId;
+	uint32_t ulOfferedIPAddress;
+	uint32_t ulDHCPServerAddress;
+	uint32_t ulLeaseTime;
+	/* Hold information on the current timer state. */
+	TickType_t xDHCPTxTime;
+	TickType_t xDHCPTxPeriod;
+	/* Try both without and with the broadcast flag */
+	BaseType_t xUseBroadcast;
+	/* Maintains the DHCP state machine state. */
+	eDHCPState_t eDHCPState;
+};
+
+typedef struct xDHCP_DATA DHCPData_t;
 
 /*
  * NOT A PUBLIC API FUNCTION.
@@ -60,12 +90,14 @@ void vDHCPProcess( BaseType_t xReset );
 /* Internal call: returns true if socket is the current DHCP socket */
 BaseType_t xIsDHCPSocket( Socket_t xSocket );
 
-/* Prototype of the hook (or callback) function that must be provided by the
-application if ipconfigUSE_DHCP_HOOK is set to 1.  See the following URL for
-usage information:
-http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_IP_Configuration.html#ipconfigUSE_DHCP_HOOK
-*/
-eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase, uint32_t ulIPAddress );
+#if( ipconfigUSE_DHCP_HOOK != 0 )
+	/* Prototype of the hook (or callback) function that must be provided by the
+	application if ipconfigUSE_DHCP_HOOK is set to 1.  See the following URL for
+	usage information:
+	http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_IP_Configuration.html#ipconfigUSE_DHCP_HOOK
+	*/
+	eDHCPCallbackAnswer_t xApplicationDHCPHook( eDHCPCallbackPhase_t eDHCPPhase, uint32_t ulIPAddress );
+#endif	/* ( ipconfigUSE_DHCP_HOOK != 0 ) */
 
 #ifdef __cplusplus
 }	/* extern "C" */

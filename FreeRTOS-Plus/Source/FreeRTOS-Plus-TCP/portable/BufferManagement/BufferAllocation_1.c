@@ -1,5 +1,5 @@
 /*
-FreeRTOS+TCP V2.0.11
+FreeRTOS+TCP V2.2.1
 Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -54,7 +54,7 @@ be at least this number of buffers available. */
 static List_t xFreeBuffersList;
 
 /* Some statistics about the use of buffers. */
-static UBaseType_t uxMinimumFreeNetworkBuffers = 0u;
+static UBaseType_t uxMinimumFreeNetworkBuffers = 0U;
 
 /* Declares the pool of NetworkBufferDescriptor_t structures that are available
 to the system.  All the network buffers referenced from xFreeBuffersList exist
@@ -86,7 +86,7 @@ are not defined then default them to call the normal enter/exit critical
 section macros. */
 #if !defined( ipconfigBUFFER_ALLOC_LOCK )
 
-	#define ipconfigBUFFER_ALLOC_INIT( ) do {} while (0)
+	#define ipconfigBUFFER_ALLOC_INIT( ) do {} while ( ipFALSE_BOOL )
 	#define ipconfigBUFFER_ALLOC_LOCK_FROM_ISR()		\
 		UBaseType_t uxSavedInterruptStatus = ( UBaseType_t ) portSET_INTERRUPT_MASK_FROM_ISR(); \
 		{
@@ -172,7 +172,7 @@ BaseType_t xReturn, x;
 		ipconfigBUFFER_ALLOC_INIT();
 
 		xNetworkBufferSemaphore = xSemaphoreCreateCounting( ( UBaseType_t ) ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS, ( UBaseType_t ) ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS );
-		configASSERT( xNetworkBufferSemaphore );
+		configASSERT( xNetworkBufferSemaphore != NULL );
 
 		if( xNetworkBufferSemaphore != NULL )
 		{
@@ -225,7 +225,7 @@ UBaseType_t uxCount;
 		available. */
 		if( xSemaphoreTake( xNetworkBufferSemaphore, xBlockTimeTicks ) == pdPASS )
 		{
-			/* Protect the structure as they are accessed from tasks and
+			/* Protect the structure as it is accessed from tasks and
 			interrupts. */
 			ipconfigBUFFER_ALLOC_LOCK();
 			{
@@ -234,7 +234,7 @@ UBaseType_t uxCount;
 				if( ( bIsValidNetworkDescriptor( pxReturn ) != pdFALSE_UNSIGNED ) &&
 					listIS_CONTAINED_WITHIN( &xFreeBuffersList, &( pxReturn->xBufferListItem ) ) )
 				{
-					uxListRemove( &( pxReturn->xBufferListItem ) );
+					( void ) uxListRemove( &( pxReturn->xBufferListItem ) );
 				}
 				else
 				{
@@ -285,6 +285,7 @@ UBaseType_t uxCount;
 		}
 		else
 		{
+			/* lint wants to see at least a comment. */
 			iptraceFAILED_TO_OBTAIN_NETWORK_BUFFER();
 		}
 	}
@@ -343,7 +344,7 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	}
 	ipconfigBUFFER_ALLOC_UNLOCK_FROM_ISR();
 
-	xSemaphoreGiveFromISR( xNetworkBufferSemaphore, &xHigherPriorityTaskWoken );
+	( void ) xSemaphoreGiveFromISR( xNetworkBufferSemaphore, &xHigherPriorityTaskWoken );
 	iptraceNETWORK_BUFFER_RELEASED( pxNetworkBuffer );
 
 	return xHigherPriorityTaskWoken;
@@ -357,34 +358,36 @@ BaseType_t xListItemAlreadyInFreeList;
 	if( bIsValidNetworkDescriptor( pxNetworkBuffer ) == pdFALSE_UNSIGNED )
 	{
 		FreeRTOS_debug_printf( ( "vReleaseNetworkBufferAndDescriptor: Invalid buffer %p\n", pxNetworkBuffer ) );
-		return ;
 	}
-	/* Ensure the buffer is returned to the list of free buffers before the
-	counting semaphore is 'given' to say a buffer is available. */
-	ipconfigBUFFER_ALLOC_LOCK();
+	else
 	{
+		/* Ensure the buffer is returned to the list of free buffers before the
+		counting semaphore is 'given' to say a buffer is available. */
+		ipconfigBUFFER_ALLOC_LOCK();
 		{
-			xListItemAlreadyInFreeList = listIS_CONTAINED_WITHIN( &xFreeBuffersList, &( pxNetworkBuffer->xBufferListItem ) );
-
-			if( xListItemAlreadyInFreeList == pdFALSE )
 			{
-				vListInsertEnd( &xFreeBuffersList, &( pxNetworkBuffer->xBufferListItem ) );
+				xListItemAlreadyInFreeList = listIS_CONTAINED_WITHIN( &xFreeBuffersList, &( pxNetworkBuffer->xBufferListItem ) );
+
+				if( xListItemAlreadyInFreeList == pdFALSE )
+				{
+					vListInsertEnd( &xFreeBuffersList, &( pxNetworkBuffer->xBufferListItem ) );
+				}
 			}
 		}
-	}
-	ipconfigBUFFER_ALLOC_UNLOCK();
+		ipconfigBUFFER_ALLOC_UNLOCK();
 
-	if( xListItemAlreadyInFreeList )
-	{
-		FreeRTOS_debug_printf( ( "vReleaseNetworkBufferAndDescriptor: %p ALREADY RELEASED (now %lu)\n",
-			pxNetworkBuffer, uxGetNumberOfFreeNetworkBuffers( ) ) );
+		if( xListItemAlreadyInFreeList )
+		{
+			FreeRTOS_debug_printf( ( "vReleaseNetworkBufferAndDescriptor: %p ALREADY RELEASED (now %lu)\n",
+				pxNetworkBuffer, uxGetNumberOfFreeNetworkBuffers( ) ) );
+		}
+		else
+		{
+			( void ) xSemaphoreGive( xNetworkBufferSemaphore );
+			prvShowWarnings();
+		}
+		iptraceNETWORK_BUFFER_RELEASED( pxNetworkBuffer );
 	}
-	if( xListItemAlreadyInFreeList == pdFALSE )
-	{
-		xSemaphoreGive( xNetworkBufferSemaphore );
-		prvShowWarnings();
-	}
-	iptraceNETWORK_BUFFER_RELEASED( pxNetworkBuffer );
 }
 /*-----------------------------------------------------------*/
 
@@ -404,7 +407,7 @@ NetworkBufferDescriptor_t *pxResizeNetworkBufferWithDescriptor( NetworkBufferDes
 	/* In BufferAllocation_1.c all network buffer are allocated with a
 	maximum size of 'ipTOTAL_ETHERNET_FRAME_SIZE'.No need to resize the
 	network buffer. */
-	( void ) xNewSizeBytes;
+	pxNetworkBuffer->xDataLength = xNewSizeBytes;
 	return pxNetworkBuffer;
 }
 

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.0
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -157,7 +157,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
  * This macro will only be used if FreeRTOS_debug_printf() is defined for logging
  */
 #ifndef ipconfigTCP_MAY_LOG_PORT
-	#define ipconfigTCP_MAY_LOG_PORT(xPort)			( ( xPort ) != 23u )
+	#define ipconfigTCP_MAY_LOG_PORT(xPort)			( ( xPort ) != 23U )
 #endif
 
 
@@ -171,11 +171,11 @@ from the FreeRTOSIPConfig.h configuration header file. */
 
 
 #ifndef	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS
-	#define	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS	pdMS_TO_TICKS( 500u )
+	#define	ipconfigDNS_RECEIVE_BLOCK_TIME_TICKS	pdMS_TO_TICKS( 5000U )
 #endif
 
 #ifndef	ipconfigDNS_SEND_BLOCK_TIME_TICKS
-	#define	ipconfigDNS_SEND_BLOCK_TIME_TICKS		pdMS_TO_TICKS( 500u )
+	#define	ipconfigDNS_SEND_BLOCK_TIME_TICKS		pdMS_TO_TICKS( 500U )
 #endif
 /*
  * FreeRTOS debug logging routine (proposal)
@@ -196,7 +196,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif /* ifdef ipconfigHAS_DEBUG_PRINTF */
 
 #ifndef FreeRTOS_debug_printf
-    #define FreeRTOS_debug_printf( MSG )		do{} while(0)
+    #define FreeRTOS_debug_printf( MSG )		do{} while( ipFALSE_BOOL )
 	#define ipconfigHAS_DEBUG_PRINTF			0
 #endif
 
@@ -217,7 +217,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif /* ifdef ipconfigHAS_PRINTF */
 
 #ifndef FreeRTOS_printf
-    #define FreeRTOS_printf( MSG )				do{} while(0)
+    #define FreeRTOS_printf( MSG )				do{} while( ipFALSE_BOOL )
 	#define ipconfigHAS_PRINTF					0
 #endif
 
@@ -227,7 +227,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
  * An example of this is the netstat command, which produces many lines of logging
  */
 #ifndef FreeRTOS_flush_logging
-    #define FreeRTOS_flush_logging( )			do{} while(0)
+    #define FreeRTOS_flush_logging( )			do{} while( ipFALSE_BOOL )
 #endif
 
 /* Malloc functions. Within most applications of FreeRTOS, the couple
@@ -274,7 +274,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS
-	#define ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ( pdMS_TO_TICKS( 20 ) )
+	#define ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ( pdMS_TO_TICKS( 20U ) )
 #endif
 
 #ifndef ipconfigARP_CACHE_ENTRIES
@@ -282,11 +282,11 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigMAX_ARP_RETRANSMISSIONS
-	#define ipconfigMAX_ARP_RETRANSMISSIONS ( 5u )
+	#define ipconfigMAX_ARP_RETRANSMISSIONS ( 5U )
 #endif
 
 #ifndef ipconfigMAX_ARP_AGE
-	#define ipconfigMAX_ARP_AGE			150u
+	#define ipconfigMAX_ARP_AGE			150U
 #endif
 
 #ifndef ipconfigUSE_ARP_REVERSED_LOOKUP
@@ -299,6 +299,10 @@ from the FreeRTOSIPConfig.h configuration header file. */
 
 #ifndef ipconfigINCLUDE_FULL_INET_ADDR
 	#define ipconfigINCLUDE_FULL_INET_ADDR	1
+#endif
+
+#ifndef ipconfigUSE_LINKED_RX_MESSAGES
+	#define ipconfigUSE_LINKED_RX_MESSAGES			0
 #endif
 
 #ifndef ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS
@@ -326,7 +330,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	 * for each UDP socket.
 	 * Can be overridden with the socket option FREERTOS_SO_UDP_MAX_RX_PACKETS
 	 */
-	#define ipconfigUDP_MAX_RX_PACKETS		0u
+	#define ipconfigUDP_MAX_RX_PACKETS		0U
 #endif
 
 #ifndef ipconfigUSE_DHCP
@@ -359,7 +363,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigTCP_MSS
-	#define ipconfigTCP_MSS		( ipconfigNETWORK_MTU - ipSIZE_OF_IPv4_HEADER - ipSIZE_OF_TCP_HEADER )
+	#define ipconfigTCP_MSS		( ipconfigNETWORK_MTU - ( ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_TCP_HEADER  ) )
 #endif
 
 /* Each TCP socket has circular stream buffers for Rx and Tx, which
@@ -367,19 +371,19 @@ from the FreeRTOSIPConfig.h configuration header file. */
  * The defaults for these size are defined here, although
  * they can be overridden at runtime by using the setsockopt() call */
 #ifndef ipconfigTCP_RX_BUFFER_LENGTH
-	#define ipconfigTCP_RX_BUFFER_LENGTH			( 4u * ipconfigTCP_MSS )	/* defaults to 5840 bytes */
+	#define ipconfigTCP_RX_BUFFER_LENGTH			( 4U * ipconfigTCP_MSS )	/* defaults to 5840 bytes */
 #endif
 
 /* Define the size of Tx stream buffer for TCP sockets */
 #ifndef ipconfigTCP_TX_BUFFER_LENGTH
-#	define ipconfigTCP_TX_BUFFER_LENGTH			( 4u * ipconfigTCP_MSS )	/* defaults to 5840 bytes */
+#	define ipconfigTCP_TX_BUFFER_LENGTH			( 4U * ipconfigTCP_MSS )	/* defaults to 5840 bytes */
 #endif
 
 #ifndef ipconfigMAXIMUM_DISCOVER_TX_PERIOD
 	#ifdef _WINDOWS_
-		#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( pdMS_TO_TICKS( 999 ) )
+		#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( pdMS_TO_TICKS( 999U ) )
 	#else
-		#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( pdMS_TO_TICKS( 30000 ) )
+		#define ipconfigMAXIMUM_DISCOVER_TX_PERIOD		( pdMS_TO_TICKS( 30000U ) )
 	#endif /* _WINDOWS_ */
 #endif /* ipconfigMAXIMUM_DISCOVER_TX_PERIOD */
 
@@ -413,7 +417,15 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#ifndef ipconfigDNS_CACHE_ENTRIES
 		#define ipconfigDNS_CACHE_ENTRIES			1
 	#endif
+
 #endif /* ipconfigUSE_DNS_CACHE != 0 */
+
+/* When accessing services which have multiple IP addresses, setting this
+greater than 1 can improve reliability by returning different IP address
+answers on successive calls to FreeRTOS_gethostbyname(). */
+#ifndef ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY 
+	#define ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY 1
+#endif
 
 #ifndef ipconfigCHECK_IP_QUEUE_SPACE
 	#define ipconfigCHECK_IP_QUEUE_SPACE			0
@@ -544,7 +556,7 @@ connections, hang protection can help reduce the impact of SYN floods. */
 
 /* Non-activity timeout is expressed in seconds. */
 #ifndef ipconfigTCP_HANG_PROTECTION_TIME
-	#define ipconfigTCP_HANG_PROTECTION_TIME 30
+	#define ipconfigTCP_HANG_PROTECTION_TIME 30U
 #endif
 
 #ifndef ipconfigTCP_IP_SANITY
@@ -559,11 +571,15 @@ connections, hang protection can help reduce the impact of SYN floods. */
 	/* Expert option: define a value for 'ipBUFFER_PADDING'.
 	When 'ipconfigBUFFER_PADDING' equals 0,
 	'ipBUFFER_PADDING' will get a default value of 8 + 2 bytes. */
-	#define ipconfigBUFFER_PADDING 0
+	#define ipconfigBUFFER_PADDING			0U
 #endif
 
 #ifndef ipconfigPACKET_FILLER_SIZE
-	#define ipconfigPACKET_FILLER_SIZE 2
+	#define ipconfigPACKET_FILLER_SIZE		2U
+#endif
+
+#ifndef ipconfigSELECT_USES_NOTIFY
+	#define ipconfigSELECT_USES_NOTIFY		0
 #endif
 
 #endif /* FREERTOS_DEFAULT_IP_CONFIG_H */

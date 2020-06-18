@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.0.11
+ * FreeRTOS+TCP V2.2.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -102,7 +102,7 @@ BaseType_t xReturn, x;
 	if( xNetworkBufferSemaphore == NULL )
 	{
 		xNetworkBufferSemaphore = xSemaphoreCreateCounting( ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS, ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS );
-		configASSERT( xNetworkBufferSemaphore );
+		configASSERT( xNetworkBufferSemaphore != NULL );
 
 		if( xNetworkBufferSemaphore != NULL )
 		{
@@ -168,9 +168,9 @@ size_t xSize = *pxRequestedSizeBytes;
 
 	/* Round up xSize to the nearest multiple of N bytes,
 	where N equals 'sizeof( size_t )'. */
-	if( ( xSize & ( sizeof( size_t ) - 1u ) ) != 0u )
+	if( ( xSize & ( sizeof( size_t ) - 1U ) ) != 0U )
 	{
-		xSize = ( xSize | ( sizeof( size_t ) - 1u ) ) + 1u;
+		xSize = ( xSize | ( sizeof( size_t ) - 1U ) ) + 1U;
 	}
 	*pxRequestedSizeBytes = xSize;
 
@@ -178,7 +178,7 @@ size_t xSize = *pxRequestedSizeBytes;
 	and a pointer to a network buffer structure (hence the addition of
 	ipBUFFER_PADDING bytes). */
 	pucEthernetBuffer = ( uint8_t * ) pvPortMalloc( xSize + ipBUFFER_PADDING );
-	configASSERT( pucEthernetBuffer );
+	configASSERT( pucEthernetBuffer != NULL );
 
 	if( pucEthernetBuffer != NULL )
 	{
@@ -212,7 +212,7 @@ size_t uxCount;
 
 	if( xNetworkBufferSemaphore != NULL )
 	{
-		if( ( xRequestedSizeBytes != 0u ) && ( xRequestedSizeBytes < ( size_t ) baMINIMAL_BUFFER_SIZE ) )
+		if( ( xRequestedSizeBytes != 0U ) && ( xRequestedSizeBytes < ( size_t ) baMINIMAL_BUFFER_SIZE ) )
 		{
 			/* ARP packets can replace application packets, so the storage must be
 			at least large enough to hold an ARP. */
@@ -221,10 +221,10 @@ size_t uxCount;
 
 		/* Add 2 bytes to xRequestedSizeBytes and round up xRequestedSizeBytes
 		to the nearest multiple of N bytes, where N equals 'sizeof( size_t )'. */
-		xRequestedSizeBytes += 2u;
-		if( ( xRequestedSizeBytes & ( sizeof( size_t ) - 1u ) ) != 0u )
+		xRequestedSizeBytes += 2U;
+		if( ( xRequestedSizeBytes & ( sizeof( size_t ) - 1U ) ) != 0U )
 		{
-			xRequestedSizeBytes = ( xRequestedSizeBytes | ( sizeof( size_t ) - 1u ) ) + 1u;
+			xRequestedSizeBytes = ( xRequestedSizeBytes | ( sizeof( size_t ) - 1U ) ) + 1U;
 		}
 
 		/* If there is a semaphore available, there is a network buffer available. */
@@ -234,7 +234,7 @@ size_t uxCount;
 			taskENTER_CRITICAL();
 			{
 				pxReturn = ( NetworkBufferDescriptor_t * ) listGET_OWNER_OF_HEAD_ENTRY( &xFreeBuffersList );
-				uxListRemove( &( pxReturn->xBufferListItem ) );
+				( void ) uxListRemove( &( pxReturn->xBufferListItem ) );
 			}
 			taskEXIT_CRITICAL();
 
@@ -297,6 +297,7 @@ size_t uxCount;
 	}
 	else
 	{
+		/* No action. */
 		iptraceNETWORK_BUFFER_OBTAINED( pxReturn );
 	}
 
@@ -340,6 +341,7 @@ BaseType_t xListItemAlreadyInFreeList;
 	}
 	else
 	{
+		/* No action. */
 		iptraceNETWORK_BUFFER_RELEASED( pxNetworkBuffer );
 	}
 }

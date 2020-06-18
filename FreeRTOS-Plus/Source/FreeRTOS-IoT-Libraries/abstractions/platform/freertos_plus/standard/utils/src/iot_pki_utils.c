@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Utils V1.1.0
+ * FreeRTOS Utils V1.1.3
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,6 +24,7 @@
  */
 
 /* FreeRTOS includes. */
+
 /**
  * @file iot_pki_utils.h
  * @brief Helper functions for PKCS #11
@@ -198,4 +199,3 @@ int PKI_pkcs11SignatureTombedTLSSignature( uint8_t * pucSig,
     return xResult;
 }
 /* @[declare pkcs11_utils_pkimbedtlssignaturetopkcs11signature] */
-

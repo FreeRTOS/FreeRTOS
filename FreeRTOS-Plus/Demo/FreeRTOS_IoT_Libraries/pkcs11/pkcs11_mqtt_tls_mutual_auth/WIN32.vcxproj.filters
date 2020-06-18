@@ -169,7 +169,7 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_validate.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\src</Filter>
     </ClCompile>
-     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_helper.c">
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_helper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_clock_freertos.c">
@@ -444,6 +444,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\private\taskpool\taskpool_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\platform\freertos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls_utils\mbedtls_error.c">
+      <Filter>FreeRTOS+\mbedtls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -819,5 +822,8 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\abstractions\pkcs11</Filter>
     </ClInclude>
     <ClInclude Include="mbedtls_config.h" />
+    <ClInclude Include="..\..\..\..\Source\mbedtls_utils\mbedtls_error.h">
+      <Filter>FreeRTOS+\mbedtls</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

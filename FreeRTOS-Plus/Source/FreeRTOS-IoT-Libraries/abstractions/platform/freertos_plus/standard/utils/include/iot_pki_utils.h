@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Utils V1.1.0
+ * FreeRTOS Utils V1.1.3
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -32,14 +32,20 @@
  */
 
 /**
- * @functionspage{pkcs11_utils,PKCS #11 Utilities, PKCS #11 Utilities}
- * - @functionname{pkcs11_utils_function_pkipkcs11signaturetombedtlssignature}
- * - @functionname{pkcs11_utils_function_pkimbedtlssignaturetopkcs11signature}
+ * @functions_page{pkcs11_utils,PKCS #11 Utilities, PKCS #11 Utilities}
+ * - @function_name{pkcs11_utils_function_pkipkcs11signaturetombedtlssignature}
+ * @function_brief{pkcs11_utils_function_pkipkcs11signaturetombedtlssignature}
+ * - @function_name{pkcs11_utils_function_pkimbedtlssignaturetopkcs11signature}
+ * @function_brief{pkcs11_utils_function_pkimbedtlssignaturetopkcs11signature}
  */
 
 /**
- * @functionpage{PKI_mbedTLSSignatureToPkcs11Signature,pkcs11_utils,pkimbedtlssignaturetopkcs11signature}
- * @functionpage{PKI_pkcs11SignatureTombedTLSSignature,pkcs11_utils,pkipkcs11signaturetombedtlssignature}
+ * @function_page{PKI_mbedTLSSignatureToPkcs11Signature,pkcs11_utils,pkimbedtlssignaturetopkcs11signature}
+ * @function_snippet{pkcs11_utils,pkimbedtlssignaturetopkcs11signature,this}
+ * @copydoc PKI_mbedTLSSignatureToPkcs11Signature
+ * @function_page{PKI_pkcs11SignatureTombedTLSSignature,pkcs11_utils,pkipkcs11signaturetombedtlssignature}
+ * @function_snippet{pkcs11_utils,pkipkcs11signaturetombedtlssignature,this}
+ * @copydoc PKI_pkcs11SignatureTombedTLSSignature
  */
 
 /**
@@ -60,8 +66,10 @@
  *
  * \return 0 on success, -1 on failure.
  */
+/* @[declare_pkcs11_utils_pkimbedtlssignaturetopkcs11signature] */
 int PKI_mbedTLSSignatureToPkcs11Signature( uint8_t * pxSignaturePKCS,
                                            uint8_t * pxMbedSignature );
+/* @[declare_pkcs11_utils_pkimbedtlssignaturetopkcs11signature] */
 
 
 
@@ -87,7 +95,8 @@ int PKI_mbedTLSSignatureToPkcs11Signature( uint8_t * pxSignaturePKCS,
  * \return 0 if successful, -1 on failure.
  *
  */
+/* @[declare_pkcs11_utils_pkipkcs11signaturetombedtlssignature] */
 int PKI_pkcs11SignatureTombedTLSSignature( uint8_t * pucSig,
                                            size_t * pxSigLen );
-
+/* @[declare_pkcs11_utils_pkipkcs11signaturetombedtlssignature] */
 #endif /* ifndef _IOT_PKI_UTILS_H_ */

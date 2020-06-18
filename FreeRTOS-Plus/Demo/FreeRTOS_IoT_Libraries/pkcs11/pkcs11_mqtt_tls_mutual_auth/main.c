@@ -208,11 +208,20 @@ void vAssertCalled(const char* pcFile, uint32_t ulLine)
 /*-----------------------------------------------------------*/
 UBaseType_t uxRand(void)
 {
-    CK_RV xResult;
-    uint32_t ulNextRand;
+    uint8_t ulNextRand = 0;
+    CK_RV xResult = CKR_OK;
+    static CK_SESSION_HANDLE xSession = CK_INVALID_HANDLE;
+    CK_FUNCTION_LIST_PTR pxFunctionList;
+    xResult = C_GetFunctionList(&pxFunctionList);
 
-    /* Get a random number from the PKCS #11 module. */
-    xResult = xGetRandomNumber((uint8_t*)&ulNextRand, sizeof(ulNextRand));
+    if (xSession == CK_INVALID_HANDLE)
+    {
+        xResult = xInitializePkcs11Session( &xSession );
+    }
+    if (xResult == CKR_OK)
+    {
+        xResult = pxFunctionList->C_GenerateRandom(xSession, &ulNextRand, sizeof(ulNextRand));
+    }
 
     if (xResult != CKR_OK) {
         ulNextRand = 0;

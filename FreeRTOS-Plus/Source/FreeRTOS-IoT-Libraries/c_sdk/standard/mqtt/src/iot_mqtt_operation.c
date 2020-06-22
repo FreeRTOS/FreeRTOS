@@ -886,8 +886,54 @@ void _IotMqtt_ProcessKeepAlive( taskPoolJob_t * pKeepAliveJob,
             IotLogDebug( "(MQTT connection %p) PINGRESP was received.", pMqttConnection );
 
             /* PINGRESP was received. Schedule the next PINGREQ transmission. */
+
+            /* This function is called for two purposes:
+             *
+             * 1. To send a PINGREQ.
+             * 2. To check that the corresponding PINGRESP is received within
+             * IOT_MQTT_RESPONSE_WAIT_MS.
+             *
+             * The way it differentiates between the two is by checking
+             * ping.nextPeriodMs in pPingreqOperation->u.operation.periodic:
+             *
+             * If ping.nextPeriodMs is set to ping.keepAliveMs,
+             * the invocation is for sending PINGREQ.
+             * Otherwise, the invocation is for checking that PINGRESP is received
+             * within IOT_MQTT_RESPONSE_WAIT_MS.
+             *
+             * Therefore, it is necessary to set ping.nextPeriodMs
+             * to ping.keepAliveMs to ensure that PINGREQ is sent in
+             * the next invocation. But we must ensure that the next time to send
+             * PINGREQ is calculated from the moment last PINGREQ was sent and NOT
+             * when we checked for PINGRESP. As a result we need to schedule the next
+             * invocation at ping.keepAliveMs - IOT_MQTT_RESPONSE_WAIT_MS.
+             * The following diagram also explains it:
+             *
+             *      WaitMS    KeepAliveMS - WaitMS
+             *    <-------->|<-------------------->
+             *    ---------------------------------
+             *    ^         ^                     ^
+             *    |         |                     |
+             * PINGREQ   PINGRESP              PINGREQ
+             * (Call 1)  (Call 2)             (Call 3)
+             *    <------------------------------->
+             *                 KeepAliveMS
+             * WaitMS = IOT_MQTT_RESPONSE_WAIT_MS.
+             * KeepAliveMS = pPingreqOperation->u.operation.periodic.ping.keepAliveMs.
+             * Call 1 - First PINGREQ is sent.
+             * Call 2 - PINGRESP is checked after IOT_MQTT_RESPONSE_WAIT_MS.
+             * Call 3 - Next PINGREQ is sent. Time difference between Call 2 and
+             * Call 3 is KeepAliveMS - WaitMS, while time difference between Call 1
+             * and Call 3 is KeepAliveMS. */
             pPingreqOperation->u.operation.periodic.ping.nextPeriodMs =
                 pPingreqOperation->u.operation.periodic.ping.keepAliveMs;
+
+            IotMqtt_Assert( pPingreqOperation->u.operation.periodic.ping.keepAliveMs
+                            > IOT_MQTT_RESPONSE_WAIT_MS );
+
+            /* Subtract time taken for PINGRESP check. */
+            scheduleDelay = pPingreqOperation->u.operation.periodic.ping.keepAliveMs
+                            - IOT_MQTT_RESPONSE_WAIT_MS;
         }
         else
         {

@@ -62,7 +62,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\Source\Test_runner;..\..\..\CMock\vendor\unity\src;..\..\..\CMock\vendor\unity\extras\fixture\src;.\Source\Config Files;..\..\..\CMock\vendor\unity\extras\memory\src;..\..\..\..\Source\FreeRTOS-Plus-FAT\include;..\..\..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-Plus-CLI;..\..\..\..\Source\FreeRTOS-Plus-TCP\test;..\..\..\..\Source\FreeRTOS-Plus-TCP\include;.\DemoTasks\include;.\TraceMacros\Example1;.\WinPCap;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Source\Test_runner;..\..\..\CMock\vendor\unity\src;..\..\..\CMock\vendor\unity\extras\fixture\src;.\Source\Config Files;..\..\..\CMock\vendor\unity\extras\memory\src;..\..\..\..\Source\FreeRTOS-Plus-FAT\include;..\..\..\..\Source\FreeRTOS-Plus-FAT\portable\common;..\..\..\..\Source\FreeRTOS-Plus-TCP\protocols\include;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-Plus-CLI;.\test;..\..\..\..\Source\FreeRTOS-Plus-TCP\include;.\DemoTasks\include;.\TraceMacros\Example1;.\WinPCap;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;FREERTOS_ENABLE_UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -159,13 +159,13 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\test_freertos_tcp.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c" />
     <ClCompile Include="..\..\..\CMock\vendor\unity\src\unity.c" />
     <ClCompile Include="Source\demo_logging.c" />
     <ClCompile Include="Source\main.c" />
     <ClCompile Include="Source\Test_runner\test_runner.c" />
+    <ClCompile Include="test\test_freertos_tcp.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\AccCtrl.h" />
@@ -1707,9 +1707,6 @@
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\tcp_dump_packets.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\tcp_mem_stats.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\freertos_tcp_test_access_declare.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\freertos_tcp_test_access_dns_define.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\freertos_tcp_test_access_tcp_define.h" />
     <ClInclude Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.h" />
     <ClInclude Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture_internals.h" />
     <ClInclude Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.h" />
@@ -1719,6 +1716,9 @@
     <ClInclude Include="Source\Config Files\FreeRTOSIPConfig.h" />
     <ClInclude Include="Source\Test_runner\test_runner.h" />
     <ClInclude Include="Source\Test_runner\test_runner_config.h" />
+    <ClInclude Include="test\freertos_tcp_test_access_declare.h" />
+    <ClInclude Include="test\freertos_tcp_test_access_dns_define.h" />
+    <ClInclude Include="test\freertos_tcp_test_access_tcp_define.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d2d1effecthelpers.hlsli" />

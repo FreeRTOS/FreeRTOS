@@ -88,9 +88,6 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c">
       <Filter>FreeRTOS+\FreeRTOS+TCP\Portable</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\test_freertos_tcp.c">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\CMock\vendor\unity\src\unity.c">
       <Filter>Unity</Filter>
     </ClCompile>
@@ -110,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
       <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_freertos_tcp.c">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,15 +190,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\tcp_mem_stats.h">
       <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\freertos_tcp_test_access_declare.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\freertos_tcp_test_access_dns_define.h">
-      <Filter>Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\test\freertos_tcp_test_access_tcp_define.h">
-      <Filter>Tests</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\CMock\vendor\unity\src\unity.h">
       <Filter>Unity</Filter>
@@ -4762,6 +4753,15 @@
     </ClInclude>
     <ClInclude Include="Source\Config Files\FreeRTOSConfig.h" />
     <ClInclude Include="Source\Config Files\FreeRTOSIPConfig.h" />
+    <ClInclude Include="test\freertos_tcp_test_access_declare.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="test\freertos_tcp_test_access_dns_define.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="test\freertos_tcp_test_access_tcp_define.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d2d1effecthelpers.hlsli">

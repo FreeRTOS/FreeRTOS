@@ -2277,12 +2277,13 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	FreeRTOS_Socket_t *pxSocket = ( FreeRTOS_Socket_t* ) xClientSocket;
 	TickType_t xRemainingTime;
 	BaseType_t xTimed = pdFALSE;
-	BaseType_t xResult;
+	BaseType_t xResult = FREERTOS_EINVAL;
 	TimeOut_t xTimeOut;
 
 		( void ) xAddressLength;
 
-		xResult = prvTCPConnectStart( pxSocket, pxAddress );
+		if( pxAddress != NULL )
+			xResult = prvTCPConnectStart( pxSocket, pxAddress );
 
 		if( xResult == 0 )
 		{

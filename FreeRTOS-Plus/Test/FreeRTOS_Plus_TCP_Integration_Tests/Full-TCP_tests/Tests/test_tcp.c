@@ -1824,7 +1824,15 @@ static void prvFreeRTOS_connect_InvalidParams( void )
 
     TEST_ASSERT_LESS_THAN_INT32_MESSAGE( 0, xResult, "Connect on an invalid socket succeeded\n" );
 
+    xResult = prvCloseHelper( xSocket, &xSocketOpen );
+    TEST_ASSERT_GREATER_OR_EQUAL_INT32_MESSAGE( pdFREERTOS_ERRNO_NONE, xResult, "Socket failed to close" );
+    
+
+
     /* Invalid IP address (0.0.0.0).  TODO: Investigate reserved IP addresses */
+    xSocket = prvTcpSocketHelper( &xSocketOpen );
+    TEST_ASSERT_NOT_EQUAL_MESSAGE( FREERTOS_INVALID_SOCKET, xSocket, "Socket creation failed" );
+
     xEchoServerAddress.sin_addr = FreeRTOS_inet_addr_quick( 0, 0, 0, 0 );
     xResult = FreeRTOS_connect( xSocket,
                                &xEchoServerAddress,
@@ -1832,7 +1840,15 @@ static void prvFreeRTOS_connect_InvalidParams( void )
 
     TEST_ASSERT_LESS_THAN_INT32_MESSAGE( 0, xResult, "Connect to IP Address 0.0.0.0 worked" );
 
+    xResult = prvCloseHelper( xSocket, &xSocketOpen );
+    TEST_ASSERT_GREATER_OR_EQUAL_INT32_MESSAGE( pdFREERTOS_ERRNO_NONE, xResult, "Socket failed to close" );
+
+
+
     /* Invalid port (0). */
+    xSocket = prvTcpSocketHelper( &xSocketOpen );
+    TEST_ASSERT_NOT_EQUAL_MESSAGE( FREERTOS_INVALID_SOCKET, xSocket, "Socket creation failed" );
+
     xEchoServerAddress.sin_port = FreeRTOS_htons( 0 );
     xEchoServerAddress.sin_addr = ulEchoServerIP;
     xResult = FreeRTOS_connect( xSocket,
@@ -1841,7 +1857,14 @@ static void prvFreeRTOS_connect_InvalidParams( void )
 
     TEST_ASSERT_LESS_THAN_INT32_MESSAGE( 0, xResult, "Connect to Port 0 worked" );
 
+    xResult = prvCloseHelper( xSocket, &xSocketOpen );
+    TEST_ASSERT_GREATER_OR_EQUAL_INT32_MESSAGE( pdFREERTOS_ERRNO_NONE, xResult, "Socket failed to close" );
+
+
+
     /* NULL Address. */
+    xSocket = prvTcpSocketHelper( &xSocketOpen );
+    TEST_ASSERT_NOT_EQUAL_MESSAGE( FREERTOS_INVALID_SOCKET, xSocket, "Socket creation failed" );
     xResult = FreeRTOS_connect( xSocket, NULL, 0 );
 
     /* Ensure that the attempt to connect to NULL address fails. */

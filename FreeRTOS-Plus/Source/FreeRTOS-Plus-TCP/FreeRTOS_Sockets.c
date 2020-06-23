@@ -1400,7 +1400,7 @@ FreeRTOS_Socket_t *pxSocket;
 	
 	if (pxSocket == FREERTOS_INVALID_SOCKET)
 	{
-		xReturn = -pdFREERTOS_ERRNO_EINVAL;
+		xReturn = FREERTOS_EINVAL;
 		return xReturn;
 	}
 
@@ -2490,7 +2490,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		if( ( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdTRUE ) == pdFALSE ) || 
 			( pvBuffer == NULL ) )
 		{
-			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
+			xByteCount = FREERTOS_EINVAL;
 		}
 		else
 		{
@@ -2766,11 +2766,8 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		/* Prevent compiler warnings about unused parameters.  The parameter
 		may be used in future versions. */
 		( void ) xFlags;
-
-		if( pvBuffer != NULL )
-			xByteCount = 0;
-
-		if( xByteCount == 0 )
+		
+		if (pvBuffer != NULL)
 			xByteCount = ( BaseType_t ) prvTCPSendCheck( pxSocket, uxDataLength );
 
 		if( xByteCount > 0 )

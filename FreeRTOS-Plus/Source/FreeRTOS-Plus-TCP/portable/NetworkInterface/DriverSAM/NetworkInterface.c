@@ -1,59 +1,27 @@
 /*
- * FreeRTOS+TCP Labs Build 160919 (C) 2016 Real Time Engineers ltd.
- * Authors include Hein Tibosch and Richard Barry
- *
- *******************************************************************************
- ***** NOTE ******* NOTE ******* NOTE ******* NOTE ******* NOTE ******* NOTE ***
- ***                                                                         ***
- ***                                                                         ***
- ***   FREERTOS+TCP IS STILL IN THE LAB (mainly because the FTP and HTTP     ***
- ***   demos have a dependency on FreeRTOS+FAT, which is only in the Labs    ***
- ***   download):                                                            ***
- ***                                                                         ***
- ***   FreeRTOS+TCP is functional and has been used in commercial products   ***
- ***   for some time.  Be aware however that we are still refining its       ***
- ***   design, the source code does not yet quite conform to the strict      ***
- ***   coding and style standards mandated by Real Time Engineers ltd., and  ***
- ***   the documentation and testing is not necessarily complete.            ***
- ***                                                                         ***
- ***   PLEASE REPORT EXPERIENCES USING THE SUPPORT RESOURCES FOUND ON THE    ***
- ***   URL: http://www.FreeRTOS.org/contact  Active early adopters may, at   ***
- ***   the sole discretion of Real Time Engineers Ltd., be offered versions  ***
- ***   under a license other than that described below.                      ***
- ***                                                                         ***
- ***                                                                         ***
- ***** NOTE ******* NOTE ******* NOTE ******* NOTE ******* NOTE ******* NOTE ***
- *******************************************************************************
- *
- * FreeRTOS+TCP can be used under two different free open source licenses.  The
- * license that applies is dependent on the processor on which FreeRTOS+TCP is
- * executed, as follows:
- *
- * If FreeRTOS+TCP is executed on one of the processors listed under the Special
- * License Arrangements heading of the FreeRTOS+TCP license information web
- * page, then it can be used under the terms of the FreeRTOS Open Source
- * License.  If FreeRTOS+TCP is used on any other processor, then it can be used
- * under the terms of the GNU General Public License V2.  Links to the relevant
- * licenses follow:
- *
- * The FreeRTOS+TCP License Information Page: http://www.FreeRTOS.org/tcp_license
- * The FreeRTOS Open Source License: http://www.FreeRTOS.org/license
- * The GNU General Public License Version 2: http://www.FreeRTOS.org/gpl-2.0.txt
- *
- * FreeRTOS+TCP is distributed in the hope that it will be useful.  You cannot
- * use FreeRTOS+TCP unless you agree that you use the software 'as is'.
- * FreeRTOS+TCP is provided WITHOUT ANY WARRANTY; without even the implied
- * warranties of NON-INFRINGEMENT, MERCHANTABILITY or FITNESS FOR A PARTICULAR
- * PURPOSE. Real Time Engineers Ltd. disclaims all conditions and terms, be they
- * implied, expressed, or statutory.
- *
- * 1 tab == 4 spaces!
- *
- * http://www.FreeRTOS.org
- * http://www.FreeRTOS.org/plus
- * http://www.FreeRTOS.org/labs
- *
- */
+FreeRTOS+TCP V2.2.1
+Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ http://aws.amazon.com/freertos
+ http://www.FreeRTOS.org
+*/
 
 /* Standard includes. */
 #include <stdint.h>
@@ -75,7 +43,6 @@
 #include "NetworkInterface.h"
 
 /* Some files from the Atmel Software Framework */
-/*_RB_ The SAM4E portable layer has three different header files called gmac.h! */
 /* gmac_SAM.[ch] is a combination of the gmac.[ch] for both SAM4E and SAME70. */
 #include "gmac_SAM.h"
 #include <sysclk.h>
@@ -201,6 +168,10 @@ static BaseType_t prvGMACInit( void );
  */
 static uint32_t prvEMACRxPoll( void );
 
+/*
+ * Handle transmission errors.
+ */
+static void hand_tx_errors( void );
 
 /*-----------------------------------------------------------*/
 
@@ -475,7 +446,7 @@ BaseType_t xReturn;
 /** The GMAC TX errors to handle */
 #define GMAC_TX_ERRORS (GMAC_TSR_TFC | GMAC_TSR_HRESP)
 
-static void hand_tx_errors()
+static void hand_tx_errors( void )
 {
 /* Handle GMAC underrun or AHB errors. */
 	if (gmac_get_tx_status(GMAC) & GMAC_TX_ERRORS) {
@@ -508,6 +479,8 @@ uint32_t ulTransmitSize;
 	{
 		ulTransmitSize = NETWORK_BUFFER_SIZE;
 	}
+	/* A do{}while(0) loop is introduced to allow the use of multiple break
+	statement. */
 	do {
 		if( xPhyObject.ulLinkStatusMask == 0ul )
 		{
@@ -551,7 +524,7 @@ uint32_t ulTransmitSize;
 		#endif /* ipconfigZERO_COPY_TX_DRIVER */
 		/* Not interested in a call-back after TX. */
 		iptraceNETWORK_INTERFACE_TRANSMIT();
-	} while( 0 );
+	} while( ipFALSE_BOOL );
 
 	if( bReleaseAfterSend != pdFALSE )
 	{
@@ -705,27 +678,23 @@ static void prvEthernetUpdateConfig( BaseType_t xForce )
 }
 /*-----------------------------------------------------------*/
 
-//#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 1 ) && ( ipconfigHAS_TX_CRC_OFFLOADING == 0 )
+void vGMACGenerateChecksum( uint8_t *pucBuffer, size_t uxLength )
+{
+ProtocolPacket_t *xProtPacket = ( ProtocolPacket_t * ) pucBuffer;
 
-	void vGMACGenerateChecksum( uint8_t *pucBuffer, size_t uxLength )
+	if ( xProtPacket->xTCPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE )
 	{
-	ProtocolPacket_t *xProtPacket = ( ProtocolPacket_t * ) pucBuffer;
+		IPHeader_t *pxIPHeader = &( xProtPacket->xTCPPacket.xIPHeader );
 
-		if ( xProtPacket->xTCPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE )
-		{
-			IPHeader_t *pxIPHeader = &( xProtPacket->xTCPPacket.xIPHeader );
+		/* Calculate the IP header checksum. */
+		pxIPHeader->usHeaderChecksum = 0x00;
+		pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0U, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
+		pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
 
-			/* Calculate the IP header checksum. */
-			pxIPHeader->usHeaderChecksum = 0x00;
-			pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0U, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
-			pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );
-
-			/* Calculate the TCP checksum for an outgoing packet. */
-			usGenerateProtocolChecksum( pucBuffer, uxLength, pdTRUE );
-		}
+		/* Calculate the TCP checksum for an outgoing packet. */
+		usGenerateProtocolChecksum( pucBuffer, uxLength, pdTRUE );
 	}
-
-//#endif
+}
 /*-----------------------------------------------------------*/
 
 static uint32_t prvEMACRxPoll( void )
@@ -900,7 +869,7 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( EMAC_MAX_BLOCK_TIME_MS );
 			ulTaskNotifyTake( pdFALSE, ulMaxBlockTime );
 		}
 
-//		if( ( ulISREvents & EMAC_IF_RX_EVENT ) != 0 )
+		if( ( ulISREvents & EMAC_IF_RX_EVENT ) != 0 )
 		{
 			ulISREvents &= ~EMAC_IF_RX_EVENT;
 

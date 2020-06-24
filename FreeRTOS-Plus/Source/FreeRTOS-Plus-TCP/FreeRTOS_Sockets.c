@@ -1395,10 +1395,8 @@ FreeRTOS_Socket_t *pxSocket;
 	sockets standard, but this implementation does not use all the parameters. */
 	( void ) lLevel;
 	( void ) uxOptionLength;
-
-	configASSERT( xSocket != NULL );
 	
-	if( pxSocket == FREERTOS_INVALID_SOCKET )
+	if( ( pxSocket == NULL ) || ( pxSocket == FREERTOS_INVALID_SOCKET ) )
 	{
 		xReturn = -pdFREERTOS_ERRNO_EINVAL;
 		return xReturn;
@@ -2489,8 +2487,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 		/* Check if the socket is valid, has type TCP and if it is bound to a
 		port. */
-		if( ( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdTRUE ) == pdFALSE ) || 
-			( pvBuffer == NULL ) )
+		if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdTRUE ) == pdFALSE )
 		{
 			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
 		}

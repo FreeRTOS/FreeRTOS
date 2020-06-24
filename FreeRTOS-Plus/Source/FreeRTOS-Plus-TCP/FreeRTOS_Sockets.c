@@ -1398,7 +1398,7 @@ FreeRTOS_Socket_t *pxSocket;
 
 	configASSERT( xSocket != NULL );
 	
-	if (pxSocket == FREERTOS_INVALID_SOCKET)
+	if( pxSocket == FREERTOS_INVALID_SOCKET )
 	{
 		xReturn = -pdFREERTOS_ERRNO_EINVAL;
 		return xReturn;
@@ -2283,7 +2283,9 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		( void ) xAddressLength;
 
 		if( pxAddress != NULL )
+		{
 			xResult = prvTCPConnectStart( pxSocket, pxAddress );
+		}
 
 		if( xResult == 0 )
 		{
@@ -2767,8 +2769,10 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		may be used in future versions. */
 		( void ) xFlags;
 		
-		if (pvBuffer != NULL)
+		if( pvBuffer != NULL )
+		{
 			xByteCount = ( BaseType_t ) prvTCPSendCheck( pxSocket, uxDataLength );
+		}
 
 		if( xByteCount > 0 )
 		{

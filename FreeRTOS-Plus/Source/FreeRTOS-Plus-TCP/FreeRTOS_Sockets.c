@@ -1400,7 +1400,7 @@ FreeRTOS_Socket_t *pxSocket;
 	
 	if (pxSocket == FREERTOS_INVALID_SOCKET)
 	{
-		xReturn = FREERTOS_EINVAL;
+		xReturn = -pdFREERTOS_ERRNO_EINVAL;
 		return xReturn;
 	}
 
@@ -2277,7 +2277,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	FreeRTOS_Socket_t *pxSocket = ( FreeRTOS_Socket_t* ) xClientSocket;
 	TickType_t xRemainingTime;
 	BaseType_t xTimed = pdFALSE;
-	BaseType_t xResult = FREERTOS_EINVAL;
+	BaseType_t xResult = -pdFREERTOS_ERRNO_EINVAL;
 	TimeOut_t xTimeOut;
 
 		( void ) xAddressLength;
@@ -2490,7 +2490,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		if( ( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdTRUE ) == pdFALSE ) || 
 			( pvBuffer == NULL ) )
 		{
-			xByteCount = FREERTOS_EINVAL;
+			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
 		}
 		else
 		{
@@ -2754,7 +2754,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	 */
 	BaseType_t FreeRTOS_send( Socket_t xSocket, const void *pvBuffer, size_t uxDataLength, BaseType_t xFlags )
 	{
-	BaseType_t xByteCount = FREERTOS_EINVAL;
+	BaseType_t xByteCount = -pdFREERTOS_ERRNO_EINVAL;
 	BaseType_t xBytesLeft;
 	FreeRTOS_Socket_t *pxSocket = ( FreeRTOS_Socket_t * ) xSocket;
 	TickType_t xRemainingTime;

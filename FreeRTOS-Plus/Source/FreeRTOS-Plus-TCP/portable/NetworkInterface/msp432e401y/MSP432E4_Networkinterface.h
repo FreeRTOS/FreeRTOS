@@ -55,27 +55,12 @@
 #include <ti/drivers/gpio/GPIOMSP432E4.h>
 
 /* FreeRTOS+TCP includes. */
-#include "FreeRTOS.h"
-#include "list.h"
-#include "FreeRTOS_IP.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* NETWORK_BUFFER_DESCRIPTORS_LEN, 
-* ipTOTAL_ETHERNET_FRAME_SIZE =eth header + mtu + crc + 4 = 1522 bytes
-* ipBUFFER_PADDING = freertos space + ipconfigPACKET_FILLER_SIZE = 8+2 bytes 
-* i +2 bytes servono al dma per non trascrivere i dati dei freertos space
-* lunghezza totale deve essere multiplo di 4 allineato a 32bit
-* ipBUFFER_PADDING deve essere lungo 4*N + 2 bytes. In questo caso 8+2.
-* dma scrive i dati anche in memoria non allineate. tuttavia scrive sempre un multiplo di 4 bytes 
-* con dummy bytes all inizio e alla fine. quindi se non allineata bisogna prevedere 
-* dei byte tampone all inizio e fine nei confronti di ipTOTAL_ETHERNET_FRAME_SIZE
-* che is pointed by pucEthernetBuffer pointer.
-*/
-//#define NETWORK_BUFFER_DESCRIPTORS_LEN (ipTOTAL_ETHERNET_FRAME_SIZE + ipBUFFER_PADDING) 
-#define NETWORK_BUFFER_DESCRIPTORS_LEN  1532
+
 
 /*!
  * @brief PF0 is used for EN0LED0
@@ -158,16 +143,6 @@ typedef struct {
 
 } EMACMSP432E4_HWAttrs;
 
-/*!
- *  @brief  This function returns the link state of the EMACMSP432E4 driver
- *
- *  @retval true if the link is up.
- *  @retval false if the link is down.
- */
-bool EMACMSP432E4_isLinkUp();
-int EMACMSP432E4_Init();
-int EMACMSP432E4_emacStart();
-int EMACMSP432E4_processPendingTx(NetworkBufferDescriptor_t *hPkt);
 
 #ifdef __cplusplus
 }

@@ -41,9 +41,6 @@
 #include "queue.h"
 #include "semphr.h"
 
-/* Type definitions for OTA Agent */
-#include "aws_iot_ota_types.h"
-
 /* General constants. */
 #define LOG2_BITS_PER_BYTE           3UL                                               /* Log base 2 of bits per byte. */
 #define BITS_PER_BYTE                ( 1UL << LOG2_BITS_PER_BYTE )                     /* Number of bits in a byte. This is used by the block bitmap implementation. */
@@ -60,13 +57,13 @@
 #endif
 
 /* Job document parser constants. */
-#define OTA_MAX_JSON_TOKENS         64U                                                                          /* Number of JSON tokens supported in a single parser call. */
-#define OTA_MAX_JSON_STR_LEN        256U                                                                         /* Limit our JSON string compares to something small to avoid going into the weeds. */
-#define OTA_DOC_MODEL_MAX_PARAMS    32U                                                                          /* The parameter list is backed by a 32 bit longword bitmap by design. */
-#define OTA_JOB_PARAM_REQUIRED      ( ( bool_t ) pdTRUE )                                                        /* Used to denote a required document model parameter. */
-#define OTA_JOB_PARAM_OPTIONAL      ( ( bool_t ) pdFALSE )                                                       /* Used to denote an optional document model parameter. */
-#define OTA_DONT_STORE_PARAM        0xffffffffUL                                                                 /* If ulDestOffset in the model is 0xffffffff, do not store the value. */
-#define OTA_DATA_BLOCK_SIZE         ( ( 1U << otaconfigLOG2_FILE_BLOCK_SIZE ) + OTA_REQUEST_URL_MAX_SIZE + 30 )  /* Header is 19 bytes.*/
+#define OTA_MAX_JSON_TOKENS         64U                                                                         /* Number of JSON tokens supported in a single parser call. */
+#define OTA_MAX_JSON_STR_LEN        256U                                                                        /* Limit our JSON string compares to something small to avoid going into the weeds. */
+#define OTA_DOC_MODEL_MAX_PARAMS    32U                                                                         /* The parameter list is backed by a 32 bit longword bitmap by design. */
+#define OTA_JOB_PARAM_REQUIRED      true                                                                        /* Used to denote a required document model parameter. */
+#define OTA_JOB_PARAM_OPTIONAL      false                                                                       /* Used to denote an optional document model parameter. */
+#define OTA_DONT_STORE_PARAM        0xffffffffUL                                                                /* If ulDestOffset in the model is 0xffffffff, do not store the value. */
+#define OTA_DATA_BLOCK_SIZE         ( ( 1U << otaconfigLOG2_FILE_BLOCK_SIZE ) + OTA_REQUEST_URL_MAX_SIZE + 30 ) /* Header is 19 bytes.*/
 
 
 /* OTA Agent task event flags. */
@@ -150,8 +147,8 @@ typedef enum
  */
 typedef struct
 {
-    const char * pcSrcKey;  /* Expected key name. */
-    const bool_t bRequired; /* If true, this parameter must exist in the document. */
+    const char * pcSrcKey; /* Expected key name. */
+    const bool bRequired;  /* If true, this parameter must exist in the document. */
     union
     {
         const uint32_t ulDestOffset;        /* Pointer or offset to where we'll store the value, if not ~0. */
@@ -208,28 +205,27 @@ enum
  * size, attributes, etc. The following value specifies the number of parameters
  * that are included in the job document model although some may be optional. */
 
-#define OTA_NUM_JOB_PARAMS         ( 19 ) /* Number of parameters in the job document. */
-/* We need the following string to match in a couple places in the code so use a #define. */
-#define OTA_JSON_UPDATED_BY_KEY    "updatedBy"
+#define OTA_NUM_JOB_PARAMS              ( 19 ) /* Number of parameters in the job document. */
 
-static const char pcOTA_JSON_ClientTokenKey[] = "clientToken";
-static const char pcOTA_JSON_ExecutionKey[] = "execution";
-static const char pcOTA_JSON_JobIDKey[] = "jobId";
-static const char pcOTA_JSON_StatusDetailsKey[] = "statusDetails";
-static const char pcOTA_JSON_SelfTestKey[] = "self_test";
-static const char pcOTA_JSON_UpdatedByKey[] = OTA_JSON_UPDATED_BY_KEY;
-static const char pcOTA_JSON_JobDocKey[] = "jobDocument";
-static const char pcOTA_JSON_OTAUnitKey[] = "afr_ota";
-static const char pcOTA_JSON_ProtocolsKey[] = "protocols";
-static const char pcOTA_JSON_FileGroupKey[] = "files";
-static const char pcOTA_JSON_StreamNameKey[] = "streamname";
-static const char pcOTA_JSON_FilePathKey[] = "filepath";
-static const char pcOTA_JSON_FileSizeKey[] = "filesize";
-static const char pcOTA_JSON_FileIDKey[] = "fileid";
-static const char pcOTA_JSON_FileAttributeKey[] = "attr";
-static const char pcOTA_JSON_FileCertNameKey[] = "certfile";
-static const char pcOTA_JSON_UpdateDataUrlKey[] = "update_data_url";
-static const char pcOTA_JSON_AuthSchemeKey[] = "auth_scheme";
+/* Keys in OTA job doc . */
+#define OTA_JSON_CLIENT_TOKEN_KEY       "clientToken"
+#define OTA_JSON_EXECUTION_KEY          "execution"
+#define OTA_JSON_JOB_ID_KEY             "jobId"
+#define OTA_JSON_STATUS_DETAILS_KEY     "statusDetails"
+#define OTA_JSON_SELF_TEST_KEY          "self_test"
+#define OTA_JSON_UPDATED_BY_KEY         "updatedBy"
+#define OTA_JSON_JOB_DOC_KEY            "jobDocument"
+#define OTA_JSON_OTA_UNIT_KEY           "afr_ota"
+#define OTA_JSON_PROTOCOLS_KEY          "protocols"
+#define OTA_JSON_FILE_GROUP_KEY         "files"
+#define OTA_JSON_STREAM_NAME_KEY        "streamname"
+#define OTA_JSON_FILE_PATH_KEY          "filepath"
+#define OTA_JSON_FILE_SIZE_KEY          "filesize"
+#define OTA_JSON_FILE_ID_KEY            "fileid"
+#define OTA_JSON_FILE_ATTRIBUTE_KEY     "attr"
+#define OTA_JSON_FILE_CERT_NAME_KEY     "certfile"
+#define OTA_JSON_UPDATE_DATA_URL_KEY    "update_data_url"
+#define OTA_JSON_AUTH_SCHEME_KEY        "auth_scheme"
 
 /* This is the OTA statistics structure to hold useful info. */
 
@@ -270,7 +266,7 @@ typedef struct
 {
     uint8_t ucData[ OTA_DATA_BLOCK_SIZE ];
     uint32_t ulDataLength;
-    bool_t bBufferUsed;
+    bool bBufferUsed;
 } OTA_EventData_t;
 
 typedef struct
@@ -295,6 +291,6 @@ void prvOTAEventBufferFree( OTA_EventData_t * const pxBuffer );
  * This function adds the event to the back of event queue and used
  * by internal OTA modules to signal agent task.
  */
-BaseType_t OTA_SignalEvent( const OTA_EventMsg_t * const pxEvent );
+bool OTA_SignalEvent( const OTA_EventMsg_t * const pxEventMsg );
 
 #endif /* ifndef _AWS_IOT_OTA_AGENT_INTERNAL_H_ */

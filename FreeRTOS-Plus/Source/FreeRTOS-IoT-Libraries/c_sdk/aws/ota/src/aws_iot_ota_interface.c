@@ -55,13 +55,13 @@
  * than one protocol is selected while creating OTA job.
  */
 #if ( configOTA_PRIMARY_DATA_PROTOCOL == OTA_DATA_OVER_MQTT )
-    const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
+    static const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
     {
         "MQTT",
         "HTTP"
     };
 #elif ( configOTA_PRIMARY_DATA_PROTOCOL == OTA_DATA_OVER_HTTP )
-    const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
+    static const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
     {
         "HTTP",
         "MQTT"

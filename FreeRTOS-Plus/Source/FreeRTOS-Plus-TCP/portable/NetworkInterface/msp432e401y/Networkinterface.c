@@ -294,6 +294,9 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
     if (pxDesc->pxNetworkBuffer) {
         vReleaseNetworkBufferAndDescriptor(pxNetworkBuffer);
         xEMAC_prv.ulTxDropped++;
+        
+        iptraceWAITING_FOR_TX_DMA_DESCRIPTOR();
+
         return pdFALSE;
     }
 
@@ -655,11 +658,10 @@ static void prvHandleRx()
             }
             /* Yes - does the frame contain errors? */
             if (ui32CtrlStatus & DES0_RX_STAT_ERR) {
-                /*
-                 *  This is a bad frame. Update the relevant statistics and
-                 *  then discard it.
-                 */
+                /* This is a bad frame.*/
 
+                iptraceETHERNET_RX_EVENT_LOST();
+                
                 /*
                  * Check the EMAC configuration to see if RX h/w checksums are
                  * enabled. (The last 2 parameters are don't cares here)
@@ -702,6 +704,7 @@ static void prvHandleRx()
                      *  Leave the packet in the descriptor and owned by the
                      *  driver. Process when the next interrupt occurs.
                      */
+                    iptraceETHERNET_RX_EVENT_LOST();
                     break;
                 }
 
@@ -735,10 +738,12 @@ static void prvHandleRx()
                     /* The buffer could not be sent to the IP task so the buffer
                     must be released. */
                     vNetworkBufferReleaseFromISR( pxNetworkBuffer );
-
+                    
+                    iptraceETHERNET_RX_EVENT_LOST();
                 }
                 else{
-                    /* The message was successfully sent to the TCP/IP stack */
+                    /* The message was successfully sent to the TCP/IP stack. */
+                    iptraceNETWORK_INTERFACE_RECEIVE();
                 }                     
             }
         }
@@ -858,6 +863,7 @@ static void prvProcessPhyInterrupt()
         }
         else {
             xEMAC_prv.linkUp = 0;
+            iptraceNETWORK_DOWN()
         }
         /* Signal the stack for this link status change (from ISR) */
         SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);
@@ -908,6 +914,8 @@ static void prv_xHwiIntFxn(uintptr_t callbacks)
 {
     uint32_t status;
 
+    iptraceNETWORK_EVENT_RECEIVED();
+    
     /* Check link status */
     status = (EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMSR) & EPHY_BMSR_LINKSTAT);
 

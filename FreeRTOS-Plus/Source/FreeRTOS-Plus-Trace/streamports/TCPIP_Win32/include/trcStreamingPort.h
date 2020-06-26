@@ -2,14 +2,13 @@
  * Trace Recorder Library for Tracealyzer v4.3.11
  * Percepio AB, www.percepio.com
  *
- * trcStreamingPort.c
+ * trcStreamingPort.h
  *
- * Supporting functions for trace streaming, used by the "stream ports" 
- * for reading and writing data to the interface.
- * Existing ports can easily be modified to fit another setup, e.g., a 
- * different TCP/IP stack, or to define your own stream port.
+ * The interface definitions for trace streaming ("stream ports").
+ * This "stream port" sets up the recorder to use TCP/IP as streaming channel.
+ * The example is for Windows sockets (Winsock), for use with Windows ports.
  *
-  * Terms of Use
+ * Terms of Use
  * This file is part of the trace recorder library (RECORDER), which is the 
  * intellectual property of Percepio AB (PERCEPIO) and provided under a
  * license as follows.
@@ -45,59 +44,32 @@
  * www.percepio.com
  ******************************************************************************/
 
-#include "trcRecorder.h"
+#ifndef TRC_STREAMING_PORT_H
+#define TRC_STREAMING_PORT_H
 
-#if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)  
-#if (TRC_USE_TRACEALYZER_RECORDER == 1)
+#include <stdint.h>
 
-FILE* traceFile = NULL;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void openFile(char* fileName)
-{
-	if (traceFile == NULL)
-	{
-		errno_t err = fopen_s(&traceFile, fileName, "wb");
-		if (err != 0)
-		{
-			printf("Could not open trace file, error code %d.\n", err);
-			exit(-1);
-		}
-		else {
-			printf("Trace file created.\n");
-		}
-	}
+int32_t readFromSocket(void* data, uint32_t size, int32_t *ptrBytesRead);
+int32_t writeToSocket(void* data, uint32_t size, int32_t *ptrBytesWritten);
+
+/* This port supports both direct write and buffered mode ...*/
+#define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 0
+
+#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) readFromSocket(_ptrData, _size, _ptrBytesRead)
+
+#if (TRC_STREAM_PORT_USE_INTERNAL_BUFFER == 1)    
+	#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesWritten) writeToSocket(_ptrData, _size, _ptrBytesWritten)
+#else
+	/* In the direct mode, _ptrBytesWritten is not used, so it is assumed that "all or nothing" is written. */
+	#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, UNUSED) writeToSocket(_ptrData, _size, NULL)
+#endif
+
+#ifdef __cplusplus
 }
+#endif
 
-int32_t writeToFile(void* data, uint32_t size, int32_t *ptrBytesWritten)
-{
-	int32_t written = 0;
-	if (traceFile != NULL)
-	{
-		written = fwrite(data, 1, size, traceFile);
-	}
-	else
-	{
-		written = 0;
-	}
-
-	if (ptrBytesWritten != 0)
-		*ptrBytesWritten = written;
-
-	if ((int32_t)size == written)
-		return 0;
-	else
-		return -1;
-}
-
-void closeFile(void)
-{
-	if (traceFile != NULL)
-	{
-		fclose(traceFile);
-		traceFile = NULL;
-		printf("Trace file closed.\n");
-	}
-}
-
-#endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
-#endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
+#endif /* TRC_STREAMING_PORT_H */

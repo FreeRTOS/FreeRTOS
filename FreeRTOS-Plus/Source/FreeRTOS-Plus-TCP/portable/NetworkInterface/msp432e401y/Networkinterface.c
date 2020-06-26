@@ -158,7 +158,7 @@ typedef struct {
     uint32_t         ulDescriptorLoopCount[NUM_RX_DESCRIPTORS];
     uint32_t         ulAbnormalInts;
     uint32_t         ulIsrCount;
-    BaseType_t       linkUp;
+    uint32_t         linkUp;
     DescriptorRefList_t *pxTxDescList;
     DescriptorRefList_t *pxRxDescList;
     HwiP_Handle      xHwi;
@@ -167,7 +167,9 @@ typedef struct {
 /*
  *  Signal the stack based on linkUp parameter.
  */
-static void prvSignalLinkChange();
+#ifndef SIGNAL_LINK_CHANGE
+    #define SIGNAL_LINK_CHANGE(linkUp)
+#endif
 
 /* 
  * The function is used to initialize the DMA descriptors 
@@ -319,6 +321,8 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
     xEMAC_prv.ulTxSent++;
 
     EMACTxDMAPollDemand(EMAC0_BASE);
+    
+    iptraceNETWORK_INTERFACE_TRANSMIT();
 
     return pdTRUE;
 }
@@ -349,7 +353,7 @@ BaseType_t xGetPhyLinkStatus( void )
 
     /* Signal the stack if link status changed */
     if (newLinkStatus != xEMAC_prv.linkUp) {
-        prvSignalLinkChange();//xEMAC_prv.hEvent, newLinkStatus, 0);
+        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);//xEMAC_prv.hEvent, newLinkStatus, 0);
     }
 
     /* Set the link status */
@@ -430,9 +434,8 @@ BaseType_t prvEmacStart()
     if (prvInitDMADescriptors()==pdFALSE) {
         /*
          *  If fail to initialize DMA descriptor lists:
-         *  1. Turns ON the prefetch buffer if it was disabled above
-         *  2. call HwiP_restore
-         *  3. call emacStop to clean up
+         *  1. call HwiP_restore
+         *  2. call emacStop to clean up
          */
         HwiP_restore(key);
         prvEmacStop();
@@ -851,13 +854,13 @@ static void prvProcessPhyInterrupt()
     if (value & EPHY_MISR1_LINKSTAT) {
         /* Is link up or down now? */
         if (status & EPHY_STS_LINK) {
-            xEMAC_prv.linkUp = pdTRUE;
+            xEMAC_prv.linkUp = 1;
         }
         else {
-            xEMAC_prv.linkUp = pdFALSE;
+            xEMAC_prv.linkUp = 0;
         }
         /* Signal the stack for this link status change (from ISR) */
-        prvSignalLinkChange();//xEMAC_prv.hEvent,xEMAC_prv.linkUp, 1);
+        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);
     }
 
     /* Has the speed or duplex status changed? */
@@ -910,7 +913,7 @@ static void prv_xHwiIntFxn(uintptr_t callbacks)
 
     /* Signal the stack if link status changed */
     if (status != xEMAC_prv.linkUp) {
-        prvSignalLinkChange();//xEMAC_prv.hEvent, status, 1);
+        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);//xEMAC_prv.hEvent, status, 1);
     }
 
     /* Set the link status */

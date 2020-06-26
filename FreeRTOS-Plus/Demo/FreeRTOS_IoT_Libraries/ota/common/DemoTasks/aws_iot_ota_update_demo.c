@@ -49,6 +49,7 @@
 /* IoT SDK includes. */
 #include "iot_mqtt.h"
 #include "platform/iot_network_freertos.h"
+#include "platform/iot_clock.h"
 
 /* Required to get the broker address and port. */
 #include "aws_iot_demo_profile.h"
@@ -73,13 +74,51 @@ static void App_OTACompleteCallback( OTA_JobEvent_t eEvent );
  */
 static void prvInitialiseLibraries( void );
 
+/**
+ * @brief Delay before retrying network connection up to a maximum interval.
+ */
+static void _connectionRetryDelay( void );
+
+/**
+ * @brief Initialize the libraries required for OTA demo.
+ *
+ * @return `EXIT_SUCCESS` if all libraries were successfully initialized;
+ * `EXIT_FAILURE` otherwise.
+ */
+
+static void prvNetworkDisconnectCallback( void * param,
+										  IotMqttCallbackParam_t * mqttCallbackParams );
+
+
+/**
+ * @brief Establish a new connection to the MQTT server.
+ *
+ * @param[in] awsIotMqttMode Specify if this demo is running with the AWS IoT
+ * MQTT server. Set this to `false` if using another MQTT server.
+ * @param[in] pIdentifier NULL-terminated MQTT client identifier.
+ * @param[in] pNetworkServerInfo Passed to the MQTT connect function when
+ * establishing the MQTT connection.
+ * @param[in] pNetworkCredentialInfo Passed to the MQTT connect function when
+ * establishing the MQTT connection.
+ * @param[in] pNetworkInterface The network interface to use for this demo.
+ * @param[out] pMqttConnection Set to the handle to the new MQTT connection.
+ *
+ * @return `EXIT_SUCCESS` if the connection is successfully established; `EXIT_FAILURE`
+ * otherwise.
+ */
+static int _establishMqttConnection( bool awsIotMqttMode,
+									 IotMqttConnection_t * pMqttConnection );
 /*-----------------------------------------------------------*/
 
-#define otaDemoCONN_TIMEOUT_MS			( 2000UL )
+#define otaDemoCONN_TIMEOUT_MS					   ( 2000UL )
 
-#define otaDemoKEEPALIVE_SECONDS		( 1200 )
+#define otaDemoKEEPALIVE_SECONDS				   ( 120 )
 
-#define myappONE_SECOND_DELAY_IN_TICKS	pdMS_TO_TICKS( 1000UL )
+#define otaDemoCONN_RETRY_BASE_INTERVAL_SECONDS	   ( 4U )
+
+#define otaDemoCONN_RETRY_MAX_INTERVAL_SECONDS	   ( 360U )
+
+#define otaDemoTASK_DELAY_SECONDS				   ( 1UL )
 
 /**
  * @brief OTA state machine string.
@@ -143,19 +182,34 @@ static IotMqttNetworkInfo_t xNetworkInfo =
 	/* Setup the callback which is called when the MQTT connection is
 	 * disconnected. The task handle is passed as the callback context which
 	 * is used by the callback to send a task notification to this task.*/
-	.disconnectCallback.function = NULL
+	.disconnectCallback.function = prvNetworkDisconnectCallback
 };
 
 /**
  * @brief The MQTT connection handle used in this example.
  */
 static IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
+
+/**
+ * @brief The MQTT connection info used for MQTT connection.
+ */
+IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
+
+/**
+ * @brief Flag used to unset, during disconnection of currently connected network. This will
+ * trigger a reconnection from the OTA demo task.
+ */
+volatile static bool _networkConnected = false;
+
+/**
+ * @brief Connection retry interval in seconds.
+ */
+static int _retryInterval = otaDemoCONN_RETRY_BASE_INTERVAL_SECONDS;
 /*-----------------------------------------------------------*/
 
 
 void vOTAUpdateDemoTask( void * pvParameters )
 {
-IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 OTA_State_t eState;
 OTA_ConnectionContext_t xOTAConnectionCtx = { 0 };
 
@@ -176,44 +230,71 @@ OTA_ConnectionContext_t xOTAConnectionCtx = { 0 };
 	for( ; ; )
 	{
 		configPRINTF( ( "Connecting to broker...\r\n" ) );
-		memset( &xConnectInfo, 0, sizeof( xConnectInfo ) );
 
-		xConnectInfo.awsIotMqttMode = true;
-		xConnectInfo.keepAliveSeconds = otaDemoKEEPALIVE_SECONDS;
-
-		xConnectInfo.cleanSession = true;
-		xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( awsiotdemoprofileCLIENT_IDENTIFIER );
-		xConnectInfo.pClientIdentifier = awsiotdemoprofileCLIENT_IDENTIFIER;
-
-		/* Connect to the broker. */
-		if( IotMqtt_Connect( &( xNetworkInfo ),
-							 &xConnectInfo,
-							 otaDemoCONN_TIMEOUT_MS, &xMQTTConnection ) == IOT_MQTT_SUCCESS )
+		/* Establish a new MQTT connection. */
+		if( _establishMqttConnection( true,
+									  &xMQTTConnection ) == IOT_MQTT_SUCCESS )
 		{
 			configPRINTF( ( "Connected to broker.\r\n" ) );
 			xOTAConnectionCtx.pvControlClient = xMQTTConnection;
 			xOTAConnectionCtx.pxNetworkInterface = ( void * ) IOT_NETWORK_INTERFACE_FREERTOS;
 			xOTAConnectionCtx.pvNetworkCredentials = &xNetworkSecurityCredentials;
 
+			/* Set the base interval for connection retry.*/
+			_retryInterval = otaDemoCONN_RETRY_BASE_INTERVAL_SECONDS;
+
+			/* Update the connection available flag.*/
+			_networkConnected = true;
+
+			/* Check if OTA Agent is suspended and resume.*/
+			if( ( eState = OTA_GetAgentState() ) == eOTA_AgentState_Suspended )
+			{
+				OTA_Resume( &xOTAConnectionCtx );
+			}
+
+			/* Check if OTA Agent is suspended and resume.*/
+			if( ( eState = OTA_GetAgentState() ) == eOTA_AgentState_Suspended )
+			{
+				OTA_Resume( &xOTAConnectionCtx );
+			}
+
+			/* Initialize the OTA Agent , if it is resuming the OTA statistics will be cleared for new connection.*/
 			OTA_AgentInit( ( void * ) ( &xOTAConnectionCtx ), ( const uint8_t * ) ( awsiotdemoprofileCLIENT_IDENTIFIER ), App_OTACompleteCallback, ( TickType_t ) ~0 );
 
-			while( ( eState = OTA_GetAgentState() ) != eOTA_AgentState_Stopped )
+			while( ( ( eState = OTA_GetAgentState() ) != eOTA_AgentState_Stopped ) && _networkConnected )
 			{
 				/* Wait forever for OTA traffic but allow other tasks to run and output statistics only once per second. */
-				vTaskDelay( myappONE_SECOND_DELAY_IN_TICKS );
+				IotClock_SleepMs( otaDemoTASK_DELAY_SECONDS * 1000 );
+
 				configPRINTF( ( "State: %s  Received: %u   Queued: %u   Processed: %u   Dropped: %u\r\n", pcStateStr[ eState ],
 								OTA_GetPacketsReceived(), OTA_GetPacketsQueued(), OTA_GetPacketsProcessed(), OTA_GetPacketsDropped() ) );
 			}
 
-			IotMqtt_Disconnect( xMQTTConnection, false );
+			/* Check if we got network disconnect callback and suspend OTA Agent.*/
+			if( _networkConnected == false )
+			{
+				/* Suspend OTA agent.*/
+				if( OTA_Suspend() == kOTA_Err_None )
+				{
+					while( ( eState = OTA_GetAgentState() ) != eOTA_AgentState_Suspended )
+					{
+						/* Wait for OTA Agent to process the suspend event. */
+						IotClock_SleepMs( otaDemoTASK_DELAY_SECONDS * 1000 );
+					}
+				}
+			}
+			else
+			{
+				IotMqtt_Disconnect( xMQTTConnection, false );
+			}
 		}
 		else
 		{
 			configPRINTF( ( "ERROR:  Failed to connect to MQTT broker.\r\n" ) );
 		}
 
-		/* After failure to connect or a disconnect, wait an arbitrary one second before retry. */
-		vTaskDelay( myappONE_SECOND_DELAY_IN_TICKS );
+		/* After failure to connect or a disconnect, delay for retrying connection. */
+		_connectionRetryDelay();
 	}
 }
 
@@ -243,6 +324,12 @@ OTA_Err_t xErr = kOTA_Err_Uninitialized;
 		configPRINTF( ( "Received eOTA_JobEvent_Activate callback from OTA Agent.\r\n" ) );
 		IotMqtt_Disconnect( xMQTTConnection, 0 );
 		OTA_ActivateNewImage();
+
+		/* We should never get here as new image activation must reset the device.*/
+		for( ; ; )
+		{
+			__debugbreak();
+		}
 	}
 	else if( eEvent == eOTA_JobEvent_Fail )
 	{
@@ -291,5 +378,95 @@ IotNetworkError_t xNetworkResult;
 	 * time initialization. */
 	xResult = IotMqtt_Init();
 	configASSERT( xResult == IOT_MQTT_SUCCESS );
+}
+/*-----------------------------------------------------------*/
+
+static void _connectionRetryDelay( void )
+{
+unsigned int retryIntervalwithJitter = 0;
+
+	if( ( _retryInterval * 2 ) >= otaDemoCONN_RETRY_MAX_INTERVAL_SECONDS )
+	{
+		/* Retry interval is already max.*/
+		_retryInterval = otaDemoCONN_RETRY_MAX_INTERVAL_SECONDS;
+	}
+	else
+	{
+		/* Double the retry interval time.*/
+		_retryInterval *= 2;
+	}
+
+	/* Add random jitter upto current retry interval .*/
+	retryIntervalwithJitter = _retryInterval + ( rand() % _retryInterval );
+
+	configPRINTF( ( "Retrying network connection in %d Secs ", retryIntervalwithJitter ) );
+
+	/* Delay for the calculated time interval .*/
+	IotClock_SleepMs( retryIntervalwithJitter * 1000 );
+}
+/*-----------------------------------------------------------*/
+
+static void prvNetworkDisconnectCallback( void * param,
+										  IotMqttCallbackParam_t * mqttCallbackParams )
+{
+	( void ) param;
+
+	/* Log the reason for MQTT disconnect.*/
+	switch( mqttCallbackParams->u.disconnectReason )
+	{
+		case IOT_MQTT_DISCONNECT_CALLED:
+			configPRINTF( ( "Mqtt disconnected due to invoking diconnect function.\r\n" ) );
+			break;
+
+		case IOT_MQTT_BAD_PACKET_RECEIVED:
+			configPRINTF( ( "Mqtt disconnected due to invalid packet received from the network.\r\n" ) );
+			break;
+
+		case IOT_MQTT_KEEP_ALIVE_TIMEOUT:
+			configPRINTF( ( "Mqtt disconnected due to Keep-alive response not received.\r\n" ) );
+			break;
+
+		default:
+			configPRINTF( ( "Mqtt disconnected due to unknown reason." ) );
+			break;
+	}
+
+	/* Clear the flag for network connection status.*/
+	_networkConnected = false;
+}
+
+/*-----------------------------------------------------------*/
+
+static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
+												IotMqttConnection_t * pMqttConnection )
+{
+IotMqttError_t connectStatus = IOT_MQTT_STATUS_PENDING;
+
+	/* Set the members of the connection info not set by the initializer. */
+	memset( &xConnectInfo, 0, sizeof( xConnectInfo ) );
+	xConnectInfo.awsIotMqttMode = awsIotMqttMode;
+	xConnectInfo.cleanSession = true;
+	xConnectInfo.keepAliveSeconds = otaDemoKEEPALIVE_SECONDS;
+	xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( awsiotdemoprofileCLIENT_IDENTIFIER );
+	xConnectInfo.pClientIdentifier = awsiotdemoprofileCLIENT_IDENTIFIER;
+
+	/* Establish the MQTT connection. */
+	configPRINTF( ( "MQTT demo client identifier is %.*s (length %hu).",
+					xConnectInfo.clientIdentifierLength,
+					xConnectInfo.pClientIdentifier,
+					xConnectInfo.clientIdentifierLength ) );
+
+	connectStatus = IotMqtt_Connect( &xNetworkInfo,
+									 &xConnectInfo,
+									 otaDemoCONN_TIMEOUT_MS,
+									 pMqttConnection );
+
+	if( connectStatus != IOT_MQTT_SUCCESS )
+	{
+		configPRINTF( ( "MQTT CONNECT returned error %s.",
+						IotMqtt_strerror( connectStatus ) ) );
+	}
+
+	return connectStatus;
 }
 /*-----------------------------------------------------------*/

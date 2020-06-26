@@ -1,5 +1,5 @@
 /*
- * FreeRTOS OTA V1.1.1
+ * FreeRTOS OTA V1.2.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -55,13 +55,13 @@
  * than one protocol is selected while creating OTA job.
  */
 #if ( configOTA_PRIMARY_DATA_PROTOCOL == OTA_DATA_OVER_MQTT )
-    const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
+    static const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
     {
         "MQTT",
         "HTTP"
     };
 #elif ( configOTA_PRIMARY_DATA_PROTOCOL == OTA_DATA_OVER_HTTP )
-    const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
+    static const char * pcProtocolPriority[ OTA_DATA_NUM_PROTOCOLS ] =
     {
         "HTTP",
         "MQTT"

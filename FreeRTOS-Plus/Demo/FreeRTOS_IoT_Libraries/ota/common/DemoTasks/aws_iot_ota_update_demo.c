@@ -324,6 +324,12 @@ OTA_Err_t xErr = kOTA_Err_Uninitialized;
 		configPRINTF( ( "Received eOTA_JobEvent_Activate callback from OTA Agent.\r\n" ) );
 		IotMqtt_Disconnect( xMQTTConnection, 0 );
 		OTA_ActivateNewImage();
+
+		/* We should never get here as new image activation must reset the device.*/
+		for( ; ; )
+		{
+			__debugbreak();
+		}
 	}
 	else if( eEvent == eOTA_JobEvent_Fail )
 	{

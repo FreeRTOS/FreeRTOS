@@ -23,9 +23,6 @@
     <Filter Include="Unity">
       <UniqueIdentifier>{fdabc401-4468-412c-8dc1-0e366fcdbec1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests">
-      <UniqueIdentifier>{623bd581-b971-47af-b62c-ac19b71a44c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FreeRTOS\Source\Source">
       <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,15 @@
     </Filter>
     <Filter Include="FreeRTOS\Source\Portable">
       <UniqueIdentifier>{98f985a8-c260-43fe-862f-7534a83922d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test_Code">
+      <UniqueIdentifier>{623bd581-b971-47af-b62c-ac19b71a44c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test_Code\Test_Cases">
+      <UniqueIdentifier>{e0b2c566-afd0-48e5-98fe-844b773a62fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test_Code\Test_Runner">
+      <UniqueIdentifier>{d79e7f9a-fafb-4f30-b5d0-c09722aaa374}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,20 +103,20 @@
     <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c">
       <Filter>Unity</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Test_runner\test_runner.c">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\demo_logging.c" />
-    <ClCompile Include="Source\main.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
       <Filter>FreeRTOS\Source\Portable</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
       <Filter>FreeRTOS\Source\Portable</Filter>
     </ClCompile>
-    <ClCompile Include="test\test_freertos_tcp.c">
-      <Filter>Tests</Filter>
+    <ClCompile Include="Test_code\Test_Cases\test_freertos_tcp.c">
+      <Filter>Test_Code\Test_Cases</Filter>
     </ClCompile>
+    <ClCompile Include="Test_code\Test_Runner\test_runner.c">
+      <Filter>Test_Code\Test_Runner</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="Logging\demo_logging.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\event_groups.h">
@@ -4745,23 +4751,23 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winppi.h">
       <Filter>Windows resources</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Test_runner\test_runner.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="Test_code\Test_Cases\freertos_tcp_test_access_declare.h">
+      <Filter>Test_Code\Test_Cases</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Test_runner\test_runner_config.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="Test_code\Test_Cases\freertos_tcp_test_access_dns_define.h">
+      <Filter>Test_Code\Test_Cases</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Config Files\FreeRTOSConfig.h" />
-    <ClInclude Include="Source\Config Files\FreeRTOSIPConfig.h" />
-    <ClInclude Include="test\freertos_tcp_test_access_declare.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="Test_code\Test_Cases\freertos_tcp_test_access_tcp_define.h">
+      <Filter>Test_Code\Test_Cases</Filter>
     </ClInclude>
-    <ClInclude Include="test\freertos_tcp_test_access_dns_define.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="Test_code\Test_Runner\test_runner.h">
+      <Filter>Test_Code\Test_Runner</Filter>
     </ClInclude>
-    <ClInclude Include="test\freertos_tcp_test_access_tcp_define.h">
-      <Filter>Tests</Filter>
+    <ClInclude Include="Test_code\Test_Runner\test_runner_config.h">
+      <Filter>Test_Code\Test_Runner</Filter>
     </ClInclude>
+    <ClInclude Include="Config\FreeRTOSConfig.h" />
+    <ClInclude Include="Config\FreeRTOSIPConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d2d1effecthelpers.hlsli">

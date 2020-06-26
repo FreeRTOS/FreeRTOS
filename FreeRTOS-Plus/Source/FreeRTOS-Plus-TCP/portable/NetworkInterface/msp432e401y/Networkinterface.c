@@ -62,18 +62,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* 
 * NETWORK_BUFFER_DESCRIPTORS_LEN is defined as follow:
 *
-* ipTOTAL_ETHERNET_FRAME_SIZE =eth_header + mtu + crc + 4 = 1522 bytes
-* ipBUFFER_PADDING = freertos space + ipconfigPACKET_FILLER_SIZE = 8+2 bytes 
-* i +2 bytes servono al dma per non trascrivere i dati dei freertos space
-* lunghezza totale deve essere multiplo di 4 allineato a 32bit
-* ipBUFFER_PADDING deve essere lungo 4*N + 2 bytes. In questo caso 8+2.
-* dma scrive i dati anche in memoria non allineate. tuttavia scrive sempre un multiplo di 4 bytes 
-* con dummy bytes all inizio e alla fine. quindi se non allineata bisogna prevedere 
-* dei byte tampone all inizio e fine nei confronti di ipTOTAL_ETHERNET_FRAME_SIZE
-* che is pointed by pucEthernetBuffer pointer. 
-* NETWORK_BUFFER_DESCRIPTORS_LEN=(ipTOTAL_ETHERNET_FRAME_SIZE + ipBUFFER_PADDING)
+* ipTOTAL_ETHERNET_FRAME_SIZE = eth_header +  ipconfigNETWORK_MTU  + crc + 4 
+*                                  14      +  1500                 +  4  + 4 = 1522 
+*
+* ipBUFFER_PADDING = 8 + ipconfigPACKET_FILLER_SIZE = 10 bytes 
+*                                    2
+* we get:
+* NETWORK_BUFFER_DESCRIPTORS_LEN = 1532
+* 
+* Understand ipBUFFER_PADDING ipconfigPACKET_FILLER_SIZE and memory alignement.
+* we want:
+* - aligned ip header
+* - using DMA transfer to fill buffers.
+* Since eth header is of len 14 the start of the buffer will not be aligned at 32 bit
+* boundaries. 
+* The MSP432e DMA can write at buffers starting at any places in memory, however the DMA 
+* transfer lenght is always a multiple of 4 bytes and dummy bytes are written at the 
+* beginning and at the end of the trasferred data.
+* thus the 2 bit of ipconfigPACKET_FILLER_SIZE serve as place for the dummy bytes written 
+* in front of the start of the non aligned eth frame.
+* Making the len of NETWORK_BUFFER_DESCRIPTORS_LEN a multiple of 4 solve the problem of
+* the dummy bytes at the end of the buffer.
 */
-#define NETWORK_BUFFER_DESCRIPTORS_LEN  1532
+
+#ifndef ipconfigPACKET_FILLER_SIZE
+    #define ipconfigPACKET_FILLER_SIZE 2
+#else
+    #if !(ipconfigPACKET_FILLER_SIZE==2)
+    #error ipconfigPACKET_FILLER_SIZE has to be 2.
+    #endif
+#endif
+
+#define ROUNDUP_4BYTES(X)  ((((X) + 3) / 4) * 4)
+
+#define NETWORK_BUFFER_DESCRIPTORS_LEN  ROUNDUP_4BYTES( (10 + ipTOTAL_ETHERNET_FRAME_SIZE) )
 
 /*
  * pxGetNetworkBufferWithDescriptor return a staic allocated buffer of fixed size,
@@ -312,8 +334,6 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
         beginning of the allocated buffer. */
         pxNetworkBuffers[ x ].pucEthernetBuffer = &( ucBuffers[ x ][ ipBUFFER_PADDING ] );
 
-        /* The following line is also required, but will not be required in
-        future versions. */
         *( ( uint32_t * ) &ucBuffers[ x ][ 0 ] ) = ( uint32_t ) &( pxNetworkBuffers[ x ] );
     }
 }
@@ -357,7 +377,6 @@ BaseType_t prvEmacStart()
     uint32_t pinMap;
     uint8_t  port;
     uint8_t  pin;
-    //bool enablePrefetch = false;
 
     /* set power dependency on peripherals being used */
     Power_setDependency(PowerMSP432E4_PERIPH_EMAC0);
@@ -457,16 +476,6 @@ BaseType_t prvEmacStart()
     EMACPHYWrite(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMCR, (EPHY_BMCR_ANEN |
                  EPHY_BMCR_RESTARTAN));
 
-    /*
-     * Turns ON the prefetch buffer if it was disabled above
-     
-    if (enablePrefetch) {
-        ui32FlashConf = FLASH_CTRL->CONF;
-        ui32FlashConf &= ~(FLASH_CONF_FPFOFF);
-        ui32FlashConf |= FLASH_CONF_FPFON;
-        FLASH_CTRL->CONF = ui32FlashConf;
-    }
-    */
     HwiP_restore(key);
 
     /* Create the hardware interrupt */
@@ -563,23 +572,6 @@ static BaseType_t prvEmacStop()
         HwiP_delete(xEMAC_prv.xHwi);
     }
 
-    #if 0
-
-
-    while (PBMQ_count(&xEMAC_prv.PBMQ_rx)) {
-        /* Dequeue a packet from the driver receive queue. */
-        pxNetworkBuffer = PBMQ_deq(&xEMAC_prv.PBMQ_rx);
-        PBM_free(pxNetworkBuffer);
-    }
-
-    while (PBMQ_count(&xEMAC_prv.PBMQ_tx)) {
-        /* Dequeue a packet from the driver receive queue. */
-        pxNetworkBuffer = PBMQ_deq(&xEMAC_prv.PBMQ_tx);
-        PBM_free(pxNetworkBuffer);
-    }
-
-    #endif
-
     for (i = 0; i < NUM_RX_DESCRIPTORS; i++) {
         if (g_pRxDescriptors[i].pxNetworkBuffer != NULL) {
             vReleaseNetworkBufferAndDescriptor(g_pRxDescriptors[i].pxNetworkBuffer);
@@ -658,7 +650,6 @@ static void prvHandleRx()
                 /* The DMA engine still owns the descriptor so we are finished. */
                 break;
             }
-
             /* Yes - does the frame contain errors? */
             if (ui32CtrlStatus & DES0_RX_STAT_ERR) {
                 /*
@@ -742,14 +733,9 @@ static void prvHandleRx()
                     must be released. */
                     vNetworkBufferReleaseFromISR( pxNetworkBuffer );
 
-                    /* Make a call to the standard trace macro to log the
-                    occurrence. */
-                    //iptraceETHERNET_RX_EVENT_LOST();
                 }
                 else{
-                    /* The message was successfully sent to the TCP/IP stack.
-                    Call the standard trace macro to log the occurrence. */
-                    //iptraceNETWORK_INTERFACE_RECEIVE();
+                    /* The message was successfully sent to the TCP/IP stack */
                 }                     
             }
         }
@@ -987,7 +973,3 @@ static BaseType_t prvSendEventStructToIPTaskFromISR( const IPStackEvent_t *pxEve
 }
 /*---------------------------------------*/
 
-static void prvSignalLinkChange()
-{
-
-}

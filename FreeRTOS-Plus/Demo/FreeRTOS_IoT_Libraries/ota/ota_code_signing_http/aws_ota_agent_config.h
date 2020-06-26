@@ -104,13 +104,13 @@
 #define otaconfigMAX_NUM_OTA_DATA_BUFFERS	 4U
 
 /**
-* @brief Allow update to same or lower version.
-*
-* Set this to 1 to allow downgrade or same version update.This configurations parameter
-* disables version check and allows update to a same or lower version.This is provided for
-* testing purpose and it is recommended to always update to higher version and keep this
-* configuration disabled.
-*/
+ * @brief Allow update to same or lower version.
+ *
+ * Set this to 1 to allow downgrade or same version update. This configurations parameter
+ * disables version check and allows update to a same or lower version.This is provided for
+ * testing purpose and it is recommended to always update to higher version and keep this
+ * configuration disabled.
+ */
 #define otaconfigAllowDowngrade              0U
 
 /**

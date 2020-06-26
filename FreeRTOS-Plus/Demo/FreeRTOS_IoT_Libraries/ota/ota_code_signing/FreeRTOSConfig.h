@@ -137,7 +137,7 @@ example, on my development laptop setting configNETWORK_INTERFACE_TO_USE to 4
 results in the wired network being used, while setting
 configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
 used. */
-#define configNETWORK_INTERFACE_TO_USE			  2L
+#define configNETWORK_INTERFACE_TO_USE			  1L
 
 /* The address of an echo server is only left in this project as it doubles as
 the address to which logging is sent should UDP logging be enabled. */

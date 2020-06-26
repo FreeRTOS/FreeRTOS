@@ -84,7 +84,7 @@
  *  Please note that this must be set larger than zero.
  *
  */
-#define otaconfigMAX_NUM_BLOCKS_REQUEST		 32U
+#define otaconfigMAX_NUM_BLOCKS_REQUEST		 1U
 
 /**
  * @brief The maximum number of requests allowed to send without a response before we abort.

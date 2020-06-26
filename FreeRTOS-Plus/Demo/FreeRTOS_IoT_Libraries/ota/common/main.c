@@ -175,6 +175,13 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 }
 /*-----------------------------------------------------------*/
 
+void vApplicationIdleHook( void )
+{
+	const uint32_t ulMSToSleep = 1;
+	Sleep( ulMSToSleep );
+}
+/*-----------------------------------------------------------*/
+
 void vAssertCalled( const char * pcFile,
 					uint32_t ulLine )
 {

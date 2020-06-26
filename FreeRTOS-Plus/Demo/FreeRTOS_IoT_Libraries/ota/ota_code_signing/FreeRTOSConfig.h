@@ -65,7 +65,7 @@
 
 /* Hook function related definitions. */
 #define configUSE_TICK_HOOK						   0
-#define configUSE_IDLE_HOOK						   0
+#define configUSE_IDLE_HOOK						   1
 #define configUSE_MALLOC_FAILED_HOOK			   0
 #define configCHECK_FOR_STACK_OVERFLOW			   0 /* Not applicable to the Win32 port. */
 
@@ -137,7 +137,7 @@ example, on my development laptop setting configNETWORK_INTERFACE_TO_USE to 4
 results in the wired network being used, while setting
 configNETWORK_INTERFACE_TO_USE to 2 results in the wireless network being
 used. */
-#define configNETWORK_INTERFACE_TO_USE			  1L
+#define configNETWORK_INTERFACE_TO_USE			  2L
 
 /* The address of an echo server is only left in this project as it doubles as
 the address to which logging is sent should UDP logging be enabled. */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.5
+ * Trace Recorder Library for Tracealyzer v4.3.11
  * Percepio AB, www.percepio.com
  *
  * trcStreamingPort.c
@@ -9,7 +9,7 @@
  * Existing ports can easily be modified to fit another setup, e.g., a 
  * different TCP/IP stack, or to define your own stream port.
  *
-  * Terms of Use
+ * Terms of Use
  * This file is part of the trace recorder library (RECORDER), which is the 
  * intellectual property of Percepio AB (PERCEPIO) and provided under a
  * license as follows.
@@ -53,8 +53,7 @@
 /* TCP/IP includes - for lwIP in this case */
 #include "lwip/tcpip.h"
 #include "lwip/sockets.h"
-
-int errno;
+#include "lwip/errno.h"
 
 #define TRC_TCPIP_PORT 12000
 
@@ -75,12 +74,12 @@ int32_t trcSocketSend( void* data, int32_t size, int32_t* bytesWritten )
   if (*bytesWritten < 0)
   {
     /* EWOULDBLOCK may be expected when buffers are full */
-    if (errno != 0 && errno != EWOULDBLOCK)
-    {
-      closesocket(new_sd);
-      new_sd = -1;
-      return -1;
-    }
+    if ((errno != 0) && (errno != EWOULDBLOCK))
+	{
+		closesocket(new_sd);
+		new_sd = -1;
+		return -1;
+	}
     else
         *bytesWritten = 0;
   }
@@ -92,19 +91,14 @@ int32_t trcSocketReceive( void* data, int32_t size, int32_t* bytesRead )
 {
   if (new_sd < 0)
     return -1;
-  
+
   *bytesRead = recv( new_sd, data, size, 0 );
-  if ( *bytesRead < 0 )
+  /* EWOULDBLOCK may be expected when there is no data to receive */
+  if (errno != 0 && errno != EWOULDBLOCK)
   {
-    /* EWOULDBLOCK may be expected when there is no data to receive */
-    if (errno != 0 && errno != EWOULDBLOCK)
-    {
-      closesocket(new_sd);
-      new_sd = -1;
-      return -1;
-    }
-    else
-        *bytesRead = 0;
+    closesocket(new_sd);
+    new_sd = -1;
+    return -1;
   }
 
   return 0;
@@ -116,7 +110,7 @@ int32_t trcSocketInitializeListener()
 	return 0;
   
   sock = lwip_socket(AF_INET, SOCK_STREAM, 0);
-
+  
   if (sock < 0)
     return -1;
 
@@ -152,9 +146,6 @@ int32_t trcSocketAccept()
   remoteSize = sizeof( remote );
   new_sd = accept( sock, (struct sockaddr *)&remote, (socklen_t*)&remoteSize );
 
-  flags = fcntl( new_sd, F_GETFL, 0 );
-  fcntl( new_sd, F_SETFL, flags | O_NONBLOCK );
-
   if( new_sd < 0 )
   {
    	closesocket(new_sd);
@@ -163,6 +154,9 @@ int32_t trcSocketAccept()
     sock = -1;
     return -1;
   }
+
+  flags = fcntl( new_sd, F_GETFL, 0 );
+  fcntl( new_sd, F_SETFL, flags | O_NONBLOCK );
 
   return 0;
 }

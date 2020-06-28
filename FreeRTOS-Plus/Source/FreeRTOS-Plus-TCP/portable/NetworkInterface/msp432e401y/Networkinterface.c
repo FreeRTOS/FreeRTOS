@@ -62,7 +62,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* 
 * NETWORK_BUFFER_DESCRIPTORS_LEN is defined as follow:
 *
-* ipTOTAL_ETHERNET_FRAME_SIZE = eth_header +  ipconfigNETWORK_MTU  + crc + 4 
+* ipTOTAL_ETHERNET_FRAME_SIZE = eth_header +  ipconfigNETWORK_MTU  + crc + ipSIZE_OF_ETH_OPTIONAL_802_1Q_TAG_BYTES
 *                                  14      +  1500                 +  4  + 4 = 1522 
 *
 * ipBUFFER_PADDING = 8 + ipconfigPACKET_FILLER_SIZE = 10 bytes 
@@ -95,7 +95,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ROUNDUP_4BYTES(X)  ((((X) + 3) / 4) * 4)
 
-#define NETWORK_BUFFER_DESCRIPTORS_LEN  ROUNDUP_4BYTES( (10 + ipTOTAL_ETHERNET_FRAME_SIZE) )
+#define NETWORK_BUFFER_DESCRIPTORS_LEN  ROUNDUP_4BYTES( (8 + ipconfigPACKET_FILLER_SIZE + ipTOTAL_ETHERNET_FRAME_SIZE) )
 
 /*
  * pxGetNetworkBufferWithDescriptor return a staic allocated buffer of fixed size,
@@ -540,7 +540,6 @@ static BaseType_t prvInitDMADescriptors(void)
         else {
             /*
              *  This is a failing scenario return pdFalse.
-             *  emacStop will do the PBM_free for any allocated packet.
              */
             g_pRxDescriptors[i].Desc.pvBuffer1 = 0;
             g_pRxDescriptors[i].Desc.ui32CtrlStatus = 0;
@@ -609,7 +608,7 @@ static void prvPrimeRx(NetworkBufferDescriptor_t *pxNetworkBuffer, DescriptorRef
 
     /* We got a buffer so fill in the payload pointer and size. */
     desc->Desc.pvBuffer1 = pxNetworkBuffer->pucEthernetBuffer;
-    desc->Desc.ui32Count |= (NETWORK_BUFFER_DESCRIPTORS_LEN << DES1_RX_CTRL_BUFF1_SIZE_S);
+    desc->Desc.ui32Count |= ((NETWORK_BUFFER_DESCRIPTORS_LEN - 8 )<< DES1_RX_CTRL_BUFF1_SIZE_S);
 
     /* Give this descriptor back to the hardware */
     desc->Desc.ui32CtrlStatus = DES0_RX_CTRL_OWN;
@@ -632,26 +631,30 @@ static void prvHandleRx()
     uint32_t         ui32Mode;
     uint32_t         ui32FrameSz;
     uint32_t         ui32CtrlStatus;
+    DescriptorRef_t *pxDescRef;
 
     IPStackEvent_t xRxEvent;
 
     /* Get a pointer to the receive descriptor list. */
     pDescList = xEMAC_prv.pxRxDescList;
 
-    /* Determine where we start and end our walk of the descriptor list */
+    /* Determine where we start and end our walk of the descriptor list 
+     * if the last ulRead was at descriptor 0 then read till NUM_RX_DESCRIPTORS - 1.
+     * else take in account to wrap around and read till ulRead -1
+     */
     ulDescEnd = pDescList->ulRead ?
             (pDescList->ulRead - 1) : (pDescList->ulNumDescs - 1);
 
     /* Step through the descriptors that are marked for CPU attention. */
     while (pDescList->ulRead != ulDescEnd) {
         descCount++;
-
+        pxDescRef = &(pDescList->pxDescriptorRef[pDescList->ulRead]);
         /* Does the current descriptor have a buffer attached to it? */
-        pxNetworkBuffer = pDescList->pxDescriptorRef[pDescList->ulRead].pxNetworkBuffer;
+        pxNetworkBuffer = pxDescRef->pxNetworkBuffer;
         if (pxNetworkBuffer) {
-            ui32CtrlStatus = pDescList->pxDescriptorRef[pDescList->ulRead].Desc.ui32CtrlStatus; 
+            ui32CtrlStatus = pxDescRef->Desc.ui32CtrlStatus; 
 
-            /* Determine if the host has filled it yet. */
+            /* Determine who control the descriptor. */
             if (ui32CtrlStatus & DES0_RX_CTRL_OWN) {
                 /* The DMA engine still owns the descriptor so we are finished. */
                 break;
@@ -670,7 +673,6 @@ static void prvHandleRx()
                 EMACConfigGet(EMAC0_BASE, &ui32Config, &ui32Mode, &ui32FrameSz);
                 if (ui32Config & EMAC_CONFIG_CHECKSUM_OFFLOAD) {
                     /* RX h/w checksums are enabled, look for checksum errors */
-
                     /* First check if the Frame Type bit is set */
                     if (ui32CtrlStatus & DES0_RX_STAT_FRAME_TYPE) {
                          /* Now, if bit 7 is reset and bit 0 is set: */
@@ -686,17 +688,18 @@ static void prvHandleRx()
                              xEMAC_prv.ulRxIpHdrChksmErrors++;
                              xEMAC_prv.ulRxPayloadChksmErrors++;
                         }
-                         
                     }
                 }
-
                 xEMAC_prv.ulRxDropped++;
-                prvPrimeRx(pxNetworkBuffer,
-                        &(pDescList->pxDescriptorRef[pDescList->ulRead]));
-                pDescList->ulRead++;
-                break;
+                /* we dont' pass the frame to the stack, thus wedon't need a new descriptorbuffer
+                 * we can thus reuse the descriptor with the akready present buffer.
+                 */
+                pxNetworkBufferNew = pxNetworkBuffer;
             }
-            else {
+            else if (ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer ))
+            {
+            /* This is a good frame so pass it up the stack. */
+
                 /* Allocate a new buffer for this descriptor */
                 pxNetworkBufferNew = pxNetworkBufferGetFromISR(GET_BUFFER_SIZE);
                 if (pxNetworkBufferNew == NULL) {
@@ -708,24 +711,13 @@ static void prvHandleRx()
                     break;
                 }
 
-                /* This is a good frame so pass it up the stack. */
                 len = (pDescList->pxDescriptorRef[pDescList->ulRead].Desc.ui32CtrlStatus &
                     DES0_RX_STAT_FRAME_LENGTH_M) >> DES0_RX_STAT_FRAME_LENGTH_S;
 
                 /* Remove the CRC */
                 pxNetworkBuffer->xDataLength= len - CRC_SIZE_BYTES;
-                /*
-                 *  Place the packet onto the receive queue to be handled in the
-                 *  EMACMSP432E4_pkt_service function (which is called by the
-                 *  NDK stack).
-                 */
                 /* Update internal statistic */
                 xEMAC_prv.ulRxCount++;
-
-
-                /* Prime the receive descriptor back up for future packets */
-                prvPrimeRx(pxNetworkBufferNew,
-                        &(pDescList->pxDescriptorRef[pDescList->ulRead]));
                 
                 xRxEvent.eEventType = eNetworkRxEvent;
 
@@ -738,22 +730,30 @@ static void prvHandleRx()
                     /* The buffer could not be sent to the IP task so the buffer
                     must be released. */
                     vNetworkBufferReleaseFromISR( pxNetworkBuffer );
-                    
+
                     iptraceETHERNET_RX_EVENT_LOST();
                 }
                 else{
                     /* The message was successfully sent to the TCP/IP stack. */
                     iptraceNETWORK_INTERFACE_RECEIVE();
                 }                     
+            }else 
+            {   
+                /* we dont' pass the frame to the stack, thus wedon't need a new descriptorbuffer
+                 * we can thus reuse the descriptor with the akready present buffer.
+                 */
+                pxNetworkBufferNew = pxNetworkBuffer;
             }
         }
+
+        /* Prime the receive descriptor back up for future packets */
+        prvPrimeRx(pxNetworkBufferNew, pxDescRef);
         /* Move on to the next descriptor in the chain, taking care to wrap. */
         pDescList->ulRead++;
         if (pDescList->ulRead == pDescList->ulNumDescs) {
             pDescList->ulRead = 0;
         }
     }
-
     /*
      * Update the desciptorLoopCount. This shows how frequently we are cycling
      * through x DMA descriptors, where x is the index of this array. So if

@@ -35,7 +35,6 @@
 /*-----------------------------------------------------------*/
 
 #include "FreeRTOS.h"
-#include "FreeRTOSIPConfig.h"
 #include "iot_pkcs11.h"
 #include "iot_pkcs11_config.h"
 
@@ -58,7 +57,7 @@
  * @brief PKCS #11 logging macro.
  *
  */
-#define PKCS11_PAL_PRINT( X )    vLoggingPrintf X
+#define PKCS11_PAL_PRINT( X )    configPRINTF( X )
 
 /**
  * @ingroup pkcs11_enums
@@ -152,10 +151,14 @@ void prvLabelToFilenameHandle( uint8_t * pcLabel,
 
 /*-----------------------------------------------------------*/
 
+CK_RV PKCS11_PAL_Initialize( void )
+{
+    return CKR_OK;
+}
 
 CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
-                                        uint8_t * pucData,
-                                        uint32_t ulDataSize )
+                                        CK_BYTE_PTR pucData,
+                                        CK_ULONG ulDataSize )
 {
     uint32_t ulStatus = 0;
     HANDLE hFile = INVALID_HANDLE_VALUE;
@@ -211,8 +214,8 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
 /*-----------------------------------------------------------*/
 
 
-CK_OBJECT_HANDLE PKCS11_PAL_FindObject( uint8_t * pLabel,
-                                        uint8_t usLength )
+CK_OBJECT_HANDLE PKCS11_PAL_FindObject( CK_BYTE_PTR pxLabel,
+                                        CK_ULONG usLength )
 {
     /* Avoid compiler warnings about unused variables. */
     ( void ) usLength;
@@ -221,7 +224,7 @@ CK_OBJECT_HANDLE PKCS11_PAL_FindObject( uint8_t * pLabel,
     char * pcFileName = NULL;
 
     /* Converts a label to its respective filename and handle. */
-    prvLabelToFilenameHandle( pLabel,
+    prvLabelToFilenameHandle( pxLabel,
                               &pcFileName,
                               &xHandle );
 
@@ -236,9 +239,9 @@ CK_OBJECT_HANDLE PKCS11_PAL_FindObject( uint8_t * pLabel,
 /*-----------------------------------------------------------*/
 
 CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
-                                 uint8_t ** ppucData,
-                                 uint32_t * pulDataSize,
-                                 CK_BBOOL * pIsPrivate )
+                                      CK_BYTE_PTR * ppucData,
+                                      CK_ULONG_PTR pulDataSize,
+                                      CK_BBOOL * pIsPrivate )
 {
     CK_RV ulReturn = CKR_OK;
     uint32_t ulDriverReturn = 0;
@@ -340,8 +343,8 @@ CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
 
 /*-----------------------------------------------------------*/
 
-void PKCS11_PAL_GetObjectValueCleanup( uint8_t * pucData,
-                                       uint32_t ulDataSize )
+void PKCS11_PAL_GetObjectValueCleanup( CK_BYTE_PTR pucData,
+                                       CK_ULONG ulDataSize )
 {
     /* Unused parameters. */
     ( void ) ulDataSize;

@@ -97,6 +97,7 @@
 #include "EventGroupsDemo.h"
 #include "IntSemTest.h"
 #include "TaskNotify.h"
+#include "TaskNotifyArray.h"
 #include "QueueSetPolling.h"
 #include "StaticAllocation.h"
 #include "blocktim.h"
@@ -183,6 +184,7 @@ int main_full( void )
 
 	/* Create the standard demo tasks. */
 	vStartTaskNotifyTask();
+	vStartTaskNotifyArrayTask();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -285,6 +287,10 @@ HeapStats_t xHeapStats;
 		else if( xAreTaskNotificationTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error:  Notification";
+		}
+		else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error:  NotificationArray";
 		}
 		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
@@ -496,6 +502,7 @@ TaskHandle_t xTimerTask;
 
 	/* Exercise using task notifications from an interrupt. */
 	xNotifyTaskFromISR();
+	xNotifyArrayTaskFromISR();
 
 	/* Writes to stream buffer byte by byte to test the stream buffer trigger
 	level functionality. */

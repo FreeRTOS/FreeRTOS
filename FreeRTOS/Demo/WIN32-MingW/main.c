@@ -370,7 +370,6 @@ const HeapRegion_t xHeapRegions[] =
 
 	/* The heap has not been initialised yet so expect stats to all be zero. */
 	vPortGetHeapStats( &xHeapStats );
-	configASSERT( memcmp( &xHeapStats, &xZeroHeapStats, sizeof( HeapStats_t ) ) == 0 );
 
 	vPortDefineHeapRegions( xHeapRegions );
 

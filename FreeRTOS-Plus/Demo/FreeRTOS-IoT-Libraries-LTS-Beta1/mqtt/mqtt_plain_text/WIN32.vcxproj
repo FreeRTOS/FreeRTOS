@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\include;..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\src;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\private\taskpool;..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\common\src;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\common\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\platform;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\private\taskpool;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -146,18 +146,18 @@
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\stream_buffer.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\timers.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_clock_freertos.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_network_freertos.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\iot_threads_freertos.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\private\taskpool\taskpool_freertos.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\src\iot_logging.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_api.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_network.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_operation.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_serialize.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_subscription.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_validate.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\src\iot_mqtt_helper.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\iot_clock_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\iot_network_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\iot_threads_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\private\taskpool\taskpool_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\common\src\iot_logging.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_api.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_network.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_operation.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_serialize.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_subscription.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_validate.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\src\iot_mqtt_helper.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c" />
@@ -186,19 +186,19 @@
     <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\task.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\timers.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\include\platform\iot_platform_types_freertos.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_clock.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_metrics.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_network.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\iot_threads.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\platform\types\iot_platform_types.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\abstractions\platform\freertos\private\taskpool\taskpool_freertos.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_error.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_logging.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\common\include\iot_static_memory.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt.h" />
-     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\iot_mqtt_protocol.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries\c_sdk\standard\mqtt\include\types\iot_mqtt_types.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\include\platform\iot_platform_types_freertos.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\platform\iot_clock.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\platform\iot_metrics.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\platform\iot_network.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\platform\iot_threads.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\platform\types\iot_platform_types.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\abstractions\platform\freertos\private\taskpool\taskpool_freertos.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\common\include\iot_error.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\common\include\iot_logging.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\common\include\iot_static_memory.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\include\iot_mqtt.h" />
+     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\include\iot_mqtt_protocol.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta1\c_sdk\standard\mqtt\include\types\iot_mqtt_types.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h" />

@@ -45,7 +45,7 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
-/* FreeRTOS-IoT-Libraries includes. */
+/* FreeRTOS-IoT-Libraries-LTS-Beta1 includes. */
 #include "iot_error.h"
 #include "platform/iot_network_freertos.h"
 #include "mbedtls/threading.h"

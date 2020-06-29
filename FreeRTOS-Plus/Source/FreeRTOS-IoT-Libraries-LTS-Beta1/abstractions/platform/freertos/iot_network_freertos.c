@@ -44,7 +44,7 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
-/* FreeRTOS-IoT-Libraries includes. */
+/* FreeRTOS-IoT-Libraries-LTS-Beta1 includes. */
 #include "iot_error.h"
 #include "platform/iot_network_freertos.h"
 
@@ -93,11 +93,11 @@
  * Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
  * of a DNS name.
  */
-#define MAX_DNS_NAME_LENGTH    ( 253 )
+#define MAX_DNS_NAME_LENGTH                 ( 253 )
 
 /**
  * @brief Socket timeout in ticks.
- * 
+ *
  * The FreeRTOS APIs take a timeout in clock ticks.
  */
 #define IOT_NETWORK_SOCKET_TIMEOUT_TICKS    ( pdMS_TO_TICKS( IOT_NETWORK_SOCKET_TIMEOUT_MS ) )
@@ -110,7 +110,7 @@
  * to ensure that if one FreeRTOS_select() or related API call times out, the other
  * API calls waiting for the mutex still have time left to execute.
  */
-#define SOCKETSET_MUTEX_TIMEOUT_TICKS      ( pdMS_TO_TICKS( IOT_NETWORK_SOCKET_TIMEOUT_MS * 2 ) )
+#define SOCKETSET_MUTEX_TIMEOUT_TICKS       ( pdMS_TO_TICKS( IOT_NETWORK_SOCKET_TIMEOUT_MS * 2 ) )
 
 /*-----------------------------------------------------------*/
 
@@ -168,20 +168,20 @@ static TaskHandle_t _networkTaskHandle;
 static SocketSet_t _socketSet;
 
 /**
-* @brief Mutex used to serialize access to FreeRTOS_select and related APIs.
-*
-* We call FreeRTOS_FD_SET() from the application task and FreeRTOS_select()
-* from the network task for the same socket set. These APIs are not thread
-* safe as of the current implementation. This mutex serializes access to
-* these APIs to ensure that these are not called simultaneously from multiple
-* threads.
-*/
+ * @brief Mutex used to serialize access to FreeRTOS_select and related APIs.
+ *
+ * We call FreeRTOS_FD_SET() from the application task and FreeRTOS_select()
+ * from the network task for the same socket set. These APIs are not thread
+ * safe as of the current implementation. This mutex serializes access to
+ * these APIs to ensure that these are not called simultaneously from multiple
+ * threads.
+ */
 static SemaphoreHandle_t _socketSetMutex;
 
 /**
  * @brief Storage space for _socketSetMutex.
  */
-static StaticSemaphore_t _socketSetMutexStorage;        
+static StaticSemaphore_t _socketSetMutexStorage;
 
 /**
  * @brief Connections in _socketSet.
@@ -455,15 +455,15 @@ static void _networkTask( void * pvParameters )
                 /* The usage of this routine must be serialized with FreeRTOS_FD_SET()
                  * because it blocks the caller on same synchronization object that
                  * FreeRTOS_FD_SET() blocks on. */
-                socketEvents = FreeRTOS_select( socketSet, 
+                socketEvents = FreeRTOS_select( socketSet,
                                                 IOT_NETWORK_SOCKET_TIMEOUT_TICKS );
                 xSemaphoreGive( _socketSetMutex );
 
                 /* This task must delay a bit so that any other waiting task, that
                  * might be the same priority or lower, may grab the _socketSetMutex
                  * before this task's next iteration. */
-                vTaskDelay(1);
-            }        
+                vTaskDelay( 1 );
+            }
             else
             {
                 IotLogError( "Failed to obtain _socketSetMutex required to call FreeRTOS_select()." );
@@ -510,9 +510,9 @@ IotNetworkError_t IotNetworkFreeRTOS_Init( void )
 {
     IOT_FUNCTION_ENTRY( IotNetworkError_t, IOT_NETWORK_SUCCESS );
 
-    /* Initialize the network connections in the socket set. If this array is 
+    /* Initialize the network connections in the socket set. If this array is
      * all NULL then that means there are no active sockets. */
-    memset( _connections, ( int )NULL, sizeof( _connections ) );
+    memset( _connections, ( int ) NULL, sizeof( _connections ) );
 
     #if ( IOT_NETWORK_ENABLE_TLS == 1 )
         int mbedtlsError = 0;
@@ -761,7 +761,7 @@ IotNetworkError_t IotNetworkFreeRTOS_SetReceiveCallback( IotNetworkConnection_t 
     else
     {
         /* Add this socket to the socket set for the network task. */
-        if( xSemaphoreTake( _socketSetMutex, 
+        if( xSemaphoreTake( _socketSetMutex,
                             SOCKETSET_MUTEX_TIMEOUT_TICKS ) == pdTRUE )
         {
             /* The usage of this routine must be serialized with FreeRTOS_select()
@@ -884,7 +884,7 @@ size_t IotNetworkFreeRTOS_Receive( IotNetworkConnection_t pConnection,
                 else
                 {
                     /* Could not obtain socket mutex, exit. */
-                     IotLogDebug( "Could not obtain the socketMutex needed for receive." );
+                    IotLogDebug( "Could not obtain the socketMutex needed for receive." );
                     break;
                 }
             }

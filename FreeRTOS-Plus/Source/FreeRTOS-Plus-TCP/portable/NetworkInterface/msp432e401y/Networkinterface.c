@@ -41,10 +41,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ti/drivers/power/PowerMSP432E4.h>
 
 /* FreeRTOS includes. */
+#include "FreeRTOSIPConfig.h"
 #include "FreeRTOS_IP.h"
 #include "NetworkBufferManagement.h"
 #include "FreeRTOS_IP_Private.h"
-#include "FreeRTOSIPConfig.h"
 
 #include "MSP432E4_Networkinterface.h"
 

@@ -229,6 +229,7 @@ static MQTTStatus_t sendPublish( MQTTContext_t * pContext,
  *
  * @param[in] pContext Initialized MQTT context.
  * @param[in] timeoutMs Timeout for waiting for CONNACK packet.
+ * @param[in] cleanSession Clean session flag set by application.
  * @param[out] pIncomingPacket List of MQTT subscription info.
  * @param[out] pSessionPresent Whether a previous session was present.
  * Only relevant if not establishing a clean session.
@@ -240,6 +241,7 @@ static MQTTStatus_t sendPublish( MQTTContext_t * pContext,
  */
 static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
                                     uint32_t timeoutMs,
+                                    bool cleanSession,
                                     MQTTPacketInfo_t * pIncomingPacket,
                                     bool * pSessionPresent );
 
@@ -874,7 +876,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
 
         case MQTT_PACKET_TYPE_PINGRESP:
             status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
-            invokeAppCallback = ( manageKeepAlive ) ? false : true;
+            invokeAppCallback = ( manageKeepAlive == true ) ? false : true;
 
             if( ( status == MQTTSuccess ) && ( manageKeepAlive == true ) )
             {
@@ -1064,6 +1066,7 @@ static MQTTStatus_t sendPublish( MQTTContext_t * pContext,
 
 static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
                                     uint32_t timeoutMs,
+                                    bool cleanSession,
                                     MQTTPacketInfo_t * pIncomingPacket,
                                     bool * pSessionPresent )
 {
@@ -1137,6 +1140,18 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
 
         /* Deserialize CONNACK. */
         status = MQTT_DeserializeAck( pIncomingPacket, NULL, pSessionPresent );
+    }
+
+    /* If a clean session is requested, a session present should not be set by
+     * broker. */
+    if( status == MQTTSuccess )
+    {
+        if( ( cleanSession == true ) && ( *pSessionPresent == true ) )
+        {
+            LogError( ( "Unexpected session present flag in CONNACK response from broker."
+                        " CONNECT request with clean session was made with broker." ) );
+            status = MQTTBadResponse;
+        }
     }
 
     if( status != MQTTSuccess )
@@ -1362,6 +1377,7 @@ MQTTStatus_t MQTT_Connect( MQTTContext_t * pContext,
     {
         status = receiveConnack( pContext,
                                  timeoutMs,
+                                 pConnectInfo->cleanSession,
                                  &incomingPacket,
                                  pSessionPresent );
     }
@@ -1704,7 +1720,6 @@ MQTTStatus_t MQTT_ProcessLoop( MQTTContext_t * pContext,
     MQTTStatus_t status = MQTTBadParameter;
     MQTTGetCurrentTimeFunc_t getTimeStampMs = NULL;
     uint32_t entryTimeMs = 0U, remainingTimeMs = timeoutMs, elapsedTimeMs = 0U;
-    MQTTPacketInfo_t incomingPacket;
 
     if( ( pContext != NULL ) && ( pContext->callbacks.getTime != NULL ) )
     {
@@ -1814,7 +1829,7 @@ uint16_t MQTT_GetPacketId( MQTTContext_t * pContext )
     {
         packetId = pContext->nextPacketId;
 
-        if( pContext->nextPacketId == UINT16_MAX )
+        if( pContext->nextPacketId == ( uint16_t ) UINT16_MAX )
         {
             pContext->nextPacketId = 1;
         }

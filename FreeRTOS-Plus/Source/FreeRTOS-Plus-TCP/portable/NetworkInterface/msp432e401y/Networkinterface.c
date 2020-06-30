@@ -149,10 +149,10 @@ store-and-forward mode frames are per default dropped, if FEF bit is set then ar
 The DT fields control forward of frames with error in the tcp/ip payload 
 */
 #define DMA_ERR_FORWARD 0
-    #if DMA_ERR_FORWARD
-        #define DMA_ERR_MODE  (EMAC_MODE_KEEP_BAD_CRC | EMAC_MODE_RX_ERROR_FRAMES)
+#if DMA_ERR_FORWARD
+    #define DMA_ERR_MODE  (EMAC_MODE_KEEP_BAD_CRC | EMAC_MODE_RX_ERROR_FRAMES)
 #else
-#define DMA_ERR_MODE 0
+    #define DMA_ERR_MODE 0
 #endif
 
 /*
@@ -312,13 +312,15 @@ BaseType_t xNetworkInterfaceInitialise( void )
 
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
-    DescriptorRef_t *pxDesc;
+    DescriptorRef_t *pxDescRef;
 
-    /* get descriptor reference */
-    pxDesc = &(xEMAC_prv.pxTxDescList->pxDescriptorRef[xEMAC_prv.pxTxDescList->ulWrite]);
-    
-    /* if no dma buffer available*/
-    if (pxDesc->pxNetworkBuffer) {
+    /* get next descriptorRef */
+    pxDescRef = &(xEMAC_prv.pxTxDescList->pxDescriptorRef[xEMAC_prv.pxTxDescList->ulWrite]);
+    /* the pxDescRef contain a reference to a pxNethworkBuffer,
+       then the buffer is in use. prvProcessTransmitted will free the buffer.
+     */
+    if (pxDescRef->pxNetworkBuffer) {
+        /* DMA buffer has associated a pxNetworkBuffer*/
         vReleaseNetworkBufferAndDescriptor(pxNetworkBuffer);
         xEMAC_prv.ulTxDropped++;
         
@@ -326,27 +328,31 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
 
         return pdFALSE;
     }
+    /* the pxDescRef contain no reference to a pxNethworkBuffer. 
+       we can use it to send the frame. 
+     */
 
     /* Fill in the buffer pointer and length */
-    pxDesc->Desc.ui32Count = pxNetworkBuffer->xDataLength;
-    pxDesc->Desc.pvBuffer1 = pxNetworkBuffer->pucEthernetBuffer;
-    pxDesc->Desc.ui32CtrlStatus = DES0_TX_CTRL_FIRST_SEG;
+    pxDescRef->Desc.ui32Count = pxNetworkBuffer->xDataLength;
+    pxDescRef->Desc.pvBuffer1 = pxNetworkBuffer->pucEthernetBuffer;
+    pxDescRef->Desc.ui32CtrlStatus =  (DES0_TX_CTRL_FIRST_SEG|
+                                    DES0_TX_CTRL_CHAINED  |
+                                    DES0_TX_CTRL_LAST_SEG |
+                                    DES0_TX_CTRL_INTERRUPT);
 
     /* CRC  IP offloading settings */
     #if ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM
-    pxDesc->Desc.ui32CtrlStatus |= (DES0_TX_CTRL_IP_ALL_CKHSUMS);
+    pxDescRef->Desc.ui32CtrlStatus |= (DES0_TX_CTRL_IP_ALL_CKHSUMS);
     #endif
-    pxDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_CHAINED;
 
-    pxDesc->Desc.ui32CtrlStatus |= (DES0_TX_CTRL_LAST_SEG |
-                                    DES0_TX_CTRL_INTERRUPT);
     xEMAC_prv.pxTxDescList->ulWrite++;
     if (xEMAC_prv.pxTxDescList->ulWrite == NUM_TX_DESCRIPTORS) {
         xEMAC_prv.pxTxDescList->ulWrite = 0;
     }
     /* set the reference to the Network Buffer */
-    pxDesc->pxNetworkBuffer = pxNetworkBuffer;
-    pxDesc->Desc.ui32CtrlStatus |= DES0_TX_CTRL_OWN;
+    pxDescRef->pxNetworkBuffer = pxNetworkBuffer;
+    /* set the Descriptor belonging the DMA */
+    pxDescRef->Desc.ui32CtrlStatus |= DES0_TX_CTRL_OWN;
 
     xEMAC_prv.ulTxSent++;
 
@@ -546,11 +552,9 @@ static BaseType_t prvInitDMADescriptors(void)
         g_pTxDescriptors[i].pxNetworkBuffer = NULL;
         g_pTxDescriptors[i].Desc.ui32Count = 0;
         g_pTxDescriptors[i].Desc.pvBuffer1 = 0;
+        g_pTxDescriptors[i].Desc.ui32CtrlStatus = 0;
         g_pTxDescriptors[i].Desc.DES3.pLink = ((i == (NUM_TX_DESCRIPTORS - 1)) ?
                &g_pTxDescriptors[0].Desc : &g_pTxDescriptors[i + 1].Desc);
-        g_pTxDescriptors[i].Desc.ui32CtrlStatus = DES0_TX_CTRL_INTERRUPT |
-                DES0_TX_CTRL_IP_ALL_CKHSUMS |
-                DES0_TX_CTRL_CHAINED;
     }
 
     /*
@@ -804,7 +808,6 @@ static void prvProcessTransmitted()
 {
     DescriptorRef_t *pDesc;
     uint32_t     ulNumDescs;
-
     /*
      * Walk the list until we have checked all descriptors or we reach the
      * write pointer or find a descriptor that the hardware is still working
@@ -817,36 +820,27 @@ static void prvProcessTransmitted()
             /* No - we're finished. */
             break;
         }
-
-        /*
-         * Check this descriptor for transmit errors
-         *
-         * First, check the error summary to see if there was any error and if
-         * so, check to see what type of error it was.
-         */
-        if (pDesc->Desc.ui32CtrlStatus & DES0_TX_STAT_ERR) {
-            /* An error occurred - now look for errors of interest */
-
-            /*
-             * Ensure TX Checksum Offload is enabled before checking for IP
-             * header error status (this status bit is reserved when TX CS
-             * offload is disabled)
-             */
-            if (((pDesc->Desc.ui32CtrlStatus & DES0_TX_CTRL_IP_HDR_CHKSUM) ||
-                (pDesc->Desc.ui32CtrlStatus & DES0_TX_CTRL_IP_ALL_CKHSUMS)) &&
-                (pDesc->Desc.ui32CtrlStatus & DES0_TX_STAT_IPH_ERR)) {
-                /* Error inserting IP header checksum */
-                xEMAC_prv.ulTxIpHdrChksmErrors++;
-            }
-
-            if (pDesc->Desc.ui32CtrlStatus & DES0_TX_STAT_PAYLOAD_ERR) {
-                /* Error in IP payload checksum (i.e. in UDP, TCP or ICMP) */
-                xEMAC_prv.ulTxPayloadChksmErrors++;
-            }
-        }
-
         /* Does this descriptor have a buffer attached to it? */
         if (pDesc->pxNetworkBuffer) {
+            /*
+            * Check this descriptor for transmit errors
+            */
+            if (pDesc->Desc.ui32CtrlStatus & DES0_TX_STAT_ERR) {
+                /* An error occurred - now look for errors of interest.
+                 * Ensure TX Checksum Offload is enabled
+                 */
+                if (((pDesc->Desc.ui32CtrlStatus & DES0_TX_CTRL_IP_HDR_CHKSUM) ||
+                    (pDesc->Desc.ui32CtrlStatus & DES0_TX_CTRL_IP_ALL_CKHSUMS)) &&
+                    (pDesc->Desc.ui32CtrlStatus & DES0_TX_STAT_IPH_ERR)) {
+                    /* Error inserting IP header checksum */
+                    xEMAC_prv.ulTxIpHdrChksmErrors++;
+                }
+
+                if (pDesc->Desc.ui32CtrlStatus & DES0_TX_STAT_PAYLOAD_ERR) {
+                    /* Error in IP payload checksum (i.e. in UDP, TCP or ICMP) */
+                    xEMAC_prv.ulTxPayloadChksmErrors++;
+                }
+            }
             /* Yes - free it*/
             vNetworkBufferReleaseFromISR(pDesc->pxNetworkBuffer);
             pDesc->pxNetworkBuffer = NULL;
@@ -856,7 +850,7 @@ static void prvProcessTransmitted()
             break;
         }
 
-        /* Move on to the next descriptor. */
+        /* Move on to the next descriptor. Wrap if necessary */
         xEMAC_prv.pxTxDescList->ulRead++;
         if (xEMAC_prv.pxTxDescList->ulRead == NUM_TX_DESCRIPTORS) {
             xEMAC_prv.pxTxDescList->ulRead = 0;

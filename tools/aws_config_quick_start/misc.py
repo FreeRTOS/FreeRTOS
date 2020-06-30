@@ -65,7 +65,7 @@ def write_client_credentials(
     file_to_modify = os.path.join(source_dir,
                                   'FreeRTOS-Labs',
                                   'Demo',
-                                  'FreeRTOS_IoT_Libraries',
+                                  'FreeRTOS-IoT-Libraries-LTS-Beta1',
                                   'include',
                                   'aws_iot_demo_profile.h')
     file_text = ''

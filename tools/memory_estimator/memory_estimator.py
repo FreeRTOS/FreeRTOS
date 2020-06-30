@@ -20,7 +20,7 @@ __REPORT_LIBS_JSON__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report_libs
 
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
 __FREERTOS_PLUS_SRC_DIR__ = os.path.join('FreeRTOS-Plus', 'Source')
-__IOT_LIBS_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries')
+__IOT_LIBS_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries-LTS-Beta1')
 
 __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
     'light-mqtt' : [

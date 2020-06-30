@@ -35,12 +35,12 @@ following links:
 The Visual Studio projects for each of the FreeRTOS IoT library examples are
 located in sub-directories of the following top-level directories:
 
-  + /FreeRTOS-Plus/Demo/FreeRTOS_IoT_Libraries/mqtt
-  + /FreeRTOS-Plus/Demo/FreeRTOS_IoT_Libraries/https
-  + /FreeRTOS-Plus/Demo/FreeRTOS_IoT_Libraries/shadow
-  + /FreeRTOS-Plus/Demo/FreeRTOS_IoT_Libraries/jobs
-  + /FreeRTOS-Plus/Demo/FreeRTOS_IoT_Libraries/ota
-  + /FreeRTOS-Plus/Demo/FreeRTOS_IoT_Libraries/pkcs11
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/mqtt
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/https
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/shadow
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/jobs
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/ota
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/pkcs11
 
 
 *** ADDITIONAL INFORMATION ***

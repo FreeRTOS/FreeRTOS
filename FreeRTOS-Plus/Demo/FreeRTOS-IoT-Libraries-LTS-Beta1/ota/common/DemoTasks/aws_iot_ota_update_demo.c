@@ -106,7 +106,7 @@ static void prvNetworkDisconnectCallback( void * param,
  * @return `EXIT_SUCCESS` if the connection is successfully established; `EXIT_FAILURE`
  * otherwise.
  */
-static int _establishMqttConnection( bool awsIotMqttMode,
+static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
 									 IotMqttConnection_t * pMqttConnection );
 /*-----------------------------------------------------------*/
 

@@ -26,6 +26,21 @@
 #include "mqtt_state.h"
 #include "private/mqtt_internal.h"
 
+
+/**
+ * @brief The number of retries for receiving CONNACK.
+ *
+ * The MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT will be used only when the
+ * timeoutMs parameter of #MQTT_Connect() is passed as 0 . The transport
+ * receive for CONNACK will be retried MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT
+ * times before timing out. A value of 0 for this config will cause the
+ * transport receive for CONNACK  to be invoked only once.
+ */
+#ifndef MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT
+    /* Default value for the CONNACK receive retries. */
+    #define MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT    ( 5U )
+#endif
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -1072,17 +1087,16 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
 {
     MQTTStatus_t status = MQTTSuccess;
     MQTTGetCurrentTimeFunc_t getTimeStamp = NULL;
-    uint32_t entryTimeMs = 0U, remainingTimeMs = 0U;
-    /* Initialize time taken to the timeout in case a time function is not provided. */
-    uint32_t timeTakenMs = timeoutMs;
-    /* Initialize loop exit condition to true in case a time function is not provided. */
-    bool timeExpired = true;
+    uint32_t entryTimeMs = 0U, remainingTimeMs = 0U, timeTakenMs = 0U;
+    bool breakFromLoop = false;
+    uint16_t loopCount = 0U;
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
     assert( pContext->callbacks.getTime != NULL );
 
     getTimeStamp = pContext->callbacks.getTime;
+
     /* Get the entry time for the function. */
     entryTimeMs = getTimeStamp();
 
@@ -1096,10 +1110,27 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
                                                       pContext->transportInterface.networkContext,
                                                       pIncomingPacket );
 
-        timeExpired = ( calculateElapsedTime( getTimeStamp(), entryTimeMs ) >= timeoutMs ) ? true : false;
+        /* The loop times out based on 2 conditions.
+         * 1. If timeoutMs is greater than 0:
+         *    Loop times out based on the timeout calculated by getTime()
+         *    function.
+         * 2. If timeoutMs is 0:
+         *    Loop times out based on the maximum number of retries config
+         *    MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT. This config will control
+         *    maximum the number of retry attempts to read the CONNACK packet.
+         *    A value of 0 for the config will try once to read CONNACK. */
+        if( timeoutMs > 0U )
+        {
+            breakFromLoop = ( calculateElapsedTime( getTimeStamp(), entryTimeMs ) >= timeoutMs ) ? true : false;
+        }
+        else
+        {
+            breakFromLoop = ( loopCount >= MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT ) ? true : false;
+            loopCount++;
+        }
 
-        /* Loop until there is data to read or if the timeout has not expired. */
-    } while( ( status == MQTTNoDataAvailable ) && ( timeExpired != true ) );
+        /* Loop until there is data to read or if we have exceeded the timeout/retries. */
+    } while( ( status == MQTTNoDataAvailable ) && ( breakFromLoop == false ) );
 
     if( status == MQTTSuccess )
     {
@@ -1114,9 +1145,12 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
         }
 
         /* Reading the remainder of the packet by transport recv.
-         * Attempt to read once even if the timeout has expired at this point.
+         * Attempt to read once even if the timeout has expired.
          * Invoking receivePacket with remainingTime as 0 would attempt to
-         * recv from network once.*/
+         * recv from network once. If using retries, the remainder of the
+         * CONNACK packet is tried to be read only once. Reading once would be
+         * good as the packet type and remaining length was already read. Hence,
+         * the probability of the remaining 2 bytes available to read is very high. */
         if( pIncomingPacket->type == MQTT_PACKET_TYPE_CONNACK )
         {
             status = receivePacket( pContext,
@@ -1154,14 +1188,14 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
         }
     }
 
-    if( status != MQTTSuccess )
+    if( status == MQTTSuccess )
     {
-        LogError( ( "CONNACK recv failed with status = %s.",
-                    MQTT_Status_strerror( status ) ) );
+        LogInfo( ( "Received MQTT CONNACK successfully from broker." ) );
     }
     else
     {
-        LogInfo( ( "Received MQTT CONNACK successfully from broker." ) );
+        LogError( ( "CONNACK recv failed with status = %s.",
+                    MQTT_Status_strerror( status ) ) );
     }
 
     return status;

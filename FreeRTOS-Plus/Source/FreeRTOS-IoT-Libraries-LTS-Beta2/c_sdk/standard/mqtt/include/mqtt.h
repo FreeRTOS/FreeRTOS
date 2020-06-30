@@ -152,14 +152,28 @@ MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
                         const MQTTFixedBuffer_t * pNetworkBuffer );
 
 /**
- * @brief Establish a MQTT session.
+ * @brief Establish an MQTT session.
  *
- * @brief param[in] pContext Initialized MQTT context.
- * @brief param[in] pConnectInfo MQTT CONNECT packet parameters.
- * @brief param[in] pWillInfo Last Will and Testament. Pass NULL if not used.
- * @brief param[in] timeoutMs Timeout in milliseconds for receiving
- * CONNACK packet.
- * @brief param[out] pSessionPresent Whether a previous session was present.
+ * This function will send MQTT CONNECT packet and receive a CONNACK packet. The
+ * send and receive from the network is done through the transport interface.
+ *
+ * The maximum time this function waits for a CONNACK is decided in one of the
+ * following ways:
+ * 1. If #timeoutMs is greater than 0:
+ *    #getTime is used to ensure that the function does not wait more than #timeoutMs
+ *    for CONNACK.
+ * 2. If #timeoutMs is 0:
+ *    The network receive for CONNACK is retried up to the number of times configured
+ *    by #MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT.
+ *
+ * @param[in] pContext Initialized MQTT context.
+ * @param[in] pConnectInfo MQTT CONNECT packet information.
+ * @param[in] pWillInfo Last Will and Testament. Pass NULL if Last Will and
+ * Testament is not used.
+ * @param[in] timeoutMs Maximum time in milliseconds to wait for a CONNACK packet.
+ * A zero timeout makes use of the retries for receiving CONNACK as configured with
+ * #MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT .
+ * @param[out] pSessionPresent Whether a previous session was present.
  * Only relevant if not establishing a clean session.
  *
  * @return #MQTTNoMemory if the #MQTTContext_t.networkBuffer is too small to
@@ -170,6 +184,24 @@ MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
  * #MQTTNoDataAvailable if no data available to receive in transport until
  * the #timeoutMs for CONNACK;
  * #MQTTSuccess otherwise.
+ *
+ * @note This API may spend more time than provided in the timeoutMS parameters in
+ * certain conditions as listed below:
+ *
+ * 1. Timeouts are incorrectly configured - If the timeoutMS is less than the
+ *    transport receive timeout and if a CONNACK packet is not received within
+ *    the transport receive timeout, the API will spend the transport receive
+ *    timeout (which is more time than the timeoutMs). It is the case of incorrect
+ *    timeout configuration as the timeoutMs parameter passed to this API must be
+ *    greater than the transport receive timeout. Please refer to the transport
+ *    interface documentation for more details about timeout configurations.
+ *
+ * 2. Partial CONNACK packet is received right before the expiry of the timeout - It
+ *    is possible that first two bytes of CONNACK packet (packet type and remaining
+ *    length) are received right before the expiry of the timeoutMS. In that case,
+ *    the API makes one more network receive call in an attempt to receive the remaining
+ *    2 bytes. In the worst case, it can happen that the remaining 2 bytes are never
+ *    received and this API will end up spending timeoutMs + transport receive timeout.
  */
 MQTTStatus_t MQTT_Connect( MQTTContext_t * pContext,
                            const MQTTConnectInfo_t * pConnectInfo,

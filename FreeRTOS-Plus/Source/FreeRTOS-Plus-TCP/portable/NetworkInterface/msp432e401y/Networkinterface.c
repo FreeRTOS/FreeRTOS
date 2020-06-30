@@ -128,6 +128,33 @@ considers need processing. */
 #endif
 
 
+/*For RX operation, if FIFO store-and-forward mode is enabled and a frame is read by the 
+DMA only after it is completely written into the RX FIFO. 
+In cut-through mode, DMA transfer is started after reaching of a given Threshold.
+TX is similar in the other direction.
+*/
+#define DMA_STORE_FORWARD_RX_OPERATION 0
+#if DMA_STORE_FORWARD_RX_OPERATION
+#define DMA_OP_MODE (EMAC_MODE_TX_STORE_FORWARD | \ 
+                     EMAC_MODE_RX_STORE_FORWARD)
+#else /*cut-through mode*/
+#define DMA_OP_MODE (EMAC_MODE_TX_STORE_FORWARD | \ 
+                     EMAC_MODE_RX_THRESHOLD_128_BYTES)
+#endif
+
+/* How error RX framaes are handled depend on the FIFO mode and on some
+Register fields in EMACDMAOPMODE. 
+In cut-through mode, only frames smaller than DMA transfer threshold, can be dropped before DMA transfers,
+store-and-forward mode frames are per default dropped, if FEF bit is set then are not dropped.
+The DT fields control forward of frames with error in the tcp/ip payload 
+*/
+#define DMA_ERR_FORWARD 0
+    #if DMA_ERR_FORWARD
+        #define DMA_ERR_MODE  (EMAC_MODE_KEEP_BAD_CRC | EMAC_MODE_RX_ERROR_FRAMES)
+#else
+#define DMA_ERR_MODE 0
+#endif
+
 /*
  *  Helper struct holding a DMA descriptor and the Network Buffer Descriptors it currently refers to.
  */
@@ -424,11 +451,9 @@ BaseType_t prvEmacStart()
                                EMAC_CONFIG_SA_FROM_DESCRIPTOR |
                                /* Enable RX Checksum Offload: */
                                EMAC_CONFIG_CHECKSUM_OFFLOAD |
-                               EMAC_CONFIG_BO_LIMIT_1024),
-                  (EMAC_MODE_RX_STORE_FORWARD |
-                   EMAC_MODE_TX_STORE_FORWARD |
-                   EMAC_MODE_TX_THRESHOLD_64_BYTES |
-                   EMAC_MODE_RX_THRESHOLD_64_BYTES), 0);
+                               EMAC_CONFIG_BO_LIMIT_1024 ),
+                               (DMA_OP_MODE | DMA_ERR_MODE), 
+                               0);
 
     /* Program the MAC address into the Ethernet controller. */
     EMACAddrSet(EMAC0_BASE, 0, (uint8_t *)hwAttrs->macAddress);
@@ -659,6 +684,8 @@ static void prvHandleRx()
                 /* The DMA engine still owns the descriptor so we are finished. */
                 break;
             }
+
+            #if ( DMA_ERR_FORWARD|(DMA_STORE_FORWARD_RX_OPERATION == 0))
             /* Yes - does the frame contain errors? */
             if (ui32CtrlStatus & DES0_RX_STAT_ERR) {
                 /* This is a bad frame.*/
@@ -696,7 +723,9 @@ static void prvHandleRx()
                  */
                 pxNetworkBufferNew = pxNetworkBuffer;
             }
-            else if (ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer ))
+            else 
+            #endif
+            if (ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer ))
             {
             /* This is a good frame so pass it up the stack. */
 
@@ -711,7 +740,7 @@ static void prvHandleRx()
                     break;
                 }
 
-                len = (pDescList->pxDescriptorRef[pDescList->ulRead].Desc.ui32CtrlStatus &
+                len = (ui32CtrlStatus &
                     DES0_RX_STAT_FRAME_LENGTH_M) >> DES0_RX_STAT_FRAME_LENGTH_S;
 
                 /* Remove the CRC */

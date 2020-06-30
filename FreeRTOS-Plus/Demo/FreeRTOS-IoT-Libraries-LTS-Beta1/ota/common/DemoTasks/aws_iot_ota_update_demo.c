@@ -80,10 +80,8 @@ static void prvInitialiseLibraries( void );
 static void _connectionRetryDelay( void );
 
 /**
- * @brief Initialize the libraries required for OTA demo.
+ * @brief Callback invoked when MQTT library detects a disconnection.
  *
- * @return `EXIT_SUCCESS` if all libraries were successfully initialized;
- * `EXIT_FAILURE` otherwise.
  */
 
 static void prvNetworkDisconnectCallback( void * param,
@@ -103,8 +101,8 @@ static void prvNetworkDisconnectCallback( void * param,
  * @param[in] pNetworkInterface The network interface to use for this demo.
  * @param[out] pMqttConnection Set to the handle to the new MQTT connection.
  *
- * @return `EXIT_SUCCESS` if the connection is successfully established; `EXIT_FAILURE`
- * otherwise.
+ * @return `IOT_MQTT_SUCCESS` if the connection is successfully established; Otherwise
+ * error code returned by `IotMqtt_Connect`.
  */
 static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
 									 IotMqttConnection_t * pMqttConnection );

@@ -80,19 +80,19 @@
 /**
  *   @brief Length of a SHA256 digest, in bytes.
  */
-#define pkcs11SHA256_DIGEST_LENGTH           32
+#define pkcs11SHA256_DIGEST_LENGTH           32UL
 
 /**
  * @brief Length of a curve P-256 ECDSA signature, in bytes.
  * PKCS #11 EC signatures are represented as a 32-bit R followed
  * by a 32-bit S value, and not ASN.1 encoded.
  */
-#define pkcs11ECDSA_P256_SIGNATURE_LENGTH    64
+#define pkcs11ECDSA_P256_SIGNATURE_LENGTH    64UL
 
 /**
  * @brief Key strength for elliptic-curve P-256.
  */
-#define pkcs11ECDSA_P256_KEY_BITS            256
+#define pkcs11ECDSA_P256_KEY_BITS            256UL
 
 /**
  * @brief Public exponent for RSA.
@@ -103,12 +103,12 @@
  * @brief The number of bits in the RSA-2048 modulus.
  *
  */
-#define pkcs11RSA_2048_MODULUS_BITS          2048
+#define pkcs11RSA_2048_MODULUS_BITS          2048UL
 
 /**
  * @brief Length of PKCS #11 signature for RSA 2048 key, in bytes.
  */
-#define pkcs11RSA_2048_SIGNATURE_LENGTH      ( pkcs11RSA_2048_MODULUS_BITS / 8 )
+#define pkcs11RSA_2048_SIGNATURE_LENGTH      ( pkcs11RSA_2048_MODULUS_BITS / 8UL )
 
 /**
  * @brief Length of RSA signature data before padding.
@@ -116,7 +116,7 @@
  * This is calculated by adding the SHA-256 hash len (32) to the 19 bytes in
  * pkcs11STUFF_APPENDED_TO_RSA_SIG = 51 bytes total.
  */
-#define pkcs11RSA_SIGNATURE_INPUT_LENGTH     51
+#define pkcs11RSA_SIGNATURE_INPUT_LENGTH     51UL
 
 /**
  * @brief Elliptic-curve object identifiers.
@@ -127,7 +127,7 @@
 /**
  * @brief Maximum length of storage for PKCS #11 label, in bytes.
  */
-#define pkcs11MAX_LABEL_LENGTH               32 /* 31 characters + 1 null terminator. */
+#define pkcs11MAX_LABEL_LENGTH               32UL /* 31 characters + 1 null terminator. */
 
 /**
  * @brief OID for curve P-256.

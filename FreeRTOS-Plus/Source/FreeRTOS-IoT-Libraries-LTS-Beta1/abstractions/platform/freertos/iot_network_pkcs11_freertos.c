@@ -48,10 +48,15 @@
 /* FreeRTOS-IoT-Libraries-LTS-Beta1 includes. */
 #include "iot_error.h"
 #include "platform/iot_network_freertos.h"
-#include "mbedtls/threading.h"
+#include "threading_alt.h"
 #include "iot_pkcs11.h"
 #include "iot_tls.h"
 
+#if !defined( MBEDTLS_CONFIG_FILE )
+#include "mbedtls/config.h"
+#else
+#include MBEDTLS_CONFIG_FILE
+#endif
 
 /* Configure logs for the functions in this file. */
 #ifdef IOT_LOG_LEVEL_NETWORK

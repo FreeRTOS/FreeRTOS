@@ -2491,6 +2491,12 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		{
 			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
 		}
+		else if( ( ( ( uint32_t ) xFlags & ( uint32_t ) FREERTOS_ZERO_COPY ) != 0U ) &&
+			 ( pvBuffer == NULL ) )
+		{
+			/* In zero-copy mode, pvBuffer is a pointer to a pointer ( not NULL ). */
+			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
+		}
 		else
 		{
 			if( pxSocket->u.xTCP.rxStream != NULL )

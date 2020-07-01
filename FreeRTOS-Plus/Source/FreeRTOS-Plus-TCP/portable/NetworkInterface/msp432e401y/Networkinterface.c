@@ -379,7 +379,7 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
         ProtocolPacket_t *pxPacket;
             
         
-        pxPacket = ( ProtocolPacket_t * ) ( pxDescriptor->pucEthernetBuffer );
+        pxPacket = ( ProtocolPacket_t * ) ( pxNetworkBuffer->pucEthernetBuffer );
 
         if( pxPacket->xICMPPacket.xIPHeader.ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP )
         {

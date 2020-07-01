@@ -80,10 +80,8 @@ static void prvInitialiseLibraries( void );
 static void _connectionRetryDelay( void );
 
 /**
- * @brief Initialize the libraries required for OTA demo.
+ * @brief Callback invoked when MQTT library detects a disconnection.
  *
- * @return `EXIT_SUCCESS` if all libraries were successfully initialized;
- * `EXIT_FAILURE` otherwise.
  */
 
 static void prvNetworkDisconnectCallback( void * param,
@@ -103,11 +101,11 @@ static void prvNetworkDisconnectCallback( void * param,
  * @param[in] pNetworkInterface The network interface to use for this demo.
  * @param[out] pMqttConnection Set to the handle to the new MQTT connection.
  *
- * @return `EXIT_SUCCESS` if the connection is successfully established; `EXIT_FAILURE`
- * otherwise.
+ * @return `IOT_MQTT_SUCCESS` if the connection is successfully established; Otherwise
+ * error code returned by `IotMqtt_Connect`.
  */
-static int _establishMqttConnection( bool awsIotMqttMode,
-									 IotMqttConnection_t * pMqttConnection );
+static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
+												IotMqttConnection_t * pMqttConnection );
 /*-----------------------------------------------------------*/
 
 #define otaDemoCONN_TIMEOUT_MS					   ( 2000UL )
@@ -326,9 +324,11 @@ OTA_Err_t xErr = kOTA_Err_Uninitialized;
 		OTA_ActivateNewImage();
 
 		/* We should never get here as new image activation must reset the device.*/
+		configPRINTF( ( "ERROR: New image activation failed.\r\n" ) );
+
 		for( ; ; )
 		{
-			__debugbreak();
+			IotClock_SleepMs( otaDemoTASK_DELAY_SECONDS * 1000 );
 		}
 	}
 	else if( eEvent == eOTA_JobEvent_Fail )

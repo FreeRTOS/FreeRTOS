@@ -66,6 +66,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     #error ipconfigZERO_COPY_TX_DRIVER should be set to 1.
 #endif
 
+/* 
+the msp432 can calculate ICMP checksum in driver. 
+settings FIX_ICMP_CHECKSUM_IN_DRIVER to 1 fix frames for a correct ICMP calculation in peripheral,
+It has only effect if ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM is set to 0
+*/
+#define FIX_ICMP_CHECKSUM_IN_DRIVER 1
 
 /* PHY phisical address, internal PHY */
 #define PHY_PHYS_ADDR       0
@@ -361,7 +367,26 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
 
     /* CRC  IP offloading settings */
     #if ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM
+    /*enable checksum offloading for this frame*/
     pxDescRef->Desc.ui32CtrlStatus |= (DES0_TX_CTRL_IP_ALL_CKHSUMS);
+    #if FIX_ICMP_CHECKSUM_IN_DRIVER
+    {       
+        /*
+        freeRTOS TCP always calculate  the ICMP checksum.
+        If the peripheral must calculate the checksum, it wants
+        the protocol checksum to have a value of zero. 
+        */ 
+        ProtocolPacket_t *pxPacket;
+            
+        
+        pxPacket = ( ProtocolPacket_t * ) ( pxDescriptor->pucEthernetBuffer );
+
+        if( pxPacket->xICMPPacket.xIPHeader.ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP )
+        {
+            pxPacket->xICMPPacket.xICMPHeader.usChecksum = ( uint16_t )0u;
+        }
+	}
+    #endif
     #endif
 
     xEMAC_prv.pxTxDescList->ulWrite++;

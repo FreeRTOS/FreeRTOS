@@ -44,7 +44,6 @@
  * port for further information:
  * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
  *
-
  *
  *******************************************************************************
  */

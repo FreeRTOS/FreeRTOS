@@ -1,6 +1,6 @@
 /*
- * FreeRTOS+TCP V2.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS V202002.00
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,26 +23,55 @@
  * http://www.FreeRTOS.org
  */
 
+ /**
+  * @file aws_test_runner.h
+  * @brief The function to be called to run all the tests.
+  */
+
+#ifndef _TEST_RUNNER_H_
+#define _TEST_RUNNER_H_
+
+#include "test_runner_config.h"
+
+  /*
+   * @brief If set to 1, will run DQP_FR tests only.
+   */
+#ifdef testrunnerAFQP_ENABLED
+#define testrunnerTEST_FILTER    "AFQP"
+#else
+#define testrunnerTEST_FILTER    0
+#endif
+
+   /**
+    * @brief Size of shared array.
+    *
+    */
+#define testrunnerBUFFER_SIZE    ( 4000 )
+
+    /**
+     * @brief Buffer used for all tests.
+     *
+     * Since tests are run in series, they can use the same memory array.
+     * This makes significant heap savings.
+     */
+extern char cBuffer[testrunnerBUFFER_SIZE];
+
 /**
- * @file aws_ota_pal_test_access_define.h
- * @brief Function wrappers that access private methods in aws_ota_pal.c.
- *
- * Needed for testing private functions.
+ * @brief FreeRTOS heap measurement taken before tests are run.
  */
+extern unsigned int xHeapBefore;
 
-#ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
-#define _AWS_FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_
+/**
+ * @brief FreeRTOS heap measurement taken after all tests are run.
+ */
+extern unsigned int xHeapAfter;
 
-#include "iot_freertos_tcp_test_access_declare.h"
 
-/*-----------------------------------------------------------*/
+/**
+ * @brief Runs all the tests.
+ */
+void TEST_RUNNER_RunTests_task(void* pvParameters);
 
-uint32_t TEST_FreeRTOS_TCP_prvParseDNSReply( uint8_t * pucUDPPayloadBuffer,
-                                             size_t xBufferLength,
-                                             TickType_t xIdentifier )
-{
-    return prvParseDNSReply( pucUDPPayloadBuffer, xBufferLength, xIdentifier );
-}
-/*-----------------------------------------------------------*/
 
-#endif /* ifndef _AWS_FREERTOS_TCP_TEST_ACCESS_DNS_DEFINE_H_ */
+
+#endif /* _AWS_TEST_RUNNER_H_ */

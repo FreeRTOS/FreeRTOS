@@ -210,13 +210,16 @@ static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
 											 FreeRTOS_Socket_t * const pxSocket,
 											 BaseType_t xHasSYNFlag );
 
-/*
- * Skip past TCP header options when doing Selective ACK, until there are no
- * more options left.
- */
-static void prvReadSackOption( const uint8_t * const pucPtr,
-							   size_t uxIndex,
-							   FreeRTOS_Socket_t * const pxSocket );
+#if( ipconfigUSE_TCP_WIN == 1 )
+	/*
+	 * Skip past TCP header options when doing Selective ACK, until there are no
+	 * more options left.
+	 */
+	static void prvReadSackOption( const uint8_t * const pucPtr,
+								   size_t uxIndex,
+								   FreeRTOS_Socket_t * const pxSocket );
+#endif/* ( ipconfigUSE_TCP_WIN == 1 ) */
+
 
 /*
  * Set the initial properties in the options fields, like the preferred
@@ -1327,47 +1330,50 @@ TCPWindow_t *pxTCPWindow = &( pxSocket->u.xTCP.xTCPWindow );
 }
 /*-----------------------------------------------------------*/
 
-static void prvReadSackOption( const uint8_t * const pucPtr,
-							   size_t uxIndex,
-							   FreeRTOS_Socket_t * const pxSocket )
-{
-uint32_t ulFirst = ulChar2u32( &( pucPtr[ uxIndex ] ) );
-uint32_t ulLast  = ulChar2u32( &( pucPtr[ uxIndex + 4U ] ) );
-uint32_t ulCount = ulTCPWindowTxSack( &( pxSocket->u.xTCP.xTCPWindow ), ulFirst, ulLast );;
-
-	/* ulTCPWindowTxSack( ) returns the number of bytes which have been acked
-	 * starting from the head position.  Advance the tail pointer in txStream.
-	 */
-	if( ( pxSocket->u.xTCP.txStream  != NULL ) && ( ulCount > 0U ) )
+#if( ipconfigUSE_TCP_WIN == 1 )
+	static void prvReadSackOption( const uint8_t * const pucPtr,
+								   size_t uxIndex,
+								   FreeRTOS_Socket_t * const pxSocket )
 	{
-		/* Just advancing the tail index, 'ulCount' bytes have been confirmed. */
-		( void ) uxStreamBufferGet( pxSocket->u.xTCP.txStream, 0, NULL, ( size_t ) ulCount, pdFALSE );
-		pxSocket->xEventBits |= ( EventBits_t ) eSOCKET_SEND;
+	uint32_t ulFirst = ulChar2u32( &( pucPtr[ uxIndex ] ) );
+	uint32_t ulLast  = ulChar2u32( &( pucPtr[ uxIndex + 4U ] ) );
+	uint32_t ulCount = ulTCPWindowTxSack( &( pxSocket->u.xTCP.xTCPWindow ), ulFirst, ulLast );;
 
-		#if ipconfigSUPPORT_SELECT_FUNCTION == 1
+		/* ulTCPWindowTxSack( ) returns the number of bytes which have been acked
+		 * starting from the head position.  Advance the tail pointer in txStream.
+		 */
+		if( ( pxSocket->u.xTCP.txStream  != NULL ) && ( ulCount > 0U ) )
 		{
-			if( ( pxSocket->xSelectBits & ( EventBits_t ) eSELECT_WRITE ) != 0U )
-			{
-				/* The field 'xEventBits' is used to store regular socket events
-				 * (at most 8), as well as 'select events', which will be left-shifted.
-				 */
-				pxSocket->xEventBits |= ( ( EventBits_t ) eSELECT_WRITE ) << SOCKET_EVENT_BIT_COUNT;
-			}
-		}
-		#endif
+			/* Just advancing the tail index, 'ulCount' bytes have been confirmed. */
+			( void ) uxStreamBufferGet( pxSocket->u.xTCP.txStream, 0, NULL, ( size_t ) ulCount, pdFALSE );
+			pxSocket->xEventBits |= ( EventBits_t ) eSOCKET_SEND;
 
-		/* In case the socket owner has installed an OnSent handler,
-		call it now. */
-		#if( ipconfigUSE_CALLBACKS == 1 )
-		{
-			if( ipconfigIS_VALID_PROG_ADDRESS( pxSocket->u.xTCP.pxHandleSent ) )
+			#if ipconfigSUPPORT_SELECT_FUNCTION == 1
 			{
-				pxSocket->u.xTCP.pxHandleSent( pxSocket, ulCount );
+				if( ( pxSocket->xSelectBits & ( EventBits_t ) eSELECT_WRITE ) != 0U )
+				{
+					/* The field 'xEventBits' is used to store regular socket events
+					 * (at most 8), as well as 'select events', which will be left-shifted.
+					 */
+					pxSocket->xEventBits |= ( ( EventBits_t ) eSELECT_WRITE ) << SOCKET_EVENT_BIT_COUNT;
+				}
 			}
+			#endif
+
+			/* In case the socket owner has installed an OnSent handler,
+			call it now. */
+			#if( ipconfigUSE_CALLBACKS == 1 )
+			{
+				if( ipconfigIS_VALID_PROG_ADDRESS( pxSocket->u.xTCP.pxHandleSent ) )
+				{
+					pxSocket->u.xTCP.pxHandleSent( pxSocket, ulCount );
+				}
+			}
+			#endif /* ipconfigUSE_CALLBACKS == 1  */
 		}
-		#endif /* ipconfigUSE_CALLBACKS == 1  */
 	}
-}
+
+#endif	/* ( ipconfigUSE_TCP_WIN != 0 ) */
 /*-----------------------------------------------------------*/
 
 #if( ipconfigUSE_TCP_WIN != 0 )
@@ -1994,7 +2000,6 @@ int32_t lCount, lLength;
 
 	/* A txStream has been created already, see if the socket has new data for
 	the sliding window.
-
 	uxStreamBufferMidSpace() returns the distance between rxHead and rxMid.  It
 	contains new Tx data which has not been passed to the sliding window yet.
 	The oldest data not-yet-confirmed can be found at rxTail. */
@@ -2004,7 +2009,6 @@ int32_t lCount, lLength;
 	{
 		/* All data between txMid and rxHead will now be passed to the sliding
 		window manager, so it can start transmitting them.
-
 		Hand over the new data to the sliding window handler.  It will be
 		split-up in chunks of 1460 bytes each (or less, depending on
 		ipconfigTCP_MSS). */
@@ -2137,7 +2141,6 @@ uint16_t usLength;
 
 	/* Determine the length and the offset of the user-data sent to this
 	node.
-
 	The size of the TCP header is given in a multiple of 4-byte words (single
 	byte, needs no ntoh() translation).  A shift-right 2: is the same as
 	(offset >> 4) * 4. */
@@ -2213,7 +2216,6 @@ BaseType_t xResult = 0;
 	{
 		/* See if way may accept the data contents and forward it to the socket
 		owner.
-
 		If it can't be "accept"ed it may have to be stored and send a selective
 		ack (SACK) option to confirm it.  In that case, lTCPAddRxdata() will be
 		called later to store an out-of-order packet (in case lOffset is
@@ -3494,12 +3496,11 @@ const ListItem_t *pxEndTCP = ipPOINTER_CAST( const ListItem_t *, listGET_END_MAR
 #endif /* ipconfigUSE_TCP == 1 */
 
 /* Provide access to private members for testing. */
-#ifdef AMAZON_FREERTOS_ENABLE_UNIT_TESTS
-	#include "iot_freertos_tcp_test_access_tcp_define.h"
+#ifdef FREERTOS_ENABLE_UNIT_TESTS
+	#include "freertos_tcp_test_access_tcp_define.h"
 #endif
 
 /* Provide access to private members for verification. */
 #ifdef FREERTOS_TCP_ENABLE_VERIFICATION
 	#include "aws_freertos_tcp_verification_access_tcp_define.h"
 #endif
-

@@ -271,7 +271,7 @@ static uint8_t ucBuffers[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS][NETWORK_BUFFER
 
 
 /* Application is required to provide this variable */
-extern const EMACMSP432E4_HWAttrs EMACMSP432E4_hwAttrs;
+extern const EMACMSP432E4_DriverAttrs g_EMAC_DriverAttrs;
 
 /* The queue used to pass events into the IP-task for processing. */
 extern QueueHandle_t xNetworkEventQueue;
@@ -410,7 +410,7 @@ BaseType_t xGetPhyLinkStatus( void )
 BaseType_t prvEmacStart()
 {
     uint16_t value;
-    EMACMSP432E4_HWAttrs const *hwAttrs = &EMACMSP432E4_hwAttrs;
+    EMACMSP432E4_DriverAttrs const *hwAttrs = &g_EMAC_DriverAttrs;
     HwiP_Params xHwiParams;
     ClockP_FreqHz freq;
     uint32_t key;
@@ -594,7 +594,7 @@ static BaseType_t prvInitDMADescriptors(void)
  */
 static BaseType_t prvEmacStop()
 {
-    EMACMSP432E4_HWAttrs const *hwAttrs = &EMACMSP432E4_hwAttrs;
+    EMACMSP432E4_DriverAttrs const *hwAttrs = &g_EMAC_DriverAttrs;
     uint8_t  port;
     int i = 0;
 

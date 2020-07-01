@@ -98,9 +98,6 @@ extern "C" {
  *
  */
 typedef struct {
-    /*! @brief Base address of the EMAC peripheral. */
-    uint32_t baseAddr;
-
     /*!
      *  @brief The EMAC peripheral's interrupt number.
      */
@@ -141,7 +138,7 @@ typedef struct {
       */
     uint8_t *macAddress;
 
-} EMACMSP432E4_HWAttrs;
+} EMACMSP432E4_DriverAttrs;
 
 
 #ifdef __cplusplus

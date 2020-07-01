@@ -68,10 +68,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* 
 the msp432 can calculate ICMP checksum in driver. 
-settings FIX_ICMP_CHECKSUM_IN_DRIVER to 1 fix frames for a correct ICMP calculation in peripheral,
+settings FIX_ICMP_CHECKSUM_IN_DRIVER to 1 fix frames for a correct ICMP 
+calculation in peripheral.
 It has only effect if ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM is set to 0
 */
 #define FIX_ICMP_CHECKSUM_IN_DRIVER 1
+
+/* PHY linkstatus read in xGetPhyLinkStatus 
+ if FORCE_LINK_STATUS_READ_IN_xGetPhyLinkStatus is 0 the linkUp 
+ variable is used instead of polling the PHY. 
+ The linkup variable is setted in ISR by PHY interrupt events 
+ by prvProcessPhyInterrupt 
+*/
+#ifndef FORCE_LINK_STATUS_READ_IN_xGetPhyLinkStatus
+    #define FORCE_LINK_STATUS_READ_IN_xGetPhyLinkStatus 0
+#endif
 
 /* PHY phisical address, internal PHY */
 #define PHY_PHYS_ADDR       0
@@ -318,20 +329,11 @@ BaseType_t xNetworkInterfaceInitialise( void )
     xEMAC_prv.ulTxPayloadChksmErrors = 0;
     xEMAC_prv.ulAbnormalInts = 0;
     xEMAC_prv.ulIsrCount = 0;
-    xEMAC_prv.linkUp       = pdFALSE;
+    xEMAC_prv.linkUp       = 0;
     memset(xEMAC_prv.ulDescriptorLoopCount, 0,
             sizeof(xEMAC_prv.ulDescriptorLoopCount));
 
-    if (prvEmacStart()== pdTRUE)
-    {
-        #if USE_DEFERRED_INTERRUPT
-        #endif
-        return pdTRUE;
-    }
-    else
-    {
-        return pdFALSE;
-    }
+    return prvEmacStart();
 }
 /*-------------------------------------------*/
 
@@ -425,19 +427,16 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
 
 BaseType_t xGetPhyLinkStatus( void )
 {
+    #if FORCE_LINK_STATUS_READ_IN_xGetPhyLinkStatus
+    {
     uint32_t newLinkStatus;
-
     /* Check link status */
     newLinkStatus =
-            (EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMSR) & EPHY_BMSR_LINKSTAT);
-
-    /* Signal the stack if link status changed */
-    if (newLinkStatus != xEMAC_prv.linkUp) {
-        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);//xEMAC_prv.hEvent, newLinkStatus, 0);
-    }
-
+            (EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMSR) & EPHY_BMSR_LINKSTAT)? 1:0;
     /* Set the link status */
     xEMAC_prv.linkUp = newLinkStatus;
+    }
+    #endif
 
     if (xEMAC_prv.linkUp) {
         return pdTRUE;
@@ -922,20 +921,6 @@ static void prvProcessPhyInterrupt()
     /* Read the current PHY status. */
     status = EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_STS);
 
-    /* Has the link status changed? */
-    if (value & EPHY_MISR1_LINKSTAT) {
-        /* Is link up or down now? */
-        if (status & EPHY_STS_LINK) {
-            xEMAC_prv.linkUp = 1;
-        }
-        else {
-            xEMAC_prv.linkUp = 0;
-            iptraceNETWORK_DOWN()
-        }
-        /* Signal the stack for this link status change (from ISR) */
-        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);
-    }
-
     /* Has the speed or duplex status changed? */
     if (value & (EPHY_MISR1_SPEED | EPHY_MISR1_DUPLEXM | EPHY_MISR1_ANC)) {
         /* Get the current MAC configuration. */
@@ -965,6 +950,20 @@ static void prvProcessPhyInterrupt()
         /* Reconfigure the MAC */
         EMACConfigSet(EMAC0_BASE, config, mode, rxMaxFrameSize);
     }
+    
+    /* Has the link status changed? */
+    if (value & EPHY_MISR1_LINKSTAT) {
+        /* Is link up or down now? */
+        if (status & EPHY_STS_LINK) {
+            xEMAC_prv.linkUp = 1;
+        }
+        else {
+            xEMAC_prv.linkUp = 0;
+            iptraceNETWORK_DOWN()
+        }
+        /* Signal the stack for this link status change (from ISR) */
+        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);
+    }
 }
 /*-------------------------------------------*/
 
@@ -980,19 +979,8 @@ static void prvProcessPhyInterrupt()
 static void prv_xHwiIntFxn(uintptr_t callbacks)
 {
     uint32_t status;
-    uint32_t linkup;
 
     iptraceNETWORK_EVENT_RECEIVED();
-    
-    /* Check link status */
-    linkup = (EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMSR) & EPHY_BMSR_LINKSTAT) ? 1 : 0;
-
-    /* Signal the stack if link status changed */
-    if (linkup != xEMAC_prv.linkUp) {
-        SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);//xEMAC_prv.hEvent, status, 1);
-    }
-    /* Set the link status */
-    xEMAC_prv.linkUp = linkup;
 
     xEMAC_prv.ulIsrCount++;
 

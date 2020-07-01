@@ -48,6 +48,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "MSP432E4_Networkinterface.h"
 
+/* check  FreeRTOSIPConfig.h*/
+
+#if (ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0)
+    #warning ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM can be set to 1.
+#endif
+
+#if (ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0)
+    #warning ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM should be set to 1.
+#endif
+
+#if (ipconfigUSE_LINKED_RX_MESSAGES == 1)
+    #error ipconfigUSE_LINKED_RX_MESSAGES should be set to 0.
+#endif
+
+#if (ipconfigZERO_COPY_TX_DRIVER == 0)
+    #error ipconfigZERO_COPY_TX_DRIVER should be set to 1.
+#endif
+
+
 /* PHY phisical address, internal PHY */
 #define PHY_PHYS_ADDR       0
 #define NUM_RX_DESCRIPTORS  4
@@ -87,11 +106,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ipconfigPACKET_FILLER_SIZE
     #define ipconfigPACKET_FILLER_SIZE 2
-#else
-    #if !(ipconfigPACKET_FILLER_SIZE==2)
+#elif !(ipconfigPACKET_FILLER_SIZE==2)
     #error ipconfigPACKET_FILLER_SIZE has to be 2.
-    #endif
 #endif
+
 
 #define ROUNDUP_4BYTES(X)  ((((X) + 3) / 4) * 4)
 
@@ -103,6 +121,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #define GET_BUFFER_SIZE 0
+
 
 /*
  * Define checksum related macros that are missing from driverlib

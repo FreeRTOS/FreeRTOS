@@ -937,7 +937,7 @@ static void prvProcessPhyInterrupt()
     }
 
     /* Has the speed or duplex status changed? */
-    if (value & (EPHY_MISR1_SPEED | EPHY_MISR1_SPEED | EPHY_MISR1_ANC)) {
+    if (value & (EPHY_MISR1_SPEED | EPHY_MISR1_DUPLEXM | EPHY_MISR1_ANC)) {
         /* Get the current MAC configuration. */
         EMACConfigGet(EMAC0_BASE, (uint32_t *)&config, (uint32_t *)&mode,
                         (uint32_t *)&rxMaxFrameSize);
@@ -980,19 +980,19 @@ static void prvProcessPhyInterrupt()
 static void prv_xHwiIntFxn(uintptr_t callbacks)
 {
     uint32_t status;
+    uint32_t linkup;
 
     iptraceNETWORK_EVENT_RECEIVED();
     
     /* Check link status */
-    status = (EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMSR) & EPHY_BMSR_LINKSTAT);
+    linkup = (EMACPHYRead(EMAC0_BASE, PHY_PHYS_ADDR, EPHY_BMSR) & EPHY_BMSR_LINKSTAT) ? 1 : 0;
 
     /* Signal the stack if link status changed */
-    if (status != xEMAC_prv.linkUp) {
+    if (linkup != xEMAC_prv.linkUp) {
         SIGNAL_LINK_CHANGE(xEMAC_prv.linkUp);//xEMAC_prv.hEvent, status, 1);
     }
-
     /* Set the link status */
-    xEMAC_prv.linkUp = status;
+    xEMAC_prv.linkUp = linkup;
 
     xEMAC_prv.ulIsrCount++;
 

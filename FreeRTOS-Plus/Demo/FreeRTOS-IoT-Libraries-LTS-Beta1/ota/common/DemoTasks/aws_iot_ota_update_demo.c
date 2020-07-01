@@ -326,7 +326,7 @@ OTA_Err_t xErr = kOTA_Err_Uninitialized;
 		/* We should never get here as new image activation must reset the device.*/
 		for( ; ; )
 		{
-			__debugbreak();
+			IotClock_SleepMs( otaDemoTASK_DELAY_SECONDS * 1000 );
 		}
 	}
 	else if( eEvent == eOTA_JobEvent_Fail )

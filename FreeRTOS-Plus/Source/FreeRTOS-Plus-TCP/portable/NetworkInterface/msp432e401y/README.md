@@ -1,3 +1,9 @@
+# Networkinterface driver for texas instruments msp432e401y 
+
+Networkinterface implemented as described in [Porting FreeRTOS+TCP to a Different Microcontroller ](https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/Embedded_Ethernet_Porting.html). 
+The driver is a modified version of the  `EMACMSP432E.c` found in [SIMPLELINK-MSP432E4-SDK](https://www.ti.com/tool/download/SIMPLELINK-MSP432E4-SDK).
+It is a zero copy driver, where  rx, tx and phy  events are handled directly in the interrupt routine.
+The Hardware is able to do IP checksum offloading.
 
 ## Usage
 
@@ -30,3 +36,33 @@ const EMACMSP432E4_DriverAttrs g_EMAC_DriverAttrs = {
 };
 ``` 
 
+### Example 
+An example for the [SimpleLink™ Ethernet MSP432E401Y MCU Launchpad™](https://www.ti.com/tool/MSP-EXP432E401Y) can be found at []().
+
+
+## Some notes on test checksum offloading
+The main problem is that the pc does itself checksum offloading, thus is hard to send frames or ip packets with error checksums.
+In Linux using `ethtools` it is possible to change some settings of eth devices.
+
+To turn tx and rx offoload off for the devicename eth0
+```bash 
+sudo ethtool --offload  eth0 tx off rx off
+```
+To read the settings of the devicename eth0
+
+```bash
+sudo ethtool -k eth0  
+```
+
+Then unsig `nping` or `hping3` it is possible to ping with different protocol and bad checksum. Some examples
+```
+# tcp
+sudo nping 192.168.0.10 --tcp  -c1 --badsum
+sudo nping 192.168.0.10 --tcp  -c1 
+
+# icmp
+sudo hping3 192.168.0.10  -i -c 1 -b
+sudo hping3 192.168.0.10  -i -c 1 
+
+``` 
+to sniff frames sent wireshark is a good option.

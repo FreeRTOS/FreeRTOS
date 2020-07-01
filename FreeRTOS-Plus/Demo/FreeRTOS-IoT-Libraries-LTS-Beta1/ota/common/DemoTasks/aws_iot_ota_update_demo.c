@@ -105,7 +105,7 @@ static void prvNetworkDisconnectCallback( void * param,
  * error code returned by `IotMqtt_Connect`.
  */
 static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
-									 IotMqttConnection_t * pMqttConnection );
+												IotMqttConnection_t * pMqttConnection );
 /*-----------------------------------------------------------*/
 
 #define otaDemoCONN_TIMEOUT_MS					   ( 2000UL )
@@ -324,6 +324,8 @@ OTA_Err_t xErr = kOTA_Err_Uninitialized;
 		OTA_ActivateNewImage();
 
 		/* We should never get here as new image activation must reset the device.*/
+		configPRINTF( ( "ERROR: New image activation failed.\r\n" ) );
+
 		for( ; ; )
 		{
 			IotClock_SleepMs( otaDemoTASK_DELAY_SECONDS * 1000 );

@@ -2204,7 +2204,12 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	{
 	BaseType_t xResult = 0;
 
-		if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdFALSE ) == pdFALSE )
+		if( pxAddress == NULL )
+		{
+			/* NULL address passed to the function. Invalid value. */
+			xResult = -pdFREERTOS_ERRNO_EINVAL;
+		}
+		else if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdFALSE ) == pdFALSE )
 		{
 			/* Not a valid socket or wrong type */
 			xResult = -pdFREERTOS_ERRNO_EBADF;
@@ -2280,10 +2285,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 		( void ) xAddressLength;
 
-		if( pxAddress != NULL )
-		{
-			xResult = prvTCPConnectStart( pxSocket, pxAddress );
-		}
+		xResult = prvTCPConnectStart( pxSocket, pxAddress );
 
 		if( xResult == 0 )
 		{

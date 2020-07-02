@@ -44,7 +44,7 @@
 
 /* Metadata information to prepend to every log message. */
 #define LOG_METADATA_FORMAT    "[%s:%d] "
-#define LOG_METADATA_ARGS      __FILE__, __LINE__
+#define LOG_METADATA_ARGS      __FUNCTION__, __LINE__
 
 /* Common macro for all logging interface macros. */
 #if !defined( DISABLE_LOGGING )

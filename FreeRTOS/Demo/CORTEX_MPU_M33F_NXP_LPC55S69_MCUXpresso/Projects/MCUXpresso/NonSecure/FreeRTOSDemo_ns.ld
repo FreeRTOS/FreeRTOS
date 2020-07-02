@@ -126,7 +126,7 @@ SECTIONS
         /* Privileged data - It needs to be 32 byte aligned to satisfy MPU requirements. */
         . = ALIGN(32);
         __privileged_sram_start__ = .;
-        *(privileged_data);
+        *(privileged_data)
         . = ALIGN(32);
         /* End address must be the last address in the region, therefore, -1. */
         __privileged_sram_end__ = . - 1;

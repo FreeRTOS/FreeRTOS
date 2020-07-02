@@ -135,7 +135,7 @@ static uint8_t * _encodeUserNameAndMetrics( uint8_t * pDestination,
  * the function #_IotMqtt_RemainingLengthEncodedSize to avoid buffer overflows.
  */
 static uint8_t * _encodeRemainingLength( uint8_t * pDestination,
-                                  size_t length );
+                                         size_t length );
 
 /**
  * @brief Encode a username into a CONNECT packet, if necessary.
@@ -145,14 +145,14 @@ static uint8_t * _encodeRemainingLength( uint8_t * pDestination,
  *
  * @return Pointer to the end of the encoded string, which will be identical to
  * `pDestination` if nothing was encoded.
- * 
+ *
  * @warning This function does not check the size of `pDestination`! To avoid a
  * buffer overflow, ensure that `pDestination` is large enough to hold
  * `pConnectInfo->userNameLength` bytes if a username is supplied, and/or
  * #AWS_IOT_METRICS_USERNAME_LENGTH bytes if metrics are enabled.
  */
 static uint8_t * _encodeUserName( uint8_t * pDestination,
-                           const IotMqttConnectInfo_t * pConnectInfo );
+                                  const IotMqttConnectInfo_t * pConnectInfo );
 
 /**
  * @brief Encode a C string as a UTF-8 string, per MQTT 3.1.1 spec.
@@ -169,8 +169,8 @@ static uint8_t * _encodeUserName( uint8_t * pDestination,
  * overflow.
  */
 static uint8_t * _encodeString( uint8_t * pDestination,
-                         const char * source,
-                         uint16_t sourceLength );
+                                const char * source,
+                                uint16_t sourceLength );
 
 /*-----------------------------------------------------------*/
 
@@ -178,7 +178,7 @@ static uint8_t * _encodeUserNameAndMetrics( uint8_t * pDestination,
                                             const IotMqttConnectInfo_t * pConnectInfo,
                                             bool * pEncodedUserName )
 {
-    uint8_t * pBuffer = pDestination;
+    uint8_t *        pBuffer          = pDestination;
 
     #if AWS_IOT_MQTT_ENABLE_METRICS == 1
         const char * pMetricsUserName = AWS_IOT_METRICS_USERNAME;
@@ -188,35 +188,35 @@ static uint8_t * _encodeUserNameAndMetrics( uint8_t * pDestination,
         if( ( pConnectInfo->userNameLength + AWS_IOT_METRICS_USERNAME_LENGTH ) <= ( ( uint16_t ) ( UINT16_MAX ) ) )
         {
             /* Write the high byte of the combined length. */
-            pBuffer[ 0 ] = UINT16_HIGH_BYTE( ( pConnectInfo->userNameLength +
-                                               AWS_IOT_METRICS_USERNAME_LENGTH ) );
+            pBuffer[ 0 ]      = UINT16_HIGH_BYTE( ( pConnectInfo->userNameLength +
+                                                    AWS_IOT_METRICS_USERNAME_LENGTH ) );
 
             /* Write the low byte of the combined length. */
-            pBuffer[ 1 ] = UINT16_LOW_BYTE( ( pConnectInfo->userNameLength +
-                                              AWS_IOT_METRICS_USERNAME_LENGTH ) );
-            pBuffer += 2;
+            pBuffer[ 1 ]      = UINT16_LOW_BYTE( ( pConnectInfo->userNameLength +
+                                                   AWS_IOT_METRICS_USERNAME_LENGTH ) );
+            pBuffer          += 2;
 
             /* Write the identity portion of the username.
              * As the types of char and uint8_t are of the same size, this memcpy
              * is acceptable. */
             /* coverity[misra_c_2012_rule_21_15_violation] */
             ( void ) memcpy( pBuffer, pConnectInfo->pUserName, pConnectInfo->userNameLength );
-            pBuffer += pConnectInfo->userNameLength;
+            pBuffer          += pConnectInfo->userNameLength;
 
             /* Write the metrics portion of the username.
              * As the types of char and uint8_t are of the same size, this memcpy
              * is acceptable. */
             /* coverity[misra_c_2012_rule_21_15_violation] */
             ( void ) memcpy( pBuffer, pMetricsUserName, AWS_IOT_METRICS_USERNAME_LENGTH );
-            pBuffer += AWS_IOT_METRICS_USERNAME_LENGTH;
+            pBuffer          += AWS_IOT_METRICS_USERNAME_LENGTH;
 
             *pEncodedUserName = true;
         }
         else
         {
             IotLogWarn( "Username length of %lu is larger than maximum %lu.",
-            ( pConnectInfo->userNameLength + AWS_IOT_METRICS_USERNAME_LENGTH ),
-            UINT16_MAX );
+                        ( pConnectInfo->userNameLength + AWS_IOT_METRICS_USERNAME_LENGTH ),
+                        UINT16_MAX );
         }
     #else /* if AWS_IOT_MQTT_ENABLE_METRICS == 1 */
         /* Avoid unused variable warnings when AWS_IOT_MQTT_ENABLE_METRICS is set to 0. */
@@ -231,8 +231,8 @@ static uint8_t * _encodeUserNameAndMetrics( uint8_t * pDestination,
 static uint8_t * _encodeUserName( uint8_t * pDestination,
                                   const IotMqttConnectInfo_t * pConnectInfo )
 {
-    bool encodedUserName = false;
-    uint8_t * pBuffer = pDestination;
+    bool      encodedUserName = false;
+    uint8_t * pBuffer         = pDestination;
 
     /* If metrics are enabled, write the metrics username into the CONNECT packet.
      * Otherwise, write the username and password only when not connecting to the
@@ -254,9 +254,9 @@ static uint8_t * _encodeUserName( uint8_t * pDestination,
             {
                 /* The username is not being used for authentication, but
                  * metrics are enabled. */
-                pBuffer = _encodeString( pBuffer,
-                                         AWS_IOT_METRICS_USERNAME,
-                                         AWS_IOT_METRICS_USERNAME_LENGTH );
+                pBuffer         = _encodeString( pBuffer,
+                                                 AWS_IOT_METRICS_USERNAME,
+                                                 AWS_IOT_METRICS_USERNAME_LENGTH );
 
                 encodedUserName = true;
             }
@@ -307,12 +307,12 @@ static uint8_t * _encodeRemainingLength( uint8_t * pDestination,
                                          size_t length )
 {
     uint8_t lengthByte = 0, * pLengthEnd = pDestination;
-    size_t remainingLength = length;
+    size_t  remainingLength = length;
 
     /* This algorithm is copied from the MQTT v3.1.1 spec. */
     do
     {
-        lengthByte = ( uint8_t ) ( remainingLength % 128U );
+        lengthByte      = ( uint8_t ) ( remainingLength % 128U );
         remainingLength = remainingLength / 128U;
 
         /* Set the high bit of this byte, indicating that there's more data. */
@@ -322,7 +322,7 @@ static uint8_t * _encodeRemainingLength( uint8_t * pDestination,
         }
 
         /* Output a single encoded byte. */
-        *pLengthEnd = lengthByte;
+        *pLengthEnd     = lengthByte;
         pLengthEnd++;
     } while( remainingLength > 0U );
 
@@ -385,8 +385,8 @@ bool _IotMqtt_ConnectPacketSize( const IotMqttConnectInfo_t * pConnectInfo,
                                  size_t * pRemainingLength,
                                  size_t * pPacketSize )
 {
-    bool status = true;
-    bool encodedUserName = false;
+    bool   status = true;
+    bool   encodedUserName = false;
     size_t connectPacketSize = 0, remainingLength = 0;
 
     /* The CONNECT packet will always include a 10-byte variable header. */
@@ -409,7 +409,7 @@ bool _IotMqtt_ConnectPacketSize( const IotMqttConnectInfo_t * pConnectInfo,
         #if AWS_IOT_MQTT_ENABLE_METRICS == 1
             connectPacketSize += ( AWS_IOT_METRICS_USERNAME_LENGTH +
                                    ( size_t ) ( pConnectInfo->userNameLength ) + sizeof( uint16_t ) );
-            encodedUserName = true;
+            encodedUserName    = true;
         #endif
     }
 
@@ -427,7 +427,7 @@ bool _IotMqtt_ConnectPacketSize( const IotMqttConnectInfo_t * pConnectInfo,
 
     /* At this point, the "Remaining Length" field of the MQTT CONNECT packet has
      * been calculated. */
-    remainingLength = connectPacketSize;
+    remainingLength    = connectPacketSize;
 
     /* Calculate the full size of the MQTT CONNECT packet by adding the size of
      * the "Remaining Length" field plus 1 byte for the "Packet Type" field. */
@@ -441,7 +441,7 @@ bool _IotMqtt_ConnectPacketSize( const IotMqttConnectInfo_t * pConnectInfo,
     else
     {
         *pRemainingLength = remainingLength;
-        *pPacketSize = connectPacketSize;
+        *pPacketSize      = connectPacketSize;
     }
 
     return status;
@@ -454,28 +454,28 @@ void _IotMqtt_SerializeConnectCommon( const IotMqttConnectInfo_t * pConnectInfo,
                                       uint8_t * pPacket,
                                       size_t connectPacketSize )
 {
-    uint8_t connectFlags = 0;
-    uint8_t * pBuffer = pPacket;
+    uint8_t   connectFlags = 0;
+    uint8_t * pBuffer      = pPacket;
 
     /* Avoid unused variable warning when logging and asserts are disabled. */
     ( void ) pPacket;
     ( void ) connectPacketSize;
 
     /* The first byte in the CONNECT packet is the control packet type. */
-    *pBuffer = MQTT_PACKET_TYPE_CONNECT;
+    *pBuffer         = MQTT_PACKET_TYPE_CONNECT;
     pBuffer++;
 
     /* The remaining length of the CONNECT packet is encoded starting from the
      * second byte. The remaining length does not include the length of the fixed
      * header or the encoding of the remaining length. */
-    pBuffer = _encodeRemainingLength( pBuffer, remainingLength );
+    pBuffer          = _encodeRemainingLength( pBuffer, remainingLength );
 
     /* The string "MQTT" is placed at the beginning of the CONNECT packet's variable
      * header. This string is 4 bytes long. */
-    pBuffer = _encodeString( pBuffer, "MQTT", 4 );
+    pBuffer          = _encodeString( pBuffer, "MQTT", 4 );
 
     /* The MQTT protocol version is the second byte of the variable header. */
-    *pBuffer = MQTT_VERSION_3_1_1;
+    *pBuffer         = MQTT_VERSION_3_1_1;
     pBuffer++;
 
     /* Set the CONNECT flags based on the given parameters. */
@@ -535,18 +535,18 @@ void _IotMqtt_SerializeConnectCommon( const IotMqttConnectInfo_t * pConnectInfo,
         }
     }
 
-    *pBuffer = connectFlags;
+    *pBuffer         = connectFlags;
     pBuffer++;
 
     /* Write the 2 bytes of the keep alive interval into the CONNECT packet. */
-    *pBuffer = UINT16_HIGH_BYTE( pConnectInfo->keepAliveSeconds );
+    *pBuffer         = UINT16_HIGH_BYTE( pConnectInfo->keepAliveSeconds );
     *( pBuffer + 1 ) = UINT16_LOW_BYTE( pConnectInfo->keepAliveSeconds );
-    pBuffer += 2;
+    pBuffer         += 2;
 
     /* Write the client identifier into the CONNECT packet. */
-    pBuffer = _encodeString( pBuffer,
-                             pConnectInfo->pClientIdentifier,
-                             pConnectInfo->clientIdentifierLength );
+    pBuffer          = _encodeString( pBuffer,
+                                      pConnectInfo->pClientIdentifier,
+                                      pConnectInfo->clientIdentifierLength );
 
     /* Write the will topic name and message into the CONNECT packet if provided. */
     if( pConnectInfo->pWillInfo != NULL )
@@ -561,7 +561,7 @@ void _IotMqtt_SerializeConnectCommon( const IotMqttConnectInfo_t * pConnectInfo,
     }
 
     /* Encode the username if there is one or metrics are enabled. */
-    pBuffer = _encodeUserName( pBuffer, pConnectInfo );
+    pBuffer          = _encodeUserName( pBuffer, pConnectInfo );
 
     /* Encode the password field, if requested by the app. */
     if( pConnectInfo->pPassword != NULL )
@@ -615,37 +615,37 @@ void _IotMqtt_SerializeSubscribeCommon( const IotMqttSubscription_t * pSubscript
                                         uint8_t * pPacket,
                                         size_t subscribePacketSize )
 {
-    uint16_t packetIdentifier = 0;
-    size_t i = 0;
-    uint8_t * pBuffer = pPacket;
+    uint16_t  packetIdentifier = 0;
+    size_t    i                = 0;
+    uint8_t * pBuffer          = pPacket;
 
     /* Avoid unused variable warning when logging and asserts are disabled. */
     ( void ) pPacket;
     ( void ) subscribePacketSize;
 
     /* The first byte in SUBSCRIBE is the packet type. */
-    *pBuffer = MQTT_PACKET_TYPE_SUBSCRIBE;
+    *pBuffer           = MQTT_PACKET_TYPE_SUBSCRIBE;
     pBuffer++;
 
     /* Encode the "Remaining length" starting from the second byte. */
-    pBuffer = _encodeRemainingLength( pBuffer, remainingLength );
+    pBuffer            = _encodeRemainingLength( pBuffer, remainingLength );
 
     /* Get the next packet identifier. It should always be nonzero. */
-    packetIdentifier = _IotMqtt_NextPacketIdentifier();
+    packetIdentifier   = _IotMqtt_NextPacketIdentifier();
     *pPacketIdentifier = packetIdentifier;
     IotMqtt_Assert( packetIdentifier != 0U );
 
     /* Place the packet identifier into the SUBSCRIBE packet. */
-    *pBuffer = UINT16_HIGH_BYTE( packetIdentifier );
-    *( pBuffer + 1 ) = UINT16_LOW_BYTE( packetIdentifier );
-    pBuffer += 2;
+    *pBuffer           = UINT16_HIGH_BYTE( packetIdentifier );
+    *( pBuffer + 1 )   = UINT16_LOW_BYTE( packetIdentifier );
+    pBuffer           += 2;
 
     /* Serialize each subscription topic filter and QoS. */
     for( i = 0; i < subscriptionCount; i++ )
     {
-        pBuffer = _encodeString( pBuffer,
-                                 pSubscriptionList[ i ].pTopicFilter,
-                                 pSubscriptionList[ i ].topicFilterLength );
+        pBuffer  = _encodeString( pBuffer,
+                                  pSubscriptionList[ i ].pTopicFilter,
+                                  pSubscriptionList[ i ].topicFilterLength );
 
         /* Place the QoS in the SUBSCRIBE packet. */
         *pBuffer = ( uint8_t ) ( pSubscriptionList[ i ].qos );
@@ -668,7 +668,7 @@ bool _IotMqtt_SubscriptionPacketSize( IotMqttOperationType_t type,
                                       size_t * pRemainingLength,
                                       size_t * pPacketSize )
 {
-    bool status = true;
+    bool   status = true;
     size_t i = 0, subscriptionPacketSize = 0;
 
     /* Only SUBSCRIBE and UNSUBSCRIBE operations should call this function. */
@@ -701,13 +701,13 @@ bool _IotMqtt_SubscriptionPacketSize( IotMqttOperationType_t type,
     }
     else
     {
-        *pRemainingLength = subscriptionPacketSize;
+        *pRemainingLength       = subscriptionPacketSize;
 
         /* Calculate the full size of the subscription packet by adding the size of the
          * "Remaining length" field plus 1 byte for the "Packet type" field. Set the
          * pPacketSize output parameter. */
         subscriptionPacketSize += 1U + _IotMqtt_RemainingLengthEncodedSize( subscriptionPacketSize );
-        *pPacketSize = subscriptionPacketSize;
+        *pPacketSize            = subscriptionPacketSize;
     }
 
     return status;
@@ -719,7 +719,7 @@ bool _IotMqtt_PublishPacketSize( const IotMqttPublishInfo_t * pPublishInfo,
                                  size_t * pRemainingLength,
                                  size_t * pPacketSize )
 {
-    bool status = true;
+    bool   status = true;
     size_t publishPacketSize = 0, payloadLimit = 0;
 
     /* The variable header of a PUBLISH packet always contains the topic name. */
@@ -735,7 +735,7 @@ bool _IotMqtt_PublishPacketSize( const IotMqttPublishInfo_t * pPublishInfo,
     /* Calculate the maximum allowed size of the payload for the given parameters.
      * This calculation excludes the "Remaining length" encoding, whose size is not
      * yet known. */
-    payloadLimit = MQTT_MAX_REMAINING_LENGTH - publishPacketSize - 1U;
+    payloadLimit       = MQTT_MAX_REMAINING_LENGTH - publishPacketSize - 1U;
 
     /* Ensure that the given payload fits within the calculated limit. */
     if( pPublishInfo->payloadLength > payloadLimit )
@@ -750,7 +750,7 @@ bool _IotMqtt_PublishPacketSize( const IotMqttPublishInfo_t * pPublishInfo,
 
         /* Now that the "Remaining length" is known, recalculate the payload limit
          * based on the size of its encoding. */
-        payloadLimit -= _IotMqtt_RemainingLengthEncodedSize( publishPacketSize );
+        payloadLimit      -= _IotMqtt_RemainingLengthEncodedSize( publishPacketSize );
 
         /* Check that the given payload fits within the size allowed by MQTT spec. */
         if( pPublishInfo->payloadLength > payloadLimit )
@@ -761,10 +761,10 @@ bool _IotMqtt_PublishPacketSize( const IotMqttPublishInfo_t * pPublishInfo,
         {
             /* Set the "Remaining length" output parameter and calculate the full
              * size of the PUBLISH packet. */
-            *pRemainingLength = publishPacketSize;
+            *pRemainingLength  = publishPacketSize;
 
             publishPacketSize += 1U + _IotMqtt_RemainingLengthEncodedSize( publishPacketSize );
-            *pPacketSize = publishPacketSize;
+            *pPacketSize       = publishPacketSize;
         }
     }
 
@@ -780,9 +780,9 @@ void _IotMqtt_SerializePublishCommon( const IotMqttPublishInfo_t * pPublishInfo,
                                       uint8_t * pPacket,
                                       size_t publishPacketSize )
 {
-    uint8_t publishFlags = 0;
-    uint16_t packetIdentifier = 0;
-    uint8_t * pBuffer = pPacket;
+    uint8_t   publishFlags     = 0;
+    uint16_t  packetIdentifier = 0;
+    uint8_t * pBuffer          = pPacket;
 
     /* Avoid unused variable warning when logging and asserts are disabled. */
     ( void ) pPacket;
@@ -809,22 +809,22 @@ void _IotMqtt_SerializePublishCommon( const IotMqttPublishInfo_t * pPublishInfo,
         UINT8_SET_BIT( publishFlags, MQTT_PUBLISH_FLAG_RETAIN );
     }
 
-    *pBuffer = publishFlags;
+    *pBuffer     = publishFlags;
     pBuffer++;
 
     /* The "Remaining length" is encoded from the second byte. */
-    pBuffer = _encodeRemainingLength( pBuffer, remainingLength );
+    pBuffer      = _encodeRemainingLength( pBuffer, remainingLength );
 
     /* The topic name is placed after the "Remaining length". */
-    pBuffer = _encodeString( pBuffer,
-                             pPublishInfo->pTopicName,
-                             pPublishInfo->topicNameLength );
+    pBuffer      = _encodeString( pBuffer,
+                                  pPublishInfo->pTopicName,
+                                  pPublishInfo->topicNameLength );
 
     /* A packet identifier is required for QoS 1 and 2 messages. */
     if( pPublishInfo->qos > IOT_MQTT_QOS_0 )
     {
         /* Get the next packet identifier. It should always be nonzero. */
-        packetIdentifier = _IotMqtt_NextPacketIdentifier();
+        packetIdentifier   = _IotMqtt_NextPacketIdentifier();
         IotMqtt_Assert( packetIdentifier != 0U );
 
         /* Set the packet identifier output parameters. */
@@ -836,9 +836,9 @@ void _IotMqtt_SerializePublishCommon( const IotMqttPublishInfo_t * pPublishInfo,
         }
 
         /* Place the packet identifier into the PUBLISH packet. */
-        *pBuffer = UINT16_HIGH_BYTE( packetIdentifier );
-        *( pBuffer + 1 ) = UINT16_LOW_BYTE( packetIdentifier );
-        pBuffer += 2;
+        *pBuffer           = UINT16_HIGH_BYTE( packetIdentifier );
+        *( pBuffer + 1 )   = UINT16_LOW_BYTE( packetIdentifier );
+        pBuffer           += 2;
     }
 
     /* The payload is placed after the packet identifier. */
@@ -868,30 +868,30 @@ void _IotMqtt_SerializeUnsubscribeCommon( const IotMqttSubscription_t * pSubscri
                                           uint8_t * pPacket,
                                           size_t unsubscribePacketSize )
 {
-    uint16_t packetIdentifier = 0;
-    size_t i = 0;
-    uint8_t * pBuffer = pPacket;
+    uint16_t  packetIdentifier = 0;
+    size_t    i                = 0;
+    uint8_t * pBuffer          = pPacket;
 
     /* Avoid unused variable warning when logging and asserts are disabled. */
     ( void ) pPacket;
     ( void ) unsubscribePacketSize;
 
     /* The first byte in UNSUBSCRIBE is the packet type. */
-    *pBuffer = MQTT_PACKET_TYPE_UNSUBSCRIBE;
+    *pBuffer           = MQTT_PACKET_TYPE_UNSUBSCRIBE;
     pBuffer++;
 
     /* Encode the "Remaining length" starting from the second byte. */
-    pBuffer = _encodeRemainingLength( pBuffer, remainingLength );
+    pBuffer            = _encodeRemainingLength( pBuffer, remainingLength );
 
     /* Get the next packet identifier. It should always be nonzero. */
-    packetIdentifier = _IotMqtt_NextPacketIdentifier();
+    packetIdentifier   = _IotMqtt_NextPacketIdentifier();
     *pPacketIdentifier = packetIdentifier;
     IotMqtt_Assert( packetIdentifier != 0U );
 
     /* Place the packet identifier into the UNSUBSCRIBE packet. */
-    *pBuffer = UINT16_HIGH_BYTE( packetIdentifier );
-    *( pBuffer + 1 ) = UINT16_LOW_BYTE( packetIdentifier );
-    pBuffer += 2;
+    *pBuffer           = UINT16_HIGH_BYTE( packetIdentifier );
+    *( pBuffer + 1 )   = UINT16_LOW_BYTE( packetIdentifier );
+    pBuffer           += 2;
 
     /* Serialize each subscription topic filter. */
     for( i = 0; i < subscriptionCount; i++ )

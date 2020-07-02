@@ -25,7 +25,7 @@
 
 /**
  * @file iot_threads_freertos.c
- * @brief Implementation of the platform specific functions in iot_threads.h for 
+ * @brief Implementation of the platform specific functions in iot_threads.h for
  * FreeRTOS.
  */
 
@@ -96,7 +96,7 @@ bool Iot_CreateDetachedThread( IotThreadRoutine_t threadRoutine,
                                int32_t priority,
                                size_t stackSize )
 {
-    bool status = true;
+    bool status                = true;
 
     configASSERT( threadRoutine != NULL );
 
@@ -113,7 +113,7 @@ bool Iot_CreateDetachedThread( IotThreadRoutine_t threadRoutine,
     if( status )
     {
         pThreadInfo->threadRoutine = threadRoutine;
-        pThreadInfo->pArgument = pArgument;
+        pThreadInfo->pArgument     = pArgument;
 
         if( xTaskCreate( _threadRoutineWrapper,
                          "iot_thread",
@@ -182,7 +182,7 @@ bool prIotMutexTimedLock( IotMutex_t * pMutex,
                           TickType_t timeout )
 {
     _IotSystemMutex_t * internalMutex = ( _IotSystemMutex_t * ) pMutex;
-    BaseType_t lockResult;
+    BaseType_t          lockResult;
 
     configASSERT( internalMutex != NULL );
 
@@ -258,7 +258,7 @@ bool IotSemaphore_Create( IotSemaphore_t * pNewSemaphore,
 uint32_t IotSemaphore_GetCount( IotSemaphore_t * pSemaphore )
 {
     _IotSystemSemaphore_t * internalSemaphore = ( _IotSystemSemaphore_t * ) pSemaphore;
-    UBaseType_t count = 0;
+    UBaseType_t             count             = 0;
 
     configASSERT( internalSemaphore != NULL );
 
@@ -299,7 +299,7 @@ void IotSemaphore_Wait( IotSemaphore_t * pSemaphore )
         IotLogWarn( "Failed to wait on semaphore %p.",
                     pSemaphore );
 
-        /* There is an assert here because during debugging we could falsely 
+        /* There is an assert here because during debugging we could falsely
          * believe that we are waiting successfully on a semaphore. */
         configASSERT( false );
     }
@@ -354,7 +354,7 @@ void IotSemaphore_Post( IotSemaphore_t * pSemaphore )
 
     IotLogDebug( "Posting to semaphore %p.", internalSemaphore );
     /* Give the semaphore using the FreeRTOS API. */
-    BaseType_t result = xSemaphoreGive( ( SemaphoreHandle_t ) &internalSemaphore->xSemaphore );
+    BaseType_t result                         = xSemaphoreGive( ( SemaphoreHandle_t ) &internalSemaphore->xSemaphore );
 
     if( result == pdFALSE )
     {

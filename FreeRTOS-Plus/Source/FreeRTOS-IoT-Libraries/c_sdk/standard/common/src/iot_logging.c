@@ -161,7 +161,7 @@ static const char * const _pLogLevelStrings[ 5 ] =
                                        size_t newSize,
                                        size_t oldSize )
     {
-        bool status = false;
+        bool   status     = false;
 
         /* Allocate a new, larger buffer. */
         void * pNewBuffer = IotLogging_Malloc( newSize );
@@ -176,7 +176,7 @@ static const char * const _pLogLevelStrings[ 5 ] =
             IotLogging_Free( *pOldBuffer );
             *pOldBuffer = pNewBuffer;
 
-            status = true;
+            status      = true;
         }
 
         return status;
@@ -192,10 +192,10 @@ void IotLog_Generic( int32_t libraryLogSetting,
                      const char * const pFormat,
                      ... )
 {
-    int requiredMessageSize = 0;
-    size_t bufferSize = 0,
-           bufferPosition = 0, timestringLength = 0;
-    char * pLoggingBuffer = NULL;
+    int     requiredMessageSize = 0;
+    size_t  bufferSize = 0,
+            bufferPosition = 0, timestringLength = 0;
+    char *  pLoggingBuffer = NULL;
     va_list args;
 
     /* If the library's log level setting is lower than the message level,
@@ -225,7 +225,7 @@ void IotLog_Generic( int32_t libraryLogSetting,
     }
 
     /* Add 64 as an initial (arbitrary) guess for the length of the message. */
-    bufferSize += 64;
+    bufferSize         += 64;
 
     /* In static memory mode, check that the log message will fit in the a
      * static buffer. */
@@ -238,11 +238,11 @@ void IotLog_Generic( int32_t libraryLogSetting,
         }
 
         /* Otherwise, update the buffer size to the size of a static buffer. */
-        bufferSize = IotLogging_StaticBufferSize();
+        bufferSize      = IotLogging_StaticBufferSize();
     #endif
 
     /* Allocate memory for the logging buffer. */
-    pLoggingBuffer = ( char * ) IotLogging_Malloc( bufferSize );
+    pLoggingBuffer      = ( char * ) IotLogging_Malloc( bufferSize );
 
     if( pLoggingBuffer == NULL )
     {
@@ -270,7 +270,7 @@ void IotLog_Generic( int32_t libraryLogSetting,
             }
 
             /* Update the buffer position. */
-            bufferPosition += ( size_t ) requiredMessageSize;
+            bufferPosition     += ( size_t ) requiredMessageSize;
         }
     }
 
@@ -292,7 +292,7 @@ void IotLog_Generic( int32_t libraryLogSetting,
         }
 
         /* Update the buffer position. */
-        bufferPosition += ( size_t ) requiredMessageSize;
+        bufferPosition     += ( size_t ) requiredMessageSize;
     }
 
     /* Print the timestring if requested. */
@@ -308,7 +308,7 @@ void IotLog_Generic( int32_t libraryLogSetting,
                                     &timestringLength ) == true )
         {
             /* If the timestring was successfully generated, add the closing "]". */
-            bufferPosition += timestringLength;
+            bufferPosition                  += timestringLength;
             pLoggingBuffer[ bufferPosition ] = ']';
             bufferPosition++;
         }
@@ -363,7 +363,7 @@ void IotLog_Generic( int32_t libraryLogSetting,
             }
 
             /* Reallocation successful, update buffer size. */
-            bufferSize = ( size_t ) requiredMessageSize + bufferPosition + 1;
+            bufferSize          = ( size_t ) requiredMessageSize + bufferPosition + 1;
 
             /* Add the log message to the buffer. Now that the buffer has been
              * reallocated, this should succeed. */

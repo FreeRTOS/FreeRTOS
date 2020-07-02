@@ -71,7 +71,7 @@
  * @param[in] x The unsigned int to check.
  * @param[in] position Which bit to check.
  */
-#define UINT8_CHECK_BIT( x, position )    ( ( ( x ) &( 0x01U << ( position ) ) ) == ( 0x01U << ( position ) ) )
+#define UINT8_CHECK_BIT( x, position )    ( ( ( x ) & ( 0x01U << ( position ) ) ) == ( 0x01U << ( position ) ) )
 
 /**
  * @cond DOXYGEN_IGNORE

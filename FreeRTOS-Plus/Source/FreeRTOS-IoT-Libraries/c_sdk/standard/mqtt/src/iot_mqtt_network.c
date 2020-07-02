@@ -250,8 +250,8 @@ static IotMqttError_t _allocateAndReceivePacket( IotNetworkConnection_t pNetwork
                                                  const _mqttConnection_t * pMqttConnection,
                                                  _mqttPacket_t * pIncomingPacket )
 {
-    IotMqttError_t status = IOT_MQTT_SUCCESS;
-    size_t dataBytesRead = 0;
+    IotMqttError_t status        = IOT_MQTT_SUCCESS;
+    size_t         dataBytesRead = 0;
 
     IotMqtt_Assert( pMqttConnection != NULL );
     IotMqtt_Assert( pIncomingPacket != NULL );
@@ -360,10 +360,10 @@ static IotMqttError_t _deserializeAck( _mqttConnection_t * pMqttConnection,
                                        IotMqttOperationType_t opType,
                                        const uint16_t * pPacketIdentifier )
 {
-    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
+    IotMqttError_t     status     = IOT_MQTT_STATUS_PENDING;
     _mqttOperation_t * pOperation = NULL;
 
-    status = _deserializer( pIncomingPacket );
+    status     = _deserializer( pIncomingPacket );
 
     pOperation = _IotMqtt_FindOperation( pMqttConnection,
                                          opType,
@@ -383,7 +383,7 @@ static IotMqttError_t _deserializeAck( _mqttConnection_t * pMqttConnection,
 static IotMqttError_t _deserializePublishPacket( _mqttConnection_t * pMqttConnection,
                                                  _mqttPacket_t * pIncomingPacket )
 {
-    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
+    IotMqttError_t     status     = IOT_MQTT_STATUS_PENDING;
     _mqttOperation_t * pOperation = NULL;
 
     /* Allocate memory to handle the incoming PUBLISH. */
@@ -398,11 +398,11 @@ static IotMqttError_t _deserializePublishPacket( _mqttConnection_t * pMqttConnec
     {
         /* Set the members of the incoming PUBLISH operation. */
         ( void ) memset( pOperation, 0x00, sizeof( _mqttOperation_t ) );
-        pOperation->incomingPublish = true;
-        pOperation->pMqttConnection = pMqttConnection;
+        pOperation->incomingPublish         = true;
+        pOperation->pMqttConnection         = pMqttConnection;
         pIncomingPacket->u.pIncomingPublish = pOperation;
         /* Deserialize incoming PUBLISH. */
-        status = _getPublishDeserializer( pMqttConnection->pSerializer )( pIncomingPacket );
+        status                              = _getPublishDeserializer( pMqttConnection->pSerializer )( pIncomingPacket );
     }
 
     if( status == IOT_MQTT_SUCCESS )
@@ -415,7 +415,7 @@ static IotMqttError_t _deserializePublishPacket( _mqttConnection_t * pMqttConnec
 
         /* Transfer ownership of the received MQTT packet to the PUBLISH operation. */
         pOperation->u.publish.pReceivedData = pIncomingPacket->pRemainingData;
-        pIncomingPacket->pRemainingData = NULL;
+        pIncomingPacket->pRemainingData     = NULL;
 
         /* Add the PUBLISH to the list of operations pending processing.
          * Coverity finds a USE_AFTER_FREE error at this line. This is a false positive.
@@ -529,11 +529,11 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
             IotLogDebug( "(MQTT connection %p) CONNACK in data stream.", pMqttConnection );
 
             /* Deserialize CONNACK and notify of result. */
-            status = _deserializeAck( pMqttConnection,
-                                      pIncomingPacket,
-                                      _getConnackDeserializer( pMqttConnection->pSerializer ),
-                                      IOT_MQTT_CONNECT,
-                                      NULL );
+            status                             = _deserializeAck( pMqttConnection,
+                                                                  pIncomingPacket,
+                                                                  _getConnackDeserializer( pMqttConnection->pSerializer ),
+                                                                  IOT_MQTT_CONNECT,
+                                                                  NULL );
 
             break;
 
@@ -541,7 +541,7 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
             IotLogDebug( "(MQTT connection %p) PUBLISH in data stream.", pMqttConnection );
 
             /* Deserialize PUBLISH. */
-            status = _deserializePublishPacket( pMqttConnection, pIncomingPacket );
+            status                             = _deserializePublishPacket( pMqttConnection, pIncomingPacket );
 
             break;
 
@@ -549,11 +549,11 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
             IotLogDebug( "(MQTT connection %p) PUBACK in data stream.", pMqttConnection );
 
             /* Deserialize PUBACK and notify of result. */
-            status = _deserializeAck( pMqttConnection,
-                                      pIncomingPacket,
-                                      _getPubackDeserializer( pMqttConnection->pSerializer ),
-                                      IOT_MQTT_PUBLISH_TO_SERVER,
-                                      &( pIncomingPacket->packetIdentifier ) );
+            status                             = _deserializeAck( pMqttConnection,
+                                                                  pIncomingPacket,
+                                                                  _getPubackDeserializer( pMqttConnection->pSerializer ),
+                                                                  IOT_MQTT_PUBLISH_TO_SERVER,
+                                                                  &( pIncomingPacket->packetIdentifier ) );
 
             break;
 
@@ -563,11 +563,11 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
             /* Deserialize SUBACK and notify of result. */
             pIncomingPacket->u.pMqttConnection = pMqttConnection;
 
-            status = _deserializeAck( pMqttConnection,
-                                      pIncomingPacket,
-                                      _getSubackDeserializer( pMqttConnection->pSerializer ),
-                                      IOT_MQTT_SUBSCRIBE,
-                                      &( pIncomingPacket->packetIdentifier ) );
+            status                             = _deserializeAck( pMqttConnection,
+                                                                  pIncomingPacket,
+                                                                  _getSubackDeserializer( pMqttConnection->pSerializer ),
+                                                                  IOT_MQTT_SUBSCRIBE,
+                                                                  &( pIncomingPacket->packetIdentifier ) );
 
             break;
 
@@ -575,11 +575,11 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
             IotLogDebug( "(MQTT connection %p) UNSUBACK in data stream.", pMqttConnection );
 
             /* Deserialize UNSUBACK and notify of result. */
-            status = _deserializeAck( pMqttConnection,
-                                      pIncomingPacket,
-                                      _getUnsubackDeserializer( pMqttConnection->pSerializer ),
-                                      IOT_MQTT_UNSUBSCRIBE,
-                                      &( pIncomingPacket->packetIdentifier ) );
+            status                             = _deserializeAck( pMqttConnection,
+                                                                  pIncomingPacket,
+                                                                  _getUnsubackDeserializer( pMqttConnection->pSerializer ),
+                                                                  IOT_MQTT_UNSUBSCRIBE,
+                                                                  &( pIncomingPacket->packetIdentifier ) );
 
             break;
 
@@ -590,7 +590,7 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
             IotLogDebug( "(MQTT connection %p) PINGRESP in data stream.", pMqttConnection );
 
             /* Deserialize PINGRESP. */
-            status = _deserializePingResp( pMqttConnection, pIncomingPacket );
+            status                             = _deserializePingResp( pMqttConnection, pIncomingPacket );
 
             break;
     }
@@ -626,7 +626,7 @@ static IotMqttError_t _deserializeIncomingPacket( _mqttConnection_t * pMqttConne
 static void _sendPuback( _mqttConnection_t * pMqttConnection,
                          uint16_t packetIdentifier )
 {
-    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
+    IotMqttError_t     status           = IOT_MQTT_STATUS_PENDING;
     _mqttOperation_t * pPubackOperation = NULL;
 
     IotLogDebug( "(MQTT connection %p) Sending PUBACK for received PUBLISH %hu.",
@@ -645,9 +645,9 @@ static void _sendPuback( _mqttConnection_t * pMqttConnection,
         pPubackOperation->u.operation.type = IOT_MQTT_PUBACK;
 
         /* Generate a PUBACK packet from the packet identifier. */
-        status = _getMqttPubackSerializer( pMqttConnection->pSerializer )( packetIdentifier,
-                                                                           &( pPubackOperation->u.operation.pMqttPacket ),
-                                                                           &( pPubackOperation->u.operation.packetSize ) );
+        status                             = _getMqttPubackSerializer( pMqttConnection->pSerializer )( packetIdentifier,
+                                                                                                       &( pPubackOperation->u.operation.pMqttPacket ),
+                                                                                                       &( pPubackOperation->u.operation.packetSize ) );
 
         if( status == IOT_MQTT_SUCCESS )
         {
@@ -679,7 +679,7 @@ static void _flushPacket( IotNetworkConnection_t pNetworkConnection,
                           const _mqttConnection_t * pMqttConnection,
                           size_t length )
 {
-    size_t bytesFlushed = 0;
+    size_t  bytesFlushed = 0;
     uint8_t receivedByte = 0;
 
     for( bytesFlushed = 0; bytesFlushed < length; bytesFlushed++ )
@@ -696,9 +696,9 @@ bool _IotMqtt_GetNextByte( IotNetworkConnection_t pNetworkConnection,
                            const IotNetworkInterface_t * pNetworkInterface,
                            uint8_t * pIncomingByte )
 {
-    bool status = false;
-    uint8_t incomingByte = 0;
-    size_t bytesReceived = 0;
+    bool    status        = false;
+    uint8_t incomingByte  = 0;
+    size_t  bytesReceived = 0;
 
     /* Attempt to read 1 byte. */
     bytesReceived = pNetworkInterface->receive( pNetworkConnection,
@@ -709,7 +709,7 @@ bool _IotMqtt_GetNextByte( IotNetworkConnection_t pNetworkConnection,
     if( bytesReceived == 1U )
     {
         *pIncomingByte = incomingByte;
-        status = true;
+        status         = true;
     }
     else
     {
@@ -725,15 +725,15 @@ bool _IotMqtt_GetNextByte( IotNetworkConnection_t pNetworkConnection,
 void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason,
                                       _mqttConnection_t * pMqttConnection )
 {
-    taskPoolError_t taskPoolStatus = TASKPOOL_SUCCESS;
-    IotNetworkError_t closeStatus = IOT_NETWORK_SUCCESS;
+    taskPoolError_t        taskPoolStatus = TASKPOOL_SUCCESS;
+    IotNetworkError_t      closeStatus = IOT_NETWORK_SUCCESS;
     IotMqttCallbackParam_t callbackParam = { .u.message = { 0 } };
     IotNetworkConnection_t pNetworkConnection = NULL;
-    void * pDisconnectCallbackContext = NULL;
+    void *                 pDisconnectCallbackContext = NULL;
 
     /* Disconnect callback function. */
-    void ( * disconnectCallback )( void * pContext,
-                                   IotMqttCallbackParam_t * pParam ) = NULL;
+    void              ( * disconnectCallback )( void * pContext,
+                                                IotMqttCallbackParam_t * pParam ) = NULL;
 
     /* Network close function. */
     IotNetworkError_t ( * closeConnection) ( IotNetworkConnection_t pConnection ) = NULL;
@@ -772,8 +772,8 @@ void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason
 
             /* Clear data about the keep-alive. */
             pMqttConnection->pingreq.u.operation.periodic.ping.keepAliveMs = 0U;
-            pMqttConnection->pingreq.u.operation.pMqttPacket = NULL;
-            pMqttConnection->pingreq.u.operation.packetSize = 0U;
+            pMqttConnection->pingreq.u.operation.pMqttPacket               = NULL;
+            pMqttConnection->pingreq.u.operation.packetSize                = 0U;
 
             /* Keep-alive is cleaned up; decrement reference count. Since this
              * function must be followed with a call to DISCONNECT, a check to
@@ -787,11 +787,11 @@ void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason
 
     /* Copy the function pointers and contexts, as the MQTT connection may be
      * modified after the mutex is released. */
-    disconnectCallback = pMqttConnection->disconnectCallback.function;
-    pDisconnectCallbackContext = pMqttConnection->disconnectCallback.pCallbackContext;
+    disconnectCallback            = pMqttConnection->disconnectCallback.function;
+    pDisconnectCallbackContext    = pMqttConnection->disconnectCallback.pCallbackContext;
 
-    closeConnection = pMqttConnection->pNetworkInterface->close;
-    pNetworkConnection = pMqttConnection->pNetworkConnection;
+    closeConnection               = pMqttConnection->pNetworkInterface->close;
+    pNetworkConnection            = pMqttConnection->pNetworkConnection;
 
     IotMutex_Unlock( &( pMqttConnection->referencesMutex ) );
 
@@ -821,7 +821,7 @@ void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason
     if( disconnectCallback != NULL )
     {
         /* Set the members of the callback parameter. */
-        callbackParam.mqttConnection = pMqttConnection;
+        callbackParam.mqttConnection     = pMqttConnection;
         callbackParam.u.disconnectReason = disconnectReason;
 
         disconnectCallback( pDisconnectCallbackContext,
@@ -834,8 +834,8 @@ void _IotMqtt_CloseNetworkConnection( IotMqttDisconnectReason_t disconnectReason
 void IotMqtt_ReceiveCallback( IotNetworkConnection_t pNetworkConnection,
                               void * pReceiveContext )
 {
-    IotMqttError_t status = IOT_MQTT_SUCCESS;
-    _mqttPacket_t incomingPacket = { .u.pMqttConnection = NULL };
+    IotMqttError_t      status          = IOT_MQTT_SUCCESS;
+    _mqttPacket_t       incomingPacket  = { .u.pMqttConnection = NULL };
 
     /* Cast context to correct type. */
     _mqttConnection_t * pMqttConnection = ( _mqttConnection_t * ) pReceiveContext;

@@ -63,14 +63,14 @@
  *
  * Use 8883 if connecting to AWS IoT services.
  */
-#define awsiotdemoprofileAWS_MQTT_PORT	   8883
+#define awsiotdemoprofileAWS_MQTT_PORT     8883
 
 /**
  * @brief The port to use for the HTTPS demo.
  *
  * Use 8443 if connecting to AWS IoT services.
  */
-#define awsiotdemoprofileAWS_HTTPS_PORT	   8443
+#define awsiotdemoprofileAWS_HTTPS_PORT    8443
 
 /**
  * @brief The AWS IoT server certificate.

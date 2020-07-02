@@ -38,11 +38,10 @@
  * If xLogToUDP is pdTRUE then ulRemoteIPAddress and usRemotePort must be set
  * to the IP address and port number to which UDP log messages will be sent.
  */
-void vLoggingInit(	BaseType_t xLogToStdout,
-					BaseType_t xLogToFile,
-					BaseType_t xLogToUDP,
-					uint32_t ulRemoteIPAddress,
-					uint16_t usRemotePort );
+void vLoggingInit( BaseType_t xLogToStdout,
+                   BaseType_t xLogToFile,
+                   BaseType_t xLogToUDP,
+                   uint32_t ulRemoteIPAddress,
+                   uint16_t usRemotePort );
 
 #endif /* DEMO_LOGGING_H */
-

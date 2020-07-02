@@ -212,24 +212,24 @@ enum
 /* We need the following string to match in a couple places in the code so use a #define. */
 #define OTA_JSON_UPDATED_BY_KEY    "updatedBy"
 
-static const char pcOTA_JSON_ClientTokenKey[] = "clientToken";
-static const char pcOTA_JSON_ExecutionKey[] = "execution";
-static const char pcOTA_JSON_JobIDKey[] = "jobId";
+static const char pcOTA_JSON_ClientTokenKey[]   = "clientToken";
+static const char pcOTA_JSON_ExecutionKey[]     = "execution";
+static const char pcOTA_JSON_JobIDKey[]         = "jobId";
 static const char pcOTA_JSON_StatusDetailsKey[] = "statusDetails";
-static const char pcOTA_JSON_SelfTestKey[] = "self_test";
-static const char pcOTA_JSON_UpdatedByKey[] = OTA_JSON_UPDATED_BY_KEY;
-static const char pcOTA_JSON_JobDocKey[] = "jobDocument";
-static const char pcOTA_JSON_OTAUnitKey[] = "afr_ota";
-static const char pcOTA_JSON_ProtocolsKey[] = "protocols";
-static const char pcOTA_JSON_FileGroupKey[] = "files";
-static const char pcOTA_JSON_StreamNameKey[] = "streamname";
-static const char pcOTA_JSON_FilePathKey[] = "filepath";
-static const char pcOTA_JSON_FileSizeKey[] = "filesize";
-static const char pcOTA_JSON_FileIDKey[] = "fileid";
+static const char pcOTA_JSON_SelfTestKey[]      = "self_test";
+static const char pcOTA_JSON_UpdatedByKey[]     = OTA_JSON_UPDATED_BY_KEY;
+static const char pcOTA_JSON_JobDocKey[]        = "jobDocument";
+static const char pcOTA_JSON_OTAUnitKey[]       = "afr_ota";
+static const char pcOTA_JSON_ProtocolsKey[]     = "protocols";
+static const char pcOTA_JSON_FileGroupKey[]     = "files";
+static const char pcOTA_JSON_StreamNameKey[]    = "streamname";
+static const char pcOTA_JSON_FilePathKey[]      = "filepath";
+static const char pcOTA_JSON_FileSizeKey[]      = "filesize";
+static const char pcOTA_JSON_FileIDKey[]        = "fileid";
 static const char pcOTA_JSON_FileAttributeKey[] = "attr";
-static const char pcOTA_JSON_FileCertNameKey[] = "certfile";
+static const char pcOTA_JSON_FileCertNameKey[]  = "certfile";
 static const char pcOTA_JSON_UpdateDataUrlKey[] = "update_data_url";
-static const char pcOTA_JSON_AuthSchemeKey[] = "auth_scheme";
+static const char pcOTA_JSON_AuthSchemeKey[]    = "auth_scheme";
 
 /* This is the OTA statistics structure to hold useful info. */
 

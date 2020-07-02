@@ -146,7 +146,8 @@ bool Iot_CreateDetachedThread( IotThreadRoutine_t threadRoutine,
  * @endcode
  */
 /* @[declare_platform_threads_mutexcreate] */
-bool IotMutex_Create( IotMutex_t * pNewMutex, bool recursive );
+bool IotMutex_Create( IotMutex_t * pNewMutex,
+                      bool recursive );
 /* @[declare_platform_threads_mutexcreate] */
 
 /**

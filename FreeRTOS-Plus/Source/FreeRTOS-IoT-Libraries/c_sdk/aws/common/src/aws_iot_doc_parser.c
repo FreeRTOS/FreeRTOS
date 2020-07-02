@@ -50,9 +50,9 @@ bool AwsIotDocParser_FindValue( const char * pAwsIotJsonDocument,
 {
     size_t i = 0;
     size_t jsonValueLength = 0;
-    char openCharacter = '\0', closeCharacter = '\0';
-    int nestingLevel = 0;
-    bool isWithinQuotes = false;
+    char   openCharacter = '\0', closeCharacter = '\0';
+    int    nestingLevel   = 0;
+    bool   isWithinQuotes = false;
 
     /* Validate all the arguments.*/
     if( ( pAwsIotJsonDocument == NULL ) || ( pAwsIotJsonKey == NULL ) ||
@@ -163,7 +163,7 @@ bool AwsIotDocParser_FindValue( const char * pAwsIotJsonDocument,
                             ( pAwsIotJsonDocument[ i + 1 ] == '\"' ) )
                         {
                             /* Skip the characters \" */
-                            i += 2;
+                            i               += 2;
                             jsonValueLength += 2;
                         }
                         else
@@ -185,13 +185,13 @@ bool AwsIotDocParser_FindValue( const char * pAwsIotJsonDocument,
                 /* Set the matching opening and closing characters of a JSON object or array.
                  * The length calculation is performed below. */
                 case '{':
-                    openCharacter = '{';
-                    closeCharacter = '}';
+                    openCharacter   = '{';
+                    closeCharacter  = '}';
                     break;
 
                 case '[':
-                    openCharacter = '[';
-                    closeCharacter = ']';
+                    openCharacter   = '[';
+                    closeCharacter  = ']';
                     break;
 
                 /* Calculate the length of a JSON primitive. */

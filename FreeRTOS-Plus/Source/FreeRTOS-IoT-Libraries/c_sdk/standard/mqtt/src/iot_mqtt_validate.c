@@ -348,8 +348,8 @@ static bool _validateSubscription( bool awsIotMqttMode,
                                    IotMqttOperationType_t operation,
                                    const IotMqttSubscription_t * pSubscription )
 {
-    bool status = true;
-    uint16_t i = 0;
+    bool     status = true;
+    uint16_t i      = 0;
 
     /* Check for a valid QoS and callback function when subscribing. */
     if( operation == IOT_MQTT_SUBSCRIBE )
@@ -499,9 +499,9 @@ static bool _validateWildcardHash( uint16_t index,
 
 static bool _validateClientId( const IotMqttConnectInfo_t * pConnectInfo )
 {
-    bool status = true;
-    uint16_t maxClientIdLength = MQTT_SERVER_MAX_CLIENTID_LENGTH;
-    bool enforceMaxClientIdLength = false;
+    bool     status                   = true;
+    uint16_t maxClientIdLength        = MQTT_SERVER_MAX_CLIENTID_LENGTH;
+    bool     enforceMaxClientIdLength = false;
 
     /* Check that a client identifier was set. */
     if( pConnectInfo->pClientIdentifier == NULL )
@@ -531,7 +531,7 @@ static bool _validateClientId( const IotMqttConnectInfo_t * pConnectInfo )
     /* The AWS IoT MQTT service enforces a client ID length limit. */
     if( pConnectInfo->awsIotMqttMode == true )
     {
-        maxClientIdLength = AWS_IOT_MQTT_SERVER_MAX_CLIENTID_LENGTH;
+        maxClientIdLength        = AWS_IOT_MQTT_SERVER_MAX_CLIENTID_LENGTH;
         enforceMaxClientIdLength = true;
     }
 
@@ -614,7 +614,7 @@ bool _IotMqtt_ValidatePublish( bool awsIotMqttMode,
                                const IotMqttCallbackInfo_t * pCallbackInfo,
                                const IotMqttOperation_t * const pPublishOperation )
 {
-    bool status = true;
+    bool   status               = true;
     size_t maximumPayloadLength = MQTT_SERVER_MAX_PUBLISH_PAYLOAD_LENGTH;
 
     if( awsIotMqttMode == true )
@@ -715,8 +715,8 @@ bool _IotMqtt_ValidateSubscriptionList( IotMqttOperationType_t operation,
                                         const IotMqttSubscription_t * pListStart,
                                         size_t listSize )
 {
-    bool status = true;
-    size_t i = 0;
+    bool   status = true;
+    size_t i      = 0;
 
     /* Operation must be either subscribe or unsubscribe. */
     IotMqtt_Assert( ( operation == IOT_MQTT_SUBSCRIBE ) ||

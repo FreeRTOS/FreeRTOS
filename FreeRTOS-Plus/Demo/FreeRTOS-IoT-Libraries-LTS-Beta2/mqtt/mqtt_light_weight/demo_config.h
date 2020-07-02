@@ -43,14 +43,47 @@
 
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "DEMO"
+	#define LIBRARY_LOG_NAME    "MQTTLWDemo"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_INFO
+	#define LIBRARY_LOG_LEVEL    LOG_INFO
 #endif
 #include "logging_stack.h"
 
 /************ End of logging configuration ****************/
+
+/**
+ * @brief The MQTT client identifier used in this example.  Each client identifier
+ * must be unique so edit as required to ensure no two clients connecting to the
+ * same broker use the same client identifier.
+ *
+ * #define democonfigCLIENT_IDENTIFIER				"insert here."
+ */
+
+
+/**
+ * @brief MQTT broker end point to connect to.
+ *
+ * #define democonfigMQTT_BROKER_ENDPOINT				"insert here."
+ */
+
+
+/**
+ * @brief The port to use for the demo.
+ *
+ * #define democonfigMQTT_BROKER_PORT					( insert here. )
+ */
+
+
+/**
+ * @brief Set the stack size of the main demo task.
+ *
+ * In the Windows port, this stack only holds a structure. The actual
+ * stack is created by an operating system thread.
+ */
+#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
+
+
 
 #endif /* DEMO_CONFIG_H */

@@ -42,17 +42,21 @@
 
 /* Logging configuration for the MQTT library. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "MQTT"
+	#define LIBRARY_LOG_NAME    "MQTT"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_INFO
+	#define LIBRARY_LOG_LEVEL    LOG_NONE
 #endif
 
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
+
 /* Set network context to socket (int). */
-typedef int NetworkContext_t;
+typedef Socket_t NetworkContext_t;
 
 #endif /* ifndef MQTT_CONFIG_H_ */

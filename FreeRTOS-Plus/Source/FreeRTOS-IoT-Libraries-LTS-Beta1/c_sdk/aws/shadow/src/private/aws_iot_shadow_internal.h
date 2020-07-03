@@ -377,11 +377,11 @@ typedef struct _shadowOperation
 #endif
 
 /* Declarations of variables for internal Shadow files. */
-extern uint32_t _AwsIotShadowMqttTimeoutMs;
-extern IotListDouble_t _AwsIotShadowPendingOperations;
-extern IotListDouble_t _AwsIotShadowSubscriptions;
-extern IotMutex_t _AwsIotShadowPendingOperationsMutex;
-extern IotMutex_t _AwsIotShadowSubscriptionsMutex;
+extern uint32_t               _AwsIotShadowMqttTimeoutMs;
+extern IotListDouble_t        _AwsIotShadowPendingOperations;
+extern IotListDouble_t        _AwsIotShadowSubscriptions;
+extern IotMutex_t             _AwsIotShadowPendingOperationsMutex;
+extern IotMutex_t             _AwsIotShadowSubscriptionsMutex;
 
 /*----------------------- Shadow operation functions ------------------------*/
 

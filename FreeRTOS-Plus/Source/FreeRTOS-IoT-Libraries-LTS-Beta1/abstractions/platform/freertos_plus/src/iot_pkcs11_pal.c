@@ -66,11 +66,11 @@
  */
 enum eObjectHandles
 {
-    eInvalidHandle = 0,            /**< According to PKCS #11 spec, 0 is never a valid object handle. */
-    eAwsDevicePrivateKey = 1,      /**< Private Key. */
-    eAwsDevicePublicKey,           /**< Public Key. */
-    eAwsDeviceCertificate,         /**< Certificate. */
-    eAwsCodeSigningKey             /**< Code Signing Key. */
+    eInvalidHandle = 0,       /**< According to PKCS #11 spec, 0 is never a valid object handle. */
+    eAwsDevicePrivateKey = 1, /**< Private Key. */
+    eAwsDevicePublicKey,      /**< Public Key. */
+    eAwsDeviceCertificate,    /**< Certificate. */
+    eAwsCodeSigningKey        /**< Code Signing Key. */
 };
 
 /*-----------------------------------------------------------*/
@@ -79,7 +79,7 @@ enum eObjectHandles
  * @brief Checks to see if a file exists
  *
  * @param[in] pcFileName         The name of the file to check for existance.
- * 
+ *
  * @returns pdTRUE if the file exists, pdFALSE if not.
  */
 BaseType_t prvFileExists( const char * pcFileName )
@@ -104,7 +104,7 @@ BaseType_t prvFileExists( const char * pcFileName )
  * @param[in] pcLabel            The PKCS #11 label to convert to a file name
  * @param[out] pcFileName        The name of the file to check for existance.
  * @param[out] pHandle           The type of the PKCS #11 object.
- * 
+ *
  */
 void prvLabelToFilenameHandle( uint8_t * pcLabel,
                                char ** pcFileName,
@@ -118,33 +118,33 @@ void prvLabelToFilenameHandle( uint8_t * pcLabel,
                          sizeof( pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS ) ) )
         {
             *pcFileName = pkcs11palFILE_NAME_CLIENT_CERTIFICATE;
-            *pHandle = eAwsDeviceCertificate;
+            *pHandle    = eAwsDeviceCertificate;
         }
         else if( 0 == memcmp( pcLabel,
                               &pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS,
                               sizeof( pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS ) ) )
         {
             *pcFileName = pkcs11palFILE_NAME_KEY;
-            *pHandle = eAwsDevicePrivateKey;
+            *pHandle    = eAwsDevicePrivateKey;
         }
         else if( 0 == memcmp( pcLabel,
                               &pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS,
                               sizeof( pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS ) ) )
         {
             *pcFileName = pkcs11palFILE_NAME_KEY;
-            *pHandle = eAwsDevicePublicKey;
+            *pHandle    = eAwsDevicePublicKey;
         }
         else if( 0 == memcmp( pcLabel,
                               &pkcs11configLABEL_CODE_VERIFICATION_KEY,
                               sizeof( pkcs11configLABEL_CODE_VERIFICATION_KEY ) ) )
         {
             *pcFileName = pkcs11palFILE_CODE_SIGN_PUBLIC_KEY;
-            *pHandle = eAwsCodeSigningKey;
+            *pHandle    = eAwsCodeSigningKey;
         }
         else
         {
             *pcFileName = NULL;
-            *pHandle = eInvalidHandle;
+            *pHandle    = eInvalidHandle;
         }
     }
 }
@@ -160,11 +160,11 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
                                         CK_BYTE_PTR pucData,
                                         CK_ULONG ulDataSize )
 {
-    uint32_t ulStatus = 0;
-    HANDLE hFile = INVALID_HANDLE_VALUE;
-    DWORD lpNumberOfBytesWritten;
-    char * pcFileName = NULL;
-    CK_OBJECT_HANDLE xHandle = eInvalidHandle;
+    uint32_t         ulStatus   = 0;
+    HANDLE           hFile      = INVALID_HANDLE_VALUE;
+    DWORD            lpNumberOfBytesWritten;
+    char *           pcFileName = NULL;
+    CK_OBJECT_HANDLE xHandle    = eInvalidHandle;
 
     /* Converts a label to its respective filename and handle. */
     prvLabelToFilenameHandle( pxLabel->pValue,
@@ -188,7 +188,7 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
         {
             ulStatus = GetLastError();
             PKCS11_PAL_PRINT( ( "ERROR: Unable to create file %d \r\n", ulStatus ) );
-            xHandle = eInvalidHandle;
+            xHandle  = eInvalidHandle;
         }
 
         /* Write the object data. */
@@ -197,7 +197,7 @@ CK_OBJECT_HANDLE PKCS11_PAL_SaveObject( CK_ATTRIBUTE_PTR pxLabel,
             if( FALSE == WriteFile( hFile, pucData, ulDataSize, &lpNumberOfBytesWritten, NULL ) )
             {
                 ulStatus = GetLastError();
-                xHandle = eInvalidHandle;
+                xHandle  = eInvalidHandle;
             }
         }
 
@@ -220,8 +220,8 @@ CK_OBJECT_HANDLE PKCS11_PAL_FindObject( CK_BYTE_PTR pxLabel,
     /* Avoid compiler warnings about unused variables. */
     ( void ) usLength;
 
-    CK_OBJECT_HANDLE xHandle = eInvalidHandle;
-    char * pcFileName = NULL;
+    CK_OBJECT_HANDLE xHandle    = eInvalidHandle;
+    char *           pcFileName = NULL;
 
     /* Converts a label to its respective filename and handle. */
     prvLabelToFilenameHandle( pxLabel,
@@ -239,36 +239,36 @@ CK_OBJECT_HANDLE PKCS11_PAL_FindObject( CK_BYTE_PTR pxLabel,
 /*-----------------------------------------------------------*/
 
 CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
-                                      CK_BYTE_PTR * ppucData,
-                                      CK_ULONG_PTR pulDataSize,
-                                      CK_BBOOL * pIsPrivate )
+                                 CK_BYTE_PTR * ppucData,
+                                 CK_ULONG_PTR pulDataSize,
+                                 CK_BBOOL * pIsPrivate )
 {
-    CK_RV ulReturn = CKR_OK;
+    CK_RV    ulReturn       = CKR_OK;
     uint32_t ulDriverReturn = 0;
-    HANDLE hFile = INVALID_HANDLE_VALUE;
-    uint32_t ulSize = 0;
-    char * pcFileName = NULL;
+    HANDLE   hFile          = INVALID_HANDLE_VALUE;
+    uint32_t ulSize         = 0;
+    char *   pcFileName     = NULL;
 
 
     if( xHandle == eAwsDeviceCertificate )
     {
-        pcFileName = pkcs11palFILE_NAME_CLIENT_CERTIFICATE;
+        pcFileName  = pkcs11palFILE_NAME_CLIENT_CERTIFICATE;
         *pIsPrivate = CK_FALSE;
     }
     else if( xHandle == eAwsDevicePrivateKey )
     {
-        pcFileName = pkcs11palFILE_NAME_KEY;
+        pcFileName  = pkcs11palFILE_NAME_KEY;
         *pIsPrivate = CK_TRUE;
     }
     else if( xHandle == eAwsDevicePublicKey )
     {
         /* Public and private key are stored together in same file. */
-        pcFileName = pkcs11palFILE_NAME_KEY;
+        pcFileName  = pkcs11palFILE_NAME_KEY;
         *pIsPrivate = CK_FALSE;
     }
     else if( xHandle == eAwsCodeSigningKey )
     {
-        pcFileName = pkcs11palFILE_CODE_SIGN_PUBLIC_KEY;
+        pcFileName  = pkcs11palFILE_CODE_SIGN_PUBLIC_KEY;
         *pIsPrivate = CK_FALSE;
     }
     else
@@ -291,7 +291,7 @@ CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
         {
             ulDriverReturn = GetLastError();
             PKCS11_PAL_PRINT( ( "ERROR: Unable to open file %d \r\n", ulDriverReturn ) );
-            ulReturn = CKR_FUNCTION_FAILED;
+            ulReturn       = CKR_FUNCTION_FAILED;
         }
 
         if( 0 == ulReturn )
@@ -300,7 +300,7 @@ CK_RV PKCS11_PAL_GetObjectValue( CK_OBJECT_HANDLE xHandle,
             *pulDataSize = GetFileSize( hFile, ( LPDWORD ) ( &ulSize ) );
 
             /* Create a buffer. */
-            *ppucData = pvPortMalloc( *pulDataSize );
+            *ppucData    = pvPortMalloc( *pulDataSize );
 
             if( NULL == *ppucData )
             {

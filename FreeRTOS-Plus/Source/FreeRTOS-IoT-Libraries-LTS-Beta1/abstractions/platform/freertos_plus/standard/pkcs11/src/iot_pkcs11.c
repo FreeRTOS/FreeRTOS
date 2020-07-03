@@ -51,7 +51,7 @@
 static CK_RV prvOpenSession( CK_SESSION_HANDLE * pxSession,
                              CK_SLOT_ID xSlotId )
 {
-    CK_RV xResult;
+    CK_RV                xResult;
     CK_FUNCTION_LIST_PTR pxFunctionList;
 
     xResult = C_GetFunctionList( &pxFunctionList );
@@ -73,9 +73,9 @@ static CK_RV prvOpenSession( CK_SESSION_HANDLE * pxSession,
 CK_RV xGetSlotList( CK_SLOT_ID ** ppxSlotId,
                     CK_ULONG * pxSlotCount )
 {
-    CK_RV xResult = CKR_OK;
+    CK_RV                xResult  = CKR_OK;
     CK_FUNCTION_LIST_PTR pxFunctionList;
-    CK_SLOT_ID * pxSlotId = NULL;
+    CK_SLOT_ID *         pxSlotId = NULL;
 
     xResult = C_GetFunctionList( &pxFunctionList );
 
@@ -125,18 +125,18 @@ CK_RV xGetSlotList( CK_SLOT_ID ** ppxSlotId,
 
 CK_RV xInitializePKCS11( void )
 {
-    CK_RV xResult = CKR_OK;
+    CK_RV                xResult        = CKR_OK;
     CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
-    CK_C_INITIALIZE_ARGS xInitArgs = { 0 };
+    CK_C_INITIALIZE_ARGS xInitArgs      = { 0 };
 
-    xInitArgs.CreateMutex = NULL;
+    xInitArgs.CreateMutex  = NULL;
     xInitArgs.DestroyMutex = NULL;
-    xInitArgs.LockMutex = NULL;
-    xInitArgs.UnlockMutex = NULL;
-    xInitArgs.flags = CKF_OS_LOCKING_OK;
-    xInitArgs.pReserved = NULL;
+    xInitArgs.LockMutex    = NULL;
+    xInitArgs.UnlockMutex  = NULL;
+    xInitArgs.flags        = CKF_OS_LOCKING_OK;
+    xInitArgs.pReserved    = NULL;
 
-    xResult = C_GetFunctionList( &pxFunctionList );
+    xResult                = C_GetFunctionList( &pxFunctionList );
 
     /* Initialize the PKCS #11 module. */
     if( xResult == CKR_OK )
@@ -151,13 +151,13 @@ CK_RV xInitializePKCS11( void )
 
 CK_RV xInitializePkcs11Token( void )
 {
-    CK_RV xResult = CKR_OK;
+    CK_RV                xResult        = CKR_OK;
 
     CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
-    CK_SLOT_ID * pxSlotId = NULL;
-    CK_ULONG xSlotCount;
-    CK_FLAGS xTokenFlags = 0;
-    CK_TOKEN_INFO_PTR pxTokenInfo = NULL;
+    CK_SLOT_ID *         pxSlotId       = NULL;
+    CK_ULONG             xSlotCount;
+    CK_FLAGS             xTokenFlags    = 0;
+    CK_TOKEN_INFO_PTR    pxTokenInfo    = NULL;
 
     xResult = C_GetFunctionList( &pxFunctionList );
 
@@ -223,10 +223,10 @@ CK_RV xInitializePkcs11Token( void )
 
 CK_RV xInitializePkcs11Session( CK_SESSION_HANDLE * pxSession )
 {
-    CK_RV xResult = CKR_OK;
-    CK_SLOT_ID * pxSlotId = NULL;
+    CK_RV                xResult        = CKR_OK;
+    CK_SLOT_ID *         pxSlotId       = NULL;
     CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
-    CK_ULONG xSlotCount = 0;
+    CK_ULONG             xSlotCount     = 0;
 
     xResult = C_GetFunctionList( &pxFunctionList );
 
@@ -282,10 +282,10 @@ CK_RV xFindObjectWithLabelAndClass( CK_SESSION_HANDLE xSession,
                                     CK_OBJECT_CLASS xClass,
                                     CK_OBJECT_HANDLE_PTR pxHandle )
 {
-    CK_RV xResult = CKR_OK;
-    CK_ULONG ulCount = 0;
+    CK_RV                xResult        = CKR_OK;
+    CK_ULONG             ulCount        = 0;
     CK_FUNCTION_LIST_PTR pxFunctionList = NULL;
-    CK_ATTRIBUTE xTemplate[ 2 ] = { 0 };
+    CK_ATTRIBUTE         xTemplate[ 2 ] = { 0 };
 
     if( ( pcLabelName == NULL ) || ( pxHandle == NULL ) )
     {
@@ -293,15 +293,15 @@ CK_RV xFindObjectWithLabelAndClass( CK_SESSION_HANDLE xSession,
     }
     else
     {
-        xTemplate[ 0 ].type = CKA_LABEL;
-        xTemplate[ 0 ].pValue = ( CK_VOID_PTR ) pcLabelName;
+        xTemplate[ 0 ].type       = CKA_LABEL;
+        xTemplate[ 0 ].pValue     = ( CK_VOID_PTR ) pcLabelName;
         xTemplate[ 0 ].ulValueLen = strlen( pcLabelName );
 
-        xTemplate[ 1 ].type = CKA_CLASS;
-        xTemplate[ 1 ].pValue = &xClass;
+        xTemplate[ 1 ].type       = CKA_CLASS;
+        xTemplate[ 1 ].pValue     = &xClass;
         xTemplate[ 1 ].ulValueLen = sizeof( CK_OBJECT_CLASS );
 
-        xResult = C_GetFunctionList( &pxFunctionList );
+        xResult                   = C_GetFunctionList( &pxFunctionList );
     }
 
     /* Initialize the FindObject state in the underlying PKCS #11 module based
@@ -338,7 +338,7 @@ CK_RV xFindObjectWithLabelAndClass( CK_SESSION_HANDLE xSession,
 CK_RV vAppendSHA256AlgorithmIdentifierSequence( const uint8_t * puc32ByteHashedMessage,
                                                 uint8_t * puc51ByteHashOidBuffer )
 {
-    CK_RV xResult = CKR_OK;
+    CK_RV         xResult          = CKR_OK;
     const uint8_t pucOidSequence[] = pkcs11STUFF_APPENDED_TO_RSA_SIG;
 
     if( ( puc32ByteHashedMessage == NULL ) || ( puc51ByteHashOidBuffer == NULL ) )

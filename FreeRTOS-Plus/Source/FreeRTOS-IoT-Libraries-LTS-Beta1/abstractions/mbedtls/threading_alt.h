@@ -41,4 +41,4 @@ void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex );
 int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex );
 int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex );
 
-#endif
+#endif /* ifndef MBEDTLS_THREADING_ALT_H_ */

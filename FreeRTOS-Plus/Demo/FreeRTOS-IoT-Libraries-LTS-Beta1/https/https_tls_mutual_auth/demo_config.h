@@ -48,13 +48,13 @@
  * For more information regarding TLS protocol:
  * https://www.freertos.org/https/tls.html
  */
-#define democonfigENABLE_TLS			 1
+#define democonfigENABLE_TLS             1
 
 /**
  * @brief Enable/Disable mutual authentication in demos. If enabled, require
  * democonfigENABLE_TLS to be set to 1.
  */
-#define democonfigENABLE_MUTUAL_AUTH	 1
+#define democonfigENABLE_MUTUAL_AUTH     1
 
 /**
  * @brief Select a connection profile.
@@ -65,7 +65,7 @@
  * requires democonfigENABLE_MUTUAL_AUTH to be set to 1 since AWS IoT requires
  * mutually authenticated connection.
  */
-#define democonfigPROFILE_USE_AWS_IOT	 1
+#define democonfigPROFILE_USE_AWS_IOT    1
 
 /**
  * @brief Set the stack size of the main demo task.
@@ -73,6 +73,6 @@
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE	    configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
 
 #endif /* DEMO_CONFIG_H */

@@ -59,18 +59,18 @@
  */
 #if defined( AWS_IOT_DEMO_PROFILE_H )
     #ifndef awsiotdemoprofileAWS_ENDPOINT
-        #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileAWS_ENDPOINT (in aws_iot_demo_profile.h) configured. Refer to https://www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup.
+        #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileAWS_ENDPOINT (in aws_iot_demo_profile.h) configured. Refer to https: /*www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup. */
     #endif
     #ifndef awsiotdemoprofileCLIENT_IDENTIFIER
-        #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileCLIENT_IDENTIFIER (in aws_iot_demo_profile.h) configured. Refer to https://www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup.
+        #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileCLIENT_IDENTIFIER (in aws_iot_demo_profile.h) configured. Refer to https: /*www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup. */
     #endif
     #if ( democonfigENABLE_TLS )
         #if ( democonfigENABLE_MUTUAL_AUTH )
             #ifndef awsiotdemoprofileCLIENT_CERTIFICATE_PEM
-                #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileCLIENT_CERTIFICATE_PEM (in aws_iot_demo_profile.h) configured as required for mutual authentication. https://www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup.
+                #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileCLIENT_CERTIFICATE_PEM (in aws_iot_demo_profile.h) configured as required for mutual authentication. https: /*www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup. */
             #endif
             #ifndef awsiotdemoprofileCLIENT_PRIVATE_KEY_PEM
-                #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileCLIENT_PRIVATE_KEY_PEM (in aws_iot_demo_profile.h) configured as required for mutual authentication. https://www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup.
+                #error ACTION REQUIRED: Please ensure you have awsiotdemoprofileCLIENT_PRIVATE_KEY_PEM (in aws_iot_demo_profile.h) configured as required for mutual authentication. https: /*www.freertos.org/mqtt/preconfiguredexamplesMA.html for proper setup. */
             #endif
         #endif
     #endif /* if ( democonfigENABLE_TLS ) */

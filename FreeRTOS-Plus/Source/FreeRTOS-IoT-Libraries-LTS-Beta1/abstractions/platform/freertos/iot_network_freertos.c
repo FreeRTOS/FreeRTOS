@@ -255,10 +255,10 @@ const IotNetworkInterface_t IotNetworkFreeRTOS =
         /* Initialize the mbed TLS context structures. */
         _sslContextInit( pNetworkConnection );
 
-        mbedtlsError = mbedtls_ssl_config_defaults( &( pNetworkConnection->ssl.config ),
-                                                    MBEDTLS_SSL_IS_CLIENT,
-                                                    MBEDTLS_SSL_TRANSPORT_STREAM,
-                                                    MBEDTLS_SSL_PRESET_DEFAULT );
+        mbedtlsError                        = mbedtls_ssl_config_defaults( &( pNetworkConnection->ssl.config ),
+                                                                           MBEDTLS_SSL_IS_CLIENT,
+                                                                           MBEDTLS_SSL_TRANSPORT_STREAM,
+                                                                           MBEDTLS_SSL_PRESET_DEFAULT );
 
         if( mbedtlsError != 0 )
         {
@@ -290,9 +290,9 @@ const IotNetworkInterface_t IotNetworkFreeRTOS =
                                        &( pNetworkConnection->ssl.certProfile ) );
 
         /* Parse the server root CA certificate into the SSL context. */
-        mbedtlsError = mbedtls_x509_crt_parse( &( pNetworkConnection->ssl.rootCa ),
-                                               ( const unsigned char * ) pCredentials->pRootCa,
-                                               pCredentials->rootCaSize );
+        mbedtlsError                        = mbedtls_x509_crt_parse( &( pNetworkConnection->ssl.rootCa ),
+                                                                      ( const unsigned char * ) pCredentials->pRootCa,
+                                                                      pCredentials->rootCaSize );
 
         if( mbedtlsError != 0 )
         {
@@ -342,8 +342,8 @@ const IotNetworkInterface_t IotNetworkFreeRTOS =
         }
 
         /* Initialize the mbed TLS secured connection context. */
-        mbedtlsError = mbedtls_ssl_setup( &( pNetworkConnection->ssl.context ),
-                                          &( pNetworkConnection->ssl.config ) );
+        mbedtlsError                        = mbedtls_ssl_setup( &( pNetworkConnection->ssl.context ),
+                                                                 &( pNetworkConnection->ssl.config ) );
 
         if( mbedtlsError != 0 )
         {
@@ -441,9 +441,9 @@ static BaseType_t _isAnyConnectionActive( void )
 static void _networkTask( void * pvParameters )
 {
     _networkConnection_t * pConnection = NULL;
-    BaseType_t socketEvents = 0, i = 0, socketStatus = 0;
-    const BaseType_t activeConnectionPresent = 1;
-    SocketSet_t socketSet = pvParameters;
+    BaseType_t             socketEvents = 0, i = 0, socketStatus = 0;
+    const BaseType_t       activeConnectionPresent = 1;
+    SocketSet_t            socketSet               = pvParameters;
 
     while( true )
     {
@@ -528,11 +528,11 @@ IotNetworkError_t IotNetworkFreeRTOS_Init( void )
         mbedtls_ctr_drbg_init( &_ctrDrgbContext );
 
         /* Add a strong entropy source. At least one is required. */
-        mbedtlsError = mbedtls_entropy_add_source( &_entropyContext,
-                                                   mbedtls_platform_entropy_poll,
-                                                   NULL,
-                                                   32,
-                                                   MBEDTLS_ENTROPY_SOURCE_STRONG );
+        mbedtlsError   = mbedtls_entropy_add_source( &_entropyContext,
+                                                     mbedtls_platform_entropy_poll,
+                                                     NULL,
+                                                     32,
+                                                     MBEDTLS_ENTROPY_SOURCE_STRONG );
 
         if( mbedtlsError != 0 )
         {
@@ -542,11 +542,11 @@ IotNetworkError_t IotNetworkFreeRTOS_Init( void )
         }
 
         /* Seed the random number generator. */
-        mbedtlsError = mbedtls_ctr_drbg_seed( &_ctrDrgbContext,
-                                              mbedtls_entropy_func,
-                                              &_entropyContext,
-                                              NULL,
-                                              0 );
+        mbedtlsError   = mbedtls_ctr_drbg_seed( &_ctrDrgbContext,
+                                                mbedtls_entropy_func,
+                                                &_entropyContext,
+                                                NULL,
+                                                0 );
 
         if( mbedtlsError != 0 )
         {
@@ -557,7 +557,7 @@ IotNetworkError_t IotNetworkFreeRTOS_Init( void )
     #endif /* if ( IOT_NETWORK_ENABLE_TLS == 1 ) */
 
     /* Create the socket set for the network task. */
-    _socketSet = FreeRTOS_CreateSocketSet();
+    _socketSet         = FreeRTOS_CreateSocketSet();
 
     if( _socketSet == NULL )
     {
@@ -565,10 +565,10 @@ IotNetworkError_t IotNetworkFreeRTOS_Init( void )
     }
 
     /* Create the socket set mutex. */
-    _socketSetMutex = xSemaphoreCreateMutexStatic( &_socketSetMutexStorage );
+    _socketSetMutex    = xSemaphoreCreateMutexStatic( &_socketSetMutexStorage );
 
     static StaticTask_t networkTask;
-    static StackType_t networkTaskStack[ IOT_NETWORK_TASK_STACK_SIZE ];
+    static StackType_t  networkTaskStack[ IOT_NETWORK_TASK_STACK_SIZE ];
 
     /* Create the network task. Since valid parameters are provided, this should
      * never fail. */
@@ -609,17 +609,17 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
                                              IotNetworkConnection_t * pConnection )
 {
     IOT_FUNCTION_ENTRY( IotNetworkError_t, IOT_NETWORK_SUCCESS );
-    Socket_t tcpSocket = FREERTOS_INVALID_SOCKET;
-    BaseType_t socketStatus = 0;
-    struct freertos_sockaddr serverAddress = { 0 };
-    const TickType_t receiveTimeout = IOT_NETWORK_SOCKET_TIMEOUT_TICKS;
-    _networkConnection_t * pNewNetworkConnection = NULL;
+    Socket_t                 tcpSocket             = FREERTOS_INVALID_SOCKET;
+    BaseType_t               socketStatus          = 0;
+    struct freertos_sockaddr serverAddress         = { 0 };
+    const TickType_t         receiveTimeout        = IOT_NETWORK_SOCKET_TIMEOUT_TICKS;
+    _networkConnection_t *   pNewNetworkConnection = NULL;
 
     /* Credentials are not used if TLS is disabled. */
     ( void ) pCredentialInfo;
 
     /* Check host name length against the maximum length allowed. */
-    const size_t hostnameLength = strlen( pServerInfo->pHostName );
+    const size_t hostnameLength                    = strlen( pServerInfo->pHostName );
 
     if( hostnameLength > ( size_t ) MAX_DNS_NAME_LENGTH )
     {
@@ -628,7 +628,7 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_BAD_PARAMETER );
     }
 
-    pNewNetworkConnection = pvPortMalloc( sizeof( _networkConnection_t ) );
+    pNewNetworkConnection         = pvPortMalloc( sizeof( _networkConnection_t ) );
 
     if( pNewNetworkConnection == NULL )
     {
@@ -640,9 +640,9 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
     ( void ) memset( pNewNetworkConnection, 0x00, sizeof( _networkConnection_t ) );
 
     /* Create a new TCP socket. */
-    tcpSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-                                 FREERTOS_SOCK_STREAM,
-                                 FREERTOS_IPPROTO_TCP );
+    tcpSocket                     = FreeRTOS_socket( FREERTOS_AF_INET,
+                                                     FREERTOS_SOCK_STREAM,
+                                                     FREERTOS_IPPROTO_TCP );
 
     if( tcpSocket == FREERTOS_INVALID_SOCKET )
     {
@@ -651,11 +651,11 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
     }
 
     /* Set the timeout for receive. */
-    socketStatus = FreeRTOS_setsockopt( tcpSocket,
-                                        0,
-                                        FREERTOS_SO_RCVTIMEO,
-                                        &receiveTimeout,
-                                        sizeof( TickType_t ) );
+    socketStatus                  = FreeRTOS_setsockopt( tcpSocket,
+                                                         0,
+                                                         FREERTOS_SO_RCVTIMEO,
+                                                         &receiveTimeout,
+                                                         sizeof( TickType_t ) );
 
     if( socketStatus != 0 )
     {
@@ -664,10 +664,10 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
     }
 
     /* Establish connection. */
-    serverAddress.sin_family = FREERTOS_AF_INET;
-    serverAddress.sin_port = FreeRTOS_htons( pServerInfo->port );
-    serverAddress.sin_addr = FreeRTOS_gethostbyname( pServerInfo->pHostName );
-    serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
+    serverAddress.sin_family      = FREERTOS_AF_INET;
+    serverAddress.sin_port        = FreeRTOS_htons( pServerInfo->port );
+    serverAddress.sin_addr        = FreeRTOS_gethostbyname( pServerInfo->pHostName );
+    serverAddress.sin_len         = ( uint8_t ) sizeof( serverAddress );
 
     /* Check for errors from DNS lookup. */
     if( serverAddress.sin_addr == 0 )
@@ -676,9 +676,9 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
         IOT_SET_AND_GOTO_CLEANUP( IOT_NETWORK_SYSTEM_ERROR );
     }
 
-    socketStatus = FreeRTOS_connect( tcpSocket,
-                                     &serverAddress,
-                                     sizeof( serverAddress ) );
+    socketStatus                  = FreeRTOS_connect( tcpSocket,
+                                                      &serverAddress,
+                                                      sizeof( serverAddress ) );
 
     if( socketStatus != 0 )
     {
@@ -721,7 +721,7 @@ IotNetworkError_t IotNetworkFreeRTOS_Create( IotNetworkServerInfo_t pServerInfo,
         pNewNetworkConnection->socketMutex = xSemaphoreCreateMutexStatic( &( pNewNetworkConnection->socketMutexStorage ) );
 
         /* Set the output parameter. */
-        *pConnection = pNewNetworkConnection;
+        *pConnection                       = pNewNetworkConnection;
 
         IotLogInfo( "(Network connection %p) Connection to %s established.",
                     pNewNetworkConnection,
@@ -737,7 +737,7 @@ IotNetworkError_t IotNetworkFreeRTOS_SetReceiveCallback( IotNetworkConnection_t 
                                                          void * pContext )
 {
     IotNetworkError_t status = IOT_NETWORK_SUCCESS;
-    BaseType_t i = 0;
+    BaseType_t        i      = 0;
 
     /* Set the receive callback and context. */
     pConnection->receiveCallback = receiveCallback;
@@ -788,7 +788,7 @@ size_t IotNetworkFreeRTOS_Send( IotNetworkConnection_t pConnection,
                                 const uint8_t * pMessage,
                                 size_t messageLength )
 {
-    size_t bytesSent = 0;
+    size_t     bytesSent    = 0;
     BaseType_t socketStatus = 0;
 
     /* Only one thread at a time may send on the connection. Lock the send
@@ -857,7 +857,7 @@ size_t IotNetworkFreeRTOS_Receive( IotNetworkConnection_t pConnection,
                                    size_t bytesRequested )
 {
     BaseType_t socketStatus = 0;
-    size_t bytesReceived = 0, bytesRemaining = bytesRequested;
+    size_t     bytesReceived = 0, bytesRemaining = bytesRequested;
 
     /* Block and wait for incoming data. */
     while( bytesRemaining > 0 )
@@ -911,7 +911,7 @@ size_t IotNetworkFreeRTOS_Receive( IotNetworkConnection_t pConnection,
         }
         else
         {
-            bytesReceived += ( size_t ) socketStatus;
+            bytesReceived  += ( size_t ) socketStatus;
             bytesRemaining -= ( size_t ) socketStatus;
 
             configASSERT( bytesReceived + bytesRemaining == bytesRequested );
@@ -941,8 +941,8 @@ size_t IotNetworkFreeRTOS_ReceiveUpto( IotNetworkConnection_t pConnection,
                                        uint8_t * pBuffer,
                                        size_t bufferSize )
 {
-    int32_t socketStatus = 0;
-    size_t bytesReceived = 0;
+    int32_t socketStatus  = 0;
+    size_t  bytesReceived = 0;
 
     /* Caller should never pass a zero-length buffer. */
     configASSERT( bufferSize > 0 );
@@ -996,7 +996,7 @@ size_t IotNetworkFreeRTOS_ReceiveUpto( IotNetworkConnection_t pConnection,
 
 IotNetworkError_t IotNetworkFreeRTOS_Close( IotNetworkConnection_t pConnection )
 {
-    BaseType_t socketStatus = 0, i = 0;
+    BaseType_t        socketStatus = 0, i = 0;
     IotNetworkError_t status = IOT_NETWORK_SUCCESS;
 
     #if ( IOT_NETWORK_ENABLE_TLS == 1 )
@@ -1066,8 +1066,8 @@ IotNetworkError_t IotNetworkFreeRTOS_Close( IotNetworkConnection_t pConnection )
 
 IotNetworkError_t IotNetworkFreeRTOS_Destroy( IotNetworkConnection_t pConnection )
 {
-    BaseType_t closeSocketStatus = 0;
-    IotNetworkError_t status = IOT_NETWORK_SUCCESS;
+    BaseType_t        closeSocketStatus = 0;
+    IotNetworkError_t status            = IOT_NETWORK_SUCCESS;
 
     closeSocketStatus = FreeRTOS_closesocket( pConnection->socket );
 

@@ -1395,8 +1395,12 @@ FreeRTOS_Socket_t *pxSocket;
 	sockets standard, but this implementation does not use all the parameters. */
 	( void ) lLevel;
 	( void ) uxOptionLength;
-
-	configASSERT( xSocket != NULL );
+	
+	if( ( pxSocket == NULL ) || ( pxSocket == FREERTOS_INVALID_SOCKET ) )
+	{
+		xReturn = -pdFREERTOS_ERRNO_EINVAL;
+		return xReturn;
+	}
 
 	switch( lOptionName )
 	{
@@ -2200,7 +2204,12 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	{
 	BaseType_t xResult = 0;
 
-		if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdFALSE ) == pdFALSE )
+		if( pxAddress == NULL )
+		{
+			/* NULL address passed to the function. Invalid value. */
+			xResult = -pdFREERTOS_ERRNO_EINVAL;
+		}
+		else if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdFALSE ) == pdFALSE )
 		{
 			/* Not a valid socket or wrong type */
 			xResult = -pdFREERTOS_ERRNO_EBADF;
@@ -2271,7 +2280,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	FreeRTOS_Socket_t *pxSocket = ( FreeRTOS_Socket_t* ) xClientSocket;
 	TickType_t xRemainingTime;
 	BaseType_t xTimed = pdFALSE;
-	BaseType_t xResult;
+	BaseType_t xResult = -pdFREERTOS_ERRNO_EINVAL;
 	TimeOut_t xTimeOut;
 
 		( void ) xAddressLength;
@@ -2482,6 +2491,12 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		port. */
 		if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_TCP, pdTRUE ) == pdFALSE )
 		{
+			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
+		}
+		else if( ( ( ( uint32_t ) xFlags & ( uint32_t ) FREERTOS_ZERO_COPY ) != 0U ) &&
+			 ( pvBuffer == NULL ) )
+		{
+			/* In zero-copy mode, pvBuffer is a pointer to a pointer ( not NULL ). */
 			xByteCount = -pdFREERTOS_ERRNO_EINVAL;
 		}
 		else
@@ -2746,7 +2761,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	 */
 	BaseType_t FreeRTOS_send( Socket_t xSocket, const void *pvBuffer, size_t uxDataLength, BaseType_t xFlags )
 	{
-	BaseType_t xByteCount;
+	BaseType_t xByteCount = -pdFREERTOS_ERRNO_EINVAL;
 	BaseType_t xBytesLeft;
 	FreeRTOS_Socket_t *pxSocket = ( FreeRTOS_Socket_t * ) xSocket;
 	TickType_t xRemainingTime;
@@ -2758,8 +2773,11 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 		/* Prevent compiler warnings about unused parameters.  The parameter
 		may be used in future versions. */
 		( void ) xFlags;
-
-		xByteCount = ( BaseType_t ) prvTCPSendCheck( pxSocket, uxDataLength );
+		
+		if( pvBuffer != NULL )
+		{
+			xByteCount = ( BaseType_t ) prvTCPSendCheck( pxSocket, uxDataLength );
+		}
 
 		if( xByteCount > 0 )
 		{

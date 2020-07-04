@@ -7,3 +7,4 @@ For more information on FreeRTOS testing please refer to https://www.freertos.or
 This directory is in working progress -- we are migrating scattered test cases to this directory. Here only lists what's currently under this directory. 
 
 - ```./CBMC```: This directory contains automated proofs of the memory safety of various parts of the FreeRTOS code base.
+- ```./VeriFast```: This directory contains automated proofs of the functional correctness of various parts of the FreeRTOS code base.

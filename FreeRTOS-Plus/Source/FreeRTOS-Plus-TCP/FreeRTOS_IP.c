@@ -2430,7 +2430,8 @@ aid though to optimise the calculations. */
 xUnion32 xSum2, xSum, xTerm;
 xUnionPtr xSource;
 xUnionPtr xLastSource;
-uint32_t ulAlignBits, ulCarry = 0UL;
+intptr_t uxAlignBits;
+uint32_t ulCarry = 0UL;
 uint16_t usTemp;
 size_t uxDataLengthBytes = uxByteCount;
 
@@ -2446,10 +2447,10 @@ size_t uxDataLengthBytes = uxByteCount;
 	xSource.u8ptr = ipPOINTER_CAST( uint8_t *, pucNextData );
 	/* coverity[misra_c_2012_rule_11_4_violation] */
 	/* The object pointer expression "pucNextData" of type "uint8_t const *" is cast to an integer type "unsigned int". */
-	ulAlignBits = ( ( ( uint32_t ) pucNextData ) & 0x03U ); /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
+	uxAlignBits = ( ( intptr_t ) pucNextData ) & 0x03U; /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
 
 	/* If byte (8-bit) aligned... */
-	if( ( ( ulAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
+	if( ( ( uxAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
 	{
 		xTerm.u8[ 1 ] = *( xSource.u8ptr );
 		xSource.u8ptr++;
@@ -2458,7 +2459,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	}
 
 	/* If half-word (16-bit) aligned... */
-	if( ( ( ulAlignBits == 1U ) || ( ulAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
+	if( ( ( uxAlignBits == 1U ) || ( uxAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
 	{
 		xSum.u32 += *(xSource.u16ptr);
 		xSource.u16ptr++;
@@ -2539,7 +2540,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	/* coverity[value_overwrite] */
 	xSum.u32 = ( uint32_t ) xSum.u16[ 0 ] + xSum.u16[ 1 ];
 
-	if( ( ulAlignBits & 1U ) != 0U )
+	if( ( uxAlignBits & 1U ) != 0U )
 	{
 		/* Quite unlikely, but pucNextData might be non-aligned, which would
 		 mean that a checksum is calculated starting at an odd position. */

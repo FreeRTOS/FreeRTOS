@@ -2201,6 +2201,16 @@ size_t uxDataLengthBytes = uxByteCount;
 	/* The object pointer expression "pucNextData" of type "uint8_t const *" is cast to an integer type "unsigned int". */
 	uxAlignBits = ( ( intptr_t ) pucNextData ) & 0x03U; /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
 
+	/*
+	 * If pucNextData is non-aligned then the checksum is starting at an
+	 * odd position and we need to make sure the usSum value now in xSum is
+	 * as if it had been "aligned" in the same way.
+	 */
+	if( ( uxAlignBits & 1UL) != 0U )
+	{
+		xSum.u32 = ( ( xSum.u32 & 0xffU ) << 8 ) | ( ( xSum.u32 & 0xff00U ) >> 8 );
+	}
+
 	/* If byte (8-bit) aligned... */
 	if( ( ( uxAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
 	{

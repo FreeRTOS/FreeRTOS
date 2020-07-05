@@ -103,9 +103,6 @@ Queue_t * const pxQueue = xQueue;
 			vListInitialise( &( pxQueue->xTasksWaitingToSend ) );
 			vListInitialise( &( pxQueue->xTasksWaitingToReceive ) );
 		}
-		/* Logically, we move from a flat character array of `N*M` bytes (using
-		the `chars` predicate) to an array of `N` elements where each element
-		is `M` bytes (using the `buffer` predicate) */
 		/*@if (M != 0) { buffer_from_chars(pxQueue->pcHead, N, M); }@*/
 	}
 	taskEXIT_CRITICAL();

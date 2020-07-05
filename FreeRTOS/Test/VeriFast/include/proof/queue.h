@@ -185,32 +185,132 @@ predicate queue(QueueHandle_t q, int8_t *Storage, size_t N, size_t M, size_t W, 
 	malloc_block(Storage, N*M) &*&
 	true
 	;
+@*/
 
+/* A buffer allows us to interpret a flat character array of `N*M` bytes as a
+list of `N` elements where each element is `M` bytes */
+/*@
 predicate buffer(char *buffer, size_t N, size_t M; list<list<char> > elements) =
 	N == 0
 		? elements == nil
 		: chars(buffer, M, ?x) &*& buffer(buffer + M, N - 1, M, ?xs) &*& elements == cons(x, xs);
 
-// TODO: buffer_from_chars proof
-lemma void buffer_from_chars(char *buffer, size_t N, size_t M);
-requires chars(buffer, N*M, _);
-ensures exists<list<list<char> > >(?elements) &*& buffer(buffer, N, M, elements) &*& length(elements) == N;
+lemma void buffer_length(char *buffer, size_t N, size_t M)
+requires buffer(buffer, N, M, ?elements);
+ensures buffer(buffer, N, M, elements) &*& length(elements) == N;
+{
+	if (N == 0) {
+		open buffer(buffer, N, M, elements);
+		close buffer(buffer, N, M, elements);
+	} else {
+		open buffer(buffer, N, M, elements);
+		buffer_length(buffer+M, N-1, M);
+	}
+}
+@*/
 
-// TODO: split_element proof
-lemma void split_element<t>(char *buffer, size_t N, size_t M, size_t i);
-requires buffer(buffer, N, M, ?elements) &*& i < N;
+/*
+There is no need in the queue proofs to preserve a relationship between `cs`
+and `elements` (i.e., `flatten(elements) == cs`) because we only move in one
+direction from `cs` to `elements` during queue creation when the contents is
+fresh from `malloc` (i.e., uninitialized). If we needed to do a roundtrip from
+elements back to cs then this would require a stronger lemma.
+*/
+/*@
+lemma void buffer_from_chars(char *buffer, size_t N, size_t M)
+requires chars(buffer, N*M, ?cs) &*& 0 <= N &*& 0 < M;
+ensures exists<list<list<char> > >(?elements) &*& buffer(buffer, N, M, elements) &*& length(elements) == N;
+{
+	if (N == 0) {
+		close exists(nil);
+	} else {
+		int i = 0;
+		while (i < N)
+		invariant 0 <= i &*& i <= N &*&
+			chars(buffer, (N-i)*M, ?xs) &*& xs == take((N-i)*M, cs) &*&
+			buffer(buffer + (N-i)*M, i, M, ?ys);
+		decreases N-i;
+		{
+			mul_mono_l(0, N-i-1, M);
+			chars_split(buffer, (N-i-1)*M);
+			mul_mono_l(i, N, M);
+			mul_mono_l(N-i, N, M);
+			take_take((N-i-1)*M, (N-i)*M, cs);
+			i++;
+		}
+		close exists(ys);
+		buffer_length(buffer, N, M);
+	}
+}
+
+lemma void append_buffer(char *buffer, size_t N1, size_t N2, size_t M)
+requires
+	buffer(buffer, N1, M, ?elements1) &*&
+	buffer(buffer + N1 * M, N2, M, ?elements2) &*&
+	0 <= N1 &*& 0 <= N2;
+ensures buffer(buffer, N1+N2, M, append(elements1, elements2));
+{
+	if (N1 == 0) {
+		open buffer(buffer, 0, M, _);
+	} else if (N2 == 0) {
+		open buffer(buffer + N1 * M, 0, M, _);
+	} else {
+		open buffer(buffer, N1, M, elements1);
+		append_buffer(buffer + M, N1-1, N2, M);
+		close buffer(buffer, N1+N2, M, cons(?x, append(xs, elements2)));
+	}
+}
+
+lemma void split_element<t>(char *buffer, size_t N, size_t M, size_t i)
+requires buffer(buffer, N, M, ?elements) &*& 0 <= i &*& i < N;
 ensures
 	buffer(buffer, i, M, take(i, elements)) &*&
 	chars(buffer + i * M, M, nth(i, elements)) &*&
 	buffer(buffer + (i + 1) * M, (N-1-i), M, drop(i+1, elements));
+{
+	if (i == 0) {
+		// straightforward
+	} else {
+		buffer_length(buffer, N, M);
+		int j = 0;
+		while (j < i)
+		invariant 0 <= j &*& j <= i &*&
+			buffer(buffer, j, M, take(j, elements)) &*&
+			buffer(buffer + j * M, N-j, M, drop(j, elements));
+		decreases i-j;
+		{
+			drop_drop(1, j, elements);
+			nth_drop2(elements, j);
+			open buffer(buffer + j * M, N-j, M, drop(j, elements));
+			assert chars(buffer + j * M, M, ?x) &*& x == nth(j, elements);
+			close buffer(buffer + j * M, 1, M, singleton(x));
+			append_buffer(buffer, j, 1, M);
+			take_plus_one(j, elements);
+			j++;
+		}
+		drop_drop(1, j, elements);
+		nth_drop2(elements, i);
+		open buffer(buffer + (i+1) * M, (N-1-i), M, _);
+	}
+}
 
-// TODO: join_element proof
-lemma void join_element(char *buffer, size_t N, size_t M, size_t i);
+lemma void join_element(char *buffer, size_t N, size_t M, size_t i)
 requires
+	0 <= i &*& i < N &*&
 	buffer(buffer, i, M, ?prefix) &*&
 	chars(buffer + i * M, M, ?element) &*&
 	buffer(buffer + (i + 1) * M, (N-1-i), M, ?suffix);
 ensures buffer(buffer, N, M, append(prefix, cons(element, suffix)));
+{
+	if (i == 0) {
+		open buffer(buffer, i, M, prefix);
+		assert prefix == nil;
+		close buffer(buffer, N, M, cons(element, suffix));
+	} else {
+		close buffer(buffer + i * M, N-i, M, cons(element, suffix));
+		append_buffer(buffer, i, N-i, M);
+	}
+}
 
 predicate list(List_t *l;) =
 	l->uxNumberOfItems |-> _;

@@ -32,8 +32,8 @@
  * @brief Commonly used buffer sizes for storing cryptographic hash computation
  * results.
  */
-#define cryptoSHA1_DIGEST_BYTES		 20
-#define cryptoSHA256_DIGEST_BYTES	 32
+#define cryptoSHA1_DIGEST_BYTES      20
+#define cryptoSHA256_DIGEST_BYTES    32
 
 /**
  * @brief Initializes the heap and threading functions for cryptography libraries.
@@ -59,10 +59,10 @@ void CRYPTO_ConfigureHeap( void );
 /**
  * @brief Library-independent cryptographic algorithm identifiers.
  */
-#define cryptoHASH_ALGORITHM_SHA1			1
-#define cryptoHASH_ALGORITHM_SHA256			2
-#define cryptoASYMMETRIC_ALGORITHM_RSA		1
-#define cryptoASYMMETRIC_ALGORITHM_ECDSA	2
+#define cryptoHASH_ALGORITHM_SHA1           1
+#define cryptoHASH_ALGORITHM_SHA256         2
+#define cryptoASYMMETRIC_ALGORITHM_RSA      1
+#define cryptoASYMMETRIC_ALGORITHM_ECDSA    2
 
 /**
  * @brief Initializes digital signature verification.
@@ -74,8 +74,8 @@ void CRYPTO_ConfigureHeap( void );
  * @return pdTRUE if initialization succeeds, or pdFALSE otherwise.
  */
 BaseType_t CRYPTO_SignatureVerificationStart( void ** ppvContext,
-											  BaseType_t xAsymmetricAlgorithm,
-											  BaseType_t xHashAlgorithm );
+                                              BaseType_t xAsymmetricAlgorithm,
+                                              BaseType_t xHashAlgorithm );
 
 /**
  * @brief Updates a cryptographic hash computation with the specified byte array.
@@ -85,8 +85,8 @@ BaseType_t CRYPTO_SignatureVerificationStart( void ** ppvContext,
  * @param[in] xDataLength Length in bytes of data that was signed.
  */
 void CRYPTO_SignatureVerificationUpdate( void * pvContext,
-										 const uint8_t * pucData,
-										 size_t xDataLength );
+                                         const uint8_t * pucData,
+                                         size_t xDataLength );
 
 /**
  * @brief Verifies a digital signature computation using the public key from the
@@ -102,9 +102,9 @@ void CRYPTO_SignatureVerificationUpdate( void * pvContext,
  * @return pdTRUE if the signature is correct or pdFALSE if the signature is invalid.
  */
 BaseType_t CRYPTO_SignatureVerificationFinal( void * pvContext,
-											  char * pcSignerCertificate,
-											  size_t xSignerCertificateLength,
-											  uint8_t * pucSignature,
-											  size_t xSignatureLength );
+                                              char * pcSignerCertificate,
+                                              size_t xSignerCertificateLength,
+                                              uint8_t * pucSignature,
+                                              size_t xSignatureLength );
 
 #endif /* ifndef __AWS_CRYPTO__H__ */

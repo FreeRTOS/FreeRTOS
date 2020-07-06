@@ -184,17 +184,17 @@ static void prvInitialiseLibraries( void );
 /**
  * @brief The MQTT connection handle used in this example.
  */
-static IotMqttConnection_t xMQTTConnection = NULL;
+static IotMqttConnection_t               xMQTTConnection             = NULL;
 
 /*-----------------------------------------------------------*/
 
-static const struct IotNetworkServerInfo xMQTTBrokerInfo =
+static const struct IotNetworkServerInfo xMQTTBrokerInfo             =
 {
     .pHostName = mqttexampleBROKER_ENDPOINT,
     .port      = mqttexampleBROKER_PORT
 };
 
-static struct IotNetworkCredentials xNetworkSecurityCredentials =
+static struct IotNetworkCredentials      xNetworkSecurityCredentials =
 {
     /* Optional TLS extensions. For this demo, they are disabled. */
     .pAlpnProtos       = NULL,
@@ -209,7 +209,7 @@ static struct IotNetworkCredentials xNetworkSecurityCredentials =
     .rootCaSize        = mqttexampleBROKER_CERTIFICATE_PEM_SIZE,
 };
 
-static IotMqttNetworkInfo_t xNetworkInfo =
+static IotMqttNetworkInfo_t              xNetworkInfo                =
 {
     /* No connection to the MQTT broker has been established yet and we want to
      * establish a new connection. */
@@ -227,7 +227,7 @@ static IotMqttNetworkInfo_t xNetworkInfo =
     .disconnectCallback.function    = prvExample_OnDisconnect
 };
 
-static const IotMqttConnectInfo_t xConnectInfo =
+static const IotMqttConnectInfo_t        xConnectInfo                =
 {
     /* Set this flag to true if connecting to the AWS IoT MQTT broker. */
     .awsIotMqttMode            = true,
@@ -288,9 +288,9 @@ void vStartPKCSMutualAuthDemo( void )
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-    uint32_t ulNotificationValue = 0, ulPublishCount;
-    const uint32_t ulMaxPublishCount = 5UL;
-    const TickType_t xNoDelay = ( TickType_t ) 0;
+    uint32_t         ulNotificationValue = 0, ulPublishCount;
+    const uint32_t   ulMaxPublishCount = 5UL;
+    const TickType_t xNoDelay          = ( TickType_t ) 0;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -464,86 +464,86 @@ static void prvMQTTDisconnect( void )
 
 static void prvMQTTSubscribe( void )
 {
-    IotMqttError_t xResult;
+    IotMqttError_t        xResult;
     IotMqttSubscription_t xMQTTSubscription;
 
     /* Subscribe to the mqttexampleTOPIC topic filter. The task handle is passed
      * as the callback context, which is then used by the callback to send a task
      * notification to this task.*/
-    xMQTTSubscription.qos = IOT_MQTT_QOS_1;
-    xMQTTSubscription.pTopicFilter = mqttexampleTOPIC;
-    xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+    xMQTTSubscription.qos                       = IOT_MQTT_QOS_1;
+    xMQTTSubscription.pTopicFilter              = mqttexampleTOPIC;
+    xMQTTSubscription.topicFilterLength         = ( uint16_t ) strlen( mqttexampleTOPIC );
     xMQTTSubscription.callback.pCallbackContext = ( void * ) xTaskGetCurrentTaskHandle();
-    xMQTTSubscription.callback.function = prvExample_OnMessageReceived;
+    xMQTTSubscription.callback.function         = prvExample_OnMessageReceived;
 
     /* Use the synchronous API to subscribe - It is a blocking call and only
      * returns when the subscribe operation is complete or a timeout occurs. */
-    xResult = IotMqtt_SubscribeSync( xMQTTConnection,
-                                     &( xMQTTSubscription ),
-                                     1, /* We are subscribing to one topic filter. */
-                                     0, /* flags - currently ignored. */
-                                     mqttexampleMQTT_TIMEOUT_MS );
+    xResult                                     = IotMqtt_SubscribeSync( xMQTTConnection,
+                                                                         &( xMQTTSubscription ),
+                                                                         1, /* We are subscribing to one topic filter. */
+                                                                         0, /* flags - currently ignored. */
+                                                                         mqttexampleMQTT_TIMEOUT_MS );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
 /*-----------------------------------------------------------*/
 
 static void prvMQTTPublish( void )
 {
-    IotMqttError_t xResult;
+    IotMqttError_t       xResult;
     IotMqttPublishInfo_t xMQTTPublishInfo;
 
     /* Publish a message with QoS1 on the mqttexampleTOPIC topic. Since we are
      * subscribed to the same topic, the MQTT broker will send the same message
      * back to us. It is verified in the publish callback. */
-    xMQTTPublishInfo.qos = IOT_MQTT_QOS_1;
-    xMQTTPublishInfo.retain = false;
-    xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
+    xMQTTPublishInfo.qos             = IOT_MQTT_QOS_1;
+    xMQTTPublishInfo.retain          = false;
+    xMQTTPublishInfo.pTopicName      = mqttexampleTOPIC;
     xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( mqttexampleTOPIC );
-    xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
-    xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
-    xMQTTPublishInfo.retryMs = mqttexamplePUBLISH_RETRY_MS;
-    xMQTTPublishInfo.retryLimit = mqttexamplePUBLISH_RETRY_LIMIT;
+    xMQTTPublishInfo.pPayload        = mqttexampleMESSAGE;
+    xMQTTPublishInfo.payloadLength   = strlen( mqttexampleMESSAGE );
+    xMQTTPublishInfo.retryMs         = mqttexamplePUBLISH_RETRY_MS;
+    xMQTTPublishInfo.retryLimit      = mqttexamplePUBLISH_RETRY_LIMIT;
 
     /* Use the synchronous API to publish - It is a blocking call and only
      * returns when the publish operation is complete or a timeout occurs. */
-    xResult = IotMqtt_PublishSync( xMQTTConnection,
-                                   &( xMQTTPublishInfo ),
-                                   0, /* flags - currently ignored. */
-                                   mqttexampleMQTT_TIMEOUT_MS );
+    xResult                          = IotMqtt_PublishSync( xMQTTConnection,
+                                                            &( xMQTTPublishInfo ),
+                                                            0, /* flags - currently ignored. */
+                                                            mqttexampleMQTT_TIMEOUT_MS );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
 /*-----------------------------------------------------------*/
 
 static void prvMQTTUnsubscribe( void )
 {
-    IotMqttError_t xResult;
+    IotMqttError_t        xResult;
     IotMqttSubscription_t xMQTTSubscription;
 
     /* Unsubscribe from the mqttexampleTOPIC topic filter. */
-    xMQTTSubscription.pTopicFilter = mqttexampleTOPIC;
-    xMQTTSubscription.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+    xMQTTSubscription.pTopicFilter              = mqttexampleTOPIC;
+    xMQTTSubscription.topicFilterLength         = ( uint16_t ) strlen( mqttexampleTOPIC );
 
     /* The following members of the IotMqttSubscription_t are ignored by the
      * unsubscribe operation. Just initialize them to avoid "use of uninitialized
      * variable" warnings. */
-    xMQTTSubscription.qos = IOT_MQTT_QOS_1;
+    xMQTTSubscription.qos                       = IOT_MQTT_QOS_1;
     xMQTTSubscription.callback.pCallbackContext = NULL;
-    xMQTTSubscription.callback.function = NULL;
+    xMQTTSubscription.callback.function         = NULL;
 
     /* Use the synchronous API to unsubscribe - It is a blocking call and only
      * returns when the unsubscribe operation is complete or a timeout occurs. */
-    xResult = IotMqtt_UnsubscribeSync( xMQTTConnection,
-                                       &( xMQTTSubscription ),
-                                       1, /* We are unsubscribing from one topic filter. */
-                                       0, /* flags - currently ignored. */
-                                       mqttexampleMQTT_TIMEOUT_MS );
+    xResult                                     = IotMqtt_UnsubscribeSync( xMQTTConnection,
+                                                                           &( xMQTTSubscription ),
+                                                                           1, /* We are unsubscribing from one topic filter. */
+                                                                           0, /* flags - currently ignored. */
+                                                                           mqttexampleMQTT_TIMEOUT_MS );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
 /*-----------------------------------------------------------*/
 
 static void prvInitialiseLibraries( void )
 {
-    IotMqttError_t xResult;
+    IotMqttError_t    xResult;
     IotNetworkError_t xNetworkResult; /*_RB_ Are three types necessary, one for each lib? */
 
     /* Initialize the network stack abstraction for FreeRTOS. */
@@ -552,7 +552,7 @@ static void prvInitialiseLibraries( void )
 
     /* MQTT library must be initialized before it can be used. This is just one
      * time initialization. */
-    xResult = IotMqtt_Init();
+    xResult        = IotMqtt_Init();
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
 /*-----------------------------------------------------------*/

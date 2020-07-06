@@ -32,15 +32,15 @@
 #if IOT_STATIC_MEMORY_ONLY == 1
 
 /* Standard includes. */
-#include <stdbool.h>
-#include <stddef.h>
-#include <string.h>
+    #include <stdbool.h>
+    #include <stddef.h>
+    #include <string.h>
 
 /* Static memory include. */
-#include "iot_static_memory.h"
+    #include "iot_static_memory.h"
 
 /* Shadow internal include. */
-#include "private/aws_iot_shadow_internal.h"
+    #include "private/aws_iot_shadow_internal.h"
 
 /*-----------------------------------------------------------*/
 
@@ -50,21 +50,21 @@
  *
  * Provide default values for undefined configuration constants.
  */
-#ifndef AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS
-    #define AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS    ( 10 )
-#endif
-#ifndef AWS_IOT_SHADOW_SUBSCRIPTIONS
-    #define AWS_IOT_SHADOW_SUBSCRIPTIONS                 ( 2 )
-#endif
+    #ifndef AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS
+        #define AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS    ( 10 )
+    #endif
+    #ifndef AWS_IOT_SHADOW_SUBSCRIPTIONS
+        #define AWS_IOT_SHADOW_SUBSCRIPTIONS                 ( 2 )
+    #endif
 /** @endcond */
 
 /* Validate static memory configuration settings. */
-#if AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS <= 0
-    #error "AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS cannot be 0 or negative."
-#endif
-#if AWS_IOT_SHADOW_SUBSCRIPTIONS <= 0
-    #error "AWS_IOT_SHADOW_SUBSCRIPTIONS cannot be 0 or negative."
-#endif
+    #if AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS <= 0
+        #error "AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS cannot be 0 or negative."
+    #endif
+    #if AWS_IOT_SHADOW_SUBSCRIPTIONS <= 0
+        #error "AWS_IOT_SHADOW_SUBSCRIPTIONS cannot be 0 or negative."
+    #endif
 
 /**
  * @brief The size of a static memory Shadow subscription.
@@ -73,88 +73,88 @@
  * the constant `AWS_IOT_MAX_THING_NAME_LENGTH` is used for the length of
  * #_shadowSubscription_t.pThingName.
  */
-#define SHADOW_SUBSCRIPTION_SIZE    ( sizeof( _shadowSubscription_t ) + ( size_t ) AWS_IOT_MAX_THING_NAME_LENGTH )
+    #define SHADOW_SUBSCRIPTION_SIZE    ( sizeof( _shadowSubscription_t ) + ( size_t ) AWS_IOT_MAX_THING_NAME_LENGTH )
 
 /*-----------------------------------------------------------*/
 
 /*
  * Static memory buffers and flags, allocated and zeroed at compile-time.
  */
-static uint32_t _pInUseShadowOperations[ AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS ] = { 0U };                     /**< @brief Shadow operation in-use flags. */
-static _shadowOperation_t _pShadowOperations[ AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS ] = { { .link = { 0 } } }; /**< @brief Shadow operations. */
+    static uint32_t           _pInUseShadowOperations[ AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS ]              = { 0U };                /**< @brief Shadow operation in-use flags. */
+    static _shadowOperation_t _pShadowOperations[ AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS ]                   = { { .link = { 0 } } }; /**< @brief Shadow operations. */
 
-static uint32_t _pInUseShadowSubscriptions[ AWS_IOT_SHADOW_SUBSCRIPTIONS ] = { 0U };                        /**< @brief Shadow subscription in-use flags. */
-static char _pShadowSubscriptions[ AWS_IOT_SHADOW_SUBSCRIPTIONS ][ SHADOW_SUBSCRIPTION_SIZE ] = { { '\0' } };  /**< @brief Shadow subscriptions. */
+    static uint32_t           _pInUseShadowSubscriptions[ AWS_IOT_SHADOW_SUBSCRIPTIONS ]                        = { 0U };                /**< @brief Shadow subscription in-use flags. */
+    static char               _pShadowSubscriptions[ AWS_IOT_SHADOW_SUBSCRIPTIONS ][ SHADOW_SUBSCRIPTION_SIZE ] = { { '\0' } };          /**< @brief Shadow subscriptions. */
 
 /*-----------------------------------------------------------*/
 
-void * AwsIotShadow_MallocOperation( size_t size )
-{
-    int32_t freeIndex = -1;
-    void * pNewOperation = NULL;
-
-    /* Check size argument. */
-    if( size == sizeof( _shadowOperation_t ) )
+    void * AwsIotShadow_MallocOperation( size_t size )
     {
-        /* Find a free Shadow operation. */
-        freeIndex = IotStaticMemory_FindFree( _pInUseShadowOperations,
-                                              AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS );
+        int32_t freeIndex     = -1;
+        void *  pNewOperation = NULL;
 
-        if( freeIndex != -1 )
+        /* Check size argument. */
+        if( size == sizeof( _shadowOperation_t ) )
         {
-            pNewOperation = &( _pShadowOperations[ freeIndex ] );
+            /* Find a free Shadow operation. */
+            freeIndex = IotStaticMemory_FindFree( _pInUseShadowOperations,
+                                                  AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS );
+
+            if( freeIndex != -1 )
+            {
+                pNewOperation = &( _pShadowOperations[ freeIndex ] );
+            }
         }
+
+        return pNewOperation;
     }
 
-    return pNewOperation;
-}
-
 /*-----------------------------------------------------------*/
 
-void AwsIotShadow_FreeOperation( void * ptr )
-{
-    /* Return the in-use Shadow operation. */
-    IotStaticMemory_ReturnInUse( ptr,
-                                 _pShadowOperations,
-                                 _pInUseShadowOperations,
-                                 AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS,
-                                 sizeof( _shadowOperation_t ) );
-}
-
-/*-----------------------------------------------------------*/
-
-void * AwsIotShadow_MallocSubscription( size_t size )
-{
-    int32_t freeIndex = -1;
-    void * pNewSubscription = NULL;
-
-    if( size <= SHADOW_SUBSCRIPTION_SIZE )
+    void AwsIotShadow_FreeOperation( void * ptr )
     {
-        /* Get the index of a free Shadow subscription. */
-        freeIndex = IotStaticMemory_FindFree( _pInUseShadowSubscriptions,
-                                              AWS_IOT_SHADOW_SUBSCRIPTIONS );
-
-        if( freeIndex != -1 )
-        {
-            pNewSubscription = &( _pShadowSubscriptions[ freeIndex ][ 0 ] );
-        }
+        /* Return the in-use Shadow operation. */
+        IotStaticMemory_ReturnInUse( ptr,
+                                     _pShadowOperations,
+                                     _pInUseShadowOperations,
+                                     AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS,
+                                     sizeof( _shadowOperation_t ) );
     }
 
-    return pNewSubscription;
-}
+/*-----------------------------------------------------------*/
+
+    void * AwsIotShadow_MallocSubscription( size_t size )
+    {
+        int32_t freeIndex        = -1;
+        void *  pNewSubscription = NULL;
+
+        if( size <= SHADOW_SUBSCRIPTION_SIZE )
+        {
+            /* Get the index of a free Shadow subscription. */
+            freeIndex = IotStaticMemory_FindFree( _pInUseShadowSubscriptions,
+                                                  AWS_IOT_SHADOW_SUBSCRIPTIONS );
+
+            if( freeIndex != -1 )
+            {
+                pNewSubscription = &( _pShadowSubscriptions[ freeIndex ][ 0 ] );
+            }
+        }
+
+        return pNewSubscription;
+    }
 
 /*-----------------------------------------------------------*/
 
-void AwsIotShadow_FreeSubscription( void * ptr )
-{
-    /* Return the in-use Shadow subscription. */
-    IotStaticMemory_ReturnInUse( ptr,
-                                 _pShadowSubscriptions,
-                                 _pInUseShadowSubscriptions,
-                                 AWS_IOT_SHADOW_SUBSCRIPTIONS,
-                                 SHADOW_SUBSCRIPTION_SIZE );
-}
+    void AwsIotShadow_FreeSubscription( void * ptr )
+    {
+        /* Return the in-use Shadow subscription. */
+        IotStaticMemory_ReturnInUse( ptr,
+                                     _pShadowSubscriptions,
+                                     _pInUseShadowSubscriptions,
+                                     AWS_IOT_SHADOW_SUBSCRIPTIONS,
+                                     SHADOW_SUBSCRIPTION_SIZE );
+    }
 
 /*-----------------------------------------------------------*/
 
-#endif
+#endif /* if IOT_STATIC_MEMORY_ONLY == 1 */

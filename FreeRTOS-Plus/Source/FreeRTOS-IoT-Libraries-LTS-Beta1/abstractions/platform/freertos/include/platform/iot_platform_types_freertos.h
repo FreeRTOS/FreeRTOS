@@ -86,7 +86,7 @@ struct IotNetworkCredentials;
 struct _networkConnection;
 
 typedef struct IotNetworkServerInfo const * _IotNetworkServerInfo_t;
-typedef struct IotNetworkCredentials * _IotNetworkCredentials_t;
-typedef struct _networkConnection * _IotNetworkConnection_t;
+typedef struct IotNetworkCredentials      * _IotNetworkCredentials_t;
+typedef struct _networkConnection         * _IotNetworkConnection_t;
 
 #endif /* ifndef _IOT_PLATFORM_TYPES_POSIX_H_ */

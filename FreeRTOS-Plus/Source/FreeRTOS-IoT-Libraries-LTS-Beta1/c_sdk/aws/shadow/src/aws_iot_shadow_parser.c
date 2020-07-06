@@ -131,9 +131,9 @@ AwsIotShadowError_t _AwsIotShadow_ParseErrorDocument( const char * pErrorDocumen
                                                       size_t errorDocumentLength )
 {
     AwsIotShadowError_t status = AWS_IOT_SHADOW_STATUS_PENDING;
-    const char * pCode = NULL, * pMessage = NULL;
-    size_t codeLength = 0, messageLength = 0;
-    uint32_t code = 0;
+    const char *        pCode = NULL, * pMessage = NULL;
+    size_t              codeLength = 0, messageLength = 0;
+    uint32_t            code = 0;
 
     /* Parse the code from the error document. */
     if( AwsIotDocParser_FindValue( pErrorDocument,

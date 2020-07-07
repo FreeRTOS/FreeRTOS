@@ -60,22 +60,22 @@ static void prvMQTTDemoTask( void * pvParameters );
  */
 void vStartSimpleMQTTDemo( void )
 {
-	xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-				 "MQTTLWDemo",             /* Text name for the task - only used for debugging. */
-				 configMINIMAL_STACK_SIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
-				 NULL,                     /* Task parameter - not used in this case. */
-				 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
-				 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
+    xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
+                 "MQTTLWDemo",             /* Text name for the task - only used for debugging. */
+                 configMINIMAL_STACK_SIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
+                 NULL,                     /* Task parameter - not used in this case. */
+                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 NULL );                   /* Used to pass out a handle to the created task - not used in this case. */
 }
 
 /*-----------------------------------------------------------*/
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-	/* Demo stub. */
-	vTaskDelay( pdMS_TO_TICKS( 1000 ) );
-	LogInfo( ( "In the light weight MQTT demo." ) );
-	vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+    /* Demo stub. */
+    vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+    LogInfo( ( "In the light weight MQTT demo." ) );
+    vTaskDelay( pdMS_TO_TICKS( 1000 ) );
 }
 
 /*-----------------------------------------------------------*/

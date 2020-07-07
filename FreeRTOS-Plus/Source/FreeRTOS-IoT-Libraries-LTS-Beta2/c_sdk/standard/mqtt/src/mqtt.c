@@ -308,9 +308,9 @@ static int32_t sendPacket( MQTTContext_t * pContext,
                            size_t bytesToSend )
 {
     const uint8_t * pIndex = pBufferToSend;
-    size_t          bytesRemaining = bytesToSend;
-    int32_t         totalBytesSent = 0, bytesSent;
-    uint32_t        sendTime = 0U;
+    size_t bytesRemaining = bytesToSend;
+    int32_t totalBytesSent = 0, bytesSent;
+    uint32_t sendTime = 0U;
 
     assert( pContext != NULL );
     assert( pContext->callbacks.getTime != NULL );
@@ -318,7 +318,7 @@ static int32_t sendPacket( MQTTContext_t * pContext,
     bytesRemaining = bytesToSend;
 
     /* Record the time of transmission. */
-    sendTime       = pContext->callbacks.getTime();
+    sendTime = pContext->callbacks.getTime();
 
     /* Loop until the entire packet is sent. */
     while( bytesRemaining > 0UL )
@@ -331,7 +331,7 @@ static int32_t sendPacket( MQTTContext_t * pContext,
         {
             bytesRemaining -= ( size_t ) bytesSent;
             totalBytesSent += bytesSent;
-            pIndex         += bytesSent;
+            pIndex += bytesSent;
             LogDebug( ( "Bytes sent=%d, bytes remaining=%ul,"
                         "total bytes sent=%d.",
                         bytesSent,
@@ -404,41 +404,41 @@ static int32_t recvExact( const MQTTContext_t * pContext,
                           size_t bytesToRecv,
                           uint32_t timeoutMs )
 {
-    uint8_t *                pIndex = NULL;
-    size_t                   bytesRemaining = bytesToRecv;
-    int32_t                  totalBytesRecvd = 0, bytesRecvd;
-    uint32_t                 entryTimeMs = 0U, elapsedTimeMs = 0U;
-    MQTTTransportRecvFunc_t  recvFunc       = NULL;
+    uint8_t * pIndex = NULL;
+    size_t bytesRemaining = bytesToRecv;
+    int32_t totalBytesRecvd = 0, bytesRecvd;
+    uint32_t entryTimeMs = 0U, elapsedTimeMs = 0U;
+    MQTTTransportRecvFunc_t recvFunc = NULL;
     MQTTGetCurrentTimeFunc_t getTimeStampMs = NULL;
-    bool receiveError                       = false;
+    bool receiveError = false;
 
     assert( pContext != NULL );
     assert( bytesToRecv <= pContext->networkBuffer.size );
     assert( pContext->callbacks.getTime != NULL );
-    pIndex         = pContext->networkBuffer.pBuffer;
-    recvFunc       = pContext->transportInterface.recv;
+    pIndex = pContext->networkBuffer.pBuffer;
+    recvFunc = pContext->transportInterface.recv;
     getTimeStampMs = pContext->callbacks.getTime;
 
-    entryTimeMs    = getTimeStampMs();
+    entryTimeMs = getTimeStampMs();
 
     while( ( bytesRemaining > 0U ) && ( receiveError == false ) )
     {
-        bytesRecvd    = recvFunc( pContext->transportInterface.networkContext,
-                                  pIndex,
-                                  bytesRemaining );
+        bytesRecvd = recvFunc( pContext->transportInterface.networkContext,
+                               pIndex,
+                               bytesRemaining );
 
         if( bytesRecvd >= 0 )
         {
-            bytesRemaining  -= ( size_t ) bytesRecvd;
+            bytesRemaining -= ( size_t ) bytesRecvd;
             totalBytesRecvd += ( int32_t ) bytesRecvd;
-            pIndex          += bytesRecvd;
+            pIndex += bytesRecvd;
         }
         else
         {
             LogError( ( "Network error while receiving packet: ReturnCode=%d",
                         bytesRecvd ) );
             totalBytesRecvd = bytesRecvd;
-            receiveError    = true;
+            receiveError = true;
         }
 
         elapsedTimeMs = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
@@ -459,20 +459,20 @@ static MQTTStatus_t discardPacket( const MQTTContext_t * pContext,
                                    size_t remainingLength,
                                    uint32_t timeoutMs )
 {
-    MQTTStatus_t             status = MQTTRecvFailed;
-    int32_t                  bytesReceived = 0;
-    size_t                   bytesToReceive = 0U;
-    uint32_t                 totalBytesReceived = 0U, entryTimeMs = 0U, elapsedTimeMs = 0U;
-    uint32_t                 remainingTimeMs = timeoutMs;
-    MQTTGetCurrentTimeFunc_t getTimeStampMs  = NULL;
-    bool receiveError                        = false;
+    MQTTStatus_t status = MQTTRecvFailed;
+    int32_t bytesReceived = 0;
+    size_t bytesToReceive = 0U;
+    uint32_t totalBytesReceived = 0U, entryTimeMs = 0U, elapsedTimeMs = 0U;
+    uint32_t remainingTimeMs = timeoutMs;
+    MQTTGetCurrentTimeFunc_t getTimeStampMs = NULL;
+    bool receiveError = false;
 
     assert( pContext != NULL );
     assert( pContext->callbacks.getTime != NULL );
     bytesToReceive = pContext->networkBuffer.size;
     getTimeStampMs = pContext->callbacks.getTime;
 
-    entryTimeMs    = getTimeStampMs();
+    entryTimeMs = getTimeStampMs();
 
     while( ( totalBytesReceived < remainingLength ) && ( receiveError == false ) )
     {
@@ -495,7 +495,7 @@ static MQTTStatus_t discardPacket( const MQTTContext_t * pContext,
         {
             totalBytesReceived += ( uint32_t ) bytesReceived;
 
-            elapsedTimeMs       = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
+            elapsedTimeMs = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
 
             /* Update remaining time and check for timeout. */
             if( elapsedTimeMs < timeoutMs )
@@ -527,9 +527,9 @@ static MQTTStatus_t receivePacket( const MQTTContext_t * pContext,
                                    MQTTPacketInfo_t incomingPacket,
                                    uint32_t remainingTimeMs )
 {
-    MQTTStatus_t status         = MQTTSuccess;
-    int32_t      bytesReceived  = 0;
-    size_t       bytesToReceive = 0U;
+    MQTTStatus_t status = MQTTSuccess;
+    int32_t bytesReceived = 0;
+    size_t bytesToReceive = 0U;
 
     assert( pContext != NULL );
 
@@ -547,7 +547,7 @@ static MQTTStatus_t receivePacket( const MQTTContext_t * pContext,
     else
     {
         bytesToReceive = incomingPacket.remainingLength;
-        bytesReceived  = recvExact( pContext, bytesToReceive, remainingTimeMs );
+        bytesReceived = recvExact( pContext, bytesToReceive, remainingTimeMs );
 
         if( bytesReceived == ( int32_t ) bytesToReceive )
         {
@@ -606,11 +606,11 @@ static MQTTStatus_t sendPublishAcks( MQTTContext_t * pContext,
                                      uint16_t packetId,
                                      MQTTPublishState_t publishState )
 {
-    MQTTStatus_t       status         = MQTTSuccess;
-    MQTTPublishState_t newState       = MQTTStateNull;
-    int32_t            bytesSent      = 0;
-    uint8_t            packetTypeByte = 0U;
-    MQTTPubAckType_t   packetType;
+    MQTTStatus_t status = MQTTSuccess;
+    MQTTPublishState_t newState = MQTTStateNull;
+    int32_t bytesSent = 0;
+    uint8_t packetTypeByte = 0U;
+    MQTTPubAckType_t packetType;
 
     assert( pContext != NULL );
 
@@ -620,9 +620,9 @@ static MQTTStatus_t sendPublishAcks( MQTTContext_t * pContext,
     {
         packetType = getAckFromPacketType( packetTypeByte );
 
-        status     = MQTT_SerializeAck( &( pContext->networkBuffer ),
-                                        packetTypeByte,
-                                        packetId );
+        status = MQTT_SerializeAck( &( pContext->networkBuffer ),
+                                    packetTypeByte,
+                                    packetId );
 
         if( status == MQTTSuccess )
         {
@@ -634,11 +634,11 @@ static MQTTStatus_t sendPublishAcks( MQTTContext_t * pContext,
         if( bytesSent == ( int32_t ) MQTT_PUBLISH_ACK_PACKET_SIZE )
         {
             pContext->controlPacketSent = true;
-            status                      = MQTT_UpdateStateAck( pContext,
-                                                               packetId,
-                                                               packetType,
-                                                               MQTT_SEND,
-                                                               &newState );
+            status = MQTT_UpdateStateAck( pContext,
+                                          packetId,
+                                          packetType,
+                                          MQTT_SEND,
+                                          &newState );
 
             if( status != MQTTSuccess )
             {
@@ -665,10 +665,10 @@ static MQTTStatus_t sendPublishAcks( MQTTContext_t * pContext,
 static MQTTStatus_t handleKeepAlive( MQTTContext_t * pContext )
 {
     MQTTStatus_t status = MQTTSuccess;
-    uint32_t     now = 0U, keepAliveMs = 0U;
+    uint32_t now = 0U, keepAliveMs = 0U;
 
     assert( pContext != NULL );
-    now         = pContext->callbacks.getTime();
+    now = pContext->callbacks.getTime();
     keepAliveMs = 1000U * ( uint32_t ) pContext->keepAliveIntervalSec;
 
     /* If keep alive interval is 0, it is disabled. */
@@ -698,11 +698,11 @@ static MQTTStatus_t handleKeepAlive( MQTTContext_t * pContext )
 static MQTTStatus_t handleIncomingPublish( MQTTContext_t * pContext,
                                            MQTTPacketInfo_t * pIncomingPacket )
 {
-    MQTTStatus_t       status             = MQTTBadParameter;
+    MQTTStatus_t status = MQTTBadParameter;
     MQTTPublishState_t publishRecordState = MQTTStateNull;
-    uint16_t           packetIdentifier   = 0U;
-    MQTTPublishInfo_t  publishInfo;
-    bool               duplicatePublish   = false;
+    uint16_t packetIdentifier = 0U;
+    MQTTPublishInfo_t publishInfo;
+    bool duplicatePublish = false;
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
@@ -752,8 +752,8 @@ static MQTTStatus_t handleIncomingPublish( MQTTContext_t * pContext,
          *       data is not passed to the application. */
         else if( ( status == MQTTStateCollision ) && ( publishInfo.dup == true ) )
         {
-            status             = MQTTSuccess;
-            duplicatePublish   = true;
+            status = MQTTSuccess;
+            duplicatePublish = true;
 
             /* Calculate the state for the ack packet that needs to be sent out
              * for the duplicate incoming publish. */
@@ -799,10 +799,10 @@ static MQTTStatus_t handleIncomingPublish( MQTTContext_t * pContext,
 static MQTTStatus_t handlePublishAcks( MQTTContext_t * pContext,
                                        MQTTPacketInfo_t * pIncomingPacket )
 {
-    MQTTStatus_t        status             = MQTTBadResponse;
-    MQTTPublishState_t  publishRecordState = MQTTStateNull;
-    uint16_t            packetIdentifier;
-    MQTTPubAckType_t    ackType;
+    MQTTStatus_t status = MQTTBadResponse;
+    MQTTPublishState_t publishRecordState = MQTTStateNull;
+    uint16_t packetIdentifier;
+    MQTTPubAckType_t ackType;
     MQTTEventCallback_t appCallback;
 
     assert( pContext != NULL );
@@ -811,8 +811,8 @@ static MQTTStatus_t handlePublishAcks( MQTTContext_t * pContext,
 
     appCallback = pContext->callbacks.appCallback;
 
-    ackType     = getAckFromPacketType( pIncomingPacket->type );
-    status      = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, NULL );
+    ackType = getAckFromPacketType( pIncomingPacket->type );
+    status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, NULL );
     LogInfo( ( "Ack packet deserialized with result: %s.",
                MQTT_Status_strerror( status ) ) );
 
@@ -859,18 +859,18 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
                                        MQTTPacketInfo_t * pIncomingPacket,
                                        bool manageKeepAlive )
 {
-    MQTTStatus_t status                   = MQTTBadResponse;
-    uint16_t     packetIdentifier;
+    MQTTStatus_t status = MQTTBadResponse;
+    uint16_t packetIdentifier;
     /* Need a dummy variable for MQTT_DeserializeAck(). */
-    bool         sessionPresent           = false;
+    bool sessionPresent = false;
 
     /* We should always invoke the app callback unless we receive a PINGRESP
      * and are managing keep alive, or if we receive an unknown packet. We
      * initialize this to false since the callback must be invoked before
      * sending any PUBREL or PUBCOMP. However, for other cases, we invoke it
      * at the end to reduce the complexity of this function. */
-    bool                invokeAppCallback = false;
-    MQTTEventCallback_t appCallback       = NULL;
+    bool invokeAppCallback = false;
+    MQTTEventCallback_t appCallback = NULL;
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
@@ -885,12 +885,12 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
         case MQTT_PACKET_TYPE_PUBCOMP:
 
             /* Handle all the publish acks. */
-            status            = handlePublishAcks( pContext, pIncomingPacket );
+            status = handlePublishAcks( pContext, pIncomingPacket );
 
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
-            status            = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
+            status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
             invokeAppCallback = ( manageKeepAlive == true ) ? false : true;
 
             if( ( status == MQTTSuccess ) && ( manageKeepAlive == true ) )
@@ -903,7 +903,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
         case MQTT_PACKET_TYPE_SUBACK:
         case MQTT_PACKET_TYPE_UNSUBACK:
             /* Deserialize and give these to the app provided callback. */
-            status            = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
+            status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
             invokeAppCallback = true;
             break;
 
@@ -911,7 +911,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
             /* Bad response from the server. */
             LogError( ( "Unexpected packet type from server: PacketType=%02x.",
                         pIncomingPacket->type ) );
-            status            = MQTTBadResponse;
+            status = MQTTBadResponse;
             break;
     }
 
@@ -929,7 +929,7 @@ static MQTTStatus_t receiveSingleIteration( MQTTContext_t * pContext,
                                             uint32_t remainingTimeMs,
                                             bool manageKeepAlive )
 {
-    MQTTStatus_t     status = MQTTSuccess;
+    MQTTStatus_t status = MQTTSuccess;
     MQTTPacketInfo_t incomingPacket;
 
     assert( pContext != NULL );
@@ -1035,8 +1035,8 @@ static MQTTStatus_t sendPublish( MQTTContext_t * pContext,
                                  const MQTTPublishInfo_t * pPublishInfo,
                                  size_t headerSize )
 {
-    MQTTStatus_t status    = MQTTSuccess;
-    int32_t      bytesSent = 0;
+    MQTTStatus_t status = MQTTSuccess;
+    int32_t bytesSent = 0;
 
     assert( pContext != NULL );
     assert( pPublishInfo != NULL );
@@ -1085,11 +1085,11 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
                                     MQTTPacketInfo_t * pIncomingPacket,
                                     bool * pSessionPresent )
 {
-    MQTTStatus_t             status = MQTTSuccess;
+    MQTTStatus_t status = MQTTSuccess;
     MQTTGetCurrentTimeFunc_t getTimeStamp = NULL;
-    uint32_t                 entryTimeMs = 0U, remainingTimeMs = 0U, timeTakenMs = 0U;
-    bool breakFromLoop                 = false;
-    uint16_t                 loopCount = 0U;
+    uint32_t entryTimeMs = 0U, remainingTimeMs = 0U, timeTakenMs = 0U;
+    bool breakFromLoop = false;
+    uint16_t loopCount = 0U;
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
@@ -1098,7 +1098,7 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
     getTimeStamp = pContext->callbacks.getTime;
 
     /* Get the entry time for the function. */
-    entryTimeMs  = getTimeStamp();
+    entryTimeMs = getTimeStamp();
 
     do
     {
@@ -1173,7 +1173,7 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
         pIncomingPacket->pRemainingData = pContext->networkBuffer.pBuffer;
 
         /* Deserialize CONNACK. */
-        status                          = MQTT_DeserializeAck( pIncomingPacket, NULL, pSessionPresent );
+        status = MQTT_DeserializeAck( pIncomingPacket, NULL, pSessionPresent );
     }
 
     /* If a clean session is requested, a session present should not be set by
@@ -1205,10 +1205,10 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
 
 static MQTTStatus_t resendPendingAcks( MQTTContext_t * pContext )
 {
-    MQTTStatus_t       status   = MQTTSuccess;
-    MQTTStateCursor_t  cursor   = MQTT_STATE_CURSOR_INITIALIZER;
-    uint16_t           packetId = MQTT_PACKET_ID_INVALID;
-    MQTTPublishState_t state    = MQTTStateNull;
+    MQTTStatus_t status = MQTTSuccess;
+    MQTTStateCursor_t cursor = MQTT_STATE_CURSOR_INITIALIZER;
+    uint16_t packetId = MQTT_PACKET_ID_INVALID;
+    MQTTPublishState_t state = MQTTStateNull;
 
     assert( pContext != NULL );
 
@@ -1219,7 +1219,7 @@ static MQTTStatus_t resendPendingAcks( MQTTContext_t * pContext )
     while( ( packetId != MQTT_PACKET_ID_INVALID ) &&
            ( status == MQTTSuccess ) )
     {
-        status   = sendPublishAcks( pContext, packetId, state );
+        status = sendPublishAcks( pContext, packetId, state );
 
         packetId = MQTT_PubrelToResend( pContext, &cursor, &state );
     }
@@ -1235,7 +1235,7 @@ static MQTTStatus_t serializePublish( const MQTTContext_t * pContext,
                                       size_t * const pHeaderSize )
 {
     MQTTStatus_t status = MQTTSuccess;
-    size_t       remainingLength = 0UL, packetSize = 0UL;
+    size_t remainingLength = 0UL, packetSize = 0UL;
 
     assert( pContext != NULL );
     assert( pPublishInfo != NULL );
@@ -1331,13 +1331,13 @@ MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
     {
         ( void ) memset( pContext, 0x00, sizeof( MQTTContext_t ) );
 
-        pContext->connectStatus      = MQTTNotConnected;
+        pContext->connectStatus = MQTTNotConnected;
         pContext->transportInterface = *pTransportInterface;
-        pContext->callbacks          = *pCallbacks;
-        pContext->networkBuffer      = *pNetworkBuffer;
+        pContext->callbacks = *pCallbacks;
+        pContext->networkBuffer = *pNetworkBuffer;
 
         /* Zero is not a valid packet ID per MQTT spec. Start from 1. */
-        pContext->nextPacketId       = 1;
+        pContext->nextPacketId = 1;
     }
 
     return status;
@@ -1351,9 +1351,9 @@ MQTTStatus_t MQTT_Connect( MQTTContext_t * pContext,
                            uint32_t timeoutMs,
                            bool * pSessionPresent )
 {
-    size_t           remainingLength = 0UL, packetSize = 0UL;
-    int32_t          bytesSent;
-    MQTTStatus_t     status         = MQTTSuccess;
+    size_t remainingLength = 0UL, packetSize = 0UL;
+    int32_t bytesSent;
+    MQTTStatus_t status = MQTTSuccess;
     MQTTPacketInfo_t incomingPacket = { 0 };
 
     incomingPacket.type = ( uint8_t ) 0;
@@ -1443,14 +1443,14 @@ MQTTStatus_t MQTT_Subscribe( MQTTContext_t * pContext,
                              size_t subscriptionCount,
                              uint16_t packetId )
 {
-    size_t       remainingLength = 0UL, packetSize = 0UL;
-    int32_t      bytesSent = 0;
+    size_t remainingLength = 0UL, packetSize = 0UL;
+    int32_t bytesSent = 0;
 
     /* Validate arguments. */
-    MQTTStatus_t status    = validateSubscribeUnsubscribeParams( pContext,
-                                                                 pSubscriptionList,
-                                                                 subscriptionCount,
-                                                                 packetId );
+    MQTTStatus_t status = validateSubscribeUnsubscribeParams( pContext,
+                                                              pSubscriptionList,
+                                                              subscriptionCount,
+                                                              packetId );
 
     if( status == MQTTSuccess )
     {
@@ -1502,11 +1502,11 @@ MQTTStatus_t MQTT_Publish( MQTTContext_t * pContext,
                            const MQTTPublishInfo_t * pPublishInfo,
                            uint16_t packetId )
 {
-    size_t             headerSize    = 0UL;
+    size_t headerSize = 0UL;
     MQTTPublishState_t publishStatus = MQTTStateNull;
 
     /* Validate arguments. */
-    MQTTStatus_t       status        = validatePublishParams( pContext, pPublishInfo, packetId );
+    MQTTStatus_t status = validatePublishParams( pContext, pPublishInfo, packetId );
 
     if( status == MQTTSuccess )
     {
@@ -1574,9 +1574,9 @@ MQTTStatus_t MQTT_Publish( MQTTContext_t * pContext,
 
 MQTTStatus_t MQTT_Ping( MQTTContext_t * pContext )
 {
-    int32_t      bytesSent = 0;
-    MQTTStatus_t status    = MQTTSuccess;
-    size_t       packetSize;
+    int32_t bytesSent = 0;
+    MQTTStatus_t status = MQTTSuccess;
+    size_t packetSize;
 
     if( pContext == NULL )
     {
@@ -1620,7 +1620,7 @@ MQTTStatus_t MQTT_Ping( MQTTContext_t * pContext )
         }
         else
         {
-            pContext->pingReqSendTimeMs  = pContext->lastPacketTime;
+            pContext->pingReqSendTimeMs = pContext->lastPacketTime;
             pContext->waitingForPingResp = true;
             LogDebug( ( "Sent %d bytes of PINGREQ packet.",
                         bytesSent ) );
@@ -1637,14 +1637,14 @@ MQTTStatus_t MQTT_Unsubscribe( MQTTContext_t * pContext,
                                size_t subscriptionCount,
                                uint16_t packetId )
 {
-    size_t       remainingLength = 0UL, packetSize = 0UL;
-    int32_t      bytesSent = 0;
+    size_t remainingLength = 0UL, packetSize = 0UL;
+    int32_t bytesSent = 0;
 
     /* Validate arguments. */
-    MQTTStatus_t status    = validateSubscribeUnsubscribeParams( pContext,
-                                                                 pSubscriptionList,
-                                                                 subscriptionCount,
-                                                                 packetId );
+    MQTTStatus_t status = validateSubscribeUnsubscribeParams( pContext,
+                                                              pSubscriptionList,
+                                                              subscriptionCount,
+                                                              packetId );
 
     if( status == MQTTSuccess )
     {
@@ -1694,8 +1694,8 @@ MQTTStatus_t MQTT_Unsubscribe( MQTTContext_t * pContext,
 
 MQTTStatus_t MQTT_Disconnect( MQTTContext_t * pContext )
 {
-    size_t       packetSize;
-    int32_t      bytesSent;
+    size_t packetSize;
+    int32_t bytesSent;
     MQTTStatus_t status = MQTTSuccess;
 
     /* Validate arguments. */
@@ -1751,15 +1751,15 @@ MQTTStatus_t MQTT_Disconnect( MQTTContext_t * pContext )
 MQTTStatus_t MQTT_ProcessLoop( MQTTContext_t * pContext,
                                uint32_t timeoutMs )
 {
-    MQTTStatus_t             status = MQTTBadParameter;
+    MQTTStatus_t status = MQTTBadParameter;
     MQTTGetCurrentTimeFunc_t getTimeStampMs = NULL;
-    uint32_t                 entryTimeMs = 0U, remainingTimeMs = timeoutMs, elapsedTimeMs = 0U;
+    uint32_t entryTimeMs = 0U, remainingTimeMs = timeoutMs, elapsedTimeMs = 0U;
 
     if( ( pContext != NULL ) && ( pContext->callbacks.getTime != NULL ) )
     {
-        getTimeStampMs              = pContext->callbacks.getTime;
-        entryTimeMs                 = getTimeStampMs();
-        status                      = MQTTSuccess;
+        getTimeStampMs = pContext->callbacks.getTime;
+        entryTimeMs = getTimeStampMs();
+        status = MQTTSuccess;
         pContext->controlPacketSent = false;
     }
     else if( pContext == NULL )
@@ -1786,7 +1786,7 @@ MQTTStatus_t MQTT_ProcessLoop( MQTTContext_t * pContext,
         {
             /* Recalculate remaining time and check if loop should exit. This is
              * done at the end so the loop will run at least a single iteration. */
-            elapsedTimeMs   = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
+            elapsedTimeMs = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
 
             if( elapsedTimeMs > timeoutMs )
             {
@@ -1805,15 +1805,15 @@ MQTTStatus_t MQTT_ProcessLoop( MQTTContext_t * pContext,
 MQTTStatus_t MQTT_ReceiveLoop( MQTTContext_t * pContext,
                                uint32_t timeoutMs )
 {
-    MQTTStatus_t             status = MQTTBadParameter;
+    MQTTStatus_t status = MQTTBadParameter;
     MQTTGetCurrentTimeFunc_t getTimeStampMs = NULL;
-    uint32_t                 entryTimeMs = 0U, remainingTimeMs = timeoutMs, elapsedTimeMs = 0U;
+    uint32_t entryTimeMs = 0U, remainingTimeMs = timeoutMs, elapsedTimeMs = 0U;
 
     if( ( pContext != NULL ) && ( pContext->callbacks.getTime != NULL ) )
     {
         getTimeStampMs = pContext->callbacks.getTime;
-        entryTimeMs    = getTimeStampMs();
-        status         = MQTTSuccess;
+        entryTimeMs = getTimeStampMs();
+        status = MQTTSuccess;
     }
     else if( pContext == NULL )
     {
@@ -1839,7 +1839,7 @@ MQTTStatus_t MQTT_ReceiveLoop( MQTTContext_t * pContext,
         {
             /* Recalculate remaining time and check if loop should exit. This is
              * done at the end so the loop will run at least a single iteration. */
-            elapsedTimeMs   = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
+            elapsedTimeMs = calculateElapsedTime( getTimeStampMs(), entryTimeMs );
 
             if( elapsedTimeMs >= timeoutMs )
             {
@@ -1863,6 +1863,8 @@ uint16_t MQTT_GetPacketId( MQTTContext_t * pContext )
     {
         packetId = pContext->nextPacketId;
 
+        /* A packet ID of zero is not a valid packet ID. When the max ID
+         * is reached the next one should start at 1. */
         if( pContext->nextPacketId == ( uint16_t ) UINT16_MAX )
         {
             pContext->nextPacketId = 1;

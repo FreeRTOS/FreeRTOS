@@ -263,6 +263,14 @@ struct MQTTPacketInfo
 /**
  * @brief Get the size and Remaining Length of an MQTT CONNECT packet.
  *
+ * This function must be called before #MQTT_SerializeConnect in order to verify
+ * the size of the MQTT CONNECT packet that is generated from
+ * #MQTTConnectInfo_t and optional #MQTTPublishInfo_t. The parameters
+ * @p pConnectInfo , @p pWillInfo , and @p pRemainingLength are valid only if
+ * this function returns #MQTTSuccess.
+ * @p pPacketSize returned is used to verify the size of a #MQTTFixedBuffer_t
+ * that will hold the MQTT CONNECT packet.
+ *
  * @param[in] pConnectInfo MQTT CONNECT packet parameters.
  * @param[in] pWillInfo Last Will and Testament. Pass NULL if not used.
  * @param[out] pRemainingLength The Remaining Length of the MQTT CONNECT packet.
@@ -277,12 +285,19 @@ MQTTStatus_t MQTT_GetConnectPacketSize( const MQTTConnectInfo_t * pConnectInfo,
                                         size_t * pPacketSize );
 
 /**
- * @brief Serialize an MQTT CONNECT packet in the given buffer.
+ * @brief Serialize an MQTT CONNECT packet in the given fixed buffer @p pBuffer.
+ *
+ * #MQTT_GetConnectPacketSize should be called with @p pConnectInfo and
+ * @p pWillInfo before invoking this routine.
+ * The @p remainingLength was calculated from the parameters in @p pConnectInfo
+ * and @p pWillInfo using function #MQTT_GetConnectPacketSize. @p pConnectInfo,
+ * @p pWillInfo , and @p remainingLength are valid only if
+ * #MQTT_GetConnectPacketSize returned #MQTTSuccess.
  *
  * @param[in] pConnectInfo MQTT CONNECT packet parameters.
  * @param[in] pWillInfo Last Will and Testament. Pass NULL if not used.
  * @param[in] remainingLength Remaining Length provided by #MQTT_GetConnectPacketSize.
- * @param[out] pBuffer Buffer for packet serialization.
+ * @param[out] pFixedBuffer Buffer for packet serialization.
  *
  * @return #MQTTNoMemory if pBuffer is too small to hold the MQTT packet;
  * #MQTTBadParameter if invalid parameters are passed;
@@ -291,7 +306,7 @@ MQTTStatus_t MQTT_GetConnectPacketSize( const MQTTConnectInfo_t * pConnectInfo,
 MQTTStatus_t MQTT_SerializeConnect( const MQTTConnectInfo_t * pConnectInfo,
                                     const MQTTPublishInfo_t * pWillInfo,
                                     size_t remainingLength,
-                                    const MQTTFixedBuffer_t * pBuffer );
+                                    const MQTTFixedBuffer_t * pFixedBuffer );
 
 /**
  * @brief Get packet size and Remaining Length of an MQTT SUBSCRIBE packet.
@@ -509,6 +524,10 @@ MQTTStatus_t MQTT_DeserializeAck( const MQTTPacketInfo_t * pIncomingPacket,
 
 /**
  * @brief Extract the MQTT packet type and length from incoming packet.
+ *
+ * This function must be called for every incoming packet to retrieve the
+ * #MQTTPacketInfo_t.type and #MQTTPacketInfo_t.remainingLength. A
+ * #MQTTPacketInfo_t is not valid until this routine has been invoked.
  *
  * @param[in] readFunc Transport layer read function pointer.
  * @param[out] pIncomingPacket Pointer to MQTTPacketInfo_t structure. This is

@@ -30,6 +30,9 @@
  * TODO - To be implemented.
  */
 
+/* Demo Specific configs. */
+#include "demo_config.h"
+
 /* Standard includes. */
 #include <string.h>
 #include <stdio.h>
@@ -37,13 +40,6 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-
-/* Demo Specific configs. */
-#include "demo_config.h"
-
-/* MQTT library config. */
-#include "mqtt_config.h"
-
 
 /*-----------------------------------------------------------*/
 
@@ -76,7 +72,6 @@ void vStartSimpleMQTTDemo( void )
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-
 	/* Demo stub. */
 	vTaskDelay( pdMS_TO_TICKS( 1000 ) );
 	LogInfo( ( "In the light weight MQTT demo." ) );

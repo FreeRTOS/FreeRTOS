@@ -359,7 +359,7 @@ static void prvJobsCallback( void * pCallbackContext,
 /**
  * @brief The MQTT connection handle used in this example.
  */
-static IotMqttConnection_t xMQTTConnection                           = IOT_MQTT_CONNECTION_INITIALIZER;
+static IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
 
 /*
  * @brief The main task handle in this demo.
@@ -369,13 +369,13 @@ static TaskHandle_t xMainTaskHandle;
 /***************** Structures that define the connection. *********************/
 
 
-static const struct IotNetworkServerInfo xMQTTBrokerInfo             =
+static const struct IotNetworkServerInfo xMQTTBrokerInfo =
 {
     .pHostName = awsiotdemoprofileAWS_ENDPOINT,
     .port      = awsiotdemoprofileAWS_MQTT_PORT
 };
 
-static struct IotNetworkCredentials      xNetworkSecurityCredentials =
+static struct IotNetworkCredentials xNetworkSecurityCredentials =
 {
     /* Optional TLS extensions. For this demo, they are disabled. */
     .pAlpnProtos       = NULL,
@@ -397,7 +397,7 @@ static struct IotNetworkCredentials      xNetworkSecurityCredentials =
     .privateKeySize    = sizeof( awsiotdemoprofileCLIENT_PRIVATE_KEY_PEM )
 };
 
-static IotMqttNetworkInfo_t              xNetworkInfo                =
+static IotMqttNetworkInfo_t xNetworkInfo =
 {
     /* No connection to the MQTT broker has been established yet and we want to
      * establish a new connection. */
@@ -416,7 +416,7 @@ static IotMqttNetworkInfo_t              xNetworkInfo                =
     .disconnectCallback.function    = prvExample_OnDisconnect
 };
 
-static const IotMqttConnectInfo_t        xConnectInfo                =
+static const IotMqttConnectInfo_t xConnectInfo =
 {
     /* Set this flag to true if connecting to the AWS IoT MQTT broker. */
     .awsIotMqttMode            = false,
@@ -492,30 +492,30 @@ void vStartJobsDemo( void )
 
 static void prvJobsDemoTask( void * pvParameters )
 {
-    IotMqttError_t           xResult;
-    IotNetworkError_t        xNetworkInit;
-    uint32_t                 ulNotificationValue = 0;
-    const TickType_t         xNoDelay            = ( TickType_t ) 0;
-    AwsIotJobsError_t        xStatus             = AWS_IOT_JOBS_SUCCESS;
-    AwsIotJobsCallbackInfo_t xCallbackInfo       = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
-    AwsIotJobsRequestInfo_t  xRequestInfo        = AWS_IOT_JOBS_REQUEST_INFO_INITIALIZER;
+    IotMqttError_t xResult;
+    IotNetworkError_t xNetworkInit;
+    uint32_t ulNotificationValue = 0;
+    const TickType_t xNoDelay = ( TickType_t ) 0;
+    AwsIotJobsError_t xStatus = AWS_IOT_JOBS_SUCCESS;
+    AwsIotJobsCallbackInfo_t xCallbackInfo = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
+    AwsIotJobsRequestInfo_t xRequestInfo = AWS_IOT_JOBS_REQUEST_INFO_INITIALIZER;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
-    xMainTaskHandle              = xTaskGetCurrentTaskHandle();
+    xMainTaskHandle = xTaskGetCurrentTaskHandle();
 
     /* Initialize the network stack abstraction for FreeRTOS. */
-    xNetworkInit                 = IotNetworkFreeRTOS_Init();
+    xNetworkInit = IotNetworkFreeRTOS_Init();
     configASSERT( xNetworkInit == IOT_NETWORK_SUCCESS );
 
     /* MQTT library must be initialized before it can be used. This is just one
      * time initialization. */
-    xResult                      = IotMqtt_Init();
+    xResult = IotMqtt_Init();
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
     /* Initialize Jobs library. */
-    xResult                      = AwsIotJobs_Init( jobsexampleUSE_DEFAULT_MQTT_TIMEOUT );
+    xResult = AwsIotJobs_Init( jobsexampleUSE_DEFAULT_MQTT_TIMEOUT );
     configASSERT( xResult == AWS_IOT_JOBS_SUCCESS );
 
     /****************************** Connect. ******************************/
@@ -535,17 +535,17 @@ static void prvJobsDemoTask( void * pvParameters )
     prvSetNotifyNextCallback();
 
     /* Call DescribeAsync to see if there are any pending jobs. */
-    xRequestInfo.mqttConnection  = xMQTTConnection;
-    xRequestInfo.pThingName      = awsiotdemoprofileCLIENT_IDENTIFIER;
+    xRequestInfo.mqttConnection = xMQTTConnection;
+    xRequestInfo.pThingName = awsiotdemoprofileCLIENT_IDENTIFIER;
     xRequestInfo.thingNameLength = jobsexampleCLIENT_IDENTIFIER_LENGTH;
-    xRequestInfo.pJobId          = AWS_IOT_JOBS_NEXT_JOB;
-    xRequestInfo.jobIdLength     = AWS_IOT_JOBS_NEXT_JOB_LENGTH;
+    xRequestInfo.pJobId = AWS_IOT_JOBS_NEXT_JOB;
+    xRequestInfo.jobIdLength = AWS_IOT_JOBS_NEXT_JOB_LENGTH;
 
     /* Use the same callback as notify-next so any pending jobs will be
      * executed the same way. */
-    xCallbackInfo.function       = prvJobsCallback;
+    xCallbackInfo.function = prvJobsCallback;
 
-    xStatus                      = AwsIotJobs_DescribeAsync( &xRequestInfo, AWS_IOT_JOBS_NO_EXECUTION_NUMBER, true, 0, &xCallbackInfo, NULL );
+    xStatus = AwsIotJobs_DescribeAsync( &xRequestInfo, AWS_IOT_JOBS_NO_EXECUTION_NUMBER, true, 0, &xCallbackInfo, NULL );
     configPRINTF( ( "Describe queued with result %s.\r\n", AwsIotJobs_strerror( xStatus ) ) );
 
     /* Print out a short user guide to the console. The default logging
@@ -655,19 +655,19 @@ static void prvMQTTDisconnect( void )
 
 static void prvSetNotifyNextCallback( void )
 {
-    AwsIotJobsError_t        xCallbackStatus = AWS_IOT_JOBS_SUCCESS;
-    AwsIotJobsCallbackInfo_t xCallbackInfo   = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
+    AwsIotJobsError_t xCallbackStatus = AWS_IOT_JOBS_SUCCESS;
+    AwsIotJobsCallbackInfo_t xCallbackInfo = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
 
     /* Set the jobs callback function. */
     xCallbackInfo.function = prvJobsCallback;
 
     /************************ Set notify-next callbacks **********************/
 
-    xCallbackStatus        = AwsIotJobs_SetNotifyNextCallback( xMQTTConnection,
-                                                               awsiotdemoprofileCLIENT_IDENTIFIER,
-                                                               jobsexampleCLIENT_IDENTIFIER_LENGTH,
-                                                               0,
-                                                               &xCallbackInfo );
+    xCallbackStatus = AwsIotJobs_SetNotifyNextCallback( xMQTTConnection,
+                                                        awsiotdemoprofileCLIENT_IDENTIFIER,
+                                                        jobsexampleCLIENT_IDENTIFIER_LENGTH,
+                                                        0,
+                                                        &xCallbackInfo );
 
     configASSERT( xCallbackStatus == AWS_IOT_JOBS_SUCCESS );
 }
@@ -776,11 +776,11 @@ static AwsIotJobState_t prvProcessMessage( IotMqttConnection_t xMqttConnection,
                                            const char * pcJobDoc,
                                            size_t xJobDocLength )
 {
-    AwsIotJobState_t     xStatus = AWS_IOT_JOB_STATE_SUCCEEDED;
-    IotMqttError_t       xMqttStatus = IOT_MQTT_STATUS_PENDING;
+    AwsIotJobState_t xStatus = AWS_IOT_JOB_STATE_SUCCEEDED;
+    IotMqttError_t xMqttStatus = IOT_MQTT_STATUS_PENDING;
     IotMqttPublishInfo_t xPublishInfo = IOT_MQTT_PUBLISH_INFO_INITIALIZER;
-    const char *         pcMessage = NULL, * pcTopic = NULL;
-    size_t               xMessageLength = 0, xTopicLength = 0;
+    const char * pcMessage = NULL, * pcTopic = NULL;
+    size_t xMessageLength = 0, xTopicLength = 0;
 
     configASSERT( pcJobDoc != NULL );
 
@@ -831,13 +831,13 @@ static AwsIotJobState_t prvProcessMessage( IotMqttConnection_t xMqttConnection,
 
             if( xStatus == AWS_IOT_JOB_STATE_SUCCEEDED )
             {
-                xPublishInfo.qos             = IOT_MQTT_QOS_0;
-                xPublishInfo.pTopicName      = pcTopic;
+                xPublishInfo.qos = IOT_MQTT_QOS_0;
+                xPublishInfo.pTopicName = pcTopic;
                 xPublishInfo.topicNameLength = ( uint16_t ) xTopicLength;
-                xPublishInfo.pPayload        = pcMessage;
-                xPublishInfo.payloadLength   = xMessageLength;
+                xPublishInfo.pPayload = pcMessage;
+                xPublishInfo.payloadLength = xMessageLength;
 
-                xMqttStatus                  = IotMqtt_PublishAsync( xMqttConnection, &xPublishInfo, 0, NULL, NULL );
+                xMqttStatus = IotMqtt_PublishAsync( xMqttConnection, &xPublishInfo, 0, NULL, NULL );
 
                 if( xMqttStatus != IOT_MQTT_SUCCESS )
                 {
@@ -857,13 +857,13 @@ static void prvProcessJob( const AwsIotJobsCallbackParam_t * pxJobInfo,
                            const char * pcJobDoc,
                            size_t xJobDocLength )
 {
-    AwsIotJobsError_t        xStatus       = AWS_IOT_JOBS_SUCCESS;
-    AwsIotJobsUpdateInfo_t   xUpdateInfo   = AWS_IOT_JOBS_UPDATE_INFO_INITIALIZER;
+    AwsIotJobsError_t xStatus = AWS_IOT_JOBS_SUCCESS;
+    AwsIotJobsUpdateInfo_t xUpdateInfo = AWS_IOT_JOBS_UPDATE_INFO_INITIALIZER;
     AwsIotJobsCallbackInfo_t xCallbackInfo = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
-    const char *             pcAction      = NULL;
-    size_t xActionLength                   = 0;
-    _jobAction_t             xAction       = JOB_ACTION_UNKNOWN;
-    AwsIotJobsRequestInfo_t  xRequestInfo  = AWS_IOT_JOBS_REQUEST_INFO_INITIALIZER;
+    const char * pcAction = NULL;
+    size_t xActionLength = 0;
+    _jobAction_t xAction = JOB_ACTION_UNKNOWN;
+    AwsIotJobsRequestInfo_t xRequestInfo = AWS_IOT_JOBS_REQUEST_INFO_INITIALIZER;
 
     configASSERT( pxJobInfo != NULL );
     configASSERT( pcJobId != NULL );
@@ -871,17 +871,17 @@ static void prvProcessJob( const AwsIotJobsCallbackParam_t * pxJobInfo,
 
     configPRINTF( ( "Job document received: %.*s\r\n", xJobDocLength, pcJobDoc ) );
 
-    xRequestInfo.mqttConnection  = pxJobInfo->mqttConnection;
-    xRequestInfo.pThingName      = pxJobInfo->pThingName;
+    xRequestInfo.mqttConnection = pxJobInfo->mqttConnection;
+    xRequestInfo.pThingName = pxJobInfo->pThingName;
     xRequestInfo.thingNameLength = pxJobInfo->thingNameLength;
-    xRequestInfo.pJobId          = pcJobId;
-    xRequestInfo.jobIdLength     = xJobIdLength;
+    xRequestInfo.pJobId = pcJobId;
+    xRequestInfo.jobIdLength = xJobIdLength;
 
     /* Tell the Jobs service that the device has started working on the Job.
      * Use the StartNext API to set the Job's status to IN_PROGRESS. */
-    xCallbackInfo.function       = prvOperationCompleteCallback;
+    xCallbackInfo.function = prvOperationCompleteCallback;
 
-    xStatus                      = AwsIotJobs_StartNextAsync( &xRequestInfo, &xUpdateInfo, 0, &xCallbackInfo, NULL );
+    xStatus = AwsIotJobs_StartNextAsync( &xRequestInfo, &xUpdateInfo, 0, &xCallbackInfo, NULL );
 
     configPRINTF( ( "Jobs StartNext queued with result %s.\r\n", AwsIotJobs_strerror( xStatus ) ) );
 
@@ -899,15 +899,15 @@ static void prvProcessJob( const AwsIotJobsCallbackParam_t * pxJobInfo,
         {
             case JOB_ACTION_EXIT:
                 xCallbackInfo.pCallbackContext = jobsexampleSHOULD_EXIT;
-                xUpdateInfo.newStatus          = AWS_IOT_JOB_STATE_SUCCEEDED;
+                xUpdateInfo.newStatus = AWS_IOT_JOB_STATE_SUCCEEDED;
                 break;
 
             case JOB_ACTION_PRINT:
             case JOB_ACTION_PUBLISH:
-                xUpdateInfo.newStatus          = prvProcessMessage( pxJobInfo->mqttConnection,
-                                                                    xAction,
-                                                                    pcJobDoc,
-                                                                    xJobDocLength );
+                xUpdateInfo.newStatus = prvProcessMessage( pxJobInfo->mqttConnection,
+                                                           xAction,
+                                                           pcJobDoc,
+                                                           xJobDocLength );
                 break;
 
             default:
@@ -915,7 +915,7 @@ static void prvProcessJob( const AwsIotJobsCallbackParam_t * pxJobInfo,
                                 xActionLength,
                                 pcAction ) );
 
-                xUpdateInfo.newStatus          = AWS_IOT_JOB_STATE_FAILED;
+                xUpdateInfo.newStatus = AWS_IOT_JOB_STATE_FAILED;
                 break;
         }
     }
@@ -934,7 +934,7 @@ static void prvProcessJob( const AwsIotJobsCallbackParam_t * pxJobInfo,
                     AwsIotJobs_StateName( xUpdateInfo.newStatus ) ) );
 
     /* Tell the Jobs service that the device has finished the Job. */
-    xStatus                      = AwsIotJobs_UpdateAsync( &xRequestInfo, &xUpdateInfo, 0, &xCallbackInfo, NULL );
+    xStatus = AwsIotJobs_UpdateAsync( &xRequestInfo, &xUpdateInfo, 0, &xCallbackInfo, NULL );
 
     configPRINTF( ( "Jobs Update queued with result %s.\r\n", AwsIotJobs_strerror( xStatus ) ) );
 }
@@ -943,13 +943,13 @@ static void prvProcessJob( const AwsIotJobsCallbackParam_t * pxJobInfo,
 static void prvJobsCallback( void * pCallbackContext,
                              AwsIotJobsCallbackParam_t * pxCallbackInfo )
 {
-    BaseType_t   xIdKeyFound = pdFALSE, xDocKeyFound = pdFALSE;
-    const char * pcJobId            = NULL;
-    size_t       xJobIdLength       = 0;
-    const char * pcJobDoc           = NULL;
-    size_t       xJobDocLength      = 0;
-    const char * pcRawDocument      = NULL;
-    size_t       xRawDocumentLength = 0;
+    BaseType_t xIdKeyFound = pdFALSE, xDocKeyFound = pdFALSE;
+    const char * pcJobId = NULL;
+    size_t xJobIdLength = 0;
+    const char * pcJobDoc = NULL;
+    size_t xJobDocLength = 0;
+    const char * pcRawDocument = NULL;
+    size_t xRawDocumentLength = 0;
 
     /* Silence warnings about unused parameters. */
     ( void ) pCallbackContext;
@@ -960,22 +960,22 @@ static void prvJobsCallback( void * pCallbackContext,
      * due to notify-next. */
     if( pxCallbackInfo->callbackType == AWS_IOT_JOBS_DESCRIBE_COMPLETE )
     {
-        pcRawDocument      = pxCallbackInfo->u.operation.pResponse;
+        pcRawDocument = pxCallbackInfo->u.operation.pResponse;
         xRawDocumentLength = pxCallbackInfo->u.operation.responseLength;
     }
     else
     {
-        pcRawDocument      = pxCallbackInfo->u.callback.pDocument;
+        pcRawDocument = pxCallbackInfo->u.callback.pDocument;
         xRawDocumentLength = pxCallbackInfo->u.callback.documentLength;
     }
 
     /* Get the Job ID. */
-    xIdKeyFound  = prvGetJsonString( pcRawDocument,
-                                     xRawDocumentLength,
-                                     jobsexampleID_KEY,
-                                     jobsexampleID_KEY_LENGTH,
-                                     &pcJobId,
-                                     &xJobIdLength );
+    xIdKeyFound = prvGetJsonString( pcRawDocument,
+                                    xRawDocumentLength,
+                                    jobsexampleID_KEY,
+                                    jobsexampleID_KEY_LENGTH,
+                                    &pcJobId,
+                                    &xJobIdLength );
 
     if( xIdKeyFound == pdTRUE )
     {

@@ -152,7 +152,7 @@
 /**
  * @brief The HTTPS connection handle used in this example.
  */
-static IotHttpsConnectionHandle_t xHTTPSConnection                                      = IOT_HTTPS_CONNECTION_HANDLE_INITIALIZER;
+static IotHttpsConnectionHandle_t xHTTPSConnection = IOT_HTTPS_CONNECTION_HANDLE_INITIALIZER;
 
 /**
  * @brief A buffer used to store the HTTPS Client library's connection context.
@@ -163,13 +163,13 @@ static uint8_t ucHTTPSConnectionUserBuffer[ httpsexampleCONNECTION_USER_BUFFER_L
  * @brief A buffer used to store the HTTPS Client library's request context and
  * some headers.
  */
-static uint8_t ucHTTPSRequestUserBuffer[ httpsexampleREQUEST_USER_BUFFER_LENGTH ]       = { 0 };
+static uint8_t ucHTTPSRequestUserBuffer[ httpsexampleREQUEST_USER_BUFFER_LENGTH ] = { 0 };
 
 /**
  * @brief A buffer used to store the HTTPS Client library's response context and
  * some headers.
  */
-static uint8_t ucHTTPSResponseUserBuffer[ httpsexampleRESPONSE_USER_BUFFER_LENGTH ]     = { 0 };
+static uint8_t ucHTTPSResponseUserBuffer[ httpsexampleRESPONSE_USER_BUFFER_LENGTH ] = { 0 };
 
 /**
  * @brief The request body.
@@ -179,7 +179,7 @@ static char cHTTPSRequestBodyBuffer[] = httpsexampleREQUEST_BODY_TEXT;
 /**
  * @brief A buffer used to receive the HTTPS Client library's response body.
  */
-static uint8_t ucHTTPSResponseBodyBuffer[ httpsexampleRESPONSE_BODY_BUFFER_LENGTH ]     = { 0 };
+static uint8_t ucHTTPSResponseBodyBuffer[ httpsexampleRESPONSE_BODY_BUFFER_LENGTH ] = { 0 };
 
 /**
  * @brief The task used to demonstrate the HTTPS Client API.
@@ -218,7 +218,7 @@ static void prvHTTPSDisconnect( void );
  */
 static void prvInitialiseLibraries( void );
 
-static const IotHttpsConnectionInfo_t xConnectionInfo                                   =
+static const IotHttpsConnectionInfo_t xConnectionInfo =
 {
     /* No connection to the HTTPS server has been established yet and we want to
      * establish a new connection. */
@@ -366,14 +366,14 @@ static void prvHTTPSRequest( IotHttpsMethod_t xMethod,
                              const char * pcPath,
                              uint32_t ulPathLength )
 {
-    IotHttpsReturnCode_t     xHTTPSClientResult;
-    IotHttpsRequestInfo_t    xHTTPSRequestInfo      = IOT_HTTPS_REQUEST_INFO_INITIALIZER;
-    IotHttpsResponseInfo_t   xHTTPSResponseInfo     = IOT_HTTPS_RESPONSE_INFO_INITIALIZER;
-    IotHttpsRequestHandle_t  xHTTPSRequest          = IOT_HTTPS_REQUEST_HANDLE_INITIALIZER;
-    IotHttpsResponseHandle_t xHTTPSResponse         = IOT_HTTPS_RESPONSE_HANDLE_INITIALIZER;
-    IotHttpsSyncInfo_t       xHTTPSSyncRequestInfo  = IOT_HTTPS_SYNC_INFO_INITIALIZER;
-    IotHttpsSyncInfo_t       xHTTPSSyncResponseInfo = IOT_HTTPS_SYNC_INFO_INITIALIZER;
-    uint16_t                 usResponseStatus       = 0;
+    IotHttpsReturnCode_t xHTTPSClientResult;
+    IotHttpsRequestInfo_t xHTTPSRequestInfo = IOT_HTTPS_REQUEST_INFO_INITIALIZER;
+    IotHttpsResponseInfo_t xHTTPSResponseInfo = IOT_HTTPS_RESPONSE_INFO_INITIALIZER;
+    IotHttpsRequestHandle_t xHTTPSRequest = IOT_HTTPS_REQUEST_HANDLE_INITIALIZER;
+    IotHttpsResponseHandle_t xHTTPSResponse = IOT_HTTPS_RESPONSE_HANDLE_INITIALIZER;
+    IotHttpsSyncInfo_t xHTTPSSyncRequestInfo = IOT_HTTPS_SYNC_INFO_INITIALIZER;
+    IotHttpsSyncInfo_t xHTTPSSyncResponseInfo = IOT_HTTPS_SYNC_INFO_INITIALIZER;
+    uint16_t usResponseStatus = 0;
 
     configASSERT( pcPath != NULL );
 
@@ -381,28 +381,28 @@ static void prvHTTPSRequest( IotHttpsMethod_t xMethod,
 
     if( ( xMethod == IOT_HTTPS_METHOD_PUT ) || ( xMethod == IOT_HTTPS_METHOD_POST ) )
     {
-        xHTTPSSyncRequestInfo.pBody   = ( uint8_t * ) cHTTPSRequestBodyBuffer;
+        xHTTPSSyncRequestInfo.pBody = ( uint8_t * ) cHTTPSRequestBodyBuffer;
         xHTTPSSyncRequestInfo.bodyLen = sizeof( cHTTPSRequestBodyBuffer );
     }
     else
     {
-        xHTTPSSyncRequestInfo.pBody   = NULL;
+        xHTTPSSyncRequestInfo.pBody = NULL;
         xHTTPSSyncRequestInfo.bodyLen = 0;
     }
 
-    xHTTPSRequestInfo.pHost                 = httpsexampleHTTPS_SERVER_ADDRESS;
-    xHTTPSRequestInfo.hostLen               = sizeof( httpsexampleHTTPS_SERVER_ADDRESS ) - 1;
-    xHTTPSRequestInfo.pPath                 = pcPath;
-    xHTTPSRequestInfo.pathLen               = ulPathLength;
-    xHTTPSRequestInfo.method                = xMethod;
-    xHTTPSRequestInfo.isNonPersistent       = false;
-    xHTTPSRequestInfo.userBuffer.pBuffer    = ucHTTPSRequestUserBuffer;
-    xHTTPSRequestInfo.userBuffer.bufferLen  = sizeof( ucHTTPSRequestUserBuffer ) - 1;
-    xHTTPSRequestInfo.isAsync               = false;
-    xHTTPSRequestInfo.u.pSyncInfo           = &xHTTPSSyncRequestInfo;
+    xHTTPSRequestInfo.pHost = httpsexampleHTTPS_SERVER_ADDRESS;
+    xHTTPSRequestInfo.hostLen = sizeof( httpsexampleHTTPS_SERVER_ADDRESS ) - 1;
+    xHTTPSRequestInfo.pPath = pcPath;
+    xHTTPSRequestInfo.pathLen = ulPathLength;
+    xHTTPSRequestInfo.method = xMethod;
+    xHTTPSRequestInfo.isNonPersistent = false;
+    xHTTPSRequestInfo.userBuffer.pBuffer = ucHTTPSRequestUserBuffer;
+    xHTTPSRequestInfo.userBuffer.bufferLen = sizeof( ucHTTPSRequestUserBuffer ) - 1;
+    xHTTPSRequestInfo.isAsync = false;
+    xHTTPSRequestInfo.u.pSyncInfo = &xHTTPSSyncRequestInfo;
 
-    xHTTPSClientResult                      = IotHttpsClient_InitializeRequest( &( xHTTPSRequest ),
-                                                                                &( xHTTPSRequestInfo ) );
+    xHTTPSClientResult = IotHttpsClient_InitializeRequest( &( xHTTPSRequest ),
+                                                           &( xHTTPSRequestInfo ) );
     configASSERT( xHTTPSClientResult == IOT_HTTPS_OK );
 
     /************************** HTTPS response setup. **************************/
@@ -411,28 +411,28 @@ static void prvHTTPSRequest( IotHttpsMethod_t xMethod,
 
     if( xMethod == IOT_HTTPS_METHOD_HEAD )
     {
-        xHTTPSSyncResponseInfo.pBody   = NULL;
+        xHTTPSSyncResponseInfo.pBody = NULL;
         xHTTPSSyncResponseInfo.bodyLen = 0;
     }
     else
     {
-        xHTTPSSyncResponseInfo.pBody   = ucHTTPSResponseBodyBuffer;
+        xHTTPSSyncResponseInfo.pBody = ucHTTPSResponseBodyBuffer;
         xHTTPSSyncResponseInfo.bodyLen = sizeof( ucHTTPSResponseBodyBuffer );
     }
 
-    xHTTPSResponseInfo.userBuffer.pBuffer   = ucHTTPSResponseUserBuffer;
+    xHTTPSResponseInfo.userBuffer.pBuffer = ucHTTPSResponseUserBuffer;
     xHTTPSResponseInfo.userBuffer.bufferLen = sizeof( ucHTTPSResponseUserBuffer );
-    xHTTPSResponseInfo.pSyncInfo            = &xHTTPSSyncResponseInfo;
+    xHTTPSResponseInfo.pSyncInfo = &xHTTPSSyncResponseInfo;
 
     /*************************** Send HTTPS request. ***************************/
 
     /* This synchronous send function blocks until the full response is received
      * from the network. */
-    xHTTPSClientResult                      = IotHttpsClient_SendSync( xHTTPSConnection,
-                                                                       xHTTPSRequest,
-                                                                       &( xHTTPSResponse ),
-                                                                       &( xHTTPSResponseInfo ),
-                                                                       httpsexampleHTTPS_TIMEOUT_MS );
+    xHTTPSClientResult = IotHttpsClient_SendSync( xHTTPSConnection,
+                                                  xHTTPSRequest,
+                                                  &( xHTTPSResponse ),
+                                                  &( xHTTPSResponseInfo ),
+                                                  httpsexampleHTTPS_TIMEOUT_MS );
     configASSERT( xHTTPSClientResult == IOT_HTTPS_OK );
 
     /* The response status is only available if the httpsexampleRESPONSE_USER_BUFFER
@@ -440,8 +440,8 @@ static void prvHTTPSRequest( IotHttpsMethod_t xMethod,
      * also the Status-Line of the response. The Status-Line and the response
      * headers are stored in the provided ucHTTPSResponseUserBuffer right after
      * the HTTPS Client response context. */
-    xHTTPSClientResult                      = IotHttpsClient_ReadResponseStatus( xHTTPSResponse,
-                                                                                 &usResponseStatus );
+    xHTTPSClientResult = IotHttpsClient_ReadResponseStatus( xHTTPSResponse,
+                                                            &usResponseStatus );
     configASSERT( xHTTPSClientResult == IOT_HTTPS_OK );
 
     configPRINTF( ( "Response status: %d\r\n", usResponseStatus ) );
@@ -469,10 +469,10 @@ static void prvHTTPSDisconnect( void )
 static void prvInitialiseLibraries( void )
 {
     IotHttpsReturnCode_t xHTTPSClientResult;
-    IotNetworkError_t    xNetworkResult;
+    IotNetworkError_t xNetworkResult;
 
     /* Initialize the network stack abstraction for FreeRTOS. */
-    xNetworkResult     = IotNetworkFreeRTOS_Init();
+    xNetworkResult = IotNetworkFreeRTOS_Init();
     configASSERT( xNetworkResult == IOT_NETWORK_SUCCESS );
 
     /* HTTPS Client library must be initialized before it can be used. This is

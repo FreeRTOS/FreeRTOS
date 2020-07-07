@@ -50,11 +50,11 @@ bool AwsIot_InitLists( IotListDouble_t * pPendingOperationsList,
     IOT_FUNCTION_ENTRY( bool, true );
 
     /* Flags to track cleanup. */
-    bool operationsMutexCreated    = false;
+    bool operationsMutexCreated = false;
     bool subscriptionsMutexCreated = false;
 
     /* Create the mutex guarding the pending operations list. */
-    operationsMutexCreated    = IotMutex_Create( pPendingOperationsMutex, false );
+    operationsMutexCreated = IotMutex_Create( pPendingOperationsMutex, false );
 
     if( operationsMutexCreated == false )
     {
@@ -93,10 +93,10 @@ bool AwsIot_GenerateOperationTopic( const AwsIotTopicInfo_t * pTopicInfo,
                                     char ** pTopicBuffer,
                                     uint16_t * pOperationTopicLength )
 {
-    bool     status               = true;
-    uint16_t bufferLength         = 0;
+    bool status = true;
+    uint16_t bufferLength = 0;
     uint16_t operationTopicLength = 0;
-    char *   pBuffer              = NULL;
+    char * pBuffer = NULL;
 
     /* Calculate the required topic buffer length. */
     bufferLength = ( uint16_t ) ( AWS_IOT_TOPIC_PREFIX_LENGTH +
@@ -124,19 +124,19 @@ bool AwsIot_GenerateOperationTopic( const AwsIotTopicInfo_t * pTopicInfo,
     {
         /* Copy the AWS IoT topic prefix into the topic buffer. */
         ( void ) memcpy( pBuffer, AWS_IOT_TOPIC_PREFIX, AWS_IOT_TOPIC_PREFIX_LENGTH );
-        operationTopicLength   = ( uint16_t ) ( operationTopicLength + AWS_IOT_TOPIC_PREFIX_LENGTH );
+        operationTopicLength = ( uint16_t ) ( operationTopicLength + AWS_IOT_TOPIC_PREFIX_LENGTH );
 
         /* Copy the Thing Name into the topic buffer. */
         ( void ) memcpy( pBuffer + operationTopicLength,
                          pTopicInfo->pThingName,
                          pTopicInfo->thingNameLength );
-        operationTopicLength   = ( uint16_t ) ( operationTopicLength + pTopicInfo->thingNameLength );
+        operationTopicLength = ( uint16_t ) ( operationTopicLength + pTopicInfo->thingNameLength );
 
         /* Copy the Shadow operation string into the topic buffer. */
         ( void ) memcpy( pBuffer + operationTopicLength,
                          pTopicInfo->pOperationName,
                          pTopicInfo->operationNameLength );
-        operationTopicLength   = ( uint16_t ) ( operationTopicLength + pTopicInfo->operationNameLength );
+        operationTopicLength = ( uint16_t ) ( operationTopicLength + pTopicInfo->operationNameLength );
 
         /* Set the output parameters. */
         if( *pTopicBuffer == NULL )

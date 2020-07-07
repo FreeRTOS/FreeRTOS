@@ -67,7 +67,7 @@ void vConfigureTimerForRunTimeStats( void )
         /* What is the performance counter value now, this will be subtracted
          * from readings taken at run time. */
         QueryPerformanceCounter( &liInitialRunTimeValue );
-        llInitialRunTimeCounterValue  = liInitialRunTimeValue.QuadPart;
+        llInitialRunTimeCounterValue = liInitialRunTimeValue.QuadPart;
     }
 }
 /*-----------------------------------------------------------*/

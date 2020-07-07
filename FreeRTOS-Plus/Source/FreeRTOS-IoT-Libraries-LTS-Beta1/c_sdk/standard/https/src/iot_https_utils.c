@@ -44,9 +44,9 @@ IotHttpsReturnCode_t IotHttpsClient_GetUrlPath( const char * pUrl,
                                                 size_t * pPathLen )
 {
     /* http-parser status. Initialized to 0 to signify success. */
-    int parserStatus                    = 0;
+    int parserStatus = 0;
     struct http_parser_url urlParser;
-    IotHttpsReturnCode_t   returnStatus = IOT_HTTPS_OK;
+    IotHttpsReturnCode_t returnStatus = IOT_HTTPS_OK;
 
     /* Sets all members in urlParser to 0. */
     http_parser_url_init( &urlParser );
@@ -75,7 +75,7 @@ IotHttpsReturnCode_t IotHttpsClient_GetUrlPath( const char * pUrl,
         if( *pPathLen == 0 )
         {
             returnStatus = IOT_HTTPS_NOT_FOUND;
-            *pPath       = NULL;
+            *pPath = NULL;
         }
         else
         {
@@ -94,9 +94,9 @@ IotHttpsReturnCode_t IotHttpsClient_GetUrlAddress( const char * pUrl,
                                                    size_t * pAddressLen )
 {
     /* http-parser status. Initialized to 0 to signify success. */
-    int parserStatus                    = 0;
+    int parserStatus = 0;
     struct http_parser_url urlParser;
-    IotHttpsReturnCode_t   returnStatus = IOT_HTTPS_OK;
+    IotHttpsReturnCode_t returnStatus = IOT_HTTPS_OK;
 
     /* Sets all members in urlParser to 0. */
     http_parser_url_init( &urlParser );
@@ -125,7 +125,7 @@ IotHttpsReturnCode_t IotHttpsClient_GetUrlAddress( const char * pUrl,
         if( *pAddressLen == 0 )
         {
             returnStatus = IOT_HTTPS_NOT_FOUND;
-            *pAddress    = NULL;
+            *pAddress = NULL;
         }
         else
         {

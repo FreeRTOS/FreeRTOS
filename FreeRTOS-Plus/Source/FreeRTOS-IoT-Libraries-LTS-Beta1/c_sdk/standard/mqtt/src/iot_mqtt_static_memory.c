@@ -85,21 +85,21 @@
 /*
  * Static memory buffers and flags, allocated and zeroed at compile-time.
  */
-    static uint32_t          _pInUseMqttConnections[ IOT_MQTT_CONNECTIONS ];                          /**< @brief MQTT connection in-use flags. */
-    static _mqttConnection_t _pMqttConnections[ IOT_MQTT_CONNECTIONS ];                               /**< @brief MQTT connections. */
+    static uint32_t _pInUseMqttConnections[ IOT_MQTT_CONNECTIONS ];                      /**< @brief MQTT connection in-use flags. */
+    static _mqttConnection_t _pMqttConnections[ IOT_MQTT_CONNECTIONS ];                  /**< @brief MQTT connections. */
 
-    static uint32_t          _pInUseMqttOperations[ IOT_MQTT_MAX_IN_PROGRESS_OPERATIONS ];            /**< @brief MQTT operation in-use flags. */
-    static _mqttOperation_t  _pMqttOperations[ IOT_MQTT_MAX_IN_PROGRESS_OPERATIONS ];                 /**< @brief MQTT operations. */
+    static uint32_t _pInUseMqttOperations[ IOT_MQTT_MAX_IN_PROGRESS_OPERATIONS ];        /**< @brief MQTT operation in-use flags. */
+    static _mqttOperation_t _pMqttOperations[ IOT_MQTT_MAX_IN_PROGRESS_OPERATIONS ];     /**< @brief MQTT operations. */
 
-    static uint32_t          _pInUseMqttSubscriptions[ IOT_MQTT_SUBSCRIPTIONS ];                      /**< @brief MQTT subscription in-use flags. */
-    static char              _pMqttSubscriptions[ IOT_MQTT_SUBSCRIPTIONS ][ MQTT_SUBSCRIPTION_SIZE ]; /**< @brief MQTT subscriptions. */
+    static uint32_t _pInUseMqttSubscriptions[ IOT_MQTT_SUBSCRIPTIONS ];                  /**< @brief MQTT subscription in-use flags. */
+    static char _pMqttSubscriptions[ IOT_MQTT_SUBSCRIPTIONS ][ MQTT_SUBSCRIPTION_SIZE ]; /**< @brief MQTT subscriptions. */
 
 /*-----------------------------------------------------------*/
 
     void * IotMqtt_MallocConnection( size_t size )
     {
-        int32_t freeIndex      = -1;
-        void *  pNewConnection = NULL;
+        int32_t freeIndex = -1;
+        void * pNewConnection = NULL;
 
         /* Check size argument. */
         if( size == sizeof( _mqttConnection_t ) )
@@ -133,8 +133,8 @@
 
     void * IotMqtt_MallocOperation( size_t size )
     {
-        int32_t freeIndex     = -1;
-        void *  pNewOperation = NULL;
+        int32_t freeIndex = -1;
+        void * pNewOperation = NULL;
 
         /* Check size argument. */
         if( size == sizeof( _mqttOperation_t ) )
@@ -168,8 +168,8 @@
 
     void * IotMqtt_MallocSubscription( size_t size )
     {
-        int32_t freeIndex        = -1;
-        void *  pNewSubscription = NULL;
+        int32_t freeIndex = -1;
+        void * pNewSubscription = NULL;
 
         if( size <= MQTT_SUBSCRIPTION_SIZE )
         {

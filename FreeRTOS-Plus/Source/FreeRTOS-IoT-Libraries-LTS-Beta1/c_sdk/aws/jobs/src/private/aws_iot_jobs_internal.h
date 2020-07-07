@@ -425,11 +425,11 @@ typedef struct _jobsOperation
 #endif
 
 /* Declarations of variables for internal Jobs files. */
-extern uint32_t               _AwsIotJobsMqttTimeoutMs;
-extern IotListDouble_t        _AwsIotJobsPendingOperations;
-extern IotListDouble_t        _AwsIotJobsSubscriptions;
-extern IotMutex_t             _AwsIotJobsPendingOperationsMutex;
-extern IotMutex_t             _AwsIotJobsSubscriptionsMutex;
+extern uint32_t _AwsIotJobsMqttTimeoutMs;
+extern IotListDouble_t _AwsIotJobsPendingOperations;
+extern IotListDouble_t _AwsIotJobsSubscriptions;
+extern IotMutex_t _AwsIotJobsPendingOperationsMutex;
+extern IotMutex_t _AwsIotJobsSubscriptionsMutex;
 
 /*------------------------ Jobs operation functions -------------------------*/
 

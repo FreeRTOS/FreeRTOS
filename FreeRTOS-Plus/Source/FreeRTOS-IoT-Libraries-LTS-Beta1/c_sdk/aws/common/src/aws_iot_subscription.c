@@ -65,28 +65,28 @@ static IotMqttError_t _modifySubscriptions( AwsIotMqttFunction_t mqttOperation,
                                             const char * pTopicFilter,
                                             uint16_t topicFilterLength )
 {
-    IotMqttError_t        status       = IOT_MQTT_STATUS_PENDING;
+    IotMqttError_t status = IOT_MQTT_STATUS_PENDING;
     IotMqttSubscription_t subscription = IOT_MQTT_SUBSCRIPTION_INITIALIZER;
 
     /* Per the AWS IoT documentation, topic subscriptions are QoS 1. */
-    subscription.qos                       = IOT_MQTT_QOS_1;
+    subscription.qos = IOT_MQTT_QOS_1;
 
     /* Set the members of the subscription parameter. */
-    subscription.pTopicFilter              = pTopicFilter;
-    subscription.topicFilterLength         = topicFilterLength;
+    subscription.pTopicFilter = pTopicFilter;
+    subscription.topicFilterLength = topicFilterLength;
     subscription.callback.pCallbackContext = NULL;
-    subscription.callback.function         = pSubscriptionInfo->callbackFunction;
+    subscription.callback.function = pSubscriptionInfo->callbackFunction;
 
     /* Call the MQTT operation function.
      * Subscription count is 1 in this case.
      * None of the flags are set in this call. Hence 0 is passed for flags.
      * Please refer to documentation for AwsIotMqttFunction_t for more details.
      */
-    status                                 = mqttOperation( pSubscriptionInfo->mqttConnection,
-                                                            &subscription,
-                                                            1,
-                                                            0,
-                                                            pSubscriptionInfo->timeout );
+    status = mqttOperation( pSubscriptionInfo->mqttConnection,
+                            &subscription,
+                            1,
+                            0,
+                            pSubscriptionInfo->timeout );
 
     return status;
 }
@@ -97,8 +97,8 @@ IotMqttError_t AwsIot_ModifySubscriptions( AwsIotMqttFunction_t mqttOperation,
                                            const AwsIotSubscriptionInfo_t * pSubscriptionInfo )
 {
     IOT_FUNCTION_ENTRY( IotMqttError_t, IOT_MQTT_STATUS_PENDING );
-    IotMqttError_t acceptedStatus    = IOT_MQTT_STATUS_PENDING;
-    uint16_t       topicFilterLength = 0;
+    IotMqttError_t acceptedStatus = IOT_MQTT_STATUS_PENDING;
+    uint16_t topicFilterLength = 0;
 
     /* Place the topic "accepted" suffix at the end of the topic buffer. */
     ( void ) memcpy( pSubscriptionInfo->pTopicFilterBase
@@ -109,10 +109,10 @@ IotMqttError_t AwsIot_ModifySubscriptions( AwsIotMqttFunction_t mqttOperation,
                                        + AWS_IOT_ACCEPTED_SUFFIX_LENGTH );
 
     /* Modify the subscription to the "accepted" topic. */
-    acceptedStatus    = _modifySubscriptions( mqttOperation,
-                                              pSubscriptionInfo,
-                                              pSubscriptionInfo->pTopicFilterBase,
-                                              topicFilterLength );
+    acceptedStatus = _modifySubscriptions( mqttOperation,
+                                           pSubscriptionInfo,
+                                           pSubscriptionInfo->pTopicFilterBase,
+                                           topicFilterLength );
 
     if( acceptedStatus != IOT_MQTT_SUCCESS )
     {
@@ -128,10 +128,10 @@ IotMqttError_t AwsIot_ModifySubscriptions( AwsIotMqttFunction_t mqttOperation,
                                        + AWS_IOT_REJECTED_SUFFIX_LENGTH );
 
     /* Modify the subscription to the "rejected" topic. */
-    status            = _modifySubscriptions( mqttOperation,
-                                              pSubscriptionInfo,
-                                              pSubscriptionInfo->pTopicFilterBase,
-                                              topicFilterLength );
+    status = _modifySubscriptions( mqttOperation,
+                                   pSubscriptionInfo,
+                                   pSubscriptionInfo->pTopicFilterBase,
+                                   topicFilterLength );
 
     IOT_FUNCTION_CLEANUP_BEGIN();
 

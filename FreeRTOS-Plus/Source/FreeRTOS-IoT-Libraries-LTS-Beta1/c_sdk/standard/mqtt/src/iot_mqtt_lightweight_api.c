@@ -210,9 +210,9 @@ static IotMqttError_t _checkPublishRemainingLength( const IotMqttPacketInfo_t * 
 static IotMqttError_t _readSubackStatus( size_t statusCount,
                                          const uint8_t * pStatusStart )
 {
-    IotMqttError_t status             = IOT_MQTT_SUCCESS;
-    uint8_t        subscriptionStatus = 0;
-    size_t         i                  = 0;
+    IotMqttError_t status = IOT_MQTT_SUCCESS;
+    uint8_t subscriptionStatus = 0;
+    size_t i = 0;
 
     /* Iterate through each status byte in the SUBACK packet. */
     for( i = 0; i < statusCount; i++ )
@@ -274,7 +274,7 @@ static size_t _getRemainingLength( IotNetworkConnection_t pNetworkConnection,
                                    IotMqttGetNextByte_t getNextByte )
 {
     uint8_t encodedByte = 0;
-    size_t  remainingLength = 0, multiplier = 1, bytesDecoded = 0, expectedSize = 0;
+    size_t remainingLength = 0, multiplier = 1, bytesDecoded = 0, expectedSize = 0;
 
     /* This algorithm is copied from the MQTT v3.1.1 spec. */
     do
@@ -288,7 +288,7 @@ static size_t _getRemainingLength( IotNetworkConnection_t pNetworkConnection,
             if( getNextByte( pNetworkConnection, &encodedByte ) == IOT_MQTT_SUCCESS )
             {
                 remainingLength += ( ( size_t ) encodedByte & 0x7FU ) * multiplier;
-                multiplier      *= 128U;
+                multiplier *= 128U;
                 bytesDecoded++;
             }
             else
@@ -326,8 +326,8 @@ static size_t _getRemainingLength( IotNetworkConnection_t pNetworkConnection,
 
 static IotMqttError_t _deserializeConnack( IotMqttPacketInfo_t * pConnack )
 {
-    IotMqttError_t  status                               = IOT_MQTT_SUCCESS;
-    const uint8_t * pRemainingData                       = pConnack->pRemainingData;
+    IotMqttError_t status = IOT_MQTT_SUCCESS;
+    const uint8_t * pRemainingData = pConnack->pRemainingData;
 
     /* If logging is enabled, declare the CONNACK response code strings. The
      * fourth byte of CONNACK indexes into this array for the corresponding response. */
@@ -416,8 +416,8 @@ static IotMqttError_t _deserializeConnack( IotMqttPacketInfo_t * pConnack )
 
 static IotMqttError_t _deserializeSuback( IotMqttPacketInfo_t * pSuback )
 {
-    IotMqttError_t  status          = IOT_MQTT_SUCCESS;
-    size_t          remainingLength = pSuback->remainingLength;
+    IotMqttError_t status = IOT_MQTT_SUCCESS;
+    size_t remainingLength = pSuback->remainingLength;
     const uint8_t * pVariableHeader = pSuback->pRemainingData;
 
     /* A SUBACK must have a remaining length of at least 3 to accommodate the
@@ -434,8 +434,8 @@ static IotMqttError_t _deserializeSuback( IotMqttPacketInfo_t * pSuback )
 
         IotLogDebug( "Packet identifier %hu.", pSuback->packetIdentifier );
 
-        status                    = _readSubackStatus( remainingLength - sizeof( uint16_t ),
-                                                       pVariableHeader + sizeof( uint16_t ) );
+        status = _readSubackStatus( remainingLength - sizeof( uint16_t ),
+                                    pVariableHeader + sizeof( uint16_t ) );
     }
 
     return status;
@@ -528,15 +528,15 @@ static IotMqttError_t _deserializePuback( IotMqttPacketInfo_t * pPuback )
 
 static IotMqttError_t _deserializePublish( IotMqttPacketInfo_t * pPublish )
 {
-    IotMqttError_t         status = IOT_MQTT_SUCCESS;
+    IotMqttError_t status = IOT_MQTT_SUCCESS;
     IotMqttPublishInfo_t * pOutput = &( pPublish->pubInfo );
-    uint8_t                publishFlags = 0;
-    const uint8_t *        pVariableHeader = pPublish->pRemainingData, * pPacketIdentifierHigh = NULL;
+    uint8_t publishFlags = 0;
+    const uint8_t * pVariableHeader = pPublish->pRemainingData, * pPacketIdentifierHigh = NULL;
 
     /* The flags are the lower 4 bits of the first byte in PUBLISH. */
     publishFlags = pPublish->type;
 
-    status       = _IotMqtt_ProcessPublishFlags( publishFlags, pOutput );
+    status = _IotMqtt_ProcessPublishFlags( publishFlags, pOutput );
 
     if( status == IOT_MQTT_SUCCESS )
     {
@@ -556,15 +556,15 @@ static IotMqttError_t _deserializePublish( IotMqttPacketInfo_t * pPublish )
 
         /* Sanity checks for topic name length and "Remaining length". The remaining
          * length must be at least as large as the variable length header. */
-        status                   = _checkPublishRemainingLength( pPublish,
-                                                                 pOutput->qos,
-                                                                 pOutput->topicNameLength + sizeof( uint16_t ) );
+        status = _checkPublishRemainingLength( pPublish,
+                                               pOutput->qos,
+                                               pOutput->topicNameLength + sizeof( uint16_t ) );
     }
 
     if( status == IOT_MQTT_SUCCESS )
     {
         /* Parse the topic. */
-        pOutput->pTopicName   = ( const char * ) ( pVariableHeader + sizeof( uint16_t ) );
+        pOutput->pTopicName = ( const char * ) ( pVariableHeader + sizeof( uint16_t ) );
 
         IotLogDebug( "Topic name length %hu: %.*s",
                      pOutput->topicNameLength,
@@ -596,12 +596,12 @@ static IotMqttError_t _deserializePublish( IotMqttPacketInfo_t * pPublish )
         if( pOutput->qos == IOT_MQTT_QOS_0 )
         {
             pOutput->payloadLength = ( pPublish->remainingLength - pOutput->topicNameLength - sizeof( uint16_t ) );
-            pOutput->pPayload      = pPacketIdentifierHigh;
+            pOutput->pPayload = pPacketIdentifierHigh;
         }
         else
         {
             pOutput->payloadLength = ( pPublish->remainingLength - pOutput->topicNameLength - 2U * sizeof( uint16_t ) );
-            pOutput->pPayload      = pPacketIdentifierHigh + sizeof( uint16_t );
+            pOutput->pPayload = pPacketIdentifierHigh + sizeof( uint16_t );
         }
 
         IotLogDebug( "Payload length %hu.", pOutput->payloadLength );
@@ -1026,7 +1026,7 @@ IotMqttError_t IotMqtt_SerializePingreq( uint8_t * pBuffer,
 
 IotMqttError_t IotMqtt_DeserializePublish( IotMqttPacketInfo_t * pMqttPacket )
 {
-    IotMqttError_t      status     = IOT_MQTT_SUCCESS;
+    IotMqttError_t status = IOT_MQTT_SUCCESS;
     /* Internal MQTT packet structure */
     IotMqttPacketInfo_t mqttPacket = { 0 };
 
@@ -1043,15 +1043,15 @@ IotMqttError_t IotMqtt_DeserializePublish( IotMqttPacketInfo_t * pMqttPacket )
     else
     {
         /* Set internal mqtt packet parameters. */
-        mqttPacket.pRemainingData  = pMqttPacket->pRemainingData;
+        mqttPacket.pRemainingData = pMqttPacket->pRemainingData;
         mqttPacket.remainingLength = pMqttPacket->remainingLength;
-        mqttPacket.type            = pMqttPacket->type;
-        status                     = _deserializePublish( &mqttPacket );
+        mqttPacket.type = pMqttPacket->type;
+        status = _deserializePublish( &mqttPacket );
     }
 
     if( status == IOT_MQTT_SUCCESS )
     {
-        pMqttPacket->pubInfo          = mqttPacket.pubInfo;
+        pMqttPacket->pubInfo = mqttPacket.pubInfo;
         pMqttPacket->packetIdentifier = mqttPacket.packetIdentifier;
     }
 
@@ -1062,7 +1062,7 @@ IotMqttError_t IotMqtt_DeserializePublish( IotMqttPacketInfo_t * pMqttPacket )
 
 IotMqttError_t IotMqtt_DeserializeResponse( IotMqttPacketInfo_t * pMqttPacket )
 {
-    IotMqttError_t      status     = IOT_MQTT_SUCCESS;
+    IotMqttError_t status = IOT_MQTT_SUCCESS;
     /* Internal MQTT packet structure */
     IotMqttPacketInfo_t mqttPacket = { 0 };
 
@@ -1079,9 +1079,9 @@ IotMqttError_t IotMqtt_DeserializeResponse( IotMqttPacketInfo_t * pMqttPacket )
     else
     {
         /* Set internal mqtt packet parameters. */
-        mqttPacket.pRemainingData  = pMqttPacket->pRemainingData;
+        mqttPacket.pRemainingData = pMqttPacket->pRemainingData;
         mqttPacket.remainingLength = pMqttPacket->remainingLength;
-        mqttPacket.type            = pMqttPacket->type;
+        mqttPacket.type = pMqttPacket->type;
 
         /* Make sure response packet is a valid packet */
         switch( pMqttPacket->type & 0xf0U )

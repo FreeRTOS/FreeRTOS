@@ -202,13 +202,13 @@ typedef struct _httpDownloader
 } _httpDownloader_t;
 
 /* Global HTTP downloader instance. */
-static _httpDownloader_t _httpDownloader       = { 0 };
+static _httpDownloader_t _httpDownloader = { 0 };
 
 /* Buffers for HTTP library. */
-uint8_t *                pConnectionUserBuffer = NULL; /* Buffer to store the HTTP connection context. */
-uint8_t *                pRequestUserBuffer    = NULL; /* Buffer to store the HTTP request context and header. */
-uint8_t *                pResponseUserBuffer   = NULL; /* Buffer to store the HTTP response context and header. */
-uint8_t *                pResponseBodyBuffer   = NULL; /* Buffer to store the HTTP response body. */
+uint8_t * pConnectionUserBuffer = NULL; /* Buffer to store the HTTP connection context. */
+uint8_t * pRequestUserBuffer = NULL;    /* Buffer to store the HTTP request context and header. */
+uint8_t * pResponseUserBuffer = NULL;   /* Buffer to store the HTTP response context and header. */
+uint8_t * pResponseBodyBuffer = NULL;   /* Buffer to store the HTTP response body. */
 
 /* We need to use this function defined in iot_logging_task_dynamic_buffers.c to print HTTP message
  * without appending the task name and tick count. */
@@ -229,7 +229,7 @@ static bool _httpAllocateBuffers()
         isSuccess = false;
     }
 
-    pRequestUserBuffer    = pvPortMalloc( HTTPS_REQUEST_USER_BUFFER_SIZE );
+    pRequestUserBuffer = pvPortMalloc( HTTPS_REQUEST_USER_BUFFER_SIZE );
 
     if( isSuccess && ( pRequestUserBuffer == NULL ) )
     {
@@ -237,7 +237,7 @@ static bool _httpAllocateBuffers()
         isSuccess = false;
     }
 
-    pResponseUserBuffer   = pvPortMalloc( HTTPS_RESPONSE_USER_BUFFER_SIZE );
+    pResponseUserBuffer = pvPortMalloc( HTTPS_RESPONSE_USER_BUFFER_SIZE );
 
     if( isSuccess && ( pResponseUserBuffer == NULL ) )
     {
@@ -245,7 +245,7 @@ static bool _httpAllocateBuffers()
         isSuccess = false;
     }
 
-    pResponseBodyBuffer   = pvPortMalloc( HTTPS_RESPONSE_BODY_BUFFER_SIZE );
+    pResponseBodyBuffer = pvPortMalloc( HTTPS_RESPONSE_BODY_BUFFER_SIZE );
 
     if( isSuccess && ( pResponseBodyBuffer == NULL ) )
     {
@@ -293,7 +293,7 @@ static void _httpProcessResponseBody( OTA_AgentContext_t * pAgentCtx,
     IotLogDebug( "Invoking _httpProcessResponseBody" );
 
     OTA_EventData_t * pMessage;
-    OTA_EventMsg_t    eventMsg = { 0 };
+    OTA_EventMsg_t eventMsg = { 0 };
 
     pAgentCtx->xStatistics.ulOTA_PacketsReceived++;
 
@@ -310,8 +310,8 @@ static void _httpProcessResponseBody( OTA_AgentContext_t * pAgentCtx,
         pMessage->ulDataLength = bufferSize;
 
         memcpy( pMessage->ucData, pHTTPResponseBody, pMessage->ulDataLength );
-        eventMsg.xEventId      = eOTA_AgentEvent_ReceivedFileBlock;
-        eventMsg.pxEventData   = pMessage;
+        eventMsg.xEventId = eOTA_AgentEvent_ReceivedFileBlock;
+        eventMsg.pxEventData = pMessage;
         /* Send job document received event. */
         OTA_SignalEvent( &eventMsg );
     }
@@ -321,7 +321,7 @@ static void _httpProcessResponseBody( OTA_AgentContext_t * pAgentCtx,
 static void _httpErrorHandler( uint16_t responseCode )
 {
     const char * pResponseBody = ( const char * ) pResponseBodyBuffer;
-    char *       endPos        = NULL;
+    char * endPos = NULL;
 
     /* Force the response body to be NULL terminated. */
     pResponseBodyBuffer[ HTTPS_RESPONSE_BODY_BUFFER_SIZE - 1 ] = '\0';
@@ -387,14 +387,14 @@ static void _httpAppendHeaderCallback( void * pPrivateData,
     IotLogDebug( "Invoking _httpAppendHeaderCallback." );
 
     /* Value of the "Range" field in HTTP GET request header, set when requesting the file block. */
-    char *               pRangeValueStr = ( ( _httpCallbackData_t * ) ( pPrivateData ) )->pRangeValueStr;
+    char * pRangeValueStr = ( ( _httpCallbackData_t * ) ( pPrivateData ) )->pRangeValueStr;
 
     /* Set the header for this range request. */
-    IotHttpsReturnCode_t status         = IotHttpsClient_AddHeader( requestHandle,
-                                                                    "Range",
-                                                                    sizeof( "Range" ) - 1,
-                                                                    pRangeValueStr,
-                                                                    strlen( pRangeValueStr ) );
+    IotHttpsReturnCode_t status = IotHttpsClient_AddHeader( requestHandle,
+                                                            "Range",
+                                                            sizeof( "Range" ) - 1,
+                                                            pRangeValueStr,
+                                                            strlen( pRangeValueStr ) );
 
     /* If case of error, the request will be canceled, then _httpErrorCallback will be invoked,
      * followed by _httpResponseCompleteCallback. */
@@ -424,25 +424,25 @@ static void _httpReadReadyCallback( void * pPrivateData,
     ( void ) returnCode;
 
     /* HTTP return status. */
-    IotHttpsReturnCode_t httpsStatus                                                = IOT_HTTPS_OK;
+    IotHttpsReturnCode_t httpsStatus = IOT_HTTPS_OK;
 
     /* The content length of this HTTP response. */
-    uint32_t             contentLength                                              = 0;
+    uint32_t contentLength = 0;
 
     /* Size of the response body returned from HTTP API. */
-    uint32_t             responseBodyLength                                         = 0;
+    uint32_t responseBodyLength = 0;
 
     /* Buffer to read the "Connection" field in HTTP header. */
-    char                 connectionValueStr[ HTTP_HEADER_CONNECTION_VALUE_MAX_LEN ] = { 0 };
+    char connectionValueStr[ HTTP_HEADER_CONNECTION_VALUE_MAX_LEN ] = { 0 };
 
     /* A response is received from the server, setting the state to processing response. */
     _httpDownloader.state = OTA_HTTP_PROCESSING_RESPONSE;
 
     /* Read the data from the network. */
-    responseBodyLength    = HTTPS_RESPONSE_BODY_BUFFER_SIZE;
-    httpsStatus           = IotHttpsClient_ReadResponseBody( responseHandle,
-                                                             pResponseBodyBuffer,
-                                                             &responseBodyLength );
+    responseBodyLength = HTTPS_RESPONSE_BODY_BUFFER_SIZE;
+    httpsStatus = IotHttpsClient_ReadResponseBody( responseHandle,
+                                                   pResponseBodyBuffer,
+                                                   &responseBodyLength );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -460,7 +460,7 @@ static void _httpReadReadyCallback( void * pPrivateData,
     }
 
     /* Read the "Content-Length" field from HTTP header. */
-    httpsStatus           = IotHttpsClient_ReadContentLength( responseHandle, &contentLength );
+    httpsStatus = IotHttpsClient_ReadContentLength( responseHandle, &contentLength );
 
     if( ( httpsStatus != IOT_HTTPS_OK ) || ( contentLength == 0 ) )
     {
@@ -482,11 +482,11 @@ static void _httpReadReadyCallback( void * pPrivateData,
     /* The connection could be closed by S3 after 100 requests, so we need to check the value
      * of the "Connection" filed in HTTP header to see if we need to reconnect. */
     memset( connectionValueStr, 0, sizeof( connectionValueStr ) );
-    httpsStatus           = IotHttpsClient_ReadHeader( responseHandle,
-                                                       "Connection",
-                                                       sizeof( "Connection" ) - 1,
-                                                       connectionValueStr,
-                                                       sizeof( connectionValueStr ) );
+    httpsStatus = IotHttpsClient_ReadHeader( responseHandle,
+                                             "Connection",
+                                             sizeof( "Connection" ) - 1,
+                                             connectionValueStr,
+                                             sizeof( connectionValueStr ) );
 
     /* Check if there is any other error besides not found when parsing the http header. */
     if( ( httpsStatus != IOT_HTTPS_OK ) && ( httpsStatus != IOT_HTTPS_NOT_FOUND ) )
@@ -618,7 +618,7 @@ static IotHttpsReturnCode_t _httpInitUrl( const char * pURL )
     IotHttpsReturnCode_t httpsStatus = IOT_HTTPS_OK;
 
     /* HTTP URL information. */
-    _httpUrlInfo_t *     pUrlInfo    = &_httpDownloader.httpUrlInfo;
+    _httpUrlInfo_t * pUrlInfo = &_httpDownloader.httpUrlInfo;
 
     /* Retrieve the resource path from the HTTP URL. pPath will point to the start of this part. */
     httpsStatus = IotHttpsClient_GetUrlPath( pURL,
@@ -633,10 +633,10 @@ static IotHttpsReturnCode_t _httpInitUrl( const char * pURL )
         pUrlInfo->pathLength = strlen( pUrlInfo->pPath );
 
         /* Retrieve the authority part and length from the HTTP URL. */
-        httpsStatus          = IotHttpsClient_GetUrlAddress( pURL,
-                                                             strlen( pURL ),
-                                                             &pUrlInfo->pAddress,
-                                                             &pUrlInfo->addressLength );
+        httpsStatus = IotHttpsClient_GetUrlAddress( pURL,
+                                                    strlen( pURL ),
+                                                    &pUrlInfo->pAddress,
+                                                    &pUrlInfo->addressLength );
 
         if( httpsStatus != IOT_HTTPS_OK )
         {
@@ -655,60 +655,60 @@ static IotHttpsReturnCode_t _httpConnect( const IotNetworkInterface_t * pNetwork
                                           struct IotNetworkCredentials * pNetworkCredentials )
 {
     /* HTTP API return status. */
-    IotHttpsReturnCode_t       httpsStatus       = IOT_HTTPS_OK;
+    IotHttpsReturnCode_t httpsStatus = IOT_HTTPS_OK;
 
     /* HTTP connection data. */
-    _httpConnection_t *        pConnection       = &_httpDownloader.httpConnection;
+    _httpConnection_t * pConnection = &_httpDownloader.httpConnection;
 
     /* HTTP connection configuration. */
     IotHttpsConnectionInfo_t * pConnectionConfig = &pConnection->connectionConfig;
 
     /* HTTP request data. */
-    _httpRequest_t *           pRequest          = &_httpDownloader.httpRequest;
+    _httpRequest_t * pRequest = &_httpDownloader.httpRequest;
 
     /* HTTP response data. */
-    _httpResponse_t *          pResponse         = &_httpDownloader.httpResponse;
+    _httpResponse_t * pResponse = &_httpDownloader.httpResponse;
 
     /* HTTP URL information. */
-    _httpUrlInfo_t *           pUrlInfo          = &_httpDownloader.httpUrlInfo;
+    _httpUrlInfo_t * pUrlInfo = &_httpDownloader.httpUrlInfo;
 
     /* Set the connection configurations. */
-    pConnectionConfig->pAddress                            = pUrlInfo->pAddress;
-    pConnectionConfig->addressLen                          = pUrlInfo->addressLength;
-    pConnectionConfig->port                                = HTTPS_PORT;
-    pConnectionConfig->pCaCert                             = HTTPS_TRUSTED_ROOT_CA;
-    pConnectionConfig->caCertLen                           = sizeof( HTTPS_TRUSTED_ROOT_CA );
-    pConnectionConfig->userBuffer.pBuffer                  = pConnectionUserBuffer;
-    pConnectionConfig->userBuffer.bufferLen                = HTTPS_CONNECTION_USER_BUFFER_SIZE;
-    pConnectionConfig->pClientCert                         = pNetworkCredentials->pClientCert;
-    pConnectionConfig->clientCertLen                       = pNetworkCredentials->clientCertSize;
-    pConnectionConfig->pPrivateKey                         = pNetworkCredentials->pPrivateKey;
-    pConnectionConfig->privateKeyLen                       = pNetworkCredentials->privateKeySize;
-    pConnectionConfig->pNetworkInterface                   = pNetworkInterface;
+    pConnectionConfig->pAddress = pUrlInfo->pAddress;
+    pConnectionConfig->addressLen = pUrlInfo->addressLength;
+    pConnectionConfig->port = HTTPS_PORT;
+    pConnectionConfig->pCaCert = HTTPS_TRUSTED_ROOT_CA;
+    pConnectionConfig->caCertLen = sizeof( HTTPS_TRUSTED_ROOT_CA );
+    pConnectionConfig->userBuffer.pBuffer = pConnectionUserBuffer;
+    pConnectionConfig->userBuffer.bufferLen = HTTPS_CONNECTION_USER_BUFFER_SIZE;
+    pConnectionConfig->pClientCert = pNetworkCredentials->pClientCert;
+    pConnectionConfig->clientCertLen = pNetworkCredentials->clientCertSize;
+    pConnectionConfig->pPrivateKey = pNetworkCredentials->pPrivateKey;
+    pConnectionConfig->privateKeyLen = pNetworkCredentials->privateKeySize;
+    pConnectionConfig->pNetworkInterface = pNetworkInterface;
 
     /* Initialize HTTP request configuration. */
-    pRequest->requestConfig.pPath                          = pUrlInfo->pPath;
-    pRequest->requestConfig.pathLen                        = pUrlInfo->pathLength;
-    pRequest->requestConfig.pHost                          = pUrlInfo->pAddress;
-    pRequest->requestConfig.hostLen                        = pUrlInfo->addressLength;
-    pRequest->requestConfig.method                         = IOT_HTTPS_METHOD_GET;
-    pRequest->requestConfig.userBuffer.pBuffer             = pRequestUserBuffer;
-    pRequest->requestConfig.userBuffer.bufferLen           = HTTPS_REQUEST_USER_BUFFER_SIZE;
-    pRequest->requestConfig.isAsync                        = true;
-    pRequest->requestConfig.u.pAsyncInfo                   = &pRequest->asyncInfo;
+    pRequest->requestConfig.pPath = pUrlInfo->pPath;
+    pRequest->requestConfig.pathLen = pUrlInfo->pathLength;
+    pRequest->requestConfig.pHost = pUrlInfo->pAddress;
+    pRequest->requestConfig.hostLen = pUrlInfo->addressLength;
+    pRequest->requestConfig.method = IOT_HTTPS_METHOD_GET;
+    pRequest->requestConfig.userBuffer.pBuffer = pRequestUserBuffer;
+    pRequest->requestConfig.userBuffer.bufferLen = HTTPS_REQUEST_USER_BUFFER_SIZE;
+    pRequest->requestConfig.isAsync = true;
+    pRequest->requestConfig.u.pAsyncInfo = &pRequest->asyncInfo;
 
     /* Initialize HTTP response configuration. */
-    pResponse->responseConfig.userBuffer.pBuffer           = pResponseUserBuffer;
-    pResponse->responseConfig.userBuffer.bufferLen         = HTTPS_RESPONSE_USER_BUFFER_SIZE;
-    pResponse->responseConfig.pSyncInfo                    = NULL;
+    pResponse->responseConfig.userBuffer.pBuffer = pResponseUserBuffer;
+    pResponse->responseConfig.userBuffer.bufferLen = HTTPS_RESPONSE_USER_BUFFER_SIZE;
+    pResponse->responseConfig.pSyncInfo = NULL;
 
     /* Initialize HTTP asynchronous configuration. */
-    pRequest->asyncInfo.callbacks.appendHeaderCallback     = _httpAppendHeaderCallback;
-    pRequest->asyncInfo.callbacks.readReadyCallback        = _httpReadReadyCallback;
+    pRequest->asyncInfo.callbacks.appendHeaderCallback = _httpAppendHeaderCallback;
+    pRequest->asyncInfo.callbacks.readReadyCallback = _httpReadReadyCallback;
     pRequest->asyncInfo.callbacks.responseCompleteCallback = _httpResponseCompleteCallback;
-    pRequest->asyncInfo.callbacks.errorCallback            = _httpErrorCallback;
+    pRequest->asyncInfo.callbacks.errorCallback = _httpErrorCallback;
     pRequest->asyncInfo.callbacks.connectionClosedCallback = _httpConnectionClosedCallback;
-    pRequest->asyncInfo.pPrivData                          = ( void * ) ( &_httpDownloader.httpCallbackData );
+    pRequest->asyncInfo.pPrivData = ( void * ) ( &_httpDownloader.httpCallbackData );
 
     httpsStatus = IotHttpsClient_Connect( &pConnection->connectionHandle, pConnectionConfig );
 
@@ -722,60 +722,60 @@ static IotHttpsReturnCode_t _httpConnect( const IotNetworkInterface_t * pNetwork
 static _httpErr _httpGetFileSize( uint32_t * pFileSize )
 {
     /* Return status. */
-    _httpErr                 status                                            = OTA_HTTP_ERR_NONE;
-    IotHttpsReturnCode_t     httpsStatus                                       = IOT_HTTPS_OK;
+    _httpErr status = OTA_HTTP_ERR_NONE;
+    IotHttpsReturnCode_t httpsStatus = IOT_HTTPS_OK;
 
     /* HTTP response code. */
-    uint16_t                 responseStatus                                    = IOT_HTTPS_STATUS_OK;
+    uint16_t responseStatus = IOT_HTTPS_STATUS_OK;
 
     /* HTTP request and response configurations. We're creating local variables here because this is
      * a temporary synchronous request. */
-    IotHttpsRequestInfo_t    requestConfig                                     = { 0 };
-    IotHttpsResponseInfo_t   responseConfig                                    = { 0 };
+    IotHttpsRequestInfo_t requestConfig = { 0 };
+    IotHttpsResponseInfo_t responseConfig = { 0 };
 
     /* Synchronous request and response configurations. */
-    IotHttpsSyncInfo_t       requestSyncInfo                                   = { 0 };
-    IotHttpsSyncInfo_t       responseSyncInfo                                  = { 0 };
+    IotHttpsSyncInfo_t requestSyncInfo = { 0 };
+    IotHttpsSyncInfo_t responseSyncInfo = { 0 };
 
     /* Handle for HTTP request and response. */
-    IotHttpsRequestHandle_t  requestHandle                                     = NULL;
-    IotHttpsResponseHandle_t responseHandle                                    = NULL;
+    IotHttpsRequestHandle_t requestHandle = NULL;
+    IotHttpsResponseHandle_t responseHandle = NULL;
 
     /* HTTP URL information. */
-    _httpUrlInfo_t *         pUrlInfo                                          = &_httpDownloader.httpUrlInfo;
+    _httpUrlInfo_t * pUrlInfo = &_httpDownloader.httpUrlInfo;
 
     /* Value of the "Content-Range" field in HTTP response header. The format is "bytes 0-0/FILESIZE". */
-    char   pContentRange[ sizeof( "bytes 0-0/" ) + OTA_MAX_FILE_SIZE_STR_LEN ] = { 0 };
+    char pContentRange[ sizeof( "bytes 0-0/" ) + OTA_MAX_FILE_SIZE_STR_LEN ] = { 0 };
 
     /* Pointer to the location of the file size in pContentRange. */
     char * pFileSizeStr = NULL;
 
     /* There's no message body in this GET request. */
-    requestSyncInfo.pBody               = NULL;
-    requestSyncInfo.bodyLen             = 0;
+    requestSyncInfo.pBody = NULL;
+    requestSyncInfo.bodyLen = 0;
 
     /* Store the response body in case there's any failure. */
-    responseSyncInfo.pBody              = pResponseBodyBuffer;
-    responseSyncInfo.bodyLen            = HTTPS_RESPONSE_BODY_BUFFER_SIZE;
+    responseSyncInfo.pBody = pResponseBodyBuffer;
+    responseSyncInfo.bodyLen = HTTPS_RESPONSE_BODY_BUFFER_SIZE;
 
     /* Set the request configurations. */
-    requestConfig.pPath                 = pUrlInfo->pPath;
-    requestConfig.pathLen               = pUrlInfo->pathLength;
-    requestConfig.pHost                 = pUrlInfo->pAddress;
-    requestConfig.hostLen               = pUrlInfo->addressLength;
-    requestConfig.method                = IOT_HTTPS_METHOD_GET;
-    requestConfig.userBuffer.pBuffer    = pRequestUserBuffer;
-    requestConfig.userBuffer.bufferLen  = HTTPS_REQUEST_USER_BUFFER_SIZE;
-    requestConfig.isAsync               = false;
-    requestConfig.u.pSyncInfo           = &requestSyncInfo;
+    requestConfig.pPath = pUrlInfo->pPath;
+    requestConfig.pathLen = pUrlInfo->pathLength;
+    requestConfig.pHost = pUrlInfo->pAddress;
+    requestConfig.hostLen = pUrlInfo->addressLength;
+    requestConfig.method = IOT_HTTPS_METHOD_GET;
+    requestConfig.userBuffer.pBuffer = pRequestUserBuffer;
+    requestConfig.userBuffer.bufferLen = HTTPS_REQUEST_USER_BUFFER_SIZE;
+    requestConfig.isAsync = false;
+    requestConfig.u.pSyncInfo = &requestSyncInfo;
 
     /* Set the response configurations. */
-    responseConfig.userBuffer.pBuffer   = pResponseUserBuffer;
+    responseConfig.userBuffer.pBuffer = pResponseUserBuffer;
     responseConfig.userBuffer.bufferLen = HTTPS_RESPONSE_USER_BUFFER_SIZE;
-    responseConfig.pSyncInfo            = &responseSyncInfo;
+    responseConfig.pSyncInfo = &responseSyncInfo;
 
     /* Initialize the request to retrieve a request handle. */
-    httpsStatus                         = IotHttpsClient_InitializeRequest( &requestHandle, &requestConfig );
+    httpsStatus = IotHttpsClient_InitializeRequest( &requestHandle, &requestConfig );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -785,11 +785,11 @@ static _httpErr _httpGetFileSize( uint32_t * pFileSize )
     }
 
     /* Set the "Range" field in HTTP header to "bytes=0-0" since we just want the file size. */
-    httpsStatus                         = IotHttpsClient_AddHeader( requestHandle,
-                                                                    "Range",
-                                                                    sizeof( "Range" ) - 1,
-                                                                    "bytes=0-0",
-                                                                    sizeof( "bytes=0-0" ) - 1 );
+    httpsStatus = IotHttpsClient_AddHeader( requestHandle,
+                                            "Range",
+                                            sizeof( "Range" ) - 1,
+                                            "bytes=0-0",
+                                            sizeof( "bytes=0-0" ) - 1 );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -799,11 +799,11 @@ static _httpErr _httpGetFileSize( uint32_t * pFileSize )
     }
 
     /* Send the request synchronously. */
-    httpsStatus                         = IotHttpsClient_SendSync( _httpDownloader.httpConnection.connectionHandle,
-                                                                   requestHandle,
-                                                                   &responseHandle,
-                                                                   &responseConfig,
-                                                                   HTTP_SYNC_TIMEOUT );
+    httpsStatus = IotHttpsClient_SendSync( _httpDownloader.httpConnection.connectionHandle,
+                                           requestHandle,
+                                           &responseHandle,
+                                           &responseConfig,
+                                           HTTP_SYNC_TIMEOUT );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -812,7 +812,7 @@ static _httpErr _httpGetFileSize( uint32_t * pFileSize )
         OTA_GOTO_CLEANUP();
     }
 
-    httpsStatus                         = IotHttpsClient_ReadResponseStatus( responseHandle, &responseStatus );
+    httpsStatus = IotHttpsClient_ReadResponseStatus( responseHandle, &responseStatus );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -830,11 +830,11 @@ static _httpErr _httpGetFileSize( uint32_t * pFileSize )
     }
 
     /* Parse the HTTP header and retrieve the file size. */
-    httpsStatus                         = IotHttpsClient_ReadHeader( responseHandle,
-                                                                     "Content-Range",
-                                                                     sizeof( "Content-Range" ) - 1,
-                                                                     pContentRange,
-                                                                     sizeof( pContentRange ) );
+    httpsStatus = IotHttpsClient_ReadHeader( responseHandle,
+                                             "Content-Range",
+                                             sizeof( "Content-Range" ) - 1,
+                                             pContentRange,
+                                             sizeof( pContentRange ) );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -843,7 +843,7 @@ static _httpErr _httpGetFileSize( uint32_t * pFileSize )
         OTA_GOTO_CLEANUP();
     }
 
-    pFileSizeStr                        = strstr( pContentRange, "/" );
+    pFileSizeStr = strstr( pContentRange, "/" );
 
     if( pFileSizeStr == NULL )
     {
@@ -856,7 +856,7 @@ static _httpErr _httpGetFileSize( uint32_t * pFileSize )
         pFileSizeStr += sizeof( char );
     }
 
-    *pFileSize                          = ( uint32_t ) strtoul( pFileSizeStr, NULL, 10 );
+    *pFileSize = ( uint32_t ) strtoul( pFileSizeStr, NULL, 10 );
 
     if( ( *pFileSize == 0 ) || ( *pFileSize == UINT32_MAX ) )
     {
@@ -917,28 +917,28 @@ OTA_Err_t _AwsIotOTA_InitFileTransfer_HTTP( OTA_AgentContext_t * pAgentCtx )
     IotLogDebug( "Invoking _AwsIotOTA_InitFileTransfer_HTTP" );
 
     /* Return status. */
-    OTA_Err_t                      status              = kOTA_Err_None;
-    IotHttpsReturnCode_t           httpsStatus         = IOT_HTTPS_OK;
+    OTA_Err_t status = kOTA_Err_None;
+    IotHttpsReturnCode_t httpsStatus = IOT_HTTPS_OK;
 
     /* Cleanup status. */
-    bool                           cleanupRequired     = false;
+    bool cleanupRequired = false;
 
     /* Network interface and credentials from OTA agent. */
-    OTA_ConnectionContext_t *      connContext         = pAgentCtx->pvConnectionContext;
-    const IotNetworkInterface_t *  pNetworkInterface   = connContext->pxNetworkInterface;
+    OTA_ConnectionContext_t * connContext = pAgentCtx->pvConnectionContext;
+    const IotNetworkInterface_t * pNetworkInterface = connContext->pxNetworkInterface;
     struct IotNetworkCredentials * pNetworkCredentials = connContext->pvNetworkCredentials;
 
     /* Pre-signed URL. */
-    const char *                   pURL                = NULL;
+    const char * pURL = NULL;
 
     /* File context from OTA agent. */
-    OTA_FileContext_t *            fileContext         = &( pAgentCtx->pxOTA_Files[ pAgentCtx->ulFileIndex ] );
+    OTA_FileContext_t * fileContext = &( pAgentCtx->pxOTA_Files[ pAgentCtx->ulFileIndex ] );
 
     /* OTA download file size from OTA agent (parsed from job document). */
-    uint32_t                       otaFileSize         = 0;
+    uint32_t otaFileSize = 0;
 
     /* OTA download file size from the HTTP server, this should match otaFileSize. */
-    uint32_t                       httpFileSize        = 0;
+    uint32_t httpFileSize = 0;
 
     /* Store the OTA agent for later access. */
     _httpDownloader.pAgentCtx = pAgentCtx;
@@ -951,14 +951,14 @@ OTA_Err_t _AwsIotOTA_InitFileTransfer_HTTP( OTA_AgentContext_t * pAgentCtx )
     }
 
     /* Get the file size from OTA agent (parsed from job document). */
-    otaFileSize               = fileContext->ulFileSize;
+    otaFileSize = fileContext->ulFileSize;
 
     /* Get pre-signed URL from pAgentCtx. */
-    pURL                      = ( const char * ) ( fileContext->pucUpdateUrlPath );
+    pURL = ( const char * ) ( fileContext->pucUpdateUrlPath );
     IotLogInfo( "Pre-signed URL size: %d.", strlen( pURL ) );
 
     /* Initialize the HTTPS library. */
-    httpsStatus               = IotHttpsClient_Init();
+    httpsStatus = IotHttpsClient_Init();
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -975,23 +975,23 @@ OTA_Err_t _AwsIotOTA_InitFileTransfer_HTTP( OTA_AgentContext_t * pAgentCtx )
     }
 
     /* Connect to the HTTP server and initialize download information. */
-    httpsStatus               = _httpInitUrl( pURL );
+    httpsStatus = _httpInitUrl( pURL );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
         IotLogError( "Failed to parse the HTTP Url. Error code: %d", httpsStatus );
-        status          = kOTA_Err_HTTPInitFailed;
+        status = kOTA_Err_HTTPInitFailed;
         cleanupRequired = true;
         OTA_GOTO_CLEANUP();
     }
 
-    httpsStatus               = _httpConnect( pNetworkInterface, pNetworkCredentials );
+    httpsStatus = _httpConnect( pNetworkInterface, pNetworkCredentials );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
         IotLogError( "Failed to connect to %.*s. Error code: %d", _httpDownloader.httpUrlInfo.addressLength,
                      _httpDownloader.httpUrlInfo.pAddress, httpsStatus );
-        status          = kOTA_Err_HTTPInitFailed;
+        status = kOTA_Err_HTTPInitFailed;
         cleanupRequired = true;
         OTA_GOTO_CLEANUP();
     }
@@ -1002,7 +1002,7 @@ OTA_Err_t _AwsIotOTA_InitFileTransfer_HTTP( OTA_AgentContext_t * pAgentCtx )
     if( _httpGetFileSize( &httpFileSize ) != OTA_HTTP_ERR_NONE )
     {
         IotLogError( "Cannot retrieve the file size from HTTP server." );
-        status          = kOTA_Err_HTTPInitFailed;
+        status = kOTA_Err_HTTPInitFailed;
         cleanupRequired = true;
         OTA_GOTO_CLEANUP();
     }
@@ -1013,7 +1013,7 @@ OTA_Err_t _AwsIotOTA_InitFileTransfer_HTTP( OTA_AgentContext_t * pAgentCtx )
                      "job document (%u bytes).",
                      ( unsigned int ) httpFileSize,
                      ( unsigned int ) otaFileSize );
-        status          = kOTA_Err_HTTPInitFailed;
+        status = kOTA_Err_HTTPInitFailed;
         cleanupRequired = true;
         OTA_GOTO_CLEANUP();
     }
@@ -1038,25 +1038,25 @@ OTA_Err_t _AwsIotOTA_RequestDataBlock_HTTP( OTA_AgentContext_t * pAgentCtx )
     IotLogDebug( "Invoking _AwsIotOTA_RequestDataBlock_HTTP" );
 
     /* Return status. */
-    OTA_Err_t            status      = kOTA_Err_None;
+    OTA_Err_t status = kOTA_Err_None;
     IotHttpsReturnCode_t httpsStatus = IOT_HTTPS_OK;
 
     /* HTTP connection data. */
-    _httpConnection_t *  pConnection = &_httpDownloader.httpConnection;
+    _httpConnection_t * pConnection = &_httpDownloader.httpConnection;
 
     /* HTTP request data. */
-    _httpRequest_t *     pRequest    = &_httpDownloader.httpRequest;
+    _httpRequest_t * pRequest = &_httpDownloader.httpRequest;
 
     /* HTTP response data. */
-    _httpResponse_t *    pResponse   = &_httpDownloader.httpResponse;
+    _httpResponse_t * pResponse = &_httpDownloader.httpResponse;
 
     /* Values for the "Range" field in HTTP header. */
-    uint32_t             rangeStart  = 0;
-    uint32_t             rangeEnd    = 0;
-    int                  numWritten  = 0;
+    uint32_t rangeStart = 0;
+    uint32_t rangeEnd = 0;
+    int numWritten = 0;
 
     /* File context from OTA agent. */
-    OTA_FileContext_t *  fileContext = &( pAgentCtx->pxOTA_Files[ pAgentCtx->ulFileIndex ] );
+    OTA_FileContext_t * fileContext = &( pAgentCtx->pxOTA_Files[ pAgentCtx->ulFileIndex ] );
 
     /* Exit if we're still busy downloading or reconnect is required but failed. */
     if( _requestDataBlockPreCheck() != OTA_HTTP_ERR_NONE )
@@ -1065,8 +1065,8 @@ OTA_Err_t _AwsIotOTA_RequestDataBlock_HTTP( OTA_AgentContext_t * pAgentCtx )
         OTA_GOTO_CLEANUP();
     }
 
-    _httpDownloader.state             = OTA_HTTP_SENDING_REQUEST;
-    _httpDownloader.err               = OTA_HTTP_ERR_NONE;
+    _httpDownloader.state = OTA_HTTP_SENDING_REQUEST;
+    _httpDownloader.err = OTA_HTTP_ERR_NONE;
 
     if( fileContext == NULL )
     {
@@ -1079,7 +1079,7 @@ OTA_Err_t _AwsIotOTA_RequestDataBlock_HTTP( OTA_AgentContext_t * pAgentCtx )
     pAgentCtx->ulNumOfBlocksToReceive = 1;
 
     /* Calculate ranges. */
-    rangeStart                        = _httpDownloader.currBlock * OTA_FILE_BLOCK_SIZE;
+    rangeStart = _httpDownloader.currBlock * OTA_FILE_BLOCK_SIZE;
 
     if( fileContext->ulBlocksRemaining == 1 )
     {
@@ -1090,14 +1090,14 @@ OTA_Err_t _AwsIotOTA_RequestDataBlock_HTTP( OTA_AgentContext_t * pAgentCtx )
         rangeEnd = rangeStart + OTA_FILE_BLOCK_SIZE - 1;
     }
 
-    _httpDownloader.currBlockSize     = rangeEnd - rangeStart + 1;
+    _httpDownloader.currBlockSize = rangeEnd - rangeStart + 1;
 
     /* Creating the "range" field in HTTP header. */
-    numWritten                        = snprintf( _httpDownloader.httpCallbackData.pRangeValueStr,
-                                                  HTTP_HEADER_RANGE_VALUE_MAX_LEN,
-                                                  "bytes=%u-%u",
-                                                  ( unsigned int ) rangeStart,
-                                                  ( unsigned int ) rangeEnd );
+    numWritten = snprintf( _httpDownloader.httpCallbackData.pRangeValueStr,
+                           HTTP_HEADER_RANGE_VALUE_MAX_LEN,
+                           "bytes=%u-%u",
+                           ( unsigned int ) rangeStart,
+                           ( unsigned int ) rangeEnd );
 
     if( ( numWritten < 0 ) || ( numWritten >= HTTP_HEADER_RANGE_VALUE_MAX_LEN ) )
     {
@@ -1107,7 +1107,7 @@ OTA_Err_t _AwsIotOTA_RequestDataBlock_HTTP( OTA_AgentContext_t * pAgentCtx )
     }
 
     /* Re-initialize the request handle as it could be changed when handling last response. */
-    httpsStatus                       = IotHttpsClient_InitializeRequest( &pRequest->requestHandle, &pRequest->requestConfig );
+    httpsStatus = IotHttpsClient_InitializeRequest( &pRequest->requestHandle, &pRequest->requestConfig );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -1118,10 +1118,10 @@ OTA_Err_t _AwsIotOTA_RequestDataBlock_HTTP( OTA_AgentContext_t * pAgentCtx )
 
     /* Send the request asynchronously. Receiving is handled in a callback. */
     IotLogInfo( "Sending HTTP request to download block %d.", _httpDownloader.currBlock );
-    httpsStatus                       = IotHttpsClient_SendAsync( pConnection->connectionHandle,
-                                                                  pRequest->requestHandle,
-                                                                  &pResponse->responseHandle,
-                                                                  &pResponse->responseConfig );
+    httpsStatus = IotHttpsClient_SendAsync( pConnection->connectionHandle,
+                                            pRequest->requestHandle,
+                                            &pResponse->responseHandle,
+                                            &pResponse->responseConfig );
 
     if( httpsStatus != IOT_HTTPS_OK )
     {
@@ -1156,14 +1156,14 @@ OTA_Err_t _AwsIotOTA_DecodeFileBlock_HTTP( uint8_t * pMessageBuffer,
     /* Unused parameters. */
     ( void ) messageSize;
 
-    *pPayload                  = pMessageBuffer;
-    *pFileId                   = 0;
-    *pBlockId                  = _httpDownloader.currBlock;
-    *pBlockSize                = _httpDownloader.currBlockSize;
-    *pPayloadSize              = _httpDownloader.currBlockSize;
+    *pPayload = pMessageBuffer;
+    *pFileId = 0;
+    *pBlockId = _httpDownloader.currBlock;
+    *pBlockSize = _httpDownloader.currBlockSize;
+    *pPayloadSize = _httpDownloader.currBlockSize;
 
     /* Current block is processed, set the file block to next one and the state to idle. */
-    _httpDownloader.state      = OTA_HTTP_IDLE;
+    _httpDownloader.state = OTA_HTTP_IDLE;
     _httpDownloader.currBlock += 1;
 
     return kOTA_Err_None;

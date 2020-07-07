@@ -40,7 +40,7 @@ void * mbedtls_platform_calloc( size_t nmemb,
                                 size_t size )
 {
     size_t totalSize = nmemb * size;
-    void * pBuffer   = NULL;
+    void * pBuffer = NULL;
 
     /* Check that neither nmemb nor size were 0. */
     if( totalSize > 0 )
@@ -147,7 +147,7 @@ int mbedtls_platform_entropy_poll( void * data,
                                    size_t len,
                                    size_t * olen )
 {
-    int      status    = 0;
+    int status = 0;
     NTSTATUS rngStatus = 0;
 
     /* Context is not used by this function. */
@@ -166,7 +166,7 @@ int mbedtls_platform_entropy_poll( void * data,
     else
     {
         /* RNG failure. */
-        *olen  = 0;
+        *olen = 0;
         status = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
     }
 

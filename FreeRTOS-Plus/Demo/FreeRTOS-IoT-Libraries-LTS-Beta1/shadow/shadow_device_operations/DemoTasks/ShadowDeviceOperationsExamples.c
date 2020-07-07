@@ -214,13 +214,13 @@
 /**
  *  @brief This is the current state of the shadow used in this demo.
  */
-static int32_t lDevicePowerOnState                                   = 0;
+static int32_t lDevicePowerOnState = 0;
 
 /**
  * @brief This is a Semaphore used to synchronize between delta callback and
  * Shadow updates.
  */
-iot_sem_internal_t xDeltaSemaphore                                   = { 0 };
+iot_sem_internal_t xDeltaSemaphore = { 0 };
 
 /**
  * @brief The task used to demonstrate Shadow.
@@ -277,7 +277,7 @@ static void prvInitialiseLibraries( void );
 /**
  * @brief The MQTT connection handle used in this example.
  */
-static IotMqttConnection_t xMQTTConnection                           = IOT_MQTT_CONNECTION_INITIALIZER;
+static IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
 
 /**
  * @brief Set the Shadow callback functions used in this demo.
@@ -370,13 +370,13 @@ static BaseType_t prvGetUpdatedState( const char * pcUpdatedDocument,
 
 /*-----------------------------------------------------------*/
 
-static const struct IotNetworkServerInfo xMQTTBrokerInfo             =
+static const struct IotNetworkServerInfo xMQTTBrokerInfo =
 {
     .pHostName = awsiotdemoprofileAWS_ENDPOINT,
     .port      = awsiotdemoprofileAWS_MQTT_PORT
 };
 
-static struct IotNetworkCredentials      xNetworkSecurityCredentials =
+static struct IotNetworkCredentials xNetworkSecurityCredentials =
 {
     /* Optional TLS extensions. For this demo, they are disabled. */
     .pAlpnProtos       = NULL,
@@ -398,7 +398,7 @@ static struct IotNetworkCredentials      xNetworkSecurityCredentials =
     .privateKeySize    = sizeof( awsiotdemoprofileCLIENT_PRIVATE_KEY_PEM )
 };
 
-static IotMqttNetworkInfo_t              xNetworkInfo                =
+static IotMqttNetworkInfo_t xNetworkInfo =
 {
     /* No connection to the MQTT broker has been established yet and we want to
      * establish a new connection. */
@@ -419,7 +419,7 @@ static IotMqttNetworkInfo_t              xNetworkInfo                =
 };
 
 
-static const IotMqttConnectInfo_t        xConnectInfo                =
+static const IotMqttConnectInfo_t xConnectInfo =
 {
     /* Set this flag to true if connecting to the AWS IoT MQTT broker. */
     .awsIotMqttMode            = true,
@@ -479,8 +479,8 @@ void vStartShadowDeviceOperationsDemo( void )
 
 static void prvShadowDemoTask( void * pvParameters )
 {
-    uint32_t         ulNotificationValue = 0;
-    const TickType_t xNoDelay            = ( TickType_t ) 0;
+    uint32_t ulNotificationValue = 0;
+    const TickType_t xNoDelay = ( TickType_t ) 0;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -620,33 +620,33 @@ static void prvMQTTDisconnect( void )
 
 static void prvSetShadowCallbacks( void )
 {
-    AwsIotShadowError_t        xCallbackStatus  = AWS_IOT_SHADOW_STATUS_PENDING;
-    AwsIotShadowCallbackInfo_t xDeltaCallback   = AWS_IOT_SHADOW_CALLBACK_INFO_INITIALIZER,
+    AwsIotShadowError_t xCallbackStatus = AWS_IOT_SHADOW_STATUS_PENDING;
+    AwsIotShadowCallbackInfo_t xDeltaCallback = AWS_IOT_SHADOW_CALLBACK_INFO_INITIALIZER,
                                xUpdatedCallback = AWS_IOT_SHADOW_CALLBACK_INFO_INITIALIZER;
 
     /* Set the functions for callbacks. */
     xDeltaCallback.pCallbackContext = &xDeltaSemaphore;
-    xDeltaCallback.function         = prvShadowDeltaCallback;
-    xUpdatedCallback.function       = prvShadowUpdatedCallback;
+    xDeltaCallback.function = prvShadowDeltaCallback;
+    xUpdatedCallback.function = prvShadowUpdatedCallback;
 
     /************************ Set delta callbacks ****************************/
 
     /* Set the delta callback, which notifies of different desired and reported
      * Shadow states. */
-    xCallbackStatus                 = AwsIotShadow_SetDeltaCallback( xMQTTConnection,
-                                                                     awsiotdemoprofileCLIENT_IDENTIFIER,
-                                                                     shadowexampleCLIENT_IDENTIFIER_LENGTH,
-                                                                     0, &xDeltaCallback );
+    xCallbackStatus = AwsIotShadow_SetDeltaCallback( xMQTTConnection,
+                                                     awsiotdemoprofileCLIENT_IDENTIFIER,
+                                                     shadowexampleCLIENT_IDENTIFIER_LENGTH,
+                                                     0, &xDeltaCallback );
     configASSERT( xCallbackStatus == AWS_IOT_SHADOW_SUCCESS );
 
     /************************ Set updated callbacks **************************/
 
     /* Set the updated callback, which notifies when a Shadow document is
      * changed. */
-    xCallbackStatus                 = AwsIotShadow_SetUpdatedCallback( xMQTTConnection,
-                                                                       awsiotdemoprofileCLIENT_IDENTIFIER,
-                                                                       shadowexampleCLIENT_IDENTIFIER_LENGTH,
-                                                                       0, &xUpdatedCallback );
+    xCallbackStatus = AwsIotShadow_SetUpdatedCallback( xMQTTConnection,
+                                                       awsiotdemoprofileCLIENT_IDENTIFIER,
+                                                       shadowexampleCLIENT_IDENTIFIER_LENGTH,
+                                                       0, &xUpdatedCallback );
 
     configASSERT( xCallbackStatus == AWS_IOT_SHADOW_SUCCESS );
 }
@@ -675,14 +675,14 @@ static void prvClearShadowCallbacks( void )
 static void prvShadowDeltaCallback( void * pCallbackContext,
                                     AwsIotShadowCallbackParam_t * pxCallbackParam )
 {
-    BaseType_t                 xDeltaFound                             = pdFALSE;
-    const char *               pcDelta                                 = NULL;
-    size_t                     xDeltaLength                            = 0;
-    IotSemaphore_t *           pxDeltaSemaphore                        = pCallbackContext;
-    uint32_t                   ulUpdateDocumentLength                  = 0;
-    AwsIotShadowError_t        xShadowStatus                           = AWS_IOT_SHADOW_STATUS_PENDING;
-    AwsIotShadowDocumentInfo_t xUpdateDocument                         = AWS_IOT_SHADOW_DOCUMENT_INFO_INITIALIZER;
-    uint8_t                    ucNewState                              = 0;
+    BaseType_t xDeltaFound = pdFALSE;
+    const char * pcDelta = NULL;
+    size_t xDeltaLength = 0;
+    IotSemaphore_t * pxDeltaSemaphore = pCallbackContext;
+    uint32_t ulUpdateDocumentLength = 0;
+    AwsIotShadowError_t xShadowStatus = AWS_IOT_SHADOW_STATUS_PENDING;
+    AwsIotShadowDocumentInfo_t xUpdateDocument = AWS_IOT_SHADOW_DOCUMENT_INFO_INITIALIZER;
+    uint8_t ucNewState = 0;
 
     configASSERT( pxDeltaSemaphore != NULL );
     configASSERT( pxCallbackParam != NULL );
@@ -729,21 +729,21 @@ static void prvShadowDeltaCallback( void * pCallbackContext,
                         lDevicePowerOnState,
                         ucNewState ) );
 
-        lDevicePowerOnState                           = ucNewState;
+        lDevicePowerOnState = ucNewState;
 
         /* Set the common members to report the new state. */
-        xUpdateDocument.pThingName                    = pxCallbackParam->pThingName;
-        xUpdateDocument.thingNameLength               = pxCallbackParam->thingNameLength;
-        xUpdateDocument.u.update.pUpdateDocument      = cUpdateDocument;
+        xUpdateDocument.pThingName = pxCallbackParam->pThingName;
+        xUpdateDocument.thingNameLength = pxCallbackParam->thingNameLength;
+        xUpdateDocument.u.update.pUpdateDocument = cUpdateDocument;
         xUpdateDocument.u.update.updateDocumentLength = shadowexampleREPORTED_JSON_SIZE;
 
         /* Generate a Shadow document for the reported state. To keep the client
          * token within 6 characters, it is modded by 1000000. */
-        ulUpdateDocumentLength                        = snprintf( cUpdateDocument,
-                                                                  shadowexampleREPORTED_JSON_SIZE + 1,
-                                                                  shadowexampleREPORTED_JSON,
-                                                                  ( int ) lDevicePowerOnState,
-                                                                  ( long unsigned ) ( IotClock_GetTimeMs() % 1000000 ) );
+        ulUpdateDocumentLength = snprintf( cUpdateDocument,
+                                           shadowexampleREPORTED_JSON_SIZE + 1,
+                                           shadowexampleREPORTED_JSON,
+                                           ( int ) lDevicePowerOnState,
+                                           ( long unsigned ) ( IotClock_GetTimeMs() % 1000000 ) );
 
         /* Check if the reported state document is generated for Shadow update*/
         configASSERT( ( size_t ) ulUpdateDocumentLength == shadowexampleREPORTED_JSON_SIZE );
@@ -753,11 +753,11 @@ static void prvShadowDeltaCallback( void * pCallbackContext,
          * was successfully updated. As the Shadow is constantly updated
          * in this demo, the "Keep Subscriptions" flag is passed to this
          * function. */
-        xShadowStatus                                 = AwsIotShadow_UpdateAsync( pxCallbackParam->mqttConnection,
-                                                                                  &xUpdateDocument,
-                                                                                  AWS_IOT_SHADOW_FLAG_KEEP_SUBSCRIPTIONS,
-                                                                                  NULL,
-                                                                                  NULL );
+        xShadowStatus = AwsIotShadow_UpdateAsync( pxCallbackParam->mqttConnection,
+                                                  &xUpdateDocument,
+                                                  AWS_IOT_SHADOW_FLAG_KEEP_SUBSCRIPTIONS,
+                                                  NULL,
+                                                  NULL );
 
         configASSERT( xShadowStatus == AWS_IOT_SHADOW_STATUS_PENDING );
         configPRINTF( ( "%.*s sent new state report: %.*s\r\n",
@@ -775,9 +775,9 @@ static void prvShadowDeltaCallback( void * pCallbackContext,
 static void prvShadowUpdatedCallback( void * pCallbackContext,
                                       AwsIotShadowCallbackParam_t * pxCallbackParam )
 {
-    BaseType_t   xPreviousFound = pdFALSE, xCurrentFound = pdFALSE;
+    BaseType_t xPreviousFound = pdFALSE, xCurrentFound = pdFALSE;
     const char * pcPrevious = NULL, * pcCurrent = NULL;
-    size_t       xPreviousLength = 0, xCurrentLength = 0;
+    size_t xPreviousLength = 0, xCurrentLength = 0;
 
     /* Silence warnings about unused parameters. */
     ( void ) pCallbackContext;
@@ -794,11 +794,11 @@ static void prvShadowUpdatedCallback( void * pCallbackContext,
 
     /****************** Get current state from Shadow document **************/
     /* Find the current Shadow document. */
-    xCurrentFound  = prvGetUpdatedState( pxCallbackParam->u.callback.pDocument,
-                                         pxCallbackParam->u.callback.documentLength,
-                                         "current",
-                                         &pcCurrent,
-                                         &xCurrentLength );
+    xCurrentFound = prvGetUpdatedState( pxCallbackParam->u.callback.pDocument,
+                                        pxCallbackParam->u.callback.documentLength,
+                                        "current",
+                                        &pcCurrent,
+                                        &xCurrentLength );
 
     configASSERT( ( xPreviousFound == pdTRUE ) || ( xCurrentFound == pdTRUE ) );
 
@@ -819,10 +819,10 @@ static BaseType_t prvGetDelta( const char * pcDeltaDocument,
                                const char ** pcDelta,
                                size_t * pcDeltaLength )
 {
-    BaseType_t   xStateFound = pdFALSE, xDeltaFound = pdFALSE;
+    BaseType_t xStateFound = pdFALSE, xDeltaFound = pdFALSE;
     const size_t xDeltaKeyLength = strlen( pcDeltaKey );
-    const char * pcState         = NULL;
-    size_t       xStateLength    = 0;
+    const char * pcState = NULL;
+    size_t xStateLength = 0;
 
     configASSERT( pcDeltaDocument != NULL );
     configASSERT( pcDeltaKey != NULL );
@@ -870,10 +870,10 @@ static BaseType_t prvGetUpdatedState( const char * pcUpdatedDocument,
                                       const char ** ppcState,
                                       size_t * ppcStateLength )
 {
-    BaseType_t   xSectionFound = pdFALSE, xStateFound = pdFALSE;
+    BaseType_t xSectionFound = pdFALSE, xStateFound = pdFALSE;
     const size_t xSectionKeyLength = strlen( pcSectionKey );
-    const char * pcSection         = NULL;
-    size_t       xSectionLength    = 0;
+    const char * pcSection = NULL;
+    size_t xSectionLength = 0;
 
     configASSERT( pcUpdatedDocument != NULL );
     configASSERT( pcSectionKey != NULL );
@@ -906,7 +906,7 @@ static BaseType_t prvGetUpdatedState( const char * pcUpdatedDocument,
      * footprint rather than checking for correctness of the document. This
      * parser is not meant to be used as a general purpose JSON parser.
      */
-    xStateFound   = ( BaseType_t ) AwsIotDocParser_FindValue(
+    xStateFound = ( BaseType_t ) AwsIotDocParser_FindValue(
         pcSection,
         xSectionLength,
         "state",
@@ -937,18 +937,18 @@ static void prvClearShadowDocument( void )
 
 static void prvSendShadowUpdates( void )
 {
-    int32_t                    lIndex = 0, lDesiredState = 0, lStatus = 0;
-    AwsIotShadowError_t        xShadowStatus                                         = AWS_IOT_SHADOW_STATUS_PENDING;
-    AwsIotShadowDocumentInfo_t xUpdateDocument                                       = AWS_IOT_SHADOW_DOCUMENT_INFO_INITIALIZER;
+    int32_t lIndex = 0, lDesiredState = 0, lStatus = 0;
+    AwsIotShadowError_t xShadowStatus = AWS_IOT_SHADOW_STATUS_PENDING;
+    AwsIotShadowDocumentInfo_t xUpdateDocument = AWS_IOT_SHADOW_DOCUMENT_INFO_INITIALIZER;
 
     /* A buffer containing the update document. It has static duration to prevent
      * it from being placed on the call stack. */
-    static char                cUpdateDocument[ shadowexampleDESIRED_JSON_SIZE + 1 ] = { 0 };
+    static char cUpdateDocument[ shadowexampleDESIRED_JSON_SIZE + 1 ] = { 0 };
 
     /********** Set the common members of Shadow update document *************/
-    xUpdateDocument.pThingName                    = awsiotdemoprofileCLIENT_IDENTIFIER;
-    xUpdateDocument.thingNameLength               = shadowexampleCLIENT_IDENTIFIER_LENGTH;
-    xUpdateDocument.u.update.pUpdateDocument      = cUpdateDocument;
+    xUpdateDocument.pThingName = awsiotdemoprofileCLIENT_IDENTIFIER;
+    xUpdateDocument.thingNameLength = shadowexampleCLIENT_IDENTIFIER_LENGTH;
+    xUpdateDocument.u.update.pUpdateDocument = cUpdateDocument;
     xUpdateDocument.u.update.updateDocumentLength = shadowexampleDESIRED_JSON_SIZE;
 
     /*************** Publish Shadow updates at a set period. *****************/
@@ -959,11 +959,11 @@ static void prvSendShadowUpdates( void )
 
         /* Generate a Shadow desired state document, using a timestamp for the client
          * token. To keep the client token within 6 characters, it is modded by 1000000. */
-        lStatus       = snprintf( cUpdateDocument,
-                                  shadowexampleDESIRED_JSON_SIZE + 1,
-                                  shadowexampleDESIRED_JSON,
-                                  ( int ) lDesiredState,
-                                  ( long unsigned ) ( IotClock_GetTimeMs() % 1000000 ) );
+        lStatus = snprintf( cUpdateDocument,
+                            shadowexampleDESIRED_JSON_SIZE + 1,
+                            shadowexampleDESIRED_JSON,
+                            ( int ) lDesiredState,
+                            ( long unsigned ) ( IotClock_GetTimeMs() % 1000000 ) );
 
         /* Check for errors from snprintf. The expected value is the length of
          * the desired JSON document less the format specifier for the state. */
@@ -998,10 +998,10 @@ static void prvSendShadowUpdates( void )
     }
 
     /* Remove persistent subscriptions. In the AwsIotShadow_UpdateSync call, we have used the */
-    xShadowStatus                                 = AwsIotShadow_RemovePersistentSubscriptions( xMQTTConnection,
-                                                                                                awsiotdemoprofileCLIENT_IDENTIFIER,
-                                                                                                shadowexampleCLIENT_IDENTIFIER_LENGTH,
-                                                                                                AWS_IOT_SHADOW_FLAG_REMOVE_UPDATE_SUBSCRIPTIONS );
+    xShadowStatus = AwsIotShadow_RemovePersistentSubscriptions( xMQTTConnection,
+                                                                awsiotdemoprofileCLIENT_IDENTIFIER,
+                                                                shadowexampleCLIENT_IDENTIFIER_LENGTH,
+                                                                AWS_IOT_SHADOW_FLAG_REMOVE_UPDATE_SUBSCRIPTIONS );
 
     configASSERT( xShadowStatus == AWS_IOT_SHADOW_SUCCESS );
 }
@@ -1009,7 +1009,7 @@ static void prvSendShadowUpdates( void )
 
 static void prvInitialiseLibraries( void )
 {
-    IotMqttError_t    xResult;
+    IotMqttError_t xResult;
     IotNetworkError_t xNetworkResult;
 
     /* Initialize the network stack abstraction for FreeRTOS. */
@@ -1018,11 +1018,11 @@ static void prvInitialiseLibraries( void )
 
     /* MQTT library must be initialized before it can be used. This is just one
      * time initialization. */
-    xResult        = IotMqtt_Init();
+    xResult = IotMqtt_Init();
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
     /* Initialize Shadow library*/
-    xResult        = AwsIotShadow_Init( shadowexampleUSE_DEFAULT_MQTT_TIMEOUT );
+    xResult = AwsIotShadow_Init( shadowexampleUSE_DEFAULT_MQTT_TIMEOUT );
     configASSERT( xResult == AWS_IOT_SHADOW_SUCCESS );
 }
 /*-----------------------------------------------------------*/

@@ -243,7 +243,7 @@ static inline void IotListDouble_Create( IotListDouble_t * const pList )
 
     /* An empty list is a link pointing to itself. */
     pList->pPrevious = pList;
-    pList->pNext     = pList;
+    pList->pNext = pList;
 }
 
 /**
@@ -363,12 +363,12 @@ static inline void IotListDouble_InsertHead( IotListDouble_t * const pList,
     IotLink_t * pHead = pList->pNext;
 
     /* Place new element before list head. */
-    pLink->pNext     = pHead;
+    pLink->pNext = pHead;
     pLink->pPrevious = pList;
 
     /* Assign new list head. */
     pHead->pPrevious = pLink;
-    pList->pNext     = pLink;
+    pList->pNext = pLink;
 }
 
 /**
@@ -389,11 +389,11 @@ static inline void IotListDouble_InsertTail( IotListDouble_t * const pList,
     /* Save current list tail. */
     IotLink_t * pTail = pList->pPrevious;
 
-    pLink->pNext     = pList;
+    pLink->pNext = pList;
     pLink->pPrevious = pTail;
 
     pList->pPrevious = pLink;
-    pTail->pNext     = pLink;
+    pTail->pNext = pLink;
 }
 
 /**
@@ -457,7 +457,7 @@ static inline void IotListDouble_InsertSorted( IotListDouble_t * const pList,
     }
     else
     {
-        bool        inserted = false;
+        bool inserted = false;
         IotLink_t * pCurrent = pList->pNext;
 
         /* Iterate through the list to find the correct position. */
@@ -500,8 +500,8 @@ static inline void IotListDouble_Remove( IotLink_t * const pLink )
 
     pLink->pPrevious->pNext = pLink->pNext;
     pLink->pNext->pPrevious = pLink->pPrevious;
-    pLink->pPrevious        = NULL;
-    pLink->pNext            = NULL;
+    pLink->pPrevious = NULL;
+    pLink->pNext = NULL;
 }
 
 /**
@@ -624,7 +624,7 @@ static inline IotLink_t * IotListDouble_FindFirstMatch( const IotListDouble_t * 
     /* The const must be cast away to match this function's return value. Nevertheless,
      * this function will respect the const-ness of pStartPoint. */
     IotLink_t * pCurrent = ( IotLink_t * ) pStartPoint, * pMatchedLink = NULL;
-    bool        matchFound = false;
+    bool matchFound = false;
 
     /* This function must not be called with a NULL pList parameter. */
     IotContainers_Assert( pList != NULL );
@@ -738,7 +738,7 @@ static inline void IotListDouble_RemoveAllMatches( const IotListDouble_t * const
         if( pMatchedElement != NULL )
         {
             /* Save pointer to next element. */
-            pNextElement    = pMatchedElement->pNext;
+            pNextElement = pMatchedElement->pNext;
 
             /* Match found; remove and free. */
             IotListDouble_Remove( pMatchedElement );

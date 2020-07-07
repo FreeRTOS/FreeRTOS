@@ -140,6 +140,7 @@ def is_ignored_file_pattern(file_name):
         "FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/mqtt/common/WinPCap",
         "FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/shadow/shadow_device_operations/WinPCap",
         "FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/ota/common/WinPCap",
+        "FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta2/mqtt/common/WinPCap",
         "tools",
     ]
     for ignored_pattern in ignored_patterns:

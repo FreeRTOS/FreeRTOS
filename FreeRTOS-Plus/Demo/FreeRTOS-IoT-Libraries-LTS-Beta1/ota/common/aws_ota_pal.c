@@ -110,7 +110,7 @@ OTA_Err_t prvPAL_Abort( OTA_FileContext_t * const C )
 
     /* Set default return status to uninitialized. */
     OTA_Err_t eResult = kOTA_Err_Uninitialized;
-    int32_t   lFileCloseResult;
+    int32_t lFileCloseResult;
 
     if( NULL != C )
     {
@@ -119,7 +119,7 @@ OTA_Err_t prvPAL_Abort( OTA_FileContext_t * const C )
         {
             lFileCloseResult = fclose( C->pxFile ); /*lint !e482 !e586
                                                      * Context file handle state is managed by this API. */
-            C->pxFile        = NULL;
+            C->pxFile = NULL;
 
             if( 0 == lFileCloseResult )
             {
@@ -202,26 +202,26 @@ OTA_Err_t prvPAL_CloseFile( OTA_FileContext_t * const C )
 {
     DEFINE_OTA_METHOD_NAME( "prvPAL_CloseFile" );
 
-    OTA_Err_t eResult       = kOTA_Err_None;
-    int32_t   lWindowsError = 0;
+    OTA_Err_t eResult = kOTA_Err_None;
+    int32_t lWindowsError = 0;
 
     if( prvContextValidate( C ) == pdTRUE )
     {
         #if ( configOTA_ENABLE_CODE_SIGNATURE_VERIFICATION )
             /* Verify the file signature, close the file and return the signature verification result. */
-            eResult   = prvPAL_CheckFileSignature( C );
+            eResult = prvPAL_CheckFileSignature( C );
         #else
             /* Code signature verification is disabled so return no error. */
 
             OTA_LOG_L1( "[%s] Warning: Code signature verification is disabled in OTA config , see configOTA_ENABLE_CODE_SIGNATURE_VERIFICATION .\r\n", OTA_METHOD_NAME );
 
-            eResult   = kOTA_Err_None;
+            eResult = kOTA_Err_None;
         #endif
 
         /* Close the file. */
         lWindowsError = fclose( C->pxFile ); /*lint !e482 !e586
                                               * C standard library call is being used for portability. */
-        C->pxFile     = NULL;
+        C->pxFile = NULL;
 
         if( lWindowsError != 0 )
         {
@@ -262,10 +262,10 @@ static OTA_Err_t prvPAL_CheckFileSignature( OTA_FileContext_t * const C )
     DEFINE_OTA_METHOD_NAME( "prvPAL_CheckFileSignature" );
 
     OTA_Err_t eResult = kOTA_Err_None;
-    uint32_t  ulBytesRead;
-    uint32_t  ulSignerCertSize;
+    uint32_t ulBytesRead;
+    uint32_t ulSignerCertSize;
     uint8_t * pucBuf, * pucSignerCert;
-    void *    pvSigVerifyContext;
+    void * pvSigVerifyContext;
 
     if( prvContextValidate( C ) == pdTRUE )
     {
@@ -353,11 +353,11 @@ static uint8_t * prvPAL_ReadAndAssumeCertificate( const uint8_t * const pucCertN
 {
     DEFINE_OTA_METHOD_NAME( "prvPAL_ReadAndAssumeCertificate" );
 
-    FILE *    pxFile;
+    FILE * pxFile;
     uint8_t * pucSignerCert = NULL;
-    uint8_t * pucCertData   = NULL;
-    int32_t   lSize         = 0; /* For MISRA mandatory. */
-    int32_t   lWindowsError;
+    uint8_t * pucCertData = NULL;
+    int32_t lSize = 0; /* For MISRA mandatory. */
+    int32_t lWindowsError;
 
     pxFile = fopen( ( const char * ) pucCertName, "rb" ); /*lint !e586
                                                            * C standard library call is being used for portability. */
@@ -394,7 +394,7 @@ static uint8_t * prvPAL_ReadAndAssumeCertificate( const uint8_t * const pucCertN
                                                                                 * C standard library call is being used for portability. */
             {
                 /* The crypto code requires the terminating zero to be part of the length so add 1 to the size. */
-                *ulSignerCertSize      = lSize + 1;
+                *ulSignerCertSize = lSize + 1;
                 pucSignerCert[ lSize ] = 0;
             }
             else
@@ -424,9 +424,9 @@ static uint8_t * prvPAL_ReadAndAssumeCertificate( const uint8_t * const pucCertN
                     ( const char * ) pucCertName );
 
         /* Allocate memory for the signer certificate plus a terminating zero so we can copy it and return to the caller. */
-        lSize         = sizeof( signingcredentialSIGNING_CERTIFICATE_PEM );
-        pucSignerCert = pvPortMalloc( lSize );                                  /*lint !e9029 !e9079 !e838 malloc proto requires void*. */
-        pucCertData   = ( uint8_t * ) signingcredentialSIGNING_CERTIFICATE_PEM; /*lint !e9005 we don't modify the cert but it could be set by PKCS11 so it's not const. */
+        lSize = sizeof( signingcredentialSIGNING_CERTIFICATE_PEM );
+        pucSignerCert = pvPortMalloc( lSize );                                /*lint !e9029 !e9079 !e838 malloc proto requires void*. */
+        pucCertData = ( uint8_t * ) signingcredentialSIGNING_CERTIFICATE_PEM; /*lint !e9005 we don't modify the cert but it could be set by PKCS11 so it's not const. */
 
         if( pucSignerCert != NULL )
         {
@@ -470,7 +470,7 @@ OTA_Err_t prvPAL_SetPlatformImageState( OTA_ImageState_t eState )
     DEFINE_OTA_METHOD_NAME( "prvPAL_SetPlatformImageState" );
 
     OTA_Err_t eResult = kOTA_Err_None;
-    FILE *    pstPlatformImageState;
+    FILE * pstPlatformImageState;
 
     if( ( eState != eOTA_ImageState_Unknown ) && ( eState <= eOTA_LastImageState ) )
     {
@@ -532,9 +532,9 @@ OTA_PAL_ImageState_t prvPAL_GetPlatformImageState( void )
     /* FIXME: This function should return OTA_PAL_ImageState_t, but it doesn't. */
     DEFINE_OTA_METHOD_NAME( "prvPAL_GetPlatformImageState" );
 
-    FILE *               pstPlatformImageState;
-    OTA_ImageState_t     eSavedAgentState = eOTA_ImageState_Unknown;
-    OTA_PAL_ImageState_t ePalState        = eOTA_PAL_ImageState_Unknown;
+    FILE * pstPlatformImageState;
+    OTA_ImageState_t eSavedAgentState = eOTA_ImageState_Unknown;
+    OTA_PAL_ImageState_t ePalState = eOTA_PAL_ImageState_Unknown;
 
     pstPlatformImageState = fopen( "PlatformImageState.txt", "r+b" ); /*lint !e586
                                                                        * C standard library call is being used for portability. */

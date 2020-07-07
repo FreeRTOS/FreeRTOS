@@ -97,7 +97,7 @@ bool AwsIot_ParseThingName( const char * pTopicName,
 {
     IOT_FUNCTION_ENTRY( bool, true );
     const char * pThingNameStart = NULL;
-    size_t       thingNameLength = 0;
+    size_t thingNameLength = 0;
 
     /* Check that the topic name is at least as long as the minimum allowed. */
     if( topicNameLength < MINIMUM_TOPIC_NAME_LENGTH )
@@ -114,7 +114,7 @@ bool AwsIot_ParseThingName( const char * pTopicName,
     }
 
     /* The Thing Name starts immediately after the topic prefix. */
-    pThingNameStart   = pTopicName + AWS_IOT_TOPIC_PREFIX_LENGTH;
+    pThingNameStart = pTopicName + AWS_IOT_TOPIC_PREFIX_LENGTH;
 
     /* Calculate the length of the Thing Name, which is terminated with a '/'. */
     while( ( thingNameLength + AWS_IOT_TOPIC_PREFIX_LENGTH < ( size_t ) topicNameLength ) &&
@@ -131,7 +131,7 @@ bool AwsIot_ParseThingName( const char * pTopicName,
     }
 
     /* Set the output parameters. */
-    *pThingName       = pThingNameStart;
+    *pThingName = pThingNameStart;
     *pThingNameLength = thingNameLength;
 
     IOT_FUNCTION_EXIT_NO_CLEANUP();

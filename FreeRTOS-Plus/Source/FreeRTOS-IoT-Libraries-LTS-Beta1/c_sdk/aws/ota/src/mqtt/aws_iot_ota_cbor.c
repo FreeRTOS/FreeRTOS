@@ -59,9 +59,9 @@ BaseType_t OTA_CBOR_Decode_GetStreamResponseMessage( const uint8_t * pucMessageB
                                                      uint8_t ** ppucPayload,
                                                      size_t * pxPayloadSize )
 {
-    CborError  xCborResult = CborNoError;
+    CborError xCborResult = CborNoError;
     CborParser xCborParser;
-    CborValue  xCborValue, xCborMap;
+    CborValue xCborValue, xCborMap;
 
     /* Initialize the parser. */
     xCborResult = cbor_parser_init( pucMessageBuffer,
@@ -207,7 +207,7 @@ BaseType_t OTA_CBOR_Encode_GetStreamRequestMessage( uint8_t * pucMessageBuffer,
                                                     size_t xBlockBitmapSize,
                                                     int32_t lNumOfBlocksRequested )
 {
-    CborError   xCborResult = CborNoError;
+    CborError xCborResult = CborNoError;
     CborEncoder xCborEncoder, xCborMapEncoder;
 
     /* Initialize the CBOR encoder. */

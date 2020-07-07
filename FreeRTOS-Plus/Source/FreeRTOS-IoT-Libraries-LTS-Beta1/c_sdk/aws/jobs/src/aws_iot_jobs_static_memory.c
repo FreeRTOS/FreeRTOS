@@ -89,18 +89,18 @@
 /*
  * Static memory buffers and flags, allocated and zeroed at compile-time.
  */
-    static uint32_t _pInUseJobsOperations[ AWS_IOT_JOBS_MAX_IN_PROGRESS_OPERATIONS ]                   = { 0U };    /**< @brief Jobs operation in-use flags. */
-    static char     _pJobsOperations[ AWS_IOT_JOBS_MAX_IN_PROGRESS_OPERATIONS ][ JOBS_OPERATION_SIZE ] = { { 0 } }; /**< @brief Jobs operations. */
+    static uint32_t _pInUseJobsOperations[ AWS_IOT_JOBS_MAX_IN_PROGRESS_OPERATIONS ] = { 0U };                  /**< @brief Jobs operation in-use flags. */
+    static char _pJobsOperations[ AWS_IOT_JOBS_MAX_IN_PROGRESS_OPERATIONS ][ JOBS_OPERATION_SIZE ] = { { 0 } }; /**< @brief Jobs operations. */
 
-    static uint32_t _pInUseJobsSubscriptions[ AWS_IOT_JOBS_SUBSCRIPTIONS ]                             = { 0U };    /**< @brief Jobs subscription in-use flags. */
-    static char     _pJobsSubscriptions[ AWS_IOT_JOBS_SUBSCRIPTIONS ][ JOBS_SUBSCRIPTION_SIZE ]        = { { 0 } }; /**< @brief Jobs subscriptions. */
+    static uint32_t _pInUseJobsSubscriptions[ AWS_IOT_JOBS_SUBSCRIPTIONS ] = { 0U };                            /**< @brief Jobs subscription in-use flags. */
+    static char _pJobsSubscriptions[ AWS_IOT_JOBS_SUBSCRIPTIONS ][ JOBS_SUBSCRIPTION_SIZE ] = { { 0 } };        /**< @brief Jobs subscriptions. */
 
 /*-----------------------------------------------------------*/
 
     void * AwsIotJobs_MallocOperation( size_t size )
     {
-        int32_t freeIndex     = -1;
-        void *  pNewOperation = NULL;
+        int32_t freeIndex = -1;
+        void * pNewOperation = NULL;
 
         /* Check size argument. */
         if( size <= JOBS_OPERATION_SIZE )
@@ -134,8 +134,8 @@
 
     void * AwsIotJobs_MallocSubscription( size_t size )
     {
-        int32_t freeIndex        = -1;
-        void *  pNewSubscription = NULL;
+        int32_t freeIndex = -1;
+        void * pNewSubscription = NULL;
 
         if( size <= JOBS_SUBSCRIPTION_SIZE )
         {

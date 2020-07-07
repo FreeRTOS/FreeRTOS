@@ -122,31 +122,31 @@ static void * pvLoggingThreadEvent = NULL;
 
 /* Stores the selected logging targets passed in as parameters to the
  * vLoggingInit() function. */
-BaseType_t    xStdoutLoggingUsed = pdFALSE, xDiskFileLoggingUsed = pdFALSE, xUDPLoggingUsed = pdFALSE;
+BaseType_t xStdoutLoggingUsed = pdFALSE, xDiskFileLoggingUsed = pdFALSE, xUDPLoggingUsed = pdFALSE;
 
 /* Circular buffer used to pass messages from the FreeRTOS tasks to the Win32
  * thread that is responsible for making Win32 calls (when stdout or a disk log is
  * used). */
-static StreamBuffer_t * xLogStreamBuffer     = NULL;
+static StreamBuffer_t * xLogStreamBuffer = NULL;
 
 /* Handle to the file used for logging.  This is left open while there are
  * messages waiting to be logged, then closed again in between logs. */
-static FILE *           pxLoggingFileHandle  = NULL;
+static FILE * pxLoggingFileHandle = NULL;
 
 /* When true prints are performed directly.  After start up xDirectPrint is set
  * to pdFALSE - at which time prints that require Win32 system calls are done by
  * the Win32 thread responsible for logging. */
-BaseType_t               xDirectPrint        = pdTRUE;
+BaseType_t xDirectPrint = pdTRUE;
 
 /* File names for the in use and complete (full) log files. */
-static const char *      pcLogFileName       = "RTOSDemo.log";
-static const char *      pcFullLogFileName   = "RTOSDemo.ful";
+static const char * pcLogFileName = "RTOSDemo.log";
+static const char * pcFullLogFileName = "RTOSDemo.ful";
 
 /* Keep the current file size in a variable, as an optimisation. */
-static size_t            ulSizeOfLoggingFile = 0ul;
+static size_t ulSizeOfLoggingFile = 0ul;
 
 /* The UDP socket and address on/to which print messages are sent. */
-Socket_t                 xPrintSocket        = FREERTOS_INVALID_SOCKET;
+Socket_t xPrintSocket = FREERTOS_INVALID_SOCKET;
 struct freertos_sockaddr xPrintUDPAddress;
 
 /*-----------------------------------------------------------*/
@@ -165,9 +165,9 @@ void vLoggingInit( BaseType_t xLogToStdout,
             HANDLE Win32Thread;
 
             /* Record which output methods are to be used. */
-            xStdoutLoggingUsed   = xLogToStdout;
+            xStdoutLoggingUsed = xLogToStdout;
             xDiskFileLoggingUsed = xLogToFile;
-            xUDPLoggingUsed      = xLogToUDP;
+            xUDPLoggingUsed = xLogToUDP;
 
             /* If a disk file is used then initialise it now. */
             if( xDiskFileLoggingUsed != pdFALSE )
@@ -193,16 +193,16 @@ void vLoggingInit( BaseType_t xLogToStdout,
             if( ( xStdoutLoggingUsed != pdFALSE ) || ( xDiskFileLoggingUsed != pdFALSE ) )
             {
                 /* Create the buffer. */
-                xLogStreamBuffer         = ( StreamBuffer_t * ) malloc( sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) + dlLOGGING_STREAM_BUFFER_SIZE + 1 );
+                xLogStreamBuffer = ( StreamBuffer_t * ) malloc( sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) + dlLOGGING_STREAM_BUFFER_SIZE + 1 );
                 configASSERT( xLogStreamBuffer );
                 memset( xLogStreamBuffer, '\0', sizeof( *xLogStreamBuffer ) - sizeof( xLogStreamBuffer->ucArray ) );
                 xLogStreamBuffer->LENGTH = dlLOGGING_STREAM_BUFFER_SIZE + 1;
 
                 /* Create the Windows event. */
-                pvLoggingThreadEvent     = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
+                pvLoggingThreadEvent = CreateEvent( NULL, FALSE, TRUE, "StdoutLoggingEvent" );
 
                 /* Create the thread itself. */
-                Win32Thread              = CreateThread(
+                Win32Thread = CreateThread(
                     NULL,                  /* Pointer to thread security attributes. */
                     0,                     /* Initial thread stack size, in bytes. */
                     prvWin32LoggingThread, /* Pointer to thread function. */
@@ -234,7 +234,7 @@ static void prvCreatePrintSocket( void * pvParameter1,
                                   uint32_t ulParameter2 )
 {
     static const TickType_t xSendTimeOut = pdMS_TO_TICKS( 0 );
-    Socket_t                xSocket;
+    Socket_t xSocket;
 
     /* The function prototype is that of a deferred function, but the parameters
      * are not actually used. */
@@ -258,17 +258,17 @@ static void prvCreatePrintSocket( void * pvParameter1,
 void vLoggingPrintf( const char * pcFormat,
                      ... )
 {
-    char              cPrintString[ dlMAX_PRINT_STRING_LENGTH ];
-    char              cOutputString[ dlMAX_PRINT_STRING_LENGTH ];
-    char *            pcSource, * pcTarget, * pcBegin;
-    size_t            xLength, xLength2, rc;
+    char cPrintString[ dlMAX_PRINT_STRING_LENGTH ];
+    char cOutputString[ dlMAX_PRINT_STRING_LENGTH ];
+    char * pcSource, * pcTarget, * pcBegin;
+    size_t xLength, xLength2, rc;
     static BaseType_t xMessageNumber = 0;
-    va_list           args;
-    uint32_t          ulIPAddress;
-    const char *      pcTaskName;
-    const char *      pcNoTask       = "None";
-    int               iOriginalPriority;
-    HANDLE            xCurrentTask;
+    va_list args;
+    uint32_t ulIPAddress;
+    const char * pcTaskName;
+    const char * pcNoTask = "None";
+    int iOriginalPriority;
+    HANDLE xCurrentTask;
 
 
     if( ( xStdoutLoggingUsed != pdFALSE ) || ( xDiskFileLoggingUsed != pdFALSE ) || ( xUDPLoggingUsed != pdFALSE ) )
@@ -304,7 +304,7 @@ void vLoggingPrintf( const char * pcFormat,
         if( xLength2 < 0 )
         {
             /* Clean up. */
-            xLength2                                      = dlMAX_PRINT_STRING_LENGTH - 1 - xLength;
+            xLength2 = dlMAX_PRINT_STRING_LENGTH - 1 - xLength;
             cPrintString[ dlMAX_PRINT_STRING_LENGTH - 1 ] = '\0';
         }
 
@@ -328,7 +328,7 @@ void vLoggingPrintf( const char * pcFormat,
                 *pcTarget = *pcSource;
                 pcTarget++;
                 *pcTarget = '\0';
-                pcBegin   = pcTarget - 8;
+                pcBegin = pcTarget - 8;
 
                 while( ( pcTarget > pcBegin ) && ( isxdigit( pcTarget[ -1 ] ) != pdFALSE ) )
                 {
@@ -336,18 +336,18 @@ void vLoggingPrintf( const char * pcFormat,
                 }
 
                 sscanf( pcTarget, "%8X", &ulIPAddress );
-                rc        = sprintf( pcTarget, "%lu.%lu.%lu.%lu",
-                                     ( unsigned long ) ( ulIPAddress >> 24UL ),
-                                     ( unsigned long ) ( ( ulIPAddress >> 16UL ) & 0xffUL ),
-                                     ( unsigned long ) ( ( ulIPAddress >> 8UL ) & 0xffUL ),
-                                     ( unsigned long ) ( ulIPAddress & 0xffUL ) );
+                rc = sprintf( pcTarget, "%lu.%lu.%lu.%lu",
+                              ( unsigned long ) ( ulIPAddress >> 24UL ),
+                              ( unsigned long ) ( ( ulIPAddress >> 16UL ) & 0xffUL ),
+                              ( unsigned long ) ( ( ulIPAddress >> 8UL ) & 0xffUL ),
+                              ( unsigned long ) ( ulIPAddress & 0xffUL ) );
                 pcTarget += rc;
                 pcSource += 3; /* skip "<n>ip" */
             }
         }
 
         /* How far through the buffer was written? */
-        xLength  = ( BaseType_t ) ( pcTarget - cOutputString );
+        xLength = ( BaseType_t ) ( pcTarget - cOutputString );
 
         /* If the message is to be logged to a UDP port then it can be sent directly
          * because it only uses FreeRTOS function (not Win32 functions). */
@@ -393,7 +393,7 @@ void vLoggingPrintf( const char * pcFormat,
                  * as there are potentially multiple writers.  The stream buffer is
                  * only thread safe when there is a single writer (likewise for
                  * reading from the buffer). */
-                xCurrentTask      = GetCurrentThread();
+                xCurrentTask = GetCurrentThread();
                 iOriginalPriority = GetThreadPriority( xCurrentTask );
                 SetThreadPriority( GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL );
                 uxStreamBufferAdd( xLogStreamBuffer, 0, ( const uint8_t * ) &( xLength ), sizeof( xLength ) );
@@ -426,7 +426,7 @@ void vLoggingPrintf( const char * pcFormat,
 static void prvLoggingFlushBuffer( void )
 {
     size_t xLength;
-    char   cPrintString[ dlMAX_PRINT_STRING_LENGTH ];
+    char cPrintString[ dlMAX_PRINT_STRING_LENGTH ];
 
     /* Is there more than the length value stored in the circular buffer
      * used to pass data from the FreeRTOS simulator into this Win32 thread? */

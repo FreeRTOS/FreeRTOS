@@ -121,7 +121,7 @@ static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
 /**
  * @brief OTA state machine string.
  */
-static const char * pcStateStr[ eOTA_AgentState_All ]                =
+static const char * pcStateStr[ eOTA_AgentState_All ] =
 {
     "Init",
     "Ready",
@@ -135,13 +135,13 @@ static const char * pcStateStr[ eOTA_AgentState_All ]                =
     "Stopped"
 };
 
-static const struct IotNetworkServerInfo xMQTTBrokerInfo             =
+static const struct IotNetworkServerInfo xMQTTBrokerInfo =
 {
     .pHostName = awsiotdemoprofileAWS_ENDPOINT,
     .port      = awsiotdemoprofileAWS_MQTT_PORT
 };
 
-static struct IotNetworkCredentials      xNetworkSecurityCredentials =
+static struct IotNetworkCredentials xNetworkSecurityCredentials =
 {
     /* Optional TLS extensions. For this demo, they are disabled. */
     .pAlpnProtos       = NULL,
@@ -163,7 +163,7 @@ static struct IotNetworkCredentials      xNetworkSecurityCredentials =
     .privateKeySize    = sizeof( awsiotdemoprofileCLIENT_PRIVATE_KEY_PEM )
 };
 
-static IotMqttNetworkInfo_t              xNetworkInfo                =
+static IotMqttNetworkInfo_t xNetworkInfo =
 {
     /* No connection to the MQTT broker has been established yet and we want to
      * establish a new connection. */
@@ -186,18 +186,18 @@ static IotMqttNetworkInfo_t              xNetworkInfo                =
 /**
  * @brief The MQTT connection handle used in this example.
  */
-static IotMqttConnection_t xMQTTConnection                           = IOT_MQTT_CONNECTION_INITIALIZER;
+static IotMqttConnection_t xMQTTConnection = IOT_MQTT_CONNECTION_INITIALIZER;
 
 /**
  * @brief The MQTT connection info used for MQTT connection.
  */
-IotMqttConnectInfo_t xConnectInfo                                    = IOT_MQTT_CONNECT_INFO_INITIALIZER;
+IotMqttConnectInfo_t xConnectInfo = IOT_MQTT_CONNECT_INFO_INITIALIZER;
 
 /**
  * @brief Flag used to unset, during disconnection of currently connected network. This will
  * trigger a reconnection from the OTA demo task.
  */
-volatile static bool _networkConnected                               = false;
+volatile static bool _networkConnected = false;
 
 /**
  * @brief Connection retry interval in seconds.
@@ -208,7 +208,7 @@ static int _retryInterval = otaDemoCONN_RETRY_BASE_INTERVAL_SECONDS;
 
 void vOTAUpdateDemoTask( void * pvParameters )
 {
-    OTA_State_t             eState;
+    OTA_State_t eState;
     OTA_ConnectionContext_t xOTAConnectionCtx = { 0 };
 
     /* Remove compiler warnings about unused parameters. */
@@ -234,15 +234,15 @@ void vOTAUpdateDemoTask( void * pvParameters )
                                       &xMQTTConnection ) == IOT_MQTT_SUCCESS )
         {
             configPRINTF( ( "Connected to broker.\r\n" ) );
-            xOTAConnectionCtx.pvControlClient      = xMQTTConnection;
-            xOTAConnectionCtx.pxNetworkInterface   = ( void * ) IOT_NETWORK_INTERFACE_FREERTOS;
+            xOTAConnectionCtx.pvControlClient = xMQTTConnection;
+            xOTAConnectionCtx.pxNetworkInterface = ( void * ) IOT_NETWORK_INTERFACE_FREERTOS;
             xOTAConnectionCtx.pvNetworkCredentials = &xNetworkSecurityCredentials;
 
             /* Set the base interval for connection retry.*/
-            _retryInterval                         = otaDemoCONN_RETRY_BASE_INTERVAL_SECONDS;
+            _retryInterval = otaDemoCONN_RETRY_BASE_INTERVAL_SECONDS;
 
             /* Update the connection available flag.*/
-            _networkConnected                      = true;
+            _networkConnected = true;
 
             /* Check if OTA Agent is suspended and resume.*/
             if( ( eState = OTA_GetAgentState() ) == eOTA_AgentState_Suspended )
@@ -367,7 +367,7 @@ void vStartOTAUpdateDemo( void )
 
 static void prvInitialiseLibraries( void )
 {
-    IotMqttError_t    xResult;
+    IotMqttError_t xResult;
     IotNetworkError_t xNetworkResult;
 
     /* Initialize the network stack abstraction for FreeRTOS. */
@@ -376,7 +376,7 @@ static void prvInitialiseLibraries( void )
 
     /* MQTT library must be initialized before it can be used. This is just one
      * time initialization. */
-    xResult        = IotMqtt_Init();
+    xResult = IotMqtt_Init();
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
 /*-----------------------------------------------------------*/
@@ -444,11 +444,11 @@ static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
 
     /* Set the members of the connection info not set by the initializer. */
     memset( &xConnectInfo, 0, sizeof( xConnectInfo ) );
-    xConnectInfo.awsIotMqttMode         = awsIotMqttMode;
-    xConnectInfo.cleanSession           = true;
-    xConnectInfo.keepAliveSeconds       = otaDemoKEEPALIVE_SECONDS;
+    xConnectInfo.awsIotMqttMode = awsIotMqttMode;
+    xConnectInfo.cleanSession = true;
+    xConnectInfo.keepAliveSeconds = otaDemoKEEPALIVE_SECONDS;
     xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( awsiotdemoprofileCLIENT_IDENTIFIER );
-    xConnectInfo.pClientIdentifier      = awsiotdemoprofileCLIENT_IDENTIFIER;
+    xConnectInfo.pClientIdentifier = awsiotdemoprofileCLIENT_IDENTIFIER;
 
     /* Establish the MQTT connection. */
     configPRINTF( ( "MQTT demo client identifier is %.*s (length %hu).",
@@ -456,10 +456,10 @@ static IotMqttError_t _establishMqttConnection( bool awsIotMqttMode,
                     xConnectInfo.pClientIdentifier,
                     xConnectInfo.clientIdentifierLength ) );
 
-    connectStatus                       = IotMqtt_Connect( &xNetworkInfo,
-                                                           &xConnectInfo,
-                                                           otaDemoCONN_TIMEOUT_MS,
-                                                           pMqttConnection );
+    connectStatus = IotMqtt_Connect( &xNetworkInfo,
+                                     &xConnectInfo,
+                                     otaDemoCONN_TIMEOUT_MS,
+                                     pMqttConnection );
 
     if( connectStatus != IOT_MQTT_SUCCESS )
     {

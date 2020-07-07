@@ -175,11 +175,11 @@ static void timerCallback( TimerHandle_t xTimer );
 void taskPoolCreateSystemTaskPool( void )
 {
     BaseType_t running;
-    uint8_t    x;
+    uint8_t x;
 
     /* Has the task pool already been started? */
     taskENTER_CRITICAL();
-    running          = taskPool.running;
+    running = taskPool.running;
     taskPool.running = pdTRUE;
     taskEXIT_CRITICAL();
 
@@ -201,7 +201,7 @@ void taskPoolCreateSystemTaskPool( void )
         for( x = 0; x < ( UBaseType_t ) configTASKPOOL_NUMBER_OF_WORKERS; x++ )
         {
             /* a unique name for the task. */
-            char taskName[]   = "worker.n";
+            char taskName[] = "worker.n";
             taskName[ sizeof( taskName ) - 2U ] = '0' + x;
 
             /* Coverity suggests adding const qualification to the local variable `task`.
@@ -240,8 +240,8 @@ void taskPoolInitializeJob( taskPoolRoutine_t userCallback,
 
     /* Initialize the job within the user-provided storage instance. */
     jobStorage->userCallback = userCallback;
-    jobStorage->userContext  = userContext;
-    jobStorage->status       = TASKPOOL_JOB_STATUS_READY;
+    jobStorage->userContext = userContext;
+    jobStorage->status = TASKPOOL_JOB_STATUS_READY;
 
     increment( initialized );
 }
@@ -259,8 +259,8 @@ taskPoolError_t taskPoolScheduleDeferred( taskPoolJob_t * job,
                                           uint32_t timeMs )
 {
     taskPoolError_t status = TASKPOOL_GENERAL_FAILURE;
-    BaseType_t      result;
-    UBaseType_t     savedStatus;
+    BaseType_t result;
+    UBaseType_t savedStatus;
 
     /*
      * Check that the timer task priority is higher than that of the calling task.
@@ -317,14 +317,14 @@ taskPoolError_t taskPoolScheduleDeferred( taskPoolJob_t * job,
             else
             {
                 job->status = TASKPOOL_JOB_STATUS_CANCELLED;
-                status      = TASKPOOL_FAILED_OPERATION;
+                status = TASKPOOL_FAILED_OPERATION;
                 increment( direct_dispatch_failed );
             }
         }
         else
         {
             /* Software timer will manage the time delay for the deferred job. */
-            job->timer  =
+            job->timer =
                 xTimerCreateStatic( NULL,
                                     pdMS_TO_TICKS( timeMs ),
                                     pdFALSE,
@@ -341,11 +341,11 @@ taskPoolError_t taskPoolScheduleDeferred( taskPoolJob_t * job,
              * priority ) to be executed which ensures that the timer start command has
              * been processed to start the job's timer.
              */
-            result      = xTimerStart( job->timer, portMAX_DELAY );
+            result = xTimerStart( job->timer, portMAX_DELAY );
             configASSERT( result == pdPASS );
 
             job->status = TASKPOOL_JOB_STATUS_DEFERRED;
-            status      = TASKPOOL_SUCCESS;
+            status = TASKPOOL_SUCCESS;
             increment( timer_start );
         }
     }
@@ -358,8 +358,8 @@ taskPoolError_t taskPoolScheduleDeferred( taskPoolJob_t * job,
 taskPoolError_t taskPoolTryCancel( taskPoolJob_t * job )
 {
     taskPoolError_t status = TASKPOOL_GENERAL_FAILURE;
-    UBaseType_t     savedStatus;
-    BaseType_t      result = pdFAIL;
+    UBaseType_t savedStatus;
+    BaseType_t result = pdFAIL;
 
     /*
      * Check that the timer task priority is higher than that of the calling task.
@@ -383,7 +383,7 @@ taskPoolError_t taskPoolTryCancel( taskPoolJob_t * job )
         ( savedStatus == TASKPOOL_JOB_STATUS_CANCELLED ) )
     {
         job->status = TASKPOOL_JOB_STATUS_CANCELLED;
-        status      = TASKPOOL_SUCCESS;
+        status = TASKPOOL_SUCCESS;
         increment( cancel );
     }
     else
@@ -519,10 +519,10 @@ static void taskPoolWorker( void * pContext )
     for( ; ; )
     {
         struct taskPoolJob * job;
-        BaseType_t           result;
+        BaseType_t result;
 
         /* block until a job arrives */
-        result      = xQueueReceive( taskPool.dispatchQueue, &job, portMAX_DELAY );
+        result = xQueueReceive( taskPool.dispatchQueue, &job, portMAX_DELAY );
         configASSERT( result == pdTRUE );
         configASSERT( ( job != NULL ) && ( job->userCallback != NULL ) );
 

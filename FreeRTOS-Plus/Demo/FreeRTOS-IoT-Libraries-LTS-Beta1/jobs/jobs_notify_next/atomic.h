@@ -179,7 +179,7 @@
         #else
             ATOMIC_ENTER_CRITICAL();
 
-            pReturnValue   = *ppDestination;
+            pReturnValue = *ppDestination;
 
             *ppDestination = pExchange;
 
@@ -227,7 +227,7 @@
             if( *ppDestination == pComparand )
             {
                 *ppDestination = pExchange;
-                ulReturnValue  = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+                ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
             }
             ATOMIC_EXIT_CRITICAL();
         #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
@@ -382,7 +382,7 @@
 
             ATOMIC_ENTER_CRITICAL();
 
-            ulCurrent      = *pDestination;
+            ulCurrent = *pDestination;
 
             *pDestination |= ulValue;
 
@@ -413,7 +413,7 @@
 
             ATOMIC_ENTER_CRITICAL();
 
-            ulCurrent      = *pDestination;
+            ulCurrent = *pDestination;
 
             *pDestination &= ulValue;
 
@@ -444,7 +444,7 @@
 
             ATOMIC_ENTER_CRITICAL();
 
-            ulCurrent     = *pDestination;
+            ulCurrent = *pDestination;
 
             *pDestination = ~( ulCurrent & ulValue );
 
@@ -475,7 +475,7 @@
 
             ATOMIC_ENTER_CRITICAL();
 
-            ulCurrent      = *pDestination;
+            ulCurrent = *pDestination;
 
             *pDestination ^= ulValue;
 

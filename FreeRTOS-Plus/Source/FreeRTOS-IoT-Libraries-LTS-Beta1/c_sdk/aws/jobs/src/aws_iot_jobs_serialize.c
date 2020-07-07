@@ -421,8 +421,8 @@ static size_t _appendClientToken( char * pBuffer,
                                   const AwsIotJobsRequestInfo_t * pRequestInfo,
                                   _jobsOperation_t * pOperation )
 {
-    int      clientTokenLength = 0;
-    uint32_t clientToken       = 0;
+    int clientTokenLength = 0;
+    uint32_t clientToken = 0;
 
     /* Place the client token key in the buffer. */
     APPEND_STRING( pBuffer,
@@ -438,14 +438,14 @@ static size_t _appendClientToken( char * pBuffer,
     {
         /* Take the address of the given buffer, truncated to 8 characters. This
          * provides a client token that is very likely to be unique while in use. */
-        clientToken                   = ( uint32_t ) ( ( uint64_t ) pBuffer % 100000000ULL );
+        clientToken = ( uint32_t ) ( ( uint64_t ) pBuffer % 100000000ULL );
 
-        clientTokenLength             = snprintf( pBuffer + copyOffset,
-                                                  CLIENT_TOKEN_AUTOGENERATE_LENGTH + 1,
-                                                  "%08u", clientToken );
+        clientTokenLength = snprintf( pBuffer + copyOffset,
+                                      CLIENT_TOKEN_AUTOGENERATE_LENGTH + 1,
+                                      "%08u", clientToken );
         AwsIotJobs_Assert( clientTokenLength == CLIENT_TOKEN_AUTOGENERATE_LENGTH );
 
-        copyOffset                   += ( size_t ) clientTokenLength;
+        copyOffset += ( size_t ) clientTokenLength;
         pOperation->clientTokenLength = CLIENT_TOKEN_AUTOGENERATE_LENGTH + 2;
     }
     else
@@ -466,10 +466,10 @@ static size_t _appendClientToken( char * pBuffer,
 static AwsIotJobsError_t _generateGetPendingRequest( const AwsIotJobsRequestInfo_t * pRequestInfo,
                                                      _jobsOperation_t * pOperation )
 {
-    AwsIotJobsError_t status        = AWS_IOT_JOBS_SUCCESS;
-    char *            pJobsRequest  = NULL;
-    size_t            copyOffset    = 0;
-    size_t            requestLength = MINIMUM_REQUEST_LENGTH;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
+    char * pJobsRequest = NULL;
+    size_t copyOffset = 0;
+    size_t requestLength = MINIMUM_REQUEST_LENGTH;
 
     /* Add the length of the client token. */
     if( pRequestInfo->pClientToken != AWS_IOT_JOBS_CLIENT_TOKEN_AUTOGENERATE )
@@ -498,11 +498,11 @@ static AwsIotJobsError_t _generateGetPendingRequest( const AwsIotJobsRequestInfo
 
         /* Construct the request JSON, which consists of just a clientToken key. */
         APPEND_STRING( pJobsRequest, copyOffset, "{\"", 2 );
-        copyOffset                    = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
+        copyOffset = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
         APPEND_STRING( pJobsRequest, copyOffset, "\"}", 2 );
 
         /* Set the output parameters. */
-        pOperation->pJobsRequest      = pJobsRequest;
+        pOperation->pJobsRequest = pJobsRequest;
         pOperation->jobsRequestLength = requestLength;
 
         /* Ensure offsets are valid. */
@@ -525,12 +525,12 @@ static AwsIotJobsError_t _generateStartNextRequest( const AwsIotJobsRequestInfo_
                                                     const AwsIotJobsUpdateInfo_t * pUpdateInfo,
                                                     _jobsOperation_t * pOperation )
 {
-    AwsIotJobsError_t status                                     = AWS_IOT_JOBS_SUCCESS;
-    char *            pJobsRequest                               = NULL;
-    size_t            copyOffset                                 = 0;
-    size_t            requestLength                              = MINIMUM_REQUEST_LENGTH;
-    char              pStepTimeout[ STEP_TIMEOUT_STRING_LENGTH ] = { 0 };
-    int               stepTimeoutLength                          = 0;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
+    char * pJobsRequest = NULL;
+    size_t copyOffset = 0;
+    size_t requestLength = MINIMUM_REQUEST_LENGTH;
+    char pStepTimeout[ STEP_TIMEOUT_STRING_LENGTH ] = { 0 };
+    int stepTimeoutLength = 0;
 
     /* Add the length of status details if provided. */
     if( pUpdateInfo->pStatusDetails != AWS_IOT_JOBS_NO_STATUS_DETAILS )
@@ -613,12 +613,12 @@ static AwsIotJobsError_t _generateStartNextRequest( const AwsIotJobsRequestInfo_
         }
 
         /* Add client token. */
-        copyOffset                    = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
+        copyOffset = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
 
         APPEND_STRING( pJobsRequest, copyOffset, "\"}", 2 );
 
         /* Set the output parameters. */
-        pOperation->pJobsRequest      = pJobsRequest;
+        pOperation->pJobsRequest = pJobsRequest;
         pOperation->jobsRequestLength = requestLength;
 
         /* Ensure offsets are valid. */
@@ -642,12 +642,12 @@ static AwsIotJobsError_t _generateDescribeRequest( const AwsIotJobsRequestInfo_t
                                                    bool includeJobDocument,
                                                    _jobsOperation_t * pOperation )
 {
-    AwsIotJobsError_t status                                             = AWS_IOT_JOBS_SUCCESS;
-    char *            pJobsRequest                                       = NULL;
-    size_t            copyOffset                                         = 0;
-    size_t            requestLength                                      = MINIMUM_REQUEST_LENGTH;
-    char              pExecutionNumber[ EXECUTION_NUMBER_STRING_LENGTH ] = { 0 };
-    int               executionNumberLength                              = 0;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
+    char * pJobsRequest = NULL;
+    size_t copyOffset = 0;
+    size_t requestLength = MINIMUM_REQUEST_LENGTH;
+    char pExecutionNumber[ EXECUTION_NUMBER_STRING_LENGTH ] = { 0 };
+    int executionNumberLength = 0;
 
     /* Add the "include job document" flag if false. The default value is true,
      * so the flag is not needed if true. */
@@ -672,8 +672,8 @@ static AwsIotJobsError_t _generateDescribeRequest( const AwsIotJobsRequestInfo_t
         AwsIotJobs_Assert( executionNumberLength > 0 );
         AwsIotJobs_Assert( executionNumberLength < EXECUTION_NUMBER_STRING_LENGTH );
 
-        requestLength        += EXECUTION_NUMBER_KEY_LENGTH + 4;
-        requestLength        += ( size_t ) executionNumberLength;
+        requestLength += EXECUTION_NUMBER_KEY_LENGTH + 4;
+        requestLength += ( size_t ) executionNumberLength;
     }
 
     /* Add the length of the client token. */
@@ -724,12 +724,12 @@ static AwsIotJobsError_t _generateDescribeRequest( const AwsIotJobsRequestInfo_t
         }
 
         /* Add client token. */
-        copyOffset                    = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
+        copyOffset = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
 
         APPEND_STRING( pJobsRequest, copyOffset, "\"}", 2 );
 
         /* Set the output parameters. */
-        pOperation->pJobsRequest      = pJobsRequest;
+        pOperation->pJobsRequest = pJobsRequest;
         pOperation->jobsRequestLength = requestLength;
 
         /* Ensure offsets are valid. */
@@ -753,15 +753,15 @@ static AwsIotJobsError_t _generateUpdateRequest( const AwsIotJobsRequestInfo_t *
                                                  _jobsOperation_t * pOperation )
 {
     AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
-    char *            pJobsRequest = NULL;
-    size_t            copyOffset = 0;
-    size_t            requestLength = MINIMUM_REQUEST_LENGTH;
-    const char *      pStatus = NULL;
-    size_t            statusLength = 0;
-    char              pExpectedVersion[ EXPECTED_VERSION_STRING_LENGTH ] = { 0 };
-    char              pExecutionNumber[ EXECUTION_NUMBER_STRING_LENGTH ] = { 0 };
-    char              pStepTimeout[ STEP_TIMEOUT_STRING_LENGTH ] = { 0 };
-    int               expectedVersionLength = 0, executionNumberLength = 0, stepTimeoutLength = 0;
+    char * pJobsRequest = NULL;
+    size_t copyOffset = 0;
+    size_t requestLength = MINIMUM_REQUEST_LENGTH;
+    const char * pStatus = NULL;
+    size_t statusLength = 0;
+    char pExpectedVersion[ EXPECTED_VERSION_STRING_LENGTH ] = { 0 };
+    char pExecutionNumber[ EXECUTION_NUMBER_STRING_LENGTH ] = { 0 };
+    char pStepTimeout[ STEP_TIMEOUT_STRING_LENGTH ] = { 0 };
+    int expectedVersionLength = 0, executionNumberLength = 0, stepTimeoutLength = 0;
 
     /* Determine the status string and length to report to the Jobs service.
      * Add 6 for the 4 quotes, colon, and comma. */
@@ -788,7 +788,7 @@ static AwsIotJobsError_t _generateUpdateRequest( const AwsIotJobsRequestInfo_t *
             break;
     }
 
-    statusLength   = strlen( pStatus );
+    statusLength = strlen( pStatus );
     requestLength += statusLength;
 
     /* Add the length of status details if provided. */
@@ -811,8 +811,8 @@ static AwsIotJobsError_t _generateUpdateRequest( const AwsIotJobsRequestInfo_t *
         AwsIotJobs_Assert( expectedVersionLength < EXPECTED_VERSION_STRING_LENGTH );
 
         /* Add 6 for the 4 quotes, colon, and comma. */
-        requestLength        += EXPECTED_VERSION_KEY_LENGTH + 6;
-        requestLength        += ( size_t ) expectedVersionLength;
+        requestLength += EXPECTED_VERSION_KEY_LENGTH + 6;
+        requestLength += ( size_t ) expectedVersionLength;
     }
 
     /* Add the length of the execution number if present. */
@@ -826,8 +826,8 @@ static AwsIotJobsError_t _generateUpdateRequest( const AwsIotJobsRequestInfo_t *
         AwsIotJobs_Assert( executionNumberLength > 0 );
         AwsIotJobs_Assert( executionNumberLength < EXECUTION_NUMBER_STRING_LENGTH );
 
-        requestLength        += EXECUTION_NUMBER_KEY_LENGTH + 4;
-        requestLength        += ( size_t ) executionNumberLength;
+        requestLength += EXECUTION_NUMBER_KEY_LENGTH + 4;
+        requestLength += ( size_t ) executionNumberLength;
     }
 
     /* Add the flags if true. The default values are false, so the flags are not
@@ -972,12 +972,12 @@ static AwsIotJobsError_t _generateUpdateRequest( const AwsIotJobsRequestInfo_t *
         }
 
         /* Add the client token. */
-        copyOffset                    = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
+        copyOffset = _appendClientToken( pJobsRequest, copyOffset, pRequestInfo, pOperation );
 
         APPEND_STRING( pJobsRequest, copyOffset, "\"}", 2 );
 
         /* Set the output parameters. */
-        pOperation->pJobsRequest      = pJobsRequest;
+        pOperation->pJobsRequest = pJobsRequest;
         pOperation->jobsRequestLength = requestLength;
 
         /* Ensure offsets are valid. */
@@ -999,9 +999,9 @@ static AwsIotJobsError_t _generateUpdateRequest( const AwsIotJobsRequestInfo_t *
 static AwsIotJobsError_t _parseErrorDocument( const char * pErrorDocument,
                                               size_t errorDocumentLength )
 {
-    AwsIotJobsError_t status     = AWS_IOT_JOBS_BAD_RESPONSE;
-    const char *      pCode      = NULL;
-    size_t            codeLength = 0;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_BAD_RESPONSE;
+    const char * pCode = NULL;
+    size_t codeLength = 0;
 
     /* Find the error code. */
     if( AwsIotDocParser_FindValue( pErrorDocument,
@@ -1165,7 +1165,7 @@ void _AwsIotJobs_ParseResponse( AwsIotStatus_t status,
      * info. */
     if( ( pOperation->flags & AWS_IOT_JOBS_FLAG_WAITABLE ) == 0 )
     {
-        pOperation->pJobsResponse      = pResponse;
+        pOperation->pJobsResponse = pResponse;
         pOperation->jobsResponseLength = responseLength;
     }
     else

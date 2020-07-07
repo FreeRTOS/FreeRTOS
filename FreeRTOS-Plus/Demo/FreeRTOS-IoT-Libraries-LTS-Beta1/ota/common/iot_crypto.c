@@ -77,8 +77,8 @@ static BaseType_t prvVerifySignature( char * pcSignerCertificate,
                                       uint8_t * pucSignature,
                                       size_t xSignatureLength )
 {
-    BaseType_t        xResult      = pdTRUE;
-    mbedtls_x509_crt  xCertCtx;
+    BaseType_t xResult = pdTRUE;
+    mbedtls_x509_crt xCertCtx;
     mbedtls_md_type_t xMbedHashAlg = MBEDTLS_MD_SHA256;
 
 
@@ -139,7 +139,7 @@ BaseType_t CRYPTO_SignatureVerificationStart( void ** ppvContext,
                                               BaseType_t xAsymmetricAlgorithm,
                                               BaseType_t xHashAlgorithm )
 {
-    BaseType_t xResult                   = pdTRUE;
+    BaseType_t xResult = pdTRUE;
     SignatureVerificationState_t * pxCtx = NULL;
 
     /*
@@ -153,13 +153,13 @@ BaseType_t CRYPTO_SignatureVerificationStart( void ** ppvContext,
 
     if( pdTRUE == xResult )
     {
-        *ppvContext                 = pxCtx;
+        *ppvContext = pxCtx;
 
         /*
          * Store the algorithm identifiers
          */
         pxCtx->xAsymmetricAlgorithm = xAsymmetricAlgorithm;
-        pxCtx->xHashAlgorithm       = xHashAlgorithm;
+        pxCtx->xHashAlgorithm = xHashAlgorithm;
 
         /*
          * Initialize the requested hash type
@@ -216,9 +216,9 @@ BaseType_t CRYPTO_SignatureVerificationFinal( void * pvContext,
     if( pvContext != NULL )
     {
         SignatureVerificationStatePtr_t pxCtx = ( SignatureVerificationStatePtr_t ) pvContext; /*lint !e9087 Allow casting void* to other types. */
-        uint8_t   ucSHA1or256[ cryptoSHA256_DIGEST_BYTES ];                                    /* Reserve enough space for the larger of SHA1 or SHA256 results. */
-        uint8_t * pucHash                     = NULL;
-        size_t    xHashLength                 = 0;
+        uint8_t ucSHA1or256[ cryptoSHA256_DIGEST_BYTES ];                                      /* Reserve enough space for the larger of SHA1 or SHA256 results. */
+        uint8_t * pucHash = NULL;
+        size_t xHashLength = 0;
 
         if( ( pcSignerCertificate != NULL ) &&
             ( pucSignature != NULL ) &&
@@ -231,13 +231,13 @@ BaseType_t CRYPTO_SignatureVerificationFinal( void * pvContext,
             if( cryptoHASH_ALGORITHM_SHA1 == pxCtx->xHashAlgorithm )
             {
                 ( void ) mbedtls_sha1_finish_ret( &pxCtx->xSHA1Context, ucSHA1or256 );
-                pucHash     = ucSHA1or256;
+                pucHash = ucSHA1or256;
                 xHashLength = cryptoSHA1_DIGEST_BYTES;
             }
             else
             {
                 ( void ) mbedtls_sha256_finish_ret( &pxCtx->xSHA256Context, ucSHA1or256 );
-                pucHash     = ucSHA1or256;
+                pucHash = ucSHA1or256;
                 xHashLength = cryptoSHA256_DIGEST_BYTES;
             }
 

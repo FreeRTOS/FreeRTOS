@@ -280,7 +280,7 @@ void vStartSimpleMQTTDemo( void )
 
 static void prvGracefulShutDown( Socket_t xSocket )
 {
-    uint8_t          ucDummy[ 20 ];
+    uint8_t ucDummy[ 20 ];
     const TickType_t xShortDelay = pdMS_TO_MIN_TICKS( 250 );
 
     if( xSocket != ( Socket_t ) 0 )
@@ -313,8 +313,8 @@ static void prvGracefulShutDown( Socket_t xSocket )
 static IotMqttError_t getNextByte( IotNetworkConnection_t pvContext,
                                    uint8_t * pNextByte )
 {
-    Socket_t       xMQTTSocket = ( Socket_t ) pvContext;
-    BaseType_t     receivedBytes;
+    Socket_t xMQTTSocket = ( Socket_t ) pvContext;
+    BaseType_t receivedBytes;
     IotMqttError_t result;
 
     /* Receive one byte from network.  Note the use of this function may be
@@ -336,8 +336,8 @@ static IotMqttError_t getNextByte( IotNetworkConnection_t pvContext,
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-    Socket_t       xMQTTSocket;
-    uint32_t       ulPublishCount    = 0;
+    Socket_t xMQTTSocket;
+    uint32_t ulPublishCount = 0;
     const uint32_t ulMaxPublishCount = 5UL;
 
     /* Remove compiler warnings about unused parameters. */
@@ -433,10 +433,10 @@ static void prvMQTTDemoTask( void * pvParameters )
 
 static Socket_t prvCreateTCPConnectionToBroker( void )
 {
-    Socket_t                 xMQTTSocket = FREERTOS_INVALID_SOCKET;
+    Socket_t xMQTTSocket = FREERTOS_INVALID_SOCKET;
     struct freertos_sockaddr xBrokerAddress;
-    uint32_t                 ulBrokerIPAddress;
-    BaseType_t               xStatus     = pdFAIL;
+    uint32_t ulBrokerIPAddress;
+    BaseType_t xStatus = pdFAIL;
 
     /* This is the socket used to connect to the MQTT broker. */
     xMQTTSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -491,11 +491,11 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 {
     IotMqttConnectInfo_t xConnectInfo;
-    size_t               xRemainingLength;
-    size_t               xPacketSize;
-    IotMqttError_t       xResult;
-    IotMqttPacketInfo_t  xIncomingPacket;
-    BaseType_t           xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    IotMqttError_t xResult;
+    IotMqttPacketInfo_t xIncomingPacket;
+    BaseType_t xStatus;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -509,26 +509,26 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * previous session data. Also, establishing a connection with clean session
      * will ensure that the broker does not store any data when this client
      * gets disconnected. */
-    xConnectInfo.cleanSession           = true;
+    xConnectInfo.cleanSession = true;
 
     /* The client identifier is used to uniquely identify this MQTT client to
      * the MQTT broker. In a production device the identifier can be something
      * unique, such as a device serial number. */
-    xConnectInfo.pClientIdentifier      = mqttexampleCLIENT_IDENTIFIER;
+    xConnectInfo.pClientIdentifier = mqttexampleCLIENT_IDENTIFIER;
     xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( mqttexampleCLIENT_IDENTIFIER );
 
     /* Get size requirement for the connect packet */
-    xResult                             = IotMqtt_GetConnectPacketSize( &xConnectInfo, &xRemainingLength, &xPacketSize );
+    xResult = IotMqtt_GetConnectPacketSize( &xConnectInfo, &xRemainingLength, &xPacketSize );
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xResult == IOT_MQTT_SUCCESS );
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
     /* Serialize MQTT connect packet into the provided buffer. */
-    xResult                             = IotMqtt_SerializeConnect( &xConnectInfo, xRemainingLength, ucSharedBuffer, xPacketSize );
+    xResult = IotMqtt_SerializeConnect( &xConnectInfo, xRemainingLength, ucSharedBuffer, xPacketSize );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
-    xStatus                             = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
+    xStatus = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 
     /* Reset all fields of the incoming packet structure. */
@@ -540,17 +540,17 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * this case to keep the example simple error checks are just performed by
      * asserts.
      */
-    xResult                             = IotMqtt_GetIncomingMQTTPacketTypeAndLength( &xIncomingPacket, getNextByte, ( void * ) xMQTTSocket );
+    xResult = IotMqtt_GetIncomingMQTTPacketTypeAndLength( &xIncomingPacket, getNextByte, ( void * ) xMQTTSocket );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
     configASSERT( xIncomingPacket.type == MQTT_PACKET_TYPE_CONNACK );
     configASSERT( xIncomingPacket.remainingLength <= mqttexampleSHARED_BUFFER_SIZE );
 
     /* Now receive the reset of the packet into the statically allocated buffer. */
-    xStatus                             = FreeRTOS_recv( xMQTTSocket, ( void * ) ucSharedBuffer, xIncomingPacket.remainingLength, 0 );
+    xStatus = FreeRTOS_recv( xMQTTSocket, ( void * ) ucSharedBuffer, xIncomingPacket.remainingLength, 0 );
     configASSERT( xStatus == ( BaseType_t ) xIncomingPacket.remainingLength );
 
-    xIncomingPacket.pRemainingData      = ucSharedBuffer;
-    xResult                             = IotMqtt_DeserializeResponse( &xIncomingPacket );
+    xIncomingPacket.pRemainingData = ucSharedBuffer;
+    xResult = IotMqtt_DeserializeResponse( &xIncomingPacket );
 
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
@@ -563,11 +563,11 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 
 static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 {
-    IotMqttError_t        xResult;
+    IotMqttError_t xResult;
     IotMqttSubscription_t xMQTTSubscription[ 1 ];
-    size_t                xRemainingLength;
-    size_t                xPacketSize;
-    BaseType_t            xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    BaseType_t xStatus;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -579,43 +579,43 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 
     /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
      * only one topic and uses QOS0. */
-    xMQTTSubscription[ 0 ].qos               = IOT_MQTT_QOS_0;
-    xMQTTSubscription[ 0 ].pTopicFilter      = mqttexampleTOPIC;
+    xMQTTSubscription[ 0 ].qos = IOT_MQTT_QOS_0;
+    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
-    xResult                                  = IotMqtt_GetSubscriptionPacketSize( IOT_MQTT_SUBSCRIBE,
-                                                                                  xMQTTSubscription,
-                                                                                  sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
-                                                                                  &xRemainingLength, &xPacketSize );
+    xResult = IotMqtt_GetSubscriptionPacketSize( IOT_MQTT_SUBSCRIBE,
+                                                 xMQTTSubscription,
+                                                 sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
+                                                 &xRemainingLength, &xPacketSize );
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xResult == IOT_MQTT_SUCCESS );
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
     /* Serialize subscribe into statically allocated ucSharedBuffer. */
-    xResult                                  = IotMqtt_SerializeSubscribe( xMQTTSubscription,
-                                                                           sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
-                                                                           xRemainingLength,
-                                                                           &usSubscribePacketIdentifier,
-                                                                           ucSharedBuffer,
-                                                                           xPacketSize );
+    xResult = IotMqtt_SerializeSubscribe( xMQTTSubscription,
+                                          sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
+                                          xRemainingLength,
+                                          &usSubscribePacketIdentifier,
+                                          ucSharedBuffer,
+                                          xPacketSize );
 
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
     /* Send Subscribe request to the broker. */
-    xStatus                                  = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
+    xStatus = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 }
 /*-----------------------------------------------------------*/
 
 static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
 {
-    IotMqttError_t       xResult;
+    IotMqttError_t xResult;
     IotMqttPublishInfo_t xMQTTPublishInfo;
-    size_t               xRemainingLength;
-    size_t               xPacketSize = 0;
-    uint8_t *            pusPacketIdentifierHigh;
-    BaseType_t           xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize = 0;
+    uint8_t * pusPacketIdentifierHigh;
+    BaseType_t xStatus;
 
 
     /***
@@ -627,41 +627,41 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
     memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
     /* This demo uses QOS0 */
-    xMQTTPublishInfo.qos             = IOT_MQTT_QOS_0;
-    xMQTTPublishInfo.retain          = false;
-    xMQTTPublishInfo.pTopicName      = mqttexampleTOPIC;
+    xMQTTPublishInfo.qos = IOT_MQTT_QOS_0;
+    xMQTTPublishInfo.retain = false;
+    xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
     xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( mqttexampleTOPIC );
-    xMQTTPublishInfo.pPayload        = mqttexampleMESSAGE;
-    xMQTTPublishInfo.payloadLength   = strlen( mqttexampleMESSAGE );
+    xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
+    xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
 
     /* Find out length of Publish packet size. */
-    xResult                          = IotMqtt_GetPublishPacketSize( &xMQTTPublishInfo, &xRemainingLength, &xPacketSize );
+    xResult = IotMqtt_GetPublishPacketSize( &xMQTTPublishInfo, &xRemainingLength, &xPacketSize );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
-    xResult                          = IotMqtt_SerializePublish( &xMQTTPublishInfo,
-                                                                 xRemainingLength,
-                                                                 &usPublishPacketIdentifier,
-                                                                 &pusPacketIdentifierHigh,
-                                                                 ucSharedBuffer,
-                                                                 xPacketSize );
+    xResult = IotMqtt_SerializePublish( &xMQTTPublishInfo,
+                                        xRemainingLength,
+                                        &usPublishPacketIdentifier,
+                                        &pusPacketIdentifierHigh,
+                                        ucSharedBuffer,
+                                        xPacketSize );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
     /* Send Publish message to the broker. */
-    xStatus                          = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
+    xStatus = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 }
 /*-----------------------------------------------------------*/
 
 static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 {
-    IotMqttError_t        xResult;
+    IotMqttError_t xResult;
     IotMqttSubscription_t xMQTTSubscription[ 1 ];
-    size_t                xRemainingLength;
-    size_t                xPacketSize;
-    BaseType_t            xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    BaseType_t xStatus;
 
     /* Some fields not used by this demo so start with everything at 0. */
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -669,29 +669,29 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
     /* Unsubscribe to the mqttexampleTOPIC topic filter. The task handle is passed
      * as the callback context which is used by the callback to send a task
      * notification to this task.*/
-    xMQTTSubscription[ 0 ].qos               = IOT_MQTT_QOS_0;
-    xMQTTSubscription[ 0 ].pTopicFilter      = mqttexampleTOPIC;
+    xMQTTSubscription[ 0 ].qos = IOT_MQTT_QOS_0;
+    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
-    xResult                                  = IotMqtt_GetSubscriptionPacketSize( IOT_MQTT_UNSUBSCRIBE,
-                                                                                  xMQTTSubscription,
-                                                                                  sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
-                                                                                  &xRemainingLength,
-                                                                                  &xPacketSize );
+    xResult = IotMqtt_GetSubscriptionPacketSize( IOT_MQTT_UNSUBSCRIBE,
+                                                 xMQTTSubscription,
+                                                 sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
+                                                 &xRemainingLength,
+                                                 &xPacketSize );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
     /* Make sure the packet size is less than static buffer size */
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
-    xResult                                  = IotMqtt_SerializeUnsubscribe( xMQTTSubscription,
-                                                                             sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
-                                                                             xRemainingLength,
-                                                                             &usUnsubscribePacketIdentifier,
-                                                                             ucSharedBuffer,
-                                                                             xPacketSize );
+    xResult = IotMqtt_SerializeUnsubscribe( xMQTTSubscription,
+                                            sizeof( xMQTTSubscription ) / sizeof( IotMqttSubscription_t ),
+                                            xRemainingLength,
+                                            &usUnsubscribePacketIdentifier,
+                                            ucSharedBuffer,
+                                            xPacketSize );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 
     /* Send Unsubscribe request to the broker. */
-    xStatus                                  = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
+    xStatus = FreeRTOS_send( xMQTTSocket, ( void * ) ucSharedBuffer, xPacketSize, 0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 }
 /*-----------------------------------------------------------*/
@@ -699,7 +699,7 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 static void prvMQTTKeepAlive( Socket_t xMQTTSocket )
 {
     IotMqttError_t xResult;
-    BaseType_t     xStatus;
+    BaseType_t xStatus;
 
     /* PingReq is fixed length packet, therefore there is no need to calculate the size,
      * just makes sure static buffer can accommodate ping request. */
@@ -718,7 +718,7 @@ static void prvMQTTKeepAlive( Socket_t xMQTTSocket )
 static void prvMQTTDisconnect( Socket_t xMQTTSocket )
 {
     IotMqttError_t xResult;
-    BaseType_t     xStatus;
+    BaseType_t xStatus;
 
     /* Disconnect is fixed length packet, therefore there is no need to calculate the size,
      * just makes sure static buffer can accommodate disconnect request. */
@@ -802,9 +802,9 @@ static void prvMQTTProcessIncomingPublish( IotMqttPacketInfo_t * pxIncomingPacke
 
 static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
 {
-    IotMqttError_t      xResult;
+    IotMqttError_t xResult;
     IotMqttPacketInfo_t xIncomingPacket;
-    BaseType_t          xStatus;
+    BaseType_t xStatus;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -814,7 +814,7 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
     memset( ( void * ) &xIncomingPacket, 0x00, sizeof( IotMqttPacketInfo_t ) );
 
     /* Determine incoming packet type and remaining length. */
-    xResult                        = IotMqtt_GetIncomingMQTTPacketTypeAndLength( &xIncomingPacket, getNextByte, ( void * ) xMQTTSocket );
+    xResult = IotMqtt_GetIncomingMQTTPacketTypeAndLength( &xIncomingPacket, getNextByte, ( void * ) xMQTTSocket );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
     configASSERT( xIncomingPacket.remainingLength <= mqttexampleSHARED_BUFFER_SIZE );
 
@@ -822,7 +822,7 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
      * responses ( SUBACK, PINGRESP and UNSUBACK ). */
 
     /* Receive the remaining bytes. */
-    xStatus                        = FreeRTOS_recv( xMQTTSocket, ( void * ) ucSharedBuffer, xIncomingPacket.remainingLength, 0 );
+    xStatus = FreeRTOS_recv( xMQTTSocket, ( void * ) ucSharedBuffer, xIncomingPacket.remainingLength, 0 );
     configASSERT( xStatus == ( BaseType_t ) xIncomingPacket.remainingLength );
 
     xIncomingPacket.pRemainingData = ucSharedBuffer;

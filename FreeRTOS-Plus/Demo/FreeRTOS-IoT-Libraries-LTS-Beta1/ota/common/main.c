@@ -94,7 +94,7 @@ const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALS
  * to and from a real network connection on the host PC.  See the
  * configNETWORK_INTERFACE_TO_USE definition for information on how to configure
  * the real network connection to use. */
-const uint8_t      ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
+const uint8_t ucMACAddress[ 6 ] = { configMAC_ADDR0, configMAC_ADDR1, configMAC_ADDR2, configMAC_ADDR3, configMAC_ADDR4, configMAC_ADDR5 };
 
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
@@ -139,8 +139,8 @@ int main( void )
  * events are only received if implemented in the MAC driver. */
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
-    uint32_t          ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-    char              cBuffer[ 16 ];
+    uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
+    char cBuffer[ 16 ];
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
     /* If the network has just come up...*/
@@ -187,8 +187,8 @@ void vAssertCalled( const char * pcFile,
                     uint32_t ulLine )
 {
     volatile uint32_t ulBlockVariable = 0UL;
-    volatile char *   pcFileName      = ( volatile char * ) pcFile;
-    volatile uint32_t ulLineNumber    = ulLine;
+    volatile char * pcFileName = ( volatile char * ) pcFile;
+    volatile uint32_t ulLineNumber = ulLine;
 
     ( void ) pcFileName;
     ( void ) ulLineNumber;
@@ -233,7 +233,7 @@ static void prvSRand( UBaseType_t ulSeed )
 
 static void prvMiscInitialisation( void )
 {
-    time_t   xTimeNow;
+    time_t xTimeNow;
     uint32_t ulLoggingIPAddress;
 
     ulLoggingIPAddress = FreeRTOS_inet_addr_quick( configECHO_SERVER_ADDR0, configECHO_SERVER_ADDR1, configECHO_SERVER_ADDR2, configECHO_SERVER_ADDR3 );
@@ -341,11 +341,11 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
      * function then they must be declared static - otherwise they will be allocated on
      * the stack and so not exists after this function exits. */
     static StaticTask_t xIdleTaskTCB;
-    static StackType_t  uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
      * state will be stored. */
-    *ppxIdleTaskTCBBuffer   = &xIdleTaskTCB;
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
     /* Pass out the array that will be used as the Idle task's stack. */
     *ppxIdleTaskStackBuffer = uxIdleTaskStack;
@@ -353,7 +353,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
     /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
      * Note that, as the array is necessarily of type StackType_t,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulIdleTaskStackSize   = configMINIMAL_STACK_SIZE;
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
@@ -368,11 +368,11 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
      * function then they must be declared static - otherwise they will be allocated on
      * the stack and so not exists after this function exits. */
     static StaticTask_t xTimerTaskTCB;
-    static StackType_t  uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Timer
      * task's state will be stored. */
-    *ppxTimerTaskTCBBuffer   = &xTimerTaskTCB;
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
 
     /* Pass out the array that will be used as the Timer task's stack. */
     *ppxTimerTaskStackBuffer = uxTimerTaskStack;
@@ -380,6 +380,6 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
     /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
      * Note that, as the array is necessarily of type StackType_t,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulTimerTaskStackSize   = configTIMER_TASK_STACK_DEPTH;
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/

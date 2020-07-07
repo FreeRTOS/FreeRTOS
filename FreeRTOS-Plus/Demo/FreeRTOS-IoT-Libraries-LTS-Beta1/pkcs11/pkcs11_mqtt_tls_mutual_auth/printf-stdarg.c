@@ -64,7 +64,7 @@ static void strbuf_init( struct SStringBuf * apStr,
                          char * apBuf,
                          const char * apMaxStr )
 {
-    apStr->str    = apBuf;
+    apStr->str = apBuf;
     apStr->orgStr = apBuf;
     apStr->nulPos = apMaxStr - 1;
     apStr->curLen = 0;
@@ -158,7 +158,7 @@ static BaseType_t prints( struct SStringBuf * apBuf,
                           const char * apString )
 {
     register int padchar = ' ';
-    int          i, len;
+    int i, len;
 
     if( xApplicationMemoryPermissions( ( uint32_t ) apString ) == 0 )
     {
@@ -169,7 +169,7 @@ static BaseType_t prints( struct SStringBuf * apBuf,
 
     if( apBuf->flags.width > 0 )
     {
-        register int          len = 0;
+        register int len = 0;
         register const char * ptr;
 
         for( ptr = apString; *ptr; ++ptr )
@@ -257,11 +257,11 @@ static BaseType_t prints( struct SStringBuf * apBuf,
     static BaseType_t printll( struct SStringBuf * apBuf,
                                long long i )
     {
-        char                        print_buf[ 2 * PRINT_BUF_LEN ];
-        register char *             s;
-        register int                t, neg = 0;
+        char print_buf[ 2 * PRINT_BUF_LEN ];
+        register char * s;
+        register int t, neg = 0;
         register unsigned long long u = i;
-        lldiv_t                     lldiv_result;
+        lldiv_t lldiv_result;
 
 /* typedef struct
  * {
@@ -282,26 +282,26 @@ static BaseType_t prints( struct SStringBuf * apBuf,
         if( ( apBuf->flags.isSigned == pdTRUE ) && ( apBuf->flags.base == 10 ) && ( i < 0LL ) )
         {
             neg = 1;
-            u   = -i;
+            u = -i;
         }
 
-        s                     = print_buf + sizeof( print_buf ) - 1;
+        s = print_buf + sizeof( print_buf ) - 1;
 
-        *s                    = '\0';
+        *s = '\0';
 
         /* 18446744073709551616 */
         while( u != 0 )
         {
             lldiv_result = lldiv( u, ( unsigned long long ) apBuf->flags.base );
-            t            = lldiv_result.rem;
+            t = lldiv_result.rem;
 
             if( t >= 10 )
             {
                 t += apBuf->flags.letBase - '0' - 10;
             }
 
-            *( --s )     = t + '0';
-            u            = lldiv_result.quot;
+            *( --s ) = t + '0';
+            u = lldiv_result.quot;
         }
 
         if( neg != 0 )
@@ -329,11 +329,11 @@ static BaseType_t prints( struct SStringBuf * apBuf,
 static BaseType_t printi( struct SStringBuf * apBuf,
                           int i )
 {
-    char                  print_buf[ PRINT_BUF_LEN ];
-    register char *       s;
-    register int          t, neg = 0;
-    register unsigned int u    = i;
-    register unsigned     base = apBuf->flags.base;
+    char print_buf[ PRINT_BUF_LEN ];
+    register char * s;
+    register int t, neg = 0;
+    register unsigned int u = i;
+    register unsigned base = apBuf->flags.base;
 
     apBuf->flags.isNumber = pdTRUE; /* Parameter for prints */
 
@@ -347,12 +347,12 @@ static BaseType_t printi( struct SStringBuf * apBuf,
     if( ( apBuf->flags.isSigned == pdTRUE ) && ( base == 10 ) && ( i < 0 ) )
     {
         neg = 1;
-        u   = -i;
+        u = -i;
     }
 
-    s                     = print_buf + sizeof( print_buf ) - 1;
+    s = print_buf + sizeof( print_buf ) - 1;
 
-    *s                    = '\0';
+    *s = '\0';
 
     switch( base )
     {
@@ -360,7 +360,7 @@ static BaseType_t printi( struct SStringBuf * apBuf,
 
             while( u != 0 )
             {
-                t        = u & 0xF;
+                t = u & 0xF;
 
                 if( t >= 10 )
                 {
@@ -368,7 +368,7 @@ static BaseType_t printi( struct SStringBuf * apBuf,
                 }
 
                 *( --s ) = t + '0';
-                u      >>= 4;
+                u >>= 4;
             }
 
             break;
@@ -379,9 +379,9 @@ static BaseType_t printi( struct SStringBuf * apBuf,
             /* GCC compiles very efficient */
             while( u )
             {
-                t        = u % base;
+                t = u % base;
                 *( --s ) = t + '0';
-                u       /= base;
+                u /= base;
             }
 
             break;
@@ -487,19 +487,19 @@ static void tiny_print( struct SStringBuf * apBuf,
 
         if( ch == '-' )
         {
-            ch               = *( format++ );
+            ch = *( format++ );
             apBuf->flags.pad = PAD_RIGHT;
         }
 
         while( ch == '0' )
         {
-            ch                = *( format++ );
+            ch = *( format++ );
             apBuf->flags.pad |= PAD_ZERO;
         }
 
         if( ch == '*' )
         {
-            ch                 = *( format++ );
+            ch = *( format++ );
             apBuf->flags.width = va_arg( args, int );
         }
         else
@@ -508,7 +508,7 @@ static void tiny_print( struct SStringBuf * apBuf,
             {
                 apBuf->flags.width *= 10;
                 apBuf->flags.width += ch - '0';
-                ch                  = *( format++ );
+                ch = *( format++ );
             }
         }
 
@@ -519,7 +519,7 @@ static void tiny_print( struct SStringBuf * apBuf,
             if( ch == '*' )
             {
                 apBuf->flags.printLimit = va_arg( args, int );
-                ch                      = *( format++ );
+                ch = *( format++ );
             }
             else
             {
@@ -527,7 +527,7 @@ static void tiny_print( struct SStringBuf * apBuf,
                 {
                     apBuf->flags.printLimit *= 10;
                     apBuf->flags.printLimit += ch - '0';
-                    ch                       = *( format++ );
+                    ch = *( format++ );
                 }
             }
         }
@@ -564,19 +564,19 @@ static void tiny_print( struct SStringBuf * apBuf,
 
         if( ch == 'l' )
         {
-            ch                  = *( format++ );
+            ch = *( format++ );
             apBuf->flags.long32 = 1;
             /* Makes not difference as u32 == long */
         }
 
         if( ch == 'L' )
         {
-            ch                  = *( format++ );
+            ch = *( format++ );
             apBuf->flags.long64 = 1;
             /* Does make a difference */
         }
 
-        apBuf->flags.base    = 10;
+        apBuf->flags.base = 10;
         apBuf->flags.letBase = 'a';
 
         if( ( ch == 'd' ) || ( ch == 'u' ) )
@@ -601,7 +601,7 @@ static void tiny_print( struct SStringBuf * apBuf,
             continue;
         }
 
-        apBuf->flags.base    = 16;  /* From here all hexadecimal */
+        apBuf->flags.base = 16; /* From here all hexadecimal */
 
         if( ( ch == 'x' ) && ( format[ 0 ] == 'i' ) && ( format[ 1 ] == 'p' ) )
         {
@@ -670,7 +670,7 @@ int snprintf( char * apBuf,
               const char * apFmt,
               ... )
 {
-    va_list           args;
+    va_list args;
 
     va_start( args, apFmt );
     struct SStringBuf strBuf;
@@ -686,7 +686,7 @@ int sprintf( char * apBuf,
              const char * apFmt,
              ... )
 {
-    va_list           args;
+    va_list args;
 
     va_start( args, apFmt );
     struct SStringBuf strBuf;
@@ -716,21 +716,21 @@ const char * mkSize( unsigned long long aSize,
                      int aLen )
 {
     static char retString[ 33 ];
-    size_t      gb, mb, kb, sb;
+    size_t gb, mb, kb, sb;
 
     if( apBuf == NULL )
     {
         apBuf = retString;
-        aLen  = sizeof( retString );
+        aLen = sizeof( retString );
     }
 
-    gb     = aSize / ( 1024 * 1024 * 1024 );
+    gb = aSize / ( 1024 * 1024 * 1024 );
     aSize -= gb * ( 1024 * 1024 * 1024 );
-    mb     = aSize / ( 1024 * 1024 );
+    mb = aSize / ( 1024 * 1024 );
     aSize -= mb * ( 1024 * 1024 );
-    kb     = aSize / ( 1024 );
+    kb = aSize / ( 1024 );
     aSize -= kb * ( 1024 );
-    sb     = aSize;
+    sb = aSize;
 
     if( gb )
     {

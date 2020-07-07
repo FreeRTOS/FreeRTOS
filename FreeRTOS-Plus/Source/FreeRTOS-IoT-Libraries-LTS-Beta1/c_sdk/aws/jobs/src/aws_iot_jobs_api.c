@@ -190,12 +190,12 @@ static void _callbackWrapperCommon( _jobsCallbackType_t type,
  *
  * API functions will fail if @ref jobs_function_init was not called.
  */
-static uint32_t _initCalled                        = 0;
+static uint32_t _initCalled = 0;
 
 /**
  * @brief Timeout used for MQTT operations.
  */
-uint32_t _AwsIotJobsMqttTimeoutMs                  = AWS_IOT_JOBS_DEFAULT_MQTT_TIMEOUT_MS;
+uint32_t _AwsIotJobsMqttTimeoutMs = AWS_IOT_JOBS_DEFAULT_MQTT_TIMEOUT_MS;
 
 #if LIBRARY_LOG_LEVEL > IOT_LOG_NONE
 
@@ -483,9 +483,9 @@ static AwsIotJobsError_t _setCallbackCommon( IotMqttConnection_t mqttConnection,
                                              const AwsIotJobsCallbackInfo_t * pCallbackInfo )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_SUCCESS );
-    bool                  subscriptionMutexLocked = false;
-    _jobsSubscription_t * pSubscription           = NULL;
-    int32_t               callbackIndex           = 0;
+    bool subscriptionMutexLocked = false;
+    _jobsSubscription_t * pSubscription = NULL;
+    int32_t callbackIndex = 0;
 
     /* Check that AwsIotJobs_Init was called. */
     if( _checkInit() == false )
@@ -535,7 +535,7 @@ static AwsIotJobsError_t _setCallbackCommon( IotMqttConnection_t mqttConnection,
 
     /* Check for an existing subscription. This function will attempt to allocate
      * a new subscription if not found. */
-    pSubscription           = _AwsIotJobs_FindSubscription( pThingName, thingNameLength, true );
+    pSubscription = _AwsIotJobs_FindSubscription( pThingName, thingNameLength, true );
 
     if( pSubscription == NULL )
     {
@@ -545,7 +545,7 @@ static AwsIotJobsError_t _setCallbackCommon( IotMqttConnection_t mqttConnection,
     }
 
     /* Get the index of the callback element to modify. */
-    callbackIndex           = _getCallbackIndex( type, pSubscription, pCallbackInfo );
+    callbackIndex = _getCallbackIndex( type, pSubscription, pCallbackInfo );
 
     switch( callbackIndex )
     {
@@ -652,29 +652,29 @@ static AwsIotJobsError_t _modifyCallbackSubscriptions( IotMqttConnection_t mqttC
                                                        AwsIotMqttFunction_t mqttOperation )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_SUCCESS );
-    int32_t                            i                                            = 0;
-    IotMqttError_t                     mqttStatus                                   = IOT_MQTT_STATUS_PENDING;
-    IotMqttSubscription_t              subscription                                 = IOT_MQTT_SUBSCRIPTION_INITIALIZER;
-    AwsIotTopicInfo_t                  topicInfo                                    = { 0 };
-    char *                             pTopicFilter                                 = NULL;
-    uint16_t                           topicFilterLength                            = 0;
+    int32_t i = 0;
+    IotMqttError_t mqttStatus = IOT_MQTT_STATUS_PENDING;
+    IotMqttSubscription_t subscription = IOT_MQTT_SUBSCRIPTION_INITIALIZER;
+    AwsIotTopicInfo_t topicInfo = { 0 };
+    char * pTopicFilter = NULL;
+    uint16_t topicFilterLength = 0;
 
     /* Lookup table for Jobs callback suffixes. */
-    const char * const                 pCallbackSuffix[ JOBS_CALLBACK_COUNT ]       =
+    const char * const pCallbackSuffix[ JOBS_CALLBACK_COUNT ] =
     {
         JOBS_NOTIFY_PENDING_CALLBACK_STRING, /* Notify pending callback. */
         JOBS_NOTIFY_NEXT_CALLBACK_STRING     /* Notify next callback. */
     };
 
     /* Lookup table for Jobs callback suffix lengths. */
-    const uint16_t                     pCallbackSuffixLength[ JOBS_CALLBACK_COUNT ] =
+    const uint16_t pCallbackSuffixLength[ JOBS_CALLBACK_COUNT ] =
     {
         JOBS_NOTIFY_PENDING_CALLBACK_STRING_LENGTH, /* Notify pending callback. */
         JOBS_NOTIFY_NEXT_CALLBACK_STRING_LENGTH     /* Notify next callback. */
     };
 
     /* Lookup table for Jobs callback function wrappers. */
-    const AwsIotMqttCallbackFunction_t pCallbackWrapper[ JOBS_CALLBACK_COUNT ]      =
+    const AwsIotMqttCallbackFunction_t pCallbackWrapper[ JOBS_CALLBACK_COUNT ] =
     {
         _notifyPendingCallbackWrapper, /* Notify pending callback. */
         _notifyNextCallbackWrapper,    /* Notify next callback. */
@@ -701,12 +701,12 @@ static AwsIotJobsError_t _modifyCallbackSubscriptions( IotMqttConnection_t mqttC
     }
 
     /* Generate the topic for the MQTT subscription. */
-    topicInfo.pThingName                   = pSubscription->pThingName;
-    topicInfo.thingNameLength              = pSubscription->thingNameLength;
-    topicInfo.longestSuffixLength          = JOBS_LONGEST_SUFFIX_LENGTH;
-    topicInfo.mallocString                 = AwsIotJobs_MallocString;
-    topicInfo.pOperationName               = pCallbackSuffix[ type ];
-    topicInfo.operationNameLength          = pCallbackSuffixLength[ type ];
+    topicInfo.pThingName = pSubscription->pThingName;
+    topicInfo.thingNameLength = pSubscription->thingNameLength;
+    topicInfo.longestSuffixLength = JOBS_LONGEST_SUFFIX_LENGTH;
+    topicInfo.mallocString = AwsIotJobs_MallocString;
+    topicInfo.pOperationName = pCallbackSuffix[ type ];
+    topicInfo.operationNameLength = pCallbackSuffixLength[ type ];
 
     if( AwsIot_GenerateOperationTopic( &topicInfo,
                                        &pTopicFilter,
@@ -721,18 +721,18 @@ static AwsIotJobsError_t _modifyCallbackSubscriptions( IotMqttConnection_t mqttC
                  pTopicFilter );
 
     /* Set the members of the MQTT subscription. */
-    subscription.qos                       = IOT_MQTT_QOS_1;
-    subscription.pTopicFilter              = pTopicFilter;
-    subscription.topicFilterLength         = topicFilterLength;
+    subscription.qos = IOT_MQTT_QOS_1;
+    subscription.pTopicFilter = pTopicFilter;
+    subscription.topicFilterLength = topicFilterLength;
     subscription.callback.pCallbackContext = NULL;
-    subscription.callback.function         = pCallbackWrapper[ type ];
+    subscription.callback.function = pCallbackWrapper[ type ];
 
     /* Call the MQTT operation function. */
-    mqttStatus                             = mqttOperation( mqttConnection,
-                                                            &subscription,
-                                                            1,
-                                                            0,
-                                                            _AwsIotJobsMqttTimeoutMs );
+    mqttStatus = mqttOperation( mqttConnection,
+                                &subscription,
+                                1,
+                                0,
+                                _AwsIotJobsMqttTimeoutMs );
 
     /* Check the result of the MQTT operation. */
     if( mqttStatus != IOT_MQTT_SUCCESS )
@@ -806,12 +806,12 @@ static void _notifyNextCallbackWrapper( void * pArgument,
 static void _callbackWrapperCommon( _jobsCallbackType_t type,
                                     IotMqttCallbackParam_t * pMessage )
 {
-    int32_t                   callbackIndex = 0;
-    AwsIotJobsCallbackInfo_t  callbackInfo  = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
+    int32_t callbackIndex = 0;
+    AwsIotJobsCallbackInfo_t callbackInfo = AWS_IOT_JOBS_CALLBACK_INFO_INITIALIZER;
     AwsIotJobsCallbackParam_t callbackParam = { .callbackType = ( AwsIotJobsCallbackType_t ) 0 };
-    _jobsSubscription_t *     pSubscription = NULL;
-    const char *              pThingName    = NULL;
-    size_t thingNameLength                  = 0;
+    _jobsSubscription_t * pSubscription = NULL;
+    const char * pThingName = NULL;
+    size_t thingNameLength = 0;
 
     /* Parse the Thing Name from the topic. */
     if( AwsIot_ParseThingName( pMessage->u.message.info.pTopicName,
@@ -851,13 +851,13 @@ static void _callbackWrapperCommon( _jobsCallbackType_t type,
             if( callbackInfo.function != NULL )
             {
                 /* Set the callback type. Jobs callbacks are enumerated after the operations. */
-                callbackParam.callbackType              = ( AwsIotJobsCallbackType_t ) ( type + JOBS_OPERATION_COUNT );
+                callbackParam.callbackType = ( AwsIotJobsCallbackType_t ) ( type + JOBS_OPERATION_COUNT );
 
                 /* Set the remaining members of the callback param. */
-                callbackParam.mqttConnection            = pMessage->mqttConnection;
-                callbackParam.pThingName                = pThingName;
-                callbackParam.thingNameLength           = thingNameLength;
-                callbackParam.u.callback.pDocument      = pMessage->u.message.info.pPayload;
+                callbackParam.mqttConnection = pMessage->mqttConnection;
+                callbackParam.pThingName = pThingName;
+                callbackParam.thingNameLength = thingNameLength;
+                callbackParam.u.callback.pDocument = pMessage->u.message.info.pPayload;
                 callbackParam.u.callback.documentLength = pMessage->u.message.info.payloadLength;
 
                 /* Invoke the callback function. */
@@ -886,8 +886,8 @@ static void _callbackWrapperCommon( _jobsCallbackType_t type,
 
 AwsIotJobsError_t AwsIotJobs_Init( uint32_t mqttTimeoutMs )
 {
-    AwsIotJobsError_t status         = AWS_IOT_JOBS_SUCCESS;
-    bool              listInitStatus = false;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
+    bool listInitStatus = false;
 
     if( _initCalled == 0 )
     {
@@ -930,7 +930,7 @@ void AwsIotJobs_Cleanup( void )
 {
     if( _initCalled == 1 )
     {
-        _initCalled              = 0;
+        _initCalled = 0;
 
         /* Remove and free all items in the Jobs pending operation list. */
         IotMutex_Lock( &_AwsIotJobsPendingOperationsMutex );
@@ -1030,7 +1030,7 @@ AwsIotJobsError_t AwsIotJobs_GetPendingSync( const AwsIotJobsRequestInfo_t * pRe
                                              uint32_t timeoutMs,
                                              AwsIotJobsResponse_t * const pJobsResponse )
 {
-    AwsIotJobsError_t     status              = AWS_IOT_JOBS_STATUS_PENDING;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_STATUS_PENDING;
     AwsIotJobsOperation_t getPendingOperation = AWS_IOT_JOBS_OPERATION_INITIALIZER;
 
     /* Set the waitable flag. */
@@ -1062,7 +1062,7 @@ AwsIotJobsError_t AwsIotJobs_StartNextAsync( const AwsIotJobsRequestInfo_t * pRe
                                              AwsIotJobsOperation_t * const pStartNextOperation )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_STATUS_PENDING );
-    _jobsOperation_t *     pOperation      = NULL;
+    _jobsOperation_t * pOperation = NULL;
     _jsonRequestContents_t requestContents = { 0 };
 
     /* Check that AwsIotJobs_Init was called. */
@@ -1072,11 +1072,11 @@ AwsIotJobsError_t AwsIotJobs_StartNextAsync( const AwsIotJobsRequestInfo_t * pRe
     }
 
     /* Check request info. */
-    status                      = _validateRequestInfo( JOBS_START_NEXT,
-                                                        pRequestInfo,
-                                                        flags,
-                                                        pCallbackInfo,
-                                                        pStartNextOperation );
+    status = _validateRequestInfo( JOBS_START_NEXT,
+                                   pRequestInfo,
+                                   flags,
+                                   pCallbackInfo,
+                                   pStartNextOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1084,8 +1084,8 @@ AwsIotJobsError_t AwsIotJobs_StartNextAsync( const AwsIotJobsRequestInfo_t * pRe
     }
 
     /* Check update info. */
-    status                      = _validateUpdateInfo( JOBS_START_NEXT,
-                                                       pUpdateInfo );
+    status = _validateUpdateInfo( JOBS_START_NEXT,
+                                  pUpdateInfo );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1095,12 +1095,12 @@ AwsIotJobsError_t AwsIotJobs_StartNextAsync( const AwsIotJobsRequestInfo_t * pRe
     /* Allocate a new Jobs operation. */
     requestContents.pUpdateInfo = pUpdateInfo;
 
-    status                      = _AwsIotJobs_CreateOperation( JOBS_START_NEXT,
-                                                               pRequestInfo,
-                                                               &requestContents,
-                                                               flags,
-                                                               pCallbackInfo,
-                                                               &pOperation );
+    status = _AwsIotJobs_CreateOperation( JOBS_START_NEXT,
+                                          pRequestInfo,
+                                          &requestContents,
+                                          flags,
+                                          pCallbackInfo,
+                                          &pOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1117,7 +1117,7 @@ AwsIotJobsError_t AwsIotJobs_StartNextAsync( const AwsIotJobsRequestInfo_t * pRe
 
     /* Process the Jobs operation. This subscribes to any required topics and
      * sends the MQTT message for the Jobs operation. */
-    status                      = _AwsIotJobs_ProcessOperation( pRequestInfo, pOperation );
+    status = _AwsIotJobs_ProcessOperation( pRequestInfo, pOperation );
 
     /* If the Jobs operation failed, clear the now invalid reference. */
     if( ( status != AWS_IOT_JOBS_STATUS_PENDING ) && ( pStartNextOperation != NULL ) )
@@ -1136,7 +1136,7 @@ AwsIotJobsError_t AwsIotJobs_StartNextSync( const AwsIotJobsRequestInfo_t * pReq
                                             uint32_t timeoutMs,
                                             AwsIotJobsResponse_t * const pJobsResponse )
 {
-    AwsIotJobsError_t     status             = AWS_IOT_JOBS_STATUS_PENDING;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_STATUS_PENDING;
     AwsIotJobsOperation_t startNextOperation = AWS_IOT_JOBS_OPERATION_INITIALIZER;
 
     /* Set the waitable flag. */
@@ -1170,7 +1170,7 @@ AwsIotJobsError_t AwsIotJobs_DescribeAsync( const AwsIotJobsRequestInfo_t * pReq
                                             AwsIotJobsOperation_t * const pDescribeOperation )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_STATUS_PENDING );
-    _jobsOperation_t *     pOperation      = NULL;
+    _jobsOperation_t * pOperation = NULL;
     _jsonRequestContents_t requestContents = { 0 };
 
     /* Check that AwsIotJobs_Init was called. */
@@ -1180,11 +1180,11 @@ AwsIotJobsError_t AwsIotJobs_DescribeAsync( const AwsIotJobsRequestInfo_t * pReq
     }
 
     /* Check request info. */
-    status                                      = _validateRequestInfo( JOBS_DESCRIBE,
-                                                                        pRequestInfo,
-                                                                        flags,
-                                                                        pCallbackInfo,
-                                                                        pDescribeOperation );
+    status = _validateRequestInfo( JOBS_DESCRIBE,
+                                   pRequestInfo,
+                                   flags,
+                                   pCallbackInfo,
+                                   pDescribeOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1192,15 +1192,15 @@ AwsIotJobsError_t AwsIotJobs_DescribeAsync( const AwsIotJobsRequestInfo_t * pReq
     }
 
     /* Allocate a new Jobs operation. */
-    requestContents.describe.executionNumber    = executionNumber;
+    requestContents.describe.executionNumber = executionNumber;
     requestContents.describe.includeJobDocument = includeJobDocument;
 
-    status                                      = _AwsIotJobs_CreateOperation( JOBS_DESCRIBE,
-                                                                               pRequestInfo,
-                                                                               &requestContents,
-                                                                               flags,
-                                                                               pCallbackInfo,
-                                                                               &pOperation );
+    status = _AwsIotJobs_CreateOperation( JOBS_DESCRIBE,
+                                          pRequestInfo,
+                                          &requestContents,
+                                          flags,
+                                          pCallbackInfo,
+                                          &pOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1217,7 +1217,7 @@ AwsIotJobsError_t AwsIotJobs_DescribeAsync( const AwsIotJobsRequestInfo_t * pReq
 
     /* Process the Jobs operation. This subscribes to any required topics and
      * sends the MQTT message for the Jobs operation. */
-    status                                      = _AwsIotJobs_ProcessOperation( pRequestInfo, pOperation );
+    status = _AwsIotJobs_ProcessOperation( pRequestInfo, pOperation );
 
     /* If the Jobs operation failed, clear the now invalid reference. */
     if( ( status != AWS_IOT_JOBS_STATUS_PENDING ) && ( pDescribeOperation != NULL ) )
@@ -1237,7 +1237,7 @@ AwsIotJobsError_t AwsIotJobs_DescribeSync( const AwsIotJobsRequestInfo_t * pRequ
                                            uint32_t timeoutMs,
                                            AwsIotJobsResponse_t * const pJobsResponse )
 {
-    AwsIotJobsError_t     status            = AWS_IOT_JOBS_STATUS_PENDING;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_STATUS_PENDING;
     AwsIotJobsOperation_t describeOperation = AWS_IOT_JOBS_OPERATION_INITIALIZER;
 
     /* Set the waitable flag. */
@@ -1271,7 +1271,7 @@ AwsIotJobsError_t AwsIotJobs_UpdateAsync( const AwsIotJobsRequestInfo_t * pReque
                                           AwsIotJobsOperation_t * const pUpdateOperation )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_STATUS_PENDING );
-    _jobsOperation_t *     pOperation      = NULL;
+    _jobsOperation_t * pOperation = NULL;
     _jsonRequestContents_t requestContents = { 0 };
 
     /* Check that AwsIotJobs_Init was called. */
@@ -1281,11 +1281,11 @@ AwsIotJobsError_t AwsIotJobs_UpdateAsync( const AwsIotJobsRequestInfo_t * pReque
     }
 
     /* Check request info. */
-    status                      = _validateRequestInfo( JOBS_UPDATE,
-                                                        pRequestInfo,
-                                                        flags,
-                                                        pCallbackInfo,
-                                                        pUpdateOperation );
+    status = _validateRequestInfo( JOBS_UPDATE,
+                                   pRequestInfo,
+                                   flags,
+                                   pCallbackInfo,
+                                   pUpdateOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1293,8 +1293,8 @@ AwsIotJobsError_t AwsIotJobs_UpdateAsync( const AwsIotJobsRequestInfo_t * pReque
     }
 
     /* Check update info. */
-    status                      = _validateUpdateInfo( JOBS_UPDATE,
-                                                       pUpdateInfo );
+    status = _validateUpdateInfo( JOBS_UPDATE,
+                                  pUpdateInfo );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1304,12 +1304,12 @@ AwsIotJobsError_t AwsIotJobs_UpdateAsync( const AwsIotJobsRequestInfo_t * pReque
     /* Allocate a new Jobs operation. */
     requestContents.pUpdateInfo = pUpdateInfo;
 
-    status                      = _AwsIotJobs_CreateOperation( JOBS_UPDATE,
-                                                               pRequestInfo,
-                                                               &requestContents,
-                                                               flags,
-                                                               pCallbackInfo,
-                                                               &pOperation );
+    status = _AwsIotJobs_CreateOperation( JOBS_UPDATE,
+                                          pRequestInfo,
+                                          &requestContents,
+                                          flags,
+                                          pCallbackInfo,
+                                          &pOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -1326,7 +1326,7 @@ AwsIotJobsError_t AwsIotJobs_UpdateAsync( const AwsIotJobsRequestInfo_t * pReque
 
     /* Process the Jobs operation. This subscribes to any required topics and
      * sends the MQTT message for the Jobs operation. */
-    status                      = _AwsIotJobs_ProcessOperation( pRequestInfo, pOperation );
+    status = _AwsIotJobs_ProcessOperation( pRequestInfo, pOperation );
 
     /* If the Jobs operation failed, clear the now invalid reference. */
     if( ( status != AWS_IOT_JOBS_STATUS_PENDING ) && ( pUpdateOperation != NULL ) )
@@ -1345,7 +1345,7 @@ AwsIotJobsError_t AwsIotJobs_UpdateSync( const AwsIotJobsRequestInfo_t * pReques
                                          uint32_t timeoutMs,
                                          AwsIotJobsResponse_t * const pJobsResponse )
 {
-    AwsIotJobsError_t     status          = AWS_IOT_JOBS_STATUS_PENDING;
+    AwsIotJobsError_t status = AWS_IOT_JOBS_STATUS_PENDING;
     AwsIotJobsOperation_t updateOperation = AWS_IOT_JOBS_OPERATION_INITIALIZER;
 
     /* Set the waitable flag. */
@@ -1439,7 +1439,7 @@ AwsIotJobsError_t AwsIotJobs_Wait( AwsIotJobsOperation_t operation,
         AwsIotJobs_Assert( operation->pJobsResponse != NULL );
         AwsIotJobs_Assert( operation->jobsResponseLength > 0 );
 
-        pJobsResponse->pJobsResponse      = operation->pJobsResponse;
+        pJobsResponse->pJobsResponse = operation->pJobsResponse;
         pJobsResponse->jobsResponseLength = operation->jobsResponseLength;
     }
 

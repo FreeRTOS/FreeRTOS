@@ -103,7 +103,7 @@ static const uint8_t ucDNSServerAddress[ 4 ] =
  * FreeRTOSConfig.h) and the port number set by configPRINT_PORT in
  * FreeRTOSConfig.h. */
 const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE,
-                 xLogToUDP      = pdFALSE;
+                 xLogToUDP = pdFALSE;
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet data
@@ -161,8 +161,8 @@ int main( void )
  * events are only received if implemented in the MAC driver. */
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
-    uint32_t          ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
-    char              cBuffer[ 16 ];
+    uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
+    char cBuffer[ 16 ];
     static BaseType_t xTasksAlreadyCreated = pdFALSE;
 
     /* If the network has just come up...*/
@@ -204,8 +204,8 @@ void vAssertCalled( const char * pcFile,
                     uint32_t ulLine )
 {
     volatile uint32_t ulBlockVariable = 0UL;
-    volatile char *   pcFileName      = ( volatile char * ) pcFile;
-    volatile uint32_t ulLineNumber    = ulLine;
+    volatile char * pcFileName = ( volatile char * ) pcFile;
+    volatile uint32_t ulLineNumber = ulLine;
 
     ( void ) pcFileName;
     ( void ) ulLineNumber;
@@ -225,10 +225,10 @@ void vAssertCalled( const char * pcFile,
 /*-----------------------------------------------------------*/
 UBaseType_t uxRand( void )
 {
-    uint8_t                  ulNextRand = 0;
-    CK_RV                    xResult    = CKR_OK;
-    static CK_SESSION_HANDLE xSession   = CK_INVALID_HANDLE;
-    CK_FUNCTION_LIST_PTR     pxFunctionList;
+    uint8_t ulNextRand = 0;
+    CK_RV xResult = CKR_OK;
+    static CK_SESSION_HANDLE xSession = CK_INVALID_HANDLE;
+    CK_FUNCTION_LIST_PTR pxFunctionList;
 
     xResult = C_GetFunctionList( &pxFunctionList );
 
@@ -265,7 +265,7 @@ static void prvMiscInitialisation( void )
         xLogToStdout, xLogToFile, xLogToUDP, ulLoggingIPAddress,
         configPRINT_PORT );
 
-    CK_RV    xResult;
+    CK_RV xResult;
     uint32_t xRandom = 0;
 
     /* Set the mutex functions for mbed TLS thread safety. */
@@ -276,14 +276,14 @@ static void prvMiscInitialisation( void )
     /*
      * Initialize the PKCS #11 module and token.
      */
-    xResult            = xInitializePkcs11Token();
+    xResult = xInitializePkcs11Token();
     configASSERT( xResult == CKR_OK );
 
     /* Call for a random number. The first time this is called, it will
      * create a PKCS #11 session which is shared by all callers to
      * xGetRandomNumber. Make this call now since randomness session
      * initialization isn't threadsafe. */
-    xRandom            = uxRand();
+    xRandom = uxRand();
     configPRINTF(
         ( "Successfully Generated Random numbers: %08X %08X %08X %08X\n",
           ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(),
@@ -378,11 +378,11 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
      * function then they must be declared static - otherwise they will be
      * allocated on the stack and so not exists after this function exits. */
     static StaticTask_t xIdleTaskTCB;
-    static StackType_t  uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
      * state will be stored. */
-    *ppxIdleTaskTCBBuffer   = &xIdleTaskTCB;
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
 
     /* Pass out the array that will be used as the Idle task's stack. */
     *ppxIdleTaskStackBuffer = uxIdleTaskStack;
@@ -390,7 +390,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
     /* Pass out the size of the array pointed to by *ppxIdleTaskStackBuffer.
      * Note that, as the array is necessarily of type StackType_t,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulIdleTaskStackSize   = configMINIMAL_STACK_SIZE;
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 /*-----------------------------------------------------------*/
 
@@ -405,11 +405,11 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
      * function then they must be declared static - otherwise they will be
      * allocated on the stack and so not exists after this function exits. */
     static StaticTask_t xTimerTaskTCB;
-    static StackType_t  uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
+    static StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
     /* Pass out a pointer to the StaticTask_t structure in which the Timer
      * task's state will be stored. */
-    *ppxTimerTaskTCBBuffer   = &xTimerTaskTCB;
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
 
     /* Pass out the array that will be used as the Timer task's stack. */
     *ppxTimerTaskStackBuffer = uxTimerTaskStack;
@@ -417,6 +417,6 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
     /* Pass out the size of the array pointed to by *ppxTimerTaskStackBuffer.
      * Note that, as the array is necessarily of type StackType_t,
      * configMINIMAL_STACK_SIZE is specified in words, not bytes. */
-    *pulTimerTaskStackSize   = configTIMER_TASK_STACK_DEPTH;
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/

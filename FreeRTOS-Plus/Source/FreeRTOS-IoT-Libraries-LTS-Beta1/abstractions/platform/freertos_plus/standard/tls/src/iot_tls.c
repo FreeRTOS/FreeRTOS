@@ -200,7 +200,7 @@ static int prvGenerateRandomBytes( void * pvCtx,
 {
     TLSContext_t * pxCtx = ( TLSContext_t * )
                            pvCtx; /*lint !e9087 !e9079 Allow casting void* to other types. */
-    BaseType_t     xResult;
+    BaseType_t xResult;
 
     xResult = pxCtx->pxP11FunctionList->C_GenerateRandom(
         pxCtx->xP11Session, pucRandom, xRandomLength );
@@ -232,14 +232,14 @@ static int prvCheckCertificate( void * pvCtx,
                                 int lPathCount,
                                 uint32_t * pulFlags )
 {
-    int        lCompilationYear  = 0;
+    int lCompilationYear = 0;
 
 #define tlsCOMPILER_DATE_STRING_MONTH_LENGTH    4
 #define tlsDATE_STRING_FIELD_COUNT              3
-    char       cCompilationMonth[ tlsCOMPILER_DATE_STRING_MONTH_LENGTH ];
-    int        lCompilationMonth = 0;
-    int        lCompilationDay   = 0;
-    const char cMonths[]         = "JanFebMarAprMayJunJulAugSepOctNovDec";
+    char cCompilationMonth[ tlsCOMPILER_DATE_STRING_MONTH_LENGTH ];
+    int lCompilationMonth = 0;
+    int lCompilationDay = 0;
+    const char cMonths[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
 
     /* Unreferenced parameters. */
     ( void ) ( pvCtx );
@@ -315,12 +315,12 @@ static int prvPrivateKeySigningCallback( void * pvContext,
                                              size_t ), /*lint !e955 This parameter is unused. */
                                          void * pvRng )
 {
-    CK_RV          xResult        = CKR_OK;
-    int            lFinalResult   = 0;
-    TLSContext_t * pxTLSContext   = ( TLSContext_t * ) pvContext;
-    CK_MECHANISM   xMech          = { 0 };
-    CK_BYTE        xToBeSigned[ 256 ];
-    CK_ULONG       xToBeSignedLen = sizeof( xToBeSigned );
+    CK_RV xResult = CKR_OK;
+    int lFinalResult = 0;
+    TLSContext_t * pxTLSContext = ( TLSContext_t * ) pvContext;
+    CK_MECHANISM xMech = { 0 };
+    CK_BYTE xToBeSigned[ 256 ];
+    CK_ULONG xToBeSignedLen = sizeof( xToBeSigned );
 
     /* Unreferenced parameters. */
     ( void ) ( piRng );
@@ -342,15 +342,15 @@ static int prvPrivateKeySigningCallback( void * pvContext,
          * function performs a hash & sign if hash algorithm is specified.  This
          * helper function applies padding indicating data was hashed with
          * SHA-256 while still allowing pre-hashed data to be provided. */
-        xResult         = vAppendSHA256AlgorithmIdentifierSequence(
+        xResult = vAppendSHA256AlgorithmIdentifierSequence(
             ( uint8_t * ) pucHash, xToBeSigned );
-        xToBeSignedLen  = pkcs11RSA_SIGNATURE_INPUT_LENGTH;
+        xToBeSignedLen = pkcs11RSA_SIGNATURE_INPUT_LENGTH;
     }
     else if( CKK_EC == pxTLSContext->xKeyType )
     {
         xMech.mechanism = CKM_ECDSA;
         memcpy( xToBeSigned, pucHash, xHashLen );
-        xToBeSignedLen  = xHashLen;
+        xToBeSignedLen = xHashLen;
     }
     else
     {
@@ -367,7 +367,7 @@ static int prvPrivateKeySigningCallback( void * pvContext,
     if( CKR_OK == xResult )
     {
         *pxSigLen = sizeof( xToBeSigned );
-        xResult   = pxTLSContext->pxP11FunctionList->C_Sign(
+        xResult = pxTLSContext->pxP11FunctionList->C_Sign(
             ( CK_SESSION_HANDLE ) pxTLSContext->xP11Session, xToBeSigned,
             xToBeSignedLen, pucSig, ( CK_ULONG_PTR ) pxSigLen );
     }
@@ -415,9 +415,9 @@ static int prvReadCertificateIntoContext( TLSContext_t * pxTlsContext,
                                           CK_OBJECT_CLASS xClass,
                                           mbedtls_x509_crt * pxCertificateContext )
 {
-    BaseType_t       xResult   = CKR_OK;
-    CK_ATTRIBUTE     xTemplate = { 0 };
-    CK_OBJECT_HANDLE xCertObj  = 0;
+    BaseType_t xResult = CKR_OK;
+    CK_ATTRIBUTE xTemplate = { 0 };
+    CK_OBJECT_HANDLE xCertObj = 0;
 
     /* Get the handle of the certificate. */
     xResult = xFindObjectWithLabelAndClass(
@@ -431,10 +431,10 @@ static int prvReadCertificateIntoContext( TLSContext_t * pxTlsContext,
     /* Query the certificate size. */
     if( 0 == xResult )
     {
-        xTemplate.type       = CKA_VALUE;
+        xTemplate.type = CKA_VALUE;
         xTemplate.ulValueLen = 0;
-        xTemplate.pValue     = NULL;
-        xResult              =
+        xTemplate.pValue = NULL;
+        xResult =
             ( BaseType_t ) pxTlsContext->pxP11FunctionList->C_GetAttributeValue(
                 pxTlsContext->xP11Session, xCertObj, &xTemplate, 1 );
     }
@@ -489,11 +489,11 @@ static int prvReadCertificateIntoContext( TLSContext_t * pxTlsContext,
  */
 static int prvInitializeClientCredential( TLSContext_t * pxCtx )
 {
-    BaseType_t        xResult   = CKR_OK;
-    CK_SLOT_ID *      pxSlotIds = NULL;
-    CK_ULONG          xCount    = 0;
-    CK_ATTRIBUTE      xTemplate[ 2 ];
-    mbedtls_pk_type_t xKeyAlgo  = ( mbedtls_pk_type_t ) ~0;
+    BaseType_t xResult = CKR_OK;
+    CK_SLOT_ID * pxSlotIds = NULL;
+    CK_ULONG xCount = 0;
+    CK_ATTRIBUTE xTemplate[ 2 ];
+    mbedtls_pk_type_t xKeyAlgo = ( mbedtls_pk_type_t ) ~0;
 
     /* Initialize the mbed contexts. */
     mbedtls_x509_crt_init( &pxCtx->xMbedX509Cli );
@@ -557,10 +557,10 @@ static int prvInitializeClientCredential( TLSContext_t * pxCtx )
     /* Query the device private key type. */
     if( xResult == CKR_OK )
     {
-        xTemplate[ 0 ].type       = CKA_KEY_TYPE;
-        xTemplate[ 0 ].pValue     = &pxCtx->xKeyType;
+        xTemplate[ 0 ].type = CKA_KEY_TYPE;
+        xTemplate[ 0 ].pValue = &pxCtx->xKeyType;
         xTemplate[ 0 ].ulValueLen = sizeof( CK_KEY_TYPE );
-        xResult                   = pxCtx->pxP11FunctionList->C_GetAttributeValue(
+        xResult = pxCtx->pxP11FunctionList->C_GetAttributeValue(
             pxCtx->xP11Session, pxCtx->xP11PrivateKey, xTemplate, 1 );
     }
 
@@ -578,7 +578,7 @@ static int prvInitializeClientCredential( TLSContext_t * pxCtx )
                 break;
 
             default:
-                xResult  = CKR_ATTRIBUTE_VALUE_INVALID;
+                xResult = CKR_ATTRIBUTE_VALUE_INVALID;
                 break;
         }
     }
@@ -591,8 +591,8 @@ static int prvInitializeClientCredential( TLSContext_t * pxCtx )
             sizeof( mbedtls_pk_info_t ) );
 
         pxCtx->xMbedPkInfo.sign_func = prvPrivateKeySigningCallback;
-        pxCtx->xMbedPkCtx.pk_info    = &pxCtx->xMbedPkInfo;
-        pxCtx->xMbedPkCtx.pk_ctx     = pxCtx;
+        pxCtx->xMbedPkCtx.pk_info = &pxCtx->xMbedPkInfo;
+        pxCtx->xMbedPkCtx.pk_ctx = pxCtx;
     }
 
     /* Get the handle of the device client certificate. */
@@ -629,8 +629,8 @@ static int prvInitializeClientCredential( TLSContext_t * pxCtx )
 BaseType_t TLS_Init( void ** ppvContext,
                      TLSParams_t * pxParams )
 {
-    BaseType_t           xResult            = CKR_OK;
-    TLSContext_t *       pxCtx              = NULL;
+    BaseType_t xResult = CKR_OK;
+    TLSContext_t * pxCtx = NULL;
     CK_C_GetFunctionList xCkGetFunctionList = NULL;
 
     /* Allocate an internal context. */
@@ -641,21 +641,21 @@ BaseType_t TLS_Init( void ** ppvContext,
     if( NULL != pxCtx )
     {
         memset( pxCtx, 0, sizeof( TLSContext_t ) );
-        *ppvContext                      = pxCtx;
+        *ppvContext = pxCtx;
 
         /* Initialize the context. */
-        pxCtx->pcDestination             = pxParams->pcDestination;
-        pxCtx->pcServerCertificate       = pxParams->pcServerCertificate;
+        pxCtx->pcDestination = pxParams->pcDestination;
+        pxCtx->pcServerCertificate = pxParams->pcServerCertificate;
         pxCtx->ulServerCertificateLength = pxParams->ulServerCertificateLength;
-        pxCtx->ppcAlpnProtocols          = pxParams->ppcAlpnProtocols;
-        pxCtx->ulAlpnProtocolsCount      = pxParams->ulAlpnProtocolsCount;
-        pxCtx->xNetworkRecv              = pxParams->pxNetworkRecv;
-        pxCtx->xNetworkSend              = pxParams->pxNetworkSend;
-        pxCtx->pvCallerContext           = pxParams->pvCallerContext;
+        pxCtx->ppcAlpnProtocols = pxParams->ppcAlpnProtocols;
+        pxCtx->ulAlpnProtocolsCount = pxParams->ulAlpnProtocolsCount;
+        pxCtx->xNetworkRecv = pxParams->pxNetworkRecv;
+        pxCtx->xNetworkSend = pxParams->pxNetworkSend;
+        pxCtx->pvCallerContext = pxParams->pvCallerContext;
 
         /* Get the function pointer list for the PKCS#11 module. */
-        xCkGetFunctionList               = C_GetFunctionList;
-        xResult                          = ( BaseType_t ) xCkGetFunctionList( &pxCtx->pxP11FunctionList );
+        xCkGetFunctionList = C_GetFunctionList;
+        xResult = ( BaseType_t ) xCkGetFunctionList( &pxCtx->pxP11FunctionList );
 
         /* Ensure that the PKCS #11 module is initialized. */
         if( CKR_OK == xResult )
@@ -700,9 +700,9 @@ BaseType_t TLS_Init( void ** ppvContext,
 
 BaseType_t TLS_Connect( void * pvContext )
 {
-    BaseType_t     xResult = 0;
-    TLSContext_t * pxCtx   = ( TLSContext_t * )
-                             pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
+    BaseType_t xResult = 0;
+    TLSContext_t * pxCtx = ( TLSContext_t * )
+                           pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
 
 
     /* Initialize mbedTLS structures. */
@@ -848,10 +848,10 @@ BaseType_t TLS_Recv( void * pvContext,
                      unsigned char * pucReadBuffer,
                      size_t xReadLength )
 {
-    BaseType_t     xResult = 0;
-    TLSContext_t * pxCtx   = ( TLSContext_t * )
-                             pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
-    size_t         xRead   = 0;
+    BaseType_t xResult = 0;
+    TLSContext_t * pxCtx = ( TLSContext_t * )
+                           pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
+    size_t xRead = 0;
 
     if( ( NULL != pxCtx ) && ( pdTRUE == pxCtx->xTLSHandshakeSuccessful ) )
     {
@@ -899,10 +899,10 @@ BaseType_t TLS_Send( void * pvContext,
                      const unsigned char * pucMsg,
                      size_t xMsgLength )
 {
-    BaseType_t     xResult  = 0;
-    TLSContext_t * pxCtx    = ( TLSContext_t * )
-                              pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
-    size_t         xWritten = 0;
+    BaseType_t xResult = 0;
+    TLSContext_t * pxCtx = ( TLSContext_t * )
+                           pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
+    size_t xWritten = 0;
 
     if( ( NULL != pxCtx ) && ( pdTRUE == pxCtx->xTLSHandshakeSuccessful ) )
     {

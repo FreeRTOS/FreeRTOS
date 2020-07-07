@@ -206,11 +206,5 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define strncasecmp _strnicmp
 #define strcmpi _strcmpi
 
-/* Prototype for the function used to print out.  In this case it prints to the
-console before the network is connected then a UDP port after the network has
-connected. */
-extern void vLoggingPrintf( const char *pcFormatString, ... );
-#define configPRINTF( X )    vLoggingPrintf X
-
 #endif /* FREERTOS_CONFIG_H */
 

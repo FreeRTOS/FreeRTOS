@@ -36,19 +36,23 @@
 
 /*-----------------------------------------------------------*/
 
-void* mbedtls_platform_calloc(size_t nmemb, size_t size)
+void * mbedtls_platform_calloc( size_t nmemb,
+                                size_t size )
 {
     size_t totalSize = nmemb * size;
-    void* pBuffer = NULL;
+    void * pBuffer   = NULL;
 
     /* Check that neither nmemb nor size were 0. */
-    if (totalSize > 0) {
+    if( totalSize > 0 )
+    {
         /* Overflow check. */
-        if (totalSize / size == nmemb) {
-            pBuffer = pvPortMalloc(totalSize);
+        if( totalSize / size == nmemb )
+        {
+            pBuffer = pvPortMalloc( totalSize );
 
-            if (pBuffer != NULL) {
-                (void)memset(pBuffer, 0x00, totalSize);
+            if( pBuffer != NULL )
+            {
+                ( void ) memset( pBuffer, 0x00, totalSize );
             }
         }
     }
@@ -58,102 +62,111 @@ void* mbedtls_platform_calloc(size_t nmemb, size_t size)
 
 /*-----------------------------------------------------------*/
 
-void mbedtls_platform_free(void* ptr)
+void mbedtls_platform_free( void * ptr )
 {
-    vPortFree(ptr);
+    vPortFree( ptr );
 }
 
 /*-----------------------------------------------------------*/
 
-int mbedtls_platform_send(void* ctx, const unsigned char* buf, size_t len)
-{
-    Socket_t socket = ctx;
-
-    return (int)FreeRTOS_send(socket, buf, len, 0);
-}
-
-/*-----------------------------------------------------------*/
-
-int mbedtls_platform_recv(void* ctx, unsigned char* buf, size_t len)
+int mbedtls_platform_send( void * ctx,
+                           const unsigned char * buf,
+                           size_t len )
 {
     Socket_t socket = ctx;
 
-    return (int)FreeRTOS_recv(socket, buf, len, 0);
+    return ( int ) FreeRTOS_send( socket, buf, len, 0 );
 }
 
 /*-----------------------------------------------------------*/
 
-void mbedtls_platform_mutex_init(mbedtls_threading_mutex_t* pMutex)
+int mbedtls_platform_recv( void * ctx,
+                           unsigned char * buf,
+                           size_t len )
+{
+    Socket_t socket = ctx;
+
+    return ( int ) FreeRTOS_recv( socket, buf, len, 0 );
+}
+
+/*-----------------------------------------------------------*/
+
+void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
 {
     /* Create a statically-allocated FreeRTOS mutex. This should never fail as
      * storage is provided. */
-    pMutex->mutexHandle = xSemaphoreCreateMutexStatic(&(pMutex->mutexStorage));
-    configASSERT(pMutex->mutexHandle != NULL);
+    pMutex->mutexHandle = xSemaphoreCreateMutexStatic( &( pMutex->mutexStorage ) );
+    configASSERT( pMutex->mutexHandle != NULL );
 }
 
 /*-----------------------------------------------------------*/
 
-void mbedtls_platform_mutex_free(mbedtls_threading_mutex_t* pMutex)
+void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
 {
     /* Nothing needs to be done to free a statically-allocated FreeRTOS mutex.
      */
-    (void)pMutex;
+    ( void ) pMutex;
 }
 
 /*-----------------------------------------------------------*/
 
-int mbedtls_platform_mutex_lock(mbedtls_threading_mutex_t* pMutex)
+int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
 {
     BaseType_t mutexStatus = 0;
 
     /* mutexStatus is not used if asserts are disabled. */
-    (void)mutexStatus;
+    ( void ) mutexStatus;
 
     /* This function should never fail if the mutex is initialized. */
-    mutexStatus = xSemaphoreTake(pMutex->mutexHandle, portMAX_DELAY);
-    configASSERT(mutexStatus == pdTRUE);
+    mutexStatus = xSemaphoreTake( pMutex->mutexHandle, portMAX_DELAY );
+    configASSERT( mutexStatus == pdTRUE );
 
     return 0;
 }
 
 /*-----------------------------------------------------------*/
 
-int mbedtls_platform_mutex_unlock(mbedtls_threading_mutex_t* pMutex)
+int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
 {
     BaseType_t mutexStatus = 0;
 
     /* mutexStatus is not used if asserts are disabled. */
-    (void)mutexStatus;
+    ( void ) mutexStatus;
 
     /* This function should never fail if the mutex is initialized. */
-    mutexStatus = xSemaphoreGive(pMutex->mutexHandle);
-    configASSERT(mutexStatus == pdTRUE);
+    mutexStatus = xSemaphoreGive( pMutex->mutexHandle );
+    configASSERT( mutexStatus == pdTRUE );
 
     return 0;
 }
 
 /*-----------------------------------------------------------*/
 
-int mbedtls_platform_entropy_poll(
-    void* data, unsigned char* output, size_t len, size_t* olen)
+int mbedtls_platform_entropy_poll( void * data,
+                                   unsigned char * output,
+                                   size_t len,
+                                   size_t * olen )
 {
-    int status = 0;
+    int      status    = 0;
     NTSTATUS rngStatus = 0;
 
     /* Context is not used by this function. */
-    (void)data;
+    ( void ) data;
 
     /* TLS requires a secure random number generator; use the RNG provided
      * by Windows. This function MUST be re-implemented for other platforms. */
     rngStatus =
-        BCryptGenRandom(NULL, output, len, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+        BCryptGenRandom( NULL, output, len, BCRYPT_USE_SYSTEM_PREFERRED_RNG );
 
-    if (rngStatus == 0) {
+    if( rngStatus == 0 )
+    {
         /* All random bytes generated. */
         *olen = len;
-    } else {
+    }
+    else
+    {
         /* RNG failure. */
-        *olen = 0;
+        *olen  = 0;
         status = MBEDTLS_ERR_ENTROPY_SOURCE_FAILED;
     }
 
@@ -162,10 +175,12 @@ int mbedtls_platform_entropy_poll(
 
 /*-----------------------------------------------------------*/
 
-int mbedtls_hardware_poll(
-    void* data, unsigned char* output, size_t len, size_t* olen)
+int mbedtls_hardware_poll( void * data,
+                           unsigned char * output,
+                           size_t len,
+                           size_t * olen )
 {
-    return mbedtls_platform_entropy_poll(data, output, len, olen);
+    return mbedtls_platform_entropy_poll( data, output, len, olen );
 }
 
 /*-----------------------------------------------------------*/

@@ -42,26 +42,25 @@
  */
 typedef enum taskPoolError
 {
-	/**
-	* @brief Task pool operation general failure.
-	*/
-	TASKPOOL_GENERAL_FAILURE = 0,
+    /**
+     * @brief Task pool operation general failure.
+     */
+    TASKPOOL_GENERAL_FAILURE = 0,
 
-	/**
-	* @brief Task pool operation completed successfully.
-	*/
-	TASKPOOL_SUCCESS,
+    /**
+     * @brief Task pool operation completed successfully.
+     */
+    TASKPOOL_SUCCESS,
 
-	/**
-	* @brief Task pool operation failed because it is illegal.
-	*/
-	TASKPOOL_ILLEGAL_OPERATION,
+    /**
+     * @brief Task pool operation failed because it is illegal.
+     */
+    TASKPOOL_ILLEGAL_OPERATION,
 
-	/**
-	* @brief Task pool operation failed due to an OS error.
-	*/
-	TASKPOOL_FAILED_OPERATION,
-
+    /**
+     * @brief Task pool operation failed due to an OS error.
+     */
+    TASKPOOL_FAILED_OPERATION,
 } taskPoolError_t;
 
 /*------------------------- Task pool types --------------------------*/
@@ -73,63 +72,64 @@ typedef enum taskPoolError
  * @note Counting may be disabled by defining TASKPOOL_KEEP_COUNTS to 0.
  */
 #ifndef TASKPOOL_KEEP_COUNTS
-	#define TASKPOOL_KEEP_COUNTS	1
+    #define TASKPOOL_KEEP_COUNTS    1
 #endif
 #if TASKPOOL_KEEP_COUNTS == 1
-struct taskPoolUsageCounts
-{
-	UBaseType_t initialized;				/**< jobs initialized */
+    struct taskPoolUsageCounts
+    {
+        UBaseType_t initialized;            /**< jobs initialized */
 
-	UBaseType_t schedule_illegal;		/**< illegal to schedule a job not ready */
-	UBaseType_t direct_dispatch;		/**< job with 0 wait directly dispatched */
-	UBaseType_t direct_dispatch_failed;	/**< direct dispatch failed */
-	UBaseType_t timer_start;			/**< job timer started */
+        UBaseType_t schedule_illegal;       /**< illegal to schedule a job not ready */
+        UBaseType_t direct_dispatch;        /**< job with 0 wait directly dispatched */
+        UBaseType_t direct_dispatch_failed; /**< direct dispatch failed */
+        UBaseType_t timer_start;            /**< job timer started */
 
-	UBaseType_t cancel;					/**< deferred job cancelled before execution */
-	UBaseType_t cancel_illegal;			/**< illegal to cancel job in non-deferred state */
+        UBaseType_t cancel;                 /**< deferred job cancelled before execution */
+        UBaseType_t cancel_illegal;         /**< illegal to cancel job in non-deferred state */
 
-	UBaseType_t timer_callback;			/**< callback runs for expired timers */
-	UBaseType_t callback_dispatch;		/**< job added to dispatch queue */
-	UBaseType_t callback_reschedule;	/**< timer reset due to full dispatch queue */
-	UBaseType_t reschedule_failed;		/**< jobs cancelled due to failed reschedule */
+        UBaseType_t timer_callback;         /**< callback runs for expired timers */
+        UBaseType_t callback_dispatch;      /**< job added to dispatch queue */
+        UBaseType_t callback_reschedule;    /**< timer reset due to full dispatch queue */
+        UBaseType_t reschedule_failed;      /**< jobs cancelled due to failed reschedule */
 
-	UBaseType_t job_started;			/**< worker to call job callback */
-	UBaseType_t job_done;				/**< worker done with job callback */
-};
+        UBaseType_t job_started;            /**< worker to call job callback */
+        UBaseType_t job_done;               /**< worker done with job callback */
+    };
 
-extern struct taskPoolUsageCounts taskPoolCounts;
+    extern struct taskPoolUsageCounts taskPoolCounts;
 
-#define taskPoolDumpCounts()		do {						\
-	configPRINTF( (	"%24s: %5u\n", "initialized",				\
-					taskPoolCounts.initialized ) );				\
-	configPRINTF( (	"%24s: %5u\n", "schedule_illegal",			\
-					taskPoolCounts.schedule_illegal ) );		\
-	configPRINTF( (	"%24s: %5u\n", "direct_dispatch",			\
-					taskPoolCounts.direct_dispatch ) );			\
-	configPRINTF( (	"%24s: %5u\n", "direct_dispatch_failed",	\
-					taskPoolCounts.direct_dispatch_failed ) );	\
-	configPRINTF( (	"%24s: %5u\n", "timer_start",				\
-					taskPoolCounts.timer_start ) );				\
-	configPRINTF( (	"%24s: %5u\n", "cancel",					\
-					taskPoolCounts.cancel ) );					\
-	configPRINTF( (	"%24s: %5u\n", "cancel_illegal",			\
-					taskPoolCounts.cancel_illegal ) );			\
-	configPRINTF( (	"%24s: %5u\n", "timer_callback",			\
-					taskPoolCounts.timer_callback ) );			\
-	configPRINTF( (	"%24s: %5u\n", "callback_dispatch",			\
-					taskPoolCounts.callback_dispatch ) );		\
-	configPRINTF( (	"%24s: %5u\n", "callback_reschedule",		\
-					taskPoolCounts.callback_reschedule ) );		\
-	configPRINTF( (	"%24s: %5u\n", "reschedule_failed",			\
-					taskPoolCounts.reschedule_failed ) );		\
-	configPRINTF( (	"%24s: %5u\n", "job_started",				\
-					taskPoolCounts.job_started ) );				\
-	configPRINTF( (	"%24s: %5u\n", "job_done",					\
-					taskPoolCounts.job_done ) );				\
-} while (0)
-#else
-	#define taskPoolDumpCounts( ... )
-#endif
+    #define taskPoolDumpCounts()                                   \
+    do {                                                           \
+        configPRINTF( ( "%24s: %5u\n", "initialized",              \
+                        taskPoolCounts.initialized ) );            \
+        configPRINTF( ( "%24s: %5u\n", "schedule_illegal",         \
+                        taskPoolCounts.schedule_illegal ) );       \
+        configPRINTF( ( "%24s: %5u\n", "direct_dispatch",          \
+                        taskPoolCounts.direct_dispatch ) );        \
+        configPRINTF( ( "%24s: %5u\n", "direct_dispatch_failed",   \
+                        taskPoolCounts.direct_dispatch_failed ) ); \
+        configPRINTF( ( "%24s: %5u\n", "timer_start",              \
+                        taskPoolCounts.timer_start ) );            \
+        configPRINTF( ( "%24s: %5u\n", "cancel",                   \
+                        taskPoolCounts.cancel ) );                 \
+        configPRINTF( ( "%24s: %5u\n", "cancel_illegal",           \
+                        taskPoolCounts.cancel_illegal ) );         \
+        configPRINTF( ( "%24s: %5u\n", "timer_callback",           \
+                        taskPoolCounts.timer_callback ) );         \
+        configPRINTF( ( "%24s: %5u\n", "callback_dispatch",        \
+                        taskPoolCounts.callback_dispatch ) );      \
+        configPRINTF( ( "%24s: %5u\n", "callback_reschedule",      \
+                        taskPoolCounts.callback_reschedule ) );    \
+        configPRINTF( ( "%24s: %5u\n", "reschedule_failed",        \
+                        taskPoolCounts.reschedule_failed ) );      \
+        configPRINTF( ( "%24s: %5u\n", "job_started",              \
+                        taskPoolCounts.job_started ) );            \
+        configPRINTF( ( "%24s: %5u\n", "job_done",                 \
+                        taskPoolCounts.job_done ) );               \
+    } while( 0 )
+#else /* if TASKPOOL_KEEP_COUNTS == 1 */
+    #define taskPoolDumpCounts( ... )
+#endif /* if TASKPOOL_KEEP_COUNTS == 1 */
 
 /**
  * @ingroup taskpool_datatypes_handles
@@ -151,8 +151,8 @@ typedef struct taskPoolJob taskPoolJob_t;
  * @ref taskPoolScheduleDeferred.
  *
  */
-typedef void ( * taskPoolRoutine_t )(	taskPoolJob_t * job,
-										void * userContext );
+typedef void ( * taskPoolRoutine_t )( taskPoolJob_t * job,
+                                      void * userContext );
 
 /**
  * @ingroup taskpool_datatypes_structs
@@ -167,11 +167,11 @@ typedef void ( * taskPoolRoutine_t )(	taskPoolJob_t * job,
  */
 struct taskPoolJob
 {
-	UBaseType_t status;					/**< status of the job */
-	taskPoolRoutine_t userCallback;		/**< user provided callback */
-	void *userContext;					/**< user provided context */
-	TimerHandle_t timer;				/**< timer for deferring a job */
-	StaticTimer_t timerStorage;			/**< storage for the above timer */
+    UBaseType_t status;             /**< status of the job */
+    taskPoolRoutine_t userCallback; /**< user provided callback */
+    void * userContext;             /**< user provided context */
+    TimerHandle_t timer;            /**< timer for deferring a job */
+    StaticTimer_t timerStorage;     /**< storage for the above timer */
 };
 
 /*------------------------- Task Pool library functions --------------------------*/
@@ -194,17 +194,17 @@ void taskPoolCreateSystemTaskPool( void );
  * @param[in] userCallback A user-specified callback for the job.
  * @param[in] userContext A user-specified context for the callback.
  * @param[in] jobStorage The storage memory for the job data structure.
- * 
+ *
  * @note This function is not thread-safe in initializing the provided job memory
  * while another task context is accessing the same memory.
- * 
+ *
  * @warning A job's memory is safe for re-use ONLY when the job has been
  * executed or cancelled. Also, the contents of the job memory SHOULD NOT
  * be modified directly by the caller.
  */
-void taskPoolInitializeJob(	taskPoolRoutine_t userCallback,
-							void * userContext,
-							taskPoolJob_t * jobStorage );
+void taskPoolInitializeJob( taskPoolRoutine_t userCallback,
+                            void * userContext,
+                            taskPoolJob_t * jobStorage );
 
 /**
  * @brief Helper function to determine if a job memory has been initialised.
@@ -224,11 +224,11 @@ BaseType_t taskPoolIsJobInitialised( taskPoolJob_t * job );
  * - #TASKPOOL_SUCCESS
  * - #TASKPOOL_ILLEGAL_OPERATION
  * - #TASKPOOL_FAILED_OPERATION
- * 
+ *
  * @note Be aware of the following:
  * 1. The calling task MUST have a lower priority than the timer (service) task
  * to ensure reliable behavior of the taskpool.
- * 2. This is a blocking function for starting the timer for deferred jobs. 
+ * 2. This is a blocking function for starting the timer for deferred jobs.
  *
  * <b>Example</b>
  * @code{c}
@@ -241,7 +241,7 @@ BaseType_t taskPoolIsJobInitialised( taskPoolJob_t * job );
  * // Statically allocate job and callback context instances.
  * static taskPoolJob_t job;
  * static JobUserContext_t userContext;
- * 
+ *
  * // An example of a user callback to invoke through a task pool thread.
  * static void ExecutionCb( taskPoolJob_t * job, void * context )
  * {
@@ -279,9 +279,9 @@ BaseType_t taskPoolIsJobInitialised( taskPoolJob_t * job );
  * }
  * @endcode
  */
-taskPoolError_t taskPoolScheduleDeferred(	taskPoolJob_t * job,
-											uint32_t timeMs );
-#define taskPoolSchedule( x )	taskPoolScheduleDeferred( x, 0 )
+taskPoolError_t taskPoolScheduleDeferred( taskPoolJob_t * job,
+                                          uint32_t timeMs );
+#define taskPoolSchedule( x )    taskPoolScheduleDeferred( x, 0 )
 
 /**
  * @brief Attempt to cancel a job
@@ -294,12 +294,12 @@ taskPoolError_t taskPoolScheduleDeferred(	taskPoolJob_t * job,
  * @return One of the following:
  * - #TASKPOOL_SUCCESS
  * - #TASKPOOL_ILLEGAL_OPERATION
- * 
+ *
  * @note Be aware of the following:
  * 1. The calling task must have a lower priority than the timer (service) task
  * to ensure reliable behavior of the taskpool.
  * 2. This is a blocking function for cancelling the timer associated with a deferred job.
- * 
+ *
  */
 taskPoolError_t taskPoolTryCancel( taskPoolJob_t * job );
 

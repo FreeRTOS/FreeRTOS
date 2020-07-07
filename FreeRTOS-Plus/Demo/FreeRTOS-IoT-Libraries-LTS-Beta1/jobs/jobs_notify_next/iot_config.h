@@ -38,7 +38,7 @@
  * Possible values: One of the Log levels.
  * Default value (if undefined): IOT_LOG_NONE.
  */
-#define IOT_LOG_LEVEL_GLOBAL                IOT_LOG_NONE
+#define IOT_LOG_LEVEL_GLOBAL             IOT_LOG_NONE
 
 /**
  * @brief Set the log level of the platform libraries except the network
@@ -52,7 +52,7 @@
  * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,
  * then IOT_LOG_NONE.
  */
-#define IOT_LOG_LEVEL_PLATFORM              IOT_LOG_NONE
+#define IOT_LOG_LEVEL_PLATFORM           IOT_LOG_NONE
 
 /**
  * @brief Set the log level of the platform network library.
@@ -64,7 +64,7 @@
  * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,
  * then IOT_LOG_NONE.
  */
-#define IOT_LOG_LEVEL_NETWORK               IOT_LOG_WARN
+#define IOT_LOG_LEVEL_NETWORK            IOT_LOG_WARN
 
 /**
  * @brief Set the log level of the MQTT library.
@@ -75,14 +75,14 @@
  * Default value (if undefined): IOT_LOG_LEVEL_GLOBAL; if that is undefined,
  * then IOT_LOG_NONE.
  */
-#define IOT_LOG_LEVEL_MQTT                  IOT_LOG_WARN
+#define IOT_LOG_LEVEL_MQTT               IOT_LOG_WARN
 
 /**
  * @brief Enable TLS in the network abstraction.
  *
  * The TLS implementation requires the mbed TLS library.
  */
-#define IOT_NETWORK_ENABLE_TLS              1
+#define IOT_NETWORK_ENABLE_TLS           1
 
 /**
  * @brief Enable/Disable asserts for the linear containers library.
@@ -96,7 +96,7 @@
  * Recommended values: 1 when debugging; 0 in production code.
  * Default value (if undefined): 0
  */
-#define IOT_CONTAINERS_ENABLE_ASSERTS       1
+#define IOT_CONTAINERS_ENABLE_ASSERTS    1
 
 /**
  * @brief Enable/Disable anonymous metrics collection when using AWS IoT.
@@ -104,7 +104,7 @@
  * This demo does not use TLS and so does not work with AWS IoT. Therefore,
  * the metric collection must be disabled.
  */
-#define AWS_IOT_MQTT_ENABLE_METRICS         0
+#define AWS_IOT_MQTT_ENABLE_METRICS      0
 
 /* Common settings for FreeRTOS; settings below this line generally do not need
  * to be changed. */

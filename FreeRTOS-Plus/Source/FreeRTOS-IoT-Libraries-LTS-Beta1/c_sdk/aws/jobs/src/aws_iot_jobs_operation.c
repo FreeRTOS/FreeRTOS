@@ -173,7 +173,7 @@ static AwsIotJobsError_t _findSubscription( const AwsIotJobsRequestInfo_t * pReq
  * @brief List of active Jobs operations awaiting a response from the Jobs
  * service.
  */
-IotListDouble_t _AwsIotJobsPendingOperations = { 0 };
+IotListDouble_t _AwsIotJobsPendingOperations        = { 0 };
 
 /**
  * @brief Protects #_AwsIotJobsPendingOperations from concurrent access.
@@ -189,20 +189,20 @@ static bool _jobsOperation_match( const IotLink_t * pOperationLink,
      * must never be NULL. */
     AwsIotJobs_Assert( pOperationLink != NULL );
 
-    _jobsOperation_t * pOperation = IotLink_Container( _jobsOperation_t,
-                                                       pOperationLink,
-                                                       link );
-    _operationMatchParams_t * pParam = ( _operationMatchParams_t * ) pMatch;
-    _jobsSubscription_t * pSubscription = pOperation->pSubscription;
-    const char * pClientToken = NULL;
-    size_t clientTokenLength = 0;
+    _jobsOperation_t *        pOperation    = IotLink_Container( _jobsOperation_t,
+                                                                 pOperationLink,
+                                                                 link );
+    _operationMatchParams_t * pParam        = ( _operationMatchParams_t * ) pMatch;
+    _jobsSubscription_t *     pSubscription = pOperation->pSubscription;
+    const char *              pClientToken  = NULL;
+    size_t clientTokenLength                = 0;
 
     /* Check for matching Thing Name and operation type. */
-    bool match = ( pOperation->type == pParam->type ) &&
-                 ( pParam->thingNameLength == pSubscription->thingNameLength ) &&
-                 ( strncmp( pParam->pThingName,
-                            pSubscription->pThingName,
-                            pParam->thingNameLength ) == 0 );
+    bool   match                            = ( pOperation->type == pParam->type ) &&
+                                              ( pParam->thingNameLength == pSubscription->thingNameLength ) &&
+                                              ( strncmp( pParam->pThingName,
+                                                         pSubscription->pThingName,
+                                                         pParam->thingNameLength ) == 0 );
 
     if( match == true )
     {
@@ -283,15 +283,15 @@ static void _updateCallback( void * pArgument,
 static void _commonOperationCallback( _jobsOperationType_t type,
                                       IotMqttCallbackParam_t * pMessage )
 {
-    _jobsOperation_t * pOperation = NULL;
-    IotLink_t * pOperationLink = NULL;
-    _operationMatchParams_t param = { 0 };
-    AwsIotStatus_t status = AWS_IOT_UNKNOWN;
-    uint32_t flags = 0;
+    _jobsOperation_t *      pOperation     = NULL;
+    IotLink_t *             pOperationLink = NULL;
+    _operationMatchParams_t param          = { 0 };
+    AwsIotStatus_t          status         = AWS_IOT_UNKNOWN;
+    uint32_t                flags          = 0;
 
     /* Set operation type and response. */
-    param.type = type;
-    param.pResponse = pMessage->u.message.info.pPayload;
+    param.type           = type;
+    param.pResponse      = pMessage->u.message.info.pPayload;
     param.responseLength = pMessage->u.message.info.payloadLength;
 
     /* Parse the Thing Name from the MQTT topic name. */
@@ -307,10 +307,10 @@ static void _commonOperationCallback( _jobsOperationType_t type,
     IotMutex_Lock( &( _AwsIotJobsPendingOperationsMutex ) );
 
     /* Search for a matching pending operation. */
-    pOperationLink = IotListDouble_FindFirstMatch( &_AwsIotJobsPendingOperations,
-                                                   NULL,
-                                                   _jobsOperation_match,
-                                                   &param );
+    pOperationLink       = IotListDouble_FindFirstMatch( &_AwsIotJobsPendingOperations,
+                                                         NULL,
+                                                         _jobsOperation_match,
+                                                         &param );
 
     /* Find and remove the first Jobs operation of the given type. */
     if( pOperationLink == NULL )
@@ -329,7 +329,7 @@ static void _commonOperationCallback( _jobsOperationType_t type,
         pOperation = IotLink_Container( _jobsOperation_t, pOperationLink, link );
 
         /* Copy the flags from the Jobs operation. */
-        flags = pOperation->flags;
+        flags      = pOperation->flags;
 
         /* Remove a non-waitable operation from the pending operation list.
          * Waitable operations are removed by the Wait function. */
@@ -341,8 +341,8 @@ static void _commonOperationCallback( _jobsOperationType_t type,
     }
 
     /* Parse the status from the topic name. */
-    status = AwsIot_ParseStatus( pMessage->u.message.info.pTopicName,
-                                 pMessage->u.message.info.topicNameLength );
+    status               = AwsIot_ParseStatus( pMessage->u.message.info.pTopicName,
+                                               pMessage->u.message.info.topicNameLength );
 
     switch( status )
     {
@@ -383,8 +383,8 @@ static void _commonOperationCallback( _jobsOperationType_t type,
 
 static void _notifyCompletion( _jobsOperation_t * pOperation )
 {
-    AwsIotJobsCallbackParam_t callbackParam = { .callbackType = ( AwsIotJobsCallbackType_t ) 0 };
-    _jobsSubscription_t * pSubscription = pOperation->pSubscription,
+    AwsIotJobsCallbackParam_t callbackParam    = { .callbackType = ( AwsIotJobsCallbackType_t ) 0 };
+    _jobsSubscription_t *     pSubscription    = pOperation->pSubscription,
                         * pRemovedSubscription = NULL;
 
     /* If the operation is waiting, post to its wait semaphore and return. */
@@ -415,13 +415,13 @@ static void _notifyCompletion( _jobsOperation_t * pOperation )
         if( pOperation->notify.callback.function != NULL )
         {
             /* Set the common members of the callback parameter. */
-            callbackParam.callbackType = ( AwsIotJobsCallbackType_t ) pOperation->type;
-            callbackParam.mqttConnection = pOperation->mqttConnection;
-            callbackParam.pThingName = pSubscription->pThingName;
-            callbackParam.thingNameLength = pSubscription->thingNameLength;
-            callbackParam.u.operation.result = pOperation->status;
-            callbackParam.u.operation.reference = pOperation;
-            callbackParam.u.operation.pResponse = pOperation->pJobsResponse;
+            callbackParam.callbackType               = ( AwsIotJobsCallbackType_t ) pOperation->type;
+            callbackParam.mqttConnection             = pOperation->mqttConnection;
+            callbackParam.pThingName                 = pSubscription->pThingName;
+            callbackParam.thingNameLength            = pSubscription->thingNameLength;
+            callbackParam.u.operation.result         = pOperation->status;
+            callbackParam.u.operation.reference      = pOperation;
+            callbackParam.u.operation.pResponse      = pOperation->pJobsResponse;
             callbackParam.u.operation.responseLength = pOperation->jobsResponseLength;
 
             pOperation->notify.callback.function( pOperation->notify.callback.pCallbackContext,
@@ -446,8 +446,8 @@ static AwsIotJobsError_t _findSubscription( const AwsIotJobsRequestInfo_t * pReq
                                             _jobsOperation_t * pOperation,
                                             bool * pFreeTopicBuffer )
 {
-    AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
-    _jobsSubscription_t * pSubscription = NULL;
+    AwsIotJobsError_t                  status                                = AWS_IOT_JOBS_SUCCESS;
+    _jobsSubscription_t *              pSubscription                         = NULL;
 
     /* Lookup table for Jobs operation callbacks. */
     const AwsIotMqttCallbackFunction_t jobsCallbacks[ JOBS_OPERATION_COUNT ] =
@@ -490,7 +490,7 @@ static AwsIotJobsError_t _findSubscription( const AwsIotJobsRequestInfo_t * pReq
             pSubscription->pTopicBuffer = pTopicBuffer;
 
             /* Don't free the topic buffer if it was allocated to the subscription. */
-            *pFreeTopicBuffer = false;
+            *pFreeTopicBuffer           = false;
         }
         else
         {
@@ -499,10 +499,10 @@ static AwsIotJobsError_t _findSubscription( const AwsIotJobsRequestInfo_t * pReq
 
         /* Increment the reference count for this Jobs operation's
          * subscriptions. */
-        status = _AwsIotJobs_IncrementReferences( pOperation,
-                                                  pTopicBuffer,
-                                                  operationTopicLength,
-                                                  jobsCallbacks[ pOperation->type ] );
+        status                    = _AwsIotJobs_IncrementReferences( pOperation,
+                                                                     pTopicBuffer,
+                                                                     operationTopicLength,
+                                                                     jobsCallbacks[ pOperation->type ] );
 
         if( status != AWS_IOT_JOBS_SUCCESS )
         {
@@ -529,8 +529,8 @@ AwsIotJobsError_t _AwsIotJobs_CreateOperation( _jobsOperationType_t type,
                                                _jobsOperation_t ** pNewOperation )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_SUCCESS );
-    size_t operationSize = sizeof( _jobsOperation_t );
-    _jobsOperation_t * pOperation = NULL;
+    size_t             operationSize = sizeof( _jobsOperation_t );
+    _jobsOperation_t * pOperation    = NULL;
 
     IotLogDebug( "Creating operation record for Jobs %s.",
                  _pAwsIotJobsOperationNames[ type ] );
@@ -547,7 +547,7 @@ AwsIotJobsError_t _AwsIotJobs_CreateOperation( _jobsOperationType_t type,
     }
 
     /* Allocate memory for a new Jobs operation. */
-    pOperation = AwsIotJobs_MallocOperation( operationSize );
+    pOperation                 = AwsIotJobs_MallocOperation( operationSize );
 
     if( pOperation == NULL )
     {
@@ -561,9 +561,9 @@ AwsIotJobsError_t _AwsIotJobs_CreateOperation( _jobsOperationType_t type,
     ( void ) memset( pOperation, 0x00, sizeof( _jobsOperation_t ) );
 
     /* Set the remaining common members of the Jobs operation. */
-    pOperation->type = type;
-    pOperation->flags = flags;
-    pOperation->status = AWS_IOT_JOBS_STATUS_PENDING;
+    pOperation->type           = type;
+    pOperation->flags          = flags;
+    pOperation->status         = AWS_IOT_JOBS_STATUS_PENDING;
     pOperation->mallocResponse = pRequestInfo->mallocResponse;
 
     /* Save the Job ID for DESCRIBE and UPDATE operations. */
@@ -575,10 +575,10 @@ AwsIotJobsError_t _AwsIotJobs_CreateOperation( _jobsOperationType_t type,
     }
 
     /* Generate a Jobs request document. */
-    status = _AwsIotJobs_GenerateJsonRequest( type,
-                                              pRequestInfo,
-                                              pRequestContents,
-                                              pOperation );
+    status                     = _AwsIotJobs_GenerateJsonRequest( type,
+                                                                  pRequestInfo,
+                                                                  pRequestContents,
+                                                                  pOperation );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -668,13 +668,13 @@ AwsIotJobsError_t _AwsIotJobs_GenerateJobsTopic( _jobsOperationType_t type,
                                                  char ** pTopicBuffer,
                                                  uint16_t * pOperationTopicLength )
 {
-    AwsIotJobsError_t status = AWS_IOT_JOBS_SUCCESS;
-    AwsIotTopicInfo_t topicInfo = { 0 };
-    char pJobOperationName[ JOBS_LONGEST_SUFFIX_LENGTH ] = { 0 };
-    uint16_t operationNameLength = 0;
+    AwsIotJobsError_t  status                                          = AWS_IOT_JOBS_SUCCESS;
+    AwsIotTopicInfo_t  topicInfo                                       = { 0 };
+    char               pJobOperationName[ JOBS_LONGEST_SUFFIX_LENGTH ] = { 0 };
+    uint16_t           operationNameLength                             = 0;
 
     /* Lookup table for Jobs operation strings. */
-    const char * const pOperationString[ JOBS_OPERATION_COUNT ] =
+    const char * const pOperationString[ JOBS_OPERATION_COUNT ]        =
     {
         JOBS_GET_PENDING_OPERATION_STRING, /* Jobs get pending operation. */
         JOBS_START_NEXT_OPERATION_STRING,  /* Jobs start next operation. */
@@ -683,7 +683,7 @@ AwsIotJobsError_t _AwsIotJobs_GenerateJobsTopic( _jobsOperationType_t type,
     };
 
     /* Lookup table for Jobs operation string lengths. */
-    const uint16_t pOperationStringLength[ JOBS_OPERATION_COUNT ] =
+    const uint16_t     pOperationStringLength[ JOBS_OPERATION_COUNT ]  =
     {
         JOBS_GET_PENDING_OPERATION_STRING_LENGTH, /* Jobs get pending operation */
         JOBS_START_NEXT_OPERATION_STRING_LENGTH,  /* Jobs start next operation. */
@@ -696,10 +696,10 @@ AwsIotJobsError_t _AwsIotJobs_GenerateJobsTopic( _jobsOperationType_t type,
                        ( type == JOBS_DESCRIBE ) || ( type == JOBS_UPDATE ) );
 
     /* Set the members needed to generate an operation topic. */
-    topicInfo.pThingName = pRequestInfo->pThingName;
-    topicInfo.thingNameLength = pRequestInfo->thingNameLength;
+    topicInfo.pThingName          = pRequestInfo->pThingName;
+    topicInfo.thingNameLength     = pRequestInfo->thingNameLength;
     topicInfo.longestSuffixLength = JOBS_LONGEST_SUFFIX_LENGTH;
-    topicInfo.mallocString = AwsIotJobs_MallocString;
+    topicInfo.mallocString        = AwsIotJobs_MallocString;
 
     /* Job operations that require a Job ID require additional processing to
      * create an operation name with the Job ID. */
@@ -711,24 +711,24 @@ AwsIotJobsError_t _AwsIotJobs_GenerateJobsTopic( _jobsOperationType_t type,
 
         /* Construct the Jobs operation name with the Job ID. */
         ( void ) memcpy( pJobOperationName, "/jobs/", 6 );
-        operationNameLength = 6;
+        operationNameLength           = 6;
 
         ( void ) memcpy( pJobOperationName + operationNameLength,
                          pRequestInfo->pJobId,
                          pRequestInfo->jobIdLength );
-        operationNameLength = ( uint16_t ) ( pRequestInfo->jobIdLength + operationNameLength );
+        operationNameLength           = ( uint16_t ) ( pRequestInfo->jobIdLength + operationNameLength );
 
         ( void ) memcpy( pJobOperationName + operationNameLength,
                          pOperationString[ type ],
                          pOperationStringLength[ type ] );
-        operationNameLength = ( uint16_t ) ( operationNameLength + pOperationStringLength[ type ] );
+        operationNameLength           = ( uint16_t ) ( operationNameLength + pOperationStringLength[ type ] );
 
-        topicInfo.pOperationName = pJobOperationName;
+        topicInfo.pOperationName      = pJobOperationName;
         topicInfo.operationNameLength = operationNameLength;
     }
     else
     {
-        topicInfo.pOperationName = pOperationString[ type ];
+        topicInfo.pOperationName      = pOperationString[ type ];
         topicInfo.operationNameLength = pOperationStringLength[ type ];
     }
 
@@ -748,11 +748,11 @@ AwsIotJobsError_t _AwsIotJobs_ProcessOperation( const AwsIotJobsRequestInfo_t * 
                                                 _jobsOperation_t * pOperation )
 {
     IOT_FUNCTION_ENTRY( AwsIotJobsError_t, AWS_IOT_JOBS_STATUS_PENDING );
-    char * pTopicBuffer = NULL;
-    uint16_t operationTopicLength = 0;
-    bool freeTopicBuffer = true;
-    IotMqttPublishInfo_t publishInfo = IOT_MQTT_PUBLISH_INFO_INITIALIZER;
-    IotMqttError_t publishStatus = IOT_MQTT_STATUS_PENDING;
+    char *               pTopicBuffer         = NULL;
+    uint16_t             operationTopicLength = 0;
+    bool                 freeTopicBuffer      = true;
+    IotMqttPublishInfo_t publishInfo          = IOT_MQTT_PUBLISH_INFO_INITIALIZER;
+    IotMqttError_t       publishStatus        = IOT_MQTT_STATUS_PENDING;
 
     IotLogDebug( "Processing Jobs operation %s for Thing %.*s.",
                  _pAwsIotJobsOperationNames[ pOperation->type ],
@@ -760,13 +760,13 @@ AwsIotJobsError_t _AwsIotJobs_ProcessOperation( const AwsIotJobsRequestInfo_t * 
                  pRequestInfo->pThingName );
 
     /* Set the operation's MQTT connection. */
-    pOperation->mqttConnection = pRequestInfo->mqttConnection;
+    pOperation->mqttConnection  = pRequestInfo->mqttConnection;
 
     /* Generate the operation topic buffer. */
-    status = _AwsIotJobs_GenerateJobsTopic( pOperation->type,
-                                            pRequestInfo,
-                                            &pTopicBuffer,
-                                            &operationTopicLength );
+    status                      = _AwsIotJobs_GenerateJobsTopic( pOperation->type,
+                                                                 pRequestInfo,
+                                                                 &pTopicBuffer,
+                                                                 &operationTopicLength );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -776,11 +776,11 @@ AwsIotJobsError_t _AwsIotJobs_ProcessOperation( const AwsIotJobsRequestInfo_t * 
     }
 
     /* Get a subscription object for this Jobs operation. */
-    status = _findSubscription( pRequestInfo,
-                                pTopicBuffer,
-                                operationTopicLength,
-                                pOperation,
-                                &freeTopicBuffer );
+    status                      = _findSubscription( pRequestInfo,
+                                                     pTopicBuffer,
+                                                     operationTopicLength,
+                                                     pOperation,
+                                                     &freeTopicBuffer );
 
     if( status != AWS_IOT_JOBS_SUCCESS )
     {
@@ -789,16 +789,16 @@ AwsIotJobsError_t _AwsIotJobs_ProcessOperation( const AwsIotJobsRequestInfo_t * 
     }
 
     /* Set the members for PUBLISH retry. */
-    publishInfo.qos = pRequestInfo->qos;
-    publishInfo.retryLimit = pRequestInfo->retryLimit;
-    publishInfo.retryMs = pRequestInfo->retryMs;
+    publishInfo.qos             = pRequestInfo->qos;
+    publishInfo.retryLimit      = pRequestInfo->retryLimit;
+    publishInfo.retryMs         = pRequestInfo->retryMs;
 
     /* Set the payload as the Jobs request. */
-    publishInfo.pPayload = pOperation->pJobsRequest;
-    publishInfo.payloadLength = pOperation->jobsRequestLength;
+    publishInfo.pPayload        = pOperation->pJobsRequest;
+    publishInfo.payloadLength   = pOperation->jobsRequestLength;
 
     /* Set the operation topic name. */
-    publishInfo.pTopicName = pTopicBuffer;
+    publishInfo.pTopicName      = pTopicBuffer;
     publishInfo.topicNameLength = operationTopicLength;
 
     IotLogDebug( "Jobs %s message will be published to topic %.*s",
@@ -813,10 +813,10 @@ AwsIotJobsError_t _AwsIotJobs_ProcessOperation( const AwsIotJobsRequestInfo_t * 
     IotMutex_Unlock( &( _AwsIotJobsPendingOperationsMutex ) );
 
     /* Publish to the Jobs topic name. */
-    publishStatus = IotMqtt_PublishSync( pOperation->mqttConnection,
-                                         &publishInfo,
-                                         0,
-                                         _AwsIotJobsMqttTimeoutMs );
+    publishStatus               = IotMqtt_PublishSync( pOperation->mqttConnection,
+                                                       &publishInfo,
+                                                       0,
+                                                       _AwsIotJobsMqttTimeoutMs );
 
     if( publishStatus != IOT_MQTT_SUCCESS )
     {

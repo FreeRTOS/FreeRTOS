@@ -34,6 +34,6 @@
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE	configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
 
 #endif /* DEMO_CONFIG_H */

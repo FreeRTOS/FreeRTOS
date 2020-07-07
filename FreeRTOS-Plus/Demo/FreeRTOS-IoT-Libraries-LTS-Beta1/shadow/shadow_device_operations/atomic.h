@@ -47,68 +47,68 @@
  */
 
 #ifndef ATOMIC_H
-#define ATOMIC_H
+    #define ATOMIC_H
 
-#ifndef INC_FREERTOS_H
-    #error "include FreeRTOS.h must appear in source files before include atomic.h"
-#endif
-
-/* Standard includes. */
-#include <stdint.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
-
-    /* Needed for __atomic_compare_exchange() weak=false. */
-    #include <stdbool.h>
-
-    /* This branch is for GCC compiler and GCC compiler only. */
-    #ifndef portFORCE_INLINE
-        #define portFORCE_INLINE  inline __attribute__((always_inline))
+    #ifndef INC_FREERTOS_H
+        #error "include FreeRTOS.h must appear in source files before include atomic.h"
     #endif
 
-#else
+/* Standard includes. */
+    #include <stdint.h>
 
-    /* Port specific definitions -- entering/exiting critical section.
-     * Refer template -- ./lib/FreeRTOS/portable/Compiler/Arch/portmacro.h
-     *
-     * Every call to ATOMIC_EXIT_CRITICAL() must be closely paired with
-     * ATOMIC_ENTER_CRITICAL().
-     */
-    #if defined( portSET_INTERRUPT_MASK_FROM_ISR )
+    #ifdef __cplusplus
+        extern "C" {
+    #endif
 
-        /* Nested interrupt scheme is supported in this port. */
-        #define ATOMIC_ENTER_CRITICAL()     \
-            UBaseType_t uxCriticalSectionType = portSET_INTERRUPT_MASK_FROM_ISR()
+    #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
 
-        #define ATOMIC_EXIT_CRITICAL()      \
-            portCLEAR_INTERRUPT_MASK_FROM_ISR( uxCriticalSectionType )
+/* Needed for __atomic_compare_exchange() weak=false. */
+        #include <stdbool.h>
+
+/* This branch is for GCC compiler and GCC compiler only. */
+        #ifndef portFORCE_INLINE
+            #define portFORCE_INLINE    inline __attribute__( ( always_inline ) )
+        #endif
 
     #else
 
-        /* Nested interrupt scheme is NOT supported in this port. */
-        #define ATOMIC_ENTER_CRITICAL()     portENTER_CRITICAL()
-        #define ATOMIC_EXIT_CRITICAL()      portEXIT_CRITICAL()
+/* Port specific definitions -- entering/exiting critical section.
+ * Refer template -- ./lib/FreeRTOS/portable/Compiler/Arch/portmacro.h
+ *
+ * Every call to ATOMIC_EXIT_CRITICAL() must be closely paired with
+ * ATOMIC_ENTER_CRITICAL().
+ */
+        #if defined( portSET_INTERRUPT_MASK_FROM_ISR )
 
-    #endif /* portSET_INTERRUPT_MASK_FROM_ISR() */
+/* Nested interrupt scheme is supported in this port. */
+            #define ATOMIC_ENTER_CRITICAL() \
+    UBaseType_t uxCriticalSectionType = portSET_INTERRUPT_MASK_FROM_ISR()
 
-    /* Port specific definition -- "always inline". 
-     * Inline is compiler specific, and may not always get inlined depending on your optimization level. 
-     * For atomic operations, inline is considered a performance optimization.
-     * Thus, if portFORCE_INLINE is not provided by portmacro.h, instead of resulting error,
-     * simply define it. 
-     */
-    #ifndef portFORCE_INLINE
-        #define portFORCE_INLINE 
-    #endif
+            #define ATOMIC_EXIT_CRITICAL() \
+    portCLEAR_INTERRUPT_MASK_FROM_ISR( uxCriticalSectionType )
 
-#endif /* configUSE_GCC_BUILTIN_ATOMICS */
+        #else
 
-#define ATOMIC_COMPARE_AND_SWAP_SUCCESS     0x1U        /**< Compare and swap succeeded, swapped. */
-#define ATOMIC_COMPARE_AND_SWAP_FAILURE     0x0U        /**< Compare and swap failed, did not swap. */
+/* Nested interrupt scheme is NOT supported in this port. */
+            #define ATOMIC_ENTER_CRITICAL()    portENTER_CRITICAL()
+            #define ATOMIC_EXIT_CRITICAL()     portEXIT_CRITICAL()
+
+        #endif /* portSET_INTERRUPT_MASK_FROM_ISR() */
+
+/* Port specific definition -- "always inline".
+ * Inline is compiler specific, and may not always get inlined depending on your optimization level.
+ * For atomic operations, inline is considered a performance optimization.
+ * Thus, if portFORCE_INLINE is not provided by portmacro.h, instead of resulting error,
+ * simply define it.
+ */
+        #ifndef portFORCE_INLINE
+            #define portFORCE_INLINE
+        #endif
+
+    #endif /* configUSE_GCC_BUILTIN_ATOMICS */
+
+    #define ATOMIC_COMPARE_AND_SWAP_SUCCESS    0x1U     /**< Compare and swap succeeded, swapped. */
+    #define ATOMIC_COMPARE_AND_SWAP_FAILURE    0x0U     /**< Compare and swap failed, did not swap. */
 
 /*----------------------------- Swap && CAS ------------------------------*/
 
@@ -127,43 +127,35 @@ extern "C" {
  * @note This function only swaps *pDestination with ulExchange, if previous
  *       *pDestination value equals ulComparand.
  */
-static portFORCE_INLINE uint32_t Atomic_CompareAndSwap_u32(
-        uint32_t volatile * pDestination,
-        uint32_t ulExchange,
-        uint32_t ulComparand )
-{
-
-    uint32_t ulReturnValue = ATOMIC_COMPARE_AND_SWAP_FAILURE;
-
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
-
-    if ( __atomic_compare_exchange( pDestination,
-                                    &ulComparand,
-                                    &ulExchange,
-                                    false,
-                                    __ATOMIC_SEQ_CST,
-                                    __ATOMIC_SEQ_CST ) )
+    static portFORCE_INLINE uint32_t Atomic_CompareAndSwap_u32( uint32_t volatile * pDestination,
+                                                                uint32_t ulExchange,
+                                                                uint32_t ulComparand )
     {
-        ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+        uint32_t ulReturnValue = ATOMIC_COMPARE_AND_SWAP_FAILURE;
+
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            if( __atomic_compare_exchange( pDestination,
+                                           &ulComparand,
+                                           &ulExchange,
+                                           false,
+                                           __ATOMIC_SEQ_CST,
+                                           __ATOMIC_SEQ_CST ) )
+            {
+                ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+            }
+        #else
+            ATOMIC_ENTER_CRITICAL();
+
+            if( *pDestination == ulComparand )
+            {
+                *pDestination = ulExchange;
+                ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+            }
+            ATOMIC_EXIT_CRITICAL();
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+
+        return ulReturnValue;
     }
-
-#else
-
-    ATOMIC_ENTER_CRITICAL();
-
-    if ( *pDestination == ulComparand )
-    {
-        *pDestination = ulExchange;
-        ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
-    }
-
-    ATOMIC_EXIT_CRITICAL();
-
-#endif
-
-    return ulReturnValue;
-
-}
 
 /**
  * Atomic swap (pointers)
@@ -177,30 +169,25 @@ static portFORCE_INLINE uint32_t Atomic_CompareAndSwap_u32(
  *
  * @return The initial value of *ppDestination.
  */
-static portFORCE_INLINE void * Atomic_SwapPointers_p32(
-        void * volatile * ppDestination,
-        void * pExchange )
-{
-    void * pReturnValue;
+    static portFORCE_INLINE void * Atomic_SwapPointers_p32( void * volatile * ppDestination,
+                                                            void * pExchange )
+    {
+        void * pReturnValue;
 
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            __atomic_exchange( ppDestination, &pExchange, &pReturnValue, __ATOMIC_SEQ_CST );
+        #else
+            ATOMIC_ENTER_CRITICAL();
 
-    __atomic_exchange( ppDestination, &pExchange, &pReturnValue, __ATOMIC_SEQ_CST );
+            pReturnValue   = *ppDestination;
 
-#else
+            *ppDestination = pExchange;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
+        #endif
 
-    pReturnValue = *ppDestination;
-
-    *ppDestination = pExchange;
-
-    ATOMIC_EXIT_CRITICAL();
-
-#endif
-
-    return pReturnValue;
-}
+        return pReturnValue;
+    }
 
 /**
  * Atomic compare-and-swap (pointers)
@@ -218,39 +205,35 @@ static portFORCE_INLINE void * Atomic_SwapPointers_p32(
  * @note This function only swaps *ppDestination with pExchange, if previous
  *       *ppDestination value equals pComparand.
  */
-static portFORCE_INLINE uint32_t Atomic_CompareAndSwapPointers_p32(
-        void * volatile * ppDestination,
-        void * pExchange, void * pComparand )
-{
-    uint32_t ulReturnValue = ATOMIC_COMPARE_AND_SWAP_FAILURE;
-
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
-    if ( __atomic_compare_exchange( ppDestination,
-                                    &pComparand,
-                                    &pExchange,
-                                    false,
-                                    __ATOMIC_SEQ_CST,
-                                    __ATOMIC_SEQ_CST ) )
+    static portFORCE_INLINE uint32_t Atomic_CompareAndSwapPointers_p32( void * volatile * ppDestination,
+                                                                        void * pExchange,
+                                                                        void * pComparand )
     {
-        ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+        uint32_t ulReturnValue = ATOMIC_COMPARE_AND_SWAP_FAILURE;
+
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            if( __atomic_compare_exchange( ppDestination,
+                                           &pComparand,
+                                           &pExchange,
+                                           false,
+                                           __ATOMIC_SEQ_CST,
+                                           __ATOMIC_SEQ_CST ) )
+            {
+                ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+            }
+        #else
+            ATOMIC_ENTER_CRITICAL();
+
+            if( *ppDestination == pComparand )
+            {
+                *ppDestination = pExchange;
+                ulReturnValue  = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
+            }
+            ATOMIC_EXIT_CRITICAL();
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+
+        return ulReturnValue;
     }
-
-#else
-
-    ATOMIC_ENTER_CRITICAL();
-
-    if ( *ppDestination == pComparand )
-    {
-        *ppDestination = pExchange;
-        ulReturnValue = ATOMIC_COMPARE_AND_SWAP_SUCCESS;
-    }
-
-    ATOMIC_EXIT_CRITICAL();
-
-#endif
-
-    return ulReturnValue;
-}
 
 
 /*----------------------------- Arithmetic ------------------------------*/
@@ -266,30 +249,25 @@ static portFORCE_INLINE uint32_t Atomic_CompareAndSwapPointers_p32(
  *
  * @return previous *pAddend value.
  */
-static portFORCE_INLINE uint32_t Atomic_Add_u32(
-        uint32_t volatile * pAddend,
-        uint32_t ulCount )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_Add_u32( uint32_t volatile * pAddend,
+                                                     uint32_t ulCount )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_add( pAddend, ulCount, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_add(pAddend, ulCount, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent = *pAddend;
 
-    uint32_t ulCurrent;
+            *pAddend += ulCount;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pAddend;
-
-    *pAddend += ulCount;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /**
  * Atomic subtract
@@ -303,30 +281,25 @@ static portFORCE_INLINE uint32_t Atomic_Add_u32(
  *
  * @return previous *pAddend value.
  */
-static portFORCE_INLINE uint32_t Atomic_Subtract_u32(
-        uint32_t volatile * pAddend,
-        uint32_t ulCount )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_Subtract_u32( uint32_t volatile * pAddend,
+                                                          uint32_t ulCount )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_sub( pAddend, ulCount, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_sub(pAddend, ulCount, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent = *pAddend;
 
-    uint32_t ulCurrent;
+            *pAddend -= ulCount;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pAddend;
-
-    *pAddend -= ulCount;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /**
  * Atomic increment
@@ -338,28 +311,24 @@ static portFORCE_INLINE uint32_t Atomic_Subtract_u32(
  *
  * @return *pAddend value before increment.
  */
-static portFORCE_INLINE uint32_t Atomic_Increment_u32( uint32_t volatile * pAddend )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_Increment_u32( uint32_t volatile * pAddend )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_add( pAddend, 1, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_add(pAddend, 1, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent = *pAddend;
 
-    uint32_t ulCurrent;
+            *pAddend += 1;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pAddend;
-
-    *pAddend += 1;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /**
  * Atomic decrement
@@ -371,28 +340,24 @@ static portFORCE_INLINE uint32_t Atomic_Increment_u32( uint32_t volatile * pAdde
  *
  * @return *pAddend value before decrement.
  */
-static portFORCE_INLINE uint32_t Atomic_Decrement_u32( uint32_t volatile * pAddend )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_Decrement_u32( uint32_t volatile * pAddend )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_sub( pAddend, 1, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_sub(pAddend, 1, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent = *pAddend;
 
-    uint32_t ulCurrent;
+            *pAddend -= 1;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pAddend;
-
-    *pAddend -= 1;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /*----------------------------- Bitwise Logical ------------------------------*/
 
@@ -407,30 +372,25 @@ static portFORCE_INLINE uint32_t Atomic_Decrement_u32( uint32_t volatile * pAdde
  *
  * @return The original value of *pDestination.
  */
-static portFORCE_INLINE uint32_t Atomic_OR_u32(
-        uint32_t volatile * pDestination,
-        uint32_t ulValue )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_OR_u32( uint32_t volatile * pDestination,
+                                                    uint32_t ulValue )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_or( pDestination, ulValue, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_or(pDestination, ulValue, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent      = *pDestination;
 
-    uint32_t ulCurrent;
+            *pDestination |= ulValue;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pDestination;
-
-    *pDestination |= ulValue;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /**
  * Atomic AND
@@ -443,30 +403,25 @@ static portFORCE_INLINE uint32_t Atomic_OR_u32(
  *
  * @return The original value of *pDestination.
  */
-static portFORCE_INLINE uint32_t Atomic_AND_u32(
-        uint32_t volatile * pDestination,
-        uint32_t ulValue )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_AND_u32( uint32_t volatile * pDestination,
+                                                     uint32_t ulValue )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_and( pDestination, ulValue, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_and(pDestination, ulValue, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent      = *pDestination;
 
-    uint32_t ulCurrent;
+            *pDestination &= ulValue;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pDestination;
-
-    *pDestination &= ulValue;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /**
  * Atomic NAND
@@ -479,30 +434,25 @@ static portFORCE_INLINE uint32_t Atomic_AND_u32(
  *
  * @return The original value of *pDestination.
  */
-static portFORCE_INLINE uint32_t Atomic_NAND_u32(
-        uint32_t volatile * pDestination,
-        uint32_t ulValue )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_NAND_u32( uint32_t volatile * pDestination,
+                                                      uint32_t ulValue )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_nand( pDestination, ulValue, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_nand(pDestination, ulValue, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent     = *pDestination;
 
-    uint32_t ulCurrent;
+            *pDestination = ~( ulCurrent & ulValue );
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pDestination;
-
-    *pDestination = ~(ulCurrent & ulValue);
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
 /**
  * Atomic XOR
@@ -515,33 +465,28 @@ static portFORCE_INLINE uint32_t Atomic_NAND_u32(
  *
  * @return The original value of *pDestination.
  */
-static portFORCE_INLINE uint32_t Atomic_XOR_u32(
-        uint32_t volatile * pDestination,
-        uint32_t ulValue )
-{
-#if defined ( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+    static portFORCE_INLINE uint32_t Atomic_XOR_u32( uint32_t volatile * pDestination,
+                                                     uint32_t ulValue )
+    {
+        #if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 )
+            return __atomic_fetch_xor( pDestination, ulValue, __ATOMIC_SEQ_CST );
+        #else
+            uint32_t ulCurrent;
 
-    return __atomic_fetch_xor(pDestination, ulValue, __ATOMIC_SEQ_CST);
+            ATOMIC_ENTER_CRITICAL();
 
-#else
+            ulCurrent      = *pDestination;
 
-    uint32_t ulCurrent;
+            *pDestination ^= ulValue;
 
-    ATOMIC_ENTER_CRITICAL();
+            ATOMIC_EXIT_CRITICAL();
 
-    ulCurrent = *pDestination;
+            return ulCurrent;
+        #endif /* if defined( configUSE_GCC_BUILTIN_ATOMICS ) && ( configUSE_GCC_BUILTIN_ATOMICS == 1 ) */
+    }
 
-    *pDestination ^= ulValue;
-
-    ATOMIC_EXIT_CRITICAL();
-
-    return ulCurrent;
-
-#endif
-}
-
-#ifdef __cplusplus
-}
-#endif
+    #ifdef __cplusplus
+        }
+    #endif
 
 #endif /* ATOMIC_H */

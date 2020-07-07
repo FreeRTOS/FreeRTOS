@@ -50,7 +50,7 @@
  * This macro should be placed at the end of a function and followed by
  * #IOT_FUNCTION_CLEANUP_END.
  */
-#define IOT_FUNCTION_CLEANUP_BEGIN()                      iotCleanup:
+#define IOT_FUNCTION_CLEANUP_BEGIN()                      iotCleanup :
 
 /**
  * @brief Declares the end of a cleanup section.

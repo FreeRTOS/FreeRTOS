@@ -567,9 +567,9 @@ typedef struct AwsIotJobsRequestInfo
 
     /* These members allow Jobs commands to be retried. Be careful that duplicate
      * commands do no cause unexpected application behavior. Use of QoS 0 is recommended. */
-    IotMqttQos_t qos;        /**< @brief QoS when sending the Jobs command. See #IotMqttPublishInfo_t.qos. */
-    uint32_t retryLimit;     /**< @brief Maximum number of retries for the Jobs command. See #IotMqttPublishInfo_t.retryLimit. */
-    uint32_t retryMs;        /**< @brief First retry time for the Jobs command. See IotMqttPublishInfo_t.retryMs. */
+    IotMqttQos_t qos;    /**< @brief QoS when sending the Jobs command. See #IotMqttPublishInfo_t.qos. */
+    uint32_t retryLimit; /**< @brief Maximum number of retries for the Jobs command. See #IotMqttPublishInfo_t.retryLimit. */
+    uint32_t retryMs;    /**< @brief First retry time for the Jobs command. See IotMqttPublishInfo_t.retryMs. */
 
     /**
      * @brief Function to allocate memory for an incoming response.
@@ -892,14 +892,14 @@ typedef struct AwsIotJobsUpdateInfo
 #define AWS_IOT_JOBS_REQUEST_INFO_INITIALIZER \
     { .pClientToken = AWS_IOT_JOBS_CLIENT_TOKEN_AUTOGENERATE }
 /** @brief Initializer for #AwsIotJobsUpdateInfo_t. */
-#define AWS_IOT_JOBS_UPDATE_INFO_INITIALIZER               \
-    { .newStatus = AWS_IOT_JOB_STATE_IN_PROGRESS,          \
-      .expectedVersion = AWS_IOT_JOBS_NO_VERSION,          \
-      .executionNumber = AWS_IOT_JOBS_NO_EXECUTION_NUMBER, \
-      .stepTimeoutInMinutes = AWS_IOT_JOBS_NO_TIMEOUT,     \
-      .includeJobExecutionState = false,                   \
-      .includeJobDocument = false,                         \
-      .pStatusDetails = AWS_IOT_JOBS_NO_STATUS_DETAILS }
+#define AWS_IOT_JOBS_UPDATE_INFO_INITIALIZER                        \
+    { .newStatus                = AWS_IOT_JOB_STATE_IN_PROGRESS,    \
+      .expectedVersion          = AWS_IOT_JOBS_NO_VERSION,          \
+      .executionNumber          = AWS_IOT_JOBS_NO_EXECUTION_NUMBER, \
+      .stepTimeoutInMinutes     = AWS_IOT_JOBS_NO_TIMEOUT,          \
+      .includeJobExecutionState = false,                            \
+      .includeJobDocument       = false,                            \
+      .pStatusDetails           = AWS_IOT_JOBS_NO_STATUS_DETAILS }
 #define AWS_IOT_JOBS_OPERATION_INITIALIZER    NULL  /**< @brief Initializer for #AwsIotJobsOperation_t. */
 #define AWS_IOT_JOBS_RESPONSE_INITIALIZER     { 0 } /**< @brief Initializer for #AwsIotJobsResponse_t. */
 /* @[define_jobs_initializers] */

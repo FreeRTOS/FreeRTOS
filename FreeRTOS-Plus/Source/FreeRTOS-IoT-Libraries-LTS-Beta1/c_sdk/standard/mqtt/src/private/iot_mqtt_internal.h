@@ -564,6 +564,7 @@ uint8_t _IotMqtt_GetPacketType( IotNetworkConnection_t pNetworkConnection,
  */
 size_t _IotMqtt_GetRemainingLength( IotNetworkConnection_t pNetworkConnection,
                                     const IotNetworkInterface_t * pNetworkInterface );
+
 /**
  * @brief Generate a CONNECT packet from the given parameters.
  *

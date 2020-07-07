@@ -25,7 +25,7 @@
 
 /**
  * @file iot_clock_freertos.c
- * @brief Implementation of the platform specific functions in iot_clock.h for 
+ * @brief Implementation of the platform specific functions in iot_clock.h for
  * FreeRTOS.
  */
 
@@ -89,14 +89,14 @@ bool IotClock_GetTimestring( char * pBuffer,
                              size_t bufferSize,
                              size_t * pTimestringLength )
 {
-    uint64_t milliSeconds = IotClock_GetTimeMs();
-    int timestringLength = 0;
+    uint64_t milliSeconds     = IotClock_GetTimeMs();
+    int      timestringLength = 0;
 
     configASSERT( pBuffer != NULL );
     configASSERT( pTimestringLength != NULL );
 
     /* Convert the localTime struct to a string. */
-    timestringLength = snprintf( pBuffer, bufferSize, "%llu", milliSeconds );
+    timestringLength   = snprintf( pBuffer, bufferSize, "%llu", milliSeconds );
 
     /* Check for error from no string */
     if( timestringLength == 0 )
@@ -117,14 +117,14 @@ uint64_t IotClock_GetTimeMs( void )
     TimeOut_t xCurrentTime = { 0 };
 
     /* This must be unsigned because the behavior of signed integer overflow is undefined. */
-    uint64_t ullTickCount = 0ULL;
+    uint64_t  ullTickCount = 0ULL;
 
     /* Get the current tick count and overflow count. vTaskSetTimeOutState()
      * is used to get these values because they are both static in tasks.c. */
     vTaskSetTimeOutState( &xCurrentTime );
 
     /* Adjust the tick count for the number of times a TickType_t has overflowed. */
-    ullTickCount = ( uint64_t ) ( xCurrentTime.xOverflowCount ) << ( sizeof( TickType_t ) * 8 );
+    ullTickCount  = ( uint64_t ) ( xCurrentTime.xOverflowCount ) << ( sizeof( TickType_t ) * 8 );
 
     /* Add the current tick count. */
     ullTickCount += xCurrentTime.xTimeOnEntering;
@@ -154,18 +154,18 @@ bool IotClock_TimerCreate( IotTimer_t * pNewTimer,
 
     /* Set the timer expiration routine, argument and period */
     pxTimer->threadRoutine = expirationRoutine;
-    pxTimer->pArgument = pArgument;
-    pxTimer->xTimerPeriod = 0;
+    pxTimer->pArgument     = pArgument;
+    pxTimer->xTimerPeriod  = 0;
 
     /* Create a new FreeRTOS timer. This call will not fail because the
      * memory for it has already been allocated, so the output parameter is
      * also set. */
-    pxTimer->timer = ( TimerHandle_t ) xTimerCreateStatic( "timer",                  /* Timer name. */
-                                                           portMAX_DELAY,            /* Initial timer period. Timers are created disarmed. */
-                                                           pdFALSE,                  /* Don't auto-reload timer. */
-                                                           ( void * ) pxTimer,       /* Timer id. */
-                                                           prvTimerCallback,         /* Timer expiration callback. */
-                                                           &pxTimer->xTimerBuffer ); /* Pre-allocated memory for timer. */
+    pxTimer->timer         = ( TimerHandle_t ) xTimerCreateStatic( "timer",                  /* Timer name. */
+                                                                   portMAX_DELAY,            /* Initial timer period. Timers are created disarmed. */
+                                                                   pdFALSE,                  /* Don't auto-reload timer. */
+                                                                   ( void * ) pxTimer,       /* Timer id. */
+                                                                   prvTimerCallback,         /* Timer expiration callback. */
+                                                                   &pxTimer->xTimerBuffer ); /* Pre-allocated memory for timer. */
 
     return true;
 }
@@ -202,11 +202,11 @@ bool IotClock_TimerArm( IotTimer_t * pTimer,
                         uint32_t relativeTimeoutMs,
                         uint32_t periodMs )
 {
-    _IotSystemTimer_t * pTimerInfo = ( _IotSystemTimer_t * ) pTimer;
+    _IotSystemTimer_t * pTimerInfo   = ( _IotSystemTimer_t * ) pTimer;
 
     configASSERT( pTimerInfo != NULL );
 
-    TimerHandle_t xTimerHandle = pTimerInfo->timer;
+    TimerHandle_t       xTimerHandle = pTimerInfo->timer;
 
     IotLogDebug( "Arming timer %p with timeout %llu and period %llu.",
                  pTimer,

@@ -76,6 +76,8 @@ static void prvMQTTDemoTask( void * pvParameters )
     vTaskDelay( pdMS_TO_TICKS( 1000 ) );
     LogInfo( ( "In the light weight MQTT demo." ) );
     vTaskDelay( pdMS_TO_TICKS( 1000 ) );
+
+    LogInfo( ( "Demo completed successfully.\r\n" ) );
 }
 
 /*-----------------------------------------------------------*/

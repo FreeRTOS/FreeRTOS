@@ -702,7 +702,7 @@ BaseType_t TLS_Connect( void * pvContext )
 {
     BaseType_t xResult = 0;
     TLSContext_t * pxCtx = ( TLSContext_t * )
-                           pvContext;   /*lint !e9087 !e9079 Allow casting void* to other types. */
+                           pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
 
 
     /* Initialize mbedTLS structures. */
@@ -850,7 +850,7 @@ BaseType_t TLS_Recv( void * pvContext,
 {
     BaseType_t xResult = 0;
     TLSContext_t * pxCtx = ( TLSContext_t * )
-                           pvContext;   /*lint !e9087 !e9079 Allow casting void* to other types. */
+                           pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
     size_t xRead = 0;
 
     if( ( NULL != pxCtx ) && ( pdTRUE == pxCtx->xTLSHandshakeSuccessful ) )
@@ -901,7 +901,7 @@ BaseType_t TLS_Send( void * pvContext,
 {
     BaseType_t xResult = 0;
     TLSContext_t * pxCtx = ( TLSContext_t * )
-                           pvContext;    /*lint !e9087 !e9079 Allow casting void* to other types. */
+                           pvContext; /*lint !e9087 !e9079 Allow casting void* to other types. */
     size_t xWritten = 0;
 
     if( ( NULL != pxCtx ) && ( pdTRUE == pxCtx->xTLSHandshakeSuccessful ) )

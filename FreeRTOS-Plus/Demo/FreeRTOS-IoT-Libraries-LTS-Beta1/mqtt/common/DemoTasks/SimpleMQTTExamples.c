@@ -553,8 +553,8 @@ static void prvMQTTSubscribe( void )
      * returns when the subscribe operation is complete or a timeout occurs. */
     xResult = IotMqtt_SubscribeSync( xMQTTConnection,
                                      &( xMQTTSubscription ),
-                                     1,                                     /* We are subscribing to one topic filter. */
-                                     0,                                     /* flags - currently ignored. */
+                                     1, /* We are subscribing to one topic filter. */
+                                     0, /* flags - currently ignored. */
                                      mqttexampleMQTT_TIMEOUT_MS );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
@@ -581,7 +581,7 @@ static void prvMQTTPublish( void )
      * returns when the publish operation is complete or a timeout occurs. */
     xResult = IotMqtt_PublishSync( xMQTTConnection,
                                    &( xMQTTPublishInfo ),
-                                   0,                          /* flags - currently ignored. */
+                                   0, /* flags - currently ignored. */
                                    mqttexampleMQTT_TIMEOUT_MS );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }
@@ -607,8 +607,8 @@ static void prvMQTTUnsubscribe( void )
      * returns when the unsubscribe operation is complete or a timeout occurs. */
     xResult = IotMqtt_UnsubscribeSync( xMQTTConnection,
                                        &( xMQTTSubscription ),
-                                       1,                                     /* We are unsubscribing from one topic filter. */
-                                       0,                                     /* flags - currently ignored. */
+                                       1, /* We are unsubscribing from one topic filter. */
+                                       0, /* flags - currently ignored. */
                                        mqttexampleMQTT_TIMEOUT_MS );
     configASSERT( xResult == IOT_MQTT_SUCCESS );
 }

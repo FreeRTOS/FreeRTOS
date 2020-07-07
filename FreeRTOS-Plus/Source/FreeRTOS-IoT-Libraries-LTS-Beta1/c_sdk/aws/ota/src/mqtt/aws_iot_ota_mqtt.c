@@ -197,8 +197,8 @@ static bool prvSubscribeToJobNotificationTopics( const OTA_AgentContext_t * pxAg
         stJobsSubscription.topicFilterLength = usTopicLen;
         eResult = IotMqtt_TimedSubscribe( pvConnContext->pvControlClient,
                                           &stJobsSubscription,
-                                          1,                              /* Subscriptions count */
-                                          0,                              /* flags */
+                                          1, /* Subscriptions count */
+                                          0, /* flags */
                                           OTA_SUBSCRIBE_WAIT_MS );
 
         if( eResult == IOT_MQTT_SUCCESS )

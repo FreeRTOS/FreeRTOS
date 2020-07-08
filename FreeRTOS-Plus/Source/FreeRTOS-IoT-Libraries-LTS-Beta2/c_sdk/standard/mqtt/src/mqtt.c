@@ -323,7 +323,7 @@ static int32_t sendPacket( MQTTContext_t * pContext,
     /* Loop until the entire packet is sent. */
     while( bytesRemaining > 0UL )
     {
-        bytesSent = pContext->transportInterface.send( pContext->transportInterface.networkContext,
+        bytesSent = pContext->transportInterface.send( pContext->transportInterface.pNetworkContext,
                                                        pIndex,
                                                        bytesRemaining );
 
@@ -408,13 +408,14 @@ static int32_t recvExact( const MQTTContext_t * pContext,
     size_t bytesRemaining = bytesToRecv;
     int32_t totalBytesRecvd = 0, bytesRecvd;
     uint32_t entryTimeMs = 0U, elapsedTimeMs = 0U;
-    MQTTTransportRecvFunc_t recvFunc = NULL;
+    TransportRecv_t recvFunc = NULL;
     MQTTGetCurrentTimeFunc_t getTimeStampMs = NULL;
     bool receiveError = false;
 
     assert( pContext != NULL );
     assert( bytesToRecv <= pContext->networkBuffer.size );
     assert( pContext->callbacks.getTime != NULL );
+
     pIndex = pContext->networkBuffer.pBuffer;
     recvFunc = pContext->transportInterface.recv;
     getTimeStampMs = pContext->callbacks.getTime;
@@ -423,7 +424,7 @@ static int32_t recvExact( const MQTTContext_t * pContext,
 
     while( ( bytesRemaining > 0U ) && ( receiveError == false ) )
     {
-        bytesRecvd = recvFunc( pContext->transportInterface.networkContext,
+        bytesRecvd = recvFunc( pContext->transportInterface.pNetworkContext,
                                pIndex,
                                bytesRemaining );
 
@@ -935,7 +936,7 @@ static MQTTStatus_t receiveSingleIteration( MQTTContext_t * pContext,
     assert( pContext != NULL );
 
     status = MQTT_GetIncomingPacketTypeAndLength( pContext->transportInterface.recv,
-                                                  pContext->transportInterface.networkContext,
+                                                  pContext->transportInterface.pNetworkContext,
                                                   &incomingPacket );
 
     if( status == MQTTNoDataAvailable )
@@ -1107,7 +1108,7 @@ static MQTTStatus_t receiveConnack( const MQTTContext_t * pContext,
          * returned after a transport receive timeout, an error, or a successful
          * receive of packet type and length. */
         status = MQTT_GetIncomingPacketTypeAndLength( pContext->transportInterface.recv,
-                                                      pContext->transportInterface.networkContext,
+                                                      pContext->transportInterface.pNetworkContext,
                                                       pIncomingPacket );
 
         /* The loop times out based on 2 conditions.
@@ -1297,7 +1298,7 @@ static MQTTStatus_t validatePublishParams( const MQTTContext_t * pContext,
 /*-----------------------------------------------------------*/
 
 MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
-                        const MQTTTransportInterface_t * pTransportInterface,
+                        const TransportInterface_t * pTransportInterface,
                         const MQTTApplicationCallbacks_t * pCallbacks,
                         const MQTTFixedBuffer_t * pNetworkBuffer )
 {

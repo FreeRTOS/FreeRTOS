@@ -4,4 +4,4 @@
 [submodule "mbedtls"]
 	path = FreeRTOS-Plus/Source/mbedtls
 	url = https://github.com/ARMmbed/mbedtls.git
-	branch = mbedtls-2.16.6
+	branch = mbedtls-2.16.7

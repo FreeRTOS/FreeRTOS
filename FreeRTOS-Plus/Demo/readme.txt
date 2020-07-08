@@ -51,3 +51,8 @@ directory structure
 See also -
 http://www.freertos.org/FreeRTOS-quick-start-guide.html
 http://www.freertos.org/FAQHelp.html
+
+
+*** Mbed TLS License ***
+
+This repository uses Mbed TLS under Apache 2.0

@@ -26,6 +26,8 @@
 #include "mqtt_config.h"
 #include "mqtt_lightweight.h"
 
+#include "transport_interface.h"
+
 /**
  * @brief Invalid packet identifier.
  *
@@ -41,13 +43,6 @@ typedef struct MQTTPubAckInfo             MQTTPubAckInfo_t;
 
 struct MQTTContext;
 typedef struct MQTTContext                MQTTContext_t;
-
-struct MQTTTransportInterface;
-typedef struct MQTTTransportInterface     MQTTTransportInterface_t;
-
-typedef int32_t (* MQTTTransportSendFunc_t )( NetworkContext_t context,
-                                              const void * pMessage,
-                                              size_t bytesToSend );
 
 typedef uint32_t (* MQTTGetCurrentTimeFunc_t )( void );
 
@@ -85,13 +80,6 @@ typedef enum MQTTPubAckType
     MQTTPubcomp
 } MQTTPubAckType_t;
 
-struct MQTTTransportInterface
-{
-    MQTTTransportSendFunc_t send;
-    MQTTTransportRecvFunc_t recv;
-    NetworkContext_t networkContext;
-};
-
 struct MQTTApplicationCallbacks
 {
     MQTTGetCurrentTimeFunc_t getTime;
@@ -112,7 +100,7 @@ struct MQTTContext
     MQTTPubAckInfo_t incomingPublishRecords[ MQTT_STATE_ARRAY_MAX_COUNT ];
     size_t incomingPublishCount;
 
-    MQTTTransportInterface_t transportInterface;
+    TransportInterface_t transportInterface;
     MQTTFixedBuffer_t networkBuffer;
 
     uint16_t nextPacketId;
@@ -147,7 +135,7 @@ struct MQTTContext
  * #MQTTSuccess otherwise.
  */
 MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
-                        const MQTTTransportInterface_t * pTransportInterface,
+                        const TransportInterface_t * pTransportInterface,
                         const MQTTApplicationCallbacks_t * pCallbacks,
                         const MQTTFixedBuffer_t * pNetworkBuffer );
 

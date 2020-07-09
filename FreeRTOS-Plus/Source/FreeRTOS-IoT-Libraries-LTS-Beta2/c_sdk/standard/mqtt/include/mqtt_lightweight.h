@@ -37,6 +37,8 @@
 /* Include config file before other headers. */
 #include "mqtt_config.h"
 
+#include "transport_interface.h"
+
 /* MQTT packet types. */
 #define MQTT_PACKET_TYPE_CONNECT        ( ( uint8_t ) 0x10U )  /**< @brief CONNECT (client-to-server). */
 #define MQTT_PACKET_TYPE_CONNACK        ( ( uint8_t ) 0x20U )  /**< @brief CONNACK (server-to-client). */
@@ -73,23 +75,6 @@ typedef struct MqttPublishInfo     MQTTPublishInfo_t;
 
 struct MQTTPacketInfo;
 typedef struct MQTTPacketInfo      MQTTPacketInfo_t;
-
-/**
- * @brief Signature of the transport interface receive function.
- *
- * A function with this signature must be provided to the MQTT library to read
- * data off the network.
- *
- * @param[in] context The network context provided with this function.
- * @param[out] pBuffer Buffer to receive network data.
- * @param[in] bytesToRecv Bytes to receive from the network. pBuffer must be at
- * least this size.
- *
- * @return The number of bytes received; negative value on failure.
- */
-typedef int32_t (* MQTTTransportRecvFunc_t )( NetworkContext_t context,
-                                              void * pBuffer,
-                                              size_t bytesToRecv );
 
 /**
  * @brief Return codes from MQTT functions.
@@ -539,8 +524,8 @@ MQTTStatus_t MQTT_DeserializeAck( const MQTTPacketInfo_t * pIncomingPacket,
  * #MQTTBadResponse if an invalid packet is read, and
  * #MQTTNoDataAvailable if there is nothing to read.
  */
-MQTTStatus_t MQTT_GetIncomingPacketTypeAndLength( MQTTTransportRecvFunc_t readFunc,
-                                                  NetworkContext_t networkContext,
+MQTTStatus_t MQTT_GetIncomingPacketTypeAndLength( TransportRecv_t readFunc,
+                                                  NetworkContext_t * pNetworkContext,
                                                   MQTTPacketInfo_t * pIncomingPacket );
 
 #endif /* ifndef MQTT_LIGHTWEIGHT_H */

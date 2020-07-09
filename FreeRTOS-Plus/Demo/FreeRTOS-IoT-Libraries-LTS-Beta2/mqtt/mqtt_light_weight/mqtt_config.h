@@ -52,7 +52,4 @@
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
-/* Set network context to socket (int). */
-typedef int NetworkContext_t;
-
 #endif /* ifndef MQTT_CONFIG_H_ */

@@ -141,6 +141,11 @@
  */
 #define mqttexampleKEEP_ALIVE_DELAY                 ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
 
+/**
+ * @brief Maximum number of times to call FreeRTOS_recv when initiating a
+ * graceful socket shutdown.
+ */
+#define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS        ( 3 )
 /*-----------------------------------------------------------*/
 
 /**
@@ -253,14 +258,14 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket );
  * @brief The transport receive wrapper function supplied to the MQTT library for
  * receiving type and length of an incoming MQTT packet.
  *
- * @param[in] xContext Network context.
+ * @param[in] pxContext Pointer to network context.
  * @param[out] pBuffer Buffer for receiving data.
  * @param[in] bytesToRecv Size of pBuffer.
  *
  * @return Number of bytes received or zero to indicate transportTimeout;
  * negative value on error.
  */
-static int32_t prvTransportRecv( NetworkContext_t xContext,
+static int32_t prvTransportRecv( NetworkContext_t * pxContext,
                                  void * pvBuffer,
                                  size_t xBytesToRecv );
 
@@ -289,16 +294,29 @@ static uint16_t usSubscribePacketIdentifier;
  * it is used to match received Unsubscribe response to the transmitted unsubscribe
  * request.
  */
-static uint16_t          usUnsubscribePacketIdentifier;
+static uint16_t usUnsubscribePacketIdentifier;
 
 
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
-static MQTTFixedBuffer_t xBuffer =
+const static MQTTFixedBuffer_t xBuffer =
 {
     .pBuffer = ucSharedBuffer,
     .size    = mqttexampleSHARED_BUFFER_SIZE
 };
 
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief The Network Context implementation. This context is passed to the
+ * transport interface functions.
+ *
+ * This example uses transport interface function only to read the packet type
+ * and length of the incoming packet from network.
+ */
+struct NetworkContext
+{
+    Socket_t xTcpSocket;
+};
 /*-----------------------------------------------------------*/
 
 /*
@@ -321,8 +339,8 @@ void vStartSimpleMQTTDemo( void )
 
 static void prvMQTTDemoTask( void * pvParameters )
 {
-    Socket_t       xMQTTSocket;
-    uint32_t       ulPublishCount    = 0U;
+    Socket_t xMQTTSocket;
+    uint32_t ulPublishCount = 0U;
     const uint32_t ulMaxPublishCount = 5UL;
 
     /* Remove compiler warnings about unused parameters. */
@@ -418,8 +436,9 @@ static void prvMQTTDemoTask( void * pvParameters )
 
 static void prvGracefulShutDown( Socket_t xSocket )
 {
-    uint8_t          ucDummy[ 20 ];
+    uint8_t ucDummy[ 20 ];
     const TickType_t xShortDelay = pdMS_TO_MIN_TICKS( 250 );
+    BaseType_t xShutdownLoopCount = 0;
 
     if( xSocket != ( Socket_t ) 0 )
     {
@@ -437,8 +456,11 @@ static void prvGracefulShutDown( Socket_t xSocket )
                  * into the Blocked state anyway. */
                 vTaskDelay( xShortDelay );
 
-                /* Note: a real applications should implement a timeout here, not just
-                 * loop forever. */
+                /* Limit the number of FreeRTOS_recv loops to avoid infinite loop. */
+                if( ++xShutdownLoopCount >= mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS )
+                {
+                    break;
+                }
             }
 
             /* The socket has shut down and is safe to close. */
@@ -448,15 +470,19 @@ static void prvGracefulShutDown( Socket_t xSocket )
 }
 /*-----------------------------------------------------------*/
 
-static int32_t prvTransportRecv( NetworkContext_t xContext,
+static int32_t prvTransportRecv( NetworkContext_t * pxContext,
                                  void * pvBuffer,
                                  size_t xBytesToRecv )
 {
-    Socket_t xMQTTSocket = ( Socket_t ) xContext;
-    int32_t  lResult;
+    int32_t lResult;
+
+    configASSERT( pxContext != NULL );
 
     /* Receive upto xBytesToRecv from network. */
-    lResult = ( int32_t ) FreeRTOS_recv( xMQTTSocket, pvBuffer, xBytesToRecv, 0 );
+    lResult = ( int32_t ) FreeRTOS_recv( ( Socket_t ) pxContext->xTcpSocket,
+                                         pvBuffer,
+                                         xBytesToRecv,
+                                         0 );
 
     return lResult;
 }
@@ -481,9 +507,9 @@ static uint16_t prvGetNextPacketIdentifier()
 
 static Socket_t prvCreateTCPConnectionToBroker( void )
 {
-    Socket_t                 xMQTTSocket = FREERTOS_INVALID_SOCKET;
-    uint32_t                 ulBrokerIPAddress;
-    BaseType_t               xStatus     = pdFAIL;
+    Socket_t xMQTTSocket = FREERTOS_INVALID_SOCKET;
+    uint32_t ulBrokerIPAddress;
+    BaseType_t xStatus = pdFAIL;
     struct freertos_sockaddr xBrokerAddress;
 
     /* This is the socket used to connect to the MQTT broker. */
@@ -538,14 +564,15 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 
 static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 {
-    BaseType_t        xStatus;
-    size_t            xRemainingLength;
-    size_t            xPacketSize;
-    MQTTStatus_t      xResult;
-    MQTTPacketInfo_t  xIncomingPacket;
+    BaseType_t xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    MQTTStatus_t xResult;
+    MQTTPacketInfo_t xIncomingPacket;
     MQTTConnectInfo_t xConnectInfo;
-    uint16_t          usPacketId;
-    bool              xSessionPresent;
+    uint16_t usPacketId;
+    bool xSessionPresent;
+    NetworkContext_t xNetworkContext;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -559,41 +586,41 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * previous session data. Also, establishing a connection with clean session
      * will ensure that the broker does not store any data when this client
      * gets disconnected. */
-    xConnectInfo.cleanSession           = true;
+    xConnectInfo.cleanSession = true;
 
     /* The client identifier is used to uniquely identify this MQTT client to
      * the MQTT broker. In a production device the identifier can be something
      * unique, such as a device serial number. */
-    xConnectInfo.pClientIdentifier      = democonfigCLIENT_IDENTIFIER;
+    xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
     xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
 
     /* Set MQTT keep-alive period. It is the responsibility of the application to ensure
      * that the interval between Control Packets being sent does not exceed the Keep Alive value.
      * In the absence of sending any other Control Packets, the Client MUST send a PINGREQ Packet. */
-    xConnectInfo.keepAliveSeconds       = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
+    xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
     /* Get size requirement for the connect packet.
      * Last Will and Testament is not used in this demo. It is passed as NULL. */
-    xResult                             = MQTT_GetConnectPacketSize( &xConnectInfo,
-                                                                     NULL,
-                                                                     &xRemainingLength,
-                                                                     &xPacketSize );
+    xResult = MQTT_GetConnectPacketSize( &xConnectInfo,
+                                         NULL,
+                                         &xRemainingLength,
+                                         &xPacketSize );
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
     /* Serialize MQTT connect packet into the provided buffer. */
-    xResult                             = MQTT_SerializeConnect( &xConnectInfo,
-                                                                 NULL,
-                                                                 xRemainingLength,
-                                                                 &xBuffer );
+    xResult = MQTT_SerializeConnect( &xConnectInfo,
+                                     NULL,
+                                     xRemainingLength,
+                                     &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
-    xStatus                             = FreeRTOS_send( xMQTTSocket,
-                                                         ( void * ) xBuffer.pBuffer,
-                                                         xPacketSize,
-                                                         0 );
+    xStatus = FreeRTOS_send( xMQTTSocket,
+                             ( void * ) xBuffer.pBuffer,
+                             xPacketSize,
+                             0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 
     /* Reset all fields of the incoming packet structure. */
@@ -605,24 +632,25 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * this case to keep the example simple error checks are just performed by
      * asserts.
      */
-    xResult                             = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
-                                                                               xMQTTSocket,
-                                                                               &xIncomingPacket );
+    xNetworkContext.xTcpSocket = xMQTTSocket;
+    xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
+                                                   &xNetworkContext,
+                                                   &xIncomingPacket );
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xIncomingPacket.type == MQTT_PACKET_TYPE_CONNACK );
     configASSERT( xIncomingPacket.remainingLength <= mqttexampleSHARED_BUFFER_SIZE );
 
     /* Now receive the reset of the packet into the statically allocated buffer. */
-    xStatus                             = FreeRTOS_recv( xMQTTSocket,
-                                                         ( void * ) xBuffer.pBuffer,
-                                                         xIncomingPacket.remainingLength,
-                                                         0 );
+    xStatus = FreeRTOS_recv( xMQTTSocket,
+                             ( void * ) xBuffer.pBuffer,
+                             xIncomingPacket.remainingLength,
+                             0 );
     configASSERT( xStatus == ( BaseType_t ) xIncomingPacket.remainingLength );
 
-    xIncomingPacket.pRemainingData      = xBuffer.pBuffer;
-    xResult                             = MQTT_DeserializeAck( &xIncomingPacket,
-                                                               &usPacketId,
-                                                               &xSessionPresent );
+    xIncomingPacket.pRemainingData = xBuffer.pBuffer;
+    xResult = MQTT_DeserializeAck( &xIncomingPacket,
+                                   &usPacketId,
+                                   &xSessionPresent );
     configASSERT( xResult == MQTTSuccess );
 
     if( xResult != MQTTSuccess )
@@ -634,11 +662,11 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 
 static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 {
-    MQTTStatus_t        xResult;
+    MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
-    size_t              xRemainingLength;
-    size_t              xPacketSize;
-    BaseType_t          xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    BaseType_t xStatus;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -650,50 +678,50 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 
     /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
      * only one topic and uses QOS0. */
-    xMQTTSubscription[ 0 ].qos               = MQTTQoS0;
-    xMQTTSubscription[ 0 ].pTopicFilter      = mqttexampleTOPIC;
+    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
+    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
-    xResult                                  = MQTT_GetSubscribePacketSize( xMQTTSubscription,
-                                                                            sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                                                            &xRemainingLength,
-                                                                            &xPacketSize );
+    xResult = MQTT_GetSubscribePacketSize( xMQTTSubscription,
+                                           sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                           &xRemainingLength,
+                                           &xPacketSize );
 
     /* Make sure the packet size is less than static buffer size. */
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
     /* Get a unique packet id. */
-    usSubscribePacketIdentifier              = prvGetNextPacketIdentifier();
+    usSubscribePacketIdentifier = prvGetNextPacketIdentifier();
     /* Make sure the packet id obtained is valid. */
     configASSERT( usSubscribePacketIdentifier != 0 );
 
     /* Serialize subscribe into statically allocated ucSharedBuffer. */
-    xResult                                  = MQTT_SerializeSubscribe( xMQTTSubscription,
-                                                                        sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                                                        usSubscribePacketIdentifier,
-                                                                        xRemainingLength,
-                                                                        &xBuffer );
+    xResult = MQTT_SerializeSubscribe( xMQTTSubscription,
+                                       sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                       usSubscribePacketIdentifier,
+                                       xRemainingLength,
+                                       &xBuffer );
 
     configASSERT( xResult == MQTTSuccess );
 
     /* Send Subscribe request to the broker. */
-    xStatus                                  = FreeRTOS_send( xMQTTSocket,
-                                                              ( void * ) xBuffer.pBuffer,
-                                                              xPacketSize,
-                                                              0 );
+    xStatus = FreeRTOS_send( xMQTTSocket,
+                             ( void * ) xBuffer.pBuffer,
+                             xPacketSize,
+                             0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 }
 /*-----------------------------------------------------------*/
 
 static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
 {
-    MQTTStatus_t      xResult;
+    MQTTStatus_t xResult;
     MQTTPublishInfo_t xMQTTPublishInfo;
-    size_t            xRemainingLength;
-    size_t            xPacketSize;
-    size_t            xHeaderSize;
-    BaseType_t        xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    size_t xHeaderSize;
+    BaseType_t xStatus;
 
 
     /***
@@ -705,17 +733,17 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
     /* This demo uses QOS0 */
-    xMQTTPublishInfo.qos             = MQTTQoS0;
-    xMQTTPublishInfo.retain          = false;
-    xMQTTPublishInfo.pTopicName      = mqttexampleTOPIC;
+    xMQTTPublishInfo.qos = MQTTQoS0;
+    xMQTTPublishInfo.retain = false;
+    xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
     xMQTTPublishInfo.topicNameLength = ( uint16_t ) strlen( mqttexampleTOPIC );
-    xMQTTPublishInfo.pPayload        = mqttexampleMESSAGE;
-    xMQTTPublishInfo.payloadLength   = strlen( mqttexampleMESSAGE );
+    xMQTTPublishInfo.pPayload = mqttexampleMESSAGE;
+    xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
 
     /* Find out length of Publish packet size. */
-    xResult                          = MQTT_GetPublishPacketSize( &xMQTTPublishInfo,
-                                                                  &xRemainingLength,
-                                                                  &xPacketSize );
+    xResult = MQTT_GetPublishPacketSize( &xMQTTPublishInfo,
+                                         &xRemainingLength,
+                                         &xPacketSize );
     configASSERT( xResult == MQTTSuccess );
 
     /* Make sure the packet size is less than static buffer size. */
@@ -724,36 +752,36 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
     /* Serialize MQTT Publish packet header. The publish message payload will
      * be sent directly in order to avoid copying it into the buffer.
      * QOS0 does not make use of packet identifier, therefore value of 0 is used */
-    xResult                          = MQTT_SerializePublishHeader( &xMQTTPublishInfo,
-                                                                    0,
-                                                                    xRemainingLength,
-                                                                    &xBuffer,
-                                                                    &xHeaderSize );
+    xResult = MQTT_SerializePublishHeader( &xMQTTPublishInfo,
+                                           0,
+                                           xRemainingLength,
+                                           &xBuffer,
+                                           &xHeaderSize );
     configASSERT( xResult == MQTTSuccess );
 
     /* Send Publish header to the broker. */
-    xStatus                          = FreeRTOS_send( xMQTTSocket,
-                                                      ( void * ) xBuffer.pBuffer,
-                                                      xHeaderSize,
-                                                      0 );
+    xStatus = FreeRTOS_send( xMQTTSocket,
+                             ( void * ) xBuffer.pBuffer,
+                             xHeaderSize,
+                             0 );
     configASSERT( xStatus == ( BaseType_t ) xHeaderSize );
 
     /* Send Publish payload to the broker. */
-    xStatus                          = FreeRTOS_send( xMQTTSocket,
-                                                      ( void * ) xMQTTPublishInfo.pPayload,
-                                                      xMQTTPublishInfo.payloadLength,
-                                                      0 );
+    xStatus = FreeRTOS_send( xMQTTSocket,
+                             ( void * ) xMQTTPublishInfo.pPayload,
+                             xMQTTPublishInfo.payloadLength,
+                             0 );
     configASSERT( xStatus == ( BaseType_t ) xMQTTPublishInfo.payloadLength );
 }
 /*-----------------------------------------------------------*/
 
 static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 {
-    MQTTStatus_t        xResult;
+    MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
-    size_t              xRemainingLength;
-    size_t              xPacketSize;
-    BaseType_t          xStatus;
+    size_t xRemainingLength;
+    size_t xPacketSize;
+    BaseType_t xStatus;
 
     /* Some fields not used by this demo so start with everything at 0. */
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -761,32 +789,32 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
     /* Unsubscribe to the mqttexampleTOPIC topic filter. The task handle is passed
      * as the callback context which is used by the callback to send a task
      * notification to this task.*/
-    xMQTTSubscription[ 0 ].qos               = MQTTQoS0;
-    xMQTTSubscription[ 0 ].pTopicFilter      = mqttexampleTOPIC;
+    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
+    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
-    xResult                                  = MQTT_GetUnsubscribePacketSize( xMQTTSubscription,
-                                                                              sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                                                              &xRemainingLength,
-                                                                              &xPacketSize );
+    xResult = MQTT_GetUnsubscribePacketSize( xMQTTSubscription,
+                                             sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                             &xRemainingLength,
+                                             &xPacketSize );
     configASSERT( xResult == MQTTSuccess );
     /* Make sure the packet size is less than static buffer size */
     configASSERT( xPacketSize < mqttexampleSHARED_BUFFER_SIZE );
 
     /* Get next unique packet identifier */
-    usUnsubscribePacketIdentifier            = prvGetNextPacketIdentifier();
+    usUnsubscribePacketIdentifier = prvGetNextPacketIdentifier();
     /* Make sure the packet id obtained is valid. */
     configASSERT( usUnsubscribePacketIdentifier != 0 );
 
-    xResult                                  = MQTT_SerializeUnsubscribe( xMQTTSubscription,
-                                                                          sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
-                                                                          usUnsubscribePacketIdentifier,
-                                                                          xRemainingLength,
-                                                                          &xBuffer );
+    xResult = MQTT_SerializeUnsubscribe( xMQTTSubscription,
+                                         sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+                                         usUnsubscribePacketIdentifier,
+                                         xRemainingLength,
+                                         &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
     /* Send Unsubscribe request to the broker. */
-    xStatus                                  = FreeRTOS_send( xMQTTSocket, ( void * ) xBuffer.pBuffer, xPacketSize, 0 );
+    xStatus = FreeRTOS_send( xMQTTSocket, ( void * ) xBuffer.pBuffer, xPacketSize, 0 );
     configASSERT( xStatus == ( BaseType_t ) xPacketSize );
 }
 /*-----------------------------------------------------------*/
@@ -794,8 +822,8 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 static void prvMQTTKeepAlive( Socket_t xMQTTSocket )
 {
     MQTTStatus_t xResult;
-    BaseType_t   xStatus;
-    size_t       xPacketSize;
+    BaseType_t xStatus;
+    size_t xPacketSize;
 
     /* Calculate PING request size. */
     xResult = MQTT_GetPingreqPacketSize( &xPacketSize );
@@ -818,8 +846,8 @@ static void prvMQTTKeepAlive( Socket_t xMQTTSocket )
 static void prvMQTTDisconnect( Socket_t xMQTTSocket )
 {
     MQTTStatus_t xResult;
-    BaseType_t   xStatus;
-    size_t       xPacketSize;
+    BaseType_t xStatus;
+    size_t xPacketSize;
 
     /* Calculate DISCONNECT packet size. */
     xResult = MQTT_GetDisconnectPacketSize( &xPacketSize );
@@ -900,11 +928,12 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
 {
-    MQTTStatus_t      xResult;
-    MQTTPacketInfo_t  xIncomingPacket;
-    BaseType_t        xStatus;
+    MQTTStatus_t xResult;
+    MQTTPacketInfo_t xIncomingPacket;
+    BaseType_t xStatus;
     MQTTPublishInfo_t xPublishInfo;
-    uint16_t          usPacketId;
+    uint16_t usPacketId;
+    NetworkContext_t xNetworkContext;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -914,8 +943,9 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
     ( void ) memset( ( void * ) &xIncomingPacket, 0x00, sizeof( MQTTPacketInfo_t ) );
 
     /* Determine incoming packet type and remaining length. */
+    xNetworkContext.xTcpSocket = xMQTTSocket;
     xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
-                                                   ( void * ) xMQTTSocket,
+                                                   &xNetworkContext,
                                                    &xIncomingPacket );
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xIncomingPacket.remainingLength <= mqttexampleSHARED_BUFFER_SIZE );
@@ -927,9 +957,9 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
      * Skip reading from network for remaining length zero. */
     if( xIncomingPacket.remainingLength > 0 )
     {
-        xStatus                        = FreeRTOS_recv( xMQTTSocket,
-                                                        ( void * ) xBuffer.pBuffer,
-                                                        xIncomingPacket.remainingLength, 0 );
+        xStatus = FreeRTOS_recv( xMQTTSocket,
+                                 ( void * ) xBuffer.pBuffer,
+                                 xIncomingPacket.remainingLength, 0 );
         configASSERT( xStatus == ( BaseType_t ) xIncomingPacket.remainingLength );
         xIncomingPacket.pRemainingData = xBuffer.pBuffer;
     }

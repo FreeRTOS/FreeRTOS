@@ -52,11 +52,4 @@
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-
-/* Set network context to socket (int). */
-typedef Socket_t NetworkContext_t;
-
 #endif /* ifndef MQTT_CONFIG_H_ */

@@ -47,19 +47,68 @@
 
 /************ End of logging configuration ****************/
 
+/* FreeRTOS+TCP include. */
+#include "FreeRTOS_Sockets.h"
+
+/* Transport interface include. */
 #include "transport_interface.h"
 
+/**
+ * @brief Network context definition for FreeRTOS sockets.
+ */
+struct NetworkContext
+{
+    Socket_t tcpSocket;
+};
+
+/**
+ * @brief Create a TCP connection with FreeRTOS sockets.
+ *
+ * @param[out] pNetworkContext Pointer to a network context to contain the
+ * initialized socket handle.
+ * @param[in] pHostName The hostname of the remote endpoint.
+ * @param[in] port The destination port.
+ * @param[in] receiveTimeoutMs Receive socket timeout.
+ *
+ * @return Non-zero value on error, 0 on success.
+ */
 BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
                                        uint16_t port,
                                        uint32_t receiveTimeoutMs );
 
+/**
+ * @brief Gracefully disconnect an established TCP connection.
+ *
+ * @param[in] pNetworkContext Network context containing the TCP socket handle.
+ */
 void Transport_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
 
+/**
+ * @brief Receives data from an established TCP connection.
+ *
+ * @param[in] pNetworkContext The network context containing the TCP socket
+ * handle.
+ * @param[out] pBuffer Buffer to receive bytes into.
+ * @param[in] bytesToRecv Number of bytes to receive from the network.
+ *
+ * @return Number of bytes received if successful; 0 if the socket times out;
+ * Negative value on error.
+ */
 int32_t Transport_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                                  void * pBuffer,
                                  size_t bytesToRecv );
 
+/**
+ * @brief Sends data over an established TCP connection.
+ *
+ * @param[in] pNetworkContext The network context containing the TCP socket
+ * handle.
+ * @param[in] pBuffer Buffer containing the bytes to send.
+ * @param[in] bytesToSend Number of bytes to send from the buffer.
+ *
+ * @return Number of bytes sent on success; else a negative value.
+ */
 int32_t Transport_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                                  const void * pBuffer,
                                  size_t bytesToSend );

@@ -34,10 +34,10 @@
 /* Transport interface include. */
 #include "transport_interface_freertos.h"
 
-struct NetworkContext
-{
-    Socket_t tcpSocket;
-};
+/* Maximum number of times to call FreeRTOS_recv when initiating a graceful shutdown. */
+#ifndef TRANSPORT_FREERTOS_SHUTDOWN_LOOPS
+    #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS       ( 3 )
+#endif
 
 BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
@@ -113,12 +113,27 @@ BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
 void Transport_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
 {
-    BaseType_t socketStatus;
+    BaseType_t waitForShutdownLoopCount = 0;
+    uint8_t pDummyBuffer[ 2 ];
 
     if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
     {
-        socketStatus = FreeRTOS_shutdown( pNetworkContext->tcpSocket, FREERTOS_SHUT_RDWR );
-        FreeRTOS_closesocket( pNetworkContext->tcpSocket );
+        /* Initiate graceful shutdown. */
+        ( void ) FreeRTOS_shutdown( pNetworkContext->tcpSocket, FREERTOS_SHUT_RDWR );
+
+        /* Wait for the socket to disconnect gracefully (indicated by FreeRTOS_recv()
+         * returning a FREERTOS_EINVAL error) before closing the socket. */
+        while( FreeRTOS_recv( pNetworkContext->tcpSocket, pDummyBuffer, sizeof( pDummyBuffer ), 0 ) >= 0 )
+        {
+            /* We don't need to delay since FreeRTOS_recv should already have a timeout. */
+
+            if( ++waitForShutdownLoopCount >= TRANSPORT_FREERTOS_SHUTDOWN_LOOPS )
+            {
+                break;
+            }
+        }
+
+        ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
     }
 }
 
@@ -129,12 +144,6 @@ int32_t Transport_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     int32_t socketStatus = 0;
 
     socketStatus = FreeRTOS_recv( pNetworkContext->tcpSocket, pBuffer, bytesToRecv, 0 );
-
-    /* If no data is available, transport receive should return 0. */
-    if( socketStatus == FREERTOS_EWOULDBLOCK )
-    {
-        socketStatus = 0;
-    }
 
     return socketStatus;
 }

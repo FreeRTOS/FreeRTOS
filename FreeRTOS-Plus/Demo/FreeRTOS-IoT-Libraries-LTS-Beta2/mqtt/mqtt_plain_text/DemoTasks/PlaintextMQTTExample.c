@@ -54,9 +54,6 @@
 /* Demo Specific configs. */
 #include "demo_config.h"
 
-/* MQTT library config. */
-#include "mqtt_config.h"
-
 /* MQTT library includes. */
 #include "mqtt.h"
 
@@ -97,7 +94,7 @@
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
  */
-#define mqttexampleCONNACK_RECV_TIMEOUT_MS             ( 1000 )
+#define mqttexampleCONNACK_RECV_TIMEOUT_MS             ( 1000U )
 
 /**
  * @brief The topic to subscribe and publish to in the example.
@@ -147,18 +144,10 @@
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200 )
+#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200U )
 
-#define _MILLISECONDS_PER_SECOND    ( 1000 )                                          /**< @brief Milliseconds per second. */
+#define _MILLISECONDS_PER_SECOND    ( 1000U )                                         /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK      ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
-
-/**
- * @brief Network Context struct for use with FreeRTOS sockets.
- */
-struct NetworkContext
-{
-    Socket_t tcpSocket;
-};
 
 /*-----------------------------------------------------------*/
 
@@ -181,7 +170,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 											   NetworkContext_t * pxNetworkContext );
 
 /**
- * @brief Subscribes to the topic as specified in mqttexampleTOPIC at the top oc
+ * @brief Subscribes to the topic as specified in mqttexampleTOPIC at the top of
  * this file.
  *
  * @param pxMQTTContext MQTT context pointer.
@@ -348,6 +337,7 @@ MQTTStatus_t xMQTTStatus;
 		 * must be ready to receive any packet.  This demo uses the generic packet
 		 * processing function everywhere to highlight this fact. */
 		xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+		configASSERT( xMQTTStatus == MQTTSuccess );
 
 		/**************************** Publish and Keep Alive Loop. ******************************/
 		/* Publish messages with QOS0, send and process Keep alive messages. */
@@ -360,9 +350,10 @@ MQTTStatus_t xMQTTStatus;
 			 * topic the broker will send publish message back to the application. */
 			LogInfo( ( "Attempt to receive publish message from broker.\r\n" ) );
 			xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+			configASSERT( xMQTTStatus == MQTTSuccess );
 
-			/* Leave Connection Idle for some time */
-			LogInfo( ( "Keeping Connection Idle.\r\n\r\n" ) );
+			/* Leave Connection Idle for some time. */
+			LogInfo( ( "Keeping Connection Idle...\r\n\r\n" ) );
 			vTaskDelay( mqttexampleDELAY_BETWEEN_PUBLISHES );
 		}
 
@@ -372,6 +363,7 @@ MQTTStatus_t xMQTTStatus;
 
 		/* Process Incoming packet from the broker. */
 		xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+		configASSERT( xMQTTStatus == MQTTSuccess );
 
 		/**************************** Disconnect. ******************************/
 
@@ -420,7 +412,8 @@ MQTTApplicationCallbacks_t xCallbacks;
 	xCallbacks.getTime = prvGetTimeMs;
 
 	/* Initialize MQTT library. */
-	MQTT_Init( pxMQTTContext, &xTransport, &xCallbacks, &xBuffer );
+	xResult = MQTT_Init( pxMQTTContext, &xTransport, &xCallbacks, &xBuffer );
+	configASSERT( xResult == MQTTSuccess );
 
 	/* Many fields not used in this demo so start with everything at 0. */
 	memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
@@ -584,7 +577,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 	configASSERT( pxPublishInfo != NULL );
 
 	/* Process incoming Publish. */
-	LogInfo( ( "Incoming QOS : %d\n", pxPublishInfo->qos ) );
+	LogInfo( ( "Incoming QoS : %d\n", pxPublishInfo->qos ) );
 
 	/* Verify the received publish is for the we have subscribed to. */
 	if( ( pxPublishInfo->topicNameLength == strlen( mqttexampleTOPIC ) ) &&
@@ -626,25 +619,14 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
 
 static uint32_t prvGetTimeMs( void )
 {
-	TimeOut_t xCurrentTime = { 0 };
-
-	/* This must be unsigned because the behavior of signed integer overflow is undefined. */
-	uint64_t ullTickCount = 0ULL;
+	TickType_t xTickCount = 0;
 	uint32_t ulTimeMs = 0UL;
 
-	/* Get the current tick count and overflow count. vTaskSetTimeOutState()
-	 * is used to get these values because they are both static in tasks.c. */
-	vTaskSetTimeOutState( &xCurrentTime );
-
-	/* Normally, we would add the overflow count shifted by a TickType_t's number
-	 * of bits in order to account for overflow. This is not necessary here since
-	 * MQTT uses 32 bit timestamps, so the overflow would be truncated anyway. */
-
-	/* Add the current tick count. */
-	ullTickCount += xCurrentTime.xTimeOnEntering;
+	/* Get the current tick count. */
+	xTickCount = xTaskGetTickCount();
 
 	/* Convert the ticks to milliseconds. */
-	ulTimeMs = ullTickCount * _MILLISECONDS_PER_TICK;
+	ulTimeMs = ( uint32_t ) xTickCount * _MILLISECONDS_PER_TICK;
 
 	/* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
 	 * elapsed time in the application. */

@@ -52,10 +52,6 @@
 #include "logging_stack.h"
 /************ End of logging configuration ****************/
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-
 /**
  * @brief The maximum number of MQTT PUBLISH messages that may be pending
  * acknowledgement at any time.

@@ -36,7 +36,7 @@
 
 /* Maximum number of times to call FreeRTOS_recv when initiating a graceful shutdown. */
 #ifndef TRANSPORT_FREERTOS_SHUTDOWN_LOOPS
-    #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS       ( 3 )
+    #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
 #endif
 
 BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,

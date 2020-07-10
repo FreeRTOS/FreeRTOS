@@ -1181,8 +1181,9 @@ uint16_t usType = 0U;
 		if( ( pxDNSMessageHeader->usFlags & dnsRX_FLAGS_MASK ) == dnsEXPECTED_RX_FLAGS )
 		{
 			const uint16_t usCount = ( uint16_t ) ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY;
+			uint16_t usNumARecordsStored = 0;
 
-			for( x = 0U; ( x < pxDNSMessageHeader->usAnswers ) && ( x < usCount ); x++ )
+			for( x = 0U; ( x < pxDNSMessageHeader->usAnswers ) && ( usNumARecordsStored < usCount ); x++ )
 			{
 			BaseType_t xDoAccept;
 
@@ -1259,6 +1260,7 @@ uint16_t usType = 0U;
 							if( xDoStore != pdFALSE )
 							{
 								( void ) prvProcessDNSCache( pcName, &ulIPAddress, pxDNSAnswerRecord->ulTTL, pdFALSE );
+								usNumARecordsStored++;    /* Track # of A records stored */
 							}
 
 							/* Show what has happened. */

@@ -64,30 +64,30 @@
 /* Default values for configs. */
 #ifndef democonfigCLIENT_IDENTIFIER
 
-    /**
-     * @brief The MQTT client identifier used in this example.  Each client identifier
-     * must be unique so edit as required to ensure no two clients connecting to the
-     * same broker use the same client identifier.
-     *
-     * @note Appending __TIME__ to the client id string will reduce the possibility of a
-     * client id collision in the broker. Note that the appended time is the compilation
-     * time. This client id can cause collision, if more than one instance of the same
-     * binary is used at the same time to connect to the broker.
-     */
+/**
+ * @brief The MQTT client identifier used in this example.  Each client identifier
+ * must be unique so edit as required to ensure no two clients connecting to the
+ * same broker use the same client identifier.
+ *
+ * @note Appending __TIME__ to the client id string will reduce the possibility of a
+ * client id collision in the broker. Note that the appended time is the compilation
+ * time. This client id can cause collision, if more than one instance of the same
+ * binary is used at the same time to connect to the broker.
+ */
     #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
 #endif
 #ifndef democonfigMQTT_BROKER_ENDPOINT
 
-    /**
-     * @brief Details of the MQTT broker to connect to.
-     */
+/**
+ * @brief Details of the MQTT broker to connect to.
+ */
     #define democonfigMQTT_BROKER_ENDPOINT    "test.mosquitto.org"
 #endif
 #ifndef democonfigMQTT_BROKER_PORT
 
-    /**
-     * @brief The port to use for the demo.
-     */
+/**
+ * @brief The port to use for the demo.
+ */
     #define democonfigMQTT_BROKER_PORT    ( 1883 )
 #endif
 

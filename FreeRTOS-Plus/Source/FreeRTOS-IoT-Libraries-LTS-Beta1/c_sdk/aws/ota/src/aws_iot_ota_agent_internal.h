@@ -205,10 +205,11 @@ enum
  * size, attributes, etc. The following value specifies the number of parameters
  * that are included in the job document model although some may be optional. */
 
-#define OTA_NUM_JOB_PARAMS              ( 19 ) /* Number of parameters in the job document. */
+#define OTA_NUM_JOB_PARAMS              ( 20 ) /* Number of parameters in the job document. */
 
 /* Keys in OTA job doc . */
 #define OTA_JSON_CLIENT_TOKEN_KEY       "clientToken"
+#define OTA_JSON_TIMESTAMP_KEY          "timestamp"
 #define OTA_JSON_EXECUTION_KEY          "execution"
 #define OTA_JSON_JOB_ID_KEY             "jobId"
 #define OTA_JSON_STATUS_DETAILS_KEY     "statusDetails"
@@ -245,10 +246,11 @@ typedef struct ota_agent_context
     uint8_t pcThingName[ otaconfigMAX_THINGNAME_LEN + 1U ]; /* Thing name + zero terminator. */
     void * pvConnectionContext;                             /* Connection context for control and data plane. */
     OTA_FileContext_t pxOTA_Files[ OTA_MAX_FILES ];         /* Static array of OTA file structures. */
-    uint32_t ulFileIndex;                                   /* Static array of OTA file structures. */
+    uint32_t ulFileIndex;                                   /* Index of current file in the array. */
     uint32_t ulServerFileID;                                /* Variable to store current file ID passed down */
     uint8_t * pcOTA_Singleton_ActiveJobName;                /* The currently active job name. We only allow one at a time. */
     uint8_t * pcClientTokenFromJob;                         /* The clientToken field from the latest update job. */
+    uint32_t ulTimestampFromJob;                            /* Timestamp received from the latest job document. */
     TimerHandle_t pvSelfTestTimer;                          /* The self-test response expected timer. */
     TimerHandle_t xRequestTimer;                            /* The request timer associated with this OTA context. */
     QueueHandle_t xOTA_EventQueue;                          /* Event queue for communicating with the OTA Agent task. */

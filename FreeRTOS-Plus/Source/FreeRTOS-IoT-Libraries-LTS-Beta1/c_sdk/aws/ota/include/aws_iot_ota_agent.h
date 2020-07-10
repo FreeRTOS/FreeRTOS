@@ -162,7 +162,8 @@ typedef enum
     eOTA_JobParseErr_ZeroFileSize,        /* Job document specified a zero sized file. This is not allowed. */
     eOTA_JobParseErr_NonConformingJobDoc, /* The job document failed to fulfill the model requirements. */
     eOTA_JobParseErr_BadModelInitParams,  /* There was an invalid initialization parameter used in the document model. */
-    eOTA_JobParseErr_NoContextAvailable   /* There wasn't an OTA context available. */
+    eOTA_JobParseErr_NoContextAvailable,  /* There wasn't an OTA context available. */
+    eOTA_JobParseErr_NoActiveJobs,        /* No active jobs are available in the service. */
 } OTA_JobParseErr_t;
 
 

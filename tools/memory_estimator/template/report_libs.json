@@ -13,8 +13,12 @@
             "size_description":"Code Size of Lightweight MQTT API (example generated with GCC for ARM Cortex-M)"
         },
         {
-            "lib_name":"mqtt",
+            "lib_name":"mqtt-beta1",
             "size_description":"Code Size of MQTT (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"mqtt-beta1",
+            "size_description":"Code Size of MQTT Beta2 (example generated with GCC for ARM Cortex-M)"
         },
         {
             "lib_name":"ota-http",

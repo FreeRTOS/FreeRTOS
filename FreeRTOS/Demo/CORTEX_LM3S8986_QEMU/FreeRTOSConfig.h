@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.1
+ * FreeRTOS Kernel V10.3.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -37,42 +37,55 @@
  * THESE PARAMETERS ARE DESCRIBED WITHIN THE 'CONFIGURATION' SECTION OF THE
  * FreeRTOS API DOCUMENTATION AVAILABLE ON THE FreeRTOS.org WEB SITE.
  *
- * See http://www.freertos.org/a00110.html.
+ * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				0
-#define configUSE_TICK_HOOK				0
+#define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 50000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 24000 ) )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
 #define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			0
 #define configUSE_CO_ROUTINES 			0
 #define configUSE_MUTEXES				1
-#define configCHECK_FOR_STACK_OVERFLOW	0
 #define configUSE_RECURSIVE_MUTEXES		1
-#define configQUEUE_REGISTRY_SIZE		10
-#define configGENERATE_RUN_TIME_STATS	0
+#define configCHECK_FOR_STACK_OVERFLOW	2
+#define configUSE_QUEUE_SETS			1
+#define configUSE_COUNTING_SEMAPHORES	1
 
-#define configMAX_PRIORITIES		( 5 )
+#define configMAX_PRIORITIES			( 5UL )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#define configQUEUE_REGISTRY_SIZE		10
+#define configSUPPORT_STATIC_ALLOCATION	1
+
+/* Timer related defines. */
+#define configUSE_TIMERS				1
+#define configTIMER_TASK_PRIORITY		2
+#define configTIMER_QUEUE_LENGTH		20
+#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
 
-#define INCLUDE_vTaskPrioritySet			1
-#define INCLUDE_uxTaskPriorityGet			1
-#define INCLUDE_vTaskDelete					1
-#define INCLUDE_vTaskCleanUpResources		0
-#define INCLUDE_vTaskSuspend				1
-#define INCLUDE_vTaskDelayUntil				1
-#define INCLUDE_vTaskDelay					1
-#define INCLUDE_uxTaskGetStackHighWaterMark	1
-#define INCLUDE_eTaskGetState				1
+#define INCLUDE_vTaskPrioritySet				1
+#define INCLUDE_uxTaskPriorityGet				1
+#define INCLUDE_vTaskDelete						1
+#define INCLUDE_vTaskCleanUpResources			0
+#define INCLUDE_vTaskSuspend					1
+#define INCLUDE_vTaskDelayUntil					1
+#define INCLUDE_vTaskDelay						1
+#define INCLUDE_uxTaskGetStackHighWaterMark		1
+#define INCLUDE_xTaskGetSchedulerState			1
+#define INCLUDE_xTimerGetTimerDaemonTaskHandle	1
+#define INCLUDE_xTaskGetIdleTaskHandle			1
+#define INCLUDE_xSemaphoreGetMutexHolder		1
+#define INCLUDE_eTaskGetState					1
+#define INCLUDE_xTimerPendFunctionCall			1
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
@@ -80,9 +93,21 @@ readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
-#define configKERNEL_INTERRUPT_PRIORITY 		( ( unsigned char ) 7 << ( unsigned char ) 5 )	/* Priority 7, or 255 as only the top three bits are implemented.  This is the lowest priority. */
+#define configKERNEL_INTERRUPT_PRIORITY 		( 255 )	/* All eight bits as QEMU doesn't model the priority bits. */
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( ( unsigned char ) 5 << ( unsigned char ) 5 )  /* Priority 5, or 160 as only the top three bits are implemented. */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( 5 )
+
+/* Use the Cortex-M3 optimised task selection rather than the generic C code
+version. */
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+
+/* The test that checks the trigger level on stream buffers requires an
+allowable margin of error on slower processors (slower than the Win32
+machine on which the test is developed). */
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
+
+void vAssertCalled( const char *pcFile, unsigned long ulLine );
+#define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 
 #endif /* FREERTOS_CONFIG_H */

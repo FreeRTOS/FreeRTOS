@@ -1,0 +1,1093 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memcpy.o)
+                              ../../../Source/queue.o (memcpy)
+c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+                              ../../Common/Minimal/IntQueue.o (memset)
+c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+                              ../../../Source/tasks.o (strcpy)
+c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+                              ../../../Source/tasks.o (strlen)
+
+Allocating common symbols
+Common symbol       size              file
+
+xHighPriorityTask   0x4               ../../Common/Minimal/QPeek.o
+xMediumPriorityTask
+                    0x4               ../../Common/Minimal/QPeek.o
+xQueueRegistry      0x50              ../../../Source/queue.o
+xHighPriorityNormallyEmptyTask2
+                    0x4               ../../Common/Minimal/IntQueue.o
+xHighPriorityNormallyFullTask1
+                    0x4               ../../Common/Minimal/IntQueue.o
+xHighPriorityNormallyEmptyTask1
+                    0x4               ../../Common/Minimal/IntQueue.o
+xHighestPriorityTask
+                    0x4               ../../Common/Minimal/QPeek.o
+xCreatedTask        0x4               ../../Common/Minimal/death.o
+xHighPriorityNormallyFullTask2
+                    0x4               ../../Common/Minimal/IntQueue.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x00000000         0x00040000         xr
+SRAM             0x20000000         0x00010000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD main.o
+LOAD ../../Common/Minimal/BlockQ.o
+LOAD ../../Common/Minimal/blocktim.o
+LOAD ../../Common/Minimal/death.o
+LOAD ../../Common/Minimal/integer.o
+LOAD ../../Common/Minimal/PollQ.o
+LOAD ../../Common/Minimal/semtest.o
+LOAD ../../Common/Minimal/GenQTest.o
+LOAD ../../Common/Minimal/QPeek.o
+LOAD ../../Common/Minimal/recmutex.o
+LOAD ../../Common/Minimal/IntQueue.o
+LOAD ../../../Source/list.o
+LOAD ../../../Source/queue.o
+LOAD ../../../Source/tasks.o
+LOAD ../../../Source/portable/GCC/ARM_CM3/port.o
+LOAD ../../../Source/portable/MemMang/heap_4.o
+LOAD startup.o
+LOAD ../../Common/drivers/LuminaryMicro/arm-none-eabi-gcc/libdriver.a
+LOAD ../../Common/drivers/LuminaryMicro/arm-none-eabi-gcc/libgr.a
+START GROUP
+LOAD c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a
+LOAD c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc.a
+END GROUP
+
+.text           0x00000000     0x5c08
+ *(.isr_vector)
+ .isr_vector    0x00000000       0xf0 startup.o
+                0x00000000                g_pfnVectors
+ *(.text*)
+ .text          0x000000f0        0x0 main.o
+ .text.main     0x000000f0       0x3e main.o
+                0x000000f0                main
+ .text.vApplicationTickHook
+                0x0000012e        0xc main.o
+                0x0000012e                vApplicationTickHook
+ .text.vApplicationStackOverflowHook
+                0x0000013a        0xc main.o
+                0x0000013a                vApplicationStackOverflowHook
+ .text          0x00000146        0x0 ../../Common/Minimal/BlockQ.o
+ *fill*         0x00000146        0x2 
+ .text.vStartBlockingQueueTasks
+                0x00000148      0x1c4 ../../Common/Minimal/BlockQ.o
+                0x00000148                vStartBlockingQueueTasks
+ .text.vBlockingQueueProducer
+                0x0000030c       0x56 ../../Common/Minimal/BlockQ.o
+ .text.vBlockingQueueConsumer
+                0x00000362       0x60 ../../Common/Minimal/BlockQ.o
+ *fill*         0x000003c2        0x2 
+ .text.xAreBlockingQueuesStillRunning
+                0x000003c4       0x90 ../../Common/Minimal/BlockQ.o
+                0x000003c4                xAreBlockingQueuesStillRunning
+ .text          0x00000454        0x0 ../../Common/Minimal/blocktim.o
+ .text.vCreateBlockTimeTasks
+                0x00000454       0x7c ../../Common/Minimal/blocktim.o
+                0x00000454                vCreateBlockTimeTasks
+ .text.vPrimaryBlockTimeTestTask
+                0x000004d0      0x2d4 ../../Common/Minimal/blocktim.o
+ .text.vSecondaryBlockTimeTestTask
+                0x000007a4       0xd8 ../../Common/Minimal/blocktim.o
+ .text.xAreBlockTimeTestTasksStillRunning
+                0x0000087c       0x68 ../../Common/Minimal/blocktim.o
+                0x0000087c                xAreBlockTimeTestTasksStillRunning
+ .text          0x000008e4        0x0 ../../Common/Minimal/death.o
+ .text.vCreateSuicidalTasks
+                0x000008e4       0x5c ../../Common/Minimal/death.o
+                0x000008e4                vCreateSuicidalTasks
+ .text.vSuicidalTask
+                0x00000940       0x50 ../../Common/Minimal/death.o
+ .text.vCreateTasks
+                0x00000990       0x84 ../../Common/Minimal/death.o
+ .text.xIsCreateTaskStillRunning
+                0x00000a14       0x74 ../../Common/Minimal/death.o
+                0x00000a14                xIsCreateTaskStillRunning
+ .text          0x00000a88        0x0 ../../Common/Minimal/integer.o
+ .text.vStartIntegerMathTasks
+                0x00000a88       0x60 ../../Common/Minimal/integer.o
+                0x00000a88                vStartIntegerMathTasks
+ .text.vCompeteingIntMathTask
+                0x00000ae8       0x68 ../../Common/Minimal/integer.o
+ .text.xAreIntegerMathsTaskStillRunning
+                0x00000b50       0x54 ../../Common/Minimal/integer.o
+                0x00000b50                xAreIntegerMathsTaskStillRunning
+ .text          0x00000ba4        0x0 ../../Common/Minimal/PollQ.o
+ .text.vStartPolledQueueTasks
+                0x00000ba4       0x7c ../../Common/Minimal/PollQ.o
+                0x00000ba4                vStartPolledQueueTasks
+ .text.vPolledQueueProducer
+                0x00000c20       0x6c ../../Common/Minimal/PollQ.o
+ .text.vPolledQueueConsumer
+                0x00000c8c       0x74 ../../Common/Minimal/PollQ.o
+ .text.xArePollingQueuesStillRunning
+                0x00000d00       0x40 ../../Common/Minimal/PollQ.o
+                0x00000d00                xArePollingQueuesStillRunning
+ .text          0x00000d40        0x0 ../../Common/Minimal/semtest.o
+ .text.vStartSemaphoreTasks
+                0x00000d40      0x158 ../../Common/Minimal/semtest.o
+                0x00000d40                vStartSemaphoreTasks
+ .text.prvSemaphoreTest
+                0x00000e98      0x104 ../../Common/Minimal/semtest.o
+ .text.xAreSemaphoreTasksStillRunning
+                0x00000f9c       0x5c ../../Common/Minimal/semtest.o
+                0x00000f9c                xAreSemaphoreTasksStillRunning
+ .text          0x00000ff8        0x0 ../../Common/Minimal/GenQTest.o
+ .text.vStartGenericQueueTasks
+                0x00000ff8       0xd4 ../../Common/Minimal/GenQTest.o
+                0x00000ff8                vStartGenericQueueTasks
+ .text.prvSendFrontAndBackTest
+                0x000010cc      0x300 ../../Common/Minimal/GenQTest.o
+ .text.prvTakeTwoMutexesReturnInDifferentOrder
+                0x000013cc      0x130 ../../Common/Minimal/GenQTest.o
+ .text.prvTakeTwoMutexesReturnInSameOrder
+                0x000014fc      0x110 ../../Common/Minimal/GenQTest.o
+ .text.prvLowPriorityMutexTask
+                0x0000160c       0x40 ../../Common/Minimal/GenQTest.o
+ .text.prvMediumPriorityMutexTask
+                0x0000164c       0x20 ../../Common/Minimal/GenQTest.o
+ .text.prvHighPriorityMutexTask
+                0x0000166c       0x4c ../../Common/Minimal/GenQTest.o
+ .text.xAreGenericQueueTasksStillRunning
+                0x000016b8       0x64 ../../Common/Minimal/GenQTest.o
+                0x000016b8                xAreGenericQueueTasksStillRunning
+ .text          0x0000171c        0x0 ../../Common/Minimal/QPeek.o
+ .text.vStartQueuePeekTasks
+                0x0000171c       0xc4 ../../Common/Minimal/QPeek.o
+                0x0000171c                vStartQueuePeekTasks
+ .text.prvHighestPriorityPeekTask
+                0x000017e0       0xf8 ../../Common/Minimal/QPeek.o
+ .text.prvHighPriorityPeekTask
+                0x000018d8       0x8c ../../Common/Minimal/QPeek.o
+ .text.prvMediumPriorityPeekTask
+                0x00001964       0x68 ../../Common/Minimal/QPeek.o
+ .text.prvLowPriorityPeekTask
+                0x000019cc      0x10c ../../Common/Minimal/QPeek.o
+ .text.xAreQueuePeekTasksStillRunning
+                0x00001ad8       0x40 ../../Common/Minimal/QPeek.o
+                0x00001ad8                xAreQueuePeekTasksStillRunning
+ .text          0x00001b18        0x0 ../../Common/Minimal/recmutex.o
+ .text.vStartRecursiveMutexTasks
+                0x00001b18       0xa8 ../../Common/Minimal/recmutex.o
+                0x00001b18                vStartRecursiveMutexTasks
+ .text.prvRecursiveMutexControllingTask
+                0x00001bc0       0xc0 ../../Common/Minimal/recmutex.o
+ .text.prvRecursiveMutexBlockingTask
+                0x00001c80       0x94 ../../Common/Minimal/recmutex.o
+ .text.prvRecursiveMutexPollingTask
+                0x00001d14       0x9c ../../Common/Minimal/recmutex.o
+ .text.xAreRecursiveMutexTasksStillRunning
+                0x00001db0       0x94 ../../Common/Minimal/recmutex.o
+                0x00001db0                xAreRecursiveMutexTasksStillRunning
+ .text          0x00001e44        0x0 ../../Common/Minimal/IntQueue.o
+ .text.vStartInterruptQueueTasks
+                0x00001e44      0x138 ../../Common/Minimal/IntQueue.o
+                0x00001e44                vStartInterruptQueueTasks
+ .text.prvRecordValue_NormallyFull
+                0x00001f7c       0x40 ../../Common/Minimal/IntQueue.o
+ .text.prvRecordValue_NormallyEmpty
+                0x00001fbc       0x40 ../../Common/Minimal/IntQueue.o
+ .text.prvQueueAccessLogError
+                0x00001ffc       0x28 ../../Common/Minimal/IntQueue.o
+ .text.prvHigherPriorityNormallyEmptyTask
+                0x00002024      0x160 ../../Common/Minimal/IntQueue.o
+ .text.prvLowerPriorityNormallyEmptyTask
+                0x00002184       0xb0 ../../Common/Minimal/IntQueue.o
+ .text.prv1stHigherPriorityNormallyFullTask
+                0x00002234      0x138 ../../Common/Minimal/IntQueue.o
+ .text.prv2ndHigherPriorityNormallyFullTask
+                0x0000236c       0x98 ../../Common/Minimal/IntQueue.o
+ .text.prvLowerPriorityNormallyFullTask
+                0x00002404       0x9c ../../Common/Minimal/IntQueue.o
+ .text.xFirstTimerHandler
+                0x000024a0      0x170 ../../Common/Minimal/IntQueue.o
+                0x000024a0                xFirstTimerHandler
+ .text.xSecondTimerHandler
+                0x00002610      0x208 ../../Common/Minimal/IntQueue.o
+                0x00002610                xSecondTimerHandler
+ .text.xAreIntQueueTasksStillRunning
+                0x00002818       0xa0 ../../Common/Minimal/IntQueue.o
+                0x00002818                xAreIntQueueTasksStillRunning
+ .text          0x000028b8        0x0 ../../../Source/list.o
+ .text.vListInitialise
+                0x000028b8       0x3e ../../../Source/list.o
+                0x000028b8                vListInitialise
+ .text.vListInitialiseItem
+                0x000028f6       0x18 ../../../Source/list.o
+                0x000028f6                vListInitialiseItem
+ .text.vListInsertEnd
+                0x0000290e       0x46 ../../../Source/list.o
+                0x0000290e                vListInsertEnd
+ .text.vListInsert
+                0x00002954       0x70 ../../../Source/list.o
+                0x00002954                vListInsert
+ .text.uxListRemove
+                0x000029c4       0x52 ../../../Source/list.o
+                0x000029c4                uxListRemove
+ .text          0x00002a16        0x0 ../../../Source/queue.o
+ .text.xQueueGenericReset
+                0x00002a16       0xa4 ../../../Source/queue.o
+                0x00002a16                xQueueGenericReset
+ .text.xQueueGenericCreate
+                0x00002aba       0x7e ../../../Source/queue.o
+                0x00002aba                xQueueGenericCreate
+ .text.xQueueCreateMutex
+                0x00002b38       0x84 ../../../Source/queue.o
+                0x00002b38                xQueueCreateMutex
+ .text.xQueueGiveMutexRecursive
+                0x00002bbc       0x4c ../../../Source/queue.o
+                0x00002bbc                xQueueGiveMutexRecursive
+ .text.xQueueTakeMutexRecursive
+                0x00002c08       0x54 ../../../Source/queue.o
+                0x00002c08                xQueueTakeMutexRecursive
+ .text.xQueueGenericSend
+                0x00002c5c      0x11e ../../../Source/queue.o
+                0x00002c5c                xQueueGenericSend
+ .text.xQueueGenericSendFromISR
+                0x00002d7a       0x88 ../../../Source/queue.o
+                0x00002d7a                xQueueGenericSendFromISR
+ .text.xQueueGiveFromISR
+                0x00002e02       0x7e ../../../Source/queue.o
+                0x00002e02                xQueueGiveFromISR
+ .text.xQueueGenericReceive
+                0x00002e80      0x16c ../../../Source/queue.o
+                0x00002e80                xQueueGenericReceive
+ .text.xQueueReceiveFromISR
+                0x00002fec       0x84 ../../../Source/queue.o
+                0x00002fec                xQueueReceiveFromISR
+ .text.xQueuePeekFromISR
+                0x00003070       0x4a ../../../Source/queue.o
+                0x00003070                xQueuePeekFromISR
+ .text.uxQueueMessagesWaiting
+                0x000030ba       0x20 ../../../Source/queue.o
+                0x000030ba                uxQueueMessagesWaiting
+ .text.uxQueueSpacesAvailable
+                0x000030da       0x2a ../../../Source/queue.o
+                0x000030da                uxQueueSpacesAvailable
+ .text.uxQueueMessagesWaitingFromISR
+                0x00003104       0x1a ../../../Source/queue.o
+                0x00003104                uxQueueMessagesWaitingFromISR
+ .text.vQueueDelete
+                0x0000311e       0x20 ../../../Source/queue.o
+                0x0000311e                vQueueDelete
+ .text.uxQueueGetQueueNumber
+                0x0000313e       0x16 ../../../Source/queue.o
+                0x0000313e                uxQueueGetQueueNumber
+ .text.vQueueSetQueueNumber
+                0x00003154       0x1a ../../../Source/queue.o
+                0x00003154                vQueueSetQueueNumber
+ .text.ucQueueGetQueueType
+                0x0000316e       0x18 ../../../Source/queue.o
+                0x0000316e                ucQueueGetQueueType
+ .text.prvCopyDataToQueue
+                0x00003186       0xd6 ../../../Source/queue.o
+ .text.prvCopyDataFromQueue
+                0x0000325c       0x4c ../../../Source/queue.o
+ .text.prvUnlockQueue
+                0x000032a8       0x98 ../../../Source/queue.o
+ .text.prvIsQueueEmpty
+                0x00003340       0x2c ../../../Source/queue.o
+ .text.xQueueIsQueueEmptyFromISR
+                0x0000336c       0x26 ../../../Source/queue.o
+                0x0000336c                xQueueIsQueueEmptyFromISR
+ .text.prvIsQueueFull
+                0x00003392       0x30 ../../../Source/queue.o
+ .text.xQueueIsQueueFullFromISR
+                0x000033c2       0x2a ../../../Source/queue.o
+                0x000033c2                xQueueIsQueueFullFromISR
+ .text.vQueueAddToRegistry
+                0x000033ec       0x50 ../../../Source/queue.o
+                0x000033ec                vQueueAddToRegistry
+ .text.vQueueUnregisterQueue
+                0x0000343c       0x48 ../../../Source/queue.o
+                0x0000343c                vQueueUnregisterQueue
+ .text          0x00003484        0x0 ../../../Source/tasks.o
+ .text.xTaskGenericCreate
+                0x00003484      0x13c ../../../Source/tasks.o
+                0x00003484                xTaskGenericCreate
+ .text.vTaskDelete
+                0x000035c0       0xd8 ../../../Source/tasks.o
+                0x000035c0                vTaskDelete
+ .text.vTaskDelayUntil
+                0x00003698       0xbc ../../../Source/tasks.o
+                0x00003698                vTaskDelayUntil
+ .text.vTaskDelay
+                0x00003754       0x74 ../../../Source/tasks.o
+                0x00003754                vTaskDelay
+ .text.eTaskGetState
+                0x000037c8       0x90 ../../../Source/tasks.o
+                0x000037c8                eTaskGetState
+ .text.uxTaskPriorityGet
+                0x00003858       0x34 ../../../Source/tasks.o
+                0x00003858                uxTaskPriorityGet
+ .text.uxTaskPriorityGetFromISR
+                0x0000388c       0x38 ../../../Source/tasks.o
+                0x0000388c                uxTaskPriorityGetFromISR
+ .text.vTaskPrioritySet
+                0x000038c4      0x130 ../../../Source/tasks.o
+                0x000038c4                vTaskPrioritySet
+ .text.vTaskSuspend
+                0x000039f4       0xe0 ../../../Source/tasks.o
+                0x000039f4                vTaskSuspend
+ .text.prvTaskIsTaskSuspended
+                0x00003ad4       0x58 ../../../Source/tasks.o
+ .text.vTaskResume
+                0x00003b2c       0x90 ../../../Source/tasks.o
+                0x00003b2c                vTaskResume
+ .text.xTaskResumeFromISR
+                0x00003bbc       0xa8 ../../../Source/tasks.o
+                0x00003bbc                xTaskResumeFromISR
+ .text.vTaskStartScheduler
+                0x00003c64       0x64 ../../../Source/tasks.o
+                0x00003c64                vTaskStartScheduler
+ .text.vTaskEndScheduler
+                0x00003cc8       0x1c ../../../Source/tasks.o
+                0x00003cc8                vTaskEndScheduler
+ .text.vTaskSuspendAll
+                0x00003ce4       0x1c ../../../Source/tasks.o
+                0x00003ce4                vTaskSuspendAll
+ .text.xTaskResumeAll
+                0x00003d00       0xfc ../../../Source/tasks.o
+                0x00003d00                xTaskResumeAll
+ .text.xTaskGetTickCount
+                0x00003dfc       0x1c ../../../Source/tasks.o
+                0x00003dfc                xTaskGetTickCount
+ .text.xTaskGetTickCountFromISR
+                0x00003e18       0x20 ../../../Source/tasks.o
+                0x00003e18                xTaskGetTickCountFromISR
+ .text.uxTaskGetNumberOfTasks
+                0x00003e38       0x14 ../../../Source/tasks.o
+                0x00003e38                uxTaskGetNumberOfTasks
+ .text.uxTaskGetSystemState
+                0x00003e4c       0xf4 ../../../Source/tasks.o
+                0x00003e4c                uxTaskGetSystemState
+ .text.xTaskIncrementTick
+                0x00003f40      0x16c ../../../Source/tasks.o
+                0x00003f40                xTaskIncrementTick
+ .text.vTaskSwitchContext
+                0x000040ac       0xcc ../../../Source/tasks.o
+                0x000040ac                vTaskSwitchContext
+ .text.vTaskPlaceOnEventList
+                0x00004178       0x84 ../../../Source/tasks.o
+                0x00004178                vTaskPlaceOnEventList
+ .text.vTaskPlaceOnUnorderedEventList
+                0x000041fc       0x90 ../../../Source/tasks.o
+                0x000041fc                vTaskPlaceOnUnorderedEventList
+ .text.xTaskRemoveFromEventList
+                0x0000428c       0xa8 ../../../Source/tasks.o
+                0x0000428c                xTaskRemoveFromEventList
+ .text.xTaskRemoveFromUnorderedEventList
+                0x00004334       0x90 ../../../Source/tasks.o
+                0x00004334                xTaskRemoveFromUnorderedEventList
+ .text.vTaskSetTimeOutState
+                0x000043c4       0x2c ../../../Source/tasks.o
+                0x000043c4                vTaskSetTimeOutState
+ .text.xTaskCheckForTimeOut
+                0x000043f0       0x88 ../../../Source/tasks.o
+                0x000043f0                xTaskCheckForTimeOut
+ .text.vTaskMissedYield
+                0x00004478       0x18 ../../../Source/tasks.o
+                0x00004478                vTaskMissedYield
+ .text.uxTaskGetTaskNumber
+                0x00004490       0x2a ../../../Source/tasks.o
+                0x00004490                uxTaskGetTaskNumber
+ .text.vTaskSetTaskNumber
+                0x000044ba       0x24 ../../../Source/tasks.o
+                0x000044ba                vTaskSetTaskNumber
+ .text.prvIdleTask
+                0x000044de        0xe ../../../Source/tasks.o
+ .text.prvInitialiseTCBVariables
+                0x000044ec       0xa8 ../../../Source/tasks.o
+ .text.prvInitialiseTaskLists
+                0x00004594       0x80 ../../../Source/tasks.o
+ .text.prvCheckTasksWaitingTermination
+                0x00004614       0x78 ../../../Source/tasks.o
+ .text.prvAddCurrentTaskToDelayedList
+                0x0000468c       0x6c ../../../Source/tasks.o
+ .text.prvAllocateTCBAndStack
+                0x000046f8       0x6c ../../../Source/tasks.o
+ .text.prvListTaskWithinSingleList
+                0x00004764      0x116 ../../../Source/tasks.o
+ .text.prvTaskCheckFreeStackSpace
+                0x0000487a       0x36 ../../../Source/tasks.o
+ .text.uxTaskGetStackHighWaterMark
+                0x000048b0       0x38 ../../../Source/tasks.o
+                0x000048b0                uxTaskGetStackHighWaterMark
+ .text.prvDeleteTCB
+                0x000048e8       0x20 ../../../Source/tasks.o
+ .text.prvResetNextTaskUnblockTime
+                0x00004908       0x48 ../../../Source/tasks.o
+ .text.xTaskGetCurrentTaskHandle
+                0x00004950       0x1c ../../../Source/tasks.o
+                0x00004950                xTaskGetCurrentTaskHandle
+ .text.vTaskPriorityInherit
+                0x0000496c       0xec ../../../Source/tasks.o
+                0x0000496c                vTaskPriorityInherit
+ .text.xTaskPriorityDisinherit
+                0x00004a58       0xc8 ../../../Source/tasks.o
+                0x00004a58                xTaskPriorityDisinherit
+ .text.prvWriteNameToBuffer
+                0x00004b20       0x4a ../../../Source/tasks.o
+ *fill*         0x00004b6a        0x2 
+ .text.vTaskList
+                0x00004b6c       0xfc ../../../Source/tasks.o
+                0x00004b6c                vTaskList
+ .text.uxTaskResetEventItemValue
+                0x00004c68       0x30 ../../../Source/tasks.o
+                0x00004c68                uxTaskResetEventItemValue
+ .text.pvTaskIncrementMutexHeldCount
+                0x00004c98       0x28 ../../../Source/tasks.o
+                0x00004c98                pvTaskIncrementMutexHeldCount
+ .text.ulTaskNotifyTake
+                0x00004cc0       0xd8 ../../../Source/tasks.o
+                0x00004cc0                ulTaskNotifyTake
+ .text.xTaskNotifyWait
+                0x00004d98       0xfc ../../../Source/tasks.o
+                0x00004d98                xTaskNotifyWait
+ .text.xTaskGenericNotify
+                0x00004e94       0xfc ../../../Source/tasks.o
+                0x00004e94                xTaskGenericNotify
+ .text.xTaskGenericNotifyFromISR
+                0x00004f90      0x124 ../../../Source/tasks.o
+                0x00004f90                xTaskGenericNotifyFromISR
+ .text.vTaskNotifyGiveFromISR
+                0x000050b4       0xc0 ../../../Source/tasks.o
+                0x000050b4                vTaskNotifyGiveFromISR
+ .text.xTaskNotifyStateClear
+                0x00005174       0x50 ../../../Source/tasks.o
+                0x00005174                xTaskNotifyStateClear
+ .text          0x000051c4        0x0 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .text.pxPortInitialiseStack
+                0x000051c4       0x54 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x000051c4                pxPortInitialiseStack
+ .text.prvTaskExitError
+                0x00005218        0xa ../../../Source/portable/GCC/ARM_CM3/port.o
+ *fill*         0x00005222        0x2 
+ .text.vPortSVCHandler
+                0x00005224       0x28 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x00005224                vPortSVCHandler
+ .text.prvPortStartFirstTask
+                0x0000524c       0x20 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .text.xPortStartScheduler
+                0x0000526c       0x3c ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x0000526c                xPortStartScheduler
+ .text.vPortEndScheduler
+                0x000052a8        0xc ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x000052a8                vPortEndScheduler
+ .text.vPortYield
+                0x000052b4       0x20 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x000052b4                vPortYield
+ .text.vPortEnterCritical
+                0x000052d4       0x24 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x000052d4                vPortEnterCritical
+ .text.vPortExitCritical
+                0x000052f8       0x24 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x000052f8                vPortExitCritical
+ .text.ulPortSetInterruptMask
+                0x0000531c       0x12 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x0000531c                ulPortSetInterruptMask
+ .text.vPortClearInterruptMask
+                0x0000532e        0x8 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x0000532e                vPortClearInterruptMask
+ *fill*         0x00005336        0x2 
+ .text.xPortPendSVHandler
+                0x00005338       0x48 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x00005338                xPortPendSVHandler
+ .text.xPortSysTickHandler
+                0x00005380       0x28 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x00005380                xPortSysTickHandler
+ .text.vPortSetupTimerInterrupt
+                0x000053a8       0x24 ../../../Source/portable/GCC/ARM_CM3/port.o
+                0x000053a8                vPortSetupTimerInterrupt
+ .text          0x000053cc        0x0 ../../../Source/portable/MemMang/heap_4.o
+ .text.pvPortMalloc
+                0x000053cc      0x128 ../../../Source/portable/MemMang/heap_4.o
+                0x000053cc                pvPortMalloc
+ .text.vPortFree
+                0x000054f4       0x74 ../../../Source/portable/MemMang/heap_4.o
+                0x000054f4                vPortFree
+ .text.xPortGetFreeHeapSize
+                0x00005568       0x14 ../../../Source/portable/MemMang/heap_4.o
+                0x00005568                xPortGetFreeHeapSize
+ .text.xPortGetMinimumEverFreeHeapSize
+                0x0000557c       0x14 ../../../Source/portable/MemMang/heap_4.o
+                0x0000557c                xPortGetMinimumEverFreeHeapSize
+ .text.vPortInitialiseBlocks
+                0x00005590        0xc ../../../Source/portable/MemMang/heap_4.o
+                0x00005590                vPortInitialiseBlocks
+ .text.prvHeapInit
+                0x0000559c       0xc4 ../../../Source/portable/MemMang/heap_4.o
+ .text.prvInsertBlockIntoFreeList
+                0x00005660       0xb0 ../../../Source/portable/MemMang/heap_4.o
+ .text          0x00005710        0x0 startup.o
+ .text.NmiSR    0x00005710        0x2 startup.o
+ .text.FaultISR
+                0x00005712        0x2 startup.o
+ .text.IntDefaultHandler
+                0x00005714        0x2 startup.o
+ *fill*         0x00005716        0x2 
+ .text.ResetISR
+                0x00005718       0x64 startup.o
+                0x00005718                ResetISR
+ .text.uipprintf
+                0x0000577c        0x8 startup.o
+                0x0000577c                uipprintf
+ .text          0x00005784       0xec c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memcpy.o)
+                0x00005784                memcpy
+ .text          0x00005870        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+ .text.memset   0x00005870       0xa0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+                0x00005870                memset
+ .text          0x00005910        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+ .text.strcpy   0x00005910       0xbc c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+                0x00005910                strcpy
+ .text          0x000059cc        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+ .text.strlen   0x000059cc       0x5c c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+                0x000059cc                strlen
+ *(.rodata*)
+ .rodata        0x00005a28       0x30 ../../Common/Minimal/BlockQ.o
+ .rodata        0x00005a58       0x23 ../../Common/Minimal/blocktim.o
+ *fill*         0x00005a7b        0x1 
+ .rodata.uxMaxNumberOfExtraTasksRunning
+                0x00005a7c        0x4 ../../Common/Minimal/death.o
+ .rodata        0x00005a80       0x18 ../../Common/Minimal/death.o
+ .rodata        0x00005a98        0x8 ../../Common/Minimal/integer.o
+ .rodata        0x00005aa0       0x20 ../../Common/Minimal/PollQ.o
+ .rodata        0x00005ac0       0x3f ../../Common/Minimal/semtest.o
+ *fill*         0x00005aff        0x1 
+ .rodata        0x00005b00       0x3f ../../Common/Minimal/GenQTest.o
+ *fill*         0x00005b3f        0x1 
+ .rodata        0x00005b40       0x33 ../../Common/Minimal/QPeek.o
+ *fill*         0x00005b73        0x1 
+ .rodata        0x00005b74       0x25 ../../Common/Minimal/recmutex.o
+ *fill*         0x00005b99        0x3 
+ .rodata        0x00005b9c       0x4e ../../Common/Minimal/IntQueue.o
+ *fill*         0x00005bea        0x2 
+ .rodata        0x00005bec       0x17 ../../../Source/tasks.o
+ *fill*         0x00005c03        0x1 
+ .rodata.xHeapStructSize
+                0x00005c04        0x4 ../../../Source/portable/MemMang/heap_4.o
+                0x00005c08                _etext = .
+
+.glue_7         0x00005c08        0x0
+ .glue_7        0x00005c08        0x0 linker stubs
+
+.glue_7t        0x00005c08        0x0
+ .glue_7t       0x00005c08        0x0 linker stubs
+
+.vfp11_veneer   0x00005c08        0x0
+ .vfp11_veneer  0x00005c08        0x0 linker stubs
+
+.v4_bx          0x00005c08        0x0
+ .v4_bx         0x00005c08        0x0 linker stubs
+
+.iplt           0x00005c08        0x0
+ .iplt          0x00005c08        0x0 main.o
+
+.rel.dyn        0x00005c08        0x0
+ .rel.iplt      0x00005c08        0x0 main.o
+
+.data           0x20000000        0xc load address 0x00005c08
+                0x20000000                _data = .
+ *(vtable)
+ *(.data*)
+ .data          0x20000000        0x0 main.o
+ .data          0x20000000        0x0 ../../Common/Minimal/BlockQ.o
+ .data          0x20000000        0x0 ../../Common/Minimal/blocktim.o
+ .data          0x20000000        0x0 ../../Common/Minimal/death.o
+ .data.usLastCreationCount.5099
+                0x20000000        0x2 ../../Common/Minimal/death.o
+ .data          0x20000002        0x0 ../../Common/Minimal/integer.o
+ .data          0x20000002        0x0 ../../Common/Minimal/PollQ.o
+ .data          0x20000002        0x0 ../../Common/Minimal/semtest.o
+ .data          0x20000002        0x0 ../../Common/Minimal/GenQTest.o
+ .data          0x20000002        0x0 ../../Common/Minimal/QPeek.o
+ .data          0x20000002        0x0 ../../Common/Minimal/recmutex.o
+ .data          0x20000002        0x0 ../../Common/Minimal/IntQueue.o
+ *fill*         0x20000002        0x2 
+ .data.xErrorStatus
+                0x20000004        0x4 ../../Common/Minimal/IntQueue.o
+ .data          0x20000008        0x0 ../../../Source/list.o
+ .data          0x20000008        0x0 ../../../Source/queue.o
+ .data          0x20000008        0x0 ../../../Source/tasks.o
+ .data          0x20000008        0x0 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .data.uxCriticalNesting
+                0x20000008        0x4 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .data          0x2000000c        0x0 ../../../Source/portable/MemMang/heap_4.o
+ .data          0x2000000c        0x0 startup.o
+ .data          0x2000000c        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memcpy.o)
+ .data          0x2000000c        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+ .data          0x2000000c        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+ .data          0x2000000c        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+                0x2000000c                _edata = .
+
+.igot.plt       0x2000000c        0x0 load address 0x00005c14
+ .igot.plt      0x2000000c        0x0 main.o
+
+.bss            0x2000000c     0x63c4 load address 0x00005c14
+                0x2000000c                _bss = .
+ *(.bss*)
+ .bss           0x2000000c        0x0 main.o
+ .bss           0x2000000c        0x0 ../../Common/Minimal/BlockQ.o
+ .bss.sBlockingConsumerCount
+                0x2000000c        0x6 ../../Common/Minimal/BlockQ.o
+ *fill*         0x20000012        0x2 
+ .bss.sBlockingProducerCount
+                0x20000014        0x6 ../../Common/Minimal/BlockQ.o
+ *fill*         0x2000001a        0x2 
+ .bss.sLastBlockingConsumerCount.5226
+                0x2000001c        0x6 ../../Common/Minimal/BlockQ.o
+ *fill*         0x20000022        0x2 
+ .bss.sLastBlockingProducerCount.5227
+                0x20000024        0x6 ../../Common/Minimal/BlockQ.o
+ .bss           0x2000002a        0x0 ../../Common/Minimal/blocktim.o
+ *fill*         0x2000002a        0x2 
+ .bss.xTestQueue
+                0x2000002c        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xSecondary
+                0x20000030        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xPrimaryCycles
+                0x20000034        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xSecondaryCycles
+                0x20000038        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xErrorOccurred
+                0x2000003c        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xRunIndicator
+                0x20000040        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xLastPrimaryCycleCount.4633
+                0x20000044        0x4 ../../Common/Minimal/blocktim.o
+ .bss.xLastSecondaryCycleCount.4634
+                0x20000048        0x4 ../../Common/Minimal/blocktim.o
+ .bss           0x2000004c        0x0 ../../Common/Minimal/death.o
+ .bss.usCreationCount
+                0x2000004c        0x2 ../../Common/Minimal/death.o
+ *fill*         0x2000004e        0x2 
+ .bss.uxTasksRunningAtStart
+                0x20000050        0x4 ../../Common/Minimal/death.o
+ .bss.uxTasksRunningNow.5101
+                0x20000054        0x4 ../../Common/Minimal/death.o
+ .bss           0x20000058        0x0 ../../Common/Minimal/integer.o
+ .bss.xTaskCheck
+                0x20000058        0x4 ../../Common/Minimal/integer.o
+ .bss           0x2000005c        0x0 ../../Common/Minimal/PollQ.o
+ .bss.xPollingConsumerCount
+                0x2000005c        0x4 ../../Common/Minimal/PollQ.o
+ .bss.xPollingProducerCount
+                0x20000060        0x4 ../../Common/Minimal/PollQ.o
+ .bss.xPolledQueue.5193
+                0x20000064        0x4 ../../Common/Minimal/PollQ.o
+ .bss           0x20000068        0x0 ../../Common/Minimal/semtest.o
+ .bss.sCheckVariables
+                0x20000068        0x8 ../../Common/Minimal/semtest.o
+ .bss.sNextCheckVariable
+                0x20000070        0x2 ../../Common/Minimal/semtest.o
+ *fill*         0x20000072        0x2 
+ .bss.sLastCheckVariables.5216
+                0x20000074        0x8 ../../Common/Minimal/semtest.o
+ .bss           0x2000007c        0x0 ../../Common/Minimal/GenQTest.o
+ .bss.xErrorDetected
+                0x2000007c        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.ulLoopCounter
+                0x20000080        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.ulLoopCounter2
+                0x20000084        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.ulGuardedVariable
+                0x20000088        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.xHighPriorityMutexTask
+                0x2000008c        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.xMediumPriorityMutexTask
+                0x20000090        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.ulLastLoopCounter.5251
+                0x20000094        0x4 ../../Common/Minimal/GenQTest.o
+ .bss.ulLastLoopCounter2.5252
+                0x20000098        0x4 ../../Common/Minimal/GenQTest.o
+ .bss           0x2000009c        0x0 ../../Common/Minimal/QPeek.o
+ .bss.xErrorDetected
+                0x2000009c        0x4 ../../Common/Minimal/QPeek.o
+ .bss.ulLoopCounter
+                0x200000a0        0x4 ../../Common/Minimal/QPeek.o
+ .bss.ulLastLoopCounter.5229
+                0x200000a4        0x4 ../../Common/Minimal/QPeek.o
+ .bss           0x200000a8        0x0 ../../Common/Minimal/recmutex.o
+ .bss.xMutex    0x200000a8        0x4 ../../Common/Minimal/recmutex.o
+ .bss.xErrorOccurred
+                0x200000ac        0x4 ../../Common/Minimal/recmutex.o
+ .bss.xControllingIsSuspended
+                0x200000b0        0x4 ../../Common/Minimal/recmutex.o
+ .bss.xBlockingIsSuspended
+                0x200000b4        0x4 ../../Common/Minimal/recmutex.o
+ .bss.uxControllingCycles
+                0x200000b8        0x4 ../../Common/Minimal/recmutex.o
+ .bss.uxBlockingCycles
+                0x200000bc        0x4 ../../Common/Minimal/recmutex.o
+ .bss.uxPollingCycles
+                0x200000c0        0x4 ../../Common/Minimal/recmutex.o
+ .bss.xControllingTaskHandle
+                0x200000c4        0x4 ../../Common/Minimal/recmutex.o
+ .bss.xBlockingTaskHandle
+                0x200000c8        0x4 ../../Common/Minimal/recmutex.o
+ .bss.uxLastControllingCycles.4613
+                0x200000cc        0x4 ../../Common/Minimal/recmutex.o
+ .bss.uxLastBlockingCycles.4614
+                0x200000d0        0x4 ../../Common/Minimal/recmutex.o
+ .bss.uxLastPollingCycles.4615
+                0x200000d4        0x4 ../../Common/Minimal/recmutex.o
+ .bss           0x200000d8        0x0 ../../Common/Minimal/IntQueue.o
+ .bss.xNormallyEmptyQueue
+                0x200000d8        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.xNormallyFullQueue
+                0x200000dc        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxHighPriorityLoops1
+                0x200000e0        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxHighPriorityLoops2
+                0x200000e4        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxLowPriorityLoops1
+                0x200000e8        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxLowPriorityLoops2
+                0x200000ec        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.xErrorLine
+                0x200000f0        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.xWasSuspended
+                0x200000f4        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxValueForNormallyEmptyQueue
+                0x200000f8        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxValueForNormallyFullQueue
+                0x200000fc        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.ucNormallyEmptyReceivedValues
+                0x20000100       0xc8 ../../Common/Minimal/IntQueue.o
+ .bss.ucNormallyFullReceivedValues
+                0x200001c8       0xc8 ../../Common/Minimal/IntQueue.o
+ .bss.uxNextOperation.5085
+                0x20000290        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxNextOperation.5094
+                0x20000294        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxLastHighPriorityLoops1.5103
+                0x20000298        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxLastHighPriorityLoops2.5104
+                0x2000029c        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxLastLowPriorityLoops1.5105
+                0x200002a0        0x4 ../../Common/Minimal/IntQueue.o
+ .bss.uxLastLowPriorityLoops2.5106
+                0x200002a4        0x4 ../../Common/Minimal/IntQueue.o
+ .bss           0x200002a8        0x0 ../../../Source/list.o
+ .bss           0x200002a8        0x0 ../../../Source/queue.o
+ .bss           0x200002a8        0x0 ../../../Source/tasks.o
+ .bss.pxCurrentTCB
+                0x200002a8        0x4 ../../../Source/tasks.o
+                0x200002a8                pxCurrentTCB
+ .bss.pxReadyTasksLists
+                0x200002ac       0x64 ../../../Source/tasks.o
+ .bss.xDelayedTaskList1
+                0x20000310       0x14 ../../../Source/tasks.o
+ .bss.xDelayedTaskList2
+                0x20000324       0x14 ../../../Source/tasks.o
+ .bss.pxDelayedTaskList
+                0x20000338        0x4 ../../../Source/tasks.o
+ .bss.pxOverflowDelayedTaskList
+                0x2000033c        0x4 ../../../Source/tasks.o
+ .bss.xPendingReadyList
+                0x20000340       0x14 ../../../Source/tasks.o
+ .bss.xTasksWaitingTermination
+                0x20000354       0x14 ../../../Source/tasks.o
+ .bss.uxTasksDeleted
+                0x20000368        0x4 ../../../Source/tasks.o
+ .bss.xSuspendedTaskList
+                0x2000036c       0x14 ../../../Source/tasks.o
+ .bss.uxCurrentNumberOfTasks
+                0x20000380        0x4 ../../../Source/tasks.o
+ .bss.xTickCount
+                0x20000384        0x4 ../../../Source/tasks.o
+ .bss.uxTopReadyPriority
+                0x20000388        0x4 ../../../Source/tasks.o
+ .bss.xSchedulerRunning
+                0x2000038c        0x4 ../../../Source/tasks.o
+ .bss.uxPendedTicks
+                0x20000390        0x4 ../../../Source/tasks.o
+ .bss.xYieldPending
+                0x20000394        0x4 ../../../Source/tasks.o
+ .bss.xNumOfOverflows
+                0x20000398        0x4 ../../../Source/tasks.o
+ .bss.uxTaskNumber
+                0x2000039c        0x4 ../../../Source/tasks.o
+ .bss.xNextTaskUnblockTime
+                0x200003a0        0x4 ../../../Source/tasks.o
+ .bss.uxSchedulerSuspended
+                0x200003a4        0x4 ../../../Source/tasks.o
+ .bss           0x200003a8        0x0 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .bss           0x200003a8        0x0 ../../../Source/portable/MemMang/heap_4.o
+ .bss.ucHeap    0x200003a8     0x5dc0 ../../../Source/portable/MemMang/heap_4.o
+ .bss.xStart    0x20006168        0x8 ../../../Source/portable/MemMang/heap_4.o
+ .bss.pxEnd     0x20006170        0x4 ../../../Source/portable/MemMang/heap_4.o
+ .bss.xFreeBytesRemaining
+                0x20006174        0x4 ../../../Source/portable/MemMang/heap_4.o
+ .bss.xMinimumEverFreeBytesRemaining
+                0x20006178        0x4 ../../../Source/portable/MemMang/heap_4.o
+ .bss.xBlockAllocatedBit
+                0x2000617c        0x4 ../../../Source/portable/MemMang/heap_4.o
+ .bss           0x20006180        0x0 startup.o
+ .bss.pulStack  0x20006180      0x1e0 startup.o
+ .bss           0x20006360        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memcpy.o)
+ .bss           0x20006360        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+ .bss           0x20006360        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+ .bss           0x20006360        0x0 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+ *(COMMON)
+ COMMON         0x20006360        0x4 ../../Common/Minimal/death.o
+                0x20006360                xCreatedTask
+ COMMON         0x20006364        0xc ../../Common/Minimal/QPeek.o
+                0x20006364                xHighPriorityTask
+                0x20006368                xMediumPriorityTask
+                0x2000636c                xHighestPriorityTask
+ COMMON         0x20006370       0x10 ../../Common/Minimal/IntQueue.o
+                0x20006370                xHighPriorityNormallyEmptyTask2
+                0x20006374                xHighPriorityNormallyFullTask1
+                0x20006378                xHighPriorityNormallyEmptyTask1
+                0x2000637c                xHighPriorityNormallyFullTask2
+ COMMON         0x20006380       0x50 ../../../Source/queue.o
+                0x20006380                xQueueRegistry
+                0x200063d0                _ebss = .
+OUTPUT(RTOSDemo.axf elf32-littlearm)
+
+.debug_info     0x00000000     0xbd5f
+ .debug_info    0x00000000      0x996 main.o
+ .debug_info    0x00000996      0xc0d ../../Common/Minimal/BlockQ.o
+ .debug_info    0x000015a3      0x28b ../../Common/Minimal/blocktim.o
+ .debug_info    0x0000182e      0xb0f ../../Common/Minimal/death.o
+ .debug_info    0x0000233d      0xa39 ../../Common/Minimal/integer.o
+ .debug_info    0x00002d76      0xad2 ../../Common/Minimal/PollQ.o
+ .debug_info    0x00003848      0xb5c ../../Common/Minimal/semtest.o
+ .debug_info    0x000043a4      0xbfc ../../Common/Minimal/GenQTest.o
+ .debug_info    0x00004fa0      0xb5e ../../Common/Minimal/QPeek.o
+ .debug_info    0x00005afe      0x299 ../../Common/Minimal/recmutex.o
+ .debug_info    0x00005d97      0xf52 ../../Common/Minimal/IntQueue.o
+ .debug_info    0x00006ce9      0xb67 ../../../Source/list.o
+ .debug_info    0x00007850     0x14ef ../../../Source/queue.o
+ .debug_info    0x00008d3f     0x2090 ../../../Source/tasks.o
+ .debug_info    0x0000adcf      0x24e ../../../Source/portable/GCC/ARM_CM3/port.o
+ .debug_info    0x0000b01d      0xba9 ../../../Source/portable/MemMang/heap_4.o
+ .debug_info    0x0000bbc6      0x199 startup.o
+
+.debug_abbrev   0x00000000     0x2489
+ .debug_abbrev  0x00000000      0x205 main.o
+ .debug_abbrev  0x00000205      0x241 ../../Common/Minimal/BlockQ.o
+ .debug_abbrev  0x00000446       0xf7 ../../Common/Minimal/blocktim.o
+ .debug_abbrev  0x0000053d      0x256 ../../Common/Minimal/death.o
+ .debug_abbrev  0x00000793      0x230 ../../Common/Minimal/integer.o
+ .debug_abbrev  0x000009c3      0x230 ../../Common/Minimal/PollQ.o
+ .debug_abbrev  0x00000bf3      0x241 ../../Common/Minimal/semtest.o
+ .debug_abbrev  0x00000e34      0x26c ../../Common/Minimal/GenQTest.o
+ .debug_abbrev  0x000010a0      0x27f ../../Common/Minimal/QPeek.o
+ .debug_abbrev  0x0000131f      0x108 ../../Common/Minimal/recmutex.o
+ .debug_abbrev  0x00001427      0x29c ../../Common/Minimal/IntQueue.o
+ .debug_abbrev  0x000016c3      0x22b ../../../Source/list.o
+ .debug_abbrev  0x000018ee      0x2cd ../../../Source/queue.o
+ .debug_abbrev  0x00001bbb      0x384 ../../../Source/tasks.o
+ .debug_abbrev  0x00001f3f      0x17a ../../../Source/portable/GCC/ARM_CM3/port.o
+ .debug_abbrev  0x000020b9      0x2ac ../../../Source/portable/MemMang/heap_4.o
+ .debug_abbrev  0x00002365      0x124 startup.o
+
+.debug_aranges  0x00000000      0x6e0
+ .debug_aranges
+                0x00000000       0x30 main.o
+ .debug_aranges
+                0x00000030       0x38 ../../Common/Minimal/BlockQ.o
+ .debug_aranges
+                0x00000068       0x38 ../../Common/Minimal/blocktim.o
+ .debug_aranges
+                0x000000a0       0x38 ../../Common/Minimal/death.o
+ .debug_aranges
+                0x000000d8       0x30 ../../Common/Minimal/integer.o
+ .debug_aranges
+                0x00000108       0x38 ../../Common/Minimal/PollQ.o
+ .debug_aranges
+                0x00000140       0x30 ../../Common/Minimal/semtest.o
+ .debug_aranges
+                0x00000170       0x58 ../../Common/Minimal/GenQTest.o
+ .debug_aranges
+                0x000001c8       0x48 ../../Common/Minimal/QPeek.o
+ .debug_aranges
+                0x00000210       0x40 ../../Common/Minimal/recmutex.o
+ .debug_aranges
+                0x00000250       0x78 ../../Common/Minimal/IntQueue.o
+ .debug_aranges
+                0x000002c8       0x40 ../../../Source/list.o
+ .debug_aranges
+                0x00000308       0xf0 ../../../Source/queue.o
+ .debug_aranges
+                0x000003f8      0x1d0 ../../../Source/tasks.o
+ .debug_aranges
+                0x000005c8       0x88 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .debug_aranges
+                0x00000650       0x50 ../../../Source/portable/MemMang/heap_4.o
+ .debug_aranges
+                0x000006a0       0x40 startup.o
+
+.debug_ranges   0x00000000      0x5d0
+ .debug_ranges  0x00000000       0x20 main.o
+ .debug_ranges  0x00000020       0x28 ../../Common/Minimal/BlockQ.o
+ .debug_ranges  0x00000048       0x28 ../../Common/Minimal/blocktim.o
+ .debug_ranges  0x00000070       0x28 ../../Common/Minimal/death.o
+ .debug_ranges  0x00000098       0x20 ../../Common/Minimal/integer.o
+ .debug_ranges  0x000000b8       0x28 ../../Common/Minimal/PollQ.o
+ .debug_ranges  0x000000e0       0x20 ../../Common/Minimal/semtest.o
+ .debug_ranges  0x00000100       0x48 ../../Common/Minimal/GenQTest.o
+ .debug_ranges  0x00000148       0x38 ../../Common/Minimal/QPeek.o
+ .debug_ranges  0x00000180       0x30 ../../Common/Minimal/recmutex.o
+ .debug_ranges  0x000001b0       0x68 ../../Common/Minimal/IntQueue.o
+ .debug_ranges  0x00000218       0x30 ../../../Source/list.o
+ .debug_ranges  0x00000248       0xe0 ../../../Source/queue.o
+ .debug_ranges  0x00000328      0x1c0 ../../../Source/tasks.o
+ .debug_ranges  0x000004e8       0x78 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .debug_ranges  0x00000560       0x40 ../../../Source/portable/MemMang/heap_4.o
+ .debug_ranges  0x000005a0       0x30 startup.o
+
+.debug_line     0x00000000     0x5313
+ .debug_line    0x00000000      0x1b7 main.o
+ .debug_line    0x000001b7      0x39f ../../Common/Minimal/BlockQ.o
+ .debug_line    0x00000556      0x41b ../../Common/Minimal/blocktim.o
+ .debug_line    0x00000971      0x320 ../../Common/Minimal/death.o
+ .debug_line    0x00000c91      0x285 ../../Common/Minimal/integer.o
+ .debug_line    0x00000f16      0x339 ../../Common/Minimal/PollQ.o
+ .debug_line    0x0000124f      0x3b1 ../../Common/Minimal/semtest.o
+ .debug_line    0x00001600      0x615 ../../Common/Minimal/GenQTest.o
+ .debug_line    0x00001c15      0x408 ../../Common/Minimal/QPeek.o
+ .debug_line    0x0000201d      0x321 ../../Common/Minimal/recmutex.o
+ .debug_line    0x0000233e      0x653 ../../Common/Minimal/IntQueue.o
+ .debug_line    0x00002991      0x353 ../../../Source/list.o
+ .debug_line    0x00002ce4      0x9e2 ../../../Source/queue.o
+ .debug_line    0x000036c6     0x13e0 ../../../Source/tasks.o
+ .debug_line    0x00004aa6      0x33e ../../../Source/portable/GCC/ARM_CM3/port.o
+ .debug_line    0x00004de4      0x42a ../../../Source/portable/MemMang/heap_4.o
+ .debug_line    0x0000520e      0x105 startup.o
+
+.debug_str      0x00000000     0x2a86
+ .debug_str     0x00000000      0x577 main.o
+                                0x5cf (size before relaxing)
+ .debug_str     0x00000577      0x261 ../../Common/Minimal/BlockQ.o
+                                0x818 (size before relaxing)
+ .debug_str     0x000007d8      0x144 ../../Common/Minimal/blocktim.o
+                                0x34b (size before relaxing)
+ .debug_str     0x0000091c       0xf1 ../../Common/Minimal/death.o
+                                0x6e4 (size before relaxing)
+ .debug_str     0x00000a0d       0x98 ../../Common/Minimal/integer.o
+                                0x652 (size before relaxing)
+ .debug_str     0x00000aa5       0xc2 ../../Common/Minimal/PollQ.o
+                                0x6e7 (size before relaxing)
+ .debug_str     0x00000b67      0x166 ../../Common/Minimal/semtest.o
+                                0x770 (size before relaxing)
+ .debug_str     0x00000ccd      0x1b7 ../../Common/Minimal/GenQTest.o
+                                0x7c1 (size before relaxing)
+ .debug_str     0x00000e84       0xf8 ../../Common/Minimal/QPeek.o
+                                0x70d (size before relaxing)
+ .debug_str     0x00000f7c      0x188 ../../Common/Minimal/recmutex.o
+                                0x3b1 (size before relaxing)
+ .debug_str     0x00001104      0x43d ../../Common/Minimal/IntQueue.o
+                                0xa2b (size before relaxing)
+ .debug_str     0x00001541      0x134 ../../../Source/list.o
+                                0x6d9 (size before relaxing)
+ .debug_str     0x00001675      0x480 ../../../Source/queue.o
+                                0xb35 (size before relaxing)
+ .debug_str     0x00001af5      0xb30 ../../../Source/tasks.o
+                               0x12c7 (size before relaxing)
+ .debug_str     0x00002625      0x166 ../../../Source/portable/GCC/ARM_CM3/port.o
+                                0x35a (size before relaxing)
+ .debug_str     0x0000278b      0x1dd ../../../Source/portable/MemMang/heap_4.o
+                                0x770 (size before relaxing)
+ .debug_str     0x00002968      0x11e startup.o
+                                0x1a3 (size before relaxing)
+
+.comment        0x00000000       0x79
+ .comment       0x00000000       0x79 main.o
+                                 0x7a (size before relaxing)
+ .comment       0x00000079       0x7a ../../Common/Minimal/BlockQ.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/blocktim.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/death.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/integer.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/PollQ.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/semtest.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/GenQTest.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/QPeek.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/recmutex.o
+ .comment       0x00000079       0x7a ../../Common/Minimal/IntQueue.o
+ .comment       0x00000079       0x7a ../../../Source/list.o
+ .comment       0x00000079       0x7a ../../../Source/queue.o
+ .comment       0x00000079       0x7a ../../../Source/tasks.o
+ .comment       0x00000079       0x7a ../../../Source/portable/GCC/ARM_CM3/port.o
+ .comment       0x00000079       0x7a ../../../Source/portable/MemMang/heap_4.o
+ .comment       0x00000079       0x7a startup.o
+
+.ARM.attributes
+                0x00000000       0x2b
+ .ARM.attributes
+                0x00000000       0x2d main.o
+ .ARM.attributes
+                0x0000002d       0x2d ../../Common/Minimal/BlockQ.o
+ .ARM.attributes
+                0x0000005a       0x2d ../../Common/Minimal/blocktim.o
+ .ARM.attributes
+                0x00000087       0x2d ../../Common/Minimal/death.o
+ .ARM.attributes
+                0x000000b4       0x2d ../../Common/Minimal/integer.o
+ .ARM.attributes
+                0x000000e1       0x2d ../../Common/Minimal/PollQ.o
+ .ARM.attributes
+                0x0000010e       0x2d ../../Common/Minimal/semtest.o
+ .ARM.attributes
+                0x0000013b       0x2d ../../Common/Minimal/GenQTest.o
+ .ARM.attributes
+                0x00000168       0x2d ../../Common/Minimal/QPeek.o
+ .ARM.attributes
+                0x00000195       0x2d ../../Common/Minimal/recmutex.o
+ .ARM.attributes
+                0x000001c2       0x2d ../../Common/Minimal/IntQueue.o
+ .ARM.attributes
+                0x000001ef       0x2d ../../../Source/list.o
+ .ARM.attributes
+                0x0000021c       0x2d ../../../Source/queue.o
+ .ARM.attributes
+                0x00000249       0x2d ../../../Source/tasks.o
+ .ARM.attributes
+                0x00000276       0x2d ../../../Source/portable/GCC/ARM_CM3/port.o
+ .ARM.attributes
+                0x000002a3       0x2d ../../../Source/portable/MemMang/heap_4.o
+ .ARM.attributes
+                0x000002d0       0x2d startup.o
+ .ARM.attributes
+                0x000002fd       0x1b c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memcpy.o)
+ .ARM.attributes
+                0x00000318       0x2d c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+ .ARM.attributes
+                0x00000345       0x2d c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+ .ARM.attributes
+                0x00000372       0x2d c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+
+.debug_frame    0x00000000     0x1860
+ .debug_frame   0x00000000       0x68 main.o
+ .debug_frame   0x00000068       0xa0 ../../Common/Minimal/BlockQ.o
+ .debug_frame   0x00000108       0x9c ../../Common/Minimal/blocktim.o
+ .debug_frame   0x000001a4       0x98 ../../Common/Minimal/death.o
+ .debug_frame   0x0000023c       0x7c ../../Common/Minimal/integer.o
+ .debug_frame   0x000002b8       0x9c ../../Common/Minimal/PollQ.o
+ .debug_frame   0x00000354       0x80 ../../Common/Minimal/semtest.o
+ .debug_frame   0x000003d4      0x120 ../../Common/Minimal/GenQTest.o
+ .debug_frame   0x000004f4       0xd8 ../../Common/Minimal/QPeek.o
+ .debug_frame   0x000005cc       0xbc ../../Common/Minimal/recmutex.o
+ .debug_frame   0x00000688      0x1a8 ../../Common/Minimal/IntQueue.o
+ .debug_frame   0x00000830       0xd8 ../../../Source/list.o
+ .debug_frame   0x00000908      0x404 ../../../Source/queue.o
+ .debug_frame   0x00000d0c      0x7e4 ../../../Source/tasks.o
+ .debug_frame   0x000014f0      0x174 ../../../Source/portable/GCC/ARM_CM3/port.o
+ .debug_frame   0x00001664      0x108 ../../../Source/portable/MemMang/heap_4.o
+ .debug_frame   0x0000176c       0x7c startup.o
+ .debug_frame   0x000017e8       0x38 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-memset.o)
+ .debug_frame   0x00001820       0x20 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strcpy.o)
+ .debug_frame   0x00001840       0x20 c:/devtools/gnu tools arm embedded/9 2019-q4-major/bin/../lib/gcc/arm-none-eabi/9.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg.a(lib_a-strlen-stub.o)
+
+.debug_loc      0x00000000       0x62
+ .debug_loc     0x00000000       0x62 startup.o

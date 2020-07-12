@@ -24,7 +24,7 @@ __IOT_LIBS_BETA1_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-L
 __IOT_LIBS_BETA2_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries-LTS-Beta2')
 
 __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
-    'light-mqtt' : [
+    'light-mqtt-beta1' : [
                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'standard', 'mqtt', 'src', 'iot_mqtt_lightweight_api.c'),
                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'standard', 'mqtt', 'src', 'iot_mqtt_helper.c')
                    ],
@@ -242,7 +242,7 @@ def parse_arguments():
 
     parser.add_argument('-p', '--lts-path', required=True, help='Path to FreeRTOS LTS directory.')
     parser.add_argument('-o', '--optimization', default='O0', help='Compiler optimization (O0, Os etc.).')
-    parser.add_argument('-l', '--lib', default='mqtt', help='Library name to generate the memory estimate for.')
+    parser.add_argument('-l', '--lib', default='mqtt-beta1', help='Library name to generate the memory estimate for.')
     parser.add_argument('-c', '--compiler', default='arm-none-eabi-gcc', help='Compiler to use.')
     parser.add_argument('-s', '--sizetool', default='arm-none-eabi-size', help='Size tool to use.')
     parser.add_argument('-d', '--dontclean', action='store_true', help='Do not clean the generated artifacts.')

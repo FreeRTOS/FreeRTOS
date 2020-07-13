@@ -43,7 +43,7 @@ proof_changes:
 
 GIT?=git
 NO_CHANGE_CHECKOUT_DIR=no-change-check-freertos-kernel
-NO_CHANGE_EXPECTED_HASH=4a61f9ff7e2
+NO_CHANGE_EXPECTED_HASH=587a83d6476
 .PHONY: synced_with_source_check
 synced_with_source_check:
 	@rm -rf $(NO_CHANGE_CHECKOUT_DIR)

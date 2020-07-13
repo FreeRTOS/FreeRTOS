@@ -9,12 +9,16 @@
             "size_description":"Code Size of AWS IoT Jobs excluding dependencies (example generated with GCC for ARM Cortex-M)"
         },
         {
-            "lib_name":"light-mqtt",
+            "lib_name":"light-mqtt-beta1",
             "size_description":"Code Size of Lightweight MQTT API (example generated with GCC for ARM Cortex-M)"
         },
         {
-            "lib_name":"mqtt",
-            "size_description":"Code Size of MQTT (example generated with GCC for ARM Cortex-M)"
+            "lib_name":"mqtt-beta1",
+            "size_description":"Code Size of MQTT Beta1 (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"mqtt-beta2",
+            "size_description":"Code Size of MQTT Beta2 (example generated with GCC for ARM Cortex-M)"
         },
         {
             "lib_name":"ota-http",

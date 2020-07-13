@@ -20,36 +20,40 @@ __REPORT_LIBS_JSON__ = os.path.join(__THIS_FILE_PATH__, 'template', 'report_libs
 
 __FREERTOS_SRC_DIR__ = os.path.join('FreeRTOS', 'Source')
 __FREERTOS_PLUS_SRC_DIR__ = os.path.join('FreeRTOS-Plus', 'Source')
-__IOT_LIBS_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries-LTS-Beta1')
+__IOT_LIBS_BETA1_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries-LTS-Beta1')
+__IOT_LIBS_BETA2_DIR__ = os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'FreeRTOS-IoT-Libraries-LTS-Beta2')
 
 __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
-    'light-mqtt' : [
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'standard', 'mqtt', 'src', 'iot_mqtt_lightweight_api.c'),
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'standard', 'mqtt', 'src', 'iot_mqtt_helper.c')
+    'light-mqtt-beta1' : [
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'standard', 'mqtt', 'src', 'iot_mqtt_lightweight_api.c'),
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'standard', 'mqtt', 'src', 'iot_mqtt_helper.c')
                    ],
-    'mqtt'       : [
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'standard', 'mqtt', 'src')
+    'mqtt-beta1' : [
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'standard', 'mqtt', 'src')
+                   ],
+    'mqtt-beta2' : [
+                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'c_sdk', 'standard', 'mqtt', 'src')
                    ],
     'https'      : [
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'standard', 'https', 'src'),
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'standard', 'https', 'src'),
                         os.path.join(__FREERTOS_PLUS_SRC_DIR__, 'http-parser')
                    ],
     'shadow'     : [
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'shadow', 'src'),
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'common', 'src')
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'shadow', 'src'),
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'common', 'src')
                    ],
     'jobs'       : [
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'jobs', 'src'),
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'common', 'src')
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'jobs', 'src'),
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'common', 'src')
                    ],
     'ota-mqtt'   : [
-                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_agent.c'),
-                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_interface.c'),
-                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_mqtt.c'),
-                         os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_cbor.c')
+                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_agent.c'),
+                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'aws_iot_ota_interface.c'),
+                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_mqtt.c'),
+                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src', 'mqtt', 'aws_iot_ota_cbor.c')
                    ],
     'ota-http'  :  [
-                        os.path.join(__IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'src')
+                        os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src')
                    ],
     'kernel'     : [
                         os.path.join(__FREERTOS_SRC_DIR__, 'event_groups.c'),
@@ -74,7 +78,7 @@ def apply_patches(freertos_lts, lib_name):
     # level is moved to a config file, it will not be needed and we will turn
     # off logging in the header file tools\memory_estimator\config_files\aws_ota_agent_config.h.
     if 'ota' in lib_name:
-        ota_agent_header_file = os.path.join(freertos_lts, __IOT_LIBS_DIR__, 'c_sdk', 'aws', 'ota', 'include', 'aws_iot_ota_agent.h')
+        ota_agent_header_file = os.path.join(freertos_lts, __IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'include', 'aws_iot_ota_agent.h')
 
         with open(ota_agent_header_file) as ota_agent_header_file_handle:
             original_content = ota_agent_header_file_handle.read()
@@ -238,7 +242,7 @@ def parse_arguments():
 
     parser.add_argument('-p', '--lts-path', required=True, help='Path to FreeRTOS LTS directory.')
     parser.add_argument('-o', '--optimization', default='O0', help='Compiler optimization (O0, Os etc.).')
-    parser.add_argument('-l', '--lib', default='mqtt', help='Library name to generate the memory estimate for.')
+    parser.add_argument('-l', '--lib', default='mqtt-beta1', help='Library name to generate the memory estimate for.')
     parser.add_argument('-c', '--compiler', default='arm-none-eabi-gcc', help='Compiler to use.')
     parser.add_argument('-s', '--sizetool', default='arm-none-eabi-size', help='Size tool to use.')
     parser.add_argument('-d', '--dontclean', action='store_true', help='Do not clean the generated artifacts.')

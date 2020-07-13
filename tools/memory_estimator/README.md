@@ -20,7 +20,7 @@ Where:
 | ---------- | --------- | ------- | ---------- |
 | -p | --lts-path | | Path to the directory containing FreeRTOS LTS code. |
 | -o | --optimization | O0 | Compiler optimization level (O0, Os etc). |
-| -l | --lib | `mqtt-beta1` | The library to calculate the memory estimates for. Currently supported libraries are: `mqtt-beta1`, `light-mqtt`, `mqtt-beta2`, `https`, `shadow`, `jobs`, `ota-mqtt`, `ota-http`, `kernel`|
+| -l | --lib | `mqtt-beta1` | The library to calculate the memory estimates for. Currently supported libraries are: `mqtt-beta1`, `light-mqtt-beta1`, `mqtt-beta2`, `https`, `shadow`, `jobs`, `ota-mqtt`, `ota-http`, `kernel`|
 | -c | --compiler | arm-none-eabi-gcc | Compiler to use. |
 | -s | --sizetool | arm-none-eabi-size | Size tool to use. |
 | -d | --dontclean | | The generated artifacts, which include the generated Makefile and built object files, are deleted by default. Pass `-d` to ensure that the generated artifacts are not deleted. |

@@ -133,8 +133,8 @@ static SemaphoreHandle_t xNetworkBufferSemaphore = NULL;
     /* */
 
     /* MAC packet acknowledgment, once MAC is done with it */
-        static bool PIC32_MacPacketAcknowledge( TCPIP_MAC_PACKET * pPkt,
-                                                const void * param );
+    static bool PIC32_MacPacketAcknowledge( TCPIP_MAC_PACKET * pPkt,
+                                            const void * param );
 
     /* allocates a MAC packet that holds a data buffer that can be used by both: */
     /*  - the FreeRTOSIP (NetworkBufferDescriptor_t->pucEthernetBuffer) */
@@ -221,6 +221,7 @@ static SemaphoreHandle_t xNetworkBufferSemaphore = NULL;
 
         /* make sure this is a properly allocated packet */
         TCPIP_MAC_PACKET ** ppkt = ( TCPIP_MAC_PACKET ** ) ( pPktBuff - PIC32_BUFFER_PKT_PTR_OSSET );
+
         configASSERT( ( ( uint32_t ) ppkt & ( sizeof( uint32_t ) - 1 ) ) == 0 );
 
         if( *ppkt != pRxPkt )
@@ -230,6 +231,7 @@ static SemaphoreHandle_t xNetworkBufferSemaphore = NULL;
 
         /* set the proper descriptor info */
         NetworkBufferDescriptor_t ** ppDcpt = ( NetworkBufferDescriptor_t ** ) ( pPktBuff - ipBUFFER_PADDING );
+
         configASSERT( ( ( uint32_t ) ppDcpt & ( sizeof( uint32_t ) - 1 ) ) == 0 );
         *ppDcpt = pxBufferDescriptor;
     }
@@ -382,9 +384,9 @@ uint8_t * pucGetNetworkBuffer( size_t * pxRequestedSizeBytes )
         /* Enough space is left at the start of the buffer to place a pointer to
          * the network buffer structure that references this Ethernet buffer.
          * Return a pointer to the start of the Ethernet buffer itself. */
-		#ifndef PIC32_USE_ETHERNET
-        	pucEthernetBuffer += ipBUFFER_PADDING;
-		#endif /* #ifndef PIC32_USE_ETHERNET */
+        #ifndef PIC32_USE_ETHERNET
+            pucEthernetBuffer += ipBUFFER_PADDING;
+        #endif /* #ifndef PIC32_USE_ETHERNET */
     }
 
     return pucEthernetBuffer;
@@ -421,19 +423,20 @@ NetworkBufferDescriptor_t * pxGetNetworkBufferWithDescriptor( size_t xRequestedS
         xRequestedSizeBytes = baMINIMAL_BUFFER_SIZE;
     }
 
-	#ifdef PIC32_USE_ETHERNET
-	if( xRequestedSizeBytes != 0u )
-    {
-	#endif /* #ifdef PIC32_USE_ETHERNET */
-    	xRequestedSizeBytes += 2u;
+    #ifdef PIC32_USE_ETHERNET
+        if( xRequestedSizeBytes != 0u )
+        {
+    #endif /* #ifdef PIC32_USE_ETHERNET */
+    xRequestedSizeBytes += 2u;
 
-    	if( ( xRequestedSizeBytes & ( sizeof( size_t ) - 1u ) ) != 0u )
-    	{
-        	xRequestedSizeBytes = ( xRequestedSizeBytes | ( sizeof( size_t ) - 1u ) ) + 1u;
-    	}
-	#ifdef PIC32_USE_ETHERNET
+    if( ( xRequestedSizeBytes & ( sizeof( size_t ) - 1u ) ) != 0u )
+    {
+        xRequestedSizeBytes = ( xRequestedSizeBytes | ( sizeof( size_t ) - 1u ) ) + 1u;
     }
-	#endif /* #ifdef PIC32_USE_ETHERNET */
+
+    #ifdef PIC32_USE_ETHERNET
+}
+    #endif /* #ifdef PIC32_USE_ETHERNET */
 
     /* If there is a semaphore available, there is a network buffer available. */
     if( xSemaphoreTake( xNetworkBufferSemaphore, xBlockTimeTicks ) == pdPASS )
@@ -550,7 +553,7 @@ void vReleaseNetworkBufferAndDescriptor( NetworkBufferDescriptor_t * const pxNet
      */
     if( xListItemAlreadyInFreeList == pdFALSE )
     {
-        if ( xSemaphoreGive( xNetworkBufferSemaphore ) == pdTRUE )
+        if( xSemaphoreGive( xNetworkBufferSemaphore ) == pdTRUE )
         {
             iptraceNETWORK_BUFFER_RELEASED( pxNetworkBuffer );
         }
@@ -587,9 +590,9 @@ NetworkBufferDescriptor_t * pxResizeNetworkBufferWithDescriptor( NetworkBufferDe
         xOriginalLength = pxNetworkBuffer->xDataLength;
     #else
         xOriginalLength = pxNetworkBuffer->xDataLength + ipBUFFER_PADDING;
-		xNewSizeBytes = xNewSizeBytes + ipBUFFER_PADDING;
+        xNewSizeBytes = xNewSizeBytes + ipBUFFER_PADDING;
     #endif /* #ifdef PIC32_USE_ETHERNET */
-	
+
     pucBuffer = pucGetNetworkBuffer( &( xNewSizeBytes ) );
 
     if( pucBuffer == NULL )
@@ -600,6 +603,7 @@ NetworkBufferDescriptor_t * pxResizeNetworkBufferWithDescriptor( NetworkBufferDe
     else
     {
         pxNetworkBuffer->xDataLength = xNewSizeBytes;
+
         if( xNewSizeBytes > xOriginalLength )
         {
             xNewSizeBytes = xOriginalLength;

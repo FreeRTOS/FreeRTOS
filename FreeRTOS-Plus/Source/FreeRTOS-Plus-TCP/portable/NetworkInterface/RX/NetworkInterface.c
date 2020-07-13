@@ -305,15 +305,15 @@ static void prvEMACDeferredInterruptHandlerTask( void * pvParameters )
         if( xBytesReceived < 0 )
         {
             /* This is an error. Logged. */
-        	if( xBytesReceived == ETHER_ERR_LINK )
-        	{
-				/* Auto-negotiation is not completed, and transmission/
-				reception is not enabled. Will be logged elsewhere. */
-        	}
-        	else
-         	{
-        		FreeRTOS_printf( ( "R_ETHER_Read_ZC2: rc = %d not %d\n", xBytesReceived, ETHER_ERR_LINK ) );
-        	}
+            if( xBytesReceived == ETHER_ERR_LINK )
+            {
+                /* Auto-negotiation is not completed, and transmission/
+                 * reception is not enabled. Will be logged elsewhere. */
+            }
+            else
+            {
+                FreeRTOS_printf( ( "R_ETHER_Read_ZC2: rc = %d not %d\n", xBytesReceived, ETHER_ERR_LINK ) );
+            }
         }
         else if( xBytesReceived > 0 )
         {

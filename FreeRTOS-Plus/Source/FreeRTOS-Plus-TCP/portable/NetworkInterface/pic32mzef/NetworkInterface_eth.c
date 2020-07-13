@@ -71,18 +71,18 @@
 
     typedef enum
     {
-        PIC32_MAC_EVENT_INIT_NONE = 0x000,      /* no event/invalid */
+        PIC32_MAC_EVENT_INIT_NONE = 0x000,  /* no event/invalid */
 
-        PIC32_MAC_EVENT_INIT_DONE = 0x001,      /* initialization done event */
-        PIC32_MAC_EVENT_TIMEOUT = 0x002,        /* periodic timeout event */
-        PIC32_MAC_EVENT_IF_PENDING = 0x004,     /* an interface event signal: RX, TX, errors. etc. */
+        PIC32_MAC_EVENT_INIT_DONE = 0x001,  /* initialization done event */
+        PIC32_MAC_EVENT_TIMEOUT = 0x002,    /* periodic timeout event */
+        PIC32_MAC_EVENT_IF_PENDING = 0x004, /* an interface event signal: RX, TX, errors. etc. */
     } PIC32_MAC_EVENT_TYPE;
 
     typedef enum
     {
-        eMACInit,                               /* Must initialise MAC. */
-        eMACPass,                               /* Initialisation was successful. */
-        eMACFailed,                             /* Initialisation failed. */
+        eMACInit,   /* Must initialise MAC. */
+        eMACPass,   /* Initialisation was successful. */
+        eMACFailed, /* Initialisation failed. */
     } eMAC_INIT_STATUS_TYPE;
 
     static TCPIP_STACK_HEAP_HANDLE macHeapHandle;
@@ -97,7 +97,7 @@
 
     static TimerHandle_t macTmrHandle;
 
-    static bool macLinkStatus;              /* true if link is ON */
+    static bool macLinkStatus; /* true if link is ON */
 
     static eMAC_INIT_STATUS_TYPE xMacInitStatus = eMACInit;
 
@@ -202,8 +202,8 @@
         static const SYS_CMD_DESCRIPTOR macCmdTbl[] =
         {
             { "macinfo", _Command_MacInfo, ": Check MAC statistics" },
-            { "netinfo", _Command_NetInfo, ": Net info" },
-            { "version", _Command_Version, ": Version info" },
+            { "netinfo", _Command_NetInfo, ": Net info"             },
+            { "version", _Command_Version, ": Version info"         },
         };
     #endif /* (PIC32_MAC_DEBUG_COMMANDS != 0) */
 
@@ -211,11 +211,11 @@
     /* FreeRTOS implementation functions */
     BaseType_t xNetworkInterfaceInitialise( void )
     {
-    BaseType_t xResult;
+        BaseType_t xResult;
 
         if( xMacInitStatus == eMACInit )
         {
-			/* This is the first time this function is called. */
+            /* This is the first time this function is called. */
             if( StartInitMac() != false )
             {
                 /* Indicate that the MAC initialisation succeeded. */
@@ -236,7 +236,7 @@
             xResult = pdFAIL;
         }
 
-    	PIC32_MAC_DbgPrint( "xNetworkInterfaceInitialise: %d %d\r\n", ( int ) xMacInitStatus, ( int ) xResult );
+        PIC32_MAC_DbgPrint( "xNetworkInterfaceInitialise: %d %d\r\n", ( int ) xMacInitStatus, ( int ) xResult );
 
         return xResult;
     }
@@ -490,7 +490,7 @@
     static void SetMacCtrl( TCPIP_MAC_MODULE_CTRL * pMacCtrl )
     {
         TCPIP_MAC_ADDR macAdd;
-        uint8_t unsetMACAddr[ 6 ] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };     /* not set MAC address */
+        uint8_t unsetMACAddr[ 6 ] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; /* not set MAC address */
 
         pMacCtrl->nIfs = 1;
 
@@ -877,13 +877,15 @@
             return true;
         }
 
-#include "aws_application_version.h"
+        #include "aws_application_version.h"
 
-static int _Command_Version(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
-{
-    configPRINTF( ( "App version - maj: %d, min: %d, build: %d\r\n",  xAppFirmwareVersion.u.x.ucMajor, xAppFirmwareVersion.u.x.ucMinor, xAppFirmwareVersion.u.x.usBuild) );
-    return 0;
-}
+        static int _Command_Version( SYS_CMD_DEVICE_NODE * pCmdIO,
+                                     int argc,
+                                     char ** argv )
+        {
+            configPRINTF( ( "App version - maj: %d, min: %d, build: %d\r\n", xAppFirmwareVersion.u.x.ucMajor, xAppFirmwareVersion.u.x.ucMinor, xAppFirmwareVersion.u.x.usBuild ) );
+            return 0;
+        }
 
     #endif /* (PIC32_MAC_DEBUG_COMMANDS != 0) */
 #endif /* #ifdef PIC32_USE_ETHERNET */

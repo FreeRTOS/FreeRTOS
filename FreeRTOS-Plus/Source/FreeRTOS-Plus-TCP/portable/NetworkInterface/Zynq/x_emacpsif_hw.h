@@ -17,23 +17,23 @@
  */
 
 #ifndef __XEMACPSIF_HW_H_
-#define __XEMACPSIF_HW_H_
+    #define __XEMACPSIF_HW_H_
 
-#include "Zynq/x_emacpsif.h"
-//#include "lwip/netif.h"
+    #include "Zynq/x_emacpsif.h"
+/*#include "lwip/netif.h" */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    #ifdef __cplusplus
+        extern "C" {
+    #endif
 
-XEmacPs_Config * lookup_config(unsigned mac_base);
+    XEmacPs_Config * lookup_config( unsigned mac_base );
 
-//void init_emacps(xemacpsif_s *xemacpsif, struct netif *netif);
+/*void init_emacps(xemacpsif_s *xemacpsif, struct netif *netif); */
 
-int emacps_check_errors( xemacpsif_s *xemacps );
+    int emacps_check_errors( xemacpsif_s * xemacps );
 
-#ifdef __cplusplus
-}
-#endif
+    #ifdef __cplusplus
+        }
+    #endif
 
-#endif
+#endif /* ifndef __XEMACPSIF_HW_H_ */

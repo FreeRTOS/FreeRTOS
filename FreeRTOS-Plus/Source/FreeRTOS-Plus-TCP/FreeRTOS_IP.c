@@ -67,6 +67,11 @@ a constant. */
 #define	ipFIRST_MULTI_CAST_IPv4		0xE0000000UL
 #define	ipLAST_MULTI_CAST_IPv4		0xF0000000UL
 
+/* The first byte in the IPv4 header combines the IP version (4) with
+with the length of the IP header. */
+#define	ipIPV4_VERSION_HEADER_LENGTH_MIN	0x45U
+#define	ipIPV4_VERSION_HEADER_LENGTH_MAX	0x4FU
+	
 /* Time delay between repeated attempts to initialise the network hardware. */
 #ifndef ipINITIALISATION_RETRY_DELAY
 	#define ipINITIALISATION_RETRY_DELAY	( pdMS_TO_TICKS( 3000U ) )
@@ -125,9 +130,11 @@ events are posted to the network event queue. */
 handled.  The value is chosen simply to be easy to spot when debugging. */
 #define ipUNHANDLED_PROTOCOL		0x4321U
 
-/* Returned to indicate a valid checksum when the checksum does not need to be
-calculated. */
+/* Returned to indicate a valid checksum. */
 #define ipCORRECT_CRC				0xffffU
+
+/* Returned to indicate incorrect checksum. */
+#define ipWRONG_CRC					0x0000U
 
 /* Returned as the (invalid) checksum when the length of the data being checked
 had an invalid length. */
@@ -227,6 +234,12 @@ static void prvIPTimerReload( IPTimer_t *pxTimer, TickType_t xTime );
 static eFrameProcessingResult_t prvAllowIPPacket( const IPPacket_t * const pxIPPacket,
 												  const NetworkBufferDescriptor_t * const pxNetworkBuffer,
 												  UBaseType_t uxHeaderLength );
+
+#if( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 )
+	/* Even when the driver takes care of checksum calculations,
+	the IP-task will still check if the length fields are OK. */
+	static BaseType_t xCheckSizeFields( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength );
+#endif	/* ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 ) */
 
 /*-----------------------------------------------------------*/
 
@@ -1543,9 +1556,10 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 				/* Can not handle, fragmented packet. */
 				eReturn = eReleaseBuffer;
 			}
-			/* 0x45 means: IPv4 with an IP header of 5 x 4 = 20 bytes
-			 * 0x47 means: IPv4 with an IP header of 7 x 4 = 28 bytes */
-			else if( ( pxIPHeader->ucVersionHeaderLength < 0x45U ) || ( pxIPHeader->ucVersionHeaderLength > 0x4FU ) )
+			/* Test if the length of the IP-header is between 20 and 60 bytes,
+			and if the IP-version is 4. */
+			else if( ( pxIPHeader->ucVersionHeaderLength < ipIPV4_VERSION_HEADER_LENGTH_MIN ) ||
+					 ( pxIPHeader->ucVersionHeaderLength > ipIPV4_VERSION_HEADER_LENGTH_MAX ) )
 			{
 				/* Can not handle, unknown or invalid header version. */
 				eReturn = eReleaseBuffer;
@@ -1600,8 +1614,58 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 	}
 	#else
 	{
+
+		if (eReturn == eProcessBuffer )
+		{
+			if( xCheckSizeFields( ( uint8_t * )( pxNetworkBuffer->pucEthernetBuffer ), pxNetworkBuffer->xDataLength ) != pdPASS )
+			{
+				/* Some of the length checks were not successful. */
+				eReturn = eReleaseBuffer;
+			}
+		}
+
+		#if( ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS == 0 )
+		{
+			/* Check if this is a UDP packet without a checksum. */
+			if (eReturn == eProcessBuffer )
+			{
+				/* ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS is defined as 0,
+				and so UDP packets carrying a protocol checksum of 0, will
+				be dropped. */
+
+				/* Identify the next protocol. */
+				if( pxIPPacket->xIPHeader.ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
+				{
+				ProtocolPacket_t *pxProtPack;
+				uint16_t *pusChecksum;
+
+					/* pxProtPack will point to the offset were the protocols begin. */
+					pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pxNetworkBuffer->pucEthernetBuffer[ uxHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+					pusChecksum = ( uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
+					if( *pusChecksum == ( uint16_t ) 0U )
+					{
+						#if( ipconfigHAS_PRINTF != 0 )
+						{
+						static BaseType_t xCount = 0;
+
+							if( xCount < 5 )
+							{
+								FreeRTOS_printf( ( "prvAllowIPPacket: UDP packet from %xip without CRC dropped\n",
+									FreeRTOS_ntohl( pxIPPacket->xIPHeader.ulSourceIPAddress ) ) );
+								xCount++;
+							}
+						}
+						#endif	/* ( ipconfigHAS_PRINTF != 0 ) */
+
+						/* Protocol checksum not accepted. */
+						eReturn = eReleaseBuffer;
+					}
+				}
+			}
+		}
+		#endif	/* ( ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS == 0 ) */
+
 		/* to avoid warning unused parameters */
-		( void ) pxNetworkBuffer;
 		( void ) uxHeaderLength;
 	}
 	#endif /* ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 0 */
@@ -1633,25 +1697,37 @@ uint8_t ucProtocol;
 
 	if( eReturn == eProcessBuffer )
 	{
+		/* Are there IP-options. */
 		if( uxHeaderLength > ipSIZE_OF_IPv4_HEADER )
 		{
-			/* All structs of headers expect a IP header size of 20 bytes
-			 * IP header options were included, we'll ignore them and cut them out
-			 * Note: IP options are mostly use in Multi-cast protocols */
-			const size_t optlen = ( ( size_t ) uxHeaderLength ) - ipSIZE_OF_IPv4_HEADER;
-			/* From: the previous start of UDP/ICMP/TCP data */
-			const uint8_t *pucSource = ( const uint8_t * ) &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( EthernetHeader_t ) + uxHeaderLength ] );
-			/* To: the usual start of UDP/ICMP/TCP data at offset 20 from IP header */
-			uint8_t *pucTarget = ( uint8_t * ) &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( EthernetHeader_t ) + ipSIZE_OF_IPv4_HEADER ] );
-			/* How many: total length minus the options and the lower headers */
-			const size_t  xMoveLen = pxNetworkBuffer->xDataLength - ( optlen + ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_ETH_HEADER );
+			/* The size of the IP-header is larger than 20 bytes.
+			The extra space is used for IP-options. */
+			#if( ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS != 0 )
+			{
+				/* All structs of headers expect a IP header size of 20 bytes
+				 * IP header options were included, we'll ignore them and cut them out. */
+				const size_t optlen = ( ( size_t ) uxHeaderLength ) - ipSIZE_OF_IPv4_HEADER;
+				/* From: the previous start of UDP/ICMP/TCP data. */
+				const uint8_t *pucSource = ( const uint8_t * ) &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( EthernetHeader_t ) + uxHeaderLength ] );
+				/* To: the usual start of UDP/ICMP/TCP data at offset 20 (decimal ) from IP header. */
+				uint8_t *pucTarget = ( uint8_t * ) &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( EthernetHeader_t ) + ipSIZE_OF_IPv4_HEADER ] );
+				/* How many: total length minus the options and the lower headers. */
+				const size_t  xMoveLen = pxNetworkBuffer->xDataLength - ( optlen + ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_ETH_HEADER );
 
-			( void ) memmove( pucTarget, pucSource, xMoveLen );
-			pxNetworkBuffer->xDataLength -= optlen;
+				( void ) memmove( pucTarget, pucSource, xMoveLen );
+				pxNetworkBuffer->xDataLength -= optlen;
 
-			/* Fix-up new version/header length field in IP packet. */
-			pxIPHeader->ucVersionHeaderLength = ( pxIPHeader->ucVersionHeaderLength & 0xF0U ) | /* High nibble is the version. */
-												( ( ipSIZE_OF_IPv4_HEADER >> 2 ) & 0x0FU );
+				/* Rewrite the Version/IHL byte to indicate that this packet has no IP options. */
+				pxIPHeader->ucVersionHeaderLength = ( pxIPHeader->ucVersionHeaderLength & 0xF0U ) | /* High nibble is the version. */
+													( ( ipSIZE_OF_IPv4_HEADER >> 2 ) & 0x0FU );
+			}
+			#else
+			{
+				/* 'ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS' is not set, so packets carrying
+				IP-options will be dropped. */
+				return eReleaseBuffer;
+			}
+			#endif
 		}
 
 		/* Add the IP and MAC addresses to the ARP table if they are not
@@ -1894,6 +1970,123 @@ uint8_t ucProtocol;
 #endif /* ( ipconfigREPLY_TO_INCOMING_PINGS == 1 ) || ( ipconfigSUPPORT_OUTGOING_PINGS == 1 ) */
 /*-----------------------------------------------------------*/
 
+#if( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 )
+	/* Although the driver will take care of checksum calculations,
+	the IP-task will still check if the length fields are OK. */
+	static BaseType_t xCheckSizeFields( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength )
+	{
+	size_t uxLength;
+	const IPPacket_t * pxIPPacket;
+	UBaseType_t uxIPHeaderLength;
+	ProtocolPacket_t *pxProtPack;
+	uint8_t ucProtocol;
+	uint16_t usLength;
+	uint16_t ucVersionHeaderLength;
+	BaseType_t xLocation = 0;
+	size_t uxMinimumLength;
+	BaseType_t xResult = pdFAIL;
+
+		do
+		{
+			/* Check for minimum packet size: Ethernet header and an IP-header, 34 bytes */
+			if( uxBufferLength < sizeof( IPPacket_t ) )
+			{
+				xLocation = 1;
+				break;
+			}
+
+			/* Parse the packet length. */
+			pxIPPacket = ipPOINTER_CAST( const IPPacket_t *, pucEthernetBuffer );
+
+			ucVersionHeaderLength = pxIPPacket->xIPHeader.ucVersionHeaderLength;
+			/* Test if the length of the IP-header is between 20 and 60 bytes,
+			and if the IP-version is 4. */
+			if( ( ucVersionHeaderLength < ipIPV4_VERSION_HEADER_LENGTH_MIN ) ||
+				( ucVersionHeaderLength > ipIPV4_VERSION_HEADER_LENGTH_MAX ) )
+			{
+				xLocation = 2;
+				break;
+			}
+			ucVersionHeaderLength = ( ucVersionHeaderLength & ( uint8_t ) 0x0FU ) << 2;
+			uxIPHeaderLength = ( UBaseType_t ) ucVersionHeaderLength;
+
+			/* Check if the complete IP-header is transferred. */
+			if( uxBufferLength < ( ipSIZE_OF_ETH_HEADER + uxIPHeaderLength ) )
+			{
+				xLocation = 3;
+				break;
+			}
+			/* Check if the complete IP-header plus protocol data have been transferred: */
+			usLength = pxIPPacket->xIPHeader.usLength;
+			usLength = FreeRTOS_ntohs( usLength );
+			if( uxBufferLength < ( size_t ) ( ipSIZE_OF_ETH_HEADER + ( size_t ) usLength ) )
+			{
+				xLocation = 4;
+				break;
+			}
+
+			/* Identify the next protocol. */
+			ucProtocol = pxIPPacket->xIPHeader.ucProtocol;
+
+			/* N.B., if this IP packet header includes Options, then the following
+			assignment results in a pointer into the protocol packet with the Ethernet
+			and IP headers incorrectly aligned. However, either way, the "third"
+			protocol (Layer 3 or 4) header will be aligned, which is the convenience
+			of this calculation. */
+			pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+
+			/* Switch on the Layer 3/4 protocol. */
+			if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
+			{
+				/* Expect at least a complete UDP header. */
+				uxMinimumLength = uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_UDP_HEADER;
+			}
+			else if( ucProtocol == ( uint8_t ) ipPROTOCOL_TCP )
+			{
+				uxMinimumLength = uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_TCP_HEADER;
+			}
+			else if( ( ucProtocol == ( uint8_t ) ipPROTOCOL_ICMP ) ||
+					 ( ucProtocol == ( uint8_t ) ipPROTOCOL_IGMP ) )
+			{
+				uxMinimumLength = uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_ICMP_HEADER;
+			}
+			else
+			{
+				/* Unhandled protocol, other than ICMP, IGMP, UDP, or TCP. */
+				xLocation = 5;
+				break;
+			}
+			if( uxBufferLength < uxMinimumLength )
+			{
+				xLocation = 6;
+				break;
+			}
+
+			uxLength = ( size_t ) usLength;
+			uxLength -= ( ( uint16_t ) uxIPHeaderLength ); /* normally, minus 20. */
+
+			if( ( uxLength < ( ( size_t ) sizeof( pxProtPack->xUDPPacket.xUDPHeader ) ) ) ||
+				( uxLength > ( ( size_t ) ipconfigNETWORK_MTU - ( size_t ) uxIPHeaderLength ) ) )
+			{
+				/* For incoming packets, the length is out of bound: either
+				too short or too long. For outgoing packets, there is a 
+				serious problem with the format/length. */
+				xLocation = 7;
+				break;
+			}
+			xResult = pdPASS;
+		} while( ipFALSE_BOOL );
+
+		if( xResult != pdPASS )
+		{
+			FreeRTOS_printf( ( "xCheckSizeFields: location %ld\n", xLocation ) );
+		}
+
+		return xResult;
+	}
+#endif /* ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 ) */
+/*-----------------------------------------------------------*/
+
 uint16_t usGenerateProtocolChecksum( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength, BaseType_t xOutgoingPacket )
 {
 uint32_t ulLength;
@@ -2029,8 +2222,30 @@ BaseType_t location = 0;
 	}
 	else if( ( *pusChecksum == 0U ) && ( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP ) )
 	{
-		/* Sender hasn't set the checksum, no use to calculate it. */
-		usChecksum = ipCORRECT_CRC;
+		#if( ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS == 0 )
+		{
+			/* Sender hasn't set the checksum, drop the packet because
+			ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS is not set. */
+			usChecksum = ipWRONG_CRC;
+			#if( ipconfigHAS_PRINTF != 0 )
+			{
+			static BaseType_t xCount = 0;
+
+				if( xCount < 5 )
+				{
+					FreeRTOS_printf( ( "usGenerateProtocolChecksum: UDP packet from %xip without CRC dropped\n",
+						FreeRTOS_ntohl( pxIPPacket->xIPHeader.ulSourceIPAddress ) ) );
+					xCount++;
+				}
+			}
+			#endif	/* ( ipconfigHAS_PRINTF != 0 ) */
+		}
+		#else
+		{
+			/* Sender hasn't set the checksum, no use to calculate it. */
+			usChecksum = ipCORRECT_CRC;
+		}
+		#endif
 		location = 8;
 		goto error_exit;
 	}
@@ -2349,6 +2564,87 @@ EthernetHeader_t *pxEthernetHeader;
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );
 	}
 }
+/*-----------------------------------------------------------*/
+
+
+#if ( ipconfigHAS_PRINTF != 0 )
+	
+	#ifndef ipMONITOR_MAX_HEAP
+		/* As long as the heap has more space than e.g. 1 MB, there
+		will be no messages. */
+		#define	ipMONITOR_MAX_HEAP			( 1024U * 1024U )
+	#endif	/* ipMONITOR_MAX_HEAP */
+
+	#ifndef ipMONITOR_PERCENTAGE_90
+		/* Make this number lower to get less logging messages. */
+		#define ipMONITOR_PERCENTAGE_90		( 90U )
+	#endif
+
+	#define ipMONITOR_PERCENTAGE_100		( 100U )
+
+	void vPrintResourceStats( void )
+	{
+	static UBaseType_t uxLastMinBufferCount = ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS;
+	static size_t uxMinLastSize = 0u;
+	UBaseType_t uxCurrentBufferCount;
+	size_t uxMinSize;
+
+		/* When setting up and testing a project with FreeRTOS+TCP, it is
+		can be helpful to monitor a few resources: the number of network
+		buffers and the amount of available heap.
+		This function will issue some logging when a minimum value has
+		changed. */
+		uxCurrentBufferCount = uxGetMinimumFreeNetworkBuffers();
+
+		if( uxLastMinBufferCount > uxCurrentBufferCount )
+		{
+			/* The logging produced below may be helpful
+			 * while tuning +TCP: see how many buffers are in use. */
+			uxLastMinBufferCount = uxCurrentBufferCount;
+			FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
+							   uxGetNumberOfFreeNetworkBuffers(),
+							   uxCurrentBufferCount ) );
+		}
+
+		uxMinSize = xPortGetMinimumEverFreeHeapSize();
+		if( uxMinLastSize == 0U )
+		{
+			/* Probably the first time this function is called. */
+			uxMinLastSize = uxMinSize;
+		}
+		else if( uxMinSize >= ipMONITOR_MAX_HEAP )
+		{
+			/* There is more than enough heap space. No need for logging. */
+		}
+		/* Write logging if there is a 10% decrease since the last time logging was written. */
+		else if( ( uxMinLastSize * ipMONITOR_PERCENTAGE_90 ) > ( uxMinSize * ipMONITOR_PERCENTAGE_100 ) )
+		{
+			uxMinLastSize = uxMinSize;
+			FreeRTOS_printf( ( "Heap: current %lu lowest %lu\n", xPortGetFreeHeapSize(), uxMinSize ) );
+		}
+		else
+		{
+			/* Nothing to log. */
+		}
+
+		#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
+		{
+			static UBaseType_t uxLastMinQueueSpace = 0;
+			UBaseType_t uxCurrentCount = 0u;
+
+			uxCurrentCount = uxGetMinimumIPQueueSpace();
+
+			if( uxLastMinQueueSpace != uxCurrentCount )
+			{
+				/* The logging produced below may be helpful
+				 * while tuning +TCP: see how many buffers are in use. */
+				uxLastMinQueueSpace = uxCurrentCount;
+				FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
+			}
+		}
+		#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
+	}
+#endif /* ( ipconfigHAS_PRINTF != 0 ) */
 /*-----------------------------------------------------------*/
 
 uint32_t FreeRTOS_GetIPAddress( void )

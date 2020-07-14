@@ -75,19 +75,28 @@
  * https://github.com/eclipse/mosquitto/blob/master/readme-windows.txt and
  * https://github.com/eclipse/mosquitto/blob/master/readme.md
  * 3. Verify that Mosquitto server is running locally and listening on port
- * 1883 by
- *     a. Opening Power Shell.
- *     b. Typing in command `netstat -a -p TCP | grep 1883` to check if there
+ * 1883 by following the steps below.
+ *     a. Open Power Shell.
+ *     b. Type in command `netstat -a -p TCP | grep 1883` to check if there
  *        is an active connection listening on port 1883.
  *     c. Verify that there is an output as shown below
  *        `TCP    0.0.0.0:1883           <HOST-NAME>:0       LISTENING`
- *     d. If there is no output please go through the Mosquitto documentation
+ *     d. If there is no output on step c,go through the Mosquitto documentation
  *        listed above to check if the installation was successful.
- * 4.After verifying that a Mosquitto broker is running successfully, update
+ * 4. Make sure the Mosquitto broker is allowed to communicate through
+ * Windows Firewall. The instructions for allowing an application on Windows 10
+ * Defender Firewall can be found at the link below.
+ * https://support.microsoft.com/en-us/help/4558235/windows-10-allow-an-app-through-microsoft-defender-firewall 
+ * After running this MQTT example, consider disabling the Mosquitto broker to
+ * communicate through Windows Firewall for avoiding unwanted network traffic
+ * to your machine.
+ * 5. After verifying that a Mosquitto broker is running successfully, update
  * the config democonfigMQTT_BROKER_ENDPOINT to the local IP address of the
  * Windows host machine. Please note that "localhost" or address "127.0.0.1"
  * will not work as this example is running on a Windows Simulator and not on
- * Windows host natively.
+ * Windows host natively. Also note that, if the Windows host is using a
+ * Virtual Private Network(VPN), connection to the Mosquitto broker may not
+ * work.
  *
  * As an alternative option, a publicly hosted Mosquitto broker can also be
  * used as an MQTT broker end point. This can be done by updating the config

@@ -39,7 +39,7 @@
     #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
 #endif
 
-BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
+BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
                                        uint16_t port,
                                        uint32_t receiveTimeoutMs )
@@ -118,7 +118,7 @@ BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     return socketStatus;
 }
 
-void Transport_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
+void Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
 {
     BaseType_t waitForShutdownLoopCount = 0;
     uint8_t pDummyBuffer[ 2 ];
@@ -144,7 +144,7 @@ void Transport_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
     }
 }
 
-int32_t Transport_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
+int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                                  void * pBuffer,
                                  size_t bytesToRecv )
 {
@@ -155,7 +155,7 @@ int32_t Transport_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     return socketStatus;
 }
 
-int32_t Transport_FreeRTOS_send( NetworkContext_t * pNetworkContext,
+int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                                  const void * pBuffer,
                                  size_t bytesToSend )
 {

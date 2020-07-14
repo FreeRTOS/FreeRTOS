@@ -311,7 +311,7 @@ static void prvMQTTDemoTask( void * pvParameters )
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
         LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        Transport_FreeRTOS_Connect( &xNetworkContext,
+        Plaintext_FreeRTOS_Connect( &xNetworkContext,
                                     democonfigMQTT_BROKER_ENDPOINT,
                                     democonfigMQTT_BROKER_PORT,
                                     TRANSPORT_SEND_RECV_TIMEOUT_MS );
@@ -378,7 +378,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         MQTT_Disconnect( &xMQTTContext );
 
         /* Close the network connection.  */
-        Transport_FreeRTOS_Disconnect( &xNetworkContext );
+        Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */
@@ -407,8 +407,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Fill in Transport Interface send and receive function pointers. */
     xTransport.pNetworkContext = pxNetworkContext;
-    xTransport.send = Transport_FreeRTOS_send;
-    xTransport.recv = Transport_FreeRTOS_recv;
+    xTransport.send = Plaintext_FreeRTOS_send;
+    xTransport.recv = Plaintext_FreeRTOS_recv;
 
     /* Application callbacks for receiving incoming published and incoming acks
      * from MQTT library. */

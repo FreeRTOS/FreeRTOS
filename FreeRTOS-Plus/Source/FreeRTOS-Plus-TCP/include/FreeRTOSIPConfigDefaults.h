@@ -317,20 +317,25 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND	1
 #endif
 
-
+/* Configuration to control whether packets with IP options,
+ * received over the network, should be passed up to the 
+ * software stack OR should be dropped.
+ * If set to 1, the stack accepts IP packets that contain IP options, but does
+ * not process the options (IP options are not supported).
+ * If set to 0, the stack will drop IP packets that contain IP options.
+ */
 #ifndef ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS
 	#define ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS	1
 #endif
 
-#ifndef ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS
-	#define ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS	0
-#endif
-
-
-#ifndef ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS
-	#define ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS	1
-#endif
-
+/* Configuration to control whether UDP packets with 
+ * checksum value of zero should be passed up the software
+ * stack OR should be dropped.
+ * If set to 1, the stack will accept UDP packets that have their checksum 
+ * value set to 0.
+ * If set to 0, the stack will drop UDP packets that have their checksum value
+ * set to 0.
+ */
 #ifndef ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS
 	#define ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS	0
 #endif

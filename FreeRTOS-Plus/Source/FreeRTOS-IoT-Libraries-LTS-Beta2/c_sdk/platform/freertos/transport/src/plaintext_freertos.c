@@ -39,6 +39,9 @@
     #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
 #endif
 
+/* A negative error code indicating a network failure. */
+#define TRANSPORT_FREERTOS_NETWORK_ERROR    ( -1 )
+
 BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
                                        uint16_t port,
@@ -55,7 +58,7 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( tcpSocket == FREERTOS_INVALID_SOCKET )
     {
         LogError( ( "Failed to create new socket." ) );
-        socketStatus = -1;
+        socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
     }
 
     if( socketStatus == 0 )
@@ -70,33 +73,18 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         if( serverAddress.sin_addr == 0 )
         {
             LogError( ( "Failed to resolve %s.", pHostName ) );
-            socketStatus = -1;
+            socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
         }
     }
 
     if( socketStatus == 0 )
     {
+        LogDebug( ( "Creating TCP Connection to %s.", pHostName ) );
         socketStatus = FreeRTOS_connect( tcpSocket, &serverAddress, sizeof( serverAddress ) );
 
         if( socketStatus != 0 )
         {
-            LogError( ( "Failed to connect to %s. FreeRTOS_connect returned with status=%d.",
-                        pHostName,
-                        socketStatus ) );
-        }
-    }
-
-    if( socketStatus == 0 )
-    {
-        socketStatus = FreeRTOS_setsockopt( tcpSocket,
-                                            0,
-                                            FREERTOS_SO_RCVTIMEO,
-                                            &receiveTimeout,
-                                            sizeof( TickType_t ) );
-
-        if( socketStatus != 0 )
-        {
-            LogError( ( "Failed to set socket receive timeout." ) );
+            LogError( ( "Failed to establish TCP Connection." ) );
         }
     }
 

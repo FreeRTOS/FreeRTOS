@@ -146,9 +146,9 @@
 #define mqttexampleDELAY_BETWEEN_PUBLISHES          ( pdMS_TO_TICKS( 500U ) )
 
 /**
- * @brief Transport timeout in milliseconds for transport send and receive.
+ * @brief Transport timeout in milliseconds for transport receive.
  */
-#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200U )
+#define TRANSPORT_RECV_TIMEOUT_MS                   ( 200U )
 
 #define _MILLISECONDS_PER_SECOND                    ( 1000U )                                         /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK                      ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
@@ -297,6 +297,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     MQTTContext_t xMQTTContext;
     MQTTStatus_t xMQTTStatus;
+    BaseType_t xNetworkStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -311,10 +312,11 @@ static void prvMQTTDemoTask( void * pvParameters )
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
         LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        Plaintext_FreeRTOS_Connect( &xNetworkContext,
-                                    democonfigMQTT_BROKER_ENDPOINT,
-                                    democonfigMQTT_BROKER_PORT,
-                                    TRANSPORT_SEND_RECV_TIMEOUT_MS );
+        xNetworkStatus = Plaintext_FreeRTOS_Connect( &xNetworkContext,
+                                                     democonfigMQTT_BROKER_ENDPOINT,
+                                                     democonfigMQTT_BROKER_PORT,
+                                                     TRANSPORT_RECV_TIMEOUT_MS );
+        configASSERT( xNetworkStatus == 0 );
 
         /* Sends an MQTT Connect packet over the already connected TCP socket,
          * and waits for connection acknowledgment (CONNACK) packet. */
@@ -330,7 +332,7 @@ static void prvMQTTDemoTask( void * pvParameters )
          * will expect all the messages it sends to the broker to be sent back to it
          * from the broker. This demo uses QOS0 in Subscribe, therefore, the Publish
          * messages received from the broker will have QOS0. */
-        LogInfo( ( "Attempt to subscribed to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
+        LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         prvMQTTSubscribeToTopic( &xMQTTContext );
 
         /* Process incoming packet from the broker. After sending the subscribe, the
@@ -395,7 +397,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 {
     MQTTStatus_t xResult;
     MQTTConnectInfo_t xConnectInfo;
-    uint16_t usPacketId;
     bool xSessionPresent;
     TransportInterface_t xTransport;
     MQTTApplicationCallbacks_t xCallbacks;
@@ -475,8 +476,6 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
 
     /* Get a unique packet id. */
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
-    /* Make sure the packet id obtained is valid. */
-    configASSERT( usSubscribePacketIdentifier != 0 );
 
     /* Send SUBSCRIBE packet. */
     xResult = MQTT_Subscribe( pxMQTTContext,
@@ -521,7 +520,6 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
-    BaseType_t xStatus;
 
     /* Some fields not used by this demo so start with everything at 0. */
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -609,6 +607,9 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               uint16_t usPacketIdentifier,
                               MQTTPublishInfo_t * pxPublishInfo )
 {
+    /* The MQTT context is not used for this demo. */
+    ( void ) pxMQTTContext;
+
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
         prvMQTTProcessIncomingPublish( pxPublishInfo );

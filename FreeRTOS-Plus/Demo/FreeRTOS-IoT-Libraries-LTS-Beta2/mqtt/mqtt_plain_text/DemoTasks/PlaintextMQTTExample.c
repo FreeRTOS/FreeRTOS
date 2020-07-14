@@ -58,7 +58,7 @@
 #include "mqtt.h"
 
 /* Transport interface include. */
-#include "transport_interface_freertos.h"
+#include "plaintext_freertos.h"
 
 /*-----------------------------------------------------------*/
 

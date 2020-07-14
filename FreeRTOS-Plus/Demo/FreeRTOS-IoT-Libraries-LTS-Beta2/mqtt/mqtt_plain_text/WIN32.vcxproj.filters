@@ -120,7 +120,7 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\abstractions\platform\freertos\transport_interface_freertos.c">
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\plaintext_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClCompile>
   </ItemGroup>
@@ -207,10 +207,10 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include</Filter>
     </ClInclude>
     <ClInclude Include="mqtt_config.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\abstractions\platform\freertos\transport_interface_freertos.h">
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include\plaintext_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\transport_interface.h">
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\include\transport_interface.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClInclude>
   </ItemGroup>

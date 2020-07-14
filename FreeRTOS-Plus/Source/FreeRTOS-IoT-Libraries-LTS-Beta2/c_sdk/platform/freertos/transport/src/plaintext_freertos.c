@@ -32,7 +32,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* Transport interface include. */
-#include "transport_interface_freertos.h"
+#include "plaintext_freertos.h"
 
 /* Maximum number of times to call FreeRTOS_recv when initiating a graceful shutdown. */
 #ifndef TRANSPORT_FREERTOS_SHUTDOWN_LOOPS

@@ -45,8 +45,12 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
-/* Demo app includes. */
+/* Demo logging includes. */
 #include "demo_logging.h"
+
+/* Demo Specific configs. */
+#include "demo_config.h"
+
 
 /*
  * Prototypes for the demos that can be started from this project.  Note the
@@ -152,7 +156,7 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
         {
             /* Demos that use the network are created after the network is
              * up. */
-            configPRINTF( ( "---------STARTING DEMO---------\r\n" ) );
+            LogInfo( ( "---------STARTING DEMO---------\r\n" ) );
             vStartSimpleMQTTDemo();
             xTasksAlreadyCreated = pdTRUE;
         }
@@ -161,16 +165,16 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
          * server. */
         FreeRTOS_GetAddressConfiguration( &ulIPAddress, &ulNetMask, &ulGatewayAddress, &ulDNSServerAddress );
         FreeRTOS_inet_ntoa( ulIPAddress, cBuffer );
-        FreeRTOS_printf( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
+        LogInfo( ( "\r\n\r\nIP Address: %s\r\n", cBuffer ) );
 
         FreeRTOS_inet_ntoa( ulNetMask, cBuffer );
-        FreeRTOS_printf( ( "Subnet Mask: %s\r\n", cBuffer ) );
+        LogInfo( ( "Subnet Mask: %s\r\n", cBuffer ) );
 
         FreeRTOS_inet_ntoa( ulGatewayAddress, cBuffer );
-        FreeRTOS_printf( ( "Gateway Address: %s\r\n", cBuffer ) );
+        LogInfo( ( "Gateway Address: %s\r\n", cBuffer ) );
 
         FreeRTOS_inet_ntoa( ulDNSServerAddress, cBuffer );
-        FreeRTOS_printf( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
+        LogInfo( ( "DNS Server Address: %s\r\n\r\n\r\n", cBuffer ) );
     }
 }
 /*-----------------------------------------------------------*/
@@ -239,9 +243,9 @@ static void prvMiscInitialisation( void )
      * devices should use a True Random Number Generator (TRNG).
      */
     time( &xTimeNow );
-    FreeRTOS_debug_printf( ( "Seed for randomizer: %lu\n", xTimeNow ) );
+    LogDebug( ( "Seed for randomizer: %lu\n", xTimeNow ) );
     prvSRand( ( uint32_t ) xTimeNow );
-    FreeRTOS_debug_printf( ( "Random numbers: %08X %08X %08X %08X\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
+    LogDebug( ( "Random numbers: %08X %08X %08X %08X\n", ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32(), ipconfigRAND32() ) );
 }
 /*-----------------------------------------------------------*/
 

@@ -86,7 +86,7 @@
  * 4. Make sure the Mosquitto broker is allowed to communicate through
  * Windows Firewall. The instructions for allowing an application on Windows 10
  * Defender Firewall can be found at the link below.
- * https://support.microsoft.com/en-us/help/4558235/windows-10-allow-an-app-through-microsoft-defender-firewall 
+ * https://support.microsoft.com/en-us/help/4558235/windows-10-allow-an-app-through-microsoft-defender-firewall
  * After running this MQTT example, consider disabling the Mosquitto broker to
  * communicate through Windows Firewall for avoiding unwanted network traffic
  * to your machine.

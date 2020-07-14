@@ -1,0 +1,20 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+# Basic project information.
+PROJECT_NAME = "Linear Containers"
+PROJECT_BRIEF = "Linked lists and Queues"
+
+# Library documentation output directory.
+HTML_OUTPUT = linear_containers
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/linear_containers.tag
+
+# Directories containing library source code.
+INPUT = doc/lib \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/common/include
+
+# Library file names.
+FILE_PATTERNS = *linear_containers*.h *linear_containers*.txt

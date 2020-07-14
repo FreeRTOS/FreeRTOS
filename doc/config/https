@@ -1,0 +1,31 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+LAYOUT_FILE = doc/config/layout_https.xml
+
+# Basic project information.
+PROJECT_NAME = "HTTPS Client"
+PROJECT_BRIEF = "HTTPS Client v1.0.0 library"
+
+# Library documentation output directory.
+HTML_OUTPUT = https
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/https.tag
+
+# Directories containing library source code.
+INPUT = doc \
+        doc/lib \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/https/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/https/include/types \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/https/src/private \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/https/src
+
+# Library file names.
+FILE_PATTERNS = *https*.c *https*.h *https*.txt
+
+# External tag files required by this library.
+TAGFILES = doc/output/linear_containers.tag=../linear_containers \
+           doc/output/logging.tag=../logging \
+           doc/output/platform.tag=../platform

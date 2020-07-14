@@ -1,0 +1,32 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+LAYOUT_FILE = doc/config/layout_pkcs11.xml
+
+# Basic project information.
+PROJECT_NAME = "PKCS11"
+PROJECT_BRIEF = "PKCS11 Cryptoki Library"
+
+# Library documentation output directory.
+HTML_OUTPUT = pkcs11
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/pkcs11.tag
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION = YES
+PREDEFINED="CK_DECLARE_FUNCTION(return, name)=return name"
+
+# Directories containing library source code.
+INPUT = doc \
+        doc/lib \
+        FreeRTOS-Plus/Source/pkcs11 \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/abstractions/platform/freertos_plus/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/abstractions/platform/freertos_plus/src \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/abstractions/platform/freertos_plus/standard/pkcs11/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/abstractions/platform/freertos_plus/standard/pkcs11/src \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/abstractions/platform/freertos_plus/standard/utils/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/abstractions/platform/freertos_plus/standard/utils/src 
+
+# Library file names.
+FILE_PATTERNS = *pkcs*.c *pkcs*.h *pkcs*.txt *pki*.c *pki*.h

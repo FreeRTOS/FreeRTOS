@@ -1,0 +1,28 @@
+/**
+@mainpage
+@anchor linear_containers
+@brief Linked list and queue data structures and functions. <br><br>
+
+This library provides linear containers, such as linked lists and queues. Linked lists and queues may hold any data type that contain an #IotLink_t member. By default, these containers do not provide thread-safety.
+
+Currently, linear containers are implemented with `static inline` functions and have no dependencies other than C standard library types.
+*/
+
+/**
+@configpage{linear_containers,linear containers library}
+
+@section IOT_CONTAINERS_ENABLE_ASSERTS
+@brief Set this to `1` to perform sanity checks when using linear containers.
+
+Asserts are useful for debugging, but should be disabled in production code.  If this is set to `1`, @ref IotContainers_Assert can be defined to set the assertion function; otherwise, the @ref Iot_DefaultAssert will be used.
+
+@configpossible `0` (asserts disabled) or `1` (asserts enabled)<br>
+@configrecommended `1` when debugging; `0` in production code.<br>
+@configdefault `0`
+
+@section IotContainers_Assert
+@brief Assertion function used when @ref IOT_CONTAINERS_ENABLE_ASSERTS is `1`.
+
+@configpossible Any function with the same signature as the standard library's [assert](http://pubs.opengroup.org/onlinepubs/9699919799/functions/assert.html) function.<br>
+@configdefault @ref Iot_DefaultAssert if @ref IOT_CONTAINERS_ENABLE_ASSERTS is `1`; otherwise, nothing. If @ref Iot_DefaultAssert is not defined when asserts are enabled, the containers library will fail to build.
+*/

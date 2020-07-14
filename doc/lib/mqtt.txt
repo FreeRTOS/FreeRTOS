@@ -1,0 +1,313 @@
+/**
+@mainpage
+@anchor mqtt
+@brief MQTT 3.1.1 client library.
+
+> MQTT stands for MQ Telemetry Transport. It is a publish/subscribe, extremely simple and lightweight messaging protocol, designed for constrained devices and low-bandwidth, high-latency or unreliable networks. The design principles are to minimise network bandwidth and device resource requirements whilst also attempting to ensure reliability and some degree of assurance of delivery. These principles also turn out to make the protocol ideal of the emerging "machine-to-machine" (M2M) or "Internet of Things" world of connected devices, and for mobile applications where bandwidth and battery power are at a premium.
+
+<span style="float:right;margin-right:4em"> &mdash; <i>Official description of MQTT from [mqtt.org](http://mqtt.org)</i></span><br>
+
+This MQTT library implements a subset of the MQTT 3.1.1 standard.  Features of this library include:
+- Both fully asynchronous and blocking API functions.
+- Scalable performance and footprint. The [configuration settings](@ref mqtt_config) allow this library to be tailored to a system's resources.
+
+@attention Currently, this library does not support QoS 2 MQTT messages.
+
+@section mqtt_memory Memory requirements
+@brief Memory requirements of the MQTT library.
+
+@subsection mqtt_memory_code Code size
+@brief Code size of the MQTT library.
+
+The following measurements were taken with arm-none-eabi-gcc v9.2.1 (October 2019) with the [MQTT library from January 2020](https://github.com/aws/aws-iot-device-sdk-embedded-C/tree/f1a8b698b1d2fd5b8475b11a16d399181c1d867f). These values are rough estimates not tuned for any specific ARM processor.
+
+<b>Minimal Size Build</b> <br>
+No logging, asserts, or diagnostic information. Compiled using the ARM Thumb instruction set (`-mthumb`) and optimized for size (`-Os`). Values are in <i>bytes</i>.
+
+<table>
+    <tr>
+        <td><b>object</b></td>
+        <td><b>text</b></td>
+        <td><b>data</b></td>
+        <td><b>bss</b></td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_api</td>
+        <td>2703</td>
+        <td>0</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_network</td>
+        <td>884</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_operation</td>
+        <td>1773</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_serialize</td>
+        <td>2606</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_subscription</td>
+        <td>1244</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_validate</td>
+        <td>444</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td><b>total</b></td>
+        <td><b>9654</b></td>
+        <td><b>4</b></td>
+        <td><b>4</b></td>
+    </tr>
+</table>
+
+<b>Debug Build</b> <br>
+All logging, asserts, and diagnostic information enabled. Debugging symbols available. Compiled using the ARM Thumb instruction set (`-mthumb`). Values are in <i>bytes</i>.
+
+<table>
+    <tr>
+        <td><b>object</b></td>
+        <td><b>text</b></td>
+        <td><b>data</b></td>
+        <td><b>bss</b></td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_api</td>
+        <td>11897</td>
+        <td>0</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_network</td>
+        <td>5412</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_operation</td>
+        <td>10484</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_serialize</td>
+        <td>14454</td>
+        <td>28</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_subscription</td>
+        <td>3885</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>iot_mqtt_validate</td>
+        <td>4330</td>
+        <td>0</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td><b>total</b></td>
+        <td><b>50462</b></td>
+        <td><b>28</b></td>
+        <td><b>4</b></td>
+    </tr>
+</table>
+
+@subsection mqtt_memory_runtime Runtime memory requirements
+@brief Runtime memory requirements of the MQTT library.
+
+<b>The values given below do not consider any dependencies, such as the task pool or TLS stack.</b>
+
+Approximate sizes of MQTT objects are given below. Note that the exact size depends on how certain platform types (such as mutexes) are implemented.<br>
+<table>
+    <tr>
+        <td>Each MQTT connection</td>
+        <td>250 bytes</td>
+    </tr>
+    <tr>
+        <td>Each MQTT operation</td>
+        <td>150 bytes, plus the length of a topic name and message if publishing</td>
+    </tr>
+    <tr>
+        <td>Each MQTT subscription</td>
+        <td>70 bytes, plus the length of the subscription topic filter</td>
+    </tr>
+</table>
+
+For example, consider an application that does the following:
+1. Establishes an MQTT connection.
+2. Subscribes to a topic.
+3. Publishes a message to a topic.
+4. Unsubscribes from a topic.
+5. Closes the connection.
+
+This application is expected to have a peak runtime memory usage of about 600 bytes (not counting any usage by dependencies or the TLS stack).
+
+By default, this memory would be allocated from the heap using the [configured memory allocation functions](@ref mqtt_config_memory). If @ref IOT_STATIC_MEMORY_ONLY is defined to `1`, then the memory will be allocated at compile-time.
+
+@image html mqtt_memory_example.png width=80%
+*/
+
+/**
+@page mqtt_design Design
+@brief Architecture behind the MQTT library.
+
+@section mqtt_design_operations Asynchronous and synchronous operations
+@brief This library provides both asynchronous and synchronous MQTT operations. Asynchronous operation functions end with <b>Async</b>, and their synchronous variants end with <b>Sync</b>.
+
+For example, @ref mqtt_function_publishasync and @ref mqtt_function_publishsync are the respective asynchronous and synchronous MQTT PUBLISH functions. The CONNECT and DISCONNECT operations only have synchronous functions.
+
+Asynchronous functions return immediately to the calling thread after allocating appropriate resources. The application thread can then continue executing while the MQTT operation is processed in the background. Once the MQTT operation is complete, the MQTT library will invoke a callback function provided by the application. The function @ref mqtt_function_wait can be used to wait for an asynchronous operation's completion. It can also be used to cancel asynchronous operations if passed a timeout of `0`.
+
+Synchronous functions block their calling thread until the MQTT operation is complete. Synchronous functions take a timeout parameter; if the operation does not complete within this timeout, the function returns @ref IOT_MQTT_TIMEOUT and cancels the operation. Synchronous operations do not use a callback; they return a value that represents the result of the operation to the calling thread.
+
+@section mqtt_design_asyncoperation Operation diagram
+@brief The following diagram shows the workflow of an operation.
+
+MQTT relies on the [task pool library](@ref taskpool) to process asynchronous MQTT operations in the background. Each MQTT API [function](@ref mqtt_functions) allocates the required resources, then schedules a background task to send the MQTT packet and receive the server's response. Incoming responses are received through a [network receive callback](@ref platform_network_function_receivecallback), which schedules another job to process the response.
+
+Synchronous operations are implemented as a call to the corresponding asynchronous operation. The synchronous function then waits on a semaphore until it receives a notification of completion. The workflow of a synchronous operation is otherwise identical to an asynchronous operation.
+
+Some operations, such as QoS 1 PUBLISHes, may be retried. See @ref IotMqttPublishInfo_t for a description of the retry strategy.
+
+@image html mqtt_design_typicaloperation.png width=80%
+
+@section mqtt_design_subscriptions Subscriptions
+@brief This section provides a description of how the library handles subscriptions.
+
+MQTT subscriptions are added with @ref mqtt_function_subscribeasync or @ref mqtt_function_subscribesync; subscriptions are removed with @ref mqtt_function_unsubscribesync or @ref mqtt_function_unsubscribeasync. Subscriptions are associated with a callback function that will be invoked by the library every time a message matching the associated topic filter is received. For example, if a connection has subscriptions for `#` (which matches everything) and `test`, and a message is received on `test`, the callback functions for both `#` and `test` will be invoked. Callbacks are invoked from the context of a background task pool threads. Because incoming messages are asynchronous (may arrive at any time), subscription callbacks are also asynchronous.
+
+This library supports the use of MQTT persistent sessions. Persistent sessions cause the MQTT server to store subscriptions and undelivered messages. When re-establishing a persistent session, the client should set @ref IotMqttConnectInfo_t.pPreviousSubscriptions and @ref IotMqttConnectInfo_t.previousSubscriptionCount to restore a list of sessions that were present in the persistent session. Setting these members does not send an MQTT SUBSCRIBE packet to the server, so they may only be used with topics that are active on the server.
+
+@section mqtt_design_keepalive Periodic keep-alive
+@brief This section provides a description of the workflow of periodic keep-alive.
+
+The MQTT standard specifies a keep-alive mechanism to detect half-open or otherwise unusable network connections. An MQTT client will send periodic ping requests (PINGREQ) to the server if the connection is idle. The MQTT server must respond to ping requests with a ping response (PINGRESP).
+
+The standard does not specify how long the server has to respond to a ping request, noting only a "reasonable amount of time". In this library, the amount of time a server has to respond to a ping request is set with @ref IOT_MQTT_RESPONSE_WAIT_MS.
+
+The PINGREQ is allocated with the MQTT connection when it is created. A `failure` flag is also set to `0`. For simplicity, the diagram below only shows the portions of MQTT CONNECT relevant for keep-alive.
+
+Once MQTT CONNECT returns to the application, the keep-alive is processed entirely through background tasks. The period of the keep-alive is controlled with @ref IotMqttConnectInfo_t.keepAliveSeconds (represented by `keepAliveSec` in the diagram below). Every `keepAliveSec`, the following code is run by a background task in the task pool.
+1. If another MQTT packet was sent within the keep-alive period, don't send the PINGREQ and reschedule for the next keep-alive period. For simplicity, this is not shown in the diagram below.
+2. The `failure` flag is set to `1`.
+3. A PINGREQ is sent to the server.
+4. If the connection is alive, the server will respond with a PINGRESP. When the client receives the PINGRESP, it sets `failure` to `0`.
+5. After @ref IOT_MQTT_RESPONSE_WAIT_MS, the client checks the `failure` flag. If `failure=0`, then a PINGRESP was received and the next PINGREQ is scheduled. Otherwise, if `failure=1`, then no PINGRESP was received and the connection terminates.
+*/
+
+/**
+@configpage{mqtt,MQTT library}
+
+@section IOT_MQTT_ENABLE_ASSERTS
+@brief Set this to `1` to perform sanity checks when using the MQTT library.
+
+Asserts are useful for debugging, but should be disabled in production code. If this is set to `1`, @ref IotMqtt_Assert can be defined to set the assertion function; otherwise, the @ref Iot_DefaultAssert will be used.
+
+@configpossible `0` (asserts disabled) or `1` (asserts enabled)<br>
+@configrecommended `1` when debugging; `0` in production code.<br>
+@configdefault `0`
+
+@section AWS_IOT_MQTT_ENABLE_METRICS
+@brief Set this to `1` to enable anonymous metrics reporting to AWS IoT.
+
+Metrics allow AWS IoT to prioritize engineering resources based on SDK usage. SDK name and version are reported; no personal or identifying information is reported.
+
+@configpossible `0` (metrics reporting disabled) or `1` (metrics reporting enabled)<br>
+@configrecommended `1`<br>
+@configdefault `1`
+@note This setting is only in effect for [MQTT connections with AWS IoT](@ref IotMqttConnectInfo_t.awsIotMqttMode).
+
+@section IOT_MQTT_ENABLE_SERIALIZER_OVERRIDES
+@brief Set this to `1` to allow the MQTT packet serializer and deserializer functions to be overridden.
+
+Serializer overrides allow the functions that generate and decode MQTT packets to be overridden. When this setting is `1`, each connection may have different serializer and deserializer functions. This allows the MQTT library to be used as a general-purpose transport library (with limitations). Currently, this setting is used to support MQTT over Bluetooth Low-Energy on FreeRTOS. See #IotMqttSerializer_t for a list of functions that can be overridden. If this setting is `1`, the [initialization](@ref mqtt_function_init) and [cleanup](@ref mqtt_function_cleanup) functions may be extended by defining `_IotMqtt_InitSerializeAdditional` and `_IotMqtt_CleanupSerializeAdditional`. These functions will be called along with the default initialization and cleanup functions. They must have the following signatures:
+@code{c}
+#include <stdbool.h>
+
+// Returns true on success and false on failure.
+bool _IotMqtt_InitSerializeAdditional( void );
+void _IotMqtt_CleanupSerializeAdditional( void );
+@endcode
+
+@configpossible `0` (serializer overrides disabled) or `1` (serializer overrides enabled)<br>
+@configrecommended The default value is <b>strongly recommended</b>.<br>
+@configdefault The default value of this setting depends on the platform. For example, when running on FreeRTOS with BLE support, this setting will be automatically enabled. Conversely, when running on Linux, this setting will be disabled.
+
+@section IOT_LOG_LEVEL_MQTT
+@brief Set the log level of the MQTT library.
+
+Log messages from the MQTT library at or below this setting will be printed.
+
+@configpossible One of the @ref logging_constants_levels.<br>
+@configdefault @ref IOT_LOG_LEVEL_GLOBAL; if that is undefined, then #IOT_LOG_NONE.
+
+@section IOT_MQTT_RESPONSE_WAIT_MS
+@brief A "reasonable amount of time" to wait for keep-alive responses from the MQTT server.
+
+The MQTT spec states that if a response to a keep-alive request is not received within a "reasonable amount of time", the network connection should be closed. Since the meaning of "reasonable" depends heavily on use case, the amount of time to wait for keep-alive responses is defined by this setting. This setting is also used as the amount of time to wait for a final PUBACK to a QoS 1 PUBLISH message before returning #IOT_MQTT_RETRY_NO_RESPONSE. See #IotMqttPublishInfo_t for a description of QoS 1 PUBLISH retries.
+
+@configpossible Any positive integer.<br>
+@configdefault `1000`
+
+@section IOT_MQTT_RETRY_MS_CEILING
+@brief Controls the maximum [retry interval](@ref IotMqttPublishInfo_t.retryMs) of QoS 1 PUBLISH retransmissions.
+
+QoS 1 PUBLISH retransmissions follow a truncated exponential backoff strategy. The interval of time between retransmissions increases exponentially until @ref IOT_MQTT_RETRY_MS_CEILING (or the [retransmission limit)](@ref IotMqttPublishInfo_t.retryLimit) is reached, then increases by @ref IOT_MQTT_RETRY_MS_CEILING until the [retransmission limit](@ref IotMqttPublishInfo_t.retryLimit) is reached.
+
+@see #IotMqttPublishInfo_t for a detailed description of the QoS 1 PUBLISH retransmission strategy.
+
+@configpossible Any positive integer.<br>
+@configdefault `60000`
+
+@section IotMqtt_Assert
+@brief Assertion function used when @ref IOT_MQTT_ENABLE_ASSERTS is `1`.
+
+@configpossible Any function with the same signature as the standard library's [assert](http://pubs.opengroup.org/onlinepubs/9699919799/functions/assert.html) function.<br>
+@configdefault @ref Iot_DefaultAssert if @ref IOT_MQTT_ENABLE_ASSERTS is `1`; otherwise, nothing. If @ref Iot_DefaultAssert is not defined when asserts are enabled, the MQTT library will fail to build.
+
+@section mqtt_config_memory Memory allocation
+@brief The following functions may be re-implemented for the MQTT library.
+- #IotMqtt_MallocConnection <br>
+  @copybrief IotMqtt_MallocConnection
+- #IotMqtt_FreeConnection <br>
+  @copybrief IotMqtt_FreeConnection
+- #IotMqtt_MallocMessage <br>
+  @copybrief IotMqtt_MallocMessage
+- #IotMqtt_FreeMessage <br>
+  @copybrief IotMqtt_FreeMessage
+- #IotMqtt_MallocOperation <br>
+  @copybrief IotMqtt_MallocOperation
+- #IotMqtt_FreeOperation <br>
+  @copybrief IotMqtt_FreeOperation
+- #IotMqtt_MallocSubscription <br>
+  @copybrief IotMqtt_MallocSubscription
+- #IotMqtt_FreeSubscription <br>
+  @copybrief IotMqtt_FreeSubscription
+
+If a custom implementation is not set for an MQTT memory allocation function, @ref Iot_DefaultMalloc will be used. If @ref Iot_DefaultMalloc are not set, the MQTT library will fail to build.
+
+When @ref IOT_STATIC_MEMORY_ONLY is `1`, the following settings configure the number of statically-allocated buffers for MQTT.
+- @anchor IOT_MQTT_CONNECTIONS IOT_MQTT_CONNECTIONS <br>
+  Number of MQTT connections that may be opened. Defaults to `1` if undefined.
+- @anchor IOT_MQTT_MAX_IN_PROGRESS_OPERATIONS IOT_MQTT_MAX_IN_PROGRESS_OPERATIONS <br>
+  Maximum number of MQTT operations that may be in-progress at any time. Defaults to `10` if undefined.
+- @anchor IOT_MQTT_SUBSCRIPTIONS IOT_MQTT_SUBSCRIPTIONS <br>
+  Maximum number of MQTT subscriptions at any time. Defaults to `8` if undefined.
+*/

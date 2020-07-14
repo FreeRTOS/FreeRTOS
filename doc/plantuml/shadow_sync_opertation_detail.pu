@@ -1,0 +1,78 @@
+@startuml
+skinparam classFontSize 8
+skinparam classFontName Helvetica
+
+box "Application Task" #LightBlue
+actor Application as app
+participant "Shadow API" as shadow
+participant "Internal Shadow functions" as internal
+participant "MQTT API" as mqtt
+end box
+
+
+box "Task Pool" #LightGreen
+participant "MQTT subscription callback" as callback
+end box
+
+app -> shadow: Call Shadow Operation\nInput:\nIotMqttConnection_t,\nThingName,\nAwsIotShadowDocumentInfo_t,\nFlags
+activate shadow
+
+shadow -> internal: Validate arguments\nInput:\nIotMqttConnection_t,\nThingName,\nAwsIotShadowDocumentInfo_t,\nFlags
+deactivate shadow
+activate internal
+note over internal: _validateThingNameFlags\n_validateDocumentInfo
+internal -> internal: Check ThingNameFlags
+internal -> internal: Check AwsIotShadowDocumentInfo_t
+return Return SUCCESS or BAD_PARAMETER
+activate shadow
+
+shadow -> internal: Create operation\nInput:\nOperation,\nFlags
+deactivate shadow
+activate internal
+note over internal: _AwsIotShadow_CreateOperation
+internal -> internal: Calculate required memory for AwsIotShadowOperation_t
+internal -> internal: Malloc AwsIotShadowOperation_t
+internal -> internal: Setup AwsIotShadowOperation_t
+return Return AwsIotShadowOperation_t
+activate shadow
+
+shadow -> internal: Process operation\nInput:\nIotMqttConnection_t\nThingName\nAwsIotShadowOperation_t\nAwsIotShadowDocumentInfo_t
+deactivate shadow
+activate internal
+note over internal: _AwsIotShadow_ProcessOperation
+internal -> internal: Generate topic for operation
+alt Topic has subscription
+internal -> internal: Retrieve subscription
+else
+internal -> internal: Create subscription for 'accepted' and 'rejected' topics
+internal -> mqtt: Subscribe for 'accepted' and 'rejected' topics for Shadow
+mqtt -> internal: Return SUCCESS or error
+alt If error for subscription
+internal -> shadow: Return error
+shadow -> app: Return AWS_IOT_SHADOW_MQTT_ERROR
+end alt
+end alt
+internal -> internal: Create MQTT PUBLISH command
+internal -> internal: Add AwsIotShadowOperation_t to pending list
+internal -> mqtt: Send MQTT PUBLISH
+mqtt -> : Transmit MQTT packet using network stack
+mqtt -> internal: Return SUCCESS or error
+internal -> shadow: Return SUCCESS or error
+deactivate internal
+activate shadow
+shadow -> shadow: Wait on a semaphore for MQTT response
+
+
+note over callback: _commonOperationCallback\nResponse received: Topic, Message
+activate callback
+callback -> callback: Parse Thing Name in Topic
+callback -> callback: Match Thing Name with pending operation
+callback -> callback: Parse ACCEPTED or REJECTED Status
+callback -> shadow: Post semaphore to unblock the wait.
+callback -> callback: Destroy AwsIotShadowOperation_t
+deactivate callback
+shadow -> app: Return AwsIotShadowError_t
+deactivate shadow
+
+
+@enduml

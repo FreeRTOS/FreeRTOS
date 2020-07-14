@@ -1,0 +1,241 @@
+/**
+@mainpage
+@anchor jobs
+@brief AWS IoT Device Jobs library.
+
+> AWS IoT jobs can be used to define a set of remote operations that are sent to and executed on one or more devices connected to AWS IoT.
+
+<span style="float:right;margin-right:4em"> &mdash; <i>Description of Jobs from [AWS IoT documentation](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html)</i></span><br>
+
+This library provides an API based on the [Jobs APIs available over MQTT](https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api). Features of this library include:
+- Both fully asynchronous and blocking API functions.
+- API functions for interacting with Jobs and registering notifications for pending Jobs.
+
+*/
+
+/**
+@page jobs_design Design
+@brief Architecture behind the Jobs library.
+
+The Jobs library uses MQTT subscriptions and publishes to communicate with the AWS IoT Jobs Service. Jobs operations such as Get Pending, Start Next, Describe, and Update use MQTT subscriptions to two MQTT topics in order to receive their accepted/rejected status, and publish to the appropriate topic for the operation. The Jobs Notify Next callback uses an MQTT subscription to receive data from the AWS IoT Jobs Service when the information for the next job in the queue changes. The Notify Pending callbacks does the same for the case when any job changes. These callbacks are run in MQTT's taskpool context.
+
+@section jobs_synchronous_design Synchronous Design
+@image html jobs_sync_detail.png width=100%
+
+@section jobs_asynchronous_design Asynchronous Design
+@image html jobs_async_detail.png width=100%
+*/
+
+/**
+@page jobs_demo Demo
+@brief Demonstrates the usage of the Jobs library.
+
+This demo provides a simple example on using the Jobs library and working with AWS IoT Jobs.
+
+The Jobs demo establishes an MQTT connection and registers a [Jobs NotifyNext callback](@ref jobs_function_setnotifynextcallback). It then waits for new Jobs. When a Job arrives, the demo parses the Job document and takes action based on the document content.
+
+@section jobs_demo_setup Demo Setup
+@brief How to set up Jobs for the Jobs demo.
+
+Because the Jobs MQTT API does not support creating Jobs, you must create Jobs for the demo separately. We recommend using AWS CLI to create Jobs.
+
+1. Create a user for AWS CLI. See steps 1 and 2 of @ref guide_developer_automated_tests_jobs for more information.
+2. Build and run the demo as described [here](@ref building).
+3. When the following message appears, you may begin creating Jobs for the demo.
+@code{sh}
+/*-----------------------------------------------------------*/
+
+The Jobs demo is now ready to accept Jobs.
+Jobs may be created using the AWS IoT console or AWS CLI.
+See the following link for more information.
+
+https://docs.aws.amazon.com/cli/latest/reference/iot/create-job.html
+
+This demo expects Job documents to have an "action" JSON key.
+The following actions are currently supported:
+ - print
+   Logs a message to the local console. The Job document must also contain a "message".
+   For example: { "action": "print", "message": "Hello world!"} will cause
+   "Hello world!" to be printed on the console.
+ - publish
+   Publishes a message to an MQTT topic. The Job document must also contain a "message" and "topic".
+   For example: { "action": "publish", "topic": "demo/jobs", "message": "Hello world!"} will cause
+   "Hello world!" to be published to the topic "demo/jobs".
+ - exit
+   Exits the demo program. This program will run until { "action": "exit" } is received.
+
+/*-----------------------------------------------------------*/
+@endcode
+
+The supported actions are described above. As an example, the command to create a "publish" Job with AWS CLI is below. Replace `UniqueId` with a Job ID that is unique, and `ThingARN` with the ARN of the target Thing.
+
+@code{sh}
+aws iot create-job \
+        --job-id UniqueId \
+        --targets ThingARN \
+        --document '{"action":"publish","message":"Hello world!","topic":"jobsdemo/1"}'
+@endcode
+
+This will cause the Jobs demo to publish the message `Hello world!` on the topic `jobsdemo/1`. You may view this message by subscribing to the topic in AWS IoT Console.
+
+When the demo finishes with a Job, it will mark the Jobs as complete. Note that completed Jobs are not automatically removed from the AWS IoT Console. The following command can be used to remove completed Jobs. Replace `UniqueId` with the Job ID.
+
+@code{sh}
+aws iot delete-job --job-id UniqueId
+@endcode
+
+# Demo Structure
+The Jobs demo uses the <i>asynchronous</i> API of the Jobs library. Most of the demo is run from the NotifyNext callback.
+
+@image html jobs_demo.png "Jobs Demo Execution Sequence" width=80%
+
+@note Messages from the Jobs service (which are sent at MQTT QoS 1) may be received multiple times. The Jobs NotifyNext callback must be able to handle duplicated Job documents.
+*/
+
+/**
+@page jobs_tests Tests
+@brief Tests written for the Jobs library.
+
+The Jobs tests reside in the `jobs/test` directory. They are divided into the following subdirectories:
+- `system`: Jobs system tests. These tests require a network connection and AWS IoT credentials. They also need an AWS account and registered Thing; see @ref jobs_system_tests_setup for instructions to configure an AWS account to run these tests. The command line option `-n` may be passed to the test executable to disable these tests.
+- `unit`: Jobs unit tests. These tests do not require a network connection or credentials. These tests use the [MQTT mocks.](@ref mqtt_tests)
+
+See @subpage jobs_tests_config for configuration settings that change the behavior of the Jobs system tests. The Jobs unit tests require no special configuration.
+
+The current Jobs tests use the [Unity test framework](http://www.throwtheswitch.org/unity/). See @ref building_tests for a guide on running the tests.
+
+@section jobs_system_tests_setup Setting up Jobs system tests
+@brief How to set up the Jobs system tests.
+
+@pre The steps below assume basic familiarity with AWS and AWS CLI.
+
+The Jobs system tests require Jobs to be created with an AWS account. AWS does not provide the functionality to create Jobs using the Device API; therefore, Jobs will have to be created using another method.
+
+See @ref guide_developer_automated_tests_jobs for additional setup for running the Jobs tests on Travis CI.
+
+1. Register a Thing for the tests. This needs to be done only once. <br>
+Follow [this guide](https://docs.aws.amazon.com/iot/latest/developerguide/register-device.html) to register a new Thing.
+2. Create an IAM user for the tests. This needs to be done only once. <br>
+Follow [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) to create an IAM user for the Jobs tests.
+    - Only <b>programmatic access</b> is required.
+    - Save the <b>access key</b> and <b>secret access key</b> for this user.
+    - The following policy grants the necessary permissions for this user. Replace `<region>` and `<account>` with your AWS region and account number, respectively; replace `<ThingName>` with the name of the Thing registered in step 1.
+```
+{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Effect": "Allow",
+        "Action": [
+            "iot:CreateJob",
+            "iot:DeleteJob",
+            "iot:DeleteJobExecution"
+        ],
+        "Resource": [
+            "arn:aws:iot:<region>:<account>:job/*",
+            "arn:aws:iot:<region>:<account>:thing/<ThingName>"
+        ]
+    }
+}
+```
+3. Create two Jobs for the tests. This must be done every time the system tests are run. <br>
+At least <b>two</b> new jobs should be in the `QUEUED` state each time the tests are run. To create a Job, the following AWS CLI command may be used. Replace `UniqueId` with a Job ID that is unique, and `ThingARN` with the ARN of the Thing registered in step 1. The `--document` argument can be followed by any JSON string.
+```sh
+aws iot create-job \
+        --job-id UniqueId \
+        --targets ThingARN \
+        --document '{"action":"print","message":"Hello world!"}'
+```
+When the Jobs tests are finished, the Jobs it uses are no longer needed. Jobs can be deleted with the following command, where `UniqueId` is the Job ID used to create the Job.
+```sh
+aws iot delete-job --job-id UniqueId --force
+```
+*/
+
+/**
+@configpage{jobs_tests,Jobs system tests,Test,tests}
+
+@section AWS_IOT_TEST_JOBS_THING_NAME
+@brief The Thing Name to use in the Jobs system tests.
+
+Thing Names are used to manage devices with AWS IoT. <b>No default value is provided for Thing Names, so this constant must be defined.</b> In addition to the Thing Name, AWS IoT credentials ([root CA certificate](@ref IOT_TEST_ROOT_CA), [client certificate](@ref IOT_TEST_CLIENT_CERT), and [client certificate private key](@ref IOT_TEST_PRIVATE_KEY)) must be provided to run the system tests. The [AWS IoT policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must also be properly configured.
+
+@configpossible A string representing an AWS IoT Thing Name.
+
+@section jobs_IOT_TEST_MQTT_SHORT_KEEPALIVE_INTERVAL_S IOT_TEST_MQTT_SHORT_KEEPALIVE_INTERVAL_S
+@brief The keep-alive interval to use in the Jobs system tests.
+
+MQTT PINGREQ packets will be sent at this interval.
+
+@configpossible Any positive integer. <br>
+@configrecommended This value should be the shortest keep-alive interval supported by the connection. <br>
+@configdefault `30`
+*/
+
+/**
+@configpage{jobs,Jobs library}
+
+@section AWS_IOT_JOBS_ENABLE_ASSERTS
+@brief Set this to `1` to perform sanity checks when using the Jobs library.
+
+Asserts are useful for debugging, but should be disabled in production code. If this is set to `1`, @ref AwsIotJobs_Assert can be defined to set the assertion function; otherwise, the @ref Iot_DefaultAssert will be used.
+
+@configpossible `0` (asserts disabled) or `1` (asserts enabled)<br>
+@configrecommended `1` when debugging; `0` in production code.<br>
+@configdefault `0`
+
+@section AWS_IOT_JOBS_DEFAULT_MQTT_TIMEOUT_MS
+@brief Set the default timeout (in milliseconds) for [MQTT library](@ref mqtt_functions) called by the Jobs library.
+
+If the `mqttTimeout` argument of @ref jobs_function_init is `0`, the Jobs library uses this setting for MQTT timeouts. This timeout is passed to functions such as @ref mqtt_function_subscribesync, @ref mqtt_function_unsubscribesync, and @ref mqtt_function_publishsync to limit amount of time an MQTT function may block.
+
+@configpossible Any positive integer.<br>
+@configrecommended This setting must be at least the network round-trip time, as an MQTT packet must be sent to the AWS IoT server and a response must be received. The recommended minimum value is `500`.<br>
+@configdefault `5000`
+
+@section AWS_IOT_JOBS_NOTIFY_CALLBACKS
+@brief Set the maximum number of Jobs Notify callbacks of each type for each Thing.
+
+This setting affects the behavior of @ref jobs_function_setnotifynextcallback and @ref jobs_function_setnotifypendingcallback. There is only one Job notification topic of each type for each Thing. This setting allows multiple callbacks to be registered for the single notification topic, allowing multiple applications to respond to the notifications received.
+
+All registered callbacks will be invoked when a notification arrives. The order in which the callbacks are invoked may vary. Therefore, it is the responsibility of each callback to ignore Job notifications that are not intended for it.
+
+@configpossible Any positive integer.<br>
+@configdefault `1`
+
+@section AWS_IOT_LOG_LEVEL_JOBS
+@brief Set the log level of the Jobs library.
+
+Log messages from the Jobs library at or below this setting will be printed.
+
+@configpossible One of the @ref logging_constants_levels.<br>
+@configdefault @ref IOT_LOG_LEVEL_GLOBAL; if that is undefined, then #IOT_LOG_NONE.
+
+@section AwsIotJobs_Assert
+@brief Assertion function used when @ref AWS_IOT_JOBS_ENABLE_ASSERTS is `1`.
+
+@configpossible Any function with the same signature as the standard library's [assert](http://pubs.opengroup.org/onlinepubs/9699919799/functions/assert.html) function.<br>
+@configdefault @ref Iot_DefaultAssert if @ref AWS_IOT_JOBS_ENABLE_ASSERTS is `1`; otherwise, nothing. If @ref Iot_DefaultAssert is not defined when asserts are enabled, the Jobs library will fail to build.
+
+@section jobs_config_memory Memory allocation
+@brief The following functions may be re-implemented for the Jobs library.
+- #AwsIotJobs_MallocOperation <br>
+  @copybrief AwsIotJobs_MallocOperation
+- #AwsIotJobs_FreeOperation <br>
+  @copybrief AwsIotJobs_FreeOperation
+- #AwsIotJobs_MallocString <br>
+  @copybrief AwsIotJobs_MallocString
+- #AwsIotJobs_FreeString <br>
+  @copybrief AwsIotJobs_FreeString
+- #AwsIotJobs_MallocSubscription <br>
+  @copybrief AwsIotJobs_MallocSubscription
+- #AwsIotJobs_FreeSubscription <br>
+  @copybrief AwsIotJobs_FreeSubscription
+
+If a custom implementation is not set for a Jobs memory allocation function, @ref Iot_DefaultMalloc will be used. If @ref Iot_DefaultMalloc are not set, the Jobs library will fail to build.
+
+When @ref IOT_STATIC_MEMORY_ONLY is `1`, the following settings configure the number of statically-allocated buffers for Jobs.
+- @anchor AWS_IOT_JOBS_MAX_IN_PROGRESS_OPERATIONS AWS_IOT_JOBS_MAX_IN_PROGRESS_OPERATIONS <br>
+  Maximum number of Jobs operations that may be in-progress at any time. Defaults to `10` if undefined.
+- @anchor AWS_IOT_JOBS_SUBSCRIPTIONS AWS_IOT_JOBS_SUBSCRIPTIONS <br>
+  Maximum number of Jobs subscriptions at any time. Defaults to `2` if undefined.
+*/

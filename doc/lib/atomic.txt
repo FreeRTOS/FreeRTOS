@@ -1,0 +1,28 @@
+/**
+@functionspage{platform_atomic,platform atomic operations,Atomic}
+- @functionname{platform_atomic_function_atomic_compareandswap_u32}
+- @functionname{platform_atomic_function_atomic_swappointers_p32}
+- @functionname{platform_atomic_function_atomic_compareandswappointers_p32}
+- @functionname{platform_atomic_function_atomic_add_u32}
+- @functionname{platform_atomic_function_atomic_subtract_u32}
+- @functionname{platform_atomic_function_atomic_increment_u32}
+- @functionname{platform_atomic_function_atomic_decrement_u32}
+- @functionname{platform_atomic_function_atomic_or_u32}
+- @functionname{platform_atomic_function_atomic_and_u32}
+- @functionname{platform_atomic_function_atomic_nand_u32}
+- @functionname{platform_atomic_function_atomic_xor_u32}
+*/
+
+/**
+@functionpage{Atomic_CompareAndSwap_u32,platform_atomic,atomic_compareandswap_u32}
+@functionpage{Atomic_SwapPointers_p32,platform_atomic,atomic_swappointers_p32}
+@functionpage{Atomic_CompareAndSwapPointers_p32,platform_atomic,atomic_compareandswappointers_p32}
+@functionpage{Atomic_Add_u32,platform_atomic,atomic_add_u32}
+@functionpage{Atomic_Subtract_u32,platform_atomic,atomic_subtract_u32}
+@functionpage{Atomic_Increment_u32,platform_atomic,atomic_increment_u32}
+@functionpage{Atomic_Decrement_u32,platform_atomic,atomic_decrement_u32}
+@functionpage{Atomic_OR_u32,platform_atomic,atomic_or_u32}
+@functionpage{Atomic_AND_u32,platform_atomic,atomic_and_u32}
+@functionpage{Atomic_NAND_u32,platform_atomic,atomic_nand_u32}
+@functionpage{Atomic_XOR_u32,platform_atomic,atomic_xor_u32}
+*/

@@ -1,0 +1,77 @@
+@startuml
+skinparam classFontSize 8
+skinparam classFontName Helvetica
+autonumber
+
+participant "Application" as app
+participant "User Callback" as callback
+participant "Job" as job
+
+participant "Task Pool public API" as TP
+participant "Dispatch queue" as queue
+participant "Worker Threads" as workers
+
+box "Task Pool" #LightBlue
+    participant TP
+    participant queue
+    participant workers
+end box
+
+== Create Task Pool ==
+
+activate app
+
+app -[#blue]> TP: IotTaskPool_Create: create a Task 
+TP -> queue: Initialize dispatch queue
+activate queue
+TP -> workers: Create minimum number of worker threads
+activate workers
+TP --[#blue]> app
+activate TP
+workers -> workers: Wait on incoming jobs
+
+== Use Task Pool ==
+
+loop Application loop: Create and schedule jobs
+	app -[#blue]> TP: IotTaskPool_CreateRecyclableJob: create a job
+	TP --[#blue]> app
+	activate job
+	note left: job status: //ready//
+	
+	app -[#blue]> TP: IotTaskPool_Schedule: schedule a job
+	TP -> queue: Queue job
+	TP -> TP: Grow pool up to maximum threads, if all threads are busy
+	TP -> workers: Signal incoming job
+	TP --[#blue]> app
+	note left: job status: //scheduled//
+	
+	loop Outer dispatch loop: Wait on incoming jobs
+		workers -> queue: Dequeue next job
+		loop Inner dispatch loop: Execute any queue jobs in order
+			workers -[#green]> job: Invoke user callback
+			note left: job status: //executing//
+			job -[#green]> callback: Invoke
+			activate callback
+			callback -[#blue]> TP: IotTaskPool_RecycleJob: recycles job
+			TP --[#blue]> callback
+			note left: job status: //completed//
+			deactivate job
+			deactivate callback
+			workers -> workers: Move to next job
+		end
+		workers -> workers: Wait on incoming jobs
+	end
+	
+end
+	
+== Destroy Task Pool ==
+
+    app -[#blue]> TP: IotTaskPool_Destroy: destroy the task pool
+	TP -> workers: Shutdown worker threads
+	deactivate workers
+	TP -> queue: Destroy all jobs in the dispatch queue
+	deactivate queue
+    TP --[#blue]> app
+	deactivate TP
+
+@enduml

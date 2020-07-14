@@ -1,0 +1,93 @@
+/**
+@mainpage Logging
+@anchor logging
+@brief Generate and print log messages. <br><br>
+
+This library allows other libraries to generate and print log messages, which can aid in debugging. Log messages are printed by passing strings to one of the [logging functions]( @ref logging_functions). The features of this library include:
+- [Configurable levels](@ref logging_constants_levels) for log messages and libraries.
+- Automatic printing of log level, library name, and time with every message. The information printed with each message [may be customized](@ref IotLogConfig_t).
+- A [function to print the contents of buffers](@ref logging_function_printbuffer) when using the [debug](@ref IOT_LOG_DEBUG) log level. This allows the contents of memory to be easily examined.
+
+@section logging_setup_use Setup and use
+@brief How to set up and use the logging library.
+
+The file iot_logging_setup.h should be included to configure logging for a single source file. Before including iot_logging_setup.h, the constants @ref LIBRARY_LOG_LEVEL and @ref LIBRARY_LOG_NAME must be defined.
+
+For example, to configure all the "SAMPLE" library to print all messages below the [info](@ref IOT_LOG_INFO) log level:
+
+@code{c}
+// Print log messages up to the "info" level.
+#define LIBRARY_LOG_LEVEL    IOT_LOG_INFO
+
+// Print library name "SAMPLE".
+#define LIBRARY_LOG_NAME     "SAMPLE"
+
+// Including this header defines the logging macros using LIBRARY_LOG_LEVEL and
+// LIBRARY_LOG_NAME.
+#include "iot_logging_setup.h"
+
+int main( void )
+{
+    // After including iot_logging_setup.h, the logging functions can be used.
+    IotLogError( "Error." );      // Will be printed because IOT_LOG_ERROR <= LIBRARY_LOG_LEVEL
+    IotLogWarn( "Warning. " );    // Will be printed because IOT_LOG_WARN <= LIBRARY_LOG_LEVEL
+    IotLogInfo( "Info." );        // Will be printed because IOT_LOG_INFO <= LIBRARY_LOG_LEVEL
+    IotLogDebug( "Debug." );      // Will not be printed because IOT_LOG_DEBUG > LIBRARY_LOG_LEVEL
+
+    return 0;
+}
+@endcode
+
+The code above will print something like the following:
+
+@code
+[ERROR][SAMPLE][2018-01-01 12:00:00] Error.
+[WARN ][SAMPLE][2018-01-01 12:00:00] Warning.
+[INFO ][SAMPLE][2018-01-01 12:00:00] Info.
+@endcode
+*/
+
+/**
+@configpage{logging,logging library}
+
+@section LIBRARY_LOG_LEVEL
+@brief The log level for a source file.
+
+Sets the log level for a single source file. A log message will only be printed if its level is less than this setting.
+
+Both this constant and @ref LIBRARY_LOG_NAME must be defined before including iot_logging_setup.h. See @ref logging_setup_use for an example on how to use this setting.
+
+@configpossible One of the @ref logging_constants_levels.
+@note This value must be defined if iot_logging_setup.h is included. The library will not provide a default value for this setting.
+
+@section LIBRARY_LOG_NAME
+@brief The library name printed in log messages.
+
+Sets the library name for a single source file. By default, all log messages contain the library name. The library name may be disabled for a single log message by setting passing an #IotLogConfig_t with [hideLibraryName](@ref IotLogConfig_t.hideLibraryName) set to `true`.
+
+Both this constant and @ref LIBRARY_LOG_LEVEL must be defined before including iot_logging_setup.h. See @ref logging_setup_use for an example on how to use this setting.
+
+@configpossible Any string.
+@note This value must be defined if iot_logging_setup.h is included. The library will not provide a default value for this setting.
+
+@section IotLogging_Puts
+@brief Logging library output function.
+
+The logging library calls this function to print strings. Like the standard library's [puts](http://pubs.opengroup.org/onlinepubs/9699919799/functions/puts.html) function, this function should write a newline after the string, as log messages may not end with a newline. This setting provided the flexibility to log over different channels. For example, if no `stdout` is available, this function may be set to log over other channels such as UART or a network.
+
+Although this function is supposed to return an `int`, the logging library does not check its return value. Therefore, a function with no return type is also acceptable.
+
+@configpossible Any function with the same parameter as the standard library's [puts](http://pubs.opengroup.org/onlinepubs/9699919799/functions/puts.html) function. Since the logging library does not check the return value of this function, the return type may differ from [puts](http://pubs.opengroup.org/onlinepubs/9699919799/functions/puts.html).<br>
+@configdefault Standard library [puts](http://pubs.opengroup.org/onlinepubs/9699919799/functions/puts.html) function.
+
+@section logging_config_memory Memory allocation
+@brief If @ref IOT_STATIC_MEMORY_ONLY is `1`, then the following functions must be re-implemented for the logging library.
+- #IotLogging_Malloc <br>
+  @copybrief IotLogging_Malloc
+- #IotLogging_Free <br>
+  @copybrief IotLogging_Free
+- #IotLogging_StaticBufferSize <br>
+  @copybrief IotLogging_StaticBufferSize
+
+Note that the logging library will silently discard logs if it fails to allocate memory for the message.
+*/

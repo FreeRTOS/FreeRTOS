@@ -1,0 +1,123 @@
+/**
+@mainpage
+@anchor pkcs11
+@brief PKCS #11 Crytpo Abstraction Library.
+
+> PKCS #11 is a standard maintained by OASIS for interacting with cryptographic hardware.
+
+<span style="float:right;margin-right:4em"> &mdash; <i>Official documentation of PKCS #11 from [oasis](http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/os/pkcs11-base-v2.40-os.html)</i></span><br>
+
+This PKCS #11 library implements a subset of the PKCS #11 API required to establish a secure connection to AWS IoT:
+- Verifying the contents of a message.
+- Signing a message.
+- Managing certificates and keys.
+- Generating random numbers.
+*/
+
+/**
+@page pkcs11_design Design
+@brief Architecture for how the PKCS #11 demos work.
+
+@section PKCS11Architecture Application Architecture using PKCS #11 for mutual authentication
+@image html pkcs11_architecture.png width=80%
+*/
+
+
+/**
+@constantspage{pkcs11,PKCS #11 library}
+@section pkcs11_pal_constants PKCS #11 PAL File Names
+
+@brief Provide file name mappings for the TLS client certificate, and keys.
+This value can be modified to create custom .dat file names.
+
+@warning If these values are not properly mapped to files in the Windows file system, located in the same location
+as the solution, the application will fail to use them for it's TLS needs.
+
+<b>Default values</b>
+@code{c}
+ #define pkcs11palFILE_NAME_CLIENT_CERTIFICATE    "FreeRTOS_P11_Certificate.dat"
+ #define pkcs11palFILE_NAME_KEY                   "FreeRTOS_P11_Key.dat"
+ #define pkcs11palFILE_CODE_SIGN_PUBLIC_KEY       "FreeRTOS_P11_CodeSignKey.dat"
+@endcode
+*/
+
+/**
+@configpage{pkcs11,PKCS #11 library}
+
+@section configPKCS11_DEFAULT_USER_PIN
+@brief The default user pin for PKCS #11. This feature is generally not used for microcontroller based applications.
+
+@configpossible Any four digit code
+@configdefault `"0000"`
+
+@section pkcs11configMAX_LABEL_LENGTH
+@brief Max length of a PKCS #11 Label attribute
+
+PKCS #11 uses labels to map human readable strings to a PKCS #11 object. This defines the maximum allowable length for such a string.
+
+@configpossible Any positive integer.<br>
+@configdefault `32`
+
+@section pkcs11configMAX_NUM_OBJECTS
+@brief Maximum number of token objects that can be stored by the PKCS #11 module.
+
+The maximum number of token objects that can be stored by the PKCS #11 module.
+
+@configpossible Any positive integer.<br>
+@configdefault `6`
+
+@section pkcs11configPAL_DESTROY_SUPPORTED
+@brief Set to 1 if a PAL destroy object is implemented.
+
+Set to 1 if a PAL destroy object is implemented. If not implemented PKCS #11 will not be able to destroy existing objects.
+
+@configpossible Any positive integer.<br>
+@configdefault `0`
+
+@section pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS
+@brief The PKCS #11 label for device private key.
+
+The PKCS #11 label for device private key. Private key for connection to AWS IoT endpoint.
+The corresponding public key should be registered with the AWS IoT endpoint.
+
+@configpossible Any String smaller then pkcs11configMAX_LABEL_LENGTH.<br>
+@configdefault `Device Priv TLS Key`
+
+
+@section pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS
+@brief The PKCS #11 label for device private key.
+
+The public key corresponding to pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS.
+
+@configpossible Any String smaller then pkcs11configMAX_LABEL_LENGTH.<br>
+@configdefault `Device Pub TLS Key`
+
+@section pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS
+@brief The PKCS #11 label for the device certificate.
+Device certificate corresponding to pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS.
+
+@configpossible Any String smaller then pkcs11configMAX_LABEL_LENGTH.<br>
+@configdefault `Device Cert`
+
+@section pkcs11configLABEL_ROOT_CERTIFICATE 
+@brief The PKCS #11 label for the AWS Trusted Root Certificate.
+
+The PKCS #11 label for the AWS Trusted Root Certificate.
+
+@configpossible Any String smaller then pkcs11configMAX_LABEL_LENGTH.<br>
+@configdefault `Root Cert`
+*/
+
+/**
+@functionspage{pkcs11,PKCS #11 Library}
+
+- @subpage pkcs11_pal_functions <br>
+  @copybrief pkcs11_pal_functions
+- @subpage pkcs11_mbedtls_functions <br>
+  @copybrief pkcs11_mbedtls_functions
+- @subpage pkcs11_iot_functions <br>
+  @copybrief pkcs11_iot_functions
+- @subpage pkcs11_utils_functions <br>
+  @copybrief pkcs11_utils_functions
+*/
+

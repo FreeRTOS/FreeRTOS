@@ -1,0 +1,9 @@
+/**
+@mainpage
+@anchor static_memory
+@brief @copybrief iot_static_memory.h <br><br>
+
+The static memory component manages statically-allocated buffers for other libraries that are used instead of dynamic memory allocation when @ref IOT_STATIC_MEMORY_ONLY is `1`. Using static memory only <b>does not guarantee that memory allocation will always succeed</b>; it's possible for all statically-allocated buffers to be in-use. However, static memory only <b>can guarantee the availability of <i>at least</i> a certain amount of resources</b>. Because space must be reserved for statically-allocated buffers, binaries compiled with static memory only will be larger.
+
+This component primarily provides functions for libraries to manage static buffers, @ref static_memory_function_findfree and @ref static_memory_function_returninuse. By itself it provides "message buffers", intended to hold strings, such as log messages or bytes transmitted over a network.
+*/

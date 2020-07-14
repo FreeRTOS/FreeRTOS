@@ -1,0 +1,36 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+LAYOUT_FILE = doc/config/layout_mqtt.xml
+
+# Basic project information.
+PROJECT_NAME = "MQTT"
+PROJECT_BRIEF = "MQTT 3.1.1 client library"
+
+# Library documentation output directory.
+HTML_OUTPUT = mqtt
+
+# Generate documentation for MQTT packet serializer overrides.
+PREDEFINED += "IOT_MQTT_ENABLE_SERIALIZER_OVERRIDES=1"
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/mqtt.tag
+
+# Directories containing library source code.
+INPUT = doc \
+        doc/lib \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/mqtt/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/mqtt/include/types \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/mqtt/src/private \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/mqtt/src
+
+# Library file names.
+FILE_PATTERNS = *mqtt*.c *mqtt*.h *mqtt*.txt
+
+# External tag files required by this library.
+TAGFILES = doc/output/logging.tag=../logging \
+           doc/output/static_memory.tag=../static_memory \
+           doc/output/platform.tag=../platform \
+           doc/output/linear_containers.tag=../linear_containers \
+           doc/output/taskpool.tag=../taskpool

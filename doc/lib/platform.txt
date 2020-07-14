@@ -1,0 +1,122 @@
+/**
+@mainpage
+@anchor platform
+@brief The platform layer provides portability across different operating systems. <br><br>
+
+All system calls (including networking) used in this SDK's libraries go through a lightweight platform layer. The functions of the platform layer are intended to be easily implementable on a wide variety of operating systems. The current platform layer has the following components:
+- @ref platform_clock <br>
+  @copybrief platform_clock
+- @ref platform_threads <br>
+  @copybrief platform_threads
+- @ref platform_network <br>
+  @copybrief platform_network
+- @ref platform_atomic <br>
+  @copybrief platform_atomic
+
+Currently, implementations exist for the following platforms:
+Component                   | Supported platforms
+---------                   | -------------------
+@ref platform_clock         | [FreeRTOS Software Timers](https://www.freertos.org/RTOS-software-timer.html)
+@ref platform_threads       | [FreeRTOS Semaphores](https://www.freertos.org/Inter-Task-Communication.html) + [FreeRTOS Tasks](https://www.freertos.org/a00015.html)
+@ref platform_network       | [FreeRTOS+TCP](https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/index.html) + [mbed TLS](https://tls.mbed.org/)
+@ref platform_atomic        | [FreeRTOS Kernel Control](https://www.freertos.org/a00020.html)
+*/
+
+/**
+@configpage{platform,platform layer}
+
+@section IOT_LOG_LEVEL_PLATFORM
+@brief Set the log level of all platform components except the [networking component](@ref platform_network).
+
+This setting overrides @ref IOT_LOG_LEVEL_GLOBAL for the platform layer components that it affects. All log messages with a level at or below this setting will be printed. The [platform networking component](@ref platform_network) is generally more verbose than others, so its logging is controlled separately by @ref IOT_LOG_LEVEL_NETWORK.
+
+@configpossible One of the @ref logging_constants_levels.<br>
+@configdefault @ref IOT_LOG_LEVEL_GLOBAL; if that is undefined, then #IOT_LOG_NONE.
+
+@section IOT_LOG_LEVEL_NETWORK
+@brief Set the log level of the [platform networking component](@ref platform_network).
+
+This setting overrides @ref IOT_LOG_LEVEL_GLOBAL for the [platform networking component](@ref platform_network). All log messages with a level at or below this setting will be printed. See @ref IOT_LOG_LEVEL_PLATFORM to set the log level of other platform components.
+
+@configpossible One of the @ref logging_constants_levels.<br>
+@configdefault @ref IOT_LOG_LEVEL_GLOBAL; if that is undefined, then #IOT_LOG_NONE.
+
+@section platform_config_memory Memory allocation
+@brief Memory allocation function overrides for the platform layer.
+
+Some platform layers are not affected by @ref IOT_STATIC_MEMORY_ONLY. Currently, the following platform implementations require memory allocation:
+- POSIX <br>
+  This implementation is not affected by @ref IOT_STATIC_MEMORY_ONLY. However, its memory allocation functions may be overridden by setting the following constants. All memory allocation functions must have the same signatures as [malloc](http://pubs.opengroup.org/onlinepubs/9699919799/functions/malloc.html) and [free](http://pubs.opengroup.org/onlinepubs/9699919799/functions/free.html).
+  - `IotThreads_Malloc` and `IotThreads_Free`.
+  - `IotNetwork_Malloc` and `IotNetwork_Free`.
+*/
+
+/**
+@page platform_clock Clock
+@brief @copybrief iot_clock.h
+
+The platform clock component provides other libraries with functions relating to timers and clocks. It interfaces directly with the operation system to provide:
+- Clocks for reading the current time.
+- Timers that create a notification thread when they expire.
+
+Currently, the platform clock component has the following dependencies:
+- The operating system must provide the necessary APIs to implement the clock component's functions.
+- The logging library may be used if @ref IOT_LOG_LEVEL_PLATFORM is not #IOT_LOG_NONE.
+*/
+
+/**
+@page platform_threads Thread Management
+@brief @copybrief iot_threads.h
+
+The platform thread management component provides other libraries with functions relating to threading and synchronization. It interfaces directly with the operating system to provide:
+- A function to create new threads.
+- Synchronization mechanisms such as [mutexes](@ref IotMutex_t) and [counting semaphores](@ref IotSemaphore_t).
+
+Currently, the platform thread management component has the following dependencies:
+- The operating system must provide the necessary APIs to implement the [thread management functions](@ref platform_threads_functions).
+- The logging library may be used if @ref IOT_LOG_LEVEL_PLATFORM is not #IOT_LOG_NONE.
+*/
+
+/**
+@page platform_network Networking
+@brief @copybrief iot_network.h
+
+The platform networking component provides other libraries with an abstraction for interacting with the network through an #IotNetworkInterface_t. Libraries that require the network will request an #IotNetworkInterface_t as a parameter and use those function pointers to access the network. This allows libraries to use different network stacks simultaneously.
+
+Functions should be implemented against the system's network stack to match the signatures given in an #IotNetworkInterface_t.
+- The operating system must provide the necessary networking APIs, such as a sockets API.
+- A third-party security library is needed to encrypt secured connections.
+- The logging library may be used if @ref IOT_LOG_LEVEL_PLATFORM is not @ref IOT_LOG_NONE.
+*/
+
+/**
+@page platform_atomic Atomics
+@brief Atomic operations: small inlined functions used for atomically manipulating memory.
+
+The platform atomic component provides lock-free and wait-free mutually exclusive access to a memory location.
+
+Unlike the other components of the platform layer, which rely on APIs provided by the host operating system, the atomic component relies on facilities provided by compilers. Many compilers, particularly recent versions that support C11 atomic features, provide compiler intrinsics for atomic operations. 
+
+FreeRTOS ported atomic.h provides a generic implementation. Compiler/architecture dependent implementation of atomic.h is to be provided under each port directory.
+
+
+*/
+
+/**
+@handles{platform,platform layer}
+@enums{platform,platform layer}
+@paramstructs{platform, platform layer}
+*/
+
+/**
+@functionspage{platform,platform layer}
+
+- @subpage platform_clock_functions <br>
+  @copybrief platform_clock_functions
+- @subpage platform_network_functions <br>
+  @copybrief platform_network_functions
+- @subpage platform_threads_functions <br>
+  @copybrief platform_threads_functions
+- @subpage platform_atomic_functions <br>
+  @copybrief platform_atomic_functions
+*/

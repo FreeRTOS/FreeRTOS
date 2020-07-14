@@ -1,0 +1,52 @@
+@startuml
+skinparam classFontSize 8
+skinparam classFontName Helvetica
+autonumber
+
+box "Application" #LightGreen
+    participant "Application thread" as application
+    create participant "MQTT API\nfunction" as api
+end box
+
+box "Task pool" #LightBlue
+    participant "Task pool jobs" as task_pool
+end box
+
+box "Network stack" #Orange
+    participant "Receive\ncallback" as receive_callback
+    participant "Network IO" as network
+end box
+
+== Send MQTT packet ==
+activate application
+application -> api: Call MQTT\noperation\nfunction
+deactivate application
+activate api
+api -> api: Allocate resources\nand generate\nMQTT packet
+api -> task_pool: Post send job
+activate task_pool
+api -> application: Return\nSTATUS_PENDING
+destroy api
+activate application
+task_pool -> network: Transmit\n MQTT packet
+activate network
+task_pool -> task_pool: Mark operation\nas awaiting response
+network -> : Send data to server
+deactivate task_pool
+
+network <- : Server response
+
+== Parse Server Response ==
+network -> receive_callback: Notify of response
+deactivate network
+activate receive_callback
+receive_callback -> receive_callback: Parse incoming packet
+receive_callback -> task_pool: Post notify job
+deactivate receive_callback
+activate task_pool
+task_pool -> application: Notify of result
+
+deactivate task_pool
+deactivate application
+
+@enduml

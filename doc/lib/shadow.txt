@@ -1,0 +1,153 @@
+/**
+@mainpage
+@anchor shadow
+@brief AWS IoT Device Shadow library.
+
+> A device's shadow is a JSON document that is used to store and retrieve current state information for a device. The Device Shadow service maintains a shadow for each device you connect to AWS IoT. You can use the shadow to get and set the state of a device over MQTT or HTTP, regardless of whether the device is connected to the Internet. Each device's shadow is uniquely identified by the name of the corresponding thing.
+
+<span style="float:right;margin-right:4em"> &mdash; <i>Description of Device Shadows from [AWS IoT documentation](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)</i></span><br>
+
+Thing Shadows are the always-available device state in the AWS cloud. They are stored as JSON documents, and available via AWS even if the associated device goes offline. Common use cases for Thing Shadows include backing up device state, or sending commands to devices.
+
+This library provides an API for interacting with AWS IoT Thing Shadows. Features of this library include:
+- Both fully asynchronous and blocking API functions.
+- API functions for modifying Thing Shadows and for registering notifications of a Thing Shadow change.
+*/
+
+/**
+@page shadow_design Design
+@brief Architecture behind the Shadow library.
+
+Shadow library uses MQTT subscriptions and MQTT publishes for communicating with the AWS IoT Shadow Service. Shadow operations such as Shadow Delete, Shadow Get, and Shadow Update uses MQTT subscriptions to two MQTT topics to know the accepted or rejected status of the following MQTT publish and then publishes to the topic for the Shadow operation. Shadow Updated Callback and Shadow Delta Callback uses MQTT subscriptions to receive data from the AWS IoT Shadow Service. The callbacks will be run in MQTT's taskpool context.
+
+@section Synchronous_Design Synchronous Design
+@image html shadow_sync_opertation_detail.png width=100%
+
+@section Asynchronous_Design Asynchronous Design
+@image html shadow_async_opertation_detail.png width=100%
+*/
+
+/**
+@page shadow_demo Demo
+@brief The Shadow demo demonstrates usage of the Shadow library.
+
+The demo program uses [Shadow updates](@ref shadow_function_updateasync) and [delta callbacks](@ref shadow_function_setdeltacallback) to simulate toggling a remote device's state. It sends a Shadow update with a new <i>desired</i> state and waits for the device to change its <i>reported</i> state in response to the new <i>desired</i> state. In addition, a [Shadow updated callback](@ref shadow_function_setupdatedcallback) is used to print the changing Shadow states.
+
+See @subpage shadow_demo_config for configuration settings that change the behavior of the demo.
+
+The diagram below shows the workflow of the Shadow demo. The Shadow demo runs on an established MQTT connection; MQTT connection setup and teardown are not shown.
+
+@image html shadow_demo.png "Shadow Demo Workflow" width=80%
+*/
+
+/**
+@configpage{shadow_demo,Shadow demo,Demo,demos}
+
+@section AWS_IOT_DEMO_SHADOW_UPDATE_COUNT
+@brief The number of periodic Shadow updates to send in the demo.
+
+The Shadow demo sends a new update every @ref AWS_IOT_DEMO_SHADOW_UPDATE_PERIOD_MS milliseconds. Each update contains a new <i>desired</i> state, which causes a Shadow delta document to be generated and sent to the device. The device will respond to the delta document by changing its state and reporting its new state.
+
+@configpossible Any positive integer. <br>
+@configdefault `20`
+
+@section AWS_IOT_DEMO_SHADOW_UPDATE_PERIOD_MS
+@brief How often (in milliseconds) to send a periodic Shadow update.
+
+This value may be `0`, which causes a new Shadow update to be sent as soon as the device responds to the Shadow delta document. The total runtime of the demo will be @ref AWS_IOT_DEMO_SHADOW_UPDATE_COUNT `*` @ref AWS_IOT_DEMO_SHADOW_UPDATE_PERIOD_MS milliseconds.
+
+@configpossible Any non-negative integer. <br>
+@configdefault `3000`
+*/
+
+/**
+@page shadow_tests Tests
+@brief Tests written for the Shadow library.
+
+The Shadow tests reside in the `shadow/test` directory. They are divided into the following subdirectories:
+- `system`: Shadow system tests. These tests require a network connection and AWS IoT credentials. The command line option `-n` may be passed to the test executable to disable these tests.
+- `unit`: Shadow unit tests. These tests do not require a network connection or credentials. These tests use the [MQTT mocks.](@ref mqtt_tests)
+
+See @subpage shadow_tests_config for configuration settings that change the behavior of the Shadow system tests. The Shadow unit tests require no special configuration.
+
+The current Shadow tests use the [Unity test framework](http://www.throwtheswitch.org/unity/). See @ref building_tests for a guide on running the tests.
+*/
+
+/**
+@configpage{shadow_tests,Shadow system tests,Test,tests}
+
+@section AWS_IOT_TEST_SHADOW_THING_NAME
+@brief The Thing Name to use in the Shadow system tests.
+
+Thing Names are used to manage devices with AWS IoT. <b>No default value is provided for Thing Names, so this constant must be defined.</b> In addition to the Thing Name, AWS IoT credentials ([root CA certificate](@ref IOT_TEST_ROOT_CA), [client certificate](@ref IOT_TEST_CLIENT_CERT), and [client certificate private key](@ref IOT_TEST_PRIVATE_KEY)) must be provided to run the system tests. The [AWS IoT policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must also be properly configured.
+
+@configpossible A string representing an AWS IoT Thing Name.
+
+@section shadow_IOT_TEST_MQTT_SHORT_KEEPALIVE_INTERVAL_S IOT_TEST_MQTT_SHORT_KEEPALIVE_INTERVAL_S
+@brief The keep-alive interval to use in the Shadow system tests.
+
+MQTT PINGREQ packets will be sent at this interval.
+
+@configpossible Any positive integer. <br>
+@configrecommended This value should be the shortest keep-alive interval supported by the connection. <br>
+@configdefault `30`
+*/
+
+/**
+@configpage{shadow,Shadow library}
+
+@section AWS_IOT_SHADOW_ENABLE_ASSERTS
+@brief Set this to `1` to perform sanity checks when using the Shadow library.
+
+Asserts are useful for debugging, but should be disabled in production code. If this is set to `1`, @ref AwsIotShadow_Assert can be defined to set the assertion function; otherwise, the @ref Iot_DefaultAssert will be used.
+
+@configpossible `0` (asserts disabled) or `1` (asserts enabled)<br>
+@configrecommended `1` when debugging; `0` in production code.<br>
+@configdefault `0`
+
+@section AWS_IOT_SHADOW_DEFAULT_MQTT_TIMEOUT_MS
+@brief Set the default timeout (in milliseconds) for [MQTT library](@ref mqtt_functions) called by the Shadow library.
+
+If the `mqttTimeout` argument of @ref shadow_function_init is `0`, the Shadow library uses this setting for MQTT timeouts. This timeout is passed to functions such as @ref mqtt_function_subscribesync, @ref mqtt_function_unsubscribesync, and @ref mqtt_function_publishsync to limit amount of time an MQTT function may block.
+
+@configpossible Any positive integer.<br>
+@configrecommended This setting must be at least the network round-trip time, as an MQTT packet must be sent to the AWS IoT server and a response must be received. The recommended minimum value is `500`.<br>
+@configdefault `5000`
+
+@section AWS_IOT_LOG_LEVEL_SHADOW
+@brief Set the log level of the Shadow library.
+
+Log messages from the Shadow library at or below this setting will be printed.
+
+@configpossible One of the @ref logging_constants_levels.<br>
+@configdefault @ref IOT_LOG_LEVEL_GLOBAL; if that is undefined, then #IOT_LOG_NONE.
+
+@section AwsIotShadow_Assert
+@brief Assertion function used when @ref AWS_IOT_SHADOW_ENABLE_ASSERTS is `1`.
+
+@configpossible Any function with the same signature as the standard library's [assert](http://pubs.opengroup.org/onlinepubs/9699919799/functions/assert.html) function.<br>
+@configdefault @ref Iot_DefaultAssert if @ref AWS_IOT_SHADOW_ENABLE_ASSERTS is `1`; otherwise, nothing. If @ref Iot_DefaultAssert is not defined when asserts are enabled, the Shadow library will fail to build.
+
+@section shadow_config_memory Memory allocation
+@brief The following functions may be re-implemented for the Shadow library.
+- #AwsIotShadow_MallocOperation <br>
+  @copybrief AwsIotShadow_MallocOperation
+- #AwsIotShadow_FreeOperation <br>
+  @copybrief AwsIotShadow_FreeOperation
+- #AwsIotShadow_MallocString <br>
+  @copybrief AwsIotShadow_MallocString
+- #AwsIotShadow_FreeString <br>
+  @copybrief AwsIotShadow_FreeString
+- #AwsIotShadow_MallocSubscription <br>
+  @copybrief AwsIotShadow_MallocSubscription
+- #AwsIotShadow_FreeSubscription <br>
+  @copybrief AwsIotShadow_FreeSubscription
+
+If a custom implementation is not set for a Shadow memory allocation function, @ref Iot_DefaultMalloc will be used. If @ref Iot_DefaultMalloc are not set, the Shadow library will fail to build.
+
+When @ref IOT_STATIC_MEMORY_ONLY is `1`, the following settings configure the number of statically-allocated buffers for Shadow.
+- @anchor AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS AWS_IOT_SHADOW_MAX_IN_PROGRESS_OPERATIONS <br>
+  Maximum number of Shadow operations that may be in-progress at any time. Defaults to `10` if undefined.
+- @anchor AWS_IOT_SHADOW_SUBSCRIPTIONS AWS_IOT_SHADOW_SUBSCRIPTIONS <br>
+  Maximum number of Shadow subscriptions at any time. Defaults to `2` if undefined.
+*/

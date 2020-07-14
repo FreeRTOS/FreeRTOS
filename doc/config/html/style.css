@@ -1,0 +1,91 @@
+/*
+ * Stylesheet for Doxygen HTML output.
+ *
+ * This file defines styles for custom elements in the header/footer and
+ * overrides some of the default Doxygen styles.
+ *
+ * Styles in this file do not affect the treeview sidebar.
+ */
+
+/* Set the margins to place a small amount of whitespace on the left and right
+ * side of the page. */
+div.contents {
+  margin-left:4em;
+  margin-right:4em;
+}
+
+/* Justify text in paragraphs. */
+p {
+  text-align: justify;
+}
+
+/* Style of section headings. */
+h1 {
+  border-bottom: 1px solid #879ECB;
+  color: #354C7B;
+  font-size: 160%;
+  font-weight: normal;
+  padding-bottom: 4px;
+  padding-top: 8px;
+}
+
+/* Style of the "Return to main page" link that appears in the header. */
+#returntomain {
+  padding: 0.5em;
+}
+
+/* Style of configuration setting names. */
+dl.section.user ~ h1 {
+  border-bottom: none;
+  color: #000000;
+  font-family: monospace, fixed;
+  font-size: 16px;
+  margin-bottom: 0px;
+  margin-left: 2em;
+  margin-top: 1.5em;
+}
+
+/* Style of paragraphs on a configuration settings page. */
+dl.section.user ~ * {
+  margin-bottom: 10px;
+  margin-left: 4em;
+  margin-right: 4em;
+  margin-top: 0px;
+}
+
+/* Hide the configuration setting marker. */
+dl.section.user {
+  display: none;
+}
+
+/* Overrides for code fragments and lines. */
+div.fragment {
+  background: #ffffff;
+  border: none;
+  padding: 5px;
+}
+
+div.line {
+  color: #3a3a3a;
+}
+
+/* Overrides for code syntax highlighting colors. */
+span.comment {
+  color: #008000;
+}
+
+span.keyword, span.keywordtype, span.keywordflow {
+  color: #0000ff;
+}
+
+span.preprocessor {
+  color: #50015a;
+}
+
+span.stringliteral, span.charliteral {
+  color: #800c0c;
+}
+
+a.code, a.code:visited, a.line, a.line:visited {
+  color: #496194;
+}

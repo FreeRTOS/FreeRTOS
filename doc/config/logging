@@ -1,0 +1,27 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+LAYOUT_FILE = doc/config/layout_logging.xml
+
+# Basic project information.
+PROJECT_NAME = "Logging"
+PROJECT_BRIEF = "Generate and print log messages"
+
+# Library documentation output directory.
+HTML_OUTPUT = logging
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/logging.tag
+
+# Directories containing library source code.
+INPUT = doc/lib \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/common/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/common/src
+
+# Library file names.
+FILE_PATTERNS = *logging*.c *logging*.h *logging*.txt
+
+# External tag files required by this library.
+TAGFILES = doc/output/static_memory.tag=../static_memory \
+           doc/output/platform.tag=../platform

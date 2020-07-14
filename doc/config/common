@@ -1,0 +1,114 @@
+# SDK version.
+PROJECT_NUMBER = "4.0.0b1"
+
+# Doxygen layout file for libraries.
+LAYOUT_FILE = doc/config/layout_library.xml
+
+# Documentation output directory.
+OUTPUT_DIRECTORY = doc/output/
+
+# Don't generate LaTeX documentation
+GENERATE_LATEX = NO
+
+# Directories containing images.
+IMAGE_PATH = doc/plantuml/images
+
+# Don't rearrange members in the input files.
+SORT_MEMBER_DOCS = NO
+
+# Silence output (warnings only).
+QUIET = YES
+
+# Define the following preprocessor constants when generating documentation.
+PREDEFINED = "DOXYGEN=1" \
+             "IOT_STATIC_MEMORY_ONLY=1" \
+             "LIBRARY_LOG_LEVEL=IOT_LOG_DEBUG" \
+             "LIBRARY_LOG_NAME=\"DOXYGEN\""
+
+# Ignore the constants used for setting log levels and names.
+EXCLUDE_SYMBOLS = "LIBRARY_LOG_*"
+
+# Configure Doxygen for C.
+OPTIMIZE_OUTPUT_FOR_C = YES
+TYPEDEF_HIDES_STRUCT = YES
+EXTRACT_STATIC = YES
+
+# Disable the tab bar and use treeview instead.
+DISABLE_INDEX = YES
+GENERATE_TREEVIEW = YES
+
+# All files should have unique names, so showing the full path is unnecessary.
+FULL_PATH_NAMES = NO
+
+# Disable the default Doxygen diagrams.
+HAVE_DOT = NO
+
+# Disable the default Doxygen search engine (for now).
+SEARCHENGINE = NO
+
+# Use custom header file, footer file, and stylesheet.
+HTML_HEADER = doc/config/html/header.html
+HTML_FOOTER = doc/config/html/footer.html
+HTML_EXTRA_STYLESHEET = doc/config/html/style.css
+
+# Don't show external pages or groups.
+EXTERNAL_GROUPS = NO
+EXTERNAL_PAGES = NO
+
+# Enable expansion of Unity test macros.
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION = YES
+EXPAND_ONLY_PREDEF = YES
+
+# Expand the TEST macro, but ignore the _run functions generated from macro expansion.
+EXPAND_AS_DEFINED = TEST
+EXCLUDE_SYMBOLS += "TEST_*_run"
+
+# Alias for starting a dependencies section.
+ALIASES += dependencies{2}="@section \1_dependencies Dependencies^^@brief Dependencies of the \2.^^^^"
+
+# Alias for starting a configuration settings page.
+ALIASES += describeconfig="Configuration settings are C pre-processor constants. They can be set with a @c #`define` in the config file (`iot_config.h`) or by using a compiler option such as `-D` in gcc. If a configuration setting is not defined, the library will use a \"sensible\" default value (unless otherwise noted). Because they are compile-time constants, a library must be rebuilt if a configuration setting is changed."
+ALIASES += configpage{2}="@page \1_config Configuration^^@brief Configuration settings of the \2.^^^^@describeconfig^^@par configpagemarker"
+ALIASES += configpage{4}="@page \1_config \3 Configuration^^@brief Configuration settings of the \2.^^^^@describeconfig^^^^The settings on this page only affect the [\2](@ref \1). In addition to the settings on this page, them \2 will also be affected by [settings that affect all \4](@ref global_\4_config).^^@par configpagemarker"
+ALIASES += globalconfigpage{3}="@page global_\1_config Global \2 Configuration^^^^@describeconfig^^@brief Configuration settings that affect all \3.^^@par configpagemarker"
+
+# Aliases for "Possible values", "Recommended values", and "Default values"
+# used in configuration setting pages.
+ALIASES += configpossible="<b>Possible values:</b> "
+ALIASES += configrecommended="<b>Recommended values:</b> "
+ALIASES += configdefault="<b>Default value (if undefined):</b> "
+
+# Alias for starting a constants page.
+ALIASES += constantspage{2}="@page \1_constants Constants^^@brief Defined constants of the \2.^^^^Libraries may @c #`define` constants in their headers with special meanings. This page describes the meanings and uses of any constants defined by the \2. Related constants are shown in a single section on this page.^^"
+
+# Alias for starting a functions page.
+ALIASES += functionspage{2}="@page \1_functions Functions^^@brief Functions of the \2.^^^^The \2 consists of the following functions."
+ALIASES += functionspage{3}="@page \1_functions \3^^@brief Functions of the \2.^^^^The \2 consists of the following functions."
+
+# Alias for listing a single function on a functions page.
+ALIASES += functionname{1}="@subpage \1 <br>^^ @copybrief \1^^"
+
+# Alias for creating a page for a single function.
+ALIASES += functionpage{3}="@page \2_function_\3 \1^^^^@snippet this declare_\2_\3^^@copydoc \1"
+
+# Alias for starting a handles group.
+ALIASES += handles{2}="@defgroup \1_datatypes_handles Handles^^@brief Opaque handles of the \2."
+
+# Alias for starting an enum group.
+ALIASES += enums{2}="@defgroup \1_datatypes_enums Enumerated types^^@brief Enumerated types of the \2."
+
+# Alias for starting a function pointers group.
+ALIASES += functionpointers{2}="@defgroup \1_datatypes_functionpointers Function pointers types^^@brief Function pointers types of the \2."
+
+# Alias for starting a structs group.
+ALIASES += structs{2}="@defgroup \1_datatypes_structs Structured types^^@brief Structured types of the \2."
+
+# Alias for starting a parameter structures group.
+ALIASES += paramstructs{2}="@defgroup \1_datatypes_paramstructs Parameter structures^^@brief Structures passed as parameters to [\2 functions](@ref \1_functions)^^^^These structures are passed as parameters to library functions. Documentation for these structures will state the functions associated with each parameter structure and the purpose of each member."
+
+# Alias for "Parameter for".
+ALIASES += paramfor="<b>Parameter for:</b> "
+
+# Alias for parameter structure initializers.
+ALIASES += initializer{2}="All instances of #\1 should be initialized with #\2.^^"

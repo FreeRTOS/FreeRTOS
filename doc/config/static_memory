@@ -1,0 +1,23 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+# Basic project information.
+PROJECT_NAME = "Static Memory"
+PROJECT_BRIEF = "Statically-allocated buffer pools"
+
+# Library documentation output directory.
+HTML_OUTPUT = static_memory
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/static_memory.tag
+
+# Directories containing library source code.
+INPUT = doc/lib \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/standard/common/include
+
+# Library file names.
+FILE_PATTERNS = *static_memory*.h *static_memory_common*.c *static_memory*.txt
+
+# External tag files required by this library.
+TAGFILES = doc/output/platform.tag=../platform

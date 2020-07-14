@@ -1,0 +1,68 @@
+@startuml
+skinparam classFontSize 8
+skinparam classFontName Helvetica
+
+box "Application Thread" #LightGreen
+actor Application as app
+participant "Jobs API function" as jobs
+participant "Internal Jobs functions" as internal
+end box
+
+box "Task Pool" #LightBlue
+participant "MQTT subscription callback" as callback
+end box
+
+app -> jobs: Call Jobs API\nInput: AwsIotJobsRequestInfo_t, callback function\nAdditional input for Update and StartNext: AwsIotJobsUpdateInfo_t
+activate jobs
+
+note over internal: _validateRequestInfo\n_validateUpdateInfo
+jobs -> internal: Input: AwsIotJobsRequestInfo_t\nAwsIotJobsUpdateInfo_t
+deactivate jobs
+activate internal
+internal -> internal: Check AwsIotJobsRequestInfo_t
+internal -> internal: Check AwsIotJobsUpdateInfo_t
+return Return SUCCESS or BAD_PARAMETER
+activate jobs
+
+note over internal: _AwsIotJobs_CreateOperation
+jobs -> internal: Input: AwsIotJobsRequestInfo_t
+deactivate jobs
+activate internal
+internal -> internal: Calculate required memory for _jobsOperation_t
+internal -> internal: Malloc _jobsOperation_t
+internal -> internal: Setup _jobsOperation_t, save callback function
+internal -> internal: Convert parameters to JSON
+return Return _jobsOperation_t
+activate jobs
+
+note over internal: _AwsIotJobs_ProcessOperation
+jobs -> internal: Input: AwsIotJobsRequestInfo_t\n_jobsOperation_t
+deactivate jobs
+activate internal
+internal -> internal: Generate topic for operation
+alt Topic has subscription
+internal -> internal: Retrieve subscription
+else
+internal -> internal: Create subscription
+end alt
+internal -> internal: Create MQTT PUBLISH command
+internal -> internal: Add _jobsOperation_t to pending list
+internal -> : Send MQTT PUBLISH
+return Return SUCCESS or error
+
+activate jobs
+jobs -> jobs: Wait on a semaphore for MQTT response
+
+
+note over callback: _commonOperationCallback\nResponse received: Topic, Message
+activate callback
+callback -> callback: Parse Thing Name in Topic
+callback -> callback: Match Thing Name with pending operation
+callback -> callback: Parse ACCEPTED or REJECTED Status
+callback -> jobs: Post semaphore to unblock the wait
+callback -> callback: Destroy _jobsOperation_t
+deactivate callback
+jobs -> app: Return AwsIotJobsError_t
+deactivate jobs
+
+@enduml

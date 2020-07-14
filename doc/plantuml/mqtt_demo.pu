@@ -1,0 +1,38 @@
+@startuml
+skinparam classFontSize 8
+skinparam classFontName Helvetica
+autonumber
+
+participant "Main Demo Thread" as main
+participant "Incoming PUBLISH callback" as callback
+
+box "MQTT Client" #LightBlue
+    participant main
+    participant callback
+end box
+
+participant "MQTT Server" as server
+
+main -> server: Subscribe to topic filters
+server -> main: Subscription ACK
+
+loop IOT_DEMO_MQTT_PUBLISH_BURST_COUNT times
+    loop IOT_DEMO_MQTT_PUBLISH_BURST_SIZE times
+        main -> server: Publish "Hello world n!"
+        server -> main: Publish ACK
+        server -> server: Check for\nmatching subscriptions
+        server -> callback: Publish to\nmatching topic filter
+        callback -> server: Publish "Received message n"
+        callback -> main: Notify "Publish received"
+        server -> callback: Publish ACK
+    end
+
+    main -> main: Wait for\nIOT_DEMO_MQTT_BURST_SIZE\nmessages to be received
+end
+
+main -> server: Unsubscribe from topic filters
+server -> main: Unsubscribe ACK
+
+main -> server: Disconnect
+
+@enduml

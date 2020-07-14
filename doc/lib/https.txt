@@ -1,0 +1,99 @@
+/**
+@mainpage
+@anchor https
+@brief HTTPS Client v1.0.0 library.
+
+- HTTPS Client Main page text.
+
+> The Hypertext Transfer Protocol (HTTP) is a stateless application-level protocol for distributed, collaborative, hypertext information systems.
+
+<span style="float:right;margin-right:4em"> &mdash; <i>Official description of HTTP from [RFC 7231](https://tools.ietf.org/html/rfc7231)</i></span><br>
+
+This HTTP library implements a subset of the HTTP/1.1 standard for compatibility with the [AWS IoT HTTP Server](https://docs.aws.amazon.com/iot/latest/developerguide/http.html) and the [AWS S3 HTTP Server](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectOps.html). It is also compatible with other HTTP servers. Feature of this library include: 
+- Both fully asynchronous and synchronous (blocking) API functions.
+- Application managed memory for internal context and HTTP formatted headers.
+- Thread-aware and parallelized connections.
+
+This library does NOT support:
+- Automatic redirection. Applications will need to handle 300 level HTTP response status codes.
+- Automatic reconnection upon a server disconnect. Applications will need to try a reconnection upon network errors or preemptively disconnect and reconnect when needed.
+- Transfer Encoding chunked request messages. Transfer Encoding chunked responses are handled automatically. 
+- Automatic decoding of Multipart Types, please see https://tools.ietf.org/html/rfc2387 for more information on Multipart Types. Transfer Encoding chunked responses are the only multipart responses handled automatically. 
+- Request compression or response decompression. The application must handle this on data before invoking the library API.
+
+*/
+
+/**
+@page https_design Design
+@brief Architecture behind the HTTPS library.
+
+The HTTPS Client library will invoke a task pool worker to send a request. It will then receive the response during the network receive callback context. If there are more requests in the connection's request queue, it will schedule another task pool worker to send that request.
+
+@section Synchronous_Design Synchronous Design
+@image html https_client_sync_workflow.png width=100%
+
+@section Asynchronous_Design Asynchronous Design
+@image html https_client_async_workflow.png width=100%
+
+@section Asynchronous_Callback_Order Asynchronous Callbacks Ordering
+@image html https_client_async_callback_order.png width=100%
+*/
+
+/**
+@configpage{https,HTTPS Client Library}
+
+@section AWS_IOT_HTTPS_ENABLE_METRICS
+@brief Set this to `1` to enable anonymous metrics reporting to AWS IoT.
+
+Metrics allow AWS IoT to prioritize engineering resources based on SDK usage. SDK name and version are reported; no personal or identifying information is reported.
+
+@configpossible `0` (metrics reporting disabled) or `1` (metrics reporting enabled)<br>
+@configrecommended `1`<br>
+@configdefault `1`
+
+@section IOT_HTTPS_USER_AGENT
+@brief The name of the application type, operating system, software vendor, or software version of the requesting software agent.
+
+This configuration will dictate the header value written to required header field "User-Agent". This value is written when the request is initialized with @ref https_client_function_initializerequest.
+
+@configpossible Any string. <br>
+@configdefault `"amazon-freertos"`
+
+@section IOT_LOG_LEVEL_HTTPS
+@brief Set the log level of the HTTPS Client library.
+
+Log messages from the HTTPS Client library at or below this setting will be printed.
+
+@configpossible One of the @ref logging_constants_levels.<br>
+@configdefault @ref IOT_LOG_LEVEL_GLOBAL; if that is undefined, then @ref IOT_LOG_NONE.
+
+@section IOT_HTTPS_MAX_FLUSH_BUFFER_SIZE
+@brief The size of a buffer instantiated in stack to flush the socket of the rest of possible unread response.
+
+@configpossible Any positive integer.<br>
+@configdefault `1024`
+
+@section IOT_HTTPS_RESPONSE_WAIT_MS
+@brief The time in milliseconds to wait for a response from the network before timing out.
+
+@configpossible Any positive integer.<br>
+@configdefault `1000`
+
+@section IOT_HTTPS_MAX_HOST_NAME_LENGTH
+@brief The maximum length of the DNS resolvable host name string allowed to be configured in #IotHttpsConnectionInfo_t.pAddress.
+
+An array of this length is allocated on stack during @ref https_client_function_connect. 
+
+@configpossible Any positive integer. <br>
+@configrecommended It is recommended that this be less or equal to 255. 255 is the maximum host length according to FQDN. <br>
+@configdefault `255`
+
+@section IOT_HTTPS_MAX_ALPN_PROTOCOLS_LENGTH
+@brief The maximum length of the ALPN protocols names string allowed to be configured in #IotHttpsConnectionInfo_t.pAlpnProtocols.
+
+An array of this length is allocated on stack during @ref https_client_function_connect. 
+
+@configpossible Any positive integer. <br>
+@configdefault `255`
+
+*/

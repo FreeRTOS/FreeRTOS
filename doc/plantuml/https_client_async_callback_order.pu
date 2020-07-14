@@ -1,0 +1,15 @@
+@startuml
+hide empty description
+[*] -right-> appendHeaderCallback
+appendHeaderCallback -right-> writeCallback : Success
+appendHeaderCallback -down-> errorCallback : Application cancels the request
+writeCallback -down-> readReadyCallback : Success in network send
+writeCallback -down-> errorCallback : Failure in network send \nor application cancels the request
+readReadyCallback -down-> responseCompleteCallback : Success in everything and a \npersistent request
+readReadyCallback -left-> errorCallback : Failure in network receive, response parsing, or the application cancels the request
+readReadyCallback -down-> connectionCloseCallback : Success in everything and a \nnon-persistent request
+errorCallback -down-> connectionCloseCallback : Network error or \nresponse parsing error
+errorCallback -down-> responseCompleteCallback : Application cancels the requset
+connectionCloseCallback -down-> responseCompleteCallback : Always
+responseCompleteCallback -right-> [*]
+@enduml

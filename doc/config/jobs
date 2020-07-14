@@ -1,0 +1,33 @@
+# Include common configuration options.
+@INCLUDE_PATH = doc/config
+@INCLUDE = common
+
+LAYOUT_FILE = doc/config/layout_jobs.xml
+
+# Basic project information.
+PROJECT_NAME = "Jobs"
+PROJECT_BRIEF = "AWS IoT Jobs library"
+
+# Library documentation output directory.
+HTML_OUTPUT = jobs
+
+# Generate Doxygen tag file for this library.
+GENERATE_TAGFILE = doc/output/jobs.tag
+
+# Directories containing library source code.
+INPUT = doc \
+        doc/lib/ \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/aws/jobs/include \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/aws/jobs/include/types \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/aws/jobs/src/private \
+        FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta1/c_sdk/aws/jobs/src
+
+# Library file names.
+FILE_PATTERNS = *jobs*.h *jobs*.c *jobs*.txt
+
+# External tag files required by this library.
+TAGFILES = doc/output/mqtt.tag=../mqtt \
+           doc/output/logging.tag=../logging \
+           doc/output/linear_containers.tag=../linear_containers \
+           doc/output/static_memory.tag=../static_memory \
+           doc/output/platform.tag=../platform

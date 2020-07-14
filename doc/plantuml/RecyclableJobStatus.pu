@@ -1,0 +1,46 @@
+@startuml
+
+skinparam classFontSize 8
+skinparam classFontName Helvetica
+skinparam state {
+  BackgroundColor<<Cached>> Gray
+}
+state READY {
+}
+state SCHEDULED {
+}
+state DEFERRED {
+}
+state COMPLETED {
+}
+state CANCELED {
+}
+state UNDEFINED {
+}
+state CACHED <<Cached>> {
+}
+
+[*] --[#green]> READY : CreateRecyclableJob
+READY --[#blue]> SCHEDULED : Schedule
+READY --[#blue]> DEFERRED : ScheduleDeferred
+DEFERRED --[#red]> SCHEDULED : <timeout elapses>
+SCHEDULED --[#green]> COMPLETED : <worker available>
+COMPLETED -up[#blue]-> CACHED : RecycleJob
+COMPLETED --[#blue]> UNDEFINED : DestroyRecyclableJob
+
+READY -right[#blue]-> CANCELED : TryCancel
+DEFERRED -right[#blue]-> CANCELED : TryCancel
+SCHEDULED -right[#blue]-> CANCELED : TryCancel
+
+CANCELED --[#blue]> CACHED : RecycleJob
+CANCELED --[#blue]> UNDEFINED : DestroyRecyclableJob
+
+READY -up[#blue]-> CACHED : RecycleJob
+DEFERRED -up[#blue]-> CACHED : RecycleJob
+SCHEDULED -up[#blue]-> CACHED : RecycleJob
+
+READY --[#blue]> UNDEFINED : DestroyRecyclableJob
+DEFERRED --[#blue]> UNDEFINED : DestroyRecyclableJob
+SCHEDULED --[#blue]> UNDEFINED : DestroyRecyclableJob
+
+@enduml

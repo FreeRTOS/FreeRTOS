@@ -57,20 +57,6 @@ BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         LogError( ( "Failed to create new socket." ) );
         socketStatus = -1;
     }
-    else
-    {
-        LogDebug( ( "Created new TCP socket." ) );
-        socketStatus = FreeRTOS_setsockopt( tcpSocket,
-                                            0,
-                                            FREERTOS_SO_RCVTIMEO,
-                                            &receiveTimeout,
-                                            sizeof( TickType_t ) );
-
-        if( socketStatus != 0 )
-        {
-            LogError( ( "Failed to set socket receive timeout." ) );
-        }
-    }
 
     if( socketStatus == 0 )
     {
@@ -91,6 +77,27 @@ BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( socketStatus == 0 )
     {
         socketStatus = FreeRTOS_connect( tcpSocket, &serverAddress, sizeof( serverAddress ) );
+
+        if( socketStatus != 0 )
+        {
+            LogError( ( "Failed to connect to %s. FreeRTOS_connect returned with status=%d.",
+                        pHostName,
+                        socketStatus ) );
+        }
+    }
+
+    if( socketStatus == 0 )
+    {
+        socketStatus = FreeRTOS_setsockopt( tcpSocket,
+                                            0,
+                                            FREERTOS_SO_RCVTIMEO,
+                                            &receiveTimeout,
+                                            sizeof( TickType_t ) );
+
+        if( socketStatus != 0 )
+        {
+            LogError( ( "Failed to set socket receive timeout." ) );
+        }
     }
 
     /* Clean up on failure. */

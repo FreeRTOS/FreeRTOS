@@ -60,6 +60,14 @@
 /* Transport interface include. */
 #include "transport_interface_freertos.h"
 
+/*-----------------------------------------------------------*/
+
+/* Compile time error for undefined configs. */
+#ifndef democonfigMQTT_BROKER_ENDPOINT
+    #error "Define the config democonfigMQTT_BROKER_ENDPOINT by following the instructions in file demo_config.h."
+#endif
+
+/*-----------------------------------------------------------*/
 
 /* Default values for configs. */
 #ifndef democonfigCLIENT_IDENTIFIER
@@ -76,13 +84,7 @@
  */
     #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
 #endif
-#ifndef democonfigMQTT_BROKER_ENDPOINT
 
-/**
- * @brief Details of the MQTT broker to connect to.
- */
-    #define democonfigMQTT_BROKER_ENDPOINT    "test.mosquitto.org"
-#endif
 #ifndef democonfigMQTT_BROKER_PORT
 
 /**
@@ -90,6 +92,8 @@
  */
     #define democonfigMQTT_BROKER_PORT    ( 1883 )
 #endif
+
+/*-----------------------------------------------------------*/
 
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.

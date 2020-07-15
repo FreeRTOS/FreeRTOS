@@ -64,39 +64,8 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     else
     {
         LogDebug( ( "Created new TCP socket." ) );
-        /* Set socket receive timeout. */
-        transportTimeout = pdMS_TO_TICKS( receiveTimeoutMs );
-        socketStatus = FreeRTOS_setsockopt( tcpSocket,
-                                            0,
-                                            FREERTOS_SO_RCVTIMEO,
-                                            &transportTimeout,
-                                            sizeof( TickType_t ) );
 
-        if( socketStatus != 0 )
-        {
-            LogError( ( "Failed to set socket receive timeout." ) );
-        }
-    }
-
-    if( socketStatus == 0 )
-    {
-        /* Set socket send timeout. */
-        transportTimeout = pdMS_TO_TICKS( sendTimeoutMs );
-        socketStatus = FreeRTOS_setsockopt( tcpSocket,
-                                            0,
-                                            FREERTOS_SO_SNDTIMEO,
-                                            &transportTimeout,
-                                            sizeof( TickType_t ) );
-
-        if( socketStatus != 0 )
-        {
-            LogError( ( "Failed to set socket send timeout." ) );
-        }
-    }
-
-    if( socketStatus == 0 )
-    {
-        /* Establish connection. */
+        /* Connection parameters. */
         serverAddress.sin_family = FREERTOS_AF_INET;
         serverAddress.sin_port = FreeRTOS_htons( port );
         serverAddress.sin_addr = FreeRTOS_gethostbyname( pHostName );
@@ -112,6 +81,7 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
     if( socketStatus == 0 )
     {
+        /* Establish connection. */
         LogDebug( ( "Creating TCP Connection to %s.", pHostName ) );
         socketStatus = FreeRTOS_connect( tcpSocket, &serverAddress, sizeof( serverAddress ) );
 
@@ -119,6 +89,27 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         {
             LogError( ( "Failed to establish TCP Connection: ReturnCode=%d.", socketStatus ) );
         }
+    }
+
+    if( socketStatus == 0 )
+    {
+        /* Set socket receive timeout. */
+        transportTimeout = pdMS_TO_TICKS( receiveTimeoutMs );
+        /* Setting the receive block time cannot fail. */
+        ( void ) FreeRTOS_setsockopt( tcpSocket,
+                                      0,
+                                      FREERTOS_SO_RCVTIMEO,
+                                      &transportTimeout,
+                                      sizeof( TickType_t ) );
+
+        /* Set socket send timeout. */
+        transportTimeout = pdMS_TO_TICKS( sendTimeoutMs );
+        /* Setting the send block time cannot fail. */
+        ( void ) FreeRTOS_setsockopt( tcpSocket,
+                                      0,
+                                      FREERTOS_SO_SNDTIMEO,
+                                      &transportTimeout,
+                                      sizeof( TickType_t ) );
     }
 
     /* Clean up on failure. */

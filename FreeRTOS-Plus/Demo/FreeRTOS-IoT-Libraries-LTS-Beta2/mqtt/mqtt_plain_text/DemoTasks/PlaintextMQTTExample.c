@@ -146,9 +146,9 @@
 #define mqttexampleDELAY_BETWEEN_PUBLISHES          ( pdMS_TO_TICKS( 500U ) )
 
 /**
- * @brief Transport timeout in milliseconds for transport receive.
+ * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define TRANSPORT_RECV_TIMEOUT_MS                   ( 200U )
+#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200U )
 
 #define _MILLISECONDS_PER_SECOND                    ( 1000U )                                         /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK                      ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
@@ -315,7 +315,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         xNetworkStatus = Plaintext_FreeRTOS_Connect( &xNetworkContext,
                                                      democonfigMQTT_BROKER_ENDPOINT,
                                                      democonfigMQTT_BROKER_PORT,
-                                                     TRANSPORT_RECV_TIMEOUT_MS );
+                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS );
         configASSERT( xNetworkStatus == 0 );
 
         /* Sends an MQTT Connect packet over the already connected TCP socket,

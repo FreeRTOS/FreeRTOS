@@ -75,7 +75,8 @@ struct NetworkContext
 BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
                                        uint16_t port,
-                                       uint32_t receiveTimeoutMs );
+                                       uint32_t receiveTimeoutMs,
+                                       uint32_t sendTimeoutMs );
 
 /**
  * @brief Gracefully disconnect an established TCP connection.

@@ -45,12 +45,13 @@
 BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
                                        uint16_t port,
-                                       uint32_t receiveTimeoutMs )
+                                       uint32_t receiveTimeoutMs,
+                                       uint32_t sendTimeoutMs )
 {
     Socket_t tcpSocket = FREERTOS_INVALID_SOCKET;
     BaseType_t socketStatus = 0;
     struct freertos_sockaddr serverAddress = { 0 };
-    TickType_t receiveTimeout = pdMS_TO_TICKS( receiveTimeoutMs );
+    TickType_t transportTimeout = 0;
 
     /* Create a new TCP socket. */
     tcpSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
@@ -59,6 +60,38 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     {
         LogError( ( "Failed to create new socket." ) );
         socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
+    }
+    else
+    {
+        LogDebug( ( "Created new TCP socket." ) );
+        /* Set socket receive timeout. */
+        transportTimeout = pdMS_TO_TICKS( receiveTimeoutMs );
+        socketStatus = FreeRTOS_setsockopt( tcpSocket,
+                                            0,
+                                            FREERTOS_SO_RCVTIMEO,
+                                            &transportTimeout,
+                                            sizeof( TickType_t ) );
+
+        if( socketStatus != 0 )
+        {
+            LogError( ( "Failed to set socket receive timeout." ) );
+        }
+    }
+
+    if( socketStatus == 0 )
+    {
+        /* Set socket send timeout. */
+        transportTimeout = pdMS_TO_TICKS( sendTimeoutMs );
+        socketStatus = FreeRTOS_setsockopt( tcpSocket,
+                                            0,
+                                            FREERTOS_SO_SNDTIMEO,
+                                            &transportTimeout,
+                                            sizeof( TickType_t ) );
+
+        if( socketStatus != 0 )
+        {
+            LogError( ( "Failed to set socket send timeout." ) );
+        }
     }
 
     if( socketStatus == 0 )
@@ -84,7 +117,7 @@ BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
         if( socketStatus != 0 )
         {
-            LogError( ( "Failed to establish TCP Connection." ) );
+            LogError( ( "Failed to establish TCP Connection: ReturnCode=%d.", socketStatus ) );
         }
     }
 

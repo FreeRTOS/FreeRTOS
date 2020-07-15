@@ -88,7 +88,7 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
  * name of the constant, or pdFALSE to not log using the method indicated by the
  * name of the constant.  Options include to standard out (xLogToStdout), to a disk
  * file (xLogToFile), and to a UDP port (xLogToUDP).  If xLogToUDP is set to pdTRUE
- * then UDP messages are sent to the IP address configured as the echo server
+ * then UDP messages are sent to the IP address configured as the UDP logging server
  * address (see the configUDP_LOGGING_ADDR0 definitions in FreeRTOSConfig.h) and
  * the port number set by configPRINT_PORT in FreeRTOSConfig.h. */
 const BaseType_t xLogToStdout = pdTRUE, xLogToFile = pdFALSE, xLogToUDP = pdFALSE;

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\common\logging-stack;..\common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\abstractions\platform\freertos;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\common\logging-stack;..\common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -157,7 +157,7 @@
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c" />
     <ClCompile Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\abstractions\platform\freertos\transport_interface_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\plaintext_freertos.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt_lightweight.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt_state.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt.c" />
@@ -189,8 +189,8 @@
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h" />
     <ClInclude Include="..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\abstractions\platform\freertos\transport_interface_freertos.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\transport_interface.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include\plaintext_freertos.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\include\transport_interface.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt_lightweight.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt_state.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt.h" />

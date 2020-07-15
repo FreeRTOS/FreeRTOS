@@ -72,17 +72,18 @@ struct NetworkContext
  *
  * @return Non-zero value on error, 0 on success.
  */
-BaseType_t Transport_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
+BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                        const char * pHostName,
                                        uint16_t port,
-                                       uint32_t receiveTimeoutMs );
+                                       uint32_t receiveTimeoutMs,
+                                       uint32_t sendTimeoutMs );
 
 /**
  * @brief Gracefully disconnect an established TCP connection.
  *
  * @param[in] pNetworkContext Network context containing the TCP socket handle.
  */
-void Transport_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
+void Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
 
 /**
  * @brief Receives data from an established TCP connection.
@@ -95,7 +96,7 @@ void Transport_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
  * @return Number of bytes received if successful; 0 if the socket times out;
  * Negative value on error.
  */
-int32_t Transport_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
+int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                                  void * pBuffer,
                                  size_t bytesToRecv );
 
@@ -109,7 +110,7 @@ int32_t Transport_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
  *
  * @return Number of bytes sent on success; else a negative value.
  */
-int32_t Transport_FreeRTOS_send( NetworkContext_t * pNetworkContext,
+int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                                  const void * pBuffer,
                                  size_t bytesToSend );
 

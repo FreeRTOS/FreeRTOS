@@ -139,12 +139,11 @@
  * used. */
 #define configNETWORK_INTERFACE_TO_USE            1L
 
-/* The address of an echo server is only left in this project as it doubles as
- * the address to which logging is sent should UDP logging be enabled. */
-#define configECHO_SERVER_ADDR0                   192
-#define configECHO_SERVER_ADDR1                   168
-#define configECHO_SERVER_ADDR2                   0
-#define configECHO_SERVER_ADDR3                   11
+/* The address to which logging is sent should UDP logging be enabled. */
+#define configUDP_LOGGING_ADDR0                   192
+#define configUDP_LOGGING_ADDR1                   168
+#define configUDP_LOGGING_ADDR2                   0
+#define configUDP_LOGGING_ADDR3                   11
 
 /* Default MAC address configuration.  The demo creates a virtual network
  * connection that uses this MAC address by accessing the raw Ethernet/WiFi data

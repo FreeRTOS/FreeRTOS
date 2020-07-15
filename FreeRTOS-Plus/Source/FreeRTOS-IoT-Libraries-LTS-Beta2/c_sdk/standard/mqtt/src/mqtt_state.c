@@ -299,7 +299,7 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
              * There are 2 valid transitions possible.
              * 1. MQTTPubRelPending -> MQTTPubCompSend : A PUBREL ack is received
              *    when publish record state is MQTTPubRelPending. This is the
-             *    normal state transition without any connection interuptions.
+             *    normal state transition without any connection interruptions.
              * 2. MQTTPubRelPending -> MQTTPubRelPending : Receiving a duplicate
              *    QoS2 publish can result in a transition to the same state.
              *    This can happen in the below state transition.
@@ -322,7 +322,7 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
              * There are 2 valid transitions possible.
              * 1. MQTTPubCompSend -> MQTTPublishDone : A PUBCOMP ack is sent
              *    after receiving a PUBREL from broker. This is the
-             *    normal state transition without any connection interuptions.
+             *    normal state transition without any connection interruptions.
              * 2. MQTTPubCompSend -> MQTTPubCompSend : Receiving a duplicate PUBREL
              *    can result in a transition to the same state.
              *    This can happen in the below state transition.
@@ -351,9 +351,9 @@ static bool validateTransitionAck( MQTTPublishState_t currentState,
             /* Outgoing publish, Qos 2.
              * There are 2 valid transitions possible.
              * 1. MQTTPubCompPending -> MQTTPublishDone : A PUBCOMP is received.
-             *    This marks the complete state transistion for the publish packet.
+             *    This marks the complete state transition for the publish packet.
              *    This is the normal state transition without any connection
-             *    interuptions.
+             *    interruptions.
              * 2. MQTTPubCompPending -> MQTTPubCompPending : Resending a PUBREL for
              *    packets in state #MQTTPubCompPending can result in this
              *    transition to the same state.

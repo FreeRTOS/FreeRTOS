@@ -41,6 +41,11 @@
     #define MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT    ( 5U )
 #endif
 
+/**
+ * @brief A return code indicating an error from the transport interface.
+ */
+#define TRANSPORT_ERROR    ( -1 )
+
 /*-----------------------------------------------------------*/
 
 /**
@@ -340,8 +345,8 @@ static int32_t sendPacket( MQTTContext_t * pContext,
         }
         else
         {
-            LogError( ( "Transport send failed." ) );
-            totalBytesSent = -1;
+            LogError( ( "Transport send failed. Error code=%d.", bytesSent ) );
+            totalBytesSent = TRANSPORT_ERROR;
             break;
         }
     }
@@ -861,9 +866,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
                                        bool manageKeepAlive )
 {
     MQTTStatus_t status = MQTTBadResponse;
-    uint16_t packetIdentifier;
-    /* Need a dummy variable for MQTT_DeserializeAck(). */
-    bool sessionPresent = false;
+    uint16_t packetIdentifier = MQTT_PACKET_ID_INVALID;
 
     /* We should always invoke the app callback unless we receive a PINGRESP
      * and are managing keep alive, or if we receive an unknown packet. We
@@ -885,13 +888,13 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
         case MQTT_PACKET_TYPE_PUBREL:
         case MQTT_PACKET_TYPE_PUBCOMP:
 
-            /* Handle all the publish acks. */
+            /* Handle all the publish acks. The app callback is invoked here. */
             status = handlePublishAcks( pContext, pIncomingPacket );
 
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
-            status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
+            status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, NULL );
             invokeAppCallback = ( manageKeepAlive == true ) ? false : true;
 
             if( ( status == MQTTSuccess ) && ( manageKeepAlive == true ) )
@@ -904,7 +907,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
         case MQTT_PACKET_TYPE_SUBACK:
         case MQTT_PACKET_TYPE_UNSUBACK:
             /* Deserialize and give these to the app provided callback. */
-            status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, &sessionPresent );
+            status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, NULL );
             invokeAppCallback = true;
             break;
 
@@ -1427,6 +1430,7 @@ MQTTStatus_t MQTT_Connect( MQTTContext_t * pContext,
     {
         LogInfo( ( "MQTT connection established with the broker." ) );
         pContext->connectStatus = MQTTConnected;
+        pContext->keepAliveIntervalSec = pConnectInfo->keepAliveSeconds;
     }
     else
     {
@@ -1577,7 +1581,7 @@ MQTTStatus_t MQTT_Ping( MQTTContext_t * pContext )
 {
     int32_t bytesSent = 0;
     MQTTStatus_t status = MQTTSuccess;
-    size_t packetSize;
+    size_t packetSize = 0U;
 
     if( pContext == NULL )
     {
@@ -1695,8 +1699,8 @@ MQTTStatus_t MQTT_Unsubscribe( MQTTContext_t * pContext,
 
 MQTTStatus_t MQTT_Disconnect( MQTTContext_t * pContext )
 {
-    size_t packetSize;
-    int32_t bytesSent;
+    size_t packetSize = 0U;
+    int32_t bytesSent = 0;
     MQTTStatus_t status = MQTTSuccess;
 
     /* Validate arguments. */

@@ -225,9 +225,10 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer, 
 	{
 	ProtocolPacket_t *pxPacket;
 
+		/* If the peripheral must calculate the checksum, it wants
+		the protocol checksum to have a value of zero. */
 		pxPacket = ( ProtocolPacket_t * ) ( pxBuffer->pucEthernetBuffer );
-		if( ( pxPacket->xICMPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE ) &&
-			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
+		if( ( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
 			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_TCP ) )
 		{
 			/* The EMAC will calculate the checksum of the IP-header.

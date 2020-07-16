@@ -25,7 +25,7 @@
 #### Bugfixes in MQTT Client Library (Beta 1)
 
 * Improved the Keep-Alive mechanism: The MQTT library will not send PING requests when connection is not idle, which fixes a disconnect issue during OTA. In the prior version, MQTT would sometimes disconnect during OTA due to timeouts for server PING response.
-* Bug fix for Keep-Alive interval: The MQTT library was incorrectly sending PING requests at intervals greater than the keep alive period sent in the CONNECT request. This change fixes the problem.
+* Bug fix for Keep-Alive interval: The MQTT library was incorrectly sending PING requests at intervals greater than the keep alive period sent in the CONNECT request. This has been fixed.
 * Bugfix for synchronous Publish at QoS 0: The earlier implementation of IotMqtt_PublishSync  API always returned success even when network transmission of the PUBLISH packet failed. This bug has now been fixed such that the API function will return network error when network transmission fails.
 
 #### PKCS#11
@@ -33,21 +33,21 @@
 - Added doxygen to various PKCS #11 files.
 - Added improved logging for mbed TLS  return codes in iot_pkcs11_mbedtls.c. 
 - Added PKCS11_PAL_Initialize for initializing the PKCS #11 PAL layer.
-- Refactored various MISRA violations
-- Refactored Sessions to use static memory instead of Dynamic memory
+- Addressed various MISRA violations.
+- Refactored Sessions to use static memory instead of dynamic memory
 
 #### FreeRTOS+TCP 
 
 - Added ability to cache multiple IP addresses per DNS entry.
 - Defensive security improvements: 
-    - In compliance with the UDP protocol specification, prior versions of FreeRTOS+TCP accepted UDP packets that had their checksum set to 0. FreeRTOS+TCP V2.3.0 adds a new configuration parameter, ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS, that enables users to opt to drop packets UDP packets that have their checksum set to 0. Note this new setting defaults to 0, so it defaults to dropping UDP packets that have their checksum set to 0.
-    - Prior versions of FreeRTOS+TCP accept IP packets that contain IP options, although those options are not processed. FreeRTOS+TCP V2.3.0 adds a new configuration parameter, ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS, that enables users to opt to drop IP packets that contain IP options.
-    - Setting ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM to 1 offloads IP checksum and length checking to the hardware. From FreeRTOS+TCP V2.3.0, the length is checked in software even when it has already been checked in hardware.
+    - In compliance with the UDP protocol specification, prior versions of FreeRTOS+TCP accepted UDP packets that had their checksum set to 0. This release adds a new configuration parameter, `ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS`, that enables users to opt to drop UDP packets that have their checksum set to 0. Note this new setting defaults to 0, so it defaults to dropping UDP packets that have their checksum set to 0.
+    - Prior versions of FreeRTOS+TCP accept IP packets that contain IP options, although those options are not processed. This release adds a new configuration parameter, `ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS`, that enables users to opt to drop IP packets that contain IP options. The default value of the configuration is set to 1, which means that IP packets that contain IP options are not dropped.
+    - Setting `ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM` to 1 offloads IP checksum and length checking to the hardware. With this release, the length is checked in software even when it has already been checked in hardware.
 
 #### Mbed TLS v2.16.7
 
 - Upgraded the version of Mbed TLS to v2.16.7.
-- Submoduled the Mbed TLS library.
+- Replaced copy of Mbed TLS with a submodule reference to the official [Mbed TLS GitHub repository](https://github.com/ARMmbed/mbedtls/tree/mbedtls-2.16.7).
 
 #### Over the Air Update
 

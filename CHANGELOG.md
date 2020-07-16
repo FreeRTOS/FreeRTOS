@@ -8,7 +8,7 @@
 
 - Updated the over-the-air (OTA) agent with the ability to pause and resume an in-progress update.
 - Updated the OTA demo to demonstrate how to suspend an in-progress OTA update should the MQTT connection disconnect, then resume the same update when the MQTT connection reconnects. In line with best practice, the reconnect logic uses an exponential backoff and jitter algorithm to prevent the MQTT server getting overwhelmed with connection requests if a fleet of devices get disconnected and then attempt to reconnect at the same time.
-- For test purposes only, it is now possible to use OTA to downgrade the version number.  That capability is disabled by default.
+- For test purposes only, it is now possible to use OTA to downgrade the version number. That capability is disabled by default.
 - Add doxygen comments to the OTA source files.
 
 ### Updates
@@ -20,7 +20,7 @@
 #### New MQTT Client Library (Beta 2)
 
 - A new MQTT library source code has been added under the FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-Beta2 directory.
-- Demos for the new MQTT library have been added to the FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-Beta2 directory
+- Demos for the new MQTT library have been added to the FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-Beta2 directory.
 
 #### Bugfixes in MQTT Client Library (Beta 1)
 

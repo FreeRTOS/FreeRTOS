@@ -15,12 +15,12 @@
 
 #### Rename FreeRTOS-IoT-Libraries Directory
 
-- The FreeRTOS-IoT-Libraries directories in the previous snapshot version (V2020218_LTS_development_snapshot) under FreeRTOS-Plus/Source and FreeRTOS-Plus/Demo has been renamed to *FreeRTOS-IoT-Libraries-Beta1* to make way for a parallel directory, *FreeRTOS-IoT-Libraries-Beta2*, that holds libraries for which the refactoring work is near completion (currently the MQTT library).
+- The FreeRTOS-IoT-Libraries directories in the previous snapshot version (V2020218_LTS_development_snapshot) under `FreeRTOS-Plus/Source and FreeRTOS-Plus/Demo` has been renamed to *FreeRTOS-IoT-Libraries-Beta1* to make way for a parallel directory, *FreeRTOS-IoT-Libraries-Beta2*, that holds libraries for which the refactoring work is near completion (currently the MQTT library).
 
 #### MQTT LTS RC1 Client Library (in FreeRTOS-IoT-LTS-Beta2)
 
-- A new MQTT library source code has been added under the FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-Beta2 directory.
-- Demos for the new MQTT library have been added to the FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-Beta2 directory.
+- The first release candidate for the refactored MQTT library is located in the `FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-Beta2` directory. The library will be released in the main FreeRTOS download when the refactoring described on the [LTS roadmap](https://freertos.org/ltsroadmap.html) page is complete.
+- Demos for the refactored MQTT library have been added to the `FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-Beta2 directory`.
 
 #### Bugfixes in MQTT Client Library (in FreeRTOS-IoT-LTS-Beta1)
 

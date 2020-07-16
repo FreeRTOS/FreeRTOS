@@ -17,12 +17,12 @@
 
 - The FreeRTOS-IoT-Libraries directories in the previous snapshot version (V2020218_LTS_development_snapshot) under `FreeRTOS-Plus/Source and FreeRTOS-Plus/Demo` has been renamed to *FreeRTOS-IoT-Libraries-Beta1* to make way for a parallel directory, *FreeRTOS-IoT-Libraries-Beta2*, that holds libraries for which the refactoring work is near completion (currently the MQTT library).
 
-#### MQTT LTS RC1 Client Library (in FreeRTOS-IoT-LTS-Beta2)
+#### MQTT LTS rc1 Client Library (in FreeRTOS-IoT-Libraries-LTS-Beta2)
 
 - The first release candidate for the refactored MQTT library is located in the `FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-Beta2` directory. The library will be released in the main FreeRTOS download when the refactoring described on the [LTS roadmap](https://freertos.org/ltsroadmap.html) page is complete.
 - Demos for the refactored MQTT library have been added to the `FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-Beta2 directory`.
 
-#### Bugfixes in MQTT Client Library (in FreeRTOS-IoT-LTS-Beta1)
+#### Bugfixes in MQTT Client Library (in FreeRTOS-IoT-Libraries-LTS-Beta1)
 
 * Improved the Keep-Alive mechanism: The MQTT library will not send PING requests when connection is not idle, which fixes a disconnect issue during OTA. In the prior version, MQTT would sometimes disconnect during OTA due to timeouts for server PING response.
 * Bug fix for Keep-Alive interval: The MQTT library was incorrectly sending PING requests at intervals greater than the keep alive period sent in the CONNECT request. This has been fixed.

@@ -20,7 +20,7 @@ all: queue
 queue:
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/create.c                    | $(call check_coverage,317)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvCopyDataFromQueue.c      | $(call check_coverage,301)
-	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/prvCopyDataToQueue.c        | $(call check_coverage,328)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/prvCopyDataToQueue.c        | $(call check_coverage,329)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueEmpty.c           | $(call check_coverage,282)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueFull.c            | $(call check_coverage,282)
 	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvLockQueue.c              | $(call check_coverage,283)

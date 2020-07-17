@@ -3,7 +3,7 @@
 We are currently working to improve the modularity and memory usage of new
 FreeRTOS IoT libraries before releasing the libraries into the main FreeRTOS
 download with long term support (LTS).  https://freertos.org/ltsroadmap.html
-contains a description of the libraries target modularity and code quality
+contains a description of the libraries that target modularity and code quality
 criteria.  An LTS release is only updated with bug and vulnerability patches,
 not new features.  This zip file contains (among other updates) a
 work-in-progress snapshot of the MQTT library, which is near completion.  The
@@ -21,7 +21,7 @@ Studio tools and without needing specific microcontroller hardware.
 https://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
 provides additional information on using the Windows port.
 
-The following links provide instructions on using using the FreeRTOS IoT
+The following links provide instructions on using the FreeRTOS IoT
 libraries:
 
   + https://www.FreeRTOS.org/mqtt/
@@ -38,7 +38,7 @@ The Visual Studio projects for each of the FreeRTOS IoT library examples are
 located in sub-directories of the following top-level directories:
 
   Demos using the refactored MQTT library:
-  + /FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta2/mqtt_plain_text
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta2/mqtt_plain_text
   + /FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta2/mqtt_light_weight
 
   Demos not yet updated to the refactored MQTT library:

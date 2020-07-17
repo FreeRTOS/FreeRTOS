@@ -4,7 +4,7 @@ The easiest way to use FreeRTOS is to start with one of the pre-configured demo 
 Additionally, for FreeRTOS kernel feature information refer to the [Developer Documentation](https://www.freertos.org/features.html), and [API Reference](https://www.freertos.org/a00106.html).
 
 ### Getting help
-If you have any questions or need assistance troubleshooting your FreeRTOS project, we have an active community that can help on the [FreeRTOS Community Support Forum](https://forums.freertos.org).
+The [FreeRTOS Support Forum](https://forums.freertos.org) is an excellent way to get rapid help from the FreeRTOS maintainers and wider FreeRTOS community.
 
 ## Repository structure
 This repository contains the FreeRTOS Kernel, a number of supplementary libraries, and a comprehensive set of example applications.

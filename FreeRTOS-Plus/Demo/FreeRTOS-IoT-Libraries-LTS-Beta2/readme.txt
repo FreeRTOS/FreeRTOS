@@ -30,6 +30,7 @@ libraries:
   + https://www.FreeRTOS.org/jobs/
   + https://www.FreeRTOS.org/ota/
   + https://www.FreeRTOS.org/pkcs11/
+  + https://www.FreeRTOS.org/mqtt_lts/
 
 
 *** LOCATING THE EXAMPLE PROJECTS ***

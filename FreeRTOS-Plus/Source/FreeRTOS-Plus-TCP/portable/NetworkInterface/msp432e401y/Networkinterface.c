@@ -169,7 +169,7 @@ DMA only after it is completely written into the RX FIFO.
 In cut-through mode, DMA transfer is started after reaching of a given Threshold.
 TX is similar in the other direction.
 */
-#define DMA_STORE_FORWARD_RX_OPERATION 0
+#define DMA_STORE_FORWARD_RX_OPERATION 1
 #if DMA_STORE_FORWARD_RX_OPERATION
 #define DMA_OP_MODE (EMAC_MODE_TX_STORE_FORWARD | \ 
                      EMAC_MODE_RX_STORE_FORWARD)
@@ -179,10 +179,10 @@ TX is similar in the other direction.
 #endif
 
 /* How error RX framaes are handled depend on the FIFO mode and on some
-Register fields in EMACDMAOPMODE. 
-In cut-through mode, only frames smaller than DMA transfer threshold, can be dropped before DMA transfers,
-store-and-forward mode frames are per default dropped, if FEF bit is set then are not dropped.
+Register fields in EMACDMAOPMODE.  
+In store-and-forward mode frames are per default dropped, if FEF bit is set then are not dropped.
 The DT fields control forward of frames with error in the tcp/ip payload 
+In cut-through mode, only frames smaller than DMA transfer threshold, can be dropped before DMA transfers.
 */
 #define DMA_ERR_FORWARD 0
 #if DMA_ERR_FORWARD
@@ -574,7 +574,6 @@ BaseType_t prvEmacStart()
     return pdTRUE;
 }
 /*-------------------------------------------*/
-
 /*
  * prvInitDMADescriptors 
  * Initialize the transmit and receive DMA descriptor lists.
@@ -704,6 +703,7 @@ static void prvHandleRx()
     uint32_t         ui32FrameSz;
     uint32_t         ui32CtrlStatus;
     DescriptorRef_t *pxDescRef;
+    BaseType_t noErrors=pdTRUE;
 
     IPStackEvent_t xRxEvent;
 
@@ -718,7 +718,7 @@ static void prvHandleRx()
             (pDescList->ulRead - 1) : (pDescList->ulNumDescs - 1);
 
     /* Step through the descriptors that are marked for CPU attention. */
-    while (pDescList->ulRead != ulDescEnd) {
+    while ((pDescList->ulRead != ulDescEnd) && noErrors) {
         descCount++;
         pxDescRef = &(pDescList->pxDescriptorRef[pDescList->ulRead]);
         /* Does the current descriptor have a buffer attached to it? */
@@ -769,6 +769,7 @@ static void prvHandleRx()
                  * we can thus reuse the descriptor with the akready present buffer.
                  */
                 pxNetworkBufferNew = pxNetworkBuffer;
+                noErrors=pdFALSE;
             }
             else 
             #endif

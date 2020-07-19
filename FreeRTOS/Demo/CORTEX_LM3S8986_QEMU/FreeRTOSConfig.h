@@ -67,7 +67,7 @@
 #define configUSE_TIMERS				1
 #define configTIMER_TASK_PRIORITY		2
 #define configTIMER_QUEUE_LENGTH		20
-#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE * 2 )
+#define configTIMER_TASK_STACK_DEPTH	( configMINIMAL_STACK_SIZE )
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
@@ -105,7 +105,13 @@ version. */
 /* The test that checks the trigger level on stream buffers requires an
 allowable margin of error on slower processors (slower than the Win32
 machine on which the test is developed). */
-#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   4
+#define configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN   ( 1 )
+
+/* Override locally defined test task stack sizes as appropriate for this
+demo. */
+#define configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE 	( 110 )
+#define configSTREAM_BUFFER_SENDER_TASK_STACK_SIZE 	( 180 )
+#define configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE	( 100 )
 
 void vAssertCalled( const char *pcFile, unsigned long ulLine );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );

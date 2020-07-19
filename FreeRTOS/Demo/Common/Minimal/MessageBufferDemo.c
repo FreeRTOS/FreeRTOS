@@ -129,7 +129,11 @@ void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize  )
 {
 MessageBufferHandle_t xMessageBuffer;
 
+#ifndef configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE
 	xBlockingStackSize = ( xStackSize + ( xStackSize >> 1U ) );
+#else
+	xBlockingStackSize = configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE;
+#endif
 
 	/* The echo servers sets up the message buffers before creating the echo
 	client tasks.  One set of tasks has the server as the higher priority, and

@@ -245,6 +245,7 @@ IntDefaultHandler(void)
 int
 uipprintf(const char *fmt, ...)
 {
+	( void ) fmt;
     return(0);
 }
 

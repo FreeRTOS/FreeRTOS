@@ -45,7 +45,7 @@
 
 void vInitialiseTimerForIntQueueTest( void )
 {
-unsigned long ulFrequency;
+uint32_t ulFrequency;
 
 	/* Timer 2 and 3 are utilised for this test. */
 	SysCtlPeripheralEnable( SYSCTL_PERIPH_TIMER2 );

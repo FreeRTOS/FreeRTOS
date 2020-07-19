@@ -52,7 +52,7 @@ zero. */
 
 /* Misc defines. */
 #define timerMAX_32BIT_VALUE			( 0xffffffffUL )
-#define timerTIMER_1_COUNT_VALUE		( * ( ( volatile unsigned long * ) ( ( unsigned long ) TIMER1_BASE + 0x48UL ) ) )
+#define timerTIMER_1_COUNT_VALUE		( * ( ( volatile uint32_t * ) ( ( uint32_t ) TIMER1_BASE + 0x48UL ) ) )
 
 /*-----------------------------------------------------------*/
 
@@ -60,13 +60,13 @@ zero. */
 void Timer0IntHandler( void );
 
 /* Stores the value of the maximum recorded jitter between interrupts. */
-volatile unsigned long ulMaxJitter = 0;
+volatile uint32_t ulMaxJitter = 0;
 
 /*-----------------------------------------------------------*/
 
 void vSetupHighFrequencyTimer( void )
 {
-unsigned long ulFrequency;
+uint32_t ulFrequency;
 
 	/* Timer zero is used to generate the interrupts, and timer 1 is used
 	to measure the jitter. */
@@ -98,9 +98,9 @@ unsigned long ulFrequency;
 
 void Timer0IntHandler( void )
 {
-unsigned long ulDifference;
-volatile unsigned long ulCurrentCount;
-static unsigned long ulMaxDifference = 0, ulLastCount = 0;
+uint32_t ulDifference;
+volatile uint32_t ulCurrentCount;
+static uint32_t ulMaxDifference = 0, ulLastCount = 0;
 
 	/* We use the timer 1 counter value to measure the clock cycles between
 	the timer 0 interrupts. */

@@ -68,12 +68,6 @@
  * various Luminary Micro EKs.
  *************************************************************************/
 
-/* Set the following option to 1 to include the WEB server in the build.  By
-default the WEB server is excluded to keep the compiled code size under the 32K
-limit imposed by the KickStart version of the IAR compiler.  The graphics
-libraries take up a lot of ROM space, hence including the graphics libraries
-and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
-#define mainINCLUDE_WEB_SERVER		0
 
 
 /* Standard includes. */
@@ -94,20 +88,14 @@ and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
 #include "sysctl.h"
 #include "gpio.h"
 #include "grlib.h"
-#include "rit128x96x4.h"
 #include "osram128x64x4.h"
 #include "uart.h"
 
 /* Demo app includes. */
 #include "death.h"
 #include "blocktim.h"
-#include "flash.h"
-#include "partest.h"
 #include "semtest.h"
-#include "PollQ.h"
-#include "lcd_message.h"
 #include "bitmap.h"
-#include "GenQTest.h"
 #include "QPeek.h"
 #include "recmutex.h"
 #include "IntQueue.h"
@@ -122,14 +110,11 @@ and the TCP/IP stack together cannot be accommodated with the 32K size limit. */
 tick hook. */
 #define mainCHECK_DELAY						( ( TickType_t ) 5000 / portTICK_PERIOD_MS )
 
-/* Size of the stack allocated to the uIP task. */
-#define mainBASIC_WEB_STACK_SIZE            ( configMINIMAL_STACK_SIZE * 3 )
-
-/* The OLED task uses the sprintf function so requires a little more stack too. */
-#define mainOLED_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 50 )
+/* Task stack sizes. */
+#define mainOLED_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE + 40 )
+#define mainMESSAGE_BUFFER_TASKS_STACK_SIZE	( 100 )
 
 /* Task priorities. */
-#define mainQUEUE_POLL_PRIORITY				( tskIDLE_PRIORITY + 2 )
 #define mainCHECK_TASK_PRIORITY				( tskIDLE_PRIORITY + 3 )
 #define mainSEM_TEST_PRIORITY				( tskIDLE_PRIORITY + 1 )
 #define mainCREATOR_TASK_PRIORITY           ( tskIDLE_PRIORITY + 3 )
@@ -144,7 +129,7 @@ time. */
 
 /* The period of the system clock in nano seconds.  This is used to calculate
 the jitter time in nano seconds. */
-#define mainNS_PER_CLOCK					( ( unsigned long ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
+#define mainNS_PER_CLOCK					( ( uint32_t ) ( ( 1.0 / ( double ) configCPU_CLOCK_HZ ) * 1000000000.0 ) )
 
 /* Constants used when writing strings to the display. */
 #define mainCHARACTER_HEIGHT				( 9 )
@@ -157,18 +142,12 @@ the jitter time in nano seconds. */
 /*-----------------------------------------------------------*/
 
 /*
- * The task that handles the uIP stack.  All TCP/IP processing is performed in
- * this task.
- */
-extern void vuIP_Task( void *pvParameters );
-
-/*
  * The display is written two by more than one task so is controlled by a
  * 'gatekeeper' task.  This is the only task that is actually permitted to
  * access the display directly.  Other tasks wanting to display a message send
  * the message to the gatekeeper.
  */
-static void vOLEDTask( void *pvParameters );
+static void prvOLEDTask( void *pvParameters );
 
 /*
  * Configure the hardware for the demo.
@@ -187,12 +166,15 @@ extern void vSetupHighFrequencyTimer( void );
 void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName );
 void vApplicationTickHook( void );
 
+/*
+ * Basic polling UART write function.
+ */
 static void prvPrintString( const char * pcString );
 
 /*-----------------------------------------------------------*/
 
 /* The queue used to send messages to the OLED task. */
-QueueHandle_t xOLEDQueue;
+static QueueHandle_t xOLEDQueue;
 
 /* The welcome text. */
 const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
@@ -211,36 +193,21 @@ int main( void )
 
 	/* Create the queue used by the OLED task.  Messages for display on the OLED
 	are received via this queue. */
-	xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( xOLEDMessage ) );
+	xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( char * ) );
 
 	/* Start the standard demo tasks. */
-	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartInterruptQueueTasks();
 	vStartRecursiveMutexTasks();
 	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
-	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	vStartQueuePeekTasks();
 	vStartQueueSetTasks();
 	vStartEventGroupTasks();
-	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE * 2 );
+	vStartMessageBufferTasks( mainMESSAGE_BUFFER_TASKS_STACK_SIZE );
 	vStartStreamBufferTasks();
 
-	/* Exclude some tasks if using the kickstart version to ensure we stay within
-	the 32K code size limit. */
-	#if mainINCLUDE_WEB_SERVER != 0
-	{
-		/* Create the uIP task if running on a processor that includes a MAC and
-		PHY. */
-		if( SysCtlPeripheralPresent( SYSCTL_PERIPH_ETH ) )
-		{
-			xTaskCreate( vuIP_Task, "uIP", mainBASIC_WEB_STACK_SIZE, NULL, mainCHECK_TASK_PRIORITY - 1, NULL );
-		}
-	}
-	#endif
-
 	/* Start the tasks defined within this file/specific to this demo. */
-	xTaskCreate( vOLEDTask, "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
+	xTaskCreate( prvOLEDTask, "OLED", mainOLED_TASK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
@@ -279,8 +246,6 @@ void prvSetupHardware( void )
 	GPIODirModeSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3), GPIO_DIR_MODE_HW );
 	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
 
-	vParTestInitialise();
-
 	/* Initialise the UART - QEMU usage does not seem to require this
 	initialisation. */
 	SysCtlPeripheralEnable( SYSCTL_PERIPH_UART0 );
@@ -290,9 +255,9 @@ void prvSetupHardware( void )
 
 void vApplicationTickHook( void )
 {
-static xOLEDMessage xMessage = { "PASS" };
-static unsigned long ulTicksSinceLastDisplay = 0;
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
+static const char * pcMessage = "PASS";
+static uint32_t ulTicksSinceLastDisplay = 0;
+BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
 	/* Called from every tick interrupt.  Have enough ticks passed to make it
 	time to perform our health status check again? */
@@ -304,56 +269,48 @@ portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 		/* Has an error been found in any task? */
 		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN STRM";
+			pcMessage = "ERROR IN STRM";
 		}
 		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN MSG";
-		}
-		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
-		{
-			xMessage.pcMessage = "ERROR IN GEN Q";
+			pcMessage = "ERROR IN MSG";
 		}
 	    else if( xIsCreateTaskStillRunning() != pdTRUE )
 	    {
-	        xMessage.pcMessage = "ERROR IN CREATE";
+	        pcMessage = "ERROR IN CREATE";
 	    }
 		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN INT QUEUE";
+			pcMessage = "ERROR IN INT QUEUE";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN BLOCK TIME";
+			pcMessage = "ERROR IN BLOCK TIME";
 		}
 		else if( xAreSemaphoreTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN SEMAPHORE";
-		}
-		else if( xArePollingQueuesStillRunning() != pdTRUE )
-		{
-			xMessage.pcMessage = "ERROR IN POLL Q";
+			pcMessage = "ERROR IN SEMAPHORE";
 		}
 		else if( xAreQueuePeekTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN PEEK Q";
+			pcMessage = "ERROR IN PEEK Q";
 		}
 		else if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN REC MUTEX";
+			pcMessage = "ERROR IN REC MUTEX";
 		}
 		else if( xAreQueueSetTasksStillRunning() != pdPASS )
 		{
-			xMessage.pcMessage = "ERROR IN Q SET";
+			pcMessage = "ERROR IN Q SET";
 		}
 		else if( xAreEventGroupTasksStillRunning() != pdTRUE )
 		{
-			xMessage.pcMessage = "ERROR IN EVNT GRP";
+			pcMessage = "ERROR IN EVNT GRP";
 		}
 
 		/* Send the message to the OLED gatekeeper for display. */
 		xHigherPriorityTaskWoken = pdFALSE;
-		xQueueSendFromISR( xOLEDQueue, &xMessage, &xHigherPriorityTaskWoken );
+		xQueueSendFromISR( xOLEDQueue, &pcMessage, &xHigherPriorityTaskWoken );
 	}
 
 	/* Write to a queue that is in use as part of the queue set demo to
@@ -378,19 +335,18 @@ static void prvPrintString( const char * pcString )
 }
 /*-----------------------------------------------------------*/
 
-void vOLEDTask( void *pvParameters )
+void prvOLEDTask( void *pvParameters )
 {
-xOLEDMessage xMessage;
-unsigned long ulY, ulMaxY;
+const char *pcMessage;
+uint32_t ulY, ulMaxY;
 static char cMessage[ mainMAX_MSG_LEN ];
-extern volatile unsigned long ulMaxJitter;
 const unsigned char *pucImage;
 
 /* Functions to access the OLED.  The one used depends on the dev kit
 being used. */
-void ( *vOLEDInit )( unsigned long ) = NULL;
-void ( *vOLEDStringDraw )( const char *, unsigned long, unsigned long, unsigned char ) = NULL;
-void ( *vOLEDImageDraw )( const unsigned char *, unsigned long, unsigned long, unsigned long, unsigned long ) = NULL;
+void ( *vOLEDInit )( uint32_t ) = NULL;
+void ( *vOLEDStringDraw )( const char *, uint32_t, uint32_t, unsigned char ) = NULL;
+void ( *vOLEDImageDraw )( const unsigned char *, uint32_t, uint32_t, uint32_t, uint32_t ) = NULL;
 void ( *vOLEDClear )( void ) = NULL;
 
 	/* Prevent warnings about unused parameters. */
@@ -415,7 +371,7 @@ void ( *vOLEDClear )( void ) = NULL;
 	for( ;; )
 	{
 		/* Wait for a message to arrive that requires displaying. */
-		xQueueReceive( xOLEDQueue, &xMessage, portMAX_DELAY );
+		xQueueReceive( xOLEDQueue, &pcMessage, portMAX_DELAY );
 
 		/* Write the message on the next available row. */
 		ulY += mainCHARACTER_HEIGHT;
@@ -428,14 +384,15 @@ void ( *vOLEDClear )( void ) = NULL;
 
 		/* Display the message along with the maximum jitter time from the
 		high priority time test. */
-		sprintf( cMessage, "%s [%luns]", xMessage.pcMessage, ulMaxJitter * mainNS_PER_CLOCK );
+		sprintf( cMessage, "%s %u", pcMessage, ( unsigned int ) xTaskGetTickCount() );
 		vOLEDStringDraw( cMessage, 0, ulY, mainFULL_SCALE );
 		prvPrintString( cMessage );
+		prvPrintString( "\r\n" );
 	}
 }
 /*-----------------------------------------------------------*/
 
-volatile signed char *pcOverflowedTask = NULL;
+volatile signed char *pcOverflowedTask = NULL; /* Prevent task name being optimised away. */
 void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName )
 {
 	( void ) pxTask;
@@ -445,9 +402,9 @@ void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskNam
 }
 /*-----------------------------------------------------------*/
 
-void vAssertCalled( const char *pcFile, unsigned long ulLine )
+void vAssertCalled( const char *pcFile, uint32_t ulLine )
 {
-volatile unsigned long ulSetTo1InDebuggerToExit = 0;
+volatile uint32_t ulSetTo1InDebuggerToExit = 0;
 
 	taskENTER_CRITICAL();
 	{
@@ -518,6 +475,9 @@ char * _sbrk_r (struct _reent *r, int incr)
 	/* Just to keep the linker quiet. */
 	( void ) r;
 	( void ) incr;
+
+	/* Check this function is never called by forcing an assert() if it is. */
+	configASSERT( incr == -1 );
 
 	return NULL;
 }

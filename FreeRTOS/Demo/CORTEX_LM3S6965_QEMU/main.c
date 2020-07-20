@@ -239,13 +239,6 @@ void prvSetupHardware( void )
 	/* Set the clocking to run from the PLL at 50 MHz */
 	SysCtlClockSet( SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_8MHZ );
 
-	/* 	Enable Port F for Ethernet LEDs
-		LED0        Bit 3   Output
-		LED1        Bit 2   Output */
-	SysCtlPeripheralEnable( SYSCTL_PERIPH_GPIOF );
-	GPIODirModeSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3), GPIO_DIR_MODE_HW );
-	GPIOPadConfigSet( GPIO_PORTF_BASE, (GPIO_PIN_2 | GPIO_PIN_3 ), GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD );
-
 	/* Initialise the UART - QEMU usage does not seem to require this
 	initialisation. */
 	SysCtlPeripheralEnable( SYSCTL_PERIPH_UART0 );

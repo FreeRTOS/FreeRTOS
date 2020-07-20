@@ -25,6 +25,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>CommonDemoFiles</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
+		</link>
+		<link>
 			<name>FreeRTOS_Source</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
@@ -35,62 +40,102 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/drivers/LuminaryMicro</locationURI>
 		</link>
 		<link>
-			<name>CommonDemoTasks/EventGroupsDemo.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/EventGroupsDemo.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/IntQueue.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/IntQueue.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/MessageBufferDemo.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/MessageBufferDemo.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/QPeek.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QPeek.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/QueueSet.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/QueueSet.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/StreamBufferDemo.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/StreamBufferDemo.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/blocktim.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/blocktim.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/death.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/death.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/include</name>
+			<name>CommonDemoFiles/include</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
 		</link>
-		<link>
-			<name>CommonDemoTasks/recmutex.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/recmutex.c</locationURI>
-		</link>
-		<link>
-			<name>CommonDemoTasks/semtest.c</name>
-			<type>1</type>
-			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal/semtest.c</locationURI>
-		</link>
 	</linkedResources>
 	<filteredResources>
+		<filter>
+			<id>1595186095257</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IntQueue.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095263</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-recmutex.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095270</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-blocktim.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095276</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-semtest.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095310</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-QPeek.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095317</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-QueueSet.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095323</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-EventGroupsDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095329</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-MessageBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095335</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-StreamBufferDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595186095356</id>
+			<name>CommonDemoFiles</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-death.c</arguments>
+			</matcher>
+		</filter>
 		<filter>
 			<id>1590288652117</id>
 			<name>FreeRTOS_Source</name>

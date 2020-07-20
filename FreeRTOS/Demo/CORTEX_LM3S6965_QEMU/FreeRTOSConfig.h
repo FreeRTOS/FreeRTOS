@@ -58,7 +58,7 @@
 #define configUSE_QUEUE_SETS			1
 #define configUSE_COUNTING_SEMAPHORES	1
 
-#define configMAX_PRIORITIES			( 5UL )
+#define configMAX_PRIORITIES			( 6UL )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
 #define configQUEUE_REGISTRY_SIZE		10
 #define configSUPPORT_STATIC_ALLOCATION	1

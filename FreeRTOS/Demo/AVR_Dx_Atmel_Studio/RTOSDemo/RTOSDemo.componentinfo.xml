@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Store xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="AtmelPackComponentManagement">
+	<ProjectComponents>
+		<ProjectComponent z:Id="i1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/">
+			<CApiVersion></CApiVersion>
+			<CBundle></CBundle>
+			<CClass>Device</CClass>
+			<CGroup>Startup</CGroup>
+			<CSub></CSub>
+			<CVariant></CVariant>
+			<CVendor>Atmel</CVendor>
+			<CVersion>1.2.0</CVersion>
+			<DefaultRepoPath>C:/Program Files (x86)\Atmel\Studio\7.0\Packs</DefaultRepoPath>
+			<DependentComponents xmlns:d4p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+			<Description></Description>
+			<Files xmlns:d4p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+				<d4p1:anyType i:type="FileInfo">
+					<AbsolutePath>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\AVR-Dx_DFP\1.2.56\include</AbsolutePath>
+					<Attribute></Attribute>
+					<Category>include</Category>
+					<Condition>C</Condition>
+					<FileContentHash i:nil="true" />
+					<FileVersion></FileVersion>
+					<Name>include</Name>
+					<SelectString></SelectString>
+					<SourcePath></SourcePath>
+				</d4p1:anyType>
+				<d4p1:anyType i:type="FileInfo">
+					<AbsolutePath>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\AVR-Dx_DFP\1.2.56\include\avr\ioavr128da48.h</AbsolutePath>
+					<Attribute></Attribute>
+					<Category>header</Category>
+					<Condition>C</Condition>
+					<FileContentHash>eBF2rQUT5y0eCTjfyvG0Jw==</FileContentHash>
+					<FileVersion></FileVersion>
+					<Name>include/avr/ioavr128da48.h</Name>
+					<SelectString></SelectString>
+					<SourcePath></SourcePath>
+				</d4p1:anyType>
+				<d4p1:anyType i:type="FileInfo">
+					<AbsolutePath>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\AVR-Dx_DFP\1.2.56\templates\main.c</AbsolutePath>
+					<Attribute>template</Attribute>
+					<Category>source</Category>
+					<Condition>C Exe</Condition>
+					<FileContentHash>KjvOcFWd++tbnsEMfVPd/w==</FileContentHash>
+					<FileVersion></FileVersion>
+					<Name>templates/main.c</Name>
+					<SelectString>Main file (.c)</SelectString>
+					<SourcePath></SourcePath>
+				</d4p1:anyType>
+				<d4p1:anyType i:type="FileInfo">
+					<AbsolutePath>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\AVR-Dx_DFP\1.2.56\templates\main.cpp</AbsolutePath>
+					<Attribute>template</Attribute>
+					<Category>source</Category>
+					<Condition>C Exe</Condition>
+					<FileContentHash>mkKaE95TOoATsuBGv6jmxg==</FileContentHash>
+					<FileVersion></FileVersion>
+					<Name>templates/main.cpp</Name>
+					<SelectString>Main file (.cpp)</SelectString>
+					<SourcePath></SourcePath>
+				</d4p1:anyType>
+				<d4p1:anyType i:type="FileInfo">
+					<AbsolutePath>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\AVR-Dx_DFP\1.2.56\gcc\dev\avr128da48</AbsolutePath>
+					<Attribute></Attribute>
+					<Category>libraryPrefix</Category>
+					<Condition>GCC</Condition>
+					<FileContentHash i:nil="true" />
+					<FileVersion></FileVersion>
+					<Name>gcc/dev/avr128da48</Name>
+					<SelectString></SelectString>
+					<SourcePath></SourcePath>
+				</d4p1:anyType>
+			</Files>
+			<PackName>AVR-Dx_DFP</PackName>
+			<PackPath>C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/AVR-Dx_DFP/1.2.56/Atmel.AVR-Dx_DFP.pdsc</PackPath>
+			<PackVersion>1.2.56</PackVersion>
+			<PresentInProject>true</PresentInProject>
+			<ReferenceConditionId>AVR128DA48</ReferenceConditionId>
+			<RteComponents xmlns:d4p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+				<d4p1:string></d4p1:string>
+			</RteComponents>
+			<Status>Resolved</Status>
+			<VersionMode>Fixed</VersionMode>
+			<IsComponentInAtProject>true</IsComponentInAtProject>
+		</ProjectComponent>
+	</ProjectComponents>
+</Store>

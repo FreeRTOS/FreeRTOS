@@ -31,7 +31,6 @@
 
 /* Demo file headers. */
 #include "regtest.h"
-#include "FreeRTOSConfig.h"
 
 /*
  * Test tasks that sets registers to known values, then checks to ensure the
@@ -121,12 +120,16 @@ static void prvRegisterCheck1( void *pvParameters )
 		asm(	"LDI	r25,	30"		);
 		asm(	"LDI	r26,	31"		);
 		asm(	"LDI	r27,	32"		);
-		asm(	"LDI	r30,	33"		);
+		asm(	"LDI	r28,	33"		);
+		asm(	"LDI	r29,	34"		);
+		asm(	"LDI	r30,	35"		);
 
-#if ( configUSE_PREEMPTION == 0 )
-        portYIELD();
-#endif
+		taskYIELD();
 
+		asm(	"CPI	r31,	20"			);
+		asm(	"BREQ	no_err_1"			);
+		asm(	"STS	xRegTestError, r0"	);
+		asm(	"no_err_1:"					);
 		asm(	"LDI	r31,	5"			);
 		asm(	"CPSE	r31,	r0"			);
 		asm(	"STS	xRegTestError, r0"	);
@@ -212,6 +215,12 @@ static void prvRegisterCheck1( void *pvParameters )
 		asm(	"CPSE	r31,	r27"		);
 		asm(	"STS	xRegTestError, r0"	);
 		asm(	"LDI	r31,	33"			);
+		asm(	"CPSE	r31,	r28"		);
+		asm(	"STS	xRegTestError, r0"	);
+		asm(	"LDI	r31,	34"			);
+		asm(	"CPSE	r31,	r29"		);
+		asm(	"STS	xRegTestError, r0"	);
+		asm(	"LDI	r31,	35"			);
 		asm(	"CPSE	r31,	r30"		);
 		asm(	"STS	xRegTestError, r0"	);
 	}
@@ -268,12 +277,16 @@ static void prvRegisterCheck2( void *pvParameters )
 		asm(	"LDI	r25,	26"		);
 		asm(	"LDI	r26,	27"		);
 		asm(	"LDI	r27,	28"		);
-		asm(	"LDI	r30,	29"		);
-		
-#if ( configUSE_PREEMPTION == 0 )
-        portYIELD();
-#endif
+		asm(	"LDI	r28,	29"		);
+		asm(	"LDI	r29,	30"		);
+		asm(	"LDI	r30,	31"		);
 
+		taskYIELD();
+
+		asm(	"CPI	r31,	16"			);
+		asm(	"BREQ	no_err_2"			);
+		asm(	"STS	xRegTestError, r0"	);
+		asm(	"no_err_2:"					);
 		asm(	"LDI	r31,	1"			);
 		asm(	"CPSE	r31,	r0"			);
 		asm(	"STS	xRegTestError, r0"	);
@@ -359,6 +372,12 @@ static void prvRegisterCheck2( void *pvParameters )
 		asm(	"CPSE	r31,	r27"		);
 		asm(	"STS	xRegTestError, r0"	);
 		asm(	"LDI	r31,	29"			);
+		asm(	"CPSE	r31,	r28"		);
+		asm(	"STS	xRegTestError, r0"	);
+		asm(	"LDI	r31,	30"			);
+		asm(	"CPSE	r31,	r29"		);
+		asm(	"STS	xRegTestError, r0"	);
+		asm(	"LDI	r31,	31"			);
 		asm(	"CPSE	r31,	r30"		);
 		asm(	"STS	xRegTestError, r0"	);
 	}

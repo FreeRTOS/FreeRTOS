@@ -29,7 +29,7 @@
 #define SEMAPHORE_TEST_H
 
 void vStartSemaphoreTasks( UBaseType_t uxPriority );
-portBASE_TYPE xAreSemaphoreTasksStillRunning( void );
+BaseType_t xAreSemaphoreTasksStillRunning( void );
 
 #endif
 

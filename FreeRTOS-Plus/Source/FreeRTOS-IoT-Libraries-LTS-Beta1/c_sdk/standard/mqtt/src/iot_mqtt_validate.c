@@ -619,7 +619,8 @@ bool _IotMqtt_ValidateConnect( const IotMqttConnectInfo_t * pConnectInfo )
         /* If will info is provided, check that it is valid. */
         if( pConnectInfo->pWillInfo != NULL )
         {
-            status = _IotMqtt_ValidateLwtPublish( pConnectInfo->awsIotMqttMode,
+            status = ( pConnectInfo->pWillInfo->pPayload != NULL ) &&
+                     _IotMqtt_ValidateLwtPublish( pConnectInfo->awsIotMqttMode,
                                                   pConnectInfo->pWillInfo );
         }
     }

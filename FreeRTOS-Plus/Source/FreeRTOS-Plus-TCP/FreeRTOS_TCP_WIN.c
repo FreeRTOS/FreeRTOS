@@ -1910,8 +1910,8 @@ const int32_t l500ms = 500;
 
 #if( ipconfigUSE_TCP_WIN == 0 )
 
-	static BaseType_t prvTCPWindowTxHasSpace( TCPWindow_t *pxWindow, uint32_t ulWindowSize );
-	static BaseType_t prvTCPWindowTxHasSpace( TCPWindow_t *pxWindow, uint32_t ulWindowSize )
+	static BaseType_t prvTCPWindowTxHasSpace( TCPWindow_t const * pxWindow, uint32_t ulWindowSize );
+	static BaseType_t prvTCPWindowTxHasSpace( TCPWindow_t const * pxWindow, uint32_t ulWindowSize )
 	{
 	BaseType_t xReturn;
 
@@ -1934,7 +1934,7 @@ const int32_t l500ms = 500;
 
 	BaseType_t xTCPWindowTxHasData( TCPWindow_t const *pxWindow, uint32_t ulWindowSize, TickType_t *pulDelay )
 	{
-	TCPSegment_t *pxSegment = &( pxWindow->xTxSegment );
+	TCPSegment_t const *pxSegment = &( pxWindow->xTxSegment );
 	BaseType_t xReturn;
 	TickType_t ulAge, ulMaxAge;
 

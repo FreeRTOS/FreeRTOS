@@ -328,6 +328,22 @@ lemma void remove_remove_nth<t>(list<t> xs, t x)
   }
 }
 
+/* Following lemma from `verifast/bin/rt/_list.java`. Renamed to
+avoid clash with listex.c's nth_drop lemma. */
+lemma void nth_drop2<t>(list<t> vs, int i)
+requires 0 <= i && i < length(vs);
+ensures nth(i, vs) == head(drop(i, vs));
+{
+  switch (vs) {
+  case nil:
+  case cons(v, vs0):
+    if (i == 0) {
+    } else {
+      nth_drop2(vs0, i - 1);
+    }
+  }
+}
+
 lemma void enq_lemma<t>(int k, int i, list<t> xs, list<t> ys, t z)
   requires 0 <= k && 0 <= i && 0 < length(xs) && k < length(xs) && i < length(xs) && take(k, rotate_left(i, xs)) == ys;
   ensures take(k+1, rotate_left(i, update((i+k)%length(xs), z, xs))) == append(ys, cons(z, nil));

@@ -304,6 +304,12 @@ BaseType_t FreeRTOS_IsNetworkUp( void );
 	UBaseType_t uxGetMinimumIPQueueSpace( void );
 #endif
 
+#if ( ipconfigHAS_PRINTF != 0 )
+	extern void vPrintResourceStats( void );
+#else
+	#define vPrintResourceStats()	do {} while( ipFALSE_BOOL )
+#endif
+
 /*
  * Defined in FreeRTOS_Sockets.c
  * //_RB_ Don't think this comment is correct.  If this is for internal use only it should appear after all the public API functions and not start with FreeRTOS_.

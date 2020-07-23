@@ -222,7 +222,7 @@ int32_t FreeRTOS_sendto( Socket_t xSocket, const void *pvBuffer, size_t uxTotalD
 BaseType_t FreeRTOS_bind( Socket_t xSocket, struct freertos_sockaddr const * pxAddress, socklen_t xAddressLength );
 
 /* function to get the local address and IP port */
-size_t FreeRTOS_GetLocalAddress( Socket_t xSocket, struct freertos_sockaddr *pxAddress );
+size_t FreeRTOS_GetLocalAddress( const Socket_t xSocket, struct freertos_sockaddr *pxAddress );
 
 #if( ipconfigETHERNET_DRIVER_FILTERS_PACKETS == 1 )
 	/* Returns true if an UDP socket exists bound to mentioned port number. */
@@ -252,19 +252,19 @@ BaseType_t FreeRTOS_GetRemoteAddress( Socket_t xSocket, struct freertos_sockaddr
 
 #if( ipconfigUSE_TCP == 1 )
 
-	/* returns pdTRUE if TCP socket is connected */
-	BaseType_t FreeRTOS_issocketconnected( Socket_t xSocket );
+	/* Returns pdTRUE if TCP socket is connected. */
+	BaseType_t FreeRTOS_issocketconnected( const Socket_t xSocket );
 
-	/* returns the actual size of MSS being used */
-	BaseType_t FreeRTOS_mss( Socket_t xSocket );
+	/* Returns the actual size of MSS being used. */
+	BaseType_t FreeRTOS_mss( const Socket_t xSocket );
 
 #endif
 
-/* for internal use only: return the connection status */
-BaseType_t FreeRTOS_connstatus( Socket_t xSocket );
+/* For internal use only: return the connection status. */
+BaseType_t FreeRTOS_connstatus( const Socket_t xSocket );
 
 /* Returns the number of bytes that may be added to txStream */
-BaseType_t FreeRTOS_maywrite( Socket_t xSocket );
+BaseType_t FreeRTOS_maywrite( const Socket_t xSocket );
 
 /*
  * Two helper functions, mostly for testing
@@ -272,9 +272,9 @@ BaseType_t FreeRTOS_maywrite( Socket_t xSocket );
  * tx_space returns the free space in the Tx buffer
  */
 #if( ipconfigUSE_TCP == 1 )
-	BaseType_t FreeRTOS_rx_size( Socket_t xSocket );
-	BaseType_t FreeRTOS_tx_space( Socket_t xSocket );
-	BaseType_t FreeRTOS_tx_size( Socket_t xSocket );
+	BaseType_t FreeRTOS_rx_size( const Socket_t xSocket );
+	BaseType_t FreeRTOS_tx_space( const Socket_t xSocket );
+	BaseType_t FreeRTOS_tx_size( const Socket_t xSocket );
 #endif
 
 /* Returns the number of outstanding bytes in txStream. */
@@ -382,7 +382,7 @@ const char *FreeRTOS_inet_ntop4( const void *pvSource, char *pcDestination, sock
  * For the web server: borrow the circular Rx buffer for inspection
  * HTML driver wants to see if a sequence of 13/10/13/10 is available
  */
-const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( Socket_t xSocket );
+const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( const Socket_t xSocket );
 
 void FreeRTOS_netstat( void );
 

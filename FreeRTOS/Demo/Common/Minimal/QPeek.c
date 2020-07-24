@@ -365,6 +365,7 @@ uint32_t ulValue;
 		if( ulValue != 0x01234567 )
 		{
 			/* We did not receive the expected value. */
+			xErrorDetected = pdTRUE;
 		}
 
 		/* Lets just delay a while as this is an intensive test as we don't

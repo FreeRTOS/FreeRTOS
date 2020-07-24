@@ -944,7 +944,7 @@ NetworkBufferDescriptor_t *pxResult;
 			/* The following statement may trigger a:
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
-			pxResult = * ( ipPOINTER_CAST( NetworkBufferDescriptor_t **, pucBuffer ) );
+			pxResult = * ( ipPOINTER_CAST( const NetworkBufferDescriptor_t **, pucBuffer ) );
 		}
 		else
 		{
@@ -1640,11 +1640,11 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 				if( pxIPPacket->xIPHeader.ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
 				{
 				ProtocolPacket_t *pxProtPack;
-				uint16_t *pusChecksum;
+				const uint16_t *pusChecksum;
 
 					/* pxProtPack will point to the offset were the protocols begin. */
 					pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pxNetworkBuffer->pucEthernetBuffer[ uxHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
-					pusChecksum = ( uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
+					pusChecksum = ( const uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
 					if( *pusChecksum == ( uint16_t ) 0U )
 					{
 						#if( ipconfigHAS_PRINTF != 0 )
@@ -1991,7 +1991,7 @@ uint8_t ucProtocol;
 	size_t uxLength;
 	const IPPacket_t * pxIPPacket;
 	UBaseType_t uxIPHeaderLength;
-	ProtocolPacket_t *pxProtPack;
+	const ProtocolPacket_t *pxProtPack;
 	uint8_t ucProtocol;
 	uint16_t usLength;
 	uint16_t ucVersionHeaderLength;
@@ -2049,7 +2049,7 @@ uint8_t ucProtocol;
 			of this calculation. */
 			/* Map the Buffer onto the Protocol Packet struct for easy access to the
 			 * struct fields. */
-			pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+			pxProtPack = ipPOINTER_CAST( const ProtocolPacket_t *, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
 
 			/* Switch on the Layer 3/4 protocol. */
 			if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )

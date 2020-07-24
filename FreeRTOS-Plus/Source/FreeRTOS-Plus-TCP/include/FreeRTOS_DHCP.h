@@ -88,7 +88,7 @@ typedef struct xDHCP_DATA DHCPData_t;
 void vDHCPProcess( BaseType_t xReset );
 
 /* Internal call: returns true if socket is the current DHCP socket */
-BaseType_t xIsDHCPSocket( Socket_t xSocket );
+BaseType_t xIsDHCPSocket( const Socket_t xSocket );
 
 #if( ipconfigUSE_DHCP_HOOK != 0 )
 	/* Prototype of the hook (or callback) function that must be provided by the

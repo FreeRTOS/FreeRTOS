@@ -224,7 +224,7 @@ static DHCPData_t xDHCPData;
 
 /*-----------------------------------------------------------*/
 
-BaseType_t xIsDHCPSocket( Socket_t xSocket )
+BaseType_t xIsDHCPSocket( ConstSocket_t xSocket )
 {
 BaseType_t xReturn;
 

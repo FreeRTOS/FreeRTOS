@@ -721,9 +721,10 @@ int32_t lTCPAddRxdata(FreeRTOS_Socket_t *pxSocket, size_t uxOffset, const uint8_
 void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket );
 
 /*
- * Some helping function, their meaning should be clear
+ * Some helping function, their meaning should be clear.
+ * Utility functions can be used anywhere in the source. Cannot be define it
+ * conditionally. 
  */
- /* coverity[misra_c_2012_rule_2_2_violation] */
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr);
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr)
 {

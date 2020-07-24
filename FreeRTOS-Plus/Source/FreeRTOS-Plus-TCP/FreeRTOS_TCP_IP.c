@@ -1213,7 +1213,7 @@ static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
 UBaseType_t uxNewMSS;
 size_t uxRemainingOptionsBytes = uxTotalLength;
 uint8_t ucLen;
-size_t uxIndex = 0U;
+size_t uxIndex;
 TCPWindow_t *pxTCPWindow = &( pxSocket->u.xTCP.xTCPWindow );
 BaseType_t xReturn = pdFALSE;
 
@@ -1682,14 +1682,14 @@ static NetworkBufferDescriptor_t *prvTCPBufferResize( const FreeRTOS_Socket_t *p
 	int32_t lDataLen, UBaseType_t uxOptionsLength )
 {
 NetworkBufferDescriptor_t *pxReturn;
-uint32_t lNeeded;
+size_t uxNeeded;
 BaseType_t xResize;
 
 	if( xBufferAllocFixedSize != pdFALSE )
 	{
 		/* Network buffers are created with a fixed size and can hold the largest
 		MTU. */
-		lNeeded = ( uint32_t ) ipTOTAL_ETHERNET_FRAME_SIZE;
+		uxNeeded = ( size_t ) ipTOTAL_ETHERNET_FRAME_SIZE;
 		/* and therefore, the buffer won't be too small.
 		Only ask for a new network buffer in case none was supplied. */
 		if( pxNetworkBuffer == NULL )
@@ -1705,11 +1705,16 @@ BaseType_t xResize;
 	{
 		/* Network buffers are created with a variable size. See if it must
 		grow. */
-		lNeeded = FreeRTOS_max_uint32( ( uint32_t ) sizeof( pxSocket->u.xTCP.xPacket.u.ucLastPacket ),
-			ipNUMERIC_CAST( uint32_t, ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength ) + lDataLen );
+		uxNeeded = ipNUMERIC_CAST( size_t, ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength ) + lDataLen;
+
+		if( uxNeeded < sizeof( pxSocket->u.xTCP.xPacket.u.ucLastPacket ) )
+		{
+			uxNeeded = sizeof( pxSocket->u.xTCP.xPacket.u.ucLastPacket );
+		}
+
 		/* In case we were called from a TCP timer event, a buffer must be
 		created.  Otherwise, test 'xDataLength' of the provided buffer. */
-		if( ( pxNetworkBuffer == NULL ) || ( pxNetworkBuffer->xDataLength < (size_t) lNeeded ) )
+		if( ( pxNetworkBuffer == NULL ) || ( pxNetworkBuffer->xDataLength < uxNeeded ) )
 		{
 			xResize = pdTRUE;
 		}
@@ -1724,12 +1729,12 @@ BaseType_t xResize;
 		/* The caller didn't provide a network buffer or the provided buffer is
 		too small.  As we must send-out a data packet, a buffer will be created
 		here. */
-		pxReturn = pxGetNetworkBufferWithDescriptor( ( size_t ) lNeeded, 0U );
+		pxReturn = pxGetNetworkBufferWithDescriptor( uxNeeded, 0U );
 
 		if( pxReturn != NULL )
 		{
 			/* Set the actual packet size, in case the returned buffer is larger. */
-			pxReturn->xDataLength = ( size_t ) lNeeded;
+			pxReturn->xDataLength = uxNeeded;
 
 			/* Copy the existing data to the new created buffer. */
 			if( pxNetworkBuffer != NULL )
@@ -2386,21 +2391,21 @@ uint32_t ulSequenceNumber = FreeRTOS_ntohl( pxTCPHeader->ulSequenceNumber );
 BaseType_t xSendLength = 0;
 
 	/* Either expect a ACK or a SYN+ACK. */
-	uint8_t usExpect = tcpTCP_FLAG_ACK;
+	uint8_t ucExpect = tcpTCP_FLAG_ACK;
 	if( pxSocket->u.xTCP.ucTCPState == ( uint8_t ) eCONNECT_SYN )
 	{
-		usExpect |= tcpTCP_FLAG_SYN;
+		ucExpect |= tcpTCP_FLAG_SYN;
 	}
 
 	const uint8_t ucFlagsMask = tcpTCP_FLAG_ACK | tcpTCP_FLAG_RST | tcpTCP_FLAG_SYN | tcpTCP_FLAG_FIN;
 
-	if( ( ucTCPFlags & ucFlagsMask ) != usExpect )
+	if( ( ucTCPFlags & ucFlagsMask ) != ucExpect )
 	{
 		/* eSYN_RECEIVED: flags 0010 expected, not 0002. */
 		/* eSYN_RECEIVED: flags ACK  expected, not SYN. */
 		FreeRTOS_debug_printf( ( "%s: flags %04X expected, not %04X\n",
 			( pxSocket->u.xTCP.ucTCPState == ( uint8_t ) eSYN_RECEIVED ) ? "eSYN_RECEIVED" : "eCONNECT_SYN",
-			usExpect, ucTCPFlags ) );
+			ucExpect, ucTCPFlags ) );
 		vTCPStateChange( pxSocket, eCLOSE_WAIT );
 		/* Send RST with the expected sequence and ACK numbers,
 		otherwise the packet will be ignored. */
@@ -2992,13 +2997,13 @@ static BaseType_t prvTCPSendSpecialPacketHelper( NetworkBufferDescriptor_t *pxNe
 	{
 		/* Map the ethernet buffer onto the TCPPacket_t struct for easy access to the fields. */
 		TCPPacket_t *pxTCPPacket = ipPOINTER_CAST( TCPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
-		const UBaseType_t xSendLength = ( UBaseType_t )
+		const uint32_t ulSendLength = ( uint32_t )
 			( ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_TCP_HEADER ); /* Plus 0 options. */
 
 		pxTCPPacket->xTCPHeader.ucTCPFlags = ucTCPFlags;
 		pxTCPPacket->xTCPHeader.ucTCPOffset = ( ipSIZE_OF_TCP_HEADER ) << 2;
 
-		prvTCPReturnPacket( NULL, pxNetworkBuffer, ( uint32_t )xSendLength, pdFALSE );
+		prvTCPReturnPacket( NULL, pxNetworkBuffer, ulSendLength, pdFALSE );
 	}
 #endif /* !ipconfigIGNORE_UNKNOWN_PACKETS */
 
@@ -3204,7 +3209,7 @@ const IPHeader_t *pxIPHeader;
 					/* Update the copy of the TCP header only (skipping eth and IP
 					headers).  It might be used later on, whenever data must be sent
 					to the peer. */
-					const UBaseType_t lOffset = ipNUMERIC_CAST( UBaseType_t, ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket ) );
+					const size_t lOffset = ipNUMERIC_CAST( size_t, ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket ) );
 					( void ) memcpy( &( pxSocket->u.xTCP.xPacket.u.ucLastPacket[ lOffset ] ),
 									 &( pxNetworkBuffer->pucEthernetBuffer[ lOffset ] ),
 									 ipSIZE_OF_TCP_HEADER );

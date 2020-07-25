@@ -57,9 +57,19 @@
  * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
  * processing is performed in this task.
  *
- * Use the following command to execute in QEMU from the IAR IDE:
- * qemu-system-arm -machine lm3s6965evb -s -S -kernel [pat_to]\RTOSDemo.out
- * and set IAR connect GDB server to "localhost,1234" in project debug options.
+ * Use the following command to start run the application in QEMU, pausing
+ * pausing to wait for a debugger connection:
+ * qemu-system-arm -machine lm3s6965evb -s -S -kernel [pat_to]\RTOSDemo.elf
+ *
+ * To enable trace:
+ * 	1) Add #include "trcRecorder.h" to the bottom of FreeRTOSConfig.h.
+ * 	2) Call vTraceEnable( TRC_START ); at the top of main.
+ * 	3) Ensure the "FreeRTOS+Trace Recorder" folder in the Project Explorer
+ * 	   window is not excluded from the build.
+ *
+ * To retrieve the trace files:
+ *	1) Use the Memory windows in the Debug perspective to dump RAM from the
+ *	   RecorderData variable.
  */
 
 /*************************************************************************
@@ -67,8 +77,6 @@
  * which provides information on configuring and running this demo for the
  * various Luminary Micro EKs.
  *************************************************************************/
-
-
 
 /* Standard includes. */
 #include <stdio.h>
@@ -98,7 +106,6 @@
 #include "bitmap.h"
 #include "QPeek.h"
 #include "recmutex.h"
-#include "IntQueue.h"
 #include "QueueSet.h"
 #include "EventGroupsDemo.h"
 #include "MessageBufferDemo.h"
@@ -181,7 +188,6 @@ const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
 
 /*-----------------------------------------------------------*/
 
-
 /*************************************************************************
  * Please ensure to read http://www.freertos.org/portlm3sx965.html
  * which provides information on configuring and running this demo for the
@@ -189,6 +195,11 @@ const char * const pcWelcomeMessage = "   www.FreeRTOS.org";
  *************************************************************************/
 int main( void )
 {
+	/* Initialise the trace recorder.  Use of the trace recorder is optional.
+	See http://www.FreeRTOS.org/trace for more information and the comments at
+	the top of this file regarding enabling trace in this demo.
+	vTraceEnable( TRC_START ); */
+
 	prvSetupHardware();
 
 	/* Create the queue used by the OLED task.  Messages for display on the OLED
@@ -196,7 +207,6 @@ int main( void )
 	xOLEDQueue = xQueueCreate( mainOLED_QUEUE_SIZE, sizeof( char * ) );
 
 	/* Start the standard demo tasks. */
-	vStartInterruptQueueTasks();
 	vStartRecursiveMutexTasks();
 	vCreateBlockTimeTasks();
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
@@ -272,10 +282,6 @@ BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	    {
 	        pcMessage = "ERROR IN CREATE";
 	    }
-		else if( xAreIntQueueTasksStillRunning() != pdTRUE )
-		{
-			pcMessage = "ERROR IN INT QUEUE";
-		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdTRUE )
 		{
 			pcMessage = "ERROR IN BLOCK TIME";
@@ -390,7 +396,7 @@ void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskNam
 {
 	( void ) pxTask;
 	pcOverflowedTask = pcTaskName;
-
+	vAssertCalled( __FILE__, __LINE__ );
 	for( ;; );
 }
 /*-----------------------------------------------------------*/

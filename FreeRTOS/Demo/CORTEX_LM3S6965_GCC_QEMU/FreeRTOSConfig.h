@@ -45,7 +45,7 @@
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 50000000 )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 )
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 50 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 12 )
 #define configUSE_TRACE_FACILITY		1
@@ -111,9 +111,12 @@ machine on which the test is developed). */
 demo. */
 #define configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE 	( 110 )
 #define configSTREAM_BUFFER_SENDER_TASK_STACK_SIZE 	( 180 )
-#define configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE	( 100 )
+#define configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE	( 110 )
 
 void vAssertCalled( const char *pcFile, unsigned long ulLine );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
+
+/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
+#include "trcRecorder.h"
 
 #endif /* FREERTOS_CONFIG_H */

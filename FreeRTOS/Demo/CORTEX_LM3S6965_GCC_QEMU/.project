@@ -30,6 +30,11 @@
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
 		</link>
 		<link>
+			<name>FreeRTOS+Trace Recorder</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS-Plus/Source/FreeRTOS-Plus-Trace</locationURI>
+		</link>
+		<link>
 			<name>FreeRTOS_Source</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Source</locationURI>
@@ -134,6 +139,33 @@
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-death.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595287884238</id>
+			<name>FreeRTOS+Trace Recorder</name>
+			<type>9</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Include</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595287884248</id>
+			<name>FreeRTOS+Trace Recorder</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-trcKernelPort.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1595287884270</id>
+			<name>FreeRTOS+Trace Recorder</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-trcSnapshotRecorder.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

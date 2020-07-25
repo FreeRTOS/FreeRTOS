@@ -780,7 +780,6 @@ EchoStreamBuffers_t *pxStreamBuffers = ( EchoStreamBuffers_t * ) pvParameters;
 		/* This stream buffer is just created and deleted to ensure no memory
 		leaks. */
 		xTempStreamBuffer = xStreamBufferCreate( sbSTREAM_BUFFER_LENGTH_BYTES, sbTRIGGER_LEVEL_1 );
-		prvSingleTaskTests( xTempStreamBuffer );
 		vStreamBufferDelete( xTempStreamBuffer );
 
 		/* The following are tests for a stream buffer of size one. */
@@ -992,7 +991,14 @@ BaseType_t xErrorDetected = pdFALSE;
 				}
 				else if( xReadBlockTime != xBytesReceived )
 				{
-					xErrorDetected = pdTRUE;
+					/* It is possible the interrupt placed an item in the stream
+					buffer before this task called xStreamBufferReceive(), but
+					if that is the case then xBytesReceived will only every be
+					0 as the interrupt will only have executed once. */
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
 				}
 			}
 			else if( xTriggerLevel < xReadBlockTime )
@@ -1000,10 +1006,19 @@ BaseType_t xErrorDetected = pdFALSE;
 				/* Trigger level was less than the block time so we expect to
 				have received the trigger level number of bytes - could be more
 				though depending on other activity between the task being
-				unblocked and the task reading the number of bytes received. */
+				unblocked and the task reading the number of bytes received.  It
+				could also be less if the interrupt already put something in the
+				stream buffer before this task attempted to read it - in which
+				case the task would have returned the available bytes immediately
+				without ever blocking - in that case the bytes received will
+				only ever be 1 as the interrupt would not have executed more
+				than one in that time unless this task has too low a priority. */
 				if( xBytesReceived < xTriggerLevel )
 				{
-					xErrorDetected = pdTRUE;
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
 				}
 				else if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
 				{
@@ -1013,12 +1028,19 @@ BaseType_t xErrorDetected = pdFALSE;
 			else
 			{
 				/* The trigger level equalled the block time, so expect to
-				receive no greater than the block time, but one or two less is
-				ok due to variations in how far through the time slice the
-				functions get executed. */
+				receive no greater than the block time.  It could also be less
+				if the interrupt already put something in the stream buffer
+				before this task attempted to read it - in which case the task
+				would have returned the available bytes immediately without ever
+				blocking - in that case the bytes received would only ever be 1
+				because the interrupt is not going to execute twice in that time
+				unless this task is running a too low a priority. */
 				if( xBytesReceived < xReadBlockTime )
 				{
-					xErrorDetected = pdTRUE;
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
 				}
 				else if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
 				{

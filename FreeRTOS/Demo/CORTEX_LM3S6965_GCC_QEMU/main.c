@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.3.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -32,15 +32,6 @@
  * In addition to the standard demo tasks, the following tasks and tests are
  * defined and/or created within this file:
  *
- * "Fast Interrupt Test" - A high frequency periodic interrupt is generated
- * using a free running timer to demonstrate the use of the
- * configKERNEL_INTERRUPT_PRIORITY configuration constant.  The interrupt
- * service routine measures the number of processor clocks that occur between
- * each interrupt - and in so doing measures the jitter in the interrupt timing.
- * The maximum measured jitter time is latched in the ulMaxJitter variable, and
- * displayed on the OLED display by the 'OLED' task as described below.  The
- * fast interrupt is configured and handled in the timertest.c source file.
- *
  * "OLED" task - the OLED task is a 'gatekeeper' task.  It is the only task that
  * is permitted to access the display directly.  Other tasks wishing to write a
  * message to the OLED send the message on a queue to the OLED task instead of
@@ -54,14 +45,11 @@
  * demo tasks are executing with their expected behaviour then the check task
  * writes PASS to the OLED (again via the OLED task), as described above.
  *
- * "uIP" task -  This is the task that handles the uIP stack.  All TCP/IP
- * processing is performed in this task.
+ * Use the following command to start running the application in QEMU, pausing
+ * to wait for a debugger connection:
+ * "qemu-system-arm -machine lm3s6965evb -s -S -kernel [pat_to]\RTOSDemo.elf"
  *
- * Use the following command to start run the application in QEMU, pausing
- * pausing to wait for a debugger connection:
- * qemu-system-arm -machine lm3s6965evb -s -S -kernel [pat_to]\RTOSDemo.elf
- *
- * To enable trace:
+ * To enable FreeRTOS+Trace:
  * 	1) Add #include "trcRecorder.h" to the bottom of FreeRTOSConfig.h.
  * 	2) Call vTraceEnable( TRC_START ); at the top of main.
  * 	3) Ensure the "FreeRTOS+Trace Recorder" folder in the Project Explorer

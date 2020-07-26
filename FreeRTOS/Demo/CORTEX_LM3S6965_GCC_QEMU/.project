@@ -142,7 +142,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1595287884238</id>
+			<id>1595791773655</id>
 			<name>FreeRTOS+Trace Recorder</name>
 			<type>9</type>
 			<matcher>
@@ -151,7 +151,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1595287884248</id>
+			<id>1595791773708</id>
 			<name>FreeRTOS+Trace Recorder</name>
 			<type>5</type>
 			<matcher>
@@ -160,7 +160,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1595287884270</id>
+			<id>1595791773801</id>
 			<name>FreeRTOS+Trace Recorder</name>
 			<type>5</type>
 			<matcher>

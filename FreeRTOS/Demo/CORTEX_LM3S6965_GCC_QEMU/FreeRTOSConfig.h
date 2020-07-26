@@ -116,7 +116,8 @@ demo. */
 void vAssertCalled( const char *pcFile, unsigned long ulLine );
 #define configASSERT( x ) if( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ );
 
-/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions. */
-#include "trcRecorder.h"
+/* Include the FreeRTOS+Trace FreeRTOS trace macro definitions.  See the comments
+at the top of main.c for enabling the trace recorder.
+#include "trcRecorder.h" */
 
 #endif /* FREERTOS_CONFIG_H */

@@ -722,7 +722,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket );
 
 /*
  * Some helping function, their meaning should be clear.
- * Utility functions can be used anywhere in the source. Cannot be define it
+ * Utility functions can be used anywhere in the source. Cannot be defined
  * conditionally. 
  */
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr);

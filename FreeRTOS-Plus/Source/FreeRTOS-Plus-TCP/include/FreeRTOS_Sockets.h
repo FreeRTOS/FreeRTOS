@@ -248,7 +248,7 @@ BaseType_t FreeRTOS_shutdown (Socket_t xSocket, BaseType_t xHow);
 #endif /* ipconfigSUPPORT_SIGNALS */
 
 /* Return the remote address and IP port. */
-BaseType_t FreeRTOS_GetRemoteAddress( Socket_t xSocket, struct freertos_sockaddr *pxAddress );
+BaseType_t FreeRTOS_GetRemoteAddress( const Socket_t xSocket, struct freertos_sockaddr *pxAddress );
 
 #if( ipconfigUSE_TCP == 1 )
 

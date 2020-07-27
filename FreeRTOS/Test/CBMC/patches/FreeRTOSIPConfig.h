@@ -268,7 +268,7 @@ extern uint32_t ulRand();
  * 32-bit memory instructions, all packets will be stored 32-bit-aligned,
  * plus 16-bits. This has to do with the contents of the IP-packets: all
  * 32-bit fields are 32-bit-aligned, plus 16-bit. */
-#define ipconfigPACKET_FILLER_SIZE                     2
+#define ipconfigPACKET_FILLER_SIZE                     2U
 
 /* Define the size of the pool of TCP window descriptors.  On the average, each
  * TCP socket will use up to 2 x 6 descriptors, meaning that it can have 2 x 6

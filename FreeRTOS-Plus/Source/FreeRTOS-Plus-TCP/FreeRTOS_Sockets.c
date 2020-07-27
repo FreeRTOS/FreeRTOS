@@ -2074,7 +2074,7 @@ uint32_t ulReturn = 0UL;
 
 
 /* Function to get the local address and IP port */
-size_t FreeRTOS_GetLocalAddress( const Socket_t xSocket, struct freertos_sockaddr *pxAddress )
+size_t FreeRTOS_GetLocalAddress( ConstSocket_t xSocket, struct freertos_sockaddr *pxAddress )
 {
 const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 
@@ -2727,7 +2727,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 	/* Get a direct pointer to the circular transmit buffer.
 	'*pxLength' will contain the number of bytes that may be written. */
-	uint8_t *FreeRTOS_get_tx_head( const Socket_t xSocket, BaseType_t *pxLength )
+	uint8_t *FreeRTOS_get_tx_head( ConstSocket_t xSocket, BaseType_t *pxLength )
 	{
     uint8_t *pucReturn = NULL;
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
@@ -3190,7 +3190,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 #if( ipconfigUSE_TCP == 1 )
 	/* For the web server: borrow the circular Rx buffer for inspection
 	 * HTML driver wants to see if a sequence of 13/10/13/10 is available. */
-	const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( const Socket_t xSocket )
+	const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t * pxSocket = ( const FreeRTOS_Socket_t * )xSocket;
     const struct xSTREAM_BUFFER *pxReturn = NULL;
@@ -3417,7 +3417,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 #if( ipconfigUSE_TCP == 1 )
 
 	/* Function to get the remote address and IP port */
-	BaseType_t FreeRTOS_GetRemoteAddress( const Socket_t xSocket, struct freertos_sockaddr *pxAddress )
+	BaseType_t FreeRTOS_GetRemoteAddress( ConstSocket_t xSocket, struct freertos_sockaddr *pxAddress )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xResult;
@@ -3449,7 +3449,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 #if( ipconfigUSE_TCP == 1 )
 
 	/* Returns the number of bytes that may be added to txStream */
-	BaseType_t FreeRTOS_maywrite( const Socket_t xSocket )
+	BaseType_t FreeRTOS_maywrite( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xResult;
@@ -3486,7 +3486,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 #if( ipconfigUSE_TCP == 1 )
 
-	BaseType_t FreeRTOS_tx_space( const Socket_t xSocket )
+	BaseType_t FreeRTOS_tx_space( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xReturn;
@@ -3515,7 +3515,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 
 #if( ipconfigUSE_TCP == 1 )
 
-	BaseType_t FreeRTOS_tx_size( const Socket_t xSocket )
+	BaseType_t FreeRTOS_tx_size( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xReturn;
@@ -3545,7 +3545,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 #if( ipconfigUSE_TCP == 1 )
 
 	/* Returns pdTRUE if TCP socket is connected. */
-	BaseType_t FreeRTOS_issocketconnected( const Socket_t xSocket )
+	BaseType_t FreeRTOS_issocketconnected( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xReturn = pdFALSE;
@@ -3574,7 +3574,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 #if( ipconfigUSE_TCP == 1 )
 
 	/* Returns the actual size of MSS being used. */
-	BaseType_t FreeRTOS_mss( const Socket_t xSocket )
+	BaseType_t FreeRTOS_mss( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xReturn;
@@ -3600,7 +3600,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 #if( ipconfigUSE_TCP == 1 )
 
 	/* For internal use only: return the connection status. */
-	BaseType_t FreeRTOS_connstatus( const Socket_t xSocket )
+	BaseType_t FreeRTOS_connstatus( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xReturn;
@@ -3626,7 +3626,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	/*
 	 * Returns the number of bytes which can be read.
 	 */
-	BaseType_t FreeRTOS_rx_size( const Socket_t xSocket )
+	BaseType_t FreeRTOS_rx_size( ConstSocket_t xSocket )
 	{
 	const FreeRTOS_Socket_t *pxSocket = ( const FreeRTOS_Socket_t * ) xSocket;
 	BaseType_t xReturn;

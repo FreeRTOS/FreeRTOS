@@ -293,7 +293,7 @@ FreeRTOS_rx_size(). */
  * Get a direct pointer to the circular transmit buffer.
  * '*pxLength' will contain the number of bytes that may be written.
  */
-uint8_t *FreeRTOS_get_tx_head( Socket_t xSocket, BaseType_t *pxLength );
+uint8_t *FreeRTOS_get_tx_head( ConstSocket_t xSocket, BaseType_t *pxLength );
 
 #endif /* ipconfigUSE_TCP */
 
@@ -383,7 +383,7 @@ const char *FreeRTOS_inet_ntop4( const void *pvSource, char *pcDestination, sock
  * For the web server: borrow the circular Rx buffer for inspection
  * HTML driver wants to see if a sequence of 13/10/13/10 is available
  */
-const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( const Socket_t xSocket );
+const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( ConstSocket_t xSocket );
 
 void FreeRTOS_netstat( void );
 

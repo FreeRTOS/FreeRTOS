@@ -149,7 +149,7 @@ extern uint32_t ulRand();
      * re-transmission time interval reaches ipconfigMAXIMUM_DISCOVER_TX_PERIOD without
      * a DHCP reply being received. */
 #define ipconfigMAXIMUM_DISCOVER_TX_PERIOD \
-    ( 120000 / portTICK_PERIOD_MS )
+    ( 120000U / portTICK_PERIOD_MS )
 
      /* The ARP cache is a table that maps IP addresses to MAC addresses.  The IP
       * stack can only send a UDP message to a remove IP address if it knowns the MAC

@@ -1323,6 +1323,8 @@ BaseType_t xReturn = pdFALSE;
 		}
 		else
 		{
+			uxIndex = 0U;
+			
 			#if( ipconfigUSE_TCP_WIN == 1 )
 			{
 				/* Selective ACK: the peer has received a packet but it is missing

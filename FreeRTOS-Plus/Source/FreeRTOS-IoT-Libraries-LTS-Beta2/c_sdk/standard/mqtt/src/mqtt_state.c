@@ -525,7 +525,7 @@ static MQTTStatus_t addRecord( MQTTPubAckInfo_t * records,
             if( records[ index ].packetId == packetId )
             {
                 /* Collision. */
-                LogError( ( "Collision when adding PacketID=%u at index=%u",
+                LogError( ( "Collision when adding PacketID=%u at index=%u.",
                             packetId,
                             index ) );
 

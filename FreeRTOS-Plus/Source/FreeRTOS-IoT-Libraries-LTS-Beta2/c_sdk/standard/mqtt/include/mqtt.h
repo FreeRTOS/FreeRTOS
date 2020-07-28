@@ -35,17 +35,29 @@
  */
 #define MQTT_PACKET_ID_INVALID    ( ( uint16_t ) 0U )
 
-struct MQTTApplicationCallbacks;
-typedef struct MQTTApplicationCallbacks   MQTTApplicationCallbacks_t;
-
 struct MQTTPubAckInfo;
-typedef struct MQTTPubAckInfo             MQTTPubAckInfo_t;
+typedef struct MQTTPubAckInfo   MQTTPubAckInfo_t;
 
 struct MQTTContext;
-typedef struct MQTTContext                MQTTContext_t;
+typedef struct MQTTContext      MQTTContext_t;
 
+/**
+ * @brief Application provided callback to retrieve the current time in
+ * milliseconds.
+ *
+ * @return The current time in milliseconds.
+ */
 typedef uint32_t (* MQTTGetCurrentTimeFunc_t )( void );
 
+/**
+ * @brief Application callback for receiving incoming publishes and incoming
+ * acks.
+ *
+ * @param[in] pContext Initialized MQTT context.
+ * @param[in] pPacketInfo Information on the type of incoming MQTT packet.
+ * @param[in] packetIdentifier Packet identifier of incoming PUBLISH packet.
+ * @param[in] pPublishInfo Incoming PUBLISH packet parameters.
+ */
 typedef void (* MQTTEventCallback_t )( MQTTContext_t * pContext,
                                        MQTTPacketInfo_t * pPacketInfo,
                                        uint16_t packetIdentifier,
@@ -80,12 +92,6 @@ typedef enum MQTTPubAckType
     MQTTPubcomp
 } MQTTPubAckType_t;
 
-struct MQTTApplicationCallbacks
-{
-    MQTTGetCurrentTimeFunc_t getTime;
-    MQTTEventCallback_t appCallback;
-};
-
 struct MQTTPubAckInfo
 {
     uint16_t packetId;
@@ -105,7 +111,8 @@ struct MQTTContext
 
     uint16_t nextPacketId;
     MQTTConnectionStatus_t connectStatus;
-    MQTTApplicationCallbacks_t callbacks;
+    MQTTGetCurrentTimeFunc_t getTime;
+    MQTTEventCallback_t appCallback;
     uint32_t lastPacketTime;
     bool controlPacketSent;
 
@@ -128,7 +135,9 @@ struct MQTTContext
  *
  * @brief param[in] pContext The context to initialize.
  * @brief param[in] pTransportInterface The transport interface to use with the context.
- * @brief param[in] pCallbacks Callbacks to use with the context.
+ * @brief param[in] getTimeFunction The time utility function to use with the context.
+ * @brief param[in] userCallback The user callback to use with the context to notify about
+ * incoming packet events.
  * @brief param[in] pNetworkBuffer Network buffer provided for the context.
  *
  * @return #MQTTBadParameter if invalid parameters are passed;
@@ -136,7 +145,8 @@ struct MQTTContext
  */
 MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
                         const TransportInterface_t * pTransportInterface,
-                        const MQTTApplicationCallbacks_t * pCallbacks,
+                        MQTTGetCurrentTimeFunc_t getTimeFunction,
+                        MQTTEventCallback_t userCallback,
                         const MQTTFixedBuffer_t * pNetworkBuffer );
 
 /**
@@ -160,7 +170,7 @@ MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
  * Testament is not used.
  * @param[in] timeoutMs Maximum time in milliseconds to wait for a CONNACK packet.
  * A zero timeout makes use of the retries for receiving CONNACK as configured with
- * #MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT .
+ * #MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT.
  * @param[out] pSessionPresent Whether a previous session was present.
  * Only relevant if not establishing a clean session.
  *

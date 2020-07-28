@@ -264,7 +264,7 @@ short sError = pdFALSE, sCheckVariableToUse;
 /*-----------------------------------------------------------*/
 
 /* This is called to check that all the created tasks are still running. */
-portBASE_TYPE xAreSemaphoreTasksStillRunning( void )
+BaseType_t xAreSemaphoreTasksStillRunning( void )
 {
 static short sLastCheckVariables[ semtstNUM_TASKS ] = { 0 };
 portBASE_TYPE xTask, xReturn = pdTRUE;

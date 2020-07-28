@@ -722,8 +722,9 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket );
 
 /*
  * Some helping function, their meaning should be clear.
- * Utility functions can be used anywhere in the source. Cannot be defined
- * conditionally. 
+ * Going by MISRA rules, these utility functions should not be defined
+ * if they are not being used anywhwere. But their use depends on the
+ * application and hence these functions are defined unconditionally.
  */
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr);
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr)

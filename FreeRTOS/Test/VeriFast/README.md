@@ -49,7 +49,7 @@ and uncheck `Check arithmetic overflow`).
   - `queue/xQueueReceiveFromISR.c`
 
 A successful proof results in the top banner turning green with a statement
-similar to: `0 errors found (286 statements verified)`.
+similar to: `0 errors found (328 statements verified)`.
 
 ## Proof checking a single proof at the command-line
 
@@ -65,7 +65,7 @@ A successful proof results in output similar to:
 
 ```
 queue/xQueueGenericSend.c
-0 errors found (286 statements verified)
+0 errors found (328 statements verified)
 ```
 
 ## Running proof regression
@@ -87,7 +87,7 @@ $ VERIFAST=/path/to/verifast NO_COVERAGE=1 make
 ## Annotation burden
 
 VeriFast can emit statistics about the number of source code lines and
-annotations.
+annotations. These range from .3-2x annotations per line of source code.
 
 ```
 $ VERIFAST=/path/to/verifast ./scripts/annotation_overhead.sh

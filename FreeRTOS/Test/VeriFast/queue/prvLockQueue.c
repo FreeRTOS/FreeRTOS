@@ -23,45 +23,47 @@
 #include "proof/queue.h"
 
 /* In this case we cannot wrap the macro in a function call to give a function
-contract because we require annotations within the macro body, which is not
-supported by VeriFast */
-#define prvLockQueue( pxQueue )								\
-	taskENTER_CRITICAL();									\
-	{														\
-		if( ( pxQueue )->cRxLock == queueUNLOCKED )			\
-		{													\
-			( pxQueue )->cRxLock = queueLOCKED_UNMODIFIED;	\
-		}													\
-		if( ( pxQueue )->cTxLock == queueUNLOCKED )			\
-		{													\
-			( pxQueue )->cTxLock = queueLOCKED_UNMODIFIED;	\
-		}													\
-	}														\
-	taskEXIT_CRITICAL()
+ * contract because we require annotations within the macro body, which is not
+ * supported by VeriFast */
+#define prvLockQueue( pxQueue )                            \
+    taskENTER_CRITICAL();                                  \
+    {                                                      \
+        if( ( pxQueue )->cRxLock == queueUNLOCKED )        \
+        {                                                  \
+            ( pxQueue )->cRxLock = queueLOCKED_UNMODIFIED; \
+        }                                                  \
+        if( ( pxQueue )->cTxLock == queueUNLOCKED )        \
+        {                                                  \
+            ( pxQueue )->cTxLock = queueLOCKED_UNMODIFIED; \
+        }                                                  \
+    }                                                      \
+    taskEXIT_CRITICAL()
 
 void wrapper_prvLockQueue( QueueHandle_t xQueue )
+
 /*@requires [1/2]queuehandle(xQueue, ?N, ?M, ?is_isr) &*& is_isr == false &*&
-	[1/2]queuelock(xQueue);@*/
+    [1/2]queuelock(xQueue);@*/
 /*@ensures [1/2]queuehandle(xQueue, N, M, is_isr) &*&
-	[1/2]xQueue->locked |-> ?m &*&
-	mutex_held(m, queue_locked_invariant(xQueue), currentThread, 1/2) &*&
-	queue_locked_invariant(xQueue)();@*/
+    [1/2]xQueue->locked |-> ?m &*&
+    mutex_held(m, queue_locked_invariant(xQueue), currentThread, 1/2) &*&
+    queue_locked_invariant(xQueue)();@*/
 {
-	taskENTER_CRITICAL();
-	/*@open queue(xQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
-	{
-		if( ( xQueue )->cRxLock == queueUNLOCKED )
-		{
-			( xQueue )->cRxLock = queueLOCKED_UNMODIFIED;
-		}
-		if( ( xQueue )->cTxLock == queueUNLOCKED )
-		{
-			( xQueue )->cTxLock = queueLOCKED_UNMODIFIED;
-		}
-	}
-	/*@close queue(xQueue, Storage, N, M, W, R, K, true, abs);@*/
-	taskEXIT_CRITICAL();
+    taskENTER_CRITICAL();
+    /*@open queue(xQueue, ?Storage, N, M, ?W, ?R, ?K, ?is_locked, ?abs);@*/
+    {
+        if( ( xQueue )->cRxLock == queueUNLOCKED )
+        {
+            ( xQueue )->cRxLock = queueLOCKED_UNMODIFIED;
+        }
+
+        if( ( xQueue )->cTxLock == queueUNLOCKED )
+        {
+            ( xQueue )->cTxLock = queueLOCKED_UNMODIFIED;
+        }
+    }
+    /*@close queue(xQueue, Storage, N, M, W, R, K, true, abs);@*/
+    taskEXIT_CRITICAL();
 #ifdef VERIFAST /*< ghost action */
-	mutex_acquire(xQueue->locked);
+    mutex_acquire( xQueue->locked );
 #endif
 }

@@ -874,6 +874,9 @@ NetworkBufferDescriptor_t xTempBuffer;
 		usPacketIdentifier++;
 		pxIPHeader->usFragmentOffset = 0U;
 
+		/* Important: tell NIC driver how many bytes must be sent. */
+		pxNetworkBuffer->xDataLength = ulLen + ipSIZE_OF_ETH_HEADER;
+
 		#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
 		{
 			/* calculate the IP header checksum, in case the driver won't do that. */
@@ -898,9 +901,6 @@ NetworkBufferDescriptor_t xTempBuffer;
 			pxNetworkBuffer->pxNextBuffer = NULL;
 		}
 		#endif
-
-		/* Important: tell NIC driver how many bytes must be sent. */
-		pxNetworkBuffer->xDataLength = ulLen + ipSIZE_OF_ETH_HEADER;
 
 		/* Fill in the destination MAC addresses. */
 		( void ) memcpy( &( pxEthernetHeader->xDestinationAddress ),
@@ -2000,6 +2000,7 @@ int32_t lCount, lLength;
 
 	/* A txStream has been created already, see if the socket has new data for
 	the sliding window.
+
 	uxStreamBufferMidSpace() returns the distance between rxHead and rxMid.  It
 	contains new Tx data which has not been passed to the sliding window yet.
 	The oldest data not-yet-confirmed can be found at rxTail. */
@@ -2009,6 +2010,7 @@ int32_t lCount, lLength;
 	{
 		/* All data between txMid and rxHead will now be passed to the sliding
 		window manager, so it can start transmitting them.
+
 		Hand over the new data to the sliding window handler.  It will be
 		split-up in chunks of 1460 bytes each (or less, depending on
 		ipconfigTCP_MSS). */
@@ -2141,6 +2143,7 @@ uint16_t usLength;
 
 	/* Determine the length and the offset of the user-data sent to this
 	node.
+
 	The size of the TCP header is given in a multiple of 4-byte words (single
 	byte, needs no ntoh() translation).  A shift-right 2: is the same as
 	(offset >> 4) * 4. */
@@ -2216,6 +2219,7 @@ BaseType_t xResult = 0;
 	{
 		/* See if way may accept the data contents and forward it to the socket
 		owner.
+
 		If it can't be "accept"ed it may have to be stored and send a selective
 		ack (SACK) option to confirm it.  In that case, lTCPAddRxdata() will be
 		called later to store an out-of-order packet (in case lOffset is
@@ -3504,3 +3508,4 @@ const ListItem_t *pxEndTCP = ipPOINTER_CAST( const ListItem_t *, listGET_END_MAR
 #ifdef FREERTOS_TCP_ENABLE_VERIFICATION
 	#include "aws_freertos_tcp_verification_access_tcp_define.h"
 #endif
+

@@ -1,0 +1,1018 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+                              C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o (exit)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+                              dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o (__tablejump2__)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+                              dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o (__do_copy_data)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+                              dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o (__xload_1)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+                              dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o (__xload_2)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a(memcpy_M.o)
+                              dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o (memcpy)
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .data          0x0000000000000000        0x0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss           0x0000000000000000        0x0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.sCheckVariables
+                0x0000000000000000        0x8 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.sNextCheckVariable
+                0x0000000000000000        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.xPollingConsumerCount
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.xPollingProducerCount
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.ulNotifyCycleCount
+                0x0000000000000000        0x4 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.uxRxLoops
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.xErrorOccurred
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.xControllingIsSuspended
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.xBlockingIsSuspended
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.uxControllingCycles
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.uxBlockingCycles
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .bss.uxPollingCycles
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .data.ulDummyVariable.4446
+                0x0000000000000000        0x4 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .text          0x0000000000000000        0x0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .data          0x0000000000000000        0x0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .bss           0x0000000000000000        0x0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .data          0x0000000000000000        0x0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+ .bss           0x0000000000000000        0x0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a(memcpy_M.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a(memcpy_M.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a(memcpy_M.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x0000000000000000 0x0000000000020000 xr
+data             0x0000000000804000 0x0000000000004000 rw !x
+eeprom           0x0000000000810000 0x0000000000000200 rw !x
+fuse             0x0000000000820000 0x0000000000000010 rw !x
+lock             0x0000000000830000 0x0000000000000400 rw !x
+signature        0x0000000000840000 0x0000000000000400 rw !x
+user_signatures  0x0000000000850000 0x0000000000000400 rw !x
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+LOAD dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+Address of section .data set to 0x804000
+                0x0000000000008000                __RODATA_PM_OFFSET__ = 0x8000
+LOAD C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+                0x0000000000000001                __MPLAB_BUILD = 0x1
+START GROUP
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libm.a
+END GROUP
+START GROUP
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libm.a
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a
+LOAD C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const\libavr128da48.a
+END GROUP
+                [0x0000000000000000]                __TEXT_REGION_ORIGIN__ = DEFINED (__TEXT_REGION_ORIGIN__)?__TEXT_REGION_ORIGIN__:0x0
+                [0x0000000000804000]                __DATA_REGION_ORIGIN__ = DEFINED (__DATA_REGION_ORIGIN__)?__DATA_REGION_ORIGIN__:0x802000
+                [0x0000000000020000]                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x100000
+                [0x0000000000004000]                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                [0x0000000000000200]                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x0000000000000010]                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x0000000000000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x0000000000000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x0000000000000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0000000000000000      0x15a
+ *(.vectors)
+ .vectors       0x0000000000000000       0xe8 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+                0x0000000000000000                __vector_default
+                0x0000000000000000                __vectors
+ *(.vectors)
+ *(.progmem.gcc*)
+ .progmem.gcc_sw_table.prvTimerTask
+                0x00000000000000e8       0x14 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ *(.dinit)
+ .dinit         0x00000000000000fc        0x5 data_init
+                0x0000000000000102                . = ALIGN (0x2)
+ *fill*         0x0000000000000101        0x1 
+                0x0000000000000102                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000000000000102        0x0 linker stubs
+ *(.trampolines*)
+                0x0000000000000102                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+                0x0000000000000102                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000000000000102                __ctors_start = .
+ *(.ctors)
+                0x0000000000000102                __ctors_end = .
+                0x0000000000000102                __dtors_start = .
+ *(.dtors)
+                0x0000000000000102                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000000000000102        0x0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+                0x0000000000000102                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000000000000102        0xc C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x000000000000010e       0x40 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_copy_data.o)
+                0x000000000000010e                __do_copy_data
+                0x0000000000000140                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000000000000014e        0x8 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+ *(.init9)
+                0x0000000000000156                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000000156        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+                0x0000000000000156                _exit
+                0x0000000000000156                exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000000000000156        0x4 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_exit.o)
+ *(.fini0)
+                0x000000000000015a                _etext = .
+
+.data           0x0000000000804000        0x0 load address 0x000000000000015a
+                [!provide]                        PROVIDE (__data_start, .)
+ *(.gnu.linkonce.d*)
+ *(.gnu.linkonce.r*)
+                0x0000000000804000                . = ALIGN (0x2)
+                0x0000000000804000                _edata = .
+                [!provide]                        PROVIDE (__data_end, .)
+
+.bss            0x0000000000804000        0x0
+                [!provide]                        PROVIDE (__bss_start, .)
+ *(COMMON)
+                [!provide]                        PROVIDE (__bss_end, .)
+                0x000000000000015a                __data_load_start = LOADADDR (.data)
+                0x000000000000015a                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x0000000000804000        0x0
+                [!provide]                        PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                [!provide]                        PROVIDE (__noinit_end, .)
+                0x0000000000804000                _end = .
+
+.eeprom         0x0000000000810000        0x0
+ *(.eeprom*)
+                0x0000000000810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x5b
+ *(.comment)
+ .comment       0x0000000000000000       0x2f dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                                         0x30 (size before relaxing)
+ .comment       0x000000000000002f       0x30 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .comment       0x000000000000002f       0x2c c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a(memcpy_M.o)
+                                         0x2d (size before relaxing)
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x148
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0xc0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_aranges
+                0x00000000000000c0       0x88 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000     0x7b11
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x0000000000000000     0x1c44 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_info    0x0000000000001c44     0x32a9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .debug_info    0x0000000000004eed     0x2c24 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+
+.debug_abbrev   0x0000000000000000     0x33e0
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x4f8 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_abbrev  0x00000000000004f8      0x51a dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .debug_abbrev  0x0000000000000a12     0x29ce C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+
+.debug_line     0x0000000000000000     0x162e
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x0000000000000000      0x999 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_line    0x0000000000000999      0xa9f dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .debug_line    0x0000000000001438      0x1f6 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+
+.debug_frame    0x0000000000000000      0x55c
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000      0x274 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_frame   0x0000000000000274      0x2e8 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.debug_str      0x0000000000000000     0x173c
+ *(.debug_str)
+ .debug_str     0x0000000000000000      0x15e dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_str     0x000000000000015e      0x2be dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+ .debug_str     0x000000000000041c     0x1320 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+
+.debug_loc      0x0000000000000000     0x1a8b
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000      0x8bf dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_loc     0x00000000000008bf     0x11cc dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x0000000000000000      0x310
+ *(.debug_ranges)
+ .debug_ranges  0x0000000000000000      0x190 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+ .debug_ranges  0x0000000000000190      0x180 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(dist/default/production/AVR_Dx_MPLAB.X.production.elf elf32-avr)
+LOAD linker stubs
+LOAD data_init
+
+.bss.xPendedTicks
+                0x000000000080507f        0x2
+ .bss.xPendedTicks
+                0x000000000080507f        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.xYieldPending
+                0x00000000008050a7        0x1
+ .bss.xYieldPending
+                0x00000000008050a7        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.xPendingReadyCoRoutineList
+                0x0000000000805040        0x9
+ .bss.xPendingReadyCoRoutineList
+                0x0000000000805040        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.pxOverflowDelayedCoRoutineList
+                0x0000000000805081        0x2
+ .bss.pxOverflowDelayedCoRoutineList
+                0x0000000000805081        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.xCoRoutineTickCount
+                0x0000000000805083        0x2
+ .bss.xCoRoutineTickCount
+                0x0000000000805083        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.xPassedTicks
+                0x0000000000805085        0x2
+ .bss.xPassedTicks
+                0x0000000000805085        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.xLastTickCount
+                0x0000000000805087        0x2
+ .bss.xLastTickCount
+                0x0000000000805087        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.pxReadyCoRoutineLists
+                0x0000000000805024       0x12
+ .bss.pxReadyCoRoutineLists
+                0x0000000000805024       0x12 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.uxTopCoRoutineReadyPriority
+                0x00000000008050a8        0x1
+ .bss.uxTopCoRoutineReadyPriority
+                0x00000000008050a8        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.pxDelayedCoRoutineList
+                0x0000000000805089        0x2
+ .bss.pxDelayedCoRoutineList
+                0x0000000000805089        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.bss.xLastTime.4726
+                0x000000000080508b        0x2
+ .bss.xLastTime.4726
+                0x000000000080508b        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xQueueRegistry
+                0x0000000000805036        0xa
+ .bss.xQueueRegistry
+                0x0000000000805036        0xa dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.pxOverflowTimerList
+                0x000000000080508d        0x2
+ .bss.pxOverflowTimerList
+                0x000000000080508d        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.pxCurrentTimerList
+                0x000000000080508f        0x2
+ .bss.pxCurrentTimerList
+                0x000000000080508f        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xActiveTimerList2
+                0x0000000000805049        0x9
+ .bss.xActiveTimerList2
+                0x0000000000805049        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xActiveTimerList1
+                0x0000000000805052        0x9
+ .bss.xActiveTimerList1
+                0x0000000000805052        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xTimerTaskHandle
+                0x0000000000805091        0x2
+ .bss.xTimerTaskHandle
+                0x0000000000805091        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xNextTaskUnblockTime.lto_priv.19
+                0x0000000000805093        0x2
+ .bss.xNextTaskUnblockTime.lto_priv.19
+                0x0000000000805093        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x0000000000805093                xNextTaskUnblockTime.lto_priv.19
+
+.bss.xIdleTaskHandle
+                0x0000000000805095        0x2
+ .bss.xIdleTaskHandle
+                0x0000000000805095        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xQueue     0x0000000000805097        0x2
+ .bss.xQueue    0x0000000000805097        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xNextFreeByte
+                0x0000000000805099        0x2
+ .bss.xNextFreeByte
+                0x0000000000805099        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.ucHeap     0x0000000000804000     0x1000
+ .bss.ucHeap    0x0000000000804000     0x1000 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.pucAlignedHeap.4419
+                0x000000000080509b        0x2
+ .bss.pucAlignedHeap.4419
+                0x000000000080509b        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.uxSchedulerSuspended.lto_priv.23
+                0x00000000008050a9        0x1
+ .bss.uxSchedulerSuspended.lto_priv.23
+                0x00000000008050a9        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050a9                uxSchedulerSuspended.lto_priv.23
+
+.bss.xTimerQueue
+                0x000000000080509d        0x2
+ .bss.xTimerQueue
+                0x000000000080509d        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.pxOverflowDelayedTaskList.lto_priv.17
+                0x000000000080509f        0x2
+ .bss.pxOverflowDelayedTaskList.lto_priv.17
+                0x000000000080509f        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x000000000080509f                pxOverflowDelayedTaskList.lto_priv.17
+
+.bss.pxDelayedTaskList.lto_priv.18
+                0x00000000008050a1        0x2
+ .bss.pxDelayedTaskList.lto_priv.18
+                0x00000000008050a1        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050a1                pxDelayedTaskList.lto_priv.18
+
+.bss.xSuspendedTaskList.lto_priv.20
+                0x000000000080505b        0x9
+ .bss.xSuspendedTaskList.lto_priv.20
+                0x000000000080505b        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x000000000080505b                xSuspendedTaskList.lto_priv.20
+
+.bss.xPendingReadyList.lto_priv.25
+                0x0000000000805064        0x9
+ .bss.xPendingReadyList.lto_priv.25
+                0x0000000000805064        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x0000000000805064                xPendingReadyList.lto_priv.25
+
+.bss.xDelayedTaskList2
+                0x000000000080506d        0x9
+ .bss.xDelayedTaskList2
+                0x000000000080506d        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xDelayedTaskList1
+                0x0000000000805076        0x9
+ .bss.xDelayedTaskList1
+                0x0000000000805076        0x9 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.uxTaskNumber
+                0x00000000008050aa        0x1
+ .bss.uxTaskNumber
+                0x00000000008050aa        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.xSchedulerRunning
+                0x00000000008050ab        0x1
+ .bss.xSchedulerRunning
+                0x00000000008050ab        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.bss.uxCurrentNumberOfTasks.lto_priv.26
+                0x00000000008050ac        0x1
+ .bss.uxCurrentNumberOfTasks.lto_priv.26
+                0x00000000008050ac        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050ac                uxCurrentNumberOfTasks.lto_priv.26
+
+.bss.pxCurrentTCB
+                0x00000000008050a3        0x2
+ .bss.pxCurrentTCB
+                0x00000000008050a3        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050a3                pxCurrentTCB
+
+.bss.xTickCount.lto_priv.16
+                0x00000000008050a5        0x2
+ .bss.xTickCount.lto_priv.16
+                0x00000000008050a5        0x2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050a5                xTickCount.lto_priv.16
+
+.bss.xNumOfOverflows.lto_priv.22
+                0x00000000008050ad        0x1
+ .bss.xNumOfOverflows.lto_priv.22
+                0x00000000008050ad        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050ad                xNumOfOverflows.lto_priv.22
+
+.bss.pxReadyTasksLists.lto_priv.21
+                0x0000000000805000       0x24
+ .bss.pxReadyTasksLists.lto_priv.21
+                0x0000000000805000       0x24 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x0000000000805000                pxReadyTasksLists.lto_priv.21
+
+.bss.uxTopReadyPriority.lto_priv.24
+                0x00000000008050ae        0x1
+ .bss.uxTopReadyPriority.lto_priv.24
+                0x00000000008050ae        0x1 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000008050ae                uxTopReadyPriority.lto_priv.24
+
+.note.gnu.avr.deviceinfo
+                0x0000000000000000       0x40
+ .note.gnu.avr.deviceinfo
+                0x0000000000000000       0x40 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+
+.progmemx.data  0x000000000000015a       0x18
+ .progmemx.data
+                0x000000000000015a       0x18 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.prvTimerTask
+                0x0000000000000172      0x240
+ .text.prvTimerTask
+                0x0000000000000172      0x240 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.startup.main
+                0x00000000000003b2      0x210
+ .text.startup.main
+                0x00000000000003b2      0x210 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000000003b2                main
+
+.text.xTaskCreate.constprop.2
+                0x00000000000005c2      0x206
+ .text.xTaskCreate.constprop.2
+                0x00000000000005c2      0x206 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.prvIdleTask.lto_priv.12
+                0x00000000000007c8      0x1ac
+ .text.prvIdleTask.lto_priv.12
+                0x00000000000007c8      0x1ac dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x00000000000007c8                prvIdleTask.lto_priv.12
+
+.text.xQueueGenericSend.constprop.7
+                0x0000000000000974      0x17c
+ .text.xQueueGenericSend.constprop.7
+                0x0000000000000974      0x17c dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.xQueueReceive
+                0x0000000000000af0      0x16c
+ .text.xQueueReceive
+                0x0000000000000af0      0x16c dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000000af0                xQueueReceive
+
+.text.xTaskIncrementTick
+                0x0000000000000c5c      0x154
+ .text.xTaskIncrementTick
+                0x0000000000000c5c      0x154 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.text.xTaskResumeAll
+                0x0000000000000db0       0xe6
+ .text.xTaskResumeAll
+                0x0000000000000db0       0xe6 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000000db0                xTaskResumeAll
+
+.text.prvCopyDataToQueue.constprop.10
+                0x0000000000000e96       0xd2
+ .text.prvCopyDataToQueue.constprop.10
+                0x0000000000000e96       0xd2 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.prvAddCurrentTaskToDelayedList.lto_priv.14
+                0x0000000000000f68       0xb8
+ .text.prvAddCurrentTaskToDelayedList.lto_priv.14
+                0x0000000000000f68       0xb8 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000000f68                prvAddCurrentTaskToDelayedList.lto_priv.14
+
+.text.vPortYieldFromTick
+                0x0000000000001020       0xb6
+ .text.vPortYieldFromTick
+                0x0000000000001020       0xb6 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.text.vPortYieldFromISR
+                0x00000000000010d6       0xb0
+ .text.vPortYieldFromISR
+                0x00000000000010d6       0xb0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x00000000000010d6                vPortYieldFromISR
+
+.text.vPortYield
+                0x0000000000001186       0xb0
+ .text.vPortYield
+                0x0000000000001186       0xb0 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001186                vPortYield
+
+.text.vTaskSwitchContext
+                0x0000000000001236       0xac
+ .text.vTaskSwitchContext
+                0x0000000000001236       0xac dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.text.__vector_32
+                0x00000000000012e2       0xaa
+ .text.__vector_32
+                0x00000000000012e2       0xaa dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x00000000000012e2                __vector_32
+
+.text.__vector_31
+                0x000000000000138c       0xa4
+ .text.__vector_31
+                0x000000000000138c       0xa4 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x000000000000138c                __vector_31
+
+.text.prvSwitchTimerLists
+                0x0000000000001430       0x9a
+ .text.prvSwitchTimerLists
+                0x0000000000001430       0x9a dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.prvUnlockQueue.lto_priv.13
+                0x00000000000014ca       0x94
+ .text.prvUnlockQueue.lto_priv.13
+                0x00000000000014ca       0x94 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x00000000000014ca                prvUnlockQueue.lto_priv.13
+
+.text.prvQueueSendTask
+                0x000000000000155e       0x88
+ .text.prvQueueSendTask
+                0x000000000000155e       0x88 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.xTaskRemoveFromEventList
+                0x00000000000015e6       0x84
+ .text.xTaskRemoveFromEventList
+                0x00000000000015e6       0x84 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x00000000000015e6                xTaskRemoveFromEventList
+
+.text.vListInsert
+                0x000000000000166a       0x6c
+ .text.vListInsert
+                0x000000000000166a       0x6c dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x000000000000166a                vListInsert
+
+.text.pvPortMalloc
+                0x00000000000016d6       0x6c
+ .text.pvPortMalloc
+                0x00000000000016d6       0x6c dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.xTaskCheckForTimeOut
+                0x0000000000001742       0x68
+ .text.xTaskCheckForTimeOut
+                0x0000000000001742       0x68 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001742                xTaskCheckForTimeOut
+
+.text.xQueueGenericReset.constprop.9
+                0x00000000000017aa       0x62
+ .text.xQueueGenericReset.constprop.9
+                0x00000000000017aa       0x62 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.prvInsertTimerInActiveList
+                0x000000000000180c       0x54
+ .text.prvInsertTimerInActiveList
+                0x000000000000180c       0x54 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.xTimerGenericCommand.constprop.0
+                0x0000000000001860       0x50
+ .text.xTimerGenericCommand.constprop.0
+                0x0000000000001860       0x50 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.uxListRemove
+                0x00000000000018b0       0x48
+ .text.uxListRemove
+                0x00000000000018b0       0x48 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x00000000000018b0                uxListRemove
+
+.text.prvQueueReceiveTask
+                0x00000000000018f8       0x48
+ .text.prvQueueReceiveTask
+                0x00000000000018f8       0x48 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+
+.text.vListInsertEnd
+                0x0000000000001940       0x42
+ .text.vListInsertEnd
+                0x0000000000001940       0x42 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001940                vListInsertEnd
+
+.text.prvCopyDataFromQueue.lto_priv.15
+                0x0000000000001982       0x36
+ .text.prvCopyDataFromQueue.lto_priv.15
+                0x0000000000001982       0x36 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001982                prvCopyDataFromQueue.lto_priv.15
+
+.text.avrlibc   0x00000000000019b8       0x32
+ .text.avrlibc  0x00000000000019b8       0x32 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega4/memx-const\libc.a(memcpy_M.o)
+                0x00000000000019b8                memcpy
+
+.text.prvResetNextTaskUnblockTime
+                0x00000000000019ea       0x26
+ .text.prvResetNextTaskUnblockTime
+                0x00000000000019ea       0x26 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+
+.text.vListInitialise
+                0x0000000000001a10       0x1c
+ .text.vListInitialise
+                0x0000000000001a10       0x1c dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001a10                vListInitialise
+
+.__pa__4        0x0000000000001a2c       0x12
+ .__pa__4       0x0000000000001a2c       0x12 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001a2c                .__pa__4
+
+.text.libgcc    0x0000000000001a3e       0x12
+ .text.libgcc   0x0000000000001a3e       0x12 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_tablejump2.o)
+                0x0000000000001a3e                __tablejump2__
+
+.text.libgcc    0x0000000000001a50       0x12
+ .text.libgcc   0x0000000000001a50       0x12 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_2.o)
+                0x0000000000001a50                __xload_2
+
+.text.xTaskGetTickCount
+                0x0000000000001a62       0x10
+ .text.xTaskGetTickCount
+                0x0000000000001a62       0x10 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001a62                xTaskGetTickCount
+
+.text.__vector_12
+                0x0000000000001a72       0x10
+ .text.__vector_12
+                0x0000000000001a72       0x10 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001a72                __vector_12
+
+.__pa__0        0x0000000000001a82       0x10
+ .__pa__0       0x0000000000001a82       0x10 dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001a82                .__pa__0
+
+.__pa__7        0x0000000000001a92        0xe
+ .__pa__7       0x0000000000001a92        0xe dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001a92                .__pa__7
+
+.__pa__8        0x0000000000001aa0        0xe
+ .__pa__8       0x0000000000001aa0        0xe dist/default/production/__pa_temp_113484/ccZXDihm.ltrans0.ltrans.o
+                0x0000000000001aa0                .__pa__8
+
+.text.libgcc    0x0000000000001aae        0xe
+ .text.libgcc   0x0000000000001aae        0xe c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega4/memx-const\libgcc.a(_xload_1.o)
+                0x0000000000001aae                __xload_1
+
+.text.vTaskSuspendAll
+                0x0000000000001abc        0xc
+ .text.vTaskSuspendAll
+                0x0000000000001abc        0xc dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001abc                vTaskSuspendAll
+
+.__pa__1        0x0000000000001ac8        0xc
+ .__pa__1       0x0000000000001ac8        0xc dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001ac8                .__pa__1
+
+.__pa__2        0x0000000000001ad4        0xa
+ .__pa__2       0x0000000000001ad4        0xa dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001ad4                .__pa__2
+
+.__pa__3        0x0000000000001ade        0xa
+ .__pa__3       0x0000000000001ade        0xa dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001ade                .__pa__3
+
+.__pa__5        0x0000000000001ae8        0xa
+ .__pa__5       0x0000000000001ae8        0xa dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001ae8                .__pa__5
+
+.__pa__6        0x0000000000001af2        0xa
+ .__pa__6       0x0000000000001af2        0xa dist/default/production/__pa_temp_113484/ccZXDihm.ltrans1.ltrans.o
+                0x0000000000001af2                .__pa__6
+
+.text           0x0000000000001afc        0x4
+ .text          0x0000000000001afc        0x4 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/AVR-Dx_DFP/1.1.40/xc8/avr/lib/avrxmega4/memx-const/crtavr128da48.o
+                0x0000000000001afc                __vector_38
+                0x0000000000001afc                __vector_22
+                0x0000000000001afc                __vector_28
+                0x0000000000001afc                __vector_1
+                0x0000000000001afc                __vector_34
+                0x0000000000001afc                __vector_24
+                0x0000000000001afc                __vector_55
+                0x0000000000001afc                __vector_46
+                0x0000000000001afc                __bad_interrupt
+                0x0000000000001afc                __vector_6
+                0x0000000000001afc                __vector_35
+                0x0000000000001afc                __vector_39
+                0x0000000000001afc                __vector_3
+                0x0000000000001afc                __vector_23
+                0x0000000000001afc                __vector_30
+                0x0000000000001afc                __vector_45
+                0x0000000000001afc                __vector_25
+                0x0000000000001afc                __vector_11
+                0x0000000000001afc                __vector_54
+                0x0000000000001afc                __vector_13
+                0x0000000000001afc                __vector_17
+                0x0000000000001afc                __vector_19
+                0x0000000000001afc                __vector_56
+                0x0000000000001afc                __vector_7
+                0x0000000000001afc                __vector_49
+                0x0000000000001afc                __vector_41
+                0x0000000000001afc                __vector_43
+                0x0000000000001afc                __vector_27
+                0x0000000000001afc                __vector_5
+                0x0000000000001afc                __vector_33
+                0x0000000000001afc                __vector_47
+                0x0000000000001afc                __vector_52
+                0x0000000000001afc                __vector_37
+                0x0000000000001afc                __vector_4
+                0x0000000000001afc                __vector_44
+                0x0000000000001afc                __vector_51
+                0x0000000000001afc                __vector_9
+                0x0000000000001afc                __vector_2
+                0x0000000000001afc                __vector_21
+                0x0000000000001afc                __vector_15
+                0x0000000000001afc                __vector_36
+                0x0000000000001afc                __vector_29
+                0x0000000000001afc                __vector_40
+                0x0000000000001afc                __vector_8
+                0x0000000000001afc                __vector_26
+                0x0000000000001afc                __vector_48
+                0x0000000000001afc                __vector_14
+                0x0000000000001afc                __vector_57
+                0x0000000000001afc                __vector_53
+                0x0000000000001afc                __vector_10
+                0x0000000000001afc                __vector_50
+                0x0000000000001afc                __vector_16
+                0x0000000000001afc                __vector_18
+                0x0000000000001afc                __vector_20
+                0x0000000000001afc                __vector_42

@@ -1,0 +1,1438 @@
+Archive member included to satisfy reference by file (symbol)
+
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+                              dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o (__udivmodhi4)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+                              dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o (__udivmodsi4)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+                              C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o (exit)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+                              dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o (__tablejump2__)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+                              dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o (__do_copy_data)
+c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+                              dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o (memcpy)
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .data          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .bss           0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .text          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .data          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .bss           0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .text          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .data          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .bss           0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .text          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .data          0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .bss           0x0000000000000000        0x0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .bss.xPollingConsumerCount
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .bss.xPollingProducerCount
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .bss.uxRxLoops
+                0x0000000000000000        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .data.ulDummyVariable.3426
+                0x0000000000000000        0x4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .data          0x0000000000000000        0x0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+ .bss           0x0000000000000000        0x0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text.libgcc   0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text.libgcc   0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+ .data          0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+ .bss           0x0000000000000000        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x0000000000000000 0x000000000000c000 xr
+data             0x0000000000802800 0x0000000000001800 rw !x
+eeprom           0x0000000000810000 0x0000000000000100 rw !x
+fuse             0x0000000000820000 0x000000000000000a rw !x
+lock             0x0000000000830000 0x0000000000000400 rw !x
+signature        0x0000000000840000 0x0000000000000400 rw !x
+user_signatures  0x0000000000850000 0x0000000000000400 rw !x
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+LOAD dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+LOAD dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+LOAD dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+Address of section .data set to 0x802800
+                0x0000000000004000                __RODATA_PM_OFFSET__ = 0x4000
+LOAD C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+                0x0000000000000001                __MPLAB_BUILD = 0x1
+START GROUP
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libm.a
+END GROUP
+START GROUP
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libm.a
+LOAD c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a
+LOAD C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3\libatmega4809.a
+END GROUP
+                [0x0000000000000000]                __TEXT_REGION_ORIGIN__ = DEFINED (__TEXT_REGION_ORIGIN__)?__TEXT_REGION_ORIGIN__:0x0
+                [0x0000000000802800]                __DATA_REGION_ORIGIN__ = DEFINED (__DATA_REGION_ORIGIN__)?__DATA_REGION_ORIGIN__:0x802000
+                [0x000000000000c000]                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x100000
+                [0x0000000000001800]                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                [0x0000000000000100]                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x000000000000000a]                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x0000000000000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x0000000000000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x0000000000000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+                0x0000000000008000                __RODATA_PM_OFFSET__ = DEFINED (__RODATA_PM_OFFSET__)?__RODATA_PM_OFFSET__:0x8000
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0000000000000000      0x11a
+ *(.vectors)
+ .vectors       0x0000000000000000       0xa0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+                0x0000000000000000                __vector_default
+                0x0000000000000000                __vectors
+ *(.vectors)
+ *(.progmem.gcc*)
+ .progmem.gcc_sw_table.prvTimerTask
+                0x00000000000000a0       0x14 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ *(.dinit)
+ .dinit         0x00000000000000b4       0x11 data_init
+                0x00000000000000c6                . = ALIGN (0x2)
+ *fill*         0x00000000000000c5        0x1 
+                0x00000000000000c6                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x00000000000000c6        0x0 linker stubs
+ *(.trampolines*)
+                0x00000000000000c6                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+                0x00000000000000c6                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x00000000000000c6                __ctors_start = .
+ *(.ctors)
+                0x00000000000000c6                __ctors_end = .
+                0x00000000000000c6                __dtors_start = .
+ *(.dtors)
+                0x00000000000000c6                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x00000000000000c6        0x0 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+                0x00000000000000c6                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x00000000000000c6        0xc C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000000000000d2       0x3c c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+                0x00000000000000d2                __do_copy_data
+                0x0000000000000100                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000000000000010e        0x8 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+ *(.init9)
+                0x0000000000000116                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000000116        0x0 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+                0x0000000000000116                _exit
+                0x0000000000000116                exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000000000000116        0x4 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ *(.fini0)
+                0x000000000000011a                _etext = .
+
+.data           0x0000000000802800        0x0 load address 0x000000000000011a
+                [!provide]                        PROVIDE (__data_start, .)
+ *(.gnu.linkonce.d*)
+                0x0000000000802800                . = ALIGN (0x2)
+                0x0000000000802800                _edata = .
+                [!provide]                        PROVIDE (__data_end, .)
+
+.bss            0x0000000000802800        0x0
+                [!provide]                        PROVIDE (__bss_start, .)
+ *(COMMON)
+                [!provide]                        PROVIDE (__bss_end, .)
+                0x000000000000011a                __data_load_start = LOADADDR (.data)
+                0x000000000000011a                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x0000000000802800        0x0
+                [!provide]                        PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                [!provide]                        PROVIDE (__noinit_end, .)
+                0x0000000000802800                _end = .
+
+.eeprom         0x0000000000810000        0x0
+ *(.eeprom*)
+                0x0000000000810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x2f
+ *(.comment)
+ .comment       0x0000000000000000       0x2f dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                                         0x30 (size before relaxing)
+ .comment       0x000000000000002f       0x30 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .comment       0x000000000000002f       0x30 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .comment       0x000000000000002f       0x30 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x228
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0x58 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_aranges
+                0x0000000000000058       0x70 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_aranges
+                0x00000000000000c8       0xd0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_aranges
+                0x0000000000000198       0x90 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000     0xba47
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x0000000000000000     0x29ba dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_info    0x00000000000029ba     0x24ec dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_info    0x0000000000004ea6     0x252d dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_info    0x00000000000073d3     0x21ea dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .debug_info    0x00000000000095bd     0x248a C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+
+.debug_abbrev   0x0000000000000000     0x3498
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x50d dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_abbrev  0x000000000000050d      0x3fc dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_abbrev  0x0000000000000909      0x4e0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_abbrev  0x0000000000000de9      0x419 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .debug_abbrev  0x0000000000001202     0x2296 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+
+.debug_line     0x0000000000000000     0x2d7f
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x0000000000000000      0x88a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_line    0x000000000000088a      0xe1c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_line    0x00000000000016a6      0xc61 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_line    0x0000000000002307      0x8f1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .debug_line    0x0000000000002bf8      0x187 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+
+.debug_frame    0x0000000000000000      0x7e8
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000       0xe0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_frame   0x00000000000000e0      0x250 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_frame   0x0000000000000330      0x348 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_frame   0x0000000000000678      0x170 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.debug_str      0x0000000000000000     0x16dd
+ *(.debug_str)
+ .debug_str     0x0000000000000000      0x246 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_str     0x0000000000000246      0x175 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_str     0x00000000000003bb      0x1f6 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_str     0x00000000000005b1      0x1a7 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+ .debug_str     0x0000000000000758      0xf85 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+
+.debug_loc      0x0000000000000000     0x2aac
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000      0x843 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_loc     0x0000000000000843      0xa84 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_loc     0x00000000000012c7     0x11d3 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_loc     0x000000000000249a      0x612 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x0000000000000000      0x4b0
+ *(.debug_ranges)
+ .debug_ranges  0x0000000000000000      0x150 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+ .debug_ranges  0x0000000000000150      0x160 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+ .debug_ranges  0x00000000000002b0      0x160 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+ .debug_ranges  0x0000000000000410       0xa0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(dist/default/production/AVR_ATMega4809_MPLAB.X.production.elf elf32-avr)
+LOAD linker stubs
+LOAD data_init
+
+.bss.xPendingReadyCoRoutineList
+                0x0000000000803836        0x9
+ .bss.xPendingReadyCoRoutineList
+                0x0000000000803836        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.pxOverflowDelayedCoRoutineList
+                0x00000000008038a1        0x2
+ .bss.pxOverflowDelayedCoRoutineList
+                0x00000000008038a1        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xCoRoutineTickCount
+                0x00000000008038a3        0x2
+ .bss.xCoRoutineTickCount
+                0x00000000008038a3        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xPassedTicks
+                0x00000000008038a5        0x2
+ .bss.xPassedTicks
+                0x00000000008038a5        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xLastTickCount
+                0x00000000008038a7        0x2
+ .bss.xLastTickCount
+                0x00000000008038a7        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.pxReadyCoRoutineLists
+                0x0000000000803824       0x12
+ .bss.pxReadyCoRoutineLists
+                0x0000000000803824       0x12 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.uxTopCoRoutineReadyPriority
+                0x00000000008038d5        0x1
+ .bss.uxTopCoRoutineReadyPriority
+                0x00000000008038d5        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.pxDelayedCoRoutineList
+                0x00000000008038a9        0x2
+ .bss.pxDelayedCoRoutineList
+                0x00000000008038a9        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xSuspendedTaskList.lto_priv.43
+                0x000000000080383f        0x9
+ .bss.xSuspendedTaskList.lto_priv.43
+                0x000000000080383f        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x000000000080383f                xSuspendedTaskList.lto_priv.43
+
+.bss.pxDelayedTaskList.lto_priv.40
+                0x00000000008038ab        0x2
+ .bss.pxDelayedTaskList.lto_priv.40
+                0x00000000008038ab        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038ab                pxDelayedTaskList.lto_priv.40
+
+.bss.pxOverflowDelayedTaskList.lto_priv.41
+                0x00000000008038ad        0x2
+ .bss.pxOverflowDelayedTaskList.lto_priv.41
+                0x00000000008038ad        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038ad                pxOverflowDelayedTaskList.lto_priv.41
+
+.bss.xLastTime.3706
+                0x00000000008038af        0x2
+ .bss.xLastTime.3706
+                0x00000000008038af        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.pxOverflowTimerList
+                0x00000000008038b1        0x2
+ .bss.pxOverflowTimerList
+                0x00000000008038b1        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.pxCurrentTimerList
+                0x00000000008038b3        0x2
+ .bss.pxCurrentTimerList
+                0x00000000008038b3        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xActiveTimerList2
+                0x0000000000803848        0x9
+ .bss.xActiveTimerList2
+                0x0000000000803848        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xActiveTimerList1
+                0x0000000000803851        0x9
+ .bss.xActiveTimerList1
+                0x0000000000803851        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.uxNextRand.lto_priv.52
+                0x00000000008038b5        0x2
+ .bss.uxNextRand.lto_priv.52
+                0x00000000008038b5        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038b5                uxNextRand.lto_priv.52
+
+.bss.xTaskToNotify.lto_priv.53
+                0x00000000008038b7        0x2
+ .bss.xTaskToNotify.lto_priv.53
+                0x00000000008038b7        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038b7                xTaskToNotify.lto_priv.53
+
+.bss.xQueueRegistry
+                0x0000000000803875        0x8
+ .bss.xQueueRegistry
+                0x0000000000803875        0x8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xBlockingTaskHandle.lto_priv.48
+                0x00000000008038b9        0x2
+ .bss.xBlockingTaskHandle.lto_priv.48
+                0x00000000008038b9        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038b9                xBlockingTaskHandle.lto_priv.48
+
+.bss.xControllingTaskHandle.lto_priv.49
+                0x00000000008038bb        0x2
+ .bss.xControllingTaskHandle.lto_priv.49
+                0x00000000008038bb        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038bb                xControllingTaskHandle.lto_priv.49
+
+.bss.xMutex.lto_priv.45
+                0x00000000008038bd        0x2
+ .bss.xMutex.lto_priv.45
+                0x00000000008038bd        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038bd                xMutex.lto_priv.45
+
+.bss.xTimerTaskHandle
+                0x00000000008038bf        0x2
+ .bss.xTimerTaskHandle
+                0x00000000008038bf        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.xNextTaskUnblockTime.lto_priv.42
+                0x00000000008038c1        0x2
+ .bss.xNextTaskUnblockTime.lto_priv.42
+                0x00000000008038c1        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000008038c1                xNextTaskUnblockTime.lto_priv.42
+
+.bss.xIdleTaskHandle
+                0x00000000008038c3        0x2
+ .bss.xIdleTaskHandle
+                0x00000000008038c3        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.bss.sCheckVariables.lto_priv.60
+                0x000000000080387d        0x8
+ .bss.sCheckVariables.lto_priv.60
+                0x000000000080387d        0x8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x000000000080387d                sCheckVariables.lto_priv.60
+
+.bss.sLastCheckVariables.3559
+                0x0000000000803885        0x8
+ .bss.sLastCheckVariables.3559
+                0x0000000000803885        0x8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+
+.bss.ulTimerNotificationsReceived.lto_priv.57
+                0x000000000080388d        0x4
+ .bss.ulTimerNotificationsReceived.lto_priv.57
+                0x000000000080388d        0x4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x000000000080388d                ulTimerNotificationsReceived.lto_priv.57
+
+.bss.ulTimerNotificationsSent.lto_priv.54
+                0x0000000000803891        0x4
+ .bss.ulTimerNotificationsSent.lto_priv.54
+                0x0000000000803891        0x4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000803891                ulTimerNotificationsSent.lto_priv.54
+
+.bss.ulNotifyCycleCount.lto_priv.58
+                0x0000000000803895        0x4
+ .bss.ulNotifyCycleCount.lto_priv.58
+                0x0000000000803895        0x4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000803895                ulNotifyCycleCount.lto_priv.58
+
+.bss.ulLastNotifyCycleCount.3370
+                0x0000000000803899        0x4
+ .bss.ulLastNotifyCycleCount.3370
+                0x0000000000803899        0x4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+
+.bss.xRegTestError
+                0x00000000008038d7        0x1
+ .bss.xRegTestError
+                0x00000000008038d7        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038d7                xRegTestError
+
+.bss.uxPollingCycles.lto_priv.47
+                0x00000000008038d8        0x1
+ .bss.uxPollingCycles.lto_priv.47
+                0x00000000008038d8        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038d8                uxPollingCycles.lto_priv.47
+
+.bss.uxLastPollingCycles.3406
+                0x00000000008038d9        0x1
+ .bss.uxLastPollingCycles.3406
+                0x00000000008038d9        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+
+.bss.uxBlockingCycles.lto_priv.50
+                0x00000000008038da        0x1
+ .bss.uxBlockingCycles.lto_priv.50
+                0x00000000008038da        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038da                uxBlockingCycles.lto_priv.50
+
+.bss.uxLastBlockingCycles.3405
+                0x00000000008038db        0x1
+ .bss.uxLastBlockingCycles.3405
+                0x00000000008038db        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+
+.bss.xErrorOccurred.lto_priv.46
+                0x00000000008038dc        0x1
+ .bss.xErrorOccurred.lto_priv.46
+                0x00000000008038dc        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038dc                xErrorOccurred.lto_priv.46
+
+.bss.uxControllingCycles.lto_priv.51
+                0x00000000008038dd        0x1
+ .bss.uxControllingCycles.lto_priv.51
+                0x00000000008038dd        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038dd                uxControllingCycles.lto_priv.51
+
+.bss.uxLastControllingCycles.3404
+                0x00000000008038de        0x1
+ .bss.uxLastControllingCycles.3404
+                0x00000000008038de        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+
+.bss.uxSchedulerSuspended.lto_priv.38
+                0x00000000008038df        0x1
+ .bss.uxSchedulerSuspended.lto_priv.38
+                0x00000000008038df        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038df                uxSchedulerSuspended.lto_priv.38
+
+.bss.xSchedulerRunning.lto_priv.24
+                0x00000000008038e0        0x1
+ .bss.xSchedulerRunning.lto_priv.24
+                0x00000000008038e0        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038e0                xSchedulerRunning.lto_priv.24
+
+.bss.xTimerQueue.lto_priv.26
+                0x00000000008038c5        0x2
+ .bss.xTimerQueue.lto_priv.26
+                0x00000000008038c5        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038c5                xTimerQueue.lto_priv.26
+
+.bss.pxCurrentTCB
+                0x00000000008038c7        0x2
+ .bss.pxCurrentTCB
+                0x00000000008038c7        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038c7                pxCurrentTCB
+
+.bss.xTickCount.lto_priv.25
+                0x00000000008038c9        0x2
+ .bss.xTickCount.lto_priv.25
+                0x00000000008038c9        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038c9                xTickCount.lto_priv.25
+
+.bss.xNumOfOverflows.lto_priv.35
+                0x00000000008038e1        0x1
+ .bss.xNumOfOverflows.lto_priv.35
+                0x00000000008038e1        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038e1                xNumOfOverflows.lto_priv.35
+
+.bss.pxReadyTasksLists.lto_priv.36
+                0x0000000000803800       0x24
+ .bss.pxReadyTasksLists.lto_priv.36
+                0x0000000000803800       0x24 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000803800                pxReadyTasksLists.lto_priv.36
+
+.bss.uxTopReadyPriority.lto_priv.39
+                0x00000000008038e2        0x1
+ .bss.uxTopReadyPriority.lto_priv.39
+                0x00000000008038e2        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038e2                uxTopReadyPriority.lto_priv.39
+
+.bss.xDelayedTaskList2
+                0x000000000080385a        0x9
+ .bss.xDelayedTaskList2
+                0x000000000080385a        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+
+.bss.xDelayedTaskList1
+                0x0000000000803863        0x9
+ .bss.xDelayedTaskList1
+                0x0000000000803863        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+
+.bss.uxTaskNumber
+                0x00000000008038e3        0x1
+ .bss.uxTaskNumber
+                0x00000000008038e3        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+
+.bss.uxCurrentNumberOfTasks
+                0x00000000008038e4        0x1
+ .bss.uxCurrentNumberOfTasks
+                0x00000000008038e4        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+
+.bss.xPendedTicks
+                0x00000000008038cb        0x2
+ .bss.xPendedTicks
+                0x00000000008038cb        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+
+.bss.xYieldPending.lto_priv.56
+                0x00000000008038e5        0x1
+ .bss.xYieldPending.lto_priv.56
+                0x00000000008038e5        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000008038e5                xYieldPending.lto_priv.56
+
+.bss.xPendingReadyList.lto_priv.55
+                0x000000000080386c        0x9
+ .bss.xPendingReadyList.lto_priv.55
+                0x000000000080386c        0x9 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x000000000080386c                xPendingReadyList.lto_priv.55
+
+.bss.sNextCheckVariable
+                0x00000000008038cd        0x2
+ .bss.sNextCheckVariable
+                0x00000000008038cd        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.ulCallCount.3341
+                0x000000000080389d        0x4
+ .bss.ulCallCount.3341
+                0x000000000080389d        0x4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.xAPIToUse.3358
+                0x00000000008038e6        0x1
+ .bss.xAPIToUse.3358
+                0x00000000008038e6        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.xCallCount.3357
+                0x00000000008038e7        0x1
+ .bss.xCallCount.3357
+                0x00000000008038e7        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.xTimer     0x00000000008038cf        0x2
+ .bss.xTimer    0x00000000008038cf        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.xControllingIsSuspended
+                0x00000000008038e8        0x1
+ .bss.xControllingIsSuspended
+                0x00000000008038e8        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.xBlockingIsSuspended
+                0x00000000008038e9        0x1
+ .bss.xBlockingIsSuspended
+                0x00000000008038e9        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.xNextFreeByte
+                0x00000000008038d1        0x2
+ .bss.xNextFreeByte
+                0x00000000008038d1        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.ucHeap     0x0000000000802800     0x1000
+ .bss.ucHeap    0x0000000000802800     0x1000 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.bss.pucAlignedHeap.3399
+                0x00000000008038d3        0x2
+ .bss.pucAlignedHeap.3399
+                0x00000000008038d3        0x2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.note.gnu.avr.deviceinfo
+                0x0000000000000000       0x40
+ .note.gnu.avr.deviceinfo
+                0x0000000000000000       0x40 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+
+.text.prvNotifiedTask.lto_priv.32
+                0x000000000000011a      0x428
+ .text.prvNotifiedTask.lto_priv.32
+                0x000000000000011a      0x428 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000011a                prvNotifiedTask.lto_priv.32
+
+.text.prvTimerTask
+                0x0000000000000542      0x340
+ .text.prvTimerTask
+                0x0000000000000542      0x340 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.text.startup.main
+                0x0000000000000882      0x2ee
+ .text.startup.main
+                0x0000000000000882      0x2ee dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x0000000000000882                main
+
+.text.xQueueSemaphoreTake
+                0x0000000000000b70      0x2e8
+ .text.xQueueSemaphoreTake
+                0x0000000000000b70      0x2e8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000000b70                xQueueSemaphoreTake
+
+.text.xTaskCreate
+                0x0000000000000e58      0x1fa
+ .text.xTaskCreate
+                0x0000000000000e58      0x1fa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000000e58                xTaskCreate
+
+.text.prvIdleTask
+                0x0000000000001052      0x1a8
+ .text.prvIdleTask
+                0x0000000000001052      0x1a8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.text.prvCheckTask.lto_priv.23
+                0x00000000000011fa      0x1a6
+ .text.prvCheckTask.lto_priv.23
+                0x00000000000011fa      0x1a6 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000011fa                prvCheckTask.lto_priv.23
+
+.text.xTaskIncrementTick
+                0x00000000000013a0      0x16a
+ .text.xTaskIncrementTick
+                0x00000000000013a0      0x16a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000013a0                xTaskIncrementTick
+
+.text.prvRegisterCheck2.lto_priv.31
+                0x000000000000150a      0x164
+ .text.prvRegisterCheck2.lto_priv.31
+                0x000000000000150a      0x164 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x000000000000150a                prvRegisterCheck2.lto_priv.31
+
+.text.prvRegisterCheck1.lto_priv.30
+                0x000000000000166e      0x164
+ .text.prvRegisterCheck1.lto_priv.30
+                0x000000000000166e      0x164 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x000000000000166e                prvRegisterCheck1.lto_priv.30
+
+.text.prvSemaphoreTest.lto_priv.34
+                0x00000000000017d2      0x13e
+ .text.prvSemaphoreTest.lto_priv.34
+                0x00000000000017d2      0x13e dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x00000000000017d2                prvSemaphoreTest.lto_priv.34
+
+.text.xQueueGenericSend.constprop.15
+                0x0000000000001910      0x11c
+ .text.xQueueGenericSend.constprop.15
+                0x0000000000001910      0x11c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000001910                xQueueGenericSend.constprop.15
+
+.text.xNotifyTaskFromISR
+                0x0000000000001a2c      0x10e
+ .text.xNotifyTaskFromISR
+                0x0000000000001a2c      0x10e dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000001a2c                xNotifyTaskFromISR
+
+.text.xTaskGenericNotifyWait.constprop.11
+                0x0000000000001b3a       0xe4
+ .text.xTaskGenericNotifyWait.constprop.11
+                0x0000000000001b3a       0xe4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000001b3a                xTaskGenericNotifyWait.constprop.11
+
+.text.xTaskResumeAll
+                0x0000000000001c1e       0xd4
+ .text.xTaskResumeAll
+                0x0000000000001c1e       0xd4 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000001c1e                xTaskResumeAll
+
+.text.prvCopyDataToQueue.constprop.16
+                0x0000000000001cf2       0xd2
+ .text.prvCopyDataToQueue.constprop.16
+                0x0000000000001cf2       0xd2 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+
+.text.vTaskPrioritySet
+                0x0000000000001dc4       0xca
+ .text.vTaskPrioritySet
+                0x0000000000001dc4       0xca dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000001dc4                vTaskPrioritySet
+
+.text.prvAddCurrentTaskToDelayedList.lto_priv.21
+                0x0000000000001e8e       0xb8
+ .text.prvAddCurrentTaskToDelayedList.lto_priv.21
+                0x0000000000001e8e       0xb8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x0000000000001e8e                prvAddCurrentTaskToDelayedList.lto_priv.21
+
+.text.xTaskGenericNotify.constprop.12
+                0x0000000000001f46       0xb8
+ .text.xTaskGenericNotify.constprop.12
+                0x0000000000001f46       0xb8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000001f46                xTaskGenericNotify.constprop.12
+
+.text.vPortYieldFromTick
+                0x0000000000001ffe       0xae
+ .text.vPortYieldFromTick
+                0x0000000000001ffe       0xae dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.text.vTaskSuspend
+                0x00000000000020ac       0xac
+ .text.vTaskSuspend
+                0x00000000000020ac       0xac dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000020ac                vTaskSuspend
+
+.text.vPortYieldFromISR
+                0x0000000000002158       0xa8
+ .text.vPortYieldFromISR
+                0x0000000000002158       0xa8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002158                vPortYieldFromISR
+
+.text.vPortYield
+                0x0000000000002200       0xa8
+ .text.vPortYield
+                0x0000000000002200       0xa8 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002200                vPortYield
+
+.text.xTimerGenericCommand.constprop.9
+                0x00000000000022a8       0xa6
+ .text.xTimerGenericCommand.constprop.9
+                0x00000000000022a8       0xa6 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000022a8                xTimerGenericCommand.constprop.9
+
+.text.prvSwitchTimerLists
+                0x000000000000234e       0xa0
+ .text.prvSwitchTimerLists
+                0x000000000000234e       0xa0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.text.__vector_38
+                0x00000000000023ee       0xa0
+ .text.__vector_38
+                0x00000000000023ee       0xa0 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000023ee                __vector_38
+
+.text.__vector_37
+                0x000000000000248e       0x98
+ .text.__vector_37
+                0x000000000000248e       0x98 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x000000000000248e                __vector_37
+
+.text.xQueueGenericCreate
+                0x0000000000002526       0x94
+ .text.xQueueGenericCreate
+                0x0000000000002526       0x94 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002526                xQueueGenericCreate
+
+.text.prvCheckForValidListAndQueue.lto_priv.61
+                0x00000000000025ba       0x88
+ .text.prvCheckForValidListAndQueue.lto_priv.61
+                0x00000000000025ba       0x88 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000000025ba                prvCheckForValidListAndQueue.lto_priv.61
+
+.text.ulTaskGenericNotifyTake.constprop.6
+                0x0000000000002642       0x86
+ .text.ulTaskGenericNotifyTake.constprop.6
+                0x0000000000002642       0x86 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000002642                ulTaskGenericNotifyTake.constprop.6
+
+.text.prvUnlockQueue.lto_priv.20
+                0x00000000000026c8       0x84
+ .text.prvUnlockQueue.lto_priv.20
+                0x00000000000026c8       0x84 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000026c8                prvUnlockQueue.lto_priv.20
+
+.text.prvRecursiveMutexControllingTask.lto_priv.27
+                0x000000000000274c       0x7e
+ .text.prvRecursiveMutexControllingTask.lto_priv.27
+                0x000000000000274c       0x7e dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000274c                prvRecursiveMutexControllingTask.lto_priv.27
+
+.text.xTaskRemoveFromEventList
+                0x00000000000027ca       0x7c
+ .text.xTaskRemoveFromEventList
+                0x00000000000027ca       0x7c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000027ca                xTaskRemoveFromEventList
+
+.text.vTaskSwitchContext
+                0x0000000000002846       0x7a
+ .text.vTaskSwitchContext
+                0x0000000000002846       0x7a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002846                vTaskSwitchContext
+
+.text.vTaskResume
+                0x00000000000028c0       0x7a
+ .text.vTaskResume
+                0x00000000000028c0       0x7a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000028c0                vTaskResume
+
+.text.prvSuspendedTaskTimerTestCallback
+                0x000000000000293a       0x76
+ .text.prvSuspendedTaskTimerTestCallback
+                0x000000000000293a       0x76 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.text.vListInsert
+                0x00000000000029b0       0x6c
+ .text.vListInsert
+                0x00000000000029b0       0x6c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000029b0                vListInsert
+
+.rodata         0x0000000000806a1c       0x6a load address 0x0000000000002a1c
+ .rodata        0x0000000000806a1c       0x6a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.text.prvRecursiveMutexPollingTask.lto_priv.29
+                0x0000000000002a86       0x6a
+ .text.prvRecursiveMutexPollingTask.lto_priv.29
+                0x0000000000002a86       0x6a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002a86                prvRecursiveMutexPollingTask.lto_priv.29
+
+.text.xTaskCheckForTimeOut
+                0x0000000000002af0       0x68
+ .text.xTaskCheckForTimeOut
+                0x0000000000002af0       0x68 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002af0                xTaskCheckForTimeOut
+
+.text.pvPortMalloc
+                0x0000000000002b58       0x64
+ .text.pvPortMalloc
+                0x0000000000002b58       0x64 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002b58                pvPortMalloc
+
+.text.prvRecursiveMutexBlockingTask.lto_priv.28
+                0x0000000000002bbc       0x62
+ .text.prvRecursiveMutexBlockingTask.lto_priv.28
+                0x0000000000002bbc       0x62 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002bbc                prvRecursiveMutexBlockingTask.lto_priv.28
+
+.text.prvInsertTimerInActiveList
+                0x0000000000002c1e       0x54
+ .text.prvInsertTimerInActiveList
+                0x0000000000002c1e       0x54 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+
+.text.uxListRemove
+                0x0000000000002c72       0x48
+ .text.uxListRemove
+                0x0000000000002c72       0x48 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002c72                uxListRemove
+
+.text.libgcc.div
+                0x0000000000002cba       0x44
+ .text.libgcc.div
+                0x0000000000002cba       0x44 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodsi4.o)
+                0x0000000000002cba                __udivmodsi4
+
+.text.vListInsertEnd
+                0x0000000000002cfe       0x42
+ .text.vListInsertEnd
+                0x0000000000002cfe       0x42 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002cfe                vListInsertEnd
+
+.__pa__38       0x0000000000002d40       0x3c
+ .__pa__38      0x0000000000002d40       0x3c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002d40                .__pa__38
+
+.text.prvCopyDataFromQueue.lto_priv.22
+                0x0000000000002d7c       0x34
+ .text.prvCopyDataFromQueue.lto_priv.22
+                0x0000000000002d7c       0x34 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002d7c                prvCopyDataFromQueue.lto_priv.22
+
+.text.prvResetNextTaskUnblockTime.lto_priv.44
+                0x0000000000002db0       0x30
+ .text.prvResetNextTaskUnblockTime.lto_priv.44
+                0x0000000000002db0       0x30 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x0000000000002db0                prvResetNextTaskUnblockTime.lto_priv.44
+
+.__pa__41       0x0000000000002de0       0x2e
+ .__pa__41      0x0000000000002de0       0x2e dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002de0                .__pa__41
+
+.text.xQueueTakeMutexRecursive
+                0x0000000000002e0e       0x2c
+ .text.xQueueTakeMutexRecursive
+                0x0000000000002e0e       0x2c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002e0e                xQueueTakeMutexRecursive
+
+.text.vTaskDelay
+                0x0000000000002e3a       0x2a
+ .text.vTaskDelay
+                0x0000000000002e3a       0x2a dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002e3a                vTaskDelay
+
+.text.prvRand.lto_priv.33
+                0x0000000000002e64       0x28
+ .text.prvRand.lto_priv.33
+                0x0000000000002e64       0x28 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002e64                prvRand.lto_priv.33
+
+.__pa__36       0x0000000000002e8c       0x28
+ .__pa__36      0x0000000000002e8c       0x28 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002e8c                .__pa__36
+
+.__pa__39       0x0000000000002eb4       0x28
+ .__pa__39      0x0000000000002eb4       0x28 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002eb4                .__pa__39
+
+.__pa__40       0x0000000000002edc       0x28
+ .__pa__40      0x0000000000002edc       0x28 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002edc                .__pa__40
+
+.text.libgcc.div
+                0x0000000000002f04       0x28
+ .text.libgcc.div
+                0x0000000000002f04       0x28 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_udivmodhi4.o)
+                0x0000000000002f04                __udivmodhi4
+
+.text.prvNotifyingTimer
+                0x0000000000002f2c       0x26
+ .text.prvNotifyingTimer
+                0x0000000000002f2c       0x26 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.text.xQueueGiveMutexRecursive
+                0x0000000000002f52       0x24
+ .text.xQueueGiveMutexRecursive
+                0x0000000000002f52       0x24 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002f52                xQueueGiveMutexRecursive
+
+.text.vTaskPlaceOnEventList
+                0x0000000000002f76       0x22
+ .text.vTaskPlaceOnEventList
+                0x0000000000002f76       0x22 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002f76                vTaskPlaceOnEventList
+
+.text.vListInitialise
+                0x0000000000002f98       0x1c
+ .text.vListInitialise
+                0x0000000000002f98       0x1c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002f98                vListInitialise
+
+.__pa__42       0x0000000000002fb4       0x1c
+ .__pa__42      0x0000000000002fb4       0x1c dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002fb4                .__pa__42
+
+.text.prvIsQueueEmpty.lto_priv.37
+                0x0000000000002fd0       0x16
+ .text.prvIsQueueEmpty.lto_priv.37
+                0x0000000000002fd0       0x16 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000002fd0                prvIsQueueEmpty.lto_priv.37
+
+.rodata         0x0000000000806fe6       0x16 load address 0x0000000000002fe6
+ .rodata        0x0000000000806fe6       0x16 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+
+.__pa__16       0x0000000000002ffc       0x16
+ .__pa__16      0x0000000000002ffc       0x16 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000002ffc                .__pa__16
+
+.__pa__0        0x0000000000003012       0x14
+ .__pa__0       0x0000000000003012       0x14 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000003012                .__pa__0
+
+.__pa__8        0x0000000000003026       0x14
+ .__pa__8       0x0000000000003026       0x14 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000003026                .__pa__8
+
+.__pa__9        0x000000000000303a       0x14
+ .__pa__9       0x000000000000303a       0x14 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000303a                .__pa__9
+
+.__pa__17       0x000000000000304e       0x14
+ .__pa__17      0x000000000000304e       0x14 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000304e                .__pa__17
+
+.__pa__12       0x0000000000003062       0x12
+ .__pa__12      0x0000000000003062       0x12 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x0000000000003062                .__pa__12
+
+.__pa__19       0x0000000000003074       0x12
+ .__pa__19      0x0000000000003074       0x12 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000003074                .__pa__19
+
+.__pa__24       0x0000000000003086       0x12
+ .__pa__24      0x0000000000003086       0x12 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000003086                .__pa__24
+
+.__pa__37       0x0000000000003098       0x12
+ .__pa__37      0x0000000000003098       0x12 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000003098                .__pa__37
+
+.text.avrlibc   0x00000000000030aa       0x12
+ .text.avrlibc  0x00000000000030aa       0x12 c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a(memcpy.o)
+                0x00000000000030aa                memcpy
+
+.__pa__6        0x00000000000030bc       0x10
+ .__pa__6       0x00000000000030bc       0x10 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000000030bc                .__pa__6
+
+.text.xTaskGetTickCount
+                0x00000000000030cc       0x10
+ .text.xTaskGetTickCount
+                0x00000000000030cc       0x10 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000030cc                xTaskGetTickCount
+
+.__pa__28       0x00000000000030dc       0x10
+ .__pa__28      0x00000000000030dc       0x10 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x00000000000030dc                .__pa__28
+
+.text.__vector_12
+                0x00000000000030ec       0x10
+ .text.__vector_12
+                0x00000000000030ec       0x10 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x00000000000030ec                __vector_12
+
+.__pa__14       0x00000000000030fc       0x10
+ .__pa__14      0x00000000000030fc       0x10 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x00000000000030fc                .__pa__14
+
+.__pa__43       0x000000000000310c       0x10
+ .__pa__43      0x000000000000310c       0x10 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000310c                .__pa__43
+
+.__pa__15       0x000000000000311c        0xe
+ .__pa__15      0x000000000000311c        0xe dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x000000000000311c                .__pa__15
+
+.__pa__20       0x000000000000312a        0xe
+ .__pa__20      0x000000000000312a        0xe dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x000000000000312a                .__pa__20
+
+.__pa__31       0x0000000000003138        0xe
+ .__pa__31      0x0000000000003138        0xe dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000003138                .__pa__31
+
+.__pa__4        0x0000000000003146        0xe
+ .__pa__4       0x0000000000003146        0xe dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000003146                .__pa__4
+
+.__pa__5        0x0000000000003154        0xe
+ .__pa__5       0x0000000000003154        0xe dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000003154                .__pa__5
+
+.__pa__18       0x0000000000003162        0xc
+ .__pa__18      0x0000000000003162        0xc dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x0000000000003162                .__pa__18
+
+.text.vTaskSuspendAll
+                0x000000000000316e        0xc
+ .text.vTaskSuspendAll
+                0x000000000000316e        0xc dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x000000000000316e                vTaskSuspendAll
+
+.__pa__30       0x000000000000317a        0xc
+ .__pa__30      0x000000000000317a        0xc dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x000000000000317a                .__pa__30
+
+.__pa__32       0x0000000000003186        0xc
+ .__pa__32      0x0000000000003186        0xc dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000003186                .__pa__32
+
+.text.libgcc    0x0000000000003192        0xc
+ .text.libgcc   0x0000000000003192        0xc c:/program files/microchip/xc8/v2.20/avr/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_tablejump2.o)
+                0x0000000000003192                __tablejump2__
+
+.__pa__2        0x000000000000319e        0xa
+ .__pa__2       0x000000000000319e        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x000000000000319e                .__pa__2
+
+.__pa__3        0x00000000000031a8        0xa
+ .__pa__3       0x00000000000031a8        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000000031a8                .__pa__3
+
+.__pa__7        0x00000000000031b2        0xa
+ .__pa__7       0x00000000000031b2        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000000031b2                .__pa__7
+
+.__pa__11       0x00000000000031bc        0xa
+ .__pa__11      0x00000000000031bc        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000000031bc                .__pa__11
+
+.__pa__13       0x00000000000031c6        0xa
+ .__pa__13      0x00000000000031c6        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans3.ltrans.o
+                0x00000000000031c6                .__pa__13
+
+.__pa__1        0x00000000000031d0        0xa
+ .__pa__1       0x00000000000031d0        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000031d0                .__pa__1
+
+.__pa__21       0x00000000000031da        0xa
+ .__pa__21      0x00000000000031da        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000031da                .__pa__21
+
+.__pa__22       0x00000000000031e4        0xa
+ .__pa__22      0x00000000000031e4        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000031e4                .__pa__22
+
+.__pa__23       0x00000000000031ee        0xa
+ .__pa__23      0x00000000000031ee        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000031ee                .__pa__23
+
+.__pa__25       0x00000000000031f8        0xa
+ .__pa__25      0x00000000000031f8        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000000031f8                .__pa__25
+
+.__pa__10       0x0000000000003202        0xa
+ .__pa__10      0x0000000000003202        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000003202                .__pa__10
+
+.__pa__26       0x000000000000320c        0xa
+ .__pa__26      0x000000000000320c        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x000000000000320c                .__pa__26
+
+.__pa__27       0x0000000000003216        0xa
+ .__pa__27      0x0000000000003216        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000003216                .__pa__27
+
+.__pa__29       0x0000000000003220        0xa
+ .__pa__29      0x0000000000003220        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans1.ltrans.o
+                0x0000000000003220                .__pa__29
+
+.__pa__33       0x000000000000322a        0xa
+ .__pa__33      0x000000000000322a        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000322a                .__pa__33
+
+.__pa__34       0x0000000000003234        0xa
+ .__pa__34      0x0000000000003234        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x0000000000003234                .__pa__34
+
+.__pa__35       0x000000000000323e        0xa
+ .__pa__35      0x000000000000323e        0xa dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans0.ltrans.o
+                0x000000000000323e                .__pa__35
+
+.text           0x0000000000003248        0x4
+ .text          0x0000000000003248        0x4 C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/ATmega_DFP/2.2.108/xc8/avr/lib/avrxmega3/crtatmega4809.o
+                0x0000000000003248                __vector_22
+                0x0000000000003248                __vector_28
+                0x0000000000003248                __vector_1
+                0x0000000000003248                __vector_32
+                0x0000000000003248                __vector_34
+                0x0000000000003248                __vector_24
+                0x0000000000003248                __bad_interrupt
+                0x0000000000003248                __vector_6
+                0x0000000000003248                __vector_31
+                0x0000000000003248                __vector_35
+                0x0000000000003248                __vector_39
+                0x0000000000003248                __vector_3
+                0x0000000000003248                __vector_23
+                0x0000000000003248                __vector_30
+                0x0000000000003248                __vector_25
+                0x0000000000003248                __vector_11
+                0x0000000000003248                __vector_13
+                0x0000000000003248                __vector_17
+                0x0000000000003248                __vector_19
+                0x0000000000003248                __vector_7
+                0x0000000000003248                __vector_27
+                0x0000000000003248                __vector_5
+                0x0000000000003248                __vector_33
+                0x0000000000003248                __vector_4
+                0x0000000000003248                __vector_9
+                0x0000000000003248                __vector_2
+                0x0000000000003248                __vector_21
+                0x0000000000003248                __vector_15
+                0x0000000000003248                __vector_36
+                0x0000000000003248                __vector_29
+                0x0000000000003248                __vector_8
+                0x0000000000003248                __vector_26
+                0x0000000000003248                __vector_14
+                0x0000000000003248                __vector_10
+                0x0000000000003248                __vector_16
+                0x0000000000003248                __vector_18
+                0x0000000000003248                __vector_20
+
+.data.xErrorStatus.lto_priv.59
+                0x00000000008038d6        0x1 load address 0x000000000000324c
+ .data.xErrorStatus.lto_priv.59
+                0x00000000008038d6        0x1 dist/default/production/__pa_temp_106644/ccYqLOMs.ltrans2.ltrans.o
+                0x00000000008038d6                xErrorStatus.lto_priv.59

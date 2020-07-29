@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202002.00
+ * FreeRTOS V202007.00
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -106,10 +106,6 @@ static BaseType_t prvGMACWaitLS( TickType_t xMaxTime );
  * A deferred interrupt handler for all MAC/DMA interrupt sources.
  */
 static void prvEMACHandlerTask( void *pvParameters );
-
-#if ( ipconfigHAS_PRINTF != 0 )
-	static void prvMonitorResources( void );
-#endif
 
 /*-----------------------------------------------------------*/
 
@@ -228,7 +224,9 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer, 
 		/* If the peripheral must calculate the checksum, it wants
 		the protocol checksum to have a value of zero. */
 		pxPacket = ( ProtocolPacket_t * ) ( pxBuffer->pucEthernetBuffer );
-		if( ( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
+
+		if( ( pxPacket->xICMPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE ) &&
+			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
 			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_TCP ) )
 		{
 			/* The EMAC will calculate the checksum of the IP-header.
@@ -326,54 +324,6 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigHAS_PRINTF != 0 )
-	static void prvMonitorResources()
-	{
-	static UBaseType_t uxLastMinBufferCount = 0u;
-	static size_t uxMinLastSize = 0uL;
-	UBaseType_t uxCurrentBufferCount;
-	size_t uxMinSize;
-
-		uxCurrentBufferCount = uxGetMinimumFreeNetworkBuffers();
-
-		if( uxLastMinBufferCount != uxCurrentBufferCount )
-		{
-			/* The logging produced below may be helpful
-			 * while tuning +TCP: see how many buffers are in use. */
-			uxLastMinBufferCount = uxCurrentBufferCount;
-			FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
-							   uxGetNumberOfFreeNetworkBuffers(),
-							   uxCurrentBufferCount ) );
-		}
-
-		uxMinSize = xPortGetMinimumEverFreeHeapSize();
-
-		if( uxMinLastSize != uxMinSize )
-		{
-			uxMinLastSize = uxMinSize;
-			FreeRTOS_printf( ( "Heap: current %lu lowest %lu\n", xPortGetFreeHeapSize(), uxMinSize ) );
-		}
-
-		#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-			{
-				static UBaseType_t uxLastMinQueueSpace = 0;
-				UBaseType_t uxCurrentCount = 0u;
-
-				uxCurrentCount = uxGetMinimumIPQueueSpace();
-
-				if( uxLastMinQueueSpace != uxCurrentCount )
-				{
-					/* The logging produced below may be helpful
-					 * while tuning +TCP: see how many buffers are in use. */
-					uxLastMinQueueSpace = uxCurrentCount;
-					FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
-				}
-			}
-		#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
-	}
-#endif /* ( ipconfigHAS_PRINTF != 0 ) */
-/*-----------------------------------------------------------*/
-
 static void prvEMACHandlerTask( void *pvParameters )
 {
 TimeOut_t xPhyTime;
@@ -394,11 +344,14 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
 
 	for( ;; )
 	{
-		#if ( ipconfigHAS_PRINTF != 0 )
-			{
-				prvMonitorResources();
-			}
-		#endif /* ipconfigHAS_PRINTF != 0 ) */
+		#if( ipconfigHAS_PRINTF != 0 )
+		{
+			/* Call a function that monitors resources: the amount of free network
+			 * buffers and the amount of free space on the heap.  See FreeRTOS_IP.c
+			 * for more detailed comments. */
+			vPrintResourceStats();
+		}
+		#endif /* ( ipconfigHAS_PRINTF != 0 ) */
 
 		if( ( xEMACpsif.isr_events & EMAC_IF_ALL_EVENT ) == 0 )
 		{

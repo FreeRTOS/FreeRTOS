@@ -332,7 +332,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
-        /* Establish a TCP connection with the MQTT broker. This example connects to
+        /* Establish a TLS connection with the MQTT broker. This example connects to
          * the MQTT broker as specified in democonfigAWS_IOT_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
         LogInfo( ( "Creating a TLS connection to %s.\r\n", democonfigAWS_IOT_ENDPOINT ) );

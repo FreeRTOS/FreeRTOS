@@ -400,7 +400,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     MQTTConnectInfo_t xConnectInfo;
     bool xSessionPresent;
     TransportInterface_t xTransport;
-    MQTTApplicationCallbacks_t xCallbacks;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -412,13 +411,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.send = Plaintext_FreeRTOS_send;
     xTransport.recv = Plaintext_FreeRTOS_recv;
 
-    /* Application callbacks for receiving incoming published and incoming acks
-     * from MQTT library. */
-    xCallbacks.appCallback = prvEventCallback;
-    xCallbacks.getTime = prvGetTimeMs;
-
     /* Initialize MQTT library. */
-    xResult = MQTT_Init( pxMQTTContext, &xTransport, &xCallbacks, &xBuffer );
+    xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */

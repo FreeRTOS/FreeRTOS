@@ -46,6 +46,7 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
@@ -222,6 +223,26 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
  */
 static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
 
+/*
+ * @brief This function locks access to the MQTT context by locking a mutex.
+ */
+static void prvLockMQTTContext( void );
+
+/**
+ * @brief This function releases access to the MQTT context by unlocking a mutex.
+ */
+static void prvUnlockMQTTContext( void );
+
+/**
+ * @brief This callback is invoked through an auto-reload software timer.
+ *
+ * Its responsibility is to send a PINGREQ packet when no control packets have
+ * been sent for an application-defined Keep Alive Interval.
+ *
+ * @param pxTimer The auto-reload software timer for handling keep alive.
+ */
+static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer );
+
 /**
  * @brief The application callback function for getting the incoming publish
  * and incoming acks reported from the MQTT library.
@@ -263,6 +284,26 @@ static uint16_t usSubscribePacketIdentifier;
  */
 static uint16_t usUnsubscribePacketIdentifier;
 
+/**
+ * @brief Timer to handle keep alive
+ */
+static TimerHandle_t xKeepAliveTimer;
+
+/**
+ * @brief Storage space for xKeepAliveTimer
+ */
+static StaticTimer_t xKeepAliveTimerBuffer;
+
+/**
+ * @brief Timer to handle keep alive
+ */
+static SemaphoreHandle_t xMQTTContextMutex;
+
+/**
+ * @brief Storage space for xMQTTContextMutex.
+ */
+static StaticSemaphore_t xMQTTContextMutexBuffer;
+
 
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
 static MQTTFixedBuffer_t xBuffer =
@@ -297,12 +338,25 @@ static void prvMQTTDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     MQTTContext_t xMQTTContext;
     MQTTStatus_t xMQTTStatus;
+    BaseType_t xTimerStatus;
     BaseType_t xNetworkStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
+    /* Create a mutex to lock the MQTT Context in case of . */
     ulGlobalEntryTimeMs = prvGetTimeMs();
+    xMQTTContextMutex = xSemaphoreCreateMutexStatic( &xMQTTContextMutexBuffer );
+    configASSERT( xMQTTContextMutex );
+
+    /* Create an auto-reload timer to handle keep-alive. */
+    xKeepAliveTimer = xTimerCreateStatic( "KeepAliveTimer",
+                                          ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS * _MILLISECONDS_PER_SECOND ) / portTICK_PERIOD_MS,
+                                          pdTRUE,
+                                          ( void * ) &xMQTTContext,
+                                          prvKeepAliveTimerCallback,
+                                          &xKeepAliveTimerBuffer );
+    configASSERT( xKeepAliveTimer );
 
     for( ; ; )
     {
@@ -323,6 +377,12 @@ static void prvMQTTDemoTask( void * pvParameters )
          * and waits for connection acknowledgment (CONNACK) packet. */
         LogInfo( ( "Creating an MQTT connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
+
+        /* Start the timer for keep alive.  No block time is specified, and even
+         * if one was it would be ignored because the RTOS scheduler has not yet
+         * been started. */
+        xTimerStatus = xTimerStart( xKeepAliveTimer, 0 );
+        configASSERT( xTimerStatus == pdPASS );
 
         /**************************** Subscribe. ******************************/
 
@@ -383,6 +443,10 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Close the network connection.  */
         Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
 
+        /* Stop the keep-alive timer for the next iteration. */
+        xTimerStatus = xTimerStop( xKeepAliveTimer, 0 );
+        configASSERT( xTimerStatus == pdPASS );
+
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
@@ -392,6 +456,21 @@ static void prvMQTTDemoTask( void * pvParameters )
     }
 }
 /*-----------------------------------------------------------*/
+
+
+static void prvLockMQTTContext( void )
+{
+    configASSERT( xSemaphoreTake( xMQTTContextMutex, 0 ) == pdTRUE );
+}
+/*-----------------------------------------------------------*/
+
+
+static void prvUnlockMQTTContext( void )
+{
+    configASSERT( xSemaphoreGive( xMQTTContextMutex ) == pdTRUE );
+}
+/*-----------------------------------------------------------*/
+
 
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext )
@@ -460,6 +539,7 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
+    BaseType_t xTimerStatus;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -475,6 +555,7 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
     xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
+    prvLockMQTTContext();
     /* Get a unique packet id. */
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
@@ -483,8 +564,13 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
                               xMQTTSubscription,
                               sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
                               usSubscribePacketIdentifier );
+    prvUnlockMQTTContext();
 
     configASSERT( xResult == MQTTSuccess );
+
+    /* When a SUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
+    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
 
@@ -492,7 +578,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
     MQTTPublishInfo_t xMQTTPublishInfo;
-
+    BaseType_t xTimerStatus;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -511,9 +597,15 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     xMQTTPublishInfo.payloadLength = strlen( mqttexampleMESSAGE );
 
     /* Send PUBLISH packet. Packet ID is not used for a QoS0 publish. */
+    prvLockMQTTContext();
     xResult = MQTT_Publish( pxMQTTContext, &xMQTTPublishInfo, 0U );
+    prvUnlockMQTTContext();
 
     configASSERT( xResult == MQTTSuccess );
+
+    /* When a PUBLISH packet has been sent, the keep-alive timer can be reset. */
+    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
 
@@ -521,6 +613,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
+    BaseType_t xTimerStatus;
 
     /* Some fields not used by this demo so start with everything at 0. */
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -530,6 +623,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
+    prvLockMQTTContext();
     /* Get next unique packet identifier */
     usUnsubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
     /* Make sure the packet id obtained is valid. */
@@ -540,8 +634,13 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
                                 xMQTTSubscription,
                                 sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
                                 usUnsubscribePacketIdentifier );
+    prvUnlockMQTTContext();
 
     configASSERT( xResult == MQTTSuccess );
+
+    /* When an UNSUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
+    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
 
@@ -599,6 +698,45 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
                    pxPublishInfo->topicNameLength,
                    pxPublishInfo->pTopicName ) );
     }
+}
+
+/*-----------------------------------------------------------*/
+
+static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer )
+{
+    MQTTStatus_t xResult = MQTTSuccess;
+    MQTTContext_t * pxMQTTContext;
+    uint32_t now = 0U, keepAliveMs = 0U;
+
+    pxMQTTContext = ( MQTTContext_t * ) pvTimerGetTimerID( pxTimer );
+    configASSERT( pxMQTTContext != NULL );
+
+    prvLockMQTTContext();
+    now = pxMQTTContext->callbacks.getTime();
+    keepAliveMs = _MILLISECONDS_PER_SECOND * ( uint32_t ) pxMQTTContext->keepAliveIntervalSec;
+
+    /* If keep alive interval is 0, it is disabled. */
+    if( ( keepAliveMs != 0U ) &&
+        ( ( now - pxMQTTContext->lastPacketTime ) > keepAliveMs ) )
+    {
+        if( pxMQTTContext->waitingForPingResp == true )
+        {
+            /* Has time expired? */
+            if( ( now - pxMQTTContext->pingReqSendTimeMs ) >
+                pxMQTTContext->pingRespTimeoutMs )
+            {
+                xResult = MQTTKeepAliveTimeout;
+            }
+        }
+        else
+        {
+            xResult = MQTT_Ping( pxMQTTContext );
+        }
+    }
+
+    prvUnlockMQTTContext();
+
+    configASSERT( xResult == MQTTSuccess );
 }
 
 /*-----------------------------------------------------------*/

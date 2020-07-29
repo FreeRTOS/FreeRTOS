@@ -86,7 +86,7 @@
 #endif /* configUSE_TCP_WIN */
 /*-----------------------------------------------------------*/
 
-extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere );
+static void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere );
 
 /*
  * All TCP sockets share a pool of segment descriptors (TCPSegment_t)
@@ -302,7 +302,7 @@ static portINLINE uint32_t ulTimerGetAge( const TCPTimer_t *pxTimer )
 }
 /*-----------------------------------------------------------*/
 
-void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere )
+static void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere )
 {
 	/* Insert a new list item into pxList, it does not sort the list,
 	but it puts the item just before xListEnd, so it will be the last item
@@ -372,7 +372,6 @@ void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem
 
 		/* Find a segment with a given sequence number in the list of received
 		segments. */
-
 		pxEnd = ipPOINTER_CAST( const ListItem_t *, listGET_END_MARKER( &pxWindow->xRxSegments ) );
 
 		for( pxIterator  = listGET_NEXT( pxEnd );

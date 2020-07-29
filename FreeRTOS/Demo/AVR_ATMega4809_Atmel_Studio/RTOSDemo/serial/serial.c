@@ -40,93 +40,78 @@
 static QueueHandle_t xRxedChars;
 static QueueHandle_t xCharsForTx;
 
-#define vInterruptOn() USART3.CTRLA |= (1 << USART_DREIE_bp)										
+#define vInterruptOn() USART3.CTRLA |= (1 << USART_DREIE_bp)
 
-#define vInterruptOff()	USART3.CTRLA &= ~(1 << USART_DREIE_bp)
+#define vInterruptOff() USART3.CTRLA &= ~(1 << USART_DREIE_bp)
 
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
-	portENTER_CRITICAL();
-	{
-		/* Create the queues used by the com test task. */
-		xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-		xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+    portENTER_CRITICAL();
+    {
+        /* Create the queues used by the com test task. */
+        xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
+        xCharsForTx = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
 
+        USART3.BAUD = (uint16_t)USART_BAUD_RATE(ulWantedBaud); /* set baud rate register */
 
-		USART3.BAUD = (uint16_t)USART_BAUD_RATE(ulWantedBaud); /* set baud rate register */
+        USART3.CTRLA = 1 << USART_LBME_bp       /* Loop-back Mode Enable: enabled */
+                     | USART_RS485_OFF_gc       /* RS485 Mode disabled */
+                     | 1 << USART_RXCIE_bp;     /* Receive Complete Interrupt Enable: enabled */
 
-		USART3.CTRLA = 0 << USART_ABEIE_bp    /* Auto-baud Error Interrupt Enable: disabled */
-						| 0 << USART_DREIE_bp  /* Data Register Empty Interrupt Enable: disabled */
-						| 1 << USART_LBME_bp   /* Loop-back Mode Enable: enabled */
-						| USART_RS485_OFF_gc   /* RS485 Mode disabled */
-						| 1 << USART_RXCIE_bp  /* Receive Complete Interrupt Enable: enabled */
-						| 0 << USART_RXSIE_bp  /* Receiver Start Frame Interrupt Enable: disabled */
-						| 0 << USART_TXCIE_bp; /* Transmit Complete Interrupt Enable: disabled */
-
-		USART3.CTRLB = 0 << USART_MPCM_bp       /* Multi-processor Communication Mode: disabled */
-						| 0 << USART_ODME_bp     /* Open Drain Mode Enable: disabled */
-						| 1 << USART_RXEN_bp     /* Reciever enable: enabled */
-						| USART_RXMODE_NORMAL_gc /* Normal mode */
-						| 0 << USART_SFDEN_bp    /* Start Frame Detection Enable */
-						| 1 << USART_TXEN_bp;    /* Transmitter Enable: enabled */
-		
-	}
-	
-	portEXIT_CRITICAL();
-	
-	/* Unlike other ports, this serial code does not allow for more than one
-	com port.  We therefore don't return a pointer to a port structure and can
-	instead just return NULL. */
-	return NULL;
+        USART3.CTRLB = 1 << USART_RXEN_bp       /* Reciever enable: enabled */
+                     | USART_RXMODE_NORMAL_gc   /* Normal mode */
+                     | 1 << USART_TXEN_bp;      /* Transmitter Enable: enabled */
+    }
+    
+    portEXIT_CRITICAL();
+    
+    /* Unlike other ports, this serial code does not allow for more than one
+    com port.  We therefore don't return a pointer to a port structure and can
+    instead just return NULL. */
+    return NULL;
 }
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
-	/* Get the next character from the buffer.  Return false if no characters
-	are available, or arrive before xBlockTime expires. */
-	if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
-	{
-		return pdTRUE;
-	}
-	else
-	{
-		return pdFALSE;
-	}
+    /* Get the next character from the buffer.  Return false if no characters
+    are available, or arrive before xBlockTime expires. */
+    if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
+    {
+        return pdTRUE;
+    }
+    else
+    {
+        return pdFALSE;
+    }
 }
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
-	/* Return false if after the block time there is no room on the Tx queue. */
-	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
-	{
-		return pdFAIL;
-	}
-	
-	vInterruptOn();
-	
-	return pdPASS;
+    /* Return false if after the block time there is no room on the Tx queue. */
+    if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) != pdPASS )
+    {
+        return pdFAIL;
+    }
+    
+    vInterruptOn();
+    
+    return pdPASS;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
 {
-unsigned char ucByte;
+    /* Turn off the interrupts.  We may also want to delete the queues and/or
+    re-install the original ISR. */
 
-	/* Turn off the interrupts.  We may also want to delete the queues and/or
-	re-install the original ISR. */
-
-	portENTER_CRITICAL();
-	{
-		vInterruptOff();
-		
-		ucByte = USART3.CTRLB ;									
-		ucByte &= (0xFF ^(1 << USART_RXEN_bp));					
-		USART3.CTRLB = ucByte ;	
-		
-	}
-	portEXIT_CRITICAL();
+    portENTER_CRITICAL();
+    {
+        vInterruptOff();
+        USART3.CTRLB &= ~(1 << USART_RXEN_bp);
+    }
+    portEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
 
@@ -134,32 +119,32 @@ ISR(USART3_RXC_vect)
 {
 signed char ucChar, xHigherPriorityTaskWoken = pdFALSE;
 
-	/* Get the character and post it on the queue of Rxed characters.
-	If the post causes a task to wake force a context switch as the woken task
-	may have a higher priority than the task we have interrupted. */
-	ucChar = USART3.RXDATAL;
+    /* Get the character and post it on the queue of Rxed characters.
+    If the post causes a task to wake force a context switch as the woken task
+    may have a higher priority than the task we have interrupted. */
+    ucChar = USART3.RXDATAL;
 
-	xQueueSendFromISR( xRxedChars, &ucChar, &xHigherPriorityTaskWoken );
+    xQueueSendFromISR( xRxedChars, &ucChar, &xHigherPriorityTaskWoken );
 
-	if( xHigherPriorityTaskWoken != pdFALSE )
-	{
-		portYIELD_FROM_ISR();
-	}
-		
+    if( xHigherPriorityTaskWoken != pdFALSE )
+    {
+        portYIELD_FROM_ISR();
+    }
+        
 }
 
 ISR(USART3_DRE_vect)
 {
 signed char cChar, cTaskWoken = pdFALSE;
 
-	if( xQueueReceiveFromISR( xCharsForTx, &cChar, &cTaskWoken ) == pdTRUE )
-	{
-		/* Send the next character queued for Tx. */
-		USART3.TXDATAL = cChar;
-	}
-	else
-	{
-		/* Queue empty, nothing to send. */
-		vInterruptOff();
-	}
+    if( xQueueReceiveFromISR( xCharsForTx, &cChar, &cTaskWoken ) == pdTRUE )
+    {
+        /* Send the next character queued for Tx. */
+        USART3.TXDATAL = cChar;
+    }
+    else
+    {
+        /* Queue empty, nothing to send. */
+        vInterruptOff();
+    }
 }

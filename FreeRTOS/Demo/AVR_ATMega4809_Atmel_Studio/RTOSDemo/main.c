@@ -22,11 +22,9 @@ TO MICROCHIP FOR THIS SOFTWARE.
 #include "FreeRTOS.h"
 #include "clk_config.h"
 
-#define mainSELECTED_APPLICATION	0
+#define mainSELECTED_APPLICATION    0
 
-/*
- * Configure the hardware as necessary to run this demo.
- */
+/* Configure the hardware as necessary to run this demo. */
 static void prvSetupHardware( void );
 
 #if ( mainSELECTED_APPLICATION == 0 )
@@ -44,33 +42,53 @@ extern void init_full( void );
 
 int main( void )
 {
-	prvSetupHardware();
-	
-#if( mainSELECTED_APPLICATION == 0 )
-	main_blinky();
+    prvSetupHardware();
+
+#if ( mainSELECTED_APPLICATION == 0 )
+    main_blinky();
 #elif ( mainSELECTED_APPLICATION == 1 )
-	main_minimal();
+    main_minimal();
 #elif ( mainSELECTED_APPLICATION == 2 )
-	main_full();
+    main_full();
 #endif
-	
-	return 0;
+    
+    return 0;
 }
 
 static void prvSetupHardware( void )
 {
-	/* Ensure no interrupts execute while the scheduler is in an inconsistent
-	state.  Interrupts are automatically enabled when the scheduler is
-	started. */
-	portDISABLE_INTERRUPTS();
-	
-	CLK_init();
-	
-#if( mainSELECTED_APPLICATION == 0 )
-	init_blinky();
+    /* Ensure no interrupts execute while the scheduler is in an inconsistent
+    state.  Interrupts are automatically enabled when the scheduler is
+    started. */
+    portDISABLE_INTERRUPTS();
+
+    CLK_init();
+
+#if ( mainSELECTED_APPLICATION == 0 )
+    init_blinky();
 #elif ( mainSELECTED_APPLICATION == 1 )
-	init_minimal();
+    init_minimal();
 #elif ( mainSELECTED_APPLICATION == 2 )
-	init_full();
+    init_full();
 #endif
 }
+
+/* vApplicationStackOverflowHook is called when a stack overflow occurs.
+This is usefull in application development, for debugging.  To use this
+hook, uncomment it, and set configCHECK_FOR_STACK_OVERFLOW to 1 in
+"FreeRTOSConfig.h" header file. */
+
+// void vApplicationStackOverflowHook(TaskHandle_t *pxTask, signed char *pcTaskName )
+// {
+//     for( ;; );
+// }
+
+/* vApplicationMallocFailedHook is called when memorry allocation fails.
+This is usefull in application development, for debugging.  To use this
+hook, uncomment it, and set configUSE_MALLOC_FAILED_HOOK to 1 in
+"FreeRTOSConfig.h" header file. */
+
+// void vApplicationMallocFailedHook( void )
+// {
+//     for( ;; );
+// }

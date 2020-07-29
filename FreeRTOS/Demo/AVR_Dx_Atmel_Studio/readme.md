@@ -24,9 +24,16 @@ This demo includes a higher number of tasks than the **Blinky demo**, but the co
  - register tasks to verify the context switch (**regtest.c**)
  - polled queue tasks (**PollQ.c**)
  - serial communiation tasks (**Serial.c**)
- - check task hat periodically checks the other tasks are operating without error.
+ - check task that periodically checks the other tasks are operating without error.
 
-This demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling every 3 seconds, then the check task has not discovered any problems. If the LED is stop toggling, then the check task has discovered a problem in one or more tasks.
+This demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling roughly every second, then the check task has not discovered any problems. If the LED stops toggling, then the check task has discovered a problem in one or more tasks.
+
+To see the console output from serial communication tasks, serial port could be configured as: 
+ - baud rate 9600
+ - data 8-bit
+ - parity none
+ - stop bits 1-bit
+ - flow control none
 
 ### Full Demo
 
@@ -38,9 +45,9 @@ This demo is a comprehensive demonstration and test of a lot of FreeRTOS feature
  - semaphores task (**Semtest.c**)
  - direct task to task notification task (**TaskNotify.c**)
  - recursive semaphores task (**Regmutex.c**)
- - check task hat periodically checks the other tasks are operating without error
+ - check task that periodically checks the other tasks are operating without error
 
-The demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling every 3 seconds, then the check task has not discovered any problems. If the LED is stop toggling, then the check task has discovered a problem in one or more tasks.
+The demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling roughly every 3 seconds, then the check task has not discovered any problems. If the LED stops toggling, then the check task has discovered a problem in one or more tasks.
 
 # Quick start
 

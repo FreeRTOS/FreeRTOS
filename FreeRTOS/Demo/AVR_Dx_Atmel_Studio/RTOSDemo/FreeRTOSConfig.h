@@ -45,7 +45,7 @@
  *     TCB1        |    1  
  *     TCB2        |    2  
  *     TCB3        |    3  
- *     TCB4        |    4  
+ *     TCB4        |    4
  *     RTC         |    5  
  */
 
@@ -84,8 +84,8 @@ For other frequency values, update clock_config.h with your own settings */
 /* Hook function related definitions. */
 #define configUSE_IDLE_HOOK 1
 #define configUSE_TICK_HOOK 1
-#define configCHECK_FOR_STACK_OVERFLOW 1
-#define configUSE_MALLOC_FAILED_HOOK 1
+#define configCHECK_FOR_STACK_OVERFLOW 0
+#define configUSE_MALLOC_FAILED_HOOK 0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK 0
 
 /* Run time and task stats gathering related definitions. */
@@ -127,6 +127,6 @@ For other frequency values, update clock_config.h with your own settings */
 
 #define pdMS_TO_TICKS(xTimeInMs) ((TickType_t)(((uint32_t)(xTimeInMs) * (uint32_t)configTICK_RATE_HZ) / (uint32_t)1000))
 
-#define recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE (configMINIMAL_STACK_SIZE * 2)
+#define recmuRECURSIVE_MUTEX_TEST_TASK_STACK_SIZE ( configMINIMAL_STACK_SIZE * 2 )
 
 #endif /* FREERTOS_CONFIG_H */

@@ -54,6 +54,9 @@
 #include "FreeRTOS_ARP.h"
 
 
+#include "FreeRTOSIPConfigDefaults.h"
+
+
 /* Just make sure the contents doesn't get compiled if TCP is not enabled. */
 #if ipconfigUSE_TCP == 1
 
@@ -198,14 +201,14 @@ static BaseType_t prvTCPPrepareConnect( FreeRTOS_Socket_t *pxSocket );
 /*
  * Parse the TCP option(s) received, if present.
  */
-static void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, const NetworkBufferDescriptor_t *pxNetworkBuffer );
+_static void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, const NetworkBufferDescriptor_t *pxNetworkBuffer );
 
 /*
  * Identify and deal with a single TCP header option, advancing the pointer to
  * the header. This function returns pdTRUE or pdFALSE depending on whether the
  * caller should continue to parse more header options or break the loop.
  */
-static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
+_static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
 											 size_t uxTotalLength,
 											 FreeRTOS_Socket_t * const pxSocket,
 											 BaseType_t xHasSYNFlag );
@@ -215,7 +218,7 @@ static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
 	 * Skip past TCP header options when doing Selective ACK, until there are no
 	 * more options left.
 	 */
-	static void prvReadSackOption( const uint8_t * const pucPtr,
+	_static void prvReadSackOption( const uint8_t * const pucPtr,
 								   size_t uxIndex,
 								   FreeRTOS_Socket_t * const pxSocket );
 #endif/* ( ipconfigUSE_TCP_WIN == 1 ) */
@@ -1137,7 +1140,7 @@ uint32_t ulInitialSequenceNumber = 0;
  * that: ((pxTCPHeader->ucTCPOffset & 0xf0) > 0x50), meaning that the TP header
  * is longer than the usual 20 (5 x 4) bytes.
  */
-static void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, const NetworkBufferDescriptor_t *pxNetworkBuffer )
+_static void prvCheckOptions( FreeRTOS_Socket_t *pxSocket, const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
 size_t uxTCPHeaderOffset = ipSIZE_OF_ETH_HEADER + xIPHeaderSize( pxNetworkBuffer );
 const ProtocolHeaders_t *pxProtocolHeaders = ipPOINTER_CAST( ProtocolHeaders_t *,
@@ -1199,7 +1202,7 @@ uint8_t ucLength;
 }
 /*-----------------------------------------------------------*/
 
-static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
+_static size_t prvSingleStepTCPHeaderOptions( const uint8_t * const pucPtr,
 											 size_t uxTotalLength,
 											 FreeRTOS_Socket_t * const pxSocket,
 											 BaseType_t xHasSYNFlag )
@@ -1331,7 +1334,7 @@ TCPWindow_t *pxTCPWindow = &( pxSocket->u.xTCP.xTCPWindow );
 /*-----------------------------------------------------------*/
 
 #if( ipconfigUSE_TCP_WIN == 1 )
-	static void prvReadSackOption( const uint8_t * const pucPtr,
+	_static void prvReadSackOption( const uint8_t * const pucPtr,
 								   size_t uxIndex,
 								   FreeRTOS_Socket_t * const pxSocket )
 	{

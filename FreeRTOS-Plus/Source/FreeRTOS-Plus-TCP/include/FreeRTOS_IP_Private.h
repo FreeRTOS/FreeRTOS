@@ -401,6 +401,7 @@ socket events. */
 		(right) = tmp; \
 	} while ( ipFALSE_BOOL )
 
+/* WARNING: Do NOT use this macro when the array was received as a parameter. */
 #ifndef ARRAY_SIZE
 	#define ARRAY_SIZE(x)	( ( BaseType_t ) ( sizeof( x ) / sizeof( ( x )[ 0 ] ) ) )
 #endif

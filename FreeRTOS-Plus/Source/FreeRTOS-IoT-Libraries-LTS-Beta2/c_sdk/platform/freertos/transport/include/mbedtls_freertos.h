@@ -1,0 +1,193 @@
+/*
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+#ifndef MBEDTLS_FREERTOS_H_
+#define MBEDTLS_FREERTOS_H_
+
+/**************************************************/
+/******* DO NOT CHANGE the following order ********/
+/**************************************************/
+
+/* Logging related header files are required to be included in the following order:
+ * 1. Include the header file "logging_levels.h".
+ * 2. Define LIBRARY_LOG_NAME and  LIBRARY_LOG_LEVEL.
+ * 3. Include the header file "logging_stack.h".
+ */
+
+/* Include header that defines log levels. */
+#include "logging_levels.h"
+
+/* Logging configuration for the Sockets. */
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME     "FreeRTOSTransport"
+#endif
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+#endif
+
+#include "logging_stack.h"
+
+/************ End of logging configuration ****************/
+
+/* FreeRTOS+TCP include. */
+#include "FreeRTOS_Sockets.h"
+
+/* Transport interface include. */
+#include "transport_interface.h"
+
+/* mbed TLS includes. */
+#include "mbedtls/ctr_drbg.h"
+#include "mbedtls/entropy.h"
+#include "mbedtls/ssl.h"
+#include "mbedtls/threading.h"
+#include "mbedtls/x509.h"
+
+/**
+ * @brief Secured connection context.
+ */
+typedef struct SSLContext
+{
+    mbedtls_ssl_config config;            /**< @brief SSL connection configuration. */
+    mbedtls_ssl_context context;          /**< @brief SSL connection context */
+    mbedtls_x509_crt_profile certProfile; /**< @brief Certificate security profile for this connection. */
+    mbedtls_x509_crt rootCa;              /**< @brief Root CA certificate context. */
+    mbedtls_x509_crt clientCert;          /**< @brief Client certificate context. */
+    mbedtls_pk_context privKey;           /**< @brief Client private key context. */
+} SSLContext_t;
+
+/**
+ * @brief Definition of the network context for the transport interface
+ * implementation that uses mbedTLS and FreeRTOS+TCP sockets.
+ *
+ * @note For this transport implementation, the socket handle and
+ * SSL context is used.
+ */
+struct NetworkContext
+{
+    Socket_t tcpSocket;
+    SSLContext_t sslContext;
+};
+
+/**
+ * @brief Contains the credentials necessary for mbedtls connection setup.
+ */
+typedef struct NetworkCredentials
+{
+    /**
+     * @brief Set this to a non-NULL value to use ALPN.
+     *
+     * This string must be NULL-terminated.
+     *
+     * See [this link]
+     * (https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/)
+     * for more information.
+     */
+    const char * pAlpnProtos;
+
+    /**
+     * @brief Disable server name indication (SNI) for a TLS session.
+     */
+    BaseType_t disableSni;
+
+    const char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;        /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    const char * pClientCert; /**< @brief String representing the client certificate. */
+    size_t clientCertSize;    /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
+    const char * pPrivateKey; /**< @brief String representing the client certificate's private key. */
+    size_t privateKeySize;    /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
+    const char * pUserName;   /**< @brief String representing the username for MQTT. */
+    size_t userNameSize;      /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
+    const char * pPassword;   /**< @brief String representing the password for MQTT. */
+    size_t passwordSize;      /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
+} NetworkCredentials_t;
+
+/**
+ * @brief mbedTLS Connect / Disconnect return status.
+ */
+typedef enum MbedtlsStatus
+{
+    MBEDTLS_SUCCESS = 0,         /**< Function successfully completed. */
+    MBEDTLS_INVALID_PARAMETER,   /**< At least one parameter was invalid. */
+    MBEDTLS_INSUFFICIENT_MEMORY, /**< Insufficient memory required to establish connection. */
+    MBEDTLS_INVALID_CREDENTIALS, /**< Provided credentials were invalid. */
+    MBEDTLS_HANDSHAKE_FAILED,    /**< Performing TLS handshake with server failed. */
+    MBEDTLS_API_ERROR,           /**< A call to a system API resulted in an internal error. */
+    MBEDTLS_CONNECT_FAILURE      /**< Initial connection to the server failed. */
+} MbedtlsStatus_t;
+
+/**
+ * @brief Create a TCP connection with FreeRTOS sockets.
+ *
+ * @param[out] pNetworkContext Pointer to a network context to contain the
+ * initialized socket handle.
+ * @param[in] pHostName The hostname of the remote endpoint.
+ * @param[in] port The destination port.
+ * @param[in] pNetworkCredentials Credentials for the TLS connection.
+ * @param[in] receiveTimeoutMs Receive socket timeout.
+ * @param[in] sendTimeoutMs Send socket timeout.
+ *
+ * @return #MBEDTLS_SUCCESS, #MBEDTLS_INSUFFICIENT_MEMORY, #MBEDTLS_INVALID_CREDENTIALS,
+ * #MBEDTLS_HANDSHAKE_FAILED, #MBEDTLS_API_ERROR, or #MBEDTLS_CONNECT_FAILURE.
+ */
+MbedtlsStatus_t Mbedtls_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
+                                          const char * pHostName,
+                                          uint16_t port,
+                                          const NetworkCredentials_t * pNetworkCredentials,
+                                          uint32_t receiveTimeoutMs,
+                                          uint32_t sendTimeoutMs );
+
+/**
+ * @brief Gracefully disconnect an established TCP connection.
+ *
+ * @param[in] pNetworkContext Network context containing the TCP socket handle.
+ */
+void Mbedtls_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
+
+/**
+ * @brief Receives data from an established TCP connection.
+ *
+ * @param[in] pNetworkContext The network context containing the TCP socket
+ * handle.
+ * @param[out] pBuffer Buffer to receive bytes into.
+ * @param[in] bytesToRecv Number of bytes to receive from the network.
+ *
+ * @return Number of bytes received if successful; 0 if the socket times out;
+ * Negative value on error.
+ */
+int32_t Mbedtls_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
+                               void * pBuffer,
+                               size_t bytesToRecv );
+
+/**
+ * @brief Sends data over an established TCP connection.
+ *
+ * @param[in] pNetworkContext The network context containing the TCP socket
+ * handle.
+ * @param[in] pBuffer Buffer containing the bytes to send.
+ * @param[in] bytesToSend Number of bytes to send from the buffer.
+ *
+ * @return Number of bytes sent on success; else a negative value.
+ */
+int32_t Mbedtls_FreeRTOS_send( NetworkContext_t * pNetworkContext,
+                               const void * pBuffer,
+                               size_t bytesToSend );
+
+#endif /* ifndef MBEDTLS_FREERTOS_H_ */

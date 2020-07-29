@@ -311,17 +311,17 @@ static StaticTimer_t xKeepAliveTimerBuffer;
 /**
  * @brief Set to true when PINGREQ is sent then false when PINGRESP is received.
  */
-static volatile bool _waitingForPingResp = false;
+static volatile bool xWaitingForPingResp = false;
 
 /**
  * @brief The last time when a PINGREQ was sent over the network.
  */
-static uint32_t _pingReqSendTimeMs;
+static uint32_t ulPingReqSendTimeMs;
 
 /**
  * @brief Timeout for a pending PINGRESP from the MQTT broker.
  */
-static uint32_t _pingRespTimeoutMs = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS * _MILLISECONDS_PER_SECOND;
+static uint32_t ulPingRespTimeoutMs = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS * _MILLISECONDS_PER_SECOND;
 
 /**
  * @brief Static buffer used to hold an MQTT PINGREQ packet for keep-alive mechanism.
@@ -341,7 +341,7 @@ static MQTTFixedBuffer_t xBuffer =
 
 /*-----------------------------------------------------------*/
 
-/*
+/**
  * @brief Create the task that demonstrates the Plain text MQTT API Demo.
  */
 void vStartSimpleMQTTDemo( void )
@@ -663,7 +663,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             break;
 
         case MQTT_PACKET_TYPE_PINGRESP:
-            _waitingForPingResp = false;
+            xWaitingForPingResp = false;
             LogInfo( ( "Ping Response successfully received.\r\n" ) );
             break;
 
@@ -712,11 +712,11 @@ static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer )
 
     pxTransport = ( TransportInterface_t * ) pvTimerGetTimerID( pxTimer );
 
-    if( _waitingForPingResp == true )
+    if( xWaitingForPingResp == true )
     {
         now = prvGetTimeMs();
         /* Assert that the PINGRESP timeout has not expired. */
-        configASSERT( ( now - _pingReqSendTimeMs ) <= _pingRespTimeoutMs );
+        configASSERT( ( now - ulPingReqSendTimeMs ) <= ulPingRespTimeoutMs );
     }
     else
     {
@@ -727,8 +727,8 @@ static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer )
                                               xPingReqBuffer.size );
         configASSERT( ( size_t ) xTransportStatus == xPingReqBuffer.size );
 
-        _pingReqSendTimeMs = prvGetTimeMs();
-        _waitingForPingResp = true;
+        ulPingReqSendTimeMs = prvGetTimeMs();
+        xWaitingForPingResp = true;
     }
 }
 

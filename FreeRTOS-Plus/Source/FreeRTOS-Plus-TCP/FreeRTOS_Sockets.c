@@ -1356,7 +1356,8 @@ BaseType_t xReturn;
 			( lOptionName == FREERTOS_SO_SNDBUF ) ? "SND" : "RCV" ) );
 		xReturn = -pdFREERTOS_ERRNO_EINVAL;
 	}
-	else if( ( ( lOptionName == FREERTOS_SO_SNDBUF ) && ( pxSocket->u.xTCP.txStream != NULL ) ) ||
+	else
+	if( ( ( lOptionName == FREERTOS_SO_SNDBUF ) && ( pxSocket->u.xTCP.txStream != NULL ) ) ||
 			( ( lOptionName == FREERTOS_SO_RCVBUF ) && ( pxSocket->u.xTCP.rxStream != NULL ) ) )
 	{
 		FreeRTOS_debug_printf( ( "Set SO_%sBUF: buffer already created\n",

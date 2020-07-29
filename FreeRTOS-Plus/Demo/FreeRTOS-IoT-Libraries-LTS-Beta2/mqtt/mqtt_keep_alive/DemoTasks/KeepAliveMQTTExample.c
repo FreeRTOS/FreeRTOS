@@ -408,9 +408,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                                               &xKeepAliveTimerBuffer );
         configASSERT( xKeepAliveTimer );
 
-        /* Start the timer for keep alive.  No block time is specified, and even
-         * if one was it would be ignored because the RTOS scheduler has not yet
-         * been started. */
+        /* Start the timer for keep alive. */
         xTimerStatus = xTimerStart( xKeepAliveTimer, 0 );
         configASSERT( xTimerStatus == pdPASS );
 
@@ -470,12 +468,12 @@ static void prvMQTTDemoTask( void * pvParameters )
         LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         MQTT_Disconnect( &xMQTTContext );
 
-        /* Close the network connection.  */
-        Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
-
         /* Stop the keep-alive timer for the next iteration. */
         xTimerStatus = xTimerStop( xKeepAliveTimer, 0 );
         configASSERT( xTimerStatus == pdPASS );
+
+        /* Close the network connection.  */
+        Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */

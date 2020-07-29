@@ -33,9 +33,10 @@
  * The example is single threaded and uses statically allocated memory;
  * it uses QoS1.
  *
- * !!! NOTE !!!
- * This MQTT demo does not authenticate the server nor the client.
- * Hence, this demo should not be used as production ready code.
+ * A mutually authenticated TLS connection is used to connect to the AWS IoT
+ * MQTT message broker in this example. Define democonfigAWS_ROOT_CA_PEM,
+ * democonfigCLIENT_CERTIFICATE_PEM, and democonfigCLIENT_PRIVATE_KEY_PEM in
+ * demo_config.h to achieve mutual authentication.
  */
 
 /* Standard includes. */
@@ -176,7 +177,6 @@ static void prvMQTTDemoTask( void * pvParameters );
  *
  * @param pxMQTTContext MQTT context pointer.
  * @param xNetworkContext network context.
- *
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext );
@@ -270,19 +270,19 @@ static uint32_t ulGlobalEntryTimeMs;
 
 /**
  * @brief Packet Identifier generated when Publish request was sent to the broker;
- * it is used to match received Publish ACK to the transmitted ACK.
+ * it is used to match received Publish ACK to the transmitted Publish packet.
  */
 static uint16_t usPublishPacketIdentifier;
 
 /**
  * @brief Packet Identifier generated when Subscribe request was sent to the broker;
- * it is used to match received Subscribe ACK to the transmitted ACK.
+ * it is used to match received Subscribe ACK to the transmitted Subscribe packet.
  */
 static uint16_t usSubscribePacketIdentifier;
 
 /**
  * @brief Packet Identifier generated when Unsubscribe request was sent to the broker;
- * it is used to match received Unsubscribe response to the transmitted unsubscribe
+ * it is used to match received Unsubscribe response to the transmitted Unsubscribe
  * request.
  */
 static uint16_t usUnsubscribePacketIdentifier;

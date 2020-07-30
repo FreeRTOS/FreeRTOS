@@ -537,7 +537,7 @@ TickType_t uxIdentifier = 0U;
 	{
 		if( pcHostName != NULL )
 		{
-		size_t xLength = strlen( pcHostName ) + 1;
+		size_t xLength = strlen( pcHostName ) + 1U;
 
 			if( xLength <= ipconfigDNS_CACHE_NAME_LENGTH )
 			{
@@ -1298,7 +1298,7 @@ BaseType_t xReturn = pdTRUE;
 									usNumARecordsStored++;    /* Track # of A records stored */
 								}
 
-								FreeRTOS_inet_ntop( FREERTOS_AF_INET, ( const void * ) &( ulIPAddress ), cBuffer, sizeof( cBuffer ) );
+								( void ) FreeRTOS_inet_ntop( FREERTOS_AF_INET, ( const void * ) &( ulIPAddress ), cBuffer, sizeof( cBuffer ) );
 								/* Show what has happened. */
 								FreeRTOS_printf( ( "DNS[0x%04lX]: The answer to '%s' (%s) will%s be stored\n",
 												   ( UBaseType_t ) pxDNSMessageHeader->usIdentifier,

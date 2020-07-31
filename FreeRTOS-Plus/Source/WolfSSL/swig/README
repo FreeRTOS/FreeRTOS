@@ -1,0 +1,45 @@
+
+
+Initial swig interface file
+
+Please send questions to support@wolfssl.com
+
+
+
+**Python Support**
+
+    For Linux, OS X, or *nix
+
+1) build wolfSSL with fpic on Linux, not needed on OS X
+    ./configure --disable-shared CFLAGS=-fpic
+    make
+    sudo make install
+
+   NOTE: if you want to use pbkdf pkcs #12 algorithm you should build CyaSSL with --enable-pwdbased:
+   ./configure --disable-shared --enable-pwdbased CFLAGS=-fpic
+
+2) start the example server from the root directory
+    ./examples/server/server -d
+
+3) run ./PythonBuild.sh from this directory it will
+    a) build the swig wrapper file
+    b) compile the swig wrapper and wolfssl wrapper files
+    c) place them into a wolfssl shared library for python
+    d) run runme.py which will connect to the wolfSSL server, write a
+       string, then read the result and output it
+
+
+    Windows only
+
+1) Make sure the install path to wolfssl doesn't have any spaces anywhere in the
+   directory path because swig doesn't like that
+2) Have python for Windows installed, note install directory
+3) Have swigwin installed, note install directory
+4) Make sure swigwin install directory is added to PATH env. variable
+5) Make sure env. variables PYTHON_INCLUDE and PYTHON_LIB are set correctly e.g.
+    PYTHON_INCLUE="c:\Python26\include"
+    PYTHON_LIB="c:\Python26\libs\python26.lib"
+6) Build python_wolfssl in Release mode only, Debug build fails to find a debug
+    python library that isn't included by default
+7) The outputs _wolfssl.pyd and wolfssl.py are the wolfssl import library
+8) Can now run python runme.py from the swig directory

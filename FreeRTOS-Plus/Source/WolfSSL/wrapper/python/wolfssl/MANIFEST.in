@@ -1,0 +1,2 @@
+include LICENSING.rst
+recursive-include certs *.pem

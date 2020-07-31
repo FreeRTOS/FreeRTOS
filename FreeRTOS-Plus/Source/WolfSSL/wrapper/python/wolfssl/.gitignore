@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution
+build/
+dist/
+.eggs/
+*.egg-info/
+
+# Unit test
+.tox/
+htmlcov/
+.coverage
+
+# Sphinx documentation
+docs/_build/
+
+# Certificates
+certs/

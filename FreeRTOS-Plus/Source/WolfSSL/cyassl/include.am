@@ -1,0 +1,31 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+#
+
+include cyassl/ctaocrypt/include.am
+include cyassl/openssl/include.am
+
+EXTRA_DIST+= cyassl/sniffer_error.rc
+
+nobase_include_HEADERS+= \
+                         cyassl/error-ssl.h \
+                         cyassl/ssl.h \
+                         cyassl/sniffer_error.h \
+                         cyassl/sniffer.h \
+                         cyassl/callbacks.h \
+                         cyassl/certs_test.h \
+                         cyassl/test.h \
+                         cyassl/version.h \
+                         cyassl/ocsp.h \
+                         cyassl/crl.h
+
+noinst_HEADERS+= \
+                         cyassl/internal.h
+
+# For distro build don't install options.h.
+# It depends on the architecture and conflicts with Multi-Arch.
+if BUILD_DISTRO
+noinst_HEADERS+=         cyassl/options.h
+else
+nobase_include_HEADERS+= cyassl/options.h
+endif

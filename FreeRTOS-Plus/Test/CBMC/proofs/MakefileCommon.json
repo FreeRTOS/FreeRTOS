@@ -3,7 +3,6 @@
     "PROOFS": [ "." ],
 
     "DEF ": [
-
 	"WIN32",
 	"WINVER=0x400",
 	"_CONSOLE",
@@ -16,7 +15,8 @@
         "CBMC",
 	"'configASSERT(X)=__CPROVER_assert(X,\"Assertion Error\")'",
         "'configPRECONDITION(X)=__CPROVER_assume(X)'",
-	"'_static= '"
+	"'_static='",
+	"'_volatile='"
     ],
 
   "INC ": [

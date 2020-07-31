@@ -1640,11 +1640,11 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 				if( pxIPPacket->xIPHeader.ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
 				{
 				ProtocolPacket_t *pxProtPack;
-				uint16_t *pusChecksum;
+				const uint16_t *pusChecksum;
 
 					/* pxProtPack will point to the offset were the protocols begin. */
 					pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pxNetworkBuffer->pucEthernetBuffer[ uxHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
-					pusChecksum = ( uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
+					pusChecksum = ( const uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
 					if( *pusChecksum == ( uint16_t ) 0U )
 					{
 						#if( ipconfigHAS_PRINTF != 0 )

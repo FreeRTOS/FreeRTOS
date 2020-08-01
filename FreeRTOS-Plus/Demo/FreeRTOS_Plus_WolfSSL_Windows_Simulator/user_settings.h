@@ -40,6 +40,9 @@
   #define CURVE25519_SMALL
   #define HAVE_ED25519
 
+  #define WC_RSA_BLINDING
+  #define ECC_TIMING_RESISTANT
+  #define TFM_TIMING_RESISTANT
 
 
 /*-- Debugging options  ------------------------------------------------------

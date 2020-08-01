@@ -19,7 +19,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* mbed TLS threading functions implemented for FreeRTOS. */
+/**
+ * @file threading_alt.h
+ * @brief mbed TLS threading functions implemented for FreeRTOS.
+ */
+
 
 #ifndef MBEDTLS_THREADING_ALT_H_
 #define MBEDTLS_THREADING_ALT_H_
@@ -28,7 +32,13 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
-/* mbed TLS mutex type. */
+/**
+ * @brief mbed TLS mutex type.
+ *
+ * mbed TLS requires the mutex type to be defined specifically for the
+ * platform it is ported on. Defining the type with FreeRTOS semaphore
+ * handle and semaphore storage as members.
+ */
 typedef struct mbedtls_threading_mutex
 {
     SemaphoreHandle_t mutexHandle;

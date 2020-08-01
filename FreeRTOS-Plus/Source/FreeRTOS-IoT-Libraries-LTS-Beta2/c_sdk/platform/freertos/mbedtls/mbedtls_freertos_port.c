@@ -21,7 +21,7 @@
  */
 
 /**
- * @file mbedtls_platform.c
+ * @file mbedtls_freertos_port.c
  * @brief Implements mbed TLS platform functions for FreeRTOS.
  */
 
@@ -36,6 +36,14 @@
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Allocates memory for an array of members.
+ *
+ * @param[in] nmemb Number of members that need to be allocated.
+ * @param[in] size Size of each member.
+ *
+ * @return Pointer to the beginning of newly allocated memory.
+ */
 void * mbedtls_platform_calloc( size_t nmemb,
                                 size_t size )
 {
@@ -62,6 +70,11 @@ void * mbedtls_platform_calloc( size_t nmemb,
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Frees the space previously allocated by calloc.
+ *
+ * @param[in] ptr Pointer to the memory to be freed.
+ */
 void mbedtls_platform_free( void * ptr )
 {
     vPortFree( ptr );
@@ -69,30 +82,65 @@ void mbedtls_platform_free( void * ptr )
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Sends data over FreeRTOS+TCP sockets.
+ *
+ * @param[in] ctx The network context containing the socket handle.
+ * @param[in] buf Buffer containing the bytes to send.
+ * @param[in] len Number of bytes to send from the buffer.
+ *
+ * @return Number of bytes sent on success; else a negative value.
+ */
 int mbedtls_platform_send( void * ctx,
                            const unsigned char * buf,
                            size_t len )
 {
-    Socket_t socket = ctx;
+    Socket_t socket;
+
+    configASSERT( ctx != NULL );
+    configASSERT( buf != NULL );
+
+    socket = ( Socket_t ) ctx;
 
     return ( int ) FreeRTOS_send( socket, buf, len, 0 );
 }
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Receives data from FreeRTOS+TCP socket.
+ *
+ * @param[in] ctx The network context containing the socket handle.
+ * @param[out] buf Buffer to receive bytes into.
+ * @param[in] len Number of bytes to receive from the network.
+ *
+ * @return Number of bytes received if successful; Negative value on error.
+ */
 int mbedtls_platform_recv( void * ctx,
                            unsigned char * buf,
                            size_t len )
 {
-    Socket_t socket = ctx;
+    Socket_t socket;
+
+    configASSERT( ctx != NULL );
+    configASSERT( buf != NULL );
+
+    socket = ( Socket_t ) ctx;
 
     return ( int ) FreeRTOS_recv( socket, buf, len, 0 );
 }
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Creates a mutex.
+ *
+ * @param[in, out] pMutex mbedtls mutex handle.
+ */
 void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
 {
+    configASSERT( pMutex != NULL );
+
     /* Create a statically-allocated FreeRTOS mutex. This should never fail as
      * storage is provided. */
     pMutex->mutexHandle = xSemaphoreCreateMutexStatic( &( pMutex->mutexStorage ) );
@@ -101,18 +149,34 @@ void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex )
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Frees a mutex.
+ *
+ * @param[in] pMutex mbedtls mutex handle.
+ *
+ * @note This function is an empty stub as nothing needs to be done to free
+ * a statically allocated FreeRTOS mutex.
+ */
 void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
 {
-    /* Nothing needs to be done to free a statically-allocated FreeRTOS mutex.
-     */
+    /* Nothing needs to be done to free a statically-allocated FreeRTOS mutex. */
     ( void ) pMutex;
 }
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Function to lock a mutex.
+ *
+ * @param[in] pMutex mbedtls mutex handle.
+ *
+ * @return 0 is always returned as any other failure is asserted.
+ */
 int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
 {
     BaseType_t mutexStatus = 0;
+
+    configASSERT( pMutex != NULL );
 
     /* mutexStatus is not used if asserts are disabled. */
     ( void ) mutexStatus;
@@ -126,10 +190,18 @@ int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Function to unlock a mutex.
+ *
+ * @param[in] pMutex mbedtls mutex handle.
+ *
+ * @return 0 is always returned as any other failure is asserted.
+ */
 int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
 {
     BaseType_t mutexStatus = 0;
 
+    configASSERT( pMutex != NULL );
     /* mutexStatus is not used if asserts are disabled. */
     ( void ) mutexStatus;
 
@@ -142,6 +214,17 @@ int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Function to generate a random number.
+ *
+ * @param[in] data Callback context.
+ * @param[out] output The address of the buffer that receives the random number.
+ * @param[in] len Maximum size of the random number to be generated.
+ * @param[out] olen The size, in bytes, of the #output buffer.
+ *
+ * @return 0 if no critical failures occurred,
+ * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
+ */
 int mbedtls_platform_entropy_poll( void * data,
                                    unsigned char * output,
                                    size_t len,
@@ -149,6 +232,9 @@ int mbedtls_platform_entropy_poll( void * data,
 {
     int status = 0;
     NTSTATUS rngStatus = 0;
+
+    configASSERT( output != NULL );
+    configASSERT( olen != NULL );
 
     /* Context is not used by this function. */
     ( void ) data;
@@ -175,6 +261,20 @@ int mbedtls_platform_entropy_poll( void * data,
 
 /*-----------------------------------------------------------*/
 
+/**
+ * @brief Function to generate a random number based on a hardware poll.
+ *
+ * For this FreeRTOS Windows port, this function is redirected by calling
+ * #mbedtls_platform_entropy_poll.
+ *
+ * @param[in] data Callback context.
+ * @param[out] output The address of the buffer that receives the random number.
+ * @param[in] len Maximum size of the random number to be generated.
+ * @param[out] olen The size, in bytes, of the #output buffer.
+ *
+ * @return 0 if no critical failures occurred,
+ * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
+ */
 int mbedtls_hardware_poll( void * data,
                            unsigned char * output,
                            size_t len,

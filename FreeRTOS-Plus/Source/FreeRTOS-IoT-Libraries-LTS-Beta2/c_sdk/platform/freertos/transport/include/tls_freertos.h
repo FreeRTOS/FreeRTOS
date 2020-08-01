@@ -19,8 +19,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef MBEDTLS_FREERTOS_H_
-#define MBEDTLS_FREERTOS_H_
+/**
+ * @file tls_freertos.h
+ * @brief TLS transport interface header.
+ */
+
+#ifndef TLS_FREERTOS_H_
+#define TLS_FREERTOS_H_
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -37,7 +42,7 @@
 
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "FreeRTOSTransport"
+    #define LIBRARY_LOG_NAME     "TlsTransport"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
     #define LIBRARY_LOG_LEVEL    LOG_DEBUG
@@ -47,7 +52,7 @@
 
 /************ End of logging configuration ****************/
 
-/* FreeRTOS+TCP include. */
+/* FreeRTOS+TLS include. */
 #include "FreeRTOS_Sockets.h"
 
 /* Transport interface include. */
@@ -75,19 +80,16 @@ typedef struct SSLContext
 
 /**
  * @brief Definition of the network context for the transport interface
- * implementation that uses mbedTLS and FreeRTOS+TCP sockets.
- *
- * @note For this transport implementation, the socket handle and
- * SSL context is used.
+ * implementation that uses mbedTLS and FreeRTOS+TLS sockets.
  */
 struct NetworkContext
 {
-    Socket_t tcpSocket;
+    Socket_t TLSSocket;
     SSLContext_t sslContext;
 };
 
 /**
- * @brief Contains the credentials necessary for mbedtls connection setup.
+ * @brief Contains the credentials necessary for tls connection setup.
  */
 typedef struct NetworkCredentials
 {
@@ -107,34 +109,34 @@ typedef struct NetworkCredentials
      */
     BaseType_t disableSni;
 
-    const char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;        /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
-    const char * pClientCert; /**< @brief String representing the client certificate. */
-    size_t clientCertSize;    /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
-    const char * pPrivateKey; /**< @brief String representing the client certificate's private key. */
-    size_t privateKeySize;    /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
-    const char * pUserName;   /**< @brief String representing the username for MQTT. */
-    size_t userNameSize;      /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
-    const char * pPassword;   /**< @brief String representing the password for MQTT. */
-    size_t passwordSize;      /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
+    const unsigned char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;                 /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    const unsigned char * pClientCert; /**< @brief String representing the client certificate. */
+    size_t clientCertSize;             /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
+    const unsigned char * pPrivateKey; /**< @brief String representing the client certificate's private key. */
+    size_t privateKeySize;             /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
+    const unsigned char * pUserName;   /**< @brief String representing the username for MQTT. */
+    size_t userNameSize;               /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
+    const unsigned char * pPassword;   /**< @brief String representing the password for MQTT. */
+    size_t passwordSize;               /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
 } NetworkCredentials_t;
 
 /**
- * @brief mbedTLS Connect / Disconnect return status.
+ * @brief TLS Connect / Disconnect return status.
  */
-typedef enum MbedtlsStatus
+typedef enum TlsTransportStatus
 {
-    MBEDTLS_SUCCESS = 0,         /**< Function successfully completed. */
-    MBEDTLS_INVALID_PARAMETER,   /**< At least one parameter was invalid. */
-    MBEDTLS_INSUFFICIENT_MEMORY, /**< Insufficient memory required to establish connection. */
-    MBEDTLS_INVALID_CREDENTIALS, /**< Provided credentials were invalid. */
-    MBEDTLS_HANDSHAKE_FAILED,    /**< Performing TLS handshake with server failed. */
-    MBEDTLS_API_ERROR,           /**< A call to a system API resulted in an internal error. */
-    MBEDTLS_CONNECT_FAILURE      /**< Initial connection to the server failed. */
-} MbedtlsStatus_t;
+    TLS_TRANSPORT_SUCCESS = 0,         /**< Function successfully completed. */
+    TLS_TRANSPORT_INVALID_PARAMETER,   /**< At least one parameter was invalid. */
+    TLS_TRANSPORT_INSUFFICIENT_MEMORY, /**< Insufficient memory required to establish connection. */
+    TLS_TRANSPORT_INVALID_CREDENTIALS, /**< Provided credentials were invalid. */
+    TLS_TRANSPORT_HANDSHAKE_FAILED,    /**< Performing TLS handshake with server failed. */
+    TLS_TRANSPORT_API_ERROR,           /**< A call to a system API resulted in an internal error. */
+    TLS_TRANSPORT_CONNECT_FAILURE      /**< Initial connection to the server failed. */
+} TlsTransportStatus_t;
 
 /**
- * @brief Create a TCP connection with FreeRTOS sockets.
+ * @brief Create a TLS connection with FreeRTOS sockets.
  *
  * @param[out] pNetworkContext Pointer to a network context to contain the
  * initialized socket handle.
@@ -144,50 +146,56 @@ typedef enum MbedtlsStatus
  * @param[in] receiveTimeoutMs Receive socket timeout.
  * @param[in] sendTimeoutMs Send socket timeout.
  *
- * @return #MBEDTLS_SUCCESS, #MBEDTLS_INSUFFICIENT_MEMORY, #MBEDTLS_INVALID_CREDENTIALS,
- * #MBEDTLS_HANDSHAKE_FAILED, #MBEDTLS_API_ERROR, or #MBEDTLS_CONNECT_FAILURE.
+ * @return #TLS_TRANSPORT_SUCCESS, #TLS_TRANSPORT_INSUFFICIENT_MEMORY, #TLS_TRANSPORT_INVALID_CREDENTIALS,
+ * #TLS_TRANSPORT_HANDSHAKE_FAILED, #TLS_TRANSPORT_API_ERROR, or #TLS_TRANSPORT_CONNECT_FAILURE.
  */
-MbedtlsStatus_t Mbedtls_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
-                                          const char * pHostName,
-                                          uint16_t port,
-                                          const NetworkCredentials_t * pNetworkCredentials,
-                                          uint32_t receiveTimeoutMs,
-                                          uint32_t sendTimeoutMs );
+TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
+                                           const char * pHostName,
+                                           uint16_t port,
+                                           const NetworkCredentials_t * pNetworkCredentials,
+                                           uint32_t receiveTimeoutMs,
+                                           uint32_t sendTimeoutMs );
 
 /**
- * @brief Gracefully disconnect an established TCP connection.
+ * @brief Gracefully disconnect an established TLS connection.
  *
- * @param[in] pNetworkContext Network context containing the TCP socket handle.
+ * @param[in] pNetworkContext Network context.
  */
-void Mbedtls_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
+void TLS_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
 
 /**
- * @brief Receives data from an established TCP connection.
+ * @brief Receives data from an established TLS connection.
  *
- * @param[in] pNetworkContext The network context containing the TCP socket
- * handle.
+ * This is the TLS version of the transport interface's
+ * #TransportRecv_t function.
+ *
+ * @param[in] pNetworkContext The Network context.
  * @param[out] pBuffer Buffer to receive bytes into.
  * @param[in] bytesToRecv Number of bytes to receive from the network.
  *
- * @return Number of bytes received if successful; 0 if the socket times out;
- * Negative value on error.
+ * @return Number of bytes (> 0) received if successful;
+ * 0 if the socket times out without reading any bytes;
+ * negative value on error.
  */
-int32_t Mbedtls_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
-                               void * pBuffer,
-                               size_t bytesToRecv );
+int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
+                           void * pBuffer,
+                           size_t bytesToRecv );
 
 /**
- * @brief Sends data over an established TCP connection.
+ * @brief Sends data over an established TLS connection.
  *
- * @param[in] pNetworkContext The network context containing the TCP socket
- * handle.
+ * This is the TLS version of the transport interface's
+ * #TransportSend_t function.
+ *
+ * @param[in] pNetworkContext The network context.
  * @param[in] pBuffer Buffer containing the bytes to send.
  * @param[in] bytesToSend Number of bytes to send from the buffer.
  *
- * @return Number of bytes sent on success; else a negative value.
+ * @return Number of bytes sent on success;
+ * else a negative value to represent error.
  */
-int32_t Mbedtls_FreeRTOS_send( NetworkContext_t * pNetworkContext,
-                               const void * pBuffer,
-                               size_t bytesToSend );
+int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
+                           const void * pBuffer,
+                           size_t bytesToSend );
 
-#endif /* ifndef MBEDTLS_FREERTOS_H_ */
+#endif /* ifndef TLS_FREERTOS_H_ */

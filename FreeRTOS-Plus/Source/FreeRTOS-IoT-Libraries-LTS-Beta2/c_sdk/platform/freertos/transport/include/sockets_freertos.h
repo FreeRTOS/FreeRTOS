@@ -19,8 +19,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * @file sockets_freertos.h
+ * @brief FreeRTOS Sockets connect and disconnect function wrapper.
+ */
+
 #ifndef SOCKETS_FREERTOS_H_
 #define SOCKETS_FREERTOS_H_
+
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_IP.h"
+#include "FreeRTOS_Sockets.h"
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -53,8 +62,8 @@
  * @param[out] pTcpSocket The output parameter to return the created socket descriptor.
  * @param[in] pHostName Server hostname to connect to.
  * @param[in] pServerInfo Server port to connect to.
- * @param[in] receiveTimeoutMs Timeout for transport receive.
- * @param[in] sendTimeoutMs Timeout for transport send.
+ * @param[in] receiveTimeoutMs Timeout (in milliseconds) for transport receive.
+ * @param[in] sendTimeoutMs Timeout (in milliseconds) for transport send.
  *
  * @note A timeout of 0 means infinite timeout.
  *

@@ -19,27 +19,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * @file sockets_freertos.c
+ * @brief FreeRTOS Sockets connect and disconnect wrapper implementation.
+ */
+
 /* Standard includes. */
 #include <string.h>
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
-
 #include "sockets_freertos.h"
 
 /*-----------------------------------------------------------*/
 
 /* Maximum number of times to call FreeRTOS_recv when initiating a graceful shutdown. */
-#ifndef TRANSPORT_FREERTOS_SHUTDOWN_LOOPS
-    #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
+#ifndef SOCKETS_FREERTOS_SHUTDOWN_LOOPS
+    #define SOCKETS_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
 #endif
 
 /* A negative error code indicating a network failure. */
-#define TRANSPORT_FREERTOS_NETWORK_ERROR    ( -1 )
+#define SOCKETS_FREERTOS_NETWORK_ERROR    ( -1 )
 
 /*-----------------------------------------------------------*/
 
@@ -60,7 +61,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     if( tcpSocket == FREERTOS_INVALID_SOCKET )
     {
         LogError( ( "Failed to create new socket." ) );
-        socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
+        socketStatus = SOCKETS_FREERTOS_NETWORK_ERROR;
     }
     else
     {
@@ -75,8 +76,9 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         /* Check for errors from DNS lookup. */
         if( serverAddress.sin_addr == 0 )
         {
-            LogError( ( "Failed to resolve %s.", pHostName ) );
-            socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
+            LogError( ( "Failed to connect to server: DNS resolution failed: Hostname=%s.",
+                        pHostName ) );
+            socketStatus = SOCKETS_FREERTOS_NETWORK_ERROR;
         }
     }
 
@@ -88,7 +90,11 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
 
         if( socketStatus != 0 )
         {
-            LogError( ( "Failed to establish TCP Connection: ReturnCode=%d.", socketStatus ) );
+            LogError( ( "Failed to connect to server: FreeRTOS_Connect failed: ReturnCode=%d,"
+                        " Hostname=%s, Port=%u.",
+                        socketStatus,
+                        pHostName,
+                        port ) );
         }
     }
 
@@ -125,7 +131,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     {
         /* Set the socket. */
         *pTcpSocket = tcpSocket;
-        LogDebug( ( "TCP Connection to %s established.", pHostName ) );
+        LogInfo( ( "Established TCP connection with %s.", pHostName ) );
     }
 
     return socketStatus;
@@ -149,7 +155,7 @@ void Sockets_Disconnect( Socket_t tcpSocket )
         {
             /* We don't need to delay since FreeRTOS_recv should already have a timeout. */
 
-            if( ++waitForShutdownLoopCount >= TRANSPORT_FREERTOS_SHUTDOWN_LOOPS )
+            if( ++waitForShutdownLoopCount >= SOCKETS_FREERTOS_SHUTDOWN_LOOPS )
             {
                 break;
             }

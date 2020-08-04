@@ -423,7 +423,7 @@ static TlsTransportStatus_t initMbedtls( void )
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
-        LogDebug( ( "Successfully Initialized mbedTLS." ) );
+        LogDebug( ( "Successfully initialized mbedTLS." ) );
     }
 
     return returnStatus;

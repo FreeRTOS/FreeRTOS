@@ -170,7 +170,7 @@ void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
  *
  * @param[in] pMutex mbedtls mutex handle.
  *
- * @return 0 is always returned as any other failure is asserted.
+ * @return 0 (success) is always returned as any other failure is asserted.
  */
 int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
 {

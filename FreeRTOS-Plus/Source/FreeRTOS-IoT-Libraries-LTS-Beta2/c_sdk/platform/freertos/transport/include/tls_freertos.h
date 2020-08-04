@@ -84,7 +84,7 @@ typedef struct SSLContext
  */
 struct NetworkContext
 {
-    Socket_t TLSSocket;
+    Socket_t tcpSocket;
     SSLContext_t sslContext;
 };
 
@@ -161,7 +161,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
  *
  * @param[in] pNetworkContext Network context.
  */
-void TLS_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
+void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext );
 
 /**
  * @brief Receives data from an established TLS connection.

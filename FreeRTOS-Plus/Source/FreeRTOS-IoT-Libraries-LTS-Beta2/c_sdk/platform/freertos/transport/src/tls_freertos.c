@@ -277,7 +277,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Include an application protocol list in the TLS ClientHello
          * message. */
         mbedtlsError = mbedtls_ssl_conf_alpn_protocols( &( pNetworkContext->sslContext.config ),
-                                                        &( pNetworkCredentials->pAlpnProtos ) );
+                                                        ( const char ** ) &( pNetworkCredentials->pAlpnProtos ) );
 
         if( mbedtlsError != 0 )
         {
@@ -508,7 +508,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
 /*-----------------------------------------------------------*/
 
-void TLS_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
+void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
     BaseType_t socketStatus = 0;
 

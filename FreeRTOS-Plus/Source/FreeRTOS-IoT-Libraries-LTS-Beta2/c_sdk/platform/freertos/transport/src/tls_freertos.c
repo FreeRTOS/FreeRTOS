@@ -560,7 +560,7 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
     }
     else if( socketStatus < 0 )
     {
-        LogError( ( "Error %d while receiving data.", socketStatus ) );
+        LogError( ( "Failed to read data: errorStatus=%d", socketStatus) );
     }
     else
     {

@@ -71,6 +71,9 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src">
       <UniqueIdentifier>{6a35782c-bc09-42d5-a850-98bcb668a4dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeRTOS+\mbedtls_utils">
+      <UniqueIdentifier>{37f68b75-28a7-4456-a554-422056841a98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -381,14 +384,20 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\mbedtls\mbedtls_platform_freertos.c">
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\mbedtls\mbedtls_freertos_port.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\mbedtls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\mbedtls_freertos.c">
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\tls_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\sockets_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls_utils\mbedtls_error.c">
+      <Filter>FreeRTOS+\mbedtls_utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\mbedtls_utils\mbedtls_utils.c">
+      <Filter>FreeRTOS+\mbedtls_utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -718,11 +727,14 @@
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\mbedtls\threading_alt.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\mbedtls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include\mbedtls_freertos.h">
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include\tls_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include\sockets_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\mbedtls_utils\mbedtls_error.h">
+      <Filter>FreeRTOS+\mbedtls_utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

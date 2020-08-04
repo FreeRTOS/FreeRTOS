@@ -58,7 +58,7 @@
 #include "mqtt.h"
 
 /* Transport interface include. */
-#include "mbedtls_freertos.h"
+#include "tls_freertos.h"
 
 /*-----------------------------------------------------------*/
 
@@ -400,7 +400,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         MQTT_Disconnect( &xMQTTContext );
 
         /* Close the network connection.  */
-        Mbedtls_FreeRTOS_Disconnect( &xNetworkContext );
+        TLS_FreeRTOS_Disconnect( &xNetworkContext );
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */
@@ -418,21 +418,21 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
     BaseType_t xNetworkStatus;
 
     /* Set the credentials for establishing a TLS connection. */
-    pxNetworkCredentials->pRootCa = democonfigAWS_ROOT_CA_PEM;
+    pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigAWS_ROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigAWS_ROOT_CA_PEM );
-    pxNetworkCredentials->pClientCert = democonfigCLIENT_CERTIFICATE_PEM;
+    pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
     pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-    pxNetworkCredentials->pPrivateKey = democonfigCLIENT_PRIVATE_KEY_PEM;
+    pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
     pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
 
     /* Attempt to create a mutually authenticated TLS connection. */
-    xNetworkStatus = Mbedtls_FreeRTOS_Connect( pxNetworkContext,
-                                               democonfigAWS_IOT_ENDPOINT,
-                                               democonfigMQTT_BROKER_PORT,
-                                               pxNetworkCredentials,
-                                               TRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                               TRANSPORT_SEND_RECV_TIMEOUT_MS );
-    configASSERT( xNetworkStatus == MBEDTLS_SUCCESS );
+    xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
+                                           democonfigAWS_IOT_ENDPOINT,
+                                           democonfigMQTT_BROKER_PORT,
+                                           pxNetworkCredentials,
+                                           TRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                           TRANSPORT_SEND_RECV_TIMEOUT_MS );
+    configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
     LogInfo( ( "A mutually authenticated TLS connection established with %s.\r\n",
                democonfigAWS_IOT_ENDPOINT ) );
 }
@@ -453,8 +453,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Fill in Transport Interface send and receive function pointers. */
     xTransport.pNetworkContext = pxNetworkContext;
-    xTransport.send = Mbedtls_FreeRTOS_send;
-    xTransport.recv = Mbedtls_FreeRTOS_recv;
+    xTransport.send = TLS_FreeRTOS_send;
+    xTransport.recv = TLS_FreeRTOS_recv;
 
     /* Application callbacks for receiving incoming published and incoming acks
      * from MQTT library. */

@@ -599,7 +599,7 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
     }
     else if( tlsStatus < 0 )
     {
-        LogError( ( "Error %d while sending data.", tlsStatus ) );
+        LogError( ( "Failed to send data: ErrorStatus=%d", tlsStatus ) );
     }
     else
     {

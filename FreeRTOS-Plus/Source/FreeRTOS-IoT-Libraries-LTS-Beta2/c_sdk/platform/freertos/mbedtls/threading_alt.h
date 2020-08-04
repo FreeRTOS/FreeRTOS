@@ -35,8 +35,8 @@
 /**
  * @brief mbed TLS mutex type.
  *
- * mbed TLS requires the mutex type to be defined specifically for the
- * platform it is ported on. Defining the type with FreeRTOS semaphore
+ * mbed TLS requires platform specific definition for the mutext type. Defining the type for 
+ * FreeRTOS with FreeRTOS semaphore
  * handle and semaphore storage as members.
  */
 typedef struct mbedtls_threading_mutex

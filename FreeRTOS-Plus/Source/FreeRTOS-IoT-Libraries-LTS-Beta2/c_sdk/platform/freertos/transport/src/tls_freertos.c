@@ -458,7 +458,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
     }
 
-    /* Create a FreeRTOS+TCP socket. */
+    /* Establish a TCP connection with the server. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         socketStatus = Sockets_Connect( &( pNetworkContext->tcpSocket ),

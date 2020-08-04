@@ -39,7 +39,7 @@
 #include "tls_freertos.h"
 
 /* FreeRTOS Socket wrapper include. */
-#include "sockets_freertos.h"
+#include "freertos_sockets_wrapper.h"
 
 /* mbedTLS util includes. */
 #include "mbedtls_error.h"

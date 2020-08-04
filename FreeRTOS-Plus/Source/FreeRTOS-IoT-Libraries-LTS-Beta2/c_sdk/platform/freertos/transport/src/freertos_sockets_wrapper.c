@@ -20,7 +20,7 @@
  */
 
 /**
- * @file sockets_freertos.c
+ * @file freertos_sockets_wrapper.c
  * @brief FreeRTOS Sockets connect and disconnect wrapper implementation.
  */
 
@@ -30,17 +30,17 @@
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 
-#include "sockets_freertos.h"
+#include "freertos_sockets_wrapper.h"
 
 /*-----------------------------------------------------------*/
 
 /* Maximum number of times to call FreeRTOS_recv when initiating a graceful shutdown. */
-#ifndef SOCKETS_FREERTOS_SHUTDOWN_LOOPS
-    #define SOCKETS_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
+#ifndef FREERTOS_SOCKETS_WRAPPER_SHUTDOWN_LOOPS
+    #define FREERTOS_SOCKETS_WRAPPER_SHUTDOWN_LOOPS    ( 3 )
 #endif
 
 /* A negative error code indicating a network failure. */
-#define SOCKETS_FREERTOS_NETWORK_ERROR    ( -1 )
+#define FREERTOS_SOCKETS_WRAPPER_NETWORK_ERROR    ( -1 )
 
 /*-----------------------------------------------------------*/
 
@@ -61,7 +61,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     if( tcpSocket == FREERTOS_INVALID_SOCKET )
     {
         LogError( ( "Failed to create new socket." ) );
-        socketStatus = SOCKETS_FREERTOS_NETWORK_ERROR;
+        socketStatus = FREERTOS_SOCKETS_WRAPPER_NETWORK_ERROR;
     }
     else
     {
@@ -78,7 +78,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         {
             LogError( ( "Failed to connect to server: DNS resolution failed: Hostname=%s.",
                         pHostName ) );
-            socketStatus = SOCKETS_FREERTOS_NETWORK_ERROR;
+            socketStatus = FREERTOS_SOCKETS_WRAPPER_NETWORK_ERROR;
         }
     }
 
@@ -155,7 +155,7 @@ void Sockets_Disconnect( Socket_t tcpSocket )
         {
             /* We don't need to delay since FreeRTOS_recv should already have a timeout. */
 
-            if( ++waitForShutdownLoopCount >= SOCKETS_FREERTOS_SHUTDOWN_LOOPS )
+            if( ++waitForShutdownLoopCount >= FREERTOS_SOCKETS_WRAPPER_SHUTDOWN_LOOPS )
             {
                 break;
             }

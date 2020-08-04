@@ -52,7 +52,7 @@
 
 /************ End of logging configuration ****************/
 
-/* FreeRTOS+TLS include. */
+/* FreeRTOS+TCP include. */
 #include "FreeRTOS_Sockets.h"
 
 /* Transport interface include. */

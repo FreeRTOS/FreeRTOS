@@ -20,12 +20,12 @@
  */
 
 /**
- * @file sockets_freertos.h
+ * @file freertos_sockets_wrapper.h
  * @brief FreeRTOS Sockets connect and disconnect function wrapper.
  */
 
-#ifndef SOCKETS_FREERTOS_H_
-#define SOCKETS_FREERTOS_H_
+#ifndef FREERTOS_SOCKETS_WRAPPER_H_
+#define FREERTOS_SOCKETS_WRAPPER_H_
 
 /* FreeRTOS+TCP includes. */
 #include "FreeRTOS_IP.h"
@@ -82,4 +82,4 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
  */
 void Sockets_Disconnect( Socket_t tcpSocket );
 
-#endif /* ifndef SOCKETS_FREERTOS_H_ */
+#endif /* ifndef FREERTOS_SOCKETS_WRAPPER_H_ */

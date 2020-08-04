@@ -131,7 +131,7 @@ typedef enum TlsTransportStatus
     TLS_TRANSPORT_INSUFFICIENT_MEMORY, /**< Insufficient memory required to establish connection. */
     TLS_TRANSPORT_INVALID_CREDENTIALS, /**< Provided credentials were invalid. */
     TLS_TRANSPORT_HANDSHAKE_FAILED,    /**< Performing TLS handshake with server failed. */
-    TLS_TRANSPORT_API_ERROR,           /**< A call to a system API resulted in an internal error. */
+    TLS_TRANSPORT_INTERNAL_ERROR,      /**< A call to a system API resulted in an internal error. */
     TLS_TRANSPORT_CONNECT_FAILURE      /**< Initial connection to the server failed. */
 } TlsTransportStatus_t;
 
@@ -147,7 +147,7 @@ typedef enum TlsTransportStatus
  * @param[in] sendTimeoutMs Send socket timeout.
  *
  * @return #TLS_TRANSPORT_SUCCESS, #TLS_TRANSPORT_INSUFFICIENT_MEMORY, #TLS_TRANSPORT_INVALID_CREDENTIALS,
- * #TLS_TRANSPORT_HANDSHAKE_FAILED, #TLS_TRANSPORT_API_ERROR, or #TLS_TRANSPORT_CONNECT_FAILURE.
+ * #TLS_TRANSPORT_HANDSHAKE_FAILED, #TLS_TRANSPORT_INTERNAL_ERROR, or #TLS_TRANSPORT_CONNECT_FAILURE.
  */
 TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
                                            const char * pHostName,

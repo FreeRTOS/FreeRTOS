@@ -110,7 +110,7 @@ static void sslContextFree( SSLContext_t * pSslContext );
  * @param[in] pNetworkCredentials TLS setup parameters.
  *
  * @return #TLS_TRANSPORT_SUCCESS, #TLS_TRANSPORT_INSUFFICIENT_MEMORY, #TLS_TRANSPORT_INVALID_CREDENTIALS,
- * #TLS_TRANSPORT_HANDSHAKE_FAILED, or #TLS_TRANSPORT_API_ERROR.
+ * #TLS_TRANSPORT_HANDSHAKE_FAILED, or #TLS_TRANSPORT_INTERNAL_ERROR.
  */
 static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                       const char * pHostName,
@@ -119,7 +119,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 /**
  * @brief Initialize mbedTLS.
  *
- * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_API_ERROR.
+ * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_INTERNAL_ERROR.
  */
 static TlsTransportStatus_t initMbedtls( void );
 
@@ -172,8 +172,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
     if( mbedtlsError != 0 )
     {
-        LogError( ( "Failed to set default SSL configuration, with mbedTLS high level error %s"
-                    " and with low level error %s.",
+        LogError( ( "Failed to set default SSL configuration: mbedTLSError= %s : %s.",
                     mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                     mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
@@ -211,8 +210,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
         if( mbedtlsError != 0 )
         {
-            LogError( ( "Failed to parse server root CA certificate, with mbedTLS high level error %s"
-                        " and with low level error %s.",
+            LogError( ( "Failed to parse server root CA certificate: mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
@@ -239,8 +237,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
             if( mbedtlsError != 0 )
             {
-                LogError( ( "Failed to parse client certificate, with mbedTLS high level error %s"
-                            " and with low level error %s.",
+                LogError( ( "Failed to parse client certificate: mbedTLSError= %s : %s.",
                             mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                             mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
@@ -255,8 +252,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
                 if( mbedtlsError != 0 )
                 {
-                    LogError( ( "Failed to parse the client private key, with mbedTLS high level error %s"
-                                " and with low level error %s.",
+                    LogError( ( "Failed to parse the client private key: mbedTLSError= %s : %s.",
                                 mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                                 mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
@@ -281,12 +277,11 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
         if( mbedtlsError != 0 )
         {
-            LogError( ( "Failed to configure ALPN protocol in mbed TLS, with mbedTLS high level error %s"
-                        " and with low level error %s.",
+            LogError( ( "Failed to configure ALPN protocol in mbed TLS: mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
-            returnStatus = TLS_TRANSPORT_API_ERROR;
+            returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
         }
     }
 
@@ -298,12 +293,11 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
         if( mbedtlsError != 0 )
         {
-            LogError( ( "Failed to set up mbed TLS SSL context, with mbedTLS high level error %s"
-                        " and with low level error %s.",
+            LogError( ( "Failed to set up mbed TLS SSL context: mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
-            returnStatus = TLS_TRANSPORT_API_ERROR;
+            returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
         }
         else
         {
@@ -326,12 +320,11 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
             if( mbedtlsError != 0 )
             {
-                LogError( ( "Failed to set server name, with mbedTLS high level error %s"
-                            " and with low level error %s.",
+                LogError( ( "Failed to set server name: mbedTLSError= %s : %s.",
                             mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                             mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
-                returnStatus = TLS_TRANSPORT_API_ERROR;
+                returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
             }
         }
     }
@@ -347,8 +340,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
         if( mbedtlsError != 0 )
         {
-            LogError( ( "Failed to perform TLS handshake, with mbedTLS high level error %s"
-                        " and with low level error %s.",
+            LogError( ( "Failed to perform TLS handshake: mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
 
@@ -395,11 +387,10 @@ static TlsTransportStatus_t initMbedtls( void )
 
     if( mbedtlsError != 0 )
     {
-        LogError( ( "Failed to add entropy source, with mbedTLS high level error %s"
-                    " and with low level error %s.",
+        LogError( ( "Failed to add entropy source: mbedTLSError= %s : %s.",
                     mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                     mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
-        returnStatus = TLS_TRANSPORT_API_ERROR;
+        returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
     }
 
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
@@ -413,11 +404,10 @@ static TlsTransportStatus_t initMbedtls( void )
 
         if( mbedtlsError != 0 )
         {
-            LogError( ( "Failed to seed PRNG, with mbedTLS high level error %s"
-                        " and with low level error %s.",
+            LogError( ( "Failed to seed PRNG: mbedTLSError= %s : %s.",
                         mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
                         mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
-            returnStatus = TLS_TRANSPORT_API_ERROR;
+            returnStatus = TLS_TRANSPORT_INTERNAL_ERROR;
         }
     }
 
@@ -510,25 +500,35 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
 
 void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 {
-    BaseType_t socketStatus = 0;
+    BaseType_t tlsStatus = 0;
 
-    socketStatus = ( BaseType_t ) mbedtls_ssl_close_notify( &( pNetworkContext->sslContext.context ) );
+    /* Attempting to terminate TLS connection. */
+    tlsStatus = ( BaseType_t ) mbedtls_ssl_close_notify( &( pNetworkContext->sslContext.context ) );
 
     /* Ignore the WANT_READ and WANT_WRITE return values. */
-    if( ( socketStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_READ ) &&
-        ( socketStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_WRITE ) )
+    if( ( tlsStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_READ ) &&
+        ( tlsStatus != ( BaseType_t ) MBEDTLS_ERR_SSL_WANT_WRITE ) )
     {
-        if( socketStatus == 0 )
+        if( tlsStatus == 0 )
         {
             LogInfo( ( "(Network connection %p) TLS close-notify sent.",
                        pNetworkContext ) );
         }
         else
         {
-            LogError( ( "(Network connection %p) Failed to send TLS close-notify, error %d.",
+            LogError( ( "(Network connection %p) Failed to send TLS close-notify: mbedTLSError= %s : %s.",
                         pNetworkContext,
-                        socketStatus ) );
+                        mbedtlsHighLevelCodeOrDefault( tlsStatus ),
+                        mbedtlsLowLevelCodeOrDefault( tlsStatus ) ) );
         }
+    }
+    else
+    {
+        /* WANT_READ and WANT_WRITE can be ignored. Logging for debugging purposes. */
+        LogInfo( ( "(Network connection %p) TLS close-notify sent; ",
+                   "received %s as the TLS status can be ignored for close-notify."
+                   ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ? "WANT_READ" : "WANT_WRITE",
+                   pNetworkContext ) );
     }
 
     /* Call socket shutdown function to close connection. */
@@ -536,6 +536,13 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 
     /* Free mbed TLS contexts. */
     sslContextFree( &( pNetworkContext->sslContext ) );
+
+    /* Free the contexts for random number generation. */
+    mbedtls_ctr_drbg_free( &ctrDrgbContext );
+    mbedtls_entropy_free( &entropyContext );
+
+    /* Clear the mutex functions for mbed TLS thread safety. */
+    mbedtls_threading_free_alt();
 }
 
 /*-----------------------------------------------------------*/
@@ -544,30 +551,30 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
                            void * pBuffer,
                            size_t bytesToRecv )
 {
-    int32_t socketStatus = 0;
+    int32_t tlsStatus = 0;
 
-    socketStatus = ( int32_t ) mbedtls_ssl_read( &( pNetworkContext->sslContext.context ),
-                                                 pBuffer,
-                                                 bytesToRecv );
+    tlsStatus = ( int32_t ) mbedtls_ssl_read( &( pNetworkContext->sslContext.context ),
+                                              pBuffer,
+                                              bytesToRecv );
 
-    if( ( socketStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
-        ( socketStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-        ( socketStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+    if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
+        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
+        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
     {
         /* Mark these set of errors as a timeout for the libraries to retry
          * the read. */
-        socketStatus = 0;
+        tlsStatus = 0;
     }
-    else if( socketStatus < 0 )
+    else if( tlsStatus < 0 )
     {
-        LogError( ( "Failed to read data: errorStatus=%d", socketStatus) );
+        LogError( ( "Failed to read data: errorStatus=%d", tlsStatus ) );
     }
     else
     {
         /* Empty else marker. */
     }
 
-    return socketStatus;
+    return tlsStatus;
 }
 
 /*-----------------------------------------------------------*/
@@ -576,29 +583,29 @@ int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
                            const void * pBuffer,
                            size_t bytesToSend )
 {
-    int32_t socketStatus = 0;
+    int32_t tlsStatus = 0;
 
-    socketStatus = ( int32_t ) mbedtls_ssl_write( &( pNetworkContext->sslContext.context ),
-                                                  pBuffer,
-                                                  bytesToSend );
+    tlsStatus = ( int32_t ) mbedtls_ssl_write( &( pNetworkContext->sslContext.context ),
+                                               pBuffer,
+                                               bytesToSend );
 
-    if( ( socketStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
-        ( socketStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
-        ( socketStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
+    if( ( tlsStatus == MBEDTLS_ERR_SSL_TIMEOUT ) ||
+        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_READ ) ||
+        ( tlsStatus == MBEDTLS_ERR_SSL_WANT_WRITE ) )
     {
         /* Mark these set of errors as a timeout for the libraries to retry
          * the send. */
-        socketStatus = 0;
+        tlsStatus = 0;
     }
-    else if( socketStatus < 0 )
+    else if( tlsStatus < 0 )
     {
-        LogError( ( "Error %d while sending data.", socketStatus ) );
+        LogError( ( "Error %d while sending data.", tlsStatus ) );
     }
     else
     {
         /* Empty else marker. */
     }
 
-    return socketStatus;
+    return tlsStatus;
 }
 /*-----------------------------------------------------------*/

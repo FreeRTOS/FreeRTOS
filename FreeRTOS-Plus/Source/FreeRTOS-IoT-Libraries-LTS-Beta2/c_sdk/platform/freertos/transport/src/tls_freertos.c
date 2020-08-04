@@ -445,7 +445,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         ( pHostName == NULL ) ||
         ( pNetworkCredentials == NULL ) )
     {
-        LogError( ( "Arguments cannot be NULL. pNetworkContext=%p, "
+        LogError( ( "Invalid input parameter(s): Arguments cannot be NULL. pNetworkContext=%p, "
                     "pHostName=%p, pNetworkCredentials=%p.",
                     pNetworkContext,
                     pHostName,

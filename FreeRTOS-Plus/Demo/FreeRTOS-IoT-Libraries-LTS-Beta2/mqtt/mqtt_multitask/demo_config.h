@@ -103,8 +103,9 @@
  * democonfigMQTT_BROKER_ENDPOINT to "test.mosquitto.org". However, this is not
  * recommended due the possible downtimes of the broker as indicated by the
  * documentation in https://test.mosquitto.org/.
+ *
+ * #define democonfigMQTT_BROKER_ENDPOINT				"localhost"
  */
-#define democonfigMQTT_BROKER_ENDPOINT				"10.0.0.111"
 
 
 /**

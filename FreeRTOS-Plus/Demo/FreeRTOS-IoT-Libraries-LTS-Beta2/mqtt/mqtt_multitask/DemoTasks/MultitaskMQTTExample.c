@@ -55,7 +55,7 @@
 #include "plaintext_freertos.h"
 
 
-#define BROKER_ENDPOINT      "localhost"
+#define BROKER_ENDPOINT      "10.0.0.127"
 
 #define BROKER_PORT          ( 1883 )
 
@@ -213,7 +213,6 @@ static int establishMqttSession( MQTTContext_t * pMqttContext,
     MQTTConnectInfo_t connectInfo;
     bool sessionPresent;
     MQTTFixedBuffer_t networkBuffer;
-    MQTTApplicationCallbacks_t callbacks;
     TransportInterface_t transport;
 
     assert( pMqttContext != NULL );
@@ -321,7 +320,6 @@ typedef enum operationType {
 
 typedef struct CommandContext {
     /* Synchronization for boolean, not return status. */
-    SemaphoreHandle_t semaphore;
     TaskHandle_t taskToNotify;
     uint32_t notificationBit;
     bool complete;
@@ -505,7 +503,7 @@ static Command_t * createCommand( CommandType_t commandType,
 
 static void addCommandToQueue( Command_t * pCommand )
 {
-    xQueueSend( pCommandQueue, *pCommand, TICKS_TO_WAIT );
+    xQueueSend( pCommandQueue, pCommand, TICKS_TO_WAIT );
 }
 
 static void destroyPublishInfo( void * pPublish )
@@ -974,7 +972,7 @@ void * thread1( void * args )
         publishInfo.topicNameLength = strlen( topicBuf );
         initializeCommandContext( &context );
         context.pResponseQueue = pResponseQueue1;
-        context.taskToNotify = task1;
+        context.taskToNotify = xTaskGetCurrentTaskHandle();
         context.notificationBit = 1 << i;
         LogInfo( (  "Adding publish operation for message %s \non topic %.*s\n", payloadBuf, publishInfo.topicNameLength, publishInfo.pTopicName ) );
         pCommand = createCommand( PUBLISH, &publishInfo, NULL, 0, &context, comCallback, &command );
@@ -986,7 +984,7 @@ void * thread1( void * args )
         configASSERT( ( notification & ( 1 << i ) ) == ( 1 << i ) );
         destroyCommandContext( &context );
         LogInfo( ( "Publish operation complete.\n" ) );
-        LogInfo( ( "\tPublish operation complete. Sleeping for %d ms.\n", 50 ) );
+        LogInfo( ( "\tPublish operation complete. Sleeping for %d ms.\n", 500 ) );
         vTaskDelay( pdMS_TO_TICKS( 500 ) );
     }
 
@@ -995,17 +993,17 @@ void * thread1( void * args )
         contexts[ i ] = ( CommandContext_t * ) pvPortMalloc( sizeof( CommandContext_t ) );
         initializeCommandContext( contexts[ i ] );
         contexts[ i ]->pResponseQueue = pResponseQueue1;
-        contexts[ i ]->taskToNotify = task1;
+        contexts[ i ]->taskToNotify = xTaskGetCurrentTaskHandle();
         contexts[ i ]->notificationBit = 1 << i;
         snprintf( payloadBuf, 100, "Hello World! %d", i+1 );
         publishInfo.payloadLength = strlen( payloadBuf );
         snprintf( topicBuf, 100, "thread/1/%i/filter", i+1 );
         publishInfo.topicNameLength = strlen( topicBuf );
         context.pResponseQueue = pResponseQueue1;
-        LogInfo( (  "Adding publish operation for message %s \non topic %.*s\n", payloadBuf, publishInfo.topicNameLength, publishInfo.pTopicName );
+        LogInfo( (  "Adding publish operation for message %s \non topic %.*s\n", payloadBuf, publishInfo.topicNameLength, publishInfo.pTopicName ) );
         pCommand = createCommand( PUBLISH, &publishInfo, NULL, 0, contexts[ i ], comCallback, &command );
         addCommandToQueue( pCommand );
-        LogInfo( ( "\tPublish operation complete. Sleeping for %d ms.\n", 50 );
+        LogInfo( ( "\tPublish operation complete. Sleeping for %d ms.\n", 50 ) );
         vTaskDelay( pdMS_TO_TICKS( 50 ) );
     }
 
@@ -1040,6 +1038,7 @@ void * thread2( void * args )
 {
     ( void ) args;
     MQTTSubscribeInfo_t subscribeInfo;
+    Command_t command;
     Command_t * pCommand = NULL;
     MQTTPublishInfo_t * pReceivedPublish = NULL;
     static int subCounter = 0;
@@ -1052,10 +1051,10 @@ void * thread2( void * args )
     CommandContext_t context;
     initializeCommandContext( &context );
     context.pResponseQueue = pResponseQueue2;
-    context.taskToNotify = task2;
+    context.taskToNotify = xTaskGetCurrentTaskHandle();
     context.notificationBit = 1;
     LogInfo( ( "Adding subscribe operation" ) );
-    pCommand = createCommand( SUBSCRIBE, NULL, &subscribeInfo, 1, &context, comCallback );
+    pCommand = createCommand( SUBSCRIBE, NULL, &subscribeInfo, 1, &context, comCallback, &command );
     LogInfo( ( "Topic filter: %.*s", pCommand->subscribeInfo.topicFilterLength, pCommand->subscribeInfo.pTopicFilter ) );
     LogInfo( ( "Topic filter: %.*s", pCommand->subscribeInfo.topicFilterLength, pCommand->pTopicName ) );
     LogInfo( ( "Topic filter: %.*s", pCommand->subscribeInfo.topicFilterLength, subscribeInfo.pTopicFilter ) );
@@ -1084,7 +1083,7 @@ void * thread2( void * args )
     {
         while( xQueueReceive( pResponseQueue2, &receivedPublish, TICKS_TO_WAIT ) )
         {
-            pReceivedPublish = receivedPublish.pPublishInfo;
+            pReceivedPublish = &( receivedPublish.publishInfo );
             pReceivedPublish->pTopicName = receivedPublish.pTopicName;
             pReceivedPublish->pPayload = receivedPublish.pPayload;
             LogInfo( ( "Received publish on topic %.*s\n", pReceivedPublish->topicNameLength, pReceivedPublish->pTopicName ) );
@@ -1104,10 +1103,10 @@ void * thread2( void * args )
     }
 
     LogInfo( ("Finished receiving\n" ) );
-    pCommand = createCommand( UNSUBSCRIBE, NULL, &subscribeInfo, 1, &context, comCallback );
+    pCommand = createCommand( UNSUBSCRIBE, NULL, &subscribeInfo, 1, &context, comCallback, &command );
     initializeCommandContext( &context );
     context.pResponseQueue = pResponseQueue2;
-    context.taskToNotify = task2;
+    context.taskToNotify = xTaskGetCurrentTaskHandle();
     context.notificationBit = 2;
     LogInfo( ("Adding unsubscribe operation\n" ) );
     addCommandToQueue( pCommand );
@@ -1162,14 +1161,14 @@ static void prvMQTTDemoTask( void * pvParameters )
         Command_t * pCommand = createCommand( PROCESSLOOP, NULL, NULL, 0, NULL, NULL, &command );
         addCommandToQueue( pCommand );
 
-        LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
+        LogInfo( ( "Create a TCP connection to %s.\r\n", BROKER_ENDPOINT ) );
         xNetworkStatus = Plaintext_FreeRTOS_Connect( &xNetworkContext,
                                                      BROKER_ENDPOINT,
                                                      BROKER_PORT,
                                                      TRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                      TRANSPORT_SEND_RECV_TIMEOUT_MS );
         configASSERT( xNetworkStatus == 0 );
-        establishMqttSession( &xMQTTContext, &xNetworkContext );
+        establishMqttSession( &globalMqttContext, &xNetworkContext );
 
         task2 = xTaskCreate( thread2, "Thread2", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, NULL );
         vTaskDelay( pdMS_TO_TICKS( 100 ) );

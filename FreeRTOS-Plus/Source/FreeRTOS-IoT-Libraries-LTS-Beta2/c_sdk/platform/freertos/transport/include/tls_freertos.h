@@ -45,7 +45,7 @@
     #define LIBRARY_LOG_NAME     "TlsTransport"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+    #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 #include "logging_stack.h"
@@ -191,7 +191,8 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
  * @param[in] pBuffer Buffer containing the bytes to send.
  * @param[in] bytesToSend Number of bytes to send from the buffer.
  *
- * @return Number of bytes sent on success;
+ * @return Number of bytes (> 0) sent on success;
+ * 0 if the socket times out without sending any bytes;
  * else a negative value to represent error.
  */
 int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,

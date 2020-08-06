@@ -36,6 +36,10 @@ will be removed. */
 /* This file provides default values for configuration options that are missing
 from the FreeRTOSIPConfig.h configuration header file. */
 
+/* These macros are used to define away static keyword for CBMC proofs */
+#ifndef _static
+	#define _static static
+#endif
 
 /* Ensure defined configuration constants are using the most up to date naming. */
 #ifdef tcpconfigIP_TIME_TO_LIVE
@@ -434,7 +438,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#ifndef ipconfigDNS_CACHE_NAME_LENGTH
 		/* Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
 		of a DNS name. The following default accounts for a null terminator. */
-		#define ipconfigDNS_CACHE_NAME_LENGTH   254
+		#define ipconfigDNS_CACHE_NAME_LENGTH   254U
 	#endif
 
 	#ifndef ipconfigDNS_CACHE_ENTRIES

@@ -46,6 +46,8 @@
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 
+#include "FreeRTOSIPConfigDefaults.h"
+
 /* Constants used for Smoothed Round Trip Time (SRTT). */
 #define	winSRTT_INCREMENT_NEW 		2
 #define winSRTT_INCREMENT_CURRENT 	6
@@ -86,7 +88,7 @@
 #endif /* configUSE_TCP_WIN */
 /*-----------------------------------------------------------*/
 
-extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere );
+static void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere );
 
 /*
  * All TCP sockets share a pool of segment descriptors (TCPSegment_t)
@@ -192,7 +194,7 @@ extern void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
 
 /* List of free TCP segments. */
 #if( ipconfigUSE_TCP_WIN == 1 )
-	static List_t xSegmentList;
+	_static List_t xSegmentList;
 #endif
 
 /* Logging verbosity level. */
@@ -302,7 +304,7 @@ static portINLINE uint32_t ulTimerGetAge( const TCPTimer_t *pxTimer )
 }
 /*-----------------------------------------------------------*/
 
-void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere )
+static void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem, MiniListItem_t * const pxWhere )
 {
 	/* Insert a new list item into pxList, it does not sort the list,
 	but it puts the item just before xListEnd, so it will be the last item
@@ -372,7 +374,6 @@ void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewListItem
 
 		/* Find a segment with a given sequence number in the list of received
 		segments. */
-
 		pxEnd = ipPOINTER_CAST( const ListItem_t *, listGET_END_MARKER( &pxWindow->xRxSegments ) );
 
 		for( pxIterator  = listGET_NEXT( pxEnd );

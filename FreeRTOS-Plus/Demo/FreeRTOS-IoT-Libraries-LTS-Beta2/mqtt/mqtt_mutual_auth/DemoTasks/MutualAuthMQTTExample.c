@@ -573,7 +573,6 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
 
     /* Unsubscribe to the mqttexampleTOPIC topic filter. */
-    xMQTTSubscription[ 0 ].qos = MQTTQoS1;
     xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
     xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 

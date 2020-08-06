@@ -129,9 +129,9 @@
  * @note This private key should be PEM-encoded.
  *
  * Must include the PEM header and footer:
- * "-----BEGIN CERTIFICATE-----\n"\
+ * "-----BEGIN RSA PRIVATE KEY-----\n"\
  * "...base64 data...\n"\
- * "-----END CERTIFICATE-----\n"
+ * "-----END RSA PRIVATE KEY-----\n"
  *
  * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
  */

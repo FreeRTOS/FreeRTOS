@@ -26,17 +26,19 @@
  */
 
 /*
- * Demo for showing use of the managed MQTT API.
+ * Demo for showing use of the managed MQTT API using a mutually
+ * authenticated connection.
  *
- * The Example shown below uses this API to create MQTT messages and
- * send them over the connection established using FreeRTOS sockets.
- * The example is single threaded and uses statically allocated memory;
- * it uses QoS1.
+ * The Example shown below uses managed MQTT APIs to create MQTT messages and
+ * send them over the mutually authenticated connection established to the
+ * AWS IoT MQTT broker. This example is single threaded and uses statically
+ * allocated memory. It uses QoS1 for outgoing publishes and to request QoS
+ * level of the incoming publishes.
  *
  * A mutually authenticated TLS connection is used to connect to the AWS IoT
  * MQTT message broker in this example. Define democonfigAWS_ROOT_CA_PEM,
  * democonfigCLIENT_CERTIFICATE_PEM, and democonfigCLIENT_PRIVATE_KEY_PEM in
- * demo_config.h to achieve mutual authentication.
+ * demo_config.h to establish a mutually authenticated connection.
  */
 
 /* Standard includes. */

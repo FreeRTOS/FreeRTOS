@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#sniffer-testsuite.test
+
+echo -e "\nStaring snifftest on testsuite.pcap...\n"
+./sslSniffer/sslSnifferTest/snifftest ./scripts/testsuite.pcap ./certs/server-key.pem 127.0.0.1 11111
+
+RESULT=$?
+[ $RESULT -ne 0 ] && echo -e "\nsnifftest failed\n" && exit 1
+
+
+if test $# -ne 0 && test "x$1" = "x-6";
+then
+    echo -e "\nStaring snifftest on sniffer-ipv6.pcap...\n"
+    ./sslSniffer/sslSnifferTest/snifftest ./scripts/sniffer-ipv6.pcap ./certs/server-key.pem ::1 11111
+
+    RESULT=$?
+    [ $RESULT -ne 0 ] && echo -e "\nsnifftest (ipv6) failed\n" && exit 1
+fi
+
+echo -e "\nSuccess!\n"
+
+exit 0

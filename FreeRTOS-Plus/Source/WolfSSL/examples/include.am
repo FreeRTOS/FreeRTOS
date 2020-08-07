@@ -1,0 +1,9 @@
+# vim:ft=automake
+# All paths should be given relative to the root
+
+include examples/benchmark/include.am
+include examples/client/include.am
+include examples/echoclient/include.am
+include examples/echoserver/include.am
+include examples/server/include.am
+include examples/sctp/include.am

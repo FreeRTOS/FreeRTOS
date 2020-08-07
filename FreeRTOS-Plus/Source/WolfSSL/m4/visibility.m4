@@ -1,5 +1,5 @@
-# visibility.m4 serial 4 (gettext-0.18.2)
-dnl Copyright (C) 2005, 2008, 2010-2011 Free Software Foundation, Inc.
+# visibility.m4 serial 5 (gettext-0.18.2)
+dnl Copyright (C) 2005, 2008, 2010-2018 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -12,7 +12,7 @@ dnl __attribute__((__visibility__("hidden"))) and
 dnl __attribute__((__visibility__("default"))).
 dnl Does *not* test for __visibility__("protected") - which has tricky
 dnl semantics (see the 'vismain' test in glibc) and does not exist e.g. on
-dnl MacOS X.
+dnl Mac OS X.
 dnl Does *not* test for __visibility__("internal") - which has processor
 dnl dependent semantics.
 dnl Does *not* test for #pragma GCC visibility push(hidden) - which is

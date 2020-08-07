@@ -16,6 +16,9 @@ EXTRA_HEADERS =
 BUILT_SOURCES=
 EXTRA_DIST=
 dist_doc_DATA=
+dist_noinst_SCRIPTS =
+noinst_SCRIPTS =
+check_SCRIPTS =
 
 #includes additional rules from aminclude.am
 @INC_AMINCLUDE@
@@ -30,13 +33,92 @@ CLEANFILES+= cert.der \
              key.der \
              key.pem \
              ntru-cert.der \
+             ecc-key-pkcs8.der \
              ntru-cert.pem \
              ntru-key.raw \
              othercert.der \
              othercert.pem \
              pkcs7cert.der \
-             pkcs7envelopedData.der \
-             pkcs7signedData.der
+             pkcs7authEnvelopedDataAES128GCM.der \
+             pkcs7authEnvelopedDataAES128GCM_ECDH_SHA1KDF.der \
+             pkcs7authEnvelopedDataAES128GCM_KEKRI.der \
+             pkcs7authEnvelopedDataAES128GCM_ORI.der \
+             pkcs7authEnvelopedDataAES128GCM_PWRI.der \
+             pkcs7authEnvelopedDataAES192GCM.der \
+             pkcs7authEnvelopedDataAES256GCM.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA256KDF.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA256KDF_authAttribs.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA256KDF_bothAttribs.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA256KDF_fw_bothAttribs.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA256KDF_unauthAttribs.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA512KDF.der \
+             pkcs7authEnvelopedDataAES256GCM_ECDH_SHA512KDF_ukm.der \
+             pkcs7authEnvelopedDataAES256GCM_firmwarePkgData.der \
+             pkcs7authEnvelopedDataAES256GCM_IANDS.der \
+             pkcs7authEnvelopedDataAES256GCM_SKID.der \
+             pkcs7compressedData_data_zlib.der \
+             pkcs7compressedData_firmwarePkgData_zlib.der \
+             pkcs7encryptedDataAES128CBC.der \
+             pkcs7encryptedDataAES192CBC.der \
+             pkcs7encryptedDataAES256CBC_attribs.der \
+             pkcs7encryptedDataAES256CBC.der \
+             pkcs7encryptedDataAES256CBC_firmwarePkgData.der \
+             pkcs7encryptedDataAES256CBC_multi_attribs.der \
+             pkcs7encryptedDataDES3.der \
+             pkcs7encryptedDataDES.der \
+             pkcs7envelopedDataAES256CBC_ECDH.der \
+             pkcs7envelopedDataAES128CBC_ECDH_SHA1KDF.der \
+             pkcs7envelopedDataAES256CBC_ECDH_SHA256KDF.der \
+             pkcs7envelopedDataAES256CBC_ECDH_SHA512KDF.der \
+             pkcs7envelopedDataAES256CBC_ECDH_SHA512KDF_ukm.der \
+             pkcs7envelopedDataDES3.der \
+             pkcs7envelopedDataAES128CBC.der \
+             pkcs7envelopedDataAES128CBC_KEKRI.der \
+             pkcs7envelopedDataAES128CBC_PWRI.der \
+             pkcs7envelopedDataAES128CBC_ORI.der \
+             pkcs7envelopedDataAES192CBC.der \
+             pkcs7envelopedDataAES256CBC.der \
+             pkcs7envelopedDataAES256CBC_IANDS.der \
+             pkcs7envelopedDataAES256CBC_SKID.der \
+             pkcs7signedData_RSA_SHA.der \
+             pkcs7signedData_RSA_SHA_noattr.der \
+             pkcs7signedData_RSA_SHA224.der \
+             pkcs7signedData_RSA_SHA256.der \
+             pkcs7signedData_RSA_SHA256_firmwarePkgData.der \
+             pkcs7signedData_RSA_SHA256_custom_contentType.der \
+             pkcs7signedData_RSA_SHA256_with_ca_cert.der \
+             pkcs7signedData_RSA_SHA256_SKID.der \
+             pkcs7signedData_RSA_SHA256_detachedSig.der \
+             pkcs7signedData_RSA_SHA384.der \
+             pkcs7signedData_RSA_SHA512.der \
+             pkcs7signedData_ECDSA_SHA.der \
+             pkcs7signedData_ECDSA_SHA_noattr.der \
+             pkcs7signedData_ECDSA_SHA224.der \
+             pkcs7signedData_ECDSA_SHA256.der \
+             pkcs7signedData_ECDSA_SHA256_firmwarePkgData.der \
+             pkcs7signedData_ECDSA_SHA256_custom_contentType.der \
+             pkcs7signedData_ECDSA_SHA256_SKID.der \
+             pkcs7signedData_ECDSA_SHA384.der \
+             pkcs7signedData_ECDSA_SHA512.der \
+             pkcs7signedFirmwarePkgData_ECDSA_SHA256.der \
+             pkcs7signedFirmwarePkgData_ECDSA_SHA256_SKID.der \
+             pkcs7signedFirmwarePkgData_ECDSA_SHA256_noattr.der \
+             pkcs7signedFirmwarePkgData_RSA_SHA256.der \
+             pkcs7signedFirmwarePkgData_RSA_SHA256_SKID.der \
+             pkcs7signedFirmwarePkgData_RSA_SHA256_noattr.der \
+             pkcs7signedFirmwarePkgData_RSA_SHA256_with_ca_cert.der \
+             pkcs7signedCompressedFirmwarePkgData_ECDSA_SHA256.der \
+             pkcs7signedCompressedFirmwarePkgData_ECDSA_SHA256_noattr.der \
+             pkcs7signedCompressedFirmwarePkgData_RSA_SHA256.der \
+             pkcs7signedCompressedFirmwarePkgData_RSA_SHA256_noattr.der \
+             pkcs7signedEncryptedFirmwarePkgData_RSA_SHA256.der \
+             pkcs7signedEncryptedFirmwarePkgData_RSA_SHA256_noattr.der \
+             pkcs7signedEncryptedFirmwarePkgData_ECDSA_SHA256.der \
+             pkcs7signedEncryptedFirmwarePkgData_ECDSA_SHA256_noattr.der \
+             pkcs7signedEncryptedCompressedFirmwarePkgData_ECDSA_SHA256.der \
+             pkcs7signedEncryptedCompressedFirmwarePkgData_ECDSA_SHA256_noattr.der \
+             pkcs7signedEncryptedCompressedFirmwarePkgData_RSA_SHA256.der \
+             pkcs7signedEncryptedCompressedFirmwarePkgData_RSA_SHA256_noattr.der
 
 exampledir = $(docdir)/example
 dist_example_DATA=
@@ -45,51 +127,64 @@ ACLOCAL_AMFLAGS= -I m4
 
 EXTRA_DIST+= lib/dummy
 
-EXTRA_DIST+= cyassl-ntru.vcproj
-EXTRA_DIST+= cyassl.vcproj
-EXTRA_DIST+= cyassl.vcxproj
-EXTRA_DIST+= cyassl-iphone.xcodeproj/project.pbxproj
-EXTRA_DIST+= cyassl-ios.xcodeproj/project.pbxproj
-EXTRA_DIST+= cyassl-ntru.sln
-EXTRA_DIST+= cyassl.sln
-EXTRA_DIST+= cyassl64.sln
+EXTRA_DIST+= wolfssl-ntru.vcproj
+EXTRA_DIST+= wolfssl.vcproj
+EXTRA_DIST+= wolfssl.vcxproj
+EXTRA_DIST+= wolfssl-ntru.sln
+EXTRA_DIST+= wolfssl.sln
+EXTRA_DIST+= wolfssl64.sln
 EXTRA_DIST+= valgrind-error.sh
+EXTRA_DIST+= fips-hash.sh
 EXTRA_DIST+= gencertbuf.pl
-EXTRA_DIST+= IDE 
+EXTRA_DIST+= README.md
+EXTRA_DIST+= README
+EXTRA_DIST+= ChangeLog.md
+EXTRA_DIST+= LICENSING
+EXTRA_DIST+= INSTALL
+EXTRA_DIST+= IPP
+EXTRA_DIST+= LPCExpresso.cproject
+EXTRA_DIST+= LPCExpresso.project
+EXTRA_DIST+= resource.h wolfssl.rc
 
+include wrapper/include.am
 include cyassl/include.am
+include wolfssl/include.am
 include certs/include.am
-include certs/1024/include.am
-include certs/crl/include.am
 include doc/include.am
 include swig/include.am
 
 include src/include.am
 include support/include.am
-include ctaocrypt/benchmark/include.am
-include ctaocrypt/src/include.am
-include ctaocrypt/test/include.am
-include examples/client/include.am
-include examples/server/include.am
-include examples/echoclient/include.am
-include examples/echoserver/include.am
+include wolfcrypt/user-crypto/include.am
+include wolfcrypt/benchmark/include.am
+include wolfcrypt/src/include.am
+include wolfcrypt/test/include.am
+include examples/include.am
 include testsuite/include.am
 include tests/include.am
 include sslSniffer/sslSnifferTest/include.am
 include rpm/include.am
-include mqx/ctaocrypt_test/Sources/include.am
-include mqx/cyassl/include.am
-include mqx/cyassl_client/Sources/include.am
+
+# Exclude references to non-DFSG sources from build files
+if !BUILD_DISTRO
 include mqx/util_lib/Sources/include.am
+include mqx/wolfcrypt_benchmark/Sources/include.am
+include mqx/wolfcrypt_test/Sources/include.am
+include mqx/wolfssl/include.am
+include mqx/wolfssl_client/Sources/include.am
 include mplabx/include.am
-include mplabx/ctaocrypt_benchmark.X/nbproject/include.am
-include mplabx/ctaocrypt_test.X/nbproject/include.am
-include mplabx/cyassl.X/nbproject/include.am
+include mplabx/wolfcrypt_benchmark.X/nbproject/include.am
+include mplabx/wolfcrypt_test.X/nbproject/include.am
+include mplabx/wolfssl.X/nbproject/include.am
 include mcapi/include.am
-include mcapi/ctaocrypt_mcapi.X/nbproject/include.am
-include mcapi/ctaocrypt_test.X/nbproject/include.am
-include mcapi/cyassl.X/nbproject/include.am
+include mcapi/wolfcrypt_mcapi.X/nbproject/include.am
+include mcapi/wolfcrypt_test.X/nbproject/include.am
+include mcapi/wolfssl.X/nbproject/include.am
 include mcapi/zlib.X/nbproject/include.am
+include tirtos/include.am
+include IDE/include.am
+endif
+include scripts/include.am
 
 if USE_VALGRIND
 TESTS_ENVIRONMENT=./valgrind-error.sh
@@ -97,13 +192,15 @@ endif
 
 TEST_EXTENSIONS=.test
 TESTS += $(check_PROGRAMS)
+
+check_SCRIPTS+= $(dist_noinst_SCRIPTS)
+TESTS += $(check_SCRIPTS)
+
 test: check
 tests/unit.log: testsuite/testsuite.log
 
 DISTCLEANFILES+= cyassl-config
-# fips files shouldn't be left after make distclean
-DISTCLEANFILES+= ctaocrypt/src/fips.c
-DISTCLEANFILES+= ctaocrypt/src/fips_test.c
+DISTCLEANFILES+= wolfssl-config
 
 maintainer-clean-local:
 	-rm Makefile.in
@@ -126,7 +223,7 @@ maintainer-clean-local:
 	-rm m4/ltsugar.m4
 	-rm m4/ltversion.m4
 	-rm m4/lt~obsolete.m4
-	-rm support/cyassl.pc
+	-rm support/wolfssl.pc
 	find . -type f -name '*~' -exec rm -f '{}' \;
 	-rm -f @PACKAGE@-*.tar.gz
 	-rm -f @PACKAGE@-*.rpm
@@ -138,9 +235,9 @@ egs:
 	$(MAKE) examples/server/server; \
 	$(MAKE) examples/echoserver/echoserver;
 
-ctc:
-	$(MAKE) ctaocrypt/test/testctaocrypt; \
-	$(MAKE) ctaocrypt/benchmark/benchmark; 
+wc_egs:
+	$(MAKE) wolfcrypt/test/testwolfcrypt; \
+	$(MAKE) wolfcrypt/benchmark/benchmark;
 
 install-exec-local:	install-generic-config
 
@@ -162,3 +259,4 @@ merge-clean:
 	@find ./ | $(GREP) \.OTHER | xargs rm -f
 	@find ./ | $(GREP) \.BASE | xargs rm -f
 	@find ./ | $(GREP) \~$$ | xargs rm -f
+

@@ -16,10 +16,16 @@ nobase_include_HEADERS+= \
                          cyassl/certs_test.h \
                          cyassl/test.h \
                          cyassl/version.h \
-                         cyassl/options.h \
                          cyassl/ocsp.h \
                          cyassl/crl.h
 
 noinst_HEADERS+= \
                          cyassl/internal.h
 
+# For distro build don't install options.h.
+# It depends on the architecture and conflicts with Multi-Arch.
+if BUILD_DISTRO
+noinst_HEADERS+=         cyassl/options.h
+else
+nobase_include_HEADERS+= cyassl/options.h
+endif

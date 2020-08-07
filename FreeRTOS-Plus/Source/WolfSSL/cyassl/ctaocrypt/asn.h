@@ -1,8 +1,8 @@
 /* asn.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifndef NO_ASN
 
@@ -37,10 +38,8 @@
 
 #include <wolfssl/wolfcrypt/asn.h>
 
-#ifndef WOLFSSL_PEMCERT_TODER_DEFINED
 #ifndef NO_FILESYSTEM
-    #define CyaSSL_PemCertToDer wolfSSL_PemCertToDer
-#endif
+    #define CyaSSL_PemCertToDer wc_PemCertToDer
 #endif
 
 #endif /* CTAO_CRYPT_ASN_H */

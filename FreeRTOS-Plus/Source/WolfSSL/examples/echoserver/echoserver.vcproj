@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../"
-				PreprocessorDefinitions="USE_ANY_ADDR;OPENSSL_EXTRA;NO_PSK"
+				AdditionalIncludeDirectories="../../;../../IDE/WIN"
+				PreprocessorDefinitions="USE_ANY_ADDR;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -116,8 +116,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../"
-				PreprocessorDefinitions="USE_ANY_ADDR;OPENSSL_EXTRA;NO_PSK"
+				AdditionalIncludeDirectories="../../;../../IDE/WIN"
+				PreprocessorDefinitions="USE_ANY_ADDR;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -184,6 +184,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\IDE\WIN\user_settings.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

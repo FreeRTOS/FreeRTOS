@@ -1,0 +1,38 @@
+# vim:ft=automake
+# included from Top Level Makefile.am
+# All paths should be given relative to the root
+
+EXTRA_DIST+= wrapper/python/wolfssl/.gitignore
+EXTRA_DIST+= wrapper/python/wolfssl/docs/api.rst
+EXTRA_DIST+= wrapper/python/wolfssl/docs/conf.py
+EXTRA_DIST+= wrapper/python/wolfssl/docs/examples.rst
+EXTRA_DIST+= wrapper/python/wolfssl/docs/index.rst
+EXTRA_DIST+= wrapper/python/wolfssl/docs/installation.rst
+EXTRA_DIST+= wrapper/python/wolfssl/docs/Makefile
+EXTRA_DIST+= wrapper/python/wolfssl/docs/licensing.rst
+EXTRA_DIST+= wrapper/python/wolfssl/docs/requirements.txt
+EXTRA_DIST+= wrapper/python/wolfssl/docs/usage.rst
+EXTRA_DIST+= wrapper/python/wolfssl/examples/client.py
+EXTRA_DIST+= wrapper/python/wolfssl/examples/server.py
+EXTRA_DIST+= wrapper/python/wolfssl/test/conftest.py
+EXTRA_DIST+= wrapper/python/wolfssl/test/test_client.py
+EXTRA_DIST+= wrapper/python/wolfssl/test/test_context.py
+EXTRA_DIST+= wrapper/python/wolfssl/test/test_methods.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/__about__.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/__init__.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/build_ffi.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/_memory.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/_methods.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/exceptions.py
+EXTRA_DIST+= wrapper/python/wolfssl/src/wolfssl/utils.py
+EXTRA_DIST+= wrapper/python/wolfssl/LICENSING.rst
+EXTRA_DIST+= wrapper/python/wolfssl/Makefile
+EXTRA_DIST+= wrapper/python/wolfssl/MANIFEST.in
+EXTRA_DIST+= wrapper/python/wolfssl/README.rst
+EXTRA_DIST+= wrapper/python/wolfssl/requirements-testing.txt
+EXTRA_DIST+= wrapper/python/wolfssl/setup.py
+EXTRA_DIST+= wrapper/python/wolfssl/tox.ini
+EXTRA_DIST+= wrapper/python/wolfssl/Vagrantfile
+EXTRA_DIST+= wrapper/python/wolfssl/.centos-provisioner.sh
+EXTRA_DIST+= wrapper/python/wolfssl/.ubuntu-provisioner.sh
+

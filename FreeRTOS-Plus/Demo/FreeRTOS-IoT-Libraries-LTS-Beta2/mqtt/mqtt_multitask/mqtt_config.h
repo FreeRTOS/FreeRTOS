@@ -62,6 +62,6 @@
  * macro sets the limit on how many simultaneous PUBLISH states an MQTT
  * context maintains.
  */
-#define MQTT_STATE_ARRAY_MAX_COUNT    10U
+#define MQTT_STATE_ARRAY_MAX_COUNT    20U
 
 #endif /* ifndef MQTT_CONFIG_H_ */

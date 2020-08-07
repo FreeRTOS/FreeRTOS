@@ -156,7 +156,7 @@
 
 #define _MILLISECONDS_PER_SECOND                    ( 1000U )                                         /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK                      ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
-#define TICKS_TO_WAIT                       ( TickType_t ) 1000
+#define TICKS_TO_WAIT                       pdMS_TO_TICKS( 1000 )
 
 #ifndef EXIT_SUCCESS
     #define EXIT_SUCCESS 0
@@ -543,6 +543,8 @@ static MQTTStatus_t processCommand( Command_t * pCommand )
             status = MQTT_ProcessLoop( &globalMqttContext, MQTT_PROCESS_LOOP_TIMEOUT_MS );
             break;
         case PUBLISH:
+            pCommand->publishInfo.pTopicName = pCommand->pTopicName;
+            pCommand->publishInfo.pPayload = pCommand->pPublishPayload;
             if( pCommand->publishInfo.qos != MQTTQoS0 )
             {
                 packetId = MQTT_GetPacketId( &globalMqttContext );
@@ -558,6 +560,7 @@ static MQTTStatus_t processCommand( Command_t * pCommand )
         case SUBSCRIBE:
         case UNSUBSCRIBE:
             assert( pCommand->subscribeInfo.pTopicFilter != NULL );
+            pCommand->subscribeInfo.pTopicFilter = pCommand->pTopicName;
             packetId = MQTT_GetPacketId( &globalMqttContext );
             if( pCommand->commandType == SUBSCRIBE )
             {
@@ -1111,7 +1114,7 @@ void * thread2( void * args )
     LogInfo( ("Adding unsubscribe operation\n" ) );
     addCommandToQueue( pCommand );
     LogInfo( ("Starting wait on operation\n" ) );
-    xTaskNotifyWait( 0, 2, &notification, TICKS_TO_WAIT );
+    xTaskNotifyWait( 0, 2, &notification, 2 * TICKS_TO_WAIT );
     configASSERT( ( notification & 2 ) == 2 );
     destroyCommandContext( &context );
     LogInfo( ("Operation wait complete.\n" ) );

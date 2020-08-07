@@ -1,0 +1,13 @@
+#include <ioavr.h>
+
+EXTERN USART3_RXC_handler
+EXTERN USART3_DRE_handler
+
+    ASEG
+        ORG USART3_RXC_vect
+              jmp USART3_RXC_handler
+        ORG USART3_DRE_vect
+              jmp USART3_DRE_handler
+    RSEG CODE
+
+END

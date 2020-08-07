@@ -21,8 +21,6 @@
  *
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -47,10 +45,6 @@
 /* Kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
-
-/* FreeRTOS+TCP includes. */
-#include "FreeRTOS_IP.h"
-#include "FreeRTOS_Sockets.h"
 
 /* Demo Specific configs. */
 #include "demo_config.h"
@@ -108,7 +102,7 @@
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
  */
-#define mqttexampleCONNACK_RECV_TIMEOUT_MS          ( 1000U )
+#define mqttexampleCONNACK_RECV_TIMEOUT_MS                ( 1000U )
 
 /**
  * @brief The topic to subscribe and publish to in the example.
@@ -116,52 +110,58 @@
  * The topic name starts with the client identifier to ensure that each demo
  * interacts with a unique topic name.
  */
-#define mqttexampleTOPIC                            democonfigCLIENT_IDENTIFIER "/example/topic"
+#define mqttexampleTOPIC                                  democonfigCLIENT_IDENTIFIER "/example/topic"
 
 /**
  * @brief The MQTT message published in this example.
  */
-#define mqttexampleMESSAGE                          "Hello World!"
+#define mqttexampleMESSAGE                                "Hello World!"
 
 /**
- * @brief Dimensions a file scope buffer currently used to send and receive MQTT data
- * from a socket.
+ * @brief Time in ticks to wait between each cycle of the demo implemented
+ * by prvMQTTDemoTask().
  */
-#define mqttexampleSHARED_BUFFER_SIZE               ( 500U )
-
-/**
- * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
- */
-#define mqttexampleDELAY_TICKS_BETWEEN_DEMO_ITERATIONS    ( pdMS_TO_TICKS( 5000U ) )
+#define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS    ( pdMS_TO_TICKS( 5000U ) )
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS          ( 500U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS                ( 500U )
 
 /**
- * @brief Keep alive time reported to the broker while establishing an MQTT connection.
+ * @brief Keep alive time reported to the broker while establishing
+ * an MQTT connection.
  *
  * It is the responsibility of the Client to ensure that the interval between
  * Control Packets being sent does not exceed the this Keep Alive value. In the
  * absence of sending any other Control Packets, the Client MUST send a
  * PINGREQ Packet.
  */
-#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS       ( 60U )
+#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS             ( 60U )
 
 /**
- * @brief Delay between consecutive cycles of MQTT publish operations in a demo iteration. Note that the process loop also has a
- * timeout, so the total time between publishes is the sum of the two delays.
+ * @brief Delay between consecutive cycles of MQTT publish operations in a
+ * demo iteration in ticks.
+ *
+ * Note that the process loop also has a timeout, so the total time between
+ * publishes is the sum of the two delays.
  */
-#define mqttexampleDELAY_BETWEEN_PUBLISHES          ( pdMS_TO_TICKS( 2000U ) )
+#define mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS          ( pdMS_TO_TICKS( 2000U ) )
 
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200U )
+#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 200U )
 
-#define _MILLISECONDS_PER_SECOND                    ( 1000U )                                         /**< @brief Milliseconds per second. */
-#define _MILLISECONDS_PER_TICK                      ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
+/**
+ * @brief Milliseconds per second.
+ */
+#define _MILLISECONDS_PER_SECOND                          ( 1000U )
+
+/**
+ * @brief Milliseconds per FreeRTOS tick.
+ */
+#define _MILLISECONDS_PER_TICK                            ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /*-----------------------------------------------------------*/
 
@@ -176,8 +176,8 @@ static void prvMQTTDemoTask( void * pvParameters );
 /**
  * @brief Sends an MQTT Connect packet over the already connected TLS over TCP connection.
  *
- * @param pxMQTTContext MQTT context pointer.
- * @param xNetworkContext network context.
+ * @param[in, out] pxMQTTContext MQTT context pointer.
+ * @param[in] xNetworkContext network context.
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext );
@@ -186,14 +186,14 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
  * @brief Subscribes to the topic as specified in mqttexampleTOPIC at the top of
  * this file.
  *
- * @param pxMQTTContext MQTT context pointer.
+ * @param[in] pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext );
 
 /**
  * @brief Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
  *
- * @param pxMQTTContext MQTT context pointer.
+ * @param[in] pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext );
 
@@ -201,7 +201,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext );
  * @brief Unsubscribes from the previously subscribed topic as specified
  * in mqttexampleTOPIC.
  *
- * @param pxMQTTContext MQTT context pointer.
+ * @param[in] pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext );
 
@@ -214,11 +214,12 @@ static uint32_t prvGetTimeMs( void );
 
 /**
  * @brief Process a response or ack to an MQTT request (PING, SUBSCRIBE
- * or UNSUBSCRIBE). This function processes PINGRESP, SUBACK, UNSUBACK
+ * or UNSUBSCRIBE). This function processes PINGRESP, PUBACK, SUBACK, and
+ * UNSUBACK.
  *
- * @param pxIncomingPacket is a pointer to structure containing deserialized
+ * @param[in] pxIncomingPacket is a pointer to structure containing deserialized
  * MQTT response.
- * @param usPacketId is the packet identifier from the ack received.
+ * @param[in] usPacketId is the packet identifier from the ack received.
  */
 static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                                     uint16_t usPacketId );
@@ -226,19 +227,19 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
 /**
  * @brief Process incoming Publish message.
  *
- * @param pxPublishInfo is a pointer to structure containing deserialized
+ * @param[in] pxPublishInfo is a pointer to structure containing deserialized
  * Publish message.
  */
 static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
 
 /**
- * @brief The application callback function for getting the incoming publish
- * and incoming acks reported from the MQTT library.
+ * @brief The application callback function for getting the incoming publishes,
+ * incoming acks, and ping responses reported from the MQTT library.
  *
- * @param pxMQTTContext MQTT context pointer.
- * @param pxPacketInfo Packet Info pointer for the incoming packet.
- * @param usPacketIdentifier Packet identifier of the incoming packet.
- * @param pxPublishInfo Deserialized publish info for the incoming packet if
+ * @param[in] pxMQTTContext MQTT context pointer.
+ * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
+ * @param[in] usPacketIdentifier Packet identifier of the incoming packet.
+ * @param[in] pxPublishInfo Deserialized publish info for the incoming packet if
  * there is an incoming PUBLISH; NULL otherwise
  */
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
@@ -249,9 +250,9 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
 /**
  * @brief TLS connect to endpoint democonfigAWS_IOT_ENDPOINT.
  *
- * @param pxNetworkCredentials Network credentials to establish a TLS connection
+ * @param[in] pxNetworkCredentials Network credentials to establish a TLS connection
  * with democonfigAWS_IOT_ENDPOINT.
- * @param pxNetworkCredentials Network context.
+ * @param[in] pxNetworkCredentials Network context.
  */
 static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
                            NetworkContext_t * pxNetworkContext );
@@ -259,7 +260,7 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
 /*-----------------------------------------------------------*/
 
 /* @brief Static buffer used to hold MQTT messages being sent and received. */
-static uint8_t ucSharedBuffer[ mqttexampleSHARED_BUFFER_SIZE ];
+static uint8_t ucSharedBuffer[ democonfigNETWORK_BUFFER_SIZE ];
 
 /**
  * @brief Global entry time into the application to use as a reference timestamp
@@ -291,14 +292,14 @@ static uint16_t usUnsubscribePacketIdentifier;
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
 static MQTTFixedBuffer_t xBuffer =
 {
-    .pBuffer = ucSharedBuffer,
-    .size    = mqttexampleSHARED_BUFFER_SIZE
+    ucSharedBuffer,
+    democonfigNETWORK_BUFFER_SIZE
 };
 
 /*-----------------------------------------------------------*/
 
 /*
- * @brief Create the task that demonstrates the MQTT API Demo over a 
+ * @brief Create the task that demonstrates the MQTT API Demo over a
  * mutually authenticated network connection with AWS IoT broker.
  */
 void vStartSimpleMQTTDemo( void )
@@ -315,18 +316,33 @@ void vStartSimpleMQTTDemo( void )
 }
 /*-----------------------------------------------------------*/
 
+/*
+ * @brief The Example shown below uses managed MQTT APIs to create MQTT messages and
+ * send them over the mutually authenticated network connection established with the
+ * AWS IoT MQTT broker. This example is single threaded and uses statically
+ * allocated memory. It uses QoS1 for sending to and receiving messages from the broker.
+ *
+ * This MQTT client subscribes to the topic as specified in mqttexampleTOPIC at the
+ * top of this file by sending a subscribe packet and then waiting for a subscribe
+ * acknowledgment (SUBACK).This client will then publish to the same topic it
+ * subscribed to, so it will expect all the messages it sends to the broker to be
+ * sent back to it from the broker.
+ */
 static void prvMQTTDemoTask( void * pvParameters )
 {
     uint32_t ulPublishCount = 0U;
     const uint32_t ulMaxPublishCount = 5UL;
     NetworkContext_t xNetworkContext = { 0 };
     NetworkCredentials_t xNetworkCredentials = { 0 };
-    MQTTContext_t xMQTTContext;
+    MQTTContext_t xMQTTContext = { 0 };
     MQTTStatus_t xMQTTStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
+    /* Store the entry time of the demo application. This entry time is used for
+     * calculating the elapsed time in application, by the time utility function
+     * used by MQTT library. */
     ulGlobalEntryTimeMs = prvGetTimeMs();
 
     for( ; ; )
@@ -334,9 +350,11 @@ static void prvMQTTDemoTask( void * pvParameters )
         /****************************** Connect. ******************************/
 
         /* Establish a TLS connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified in democonfigAWS_IOT_ENDPOINT and
-         * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Creating a TLS connection to %s.\r\n", democonfigAWS_IOT_ENDPOINT ) );
+         * the MQTT broker as specified by democonfigAWS_IOT_ENDPOINT and
+         * democonfigMQTT_BROKER_PORT in the demo_config.h file. */
+        LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
+                   democonfigAWS_IOT_ENDPOINT,
+                   democonfigMQTT_BROKER_PORT ) );
         prvTLSConnect( &xNetworkCredentials, &xNetworkContext );
 
         /* Sends an MQTT Connect packet over the already established TLS connection,
@@ -349,10 +367,12 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* The client is now connected to the broker. Subscribe to the topic
          * as specified in mqttexampleTOPIC at the top of this file by sending a
          * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
-         * This client will then publish to the same topic it subscribed to, so it
-         * will expect all the messages it sends to the broker to be sent back to it
-         * from the broker. This demo uses QoS1 in Subscribe, therefore, the Publish
-         * messages received from the broker will have QoS1. */
+         * The function #prvMQTTSubscribeToTopic will not wait to receive a SUBACK,
+         * but the function #MQTT_ProcessLoop will attempt to receive the SUBACK
+         * from network and if a SUBACK is received, application will be notified
+         * through the callback registered(#prvEventCallback for this application).
+         * This demo uses QoS1 in Subscribe, therefore, the Publish messages
+         * received from the broker will have QoS1. */
         LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         prvMQTTSubscribeToTopic( &xMQTTContext );
 
@@ -381,7 +401,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
             /* Leave Connection Idle for some time. */
             LogInfo( ( "Keeping Connection Idle...\r\n\r\n" ) );
-            vTaskDelay( mqttexampleDELAY_BETWEEN_PUBLISHES );
+            vTaskDelay( mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS );
         }
 
         /************************ Unsubscribe from the topic. **************************/
@@ -408,7 +428,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
-        vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );
+        vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS );
     }
 }
 /*-----------------------------------------------------------*/
@@ -431,11 +451,12 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
                                            democonfigAWS_IOT_ENDPOINT,
                                            democonfigMQTT_BROKER_PORT,
                                            pxNetworkCredentials,
-                                           TRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                           TRANSPORT_SEND_RECV_TIMEOUT_MS );
+                                           mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                           mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
     configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
-    LogInfo( ( "A mutually authenticated TLS connection established with %s.\r\n",
-               democonfigAWS_IOT_ENDPOINT ) );
+    LogInfo( ( "A mutually authenticated TLS connection established with %s:%u.\r\n",
+               democonfigAWS_IOT_ENDPOINT,
+               democonfigMQTT_BROKER_PORT ) );
 }
 /*-----------------------------------------------------------*/
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
@@ -485,7 +506,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
 
     /* Set MQTT keep-alive period. If the application does not send packets at an interval less than
-     * the keep-alive period, the MQTT library will send PINGREQ packets. */ 
+     * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
@@ -495,11 +516,10 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
                             &xSessionPresent );
+    configASSERT( xResult == MQTTSuccess );
 
-    if( xResult != MQTTSuccess )
-    {
-        LogError( ( "Connection with MQTT broker failed.\r\n" ) );
-    }
+    /* Successfully established and MQTT connection with the broker. */
+    LogInfo( ( "An MQTT connection is established with %s.", democonfigAWS_IOT_ENDPOINT ) );
 }
 /*-----------------------------------------------------------*/
 

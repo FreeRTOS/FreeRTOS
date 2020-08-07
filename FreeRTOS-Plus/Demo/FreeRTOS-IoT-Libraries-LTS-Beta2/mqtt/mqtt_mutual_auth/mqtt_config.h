@@ -21,8 +21,6 @@
  *
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
- *
- * 1 tab == 4 spaces!
  */
 #ifndef MQTT_CONFIG_H_
 #define MQTT_CONFIG_H_

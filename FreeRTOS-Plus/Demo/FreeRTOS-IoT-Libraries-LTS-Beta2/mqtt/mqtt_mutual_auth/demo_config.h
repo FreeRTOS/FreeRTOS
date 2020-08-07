@@ -22,11 +22,13 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef DEMO_CONFIG_H
 #define DEMO_CONFIG_H
+
+/* FreeRTOS config include. */
+#include "FreeRTOSConfig.h"
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -57,8 +59,6 @@
  * @brief The MQTT client identifier used in this example.  Each client identifier
  * must be unique; so edit as required to ensure that no two clients connecting to
  * the same broker use the same client identifier.
- *
- * This is the "Thing Name" in AWS IoT.
  *
  * #define democonfigCLIENT_IDENTIFIER    "insert here."
  */
@@ -143,11 +143,11 @@
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE    configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
 
 /**
  * @brief Size of the network buffer for MQTT packets.
  */
-#define NETWORK_BUFFER_SIZE         ( 1024U )
+#define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
 
 #endif /* DEMO_CONFIG_H */

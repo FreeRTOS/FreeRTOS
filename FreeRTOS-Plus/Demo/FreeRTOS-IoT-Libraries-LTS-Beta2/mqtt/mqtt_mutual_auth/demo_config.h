@@ -55,8 +55,8 @@
 
 /**
  * @brief The MQTT client identifier used in this example.  Each client identifier
- * must be unique so edit as required to ensure no two clients connecting to the
- * same broker use the same client identifier.
+ * must be unique; so edit as required to ensure that no two clients connecting to
+ * the same broker use the same client identifier.
  *
  * This is the "Thing Name" in AWS IoT.
  *
@@ -66,10 +66,11 @@
 /**
  * @brief Details of the MQTT broker to connect to.
  *
- * This is the Thing's Rest API Endpoint for AWS IoT.
+ * This is the Thing's REST API Endpoint for AWS IoT.
  *
  * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
- * Settings/Custom Endpoint, or using the describe-endpoint API.
+ * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
+ * AWS CLI command line tool).
  *
  * #define democonfigAWS_IOT_ENDPOINT    "...insert here..."
  */

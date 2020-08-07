@@ -257,7 +257,7 @@ FreeRTOS_Socket_t *pxSocket;
 configASSERT( pxNetworkBuffer != NULL );
 configASSERT( pxNetworkBuffer->pucEthernetBuffer != NULL );
 
-
+/* Map the ethernet buffer to the UDPPacket_t struct for easy access to the fields. */
 const UDPPacket_t *pxUDPPacket = ipPOINTER_CAST( const UDPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
 
 	/* Caller must check for minimum packet size. */

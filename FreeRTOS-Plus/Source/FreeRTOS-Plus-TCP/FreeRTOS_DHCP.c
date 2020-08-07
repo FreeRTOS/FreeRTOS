@@ -39,6 +39,8 @@
 #include "FreeRTOS_DHCP.h"
 #include "FreeRTOS_ARP.h"
 
+#include "FreeRTOSIPConfigDefaults.h"
+
 /* Exclude the entire file if DHCP is not enabled. */
 #if( ipconfigUSE_DHCP != 0 )
 
@@ -153,7 +155,7 @@ struct xDHCPMessage_IPv4
 typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
 
 /* The UDP socket used for all incoming and outgoing DHCP traffic. */
-static Socket_t xDHCPSocket;
+_static Socket_t xDHCPSocket;
 
 #if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
 	/* Define the Link Layer IP address: 169.254.x.x */
@@ -176,7 +178,7 @@ static void prvSendDHCPDiscover( void );
 /*
  * Interpret message received on the DHCP socket.
  */
-static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
+_static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
 
 /*
  * Generate a DHCP request packet, and send it on the DHCP socket.
@@ -201,7 +203,7 @@ static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress,
 /*
  * Create the DHCP socket, if it has not been created already.
  */
-static void prvCreateDHCPSocket( void );
+_static void prvCreateDHCPSocket( void );
 
 /*
  * Close the DHCP socket.
@@ -220,7 +222,7 @@ static void prvCloseDHCPSocket( void );
 /*-----------------------------------------------------------*/
 
 /* Hold information in between steps in the DHCP state machine. */
-static DHCPData_t xDHCPData;
+_static DHCPData_t xDHCPData;
 
 /*-----------------------------------------------------------*/
 
@@ -620,7 +622,7 @@ static void prvInitialiseDHCP( void )
 }
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
+_static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
 {
 uint8_t *pucUDPPayload;
 int32_t lBytes;

@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "default" do |default|
+    default.vm.box = "ubuntu/trusty64"
+    default.vm.provision "shell", path: ".ubuntu-provisioner.sh"
+  end
+
+  config.vm.define "centos", autostart: false do |centos|
+    centos.vm.box = "moisesguimaraes/centos72-64"
+    centos.vm.provision "shell", path: ".centos-provisioner.sh"
+  end
+
+end

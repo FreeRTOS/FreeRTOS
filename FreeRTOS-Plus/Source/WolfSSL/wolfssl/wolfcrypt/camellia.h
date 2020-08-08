@@ -27,9 +27,9 @@
 
 /* camellia.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,8 +43,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
+/*!
+    \file wolfssl/wolfcrypt/camellia.h
+*/
+
 
 #ifndef WOLF_CRYPT_CAMELLIA_H
 #define WOLF_CRYPT_CAMELLIA_H
@@ -77,13 +82,13 @@ typedef struct Camellia {
 WOLFSSL_API int  wc_CamelliaSetKey(Camellia* cam,
                                    const byte* key, word32 len, const byte* iv);
 WOLFSSL_API int  wc_CamelliaSetIV(Camellia* cam, const byte* iv);
-WOLFSSL_API void wc_CamelliaEncryptDirect(Camellia* cam, byte* out,
+WOLFSSL_API int  wc_CamelliaEncryptDirect(Camellia* cam, byte* out,
                                                                 const byte* in);
-WOLFSSL_API void wc_CamelliaDecryptDirect(Camellia* cam, byte* out,
+WOLFSSL_API int  wc_CamelliaDecryptDirect(Camellia* cam, byte* out,
                                                                 const byte* in);
-WOLFSSL_API void wc_CamelliaCbcEncrypt(Camellia* cam,
+WOLFSSL_API int wc_CamelliaCbcEncrypt(Camellia* cam,
                                           byte* out, const byte* in, word32 sz);
-WOLFSSL_API void wc_CamelliaCbcDecrypt(Camellia* cam,
+WOLFSSL_API int wc_CamelliaCbcDecrypt(Camellia* cam,
                                           byte* out, const byte* in, word32 sz);
 
 

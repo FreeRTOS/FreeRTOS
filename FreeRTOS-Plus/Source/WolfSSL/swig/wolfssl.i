@@ -1,8 +1,8 @@
 /* wolfssl.i
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 %module wolfssl
 %{
     #include <wolfssl/ssl.h>
     #include <wolfssl/wolfcrypt/rsa.h>
+    #include <wolfssl/wolfcrypt/pwdbased.h>
 
     /* defn adds */
     char* wolfSSL_error_string(int err);
     int   wolfSSL_swig_connect(WOLFSSL*, const char* server, int port);
-    RNG*  GetRng(void);
+    WC_RNG* GetRng(void);
     RsaKey* GetRsaPrivateKey(const char* file);
     void    FillSignStr(unsigned char*, const char*, int);
 %}
@@ -44,11 +46,14 @@ int             wolfSSL_Init(void);
 char*           wolfSSL_error_string(int);
 int             wolfSSL_swig_connect(WOLFSSL*, const char* server, int port);
 
-int         wc_RsaSSL_Sign(const unsigned char* in, int inLen, unsigned char* out, int outLen, RsaKey* key, RNG* rng);
+int         wc_PKCS12_PBKDF(unsigned char* output, const unsigned char* passwd, int pLen, const unsigned char* salt,
+                        int sLen, int iterations, int kLen, int hashType, int purpose);
+
+int         wc_RsaSSL_Sign(const unsigned char* in, int inLen, unsigned char* out, int outLen, RsaKey* key, WC_RNG* rng);
 
 int         wc_RsaSSL_Verify(const unsigned char* in, int inLen, unsigned char* out, int outLen, RsaKey* key);
 
-RNG* GetRng(void);
+WC_RNG* GetRng(void);
 RsaKey* GetRsaPrivateKey(const char* file);
 void    FillSignStr(unsigned char*, const char*, int);
 

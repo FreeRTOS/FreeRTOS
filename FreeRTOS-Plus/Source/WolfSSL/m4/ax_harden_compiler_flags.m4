@@ -61,10 +61,13 @@
 # AX_APPEND_COMPILE_FLAGS([-fstack-check],,[$ax_append_compile_cflags_extra]) -- problems with fastmath stack size checks
 # AX_APPEND_COMPILE_FLAGS([-floop-parallelize-all],,[$ax_append_compile_cflags_extra]) -- causes RSA verify problem on x64
 # AX_APPEND_COMPILE_FLAGS([-Wunreachable-code],,[$ax_append_compile_cflags_extra])  -- older clang and when gcc had it are buggy
+# AX_APPEND_COMPILE_FLAGS([-fPIE],,[$ax_append_compile_cflags_extra]) -- Flag for executables not libraries
 
-#serial 4.1
+#serial 4.2
+# changes: deleted the clearing of CFLAGS
 
   AC_DEFUN([AX_HARDEN_LINKER_FLAGS], [
+      AX_REQUIRE_DEFINED([AX_CHECK_LINK_FLAG])
       AC_REQUIRE([AX_VCS_CHECKOUT])
       AC_REQUIRE([AX_DEBUG])
 
@@ -93,11 +96,11 @@
       ])
 
   AC_DEFUN([AX_HARDEN_CC_COMPILER_FLAGS], [
+      AX_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
       AC_REQUIRE([AX_HARDEN_LINKER_FLAGS])
 
       AC_LANG_PUSH([C])
 
-      CFLAGS=
       ac_cv_warnings_as_errors=no
       ax_append_compile_cflags_extra=
       AS_IF([test "$ac_cv_vcs_checkout" = "yes"],[
@@ -155,11 +158,11 @@
       AX_APPEND_COMPILE_FLAGS([-Wunused-variable],,[$ax_append_compile_cflags_extra])
       AX_APPEND_COMPILE_FLAGS([-Wwrite-strings],,[$ax_append_compile_cflags_extra])
       AX_APPEND_COMPILE_FLAGS([-fwrapv],,[$ax_append_compile_cflags_extra])
-      AX_APPEND_COMPILE_FLAGS([-fPIE],,[$ax_append_compile_cflags_extra])
       AC_LANG_POP
       ])
 
   AC_DEFUN([AX_HARDEN_CXX_COMPILER_FLAGS], [
+      AC_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
       AC_REQUIRE([AX_HARDEN_CC_COMPILER_FLAGS])
       AC_LANG_PUSH([C++])
 
@@ -227,6 +230,7 @@
       ])
 
   AC_DEFUN([AX_CC_OTHER_FLAGS], [
+      AX_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
       AC_REQUIRE([AX_HARDEN_CC_COMPILER_FLAGS])
 
       AC_LANG_PUSH([C])

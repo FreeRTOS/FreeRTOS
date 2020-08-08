@@ -88,8 +88,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPENSSL_EXTRA;WOLFSSL_RIPEMD;WOLFSSL_SHA512;NO_PSK;WOLFSSL_SNIFFER;SSL_SNIFFER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;../IDE/WIN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_LIB;SSL_SNIFFER_EXPORTS;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -108,8 +108,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPENSSL_EXTRA;WOLFSSL_RIPEMD;WOLFSSL_SHA512;NO_PSK;WOLFSSL_SNIFFER;SSL_SNIFFER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;../IDE/WIN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_LIB;SSL_SNIFFER_EXPORTS;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -127,8 +127,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPENSSL_EXTRA;WOLFSSL_RIPEMD;WOLFSSL_SHA512;NO_PSK;WOLFSSL_SNIFFER;SSL_SNIFFER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;../IDE/WIN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_LIB;SSL_SNIFFER_EXPORTS;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
@@ -149,8 +149,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>OPENSSL_EXTRA;WOLFSSL_RIPEMD;WOLFSSL_SHA512;NO_PSK;WOLFSSL_SNIFFER;SSL_SNIFFER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../;../IDE/WIN;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WOLFSSL_LIB;SSL_SNIFFER_EXPORTS;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\wolfssl\sniffer.h" />
+    <ClInclude Include="..\IDE\WIN\user_settings.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\wolfssl\sniffer_error.rc" />

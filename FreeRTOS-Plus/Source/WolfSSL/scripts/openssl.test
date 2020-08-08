@@ -1,0 +1,327 @@
+#!/bin/sh
+
+#openssl.test
+
+# need a unique port since may run the same time as testsuite
+generate_port() {
+    port=`LC_CTYPE=C tr -cd 0-9 </dev/urandom | head -c 7`
+    port=$((`LC_CTYPE=C tr -cd 1-9 </dev/urandom | head -c 1`$port))
+    port=$(($port % (65535-49512)))
+    port=$(($port + 49512))
+}
+
+
+generate_port
+openssl_port=$port
+no_pid=-1
+server_pid=$no_pid
+ecdh_server_pid=$no_pid
+wolf_suites_tested=0
+wolf_suites_total=0
+counter=0
+testing_summary="OpenSSL Interop Testing Summary:\nVersion\tTested\t#Found\t#Tested\n"
+versionName="Invalid"
+if [ "$OPENSSL" = "" ]; then
+    OPENSSL=openssl
+fi
+
+version_name() {
+    case $version in "0")
+        versionName="SSLv3"
+        ;;
+    "1")
+        versionName="TLSv1"
+        ;;
+    "2")
+        versionName="TLSv1.1"
+        ;;
+    "3")
+        versionName="TLSv1.2"
+        ;;
+    "4")
+        versionName="ALL"
+        ;;
+    esac
+}
+
+do_cleanup() {
+    echo "in cleanup"
+
+    if  [ $server_pid != $no_pid ]
+    then
+        echo "killing server"
+        kill -9 $server_pid
+    fi
+
+    if  [ $ecdh_server_pid != $no_pid ]
+    then
+        echo "killing ECDH-RSA server"
+        kill -9 $ecdh_server_pid
+    fi
+}
+
+do_trap() {
+    echo "got trap"
+    do_cleanup
+    exit 1
+}
+
+trap do_trap INT TERM
+
+if test -n "$WOLFSSL_OPENSSL_TEST"; then
+    echo "WOLFSSL_OPENSSL_TEST set, running test..."
+else
+    echo "WOLFSSL_OPENSSL_TEST NOT set, won't run"
+    exit 0
+fi
+
+echo -e "\nTesting existence of openssl command...\n"
+command -v $OPENSSL >/dev/null 2>&1 || { echo >&2 "Requires openssl command, but it's not installed.  Ending."; exit 0; }
+
+
+echo -e "\nTesting for _build directory as part of distcheck, different paths"
+currentDir=`pwd`
+if [ $currentDir = *"_build" ]
+then
+    echo -e "_build directory detected, moving a directory back"
+    cd ..
+fi
+
+
+# get wolfssl ciphers
+wolf_ciphers=`./examples/client/client -e`
+
+found_free_port=0
+while [ "$counter" -lt 20 ]; do
+    echo -e "\nTrying to start openssl server on port $openssl_port...\n"
+
+    $OPENSSL s_server -accept $openssl_port -cert ./certs/server-cert.pem -key ./certs/server-key.pem  -quiet -CAfile ./certs/client-ca.pem -www  -dhparam ./certs/dh2048.pem -dcert ./certs/server-ecc.pem -dkey ./certs/ecc-key.pem -verify 10 -verify_return_error -psk 1a2b3c4d -cipher "ALL:eNULL" &
+    server_pid=$!
+    # wait to see if s_server successfully starts before continuing
+    sleep 0.1
+
+    if ps -p $server_pid > /dev/null
+    then
+        echo "s_server started successfully on port $openssl_port"
+        found_free_port=1
+        break
+    else
+        #port already started, try a different port
+        counter=$((counter+ 1))
+        generate_port
+        openssl_port=$port
+    fi
+done
+
+if [ $found_free_port = 0 ]
+then
+    echo -e "Couldn't find free port for server"
+    do_cleanup
+    exit 1
+fi
+
+# if ECDH-RSA is enabled then start up server for ECDH-RSA suites
+case $wolf_ciphers in
+*ECDH-RSA*)
+    generate_port
+    ecdh_port=$port
+    found_free_port=0
+    counter=0
+    while [ "$counter" -lt 20 ]; do
+        echo -e "\nTrying to start ECDH-RSA openssl server on port $ecdh_port...\n"
+
+        $OPENSSL s_server -accept $ecdh_port -cert ./certs/server-ecc-rsa.pem -key ./certs/ecc-key.pem  -quiet -CAfile ./certs/client-ca.pem -www -dhparam ./certs/dh2048.pem -verify 10 -verify_return_error -cipher "ALL:eNULL" &
+        ecdh_server_pid=$!
+        # wait to see if s_server successfully starts before continuing
+        sleep 0.1
+
+        if ps -p $ecdh_server_pid > /dev/null
+        then
+            echo "s_server started successfully on port $ecdh_port"
+            found_free_port=1
+            break
+        else
+            #port already started, try a different port
+            counter=$((counter+ 1))
+            generate_port
+            ecdh_port=$port
+        fi
+    done
+
+    if [ $found_free_port = 0 ]
+    then
+        echo -e "Couldn't find free port for server"
+        do_cleanup
+        exit 1
+    fi
+    ;;
+esac
+
+# server should be ready, let's make sure
+server_ready=0
+while [ "$counter" -lt 20 ]; do
+    echo -e "waiting for openssl s_server ready..."
+    nc -z localhost $openssl_port
+    nc_result=$?
+    if [ $nc_result = 0 ]
+    then
+        echo -e "openssl s_server ready!"
+        server_ready=1
+        break
+    fi
+    sleep 0.1
+    counter=$((counter+ 1))
+done
+
+
+if [ $server_ready = 0 ]
+then
+    echo -e "Couldn't verify openssl server is running, timeout error"
+    do_cleanup
+    exit 1
+fi
+
+OIFS=$IFS # store old separator to reset
+IFS=$'\:' # set delimiter
+set -f # no globbing
+
+wolf_versions=`./examples/client/client -V`
+wolf_versions="$wolf_versions:4" #:4 will test without -v flag
+
+wolf_temp_suites_total=0
+wolf_temp_suites_tested=0
+
+for version in $wolf_versions;
+do
+    echo -e "version = $version"
+    # get openssl ciphers depending on version
+    # -s flag for only supported ciphers
+    case $version in "0")
+        openssl_ciphers=`$OPENSSL ciphers "SSLv3"`
+
+        # double check that can actually do a sslv3 connection using
+        # client-cert.pem to send but any file with EOF works
+        $OPENSSL s_client -ssl3 -no_ign_eof -host localhost -port $openssl_port < ./certs/client-cert.pem
+        sslv3_sup=$?
+
+        if [ $sslv3_sup != 0 ]
+        then
+            echo -e "Not testing SSLv3. No OpenSSL support for 'SSLv3' modifier"
+            testing_summary="$testing_summary SSLv3\tNo\tN/A\tN/A\t (No OpenSSL Support for cipherstring)\n"
+            continue
+        fi
+        ;;
+    "1")
+        openssl_ciphers=`$OPENSSL ciphers -s "TLSv1"`
+        tlsv1_sup=$?
+        if [ $tlsv1_sup != 0 ]
+        then
+            echo -e "Not testing TLSv1. No OpenSSL support for 'TLSv1' modifier"
+            testing_summary="$testing_summary TLSv1\tNo\tN/A\tN/A\t (No OpenSSL Support for cipherstring)\n"
+            continue
+        fi
+        ;;
+    "2")
+        openssl_ciphers=`$OPENSSL ciphers -s "TLSv1.1"`
+        tlsv1_1_sup=$?
+        if [ $tlsv1_1_sup != 0 ]
+        then
+            echo -e "Not testing TLSv1.1. No OpenSSL support for 'TLSv1.1' modifier"
+            testing_summary="${testing_summary}TLSv1.1\tNo\tN/A\tN/A\t (No OpenSSL Support for cipherstring)\n"
+            continue
+        fi
+        ;;
+    "3")
+        openssl_ciphers=`$OPENSSL ciphers -s "TLSv1.2"`
+        tlsv1_2_sup=$?
+        if [ $tlsv1_2_sup != 0 ]
+        then
+            echo -e "Not testing TLSv1.2. No OpenSSL support for 'TLSv1.2' modifier"
+            testing_summary="$testing_summary TLSv1.2\tNo\tN/A\tN/A\t (No OpenSSL Support for cipherstring)\n"
+            continue
+        fi
+        ;;
+    "4") #test all suites
+        openssl_ciphers=`$OPENSSL ciphers -s "ALL"`
+        all_sup=$?
+        if [ $all_sup != 0 ]
+        then
+            echo -e "Not testing ALL. No OpenSSL support for ALL modifier"
+            testing_summary="$testing_summary ALL\tNo\tN/A\tN/A\t (No OpenSSL Support for cipherstring)\n"
+            continue
+        fi
+        ;;
+    esac
+
+    for wolfSuite in $wolf_ciphers; do
+        echo -e "trying wolfSSL cipher suite $wolfSuite"
+        wolf_temp_suites_total=$((wolf_temp_suites_total + 1))
+        matchSuite=0;
+
+        case ":$openssl_ciphers:" in *":$wolfSuite:"*) # add extra : for edge cases
+            echo -e "Matched to OpenSSL suite support"
+            matchSuite=1;;
+        esac
+
+        if [ $matchSuite = 0 ]
+        then
+            echo -e "Couldn't match suite, continuing..."
+            continue
+        fi
+
+        # check for psk suite and turn on client psk if so
+        psk=""
+        adh=""
+        port=$openssl_port
+        caCert=""
+        case $wolfSuite in
+        *ECDH-RSA*)
+            port=$ecdh_port ;;
+        *ECDHE-ECDSA*|*ECDH-ECDSA*)
+            caCert="-A./certs/ca-ecc-cert.pem" ;;
+        *PSK*)
+            psk="-s " ;;
+        *ADH*)
+            adh="-a " ;;
+        esac
+
+        if [ $version -lt 4 ]
+        then
+            ./examples/client/client -p $port -g -r -l $wolfSuite -v $version $psk $adh $caCert
+        else
+            # do all versions
+            ./examples/client/client -p $port -g -r -l $wolfSuite $psk $adh $caCert
+        fi
+
+        client_result=$?
+
+        if [ $client_result != 0 ]
+        then
+            echo -e "client failed! Suite = $wolfSuite version = $version"
+            do_cleanup
+            exit 1
+        fi
+        wolf_temp_suites_tested=$((wolf_temp_suites_tested+1))
+
+    done
+    wolf_suites_tested=$((wolf_temp_suites_tested+wolf_suites_tested))
+    wolf_suites_total=$((wolf_temp_suites_total+wolf_suites_total))
+    echo -e "wolfSSL suites tested with version:$version  $wolf_temp_suites_tested"
+    version_name
+    testing_summary="$testing_summary$versionName\tYes\t$wolf_temp_suites_total\t$wolf_temp_suites_tested\n"
+    wolf_temp_suites_total=0
+    wolf_temp_suites_tested=0
+done
+IFS=$OIFS #restore separator
+
+kill -9 $server_pid
+if  [ $ecdh_server_pid != $no_pid ]
+then
+    kill -9 $ecdh_server_pid
+fi
+
+echo -e "wolfSSL total suites   $wolf_suites_total"
+echo -e "wolfSSL suites tested  $wolf_suites_tested"
+echo -e "\nSuccess!\n\n\n\n"
+echo -e "$testing_summary"
+exit 0

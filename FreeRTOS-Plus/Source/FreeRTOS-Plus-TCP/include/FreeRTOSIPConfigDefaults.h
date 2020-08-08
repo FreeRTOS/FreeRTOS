@@ -36,6 +36,10 @@ will be removed. */
 /* This file provides default values for configuration options that are missing
 from the FreeRTOSIPConfig.h configuration header file. */
 
+/* These macros are used to define away static keyword for CBMC proofs */
+#ifndef _static
+	#define _static static
+#endif
 
 /* Ensure defined configuration constants are using the most up to date naming. */
 #ifdef tcpconfigIP_TIME_TO_LIVE
@@ -317,20 +321,25 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#define ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND	1
 #endif
 
-
+/* Configuration to control whether packets with IP options,
+ * received over the network, should be passed up to the 
+ * software stack OR should be dropped.
+ * If set to 1, the stack accepts IP packets that contain IP options, but does
+ * not process the options (IP options are not supported).
+ * If set to 0, the stack will drop IP packets that contain IP options.
+ */
 #ifndef ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS
 	#define ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS	1
 #endif
 
-#ifndef ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS
-	#define ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS	0
-#endif
-
-
-#ifndef ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS
-	#define ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS	1
-#endif
-
+/* Configuration to control whether UDP packets with 
+ * checksum value of zero should be passed up the software
+ * stack OR should be dropped.
+ * If set to 1, the stack will accept UDP packets that have their checksum 
+ * value set to 0.
+ * If set to 0, the stack will drop UDP packets that have their checksum value
+ * set to 0.
+ */
 #ifndef ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS
 	#define ipconfigUDP_PASS_ZERO_CHECKSUM_PACKETS	0
 #endif
@@ -429,7 +438,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 	#ifndef ipconfigDNS_CACHE_NAME_LENGTH
 		/* Per https://tools.ietf.org/html/rfc1035, 253 is the maximum string length
 		of a DNS name. The following default accounts for a null terminator. */
-		#define ipconfigDNS_CACHE_NAME_LENGTH   254
+		#define ipconfigDNS_CACHE_NAME_LENGTH   254U
 	#endif
 
 	#ifndef ipconfigDNS_CACHE_ENTRIES

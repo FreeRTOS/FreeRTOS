@@ -1,8 +1,8 @@
 /* ssl.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * a with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
 
-/*  ssl.h defines openssl compatibility layer 
+
+/*  ssl.h defines openssl compatibility layer
  *
  */
+#ifndef CYASSL_OPENSSL_H_
+#define CYASSL_OPENSSL_H_
 
+#include <cyassl/ssl.h>
 #include <wolfssl/openssl/ssl.h>
+
+#endif
+

@@ -1,8 +1,8 @@
 /* wolfcrypt_last.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 /* This file needs to be linked last in order to work correctly */
 
@@ -29,6 +30,12 @@
 #include <cyassl/ctaocrypt/settings.h>
 
 #ifdef HAVE_FIPS
+
+#ifdef USE_WINDOWS_API
+    #pragma code_seg(".fipsA$l")
+    #pragma const_seg(".fipsB$l")
+#endif
+
 
 /* last function of text/code segment */
 int wolfCrypt_FIPS_last(void);

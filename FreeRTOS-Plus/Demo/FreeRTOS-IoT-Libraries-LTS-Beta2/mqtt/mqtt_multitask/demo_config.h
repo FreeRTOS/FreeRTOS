@@ -58,7 +58,7 @@
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
  *
- * #define democonfigCLIENT_IDENTIFIER				"insert here."
+ * #define CLIENT_IDENTIFIER				"insert here."
  */
 
 
@@ -91,7 +91,7 @@
  * communicate through Windows Firewall for avoiding unwanted network traffic
  * to your machine.
  * 5. After verifying that a Mosquitto broker is running successfully, update
- * the config democonfigMQTT_BROKER_ENDPOINT to the local IP address of the
+ * the config BROKER_ENDPOINT to the local IP address of the
  * Windows host machine. Please note that "localhost" or address "127.0.0.1"
  * will not work as this example is running on a Windows Simulator and not on
  * Windows host natively. Also note that, if the Windows host is using a
@@ -100,18 +100,18 @@
  *
  * As an alternative option, a publicly hosted Mosquitto broker can also be
  * used as an MQTT broker end point. This can be done by updating the config
- * democonfigMQTT_BROKER_ENDPOINT to "test.mosquitto.org". However, this is not
+ * BROKER_ENDPOINT to "test.mosquitto.org". However, this is not
  * recommended due the possible downtimes of the broker as indicated by the
  * documentation in https://test.mosquitto.org/.
  *
- * #define democonfigMQTT_BROKER_ENDPOINT				"localhost"
+ * #define BROKER_ENDPOINT				"localhost"
  */
 
 
 /**
  * @brief The port to use for the demo.
  *
- * #define democonfigMQTT_BROKER_PORT					( insert here. )
+ * #define BROKER_PORT					( insert here. )
  */
 
 

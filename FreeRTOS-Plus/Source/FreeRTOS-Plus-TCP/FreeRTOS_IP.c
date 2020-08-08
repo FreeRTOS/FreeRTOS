@@ -170,7 +170,7 @@ static void prvIPTask( void *pvParameters );
 /*
  * Called when new data is available from the network interface.
  */
-static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+_static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
 
 /*
  * Process incoming IP packets.

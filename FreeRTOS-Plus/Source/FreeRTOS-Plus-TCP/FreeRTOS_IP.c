@@ -1417,7 +1417,7 @@ void vIPNetworkUpCalls( void )
 }
 /*-----------------------------------------------------------*/
 
-static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
+_static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 const EthernetHeader_t *pxEthernetHeader;
 eFrameProcessingResult_t eReturned = eReleaseBuffer;

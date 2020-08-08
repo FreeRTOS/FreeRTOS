@@ -140,8 +140,8 @@
 #define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS             ( 60U )
 
 /**
- * @brief Delay between consecutive cycles of MQTT publish operations in a
- * demo iteration in ticks.
+ * @brief Delay (in ticks) between consecutive cycles of MQTT publish operations in a
+ * demo iteration.
  *
  * Note that the process loop also has a timeout, so the total time between
  * publishes is the sum of the two delays.
@@ -340,9 +340,10 @@ static void prvMQTTDemoTask( void * pvParameters )
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
 
-    /* Store the entry time of the demo application. This entry time is used for
-     * calculating the elapsed time in application, by the time utility function
-     * used by MQTT library. */
+    /* Set the entry time of the demo application. This entry time will be used
+     * to calculate relative time elapsed in the execution of the demo application,
+     * by the timer utility function that is provided to the MQTT library.
+     */
     ulGlobalEntryTimeMs = prvGetTimeMs();
 
     for( ; ; )
@@ -370,7 +371,7 @@ static void prvMQTTDemoTask( void * pvParameters )
          * The function #prvMQTTSubscribeToTopic will not wait to receive a SUBACK,
          * but the function #MQTT_ProcessLoop will attempt to receive the SUBACK
          * from network and if a SUBACK is received, application will be notified
-         * through the callback registered(#prvEventCallback for this application).
+         * through the callback registered (#prvEventCallback for this application).
          * This demo uses QoS1 in Subscribe, therefore, the Publish messages
          * received from the broker will have QoS1. */
         LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );

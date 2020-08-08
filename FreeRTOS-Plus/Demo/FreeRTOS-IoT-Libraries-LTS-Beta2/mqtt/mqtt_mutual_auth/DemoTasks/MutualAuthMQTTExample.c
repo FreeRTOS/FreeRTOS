@@ -213,9 +213,9 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext );
 static uint32_t prvGetTimeMs( void );
 
 /**
- * @brief Process a response or ack to an MQTT request (PING, SUBSCRIBE
- * or UNSUBSCRIBE). This function processes PINGRESP, PUBACK, SUBACK, and
- * UNSUBACK.
+ * @brief Process a response or ack to an MQTT request (PING, PUBLISH,
+ * SUBSCRIBE or UNSUBSCRIBE). This function processes PINGRESP, PUBACK,
+ * SUBACK, and UNSUBACK.
  *
  * @param[in] pxIncomingPacket is a pointer to structure containing deserialized
  * MQTT response.
@@ -467,8 +467,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     MQTTConnectInfo_t xConnectInfo;
     bool xSessionPresent;
     TransportInterface_t xTransport;
-    MQTTGetCurrentTimeFunc_t xGetTimeFunction;
-    MQTTEventCallback_t xUserCallback;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -480,15 +478,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.send = TLS_FreeRTOS_send;
     xTransport.recv = TLS_FreeRTOS_recv;
 
-    /* Application callback for receiving incoming published and incoming acks
-     * from MQTT library. */
-    xUserCallback = prvEventCallback;
-
-    /* Time utility function to be used by MQTT library. */
-    xGetTimeFunction = prvGetTimeMs;
-
     /* Initialize MQTT library. */
-    xResult = MQTT_Init( pxMQTTContext, &xTransport, xGetTimeFunction, xUserCallback, &xBuffer );
+    xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */

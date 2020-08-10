@@ -782,7 +782,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\stm32h743xx_flash.icf</state>
+                    <state>$PROJ_DIR$\stm32h743xx_flash_dtcram.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

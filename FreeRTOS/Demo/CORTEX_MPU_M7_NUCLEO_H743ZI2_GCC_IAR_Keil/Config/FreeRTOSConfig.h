@@ -135,4 +135,9 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
  * configTOTAL_MPU_REGIONS correctly. */
 #define configTOTAL_MPU_REGIONS						16
 
+/* The default TEX,S,C,B setting marks the SRAM as shareable and as a result,
+ * disables cache. Do not mark the SRAM as shareable because caching is being
+ * used. TEX=0, S=0, C=1, B=1. */
+#define configTEX_S_C_B_SRAM						( 0x03UL )
+
 #endif /* FREERTOS_CONFIG_H */

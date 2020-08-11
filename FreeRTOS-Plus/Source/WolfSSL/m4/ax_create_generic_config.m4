@@ -9,7 +9,7 @@
 # DESCRIPTION
 #
 #   Creates a generic PACKAGE-config file that has all the things that you
-#   want, hmm, well, atleast it has --cflags, --version, --libs. Ahhm, did
+#   want, hmm, well, at least it has --cflags, --version, --libs. Ahhm, did
 #   you see ax_path_generic in the autoconf-archive? ;-)
 #
 #   this macros saves you all the typing for a pkg-config.in script, you
@@ -78,7 +78,7 @@ echo 'package="'$P'"' >>$F
 echo 'version="'$V'"' >>$F
 echo 'libs="'$L'"' >>$F
 echo ' ' >>$F
-# in the order of occurence a standard automake Makefile
+# in the order of occurrence a standard automake Makefile
 echo 'prefix="'$prefix'"' >>$F
 echo 'exec_prefix="'$exec_prefix'"' >>$F
 echo 'bindir="'$bindir'"' >>$F

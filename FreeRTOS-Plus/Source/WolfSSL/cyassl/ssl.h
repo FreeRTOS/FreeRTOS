@@ -1,8 +1,8 @@
 /* ssl.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * a with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+
 /*
- * ssl.h makes wolfssl backwards compatibile with cyassl
+ * ssl.h makes wolfssl backwards compatible with cyassl
  */
 
 #ifndef WOLFSSL_CYASSL_H_
@@ -165,6 +166,8 @@
 #define CyaSSL_X509_get_der       wolfSSL_X509_get_der
 #define CyaSSL_X509_notBefore     wolfSSL_X509_notBefore
 #define CyaSSL_X509_notAfter      wolfSSL_X509_notAfter
+#define CyaSSL_X509_get_notBefore wolfSSL_X509_get_notBefore
+#define CyaSSL_X509_get_notAfter  wolfSSL_X509_get_notAfter
 #define CyaSSL_X509_version       wolfSSL_X509_version
 
 #define CyaSSL_cmp_peer_cert_to_file wolfSSL_cmp_peer_cert_to_file
@@ -225,7 +228,7 @@
 #define CyaSSL_CTX_get_ex_new_index wolfSSL_CTX_get_ex_new_index
 
 
-/* io.c */
+/* wolfio.c */
 #define CYASSL_CBIO_ERR_ISR        WOLFSSL_CBIO_ERR_ISR
 #define CYASSL_CBIO_ERR_TIMEOUT    WOLFSSL_CBIO_ERR_TIMEOUT
 #define CYASSL_CBIO_ERR_GENERAL    WOLFSSL_CBIO_ERR_GENERAL
@@ -444,7 +447,6 @@
 #define CyaSSL_CTX_use_PrivateKey_file      wolfSSL_CTX_use_PrivateKey_file
 #define CyaSSL_CTX_use_certificate_file     wolfSSL_CTX_use_certificate_file
 #define CyaSSL_CTX_use_PrivateKey_buffer    wolfSSL_CTX_use_PrivateKey_buffer
-#define CyaSSL_CTX_use_PrivateKey_buffer    wolfSSL_CTX_use_PrivateKey_buffer
 #define CyaSSL_CTX_use_certificate_buffer   wolfSSL_CTX_use_certificate_buffer
 #define CyaSSL_CTX_use_NTRUPrivateKey_file  wolfSSL_CTX_use_NTRUPrivateKey_file
 #define CyaSSL_use_certificate_chain_buffer wolfSSL_use_certificate_chain_buffer
@@ -485,21 +487,20 @@
 #define CyaDTLSv1_2_client_method         wolfDTLSv1_2_client_method
 #define CyaDTLSv1_2_server_method         wolfDTLSv1_2_server_method
 #define CyaSSL_set_group_messages         wolfSSL_set_group_messages
-#define CyaSSL_set_using_nonblock         wolfSSL_set_using_nonblock
 #define CyaSSL_CTX_set_cipher_list        wolfSSL_CTX_set_cipher_list
 #define CyaSSL_CTX_set_group_messages     wolfSSL_CTX_set_group_messages
 #define CyaSSL_CTX_set_session_cache_mode wolfSSL_CTX_set_session_cache_mode
 
 /* Callbacks */
 
-/* 
- * Empty commment denotes not listed in CyaSSL Manual
- * (soon to be wolfSSL Manual) 
+/*
+ * Empty comment denotes not listed in CyaSSL Manual
+ * (soon to be wolfSSL Manual)
  */
 
 #define CyaSSL_accept_ex              wolfSSL_accept_ex
-#define CyaSSL_SetIORecv              wolfSSL_SetIORecv
-#define CyaSSL_SetIOSend              wolfSSL_SetIOSend
+#define CyaSSL_SetIORecv              wolfSSL_CTX_SetIORecv
+#define CyaSSL_SetIOSend              wolfSSL_CTX_SetIOSend
 #define CyaSSL_connect_ex             wolfSSL_connect_ex
 #define CyaSSL_CTX_SetCACb            wolfSSL_CTX_SetCACb
 #define CyaSSL_SetIOReadCtx           wolfSSL_SetIOReadCtx
@@ -566,9 +567,9 @@
 
 /* OCSP and CRL */
 
-/* 
- * Empty commment denotes not listed in CyaSSL Manual
- * (soon to be wolfSSL Manual) 
+/*
+ * Empty comment denotes not listed in CyaSSL Manual
+ * (soon to be wolfSSL Manual)
  */
 
 #define CYASSL_CRL_MONITOR               WOLFSSL_CRL_MONITOR               /**/
@@ -623,6 +624,7 @@
 #define CyaSSL_dtls_get_peer            wolfSSL_dtls_get_peer
 #define CyaSSL_dtls_got_timeout         wolfSSL_dtls_got_timeout
 #define CyaSSL_dtls_get_current_timeout wolfSSL_dtls_get_current_timeout
+#define CyaSSL_set_using_nonblock       wolfSSL_dtls_set_using_nonblock
 
 /* Certificate Manager */
 #define CyaSSL_CertManagerNew          wolfSSL_CertManagerNew
@@ -657,7 +659,6 @@
 
 
 /* OpenSSL Compatibility Layer */
-#define CyaSSL_PemCertToDer               wolfSSL_PemCertToDer
 #define CyaSSL_get_sessionID              wolfSSL_get_sessionID
 #define CyaSSL_get_peer_count             wolfSSL_get_peer_count
 #define CyaSSL_get_chain_cert             wolfSSL_get_chain_cert

@@ -23,7 +23,7 @@ same as self signed, use ca prefix instead of client
 
 1) openssl req -newkey rsa:1024 -sha1 -days 1000 -nodes -keyout server-key.pem > server-req.pem
 
-* note if using exisitng key do: -new -key keyName
+* note if using existing key do: -new -key keyName
 
 2) copy ca-key.pem ca-cert.srl   (why ????)
 
@@ -106,7 +106,7 @@ to use PKCS#12 instead use -v1 witch a 12 algo like
 openssl pkcs8 -nocrypt -in server-keyPkcs8.pem -out server-key.pem
 
 
-*** DH paramters ***
+*** DH parameters ***
 
 openssl dhparam 2048 > dh2048.param
 

@@ -1,5 +1,5 @@
 # ===========================================================================
-#      http://www.gnu.org/software/autoconf-archive/ax_am_jobserver.html
+#     https://www.gnu.org/software/autoconf-archive/ax_am_jobserver.html
 # ===========================================================================
 #
 # SYNOPSIS
@@ -33,7 +33,9 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 7.1
+#serial 8.1
+# Local update: Make the increment of enable-jobserver so it isn't executable
+# and is more posix syntax.
 
 AC_DEFUN([AX_AM_JOBSERVER], [
     AC_REQUIRE([AX_COUNT_CPUS])
@@ -44,7 +46,8 @@ AC_DEFUN([AX_AM_JOBSERVER], [
                         yes: enable one more than CPU count
     ],, [enable_jobserver=m4_ifval([$1],[$1],[yes])])
     if test "x$enable_jobserver" = "xyes"; then
-        let enable_jobserver=$CPU_COUNT+1
+        enable_jobserver=$CPU_COUNT
+        : $((enable_jobserver+=1))
     fi
     m4_pattern_allow(AM_MAKEFLAGS)
     if test "x$enable_jobserver" != "xno"; then

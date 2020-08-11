@@ -1,8 +1,8 @@
 /* testsuite.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -27,21 +28,27 @@
 
 #include <wolfssl/ssl.h>
 #include <wolfssl/test.h>
-#include "wolfcrypt/test/test.h"
+#include <wolfcrypt/test/test.h>
+
 
 #ifndef SINGLE_THREADED
 
+#ifdef OPENSSL_EXTRA
 #include <wolfssl/openssl/ssl.h>
+#endif
 #include <wolfssl/wolfcrypt/sha256.h>
 
-#include "examples/echoclient/echoclient.h"
-#include "examples/echoserver/echoserver.h"
-#include "examples/server/server.h"
-#include "examples/client/client.h"
+#include <examples/echoclient/echoclient.h>
+#include <examples/echoserver/echoserver.h>
+#include <examples/server/server.h>
+#include <examples/client/client.h>
 
 
+#ifndef NO_SHA256
 void file_test(const char* file, byte* hash);
+#endif
 
+#if !defined(NO_WOLFSSL_SERVER) && !defined(NO_WOLFSSL_CLIENT)
 void simple_test(func_args*);
 
 enum {
@@ -49,10 +56,10 @@ enum {
 };
 
 static const char *outputName;
+#endif
 
 int myoptind = 0;
 char* myoptarg = NULL;
-
 
 #ifndef NO_TESTSUITE_MAIN_DRIVER
 
@@ -68,6 +75,7 @@ char* myoptarg = NULL;
 
 int testsuite_test(int argc, char** argv)
 {
+#if !defined(NO_WOLFSSL_SERVER) && !defined(NO_WOLFSSL_CLIENT)
     func_args server_args;
 
     tcp_ready ready;
@@ -83,11 +91,12 @@ int testsuite_test(int argc, char** argv)
     int num = 6;
 #endif
 
-#ifdef HAVE_CAVIUM
-        int ret = OpenNitroxDevice(CAVIUM_DIRECT, CAVIUM_DEV_ID);
-        if (ret != 0)
-            err_sys("Cavium OpenNitroxDevice failed");
-#endif /* HAVE_CAVIUM */
+#ifdef HAVE_WNR
+    if (wc_InitNetRandom(wnrConfig, NULL, 5000) != 0) {
+        err_sys("Whitewood netRandom global config failed");
+        return -1237;
+    }
+#endif /* HAVE_WNR */
 
     StartTCP();
 
@@ -100,13 +109,7 @@ int testsuite_test(int argc, char** argv)
 #endif
 
 #if !defined(WOLFSSL_TIRTOS)
-    if (CurrentDir("testsuite") || CurrentDir("_build"))
-        ChangeDirBack(1);
-    else if (CurrentDir("Debug") || CurrentDir("Release"))
-        ChangeDirBack(3);          /* Xcode->Preferences->Locations->Locations*/
-                                   /* Derived Data Advanced -> Custom  */
-                                   /* Relative to Workspace, Build/Products */
-                                   /* Debug or Release */
+    ChangeToWolfRoot();
 #endif
 
 #ifdef WOLFSSL_TIRTOS
@@ -116,10 +119,12 @@ int testsuite_test(int argc, char** argv)
     server_args.signal = &ready;
     InitTcpReady(&ready);
 
+#ifndef NO_CRYPT_TEST
     /* wc_ test */
     wolfcrypt_test(&server_args);
     if (server_args.return_code != 0) return server_args.return_code;
- 
+#endif
+
     /* Simple wolfSSL client server test */
     simple_test(&server_args);
     if (server_args.return_code != 0) return server_args.return_code;
@@ -131,13 +136,11 @@ int testsuite_test(int argc, char** argv)
         func_args echo_args;
         char* myArgv[NUMARGS];
 
-        char argc0[32];
-        char argc1[32];
-        char argc2[32];
+        char arg[3][32];
 
-        myArgv[0] = argc0;
-        myArgv[1] = argc1;
-        myArgv[2] = argc2;
+        myArgv[0] = arg[0];
+        myArgv[1] = arg[1];
+        myArgv[2] = arg[2];
 
         echo_args.argc = 3;
         echo_args.argv = myArgv;
@@ -149,9 +152,9 @@ int testsuite_test(int argc, char** argv)
             return EXIT_FAILURE;
         }
 
-        strcpy(echo_args.argv[0], "echoclient");
-        strcpy(echo_args.argv[1], "input");
-        strcpy(echo_args.argv[2], outputName);
+        strcpy(arg[0], "echoclient");
+        strcpy(arg[1], "input");
+        strcpy(arg[2], outputName);
 
         /* Share the signal, it has the new port number in it. */
         echo_args.signal = server_args.signal;
@@ -175,7 +178,7 @@ int testsuite_test(int argc, char** argv)
 
     /* show ciphers */
     {
-        char ciphers[1024];
+        char ciphers[WOLFSSL_CIPHER_LIST_MAX_SIZE];
         XMEMSET(ciphers, 0, sizeof(ciphers));
         wolfSSL_get_ciphers(ciphers, sizeof(ciphers)-1);
         printf("ciphers = %s\n", ciphers);
@@ -183,14 +186,18 @@ int testsuite_test(int argc, char** argv)
 
     /* validate output equals input */
     {
-        byte input[SHA256_DIGEST_SIZE];
-        byte output[SHA256_DIGEST_SIZE];
+    #ifndef NO_SHA256
+        byte input[WC_SHA256_DIGEST_SIZE];
+        byte output[WC_SHA256_DIGEST_SIZE];
 
         file_test("input",  input);
         file_test(outputName, output);
+    #endif
         remove(outputName);
+    #ifndef NO_SHA256
         if (memcmp(input, output, sizeof(input)) != 0)
             return EXIT_FAILURE;
+    #endif
     }
 
     wolfSSL_Cleanup();
@@ -200,68 +207,49 @@ int testsuite_test(int argc, char** argv)
     fdCloseSession(Task_self());
 #endif
 
-#ifdef HAVE_CAVIUM
-        CspShutdown(CAVIUM_DEV_ID);
-#endif
+#ifdef HAVE_WNR
+    if (wc_FreeNetRandom() < 0)
+        err_sys("Failed to free netRandom context");
+#endif /* HAVE_WNR */
+
     printf("\nAll tests passed!\n");
+
+#else
+    (void)argc;
+    (void)argv;
+#endif /* !NO_WOLFSSL_SERVER && !NO_WOLFSSL_CLIENT */
+
     return EXIT_SUCCESS;
 }
 
+#if !defined(NO_WOLFSSL_SERVER) && !defined(NO_WOLFSSL_CLIENT)
 void simple_test(func_args* args)
 {
     THREAD_TYPE serverThread;
 
+    int i;
+
     func_args svrArgs;
     char *svrArgv[9];
-    char argc0s[32];
-    char argc1s[32];
-    char argc2s[32];
-    char argc3s[32];
-    char argc4s[32];
-    char argc5s[32];
-    char argc6s[32];
-    char argc7s[32];
-    char argc8s[32];
+    char argvs[9][32];
 
     func_args cliArgs;
     char *cliArgv[NUMARGS];
-    char argc0c[32];
-    char argc1c[32];
-    char argc2c[32];
+    char argvc[3][32];
 
-    svrArgv[0] = argc0s;
-    svrArgv[1] = argc1s;
-    svrArgv[2] = argc2s;
-    svrArgv[3] = argc3s;
-    svrArgv[4] = argc4s;
-    svrArgv[5] = argc5s;
-    svrArgv[6] = argc6s;
-    svrArgv[7] = argc7s;
-    svrArgv[8] = argc8s;
-    cliArgv[0] = argc0c;
-    cliArgv[1] = argc1c;
-    cliArgv[2] = argc2c;
+    for (i = 0; i < 9; i++)
+        svrArgv[i] = argvs[i];
+    for (i = 0; i < 3; i++)
+        cliArgv[i] = argvc[i];
 
+    strcpy(argvs[0], "SimpleServer");
     svrArgs.argc = 1;
     svrArgs.argv = svrArgv;
     svrArgs.return_code = 0;
-    cliArgs.argc = 1;
-    cliArgs.argv = cliArgv;
-    cliArgs.return_code = 0;
-
-    strcpy(svrArgs.argv[0], "SimpleServer");
     #if !defined(USE_WINDOWS_API) && !defined(WOLFSSL_SNIFFER)  && \
                                      !defined(WOLFSSL_TIRTOS)
-        strcpy(svrArgs.argv[svrArgs.argc++], "-p");
-        strcpy(svrArgs.argv[svrArgs.argc++], "0");
-    #endif
-    #ifdef HAVE_NTRU
-        strcpy(svrArgs.argv[svrArgs.argc++], "-d");
-        strcpy(svrArgs.argv[svrArgs.argc++], "-n");
-        strcpy(svrArgs.argv[svrArgs.argc++], "-c");
-        strcpy(svrArgs.argv[svrArgs.argc++], "./certs/ntru-cert.pem");
-        strcpy(svrArgs.argv[svrArgs.argc++], "-k");
-        strcpy(svrArgs.argv[svrArgs.argc++], "./certs/ntru-key.raw");
+        strcpy(argvs[svrArgs.argc++], "-p");
+        strcpy(argvs[svrArgs.argc++], "0");
     #endif
     /* Set the last arg later, when it is known. */
 
@@ -271,11 +259,15 @@ void simple_test(func_args* args)
     wait_tcp_ready(&svrArgs);
 
     /* Setting the actual port number. */
-    strcpy(cliArgs.argv[0], "SimpleClient");
+    strcpy(argvc[0], "SimpleClient");
+    cliArgs.argv = cliArgv;
+    cliArgs.return_code = 0;
     #ifndef USE_WINDOWS_API
         cliArgs.argc = NUMARGS;
-        strcpy(cliArgs.argv[1], "-p");
-        snprintf(cliArgs.argv[2], sizeof(argc2c), "%d", svrArgs.signal->port);
+        strcpy(argvc[1], "-p");
+        snprintf(argvc[2], sizeof(argvc[2]), "%d", svrArgs.signal->port);
+    #else
+        cliArgs.argc = 1;
     #endif
 
     client_test(&cliArgs);
@@ -286,6 +278,7 @@ void simple_test(func_args* args)
     join_thread(serverThread);
     if (svrArgs.return_code != 0) args->return_code = svrArgs.return_code;
 }
+#endif /* !NO_WOLFSSL_SERVER && !NO_WOLFSSL_CLIENT */
 
 
 void wait_tcp_ready(func_args* args)
@@ -333,7 +326,7 @@ void join_thread(THREAD_TYPE thread)
 #elif defined(WOLFSSL_TIRTOS)
     while(1) {
         if (Task_getMode(thread) == Task_Mode_TERMINATED) {
-		    Task_sleep(5);
+            Task_sleep(5);
             break;
         }
         Task_yield();
@@ -343,39 +336,19 @@ void join_thread(THREAD_TYPE thread)
     assert(res == WAIT_OBJECT_0);
     res = CloseHandle((HANDLE)thread);
     assert(res);
+    (void)res; /* Suppress un-used variable warning */
 #endif
 }
 
 
-void InitTcpReady(tcp_ready* ready)
-{
-    ready->ready = 0;
-    ready->port = 0;
-#if defined(_POSIX_THREADS) && !defined(__MINGW32__)
-      pthread_mutex_init(&ready->mutex, 0);
-      pthread_cond_init(&ready->cond, 0);
-#endif
-}
-
-
-void FreeTcpReady(tcp_ready* ready)
-{
-#if defined(_POSIX_THREADS) && !defined(__MINGW32__)
-    pthread_mutex_destroy(&ready->mutex);
-    pthread_cond_destroy(&ready->cond);
-#else
-    (void)ready;
-#endif
-}
-
-
+#ifndef NO_SHA256
 void file_test(const char* file, byte* check)
 {
     FILE* f;
     int   i = 0, j, ret;
-    Sha256   sha256;
+    wc_Sha256   sha256;
     byte  buf[1024];
-    byte  shasum[SHA256_DIGEST_SIZE];
+    byte  shasum[WC_SHA256_DIGEST_SIZE];
 
     ret = wc_InitSha256(&sha256);
     if (ret != 0) {
@@ -390,6 +363,7 @@ void file_test(const char* file, byte* check)
         ret = wc_Sha256Update(&sha256, buf, i);
         if (ret != 0) {
             printf("Can't wc_Sha256Update %d\n", ret);
+            fclose(f);
             return;
         }
     }
@@ -397,19 +371,20 @@ void file_test(const char* file, byte* check)
     ret = wc_Sha256Final(&sha256, shasum);
     if (ret != 0) {
         printf("Can't wc_Sha256Final %d\n", ret);
+        fclose(f);
         return;
     }
 
-    memcpy(check, shasum, sizeof(shasum));
+    XMEMCPY(check, shasum, sizeof(shasum));
 
-    for(j = 0; j < SHA256_DIGEST_SIZE; ++j )
+    for(j = 0; j < WC_SHA256_DIGEST_SIZE; ++j )
         printf( "%02x", shasum[j] );
 
     printf("  %s\n", file);
 
     fclose(f);
 }
-
+#endif
 
 #else /* SINGLE_THREADED */
 
@@ -425,19 +400,16 @@ int main(int argc, char** argv)
     server_args.argc = argc;
     server_args.argv = argv;
 
-    if (CurrentDir("testsuite") || CurrentDir("_build"))
-        ChangeDirBack(1);
-    else if (CurrentDir("Debug") || CurrentDir("Release"))
-        ChangeDirBack(3);          /* Xcode->Preferences->Locations->Locations*/
-                                   /* Derived Data Advanced -> Custom  */
-                                   /* Relative to Workspace, Build/Products */
-                                   /* Debug or Release */
+    wolfSSL_Init();
+    ChangeToWolfRoot();
 
     wolfcrypt_test(&server_args);
     if (server_args.return_code != 0) return server_args.return_code;
 
+    wolfSSL_Cleanup();
     printf("\nAll tests passed!\n");
-    return EXIT_SUCCESS;
+
+    EXIT_TEST(EXIT_SUCCESS);
 }
 
 

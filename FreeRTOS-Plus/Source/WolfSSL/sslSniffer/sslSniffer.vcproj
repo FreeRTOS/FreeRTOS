@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="OPENSSL_EXTRA;WOLFSSL_RIPEMD;WOLFSSL_SHA512;NO_PSK;WOLFSSL_SNIFFER;SSL_SNIFFER_EXPORTS"
+				AdditionalIncludeDirectories="../;../IDE/WIN"
+				PreprocessorDefinitions="WOLFSSL_LIB;SSL_SNIFFER_EXPORTS;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -117,8 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../"
-				PreprocessorDefinitions="OPENSSL_EXTRA;WOLFSSL_RIPEMD;WOLFSSL_SHA512;NO_PSK;WOLFSSL_SNIFFER;SSL_SNIFFER_EXPORTS"
+				AdditionalIncludeDirectories="../;../IDE/WIN"
+				PreprocessorDefinitions="WOLFSSL_LIB;SSL_SNIFFER_EXPORTS;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -186,7 +186,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\include\sniffer.h"
+				RelativePath="..\wolfssl\sniffer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\IDE\WIN\user_settings.h"
 				>
 			</File>
 		</Filter>
@@ -196,7 +200,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\cyassl\sniffer_error.rc"
+				RelativePath="..\wolfssl\sniffer_error.rc"
 				>
 			</File>
 		</Filter>

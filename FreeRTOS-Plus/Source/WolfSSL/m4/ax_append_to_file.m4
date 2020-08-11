@@ -1,5 +1,5 @@
 # ===========================================================================
-#     http://www.gnu.org/software/autoconf-archive/ax_append_to_file.html
+#    https://www.gnu.org/software/autoconf-archive/ax_append_to_file.html
 # ===========================================================================
 #
 # SYNOPSIS
@@ -19,9 +19,9 @@
 #   and this notice are preserved. This file is offered as-is, without any
 #   warranty.
 
-#serial 8
+#serial 9
 
 AC_DEFUN([AX_APPEND_TO_FILE],[
 AC_REQUIRE([AX_FILE_ESCAPES])
-printf "$2\n" >> "$1"
+printf "%s" "$2" >> "$1"
 ])

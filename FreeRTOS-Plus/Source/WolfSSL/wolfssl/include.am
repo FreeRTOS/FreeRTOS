@@ -16,10 +16,17 @@ nobase_include_HEADERS+= \
                          wolfssl/certs_test.h \
                          wolfssl/test.h \
                          wolfssl/version.h \
-                         wolfssl/options.h \
                          wolfssl/ocsp.h \
-                         wolfssl/crl.h
+                         wolfssl/crl.h \
+                         wolfssl/wolfio.h
 
 noinst_HEADERS+= \
                          wolfssl/internal.h
 
+# For distro build don't install options.h.
+# It depends on the architecture and conflicts with Multi-Arch.
+if BUILD_DISTRO
+noinst_HEADERS+=         wolfssl/options.h
+else
+nobase_include_HEADERS+= wolfssl/options.h
+endif

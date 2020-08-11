@@ -1,8 +1,8 @@
 /* wolfssl_adds.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -168,7 +169,8 @@ int wolfSSL_swig_connect(WOLFSSL* ssl, const char* server, int port)
     int ret = tcp_connect(&sockfd, server, port);
     if (ret != 0) return ret;
 
-    wolfSSL_set_fd(ssl, sockfd);
+    ret = wolfSSL_set_fd(ssl, sockfd);
+    if (ret != SSL_SUCCESS) return ret;
 
     return wolfSSL_connect(ssl);
 }
@@ -182,9 +184,9 @@ char* wolfSSL_error_string(int err)
 }
 
 
-RNG* GetRng(void)
+WC_RNG* GetRng(void)
 {
-    RNG* rng = (RNG*)malloc(sizeof(RNG));
+    WC_RNG* rng = (WC_RNG*)malloc(sizeof(WC_RNG));
 
     if (rng)
         if (wc_InitRng(rng) != 0) {
@@ -205,15 +207,16 @@ RsaKey* GetRsaPrivateKey(const char* keyFile)
         size_t bytes;
         int    ret;
         word32 idx = 0;
-        FILE*  file = fopen(keyFile, "rb");
+        XFILE  file = XFOPEN(keyFile, "rb");
 
-        if (!file) {
+        if (file == XBADFILE)
+        {
             free(key);
             return 0;
         }
 
-        bytes = fread(tmp, 1, sizeof(tmp), file);
-        fclose(file);
+        bytes = XFREAD(tmp, 1, sizeof(tmp), file);
+        XFCLOSE(file);
         wc_InitRsaKey(key, 0);
 
         ret = wc_RsaPrivateKeyDecode(tmp, &idx, key, (word32)bytes);

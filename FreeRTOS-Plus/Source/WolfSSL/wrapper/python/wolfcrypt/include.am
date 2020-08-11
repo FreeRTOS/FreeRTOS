@@ -1,0 +1,30 @@
+# vim:ft=automake
+# included from Top Level Makefile.am
+# All paths should be given relative to the root
+
+EXTRA_DIST+= wrapper/python/wolfcrypt/.gitignore
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/asymmetric.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/conf.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/digest.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/index.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/mac.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/Makefile
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/random.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/docs/symmetric.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/LICENSING.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/MANIFEST.in
+EXTRA_DIST+= wrapper/python/wolfcrypt/README.rst
+EXTRA_DIST+= wrapper/python/wolfcrypt/requirements-testing.txt
+EXTRA_DIST+= wrapper/python/wolfcrypt/setup.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/test/test_ciphers.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/test/test_hashes.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/test/test_random.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/tox.ini
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/__about__.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/__init__.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/build_ffi.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/ciphers.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/exceptions.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/hashes.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/random.py
+EXTRA_DIST+= wrapper/python/wolfcrypt/wolfcrypt/utils.py

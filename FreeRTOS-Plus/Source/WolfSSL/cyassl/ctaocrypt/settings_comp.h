@@ -1,8 +1,8 @@
 /* settings_comp.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifndef CTAO_CRYPT_SETTINGS_C_H
 #define CTAO_CRYPT_SETTINGS_C_H
@@ -50,8 +51,21 @@
 #if defined(NO_WOLFSSL_MEMORY) && !defined(NO_CYASSL_MEMORY)
     #define NO_CYASSL_MEMORY
 #endif
-#ifdef WOLFSSL_KEY_GEN
+#if defined(WOLFSSL_KEY_GEN) && !defined(CYASSL_KEY_GEN)
     #define CYASSL_KEY_GEN
+#endif
+
+/* AES */
+#if defined(WOLFSSL_AES_DIRECT) && !defined(CYASSL_AES_DIRECT)
+    #define CYASSL_AES_DIRECT
+#endif
+#if defined(WOLFSSL_AES_COUNTER) && !defined(CYASSL_AES_COUNTER)
+    #define CYASSL_AES_COUNTER
+#endif
+
+/* DES */
+#if defined(WOLFSSL_DES_ECB) && !defined(CYASSL_DES_ECB)
+    #define CYASSL_DES_ECB
 #endif
 
 #endif /* CTAO_CRYPT_SETTINGS_C_H */

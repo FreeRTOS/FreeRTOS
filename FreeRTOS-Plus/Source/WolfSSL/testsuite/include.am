@@ -3,7 +3,7 @@
 # All paths should be given relative to the root
 
 
-if BUILD_EXAMPLES
+if BUILD_TESTS
 check_PROGRAMS += testsuite/testsuite.test
 noinst_PROGRAMS += testsuite/testsuite.test
 testsuite_testsuite_test_SOURCES = \
@@ -14,7 +14,7 @@ testsuite_testsuite_test_SOURCES = \
 			      examples/server/server.c \
 			      testsuite/testsuite.c
 testsuite_testsuite_test_CFLAGS       = -DNO_MAIN_DRIVER $(AM_CFLAGS)
-testsuite_testsuite_test_LDADD        = src/libwolfssl.la
+testsuite_testsuite_test_LDADD        = src/libwolfssl.la $(LIB_STATIC_ADD)
 testsuite_testsuite_test_DEPENDENCIES = src/libwolfssl.la
 endif
 EXTRA_DIST += testsuite/testsuite.sln

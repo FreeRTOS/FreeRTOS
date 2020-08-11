@@ -1,8 +1,8 @@
 /* fips_test.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 
 #ifndef WOLF_CRYPT_FIPS_TEST_H
 #define WOLF_CRYPT_FIPS_TEST_H
 
-#include <cyassl/ctaocrypt/types.h>
+#include <wolfssl/wolfcrypt/types.h>
 
 
 #ifdef __cplusplus
@@ -31,22 +32,22 @@
 #endif
 
 /* Known Answer Test string inputs are hex, internal */
-CYASSL_LOCAL int DoKnownAnswerTests(char*, int);
+WOLFSSL_LOCAL int DoKnownAnswerTests(char*, int);
 
 
 /* FIPS failure callback */
 typedef void(*wolfCrypt_fips_cb)(int ok, int err, const char* hash);
 
 /* Public set function */
-CYASSL_API int wolfCrypt_SetCb_fips(wolfCrypt_fips_cb cbf);
+WOLFSSL_API int wolfCrypt_SetCb_fips(wolfCrypt_fips_cb cbf);
 
 /* Public get status functions */
-CYASSL_API int wolfCrypt_GetStatus_fips(void);
-CYASSL_API const char* wolfCrypt_GetCoreHash_fips(void);
+WOLFSSL_API int wolfCrypt_GetStatus_fips(void);
+WOLFSSL_API const char* wolfCrypt_GetCoreHash_fips(void);
 
 #ifdef HAVE_FORCE_FIPS_FAILURE
     /* Public function to force failure mode for operational testing */
-    CYASSL_API int wolfCrypt_SetStatus_fips(int);
+    WOLFSSL_API int wolfCrypt_SetStatus_fips(int);
 #endif
 
 

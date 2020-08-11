@@ -1,8 +1,8 @@
 /* rsa.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifndef NO_RSA
 
@@ -44,11 +45,12 @@
 #ifdef WOLFSSL_KEY_GEN
     #define MakeRsaKey  wc_MakeRsaKey
     #define RsaKeyToDer wc_RsaKeyToDer
+    #define CheckProbablePrime wc_CheckProbablePrime
 #endif
 
-#ifdef HAVE_CAVIUM
-    #define RsaInitCavium wc_RsaInitCavium
-    #define RsaFreeCavium wc_RsaFreeCavium
+#ifdef WOLFSSL_ASYNC_CRYPT
+    #define RsaAsyncInit wc_RsaAsyncInit
+    #define RsaAsyncFree wc_RsaAsyncFree
 #endif
 
 #endif /* CTAO_CRYPT_RSA_H */

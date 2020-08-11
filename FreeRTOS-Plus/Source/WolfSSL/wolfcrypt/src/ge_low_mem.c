@@ -1,8 +1,8 @@
 /* ge_low_mem.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
  /* Based from Daniel Beer's public domain work. */
 
@@ -28,12 +29,14 @@
 #include <wolfssl/wolfcrypt/settings.h>
 
 #ifdef HAVE_ED25519
+#ifdef ED25519_SMALL /* use slower code that takes less memory */
 
 #include <wolfssl/wolfcrypt/ge_operations.h>
 #include <wolfssl/wolfcrypt/error-crypt.h>
 #ifdef NO_INLINE
     #include <wolfssl/wolfcrypt/misc.h>
 #else
+    #define WOLFSSL_MISC_INCLUDED
     #include <wolfcrypt/src/misc.c>
 #endif
 
@@ -43,10 +46,10 @@ void ed25519_double(ge_p3 *r, const ge_p3 *a);
 
 
 static const byte ed25519_order[F25519_SIZE] = {
-	0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58,
-	0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10
+    0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58,
+    0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9, 0xde, 0x14,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10
 };
 
 /*Arithmetic modulo the group order m = 2^252 +
@@ -69,16 +72,16 @@ static const word32 mu[33] = {
 int ge_compress_key(byte* out, const byte* xIn, const byte* yIn,
                         word32 keySz)
 {
-	byte tmp[F25519_SIZE];
-	byte parity;
+    byte tmp[F25519_SIZE];
+    byte parity;
+    byte pt[32];
     int     i;
 
-	fe_copy(tmp, xIn);
-	parity = (tmp[0] & 1) << 7;
+    lm_copy(tmp, xIn);
+    parity = (tmp[0] & 1) << 7;
 
-    byte pt[32];
-	fe_copy(pt, yIn);
-	pt[31] |= parity;
+    lm_copy(pt, yIn);
+    pt[31] |= parity;
 
     for(i = 0; i < 32; i++) {
         out[32-i-1] = pt[i];
@@ -90,7 +93,7 @@ int ge_compress_key(byte* out, const byte* xIn, const byte* yIn,
 
 static word32 lt(word32 a,word32 b) /* 16-bit inputs */
 {
-  unsigned int x = a;
+  word32 x = a;
   x -= (unsigned int) b; /* 0..65535: no; 4294901761..4294967295: yes */
   x >>= 31; /* 0: no; 1: yes */
   return x;
@@ -187,20 +190,20 @@ void sc_reduce(unsigned char x[64])
 void sc_muladd(byte* out, const byte* a, const byte* b, const byte* c)
 {
 
-	byte s[32];
+    byte s[32];
     byte e[64];
 
     XMEMSET(e, 0, sizeof(e));
     XMEMCPY(e, b, 32);
 
-	/* Obtain e */
-	sc_reduce(e);
+    /* Obtain e */
+    sc_reduce(e);
 
-	/* Compute s = ze + k */
-	fprime_mul(s, a, e, ed25519_order);
-	fprime_add(s, c, ed25519_order);
+    /* Compute s = ze + k */
+    fprime_mul(s, a, e, ed25519_order);
+    fprime_add(s, c, ed25519_order);
 
-	XMEMCPY(out, s, 32);
+    XMEMCPY(out, s, 32);
 }
 
 
@@ -216,315 +219,317 @@ void sc_muladd(byte* out, const byte* a, const byte* b, const byte* c)
  * t is x*y.
  */
 const ge_p3 ed25519_base = {
-	.X = {
-		0x1a, 0xd5, 0x25, 0x8f, 0x60, 0x2d, 0x56, 0xc9,
-		0xb2, 0xa7, 0x25, 0x95, 0x60, 0xc7, 0x2c, 0x69,
-		0x5c, 0xdc, 0xd6, 0xfd, 0x31, 0xe2, 0xa4, 0xc0,
-		0xfe, 0x53, 0x6e, 0xcd, 0xd3, 0x36, 0x69, 0x21
-	},
-	.Y = {
-		0x58, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-		0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-		0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-		0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66
-	},
-	.T = {
-		0xa3, 0xdd, 0xb7, 0xa5, 0xb3, 0x8a, 0xde, 0x6d,
-		0xf5, 0x52, 0x51, 0x77, 0x80, 0x9f, 0xf0, 0x20,
-		0x7d, 0xe3, 0xab, 0x64, 0x8e, 0x4e, 0xea, 0x66,
-		0x65, 0x76, 0x8b, 0xd7, 0x0f, 0x5f, 0x87, 0x67
-	},
-	.Z = {1, 0}
+    {
+        0x1a, 0xd5, 0x25, 0x8f, 0x60, 0x2d, 0x56, 0xc9,
+        0xb2, 0xa7, 0x25, 0x95, 0x60, 0xc7, 0x2c, 0x69,
+        0x5c, 0xdc, 0xd6, 0xfd, 0x31, 0xe2, 0xa4, 0xc0,
+        0xfe, 0x53, 0x6e, 0xcd, 0xd3, 0x36, 0x69, 0x21
+    },
+    {
+        0x58, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
+        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
+        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
+        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66
+    },
+    {1, 0},
+    {
+        0xa3, 0xdd, 0xb7, 0xa5, 0xb3, 0x8a, 0xde, 0x6d,
+        0xf5, 0x52, 0x51, 0x77, 0x80, 0x9f, 0xf0, 0x20,
+        0x7d, 0xe3, 0xab, 0x64, 0x8e, 0x4e, 0xea, 0x66,
+        0x65, 0x76, 0x8b, 0xd7, 0x0f, 0x5f, 0x87, 0x67
+    },
+
 };
 
 
 const ge_p3 ed25519_neutral = {
-	.X = {0},
-	.Y = {1, 0},
-	.T = {0},
-	.Z = {1, 0}
+    {0},
+    {1, 0},
+    {1, 0},
+    {0},
+
 };
 
 
 static const byte ed25519_d[F25519_SIZE] = {
-	0xa3, 0x78, 0x59, 0x13, 0xca, 0x4d, 0xeb, 0x75,
-	0xab, 0xd8, 0x41, 0x41, 0x4d, 0x0a, 0x70, 0x00,
-	0x98, 0xe8, 0x79, 0x77, 0x79, 0x40, 0xc7, 0x8c,
-	0x73, 0xfe, 0x6f, 0x2b, 0xee, 0x6c, 0x03, 0x52
+    0xa3, 0x78, 0x59, 0x13, 0xca, 0x4d, 0xeb, 0x75,
+    0xab, 0xd8, 0x41, 0x41, 0x4d, 0x0a, 0x70, 0x00,
+    0x98, 0xe8, 0x79, 0x77, 0x79, 0x40, 0xc7, 0x8c,
+    0x73, 0xfe, 0x6f, 0x2b, 0xee, 0x6c, 0x03, 0x52
 };
 
 
 /* k = 2d */
 static const byte ed25519_k[F25519_SIZE] = {
-	0x59, 0xf1, 0xb2, 0x26, 0x94, 0x9b, 0xd6, 0xeb,
-	0x56, 0xb1, 0x83, 0x82, 0x9a, 0x14, 0xe0, 0x00,
-	0x30, 0xd1, 0xf3, 0xee, 0xf2, 0x80, 0x8e, 0x19,
-	0xe7, 0xfc, 0xdf, 0x56, 0xdc, 0xd9, 0x06, 0x24
+    0x59, 0xf1, 0xb2, 0x26, 0x94, 0x9b, 0xd6, 0xeb,
+    0x56, 0xb1, 0x83, 0x82, 0x9a, 0x14, 0xe0, 0x00,
+    0x30, 0xd1, 0xf3, 0xee, 0xf2, 0x80, 0x8e, 0x19,
+    0xe7, 0xfc, 0xdf, 0x56, 0xdc, 0xd9, 0x06, 0x24
 };
 
 
 void ed25519_add(ge_p3 *r,
-		 const ge_p3 *p1, const ge_p3 *p2)
+         const ge_p3 *p1, const ge_p3 *p2)
 {
-	/* Explicit formulas database: add-2008-hwcd-3
-	 *
-	 * source 2008 Hisil--Wong--Carter--Dawson,
-	 *     http://eprint.iacr.org/2008/522, Section 3.1
-	 * appliesto extended-1
-	 * parameter k
-	 * assume k = 2 d
-	 * compute A = (Y1-X1)(Y2-X2)
-	 * compute B = (Y1+X1)(Y2+X2)
-	 * compute C = T1 k T2
-	 * compute D = Z1 2 Z2
-	 * compute E = B - A
-	 * compute F = D - C
-	 * compute G = D + C
-	 * compute H = B + A
-	 * compute X3 = E F
-	 * compute Y3 = G H
-	 * compute T3 = E H
-	 * compute Z3 = F G
-	 */
-	byte a[F25519_SIZE];
-	byte b[F25519_SIZE];
-	byte c[F25519_SIZE];
-	byte d[F25519_SIZE];
-	byte e[F25519_SIZE];
-	byte f[F25519_SIZE];
-	byte g[F25519_SIZE];
-	byte h[F25519_SIZE];
+    /* Explicit formulas database: add-2008-hwcd-3
+     *
+     * source 2008 Hisil--Wong--Carter--Dawson,
+     *     http://eprint.iacr.org/2008/522, Section 3.1
+     * appliesto extended-1
+     * parameter k
+     * assume k = 2 d
+     * compute A = (Y1-X1)(Y2-X2)
+     * compute B = (Y1+X1)(Y2+X2)
+     * compute C = T1 k T2
+     * compute D = Z1 2 Z2
+     * compute E = B - A
+     * compute F = D - C
+     * compute G = D + C
+     * compute H = B + A
+     * compute X3 = E F
+     * compute Y3 = G H
+     * compute T3 = E H
+     * compute Z3 = F G
+     */
+    byte a[F25519_SIZE];
+    byte b[F25519_SIZE];
+    byte c[F25519_SIZE];
+    byte d[F25519_SIZE];
+    byte e[F25519_SIZE];
+    byte f[F25519_SIZE];
+    byte g[F25519_SIZE];
+    byte h[F25519_SIZE];
 
-	/* A = (Y1-X1)(Y2-X2) */
-	fe_sub(c, p1->Y, p1->X);
-	fe_sub(d, p2->Y, p2->X);
-	fe_mul__distinct(a, c, d);
+    /* A = (Y1-X1)(Y2-X2) */
+    lm_sub(c, p1->Y, p1->X);
+    lm_sub(d, p2->Y, p2->X);
+    fe_mul__distinct(a, c, d);
 
-	/* B = (Y1+X1)(Y2+X2) */
-	fe_add(c, p1->Y, p1->X);
-	fe_add(d, p2->Y, p2->X);
-	fe_mul__distinct(b, c, d);
+    /* B = (Y1+X1)(Y2+X2) */
+    lm_add(c, p1->Y, p1->X);
+    lm_add(d, p2->Y, p2->X);
+    fe_mul__distinct(b, c, d);
 
-	/* C = T1 k T2 */
-	fe_mul__distinct(d, p1->T, p2->T);
-	fe_mul__distinct(c, d, ed25519_k);
+    /* C = T1 k T2 */
+    fe_mul__distinct(d, p1->T, p2->T);
+    fe_mul__distinct(c, d, ed25519_k);
 
-	/* D = Z1 2 Z2 */
-	fe_mul__distinct(d, p1->Z, p2->Z);
-	fe_add(d, d, d);
+    /* D = Z1 2 Z2 */
+    fe_mul__distinct(d, p1->Z, p2->Z);
+    lm_add(d, d, d);
 
-	/* E = B - A */
-	fe_sub(e, b, a);
+    /* E = B - A */
+    lm_sub(e, b, a);
 
-	/* F = D - C */
-	fe_sub(f, d, c);
+    /* F = D - C */
+    lm_sub(f, d, c);
 
-	/* G = D + C */
-	fe_add(g, d, c);
+    /* G = D + C */
+    lm_add(g, d, c);
 
-	/* H = B + A */
-	fe_add(h, b, a);
+    /* H = B + A */
+    lm_add(h, b, a);
 
-	/* X3 = E F */
-	fe_mul__distinct(r->X, e, f);
+    /* X3 = E F */
+    fe_mul__distinct(r->X, e, f);
 
-	/* Y3 = G H */
-	fe_mul__distinct(r->Y, g, h);
+    /* Y3 = G H */
+    fe_mul__distinct(r->Y, g, h);
 
-	/* T3 = E H */
-	fe_mul__distinct(r->T, e, h);
+    /* T3 = E H */
+    fe_mul__distinct(r->T, e, h);
 
-	/* Z3 = F G */
-	fe_mul__distinct(r->Z, f, g);
+    /* Z3 = F G */
+    fe_mul__distinct(r->Z, f, g);
 }
 
 
 void ed25519_double(ge_p3 *r, const ge_p3 *p)
 {
-	/* Explicit formulas database: dbl-2008-hwcd
-	 *
-	 * source 2008 Hisil--Wong--Carter--Dawson,
-	 *     http://eprint.iacr.org/2008/522, Section 3.3
-	 * compute A = X1^2
-	 * compute B = Y1^2
-	 * compute C = 2 Z1^2
-	 * compute D = a A
-	 * compute E = (X1+Y1)^2-A-B
-	 * compute G = D + B
-	 * compute F = G - C
-	 * compute H = D - B
-	 * compute X3 = E F
-	 * compute Y3 = G H
-	 * compute T3 = E H
-	 * compute Z3 = F G
-	 */
-	byte a[F25519_SIZE];
-	byte b[F25519_SIZE];
-	byte c[F25519_SIZE];
-	byte e[F25519_SIZE];
-	byte f[F25519_SIZE];
-	byte g[F25519_SIZE];
-	byte h[F25519_SIZE];
+    /* Explicit formulas database: dbl-2008-hwcd
+     *
+     * source 2008 Hisil--Wong--Carter--Dawson,
+     *     http://eprint.iacr.org/2008/522, Section 3.3
+     * compute A = X1^2
+     * compute B = Y1^2
+     * compute C = 2 Z1^2
+     * compute D = a A
+     * compute E = (X1+Y1)^2-A-B
+     * compute G = D + B
+     * compute F = G - C
+     * compute H = D - B
+     * compute X3 = E F
+     * compute Y3 = G H
+     * compute T3 = E H
+     * compute Z3 = F G
+     */
+    byte a[F25519_SIZE];
+    byte b[F25519_SIZE];
+    byte c[F25519_SIZE];
+    byte e[F25519_SIZE];
+    byte f[F25519_SIZE];
+    byte g[F25519_SIZE];
+    byte h[F25519_SIZE];
 
-	/* A = X1^2 */
-	fe_mul__distinct(a, p->X, p->X);
+    /* A = X1^2 */
+    fe_mul__distinct(a, p->X, p->X);
 
-	/* B = Y1^2 */
-	fe_mul__distinct(b, p->Y, p->Y);
+    /* B = Y1^2 */
+    fe_mul__distinct(b, p->Y, p->Y);
 
-	/* C = 2 Z1^2 */
-	fe_mul__distinct(c, p->Z, p->Z);
-	fe_add(c, c, c);
+    /* C = 2 Z1^2 */
+    fe_mul__distinct(c, p->Z, p->Z);
+    lm_add(c, c, c);
 
-	/* D = a A (alter sign) */
-	/* E = (X1+Y1)^2-A-B */
-	fe_add(f, p->X, p->Y);
-	fe_mul__distinct(e, f, f);
-	fe_sub(e, e, a);
-	fe_sub(e, e, b);
+    /* D = a A (alter sign) */
+    /* E = (X1+Y1)^2-A-B */
+    lm_add(f, p->X, p->Y);
+    fe_mul__distinct(e, f, f);
+    lm_sub(e, e, a);
+    lm_sub(e, e, b);
 
-	/* G = D + B */
-	fe_sub(g, b, a);
+    /* G = D + B */
+    lm_sub(g, b, a);
 
-	/* F = G - C */
-	fe_sub(f, g, c);
+    /* F = G - C */
+    lm_sub(f, g, c);
 
-	/* H = D - B */
-	fe_neg(h, b);
-	fe_sub(h, h, a);
+    /* H = D - B */
+    lm_neg(h, b);
+    lm_sub(h, h, a);
 
-	/* X3 = E F */
-	fe_mul__distinct(r->X, e, f);
+    /* X3 = E F */
+    fe_mul__distinct(r->X, e, f);
 
-	/* Y3 = G H */
-	fe_mul__distinct(r->Y, g, h);
+    /* Y3 = G H */
+    fe_mul__distinct(r->Y, g, h);
 
-	/* T3 = E H */
-	fe_mul__distinct(r->T, e, h);
+    /* T3 = E H */
+    fe_mul__distinct(r->T, e, h);
 
-	/* Z3 = F G */
-	fe_mul__distinct(r->Z, f, g);
+    /* Z3 = F G */
+    fe_mul__distinct(r->Z, f, g);
 }
 
 
 void ed25519_smult(ge_p3 *r_out, const ge_p3 *p, const byte *e)
 {
-	ge_p3 r;
-	int   i;
+    ge_p3 r;
+    int   i;
 
     XMEMCPY(&r, &ed25519_neutral, sizeof(r));
 
-	for (i = 255; i >= 0; i--) {
-		const byte bit = (e[i >> 3] >> (i & 7)) & 1;
-		ge_p3 s;
+    for (i = 255; i >= 0; i--) {
+        const byte bit = (e[i >> 3] >> (i & 7)) & 1;
+        ge_p3 s;
 
-		ed25519_double(&r, &r);
-		ed25519_add(&s, &r, p);
+        ed25519_double(&r, &r);
+        ed25519_add(&s, &r, p);
 
-		fe_select(r.X, r.X, s.X, bit);
-		fe_select(r.Y, r.Y, s.Y, bit);
-		fe_select(r.Z, r.Z, s.Z, bit);
-		fe_select(r.T, r.T, s.T, bit);
-	}
+        fe_select(r.X, r.X, s.X, bit);
+        fe_select(r.Y, r.Y, s.Y, bit);
+        fe_select(r.Z, r.Z, s.Z, bit);
+        fe_select(r.T, r.T, s.T, bit);
+    }
     XMEMCPY(r_out, &r, sizeof(r));
 }
 
 
 void ge_scalarmult_base(ge_p3 *R,const unsigned char *nonce)
 {
-	ed25519_smult(R, &ed25519_base, nonce);
+    ed25519_smult(R, &ed25519_base, nonce);
 }
 
 
 /* pack the point h into array s */
 void ge_p3_tobytes(unsigned char *s,const ge_p3 *h)
 {
-	byte x[F25519_SIZE];
-	byte y[F25519_SIZE];
-	byte z1[F25519_SIZE];
-	byte parity;
+    byte x[F25519_SIZE];
+    byte y[F25519_SIZE];
+    byte z1[F25519_SIZE];
+    byte parity;
 
-	fe_inv__distinct(z1, h->Z);
-	fe_mul__distinct(x, h->X, z1);
-	fe_mul__distinct(y, h->Y, z1);
+    fe_inv__distinct(z1, h->Z);
+    fe_mul__distinct(x, h->X, z1);
+    fe_mul__distinct(y, h->Y, z1);
 
-	fe_normalize(x);
-	fe_normalize(y);
+    fe_normalize(x);
+    fe_normalize(y);
 
-	parity = (x[0] & 1) << 7;
-	fe_copy(s, y);
-	fe_normalize(s);
-	s[31] |= parity;
+    parity = (x[0] & 1) << 7;
+    lm_copy(s, y);
+    fe_normalize(s);
+    s[31] |= parity;
 }
 
 
 /* pack the point h into array s */
 void ge_tobytes(unsigned char *s,const ge_p2 *h)
 {
-	byte x[F25519_SIZE];
-	byte y[F25519_SIZE];
-	byte z1[F25519_SIZE];
-	byte parity;
+    byte x[F25519_SIZE];
+    byte y[F25519_SIZE];
+    byte z1[F25519_SIZE];
+    byte parity;
 
-	fe_inv__distinct(z1, h->Z);
-	fe_mul__distinct(x, h->X, z1);
-	fe_mul__distinct(y, h->Y, z1);
+    fe_inv__distinct(z1, h->Z);
+    fe_mul__distinct(x, h->X, z1);
+    fe_mul__distinct(y, h->Y, z1);
 
-	fe_normalize(x);
-	fe_normalize(y);
+    fe_normalize(x);
+    fe_normalize(y);
 
-	parity = (x[0] & 1) << 7;
-	fe_copy(s, y);
-	fe_normalize(s);
-	s[31] |= parity;
+    parity = (x[0] & 1) << 7;
+    lm_copy(s, y);
+    fe_normalize(s);
+    s[31] |= parity;
 }
 
 
 /*
-   Test if the public key can be uncommpressed and negate it (-X,Y,Z,-T)
+   Test if the public key can be uncompressed and negate it (-X,Y,Z,-T)
    return 0 on success
  */
 int ge_frombytes_negate_vartime(ge_p3 *p,const unsigned char *s)
 {
 
-	byte parity;
+    byte parity;
     byte x[F25519_SIZE];
-	byte y[F25519_SIZE];
-	byte a[F25519_SIZE];
-	byte b[F25519_SIZE];
-	byte c[F25519_SIZE];
+    byte y[F25519_SIZE];
+    byte a[F25519_SIZE];
+    byte b[F25519_SIZE];
+    byte c[F25519_SIZE];
     int ret = 0;
 
     /* unpack the key s */
     parity = s[31] >> 7;
-    fe_copy(y, s);
-	y[31] &= 127;
+    lm_copy(y, s);
+    y[31] &= 127;
 
-	fe_mul__distinct(c, y, y);
+    fe_mul__distinct(c, y, y);
     fe_mul__distinct(b, c, ed25519_d);
-	fe_add(a, b, f25519_one);
-	fe_inv__distinct(b, a);
-	fe_sub(a, c, f25519_one);
-	fe_mul__distinct(c, a, b);
-	fe_sqrt(a, c);
-	fe_neg(b, a);
-	fe_select(x, a, b, (a[0] ^ parity) & 1);
+    lm_add(a, b, f25519_one);
+    fe_inv__distinct(b, a);
+    lm_sub(a, c, f25519_one);
+    fe_mul__distinct(c, a, b);
+    fe_sqrt(a, c);
+    lm_neg(b, a);
+    fe_select(x, a, b, (a[0] ^ parity) & 1);
 
     /* test that x^2 is equal to c */
     fe_mul__distinct(a, x, x);
-	fe_normalize(a);
-	fe_normalize(c);
-	ret |= ConstantCompare(a, c, F25519_SIZE);
+    fe_normalize(a);
+    fe_normalize(c);
+    ret |= ConstantCompare(a, c, F25519_SIZE);
 
     /* project the key s onto p */
-	fe_copy(p->X, x);
-	fe_copy(p->Y, y);
-	fe_load(p->Z, 1);
-	fe_mul__distinct(p->T, x, y);
+    lm_copy(p->X, x);
+    lm_copy(p->Y, y);
+    fe_load(p->Z, 1);
+    fe_mul__distinct(p->T, x, y);
 
     /* negate, the point becomes (-X,Y,Z,-T) */
-    fe_neg(p->X,p->X);
-    fe_neg(p->T,p->T);
+    lm_neg(p->X,p->X);
+    lm_neg(p->T,p->T);
 
     return ret;
 }
@@ -542,17 +547,17 @@ int ge_double_scalarmult_vartime(ge_p2* R, const unsigned char *h,
     ed25519_smult(&p, &ed25519_base, sig);
 
     /* find H(R,A,M) * -A */
-	ed25519_smult(&A, &A, h);
+    ed25519_smult(&A, &A, h);
 
     /* SB + -H(R,A,M)A */
-	ed25519_add(&A, &p, &A);
+    ed25519_add(&A, &p, &A);
 
-    fe_copy(R->X, A.X);
-    fe_copy(R->Y, A.Y);
-    fe_copy(R->Z, A.Z);
+    lm_copy(R->X, A.X);
+    lm_copy(R->Y, A.Y);
+    lm_copy(R->Z, A.Z);
 
     return ret;
 }
 
+#endif /* ED25519_SMALL */
 #endif /* HAVE_ED25519 */
-

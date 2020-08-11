@@ -52,10 +52,8 @@ void harness(){
     __CPROVER_assume(uxQueueLength > ( UBaseType_t ) 0);
 
     // QueueGenericCreateStatic asserts the following equivalence
-    /* A queue storage area should be provided if the item size is not 0, and
-    should not be provided if the item size is 0. */
-    __CPROVER_assume( !( ( pucQueueStorage != NULL ) && ( uxItemSize == 0 ) ) );
-    __CPROVER_assume( !( ( pucQueueStorage == NULL ) && ( uxItemSize != 0 ) ) );
+    __CPROVER_assume( ( pucQueueStorage && uxItemSize ) ||
+                      ( !pucQueueStorage && !uxItemSize ) );
 
     // QueueGenericCreateStatic asserts nonnull pointer
     __CPROVER_assume(pxStaticQueue);

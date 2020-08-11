@@ -1,10 +1,9 @@
 {
-  "ENTRY": "ulARPRemoveCacheEntryByMAC",
+  "ENTRY": "ulARPRemoveCacheEntryByMac",
+  "NUMBER_OF_ENTRIES":1,
+  "CACHE_ENTRIES":6,
   "CBMCFLAGS":
   [
-    "--unwind 1",
-    "--unwindset prvTCPSendRepeated.0:13",
-    "--nondet-static"
   ],
   "OBJS":
   [
@@ -16,8 +15,8 @@
   ],
   "DEF":
   [
-    "ipconfigUSE_ARP_REMOVE_ENTRY=1",
-    "ipconfigARP_CACHE_ENTRIES=6"
+    "ipconfigUSE_ARP_REMOVE_ENTRY={NUMBER_OF_ENTRIES}",
+    "ipconfigARP_CACHE_ENTRIES={CACHE_ENTRIES}"
   ],
   "INC":
   [

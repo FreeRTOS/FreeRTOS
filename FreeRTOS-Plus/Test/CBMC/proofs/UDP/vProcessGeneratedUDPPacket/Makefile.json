@@ -1,0 +1,21 @@
+{
+  "ENTRY": "vProcessGeneratedUDPPacket",
+  "CBMCFLAGS":
+  [
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.goto"
+  ],
+  "INSTFLAGS":
+  [
+  ],
+  "DEF":
+  [
+  ],
+  "INC":
+  [
+    "$(FREERTOS)/tools/cbmc/include"
+  ]
+}

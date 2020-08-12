@@ -24,8 +24,8 @@
  */
 
 /*
- * Demo for showing use of the managed MQTT API using a mutually
- * authenticated network connection.
+ * Demo for showing use of the MQTT API using a mutually authenticated
+ * network connection.
  *
  * The Example shown below uses MQTT APIs to create MQTT messages and send them
  * over the mutually authenticated network connection established with the
@@ -33,9 +33,10 @@
  * memory. It uses QoS1 for sending to and receiving messages from the broker.
  *
  * A mutually authenticated TLS connection is used to connect to the
- * MQTT message broker in this example. Define democonfigROOT_CA_PEM,
- * democonfigCLIENT_CERTIFICATE_PEM, and democonfigCLIENT_PRIVATE_KEY_PEM in
- * demo_config.h to establish a mutually authenticated connection.
+ * MQTT message broker in this example. Define democonfigMQTT_BROKER_ENDPOINT,
+ * democonfigROOT_CA_PEM, democonfigCLIENT_CERTIFICATE_PEM,
+ * and democonfigCLIENT_PRIVATE_KEY_PEM in demo_config.h to establish a
+ * mutually authenticated connection.
  */
 
 /* Standard includes. */
@@ -317,7 +318,7 @@ void vStartSimpleMQTTDemo( void )
 /*-----------------------------------------------------------*/
 
 /*
- * @brief The Example shown below uses managed MQTT APIs to create MQTT messages and
+ * @brief The Example shown below uses MQTT APIs to create MQTT messages and
  * send them over the mutually authenticated network connection established with the
  * MQTT broker. This example is single threaded and uses statically allocated
  * memory. It uses QoS1 for sending to and receiving messages from the broker.
@@ -482,7 +483,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
-    /* Many fields not used in this demo so start with everything at 0. */
+    /* Some fields are not used in this demo so start with everything at 0. */
     memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
 
     /* Start with a clean session i.e. direct the MQTT broker to discard any
@@ -525,7 +526,7 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
      * asserts().
      ***/
 
-    /* Some fields not used by this demo so start with everything at 0. */
+    /* Some fields are not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
 
     /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
@@ -558,7 +559,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
      * asserts().
      ***/
 
-    /* Some fields not used by this demo so start with everything at 0. */
+    /* Some fields are not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
     /* This demo uses QoS1 */
@@ -584,7 +585,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     MQTTStatus_t xResult;
     MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
 
-    /* Some fields not used by this demo so start with everything at 0. */
+    /* Some fields are not used by this demo so start with everything at 0. */
     memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
 
     /* Unsubscribe to the mqttexampleTOPIC topic filter. */

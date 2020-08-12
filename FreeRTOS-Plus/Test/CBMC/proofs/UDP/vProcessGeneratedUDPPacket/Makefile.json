@@ -7,12 +7,16 @@
   [
     "$(ENTRY)_harness.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.goto"
+    # "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.goto",
+    # "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.goto"
   ],
   "INSTFLAGS":
   [
   ],
   "DEF":
   [
+    "ipconfigSUPPORT_OUTGOING_PINGS=1",
+    "ipconfigBYTE_ORDER=pdFREERTOS_BIG_ENDIAN"
   ],
   "INC":
   [

@@ -75,7 +75,7 @@ void vAssertCalled(void);
 void vApplicationIdleHook(void);
 void vApplicationTickHook(void);
 void vApplicationMallocFailedHook(void);
-void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName);
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName);
 
 /* FreeRTOS's processing before start the kernel. */
 void Processing_Before_Start_Kernel(void);
@@ -350,7 +350,7 @@ void vApplicationMallocFailedHook(void)
 *                    Pointer of where to store the task's name
 * Return Value : None.
 ******************************************************************************/
-void vApplicationStackOverflowHook(TaskHandle_t pxTask, signed char *pcTaskName)
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
     ( void ) pcTaskName;
     ( void ) pxTask;

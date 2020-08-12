@@ -64,15 +64,18 @@
  */
 
 /**
- * @brief Details of the MQTT broker to connect to.
+ * @brief Endpoint of the MQTT broker to connect to.
  *
- * This is the Thing's REST API Endpoint for AWS IoT.
+ * This demo application can be run with any MQTT broker, that supports mutual
+ * authentication.
+ *
+ * For AWS IoT MQTT broker, this is the Thing's REST API Endpoint.
  *
  * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
  * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
  * AWS CLI command line tool).
  *
- * #define democonfigAWS_IOT_ENDPOINT    "...insert here..."
+ * #define democonfigMQTT_BROKER_ENDPOINT    "...insert here..."
  */
 
 /**
@@ -89,8 +92,9 @@
 /**
  * @brief Server's root CA certificate.
  *
- * This certificate is used to identify the AWS IoT server and is publicly
- * available. Refer to the AWS documentation available in the link below
+ * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
+ * server and is publicly available. Refer to the AWS documentation available
+ * in the link below.
  * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
  *
  * @note This certificate should be PEM-encoded.
@@ -100,14 +104,14 @@
  * "...base64 data...\n"\
  * "-----END CERTIFICATE-----\n"
  *
- * #define democonfigAWS_ROOT_CA_PEM    "...insert here..."
+ * #define democonfigROOT_CA_PEM    "...insert here..."
  */
 
 /**
  * @brief Client certificate.
  *
- * Refer to the AWS documentation below for details regarding client
- * authentication.
+ * For AWS IoT MQTT broker, refer to the AWS documentation below for details
+ * regarding client authentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This certificate should be PEM-encoded.
@@ -123,8 +127,8 @@
 /**
  * @brief Client's private key.
  *
- * Refer to the AWS documentation below for details regarding client
- * authentication.
+ * For AWS IoT MQTT broker, refer to the AWS documentation below for details
+ * regarding clientauthentication.
  * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
  *
  * @note This private key should be PEM-encoded.

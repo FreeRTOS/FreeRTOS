@@ -27,13 +27,13 @@
  * Demo for showing use of the managed MQTT API using a mutually
  * authenticated network connection.
  *
- * The Example shown below uses managed MQTT APIs to create MQTT messages and
- * send them over the mutually authenticated network connection established with the
- * AWS IoT MQTT broker. This example is single threaded and uses statically
- * allocated memory. It uses QoS1 for sending to and receiving messages from the broker.
+ * The Example shown below uses MQTT APIs to create MQTT messages and send them
+ * over the mutually authenticated network connection established with the
+ * MQTT broker. This example is single threaded and uses statically allocated
+ * memory. It uses QoS1 for sending to and receiving messages from the broker.
  *
- * A mutually authenticated TLS connection is used to connect to the AWS IoT
- * MQTT message broker in this example. Define democonfigAWS_ROOT_CA_PEM,
+ * A mutually authenticated TLS connection is used to connect to the
+ * MQTT message broker in this example. Define democonfigROOT_CA_PEM,
  * democonfigCLIENT_CERTIFICATE_PEM, and democonfigCLIENT_PRIVATE_KEY_PEM in
  * demo_config.h to establish a mutually authenticated connection.
  */
@@ -58,11 +58,11 @@
 /*-----------------------------------------------------------*/
 
 /* Compile time error for undefined configs. */
-#ifndef democonfigAWS_IOT_ENDPOINT
-    #error "Define the config democonfigAWS_IOT_ENDPOINT by following the instructions in file demo_config.h."
+#ifndef democonfigMQTT_BROKER_ENDPOINT
+    #error "Define the config democonfigMQTT_BROKER_ENDPOINT by following the instructions in file demo_config.h."
 #endif
-#ifndef democonfigAWS_ROOT_CA_PEM
-    #error "Please define Root CA certificate of the MQTT broker(democonfigAWS_ROOT_CA_PEM) in demo_config.h."
+#ifndef democonfigROOT_CA_PEM
+    #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
 #ifndef democonfigCLIENT_CERTIFICATE_PEM
     #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
@@ -81,10 +81,10 @@
  * must be unique so edit as required to ensure no two clients connecting to the
  * same broker use the same client identifier.
  *
- * @note Appending __TIME__ to the client id string will reduce the possibility of a
- * client id collision in the broker. Note that the appended time is the compilation
- * time. This client id can cause collision, if more than one instance of the same
- * binary is used at the same time to connect to the broker.
+ * @note Appending __TIME__ to the client id string will help to create a unique
+ * client id every time an application binary is built. Only a single instance of
+ * this application's compiled binary may be used at a time, since the client ID
+ * will always be the same.
  */
     #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
 #endif
@@ -248,10 +248,10 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPublishInfo_t * pxPublishInfo );
 
 /**
- * @brief TLS connect to endpoint democonfigAWS_IOT_ENDPOINT.
+ * @brief TLS connect to endpoint democonfigMQTT_BROKER_ENDPOINT.
  *
  * @param[in] pxNetworkCredentials Network credentials to establish a TLS connection
- * with democonfigAWS_IOT_ENDPOINT.
+ * with democonfigMQTT_BROKER_ENDPOINT.
  * @param[in] pxNetworkCredentials Network context.
  */
 static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
@@ -300,7 +300,7 @@ static MQTTFixedBuffer_t xBuffer =
 
 /*
  * @brief Create the task that demonstrates the MQTT API Demo over a
- * mutually authenticated network connection with AWS IoT broker.
+ * mutually authenticated network connection with MQTT broker.
  */
 void vStartSimpleMQTTDemo( void )
 {
@@ -319,8 +319,8 @@ void vStartSimpleMQTTDemo( void )
 /*
  * @brief The Example shown below uses managed MQTT APIs to create MQTT messages and
  * send them over the mutually authenticated network connection established with the
- * AWS IoT MQTT broker. This example is single threaded and uses statically
- * allocated memory. It uses QoS1 for sending to and receiving messages from the broker.
+ * MQTT broker. This example is single threaded and uses statically allocated
+ * memory. It uses QoS1 for sending to and receiving messages from the broker.
  *
  * This MQTT client subscribes to the topic as specified in mqttexampleTOPIC at the
  * top of this file by sending a subscribe packet and then waiting for a subscribe
@@ -351,16 +351,16 @@ static void prvMQTTDemoTask( void * pvParameters )
         /****************************** Connect. ******************************/
 
         /* Establish a TLS connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified by democonfigAWS_IOT_ENDPOINT and
+         * the MQTT broker as specified by democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT in the demo_config.h file. */
         LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
-                   democonfigAWS_IOT_ENDPOINT,
+                   democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
         prvTLSConnect( &xNetworkCredentials, &xNetworkContext );
 
         /* Sends an MQTT Connect packet over the already established TLS connection,
          * and waits for connection acknowledgment (CONNACK) packet. */
-        LogInfo( ( "Creating an MQTT connection to %s.\r\n", democonfigAWS_IOT_ENDPOINT ) );
+        LogInfo( ( "Creating an MQTT connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         prvCreateMQTTConnectionWithBroker( &xMQTTContext, &xNetworkContext );
 
         /**************************** Subscribe. ******************************/
@@ -418,14 +418,14 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Send an MQTT Disconnect packet over the already connected TLS over TCP connection.
          * There is no corresponding response for the disconnect packet. After sending
          * disconnect, client must close the network connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigAWS_IOT_ENDPOINT ) );
+        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         MQTT_Disconnect( &xMQTTContext );
 
         /* Close the network connection.  */
         TLS_FreeRTOS_Disconnect( &xNetworkContext );
 
         /* Wait for some time between two iterations to ensure that we do not
-         * bombard the public test mosquitto broker. */
+         * the broker. */
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
@@ -440,8 +440,8 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
     BaseType_t xNetworkStatus;
 
     /* Set the credentials for establishing a TLS connection. */
-    pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigAWS_ROOT_CA_PEM;
-    pxNetworkCredentials->rootCaSize = sizeof( democonfigAWS_ROOT_CA_PEM );
+    pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
+    pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
     pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
     pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
     pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
@@ -449,14 +449,14 @@ static void prvTLSConnect( NetworkCredentials_t * pxNetworkCredentials,
 
     /* Attempt to create a mutually authenticated TLS connection. */
     xNetworkStatus = TLS_FreeRTOS_Connect( pxNetworkContext,
-                                           democonfigAWS_IOT_ENDPOINT,
+                                           democonfigMQTT_BROKER_ENDPOINT,
                                            democonfigMQTT_BROKER_PORT,
                                            pxNetworkCredentials,
                                            mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                            mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
     configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
     LogInfo( ( "A mutually authenticated TLS connection established with %s:%u.\r\n",
-               democonfigAWS_IOT_ENDPOINT,
+               democonfigMQTT_BROKER_ENDPOINT,
                democonfigMQTT_BROKER_PORT ) );
 }
 /*-----------------------------------------------------------*/
@@ -511,7 +511,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     configASSERT( xResult == MQTTSuccess );
 
     /* Successfully established and MQTT connection with the broker. */
-    LogInfo( ( "An MQTT connection is established with %s.", democonfigAWS_IOT_ENDPOINT ) );
+    LogInfo( ( "An MQTT connection is established with %s.", democonfigMQTT_BROKER_ENDPOINT ) );
 }
 /*-----------------------------------------------------------*/
 

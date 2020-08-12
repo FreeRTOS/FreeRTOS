@@ -257,7 +257,7 @@ static void prvRecursiveMutexBlockingTask( void *pvParameters )
 		}
 
 		/* The controlling and blocking tasks should be in lock step. */
-		if( uxControllingCycles != ( uxBlockingCycles + 1 ) )
+		if( uxControllingCycles != (UBaseType_t) ( uxBlockingCycles + 1 ) )
 		{
 			xErrorOccurred = pdTRUE;
 		}

@@ -17,9 +17,23 @@
 //#include "FreeRTOS_TCP_IP.h"
 #include "FreeRTOS_IP_Private.h"
 
-uint16_t usGenerateChecksum( uint16_t usSum, const uint8_t * pucNextData, size_t uxByteCount ) { }
 
-uint16_t usGenerateProtocolChecksum( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength, BaseType_t xOutgoingPacket ) { }
+
+uint16_t usGenerateChecksum( uint16_t usSum, const uint8_t * pucNextData, size_t uxByteCount ) 
+{
+	uint16_t usChecksum;
+
+	/* Return any random value of checksum since it does not matter for CBMC checks. */
+	return usChecksum;
+}
+
+uint16_t usGenerateProtocolChecksum( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength, BaseType_t xOutgoingPacket )
+{
+	uint16_t usProtocolChecksum;
+
+	/* Return random value of checksum since it does not matter for CBMC checks. */
+	return usProtocolChecksum;
+}
 
 /* This function has been tested separately. Therefore, we assume that the implementation is correct. */
 void vARPRefreshCacheEntry( const MACAddress_t * pxMACAddress, const uint32_t ulIPAddress ) { }
@@ -27,14 +41,14 @@ void vARPRefreshCacheEntry( const MACAddress_t * pxMACAddress, const uint32_t ul
 /* This function has been tested separately. Therefore, we assume that the implementation is correct. */
 void vARPGenerateRequestPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )         { }
 
-/* Provide a stub for this function. */
+/* This function has been tested separately. Therefore, we assume that the implementation is correct. */
 eARPLookupResult_t eARPGetCacheEntry( uint32_t *pulIPAddress, MACAddress_t * const pxMACAddress )
 {
 	eARPLookupResult_t eResult;
 	return eResult;
 }
 
-/* Implementation of safe malloc */
+/* Implementation of safe malloc. Return a NULL or the expected buffer indeterministically. */
 void *safeMalloc(size_t xWantedSize ){
 	if(xWantedSize == 0){
 		return NULL;
@@ -74,5 +88,5 @@ void harness()
 	/* Minimum length of the pxNetworkBuffer->xDataLength is at least the size of the IPPacket_t. */
 	__CPROVER_assume(pxNetworkBuffer->xDataLength >= sizeof(EthernetHeader_t)  && pxNetworkBuffer->xDataLength <= ipTOTAL_ETHERNET_FRAME_SIZE);
 
-	vProcessGeneratedUDPPacket( &pxNetworkBuffer );
+	vProcessGeneratedUDPPacket( pxNetworkBuffer );
 }

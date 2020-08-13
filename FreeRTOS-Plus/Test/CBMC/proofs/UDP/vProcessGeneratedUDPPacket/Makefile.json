@@ -7,8 +7,6 @@
   [
     "$(ENTRY)_harness.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_UDP_IP.goto"
-    # "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.goto",
-    # "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_ARP.goto"
   ],
   "INSTFLAGS":
   [
@@ -20,6 +18,6 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/tools/cbmc/include"
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/include"
   ]
 }

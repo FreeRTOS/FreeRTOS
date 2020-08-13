@@ -37,18 +37,15 @@
 
 /* Logging configuration for the Sockets. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME     "FreeRTOSTransport"
+    #define LIBRARY_LOG_NAME     "PlaintextTransport"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL    LOG_DEBUG
+    #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 #include "logging_stack.h"
 
 /************ End of logging configuration ****************/
-
-/* FreeRTOS+TCP include. */
-#include "FreeRTOS_Sockets.h"
 
 /* Transport interface include. */
 #include "transport_interface.h"
@@ -62,6 +59,16 @@ struct NetworkContext
 };
 
 /**
+ * @brief Plain text transport Connect / Disconnect return status.
+ */
+typedef enum PlaintextTransportStatus
+{
+    PLAINTEXT_TRANSPORT_SUCCESS = 0,       /**< Function successfully completed. */
+    PLAINTEXT_TRANSPORT_INVALID_PARAMETER, /**< At least one parameter was invalid. */
+    PLAINTEXT_TRANSPORT_CONNECT_FAILURE    /**< Initial connection to the server failed. */
+} PlaintextTransportStatus_t;
+
+/**
  * @brief Create a TCP connection with FreeRTOS sockets.
  *
  * @param[out] pNetworkContext Pointer to a network context to contain the
@@ -70,20 +77,23 @@ struct NetworkContext
  * @param[in] port The destination port.
  * @param[in] receiveTimeoutMs Receive socket timeout.
  *
- * @return Non-zero value on error, 0 on success.
+ * @return #PLAINTEXT_TRANSPORT_SUCCESS, #PLAINTEXT_TRANSPORT_INVALID_PARAMETER,
+ * or #PLAINTEXT_TRANSPORT_CONNECT_FAILURE.
  */
-BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
-                                       const char * pHostName,
-                                       uint16_t port,
-                                       uint32_t receiveTimeoutMs,
-                                       uint32_t sendTimeoutMs );
+PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
+                                                       const char * pHostName,
+                                                       uint16_t port,
+                                                       uint32_t receiveTimeoutMs,
+                                                       uint32_t sendTimeoutMs );
 
 /**
  * @brief Gracefully disconnect an established TCP connection.
  *
  * @param[in] pNetworkContext Network context containing the TCP socket handle.
+ *
+ * @return #PLAINTEXT_TRANSPORT_SUCCESS, or #PLAINTEXT_TRANSPORT_INVALID_PARAMETER.
  */
-void Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
+PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext );
 
 /**
  * @brief Receives data from an established TCP connection.

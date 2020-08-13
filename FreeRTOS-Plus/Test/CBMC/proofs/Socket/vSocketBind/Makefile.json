@@ -1,0 +1,22 @@
+{
+  "ENTRY": "vSocketBind",
+  "CBMCFLAGS":
+  [
+  ],
+  "OBJS":
+  [
+    "$(ENTRY)_harness.goto",
+    "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_Sockets.goto"
+  ],
+  "INSTFLAGS":
+  [
+  ],
+  "DEF":
+  [
+  ],
+  "INC":
+  [
+    "$(FREERTOS)/tools/cbmc/include"
+  ]
+}
+

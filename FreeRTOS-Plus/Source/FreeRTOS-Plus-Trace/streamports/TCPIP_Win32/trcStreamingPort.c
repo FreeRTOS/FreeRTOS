@@ -45,58 +45,165 @@
  * www.percepio.com
  ******************************************************************************/
 
+#include<stdio.h>
+#include<winsock2.h>
+
 #include "trcRecorder.h"
 
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)  
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
 
-FILE* traceFile = NULL;
 
-void openFile(char* fileName)
+#pragma comment(lib,"ws2_32.lib") //Winsock Library
+
+SOCKET server_socket = (UINT_PTR)NULL, trace_socket = (UINT_PTR)NULL;
+struct sockaddr_in server, client;
+
+int initServerSocketIfNeeded(void);
+int initWinsockIfNeeded(void);
+
+int initWinsockIfNeeded(void)
 {
-	if (traceFile == NULL)
-	{
-		errno_t err = fopen_s(&traceFile, fileName, "wb");
-		if (err != 0)
-		{
-			printf("Could not open trace file, error code %d.\n", err);
-			exit(-1);
-		}
-		else {
-			printf("Trace file created.\n");
-		}
-	}
-}
-
-int32_t writeToFile(void* data, uint32_t size, int32_t *ptrBytesWritten)
-{
-	int32_t written = 0;
-	if (traceFile != NULL)
-	{
-		written = fwrite(data, 1, size, traceFile);
-	}
-	else
-	{
-		written = 0;
-	}
-
-	if (ptrBytesWritten != 0)
-		*ptrBytesWritten = written;
-
-	if ((int32_t)size == written)
+	WSADATA wsa;
+	
+	if (server_socket)
 		return 0;
-	else
+
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+	{
 		return -1;
+	}
+
+	return 0;
 }
 
-void closeFile(void)
+
+int initServerSocketIfNeeded(void)
 {
-	if (traceFile != NULL)
+	if (initWinsockIfNeeded() < 0)
 	{
-		fclose(traceFile);
-		traceFile = NULL;
-		printf("Trace file closed.\n");
+		return -1;
 	}
+
+	if (server_socket)
+		return 0;
+
+	if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+	{
+		return -1;
+	}
+
+	server.sin_family = AF_INET;
+	server.sin_addr.s_addr = INADDR_ANY;
+	server.sin_port = htons(8888);
+
+	if (bind(server_socket, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
+	{
+		closesocket(server_socket);
+		WSACleanup();
+		server_socket = (UINT_PTR)NULL;
+		return -1;
+	}
+
+	if (listen(server_socket, 3) < 0)
+	{
+		closesocket(server_socket);
+		WSACleanup();
+		server_socket = (UINT_PTR)NULL;
+		return -1;
+	}
+
+	return 0;
+}
+
+int initTraceSocketIfNeeded(void)
+{
+	int c;
+
+	if (!server_socket)
+		return -1;
+
+	if (trace_socket)
+		return 0;
+
+	c = sizeof(struct sockaddr_in);
+	trace_socket = accept(server_socket, (struct sockaddr *)&client, &c);
+	if (trace_socket == INVALID_SOCKET)
+	{
+		trace_socket = (UINT_PTR)NULL;
+		
+		closesocket(server_socket);
+		WSACleanup();
+		server_socket = (UINT_PTR)NULL;
+		
+		return -1;
+	}
+
+	return 0;
+}
+
+int32_t writeToSocket(void* data, uint32_t size, int32_t *ptrBytesWritten)
+{
+	int ret;
+
+	if (!trace_socket)
+	{
+		if (ptrBytesWritten != NULL)
+		{
+			*ptrBytesWritten = 0;
+		}
+		return -1;
+	}
+	ret = send(trace_socket, data, size, 0);
+	if (ret <= 0)
+	{
+		if (ptrBytesWritten != NULL)
+		{
+			*ptrBytesWritten = 0;
+		}
+
+		closesocket(trace_socket);
+		trace_socket = (UINT_PTR)NULL;
+		return ret;
+	}
+
+	if (ptrBytesWritten != NULL)
+	{
+		*ptrBytesWritten = ret;
+	}
+	
+	return 0;
+}
+
+int32_t readFromSocket(void* data, uint32_t bufsize, int32_t *ptrBytesRead)
+{
+	unsigned long bytesAvailable = 0;
+
+	if (initServerSocketIfNeeded() < 0)
+		return -1;
+	
+	if (initTraceSocketIfNeeded() < 0)
+		return -1;
+
+	if (ioctlsocket(trace_socket, FIONREAD, &bytesAvailable) != NO_ERROR)
+	{
+		closesocket(trace_socket);
+		trace_socket = (UINT_PTR)NULL;
+		return -1;
+	}
+
+	if (bytesAvailable > 0)
+	{
+		*ptrBytesRead = recv(trace_socket, data, bufsize, 0);
+		if (*ptrBytesRead == SOCKET_ERROR)
+		{
+			closesocket(trace_socket);
+			trace_socket = (UINT_PTR)NULL;
+			return -1;
+		}
+	}
+
+	return 0;
 }
 
 #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/

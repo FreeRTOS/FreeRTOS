@@ -63,9 +63,9 @@ struct NetworkContext
  */
 typedef enum PlaintextTransportStatus
 {
-    PLAINTEXT_TRANSPORT_INVALID_PARAMETER = 0, /**< At least one parameter was invalid. */
     PLAINTEXT_TRANSPORT_SUCCESS = 1,           /**< Function successfully completed. */
-    PLAINTEXT_TRANSPORT_CONNECT_FAILURE        /**< Initial connection to the server failed. */
+    PLAINTEXT_TRANSPORT_INVALID_PARAMETER = 2, /**< At least one parameter was invalid. */
+    PLAINTEXT_TRANSPORT_CONNECT_FAILURE = 3    /**< Initial connection to the server failed. */
 } PlaintextTransportStatus_t;
 
 /**

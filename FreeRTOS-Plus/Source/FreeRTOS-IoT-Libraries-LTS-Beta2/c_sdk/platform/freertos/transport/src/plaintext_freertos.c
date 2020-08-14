@@ -85,13 +85,15 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t
         LogError( ( "pNetworkContext cannot be NULL." ) );
         plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
     }
+    else if( pNetworkContext->tcpSocket == FREERTOS_INVALID_SOCKET )
+    {
+        LogError( ( "pNetworkContext->tcpSocket cannot be an invalid socket." ) );
+        plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
+    }
     else
     {
-        if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
-        {
-            /* Call socket disconnect function to close connection. */
-            Sockets_Disconnect( pNetworkContext->tcpSocket );
-        }
+        /* Call socket disconnect function to close connection. */
+        Sockets_Disconnect( pNetworkContext->tcpSocket );
     }
 
     return plaintextStatus;

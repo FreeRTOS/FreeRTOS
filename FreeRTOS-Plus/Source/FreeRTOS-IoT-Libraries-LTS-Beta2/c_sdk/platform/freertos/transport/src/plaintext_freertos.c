@@ -31,129 +31,72 @@
 #include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
 
+/* FreeRTOS Socket wrapper include. */
+#include "freertos_sockets_wrapper.h"
+
 /* Transport interface include. */
 #include "plaintext_freertos.h"
 
-/* Maximum number of times to call FreeRTOS_recv when initiating a graceful shutdown. */
-#ifndef TRANSPORT_FREERTOS_SHUTDOWN_LOOPS
-    #define TRANSPORT_FREERTOS_SHUTDOWN_LOOPS    ( 3 )
-#endif
-
-/* A negative error code indicating a network failure. */
-#define TRANSPORT_FREERTOS_NETWORK_ERROR    ( -1 )
-
-BaseType_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
-                                       const char * pHostName,
-                                       uint16_t port,
-                                       uint32_t receiveTimeoutMs,
-                                       uint32_t sendTimeoutMs )
+PlaintextTransportStatus_t Plaintext_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
+                                                       const char * pHostName,
+                                                       uint16_t port,
+                                                       uint32_t receiveTimeoutMs,
+                                                       uint32_t sendTimeoutMs )
 {
-    Socket_t tcpSocket = FREERTOS_INVALID_SOCKET;
+    PlaintextTransportStatus_t plaintextStatus = PLAINTEXT_TRANSPORT_SUCCESS;
     BaseType_t socketStatus = 0;
-    struct freertos_sockaddr serverAddress = { 0 };
-    TickType_t transportTimeout = 0;
 
-    /* Create a new TCP socket. */
-    tcpSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
-
-    if( tcpSocket == FREERTOS_INVALID_SOCKET )
+    if( ( pNetworkContext == NULL ) || ( pHostName == NULL ) )
     {
-        LogError( ( "Failed to create new socket." ) );
-        socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
+        LogError( ( "Invalid input parameter(s): Arguments cannot be NULL. pNetworkContext=%p, "
+                    "pHostName=%p.",
+                    pNetworkContext,
+                    pHostName ) );
+        plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
     }
     else
     {
-        LogDebug( ( "Created new TCP socket." ) );
+        /* Establish a TCP connection with the server. */
+        socketStatus = Sockets_Connect( &( pNetworkContext->tcpSocket ),
+                                        pHostName,
+                                        port,
+                                        receiveTimeoutMs,
+                                        sendTimeoutMs );
 
-        /* Connection parameters. */
-        serverAddress.sin_family = FREERTOS_AF_INET;
-        serverAddress.sin_port = FreeRTOS_htons( port );
-        serverAddress.sin_addr = FreeRTOS_gethostbyname( pHostName );
-        serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
-
-        /* Check for errors from DNS lookup. */
-        if( serverAddress.sin_addr == 0 )
-        {
-            LogError( ( "Failed to resolve %s.", pHostName ) );
-            socketStatus = TRANSPORT_FREERTOS_NETWORK_ERROR;
-        }
-    }
-
-    if( socketStatus == 0 )
-    {
-        /* Establish connection. */
-        LogDebug( ( "Creating TCP Connection to %s.", pHostName ) );
-        socketStatus = FreeRTOS_connect( tcpSocket, &serverAddress, sizeof( serverAddress ) );
-
+        /* A non zero status is an error. */
         if( socketStatus != 0 )
         {
-            LogError( ( "Failed to establish TCP Connection: ReturnCode=%d.", socketStatus ) );
+            LogError( ( "Failed to connect to %s with error %d.",
+                        pHostName,
+                        socketStatus ) );
+            plaintextStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
         }
     }
 
-    if( socketStatus == 0 )
-    {
-        /* Set socket receive timeout. */
-        transportTimeout = pdMS_TO_TICKS( receiveTimeoutMs );
-        /* Setting the receive block time cannot fail. */
-        ( void ) FreeRTOS_setsockopt( tcpSocket,
-                                      0,
-                                      FREERTOS_SO_RCVTIMEO,
-                                      &transportTimeout,
-                                      sizeof( TickType_t ) );
+    return plaintextStatus;
+}
 
-        /* Set socket send timeout. */
-        transportTimeout = pdMS_TO_TICKS( sendTimeoutMs );
-        /* Setting the send block time cannot fail. */
-        ( void ) FreeRTOS_setsockopt( tcpSocket,
-                                      0,
-                                      FREERTOS_SO_SNDTIMEO,
-                                      &transportTimeout,
-                                      sizeof( TickType_t ) );
+PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
+{
+    PlaintextTransportStatus_t plaintextStatus = PLAINTEXT_TRANSPORT_SUCCESS;
+
+    if( pNetworkContext == NULL )
+    {
+        LogError( ( "pNetworkContext cannot be NULL." ) );
+        plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
     }
-
-    /* Clean up on failure. */
-    if( socketStatus != 0 )
+    else if( pNetworkContext->tcpSocket == FREERTOS_INVALID_SOCKET )
     {
-        if( tcpSocket != FREERTOS_INVALID_SOCKET )
-        {
-            FreeRTOS_closesocket( tcpSocket );
-        }
+        LogError( ( "pNetworkContext->tcpSocket cannot be an invalid socket." ) );
+        plaintextStatus = PLAINTEXT_TRANSPORT_INVALID_PARAMETER;
     }
     else
     {
-        /* Set the socket. */
-        pNetworkContext->tcpSocket = tcpSocket;
-        LogDebug( ( "TCP Connection to %s established.", pHostName ) );
+        /* Call socket disconnect function to close connection. */
+        Sockets_Disconnect( pNetworkContext->tcpSocket );
     }
 
-    return socketStatus;
-}
-
-void Plaintext_FreeRTOS_Disconnect( const NetworkContext_t * pNetworkContext )
-{
-    BaseType_t waitForShutdownLoopCount = 0;
-    uint8_t pDummyBuffer[ 2 ];
-
-    if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
-    {
-        /* Initiate graceful shutdown. */
-        ( void ) FreeRTOS_shutdown( pNetworkContext->tcpSocket, FREERTOS_SHUT_RDWR );
-
-        /* Wait for the socket to disconnect gracefully (indicated by FreeRTOS_recv()
-         * returning a FREERTOS_EINVAL error) before closing the socket. */
-        while( FreeRTOS_recv( pNetworkContext->tcpSocket, pDummyBuffer, sizeof( pDummyBuffer ), 0 ) >= 0 )
-        {
-            /* We don't need to delay since FreeRTOS_recv should already have a timeout. */
-
-            if( ++waitForShutdownLoopCount >= TRANSPORT_FREERTOS_SHUTDOWN_LOOPS )
-            {
-                break;
-            }
-        }
-
-        ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
-    }
+    return plaintextStatus;
 }
 
 int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,

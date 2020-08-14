@@ -297,7 +297,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     MQTTContext_t xMQTTContext;
     MQTTStatus_t xMQTTStatus;
-    BaseType_t xNetworkStatus;
+    PlaintextTransportStatus_t xNetworkStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -317,7 +317,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                                                      democonfigMQTT_BROKER_PORT,
                                                      TRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                      TRANSPORT_SEND_RECV_TIMEOUT_MS );
-        configASSERT( xNetworkStatus == 0 );
+        configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
         /* Sends an MQTT Connect packet over the already connected TCP socket,
          * and waits for connection acknowledgment (CONNACK) packet. */
@@ -381,7 +381,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         MQTT_Disconnect( &xMQTTContext );
 
         /* Close the network connection.  */
-        Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
+        xNetworkStatus = Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
+        configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */

@@ -228,14 +228,11 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  *
  * @param pxMQTTContext MQTT context pointer.
  * @param pxPacketInfo Packet Info pointer for the incoming packet.
- * @param usPacketIdentifier Packet identifier of the incoming packet.
- * @param pxPublishInfo Deserialized publish info pointer for the incoming
- * packet.
+ * @param pxDeserializedInfo Deserialized information from the incoming packet.
  */
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              uint16_t usPacketIdentifier,
-                              MQTTPublishInfo_t * pxPublishInfo );
+                              MQTTDeserializedInfo_t * pxDeserializedInfo );
 
 /*-----------------------------------------------------------*/
 
@@ -600,19 +597,18 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              uint16_t usPacketIdentifier,
-                              MQTTPublishInfo_t * pxPublishInfo )
+                              MQTTDeserializedInfo_t * pxDeserializedInfo )
 {
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;
 
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
-        prvMQTTProcessIncomingPublish( pxPublishInfo );
+        prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
     }
     else
     {
-        prvMQTTProcessResponse( pxPacketInfo, usPacketIdentifier );
+        prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }
 }
 

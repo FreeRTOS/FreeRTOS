@@ -19,6 +19,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * @file mqtt.c
+ * @brief Implements the user-facing functions in mqtt.h.
+ */
 #include <string.h>
 #include <assert.h>
 
@@ -39,6 +43,18 @@
 #ifndef MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT
     /* Default value for the CONNACK receive retries. */
     #define MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT    ( 5U )
+#endif
+
+/**
+ * @brief Number of milliseconds to wait for a ping response to a ping
+ * request as part of the keep-alive mechanism.
+ *
+ * If a ping response is not received before this timeout, then
+ * #MQTT_ProcessLoop will return #MQTTKeepAliveTimeout.
+ */
+#ifndef MQTT_PINGRESP_TIMEOUT_MS
+    /* Wait 0.5 seconds by default for a ping response. */
+    #define MQTT_PINGRESP_TIMEOUT_MS    ( 500U )
 #endif
 
 /*-----------------------------------------------------------*/
@@ -97,7 +113,7 @@ static int32_t recvExact( const MQTTContext_t * pContext,
 /**
  * @brief Discard a packet from the transport interface.
  *
- * @param[in] PContext MQTT Connection context.
+ * @param[in] pContext MQTT Connection context.
  * @param[in] remainingLength Remaining length of the packet to dump.
  * @param[in] timeoutMs Time remaining to discard the packet.
  *
@@ -200,7 +216,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
  * #MQTTSendFailed if a network error occurs while sending an ACK or PINGREQ;
  * #MQTTBadResponse if an invalid packet is received;
  * #MQTTKeepAliveTimeout if the server has not sent a PINGRESP before
- * pContext->pingRespTimeoutMs milliseconds;
+ * #MQTT_PINGRESP_TIMEOUT_MS milliseconds;
  * #MQTTIllegalState if an incoming QoS 1/2 publish or ack causes an
  * invalid transition for the internal state machine;
  * #MQTTSuccess on success.
@@ -301,6 +317,251 @@ static MQTTStatus_t validatePublishParams( const MQTTContext_t * pContext,
                                            const MQTTPublishInfo_t * pPublishInfo,
                                            uint16_t packetId );
 
+/**
+ * topic filter, this function handles the following 2 cases:
+ * - When the topic filter ends with "/+" or "/#" characters, but the topic
+ * name only ends with '/'.
+ * - When the topic filter ends with "/#" characters, but the topic name
+ * ends at the parent level.
+ *
+ * @note This function ASSUMES that the topic name been consumed in linear
+ * matching with the topic filer, but the topic filter has remaining characters
+ * to be matched.
+ *
+ * @param[in] pTopicFilter The topic filter containing the wildcard.
+ * @param[in] topicFilterLength Length of the topic filter being examined.
+ * @param[in] filterIndex Index of the topic filter being examined.
+ *
+ * @return Returns whether the topic filter and the topic name match.
+ */
+static bool matchEndWildcardsSpecialCases( const char * pTopicFilter,
+                                           uint16_t topicFilterLength,
+                                           uint16_t filterIndex );
+
+/**
+ * @brief Attempt to match topic name with a topic filter starting with a wildcard.
+ *
+ * If the topic filter starts with a '+' (single-level) wildcard, the function
+ * advances the @a pNameIndex by a level in the topic name.
+ * If the topic filter starts with a '#' (multi-level) wildcard, the function
+ * concludes that both the topic name and topic filter match.
+ *
+ * @param[in] pTopicName The topic name to match.
+ * @param[in] topicNameLength Length of the topic name.
+ * @param[in] pTopicFilter The topic filter to match.
+ * @param[in] topicFilterLength Length of the topic filter.
+ * @param[in,out] pNameIndex Current index in topic name being examined.. It is
+ * advanced by one level for `+` wildcards.
+ * @param[in] filterIndex Current index in the topic filter being examined..
+ * @param[out] pMatch Whether the topic filter and topic name match.
+ *
+ * @return `true` if the caller of this function should exit; `false` if the
+ * caller should continue parsing the topics.
+ */
+static bool matchWildcards( const char * pTopicName,
+                            uint16_t topicNameLength,
+                            const char * pTopicFilter,
+                            uint16_t topicFilterLength,
+                            uint16_t * pNameIndex,
+                            uint16_t filterIndex,
+                            bool * pMatch );
+
+/**
+ * @brief Match a topic name and topic filter allowing the use of wildcards.
+ *
+ * @param[in] pTopicName The topic name to check.
+ * @param[in] topicNameLength Length of the topic name.
+ * @param[in] pTopicFilter The topic filter to check.
+ * @param[in] topicFilterLength Length of topic filter.
+ *
+ * @return `true` if the topic name and topic filter match; `false` otherwise.
+ */
+static bool matchTopicFilter( const char * pTopicName,
+                              uint16_t topicNameLength,
+                              const char * pTopicFilter,
+                              uint16_t topicFilterLength );
+
+/*-----------------------------------------------------------*/
+
+static bool matchEndWildcardsSpecialCases( const char * pTopicFilter,
+                                           uint16_t topicFilterLength,
+                                           uint16_t filterIndex )
+{
+    bool matchFound = false;
+
+    assert( pTopicFilter != NULL );
+    assert( topicFilterLength != 0 );
+
+    /* Check if the topic filter has 2 remaining characters and it ends in
+     * "/#". This check handles the case to match filter "sport/#" with topic
+     * "sport". The reason is that the '#' wildcard represents the parent and
+     * any number of child levels in the topic name.*/
+    if( ( filterIndex == ( topicFilterLength - 3U ) ) &&
+        ( pTopicFilter[ filterIndex + 1U ] == '/' ) &&
+        ( pTopicFilter[ filterIndex + 2U ] == '#' ) )
+
+    {
+        matchFound = true;
+    }
+
+    /* Check if the next character is "#" or "+" and the topic filter ends in
+     * "/#" or "/+". This check handles the cases to match:
+     *
+     * - Topic filter "sport/+" with topic "sport/".
+     * - Topic filter "sport/#" with topic "sport/".
+     */
+    if( ( filterIndex == ( topicFilterLength - 2U ) ) &&
+        ( pTopicFilter[ filterIndex ] == '/' ) )
+    {
+        /* Check that the last character is a wildcard. */
+        matchFound = ( ( pTopicFilter[ filterIndex + 1U ] == '+' ) ||
+                       ( pTopicFilter[ filterIndex + 1U ] == '#' ) ) ? true : false;
+    }
+
+    return matchFound;
+}
+
+/*-----------------------------------------------------------*/
+
+static bool matchWildcards( const char * pTopicName,
+                            uint16_t topicNameLength,
+                            const char * pTopicFilter,
+                            uint16_t topicFilterLength,
+                            uint16_t * pNameIndex,
+                            uint16_t filterIndex,
+                            bool * pMatch )
+{
+    bool shouldStopMatching = false;
+    bool locationIsValidForWildcard;
+
+    assert( pTopicName != NULL );
+    assert( topicNameLength != 0 );
+    assert( pTopicFilter != NULL );
+    assert( topicFilterLength != 0 );
+    assert( pNameIndex != NULL );
+    assert( pMatch != NULL );
+
+    /* Wild card in a topic filter is only valid either at the starting position
+     * or when it is preceded by a '/'.*/
+    locationIsValidForWildcard = ( ( filterIndex == 0u ) ||
+                                   ( pTopicFilter[ filterIndex - 1U ] == '/' )
+                                   ) ? true : false;
+
+    if( locationIsValidForWildcard == true )
+    {
+        if( pTopicFilter[ filterIndex ] == '+' )
+        {
+            /* Move topic name index to the end of the current level. The end of the
+             * current level is identified by '/'. */
+            while( ( *pNameIndex < topicNameLength ) && ( pTopicName[ *pNameIndex ] != '/' ) )
+            {
+                ( *pNameIndex )++;
+            }
+
+            /* Decrement the topic name index for 2 different cases:
+             * - If the break condition is ( *pNameIndex < topicNameLength ), then
+             *   we have reached past the end of the topic name and we move back the
+             *   the index on the last character.
+             * - If the break condition is ( pTopicName[ *pNameIndex ] != '/' ), we
+             *   move back the index on the '/' character. */
+            ( *pNameIndex )--;
+        }
+
+        /* '#' matches everything remaining in the topic name. It must be the
+         * last character in a topic filter. */
+        else if( ( pTopicFilter[ filterIndex ] == '#' ) &&
+                 ( filterIndex == ( topicFilterLength - 1U ) ) )
+        {
+            /* Subsequent characters don't need to be checked for the
+             * multi-level wildcard. */
+            *pMatch = true;
+            shouldStopMatching = true;
+        }
+        else
+        {
+            /* Any character mismatch other than '+' or '#' means the topic
+             * name does not match the topic filter. */
+            *pMatch = false;
+            shouldStopMatching = true;
+        }
+    }
+    else
+    {
+        /* If the location is not valid for a wildcard, the topic name does not
+         * match the topic filter. */
+        *pMatch = false;
+        shouldStopMatching = true;
+    }
+
+    return shouldStopMatching;
+}
+
+/*-----------------------------------------------------------*/
+
+static bool matchTopicFilter( const char * pTopicName,
+                              uint16_t topicNameLength,
+                              const char * pTopicFilter,
+                              uint16_t topicFilterLength )
+{
+    bool matchFound = false, shouldStopMatching = false;
+    uint16_t nameIndex = 0, filterIndex = 0;
+
+    assert( pTopicName != NULL );
+    assert( topicNameLength != 0 );
+    assert( pTopicFilter != NULL );
+    assert( topicFilterLength != 0 );
+
+    while( ( nameIndex < topicNameLength ) && ( filterIndex < topicFilterLength ) )
+    {
+        /* Check if the character in the topic name matches the corresponding
+         * character in the topic filter string. */
+        if( pTopicName[ nameIndex ] == pTopicFilter[ filterIndex ] )
+        {
+            /* If the topic name has been consumed but the topic filter has not
+             * been consumed, match for special cases when the topic filter ends
+             * with wildcard character. */
+            if( nameIndex == ( topicNameLength - 1U ) )
+            {
+                matchFound = matchEndWildcardsSpecialCases( pTopicFilter,
+                                                            topicFilterLength,
+                                                            filterIndex );
+            }
+        }
+        else
+        {
+            /* Check for matching wildcards. */
+            shouldStopMatching = matchWildcards( pTopicName,
+                                                 topicNameLength,
+                                                 pTopicFilter,
+                                                 topicFilterLength,
+                                                 &nameIndex,
+                                                 filterIndex,
+                                                 &matchFound );
+        }
+
+        if( ( matchFound == true ) || ( shouldStopMatching == true ) )
+        {
+            break;
+        }
+
+        /* Increment indexes. */
+        nameIndex++;
+        filterIndex++;
+    }
+
+    if( matchFound == false )
+    {
+        /* If the end of both strings has been reached, they match. This represents the
+         * case when the topic filter contains the '+' wildcard at a non-starting position.
+         * For example, when matching either of "sport/+/player" OR "sport/hockey/+" topic
+         * filters with "sport/hockey/player" topic name. */
+        matchFound = ( ( nameIndex == topicNameLength ) &&
+                       ( filterIndex == topicFilterLength ) ) ? true : false;
+    }
+
+    return matchFound;
+}
+
 /*-----------------------------------------------------------*/
 
 static int32_t sendPacket( MQTTContext_t * pContext,
@@ -350,7 +611,7 @@ static int32_t sendPacket( MQTTContext_t * pContext,
             LogDebug( ( "BytesSent=%d, BytesRemaining=%lu,"
                         " TotalBytesSent=%d.",
                         bytesSent,
-                        bytesRemaining,
+                        ( unsigned long ) bytesRemaining,
                         totalBytesSent ) );
         }
     }
@@ -461,7 +722,7 @@ static int32_t recvExact( const MQTTContext_t * pContext,
             LogDebug( ( "BytesReceived=%d, BytesRemaining=%lu, "
                         "TotalBytesReceived=%d.",
                         bytesRecvd,
-                        bytesRemaining,
+                        ( unsigned long ) bytesRemaining,
                         totalBytesRecvd ) );
         }
 
@@ -493,6 +754,7 @@ static MQTTStatus_t discardPacket( const MQTTContext_t * pContext,
 
     assert( pContext != NULL );
     assert( pContext->getTime != NULL );
+
     bytesToReceive = pContext->networkBuffer.size;
     getTimeStampMs = pContext->getTime;
 
@@ -512,7 +774,7 @@ static MQTTStatus_t discardPacket( const MQTTContext_t * pContext,
             LogError( ( "Receive error while discarding packet."
                         "ReceivedBytes=%d, ExpectedBytes=%lu.",
                         bytesReceived,
-                        bytesToReceive ) );
+                        ( unsigned long ) bytesToReceive ) );
             receiveError = true;
         }
         else
@@ -563,8 +825,8 @@ static MQTTStatus_t receivePacket( const MQTTContext_t * pContext,
         LogError( ( "Incoming packet will be dumped: "
                     "Packet length exceeds network buffer size."
                     "PacketSize=%lu, NetworkBufferSize=%lu.",
-                    incomingPacket.remainingLength,
-                    pContext->networkBuffer.size ) );
+                    ( unsigned long ) incomingPacket.remainingLength,
+                    ( unsigned long ) pContext->networkBuffer.size ) );
         status = discardPacket( pContext,
                                 incomingPacket.remainingLength,
                                 remainingTimeMs );
@@ -585,7 +847,7 @@ static MQTTStatus_t receivePacket( const MQTTContext_t * pContext,
             LogError( ( "Packet reception failed. ReceivedBytes=%d, "
                         "ExpectedBytes=%lu.",
                         bytesReceived,
-                        bytesToReceive ) );
+                        ( unsigned long ) bytesToReceive ) );
             status = MQTTRecvFailed;
         }
     }
@@ -693,6 +955,8 @@ static MQTTStatus_t handleKeepAlive( MQTTContext_t * pContext )
     uint32_t now = 0U, keepAliveMs = 0U;
 
     assert( pContext != NULL );
+    assert( pContext->getTime != NULL );
+
     now = pContext->getTime();
     keepAliveMs = 1000U * ( uint32_t ) pContext->keepAliveIntervalSec;
 
@@ -704,7 +968,7 @@ static MQTTStatus_t handleKeepAlive( MQTTContext_t * pContext )
         {
             /* Has time expired? */
             if( calculateElapsedTime( now, pContext->pingReqSendTimeMs ) >
-                pContext->pingRespTimeoutMs )
+                MQTT_PINGRESP_TIMEOUT_MS )
             {
                 status = MQTTKeepAliveTimeout;
             }
@@ -727,13 +991,16 @@ static MQTTStatus_t handleIncomingPublish( MQTTContext_t * pContext,
     MQTTPublishState_t publishRecordState = MQTTStateNull;
     uint16_t packetIdentifier = 0U;
     MQTTPublishInfo_t publishInfo;
+    MQTTDeserializedInfo_t deserializedInfo;
     bool duplicatePublish = false;
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
+    assert( pContext->appCallback != NULL );
 
     status = MQTT_DeserializePublish( pIncomingPacket, &packetIdentifier, &publishInfo );
-    LogInfo( ( "De-serialized incoming PUBLISH packet: DeserializerResult=%d.", status ) );
+    LogInfo( ( "De-serialized incoming PUBLISH packet: DeserializerResult=%s.",
+               MQTT_Status_strerror( status ) ) );
 
     if( status == MQTTSuccess )
     {
@@ -798,6 +1065,11 @@ static MQTTStatus_t handleIncomingPublish( MQTTContext_t * pContext,
 
     if( status == MQTTSuccess )
     {
+        /* Set fields of deserialized struct. */
+        deserializedInfo.packetIdentifier = packetIdentifier;
+        deserializedInfo.pPublishInfo = &publishInfo;
+        deserializedInfo.deserializationResult = status;
+
         /* Invoke application callback to hand the buffer over to application
          * before sending acks.
          * Application callback will be invoked for all publishes, except for
@@ -806,8 +1078,7 @@ static MQTTStatus_t handleIncomingPublish( MQTTContext_t * pContext,
         {
             pContext->appCallback( pContext,
                                    pIncomingPacket,
-                                   packetIdentifier,
-                                   &publishInfo );
+                                   &deserializedInfo );
         }
 
         /* Send PUBACK or PUBREC if necessary. */
@@ -829,6 +1100,7 @@ static MQTTStatus_t handlePublishAcks( MQTTContext_t * pContext,
     uint16_t packetIdentifier;
     MQTTPubAckType_t ackType;
     MQTTEventCallback_t appCallback;
+    MQTTDeserializedInfo_t deserializedInfo;
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
@@ -865,9 +1137,14 @@ static MQTTStatus_t handlePublishAcks( MQTTContext_t * pContext,
 
     if( status == MQTTSuccess )
     {
+        /* Set fields of deserialized struct. */
+        deserializedInfo.packetIdentifier = packetIdentifier;
+        deserializedInfo.deserializationResult = status;
+        deserializedInfo.pPublishInfo = NULL;
+
         /* Invoke application callback to hand the buffer over to application
          * before sending acks. */
-        appCallback( pContext, pIncomingPacket, packetIdentifier, NULL );
+        appCallback( pContext, pIncomingPacket, &deserializedInfo );
 
         /* Send PUBREL or PUBCOMP if necessary. */
         status = sendPublishAcks( pContext,
@@ -886,6 +1163,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
 {
     MQTTStatus_t status = MQTTBadResponse;
     uint16_t packetIdentifier = MQTT_PACKET_ID_INVALID;
+    MQTTDeserializedInfo_t deserializedInfo;
 
     /* We should always invoke the app callback unless we receive a PINGRESP
      * and are managing keep alive, or if we receive an unknown packet. We
@@ -897,6 +1175,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
 
     assert( pContext != NULL );
     assert( pIncomingPacket != NULL );
+    assert( pContext->appCallback != NULL );
 
     appCallback = pContext->appCallback;
 
@@ -914,7 +1193,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
 
         case MQTT_PACKET_TYPE_PINGRESP:
             status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, NULL );
-            invokeAppCallback = ( manageKeepAlive == true ) ? false : true;
+            invokeAppCallback = ( ( status == MQTTSuccess ) && ( manageKeepAlive == false ) ) ? true : false;
 
             if( ( status == MQTTSuccess ) && ( manageKeepAlive == true ) )
             {
@@ -927,7 +1206,7 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
         case MQTT_PACKET_TYPE_UNSUBACK:
             /* Deserialize and give these to the app provided callback. */
             status = MQTT_DeserializeAck( pIncomingPacket, &packetIdentifier, NULL );
-            invokeAppCallback = true;
+            invokeAppCallback = ( ( status == MQTTSuccess ) || ( status == MQTTServerRefused ) ) ? true : false;
             break;
 
         default:
@@ -938,9 +1217,15 @@ static MQTTStatus_t handleIncomingAck( MQTTContext_t * pContext,
             break;
     }
 
-    if( ( status == MQTTSuccess ) && ( invokeAppCallback == true ) )
+    if( invokeAppCallback == true )
     {
-        appCallback( pContext, pIncomingPacket, packetIdentifier, NULL );
+        /* Set fields of deserialized struct. */
+        deserializedInfo.packetIdentifier = packetIdentifier;
+        deserializedInfo.deserializationResult = status;
+        deserializedInfo.pPublishInfo = NULL;
+        appCallback( pContext, pIncomingPacket, &deserializedInfo );
+        /* In case a SUBACK indicated refusal, reset the status to continue the loop. */
+        status = MQTTSuccess;
     }
 
     return status;
@@ -1031,8 +1316,8 @@ static MQTTStatus_t validateSubscribeUnsubscribeParams( const MQTTContext_t * pC
     {
         LogError( ( "Argument cannot be NULL: pContext=%p, "
                     "pSubscriptionList=%p.",
-                    pContext,
-                    pSubscriptionList ) );
+                    ( void * ) pContext,
+                    ( void * ) pSubscriptionList ) );
         status = MQTTBadParameter;
     }
     else if( subscriptionCount == 0UL )
@@ -1104,7 +1389,7 @@ static MQTTStatus_t sendPublish( MQTTContext_t * pContext,
         }
         else
         {
-            LogDebug( "PUBLISH payload was not sent. Payload length was zero." );
+            LogDebug( ( "PUBLISH payload was not sent. Payload length was zero." ) );
         }
     }
 
@@ -1280,8 +1565,8 @@ static MQTTStatus_t serializePublish( const MQTTContext_t * pContext,
                                         &remainingLength,
                                         &packetSize );
     LogDebug( ( "PUBLISH packet size is %lu and remaining length is %lu.",
-                packetSize,
-                remainingLength ) );
+                ( unsigned long ) packetSize,
+                ( unsigned long ) remainingLength ) );
 
     if( status == MQTTSuccess )
     {
@@ -1291,7 +1576,7 @@ static MQTTStatus_t serializePublish( const MQTTContext_t * pContext,
                                               &( pContext->networkBuffer ),
                                               pHeaderSize );
         LogDebug( ( "Serialized PUBLISH header size is %lu.",
-                    *pHeaderSize ) );
+                    ( unsigned long ) *pHeaderSize ) );
     }
 
     return status;
@@ -1310,8 +1595,8 @@ static MQTTStatus_t validatePublishParams( const MQTTContext_t * pContext,
     {
         LogError( ( "Argument cannot be NULL: pContext=%p, "
                     "pPublishInfo=%p.",
-                    pContext,
-                    pPublishInfo ) );
+                    ( void * ) pContext,
+                    ( void * ) pPublishInfo ) );
         status = MQTTBadParameter;
     }
     else if( ( pPublishInfo->qos != MQTTQoS0 ) && ( packetId == 0U ) )
@@ -1353,20 +1638,29 @@ MQTTStatus_t MQTT_Init( MQTTContext_t * pContext,
         LogError( ( "Argument cannot be NULL: pContext=%p, "
                     "pTransportInterface=%p, "
                     "pNetworkBuffer=%p",
-                    pContext,
-                    pTransportInterface,
-                    pNetworkBuffer ) );
+                    ( void * ) pContext,
+                    ( void * ) pTransportInterface,
+                    ( void * ) pNetworkBuffer ) );
         status = MQTTBadParameter;
     }
-    else if( ( getTimeFunction == NULL ) || ( userCallback == NULL ) ||
-             ( pTransportInterface->recv == NULL ) || ( pTransportInterface->send == NULL ) )
+    else if( getTimeFunction == NULL )
     {
-        LogError( ( "Function pointers cannot be NULL: getTimeFunction=%p, userCallback=%p, "
-                    "transportRecv=%p, transportRecvSend=%p",
-                    getTimeFunction,
-                    userCallback,
-                    pTransportInterface->recv,
-                    pTransportInterface->send ) );
+        LogError( ( "Invalid parameter: getTimeFunction is NULL" ) );
+        status = MQTTBadParameter;
+    }
+    else if( userCallback == NULL )
+    {
+        LogError( ( "Invalid parameter: userCallback is NULL" ) );
+        status = MQTTBadParameter;
+    }
+    else if( pTransportInterface->recv == NULL )
+    {
+        LogError( ( "Invalid parameter: pTransportInterface->recv is NULL" ) );
+        status = MQTTBadParameter;
+    }
+    else if( pTransportInterface->send == NULL )
+    {
+        LogError( ( "Invalid parameter: pTransportInterface->send is NULL" ) );
         status = MQTTBadParameter;
     }
     else
@@ -1405,9 +1699,9 @@ MQTTStatus_t MQTT_Connect( MQTTContext_t * pContext,
     {
         LogError( ( "Argument cannot be NULL: pContext=%p, "
                     "pConnectInfo=%p, pSessionPresent=%p.",
-                    pContext,
-                    pConnectInfo,
-                    pSessionPresent ) );
+                    ( void * ) pContext,
+                    ( void * ) pConnectInfo,
+                    ( void * ) pSessionPresent ) );
         status = MQTTBadParameter;
     }
 
@@ -1419,8 +1713,8 @@ MQTTStatus_t MQTT_Connect( MQTTContext_t * pContext,
                                             &remainingLength,
                                             &packetSize );
         LogDebug( ( "CONNECT packet size is %lu and remaining length is %lu.",
-                    packetSize,
-                    remainingLength ) );
+                    ( unsigned long ) packetSize,
+                    ( unsigned long ) remainingLength ) );
     }
 
     if( status == MQTTSuccess )
@@ -1504,8 +1798,8 @@ MQTTStatus_t MQTT_Subscribe( MQTTContext_t * pContext,
                                               &remainingLength,
                                               &packetSize );
         LogDebug( ( "SUBSCRIBE packet size is %lu and remaining length is %lu.",
-                    packetSize,
-                    remainingLength ) );
+                    ( unsigned long ) packetSize,
+                    ( unsigned long ) remainingLength ) );
     }
 
     if( status == MQTTSuccess )
@@ -1636,7 +1930,7 @@ MQTTStatus_t MQTT_Ping( MQTTContext_t * pContext )
         if( status == MQTTSuccess )
         {
             LogDebug( ( "MQTT PINGREQ packet size is %lu.",
-                        packetSize ) );
+                        ( unsigned long ) packetSize ) );
         }
         else
         {
@@ -1699,8 +1993,8 @@ MQTTStatus_t MQTT_Unsubscribe( MQTTContext_t * pContext,
                                                 &remainingLength,
                                                 &packetSize );
         LogDebug( ( "UNSUBSCRIBE packet size is %lu and remaining length is %lu.",
-                    packetSize,
-                    remainingLength ) );
+                    ( unsigned long ) packetSize,
+                    ( unsigned long ) remainingLength ) );
     }
 
     if( status == MQTTSuccess )
@@ -1755,7 +2049,7 @@ MQTTStatus_t MQTT_Disconnect( MQTTContext_t * pContext )
         /* Get MQTT DISCONNECT packet size. */
         status = MQTT_GetDisconnectPacketSize( &packetSize );
         LogDebug( ( "MQTT DISCONNECT packet size is %lu.",
-                    packetSize ) );
+                    ( unsigned long ) packetSize ) );
     }
 
     if( status == MQTTSuccess )
@@ -1926,6 +2220,133 @@ uint16_t MQTT_GetPacketId( MQTTContext_t * pContext )
     }
 
     return packetId;
+}
+
+/*-----------------------------------------------------------*/
+
+MQTTStatus_t MQTT_MatchTopic( const char * pTopicName,
+                              const uint16_t topicNameLength,
+                              const char * pTopicFilter,
+                              const uint16_t topicFilterLength,
+                              bool * pIsMatch )
+{
+    MQTTStatus_t status = MQTTSuccess;
+    bool topicFilterStartsWithWildcard = false;
+    bool matchStatus = false;
+
+    if( ( pTopicName == NULL ) || ( topicNameLength == 0u ) )
+    {
+        LogError( ( "Invalid paramater: Topic name should be non-NULL and its "
+                    "length should be > 0: TopicName=%p, TopicNameLength=%u",
+                    ( void * ) pTopicName,
+                    topicNameLength ) );
+
+        status = MQTTBadParameter;
+    }
+    else if( ( pTopicFilter == NULL ) || ( topicFilterLength == 0u ) )
+    {
+        LogError( ( "Invalid paramater: Topic filter should be non-NULL and "
+                    "its length should be > 0: TopicName=%p, TopicFilterLength=%u",
+                    ( void * ) pTopicFilter,
+                    topicFilterLength ) );
+        status = MQTTBadParameter;
+    }
+    else if( pIsMatch == NULL )
+    {
+        LogError( ( "Invalid paramater: Output parameter, pIsMatch, is NULL" ) );
+        status = MQTTBadParameter;
+    }
+    else
+    {
+        /* Check for an exact match if the incoming topic name and the registered
+         * topic filter length match. */
+        if( topicNameLength == topicFilterLength )
+        {
+            matchStatus = ( strncmp( pTopicName, pTopicFilter, topicNameLength ) == 0 ) ? true : false;
+        }
+
+        if( matchStatus == false )
+        {
+            /* If an exact match was not found, match against wildcard characters in
+             * topic filter.*/
+
+            /* Determine if topic filter starts with a wildcard. */
+            topicFilterStartsWithWildcard = ( ( pTopicFilter[ 0 ] == '+' ) ||
+                                              ( pTopicFilter[ 0 ] == '#' ) ) ? true : false;
+
+            /* Note: According to the MQTT 3.1.1 specification, incoming PUBLISH topic names
+             * starting with "$" character cannot be matched against topic filter starting with
+             * a wildcard, i.e. for example, "$SYS/sport" cannot be matched with "#" or
+             * "+/sport" topic filters. */
+            if( !( ( pTopicName[ 0 ] == '$' ) && ( topicFilterStartsWithWildcard == true ) ) )
+            {
+                matchStatus = matchTopicFilter( pTopicName, topicNameLength, pTopicFilter, topicFilterLength );
+            }
+        }
+
+        /* Update the output parameter with the match result. */
+        *pIsMatch = matchStatus;
+    }
+
+    return status;
+}
+
+/*-----------------------------------------------------------*/
+
+MQTTStatus_t MQTT_GetSubAckStatusCodes( const MQTTPacketInfo_t * pSubackPacket,
+                                        uint8_t ** pPayloadStart,
+                                        size_t * pPayloadSize )
+{
+    MQTTStatus_t status = MQTTSuccess;
+
+    if( pSubackPacket == NULL )
+    {
+        LogError( ( "Invalid parameter: pSubackPacket is NULL." ) );
+        status = MQTTBadParameter;
+    }
+    else if( pPayloadStart == NULL )
+    {
+        LogError( ( "Invalid parameter: pPayloadStart is NULL." ) );
+        status = MQTTBadParameter;
+    }
+    else if( pPayloadSize == NULL )
+    {
+        LogError( ( "Invalid parameter: pPayloadSize is NULL." ) );
+        status = MQTTBadParameter;
+    }
+    else if( pSubackPacket->type != MQTT_PACKET_TYPE_SUBACK )
+    {
+        LogError( ( "Invalid parameter: Input packet is not a SUBACK packet: "
+                    "ExpectedType=%02x, InputType=%02x",
+                    MQTT_PACKET_TYPE_SUBACK, pSubackPacket->type ) );
+        status = MQTTBadParameter;
+    }
+    else if( pSubackPacket->pRemainingData == NULL )
+    {
+        LogError( ( "Invalid parameter: pSubackPacket->pRemainingData is NULL" ) );
+        status = MQTTBadParameter;
+    }
+
+    /* A SUBACK must have a remaining length of at least 3 to accommodate the
+     * packet identifier and at least 1 return code. */
+    else if( pSubackPacket->remainingLength < 3U )
+    {
+        LogError( ( "Invalid parameter: Packet remaining length is invalid: "
+                    "Should be greater than 2 for SUBACK packet: InputRemainingLength=%lu",
+                    ( unsigned long ) pSubackPacket->remainingLength ) );
+        status = MQTTBadParameter;
+    }
+    else
+    {
+        /* According to the MQTT 3.1.1 protocol specification, the "Remaining Length" field is a
+         * length of the variable header (2 bytes) plus the length of the payload.
+         * Therefore, we add 2 positions for the starting address of the payload, and
+         * subtract 2 bytes from the remaining length for the length of the payload.*/
+        *pPayloadStart = pSubackPacket->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) );
+        *pPayloadSize = pSubackPacket->remainingLength - sizeof( uint16_t );
+    }
+
+    return status;
 }
 
 /*-----------------------------------------------------------*/

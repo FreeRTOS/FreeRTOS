@@ -329,8 +329,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand );
  */
 static void prvSubscriptionManager( MQTTContext_t * pMqttContext,
                                     MQTTPacketInfo_t * pPacketInfo,
-                                    uint16_t packetIdentifier,
-                                    MQTTPublishInfo_t * pPublishInfo );
+                                    MQTTDeserializedInfo_t * pDeserializedInfo );
 
 /**
  * @brief Process commands from the command queue in a loop.
@@ -935,8 +934,7 @@ static bool topicFilterMatch( const char * pTopicName,
 
 static void prvSubscriptionManager( MQTTContext_t * pMqttContext,
                                     MQTTPacketInfo_t * pPacketInfo,
-                                    uint16_t packetIdentifier,
-                                    MQTTPublishInfo_t * pPublishInfo )
+                                    MQTTDeserializedInfo_t * pDeserializedInfo )
 {
     assert( pMqttContext != NULL );
     assert( pPacketInfo != NULL );
@@ -945,6 +943,8 @@ static void prvSubscriptionManager( MQTTContext_t * pMqttContext,
     bool xIsMatched = false;
     size_t i;
     MQTTSubscribeInfo_t * pxSubscribeInfo = NULL;
+    MQTTPublishInfo_t * pPublishInfo = pDeserializedInfo->pPublishInfo;
+    uint16_t packetIdentifier = pDeserializedInfo->packetIdentifier;
 
     /* Handle incoming publish. The lower 4 bits of the publish packet
      * type is used for the dup, QoS, and retain flags. Hence masking
@@ -1368,7 +1368,7 @@ void prvSubscribeTask( void * pvParameters )
 static void prvMQTTDemoTask( void * pvParameters )
 {
     NetworkContext_t xNetworkContext = { 0 };
-    BaseType_t xNetworkStatus;
+    PlaintextTransportStatus_t xNetworkStatus;
     BaseType_t xResult;
     uint32_t ulNotification = 0;
     Command_t xCommand;
@@ -1397,7 +1397,7 @@ static void prvMQTTDemoTask( void * pvParameters )
                                                  BROKER_PORT,
                                                  TRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                  TRANSPORT_SEND_RECV_TIMEOUT_MS );
-    configASSERT( xNetworkStatus == 0 );
+    configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
     prvCreateMQTTConnectionWithBroker( &globalMqttContext, &xNetworkContext );
     configASSERT( globalMqttContext.connectStatus = MQTTConnected );
 
@@ -1432,6 +1432,8 @@ static void prvMQTTDemoTask( void * pvParameters )
     vQueueDelete( xCommandQueue );
     vQueueDelete( xResponseQueue1 );
     vQueueDelete( xResponseQueue2 );
+
+    xNetworkStatus = Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
 }
 
 /*-----------------------------------------------------------*/

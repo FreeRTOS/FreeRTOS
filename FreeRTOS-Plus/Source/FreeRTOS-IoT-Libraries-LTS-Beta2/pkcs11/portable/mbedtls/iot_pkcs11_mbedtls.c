@@ -4113,6 +4113,7 @@ static CK_RV prvCheckGenerateKeyPairPublicTemplate( CK_ATTRIBUTE ** ppxLabel,
                 PKCS11_PRINT( ( "ERROR: Only token key generation is supported. \r\n" ) );
                 xResult = CKR_ATTRIBUTE_VALUE_INVALID;
             }
+
             break;
 
         default:

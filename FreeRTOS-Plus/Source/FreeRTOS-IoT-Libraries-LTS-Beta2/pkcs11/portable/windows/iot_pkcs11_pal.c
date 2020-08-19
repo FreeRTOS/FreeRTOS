@@ -67,11 +67,11 @@
  */
 enum eObjectHandles
 {
-    eInvalidHandle = 0,            /**< According to PKCS #11 spec, 0 is never a valid object handle. */
-    eAwsDevicePrivateKey = 1,      /**< Private Key. */
-    eAwsDevicePublicKey,           /**< Public Key. */
-    eAwsDeviceCertificate,         /**< Certificate. */
-    eAwsCodeSigningKey             /**< Code Signing Key. */
+    eInvalidHandle = 0,       /**< According to PKCS #11 spec, 0 is never a valid object handle. */
+    eAwsDevicePrivateKey = 1, /**< Private Key. */
+    eAwsDevicePublicKey,      /**< Public Key. */
+    eAwsDeviceCertificate,    /**< Certificate. */
+    eAwsCodeSigningKey        /**< Code Signing Key. */
 };
 
 /*-----------------------------------------------------------*/
@@ -80,7 +80,7 @@ enum eObjectHandles
  * @brief Checks to see if a file exists
  *
  * @param[in] pcFileName         The name of the file to check for existance.
- * 
+ *
  * @returns pdTRUE if the file exists, pdFALSE if not.
  */
 BaseType_t prvFileExists( const char * pcFileName )
@@ -105,7 +105,7 @@ BaseType_t prvFileExists( const char * pcFileName )
  * @param[in] pcLabel            The PKCS #11 label to convert to a file name
  * @param[out] pcFileName        The name of the file to check for existance.
  * @param[out] pHandle           The type of the PKCS #11 object.
- * 
+ *
  */
 void prvLabelToFilenameHandle( uint8_t * pcLabel,
                                char ** pcFileName,

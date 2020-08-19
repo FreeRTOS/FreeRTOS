@@ -369,4 +369,3 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 /*-----------------------------------------------------------*/
-

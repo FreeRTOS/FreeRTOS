@@ -121,12 +121,12 @@ typedef struct NetworkCredentials
      */
     BaseType_t disableSni;
 
-    const unsigned char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;                 /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
-    const unsigned char * pUserName;   /**< @brief String representing the username for MQTT. */
-    size_t userNameSize;               /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
-    const unsigned char * pPassword;   /**< @brief String representing the password for MQTT. */
-    size_t passwordSize;               /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
+    const unsigned char * pRootCa;   /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;               /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    const unsigned char * pUserName; /**< @brief String representing the username for MQTT. */
+    size_t userNameSize;             /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
+    const unsigned char * pPassword; /**< @brief String representing the password for MQTT. */
+    size_t passwordSize;             /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
 } NetworkCredentials_t;
 
 /**

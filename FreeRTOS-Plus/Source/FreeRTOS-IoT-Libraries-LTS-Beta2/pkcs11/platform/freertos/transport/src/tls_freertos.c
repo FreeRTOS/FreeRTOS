@@ -324,7 +324,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
             if( xResult != 0 )
             {
-                LogError( ( "Failed to get certificate from PKCSS #11 module." ) );
+                LogError( ( "Failed to get certificate from PKCS #11 module." ) );
 
                 returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
             }

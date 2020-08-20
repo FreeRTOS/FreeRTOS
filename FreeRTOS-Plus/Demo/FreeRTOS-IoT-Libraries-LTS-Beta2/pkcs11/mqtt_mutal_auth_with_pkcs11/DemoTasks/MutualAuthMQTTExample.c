@@ -34,7 +34,7 @@
  *
  * A mutually authenticated TLS connection is used to connect to the
  * MQTT message broker in this example. Define democonfigMQTT_BROKER_ENDPOINT and
- * democonfigROOT_CA_PEM in demo_config.h to establish a mutually authenticated 
+ * democonfigROOT_CA_PEM in demo_config.h to establish a mutually authenticated
  * connection.
  */
 

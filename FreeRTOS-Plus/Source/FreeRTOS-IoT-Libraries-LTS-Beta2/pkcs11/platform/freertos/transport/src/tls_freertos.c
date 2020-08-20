@@ -157,9 +157,9 @@ static int generateRandomBytes( void * pvCtx,
  * @return Zero on success.
  */
 static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
-                                       char * pcLabelName,
-                                       CK_OBJECT_CLASS xClass,
-                                       mbedtls_x509_crt * pxCertificateContext );
+                                         char * pcLabelName,
+                                         CK_OBJECT_CLASS xClass,
+                                         mbedtls_x509_crt * pxCertificateContext );
 
 /**
  * @brief Helper for setting up potentially hardware-based cryptographic context.
@@ -471,9 +471,9 @@ static int generateRandomBytes( void * pvCtx,
 /*-----------------------------------------------------------*/
 
 static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
-                                       char * pcLabelName,
-                                       CK_OBJECT_CLASS xClass,
-                                       mbedtls_x509_crt * pxCertificateContext )
+                                         char * pcLabelName,
+                                         CK_OBJECT_CLASS xClass,
+                                         mbedtls_x509_crt * pxCertificateContext )
 {
     CK_RV xResult = CKR_OK;
     CK_ATTRIBUTE xTemplate = { 0 };

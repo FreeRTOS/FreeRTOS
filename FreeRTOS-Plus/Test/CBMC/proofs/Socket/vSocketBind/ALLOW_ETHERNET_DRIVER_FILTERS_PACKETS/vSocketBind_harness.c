@@ -11,12 +11,10 @@
 #include "FreeRTOS_IP_Private.h"
 #include "FreeRTOS_Sockets.h"
 
-#include "memory_assignment.c"
+#include "memory_assignments.c"
 
+uint16_t prvGetPrivatePortNumber( BaseType_t xProtocol );
 
-/*void *safeMalloc(size_t xWantedSize) {
-        return nondet_bool() ? malloc(xWantedSize) : NULL;
-}*/
 
 uint16_t prvGetPrivatePortNumber( BaseType_t xProtocol )
 {
@@ -35,7 +33,7 @@ BaseType_t xIPIsNetworkTaskReady( void )
  * an indeterministic value. */
 BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber )
 {
-	__CPROVER_assert( pulNumber );
+	__CPROVER_assert( pulNumber != NULL, "Argument to xApplicationGetRandomNumber cannot be NULL" );
 
 	if( nondet_bool() )
 	{
@@ -49,26 +47,13 @@ BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber )
 	}
 }
 
-/* Memory assignment for FreeRTOS_Socket_t 
-FreeRTOS_Socket_t * ensure_FreeRTOS_Socket_t_is_allocated () {
-	FreeRTOS_Socket_t *pxSocket = malloc(sizeof(FreeRTOS_Socket_t));
-
-	__CPROVER_assume( pxSocket != NULL );
-
-	pxSocket->u.xTCP.rxStream = malloc(sizeof(StreamBuffer_t));
-	pxSocket->u.xTCP.txStream = malloc(sizeof(StreamBuffer_t));
-	pxSocket->u.xTCP.pxPeerSocket = malloc(sizeof(FreeRTOS_Socket_t));
-
-	return pxSocket;
-}*/
-
 void harness()
 {
 	FreeRTOS_Socket_t *pxSocket = ensure_FreeRTOS_Socket_t_is_allocated();
 
 	__CPROVER_assume( pxSocket != NULL );
 	__CPROVER_assume( pxSocket != FREERTOS_INVALID_SOCKET );
-	
+
 	struct freertos_sockaddr * pxBindAddress = safeMalloc( sizeof( struct freertos_sockaddr ) );
 
 	/* uxAddressLength is not used in this implementation. */

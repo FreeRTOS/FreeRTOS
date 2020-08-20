@@ -21,7 +21,8 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/include"
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/include",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/proofs/utility"
   ]
 }
 

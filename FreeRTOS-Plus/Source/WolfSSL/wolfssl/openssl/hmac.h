@@ -1,8 +1,8 @@
 /* hmac.h
  *
- * Copyright (C) 2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
 
-/*  hmac.h defines mini hamc openssl compatibility layer 
+
+/*  hmac.h defines mini hamc openssl compatibility layer
  *
  */
 
@@ -35,6 +36,7 @@
 #endif
 
 #include <wolfssl/openssl/evp.h>
+#include <wolfssl/openssl/opensslv.h>
 #include <wolfssl/wolfcrypt/hmac.h>
 
 #ifdef __cplusplus
@@ -51,26 +53,43 @@ WOLFSSL_API unsigned char* wolfSSL_HMAC(const WOLFSSL_EVP_MD* evp_md,
 typedef struct WOLFSSL_HMAC_CTX {
     Hmac hmac;
     int  type;
+    word32  save_ipad[WC_HMAC_BLOCK_SIZE  / sizeof(word32)];  /* same block size all*/
+    word32  save_opad[WC_HMAC_BLOCK_SIZE  / sizeof(word32)];
 } WOLFSSL_HMAC_CTX;
 
 
-WOLFSSL_API void wolfSSL_HMAC_Init(WOLFSSL_HMAC_CTX* ctx, const void* key,
+WOLFSSL_API WOLFSSL_HMAC_CTX* wolfSSL_HMAC_CTX_new(void);
+WOLFSSL_API int wolfSSL_HMAC_CTX_Init(WOLFSSL_HMAC_CTX* ctx);
+WOLFSSL_API int wolfSSL_HMAC_CTX_copy(WOLFSSL_HMAC_CTX* des,
+                                       WOLFSSL_HMAC_CTX* src);
+WOLFSSL_LOCAL int wolfSSL_HmacCopy(Hmac* des, Hmac* src);
+WOLFSSL_API int wolfSSL_HMAC_Init(WOLFSSL_HMAC_CTX* ctx, const void* key,
                                  int keylen, const EVP_MD* type);
-WOLFSSL_API void wolfSSL_HMAC_Update(WOLFSSL_HMAC_CTX* ctx,
+WOLFSSL_API int wolfSSL_HMAC_Init_ex(WOLFSSL_HMAC_CTX* ctx, const void* key,
+                             int keylen, const EVP_MD* type, WOLFSSL_ENGINE* e);
+WOLFSSL_API int wolfSSL_HMAC_Update(WOLFSSL_HMAC_CTX* ctx,
                                    const unsigned char* data, int len);
-WOLFSSL_API void wolfSSL_HMAC_Final(WOLFSSL_HMAC_CTX* ctx, unsigned char* hash,
+WOLFSSL_API int wolfSSL_HMAC_Final(WOLFSSL_HMAC_CTX* ctx, unsigned char* hash,
                                   unsigned int* len);
-WOLFSSL_API void wolfSSL_HMAC_cleanup(WOLFSSL_HMAC_CTX* ctx);
-
+WOLFSSL_API int wolfSSL_HMAC_cleanup(WOLFSSL_HMAC_CTX* ctx);
+WOLFSSL_API void wolfSSL_HMAC_CTX_free(WOLFSSL_HMAC_CTX* ctx);
+WOLFSSL_API size_t wolfSSL_HMAC_size(const WOLFSSL_HMAC_CTX *ctx);
 
 typedef struct WOLFSSL_HMAC_CTX HMAC_CTX;
 
 #define HMAC(a,b,c,d,e,f,g) wolfSSL_HMAC((a),(b),(c),(d),(e),(f),(g))
 
-#define HMAC_Init    wolfSSL_HMAC_Init
-#define HMAC_Update  wolfSSL_HMAC_Update
-#define HMAC_Final   wolfSSL_HMAC_Final
-#define HMAC_cleanup wolfSSL_HMAC_cleanup
+#define HMAC_CTX_new wolfSSL_HMAC_CTX_new
+#define HMAC_CTX_init wolfSSL_HMAC_CTX_Init
+#define HMAC_CTX_copy wolfSSL_HMAC_CTX_copy
+#define HMAC_CTX_free wolfSSL_HMAC_CTX_free
+#define HMAC_CTX_reset wolfSSL_HMAC_cleanup
+#define HMAC_Init_ex  wolfSSL_HMAC_Init_ex
+#define HMAC_Init     wolfSSL_HMAC_Init
+#define HMAC_Update   wolfSSL_HMAC_Update
+#define HMAC_Final    wolfSSL_HMAC_Final
+#define HMAC_cleanup  wolfSSL_HMAC_cleanup
+#define HMAC_size     wolfSSL_HMAC_size
 
 
 #ifdef __cplusplus

@@ -1,0 +1,21 @@
+"--cpu=m4809" 
+
+"--enhanced_core" 
+
+"-p" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\avr\Config\iom4809.ddf" 
+
+"--eeprom_size" 
+
+"256" 
+
+"--avrone_jtag_clock=100000" 
+
+"--drv_communication=USB" 
+
+"--drv_debug_port=updi" 
+
+
+
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.debug.core.groups.GroupLaunchConfigurationType">
+<stringAttribute key="org.eclipse.debug.core.launchGroup.0.action" value="DELAY"/>
+<stringAttribute key="org.eclipse.debug.core.launchGroup.0.actionParam" value="2"/>
+<booleanAttribute key="org.eclipse.debug.core.launchGroup.0.adoptIfRunning" value="false"/>
+<booleanAttribute key="org.eclipse.debug.core.launchGroup.0.enabled" value="true"/>
+<stringAttribute key="org.eclipse.debug.core.launchGroup.0.mode" value="run"/>
+<stringAttribute key="org.eclipse.debug.core.launchGroup.0.name" value="Start_QEMU"/>
+<stringAttribute key="org.eclipse.debug.core.launchGroup.1.action" value="NONE"/>
+<booleanAttribute key="org.eclipse.debug.core.launchGroup.1.adoptIfRunning" value="false"/>
+<booleanAttribute key="org.eclipse.debug.core.launchGroup.1.enabled" value="true"/>
+<stringAttribute key="org.eclipse.debug.core.launchGroup.1.mode" value="debug"/>
+<stringAttribute key="org.eclipse.debug.core.launchGroup.1.name" value="RTOSDemo Debug"/>
+</launchConfiguration>

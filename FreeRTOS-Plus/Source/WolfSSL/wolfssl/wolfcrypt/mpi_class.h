@@ -1,8 +1,8 @@
 /* mpi_class.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 
 #if !(defined(LTM1) && defined(LTM2) && defined(LTM3))
@@ -61,6 +62,7 @@
 #define BN_MP_DR_SETUP_C
 #define BN_MP_EXCH_C
 #define BN_MP_EXPT_D_C
+#define BN_MP_EXPTMOD_BASE_2
 #define BN_MP_EXPTMOD_C
 #define BN_MP_EXPTMOD_FAST_C
 #define BN_MP_EXTEUCLID_C
@@ -357,6 +359,7 @@
    #define BN_MP_REDUCE_IS_2K_C
    #define BN_MP_ISODD_C
    #define BN_MP_EXPTMOD_FAST_C
+   #define BN_MP_EXPTMOD_BASE_2
 #endif
 
 #if defined(BN_MP_EXPTMOD_FAST_C)

@@ -1,8 +1,8 @@
 /* fp_sqr_comba_12.i
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
 
+
 #ifdef TFM_SQR12
-void fp_sqr_comba12(fp_int *A, fp_int *B)
+int fp_sqr_comba12(fp_int *A, fp_int *B)
 {
-   fp_digit *a, b[24], c0, c1, c2, sc0, sc1, sc2;
+   fp_digit *a, c0, c1, c2, sc0 = 0, sc1 = 0, sc2 = 0;
 #ifdef TFM_ISO
    fp_word tt;
 #endif
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit b[24];
+#else
+   fp_digit *b;
+#endif
+
+#ifdef WOLFSSL_SMALL_STACK
+   b = (fp_digit*)XMALLOC(sizeof(fp_digit) * 24, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (b == NULL)
+      return FP_MEM;
+#endif
+
    a = A->dp;
    COMBA_START; 
 
@@ -151,8 +164,13 @@ void fp_sqr_comba12(fp_int *A, fp_int *B)
 
    B->used = 24;
    B->sign = FP_ZPOS;
-   memcpy(B->dp, b, 24 * sizeof(fp_digit));
+   XMEMCPY(B->dp, b, 24 * sizeof(fp_digit));
    fp_clamp(B);
+
+#ifdef WOLFSSL_SMALL_STACK
+   XFREE(b, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+   return FP_OKAY;
 }
 #endif
 

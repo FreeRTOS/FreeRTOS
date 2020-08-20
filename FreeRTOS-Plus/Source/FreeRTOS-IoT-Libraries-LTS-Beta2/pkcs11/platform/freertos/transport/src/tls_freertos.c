@@ -156,7 +156,7 @@ static int generateRandomBytes( void * pvCtx,
  *
  * @return Zero on success.
  */
-static int readCertificateIntoContext( SSLContext_t * pSslContext,
+static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
                                        char * pcLabelName,
                                        CK_OBJECT_CLASS xClass,
                                        mbedtls_x509_crt * pxCertificateContext );
@@ -168,7 +168,7 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
  *
  * @return Zero on success.
  */
-static int initializeClientKeys( SSLContext_t * pxCtx );
+static CK_RV initializeClientKeys( SSLContext_t * pxCtx );
 
 /**
  * @brief Sign a cryptographic hash with the private key.
@@ -304,13 +304,11 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Setup the client private key. */
-        mbedtlsError = initializeClientKeys( &( pNetworkContext->sslContext ) );
+        xResult = initializeClientKeys( &( pNetworkContext->sslContext ) );
 
-        if( mbedtlsError != 0 )
+        if( xResult != CKR_OK )
         {
-            LogError( ( "Failed to parse client certificate: mbedTLSError= %s : %s.",
-                        mbedtlsHighLevelCodeOrDefault( mbedtlsError ),
-                        mbedtlsLowLevelCodeOrDefault( mbedtlsError ) ) );
+            LogError( ( "Failed to setup key handling by PKCS #11." ) );
 
             returnStatus = TLS_TRANSPORT_INVALID_CREDENTIALS;
         }
@@ -322,7 +320,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                                   CKO_CERTIFICATE,
                                                   &( pNetworkContext->sslContext.clientCert ) );
 
-            if( xResult != 0 )
+            if( xResult != CKR_OK )
             {
                 LogError( ( "Failed to get certificate from PKCS #11 module." ) );
 
@@ -472,7 +470,7 @@ static int generateRandomBytes( void * pvCtx,
 
 /*-----------------------------------------------------------*/
 
-static int readCertificateIntoContext( SSLContext_t * pSslContext,
+static CK_RV readCertificateIntoContext( SSLContext_t * pSslContext,
                                        char * pcLabelName,
                                        CK_OBJECT_CLASS xClass,
                                        mbedtls_x509_crt * pxCertificateContext )
@@ -493,7 +491,7 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
     }
 
     /* Query the certificate size. */
-    if( 0 == xResult )
+    if( CKR_OK == xResult )
     {
         xTemplate.type = CKA_VALUE;
         xTemplate.ulValueLen = 0;
@@ -505,9 +503,9 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
     }
 
     /* Create a buffer for the certificate. */
-    if( 0 == xResult )
+    if( CKR_OK == xResult )
     {
-        xTemplate.pValue = pvPortMalloc( xTemplate.ulValueLen ); /*lint !e9079 Allow casting void* to other types. */
+        xTemplate.pValue = pvPortMalloc( xTemplate.ulValueLen );
 
         if( NULL == xTemplate.pValue )
         {
@@ -516,7 +514,7 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
     }
 
     /* Export the certificate. */
-    if( 0 == xResult )
+    if( CKR_OK == xResult )
     {
         xResult = pSslContext->pxP11FunctionList->C_GetAttributeValue( pSslContext->xP11Session,
                                                                        xCertObj,
@@ -525,7 +523,7 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
     }
 
     /* Decode the certificate. */
-    if( 0 == xResult )
+    if( CKR_OK == xResult )
     {
         xResult = mbedtls_x509_crt_parse( pxCertificateContext,
                                           ( const unsigned char * ) xTemplate.pValue,
@@ -533,10 +531,7 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
     }
 
     /* Free memory. */
-    if( NULL != xTemplate.pValue )
-    {
-        vPortFree( xTemplate.pValue );
-    }
+    vPortFree( xTemplate.pValue );
 
     return xResult;
 }
@@ -551,7 +546,7 @@ static int readCertificateIntoContext( SSLContext_t * pSslContext,
  *
  * @return Zero on success.
  */
-static int initializeClientKeys( SSLContext_t * pxCtx )
+static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
 {
     CK_RV xResult = CKR_OK;
     CK_SLOT_ID * pxSlotIds = NULL;
@@ -663,10 +658,7 @@ static int initializeClientKeys( SSLContext_t * pxCtx )
     }
 
     /* Free memory. */
-    if( NULL != pxSlotIds )
-    {
-        vPortFree( pxSlotIds );
-    }
+    vPortFree( pxSlotIds );
 
     return xResult;
 }

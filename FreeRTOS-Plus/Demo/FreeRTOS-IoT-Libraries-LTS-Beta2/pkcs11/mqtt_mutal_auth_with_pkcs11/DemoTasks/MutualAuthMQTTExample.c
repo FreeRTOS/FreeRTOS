@@ -33,10 +33,9 @@
  * memory. It uses QoS1 for sending to and receiving messages from the broker.
  *
  * A mutually authenticated TLS connection is used to connect to the
- * MQTT message broker in this example. Define democonfigMQTT_BROKER_ENDPOINT,
- * democonfigROOT_CA_PEM, democonfigCLIENT_CERTIFICATE_PEM,
- * and democonfigCLIENT_PRIVATE_KEY_PEM in demo_config.h to establish a
- * mutually authenticated connection.
+ * MQTT message broker in this example. Define democonfigMQTT_BROKER_ENDPOINT and
+ * democonfigROOT_CA_PEM in demo_config.h to establish a mutually authenticated 
+ * connection.
  */
 
 /* Standard includes. */

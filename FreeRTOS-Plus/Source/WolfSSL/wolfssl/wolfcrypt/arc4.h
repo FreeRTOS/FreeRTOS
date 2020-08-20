@@ -1,8 +1,8 @@
 /* arc4.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/arc4.h
+*/
 
 #ifndef WOLF_CRYPT_ARC4_H
 #define WOLF_CRYPT_ARC4_H
@@ -29,11 +32,14 @@
     extern "C" {
 #endif
 
-#define WOLFSSL_ARC4_CAVIUM_MAGIC 0xBEEF0001
+#ifdef WOLFSSL_ASYNC_CRYPT
+    #include <wolfssl/wolfcrypt/async.h>
+#endif
 
 enum {
 	ARC4_ENC_TYPE   = 4,    /* cipher unique type */
-    ARC4_STATE_SIZE = 256
+    ARC4_STATE_SIZE = 256,
+    RC4_KEY_SIZE    = 16,   /* always 128bit           */
 };
 
 /* ARC4 encryption and decryption */
@@ -41,20 +47,17 @@ typedef struct Arc4 {
     byte x;
     byte y;
     byte state[ARC4_STATE_SIZE];
-#ifdef HAVE_CAVIUM
-    int    devId;           /* nitrox device id */
-    word32 magic;           /* using cavium magic */
-    word64 contextHandle;   /* nitrox context memory handle */
+#ifdef WOLFSSL_ASYNC_CRYPT
+    WC_ASYNC_DEV asyncDev;
 #endif
+    void* heap;
 } Arc4;
 
-WOLFSSL_API void wc_Arc4Process(Arc4*, byte*, const byte*, word32);
-WOLFSSL_API void wc_Arc4SetKey(Arc4*, const byte*, word32);
+WOLFSSL_API int wc_Arc4Process(Arc4*, byte*, const byte*, word32);
+WOLFSSL_API int wc_Arc4SetKey(Arc4*, const byte*, word32);
 
-#ifdef HAVE_CAVIUM
-    WOLFSSL_API int  wc_Arc4InitCavium(Arc4*, int);
-    WOLFSSL_API void wc_Arc4FreeCavium(Arc4*);
-#endif
+WOLFSSL_API int  wc_Arc4Init(Arc4*, void*, int);
+WOLFSSL_API void wc_Arc4Free(Arc4*);
 
 #ifdef __cplusplus
     } /* extern "C" */

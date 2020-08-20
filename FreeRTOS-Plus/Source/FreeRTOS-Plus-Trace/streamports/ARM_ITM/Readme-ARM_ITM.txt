@@ -13,12 +13,16 @@ performance. This stream port does not use any RAM buffer for the trace, but
 writes the data directly to the ITM registers. This is very fast.
 
 To setup Keil uVision for ITM tracing with a Keil ULINKpro (or ULINKplus),
-see Percepio Application Note PA-021 https://percepio.com/2018/05/04/keil-itm-support/
+see Percepio Application Note PA-021, https://percepio.com/2018/05/04/keil-itm-support/
+
+To setup IAR Embedded Workbench for ITM tracing with an IAR I-Jet,
+see Percepio Application Note PA-023, https://percepio.com/iar
 
 Learning more:
  - Tracealyzer User Manual (Help -> User Manual)
  - https://percepio.com/gettingstarted
- - Percepio Application Note PA-021 https://percepio.com/2018/05/04/keil-itm-support/
+ - Percepio Application Note PA-021 (Keil), https://percepio.com/2018/05/04/keil-itm-support/
+ - Percepio Application Note PA-023 (IAR), https://percepio.com/iar
  - About ITM trace, https://percepio.com/2016/06/09/arm-itm/
  - About the recorder and custom streaming, http://percepio.com/2016/10/05/rtos-tracing
 

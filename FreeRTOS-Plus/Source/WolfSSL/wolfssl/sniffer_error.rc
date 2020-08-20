@@ -89,5 +89,28 @@ STRINGTABLE
     72, "Late Key Load Error"
     73, "Got Certificate Status msg"
     74, "RSA Key Missing Error"
+    75, "Secure Renegotiation Not Supported"
+
+    76, "Get Session Stats Failure"
+    77, "Reassembly Buffer Size Exceeded"
+    78, "Dropping Lost Fragment"
+    79, "Dropping Partial Record"
+    80, "Clear ACK Fault"
+
+    81, "Bad Decrypt Size"
+    82, "Extended Master Secret Hash Error"
+    83, "Handshake Message Split Across TLS Records"
+    84, "ECC Private Decode Error"
+    85, "ECC Public Decode Error"
+
+    86, "Watch callback not set"
+    87, "Watch hash failed"
+    88, "Watch callback failed"
+    89, "Bad Certificate Message"
+    90, "Store data callback not set"
+
+    91, "No data destination Error"
+    92, "Store Data callback failed"
+    93, "Loading chain input"
 }
 

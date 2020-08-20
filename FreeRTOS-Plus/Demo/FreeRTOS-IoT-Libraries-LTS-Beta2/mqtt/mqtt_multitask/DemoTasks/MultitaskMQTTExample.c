@@ -122,50 +122,99 @@
 #define _MILLISECONDS_PER_SECOND            ( 1000U )                                                 /**< @brief Milliseconds per second. */
 #define _MILLISECONDS_PER_TICK              ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )         /**< Milliseconds per FreeRTOS tick. */
 
-/* Ticks to wait for task notifications. */
+/**
+ * @brief Ticks to wait for task notifications.
+ */
 #define DEMO_TICKS_TO_WAIT                  pdMS_TO_TICKS( 1000 )
 
-/* Maximum number of operations awaiting an ack packet from the broker. */
+/**
+ * @brief Maximum number of operations awaiting an ack packet from the broker.
+ */
 #define PENDING_ACKS_MAX_SIZE               20
-/* Maximum number of subscriptions to store in the subscription list. */
+
+/**
+ * @brief Maximum number of subscriptions to store in the subscription list.
+ */
 #define SUBSCRIPTIONS_MAX_COUNT             10
-/* Number of publishes done by the publisher in this demo. */
+
+/**
+ * @brief Number of publishes done by the publisher in this demo.
+ */
 #define PUBLISH_COUNT                       16
 
-/* Size of statically allocated buffers for holding topic names and payloads in this demo. */
+/**
+ * @brief Size of statically allocated buffers for holding topic names and payloads in this demo.
+ */
 #define DEMO_BUFFER_SIZE                    100
-/* Size of dynamically allocated buffers for holding topic names and payloads in this demo. */
+
+/**
+ * @brief Size of dynamically allocated buffers for holding topic names and payloads in this demo.
+ */
 #define DYNAMIC_BUFFER_SIZE                 25
 
-/* Max number of commands that can be enqueued. */
+/**
+ * @brief Max number of commands that can be enqueued.
+ */
 #define COMMAND_QUEUE_SIZE                  25
-/* Max number of received publishes that can be enqueued for a task. */
+
+/**
+ * @brief Max number of received publishes that can be enqueued for a task.
+ */
 #define PUBLISH_QUEUE_SIZE                  20
 
-/* Delay for the subscriber task when no publishes are waiting in the queue. */
+/**
+ * @brief Delay for the subscriber task when no publishes are waiting in the queue.
+ */
 #define SUBSCRIBE_TASK_DELAY_MS             400U
-/* Delay for the publisher task between synchronous publishes. */
+
+/**
+ * @brief Delay for the publisher task between synchronous publishes.
+ */
 #define PUBLISH_DELAY_SYNC_MS               500U
-/* Delay for the publisher task between asynchronous publishes. */
+
+/**
+ * @brief Delay for the publisher task between asynchronous publishes.
+ */
 #define PUBLISH_DELAY_ASYNC_MS              50U
 
-/* Notification bit indicating completion of publisher task. */
+/**
+ * @brief Notification bit indicating completion of publisher task.
+ */
 #define PUBLISHER_TASK_COMPLETE_BIT         ( 1U << 1 )
-/* Notification bit indicating completion of subscriber task. */
+
+/**
+ * @brief Notification bit indicating completion of subscriber task.
+ */
 #define SUBSCRIBE_TASK_COMPLETE_BIT         ( 1U << 2 )
-/* Notification bit used by subscriber task for subscribe operation. */
+
+/**
+ * @brief Notification bit used by subscriber task for subscribe operation.
+ */
 #define SUBSCRIBE_COMPLETE_BIT              ( 1U << 0 )
-/* Notification bit used by subscriber task for unsubscribe operation. */
+
+/**
+ * @brief Notification bit used by subscriber task for unsubscribe operation.
+ */
 #define UNSUBSCRIBE_COMPLETE_BIT            ( 1U << 1 )
 
-/* Maximum number of loop iterations to wait for a task notification. */
+/**
+ * @brief Maximum number of loop iterations to wait for a task notification.
+ */
 #define MAX_WAIT_ITERATIONS                 5
 
-/* Topic filter used by the subscriber task. */
+/**
+ * @brief Topic filter used by the subscriber task.
+ */
 #define SUBSCRIBE_TOPIC_FILTER              "publish/+/filter"
-/* Format string used by the publisher task for topic names. */
+
+/**
+ * @brief Format string used by the publisher task for topic names.
+ */
 #define PUBLISH_TOPIC_FORMAT_STRING         "publish/%i/filter"
-/* Format string used by the publisher task for payloads. */
+
+/**
+ * @brief Format string used by the publisher task for payloads.
+ */
 #define PUBLISH_PAYLOAD_FORMAT              "Hello World! %d"
 
 /*-----------------------------------------------------------*/
@@ -434,13 +483,19 @@ static uint32_t prvGetTimeMs( void );
 
 /*-----------------------------------------------------------*/
 
-/* Global MQTT context. */
+/**
+ * @brief Global MQTT context.
+ */
 static MQTTContext_t globalMqttContext;
 
-/* List of operations that are awaiting an ack from the broker. */
+/**
+ * @brief List of operations that are awaiting an ack from the broker.
+ */
 static AckInfo_t pxPendingAcks[ PENDING_ACKS_MAX_SIZE ];
 
-/* List of active subscriptions. */
+/**
+ * @brief List of active subscriptions.
+ */
 static SubscriptionElement_t pxSubscriptions[ SUBSCRIPTIONS_MAX_COUNT ];
 
 /**
@@ -459,7 +514,7 @@ static QueueHandle_t xPublisherResponseQueue;
 static QueueHandle_t xSubscriberResponseQueue;
 
 /**
- * @brief Response queue for publishes received on unsubscribed topics.
+ * @brief Response queue for publishes received on non-subscribed topics.
  */
 static QueueHandle_t xDefaultResponseQueue;
 

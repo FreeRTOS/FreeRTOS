@@ -581,17 +581,6 @@ static CK_RV initializeClientKeys( SSLContext_t * pxCtx )
                                                                           &xCount );
     }
 
-    /* Start a private session with the PKCS #11 module using the first
-     * enumerated slot. */
-    if( CKR_OK == xResult )
-    {
-        xResult = ( BaseType_t ) pxCtx->pxP11FunctionList->C_OpenSession( pxSlotIds[ 0 ],
-                                                                          CKF_SERIAL_SESSION,
-                                                                          NULL,
-                                                                          NULL,
-                                                                          &pxCtx->xP11Session );
-    }
-
     /* Put the module in authenticated mode. */
     if( CKR_OK == xResult )
     {

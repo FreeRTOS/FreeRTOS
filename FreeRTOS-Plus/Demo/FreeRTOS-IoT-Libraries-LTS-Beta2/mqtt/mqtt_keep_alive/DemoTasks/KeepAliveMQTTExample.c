@@ -322,7 +322,7 @@ static uint32_t ulPingReqSendTimeMs;
 /**
  * @brief Timeout for a pending PINGRESP from the MQTT broker.
  */
-static uint32_t ulPingRespTimeoutMs = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS * _MILLISECONDS_PER_SECOND;
+static uint32_t ulPingRespTimeoutMs = ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * _MILLISECONDS_PER_SECOND;
 
 /**
  * @brief Static buffer used to hold an MQTT PINGREQ packet for keep-alive mechanism.

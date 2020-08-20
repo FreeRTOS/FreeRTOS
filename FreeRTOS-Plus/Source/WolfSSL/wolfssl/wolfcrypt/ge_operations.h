@@ -1,8 +1,8 @@
 /* ge_operations.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
  /* Based On Daniel J Bernstein's ed25519 Public Domain ref10 work. */
 
@@ -28,9 +29,6 @@
 
 #ifdef HAVE_ED25519
 
-#ifndef CURVED25519_SMALL
-    #include <stdint.h>
-#endif
 #include <wolfssl/wolfcrypt/fe_operations.h>
 
 /*
@@ -47,19 +45,31 @@ Representations:
   ge_precomp (Duif): (y+x,y-x,2dxy)
 */
 
+#ifdef ED25519_SMALL
+  typedef byte     ge[F25519_SIZE];
+#elif defined(CURVED25519_ASM_64BIT)
+  typedef int64_t  ge[4];
+#elif defined(CURVED25519_ASM_32BIT)
+  typedef int32_t  ge[8];
+#elif defined(CURVED25519_128BIT)
+  typedef int64_t  ge[5];
+#else
+  typedef int32_t  ge[10];
+#endif
 
 typedef struct {
-  fe X;
-  fe Y;
-  fe Z;
+  ge X;
+  ge Y;
+  ge Z;
 } ge_p2;
 
 typedef struct {
-  fe X;
-  fe Y;
-  fe Z;
-  fe T;
+  ge X;
+  ge Y;
+  ge Z;
+  ge T;
 } ge_p3;
+
 
 WOLFSSL_LOCAL int  ge_compress_key(byte* out, const byte* xIn, const byte* yIn,
                                                                 word32 keySz);
@@ -74,42 +84,30 @@ WOLFSSL_LOCAL void sc_muladd(byte* s, const byte* a, const byte* b,
 WOLFSSL_LOCAL void ge_tobytes(unsigned char *,const ge_p2 *);
 WOLFSSL_LOCAL void ge_p3_tobytes(unsigned char *,const ge_p3 *);
 
-#ifndef CURVED25519_SMALL
+
+#ifndef ED25519_SMALL
 typedef struct {
-  fe X;
-  fe Y;
-  fe Z;
-  fe T;
+  ge X;
+  ge Y;
+  ge Z;
+  ge T;
 } ge_p1p1;
 
 typedef struct {
-  fe yplusx;
-  fe yminusx;
-  fe xy2d;
+  ge yplusx;
+  ge yminusx;
+  ge xy2d;
 } ge_precomp;
 
 typedef struct {
-  fe YplusX;
-  fe YminusX;
-  fe Z;
-  fe T2d;
+  ge YplusX;
+  ge YminusX;
+  ge Z;
+  ge T2d;
 } ge_cached;
 
-WOLFSSL_LOCAL void ge_p2_0(ge_p2 *);
-WOLFSSL_LOCAL void ge_p3_0(ge_p3 *);
-WOLFSSL_LOCAL void ge_precomp_0(ge_precomp *);
-WOLFSSL_LOCAL void ge_p3_to_p2(ge_p2 *,const ge_p3 *);
-WOLFSSL_LOCAL void ge_p3_to_cached(ge_cached *,const ge_p3 *);
-WOLFSSL_LOCAL void ge_p1p1_to_p2(ge_p2 *,const ge_p1p1 *);
-WOLFSSL_LOCAL void ge_p1p1_to_p3(ge_p3 *,const ge_p1p1 *);
-WOLFSSL_LOCAL void ge_p2_dbl(ge_p1p1 *,const ge_p2 *);
-WOLFSSL_LOCAL void ge_p3_dbl(ge_p1p1 *,const ge_p3 *);
+#endif /* !ED25519_SMALL */
 
-WOLFSSL_LOCAL void ge_madd(ge_p1p1 *,const ge_p3 *,const ge_precomp *);
-WOLFSSL_LOCAL void ge_msub(ge_p1p1 *,const ge_p3 *,const ge_precomp *);
-WOLFSSL_LOCAL void ge_add(ge_p1p1 *,const ge_p3 *,const ge_cached *);
-WOLFSSL_LOCAL void ge_sub(ge_p1p1 *,const ge_p3 *,const ge_cached *);
-#endif /* no CURVED25519_SMALL */
 #endif /* HAVE_ED25519 */
-#endif /* WOLF_CRYPT_GE_OPERATIONS_H */
 
+#endif /* WOLF_CRYPT_GE_OPERATIONS_H */

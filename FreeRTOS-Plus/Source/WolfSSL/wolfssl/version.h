@@ -1,8 +1,8 @@
 /* wolfssl_version.h.in
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
 
-#pragma once
+#ifndef WOLFSSL_VERSION_H
+#define WOLFSSL_VERSION_H
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define LIBWOLFSSL_VERSION_STRING "3.6.0"
-#define LIBWOLFSSL_VERSION_HEX 0x03006000
+#define LIBWOLFSSL_VERSION_STRING "4.4.0"
+#define LIBWOLFSSL_VERSION_HEX 0x04004000
 
 #ifdef __cplusplus
 }
 #endif
+
+
+#endif /* WOLFSSL_VERSION_H */
 

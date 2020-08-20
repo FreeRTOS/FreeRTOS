@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.5
+ * Trace Recorder Library for Tracealyzer v4.3.11
  * Percepio AB, www.percepio.com
  *
  * trcPortDefines.h
@@ -130,8 +130,9 @@
 #define TRC_HARDWARE_PORT_XILINX_PPC405					11	/*	No			FreeRTOS			*/
 #define TRC_HARDWARE_PORT_XILINX_PPC440					12	/*	No			FreeRTOS			*/
 #define TRC_HARDWARE_PORT_XILINX_MICROBLAZE				13	/*	No			Any					*/
-#define TRC_HARDWARE_PORT_NXP_LPC210X					14	/*	No			Any					*/
-#define TRC_HARDWARE_PORT_ARM_CORTEX_A9					15	/*	Yes			Any					*/
-#define TRC_HARDWARE_PORT_POWERPC_Z4                    16  /*  No          FreeRTOS            */
-#define TRC_HARDWARE_PORT_Altera_NiosII					17  /*  No          Any                 */
+#define TRC_HARDWARE_PORT_XILINX_ZyncUltraScaleR5		14	/*  No			FreeRTOS			*/
+#define TRC_HARDWARE_PORT_NXP_LPC210X					15	/*	No			Any					*/
+#define TRC_HARDWARE_PORT_ARM_CORTEX_A9					16	/*	Yes			Any					*/
+#define TRC_HARDWARE_PORT_POWERPC_Z4                    17  /*  No          FreeRTOS            */
+#define TRC_HARDWARE_PORT_Altera_NiosII					18  /*  Yes          Any (Tested with FreeRTOS)                 */
 #endif /*TRC_PORTDEFINES_H*/

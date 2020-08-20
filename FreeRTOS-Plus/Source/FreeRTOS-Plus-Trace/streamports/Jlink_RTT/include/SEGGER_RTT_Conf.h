@@ -78,6 +78,10 @@ Revision: $Rev: 3892 $
 
 #define SEGGER_RTT_MODE_DEFAULT                   SEGGER_RTT_MODE_NO_BLOCK_SKIP // Mode for pre-initialized terminal channel (buffer 0)
 
+// This can be used to place the RTT control block in the right memory range, if no found automatically.
+// This example is for NXP LPC54018, needs to be adapted for each MCU family.
+//#define SEGGER_RTT_SECTION ".data.$RAM2"
+
 //
 // Target is not allowed to perform other RTT operations while string still has not been stored completely.
 // Otherwise we would probably end up with a mixed string in the buffer.

@@ -12,9 +12,9 @@
 */
 /* blake2b.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 
 #ifdef HAVE_CONFIG_H
@@ -69,14 +70,14 @@ static const byte blake2b_sigma[12][16] =
 };
 
 
-static INLINE int blake2b_set_lastnode( blake2b_state *S )
+static WC_INLINE int blake2b_set_lastnode( blake2b_state *S )
 {
   S->f[1] = ~0ULL;
   return 0;
 }
 
 /* Some helper functions, not necessarily useful */
-static INLINE int blake2b_set_lastblock( blake2b_state *S )
+static WC_INLINE int blake2b_set_lastblock( blake2b_state *S )
 {
   if( S->last_node ) blake2b_set_lastnode( S );
 
@@ -84,7 +85,7 @@ static INLINE int blake2b_set_lastblock( blake2b_state *S )
   return 0;
 }
 
-static INLINE int blake2b_increment_counter( blake2b_state *S, const word64
+static WC_INLINE int blake2b_increment_counter( blake2b_state *S, const word64
                                              inc )
 {
   S->t[0] += inc;
@@ -92,7 +93,7 @@ static INLINE int blake2b_increment_counter( blake2b_state *S, const word64
   return 0;
 }
 
-static INLINE int blake2b_init0( blake2b_state *S )
+static WC_INLINE int blake2b_init0( blake2b_state *S )
 {
   int i;
   XMEMSET( S, 0, sizeof( blake2b_state ) );
@@ -106,8 +107,9 @@ static INLINE int blake2b_init0( blake2b_state *S )
 int blake2b_init_param( blake2b_state *S, const blake2b_param *P )
 {
   word32 i;
+  byte *p ;
   blake2b_init0( S );
-  byte *p = ( byte * )( P );
+  p =  ( byte * )( P );
 
   /* IV XOR ParamBlock */
   for( i = 0; i < 8; ++i )
@@ -124,6 +126,7 @@ int blake2b_init( blake2b_state *S, const byte outlen )
 
   if ( ( !outlen ) || ( outlen > BLAKE2B_OUTBYTES ) ) return -1;
 
+#ifdef WOLFSSL_BLAKE2B_INIT_EACH_FIELD
   P->digest_length = outlen;
   P->key_length    = 0;
   P->fanout        = 1;
@@ -135,6 +138,12 @@ int blake2b_init( blake2b_state *S, const byte outlen )
   XMEMSET( P->reserved, 0, sizeof( P->reserved ) );
   XMEMSET( P->salt,     0, sizeof( P->salt ) );
   XMEMSET( P->personal, 0, sizeof( P->personal ) );
+#else
+  XMEMSET( P, 0, sizeof( *P ) );
+  P->digest_length = outlen;
+  P->fanout        = 1;
+  P->depth         = 1;
+#endif
   return blake2b_init_param( S, P );
 }
 
@@ -148,6 +157,7 @@ int blake2b_init_key( blake2b_state *S, const byte outlen, const void *key,
 
   if ( !key || !keylen || keylen > BLAKE2B_KEYBYTES ) return -1;
 
+#ifdef WOLFSSL_BLAKE2B_INIT_EACH_FIELD
   P->digest_length = outlen;
   P->key_length    = keylen;
   P->fanout        = 1;
@@ -159,6 +169,13 @@ int blake2b_init_key( blake2b_state *S, const byte outlen, const void *key,
   XMEMSET( P->reserved, 0, sizeof( P->reserved ) );
   XMEMSET( P->salt,     0, sizeof( P->salt ) );
   XMEMSET( P->personal, 0, sizeof( P->personal ) );
+#else
+  XMEMSET( P, 0, sizeof( *P ) );
+  P->digest_length = outlen;
+  P->key_length    = keylen;
+  P->fanout        = 1;
+  P->depth         = 1;
+#endif
 
   if( blake2b_init_param( S, P ) < 0 ) return -1;
 
@@ -300,8 +317,7 @@ int blake2b_update( blake2b_state *S, const byte *in, word64 inlen )
     {
       XMEMCPY( S->buf + left, in, (wolfssl_word)inlen );
       S->buflen += inlen; /* Be lazy, do not compress */
-      in += inlen;
-      inlen -= inlen;
+      inlen = 0;
     }
   }
 
@@ -387,7 +403,7 @@ int main( int argc, char **argv )
       return -1;
     }
 
-    if( 0 != memcmp( hash, blake2b_keyed_kat[i], BLAKE2B_OUTBYTES ) )
+    if( 0 != XMEMCMP( hash, blake2b_keyed_kat[i], BLAKE2B_OUTBYTES ) )
     {
       puts( "error" );
       return -1;
@@ -402,9 +418,12 @@ int main( int argc, char **argv )
 
 /* wolfCrypt API */
 
-/* Init Blake2b digest, track size incase final doesn't want to "remember" */
+/* Init Blake2b digest, track size in case final doesn't want to "remember" */
 int wc_InitBlake2b(Blake2b* b2b, word32 digestSz)
 {
+    if (b2b == NULL){
+        return -1;
+    }
     b2b->digestSz = digestSz;
 
     return blake2b_init(b2b->S, (byte)digestSz);

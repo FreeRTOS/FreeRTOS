@@ -240,12 +240,15 @@ typedef enum CommandType
  * @note An instance of this struct and any variables it points to MUST stay
  * in scope until the associated command is processed, and its callback called.
  * The command callback will set the `complete` flag, and notify the calling task.
+ *
+ * @note This struct does not accept a parameter for number of subscriptions.
+ * Only a single subscription per SUBSCRIBE command is allowed in this demo.
+ * This is to simplify subscription management.
  */
 typedef struct CommandContext
 {
     MQTTPublishInfo_t * pPublishInfo;
     MQTTSubscribeInfo_t * pSubscribeInfo;
-    size_t subscriptionCount;
     MQTTStatus_t returnStatus;
     bool complete;
 
@@ -845,7 +848,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
                            pxSubscribeInfo->pTopicFilter ) );
                 xStatus = MQTT_Subscribe( &globalMqttContext,
                                           pxSubscribeInfo,
-                                          pxCommand->pContext->subscriptionCount,
+                                          1,
                                           usPacketId );
             }
             else
@@ -855,7 +858,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
                            pxSubscribeInfo->pTopicFilter ) );
                 xStatus = MQTT_Unsubscribe( &globalMqttContext,
                                             pxSubscribeInfo,
-                                            pxCommand->pContext->subscriptionCount,
+                                            1,
                                             usPacketId );
             }
 
@@ -997,16 +1000,12 @@ static void prvSubscriptionManager( MQTTContext_t * pMqttContext,
                 {
                     pxSubscribeInfo = xAckInfo.pCommandContext->pSubscribeInfo;
 
-                    for( i = 0; i < xAckInfo.pCommandContext->subscriptionCount; i++ )
-                    {
-                        LogInfo( ( "Adding subscription to %.*s",
-                                   pxSubscribeInfo[ i ].topicFilterLength,
-                                   pxSubscribeInfo[ i ].pTopicFilter ) );
-                        LogInfo( ( "Filter length: %u", pxSubscribeInfo[ i ].topicFilterLength ) );
-                        prvAddSubscription( pxSubscribeInfo[ i ].pTopicFilter,
-                                            pxSubscribeInfo[ i ].topicFilterLength,
-                                            xAckInfo.pCommandContext->pResponseQueue );
-                    }
+                    LogInfo( ( "Adding subscription to %.*s",
+                               pxSubscribeInfo->topicFilterLength,
+                               pxSubscribeInfo->pTopicFilter ) );
+                    prvAddSubscription( pxSubscribeInfo->pTopicFilter,
+                                        pxSubscribeInfo->topicFilterLength,
+                                        xAckInfo.pCommandContext->pResponseQueue );
 
                     xAckInfo.pCommandContext->returnStatus = pDeserializedInfo->deserializationResult;
 
@@ -1029,14 +1028,11 @@ static void prvSubscriptionManager( MQTTContext_t * pMqttContext,
                 {
                     pxSubscribeInfo = xAckInfo.pCommandContext->pSubscribeInfo;
 
-                    for( i = 0; i < xAckInfo.pCommandContext->subscriptionCount; i++ )
-                    {
-                        LogInfo( ( "Removing subscription to %.*s",
-                                   pxSubscribeInfo[ i ].topicFilterLength,
-                                   pxSubscribeInfo[ i ].pTopicFilter ) );
-                        prvRemoveSubscription( pxSubscribeInfo[ i ].pTopicFilter,
-                                               pxSubscribeInfo[ i ].topicFilterLength );
-                    }
+                    LogInfo( ( "Removing subscription to %.*s",
+                               pxSubscribeInfo->topicFilterLength,
+                               pxSubscribeInfo->pTopicFilter ) );
+                    prvRemoveSubscription( pxSubscribeInfo->pTopicFilter,
+                                           pxSubscribeInfo->topicFilterLength );
 
                     xAckInfo.pCommandContext->returnStatus = pDeserializedInfo->deserializationResult;
 
@@ -1283,8 +1279,7 @@ void prvSubscribeTask( void * pvParameters )
     prvInitializeCommandContext( &xContext );
     xContext.pResponseQueue = xSubscriberResponseQueue;
     xContext.taskToNotify = xTaskGetCurrentTaskHandle();
-    xContext.notificationBit = 1;
-    xContext.subscriptionCount = 1;
+    xContext.notificationBit = SUBSCRIBE_COMPLETE_BIT;
     xContext.pSubscribeInfo = &xSubscribeInfo;
     LogInfo( ( "Adding subscribe operation" ) );
     prvCreateCommand( SUBSCRIBE, &xContext, prvCommandCallback, &xCommand );

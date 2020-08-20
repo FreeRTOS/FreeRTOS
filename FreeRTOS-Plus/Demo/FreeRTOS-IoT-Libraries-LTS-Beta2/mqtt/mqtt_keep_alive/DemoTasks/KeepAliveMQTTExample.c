@@ -149,10 +149,11 @@
 #define mqttexampleKEEP_ALIVE_DELAY                 ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
 
 /**
- * @brief Delay between MQTT publishes. Note that the process loop also has a
- * timeout, so the total time between publishes is the sum of the two delays.
+ * @brief Delay between MQTT publishes. Note that the receive loop also has a
+ * timeout, so the total time between publishes is the sum of the two delays. The
+ * keep-alive delay is added here so the keep-alive timer callback executes.
  */
-#define mqttexampleDELAY_BETWEEN_PUBLISHES          ( pdMS_TO_TICKS( 500U ) )
+#define mqttexampleDELAY_BETWEEN_PUBLISHES          ( mqttexampleKEEP_ALIVE_DELAY + pdMS_TO_TICKS( 500U ) )
 
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
@@ -528,6 +529,11 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xConnectInfo.pClientIdentifier = democonfigCLIENT_IDENTIFIER;
     xConnectInfo.clientIdentifierLength = ( uint16_t ) strlen( democonfigCLIENT_IDENTIFIER );
 
+    /* Set MQTT keep-alive period. It is the responsibility of the application to ensure
+     * that the interval between Control Packets being sent does not exceed the Keep Alive value.
+     * In the absence of sending any other Control Packets, the Client MUST send a PINGREQ Packet. */
+    xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
+
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
      * is passed as NULL. */
     xResult = MQTT_Connect( pxMQTTContext,
@@ -719,7 +725,7 @@ static void prvKeepAliveTimerCallback( TimerHandle_t pxTimer )
     else
     {
         /* Send Ping Request to the broker. */
-        LogInfo( ( "Attempt to send PINGREQ to MQTT broker.\r\n" ) );
+        LogInfo( ( "Attempt to ping the MQTT broker.\r\n" ) );
         xTransportStatus = pxTransport->send( pxTransport->pNetworkContext,
                                               ( void * ) xPingReqBuffer.pBuffer,
                                               xPingReqBuffer.size );

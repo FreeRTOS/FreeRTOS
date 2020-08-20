@@ -11,12 +11,7 @@
 
 
 void harness() {
-
-	uint8_t u1,u2,u3,u4,u5,u6;
-
-	const MACAddress_t xMACAddress = {u1, u2, u3, u4, u5, u6};
-
-	//__CPROVER_assume( &xMACAddress );
+	const MACAddress_t xMACAddress;
 
 	ulARPRemoveCacheEntryByMac( &xMACAddress );
 }

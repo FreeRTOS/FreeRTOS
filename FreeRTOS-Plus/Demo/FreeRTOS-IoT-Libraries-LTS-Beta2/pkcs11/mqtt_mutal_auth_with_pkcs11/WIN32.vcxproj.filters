@@ -417,7 +417,7 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\src\freertos_sockets_wrapper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\src\tls_freertos.c">
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\src\tls_freertos_pkcs11.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -773,7 +773,7 @@
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\include\freertos_sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\include\tls_freertos.h">
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\include\tls_freertos_pkcs11.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
     </ClInclude>
   </ItemGroup>

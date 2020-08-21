@@ -53,7 +53,7 @@
 #include "mqtt.h"
 
 /* Transport interface implementation include header for TLS. */
-#include "tls_freertos.h"
+#include "tls_freertos_pkcs11.h"
 
 /*-----------------------------------------------------------*/
 

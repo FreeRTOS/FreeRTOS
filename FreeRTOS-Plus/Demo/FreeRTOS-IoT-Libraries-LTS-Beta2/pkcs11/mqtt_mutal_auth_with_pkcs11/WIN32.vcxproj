@@ -164,7 +164,7 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\iot_pkcs11.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\iot_pki_utils.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\src\freertos_sockets_wrapper.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\src\tls_freertos.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\src\tls_freertos_pkcs11.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\portable\mbedtls\iot_pkcs11_mbedtls.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\portable\windows\iot_pkcs11_pal.c" />
     <ClCompile Include="..\..\..\..\Source\mbedtls\library\aes.c">
@@ -522,7 +522,7 @@
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pkcs11_pal.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pki_utils.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\include\freertos_sockets_wrapper.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\include\tls_freertos.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\platform\freertos\transport\include\tls_freertos_pkcs11.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aes.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aesni.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\arc4.h" />

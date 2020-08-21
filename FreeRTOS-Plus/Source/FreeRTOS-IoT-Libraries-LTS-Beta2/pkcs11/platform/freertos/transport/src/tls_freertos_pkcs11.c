@@ -20,9 +20,12 @@
  */
 
 /**
- * @file tls_freertos.c
+ * @file tls_freertos_pkcs11.c
  * @brief TLS transport interface implementations. This implementation uses
  * mbedTLS.
+ * @note This file is derived from the tls_freertos.c source file found in the mqtt
+ * section of IoT Libraries source code. The file has been modified to support using 
+ * PKCS #11 when using TLS.
  */
 
 /* Standard includes. */
@@ -36,7 +39,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* TLS transport header. */
-#include "tls_freertos.h"
+#include "tls_freertos_pkcs11.h"
 
 /* FreeRTOS Socket wrapper include. */
 #include "freertos_sockets_wrapper.h"

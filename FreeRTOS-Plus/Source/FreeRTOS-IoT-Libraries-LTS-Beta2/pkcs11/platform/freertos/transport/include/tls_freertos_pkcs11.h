@@ -20,8 +20,11 @@
  */
 
 /**
- * @file tls_freertos.h
+ * @file tls_freertos_pkcs11.h
  * @brief TLS transport interface header.
+ * @note This file is derived from the tls_freertos.h header file found in the mqtt
+ * section of IoT Libraries source code. The file has been modified to support using 
+ * PKCS #11 when using TLS.
  */
 
 #ifndef TLS_FREERTOS_H_

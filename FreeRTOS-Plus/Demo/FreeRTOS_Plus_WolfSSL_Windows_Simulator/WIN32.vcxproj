@@ -21,32 +21,32 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C686325E-3261-42F7-AEB1-DDE5280E1CEB}</ProjectGuid>
     <ProjectName>RTOSDemo</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -247,7 +247,6 @@
     <ClCompile Include="..\..\..\FreeRTOS\Source\queue.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\tasks.c" />
     <ClCompile Include="..\..\..\FreeRTOS\Source\timers.c" />
-    <ClCompile Include="..\..\Source\WolfSSL\src\bio.c" />
     <ClCompile Include="..\..\Source\WolfSSL\src\crl.c" />
     <ClCompile Include="..\..\Source\WolfSSL\src\internal.c" />
     <ClCompile Include="..\..\Source\WolfSSL\src\keys.c" />
@@ -282,7 +281,6 @@
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\ed25519.c" />
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\ed448.c" />
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\error.c" />
-    <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\evp.c" />
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\fe_448.c" />
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\fe_low_mem.c" />
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\fe_operations.c" />

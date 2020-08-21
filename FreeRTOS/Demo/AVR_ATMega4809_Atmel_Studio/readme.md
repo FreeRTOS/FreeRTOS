@@ -29,7 +29,7 @@ This demo includes a higher number of tasks than the **Blinky demo**, but the co
 
 This demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling roughly every second, then the check task has not discovered any problems. If the LED stops toggling, then the check task has discovered a problem in one or more tasks.
 
-If to see the console output from serial communication tasks, serial port could be configured as: 
+To see the console output from serial communication tasks, serial port could be configured as: 
  - baud rate 9600
  - data 8-bit
  - parity none
@@ -48,7 +48,7 @@ This demo is a comprehensive demonstration and test of a lot of FreeRTOS feature
  - recursive semaphores task (**Regmutex.c**)
  - check task that periodically checks the other tasks are operating without error
 
-The demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling every 3 seconds, then the check task has not discovered any problems. If the LED stops toggling, then the check task has discovered a problem in one or more tasks.
+The demo uses the **check** task to periodically inspect the standard demo tasks in order to ensure all the tasks are functioning as expected. The check task also toggles an LED to give a visual feedback of the system status. If the LED is toggling roughly every 3 seconds, then the check task has not discovered any problems. If the LED stops toggling, then the check task has discovered a problem in one or more tasks.
 
 # Quick start
 

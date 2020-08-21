@@ -46,6 +46,8 @@
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 
+#include "FreeRTOSIPConfigDefaults.h"
+
 /* Constants used for Smoothed Round Trip Time (SRTT). */
 #define	winSRTT_INCREMENT_NEW 		2
 #define winSRTT_INCREMENT_CURRENT 	6
@@ -192,7 +194,7 @@ static void vListInsertGeneric( List_t * const pxList, ListItem_t * const pxNewL
 
 /* List of free TCP segments. */
 #if( ipconfigUSE_TCP_WIN == 1 )
-	static List_t xSegmentList;
+	_static List_t xSegmentList;
 #endif
 
 /* Logging verbosity level. */

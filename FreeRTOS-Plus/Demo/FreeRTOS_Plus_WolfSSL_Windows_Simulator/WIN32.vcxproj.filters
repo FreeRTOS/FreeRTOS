@@ -132,9 +132,6 @@
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\error.c">
       <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\evp.c">
-      <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\fe_448.c">
       <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
     </ClCompile>
@@ -290,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\WolfSSL\wolfcrypt\src\wolfmath.c">
       <Filter>FreeRTOS+\wolfSSL\wolfcrypt</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\WolfSSL\src\bio.c">
-      <Filter>FreeRTOS+\wolfSSL</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\WolfSSL\src\crl.c">
       <Filter>FreeRTOS+\wolfSSL</Filter>

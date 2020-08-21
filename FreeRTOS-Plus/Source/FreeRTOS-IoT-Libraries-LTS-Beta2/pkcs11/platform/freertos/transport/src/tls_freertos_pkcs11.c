@@ -24,7 +24,7 @@
  * @brief TLS transport interface implementations. This implementation uses
  * mbedTLS.
  * @note This file is derived from the tls_freertos.c source file found in the mqtt
- * section of IoT Libraries source code. The file has been modified to support using 
+ * section of IoT Libraries source code. The file has been modified to support using
  * PKCS #11 when using TLS.
  */
 

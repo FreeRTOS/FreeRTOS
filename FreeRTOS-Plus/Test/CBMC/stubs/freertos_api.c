@@ -380,7 +380,7 @@ const char * pcApplicationHostnameHook( void )
 
 
 /****************************************************************
- * Abstract pcApplicationHostnameHook
+ * Abstract xNetworkInterfaceOutput
  * https://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/Embedded_Ethernet_Porting.html#xNetworkInterfaceOutput
  ****************************************************************/
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer, BaseType_t bReleaseAfterSend )

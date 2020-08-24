@@ -15,7 +15,9 @@
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_IP_Private.h"
 
-#include "../../utility/memory_assignments.c"
+/* Include the stubs for APIs. */
+#include "memory_assignments.c"
+#include "freertos_api.c"
 
 /* We do not need to calculate the actual checksum for the proof to be complete.
  * Neither does the checksum matter for completeness. */
@@ -67,31 +69,11 @@ eARPLookupResult_t eARPGetCacheEntry( uint32_t *pulIPAddress, MACAddress_t * con
 }
 
 
-/* Abstraction of pxGetNetworkBufferWithDescriptor. We assume it to be correctly implemented. */
-NetworkBufferDescriptor_t *pxGetNetworkBufferWithDescriptor( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks ){
-	NetworkBufferDescriptor_t *pxNetworkBuffer = safeMalloc(sizeof(NetworkBufferDescriptor_t));
-	if(pxNetworkBuffer) {
-		pxNetworkBuffer->pucEthernetBuffer = safeMalloc(xRequestedSizeBytes);
-
-		__CPROVER_assume(pxNetworkBuffer->xDataLength == ipSIZE_OF_ETH_HEADER + sizeof(int32_t));
-	}
-	return pxNetworkBuffer;
-}
-
-
-/* Provide a stub for ReleaseNetworkBufferAndDescriptor since it is not required for the proof.  */
-void vReleaseNetworkBufferAndDescriptor( NetworkBufferDescriptor_t * pxNetworkBuffer )
-{
-	__CPROVER_assert( pxNetworkBuffer != NULL, "The network buffer to be freed cannot be NULL" );
-
-	pxNetworkBuffer->pucEthernetBuffer = NULL;
-	pxNetworkBuffer = NULL;
-}
-
-
 /* Network Interface function needs to be stubbed out since we do not have an actual network interface. Hence we assume it to be correct. */
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer, BaseType_t bReleaseAfterSend )
 {
+	__CPROVER_assert( pxNetworkBuffer != NULL, "The networkbuffer cannot be NULL" );
+
 	/* Return pdPASS */
 	return pdPASS;
 }

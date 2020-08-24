@@ -387,8 +387,10 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkB
 {
         __CPROVER_assert( pxNetworkBuffer != NULL, "The networkbuffer cannot be NULL" );
 
-        /* Return pdPASS */
-        return pdPASS;
+	BaseType_t xReturn;
+
+        /* Return some random value. */
+        return xReturn;
 }
 
 /****************************************************************/

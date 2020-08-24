@@ -31,12 +31,18 @@ void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer
 
 
 /* This proof was done before. Hence we assume it to be correct here. */
-void vARPRefreshCacheEntry( const MACAddress_t * pxMACAddress, const uint32_t ulIPAddress ) { }
+void vARPRefreshCacheEntry( const MACAddress_t * pxMACAddress, const uint32_t ulIPAddress )
+{
+	/* pxMACAddress can be NULL or non-NULL. No need to assert. */
+}
 
 
 /* This Proof has been done separately. In 'parsing/ProcessIPPacket'. Hence we assume it to be correct here. */
 eFrameProcessingResult_t prvProcessIPPacket( IPPacket_t * pxIPPacket, NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
+	__CPROVER_assert( pxIPPacket != NULL, "pxIPPacket cannot be NULL" );
+	__CPROVER_assert( pxNetworkBuffer != NULL, "pxNetworkBuffer cannot be NULL" );
+
 	eFrameProcessingResult_t result;
 	return result;
 }

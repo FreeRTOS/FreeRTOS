@@ -500,6 +500,9 @@ static int ECC_CDH_KnownAnswerTest(const char* ax, const char* ay,
 
     byte sharedA[FIPS_ECC_256_SZ] = {0};
     byte sharedB[FIPS_ECC_256_SZ] = {0};
+#ifdef ECC_TIMING_RESISTANT
+    WC_RNG rng;
+#endif
 
     /* setup private and public keys */
     int ret = wc_ecc_init(&pub_key);
@@ -511,7 +514,12 @@ static int ECC_CDH_KnownAnswerTest(const char* ax, const char* ay,
         wc_ecc_free(&pub_key);
         return ret;
     }
-
+#ifdef ECC_TIMING_RESISTANT
+    if (ret == 0)
+        ret = wc_InitRng(&rng);
+    if (ret == 0)
+        ret = wc_ecc_set_rng(&priv_key, &rng);
+#endif
     ret = wc_ecc_set_flags(&priv_key, WC_ECC_FLAG_COFACTOR);
     if (ret == 0) {
         ret = wc_ecc_import_raw(&pub_key, ax, ay, NULL, "SECP256R1");
@@ -539,6 +547,9 @@ static int ECC_CDH_KnownAnswerTest(const char* ax, const char* ay,
 
     wc_ecc_free(&priv_key);
     wc_ecc_free(&pub_key);
+#ifdef ECC_TIMING_RESISTANT
+    wc_FreeRng(&rng);
+#endif
 
     return ret;
 }
@@ -646,13 +657,24 @@ static int EccPrimitiveZ_KnownAnswerTest(
     word32 zVerifyFlatSz = sizeof(zVerifyFlat);
     word32 zSz = sizeof(z);
     int ret;
+#ifdef ECC_TIMING_RESISTANT
+    WC_RNG rng;
+#endif
 
     ret = ConvertHexToBin(zVerify, zVerifyFlat, &zVerifyFlatSz,
             NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+#ifdef ECC_TIMING_RESISTANT
+    if (ret == 0)
+        ret = wc_InitRng(&rng);
+#endif
     if (ret == 0)
         ret = wc_ecc_init(&serverKey);
     if (ret == 0)
         ret = wc_ecc_init(&clientKey);
+#ifdef ECC_TIMING_RESISTANT
+    if (ret == 0)
+        ret = wc_ecc_set_rng(&clientKey, &rng);
+#endif
     if (ret == 0)
         ret = wc_ecc_import_raw_ex(&serverKey, qexServer, qeyServer,
                                    NULL, ECC_SECP256R1);
@@ -677,6 +699,9 @@ static int EccPrimitiveZ_KnownAnswerTest(
     }
     wc_ecc_free(&serverKey);
     wc_ecc_free(&clientKey);
+#ifdef ECC_TIMING_RESISTANT
+    wc_FreeRng(&rng);
+#endif
     return ret;
 }
 #endif /* HAVE_ECC_DHE */
@@ -863,8 +888,7 @@ static int GenBase16_Hash(const byte* in, int length, char* out, int outSz)
 /* hmac-sha256 in memory core verify hash, output to pos callback,
  * copy here when changes */
 static const char verifyCore[] =
-	"A17B0E2126FAD85519DF9BA48412475087C5AE362B3F0DE33787B4DCB29A5C64";
-
+"542F30458624B1C57D6FDDE94A7E28C7A688097F6FB8A7FF647BF418C2D6867A";
 
 
 #ifdef USE_WINDOWS_API
@@ -955,8 +979,7 @@ static int DoInCoreCheck(char* base16_hash, int base16_hashSz)
 int DoKnownAnswerTests(char* base16_hash, int base16_hashSz)
 {
     if (DoInCoreCheck(base16_hash, base16_hashSz) != 0) {
-
-		printf("In core integrity check error: hash = %s\n", base16_hash);
+        printf("In core integrity check error: hash = %s\n", base16_hash);
         return IN_CORE_FIPS_E;
     }
 

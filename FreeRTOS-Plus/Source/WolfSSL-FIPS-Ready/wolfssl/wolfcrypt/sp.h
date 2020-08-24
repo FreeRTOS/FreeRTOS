@@ -141,7 +141,18 @@ int sp_ecc_proj_dbl_point_384(mp_int* pX, mp_int* pY, mp_int* pZ,
 int sp_ecc_map_384(mp_int* pX, mp_int* pY, mp_int* pZ);
 int sp_ecc_uncompress_384(mp_int* xm, int odd, mp_int* ym);
 
-#endif /*ifdef WOLFSSL_HAVE_SP_ECC */
+#ifdef WOLFSSL_SP_NONBLOCK
+int sp_ecc_sign_256_nb(sp_ecc_ctx_t* ctx, const byte* hash, word32 hashLen, WC_RNG* rng, mp_int* priv,
+                    mp_int* rm, mp_int* sm, mp_int* km, void* heap);
+int sp_ecc_verify_256_nb(sp_ecc_ctx_t* ctx, const byte* hash, word32 hashLen, mp_int* pX, mp_int* pY,
+                      mp_int* pZ, mp_int* r, mp_int* sm, int* res, void* heap);
+int sp_ecc_sign_384_nb(sp_ecc_ctx_t* ctx, const byte* hash, word32 hashLen, WC_RNG* rng, mp_int* priv,
+                    mp_int* rm, mp_int* sm, mp_int* km, void* heap);
+int sp_ecc_verify_384_nb(sp_ecc_ctx_t* ctx, const byte* hash, word32 hashLen, mp_int* pX, mp_int* pY,
+                      mp_int* pZ, mp_int* r, mp_int* sm, int* res, void* heap);
+#endif /* WOLFSSL_SP_NONBLOCK */
+
+#endif /* WOLFSSL_HAVE_SP_ECC */
 
 
 #ifdef __cplusplus

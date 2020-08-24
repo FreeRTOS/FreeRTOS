@@ -5531,7 +5531,7 @@ static int wc_PKCS7_KariGenerateSharedInfo(WC_PKCS7_KARI* kari, int keyWrapOID)
 
 /* create key encryption key (KEK) using key wrap algorithm and key encryption
  * algorithm, place in kari->kek. return 0 on success, <0 on error. */
-static int wc_PKCS7_KariGenerateKEK(WC_PKCS7_KARI* kari,
+static int wc_PKCS7_KariGenerateKEK(WC_PKCS7_KARI* kari, WC_RNG* rng,
                                     int keyWrapOID, int keyEncOID)
 {
     int ret;
@@ -5565,6 +5565,19 @@ static int wc_PKCS7_KariGenerateKEK(WC_PKCS7_KARI* kari,
     secret = (byte*)XMALLOC(secretSz, kari->heap, DYNAMIC_TYPE_PKCS7);
     if (secret == NULL)
         return MEMORY_E;
+
+#if defined(ECC_TIMING_RESISTANT) && (!defined(HAVE_FIPS) || \
+    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION != 2))) && \
+    !defined(HAVE_SELFTEST)
+    ret = wc_ecc_set_rng(kari->senderKey, rng);
+    if (ret != 0)
+        return ret;
+    ret = wc_ecc_set_rng(kari->recipKey, rng);
+    if (ret != 0)
+        return ret;
+#else
+    (void)rng;
+#endif
 
     if (kari->direction == WC_PKCS7_ENCODE) {
 
@@ -5797,7 +5810,7 @@ int wc_PKCS7_AddRecipient_KARI(PKCS7* pkcs7, const byte* cert, word32 certSz,
     }
 
     /* generate KEK (key encryption key) */
-    ret = wc_PKCS7_KariGenerateKEK(kari, keyWrapOID, keyAgreeOID);
+    ret = wc_PKCS7_KariGenerateKEK(kari, pkcs7->rng, keyWrapOID, keyAgreeOID);
     if (ret != 0) {
         wc_PKCS7_KariFree(kari);
 #ifdef WOLFSSL_SMALL_STACK
@@ -9397,7 +9410,8 @@ static int wc_PKCS7_DecryptKari(PKCS7* pkcs7, byte* in, word32 inSz,
             }
             else {
                 /* create KEK */
-                ret = wc_PKCS7_KariGenerateKEK(kari, keyWrapOID, pkcs7->keyAgreeOID);
+                ret = wc_PKCS7_KariGenerateKEK(kari, pkcs7->rng, keyWrapOID,
+                                               pkcs7->keyAgreeOID);
                 if (ret != 0) {
                     wc_PKCS7_KariFree(kari);
                     #ifdef WOLFSSL_SMALL_STACK

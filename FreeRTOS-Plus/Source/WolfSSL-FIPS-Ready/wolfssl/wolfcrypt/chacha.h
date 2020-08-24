@@ -18,7 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+/*
 
+DESCRIPTION
+This library contains implementation for the ChaCha20 stream cipher.
+
+*/
 /*!
     \file wolfssl/wolfcrypt/chacha.h
 */
@@ -35,9 +40,21 @@
     extern "C" {
 #endif
 
+/*
+Initialization vector starts at 13 with zero being the index origin of a matrix.
+Block counter is located at index 12.
+  0   1   2   3
+  4   5   6   7
+  8   9   10  11
+  12  13  14  15
+*/
+#define CHACHA_MATRIX_CNT_IV 12
+
 /* Size of the IV */
 #define CHACHA_IV_WORDS    3
-#define CHACHA_IV_BYTES    (CHACHA_IV_WORDS * sizeof(word32))
+
+/* Size of IV in bytes*/
+#define CHACHA_IV_BYTES 12
 
 /* Size of ChaCha chunks */
 #define CHACHA_CHUNK_WORDS 16

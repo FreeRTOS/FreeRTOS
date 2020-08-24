@@ -406,7 +406,7 @@ void fe_invert(fe r, const fe a)
  * n  The scalar as an array of bytes.
  * a  A field element as an array of bytes.
  */
-int curve25519(byte* r, byte* n, byte* a)
+int curve25519(byte* r, const byte* n, const byte* a)
 {
     fe           x1, x2, z2, x3, z3;
     fe           t0, t1;

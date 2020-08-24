@@ -360,11 +360,9 @@ static void DoSelfTest(void)
     /* do tests proper */
     if ( (posReturn = DoKnownAnswerTests(base16_hash,
                                          sizeof(base16_hash))) != 0) {
-printf("ERROR: %d\n", posReturn);
-
         posStatus = POS_FAILURE;
         SetThisThreadInPOS(0);
-        FIPS_MSG("Power On Self Test(Known-Answer-Test) FAILURE");
+        FIPS_MSG("Power On Self Test FAILURE");
         return;
     }
 
@@ -394,6 +392,7 @@ INITIALIZER(fipsEntry)
 
     DoSelfTest();
 }
+
 
 #if defined(USE_WINDOWS_API) && defined(WOLFSSL_DLL)
 

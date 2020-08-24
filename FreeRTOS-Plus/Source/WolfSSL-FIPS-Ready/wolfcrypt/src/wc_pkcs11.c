@@ -1061,8 +1061,8 @@ static int Pkcs11GetRsaPublicKey(RsaKey* key, Pkcs11Session* session,
         ret = WC_HW_E;
 
     if (ret == 0) {
-        modSz = tmpl[0].ulValueLen;
-        expSz = tmpl[1].ulValueLen;
+        modSz = (int)tmpl[0].ulValueLen;
+        expSz = (int)tmpl[1].ulValueLen;
         mod = (unsigned char*)XMALLOC(modSz, key->heap,
                                                        DYNAMIC_TYPE_TMP_BUFFER);
         if (mod == NULL)
@@ -1162,9 +1162,9 @@ static int Pkcs11RsaKeyGen(Pkcs11Session* session, wc_CryptoInfo* info)
         ret = Pkcs11GetRsaPublicKey(key, session, pubKey);
 
     if (pubKey != NULL_PTR)
-        ret = session->func->C_DestroyObject(session->handle, pubKey);
+        ret = (int)session->func->C_DestroyObject(session->handle, pubKey);
     if (ret != 0 && privKey != NULL_PTR)
-        ret = session->func->C_DestroyObject(session->handle, privKey);
+        ret = (int)session->func->C_DestroyObject(session->handle, privKey);
 
     return ret;
 }

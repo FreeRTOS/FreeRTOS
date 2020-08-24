@@ -46,7 +46,12 @@
     #include <wolfssl/wolfcrypt/port/nxp/ksdk_port.h>
 #endif
 
-#if defined(WOLFSSL_ATMEL) || defined(WOLFSSL_ATECC508A)
+#ifdef WOLFSSL_PSOC6_CRYPTO
+    #include <wolfssl/wolfcrypt/port/cypress/psoc6_crypto.h>
+#endif
+
+#if defined(WOLFSSL_ATMEL) || defined(WOLFSSL_ATECC508A) || \
+    defined(WOLFSSL_ATECC608A)
     #include <wolfssl/wolfcrypt/port/atmel/atmel.h>
 #endif
 #if defined(WOLFSSL_RENESAS_TSIP)
@@ -180,7 +185,8 @@ int wolfCrypt_Init(void)
         }
     #endif
 
-    #if defined(WOLFSSL_ATMEL) || defined(WOLFSSL_ATECC508A)
+    #if defined(WOLFSSL_ATMEL) || defined(WOLFSSL_ATECC508A) || \
+        defined(WOLFSSL_ATECC608A)
         ret = atmel_init();
         if (ret != 0) {
             WOLFSSL_MSG("CryptoAuthLib init failed");
@@ -197,6 +203,14 @@ int wolfCrypt_Init(void)
     #endif
     #if defined(WOLFSSL_STSAFEA100)
         stsafe_interface_init();
+    #endif
+
+    #if defined(WOLFSSL_PSOC6_CRYPTO)
+        ret = psoc6_crypto_port_init();
+        if (ret != 0) {
+            WOLFSSL_MSG("PSoC6 crypto engine init failed");
+            return ret;
+        }
     #endif
 
     #ifdef WOLFSSL_ARMASM
@@ -219,6 +233,9 @@ int wolfCrypt_Init(void)
     #endif
 
 #ifdef HAVE_ECC
+    #ifdef FP_ECC
+        wc_ecc_fp_init();
+    #endif
     #ifdef ECC_CACHE_CURVE
         if ((ret = wc_ecc_curve_cache_init()) != 0) {
             WOLFSSL_MSG("Error creating curve cache");
@@ -314,8 +331,60 @@ int wolfCrypt_Cleanup(void)
     return ret;
 }
 
-#if !defined(NO_FILESYSTEM) && !defined(NO_WOLFSSL_DIR) && \
-	!defined(WOLFSSL_NUCLEUS) && !defined(WOLFSSL_NUCLEUS_1_2)
+#ifndef NO_FILESYSTEM
+
+/* Helpful function to load file into allocated buffer */
+int wc_FileLoad(const char* fname, unsigned char** buf, size_t* bufLen, 
+    void* heap)
+{
+    int ret;
+    size_t fileSz;
+    XFILE f;
+
+    if (fname == NULL || buf == NULL || bufLen == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
+    /* set defaults */
+    *buf = NULL;
+    *bufLen = 0;
+
+    /* open file (read-only binary) */
+    f = XFOPEN(fname, "rb");
+    if (!f) {
+        WOLFSSL_MSG("wc_LoadFile file load error");
+        return BAD_PATH_ERROR;
+    }
+
+    XFSEEK(f, 0, SEEK_END);
+    fileSz = XFTELL(f);
+    XREWIND(f);
+    if (fileSz > 0) {
+        *bufLen = fileSz;
+        *buf = (byte*)XMALLOC(*bufLen, heap, DYNAMIC_TYPE_TMP_BUFFER);
+        if (*buf == NULL) {
+            WOLFSSL_MSG("wc_LoadFile memory error");
+            ret = MEMORY_E;
+        }
+        else {
+            size_t readLen = XFREAD(*buf, 1, *bufLen, f);
+
+            /* check response code */
+            ret = (readLen == *bufLen) ? 0 : -1;
+        }
+    }
+    else {
+        ret = BUFFER_E;
+    }
+    XFCLOSE(f);
+
+    (void)heap;
+
+    return ret;
+}
+
+#if !defined(NO_WOLFSSL_DIR) && \
+    !defined(WOLFSSL_NUCLEUS) && !defined(WOLFSSL_NUCLEUS_1_2)
 
 /* File Handling Helpers */
 /* returns 0 if file found, WC_READDIR_NOFILE if no files or negative error */
@@ -614,7 +683,8 @@ void wc_ReadDirClose(ReadDirCtx* ctx)
 #endif
 }
 
-#endif /* !NO_FILESYSTEM && !NO_WOLFSSL_DIR */
+#endif /* !NO_WOLFSSL_DIR */
+#endif /* !NO_FILESYSTEM */
 
 #if !defined(NO_FILESYSTEM) && defined(WOLFSSL_ZEPHYR)
 XFILE z_fs_open(const char* filename, const char* perm)
@@ -647,7 +717,7 @@ int z_fs_close(XFILE file)
 
 #endif /* !NO_FILESYSTEM && !WOLFSSL_ZEPHYR */
 
-
+#if !defined(WOLFSSL_USER_MUTEX) 
 wolfSSL_Mutex* wc_InitAndAllocMutex(void)
 {
     wolfSSL_Mutex* m = (wolfSSL_Mutex*) XMALLOC(sizeof(wolfSSL_Mutex), NULL,
@@ -665,6 +735,7 @@ wolfSSL_Mutex* wc_InitAndAllocMutex(void)
 
     return m;
 }
+#endif
 
 #ifdef USE_WOLF_STRTOK
 /* String token (delim) search. If str is null use nextp. */
@@ -752,33 +823,31 @@ char* wc_strsep(char **stringp, const char *delim)
 static wolfSSL_Mutex wcCryptHwMutex;
 static int wcCryptHwMutexInit = 0;
 
-int wolfSSL_CryptHwMutexInit(void) {
+int wolfSSL_CryptHwMutexInit(void)
+{
     int ret = 0;
-    if(wcCryptHwMutexInit == 0) {
+    if (wcCryptHwMutexInit == 0) {
         ret = wc_InitMutex(&wcCryptHwMutex);
-        if(ret == 0) {
+        if (ret == 0) {
             wcCryptHwMutexInit = 1;
         }
     }
     return ret;
 }
-
-int wolfSSL_CryptHwMutexLock(void) {
+int wolfSSL_CryptHwMutexLock(void)
+{
     int ret = BAD_MUTEX_E;
-
     /* Make sure HW Mutex has been initialized */
-    wolfSSL_CryptHwMutexInit();
-
-    if(wcCryptHwMutexInit) {
+    ret = wolfSSL_CryptHwMutexInit();
+    if (ret == 0) {
         ret = wc_LockMutex(&wcCryptHwMutex);
     }
     return ret;
 }
-
-int wolfSSL_CryptHwMutexUnLock(void) {
+int wolfSSL_CryptHwMutexUnLock(void)
+{
     int ret = BAD_MUTEX_E;
-
-    if(wcCryptHwMutexInit) {
+    if (wcCryptHwMutexInit) {
         ret = wc_UnLockMutex(&wcCryptHwMutex);
     }
     return ret;
@@ -1844,6 +1913,17 @@ int wolfSSL_CryptHwMutexUnLock(void) {
 
         return 0;
     }
+
+#elif defined(WOLFSSL_USER_MUTEX)
+
+    /* Use user own mutex */
+    
+    /*
+    int wc_InitMutex(wolfSSL_Mutex* m) { ... }
+    int wc_FreeMutex(wolfSSL_Mutex *m) { ... }
+    int wc_LockMutex(wolfSSL_Mutex *m) { ... }
+    int wc_UnLockMutex(wolfSSL_Mutex *m) { ... }
+    */
 
 #else
     #warning No mutex handling defined

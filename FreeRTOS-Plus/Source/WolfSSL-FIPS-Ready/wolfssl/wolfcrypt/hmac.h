@@ -131,11 +131,11 @@ typedef union {
 #ifdef WOLFSSL_SHA3
     wc_Sha3 sha3;
 #endif
-} Hash;
+} wc_Hmac_Hash;
 
 /* Hmac digest */
 struct Hmac {
-    Hash    hash;
+    wc_Hmac_Hash    hash;
     word32  ipad[WC_HMAC_BLOCK_SIZE  / sizeof(word32)];  /* same block size all*/
     word32  opad[WC_HMAC_BLOCK_SIZE  / sizeof(word32)];
     word32  innerHash[WC_MAX_DIGEST_SIZE / sizeof(word32)];

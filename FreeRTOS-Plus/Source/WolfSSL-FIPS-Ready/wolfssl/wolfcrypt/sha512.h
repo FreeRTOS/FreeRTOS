@@ -31,6 +31,7 @@
 
 #if defined(WOLFSSL_SHA512) || defined(WOLFSSL_SHA384)
 
+
 #if defined(HAVE_FIPS) && \
     defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
     #include <wolfssl/wolfcrypt/fips.h>
@@ -111,6 +112,8 @@ enum {
 
 #ifdef WOLFSSL_IMX6_CAAM
     #include "wolfssl/wolfcrypt/port/caam/wolfcaam_sha.h"
+#elif defined (WOLFSSL_PSOC6_CRYPTO)
+    #include "wolfssl/wolfcrypt/port/cypress/psoc6_crypto.h"
 #else
 /* wc_Sha512 digest */
 struct wc_Sha512 {
@@ -152,6 +155,7 @@ WOLFSSL_LOCAL void Transform_Sha512_Len(wc_Sha512* sha512, const byte* data,
 #endif
 
 #ifdef WOLFSSL_SHA512
+
 
 WOLFSSL_API int wc_InitSha512(wc_Sha512*);
 WOLFSSL_API int wc_InitSha512_ex(wc_Sha512*, void*, int);

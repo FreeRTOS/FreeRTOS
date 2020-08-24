@@ -615,6 +615,9 @@ int wc_SrpComputeKey(Srp* srp, byte* clientPubKey, word32 clientPubKeySz,
     digestSz = SrpHashSize(srp->type);
     secretSz = mp_unsigned_bin_size(&srp->N);
 
+    if ((secretSz < clientPubKeySz) || (secretSz < serverPubKeySz))
+        return BAD_FUNC_ARG;
+
     if ((secret = (byte*)XMALLOC(secretSz, srp->heap, DYNAMIC_TYPE_SRP)) ==NULL)
         return MEMORY_E;
 

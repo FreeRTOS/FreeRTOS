@@ -28,24 +28,33 @@
 #define WOLF_CRYPT_ENCRYPT_H
 
 #include <wolfssl/wolfcrypt/types.h>
-#include <wolfssl/wolfcrypt/aes.h>
-#include <wolfssl/wolfcrypt/chacha.h>
-#include <wolfssl/wolfcrypt/des3.h>
-#include <wolfssl/wolfcrypt/arc4.h>
+#ifndef NO_AES
+    #include <wolfssl/wolfcrypt/aes.h>
+#endif
+#ifdef HAVE_CHACHA
+    #include <wolfssl/wolfcrypt/chacha.h>
+#endif
+#ifndef NO_DES3
+    #include <wolfssl/wolfcrypt/des3.h>
+#endif
+#ifndef NO_RC4
+    #include <wolfssl/wolfcrypt/arc4.h>
+#endif
 
 #ifdef __cplusplus
     extern "C" {
 #endif
 
-/* determine max cipher key size */
+/* determine max cipher key size - cannot use enum values here, must be define,
+ * since WC_MAX_SYM_KEY_SIZE is used in if macro logic. */
 #ifndef NO_AES
     #define WC_MAX_SYM_KEY_SIZE     (AES_MAX_KEY_SIZE/8)
 #elif defined(HAVE_CHACHA)
-    #define WC_MAX_SYM_KEY_SIZE     CHACHA_MAX_KEY_SZ
+    #define WC_MAX_SYM_KEY_SIZE     32 /* CHACHA_MAX_KEY_SZ */
 #elif !defined(NO_DES3)
-    #define WC_MAX_SYM_KEY_SIZE     DES3_KEY_SIZE
+    #define WC_MAX_SYM_KEY_SIZE     24 /* DES3_KEY_SIZE */
 #elif !defined(NO_RC4)
-    #define WC_MAX_SYM_KEY_SIZE     RC4_KEY_SIZE
+    #define WC_MAX_SYM_KEY_SIZE     16 /* RC4_KEY_SIZE */
 #else
     #define WC_MAX_SYM_KEY_SIZE     32
 #endif

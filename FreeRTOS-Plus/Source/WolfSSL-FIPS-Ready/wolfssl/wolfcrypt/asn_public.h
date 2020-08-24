@@ -23,6 +23,11 @@
     \file wolfssl/wolfcrypt/asn_public.h
 */
 
+/*
+DESCRIPTION
+This library defines the interface APIs for X509 certificates.
+
+*/
 #ifndef WOLF_CRYPT_ASN_PUBLIC_H
 #define WOLF_CRYPT_ASN_PUBLIC_H
 

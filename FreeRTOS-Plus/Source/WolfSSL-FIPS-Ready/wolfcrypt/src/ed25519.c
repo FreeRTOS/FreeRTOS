@@ -61,7 +61,7 @@ int wc_ed25519_make_public(ed25519_key* key, unsigned char* pubKey,
     ge_p3 A;
 #endif
 
-    if (key == NULL || pubKeySz != ED25519_PUB_KEY_SIZE)
+    if (key == NULL || pubKey == NULL || pubKeySz != ED25519_PUB_KEY_SIZE)
         ret = BAD_FUNC_ARG;
 
     if (ret == 0)
@@ -365,7 +365,7 @@ static int ed25519_verify_msg(const byte* sig, word32 sigLen, const byte* msg,
     *res = 0;
 
     /* check on basics needed to verify signature */
-    if (sigLen < ED25519_SIG_SIZE || (sig[ED25519_SIG_SIZE-1] & 224))
+    if (sigLen != ED25519_SIG_SIZE || (sig[ED25519_SIG_SIZE-1] & 224))
         return BAD_FUNC_ARG;
 
     /* uncompress A (public key), test if valid, and negate it */

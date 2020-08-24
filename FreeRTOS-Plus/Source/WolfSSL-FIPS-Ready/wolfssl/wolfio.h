@@ -126,6 +126,8 @@
         #include <errno.h>
     #elif defined(WOLFSSL_ZEPHYR)
         #include <net/socket.h>
+    #elif defined(MICROCHIP_PIC32)
+        #include <sys/errno.h>
     #elif defined(HAVE_NETX)
         #include "nx_api.h"
         #include "errno.h"
@@ -158,7 +160,7 @@
         #endif
     #endif
 
-    #if defined(WOLFSSL_RENESAS_RA6M3G) /* Uses FREERTOS_TCP */
+    #if defined(WOLFSSL_RENESAS_RA6M3G) || defined(WOLFSSL_RENESAS_RA6M3) /* Uses FREERTOS_TCP */
         #include <errno.h>
     #endif
 
@@ -303,8 +305,14 @@
 
 #ifdef USE_WINDOWS_API
     typedef unsigned int SOCKET_T;
+    #ifndef SOCKET_INVALID
+        #define SOCKET_INVALID INVALID_SOCKET
+    #endif
 #else
     typedef int SOCKET_T;
+    #ifndef SOCKET_INVALID
+        #define SOCKET_INVALID -1
+    #endif
 #endif
 
 #ifndef WOLFSSL_NO_SOCK

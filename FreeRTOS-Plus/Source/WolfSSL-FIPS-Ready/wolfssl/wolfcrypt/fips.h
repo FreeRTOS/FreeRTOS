@@ -40,9 +40,6 @@ enum wc_HashType;
 WOLFSSL_API const char* wolfCrypt_GetVersion_fips(void);
 
 
-int		wolfCrypt_GetStatus_fips(void);
-
-
 /* Hash_DRBG API */
 #ifdef HAVE_HASHDRBG
 

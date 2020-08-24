@@ -18,12 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+/*
 
+DESCRIPTION
+This library contains implementation for the ChaCha20 stream cipher and
+the Poly1305 authenticator, both as as combined-mode,
+or Authenticated Encryption with Additional Data (AEAD) algorithm.
 
-/* This implementation of the ChaCha20-Poly1305 AEAD is based on "ChaCha20
- * and Poly1305 for IETF protocols" (draft-irtf-cfrg-chacha20-poly1305-10):
- * https://tools.ietf.org/html/draft-irtf-cfrg-chacha20-poly1305-10
- */
+*/
 
 /*!
     \file wolfssl/wolfcrypt/chacha20_poly1305.h
@@ -45,6 +47,7 @@
 #define CHACHA20_POLY1305_AEAD_KEYSIZE      32
 #define CHACHA20_POLY1305_AEAD_IV_SIZE      12
 #define CHACHA20_POLY1305_AEAD_AUTHTAG_SIZE 16
+#define CHACHA20_POLY1305_MAX               4294967295U
 
 enum {
     CHACHA20_POLY_1305_ENC_TYPE = 8,    /* cipher unique type */

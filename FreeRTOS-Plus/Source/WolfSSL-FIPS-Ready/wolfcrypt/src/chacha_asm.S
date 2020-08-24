@@ -1418,3 +1418,7 @@ L_chacha20_avx2_end256:
 .size	chacha_encrypt_avx2,.-chacha_encrypt_avx2
 #endif /* __APPLE__ */
 #endif /* HAVE_INTEL_AVX2 */
+
+#if defined(__linux__) && defined(__ELF__)
+.section	.note.GNU-stack,"",%progbits
+#endif

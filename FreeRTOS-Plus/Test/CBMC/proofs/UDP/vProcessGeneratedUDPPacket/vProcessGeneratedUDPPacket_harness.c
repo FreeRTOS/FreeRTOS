@@ -69,16 +69,6 @@ eARPLookupResult_t eARPGetCacheEntry( uint32_t *pulIPAddress, MACAddress_t * con
 }
 
 
-/* Network Interface function needs to be stubbed out since we do not have an actual network interface. Hence we assume it to be correct. */
-BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxNetworkBuffer, BaseType_t bReleaseAfterSend )
-{
-	__CPROVER_assert( pxNetworkBuffer != NULL, "The networkbuffer cannot be NULL" );
-
-	/* Return pdPASS */
-	return pdPASS;
-}
-
-
 void harness()
 {
 	size_t xRequestedSizeBytes;

@@ -9,7 +9,6 @@
   "OBJS":
   [
     "$(ENTRY)_harness.goto",
-    # "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/portable/BufferManagement/BufferAllocation_2.goto",
     "$(FREERTOS)/../FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP/FreeRTOS_IP.goto"
   ],
   "INSTFLAGS":
@@ -21,6 +20,8 @@
   ],
   "INC":
   [
-    "$(FREERTOS)/tools/cbmc/include"
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/include",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/proofs/utility",
+    "$(FREERTOS)/../FreeRTOS-Plus/Test/CBMC/stubs"
   ]
 }

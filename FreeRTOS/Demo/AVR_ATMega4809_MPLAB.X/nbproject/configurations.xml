@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="65">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="f1" displayName="Common" projectFiles="true">
+      <logicalFolder name="f3" displayName="Full" projectFiles="true">
+        <itemPath>../Common/Full/print.c</itemPath>
+        <itemPath>../Common/Full/semtest.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="include" projectFiles="true">
+        <itemPath>../Common/include/AbortDelay.h</itemPath>
+        <itemPath>../Common/include/BlockQ.h</itemPath>
+        <itemPath>../Common/include/EventGroupsDemo.h</itemPath>
+        <itemPath>../Common/include/GenQTest.h</itemPath>
+        <itemPath>../Common/include/IntQueue.h</itemPath>
+        <itemPath>../Common/include/IntSemTest.h</itemPath>
+        <itemPath>../Common/include/MessageBufferAMP.h</itemPath>
+        <itemPath>../Common/include/MessageBufferDemo.h</itemPath>
+        <itemPath>../Common/include/PollQ.h</itemPath>
+        <itemPath>../Common/include/QPeek.h</itemPath>
+        <itemPath>../Common/include/QueueOverwrite.h</itemPath>
+        <itemPath>../Common/include/QueueSet.h</itemPath>
+        <itemPath>../Common/include/QueueSetPolling.h</itemPath>
+        <itemPath>../Common/include/StaticAllocation.h</itemPath>
+        <itemPath>../Common/include/StreamBufferDemo.h</itemPath>
+        <itemPath>../Common/include/StreamBufferInterrupt.h</itemPath>
+        <itemPath>../Common/include/TaskNotify.h</itemPath>
+        <itemPath>../Common/include/TimerDemo.h</itemPath>
+        <itemPath>../Common/include/blocktim.h</itemPath>
+        <itemPath>../Common/include/comtest.h</itemPath>
+        <itemPath>../Common/include/comtest2.h</itemPath>
+        <itemPath>../Common/include/comtest_strings.h</itemPath>
+        <itemPath>../Common/include/countsem.h</itemPath>
+        <itemPath>../Common/include/crflash.h</itemPath>
+        <itemPath>../Common/include/crhook.h</itemPath>
+        <itemPath>../Common/include/death.h</itemPath>
+        <itemPath>../Common/include/dynamic.h</itemPath>
+        <itemPath>../Common/include/fileIO.h</itemPath>
+        <itemPath>../Common/include/flash.h</itemPath>
+        <itemPath>../Common/include/flash_timer.h</itemPath>
+        <itemPath>../Common/include/flop.h</itemPath>
+        <itemPath>../Common/include/integer.h</itemPath>
+        <itemPath>../Common/include/mevents.h</itemPath>
+        <itemPath>../Common/include/partest.h</itemPath>
+        <itemPath>../Common/include/print.h</itemPath>
+        <itemPath>../Common/include/recmutex.h</itemPath>
+        <itemPath>../Common/include/semtest.h</itemPath>
+        <itemPath>../Common/include/serial.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Minimal" projectFiles="true">
+        <itemPath>../Common/Minimal/PollQ.c</itemPath>
+        <itemPath>../Common/Minimal/TaskNotify.c</itemPath>
+        <itemPath>../Common/Minimal/comtest.c</itemPath>
+        <itemPath>../Common/Minimal/crflash.c</itemPath>
+        <itemPath>../Common/Minimal/integer.c</itemPath>
+        <itemPath>../Common/Minimal/recmutex.c</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="freeRTOS" projectFiles="true">
+      <logicalFolder name="f1" displayName="include" projectFiles="true">
+        <itemPath>../../Source/include/FreeRTOS.h</itemPath>
+        <itemPath>../../Source/include/StackMacros.h</itemPath>
+        <itemPath>../../Source/include/atomic.h</itemPath>
+        <itemPath>../../Source/include/croutine.h</itemPath>
+        <itemPath>../../Source/include/deprecated_definitions.h</itemPath>
+        <itemPath>../../Source/include/event_groups.h</itemPath>
+        <itemPath>../../Source/include/list.h</itemPath>
+        <itemPath>../../Source/include/message_buffer.h</itemPath>
+        <itemPath>../../Source/include/mpu_prototypes.h</itemPath>
+        <itemPath>../../Source/include/mpu_wrappers.h</itemPath>
+        <itemPath>../../Source/include/portable.h</itemPath>
+        <itemPath>../../Source/include/projdefs.h</itemPath>
+        <itemPath>../../Source/include/queue.h</itemPath>
+        <itemPath>../../Source/include/semphr.h</itemPath>
+        <itemPath>../../Source/include/stack_macros.h</itemPath>
+        <itemPath>../../Source/include/stdint.readme</itemPath>
+        <itemPath>../../Source/include/stream_buffer.h</itemPath>
+        <itemPath>../../Source/include/task.h</itemPath>
+        <itemPath>../../Source/include/timers.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="portable" projectFiles="true">
+        <logicalFolder name="f1" displayName="GCC" projectFiles="true">
+          <logicalFolder name="f1" displayName="AVR_Mega0" projectFiles="true">
+            <itemPath>../../Source/portable/GCC/AVR_Mega0/port.c</itemPath>
+            <itemPath>../../Source/portable/GCC/AVR_Mega0/porthardware.h</itemPath>
+            <itemPath>../../Source/portable/GCC/AVR_Mega0/portmacro.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="MemMang" projectFiles="true">
+          <itemPath>../../Source/portable/MemMang/heap_1.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>../../Source/croutine.c</itemPath>
+      <itemPath>../../Source/event_groups.c</itemPath>
+      <itemPath>../../Source/list.c</itemPath>
+      <itemPath>../../Source/queue.c</itemPath>
+      <itemPath>../../Source/stream_buffer.c</itemPath>
+      <itemPath>../../Source/tasks.c</itemPath>
+      <itemPath>../../Source/timers.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>regtest.h</itemPath>
+      <itemPath>clk_config.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>FreeRTOSConfig.h</itemPath>
+      <itemPath>main.c</itemPath>
+      <itemPath>main_blinky.c</itemPath>
+      <itemPath>main_full.c</itemPath>
+      <itemPath>main_minimal.c</itemPath>
+      <itemPath>regtest.c</itemPath>
+      <itemPath>serial/serial.c</itemPath>
+      <itemPath>ParTest/ParTest.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+    <Elem>../../Source</Elem>
+    <Elem>../Common/include</Elem>
+    <Elem>../Common/Full</Elem>
+    <Elem>../Common/Minimal</Elem>
+    <Elem>../../Source/portable/MemMang</Elem>
+    <Elem>../../Source/include</Elem>
+    <Elem>../../Source/portable/GCC/AVR_Mega0</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="default" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <targetDevice>ATmega4809</targetDevice>
+        <targetHeader></targetHeader>
+        <targetPluginBoard></targetPluginBoard>
+        <platformTool>nEdbgTool</platformTool>
+        <languageToolchain>XC8</languageToolchain>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
+        <platform>3</platform>
+      </toolsSet>
+      <packs>
+        <pack name="ATmega_DFP" vendor="Microchip" version="2.2.108"/>
+      </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+        <archiverTool>
+        </archiverTool>
+        <loading>
+          <useAlternateLoadableFile>false</useAlternateLoadableFile>
+          <parseOnProdLoad>false</parseOnProdLoad>
+          <alternateLoadableFile></alternateLoadableFile>
+        </loading>
+        <subordinates>
+        </subordinates>
+      </compileType>
+      <makeCustomizationType>
+        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
+        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
+        <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
+        <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
+      </makeCustomizationType>
+      <HI-TECH-COMP>
+        <property key="additional-warnings" value="true"/>
+        <property key="asmlist" value="true"/>
+        <property key="call-prologues" value="false"/>
+        <property key="default-bitfield-type" value="true"/>
+        <property key="default-char-type" value="true"/>
+        <property key="define-macros" value=""/>
+        <property key="disable-optimizations" value="false"/>
+        <property key="extra-include-directories"
+                  value="..\Common\include;..\..\Source\include;..\..\Source\portable\MemMang;..\..\Source;.;..\..\Source\portable\GCC\AVR_Mega0;..\Common\include"/>
+        <property key="favor-optimization-for" value="-speed,+space"/>
+        <property key="garbage-collect-data" value="true"/>
+        <property key="garbage-collect-functions" value="true"/>
+        <property key="identifier-length" value="255"/>
+        <property key="local-generation" value="false"/>
+        <property key="operation-mode" value="pro"/>
+        <property key="opt-xc8-compiler-strict_ansi" value="false"/>
+        <property key="optimization-assembler" value="true"/>
+        <property key="optimization-assembler-files" value="false"/>
+        <property key="optimization-debug" value="false"/>
+        <property key="optimization-invariant-enable" value="false"/>
+        <property key="optimization-invariant-value" value="16"/>
+        <property key="optimization-level" value="-Os"/>
+        <property key="optimization-speed" value="false"/>
+        <property key="optimization-stable-enable" value="false"/>
+        <property key="pack-struct" value="true"/>
+        <property key="preprocess-assembler" value="true"/>
+        <property key="short-enums" value="true"/>
+        <property key="undefine-macros" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="verbose" value="false"/>
+        <property key="warning-level" value="-3"/>
+        <property key="what-to-do" value="ignore"/>
+        <appendMe value="-flto"/>
+      </HI-TECH-COMP>
+      <HI-TECH-LINK>
+        <property key="additional-options-checksum" value=""/>
+        <property key="additional-options-code-offset" value=""/>
+        <property key="additional-options-command-line" value=""/>
+        <property key="additional-options-errata" value=""/>
+        <property key="additional-options-extend-address" value="false"/>
+        <property key="additional-options-trace-type" value=""/>
+        <property key="additional-options-use-response-files" value="false"/>
+        <property key="backup-reset-condition-flags" value="false"/>
+        <property key="calibrate-oscillator" value="false"/>
+        <property key="calibrate-oscillator-value" value="0x3400"/>
+        <property key="clear-bss" value="true"/>
+        <property key="code-model-external" value="wordwrite"/>
+        <property key="code-model-rom" value=""/>
+        <property key="create-html-files" value="false"/>
+        <property key="data-model-ram" value=""/>
+        <property key="data-model-size-of-double" value="24"/>
+        <property key="data-model-size-of-double-gcc" value="no-short-double"/>
+        <property key="data-model-size-of-float" value="24"/>
+        <property key="data-model-size-of-float-gcc" value="no-short-float"/>
+        <property key="display-class-usage" value="false"/>
+        <property key="display-hex-usage" value="false"/>
+        <property key="display-overall-usage" value="true"/>
+        <property key="display-psect-usage" value="false"/>
+        <property key="extra-lib-directories" value=""/>
+        <property key="fill-flash-options-addr" value=""/>
+        <property key="fill-flash-options-const" value=""/>
+        <property key="fill-flash-options-how" value="0"/>
+        <property key="fill-flash-options-inc-const" value="1"/>
+        <property key="fill-flash-options-increment" value=""/>
+        <property key="fill-flash-options-seq" value=""/>
+        <property key="fill-flash-options-what" value="0"/>
+        <property key="format-hex-file-for-download" value="false"/>
+        <property key="initialize-data" value="true"/>
+        <property key="input-libraries" value="libm"/>
+        <property key="keep-generated-startup.as" value="false"/>
+        <property key="link-in-c-library" value="true"/>
+        <property key="link-in-c-library-gcc" value=""/>
+        <property key="link-in-peripheral-library" value="false"/>
+        <property key="managed-stack" value="false"/>
+        <property key="opt-xc8-linker-file" value="false"/>
+        <property key="opt-xc8-linker-link_startup" value="false"/>
+        <property key="opt-xc8-linker-serial" value=""/>
+        <property key="program-the-device-with-default-config-words" value="true"/>
+        <property key="remove-unused-sections" value="true"/>
+      </HI-TECH-LINK>
+      <XC8-CO>
+        <property key="coverage-enable" value=""/>
+      </XC8-CO>
+      <XC8-config-global>
+        <property key="advanced-elf" value="true"/>
+        <property key="gcc-opt-driver-new" value="true"/>
+        <property key="gcc-opt-std" value="-std=c99"/>
+        <property key="gcc-output-file-format" value="dwarf-3"/>
+        <property key="omit-pack-options" value="false"/>
+        <property key="omit-pack-options-new" value="1"/>
+        <property key="output-file-format" value="-mcof,+elf"/>
+        <property key="stack-size-high" value="auto"/>
+        <property key="stack-size-low" value="auto"/>
+        <property key="stack-size-main" value="auto"/>
+        <property key="stack-type" value="compiled"/>
+        <property key="user-pack-device-support" value=""/>
+      </XC8-config-global>
+      <nEdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.activationmode" value="nohv"/>
+        <property key="communication.interface" value="updi"/>
+        <property key="communication.speed" value="${communication.speed.default}"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.path"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="firmware.toolpack"
+                  value="Press to select which tool pack to use"/>
+        <property key="firmware.update.action" value="firmware.update.use.latest"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-ffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value="1400-15ff"/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
+        <property key="voltagevalue" value=""/>
+      </nEdbgTool>
+    </conf>
+  </confs>
+</configurationDescriptor>

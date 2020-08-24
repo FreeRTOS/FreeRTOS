@@ -1,8 +1,8 @@
 /* rabbit.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -33,6 +34,7 @@
 #ifdef NO_INLINE
     #include <wolfssl/wolfcrypt/misc.h>
 #else
+    #define WOLFSSL_MISC_INCLUDED
     #include <wolfcrypt/src/misc.c>
 #endif
 
@@ -86,7 +88,7 @@ static void RABBIT_next_state(RabbitCtx* ctx)
     ctx->c[6] = U32V(ctx->c[6] + 0x4D34D34D + (ctx->c[5] < c_old[5]));
     ctx->c[7] = U32V(ctx->c[7] + 0xD34D34D3 + (ctx->c[6] < c_old[6]));
     ctx->carry = (ctx->c[7] < c_old[7]);
-   
+
     /* Calculate the g-values */
     for (i=0;i<8;i++)
         g[i] = RABBIT_g_func(U32V(ctx->x[i] + ctx->c[i]));
@@ -114,7 +116,7 @@ static void wc_RabbitSetIV(Rabbit* ctx, const byte* inIv)
         XMEMCPY(iv, inIv, sizeof(iv));
     else
         XMEMSET(iv,    0, sizeof(iv));
-      
+
     /* Generate four subvectors */
     i0 = LITTLE32(iv[0]);
     i2 = LITTLE32(iv[1]);
@@ -143,7 +145,7 @@ static void wc_RabbitSetIV(Rabbit* ctx, const byte* inIv)
 
 
 /* Key setup */
-static INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
+static WC_INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
 {
     /* Temporary variables */
     word32 k0, k1, k2, k3, i;
@@ -198,10 +200,36 @@ static INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
 }
 
 
+int wc_Rabbit_SetHeap(Rabbit* ctx, void* heap)
+{
+    if (ctx == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
+#ifdef XSTREAM_ALIGN
+    ctx->heap = heap;
+#endif
+
+    (void)heap;
+    return 0;
+}
+
+
 /* Key setup */
 int wc_RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
 {
+    if (ctx == NULL || key == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
 #ifdef XSTREAM_ALIGN
+    /* default heap to NULL or heap test value */
+    #ifdef WOLFSSL_HEAP_TEST
+        ctx->heap = (void*)WOLFSSL_HEAP_TEST;
+    #else
+        ctx->heap = NULL;
+    #endif /* WOLFSSL_HEAP_TEST */
+
     if ((wolfssl_word)key % 4) {
         int alignKey[4];
 
@@ -219,7 +247,7 @@ int wc_RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
 
 
 /* Encrypt/decrypt a message of any size */
-static INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
+static WC_INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
                             word32 msglen)
 {
     /* Encrypt/decrypt all full blocks */
@@ -262,11 +290,11 @@ static INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
         /* Generate 16 bytes of pseudo-random data */
         tmp[0] = LITTLE32(ctx->workCtx.x[0] ^
                   (ctx->workCtx.x[5]>>16) ^ U32V(ctx->workCtx.x[3]<<16));
-        tmp[1] = LITTLE32(ctx->workCtx.x[2] ^ 
+        tmp[1] = LITTLE32(ctx->workCtx.x[2] ^
                   (ctx->workCtx.x[7]>>16) ^ U32V(ctx->workCtx.x[5]<<16));
-        tmp[2] = LITTLE32(ctx->workCtx.x[4] ^ 
+        tmp[2] = LITTLE32(ctx->workCtx.x[4] ^
                   (ctx->workCtx.x[1]>>16) ^ U32V(ctx->workCtx.x[7]<<16));
-        tmp[3] = LITTLE32(ctx->workCtx.x[6] ^ 
+        tmp[3] = LITTLE32(ctx->workCtx.x[6] ^
                   (ctx->workCtx.x[3]>>16) ^ U32V(ctx->workCtx.x[1]<<16));
 
         /* Encrypt/decrypt the data */
@@ -281,20 +309,24 @@ static INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
 /* Encrypt/decrypt a message of any size */
 int wc_RabbitProcess(Rabbit* ctx, byte* output, const byte* input, word32 msglen)
 {
+    if (ctx == NULL || output == NULL || input == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
 #ifdef XSTREAM_ALIGN
     if ((wolfssl_word)input % 4 || (wolfssl_word)output % 4) {
         #ifndef NO_WOLFSSL_ALLOC_ALIGN
             byte* tmp;
             WOLFSSL_MSG("wc_RabbitProcess unaligned");
 
-            tmp = (byte*)XMALLOC(msglen, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+            tmp = (byte*)XMALLOC(msglen, ctx->heap, DYNAMIC_TYPE_TMP_BUFFER);
             if (tmp == NULL) return MEMORY_E;
 
             XMEMCPY(tmp, input, msglen);
             DoProcess(ctx, tmp, tmp, msglen);
             XMEMCPY(output, tmp, msglen);
 
-            XFREE(tmp, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+            XFREE(tmp, ctx->heap, DYNAMIC_TYPE_TMP_BUFFER);
 
             return 0;
         #else

@@ -1,8 +1,8 @@
 /* mpi_superclass.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 
 /* super class file for PK algos */
@@ -82,9 +83,9 @@
    #undef  BN_FAST_MP_INVMOD_C
 
    /* To safely undefine these you have to make sure your RSA key won't exceed the Comba threshold
-    * which is roughly 255 digits [7140 bits for 32-bit machines, 15300 bits for 64-bit machines] 
-    * which means roughly speaking you can handle upto 2536-bit RSA keys with these defined without
-    * trouble.  
+    * which is roughly 255 digits [7140 bits for 32-bit machines, 15300 bits for 64-bit machines]
+    * which means roughly speaking you can handle up to 2536-bit RSA keys with these defined without
+    * trouble.
     */
    #undef  BN_S_MP_MUL_DIGS_C
    #undef  BN_S_MP_SQR_C

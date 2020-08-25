@@ -46,8 +46,6 @@
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP_Private.h"
 
-#include "FreeRTOSIPConfigDefaults.h"
-
 /* Constants used for Smoothed Round Trip Time (SRTT). */
 #define	winSRTT_INCREMENT_NEW 		2
 #define winSRTT_INCREMENT_CURRENT 	6

@@ -656,7 +656,7 @@ ARPPacket_t *pxARPPacket;
 	configASSERT( pxNetworkBuffer != NULL );
 	configASSERT( pxNetworkBuffer->xDataLength >= sizeof(ARPPacket_t) );
 
-	pxARPPacket = ipPOINTER_CAST( ARPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
+	pxARPPacket = vCastUint8PointerToARPPacketPointer( pxNetworkBuffer->pucEthernetBuffer );
 
 	/* memcpy the const part of the header information into the correct
 	location in the packet.  This copies:
@@ -693,7 +693,7 @@ BaseType_t xCheckLoopback( NetworkBufferDescriptor_t * const pxDescriptor, BaseT
 {
 BaseType_t xResult = pdFALSE;
 NetworkBufferDescriptor_t * pxUseDescriptor = pxDescriptor;
-const IPPacket_t *pxIPPacket = ipPOINTER_CAST( IPPacket_t *, pxUseDescriptor->pucEthernetBuffer );
+const IPPacket_t *pxIPPacket = vCastUint8PointerToIPPacketPointer( pxUseDescriptor->pucEthernetBuffer );
 
 	/* This function will check if the target IP-address belongs to this device.
 	 * If so, the packet will be passed to the IP-stack, who will answer it.

@@ -45,6 +45,25 @@ extern "C" {
 
 #include "event_groups.h"
 
+/* In this library, there is often a cast from a character pointer
+ * to a pointer to a struct.
+ * In order to suppress MISRA warnings, do the cast within a macro,
+ * which can be exempt from warnings:
+ *
+ * 3 required by MISRA:
+ * -emacro(740,ipPOINTER_CAST)    // 750:  Unusual pointer cast (incompatible indirect types) [MISRA 2012 Rule 1.3, required])
+ * -emacro(9005,ipPOINTER_CAST)   // 9005: attempt to cast away const/volatile from a pointer or reference [MISRA 2012 Rule 11.8, required]
+ * -emacro(9087,ipPOINTER_CAST)   // 9087: cast performed between a pointer to object type and a pointer to a different object type [MISRA 2012 Rule 11.3, required]
+ *
+ * 2 advisory by MISRA:
+ * -emacro(9079,ipPOINTER_CAST)   // 9079: conversion from pointer to void to pointer to other type [MISRA 2012 Rule 11.5, advisory])
+ * --emacro((826),ipPOINTER_CAST) // 826:  Suspicious pointer-to-pointer conversion (area too small)
+ *
+ * The MISRA warnings can safely be suppressed because all casts are planned with care.
+ */
+
+#define ipPOINTER_CAST( TYPE, pointer  ) ( ( TYPE ) ( pointer ) )
+
 typedef struct xNetworkAddressingParameters
 {
 	uint32_t ulDefaultIPAddress;
@@ -160,6 +179,21 @@ struct xARP_PACKET
 #include "pack_struct_end.h"
 typedef struct xARP_PACKET ARPPacket_t;
 
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE ARPPacket_t* vCastUint8PointerToARPPacketPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ARPPacket_t *, pucBuffer );
+	}
+#else
+	static ARPPacket_t* vCastUint8PointerToARPPacketPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ARPPacket_t *, pucBuffer );
+	}
+#endif
+
+
 #include "pack_struct_start.h"
 struct xIP_PACKET
 {
@@ -168,6 +202,21 @@ struct xIP_PACKET
 }
 #include "pack_struct_end.h"
 typedef struct xIP_PACKET IPPacket_t;
+
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE IPPacket_t* vCastUint8PointerToIPPacketPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( IPPacket_t *, pucBuffer );
+	}
+#else
+	static IPPacket_t* vCastUint8PointerToIPPacketPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( IPPacket_t *, pucBuffer );
+	}
+#endif
+
 
 #include "pack_struct_start.h"
 struct xICMP_PACKET
@@ -332,25 +381,6 @@ rather than duplicated in its own variable. */
 /* The local MAC address is accessed from within xDefaultPartUDPPacketHeader,
 rather than duplicated in its own variable. */
 #define ipLOCAL_MAC_ADDRESS ( xDefaultPartUDPPacketHeader.ucBytes )
-
-/* In this library, there is often a cast from a character pointer
- * to a pointer to a struct.
- * In order to suppress MISRA warnings, do the cast within a macro,
- * which can be exempt from warnings:
- *
- * 3 required by MISRA:
- * -emacro(740,ipPOINTER_CAST)    // 750:  Unusual pointer cast (incompatible indirect types) [MISRA 2012 Rule 1.3, required])
- * -emacro(9005,ipPOINTER_CAST)   // 9005: attempt to cast away const/volatile from a pointer or reference [MISRA 2012 Rule 11.8, required]
- * -emacro(9087,ipPOINTER_CAST)   // 9087: cast performed between a pointer to object type and a pointer to a different object type [MISRA 2012 Rule 11.3, required]
- *
- * 2 advisory by MISRA:
- * -emacro(9079,ipPOINTER_CAST)   // 9079: conversion from pointer to void to pointer to other type [MISRA 2012 Rule 11.5, advisory])
- * --emacro((826),ipPOINTER_CAST) // 826:  Suspicious pointer-to-pointer conversion (area too small)
- * 
- * The MISRA warnings can safely be suppressed because all casts are planned with care.
- */
-
-#define ipPOINTER_CAST( TYPE, pointer  ) ( ( TYPE ) ( pointer ) )
 
 /* Sequence and ACK numbers are essentially unsigned (uint32_t). But when
  * a distance is calculated, it is useful to use signed numbers:

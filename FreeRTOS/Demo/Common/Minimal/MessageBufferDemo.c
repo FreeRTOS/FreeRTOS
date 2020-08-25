@@ -129,7 +129,11 @@ void vStartMessageBufferTasks( configSTACK_DEPTH_TYPE xStackSize  )
 {
 MessageBufferHandle_t xMessageBuffer;
 
+#ifndef configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE
 	xBlockingStackSize = ( xStackSize + ( xStackSize >> 1U ) );
+#else
+	xBlockingStackSize = configMESSAGE_BUFFER_BLOCK_TASK_STACK_SIZE;
+#endif
 
 	/* The echo servers sets up the message buffers before creating the echo
 	client tasks.  One set of tasks has the server as the higher priority, and
@@ -543,6 +547,7 @@ char cRxString[ 12 ];
 	char cTxString[ 12 ]; /* Large enough to hold a 32 number in ASCII. */
 	const TickType_t xTicksToWait = mbRX_TX_BLOCK_TIME, xShortDelay = pdMS_TO_TICKS( 50 );
 	StaticMessageBuffer_t xStaticMessageBuffer;
+	size_t xBytesSent;
 
 
 	/* The task's priority is used as an index into the loop counters used to
@@ -583,7 +588,11 @@ char cRxString[ 12 ];
 			then overflows. */
 			memset( cTxString, 0x00, sizeof( cTxString ) );
 			sprintf( cTxString, "%d", ( int ) iDataToSend );
-			xMessageBufferSend( xMessageBuffer, ( void * ) cTxString, strlen( cTxString ), xTicksToWait );
+
+			do
+			{
+				xBytesSent = xMessageBufferSend( xMessageBuffer, ( void * ) cTxString, strlen( cTxString ), xTicksToWait );
+			} while ( xBytesSent == 0 ); /* Buffer may become full when receiver is running at the idle priority. */
 
 			iDataToSend++;
 

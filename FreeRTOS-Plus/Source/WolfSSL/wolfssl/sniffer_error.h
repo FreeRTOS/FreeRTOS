@@ -1,8 +1,8 @@
 /* sniffer_error.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 
 #ifndef WOLFSSL_SNIFFER_ERROR_H
@@ -101,12 +102,34 @@
 #define BAD_COMPRESSION_STR 67
 #define BAD_DERIVE_STR 68
 #define ACK_MISSED_STR 69
-#define BAD_DECRYPT    70 
+#define BAD_DECRYPT    70
 
 #define DECRYPT_KEYS_NOT_SETUP 71
 #define CLIENT_HELLO_LATE_KEY_STR 72
 #define GOT_CERT_STATUS_STR 73
 #define RSA_KEY_MISSING_STR 74
+#define NO_SECURE_RENEGOTIATION 75
+
+#define BAD_SESSION_STATS 76
+#define REASSEMBLY_MAX_STR 77
+#define DROPPING_LOST_FRAG_STR 78
+#define DROPPING_PARTIAL_RECORD 79
+#define CLEAR_ACK_FAULT 80
+
+#define BAD_DECRYPT_SIZE 81
+#define EXTENDED_MASTER_HASH_STR 82
+#define SPLIT_HANDSHAKE_MSG_STR 83
+#define ECC_DECODE_STR 84
+#define ECC_PUB_DECODE_STR 85
+#define WATCH_CB_MISSING_STR 86
+#define WATCH_HASH_STR 87
+#define WATCH_FAIL_STR 88
+#define BAD_CERT_MSG_STR 89
+#define STORE_DATA_CB_MISSING_STR 90
+
+#define NO_DATA_DEST_STR 91
+#define STORE_DATA_FAIL_STR 92
+#define CHAIN_INPUT_STR 93
 /* !!!! also add to msgTable in sniffer.c and .rc file !!!! */
 
 

@@ -1,0 +1,94 @@
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__ = 0x08000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_ROM_start__     = 0x08000000;
+define symbol __ICFEDIT_region_ROM_end__       = 0x081FFFFF;
+define symbol __ICFEDIT_region_RAM_start__     = 0x24000000;
+define symbol __ICFEDIT_region_RAM_end__       = 0x2407FFFF;
+define symbol __ICFEDIT_region_ITCMRAM_start__ = 0x00000000;
+define symbol __ICFEDIT_region_ITCMRAM_end__   = 0x0000FFFF;
+/*-Sizes-*/
+define symbol __ICFEDIT_size_cstack__ = 0x400;
+define symbol __ICFEDIT_size_heap__ = 0x200;
+/**** End of ICF editor section. ###ICF###*/
+
+/* Flash Organization [ Total Flash Size = 2048 Kbytes or 2 Mbytes]
+ *  1. Privileged Code:
+ *      Start   : 0x08000000
+ *      End     : 0x08007FFF
+ *      Size    : 32 Kbytes
+ *  2. System calls:
+ *      Start   : 0x08008000
+ *      End     : 0x08008FFF
+ *      Size    : 4 Kbytes
+ *  3. Unprivileged Code:
+ *      Start   : 0x08009000
+ *      End     : 0x081FFFFF
+ *      Size    : 2012 Kbytes
+ */
+define symbol __reigon_ROM_privileged_start__   = __ICFEDIT_region_ROM_start__;
+define symbol __reigon_ROM_privileged_end__     = 0x08007FFF;
+define symbol __reigon_ROM_system_calls_start__ = 0x08008000;
+define symbol __reigon_ROM_system_calls_end__   = 0x08008FFF;
+define symbol __reigon_ROM_unprivileged_start__ = 0x08009000;
+define symbol __reigon_ROM_unprivileged_end__   = __ICFEDIT_region_ROM_end__;
+
+/* RAM Organization [Total RAM Size = 512 Kbytes]
+ *  1. Privileged Data:
+ *      Start   : 0x24000000
+ *      End     : 0x24007FFF
+ *      Size    : 32 Kbytes
+ *  2. Unprivileged Data:
+ *      Start   : 0x24008000
+ *      End     : 0x2407FFFF
+ *      Size    : 480 Kbytes
+ */
+define symbol __region_RAM_privileged_start__   = __ICFEDIT_region_RAM_start__;
+define symbol __region_RAM_privileged_end__     = 0x24007FFF;
+define symbol __region_RAM_unprivileged_start__ = 0x24008000;
+define symbol __region_RAM_unprivileged_end__   = __ICFEDIT_region_RAM_end__;
+
+/* Memory regions. */
+define memory mem with size = 4G;
+define region ROM_region_privileged     = mem:[from __reigon_ROM_privileged_start__ to __reigon_ROM_privileged_end__];
+define region ROM_region_system_calls   = mem:[from __reigon_ROM_system_calls_start__ to __reigon_ROM_system_calls_end__];
+define region ROM_region_unprivileged   = mem:[from __reigon_ROM_unprivileged_start__ to __reigon_ROM_unprivileged_end__];
+define region RAM_region_privileged     = mem:[from __region_RAM_privileged_start__   to __region_RAM_privileged_end__];
+define region RAM_region_unprivileged   = mem:[from __region_RAM_unprivileged_start__   to __region_RAM_unprivileged_end__];
+define region ITCMRAM_region            = mem:[from __ICFEDIT_region_ITCMRAM_start__ to __ICFEDIT_region_ITCMRAM_end__];
+
+/* Stack and Heap. */
+define block CSTACK    with alignment = 8, size = __ICFEDIT_size_cstack__   { };
+define block HEAP      with alignment = 8, size = __ICFEDIT_size_heap__     { };
+
+/* Initialization. */
+initialize by copy { readwrite };
+do not initialize  { section .noinit };
+
+/* Exported symbols. */
+define exported symbol __FLASH_segment_start__          = __ICFEDIT_region_ROM_start__;
+define exported symbol __FLASH_segment_end__            = __ICFEDIT_region_ROM_end__;
+define exported symbol __SRAM_segment_start__           = __ICFEDIT_region_RAM_start__;
+define exported symbol __SRAM_segment_end__             = __ICFEDIT_region_RAM_end__;
+
+define exported symbol __privileged_functions_start__   = __reigon_ROM_privileged_start__;
+define exported symbol __privileged_functions_end__     = __reigon_ROM_privileged_end__;
+define exported symbol __privileged_data_start__        = __region_RAM_privileged_start__;
+define exported symbol __privileged_data_end__          = __region_RAM_privileged_end__;
+
+define exported symbol __syscalls_flash_start__         = __reigon_ROM_system_calls_start__;
+define exported symbol __syscalls_flash_end__           = __reigon_ROM_system_calls_end__;
+
+/* Placements. */
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+
+place in ROM_region_privileged      { readonly section privileged_functions };
+place in ROM_region_system_calls    { readonly section freertos_system_calls };
+place in ROM_region_unprivileged    { readonly };
+
+place in RAM_region_privileged      { readwrite section privileged_data };
+place in RAM_region_unprivileged    { readwrite,
+                                      block CSTACK, block HEAP }; 

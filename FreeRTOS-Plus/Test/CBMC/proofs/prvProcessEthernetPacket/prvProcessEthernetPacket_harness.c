@@ -18,9 +18,6 @@
 #include "NetworkBufferManagement.h"
 #include "FreeRTOS_ARP.h"
 
-#include "cbmc.h"
-
-
 #include "memory_assignments.c"
 #include "freertos_api.c"
 
@@ -37,8 +34,16 @@ void vARPRefreshCacheEntry( const MACAddress_t * pxMACAddress, const uint32_t ul
 }
 
 
+eFrameProcessingResult_t eARPProcessPacket( ARPPacket_t * const pxARPFrame )
+{
+	__CPROVER_assert( pxARPFrame != NULL, "pxARPFrame cannot be NULL" );
+
+	eFrameProcessingResult_t eReturn;
+	return eReturn;
+}
+
 /* This Proof has been done separately. In 'parsing/ProcessIPPacket'. Hence we assume it to be correct here. */
-eFrameProcessingResult_t prvProcessIPPacket( IPPacket_t * pxIPPacket, NetworkBufferDescriptor_t * const pxNetworkBuffer )
+eFrameProcessingResult_t  __CPROVER_file_local_FreeRTOS_IP_c_prvProcessIPPacket( IPPacket_t * pxIPPacket, NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 	__CPROVER_assert( pxIPPacket != NULL, "pxIPPacket cannot be NULL" );
 	__CPROVER_assert( pxNetworkBuffer != NULL, "pxNetworkBuffer cannot be NULL" );

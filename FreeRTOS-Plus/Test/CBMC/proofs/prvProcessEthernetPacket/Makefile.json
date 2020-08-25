@@ -4,7 +4,10 @@
   [
     "--unwind 1",
     "--unwindset prvTCPSendRepeated.0:13",
-    "--nondet-static"
+    "--nondet-static",
+    "--flush",
+    "--verbosity 10"
+ #   "--export-file-local-symbols"
   ],
   "OBJS":
   [
@@ -13,6 +16,10 @@
   ],
   "INSTFLAGS":
   [
+  ],
+  "OPT":
+  [
+    "--export-file-local-symbols"
   ],
   "DEF":
   [

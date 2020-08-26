@@ -44,7 +44,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pthread.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <sys/sysinfo.h>
 #include <signal.h>
 #include <pcap.h>
 

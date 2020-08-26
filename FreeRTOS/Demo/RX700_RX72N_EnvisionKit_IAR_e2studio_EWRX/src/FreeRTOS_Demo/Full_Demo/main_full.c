@@ -452,6 +452,14 @@ static void prvRegTest1Task( void *pvParameters )
 		}
 	}
 
+#if defined(__DPFPU)
+
+	/* Tell the kernel that this task require a DPFPU context before any DPFPU 
+	instructions are executed. */
+	portTASK_USES_DPFPU();
+
+#endif /* defined(__DPFPU) */
+
 	/* This is an inline asm function that never returns. */
 	prvRegTest1Implementation();
 }
@@ -469,6 +477,14 @@ static void prvRegTest2Task( void *pvParameters )
 			taskDISABLE_INTERRUPTS();
 		}
 	}
+
+#if defined(__DPFPU)
+
+	/* Tell the kernel that this task require a DPFPU context before any DPFPU 
+	instructions are executed. */
+	portTASK_USES_DPFPU();
+
+#endif /* defined(__DPFPU) */
 
 	/* This is an inline asm function that never returns. */
 	prvRegTest2Implementation();
@@ -498,6 +514,26 @@ R_BSP_ASM_BEGIN
 	R_BSP_ASM(	MOV.L	#14, R14		)
 	R_BSP_ASM(	MOV.L	#15, R15		)
 
+#if defined(__DPFPU)
+	/* Put a known value in each DPFPU register. (DR0 is the same value as DR15.) */
+	R_BSP_ASM(	ITOD	R1, DR1			)
+	R_BSP_ASM(	ITOD	R2, DR2			)
+	R_BSP_ASM(	ITOD	R3, DR3			)
+	R_BSP_ASM(	ITOD	R4, DR4			)
+	R_BSP_ASM(	ITOD	R5, DR5			)
+	R_BSP_ASM(	ITOD	R6, DR6			)
+	R_BSP_ASM(	ITOD	R7, DR7			)
+	R_BSP_ASM(	ITOD	R8, DR8			)
+	R_BSP_ASM(	ITOD	R9, DR9			)
+	R_BSP_ASM(	ITOD	R10, DR10		)
+	R_BSP_ASM(	ITOD	R11, DR11		)
+	R_BSP_ASM(	ITOD	R12, DR12		)
+	R_BSP_ASM(	ITOD	R13, DR13		)
+	R_BSP_ASM(	ITOD	R14, DR14		)
+	R_BSP_ASM(	ITOD	R15, DR15		)
+	R_BSP_ASM(	ITOD	R15, DR0		)
+#endif /* defined(__DPFPU) */
+
 	/* Loop, checking each iteration that each register still contains the
 	expected value. */
 R_BSP_ASM_LAB(1:)	/* TestLoop1: */
@@ -524,38 +560,106 @@ R_BSP_ASM_LAB(1:)	/* TestLoop1: */
 	/* Now compare each register to ensure it still contains the value that was
 	set before this loop was entered. */
 	R_BSP_ASM(	CMP		#1, R1					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#2, R2					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#3, R3					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#4, R4					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#5, R5					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#6, R6					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#7, R7					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#8, R8					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#9, R9					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#10, R10				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#11, R11				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#12, R12				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#13, R13				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#14, R14				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
 	R_BSP_ASM(	CMP		#15, R15				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+
+#if defined(__DPFPU)
+	/* Now compare each DPFPU register to ensure it still contains the value that was
+	set before this loop was entered. (DR0 is the same value as DR15.) */
+	R_BSP_ASM(	DCMPEQ	DR0, DR15				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R1, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR1, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R2, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR2, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R3, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR3, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R4, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR4, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R5, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR5, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R6, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR6, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R7, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR7, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R8, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR8, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R9, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR9, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R10, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR10, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R11, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR11, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R12, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR12, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R13, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR13, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R14, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR14, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R15, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR15, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(11)	)	/* BNE RegTest1Error */
+#endif /* defined(__DPFPU) */
 
 	/* All comparisons passed, start a new itteratio of this loop. */
-	R_BSP_ASM(	BRA.B	R_BSP_ASM_LAB_PREV(1)	)	/* BRA TestLoop1 */
+	R_BSP_ASM(	BRA.W	R_BSP_ASM_LAB_PREV(1)	)	/* BRA TestLoop1 */
 
 R_BSP_ASM_LAB(11:)	/* RegTest1Error: */
 	/* A compare failed, just loop here so the loop counter stops incrementing
@@ -589,6 +693,26 @@ R_BSP_ASM_BEGIN
 	R_BSP_ASM(	MOV.L	#140, R14		)
 	R_BSP_ASM(	MOV.L	#150, R15		)
 
+#if defined(__DPFPU)
+	/* Put a known value in each DPFPU register. (DR0 is the same value as DR15.) */
+	R_BSP_ASM(	ITOD	R1, DR1			)
+	R_BSP_ASM(	ITOD	R2, DR2			)
+	R_BSP_ASM(	ITOD	R3, DR3			)
+	R_BSP_ASM(	ITOD	R4, DR4			)
+	R_BSP_ASM(	ITOD	R5, DR5			)
+	R_BSP_ASM(	ITOD	R6, DR6			)
+	R_BSP_ASM(	ITOD	R7, DR7			)
+	R_BSP_ASM(	ITOD	R8, DR8			)
+	R_BSP_ASM(	ITOD	R9, DR9			)
+	R_BSP_ASM(	ITOD	R10, DR10		)
+	R_BSP_ASM(	ITOD	R11, DR11		)
+	R_BSP_ASM(	ITOD	R12, DR12		)
+	R_BSP_ASM(	ITOD	R13, DR13		)
+	R_BSP_ASM(	ITOD	R14, DR14		)
+	R_BSP_ASM(	ITOD	R15, DR15		)
+	R_BSP_ASM(	ITOD	R15, DR0		)
+#endif /* defined(__DPFPU) */
+
 	/* Loop, checking on each iteration that each register still contains the
 	expected value. */
 R_BSP_ASM_LAB(2:)	/* TestLoop2: */
@@ -605,39 +729,109 @@ R_BSP_ASM_LAB(2:)	/* TestLoop2: */
 	/* Restore the clobbered registers. */
 	R_BSP_ASM(	POPM	R14-R15			)
 
+	/* Now compare each register to ensure it still contains the value that was
+	set before this loop was entered. */
 	R_BSP_ASM(	CMP		#10, R1					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#20, R2					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#30, R3					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#40, R4					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#50, R5					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#60, R6					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#70, R7					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#80, R8					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#90, R9					)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#100, R10				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#110, R11				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#120, R12				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#130, R13				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#140, R14				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
 	R_BSP_ASM(	CMP		#150, R15				)
-	R_BSP_ASM(	BNE.B	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest2Error */
+
+#if defined(__DPFPU)
+	/* Now compare each DPFPU register to ensure it still contains the value that was
+	set before this loop was entered. (DR0 is the same value as DR15.) */
+	R_BSP_ASM(	DCMPEQ	DR0, DR15				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R1, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR1, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R2, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR2, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R3, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR3, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R4, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR4, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R5, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR5, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R6, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR6, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R7, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR7, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R8, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR8, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R9, DR0					)
+	R_BSP_ASM(	DCMPEQ	DR9, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R10, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR10, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R11, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR11, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R12, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR12, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R13, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR13, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R14, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR14, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+	R_BSP_ASM(	ITOD	R15, DR0				)
+	R_BSP_ASM(	DCMPEQ	DR15, DR0				)
+	R_BSP_ASM(	MVFDR							)
+	R_BSP_ASM(	BNE.W	R_BSP_ASM_LAB_NEXT(22)	)	/* BNE RegTest1Error */
+#endif /* defined(__DPFPU) */
 
 	/* All comparisons passed, start a new itteratio of this loop. */
-	R_BSP_ASM(	BRA.B	R_BSP_ASM_LAB_PREV(2)	)	/* BRA TestLoop2 */
+	R_BSP_ASM(	BRA.W	R_BSP_ASM_LAB_PREV(2)	)	/* BRA TestLoop2 */
 
 R_BSP_ASM_LAB(22:)	/* RegTest2Error: */
 	/* A compare failed, just loop here so the loop counter stops incrementing

@@ -150,6 +150,21 @@ struct xICMP_HEADER
 #include "pack_struct_end.h"
 typedef struct xICMP_HEADER ICMPHeader_t;
 
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE ICMPHeader_t* vCastUint8PointerToICMPHeaderPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ICMPHeader_t *, pucBuffer );
+	}
+#else
+	static ICMPHeader_t * vCastUint8PointerToICMPHeaderPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ICMPHeader_t *, pucBuffer );
+	}
+#endif
+
+
 #include "pack_struct_start.h"
 struct xUDP_HEADER
 {
@@ -243,6 +258,21 @@ struct xICMP_PACKET
 #include "pack_struct_end.h"
 typedef struct xICMP_PACKET ICMPPacket_t;
 
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE ICMPPacket_t * vCastUint8PointerToICMPPacketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ICMPPacket_t *, pucBuffer );
+	}
+#else
+	static ICMPPacket_t * vCastUint8PointerToICMPPacketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ICMPPacket_t *, pucBuffer );
+	}
+#endif
+
+
 #include "pack_struct_start.h"
 struct xUDP_PACKET
 {
@@ -285,6 +315,21 @@ typedef union XPROT_PACKET
 	UDPPacket_t xUDPPacket;
 	ICMPPacket_t xICMPPacket;
 } ProtocolPacket_t;
+
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE ProtocolPacket_t * vCastUint8PointerToProtocolPacketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ProtocolPacket_t *, pucBuffer );
+	}
+#else
+	static ProtocolPacket_t * vCastUint8PointerToProtocolPacketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( ProtocolPacket_t *, pucBuffer );
+	}
+#endif
+
 
 typedef union xPROT_HEADERS
 {
@@ -724,6 +769,21 @@ typedef struct xSOCKET
 		#endif /* ipconfigUSE_TCP */
 	} u;
 } FreeRTOS_Socket_t;
+
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE FreeRTOS_Socket_t * vCastVoidPointerToFreeRTOSSocketPointer( const void *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( FreeRTOS_Socket_t *, pucBuffer );
+	}
+#else
+	static FreeRTOS_Socket_t * vCastVoidPointerToFreeRTOSSocketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( FreeRTOS_Socket_t *, pucBuffer );
+	}
+#endif
+
 
 #if( ipconfigUSE_TCP == 1 )
 	/*

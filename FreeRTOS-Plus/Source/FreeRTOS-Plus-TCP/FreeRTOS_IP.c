@@ -416,7 +416,7 @@ struct freertos_sockaddr xAddress;
 				usLocalPort. vSocketBind() will actually bind the socket and the
 				API will unblock as soon as the eSOCKET_BOUND event is
 				triggered. */
-				pxSocket = ipPOINTER_CAST( FreeRTOS_Socket_t *, xReceivedEvent.pvData );
+				pxSocket = vCastVoidPointerToFreeRTOSSocketPointer( xReceivedEvent.pvData );
 				xAddress.sin_addr = 0U;	/* For the moment. */
 				xAddress.sin_port = FreeRTOS_ntohs( pxSocket->usLocalPort );
 				pxSocket->usLocalPort = 0U;
@@ -434,7 +434,7 @@ struct freertos_sockaddr xAddress;
 				IP-task to actually close a socket. This is handled in
 				vSocketClose().  As the socket gets closed, there is no way to
 				report back to the API, so the API won't wait for the result */
-				( void ) vSocketClose( ipPOINTER_CAST( FreeRTOS_Socket_t *, xReceivedEvent.pvData ) );
+				( void ) vSocketClose( vCastVoidPointerToFreeRTOSSocketPointer( xReceivedEvent.pvData ) );
 				break;
 
 			case eStackTxEvent :
@@ -501,7 +501,7 @@ struct freertos_sockaddr xAddress;
 				received a new connection. */
 				#if( ipconfigUSE_TCP == 1 )
 				{
-					pxSocket = ipPOINTER_CAST( FreeRTOS_Socket_t *, xReceivedEvent.pvData );
+					pxSocket = vCastVoidPointerToFreeRTOSSocketPointer( xReceivedEvent.pvData );
 
 					if( xTCPCheckNewClient( pxSocket ) != pdFALSE )
 					{
@@ -1123,7 +1123,7 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 || 1 )
+#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
 
 	BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t uxNumberOfBytesToSend, TickType_t uxBlockTimeTicks )
 	{
@@ -1153,11 +1153,11 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 			}
 			if( ( uxGetNumberOfFreeNetworkBuffers() >= 3U ) && ( uxNumberOfBytesToSend >= 1U ) && ( xEnoughSpace != pdFALSE ) )
 			{
-				pxEthernetHeader = ipPOINTER_CAST( EthernetHeader_t *, pxNetworkBuffer->pucEthernetBuffer );
+				pxEthernetHeader = vCastUint8PointerToEthernetHeaderPointer( pxNetworkBuffer->pucEthernetBuffer );
 				pxEthernetHeader->usFrameType = ipIPv4_FRAME_TYPE;
 				
 
-				pxICMPHeader = ipPOINTER_CAST( ICMPHeader_t *, &( pxNetworkBuffer->pucEthernetBuffer[ ipIP_PAYLOAD_OFFSET ] ) );
+				pxICMPHeader = vCastUint8PointerToICMPHeaderPointer( &( pxNetworkBuffer->pucEthernetBuffer[ ipIP_PAYLOAD_OFFSET ] ) );
 				usSequenceNumber++;
 
 				/* Fill in the basic header information. */
@@ -1289,7 +1289,7 @@ eFrameProcessingResult_t eReturn;
 const EthernetHeader_t *pxEthernetHeader;
 
 	/* Map the buffer onto Ethernet Header struct for easy access to fields. */
-	pxEthernetHeader = ipPOINTER_CAST( const EthernetHeader_t *, pucEthernetBuffer );
+	pxEthernetHeader = vCastUint8PointerToEthernetHeaderPointer( pucEthernetBuffer );
 
 	if( memcmp( ipLOCAL_MAC_ADDRESS, pxEthernetHeader->xDestinationAddress.ucBytes, sizeof( MACAddress_t ) ) == 0 )
 	{
@@ -1430,7 +1430,7 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 		eReturned = ipCONSIDER_FRAME_FOR_PROCESSING( pxNetworkBuffer->pucEthernetBuffer );
 
 		/* Map the buffer onto the Ethernet Header struct for easy access to the fields. */
-		pxEthernetHeader = ipPOINTER_CAST( const EthernetHeader_t *, pxNetworkBuffer->pucEthernetBuffer );
+		pxEthernetHeader = vCastUint8PointerToEthernetHeaderPointer( pxNetworkBuffer->pucEthernetBuffer );
 
 		/* The condition "eReturned == eProcessBuffer" must be true. */
 		#if( ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 0 )
@@ -1444,7 +1444,7 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 				/* The Ethernet frame contains an ARP packet. */
 				if( pxNetworkBuffer->xDataLength >= sizeof( ARPPacket_t ) )
 				{
-					eReturned = eARPProcessPacket( ipPOINTER_CAST( ARPPacket_t *, pxNetworkBuffer->pucEthernetBuffer ) );
+					eReturned = eARPProcessPacket( vCastUint8PointerToARPPacketPointer( pxNetworkBuffer->pucEthernetBuffer ) );
 				}
 				else
 				{
@@ -1456,7 +1456,7 @@ eFrameProcessingResult_t eReturned = eReleaseBuffer;
 				/* The Ethernet frame contains an IP packet. */
 				if( pxNetworkBuffer->xDataLength >= sizeof( IPPacket_t ) )
 				{
-					eReturned = prvProcessIPPacket( ipPOINTER_CAST( IPPacket_t *, pxNetworkBuffer->pucEthernetBuffer ), pxNetworkBuffer );
+					eReturned = prvProcessIPPacket( vCastUint8PointerToIPPacketPointer( pxNetworkBuffer->pucEthernetBuffer ), pxNetworkBuffer );
 				}
 				else
 				{
@@ -1643,7 +1643,7 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 				const uint16_t *pusChecksum;
 
 					/* pxProtPack will point to the offset were the protocols begin. */
-					pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pxNetworkBuffer->pucEthernetBuffer[ uxHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+					pxProtPack = vCastUint8PointerToProtocolPacketPointer( &( pxNetworkBuffer->pucEthernetBuffer[ uxHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
 					pusChecksum = ( const uint16_t * ) ( &( pxProtPack->xUDPPacket.xUDPHeader.usChecksum ) );
 					if( *pusChecksum == ( uint16_t ) 0U )
 					{
@@ -1762,7 +1762,7 @@ uint8_t ucProtocol;
 							{
 								/* Map the buffer onto a ICMP-Packet struct to easily access the
 								 * fields of ICMP packet. */
-								ICMPPacket_t *pxICMPPacket = ipPOINTER_CAST( ICMPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
+								ICMPPacket_t *pxICMPPacket = vCastUint8PointerToICMPPacketPointer( pxNetworkBuffer->pucEthernetBuffer );
 								if( pxIPHeader->ulDestinationIPAddress == *ipLOCAL_IP_ADDRESS_POINTER )
 								{
 									eReturn = prvProcessICMPPacket( pxICMPPacket );
@@ -1782,7 +1782,7 @@ uint8_t ucProtocol;
 
 						/* Map the buffer onto a UDP-Packet struct to easily access the
 						 * fields of UDP packet. */
-						const UDPPacket_t *pxUDPPacket = ipPOINTER_CAST( const UDPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
+						const UDPPacket_t *pxUDPPacket = vCastUint8PointerToUDPPacketPointer( pxNetworkBuffer->pucEthernetBuffer );
 						uint16_t usLength;
 
 							/* Note the header values required prior to the checksum
@@ -2010,7 +2010,7 @@ uint8_t ucProtocol;
 
 			/* Map the buffer onto a IP-Packet struct to easily access the
 			 * fields of the IP packet. */
-			pxIPPacket = ipPOINTER_CAST( const IPPacket_t *, pucEthernetBuffer );
+			pxIPPacket = vCastUint8PointerToIPPacketPointer( pucEthernetBuffer );
 
 			ucVersionHeaderLength = pxIPPacket->xIPHeader.ucVersionHeaderLength;
 			/* Test if the length of the IP-header is between 20 and 60 bytes,
@@ -2049,7 +2049,7 @@ uint8_t ucProtocol;
 			of this calculation. */
 			/* Map the Buffer onto the Protocol Packet struct for easy access to the
 			 * struct fields. */
-			pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+			pxProtPack = vCastUint8PointerToProtocolPacketPointer( &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
 
 			/* Switch on the Layer 3/4 protocol. */
 			if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
@@ -2133,7 +2133,7 @@ BaseType_t location = 0;
 		}
 
 		/* Parse the packet length. */
-		pxIPPacket = ipPOINTER_CAST( const IPPacket_t *, pucEthernetBuffer );
+		pxIPPacket = vCastUint8PointerToIPPacketPointer( pucEthernetBuffer );
 
 		/* Per https://tools.ietf.org/html/rfc791, the four-bit Internet Header
 		Length field contains the length of the internet header in 32-bit words. */
@@ -2165,7 +2165,7 @@ BaseType_t location = 0;
 		and IP headers incorrectly aligned. However, either way, the "third"
 		protocol (Layer 3 or 4) header will be aligned, which is the convenience
 		of this calculation. */
-		pxProtPack = ipPOINTER_CAST( ProtocolPacket_t *, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+		pxProtPack = vCastUint8PointerToProtocolPacketPointer( &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
 
 		/* Switch on the Layer 3/4 protocol. */
 		if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
@@ -2578,7 +2578,7 @@ EthernetHeader_t *pxEthernetHeader;
 #endif
 	{
 		/* Map the Buffer to Ethernet Header struct for easy access to fields. */
-		pxEthernetHeader = ipPOINTER_CAST( EthernetHeader_t *, pxNetworkBuffer->pucEthernetBuffer );
+		pxEthernetHeader = vCastUint8PointerToEthernetHeaderPointer( pxNetworkBuffer->pucEthernetBuffer );
 
 		/* Swap source and destination MAC addresses. */
 		( void ) memcpy( &( pxEthernetHeader->xDestinationAddress ), &( pxEthernetHeader->xSourceAddress ), sizeof( pxEthernetHeader->xDestinationAddress ) );

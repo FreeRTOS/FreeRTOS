@@ -28,7 +28,7 @@
  *----------------------------------------------------------------------------*/
 
 #define HAVE_FIPS
-#define HAVE_FIPS_VERSION 2
+#define HAVE_FIPS_VERSION 3
 #define WOLFSSL_TLS13
 #define HAVE_TLS_EXTENSIONS
 
@@ -96,6 +96,6 @@
  * Note: wolfSSL_Debugging_ON() must be called just after wolfSSL_Init().
  *----------------------------------------------------------------------------*/
 
-#define DEBUG_WOLFSSL
+/*#define DEBUG_WOLFSSL*/
 	
 

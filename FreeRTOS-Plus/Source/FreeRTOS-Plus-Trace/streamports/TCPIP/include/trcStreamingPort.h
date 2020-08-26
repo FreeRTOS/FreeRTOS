@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.5
+ * Trace Recorder Library for Tracealyzer v4.3.11
  * Percepio AB, www.percepio.com
  *
  * trcStreamingPort.h
@@ -50,6 +50,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 1
 
 int32_t trcTcpRead(void* data, uint32_t size, int32_t *ptrBytesRead);
 

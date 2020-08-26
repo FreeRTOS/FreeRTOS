@@ -135,6 +135,44 @@ typedef struct xNETWORK_BUFFER
 	#endif
 } NetworkBufferDescriptor_t;
 
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE NetworkBufferDescriptor_t * vCastUint8PointerToNetworkBufferDescriptorPointer( const uint8_t *pucBuffer )
+	{
+		/* Cannot use ipPOINTER_CAST here since we cannot include FreeRTOS_IP_Private.h */
+
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( ( NetworkBufferDescriptor_t *) pucBuffer );
+	}
+#else
+	static NetworkBufferDescriptor_t * vCastUint8PointerToNetworkBufferDescriptorPointer( const uint8_t *pucBuffer )
+	{
+		/* Cannot use ipPOINTER_CAST here since we cannot include FreeRTOS_IP_Private.h */
+
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( ( NetworkBufferDescriptor_t *) pucBuffer );
+	}
+#endif
+
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+
+	static portINLINE NetworkBufferDescriptor_t* vCastVoidPointerToNetworkBufferDescriptorPointer(const void * pvBuffer)
+	{
+		/* Cannot use ipPOINTER_CAST here since we cannot include FreeRTOS_IP_Private.h */
+
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( ( NetworkBufferDescriptor_t * ) pvBuffer );
+	}
+#else
+	static NetworkBufferDescriptor_t* vCastVoidPointerToNetworkBufferDescriptorPointer(const void * pvBuffer)
+	{
+		/* Cannot use ipPOINTER_CAST here since we cannot include FreeRTOS_IP_Private.h */
+
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( ( NetworkBufferDescriptor_t * ) pvBuffer );
+	}
+#endif
+
+
 #include "pack_struct_start.h"
 struct xMAC_ADDRESS
 {

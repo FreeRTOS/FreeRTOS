@@ -90,6 +90,21 @@ struct xETH_HEADER
 #include "pack_struct_end.h"
 typedef struct xETH_HEADER EthernetHeader_t;
 
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE EthernetHeader_t * vCastUint8PointerToEthernetHeaderPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( EthernetHeader_t *, pucBuffer );
+	}
+#else
+	static EthernetHeader_t * vCastUint8PointerToEthernetHeaderPointer( const uint8_t* pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( EthernetHeader_t *, pucBuffer );
+	}
+#endif
+
+
 #include "pack_struct_start.h"
 struct xARP_HEADER
 {
@@ -237,6 +252,21 @@ struct xUDP_PACKET
 }
 #include "pack_struct_end.h"
 typedef struct xUDP_PACKET UDPPacket_t;
+
+#if( ipconfigHAS_INLINE_FUNCTIONS == 1 )
+	static portINLINE UDPPacket_t * vCastUint8PointerToUDPPacketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( UDPPacket_t *, pucBuffer );
+	}
+#else
+	static UDPPacket_t * vCastUint8PointerToUDPPacketPointer( const uint8_t *pucBuffer )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ipPOINTER_CAST( UDPPacket_t *, pucBuffer );
+	}
+#endif
+
 
 #include "pack_struct_start.h"
 struct xTCP_PACKET

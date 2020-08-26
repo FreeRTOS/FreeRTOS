@@ -396,13 +396,13 @@ struct freertos_sockaddr xAddress;
 				/* The network hardware driver has received a new packet.  A
 				pointer to the received buffer is located in the pvData member
 				of the received event structure. */
-				prvHandleEthernetPacket( ipPOINTER_CAST( NetworkBufferDescriptor_t *, xReceivedEvent.pvData ) );
+				prvHandleEthernetPacket( vCastVoidPointerToNetworkBufferDescriptorPointer( xReceivedEvent.pvData ) );
 				break;
 
 			case eNetworkTxEvent:
 				/* Send a network packet. The ownership will  be transferred to
 				the driver, which will release it after delivery. */
-				( void ) xNetworkInterfaceOutput( ipPOINTER_CAST( NetworkBufferDescriptor_t *, xReceivedEvent.pvData ), pdTRUE );
+				( void ) xNetworkInterfaceOutput( vCastVoidPointerToNetworkBufferDescriptorPointer( xReceivedEvent.pvData ), pdTRUE );
 				break;
 
 			case eARPTimerEvent :
@@ -441,7 +441,7 @@ struct freertos_sockaddr xAddress;
 				/* The network stack has generated a packet to send.  A
 				pointer to the generated buffer is located in the pvData
 				member of the received event structure. */
-				vProcessGeneratedUDPPacket( ipPOINTER_CAST( NetworkBufferDescriptor_t *, xReceivedEvent.pvData ) );
+				vProcessGeneratedUDPPacket( vCastVoidPointerToNetworkBufferDescriptorPointer( xReceivedEvent.pvData ) );
 				break;
 
 			case eDHCPEvent:
@@ -1123,7 +1123,7 @@ void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 || 1 )
 
 	BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t uxNumberOfBytesToSend, TickType_t uxBlockTimeTicks )
 	{

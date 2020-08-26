@@ -238,7 +238,7 @@ void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	/* This will get called if a stack overflow is detected during the context
 	switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack

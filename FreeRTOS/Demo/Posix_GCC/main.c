@@ -229,7 +229,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected.  This function is
 	provided as an example only as stack overflow checking does not function
-	when running the FreeRTOS Windows port. */
+	when running the FreeRTOS POSIX port. */
 	vAssertCalled( __FILE__, __LINE__ );
 }
 /*-----------------------------------------------------------*/

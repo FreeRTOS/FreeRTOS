@@ -170,7 +170,7 @@ static void prvIPTask( void *pvParameters );
 /*
  * Called when new data is available from the network interface.
  */
-_static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
 
 /*
  * Process incoming IP packets.
@@ -1417,7 +1417,7 @@ void vIPNetworkUpCalls( void )
 }
 /*-----------------------------------------------------------*/
 
-_static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
+static void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer )
 {
 const EthernetHeader_t *pxEthernetHeader;
 eFrameProcessingResult_t eReturned = eReleaseBuffer;

@@ -24,7 +24,7 @@
 /****************************************************************
  * Signature of function under test
  ****************************************************************/
-void prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+void __CPROVER_file_local_FreeRTOS_IP_c_prvProcessEthernetPacket( NetworkBufferDescriptor_t * const pxNetworkBuffer );
 
 
 /* This proof was done before. Hence we assume it to be correct here. */
@@ -60,5 +60,5 @@ void harness() {
 	__CPROVER_assume( pxNetworkBuffer != NULL );
 	__CPROVER_assume( pxNetworkBuffer->pucEthernetBuffer != NULL );
 
-	prvProcessEthernetPacket( pxNetworkBuffer );
+	__CPROVER_file_local_FreeRTOS_IP_c_prvProcessEthernetPacket( pxNetworkBuffer );
 }

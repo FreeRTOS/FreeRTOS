@@ -105,6 +105,7 @@ QueueHandle_t xUnconstrainedQueue( void ) {
 
 	if(xQueue){
 		xQueue->cTxLock = nondet_int8_t();
+		__CPROVER_assume(xQueue->cTxLock != 127);
 		xQueue->cRxLock = nondet_int8_t();
 		xQueue->uxMessagesWaiting = nondet_UBaseType_t();
 		/* This is an invariant checked with a couple of asserts in the code base.

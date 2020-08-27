@@ -56,9 +56,8 @@ void harness() {
 
 	NetworkBufferDescriptor_t * const pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( ipTOTAL_ETHERNET_FRAME_SIZE, 0 );
 
-	/* The network buffer and the ethernet buffer cannot be NULL for this function. */
+	/* The network buffer cannot be NULL for this function call. If it is, it will hit an assert in the function. */
 	__CPROVER_assume( pxNetworkBuffer != NULL );
-	__CPROVER_assume( pxNetworkBuffer->pucEthernetBuffer != NULL );
 
 	__CPROVER_file_local_FreeRTOS_IP_c_prvProcessEthernetPacket( pxNetworkBuffer );
 }

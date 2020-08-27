@@ -242,6 +242,18 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
 static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
 
 /**
+ * @brief Check if the amount of time waiting for PINGRESP has exceeded
+ * the specified timeout, then reset the keep-alive timer.
+ *
+ * This should only be called after a control packet has been sent.
+ *
+ * @param pxTimer The auto-reload software timer for handling keep alive.
+ *
+ * @return The status returned by #xTimerReset.
+ */
+static BaseType_t prvCheckTimeoutThenResetTimer( TimerHandle_t pxTimer );
+
+/**
  * @brief This callback is invoked through an auto-reload software timer.
  *
  * Its responsibility is to send a PINGREQ packet if a PINGRESP is not pending
@@ -541,11 +553,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                             NULL,
                             mqttexampleCONNACK_RECV_TIMEOUT_MS,
                             &xSessionPresent );
-
-    if( xResult != MQTTSuccess )
-    {
-        LogError( ( "Connection with MQTT broker failed.\r\n" ) );
-    }
+    configASSERT( xResult == MQTTSuccess );
 }
 /*-----------------------------------------------------------*/
 
@@ -580,7 +588,7 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
     configASSERT( xResult == MQTTSuccess );
 
     /* When a SUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
-    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    xTimerStatus = prvCheckTimeoutThenResetTimer( xKeepAliveTimer );
     configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
@@ -612,7 +620,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     configASSERT( xResult == MQTTSuccess );
 
     /* When a PUBLISH packet has been sent, the keep-alive timer can be reset. */
-    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    xTimerStatus = prvCheckTimeoutThenResetTimer( xKeepAliveTimer );
     configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
@@ -644,7 +652,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     configASSERT( xResult == MQTTSuccess );
 
     /* When an UNSUBSCRIBE packet has been sent, the keep-alive timer can be reset. */
-    xTimerStatus = xTimerReset( xKeepAliveTimer, 0 );
+    xTimerStatus = prvCheckTimeoutThenResetTimer( xKeepAliveTimer );
     configASSERT( xTimerStatus == pdPASS );
 }
 /*-----------------------------------------------------------*/
@@ -704,6 +712,22 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
                    pxPublishInfo->topicNameLength,
                    pxPublishInfo->pTopicName ) );
     }
+}
+
+/*-----------------------------------------------------------*/
+
+static BaseType_t prvCheckTimeoutThenResetTimer( TimerHandle_t pxTimer )
+{
+    uint32_t now = 0U;
+
+    if( xWaitingForPingResp == true )
+    {
+        now = prvGetTimeMs();
+        /* Assert that the PINGRESP timeout has not expired. */
+        configASSERT( ( now - ulPingReqSendTimeMs ) <= ulPingRespTimeoutMs );
+    }
+
+    return xTimerReset( pxTimer, 0 );
 }
 
 /*-----------------------------------------------------------*/

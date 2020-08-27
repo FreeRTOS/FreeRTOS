@@ -1,8 +1,19 @@
 # FreeRTOS VeriFast proofs
 
-This directory contains automated functional correctness proofs of the FreeRTOS
-kernel queue data structure. These properties are proven with the
-[VeriFast](https://github.com/verifast/verifast) verifier.
+This directory contains unbounded proofs of the FreeRTOS kernel queue and list
+data structures. Unbounded proofs mean that these results hold independent of
+the length of the queue or list.
+
+Informally, the queue proofs demonstrate that the queue implementation is
+memory safe (does not access invalid memory), thread safe (properly
+synchronizes accesses) and functionally correct (behaves like a queue) under
+any arbitrary number of tasks or ISRs. The list proofs demonstrate that the
+list implementation is memory safe and functionally correct.
+
+These properties are proven with the
+[VeriFast](https://github.com/verifast/verifast) verifier. See the proof
+[signoff](docs/signoff.md) document for more on the proof properties,
+assumptions, and simplifications.
 
 ## Proof directory structure
 
@@ -14,6 +25,7 @@ predicates, functions and lemmas used by all proofs is maintained in the
 `include/proof` directory.
 
   - `queue`: proofs for the FreeRTOS queue data structure
+  - `list`: proofs for the FreeRTOS list data structure
 
 The following figure gives the callgraph of the queue proofs. Green=Proven
 functions, Blue=Functions modeled by lock invariants (underlying implementation
@@ -49,7 +61,7 @@ and uncheck `Check arithmetic overflow`).
   - `queue/xQueueReceiveFromISR.c`
 
 A successful proof results in the top banner turning green with a statement
-similar to: `0 errors found (328 statements verified)`.
+similar to: `0 errors found (335 statements verified)`.
 
 ## Proof checking a single proof at the command-line
 
@@ -65,7 +77,7 @@ A successful proof results in output similar to:
 
 ```
 queue/xQueueGenericSend.c
-0 errors found (328 statements verified)
+0 errors found (335 statements verified)
 ```
 
 ## Running proof regression
@@ -87,7 +99,8 @@ $ VERIFAST=/path/to/verifast NO_COVERAGE=1 make
 ## Annotation burden
 
 VeriFast can emit statistics about the number of source code lines and
-annotations. These range from .3-2x annotations per line of source code.
+annotations. These range from .3-2x annotations per line of source code for the
+queue proofs and up to 7x for the list proofs.
 
 ```
 $ VERIFAST=/path/to/verifast ./scripts/annotation_overhead.sh
@@ -96,15 +109,12 @@ $ VERIFAST=/path/to/verifast ./scripts/annotation_overhead.sh
 ## Reading a VeriFast proof
 
 VeriFast is a modular deductive verifier using separation logic. A quick
-introduction is given by [Jacobs and
-Piessens](https://people.cs.kuleuven.be/~bart.jacobs/verifast/verifast.pdf).
-In particular, Section 1 Introduction, gives a high-level overview of the proof
-technique, which uses forward symbolic execution over a symbolic heap.
+introduction is given by [Jacobs and Piessens][1]. In particular, Section 1
+Introduction, gives a high-level overview of the proof technique, which uses
+forward symbolic execution over a symbolic heap.
 
-Learning how to use VeriFast will help you read and understand the proofs. 
-The VeriFast
-[tutorial](https://people.cs.kuleuven.be/~bart.jacobs/verifast/tutorial.pdf) is
-a good guide. You will need to understand:
+Learning how to use VeriFast will help you read and understand the proofs. The
+VeriFast [tutorial][2] is a good guide. You will need to understand:
 
   - Sec 4. Functions and Contracts
   - Sec 5. Patterns
@@ -115,8 +125,12 @@ a good guide. You will need to understand:
   - Sec 10. Inductive Datatypes
   - Sec 11. Lemmas
 
+[1]: https://people.cs.kuleuven.be/~bart.jacobs/verifast/verifast.pdf
+[2]: https://people.cs.kuleuven.be/~bart.jacobs/verifast/tutorial.pdf
+
 ## Contributors
 
-We acknowledge and thank the following contributors, listed alphabetically:
+We acknowledge and thank the following contributors:
 
   - Bart Jacobs, KU Leuven, https://people.cs.kuleuven.be/~bart.jacobs/
+  - Aalok Thakkar, University of Pennsylvania, https://aalok-thakkar.github.io/

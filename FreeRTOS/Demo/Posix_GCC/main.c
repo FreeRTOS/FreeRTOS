@@ -26,25 +26,26 @@
  */
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
+ * This project provides three demo applications.  A simple blinky style project,
+ * a more comprehensive test and demo application, and a TCP echo application.
+ * The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between
+ * the two if mainCREATE_TCP_ECHO_TASKS_SINGLE is 0.
  * The simply blinky demo is implemented and described in main_blinky.c.  The
  * more comprehensive test and demo application is implemented and described in
  * main_full.c.
+ * The mainCREATE_TCP_ECHO_TASKS_SINGLE setting is used to select the tcp echo
+ * application regardless of the value of mainCREATE_SIMPLE_BLINKY_DEMO_ONLY.
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
  *******************************************************************************
- * NOTE: Windows will not be running the FreeRTOS demo threads continuously, so
- * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * NOTE: Linux will not be running the FreeRTOS demo threads continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Linux port, or
  * this demo application.  Also, the timing information in the FreeRTOS+Trace
- * logs have no meaningful units.  See the documentation page for the Windows
+ * logs have no meaningful units.  See the documentation page for the Linux
  * port for further information:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
- *
-
+ * https://freertos.org/FreeRTOS-simulator-for-Linux.html
  *
  *******************************************************************************
  */
@@ -62,16 +63,21 @@
 /* Local includes. */
 #include "console.h"
 
-/* This project provides two demo applications.  A simple blinky style demo
-application, and a more comprehensive test and demo application.  The
-mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
+/* This project provides three demo applications.  A simple blinky style demo
+application, a more comprehensive test and demo application, and a TCP
+echo application.  The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY and
+mainCREATE_TCP_ECHO_TASKS_SINGLE settings are used to select between the three.
 
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 then the blinky demo will be built.
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 & mainCREATE_TCP_ECHO_TASKS_SINGLE
+is not 1 then the blinky demo will be built.
 The blinky demo is implemented and described in main_blinky.c.
 
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
+If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 &
+mainCREATE_TCP_ECHO_TASKS_SINGLE is not 1  then the comprehensive test and
 demo application will be built.  The comprehensive test and demo application is
-implemented and described in main_full.c. */
+implemented and described in main_full.c the tcp echo demo application
+is implemented in main_networking.c. */
+
 #ifndef mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
 	#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 #endif
@@ -223,7 +229,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected.  This function is
 	provided as an example only as stack overflow checking does not function
-	when running the FreeRTOS Windows port. */
+	when running the FreeRTOS POSIX port. */
 	vAssertCalled( __FILE__, __LINE__ );
 }
 /*-----------------------------------------------------------*/

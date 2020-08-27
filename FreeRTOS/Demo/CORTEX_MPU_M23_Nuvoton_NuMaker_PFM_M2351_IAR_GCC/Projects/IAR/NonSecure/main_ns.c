@@ -88,7 +88,7 @@ static void prvCreateTasks( void )
 /*-----------------------------------------------------------*/
 
 /* Stack overflow hook. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 {
 	/* Force an assert. */
 	configASSERT( pcTaskName == 0 );

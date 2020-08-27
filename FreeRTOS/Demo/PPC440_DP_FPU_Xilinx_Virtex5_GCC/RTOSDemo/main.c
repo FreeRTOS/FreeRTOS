@@ -653,8 +653,8 @@ static void prvRegTestTask2( void *pvParameters )
 /* This hook function will get called if there is a suspected stack overflow.
 An overflow can cause the task name to be corrupted, in which case the task
 handle needs to be used to determine the offending task. */
-void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName );
-void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 {
 /* To prevent the optimiser removing the variables. */
 volatile TaskHandle_t xTaskIn = xTask;

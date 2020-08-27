@@ -34,3 +34,5 @@ If applicable, add screenshots to help explain your problem.
 Add any other context about the problem here.
 e.g. code snippet to reproduce the issue.
 e.g. stack trace, memory dump, debugger log, and many etc.
+
+<!-- For general inquiries, please post in [FreeRTOS forum](https://forums.freertos.org) for community support. -->

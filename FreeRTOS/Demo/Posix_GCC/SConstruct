@@ -27,10 +27,10 @@
 import os
 
 # Create a symlink to the FreeRTOS sources.
-if not os.path.exists("src/FreeRTOS"):
-    os.symlink("../../..", "src/FreeRTOS")
-if not os.path.exists("src/FreeRTOS-Plus"):
-    os.symlink("../../../../FreeRTOS-Plus", "src/FreeRTOS-Plus")
+if not os.path.exists("FreeRTOS"):
+    os.symlink("../..", "FreeRTOS")
+if not os.path.exists("FreeRTOS-Plus"):
+    os.symlink("../../../FreeRTOS-Plus", "FreeRTOS-Plus")
 
 AddOption("--simple",
           action='store_true',
@@ -49,4 +49,4 @@ env.Append(CFLAGS = [
     "-O2",
 ])
 
-SConscript("src/SConscript", variant_dir="build", duplicate=0)
+SConscript("./SConscript", variant_dir="build", duplicate=0)

@@ -185,7 +185,7 @@ extern void vSetupHighFrequencyTimer( void );
 /*
  * Hook functions that can get called by the kernel.
  */
-void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName );
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
 static void prvPrintString( const char * pcString );
@@ -453,8 +453,8 @@ void ( *vOLEDClear )( void ) = NULL;
 }
 /*-----------------------------------------------------------*/
 
-volatile signed char *pcOverflowedTask = NULL;
-void vApplicationStackOverflowHook( TaskHandle_t *pxTask, signed char *pcTaskName )
+volatile char *pcOverflowedTask = NULL;
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 {
 	( void ) pxTask;
 	pcOverflowedTask = pcTaskName;

@@ -69,7 +69,17 @@ the Blocked state so it can read the bytes. */
 
 /* The size of the stack allocated to the tasks that run as part of this demo/
 test.  The stack size is over generous in most cases. */
-#define sbSTACK_SIZE				( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#ifndef configSTREAM_BUFFER_SENDER_TASK_STACK_SIZE
+	#define sbSTACK_SIZE			( configMINIMAL_STACK_SIZE + ( configMINIMAL_STACK_SIZE >> 1 ) )
+#else
+	#define sbSTACK_SIZE			configSTREAM_BUFFER_SENDER_TASK_STACK_SIZE
+#endif
+
+#ifndef configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE
+	#define sbSMALLER_STACK_SIZE	sbSTACK_SIZE
+#else
+	#define sbSMALLER_STACK_SIZE	configSTREAM_BUFFER_SMALLER_TASK_STACK_SIZE
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -148,7 +158,7 @@ static volatile StreamBufferHandle_t xInterruptStreamBuffer = NULL;
 
 /* The data sent from the tick interrupt to the task that tests the trigger
 level functionality. */
-static const char *pcDataSentFromInterrupt = "12345678";
+static const char *pcDataSentFromInterrupt = "0123456789";
 
 /* Data that is longer than the buffer that is sent to the buffers as a stream
 of bytes.  Parts of which are written to the stream buffer to test writing
@@ -171,8 +181,8 @@ StreamBufferHandle_t xStreamBuffer;
 	/* The echo servers sets up the stream buffers before creating the echo
 	client tasks.  One set of tasks has the server as the higher priority, and
 	the other has the client as the higher priority. */
-	xTaskCreate( prvEchoServer, "1StrEchoServer", sbSTACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
-	xTaskCreate( prvEchoServer, "2StrEchoServer", sbSTACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
+	xTaskCreate( prvEchoServer, "1StrEchoServer", sbSMALLER_STACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
+	xTaskCreate( prvEchoServer, "2StrEchoServer", sbSMALLER_STACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
 
 	/* The non blocking tasks run continuously and will interleave with each
 	other, so must be created at the lowest priority.  The stream buffer they
@@ -192,8 +202,8 @@ StreamBufferHandle_t xStreamBuffer;
 		/* The sender tasks set up the stream buffers before creating the
 		receiver tasks.  Priorities must be 0 and 1 as the priority is used to
 		index into the xStaticStreamBuffers and ucBufferStorage arrays. */
-		xTaskCreate( prvSenderTask, "Str1Sender", sbSTACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
-		xTaskCreate( prvSenderTask, "Str2Sender", sbSTACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
+		xTaskCreate( prvSenderTask, "Str1Sender", sbSMALLER_STACK_SIZE, NULL, sbHIGHER_PRIORITY, NULL );
+		xTaskCreate( prvSenderTask, "Str2Sender", sbSMALLER_STACK_SIZE, NULL, sbLOWER_PRIORITY, NULL );
 	}
 	#endif /* configSUPPORT_STATIC_ALLOCATION */
 }
@@ -599,11 +609,11 @@ BaseType_t xNonBlockingReceiveError = pdFALSE;
 			/* Here prvSingleTaskTests() performs various tests on a stream buffer
 			that was created statically. */
 			prvSingleTaskTests( xStreamBuffer );
-			xTaskCreate( prvReceiverTask, "StrReceiver", sbSTACK_SIZE,  ( void * ) xStreamBuffer, sbHIGHER_PRIORITY, NULL );
+			xTaskCreate( prvReceiverTask, "StrReceiver", sbSMALLER_STACK_SIZE,  ( void * ) xStreamBuffer, sbHIGHER_PRIORITY, NULL );
 		}
 		else
 		{
-			xTaskCreate( prvReceiverTask, "StrReceiver", sbSTACK_SIZE,  ( void * ) xStreamBuffer, sbLOWER_PRIORITY, NULL );
+			xTaskCreate( prvReceiverTask, "StrReceiver", sbSMALLER_STACK_SIZE,  ( void * ) xStreamBuffer, sbLOWER_PRIORITY, NULL );
 		}
 
 		for( ;; )
@@ -770,7 +780,6 @@ EchoStreamBuffers_t *pxStreamBuffers = ( EchoStreamBuffers_t * ) pvParameters;
 		/* This stream buffer is just created and deleted to ensure no memory
 		leaks. */
 		xTempStreamBuffer = xStreamBufferCreate( sbSTREAM_BUFFER_LENGTH_BYTES, sbTRIGGER_LEVEL_1 );
-		prvSingleTaskTests( xTempStreamBuffer );
 		vStreamBufferDelete( xTempStreamBuffer );
 
 		/* The following are tests for a stream buffer of size one. */
@@ -856,14 +865,14 @@ const TickType_t xTicksToBlock = pdMS_TO_TICKS( 350UL );
 	priority then the client task is created at the higher priority. */
 	if( uxTaskPriorityGet( NULL ) == sbLOWER_PRIORITY )
 	{
-		xTaskCreate( prvEchoClient, "EchoClient", sbSTACK_SIZE,  ( void * ) &xStreamBuffers, sbHIGHER_PRIORITY, NULL );
+		xTaskCreate( prvEchoClient, "EchoClient", sbSMALLER_STACK_SIZE,  ( void * ) &xStreamBuffers, sbHIGHER_PRIORITY, NULL );
 	}
 	else
 	{
 		/* Here prvSingleTaskTests() performs various tests on a stream buffer
 		that was created dynamically. */
 		prvSingleTaskTests( xStreamBuffers.xEchoClientBuffer );
-		xTaskCreate( prvEchoClient, "EchoClient", sbSTACK_SIZE, ( void * ) &xStreamBuffers, sbLOWER_PRIORITY, NULL );
+		xTaskCreate( prvEchoClient, "EchoClient", sbSMALLER_STACK_SIZE, ( void * ) &xStreamBuffers, sbLOWER_PRIORITY, NULL );
 	}
 
 	for( ;; )
@@ -914,14 +923,14 @@ static void prvInterruptTriggerLevelTest( void *pvParameters )
 {
 StreamBufferHandle_t xStreamBuffer;
 size_t xTriggerLevel = 1, xBytesReceived;
-const size_t xStreamBufferSizeBytes = ( size_t ) 8, xMaxTriggerLevel = ( size_t ) 6, xMinTriggerLevel = ( size_t ) 1;
-const TickType_t xReadBlockTime = 4, xCycleBlockTime = pdMS_TO_TICKS( 100 );
-uint8_t ucRxData[ 8 ];
+const size_t xStreamBufferSizeBytes = ( size_t ) 9, xMaxTriggerLevel = ( size_t ) 7, xMinTriggerLevel = ( size_t ) 2;
+const TickType_t xReadBlockTime = 5, xCycleBlockTime = pdMS_TO_TICKS( 100 );
+uint8_t ucRxData[ 9 ];
 BaseType_t xErrorDetected = pdFALSE;
 #ifndef configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN
-    const size_t xAllowableMargin = ( size_t ) 0;
+	const size_t xAllowableMargin = ( size_t ) 0;
 #else
-    const size_t xAllowableMargin = ( size_t ) configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN;
+	const size_t xAllowableMargin = ( size_t ) configSTREAM_BUFFER_TRIGGER_LEVEL_TEST_MARGIN;
 #endif
 
 	/* Remove compiler warning about unused parameter. */
@@ -931,6 +940,12 @@ BaseType_t xErrorDetected = pdFALSE;
 	{
 		for( xTriggerLevel = xMinTriggerLevel; xTriggerLevel < xMaxTriggerLevel; xTriggerLevel++ )
 		{
+			/* This test is very time sensitive so delay at the beginning to ensure
+			the rest of the system is up and running before starting.  Delay between
+			each loop to ensure the interrupt that sends to the stream buffer
+			detects it needs to start sending from the start of the strin again.. */
+			vTaskDelay( xCycleBlockTime );
+		
 			/* Create the stream buffer that will be used from inside the tick
 			interrupt. */
 			memset( ucRxData, 0x00, sizeof( ucRxData ) );
@@ -963,9 +978,27 @@ BaseType_t xErrorDetected = pdFALSE;
 			{
 				/* Trigger level was greater than the block time so expect to
 				time out having received xReadBlockTime bytes. */
-				if( ( xReadBlockTime - xBytesReceived ) > xAllowableMargin )
+				if( xBytesReceived > xReadBlockTime )
 				{
-					xErrorDetected = pdTRUE;
+					/* Received more bytes than expected.  That could happen if
+					this task unblocked at the right time, but an interrupt
+					added another byte to the stream buffer before this task was
+					able to run. */
+					if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
+					{
+						xErrorDetected = pdTRUE;
+					}
+				}
+				else if( xReadBlockTime != xBytesReceived )
+				{
+					/* It is possible the interrupt placed an item in the stream
+					buffer before this task called xStreamBufferReceive(), but
+					if that is the case then xBytesReceived will only every be
+					0 as the interrupt will only have executed once. */
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
 				}
 			}
 			else if( xTriggerLevel < xReadBlockTime )
@@ -973,19 +1006,43 @@ BaseType_t xErrorDetected = pdFALSE;
 				/* Trigger level was less than the block time so we expect to
 				have received the trigger level number of bytes - could be more
 				though depending on other activity between the task being
-				unblocked and the task reading the number of bytes received. */
-				if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
+				unblocked and the task reading the number of bytes received.  It
+				could also be less if the interrupt already put something in the
+				stream buffer before this task attempted to read it - in which
+				case the task would have returned the available bytes immediately
+				without ever blocking - in that case the bytes received will
+				only ever be 1 as the interrupt would not have executed more
+				than one in that time unless this task has too low a priority. */
+				if( xBytesReceived < xTriggerLevel )
+				{
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
+				}
+				else if( ( xBytesReceived - xTriggerLevel ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}
 			}
 			else
 			{
-				/* The trigger level equaled the block time, so expect to
-				receive no greater than the block time, but one or two less is
-				ok due to variations in how far through the time slice the
-				functions get executed. */
-				if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
+				/* The trigger level equalled the block time, so expect to
+				receive no greater than the block time.  It could also be less
+				if the interrupt already put something in the stream buffer
+				before this task attempted to read it - in which case the task
+				would have returned the available bytes immediately without ever
+				blocking - in that case the bytes received would only ever be 1
+				because the interrupt is not going to execute twice in that time
+				unless this task is running a too low a priority. */
+				if( xBytesReceived < xReadBlockTime )
+				{
+					if( xBytesReceived != 1 )
+					{
+						xErrorDetected = pdTRUE;
+					}
+				}
+				else if( ( xBytesReceived - xReadBlockTime ) > xAllowableMargin )
 				{
 					xErrorDetected = pdTRUE;
 				}
@@ -1010,7 +1067,6 @@ BaseType_t xErrorDetected = pdFALSE;
 
 			/* Tidy up ready for the next loop. */
 			vStreamBufferDelete( xStreamBuffer );
-			vTaskDelay( xCycleBlockTime );
 		}
 	}
 }

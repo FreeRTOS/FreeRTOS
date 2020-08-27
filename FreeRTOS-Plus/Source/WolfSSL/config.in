@@ -3,6 +3,9 @@
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
 
+/* User RSA is being defined */
+#undef BUILD_USER_RSA
+
 /* Define to 1 to enable debugging code. */
 #undef DEBUG
 
@@ -27,11 +30,17 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
+/* Define to 1 if you have the `gmtime_r' function. */
+#undef HAVE_GMTIME_R
+
 /* Define to 1 if you have the `inet_ntoa' function. */
 #undef HAVE_INET_NTOA
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <ippcp.h> header file. */
+#undef HAVE_IPPCP_H
 
 /* Define to 1 if you have the `network' library (-lnetwork). */
 #undef HAVE_LIBNETWORK
@@ -106,12 +115,8 @@
 /* Define to 1 if the system has the type `__uint128_t'. */
 #undef HAVE___UINT128_T
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
@@ -141,6 +146,9 @@
 /* The size of `long long', as computed by sizeof. */
 #undef SIZEOF_LONG_LONG
 
+/* The size of `time_t', as computed by sizeof. */
+#undef SIZEOF_TIME_T
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
@@ -152,6 +160,9 @@
 
 /* VCS system */
 #undef VCS_SYSTEM
+
+/* Use __declspec(dllexport) when building library */
+#undef WOLFSSL_DLL
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

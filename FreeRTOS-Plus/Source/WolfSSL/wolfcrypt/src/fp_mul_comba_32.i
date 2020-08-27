@@ -1,8 +1,8 @@
 /* fp_mul_comba_32.i
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,31 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
 
+
 #ifdef TFM_MUL32
-void fp_mul_comba32(fp_int *A, fp_int *B, fp_int *C)
+int fp_mul_comba32(fp_int *A, fp_int *B, fp_int *C)
 {
-   fp_digit c0, c1, c2, at[64];
    int out_size;
+   fp_digit c0, c1, c2;
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit at[64];
+#else
+   fp_digit *at;
+#endif
+
+#ifdef WOLFSSL_SMALL_STACK
+   at = (fp_digit*)XMALLOC(sizeof(fp_digit) * 64, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (at == NULL)
+       return FP_MEM;
+#endif
 
    out_size = A->used + B->used;
-   memcpy(at, A->dp, 32 * sizeof(fp_digit));
-   memcpy(at+32, B->dp, 32 * sizeof(fp_digit));
+   XMEMCPY(at, A->dp, 32 * sizeof(fp_digit));
+   XMEMCPY(at+32, B->dp, 32 * sizeof(fp_digit));
    COMBA_START;
 
    COMBA_CLEAR;
@@ -189,7 +201,7 @@ void fp_mul_comba32(fp_int *A, fp_int *B, fp_int *C)
    COMBA_STORE(C->dp[38]);
 
    /* early out at 40 digits, 40*32==1280, or two 640 bit operands */
-   if (out_size <= 40) { COMBA_STORE2(C->dp[39]); C->used = 40; C->sign = A->sign ^ B->sign; fp_clamp(C); COMBA_FINI; return; }
+   if (out_size <= 40) { COMBA_STORE2(C->dp[39]); C->used = 40; C->sign = A->sign ^ B->sign; fp_clamp(C); COMBA_FINI; return FP_OKAY; }
 
    /* 39 */
    COMBA_FORWARD;
@@ -225,7 +237,7 @@ void fp_mul_comba32(fp_int *A, fp_int *B, fp_int *C)
    COMBA_STORE(C->dp[46]);
 
    /* early out at 48 digits, 48*32==1536, or two 768 bit operands */
-   if (out_size <= 48) { COMBA_STORE2(C->dp[47]); C->used = 48; C->sign = A->sign ^ B->sign; fp_clamp(C); COMBA_FINI; return; }
+   if (out_size <= 48) { COMBA_STORE2(C->dp[47]); C->used = 48; C->sign = A->sign ^ B->sign; fp_clamp(C); COMBA_FINI; return FP_OKAY; }
 
    /* 47 */
    COMBA_FORWARD;
@@ -261,7 +273,7 @@ void fp_mul_comba32(fp_int *A, fp_int *B, fp_int *C)
    COMBA_STORE(C->dp[54]);
 
    /* early out at 56 digits, 56*32==1792, or two 896 bit operands */
-   if (out_size <= 56) { COMBA_STORE2(C->dp[55]); C->used = 56; C->sign = A->sign ^ B->sign; fp_clamp(C); COMBA_FINI; return; }
+   if (out_size <= 56) { COMBA_STORE2(C->dp[55]); C->used = 56; C->sign = A->sign ^ B->sign; fp_clamp(C); COMBA_FINI; return FP_OKAY; }
 
    /* 55 */
    COMBA_FORWARD;
@@ -300,5 +312,10 @@ void fp_mul_comba32(fp_int *A, fp_int *B, fp_int *C)
    C->sign = A->sign ^ B->sign;
    fp_clamp(C);
    COMBA_FINI;
+
+#ifdef WOLFSSL_SMALL_STACK
+   XFREE(at, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+   return FP_OKAY;
 }
 #endif

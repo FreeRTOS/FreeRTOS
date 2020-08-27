@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{38712199-cebf-4124-bf15-398f7c3419ea}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS">
+      <UniqueIdentifier>{af3445a1-4908-4170-89ed-39345d90d30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS\Source">
+      <UniqueIdentifier>{f32be356-4763-4cae-9020-974a2638cb08}</UniqueIdentifier>
+      <Extensions>*.c</Extensions>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\Portable">
+      <UniqueIdentifier>{88f409e6-d396-4ac5-94bd-7a99c914be46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+">
+      <UniqueIdentifier>{e5ad4ec7-23dc-4295-8add-2acaee488f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS\Source\include">
+      <UniqueIdentifier>{d2dcd641-8d91-492b-852f-5563ffadaec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+TCP">
+      <UniqueIdentifier>{8672fa26-b119-481f-8b8d-086419c01a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+TCP\portable">
+      <UniqueIdentifier>{4570be11-ec96-4b55-ac58-24b50ada980a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS+TCP\include">
+      <UniqueIdentifier>{5d93ed51-023a-41ad-9243-8d230165d34b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unity">
+      <UniqueIdentifier>{fdabc401-4468-412c-8dc1-0e366fcdbec1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{623bd581-b971-47af-b62c-ac19b71a44c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application Code">
+      <UniqueIdentifier>{eff6eadc-8f72-4484-807b-6d25a2628276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\include">
+      <UniqueIdentifier>{8443e065-8092-4050-b78d-136c6f166a87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MemMang\heap_4.c">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\event_groups.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\list.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\queue.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\tasks.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\timers.c">
+      <Filter>FreeRTOS\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\BufferManagement\BufferAllocation_2.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\portable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_ARP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DHCP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_DNS.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_IP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_Sockets.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_Stream_Buffer.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_IP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_TCP_WIN.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\FreeRTOS_UDP_IP.c">
+      <Filter>FreeRTOS+\FreeRTOS+TCP</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Code\Test_Cases\test.c">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Code\Test_Cases\test_framework.c">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Code\Test_Cases\test_freertos.c">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Code\Test_Cases\test_tcp.c">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\CMock\vendor\unity\src\unity.c">
+      <Filter>Unity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.c">
+      <Filter>Unity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.c">
+      <Filter>Unity</Filter>
+    </ClCompile>
+    <ClCompile Include="Logging\demo_logging.c" />
+    <ClCompile Include="Logging\run-time-stats-utils.c">
+      <Filter>Application Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Test_Code\Test_Runner\test_runner.c">
+      <Filter>Tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\event_groups.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\FreeRTOS.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\list.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\portable.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\projdefs.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\queue.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\semphr.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\stream_buffer.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\task.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\include\timers.h">
+      <Filter>FreeRTOS\Source\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\portmacro.h">
+      <Filter>FreeRTOS\Source\Portable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_ARP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DHCP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_DNS.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_errno_TCP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_IP_Private.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Sockets.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_Stream_Buffer.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_IP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_TCP_WIN.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOS_UDP_IP.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\FreeRTOSIPConfigDefaults.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\IPTraceMacroDefaults.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkBufferManagement.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\NetworkInterface.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\tcp_dump_packets.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-Plus-TCP\include\tcp_mem_stats.h">
+      <Filter>FreeRTOS+\FreeRTOS+TCP\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\application_version.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\clientcredential.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\config_common.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\test_framework.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\test_runner.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\test_tcp.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\test_tcp_config.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\test_utils.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_Code\Test_Cases\include\unity_config.h">
+      <Filter>Tests\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\CMock\vendor\unity\src\unity.h">
+      <Filter>Unity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\CMock\vendor\unity\src\unity_internals.h">
+      <Filter>Unity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture.h">
+      <Filter>Unity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\CMock\vendor\unity\extras\fixture\src\unity_fixture_internals.h">
+      <Filter>Unity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\CMock\vendor\unity\extras\memory\src\unity_memory.h">
+      <Filter>Unity</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\FreeRTOSConfig.h" />
+    <ClInclude Include="Config\FreeRTOSIPConfig.h" />
+  </ItemGroup>
+</Project>

@@ -1,8 +1,8 @@
 /* fp_mont_small.i
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 
 #ifdef TFM_SMALL_MONT_SET
 /* computes x/R == x (mod N) via Montgomery Reduction */
-void fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
+int fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
 {
-   fp_digit c[FP_SIZE], *_c, *tmpm, mu, cy;
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit c[FP_SIZE];
+#else
+   fp_digit *c;
+#endif
+   fp_digit *_c, *tmpm, mu, cy;
    int      oldused, x, y, pa;
 
-#if defined(USE_MEMSET)
-   /* now zero the buff */
-   memset(c, 0, sizeof c);
+#ifdef WOLFSSL_SMALL_STACK
+   /* only allocate space for what's needed for window plus res */
+   c = (fp_digit*)XMALLOC(sizeof(fp_digit)*FP_SIZE, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (c == NULL) {
+      return FP_MEM;
+   }
 #endif
+
+   /* now zero the buff */
+   XMEMSET(c, 0, sizeof(fp_digit)*(FP_SIZE));
+
    pa = m->used;
 
    /* copy the input */
@@ -38,11 +51,7 @@ void fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
    for (x = 0; x < oldused; x++) {
        c[x] = a->dp[x];
    }
-#if !defined(USE_MEMSET)
-   for (; x < 2*pa+3; x++) {
-       c[x] = 0;
-   }
-#endif
+
    MONT_START;
 
    switch (pa) {
@@ -3855,6 +3864,11 @@ void fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
   if (fp_cmp_mag (a, m) != FP_LT) {
     s_fp_sub (a, m, a);
   }
+
+#ifdef WOLFSSL_SMALL_STACK
+  XFREE(c, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+  return FP_OKAY;
 }
 
 #endif

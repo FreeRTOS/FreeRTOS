@@ -15,4 +15,4 @@ the source code of the libraries that are being refactored.
 
 The /FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta2 directory contains
 the work-in-progress source code of libraries that have already been refactored
-(currently the MQTT library).
+(currently the MQTT and PKCS #11 library).

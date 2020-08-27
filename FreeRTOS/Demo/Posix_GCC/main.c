@@ -75,7 +75,8 @@ The blinky demo is implemented and described in main_blinky.c.
 If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 &
 mainCREATE_TCP_ECHO_TASKS_SINGLE is not 1  then the comprehensive test and
 demo application will be built.  The comprehensive test and demo application is
-implemented and described in main_full.c. */
+implemented and described in main_full.c the tcp echo demo application
+is implemented in main_networking.c. */
 
 #ifndef mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
 	#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0

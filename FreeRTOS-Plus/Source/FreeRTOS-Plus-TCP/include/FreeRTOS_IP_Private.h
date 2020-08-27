@@ -45,6 +45,20 @@ extern "C" {
 
 #include "event_groups.h"
 
+/*-----------------------------------------------------------*/
+/* Utility macros for marking casts as recognized during     */
+/* static analysis.                                          */
+/*-----------------------------------------------------------*/
+#define ipCAST_PTR_TO_TYPE_PTR( TYPE, pointer ) ( vCastPointerTo_##TYPE( ( void * )( pointer ) ) )
+#define ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( TYPE, pointer ) ( vCastConstPointerTo_##TYPE( ( const void * )( pointer ) ) )
+
+/*-----------------------------------------------------------*/
+/* Utility macros for declaring cast utility functions in    */
+/* order to centralize typecasting for static analysis.      */
+/*-----------------------------------------------------------*/
+#define ipDECL_CAST_PTR_FUNC_FOR_TYPE( TYPE ) TYPE * vCastPointerTo_##TYPE( void * pvArgument )
+#define ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( TYPE ) const TYPE * vCastConstPointerTo_##TYPE( const void * pvArgument )
+
 typedef struct xNetworkAddressingParameters
 {
 	uint32_t ulDefaultIPAddress;
@@ -188,6 +202,17 @@ struct xUDP_PACKET
 }
 #include "pack_struct_end.h"
 typedef struct xUDP_PACKET UDPPacket_t;
+
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( UDPPacket_t )
+{
+    /* coverity[misra_c_2012_rule_11_3_violation] */
+    return ( UDPPacket_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( UDPPacket_t )
+{
+    /* coverity[misra_c_2012_rule_11_3_violation] */
+    return ( const UDPPacket_t *) pvArgument;
+}
 
 #include "pack_struct_start.h"
 struct xTCP_PACKET
@@ -827,16 +852,4 @@ void vIPNetworkUpCalls( void );
 #endif
 
 #endif /* FREERTOS_IP_PRIVATE_H */
-
-
-
-
-
-
-
-
-
-
-
-
 

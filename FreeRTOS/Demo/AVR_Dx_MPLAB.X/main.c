@@ -78,7 +78,7 @@ This is usefull in application development, for debugging.  To use this
 hook, uncomment it, and set configCHECK_FOR_STACK_OVERFLOW to 1 in
 "FreeRTOSConfig.h" header file. */
 
-// void vApplicationStackOverflowHook(TaskHandle_t *pxTask, signed char *pcTaskName )
+// void vApplicationStackOverflowHook(TaskHandle_t *pxTask, char *pcTaskName )
 // {
 //     for( ;; );
 // }

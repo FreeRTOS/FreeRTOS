@@ -90,12 +90,10 @@ range 1024-65535" excluding those already in use (inbound or outbound). */
 #if( ipconfigUSE_CALLBACKS != 0 )
 	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( F_TCP_UDP_Handler_t )
 	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
 		return ( F_TCP_UDP_Handler_t *)pvArgument;
 	}
 	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( F_TCP_UDP_Handler_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
+	{	
 		return ( const F_TCP_UDP_Handler_t *) pvArgument;
 	}
 #endif
@@ -103,25 +101,13 @@ range 1024-65535" excluding those already in use (inbound or outbound). */
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( NetworkBufferDescriptor_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( const NetworkBufferDescriptor_t *) pvArgument;
 }
 
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( StreamBuffer_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( StreamBuffer_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( StreamBuffer_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( const StreamBuffer_t *) pvArgument;
 }
 /*-----------------------------------------------------------*/
 
@@ -1352,7 +1338,7 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 	static void prvTCPSetSocketCount( FreeRTOS_Socket_t const * pxSocketToDelete )
 	{
 	const ListItem_t *pxIterator;
-	const ListItem_t *pxEnd = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundTCPSocketsList ) );
+	const ListItem_t *pxEnd = listGET_END_MARKER( &xBoundTCPSocketsList );
 	FreeRTOS_Socket_t *pxOtherSocket;
 	uint16_t usLocalPort = pxSocketToDelete->usLocalPort;
 
@@ -1444,12 +1430,12 @@ FreeRTOS_Socket_t *pxSocket;
 	{
 		case FREERTOS_SO_RCVTIMEO	:
 			/* Receive time out. */
-			pxSocket->xReceiveBlockTime = *( ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( TickType_t, pvOptionValue ) );
+			pxSocket->xReceiveBlockTime = *( ( TickType_t *) pvOptionValue );
 			xReturn = 0;
 			break;
 
 		case FREERTOS_SO_SNDTIMEO	:
-			pxSocket->xSendBlockTime = *( ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( TickType_t, pvOptionValue ) );
+			pxSocket->xSendBlockTime = *( ( TickType_t *) pvOptionValue );
 			if( pxSocket->ucProtocol == ( uint8_t ) FREERTOS_IPPROTO_UDP )
 			{
 				/* The send time out is capped for the reason stated in the
@@ -1675,7 +1661,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( BaseType_t, pvOptionValue ) ) != 0 )
+					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bReuseSocket = pdTRUE;
 					}
@@ -1694,7 +1680,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( BaseType_t, pvOptionValue ) ) != 0 )
+					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bCloseAfterSend = pdTRUE;
 					}
@@ -1713,7 +1699,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( BaseType_t, pvOptionValue ) ) != 0 )
+					if( *( ( BaseType_t *) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.xTCPWindow.u.bits.bSendFullSize = pdTRUE;
 					}
@@ -1739,7 +1725,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( BaseType_t, pvOptionValue ) ) != 0 )
+					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bRxStopped = pdTRUE;
 					}
@@ -1838,7 +1824,7 @@ const ListItem_t * pxResult = NULL;
 	if( ( xIPIsNetworkTaskReady() != pdFALSE ) && ( pxList != NULL ) )
 	{
 		const ListItem_t *pxIterator;
-		const ListItem_t *pxEnd = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( pxList ) );
+		const ListItem_t *pxEnd = listGET_END_MARKER( pxList );
 		for( pxIterator  = listGET_NEXT( pxEnd );
 			 pxIterator != pxEnd;
 			 pxIterator  = listGET_NEXT( pxIterator ) )
@@ -3093,7 +3079,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	TickType_t xNow = xTaskGetTickCount();
 	static TickType_t xLastTime = 0U;
 	TickType_t xDelta = xNow - xLastTime;
-	const ListItem_t* pxEnd = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundTCPSocketsList ) );
+	const ListItem_t* pxEnd = listGET_END_MARKER( &xBoundTCPSocketsList );
 	const ListItem_t *pxIterator = ( const ListItem_t * ) listGET_HEAD_ENTRY( &xBoundTCPSocketsList );
 
 		xLastTime = xNow;
@@ -3177,7 +3163,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 	{
 	const ListItem_t *pxIterator;
 	FreeRTOS_Socket_t *pxResult = NULL, *pxListenSocket = NULL;
-	const ListItem_t *pxEnd = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundTCPSocketsList ) );
+	const ListItem_t *pxEnd = listGET_END_MARKER( &xBoundTCPSocketsList );
 
 		/* Parameter not yet supported. */
 		( void ) ulLocalIP;
@@ -3736,8 +3722,8 @@ BaseType_t FreeRTOS_udp_rx_size( Socket_t xSocket )
 		}
 		else
 		{
-		const ListItem_t *pxEndTCP = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundTCPSocketsList ) );
-		const ListItem_t *pxEndUDP = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundUDPSocketsList ) );
+		const ListItem_t *pxEndTCP = listGET_END_MARKER( &xBoundTCPSocketsList );
+		const ListItem_t *pxEndUDP = listGET_END_MARKER( &xBoundUDPSocketsList );
 			FreeRTOS_printf( ( "Prot Port IP-Remote       : Port  R/T Status       Alive  tmout Child\n" ) );
 			for( pxIterator  = listGET_HEAD_ENTRY( &xBoundTCPSocketsList );
 				 pxIterator != pxEndTCP;
@@ -3817,12 +3803,12 @@ BaseType_t FreeRTOS_udp_rx_size( Socket_t xSocket )
 			const ListItem_t *pxEnd;
 			if( xRound == 0 )
 			{
-				pxEnd = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundUDPSocketsList ) );
+				pxEnd = listGET_END_MARKER( &xBoundUDPSocketsList );
 			}
 		#if ipconfigUSE_TCP == 1
 			else
 			{
-				pxEnd = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ListItem_t, listGET_END_MARKER( &xBoundTCPSocketsList ) );
+				pxEnd = listGET_END_MARKER( &xBoundTCPSocketsList );
 			}
 		#endif /* ipconfigUSE_TCP == 1 */
 			for( pxIterator = listGET_NEXT( pxEnd );

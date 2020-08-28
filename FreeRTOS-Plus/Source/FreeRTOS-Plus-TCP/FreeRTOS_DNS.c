@@ -252,12 +252,10 @@ typedef struct xDNSMessage DNSMessage_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSMessage_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( DNSMessage_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DNSMessage_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const DNSMessage_t *) pvArgument;
 }
 
@@ -274,11 +272,10 @@ struct xDNSTail
 #include "pack_struct_end.h"
 typedef struct xDNSTail DNSTail_t;
 
-	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSTail_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( DNSTail_t * ) pvArgument;
-	}
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSTail_t )
+{
+	return ( DNSTail_t * ) pvArgument;
+}
 
 /* DNS answer record header. */
 #include "pack_struct_start.h"
@@ -292,11 +289,10 @@ struct xDNSAnswerRecord
 #include "pack_struct_end.h"
 typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 
-	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( DNSAnswerRecord_t * ) pvArgument;
-	}
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
+{
+	return ( DNSAnswerRecord_t * ) pvArgument;
+}
 
 #if( ipconfigUSE_LLMNR == 1 )
 
@@ -316,13 +312,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 
 	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( LLMNRAnswer_t )
 	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
 		return ( LLMNRAnswer_t *)pvArgument;
-	}
-	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( LLMNRAnswer_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( const LLMNRAnswer_t *) pvArgument;
 	}
 
 
@@ -363,13 +353,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 
 	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NBNSAnswer_t )
 	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
 		return ( NBNSAnswer_t *)pvArgument;
-	}
-	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( NBNSAnswer_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( const NBNSAnswer_t *) pvArgument;
 	}
 
 	#endif /* ipconfigUSE_NBNS == 1 */
@@ -401,13 +385,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 
 	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSCallback_t )
 	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
 		return ( DNSCallback_t *)pvArgument;
-	}
-	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DNSCallback_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( const DNSCallback_t *) pvArgument;
 	}
 
 	static List_t xCallbackList;

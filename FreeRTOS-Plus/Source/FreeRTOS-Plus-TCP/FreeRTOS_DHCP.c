@@ -156,12 +156,10 @@ typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DHCPMessage_IPv4_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( DHCPMessage_IPv4_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DHCPMessage_IPv4_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( const DHCPMessage_IPv4_t *) pvArgument;
 }
 

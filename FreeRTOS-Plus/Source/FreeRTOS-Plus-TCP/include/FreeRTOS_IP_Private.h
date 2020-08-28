@@ -59,44 +59,6 @@ extern "C" {
 #define ipDECL_CAST_PTR_FUNC_FOR_TYPE( TYPE ) TYPE * vCastPointerTo_##TYPE( void * pvArgument )
 #define ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( TYPE ) const TYPE * vCastConstPointerTo_##TYPE( const void * pvArgument )
 
-
-/* Pointer conversion to BaseType_t */
-static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( BaseType_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( BaseType_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( BaseType_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( const BaseType_t *) pvArgument;
-}
-
-
-static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ListItem_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( ListItem_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ListItem_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( const ListItem_t *) pvArgument;
-}
-
-/* Pointer conversion to TickType_t. */
-static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( TickType_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( TickType_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( TickType_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( const TickType_t *) pvArgument;
-}
-
-
 typedef struct xNetworkAddressingParameters
 {
 	uint32_t ulDefaultIPAddress;
@@ -125,12 +87,11 @@ typedef struct xETH_HEADER EthernetHeader_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( EthernetHeader_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( EthernetHeader_t *)pvArgument;
 }
+
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( EthernetHeader_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const EthernetHeader_t *) pvArgument;
 }
 
@@ -182,12 +143,10 @@ typedef struct xICMP_HEADER ICMPHeader_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ICMPHeader_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( ICMPHeader_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ICMPHeader_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const ICMPHeader_t *) pvArgument;
 }
 
@@ -238,12 +197,10 @@ typedef struct xARP_PACKET ARPPacket_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ARPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( ARPPacket_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ARPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( const ARPPacket_t *) pvArgument;
 }
 
@@ -259,12 +216,10 @@ typedef struct xIP_PACKET IPPacket_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( IPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( IPPacket_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( IPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( const IPPacket_t *) pvArgument;
 }
 
@@ -281,7 +236,6 @@ typedef struct xICMP_PACKET ICMPPacket_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ICMPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( ICMPPacket_t *)pvArgument;
 }
 
@@ -298,12 +252,10 @@ typedef struct xUDP_PACKET UDPPacket_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( UDPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( UDPPacket_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( UDPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( const UDPPacket_t *) pvArgument;
 }
 
@@ -327,12 +279,10 @@ typedef union XPROT_PACKET
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ProtocolPacket_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( ProtocolPacket_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ProtocolPacket_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const ProtocolPacket_t *) pvArgument;
 }
 
@@ -796,12 +746,10 @@ typedef struct xSOCKET
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( FreeRTOS_Socket_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( FreeRTOS_Socket_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( FreeRTOS_Socket_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const FreeRTOS_Socket_t *) pvArgument;
 }
 
@@ -943,12 +891,10 @@ typedef struct xSOCKET_SET
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( SocketSelect_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( SocketSelect_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( SocketSelect_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const SocketSelect_t *) pvArgument;
 }
 
@@ -963,12 +909,10 @@ typedef struct xSocketSelectMessage
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( SocketSelectMessage_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( SocketSelectMessage_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( SocketSelectMessage_t )
 {
-	/* coverity[misra_c_2012_rule_11_3_violation] */
 	return ( const SocketSelectMessage_t *) pvArgument;
 }
 

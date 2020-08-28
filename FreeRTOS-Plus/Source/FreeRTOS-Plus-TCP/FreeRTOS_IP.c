@@ -161,12 +161,10 @@ typedef union _xUnionPtr
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( NetworkBufferDescriptor_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( const NetworkBufferDescriptor_t *) pvArgument;
 }
 

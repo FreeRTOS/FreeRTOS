@@ -85,6 +85,17 @@ struct xETH_HEADER
 #include "pack_struct_end.h"
 typedef struct xETH_HEADER EthernetHeader_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( EthernetHeader_t )
+{
+	return ( EthernetHeader_t *)pvArgument;
+}
+
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( EthernetHeader_t )
+{
+	return ( const EthernetHeader_t *) pvArgument;
+}
+
+
 #include "pack_struct_start.h"
 struct xARP_HEADER
 {
@@ -130,6 +141,16 @@ struct xICMP_HEADER
 #include "pack_struct_end.h"
 typedef struct xICMP_HEADER ICMPHeader_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ICMPHeader_t )
+{
+	return ( ICMPHeader_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ICMPHeader_t )
+{
+	return ( const ICMPHeader_t *) pvArgument;
+}
+
+
 #include "pack_struct_start.h"
 struct xUDP_HEADER
 {
@@ -174,6 +195,16 @@ struct xARP_PACKET
 #include "pack_struct_end.h"
 typedef struct xARP_PACKET ARPPacket_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ARPPacket_t )
+{
+    return ( ARPPacket_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ARPPacket_t )
+{
+    return ( const ARPPacket_t *) pvArgument;
+}
+
+
 #include "pack_struct_start.h"
 struct xIP_PACKET
 {
@@ -182,6 +213,16 @@ struct xIP_PACKET
 }
 #include "pack_struct_end.h"
 typedef struct xIP_PACKET IPPacket_t;
+
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( IPPacket_t )
+{
+    return ( IPPacket_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( IPPacket_t )
+{
+    return ( const IPPacket_t *) pvArgument;
+}
+
 
 #include "pack_struct_start.h"
 struct xICMP_PACKET
@@ -192,6 +233,12 @@ struct xICMP_PACKET
 }
 #include "pack_struct_end.h"
 typedef struct xICMP_PACKET ICMPPacket_t;
+
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ICMPPacket_t )
+{
+    return ( ICMPPacket_t *)pvArgument;
+}
+
 
 #include "pack_struct_start.h"
 struct xUDP_PACKET
@@ -205,12 +252,10 @@ typedef struct xUDP_PACKET UDPPacket_t;
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( UDPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( UDPPacket_t *)pvArgument;
 }
 static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( UDPPacket_t )
 {
-    /* coverity[misra_c_2012_rule_11_3_violation] */
     return ( const UDPPacket_t *) pvArgument;
 }
 
@@ -231,6 +276,15 @@ typedef union XPROT_PACKET
 	UDPPacket_t xUDPPacket;
 	ICMPPacket_t xICMPPacket;
 } ProtocolPacket_t;
+
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ProtocolPacket_t )
+{
+	return ( ProtocolPacket_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ProtocolPacket_t )
+{
+	return ( const ProtocolPacket_t *) pvArgument;
+}
 
 typedef union xPROT_HEADERS
 {
@@ -690,6 +744,15 @@ typedef struct xSOCKET
 	} u;
 } FreeRTOS_Socket_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( FreeRTOS_Socket_t )
+{
+	return ( FreeRTOS_Socket_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( FreeRTOS_Socket_t )
+{
+	return ( const FreeRTOS_Socket_t *) pvArgument;
+}
+
 #if( ipconfigUSE_TCP == 1 )
 	/*
 	 * Lookup a TCP socket, using a multiple matching: both port numbers and
@@ -826,6 +889,15 @@ typedef struct xSOCKET_SET
 	EventGroupHandle_t xSelectGroup;
 } SocketSelect_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( SocketSelect_t )
+{
+	return ( SocketSelect_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( SocketSelect_t )
+{
+	return ( const SocketSelect_t *) pvArgument;
+}
+
 extern void vSocketSelect( SocketSelect_t *pxSocketSet );
 
 /* Define the data that must be passed for a 'eSocketSelectEvent'. */
@@ -834,6 +906,15 @@ typedef struct xSocketSelectMessage
 	TaskHandle_t xTaskhandle;
 	SocketSelect_t *pxSocketSet;
 } SocketSelectMessage_t;
+
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( SocketSelectMessage_t )
+{
+	return ( SocketSelectMessage_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( SocketSelectMessage_t )
+{
+	return ( const SocketSelectMessage_t *) pvArgument;
+}
 
 #endif /* ipconfigSUPPORT_SELECT_FUNCTION */
 

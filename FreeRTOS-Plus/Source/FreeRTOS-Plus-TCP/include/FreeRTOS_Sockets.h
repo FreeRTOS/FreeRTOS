@@ -205,6 +205,12 @@ struct xSOCKET;
 typedef struct xSOCKET *Socket_t;
 typedef struct xSOCKET const * ConstSocket_t;
 
+static portINLINE int prvSocketValid( Socket_t xSocket )
+{
+    /* coverity[misra_c_2012_rule_11_4_violation] */
+    return ( ( xSocket != FREERTOS_INVALID_SOCKET ) && ( xSocket != NULL ) );
+}
+
 #if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
 	/* The SocketSet_t type is the equivalent to the fd_set type used by the
 	Berkeley API. */
@@ -416,16 +422,4 @@ void FreeRTOS_netstat( void );
 #endif
 
 #endif /* FREERTOS_SOCKETS_H */
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -87,18 +87,18 @@ range 1024-65535" excluding those already in use (inbound or outbound). */
 #define sock80_PERCENT						80U
 #define sock100_PERCENT						100U
 
-
-static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( F_TCP_UDP_Handler_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( F_TCP_UDP_Handler_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( F_TCP_UDP_Handler_t )
-{
-	/* coverity[misra_c_2012_rule_11_3_violation] */
-	return ( const F_TCP_UDP_Handler_t *) pvArgument;
-}
-
+#if( ipconfigUSE_CALLBACKS != 0 )
+	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( F_TCP_UDP_Handler_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( F_TCP_UDP_Handler_t *)pvArgument;
+	}
+	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( F_TCP_UDP_Handler_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( const F_TCP_UDP_Handler_t *) pvArgument;
+	}
+#endif
 
 
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )

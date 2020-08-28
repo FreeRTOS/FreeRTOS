@@ -161,7 +161,8 @@ section macros. */
 
 BaseType_t xNetworkBuffersInitialise( void )
 {
-BaseType_t xReturn, x;
+BaseType_t xReturn;
+uint32_t x;
 
 	/* Only initialise the buffers and their associated kernel objects if they
 	have not been initialised before. */
@@ -182,7 +183,7 @@ BaseType_t xReturn, x;
 			from the network interface, and different hardware has different
 			requirements. */
 			vNetworkInterfaceAllocateRAMToBuffers( xNetworkBuffers );
-			for( x = 0; x < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; x++ )
+			for( x = 0U; x < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; x++ )
 			{
 				/* Initialise and set the owner of the buffer list items. */
 				vListInitialiseItem( &( xNetworkBuffers[ x ].xBufferListItem ) );

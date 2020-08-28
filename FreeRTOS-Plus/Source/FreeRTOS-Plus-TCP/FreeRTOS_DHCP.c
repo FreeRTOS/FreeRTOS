@@ -154,6 +154,18 @@ struct xDHCPMessage_IPv4
 #include "pack_struct_end.h"
 typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DHCPMessage_IPv4_t )
+{
+    /* coverity[misra_c_2012_rule_11_3_violation] */
+    return ( DHCPMessage_IPv4_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DHCPMessage_IPv4_t )
+{
+    /* coverity[misra_c_2012_rule_11_3_violation] */
+    return ( const DHCPMessage_IPv4_t *) pvArgument;
+}
+
+
 /* The UDP socket used for all incoming and outgoing DHCP traffic. */
 _static Socket_t xDHCPSocket;
 
@@ -639,7 +651,7 @@ const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct
 	if( lBytes > 0 )
 	{
 		/* Map a DHCP structure onto the received data. */
-		pxDHCPMessage = ipPOINTER_CAST( const DHCPMessage_IPv4_t *, pucUDPPayload );
+		pxDHCPMessage = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( DHCPMessage_IPv4_t, pucUDPPayload );
 
 		/* Sanity check. */
 		if( lBytes < ( int32_t ) sizeof( DHCPMessage_IPv4_t ) )
@@ -887,7 +899,7 @@ uint8_t *pucUDPPayloadBuffer;
 
 	/* Leave space for the UPD header. */
 	pucUDPPayloadBuffer = &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] );
-	pxDHCPMessage = ipPOINTER_CAST( DHCPMessage_IPv4_t *, pucUDPPayloadBuffer );
+	pxDHCPMessage = ipCAST_PTR_TO_TYPE_PTR( DHCPMessage_IPv4_t, pucUDPPayloadBuffer );
 
 	/* Most fields need to be zero. */
 	( void ) memset( pxDHCPMessage, 0x00, sizeof( DHCPMessage_IPv4_t ) );

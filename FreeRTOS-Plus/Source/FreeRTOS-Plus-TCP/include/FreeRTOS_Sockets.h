@@ -203,6 +203,7 @@ extern const char *FreeRTOS_inet_ntoa( uint32_t ulIPAddress, char *pcBuffer );
 /* The socket type itself. */
 struct xSOCKET;
 typedef struct xSOCKET *Socket_t;
+
 typedef struct xSOCKET const * ConstSocket_t;
 
 static portINLINE int prvSocketValid( Socket_t xSocket )
@@ -364,6 +365,7 @@ uint8_t *FreeRTOS_get_tx_head( ConstSocket_t xSocket, BaseType_t *pxLength );
 		FOnUDPReceive_t	pxOnUDPReceive;		/* FREERTOS_SO_UDP_RECV_HANDLER */
 		FOnUDPSent_t	pxOnUDPSent;		/* FREERTOS_SO_UDP_SENT_HANDLER */
 	} F_TCP_UDP_Handler_t;
+
 #endif	/* ( ipconfigUSE_CALLBACKS != 0 ) */
 
 BaseType_t FreeRTOS_setsockopt( Socket_t xSocket, int32_t lLevel, int32_t lOptionName, const void *pvOptionValue, size_t uxOptionLength );

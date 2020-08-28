@@ -250,16 +250,16 @@ struct xDNSMessage
 #include "pack_struct_end.h"
 typedef struct xDNSMessage DNSMessage_t;
 
-	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSMessage_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( DNSMessage_t *)pvArgument;
-	}
-	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DNSMessage_t )
-	{
-		/* coverity[misra_c_2012_rule_11_3_violation] */
-		return ( const DNSMessage_t *) pvArgument;
-	}
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSMessage_t )
+{
+	/* coverity[misra_c_2012_rule_11_3_violation] */
+	return ( DNSMessage_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DNSMessage_t )
+{
+	/* coverity[misra_c_2012_rule_11_3_violation] */
+	return ( const DNSMessage_t *) pvArgument;
+}
 
 /* A DNS query consists of a header, as described in 'struct xDNSMessage'
 It is followed by 1 or more queries, each one consisting of a name and a tail,
@@ -314,6 +314,18 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 	#include "pack_struct_end.h"
 	typedef struct xLLMNRAnswer LLMNRAnswer_t;
 
+	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( LLMNRAnswer_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( LLMNRAnswer_t *)pvArgument;
+	}
+	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( LLMNRAnswer_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( const LLMNRAnswer_t *) pvArgument;
+	}
+
+
 #endif /* ipconfigUSE_LLMNR == 1 */
 
 #if( ipconfigUSE_NBNS == 1 )
@@ -349,6 +361,17 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 	#include "pack_struct_end.h"
 	typedef struct xNBNSAnswer NBNSAnswer_t;
 
+	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NBNSAnswer_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( NBNSAnswer_t *)pvArgument;
+	}
+	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( NBNSAnswer_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( const NBNSAnswer_t *) pvArgument;
+	}
+
 	#endif /* ipconfigUSE_NBNS == 1 */
 
 /*-----------------------------------------------------------*/
@@ -375,6 +398,17 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 		struct xLIST_ITEM xListItem;
 		char pcName[ 1 ];
 	} DNSCallback_t;
+
+	static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSCallback_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( DNSCallback_t *)pvArgument;
+	}
+	static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DNSCallback_t )
+	{
+		/* coverity[misra_c_2012_rule_11_3_violation] */
+		return ( const DNSCallback_t *) pvArgument;
+	}
 
 	static List_t xCallbackList;
 
@@ -408,7 +442,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 				 pxIterator != xEnd;
 				 )
 			{
-				DNSCallback_t *pxCallback = ipPOINTER_CAST( DNSCallback_t *, listGET_LIST_ITEM_OWNER( pxIterator ) );
+				DNSCallback_t *pxCallback = ipCAST_PTR_TO_TYPE_PTR( DNSCallback_t, listGET_LIST_ITEM_OWNER( pxIterator ) );
 				/* Move to the next item because we might remove this item */
 				pxIterator = ( const ListItem_t * ) listGET_NEXT( pxIterator );
 				if( ( pvSearchID != NULL ) && ( pvSearchID == pxCallback->pvSearchID ) )
@@ -453,7 +487,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 								 TickType_t uxIdentifier )
 	{
 	size_t lLength = strlen( pcHostName );
-	DNSCallback_t *pxCallback = ipPOINTER_CAST( DNSCallback_t *, pvPortMalloc( sizeof( *pxCallback ) + lLength ) );
+	DNSCallback_t *pxCallback = ipCAST_PTR_TO_TYPE_PTR( DNSCallback_t, pvPortMalloc( sizeof( *pxCallback ) + lLength ) );
 
 		/* Translate from ms to number of clock ticks. */
 		uxTimeout /= portTICK_PERIOD_MS;
@@ -471,7 +505,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 			pxCallback->pvSearchID = pvSearchID;
 			pxCallback->uxRemaningTime = uxTimeout;
 			vTaskSetTimeOutState( &pxCallback->uxTimeoutState );
-			listSET_LIST_ITEM_OWNER( &( pxCallback->xListItem ), ipPOINTER_CAST( void *, pxCallback ) );
+			listSET_LIST_ITEM_OWNER( &( pxCallback->xListItem ), ( void *) pxCallback );
 			listSET_LIST_ITEM_VALUE( &( pxCallback->xListItem ), uxIdentifier );
 			vTaskSuspendAll();
 			{
@@ -500,7 +534,7 @@ typedef struct xDNSAnswerRecord DNSAnswerRecord_t;
 			{
 				if( listGET_LIST_ITEM_VALUE( pxIterator ) == uxIdentifier )
 				{
-				DNSCallback_t *pxCallback = ipPOINTER_CAST( DNSCallback_t *, listGET_LIST_ITEM_OWNER( pxIterator ) );
+				DNSCallback_t *pxCallback = ipCAST_PTR_TO_TYPE_PTR( DNSCallback_t, listGET_LIST_ITEM_OWNER( pxIterator ) );
 
 					pxCallback->pCallbackFunction( pcName, pxCallback->pvSearchID, ulIPAddress );
 					( void ) uxListRemove( &pxCallback->xListItem );
@@ -1415,7 +1449,7 @@ BaseType_t xReturn = pdTRUE;
 					/* The test on 'pucNewBuffer' is only to satisfy lint. */
 					if( ( pxNetworkBuffer != NULL ) && ( pucNewBuffer != NULL ) )
 					{
-						pxAnswer = ipPOINTER_CAST( LLMNRAnswer_t *, pucByte );
+						pxAnswer = ipCAST_PTR_TO_TYPE_PTR( LLMNRAnswer_t, pucByte );
 
 						/* We leave 'usIdentifier' and 'usQuestions' untouched */
 						#ifndef _lint
@@ -1604,8 +1638,8 @@ BaseType_t xReturn = pdTRUE;
 					#else
 					( void ) pxMessage;
 					#endif
-
-					pxAnswer = ipPOINTER_CAST( NBNSAnswer_t *, &( pucUDPPayloadBuffer[ offsetof( NBNSRequest_t, usType ) ] ) );
+					
+					pxAnswer = ipCAST_PTR_TO_TYPE_PTR( NBNSAnswer_t, &( pucUDPPayloadBuffer[ offsetof( NBNSRequest_t, usType ) ] ) );
 
 					#ifndef _lint
 					vSetField16( pxAnswer, NBNSAnswer_t, usType, usType );            /* Type */

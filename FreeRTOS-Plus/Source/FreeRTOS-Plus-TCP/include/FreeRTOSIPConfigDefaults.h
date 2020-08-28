@@ -500,7 +500,7 @@ answers on successive calls to FreeRTOS_gethostbyname(). */
 #endif
 
 #ifndef ipconfigUSE_CALLBACKS
-	#define ipconfigUSE_CALLBACKS			( 0 )
+	#define ipconfigUSE_CALLBACKS			( 1 )
 #endif
 
 #if( ipconfigUSE_CALLBACKS != 0 )

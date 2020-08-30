@@ -660,6 +660,7 @@ int32_t FreeRTOS_recvfrom( Socket_t xSocket, void *pvBuffer, size_t uxBufferLeng
 {
 BaseType_t lPacketCount;
 NetworkBufferDescriptor_t *pxNetworkBuffer;
+const void *pvCopySource;
 FreeRTOS_Socket_t const * pxSocket = xSocket;
 TickType_t xRemainingTime = ( TickType_t ) 0; /* Obsolete assignment, but some compilers output a warning if its not done. */
 BaseType_t xTimed = pdFALSE;
@@ -789,7 +790,8 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 
 				/* Copy the received data into the provided buffer, then release the
 				network buffer. */
-				( void ) memcpy( pvBuffer, &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] ), ( size_t )lReturn );
+				pvCopySource = ( const void *) &pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ];
+				( void ) memcpy( pvBuffer, pvCopySource, ( size_t )lReturn );
 
 				if( ( ( UBaseType_t ) xFlags & ( UBaseType_t ) FREERTOS_MSG_PEEK ) == 0U )
 				{
@@ -827,6 +829,7 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 int32_t FreeRTOS_sendto( Socket_t xSocket, const void *pvBuffer, size_t uxTotalDataLength, BaseType_t xFlags, const struct freertos_sockaddr *pxDestinationAddress, socklen_t xDestinationAddressLength )
 {
 NetworkBufferDescriptor_t *pxNetworkBuffer;
+void *pvCopyDest;
 IPStackEvent_t xStackTxEvent = { eStackTxEvent, NULL };
 TimeOut_t xTimeOut;
 TickType_t xTicksToWait;
@@ -883,7 +886,8 @@ const size_t uxPayloadOffset = ( size_t ) ipUDP_PAYLOAD_OFFSET_IPv4;
 
 				if( pxNetworkBuffer != NULL )
 				{
-					( void ) memcpy( &( pxNetworkBuffer->pucEthernetBuffer[ uxPayloadOffset ] ), pvBuffer, uxTotalDataLength );
+					pvCopyDest = ( void * ) &pxNetworkBuffer->pucEthernetBuffer[ uxPayloadOffset ];
+					( void ) memcpy( pvCopyDest, pvBuffer, uxTotalDataLength );
 
 					if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdTRUE )
 					{
@@ -1971,6 +1975,7 @@ const char *pcResult;
 const char *FreeRTOS_inet_ntop4( const void *pvSource, char *pcDestination, socklen_t uxSize )
 {
 uint32_t ulIPAddress;
+void *pvCopyDest;
 const char *pcReturn;
 
 	if( uxSize < 16U )
@@ -1980,7 +1985,8 @@ const char *pcReturn;
 	}
 	else
 	{
-		( void ) memcpy( &( ulIPAddress ), pvSource, sizeof( ulIPAddress ) );
+		pvCopyDest = ( void * ) &ulIPAddress;
+		( void ) memcpy( pvCopyDest, pvSource, sizeof( ulIPAddress ) );
 		( void ) FreeRTOS_inet_ntoa( ulIPAddress, pcDestination );
 		pcReturn = pcDestination;
 	}
@@ -1996,6 +2002,7 @@ uint32_t ulReturn = 0UL, ulValue;
 UBaseType_t uxOctetNumber;
 BaseType_t xResult = pdPASS;
 const char *pcIPAddress = pcSource;
+const void *pvCopySource;
 
 	/* Translate "192.168.2.100" to a 32-bit number, network-endian. */
 	for( uxOctetNumber = 0U; uxOctetNumber < socketMAX_IP_ADDRESS_OCTETS; uxOctetNumber++ )
@@ -2076,7 +2083,8 @@ const char *pcIPAddress = pcSource;
 	{
 		ulReturn = 0UL;
 	}
-	( void ) memcpy( pvDestination, &( ulReturn ), sizeof( ulReturn ) );
+	pvCopySource = ( const void * ) &ulReturn;
+	( void ) memcpy( pvDestination, pvCopySource, sizeof( ulReturn ) );
 
 	return xResult;
 }

@@ -2096,6 +2096,7 @@ uint8_t ucProtocol;
 		if( xResult != pdPASS )
 		{
 			FreeRTOS_printf( ( "xCheckSizeFields: location %ld\n", xLocation ) );
+			( void ) xLocation;
 		}
 
 		return xResult;
@@ -2370,6 +2371,7 @@ BaseType_t location = 0;
 		( usChecksum == ipINVALID_LENGTH ) )
 	{
 		FreeRTOS_printf( ( "CRC error: %04x location %ld\n", usChecksum, location ) );
+		( void ) location;
 	}
 
 	return usChecksum;

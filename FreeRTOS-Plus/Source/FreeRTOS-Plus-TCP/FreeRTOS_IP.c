@@ -2105,6 +2105,11 @@ uint8_t ucProtocol;
 		if( xResult != pdPASS )
 		{
 			FreeRTOS_printf( ( "xCheckSizeFields: location %ld\n", xLocation ) );
+			
+			/* If FreeRTOS_printf is not defined, not using xLocation will be a violation of MISRA
+			 * rule 2.2 as the value assigned to xLocation will not be used. The below statement uses
+			 * the variable without modifying the logic of the source. */
+			( void ) xLocation;
 		}
 
 		return xResult;
@@ -2379,6 +2384,11 @@ BaseType_t location = 0;
 		( usChecksum == ipINVALID_LENGTH ) )
 	{
 		FreeRTOS_printf( ( "CRC error: %04x location %ld\n", usChecksum, location ) );
+		
+		/* If FreeRTOS_printf is not defined, not using 'location' will be a violation of MISRA
+		 * rule 2.2 as the value assigned to 'location' will not be used. The below statement uses
+		 * the variable without modifying the logic of the source. */
+		( void ) location;
 	}
 
 	return usChecksum;

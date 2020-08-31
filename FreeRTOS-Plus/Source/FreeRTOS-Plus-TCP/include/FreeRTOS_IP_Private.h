@@ -129,6 +129,16 @@ struct xIP_HEADER
 #include "pack_struct_end.h"
 typedef struct xIP_HEADER IPHeader_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( IPHeader_t )
+{
+	return ( IPHeader_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( IPHeader_t )
+{
+	return ( const IPHeader_t *) pvArgument;
+}
+
+
 #include "pack_struct_start.h"
 struct xICMP_HEADER
 {
@@ -269,6 +279,17 @@ struct xTCP_PACKET
 #include "pack_struct_end.h"
 typedef struct xTCP_PACKET TCPPacket_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( TCPPacket_t )
+{
+    return ( TCPPacket_t *)pvArgument;
+}
+
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( TCPPacket_t )
+{
+	return ( const TCPPacket_t *) pvArgument;
+}
+
+
 typedef union XPROT_PACKET
 {
 	ARPPacket_t xARPPacket;
@@ -293,6 +314,15 @@ typedef union xPROT_HEADERS
 	TCPHeader_t xTCPHeader;
 } ProtocolHeaders_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( ProtocolHeaders_t )
+{
+	return ( ProtocolHeaders_t *)pvArgument;
+}
+
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( ProtocolHeaders_t )
+{
+	return ( const ProtocolHeaders_t *) pvArgument;
+}
 
 /* The maximum UDP payload length. */
 #define ipMAX_UDP_PAYLOAD_LENGTH ( ( ipconfigNETWORK_MTU - ipSIZE_OF_IPv4_HEADER ) - ipSIZE_OF_UDP_HEADER )

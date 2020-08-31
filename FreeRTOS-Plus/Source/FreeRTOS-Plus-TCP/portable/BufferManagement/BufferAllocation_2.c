@@ -95,7 +95,8 @@ static SemaphoreHandle_t xNetworkBufferSemaphore = NULL;
 
 BaseType_t xNetworkBuffersInitialise( void )
 {
-BaseType_t xReturn, x;
+BaseType_t xReturn;
+uint32_t x;
 
 	/* Only initialise the buffers and their associated kernel objects if they
 	have not been initialised before. */
@@ -126,7 +127,7 @@ BaseType_t xReturn, x;
 
 			/* Initialise all the network buffers.  No storage is allocated to
 			the buffers yet. */
-			for( x = 0; x < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; x++ )
+			for( x = 0U; x < ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS; x++ )
 			{
 				/* Initialise and set the owner of the buffer list items. */
 				xNetworkBufferDescriptors[ x ].pucEthernetBuffer = NULL;
@@ -248,7 +249,7 @@ size_t uxCount;
 
 			/* Allocate storage of exactly the requested size to the buffer. */
 			configASSERT( pxReturn->pucEthernetBuffer == NULL );
-			if( xRequestedSizeBytes > 0 )
+			if( xRequestedSizeBytes > 0U )
 			{
 				/* Extra space is obtained so a pointer to the network buffer can
 				be stored at the beginning of the buffer. */

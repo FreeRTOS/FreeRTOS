@@ -30,46 +30,62 @@
 extern "C" {
 #endif
 
-#include "FreeRTOS.h"
-#include "task.h"
+/* Application level configuration options. */
+#include "FreeRTOSIPConfig.h"
+#include "FreeRTOSIPConfigDefaults.h"
+#include "IPTraceMacroDefaults.h"
+
+/* Some constants defining the sizes of several parts of a packet.
+These defines come before inlucding the configuration header files. */
+#define ipSIZE_OF_ETH_HEADER			14U
+#define ipSIZE_OF_IPv4_HEADER			20U
+#define ipSIZE_OF_IPv6_HEADER			40U
+#define ipSIZE_OF_IGMP_HEADER			8U
+#define ipSIZE_OF_ICMPv4_HEADER			8U
+#define ipSIZE_OF_ICMPv6_HEADER			24U
+#define ipSIZE_OF_UDP_HEADER			8U
+#define ipSIZE_OF_TCP_HEADER			20U
 
 /* Application level configuration options. */
 #include "FreeRTOSIPConfig.h"
 #include "FreeRTOSIPConfigDefaults.h"
 #include "IPTraceMacroDefaults.h"
 
-#ifdef __COVERITY__
-	/* Coverity static checks don't like inlined functions.
-	As it is up to the users to allow inlining, don't let
-	let Coverity know about it. */
+#define ipSIZE_OF_IPv4_ADDRESS	4U
+#define ipSIZE_OF_IPv6_ADDRESS	16U
 
-	#ifdef portINLINE
-		/* The usage of #undef violates the rule. */
-		#undef portINLINE
+#if( ipconfigUSE_IPv6 != 0 )
 
+	struct xIPv6_Address
+	{
+		uint8_t ucBytes[ 16 ];
+	};
+
+	typedef struct xIPv6_Address IPv6_Address_t;
+
+	#ifndef _MSC_VER
+		extern const struct xIPv6_Address in6addr_any;
+		extern const struct xIPv6_Address in6addr_loopback;
+	#else
+		/* Microsoft visual C already has these objects defined.
+		Name them slightly different. */
+		extern const struct xIPv6_Address FreeRTOS_in6addr_any;
+		extern const struct xIPv6_Address FreeRTOS_in6addr_loopback;
+		#define in6addr_any			FreeRTOS_in6addr_any
+		#define in6addr_loopback	FreeRTOS_in6addr_loopback
 	#endif
 
-	#define	portINLINE
-#endif
+	/* Note that 'xCompareIPv6_Address' will also check if 'pxRight' is
+	the special unicast address: ff02::1:ffnn:nnnn, where nn:nnnn are
+	the last 3 bytes of the IPv6 address. */
+	BaseType_t xCompareIPv6_Address( const IPv6_Address_t *pxLeft, const IPv6_Address_t *pxRight, size_t uxPrefixLength );
 
-/* Some constants defining the sizes of several parts of a packet.
-These defines come before inlucding the configuration header files. */
-/* The size of the Ethernet header is 14, meaning that 802.1Q VLAN tags
-are not ( yet ) supported. */
-#define ipSIZE_OF_ETH_HEADER			14U
-#define ipSIZE_OF_IPv4_HEADER			20U
-#define ipSIZE_OF_IGMP_HEADER			8U
-#define ipSIZE_OF_ICMP_HEADER			8U
-#define ipSIZE_OF_UDP_HEADER			8U
-#define ipSIZE_OF_TCP_HEADER			20U
-
-#define ipSIZE_OF_IPv4_ADDRESS	4U
+#endif /* ipconfigUSE_IPv6 */
 
 /*
  * Generate a randomized TCP Initial Sequence Number per RFC.
- * This function must be provided by the application builder.
+ * This function must be provided my the application builder.
  */
-/* This function is defined generally by the application. */
 extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 													uint16_t usSourcePort,
 													uint32_t ulDestinationAddress,
@@ -80,10 +96,28 @@ extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 #define ipIP_ADDRESS_LENGTH_BYTES ( 4 )
 
 /* IP protocol definitions. */
+#define ipPROTOCOL_EXT_HEADER	( 0U )	/* Extension header, IPv6 only. */
 #define ipPROTOCOL_ICMP			( 1U )
 #define ipPROTOCOL_IGMP         ( 2U )
 #define ipPROTOCOL_TCP			( 6U )
 #define ipPROTOCOL_UDP			( 17U )
+
+#define ipPROTOCOL_ICMP_IPv6	( 58U )
+
+#define ipTYPE_IPv4				( 0x40U )
+#define ipTYPE_IPv6				( 0x60U )
+
+/* Some IPv6 ICMP requests. */
+#define ipICMP_DEST_UNREACHABLE_IPv6		( ( uint8_t )   1U )
+#define ipICMP_PACKET_TOO_BIG_IPv6			( ( uint8_t )   2U )
+#define ipICMP_TIME_EXEEDED_IPv6			( ( uint8_t )   3U )
+#define ipICMP_PARAMETER_PROBLEM_IPv6		( ( uint8_t )   4U )
+#define ipICMP_PING_REQUEST_IPv6			( ( uint8_t ) 128U )
+#define ipICMP_PING_REPLY_IPv6				( ( uint8_t ) 129U )
+#define ipICMP_ROUTER_SOLICITATION_IPv6		( ( uint8_t ) 133U )
+#define ipICMP_ROUTER_ADVERTISEMENT_IPv6	( ( uint8_t ) 134U )
+#define ipICMP_NEIGHBOR_SOLICITATION_IPv6	( ( uint8_t ) 135U )
+#define ipICMP_NEIGHBOR_ADVERTISEMENT_IPv6	( ( uint8_t ) 136U )
 
 /* The character used to fill ICMP echo requests, and therefore also the
 character expected to fill ICMP echo replies. */
@@ -119,6 +153,12 @@ buffer will have the following contents:
     #define ipBUFFER_PADDING    ( 8U + ipconfigPACKET_FILLER_SIZE )
 #endif
 
+/* A forward declaration of 'struct xNetworkEndPoint' and 'xNetworkInterface'.
+The actual declaration can be found in FreeRTOS_Routing.h which is included
+as the last +TCP header file. */
+struct xNetworkEndPoint;
+struct xNetworkInterface;
+
 /* The structure used to store buffers and pass them around the network stack.
 Buffers can be in use by the stack, in use by the network interface hardware
 driver, or free (not in use). */
@@ -128,10 +168,15 @@ typedef struct xNETWORK_BUFFER
 	uint32_t ulIPAddress;			/* Source or destination IP address, depending on usage scenario. */
 	uint8_t *pucEthernetBuffer; 	/* Pointer to the start of the Ethernet frame. */
 	size_t xDataLength; 			/* Starts by holding the total Ethernet frame length, then the UDP/TCP payload length. */
+	struct xNetworkInterface *pxInterface;	/* The interface on which the packet was received. */
+	struct xNetworkEndPoint *pxEndPoint;	/* The end-point through which this packet shall be sent. */
 	uint16_t usPort;				/* Source or destination port, depending on usage scenario. */
 	uint16_t usBoundPort;			/* The port to which a transmitting socket is bound. */
 	#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
 		struct xNETWORK_BUFFER *pxNextBuffer; /* Possible optimisation for expert users - requires network driver support. */
+	#endif
+	#if( ipconfigUSE_IPv6 != 0 )
+		IPv6_Address_t xIPv6_Address;
 	#endif
 } NetworkBufferDescriptor_t;
 
@@ -150,8 +195,6 @@ typedef enum eNETWORK_EVENTS
 	eNetworkDown	/* The network connection has been lost. */
 } eIPCallbackEvent_t;
 
-/* MISRA check: some modules refer to this typedef even though
-ipconfigSUPPORT_OUTGOING_PINGS is not enabled. */
 typedef enum ePING_REPLY_STATUS
 {
 	eSuccess = 0,		/* A correct reply has been received for an outgoing ping. */
@@ -228,7 +271,7 @@ typedef struct xIP_TIMER
 	#define FreeRTOS_min_int32(a,b)  ( ( ( ( int32_t  ) a ) <= ( ( int32_t  ) b ) ) ? ( ( int32_t  ) a ) : ( ( int32_t  ) b ) )
 	#define FreeRTOS_min_uint32(a,b) ( ( ( ( uint32_t ) a ) <= ( ( uint32_t ) b ) ) ? ( ( uint32_t ) a ) : ( ( uint32_t ) b ) )
 
-	/*  Round-up: divide a by d and round=up the result. */
+	/*  Round-up: a = d * ( ( a + d - 1 ) / d ) */
 	#define FreeRTOS_round_up(a,d)   ( ( ( uint32_t ) ( d ) ) * ( ( ( ( uint32_t ) ( a ) ) + ( ( uint32_t ) ( d ) ) - 1UL ) / ( ( uint32_t ) ( d ) ) ) )
 	#define FreeRTOS_round_down(a,d) ( ( ( uint32_t ) ( d ) ) * ( ( ( uint32_t ) ( a ) ) / ( ( uint32_t ) ( d ) ) ) )
 
@@ -256,45 +299,72 @@ typedef struct xIP_TIMER
  * FUNCTIONS IS AVAILABLE ON THE FOLLOWING URL:
  * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/FreeRTOS_TCP_API_Functions.html
  */
-BaseType_t FreeRTOS_IPInit( const uint8_t ucIPAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-	const uint8_t ucNetMask[ ipIP_ADDRESS_LENGTH_BYTES ],
-	const uint8_t ucGatewayAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-	const uint8_t ucDNSServerAddress[ ipIP_ADDRESS_LENGTH_BYTES ],
-	const uint8_t ucMACAddress[ ipMAC_ADDRESS_LENGTH_BYTES ] );
 
+/* FreeRTOS_IPStart() replaces the earlier FreeRTOS_IPInit().  It assumes
+that network interfaces and IP-addresses have been added using the functions
+from FreeRTOS_Routing.h. */
+BaseType_t FreeRTOS_IPStart( void );
+
+#if( ipconfigUSE_IPv6 != 0 )
+	/* The last parameter is either ipTYPE_IPv4 or ipTYPE_IPv6. */
+	void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes, TickType_t uxBlockTimeTicks, uint8_t ucIPType );
+#else
 void * FreeRTOS_GetUDPPayloadBuffer( size_t uxRequestedSizeBytes, TickType_t uxBlockTimeTicks );
+#endif
+/*
+ * Calculates the starting offset of the UDP payload.
+ * If IPv6 enabled, checks for ( usFrameType == ipIPv6_FRAME_TYPE )
+ */
+uint8_t *pcNetworkBuffer_to_UDPPayloadBuffer( NetworkBufferDescriptor_t *pxNetworkBuffer );
+
+/*
+ * Returns the addresses stored in an end-point structure.
+ * This function already existed in the release with the single-interface.
+ * Only the first parameters is new: an end-point
+ */
 void FreeRTOS_GetAddressConfiguration( uint32_t *pulIPAddress,
 									   uint32_t *pulNetMask,
 									   uint32_t *pulGatewayAddress,
-									   uint32_t *pulDNSServerAddress );
+									   uint32_t *pulDNSServerAddress,
+									   struct xNetworkEndPoint *pxEndPoint );
 
 void FreeRTOS_SetAddressConfiguration( const uint32_t *pulIPAddress,
 									   const uint32_t *pulNetMask,
 									   const uint32_t *pulGatewayAddress,
-									   const uint32_t *pulDNSServerAddress );
+									   const uint32_t *pulDNSServerAddress,
+									   struct xNetworkEndPoint *pxEndPoint );
 
-/* MISRA defining 'FreeRTOS_SendPingRequest' should be dependent on 'ipconfigSUPPORT_OUTGOING_PINGS'.
-In order not to break some existing project, define it unconditionally. */
 BaseType_t FreeRTOS_SendPingRequest( uint32_t ulIPAddress, size_t uxNumberOfBytesToSend, TickType_t uxBlockTimeTicks );
-
-void FreeRTOS_ReleaseUDPPayloadBuffer( void const * pvBuffer );
-const uint8_t * FreeRTOS_GetMACAddress( void );
-void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ipMAC_ADDRESS_LENGTH_BYTES] );
-#if( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
-	/* This function shall be defined by the application. */
-	void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
-#endif
-#if ( ipconfigSUPPORT_OUTGOING_PINGS == 1 )
+void FreeRTOS_ReleaseUDPPayloadBuffer( void *pvBuffer );
+/* _HT_ FreeRTOS_GetMACAddress() can not continue to exist with multiple interfaces.*/
+//const uint8_t * FreeRTOS_GetMACAddress( void );
+void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent, struct xNetworkEndPoint *pxEndPoint );
 	void vApplicationPingReplyHook( ePingReplyStatus_t eStatus, uint16_t usIdentifier );
-#endif
 uint32_t FreeRTOS_GetIPAddress( void );
+/*
+	_HT_ : these functions come from the IPv4-only library.
+	They should get an extra parameter, the end-point
 void FreeRTOS_SetIPAddress( uint32_t ulIPAddress );
 void FreeRTOS_SetNetmask( uint32_t ulNetmask );
 void FreeRTOS_SetGatewayAddress( uint32_t ulGatewayAddress );
 uint32_t FreeRTOS_GetGatewayAddress( void );
 uint32_t FreeRTOS_GetDNSServerAddress( void );
 uint32_t FreeRTOS_GetNetmask( void );
+*/
+
 void FreeRTOS_OutputARPRequest( uint32_t ulIPAddress );
+
+/* Return true if a given end-point is up and running.
+When FreeRTOS_IsNetworkUp() is called with NULL as a parameter,
+it will return pdTRUE when all end-points are up. */
+BaseType_t FreeRTOS_IsEndPointUp( const struct xNetworkEndPoint *pxEndPoint );
+
+/* Return pdTRUE if all end-points are up.
+When pxInterface is null, all end-points will be checked. */
+BaseType_t FreeRTOS_AllEndPointsUp( const struct xNetworkInterface *pxInterface );
+
+/* For backward compatibility: FreeRTOS_IsNetworkUp() returns true
+as soon as all end-points are up. */
 BaseType_t FreeRTOS_IsNetworkUp( void );
 
 #if( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
@@ -318,13 +388,16 @@ const char *FreeRTOS_GetTCPStateName( UBaseType_t ulState);
 /* _HT_ Temporary: show all valid ARP entries
  */
 void FreeRTOS_PrintARPCache( void );
-void FreeRTOS_ClearARP( void );
+#if( ipconfigUSE_IPv6 != 0 )
+	void FreeRTOS_ClearND( void );
+#endif/* ( ipconfigUSE_IPv6 != 0 ) */
 
 /* Return pdTRUE if the IPv4 address is a multicast address. */
 BaseType_t xIsIPv4Multicast( uint32_t ulIPAddress );
 
-/* Set the MAC-address that belongs to a given IPv4 multi-cast address. */
-void vSetMultiCastIPv4MacAddress( uint32_t ulIPAddress, MACAddress_t *pxMACAddress );
+#if( ipconfigUSE_IPv6 != 0 )
+	BaseType_t xIsIPv6Multicast( const IPv6_Address_t *pxIPAddress );
+#endif/* ( ipconfigUSE_IPv6 != 0 ) */
 
 #if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 
@@ -332,7 +405,6 @@ void vSetMultiCastIPv4MacAddress( uint32_t ulIPAddress, MACAddress_t *pxMACAddre
 	have much use, except that a device can be found in a router along with its
 	name. If this option is used the callback below must be provided by the
 	application	writer to return a const string, denoting the device's name. */
-	/* Typically this function is defined in a user module. */
 	const char *pcApplicationHostnameHook( void );
 
 #endif /* ipconfigDHCP_REGISTER_HOSTNAME */
@@ -345,9 +417,7 @@ The function is defined in 'iot_secure_sockets.c'.
 If that module is not included in the project, the application must provide an
 implementation of it.
 The macro's ipconfigRAND32() and configRAND32() are not in use anymore. */
-/* "xApplicationGetRandomNumber" is declared but never defined, because it may
-be defined in a user module. */
-extern BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber );
+BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber );
 
 /* For backward compatibility define old structure names to the newer equivalent
 structure name. */

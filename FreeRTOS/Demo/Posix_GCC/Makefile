@@ -9,11 +9,11 @@ BUILD_DIR := build
 INCLUDE_DIRS := -I. 
 INCLUDE_DIRS += -I utils 
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/include
-INCLUDE_DIRS +=	-I${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix
-INCLUDE_DIRS +=	-I${FREERTOS_DIR}/Demo/Common/include
-INCLUDE_DIRS +=	-I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
-INCLUDE_DIRS +=	-I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/
-INCLUDE_DIRS +=	-I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/include/
+INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix
+INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/
+INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/include/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/
 
 SOURCE_FILES := $(wildcard *.c)

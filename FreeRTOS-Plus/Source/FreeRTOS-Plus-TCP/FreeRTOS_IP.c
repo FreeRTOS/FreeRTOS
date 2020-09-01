@@ -2600,8 +2600,8 @@ EthernetHeader_t *pxEthernetHeader;
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( &( pxEthernetHeader->xDestinationAddress ), &( pxEthernetHeader->xSourceAddress ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( &( pxEthernetHeader->xSourceAddress) , ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
+		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );

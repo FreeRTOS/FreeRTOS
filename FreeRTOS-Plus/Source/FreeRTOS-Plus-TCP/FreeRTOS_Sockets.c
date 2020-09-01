@@ -901,7 +901,7 @@ const size_t uxPayloadOffset = ( size_t ) ipUDP_PAYLOAD_OFFSET_IPv4;
 				/* When zero copy is used, pvBuffer is a pointer to the
 				payload of a buffer that has already been obtained from the
 				stack.  Obtain the network buffer pointer from the buffer. */
-				pxNetworkBuffer = pxUDPPayloadBuffer_to_NetworkBuffer( ( void * ) pvBuffer );
+				pxNetworkBuffer = pxUDPPayloadBuffer_to_NetworkBuffer( pvBuffer );
 			}
 
 			if( pxNetworkBuffer != NULL )
@@ -1434,12 +1434,12 @@ FreeRTOS_Socket_t *pxSocket;
 	{
 		case FREERTOS_SO_RCVTIMEO	:
 			/* Receive time out. */
-			pxSocket->xReceiveBlockTime = *( ( TickType_t *) pvOptionValue );
+			pxSocket->xReceiveBlockTime = *( ( const TickType_t *) pvOptionValue );
 			xReturn = 0;
 			break;
 
 		case FREERTOS_SO_SNDTIMEO	:
-			pxSocket->xSendBlockTime = *( ( TickType_t *) pvOptionValue );
+			pxSocket->xSendBlockTime = *( ( const TickType_t *) pvOptionValue );
 			if( pxSocket->ucProtocol == ( uint8_t ) FREERTOS_IPPROTO_UDP )
 			{
 				/* The send time out is capped for the reason stated in the
@@ -1665,7 +1665,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bReuseSocket = pdTRUE;
 					}
@@ -1684,7 +1684,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bCloseAfterSend = pdTRUE;
 					}
@@ -1703,7 +1703,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ( BaseType_t *) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t *) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.xTCPWindow.u.bits.bSendFullSize = pdTRUE;
 					}
@@ -1729,7 +1729,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bRxStopped = pdTRUE;
 					}
@@ -1883,7 +1883,7 @@ const socklen_t uxSize = 16;
 	{
 	uint8_t pucDigits[ sockDIGIT_COUNT ];
 	uint8_t ucValue = pucAddress[ uxNibble ];
-	socklen_t uxSource = sockDIGIT_COUNT - 1;
+	socklen_t uxSource = sockDIGIT_COUNT - 1U;
 	socklen_t uxNeeded;
 
 		for( ;; )
@@ -1899,7 +1899,7 @@ const socklen_t uxSize = 16;
 		pucDigits[ 0 ] = ucValue;
 
 		/* Skip leading zeros. */
-		for( uxSource = 0; uxSource < ( socklen_t ) ( sockDIGIT_COUNT - 1 ); uxSource++ )
+		for( uxSource = 0; uxSource < ( socklen_t ) ( sockDIGIT_COUNT - 1U ); uxSource++ )
 		{
 			if( pucDigits[ uxSource ] != 0U )
 			{

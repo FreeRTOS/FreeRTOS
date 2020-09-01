@@ -726,8 +726,8 @@ const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct
 					just get it once here and use later. */
 					if( uxLength >= sizeof( ulParameter ) )
 					{
-						( void ) memcpy( &( ulParameter ),
-										 &( pucByte[ uxIndex ] ),
+						( void ) memcpy( ( void * ) ( &( ulParameter ) ),
+										 ( const void * ) ( &( pucByte[ uxIndex ] ) ),
 										 ( size_t ) sizeof( ulParameter ) );
 						/* 'uxIndex' will be increased at the end of this loop. */
 					}
@@ -931,7 +931,7 @@ uint8_t *pucUDPPayloadBuffer;
 		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1U ) ] );
 		pucPtr[ 0U ] = dhcpIPv4_DNS_HOSTNAME_OPTIONS_CODE;
 		pucPtr[ 1U ] = ( uint8_t ) uxNameLength;
-		( void ) memcpy( &( pucPtr[ 2U ] ), pucHostName, uxNameLength );
+		( void ) memcpy( ( void * ) ( &( pucPtr[ 2U ] ) ), ( const void * ) pucHostName, uxNameLength );
 		pucPtr[ 2U + uxNameLength ] = ( uint8_t ) dhcpOPTION_END_BYTE;
 		*pxOptionsArraySize += ( size_t ) ( 2U + uxNameLength );
 	}
@@ -972,13 +972,13 @@ size_t uxOptionsLength = sizeof( ucDHCPRequestOptions );
 													&( uxOptionsLength ) );
 
 	/* Copy in the IP address being requested. */
-	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ),
-					 &( EP_DHCPData.ulOfferedIPAddress ),
+	( void ) memcpy( ( void * ) ( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ) ),
+					 ( const void * ) ( &( EP_DHCPData.ulOfferedIPAddress ) ),
 					 sizeof( EP_DHCPData.ulOfferedIPAddress ) );
 
 	/* Copy in the address of the DHCP server being used. */
-	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ),
-					 &( EP_DHCPData.ulDHCPServerAddress ),
+	( void ) memcpy( ( void * ) ( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ) ),
+					 ( const void * ) ( &( EP_DHCPData.ulDHCPServerAddress ) ),
 					 sizeof( EP_DHCPData.ulDHCPServerAddress ) );
 
 	FreeRTOS_debug_printf( ( "vDHCPProcess: reply %lxip\n", FreeRTOS_ntohl( EP_DHCPData.ulOfferedIPAddress ) ) );

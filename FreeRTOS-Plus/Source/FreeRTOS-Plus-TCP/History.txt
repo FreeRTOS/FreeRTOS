@@ -1,3 +1,16 @@
+Changes between V2.2.1 and V2.2.2
+	+ Add CBMC proofs to prove memory safety of various critical functions.
+	+ Address multiple MISRA violations of various categories in the TCP
+	  source code.
+
+Changes between V2.0.0 and V2.2.1
+	+ Support caching multiple IP addresses per DNS entry in TCP library.
+	+ Security improvements in the TCP library.
+
+Changes between 180821 and V2.0.0
+	+ Move the TCP library code from FreeRTOS/FreeRTOS-Labs to the 
+	  FreeRTOS/FreeRTOS repository.
+
 Changes between 160919 and 180821 releases:
 
 	+ Multiple security improvements and fixes in packet parsing routines, DNS

@@ -1899,7 +1899,7 @@ const socklen_t uxSize = 16;
 		pucDigits[ 0 ] = ucValue;
 
 		/* Skip leading zeros. */
-		for( uxSource = 0; uxSource < ( ( socklen_t )sockDIGIT_COUNT - ( socklen_t )1U ); uxSource++ )
+		for( uxSource = 0; uxSource < ( ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U ); uxSource++ )
 		{
 			if( pucDigits[ uxSource ] != 0U )
 			{

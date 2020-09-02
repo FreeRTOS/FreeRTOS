@@ -911,7 +911,7 @@ const int32_t l500ms = 500;
 			ulLast = ulSequenceNumber + ulLength;
 			/* The cast from unsigned long to signed long is on purpose.
 			The macro 'ipNUMERIC_CAST' will prevent PC-lint from complaining. */
-			lDistance = ipNUMERIC_CAST( int32_t, ulLast - ulCurrentSequenceNumber );
+			lDistance = ( ( int32_t ) ulLast ) - ( ( int32_t ) ulCurrentSequenceNumber );
 
 			if( lDistance <= 0 )
 			{

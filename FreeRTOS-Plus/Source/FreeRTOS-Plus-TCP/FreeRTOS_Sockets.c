@@ -770,7 +770,7 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 			calculated at the total packet size minus the headers.
 			The validity of `xDataLength` prvProcessIPPacket has been confirmed
 			in 'prvProcessIPPacket()'. */
-			lReturn = ( int32_t ) ( pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t ) );
+			lReturn = ( ( ( int32_t ) pxNetworkBuffer->xDataLength ) - ( ( int32_t ) sizeof( UDPPacket_t ) ) );
 
 			if( pxSourceAddress != NULL )
 			{

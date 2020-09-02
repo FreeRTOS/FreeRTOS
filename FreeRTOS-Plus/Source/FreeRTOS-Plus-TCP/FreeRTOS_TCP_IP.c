@@ -2688,7 +2688,7 @@ BaseType_t xSendLength = xByteCount;
 
 	/* Set the time-out field, so that we'll be called by the IP-task in case no
 	next message will be received. */
-	lRxSpace = ipNUMERIC_CAST( int32_t, pxSocket->u.xTCP.ulHighestRxAllowed - pxTCPWindow->rx.ulCurrentSequenceNumber );
+	lRxSpace = ( ( int32_t ) pxSocket->u.xTCP.ulHighestRxAllowed ) - ( ( int32_t ) pxTCPWindow->rx.ulCurrentSequenceNumber );
 	#if ipconfigUSE_TCP_WIN == 1
 	{
 

@@ -301,7 +301,7 @@ FreeRTOS_Socket_t const *pxSocket = NULL;
 Socket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol )
 {
 FreeRTOS_Socket_t *pxSocket;
-size_t uxSocketSize;
+size_t uxSocketSize = 0;
 EventGroupHandle_t xEventGroup;
 Socket_t xReturn;
 

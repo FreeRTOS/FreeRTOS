@@ -801,7 +801,7 @@ const int32_t l500ms = 500;
 
 	int32_t lTCPWindowRxCheck( TCPWindow_t *pxWindow, uint32_t ulSequenceNumber, uint32_t ulLength, uint32_t ulSpace )
 	{
-	uint32_t ulCurrentSequenceNumber, ulLast, ulSavedSequenceNumber;
+	uint32_t ulCurrentSequenceNumber, ulLast, ulSavedSequenceNumber, ulSequenceNumberDiff;
 	int32_t lReturn, lDistance;
 	TCPSegment_t *pxFound;
 
@@ -909,9 +909,10 @@ const int32_t l500ms = 500;
 			/*  An "out-of-sequence" segment was received, must have missed one.
 			Prepare a SACK (Selective ACK). */
 			ulLast = ulSequenceNumber + ulLength;
-			/* The cast from unsigned long to signed long is on purpose.
-			The macro 'ipNUMERIC_CAST' will prevent PC-lint from complaining. */
-			lDistance = ( ( int32_t ) ulLast ) - ( ( int32_t ) ulCurrentSequenceNumber );
+
+			ulSequenceNumberDiff = ulLast - ulCurrentSequenceNumber;
+			/* The cast from unsigned long to signed long is on purpose. */
+			lDistance = ( int32_t ) ulSequenceNumberDiff;
 
 			if( lDistance <= 0 )
 			{

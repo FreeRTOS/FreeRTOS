@@ -311,8 +311,8 @@ Socket_t xReturn;
 	}
 	else
 	{
-		/* Allocate the structure that will hold the socket information.  The
-		size depends on the type of socket: UDP sockets need less space.  A
+		/* Allocate the structure that will hold the socket information. The
+		size depends on the type of socket: UDP sockets need less space. A
 		define 'pvPortMallocSocket' will used to allocate the necessary space.
 		By default it points to the FreeRTOS function 'pvPortMalloc()'. */
 		pxSocket = ipCAST_PTR_TO_TYPE_PTR( FreeRTOS_Socket_t, pvPortMallocSocket( uxSocketSize ) );
@@ -667,6 +667,7 @@ BaseType_t xTimed = pdFALSE;
 TimeOut_t xTimeOut;
 int32_t lReturn;
 EventBits_t xEventBits = ( EventBits_t ) 0;
+size_t uxPayloadLength;
 
 	if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_UDP, pdTRUE ) == pdFALSE )
 	{
@@ -770,7 +771,8 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 			calculated at the total packet size minus the headers.
 			The validity of `xDataLength` prvProcessIPPacket has been confirmed
 			in 'prvProcessIPPacket()'. */
-			lReturn = ( ( ( int32_t ) pxNetworkBuffer->xDataLength ) - ( ( int32_t ) sizeof( UDPPacket_t ) ) );
+			uxPayloadLength = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+			lReturn = ( int32_t ) uxPayloadLength;
 
 			if( pxSourceAddress != NULL )
 			{

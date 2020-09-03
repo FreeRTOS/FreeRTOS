@@ -909,9 +909,10 @@ const int32_t l500ms = 500;
 			/*  An "out-of-sequence" segment was received, must have missed one.
 			Prepare a SACK (Selective ACK). */
 			ulLast = ulSequenceNumber + ulLength;
-			/* The cast from unsigned long to signed long is on purpose.
-			The macro 'ipNUMERIC_CAST' will prevent PC-lint from complaining. */
-			lDistance = ipNUMERIC_CAST( int32_t, ulLast - ulCurrentSequenceNumber );
+
+			ulIntermediateResult = ulLast - ulCurrentSequenceNumber;
+			/* The cast from unsigned long to signed long is on purpose. */
+			lDistance = ( int32_t ) ulIntermediateResult;
 
 			if( lDistance <= 0 )
 			{

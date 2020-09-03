@@ -2678,6 +2678,8 @@ const TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 /* Find out what window size we may advertised. */
 int32_t lRxSpace;
 BaseType_t xSendLength = xByteCount;
+uint32_t ulRxBufferSpace;
+
 #if( ipconfigUSE_TCP_WIN == 1 )
 	#if( ipconfigTCP_ACK_EARLIER_PACKET == 0 )
 		const int32_t lMinLength = 0;
@@ -2688,7 +2690,9 @@ BaseType_t xSendLength = xByteCount;
 
 	/* Set the time-out field, so that we'll be called by the IP-task in case no
 	next message will be received. */
-	lRxSpace = ipNUMERIC_CAST( int32_t, pxSocket->u.xTCP.ulHighestRxAllowed - pxTCPWindow->rx.ulCurrentSequenceNumber );
+	ulRxBufferSpace = pxSocket->u.xTCP.ulHighestRxAllowed - pxTCPWindow->rx.ulCurrentSequenceNumber;
+	lRxSpace = ( int32_t ) ulRxBufferSpace;
+
 	#if ipconfigUSE_TCP_WIN == 1
 	{
 

@@ -205,7 +205,7 @@ struct xSOCKET;
 typedef struct xSOCKET *Socket_t;
 typedef struct xSOCKET const * ConstSocket_t;
 
-static portINLINE int prvSocketValid( Socket_t xSocket )
+static portINLINE unsigned int prvSocketValid( Socket_t xSocket )
 {
     /* coverity[misra_c_2012_rule_11_4_violation] */
     return ( ( xSocket != FREERTOS_INVALID_SOCKET ) && ( xSocket != NULL ) );

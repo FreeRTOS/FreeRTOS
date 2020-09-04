@@ -1,5 +1,4 @@
-Changes between V2.2.1 and V2.2.2 releases:
-	+ Added another 4 memory safety proofs using the CBMC model checker.
+Changes between V2.0.0 and V2.2.1 releases:
 	+ Updated the source code to adhere to stricter MISRA compliance.
 	+ Improved security by giving users the option to reject UDP packets with a
 	  checksum of zero even though the UDP spec allows it.
@@ -7,8 +6,6 @@ Changes between V2.2.1 and V2.2.2 releases:
 	  has already been performed in the hardware.
 	+ Added ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS macro to enable users to
 	  drop/accept IP Packets containing IP options (IP options are not supported).
-
-Changes between V2.0.0 and V2.2.1 releases:
 	+ Modified xDataLength to always mean "total number of bytes" to impart more
 	  clarity.
 	+ Replaced the ipconfigRAND32 macro with a function

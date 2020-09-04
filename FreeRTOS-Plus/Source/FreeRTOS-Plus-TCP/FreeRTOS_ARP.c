@@ -96,7 +96,7 @@ uint32_t ulTargetProtocolAddress, ulSenderProtocolAddress;
 	pxARPHeader = &( pxARPFrame->xARPHeader );
 
 	/* The field ulSenderProtocolAddress is badly aligned, copy byte-by-byte. */
-	( void ) memcpy( &( ulSenderProtocolAddress ), pxARPHeader->ucSenderProtocolAddress, sizeof( ulSenderProtocolAddress ) );
+	( void ) memcpy( ( void * ) ( &( ulSenderProtocolAddress ) ), ( const void * ) ( pxARPHeader->ucSenderProtocolAddress ), sizeof( ulSenderProtocolAddress ) );
 	/* The field ulTargetProtocolAddress is well-aligned, a 32-bits copy. */
 	ulTargetProtocolAddress = pxARPHeader->ulTargetProtocolAddress;
 
@@ -135,8 +135,8 @@ uint32_t ulTargetProtocolAddress, ulSenderProtocolAddress;
 						( void ) memcpy( pxARPHeader->xTargetHardwareAddress.ucBytes, pxARPHeader->xSenderHardwareAddress.ucBytes, sizeof( MACAddress_t ) );
 						pxARPHeader->ulTargetProtocolAddress = ulSenderProtocolAddress;
 					}
-					( void ) memcpy( pxARPHeader->xSenderHardwareAddress.ucBytes, ipLOCAL_MAC_ADDRESS, sizeof( MACAddress_t ) );
-					( void ) memcpy( pxARPHeader->ucSenderProtocolAddress, ipLOCAL_IP_ADDRESS_POINTER, sizeof( pxARPHeader->ucSenderProtocolAddress ) );
+					( void ) memcpy( ( void * ) ( pxARPHeader->xSenderHardwareAddress.ucBytes ), ( const void * ) ( ipLOCAL_MAC_ADDRESS ), sizeof( MACAddress_t ) );
+					( void ) memcpy( ( void * ) ( pxARPHeader->ucSenderProtocolAddress ), ( const void * ) ( ipLOCAL_IP_ADDRESS_POINTER ), sizeof( pxARPHeader->ucSenderProtocolAddress ) );
 
 					eReturn = eReturnEthernetFrame;
 				}
@@ -656,7 +656,7 @@ ARPPacket_t *pxARPPacket;
 	configASSERT( pxNetworkBuffer != NULL );
 	configASSERT( pxNetworkBuffer->xDataLength >= sizeof(ARPPacket_t) );
 
-	pxARPPacket = ipPOINTER_CAST( ARPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
+	pxARPPacket = ipCAST_PTR_TO_TYPE_PTR( ARPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
 
 	/* memcpy the const part of the header information into the correct
 	location in the packet.  This copies:
@@ -669,11 +669,11 @@ ARPPacket_t *pxARPPacket;
 		xARPHeader.usOperation;
 		xARPHeader.xTargetHardwareAddress;
 	*/
-	( void ) memcpy( pxARPPacket, xDefaultPartARPPacketHeader, sizeof( xDefaultPartARPPacketHeader ) );
-	( void ) memcpy( pxARPPacket->xEthernetHeader.xSourceAddress.ucBytes , ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
-	( void ) memcpy( pxARPPacket->xARPHeader.xSenderHardwareAddress.ucBytes, ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+	( void ) memcpy( ( void * ) pxARPPacket, ( const void * ) xDefaultPartARPPacketHeader, sizeof( xDefaultPartARPPacketHeader ) );
+	( void ) memcpy( ( void * ) ( pxARPPacket->xEthernetHeader.xSourceAddress.ucBytes ) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+	( void ) memcpy( ( void * ) ( pxARPPacket->xARPHeader.xSenderHardwareAddress.ucBytes ), ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
-	( void ) memcpy( pxARPPacket->xARPHeader.ucSenderProtocolAddress, ipLOCAL_IP_ADDRESS_POINTER, sizeof( pxARPPacket->xARPHeader.ucSenderProtocolAddress ) );
+	( void ) memcpy( ( void * ) ( pxARPPacket->xARPHeader.ucSenderProtocolAddress ), ( const void * ) ipLOCAL_IP_ADDRESS_POINTER, sizeof( pxARPPacket->xARPHeader.ucSenderProtocolAddress ) );
 	pxARPPacket->xARPHeader.ulTargetProtocolAddress = pxNetworkBuffer->ulIPAddress;
 
 	pxNetworkBuffer->xDataLength = sizeof( ARPPacket_t );
@@ -693,7 +693,7 @@ BaseType_t xCheckLoopback( NetworkBufferDescriptor_t * const pxDescriptor, BaseT
 {
 BaseType_t xResult = pdFALSE;
 NetworkBufferDescriptor_t * pxUseDescriptor = pxDescriptor;
-const IPPacket_t *pxIPPacket = ipPOINTER_CAST( IPPacket_t *, pxUseDescriptor->pucEthernetBuffer );
+const IPPacket_t *pxIPPacket = ipCAST_PTR_TO_TYPE_PTR( IPPacket_t, pxUseDescriptor->pucEthernetBuffer );
 
 	/* This function will check if the target IP-address belongs to this device.
 	 * If so, the packet will be passed to the IP-stack, who will answer it.

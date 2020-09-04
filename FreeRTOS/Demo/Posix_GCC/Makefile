@@ -75,7 +75,7 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File
 
 
 CFLAGS := -ggdb3 -Og -DprojCOVERAGE_TEST=0
-LDFLAGS := -ggdb3 -Og -lpthread -lpcap
+LDFLAGS := -ggdb3 -Og -pthread -lpcap
 
 OBJ_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 

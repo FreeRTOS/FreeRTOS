@@ -801,7 +801,7 @@ const int32_t l500ms = 500;
 
 	int32_t lTCPWindowRxCheck( TCPWindow_t *pxWindow, uint32_t ulSequenceNumber, uint32_t ulLength, uint32_t ulSpace )
 	{
-	uint32_t ulCurrentSequenceNumber, ulLast, ulSavedSequenceNumber, ulSequenceNumberDiff;
+	uint32_t ulCurrentSequenceNumber, ulLast, ulSavedSequenceNumber, ulIntermediateResult = 0;
 	int32_t lReturn, lDistance;
 	TCPSegment_t *pxFound;
 
@@ -910,9 +910,9 @@ const int32_t l500ms = 500;
 			Prepare a SACK (Selective ACK). */
 			ulLast = ulSequenceNumber + ulLength;
 
-			ulSequenceNumberDiff = ulLast - ulCurrentSequenceNumber;
+			ulIntermediateResult = ulLast - ulCurrentSequenceNumber;
 			/* The cast from unsigned long to signed long is on purpose. */
-			lDistance = ( int32_t ) ulSequenceNumberDiff;
+			lDistance = ( int32_t ) ulIntermediateResult;
 
 			if( lDistance <= 0 )
 			{
@@ -1006,7 +1006,8 @@ const int32_t l500ms = 500;
 
 						/* Return a positive value.  The packet may be accepted
 						and stored but an earlier packet is still missing. */
-						lReturn = ipNUMERIC_CAST( int32_t, ulSequenceNumber - ulCurrentSequenceNumber );
+						ulIntermediateResult = ulSequenceNumber - ulCurrentSequenceNumber;
+						lReturn = ( int32_t ) ulIntermediateResult;
 					}
 				}
 			}

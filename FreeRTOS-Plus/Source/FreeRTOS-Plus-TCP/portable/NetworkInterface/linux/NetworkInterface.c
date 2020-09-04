@@ -48,7 +48,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pcap.h>
 
 /* ========================== Local includes =================================*/
-#include "utils/wait_for_event.h"
+#include <utils/wait_for_event.h>
 
 /* ======================== Macro Definitions =============================== */
 #if ( ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES == 0 )

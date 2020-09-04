@@ -1,15 +1,18 @@
 CC := gcc
 BIN := posix_demo
 
-FREERTOS_DIR := ../../../FreeRTOS
-FREERTOS_PLUS_DIR := ../../../FreeRTOS-Plus
-
 BUILD_DIR := build
 
-INCLUDE_DIRS := -I. 
-INCLUDE_DIRS += -I utils 
+FREERTOS_DIR_REL := ../../../FreeRTOS
+FREERTOS_DIR := $(abspath $(FREERTOS_DIR_REL))
+
+FREERTOS_PLUS_DIR_REL := ../../../FreeRTOS-Plus
+FREERTOS_PLUS_DIR := $(abspath $(FREERTOS_PLUS_DIR_REL))
+
+INCLUDE_DIRS := -I.
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/include
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix
+INCLUDE_DIRS += -I${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/utils
 INCLUDE_DIRS += -I${FREERTOS_DIR}/Demo/Common/include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/Include
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/NetworkInterface/linux/
@@ -17,11 +20,11 @@ INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/include/
 INCLUDE_DIRS += -I${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-TCP/portable/Compiler/GCC/
 
 SOURCE_FILES := $(wildcard *.c)
-SOURCE_FILES += $(wildcard utils/*.c)
 SOURCE_FILES += $(wildcard ${FREERTOS_DIR}/Source/*.c)
 # Memory manager (use malloc() / free() )
 SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/MemMang/heap_3.c
 # posix port
+SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c
 SOURCE_FILES += ${FREERTOS_DIR}/Source/portable/ThirdParty/GCC/Posix/port.c
 
 # FreeRTOS TCP

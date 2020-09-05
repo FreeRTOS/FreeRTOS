@@ -83,7 +83,7 @@ is implemented in main_networking.c. */
 #endif
 
 #ifndef mainCREATE_TCP_ECHO_TASKS_SINGLE
-	#define mainCREATE_TCP_ECHO_TASKS_SINGLE    1
+	#define mainCREATE_TCP_ECHO_TASKS_SINGLE    0
 #endif
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */

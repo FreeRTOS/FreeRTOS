@@ -106,6 +106,7 @@
 #include "StreamBufferDemo.h"
 #include "StreamBufferInterrupt.h"
 #include "MessageBufferAMP.h"
+#include "console.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -182,7 +183,7 @@ static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer );
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
-static char *pcStatusMessage = "No errors";
+static char *pcStatusMessage = "OK: No errors";
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
 semaphore tracing API functions.  It has no other purpose. */
@@ -383,6 +384,8 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 				pcStatusMessage = "Error: Static allocation";
 			}
 		#endif /* configSUPPORT_STATIC_ALLOCATION */
+        console_print("TickCount %d, pcStatusMessage %s\n",
+                      xNextWakeTime, pcStatusMessage);
 	}
 }
 /*-----------------------------------------------------------*/

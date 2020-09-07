@@ -82,7 +82,7 @@ uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
 size_t uxPayloadSize;
 
 	/* Map the UDP packet onto the start of the frame. */
-	pxUDPPacket = ipPOINTER_CAST( UDPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
+	pxUDPPacket = ipCAST_PTR_TO_TYPE_PTR( UDPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
 
 #if ipconfigSUPPORT_OUTGOING_PINGS == 1
 	if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
@@ -154,7 +154,7 @@ size_t uxPayloadSize;
 			 */
 			/* The Ethernet source address is at offset 6. */
 			char *pxUdpSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddress_t ) ] ) );
-			( void ) memcpy( pxUdpSrcAddrOffset, xDefaultPartUDPPacketHeader.ucBytes, sizeof( xDefaultPartUDPPacketHeader ) );
+			( void ) memcpy( ( void * ) pxUdpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader.ucBytes ), sizeof( xDefaultPartUDPPacketHeader ) );
 
 		#if ipconfigSUPPORT_OUTGOING_PINGS == 1
 			if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )
@@ -258,7 +258,7 @@ configASSERT( pxNetworkBuffer != NULL );
 configASSERT( pxNetworkBuffer->pucEthernetBuffer != NULL );
 
 /* Map the ethernet buffer to the UDPPacket_t struct for easy access to the fields. */
-const UDPPacket_t *pxUDPPacket = ipPOINTER_CAST( const UDPPacket_t *, pxNetworkBuffer->pucEthernetBuffer );
+const UDPPacket_t *pxUDPPacket = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( UDPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
 
 	/* Caller must check for minimum packet size. */
 	pxSocket = pxUDPSocketLookup( usPort );

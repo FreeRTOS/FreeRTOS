@@ -19,19 +19,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
- * NOTE 1: Windows will not be running the FreeRTOS demo threads continuously, so
- * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * NOTE 1: The FreeRTOS demo threads will not be running continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Linux port, or
  * this demo application.  Also, the timing information in the FreeRTOS+Trace
- * logs have no meaningful units.  See the documentation page for the Windows
+ * logs have no meaningful units.  See the documentation page for the Linux
  * port for further information:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ * https://freertos-wordpress.corp.amazon.com/FreeRTOS-simulator-for-Linux.html
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The
@@ -52,7 +51,7 @@
  * The queue send task is implemented by the prvQueueSendTask() function in
  * this file.  It uses vTaskDelayUntil() to create a periodic task that sends
  * the value 100 to the queue every 200 milliseconds (please read the notes
- * above regarding the accuracy of timing under Windows).
+ * above regarding the accuracy of timing under Linux).
  *
  * The Queue Send Software Timer:
  * The timer is an auto-reload timer with a period of two seconds.  The timer's
@@ -75,9 +74,9 @@
  *   pressed then the queue receive task will output a message indicating that
  *   data was received on the queue from the queue send software timer.
  *
- * NOTE:  Console input and output relies on Windows system calls, which can
- * interfere with the execution of the FreeRTOS Windows port.  This demo only
- * uses Windows system call occasionally.  Heavier use of Windows system calls
+ * NOTE:  Console input and output relies on Linux system calls, which can
+ * interfere with the execution of the FreeRTOS Linux port.  This demo only
+ * uses Linux system call occasionally.  Heavier use of Linux system calls
  * can crash the port.
  */
 
@@ -246,7 +245,7 @@ uint32_t ulReceivedValue;
 		is it an expected value?  Normally calling printf() from a task is not
 		a good idea.  Here there is lots of stack space and only one task is
 		using console IO so it is ok.  However, note the comments at the top of
-		this file about the risks of making Windows system calls (such as
+		this file about the risks of making Linux system calls (such as
 		console output) from a FreeRTOS task. */
 		if( ulReceivedValue == mainVALUE_SENT_FROM_TASK )
 		{

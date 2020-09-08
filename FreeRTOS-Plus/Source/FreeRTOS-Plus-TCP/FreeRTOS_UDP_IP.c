@@ -154,7 +154,7 @@ size_t uxPayloadSize;
 			 */
 			/* The Ethernet source address is at offset 6. */
 			char *pxUdpSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddress_t ) ] ) );
-			( void ) memcpy( pxUdpSrcAddrOffset, xDefaultPartUDPPacketHeader.ucBytes, sizeof( xDefaultPartUDPPacketHeader ) );
+			( void ) memcpy( ( void * ) pxUdpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader.ucBytes ), sizeof( xDefaultPartUDPPacketHeader ) );
 
 		#if ipconfigSUPPORT_OUTGOING_PINGS == 1
 			if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )

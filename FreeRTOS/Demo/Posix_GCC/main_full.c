@@ -32,11 +32,11 @@
  * application.  It is provided as a convenient development and demonstration
  * test bed only.
  *
- * Windows will not be running the FreeRTOS simulator threads continuously, so
+ * Linux will not be running the FreeRTOS simulator threads continuously, so
  * the timing information in the FreeRTOS+Trace logs have no meaningful units.
- * See the documentation page for the Windows simulator for an explanation of
+ * See the documentation page for the Linux simulator for an explanation of
  * the slow timing:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ * https://freertos-wordpress.corp.amazon.com/FreeRTOS-simulator-for-Linux.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style

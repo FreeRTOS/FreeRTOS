@@ -887,14 +887,12 @@ BaseType_t xSendEventStructToIPTask( const IPStackEvent_t *pxEvent, TickType_t u
  */
 NetworkBufferDescriptor_t *pxUDPPayloadBuffer_to_NetworkBuffer( const void * pvBuffer );
 
-#if( ipconfigZERO_COPY_TX_DRIVER != 0 )
-	/*
-	 * For the case where the network driver passes a buffer directly to a DMA
-	 * descriptor, this function can be used to translate a 'network buffer' to
-	 * a 'network buffer descriptor'.
-	 */
-	NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer );
-#endif
+/*
+ * For the case where the network driver passes a buffer directly to a DMA
+ * descriptor, this function can be used to translate a 'network buffer' to
+ * a 'network buffer descriptor'.
+ */
+NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer );
 
 /*
  * Internal: Sets a new state for a TCP socket and performs the necessary

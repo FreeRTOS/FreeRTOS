@@ -890,47 +890,9 @@ NetworkBufferDescriptor_t * pxNewBuffer;
 }
 /*-----------------------------------------------------------*/
 
-#if( ipconfigZERO_COPY_TX_DRIVER != 0 ) || ( ipconfigZERO_COPY_RX_DRIVER != 0 )
-
-	NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer )
-	{
-	const uint8_t *pucBuffer;
-	NetworkBufferDescriptor_t *pxResult;
-
-		if( pvBuffer == NULL )
-		{
-			pxResult = NULL;
-		}
-		else
-		{
-			/* Obtain the network buffer from the zero copy pointer. */
-			pucBuffer = ipPOINTER_CAST( const uint8_t *, pvBuffer );
-
-			/* The input here is a pointer to a payload buffer.  Subtract the
-			size of the header in the network buffer, usually 8 + 2 bytes. */
-			pucBuffer -= ipBUFFER_PADDING;
-
-			/* Here a pointer was placed to the network descriptor.  As a
-			pointer is dereferenced, make sure it is well aligned. */
-			if( ( ( ( size_t ) pucBuffer ) & ( sizeof( pucBuffer ) - 1U ) ) == ( size_t ) 0U )
-			{
-				pxResult = * ( ipPOINTER_CAST( NetworkBufferDescriptor_t **, pucBuffer ) );
-			}
-			else
-			{
-				pxResult = NULL;
-			}
-		}
-
-		return pxResult;
-	}
-
-#endif /* ipconfigZERO_COPY_TX_DRIVER != 0 */
-/*-----------------------------------------------------------*/
-
-NetworkBufferDescriptor_t *pxUDPPayloadBuffer_to_NetworkBuffer( const void * pvBuffer )
+NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer )
 {
-const uint8_t *pucBuffer;
+uintptr_t uxBuffer;
 NetworkBufferDescriptor_t *pxResult;
 
 	if( pvBuffer == NULL )
@@ -940,26 +902,54 @@ NetworkBufferDescriptor_t *pxResult;
 	else
 	{
 		/* Obtain the network buffer from the zero copy pointer. */
-		pucBuffer = ipPOINTER_CAST( const uint8_t *, pvBuffer );
+		uxBuffer = ipPOINTER_CAST( uintptr_t, pvBuffer );
 
-		/* The input here is a pointer to a payload buffer.  Subtract
-		the total size of a UDP/IP header plus the size of the header in
-		the network buffer, usually 8 + 2 bytes. */
-		pucBuffer -= ( sizeof( UDPPacket_t ) + ( ( size_t ) ipBUFFER_PADDING ) );
+		/* The input here is a pointer to a payload buffer.  Subtract the
+		size of the header in the network buffer, usually 8 + 2 bytes. */
+		uxBuffer -= ipBUFFER_PADDING;
 
-		/* Here a pointer was placed to the network descriptor,
-		As a pointer is dereferenced, make sure it is well aligned */
-		if( ( ( ( size_t ) pucBuffer ) & ( sizeof( pucBuffer ) - 1U ) ) == 0U )
+		/* Here a pointer was placed to the network descriptor.  As a
+		pointer is dereferenced, make sure it is well aligned. */
+		if( ( uxBuffer & ( ( ( uintptr_t ) sizeof( uxBuffer ) ) - 1U ) ) == ( uintptr_t ) 0U )
 		{
 			/* The following statement may trigger a:
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
-			pxResult = * ( ( const NetworkBufferDescriptor_t **) pucBuffer );
+			pxResult = * ( ipPOINTER_CAST( NetworkBufferDescriptor_t **, uxBuffer ) );
+			#if( ipconfigTCP_IP_SANITY != 0 )
+				configASSERT( bIsValidNetworkDescriptor( pxResult ) != 0 );
+			#endif
 		}
 		else
 		{
 			pxResult = NULL;
 		}
+	}
+
+	return pxResult;
+}
+/*-----------------------------------------------------------*/
+
+NetworkBufferDescriptor_t *pxUDPPayloadBuffer_to_NetworkBuffer( const void * pvBuffer )
+{
+uintptr_t uxBuffer;
+NetworkBufferDescriptor_t *pxResult;
+
+	if( pvBuffer == NULL )
+	{
+		pxResult = NULL;
+	}
+	else
+	{
+		/* Obtain the network buffer from the zero copy pointer. */
+		uxBuffer = ipPOINTER_CAST( uintptr_t, pvBuffer );
+
+		/* The input here is a pointer to a payload buffer.  Subtract
+		the total size of a UDP/IP header plus the size of the header in
+		the network buffer, usually 8 + 2 bytes. */
+		uxBuffer -= ( uintptr_t ) sizeof( UDPPacket_t );
+
+		pxResult = pxPacketBuffer_to_NetworkBuffer( ( const void * ) uxBuffer );
 	}
 
 	return pxResult;

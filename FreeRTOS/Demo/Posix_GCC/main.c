@@ -143,17 +143,17 @@ int main( void )
 	console_init();
 	#if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
 	{
-	    console_print("sgtaring echo clientdemo\n");
+	    console_print("Starting echo client demo\n");
 		main_tcp_echo_client_tasks();
 	}
 	#elif ( mainSELECTED_APPLICATION == BLINKY_DEMO )
 	{
-	    console_print("sgtaring echo blinky\n");
+	    console_print("Starting echo blinky demo\n");
 		main_blinky();
 	}
 	#elif ( mainSELECTED_APPLICATION == FULL_DEMO)
 	{
-	    console_print("sgtaring full demo\n");
+	    console_print("Starting full demo\n");
 		main_full();
 	}
         #else

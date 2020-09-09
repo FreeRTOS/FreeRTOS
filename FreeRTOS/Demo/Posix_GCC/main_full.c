@@ -27,8 +27,8 @@
 
 /*
  *******************************************************************************
- * NOTE 1: The Win32 port is a simulation (or is that emulation?) only!  Do not
- * expect to get real time behaviour from the Win32 port or this demo
+ * NOTE 1: The Linux port is a simulation (or is that emulation?) only!  Do not
+ * expect to get real time behaviour from the Linux port or this demo
  * application.  It is provided as a convenient development and demonstration
  * test bed only.
  *
@@ -224,7 +224,7 @@ int main_full( void )
 	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 	/* vStartStreamBufferTasks(); */
 	/* vStartStreamBufferInterruptDemo(); */
-	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
+	/* vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE ); */
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{

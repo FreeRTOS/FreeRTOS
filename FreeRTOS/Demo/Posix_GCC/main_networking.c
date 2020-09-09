@@ -158,7 +158,7 @@ const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 	there was insufficient FreeRTOS heap memory available for the idle and/or
 	timer tasks	to be created.  See the memory management section on the
 	FreeRTOS web site for more details (this is standard text that is not not
-	really applicable to the Win32 simulator port). */
+	really applicable to the Linux simulator port). */
 	for( ; ; )
 	{
 		usleep( ulLongTime_ms * 1000 );

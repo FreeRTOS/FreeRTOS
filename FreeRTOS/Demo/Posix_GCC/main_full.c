@@ -198,6 +198,7 @@ int main_full( void )
 
 	/* Create the standard demo tasks. */
 	vStartTaskNotifyTask();
+	// vStartTaskNotifyArrayTask();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -208,23 +209,26 @@ int main_full( void )
 	vStartRecursiveMutexTasks();
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
-	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-	xTaskCreate( prvDemoQueueSpaceFunctions, NULL, configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL ); /* Name is null for code coverage. */
 	vStartEventGroupTasks();
 	vStartInterruptSemaphoreTasks();
-	vStartQueueSetPollingTask();
 	vCreateBlockTimeTasks();
 	vCreateAbortDelayTasks();
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvDemonstrateChangingTimerReloadMode, "TimerMode", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
 	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
-	/* vStartStreamBufferTasks(); */
-	/* vStartStreamBufferInterruptDemo(); */
-	/* vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE ); */
+	vStartStreamBufferTasks();
+	vStartStreamBufferInterruptDemo();
+	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
+
+	#if( configUSE_QUEUE_SETS == 1 )
+	{
+		vStartQueueSetTasks();
+		vStartQueueSetPollingTask();
+	}
+	#endif
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{
@@ -235,7 +239,7 @@ int main_full( void )
 	#if( configUSE_PREEMPTION != 0  )
 	{
 		/* Don't expect these tasks to pass when preemption is not used. */
-		//vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	}
 	#endif
 
@@ -261,7 +265,8 @@ int main_full( void )
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
+const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2000UL );
+HeapStats_t xHeapStats;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -275,21 +280,21 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
 		/* Check the standard demo tasks are running without error. */
-		/* #if( configUSE_PREEMPTION != 0 ) */
-		/* { */
-		/* 	/\* These tasks are only created when preemption is used. *\/ */
-		/* 	if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE ) */
-		/* 	{ */
-		/* 		pcStatusMessage = "Error: TimerDemo"; */
-		/* 	} */
-		/* } */
-		/* #endif */
+		#if( configUSE_PREEMPTION != 0 )
+		{
+			/* These tasks are only created when preemption is used. */
+			if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
+			{
+				pcStatusMessage = "Error: TimerDemo";
+			}
+		}
+		#endif
 
-		/* if( xAreStreamBufferTasksStillRunning() != pdTRUE ) */
-		/* { */
-		/* 	pcStatusMessage = "Error:  StreamBuffer"; */
-		/* } */
-		/* else  */if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error:  StreamBuffer";
+		}
+		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error:  MessageBuffer";
 		}
@@ -297,6 +302,10 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error:  Notification";
 		}
+		// else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+		// {
+		// 	pcStatusMessage = "Error:  NotificationArray";
+		// }
 		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: IntSem";
@@ -349,17 +358,9 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: Dynamic";
 		}
-		else if( xAreQueueSetTasksStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Queue set";
-		}
 		else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Queue overwrite";
-		}
-		else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Queue set polling";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 		{
@@ -369,14 +370,25 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: Abort delay";
 		}
-		/* else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS ) */
-		/* { */
-		/* 	pcStatusMessage = "Error: Stream buffer interrupt"; */
-		/* } */
+		else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Stream buffer interrupt";
+		}
 		else if( xAreMessageBufferAMPTasksStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Message buffer AMP";
 		}
+
+		#if( configUSE_QUEUE_SETS == 1 )
+			else if( xAreQueueSetTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "Error: Queue set";
+			}
+			else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "Error: Queue set polling";
+			}
+		#endif
 
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
@@ -384,8 +396,10 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 				pcStatusMessage = "Error: Static allocation";
 			}
 		#endif /* configSUPPORT_STATIC_ALLOCATION */
-        console_print("TickCount %d, pcStatusMessage %s\n",
-                      xNextWakeTime, pcStatusMessage);
+
+		printf( "%s - tick count %u \r\n",
+					pcStatusMessage,
+					xTaskGetTickCount() );	
 	}
 }
 /*-----------------------------------------------------------*/
@@ -489,20 +503,24 @@ TaskHandle_t xTimerTask;
 
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
-	/* #if( configUSE_PREEMPTION != 0 ) */
-	/* { */
-	/* 	/\* Only created when preemption is used. *\/ */
-	/* 	vTimerPeriodicISRTests(); */
-	/* } */
-	/* #endif */
+	#if( configUSE_PREEMPTION != 0 )
+	{
+		/* Only created when preemption is used. */
+		vTimerPeriodicISRTests();
+	}
+	#endif
 
 	/* Call the periodic queue overwrite from ISR demo. */
 	vQueueOverwritePeriodicISRDemo();
 
-	/* Write to a queue that is in use as part of the queue set demo to
-	demonstrate using queue sets from an ISR. */
-	vQueueSetAccessQueueSetFromISR();
-	vQueueSetPollingInterruptAccess();
+	#if( configUSE_QUEUE_SETS == 1 ) /* Remove the tests if queue sets are not defined. */
+	{
+		/* Write to a queue that is in use as part of the queue set demo to
+		demonstrate using queue sets from an ISR. */
+		vQueueSetAccessQueueSetFromISR();
+		vQueueSetPollingInterruptAccess();
+	}
+	#endif
 
 	/* Exercise event groups from interrupts. */
 	vPeriodicEventGroupsProcessing();
@@ -512,19 +530,19 @@ TaskHandle_t xTimerTask;
 
 	/* Exercise using task notifications from an interrupt. */
 	xNotifyTaskFromISR();
+	// xNotifyArrayTaskFromISR();
 
 	/* Writes to stream buffer byte by byte to test the stream buffer trigger
 	level functionality. */
-	/* vPeriodicStreamBufferProcessing(); */
+	vPeriodicStreamBufferProcessing();
 
 	/* Writes a string to a string buffer four bytes at a time to demonstrate
 	a stream being sent from an interrupt to a task. */
-	/* vBasicStreamBufferSendFromISR(); */
+	vBasicStreamBufferSendFromISR();
 
 	/* For code coverage purposes. */
 	xTimerTask = xTimerGetTimerDaemonTaskHandle();
 	configASSERT( uxTaskPriorityGetFromISR( xTimerTask ) == configTIMER_TASK_PRIORITY );
-	( void ) xTimerTask; /* In case configASSERT() is not defined. */
 }
 /*-----------------------------------------------------------*/
 
@@ -619,8 +637,6 @@ static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
 TaskStatus_t xTaskInfo;
 extern StackType_t uxTimerTaskStack[];
-static uint32_t ulLastIdleExecutionTime = 0;
-uint32_t ulIdleExecutionTime;
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets

@@ -80,7 +80,7 @@
 extern void main_blinky( void );
 extern void main_full( void );
 extern void main_tcp_echo_client_tasks( void );
-
+static void traceOnEnter( void );
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
  * http://www.freertos.org/a00016.html for more information.
@@ -136,6 +136,7 @@ int main( void )
 		/* Start the trace recording - the recording is written to a file if
 		configASSERT() is called. */
 		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+		printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
 		uiTraceStart();
 	}
 	#endif
@@ -197,7 +198,7 @@ void vApplicationIdleHook( void )
 	because it is the responsibility of the idle task to clean up memory
 	allocated by the kernel to any task that has since deleted itself. */
 
-	sleep( 1 );
+	traceOnEnter();
 
 	#if ( mainSELECTED_APPLICATION == FULL_DEMO )
 	{
@@ -237,6 +238,30 @@ void vApplicationTickHook( void )
 		vFullDemoTickHookFunction();
         }
 	#endif /* mainSELECTED_APPLICATION */
+}
+
+void traceOnEnter()
+{
+    int ret;
+    static BaseType_t xPrinted = pdFALSE;
+    struct timeval tv = { 0L, 0L };
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(0, &fds);
+    ret = select(1, &fds, NULL, NULL, &tv);
+    if ( ret > 0 )
+    {
+        /* Stop the trace recording. */
+        if( xPrinted == pdFALSE )
+        {
+            xPrinted = pdTRUE;
+
+            if( xTraceRunning == pdTRUE )
+            {
+                prvSaveTraceFile();
+            }
+        }
+    }
 }
 
 void vLoggingPrintf( const char *pcFormat,

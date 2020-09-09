@@ -1,5 +1,46 @@
 Documentation and download available at http://www.FreeRTOS.org/
 
+Changes between FreeRTOS V10.4.0 and FreeRTOS V10.3.1 released September 2020
+
+	See https://www.FreeRTOS.org/FreeRTOS-V10.4.x.html
+
+	Major enhancements:
+
+	+ Task notifications:  Prior to FreeRTOS V10.4.0 each created task had a
+	  single direct to task notification.  From FreeRTOS V10.4.0 each task has
+	  an array of notifications.  The direct to task notification API has been
+	  extended with API functions postfixed with "Indexed" to enable the API to
+	  operate on a task notification at any array index.  See
+	  https://www.freertos.org/RTOS-task-notifications.html for more information.
+	+ Kernel ports that support memory protection units (MPUs): The ARMv7-M and
+	  ARMv8-M MPU ports now support a privilege access only heap. The ARMv7-M
+	  MPU ports now support devices that have 16 MPU regions, have the ability
+	  to override default memory attributes for privileged code and data
+	  regions, and have the ability to place the FreeRTOS kernel code outside of
+	  the Flash memory. The ARMv8-M MPU ports now support tickless idle mode.
+	  See https://www.freertos.org/FreeRTOS-MPU-memory-protection-unit.html
+	  for more information.
+
+	Additional noteworthy updates:
+
+	+ Code formatting is now automated to facilitate the increase in
+	  collaborative development in Git.  The auto-formated code is not identical
+	  to the original formatting conventions.  Most notably spaces are now used
+	  in place of tabs.
+	+ The prototypes for callback functions (those that start with "Application",
+	  such as vApplicationStackOverflowHook()) are now in the FreeRTOS header
+	  files, removing the need for application writers to add prototypes into
+	  the C files in which they define the functions.
+	+ New Renesas RXv3 port layer.
+	+ Updates to the Synopsys ARC code, including support for EM and HS cores,
+	  and updated BSP.
+	+ Added new POSIX port layer that allows FreeRTOS to run on Linux hosts in
+	  the same way the Windows port layer enables FreeRTOS to run on Windows
+	  hosts.
+	+ Many other minor optimisations and enhancements. For full details  
+	  see https://github.com/FreeRTOS/FreeRTOS-Kernel/commits/master
+
+
 Changes between FreeRTOS V10.2.1 and FreeRTOS V10.3.0 released February 7 2020
 
 	See http://www.FreeRTOS.org/FreeRTOS-V10.3.x.html

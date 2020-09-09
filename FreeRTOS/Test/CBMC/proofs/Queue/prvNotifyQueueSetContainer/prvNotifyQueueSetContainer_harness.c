@@ -61,6 +61,7 @@ QueueSetHandle_t xUnconstrainedQueueSet()
 	if( xSet )
 	{
 		xSet->cTxLock = nondet_int8_t();
+		__CPROVER_assume(xSet->cTxLock != 127);
 		xSet->cRxLock = nondet_int8_t();
 		xSet->uxMessagesWaiting = nondet_UBaseType_t();
 		xSet->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();

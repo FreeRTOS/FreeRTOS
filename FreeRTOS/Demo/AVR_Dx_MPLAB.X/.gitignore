@@ -1,0 +1,5 @@
+build
+dist
+debug
+nbproject/*
+!nbproject/*.xml

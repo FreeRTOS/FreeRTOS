@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -44,7 +44,6 @@ extern "C" {
 	let Coverity know about it. */
 
 	#ifdef portINLINE
-		/* coverity[misra_c_2012_rule_20_5_violation] */
 		/* The usage of #undef violates the rule. */
 		#undef portINLINE
 
@@ -70,8 +69,7 @@ are not ( yet ) supported. */
  * Generate a randomized TCP Initial Sequence Number per RFC.
  * This function must be provided by the application builder.
  */
-/* coverity[misra_c_2012_rule_8_6_violation] */
-/* "ulApplicationGetNextSequenceNumber" is declared but never defined. */
+/* This function is defined generally by the application. */
 extern uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 													uint16_t usSourcePort,
 													uint32_t ulDestinationAddress,
@@ -283,7 +281,6 @@ void FreeRTOS_ReleaseUDPPayloadBuffer( void const * pvBuffer );
 const uint8_t * FreeRTOS_GetMACAddress( void );
 void FreeRTOS_UpdateMACAddress( const uint8_t ucMACAddress[ipMAC_ADDRESS_LENGTH_BYTES] );
 #if( ipconfigUSE_NETWORK_EVENT_HOOK == 1 )
-	/* coverity[misra_c_2012_rule_8_6_violation] */
 	/* This function shall be defined by the application. */
 	void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
 #endif
@@ -304,17 +301,28 @@ BaseType_t FreeRTOS_IsNetworkUp( void );
 	UBaseType_t uxGetMinimumIPQueueSpace( void );
 #endif
 
+#if ( ipconfigHAS_PRINTF != 0 )
+	extern void vPrintResourceStats( void );
+#else
+	#define vPrintResourceStats()	do {} while( ipFALSE_BOOL )
+#endif
+
 /*
  * Defined in FreeRTOS_Sockets.c
  * //_RB_ Don't think this comment is correct.  If this is for internal use only it should appear after all the public API functions and not start with FreeRTOS_.
  * Socket has had activity, reset the timer so it will not be closed
  * because of inactivity
  */
-const char *FreeRTOS_GetTCPStateName( UBaseType_t ulState);
+#if( ( ipconfigHAS_DEBUG_PRINTF != 0 ) || ( ipconfigHAS_PRINTF != 0 ) )
+	const char *FreeRTOS_GetTCPStateName( UBaseType_t ulState);
+#endif
 
 /* _HT_ Temporary: show all valid ARP entries
  */
-void FreeRTOS_PrintARPCache( void );
+#if( ipconfigHAS_PRINTF != 0 ) || ( ipconfigHAS_DEBUG_PRINTF != 0 )
+	void FreeRTOS_PrintARPCache( void );
+#endif
+
 void FreeRTOS_ClearARP( void );
 
 /* Return pdTRUE if the IPv4 address is a multicast address. */
@@ -329,7 +337,7 @@ void vSetMultiCastIPv4MacAddress( uint32_t ulIPAddress, MACAddress_t *pxMACAddre
 	have much use, except that a device can be found in a router along with its
 	name. If this option is used the callback below must be provided by the
 	application	writer to return a const string, denoting the device's name. */
-	/* coverity[misra_c_2012_rule_8_6_violation], typically defined in a user module. */
+	/* Typically this function is defined in a user module. */
 	const char *pcApplicationHostnameHook( void );
 
 #endif /* ipconfigDHCP_REGISTER_HOSTNAME */
@@ -344,7 +352,6 @@ implementation of it.
 The macro's ipconfigRAND32() and configRAND32() are not in use anymore. */
 /* "xApplicationGetRandomNumber" is declared but never defined, because it may
 be defined in a user module. */
-/* coverity[misra_c_2012_rule_8_6_violation] */
 extern BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber );
 
 /* For backward compatibility define old structure names to the newer equivalent

@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <fileVersion>2</fileVersion>
+    <fileChecksum>2581835147</fileChecksum>
+    <configuration>
+        <name>Debug</name>
+        <outputs>
+            <file>$PROJ_DIR$\Debug\Obj\print.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\TaskNotify.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\queue.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\semtest.r90</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\ycheck.h</file>
+            <file>$TOOLKIT_DIR$\inc\iom4809.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\timers.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\regtest.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\croutine.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\event_groups.r90</file>
+            <file>$TOOLKIT_DIR$\src\template\cfgm4809.xcl</file>
+            <file>$PROJ_DIR$\Debug\List\RTOSDemo.map</file>
+            <file>$PROJ_DIR$\Debug\Obj\queue.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
+            <file>$PROJ_DIR$\..\Common\include\serial.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_full.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\RTOSDemo.pbd</file>
+            <file>$PROJ_DIR$\Debug\Obj\crflash.r90</file>
+            <file>$TOOLKIT_DIR$\lib\dlib\dlAVR-3s-arch4-sf-n.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\list.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_blinky.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Threads.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\recmutex.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\list.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\tasks.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\stream_buffer.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_blinky.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\stream_buffer.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\regtest.r90</file>
+            <file>$TOOLKIT_DIR$\inc\Atmel\iomacro_xmega.h</file>
+            <file>$PROJ_DIR$\..\..\Source\include\timers.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\semtest.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\stdint.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\comtest.r90</file>
+            <file>$PROJ_DIR$\main_blinky.c</file>
+            <file>$PROJ_DIR$\clk_config.h</file>
+            <file>$PROJ_DIR$\regtest.c</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_minimal.pbi</file>
+            <file>$PROJ_DIR$\regtest.h</file>
+            <file>$PROJ_DIR$\..\..\Source\list.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\task.h</file>
+            <file>$PROJ_DIR$\..\..\Source\include\stack_macros.h</file>
+            <file>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</file>
+            <file>$PROJ_DIR$\..\..\Source\croutine.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\queue.h</file>
+            <file>$PROJ_DIR$\..\..\Source\queue.c</file>
+            <file>$PROJ_DIR$\..\..\Source\portable\IAR\AVR_Mega0\porthardware.h</file>
+            <file>$PROJ_DIR$\..\..\Source\stream_buffer.c</file>
+            <file>$PROJ_DIR$\..\..\Source\tasks.c</file>
+            <file>$PROJ_DIR$\..\..\Source\timers.c</file>
+            <file>$PROJ_DIR$\FreeRTOSConfig.h</file>
+            <file>$PROJ_DIR$\main.c</file>
+            <file>$PROJ_DIR$\..\..\Source\event_groups.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\semphr.h</file>
+            <file>$PROJ_DIR$\..\..\Source\portable\IAR\AVR_Mega0\port.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\stream_buffer.h</file>
+            <file>$PROJ_DIR$\..\..\Source\portable\IAR\AVR_Mega0\portmacro.s90</file>
+            <file>$PROJ_DIR$\main_full.c</file>
+            <file>$PROJ_DIR$\main_minimal.c</file>
+            <file>$PROJ_DIR$\..\..\Source\portable\IAR\AVR_Mega0\portmacro.h</file>
+            <file>$PROJ_DIR$\serial\serial.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\FreeRTOS.h</file>
+            <file>$PROJ_DIR$\..\..\Source\include\list.h</file>
+            <file>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\mpu_wrappers.h</file>
+            <file>$PROJ_DIR$\protected_io\protected_io.S</file>
+            <file>$PROJ_DIR$\..\Common\include\TaskNotify.h</file>
+            <file>$PROJ_DIR$\..\Common\Minimal\comtest.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\croutine.h</file>
+            <file>$PROJ_DIR$\..\Common\Full\semtest.c</file>
+            <file>$PROJ_DIR$\..\Common\include\comtest.h</file>
+            <file>$PROJ_DIR$\..\Common\include\recmutex.h</file>
+            <file>$PROJ_DIR$\..\Common\Minimal\crflash.c</file>
+            <file>$PROJ_DIR$\..\Common\Minimal\integer.c</file>
+            <file>$PROJ_DIR$\..\Common\Minimal\recmutex.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\deprecated_definitions.h</file>
+            <file>$PROJ_DIR$\ParTest\ParTest.c</file>
+            <file>$PROJ_DIR$\..\Common\include\print.h</file>
+            <file>$PROJ_DIR$\..\..\Source\include\event_groups.h</file>
+            <file>$PROJ_DIR$\..\Common\Minimal\PollQ.c</file>
+            <file>$PROJ_DIR$\protected_io\ccp.h</file>
+            <file>$PROJ_DIR$\..\Common\include\integer.h</file>
+            <file>$PROJ_DIR$\..\Common\include\semtest.h</file>
+            <file>$PROJ_DIR$\..\Common\include\crflash.h</file>
+            <file>$PROJ_DIR$\protected_io\protected_io.h</file>
+            <file>$PROJ_DIR$\..\Common\include\PollQ.h</file>
+            <file>$PROJ_DIR$\serial\interrupts.s90</file>
+            <file>$PROJ_DIR$\..\Common\Full\print.c</file>
+            <file>$PROJ_DIR$\..\..\Source\include\portable.h</file>
+            <file>$PROJ_DIR$\..\..\Source\include\projdefs.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\integer.pbi</file>
+            <file>$PROJ_DIR$\..\Common\include\partest.h</file>
+            <file>$PROJ_DIR$\Debug\Exe\RTOSDemo.d90</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_full.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\tasks.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\heap_1.r90</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\limits.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\recmutex.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\heap_1.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\TaskNotify.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\serial.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Product.h</file>
+            <file>$TOOLKIT_DIR$\lib\dlib\dlAVR-3s-arch4-sf-n.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\port.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\ParTest.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\integer.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\portmacro.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\timers.r90</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\stdlib.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\print.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\interrupts.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\serial.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\crflash.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\main_minimal.r90</file>
+            <file>$TOOLKIT_DIR$\inc\ioavr.h</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\ysizet.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\croutine.r90</file>
+            <file>$TOOLKIT_DIR$\src\template\cfg_avr_arch4_3soim.xcl</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\xencoding_limits.h</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\stddef.h</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\yvals.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\ParTest.r90</file>
+            <file>$PROJ_DIR$\Debug\Obj\protected_io.r90</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\string.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\PollQ.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\PollQ.r90</file>
+            <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\Debug\Obj\port.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\event_groups.pbi</file>
+            <file>$PROJ_DIR$\Debug\Obj\comtest.pbi</file>
+        </outputs>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>XLINK</name>
+                    <file> 94 12</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main_blinky.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 28</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 22</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 116 6 17 31 63 121 5 122 128 20 103 120 23 117 34 52 91 90 77 61 66 42 64 55 46</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\regtest.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 30</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 8</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 42 64 40</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\list.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 21</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 25</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 64</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 20 5 91 120 122 17 63 117 103 34 64 128 23 121 52 90 116 6 31 61 66 110 77</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\portable\MemMang\heap_1.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 97</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 100</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 122 77 117 34 103 5 63 120 20 91 17 42 128 23 121 52 90 116 6 31 64 110 61 66</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\croutine.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 118</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 9</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 42 64 70</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 66 122 34 5 70 91 128 23 17 61 42 121 52 90 117 120 20 103 116 6 31 64 63 77</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\queue.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 13</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 2</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 125 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 46 70</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 122 128 23 121 42 5 90 120 117 52 31 64 125 63 46 70 20 103 34 91 116 6 77 110 17 61 66</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\stream_buffer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 27</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 29</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 34 5 122 128 20 103 120 23 125 117 63 121 52 116 6 17 31 91 90 77 61 66 42 64 57</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 122 90 42 128 23 117 121 5 66 52 17 61 125 63 57 120 20 103 34 91 116 6 31 77 64</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\tasks.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 26</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 96</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 125 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 32 43</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 122 117 116 42 120 52 43 128 23 5 6 77 125 63 32 20 103 121 90 31 64 110 34 91 17 61 66</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\timers.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 109</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 7</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 46 32</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 122 128 23 90 46 121 5 31 42 63 120 52 117 116 6 32 20 103 34 91 17 61 66 110 77 64</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 14</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 3</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 116 6 17 31 63 121 5 122 128 20 103 120 23 117 34 52 91 90 77 61 66 37 82 86</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 17 5 82 37 52 117 120 103 122 63 6 31 121 90 20 77 116 34 91 128 23 61 66 86</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\event_groups.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 10</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 130</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 32 80</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 31 5 122 121 32 128 23 90 63 120 52 117 116 6 64 42 80 20 103 34 91 17 77 110 61 66</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\portable\IAR\AVR_Mega0\port.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 105</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 129</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 48 116 6 17 31 52 63 121 34 91 90 77 61 66 42 64</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 116 122 128 23 64 63 120 17 91 77 48 42 5 117 20 103 52 6 31 34 110 121 90 61 66</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\Source\portable\IAR\AVR_Mega0\portmacro.s90</name>
+            <outputs>
+                <tool>
+                    <name>AAVR</name>
+                    <file> 108</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AAVR</name>
+                    <file> 48 116 6 17 31 52</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main_full.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 95</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 16</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 42 64 93 84 68 40 73</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main_minimal.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 115</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 39</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 42 64 70 87 83 15 72 85 93 40</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\serial\serial.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 113</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 102</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 46 42 64 15</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Minimal\TaskNotify.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 101</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 1</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 98 5 122 128 20 103 120 23 63 121 117 34 52 116 6 17 31 91 90 77 61 66 42 64 32 68</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\protected_io\protected_io.S</name>
+            <outputs>
+                <tool>
+                    <name>AAVR</name>
+                    <file> 124</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AAVR</name>
+                    <file> 116 6 17 31</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Minimal\comtest.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 35</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 131</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 15 72 93</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Full\semtest.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 4</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 33</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 55 46 84 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Minimal\crflash.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 19</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 114</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 70 64 46 42 93 85</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Minimal\integer.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 107</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 92</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 83</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Minimal\recmutex.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 24</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 99</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 42 64 55 46 73</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\ParTest\ParTest.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 123</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 106</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 63 121 5 122 128 20 103 120 23 117 34 52 116 6 17 31 91 90 77 61 66 42 64 93</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Minimal\PollQ.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 127</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 126</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 42 64 46 87</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\serial\interrupts.s90</name>
+            <outputs>
+                <tool>
+                    <name>AAVR</name>
+                    <file> 112</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AAVR</name>
+                    <file> 116 6 17 31</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Common\Full\print.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 0</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 111</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCAVR</name>
+                    <file> 110 5 122 128 20 103 120 23 117 63 121 34 52 116 6 17 31 91 90 77 61 66 46 42 64 79</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Debug\Exe\RTOSDemo.d90</name>
+            <outputs>
+                <tool>
+                    <name>XLINK</name>
+                    <file> 12</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>XLINK</name>
+                    <file> 11 119 35 19 118 10 97 107 112 21 14 28 95 115 123 127 105 108 0 124 13 24 30 4 113 27 101 26 109 104</file>
+                </tool>
+            </inputs>
+        </file>
+    </configuration>
+    <configuration>
+        <name>Release</name>
+        <outputs />
+        <forcedrebuild>
+            <name>[MULTI_TOOL]</name>
+            <tool>XLINK</tool>
+        </forcedrebuild>
+    </configuration>
+</project>

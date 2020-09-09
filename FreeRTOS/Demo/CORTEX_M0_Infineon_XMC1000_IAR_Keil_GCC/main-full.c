@@ -86,7 +86,7 @@
 #include "blocktim.h"
 #include "countsem.h"
 #include "recmutex.h"
-#include "ParTest.h"
+#include "partest.h"
 #include "dynamic.h"
 #include "QueueOverwrite.h"
 #include "QueueSet.h"

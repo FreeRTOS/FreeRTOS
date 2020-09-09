@@ -265,7 +265,7 @@ int main_full( void )
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2000UL );
+const TickType_t xCycleFrequency = pdMS_TO_TICKS( 10000UL );
 HeapStats_t xHeapStats;
 
 	/* Just to remove compiler warning. */
@@ -399,7 +399,10 @@ HeapStats_t xHeapStats;
 
 		printf( "%s - tick count %u \r\n",
 					pcStatusMessage,
-					xTaskGetTickCount() );	
+					xTaskGetTickCount() );
+
+		// Reset the error condition
+		pcStatusMessage = "OK: No errors";	
 	}
 }
 /*-----------------------------------------------------------*/

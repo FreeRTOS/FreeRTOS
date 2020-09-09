@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -1252,10 +1252,16 @@ BaseType_t xReturn = pdTRUE;
 			const uint16_t usCount = ( uint16_t ) ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY;
 			uint16_t usNumARecordsStored = 0;
 	
-				for( x = 0U; ( x < pxDNSMessageHeader->usAnswers ) && ( usNumARecordsStored < usCount ); x++ )
+				for( x = 0U; x < pxDNSMessageHeader->usAnswers; x++ )
 				{
 				BaseType_t xDoAccept;
 	
+					if( usNumARecordsStored >= usCount )
+					{
+						/* Only count ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY number of records. */
+						break;
+					}
+
 					uxResult = prvSkipNameField( pucByte,
 												 uxSourceBytesRemaining );
 	

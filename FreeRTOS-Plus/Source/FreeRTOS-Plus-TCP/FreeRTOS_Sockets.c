@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -301,7 +301,7 @@ FreeRTOS_Socket_t const *pxSocket = NULL;
 Socket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol )
 {
 FreeRTOS_Socket_t *pxSocket;
-size_t uxSocketSize;
+size_t uxSocketSize = 0;
 EventGroupHandle_t xEventGroup;
 Socket_t xReturn;
 
@@ -311,8 +311,8 @@ Socket_t xReturn;
 	}
 	else
 	{
-		/* Allocate the structure that will hold the socket information.  The
-		size depends on the type of socket: UDP sockets need less space.  A
+		/* Allocate the structure that will hold the socket information. The
+		size depends on the type of socket: UDP sockets need less space. A
 		define 'pvPortMallocSocket' will used to allocate the necessary space.
 		By default it points to the FreeRTOS function 'pvPortMalloc()'. */
 		pxSocket = ipCAST_PTR_TO_TYPE_PTR( FreeRTOS_Socket_t, pvPortMallocSocket( uxSocketSize ) );
@@ -667,6 +667,7 @@ BaseType_t xTimed = pdFALSE;
 TimeOut_t xTimeOut;
 int32_t lReturn;
 EventBits_t xEventBits = ( EventBits_t ) 0;
+size_t uxPayloadLength;
 
 	if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_UDP, pdTRUE ) == pdFALSE )
 	{
@@ -770,7 +771,8 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 			calculated at the total packet size minus the headers.
 			The validity of `xDataLength` prvProcessIPPacket has been confirmed
 			in 'prvProcessIPPacket()'. */
-			lReturn = ( int32_t ) ( pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t ) );
+			uxPayloadLength = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+			lReturn = ( int32_t ) uxPayloadLength;
 
 			if( pxSourceAddress != NULL )
 			{
@@ -1883,7 +1885,7 @@ const socklen_t uxSize = 16;
 	{
 	uint8_t pucDigits[ sockDIGIT_COUNT ];
 	uint8_t ucValue = pucAddress[ uxNibble ];
-	socklen_t uxSource = sockDIGIT_COUNT - 1U;
+	socklen_t uxSource = ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U;
 	socklen_t uxNeeded;
 
 		for( ;; )
@@ -1899,7 +1901,7 @@ const socklen_t uxSize = 16;
 		pucDigits[ 0 ] = ucValue;
 
 		/* Skip leading zeros. */
-		for( uxSource = 0; uxSource < ( socklen_t ) ( sockDIGIT_COUNT - 1U ); uxSource++ )
+		for( uxSource = 0; uxSource < ( ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U ); uxSource++ )
 		{
 			if( pucDigits[ uxSource ] != 0U )
 			{

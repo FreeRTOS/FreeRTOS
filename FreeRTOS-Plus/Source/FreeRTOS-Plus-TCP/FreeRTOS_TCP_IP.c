@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -581,7 +581,7 @@ BaseType_t xReady = pdFALSE;
 static int32_t prvTCPSendPacket( FreeRTOS_Socket_t *pxSocket )
 {
 int32_t lResult = 0;
-UBaseType_t uxOptionsLength;
+UBaseType_t uxOptionsLength, uxIntermediateResult = 0;
 NetworkBufferDescriptor_t *pxNetworkBuffer;
 
 	if( pxSocket->u.xTCP.ucTCPState != ( uint8_t ) eCONNECT_SYN )
@@ -626,7 +626,8 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 			uxOptionsLength = prvSetSynAckOptions( pxSocket, &( pxProtocolHeaders->xTCPHeader ) );
 
 			/* Return the number of bytes to be sent. */
-			lResult = ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength );
+			uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength;
+			lResult = ( int32_t ) uxIntermediateResult;
 
 			/* Set the TCP offset field:  ipSIZE_OF_TCP_HEADER equals 20 and
 			uxOptionsLength is always a multiple of 4.  The complete expression
@@ -1785,6 +1786,7 @@ uint32_t ulDataGot, ulDistance;
 TCPWindow_t *pxTCPWindow;
 NetworkBufferDescriptor_t *pxNewBuffer;
 int32_t lStreamPos;
+UBaseType_t uxIntermediateResult = 0;
 
 	if( ( *ppxNetworkBuffer ) != NULL )
 	{
@@ -1957,7 +1959,8 @@ int32_t lStreamPos;
 			pxProtocolHeaders->xTCPHeader.ucTCPFlags |= ( uint8_t ) tcpTCP_FLAG_PSH;
 		}
 
-		lDataLen += ipNUMERIC_CAST( int32_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength );
+		uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength;
+		lDataLen += ( int32_t ) uxIntermediateResult;
 	}
 
 	return lDataLen;
@@ -2077,7 +2080,7 @@ static BaseType_t prvTCPHandleFin( FreeRTOS_Socket_t *pxSocket, const NetworkBuf
 ProtocolHeaders_t *pxProtocolHeaders = ipCAST_PTR_TO_TYPE_PTR( ProtocolHeaders_t,
 	&( pxNetworkBuffer->pucEthernetBuffer[ ipSIZE_OF_ETH_HEADER + xIPHeaderSize( pxNetworkBuffer ) ] ) );
 TCPHeader_t *pxTCPHeader = &( pxProtocolHeaders->xTCPHeader );
-uint8_t ucTCPFlags = pxTCPHeader->ucTCPFlags;
+uint8_t ucIntermediateResult = 0, ucTCPFlags = pxTCPHeader->ucTCPFlags;
 TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 BaseType_t xSendLength = 0;
 uint32_t ulAckNr = FreeRTOS_ntohl( pxTCPHeader->ulAckNr );
@@ -2143,7 +2146,8 @@ uint32_t ulAckNr = FreeRTOS_ntohl( pxTCPHeader->ulAckNr );
 
 	if( pxTCPHeader->ucTCPFlags != 0U )
 	{
-		xSendLength = ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + pxTCPWindow->ucOptionLength );
+		ucIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + pxTCPWindow->ucOptionLength;
+		xSendLength = ( BaseType_t ) ucIntermediateResult;
 	}
 
 	pxTCPHeader->ucTCPOffset = ( uint8_t ) ( ( ipSIZE_OF_TCP_HEADER + pxTCPWindow->ucOptionLength ) << 2 );
@@ -2180,6 +2184,7 @@ int32_t lLength, lTCPHeaderLength, lReceiveLength, lUrgentLength;
 const IPHeader_t *pxIPHeader = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( IPHeader_t, &( pxNetworkBuffer->pucEthernetBuffer[ ipSIZE_OF_ETH_HEADER ] ) );
 const size_t xIPHeaderLength = ipSIZE_OF_IPv4_HEADER;
 uint16_t usLength;
+uint8_t ucIntermediateResult = 0;
 
 	/* Determine the length and the offset of the user-data sent to this
 	node.
@@ -2187,7 +2192,8 @@ uint16_t usLength;
 	The size of the TCP header is given in a multiple of 4-byte words (single
 	byte, needs no ntoh() translation).  A shift-right 2: is the same as
 	(offset >> 4) * 4. */
-	lTCPHeaderLength = ipNUMERIC_CAST( BaseType_t, ( pxTCPHeader->ucTCPOffset & tcpVALID_BITS_IN_TCP_OFFSET_BYTE ) >> 2 );
+	ucIntermediateResult = ( pxTCPHeader->ucTCPOffset & tcpVALID_BITS_IN_TCP_OFFSET_BYTE ) >> 2;
+	lTCPHeaderLength = ( int32_t ) ucIntermediateResult;
 
 	/* Let pucRecvData point to the first byte received. */
 	*ppucRecvData = &( pxNetworkBuffer->pucEthernetBuffer[ ( size_t ) ipSIZE_OF_ETH_HEADER + xIPHeaderLength + ( size_t ) lTCPHeaderLength ] );
@@ -2394,6 +2400,7 @@ TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 uint8_t ucTCPFlags = pxTCPHeader->ucTCPFlags;
 uint32_t ulSequenceNumber = FreeRTOS_ntohl( pxTCPHeader->ulSequenceNumber );
 BaseType_t xSendLength = 0;
+UBaseType_t uxIntermediateResult = 0;
 
 	/* Either expect a ACK or a SYN+ACK. */
 	uint8_t ucExpect = tcpTCP_FLAG_ACK;
@@ -2418,7 +2425,10 @@ BaseType_t xSendLength = 0;
 		pxTCPWindow->rx.ulCurrentSequenceNumber = ulSequenceNumber;
 
 		pxTCPHeader->ucTCPFlags |= tcpTCP_FLAG_RST;
-		xSendLength = ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength );
+
+		uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength;
+		xSendLength = ( BaseType_t ) uxIntermediateResult;
+
 		pxTCPHeader->ucTCPOffset = ( uint8_t )( ( ipSIZE_OF_TCP_HEADER + uxOptionsLength ) << 2 );
 	}
 	else
@@ -2472,7 +2482,9 @@ BaseType_t xSendLength = 0;
 		if( ( pxSocket->u.xTCP.ucTCPState == ( EventBits_t ) eCONNECT_SYN ) || ( ulReceiveLength != 0UL ) )
 		{
 			pxTCPHeader->ucTCPFlags = tcpTCP_FLAG_ACK;
-			xSendLength = ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ( size_t ) ipSIZE_OF_TCP_HEADER + uxOptionsLength );
+
+			uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ( size_t ) ipSIZE_OF_TCP_HEADER + uxOptionsLength;
+			xSendLength = ( BaseType_t ) uxIntermediateResult;
 			pxTCPHeader->ucTCPOffset = ( uint8_t ) ( ( ipSIZE_OF_TCP_HEADER + uxOptionsLength ) << 2 );
 		}
 		#if( ipconfigUSE_TCP_WIN != 0 )
@@ -2512,10 +2524,11 @@ ProtocolHeaders_t *pxProtocolHeaders = ipCAST_PTR_TO_TYPE_PTR( ProtocolHeaders_t
 TCPHeader_t *pxTCPHeader = &pxProtocolHeaders->xTCPHeader;
 TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 uint8_t ucTCPFlags = pxTCPHeader->ucTCPFlags;
-uint32_t ulSequenceNumber = FreeRTOS_ntohl( pxTCPHeader->ulSequenceNumber ), ulCount;
+uint32_t ulSequenceNumber = FreeRTOS_ntohl( pxTCPHeader->ulSequenceNumber ), ulCount, ulIntermediateResult = 0;
 BaseType_t xSendLength = 0, xMayClose = pdFALSE, bRxComplete, bTxDone;
 int32_t lDistance, lSendResult;
 uint16_t usWindow;
+UBaseType_t uxIntermediateResult = 0;
 
 	/* Remember the window size the peer is advertising. */
 	usWindow = FreeRTOS_ntohs( pxTCPHeader->usWindow );
@@ -2598,7 +2611,8 @@ uint16_t usWindow;
 			}
 			else
 			{
-				lDistance = ipNUMERIC_CAST( int32_t, ulSequenceNumber + ulReceiveLength - pxTCPWindow->rx.ulCurrentSequenceNumber );
+				ulIntermediateResult = ulSequenceNumber + ulReceiveLength - pxTCPWindow->rx.ulCurrentSequenceNumber;
+				lDistance = ( int32_t ) ulIntermediateResult;
 
 				if( lDistance > 1 )
 				{
@@ -2631,7 +2645,8 @@ uint16_t usWindow;
 
 		if( ulReceiveLength != 0U )
 		{
-			xSendLength = ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength );
+			uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength;
+			xSendLength = ( BaseType_t ) uxIntermediateResult;
 			/* TCP-offsett equals '( ( length / 4 ) << 4 )', resulting in a shift-left 2 */
 			pxTCPHeader->ucTCPOffset = ( uint8_t )( ( ipSIZE_OF_TCP_HEADER + uxOptionsLength ) << 2 );
 
@@ -2678,6 +2693,8 @@ const TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 /* Find out what window size we may advertised. */
 int32_t lRxSpace;
 BaseType_t xSendLength = xByteCount;
+uint32_t ulRxBufferSpace;
+
 #if( ipconfigUSE_TCP_WIN == 1 )
 	#if( ipconfigTCP_ACK_EARLIER_PACKET == 0 )
 		const int32_t lMinLength = 0;
@@ -2688,7 +2705,9 @@ BaseType_t xSendLength = xByteCount;
 
 	/* Set the time-out field, so that we'll be called by the IP-task in case no
 	next message will be received. */
-	lRxSpace = ipNUMERIC_CAST( int32_t, pxSocket->u.xTCP.ulHighestRxAllowed - pxTCPWindow->rx.ulCurrentSequenceNumber );
+	ulRxBufferSpace = pxSocket->u.xTCP.ulHighestRxAllowed - pxTCPWindow->rx.ulCurrentSequenceNumber;
+	lRxSpace = ( int32_t ) ulRxBufferSpace;
+
 	#if ipconfigUSE_TCP_WIN == 1
 	{
 
@@ -2832,6 +2851,7 @@ uint32_t ulSequenceNumber = FreeRTOS_ntohl (pxTCPHeader->ulSequenceNumber);
 UBaseType_t uxOptionsLength = 0U;
 uint8_t ucTCPFlags = pxTCPHeader->ucTCPFlags;
 TCPWindow_t *pxTCPWindow = &( pxSocket->u.xTCP.xTCPWindow );
+UBaseType_t uxIntermediateResult = 0;
 
 	/* First get the length and the position of the received data, if any.
 	pucRecvData will point to the first byte of the TCP payload. */
@@ -2912,7 +2932,8 @@ TCPWindow_t *pxTCPWindow = &( pxSocket->u.xTCP.xTCPWindow );
 				uxOptionsLength = prvSetSynAckOptions( pxSocket, pxTCPHeader );
 				pxTCPHeader->ucTCPFlags = ( uint8_t ) tcpTCP_FLAG_SYN | ( uint8_t ) tcpTCP_FLAG_ACK;
 
-				xSendLength = ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength );
+				uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength;
+				xSendLength = ( BaseType_t ) uxIntermediateResult;
 
 				/* Set the TCP offset field:  ipSIZE_OF_TCP_HEADER equals 20 and
 				uxOptionsLength is a multiple of 4.  The complete expression is:

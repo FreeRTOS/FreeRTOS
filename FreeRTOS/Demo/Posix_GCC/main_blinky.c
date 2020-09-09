@@ -75,9 +75,9 @@
  *   data was received on the queue from the queue send software timer.
  *
  * NOTE:  Console input and output relies on Linux system calls, which can
- * interfere with the execution of the FreeRTOS Linux port.  This demo only
- * uses Linux system call occasionally.  Heavier use of Linux system calls
- * can crash the port.
+ * interfere with the execution of the FreeRTOS Linux port. This demo only
+ * uses Linux system call occasionally. Heavier use of Linux system calls
+ * may crash the port.
  */
 
 #include <stdio.h>

@@ -224,7 +224,7 @@ int main_full( void )
 	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
 	/* vStartStreamBufferTasks(); */
 	/* vStartStreamBufferInterruptDemo(); */
-	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
+	/* vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE ); */
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{

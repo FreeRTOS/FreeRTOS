@@ -27,20 +27,18 @@
 
 /******************************************************************************
  * This project provides three demo applications.  A simple blinky style project,
- * a more comprehensive test and demo application, and a TCP echo application.
+ * a more comprehensive test and demo application, and a TCP echo demo.
  * The mainSELECTED_APPLICATION setting is used to select between
  * the three
  *
- * if mainSELECTED_APPLICATION is BLINKY_DEMO.
+ * If mainSELECTED_APPLICATION = BLINKY_DEMO the simple blinky demo will be built.
  * The simply blinky demo is implemented and described in main_blinky.c.
  *
- * if mainSELECTED_APPLICATION is FULL_DEMO
- * The more comprehensive test and demo application is implemented
- * and described in main_full.c and activated by
+ * If mainSELECTED_APPLICATION = FULL_DEMO the more comprehensive test and demo 
+ * application built. This is implemented and described in main_full.c.
  *
- * if mainSELECTED_APPLICATION is ECHO_CLIENT_DEMO
- * The ECHO_CLIENT_DEMO setting is used to select the tcp echo
- * application implemeted in main_networking.c
+ * If mainSELECTED_APPLICATION = ECHO_CLIENT_DEMO the tcp echo demo will be built. 
+ * This is implemented and described in main_networking.c 
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -196,7 +194,8 @@ void vApplicationIdleHook( void )
 	vTaskDelete() API function to delete themselves then it is also important
 	that vApplicationIdleHook() is permitted to return to its calling function,
 	because it is the responsibility of the idle task to clean up memory
-	allocated by the kernel to any task that has since deleted itself. */
+	allocated by the kernel to any task that has since deleted itself. */	
+
 
 	usleep(15000);
 	traceOnEnter();
@@ -313,8 +312,8 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 		value. */
 		while( ulSetToNonZeroInDebuggerToContinue == 0 )
 		{
-		__asm volatile ( "NOP" );
-		__asm volatile ( "NOP" );
+			__asm volatile ( "NOP" );
+			__asm volatile ( "NOP" );
 		}
 	}
 	taskEXIT_CRITICAL();

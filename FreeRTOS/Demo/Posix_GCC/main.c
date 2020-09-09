@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  * 1 tab == 4 spaces!
  */
@@ -79,7 +79,7 @@
 extern void main_blinky( void );
 extern void main_full( void );
 extern void main_tcp_echo_client_tasks( void );
-
+static void traceOnEnter( void );
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
  * http://www.freertos.org/a00016.html for more information.
@@ -135,6 +135,7 @@ int main( void )
 		/* Start the trace recording - the recording is written to a file if
 		configASSERT() is called. */
 		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
+		printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
 		uiTraceStart();
 	}
 	#endif
@@ -142,24 +143,23 @@ int main( void )
 	console_init();
 	#if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
 	{
-	    console_print("Starting echo client demo\n");
+		console_print("Starting echo client demo\n");
 		main_tcp_echo_client_tasks();
 	}
 	#elif ( mainSELECTED_APPLICATION == BLINKY_DEMO )
 	{
-	    console_print("Starting echo blinky demo\n");
+		console_print("Starting echo blinky demo\n");
 		main_blinky();
 	}
 	#elif ( mainSELECTED_APPLICATION == FULL_DEMO)
 	{
-	    console_print("Starting full demo\n");
+		console_print("Starting full demo\n");
 		main_full();
 	}
 	#else
 	{
 		#error "The selected demo is not valid"
 	}
-
 	#endif /* if ( mainSELECTED_APPLICATION ) */
 
 	return 0;
@@ -197,11 +197,14 @@ void vApplicationIdleHook( void )
 	allocated by the kernel to any task that has since deleted itself. */	
 
 
+	usleep(15000);
+	traceOnEnter();
+
 	#if ( mainSELECTED_APPLICATION == FULL_DEMO )
 	{
 		/* Call the idle task processing used by the full demo.  The simple
 		blinky demo does not use the idle task hook. */
-		vFullDemoIdleFunction(); 
+		vFullDemoIdleFunction();
 	}
 	#endif
 }
@@ -235,6 +238,26 @@ void vApplicationTickHook( void )
 		vFullDemoTickHookFunction();
 	}
 	#endif /* mainSELECTED_APPLICATION */
+}
+
+void traceOnEnter()
+{
+	int ret;
+	struct timeval tv = { 0L, 0L };
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(0, &fds);
+	ret = select(1, &fds, NULL, NULL, &tv);
+	if ( ret > 0 )
+	{
+	if( xTraceRunning == pdTRUE )
+	{
+		prvSaveTraceFile();
+	}
+	/* clear the buffer */
+	char buffer[200];
+	read(1, &buffer, 200);
+	}
 }
 
 void vLoggingPrintf( const char *pcFormat,

@@ -27,8 +27,8 @@
 
 /*
  *******************************************************************************
- * NOTE 1: The Linux port is a simulation (or is that emulation?) only!  Do not
- * expect to get real time behaviour from the Linux port or this demo
+ * NOTE 1: The POSIX port is a simulation (or is that emulation?) only!  Do not
+ * expect to get real time behaviour from the POSIX port or this demo
  * application.  It is provided as a convenient development and demonstration
  * test bed only.
  *
@@ -719,13 +719,6 @@ uint32_t ulIdleExecutionTime;
 			}
 		}
 	}
-
-	ulIdleExecutionTime = ulTaskGetIdleRunTimeCounter();
-	if( ulIdleExecutionTime == ulLastIdleExecutionTime )
-	{
-		pcStatusMessage = "Error: Total amount of Idle task execution time did not change";
-	}
-	ulLastIdleExecutionTime = ulIdleExecutionTime;
 }
 /*-----------------------------------------------------------*/
 

@@ -243,7 +243,6 @@ void vApplicationTickHook( void )
 void traceOnEnter()
 {
     int ret;
-    static BaseType_t xPrinted = pdFALSE;
     struct timeval tv = { 0L, 0L };
     fd_set fds;
     FD_ZERO(&fds);
@@ -251,16 +250,13 @@ void traceOnEnter()
     ret = select(1, &fds, NULL, NULL, &tv);
     if ( ret > 0 )
     {
-        /* Stop the trace recording. */
-        if( xPrinted == pdFALSE )
+        if( xTraceRunning == pdTRUE )
         {
-            xPrinted = pdTRUE;
-
-            if( xTraceRunning == pdTRUE )
-            {
-                prvSaveTraceFile();
-            }
+            prvSaveTraceFile();
         }
+        /* clear the buffer */
+        char buffer[200];
+        read(1, &buffer, 200);
     }
 }
 

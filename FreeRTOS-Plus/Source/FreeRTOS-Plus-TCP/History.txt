@@ -1,5 +1,7 @@
-Changes between V2.0.0 and V2.2.1 releases:
+Changes between V2.2.1 and V2.2.2 releases:
 	+ Updated the source code to adhere to stricter MISRA compliance.
+
+Changes between V2.0.0 and V2.2.1 releases:
 	+ Improved security by giving users the option to reject UDP packets with a
 	  checksum of zero even though the UDP spec allows it.
 	+ Improved robustness by checking packet lengths in software even if the check

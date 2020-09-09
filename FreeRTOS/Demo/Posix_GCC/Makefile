@@ -74,8 +74,8 @@ SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/trcStreamingReco
 SOURCE_FILES += ${FREERTOS_PLUS_DIR}/Source/FreeRTOS-Plus-Trace/streamports/File/trcStreamingPort.c
 
 
-CFLAGS := -ggdb3 -Og -DprojCOVERAGE_TEST=0
-LDFLAGS := -ggdb3 -Og -pthread -lpcap
+CFLAGS := -ggdb3 -O0 -DprojCOVERAGE_TEST=0 -D_WINDOWS_
+LDFLAGS := -ggdb3 -O0 -pthread -lpcap
 
 OBJ_FILES = $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 

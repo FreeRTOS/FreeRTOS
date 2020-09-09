@@ -85,7 +85,7 @@ ${BIN} : $(BUILD_DIR)/$(BIN)
 
 ${BUILD_DIR}/${BIN} : ${OBJ_FILES}
 	-mkdir -p ${@D}
-	$(CC) $(CFLAGS) $(INCLUDE_DIRS) ${LDFLAGS} $^ -o $@
+	$(CC) $^ $(CFLAGS) $(INCLUDE_DIRS) ${LDFLAGS} -o $@
 
 
 -include ${DEP_FILE}

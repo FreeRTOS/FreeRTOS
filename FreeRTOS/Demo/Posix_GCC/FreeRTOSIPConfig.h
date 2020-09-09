@@ -266,7 +266,7 @@ Ethernet driver does all the necessary filtering in hardware then software
 filtering can be removed by using a value other than 1 or 0. */
 #define ipconfigETHERNET_DRIVER_FILTERS_FRAME_TYPES	1
 
-/* The windows simulator cannot really simulate MAC interrupts, and needs to
+/* The Linux simulator cannot really simulate MAC interrupts, and needs to
 block occasionally to allow other tasks to run. */
 #define configWINDOWS_MAC_INTERRUPT_SIMULATOR_DELAY ( 20 / portTICK_PERIOD_MS )
 

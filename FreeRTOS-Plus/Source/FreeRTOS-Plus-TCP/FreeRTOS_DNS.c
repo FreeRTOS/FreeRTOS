@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -846,7 +846,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Copy in the const part of the header. Intentionally using different
 	 * pointers with memcpy() to put the information in to correct place. */
-	( void ) memcpy( pucUDPPayloadBuffer, &( xDefaultPartDNSHeader ), sizeof( xDefaultPartDNSHeader ) );
+	( void ) memcpy( ( void * ) pucUDPPayloadBuffer, ( const void * ) ( &( xDefaultPartDNSHeader ) ), sizeof( xDefaultPartDNSHeader ) );
 
 	/* Write in a unique identifier. Cast the Payload Buffer to DNSMessage_t
 	 * to easily access fields of the DNS Message. */
@@ -1252,10 +1252,16 @@ BaseType_t xReturn = pdTRUE;
 			const uint16_t usCount = ( uint16_t ) ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY;
 			uint16_t usNumARecordsStored = 0;
 	
-				for( x = 0U; ( x < pxDNSMessageHeader->usAnswers ) && ( usNumARecordsStored < usCount ); x++ )
+				for( x = 0U; x < pxDNSMessageHeader->usAnswers; x++ )
 				{
 				BaseType_t xDoAccept;
 	
+					if( usNumARecordsStored >= usCount )
+					{
+						/* Only count ipconfigDNS_CACHE_ADDRESSES_PER_ENTRY number of records. */
+						break;
+					}
+
 					uxResult = prvSkipNameField( pucByte,
 												 uxSourceBytesRemaining );
 	
@@ -1308,8 +1314,8 @@ BaseType_t xReturn = pdTRUE;
 						{
 							/* Copy the IP address out of the record. Using different pointers
 							 * to copy only the portion we want is intentional here. */
-							( void ) memcpy( &( ulIPAddress ),
-											 &( pucByte[ sizeof( DNSAnswerRecord_t ) ] ),
+							( void ) memcpy( ( void * ) ( &( ulIPAddress ) ),
+											 ( const void * ) ( &( pucByte[ sizeof( DNSAnswerRecord_t ) ] ) ),
 											 sizeof( uint32_t ) );
 
 							#if( ipconfigDNS_USE_CALLBACKS == 1 )

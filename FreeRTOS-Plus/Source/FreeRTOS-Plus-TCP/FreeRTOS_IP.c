@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -954,7 +954,7 @@ NetworkBufferDescriptor_t *pxResult;
 			/* The following statement may trigger a:
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
-			pxResult = * ( ipPOINTER_CAST( NetworkBufferDescriptor_t **, pucBuffer ) );
+			pxResult = * ( ( const NetworkBufferDescriptor_t **) pucBuffer );
 		}
 		else
 		{
@@ -2000,7 +2000,7 @@ uint8_t ucProtocol;
 	size_t uxLength;
 	const IPPacket_t * pxIPPacket;
 	UBaseType_t uxIPHeaderLength;
-	ProtocolPacket_t *pxProtPack;
+	const ProtocolPacket_t *pxProtPack;
 	uint8_t ucProtocol;
 	uint16_t usLength;
 	uint16_t ucVersionHeaderLength;
@@ -2058,7 +2058,7 @@ uint8_t ucProtocol;
 			of this calculation. */
 			/* Map the Buffer onto the Protocol Packet struct for easy access to the
 			 * struct fields. */
-			pxProtPack = ipCAST_PTR_TO_TYPE_PTR( ProtocolPacket_t, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+			pxProtPack = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ProtocolPacket_t, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
 
 			/* Switch on the Layer 3/4 protocol. */
 			if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
@@ -2123,7 +2123,7 @@ uint32_t ulLength;
 uint16_t usChecksum, *pusChecksum;
 const IPPacket_t * pxIPPacket;
 UBaseType_t uxIPHeaderLength;
-ProtocolPacket_t *pxProtPack;
+const ProtocolPacket_t *pxProtPack;
 uint8_t ucProtocol;
 #if( ipconfigHAS_DEBUG_PRINTF != 0 )
 	const char *pcType;
@@ -2179,7 +2179,7 @@ BaseType_t location = 0;
 		and IP headers incorrectly aligned. However, either way, the "third"
 		protocol (Layer 3 or 4) header will be aligned, which is the convenience
 		of this calculation. */
-		pxProtPack = ipCAST_PTR_TO_TYPE_PTR( ProtocolPacket_t, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
+		pxProtPack = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( ProtocolPacket_t, &( pucEthernetBuffer[ uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ] ) );
 
 		/* Switch on the Layer 3/4 protocol. */
 		if( ucProtocol == ( uint8_t ) ipPROTOCOL_UDP )
@@ -2315,7 +2315,7 @@ BaseType_t location = 0;
 			/* ICMP/IGMP do not have a pseudo header for CRC-calculation. */
 			usChecksum = ( uint16_t )
 				( ~usGenerateChecksum( 0U,
-					( uint8_t * ) &( pxProtPack->xTCPPacket.xTCPHeader ), ( size_t ) ulLength ) );
+					( const uint8_t * ) &( pxProtPack->xTCPPacket.xTCPHeader ), ( size_t ) ulLength ) );
 		}
 		else
 		{
@@ -2600,8 +2600,8 @@ EthernetHeader_t *pxEthernetHeader;
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( &( pxEthernetHeader->xDestinationAddress ), &( pxEthernetHeader->xSourceAddress ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( &( pxEthernetHeader->xSourceAddress) , ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
+		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );

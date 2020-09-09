@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -205,7 +205,7 @@ struct xSOCKET;
 typedef struct xSOCKET *Socket_t;
 typedef struct xSOCKET const * ConstSocket_t;
 
-static portINLINE int prvSocketValid( Socket_t xSocket )
+static portINLINE unsigned int prvSocketValid( Socket_t xSocket )
 {
     /* coverity[misra_c_2012_rule_11_4_violation] */
     return ( ( xSocket != FREERTOS_INVALID_SOCKET ) && ( xSocket != NULL ) );

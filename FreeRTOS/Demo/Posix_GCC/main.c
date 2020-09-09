@@ -28,13 +28,18 @@
 /******************************************************************************
  * This project provides three demo applications.  A simple blinky style project,
  * a more comprehensive test and demo application, and a TCP echo application.
- * The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between
- * the two if mainCREATE_TCP_ECHO_TASKS_SINGLE is 0.
- * The simply blinky demo is implemented and described in main_blinky.c.  The
- * more comprehensive test and demo application is implemented and described in
- * main_full.c.
- * The mainCREATE_TCP_ECHO_TASKS_SINGLE setting is used to select the tcp echo
- * application regardless of the value of mainCREATE_SIMPLE_BLINKY_DEMO_ONLY.
+ * The mainSELECTED_APPLICATION setting is used to select between
+ * the three
+ *
+ * if mainSELECTED_APPLICATION is BLINKY_DEMO.
+ * The simply blinky demo is implemented and described in main_blinky.c.
+ *
+ * The more comprehensive test and demo application is implemented
+ * and described in main_full.c and activated by
+ * setting mainSELECTED_APPLICATION FULL_DEMO.
+ *
+ * The ECHO_CLIENT_DEMO setting is used to select the tcp echo
+ * application implemeted in main_networking.c
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
@@ -63,37 +68,15 @@
 /* Local includes. */
 #include "console.h"
 
-/* This project provides three demo applications.  A simple blinky style demo
-application, a more comprehensive test and demo application, and a TCP
-echo application.  The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY and
-mainCREATE_TCP_ECHO_TASKS_SINGLE settings are used to select between the three.
+#define    BLINKY_DEMO       0
+#define    FULL_DEMO         1
+#define    ECHO_CLIENT_DEMO  2
 
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 & mainCREATE_TCP_ECHO_TASKS_SINGLE
-is not 1 then the blinky demo will be built.
-The blinky demo is implemented and described in main_blinky.c.
-
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 &
-mainCREATE_TCP_ECHO_TASKS_SINGLE is not 1  then the comprehensive test and
-demo application will be built.  The comprehensive test and demo application is
-implemented and described in main_full.c the tcp echo demo application
-is implemented in main_networking.c. */
-
-#ifndef mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
-	#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
-#endif
-
-#ifndef mainCREATE_TCP_ECHO_TASKS_SINGLE
-	#define mainCREATE_TCP_ECHO_TASKS_SINGLE    1
-#endif
+#define mainSELECTED_APPLICATION FULL_DEMO
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
 /*-----------------------------------------------------------*/
-
-/*
- * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
- */
 extern void main_blinky( void );
 extern void main_full( void );
 extern void main_tcp_echo_client_tasks( void );
@@ -153,25 +136,32 @@ int main( void )
 		/* Start the trace recording - the recording is written to a file if
 		configASSERT() is called. */
 		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
 		uiTraceStart();
 	}
 	#endif
 
 	console_init();
-	#if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
+	#if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
 	{
+	    console_print("sgtaring echo clientdemo\n");
 		main_tcp_echo_client_tasks();
 	}
-	#elif ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	#elif ( mainSELECTED_APPLICATION == BLINKY_DEMO )
 	{
+	    console_print("sgtaring echo blinky\n");
 		main_blinky();
 	}
-	#else
+	#elif ( mainSELECTED_APPLICATION == FULL_DEMO)
 	{
+	    console_print("sgtaring full demo\n");
 		main_full();
 	}
-	#endif /* if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 ) */
+        #else
+        {
+                #error "The selected demo is not valid"
+        }
+
+	#endif /* if ( mainSELECTED_APPLICATION ) */
 
 	return 0;
 }
@@ -209,11 +199,11 @@ void vApplicationIdleHook( void )
 
 	sleep( 1 );
 
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+	#if ( mainSELECTED_APPLICATION == FULL_DEMO )
 	{
 		/* Call the idle task processing used by the full demo.  The simple
 		blinky demo does not use the idle task hook. */
-		/*vFullDemoIdleFunction();*/
+		/* vFullDemoIdleFunction(); */
 	}
 	#endif
 }
@@ -242,12 +232,11 @@ void vApplicationTickHook( void )
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
 	functions can be used (those that end in FromISR()). */
 
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 && \
-		  mainCREATE_TCP_ECHO_TASKS_SINGLE != 1 )
-		{
-			vFullDemoTickHookFunction();
-		}
-	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
+	#if (mainSELECTED_APPLICATION == FULL_DEMO )
+        {
+		vFullDemoTickHookFunction();
+        }
+	#endif /* mainSELECTED_APPLICATION */
 }
 
 void vLoggingPrintf( const char *pcFormat,

@@ -19,8 +19,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  * 1 tab == 4 spaces!
  */
@@ -34,10 +34,11 @@
  * if mainSELECTED_APPLICATION is BLINKY_DEMO.
  * The simply blinky demo is implemented and described in main_blinky.c.
  *
+ * if mainSELECTED_APPLICATION is FULL_DEMO
  * The more comprehensive test and demo application is implemented
  * and described in main_full.c and activated by
- * setting mainSELECTED_APPLICATION FULL_DEMO.
  *
+ * if mainSELECTED_APPLICATION is ECHO_CLIENT_DEMO
  * The ECHO_CLIENT_DEMO setting is used to select the tcp echo
  * application implemeted in main_networking.c
  *
@@ -144,24 +145,23 @@ int main( void )
 	console_init();
 	#if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
 	{
-	    console_print("Starting echo client demo\n");
+		console_print("Starting echo client demo\n");
 		main_tcp_echo_client_tasks();
 	}
 	#elif ( mainSELECTED_APPLICATION == BLINKY_DEMO )
 	{
-	    console_print("Starting echo blinky demo\n");
+		console_print("Starting echo blinky demo\n");
 		main_blinky();
 	}
 	#elif ( mainSELECTED_APPLICATION == FULL_DEMO)
 	{
-	    console_print("Starting full demo\n");
+		console_print("Starting full demo\n");
 		main_full();
 	}
-        #else
-        {
-                #error "The selected demo is not valid"
-        }
-
+	#else
+	{
+		#error "The selected demo is not valid"
+	}
 	#endif /* if ( mainSELECTED_APPLICATION ) */
 
 	return 0;
@@ -198,13 +198,14 @@ void vApplicationIdleHook( void )
 	because it is the responsibility of the idle task to clean up memory
 	allocated by the kernel to any task that has since deleted itself. */
 
+	usleep(15000);
 	traceOnEnter();
 
 	#if ( mainSELECTED_APPLICATION == FULL_DEMO )
 	{
 		/* Call the idle task processing used by the full demo.  The simple
 		blinky demo does not use the idle task hook. */
-		/* vFullDemoIdleFunction(); */
+		vFullDemoIdleFunction();
 	}
 	#endif
 }
@@ -234,30 +235,30 @@ void vApplicationTickHook( void )
 	functions can be used (those that end in FromISR()). */
 
 	#if (mainSELECTED_APPLICATION == FULL_DEMO )
-        {
+	{
 		vFullDemoTickHookFunction();
-        }
+	}
 	#endif /* mainSELECTED_APPLICATION */
 }
 
 void traceOnEnter()
 {
-    int ret;
-    struct timeval tv = { 0L, 0L };
-    fd_set fds;
-    FD_ZERO(&fds);
-    FD_SET(0, &fds);
-    ret = select(1, &fds, NULL, NULL, &tv);
-    if ( ret > 0 )
-    {
-        if( xTraceRunning == pdTRUE )
-        {
-            prvSaveTraceFile();
-        }
-        /* clear the buffer */
-        char buffer[200];
-        read(1, &buffer, 200);
-    }
+	int ret;
+	struct timeval tv = { 0L, 0L };
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(0, &fds);
+	ret = select(1, &fds, NULL, NULL, &tv);
+	if ( ret > 0 )
+	{
+	if( xTraceRunning == pdTRUE )
+	{
+		prvSaveTraceFile();
+	}
+	/* clear the buffer */
+	char buffer[200];
+	read(1, &buffer, 200);
+	}
 }
 
 void vLoggingPrintf( const char *pcFormat,

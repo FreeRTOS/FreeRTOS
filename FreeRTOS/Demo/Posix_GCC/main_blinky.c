@@ -30,7 +30,7 @@
  * this demo application.  Also, the timing information in the FreeRTOS+Trace
  * logs have no meaningful units.  See the documentation page for the Linux
  * port for further information:
- * https://freertos-wordpress.corp.amazon.com/FreeRTOS-simulator-for-Linux.html
+ * https://freertos.org/FreeRTOS-simulator-for-Linux.html
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
  * project, and a more comprehensive test and demo application.  The

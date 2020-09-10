@@ -211,7 +211,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 	}
 	else
 	{
-		printf( "application iddle hook network down\n" );
+		FreeRTOS_printf( "Application idle hook network down\n" );
 	}
 }
 /*-----------------------------------------------------------*/

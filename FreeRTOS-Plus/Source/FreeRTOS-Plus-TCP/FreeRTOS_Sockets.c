@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -301,7 +301,7 @@ FreeRTOS_Socket_t const *pxSocket = NULL;
 Socket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol )
 {
 FreeRTOS_Socket_t *pxSocket;
-size_t uxSocketSize;
+size_t uxSocketSize = 0;
 EventGroupHandle_t xEventGroup;
 Socket_t xReturn;
 
@@ -311,8 +311,8 @@ Socket_t xReturn;
 	}
 	else
 	{
-		/* Allocate the structure that will hold the socket information.  The
-		size depends on the type of socket: UDP sockets need less space.  A
+		/* Allocate the structure that will hold the socket information. The
+		size depends on the type of socket: UDP sockets need less space. A
 		define 'pvPortMallocSocket' will used to allocate the necessary space.
 		By default it points to the FreeRTOS function 'pvPortMalloc()'. */
 		pxSocket = ipCAST_PTR_TO_TYPE_PTR( FreeRTOS_Socket_t, pvPortMallocSocket( uxSocketSize ) );
@@ -660,12 +660,14 @@ int32_t FreeRTOS_recvfrom( Socket_t xSocket, void *pvBuffer, size_t uxBufferLeng
 {
 BaseType_t lPacketCount;
 NetworkBufferDescriptor_t *pxNetworkBuffer;
+const void *pvCopySource;
 FreeRTOS_Socket_t const * pxSocket = xSocket;
 TickType_t xRemainingTime = ( TickType_t ) 0; /* Obsolete assignment, but some compilers output a warning if its not done. */
 BaseType_t xTimed = pdFALSE;
 TimeOut_t xTimeOut;
 int32_t lReturn;
 EventBits_t xEventBits = ( EventBits_t ) 0;
+size_t uxPayloadLength;
 
 	if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_UDP, pdTRUE ) == pdFALSE )
 	{
@@ -769,7 +771,8 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 			calculated at the total packet size minus the headers.
 			The validity of `xDataLength` prvProcessIPPacket has been confirmed
 			in 'prvProcessIPPacket()'. */
-			lReturn = ( int32_t ) ( pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t ) );
+			uxPayloadLength = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+			lReturn = ( int32_t ) uxPayloadLength;
 
 			if( pxSourceAddress != NULL )
 			{
@@ -789,7 +792,8 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 
 				/* Copy the received data into the provided buffer, then release the
 				network buffer. */
-				( void ) memcpy( pvBuffer, &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] ), ( size_t )lReturn );
+				pvCopySource = ( const void *) &pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ];
+				( void ) memcpy( pvBuffer, pvCopySource, ( size_t )lReturn );
 
 				if( ( ( UBaseType_t ) xFlags & ( UBaseType_t ) FREERTOS_MSG_PEEK ) == 0U )
 				{
@@ -827,6 +831,7 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 int32_t FreeRTOS_sendto( Socket_t xSocket, const void *pvBuffer, size_t uxTotalDataLength, BaseType_t xFlags, const struct freertos_sockaddr *pxDestinationAddress, socklen_t xDestinationAddressLength )
 {
 NetworkBufferDescriptor_t *pxNetworkBuffer;
+void *pvCopyDest;
 IPStackEvent_t xStackTxEvent = { eStackTxEvent, NULL };
 TimeOut_t xTimeOut;
 TickType_t xTicksToWait;
@@ -883,7 +888,8 @@ const size_t uxPayloadOffset = ( size_t ) ipUDP_PAYLOAD_OFFSET_IPv4;
 
 				if( pxNetworkBuffer != NULL )
 				{
-					( void ) memcpy( &( pxNetworkBuffer->pucEthernetBuffer[ uxPayloadOffset ] ), pvBuffer, uxTotalDataLength );
+					pvCopyDest = ( void * ) &pxNetworkBuffer->pucEthernetBuffer[ uxPayloadOffset ];
+					( void ) memcpy( pvCopyDest, pvBuffer, uxTotalDataLength );
 
 					if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdTRUE )
 					{
@@ -897,7 +903,7 @@ const size_t uxPayloadOffset = ( size_t ) ipUDP_PAYLOAD_OFFSET_IPv4;
 				/* When zero copy is used, pvBuffer is a pointer to the
 				payload of a buffer that has already been obtained from the
 				stack.  Obtain the network buffer pointer from the buffer. */
-				pxNetworkBuffer = pxUDPPayloadBuffer_to_NetworkBuffer( ( void * ) pvBuffer );
+				pxNetworkBuffer = pxUDPPayloadBuffer_to_NetworkBuffer( pvBuffer );
 			}
 
 			if( pxNetworkBuffer != NULL )
@@ -1430,12 +1436,12 @@ FreeRTOS_Socket_t *pxSocket;
 	{
 		case FREERTOS_SO_RCVTIMEO	:
 			/* Receive time out. */
-			pxSocket->xReceiveBlockTime = *( ( TickType_t *) pvOptionValue );
+			pxSocket->xReceiveBlockTime = *( ( const TickType_t *) pvOptionValue );
 			xReturn = 0;
 			break;
 
 		case FREERTOS_SO_SNDTIMEO	:
-			pxSocket->xSendBlockTime = *( ( TickType_t *) pvOptionValue );
+			pxSocket->xSendBlockTime = *( ( const TickType_t *) pvOptionValue );
 			if( pxSocket->ucProtocol == ( uint8_t ) FREERTOS_IPPROTO_UDP )
 			{
 				/* The send time out is capped for the reason stated in the
@@ -1661,7 +1667,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bReuseSocket = pdTRUE;
 					}
@@ -1680,7 +1686,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bCloseAfterSend = pdTRUE;
 					}
@@ -1699,7 +1705,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ( BaseType_t *) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t *) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.xTCPWindow.u.bits.bSendFullSize = pdTRUE;
 					}
@@ -1725,7 +1731,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bRxStopped = pdTRUE;
 					}
@@ -1879,7 +1885,7 @@ const socklen_t uxSize = 16;
 	{
 	uint8_t pucDigits[ sockDIGIT_COUNT ];
 	uint8_t ucValue = pucAddress[ uxNibble ];
-	socklen_t uxSource = sockDIGIT_COUNT - 1;
+	socklen_t uxSource = ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U;
 	socklen_t uxNeeded;
 
 		for( ;; )
@@ -1895,7 +1901,7 @@ const socklen_t uxSize = 16;
 		pucDigits[ 0 ] = ucValue;
 
 		/* Skip leading zeros. */
-		for( uxSource = 0; uxSource < ( socklen_t ) ( sockDIGIT_COUNT - 1 ); uxSource++ )
+		for( uxSource = 0; uxSource < ( ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U ); uxSource++ )
 		{
 			if( pucDigits[ uxSource ] != 0U )
 			{
@@ -1971,6 +1977,7 @@ const char *pcResult;
 const char *FreeRTOS_inet_ntop4( const void *pvSource, char *pcDestination, socklen_t uxSize )
 {
 uint32_t ulIPAddress;
+void *pvCopyDest;
 const char *pcReturn;
 
 	if( uxSize < 16U )
@@ -1980,7 +1987,8 @@ const char *pcReturn;
 	}
 	else
 	{
-		( void ) memcpy( &( ulIPAddress ), pvSource, sizeof( ulIPAddress ) );
+		pvCopyDest = ( void * ) &ulIPAddress;
+		( void ) memcpy( pvCopyDest, pvSource, sizeof( ulIPAddress ) );
 		( void ) FreeRTOS_inet_ntoa( ulIPAddress, pcDestination );
 		pcReturn = pcDestination;
 	}
@@ -1996,6 +2004,7 @@ uint32_t ulReturn = 0UL, ulValue;
 UBaseType_t uxOctetNumber;
 BaseType_t xResult = pdPASS;
 const char *pcIPAddress = pcSource;
+const void *pvCopySource;
 
 	/* Translate "192.168.2.100" to a 32-bit number, network-endian. */
 	for( uxOctetNumber = 0U; uxOctetNumber < socketMAX_IP_ADDRESS_OCTETS; uxOctetNumber++ )
@@ -2076,7 +2085,8 @@ const char *pcIPAddress = pcSource;
 	{
 		ulReturn = 0UL;
 	}
-	( void ) memcpy( pvDestination, &( ulReturn ), sizeof( ulReturn ) );
+	pvCopySource = ( const void * ) &ulReturn;
+	( void ) memcpy( pvDestination, pvCopySource, sizeof( ulReturn ) );
 
 	return xResult;
 }

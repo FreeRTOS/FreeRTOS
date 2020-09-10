@@ -1,3 +1,41 @@
+Changes between V2.2.1 and V2.2.2 releases:
+	+ Updated the source code to adhere to stricter MISRA compliance.
+
+Changes between V2.0.0 and V2.2.1 releases:
+	+ Improved security by giving users the option to reject UDP packets with a
+	  checksum of zero even though the UDP spec allows it.
+	+ Improved robustness by checking packet lengths in software even if the check
+	  has already been performed in the hardware.
+	+ Added ipconfigIP_PASS_PACKETS_WITH_IP_OPTIONS macro to enable users to
+	  drop/accept IP Packets containing IP options (IP options are not supported).
+	+ Modified xDataLength to always mean "total number of bytes" to impart more
+	  clarity.
+	+ Replaced the ipconfigRAND32 macro with a function
+	  xApplicationGetRandomNumber(). The return value indicates if the randomiser
+	  is broken or working properly. Before this, a random value of 0 was treated
+	  as invalid, whereas 0 can be a proper random value.
+	+ Made changes in DNS to make asynchronous lookup work.
+	+ Made FreeRTOS_OutputARPRequest() available for application code. Now the
+	  application can start an ARP request directly by sending a UDP packet.
+	+ Made Socket_t and SocketSet_t point to a struct in stead of void.
+	+ Corrected the DNSs protocol-checksum calculation length.
+	+ Corrected length-check in usGenerateProtocolChecksum().
+	+ Modified pxGetNetworkBufferWithDescriptor() function to check if a counting
+	  semaphore has been created. Earlier when a user tried to get a Network
+	  Buffer before the IP-task started, the function could crash.
+	+ Made TCP low-water/high-water limits configurable with a socket option.
+	+ The 'ucFirstOptionByte' was counted twice in earlier releases, subtract 1
+	  byte to send the correct amount of bytes.
+	+ Corrected the WIN size reporting to the TCP peer. The WIN size as reported
+	  to the TCP peer was sometimes running slightly behind.
+	+ Added a function FreeRTOS_dnsclear() which invalidates the entire DNS cache.
+	+ Added DNS response transaction ID check. The DNS cache shall only be updated
+	  when the ID in the reply comes from the device.
+
+Changes between 180821 and V2.0.0 releases:
+	+ Move the TCP source code from FreeRTOS/FreeRTOS-Labs to FreeRTOS/FreeRTOS 
+	  repository.
+
 Changes between 160919 and 180821 releases:
 
 	+ Multiple security improvements and fixes in packet parsing routines, DNS

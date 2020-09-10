@@ -19,32 +19,37 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  * 1 tab == 4 spaces!
  */
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
- * The simply blinky demo is implemented and described in main_blinky.c.  The
- * more comprehensive test and demo application is implemented and described in
- * main_full.c.
+ * This project provides three demo applications.  A simple blinky style project,
+ * a more comprehensive test and demo application, and a TCP echo demo.
+ * The mainSELECTED_APPLICATION setting is used to select between
+ * the three
+ *
+ * If mainSELECTED_APPLICATION = BLINKY_DEMO the simple blinky demo will be built.
+ * The simply blinky demo is implemented and described in main_blinky.c.
+ *
+ * If mainSELECTED_APPLICATION = FULL_DEMO the more comprehensive test and demo 
+ * application built. This is implemented and described in main_full.c.
+ *
+ * If mainSELECTED_APPLICATION = ECHO_CLIENT_DEMO the tcp echo demo will be built. 
+ * This is implemented and described in main_networking.c 
  *
  * This file implements the code that is not demo specific, including the
  * hardware setup and FreeRTOS hook functions.
  *
  *******************************************************************************
- * NOTE: Windows will not be running the FreeRTOS demo threads continuously, so
- * do not expect to get real time behaviour from the FreeRTOS Windows port, or
+ * NOTE: Linux will not be running the FreeRTOS demo threads continuously, so
+ * do not expect to get real time behaviour from the FreeRTOS Linux port, or
  * this demo application.  Also, the timing information in the FreeRTOS+Trace
- * logs have no meaningful units.  See the documentation page for the Windows
+ * logs have no meaningful units.  See the documentation page for the Linux
  * port for further information:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
- *
-
+ * https://freertos.org/FreeRTOS-simulator-for-Linux.html
  *
  *******************************************************************************
  */
@@ -62,36 +67,19 @@
 /* Local includes. */
 #include "console.h"
 
-/* This project provides two demo applications.  A simple blinky style demo
-application, and a more comprehensive test and demo application.  The
-mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is used to select between the two.
+#define    BLINKY_DEMO       0
+#define    FULL_DEMO         1
+#define    ECHO_CLIENT_DEMO  2
 
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is 1 then the blinky demo will be built.
-The blinky demo is implemented and described in main_blinky.c.
-
-If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
-demo application will be built.  The comprehensive test and demo application is
-implemented and described in main_full.c. */
-#ifndef mainCREATE_SIMPLE_BLINKY_DEMO_ONLY
-	#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
-#endif
-
-#ifndef mainCREATE_TCP_ECHO_TASKS_SINGLE
-	#define mainCREATE_TCP_ECHO_TASKS_SINGLE    1
-#endif
+#define mainSELECTED_APPLICATION FULL_DEMO
 
 /* This demo uses heap_3.c (the libc provided malloc() and free()). */
 
 /*-----------------------------------------------------------*/
-
-/*
- * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
- */
 extern void main_blinky( void );
 extern void main_full( void );
 extern void main_tcp_echo_client_tasks( void );
-
+static void traceOnEnter( void );
 /*
  * Only the comprehensive demo uses application hook (callback) functions.  See
  * http://www.freertos.org/a00016.html for more information.
@@ -147,25 +135,32 @@ int main( void )
 		/* Start the trace recording - the recording is written to a file if
 		configASSERT() is called. */
 		printf( "\r\nTrace started.\r\nThe trace will be dumped to disk if a call to configASSERT() fails.\r\n" );
-		printf( "Uncomment the call to kbhit() in this file to also dump trace with a key press.\r\n" );
+		printf( "\r\nThe trace will be dumped to disk if Enter is hit.\r\n" );
 		uiTraceStart();
 	}
 	#endif
 
 	console_init();
-	#if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 )
+	#if ( mainSELECTED_APPLICATION == ECHO_CLIENT_DEMO )
 	{
+		console_print("Starting echo client demo\n");
 		main_tcp_echo_client_tasks();
 	}
-	#elif ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	#elif ( mainSELECTED_APPLICATION == BLINKY_DEMO )
 	{
+		console_print("Starting echo blinky demo\n");
 		main_blinky();
+	}
+	#elif ( mainSELECTED_APPLICATION == FULL_DEMO)
+	{
+		console_print("Starting full demo\n");
+		main_full();
 	}
 	#else
 	{
-		main_full();
+		#error "The selected demo is not valid"
 	}
-	#endif /* if ( mainCREATE_TCP_ECHO_TASKS_SINGLE == 1 ) */
+	#endif /* if ( mainSELECTED_APPLICATION ) */
 
 	return 0;
 }
@@ -199,15 +194,17 @@ void vApplicationIdleHook( void )
 	vTaskDelete() API function to delete themselves then it is also important
 	that vApplicationIdleHook() is permitted to return to its calling function,
 	because it is the responsibility of the idle task to clean up memory
-	allocated by the kernel to any task that has since deleted itself. */
+	allocated by the kernel to any task that has since deleted itself. */	
 
-	sleep( 1 );
 
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 )
+	usleep(15000);
+	traceOnEnter();
+
+	#if ( mainSELECTED_APPLICATION == FULL_DEMO )
 	{
 		/* Call the idle task processing used by the full demo.  The simple
 		blinky demo does not use the idle task hook. */
-		/*vFullDemoIdleFunction();*/
+		vFullDemoIdleFunction();
 	}
 	#endif
 }
@@ -223,7 +220,7 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask,
 	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
 	function is called if a stack overflow is detected.  This function is
 	provided as an example only as stack overflow checking does not function
-	when running the FreeRTOS Windows port. */
+	when running the FreeRTOS POSIX port. */
 	vAssertCalled( __FILE__, __LINE__ );
 }
 /*-----------------------------------------------------------*/
@@ -236,12 +233,31 @@ void vApplicationTickHook( void )
 	code must not attempt to block, and only the interrupt safe FreeRTOS API
 	functions can be used (those that end in FromISR()). */
 
-	#if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY != 1 && \
-		  mainCREATE_TCP_ECHO_TASKS_SINGLE != 1 )
-		{
-			vFullDemoTickHookFunction();
-		}
-	#endif /* mainCREATE_SIMPLE_BLINKY_DEMO_ONLY */
+	#if (mainSELECTED_APPLICATION == FULL_DEMO )
+	{
+		vFullDemoTickHookFunction();
+	}
+	#endif /* mainSELECTED_APPLICATION */
+}
+
+void traceOnEnter()
+{
+	int ret;
+	struct timeval tv = { 0L, 0L };
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(0, &fds);
+	ret = select(1, &fds, NULL, NULL, &tv);
+	if ( ret > 0 )
+	{
+	if( xTraceRunning == pdTRUE )
+	{
+		prvSaveTraceFile();
+	}
+	/* clear the buffer */
+	char buffer[200];
+	read(1, &buffer, 200);
+	}
 }
 
 void vLoggingPrintf( const char *pcFormat,
@@ -296,8 +312,8 @@ volatile uint32_t ulSetToNonZeroInDebuggerToContinue = 0;
 		value. */
 		while( ulSetToNonZeroInDebuggerToContinue == 0 )
 		{
-		__asm volatile ( "NOP" );
-		__asm volatile ( "NOP" );
+			__asm volatile ( "NOP" );
+			__asm volatile ( "NOP" );
 		}
 	}
 	taskEXIT_CRITICAL();

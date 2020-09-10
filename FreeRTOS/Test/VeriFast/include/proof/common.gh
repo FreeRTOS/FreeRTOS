@@ -191,6 +191,45 @@ lemma_auto void mod_range(int x, int n)
   div_rem_nonneg(x, n);
 }
 
+lemma void head_append<t>(list<t> xs, list<t> ys)
+  requires 0 < length(xs);
+  ensures head(append(xs, ys)) == head(xs);
+{
+  switch(xs)
+  {
+    case cons(c, cs):
+    case nil:
+  }
+}
+
+lemma void drop_take_singleton<t>(int i, list<t> xs)
+  requires 0 < i && i < length(xs);
+  ensures drop(i-1, take(i, xs)) == singleton(nth(i-1, xs));
+{
+  switch (xs) {
+  case nil:
+  case cons(x0, xs0):
+    if (i == 1) {
+    } else {
+      drop_take_singleton(i-1, xs0);
+    }
+  }
+}
+
+lemma void take_singleton<t>(int i, list<t> xs)
+  requires 0 <= i && i < length(xs);
+  ensures append(take(i, xs), singleton(nth(i, xs))) == take(i+1, xs);
+{
+  switch (xs) {
+  case nil:
+  case cons(x0, xs0):
+    if (i == 0) {
+    } else {
+      take_singleton(i-1, xs0);
+    }
+  }
+}
+
 lemma void drop_update_le<t>(int i, int j, t x, list<t> xs)
   requires 0 <= i && i <= j && j < length(xs);
   ensures drop(i, update(j, x, xs)) == update(j - i, x, drop(i, xs));
@@ -298,21 +337,17 @@ lemma void take_take<t>(int m, int n, list<t> xs)
   }
 }
 
-lemma void index_of_distinct<t>(list<t> xs, t x1, t x2)
-  requires mem(x1, xs) == true &*& mem(x2, xs) == true &*& x1 != x2;
-  ensures index_of(x1, xs) != index_of(x2, xs);
+lemma_auto void take_head<t>(list<t> xs)
+  requires 0 < length(xs);
+  ensures take(1, xs) == singleton(head(xs));
 {
-  switch (xs) {
+  switch(xs) {
   case nil:
-  case cons(h, tl):
-    if (h == x1 || h == x2) {
-      /* trivial */
-    } else {
-      index_of_distinct(tl, x1, x2);
-    }
+  case cons(x0, xs0):
   }
 }
 
+/* Following lemma from `verifast/bin/rt/_list.java` */
 lemma void remove_remove_nth<t>(list<t> xs, t x)
   requires mem(x, xs) == true;
   ensures remove(x, xs) == remove_nth(index_of(x, xs), xs);
@@ -325,6 +360,18 @@ lemma void remove_remove_nth<t>(list<t> xs, t x)
     } else {
       remove_remove_nth(tl, x);
     }
+  }
+}
+
+lemma void mem_take_false<t>(t x, int n, list<t> xs)
+    requires mem(x, xs) == false;
+    ensures mem(x, take(n, xs)) == false;
+{
+  switch (xs) {
+  case nil:
+  case cons(x0, xs0):
+      if (x0 != x && n != 0)
+          mem_take_false(x, n - 1, xs0);
   }
 }
 
@@ -536,12 +583,12 @@ lemma void update_rewrite<t>(list<t> vs, t v, int pos)
   ensures update(pos, v, vs) == append(take(pos, vs), cons(v, (drop(pos+1, vs))));
 {
   switch(vs) {
-    case nil:
-    case cons(h, t):
-      if(pos == 0) {
-      } else {
-        update_rewrite(t, v, pos - 1);
-      }
+  case nil:
+  case cons(h, t):
+    if (pos == 0) {
+    } else {
+      update_rewrite(t, v, pos - 1);
+    }
   }
 }
 

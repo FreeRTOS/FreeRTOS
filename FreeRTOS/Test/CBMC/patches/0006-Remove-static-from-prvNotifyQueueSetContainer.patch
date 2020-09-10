@@ -11,12 +11,12 @@ index 17a6964e..24a40c29 100644
  #endif
 
  /*
-@@ -2887,7 +2887,7 @@ Queue_t * const pxQueue = xQueue;
-
+@@ -2957,7 +2957,7 @@ BaseType_t xQueueIsQueueFullFromISR( const QueueHandle_t xQueue )
+ 
  #if ( configUSE_QUEUE_SETS == 1 )
-
--	static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue )
-+	BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue )
- 	{
- 	Queue_t *pxQueueSetContainer = pxQueue->pxQueueSetContainer;
- 	BaseType_t xReturn = pdFALSE;
+ 
+-    static BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue )
++    BaseType_t prvNotifyQueueSetContainer( const Queue_t * const pxQueue )
+     {
+         Queue_t * pxQueueSetContainer = pxQueue->pxQueueSetContainer;
+         BaseType_t xReturn = pdFALSE;

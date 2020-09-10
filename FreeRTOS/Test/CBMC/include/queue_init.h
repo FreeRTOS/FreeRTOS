@@ -43,6 +43,7 @@
 		if( xSet )
 		{
 			xSet->cTxLock = nondet_int8_t();
+			__CPROVER_assume(xSet->cTxLock != 127);
 			xSet->cRxLock = nondet_int8_t();
 			xSet->uxMessagesWaiting = nondet_UBaseType_t();
 			xSet->xTasksWaitingToReceive.uxNumberOfItems = nondet_UBaseType_t();
@@ -73,7 +74,9 @@ QueueHandle_t xUnconstrainedQueueBoundedItemSize( UBaseType_t uxItemSizeBound ) 
 		xQueueGenericCreate(uxQueueLength, uxItemSize, ucQueueType);
 	if(xQueue){
 		xQueue->cTxLock = nondet_int8_t();
+		__CPROVER_assume(xQueue->cTxLock != 127);
 		xQueue->cRxLock = nondet_int8_t();
+		__CPROVER_assume(xQueue->cRxLock != 127);
 		xQueue->uxMessagesWaiting = nondet_UBaseType_t();
 		/* This is an invariant checked with a couple of asserts in the code base.
 		   If it is false from the beginning, the CBMC proofs are not able to succeed*/
@@ -105,6 +108,7 @@ QueueHandle_t xUnconstrainedQueue( void ) {
 
 	if(xQueue){
 		xQueue->cTxLock = nondet_int8_t();
+		__CPROVER_assume(xQueue->cTxLock != 127);
 		xQueue->cRxLock = nondet_int8_t();
 		xQueue->uxMessagesWaiting = nondet_UBaseType_t();
 		/* This is an invariant checked with a couple of asserts in the code base.
@@ -126,6 +130,7 @@ QueueHandle_t xUnconstrainedMutex( void ) {
 		xQueueCreateMutex(ucQueueType);
 	if(xQueue){
 		xQueue->cTxLock = nondet_int8_t();
+		__CPROVER_assume(xQueue->cTxLock != 127);
 		xQueue->cRxLock = nondet_int8_t();
 		xQueue->uxMessagesWaiting = nondet_UBaseType_t();
 		/* This is an invariant checked with a couple of asserts in the code base.

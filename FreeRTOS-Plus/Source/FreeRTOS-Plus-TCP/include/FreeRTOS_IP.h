@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -313,11 +313,16 @@ BaseType_t FreeRTOS_IsNetworkUp( void );
  * Socket has had activity, reset the timer so it will not be closed
  * because of inactivity
  */
-const char *FreeRTOS_GetTCPStateName( UBaseType_t ulState);
+#if( ( ipconfigHAS_DEBUG_PRINTF != 0 ) || ( ipconfigHAS_PRINTF != 0 ) )
+	const char *FreeRTOS_GetTCPStateName( UBaseType_t ulState);
+#endif
 
 /* _HT_ Temporary: show all valid ARP entries
  */
-void FreeRTOS_PrintARPCache( void );
+#if( ipconfigHAS_PRINTF != 0 ) || ( ipconfigHAS_DEBUG_PRINTF != 0 )
+	void FreeRTOS_PrintARPCache( void );
+#endif
+
 void FreeRTOS_ClearARP( void );
 
 /* Return pdTRUE if the IPv4 address is a multicast address. */

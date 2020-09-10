@@ -14,28 +14,37 @@ check_coverage = perl -pe \
    $$status=/$1 statements verified/ ? 0 : 1;'
 endif
 
-all: queue
+all: queue list
 
 .PHONY: queue
 queue:
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/create.c                    | $(call check_coverage,317)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvCopyDataFromQueue.c      | $(call check_coverage,301)
-	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/prvCopyDataToQueue.c        | $(call check_coverage,329)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueEmpty.c           | $(call check_coverage,282)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueFull.c            | $(call check_coverage,282)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvLockQueue.c              | $(call check_coverage,283)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvUnlockQueue.c            | $(call check_coverage,297)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/uxQueueMessagesWaiting.c    | $(call check_coverage,285)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/uxQueueSpacesAvailable.c    | $(call check_coverage,283)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/vQueueDelete.c              | $(call check_coverage,280)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueGenericSend.c         | $(call check_coverage,328)
-	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/xQueueGenericSendFromISR.c  | $(call check_coverage,310)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueIsQueueEmptyFromISR.c | $(call check_coverage,280)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueIsQueueFullFromISR.c  | $(call check_coverage,280)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueuePeek.c                | $(call check_coverage,328)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueuePeekFromISR.c         | $(call check_coverage,293)
-	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueReceive.c             | $(call check_coverage,330)
-	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/xQueueReceiveFromISR.c      | $(call check_coverage,307)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/create.c                    | $(call check_coverage,324)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvCopyDataFromQueue.c      | $(call check_coverage,308)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/prvCopyDataToQueue.c        | $(call check_coverage,336)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueEmpty.c           | $(call check_coverage,289)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvIsQueueFull.c            | $(call check_coverage,289)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvLockQueue.c              | $(call check_coverage,290)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/prvUnlockQueue.c            | $(call check_coverage,304)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/uxQueueMessagesWaiting.c    | $(call check_coverage,292)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/uxQueueSpacesAvailable.c    | $(call check_coverage,290)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/vQueueDelete.c              | $(call check_coverage,287)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueGenericSend.c         | $(call check_coverage,335)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/xQueueGenericSendFromISR.c  | $(call check_coverage,317)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueIsQueueEmptyFromISR.c | $(call check_coverage,287)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueIsQueueFullFromISR.c  | $(call check_coverage,287)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueuePeek.c                | $(call check_coverage,335)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueuePeekFromISR.c         | $(call check_coverage,300)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         queue/xQueueReceive.c             | $(call check_coverage,337)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check queue/xQueueReceiveFromISR.c      | $(call check_coverage,314)
+
+.PHONY: list
+list:
+	@$(VERIFAST) $(VERIFAST_ARGS)                         list/listLIST_IS_EMPTY.c   | $(call check_coverage,314)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         list/uxListRemove.c        | $(call check_coverage,440)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         list/vListInitialise.c     | $(call check_coverage,325)
+	@$(VERIFAST) $(VERIFAST_ARGS)                         list/vListInitialiseItem.c | $(call check_coverage,316)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check list/vListInsertEnd.c      | $(call check_coverage,410)
+	@$(VERIFAST) $(VERIFAST_ARGS) -disable_overflow_check list/vListInsert.c         | $(call check_coverage,456)
 
 .PHONY: proof_changes
 proof_changes:
@@ -43,10 +52,13 @@ proof_changes:
 
 GIT?=git
 NO_CHANGE_CHECKOUT_DIR=no-change-check-freertos-kernel
-NO_CHANGE_EXPECTED_HASH=587a83d6476
+NO_CHANGE_EXPECTED_HASH_QUEUE=587a83d6476
+NO_CHANGE_EXPECTED_HASH_LIST=bb1c4293787
 .PHONY: synced_with_source_check
 synced_with_source_check:
 	@rm -rf $(NO_CHANGE_CHECKOUT_DIR)
 	@$(GIT) clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git $(NO_CHANGE_CHECKOUT_DIR)
-	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH) queue.c
-	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH) include/queue.h
+	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_QUEUE) queue.c
+	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_QUEUE) include/queue.h
+	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_LIST) list.c
+	@cd $(NO_CHANGE_CHECKOUT_DIR) && $(GIT) diff --quiet $(NO_CHANGE_EXPECTED_HASH_LIST) include/list.h

@@ -104,16 +104,25 @@ extern "C" {
  * Specify what version of FreeRTOS that is used (don't change unless using the
  * trace recorder library with an older version of FreeRTOS).
  *
- * TRC_FREERTOS_VERSION_7_3						If using FreeRTOS v7.3.x
- * TRC_FREERTOS_VERSION_7_4						If using FreeRTOS v7.4.x 
- * TRC_FREERTOS_VERSION_7_5_OR_7_6				If using FreeRTOS v7.5.0 - v7.6.0
- * TRC_FREERTOS_VERSION_8_X						If using FreeRTOS v8.X.X
- * TRC_FREERTOS_VERSION_9_0_0					If using FreeRTOS v9.0.0
- * TRC_FREERTOS_VERSION_9_0_1					If using FreeRTOS v9.0.1
- * TRC_FREERTOS_VERSION_9_0_2					If using FreeRTOS v9.0.2
- * TRC_FREERTOS_VERSION_10_0_0					If using FreeRTOS v10.0.0 or later
+ * TRC_FREERTOS_VERSION_7_3_X          If using FreeRTOS v7.3.X
+ * TRC_FREERTOS_VERSION_7_4_X          If using FreeRTOS v7.4.X 
+ * TRC_FREERTOS_VERSION_7_5_X          If using FreeRTOS v7.5.X
+ * TRC_FREERTOS_VERSION_7_6_X          If using FreeRTOS v7.6.X
+ * TRC_FREERTOS_VERSION_8_X_X          If using FreeRTOS v8.X.X
+ * TRC_FREERTOS_VERSION_9_0_0          If using FreeRTOS v9.0.0
+ * TRC_FREERTOS_VERSION_9_0_1          If using FreeRTOS v9.0.1
+ * TRC_FREERTOS_VERSION_9_0_2          If using FreeRTOS v9.0.2
+ * TRC_FREERTOS_VERSION_10_0_0         If using FreeRTOS v10.0.0
+ * TRC_FREERTOS_VERSION_10_0_1         If using FreeRTOS v10.0.1
+ * TRC_FREERTOS_VERSION_10_1_0         If using FreeRTOS v10.1.0
+ * TRC_FREERTOS_VERSION_10_1_1         If using FreeRTOS v10.1.1
+ * TRC_FREERTOS_VERSION_10_2_0         If using FreeRTOS v10.2.0
+ * TRC_FREERTOS_VERSION_10_2_1         If using FreeRTOS v10.2.1
+ * TRC_FREERTOS_VERSION_10_3_0         If using FreeRTOS v10.3.0
+ * TRC_FREERTOS_VERSION_10_3_1         If using FreeRTOS v10.3.1
+ * TRC_FREERTOS_VERSION_10_4_0         If using FreeRTOS v10.4.0 or later
  *****************************************************************************/
-#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_0_0
+#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_4_0
 
 /*******************************************************************************
  * TRC_CFG_SCHEDULING_ONLY

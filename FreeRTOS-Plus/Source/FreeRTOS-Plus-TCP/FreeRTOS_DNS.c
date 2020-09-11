@@ -828,11 +828,11 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 /*-----------------------------------------------------------*/
 
 _static size_t prvCreateDNSMessage( uint8_t *pucUDPPayloadBuffer,
-								   const char *pcHostName,
-								   TickType_t uxIdentifier )
+									const char *pcHostName,
+									TickType_t uxIdentifier )
 {
 DNSMessage_t *pxDNSMessageHeader;
-uint8_t *pucStart, *pucByte;
+size_t uxStart, uxIndex;
 DNSTail_t const * pxTail;
 static const DNSMessage_t xDefaultPartDNSHeader =
 {
@@ -855,43 +855,43 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Create the resource record at the end of the header.  First
 	find the end of the header. */
-	pucStart = &( pucUDPPayloadBuffer[ sizeof( xDefaultPartDNSHeader ) ] );
+	uxStart = sizeof( xDefaultPartDNSHeader );
 
-	/* Leave a gap for the first length bytes. */
-	pucByte = &( pucStart[ 1 ] );
+	/* Leave a gap for the first length byte. */
+	uxIndex = uxStart + 1U;
 
-	/* Copy in the host name. */
-	( void ) strcpy( ( char * ) pucByte, pcHostName );
+	/* Copy in the host name, a zero-byte will be written at the end. */
+	( void ) strcpy( ( char * ) &( pucUDPPayloadBuffer[ uxIndex ] ), pcHostName );
 
-	/* Mark the end of the string. */
-	pucByte = &( pucByte[ strlen( pcHostName ) ] );
-	*pucByte = 0x00U;
-
-	/* Walk the string to replace the '.' characters with byte counts.
-	pucStart holds the address of the byte count.  Walking the string
-	starts after the byte count position. */
-	pucByte = pucStart;
+	/* Walk through the string to replace the '.' characters with byte
+	counts.  pucStart holds the address of the byte count.  Walking the
+	string starts after the byte count position. */
+	uxIndex = uxStart;
 
 	do
 	{
-		pucByte++;
+	size_t uxLength;
 
-		while( ( *pucByte != ( uint8_t ) 0U ) && ( *pucByte != ( uint8_t ) ASCII_BASELINE_DOT ) )
+		/* Skip the length byte. */
+		uxIndex++;
+
+		while( ( pucUDPPayloadBuffer[ uxIndex ] != ( uint8_t ) 0U ) &&
+			   ( pucUDPPayloadBuffer[ uxIndex ] != ( uint8_t ) ASCII_BASELINE_DOT ) )
 		{
-			pucByte++;
+			uxIndex++;
 		}
 
 		/* Fill in the byte count, then move the pucStart pointer up to
 		the found byte position. */
-		*pucStart = ( uint8_t ) ( ( uintptr_t ) pucByte - ( uintptr_t ) pucStart );
-		( *pucStart )--;
+		uxLength = uxIndex - ( uxStart + 1U );
+		pucUDPPayloadBuffer[ uxStart ] = ( uint8_t ) uxLength;
 
-		pucStart = pucByte;
-	} while( *pucByte != ( uint8_t ) 0U );
+		uxStart = uxIndex;
+	} while( pucUDPPayloadBuffer[ uxIndex ] != ( uint8_t ) 0U );
 
 	/* Finish off the record. Cast the record onto DNSTail_t stucture to easily
 	 * access the fields of the DNS Message. */
-	pxTail = ipCAST_PTR_TO_TYPE_PTR( DNSTail_t, &( pucByte[ 1 ] ) );
+	pxTail = ipCAST_PTR_TO_TYPE_PTR( DNSTail_t, &( pucUDPPayloadBuffer[ uxStart + 1 ] ) );
 
 	#if defined( _lint ) || defined( __COVERITY__ )
 	( void ) pxTail;
@@ -902,7 +902,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Return the total size of the generated message, which is the space from
 	the last written byte to the beginning of the buffer. */
-	return ( ( uintptr_t ) pucByte - ( uintptr_t ) pucUDPPayloadBuffer + 1U ) + sizeof( DNSTail_t );
+	return uxIndex + sizeof( DNSTail_t ) + 1;
 }
 /*-----------------------------------------------------------*/
 

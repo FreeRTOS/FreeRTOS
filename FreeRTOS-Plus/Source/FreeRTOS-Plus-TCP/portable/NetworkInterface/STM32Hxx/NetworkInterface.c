@@ -51,11 +51,13 @@
 
 #ifndef STM32Hxx_HAL_ETH_H
 	/*
-	 * The ST HAL library provides stm32h7xx_hal.{c,h}.
-	 * This FreeRTOS+TCP driver renamed these files to stm32hxx_hal.{c,h}
+	 * The ST HAL library provides stm32h7xx_hal_eth.{c,h}.
+	 * This FreeRTOS+TCP driver renamed these files to stm32hxx_hal_eth.{c,h}
 	 * by removing the '7'.
 	 * Please make sure that "portable/NetworkInterface/STM32Hxx" is included
 	 * in the include paths earlier than "STM32H7xx_HAL_Driver/Inc".
+	 * and also make sure that you have defined 'HAL_ETH_MODULE_ENABLED'
+	 * in your copy of "stm32h7xx_hal_conf".
 	 */
 	#error stm32hxx_hal_eth.h is possibly not included
 #endif

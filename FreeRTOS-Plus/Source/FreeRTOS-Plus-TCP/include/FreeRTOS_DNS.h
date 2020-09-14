@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.2
+ * FreeRTOS+TCP V3.0.0
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -55,13 +55,38 @@ extern "C" {
 #define	ipNBNS_PORT		137	/* NetBIOS Name Service. */
 #define	ipNBDGM_PORT	138 /* Datagram Service, not included. */
 
-#if( ipconfigUSE_LLMNR == 1 ) || ( ipconfigUSE_NBNS == 1 )
-	/*
-	 * The following function should be provided by the user and return true if it
-	 * matches the domain name.
-	 */
-	extern BaseType_t xApplicationDNSQueryHook( const char *pcName );
-#endif	/* ( ipconfigUSE_LLMNR == 1 ) || ( ipconfigUSE_NBNS == 1 ) */
+/* Even when a DNS server is contacted through its IPv4 address,
+it can look-up IPv6 addresses. */
+
+#define dnsTYPE_A_HOST						0x0001U
+#define dnsTYPE_AAAA_HOST					0x001CU
+
+struct freertos_addrinfo
+{
+	BaseType_t					ai_flags;
+	BaseType_t					ai_family;
+	BaseType_t					ai_socktype;
+	BaseType_t					ai_protocol;
+	socklen_t					ai_addrlen;
+	struct freertos_sockaddr	*ai_addr;
+	char						*ai_canonname;
+	struct freertos_addrinfo	*ai_next;
+	struct {
+		/* In order to avoid allocations, reserve space here for *ai_addr and *ai_canonname. */
+		#if( ipconfigUSE_IPv6 != 0 )
+			struct freertos_sockaddr6 sockaddr6;
+		#else
+			struct freertos_sockaddr sockaddr4;
+		#endif
+		char ucName[ ipconfigDNS_CACHE_NAME_LENGTH ];
+	} xPrivateStorage;
+};
+
+/*
+ * The following function should be provided by the user and return true if it
+ * matches the domain name.
+ */
+extern BaseType_t xApplicationDNSQueryHook( struct xNetworkEndPoint *pxEndPoint, const char *pcName );
 
 /*
  * LLMNR is very similar to DNS, so is handled by the DNS routines.
@@ -71,6 +96,15 @@ uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer );
 #if( ipconfigUSE_LLMNR == 1 )
 	/* The LLMNR MAC address is 01:00:5e:00:00:fc */
 	extern const MACAddress_t xLLMNR_MacAdress;
+#endif /* ipconfigUSE_LLMNR */
+
+#if( ipconfigUSE_LLMNR == 1 ) && ( ipconfigUSE_IPv6 != 0 )
+
+	/* The LLMNR IPv6 address is ff02::1:3 */
+	extern const IPv6_Address_t ipLLMNR_IP_ADDR_IPv6;
+
+	/* The LLMNR IPv6 MAC address is 33:33:00:01:00:03 */
+	extern const MACAddress_t xLLMNR_MacAdressIPv6;
 #endif /* ipconfigUSE_LLMNR */
 
 #if( ipconfigUSE_NBNS != 0 )
@@ -91,6 +125,11 @@ uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer );
 	address if present, or 0x0 otherwise. */
 	uint32_t FreeRTOS_dnslookup( const char *pcHostName );
 
+	#if( ipconfigUSE_IPv6 != 0 )
+		/* FreeRTOS_dnslookup6() returns pdTRUE when a host has been found. */
+		uint32_t FreeRTOS_dnslookup6( const char *pcHostName, IPv6_Address_t *pxAddress_IPv6 );
+	#endif
+
 	/* Remove all entries from the DNS cache. */
 	void FreeRTOS_dnsclear( void );
 
@@ -102,7 +141,11 @@ uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer );
 	 * Users may define this type of function as a callback.
 	 * It will be called when a DNS reply is received or when a timeout has been reached.
 	 */
-	typedef void (* FOnDNSEvent ) ( const char * /* pcName */, void * /* pvSearchID */, uint32_t /* ulIPAddress */ );
+	#if( ipconfigUSE_IPv6 != 0 )
+		typedef void (* FOnDNSEvent ) ( const char * /* pcName */, void * /* pvSearchID */, struct freertos_addrinfo * /* pxAddressInfo */ );
+	#else
+		typedef void (* FOnDNSEvent ) ( const char * /* pcName */, void * /* pvSearchID */, uint32_t /* ulIPAddress */ );
+	#endif
 
 	/*
 	 * Asynchronous version of gethostbyname()
@@ -110,6 +153,15 @@ uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer );
 	 */
 	uint32_t FreeRTOS_gethostbyname_a( const char *pcHostName, FOnDNSEvent pCallback, void *pvSearchID, TickType_t uxTimeout );
 	void FreeRTOS_gethostbyname_cancel( void *pvSearchID );
+
+	/* The asynchronous verions of FreeRTOS_getaddrinfo(). */
+	BaseType_t FreeRTOS_getaddrinfo_a( const char *pcName,					/* The name of the node or device */
+									   const char *pcService,						/* Ignored for now. */
+									   const struct freertos_addrinfo *pxHints,	/* If not NULL: preferences. */
+									   struct freertos_addrinfo **ppxResult,		/* An allocated struct, containing the results. */
+									   FOnDNSEvent pCallback,
+									   void *pvSearchID,
+									   TickType_t uxTimeout );
 
 #endif
 
@@ -120,20 +172,28 @@ uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer );
  */
 uint32_t FreeRTOS_gethostbyname( const char *pcHostName );
 
-#if( ipconfigDNS_USE_CALLBACKS == 1 )
-	/*
-	 * The function vDNSInitialise() initialises the DNS module.
-	 * It will be called "internally", by the IP-task.
-	 */
-	void vDNSInitialise( void );
-#endif	/* ( ipconfigDNS_USE_CALLBACKS == 1 ) */
+/*
+ * FreeRTOS_getaddrinfo() replaces FreeRTOS_gethostbyname().
+ * When 'ipconfigUSE_IPv6' is defined, it can also retrieve IPv6 addresses,
+ * in case pxHints->ai_family equals FREERTOS_AF_INET6.
+ * Otherwise, or when pxHints is NULL, only IPv4 addresses will be returned.
+ */
+BaseType_t FreeRTOS_getaddrinfo( const char *pcName,						/* The name of the node or device */
+								 const char *pcService,						/* Ignored for now. */
+								 const struct freertos_addrinfo *pxHints,	/* If not NULL: preferences. */
+								 struct freertos_addrinfo **ppxResult );	/* An allocated struct, containing the results. */
 
-#if( ipconfigDNS_USE_CALLBACKS == 1 )
-	/*
-	 * A function local to the library.
-	 */
-	extern void vDNSCheckCallBack( void *pvSearchID );
-#endif
+/* When FreeRTOS_getaddrinfo() is succesfull, ppxResult will point to an
+ * allocated structure.  This pointer must be released by the user by calling
+ * FreeRTOS_freeaddrinfo().
+ */
+void FreeRTOS_freeaddrinfo( struct freertos_addrinfo *pxResult );
+
+/*
+ * The function vDNSInitialise() initialises the DNS module.
+ * It will be called "internally", by the IP-task.
+ */
+void vDNSInitialise( void );
 
 
 #ifdef __cplusplus

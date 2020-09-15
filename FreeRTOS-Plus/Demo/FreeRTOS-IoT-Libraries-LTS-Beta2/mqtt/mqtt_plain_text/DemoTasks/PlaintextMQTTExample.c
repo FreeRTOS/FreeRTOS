@@ -57,6 +57,9 @@
 /* MQTT library includes. */
 #include "mqtt.h"
 
+/* Retry utilities include. */
+#include "retry_utils.h"
+
 /* Transport interface include. */
 #include "plaintext_freertos.h"
 
@@ -164,10 +167,23 @@
 static void prvMQTTDemoTask( void * pvParameters );
 
 /**
+ * @brief Connect to MQTT broker with reconnection retries.
+ *
+ * If connection fails, retry is attempted after a timeout.
+ * Timeout value will exponentially increase until maximum
+ * timeout value is reached or the number of attempts are exhausted.
+ *
+ * @param pxNetworkContext The output parameter to return the created network context.
+ *
+ * @return EXIT_FAILURE on failure; EXIT_SUCCESS on successful connection.
+ */
+static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext );
+
+/**
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
  * @param pxMQTTContext MQTT context pointer.
- * @param xNetworkContext network context.
+ * @param pxNetworkContext network context.
  *
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
@@ -309,12 +325,13 @@ static void prvMQTTDemoTask( void * pvParameters )
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
         LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        xNetworkStatus = Plaintext_FreeRTOS_Connect( &xNetworkContext,
-                                                     democonfigMQTT_BROKER_ENDPOINT,
-                                                     democonfigMQTT_BROKER_PORT,
-                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS );
-        configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
+        /* Attempt to connect to the MQTT broker. If connection fails, retry after
+         * a timeout. Timeout value will be exponentially increased till the maximum
+         * attempts are reached or maximum timeout value is reached. The function
+         * returns EXIT_FAILURE if the TCP connection cannot be established to
+         * broker after configured number of attempts. */
+        xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkContext );
+        configASSERT(xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS);
 
         /* Sends an MQTT Connect packet over the already connected TCP socket,
          * and waits for connection acknowledgment (CONNACK) packet. */
@@ -388,6 +405,50 @@ static void prvMQTTDemoTask( void * pvParameters )
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );
     }
+}
+/*-----------------------------------------------------------*/
+
+static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries(NetworkContext_t * pNetworkContext)
+{
+    RetryUtilsStatus_t retryUtilsStatus = RetryUtilsSuccess;
+    PlaintextTransportStatus_t xNetworkStatus;
+    RetryUtilsParams_t reconnectParams;
+
+    /* Initialize reconnect attempts and interval */
+    RetryUtils_ParamsReset(&reconnectParams);
+
+    /* Attempt to connect to MQTT broker. If connection fails, retry after
+     * a timeout. Timeout value will exponentially increase till maximum
+     * attempts are reached.
+     */
+    do
+    {
+        /* Establish a TCP connection with the MQTT broker. This example connects
+         * to the MQTT broker as specified in BROKER_ENDPOINT and BROKER_PORT
+         * at the demo config header. */
+        LogInfo(("Creating a TCP connection to %s:%d.",
+            democonfigMQTT_BROKER_ENDPOINT,
+            democonfigMQTT_BROKER_PORT));
+        xNetworkStatus = Plaintext_FreeRTOS_Connect(pNetworkContext,
+            democonfigMQTT_BROKER_ENDPOINT,
+            democonfigMQTT_BROKER_PORT,
+            TRANSPORT_SEND_RECV_TIMEOUT_MS,
+            TRANSPORT_SEND_RECV_TIMEOUT_MS);
+
+        if (xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS)
+        {
+            LogWarn(("Connection to the broker failed. Retrying connection with backoff and jitter."));
+            retryUtilsStatus = RetryUtils_BackoffAndSleep(&reconnectParams);
+        }
+
+        if (retryUtilsStatus == RetryUtilsRetriesExhausted)
+        {
+            LogError(("Connection to the broker failed, all attempts exhausted."));
+            xNetworkStatus = pdFAIL;
+        }
+    } while ((xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS) && (retryUtilsStatus == RetryUtilsSuccess));
+
+    return xNetworkStatus;
 }
 /*-----------------------------------------------------------*/
 

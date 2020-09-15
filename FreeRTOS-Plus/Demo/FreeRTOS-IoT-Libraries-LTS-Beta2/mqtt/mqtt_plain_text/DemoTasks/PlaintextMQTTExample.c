@@ -321,11 +321,6 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
-        /* Establish a TCP connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
-         * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-
         /* Attempt to connect to the MQTT broker. If connection fails, retry after
          * a timeout. Timeout value will be exponentially increased till the maximum
          * attempts are reached or maximum timeout value is reached. The function
@@ -424,10 +419,10 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
      */
     do
     {
-        /* Establish a TCP connection with the MQTT broker. This example connects
-         * to the MQTT broker as specified in BROKER_ENDPOINT and BROKER_PORT
-         * at the demo config header. */
-        LogInfo( ( "Creating a TCP connection to %s:%d.",
+        /* Establish a TCP connection with the MQTT broker. This example connects to
+         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
+         * democonfigMQTT_BROKER_PORT at the top of this file. */
+        LogInfo( ( "Create a TCP connection to %s:%d.",
                    democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
         xNetworkStatus = Plaintext_FreeRTOS_Connect( pNetworkContext,

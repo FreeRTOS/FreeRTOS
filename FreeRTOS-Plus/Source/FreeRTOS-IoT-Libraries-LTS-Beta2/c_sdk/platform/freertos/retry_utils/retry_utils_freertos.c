@@ -27,26 +27,32 @@
 /* Standard includes. */
 #include <stdint.h>
 
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include "retry_utils.h"
 
 #define _MILLISECONDS_PER_SECOND                    ( 1000U )                                         /**< @brief Milliseconds per second. */
+
+extern UBaseType_t uxRand(void);
 
 /*-----------------------------------------------------------*/
 
 RetryUtilsStatus_t RetryUtils_BackoffAndSleep( RetryUtilsParams_t * pRetryParams )
 {
     RetryUtilsStatus_t status = RetryUtilsRetriesExhausted;
-    int32_t backOffDelay = 0;
+    int32_t backOffDelayMs = 0;
 
     /* If MAX_RETRY_ATTEMPTS is set to 0, try forever. */
     if( ( pRetryParams->attemptsDone < MAX_RETRY_ATTEMPTS ) ||
         ( 0 == MAX_RETRY_ATTEMPTS ) )
     {
         /* Choose a random value for back-off time between 0 and the max jitter value. */
-        backOffDelay = uxRand() % pRetryParams->nextJitterMax;
+        backOffDelayMs = uxRand() % pRetryParams->nextJitterMax;
 
         /*  Wait for backoff time to expire for the next retry. */
-        vTaskDelay(pdMS_TO_TICKS(backOffDelay * _MILLISECONDS_PER_SECOND));
+        vTaskDelay(pdMS_TO_TICKS(backOffDelayMs * _MILLISECONDS_PER_SECOND));
 
         /* Increment backoff counts. */
         pRetryParams->attemptsDone++;

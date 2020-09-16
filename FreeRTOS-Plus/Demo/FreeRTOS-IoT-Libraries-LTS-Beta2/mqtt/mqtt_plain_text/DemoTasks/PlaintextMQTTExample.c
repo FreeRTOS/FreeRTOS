@@ -387,7 +387,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Check if recent subscription request has been rejected. globalSubAckStatus is updated
          * in eventCallback to reflect the status of the SUBACK sent by the broker. */
-        if( *pxGlobalSubAckStatus == MQTTSubAckFailure )
+        if( pxGlobalSubAckStatus[ 0 ] == MQTTSubAckFailure )
         {
             /* If server rejected the subscription request, attempt to resubscribe to topic.
              * Attempts are made according to the exponential backoff retry strategy
@@ -436,7 +436,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
         /* Reset global SUBACK status variable after completion of subscription request cycle. */
-        *pxGlobalSubAckStatus = MQTTSubAckFailure;
+        pxGlobalSubAckStatus[ 0 ] = MQTTSubAckFailure;
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */
@@ -586,14 +586,14 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     uint8_t * pucPayload = NULL;
     size_t ulSize = 0;
 
-    xResult = MQTT_GetSubAckStatusCodes( pxPacketInfo, &pPayload, &pSize );
+    xResult = MQTT_GetSubAckStatusCodes( pxPacketInfo, &pucPayload, &ulSize );
 
     /* MQTT_GetSubAckStatusCodes always returns success if called with packet info
      * from the event callback and non-NULL parameters. */
     configASSERT( xResult == MQTTSuccess );
 
     /* Demo only subscribes to one topic, so only one status code is returned. */
-    *pxGlobalSubAckStatus = pPayload[ 0 ];
+    pxGlobalSubAckStatus[ 0 ] = pucPayload[ 0 ];
 }
 /*-----------------------------------------------------------*/
 
@@ -628,14 +628,14 @@ static void prvHandleResubscribe( MQTTContext_t * pxMQTTContext )
          * in eventCallback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
-        if( *pxGlobalSubAckStatus == MQTTSubAckFailure )
+        if( pxGlobalSubAckStatus[ 0 ] == MQTTSubAckFailure )
         {
             LogWarn( ( "Server rejected subscription request. Retrying subscribe with backoff and jitter." ) );
             xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xRetryParams );
         }
 
         configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( *pxGlobalSubAckStatus == MQTTSubAckFailure ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( pxGlobalSubAckStatus[ 0 ] == MQTTSubAckFailure ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -699,7 +699,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
             prvUpdateSubAckStatus( pxIncomingPacket );
             LogInfo( ( "Subscribed to the topic %s with maximum QoS %u.\r\n",
                        mqttexampleTOPIC,
-                       *pxGlobalSubAckStatus ) );
+                       pxGlobalSubAckStatus[ 0 ] ) );
             /* Make sure ACK packet identifier matches with Request packet identifier. */
             configASSERT( usSubscribePacketIdentifier == usPacketId );
             break;

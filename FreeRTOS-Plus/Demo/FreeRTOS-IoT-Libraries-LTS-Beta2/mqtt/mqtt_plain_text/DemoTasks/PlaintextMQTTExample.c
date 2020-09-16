@@ -266,7 +266,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo );
-
+ 
 /*-----------------------------------------------------------*/
 
 /* @brief Static buffer used to hold MQTT messages being sent and received. */
@@ -653,7 +653,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
-    /* This demo uses QOS0 */
+    /* This demo uses QOS0. */
     xMQTTPublishInfo.qos = MQTTQoS0;
     xMQTTPublishInfo.retain = false;
     xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
@@ -675,7 +675,9 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     /* Get next unique packet identifier */
     usUnsubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
-    /* Send UNSUBSCRIBE packet. */
+    /* Send UNSUBSCRIBE packet. Note that because #pxGlobalSubscriptionList 
+     * was initialized before sending the SUBSCRIBE packet, there is no need
+     * to initialize it again. */
     xResult = MQTT_Unsubscribe( pxMQTTContext,
                                 pxGlobalSubscriptionList,
                                 sizeof( pxGlobalSubscriptionList ) / sizeof( MQTTSubscribeInfo_t ),

@@ -266,7 +266,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
                               MQTTDeserializedInfo_t * pxDeserializedInfo );
- 
+
 /*-----------------------------------------------------------*/
 
 /* @brief Static buffer used to hold MQTT messages being sent and received. */
@@ -675,7 +675,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
     /* Get next unique packet identifier */
     usUnsubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
-    /* Send UNSUBSCRIBE packet. Note that because #pxGlobalSubscriptionList 
+    /* Send UNSUBSCRIBE packet. Note that because #pxGlobalSubscriptionList
      * was initialized before sending the SUBSCRIBE packet, there is no need
      * to initialize it again. */
     xResult = MQTT_Unsubscribe( pxMQTTContext,

@@ -183,7 +183,7 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
  * @param pxMQTTContext MQTT context pointer.
- * @param pxNetworkContext network context.
+ * @param pxNetworkContext Network context.
  *
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,

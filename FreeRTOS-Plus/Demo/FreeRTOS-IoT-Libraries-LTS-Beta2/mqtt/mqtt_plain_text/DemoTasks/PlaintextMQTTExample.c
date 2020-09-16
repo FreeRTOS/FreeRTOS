@@ -644,7 +644,6 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
     MQTTStatus_t xResult;
     MQTTPublishInfo_t xMQTTPublishInfo;
 
-
     /***
      * For readability, error handling in this function is restricted to the use of
      * asserts().

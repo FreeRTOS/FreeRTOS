@@ -301,7 +301,9 @@ FreeRTOS_Socket_t const *pxSocket = NULL;
 Socket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol )
 {
 FreeRTOS_Socket_t *pxSocket;
-size_t uxSocketSize = 0;
+
+/* Note that this value will be over-written by the call to prvDetermineSocketSize. */
+size_t uxSocketSize = 1;
 EventGroupHandle_t xEventGroup;
 Socket_t xReturn;
 

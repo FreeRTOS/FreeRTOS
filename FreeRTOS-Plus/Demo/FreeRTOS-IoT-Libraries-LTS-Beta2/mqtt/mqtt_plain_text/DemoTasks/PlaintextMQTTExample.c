@@ -611,7 +611,7 @@ static void prvHandleResubscribe( MQTTContext_t * pxMQTTContext )
         /* Send SUBSCRIBE packet.
          * Note: reusing the value specified in globalSubscribePacketIdentifier is acceptable here
          * because this function is entered only after the receipt of a SUBACK, at which point
-         * its associated packet id is free to use. */
+         * its associated packet id is free to reuse. */
         xResult = MQTT_Subscribe( pxMQTTContext,
                                   pxGlobalSubscriptionList,
                                   sizeof( pxGlobalSubscriptionList ) / sizeof( MQTTSubscribeInfo_t ),

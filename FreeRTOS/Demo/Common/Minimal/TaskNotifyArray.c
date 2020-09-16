@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.1
+ * FreeRTOS Kernel V10.4.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -1131,7 +1131,7 @@ const TickType_t xDontBlock = 0;
 
 void xNotifyArrayTaskFromISR( void )
 {
-static BaseType_t xCallCount = 0, xAPIToUse = 0;
+static BaseType_t xAPIToUse = 0;
 uint32_t ulPreviousValue;
 const uint32_t ulUnexpectedValue = 0xff;
 static UBaseType_t uxIndexToNotify = 0;
@@ -1145,9 +1145,6 @@ static UBaseType_t uxIndexToNotify = 0;
 	if( xSendNotificationFromISR == pdTRUE )
 	{
 		xSendNotificationFromISR = pdFALSE;
-
-		/* It is time to 'give' the notification again. */
-		xCallCount = 0;
 
 		/* Test using both vTaskNotifyGiveFromISR(), xTaskNotifyFromISR()
 		and xTaskNotifyAndQueryFromISR(). The notification is set to the task

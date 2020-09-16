@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -301,7 +301,9 @@ FreeRTOS_Socket_t const *pxSocket = NULL;
 Socket_t FreeRTOS_socket( BaseType_t xDomain, BaseType_t xType, BaseType_t xProtocol )
 {
 FreeRTOS_Socket_t *pxSocket;
-size_t uxSocketSize;
+
+/* Note that this value will be over-written by the call to prvDetermineSocketSize. */
+size_t uxSocketSize = 1;
 EventGroupHandle_t xEventGroup;
 Socket_t xReturn;
 
@@ -311,8 +313,8 @@ Socket_t xReturn;
 	}
 	else
 	{
-		/* Allocate the structure that will hold the socket information.  The
-		size depends on the type of socket: UDP sockets need less space.  A
+		/* Allocate the structure that will hold the socket information. The
+		size depends on the type of socket: UDP sockets need less space. A
 		define 'pvPortMallocSocket' will used to allocate the necessary space.
 		By default it points to the FreeRTOS function 'pvPortMalloc()'. */
 		pxSocket = ipCAST_PTR_TO_TYPE_PTR( FreeRTOS_Socket_t, pvPortMallocSocket( uxSocketSize ) );
@@ -667,6 +669,7 @@ BaseType_t xTimed = pdFALSE;
 TimeOut_t xTimeOut;
 int32_t lReturn;
 EventBits_t xEventBits = ( EventBits_t ) 0;
+size_t uxPayloadLength;
 
 	if( prvValidSocket( pxSocket, FREERTOS_IPPROTO_UDP, pdTRUE ) == pdFALSE )
 	{
@@ -770,7 +773,8 @@ EventBits_t xEventBits = ( EventBits_t ) 0;
 			calculated at the total packet size minus the headers.
 			The validity of `xDataLength` prvProcessIPPacket has been confirmed
 			in 'prvProcessIPPacket()'. */
-			lReturn = ( int32_t ) ( pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t ) );
+			uxPayloadLength = pxNetworkBuffer->xDataLength - sizeof( UDPPacket_t );
+			lReturn = ( int32_t ) uxPayloadLength;
 
 			if( pxSourceAddress != NULL )
 			{
@@ -901,7 +905,7 @@ const size_t uxPayloadOffset = ( size_t ) ipUDP_PAYLOAD_OFFSET_IPv4;
 				/* When zero copy is used, pvBuffer is a pointer to the
 				payload of a buffer that has already been obtained from the
 				stack.  Obtain the network buffer pointer from the buffer. */
-				pxNetworkBuffer = pxUDPPayloadBuffer_to_NetworkBuffer( ( void * ) pvBuffer );
+				pxNetworkBuffer = pxUDPPayloadBuffer_to_NetworkBuffer( pvBuffer );
 			}
 
 			if( pxNetworkBuffer != NULL )
@@ -1434,12 +1438,12 @@ FreeRTOS_Socket_t *pxSocket;
 	{
 		case FREERTOS_SO_RCVTIMEO	:
 			/* Receive time out. */
-			pxSocket->xReceiveBlockTime = *( ( TickType_t *) pvOptionValue );
+			pxSocket->xReceiveBlockTime = *( ( const TickType_t *) pvOptionValue );
 			xReturn = 0;
 			break;
 
 		case FREERTOS_SO_SNDTIMEO	:
-			pxSocket->xSendBlockTime = *( ( TickType_t *) pvOptionValue );
+			pxSocket->xSendBlockTime = *( ( const TickType_t *) pvOptionValue );
 			if( pxSocket->ucProtocol == ( uint8_t ) FREERTOS_IPPROTO_UDP )
 			{
 				/* The send time out is capped for the reason stated in the
@@ -1665,7 +1669,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bReuseSocket = pdTRUE;
 					}
@@ -1684,7 +1688,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bCloseAfterSend = pdTRUE;
 					}
@@ -1703,7 +1707,7 @@ FreeRTOS_Socket_t *pxSocket;
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
 
-					if( *( ( BaseType_t *) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t *) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.xTCPWindow.u.bits.bSendFullSize = pdTRUE;
 					}
@@ -1729,7 +1733,7 @@ FreeRTOS_Socket_t *pxSocket;
 					{
 						break;	/* will return -pdFREERTOS_ERRNO_EINVAL */
 					}
-					if( *( ( BaseType_t * ) pvOptionValue ) != 0 )
+					if( *( ( const BaseType_t * ) pvOptionValue ) != 0 )
 					{
 						pxSocket->u.xTCP.bits.bRxStopped = pdTRUE;
 					}
@@ -1883,7 +1887,7 @@ const socklen_t uxSize = 16;
 	{
 	uint8_t pucDigits[ sockDIGIT_COUNT ];
 	uint8_t ucValue = pucAddress[ uxNibble ];
-	socklen_t uxSource = sockDIGIT_COUNT - 1;
+	socklen_t uxSource = ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U;
 	socklen_t uxNeeded;
 
 		for( ;; )
@@ -1899,7 +1903,7 @@ const socklen_t uxSize = 16;
 		pucDigits[ 0 ] = ucValue;
 
 		/* Skip leading zeros. */
-		for( uxSource = 0; uxSource < ( socklen_t ) ( sockDIGIT_COUNT - 1 ); uxSource++ )
+		for( uxSource = 0; uxSource < ( ( socklen_t ) sockDIGIT_COUNT - ( socklen_t ) 1U ); uxSource++ )
 		{
 			if( pucDigits[ uxSource ] != 0U )
 			{

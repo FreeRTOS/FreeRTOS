@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -27,16 +27,16 @@
 
 /*
  *******************************************************************************
- * NOTE 1: The Win32 port is a simulation (or is that emulation?) only!  Do not
- * expect to get real time behaviour from the Win32 port or this demo
+ * NOTE 1: The POSIX port is a simulation (or is that emulation?) only!  Do not
+ * expect to get real time behaviour from the POSIX port or this demo
  * application.  It is provided as a convenient development and demonstration
  * test bed only.
  *
- * Windows will not be running the FreeRTOS simulator threads continuously, so
+ * Linux will not be running the FreeRTOS simulator threads continuously, so
  * the timing information in the FreeRTOS+Trace logs have no meaningful units.
- * See the documentation page for the Windows simulator for an explanation of
+ * See the documentation page for the Linux simulator for an explanation of
  * the slow timing:
- * http://www.freertos.org/FreeRTOS-Windows-Simulator-Emulator-for-Visual-Studio-and-Eclipse-MingW.html
+ * https://freertos-wordpress.corp.amazon.com/FreeRTOS-simulator-for-Linux.html
  * - READ THE WEB DOCUMENTATION FOR THIS PORT FOR MORE INFORMATION ON USING IT -
  *
  * NOTE 2:  This project provides two demo applications.  A simple blinky style
@@ -106,6 +106,7 @@
 #include "StreamBufferDemo.h"
 #include "StreamBufferInterrupt.h"
 #include "MessageBufferAMP.h"
+#include "console.h"
 
 /* Priorities at which the tasks are created. */
 #define mainCHECK_TASK_PRIORITY			( configMAX_PRIORITIES - 2 )
@@ -182,7 +183,7 @@ static void prvReloadModeTestTimerCallback( TimerHandle_t xTimer );
 /*-----------------------------------------------------------*/
 
 /* The variable into which error messages are latched. */
-static char *pcStatusMessage = "No errors";
+static char *pcStatusMessage = "OK: No errors";
 
 /* This semaphore is created purely to test using the vSemaphoreDelete() and
 semaphore tracing API functions.  It has no other purpose. */
@@ -197,6 +198,7 @@ int main_full( void )
 
 	/* Create the standard demo tasks. */
 	vStartTaskNotifyTask();
+	// vStartTaskNotifyArrayTask();
 	vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -207,23 +209,26 @@ int main_full( void )
 	vStartRecursiveMutexTasks();
 	vStartCountingSemaphoreTasks();
 	vStartDynamicPriorityTasks();
-	vStartQueueSetTasks();
 	vStartQueueOverwriteTask( mainQUEUE_OVERWRITE_PRIORITY );
-	xTaskCreate( prvDemoQueueSpaceFunctions, NULL, configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL ); /* Name is null for code coverage. */
 	vStartEventGroupTasks();
 	vStartInterruptSemaphoreTasks();
-	vStartQueueSetPollingTask();
 	vCreateBlockTimeTasks();
 	vCreateAbortDelayTasks();
 	xTaskCreate( prvDemoQueueSpaceFunctions, "QSpace", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvPermanentlyBlockingSemaphoreTask, "BlockSem", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
 	xTaskCreate( prvPermanentlyBlockingNotificationTask, "BlockNoti", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL );
-	xTaskCreate( prvDemonstrateChangingTimerReloadMode, "TimerMode", configMINIMAL_STACK_SIZE, NULL, configMAX_PRIORITIES - 1, NULL );
 
 	vStartMessageBufferTasks( configMINIMAL_STACK_SIZE );
-	/* vStartStreamBufferTasks(); */
-	/* vStartStreamBufferInterruptDemo(); */
+	vStartStreamBufferTasks();
+	vStartStreamBufferInterruptDemo();
 	vStartMessageBufferAMPTasks( configMINIMAL_STACK_SIZE );
+
+	#if( configUSE_QUEUE_SETS == 1 )
+	{
+		vStartQueueSetTasks();
+		vStartQueueSetPollingTask();
+	}
+	#endif
 
 	#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	{
@@ -234,7 +239,7 @@ int main_full( void )
 	#if( configUSE_PREEMPTION != 0  )
 	{
 		/* Don't expect these tasks to pass when preemption is not used. */
-		//vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
+		vStartTimerDemoTask( mainTIMER_TEST_PERIOD );
 	}
 	#endif
 
@@ -260,7 +265,8 @@ int main_full( void )
 static void prvCheckTask( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
+const TickType_t xCycleFrequency = pdMS_TO_TICKS( 10000UL );
+HeapStats_t xHeapStats;
 
 	/* Just to remove compiler warning. */
 	( void ) pvParameters;
@@ -274,21 +280,21 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		vTaskDelayUntil( &xNextWakeTime, xCycleFrequency );
 
 		/* Check the standard demo tasks are running without error. */
-		/* #if( configUSE_PREEMPTION != 0 ) */
-		/* { */
-		/* 	/\* These tasks are only created when preemption is used. *\/ */
-		/* 	if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE ) */
-		/* 	{ */
-		/* 		pcStatusMessage = "Error: TimerDemo"; */
-		/* 	} */
-		/* } */
-		/* #endif */
+		#if( configUSE_PREEMPTION != 0 )
+		{
+			/* These tasks are only created when preemption is used. */
+			if( xAreTimerDemoTasksStillRunning( xCycleFrequency ) != pdTRUE )
+			{
+				pcStatusMessage = "Error: TimerDemo";
+			}
+		}
+		#endif
 
-		/* if( xAreStreamBufferTasksStillRunning() != pdTRUE ) */
-		/* { */
-		/* 	pcStatusMessage = "Error:  StreamBuffer"; */
-		/* } */
-		/* else  */if( xAreMessageBufferTasksStillRunning() != pdTRUE )
+		if( xAreStreamBufferTasksStillRunning() != pdTRUE )
+		{
+			pcStatusMessage = "Error:  StreamBuffer";
+		}
+		else if( xAreMessageBufferTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error:  MessageBuffer";
 		}
@@ -296,6 +302,10 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error:  Notification";
 		}
+		// else if( xAreTaskNotificationArrayTasksStillRunning() != pdTRUE )
+		// {
+		// 	pcStatusMessage = "Error:  NotificationArray";
+		// }
 		else if( xAreInterruptSemaphoreTasksStillRunning() != pdTRUE )
 		{
 			pcStatusMessage = "Error: IntSem";
@@ -348,17 +358,9 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: Dynamic";
 		}
-		else if( xAreQueueSetTasksStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Queue set";
-		}
 		else if( xIsQueueOverwriteTaskStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Queue overwrite";
-		}
-		else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
-		{
-			pcStatusMessage = "Error: Queue set polling";
 		}
 		else if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 		{
@@ -368,14 +370,25 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 		{
 			pcStatusMessage = "Error: Abort delay";
 		}
-		/* else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS ) */
-		/* { */
-		/* 	pcStatusMessage = "Error: Stream buffer interrupt"; */
-		/* } */
+		else if( xIsInterruptStreamBufferDemoStillRunning() != pdPASS )
+		{
+			pcStatusMessage = "Error: Stream buffer interrupt";
+		}
 		else if( xAreMessageBufferAMPTasksStillRunning() != pdPASS )
 		{
 			pcStatusMessage = "Error: Message buffer AMP";
 		}
+
+		#if( configUSE_QUEUE_SETS == 1 )
+			else if( xAreQueueSetTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "Error: Queue set";
+			}
+			else if( xAreQueueSetPollTasksStillRunning() != pdPASS )
+			{
+				pcStatusMessage = "Error: Queue set polling";
+			}
+		#endif
 
 		#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 			else if( xAreStaticAllocationTasksStillRunning() != pdPASS )
@@ -383,6 +396,13 @@ const TickType_t xCycleFrequency = pdMS_TO_TICKS( 2500UL );
 				pcStatusMessage = "Error: Static allocation";
 			}
 		#endif /* configSUPPORT_STATIC_ALLOCATION */
+
+		printf( "%s - tick count %u \r\n",
+					pcStatusMessage,
+					xTaskGetTickCount() );
+
+		// Reset the error condition
+		pcStatusMessage = "OK: No errors";	
 	}
 }
 /*-----------------------------------------------------------*/
@@ -486,20 +506,24 @@ TaskHandle_t xTimerTask;
 
 	/* Call the periodic timer test, which tests the timer API functions that
 	can be called from an ISR. */
-	/* #if( configUSE_PREEMPTION != 0 ) */
-	/* { */
-	/* 	/\* Only created when preemption is used. *\/ */
-	/* 	vTimerPeriodicISRTests(); */
-	/* } */
-	/* #endif */
+	#if( configUSE_PREEMPTION != 0 )
+	{
+		/* Only created when preemption is used. */
+		vTimerPeriodicISRTests();
+	}
+	#endif
 
 	/* Call the periodic queue overwrite from ISR demo. */
 	vQueueOverwritePeriodicISRDemo();
 
-	/* Write to a queue that is in use as part of the queue set demo to
-	demonstrate using queue sets from an ISR. */
-	vQueueSetAccessQueueSetFromISR();
-	vQueueSetPollingInterruptAccess();
+	#if( configUSE_QUEUE_SETS == 1 ) /* Remove the tests if queue sets are not defined. */
+	{
+		/* Write to a queue that is in use as part of the queue set demo to
+		demonstrate using queue sets from an ISR. */
+		vQueueSetAccessQueueSetFromISR();
+		vQueueSetPollingInterruptAccess();
+	}
+	#endif
 
 	/* Exercise event groups from interrupts. */
 	vPeriodicEventGroupsProcessing();
@@ -509,19 +533,19 @@ TaskHandle_t xTimerTask;
 
 	/* Exercise using task notifications from an interrupt. */
 	xNotifyTaskFromISR();
+	// xNotifyArrayTaskFromISR();
 
 	/* Writes to stream buffer byte by byte to test the stream buffer trigger
 	level functionality. */
-	/* vPeriodicStreamBufferProcessing(); */
+	vPeriodicStreamBufferProcessing();
 
 	/* Writes a string to a string buffer four bytes at a time to demonstrate
 	a stream being sent from an interrupt to a task. */
-	/* vBasicStreamBufferSendFromISR(); */
+	vBasicStreamBufferSendFromISR();
 
 	/* For code coverage purposes. */
 	xTimerTask = xTimerGetTimerDaemonTaskHandle();
 	configASSERT( uxTaskPriorityGetFromISR( xTimerTask ) == configTIMER_TASK_PRIORITY );
-	( void ) xTimerTask; /* In case configASSERT() is not defined. */
 }
 /*-----------------------------------------------------------*/
 
@@ -616,8 +640,6 @@ static portBASE_TYPE xPerformedOneShotTests = pdFALSE;
 TaskHandle_t xTestTask;
 TaskStatus_t xTaskInfo;
 extern StackType_t uxTimerTaskStack[];
-static uint32_t ulLastIdleExecutionTime = 0;
-uint32_t ulIdleExecutionTime;
 
 	/* Demonstrate the use of the xTimerGetTimerDaemonTaskHandle() and
 	xTaskGetIdleTaskHandle() functions.  Also try using the function that sets
@@ -716,13 +738,6 @@ uint32_t ulIdleExecutionTime;
 			}
 		}
 	}
-
-	ulIdleExecutionTime = ulTaskGetIdleRunTimeCounter();
-	if( ulIdleExecutionTime == ulLastIdleExecutionTime )
-	{
-		pcStatusMessage = "Error: Total amount of Idle task execution time did not change";
-	}
-	ulLastIdleExecutionTime = ulIdleExecutionTime;
 }
 /*-----------------------------------------------------------*/
 

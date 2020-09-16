@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -516,13 +516,6 @@ socket events. */
 #endif
 
 /*
- * A version of FreeRTOS_GetReleaseNetworkBuffer() that can be called from an
- * interrupt.  If a non zero value is returned, then the calling ISR should
- * perform a context switch before exiting the ISR.
- */
-BaseType_t FreeRTOS_ReleaseFreeNetworkBufferFromISR( void );
-
-/*
  * Create a message that contains a command to initialise the network interface.
  * This is used during initialisation, and at any time the network interface
  * goes down thereafter.  The network interface hardware driver is responsible
@@ -585,7 +578,9 @@ BaseType_t xIPIsNetworkTaskReady( void );
 	 * Actually a user thing, but because xBoundTCPSocketsList, let it do by the
 	 * IP-task
 	 */
-	void vTCPNetStat( void );
+	#if( ipconfigHAS_PRINTF != 0 )
+		void vTCPNetStat( void );
+	#endif
 
 	/*
 	 * At least one socket needs to check for timeouts

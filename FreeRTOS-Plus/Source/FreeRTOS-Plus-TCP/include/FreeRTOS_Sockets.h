@@ -207,8 +207,19 @@ typedef struct xSOCKET const * ConstSocket_t;
 
 static portINLINE unsigned int prvSocketValid( Socket_t xSocket )
 {
+    unsigned int lReturnValue = pdFALSE;
+    /*
+     * There are two values which can indicate an invalid socket:
+     * FREERTOS_INVALID_SOCKET and NULL.  In order to compare against
+     * both values, the code cannot be compliant with rule 11.4,
+     * hence the Coverity suppression statement below.
+     */
     /* coverity[misra_c_2012_rule_11_4_violation] */
-    return ( ( xSocket != FREERTOS_INVALID_SOCKET ) && ( xSocket != NULL ) );
+    if( ( xSocket != FREERTOS_INVALID_SOCKET ) && ( xSocket != NULL ) )
+    {
+	    lReturnValue = pdTRUE;
+    }
+    return lReturnValue;
 }
 
 #if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )

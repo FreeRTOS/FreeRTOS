@@ -57,6 +57,9 @@
 /* MQTT library includes. */
 #include "mqtt.h"
 
+/* Retry utilities include. */
+#include "retry_utils.h"
+
 /* Transport interface include. */
 #include "plaintext_freertos.h"
 
@@ -183,10 +186,23 @@
 static void prvMQTTDemoTask( void * pvParameters );
 
 /**
+ * @brief Connect to MQTT broker with reconnection retries.
+ *
+ * If connection fails, retry is attempted after a timeout.
+ * Timeout value will exponentially increase until maximum
+ * timeout value is reached or the number of attempts are exhausted.
+ *
+ * @param pxNetworkContext The output parameter to return the created network context.
+ *
+ * @return The status of the final connection attempt.
+ */
+static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext );
+
+/**
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
  *
  * @param pxMQTTContext MQTT context pointer.
- * @param xNetworkContext network context.
+ * @param pxNetworkContext Network context.
  *
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
@@ -199,6 +215,23 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
  * @param pxMQTTContext MQTT context pointer.
  */
 static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext );
+
+/**
+ * @brief Function to update variable globalSubAckStatus with status
+ * information from Subscribe ACK. Called by eventCallback after processing
+ * incoming subscribe echo.
+ *
+ * @param Server response to the subscription request.
+ */
+static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
+
+/**
+ * @brief Function to handle resubscription of topics on Subscribe
+ * ACK failure. Uses an exponential backoff strategy with jitter.
+ *
+ * @param pxMQTTContext MQTT context pointer.
+ */
+static void prvHandleResubscribe( MQTTContext_t * pxMQTTContext );
 
 /**
  * @brief  Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
@@ -312,6 +345,18 @@ static uint16_t usSubscribePacketIdentifier;
 static uint16_t usUnsubscribePacketIdentifier;
 
 /**
+ * @brief Status of latest Subscribe ACK;
+ * it is updated every time the callback function processes a Subscribe ACK.
+ */
+static MQTTSubAckStatus_t pxGlobalSubAckStatus[ 1 ] = { MQTTSubAckFailure };
+
+/**
+ * @brief Array to keep subscription topics.
+ * Used to re-subscribe to topics that failed initial subscription attempts.
+ */
+static MQTTSubscribeInfo_t pxGlobalSubscriptionList[ 1 ];
+
+/**
  * @brief Timer to handle the MQTT keep-alive mechanism.
  */
 static TimerHandle_t xKeepAliveTimer;
@@ -378,6 +423,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     NetworkContext_t xNetworkContext = { 0 };
     MQTTContext_t xMQTTContext;
     MQTTStatus_t xMQTTStatus;
+    PlaintextTransportStatus_t xNetworkStatus;
     BaseType_t xTimerStatus;
     BaseType_t xNetworkStatus;
 
@@ -396,16 +442,13 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
-        /* Establish a TCP connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
-         * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        xNetworkStatus = Plaintext_FreeRTOS_Connect( &xNetworkContext,
-                                                     democonfigMQTT_BROKER_ENDPOINT,
-                                                     democonfigMQTT_BROKER_PORT,
-                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS );
-        configASSERT( xNetworkStatus == 0 );
+        /* Attempt to connect to the MQTT broker. If connection fails, retry after
+         * a timeout. Timeout value will be exponentially increased until the maximum
+         * number of attempts are reached or the maximum timeout value is reached.
+         * The function returns a failure status if the TCP connection cannot be established
+         * to the broker after the configured number of attempts. */
+        xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkContext );
+        configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
         /* Sends an MQTT Connect packet over the already connected TCP socket,
          * and waits for connection acknowledgment (CONNACK) packet. */
@@ -447,6 +490,18 @@ static void prvMQTTDemoTask( void * pvParameters )
         xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, mqttexampleRECEIVE_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
+        /* Check if recent subscription request has been rejected. globalSubAckStatus is updated
+         * in eventCallback to reflect the status of the SUBACK sent by the broker. */
+        if( pxGlobalSubAckStatus[ 0 ] == MQTTSubAckFailure )
+        {
+            /* If server rejected the subscription request, attempt to resubscribe to topic.
+             * Attempts are made according to the exponential backoff retry strategy
+             * implemented in retryUtils. */
+            LogInfo( ( "Server rejected initial subscription request. Attempting to re-subscribe to topic %s.",
+                       mqttexampleTOPIC ) );
+            prvHandleResubscribe( &xMQTTContext );
+        }
+
         /**************************** Publish and Receive Loop. ******************************/
         /* Publish messages with QOS0, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
@@ -486,7 +541,11 @@ static void prvMQTTDemoTask( void * pvParameters )
         configASSERT( xTimerStatus == pdPASS );
 
         /* Close the network connection.  */
-        Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
+        xNetworkStatus = Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
+        configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
+
+        /* Reset global SUBACK status variable after completion of subscription request cycle. */
+        pxGlobalSubAckStatus[ 0 ] = MQTTSubAckFailure;
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */
@@ -498,6 +557,50 @@ static void prvMQTTDemoTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
+static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pNetworkContext )
+{
+    PlaintextTransportStatus_t xNetworkStatus;
+    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
+    RetryUtilsParams_t xReconnectParams;
+
+    /* Initialize reconnect attempts and interval */
+    RetryUtils_ParamsReset( &xReconnectParams );
+
+    /* Attempt to connect to MQTT broker. If connection fails, retry after
+     * a timeout. Timeout value will exponentially increase till maximum
+     * attempts are reached.
+     */
+    do
+    {
+        /* Establish a TCP connection with the MQTT broker. This example connects to
+         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
+         * democonfigMQTT_BROKER_PORT at the top of this file. */
+        LogInfo( ( "Create a TCP connection to %s:%d.",
+                   democonfigMQTT_BROKER_ENDPOINT,
+                   democonfigMQTT_BROKER_PORT ) );
+        xNetworkStatus = Plaintext_FreeRTOS_Connect( pNetworkContext,
+                                                     democonfigMQTT_BROKER_ENDPOINT,
+                                                     democonfigMQTT_BROKER_PORT,
+                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS );
+
+        if( xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS )
+        {
+            LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
+            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
+        }
+
+        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+        {
+            LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
+            xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
+        }
+    } while( ( xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+
+    return xNetworkStatus;
+}
+/*-----------------------------------------------------------*/
+
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext )
 {
@@ -505,7 +608,6 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     MQTTConnectInfo_t xConnectInfo;
     bool xSessionPresent;
     TransportInterface_t xTransport;
-    MQTTApplicationCallbacks_t xCallbacks;
 
     /***
      * For readability, error handling in this function is restricted to the use of
@@ -517,13 +619,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xTransport.send = Plaintext_FreeRTOS_send;
     xTransport.recv = Plaintext_FreeRTOS_recv;
 
-    /* Application callbacks for receiving incoming published and incoming acks
-     * from MQTT library. */
-    xCallbacks.appCallback = prvEventCallback;
-    xCallbacks.getTime = prvGetTimeMs;
-
     /* Initialize MQTT library. */
-    xResult = MQTT_Init( pxMQTTContext, &xTransport, &xCallbacks, &xBuffer );
+    xResult = MQTT_Init( pxMQTTContext, &xTransport, prvGetTimeMs, prvEventCallback, &xBuffer );
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */

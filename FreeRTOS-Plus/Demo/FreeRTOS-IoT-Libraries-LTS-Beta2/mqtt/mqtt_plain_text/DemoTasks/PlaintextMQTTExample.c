@@ -583,8 +583,8 @@ static void prvMQTTSubscribeToTopic( MQTTContext_t * pxMQTTContext )
 static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
 {
     MQTTStatus_t xResult = MQTTSuccess;
-    uint8_t * pPayload = NULL;
-    size_t pSize = 0;
+    uint8_t * pucPayload = NULL;
+    size_t ulSize = 0;
 
     xResult = MQTT_GetSubAckStatusCodes( pxPacketInfo, &pPayload, &pSize );
 

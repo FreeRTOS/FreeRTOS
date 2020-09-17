@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.5
+ * Trace Recorder Library for Tracealyzer v4.3.11
  * Percepio AB, www.percepio.com
  *
  * trcRecorder.h
@@ -51,30 +51,39 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdarg.h>
+
+#define TRC_ACKNOWLEDGED (0xABC99123)
 
 #include "trcConfig.h"
 #include "trcPortDefines.h"
 
-
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)
+
 typedef uint16_t traceString;
 typedef uint8_t traceUBChannel;
 typedef uint8_t traceObjectClass;
 
 #if (TRC_CFG_USE_16BIT_OBJECT_HANDLES == 1)
 typedef uint16_t traceHandle;
-#else
+#else /* (TRC_CFG_USE_16BIT_OBJECT_HANDLES == 1) */
 typedef uint8_t traceHandle;
-#endif
+#endif /* (TRC_CFG_USE_16BIT_OBJECT_HANDLES == 1) */
 	
 #include "trcHardwarePort.h"
 #include "trcKernelPort.h"
 
-// Not available in snapshot mode
-#define vTraceConsoleChannelPrintF(fmt, ...)
+/* Not yet available in snapshot mode */
+#define vTraceConsoleChannelPrintF(fmt, ...) (void)(fmt)
+#define prvTraceStoreEvent0(...)
+#define prvTraceStoreEvent1(...)
+#define prvTraceStoreEvent2(...)
+#define prvTraceStoreEvent3(...)
+#define prvTraceStoreEvent(...)
+#define prvTraceStoreStringEvent(...)
 
-#endif
-	
+#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT) */
+
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
 
 typedef const char* traceString;
@@ -84,9 +93,13 @@ typedef const void* traceHandle;
 #include "trcStreamingPort.h"
 #include "trcKernelPort.h"
 
-#endif
+#endif /* (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING) */
 
 #if (TRC_USE_TRACEALYZER_RECORDER == 1)
+
+#define TRC_STATE_IN_STARTUP 0
+#define TRC_STATE_IN_TASKSWITCH 1
+#define TRC_STATE_IN_APPLICATION 2
 
 /* The user event channel for recorder warnings, must be defined in trcKernelPort.c */
 extern traceString trcWarningChannel;
@@ -223,10 +236,23 @@ void vTraceEnable(int startOption);
 #if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
 void vTracePrintF(traceString chn, const char* fmt, ...);
 #else
-#define vTracePrintF(chn, ...) (void)chn
+#define vTracePrintF(chn, fmt, ...) (void)(chn), (void)(fmt) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
 #endif
 
- /******************************************************************************
+/******************************************************************************
+ * vTraceVPrintF
+ *
+ * vTracePrintF variant that accepts a va_list.
+ * See vTracePrintF documentation for further details.
+ *
+ ******************************************************************************/
+#if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
+void vTraceVPrintF(traceString eventLabel, const char* formatStr, va_list vl);
+#else
+#define vTraceVPrintF(chn, formatStr, vl) (void)(chn), (void)(formatStr), (void)(vl) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
+#endif
+
+/******************************************************************************
 * vTracePrint
 *
 * A faster version of vTracePrintF, that only allows for logging a string.
@@ -240,7 +266,7 @@ void vTracePrintF(traceString chn, const char* fmt, ...);
 #if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
 void vTracePrint(traceString chn, const char* str);
 #else
-#define vTracePrint(chn, ...) (void)chn
+#define vTracePrint(chn, str) (void)(chn), (void)(str) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
 #endif
 
 
@@ -276,7 +302,7 @@ void vTraceConsoleChannelPrintF(const char* fmt, ...);
 #if (TRC_CFG_SCHEDULING_ONLY == 0) && (TRC_CFG_INCLUDE_USER_EVENTS == 1)
 traceString xTraceRegisterString(const char* name);
 #else
-#define xTraceRegisterString(x) (x)
+#define xTraceRegisterString(x) ((void)(x), (traceString)0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
 #endif
 
 /*******************************************************************************
@@ -294,7 +320,7 @@ traceString xTraceRegisterString(const char* name);
  * xTraceSetISRProperties
  *
  * Stores a name and priority level for an Interrupt Service Routine, to allow
- * for better visualization. Returns a traceHandle used by vTraceStoreISRBegin. 
+ * for better visualization. Returns a traceHandle used by vTraceStoreISRBegin.
  *
  * Example:
  *	 #define PRIO_ISR_TIMER1 3 // the hardware priority of the interrupt
@@ -430,7 +456,7 @@ void vTraceSetFrequency(uint32_t frequency);
 #if (TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_CUSTOM)
 void vTraceSetRecorderDataBuffer(void* pRecorderData);
 #else
-#define vTraceSetRecorderDataBuffer(pRecorderData)
+#define vTraceSetRecorderDataBuffer(pRecorderData) /* If not CUSTOM, pRecorderData will be an undefined symbol (same as in TRC_ALLOC_CUSTOM_BUFFER), so no (void) here */
 #endif
 
 
@@ -476,7 +502,7 @@ void vTraceSetRecorderDataBuffer(void* pRecorderData);
 		#endif
 	#endif
 #else
-	#define TRC_ALLOC_CUSTOM_BUFFER(bufname)
+	#define TRC_ALLOC_CUSTOM_BUFFER(bufname) /* If not CUSTOM, bufname will be an undefined symbol (same as in vTraceSetRecorderDataBuffer), so no (void) here */
 #endif
 
 /******************************************************************************
@@ -732,11 +758,21 @@ void vTraceClear(void);
 	if (TRACE_GET_OBJECT_FILTER(CLASS, pxObject) & CurrentFilterMask) \
 		prvTraceStoreKernelCall(SERVICE, TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject), TRACE_GET_OBJECT_NUMBER(CLASS, pxObject));
 
+/* This macro will create a call to a kernel service with a certain result, with a null object as parameter */
+#undef trcKERNEL_HOOKS_KERNEL_SERVICE_NULL_OBJECT_FROM_ISR
+#define trcKERNEL_HOOKS_KERNEL_SERVICE_NULL_OBJECT_FROM_ISR(SERVICE, TRACECLASS) \
+	prvTraceStoreKernelCall(SERVICE, TRACECLASS, 0);
+
 /* This macro will create a call to a kernel service with a certain result, with an object as parameter */
 #undef trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM_FROM_ISR
 #define trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_PARAM_FROM_ISR(SERVICE, CLASS, pxObject, param) \
 	if (TRACE_GET_OBJECT_FILTER(CLASS, pxObject) & CurrentFilterMask) \
 		prvTraceStoreKernelCallWithParam(SERVICE, TRACE_GET_OBJECT_TRACE_CLASS(CLASS, pxObject), TRACE_GET_OBJECT_NUMBER(CLASS, pxObject), (uint32_t)param);
+
+/* This macro will create a call to a kernel service with a certain result, with a null object and other value as parameter */
+#undef trcKERNEL_HOOKS_KERNEL_SERVICE_NULL_OBJECT_WITH_PARAM_FROM_ISR
+#define trcKERNEL_HOOKS_KERNEL_SERVICE_NULL_OBJECT_WITH_PARAM_FROM_ISR(SERVICE, TRACECLASS, param) \
+	prvTraceStoreKernelCallWithParam(SERVICE, TRACECLASS, 0, param);
 
 /* This macro will create a call to a kernel service with a certain result, with an object as parameter */
 #undef trcKERNEL_HOOKS_KERNEL_SERVICE_WITH_NUMERIC_PARAM_ONLY_FROM_ISR
@@ -856,6 +892,15 @@ void prvTraceStoreKernelCallWithParam(uint32_t evtcode, traceObjectClass objectC
 
 #endif
 
+/*******************************************************************************
+* prvTraceInitTraceData
+*
+* Allocates and initializes the recorder data structure, based on the constants
+* in trcConfig.h. This allows for allocating the data on the heap, instead of
+* using a static declaration.
+******************************************************************************/
+void prvTraceInitTraceData(void);
+
 void prvTraceSetTaskInstanceFinished(traceHandle handle);
 
 void prvTraceSetPriorityProperty(uint8_t objectclass, traceHandle id, uint8_t value);
@@ -880,16 +925,16 @@ void prvTraceStoreObjectPropertiesOnCloseEvent(uint8_t evtcode, traceHandle hand
 #if (TRC_CFG_INCLUDE_ISR_TRACING == 0)
 
 #undef vTraceSetISRProperties
-#define vTraceSetISRProperties(handle, name, priority)
+#define vTraceSetISRProperties(handle, name, priority) (void)(handle), (void)(name), (void)(priority) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
 
 #undef vTraceStoreISRBegin
-#define vTraceStoreISRBegin(x) (void)x
+#define vTraceStoreISRBegin(x) (void)(x)
 
 #undef vTraceStoreISREnd
-#define vTraceStoreISREnd(x) (void)x
+#define vTraceStoreISREnd(x) (void)(x)
 
 #undef xTraceSetISRProperties
-#define xTraceSetISRProperties(name, priority) 0
+#define xTraceSetISRProperties(name, priority) ((void)(name), (void)(priority), (traceHandle)0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
 
 #endif /*(TRC_CFG_INCLUDE_ISR_TRACING == 0)*/
 
@@ -928,17 +973,19 @@ void vTraceUBEvent(traceUBChannel channel);
 #else /*((TRC_CFG_INCLUDE_USER_EVENTS == 1) && (TRC_CFG_SCHEDULING_ONLY == 0))*/
 
 #undef vTracePrint
-#define vTracePrint(chn, ...) (void)chn
+#define vTracePrint(chn, ...) (void)(chn)
 #undef vTracePrintF
-#define vTracePrintF(chn, ...) (void)chn
+#define vTracePrintF(chn, fmt, ...) (void)(chn), (void)(fmt) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
+#undef vTraceVPrintF
+#define vTraceVPrintF(chn, formatStr, vl) (void)(chn), (void)(formatStr), (void)(vl) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
 #undef xTraceRegisterString
-#define xTraceRegisterString(x) 0; (void)x;
+#define xTraceRegisterString(x) ((void)(x), (traceString)0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
 #undef xTraceRegisterChannelFormat
-#define xTraceRegisterChannelFormat(eventLabel, formatStr) 0
+#define xTraceRegisterChannelFormat(eventLabel, formatStr) ((void)(eventLabel), (void)(formatStr), 0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
 #undef vTraceUBData
-#define vTraceUBData(label, ...) {}
+#define vTraceUBData(label, ...) (void)(label)
 #undef vTraceChannelPrint
-#define vTraceChannelPrint(label) {}
+#define vTraceChannelPrint(label) (void)(label)
 
 #endif /*(TRC_CFG_INCLUDE_USER_EVENTS == 1)*/
 
@@ -1433,7 +1480,7 @@ if (!(eval)) \
 #endif
 
  /******************************************************************************
- * TRC_STREAM_PORT_ON_TRACE_BEGIN
+ * TRC_STREAM_PORT_ON_TRACE_END
  *
  * Defining any actions needed in the stream port when the tracing stops.
  * Empty by default.
@@ -1450,12 +1497,34 @@ if (!(eval)) \
  * Depending on "TRC_STREAM_PORT_USE_INTERNAL_BUFFER", this either allocates
  * space in the paged event buffer, or on the local stack. In the latter case,
  * the COMMIT event is used to write the data to the streaming interface.
+ *
+ * The BLOCKING option is only used within vTraceEnable, to ensure the full
+ * header, object table and symbol table is transferred without data loss.
  ******************************************************************************/
 #ifndef TRC_STREAM_PORT_ALLOCATE_EVENT
 #if (TRC_STREAM_PORT_USE_INTERNAL_BUFFER == 1)
-	#define TRC_STREAM_PORT_ALLOCATE_EVENT(_type, _ptrData, _size) _type* _ptrData; _ptrData = (_type*)prvPagedEventBufferGetWritePointer(_size);
+	#define TRC_STREAM_PORT_ALLOCATE_EVENT(_type, _ptrData, _size) \
+	_type* _ptrData; \
+	_ptrData = (_type*)prvPagedEventBufferGetWritePointer(_size);
+	
+	/**************************************************************************
+     If your application gets stuck in TRC_STREAM_PORT_ALLOCATE_EVENT_BLOCKING,
+     it means it fails to transfer the header, object table or symbol table
+     during vTraceEnable.
+     This occurs if the trace buffer is too small to accomodate these in full,
+     i.e. before the streaming interface is started and begins to transfer.
+	 
+	 Note that this is intentionally blocking to avoid data loss, but only
+     used within vTraceEnable.
+    **************************************************************************/
+   
+	#define TRC_STREAM_PORT_ALLOCATE_EVENT_BLOCKING(_type, _ptrData, _size) \
+	_type* _ptrData; \
+	do { _ptrData = (_type*)prvPagedEventBufferGetWritePointer(_size); } while (_ptrData == NULL);
+
 #else
 	#define TRC_STREAM_PORT_ALLOCATE_EVENT(_type, _ptrData, _size) _type _tmpArray[_size / sizeof(_type)]; _type* _ptrData = _tmpArray;
+	#define TRC_STREAM_PORT_ALLOCATE_EVENT_BLOCKING(_type, _ptrData, _size) _type _tmpArray[_size / sizeof(_type)]; _type* _ptrData = _tmpArray;
 #endif
 #endif
 
@@ -1480,10 +1549,16 @@ if (!(eval)) \
 
  /******************************************************************************
  * TRC_STREAM_PORT_COMMIT_EVENT
+ * TRC_STREAM_PORT_COMMIT_EVENT_BLOCKING
  *
  * The COMMIT macro is used to write a single event record directly to the 
  * streaming inteface, without first storing the event in the internal buffer.
  * This is currently only used in the SEGGER J-Link RTT port. 
+ *
+ * The BLOCKING version is used when sending the initial trace header, which is
+ * important to receive in full. Otherwise, when using non-blocking RTT transfer
+ * this may be corrupted if using an RTT buffer smaller than the combined size
+ * of the header, object table and symbol table.
  *
  * This relies on the TRC_STREAM_PORT_WRITE_DATA macro, defined in by the 
  * stream port in trcStreamingPort.h. The COMMIT macro calls 
@@ -1498,12 +1573,46 @@ if (!(eval)) \
 #ifndef TRC_STREAM_PORT_COMMIT_EVENT
 #if (TRC_STREAM_PORT_USE_INTERNAL_BUFFER == 1)
 	#define TRC_STREAM_PORT_COMMIT_EVENT(_ptrData, _size) /* Not used */
+	#define TRC_STREAM_PORT_COMMIT_EVENT_BLOCKING(_ptrData, _size) /* Not used */
 #else
 	#define TRC_STREAM_PORT_COMMIT_EVENT(_ptrData, _size) \
 	{ \
-	 if (TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, 0) != 0)\
-		prvTraceWarning(PSF_WARNING_STREAM_PORT_WRITE); \
+		int32_t dummy = 0; \
+		(void)dummy; \
+		if (TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, &dummy) != 0) \
+		{ \
+			vTraceStop(); \
+		} \
 	}
+	
+	/* Only used during vTraceEnable */
+	#define TRC_STREAM_PORT_COMMIT_EVENT_BLOCKING(_ptrData, _size) \
+	{ \
+		char* ptrWrite = (char*)_ptrData; \
+		uint32_t writeSize = _size; \
+		uint32_t attemptCounter = 0; \
+		int32_t bytesWritten; \
+		int32_t status; \
+		do \
+		{ \
+			bytesWritten = 0; \
+			status = TRC_STREAM_PORT_WRITE_DATA(ptrWrite, writeSize, &bytesWritten); \
+			if (status != 0) \
+			{ \
+				prvTraceError(PSF_ERROR_STREAM_PORT_WRITE); \
+				break; \
+			} \
+			ptrWrite += bytesWritten; \
+			writeSize -= bytesWritten; \
+			attemptCounter++; \
+		} while (writeSize > 0); \
+		\
+		if (attemptCounter > 1) \
+		{ \
+			prvTraceWarning(PSF_WARNING_STREAM_PORT_INITIAL_BLOCKING); \
+		} \
+	}
+
 #endif
 #endif
 
@@ -1659,20 +1768,26 @@ void prvTraceWarning(int errCode);
 #define PSF_ERROR_DWT_NOT_SUPPORTED 3
 #define PSF_ERROR_DWT_CYCCNT_NOT_SUPPORTED 4
 #define PSF_ERROR_TZCTRLTASK_NOT_CREATED 5
+#define PSF_ERROR_STREAM_PORT_WRITE 6
 
-#define PSF_WARNING_SYMBOL_TABLE_SLOTS 101
-#define PSF_WARNING_SYMBOL_MAX_LENGTH 102
-#define PSF_WARNING_OBJECT_DATA_SLOTS 103
-#define PSF_WARNING_STRING_TOO_LONG 104
-#define PSF_WARNING_STREAM_PORT_READ 105
-#define PSF_WARNING_STREAM_PORT_WRITE 106
+#define PSF_WARNING_SYMBOL_TABLE_SLOTS 7
+#define PSF_WARNING_SYMBOL_MAX_LENGTH 8
+#define PSF_WARNING_OBJECT_DATA_SLOTS 9
+#define PSF_WARNING_STRING_TOO_LONG 10
+#define PSF_WARNING_STREAM_PORT_READ 11
+#define PSF_WARNING_STREAM_PORT_WRITE 12
+#define PSF_WARNING_STREAM_PORT_INITIAL_BLOCKING 13
+#define PSF_WARNING_STACKMON_NO_SLOTS 14
 
 /******************************************************************************/
 /*** INTERNAL STREAMING FUNCTIONS *********************************************/
 /******************************************************************************/
 
-/* Saves a symbol name (task name etc.) in symbol table */
-void prvTraceSaveSymbol(const void *address, const char *name);
+/* Saves a symbol name in the symbol table and returns the slot address */
+void* prvTraceSaveSymbol(const char *name);
+
+/* Saves a string in the symbol table for an object (task name etc.) */
+void prvTraceSaveObjectSymbol(void* address, const char *name);
 
 /* Deletes a symbol name (task name etc.) from symbol table */
 void prvTraceDeleteSymbol(void *address);
@@ -1735,42 +1850,43 @@ int prvIsValidCommand(TracealyzerCommandType* cmd);
 /* Executed the received command (Start or Stop) */
 void prvProcessCommand(TracealyzerCommandType* cmd);
 
-#define vTraceSetStopHook(x)
+#define vTraceSetStopHook(x) (void)(x)
 
 #endif /*(TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)*/
 
 #else /* when TRC_USE_TRACEALYZER_RECORDER == 0 */
 
-#define vTraceEnable(x)
-#define xTraceRegisterString(x) 0; (void)x;
-#define vTracePrint(chn, ...) (void)chn
-#define vTracePrintF(chn, ...) (void)chn
+#define vTraceEnable(x) (void)(x)
+#define xTraceRegisterString(x) ((void)(x), (traceString)0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
+#define vTracePrint(chn, ...) (void)(chn)
+#define vTracePrintF(chn, fmt, ...) (void)(chn), (void)(fmt) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
+#define vTraceVPrintF(chn, formatStr, vl) (void)(chn), (void)(formatStr), (void)(vl) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
 #define vTraceInstanceFinishedNow()
 #define vTraceInstanceFinishedNext()
-#define vTraceStoreISRBegin(x) (void)x
-#define vTraceStoreISREnd(x) (void)x
-#define xTraceSetISRProperties(a, b) 0
-#define vTraceStoreKernelObjectName(a, b)
-#define xTraceRegisterChannelFormat(eventLabel, formatStr) 0
-#define vTraceChannelPrint(label)
-#define vTraceUBData(label, ...)
+#define vTraceStoreISRBegin(x) (void)(x)
+#define vTraceStoreISREnd(x) (void)(x)
+#define xTraceSetISRProperties(a, b) ((void)(a), (void)(b), (traceHandle)0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
+#define vTraceStoreKernelObjectName(a, b) (void)(a), (void)(b) /* Comma operator is used to avoid "unused variable" compiler warnings in a single statement */
+#define xTraceRegisterChannelFormat(eventLabel, formatStr) ((void)(eventLabel), (void)(formatStr), 0) /* Comma operator in parenthesis is used to avoid "unused variable" compiler warnings and return 0 in a single statement */
+#define vTraceChannelPrint(label) (void)(label)
+#define vTraceUBData(label, ...) (void)(label)
 
-#define vTraceSetFilterGroup(x)
-#define vTraceSetFilterMask(x)
+#define vTraceSetFilterGroup(x) (void)(x)
+#define vTraceSetFilterMask(x) (void)(x)
 
-#define prvTraceSetReadyEventsEnabled(status)
+#define prvTraceSetReadyEventsEnabled(status) (void)(status)
 
-#define vTraceExcludeTask(handle)
+#define vTraceExcludeTask(handle) (void)(handle)
 
 #define uiTraceStart() (1)
 #define vTraceStart()
 #define vTraceStop()
 
 #ifndef vTraceSetRecorderDataBuffer
-#define vTraceSetRecorderDataBuffer(pRecorderData)
+#define vTraceSetRecorderDataBuffer(pRecorderData) /* No (void) here - ignore parameter since undefined symbol if custom allocation is not used */
 #endif
 
-#define vTraceConsoleChannelPrintF(fmt, ...)
+#define vTraceConsoleChannelPrintF(fmt, ...) (void)(fmt)
 
 #ifndef TRC_ALLOC_CUSTOM_BUFFER
 #define TRC_ALLOC_CUSTOM_BUFFER(bufname)
@@ -1778,7 +1894,7 @@ void prvProcessCommand(TracealyzerCommandType* cmd);
 
 #define xTraceIsRecordingEnabled() (0)
 
-#define vTraceSetStopHook(x)
+#define vTraceSetStopHook(x) (void)(x)
 
 #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
 

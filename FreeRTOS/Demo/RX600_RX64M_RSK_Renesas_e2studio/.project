@@ -36,6 +36,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>Source/stream_buffer.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/stream_buffer.c</locationURI>
+		</link>
+		<link>
 			<name>Source/Common_Demo_Source/Minimal</name>
 			<type>2</type>
 			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>

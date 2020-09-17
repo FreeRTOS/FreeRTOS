@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -59,10 +59,10 @@ int main(void)
 	/* Initializes MCU, drivers and middleware.
 	This is generated from Atmel START project. */
 	atmel_start_init();
-	
+
 	/* Standard register test. */
 	vStartRegTestTasks();
-	
+
 	/* Optionally enable below tests. This port only has 2KB RAM. */
 	vStartIntegerMathTasks( tskIDLE_PRIORITY );
 	vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
@@ -102,7 +102,7 @@ BaseType_t xFirstTimeCheck = pdTRUE;
 		{
 			uxErrorHasOccurred |= ( 0x01U << 2);
 		}
-		
+
 		/* When check task runs before any other tasks, all above checks shall fail.
 		To avoid false alarm, clear errors upon first entry. */
 		if ( xFirstTimeCheck == pdTRUE )
@@ -110,7 +110,7 @@ BaseType_t xFirstTimeCheck = pdTRUE;
 			uxErrorHasOccurred = 0;
 			xFirstTimeCheck = pdFALSE;
 		}
-		
+
 		/* Could set break point at below line to verify uxErrorHasOccurred. */
 		vTaskDelay( mainCHECK_PERIOD );
 	}
@@ -126,7 +126,7 @@ static void vBlinkOnboardUserLED( void *pvParameters )
 	for( ;; )
 	{
 		vParTestToggleLED( 0 );
-		
+
 		vTaskDelay( mainBLINK_LED_OK_HALF_PERIOD );
 	}
 
@@ -141,9 +141,9 @@ void vApplicationIdleHook( void )
 
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( TaskHandle_t xTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 {
-	/* When stack overflow happens, trap instead of attempting to recover. 
+	/* When stack overflow happens, trap instead of attempting to recover.
 	Read input arguments to learn about the offending task. */
 	for( ;; )
 	{

@@ -1,8 +1,8 @@
 /* blake2.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +15,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * a with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
-
+/*!
+    \file wolfssl/wolfcrypt/blake2.h
+*/
 
 #ifndef WOLF_CRYPT_BLAKE2_H
 #define WOLF_CRYPT_BLAKE2_H
 
 #include <wolfssl/wolfcrypt/settings.h>
 
-#ifdef HAVE_BLAKE2
+#if defined(HAVE_BLAKE2) || defined(HAVE_BLAKE2S)
 
 #include <wolfssl/wolfcrypt/blake2-int.h>
 
@@ -44,28 +46,51 @@
 
 /* in bytes, variable digest size up to 512 bits (64 bytes) */
 enum {
-    BLAKE2B_ID  = 7,   /* hash type unique */
-    BLAKE2B_256 = 32   /* 256 bit type, SSL default */
+#ifdef HAVE_BLAKE2B
+    BLAKE2B_ID  = WC_HASH_TYPE_BLAKE2B,
+    BLAKE2B_256 = 32,  /* 256 bit type, SSL default */
+#endif
+#ifdef HAVE_BLAKE2S
+    BLAKE2S_ID  = WC_HASH_TYPE_BLAKE2S,
+    BLAKE2S_256 = 32   /* 256 bit type */
+#endif
 };
 
 
+#ifdef HAVE_BLAKE2B
 /* BLAKE2b digest */
 typedef struct Blake2b {
     blake2b_state S[1];         /* our state */
     word32        digestSz;     /* digest size used on init */
 } Blake2b;
+#endif
+
+#ifdef HAVE_BLAKE2S
+/* BLAKE2s digest */
+typedef struct Blake2s {
+    blake2s_state S[1];         /* our state */
+    word32        digestSz;     /* digest size used on init */
+} Blake2s;
+#endif
 
 
+#ifdef HAVE_BLAKE2B
 WOLFSSL_API int wc_InitBlake2b(Blake2b*, word32);
 WOLFSSL_API int wc_Blake2bUpdate(Blake2b*, const byte*, word32);
 WOLFSSL_API int wc_Blake2bFinal(Blake2b*, byte*, word32);
+#endif
 
+#ifdef HAVE_BLAKE2S
+WOLFSSL_API int wc_InitBlake2s(Blake2s*, word32);
+WOLFSSL_API int wc_Blake2sUpdate(Blake2s*, const byte*, word32);
+WOLFSSL_API int wc_Blake2sFinal(Blake2s*, byte*, word32);
+#endif
 
 
 #ifdef __cplusplus
     }
 #endif
 
-#endif  /* HAVE_BLAKE2 */
+#endif  /* HAVE_BLAKE2 || HAVE_BLAKE2S */
 #endif  /* WOLF_CRYPT_BLAKE2_H */
 

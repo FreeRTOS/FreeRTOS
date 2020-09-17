@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -203,6 +203,24 @@ extern const char *FreeRTOS_inet_ntoa( uint32_t ulIPAddress, char *pcBuffer );
 /* The socket type itself. */
 struct xSOCKET;
 typedef struct xSOCKET *Socket_t;
+typedef struct xSOCKET const * ConstSocket_t;
+
+static portINLINE unsigned int prvSocketValid( Socket_t xSocket )
+{
+    unsigned int lReturnValue = pdFALSE;
+    /*
+     * There are two values which can indicate an invalid socket:
+     * FREERTOS_INVALID_SOCKET and NULL.  In order to compare against
+     * both values, the code cannot be compliant with rule 11.4,
+     * hence the Coverity suppression statement below.
+     */
+    /* coverity[misra_c_2012_rule_11_4_violation] */
+    if( ( xSocket != FREERTOS_INVALID_SOCKET ) && ( xSocket != NULL ) )
+    {
+	    lReturnValue = pdTRUE;
+    }
+    return lReturnValue;
+}
 
 #if( ipconfigSUPPORT_SELECT_FUNCTION == 1 )
 	/* The SocketSet_t type is the equivalent to the fd_set type used by the
@@ -222,7 +240,7 @@ int32_t FreeRTOS_sendto( Socket_t xSocket, const void *pvBuffer, size_t uxTotalD
 BaseType_t FreeRTOS_bind( Socket_t xSocket, struct freertos_sockaddr const * pxAddress, socklen_t xAddressLength );
 
 /* function to get the local address and IP port */
-size_t FreeRTOS_GetLocalAddress( Socket_t xSocket, struct freertos_sockaddr *pxAddress );
+size_t FreeRTOS_GetLocalAddress( ConstSocket_t xSocket, struct freertos_sockaddr *pxAddress );
 
 #if( ipconfigETHERNET_DRIVER_FILTERS_PACKETS == 1 )
 	/* Returns true if an UDP socket exists bound to mentioned port number. */
@@ -248,23 +266,23 @@ BaseType_t FreeRTOS_shutdown (Socket_t xSocket, BaseType_t xHow);
 #endif /* ipconfigSUPPORT_SIGNALS */
 
 /* Return the remote address and IP port. */
-BaseType_t FreeRTOS_GetRemoteAddress( Socket_t xSocket, struct freertos_sockaddr *pxAddress );
+BaseType_t FreeRTOS_GetRemoteAddress( ConstSocket_t xSocket, struct freertos_sockaddr *pxAddress );
 
 #if( ipconfigUSE_TCP == 1 )
 
-	/* returns pdTRUE if TCP socket is connected */
-	BaseType_t FreeRTOS_issocketconnected( Socket_t xSocket );
+	/* Returns pdTRUE if TCP socket is connected. */
+	BaseType_t FreeRTOS_issocketconnected( ConstSocket_t xSocket );
 
-	/* returns the actual size of MSS being used */
-	BaseType_t FreeRTOS_mss( Socket_t xSocket );
+	/* Returns the actual size of MSS being used. */
+	BaseType_t FreeRTOS_mss( ConstSocket_t xSocket );
 
 #endif
 
-/* for internal use only: return the connection status */
-BaseType_t FreeRTOS_connstatus( Socket_t xSocket );
+/* For internal use only: return the connection status. */
+BaseType_t FreeRTOS_connstatus( ConstSocket_t xSocket );
 
 /* Returns the number of bytes that may be added to txStream */
-BaseType_t FreeRTOS_maywrite( Socket_t xSocket );
+BaseType_t FreeRTOS_maywrite( ConstSocket_t xSocket );
 
 /*
  * Two helper functions, mostly for testing
@@ -272,9 +290,9 @@ BaseType_t FreeRTOS_maywrite( Socket_t xSocket );
  * tx_space returns the free space in the Tx buffer
  */
 #if( ipconfigUSE_TCP == 1 )
-	BaseType_t FreeRTOS_rx_size( Socket_t xSocket );
-	BaseType_t FreeRTOS_tx_space( Socket_t xSocket );
-	BaseType_t FreeRTOS_tx_size( Socket_t xSocket );
+	BaseType_t FreeRTOS_rx_size( ConstSocket_t xSocket );
+	BaseType_t FreeRTOS_tx_space( ConstSocket_t xSocket );
+	BaseType_t FreeRTOS_tx_size( ConstSocket_t xSocket );
 #endif
 
 /* Returns the number of outstanding bytes in txStream. */
@@ -292,7 +310,7 @@ FreeRTOS_rx_size(). */
  * Get a direct pointer to the circular transmit buffer.
  * '*pxLength' will contain the number of bytes that may be written.
  */
-uint8_t *FreeRTOS_get_tx_head( Socket_t xSocket, BaseType_t *pxLength );
+uint8_t *FreeRTOS_get_tx_head( ConstSocket_t xSocket, BaseType_t *pxLength );
 
 #endif /* ipconfigUSE_TCP */
 
@@ -382,7 +400,7 @@ const char *FreeRTOS_inet_ntop4( const void *pvSource, char *pcDestination, sock
  * For the web server: borrow the circular Rx buffer for inspection
  * HTML driver wants to see if a sequence of 13/10/13/10 is available
  */
-const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( Socket_t xSocket );
+const struct xSTREAM_BUFFER *FreeRTOS_get_rx_buf( ConstSocket_t xSocket );
 
 void FreeRTOS_netstat( void );
 
@@ -415,16 +433,4 @@ void FreeRTOS_netstat( void );
 #endif
 
 #endif /* FREERTOS_SOCKETS_H */
-
-
-
-
-
-
-
-
-
-
-
-
 

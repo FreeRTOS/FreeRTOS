@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #define ensure_memory_is_valid( px, length ) (px != NULL) && __CPROVER_w_ok((px), length)
 
 /* Implementation of safe malloc which returns NULL if the requested size is 0.

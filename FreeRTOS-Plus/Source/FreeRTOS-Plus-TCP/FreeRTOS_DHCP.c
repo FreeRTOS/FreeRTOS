@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -38,6 +38,8 @@
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_DHCP.h"
 #include "FreeRTOS_ARP.h"
+
+#include "FreeRTOSIPConfigDefaults.h"
 
 /* Exclude the entire file if DHCP is not enabled. */
 #if( ipconfigUSE_DHCP != 0 )
@@ -152,8 +154,18 @@ struct xDHCPMessage_IPv4
 #include "pack_struct_end.h"
 typedef struct xDHCPMessage_IPv4 DHCPMessage_IPv4_t;
 
+static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DHCPMessage_IPv4_t )
+{
+    return ( DHCPMessage_IPv4_t *)pvArgument;
+}
+static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( DHCPMessage_IPv4_t )
+{
+    return ( const DHCPMessage_IPv4_t *) pvArgument;
+}
+
+
 /* The UDP socket used for all incoming and outgoing DHCP traffic. */
-static Socket_t xDHCPSocket;
+_static Socket_t xDHCPSocket;
 
 #if( ipconfigDHCP_FALL_BACK_AUTO_IP != 0 )
 	/* Define the Link Layer IP address: 169.254.x.x */
@@ -176,7 +188,7 @@ static void prvSendDHCPDiscover( void );
 /*
  * Interpret message received on the DHCP socket.
  */
-static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
+_static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType );
 
 /*
  * Generate a DHCP request packet, and send it on the DHCP socket.
@@ -201,7 +213,7 @@ static uint8_t *prvCreatePartDHCPMessage( struct freertos_sockaddr *pxAddress,
 /*
  * Create the DHCP socket, if it has not been created already.
  */
-static void prvCreateDHCPSocket( void );
+_static void prvCreateDHCPSocket( void );
 
 /*
  * Close the DHCP socket.
@@ -220,7 +232,7 @@ static void prvCloseDHCPSocket( void );
 /*-----------------------------------------------------------*/
 
 /* Hold information in between steps in the DHCP state machine. */
-static DHCPData_t xDHCPData;
+_static DHCPData_t xDHCPData;
 
 /*-----------------------------------------------------------*/
 
@@ -620,7 +632,7 @@ static void prvInitialiseDHCP( void )
 }
 /*-----------------------------------------------------------*/
 
-static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
+_static BaseType_t prvProcessDHCPReplies( BaseType_t xExpectedMessageType )
 {
 uint8_t *pucUDPPayload;
 int32_t lBytes;
@@ -637,7 +649,7 @@ const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct
 	if( lBytes > 0 )
 	{
 		/* Map a DHCP structure onto the received data. */
-		pxDHCPMessage = ipPOINTER_CAST( const DHCPMessage_IPv4_t *, pucUDPPayload );
+		pxDHCPMessage = ipCAST_CONST_PTR_TO_CONST_TYPE_PTR( DHCPMessage_IPv4_t, pucUDPPayload );
 
 		/* Sanity check. */
 		if( lBytes < ( int32_t ) sizeof( DHCPMessage_IPv4_t ) )
@@ -714,8 +726,8 @@ const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct
 					just get it once here and use later. */
 					if( uxLength >= sizeof( ulParameter ) )
 					{
-						( void ) memcpy( &( ulParameter ),
-										 &( pucByte[ uxIndex ] ),
+						( void ) memcpy( ( void * ) ( &( ulParameter ) ),
+										 ( const void * ) ( &( pucByte[ uxIndex ] ) ),
 										 ( size_t ) sizeof( ulParameter ) );
 						/* 'uxIndex' will be increased at the end of this loop. */
 					}
@@ -885,7 +897,7 @@ uint8_t *pucUDPPayloadBuffer;
 
 	/* Leave space for the UPD header. */
 	pucUDPPayloadBuffer = &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] );
-	pxDHCPMessage = ipPOINTER_CAST( DHCPMessage_IPv4_t *, pucUDPPayloadBuffer );
+	pxDHCPMessage = ipCAST_PTR_TO_TYPE_PTR( DHCPMessage_IPv4_t, pucUDPPayloadBuffer );
 
 	/* Most fields need to be zero. */
 	( void ) memset( pxDHCPMessage, 0x00, sizeof( DHCPMessage_IPv4_t ) );
@@ -919,7 +931,7 @@ uint8_t *pucUDPPayloadBuffer;
 		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1U ) ] );
 		pucPtr[ 0U ] = dhcpIPv4_DNS_HOSTNAME_OPTIONS_CODE;
 		pucPtr[ 1U ] = ( uint8_t ) uxNameLength;
-		( void ) memcpy( &( pucPtr[ 2U ] ), pucHostName, uxNameLength );
+		( void ) memcpy( ( void * ) ( &( pucPtr[ 2U ] ) ), ( const void * ) pucHostName, uxNameLength );
 		pucPtr[ 2U + uxNameLength ] = ( uint8_t ) dhcpOPTION_END_BYTE;
 		*pxOptionsArraySize += ( size_t ) ( 2U + uxNameLength );
 	}
@@ -960,13 +972,13 @@ size_t uxOptionsLength = sizeof( ucDHCPRequestOptions );
 													&( uxOptionsLength ) );
 
 	/* Copy in the IP address being requested. */
-	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ),
-					 &( EP_DHCPData.ulOfferedIPAddress ),
+	( void ) memcpy( ( void * ) ( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ) ),
+					 ( const void * ) ( &( EP_DHCPData.ulOfferedIPAddress ) ),
 					 sizeof( EP_DHCPData.ulOfferedIPAddress ) );
 
 	/* Copy in the address of the DHCP server being used. */
-	( void ) memcpy( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ),
-					 &( EP_DHCPData.ulDHCPServerAddress ),
+	( void ) memcpy( ( void * ) ( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ) ),
+					 ( const void * ) ( &( EP_DHCPData.ulDHCPServerAddress ) ),
 					 sizeof( EP_DHCPData.ulDHCPServerAddress ) );
 
 	FreeRTOS_debug_printf( ( "vDHCPProcess: reply %lxip\n", FreeRTOS_ntohl( EP_DHCPData.ulOfferedIPAddress ) ) );

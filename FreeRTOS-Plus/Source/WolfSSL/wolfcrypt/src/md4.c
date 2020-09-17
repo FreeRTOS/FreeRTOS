@@ -1,8 +1,8 @@
 /* md4.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
 
 #ifdef HAVE_CONFIG_H
     #include <config.h>
@@ -31,19 +32,9 @@
 #ifdef NO_INLINE
     #include <wolfssl/wolfcrypt/misc.h>
 #else
+    #define WOLFSSL_MISC_INCLUDED
     #include <wolfcrypt/src/misc.c>
 #endif
-
-
-#ifndef WOLFSSL_HAVE_MIN
-#define WOLFSSL_HAVE_MIN
-
-    static INLINE word32 min(word32 a, word32 b)
-    {
-        return a > b ? b : a;
-    }
-
-#endif /* WOLFSSL_HAVE_MIN */
 
 
 void wc_InitMd4(Md4* md4)
@@ -89,7 +80,7 @@ static void Transform(Md4* md4)
     function(C,D,A,B,14,11);
     function(B,C,D,A,15,19);
 
-#undef function	  
+#undef function
 #define function(a,b,c,d,k,s) \
     a=rotlFixed(a+G(b,c,d)+md4->buffer[k]+0x5a827999,s);
 
@@ -110,7 +101,7 @@ static void Transform(Md4* md4)
     function(C,D,A,B,11, 9);
     function(B,C,D,A,15,13);
 
-#undef function	 
+#undef function
 #define function(a,b,c,d,k,s) \
     a=rotlFixed(a+H(b,c,d)+md4->buffer[k]+0x6ed9eba1,s);
 
@@ -130,7 +121,7 @@ static void Transform(Md4* md4)
     function(D,A,B,C,11, 9);
     function(C,D,A,B, 7,11);
     function(B,C,D,A,15,15);
-    
+
     /* Add the working vars back into digest state[]  */
     md4->digest[0] += A;
     md4->digest[1] += B;
@@ -139,7 +130,7 @@ static void Transform(Md4* md4)
 }
 
 
-static INLINE void AddLength(Md4* md4, word32 len)
+static WC_INLINE void AddLength(Md4* md4, word32 len)
 {
     word32 tmp = md4->loLen;
     if ( (md4->loLen += len) < tmp)
@@ -192,9 +183,9 @@ void wc_Md4Final(Md4* md4, byte* hash)
         md4->buffLen = 0;
     }
     XMEMSET(&local[md4->buffLen], 0, MD4_PAD_SIZE - md4->buffLen);
-   
+
     /* put lengths in bits */
-    md4->hiLen = (md4->loLen >> (8*sizeof(md4->loLen) - 3)) + 
+    md4->hiLen = (md4->loLen >> (8*sizeof(md4->loLen) - 3)) +
                  (md4->hiLen << 3);
     md4->loLen = md4->loLen << 3;
 

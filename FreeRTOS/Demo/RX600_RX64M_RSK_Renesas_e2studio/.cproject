@@ -119,6 +119,7 @@
 								<option id="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.isa.328950611" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.HardwareDebug.StandardLibrary.option.isa" value="RXv2 architecture" valueType="enumerated"/>
 							</tool>
 							<tool command="rlink" errorParsers="" id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.1803349405" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id"/>
+							<tool id="com.renesas.cdt.rxc.release.win32.tool.config.Id.718394725" name="RTOS Configurator" superClass="com.renesas.cdt.rxc.release.win32.tool.config.Id"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.renesas.cdt.rxc.hardwaredebug.win32.configuration.Id.534038930.435561194" name="/" resourcePath="Source/Common_Demo_Source/Minimal">
@@ -134,6 +135,7 @@
 							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.629169293" name="Linker" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.linker.Id.1242574850"/>
 							<tool errorParsers="" id="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.1105527095" name="Standard Library" superClass="%com.renesas.cdt.rxc.hardwaredebug.win32.tool.libgen.Id.1405860605"/>
 							<tool id="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.794872766" name="Converter" superClass="com.renesas.cdt.rxc.hardwaredebug.win32.tool.convertor.Id.1803349405"/>
+							<tool id="com.renesas.cdt.rxc.release.win32.tool.config.Id.599503304" name="RTOS Configurator" superClass="com.renesas.cdt.rxc.release.win32.tool.config.Id"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -151,5 +153,9 @@
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="HardwareDebug">
+			<resource resourceType="PROJECT" workspacePath="/RTOSDemo"/>
+		</configuration>
+	</storageModule>
 </cproject>

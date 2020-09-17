@@ -48,7 +48,9 @@ int main(int argc, char** argv)
 
     ssl = SSL_new(ctx);
 
-    SSL_set_fd(ssl, sockfd);
+    if (SSL_set_fd(ssl, sockfd) != SSL_SUCCESS)
+        err_sys("can't set ssl fd");
+
     if (SSL_connect(ssl) != SSL_SUCCESS) err_sys("SSL_connect failed");
 
     while (fgets(send, sizeof(send), fin)) {

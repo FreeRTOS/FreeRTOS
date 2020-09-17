@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v4.1.5
+ * Trace Recorder Library for Tracealyzer v4.3.11
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -240,7 +240,7 @@
 	#define TRC_HWTC_PERIOD (PR1 + 1)
 	#define TRC_HWTC_DIVISOR 1
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
-	#define TRC_IRQ_PRIORITY_ORDER 0
+	#define TRC_IRQ_PRIORITY_ORDER 1
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_TEXAS_INSTRUMENTS_TMS570_RM48)
 
@@ -344,25 +344,91 @@
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_XILINX_ZyncUltraScaleR5)
+
+	#include "xttcps_hw.h"
+
+	#define TRC_HWTC_TYPE  TRC_OS_TIMER_INCR
+	#define TRC_HWTC_COUNT  (*(volatile uint32_t *)(configTIMER_BASEADDR + XTTCPS_COUNT_VALUE_OFFSET))
+	#define TRC_HWTC_PERIOD  (*(volatile uint32_t *)(configTIMER_BASEADDR + XTTCPS_INTERVAL_VAL_OFFSET))
+	#define TRC_HWTC_DIVISOR  16
+	#define TRC_HWTC_FREQ_HZ  (TRC_HWTC_PERIOD * TRACE_TICK_RATE_HZ)
+	#define TRC_IRQ_PRIORITY_ORDER  0
+
+	#ifdef __GNUC__
+	/* For Arm Cortex-A and Cortex-R in general. */
+	static inline uint32_t prvGetCPSR(void)
+	{
+		unsigned long ret;
+		/* GCC-style assembly for getting the CPSR/APSR register, where the system execution mode is found. */
+		asm volatile (" mrs  %0, cpsr" : "=r" (ret) : /* no inputs */  );
+		return ret;
+	}
+	#else
+		#error "Only GCC Supported!"
+	#endif
+
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Altera_NiosII)
 
-    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
-    
-    #include "system.h"
-    #include "sys/alt_timestamp.h"
+    /* OFFICIAL PORT */
 
-    #define TRC_HWTC_TYPE          TRC_OS_TIMER_INCR
-    #define TRC_HWTC_COUNT         (uint32_t)alt_timestamp()
-    #define TRC_HWTC_PERIOD        0xFFFFFFFF
-    #define TRC_HWTC_FREQ_HZ       TIMESTAMP_TIMER_FREQ
-    #define TRC_HWTC_DIVISOR       1
-    #define TRC_IRQ_PRIORITY_ORDER 0
+	#include <system.h>
+	#include <altera_avalon_timer_regs.h>
+
+	#define NOT_SET 1
+
+	/* The base address for the sustem timer set.
+	 * The name user for the system timer can be found in the BSP editor.
+	 * If the name of the timer is sys_tmr SYSTEM_TIMER_BASE should be set to SYS_TMR_BASE.
+	*/
+	#define SYSTEM_TIMER_BASE NOT_SET
+
+	#if (SYSTEM_TIMER == NOT_SET)
+		#error "Set SYSTEM_TIMER_BASE to the timer base used for system ticks."
+	#endif
+
+ 	static inline uint32_t altera_nios2_GetTimerSnapReg(void)
+	{
+		/* A processor can read the current counter value by first writing to either snapl or snaph to request a coherent snapshot of the counter,
+		 * and then reading snapl and snaph for the full 32-bit value.
+		*/
+		IOWR_ALTERA_AVALON_TIMER_SNAPL(SYSTEM_TIMER_BASE, 0);
+		return (IORD_ALTERA_AVALON_TIMER_SNAPH(SYSTEM_TIMER_BASE) << 16) | IORD_ALTERA_AVALON_TIMER_SNAPL(SYSTEM_TIMER_BASE);
+	}
+
+	#define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
+	#define TRC_HWTC_COUNT altera_nios2_GetTimerSnapReg()
+	#define TRC_HWTC_PERIOD (configCPU_CLOCK_HZ / configTICK_RATE_HZ )
+	#define TRC_HWTC_DIVISOR 16
+	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
+	#define TRC_IRQ_PRIORITY_ORDER 0  
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_CORTEX_A9)
+
+	/**************************************************************************
+	* This hardware port only supports FreeRTOS and the GCC compiler at the
+	* moment, due to the implementation of critical sections (trcKernelPort.h).
+	*
+	* Assuming FreeRTOS is used:
+	* 
+    * For critical sections, this uses vTaskEnterCritical is when called from
+	* task context and ulPortSetInterruptMask when called from ISR context.
+	* Thus, it does not disable all ISRs. This means that the trace recorder
+	* can only be called from ISRs with priority less or equal to 
+	* configMAX_API_CALL_INTERRUPT_PRIORITY (like FreeRTOS fromISR functions).
+	*
+    * This hardware port has been tested on it a Xilinx Zync 7000 (Cortex-A9),
+	* but should work with all Cortex-A and R processors assuming that
+	* TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS is set accordingly.	
+	**************************************************************************/
 	
-	/* INPUT YOUR PERIPHERAL BASE ADDRESS HERE */
-	#define TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS	0xSOMETHING
+	/* INPUT YOUR PERIPHERAL BASE ADDRESS HERE (0xF8F00000 for Xilinx Zynq 7000)*/
+	#define TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS	0
 	
+	#if (TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS == 0)
+		#error "Please specify TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS."
+	#endif
+
 	#define TRC_CA9_MPCORE_PRIVATE_MEMORY_OFFSET	0x0600
 	#define TRC_CA9_MPCORE_PRIVCTR_PERIOD_REG	(*(volatile uint32_t*)(TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS + TRC_CA9_MPCORE_PRIVATE_MEMORY_OFFSET + 0x00))
 	#define TRC_CA9_MPCORE_PRIVCTR_COUNTER_REG	(*(volatile uint32_t*)(TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS + TRC_CA9_MPCORE_PRIVATE_MEMORY_OFFSET + 0x04))
@@ -386,6 +452,20 @@
 	
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
     #define TRC_IRQ_PRIORITY_ORDER 0
+
+	#ifdef __GNUC__
+	/* For Arm Cortex-A and Cortex-R in general. */
+	static inline uint32_t prvGetCPSR(void)
+	{
+		unsigned long ret;
+		/* GCC-style assembly for getting the CPSR/APSR register, where the system execution mode is found. */
+		asm volatile (" mrs  %0, cpsr" : "=r" (ret) : /* no inputs */  );
+		return ret;
+	}
+	#else
+		#error "Only GCC Supported!"
+	#endif
+
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_POWERPC_Z4)
 

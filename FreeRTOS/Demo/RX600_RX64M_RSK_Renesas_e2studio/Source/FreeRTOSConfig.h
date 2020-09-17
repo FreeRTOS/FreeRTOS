@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.0
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -67,6 +67,7 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configMAX_PRIORITIES			( 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
+#define configTASK_NOTIFICATION_ARRAY_ENTRIES ( 3 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1

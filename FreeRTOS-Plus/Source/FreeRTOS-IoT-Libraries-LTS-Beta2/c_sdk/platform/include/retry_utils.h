@@ -111,9 +111,9 @@
  * When this function is invoked, the calling task is expected to sleep a random
  * number of seconds between 0 and @ref RetryUtilsParams_t.nextJitterMax. After
  * sleeping this function must double @ref RetryUtilsParams_t.nextJitterMax, but
- * not exceeding @ref MAX_RETRY_BACKOFF_SECONDS. When @ref RetryUtilsParams_t.maxRetryAttempts
- * are reached this function should return @ref RetryUtilsRetriesExhausted, unless
- * @ref RetryUtilsParams_t.maxRetryAttempts is set to zero.
+ * not exceeding @ref MAX_RETRY_BACKOFF_SECONDS. When @ref MAX_RETRY_ATTEMPTS are
+ * reached this function should return @ref RetryUtilsRetriesExhausted, unless
+ * @ref MAX_RETRY_ATTEMPTS is set to zero.
  * When @ref RetryUtilsRetriesExhausted is returned the calling application can
  * stop trying with a failure, or it can call @ref RetryUtils_ParamsReset again
  * and restart the exponential back off with jitter loop.<br><br>
@@ -126,9 +126,9 @@
  *     // The quiet period delay in seconds.
  *     int backOffDelay = 0;
  *
- *     // If pRetryParams->maxRetryAttempts is set to 0, try forever.
- *     if( ( pRetryParams->attemptsDone < pRetryParams->maxRetryAttempts ) ||
- *         ( 0 == pRetryParams->maxRetryAttempts ) )
+ *     // If MAX_RETRY_ATTEMPTS is set to 0, try forever.
+ *     if( ( pRetryParams->attemptsDone < MAX_RETRY_ATTEMPTS ) ||
+ *         ( 0 == MAX_RETRY_ATTEMPTS ) )
  *     {
  *         // Choose a random value for back-off time between 0 and the max jitter value.
  *         backOffDelay = rand() % pRetryParams->nextJitterMax;
@@ -202,12 +202,6 @@ typedef enum RetryUtilsStatus
  */
 typedef struct RetryUtilsParams
 {
-    /**
-     * @brief Max number of retry attempts. Set this value to 0 if the client must
-     * retry forever.
-     */
-    uint32_t maxRetryAttempts;
-
     /**
      * @brief The cumulative count of backoff delay cycles completed
      * for retries.

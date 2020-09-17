@@ -535,7 +535,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     RetryUtilsParams_t xRetryParams;
 
     /* Some fields not used by this demo so start with everything at 0. */
-    ( void ) memset( ( void * ) xGlobalSubscribeInfo, 0x00, sizeof( MQTTSubscribeInfo_t ) );
+    ( void ) memset( ( void * ) &xGlobalSubscribeInfo, 0x00, sizeof( MQTTSubscribeInfo_t ) );
 
     /* Get a unique packet id. */
     usSubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );

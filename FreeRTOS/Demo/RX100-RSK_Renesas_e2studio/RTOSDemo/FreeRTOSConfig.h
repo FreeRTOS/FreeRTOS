@@ -136,6 +136,6 @@ void vPostSleepProcessing( unsigned long xExpectedIdleTime );
 
 /* configTICK_VECTOR must be set to the interrupt vector used by the peripheral
 that generates the tick interrupt. */
-#define configTICK_VECTOR VECT_CMT0_CMI0
+#define configTICK_VECTOR _CMT0_CMI0
 
 #endif /* FREERTOS_CONFIG_H */

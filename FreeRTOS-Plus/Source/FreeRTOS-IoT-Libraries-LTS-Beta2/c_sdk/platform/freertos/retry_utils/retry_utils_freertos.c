@@ -44,9 +44,9 @@ RetryUtilsStatus_t RetryUtils_BackoffAndSleep( RetryUtilsParams_t * pRetryParams
     RetryUtilsStatus_t status = RetryUtilsRetriesExhausted;
     int32_t backOffDelayMs = 0;
 
-    /* If MAX_RETRY_ATTEMPTS is set to 0, try forever. */
-    if( ( pRetryParams->attemptsDone < MAX_RETRY_ATTEMPTS ) ||
-        ( 0 == MAX_RETRY_ATTEMPTS ) )
+    /* If pRetryParams->maxRetryAttempts is set to 0, try forever. */
+    if( ( pRetryParams->attemptsDone < pRetryParams->maxRetryAttempts ) ||
+        ( 0 == pRetryParams->maxRetryAttempts ) )
     {
         /* Choose a random value for back-off time between 0 and the max jitter value. */
         backOffDelayMs = uxRand() % pRetryParams->nextJitterMax;

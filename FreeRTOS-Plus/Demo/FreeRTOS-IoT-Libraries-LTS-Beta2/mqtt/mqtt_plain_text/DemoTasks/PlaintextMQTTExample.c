@@ -420,7 +420,7 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams;
 
-    /* Initialize reconnect attempts and interval */
+    /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
@@ -481,7 +481,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     configASSERT( xResult == MQTTSuccess );
 
     /* Many fields not used in this demo so start with everything at 0. */
-    memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
+    ( void ) memset( ( void * ) &xConnectInfo, 0x00, sizeof( xConnectInfo ) );
 
     /* Start with a clean session i.e. direct the MQTT broker to discard any
      * previous session data. Also, establishing a connection with clean session
@@ -560,7 +560,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
          * messages received from the broker will have QOS0. */
         LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         xResult = MQTT_Subscribe( pxMQTTContext,
-                                  xGlobalSubscribeInfo,
+                                  &xGlobalSubscribeInfo,
                                   sizeof( MQTTSubscribeInfo_t ),
                                   usSubscribePacketIdentifier );
         configASSERT( xResult == MQTTSuccess );
@@ -625,7 +625,7 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
 {
     MQTTStatus_t xResult;
 
-    /* Get next unique packet identifier */
+    /* Get next unique packet identifier. */
     usUnsubscribePacketIdentifier = MQTT_GetPacketId( pxMQTTContext );
 
     /* Send UNSUBSCRIBE packet. Note that because #xGlobalSubscribeInfo

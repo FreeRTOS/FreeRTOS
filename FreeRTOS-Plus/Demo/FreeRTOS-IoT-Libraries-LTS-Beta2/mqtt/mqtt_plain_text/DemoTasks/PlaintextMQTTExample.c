@@ -561,7 +561,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         xResult = MQTT_Subscribe( pxMQTTContext,
                                   &xGlobalSubscribeInfo,
-                                  sizeof( MQTTSubscribeInfo_t ),
+                                  sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
                                   usSubscribePacketIdentifier );
         configASSERT( xResult == MQTTSuccess );
 
@@ -632,8 +632,8 @@ static void prvMQTTUnsubscribeFromTopic( MQTTContext_t * pxMQTTContext )
      * was initialized before sending the SUBSCRIBE packet, there is no need
      * to initialize it again. */
     xResult = MQTT_Unsubscribe( pxMQTTContext,
-                                xGlobalSubscribeInfo,
-                                sizeof( MQTTSubscribeInfo_t ),
+                                &xGlobalSubscribeInfo,
+                                sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
                                 usUnsubscribePacketIdentifier );
 
     configASSERT( xResult == MQTTSuccess );

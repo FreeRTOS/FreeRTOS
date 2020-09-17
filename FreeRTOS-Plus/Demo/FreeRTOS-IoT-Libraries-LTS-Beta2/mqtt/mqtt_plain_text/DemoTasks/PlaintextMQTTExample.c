@@ -421,7 +421,6 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
     RetryUtilsParams_t xReconnectParams;
 
     /* Initialize reconnect attempts and interval */
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
     RetryUtils_ParamsReset( &xReconnectParams );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
@@ -548,7 +547,6 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     xGlobalSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
     /* Initialize retry attempts and interval. */
-    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
     RetryUtils_ParamsReset( &xRetryParams );
 
     do

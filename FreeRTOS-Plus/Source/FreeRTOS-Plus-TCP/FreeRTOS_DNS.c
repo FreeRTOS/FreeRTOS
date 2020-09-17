@@ -1070,7 +1070,7 @@ size_t uxIndex = 0U;
 /* The function below will only be called :
 when ipconfigDNS_USE_CALLBACKS == 1
 when ipconfigUSE_LLMNR == 1
-for testing purposes, by the module iot_test_freertos_tcp.c
+for testing purposes, by the module test_freertos_tcp.c
 */
 uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
@@ -1656,7 +1656,7 @@ BaseType_t xReturn;
 	/* This must be the first time this function has been called.  Create
 	the socket. */
 	xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-	if( prvSocketValid( xSocket ) != pdTRUE )
+	if( prvSocketValid( xSocket ) != pdTRUE_UNSIGNED )
 	{
 		/* There was an error, return NULL. */
 		xSocket = NULL;

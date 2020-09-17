@@ -33,8 +33,12 @@ extern "C" {
 /* NOTE PUBLIC API FUNCTIONS. */
 BaseType_t xNetworkBuffersInitialise( void );
 NetworkBufferDescriptor_t *pxGetNetworkBufferWithDescriptor( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks );
+
+/* The definition of the below function is only available if BufferAllocation_2.c has been linked into the source. */
 NetworkBufferDescriptor_t *pxNetworkBufferGetFromISR( size_t xRequestedSizeBytes );
 void vReleaseNetworkBufferAndDescriptor( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+
+/* The definition of the below function is only available if BufferAllocation_2.c has been linked into the source. */
 BaseType_t vNetworkBufferReleaseFromISR( NetworkBufferDescriptor_t * const pxNetworkBuffer );
 uint8_t *pucGetNetworkBuffer( size_t *pxRequestedSizeBytes );
 void vReleaseNetworkBuffer( uint8_t *pucEthernetBuffer );

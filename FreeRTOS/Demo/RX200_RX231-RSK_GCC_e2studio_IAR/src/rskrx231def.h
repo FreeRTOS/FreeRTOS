@@ -35,6 +35,9 @@ Macro definitions
 #ifndef RSKRX231_H
 #define RSKRX231_H
 
+#if !defined(RSK_RX231) && !defined(TB_RX231)
+#define RSK_RX231
+#endif
 
 /* General Values */
 #define LED_ON          (0)
@@ -45,15 +48,24 @@ Macro definitions
 #define SET_BYTE_LOW    (0x00)
 
 /* Switches */
+#if defined(RSK_RX231)
 #define SW1             (PORT3.PIDR.BIT.B1)
 #define SW2             (PORT3.PIDR.BIT.B4)
 #define SW3             (PORT0.PIDR.BIT.B7)
+#elif defined(TB_RX231)
+#define SW1             (PORTB.PIDR.BIT.B1)
+#endif
 
 /* LED port settings */
+#if defined(RSK_RX231)
 #define LED0            (PORT1.PODR.BIT.B7)
 #define LED1            (PORT5.PODR.BIT.B0)
 #define LED2            (PORT5.PODR.BIT.B1)
 #define LED3            (PORT5.PODR.BIT.B2)
+#elif defined(TB_RX231)
+#define LED0            (PORTD.PODR.BIT.B6)
+#define LED1            (PORTD.PODR.BIT.B7)
+#endif
 
 /***********************************************************************************************************************
 Typedef definitions

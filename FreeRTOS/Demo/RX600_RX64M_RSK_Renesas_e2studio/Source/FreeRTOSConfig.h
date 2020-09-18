@@ -67,7 +67,6 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 #define configMAX_PRIORITIES			( 7 )
 #define configMAX_CO_ROUTINE_PRIORITIES ( 2 )
-#define configTASK_NOTIFICATION_ARRAY_ENTRIES ( 3 )
 
 /* Software timer definitions. */
 #define configUSE_TIMERS				1

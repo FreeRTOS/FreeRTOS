@@ -3,8 +3,9 @@ Documentation and download available at https://www.FreeRTOS.org/
 Changes between FreeRTOS V10.4.0 and FreeRTOS V10.4.1 released September 17 2020
 	See https://www.FreeRTOS.org/FreeRTOS-V10.4.x.html
 
-	+ An incorrectly named parameter in the macro ulTaskNotifyTakeIndexed that 
-	   caused a compilation error when using this macro has been fixed.
+	+ Fixed an incorrectly named parameter that prevented the 
+	  ulTaskNotifyTakeIndexed macro compiling, and the name space clash in the 
+	  test code that prevented this error causing test failures.
 
 
 Changes between FreeRTOS V10.3.1 and FreeRTOS V10.4.0 released September 10 2020

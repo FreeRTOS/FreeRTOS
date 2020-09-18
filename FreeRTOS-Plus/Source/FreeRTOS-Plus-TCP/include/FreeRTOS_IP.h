@@ -38,20 +38,6 @@ extern "C" {
 #include "FreeRTOSIPConfigDefaults.h"
 #include "IPTraceMacroDefaults.h"
 
-#ifdef __COVERITY__
-	/* Coverity static checks don't like inlined functions.
-	As it is up to the users to allow inlining, don't let
-	let Coverity know about it. */
-
-	#ifdef portINLINE
-		/* The usage of #undef violates the rule. */
-		#undef portINLINE
-
-	#endif
-
-	#define	portINLINE
-#endif
-
 /* Some constants defining the sizes of several parts of a packet.
 These defines come before inlucding the configuration header files. */
 /* The size of the Ethernet header is 14, meaning that 802.1Q VLAN tags

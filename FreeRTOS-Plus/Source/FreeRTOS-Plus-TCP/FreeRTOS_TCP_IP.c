@@ -709,6 +709,9 @@ uint32_t ulFrontSpace, ulSpace, ulSourceAddress, ulWinSize;
 const TCPWindow_t *pxTCPWindow;
 NetworkBufferDescriptor_t *pxNetworkBuffer = pxDescriptor;
 NetworkBufferDescriptor_t xTempBuffer;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 /* For sending, a pseudo network buffer will be used, as explained above. */
 
 	if( pxNetworkBuffer == NULL )
@@ -912,8 +915,15 @@ NetworkBufferDescriptor_t xTempBuffer;
 						 ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ),
 						 sizeof( pxEthernetHeader->xDestinationAddress ) );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* The source MAC addresses is fixed to 'ipLOCAL_MAC_ADDRESS'. */
-		( void ) memcpy( ( void * ) ( &( pxEthernetHeader->xSourceAddress ) ), ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
  
 		#if defined( ipconfigETHERNET_MINIMUM_PACKET_BYTES )
 		{
@@ -2335,6 +2345,9 @@ ProtocolHeaders_t *pxProtocolHeaders = ipCAST_PTR_TO_TYPE_PTR( ProtocolHeaders_t
 TCPHeader_t *pxTCPHeader = &pxProtocolHeaders->xTCPHeader;
 const TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 UBaseType_t uxOptionsLength = pxTCPWindow->ucOptionLength;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if(	ipconfigUSE_TCP_WIN == 1 )
 	if( uxOptionsLength != 0U )
@@ -2350,7 +2363,14 @@ UBaseType_t uxOptionsLength = pxTCPWindow->ucOptionLength;
 				FreeRTOS_ntohl( pxTCPWindow->ulOptionsData[ 1 ] ) - pxSocket->u.xTCP.xTCPWindow.rx.ulFirstSequenceNumber,
 				FreeRTOS_ntohl( pxTCPWindow->ulOptionsData[ 2 ] ) - pxSocket->u.xTCP.xTCPWindow.rx.ulFirstSequenceNumber ) );
 		}
-		( void ) memcpy( ( void * ) ( pxTCPHeader->ucOptdata ), ( const void * ) ( pxTCPWindow->ulOptionsData ), ( size_t ) uxOptionsLength );
+		/*
+		 * Use helper variables for memcpy() source & dest to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
+		pvCopySource = pxTCPWindow->ulOptionsData;
+		pvCopyDest = pxTCPHeader->ucOptdata;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) uxOptionsLength );
 
 		/* The header length divided by 4, goes into the higher nibble,
 		effectively a shift-left 2. */

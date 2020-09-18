@@ -2556,6 +2556,9 @@ size_t uxDataLengthBytes = uxByteCount;
 void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
 EthernetHeader_t *pxEthernetHeader;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNewBuffer;
@@ -2594,9 +2597,19 @@ EthernetHeader_t *pxEthernetHeader;
 		/* Map the Buffer to Ethernet Header struct for easy access to fields. */
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = &pxEthernetHeader->xSourceAddress;
+		pvCopyDest = &pxEthernetHeader->xDestinationAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, sizeof( pxEthernetHeader->xDestinationAddress ) );
+
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );

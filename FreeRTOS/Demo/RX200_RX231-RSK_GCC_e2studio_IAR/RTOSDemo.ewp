@@ -627,7 +627,7 @@
         </option>
         <option>
           <name>OOCObjCopyEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
       </data>
     </settings>
@@ -734,11 +734,11 @@
         </option>
         <option>
           <name>IlinkIcfOverride</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\src\IAR_Support\lnkr5f52318.icf</state>
+          <state></state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -2031,18 +2031,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\src\Full_Demo\RegTest_IAR.s</name>
-    </file>
-  </group>
-  <group>
-    <name>System</name>
-    <file>
-      <name>$PROJ_DIR$\src\IAR_Support\defaults.s</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\IAR_Support\exceptvect_rxv2.s</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\src\IAR_Support\option_rom_rxv2.s</name>
     </file>
   </group>
   <file>

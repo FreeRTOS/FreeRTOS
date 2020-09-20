@@ -1,0 +1,22 @@
+
+git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
+
+Please ensure, you installed the risc-v toolchain and exported them to 'PATH' variable.
+
+vajra SoC
+=========
+
+cd FreeRTOS/FreeRTOS/Demo/shakti/vajra
+make
+
+pinaka SoC
+=========
+
+cd FreeRTOS/FreeRTOS/Demo/shakti/pinaka
+make
+
+parashu SoC
+=========
+
+cd FreeRTOS/FreeRTOS/Demo/shakti/parashu
+make

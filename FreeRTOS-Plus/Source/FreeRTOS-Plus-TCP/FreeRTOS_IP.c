@@ -2430,7 +2430,7 @@ aid though to optimise the calculations. */
 xUnion32 xSum2, xSum, xTerm;
 xUnionPtr xSource;
 xUnionPtr xLastSource;
-intptr_t uxAlignBits;
+uintptr_t uxAlignBits;
 uint32_t ulCarry = 0UL;
 uint16_t usTemp;
 size_t uxDataLengthBytes = uxByteCount;
@@ -2445,10 +2445,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	xTerm.u32 = 0UL;
 
 	xSource.u8ptr = ipPOINTER_CAST( uint8_t *, pucNextData );
-	/* coverity[misra_c_2012_rule_11_4_violation] */
-	/* The object pointer expression "pucNextData" of type "uint8_t const *" is cast to an integer type "unsigned int". */
-	uxAlignBits = ( ( intptr_t ) pucNextData ) & 0x03U; /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
-
+	uxAlignBits = ( ( ( uintptr_t ) pucNextData ) & 0x03U );
 	/*
 	 * If pucNextData is non-aligned then the checksum is starting at an
 	 * odd position and we need to make sure the usSum value now in xSum is

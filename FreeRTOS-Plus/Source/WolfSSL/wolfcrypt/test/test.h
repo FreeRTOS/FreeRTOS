@@ -1,8 +1,8 @@
-/* ctaocrypt/test/test.h
+/* wolfcrypt/test/test.h
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
-#pragma once
+
+#ifndef WOLFCRYPT_TEST_H
+#define WOLFCRYPT_TEST_H
+
 
 #ifdef __cplusplus
     extern "C" {
 #endif
 
+#ifdef HAVE_STACK_SIZE
+THREAD_RETURN WOLFSSL_THREAD wolfcrypt_test(void* args);
+#else
 int wolfcrypt_test(void* args);
+#endif
 
 #ifdef __cplusplus
     }  /* extern "C" */
 #endif
+
+
+#endif /* WOLFCRYPT_TEST_H */
 

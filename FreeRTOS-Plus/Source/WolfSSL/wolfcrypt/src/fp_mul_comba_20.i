@@ -1,8 +1,8 @@
 /* fp_mul_comba_20.i
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+
 #ifdef TFM_MUL20
-void fp_mul_comba20(fp_int *A, fp_int *B, fp_int *C)
+int fp_mul_comba20(fp_int *A, fp_int *B, fp_int *C)
 {
-   fp_digit c0, c1, c2, at[40];
-   
-   memcpy(at, A->dp, 20 * sizeof(fp_digit));
-   memcpy(at+20, B->dp, 20 * sizeof(fp_digit));
+   fp_digit c0, c1, c2;
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit at[40];
+#else
+   fp_digit *at;
+#endif
+
+#ifdef WOLFSSL_SMALL_STACK
+   at = (fp_digit*)XMALLOC(sizeof(fp_digit) * 40, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (at == NULL)
+       return FP_MEM;
+#endif
+
+   XMEMCPY(at, A->dp, 20 * sizeof(fp_digit));
+   XMEMCPY(at+20, B->dp, 20 * sizeof(fp_digit));
    COMBA_START;
 
    COMBA_CLEAR;
@@ -189,5 +201,10 @@ void fp_mul_comba20(fp_int *A, fp_int *B, fp_int *C)
    C->sign = A->sign ^ B->sign;
    fp_clamp(C);
    COMBA_FINI;
+
+#ifdef WOLFSSL_SMALL_STACK
+   XFREE(at, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+   return FP_OKAY;
 }
 #endif

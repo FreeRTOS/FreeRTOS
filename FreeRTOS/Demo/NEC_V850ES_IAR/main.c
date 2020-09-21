@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -124,7 +124,7 @@ void main( void )
 	vStartSemaphoreTasks( mainSEM_TEST_PRIORITY );
 	vStartGenericQueueTasks( mainGEN_QUEUE_TASK_PRIORITY );
 	vStartQueuePeekTasks();
-	
+
 	/* Create the check task as described at the top of this file. */
 	xTaskCreate( prvCheckTask, "Check", configMINIMAL_STACK_SIZE, mainCHECK_PARAMETER, mainCHECK_TASK_PRIORITY, NULL );
 
@@ -135,22 +135,22 @@ void main( void )
 	#ifdef __IAR_V850ES_Fx3__
 	{
 		/* The extra IO required for the com test and led flashing tasks is only
-		available on the application board, not the target boards. */	
+		available on the application board, not the target boards. */
 		vAltStartComTestTasks( mainCOMTEST_PRIORITY, mainBAUD_RATE, mainCOMTEST_LED );
 		vStartLEDFlashTasks( mainFLASH_PRIORITY );
-		
+
 		/* The Fx3 also has enough RAM to run loads more tasks. */
 		vStartRecursiveMutexTasks();
 		vStartBlockingQueueTasks( mainBLOCK_Q_PRIORITY );
-		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );				
+		vStartPolledQueueTasks( mainQUEUE_POLL_PRIORITY );
 	}
-	#endif	
-	
+	#endif
+
 	/* The suicide tasks must be created last as they need to know how many
 	tasks were running prior to their creation in order to ascertain whether
 	or not the correct/expected number of tasks are running at any given time. */
     vCreateSuicidalTasks( mainCREATOR_TASK_PRIORITY );
-	
+
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
@@ -170,23 +170,23 @@ unsigned portBASE_TYPE uxLEDToUse = 0;
 	{
 		xDelayPeriod = mainERROR_DELAY;
 	}
-	
+
 	/* Initialise xLastWakeTime before it is used.  After this point it is not
 	written to directly. */
 	xLastWakeTime = xTaskGetTickCount();
-	
+
 	/* Cycle for ever, delaying then checking all the other tasks are still
 	operating without error. */
 	for( ;; )
 	{
 		/* Wait until it is time to check all the other tasks again. */
 		vTaskDelayUntil( &xLastWakeTime, xDelayPeriod );
-		
+
 		if( lRegTestStatus != pdPASS )
 		{
 			xDelayPeriod = mainERROR_DELAY;
 		}
-		
+
 		if( xAreGenericQueueTasksStillRunning() != pdTRUE )
 		{
 			xDelayPeriod = mainERROR_DELAY;
@@ -207,14 +207,14 @@ unsigned portBASE_TYPE uxLEDToUse = 0;
 	    	xDelayPeriod = mainERROR_DELAY;
 	    }
 
-		/* The Fx3 runs more tasks, so more checks are performed. */		
+		/* The Fx3 runs more tasks, so more checks are performed. */
 		#ifdef __IAR_V850ES_Fx3__
 		{
 			if( xAreComTestTasksStillRunning() != pdTRUE )
 			{
 				xDelayPeriod = mainERROR_DELAY;
 			}
-			
+
 			if( xArePollingQueuesStillRunning() != pdTRUE )
 			{
 				xDelayPeriod = mainERROR_DELAY;
@@ -224,12 +224,12 @@ unsigned portBASE_TYPE uxLEDToUse = 0;
 			{
 				xDelayPeriod = mainERROR_DELAY;
 			}
-			
+
 			if( xAreRecursiveMutexTasksStillRunning() != pdTRUE )
 			{
 				xDelayPeriod = mainERROR_DELAY;
-			}		
-			
+			}
+
 			/* The application board has more LEDs and uses the flash tasks
 			so the check task instead uses LED3 as LED3 is still spare. */
 			uxLEDToUse = 3;
@@ -252,8 +252,11 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook( void )
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
 {
+	( void ) xTask;
+	( void ) pcTaskName;
+
 	/* This will be called if a task overflows its stack.  pxCurrentTCB
 	can be inspected to see which is the offending task. */
 	for( ;; );
@@ -265,7 +268,7 @@ void vRegTestFailed( void )
 	/* Called by the RegTest tasks if an error is found.  lRegTestStatus is
 	inspected by the check task. */
 	lRegTestStatus = pdFAIL;
-	
+
 	/* Do not return from here as the reg test tasks clobber all registers so
 	function calls may not function correctly. */
 	for( ;; );

@@ -1,7 +1,7 @@
 0. Building on *nix from git repository
 
-    Run the autogen script to generate configure, you'll need the autoconf tools
-    installed, then proceed to step 1.
+    Run the autogen script to generate configure, then proceed to step 1.
+    Prerequisites: You'll need autoconf, automake and libtool installed.
 
     $ ./autogen.sh
 
@@ -38,7 +38,37 @@
 
     Please see the README in mqx
 
-8. Porting to a new platform
+8. Building with Rowley CrossWorks for ARM
+
+    Use the CrossWorks project in IDE/ROWLEY-CROSSWORKS-ARM/wolfssl.hzp
+    There is a README.md in IDE/ROWLEY-CROSSWORKS-ARM with more information
+
+9. Building with Arduino
+
+    Use the script IDE/ARDUINO/wolfssl-arduino.sh to reformat the wolfSSL
+    library for compatibility with the Arduino IDE. There is a README.md in
+    IDE/ARDUINO for detailed instructions.
+
+10. Building for Android with Visual Studio 2017
+
+    Please see the README in IDE/VS-ARM.
+    Use the Visual Studio solution IDE/VS-ARM/wolfssl.sln.
+
+11. Building for Yocto Project or OpenEmbedded
+
+    Please see the README in the "meta-wolfssl" repository. This repository
+    holds wolfSSL's Yocto and OpenEmbedded layer, which contains recipes
+    for wolfSSL, wolfSSH, wolfMQTT, wolfTPM, wolfCrypt examples, and OSS
+    project bbappend files.
+
+    https://github.com/wolfssl/meta-wolfssl
+
+    The wolfSSL recipe can also be found in the OpenEmbedded
+    "meta-openembedded/meta-networking/recipes-connectivity" layer:
+
+    https://github.com/openembedded/meta-openembedded
+
+12. Porting to a new platform
 
     Please see section 2.4 in the manual:
     http://www.wolfssl.com/yaSSL/Docs-cyassl-manual-2-building-cyassl.html

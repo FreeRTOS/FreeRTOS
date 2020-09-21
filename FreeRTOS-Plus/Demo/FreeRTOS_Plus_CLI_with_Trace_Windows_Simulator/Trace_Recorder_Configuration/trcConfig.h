@@ -98,22 +98,32 @@ extern "C" {
  * TRC_RECORDER_MODE_STREAMING
  ******************************************************************************/
 #define TRC_CFG_RECORDER_MODE TRC_RECORDER_MODE_SNAPSHOT
+
 /******************************************************************************
  * TRC_CFG_FREERTOS_VERSION
  *
  * Specify what version of FreeRTOS that is used (don't change unless using the
  * trace recorder library with an older version of FreeRTOS).
  *
- * TRC_FREERTOS_VERSION_7_3						If using FreeRTOS v7.3.x
- * TRC_FREERTOS_VERSION_7_4						If using FreeRTOS v7.4.x
- * TRC_FREERTOS_VERSION_7_5_OR_7_6				If using FreeRTOS v7.5.0 - v7.6.0
- * TRC_FREERTOS_VERSION_8_X						If using FreeRTOS v8.X.X
- * TRC_FREERTOS_VERSION_9_0_0					If using FreeRTOS v9.0.0
- * TRC_FREERTOS_VERSION_9_0_1					If using FreeRTOS v9.0.1
- * TRC_FREERTOS_VERSION_9_0_2					If using FreeRTOS v9.0.2
- * TRC_FREERTOS_VERSION_10_0_0					If using FreeRTOS v10.0.0 or later
+ * TRC_FREERTOS_VERSION_7_3_X				If using FreeRTOS v7.3.X
+ * TRC_FREERTOS_VERSION_7_4_X				If using FreeRTOS v7.4.X 
+ * TRC_FREERTOS_VERSION_7_5_X				If using FreeRTOS v7.5.X
+ * TRC_FREERTOS_VERSION_7_6_X				If using FreeRTOS v7.6.X
+ * TRC_FREERTOS_VERSION_8_X_X				If using FreeRTOS v8.X.X
+ * TRC_FREERTOS_VERSION_9_0_0				If using FreeRTOS v9.0.0
+ * TRC_FREERTOS_VERSION_9_0_1				If using FreeRTOS v9.0.1
+ * TRC_FREERTOS_VERSION_9_0_2				If using FreeRTOS v9.0.2
+ * TRC_FREERTOS_VERSION_10_0_0				If using FreeRTOS v10.0.0
+ * TRC_FREERTOS_VERSION_10_0_1				If using FreeRTOS v10.0.1
+ * TRC_FREERTOS_VERSION_10_1_0				If using FreeRTOS v10.1.0
+ * TRC_FREERTOS_VERSION_10_1_1				If using FreeRTOS v10.1.1
+ * TRC_FREERTOS_VERSION_10_2_0				If using FreeRTOS v10.2.0
+ * TRC_FREERTOS_VERSION_10_2_1				If using FreeRTOS v10.2.1
+ * TRC_FREERTOS_VERSION_10_3_0				If using FreeRTOS v10.3.0
+ * TRC_FREERTOS_VERSION_10_3_1				If using FreeRTOS v10.3.1
+ * TRC_FREERTOS_VERSION_10_4_0				If using FreeRTOS v10.4.0 or later
  *****************************************************************************/
-#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_0_0
+#define TRC_CFG_FREERTOS_VERSION TRC_FREERTOS_VERSION_10_4_0
 
 /*******************************************************************************
  * TRC_CFG_SCHEDULING_ONLY
@@ -144,13 +154,13 @@ extern "C" {
  *
  * Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), all code related to User Events is excluded in order
+ * If this is zero (0), all code related to User Events is excluded in order 
  * to reduce code size. Any attempts of storing User Events are then silently
  * ignored.
  *
- * User Events are application-generated events, like "printf" but for the
- * trace log, generated using vTracePrint and vTracePrintF.
- * The formatting is done on host-side, by Tracealyzer. User Events are
+ * User Events are application-generated events, like "printf" but for the 
+ * trace log, generated using vTracePrint and vTracePrintF. 
+ * The formatting is done on host-side, by Tracealyzer. User Events are 
  * therefore much faster than a console printf and can often be used
  * in timing critical code without problems.
  *
@@ -170,7 +180,14 @@ extern "C" {
  * Macro which should be defined as either zero (0) or one (1).
  *
  * If this is zero (0), the code for recording Interrupt Service Routines is
- * excluded, in order to reduce code size.
+ * excluded, in order to reduce code size. This means that any calls to
+ * vTraceStoreISRBegin/vTraceStoreISREnd will be ignored.
+ * This does not completely disable ISR tracing, in cases where an ISR is
+ * calling a traced kernel service. These events will still be recorded and
+ * show up in anonymous ISR instances in Tracealyzer, with names such as
+ * "ISR sending to <queue name>".
+ * To disable such tracing, please refer to vTraceSetFilterGroup and 
+ * vTraceSetFilterMask.
  *
  * Default value is 1.
  *
@@ -234,7 +251,7 @@ extern "C" {
  *
  * Macro which should be defined as either zero (0) or one (1).
  *
- * If this is zero (0), the trace will exclude any "pending function call"
+ * If this is zero (0), the trace will exclude any "pending function call" 
  * events, such as xTimerPendFunctionCall().
  *
  * Default value is 0 since dependent on timers.c
@@ -252,6 +269,90 @@ extern "C" {
  * Default value is 0 since dependent on stream_buffer.c (new in FreeRTOS v10)
  ******************************************************************************/
 #define TRC_CFG_INCLUDE_STREAM_BUFFER_EVENTS 0
+
+ /******************************************************************************
+ * TRC_CFG_ENABLE_STACK_MONITOR
+ *
+ * If enabled (1), the recorder periodically reports the unused stack space of
+ * all active tasks.
+ * The stack monitoring runs in the Tracealyzer Control task, TzCtrl. This task
+ * is always created by the recorder when in streaming mode. 
+ * In snapshot mode, the TzCtrl task is only used for stack monitoring and is
+ * not created unless this is enabled.
+ *****************************************************************************/
+#define TRC_CFG_ENABLE_STACK_MONITOR 0
+
+ /******************************************************************************
+ * TRC_CFG_STACK_MONITOR_MAX_TASKS
+ *
+ * Macro which should be defined as a non-zero integer value.
+ *
+ * This controls how many tasks that can be monitored by the stack monitor.
+ * If this is too small, some tasks will be excluded and a warning is shown.
+ *
+ * Default value is 10.
+ *****************************************************************************/
+#define TRC_CFG_STACK_MONITOR_MAX_TASKS 10
+
+ /******************************************************************************
+ * TRC_CFG_STACK_MONITOR_MAX_REPORTS
+ *
+ * Macro which should be defined as a non-zero integer value.
+ *
+ * This defines how many tasks that will be subject to stack usage analysis for
+ * each execution of the Tracealyzer Control task (TzCtrl). Note that the stack
+ * monitoring cycles between the tasks, so this does not affect WHICH tasks that
+ * are monitored, but HOW OFTEN each task stack is analyzed. 
+ *
+ * This setting can be combined with TRC_CFG_CTRL_TASK_DELAY to tune the
+ * frequency of the stack monitoring. This is motivated since the stack analysis
+ * can take some time to execute.
+ * However, note that the stack analysis runs in a separate task (TzCtrl) that
+ * can be executed on low priority. This way, you can avoid that the stack
+ * analysis disturbs any time-sensitive tasks.
+ *
+ * Default value is 1.
+ *****************************************************************************/
+#define TRC_CFG_STACK_MONITOR_MAX_REPORTS 1
+
+ /*******************************************************************************
+ * Configuration Macro: TRC_CFG_CTRL_TASK_PRIORITY
+ *
+ * The scheduling priority of the Tracealyzer Control (TzCtrl) task. 
+ *
+ * In streaming mode, TzCtrl is used to receive start/stop commands from 
+ * Tracealyzer and in some cases also to transmit the trace data (for stream
+ * ports that uses the internal buffer, like TCP/IP). For such stream ports,
+ * make sure the TzCtrl priority is high enough to ensure reliable periodic
+ * execution and transfer of the data, but low enough to avoid disturbing any 
+ * time-sensitive functions.
+ *
+ * In Snapshot mode, TzCtrl is only used for the stack usage monitoring and is
+ * not created if stack monitoring is disabled. TRC_CFG_CTRL_TASK_PRIORITY should
+ * be low, to avoid disturbing any time-sensitive tasks.
+ ******************************************************************************/
+#define TRC_CFG_CTRL_TASK_PRIORITY 1
+
+ /*******************************************************************************
+ * Configuration Macro: TRC_CFG_CTRL_TASK_DELAY
+ *
+ * The delay between loops of the TzCtrl task (see TRC_CFG_CTRL_TASK_PRIORITY), 
+ * which affects the frequency of the stack monitoring. 
+ * 
+ * In streaming mode, this also affects the trace data transfer if you are using
+ * a stream port leveraging the internal buffer (like TCP/IP). A shorter delay
+ * increases the CPU load of TzCtrl somewhat, but may improve the performance of
+ * of the trace streaming, especially if the trace buffer is small.
+ ******************************************************************************/
+#define TRC_CFG_CTRL_TASK_DELAY 10
+
+ /*******************************************************************************
+ * Configuration Macro: TRC_CFG_CTRL_TASK_STACK_SIZE
+ *
+ * The stack size of the Tracealyzer Control (TzCtrl) task.
+ * See TRC_CFG_CTRL_TASK_PRIORITY for further information about TzCtrl.
+ ******************************************************************************/
+#define TRC_CFG_CTRL_TASK_STACK_SIZE (configMINIMAL_STACK_SIZE * 2)
 
 /*******************************************************************************
  * Configuration Macro: TRC_CFG_RECORDER_BUFFER_ALLOCATION
@@ -285,6 +386,16 @@ extern "C" {
  * Default value: 8
  *****************************************************************************/
 #define TRC_CFG_MAX_ISR_NESTING 8
+
+/******************************************************************************
+ * TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND
+ *
+ * When using FreeRTOS v10.3.0 or v10.3.1, please make sure that the trace
+ * point in prvNotifyQueueSetContainer() in queue.c is renamed from
+ * traceQUEUE_SEND to traceQUEUE_SET_SEND in order to tell them apart from
+ * other traceQUEUE_SEND trace points. Then set this to TRC_ACKNOWLEDGED.
+ *****************************************************************************/
+#define TRC_CFG_ACKNOWLEDGE_QUEUE_SET_SEND TRC_ACKNOWLEDGED /* 0 or TRC_ACKNOWLEDGED */
 
 /* Specific configuration, depending on Streaming/Snapshot mode */
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_SNAPSHOT)

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -59,9 +59,9 @@
  * 1. Close jumper JP9(BOOT_DIS) and JP2(DEBUG_DIS).
  * 2. Open jumper JP1(EDBG_DIS).
  * 3. Power on the board by USB connection on J14(EDBG_JTAG).
- * 4. Open “EDBG Virtual COM Port” with setting “57600,8,N,1”.
- * 5. Type “#” on HyperTerminal and get “>” as a reply.
- * 6. Don’t reset the board during debugging. For IAR, set the Debugger to CMSIS
+ * 4. Open EDBG Virtual COM Port with setting 57600,8,N,1.
+ * 5. Type # on HyperTerminal and get > as a reply.
+ * 6. Dont reset the board during debugging. For IAR, set the Debugger to CMSIS
  *    DAP, with the "Disabled(no reset)" option.
  */
 

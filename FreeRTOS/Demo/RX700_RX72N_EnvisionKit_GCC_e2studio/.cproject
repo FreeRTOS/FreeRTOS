@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.887759396">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.887759396" moduleId="org.eclipse.cdt.core.settings" name="HardwareDebug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="com.renesas.cdt.managedbuild.core.toolchainInfo">
+				<option id="toolchain.id" value="RENESAS_GCC_RX"/>
+				<option id="toolchain.version" value="8.3.0.202002"/>
+				<option id="toolchain.enable" value="true"/>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf *.lst *.lis *.lpp *.map" description="" errorParsers="org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.CWDLocator;org.eclipse.cdt.core.GCCErrorParser" id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.887759396" name="HardwareDebug" parent="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug">
+					<folderInfo id="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.887759396." name="/" resourcePath="">
+						<toolChain id="com.renesas.cdt.managedbuild.gcc.rx.toolchain.debug.512417966" name="GCC for Renesas RX" superClass="com.renesas.cdt.managedbuild.gcc.rx.toolchain.debug">
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel.845303127" name="Optimization Level" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.optimization.optimizationLevel.speed" valueType="enumerated"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.fdatasections.587546279" name="Data sections (-fdata-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.fdatasections" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat.1470065207" name="Debug format" superClass="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.debug.debugFormat.Default" valueType="enumerated"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.1552036578" name="Architecture" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.gcc.rx.architecture.v3" valueType="enumerated"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.applicability.111520192" name="Architecture Applicability" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.architecture.applicability" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType.1694707801" name="CPU Type" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.gcc.core.option.cpu.cpuType.rx72n" valueType="enumerated"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.deviceShortName.1804875978" name="DeviceName" superClass="com.renesas.cdt.managedbuild.gcc.core.option.deviceShortName" useByScannerDiscovery="false" value="R5F572NNHxFB" valueType="string"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.deviceCommand.1743609999" name="DeviceCommand" superClass="com.renesas.cdt.managedbuild.gcc.core.option.deviceCommand" useByScannerDiscovery="false" value="R5F572NN" valueType="string"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.functionsections.1847643954" name="Function sections (-ffunction-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.functionsections" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.debug.warnStackSize.1250737843" name="Warn if stack size exceeds the limit, in bytes (-Wstack-usage)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.debug.warnStackSize" useByScannerDiscovery="false" value="100" valueType="string"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.allwarn.809828919" name="Enable all warnings (-Wall)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.allwarn" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.extrawarn.556241989" name="Enable extra warnings (-Wextra)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.extrawarn" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.conversion.788565876" name="Warn for implicit conversions (-Wconversion)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.conversion" useByScannerDiscovery="true" value="false" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.uninitialized.433042010" name="Warn for uninitialized variables (-Wuninitialized)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.uninitialized" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.unused.94378731" name="Warn for various unused elements (-Wunused)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.unused" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.shadow.774244211" name="Warn for shadowed variables (-Wshadow)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.shadow" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.pointerarith.445557127" name="Warn if it depends on the “size of” a function(-Wpointer-arith)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.pointerarith" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.agreggatereturn.207353419" name="Warn if structures are returned (-Waggregate-return)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.agreggatereturn" useByScannerDiscovery="true" value="false" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.missingdeclaration.97219514" name="Warn for undeclared global functions (-Wmissing-declarations)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.missingdeclaration" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.toerrors.1993051522" name="Generate errors instead of warnings (-Werror)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.toerrors" useByScannerDiscovery="true" value="false" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.missingprototypes.1360760062" name="Warn if a global function has no prototype (-Wmissing-prototypes)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.missingprototypes" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.strictprototypes.600624521" name="Warn if a function has no argument type (-Wstrict-prototypes)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.strictprototypes" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.badfunctioncast.950620017" name="Warn if a cast is wrong (-Wbad-function-cast)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.badfunctioncast" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.warnings.otherFlags.1730765873" name="Other Flags" superClass="com.renesas.cdt.managedbuild.gcc.core.option.warnings.otherFlags" useByScannerDiscovery="false" valueType="stringList">
+								<listOptionValue builtIn="false" value="-Wundef"/>
+								<listOptionValue builtIn="false" value="-Wno-unused-function -Wno-unused-label -Wno-unused-variable -Wno-main"/>
+							</option>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.disableFPUInstructions.330060499" name="Disable generation of RX hardware FPU instructions" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.disableFPUInstructions" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.flto.2037414293" name="Link-time optimizer (-flto)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.flto" useByScannerDiscovery="true" value="false" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.optimization.mrelax.1703211957" name="Enable linker relaxation (-mrelax)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.optimization.mrelax" useByScannerDiscovery="true" value="false" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.64bitdouble.1143920287" name="Make the double data type be 64 bits in size" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.64bitdouble" useByScannerDiscovery="true" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.cpu.doubleFPU.1248721932" name="Double FPU instruction" superClass="com.renesas.cdt.managedbuild.gcc.core.option.cpu.doubleFPU" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.core.option.addtools.printsize.1758670966" name="Create Print Size" superClass="com.renesas.cdt.managedbuild.gcc.core.option.addtools.printsize" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+							<option id="com.renesas.cdt.managedbuild.gcc.rz.option.mtfu.523411517" name="MTFU" superClass="com.renesas.cdt.managedbuild.gcc.rz.option.mtfu" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.gcc.rz.mtfu.none" valueType="enumerated"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.renesas.cdt.managedbuild.gcc.core.targetPlatform.447033150" isAbstract="false" osList="all" superClass="com.renesas.cdt.managedbuild.gcc.core.targetPlatform"/>
+							<builder arguments="-r" buildPath="${workspace_loc:/${ProjName}}/HardwareDebug" command="make" id="com.renesas.cdt.managedbuild.gcc.core.builder.348807577" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="GCC for Renesas Builder" parallelBuildOn="true" parallelizationNumber="optimal" stopOnErr="false" superClass="com.renesas.cdt.managedbuild.gcc.core.builder"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.libgen.1999510944" name="Library Generator" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.libgen">
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.libgen.libstd.applicability.1820050119" superClass="com.renesas.cdt.managedbuild.gcc.core.option.libgen.libstd.applicability" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.managedbuild.gcc.rx.option.libraryType.1420001111" name="Library type" superClass="com.renesas.cdt.managedbuild.gcc.rx.option.libraryType" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.librarygenerator.settings.libraryType.preBuilt" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.gcc.rx.option.selectlibrary.1111447120" name="Select Library" superClass="com.renesas.cdt.managedbuild.gcc.rx.option.selectlibrary" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.librarygenerator.settings.selectLibrary.newLib" valueType="enumerated"/>
+							</tool>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.compiler.2065772045" name="Compiler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.compiler">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir.1541317597" name="Include file directories" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.includeFileDir" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/rx-elf/optlibinc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo/Full_Demo/FreeRTOS-Plus-CLI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo/Full_Demo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_workaround}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_workaround/r_bsp_patch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS/Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS/Source/portable/GCC/RX700v3_DPFPU}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/frtos_startup}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/frtos_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/frtos_skeleton}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_bsp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_dtc_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_dtc_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/general}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_pincfg}&quot;"/>
+								</option>
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std.2019477617" name="Language standard" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.std" useByScannerDiscovery="true" value="com.renesas.cdt.managedbuild.gcc.core.option.compiler.common.gnu99" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines.1113626646" name="Macro Defines" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.includes.macroDefines" useByScannerDiscovery="false"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.userDefinedCompilerOptions.430530314" name="User defined compiler options" superClass="com.renesas.cdt.managedbuild.gcc.core.option.compiler.source.userDefinedCompilerOptions" useByScannerDiscovery="false" valueType="stringList">
+									<listOptionValue builtIn="false" value="-fstack-usage -fdump-rtl-pro_and_epilogue"/>
+								</option>
+								<inputType id="com.renesas.cdt.managedbuild.gcc.core.inputType.compiler.c.335247410" superClass="com.renesas.cdt.managedbuild.gcc.core.inputType.compiler.c"/>
+							</tool>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.assembler.1182690221" name="Assembler" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.assembler">
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.usepreprocessor.769694783" name="Use preprocessor" superClass="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.usepreprocessor" useByScannerDiscovery="false"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.userDefinedOptions.159158576" name="User defined options" superClass="com.renesas.cdt.managedbuild.gcc.core.option.assembler.source.userDefinedOptions" useByScannerDiscovery="false" valueType="stringList"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.managedbuild.gcc.core.option.assembler.includes.includeFileDirectories.1301711064" name="Include file directories" superClass="com.renesas.cdt.managedbuild.gcc.core.option.assembler.includes.includeFileDirectories" useByScannerDiscovery="false" valueType="includePath"/>
+								<inputType id="com.renesas.cdt.managedbuild.gcc.core.inputType.assembler.985505582" superClass="com.renesas.cdt.managedbuild.gcc.core.inputType.assembler"/>
+							</tool>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.linker.174948488" name="Linker" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.linker">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.linker.source.linkerScript.687565960" name="Linker script" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.source.linkerScript" useByScannerDiscovery="false" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/linker_script.ld}&quot;"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.managedbuild.gcc.rx.option.linker.archives.archiveSearchDirectories.148989277" name="Standard archive search directories" superClass="com.renesas.cdt.managedbuild.gcc.rx.option.linker.archives.archiveSearchDirectories" useByScannerDiscovery="false" valueType="stringList"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.gcc.core.option.linker.archives.archiveLibraryFiles.1921976852" name="Standard archive (library) files" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.archives.archiveLibraryFiles" useByScannerDiscovery="false" valueType="stringList">
+									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="c"/>
+									<listOptionValue builtIn="false" value="gcc"/>
+								</option>
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.linker.source.linkOrderList.1594631832" name="Linkage Order List" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.source.linkOrderList" useByScannerDiscovery="false"/>
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.linker.newlibnano.110587920" name="Use newlib-nano (--specs=nano.specs)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.newlibnano" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.managedbuild.gcc.rx.option.linker.userDefinedArchives.248919770" name="User defined archives" superClass="com.renesas.cdt.managedbuild.gcc.rx.option.linker.userDefinedArchives" useByScannerDiscovery="false" valueType="stringList"/>
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.linker.misc.inputsections.967483530" name="Enable garbage collection of unused input sections(-gc-sections)" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.misc.inputsections" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.managedbuild.gcc.core.option.linker.other.userDefinedOptions.970535055" name="User defined options" superClass="com.renesas.cdt.managedbuild.gcc.core.option.linker.other.userDefinedOptions" useByScannerDiscovery="false" valueType="stringList"/>
+							</tool>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.objcopy.1535137026" name="Objcopy" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.objcopy"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.archiver.1263598834" name="Archiver" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.archiver"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.compiler.297687971" name="Compiler CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.compiler"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker.1687043618" name="Linker CPP" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.cpp.linker"/>
+							<tool id="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize.1006072056" name="Print Size" superClass="com.renesas.cdt.managedbuild.gcc.rx.tool.printsize">
+								<option id="com.renesas.cdt.managedbuild.gcc.core.option.printsize.format.813391619" name="Size Format" superClass="com.renesas.cdt.managedbuild.gcc.core.option.printsize.format" useByScannerDiscovery="false"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="smc_gen/r_dtc_rx/src/r_dtc_rx.c|smc_gen/r_dtc_rx/src/targets/rx72n/r_dtc_rx_target.c|smc_gen/r_pincfg/Pin.h|smc_gen/r_pincfg/Pin.c|FreeRTOS/Source/portable/MemMang/heap_5.c|FreeRTOS/Source/portable/MemMang/heap_3.c|FreeRTOS/Source/portable/MemMang/heap_2.c|FreeRTOS/Source/portable/MemMang/heap_1.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="RTOSDemo.com.renesas.cdt.managedbuild.gcc.rx.projectType.Id.457688497" name="実行可能" projectType="com.renesas.cdt.managedbuild.gcc.rx.projectType.Id"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.887759396;com.renesas.cdt.managedbuild.gcc.rx.configuration.debug.887759396.;com.renesas.cdt.managedbuild.gcc.rx.tool.compiler.2065772045;com.renesas.cdt.managedbuild.gcc.core.inputType.compiler.c.335247410">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+</cproject>

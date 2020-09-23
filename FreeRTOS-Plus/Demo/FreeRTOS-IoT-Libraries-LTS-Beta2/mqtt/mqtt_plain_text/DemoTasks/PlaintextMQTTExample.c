@@ -416,7 +416,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 }
 /*-----------------------------------------------------------*/
 
-static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pNetworkContext )
+static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkContext_t * pxNetworkContext )
 {
     PlaintextTransportStatus_t xNetworkStatus;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
@@ -438,7 +438,7 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
         LogInfo( ( "Create a TCP connection to %s:%d.",
                    democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
-        xNetworkStatus = Plaintext_FreeRTOS_Connect( pNetworkContext,
+        xNetworkStatus = Plaintext_FreeRTOS_Connect( pxNetworkContext,
                                                      democonfigMQTT_BROKER_ENDPOINT,
                                                      democonfigMQTT_BROKER_PORT,
                                                      TRANSPORT_SEND_RECV_TIMEOUT_MS,

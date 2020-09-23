@@ -191,13 +191,13 @@ static void prvMQTTDemoTask( void * pvParameters );
  * @return The status of the final connection attempt.
  */
 static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pNetworkContext )
+                                                                  NetworkContext_t * pNetworkContext );
 
 /**
  * @brief Sends an MQTT Connect packet over the already connected TLS over TCP connection.
  *
  * @param[in, out] pxMQTTContext MQTT context pointer.
- * @param[in] xNetworkContext network context.
+ * @param[in] xNetworkContext Network context.
  */
 static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
                                                NetworkContext_t * pxNetworkContext );
@@ -366,6 +366,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     NetworkCredentials_t xNetworkCredentials = { 0 };
     MQTTContext_t xMQTTContext = { 0 };
     MQTTStatus_t xMQTTStatus;
+    TlsTransportStatus_t xNetworkStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -388,7 +389,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
                    democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
-        xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkContext );
+        xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkCredentials,
+                                                               &xNetworkContext );
         configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
 
         /* Sends an MQTT Connect packet over the already established TLS connection,
@@ -464,7 +466,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 /*-----------------------------------------------------------*/
 
 static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredentials_t * pxNetworkCredentials,
-                                                                  NetworkContext_t * pNetworkContext )
+                                                                  NetworkContext_t * pxNetworkContext )
 {
     TlsTransportStatus_t xNetworkStatus;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
@@ -571,6 +573,23 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
     /* Successfully established and MQTT connection with the broker. */
     LogInfo( ( "An MQTT connection is established with %s.", democonfigMQTT_BROKER_ENDPOINT ) );
+}
+/*-----------------------------------------------------------*/
+
+static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
+{
+    MQTTStatus_t xResult = MQTTSuccess;
+    uint8_t * pucPayload = NULL;
+    size_t ulSize = 0;
+
+    xResult = MQTT_GetSubAckStatusCodes( pxPacketInfo, &pucPayload, &ulSize );
+
+    /* MQTT_GetSubAckStatusCodes always returns success if called with packet info
+     * from the event callback and non-NULL parameters. */
+    configASSERT( xResult == MQTTSuccess );
+
+    /* Demo only subscribes to one topic, so only one status code is returned. */
+    xGlobalSubAckStatus = pucPayload[ 0 ];
 }
 /*-----------------------------------------------------------*/
 

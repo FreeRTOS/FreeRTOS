@@ -119,8 +119,15 @@
  */
 #define TRANSPORT_SEND_RECV_TIMEOUT_MS      ( 20 )
 
-#define _MILLISECONDS_PER_SECOND            ( 1000U )                                                 /**< @brief Milliseconds per second. */
-#define _MILLISECONDS_PER_TICK              ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )         /**< Milliseconds per FreeRTOS tick. */
+/**
+ * @brief Milliseconds per second.
+ */
+#define MILLISECONDS_PER_SECOND             ( 1000U )
+
+/**
+ * @brief Milliseconds per FreeRTOS tick.
+ */
+#define MILLISECONDS_PER_TICK               ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /**
  * @brief Ticks to wait for task notifications.
@@ -163,7 +170,9 @@
 #define PUBLISH_QUEUE_SIZE                  20
 
 /**
- * @brief Delay for the subscriber task when no publishes are waiting in the queue.
+ * @brief Delay for the subscriber task. If no publishes are waiting in the
+ * task's message queue, it will wait this many milliseconds before checking
+ * it again.
  */
 #define SUBSCRIBE_TASK_DELAY_MS             400U
 
@@ -228,7 +237,7 @@ typedef enum CommandType
     PUBLISH,     /**< @brief Call MQTT_Publish(). */
     SUBSCRIBE,   /**< @brief Call MQTT_Subscribe(). */
     UNSUBSCRIBE, /**< @brief Call MQTT_Unsubscribe(). */
-    PING,        /**< @brief Call MQTT_Pint(). */
+    PING,        /**< @brief Call MQTT_Ping(). */
     DISCONNECT,  /**< @brief Call MQTT_Disconnect(). */
     CONNECT,     /**< @brief Placeholder command for reconnecting a broken connection. */
     TERMINATE    /**< @brief Exit the command loop and stop processing commands. */
@@ -240,10 +249,6 @@ typedef enum CommandType
  * @note An instance of this struct and any variables it points to MUST stay
  * in scope until the associated command is processed, and its callback called.
  * The command callback will set the `complete` flag, and notify the calling task.
- *
- * @note This struct does not accept a parameter for number of subscriptions.
- * Only a single subscription per SUBSCRIBE command is allowed in this demo.
- * This is to simplify subscription management.
  */
 typedef struct CommandContext
 {
@@ -287,6 +292,8 @@ typedef struct ackInfo
  * @brief An element in the list of subscriptions maintained in the demo.
  *
  * @note This demo allows multiple tasks to subscribe to the same topic.
+ * In this case, another element is added to the subscription list, differing
+ * in the destination response queue.
  */
 typedef struct subscriptionElement
 {
@@ -336,15 +343,17 @@ static void prvInitializeCommandContext( CommandContext_t * pxContext );
  *
  * @param[in] usPacketId Packet ID of pending ack.
  * @param[in] pCommand Copy of command that is expecting an ack.
+ *
+ * @return `true` if the operation was added; else `false`
  */
-static void prvAddAck( uint16_t usPacketId,
+static bool prvAddAck( uint16_t usPacketId,
                        Command_t * pCommand );
 
 /**
  * @brief Remove an operation from the list of pending acks and return it.
  *
  * @param[in] usPacketId Packet ID of incoming ack.
- * @param[in] xRemove Flag indicating if an ack should be removed
+ * @param[in] xRemove Flag indicating if the operation should be removed.
  *
  * @return Stored information about the operation awaiting the ack.
  */
@@ -457,6 +466,12 @@ static void prvCommandCallback( CommandContext_t * pxContext );
 /**
  * @brief The task used to create various publish operations.
  *
+ * This task creates a series of publish operations to push to a command queue,
+ * which are in turn executed serially by the main task. This task demonstrates
+ * both synchronous execution - waiting for each publish delivery to complete
+ * before proceeding - and asynchronous, where it is not necessary for the
+ * publish operation to complete before this task resumes.
+ *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
  */
@@ -465,6 +480,12 @@ void prvPublishTask( void * pvParameters );
 /**
  * @brief The task used to wait for incoming publishes.
  *
+ * This task subscribes to a topic filter that matches the topics on which the
+ * publisher task publishes. It then enters a loop waiting for publish messages
+ * from a message queue, to which the main loop will be pushing when publishes
+ * are received from the broker. After `PUBLISH_COUNT` messages have been received,
+ * this task will unsubscribe, and then tell the main loop to terminate.
+ *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
  */
@@ -472,6 +493,11 @@ void prvSubscribeTask( void * pvParameters );
 
 /**
  * @brief The main task used in the MQTT demo.
+ *
+ * After creating the publisher and subscriber tasks, this task will enter a
+ * loop, processing commands from the command queue and calling the MQTT API.
+ * After the termination command is received on the command queue, the task
+ * will break from the loop.
  *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
@@ -557,9 +583,9 @@ static uint32_t ulGlobalEntryTimeMs;
  */
 void vStartSimpleMQTTDemo( void )
 {
-    /* This example uses a single application task, which in turn is used to
-     * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
-     * broker. */
+    /* This example uses one application task to process the command queue for
+     * MQTT operations, and creates additional tasks to add operations to that
+     * queue. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
                  "MQTTDemo",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
@@ -643,10 +669,11 @@ static void prvInitializeCommandContext( CommandContext_t * pxContext )
 
 /*-----------------------------------------------------------*/
 
-static void prvAddAck( uint16_t usPacketId,
+static bool prvAddAck( uint16_t usPacketId,
                        Command_t * pCommand )
 {
     int32_t i = 0;
+    bool xAckAdded = false;
 
     for( i = 0; i < PENDING_ACKS_MAX_SIZE; i++ )
     {
@@ -654,9 +681,12 @@ static void prvAddAck( uint16_t usPacketId,
         {
             pxPendingAcks[ i ].packetId = usPacketId;
             pxPendingAcks[ i ].command = *pCommand;
+            xAckAdded = true;
             break;
         }
     }
+
+    return xAckAdded;
 }
 
 /*-----------------------------------------------------------*/
@@ -712,14 +742,14 @@ static void prvAddSubscription( const char * pTopicFilter,
             /* If a subscription already exists, don't do anything. */
             if( pxSubscriptions[ i ].pResponseQueue == pxQueue )
             {
-                LogWarn( ( "Subscription already exists. " ) );
+                LogWarn( ( "Subscription already exists." ) );
                 availableIndex = SUBSCRIPTIONS_MAX_COUNT;
                 break;
             }
         }
     }
 
-    if( availableIndex < SUBSCRIPTIONS_MAX_COUNT )
+    if( ( availableIndex < SUBSCRIPTIONS_MAX_COUNT ) && ( pxQueue != NULL ) )
     {
         pxSubscriptions[ availableIndex ].topicFilterLength = topicFilterLength;
         pxSubscriptions[ availableIndex ].pResponseQueue = pxQueue;
@@ -819,7 +849,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
 {
     MQTTStatus_t xStatus = MQTTSuccess;
     uint16_t usPacketId = MQTT_PACKET_ID_INVALID;
-    bool xAddAckToList = false;
+    bool xAddAckToList = false, xAckAdded = false;
     MQTTPublishInfo_t * pxPublishInfo;
     MQTTSubscribeInfo_t * pxSubscribeInfo;
 
@@ -912,9 +942,22 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
 
     if( xAddAckToList )
     {
-        prvAddAck( usPacketId, pxCommand );
+        xAckAdded = prvAddAck( usPacketId, pxCommand );
+
+        /* Set the return status if no memory was available to store the operation
+         * information. */
+        if( !xAckAdded )
+        {
+            LogError( ( "No memory to wait for acknowledgment for packet %u", usPacketId ) );
+
+            /* All operations that can wait for acks (publish, subscribe, unsubscribe)
+             * require a context. */
+            configASSERT( pxCommand->pContext != NULL );
+            pxCommand->pContext->returnStatus = MQTTNoMemory;
+        }
     }
-    else
+
+    if( !xAckAdded )
     {
         /* The command is complete, call the callback. */
         if( pxCommand->callback != NULL )
@@ -1153,6 +1196,7 @@ static void prvCommandLoop()
             xSubscribeProcessed = true;
         }
 
+        /* Terminate the loop if we receive the termination command. */
         if( pxCommand->commandType == TERMINATE )
         {
             break;
@@ -1308,7 +1352,8 @@ void prvSubscribeTask( void * pvParameters )
     PublishElement_t xReceivedPublish;
     uint16_t usWaitCounter = 0;
 
-    /* QoS 0 is simplest, so use that. */
+    /* The QoS does not affect when subscribe operations are marked completed
+     * as it does for publishes, so we use QoS 0, since it is the simplest. */
     xSubscribeInfo.qos = MQTTQoS0;
     xSubscribeInfo.pTopicFilter = SUBSCRIBE_TOPIC_FILTER;
     xSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( xSubscribeInfo.pTopicFilter );
@@ -1406,13 +1451,20 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     ulGlobalEntryTimeMs = prvGetTimeMs();
 
+    /* Create command queue for processing MQTT commands. */
     xCommandQueue = xQueueCreate( COMMAND_QUEUE_SIZE, sizeof( Command_t ) );
+    /* Create response queues for each task. */
     xSubscriberResponseQueue = xQueueCreate( PUBLISH_QUEUE_SIZE, sizeof( PublishElement_t ) );
     /* Publish task doesn't receive anything in this demo, so it doesn't need a large queue. */
     xPublisherResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
-    /* In this demo, send publishes on non-subscribed topics to this queue. */
+
+    /* In this demo, send publishes on non-subscribed topics to this queue.
+     * Note that this value is not meant to be changed after `prvCommandLoop` has
+     * been called, since access to this variable is not protected by thread
+     * synchronization primitives. */
     xDefaultResponseQueue = xPublisherResponseQueue;
 
+    /* Clear the lists of subscriptions and pending acknowledgments. */
     memset( ( void * ) pxPendingAcks, 0x00, PENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
     memset( ( void * ) pxSubscriptions, 0x00, SUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
 
@@ -1438,7 +1490,8 @@ static void prvMQTTDemoTask( void * pvParameters )
     LogInfo( ( "Running command loop" ) );
     prvCommandLoop();
 
-    /* Delete created tasks and queues. */
+    /* Delete created tasks and queues.
+     * Wait for subscriber task to exit before cleaning up. */
     while( ( ulNotification & SUBSCRIBE_TASK_COMPLETE_BIT ) != SUBSCRIBE_TASK_COMPLETE_BIT )
     {
         LogInfo( ( "Waiting for subscribe task to exit." ) );
@@ -1449,6 +1502,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     vTaskDelete( xSubscribeTask );
     LogInfo( ( "Subscribe task Deleted." ) );
 
+    /* Wait for publishing task to exit before cleaning up. */
     while( ( ulNotification & PUBLISHER_TASK_COMPLETE_BIT ) != PUBLISHER_TASK_COMPLETE_BIT )
     {
         LogInfo( ( "Waiting for publish task to exit." ) );
@@ -1482,7 +1536,7 @@ static uint32_t prvGetTimeMs( void )
     xTickCount = xTaskGetTickCount();
 
     /* Convert the ticks to milliseconds. */
-    ulTimeMs = ( uint32_t ) xTickCount * _MILLISECONDS_PER_TICK;
+    ulTimeMs = ( uint32_t ) xTickCount * MILLISECONDS_PER_TICK;
 
     /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
      * elapsed time in the application. */

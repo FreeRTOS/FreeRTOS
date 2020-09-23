@@ -415,7 +415,6 @@ static void prvMQTTDemoTask( void * pvParameters )
     MQTTStatus_t xMQTTStatus;
     PlaintextTransportStatus_t xNetworkStatus;
     BaseType_t xTimerStatus;
-    BaseType_t xNetworkStatus;
 
     /* Remove compiler warnings about unused parameters. */
     ( void ) pvParameters;
@@ -680,7 +679,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
          * receiving Publish message before subscribe ack is zero; but application
          * must be ready to receive any packet.  This demo uses the generic packet
          * processing function everywhere to highlight this fact. */
-        xResult = MQTT_ProcessLoop( pxMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
+        xResult = MQTT_ProcessLoop( pxMQTTContext, mqttexampleRECEIVE_LOOP_TIMEOUT_MS );
         configASSERT( xResult == MQTTSuccess );
 
         /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated

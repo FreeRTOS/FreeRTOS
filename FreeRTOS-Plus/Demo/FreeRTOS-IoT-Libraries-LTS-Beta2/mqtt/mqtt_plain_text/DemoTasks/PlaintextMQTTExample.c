@@ -208,7 +208,7 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
 static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext );
 
 /**
- * @brief  Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
+ * @brief Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
  *
  * @param pxMQTTContext MQTT context pointer.
  */

@@ -22,7 +22,6 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -204,8 +203,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
 /**
  * @brief Function to update variable globalSubAckStatus with status
- * information from Subscribe ACK. Called by eventCallback after processing
- * incoming subscribe echo.
+ * information from Subscribe ACK. Called bythe event callback after processing
+ * an incoming SUBSCRIBE packet.
  *
  * @param[in] Server response to the subscription request.
  */
@@ -609,8 +608,8 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     xGlobalSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
     /* Initialize retry attempts and interval. */
-    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
     RetryUtils_ParamsReset( &xRetryParams );
+    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
 
     do
     {
@@ -641,7 +640,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         configASSERT( xResult == MQTTSuccess );
 
         /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated
-         * in eventCallback to reflect the status of the SUBACK sent by the broker. It represents
+         * inthe event callback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
         if( xGlobalSubAckStatus == MQTTSubAckFailure )

@@ -22,7 +22,6 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 /*
@@ -101,7 +100,7 @@
 /**
  * @brief Timeout for receiving CONNACK packet in milliseconds.
  */
-#define mqttexampleCONNACK_RECV_TIMEOUT_MS          ( 1000U )
+#define mqttexampleCONNACK_RECV_TIMEOUT_MS           ( 1000U )
 
 /**
  * @brief The topic to subscribe and publish to in the example.
@@ -109,28 +108,28 @@
  * The topic name starts with the client identifier to ensure that each demo
  * interacts with a unique topic name.
  */
-#define mqttexampleTOPIC                            democonfigCLIENT_IDENTIFIER "/example/topic"
+#define mqttexampleTOPIC                             democonfigCLIENT_IDENTIFIER "/example/topic"
 
 /**
  * @brief The MQTT message published in this example.
  */
-#define mqttexampleMESSAGE                          "Hello World!"
+#define mqttexampleMESSAGE                           "Hello World!"
 
 /**
  * @brief Dimensions a file scope buffer currently used to send and receive MQTT data
  * from a socket.
  */
-#define mqttexampleSHARED_BUFFER_SIZE               ( 500U )
+#define mqttexampleSHARED_BUFFER_SIZE                ( 500U )
 
 /**
  * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
  */
-#define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS    ( pdMS_TO_TICKS( 5000U ) )
+#define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS     ( pdMS_TO_TICKS( 5000U ) )
 
 /**
  * @brief Timeout for MQTT_ProcessLoop in milliseconds.
  */
-#define mqttexamplePROCESS_LOOP_TIMEOUT_MS          ( 500U )
+#define mqttexamplePROCESS_LOOP_TIMEOUT_MS           ( 500U )
 
 /**
  * @brief Keep alive time reported to the broker while establishing an MQTT connection.
@@ -140,21 +139,21 @@
  * absence of sending any other Control Packets, the Client MUST send a
  * PINGREQ Packet.
  */
-#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS       ( 60U )
+#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS        ( 60U )
 
 /**
  * @brief Delay between MQTT publishes. Note that the process loop also has a
  * timeout, so the total time between publishes is the sum of the two delays.
  */
-#define mqttexampleDELAY_BETWEEN_PUBLISHES          ( pdMS_TO_TICKS( 500U ) )
+#define mqttexampleDELAY_BETWEEN_PUBLISHES           ( pdMS_TO_TICKS( 500U ) )
 
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200U )
+#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200U )
 
-#define _MILLISECONDS_PER_SECOND                    ( 1000U )                                         /**< @brief Milliseconds per second. */
-#define _MILLISECONDS_PER_TICK                      ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
+#define _MILLISECONDS_PER_SECOND                     ( 1000U )                                         /**< @brief Milliseconds per second. */
+#define _MILLISECONDS_PER_TICK                       ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ ) /**< Milliseconds per FreeRTOS tick. */
 
 /*-----------------------------------------------------------*/
 
@@ -191,8 +190,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
 /**
  * @brief Function to update variable globalSubAckStatus with status
- * information from Subscribe ACK. Called by eventCallback after processing
- * incoming subscribe echo.
+ * information from Subscribe ACK. Called bythe event callback after processing
+ * an incoming SUBSCRIBE packet.
  *
  * @param Server response to the subscription request.
  */
@@ -441,8 +440,8 @@ static PlaintextTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkC
         xNetworkStatus = Plaintext_FreeRTOS_Connect( pxNetworkContext,
                                                      democonfigMQTT_BROKER_ENDPOINT,
                                                      democonfigMQTT_BROKER_PORT,
-                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS,
-                                                     TRANSPORT_SEND_RECV_TIMEOUT_MS );
+                                                     mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
+                                                     mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
 
         if( xNetworkStatus != PLAINTEXT_TRANSPORT_SUCCESS )
         {
@@ -550,8 +549,8 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     xGlobalSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
     /* Initialize retry attempts and interval. */
-    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
     RetryUtils_ParamsReset( &xRetryParams );
+    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
 
     do
     {
@@ -582,7 +581,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         configASSERT( xResult == MQTTSuccess );
 
         /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated
-         * in eventCallback to reflect the status of the SUBACK sent by the broker. It represents
+         * inthe event callback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
         if( xGlobalSubAckStatus == MQTTSubAckFailure )

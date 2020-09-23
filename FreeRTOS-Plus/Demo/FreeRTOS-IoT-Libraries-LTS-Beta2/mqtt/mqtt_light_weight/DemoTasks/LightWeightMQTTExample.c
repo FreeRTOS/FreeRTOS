@@ -104,23 +104,23 @@
  * The topic name starts with the client identifier to ensure that each demo
  * interacts with a unique topic name.
  */
-#define mqttexampleTOPIC                             democonfigCLIENT_IDENTIFIER "/example/topic"
+#define mqttexampleTOPIC                            democonfigCLIENT_IDENTIFIER "/example/topic"
 
 /**
  * @brief The MQTT message published in this example.
  */
-#define mqttexampleMESSAGE                           "Hello Light Weight MQTT World!"
+#define mqttexampleMESSAGE                          "Hello Light Weight MQTT World!"
 
 /**
  * @brief Dimensions a file scope buffer currently used to send and receive MQTT data
  * from a socket.
  */
-#define mqttexampleSHARED_BUFFER_SIZE                ( 500U )
+#define mqttexampleSHARED_BUFFER_SIZE               ( 500U )
 
 /**
  * @brief Time to wait between each cycle of the demo implemented by prvMQTTDemoTask().
  */
-#define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS     ( pdMS_TO_TICKS( 5000U ) )
+#define mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS    ( pdMS_TO_TICKS( 5000U ) )
 
 /**
  * @brief Keep alive time reported to the broker while establishing an MQTT connection.
@@ -130,7 +130,7 @@
  * absence of sending any other Control Packets, the Client MUST send a
  * PINGREQ Packet.
  */
-#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS        ( 10U )
+#define mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS       ( 10U )
 
 /**
  * @brief Time to wait before sending ping request to keep MQTT connection alive.
@@ -139,23 +139,14 @@
  * seconds. This is to make sure that a PINGREQ is always sent before the timeout
  * expires in broker.
  */
-#define mqttexampleKEEP_ALIVE_DELAY                  ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
-
-/**
- * @brief Number of times a attempt a network receive when it fails due to timeout.
- */
-#define mqttexampleMAX_RECV_ATTEMPTS                 ( 10U )
+#define mqttexampleKEEP_ALIVE_DELAY                 ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
 
 /**
  * @brief Maximum number of times to call FreeRTOS_recv when initiating a
  * graceful socket shutdown.
  */
-#define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS         ( 3 )
+#define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS        ( 3 )
 
-/**
- * @brief Transport timeout in milliseconds for transport send and receive.
- */
-#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200U )
 /*-----------------------------------------------------------*/
 
 /**
@@ -544,7 +535,6 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
     uint32_t ulBrokerIPAddress;
     BaseType_t xStatus = pdFAIL;
     struct freertos_sockaddr xBrokerAddress;
-    TickType_t xTransportTimeout = 0;
 
     /* This is the socket used to connect to the MQTT broker. */
     xMQTTSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -563,24 +553,6 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 
             if( FreeRTOS_connect( xMQTTSocket, &xBrokerAddress, sizeof( xBrokerAddress ) ) == 0 )
             {
-                xTransportTimeout = pdMS_TO_TICKS( mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
-
-                /* Set socket receive timeout.
-                 * Setting the receive block time cannot fail. */
-                ( void ) FreeRTOS_setsockopt( xMQTTSocket,
-                                              0,
-                                              FREERTOS_SO_RCVTIMEO,
-                                              &xTransportTimeout,
-                                              sizeof( TickType_t ) );
-
-                /* Set socket send timeout.
-                 * Setting the send block time cannot fail. */
-                ( void ) FreeRTOS_setsockopt( xMQTTSocket,
-                                              0,
-                                              FREERTOS_SO_SNDTIMEO,
-                                              &xTransportTimeout,
-                                              sizeof( TickType_t ) );
-
                 /* Connection was successful. */
                 xStatus = pdPASS;
             }
@@ -663,7 +635,7 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     MQTTStatus_t xResult;
     MQTTPacketInfo_t xIncomingPacket;
     MQTTConnectInfo_t xConnectInfo;
-    uint16_t usPacketId, usReceiveAttempts = 0;
+    uint16_t usPacketId;
     bool xSessionPresent;
     NetworkContext_t xNetworkContext;
 
@@ -727,14 +699,9 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      */
     xNetworkContext.xTcpSocket = xMQTTSocket;
 
-    do
-    {
-        /* Since TCP socket has timeout, retry until the data is available. */
-        xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
-                                                       &xNetworkContext,
-                                                       &xIncomingPacket );
-        usReceiveAttempts++;
-    } while( ( xResult == MQTTNoDataAvailable ) && ( usReceiveAttempts < mqttexampleMAX_RECV_ATTEMPTS ) );
+    xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
+                                                   &xNetworkContext,
+                                                   &xIncomingPacket );
 
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xIncomingPacket.type == MQTT_PACKET_TYPE_CONNACK );
@@ -847,7 +814,7 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
         prvMQTTProcessIncomingPacket( xMQTTSocket );
 
         /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated
-         * inthe event callback to reflect the status of the SUBACK sent by the broker. It represents
+         * in the event callback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
         if( xGlobalSubAckStatus == false )

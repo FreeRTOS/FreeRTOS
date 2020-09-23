@@ -203,8 +203,8 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
 
 /**
  * @brief Function to update variable globalSubAckStatus with status
- * information from Subscribe ACK. Called bythe event callback after processing
- * an incoming SUBSCRIBE packet.
+ * information from Subscribe ACK. Called by the event callback after processing
+ * an incoming SUBACK packet.
  *
  * @param[in] Server response to the subscription request.
  */
@@ -640,7 +640,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
         configASSERT( xResult == MQTTSuccess );
 
         /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated
-         * inthe event callback to reflect the status of the SUBACK sent by the broker. It represents
+         * in the event callback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
         if( xGlobalSubAckStatus == MQTTSubAckFailure )

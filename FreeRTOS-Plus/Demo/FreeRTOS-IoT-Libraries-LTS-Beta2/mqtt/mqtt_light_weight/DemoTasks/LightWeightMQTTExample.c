@@ -61,6 +61,9 @@
 /* MQTT library includes. */
 #include "mqtt_lightweight.h"
 
+/* Retry utilities include. */
+#include "retry_utils.h"
+
 /*-----------------------------------------------------------*/
 
 /* Compile time error for undefined configs. */
@@ -85,8 +88,6 @@
  */
     #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
 #endif
-
-
 
 #ifndef democonfigMQTT_BROKER_PORT
 
@@ -142,10 +143,20 @@
 #define mqttexampleKEEP_ALIVE_DELAY                 ( pdMS_TO_TICKS( ( ( mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS / 4 ) * 1000 ) ) )
 
 /**
+ * @brief Number of times a attempt a network receive when it fails due to timeout.
+ */
+#define mqttexampleMAX_RECV_ATTEMPTS                ( 5U )
+
+/**
  * @brief Maximum number of times to call FreeRTOS_recv when initiating a
  * graceful socket shutdown.
  */
-#define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS        ( 3 )
+#define mqttexampleMAX_SOCKET_SHUTDOWN_LOOPS        ( 3U )
+
+/**
+ * @brief Transport timeout in milliseconds for transport send and receive.
+ */
+#define TRANSPORT_SEND_RECV_TIMEOUT_MS              ( 200U )
 /*-----------------------------------------------------------*/
 
 /**
@@ -165,6 +176,19 @@ static void prvMQTTDemoTask( void * pvParameters );
  *
  */
 static Socket_t prvCreateTCPConnectionToBroker( void );
+
+/**
+ * @brief Connect to MQTT broker with reconnection retries.
+ *
+ * If connection fails, retry is attempted after a timeout.
+ * Timeout value will exponentially increase until maximum
+ * timeout value is reached or the number of attempts are exhausted.
+ *
+ * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker.
+ *
+ * @return The socket of the final connection attempt.
+ */
+static Socket_t prvConnectToServerWithBackoffRetries();
 
 /**
  * @brief Sends an MQTT Connect packet over the already connected TCP socket.
@@ -191,6 +215,16 @@ static void prvGracefulShutDown( Socket_t xSocket );
  * an MQTT connection has been established.
  */
 static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket );
+
+/**
+ * @brief Subscribes to the topic as specified in mqttexampleTOPIC at the top of
+ * this file. In the case of a Subscribe ACK failure, then subscription is
+ * retried using an exponential backoff strategy with jitter.
+ *
+ * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
+ * an MQTT connection has been established.
+ */
+static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket );
 
 /**
  * @brief  Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
@@ -296,6 +330,18 @@ static uint16_t usSubscribePacketIdentifier;
  */
 static uint16_t usUnsubscribePacketIdentifier;
 
+/**
+ * @brief Status of latest Subscribe ACK;
+ * it is updated every time a Subscribe ACK is processed.
+ */
+static bool xGlobalSubAckStatus = false;
+
+/**
+ * @brief Topic to subscribe.
+ * Used to re-subscribe to topics that failed initial subscription attempts.
+ */
+static MQTTSubscribeInfo_t xGlobalSubscribeInfo;
+
 
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
 const static MQTTFixedBuffer_t xBuffer =
@@ -350,11 +396,13 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
-        /* Establish a TCP connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
-         * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Create a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        xMQTTSocket = prvCreateTCPConnectionToBroker();
+        /* Attempt to connect to the MQTT broker. If connection fails, retry after
+         * a timeout. Timeout value will be exponentially increased until the maximum
+         * number of attempts are reached or the maximum timeout value is reached.
+         * The function returns a failure status if the TCP connection cannot be established
+         * to the broker after the configured number of attempts. */
+        xMQTTSocket = prvConnectToServerWithBackoffRetries();
+        configASSERT( xMQTTSocket != FREERTOS_INVALID_SOCKET );
 
         /* Sends an MQTT Connect packet over the already connected TCP socket
          * xMQTTSocket, and waits for connection acknowledgment (CONNACK) packet. */
@@ -363,24 +411,10 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Subscribe. ******************************/
 
-        /* The client is now connected to the broker. Subscribe to the topic
-         * as specified in mqttexampleTOPIC at the top of this file by sending a
-         * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
-         * This client will then publish to the same topic it subscribed to, so it
-         * will expect all the messages it sends to the broker to be sent back to it
-         * from the broker. This demo uses QOS0 in Subscribe, therefore, the Publish
-         * messages received from the broker will have QOS0. */
-        LogInfo( ( "Attempt to subscribed to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
-        prvMQTTSubscribeToTopic( xMQTTSocket );
-
-        /* Process incoming packet from the broker. After sending the subscribe, the
-         * client may receive a publish before it receives a subscribe ack. Therefore,
-         * call generic incoming packet processing function. Since this demo is
-         * subscribing to the topic to which no one is publishing, probability of
-         * receiving Publish message before subscribe ack is zero; but application
-         * must be ready to receive any packet.  This demo uses the generic packet
-         * processing function everywhere to highlight this fact. */
-        prvMQTTProcessIncomingPacket( xMQTTSocket );
+        /* If server rejected the subscription request, attempt to resubscribe to topic.
+         * Attempts are made according to the exponential backoff retry strategy
+         * implemented in retryUtils. */
+        prvMQTTSubscribeWithBackoffRetries( xMQTTSocket );
 
         /**************************** Publish and Keep Alive Loop. ******************************/
         /* Publish messages with QOS0, send and process Keep alive messages. */
@@ -511,6 +545,7 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
     uint32_t ulBrokerIPAddress;
     BaseType_t xStatus = pdFAIL;
     struct freertos_sockaddr xBrokerAddress;
+    TickType_t xTransportTimeout = 0;
 
     /* This is the socket used to connect to the MQTT broker. */
     xMQTTSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -529,6 +564,24 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 
             if( FreeRTOS_connect( xMQTTSocket, &xBrokerAddress, sizeof( xBrokerAddress ) ) == 0 )
             {
+                xTransportTimeout = pdMS_TO_TICKS( TRANSPORT_SEND_RECV_TIMEOUT_MS );
+
+                /* Set socket receive timeout.
+                 * Setting the receive block time cannot fail. */
+                ( void ) FreeRTOS_setsockopt( xMQTTSocket,
+                                              0,
+                                              FREERTOS_SO_RCVTIMEO,
+                                              &xTransportTimeout,
+                                              sizeof( TickType_t ) );
+
+                /* Set socket send timeout.
+                 * Setting the send block time cannot fail. */
+                ( void ) FreeRTOS_setsockopt( xMQTTSocket,
+                                              0,
+                                              FREERTOS_SO_SNDTIMEO,
+                                              &xTransportTimeout,
+                                              sizeof( TickType_t ) );
+
                 /* Connection was successful. */
                 xStatus = pdPASS;
             }
@@ -562,6 +615,47 @@ static Socket_t prvCreateTCPConnectionToBroker( void )
 }
 /*-----------------------------------------------------------*/
 
+static Socket_t prvConnectToServerWithBackoffRetries()
+{
+    Socket_t xSocket;
+    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
+    RetryUtilsParams_t xReconnectParams;
+
+    /* Initialize reconnect attempts and interval. */
+    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    RetryUtils_ParamsReset( &xReconnectParams );
+
+    /* Attempt to connect to MQTT broker. If connection fails, retry after
+     * a timeout. Timeout value will exponentially increase till maximum
+     * attempts are reached.
+     */
+    do
+    {
+        /* Establish a TCP connection with the MQTT broker. This example connects to
+         * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
+         * democonfigMQTT_BROKER_PORT at the top of this file. */
+        LogInfo( ( "Create a TCP connection to %s:%d.",
+                   democonfigMQTT_BROKER_ENDPOINT,
+                   democonfigMQTT_BROKER_PORT ) );
+        xSocket = prvCreateTCPConnectionToBroker();
+
+        if( xSocket == FREERTOS_INVALID_SOCKET )
+        {
+            LogWarn( ( "Connection to the broker failed. Retrying connection with backoff and jitter." ) );
+            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xReconnectParams );
+        }
+
+        if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
+        {
+            LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
+            xSocket = FREERTOS_INVALID_SOCKET;
+        }
+    } while( ( xSocket == FREERTOS_INVALID_SOCKET ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+
+    return xSocket;
+}
+/*-----------------------------------------------------------*/
+
 static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 {
     BaseType_t xStatus;
@@ -570,7 +664,7 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
     MQTTStatus_t xResult;
     MQTTPacketInfo_t xIncomingPacket;
     MQTTConnectInfo_t xConnectInfo;
-    uint16_t usPacketId;
+    uint16_t usPacketId, usReceiveAttempts = 0;
     bool xSessionPresent;
     NetworkContext_t xNetworkContext;
 
@@ -633,9 +727,16 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
      * asserts.
      */
     xNetworkContext.xTcpSocket = xMQTTSocket;
-    xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
-                                                   &xNetworkContext,
-                                                   &xIncomingPacket );
+
+    do
+    {
+        /* Since TCP socket has timeout, retry until the data is available */
+        xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
+                                                       &xNetworkContext,
+                                                       &xIncomingPacket );
+        usReceiveAttempts++;
+    } while( ( xResult == MQTTNoDataAvailable ) && ( usReceiveAttempts < mqttexampleMAX_RECV_ATTEMPTS ) );
+
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xIncomingPacket.type == MQTT_PACKET_TYPE_CONNACK );
     configASSERT( xIncomingPacket.remainingLength <= mqttexampleSHARED_BUFFER_SIZE );
@@ -663,7 +764,6 @@ static void prvCreateMQTTConnectionWithBroker( Socket_t xMQTTSocket )
 static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 {
     MQTTStatus_t xResult;
-    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
     size_t xRemainingLength;
     size_t xPacketSize;
     BaseType_t xStatus;
@@ -673,17 +773,8 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
      * asserts().
      ***/
 
-    /* Some fields not used by this demo so start with everything at 0. */
-    ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
-
-    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
-     * only one topic and uses QOS0. */
-    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
-    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
-    xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
-
-    xResult = MQTT_GetSubscribePacketSize( xMQTTSubscription,
-                                           sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_GetSubscribePacketSize( &xGlobalSubscribeInfo,
+                                           sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
                                            &xRemainingLength,
                                            &xPacketSize );
 
@@ -697,8 +788,8 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
     configASSERT( usSubscribePacketIdentifier != 0 );
 
     /* Serialize subscribe into statically allocated ucSharedBuffer. */
-    xResult = MQTT_SerializeSubscribe( xMQTTSubscription,
-                                       sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_SerializeSubscribe( &xGlobalSubscribeInfo,
+                                       sizeof( MQTTSubscribeInfo_t ),
                                        usSubscribePacketIdentifier,
                                        xRemainingLength,
                                        &xBuffer );
@@ -714,6 +805,63 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 }
 /*-----------------------------------------------------------*/
 
+static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
+{
+    RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
+    RetryUtilsParams_t xRetryParams;
+
+    /* Some fields not used by this demo so start with everything at 0. */
+    ( void ) memset( ( void * ) &xGlobalSubscribeInfo, 0x00, sizeof( MQTTSubscribeInfo_t ) );
+
+    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
+     * only one topic and uses QOS0. */
+    xGlobalSubscribeInfo.qos = MQTTQoS0;
+    xGlobalSubscribeInfo.pTopicFilter = mqttexampleTOPIC;
+    xGlobalSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+
+    /* Initialize retry attempts and interval. */
+    xRetryParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
+    RetryUtils_ParamsReset( &xRetryParams );
+
+    do
+    {
+        /* The client is now connected to the broker. Subscribe to the topic
+         * as specified in mqttexampleTOPIC at the top of this file by sending a
+         * subscribe packet then waiting for a subscribe acknowledgment (SUBACK).
+         * This client will then publish to the same topic it subscribed to, so it
+         * will expect all the messages it sends to the broker to be sent back to it
+         * from the broker. This demo uses QOS0 in Subscribe, therefore, the Publish
+         * messages received from the broker will have QOS0. */
+        LogInfo( ( "Attempt to subscribe to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
+        prvMQTTSubscribeToTopic( xMQTTSocket );
+
+        LogInfo( ( "SUBSCRIBE sent for topic %s to broker.\n\n", mqttexampleTOPIC ) );
+
+        /* Process incoming packet from the broker. After sending the subscribe, the
+         * client may receive a publish before it receives a subscribe ack. Therefore,
+         * call generic incoming packet processing function. Since this demo is
+         * subscribing to the topic to which no one is publishing, probability of
+         * receiving Publish message before subscribe ack is zero; but application
+         * must be ready to receive any packet.  This demo uses the generic packet
+         * processing function everywhere to highlight this fact. */
+        prvMQTTProcessIncomingPacket( xMQTTSocket );
+
+        /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated
+         * in eventCallback to reflect the status of the SUBACK sent by the broker. It represents
+         * either the QoS level granted by the server upon subscription, or acknowledgement of
+         * server rejection of the subscription request. */
+        if( xGlobalSubAckStatus == false )
+        {
+            LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
+                       mqttexampleTOPIC ) );
+            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xRetryParams );
+        }
+
+        configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
+    } while( ( xGlobalSubAckStatus == false ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+}
+/*-----------------------------------------------------------*/
+
 static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
 {
     MQTTStatus_t xResult;
@@ -723,7 +871,6 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
     size_t xHeaderSize;
     BaseType_t xStatus;
 
-
     /***
      * For readability, error handling in this function is restricted to the use of
      * asserts().
@@ -732,7 +879,7 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
-    /* This demo uses QOS0 */
+    /* This demo uses QOS0. */
     xMQTTPublishInfo.qos = MQTTQoS0;
     xMQTTPublishInfo.retain = false;
     xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
@@ -778,23 +925,12 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
 static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
 {
     MQTTStatus_t xResult;
-    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
     size_t xRemainingLength;
     size_t xPacketSize;
     BaseType_t xStatus;
 
-    /* Some fields not used by this demo so start with everything at 0. */
-    memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
-
-    /* Unsubscribe to the mqttexampleTOPIC topic filter. The task handle is passed
-     * as the callback context which is used by the callback to send a task
-     * notification to this task.*/
-    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
-    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
-    xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
-
-    xResult = MQTT_GetUnsubscribePacketSize( xMQTTSubscription,
-                                             sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_GetUnsubscribePacketSize( &xGlobalSubscribeInfo,
+                                             sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
                                              &xRemainingLength,
                                              &xPacketSize );
     configASSERT( xResult == MQTTSuccess );
@@ -806,8 +942,8 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
     /* Make sure the packet id obtained is valid. */
     configASSERT( usUnsubscribePacketIdentifier != 0 );
 
-    xResult = MQTT_SerializeUnsubscribe( xMQTTSubscription,
-                                         sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_SerializeUnsubscribe( &xGlobalSubscribeInfo,
+                                         sizeof( MQTTSubscribeInfo_t ),
                                          usUnsubscribePacketIdentifier,
                                          xRemainingLength,
                                          &xBuffer );
@@ -872,7 +1008,18 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
     switch( pxIncomingPacket->type )
     {
         case MQTT_PACKET_TYPE_SUBACK:
-            LogInfo( ( "Subscribed to the topic %s.\r\n", mqttexampleTOPIC ) );
+
+            /* Check if recent subscription request has been accepted. xGlobalSubAckStatus is updated
+            * in mqttProcessIncomingPacket to reflect the status of the SUBACK sent by the broker. */
+            if( xGlobalSubAckStatus == true )
+            {
+                LogInfo( ( "Subscribed to the topic %s.\r\n", mqttexampleTOPIC ) );
+            }
+            else
+            {
+                LogInfo( ( "Server refused subscription request for the topic %s.\r\n", mqttexampleTOPIC ) );
+            }
+
             /* Make sure ACK packet identifier matches with Request packet identifier. */
             configASSERT( usSubscribePacketIdentifier == usPacketId );
             break;
@@ -889,7 +1036,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
 
         /* Any other packet type is invalid. */
         default:
-            LogInfo( ( "prvMQTTProcessResponse() called with unknown packet type:(%02X).\r\n",
+            LogWarn( ( "prvMQTTProcessResponse() called with unknown packet type:(%02X).\r\n",
                        pxIncomingPacket->type ) );
     }
 }
@@ -901,7 +1048,7 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
     configASSERT( pxPublishInfo != NULL );
 
     /* Process incoming Publish. */
-    LogInfo( ( "Incoming QOS : %d\n", pxPublishInfo->qos ) );
+    LogInfo( ( "Incoming QoS : %d\n", pxPublishInfo->qos ) );
 
     /* Verify the received publish is for the we have subscribed to. */
     if( ( pxPublishInfo->topicNameLength == strlen( mqttexampleTOPIC ) ) &&
@@ -932,7 +1079,7 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
     MQTTPacketInfo_t xIncomingPacket;
     BaseType_t xStatus;
     MQTTPublishInfo_t xPublishInfo;
-    uint16_t usPacketId;
+    uint16_t usPacketId, usReceiveAttempts = 0;
     NetworkContext_t xNetworkContext;
 
     /***
@@ -944,9 +1091,16 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
 
     /* Determine incoming packet type and remaining length. */
     xNetworkContext.xTcpSocket = xMQTTSocket;
-    xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
-                                                   &xNetworkContext,
-                                                   &xIncomingPacket );
+
+    do
+    {
+        /* Since TCP socket has timeout, retry until the data is available */
+        xResult = MQTT_GetIncomingPacketTypeAndLength( prvTransportRecv,
+                                                       &xNetworkContext,
+                                                       &xIncomingPacket );
+        usReceiveAttempts++;
+    } while( ( xResult == MQTTNoDataAvailable ) && ( usReceiveAttempts < mqttexampleMAX_RECV_ATTEMPTS ) );
+
     configASSERT( xResult == MQTTSuccess );
     configASSERT( xIncomingPacket.remainingLength <= mqttexampleSHARED_BUFFER_SIZE );
 
@@ -982,6 +1136,16 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
          * present. */
         xResult = MQTT_DeserializeAck( &xIncomingPacket, &usPacketId, NULL );
         configASSERT( xResult == MQTTSuccess );
+
+        if( xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK )
+        {
+            xGlobalSubAckStatus = ( xResult == MQTTSuccess );
+            configASSERT( xResult == MQTTSuccess || xResult == MQTTServerRefused );
+        }
+        else
+        {
+            configASSERT( xResult == MQTTSuccess );
+        }
 
         /* Process the response. */
         prvMQTTProcessResponse( &xIncomingPacket, usPacketId );

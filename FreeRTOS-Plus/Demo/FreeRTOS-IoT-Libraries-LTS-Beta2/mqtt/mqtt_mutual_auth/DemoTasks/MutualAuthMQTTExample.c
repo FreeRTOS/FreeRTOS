@@ -477,8 +477,8 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
 
     /* Initialize reconnect attempts and interval. */
-    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
     RetryUtils_ParamsReset( &xReconnectParams );
+    xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after
      * a timeout. Timeout value will exponentially increase till maximum

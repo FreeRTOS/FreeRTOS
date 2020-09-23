@@ -386,9 +386,6 @@ static void prvMQTTDemoTask( void * pvParameters )
          * the maximum number of attempts are reached or the maximum timeout value is reached.
          * The function returns a failure status if the TCP connection cannot be established
          * to the broker after the configured number of attempts. */
-        LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
-                   democonfigMQTT_BROKER_ENDPOINT,
-                   democonfigMQTT_BROKER_PORT ) );
         xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkCredentials,
                                                                &xNetworkContext );
         configASSERT( xNetworkStatus == TLS_TRANSPORT_SUCCESS );
@@ -490,10 +487,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
      */
     do
     {
-        /* Establish a TCP connection with the MQTT broker. This example connects to
+        /* Establish a TLS session with the MQTT broker. This example connects to
          * the MQTT broker as specified in democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT at the top of this file. */
-        LogInfo( ( "Create a TCP connection to %s:%d.",
+        LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
                    democonfigMQTT_BROKER_ENDPOINT,
                    democonfigMQTT_BROKER_PORT ) );
         /* Attempt to create a mutually authenticated TLS connection. */

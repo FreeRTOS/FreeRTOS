@@ -262,7 +262,9 @@ static void prvEventCallback( MQTTContext_t * pxMQTTContext,
 
 /*-----------------------------------------------------------*/
 
-/* @brief Static buffer used to hold MQTT messages being sent and received. */
+/**
+ * @brief Static buffer used to hold MQTT messages being sent and received.
+ */
 static uint8_t ucSharedBuffer[ mqttexampleSHARED_BUFFER_SIZE ];
 
 /**
@@ -293,7 +295,7 @@ static uint16_t usUnsubscribePacketIdentifier;
 static MQTTSubAckStatus_t xGlobalSubAckStatus = MQTTSubAckFailure;
 
 /**
- * @brief Array to keep subscription topics.
+ * @brief Topic to subscribe.
  * Used to re-subscribe to topics that failed initial subscription attempts.
  */
 static MQTTSubscribeInfo_t xGlobalSubscribeInfo;

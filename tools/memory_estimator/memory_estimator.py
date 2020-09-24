@@ -56,8 +56,9 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src')
                    ],
     'pkcs11'  :  [
-                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source'),
-                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source', 'portable', 'mbedtls')
+                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source', 'iot_pkcs11.c'),
+                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source', 'iot_pki_utils.c'),
+                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source', 'portable', 'mbedtls', 'iot_pkcs11_mbedtls.c')
                    ],
     'kernel'     : [
                         os.path.join(__FREERTOS_SRC_DIR__, 'event_groups.c'),

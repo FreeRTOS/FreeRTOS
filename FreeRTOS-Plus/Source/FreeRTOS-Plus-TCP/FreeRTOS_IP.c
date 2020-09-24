@@ -140,6 +140,15 @@ handled.  The value is chosen simply to be easy to spot when debugging. */
 had an invalid length. */
 #define ipINVALID_LENGTH			0x1234U
 
+/* Trace macros to aid in debugging, disabled if ipconfigHAS_PRINTF != 1 */
+#if ( ipconfigHAS_PRINTF == 1 )
+    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )    type var = ( init )
+    #define DEBUG_SET_TRACE_VARIABLE( var, value )  var = ( value )
+#else
+    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )
+    #define DEBUG_SET_TRACE_VARIABLE( var, value )
+#endif
+
 /*-----------------------------------------------------------*/
 
 /* Used in checksum calculation. */
@@ -162,10 +171,6 @@ typedef union _xUnionPtr
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
 {
     return ( NetworkBufferDescriptor_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
-{
-    return ( const NetworkBufferDescriptor_t *) pvArgument;
 }
 
 /*-----------------------------------------------------------*/
@@ -1994,16 +1999,16 @@ uint8_t ucProtocol;
 	uint8_t ucProtocol;
 	uint16_t usLength;
 	uint16_t ucVersionHeaderLength;
-	BaseType_t xLocation = 0;
 	size_t uxMinimumLength;
 	BaseType_t xResult = pdFAIL;
+	DEBUG_DECLARE_TRACE_VARIABLE( BaseType_t, xLocation, 0 );
 
 		do
 		{
 			/* Check for minimum packet size: Ethernet header and an IP-header, 34 bytes */
 			if( uxBufferLength < sizeof( IPPacket_t ) )
 			{
-				xLocation = 1;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 1 );
 				break;
 			}
 
@@ -2017,7 +2022,7 @@ uint8_t ucProtocol;
 			if( ( ucVersionHeaderLength < ipIPV4_VERSION_HEADER_LENGTH_MIN ) ||
 				( ucVersionHeaderLength > ipIPV4_VERSION_HEADER_LENGTH_MAX ) )
 			{
-				xLocation = 2;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 2 );
 				break;
 			}
 			ucVersionHeaderLength = ( ucVersionHeaderLength & ( uint8_t ) 0x0FU ) << 2;
@@ -2026,7 +2031,7 @@ uint8_t ucProtocol;
 			/* Check if the complete IP-header is transferred. */
 			if( uxBufferLength < ( ipSIZE_OF_ETH_HEADER + uxIPHeaderLength ) )
 			{
-				xLocation = 3;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 3 );
 				break;
 			}
 			/* Check if the complete IP-header plus protocol data have been transferred: */
@@ -2034,7 +2039,7 @@ uint8_t ucProtocol;
 			usLength = FreeRTOS_ntohs( usLength );
 			if( uxBufferLength < ( size_t ) ( ipSIZE_OF_ETH_HEADER + ( size_t ) usLength ) )
 			{
-				xLocation = 4;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 4 );
 				break;
 			}
 
@@ -2068,12 +2073,12 @@ uint8_t ucProtocol;
 			else
 			{
 				/* Unhandled protocol, other than ICMP, IGMP, UDP, or TCP. */
-				xLocation = 5;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 5 );
 				break;
 			}
 			if( uxBufferLength < uxMinimumLength )
 			{
-				xLocation = 6;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 6 );
 				break;
 			}
 
@@ -2086,7 +2091,7 @@ uint8_t ucProtocol;
 				/* For incoming packets, the length is out of bound: either
 				too short or too long. For outgoing packets, there is a 
 				serious problem with the format/length. */
-				xLocation = 7;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 7 );
 				break;
 			}
 			xResult = pdPASS;
@@ -2094,12 +2099,8 @@ uint8_t ucProtocol;
 
 		if( xResult != pdPASS )
 		{
+			/* NOP if ipconfigHAS_PRINTF != 1 */
 			FreeRTOS_printf( ( "xCheckSizeFields: location %ld\n", xLocation ) );
-			
-			/* If FreeRTOS_printf is not defined, not using xLocation will be a violation of MISRA
-			 * rule 2.2 as the value assigned to xLocation will not be used. The below statement uses
-			 * the variable without modifying the logic of the source. */
-			( void ) xLocation;
 		}
 
 		return xResult;
@@ -2120,9 +2121,7 @@ uint8_t ucProtocol;
 #endif
 uint16_t usLength;
 uint16_t ucVersionHeaderLength;
-
-
-BaseType_t location = 0;
+DEBUG_DECLARE_TRACE_VARIABLE( BaseType_t, xLocation, 0 );
 
 	/* Introduce a do-while loop to allow use of break statements.
 	 * Note: MISRA prohibits use of 'goto', thus replaced with breaks. */
@@ -2132,7 +2131,7 @@ BaseType_t location = 0;
 		if( uxBufferLength < sizeof( IPPacket_t ) )
 		{
 			usChecksum = ipINVALID_LENGTH;
-			location = 1;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 1 );
 			break;
 		}
 
@@ -2149,7 +2148,7 @@ BaseType_t location = 0;
 		if( uxBufferLength < ( sizeof( IPPacket_t ) + ( uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ) ) )
 		{
 			usChecksum = ipINVALID_LENGTH;
-			location = 2;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 2 );
 			break;
 		}
 		usLength = pxIPPacket->xIPHeader.usLength;
@@ -2157,7 +2156,7 @@ BaseType_t location = 0;
 		if( uxBufferLength < ( size_t ) ( ipSIZE_OF_ETH_HEADER + ( size_t ) usLength ) )
 		{
 			usChecksum = ipINVALID_LENGTH;
-			location = 3;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 3 );
 			break;
 		}
 
@@ -2177,7 +2176,7 @@ BaseType_t location = 0;
 			if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_UDP_HEADER ) )
 			{
 				usChecksum = ipINVALID_LENGTH;
-				location = 4;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 4 );
 				break;
 			}
 
@@ -2193,7 +2192,7 @@ BaseType_t location = 0;
 			if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_TCP_HEADER ) )
 			{
 				usChecksum = ipINVALID_LENGTH;
-				location = 5;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 5 );
 				break;
 			}
 
@@ -2210,7 +2209,7 @@ BaseType_t location = 0;
 			if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_ICMP_HEADER ) )
 			{
 				usChecksum = ipINVALID_LENGTH;
-				location = 6;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 6 );
 				break;
 			}
 
@@ -2232,7 +2231,7 @@ BaseType_t location = 0;
 		{
 			/* Unhandled protocol, other than ICMP, IGMP, UDP, or TCP. */
 			usChecksum = ipUNHANDLED_PROTOCOL;
-			location = 7;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 7 );
 			break;
 		}
 
@@ -2270,7 +2269,7 @@ BaseType_t location = 0;
 				usChecksum = ipCORRECT_CRC;
 			}
 			#endif
-			location = 8;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 8 );
 			break;
 		}
 		else
@@ -2297,7 +2296,7 @@ BaseType_t location = 0;
 			For outgoing packets, there is a serious problem with the
 			format/length */
 			usChecksum = ipINVALID_LENGTH;
-			location = 9;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 9 );
 			break;
 		}
 		if( ucProtocol <= ( uint8_t ) ipPROTOCOL_IGMP )
@@ -2373,12 +2372,8 @@ BaseType_t location = 0;
 	if( ( usChecksum == ipUNHANDLED_PROTOCOL ) || 
 		( usChecksum == ipINVALID_LENGTH ) )
 	{
-		FreeRTOS_printf( ( "CRC error: %04x location %ld\n", usChecksum, location ) );
-		
-		/* If FreeRTOS_printf is not defined, not using 'location' will be a violation of MISRA
-		 * rule 2.2 as the value assigned to 'location' will not be used. The below statement uses
-		 * the variable without modifying the logic of the source. */
-		( void ) location;
+		/* NOP if ipconfigHAS_PRINTF != 0 */
+		FreeRTOS_printf( ( "CRC error: %04x location %ld\n", usChecksum, xLocation ) );
 	}
 
 	return usChecksum;

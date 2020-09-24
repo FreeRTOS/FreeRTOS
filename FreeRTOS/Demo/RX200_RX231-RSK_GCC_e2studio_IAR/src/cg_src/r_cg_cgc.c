@@ -38,6 +38,7 @@ Includes
 #include "r_cg_macrodriver.h"
 #include "r_cg_cgc.h"
 /* Start user code for include. Do not edit comment generated here */
+#include "rskrx231def.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -45,6 +46,9 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
+
+#if defined(RSK_RX231)
+
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -137,4 +141,59 @@ void R_CGC_Create(void)
 }
 
 /* Start user code for adding. Do not edit comment generated here */
+
+#elif defined(TB_RX231)
+
+void R_CGC_Create(void)
+{
+    uint32_t sckcr_dummy;
+    volatile uint32_t memorywaitcycle;
+
+
+    /* Set system clock */
+    sckcr_dummy = _00000000_CGC_PCLKD_DIV_1 | _00000100_CGC_PCLKB_DIV_2 | _00000000_CGC_PCLKA_DIV_1 | 
+                  _00010000_CGC_BCLK_DIV_2 | _00000000_CGC_ICLK_DIV_1 | _10000000_CGC_FCLK_DIV_2;
+    SYSTEM.SCKCR.LONG = sckcr_dummy;
+
+    while (SYSTEM.SCKCR.LONG != sckcr_dummy);
+
+    /* Disable sub-clock */
+    SYSTEM.SOSCCR.BIT.SOSTP = 1U;
+
+    /* Wait for the register modification to complete */
+    while (1U != SYSTEM.SOSCCR.BIT.SOSTP);
+
+    /* Disable sub-clock */
+    RTC.RCR3.BIT.RTCEN = 0U;
+
+    /* Wait for the register modification to complete */
+    while (0U != RTC.RCR3.BIT.RTCEN);
+
+    /* Set HOCO */
+    SYSTEM.HOCOCR.BIT.HCSTP = 1U;
+    SYSTEM.HOCOCR2.BYTE = _03_CGC_HOCO_CLK_54;
+    SYSTEM.HOCOCR.BIT.HCSTP = 0U;
+
+    /* Wait for HOCO wait counter overflow */
+    while (1U != SYSTEM.OSCOVFSR.BIT.HCOVF);
+
+    /* Set BCLK */
+    SYSTEM.SCKCR.BIT.PSTOP1 = 1U;
+
+    /* Set memory wait cycle setting register */
+    SYSTEM.MEMWAIT.BIT.MEMWAIT = 1U;
+    memorywaitcycle = SYSTEM.MEMWAIT.BYTE;
+    memorywaitcycle++;
+
+    /* Set clock source */
+    SYSTEM.SCKCR3.WORD = _0100_CGC_CLOCKSOURCE_HOCO;
+
+    while (SYSTEM.SCKCR3.WORD != _0100_CGC_CLOCKSOURCE_HOCO);
+
+    /* Set LOCO */
+    SYSTEM.LOCOCR.BIT.LCSTP = 1U;
+}
+
+#endif
+
 /* End user code. Do not edit comment generated here */

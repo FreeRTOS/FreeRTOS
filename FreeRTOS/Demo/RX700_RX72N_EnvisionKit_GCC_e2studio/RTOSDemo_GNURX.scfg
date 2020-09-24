@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<smc>
+<general version="2.0.0.0">
+<configuration active="true" id="com.renesas.smc.toolchain.gccrx.configuration.release">
+<property id="com.renesas.smc.service.project.buildArtefactType" values="com.renesas.smc.service.project.buildArtefactType.exe"/>
+<toolchain id="com.renesas.smc.toolchain.gccrx.toolchain.gccrx">
+<option id="com.renesas.smc.toolchain.option.buildArtefactType" key="com.renesas.smc.toolchain.option.buildArtefactType.exe"/>
+<option id="com.renesas.smc.toolchain.option.rtos" key="com.renesas.smc.toolchain.option.rtos.freertos">
+<item id="com.renesas.smc.toolchain.option.rtos.freertos" value="FreeRTOS_RX_v10.0.03"/>
+</option>
+</toolchain>
+</configuration>
+<platform id="R5F572NNHxFB"/>
+<option id="board" value="Custom User Board"/>
+</general>
+<tool id="Clock">
+<Item current="true" id="vccSetting.isSelected"/>
+<Item current="" id="vccSetting.InputValue"/>
+<Item current="vcc2_7-3_6" id="vccSetting.OutputValue"/>
+<Item current="3.3" id="vccSetting.vccTxt"/>
+<Item current="false" id="mainclock.selectBox"/>
+<Item current="" id="mainclock.InputValue"/>
+<Item current="" id="mainclock.OutputValue"/>
+<Item current="16" error="false" id="mainclock.frequencyTxt"/>
+<Item current="srcR" id="mainclock.sourceBox"/>
+<Item current="9980" id="mainclock.cycleValueTxt"/>
+<Item current="false" id="subclock.selectBox"/>
+<Item current="" id="subclock.InputValue"/>
+<Item current="" id="subclock.OutputValue"/>
+<Item current="32.768" error="false" id="subclock.frequencyTxt"/>
+<Item current="standardCL" id="subclock.generalBox"/>
+<Item current="2000" id="subclock.cycleValueTxt"/>
+<Item current="true" id="hococlock.selectBox"/>
+<Item current="" id="hococlock.InputValue"/>
+<Item current="20 MHz" id="hococlock.OutputValue"/>
+<Item current="frq20" id="hococlock.frequencyListBox"/>
+<Item current="false" id="lococlock.selectBox"/>
+<Item current="" id="lococlock.InputValue"/>
+<Item current="" id="lococlock.OutputValue"/>
+<Item current="240" error="false" id="lococlock.frequencyTxt"/>
+<Item current="false" id="iwdtclock.selectBox"/>
+<Item current="" id="iwdtclock.InputValue"/>
+<Item current="" id="iwdtclock.OutputValue"/>
+<Item current="120" error="false" id="iwdtclock.frequencyTxt"/>
+<Item current="true" id="pllSourceSelect.isSelected"/>
+<Item current="" id="pllSourceSelect.InputValue"/>
+<Item current="20 MHz" id="pllSourceSelect.OutputValue"/>
+<Item current="swthococlock" id="pllSourceSelect.radiobutton"/>
+<Item current="1" id="pllSourceSelect.CurrentValue"/>
+<Item current="true" id="pllSourceSelect.buttonDisable.0"/>
+<Item current="false" id="pllSourceSelect.buttonDisable.1"/>
+<Item current="true" id="pll.isSelected"/>
+<Item current="20 MHz" id="pll.InputValue"/>
+<Item current="240.0 MHz" id="pll.OutputValue"/>
+<Item current="mul12-1" error="false" id="pll.multiplyBox"/>
+<Item current="div1-1" error="false" id="pll.dividerBox"/>
+<Item current="20.0 MHz" error="false" id="pll.MiddleValue"/>
+<Item current="true" id="ppll.isSelected"/>
+<Item current="20 MHz" id="ppll.InputValue"/>
+<Item current="200.0 MHz" id="ppll.OutputValue"/>
+<Item current="mul10-1" error="false" id="ppll.multiplyBox"/>
+<Item current="div1-1" error="false" id="ppll.dividerBox"/>
+<Item current="20.0 MHz" error="false" id="ppll.MiddleValue"/>
+<Item current="true" id="sckselector.isSelected"/>
+<Item current="240.0 MHz" id="sckselector.InputValue"/>
+<Item current="240.0 MHz" id="sckselector.OutputValue"/>
+<Item current="swtpll" id="sckselector.radiobutton"/>
+<Item current="0" id="sckselector.CurrentValue"/>
+<Item current="false" id="sckselector.buttonDisable.0"/>
+<Item current="true" id="sckselector.buttonDisable.1"/>
+<Item current="true" id="sckselector.buttonDisable.2"/>
+<Item current="false" id="sckselector.buttonDisable.3"/>
+<Item current="true" id="sckselector.buttonDisable.4"/>
+<Item current="true" id="ckoselector.isSelected"/>
+<Item current="" id="ckoselector.InputValue"/>
+<Item current="20 MHz" id="ckoselector.OutputValue"/>
+<Item current="swthococlock" id="ckoselector.radiobutton"/>
+<Item current="4" id="ckoselector.CurrentValue"/>
+<Item current="false" id="ckoselector.buttonDisable.0"/>
+<Item current="false" id="ckoselector.buttonDisable.1"/>
+<Item current="true" id="ckoselector.buttonDisable.2"/>
+<Item current="true" id="ckoselector.buttonDisable.3"/>
+<Item current="false" id="ckoselector.buttonDisable.4"/>
+<Item current="true" id="ckoselector.buttonDisable.5"/>
+<Item current="true" id="bckdivider.isSelected"/>
+<Item current="240.0 MHz" id="bckdivider.InputValue"/>
+<Item current="80.0 MHz" id="bckdivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="bckdivider.Condition"/>
+<Item current="comboBox1-3" error="false" id="bckdivider.comboBox"/>
+<Item current="240.0 MHz" error="false" id="bckdivider.PreOutput"/>
+<Item current="iclkdivider" error="false" id="bckdivider.PreOutputController"/>
+<Item current="false" id="bckselector.selectBox"/>
+<Item current="80.0 MHz" id="bckselector.InputValue"/>
+<Item current="" id="bckselector.OutputValue"/>
+<Item current="comboBox1-2" error="false" id="bckselector.comboBox"/>
+<Item current="true" id="fclkdivider.isSelected"/>
+<Item current="240.0 MHz" id="fclkdivider.InputValue"/>
+<Item current="60.0 MHz" id="fclkdivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="fclkdivider.Condition"/>
+<Item current="comboBox1-4" error="false" id="fclkdivider.comboBox"/>
+<Item current="true" id="pclkcdivider.isSelected"/>
+<Item current="240.0 MHz" id="pclkcdivider.InputValue"/>
+<Item current="60.0 MHz" id="pclkcdivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="pclkcdivider.Condition"/>
+<Item current="comboBox1-4" error="false" id="pclkcdivider.comboBox"/>
+<Item current="60.0 MHz" error="false" id="pclkcdivider.PreOutput"/>
+<Item current="pclkbdivider" error="false" id="pclkcdivider.PreOutputController"/>
+<Item current="true" id="pclkddivider.isSelected"/>
+<Item current="240.0 MHz" id="pclkddivider.InputValue"/>
+<Item current="60.0 MHz" id="pclkddivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="pclkddivider.Condition"/>
+<Item current="comboBox1-4" error="false" id="pclkddivider.comboBox"/>
+<Item current="60.0 MHz" error="false" id="pclkddivider.PreOutput"/>
+<Item current="pclkbdivider" error="false" id="pclkddivider.PreOutputController"/>
+<Item current="true" id="pclkbdivider.isSelected"/>
+<Item current="240.0 MHz" id="pclkbdivider.InputValue"/>
+<Item current="60.0 MHz" id="pclkbdivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="pclkbdivider.Condition"/>
+<Item current="comboBox1-4" error="false" id="pclkbdivider.comboBox"/>
+<Item current="120.0 MHz" error="false" id="pclkbdivider.PreOutput"/>
+<Item current="pclkadivider" error="false" id="pclkbdivider.PreOutputController"/>
+<Item current="true" id="pclkadivider.isSelected"/>
+<Item current="240.0 MHz" id="pclkadivider.InputValue"/>
+<Item current="120.0 MHz" id="pclkadivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="pclkadivider.Condition"/>
+<Item current="comboBox1-2" error="false" id="pclkadivider.comboBox"/>
+<Item current="false" id="uckdivider.selectBox"/>
+<Item current="240.0 MHz" id="uckdivider.InputValue"/>
+<Item current="" id="uckdivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="uckdivider.Condition"/>
+<Item current="comboBox1-5" error="false" id="uckdivider.comboBox"/>
+<Item current="true" id="iclkdivider.isSelected"/>
+<Item current="240.0 MHz" id="iclkdivider.InputValue"/>
+<Item current="240.0 MHz" id="iclkdivider.OutputValue"/>
+<Item current="sckselector.radiobutton.swtpll" id="iclkdivider.Condition"/>
+<Item current="comboBox1-1" error="false" id="iclkdivider.comboBox"/>
+<Item current="true" id="pplldivider.isSelected"/>
+<Item current="200.0 MHz" id="pplldivider.InputValue"/>
+<Item current="100.0 MHz" id="pplldivider.OutputValue"/>
+<Item current="comboBox1-2" error="false" id="pplldivider.comboBox"/>
+<Item current="true" id="ckodivider.isSelected"/>
+<Item current="20 MHz" id="ckodivider.InputValue"/>
+<Item current="20.0 MHz" id="ckodivider.OutputValue"/>
+<Item current="ckoselector.radiobutton.swthococlock" id="ckodivider.Condition"/>
+<Item current="comboBox1-1" error="false" id="ckodivider.comboBox"/>
+<Item current="20 MHz" error="false" id="ckodivider.PreOutput"/>
+<Item current="ckoselector" error="false" id="ckodivider.PreOutputController"/>
+<Item current="false" id="uclkSourceSelect.isSelected"/>
+<Item current="" id="uclkSourceSelect.InputValue"/>
+<Item current="" id="uclkSourceSelect.OutputValue"/>
+<Item current="swtuckdivider" id="uclkSourceSelect.radiobutton"/>
+<Item current="0" id="uclkSourceSelect.CurrentValue"/>
+<Item current="true" id="uclkSourceSelect.buttonDisable.0"/>
+<Item current="false" id="uclkSourceSelect.buttonDisable.1"/>
+<Item current="true" id="outckSourceSelect.isSelected"/>
+<Item current="240.0 MHz" id="outckSourceSelect.InputValue"/>
+<Item current="200.0 MHz" id="outckSourceSelect.OutputValue"/>
+<Item current="swtppll" id="outckSourceSelect.radiobutton"/>
+<Item current="1" id="outckSourceSelect.CurrentValue"/>
+<Item current="false" id="outckSourceSelect.buttonDisable.0"/>
+<Item current="false" id="outckSourceSelect.buttonDisable.1"/>
+<Item current="true" id="fclk.isSelected"/>
+<Item current="60.0 MHz" id="fclk.InputValue"/>
+<Item current="60.0 MHz" id="fclk.OutputValue"/>
+<Item current="60.0" id="fclk.frequencyTxt"/>
+<Item current="MHz" id="fclk.unitTxt"/>
+<Item current="60.0" id="fclk.CurrentValue"/>
+<Item current="false" id="fclk.Disabled"/>
+<Item current="true" id="iclk.isSelected"/>
+<Item current="240.0 MHz" id="iclk.InputValue"/>
+<Item current="240.0 MHz" id="iclk.OutputValue"/>
+<Item current="240.0" id="iclk.frequencyTxt"/>
+<Item current="MHz" id="iclk.unitTxt"/>
+<Item current="240.0" id="iclk.CurrentValue"/>
+<Item current="false" id="iclk.Disabled"/>
+<Item current="true" id="pclka.isSelected"/>
+<Item current="120.0 MHz" id="pclka.InputValue"/>
+<Item current="120.0 MHz" id="pclka.OutputValue"/>
+<Item current="120.0" id="pclka.frequencyTxt"/>
+<Item current="MHz" id="pclka.unitTxt"/>
+<Item current="120.0" id="pclka.CurrentValue"/>
+<Item current="false" id="pclka.Disabled"/>
+<Item current="true" id="pclkb.isSelected"/>
+<Item current="60.0 MHz" id="pclkb.InputValue"/>
+<Item current="60.0 MHz" id="pclkb.OutputValue"/>
+<Item current="60.0" id="pclkb.frequencyTxt"/>
+<Item current="MHz" id="pclkb.unitTxt"/>
+<Item current="60.0" id="pclkb.CurrentValue"/>
+<Item current="false" id="pclkb.Disabled"/>
+<Item current="true" id="pclkc.isSelected"/>
+<Item current="60.0 MHz" id="pclkc.InputValue"/>
+<Item current="60.0 MHz" id="pclkc.OutputValue"/>
+<Item current="60.0" id="pclkc.frequencyTxt"/>
+<Item current="MHz" id="pclkc.unitTxt"/>
+<Item current="60.0" id="pclkc.CurrentValue"/>
+<Item current="false" id="pclkc.Disabled"/>
+<Item current="true" id="pclkd.isSelected"/>
+<Item current="60.0 MHz" id="pclkd.InputValue"/>
+<Item current="60.0 MHz" id="pclkd.OutputValue"/>
+<Item current="60.0" id="pclkd.frequencyTxt"/>
+<Item current="MHz" id="pclkd.unitTxt"/>
+<Item current="60.0" id="pclkd.CurrentValue"/>
+<Item current="false" id="pclkd.Disabled"/>
+<Item current="false" id="bckpin.isSelected"/>
+<Item current="" id="bckpin.InputValue"/>
+<Item current="0" id="bckpin.OutputValue"/>
+<Item current="-" id="bckpin.frequencyTxt"/>
+<Item current="MHz" id="bckpin.unitTxt"/>
+<Item current="true" id="bckpin.Disabled"/>
+<Item current="true" id="bck.isSelected"/>
+<Item current="80.0 MHz" id="bck.InputValue"/>
+<Item current="80.0 MHz" id="bck.OutputValue"/>
+<Item current="80.0" id="bck.frequencyTxt"/>
+<Item current="MHz" id="bck.unitTxt"/>
+<Item current="80.0" id="bck.CurrentValue"/>
+<Item current="false" id="bck.Disabled"/>
+<Item current="false" id="sdclk.selectBox"/>
+<Item current="80.0 MHz" id="sdclk.InputValue"/>
+<Item current="0" id="sdclk.OutputValue"/>
+<Item current="-" id="sdclk.frequencyTxt"/>
+<Item current="MHz" id="sdclk.unitTxt"/>
+<Item current="80.0" id="sdclk.CurrentValue"/>
+<Item current="true" id="sdclk.Disabled"/>
+<Item current="false" id="sdclk.SelectBoxDisabled"/>
+<Item current="false" id="uclk.isSelected"/>
+<Item current="" id="uclk.InputValue"/>
+<Item current="0" id="uclk.OutputValue"/>
+<Item current="-" id="uclk.frequencyTxt"/>
+<Item current="MHz" id="uclk.unitTxt"/>
+<Item current="48.0" id="uclk.CurrentValue"/>
+<Item current="true" id="uclk.Disabled"/>
+<Item current="true" id="outckdivider.isSelected"/>
+<Item current="200.0 MHz" id="outckdivider.InputValue"/>
+<Item current="25.0 MHz" id="outckdivider.OutputValue"/>
+<Item current="comboBox1-8" error="false" id="outckdivider.comboBox"/>
+<Item current="true" id="clkout25m.isSelected"/>
+<Item current="25.0 MHz" id="clkout25m.InputValue"/>
+<Item current="25.0 MHz" id="clkout25m.OutputValue"/>
+<Item current="25.0" id="clkout25m.frequencyTxt"/>
+<Item current="MHz" id="clkout25m.unitTxt"/>
+<Item current="25.0" id="clkout25m.CurrentValue"/>
+<Item current="false" id="clkout25m.Disabled"/>
+<Item current="false" id="clkout.selectBox"/>
+<Item current="20.0 MHz" id="clkout.InputValue"/>
+<Item current="0" id="clkout.OutputValue"/>
+<Item current="-" id="clkout.frequencyTxt"/>
+<Item current="MHz" id="clkout.unitTxt"/>
+<Item current="20.0" id="clkout.CurrentValue"/>
+<Item current="true" id="clkout.Disabled"/>
+<Item current="false" id="clkout.SelectBoxDisabled"/>
+<Item current="false" id="cacilsclk.isSelected"/>
+<Item current="" id="cacilsclk.InputValue"/>
+<Item current="0" id="cacilsclk.OutputValue"/>
+<Item current="-" id="cacilsclk.frequencyTxt"/>
+<Item current="MHz" id="cacilsclk.unitTxt"/>
+<Item current="true" id="cacilsclk.Disabled"/>
+<Item current="false" id="caclclk.isSelected"/>
+<Item current="" id="caclclk.InputValue"/>
+<Item current="0" id="caclclk.OutputValue"/>
+<Item current="-" id="caclclk.frequencyTxt"/>
+<Item current="MHz" id="caclclk.unitTxt"/>
+<Item current="true" id="caclclk.Disabled"/>
+<Item current="true" id="cachclk.isSelected"/>
+<Item current="20 MHz" id="cachclk.InputValue"/>
+<Item current="20 MHz" id="cachclk.OutputValue"/>
+<Item current="20" id="cachclk.frequencyTxt"/>
+<Item current="MHz" id="cachclk.unitTxt"/>
+<Item current="false" id="cachclk.Disabled"/>
+<Item current="false" id="cacsclk.isSelected"/>
+<Item current="" id="cacsclk.InputValue"/>
+<Item current="0" id="cacsclk.OutputValue"/>
+<Item current="-" id="cacsclk.frequencyTxt"/>
+<Item current="MHz" id="cacsclk.unitTxt"/>
+<Item current="true" id="cacsclk.Disabled"/>
+<Item current="false" id="rtcclk.selectBox"/>
+<Item current="" id="rtcclk.InputValue"/>
+<Item current="0" id="rtcclk.OutputValue"/>
+<Item current="-" id="rtcclk.frequencyTxt"/>
+<Item current="MHz" id="rtcclk.unitTxt"/>
+<Item current="true" id="rtcclk.Disabled"/>
+<Item current="true" id="rtcclk.SelectBoxDisabled"/>
+<Item current="false" id="cacmclk.isSelected"/>
+<Item current="" id="cacmclk.InputValue"/>
+<Item current="0" id="cacmclk.OutputValue"/>
+<Item current="-" id="cacmclk.frequencyTxt"/>
+<Item current="MHz" id="cacmclk.unitTxt"/>
+<Item current="16" id="cacmclk.CurrentValue"/>
+<Item current="true" id="cacmclk.Disabled"/>
+<Item current="20" id="cachclk.CurrentValue"/>
+</tool>
+<tool id="Pins" version="1.0.1.0">
+<pinItem allocation="" comments="" direction="None" id="XTAL" isUsedBySoftware="false" locked="false" status="0"/>
+<pinItem allocation="50" comments="" direction="None" id="CLKOUT25M" isUsedBySoftware="true" locked="false" status="0"/>
+<pinItem allocation="" comments="" direction="None" id="EXTAL" isUsedBySoftware="false" locked="false" status="0"/>
+<pinItem allocation="45" comments="" direction="None" id="RXD2" isUsedBySoftware="true" locked="false" status="0"/>
+<pinItem allocation="44" comments="" direction="None" id="TXD2" isUsedBySoftware="true" locked="false" status="0"/>
+<pinItem allocation="79" comments="" direction="None" id="RXD9" isUsedBySoftware="true" locked="false" status="0"/>
+<pinItem allocation="78" comments="" direction="None" id="TXD9" isUsedBySoftware="true" locked="false" status="0"/>
+</tool>
+<tool id="Interrupt">
+<Item currentVect="16" id="BSC_BUSERR" priority="15" usedState="Not Use"/>
+<Item currentVect="17" groupchild="&lt;br&gt;1-DPFPUEX" id="IE0" priority="15" usedState="Not Use"/>
+<Item currentVect="18" id="RAM_RAMERR" priority="15" usedState="Not Use"/>
+<Item currentVect="21" id="FCU_FIFERR" priority="15" usedState="Not Use"/>
+<Item currentVect="23" id="FCU_FRDYI" priority="15" usedState="Not Use"/>
+<Item currentVect="26" id="ICU_SWINT2" priority="1" usedState="Used"/>
+<Item currentVect="27" id="ICU_SWINT" priority="1" usedState="Not Use"/>
+<Item currentVect="28" id="CMT0_CMI0" priority="15" usedState="Not Use"/>
+<Item currentVect="29" id="CMT1_CMI1" priority="15" usedState="Not Use"/>
+<Item currentVect="30" id="CMTW0_CMWI0" priority="15" usedState="Not Use"/>
+<Item currentVect="31" id="CMTW1_CMWI1" priority="15" usedState="Not Use"/>
+<Item currentVect="34" id="USB0_D0FIFO0" priority="15" usedState="Not Use"/>
+<Item currentVect="35" id="USB0_D1FIFO0" priority="15" usedState="Not Use"/>
+<Item currentVect="38" id="RSPI0_SPRI0" priority="15" usedState="Not Use"/>
+<Item currentVect="39" id="RSPI0_SPTI0" priority="15" usedState="Not Use"/>
+<Item currentVect="40" id="RSPI1_SPRI1" priority="15" usedState="Not Use"/>
+<Item currentVect="41" id="RSPI1_SPTI1" priority="15" usedState="Not Use"/>
+<Item currentVect="42" id="QSPI_SPRI" priority="15" usedState="Not Use"/>
+<Item currentVect="43" id="QSPI_SPTI" priority="15" usedState="Not Use"/>
+<Item currentVect="44" id="SDHI_SBFAI" priority="15" usedState="Not Use"/>
+<Item currentVect="45" id="MMCIF_MBFAI" priority="15" usedState="Not Use"/>
+<Item currentVect="46" id="SSIE0_SSITXI0" priority="15" usedState="Not Use"/>
+<Item currentVect="47" id="SSIE0_SSIRXI0" priority="15" usedState="Not Use"/>
+<Item currentVect="48" id="SSIE1_SSIRTI1" priority="15" usedState="Not Use"/>
+<Item currentVect="50" id="RIIC1_RXI1" priority="15" usedState="Not Use"/>
+<Item currentVect="51" id="RIIC1_TXI1" priority="15" usedState="Not Use"/>
+<Item currentVect="52" id="RIIC0_RXI0" priority="15" usedState="Not Use"/>
+<Item currentVect="53" id="RIIC0_TXI0" priority="15" usedState="Not Use"/>
+<Item currentVect="54" id="RIIC2_RXI2" priority="15" usedState="Not Use"/>
+<Item currentVect="55" id="RIIC2_TXI2" priority="15" usedState="Not Use"/>
+<Item currentVect="58" id="SCI0_RXI0" priority="15" usedState="Not Use"/>
+<Item currentVect="59" id="SCI0_TXI0" priority="15" usedState="Not Use"/>
+<Item currentVect="60" id="SCI1_RXI1" priority="15" usedState="Not Use"/>
+<Item currentVect="61" id="SCI1_TXI1" priority="15" usedState="Not Use"/>
+<Item currentVect="62" id="SCI2_RXI2" priority="15" usedState="Not Use"/>
+<Item currentVect="63" id="SCI2_TXI2" priority="15" usedState="Not Use"/>
+<Item currentVect="64" id="ICU_IRQ0" priority="15" usedState="Not Use"/>
+<Item currentVect="65" id="ICU_IRQ1" priority="15" usedState="Not Use"/>
+<Item currentVect="66" id="ICU_IRQ2" priority="15" usedState="Not Use"/>
+<Item currentVect="67" id="ICU_IRQ3" priority="15" usedState="Not Use"/>
+<Item currentVect="68" id="ICU_IRQ4" priority="15" usedState="Not Use"/>
+<Item currentVect="69" id="ICU_IRQ5" priority="15" usedState="Not Use"/>
+<Item currentVect="70" id="ICU_IRQ6" priority="15" usedState="Not Use"/>
+<Item currentVect="71" id="ICU_IRQ7" priority="15" usedState="Not Use"/>
+<Item currentVect="72" id="ICU_IRQ8" priority="15" usedState="Not Use"/>
+<Item currentVect="73" id="ICU_IRQ9" priority="15" usedState="Not Use"/>
+<Item currentVect="74" id="ICU_IRQ10" priority="15" usedState="Not Use"/>
+<Item currentVect="75" id="ICU_IRQ11" priority="15" usedState="Not Use"/>
+<Item currentVect="76" id="ICU_IRQ12" priority="15" usedState="Not Use"/>
+<Item currentVect="77" id="ICU_IRQ13" priority="15" usedState="Not Use"/>
+<Item currentVect="78" id="ICU_IRQ14" priority="15" usedState="Not Use"/>
+<Item currentVect="79" id="ICU_IRQ15" priority="15" usedState="Not Use"/>
+<Item currentVect="80" id="SCI3_RXI3" priority="15" usedState="Not Use"/>
+<Item currentVect="81" id="SCI3_TXI3" priority="15" usedState="Not Use"/>
+<Item currentVect="82" id="SCI4_RXI4" priority="15" usedState="Not Use"/>
+<Item currentVect="83" id="SCI4_TXI4" priority="15" usedState="Not Use"/>
+<Item currentVect="84" id="SCI5_RXI5" priority="15" usedState="Not Use"/>
+<Item currentVect="85" id="SCI5_TXI5" priority="15" usedState="Not Use"/>
+<Item currentVect="86" id="SCI6_RXI6" priority="15" usedState="Not Use"/>
+<Item currentVect="87" id="SCI6_TXI6" priority="15" usedState="Not Use"/>
+<Item currentVect="88" id="LVD1_LVD1" priority="15" usedState="Not Use"/>
+<Item currentVect="89" id="LVD2_LVD2" priority="15" usedState="Not Use"/>
+<Item currentVect="90" id="USB0_USBR0" priority="15" usedState="Not Use"/>
+<Item currentVect="92" id="RTC_ALM" priority="15" usedState="Not Use"/>
+<Item currentVect="93" id="RTC_PRD" priority="15" usedState="Not Use"/>
+<Item currentVect="95" id="IWDT_IWUNI" priority="15" usedState="Not Use"/>
+<Item currentVect="96" id="WDT_WUNI" priority="15" usedState="Not Use"/>
+<Item currentVect="97" id="PDC_PCDFI" priority="15" usedState="Not Use"/>
+<Item currentVect="98" id="SCI7_RXI7" priority="15" usedState="Not Use"/>
+<Item currentVect="99" id="SCI7_TXI7" priority="15" usedState="Not Use"/>
+<Item currentVect="100" id="SCI8_RXI8" priority="15" usedState="Not Use"/>
+<Item currentVect="101" id="SCI8_TXI8" priority="15" usedState="Not Use"/>
+<Item currentVect="102" id="SCI9_RXI9" priority="15" usedState="Not Use"/>
+<Item currentVect="103" id="SCI9_TXI9" priority="15" usedState="Not Use"/>
+<Item currentVect="104" id="SCI10_RXI10" priority="15" usedState="Not Use"/>
+<Item currentVect="105" id="SCI10_TXI10" priority="15" usedState="Not Use"/>
+<Item currentVect="106" groupchild="&lt;br&gt;1-ERS0&lt;br&gt;2-ERS1&lt;br&gt;3-ERS2" id="BE0" priority="15" usedState="Not Use"/>
+<Item currentVect="107" groupchild="&lt;br&gt;1-POEGGAI&lt;br&gt;2-POEGGBI&lt;br&gt;3-POEGGCI&lt;br&gt;4-POEGGDI" id="BL2" priority="15" usedState="Not Use"/>
+<Item currentVect="108" id="RSPI2_SPRI2" priority="15" usedState="Not Use"/>
+<Item currentVect="109" id="RSPI2_SPTI2" priority="15" usedState="Not Use"/>
+<Item currentVect="110" groupchild="&lt;br&gt;1-TEI0&lt;br&gt;2-ERI0&lt;br&gt;3-TEI1&lt;br&gt;4-ERI1&lt;br&gt;5-TEI2&lt;br&gt;6-ERI2&lt;br&gt;7-TEI3&lt;br&gt;8-ERI3&lt;br&gt;9-TEI4&lt;br&gt;10-ERI4&lt;br&gt;11-TEI5&lt;br&gt;12-ERI5&lt;br&gt;13-TEI6&lt;br&gt;14-ERI6&lt;br&gt;15-TEI12&lt;br&gt;16-ERI12&lt;br&gt;17-SCIX0&lt;br&gt;18-SCIX1&lt;br&gt;19-SCIX2&lt;br&gt;20-SCIX3&lt;br&gt;21-QSPSSLI&lt;br&gt;22-FERRI&lt;br&gt;23-MENDI&lt;br&gt;24-OVFI&lt;br&gt;25-DOPCI&lt;br&gt;26-PCFEI&lt;br&gt;27-PCERI" id="BL0" priority="15" usedState="Not Use"/>
+<Item currentVect="111" groupchild="&lt;br&gt;1-CDETI&lt;br&gt;2-CACI&lt;br&gt;3-SDACI&lt;br&gt;4-CDETIO&lt;br&gt;5-ERRIO&lt;br&gt;6-ACCIO&lt;br&gt;7-OEI1&lt;br&gt;8-OEI2&lt;br&gt;9-OEI3&lt;br&gt;10-OEI4&lt;br&gt;11-TEI0&lt;br&gt;12-EEI0&lt;br&gt;13-TEI2&lt;br&gt;14-EEI2&lt;br&gt;15-SSIF0&lt;br&gt;16-SSIF1&lt;br&gt;17-S12CMPAI&lt;br&gt;18-S12CMPBI&lt;br&gt;19-S12CMPAI1&lt;br&gt;20-S12CMPBI1&lt;br&gt;21-TEI1&lt;br&gt;22-EEI1" id="BL1" priority="15" usedState="Not Use"/>
+<Item currentVect="112" groupchild="&lt;br&gt;1-TEI8&lt;br&gt;2-ERI8&lt;br&gt;3-TEI9&lt;br&gt;4-ERI9&lt;br&gt;5-TEI10&lt;br&gt;6-ERI10&lt;br&gt;7-TEI11&lt;br&gt;8-ERI11&lt;br&gt;9-SPII0&lt;br&gt;10-SPEI0&lt;br&gt;11-SPII1&lt;br&gt;12-SPEI1&lt;br&gt;13-SPII2&lt;br&gt;14-SPEI2&lt;br&gt;15-TEI7&lt;br&gt;16-ERI7" id="AL0" priority="15" usedState="Not Use"/>
+<Item currentVect="113" groupchild="&lt;br&gt;1-MINT&lt;br&gt;2-PINT&lt;br&gt;3-EINT0&lt;br&gt;4-EINT1&lt;br&gt;5-VPOS&lt;br&gt;6-GR1UF&lt;br&gt;7-GR2UF&lt;br&gt;8-DRW_IRQ" id="AL1" priority="15" usedState="Not Use"/>
+<Item currentVect="114" id="SCI11_RXI11" priority="15" usedState="Not Use"/>
+<Item currentVect="115" id="SCI11_TXI11" priority="15" usedState="Not Use"/>
+<Item currentVect="116" id="SCI12_RXI12" priority="15" usedState="Not Use"/>
+<Item currentVect="117" id="SCI12_TXI12" priority="15" usedState="Not Use"/>
+<Item currentVect="120" id="DMAC_DMAC0I" priority="15" usedState="Not Use"/>
+<Item currentVect="121" id="DMAC_DMAC1I" priority="15" usedState="Not Use"/>
+<Item currentVect="122" id="DMAC_DMAC2I" priority="15" usedState="Not Use"/>
+<Item currentVect="123" id="DMAC_DMAC3I" priority="15" usedState="Not Use"/>
+<Item currentVect="124" id="DMAC_DMAC74I" priority="15" usedState="Not Use"/>
+<Item currentVect="125" id="OST_OSTDI" priority="15" usedState="Not Use"/>
+<Item currentVect="126" id="EXDMAC_EXDMAC0I" priority="15" usedState="Not Use"/>
+<Item currentVect="127" id="EXDMAC_EXDMAC1I" priority="15" usedState="Not Use"/>
+<Item currentVect="128" defaultVect="128" id="CMT2_CMI2" priority="15" usedState="Not Use"/>
+<Item currentVect="129" defaultVect="129" id="CMT3_CMI3" priority="15" usedState="Not Use"/>
+<Item currentVect="130" defaultVect="130" id="TPU0_TGI0A" priority="15" usedState="Not Use"/>
+<Item currentVect="131" defaultVect="131" id="TPU0_TGI0B" priority="15" usedState="Not Use"/>
+<Item currentVect="132" defaultVect="132" id="TPU0_TGI0C" priority="15" usedState="Not Use"/>
+<Item currentVect="133" defaultVect="133" id="TPU0_TGI0D" priority="15" usedState="Not Use"/>
+<Item currentVect="134" defaultVect="134" id="TPU0_TCI0V" priority="15" usedState="Not Use"/>
+<Item currentVect="135" defaultVect="135" id="TPU1_TGI1B" priority="15" usedState="Not Use"/>
+<Item currentVect="136" defaultVect="136" id="TPU1_TCI1V" priority="15" usedState="Not Use"/>
+<Item currentVect="137" defaultVect="137" id="TPU1_TCI1U" priority="15" usedState="Not Use"/>
+<Item currentVect="138" defaultVect="138" id="TPU2_TGI2A" priority="15" usedState="Not Use"/>
+<Item currentVect="139" defaultVect="139" id="TPU2_TGI2B" priority="15" usedState="Not Use"/>
+<Item currentVect="140" defaultVect="140" id="TPU2_TCI2V" priority="15" usedState="Not Use"/>
+<Item currentVect="141" defaultVect="141" id="TPU2_TCI2U" priority="15" usedState="Not Use"/>
+<Item currentVect="142" defaultVect="142" id="TPU3_TGI3A" priority="15" usedState="Not Use"/>
+<Item currentVect="143" defaultVect="143" id="TPU3_TGI3B" priority="15" usedState="Not Use"/>
+<Item currentVect="144" defaultVect="144" id="TPU1_TGI1A" priority="15" usedState="Not Use"/>
+<Item currentVect="145" defaultVect="145" id="TPU3_TGI3C" priority="15" usedState="Not Use"/>
+<Item currentVect="146" defaultVect="146" id="TMR0_CMIA0" priority="15" usedState="Not Use"/>
+<Item currentVect="147" defaultVect="147" id="TMR0_CMIB0" priority="15" usedState="Not Use"/>
+<Item currentVect="148" defaultVect="148" id="TMR0_OVI0" priority="15" usedState="Not Use"/>
+<Item currentVect="149" defaultVect="149" id="TMR1_CMIA1" priority="15" usedState="Not Use"/>
+<Item currentVect="150" defaultVect="150" id="TMR1_CMIB1" priority="15" usedState="Not Use"/>
+<Item currentVect="151" defaultVect="151" id="TMR1_OVI1" priority="15" usedState="Not Use"/>
+<Item currentVect="152" defaultVect="152" id="TMR2_CMIA2" priority="15" usedState="Not Use"/>
+<Item currentVect="153" defaultVect="153" id="TMR2_CMIB2" priority="15" usedState="Not Use"/>
+<Item currentVect="154" defaultVect="154" id="TMR2_OVI2" priority="15" usedState="Not Use"/>
+<Item currentVect="155" defaultVect="155" id="TMR3_CMIA3" priority="15" usedState="Not Use"/>
+<Item currentVect="156" defaultVect="156" id="TMR3_CMIB3" priority="15" usedState="Not Use"/>
+<Item currentVect="157" defaultVect="157" id="TMR3_OVI3" priority="15" usedState="Not Use"/>
+<Item currentVect="158" defaultVect="158" id="TPU3_TGI3D" priority="15" usedState="Not Use"/>
+<Item currentVect="159" defaultVect="159" id="TPU3_TCI3V" priority="15" usedState="Not Use"/>
+<Item currentVect="160" defaultVect="160" id="TPU4_TGI4A" priority="15" usedState="Not Use"/>
+<Item currentVect="161" defaultVect="161" id="TPU4_TGI4B" priority="15" usedState="Not Use"/>
+<Item currentVect="162" defaultVect="162" id="TPU4_TCI4V" priority="15" usedState="Not Use"/>
+<Item currentVect="163" defaultVect="163" id="TPU4_TCI4U" priority="15" usedState="Not Use"/>
+<Item currentVect="164" defaultVect="164" id="TPU5_TGI5A" priority="15" usedState="Not Use"/>
+<Item currentVect="165" defaultVect="165" id="TPU5_TGI5B" priority="15" usedState="Not Use"/>
+<Item currentVect="166" defaultVect="166" id="TPU5_TCI5V" priority="15" usedState="Not Use"/>
+<Item currentVect="167" defaultVect="167" id="TPU5_TCI5U" priority="15" usedState="Not Use"/>
+<Item currentVect="168" defaultVect="168" id="CMTW0_IC0I0" priority="15" usedState="Not Use"/>
+<Item currentVect="169" defaultVect="169" id="CMTW0_IC1I0" priority="15" usedState="Not Use"/>
+<Item currentVect="170" defaultVect="170" id="CMTW0_OC0I0" priority="15" usedState="Not Use"/>
+<Item currentVect="171" defaultVect="171" id="CMTW0_OC1I0" priority="15" usedState="Not Use"/>
+<Item currentVect="172" defaultVect="172" id="CMTW1_IC0I1" priority="15" usedState="Not Use"/>
+<Item currentVect="173" defaultVect="173" id="CMTW1_IC1I1" priority="15" usedState="Not Use"/>
+<Item currentVect="174" defaultVect="174" id="CMTW1_OC0I1" priority="15" usedState="Not Use"/>
+<Item currentVect="175" defaultVect="175" id="CMTW1_OC1I1" priority="15" usedState="Not Use"/>
+<Item currentVect="176" defaultVect="176" id="RTC_CUP" priority="15" usedState="Not Use"/>
+<Item currentVect="177" defaultVect="177" id="CAN0_RXF0" priority="15" usedState="Not Use"/>
+<Item currentVect="178" defaultVect="178" id="CAN0_TXF0" priority="15" usedState="Not Use"/>
+<Item currentVect="179" defaultVect="179" id="CAN0_RXM0" priority="15" usedState="Not Use"/>
+<Item currentVect="180" defaultVect="180" id="CAN0_TXM0" priority="15" usedState="Not Use"/>
+<Item currentVect="181" defaultVect="181" id="CAN1_RXF1" priority="15" usedState="Not Use"/>
+<Item currentVect="182" defaultVect="182" id="CAN1_TXF1" priority="15" usedState="Not Use"/>
+<Item currentVect="183" defaultVect="183" id="CAN1_RXM1" priority="15" usedState="Not Use"/>
+<Item currentVect="184" defaultVect="184" id="CAN1_TXM1" priority="15" usedState="Not Use"/>
+<Item currentVect="185" defaultVect="185" id="USB0_USBI0" priority="15" usedState="Not Use"/>
+<Item currentVect="186" defaultVect="186" id="S12AD_S12ADI" priority="15" usedState="Not Use"/>
+<Item currentVect="187" defaultVect="187" id="S12AD_S12GBADI" priority="15" usedState="Not Use"/>
+<Item currentVect="188" defaultVect="188" id="S12AD_S12GCADI" priority="15" usedState="Not Use"/>
+<Item currentVect="189" defaultVect="189" id="S12AD1_S12ADI1" priority="15" usedState="Not Use"/>
+<Item currentVect="190" defaultVect="190" id="S12AD1_S12GBADI1" priority="15" usedState="Not Use"/>
+<Item currentVect="191" defaultVect="191" id="S12AD1_S12GCADI1" priority="15" usedState="Not Use"/>
+<Item currentVect="192" defaultVect="192" id="ELC_ELSR18I" priority="15" usedState="Not Use"/>
+<Item currentVect="193" defaultVect="193" id="ELC_ELSR19I" priority="15" usedState="Not Use"/>
+<Item currentVect="194" defaultVect="194" id="TSIP_PROC_BUSY" priority="15" usedState="Not Use"/>
+<Item currentVect="195" defaultVect="195" id="TSIP_ROMOK" priority="15" usedState="Not Use"/>
+<Item currentVect="196" defaultVect="196" id="TSIP_LONG_PLG" priority="15" usedState="Not Use"/>
+<Item currentVect="197" defaultVect="197" id="TSIP_TEST_BUSY" priority="15" usedState="Not Use"/>
+<Item currentVect="198" defaultVect="198" id="TSIP_WRRDY0" priority="15" usedState="Not Use"/>
+<Item currentVect="199" defaultVect="199" id="TSIP_WRRDY1" priority="15" usedState="Not Use"/>
+<Item currentVect="200" defaultVect="200" id="TSIP_WRRDY4" priority="15" usedState="Not Use"/>
+<Item currentVect="201" defaultVect="201" id="TSIP_RDRDY0" priority="15" usedState="Not Use"/>
+<Item currentVect="202" defaultVect="202" id="TSIP_RDRDY1" priority="15" usedState="Not Use"/>
+<Item currentVect="203" defaultVect="203" id="TSIP_INTEGRATE_WRRDY" priority="15" usedState="Not Use"/>
+<Item currentVect="204" defaultVect="204" id="TSIP_INTEGRATE_RDRDY" priority="15" usedState="Not Use"/>
+<Item currentVect="205" id="PERIB_INTB205" priority="15" usedState="Not Use"/>
+<Item currentVect="206" id="PERIB_INTB206" priority="15" usedState="Not Use"/>
+<Item currentVect="207" id="PERIB_INTB207" priority="15" usedState="Not Use"/>
+<Item currentVect="208" defaultVect="208" id="MTU1_TGIA1" priority="15" usedState="Not Use"/>
+<Item currentVect="209" defaultVect="209" id="MTU0_TGIA0" priority="15" usedState="Not Use"/>
+<Item currentVect="210" defaultVect="210" id="MTU0_TGIB0" priority="15" usedState="Not Use"/>
+<Item currentVect="211" defaultVect="211" id="MTU0_TGIC0" priority="15" usedState="Not Use"/>
+<Item currentVect="212" defaultVect="212" id="MTU0_TGID0" priority="15" usedState="Not Use"/>
+<Item currentVect="213" defaultVect="213" id="MTU0_TCIV0" priority="15" usedState="Not Use"/>
+<Item currentVect="214" defaultVect="214" id="MTU0_TGIE0" priority="15" usedState="Not Use"/>
+<Item currentVect="215" defaultVect="215" id="MTU0_TGIF0" priority="15" usedState="Not Use"/>
+<Item currentVect="216" defaultVect="216" id="MTU1_TGIB1" priority="15" usedState="Not Use"/>
+<Item currentVect="217" defaultVect="217" id="MTU1_TCIV1" priority="15" usedState="Not Use"/>
+<Item currentVect="218" defaultVect="218" id="MTU1_TCIU1" priority="15" usedState="Not Use"/>
+<Item currentVect="219" defaultVect="219" id="MTU2_TGIA2" priority="15" usedState="Not Use"/>
+<Item currentVect="220" defaultVect="220" id="MTU2_TGIB2" priority="15" usedState="Not Use"/>
+<Item currentVect="221" defaultVect="221" id="MTU2_TCIV2" priority="15" usedState="Not Use"/>
+<Item currentVect="222" defaultVect="222" id="MTU2_TCIU2" priority="15" usedState="Not Use"/>
+<Item currentVect="223" defaultVect="223" id="MTU3_TGIA3" priority="15" usedState="Not Use"/>
+<Item currentVect="224" defaultVect="224" id="MTU3_TGIB3" priority="15" usedState="Not Use"/>
+<Item currentVect="225" defaultVect="225" id="MTU3_TGIC3" priority="15" usedState="Not Use"/>
+<Item currentVect="226" defaultVect="226" id="MTU3_TGID3" priority="15" usedState="Not Use"/>
+<Item currentVect="227" defaultVect="227" id="MTU3_TCIV3" priority="15" usedState="Not Use"/>
+<Item currentVect="228" defaultVect="228" id="MTU4_TGIA4" priority="15" usedState="Not Use"/>
+<Item currentVect="229" defaultVect="229" id="MTU4_TGIB4" priority="15" usedState="Not Use"/>
+<Item currentVect="230" defaultVect="230" id="MTU4_TGIC4" priority="15" usedState="Not Use"/>
+<Item currentVect="231" defaultVect="231" id="MTU4_TGID4" priority="15" usedState="Not Use"/>
+<Item currentVect="232" defaultVect="232" id="MTU4_TCIV4" priority="15" usedState="Not Use"/>
+<Item currentVect="233" defaultVect="233" id="MTU5_TGIU5" priority="15" usedState="Not Use"/>
+<Item currentVect="234" defaultVect="234" id="MTU5_TGIV5" priority="15" usedState="Not Use"/>
+<Item currentVect="235" defaultVect="235" id="MTU5_TGIW5" priority="15" usedState="Not Use"/>
+<Item currentVect="236" defaultVect="236" id="MTU6_TGIA6" priority="15" usedState="Not Use"/>
+<Item currentVect="237" defaultVect="237" id="MTU6_TGIB6" priority="15" usedState="Not Use"/>
+<Item currentVect="238" defaultVect="238" id="MTU6_TGIC6" priority="15" usedState="Not Use"/>
+<Item currentVect="239" defaultVect="239" id="MTU6_TGID6" priority="15" usedState="Not Use"/>
+<Item currentVect="240" defaultVect="240" id="MTU6_TCIV6" priority="15" usedState="Not Use"/>
+<Item currentVect="241" defaultVect="241" id="MTU7_TGIA7" priority="15" usedState="Not Use"/>
+<Item currentVect="242" defaultVect="242" id="MTU7_TGIB7" priority="15" usedState="Not Use"/>
+<Item currentVect="243" defaultVect="243" id="MTU7_TGIC7" priority="15" usedState="Not Use"/>
+<Item currentVect="244" defaultVect="244" id="MTU7_TGID7" priority="15" usedState="Not Use"/>
+<Item currentVect="245" defaultVect="245" id="MTU7_TCIV7" priority="15" usedState="Not Use"/>
+<Item currentVect="246" defaultVect="246" id="MTU8_TGIA8" priority="15" usedState="Not Use"/>
+<Item currentVect="247" defaultVect="247" id="MTU8_TGIB8" priority="15" usedState="Not Use"/>
+<Item currentVect="248" defaultVect="248" id="MTU8_TGIC8" priority="15" usedState="Not Use"/>
+<Item currentVect="249" defaultVect="249" id="MTU8_TGID8" priority="15" usedState="Not Use"/>
+<Item currentVect="250" defaultVect="250" id="MTU8_TCIV8" priority="15" usedState="Not Use"/>
+<Item currentVect="251" defaultVect="251" id="EPTPC_IPLS" priority="15" usedState="Not Use"/>
+<Item currentVect="252" defaultVect="252" id="PMGI0_PMGI0I" priority="15" usedState="Not Use"/>
+<Item currentVect="253" defaultVect="253" id="PMGI1_PMGI1I" priority="15" usedState="Not Use"/>
+<Item currentVect="254" id="PERIA_INTA254" priority="15" usedState="Not Use"/>
+<Item currentVect="255" id="PERIA_INTA255" priority="15" usedState="Not Use"/>
+</tool>
+<tool id="SWComponent" version="1.0.0.0">
+<configuration id="cd9c5dcf-9eb1-4458-9c0f-b4dfe68d8930" inuse="true" name="FreeRTOS_Kernel">
+<component description="This component is a part of RTOS Configurator feature that allow user to use the GUI to configure kernel setting of FreeRTOS." detailDescription="" display="FreeRTOS_Kernel" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.freertos.kernel" version="1.0.100">
+<gridItem id="configUSE_PREEMPTION" selectedIndex="1"/>
+<gridItem id="configUSE_IDLE_HOOK" selectedIndex="1"/>
+<gridItem id="configUSE_TICK_HOOK" selectedIndex="1"/>
+<gridItem id="configCPU_CLOCK_HZ" selectedIndex="BSP_ICLK_HZ"/>
+<gridItem id="configPERIPHERAL_CLOCK_HZ" selectedIndex="BSP_PCLKB_HZ"/>
+<gridItem id="configTICK_RATE_HZ" selectedIndex="( TickType_t ) 1000"/>
+<gridItem id="configMINIMAL_STACK_SIZE" selectedIndex="( unsigned short ) 170"/>
+<gridItem id="configTOTAL_HEAP_SIZE_N" selectedIndex="60"/>
+<gridItem id="configTOTAL_HEAP_SIZE" selectedIndex="( size_t ) ( configTOTAL_HEAP_SIZE_N * 1024 )"/>
+<gridItem id="configMAX_TASK_NAME_LEN" selectedIndex="12"/>
+<gridItem id="configUSE_TRACE_FACILITY" selectedIndex="1"/>
+<gridItem id="configUSE_16_BIT_TICKS" selectedIndex="0"/>
+<gridItem id="configIDLE_SHOULD_YIELD" selectedIndex="1"/>
+<gridItem id="configUSE_CO_ROUTINES" selectedIndex="0"/>
+<gridItem id="configUSE_MUTEXES" selectedIndex="1"/>
+<gridItem id="configGENERATE_RUN_TIME_STATS" selectedIndex="0"/>
+<gridItem id="configCHECK_FOR_STACK_OVERFLOW" selectedIndex="2"/>
+<gridItem id="configUSE_RECURSIVE_MUTEXES" selectedIndex="1"/>
+<gridItem id="configQUEUE_REGISTRY_SIZE" selectedIndex="0"/>
+<gridItem id="configUSE_MALLOC_FAILED_HOOK" selectedIndex="1"/>
+<gridItem id="configUSE_APPLICATION_TASK_TAG" selectedIndex="0"/>
+<gridItem id="configUSE_QUEUE_SETS" selectedIndex="1"/>
+<gridItem id="configUSE_COUNTING_SEMAPHORES" selectedIndex="1"/>
+<gridItem id="configMAX_PRIORITIES" selectedIndex="7"/>
+<gridItem id="configMAX_CO_ROUTINE_PRIORITIES" selectedIndex="2"/>
+<gridItem id="configUSE_TIMERS" selectedIndex="1"/>
+<gridItem id="configTIMER_TASK_PRIORITY" selectedIndex="6"/>
+<gridItem id="configTIMER_QUEUE_LENGTH" selectedIndex="5"/>
+<gridItem id="configTIMER_TASK_STACK_DEPTH" selectedIndex="configMINIMAL_STACK_SIZE"/>
+<gridItem id="configKERNEL_INTERRUPT_PRIORITY" selectedIndex="1"/>
+<gridItem id="configMAX_SYSCALL_INTERRUPT_PRIORITY" selectedIndex="4"/>
+<gridItem id="configTICK_VECTOR" selectedIndex="0"/>
+<gridItem id="INCLUDE_vTaskPrioritySet" selectedIndex="1"/>
+<gridItem id="INCLUDE_uxTaskPriorityGet" selectedIndex="1"/>
+<gridItem id="INCLUDE_vTaskDelete" selectedIndex="1"/>
+<gridItem id="INCLUDE_vTaskCleanUpResources" selectedIndex="0"/>
+<gridItem id="INCLUDE_vTaskSuspend" selectedIndex="1"/>
+<gridItem id="INCLUDE_vTaskDelayUntil" selectedIndex="1"/>
+<gridItem id="INCLUDE_vTaskDelay" selectedIndex="1"/>
+<gridItem id="INCLUDE_uxTaskGetStackHighWaterMark" selectedIndex="1"/>
+<gridItem id="INCLUDE_xTaskGetSchedulerState" selectedIndex="1"/>
+<gridItem id="INCLUDE_eTaskGetState" selectedIndex="1"/>
+<gridItem id="INCLUDE_xTimerPendFunctionCall" selectedIndex="1"/>
+<gridItem id="bktPRIMARY_PRIORITY" selectedIndex="( configMAX_PRIORITIES - 3 )"/>
+<gridItem id="bktSECONDARY_PRIORITY" selectedIndex="( configMAX_PRIORITIES - 4 )"/>
+<gridItem id="intqHIGHER_PRIORITY" selectedIndex="( configMAX_PRIORITIES - 3 )"/>
+<gridItem id="configMAC_ADDR0" selectedIndex="0x01"/>
+<gridItem id="configMAC_ADDR1" selectedIndex="0x12"/>
+<gridItem id="configMAC_ADDR2" selectedIndex="0x13"/>
+<gridItem id="configMAC_ADDR3" selectedIndex="0x10"/>
+<gridItem id="configMAC_ADDR4" selectedIndex="0x15"/>
+<gridItem id="configMAC_ADDR5" selectedIndex="0x11"/>
+<gridItem id="configIP_ADDR0" selectedIndex="192"/>
+<gridItem id="configIP_ADDR1" selectedIndex="168"/>
+<gridItem id="configIP_ADDR2" selectedIndex="0"/>
+<gridItem id="configIP_ADDR3" selectedIndex="200"/>
+<gridItem id="configNET_MASK0" selectedIndex="8"/>
+<gridItem id="configNET_MASK1" selectedIndex="8"/>
+<gridItem id="configNET_MASK2" selectedIndex="8"/>
+<gridItem id="configNET_MASK3" selectedIndex="0"/>
+<gridItem id="configUSE_TASK_NOTIFICATIONS" selectedIndex="1"/>
+<gridItem id="configRECORD_STACK_HIGH_ADDRESS" selectedIndex="0"/>
+<gridItem id="configNUM_THREAD_LOCAL_STORAGE_POINTERS" selectedIndex="0"/>
+<gridItem id="configSUPPORT_DYNAMIC_ALLOCATION" selectedIndex="1"/>
+<gridItem id="configSUPPORT_STATIC_ALLOCATION" selectedIndex="0"/>
+</component>
+<source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
+</configuration>
+<configuration id="69122a3f-6cfe-4250-bf8a-c770b6604efd" inuse="true" name="FreeRTOS_Object">
+<allocatable id="OBJECT" name="OBJECT">
+<allocatable id="TASK" name="TASK">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+<allocatable id="QUEUE" name="QUEUE">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+<allocatable id="SEMAPHORE" name="SEMAPHORE">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+<allocatable id="SWTIMER" name="SWTIMER">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+<allocatable id="EVENTGROUP" name="EVENTGROUP">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+<allocatable id="STREAMBUFFER" name="STREAMBUFFER">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+<allocatable id="MESSAGEBUFFER" name="MESSAGEBUFFER">
+<option defaultValue="0" id="LinkNum" value=""/>
+</allocatable>
+</allocatable>
+<component description="This component is a part of RTOS Configurator feature that allow user to use the GUI to create and configure new object of FreeRTOS." detailDescription="" display="FreeRTOS_Object" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.freertos.object" version="1.0.100"/>
+<source description="Code generator for Real-time OS" display="RTOS Configurator" id="com.renesas.smc.tools.swcomponent.rtosconfigurator.source"/>
+</configuration>
+<configuration inuse="true" name="r_bsp">
+<component description="Dependencies : None&#10;The r_bsp package provides a foundation for code to be built on top of. It provides startup code, iodefines, and MCU information for different boards. There are 2 folders that make up the r_bsp package. The 'mcu' folder contains files that are common to a MCU group. These files provide functionality such as easy register access, CPU functions, and a file named 'mcu_info.h' for each MCU group. The 'mcu_info.h' file has information about the MCU on the board and is configured based on the information given in r_bsp_config.h. The information in 'mcu_info.h' is used to help configure Renesas middleware that uses the r_bsp package. The 'board' folder has a folder with startup code for each supported board.  Which MCU and board is chosen is decided by the settings in 'platform.h'. The user can choose which board they are using by uncommenting the include path that applies to their board. For example, if you are using the RSK+RX64M then you would uncomment the #include &quot;./board/generic_rx64m/r_bsp.h&quot; include path. Users are encouraged to add their own boards to the 'board' directory. BSPs are configured by using the r_bsp_config.h file. Each board will have a reference configuration file named r_bsp_config_reference.h. The user should copy this file to their project, rename it to r_bsp_config.h, and use the options inside the file to configure the BSP for their project." detailDescription="Board Support Packages." display="r_bsp" id="r_bsp5.52" version="5.52">
+<gridItem id="BSP_CFG_STARTUP_DISABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_STACK_ENABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USTACK_BYTES" selectedIndex="0x0"/>
+<gridItem id="BSP_CFG_ISTACK_BYTES" selectedIndex="0x400"/>
+<gridItem id="BSP_CFG_HEAP_BYTES" selectedIndex="0x0"/>
+<gridItem id="BSP_CFG_IO_LIB_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_USER_CHARGET_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_CHARGET_FUNCTION" selectedIndex="my_sw_charget_function"/>
+<gridItem id="BSP_CFG_USER_CHARPUT_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_CHARPUT_FUNCTION" selectedIndex="my_sw_charput_function"/>
+<gridItem id="BSP_CFG_RUN_IN_USER_MODE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_1" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_2" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_3" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_4" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ROM_CACHE_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_TRUSTED_MODE_FUNCTION" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_FAW_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ROMCODE_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_CODE_FLASH_BANK_MODE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_CODE_FLASH_START_BANK" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_LOCKING_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_LOCKING_TYPE" selectedIndex="bsp_lock_t"/>
+<gridItem id="BSP_CFG_USER_LOCKING_HW_LOCK_FUNCTION" selectedIndex="my_hw_locking_function"/>
+<gridItem id="BSP_CFG_USER_LOCKING_HW_UNLOCK_FUNCTION" selectedIndex="my_hw_unlocking_function"/>
+<gridItem id="BSP_CFG_USER_LOCKING_SW_LOCK_FUNCTION" selectedIndex="my_sw_locking_function"/>
+<gridItem id="BSP_CFG_USER_LOCKING_SW_UNLOCK_FUNCTION" selectedIndex="my_sw_unlocking_function"/>
+<gridItem id="BSP_CFG_USER_WARM_START_CALLBACK_PRE_INITC_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_WARM_START_PRE_C_FUNCTION" selectedIndex="my_sw_warmstart_prec_function"/>
+<gridItem id="BSP_CFG_USER_WARM_START_CALLBACK_POST_INITC_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_WARM_START_POST_C_FUNCTION" selectedIndex="my_sw_warmstart_postc_function"/>
+<gridItem id="BSP_CFG_PARAM_CHECKING_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_EBMAPCR_1ST_PRIORITY" selectedIndex="0"/>
+<gridItem id="BSP_CFG_EBMAPCR_2ND_PRIORITY" selectedIndex="3"/>
+<gridItem id="BSP_CFG_EBMAPCR_3RD_PRIORITY" selectedIndex="1"/>
+<gridItem id="BSP_CFG_EBMAPCR_4TH_PRIORITY" selectedIndex="2"/>
+<gridItem id="BSP_CFG_EBMAPCR_5TH_PRIORITY" selectedIndex="4"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA0_ENABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA0_ADDR" selectedIndex="0xFFE00000"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA0_SIZE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA0_IF_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA0_OA_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA0_DM_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA1_ENABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA1_ADDR" selectedIndex="0xFFE00000"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA1_SIZE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA1_IF_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA1_OA_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_NONCACHEABLE_AREA1_DM_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_FIT_IPL_MAX" selectedIndex="15"/>
+<gridItem id="BSP_CFG_CLKOUT_OUTPUT" selectedIndex="0"/>
+<gridItem id="BSP_CFG_SWINT_UNIT1_ENABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_SWINT_UNIT2_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_SWINT_TASK_BUFFER_NUMBER" selectedIndex="8"/>
+<gridItem id="BSP_CFG_SWINT_IPR_INITIAL_VALUE" selectedIndex="1"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_byteq">
+<component description="Dependency : r_bsp version(s) 3.10&#10;This module allocates a queue control block in an Open() call to handle indexing for buffers provided by the user application. Additional functions are provided to put and get data from the buffer queue, inspect the number of bytes available or in use, and to flush the queue. There is no limit to the number of queues supported, and queue control blocks can be allocated statically at build time or dynamically at run time." detailDescription="Byte-based circular buffer library." display="r_byteq" id="r_byteq1.80" version="1.80">
+<gridItem id="BYTEQ_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+<gridItem id="BYTEQ_CFG_USE_HEAP_FOR_CTRL_BLKS" selectedIndex="0"/>
+<gridItem id="BYTEQ_CFG_MAX_CTRL_BLKS" selectedIndex="32"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_gpio_rx">
+<component description="Dependency : r_bsp version(s) 5.52&#10;This code implements a General Purpose Input/Output driver. Common features such as reading, writing, and setting the direction of ports and pins is supported. Enabling features such as open-drain outputs and internal pull-ups are also supported." detailDescription="General Purpose Input/Output Driver" display="r_gpio_rx" id="r_gpio_rx3.50" version="3.50">
+<gridItem id="GPIO_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_sci_rx">
+<component description="Dependency : r_bsp version(s) 5.52&#10;Dependency : r_byteq version(s) 1.40, 1.50, 1.60, 1.70, 1.71, 1.80&#10;This module allows any number of SCI channels on the MCU to run in full duplex Asynchronous mode, single master Simple SPI mode, or master Synchronous mode simultaneously. The driver is interrupt driven and non-blocking. Transmit and receive buffer queues are used in Asynchronous mode and their sizes may be configured independently for each channel. Resources for unused channels or modes may be removed via settings in the driver's config.h file." detailDescription="Multi-Channel Multi-Mode SCI Driver." display="r_sci_rx" id="r_sci_rx3.50" version="3.50">
+<gridItem id="SCK0" selectedIndex="0"/>
+<gridItem id="RXD0/SMISO0" selectedIndex="0"/>
+<gridItem id="TXD0/SMOSI0" selectedIndex="0"/>
+<gridItem id="CTS0#/RTS0#/SS0#" selectedIndex="0"/>
+<gridItem id="SCI0" selectedIndex="0"/>
+<gridItem id="SCK1" selectedIndex="0"/>
+<gridItem id="RXD1/SMISO1" selectedIndex="0"/>
+<gridItem id="TXD1/SMOSI1" selectedIndex="0"/>
+<gridItem id="CTS1#/RTS1#/SS1#" selectedIndex="0"/>
+<gridItem id="SCI1" selectedIndex="0"/>
+<gridItem id="SCK2" selectedIndex="0"/>
+<gridItem id="RXD2/SMISO2" selectedIndex="1"/>
+<gridItem id="TXD2/SMOSI2" selectedIndex="1"/>
+<gridItem id="CTS2#/RTS2#/SS2#" selectedIndex="0"/>
+<gridItem id="SCI2" selectedIndex="1"/>
+<gridItem id="SCK3" selectedIndex="0"/>
+<gridItem id="RXD3/SMISO3" selectedIndex="0"/>
+<gridItem id="TXD3/SMOSI3" selectedIndex="0"/>
+<gridItem id="CTS3#/RTS3#/SS3#" selectedIndex="0"/>
+<gridItem id="SCI3" selectedIndex="0"/>
+<gridItem id="SCK4" selectedIndex="0"/>
+<gridItem id="RXD4/SMISO4" selectedIndex="0"/>
+<gridItem id="TXD4/SMOSI4" selectedIndex="0"/>
+<gridItem id="CTS4#/RTS4#/SS4#" selectedIndex="0"/>
+<gridItem id="SCI4" selectedIndex="0"/>
+<gridItem id="SCK5" selectedIndex="0"/>
+<gridItem id="RXD5/SMISO5" selectedIndex="0"/>
+<gridItem id="TXD5/SMOSI5" selectedIndex="0"/>
+<gridItem id="CTS5#/RTS5#/SS5#" selectedIndex="0"/>
+<gridItem id="SCI5" selectedIndex="0"/>
+<gridItem id="SCK6" selectedIndex="0"/>
+<gridItem id="RXD6/SMISO6" selectedIndex="0"/>
+<gridItem id="TXD6/SMOSI6" selectedIndex="0"/>
+<gridItem id="CTS6#/RTS6#/SS6#" selectedIndex="0"/>
+<gridItem id="SCI6" selectedIndex="0"/>
+<gridItem id="SCK7" selectedIndex="0"/>
+<gridItem id="RXD7/SMISO7" selectedIndex="0"/>
+<gridItem id="TXD7/SMOSI7" selectedIndex="0"/>
+<gridItem id="CTS7#/RTS7#/SS7#" selectedIndex="0"/>
+<gridItem id="SCI7" selectedIndex="0"/>
+<gridItem id="SCK8" selectedIndex="0"/>
+<gridItem id="RXD8/SMISO8/SSCL8" selectedIndex="0"/>
+<gridItem id="TXD8/SMOSI8/SSDA8" selectedIndex="0"/>
+<gridItem id="CTS8#/RTS8#/SS8#" selectedIndex="0"/>
+<gridItem id="SCI8" selectedIndex="0"/>
+<gridItem id="SCK9" selectedIndex="0"/>
+<gridItem id="RXD9/SMISO9/SSCL9" selectedIndex="1"/>
+<gridItem id="TXD9/SMOSI9/SSDA9" selectedIndex="1"/>
+<gridItem id="CTS9#/RTS9#/SS9#" selectedIndex="0"/>
+<gridItem id="SCI9" selectedIndex="1"/>
+<gridItem id="SCK10" selectedIndex="0"/>
+<gridItem id="RXD10/SMISO10/SSCL10" selectedIndex="0"/>
+<gridItem id="TXD10/SMOSI10/SSDA10" selectedIndex="0"/>
+<gridItem id="SS10#" selectedIndex="0"/>
+<gridItem id="CTS10#" selectedIndex="0"/>
+<gridItem id="RTS10#" selectedIndex="0"/>
+<gridItem id="SCI10" selectedIndex="0"/>
+<gridItem id="SCK11" selectedIndex="0"/>
+<gridItem id="RXD11/SMISO11" selectedIndex="0"/>
+<gridItem id="TXD11/SMOSI11" selectedIndex="0"/>
+<gridItem id="CTS11#/RTS11#/SS11#" selectedIndex="0"/>
+<gridItem id="SCI11" selectedIndex="0"/>
+<gridItem id="SCK11" selectedIndex="0"/>
+<gridItem id="RXD11/SMISO11/SSCL11" selectedIndex="0"/>
+<gridItem id="TXD11/SMOSI11/SSDA11" selectedIndex="0"/>
+<gridItem id="SS11#" selectedIndex="0"/>
+<gridItem id="CTS11#" selectedIndex="0"/>
+<gridItem id="RTS11#" selectedIndex="0"/>
+<gridItem id="SCI11" selectedIndex="0"/>
+<gridItem id="SCK12" selectedIndex="0"/>
+<gridItem id="RXD12/SMISO12" selectedIndex="0"/>
+<gridItem id="TXD12/SMOSI12" selectedIndex="0"/>
+<gridItem id="CTS12#/RTS12#/SS12#" selectedIndex="0"/>
+<gridItem id="SCI12" selectedIndex="0"/>
+<gridItem id="SCI_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+<gridItem id="SCI_CFG_ASYNC_INCLUDED" selectedIndex="1"/>
+<gridItem id="SCI_CFG_SYNC_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_SSPI_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_DUMMY_TX_BYTE" selectedIndex="0xFF"/>
+<gridItem id="SCI_CFG_CH0_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH1_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH2_INCLUDED" selectedIndex="1"/>
+<gridItem id="SCI_CFG_CH3_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH4_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH5_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH6_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH7_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH8_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH9_INCLUDED" selectedIndex="1"/>
+<gridItem id="SCI_CFG_CH10_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH11_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH12_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH0_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH1_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH2_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH3_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH4_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH5_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH6_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH7_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH8_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH9_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH10_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH11_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH12_TX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH0_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH1_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH2_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH3_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH4_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH5_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH6_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH7_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH8_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH9_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH10_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH11_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_CH12_RX_BUFSIZ" selectedIndex="80"/>
+<gridItem id="SCI_CFG_TEI_INCLUDED" selectedIndex="1"/>
+<gridItem id="SCI_CFG_ERI_TEI_PRIORITY" selectedIndex="3"/>
+<gridItem id="SCI_CFG_CH7_FIFO_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH8_FIFO_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH9_FIFO_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH10_FIFO_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH11_FIFO_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH7_TX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH8_TX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH9_TX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH10_TX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH11_TX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH7_RX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH8_RX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH9_RX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH10_RX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH11_RX_FIFO_THRESH" selectedIndex="8"/>
+<gridItem id="SCI_CFG_CH0_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH1_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH2_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH3_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH4_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH5_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH6_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH7_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH8_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH9_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH10_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_CFG_CH11_DATA_MATCH_INCLUDED" selectedIndex="0"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_dtc_rx">
+<component description="Dependency : r_bsp version(s) 5.52&#10;This driver gives the user an easy API to control the MCU's DTC. DTC module transfers the data corresponding to an interrupt when it signals to DTC. Each module can register its transfer settings with DTC driver such as: interrupt number, destination and source address, data counter, transfer mode (3 modes: normal, repeat, block), enable or disable chain transfer." detailDescription="DTC driver" display="r_dtc_rx" id="r_dtc_rx3.50" version="3.50">
+<gridItem id="DTC_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+<gridItem id="DTC_CFG_DISABLE_ALL_ACT_SOURCE" selectedIndex="1"/>
+<gridItem id="DTC_CFG_SHORT_ADDRESS_MODE" selectedIndex="0"/>
+<gridItem id="DTC_CFG_TRANSFER_DATA_READ_SKIP_EN" selectedIndex="1"/>
+<gridItem id="DTC_CFG_USE_DMAC_FIT_MODULE" selectedIndex="1"/>
+<gridItem id="DTC_CFG_USE_SEQUENCE_TRANSFER" selectedIndex="1"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+</tool>
+</smc>

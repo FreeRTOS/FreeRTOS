@@ -776,8 +776,5 @@
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pki_utils.h">
       <Filter>FreeRTOS+\FreeRTOS-PKCS\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\portable\mbedtls\threading_alt.h">
-      <Filter>FreeRTOS+\FreeRTOS-PKCS\include</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

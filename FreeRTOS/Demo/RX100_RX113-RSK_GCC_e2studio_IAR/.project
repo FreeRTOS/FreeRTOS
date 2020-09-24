@@ -6,7 +6,8 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>com.renesas.cdt.core.genmakebuilder</name>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -19,8 +20,6 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
-		<nature>com.renesas.cdt.core.kpitcnature</nature>
-		<nature>com.renesas.cdt.core.kpitccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>

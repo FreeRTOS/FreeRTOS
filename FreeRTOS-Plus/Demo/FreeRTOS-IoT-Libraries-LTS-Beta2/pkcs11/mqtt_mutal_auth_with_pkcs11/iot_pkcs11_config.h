@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V1.1.4
+ * FreeRTOS V1.4.8
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -25,13 +25,13 @@
 
 
 /**
- * @file aws_pkcs11_config.h
+ * @file iot_pkcs11_config.h
  * @brief PCKS#11 config options.
  */
 
 
-#ifndef _AWS_PKCS11_CONFIG_H_
-#define _AWS_PKCS11_CONFIG_H_
+#ifndef _IOT_PKCS11_CONFIG_H_
+#define _IOT_PKCS11_CONFIG_H_
 
 #include "FreeRTOS.h"
 

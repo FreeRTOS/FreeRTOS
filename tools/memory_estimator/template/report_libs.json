@@ -31,6 +31,10 @@
         {
             "lib_name":"shadow",
             "size_description":"Code Size of AWS IoT Device Shadow excluding dependencies (example generated with GCC for ARM Cortex-M)"
+        },
+        {
+            "lib_name":"pkcs11",
+            "size_description":"Code Size of PKCS #11 excluding dependencies (example generated with GCC for ARM Cortex-M)"
         }
     ]
 }

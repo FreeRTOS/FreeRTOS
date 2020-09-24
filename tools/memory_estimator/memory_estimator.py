@@ -55,6 +55,10 @@ __LIB_NAME_TO_SRC_DIRS_MAPPING__ = {
     'ota-http'  :  [
                         os.path.join(__IOT_LIBS_BETA1_DIR__, 'c_sdk', 'aws', 'ota', 'src')
                    ],
+    'pkcs11'  :  [
+                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source'),
+                        os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', 'source', 'portable', 'mbedtls')
+                   ],
     'kernel'     : [
                         os.path.join(__FREERTOS_SRC_DIR__, 'event_groups.c'),
                         os.path.join(__FREERTOS_SRC_DIR__, 'list.c'),
@@ -147,6 +151,10 @@ def generate_makefile(freertos_lts, optimization, lib_name):
 
     # Add config files dir to include dirs list.
     include_dirs.append(os.path.join(__THIS_FILE_PATH__, 'config_files'))
+
+    # Add PKCS #11 include path for mbed TLS dependency.
+    if 'pkcs' in lib_name:
+        include_dirs.append(os.path.join(__IOT_LIBS_BETA2_DIR__, 'pkcs11', 'FreeRTOS-PKCS', '3rdparty', 'mbedtls', 'include'))
 
     # Generate source files list.
     if lib_name in __LIB_NAME_TO_SRC_DIRS_MAPPING__:

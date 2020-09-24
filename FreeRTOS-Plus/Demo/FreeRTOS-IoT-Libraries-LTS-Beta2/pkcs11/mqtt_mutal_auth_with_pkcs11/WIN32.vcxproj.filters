@@ -71,17 +71,17 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src">
       <UniqueIdentifier>{6a35782c-bc09-42d5-a850-98bcb668a4dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FreeRTOS+\mbedtls_utils">
-      <UniqueIdentifier>{37f68b75-28a7-4456-a554-422056841a98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\pkcs11">
-      <UniqueIdentifier>{ddaf9df2-d1b8-4486-a467-713f3d844435}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\pkcs11\include">
-      <UniqueIdentifier>{4e6fba7d-0003-4e39-8e74-ad58d49c84b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FreeRTOS+\pkcs11">
       <UniqueIdentifier>{9f3039f1-dee0-4b5b-b1e9-a4b9803c8901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS-PKCS">
+      <UniqueIdentifier>{999218ad-7c24-4e43-9fc2-23108073f512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS-PKCS\include">
+      <UniqueIdentifier>{1414401a-5aeb-4055-9725-74964e06b188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FreeRTOS+\mbedtls_utils">
+      <UniqueIdentifier>{37f68b75-28a7-4456-a554-422056841a98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -402,23 +402,23 @@
     </ClCompile>
     <ClCompile Include="main.c" />
     <ClCompile Include="..\..\mqtt\common\demo_logging.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\iot_pkcs11.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\iot_pki_utils.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\portable\mbedtls\iot_pkcs11_mbedtls.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\portable\windows\iot_pkcs11_pal.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\tls_freertos_pkcs11.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\src\freertos_sockets_wrapper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\iot_pkcs11.c">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\iot_pki_utils.c">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\portable\mbedtls\iot_pkcs11_mbedtls.c">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\portable\windows\iot_pkcs11_pal.c">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -752,15 +752,6 @@
       <Filter>FreeRTOS+\mbedtls_utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\mqtt\common\demo_logging.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pkcs11.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pkcs11_pal.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pki_utils.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\pkcs11\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\Source\pkcs11\pkcs11.h">
       <Filter>FreeRTOS+\pkcs11</Filter>
     </ClInclude>
@@ -775,6 +766,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include\freertos_sockets_wrapper.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pkcs11.h">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pkcs11_pal.h">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pki_utils.h">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\portable\mbedtls\threading_alt.h">
+      <Filter>FreeRTOS+\FreeRTOS-PKCS\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -44,11 +44,11 @@
 #include "logging_levels.h"
 
 /* Logging configuration for the Sockets. */
-#ifndef LIBRARY_LOG_NAME 
-    #define LIBRARY_LOG_NAME    "PkcsTlsTransport"
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME     "PkcsTlsTransport"
 #endif
 #ifndef LIBRARY_LOG_LEVEL
-    #define LIBRARY_LOG_LEVEL                         LOG_ERROR
+    #define LIBRARY_LOG_LEVEL    LOG_ERROR
 #endif
 
 #include "logging_stack.h"

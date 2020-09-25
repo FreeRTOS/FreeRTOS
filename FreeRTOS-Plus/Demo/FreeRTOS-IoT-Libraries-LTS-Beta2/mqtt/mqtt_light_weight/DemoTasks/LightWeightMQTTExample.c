@@ -324,13 +324,7 @@ static uint16_t usUnsubscribePacketIdentifier;
  * @brief Status of latest Subscribe ACK;
  * it is updated every time a Subscribe ACK is processed.
  */
-static bool xGlobalSubAckStatus = false;
-
-/**
- * @brief Topic to subscribe.
- * Used to re-subscribe to topics that failed initial subscription attempts.
- */
-static MQTTSubscribeInfo_t xGlobalSubscribeInfo;
+static bool xGlobalSubAckStatus[ 1 ] = { false };
 
 
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
@@ -733,23 +727,24 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
     size_t xRemainingLength;
     size_t xPacketSize;
     BaseType_t xStatus;
+    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
+
+    /* Some fields not used by this demo so start with everything at 0. */
+    ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
+
+    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
+     * only one topic and uses QoS0. */
+    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
+    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
+    xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
 
     /***
      * For readability, error handling in this function is restricted to the use of
      * asserts().
      ***/
 
-    /* Some fields not used by this demo so start with everything at 0. */
-    ( void ) memset( ( void * ) &xGlobalSubscribeInfo, 0x00, sizeof( MQTTSubscribeInfo_t ) );
-
-    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
-     * only one topic and uses QOS0. */
-    xGlobalSubscribeInfo.qos = MQTTQoS0;
-    xGlobalSubscribeInfo.pTopicFilter = mqttexampleTOPIC;
-    xGlobalSubscribeInfo.topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
-
-    xResult = MQTT_GetSubscribePacketSize( &xGlobalSubscribeInfo,
-                                           sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_GetSubscribePacketSize( xMQTTSubscription,
+                                           sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
                                            &xRemainingLength,
                                            &xPacketSize );
 
@@ -763,8 +758,8 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
     configASSERT( usSubscribePacketIdentifier != 0 );
 
     /* Serialize subscribe into statically allocated ucSharedBuffer. */
-    xResult = MQTT_SerializeSubscribe( &xGlobalSubscribeInfo,
-                                       sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_SerializeSubscribe( xMQTTSubscription,
+                                       sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
                                        usSubscribePacketIdentifier,
                                        xRemainingLength,
                                        &xBuffer );
@@ -817,7 +812,7 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
          * in the event callback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
-        if( xGlobalSubAckStatus == false )
+        if( xGlobalSubAckStatus[ 0 ] == false )
         {
             LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
                        mqttexampleTOPIC ) );
@@ -825,7 +820,7 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
         }
 
         configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( xGlobalSubAckStatus == false ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xGlobalSubAckStatus[ 0 ] == false ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -846,7 +841,7 @@ static void prvMQTTPublishToTopic( Socket_t xMQTTSocket )
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
-    /* This demo uses QOS0. */
+    /* This demo uses QoS0. */
     xMQTTPublishInfo.qos = MQTTQoS0;
     xMQTTPublishInfo.retain = false;
     xMQTTPublishInfo.pTopicName = mqttexampleTOPIC;
@@ -895,9 +890,20 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
     size_t xRemainingLength;
     size_t xPacketSize;
     BaseType_t xStatus;
+    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
 
-    xResult = MQTT_GetUnsubscribePacketSize( &xGlobalSubscribeInfo,
-                                             sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
+    /* Some fields not used by this demo so start with everything at 0. */
+    ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
+
+    /* Subscribe to the mqttexampleTOPIC topic filter. This example subscribes to
+     * only one topic and uses QoS0. */
+    xMQTTSubscription[ 0 ].qos = MQTTQoS0;
+    xMQTTSubscription[ 0 ].pTopicFilter = mqttexampleTOPIC;
+    xMQTTSubscription[ 0 ].topicFilterLength = ( uint16_t ) strlen( mqttexampleTOPIC );
+
+
+    xResult = MQTT_GetUnsubscribePacketSize( xMQTTSubscription,
+                                             sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
                                              &xRemainingLength,
                                              &xPacketSize );
     configASSERT( xResult == MQTTSuccess );
@@ -909,8 +915,8 @@ static void prvMQTTUnsubscribeFromTopic( Socket_t xMQTTSocket )
     /* Make sure the packet id obtained is valid. */
     configASSERT( usUnsubscribePacketIdentifier != 0 );
 
-    xResult = MQTT_SerializeUnsubscribe( &xGlobalSubscribeInfo,
-                                         sizeof( xGlobalSubscribeInfo ) / sizeof( MQTTSubscribeInfo_t ),
+    xResult = MQTT_SerializeUnsubscribe( xMQTTSubscription,
+                                         sizeof( xMQTTSubscription ) / sizeof( MQTTSubscribeInfo_t ),
                                          usUnsubscribePacketIdentifier,
                                          xRemainingLength,
                                          &xBuffer );
@@ -978,7 +984,7 @@ static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
 
             /* Check if recent subscription request has been accepted. xGlobalSubAckStatus is updated
              * in #prvMQTTProcessIncomingPacket to reflect the status of the SUBACK sent by the broker. */
-            if( xGlobalSubAckStatus == true )
+            if( xGlobalSubAckStatus[ 0 ] == true )
             {
                 LogInfo( ( "Subscribed to the topic %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
             }
@@ -1103,7 +1109,7 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
 
             if( xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK )
             {
-                xGlobalSubAckStatus = ( xResult == MQTTSuccess );
+                xGlobalSubAckStatus[ 0 ] = ( xResult == MQTTSuccess );
 
                 /* #MQTTServerRefused is returned when the broker refuses the client
                  * to subscribe a specific topic filter. */

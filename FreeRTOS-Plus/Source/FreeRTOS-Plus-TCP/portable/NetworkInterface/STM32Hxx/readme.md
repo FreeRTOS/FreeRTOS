@@ -8,15 +8,18 @@ Number of DMA descriptors, for transmission and for reception.
 The descriptors for transmission are protected with a counting semaphore.
 By the time that a packet has been sent, the other TX descriptor becomes
 available already.
-The more descriptors, the higher the performance.  But htat also depends on the size
+The number of descriptors has an incluence on the performance.  But that also depends on the size
 of the TCP buffers and TCP window sizes.
+
+When ETH_RX_DESC_CNT is too low, the adapter may miss incoming packets, they will be dropped.
+When ETH_RX_DESC_CNT is low, sending packets becomes slower.
 
 Here are settings give a high performance for iperf3:
 
 ~~~
 /* ########################### Ethernet Configuration ######################### */
 #define ETH_TX_DESC_CNT         14U /* number of Ethernet Tx DMA descriptors */
-#define ETH_RX_DESC_CNT         6U  /* number of Ethernet Rx DMA descriptors */
+#define ETH_RX_DESC_CNT         8U  /* number of Ethernet Rx DMA descriptors */
 ~~~
 
 Two more defines that are needed:
@@ -33,11 +36,39 @@ The following macro's are **not** used by the FreeRTOS driver:
     ...
 
 All memory that is shared between the CPU and the DMA ETH peripheral, should be
-located in special RAM area:
+located in special RAM area called ".ethernet_data". This shall be declared in
+the linker file.
 
-    RAM3 (xrw)      : ORIGIN = 0x24000000, LENGTH = 512K
+It is possible to use the AXI SRAM for this, but RAM{1,2,3} are also connected
+to the Ethernet MAC.
 
-Please make sure that the address and length are correct for your model of STM32H7xx.
+Here is an example of the changes to the linker file:
+
+	AXI_RAM (xrw)   : ORIGIN = 0x24000000, LENGTH = 512K	/* .ethernet_data declared here. */
+	.ethernet_data :
+	{
+		PROVIDE_HIDDEN (__ethernet_data_start = .);
+		KEEP (*(SORT(.ethernet_data.*)))
+		KEEP (*(.ethernet_data*))
+		PROVIDE_HIDDEN (__ethernet_data_end = .);
+	} >AXI_RAM
+
+Here is a table of 3 types of STH32H7 :
+/**
+ * RAM area	H747	H743	H742	Location
+ * ------------------------------------------------
+ * DTCM		128k	128k	128k	0x20000000
+ * AXI-SRAM	511k	511k	384k	0x24000000
+ *
+ * SRAM1	128k	128k	32k		0x30000000
+ * SRAM2	128k	128k	16k		0x30020000
+ * SRAM3	32k		32k	 	-		0x30040000
+ * SRAM4	64k		64k		64k		0x38000000
+ * Backup   SRAM	4k		4k	4k	0x38800000
+ */
+
+
+Please make sure that the addresses and lengths are correct for your model of STM32H7xx.
 If you use a memory that is not supported, it will result in a DMA errors.
 
 In FreeRTOSIPConfig.h :
@@ -57,6 +88,13 @@ It is recommended to use the zero-copy method for both reception and transmissio
 
 The copy-method also works well, may just a little slower.
 
+Checksum cal be calculated in the Ethernet MAC, which is faster than doing manual calculations:
+
+~~~
+	/* The checksums will be checked and calculated by the STM32F4x ETH peripheral. */
+	#define ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM		( 1 )
+	#define ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM		( 1 )
+~~~
 
 The most important DMAC registers, along with their names which are used in the reference manual:
 
@@ -81,7 +119,6 @@ The most important DMAC registers, along with their names which are used in the 
     __IO uint32_t DMACSR;          // ETH_DMACSR        Channel status register
 
 
-As most EMAC's the STM32H7 EMAC is able to put packets in multiple linked DMA segments.
+As most EMAC's, the STM32H7 EMAC is able to put packets in multiple linked DMA segments.
 FreeRTOS+TCP never uses this feature. Each packet is stored in a single buffer called
 `NetworkBufferDescriptor_t`.
-

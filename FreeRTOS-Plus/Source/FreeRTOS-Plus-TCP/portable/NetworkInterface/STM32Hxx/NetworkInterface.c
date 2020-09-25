@@ -105,34 +105,34 @@ static ETH_HandleTypeDef xEthHandle;
 static ETH_TxPacketConfig xTxConfig;
 
 /*
-  About the section ".ram3_data" : the DMA wants the descriptors and buffers allocated in the
+  About the section ".ethernet_data" : the DMA wants the descriptors and buffers allocated in the
   RAM3 memory, which can be added to the .LD file as follows::
 
   RAM3 (xrw)      : ORIGIN = 0x24040000, LENGTH = 0x8000
 
-  .ram3_data :
+  .ethernet_data :
   {
-    PROVIDE_HIDDEN (__ram3_data_start = .);
-    KEEP (*(SORT(.ram3_data.*)))
-    KEEP (*(.ram3_data*))
-    PROVIDE_HIDDEN (__ram3_data_end = .);
+    PROVIDE_HIDDEN (__ethernet_data_start = .);
+    KEEP (*(SORT(.ethernet_data.*)))
+    KEEP (*(.ethernet_data*))
+    PROVIDE_HIDDEN (__ethernet_data_end = .);
   } >RAM3
 
 */
 /* Ethernet Rx DMA Descriptors */
-ETH_DMADescTypeDef DMARxDscrTab[ ETH_RX_DESC_CNT ]    __attribute__( ( section( ".ram3_data" ), aligned( 32 ) ) );
+ETH_DMADescTypeDef DMARxDscrTab[ ETH_RX_DESC_CNT ]    __attribute__( ( section( ".ethernet_data" ), aligned( 32 ) ) );
 
 /* Ethernet Receive Buffer */
 #if( ipconfigZERO_COPY_TX_DRIVER == 0 )
-uint8_t Rx_Buff[ ETH_RX_DESC_CNT ][ ETH_RX_BUF_SIZE ] __attribute__( ( section( ".ram3_data" ), aligned( 32 ) ) );
+uint8_t Rx_Buff[ ETH_RX_DESC_CNT ][ ETH_RX_BUF_SIZE ] __attribute__( ( section( ".ethernet_data" ), aligned( 32 ) ) );
 #endif
 
 /* Ethernet Tx DMA Descriptors */
-ETH_DMADescTypeDef DMATxDscrTab[ ETH_TX_DESC_CNT ]    __attribute__( ( section( ".ram3_data" ), aligned( 32 ) ) );
+ETH_DMADescTypeDef DMATxDscrTab[ ETH_TX_DESC_CNT ]    __attribute__( ( section( ".ethernet_data" ), aligned( 32 ) ) );
 
 /* Ethernet Transmit Buffer */
 #if( ipconfigZERO_COPY_TX_DRIVER == 0 )
-	uint8_t Tx_Buff[ ETH_TX_DESC_CNT ][ ETH_TX_BUF_SIZE ]                __attribute__( ( section( ".ram3_data" ), aligned( 32 ) ) );
+	uint8_t Tx_Buff[ ETH_TX_DESC_CNT ][ ETH_TX_BUF_SIZE ]                __attribute__( ( section( ".ethernet_data" ), aligned( 32 ) ) );
 #endif
 
 /* This function binds PHY IO functions, then inits and configures */
@@ -760,7 +760,7 @@ void HAL_ETH_DMAErrorCallback( ETH_HandleTypeDef *heth )
 
 uint8_t ucNetworkPackets[ ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS * ETH_RX_BUF_SIZE ]
 #if( ipconfigZERO_COPY_RX_DRIVER != 0 || ipconfigZERO_COPY_TX_DRIVER != 0 )
-	__attribute__( ( section(".ram3_data" ) ) )
+	__attribute__( ( section(".ethernet_data" ) ) )
 #endif	/* ( ipconfigZERO_COPY_RX_DRIVER != 0 || ipconfigZERO_COPY_TX_DRIVER != 0 ) */
 	__attribute__( ( aligned( 32 ) ) );
 

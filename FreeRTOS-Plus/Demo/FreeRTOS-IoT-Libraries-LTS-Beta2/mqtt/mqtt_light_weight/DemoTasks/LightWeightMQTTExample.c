@@ -468,7 +468,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Close the network connection.  */
         prvGracefulShutDown( xMQTTSocket );
 
-        /* Reset SUBACK status for each topic iflter after completion of subscription request cycle. */
+        /* Reset SUBACK status for each topic filter after completion of subscription request cycle. */
         for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {
             xTopicFilterContext[ ulTopicCount ].xSubAckSuccess = false;
@@ -873,15 +873,21 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     configASSERT( pxPacketInfo != NULL );
     configASSERT( pxPacketInfo->type == MQTT_PACKET_TYPE_SUBACK );
     configASSERT( pxPacketInfo->pRemainingData != NULL );
+
+    /* A SUBACK must have a remaining length of at least 3 to accommodate the
+     * packet identifier and at least 1 return code. */
     configASSERT( pxPacketInfo->remainingLength >= 3U );
 
+    /* According to the MQTT 3.1.1 protocol specification, the "Remaining Length" field is a
+     * length of the variable header (2 bytes) plus the length of the payload.
+     * Therefore, we add 2 positions for the starting address of the payload, and
+     * subtract 2 bytes from the remaining length for the length of the payload.*/
     pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) );
     ulSize = pxPacketInfo->remainingLength - sizeof( uint16_t );
 
     for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {
-        /* 0x80 denotes that the broker rejected subscription to a topic filter.
-         * Multiply the index by 2 because the status code consists of two bytes. */
+        /* 0x80 denotes that the broker rejected subscription to a topic filter. */
         if( pucPayload[ ulTopicCount ] == 0x80 )
         {
             xTopicFilterContext[ ulTopicCount ].xSubAckSuccess = false;

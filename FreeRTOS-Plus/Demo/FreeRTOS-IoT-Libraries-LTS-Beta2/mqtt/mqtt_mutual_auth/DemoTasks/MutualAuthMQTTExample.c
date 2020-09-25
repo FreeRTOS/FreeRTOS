@@ -461,7 +461,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Close the network connection.  */
         TLS_FreeRTOS_Disconnect( &xNetworkContext );
 
-        /* Reset SUBACK status for each topic iflter after completion of subscription request cycle. */
+        /* Reset SUBACK status for each topic filter after completion of subscription request cycle. */
         for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {
             xTopicFilterContext[ ulTopicCount ].xSubAckStatus = MQTTSubAckFailure;
@@ -603,7 +603,6 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
 
     for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {
-        /* Multiply the index by 2 because the status code consists of two bytes. */
         xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount ];
     }
 }

@@ -58,7 +58,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\common\logging-stack;..\..\mqtt\common;..\..\mqtt\common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include;..\..\..\..\Source\pkcs11;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\mbedtls;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c-sdk\platform\include;..\..\..\..\Source\mbedtls_utils;..\..\..\..\Source\mbedtls\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\Source\FreeRTOS-Plus-Trace\Include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\include;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\BufferManagement;..\..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\Compiler\MSVC;..\..\common\logging-stack;..\..\mqtt\common;..\..\mqtt\common\WinPCap;..\..\..\..\..\FreeRTOS\Source\include;..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\transport\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\mbedtls;..\..\..\..\Source\mbedtls\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c-sdk\platform\include;..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include;..\..\..\..\Source\pkcs11;..\..\..\..\Source\mbedtls_utils;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MBEDTLS_CONFIG_FILE="mbedtls_config.h";WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0500;WINVER=0x400;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -163,10 +163,10 @@
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt_lightweight.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt_state.c" />
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\iot_pkcs11.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\iot_pki_utils.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\portable\mbedtls\iot_pkcs11_mbedtls.c" />
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\portable\windows\iot_pkcs11_pal.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\iot_pkcs11.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\iot_pki_utils.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\portable\mbedtls\iot_pkcs11_mbedtls.c" />
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\portable\windows\iot_pkcs11_pal.c" />
     <ClCompile Include="..\..\..\..\Source\mbedtls\library\aes.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -520,9 +520,9 @@
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt_lightweight.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt_state.h" />
     <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pkcs11.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pkcs11_pal.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\include\iot_pki_utils.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pkcs11.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pkcs11_pal.h" />
+    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\pkcs11\FreeRTOS-PKCS\source\include\iot_pki_utils.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aes.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\aesni.h" />
     <ClInclude Include="..\..\..\..\Source\mbedtls\include\mbedtls\arc4.h" />

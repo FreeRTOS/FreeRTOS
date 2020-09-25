@@ -5,3 +5,6 @@
 	path = FreeRTOS-Plus/Source/mbedtls
 	url = https://github.com/ARMmbed/mbedtls.git
 	branch = mbedtls-2.16.7
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta2/pkcs11/FreeRTOS-PKCS"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-IoT-Libraries-LTS-Beta2/pkcs11/FreeRTOS-PKCS
+	url = https://github.com/FreeRTOS/FreeRTOS-PKCS.git

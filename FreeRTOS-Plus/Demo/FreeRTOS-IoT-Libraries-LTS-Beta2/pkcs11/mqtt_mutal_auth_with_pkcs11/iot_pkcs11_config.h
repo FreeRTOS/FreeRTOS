@@ -23,6 +23,7 @@
  * http://www.FreeRTOS.org
  */
 
+
 /**
  * @file iot_pkcs11_config.h
  * @brief PCKS#11 config options.
@@ -32,6 +33,8 @@
 #ifndef _IOT_PKCS11_CONFIG_H_
 #define _IOT_PKCS11_CONFIG_H_
 
+#include "FreeRTOS.h"
+
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
 /**************************************************/
@@ -39,10 +42,9 @@
 /* Include logging header files and define logging macros in the following order:
  * 1. Include the header file "logging_levels.h".
  * 2. Define the LIBRARY_LOG_NAME and LIBRARY_LOG_LEVEL macros depending on
- * the logging configuration for MQTT.
- * 3. Include the header file "logging_stack.h", if logging is enabled for MQTT.
+ * the logging configuration for PKCS #11.
+ * 3. Include the header file "logging_stack.h", if logging is enabled for PKCS #11.
  */
-
 #include "logging_levels.h"
 
 /* Logging configuration for the PKCS #11 library. */
@@ -55,6 +57,26 @@
 #endif
 
 #include "logging_stack.h"
+
+/**
+ * @brief Malloc API used by iot_pkcs11.h
+ */
+#define PKCS11_MALLOC                                      pvPortMalloc
+
+/**
+ * @brief Free API used by iot_pkcs11.h
+ */
+#define PKCS11_FREE                                        vPortFree
+
+/**
+ * @brief ESP32 NVS Partition where PKCS #11 data is stored
+ */
+#define pkcs11configSTORAGE_PARTITION                      "storage"
+
+/**
+ * @brief ESP32 NVS namespace for PKCS #11 data
+ */
+#define pkcs11configSTORAGE_NS                             "creds"
 
 /**
  * @brief PKCS #11 default user PIN.
@@ -74,19 +96,19 @@
  * @brief Maximum length (in characters) for a PKCS #11 CKA_LABEL
  * attribute.
  */
-#define pkcs11configMAX_LABEL_LENGTH                       32
+#define pkcs11configMAX_LABEL_LENGTH                       32UL
 
 /**
  * @brief Maximum number of token objects that can be stored
  * by the PKCS #11 module.
  */
-#define pkcs11configMAX_NUM_OBJECTS                        6
+#define pkcs11configMAX_NUM_OBJECTS                        6UL
 
 /**
  * @brief Maximum number of sessions that can be stored
  * by the PKCS #11 module.
  */
-#define pkcs11configMAX_SESSIONS                           10
+#define pkcs11configMAX_SESSIONS                           10UL
 
 /**
  * @brief Set to 1 if a PAL destroy object is implemented.
@@ -102,7 +124,7 @@
  * If set to 0, OTA code signing certificate is built in via
  * aws_ota_codesigner_certificate.h.
  */
-#define pkcs11configOTA_SUPPORTED                          0
+#define pkcs11configOTA_SUPPORTED                          1
 
 /**
  * @brief Set to 1 if PAL supports storage for JITP certificate,
@@ -119,28 +141,28 @@
  * Private key for connection to AWS IoT endpoint.  The corresponding
  * public key should be registered with the AWS IoT endpoint.
  */
-#define pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS       "Device Priv TLS Key"
+#define pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS       ( "Device Priv TLS Key" )
 
 /**
  * @brief The PKCS #11 label for device public key.
  *
  * The public key corresponding to pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS.
  */
-#define pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS        "Device Pub TLS Key"
+#define pkcs11configLABEL_DEVICE_PUBLIC_KEY_FOR_TLS        ( "Device Pub TLS Key" )
 
 /**
  * @brief The PKCS #11 label for the device certificate.
  *
  * Device certificate corresponding to pkcs11configLABEL_DEVICE_PRIVATE_KEY_FOR_TLS.
  */
-#define pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS       "Device Cert"
+#define pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS       ( "Device Cert" )
 
 /**
  * @brief The PKCS #11 label for the object to be used for code verification.
  *
  * Used by over-the-air update code to verify an incoming signed image.
  */
-#define pkcs11configLABEL_CODE_VERIFICATION_KEY            "Code Verify Key"
+#define pkcs11configLABEL_CODE_VERIFICATION_KEY            ( "Code Verify Key" )
 
 /**
  * @brief The PKCS #11 label for Just-In-Time-Provisioning.
@@ -149,13 +171,13 @@
  * (pkcs11configLABEL_DEVICE_CERTIFICATE_FOR_TLS) when using the JITR or
  * JITP flow.
  */
-#define pkcs11configLABEL_JITP_CERTIFICATE                 "JITP Cert"
+#define pkcs11configLABEL_JITP_CERTIFICATE                 ( "JITP Cert" )
 
 /**
  * @brief The PKCS #11 label for the AWS Trusted Root Certificate.
  *
  * @see aws_default_root_certificates.h
  */
-#define pkcs11configLABEL_ROOT_CERTIFICATE                 "Root Cert"
+#define pkcs11configLABEL_ROOT_CERTIFICATE                 ( "Root Cert" )
 
 #endif /* _AWS_PKCS11_CONFIG_H_ include guard. */

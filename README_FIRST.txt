@@ -41,6 +41,7 @@ located in sub-directories of the following top-level directories:
   Demos using the refactored MQTT library:
   + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta2/mqtt/mqtt_plain_text
   + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta2/mqtt/mqtt_light_weight
+  + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta2/pkcs11/mqtt_mutal_auth_with_pkcs11
 
   Demos not yet updated to the refactored MQTT library:
   + /FreeRTOS-Plus/Demo/FreeRTOS-IoT-Libraries-LTS-Beta1/mqtt

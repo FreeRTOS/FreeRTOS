@@ -867,6 +867,7 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
 {
     uint8_t * pucPayload = NULL;
     uint32_t ulTopicCount = 0U;
+    size_t ulSize = 0U;
 
     /* Check if the pxPacketInfo contains a valid SUBACK packet. */
     configASSERT( pxPacketInfo != NULL );
@@ -875,8 +876,9 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     configASSERT( pxPacketInfo->remainingLength >= 3U );
 
     pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) );
+    ulSize = pxPacketInfo->remainingLength - sizeof( uint16_t );
 
-    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
+    for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {
         /* 0x80 denotes that the broker rejected subscription to a topic filter.
          * Multiply the index by 2 because the status code consists of two bytes. */

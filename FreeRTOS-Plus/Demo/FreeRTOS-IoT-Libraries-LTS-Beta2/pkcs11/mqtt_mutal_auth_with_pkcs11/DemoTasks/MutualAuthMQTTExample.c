@@ -232,14 +232,11 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo );
  *
  * @param[in] pxMQTTContext MQTT context pointer.
  * @param[in] pxPacketInfo Packet Info pointer for the incoming packet.
- * @param[in] usPacketIdentifier Packet identifier of the incoming packet.
- * @param[in] pxPublishInfo Deserialized publish info for the incoming packet if
- * there is an incoming PUBLISH; NULL otherwise
+ * @param[in] pxDeserializedInfo Deserialized information from the incoming packet.
  */
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              uint16_t usPacketIdentifier,
-                              MQTTPublishInfo_t * pxPublishInfo );
+                              MQTTDeserializedInfo_t * pxDeserializedInfo );
 
 /**
  * @brief TLS connect to endpoint democonfigMQTT_BROKER_ENDPOINT.
@@ -662,19 +659,18 @@ static void prvMQTTProcessIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
 
 static void prvEventCallback( MQTTContext_t * pxMQTTContext,
                               MQTTPacketInfo_t * pxPacketInfo,
-                              uint16_t usPacketIdentifier,
-                              MQTTPublishInfo_t * pxPublishInfo )
+                              MQTTDeserializedInfo_t * pxDeserializedInfo )
 {
     /* The MQTT context is not used for this demo. */
     ( void ) pxMQTTContext;
 
     if( ( pxPacketInfo->type & 0xF0U ) == MQTT_PACKET_TYPE_PUBLISH )
     {
-        prvMQTTProcessIncomingPublish( pxPublishInfo );
+        prvMQTTProcessIncomingPublish( pxDeserializedInfo->pPublishInfo );
     }
     else
     {
-        prvMQTTProcessResponse( pxPacketInfo, usPacketIdentifier );
+        prvMQTTProcessResponse( pxPacketInfo, pxDeserializedInfo->packetIdentifier );
     }
 }
 

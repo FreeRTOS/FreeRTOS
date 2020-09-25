@@ -355,26 +355,28 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
 static void prvInitializeCommandContext( CommandContext_t * pxContext );
 
 /**
- * @brief Add an operation to the list of pending acks.
+ * @brief Track an operation by adding it to a list, indicating it is anticipating
+ * an acknowledgment.
  *
  * @param[in] usPacketId Packet ID of pending ack.
  * @param[in] pxCommand Copy of command that is expecting an ack.
  *
  * @return `true` if the operation was added; else `false`
  */
-static bool prvAddAck( uint16_t usPacketId,
-                       Command_t * pxCommand );
+static bool prvAddAwaitingOperation( uint16_t usPacketId,
+                                     Command_t * pxCommand );
 
 /**
- * @brief Remove an operation from the list of pending acks and return it.
+ * @brief Retrieve an operation from the list of pending acks, and optionally
+ * remove it.
  *
  * @param[in] usPacketId Packet ID of incoming ack.
  * @param[in] xRemove Flag indicating if the operation should be removed.
  *
  * @return Stored information about the operation awaiting the ack.
  */
-static AckInfo_t prvGetAck( uint16_t usPacketId,
-                            bool xRemove );
+static AckInfo_t prvGetAwaitingOperation( uint16_t usPacketId,
+                                          bool xRemove );
 
 /**
  * @brief Add a subscription to the subscription list.
@@ -422,17 +424,21 @@ static bool prvCreateCommand( CommandType_t xCommandType,
  * @brief Add a command to the global command queue.
  *
  * @param[in] pxCommand Pointer to command to copy to queue.
+ *
+ * @return true if the command was added to the queue, else false.
  */
-static void prvAddCommandToQueue( Command_t * pxCommand );
+static BaseType_t prvAddCommandToQueue( Command_t * pxCommand );
 
 /**
  * @brief Copy an incoming publish to a response queue.
  *
  * @param[in] pxPublishInfo Info of incoming publish.
  * @param[in] pxResponseQueue Queue to which the publish is copied.
+ *
+ * @return true if the publish was copied to the queue, else false.
  */
-static void prvCopyPublishToQueue( MQTTPublishInfo_t * pxPublishInfo,
-                                   QueueHandle_t pxResponseQueue );
+static BaseType_t prvCopyPublishToQueue( MQTTPublishInfo_t * pxPublishInfo,
+                                         QueueHandle_t pxResponseQueue );
 
 /**
  * @brief Process a #Command_t.
@@ -707,8 +713,8 @@ static void prvInitializeCommandContext( CommandContext_t * pxContext )
 
 /*-----------------------------------------------------------*/
 
-static bool prvAddAck( uint16_t usPacketId,
-                       Command_t * pxCommand )
+static bool prvAddAwaitingOperation( uint16_t usPacketId,
+                                     Command_t * pxCommand )
 {
     int32_t i = 0;
     bool xAckAdded = false;
@@ -729,8 +735,8 @@ static bool prvAddAck( uint16_t usPacketId,
 
 /*-----------------------------------------------------------*/
 
-static AckInfo_t prvGetAck( uint16_t usPacketId,
-                            bool xRemove )
+static AckInfo_t prvGetAwaitingOperation( uint16_t usPacketId,
+                                          bool xRemove )
 {
     int32_t i = 0;
     AckInfo_t xFoundAck = { 0 };
@@ -855,15 +861,15 @@ static bool prvCreateCommand( CommandType_t xCommandType,
 
 /*-----------------------------------------------------------*/
 
-static void prvAddCommandToQueue( Command_t * pxCommand )
+static BaseType_t prvAddCommandToQueue( Command_t * pxCommand )
 {
-    xQueueSendToBack( xCommandQueue, pxCommand, mqttexampleDEMO_TICKS_TO_WAIT );
+    return xQueueSendToBack( xCommandQueue, pxCommand, mqttexampleDEMO_TICKS_TO_WAIT );
 }
 
 /*-----------------------------------------------------------*/
 
-static void prvCopyPublishToQueue( MQTTPublishInfo_t * pxPublishInfo,
-                                   QueueHandle_t pxResponseQueue )
+static BaseType_t prvCopyPublishToQueue( MQTTPublishInfo_t * pxPublishInfo,
+                                         QueueHandle_t pxResponseQueue )
 {
     PublishElement_t xCopiedPublish;
 
@@ -878,7 +884,7 @@ static void prvCopyPublishToQueue( MQTTPublishInfo_t * pxPublishInfo,
     memcpy( xCopiedPublish.pcPayloadBuf, pxPublishInfo->pPayload, pxPublishInfo->payloadLength );
 
     /* Add to response queue. */
-    xQueueSendToBack( pxResponseQueue, ( void * ) &xCopiedPublish, mqttexampleDEMO_TICKS_TO_WAIT );
+    return xQueueSendToBack( pxResponseQueue, ( void * ) &xCopiedPublish, mqttexampleDEMO_TICKS_TO_WAIT );
 }
 
 /*-----------------------------------------------------------*/
@@ -980,7 +986,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
 
     if( xAddAckToList )
     {
-        xAckAdded = prvAddAck( usPacketId, pxCommand );
+        xAckAdded = prvAddAwaitingOperation( usPacketId, pxCommand );
 
         /* Set the return status if no memory was available to store the operation
          * information. */
@@ -1014,6 +1020,7 @@ static void prvHandleIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
     bool xIsMatched = false, xRelayedPublish = false;
     MQTTStatus_t xStatus;
     size_t i;
+    BaseType_t xPublishCopied = pdFALSE;
 
     configASSERT( pxPublishInfo != NULL );
 
@@ -1034,7 +1041,9 @@ static void prvHandleIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
                 LogDebug( ( "Adding publish to response queue for %.*s",
                             pxSubscriptions[ i ].usFilterLength,
                             pxSubscriptions[ i ].pcSubscriptionFilter ) );
-                prvCopyPublishToQueue( pxPublishInfo, pxSubscriptions[ i ].pxResponseQueue );
+                xPublishCopied = prvCopyPublishToQueue( pxPublishInfo, pxSubscriptions[ i ].pxResponseQueue );
+                /* Ensure the publish was copied to the queue. */
+                configASSERT( xPublishCopied == pdTRUE );
                 xRelayedPublish = true;
             }
         }
@@ -1049,7 +1058,9 @@ static void prvHandleIncomingPublish( MQTTPublishInfo_t * pxPublishInfo )
         LogWarn( ( "Publish received on topic %.*s with no subscription.",
                    pxPublishInfo->topicNameLength,
                    pxPublishInfo->pTopicName ) );
-        prvCopyPublishToQueue( pxPublishInfo, xDefaultResponseQueue );
+        xPublishCopied = prvCopyPublishToQueue( pxPublishInfo, xDefaultResponseQueue );
+        /* Ensure the publish was copied to the queue. */
+        configASSERT( xPublishCopied == pdTRUE );
     }
 }
 
@@ -1138,7 +1149,7 @@ static void prvEventCallback( MQTTContext_t * pMqttContext,
         {
             case MQTT_PACKET_TYPE_PUBACK:
             case MQTT_PACKET_TYPE_PUBCOMP:
-                xAckInfo = prvGetAck( packetIdentifier, true );
+                xAckInfo = prvGetAwaitingOperation( packetIdentifier, true );
 
                 if( xAckInfo.usPacketId == packetIdentifier )
                 {
@@ -1156,7 +1167,7 @@ static void prvEventCallback( MQTTContext_t * pMqttContext,
 
             case MQTT_PACKET_TYPE_SUBACK:
             case MQTT_PACKET_TYPE_UNSUBACK:
-                xAckInfo = prvGetAck( packetIdentifier, true );
+                xAckInfo = prvGetAwaitingOperation( packetIdentifier, true );
 
                 if( xAckInfo.usPacketId == packetIdentifier )
                 {
@@ -1199,9 +1210,12 @@ static void prvCommandLoop()
     Command_t * pxCommand;
     MQTTStatus_t xStatus = MQTTSuccess;
     static int lNumProcessed = 0;
-    bool xSubscribeProcessed = false;
+    bool xSubscribeProcessed = false, xTerminateReceived = false;
+    BaseType_t xCommandAdded = pdTRUE;
 
-    while( xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT ) )
+    /* Loop while the queue is not empty. If a process loop command exists in
+     * the queue, then it should never become empty as it will be re-added. */
+    while( xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT ) != pdFALSE )
     {
         pxCommand = &xCommand;
 
@@ -1211,7 +1225,9 @@ static void prvCommandLoop()
             if( !xSubscribeProcessed )
             {
                 LogInfo( ( "Publish in queue before subscribe. Sending to back of queue." ) );
-                prvAddCommandToQueue( pxCommand );
+                xCommandAdded = prvAddCommandToQueue( pxCommand );
+                /* Ensure the command was re-added. */
+                configASSERT( xCommand == true );
                 continue;
             }
         }
@@ -1227,7 +1243,9 @@ static void prvCommandLoop()
         {
             /* Add process loop back to end of queue. */
             prvCreateCommand( PROCESSLOOP, NULL, NULL, &xNewCommand );
-            prvAddCommandToQueue( &xNewCommand );
+            xCommandAdded = prvAddCommandToQueue( &xNewCommand );
+            /* Ensure the command was re-added. */
+            configASSERT( xCommandAdded == pdTRUE );
             lNumProcessed--;
         }
 
@@ -1240,11 +1258,16 @@ static void prvCommandLoop()
         /* Terminate the loop if we receive the termination command. */
         if( pxCommand->xCommandType == TERMINATE )
         {
+            xTerminateReceived = true;
             break;
         }
 
         LogDebug( ( "Processed %d non-Process Loop operations.", lNumProcessed ) );
     }
+
+    /* Make sure we exited the loop due to receiving a terminate command and not
+     * due to the queue being empty. */
+    configASSERT( xTerminateReceived == true );
 
     LogInfo( ( "Creating Disconnect operation." ) );
     prvCreateCommand( DISCONNECT, NULL, NULL, &xNewCommand );
@@ -1276,6 +1299,7 @@ void prvPublishTask( void * pvParameters )
     char topicBuf[ mqttexampleDEMO_BUFFER_SIZE ];
     CommandContext_t xContext;
     uint32_t ulNotification = 0U;
+    BaseType_t xCommandAdded = pdTRUE;
     /* The following arrays are used to hold pointers to dynamically allocated memory. */
     char * payloadBuffers[ mqttexamplePUBLISH_COUNT ];
     char * topicBuffers[ mqttexamplePUBLISH_COUNT ];
@@ -1302,7 +1326,9 @@ void prvPublishTask( void * pvParameters )
         xContext.pxPublishInfo = &xPublishInfo;
         LogInfo( ( "Adding publish operation for message %s \non topic %.*s", payloadBuf, xPublishInfo.topicNameLength, xPublishInfo.pTopicName ) );
         prvCreateCommand( PUBLISH, &xContext, prvCommandCallback, &xCommand );
-        prvAddCommandToQueue( &xCommand );
+        xCommandAdded = prvAddCommandToQueue( &xCommand );
+        /* Ensure command was added to queue. */
+        configASSERT( xCommandAdded == pdTRUE );
 
         while( ( ulNotification & ( 1U << i ) ) != ( 1U << i ) )
         {
@@ -1344,7 +1370,9 @@ void prvPublishTask( void * pvParameters )
                    pxPublishes[ i ].topicNameLength,
                    pxPublishes[ i ].pTopicName ) );
         prvCreateCommand( PUBLISH, pxContexts[ i ], prvCommandCallback, &xCommand );
-        prvAddCommandToQueue( &xCommand );
+        xCommandAdded = prvAddCommandToQueue( &xCommand );
+        /* Ensure command was added to queue. */
+        configASSERT( xCommandAdded == pdTRUE );
         LogInfo( ( "Publish operation queued. Sleeping for %d ms.\n", mqttexamplePUBLISH_DELAY_ASYNC_MS ) );
         vTaskDelay( pdMS_TO_TICKS( mqttexamplePUBLISH_DELAY_ASYNC_MS ) );
     }
@@ -1386,6 +1414,7 @@ void prvSubscribeTask( void * pvParameters )
     ( void ) pvParameters;
     MQTTSubscribeInfo_t xSubscribeInfo;
     Command_t xCommand;
+    BaseType_t xCommandAdded = pdTRUE;
     MQTTPublishInfo_t * pxReceivedPublish = NULL;
     static uint16_t usNumReceived = 0;
     uint32_t ulNotification = 0;
@@ -1410,7 +1439,9 @@ void prvSubscribeTask( void * pvParameters )
     xContext.ulSubscriptionCount = 1;
     LogInfo( ( "Adding subscribe operation" ) );
     prvCreateCommand( SUBSCRIBE, &xContext, prvCommandCallback, &xCommand );
-    prvAddCommandToQueue( &xCommand );
+    xCommandAdded = prvAddCommandToQueue( &xCommand );
+    /* Ensure command was added to queue. */
+    configASSERT( xCommandAdded == pdTRUE );
 
     while( ( ulNotification & mqttexampleSUBSCRIBE_COMPLETE_BIT ) != mqttexampleSUBSCRIBE_COMPLETE_BIT )
     {
@@ -1422,6 +1453,11 @@ void prvSubscribeTask( void * pvParameters )
 
     while( 1 )
     {
+        /* It is possible that there is nothing to receive from the queue, and
+         * this is expected, as there are delays between each publish. For this
+         * reason, we keep track of the number of publishes received, and break
+         * from the outermost while loop when we have received all of them. If
+         * the queue is empty, we add a delay before checking it again. */
         while( xQueueReceive( xSubscriberResponseQueue, &xReceivedPublish, mqttexampleDEMO_TICKS_TO_WAIT ) )
         {
             pxReceivedPublish = &( xReceivedPublish.xPublishInfo );
@@ -1453,7 +1489,9 @@ void prvSubscribeTask( void * pvParameters )
     xContext.pxSubscribeInfo = &xSubscribeInfo;
     xContext.ulSubscriptionCount = 1;
     LogInfo( ( "Adding unsubscribe operation\n" ) );
-    prvAddCommandToQueue( &xCommand );
+    xCommandAdded = prvAddCommandToQueue( &xCommand );
+    /* Ensure command was added to queue. */
+    configASSERT( xCommandAdded == pdTRUE );
     LogInfo( ( "Starting wait on operation\n" ) );
 
     while( ( ulNotification & mqttexampleUNSUBSCRIBE_COMPLETE_BIT ) != mqttexampleUNSUBSCRIBE_COMPLETE_BIT )
@@ -1467,7 +1505,9 @@ void prvSubscribeTask( void * pvParameters )
     /* Create command to stop command loop. */
     LogInfo( ( "Beginning command queue termination." ) );
     prvCreateCommand( TERMINATE, NULL, NULL, &xCommand );
-    prvAddCommandToQueue( &xCommand );
+    xCommandAdded = prvAddCommandToQueue( &xCommand );
+    /* Ensure command was added to queue. */
+    configASSERT( xCommandAdded == pdTRUE );
 
     /* Notify main task this task can be deleted. */
     xTaskNotify( xMainTask, mqttexampleSUBSCRIBE_TASK_COMPLETE_BIT, eSetBits );
@@ -1482,33 +1522,35 @@ static void prvMQTTDemoTask( void * pvParameters )
     BaseType_t xResult;
     uint32_t ulNotification = 0;
     Command_t xCommand;
+    MQTTStatus_t xMQTTStatus;
 
     ( void ) pvParameters;
 
     ulGlobalEntryTimeMs = prvGetTimeMs();
 
+    /* Create command queue for processing MQTT commands. */
+    xCommandQueue = xQueueCreate( mqttexampleCOMMAND_QUEUE_SIZE, sizeof( Command_t ) );
+    /* Create response queues for each task. */
+    xSubscriberResponseQueue = xQueueCreate( mqttexamplePUBLISH_QUEUE_SIZE, sizeof( PublishElement_t ) );
+    /* Publish task doesn't receive anything in this demo, so it doesn't need a large queue. */
+    xPublisherResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
+
+    /* In this demo, send publishes on non-subscribed topics to this queue.
+     * Note that this value is not meant to be changed after `prvCommandLoop` has
+     * been called, since access to this variable is not protected by thread
+     * synchronization primitives. */
+    xDefaultResponseQueue = xPublisherResponseQueue;
+
     for( ; ; )
     {
-        /* Create command queue for processing MQTT commands. */
-        xCommandQueue = xQueueCreate( mqttexampleCOMMAND_QUEUE_SIZE, sizeof( Command_t ) );
-        /* Create response queues for each task. */
-        xSubscriberResponseQueue = xQueueCreate( mqttexamplePUBLISH_QUEUE_SIZE, sizeof( PublishElement_t ) );
-        /* Publish task doesn't receive anything in this demo, so it doesn't need a large queue. */
-        xPublisherResponseQueue = xQueueCreate( 1, sizeof( PublishElement_t ) );
-
-        /* In this demo, send publishes on non-subscribed topics to this queue.
-         * Note that this value is not meant to be changed after `prvCommandLoop` has
-         * been called, since access to this variable is not protected by thread
-         * synchronization primitives. */
-        xDefaultResponseQueue = xPublisherResponseQueue;
-
         /* Clear the lists of subscriptions and pending acknowledgments. */
         memset( pxPendingAcks, 0x00, mqttexamplePENDING_ACKS_MAX_SIZE * sizeof( AckInfo_t ) );
         memset( pxSubscriptions, 0x00, mqttexampleSUBSCRIPTIONS_MAX_COUNT * sizeof( SubscriptionElement_t ) );
 
         /* Create inital process loop command. */
         prvCreateCommand( PROCESSLOOP, NULL, NULL, &xCommand );
-        prvAddCommandToQueue( &xCommand );
+        xResult = prvAddCommandToQueue( &xCommand );
+        configASSERT( xResult == pdTRUE );
 
         LogInfo( ( "Creating a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
 
@@ -1519,11 +1561,14 @@ static void prvMQTTDemoTask( void * pvParameters )
                                                      mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS,
                                                      mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS );
         configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
-        ( void ) prvMQTTConnect( &globalMqttContext, &xNetworkContext, true );
+        xMQTTStatus = prvMQTTConnect( &globalMqttContext, &xNetworkContext, true );
+        configASSERT( xMQTTStatus == MQTTSuccess );
         configASSERT( globalMqttContext.connectStatus = MQTTConnected );
 
         xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSubscribeTask );
+        configASSERT( xResult == pdPASS );
         xResult = xTaskCreate( prvPublishTask, "Publisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xPublisherTask );
+        configASSERT( xResult == pdPASS );
 
         LogInfo( ( "Running command loop" ) );
         prvCommandLoop();
@@ -1551,10 +1596,10 @@ static void prvMQTTDemoTask( void * pvParameters )
         vTaskDelete( xPublisherTask );
         LogInfo( ( "Publish task Deleted." ) );
 
-        /* Clean up queues. */
-        vQueueDelete( xCommandQueue );
-        vQueueDelete( xPublisherResponseQueue );
-        vQueueDelete( xSubscriberResponseQueue );
+        /* Reset queues. */
+        xQueueReset( xCommandQueue );
+        xQueueReset( xPublisherResponseQueue );
+        xQueueReset( xSubscriberResponseQueue );
 
         LogInfo( ( "Disconnecting TCP connection." ) );
         xNetworkStatus = Plaintext_FreeRTOS_Disconnect( &xNetworkContext );

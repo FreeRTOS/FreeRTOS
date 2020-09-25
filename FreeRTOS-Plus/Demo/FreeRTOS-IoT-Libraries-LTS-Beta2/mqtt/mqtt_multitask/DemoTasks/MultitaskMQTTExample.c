@@ -634,7 +634,7 @@ void vStartSimpleMQTTDemo( void )
                  "MQTTDemo",               /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
-                 tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
+                 tskIDLE_PRIORITY + 1,     /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */
                  &xMainTask );             /* Used to pass out a handle to the created task. */
 }
 /*-----------------------------------------------------------*/
@@ -1210,27 +1210,14 @@ static void prvCommandLoop()
     Command_t * pxCommand;
     MQTTStatus_t xStatus = MQTTSuccess;
     static int lNumProcessed = 0;
-    bool xSubscribeProcessed = false, xTerminateReceived = false;
+    bool xTerminateReceived = false;
     BaseType_t xCommandAdded = pdTRUE;
 
-    /* Loop while the queue is not empty. If a process loop command exists in
-     * the queue, then it should never become empty as it will be re-added. */
+    /* Loop while the queue is not empty. If a process loop command exists in the
+     * queue, then it should never become empty as it will be re-added. */
     while( xQueueReceive( xCommandQueue, &xCommand, mqttexampleDEMO_TICKS_TO_WAIT ) != pdFALSE )
     {
         pxCommand = &xCommand;
-
-        /* This demo requires the subscription to be present before the first publish. */
-        if( pxCommand->xCommandType == PUBLISH )
-        {
-            if( !xSubscribeProcessed )
-            {
-                LogInfo( ( "Publish in queue before subscribe. Sending to back of queue." ) );
-                xCommandAdded = prvAddCommandToQueue( pxCommand );
-                /* Ensure the command was re-added. */
-                configASSERT( xCommand == true );
-                continue;
-            }
-        }
 
         xStatus = prvProcessCommand( pxCommand );
 
@@ -1247,12 +1234,6 @@ static void prvCommandLoop()
             /* Ensure the command was re-added. */
             configASSERT( xCommandAdded == pdTRUE );
             lNumProcessed--;
-        }
-
-        /* Mark subscribed as being processed. */
-        if( pxCommand->xCommandType == SUBSCRIBE )
-        {
-            xSubscribeProcessed = true;
         }
 
         /* Terminate the loop if we receive the termination command. */
@@ -1458,7 +1439,7 @@ void prvSubscribeTask( void * pvParameters )
          * reason, we keep track of the number of publishes received, and break
          * from the outermost while loop when we have received all of them. If
          * the queue is empty, we add a delay before checking it again. */
-        while( xQueueReceive( xSubscriberResponseQueue, &xReceivedPublish, mqttexampleDEMO_TICKS_TO_WAIT ) )
+        while( xQueueReceive( xSubscriberResponseQueue, &xReceivedPublish, mqttexampleDEMO_TICKS_TO_WAIT ) != pdFALSE )
         {
             pxReceivedPublish = &( xReceivedPublish.xPublishInfo );
             pxReceivedPublish->pTopicName = ( const char * ) xReceivedPublish.pcTopicNameBuf;
@@ -1565,7 +1546,9 @@ static void prvMQTTDemoTask( void * pvParameters )
         configASSERT( xMQTTStatus == MQTTSuccess );
         configASSERT( globalMqttContext.connectStatus = MQTTConnected );
 
-        xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xSubscribeTask );
+        /* Give subscriber task higher priority so the subscribe will be processed before the first publish.
+         * This must be less than or equal to the priority of the main task. */
+        xResult = xTaskCreate( prvSubscribeTask, "Subscriber", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY + 1, &xSubscribeTask );
         configASSERT( xResult == pdPASS );
         xResult = xTaskCreate( prvPublishTask, "Publisher", democonfigDEMO_STACKSIZE, NULL, tskIDLE_PRIORITY, &xPublisherTask );
         configASSERT( xResult == pdPASS );

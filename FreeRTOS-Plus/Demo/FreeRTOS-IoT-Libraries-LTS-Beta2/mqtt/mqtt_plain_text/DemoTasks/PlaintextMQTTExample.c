@@ -543,7 +543,7 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {
         /* Multiply the index by 2 because the status code consists of two bytes. */
-        xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount * 2 ];
+        xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount ];
     }
 }
 /*-----------------------------------------------------------*/

@@ -882,7 +882,7 @@ static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
     {
         /* 0x80 denotes that the broker rejected subscription to a topic filter.
          * Multiply the index by 2 because the status code consists of two bytes. */
-        if( pucPayload[ ulTopicCount * 2 ] & 0x80 )
+        if( pucPayload[ ulTopicCount ] == 0x80 )
         {
             xTopicFilterContext[ ulTopicCount ].xSubAckSuccess = false;
         }

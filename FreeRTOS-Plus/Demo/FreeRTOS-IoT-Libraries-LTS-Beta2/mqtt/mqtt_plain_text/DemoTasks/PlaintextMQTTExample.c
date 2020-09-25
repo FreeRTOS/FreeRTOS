@@ -540,9 +540,10 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
      * from the event callback and non-NULL parameters. */
     configASSERT( xResult == MQTTSuccess );
 
-    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
+    for( ulTopicCount = 0; ulTopicCount < ulSize; ulTopicCount++ )
     {
-        xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount ];
+        /* Multiply the index by 2 because the status code consists of two bytes. */
+        xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount * 2 ];
     }
 }
 /*-----------------------------------------------------------*/
@@ -553,7 +554,7 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xRetryParams;
     MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
-    bool xFailedSubscribeToTopic = true;
+    bool xFailedSubscribeToTopic = false;
     uint32_t ulTopicCount = 0U;
 
     /* Some fields not used by this demo so start with everything at 0. */
@@ -615,9 +616,6 @@ static void prvMQTTSubscribeWithBackoffRetries( MQTTContext_t * pxMQTTContext )
                 break;
             }
         }
-
-        /* The broker has successfully acknowledged subscriptions to all topic filters. */
-        xFailedSubscribeToTopic = false;
 
         configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
     } while( ( xFailedSubscribeToTopic == true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );

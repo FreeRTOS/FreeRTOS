@@ -107,6 +107,11 @@
 #define mqttexampleTOPIC                            democonfigCLIENT_IDENTIFIER "/example/topic"
 
 /**
+ * @brief The number of topic filters to subscribe.
+ */
+#define mqttexampleTOPIC_COUNT                      ( 1 )
+
+/**
  * @brief The MQTT message published in this example.
  */
 #define mqttexampleMESSAGE                          "Hello Light Weight MQTT World!"
@@ -217,6 +222,15 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket );
 static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket );
 
 /**
+ * @brief Function to update variable #xTopicFilterContext with status
+ * information from Subscribe ACK. Called by the event callback after processing
+ * an incoming SUBACK packet.
+ *
+ * @param Server response to the subscription request.
+ */
+static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo );
+
+/**
  * @brief  Publishes a message mqttexampleMESSAGE on mqttexampleTOPIC topic.
  *
  * @param xMQTTSocket is a TCP socket that is connected to an MQTT broker to which
@@ -321,10 +335,22 @@ static uint16_t usSubscribePacketIdentifier;
 static uint16_t usUnsubscribePacketIdentifier;
 
 /**
- * @brief Status of latest Subscribe ACK;
- * it is updated every time a Subscribe ACK is processed.
+ * @brief A pair containing a topic filter and its SUBACK status.
  */
-static bool xGlobalSubAckStatus[ 1 ] = { false };
+typedef struct topicFilterContext
+{
+    const char * pcTopicFilter;
+    bool xSubAckSuccess;
+} topicFilterContext_t;
+
+/**
+ * @brief An array containing the context of a SUBACK; the SUBACK status
+ * of a filter is updated when a SUBACK packet is processed.
+ */
+static topicFilterContext_t xTopicFilterContext[ mqttexampleTOPIC_COUNT ] =
+{
+    { mqttexampleTOPIC, false }
+};
 
 
 /** @brief Static buffer used to hold MQTT messages being sent and received. */
@@ -370,7 +396,7 @@ void vStartSimpleMQTTDemo( void )
 static void prvMQTTDemoTask( void * pvParameters )
 {
     Socket_t xMQTTSocket;
-    uint32_t ulPublishCount = 0U;
+    uint32_t ulPublishCount = 0U, ulTopicCount = 0U;
     const uint32_t ulMaxPublishCount = 5UL;
 
     /* Remove compiler warnings about unused parameters. */
@@ -401,7 +427,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvMQTTSubscribeWithBackoffRetries( xMQTTSocket );
 
         /**************************** Publish and Keep Alive Loop. ******************************/
-        /* Publish messages with QOS0, send and process Keep alive messages. */
+        /* Publish messages with QoS0, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
         {
             LogInfo( ( "Publish to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
@@ -441,6 +467,12 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* Close the network connection.  */
         prvGracefulShutDown( xMQTTSocket );
+
+        /* Reset SUBACK status for each topic iflter after completion of subscription request cycle. */
+        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
+        {
+            xTopicFilterContext[ ulTopicCount ].xSubAckSuccess = false;
+        }
 
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the public test mosquitto broker. */
@@ -727,7 +759,7 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
     size_t xRemainingLength;
     size_t xPacketSize;
     BaseType_t xStatus;
-    MQTTSubscribeInfo_t xMQTTSubscription[ 1 ];
+    MQTTSubscribeInfo_t xMQTTSubscription[ mqttexampleTOPIC_COUNT ];
 
     /* Some fields not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTSubscription, 0x00, sizeof( xMQTTSubscription ) );
@@ -778,8 +810,10 @@ static void prvMQTTSubscribeToTopic( Socket_t xMQTTSocket )
 
 static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
 {
+    uint32_t ulTopicCount = 0U;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xRetryParams;
+    bool xFailedSubscribeToTopic = false;
 
     /* Initialize retry attempts and interval. */
     RetryUtils_ParamsReset( &xRetryParams );
@@ -808,19 +842,53 @@ static void prvMQTTSubscribeWithBackoffRetries( Socket_t xMQTTSocket )
          * processing function everywhere to highlight this fact. */
         prvMQTTProcessIncomingPacket( xMQTTSocket );
 
-        /* Check if recent subscription request has been rejected. #xGlobalSubAckStatus is updated
+        /* Check if recent subscription request has been rejected. #xTopicFilterContext is updated
          * in the event callback to reflect the status of the SUBACK sent by the broker. It represents
          * either the QoS level granted by the server upon subscription, or acknowledgement of
          * server rejection of the subscription request. */
-        if( xGlobalSubAckStatus[ 0 ] == false )
+        for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {
-            LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
-                       mqttexampleTOPIC ) );
-            xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xRetryParams );
+            if( xTopicFilterContext[ ulTopicCount ].xSubAckSuccess == false )
+            {
+                LogWarn( ( "Server rejected subscription request. Attempting to re-subscribe to topic %s.",
+                           xTopicFilterContext[ ulTopicCount ].pcTopicFilter ) );
+                xFailedSubscribeToTopic = true;
+                xRetryUtilsStatus = RetryUtils_BackoffAndSleep( &xRetryParams );
+                break;
+            }
         }
 
         configASSERT( xRetryUtilsStatus != RetryUtilsRetriesExhausted );
-    } while( ( xGlobalSubAckStatus[ 0 ] == false ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+    } while( ( xFailedSubscribeToTopic == true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
+}
+/*-----------------------------------------------------------*/
+
+static void prvMQTTUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
+{
+    uint8_t * pucPayload = NULL;
+    uint32_t ulTopicCount = 0U;
+
+    /* Check if the pxPacketInfo contains a valid SUBACK packet. */
+    configASSERT( pxPacketInfo != NULL );
+    configASSERT( pxPacketInfo->type == MQTT_PACKET_TYPE_SUBACK );
+    configASSERT( pxPacketInfo->pRemainingData != NULL );
+    configASSERT( pxPacketInfo->remainingLength >= 3U );
+
+    pucPayload = pxPacketInfo->pRemainingData + ( ( uint16_t ) sizeof( uint16_t ) );
+
+    for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
+    {
+        /* 0x80 denotes that the broker rejected subscription to a topic filter.
+         * Multiply the index by 2 because the status code consists of two bytes. */
+        if( pucPayload[ ulTopicCount * 2 ] & 0x80 )
+        {
+            xTopicFilterContext[ ulTopicCount ].xSubAckSuccess = false;
+        }
+        else
+        {
+            xTopicFilterContext[ ulTopicCount ].xSubAckSuccess = true;
+        }
+    }
 }
 /*-----------------------------------------------------------*/
 
@@ -978,19 +1046,22 @@ static void prvMQTTDisconnect( Socket_t xMQTTSocket )
 static void prvMQTTProcessResponse( MQTTPacketInfo_t * pxIncomingPacket,
                                     uint16_t usPacketId )
 {
+    uint32_t ulTopicCount = 0U;
+
     switch( pxIncomingPacket->type )
     {
         case MQTT_PACKET_TYPE_SUBACK:
 
-            /* Check if recent subscription request has been accepted. xGlobalSubAckStatus is updated
+            /* Check if recent subscription request has been accepted. #xTopicFilterContext is updated
              * in #prvMQTTProcessIncomingPacket to reflect the status of the SUBACK sent by the broker. */
-            if( xGlobalSubAckStatus[ 0 ] == true )
+            for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
             {
-                LogInfo( ( "Subscribed to the topic %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-            }
-            else
-            {
-                LogInfo( ( "Server refused subscription request for the topic %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
+                if( xTopicFilterContext[ ulTopicCount ].xSubAckSuccess != false )
+                {
+                    LogInfo( ( "Subscribed to the topic %s with maximum QoS %u.\r\n",
+                               xTopicFilterContext[ ulTopicCount ].pcTopicFilter,
+                               xTopicFilterContext[ ulTopicCount ].xSubAckSuccess ) );
+                }
             }
 
             /* Make sure ACK packet identifier matches with Request packet identifier. */
@@ -1109,10 +1180,10 @@ static void prvMQTTProcessIncomingPacket( Socket_t xMQTTSocket )
 
             if( xIncomingPacket.type == MQTT_PACKET_TYPE_SUBACK )
             {
-                xGlobalSubAckStatus[ 0 ] = ( xResult == MQTTSuccess );
+                prvMQTTUpdateSubAckStatus( &xIncomingPacket );
 
                 /* #MQTTServerRefused is returned when the broker refuses the client
-                 * to subscribe a specific topic filter. */
+                 * to subscribe to a specific topic filter. */
                 configASSERT( xResult == MQTTSuccess || xResult == MQTTServerRefused );
             }
             else

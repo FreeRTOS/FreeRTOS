@@ -844,9 +844,9 @@ TickType_t uxBlockTime = uxBlockTimeTicks;
 	/* Cap the block time.  The reason for this is explained where
 	ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS is defined (assuming an official
 	FreeRTOSIPConfig.h header file is being used). */
-	if( uxBlockTime > ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ) )
+	if( uxBlockTime > ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS )
 	{
-		uxBlockTime = ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS );
+		uxBlockTime = ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS;
 	}
 
 	/* Obtain a network buffer with the required amount of storage. */
@@ -950,7 +950,7 @@ NetworkBufferDescriptor_t *pxResult;
 		/* The input here is a pointer to a payload buffer.  Subtract
 		the total size of a UDP/IP header plus the size of the header in
 		the network buffer, usually 8 + 2 bytes. */
-		pucBuffer -= ( sizeof( UDPPacket_t ) + ( ( size_t ) ipBUFFER_PADDING ) );
+		pucBuffer -= sizeof( UDPPacket_t ) + ipBUFFER_PADDING;
 
 		/* Here a pointer was placed to the network descriptor,
 		As a pointer is dereferenced, make sure it is well aligned */
@@ -1003,7 +1003,7 @@ BaseType_t xReturn = pdFALSE;
 	}
 	#endif
 	/* Attempt to create the queue used to communicate with the IP task. */
-	xNetworkEventQueue = xQueueCreate( ( UBaseType_t ) ipconfigEVENT_QUEUE_LENGTH, ( UBaseType_t ) sizeof( IPStackEvent_t ) );
+	xNetworkEventQueue = xQueueCreate( ipconfigEVENT_QUEUE_LENGTH, sizeof( IPStackEvent_t ) );
 	configASSERT( xNetworkEventQueue != NULL );
 
 	if( xNetworkEventQueue != NULL )
@@ -1057,9 +1057,9 @@ BaseType_t xReturn = pdFALSE;
 			/* Create the task that processes Ethernet and stack events. */
 			xReturn = xTaskCreate( prvIPTask,
 								   "IP-task",
-								   ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS,
+								   ipconfigIP_TASK_STACK_SIZE_WORDS,
 								   NULL,
-								   ( UBaseType_t )ipconfigIP_TASK_PRIORITY,
+								   ipconfigIP_TASK_PRIORITY,
 								   &( xIPTaskHandle ) );
 		}
 		else
@@ -2564,6 +2564,9 @@ size_t uxDataLengthBytes = uxByteCount;
 void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
 EthernetHeader_t *pxEthernetHeader;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNewBuffer;
@@ -2602,9 +2605,19 @@ EthernetHeader_t *pxEthernetHeader;
 		/* Map the Buffer to Ethernet Header struct for easy access to fields. */
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = &pxEthernetHeader->xSourceAddress;
+		pvCopyDest = &pxEthernetHeader->xDestinationAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, sizeof( pxEthernetHeader->xDestinationAddress ) );
+
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );

@@ -111,7 +111,7 @@
 #define mqttexampleTOPIC                             democonfigCLIENT_IDENTIFIER "/example/topic"
 
 /**
- * @brief The number of topic filters to subscribe to.
+ * @brief The number of topic filters to subscribe.
  */
 #define mqttexampleTOPIC_COUNT                       ( 1 )
 
@@ -376,7 +376,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
         /**************************** Publish and Keep Alive Loop. ******************************/
-        /* Publish messages with QOS0, send and process Keep alive messages. */
+        /* Publish messages with QoS0, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
         {
             LogInfo( ( "Publish to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
@@ -540,7 +540,6 @@ static void prvUpdateSubAckStatus( MQTTPacketInfo_t * pxPacketInfo )
      * from the event callback and non-NULL parameters. */
     configASSERT( xResult == MQTTSuccess );
 
-    /* Demo only subscribes to one topic, so only one status code is returned. */
     for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
     {
         xTopicFilterContext[ ulTopicCount ].xSubAckStatus = pucPayload[ ulTopicCount ];
@@ -635,7 +634,7 @@ static void prvMQTTPublishToTopic( MQTTContext_t * pxMQTTContext )
      * asserts().
      ***/
 
-    /* Some fields not used by this demo so start with everything at 0. */
+    /* Some fields are not used by this demo so start with everything at 0. */
     ( void ) memset( ( void * ) &xMQTTPublishInfo, 0x00, sizeof( xMQTTPublishInfo ) );
 
     /* This demo uses QoS0. */

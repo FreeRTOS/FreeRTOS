@@ -98,7 +98,7 @@ static HANDLE pvProcessHandle;
 static UBaseType_t uxNextPacketNumber;
 static BaseType_t xFirstPacket = 1;
 
-/* Bollean 'xDumpingReady' becomes true once all desired packet have been collected.
+/* Boolean 'xDumpingReady' becomes true once all desired packet have been collected.
 Further packets will be dropped (ignored). */
 static volatile BaseType_t xDumpingReady = pdFALSE;
 

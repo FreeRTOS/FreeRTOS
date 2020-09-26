@@ -54,7 +54,7 @@
 #define BMCR_FULLDPLX           0x0100  /* Full duplex                 */
 #define BMCR_ANRESTART          0x0200  /* Auto negotiation restart    */
 #define BMCR_ISOLATE            0x0400  /* Disconnect DP83840 from MII */
-#define BMCR_PDOWN              0x0800  /* Powerdown the DP83840       */
+#define BMCR_PDOWN              0x0800  /* Power down the DP83840      */
 #define BMCR_ANENABLE           0x1000  /* Enable auto negotiation     */
 #define BMCR_SPEED100           0x2000  /* Select 100Mbps              */
 #define BMCR_LOOPBACK           0x4000  /* TXD loopback bits           */

@@ -453,7 +453,7 @@ void vNetworkInterfaceAllocateRAMToBuffers( NetworkBufferDescriptor_t pxNetworkB
 /***********************************************************************************************************************
  * Function Name: prvLinkStatusChange ()
  * Description  : Function will be called when the Link Status of the phy has changed ( see ether_callback.c )
- * Arguments    : xStatus : true when statyus has become high
+ * Arguments    : xStatus : true when status has become high
  * Return Value : void
  **********************************************************************************************************************/
 void prvLinkStatusChange( BaseType_t xStatus )

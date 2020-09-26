@@ -292,7 +292,7 @@ FreeRTOS_Socket_t const *pxSocket = NULL;
 	}
 	/* In case configASSERT() is not used */
 	( void )xDomain;
-	( void )pxSocket;	/* Was only use fot sizeof. */
+	( void )pxSocket;	/* Was only used for sizeof. */
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
@@ -655,7 +655,7 @@ Socket_t xReturn;
 
 /*
  * FreeRTOS_recvfrom: receive data from a bound socket
- * In this library, the function can only be used with connectionsless sockets
+ * In this library, the function can only be used with connection-less sockets
  * (UDP)
  */
 int32_t FreeRTOS_recvfrom( Socket_t xSocket, void *pvBuffer, size_t uxBufferLength, BaseType_t xFlags, struct freertos_sockaddr *pxSourceAddress, socklen_t *pxSourceAddressLength )
@@ -1211,7 +1211,7 @@ xCloseEvent.pvData = xSocket;
 		}
 		#endif  /* ( ( ipconfigUSE_TCP == 1 ) && ( ipconfigUSE_CALLBACKS == 1 ) ) */
 
-		/* Let the IP task close the socket to keep it synchronised	with the
+		/* Let the IP task close the socket to keep it synchronized	with the
 		packet handling. */
 
 		/* Note when changing the time-out value below, it must be checked who is calling
@@ -1327,7 +1327,7 @@ NetworkBufferDescriptor_t *pxNetworkBuffer;
 	}
 	#endif /* ( ipconfigUSE_TCP == 1 ) && ( ipconfigHAS_DEBUG_PRINTF != 0 ) */
 
-	/* Anf finally, after all resources have been freed, free the socket space */
+	/* And finally, after all resources have been freed, free the socket space */
 	iptraceMEM_STATS_DELETE( pxSocket );
 	vPortFreeSocket( pxSocket );
 
@@ -1681,7 +1681,7 @@ FreeRTOS_Socket_t *pxSocket;
 				xReturn = 0;
 				break;
 
-			case FREERTOS_SO_CLOSE_AFTER_SEND:		/* As soon as the last byte has been transmitted, finalise the connection */
+			case FREERTOS_SO_CLOSE_AFTER_SEND:		/* As soon as the last byte has been transmitted, finalize the connection */
 				{
 					if( pxSocket->ucProtocol != ( uint8_t ) FREERTOS_IPPROTO_TCP )
 					{
@@ -2555,7 +2555,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 					if( pxSocket->u.xTCP.bits.bMallocError != pdFALSE_UNSIGNED )
 					{
 						/* The no-memory error has priority above the non-connected error.
-						Both are fatal and will elad to closing the socket. */
+						Both are fatal and will lead to closing the socket. */
 						xByteCount = -pdFREERTOS_ERRNO_ENOMEM;
 					}
 					else
@@ -3106,7 +3106,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket )
 			pxSocket = ipCAST_PTR_TO_TYPE_PTR( FreeRTOS_Socket_t, listGET_LIST_ITEM_OWNER( pxIterator ) );
 			pxIterator = ( ListItem_t * ) listGET_NEXT( pxIterator );
 
-			/* Sockets with 'tmout == 0' do not need any regular attention. */
+			/* Sockets with 'timeout == 0' do not need any regular attention. */
 			if( pxSocket->u.xTCP.usTimeout == 0U )
 			{
 				continue;
@@ -3864,7 +3864,7 @@ BaseType_t FreeRTOS_udp_rx_size( Socket_t xSocket )
 						else if( ( pxSocket->u.xTCP.bits.bReuseSocket != pdFALSE_UNSIGNED ) && ( pxSocket->u.xTCP.bits.bPassAccept != pdFALSE_UNSIGNED ) )
 						{
 							/* This socket has the re-use flag. After connecting it turns into
-							aconnected socket. Set the READ event, so that accept() will be called. */
+							a connected socket. Set the READ event, so that accept() will be called. */
 							xSocketBits |= ( EventBits_t ) eSELECT_READ;
 						}
 						else if( ( bAccepted != 0 ) && ( FreeRTOS_recvcount( pxSocket ) > 0 ) )

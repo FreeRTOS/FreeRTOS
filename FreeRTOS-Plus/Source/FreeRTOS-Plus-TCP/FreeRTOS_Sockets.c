@@ -839,8 +839,8 @@ TimeOut_t xTimeOut;
 TickType_t xTicksToWait;
 int32_t lReturn = 0;
 FreeRTOS_Socket_t const * pxSocket;
-const size_t uxMaxPayloadLength = ( size_t ) ipMAX_UDP_PAYLOAD_LENGTH;
-const size_t uxPayloadOffset = ( size_t ) ipUDP_PAYLOAD_OFFSET_IPv4;
+const size_t uxMaxPayloadLength = ipMAX_UDP_PAYLOAD_LENGTH;
+const size_t uxPayloadOffset = ipUDP_PAYLOAD_OFFSET_IPv4;
 
 
 	pxSocket = ( FreeRTOS_Socket_t * ) xSocket;
@@ -1450,9 +1450,9 @@ FreeRTOS_Socket_t *pxSocket;
 				comments where ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS is defined
 				in FreeRTOSIPConfig.h (assuming an official configuration file
 				is being used. */
-				if( pxSocket->xSendBlockTime > ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ) )
+				if( pxSocket->xSendBlockTime > ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS )
 				{
-					pxSocket->xSendBlockTime = ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS );
+					pxSocket->xSendBlockTime = ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS;
 				}
 			}
 			else

@@ -642,6 +642,9 @@ uint8_t ucOptionCode;
 uint32_t ulProcessed, ulParameter;
 BaseType_t xReturn = pdFALSE;
 const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct DHCP message type must be present in the options. */
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 	/* Passing the address of a pointer (pucUDPPayload) because FREERTOS_ZERO_COPY is used. */
 	lBytes = FreeRTOS_recvfrom( xDHCPSocket, &pucUDPPayload, 0UL, FREERTOS_ZERO_COPY, NULL, NULL );
@@ -726,9 +729,14 @@ const uint32_t ulMandatoryOptions = 2UL; /* DHCP server address, and the correct
 					just get it once here and use later. */
 					if( uxLength >= sizeof( ulParameter ) )
 					{
-						( void ) memcpy( ( void * ) ( &( ulParameter ) ),
-										 ( const void * ) ( &( pucByte[ uxIndex ] ) ),
-										 ( size_t ) sizeof( ulParameter ) );
+						/*
+						 * Use helper variables for memcpy() to remain
+						 * compliant with MISRA Rule 21.15.  These should be
+						 * optimized away.
+						 */
+						pvCopySource = &pucByte[ uxIndex ];
+						pvCopyDest =  &ulParameter;
+						( void ) memcpy( pvCopyDest, pvCopySource, sizeof( ulParameter ) );
 						/* 'uxIndex' will be increased at the end of this loop. */
 					}
 					else
@@ -876,6 +884,9 @@ DHCPMessage_IPv4_t *pxDHCPMessage;
 size_t uxRequiredBufferSize = sizeof( DHCPMessage_IPv4_t ) + *pxOptionsArraySize;
 const NetworkBufferDescriptor_t *pxNetworkBuffer;
 uint8_t *pucUDPPayloadBuffer;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigDHCP_REGISTER_HOSTNAME == 1 )
 	const char *pucHostName = pcApplicationHostnameHook ();
@@ -931,7 +942,15 @@ uint8_t *pucUDPPayloadBuffer;
 		pucPtr = &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + ( *pxOptionsArraySize - 1U ) ] );
 		pucPtr[ 0U ] = dhcpIPv4_DNS_HOSTNAME_OPTIONS_CODE;
 		pucPtr[ 1U ] = ( uint8_t ) uxNameLength;
-		( void ) memcpy( ( void * ) ( &( pucPtr[ 2U ] ) ), ( const void * ) pucHostName, uxNameLength );
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
+		pvCopySource = pucHostName;
+		pvCopyDest = &pucPtr[ 2U ];
+
+		( void ) memcpy( pvCopyDest, pvCopySource, uxNameLength );
 		pucPtr[ 2U + uxNameLength ] = ( uint8_t ) dhcpOPTION_END_BYTE;
 		*pxOptionsArraySize += ( size_t ) ( 2U + uxNameLength );
 	}
@@ -965,6 +984,9 @@ static const uint8_t ucDHCPRequestOptions[] =
 	dhcpOPTION_END_BYTE
 };
 size_t uxOptionsLength = sizeof( ucDHCPRequestOptions );
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 	pucUDPPayloadBuffer = prvCreatePartDHCPMessage( &xAddress,
 													( BaseType_t ) dhcpREQUEST_OPCODE,
@@ -972,14 +994,19 @@ size_t uxOptionsLength = sizeof( ucDHCPRequestOptions );
 													&( uxOptionsLength ) );
 
 	/* Copy in the IP address being requested. */
-	( void ) memcpy( ( void * ) ( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ] ) ),
-					 ( const void * ) ( &( EP_DHCPData.ulOfferedIPAddress ) ),
-					 sizeof( EP_DHCPData.ulOfferedIPAddress ) );
+	/*
+	 * Use helper variables for memcpy() source & dest to remain
+	 * compliant with MISRA Rule 21.15.  These should be
+	 * optimized away.
+	 */
+	pvCopySource = &EP_DHCPData.ulOfferedIPAddress;
+	pvCopyDest = &pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpREQUESTED_IP_ADDRESS_OFFSET ];
+	( void ) memcpy( pvCopyDest, pvCopySource, sizeof( EP_DHCPData.ulOfferedIPAddress ) );
 
 	/* Copy in the address of the DHCP server being used. */
-	( void ) memcpy( ( void * ) ( &( pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ] ) ),
-					 ( const void * ) ( &( EP_DHCPData.ulDHCPServerAddress ) ),
-					 sizeof( EP_DHCPData.ulDHCPServerAddress ) );
+	pvCopySource = &EP_DHCPData.ulDHCPServerAddress;
+	pvCopyDest = &pucUDPPayloadBuffer[ dhcpFIRST_OPTION_BYTE_OFFSET + dhcpDHCP_SERVER_IP_ADDRESS_OFFSET ];
+	( void ) memcpy( pvCopyDest, pvCopySource, sizeof( EP_DHCPData.ulDHCPServerAddress ) );
 
 	FreeRTOS_debug_printf( ( "vDHCPProcess: reply %lxip\n", FreeRTOS_ntohl( EP_DHCPData.ulOfferedIPAddress ) ) );
 	iptraceSENDING_DHCP_REQUEST();

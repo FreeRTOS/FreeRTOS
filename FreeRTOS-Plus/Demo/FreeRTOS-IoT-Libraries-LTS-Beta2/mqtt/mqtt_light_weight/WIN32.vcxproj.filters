@@ -44,6 +44,9 @@
     <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\include">
       <UniqueIdentifier>{6ad56e6d-c330-4830-8f4b-c75b05dfa866}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeRTOS+\FreeRTOS IoT Libraries\platform">
+      <UniqueIdentifier>{84613aa2-91dc-4e1a-a3b3-823b6d7bf0e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\FreeRTOS\Source\portable\MSVC-MingW\port.c">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt_lightweight.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\mqtt\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\retry_utils\retry_utils_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

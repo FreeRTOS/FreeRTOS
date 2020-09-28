@@ -709,6 +709,9 @@ uint32_t ulFrontSpace, ulSpace, ulSourceAddress, ulWinSize;
 const TCPWindow_t *pxTCPWindow;
 NetworkBufferDescriptor_t *pxNetworkBuffer = pxDescriptor;
 NetworkBufferDescriptor_t xTempBuffer;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 /* For sending, a pseudo network buffer will be used, as explained above. */
 
 	if( pxNetworkBuffer == NULL )
@@ -912,8 +915,15 @@ NetworkBufferDescriptor_t xTempBuffer;
 						 ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ),
 						 sizeof( pxEthernetHeader->xDestinationAddress ) );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* The source MAC addresses is fixed to 'ipLOCAL_MAC_ADDRESS'. */
-		( void ) memcpy( ( void * ) ( &( pxEthernetHeader->xSourceAddress ) ), ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
  
 		#if defined( ipconfigETHERNET_MINIMUM_PACKET_BYTES )
 		{
@@ -967,8 +977,8 @@ static void prvTCPCreateWindow( FreeRTOS_Socket_t *pxSocket )
 	}
 	vTCPWindowCreate(
 		&pxSocket->u.xTCP.xTCPWindow,
-		( ( size_t ) ipconfigTCP_MSS ) * pxSocket->u.xTCP.uxRxWinSize,
-		( ( size_t ) ipconfigTCP_MSS ) * pxSocket->u.xTCP.uxTxWinSize,
+		ipconfigTCP_MSS * pxSocket->u.xTCP.uxRxWinSize,
+		ipconfigTCP_MSS * pxSocket->u.xTCP.uxTxWinSize,
 		pxSocket->u.xTCP.xTCPWindow.rx.ulCurrentSequenceNumber,
 		pxSocket->u.xTCP.xTCPWindow.ulOurSequenceNumber,
 		( uint32_t ) pxSocket->u.xTCP.usInitMSS );
@@ -2335,6 +2345,9 @@ ProtocolHeaders_t *pxProtocolHeaders = ipCAST_PTR_TO_TYPE_PTR( ProtocolHeaders_t
 TCPHeader_t *pxTCPHeader = &pxProtocolHeaders->xTCPHeader;
 const TCPWindow_t *pxTCPWindow = &pxSocket->u.xTCP.xTCPWindow;
 UBaseType_t uxOptionsLength = pxTCPWindow->ucOptionLength;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if(	ipconfigUSE_TCP_WIN == 1 )
 	if( uxOptionsLength != 0U )
@@ -2350,7 +2363,14 @@ UBaseType_t uxOptionsLength = pxTCPWindow->ucOptionLength;
 				FreeRTOS_ntohl( pxTCPWindow->ulOptionsData[ 1 ] ) - pxSocket->u.xTCP.xTCPWindow.rx.ulFirstSequenceNumber,
 				FreeRTOS_ntohl( pxTCPWindow->ulOptionsData[ 2 ] ) - pxSocket->u.xTCP.xTCPWindow.rx.ulFirstSequenceNumber ) );
 		}
-		( void ) memcpy( ( void * ) ( pxTCPHeader->ucOptdata ), ( const void * ) ( pxTCPWindow->ulOptionsData ), ( size_t ) uxOptionsLength );
+		/*
+		 * Use helper variables for memcpy() source & dest to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
+		pvCopySource = pxTCPWindow->ulOptionsData;
+		pvCopyDest = pxTCPHeader->ucOptdata;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) uxOptionsLength );
 
 		/* The header length divided by 4, goes into the higher nibble,
 		effectively a shift-left 2. */
@@ -2723,7 +2743,7 @@ uint32_t ulRxBufferSpace;
 		if( ( ulReceiveLength > 0U ) &&							/* Data was sent to this socket. */
 			( lRxSpace >= lMinLength ) &&						/* There is Rx space for more data. */
 			( pxSocket->u.xTCP.bits.bFinSent == pdFALSE_UNSIGNED ) &&	/* Not in a closure phase. */
-			( xSendLength == ipNUMERIC_CAST( BaseType_t, uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER ) ) && /* No Tx data or options to be sent. */
+			( xSendLength == uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER ) && /* No Tx data or options to be sent. */
 			( pxSocket->u.xTCP.ucTCPState == ( uint8_t ) eESTABLISHED ) &&	/* Connection established. */
 			( pxTCPHeader->ucTCPFlags == tcpTCP_FLAG_ACK ) )		/* There are no other flags than an ACK. */
 		{
@@ -2870,7 +2890,7 @@ UBaseType_t uxIntermediateResult = 0;
 
 	/* Keep track of the highest sequence number that might be expected within
 	this connection. */
-	if( ( ipNUMERIC_CAST( int32_t, ulSequenceNumber + ulReceiveLength - pxTCPWindow->rx.ulHighestSequenceNumber ) ) > 0L )
+	if( ( ulSequenceNumber + ulReceiveLength ) > pxTCPWindow->rx.ulHighestSequenceNumber )
 	{
 		pxTCPWindow->rx.ulHighestSequenceNumber = ulSequenceNumber + ulReceiveLength;
 	}
@@ -3023,7 +3043,7 @@ static BaseType_t prvTCPSendSpecialPacketHelper( NetworkBufferDescriptor_t *pxNe
 	{
 		/* Map the ethernet buffer onto the TCPPacket_t struct for easy access to the fields. */
 		TCPPacket_t *pxTCPPacket = ipCAST_PTR_TO_TYPE_PTR( TCPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
-		const uint32_t ulSendLength = ( uint32_t )
+		const uint32_t ulSendLength =
 			( ipSIZE_OF_IPv4_HEADER + ipSIZE_OF_TCP_HEADER ); /* Plus 0 options. */
 
 		pxTCPPacket->xTCPHeader.ucTCPFlags = ucTCPFlags;
@@ -3235,7 +3255,7 @@ const IPHeader_t *pxIPHeader;
 					/* Update the copy of the TCP header only (skipping eth and IP
 					headers).  It might be used later on, whenever data must be sent
 					to the peer. */
-					const size_t lOffset = ipNUMERIC_CAST( size_t, ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket ) );
+					const size_t lOffset = ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket );
 					( void ) memcpy( ( void * ) ( &( pxSocket->u.xTCP.xPacket.u.ucLastPacket[ lOffset ] ) ),
 									 ( const void * ) ( &( pxNetworkBuffer->pucEthernetBuffer[ lOffset ] ) ),
 									 ipSIZE_OF_TCP_HEADER );

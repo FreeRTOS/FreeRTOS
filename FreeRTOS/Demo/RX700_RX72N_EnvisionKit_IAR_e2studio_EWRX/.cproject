@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug.1633177809">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug.1633177809" moduleId="org.eclipse.cdt.core.settings" name="HardwareDebug">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.iar.cdt.errorParser.com.iar.cdt.errorParser.ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="out" artifactName="${ProjName}" buildArtefactType="com.iar.cdt.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=com.iar.cdt.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug.1633177809" name="HardwareDebug" parent="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug">
+					<folderInfo id="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug.1633177809." name="/" resourcePath="">
+						<toolChain id="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug.toolChain.992874181" name="IAR Toolchain for RX (4.x)" superClass="iar.wtdx.rx_v3.toolchain.project.exe.configuration.debug.toolChain">
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenDevice::deviceSelect.428128631" name="Device" superClass="iar.wtdx.rx_v3.toolchain.option.OGenDevice::deviceSelect" useByScannerDiscovery="false" value="R5F572NN&#9;R5F572NN" valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.General.wtdxToolVersion.1162845106" name="wtd version" superClass="iar.wtdx.rx_v3.toolchain.option.General.wtdxToolVersion" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenDoubleSize::alternatives.629838484" name="Size of type 'double':" superClass="iar.wtdx.rx_v3.toolchain.option.OGenDoubleSize::alternatives" useByScannerDiscovery="false" value="iar.wtdx.rx_v3.toolchain.option.OGenDoubleSize::alternatives.OGenDoubleSize::DoubleSizeType::kDoubleSize64" valueType="enumerated"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenSubnormal::alternatives.2039299384" name="Subnormal numbers" superClass="iar.wtdx.rx_v3.toolchain.option.OGenSubnormal::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenByteOrder::alternatives.851867994" name="Byte order" superClass="iar.wtdx.rx_v3.toolchain.option.OGenByteOrder::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenIntSize::alternatives.55711435" name="Size of type 'int'" superClass="iar.wtdx.rx_v3.toolchain.option.OGenIntSize::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenDataModel::alternatives.331266476" name="Data model" superClass="iar.wtdx.rx_v3.toolchain.option.OGenDataModel::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRopi::alternatives.199360751" name="Code and read-only data" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRopi::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRwpi::alternatives.1253392146" name="Read-write data" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRwpi::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenOutputBinary::alternatives.1530671790" name="Output file" superClass="iar.wtdx.rx_v3.toolchain.option.OGenOutputBinary::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibOutput2::printfList.1608338869" name="Printf formatter" superClass="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibOutput2::printfList" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibInput2::scanfList.113962621" name="Scanf formatter" superClass="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibInput2::scanfList" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OutputFormatter::description.1509246001" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OutputFormatter::description" useByScannerDiscovery="false" value="Automatic choice of formatter, without multibyte support." valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibInput2::multiByteSupport.1237999166" name="Enable multibyte support" superClass="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibInput2::multiByteSupport" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenStackHeap::stackDescriptor.1842168290" name="User mode stack size:" superClass="iar.wtdx.rx_v3.toolchain.option.OGenStackHeap::stackDescriptor" useByScannerDiscovery="false" value="0" valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibOutput2::multiByteSupport.574052600" name="Enable multibyte support" superClass="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::OGLibOutput2::multiByteSupport" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::description.1688471072" name="Description:" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::description" useByScannerDiscovery="false" value="Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod." valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenStackHeap::heapDescriptor.107591406" name="Heap size:" superClass="iar.wtdx.rx_v3.toolchain.option.OGenStackHeap::heapDescriptor" useByScannerDiscovery="false" value="0" valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenStackHeap::iStackDescriptor.1051951949" name="Supervisor mode stack size:" superClass="iar.wtdx.rx_v3.toolchain.option.OGenStackHeap::iStackDescriptor" useByScannerDiscovery="false" value="0x400" valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenUnicore::alternatives.1431885040" name="Suppress the core runtime model attribute" superClass="iar.wtdx.rx_v3.toolchain.option.OGenUnicore::alternatives" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::InputFormatter::description.1670299209" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OGenLibOptions::InputFormatter::description" useByScannerDiscovery="false" value="Automatic choice of formatter, without multibyte support." valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::list.292925029" name="Library:" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::list" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.dGListPath.136837283" name="List files:" superClass="iar.wtdx.rx_v3.toolchain.option.dGListPath" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::configPath.1770573384" name="Configuration file:" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::configPath" useByScannerDiscovery="false" value="$TOOLKIT_DIR$\LIB\dlrxdlln.h" valueType="string"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::rtThreadSupport.400257724" name="Enable thread support in library" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::rtThreadSupport" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::listSlave.933047043" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OGenRuntimeLibrary::listSlave" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::additionalLocale.1254305033" name="Use in addition to the C locale:" superClass="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::additionalLocale" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::localeTags.2141972958" name="Edit..." superClass="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::localeTags" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::localeTagsDisplay.1881058845" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::localeTagsDisplay" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::heapSelection.571053680" name="Heap selection" superClass="iar.wtdx.rx_v3.toolchain.option.OGLibraryOptions2::heapSelection" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dEnable.620946797" name="Enable MISRA-C" superClass="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dEnable" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dMisraVer.410416020" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dMisraVer" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dRules04.1171253715" name="Set Active MISRA-C:2004 Rules" superClass="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dRules04" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dRules98.142933827" name="Set Active MISRA-C:1998 Rules" superClass="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dRules98" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dVerbose.1913832225" name="Log MISRA C-Settings" superClass="iar.wtdx.rx_v3.toolchain.option.OGeneralMisra::dVerbose" useByScannerDiscovery="false"/>
+							<option id="iar.wtdx.rx_v3.toolchain.option.OGenCodeModel::alternatives.1246156112" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OGenCodeModel::alternatives" useByScannerDiscovery="false"/>
+							<targetPlatform id="iar.wtdx.rx_v3.toolchain.targetPlatform.ELF.93742130" isAbstract="false" name="IAR RX Target platform (ELF)" osList="win32,linux" superClass="iar.wtdx.rx_v3.toolchain.targetPlatform.ELF"/>
+							<builder buildPath="${workspace_loc:/{ProjName}}/Debug" id="iar.wtdx.rx_v3.toolchain.builder.1374028651" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" stopOnErr="false" superClass="iar.wtdx.rx_v3.toolchain.builder"/>
+							<tool id="iar.wtdx.rx_v3.toolchain.compiler.1574691892" name="IAR RX C/C++ Compiler" superClass="iar.wtdx.rx_v3.toolchain.compiler">
+								<option defaultValue="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadios.OIccOptimization::kLow" id="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadios.1263175861" name="Level" superClass="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadios" useByScannerDiscovery="false" value="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadios.OIccOptimization::kHigh" valueType="enumerated"/>
+								<option defaultValue="OIccOptimization::kComSubElim,0,1;OIccOptimization::kLoopUnroll,0,1;OIccOptimization::kFuncInline,0,1;OIccOptimization::kCodeMotion,0,1;OIccOptimization::kTBAA,0,1;OIccOptimization::kCrossCall,0,1;OIccOptimization::kClustering,0,1;" id="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dCList.1508767243" name="Enabled transformations:" superClass="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dCList" useByScannerDiscovery="false" value="OIccOptimization::kComSubElim,1,1;OIccOptimization::kLoopUnroll,1,1;OIccOptimization::kFuncInline,1,1;OIccOptimization::kCodeMotion,1,1;OIccOptimization::kTBAA,1,1;OIccOptimization::kCrossCall,0,0;OIccOptimization::kClustering,1,1;" valueType="string"/>
+								<option defaultValue="true" id="iar.wtdx.rx_v3.toolchain.option.OIccDebugInfo::enable.1968321100" name="Generate debug information" superClass="iar.wtdx.rx_v3.toolchain.option.OIccDebugInfo::enable" useByScannerDiscovery="false" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="iar.wtdx.rx_v3.toolchain.option.OCCDefines::dEdit.2050235657" name="Defined symbols: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OCCDefines::dEdit" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__RX"/>
+								</option>
+								<option defaultValue="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadioSlave.OIccOptimization::kLow" id="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadioSlave.1723878160" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadioSlave" useByScannerDiscovery="false" value="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dRadioSlave.OIccOptimization::kHigh" valueType="enumerated"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLibConfigHeader::header.262272132" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLibConfigHeader::header" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccThreadSupport::slave.1105597936" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccThreadSupport::slave" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCompilerMisra::dRules04.1142720261" name="Set Active MISRA-C:2004 Rules" superClass="iar.wtdx.rx_v3.toolchain.option.OCompilerMisra::dRules04" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCompilerMisra::dOverride.335742798" name="Override General MISRA-C Settings" superClass="iar.wtdx.rx_v3.toolchain.option.OCompilerMisra::dOverride" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCompilerMisra::dRules98.515286304" name="Set Active MISRA-C:1998 Rules" superClass="iar.wtdx.rx_v3.toolchain.option.OCompilerMisra::dRules98" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.ICCRX.wtdxToolVersion.1290616159" name="wtd version" superClass="iar.wtdx.rx_v3.toolchain.option.ICCRX.wtdxToolVersion" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLanguage::alternatives.2086832913" name="Language" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLanguage::alternatives" useByScannerDiscovery="false" value="iar.wtdx.rx_v3.toolchain.option.OIccLanguage::alternatives.OIccLanguage::kC" valueType="enumerated"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLangConformance::alternatives.56196140" name="Language conformance" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLangConformance::alternatives" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::alternatives.1060500538" name="C dialect" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::alternatives" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::inlineSemantics.532866857" name="C++ inline semantics" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::inlineSemantics" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::VLA.1996321502" name="Allow VLA" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::VLA" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::reqPrototypes.199586113" name="Require prototypes" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCDialect::reqPrototypes" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCppDialect::staticDestr.1459827081" name="Destroy static objects" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCppDialect::staticDestr" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccSignedChar::alternatives.1233531577" name="Plain 'char' is" superClass="iar.wtdx.rx_v3.toolchain.option.OIccSignedChar::alternatives" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccFloatingPointSemantics::alternatives.1392445010" name="Floating-point semantics" superClass="iar.wtdx.rx_v3.toolchain.option.OIccFloatingPointSemantics::alternatives" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccAlignFunc2::list.566494204" name="Align functions:" superClass="iar.wtdx.rx_v3.toolchain.option.OIccAlignFunc2::list" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccTfu::list.168636018" name="Trigonometric Functions Unit:" superClass="iar.wtdx.rx_v3.toolchain.option.OIccTfu::list" useByScannerDiscovery="false" value="iar.wtdx.rx_v3.toolchain.option.OIccTfu::list.OIccTfu::kTfuNone" valueType="enumerated"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::lockRegisters.1534643037" name="Lock registers" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::lockRegisters" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r8.2129290511" name="R8" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r8" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r9.1853808202" name="R9" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r9" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r10.1531921195" name="R10" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r10" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r11.1089628108" name="R11" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r11" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r12.200408545" name="R12" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r12" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r13.761098917" name="R13" superClass="iar.wtdx.rx_v3.toolchain.option.OIccLockRegisters::r13" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dList.1419588446" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dList" useByScannerDiscovery="false" value="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dList.OIccOptimization::kSpeed" valueType="enumerated"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dCNoSizeConstaints.562562297" name="No size constraints" superClass="iar.wtdx.rx_v3.toolchain.option.OIccOptimization::dCNoSizeConstaints" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCCList::dCheckFile.906537511" name="Output list file" superClass="iar.wtdx.rx_v3.toolchain.option.OCCCList::dCheckFile" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCCList::dCheckAss.404389502" name="Assembler mnemonics" superClass="iar.wtdx.rx_v3.toolchain.option.OCCCList::dCheckAss" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCCList::dCheckMsgs.1597716962" name="Diagnostics" superClass="iar.wtdx.rx_v3.toolchain.option.OCCCList::dCheckMsgs" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCAssList::dCheckFile.1746556850" name="Output assembler file" superClass="iar.wtdx.rx_v3.toolchain.option.OCCAssList::dCheckFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCAssList::dCheckSource.859273694" name="Include source" superClass="iar.wtdx.rx_v3.toolchain.option.OCCAssList::dCheckSource" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCAssList::dCompilerRuntimeInfo.1004616043" name="Include call frame information" superClass="iar.wtdx.rx_v3.toolchain.option.OCCAssList::dCompilerRuntimeInfo" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCIncludePaths2::stdIncCheck.575998058" name="Ignore standard include directories" superClass="iar.wtdx.rx_v3.toolchain.option.OCCIncludePaths2::stdIncCheck" useByScannerDiscovery="false"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="iar.wtdx.rx_v3.toolchain.option.OCCIncludePaths2::incEditWithBrowse.857699934" name="Additional include directories: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OCCIncludePaths2::incEditWithBrowse" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo/Full_Demo/FreeRTOS-Plus-CLI}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo/Full_Demo/Standard_Demo_Tasks/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo/Full_Demo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS_Demo}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_workaround}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_workaround/r_bsp_patch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS/Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/FreeRTOS/Source/portable/IAR/RX700v3_DPFPU}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/frtos_startup}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/frtos_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/frtos_skeleton}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_bsp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_byteq/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_dtc_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_dtc_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/general}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_pincfg}&quot;"/>
+								</option>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCPreInclude::dEditB.1080309869" name="Preinclude file:" superClass="iar.wtdx.rx_v3.toolchain.option.OCCPreInclude::dEditB" useByScannerDiscovery="false" value="" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCPreprocFile::dCheckFile.1843208694" name="Preprocessor output to file" superClass="iar.wtdx.rx_v3.toolchain.option.OCCPreprocFile::dCheckFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCPreprocFile::dCheckComments.616820638" name="Preserve comments" superClass="iar.wtdx.rx_v3.toolchain.option.OCCPreprocFile::dCheckComments" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCPreprocFile::dCheckLine.187348240" name="Generate #line directives" superClass="iar.wtdx.rx_v3.toolchain.option.OCCPreprocFile::dCheckLine" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCRemarks::dCheck.1513464828" name="Enable remarks" superClass="iar.wtdx.rx_v3.toolchain.option.OCCRemarks::dCheck" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCDiagSuppress::dEdit.881517045" name="Suppress these diagnostics:" superClass="iar.wtdx.rx_v3.toolchain.option.OCCDiagSuppress::dEdit" useByScannerDiscovery="false" value="Pa091" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCDiagRemark::dEdit.1545700857" name="Treat these as remarks:" superClass="iar.wtdx.rx_v3.toolchain.option.OCCDiagRemark::dEdit" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCDiagWarning::dEdit.643461114" name="Treat these as warnings:" superClass="iar.wtdx.rx_v3.toolchain.option.OCCDiagWarning::dEdit" useByScannerDiscovery="false" value="Pa045" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCDiagError::dEdit.852922915" name="Treat these as errors:" superClass="iar.wtdx.rx_v3.toolchain.option.OCCDiagError::dEdit" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCDiagWarningsAreErrors::dCheck.856178519" name="Treat all warnings as errors" superClass="iar.wtdx.rx_v3.toolchain.option.OCCDiagWarningsAreErrors::dCheck" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCSourceEncoding::radioSelect.197248186" name="Default source file encoding" superClass="iar.wtdx.rx_v3.toolchain.option.OCCSourceEncoding::radioSelect" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCTextInputEncoding::radioSelect.1464336666" name="Default input file encoding" superClass="iar.wtdx.rx_v3.toolchain.option.OCCTextInputEncoding::radioSelect" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCTextOutputEncoding::radioSelect.377869340" name="Text output file encoding" superClass="iar.wtdx.rx_v3.toolchain.option.OCCTextOutputEncoding::radioSelect" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OCCTextOutputEncoding::useBom.833828560" name="with BOM" superClass="iar.wtdx.rx_v3.toolchain.option.OCCTextOutputEncoding::useBom" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccExtraOptions::enable.1276171615" name="Use command line options" superClass="iar.wtdx.rx_v3.toolchain.option.OIccExtraOptions::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccExtraOptions::cmdLineParts.696590678" name="Command line options:  (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OIccExtraOptions::cmdLineParts" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccByteOrder::descriptor.106132699" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccByteOrder::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCompilerCpuCore::descriptor.795174758" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCompilerCpuCore::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCompilerFpu::descriptor.647676118" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCompilerFpu::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccCompilerPatch::descriptor.143742455" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccCompilerPatch::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccDataModel::descriptor.2049020339" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccDataModel::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccDoubleSize::descriptor.213515244" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccDoubleSize::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccIntSize::descriptor.1735705651" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccIntSize::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccOutputFile::filename.1612325128" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccOutputFile::filename" useByScannerDiscovery="false" value="$FILE_BNAME$.o" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccProcessor::derivative.1399488036" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccProcessor::derivative" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccRopi::enable.269584546" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccRopi::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccRwpi::enable.136563753" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccRwpi::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIccUnicore::enable.1174512373" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIccUnicore::enable" useByScannerDiscovery="false"/>
+								<inputType id="iar.wtdx.rx_v3.toolchain.compiler.c.inputType.555261415" name="IAR C Compiler Input Type (RX)" superClass="iar.wtdx.rx_v3.toolchain.compiler.c.inputType"/>
+							</tool>
+							<tool id="iar.wtdx.rx_v3.toolchain.assembler.71962117" name="IAR RX Assembler" superClass="iar.wtdx.rx_v3.toolchain.assembler">
+								<option defaultValue="true" id="iar.wtdx.rx_v3.toolchain.option.OAsmDebugInfo::enable.538499515" name="Generate debug information" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDebugInfo::enable" useByScannerDiscovery="false" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDefines::symbols.1125548738" name="Defined symbols: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDefines::symbols" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::listFile.1999394455" name="Output list file" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::listFile" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmPreprocOutput::outputToFile.539640705" name="Preprocessor output to file" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmPreprocOutput::outputToFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.ARX.wtdxToolVersion.940752774" name="wtd version" superClass="iar.wtdx.rx_v3.toolchain.option.ARX.wtdxToolVersion" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmCaseSensitivity::enable.1153550563" name="User symbols are case sensitive" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmCaseSensitivity::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmAllowMnemonics::enable.632215248" name="Allow mnemonics in first column" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmAllowMnemonics::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmAllowDirectives::enable.1056766879" name="Allow directives in first column" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmAllowDirectives::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmMacroQuoteChars::list.1701544096" name="Macro quote characters:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmMacroQuoteChars::list" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::noDiag.1065069159" name="Do not include diagnostics" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::noDiag" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::crossRef.160202176" name="Include cross reference" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::crossRef" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::macroDefs.797961145" name="List macro definitions" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::macroDefs" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::macroExpansion.183338819" name="Disable macro expansion" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::macroExpansion" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::assembledOnly.1122437275" name="List only assembled parts" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::assembledOnly" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::truncateMultiline.2100692766" name="Truncate multiline data field" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::truncateMultiline" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmListing::includeHeaderSource.1569714426" name="Include header file source lines" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmListing::includeHeaderSource" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmStdIncludes2::ignore.696553130" name="Ignore standard include directories" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmStdIncludes2::ignore" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmIncludes::dUserIncludesWithBrowse.999524989" name="Additional include directories: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmIncludes::dUserIncludesWithBrowse" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmPreInclude::dEditB.949864569" name="Preinclude file:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmPreInclude::dEditB" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmPreprocOutput::preserveComment.1280359782" name="Preserve comments" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmPreprocOutput::preserveComment" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmPreprocOutput::lineDirective.806095605" name="Generate #line directives" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmPreprocOutput::lineDirective" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDiagRemarks::enable.1354820734" name="Enable remarks" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDiagRemarks::enable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDiagSuppress::idList.1212845270" name="Suppress these diagnostics:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDiagSuppress::idList" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDiagRemark::idList.1292428955" name="Treat these as remarks:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDiagRemark::idList" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDiagWarning::idList.1885695841" name="Treat these as warnings:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDiagWarning::idList" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDiagError::idList.1364569780" name="Treat these as errors:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDiagError::idList" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDiagWarningsAreErrors::enable.556026743" name="Treat all warnings as errors" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDiagWarningsAreErrors::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmMaxNumberErrors::enableLimit.775373428" name="Max number of errors:" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmMaxNumberErrors::enableLimit" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmMaxNumberErrors::limit.889658866" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmMaxNumberErrors::limit" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmExtraOptions::enable.1553697197" name="Use command line options" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmExtraOptions::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmExtraOptions::cmdLineParts.469499578" name="Command line options:  (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmExtraOptions::cmdLineParts" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmByteOrder::descriptor.713386259" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmByteOrder::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmCpuCore::descriptor.1601201110" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmCpuCore::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmCpuFpu::descriptor.359557212" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmCpuFpu::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmCpuPatch::descriptor.676971255" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmCpuPatch::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDataModel::descriptor.932023241" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDataModel::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmDoubleSize::descriptor.2068930025" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmDoubleSize::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmIntSize::descriptor.678472846" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmIntSize::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmOutputFile::fileName.1463582159" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmOutputFile::fileName" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmProcessor::derivative.40860849" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmProcessor::derivative" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OAsmRopi::descriptor.556435458" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OAsmRopi::descriptor" useByScannerDiscovery="false"/>
+								<inputType id="iar.wtdx.rx_v3.toolchain.assembler.inputType.469552395" name="IAR RX Assembler input type (s)" superClass="iar.wtdx.rx_v3.toolchain.assembler.inputType"/>
+							</tool>
+							<tool id="iar.wtdx.rx_v3.toolchain.linker.1297246569" name="IAR RX ILINK Linker" superClass="iar.wtdx.rx_v3.toolchain.linker">
+								<option defaultValue="true" id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dCspyDebugSupportEnable.1693988642" name="Include C-SPY debugging support" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dCspyDebugSupportEnable" useByScannerDiscovery="false" valueType="boolean"/>
+								<option defaultValue="false" id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptInline::dEnableCheck.339436827" name="Inline small routines" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptInline::dEnableCheck" useByScannerDiscovery="false" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkLibInputOutputConf::slave.814245171" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkLibInputOutputConf::slave" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIStackHeap::dUStackSize.1984657109" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIStackHeap::dUStackSize" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIStackHeap::dHeapSize.1814799672" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIStackHeap::dHeapSize" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIStackHeap::dIStackSize.422800766" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIStackHeap::dIStackSize" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkThreadSupport::slave.1940837664" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkThreadSupport::slave" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkLocaleSelections::slave.375187651" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkLocaleSelections::slave" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkHeapSelection::slave.395074291" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkHeapSelection::slave" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.ILINK.wtdxToolVersion.179727615" name="wtd version" superClass="iar.wtdx.rx_v3.toolchain.option.ILINK.wtdxToolVersion" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfOverride.388390302" name="Override default" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfOverride" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfFileName.784582060" name="Edit..." superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfFileName" useByScannerDiscovery="false" value="$TOOLKIT_DIR$\CONFIG\lnkr5f572nn.icf" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfFile.939688485" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dConfigDefines.280029605" name="Configuration file symbol definitions: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dConfigDefines" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dCspyBufferedWrite.1196493414" name="Buffered write" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dCspyBufferedWrite" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dAutoLibUsageEnable.1236906701" name="Automatic runtime library selection" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dAutoLibUsageEnable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dAdditionalLibsWithEdit.609765405" name="Additional libraries: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLibrary::dAdditionalLibsWithEdit" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dOverrideProgramEntryLabel.1132585523" name="Override default program entry" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dOverrideProgramEntryLabel" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dProgramEntryLabel.1745178065" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dProgramEntryLabel" useByScannerDiscovery="false" value="__iar_program_start" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dProgramEntryLabelSelect.1186435214" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dProgramEntryLabelSelect" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dKeepSymbols.1558848723" name="Keep symbols: (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dKeepSymbols" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::file.424854373" name="File:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::file" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::symbol.2112791529" name="Symbol:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::symbol" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::alignment.1675999683" name="Align:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::alignment" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::segment.1102605142" name="Section:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkRawBinaryImage::segment" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptMergeDuplicateSections::dEnableCheck.587376398" name="Merge duplicate sections" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptMergeDuplicateSections::dEnableCheck" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptVFE2::dEnableVFE.522725204" name="Perform C++ Virtual Function Elimination" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptVFE2::dEnableVFE" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptVFE2::dEnableForceVFE.903713581" name="Even if some modules are missing VFE information" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOptVFE2::dEnableForceVFE" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkAdvStackAnalysis::enableCheck.874941542" name="Enable stack usage analysis" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkAdvStackAnalysis::enableCheck" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkAdvStackAnalysis::controlFile.68072093" name="Control file:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkAdvStackAnalysis::controlFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkAdvStackAnalysis::callGraphFile.1250368643" name="Call graph output (XML):" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkAdvStackAnalysis::callGraphFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkMapFile::file.1763883040" name="Generate linker map file" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkMapFile::file" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::file.120420159" name="Generate log file" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::file" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::autoLibSel.1931394231" name="Automatic library selection" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::autoLibSel" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::initialization.1320307182" name="Initialization decisions" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::initialization" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::module.495086430" name="Module selections" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::module" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::redirSymbols.593345580" name="Redirected symbols" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::redirSymbols" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::section.526902001" name="Section selections" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::section" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::stackUsageCallGraph.1492440244" name="Stack usage call graph" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::stackUsageCallGraph" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::unusedFragments.2044732649" name="Unused section fragments" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::unusedFragments" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::veneer.1009503556" name="Veneer statistics" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkLogFile::veneer" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dDefines.1760318242" name="Defined symbols:  (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dDefines" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::enableRemarks.396731937" name="Enable remarks" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::enableRemarks" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::suppressDiagnostics.738873192" name="Suppress these diagnostics:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::suppressDiagnostics" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::treatAsRemarks.673009154" name="Treat these as remarks:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::treatAsRemarks" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::treatAsWarnings.806281884" name="Treat these as warnings:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::treatAsWarnings" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::treatAsErrors.571636024" name="Treat these as errors:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::treatAsErrors" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::warningsAreErrors.1031372218" name="Treat all warnings as errors" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkDiagnostics::warningsAreErrors" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dDoFill.107456241" name="Fill unused code memory" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dDoFill" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dDoCrc.1474225724" name="Generate checksum" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dDoCrc" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dFillerByte.1670722749" name="Fill pattern:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dFillerByte" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dFillerStart.1337210746" name="Start address:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dFillerStart" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dFillerEnd.1636448205" name="End address:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dFillerEnd" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcSize.2142189731" name="Checksum size:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcSize" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkCrcByteOrder::dReverseCheck.1008209995" name="Reverse byte order within word" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkCrcByteOrder::dReverseCheck" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcAlign.1916765352" name="Alignment:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcAlign" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcAlgo2.349053663" name="Algorithm:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcAlgo2" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcFullSize.1598560080" name="Result in full size" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcFullSize" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcPoly.17447848" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcPoly" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcCompl.1893004820" name="Complement:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcCompl" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcBitOrder.120832258" name="Bit order:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcBitOrder" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcInitialValue.528920413" name="Initial value" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcInitialValue" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkCrcUseAsInput::dUseAsInputCheck.1949824963" name="Use as input" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkCrcUseAsInput::dUseAsInputCheck" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcUnitSize.194368455" name="Checksum unit size:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dCrcUnitSize" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkTextInputEncoding::radioSelect.160143165" name="Default input file encoding" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkTextInputEncoding::radioSelect" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkTextOutputEncoding::radioSelect.1389640260" name="Text output file encoding" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkTextOutputEncoding::radioSelect" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkTextOutputEncoding::useBom.100346760" name="With BOM" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkTextOutputEncoding::useBom" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkExtraOptions::enable.1820138417" name="Use command line options" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkExtraOptions::enable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkExtraOptions::cmdLineParts.1010804768" name="Command line options:  (one per line)" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkExtraOptions::cmdLineParts" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dOutputFile.2139627042" name="Output filename:" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dOutputFile" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOutputFile::debugInfoEnable.1558372047" name="Include debug information in output" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkOutputFile::debugInfoEnable" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkHasOptionRom::descriptor.1138712743" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkHasOptionRom::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OIlinkSubnormal::descriptor.2045286647" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OIlinkSubnormal::descriptor" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkInputFilePath::slave.569913606" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::OIlinkInputFilePath::slave" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfFileName_AltDefault.1751962672" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OhIlinkCom::dIcfFileName_AltDefault" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.toolEnable.891066943" name="Generate additional output" superClass="iar.wtdx.rx_v3.toolchain.option.toolEnable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OOCOutputFormat::list.1629128654" name="Output format:" superClass="iar.wtdx.rx_v3.toolchain.option.OOCOutputFormat::list" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OOCCommandLine::producer.747418888" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OOCCommandLine::producer" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OOCOutput::fileName.1798499541" name="" superClass="iar.wtdx.rx_v3.toolchain.option.OOCOutput::fileName" useByScannerDiscovery="false" value="${ProjName}.srec" valueType="string"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.OOCOutput::outputFileOverride.1395126225" name="Override default" superClass="iar.wtdx.rx_v3.toolchain.option.OOCOutput::outputFileOverride" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="iar.wtdx.rx_v3.toolchain.option.additionalLibraries.133745751" name="Additional libraries" superClass="iar.wtdx.rx_v3.toolchain.option.additionalLibraries" useByScannerDiscovery="false"/>
+								<option id="iar.wtdx.rx_v3.toolchain.ILINK.option.cdt.LibPaths.856170713" name="CDT Library paths" superClass="iar.wtdx.rx_v3.toolchain.ILINK.option.cdt.LibPaths" useByScannerDiscovery="false"/>
+								<inputType id="iar.wtdx.rx_v3.toolchain.linker.objectInputType.751532591" name="IAR RX Linker Input Type (o)" superClass="iar.wtdx.rx_v3.toolchain.linker.objectInputType">
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+								</inputType>
+							</tool>
+							<tool id="iar.wtdx.rx_v3.toolchain.archiver.556580324" name="IAR RX Archiver" superClass="iar.wtdx.rx_v3.toolchain.archiver"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="smc_gen/r_dtc_rx/src/r_dtc_rx.c|smc_gen/r_dtc_rx/src/targets/rx72n/r_dtc_rx_target.c|smc_gen/r_pincfg/Pin.h|smc_gen/r_pincfg/Pin.c|FreeRTOS/Source/portable/MemMang/heap_5.c|FreeRTOS/Source/portable/MemMang/heap_3.c|FreeRTOS/Source/portable/MemMang/heap_2.c|FreeRTOS/Source/portable/MemMang/heap_1.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="com.renesas.cdt.managedbuild.core.toolchainInfo"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="RTOSDemo.iar.wtdx.rx_v3.toolchain.project.exe.618814534" name="Executable (IAR)" projectType="iar.wtdx.rx_v3.toolchain.project.exe"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+		<project-mappings>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.asmSource" language="com.iar.cdt.rx.v3.toolchain.ui.asm"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cHeader" language="com.iar.cdt.rx.v3.toolchain.IARc"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cSource" language="com.iar.cdt.rx.v3.toolchain.IARc"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxHeader" language="com.iar.cdt.rx.v3.toolchain.IARcpp"/>
+			<content-type-mapping configuration="" content-type="org.eclipse.cdt.core.cxxSource" language="com.iar.cdt.rx.v3.toolchain.IARcpp"/>
+		</project-mappings>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+</cproject>

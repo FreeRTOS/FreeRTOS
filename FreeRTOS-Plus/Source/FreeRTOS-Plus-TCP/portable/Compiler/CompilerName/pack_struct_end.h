@@ -29,4 +29,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/Embedded_Compiler_Porting.html
  *
  *****************************************************************************/
-; /* FIX ME. Update for the compiler specifier needed at end of a struct declartion to pack the struct. */
+; /* FIX ME. Update for the compiler specifier needed at end of a struct declaration to pack the struct. */

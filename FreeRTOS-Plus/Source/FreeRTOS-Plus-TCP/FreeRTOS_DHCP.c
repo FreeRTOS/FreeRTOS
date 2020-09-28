@@ -627,7 +627,7 @@ static void prvInitialiseDHCP( void )
 	}
 	else
 	{
-		/* There was a problem with the randomiser. */
+		/* There was a problem with the randomizer. */
 	}
 }
 /*-----------------------------------------------------------*/
@@ -906,7 +906,7 @@ void *pvCopyDest;
 		pxNetworkBuffer = pxGetNetworkBufferWithDescriptor( sizeof( UDPPacket_t ) + uxRequiredBufferSize, portMAX_DELAY );
 	} while( pxNetworkBuffer == NULL );
 
-	/* Leave space for the UPD header. */
+	/* Leave space for the UDP header. */
 	pucUDPPayloadBuffer = &( pxNetworkBuffer->pucEthernetBuffer[ ipUDP_PAYLOAD_OFFSET_IPv4 ] );
 	pxDHCPMessage = ipCAST_PTR_TO_TYPE_PTR( DHCPMessage_IPv4_t, pucUDPPayloadBuffer );
 

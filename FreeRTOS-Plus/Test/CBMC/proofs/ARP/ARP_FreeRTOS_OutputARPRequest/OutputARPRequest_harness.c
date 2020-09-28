@@ -49,7 +49,7 @@ NetworkBufferDescriptor_t xNetworkBuffer;
  * passing this buffer along in the function call. vARPGenerateRequestPacket
  * casts the pointer xNetworkBuffer.pucEthernetBuffer into an ARPPacket_t pointer
  * and writes a complete ARPPacket to it. Therefore the buffer has to be at least of the size
- * of an ARPPacket to gurantee memory safety.
+ * of an ARPPacket to guarantee memory safety.
  */
 NetworkBufferDescriptor_t *pxGetNetworkBufferWithDescriptor( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks ){
 	#ifdef CBMC_PROOF_ASSUMPTION_HOLDS

@@ -53,8 +53,8 @@ extern "C" {
 // IEEE defined Registers
 #define GMII_BMCR        0x00   // Basic Control
 #define GMII_BMSR        0x01   // Basic Status
-#define GMII_PHYID1      0x02   // PHY Idendifier 1
-#define GMII_PHYID2      0x03   // PHY Idendifier 2
+#define GMII_PHYID1      0x02   // PHY Identifier 1
+#define GMII_PHYID2      0x03   // PHY Identifier 2
 #define GMII_ANAR        0x04   // Auto_Negotiation Advertisement
 #define GMII_ANLPAR      0x05   // Auto_negotiation Link Partner Ability
 #define GMII_ANER        0x06   // Auto-negotiation Expansion
@@ -179,8 +179,8 @@ extern "C" {
 #define GMII_EXTEND_CAPAB      (1 << 0)  // Extended Capability
 
 
-// Bit definitions: GMII_PHYID1 0x02 PHY Idendifier 1
-// Bit definitions: GMII_PHYID2 0x03 PHY Idendifier 2
+// Bit definitions: GMII_PHYID1 0x02 PHY Identifier 1
+// Bit definitions: GMII_PHYID2 0x03 PHY Identifier 2
 #define GMII_LSB_MASK           0x3F
 #define GMII_OUI_MSB            0x0022
 #define GMII_OUI_LSB            0x05

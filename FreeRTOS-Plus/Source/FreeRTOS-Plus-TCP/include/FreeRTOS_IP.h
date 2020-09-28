@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -37,20 +37,6 @@ extern "C" {
 #include "FreeRTOSIPConfig.h"
 #include "FreeRTOSIPConfigDefaults.h"
 #include "IPTraceMacroDefaults.h"
-
-#ifdef __COVERITY__
-	/* Coverity static checks don't like inlined functions.
-	As it is up to the users to allow inlining, don't let
-	let Coverity know about it. */
-
-	#ifdef portINLINE
-		/* The usage of #undef violates the rule. */
-		#undef portINLINE
-
-	#endif
-
-	#define	portINLINE
-#endif
 
 /* Some constants defining the sizes of several parts of a packet.
 These defines come before inlucding the configuration header files. */

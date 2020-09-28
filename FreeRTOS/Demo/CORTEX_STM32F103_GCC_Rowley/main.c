@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -218,16 +218,16 @@ signed char cChar;
 what the optimisation level. */
 static const char *pcLongishString =
 "ABBA was a Swedish pop music group formed in Stockholm in 1972, consisting of Anni-Frid Frida Lyngstad, "
-"Björn Ulvaeus, Benny Andersson and Agnetha Fältskog. Throughout the band's existence, Fältskog and Ulvaeus "
+"Bjrn Ulvaeus, Benny Andersson and Agnetha Fltskog. Throughout the band's existence, Fltskog and Ulvaeus "
 "were a married couple, as were Lyngstad and Andersson - although both couples later divorced. They became one "
 "of the most commercially successful acts in the history of popular music, and they topped the charts worldwide "
 "from 1972 to 1983.  ABBA gained international popularity employing catchy song hooks, simple lyrics, sound "
 "effects (reverb, phasing) and a Wall of Sound achieved by overdubbing the female singers' voices in multiple "
 "harmonies. As their popularity grew, they were sought after to tour Europe, Australia, and North America, drawing "
 "crowds of ardent fans, notably in Australia. Touring became a contentious issue, being particularly cumbersome for "
-"Fältskog, but they continued to release studio albums to widespread commercial success. At the height of their "
+"Fltskog, but they continued to release studio albums to widespread commercial success. At the height of their "
 "popularity, however, both relationships began suffering strain that led ultimately to the collapse of first the "
-"Ulvaeus-Fältskog marriage (in 1979) and then of the Andersson-Lyngstad marriage in 1981. In the late 1970s and early "
+"Ulvaeus-Fltskog marriage (in 1979) and then of the Andersson-Lyngstad marriage in 1981. In the late 1970s and early "
 "1980s these relationship changes began manifesting in the group's music, as they produced more thoughtful, "
 "introspective lyrics with different compositions.";
 

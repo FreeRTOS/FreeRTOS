@@ -1,5 +1,5 @@
 /*
- * FreeRTOS V202002.00
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -77,14 +77,14 @@ http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/Embedded_Ethernet_Buffer
 #define PHY_REG_01_BMSR			0x01	/* Basic mode status register */
 
 #ifndef iptraceEMAC_TASK_STARTING
-	#define iptraceEMAC_TASK_STARTING()	do { } while( 0 )
+	#define iptraceEMAC_TASK_STARTING()    do {} while( ipFALSE_BOOL )
 #endif
 
 /* Default the size of the stack used by the EMAC deferred handler task to twice
 the size of the stack used by the idle task - but allow this to be overridden in
 FreeRTOSConfig.h as configMINIMAL_STACK_SIZE is a user definable constant. */
 #ifndef configEMAC_TASK_STACK_SIZE
-	#define configEMAC_TASK_STACK_SIZE ( 2 * configMINIMAL_STACK_SIZE )
+	#define configEMAC_TASK_STACK_SIZE    ( 8 * configMINIMAL_STACK_SIZE )
 #endif
 
 #if( ipconfigZERO_COPY_RX_DRIVER == 0 || ipconfigZERO_COPY_TX_DRIVER == 0 )
@@ -106,10 +106,6 @@ static BaseType_t prvGMACWaitLS( TickType_t xMaxTime );
  * A deferred interrupt handler for all MAC/DMA interrupt sources.
  */
 static void prvEMACHandlerTask( void *pvParameters );
-
-#if ( ipconfigHAS_PRINTF != 0 )
-	static void prvMonitorResources( void );
-#endif
 
 /*-----------------------------------------------------------*/
 
@@ -163,7 +159,7 @@ const TickType_t xWaitLinkDelay = pdMS_TO_TICKS( 7000UL ), xWaitRelinkDelay = pd
 		pxEMAC_PS = &( xEMACpsif.emacps );
 		memset( &xEMACpsif, '\0', sizeof( xEMACpsif ) );
 
-		xStatus = XEmacPs_CfgInitialize( pxEMAC_PS, &mac_config, mac_config.BaseAddress);
+		xStatus = XEmacPs_CfgInitialize( pxEMAC_PS, &mac_config, mac_config.BaseAddress );
 		if( xStatus != XST_SUCCESS )
 		{
 			FreeRTOS_printf( ( "xEMACInit: EmacPs Configuration Failed....\n" ) );
@@ -181,17 +177,17 @@ const TickType_t xWaitLinkDelay = pdMS_TO_TICKS( 7000UL ), xWaitRelinkDelay = pd
 
 		XEmacPs_SetMdioDivisor( pxEMAC_PS, MDC_DIV_224 );
 		ulLinkSpeed = Phy_Setup( pxEMAC_PS );
-		XEmacPs_SetOperatingSpeed( pxEMAC_PS, ulLinkSpeed);
+		XEmacPs_SetOperatingSpeed( pxEMAC_PS, ulLinkSpeed );
 
 		/* Setting the operating speed of the MAC needs a delay. */
 		vTaskDelay( pdMS_TO_TICKS( 25UL ) );
 
-		ulDMAReg = XEmacPs_ReadReg( pxEMAC_PS->Config.BaseAddress, XEMACPS_DMACR_OFFSET);
+		ulDMAReg = XEmacPs_ReadReg( pxEMAC_PS->Config.BaseAddress, XEMACPS_DMACR_OFFSET );
 
 		/* DISC_WHEN_NO_AHB: when set, the GEM DMA will automatically discard receive
 		packets from the receiver packet buffer memory when no AHB resource is available. */
 		XEmacPs_WriteReg( pxEMAC_PS->Config.BaseAddress, XEMACPS_DMACR_OFFSET,
-			ulDMAReg | XEMACPS_DMACR_DISC_WHEN_NO_AHB_MASK);
+						  ulDMAReg | XEMACPS_DMACR_DISC_WHEN_NO_AHB_MASK );
 
 		setup_isr( &xEMACpsif );
 		init_dma( &xEMACpsif );
@@ -215,11 +211,12 @@ const TickType_t xWaitLinkDelay = pdMS_TO_TICKS( 7000UL ), xWaitRelinkDelay = pd
 	DHCP process and all other communication will fail. */
 	xLinkStatus = xGetPhyLinkStatus();
 
-	return ( xLinkStatus != pdFALSE );
+	return( xLinkStatus != pdFALSE );
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer, BaseType_t bReleaseAfterSend )
+BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer,
+									BaseType_t bReleaseAfterSend )
 {
 	#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM != 0 )
 	{
@@ -228,13 +225,15 @@ BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxBuffer, 
 		/* If the peripheral must calculate the checksum, it wants
 		the protocol checksum to have a value of zero. */
 		pxPacket = ( ProtocolPacket_t * ) ( pxBuffer->pucEthernetBuffer );
-		if( ( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
+
+		if( ( pxPacket->xICMPPacket.xEthernetHeader.usFrameType == ipIPv4_FRAME_TYPE ) &&
+			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_UDP ) &&
 			( pxPacket->xICMPPacket.xIPHeader.ucProtocol != ipPROTOCOL_TCP ) )
 		{
 			/* The EMAC will calculate the checksum of the IP-header.
 			It can only calculate protocol checksums of UDP and TCP,
 			so for ICMP and other protocols it must be done manually. */
-			usGenerateProtocolChecksum( (uint8_t*)&( pxPacket->xUDPPacket ), pxBuffer->xDataLength, pdTRUE );
+			usGenerateProtocolChecksum( ( uint8_t * ) &( pxPacket->xUDPPacket ), pxBuffer->xDataLength, pdTRUE );
 		}
 	}
 	#endif /* ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM */
@@ -326,54 +325,6 @@ BaseType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-#if ( ipconfigHAS_PRINTF != 0 )
-	static void prvMonitorResources()
-	{
-	static UBaseType_t uxLastMinBufferCount = 0u;
-	static size_t uxMinLastSize = 0uL;
-	UBaseType_t uxCurrentBufferCount;
-	size_t uxMinSize;
-
-		uxCurrentBufferCount = uxGetMinimumFreeNetworkBuffers();
-
-		if( uxLastMinBufferCount != uxCurrentBufferCount )
-		{
-			/* The logging produced below may be helpful
-			 * while tuning +TCP: see how many buffers are in use. */
-			uxLastMinBufferCount = uxCurrentBufferCount;
-			FreeRTOS_printf( ( "Network buffers: %lu lowest %lu\n",
-							   uxGetNumberOfFreeNetworkBuffers(),
-							   uxCurrentBufferCount ) );
-		}
-
-		uxMinSize = xPortGetMinimumEverFreeHeapSize();
-
-		if( uxMinLastSize != uxMinSize )
-		{
-			uxMinLastSize = uxMinSize;
-			FreeRTOS_printf( ( "Heap: current %lu lowest %lu\n", xPortGetFreeHeapSize(), uxMinSize ) );
-		}
-
-		#if ( ipconfigCHECK_IP_QUEUE_SPACE != 0 )
-			{
-				static UBaseType_t uxLastMinQueueSpace = 0;
-				UBaseType_t uxCurrentCount = 0u;
-
-				uxCurrentCount = uxGetMinimumIPQueueSpace();
-
-				if( uxLastMinQueueSpace != uxCurrentCount )
-				{
-					/* The logging produced below may be helpful
-					 * while tuning +TCP: see how many buffers are in use. */
-					uxLastMinQueueSpace = uxCurrentCount;
-					FreeRTOS_printf( ( "Queue space: lowest %lu\n", uxCurrentCount ) );
-				}
-			}
-		#endif /* ipconfigCHECK_IP_QUEUE_SPACE */
-	}
-#endif /* ( ipconfigHAS_PRINTF != 0 ) */
-/*-----------------------------------------------------------*/
-
 static void prvEMACHandlerTask( void *pvParameters )
 {
 TimeOut_t xPhyTime;
@@ -395,10 +346,13 @@ const TickType_t ulMaxBlockTime = pdMS_TO_TICKS( 100UL );
 	for( ;; )
 	{
 		#if ( ipconfigHAS_PRINTF != 0 )
-			{
-				prvMonitorResources();
-			}
-		#endif /* ipconfigHAS_PRINTF != 0 ) */
+		{
+			/* Call a function that monitors resources: the amount of free network
+			 * buffers and the amount of free space on the heap.  See FreeRTOS_IP.c
+			 * for more detailed comments. */
+			vPrintResourceStats();
+		}
+		#endif /* ( ipconfigHAS_PRINTF != 0 ) */
 
 		if( ( xEMACpsif.isr_events & EMAC_IF_ALL_EVENT ) == 0 )
 		{

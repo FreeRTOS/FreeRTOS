@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- IAR Project Connection File -->
+<iarProjectConnection version="1.6" name="Renesas_AP" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="IarProjectConnection_1.8.xsd">
+<includePath>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\general</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_bsp</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_byteq</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_config</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_dtc_rx</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_gpio_rx</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_pincfg</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_sci_rx</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_byteq\src</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_gpio_rx\src</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_sci_rx\src</path>
+    <path>C:\Renesas\GitHubDesktop\work\FreeRTOS\FreeRTOS\Demo\RX700_RX72N_EnvisionKit_IAR_e2studio_EWRX\src\smc_gen\r_dtc_rx\src</path>
+</includePath>
+<files>
+<group name="smc_gen">
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_cg_hardware_setup.c</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_cg_macrodriver.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_cg_userdefine.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_smc_cgc.c</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_smc_cgc.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_smc_cgc_user.c</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_smc_entry.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_smc_interrupt.c</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="general">
+            <path>.\src\smc_gen\general\r_smc_interrupt.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="board">
+                <group name ="generic_rx72n">
+                    <path>.\src\smc_gen\r_bsp\board\generic_rx72n\hwsetup.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="board">
+                <group name ="generic_rx72n">
+                    <path>.\src\smc_gen\r_bsp\board\generic_rx72n\hwsetup.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="board">
+                <group name ="generic_rx72n">
+                    <path>.\src\smc_gen\r_bsp\board\generic_rx72n\r_bsp.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="board">
+                <group name ="generic_rx72n">
+                    <path>.\src\smc_gen\r_bsp\board\generic_rx72n\r_bsp_config_reference.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="board">
+                <group name ="generic_rx72n">
+                    <path>.\src\smc_gen\r_bsp\board\generic_rx72n\r_bsp_interrupt_config_reference.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="board">
+                <group name ="user">
+                    <path>.\src\smc_gen\r_bsp\board\user\r_bsp.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="doc">
+                <group name ="en">
+                    <path>.\src\smc_gen\r_bsp\doc\en\r01an1685ej0552-rx-bsp.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="doc">
+                <group name ="ja">
+                    <path>.\src\smc_gen\r_bsp\doc\ja\r01an1685jj0552-rx-bsp.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\lowlvl.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\lowsrc.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\mcu_locks.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\resetprg.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_rtos.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_rx_compiler.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="all">
+                    <path>.\src\smc_gen\r_bsp\mcu\all\r_typedefs.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_clocks.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_clocks.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_info.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_init.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_init.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_interrupts.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_interrupts.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_locks.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_mapped_interrupts.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_mapped_interrupts.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\mcu_mapped_interrupts_private.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <group name ="register_access">
+                        <group name ="iccrx">
+                            <path>.\src\smc_gen\r_bsp\mcu\rx72n\register_access\iccrx\iodefine.h</path>
+                        </group>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\r_bsp_cpu.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\r_bsp_locking.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\vecttbl.c</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <group name ="mcu">
+                <group name ="rx72n">
+                    <path>.\src\smc_gen\r_bsp\mcu\rx72n\vecttbl.h</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <path>.\src\smc_gen\r_bsp\platform.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_bsp">
+            <path>.\src\smc_gen\r_bsp\readme.txt</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <group name ="doc">
+                <group name ="en">
+                    <path>.\src\smc_gen\r_byteq\doc\en\r01an1683ej0180-rx-apl.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <group name ="doc">
+                <group name ="ja">
+                    <path>.\src\smc_gen\r_byteq\doc\ja\r01an1683jj0180-rx-apl.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <path>.\src\smc_gen\r_byteq\readme.txt</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <group name ="ref">
+                <path>.\src\smc_gen\r_byteq\ref\r_byteq_config_reference.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <path>.\src\smc_gen\r_byteq\r_byteq_if.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <group name ="src">
+                <path>.\src\smc_gen\r_byteq\src\r_byteq.c</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_byteq">
+            <group name ="src">
+                <path>.\src\smc_gen\r_byteq\src\r_byteq_private.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_bsp_config.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_bsp_config_readme.txt</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_bsp_interrupt_config.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_byteq_config.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_dtc_rx_config.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_gpio_rx_config.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_config">
+            <path>.\src\smc_gen\r_config\r_sci_rx_config.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="doc">
+                <group name ="en">
+                    <path>.\src\smc_gen\r_dtc_rx\doc\en\r01an1819ej0350-rx-dtc-dmac2.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="doc">
+                <group name ="ja">
+                    <path>.\src\smc_gen\r_dtc_rx\doc\ja\r01an1819jj0350-rx-dtc-dmac2.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <path>.\src\smc_gen\r_dtc_rx\readme.txt</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="ref">
+                <path>.\src\smc_gen\r_dtc_rx\ref\r_dtc_rx_config_reference.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <path>.\src\smc_gen\r_dtc_rx\r_dtc_rx_if.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="src">
+                <path>.\src\smc_gen\r_dtc_rx\src\r_dtc_rx.c</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="src">
+                <path>.\src\smc_gen\r_dtc_rx\src\r_dtc_rx_private.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_dtc_rx\src\targets\rx72n\r_dtc_rx_target.c</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_dtc_rx\src\targets\rx72n\r_dtc_rx_target.h</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_dtc_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_dtc_rx\src\targets\rx72n\r_dtc_rx_target_if.h</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <group name ="doc">
+                <group name ="en">
+                    <path>.\src\smc_gen\r_gpio_rx\doc\en\r01an1721ej0350-rx-gpio.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <group name ="doc">
+                <group name ="ja">
+                    <path>.\src\smc_gen\r_gpio_rx\doc\ja\r01an1721jj0350-rx-gpio.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <path>.\src\smc_gen\r_gpio_rx\readme.txt</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <group name ="ref">
+                <path>.\src\smc_gen\r_gpio_rx\ref\r_gpio_rx_config_reference.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <path>.\src\smc_gen\r_gpio_rx\r_gpio_rx_if.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <group name ="src">
+                <path>.\src\smc_gen\r_gpio_rx\src\r_gpio_rx.c</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_gpio_rx\src\targets\rx72n\r_gpio_rx72n.c</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_gpio_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_gpio_rx\src\targets\rx72n\r_gpio_rx72n.h</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_pincfg">
+            <path>.\src\smc_gen\r_pincfg\Pin.c</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_pincfg">
+            <path>.\src\smc_gen\r_pincfg\Pin.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_pincfg">
+            <path>.\src\smc_gen\r_pincfg\r_pinset.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_pincfg">
+            <path>.\src\smc_gen\r_pincfg\r_sci_rx_pinset.c</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_pincfg">
+            <path>.\src\smc_gen\r_pincfg\r_sci_rx_pinset.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="doc">
+                <group name ="en">
+                    <path>.\src\smc_gen\r_sci_rx\doc\en\r01an1815ej0350-rx-serial.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="doc">
+                <group name ="ja">
+                    <path>.\src\smc_gen\r_sci_rx\doc\ja\r01an1815jj0350-rx-serial.pdf</path>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <path>.\src\smc_gen\r_sci_rx\readme.txt</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="ref">
+                <path>.\src\smc_gen\r_sci_rx\ref\r_sci_rx_config_reference.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <path>.\src\smc_gen\r_sci_rx\r_sci_rx_if.h</path>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="src">
+                <path>.\src\smc_gen\r_sci_rx\src\r_sci_rx.c</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="src">
+                <path>.\src\smc_gen\r_sci_rx\src\r_sci_rx_platform.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="src">
+                <path>.\src\smc_gen\r_sci_rx\src\r_sci_rx_private.h</path>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_sci_rx\src\targets\rx72n\r_sci_rx72n.c</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_sci_rx\src\targets\rx72n\r_sci_rx72n_data.c</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+    <group name ="">
+        <group name ="r_sci_rx">
+            <group name ="src">
+                <group name ="targets">
+                    <group name ="rx72n">
+                        <path>.\src\smc_gen\r_sci_rx\src\targets\rx72n\r_sci_rx72n_private.h</path>
+                    </group>
+                </group>
+            </group>
+        </group>
+    </group>
+</group>
+</files>
+</iarProjectConnection>

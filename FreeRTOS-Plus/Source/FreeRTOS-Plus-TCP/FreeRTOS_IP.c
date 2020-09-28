@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -140,6 +140,15 @@ handled.  The value is chosen simply to be easy to spot when debugging. */
 had an invalid length. */
 #define ipINVALID_LENGTH			0x1234U
 
+/* Trace macros to aid in debugging, disabled if ipconfigHAS_PRINTF != 1 */
+#if ( ipconfigHAS_PRINTF == 1 )
+    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )    type var = ( init )
+    #define DEBUG_SET_TRACE_VARIABLE( var, value )  var = ( value )
+#else
+    #define DEBUG_DECLARE_TRACE_VARIABLE( type, var, init )
+    #define DEBUG_SET_TRACE_VARIABLE( var, value )
+#endif
+
 /*-----------------------------------------------------------*/
 
 /* Used in checksum calculation. */
@@ -162,10 +171,6 @@ typedef union _xUnionPtr
 static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
 {
     return ( NetworkBufferDescriptor_t *)pvArgument;
-}
-static portINLINE ipDECL_CAST_CONST_PTR_FUNC_FOR_TYPE( NetworkBufferDescriptor_t )
-{
-    return ( const NetworkBufferDescriptor_t *) pvArgument;
 }
 
 /*-----------------------------------------------------------*/
@@ -839,9 +844,9 @@ TickType_t uxBlockTime = uxBlockTimeTicks;
 	/* Cap the block time.  The reason for this is explained where
 	ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS is defined (assuming an official
 	FreeRTOSIPConfig.h header file is being used). */
-	if( uxBlockTime > ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ) )
+	if( uxBlockTime > ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS )
 	{
-		uxBlockTime = ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS );
+		uxBlockTime = ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS;
 	}
 
 	/* Obtain a network buffer with the required amount of storage. */
@@ -945,7 +950,7 @@ NetworkBufferDescriptor_t *pxResult;
 		/* The input here is a pointer to a payload buffer.  Subtract
 		the total size of a UDP/IP header plus the size of the header in
 		the network buffer, usually 8 + 2 bytes. */
-		pucBuffer -= ( sizeof( UDPPacket_t ) + ( ( size_t ) ipBUFFER_PADDING ) );
+		pucBuffer -= sizeof( UDPPacket_t ) + ipBUFFER_PADDING;
 
 		/* Here a pointer was placed to the network descriptor,
 		As a pointer is dereferenced, make sure it is well aligned */
@@ -954,7 +959,7 @@ NetworkBufferDescriptor_t *pxResult;
 			/* The following statement may trigger a:
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
-			pxResult = * ( ( const NetworkBufferDescriptor_t **) pucBuffer );
+			pxResult = * ( ( NetworkBufferDescriptor_t ** ) pucBuffer );
 		}
 		else
 		{
@@ -998,7 +1003,7 @@ BaseType_t xReturn = pdFALSE;
 	}
 	#endif
 	/* Attempt to create the queue used to communicate with the IP task. */
-	xNetworkEventQueue = xQueueCreate( ( UBaseType_t ) ipconfigEVENT_QUEUE_LENGTH, ( UBaseType_t ) sizeof( IPStackEvent_t ) );
+	xNetworkEventQueue = xQueueCreate( ipconfigEVENT_QUEUE_LENGTH, sizeof( IPStackEvent_t ) );
 	configASSERT( xNetworkEventQueue != NULL );
 
 	if( xNetworkEventQueue != NULL )
@@ -1052,9 +1057,9 @@ BaseType_t xReturn = pdFALSE;
 			/* Create the task that processes Ethernet and stack events. */
 			xReturn = xTaskCreate( prvIPTask,
 								   "IP-task",
-								   ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS,
+								   ipconfigIP_TASK_STACK_SIZE_WORDS,
 								   NULL,
-								   ( UBaseType_t )ipconfigIP_TASK_PRIORITY,
+								   ipconfigIP_TASK_PRIORITY,
 								   &( xIPTaskHandle ) );
 		}
 		else
@@ -2004,16 +2009,16 @@ uint8_t ucProtocol;
 	uint8_t ucProtocol;
 	uint16_t usLength;
 	uint16_t ucVersionHeaderLength;
-	BaseType_t xLocation = 0;
 	size_t uxMinimumLength;
 	BaseType_t xResult = pdFAIL;
+	DEBUG_DECLARE_TRACE_VARIABLE( BaseType_t, xLocation, 0 );
 
 		do
 		{
 			/* Check for minimum packet size: Ethernet header and an IP-header, 34 bytes */
 			if( uxBufferLength < sizeof( IPPacket_t ) )
 			{
-				xLocation = 1;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 1 );
 				break;
 			}
 
@@ -2027,7 +2032,7 @@ uint8_t ucProtocol;
 			if( ( ucVersionHeaderLength < ipIPV4_VERSION_HEADER_LENGTH_MIN ) ||
 				( ucVersionHeaderLength > ipIPV4_VERSION_HEADER_LENGTH_MAX ) )
 			{
-				xLocation = 2;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 2 );
 				break;
 			}
 			ucVersionHeaderLength = ( ucVersionHeaderLength & ( uint8_t ) 0x0FU ) << 2;
@@ -2036,7 +2041,7 @@ uint8_t ucProtocol;
 			/* Check if the complete IP-header is transferred. */
 			if( uxBufferLength < ( ipSIZE_OF_ETH_HEADER + uxIPHeaderLength ) )
 			{
-				xLocation = 3;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 3 );
 				break;
 			}
 			/* Check if the complete IP-header plus protocol data have been transferred: */
@@ -2044,7 +2049,7 @@ uint8_t ucProtocol;
 			usLength = FreeRTOS_ntohs( usLength );
 			if( uxBufferLength < ( size_t ) ( ipSIZE_OF_ETH_HEADER + ( size_t ) usLength ) )
 			{
-				xLocation = 4;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 4 );
 				break;
 			}
 
@@ -2078,12 +2083,12 @@ uint8_t ucProtocol;
 			else
 			{
 				/* Unhandled protocol, other than ICMP, IGMP, UDP, or TCP. */
-				xLocation = 5;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 5 );
 				break;
 			}
 			if( uxBufferLength < uxMinimumLength )
 			{
-				xLocation = 6;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 6 );
 				break;
 			}
 
@@ -2096,7 +2101,7 @@ uint8_t ucProtocol;
 				/* For incoming packets, the length is out of bound: either
 				too short or too long. For outgoing packets, there is a 
 				serious problem with the format/length. */
-				xLocation = 7;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 7 );
 				break;
 			}
 			xResult = pdPASS;
@@ -2104,12 +2109,8 @@ uint8_t ucProtocol;
 
 		if( xResult != pdPASS )
 		{
+			/* NOP if ipconfigHAS_PRINTF != 1 */
 			FreeRTOS_printf( ( "xCheckSizeFields: location %ld\n", xLocation ) );
-			
-			/* If FreeRTOS_printf is not defined, not using xLocation will be a violation of MISRA
-			 * rule 2.2 as the value assigned to xLocation will not be used. The below statement uses
-			 * the variable without modifying the logic of the source. */
-			( void ) xLocation;
 		}
 
 		return xResult;
@@ -2130,9 +2131,7 @@ uint8_t ucProtocol;
 #endif
 uint16_t usLength;
 uint16_t ucVersionHeaderLength;
-
-
-BaseType_t location = 0;
+DEBUG_DECLARE_TRACE_VARIABLE( BaseType_t, xLocation, 0 );
 
 	/* Introduce a do-while loop to allow use of break statements.
 	 * Note: MISRA prohibits use of 'goto', thus replaced with breaks. */
@@ -2142,7 +2141,7 @@ BaseType_t location = 0;
 		if( uxBufferLength < sizeof( IPPacket_t ) )
 		{
 			usChecksum = ipINVALID_LENGTH;
-			location = 1;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 1 );
 			break;
 		}
 
@@ -2159,7 +2158,7 @@ BaseType_t location = 0;
 		if( uxBufferLength < ( sizeof( IPPacket_t ) + ( uxIPHeaderLength - ipSIZE_OF_IPv4_HEADER ) ) )
 		{
 			usChecksum = ipINVALID_LENGTH;
-			location = 2;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 2 );
 			break;
 		}
 		usLength = pxIPPacket->xIPHeader.usLength;
@@ -2167,7 +2166,7 @@ BaseType_t location = 0;
 		if( uxBufferLength < ( size_t ) ( ipSIZE_OF_ETH_HEADER + ( size_t ) usLength ) )
 		{
 			usChecksum = ipINVALID_LENGTH;
-			location = 3;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 3 );
 			break;
 		}
 
@@ -2187,7 +2186,7 @@ BaseType_t location = 0;
 			if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_UDP_HEADER ) )
 			{
 				usChecksum = ipINVALID_LENGTH;
-				location = 4;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 4 );
 				break;
 			}
 
@@ -2203,7 +2202,7 @@ BaseType_t location = 0;
 			if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_TCP_HEADER ) )
 			{
 				usChecksum = ipINVALID_LENGTH;
-				location = 5;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 5 );
 				break;
 			}
 
@@ -2220,7 +2219,7 @@ BaseType_t location = 0;
 			if( uxBufferLength < ( uxIPHeaderLength + ipSIZE_OF_ETH_HEADER + ipSIZE_OF_ICMP_HEADER ) )
 			{
 				usChecksum = ipINVALID_LENGTH;
-				location = 6;
+				DEBUG_SET_TRACE_VARIABLE( xLocation, 6 );
 				break;
 			}
 
@@ -2242,7 +2241,7 @@ BaseType_t location = 0;
 		{
 			/* Unhandled protocol, other than ICMP, IGMP, UDP, or TCP. */
 			usChecksum = ipUNHANDLED_PROTOCOL;
-			location = 7;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 7 );
 			break;
 		}
 
@@ -2280,7 +2279,7 @@ BaseType_t location = 0;
 				usChecksum = ipCORRECT_CRC;
 			}
 			#endif
-			location = 8;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 8 );
 			break;
 		}
 		else
@@ -2307,7 +2306,7 @@ BaseType_t location = 0;
 			For outgoing packets, there is a serious problem with the
 			format/length */
 			usChecksum = ipINVALID_LENGTH;
-			location = 9;
+			DEBUG_SET_TRACE_VARIABLE( xLocation, 9 );
 			break;
 		}
 		if( ucProtocol <= ( uint8_t ) ipPROTOCOL_IGMP )
@@ -2383,12 +2382,8 @@ BaseType_t location = 0;
 	if( ( usChecksum == ipUNHANDLED_PROTOCOL ) || 
 		( usChecksum == ipINVALID_LENGTH ) )
 	{
-		FreeRTOS_printf( ( "CRC error: %04x location %ld\n", usChecksum, location ) );
-		
-		/* If FreeRTOS_printf is not defined, not using 'location' will be a violation of MISRA
-		 * rule 2.2 as the value assigned to 'location' will not be used. The below statement uses
-		 * the variable without modifying the logic of the source. */
-		( void ) location;
+		/* NOP if ipconfigHAS_PRINTF != 0 */
+		FreeRTOS_printf( ( "CRC error: %04x location %ld\n", usChecksum, xLocation ) );
 	}
 
 	return usChecksum;
@@ -2435,7 +2430,8 @@ aid though to optimise the calculations. */
 xUnion32 xSum2, xSum, xTerm;
 xUnionPtr xSource;
 xUnionPtr xLastSource;
-uint32_t ulAlignBits, ulCarry = 0UL;
+uintptr_t uxAlignBits;
+uint32_t ulCarry = 0UL;
 uint16_t usTemp;
 size_t uxDataLengthBytes = uxByteCount;
 
@@ -2449,12 +2445,19 @@ size_t uxDataLengthBytes = uxByteCount;
 	xTerm.u32 = 0UL;
 
 	xSource.u8ptr = ipPOINTER_CAST( uint8_t *, pucNextData );
-	/* coverity[misra_c_2012_rule_11_4_violation] */
-	/* The object pointer expression "pucNextData" of type "uint8_t const *" is cast to an integer type "unsigned int". */
-	ulAlignBits = ( ( ( uint32_t ) pucNextData ) & 0x03U ); /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
+	uxAlignBits = ( ( ( uintptr_t ) pucNextData ) & 0x03U );
+	/*
+	 * If pucNextData is non-aligned then the checksum is starting at an
+	 * odd position and we need to make sure the usSum value now in xSum is
+	 * as if it had been "aligned" in the same way.
+	 */
+	if( ( uxAlignBits & 1UL) != 0U )
+	{
+		xSum.u32 = ( ( xSum.u32 & 0xffU ) << 8 ) | ( ( xSum.u32 & 0xff00U ) >> 8 );
+	}
 
 	/* If byte (8-bit) aligned... */
-	if( ( ( ulAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
+	if( ( ( uxAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
 	{
 		xTerm.u8[ 1 ] = *( xSource.u8ptr );
 		xSource.u8ptr++;
@@ -2463,7 +2466,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	}
 
 	/* If half-word (16-bit) aligned... */
-	if( ( ( ulAlignBits == 1U ) || ( ulAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
+	if( ( ( uxAlignBits == 1U ) || ( uxAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
 	{
 		xSum.u32 += *(xSource.u16ptr);
 		xSource.u16ptr++;
@@ -2544,7 +2547,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	/* coverity[value_overwrite] */
 	xSum.u32 = ( uint32_t ) xSum.u16[ 0 ] + xSum.u16[ 1 ];
 
-	if( ( ulAlignBits & 1U ) != 0U )
+	if( ( uxAlignBits & 1U ) != 0U )
 	{
 		/* Quite unlikely, but pucNextData might be non-aligned, which would
 		 mean that a checksum is calculated starting at an odd position. */
@@ -2561,6 +2564,9 @@ size_t uxDataLengthBytes = uxByteCount;
 void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
 EthernetHeader_t *pxEthernetHeader;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNewBuffer;
@@ -2599,9 +2605,19 @@ EthernetHeader_t *pxEthernetHeader;
 		/* Map the Buffer to Ethernet Header struct for easy access to fields. */
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = &pxEthernetHeader->xSourceAddress;
+		pvCopyDest = &pxEthernetHeader->xDestinationAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, sizeof( pxEthernetHeader->xDestinationAddress ) );
+
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );

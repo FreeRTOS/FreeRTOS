@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -158,7 +158,7 @@ const uint32_t ulLongTime_ms = pdMS_TO_TICKS( 1000UL );
 	there was insufficient FreeRTOS heap memory available for the idle and/or
 	timer tasks	to be created.  See the memory management section on the
 	FreeRTOS web site for more details (this is standard text that is not not
-	really applicable to the Win32 simulator port). */
+	really applicable to the Linux simulator port). */
 	for( ; ; )
 	{
 		usleep( ulLongTime_ms * 1000 );
@@ -211,7 +211,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 	}
 	else
 	{
-		printf( "application iddle hook network down\n" );
+		FreeRTOS_printf( "Application idle hook network down\n" );
 	}
 }
 /*-----------------------------------------------------------*/

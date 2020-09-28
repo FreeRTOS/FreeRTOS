@@ -1333,7 +1333,7 @@ const size_t uxAddressLength = ipSIZE_OF_IPv4_ADDRESS;
 							 */
 							pvCopySource = &pucByte[ sizeof( DNSAnswerRecord_t ) ];
 							pvCopyDest = &ulIPAddress;
-							( void ) memcpy( pvCopyDest, pvCopySource, uxAddressLength );
+							( void ) memcpy( pvCopyDest, pvCopySource, sizeof( uint32_t ) );
 
 							#if( ipconfigDNS_USE_CALLBACKS == 1 )
 							{
@@ -1676,7 +1676,7 @@ BaseType_t xReturn;
 	/* This must be the first time this function has been called.  Create
 	the socket. */
 	xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-	if( prvSocketValid( xSocket ) != pdTRUE )
+	if( prvSocketValid( xSocket ) != pdTRUE_UNSIGNED )
 	{
 		/* There was an error, return NULL. */
 		xSocket = NULL;

@@ -80,6 +80,9 @@ IPHeader_t *pxIPHeader;
 eARPLookupResult_t eReturned;
 uint32_t ulIPAddress = pxNetworkBuffer->ulIPAddress;
 size_t uxPayloadSize;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 	/* Map the UDP packet onto the start of the frame. */
 	pxUDPPacket = ipCAST_PTR_TO_TYPE_PTR( UDPPacket_t, pxNetworkBuffer->pucEthernetBuffer );
@@ -152,9 +155,15 @@ size_t uxPayloadSize;
 			 * Offset the memcpy by the size of a MAC address to start at the packet's
 			 * Ethernet header 'source' MAC address; the preceding 'destination' should not be altered.
 			 */
+			/*
+			 * Use helper variables for memcpy() to remain
+			 * compliant with MISRA Rule 21.15.  These should be
+			 * optimized away.
+			 */
+			pvCopySource = xDefaultPartUDPPacketHeader.ucBytes;
 			/* The Ethernet source address is at offset 6. */
-			char *pxUdpSrcAddrOffset = ( char *) ( &( pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddress_t ) ] ) );
-			( void ) memcpy( ( void * ) pxUdpSrcAddrOffset, ( const void * ) ( xDefaultPartUDPPacketHeader.ucBytes ), sizeof( xDefaultPartUDPPacketHeader ) );
+			pvCopyDest = &pxNetworkBuffer->pucEthernetBuffer[ sizeof( MACAddress_t ) ];
+			( void ) memcpy( pvCopyDest, pvCopySource, sizeof( xDefaultPartUDPPacketHeader ) );
 
 		#if ipconfigSUPPORT_OUTGOING_PINGS == 1
 			if( pxNetworkBuffer->usPort == ( uint16_t ) ipPACKET_CONTAINS_ICMP_DATA )

@@ -6,7 +6,8 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>com.renesas.cdt.core.genmakebuilder</name>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -19,8 +20,6 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
-		<nature>com.renesas.cdt.core.kpitcnature</nature>
-		<nature>com.renesas.cdt.core.kpitccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
@@ -38,54 +37,206 @@
 		<link>
 			<name>src/Common_Demo_Tasks/Minimal</name>
 			<type>2</type>
-			<locationURI>FREERTOS_ROOT/Demo/Common/Minimal</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/Minimal</locationURI>
 		</link>
 		<link>
 			<name>src/Common_Demo_Tasks/include</name>
 			<type>2</type>
-			<locationURI>FREERTOS_ROOT/Demo/Common/include</locationURI>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Demo/Common/include</locationURI>
 		</link>
 		<link>
 			<name>src/FreeRTOS/Source</name>
 			<type>2</type>
-			<locationURI>FREERTOS_ROOT/Source</locationURI>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/event_groups.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/event_groups.c</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/include</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/include</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/list.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/list.c</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/portable</name>
+			<type>2</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/portable</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/queue.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/queue.c</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/tasks.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/tasks.c</locationURI>
+		</link>
+		<link>
+			<name>src/FreeRTOS/Source/timers.c</name>
+			<type>1</type>
+			<locationURI>FREERTOS_ROOT/FreeRTOS/Source/timers.c</locationURI>
 		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1401803846285</id>
-			<name>src/Common_Demo_Tasks</name>
-			<type>22</type>
+			<id>1597858150422</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-alt*.*</arguments>
+				<arguments>1.0-name-matches-false-false-BlockQ.c</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1401803846295</id>
-			<name>src/Common_Demo_Tasks</name>
-			<type>22</type>
+			<id>1597858150469</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-cr*.*</arguments>
+				<arguments>1.0-name-matches-false-false-blocktim.c</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1401803846295</id>
-			<name>src/Common_Demo_Tasks</name>
-			<type>22</type>
+			<id>1597858150500</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-sp*.*</arguments>
+				<arguments>1.0-name-matches-false-false-countsem.c</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1401803846295</id>
-			<name>src/Common_Demo_Tasks</name>
-			<type>22</type>
+			<id>1597858150516</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-comtest*.*</arguments>
+				<arguments>1.0-name-matches-false-false-death.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150547</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-dynamic.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150578</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-EventGroupsDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150609</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-flop.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150641</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-GenQTest.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150672</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IntQueue.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150703</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IntQueue.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150734</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-IntSemTest.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150766</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-QueueOverwrite.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150781</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-recmutex.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150844</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-semtest.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150891</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TaskNotify.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150922</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-TimerDemo.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1597858150969</id>
+			<name>src/Common_Demo_Tasks/Minimal</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-flash.c</arguments>
 			</matcher>
 		</filter>
 		<filter>
@@ -128,7 +279,7 @@
 	<variableList>
 		<variable>
 			<name>FREERTOS_ROOT</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D</value>
+			<value>$%7BPARENT-3-PROJECT_LOC%7D</value>
 		</variable>
 	</variableList>
 </projectDescription>

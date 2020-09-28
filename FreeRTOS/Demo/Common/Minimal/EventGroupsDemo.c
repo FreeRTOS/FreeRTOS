@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.0
+ * FreeRTOS Kernel V10.4.1
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -78,7 +78,6 @@ that synchronise with the xEventGroupSync() function. */
 
 /* A block time of zero simply means "don't block". */
 #define ebDONT_BLOCK	( 0 )
-#define ebONE_TICK		( ( TickType_t ) 1 )
 
 /* A 5ms delay. */
 #define ebSHORT_DELAY	pdMS_TO_TICKS( ( TickType_t ) 5 )
@@ -290,10 +289,9 @@ EventBits_t uxSynchronisationBit, uxReturned;
 		/* Set the bit that indicates this task is at the synchronisation
 		point.  The first time this is done the 'test master' task has a lower
 		priority than this task so this task will get to the sync point before
-		the set bits task - test this by first calling xEventGroupSync() with
-		a zero block time, and a block time that is too short for the other
-		task, before calling again with a max delay - the first two calls should
-		return before the rendezvous completes, the third only after the
+		the set bits task - test this by calling xEventGroupSync() with a zero
+		block time before calling again with a max delay - the first call should
+		return before the rendezvous completes, the second only after the
 		rendezvous is complete. */
 		uxReturned = xEventGroupSync( xEventGroup,	/* The event group used for the synchronisation. */
 									  uxSynchronisationBit, /* The bit to set in the event group to indicate this task is at the sync point. */
@@ -301,15 +299,6 @@ EventBits_t uxSynchronisationBit, uxReturned;
 									  ebDONT_BLOCK ); /* The maximum time to wait for the sync condition to be met before giving up. */
 
 		/* No block time was specified, so as per the comments above, the
-		rendezvous is not expected to have completed yet. */
-		configASSERT( ( uxReturned & ebALL_SYNC_BITS ) != ebALL_SYNC_BITS );
-
-		uxReturned = xEventGroupSync( xEventGroup,	/* The event group used for the synchronisation. */
-									  uxSynchronisationBit, /* The bit to set in the event group to indicate this task is at the sync point. */
-									  ebALL_SYNC_BITS, /* The bits to wait for - these bits are set by the other tasks taking part in the sync. */
-									  ebONE_TICK ); /* The maximum time to wait for the sync condition to be met before giving up. */
-
-		/* A short block time was specified, so as per the comments above, the
 		rendezvous is not expected to have completed yet. */
 		configASSERT( ( uxReturned & ebALL_SYNC_BITS ) != ebALL_SYNC_BITS );
 

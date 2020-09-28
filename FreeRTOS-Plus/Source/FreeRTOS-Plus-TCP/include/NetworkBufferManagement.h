@@ -1,5 +1,5 @@
 /*
- * FreeRTOS+TCP V2.2.1
+ * FreeRTOS+TCP V2.2.2
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -33,8 +33,12 @@ extern "C" {
 /* NOTE PUBLIC API FUNCTIONS. */
 BaseType_t xNetworkBuffersInitialise( void );
 NetworkBufferDescriptor_t *pxGetNetworkBufferWithDescriptor( size_t xRequestedSizeBytes, TickType_t xBlockTimeTicks );
+
+/* The definition of the below function is only available if BufferAllocation_2.c has been linked into the source. */
 NetworkBufferDescriptor_t *pxNetworkBufferGetFromISR( size_t xRequestedSizeBytes );
 void vReleaseNetworkBufferAndDescriptor( NetworkBufferDescriptor_t * const pxNetworkBuffer );
+
+/* The definition of the below function is only available if BufferAllocation_2.c has been linked into the source. */
 BaseType_t vNetworkBufferReleaseFromISR( NetworkBufferDescriptor_t * const pxNetworkBuffer );
 uint8_t *pucGetNetworkBuffer( size_t *pxRequestedSizeBytes );
 void vReleaseNetworkBuffer( uint8_t *pucEthernetBuffer );

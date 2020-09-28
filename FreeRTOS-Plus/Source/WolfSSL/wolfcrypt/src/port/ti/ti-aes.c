@@ -1,8 +1,8 @@
 /* port/ti/ti-aes.c
  *
- * Copyright (C) 2006-2015 wolfSSL Inc.
+ * Copyright (C) 2006-2020 wolfSSL Inc.
  *
- * This file is part of wolfSSL. (formerly known as CyaSSL)
+ * This file is part of wolfSSL.
  *
  * wolfSSL is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
- 
+
+
 #ifdef HAVE_CONFIG_H
     #include <config.h>
 #endif
@@ -65,14 +66,14 @@ WOLFSSL_API int  wc_AesSetKey(Aes* aes, const byte* key, word32 len, const byte*
         return BAD_FUNC_ARG;
     if(!((dir == AES_ENCRYPTION) || (dir == AES_DECRYPTION)))
         return BAD_FUNC_ARG;
-    
+
     switch(len) {
     case 16: aes->keylen = AES_CFG_KEY_SIZE_128BIT ; break ;
     case 24: aes->keylen = AES_CFG_KEY_SIZE_192BIT ; break ;
     case 32: aes->keylen = AES_CFG_KEY_SIZE_256BIT ; break ;
-    default: return BAD_FUNC_ARG;      
+    default: return BAD_FUNC_ARG;
     }
-    
+
     XMEMCPY(aes->key, key, len) ;
     #ifdef WOLFSSL_AES_COUNTER
     aes->left = 0;
@@ -84,19 +85,19 @@ WOLFSSL_API int  wc_AesSetKey(Aes* aes, const byte* key, word32 len, const byte*
 #define IS_ALIGN16(p) (((unsigned int)(p)&0xf) == 0)
 
 static int  AesAlign16(Aes* aes, byte* out, const byte* in, word32 sz, word32 dir, word32 mode)
-{   
+{
     wolfSSL_TI_lockCCM() ;
     ROM_AESReset(AES_BASE);
-    ROM_AESConfigSet(AES_BASE, (aes->keylen | dir | 
+    ROM_AESConfigSet(AES_BASE, (aes->keylen | dir |
                      (mode==AES_CFG_MODE_CTR_NOCTR ? AES_CFG_MODE_CTR : mode)));
-    ROM_AESIVSet(AES_BASE, aes->reg);
-    ROM_AESKey1Set(AES_BASE, aes->key, aes->keylen);
+    ROM_AESIVSet(AES_BASE, (uint32_t *)aes->reg);
+    ROM_AESKey1Set(AES_BASE, (uint32_t *)aes->key, aes->keylen);
     if((dir == AES_CFG_DIR_DECRYPT)&& (mode == AES_CFG_MODE_CBC))
         /* if input and output same will overwrite input iv */
         XMEMCPY(aes->tmp, in + sz - AES_BLOCK_SIZE, AES_BLOCK_SIZE);
     ROM_AESDataProcess(AES_BASE, (uint32_t *)in, (uint32_t *)out, sz);
     wolfSSL_TI_unlockCCM() ;
-    
+
     /* store iv for next call */
     if(mode == AES_CFG_MODE_CBC){
         if(dir == AES_CFG_DIR_ENCRYPT)
@@ -106,7 +107,7 @@ static int  AesAlign16(Aes* aes, byte* out, const byte* in, word32 sz, word32 di
     }
 
     if(mode == AES_CFG_MODE_CTR) {
-        do {  
+        do {
             int i ;
             for (i = AES_BLOCK_SIZE - 1; i >= 0; i--) {
                  if (++((byte *)aes->reg)[i])
@@ -120,12 +121,12 @@ static int  AesAlign16(Aes* aes, byte* out, const byte* in, word32 sz, word32 di
 }
 
 static int  AesProcess(Aes* aes, byte* out, const byte* in, word32 sz, word32 dir, word32 mode)
-{   
-    const byte * in_p ; byte * out_p ; 
+{
+    const byte * in_p ; byte * out_p ;
     word32 size ;
     #define TI_BUFFSIZE 1024
     byte buff[TI_BUFFSIZE] ;
-    
+
     if ((aes == NULL) || (in == NULL) || (out == NULL))
         return BAD_FUNC_ARG;
     if(sz % AES_BLOCK_SIZE)
@@ -135,16 +136,16 @@ static int  AesProcess(Aes* aes, byte* out, const byte* in, word32 sz, word32 di
         size = sz ; in_p = in ; out_p = out ;
         if(!IS_ALIGN16(in)){
             size = sz>TI_BUFFSIZE ? TI_BUFFSIZE : sz ;
-            XMEMCPY(buff, in, size) ; 
+            XMEMCPY(buff, in, size) ;
             in_p = (const byte *)buff ;
         }
         if(!IS_ALIGN16(out)){
             size = sz>TI_BUFFSIZE ? TI_BUFFSIZE : sz ;
             out_p = buff ;
         }
-   
+
         AesAlign16(aes, out_p, in_p, size, dir, mode) ;
- 
+
         if(!IS_ALIGN16(out)){
             XMEMCPY(out, buff, size) ;
         }
@@ -155,18 +156,18 @@ static int  AesProcess(Aes* aes, byte* out, const byte* in, word32 sz, word32 di
 }
 
 WOLFSSL_API int  wc_AesCbcEncrypt(Aes* aes, byte* out, const byte* in, word32 sz)
-{   
+{
     return AesProcess(aes, out, in, sz, AES_CFG_DIR_ENCRYPT, AES_CFG_MODE_CBC) ;
 }
 
 WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out, const byte* in, word32 sz)
-{   
+{
     return AesProcess(aes, out, in, sz, AES_CFG_DIR_DECRYPT, AES_CFG_MODE_CBC) ;
 }
 
 #ifdef WOLFSSL_AES_COUNTER
 WOLFSSL_API void wc_AesCtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz)
-{ 
+{
             char out_block[AES_BLOCK_SIZE] ;
             int odd ;
             int even ;
@@ -181,7 +182,7 @@ WOLFSSL_API void wc_AesCtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz
                 }
                 XMEMCPY(tmp+aes->left, in, odd) ;
                 if((odd+aes->left) == AES_BLOCK_SIZE){
-                    AesProcess(aes, (byte *)out_block, (byte const *)tmp, AES_BLOCK_SIZE, 
+                    AesProcess(aes, (byte *)out_block, (byte const *)tmp, AES_BLOCK_SIZE,
                              AES_CFG_DIR_ENCRYPT, AES_CFG_MODE_CTR) ;
                     XMEMCPY(out, out_block+aes->left, odd) ;
                     aes->left = 0 ;
@@ -201,8 +202,8 @@ WOLFSSL_API void wc_AesCtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz
             if(odd) {
                 XMEMSET(tmp+aes->left, 0x0, AES_BLOCK_SIZE - aes->left) ;
                 XMEMCPY(tmp+aes->left, in, odd) ;
-                AesProcess(aes, (byte *)out_block, (byte const *)tmp, AES_BLOCK_SIZE, 
-                           AES_CFG_DIR_ENCRYPT, 
+                AesProcess(aes, (byte *)out_block, (byte const *)tmp, AES_BLOCK_SIZE,
+                           AES_CFG_DIR_ENCRYPT,
                            AES_CFG_MODE_CTR_NOCTR /* Counter mode without counting IV */
                            );
                 XMEMCPY(out, out_block+aes->left,odd) ;
@@ -250,11 +251,12 @@ static int AesAuthArgCheck(Aes* aes, byte* out, const byte* in, word32 inSz,
                               const byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz, word32 *M,  word32 *L)
 {
+    (void) authInSz ;
     if((aes == NULL)||(nonce == NULL)||(authTag== NULL)||(authIn == NULL))
         return BAD_FUNC_ARG;
     if((inSz != 0) && ((out == NULL)||(in == NULL)))
         return BAD_FUNC_ARG;
-    
+
     switch(authTagSz){
     case  4:
         *M = AES_CFG_CCM_M_4; break ;
@@ -302,24 +304,24 @@ static void AesAuthSetIv(Aes *aes, const byte *nonce, word32 len, word32 L, int 
   if(mode == AES_CFG_MODE_CCM){
     XMEMSET(aes->reg, 0, 16) ;
     switch(L){
-    case AES_CFG_CCM_L_8: 
+    case AES_CFG_CCM_L_8:
       aes->reg[0] = 0x7; break ;
-    case AES_CFG_CCM_L_7: 
+    case AES_CFG_CCM_L_7:
       aes->reg[0] = 0x6; break ;
-    case AES_CFG_CCM_L_6: 
+    case AES_CFG_CCM_L_6:
       aes->reg[0] = 0x5; break ;
-    case AES_CFG_CCM_L_5: 
+    case AES_CFG_CCM_L_5:
       aes->reg[0] = 0x4; break ;
-    case AES_CFG_CCM_L_4: 
+    case AES_CFG_CCM_L_4:
       aes->reg[0] = 0x3; break ;
-    case AES_CFG_CCM_L_3: 
+    case AES_CFG_CCM_L_3:
       aes->reg[0] = 0x2; break ;
-    case AES_CFG_CCM_L_2: 
+    case AES_CFG_CCM_L_2:
       aes->reg[0] = 0x1; break ;
-    case AES_CFG_CCM_L_1: 
+    case AES_CFG_CCM_L_1:
       aes->reg[0] = 0x0; break ;
     }
-    XMEMCPY(((byte *)aes->reg)+1, nonce, len) ; 
+    XMEMCPY(((byte *)aes->reg)+1, nonce, len) ;
   } else {
     byte *b = (byte *)aes->reg ;
     XMEMSET(aes->reg, 0, AES_BLOCK_SIZE);
@@ -342,7 +344,7 @@ static int AesAuthEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
                               const byte* nonce, word32 nonceSz,
                               byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz, int mode)
-{ 
+{
     word32 M, L ;
     byte *in_a,     *in_save ;
     byte *out_a,    *out_save ;
@@ -353,26 +355,26 @@ static int AesAuthEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
 
     if(AesAuthArgCheck(aes, out, in, inSz, nonce, nonceSz, authTag, authTagSz, authIn, authInSz, &M, &L)
        == BAD_FUNC_ARG)return BAD_FUNC_ARG ;
-    
+
     /* 16 byte padding */
     in_save = NULL ; out_save = NULL ; authIn_save = NULL ; nonce_save = NULL ;
     if((inSz%16)==0){
         in_save = NULL ; in_a = (byte *)in ;
         out_save = NULL ; out_a = out ;
     } else {
-      if((in_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+      if((in_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E ; }
       in_a = in_save ; XMEMSET(in_a, 0, RoundUp16(inSz)) ; XMEMCPY(in_a, in, inSz) ;
-      
-      if((out_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
-          FREE_ALL; return MEMORY_E ; } 
-      out_a = out_save ; 
+
+      if((out_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
+          FREE_ALL; return MEMORY_E ; }
+      out_a = out_save ;
     }
-    
+
     if((authInSz%16)==0){
         authIn_save = NULL ; authIn_a = (byte *)authIn ;
     } else {
-      if((authIn_save = XMALLOC(RoundUp16(authInSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+      if((authIn_save = XMALLOC(RoundUp16(authInSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E ; }
       authIn_a = authIn_save ; XMEMSET(authIn_a, 0, RoundUp16(authInSz)) ; XMEMCPY(authIn_a, authIn, authInSz) ;
     }
@@ -380,7 +382,7 @@ static int AesAuthEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
     if((nonceSz%16)==0){
         nonce_save = NULL ; nonce_a = (byte *)nonce ;
     } else {
-      if((nonce_save = XMALLOC(RoundUp16(nonceSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+      if((nonce_save = XMALLOC(RoundUp16(nonceSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E; }
       nonce_a = nonce_save ; XMEMSET(nonce_a, 0, RoundUp16(nonceSz)) ; XMEMCPY(nonce_a, nonce, nonceSz) ;
     }
@@ -403,7 +405,7 @@ static int AesAuthEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
         XMEMCPY(authTag, tmpTag, authTagSz) ;
     }
 
-    FREE_ALL; 
+    FREE_ALL;
     return 0 ;
 }
 
@@ -411,7 +413,7 @@ static int AesAuthDecrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
                               const byte* nonce, word32 nonceSz,
                               const byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz, int mode)
-{ 
+{
     word32 M, L ;
     byte *in_a,     *in_save ;
     byte *out_a,    *out_save ;
@@ -422,26 +424,26 @@ static int AesAuthDecrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
 
     if(AesAuthArgCheck(aes, out, in, inSz, nonce, nonceSz, authTag, authTagSz, authIn, authInSz, &M, &L)
        == BAD_FUNC_ARG)return  BAD_FUNC_ARG ;
-    
+
     /* 16 byte padding */
     in_save = NULL ; out_save = NULL ; authIn_save = NULL ; nonce_save = NULL ;
     if((inSz%16)==0){
         in_save = NULL ; in_a = (byte *)in ;
         out_save = NULL ; out_a = out ;
     } else {
-      if((in_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+      if((in_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E;}
       in_a = in_save ; XMEMSET(in_a, 0, RoundUp16(inSz)) ; XMEMCPY(in_a, in, inSz) ;
-      
-      if((out_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+
+      if((out_save = XMALLOC(RoundUp16(inSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E;}
-      out_a = out_save ; 
+      out_a = out_save ;
     }
-    
+
     if((authInSz%16)==0){
         authIn_save = NULL ; authIn_a = (byte *)authIn ;
     } else {
-      if((authIn_save = XMALLOC(RoundUp16(authInSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+      if((authIn_save = XMALLOC(RoundUp16(authInSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E; }
       authIn_a = authIn_save ; XMEMSET(authIn_a, 0, RoundUp16(authInSz)) ; XMEMCPY(authIn_a, authIn, authInSz) ;
     }
@@ -449,7 +451,7 @@ static int AesAuthDecrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
     if((nonceSz%16)==0){
         nonce_save = NULL ; nonce_a = (byte *)nonce ;
     } else {
-      if((nonce_save = XMALLOC(RoundUp16(nonceSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){ 
+      if((nonce_save = XMALLOC(RoundUp16(nonceSz), NULL, DYNAMIC_TYPE_TMP_BUFFER)) == NULL){
           FREE_ALL; return MEMORY_E; }
       nonce_a = nonce_save ; XMEMSET(nonce_a, 0, RoundUp16(nonceSz)) ; XMEMCPY(nonce_a, nonce, nonceSz) ;
     }
@@ -468,7 +470,7 @@ static int AesAuthDecrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
         XMEMSET(out, 0, inSz) ;
         ret = false ;
     } else {
-        XMEMCPY(out, out_a, inSz) ;  
+        XMEMCPY(out, out_a, inSz) ;
     }
 
     FREE_ALL ;
@@ -488,6 +490,9 @@ WOLFSSL_API int  wc_AesGcmEncrypt(Aes* aes, byte* out, const byte* in, word32 sz
                               byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz)
 {
+    if (authTagSz < WOLFSSL_MIN_AUTH_TAG_SZ) {
+        return BAD_FUNC_ARG;
+    }
     return AesAuthEncrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz,
                               authIn, authInSz, AES_CFG_MODE_GCM_HY0CALC) ;
 }
@@ -495,7 +500,7 @@ WOLFSSL_API int  wc_AesGcmDecrypt(Aes* aes, byte* out, const byte* in, word32 sz
                               const byte* iv, word32 ivSz,
                               const byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz)
-{ 
+{
     return AesAuthDecrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz,
                               authIn, authInSz, AES_CFG_MODE_GCM_HY0CALC) ;
 }
@@ -516,17 +521,17 @@ WOLFSSL_API int wc_GmacUpdate(Gmac* gmac, const byte* iv, word32 ivSz,
 #endif /* HAVE_AESGCM */
 
 #ifdef HAVE_AESCCM
-WOLFSSL_API void wc_AesCcmSetKey(Aes* aes, const byte* key, word32 keySz)
+WOLFSSL_API int wc_AesCcmSetKey(Aes* aes, const byte* key, word32 keySz)
 {
-    AesAuthSetKey(aes, key, keySz) ;
+    return AesAuthSetKey(aes, key, keySz) ;
 }
 
-WOLFSSL_API void wc_AesCcmEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
+WOLFSSL_API int wc_AesCcmEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
                               const byte* nonce, word32 nonceSz,
                               byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz)
-{ 
-    AesAuthEncrypt(aes, out, in, inSz, nonce, nonceSz, authTag, authTagSz,
+{
+    return AesAuthEncrypt(aes, out, in, inSz, nonce, nonceSz, authTag, authTagSz,
                               authIn, authInSz, AES_CFG_MODE_CCM) ;
 }
 
@@ -534,11 +539,27 @@ WOLFSSL_API int wc_AesCcmDecrypt(Aes* aes, byte* out, const byte* in, word32 inS
                               const byte* nonce, word32 nonceSz,
                               const byte* authTag, word32 authTagSz,
                               const byte* authIn, word32 authInSz)
-{ 
+{
     return AesAuthDecrypt(aes, out, in, inSz, nonce, nonceSz, authTag, authTagSz,
                               authIn, authInSz, AES_CFG_MODE_CCM) ;
 }
 #endif /* HAVE_AESCCM */
+
+WOLFSSL_API int wc_AesInit(Aes* aes, void* heap, int devId)
+{
+    if (aes == NULL)
+        return BAD_FUNC_ARG;
+
+    aes->heap = heap;
+    (void)devId;
+
+    return 0;
+}
+
+WOLFSSL_API void wc_AesFree(Aes* aes)
+{
+    (void)aes;
+}
 
 #endif /* WOLFSSL_TI_CRYPT */
 

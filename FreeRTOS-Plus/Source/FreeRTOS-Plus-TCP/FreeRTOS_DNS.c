@@ -843,10 +843,20 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	0,                 /* No authorities. */
 	0                  /* No additional authorities. */
 };
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 	/* Copy in the const part of the header. Intentionally using different
 	 * pointers with memcpy() to put the information in to correct place. */
-	( void ) memcpy( ( void * ) pucUDPPayloadBuffer, ( const void * ) ( &( xDefaultPartDNSHeader ) ), sizeof( xDefaultPartDNSHeader ) );
+	/*
+	 * Use helper variables for memcpy() to remain
+	 * compliant with MISRA Rule 21.15.  These should be
+	 * optimized away.
+	 */
+	pvCopySource = &xDefaultPartDNSHeader;
+	pvCopyDest = pucUDPPayloadBuffer;
+	( void ) memcpy( pvCopyDest, pvCopySource, sizeof( xDefaultPartDNSHeader ) );
 
 	/* Write in a unique identifier. Cast the Payload Buffer to DNSMessage_t
 	 * to easily access fields of the DNS Message. */
@@ -1070,7 +1080,7 @@ size_t uxIndex = 0U;
 /* The function below will only be called :
 when ipconfigDNS_USE_CALLBACKS == 1
 when ipconfigUSE_LLMNR == 1
-for testing purposes, by the module iot_test_freertos_tcp.c
+for testing purposes, by the module test_freertos_tcp.c
 */
 uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
@@ -1134,6 +1144,9 @@ size_t uxSourceBytesRemaining;
 uint16_t x, usDataLength, usQuestions;
 uint16_t usType = 0U;
 BaseType_t xReturn = pdTRUE;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigUSE_LLMNR == 1 )
 	uint16_t usClass = 0U;
@@ -1314,9 +1327,14 @@ BaseType_t xReturn = pdTRUE;
 						{
 							/* Copy the IP address out of the record. Using different pointers
 							 * to copy only the portion we want is intentional here. */
-							( void ) memcpy( ( void * ) ( &( ulIPAddress ) ),
-											 ( const void * ) ( &( pucByte[ sizeof( DNSAnswerRecord_t ) ] ) ),
-											 sizeof( uint32_t ) );
+							/*
+							 * Use helper variables for memcpy() to remain
+							 * compliant with MISRA Rule 21.15.  These should be
+							 * optimized away.
+							 */
+							pvCopySource = &pucByte[ sizeof( DNSAnswerRecord_t ) ];
+							pvCopyDest = &ulIPAddress;
+							( void ) memcpy( pvCopyDest, pvCopySource, sizeof( uint32_t ) );
 
 							#if( ipconfigDNS_USE_CALLBACKS == 1 )
 							{
@@ -1656,7 +1674,7 @@ BaseType_t xReturn;
 	/* This must be the first time this function has been called.  Create
 	the socket. */
 	xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-	if( prvSocketValid( xSocket ) != pdTRUE )
+	if( prvSocketValid( xSocket ) != pdTRUE_UNSIGNED )
 	{
 		/* There was an error, return NULL. */
 		xSocket = NULL;

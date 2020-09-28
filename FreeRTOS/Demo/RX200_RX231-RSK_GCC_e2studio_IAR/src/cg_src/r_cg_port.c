@@ -38,6 +38,7 @@ Includes
 #include "r_cg_macrodriver.h"
 #include "r_cg_port.h"
 /* Start user code for include. Do not edit comment generated here */
+#include "rskrx231def.h"
 /* End user code. Do not edit comment generated here */
 #include "r_cg_userdefine.h"
 
@@ -45,6 +46,9 @@ Includes
 Global variables and functions
 ***********************************************************************************************************************/
 /* Start user code for global. Do not edit comment generated here */
+
+#if defined(RSK_RX231)
+
 /* End user code. Do not edit comment generated here */
 
 /***********************************************************************************************************************
@@ -66,4 +70,15 @@ void R_PORT_Create(void)
 }
 
 /* Start user code for adding. Do not edit comment generated here */
+
+#elif defined(TB_RX231)
+
+void R_PORT_Create(void)
+{
+    PORTD.PODR.BYTE = _40_Pm6_OUTPUT_1 | _80_Pm7_OUTPUT_1;
+    PORTD.PDR.BYTE = _40_Pm6_MODE_OUTPUT | _80_Pm7_MODE_OUTPUT;
+}
+
+#endif
+
 /* End user code. Do not edit comment generated here */

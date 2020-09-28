@@ -256,6 +256,11 @@ static eFrameProcessingResult_t prvAllowIPPacket( const IPPacket_t * const pxIPP
 	static BaseType_t xCheckSizeFields( const uint8_t * const pucEthernetBuffer, size_t uxBufferLength );
 #endif	/* ( ipconfigDRIVER_INCLUDED_RX_IP_CHECKSUM == 1 ) */
 
+/*
+ * Returns the network buffer descriptor that owns a given packet buffer.
+ */
+static NetworkBufferDescriptor_t *prvPacketBuffer_to_NetworkBuffer( const void *pvBuffer, size_t uxOffset );
+
 /*-----------------------------------------------------------*/
 
 /* The queue used to pass events into the IP-task for processing. */
@@ -410,7 +415,7 @@ struct freertos_sockaddr xAddress;
 			case eNetworkRxEvent:
 				/* The network hardware driver has received a new packet.  A
 				pointer to the received buffer is located in the pvData member
-				of the received event structure. */				
+				of the received event structure. */
 				prvHandleEthernetPacket( ipCAST_PTR_TO_TYPE_PTR( NetworkBufferDescriptor_t, xReceivedEvent.pvData ) );
 				break;
 
@@ -482,7 +487,7 @@ struct freertos_sockaddr xAddress;
 						( void ) xTaskNotifyGive( pxMessage->xTaskhandle );
 					}
 					#else
-					{						
+					{
 						vSocketSelect( ipCAST_PTR_TO_TYPE_PTR( SocketSelect_t, xReceivedEvent.pvData ) );
 					}
 					#endif	/* ( ipconfigSELECT_USES_NOTIFY != 0 ) */
@@ -844,9 +849,9 @@ TickType_t uxBlockTime = uxBlockTimeTicks;
 	/* Cap the block time.  The reason for this is explained where
 	ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS is defined (assuming an official
 	FreeRTOSIPConfig.h header file is being used). */
-	if( uxBlockTime > ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ) )
+	if( uxBlockTime > ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS )
 	{
-		uxBlockTime = ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS );
+		uxBlockTime = ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS;
 	}
 
 	/* Obtain a network buffer with the required amount of storage. */
@@ -895,7 +900,7 @@ NetworkBufferDescriptor_t * pxNewBuffer;
 }
 /*-----------------------------------------------------------*/
 
-NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer )
+static NetworkBufferDescriptor_t *prvPacketBuffer_to_NetworkBuffer( const void *pvBuffer, size_t uxOffset )
 {
 uintptr_t uxBuffer;
 NetworkBufferDescriptor_t *pxResult;
@@ -909,9 +914,10 @@ NetworkBufferDescriptor_t *pxResult;
 		/* Obtain the network buffer from the zero copy pointer. */
 		uxBuffer = ipPOINTER_CAST( uintptr_t, pvBuffer );
 
-		/* The input here is a pointer to a payload buffer.  Subtract the
-		size of the header in the network buffer, usually 8 + 2 bytes. */
-		uxBuffer -= ipBUFFER_PADDING;
+		/* The input here is a pointer to a packet buffer plus some offset.  Subtract
+		this offset, and also the size of the header in the network buffer, usually
+		8 + 2 bytes. */
+		uxBuffer -= ( uxOffset + ipBUFFER_PADDING );
 
 		/* Here a pointer was placed to the network descriptor.  As a
 		pointer is dereferenced, make sure it is well aligned. */
@@ -921,9 +927,6 @@ NetworkBufferDescriptor_t *pxResult;
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
 			pxResult = * ( ipPOINTER_CAST( NetworkBufferDescriptor_t **, uxBuffer ) );
-			#if( ipconfigTCP_IP_SANITY != 0 )
-				configASSERT( bIsValidNetworkDescriptor( pxResult ) != 0 );
-			#endif
 		}
 		else
 		{
@@ -935,29 +938,17 @@ NetworkBufferDescriptor_t *pxResult;
 }
 /*-----------------------------------------------------------*/
 
+#if( ipconfigZERO_COPY_TX_DRIVER != 0 ) || ( ipconfigZERO_COPY_RX_DRIVER != 0 )
+	NetworkBufferDescriptor_t *pxPacketBuffer_to_NetworkBuffer( const void *pvBuffer )
+	{
+		return prvPacketBuffer_to_NetworkBuffer( pvBuffer, 0U );
+	}
+#endif /* ( ipconfigZERO_COPY_TX_DRIVER != 0 ) || ( ipconfigZERO_COPY_RX_DRIVER != 0 ) */
+/*-----------------------------------------------------------*/
+
 NetworkBufferDescriptor_t *pxUDPPayloadBuffer_to_NetworkBuffer( const void * pvBuffer )
 {
-uintptr_t uxBuffer;
-NetworkBufferDescriptor_t *pxResult;
-
-	if( pvBuffer == NULL )
-	{
-		pxResult = NULL;
-	}
-	else
-	{
-		/* Obtain the network buffer from the zero copy pointer. */
-		uxBuffer = ipPOINTER_CAST( uintptr_t, pvBuffer );
-
-		/* The input here is a pointer to a payload buffer.  Subtract
-		the total size of a UDP/IP header plus the size of the header in
-		the network buffer, usually 8 + 2 bytes. */
-		uxBuffer -= ( uintptr_t ) sizeof( UDPPacket_t );
-
-		pxResult = pxPacketBuffer_to_NetworkBuffer( ( const void * ) uxBuffer );
-	}
-
-	return pxResult;
+	return prvPacketBuffer_to_NetworkBuffer( pvBuffer, sizeof( UDPPacket_t ) );
 }
 /*-----------------------------------------------------------*/
 
@@ -979,6 +970,12 @@ BaseType_t xReturn = pdFALSE;
 	configASSERT( xIPIsNetworkTaskReady() == pdFALSE );
 	configASSERT( xNetworkEventQueue == NULL );
 	configASSERT( xIPTaskHandle == NULL );
+	if( sizeof( uintptr_t ) == 8 )
+	{
+		/* This is a 64-bit platform, make sure there is enough space in
+		 * pucEthernetBuffer to store a pointer. */
+		configASSERT( ipconfigBUFFER_PADDING == 14 );
+	}
 
 	#ifndef _lint
 	{
@@ -993,7 +990,7 @@ BaseType_t xReturn = pdFALSE;
 	}
 	#endif
 	/* Attempt to create the queue used to communicate with the IP task. */
-	xNetworkEventQueue = xQueueCreate( ( UBaseType_t ) ipconfigEVENT_QUEUE_LENGTH, ( UBaseType_t ) sizeof( IPStackEvent_t ) );
+	xNetworkEventQueue = xQueueCreate( ipconfigEVENT_QUEUE_LENGTH, sizeof( IPStackEvent_t ) );
 	configASSERT( xNetworkEventQueue != NULL );
 
 	if( xNetworkEventQueue != NULL )
@@ -1047,9 +1044,9 @@ BaseType_t xReturn = pdFALSE;
 			/* Create the task that processes Ethernet and stack events. */
 			xReturn = xTaskCreate( prvIPTask,
 								   "IP-task",
-								   ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS,
+								   ipconfigIP_TASK_STACK_SIZE_WORDS,
 								   NULL,
-								   ( UBaseType_t )ipconfigIP_TASK_PRIORITY,
+								   ipconfigIP_TASK_PRIORITY,
 								   &( xIPTaskHandle ) );
 		}
 		else
@@ -2420,7 +2417,8 @@ aid though to optimise the calculations. */
 xUnion32 xSum2, xSum, xTerm;
 xUnionPtr xSource;
 xUnionPtr xLastSource;
-uint32_t ulAlignBits, ulCarry = 0UL;
+uintptr_t uxAlignBits;
+uint32_t ulCarry = 0UL;
 uint16_t usTemp;
 size_t uxDataLengthBytes = uxByteCount;
 
@@ -2434,12 +2432,19 @@ size_t uxDataLengthBytes = uxByteCount;
 	xTerm.u32 = 0UL;
 
 	xSource.u8ptr = ipPOINTER_CAST( uint8_t *, pucNextData );
-	/* coverity[misra_c_2012_rule_11_4_violation] */
-	/* The object pointer expression "pucNextData" of type "uint8_t const *" is cast to an integer type "unsigned int". */
-	ulAlignBits = ( ( ( uint32_t ) pucNextData ) & 0x03U ); /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
+	uxAlignBits = ( ( ( uintptr_t ) pucNextData ) & 0x03U );
+	/*
+	 * If pucNextData is non-aligned then the checksum is starting at an
+	 * odd position and we need to make sure the usSum value now in xSum is
+	 * as if it had been "aligned" in the same way.
+	 */
+	if( ( uxAlignBits & 1UL) != 0U )
+	{
+		xSum.u32 = ( ( xSum.u32 & 0xffU ) << 8 ) | ( ( xSum.u32 & 0xff00U ) >> 8 );
+	}
 
 	/* If byte (8-bit) aligned... */
-	if( ( ( ulAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
+	if( ( ( uxAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
 	{
 		xTerm.u8[ 1 ] = *( xSource.u8ptr );
 		xSource.u8ptr++;
@@ -2448,7 +2453,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	}
 
 	/* If half-word (16-bit) aligned... */
-	if( ( ( ulAlignBits == 1U ) || ( ulAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
+	if( ( ( uxAlignBits == 1U ) || ( uxAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
 	{
 		xSum.u32 += *(xSource.u16ptr);
 		xSource.u16ptr++;
@@ -2529,7 +2534,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	/* coverity[value_overwrite] */
 	xSum.u32 = ( uint32_t ) xSum.u16[ 0 ] + xSum.u16[ 1 ];
 
-	if( ( ulAlignBits & 1U ) != 0U )
+	if( ( uxAlignBits & 1U ) != 0U )
 	{
 		/* Quite unlikely, but pucNextData might be non-aligned, which would
 		 mean that a checksum is calculated starting at an odd position. */
@@ -2546,6 +2551,9 @@ size_t uxDataLengthBytes = uxByteCount;
 void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
 EthernetHeader_t *pxEthernetHeader;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNewBuffer;
@@ -2584,9 +2592,19 @@ EthernetHeader_t *pxEthernetHeader;
 		/* Map the Buffer to Ethernet Header struct for easy access to fields. */
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = &pxEthernetHeader->xSourceAddress;
+		pvCopyDest = &pxEthernetHeader->xDestinationAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, sizeof( pxEthernetHeader->xDestinationAddress ) );
+
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );

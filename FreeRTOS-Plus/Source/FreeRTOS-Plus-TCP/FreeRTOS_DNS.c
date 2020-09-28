@@ -42,8 +42,6 @@
 #include "NetworkBufferManagement.h"
 #include "NetworkInterface.h"
 
-#include "FreeRTOSIPConfigDefaults.h"
-
 /* Exclude the entire file if DNS is not enabled. */
 #if( ipconfigUSE_DNS != 0 )
 
@@ -393,7 +391,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 	/* Define FreeRTOS_gethostbyname() as a normal blocking call. */
 	uint32_t FreeRTOS_gethostbyname( const char *pcHostName )
 	{
-		return FreeRTOS_gethostbyname_a( pcHostName, NULL, ( void * ) NULL, 0 );
+		return FreeRTOS_gethostbyname_a( pcHostName, NULL, ( void * ) NULL, 0U );
 	}
 	/*-----------------------------------------------------------*/
 
@@ -843,10 +841,20 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	0,                 /* No authorities. */
 	0                  /* No additional authorities. */
 };
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 	/* Copy in the const part of the header. Intentionally using different
 	 * pointers with memcpy() to put the information in to correct place. */
-	( void ) memcpy( ( void * ) pucUDPPayloadBuffer, ( const void * ) ( &( xDefaultPartDNSHeader ) ), sizeof( xDefaultPartDNSHeader ) );
+	/*
+	 * Use helper variables for memcpy() to remain
+	 * compliant with MISRA Rule 21.15.  These should be
+	 * optimized away.
+	 */
+	pvCopySource = &xDefaultPartDNSHeader;
+	pvCopyDest = pucUDPPayloadBuffer;
+	( void ) memcpy( pvCopyDest, pvCopySource, sizeof( xDefaultPartDNSHeader ) );
 
 	/* Write in a unique identifier. Cast the Payload Buffer to DNSMessage_t
 	 * to easily access fields of the DNS Message. */
@@ -891,7 +899,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Finish off the record. Cast the record onto DNSTail_t stucture to easily
 	 * access the fields of the DNS Message. */
-	pxTail = ipCAST_PTR_TO_TYPE_PTR( DNSTail_t, &( pucUDPPayloadBuffer[ uxStart + 1 ] ) );
+	pxTail = ipCAST_PTR_TO_TYPE_PTR( DNSTail_t, &( pucUDPPayloadBuffer[ uxStart + 1U ] ) );
 
 	#if defined( _lint ) || defined( __COVERITY__ )
 	( void ) pxTail;
@@ -902,7 +910,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 
 	/* Return the total size of the generated message, which is the space from
 	the last written byte to the beginning of the buffer. */
-	return uxIndex + sizeof( DNSTail_t ) + 1;
+	return uxIndex + sizeof( DNSTail_t ) + 1U;
 }
 /*-----------------------------------------------------------*/
 
@@ -1070,7 +1078,7 @@ size_t uxIndex = 0U;
 /* The function below will only be called :
 when ipconfigDNS_USE_CALLBACKS == 1
 when ipconfigUSE_LLMNR == 1
-for testing purposes, by the module iot_test_freertos_tcp.c
+for testing purposes, by the module test_freertos_tcp.c
 */
 uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
@@ -1134,6 +1142,9 @@ size_t uxSourceBytesRemaining;
 uint16_t x, usDataLength, usQuestions;
 uint16_t usType = 0U;
 BaseType_t xReturn = pdTRUE;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigUSE_LLMNR == 1 )
 	uint16_t usClass = 0U;
@@ -1142,6 +1153,7 @@ BaseType_t xReturn = pdTRUE;
 	BaseType_t xDoStore = xExpected;
 	char pcName[ ipconfigDNS_CACHE_NAME_LENGTH ] = "";
 #endif
+const size_t uxAddressLength = ipSIZE_OF_IPv4_ADDRESS;
 
 	/* Ensure that the buffer is of at least minimal DNS message length. */
 	if( uxBufferLength < sizeof( DNSMessage_t ) )
@@ -1264,7 +1276,7 @@ BaseType_t xReturn = pdTRUE;
 
 					uxResult = prvSkipNameField( pucByte,
 												 uxSourceBytesRemaining );
-	
+
 					/* Check for a malformed response. */
 					if( uxResult == 0U )
 					{
@@ -1287,7 +1299,7 @@ BaseType_t xReturn = pdTRUE;
 
 					if( usType == ( uint16_t ) dnsTYPE_A_HOST )
 					{
-						if( uxSourceBytesRemaining >= ( sizeof( DNSAnswerRecord_t ) + ipSIZE_OF_IPv4_ADDRESS ) )
+						if( uxSourceBytesRemaining >= ( sizeof( DNSAnswerRecord_t ) + uxAddressLength ) )
 						{
 							xDoAccept = pdTRUE;
 						}
@@ -1310,13 +1322,18 @@ BaseType_t xReturn = pdTRUE;
 						pxDNSAnswerRecord = ipCAST_PTR_TO_TYPE_PTR( DNSAnswerRecord_t, pucByte );
 
 						/* Sanity check the data length of an IPv4 answer. */
-						if( FreeRTOS_ntohs( pxDNSAnswerRecord->usDataLength ) == ( uint16_t ) sizeof( uint32_t ) )
+						if( FreeRTOS_ntohs( pxDNSAnswerRecord->usDataLength ) == ( uint16_t ) uxAddressLength )
 						{
 							/* Copy the IP address out of the record. Using different pointers
 							 * to copy only the portion we want is intentional here. */
-							( void ) memcpy( ( void * ) ( &( ulIPAddress ) ),
-											 ( const void * ) ( &( pucByte[ sizeof( DNSAnswerRecord_t ) ] ) ),
-											 sizeof( uint32_t ) );
+							/*
+							 * Use helper variables for memcpy() to remain
+							 * compliant with MISRA Rule 21.15.  These should be
+							 * optimized away.
+							 */
+							pvCopySource = &pucByte[ sizeof( DNSAnswerRecord_t ) ];
+							pvCopyDest = &ulIPAddress;
+							( void ) memcpy( pvCopyDest, pvCopySource, uxAddressLength );
 
 							#if( ipconfigDNS_USE_CALLBACKS == 1 )
 							{
@@ -1352,8 +1369,8 @@ BaseType_t xReturn = pdTRUE;
 							#endif /* ipconfigUSE_DNS_CACHE */
 						}
 
-						pucByte = &( pucByte[ sizeof( DNSAnswerRecord_t ) + sizeof( uint32_t ) ] );
-						uxSourceBytesRemaining -= ( sizeof( DNSAnswerRecord_t ) + sizeof( uint32_t ) );
+						pucByte = &( pucByte[ sizeof( DNSAnswerRecord_t ) + uxAddressLength ] );
+						uxSourceBytesRemaining -= ( sizeof( DNSAnswerRecord_t ) + uxAddressLength );
 					}
 					else if( uxSourceBytesRemaining >= sizeof( DNSAnswerRecord_t ) )
 					{
@@ -1389,7 +1406,10 @@ BaseType_t xReturn = pdTRUE;
 			}
 
 #if( ipconfigUSE_LLMNR == 1 )
-			else if( ( usQuestions != ( uint16_t ) 0U ) && ( usType == dnsTYPE_A_HOST ) && ( usClass == dnsCLASS_IN ) && ( pcRequestedName != NULL ) )
+			else if( ( usQuestions != ( uint16_t ) 0U ) &&
+					 ( usType == dnsTYPE_A_HOST ) &&
+					 ( usClass == dnsCLASS_IN ) &&
+					 ( pcRequestedName != NULL ) )
 			{
 				/* If this is not a reply to our DNS request, it might an LLMNR
 				request. */
@@ -1712,7 +1732,7 @@ BaseType_t xReturn;
 
 		#if( ipconfigDRIVER_INCLUDED_TX_IP_CHECKSUM == 0 )
 		{
-			/* calculate the IP header checksum */
+			/* Calculate the IP header checksum */
 			pxIPHeader->usHeaderChecksum = 0U;
 			pxIPHeader->usHeaderChecksum = usGenerateChecksum( 0U, ( uint8_t * ) &( pxIPHeader->ucVersionHeaderLength ), ipSIZE_OF_IPv4_HEADER );
 			pxIPHeader->usHeaderChecksum = ~FreeRTOS_htons( pxIPHeader->usHeaderChecksum );

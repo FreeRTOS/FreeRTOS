@@ -3,20 +3,22 @@
 #
 # Our valgrind "error" wrapper.
 
-valgrind --leak-check=full -q "$@" 2> valgrind.tmp
+TMP="valgrind.tmp.$$"
+
+valgrind  --suppressions=valgrind-bash.supp --leak-check=full -q "$@" 2> $TMP
 
 result="$?"
 
 # verify no errors
 
-output="`cat valgrind.tmp`"
+output="`cat $TMP`"
 
 if [ "$output" != "" ]; then
-    cat valgrind.tmp >&2
+    cat $TMP >&2
     result=1
 fi
 
-rm valgrind.tmp
+rm $TMP
 
 exit $result
 

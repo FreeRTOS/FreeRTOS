@@ -600,14 +600,14 @@ void fe448_to_bytes(unsigned char* b, const int64_t* a)
     in0 += o;
     in4 += o;
     in7 -= o << 56;
-    o = in0  >> 56; in1  += o; t = o << 56; in0  -= t;
-    o = in1  >> 56; in2  += o; t = o << 56; in1  -= t;
-    o = in2  >> 56; in3  += o; t = o << 56; in2  -= t;
-    o = in3  >> 56; in4  += o; t = o << 56; in3  -= t;
-    o = in4  >> 56; in5  += o; t = o << 56; in4  -= t;
-    o = in5  >> 56; in6  += o; t = o << 56; in5  -= t;
-    o = in6  >> 56; in7  += o; t = o << 56; in6  -= t;
-    o = in7  >> 56; in0  += o;
+    o = (int64_t)(in0  >> 56); in1  += o; t = o << 56; in0  -= t;
+    o = (int64_t)(in1  >> 56); in2  += o; t = o << 56; in1  -= t;
+    o = (int64_t)(in2  >> 56); in3  += o; t = o << 56; in2  -= t;
+    o = (int64_t)(in3  >> 56); in4  += o; t = o << 56; in3  -= t;
+    o = (int64_t)(in4  >> 56); in5  += o; t = o << 56; in4  -= t;
+    o = (int64_t)(in5  >> 56); in6  += o; t = o << 56; in5  -= t;
+    o = (int64_t)(in6  >> 56); in7  += o; t = o << 56; in6  -= t;
+    o = (int64_t)(in7  >> 56); in0  += o;
                     in4  += o; t = o << 56; in7  -= t;
 
     /* Output as bytes */
@@ -807,25 +807,25 @@ void fe448_mul39081(int64_t* r, const int64_t* a)
     int128_t t5 = a[5] * (int128_t)39081;
     int128_t t6 = a[6] * (int128_t)39081;
     int128_t t7 = a[7] * (int128_t)39081;
-    o = t0  >> 56; t1  += o; t = (int128_t)o << 56; t0  -= t;
-    o = t1  >> 56; t2  += o; t = (int128_t)o << 56; t1  -= t;
-    o = t2  >> 56; t3  += o; t = (int128_t)o << 56; t2  -= t;
-    o = t3  >> 56; t4  += o; t = (int128_t)o << 56; t3  -= t;
-    o = t4  >> 56; t5  += o; t = (int128_t)o << 56; t4  -= t;
-    o = t5  >> 56; t6  += o; t = (int128_t)o << 56; t5  -= t;
-    o = t6  >> 56; t7  += o; t = (int128_t)o << 56; t6  -= t;
-    o = t7  >> 56; t0  += o;
+    o = (int64_t)(t0  >> 56); t1  += o; t = (int128_t)o << 56; t0  -= t;
+    o = (int64_t)(t1  >> 56); t2  += o; t = (int128_t)o << 56; t1  -= t;
+    o = (int64_t)(t2  >> 56); t3  += o; t = (int128_t)o << 56; t2  -= t;
+    o = (int64_t)(t3  >> 56); t4  += o; t = (int128_t)o << 56; t3  -= t;
+    o = (int64_t)(t4  >> 56); t5  += o; t = (int128_t)o << 56; t4  -= t;
+    o = (int64_t)(t5  >> 56); t6  += o; t = (int128_t)o << 56; t5  -= t;
+    o = (int64_t)(t6  >> 56); t7  += o; t = (int128_t)o << 56; t6  -= t;
+    o = (int64_t)(t7  >> 56); t0  += o;
                    t4  += o; t = (int128_t)o << 56; t7  -= t;
 
     /* Store */
-    r[0] = t0;
-    r[1] = t1;
-    r[2] = t2;
-    r[3] = t3;
-    r[4] = t4;
-    r[5] = t5;
-    r[6] = t6;
-    r[7] = t7;
+    r[0] = (int64_t)t0;
+    r[1] = (int64_t)t1;
+    r[2] = (int64_t)t2;
+    r[3] = (int64_t)t3;
+    r[4] = (int64_t)t4;
+    r[5] = (int64_t)t5;
+    r[6] = (int64_t)t6;
+    r[7] = (int64_t)t7;
 }
 
 /* Mulitply two field elements. r = (a * b) mod (2^448 - 2^224 - 1)
@@ -931,25 +931,25 @@ void fe448_mul(int64_t* r, const int64_t* a, const int64_t* b)
     t7  +=       t11;
     o = t7  >> 56; t0  += o;
                    t4  += o; t = (int128_t)o << 56; t7  -= t;
-    o = t0  >> 56; t1  += o; t = (int128_t)o << 56; t0  -= t;
-    o = t1  >> 56; t2  += o; t = (int128_t)o << 56; t1  -= t;
-    o = t2  >> 56; t3  += o; t = (int128_t)o << 56; t2  -= t;
-    o = t3  >> 56; t4  += o; t = (int128_t)o << 56; t3  -= t;
-    o = t4  >> 56; t5  += o; t = (int128_t)o << 56; t4  -= t;
-    o = t5  >> 56; t6  += o; t = (int128_t)o << 56; t5  -= t;
-    o = t6  >> 56; t7  += o; t = (int128_t)o << 56; t6  -= t;
-    o = t7  >> 56; t0  += o;
+    o = (int64_t)(t0  >> 56); t1  += o; t = (int128_t)o << 56; t0  -= t;
+    o = (int64_t)(t1  >> 56); t2  += o; t = (int128_t)o << 56; t1  -= t;
+    o = (int64_t)(t2  >> 56); t3  += o; t = (int128_t)o << 56; t2  -= t;
+    o = (int64_t)(t3  >> 56); t4  += o; t = (int128_t)o << 56; t3  -= t;
+    o = (int64_t)(t4  >> 56); t5  += o; t = (int128_t)o << 56; t4  -= t;
+    o = (int64_t)(t5  >> 56); t6  += o; t = (int128_t)o << 56; t5  -= t;
+    o = (int64_t)(t6  >> 56); t7  += o; t = (int128_t)o << 56; t6  -= t;
+    o = (int64_t)(t7  >> 56); t0  += o;
                    t4  += o; t = (int128_t)o << 56; t7  -= t;
 
     /* Store */
-    r[0] = t0;
-    r[1] = t1;
-    r[2] = t2;
-    r[3] = t3;
-    r[4] = t4;
-    r[5] = t5;
-    r[6] = t6;
-    r[7] = t7;
+    r[0] = (int64_t)t0;
+    r[1] = (int64_t)t1;
+    r[2] = (int64_t)t2;
+    r[3] = (int64_t)t3;
+    r[4] = (int64_t)t4;
+    r[5] = (int64_t)t5;
+    r[6] = (int64_t)t6;
+    r[7] = (int64_t)t7;
 }
 
 /* Square a field element. r = (a * a) mod (2^448 - 2^224 - 1)
@@ -1020,25 +1020,25 @@ void fe448_sqr(int64_t* r, const int64_t* a)
     t7  +=       t11;
     o = t7  >> 56; t0  += o;
                    t4  += o; t = (int128_t)o << 56; t7  -= t;
-    o = t0  >> 56; t1  += o; t = (int128_t)o << 56; t0  -= t;
-    o = t1  >> 56; t2  += o; t = (int128_t)o << 56; t1  -= t;
-    o = t2  >> 56; t3  += o; t = (int128_t)o << 56; t2  -= t;
-    o = t3  >> 56; t4  += o; t = (int128_t)o << 56; t3  -= t;
-    o = t4  >> 56; t5  += o; t = (int128_t)o << 56; t4  -= t;
-    o = t5  >> 56; t6  += o; t = (int128_t)o << 56; t5  -= t;
-    o = t6  >> 56; t7  += o; t = (int128_t)o << 56; t6  -= t;
-    o = t7  >> 56; t0  += o;
+    o = (int64_t)(t0  >> 56); t1  += o; t = (int128_t)o << 56; t0  -= t;
+    o = (int64_t)(t1  >> 56); t2  += o; t = (int128_t)o << 56; t1  -= t;
+    o = (int64_t)(t2  >> 56); t3  += o; t = (int128_t)o << 56; t2  -= t;
+    o = (int64_t)(t3  >> 56); t4  += o; t = (int128_t)o << 56; t3  -= t;
+    o = (int64_t)(t4  >> 56); t5  += o; t = (int128_t)o << 56; t4  -= t;
+    o = (int64_t)(t5  >> 56); t6  += o; t = (int128_t)o << 56; t5  -= t;
+    o = (int64_t)(t6  >> 56); t7  += o; t = (int128_t)o << 56; t6  -= t;
+    o = (int64_t)(t7  >> 56); t0  += o;
                    t4  += o; t = (int128_t)o << 56; t7  -= t;
 
     /* Store */
-    r[0] = t0;
-    r[1] = t1;
-    r[2] = t2;
-    r[3] = t3;
-    r[4] = t4;
-    r[5] = t5;
-    r[6] = t6;
-    r[7] = t7;
+    r[0] = (int64_t)t0;
+    r[1] = (int64_t)t1;
+    r[2] = (int64_t)t2;
+    r[3] = (int64_t)t3;
+    r[4] = (int64_t)t4;
+    r[5] = (int64_t)t5;
+    r[6] = (int64_t)t6;
+    r[7] = (int64_t)t7;
 }
 
 /* Invert the field element. (r * a) mod (2^448 - 2^224 - 1) = 1
@@ -1469,22 +1469,22 @@ void fe448_to_bytes(unsigned char* b, const int32_t* a)
     in0 += o;
     in8 += o;
     in15 -= o << 28;
-    o = in0  >> 28; in1  += o; t = o << 28; in0  -= t;
-    o = in1  >> 28; in2  += o; t = o << 28; in1  -= t;
-    o = in2  >> 28; in3  += o; t = o << 28; in2  -= t;
-    o = in3  >> 28; in4  += o; t = o << 28; in3  -= t;
-    o = in4  >> 28; in5  += o; t = o << 28; in4  -= t;
-    o = in5  >> 28; in6  += o; t = o << 28; in5  -= t;
-    o = in6  >> 28; in7  += o; t = o << 28; in6  -= t;
-    o = in7  >> 28; in8  += o; t = o << 28; in7  -= t;
-    o = in8  >> 28; in9  += o; t = o << 28; in8  -= t;
-    o = in9  >> 28; in10 += o; t = o << 28; in9  -= t;
-    o = in10 >> 28; in11 += o; t = o << 28; in10 -= t;
-    o = in11 >> 28; in12 += o; t = o << 28; in11 -= t;
-    o = in12 >> 28; in13 += o; t = o << 28; in12 -= t;
-    o = in13 >> 28; in14 += o; t = o << 28; in13 -= t;
-    o = in14 >> 28; in15 += o; t = o << 28; in14 -= t;
-    o = in15 >> 28; in0  += o;
+    o = (int32_t)(in0  >> 28); in1  += o; t = o << 28; in0  -= t;
+    o = (int32_t)(in1  >> 28); in2  += o; t = o << 28; in1  -= t;
+    o = (int32_t)(in2  >> 28); in3  += o; t = o << 28; in2  -= t;
+    o = (int32_t)(in3  >> 28); in4  += o; t = o << 28; in3  -= t;
+    o = (int32_t)(in4  >> 28); in5  += o; t = o << 28; in4  -= t;
+    o = (int32_t)(in5  >> 28); in6  += o; t = o << 28; in5  -= t;
+    o = (int32_t)(in6  >> 28); in7  += o; t = o << 28; in6  -= t;
+    o = (int32_t)(in7  >> 28); in8  += o; t = o << 28; in7  -= t;
+    o = (int32_t)(in8  >> 28); in9  += o; t = o << 28; in8  -= t;
+    o = (int32_t)(in9  >> 28); in10 += o; t = o << 28; in9  -= t;
+    o = (int32_t)(in10 >> 28); in11 += o; t = o << 28; in10 -= t;
+    o = (int32_t)(in11 >> 28); in12 += o; t = o << 28; in11 -= t;
+    o = (int32_t)(in12 >> 28); in13 += o; t = o << 28; in12 -= t;
+    o = (int32_t)(in13 >> 28); in14 += o; t = o << 28; in13 -= t;
+    o = (int32_t)(in14 >> 28); in15 += o; t = o << 28; in14 -= t;
+    o = (int32_t)(in15 >> 28); in0  += o;
                     in8  += o; t = o << 28; in15 -= t;
 
     /* Output as bytes */
@@ -1778,41 +1778,41 @@ void fe448_mul39081(int32_t* r, const int32_t* a)
     int64_t t13 = a[13] * (int64_t)39081;
     int64_t t14 = a[14] * (int64_t)39081;
     int64_t t15 = a[15] * (int64_t)39081;
-    o = t0  >> 28; t1  += o; t = (int64_t)o << 28; t0  -= t;
-    o = t1  >> 28; t2  += o; t = (int64_t)o << 28; t1  -= t;
-    o = t2  >> 28; t3  += o; t = (int64_t)o << 28; t2  -= t;
-    o = t3  >> 28; t4  += o; t = (int64_t)o << 28; t3  -= t;
-    o = t4  >> 28; t5  += o; t = (int64_t)o << 28; t4  -= t;
-    o = t5  >> 28; t6  += o; t = (int64_t)o << 28; t5  -= t;
-    o = t6  >> 28; t7  += o; t = (int64_t)o << 28; t6  -= t;
-    o = t7  >> 28; t8  += o; t = (int64_t)o << 28; t7  -= t;
-    o = t8  >> 28; t9  += o; t = (int64_t)o << 28; t8  -= t;
-    o = t9  >> 28; t10 += o; t = (int64_t)o << 28; t9  -= t;
-    o = t10 >> 28; t11 += o; t = (int64_t)o << 28; t10 -= t;
-    o = t11 >> 28; t12 += o; t = (int64_t)o << 28; t11 -= t;
-    o = t12 >> 28; t13 += o; t = (int64_t)o << 28; t12 -= t;
-    o = t13 >> 28; t14 += o; t = (int64_t)o << 28; t13 -= t;
-    o = t14 >> 28; t15 += o; t = (int64_t)o << 28; t14 -= t;
-    o = t15 >> 28; t0  += o;
+    o = (int32_t)(t0  >> 28); t1  += o; t = (int64_t)o << 28; t0  -= t;
+    o = (int32_t)(t1  >> 28); t2  += o; t = (int64_t)o << 28; t1  -= t;
+    o = (int32_t)(t2  >> 28); t3  += o; t = (int64_t)o << 28; t2  -= t;
+    o = (int32_t)(t3  >> 28); t4  += o; t = (int64_t)o << 28; t3  -= t;
+    o = (int32_t)(t4  >> 28); t5  += o; t = (int64_t)o << 28; t4  -= t;
+    o = (int32_t)(t5  >> 28); t6  += o; t = (int64_t)o << 28; t5  -= t;
+    o = (int32_t)(t6  >> 28); t7  += o; t = (int64_t)o << 28; t6  -= t;
+    o = (int32_t)(t7  >> 28); t8  += o; t = (int64_t)o << 28; t7  -= t;
+    o = (int32_t)(t8  >> 28); t9  += o; t = (int64_t)o << 28; t8  -= t;
+    o = (int32_t)(t9  >> 28); t10 += o; t = (int64_t)o << 28; t9  -= t;
+    o = (int32_t)(t10 >> 28); t11 += o; t = (int64_t)o << 28; t10 -= t;
+    o = (int32_t)(t11 >> 28); t12 += o; t = (int64_t)o << 28; t11 -= t;
+    o = (int32_t)(t12 >> 28); t13 += o; t = (int64_t)o << 28; t12 -= t;
+    o = (int32_t)(t13 >> 28); t14 += o; t = (int64_t)o << 28; t13 -= t;
+    o = (int32_t)(t14 >> 28); t15 += o; t = (int64_t)o << 28; t14 -= t;
+    o = (int32_t)(t15 >> 28); t0  += o;
                    t8  += o; t = (int64_t)o << 28; t15 -= t;
 
     /* Store */
-    r[0] = t0;
-    r[1] = t1;
-    r[2] = t2;
-    r[3] = t3;
-    r[4] = t4;
-    r[5] = t5;
-    r[6] = t6;
-    r[7] = t7;
-    r[8] = t8;
-    r[9] = t9;
-    r[10] = t10;
-    r[11] = t11;
-    r[12] = t12;
-    r[13] = t13;
-    r[14] = t14;
-    r[15] = t15;
+    r[0] = (int32_t)t0;
+    r[1] = (int32_t)t1;
+    r[2] = (int32_t)t2;
+    r[3] = (int32_t)t3;
+    r[4] = (int32_t)t4;
+    r[5] = (int32_t)t5;
+    r[6] = (int32_t)t6;
+    r[7] = (int32_t)t7;
+    r[8] = (int32_t)t8;
+    r[9] = (int32_t)t9;
+    r[10] = (int32_t)t10;
+    r[11] = (int32_t)t11;
+    r[12] = (int32_t)t12;
+    r[13] = (int32_t)t13;
+    r[14] = (int32_t)t14;
+    r[15] = (int32_t)t15;
 }
 
 /* Mulitply two field elements. r = a * b
@@ -1908,41 +1908,41 @@ static WC_INLINE void fe448_mul_8(int32_t* r, const int32_t* a, const int32_t* b
     int64_t o = t14 >> 28;
     int64_t t15 = o;
     t14 -= o << 28;
-    o = t0  >> 28; t1  += o; t = (int64_t)o << 28; t0  -= t;
-    o = t1  >> 28; t2  += o; t = (int64_t)o << 28; t1  -= t;
-    o = t2  >> 28; t3  += o; t = (int64_t)o << 28; t2  -= t;
-    o = t3  >> 28; t4  += o; t = (int64_t)o << 28; t3  -= t;
-    o = t4  >> 28; t5  += o; t = (int64_t)o << 28; t4  -= t;
-    o = t5  >> 28; t6  += o; t = (int64_t)o << 28; t5  -= t;
-    o = t6  >> 28; t7  += o; t = (int64_t)o << 28; t6  -= t;
-    o = t7  >> 28; t8  += o; t = (int64_t)o << 28; t7  -= t;
-    o = t8  >> 28; t9  += o; t = (int64_t)o << 28; t8  -= t;
-    o = t9  >> 28; t10 += o; t = (int64_t)o << 28; t9  -= t;
-    o = t10 >> 28; t11 += o; t = (int64_t)o << 28; t10 -= t;
-    o = t11 >> 28; t12 += o; t = (int64_t)o << 28; t11 -= t;
-    o = t12 >> 28; t13 += o; t = (int64_t)o << 28; t12 -= t;
-    o = t13 >> 28; t14 += o; t = (int64_t)o << 28; t13 -= t;
-    o = t14 >> 28; t15 += o; t = (int64_t)o << 28; t14 -= t;
-    o = t15 >> 28; t0  += o;
+    o = (int32_t)(t0  >> 28); t1  += o; t = (int64_t)o << 28; t0  -= t;
+    o = (int32_t)(t1  >> 28); t2  += o; t = (int64_t)o << 28; t1  -= t;
+    o = (int32_t)(t2  >> 28); t3  += o; t = (int64_t)o << 28; t2  -= t;
+    o = (int32_t)(t3  >> 28); t4  += o; t = (int64_t)o << 28; t3  -= t;
+    o = (int32_t)(t4  >> 28); t5  += o; t = (int64_t)o << 28; t4  -= t;
+    o = (int32_t)(t5  >> 28); t6  += o; t = (int64_t)o << 28; t5  -= t;
+    o = (int32_t)(t6  >> 28); t7  += o; t = (int64_t)o << 28; t6  -= t;
+    o = (int32_t)(t7  >> 28); t8  += o; t = (int64_t)o << 28; t7  -= t;
+    o = (int32_t)(t8  >> 28); t9  += o; t = (int64_t)o << 28; t8  -= t;
+    o = (int32_t)(t9  >> 28); t10 += o; t = (int64_t)o << 28; t9  -= t;
+    o = (int32_t)(t10 >> 28); t11 += o; t = (int64_t)o << 28; t10 -= t;
+    o = (int32_t)(t11 >> 28); t12 += o; t = (int64_t)o << 28; t11 -= t;
+    o = (int32_t)(t12 >> 28); t13 += o; t = (int64_t)o << 28; t12 -= t;
+    o = (int32_t)(t13 >> 28); t14 += o; t = (int64_t)o << 28; t13 -= t;
+    o = (int32_t)(t14 >> 28); t15 += o; t = (int64_t)o << 28; t14 -= t;
+    o = (int32_t)(t15 >> 28); t0  += o;
                    t8  += o; t = (int64_t)o << 28; t15 -= t;
 
     /* Store */
-    r[0] = t0;
-    r[1] = t1;
-    r[2] = t2;
-    r[3] = t3;
-    r[4] = t4;
-    r[5] = t5;
-    r[6] = t6;
-    r[7] = t7;
-    r[8] = t8;
-    r[9] = t9;
-    r[10] = t10;
-    r[11] = t11;
-    r[12] = t12;
-    r[13] = t13;
-    r[14] = t14;
-    r[15] = t15;
+    r[0] = (int32_t)t0;
+    r[1] = (int32_t)t1;
+    r[2] = (int32_t)t2;
+    r[3] = (int32_t)t3;
+    r[4] = (int32_t)t4;
+    r[5] = (int32_t)t5;
+    r[6] = (int32_t)t6;
+    r[7] = (int32_t)t7;
+    r[8] = (int32_t)t8;
+    r[9] = (int32_t)t9;
+    r[10] = (int32_t)t10;
+    r[11] = (int32_t)t11;
+    r[12] = (int32_t)t12;
+    r[13] = (int32_t)t13;
+    r[14] = (int32_t)t14;
+    r[15] = (int32_t)t15;
 }
 
 /* Mulitply two field elements. r = (a * b) mod (2^448 - 2^224 - 1)
@@ -2053,41 +2053,41 @@ static WC_INLINE void fe448_sqr_8(int32_t* r, const int32_t* a)
     int64_t o = t14 >> 28;
     int64_t t15 = o;
     t14 -= o << 28;
-    o = t0  >> 28; t1  += o; t = (int64_t)o << 28; t0  -= t;
-    o = t1  >> 28; t2  += o; t = (int64_t)o << 28; t1  -= t;
-    o = t2  >> 28; t3  += o; t = (int64_t)o << 28; t2  -= t;
-    o = t3  >> 28; t4  += o; t = (int64_t)o << 28; t3  -= t;
-    o = t4  >> 28; t5  += o; t = (int64_t)o << 28; t4  -= t;
-    o = t5  >> 28; t6  += o; t = (int64_t)o << 28; t5  -= t;
-    o = t6  >> 28; t7  += o; t = (int64_t)o << 28; t6  -= t;
-    o = t7  >> 28; t8  += o; t = (int64_t)o << 28; t7  -= t;
-    o = t8  >> 28; t9  += o; t = (int64_t)o << 28; t8  -= t;
-    o = t9  >> 28; t10 += o; t = (int64_t)o << 28; t9  -= t;
-    o = t10 >> 28; t11 += o; t = (int64_t)o << 28; t10 -= t;
-    o = t11 >> 28; t12 += o; t = (int64_t)o << 28; t11 -= t;
-    o = t12 >> 28; t13 += o; t = (int64_t)o << 28; t12 -= t;
-    o = t13 >> 28; t14 += o; t = (int64_t)o << 28; t13 -= t;
-    o = t14 >> 28; t15 += o; t = (int64_t)o << 28; t14 -= t;
-    o = t15 >> 28; t0  += o;
+    o = (int32_t)(t0  >> 28); t1  += o; t = (int64_t)o << 28; t0  -= t;
+    o = (int32_t)(t1  >> 28); t2  += o; t = (int64_t)o << 28; t1  -= t;
+    o = (int32_t)(t2  >> 28); t3  += o; t = (int64_t)o << 28; t2  -= t;
+    o = (int32_t)(t3  >> 28); t4  += o; t = (int64_t)o << 28; t3  -= t;
+    o = (int32_t)(t4  >> 28); t5  += o; t = (int64_t)o << 28; t4  -= t;
+    o = (int32_t)(t5  >> 28); t6  += o; t = (int64_t)o << 28; t5  -= t;
+    o = (int32_t)(t6  >> 28); t7  += o; t = (int64_t)o << 28; t6  -= t;
+    o = (int32_t)(t7  >> 28); t8  += o; t = (int64_t)o << 28; t7  -= t;
+    o = (int32_t)(t8  >> 28); t9  += o; t = (int64_t)o << 28; t8  -= t;
+    o = (int32_t)(t9  >> 28); t10 += o; t = (int64_t)o << 28; t9  -= t;
+    o = (int32_t)(t10 >> 28); t11 += o; t = (int64_t)o << 28; t10 -= t;
+    o = (int32_t)(t11 >> 28); t12 += o; t = (int64_t)o << 28; t11 -= t;
+    o = (int32_t)(t12 >> 28); t13 += o; t = (int64_t)o << 28; t12 -= t;
+    o = (int32_t)(t13 >> 28); t14 += o; t = (int64_t)o << 28; t13 -= t;
+    o = (int32_t)(t14 >> 28); t15 += o; t = (int64_t)o << 28; t14 -= t;
+    o = (int32_t)(t15 >> 28); t0  += o;
                    t8  += o; t = (int64_t)o << 28; t15 -= t;
 
     /* Store */
-    r[0] = t0;
-    r[1] = t1;
-    r[2] = t2;
-    r[3] = t3;
-    r[4] = t4;
-    r[5] = t5;
-    r[6] = t6;
-    r[7] = t7;
-    r[8] = t8;
-    r[9] = t9;
-    r[10] = t10;
-    r[11] = t11;
-    r[12] = t12;
-    r[13] = t13;
-    r[14] = t14;
-    r[15] = t15;
+    r[0] = (int32_t)t0;
+    r[1] = (int32_t)t1;
+    r[2] = (int32_t)t2;
+    r[3] = (int32_t)t3;
+    r[4] = (int32_t)t4;
+    r[5] = (int32_t)t5;
+    r[6] = (int32_t)t6;
+    r[7] = (int32_t)t7;
+    r[8] = (int32_t)t8;
+    r[9] = (int32_t)t9;
+    r[10] = (int32_t)t10;
+    r[11] = (int32_t)t11;
+    r[12] = (int32_t)t12;
+    r[13] = (int32_t)t13;
+    r[14] = (int32_t)t14;
+    r[15] = (int32_t)t15;
 }
 
 /* Square a field element. r = (a * a) mod (2^448 - 2^224 - 1)

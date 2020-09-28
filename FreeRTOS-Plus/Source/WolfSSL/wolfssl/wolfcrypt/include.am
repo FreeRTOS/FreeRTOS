@@ -82,7 +82,8 @@ noinst_HEADERS+= \
                          wolfssl/wolfcrypt/port/st/stsafe.h \
                          wolfssl/wolfcrypt/port/Espressif/esp32-crypt.h \
                          wolfssl/wolfcrypt/port/arm/cryptoCell.h \
-                         wolfssl/wolfcrypt/port/Renesas/renesas-tsip-crypt.h
+                         wolfssl/wolfcrypt/port/Renesas/renesas-tsip-crypt.h \
+                         wolfssl/wolfcrypt/port/cypress/psoc6_crypto.h
 
 if BUILD_CRYPTOAUTHLIB
 nobase_include_HEADERS+= wolfssl/wolfcrypt/port/atmel/atmel.h

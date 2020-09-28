@@ -118,7 +118,8 @@ CLEANFILES+= cert.der \
              pkcs7signedEncryptedCompressedFirmwarePkgData_ECDSA_SHA256.der \
              pkcs7signedEncryptedCompressedFirmwarePkgData_ECDSA_SHA256_noattr.der \
              pkcs7signedEncryptedCompressedFirmwarePkgData_RSA_SHA256.der \
-             pkcs7signedEncryptedCompressedFirmwarePkgData_RSA_SHA256_noattr.der
+             pkcs7signedEncryptedCompressedFirmwarePkgData_RSA_SHA256_noattr.der \
+             tests/test-log-dump-to-file.txt
 
 exampledir = $(docdir)/example
 dist_example_DATA=
@@ -134,6 +135,7 @@ EXTRA_DIST+= wolfssl-ntru.sln
 EXTRA_DIST+= wolfssl.sln
 EXTRA_DIST+= wolfssl64.sln
 EXTRA_DIST+= valgrind-error.sh
+EXTRA_DIST+= valgrind-bash.supp
 EXTRA_DIST+= fips-hash.sh
 EXTRA_DIST+= gencertbuf.pl
 EXTRA_DIST+= README.md
@@ -145,6 +147,7 @@ EXTRA_DIST+= IPP
 EXTRA_DIST+= LPCExpresso.cproject
 EXTRA_DIST+= LPCExpresso.project
 EXTRA_DIST+= resource.h wolfssl.rc
+EXTRA_DIST+= CMakeLists.txt
 
 include wrapper/include.am
 include cyassl/include.am

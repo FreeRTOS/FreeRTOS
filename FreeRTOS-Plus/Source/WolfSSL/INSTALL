@@ -73,3 +73,30 @@
     Please see section 2.4 in the manual:
     http://www.wolfssl.com/yaSSL/Docs-cyassl-manual-2-building-cyassl.html
 
+13. Building with CMake
+    Note: Primary development uses automake (./configure). The support for CMake is minimal.
+
+    Internally cmake is setup to do the following:
+    1. Uses the ./configure generated wolfssl/options.h as the build options by coping it to the build directory as user_settings.h.
+    2. Builds wolfSSL as library.
+    3. Builds the examples.
+
+    Build Steps:
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ cmake --build .
+    $ cmake --install .
+
+    To build library only and not build examples and test apps use:
+    $ cmake .. -DBUILD_TESTS=NO
+
+    To build with debugging use:
+    $ cmake .. -DCMAKE_BUILD_TYPE=Debug
+
+    Make sure and run the built examples and test from the wolfssl-root to properly find the ./certs directory.
+
+    CMake on Windows with Visual Studio
+    1. Open Command Prompt
+    2. Run the Visual Studio batch to setup command line variables: Example: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat
+    3. Then use steps above

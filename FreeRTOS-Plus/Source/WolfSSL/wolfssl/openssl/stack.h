@@ -28,6 +28,8 @@
     extern "C" {
 #endif
 
+#include <wolfssl/openssl/conf.h>
+
 typedef void (*wolfSSL_sk_freefunc)(void *);
 
 WOLFSSL_API void wolfSSL_sk_GENERIC_pop_free(WOLFSSL_STACK* sk, wolfSSL_sk_freefunc);

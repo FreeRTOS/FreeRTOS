@@ -132,7 +132,7 @@
 
 /*
  * When there are no TCP options, the TCP offset equals 20 bytes, which is stored as
- * the number 5 (words) in the higher niblle of the TCP-offset byte.
+ * the number 5 (words) in the higher nibble of the TCP-offset byte.
  */
 #define tcpTCP_OFFSET_LENGTH_BITS			( 0xf0U )
 #define tcpTCP_OFFSET_STANDARD_LENGTH		( 0x50U )
@@ -820,7 +820,7 @@ void *pvCopyDest;
 			if( pxSocket->u.xTCP.bits.bSendKeepAlive != pdFALSE_UNSIGNED )
 			{
 				/* Sending a keep-alive packet, send the current sequence number
-				minus 1, which will	be recognised as a keep-alive packet an
+				minus 1, which will	be recognized as a keep-alive packet an
 				responded to by acknowledging the last byte. */
 				pxSocket->u.xTCP.bits.bSendKeepAlive = pdFALSE_UNSIGNED;
 				pxSocket->u.xTCP.bits.bWaitKeepAlive = pdTRUE_UNSIGNED;
@@ -961,7 +961,7 @@ void *pvCopyDest;
 
 /*
  * The SYN event is very important: the sequence numbers, which have a kind of
- * random starting value, are being synchronised.  The sliding window manager
+ * random starting value, are being synchronized.  The sliding window manager
  * (in FreeRTOS_TCP_WIN.c) needs to know them, along with the Maximum Segment
  * Size (MSS) in use.
  */
@@ -1020,7 +1020,7 @@ uint32_t ulInitialSequenceNumber = 0;
 	case eARPCacheMiss:		/* An ARP table lookup did not find a valid entry. */
 	case eCantSendPacket:	/* There is no IP address, or an ARP is still in progress. */
 	default:
-		/* Count the number of times it couldn't find the ARP address. */
+		/* Count the number of times it could not find the ARP address. */
 		pxSocket->u.xTCP.ucRepCount++;
 
 		FreeRTOS_debug_printf( ( "ARP for %lxip (using %lxip): rc=%d %02X:%02X:%02X %02X:%02X:%02X\n",
@@ -1445,7 +1445,7 @@ BaseType_t xReturn = pdFALSE;
 /*
  * When opening a TCP connection, while SYN's are being sent, the  parties may
  * communicate what MSS (Maximum Segment Size) they intend to use.   MSS is the
- * nett size of the payload, always smaller than MTU.
+ * net size of the payload, always smaller than MTU.
 */
 static UBaseType_t prvSetSynAckOptions( FreeRTOS_Socket_t *pxSocket, TCPHeader_t * pxTCPHeader )
 {
@@ -1515,7 +1515,7 @@ static void prvTCPTouchSocket( FreeRTOS_Socket_t *pxSocket )
 /*-----------------------------------------------------------*/
 
 /*
- * Changing to a new state. Centralised here to do specific actions such as
+ * Changing to a new state. Centralized here to do specific actions such as
  * resetting the alive timer, calling the user's OnConnect handler to notify
  * that a socket has got (dis)connected, and setting bit to unblock a call to
  * FreeRTOS_select()
@@ -1774,8 +1774,6 @@ BaseType_t xResize;
 		configASSERT( pxNetworkBuffer != NULL );	/* to tell lint: when xResize is false, pxNetworkBuffer is not NULL. */
 		pxReturn = pxNetworkBuffer;
 
-		/* Thanks to Andrey Ivanov from swissEmbedded for reporting that the
-		xDataLength member must get the correct length too! */
 		pxNetworkBuffer->xDataLength = ( size_t ) ( ipSIZE_OF_ETH_HEADER + uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength ) + ( size_t ) lDataLen;
 	}
 
@@ -2467,7 +2465,7 @@ UBaseType_t uxIntermediateResult = 0;
 			pxProtocolHeaders->xTCPHeader.ucTCPFlags = tcpTCP_FLAG_ACK;
 
 			/* This socket was the one connecting actively so now perform the
-			synchronisation. */
+			synchronization. */
 			vTCPWindowInit( &pxSocket->u.xTCP.xTCPWindow,
 				ulSequenceNumber, pxSocket->u.xTCP.xTCPWindow.ulOurSequenceNumber, ( uint32_t ) pxSocket->u.xTCP.usCurMSS );
 			pxTCPWindow->rx.ulHighestSequenceNumber = ulSequenceNumber + 1U;
@@ -2622,7 +2620,7 @@ UBaseType_t uxIntermediateResult = 0;
 
 			if( ( bRxComplete == 0 ) || ( bTxDone == 0 ) )
 			{
-				/* Refusing FIN: Rx incomp 1 optlen 4 tx done 1. */
+				/* Refusing FIN: Rx incomplete 1 optlen 4 tx done 1. */
 				FreeRTOS_debug_printf( ( "Refusing FIN[%u,%u]: RxCompl %lu tx done %ld\n",
 					pxSocket->usLocalPort,
 					pxSocket->u.xTCP.usRemotePort,
@@ -2667,7 +2665,7 @@ UBaseType_t uxIntermediateResult = 0;
 		{
 			uxIntermediateResult = uxIPHeaderSizeSocket( pxSocket ) + ipSIZE_OF_TCP_HEADER + uxOptionsLength;
 			xSendLength = ( BaseType_t ) uxIntermediateResult;
-			/* TCP-offsett equals '( ( length / 4 ) << 4 )', resulting in a shift-left 2 */
+			/* TCP-offset equals '( ( length / 4 ) << 4 )', resulting in a shift-left 2 */
 			pxTCPHeader->ucTCPOffset = ( uint8_t )( ( ipSIZE_OF_TCP_HEADER + uxOptionsLength ) << 2 );
 
 			if( pxSocket->u.xTCP.bits.bFinSent != pdFALSE_UNSIGNED )

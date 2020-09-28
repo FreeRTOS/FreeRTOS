@@ -651,7 +651,7 @@ static const char *prvRemoveSpaces( char *pcBuffer, int aBuflen, const char *pcM
 {
 	char *pcTarget = pcBuffer;
 
-	/* Utility function used to formap messages being printed only. */
+	/* Utility function used to format messages being printed only. */
 	while( ( *pcMessage != 0 ) && ( pcTarget < ( pcBuffer + aBuflen - 1 ) ) )
 	{
 		*( pcTarget++ ) = *pcMessage;

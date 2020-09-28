@@ -320,7 +320,7 @@ IPStackEvent_t xRxEvent;
 	if( xSendEventStructToIPTask( &xRxEvent, ( TickType_t ) 1000 ) != pdPASS )
 	{
 		/* The buffer could not be sent to the stack so	must be released again.
-		This is a deferred handler taskr, not a real interrupt, so it is ok to
+		This is a deferred handler task, not a real interrupt, so it is ok to
 		use the task level function here. */
 		#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
 		{

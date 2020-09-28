@@ -24,7 +24,7 @@
  */
 /*
  * tcp_mem_stats.c
- * Used to create a CSV file with detaild information about the memory usage of FreeRTOS+TCP.
+ * Used to create a CSV file with detailed information about the memory usage of FreeRTOS+TCP.
  * See tools/tcp_mem_stats.md for further description.
  */
 

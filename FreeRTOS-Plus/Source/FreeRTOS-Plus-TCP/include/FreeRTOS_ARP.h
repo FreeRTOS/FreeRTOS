@@ -63,7 +63,7 @@ typedef enum
 void vARPRefreshCacheEntry( const MACAddress_t * pxMACAddress, const uint32_t ulIPAddress );
 
 #if( ipconfigARP_USE_CLASH_DETECTION != 0 )
-	/* Becomes non-zero if another device responded to a gratuitos ARP message. */
+	/* Becomes non-zero if another device responded to a gratuitous ARP message. */
 	extern BaseType_t xARPHadIPClash;
 	/* MAC-address of the other device containing the same IP-address. */
 	extern MACAddress_t xARPClashMacAddress;

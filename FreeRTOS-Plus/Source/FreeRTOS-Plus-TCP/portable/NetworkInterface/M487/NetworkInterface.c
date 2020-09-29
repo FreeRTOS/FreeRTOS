@@ -133,7 +133,7 @@ BaseType_t xNetworkInterfaceInitialise( void )
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxDescriptor, BaseType_t xReleaseAfterSend )
 {
     uint8_t *buffer=NULL;
-//    FreeRTOS_printf(("<-- dataLength=%d\n",pxDescriptor->xDataLength));
+
     if( pxDescriptor->xDataLength >= PACKET_BUFFER_SIZE )
     {
         FreeRTOS_printf(("TX buffer length %d over %d\n", pxDescriptor->xDataLength, PACKET_BUFFER_SIZE));
@@ -272,7 +272,6 @@ static void prvEMACHandlerTask( void *pvParameters )
             if( pxBufferDescriptor != NULL )
             {        
                 memcpy( pxBufferDescriptor->pucEthernetBuffer, buffer, dataLength );
-//                          FreeRTOS_printf(("--> dataLength=%d\n",dataLength));
                 pxBufferDescriptor->xDataLength = dataLength;            
             } else {
                 numaker_eth_rx_next();

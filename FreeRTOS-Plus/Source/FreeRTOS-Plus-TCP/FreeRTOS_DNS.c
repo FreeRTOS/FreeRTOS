@@ -376,7 +376,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 	typedef struct xDNS_Callback
 	{
 		TickType_t uxRemaningTime;		/* Timeout in ms */
-		FOnDNSEvent pCallbackFunction;	/* Function to be called when the address has been found or when a timeout has beeen reached */
+		FOnDNSEvent pCallbackFunction;	/* Function to be called when the address has been found or when a timeout has been reached */
 		TimeOut_t uxTimeoutState;
 		void *pvSearchID;
 		struct xLIST_ITEM xListItem;
@@ -406,7 +406,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 
 	/* Iterate through the list of call-back structures and remove
 	old entries which have reached a timeout.
-	As soon as the list hase become empty, the DNS timer will be stopped
+	As soon as the list has become empty, the DNS timer will be stopped
 	In case pvSearchID is supplied, the user wants to cancel a DNS request
 	*/
 	void vDNSCheckCallBack( void *pvSearchID )
@@ -495,7 +495,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 	/*-----------------------------------------------------------*/
 
 	/* A DNS reply was received, see if there is any matching entry and
-	call the handler.  Returns pdTRUE if uxIdentifier was recognised. */
+	call the handler.  Returns pdTRUE if uxIdentifier was recognized. */
 	static BaseType_t xDNSDoCallback( TickType_t uxIdentifier,
 									  const char *pcName,
 									  uint32_t ulIPAddress )
@@ -782,7 +782,7 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 
 						/* The reply was received.  Process it. */
 					#if( ipconfigDNS_USE_CALLBACKS == 0 )
-						/* It is useless to analyse the unexpected reply
+						/* It is useless to analyze the unexpected reply
 						unless asynchronous look-ups are enabled. */
 						if( xExpected != pdFALSE )
 					#endif /* ipconfigDNS_USE_CALLBACKS == 0 */
@@ -899,7 +899,7 @@ void *pvCopyDest;
 		pucStart = pucByte;
 	} while( *pucByte != ( uint8_t ) 0U );
 
-	/* Finish off the record. Cast the record onto DNSTail_t stucture to easily
+	/* Finish off the record. Cast the record onto DNSTail_t structure to easily
 	 * access the fields of the DNS Message. */
 	pxTail = ipCAST_PTR_TO_TYPE_PTR( DNSTail_t, &( pucByte[ 1 ] ) );
 
@@ -927,7 +927,7 @@ void *pvCopyDest;
 	size_t uxIndex = 0U;
 	size_t uxSourceLen = uxRemainingBytes;
 
-	/* uxCount gets the valus from pucByte and counts down to 0.
+	/* uxCount gets the values from pucByte and counts down to 0.
 	No need to have a different type than that of pucByte */
 	size_t uxCount;  
 

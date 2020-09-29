@@ -175,7 +175,7 @@
         }
 
         if( !pktSuccess )
-        { /* smth went wrong; nothing sent to the */
+        { /* something went wrong; nothing sent to the */
             if( pxNetworkBuffer != NULL )
             {
                 pxNetworkBuffer->pucEthernetBuffer = 0;

@@ -622,7 +622,7 @@ uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
 		}
 		else
 		{
-			/* The driver couldn't not allocate a buffer to receive a packet.
+			/* The driver could not allocate a buffer to receive a packet.
 			Leave the current DMA buffer in place. */
 		}
 	}
@@ -685,7 +685,7 @@ uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 	if (p_buffer && ul_size) {
 		/* Driver manages the ring buffer */
 		/* Calculating the checksum here is faster than calculating it from the GMAC buffer
-		 * because withing p_buffer, it is well aligned */
+		 * because within p_buffer, it is well aligned */
 		#if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 		{
 			/* Zero-copy... */
@@ -853,7 +853,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 
 		if (ul_isr & GMAC_ISR_RCOMP)
 			ul_rsr |= GMAC_RSR_REC;
-		/* Invoke callbacks which can be useful to wake op a task */
+		/* Invoke callbacks which can be useful to wake up a task */
 		xRxCallback( ul_rsr );
 	}
 

@@ -427,7 +427,7 @@ void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 
 	/*
 	 * GMAC_DCFGR_TXCOEN: (GMAC_DCFGR) Transmitter Checksum Generation Offload Enable.
-	 * Note: tha SAM4E does have RX checksum offloading
+	 * Note: that SAM4E does have RX checksum offloading
 	 * but TX checksum offloading has NOT been implemented.
 	 */
 
@@ -649,7 +649,7 @@ uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
 	if (p_buffer && ul_size) {
 		/* Driver manages the ring buffer */
 		/* Calculating the checksum here is faster than calculating it from the GMAC buffer
-		 * because withing p_buffer, it is well aligned */
+		 * because within p_buffer, it is well aligned */
 		#if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 		{
 			/* Zero-copy... */
@@ -859,7 +859,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev)
 
 		if (ul_isr & GMAC_ISR_RCOMP)
 			ul_rsr |= GMAC_RSR_REC;
-		/* Invoke callbacks which can be useful to wake op a task */
+		/* Invoke callbacks which can be useful to wake up a task */
 		if (p_gmac_dev->func_rx_cb) {
 			p_gmac_dev->func_rx_cb(ul_rsr);
 		}

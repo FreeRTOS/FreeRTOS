@@ -80,7 +80,7 @@ http://www.freertos.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/Embedded_Ethernet_Buffer
 	#define iptraceEMAC_TASK_STARTING()    do {} while( ipFALSE_BOOL )
 #endif
 
-/* Default the size of the stack used by the EMAC deferred handler task to twice
+/* Default the size of the stack used by the EMAC deferred handler task to 8 times
 the size of the stack used by the idle task - but allow this to be overridden in
 FreeRTOSConfig.h as configMINIMAL_STACK_SIZE is a user definable constant. */
 #ifndef configEMAC_TASK_STACK_SIZE

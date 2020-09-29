@@ -524,7 +524,7 @@ socket events. */
  *
  * Only use the FreeRTOS_NetworkDownFromISR() version if the function is to be
  * called from an interrupt service routine.  If FreeRTOS_NetworkDownFromISR()
- * returns a non-zero value then a context switch should be performed ebfore
+ * returns a non-zero value then a context switch should be performed before
  * the interrupt is exited.
  */
 void FreeRTOS_NetworkDown( void );
@@ -837,7 +837,7 @@ void vSocketWakeUpUser( FreeRTOS_Socket_t *pxSocket );
 /*
  * Some helping function, their meaning should be clear.
  * Going by MISRA rules, these utility functions should not be defined
- * if they are not being used anywhwere. But their use depends on the
+ * if they are not being used anywhere. But their use depends on the
  * application and hence these functions are defined unconditionally.
  */
 static portINLINE uint32_t ulChar2u32 (const uint8_t *apChr);

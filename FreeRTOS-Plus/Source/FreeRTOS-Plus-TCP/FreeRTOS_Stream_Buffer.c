@@ -182,7 +182,7 @@ size_t uxSize, uxCount, uxFirst, uxNextTail;
 
 		if( ( xPeek == pdFALSE ) && ( uxOffset == 0UL ) )
 		{
-			/* Move the tail pointer to effecively remove the data read from
+			/* Move the tail pointer to effectively remove the data read from
 			the buffer. */
 			uxNextTail += uxCount;
 

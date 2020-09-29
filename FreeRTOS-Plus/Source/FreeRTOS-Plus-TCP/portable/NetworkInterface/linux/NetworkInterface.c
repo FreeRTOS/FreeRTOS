@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "NetworkBufferManagement.h"
 #include "FreeRTOS_Stream_Buffer.h"
 
-/* ======================== Standard Library inludes ======================== */
+/* ======================== Standard Library includes ======================== */
 #include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -652,7 +652,7 @@ int ret;
 	( void ) pvParam;
 
 	/* Disable signals to this thread since this is a Linux pthread to be able to
-	 * printf and other blocking operations without being interruped and put in
+	 * printf and other blocking operations without being interrupted and put in
 	 * suspension mode by the linux port signals
 	 */
 	sigset_t set;
@@ -689,7 +689,7 @@ const time_t xMaxMSToWait = 1000;
 
 	( void ) pvParam;
 
-	/* disable signals to avoid treating this thread as a FreeRTOS task and puting
+	/* disable signals to avoid treating this thread as a FreeRTOS task and putting
 	 * it to sleep by the scheduler */
 	sigset_t set;
 	sigfillset( &set );
@@ -833,7 +833,7 @@ static void prvInterruptSimulatorTask( void *pvParameters )
 }
 
 /*!
- * @brief remove spacces from pcMessage into pcBuffer
+ * @brief remove spaces from pcMessage into pcBuffer
  * @param [out] pcBuffer buffer to fill up
  * @param [in] aBuflen length of pcBuffer
  * @param [in] pcMessage original message
@@ -845,7 +845,7 @@ static const char * prvRemoveSpaces( char *pcBuffer,
 {
 char *pcTarget = pcBuffer;
 
-	/* Utility function used to formap messages being printed only. */
+	/* Utility function used to format messages being printed only. */
 	while( ( *pcMessage != 0 ) && ( pcTarget < ( &pcBuffer[ aBuflen - 1 ] ) ) )
 	{
 		*( pcTarget++ ) = *pcMessage;

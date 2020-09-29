@@ -76,10 +76,10 @@ static TickType_t xLastGratuitousARPTime = ( TickType_t ) 0;
 /*
  * IP-clash detection is currently only used internally. When DHCP doesn't respond, the
  * driver can try out a random LinkLayer IP address (169.254.x.x).  It will send out a
- * gratuitos ARP message and, after a period of time, check the variables here below:
+ * gratuitous ARP message and, after a period of time, check the variables here below:
  */
 #if( ipconfigARP_USE_CLASH_DETECTION != 0 )
-	/* Becomes non-zero if another device responded to a gratuitos ARP message. */
+	/* Becomes non-zero if another device responded to a gratuitous ARP message. */
 	BaseType_t xARPHadIPClash;
 	/* MAC-address of the other device containing the same IP-address. */
 	MACAddress_t xARPClashMacAddress;
@@ -339,7 +339,7 @@ uint8_t ucMinAgeFound = 0U;
 			}
 			else
 			{
-				/* Nothing happes to this cache entry for now. */
+				/* Nothing happens to this cache entry for now. */
 			}
 		}
 

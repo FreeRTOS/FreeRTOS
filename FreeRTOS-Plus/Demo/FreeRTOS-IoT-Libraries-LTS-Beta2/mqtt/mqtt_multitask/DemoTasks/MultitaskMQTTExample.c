@@ -93,10 +93,12 @@
     #define democonfigCLIENT_IDENTIFIER    "testClient"__TIME__
 #endif
 
-/* Compile time error for undefined configs. */
+/* Compile time error for some undefined configs, and provide default values
+ * for others. */
 #ifndef democonfigMQTT_BROKER_ENDPOINT
     #error "Please define democonfigMQTT_BROKER_ENDPOINT."
 #endif
+
 #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
     #ifndef democonfigROOT_CA_PEM
         #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
@@ -107,15 +109,19 @@
     #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
         #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
     #endif
-#endif
+
+    #ifndef democonfigMQTT_BROKER_PORT
+        #define democonfigMQTT_BROKER_PORT    ( 8883 )
+    #endif
+#else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
+    #ifndef democonfigMQTT_BROKER_PORT
+        #define democonfigMQTT_BROKER_PORT    ( 1883 )
+    #endif
+#endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
 /**
- * Provide default values for undefined configuration settings.
+ * @brief The size to use for the network buffer.
  */
-#ifndef democonfigMQTT_BROKER_PORT
-    #define democonfigMQTT_BROKER_PORT    ( 1883 )
-#endif
-
 #ifndef mqttexampleNETWORK_BUFFER_SIZE
     #define mqttexampleNETWORK_BUFFER_SIZE    ( 1024U )
 #endif
@@ -864,7 +870,7 @@ static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext )
         xNetworkCredentials.clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
         xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
         xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
-    #else  /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
+    #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
         PlaintextTransportStatus_t xNetworkStatus;
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 

@@ -116,7 +116,7 @@ FreeRTOS_setsockopt(). */
 #endif /* ipconfigUSE_CALLBACKS */
 
 #define FREERTOS_SO_REUSE_LISTEN_SOCKET	( 11 )		/* When a listening socket gets connected, do not create a new one but re-use it */
-#define FREERTOS_SO_CLOSE_AFTER_SEND	( 12 )		/* As soon as the last byte has been transmitted, finalise the connection */
+#define FREERTOS_SO_CLOSE_AFTER_SEND	( 12 )		/* As soon as the last byte has been transmitted, finalize the connection */
 #define FREERTOS_SO_WIN_PROPERTIES		( 13 )		/* Set all buffer and window properties in one call, parameter is pointer to WinProperties_t */
 #define FREERTOS_SO_SET_FULL_SIZE		( 14 )		/* Refuse to send packets smaller than MSS  */
 

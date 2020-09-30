@@ -252,7 +252,7 @@ int numaker_eth_init(uint8_t *mac_addr)
     init_tx_desc();
     init_rx_desc();
 
-    numaker_set_mac_addr(mac_addr);  // need to reconfigure hardware address 'cos we just RESET emc...
+    numaker_set_mac_addr(mac_addr);  // need to reconfigure hardware address because we just RESET EMAC...
 
 
     /* Configure the MAC interrupt enable register. */
@@ -317,7 +317,7 @@ int numaker_eth_get_rx_buf(uint16_t *len, uint8_t **buf)
     unsigned int cur_entry, status;
 
     cur_entry = EMAC->CRXDSA;
-    if ((cur_entry == (uint32_t)cur_rx_desc_ptr) && (!(m_status & EMAC_INTSTS_RDUIF_Msk)))  // cur_entry may equal to cur_rx_desc_ptr if RDU occures
+    if ((cur_entry == (uint32_t)cur_rx_desc_ptr) && (!(m_status & EMAC_INTSTS_RDUIF_Msk)))  // cur_entry may equal to cur_rx_desc_ptr if RDU occurred
             return -1;
     status = cur_rx_desc_ptr->status1;
 

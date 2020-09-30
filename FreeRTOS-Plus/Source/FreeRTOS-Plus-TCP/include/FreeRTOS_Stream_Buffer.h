@@ -26,9 +26,9 @@
 /*
  *	FreeRTOS_Stream_Buffer.h
  *
- *	A cicular character buffer
+ *	A circular character buffer
  *	An implementation of a circular buffer without a length field
- *	If LENGTH defines the size of the buffer, a maximum of (LENGT-1) bytes can be stored
+ *	If LENGTH defines the size of the buffer, a maximum of (LENGTH-1) bytes can be stored
  *	In order to add or read data from the buffer, memcpy() will be called at most 2 times
  */
 

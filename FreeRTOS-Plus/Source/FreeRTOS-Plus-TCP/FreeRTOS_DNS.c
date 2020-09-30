@@ -376,7 +376,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 	typedef struct xDNS_Callback
 	{
 		TickType_t uxRemaningTime;		/* Timeout in ms */
-		FOnDNSEvent pCallbackFunction;	/* Function to be called when the address has been found or when a timeout has beeen reached */
+		FOnDNSEvent pCallbackFunction;	/* Function to be called when the address has been found or when a timeout has been reached */
 		TimeOut_t uxTimeoutState;
 		void *pvSearchID;
 		struct xLIST_ITEM xListItem;
@@ -406,7 +406,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 
 	/* Iterate through the list of call-back structures and remove
 	old entries which have reached a timeout.
-	As soon as the list hase become empty, the DNS timer will be stopped
+	As soon as the list has become empty, the DNS timer will be stopped
 	In case pvSearchID is supplied, the user wants to cancel a DNS request
 	*/
 	void vDNSCheckCallBack( void *pvSearchID )
@@ -495,7 +495,7 @@ static portINLINE ipDECL_CAST_PTR_FUNC_FOR_TYPE( DNSAnswerRecord_t )
 	/*-----------------------------------------------------------*/
 
 	/* A DNS reply was received, see if there is any matching entry and
-	call the handler.  Returns pdTRUE if uxIdentifier was recognised. */
+	call the handler.  Returns pdTRUE if uxIdentifier was recognized. */
 	static BaseType_t xDNSDoCallback( TickType_t uxIdentifier,
 									  const char *pcName,
 									  uint32_t ulIPAddress )
@@ -782,7 +782,7 @@ TickType_t uxWriteTimeOut_ticks = ipconfigDNS_SEND_BLOCK_TIME_TICKS;
 
 						/* The reply was received.  Process it. */
 					#if( ipconfigDNS_USE_CALLBACKS == 0 )
-						/* It is useless to analyse the unexpected reply
+						/* It is useless to analyze the unexpected reply
 						unless asynchronous look-ups are enabled. */
 						if( xExpected != pdFALSE )
 					#endif /* ipconfigDNS_USE_CALLBACKS == 0 */
@@ -843,10 +843,20 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	0,                 /* No authorities. */
 	0                  /* No additional authorities. */
 };
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 	/* Copy in the const part of the header. Intentionally using different
 	 * pointers with memcpy() to put the information in to correct place. */
-	( void ) memcpy( ( void * ) pucUDPPayloadBuffer, ( const void * ) ( &( xDefaultPartDNSHeader ) ), sizeof( xDefaultPartDNSHeader ) );
+	/*
+	 * Use helper variables for memcpy() to remain
+	 * compliant with MISRA Rule 21.15.  These should be
+	 * optimized away.
+	 */
+	pvCopySource = &xDefaultPartDNSHeader;
+	pvCopyDest = pucUDPPayloadBuffer;
+	( void ) memcpy( pvCopyDest, pvCopySource, sizeof( xDefaultPartDNSHeader ) );
 
 	/* Write in a unique identifier. Cast the Payload Buffer to DNSMessage_t
 	 * to easily access fields of the DNS Message. */
@@ -889,7 +899,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 		pucStart = pucByte;
 	} while( *pucByte != ( uint8_t ) 0U );
 
-	/* Finish off the record. Cast the record onto DNSTail_t stucture to easily
+	/* Finish off the record. Cast the record onto DNSTail_t structure to easily
 	 * access the fields of the DNS Message. */
 	pxTail = ipCAST_PTR_TO_TYPE_PTR( DNSTail_t, &( pucByte[ 1 ] ) );
 
@@ -917,7 +927,7 @@ static const DNSMessage_t xDefaultPartDNSHeader =
 	size_t uxIndex = 0U;
 	size_t uxSourceLen = uxRemainingBytes;
 
-	/* uxCount gets the valus from pucByte and counts down to 0.
+	/* uxCount gets the values from pucByte and counts down to 0.
 	No need to have a different type than that of pucByte */
 	size_t uxCount;  
 
@@ -1070,7 +1080,7 @@ size_t uxIndex = 0U;
 /* The function below will only be called :
 when ipconfigDNS_USE_CALLBACKS == 1
 when ipconfigUSE_LLMNR == 1
-for testing purposes, by the module iot_test_freertos_tcp.c
+for testing purposes, by the module test_freertos_tcp.c
 */
 uint32_t ulDNSHandlePacket( const NetworkBufferDescriptor_t *pxNetworkBuffer )
 {
@@ -1134,6 +1144,9 @@ size_t uxSourceBytesRemaining;
 uint16_t x, usDataLength, usQuestions;
 uint16_t usType = 0U;
 BaseType_t xReturn = pdTRUE;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigUSE_LLMNR == 1 )
 	uint16_t usClass = 0U;
@@ -1314,9 +1327,14 @@ BaseType_t xReturn = pdTRUE;
 						{
 							/* Copy the IP address out of the record. Using different pointers
 							 * to copy only the portion we want is intentional here. */
-							( void ) memcpy( ( void * ) ( &( ulIPAddress ) ),
-											 ( const void * ) ( &( pucByte[ sizeof( DNSAnswerRecord_t ) ] ) ),
-											 sizeof( uint32_t ) );
+							/*
+							 * Use helper variables for memcpy() to remain
+							 * compliant with MISRA Rule 21.15.  These should be
+							 * optimized away.
+							 */
+							pvCopySource = &pucByte[ sizeof( DNSAnswerRecord_t ) ];
+							pvCopyDest = &ulIPAddress;
+							( void ) memcpy( pvCopyDest, pvCopySource, sizeof( uint32_t ) );
 
 							#if( ipconfigDNS_USE_CALLBACKS == 1 )
 							{
@@ -1656,7 +1674,7 @@ BaseType_t xReturn;
 	/* This must be the first time this function has been called.  Create
 	the socket. */
 	xSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_DGRAM, FREERTOS_IPPROTO_UDP );
-	if( prvSocketValid( xSocket ) != pdTRUE )
+	if( prvSocketValid( xSocket ) != pdTRUE_UNSIGNED )
 	{
 		/* There was an error, return NULL. */
 		xSocket = NULL;

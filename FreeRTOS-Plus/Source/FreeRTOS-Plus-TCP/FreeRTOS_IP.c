@@ -302,7 +302,7 @@ static BaseType_t xNetworkUp = pdFALSE;
 A timer for each of the following processes, all of which need attention on a
 regular basis:
 	1. ARP, to check its table entries
-	2. DPHC, to send requests and to renew a reservation
+	2. DHCP, to send requests and to renew a reservation
 	3. TCP, to check for timeouts, resends
 	4. DNS, to check for timeouts when looking-up a domain.
  */
@@ -844,9 +844,9 @@ TickType_t uxBlockTime = uxBlockTimeTicks;
 	/* Cap the block time.  The reason for this is explained where
 	ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS is defined (assuming an official
 	FreeRTOSIPConfig.h header file is being used). */
-	if( uxBlockTime > ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS ) )
+	if( uxBlockTime > ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS )
 	{
-		uxBlockTime = ( ( TickType_t ) ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS );
+		uxBlockTime = ipconfigUDP_MAX_SEND_BLOCK_TIME_TICKS;
 	}
 
 	/* Obtain a network buffer with the required amount of storage. */
@@ -950,7 +950,7 @@ NetworkBufferDescriptor_t *pxResult;
 		/* The input here is a pointer to a payload buffer.  Subtract
 		the total size of a UDP/IP header plus the size of the header in
 		the network buffer, usually 8 + 2 bytes. */
-		pucBuffer -= ( sizeof( UDPPacket_t ) + ( ( size_t ) ipBUFFER_PADDING ) );
+		pucBuffer -= sizeof( UDPPacket_t ) + ipBUFFER_PADDING;
 
 		/* Here a pointer was placed to the network descriptor,
 		As a pointer is dereferenced, make sure it is well aligned */
@@ -959,7 +959,7 @@ NetworkBufferDescriptor_t *pxResult;
 			/* The following statement may trigger a:
 			warning: cast increases required alignment of target type [-Wcast-align].
 			It has been confirmed though that the alignment is suitable. */
-			pxResult = * ( ( const NetworkBufferDescriptor_t **) pucBuffer );
+			pxResult = * ( ( NetworkBufferDescriptor_t ** ) pucBuffer );
 		}
 		else
 		{
@@ -1003,7 +1003,7 @@ BaseType_t xReturn = pdFALSE;
 	}
 	#endif
 	/* Attempt to create the queue used to communicate with the IP task. */
-	xNetworkEventQueue = xQueueCreate( ( UBaseType_t ) ipconfigEVENT_QUEUE_LENGTH, ( UBaseType_t ) sizeof( IPStackEvent_t ) );
+	xNetworkEventQueue = xQueueCreate( ipconfigEVENT_QUEUE_LENGTH, sizeof( IPStackEvent_t ) );
 	configASSERT( xNetworkEventQueue != NULL );
 
 	if( xNetworkEventQueue != NULL )
@@ -1057,9 +1057,9 @@ BaseType_t xReturn = pdFALSE;
 			/* Create the task that processes Ethernet and stack events. */
 			xReturn = xTaskCreate( prvIPTask,
 								   "IP-task",
-								   ( uint16_t )ipconfigIP_TASK_STACK_SIZE_WORDS,
+								   ipconfigIP_TASK_STACK_SIZE_WORDS,
 								   NULL,
-								   ( UBaseType_t )ipconfigIP_TASK_PRIORITY,
+								   ipconfigIP_TASK_PRIORITY,
 								   &( xIPTaskHandle ) );
 		}
 		else
@@ -1599,7 +1599,7 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 			}
 			else
 			{
-				/* Packet is not fragemented, destination is this device. */
+				/* Packet is not fragmented, destination is this device. */
 			}
 	}
 	#endif /* ipconfigETHERNET_DRIVER_FILTERS_PACKETS */
@@ -2392,7 +2392,7 @@ DEBUG_DECLARE_TRACE_VARIABLE( BaseType_t, xLocation, 0 );
 
 /**
  * This method generates a checksum for a given IPv4 header, per RFC791 (page 14).
- * The checksum algorithm is decribed as:
+ * The checksum algorithm is described as:
  *   "[T]he 16 bit one's complement of the one's complement sum of all 16 bit words in the
  *   header.  For purposes of computing the checksum, the value of the checksum field is zero."
  *
@@ -2430,7 +2430,8 @@ aid though to optimise the calculations. */
 xUnion32 xSum2, xSum, xTerm;
 xUnionPtr xSource;
 xUnionPtr xLastSource;
-uint32_t ulAlignBits, ulCarry = 0UL;
+uintptr_t uxAlignBits;
+uint32_t ulCarry = 0UL;
 uint16_t usTemp;
 size_t uxDataLengthBytes = uxByteCount;
 
@@ -2444,12 +2445,19 @@ size_t uxDataLengthBytes = uxByteCount;
 	xTerm.u32 = 0UL;
 
 	xSource.u8ptr = ipPOINTER_CAST( uint8_t *, pucNextData );
-	/* coverity[misra_c_2012_rule_11_4_violation] */
-	/* The object pointer expression "pucNextData" of type "uint8_t const *" is cast to an integer type "unsigned int". */
-	ulAlignBits = ( ( ( uint32_t ) pucNextData ) & 0x03U ); /*lint !e9078 !e923*/	/* gives 0, 1, 2, or 3 */
+	uxAlignBits = ( ( ( uintptr_t ) pucNextData ) & 0x03U );
+	/*
+	 * If pucNextData is non-aligned then the checksum is starting at an
+	 * odd position and we need to make sure the usSum value now in xSum is
+	 * as if it had been "aligned" in the same way.
+	 */
+	if( ( uxAlignBits & 1UL) != 0U )
+	{
+		xSum.u32 = ( ( xSum.u32 & 0xffU ) << 8 ) | ( ( xSum.u32 & 0xff00U ) >> 8 );
+	}
 
 	/* If byte (8-bit) aligned... */
-	if( ( ( ulAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
+	if( ( ( uxAlignBits & 1UL ) != 0UL ) && ( uxDataLengthBytes >= ( size_t ) 1 ) )
 	{
 		xTerm.u8[ 1 ] = *( xSource.u8ptr );
 		xSource.u8ptr++;
@@ -2458,7 +2466,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	}
 
 	/* If half-word (16-bit) aligned... */
-	if( ( ( ulAlignBits == 1U ) || ( ulAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
+	if( ( ( uxAlignBits == 1U ) || ( uxAlignBits == 2U ) ) && ( uxDataLengthBytes >= 2U ) )
 	{
 		xSum.u32 += *(xSource.u16ptr);
 		xSource.u16ptr++;
@@ -2539,7 +2547,7 @@ size_t uxDataLengthBytes = uxByteCount;
 	/* coverity[value_overwrite] */
 	xSum.u32 = ( uint32_t ) xSum.u16[ 0 ] + xSum.u16[ 1 ];
 
-	if( ( ulAlignBits & 1U ) != 0U )
+	if( ( uxAlignBits & 1U ) != 0U )
 	{
 		/* Quite unlikely, but pucNextData might be non-aligned, which would
 		 mean that a checksum is calculated starting at an odd position. */
@@ -2556,6 +2564,9 @@ size_t uxDataLengthBytes = uxByteCount;
 void vReturnEthernetFrame( NetworkBufferDescriptor_t * pxNetworkBuffer, BaseType_t xReleaseAfterSend )
 {
 EthernetHeader_t *pxEthernetHeader;
+/* memcpy() helper variables for MISRA Rule 21.15 compliance*/
+const void *pvCopySource;
+void *pvCopyDest;
 
 #if( ipconfigZERO_COPY_TX_DRIVER != 0 )
 	NetworkBufferDescriptor_t *pxNewBuffer;
@@ -2594,9 +2605,19 @@ EthernetHeader_t *pxEthernetHeader;
 		/* Map the Buffer to Ethernet Header struct for easy access to fields. */
 		pxEthernetHeader = ipCAST_PTR_TO_TYPE_PTR( EthernetHeader_t, pxNetworkBuffer->pucEthernetBuffer );
 
+		/*
+		 * Use helper variables for memcpy() to remain
+		 * compliant with MISRA Rule 21.15.  These should be
+		 * optimized away.
+		 */
 		/* Swap source and destination MAC addresses. */
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xDestinationAddress ), ( const void * ) ( &( pxEthernetHeader->xSourceAddress ) ), sizeof( pxEthernetHeader->xDestinationAddress ) );
-		( void ) memcpy( ( void * ) &( pxEthernetHeader->xSourceAddress) , ( const void * ) ipLOCAL_MAC_ADDRESS, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
+		pvCopySource = &pxEthernetHeader->xSourceAddress;
+		pvCopyDest = &pxEthernetHeader->xDestinationAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, sizeof( pxEthernetHeader->xDestinationAddress ) );
+
+		pvCopySource = ipLOCAL_MAC_ADDRESS;
+		pvCopyDest = &pxEthernetHeader->xSourceAddress;
+		( void ) memcpy( pvCopyDest, pvCopySource, ( size_t ) ipMAC_ADDRESS_LENGTH_BYTES );
 
 		/* Send! */
 		( void ) xNetworkInterfaceOutput( pxNetworkBuffer, xReleaseAfterSend );
@@ -2808,7 +2829,7 @@ BaseType_t FreeRTOS_IsNetworkUp( void )
 #endif
 /*-----------------------------------------------------------*/
 /* Utility function: Convert error number to a human readable
- * string. Decalartion in FreeRTOS_errno_TCP.h. */
+ * string. Declaration in FreeRTOS_errno_TCP.h. */
 const char *FreeRTOS_strerror_r( BaseType_t xErrnum, char *pcBuffer, size_t uxLength )
 {
 const char *pcName;

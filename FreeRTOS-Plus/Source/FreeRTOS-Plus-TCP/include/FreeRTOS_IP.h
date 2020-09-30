@@ -39,7 +39,7 @@ extern "C" {
 #include "IPTraceMacroDefaults.h"
 
 /* Some constants defining the sizes of several parts of a packet.
-These defines come before inlucding the configuration header files. */
+These defines come before including the configuration header files. */
 /* The size of the Ethernet header is 14, meaning that 802.1Q VLAN tags
 are not ( yet ) supported. */
 #define ipSIZE_OF_ETH_HEADER			14U

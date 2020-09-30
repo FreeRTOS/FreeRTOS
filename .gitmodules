@@ -7,3 +7,6 @@
 [submodule "FreeRTOS/Test/CMock/CMock"]
 	path = FreeRTOS/Test/CMock/CMock
 	url = https://github.com/ThrowTheSwitch/CMock.git
+[submodule "FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP"]
+	path = FreeRTOS-Plus/Source/FreeRTOS-Plus-TCP
+	url = https://github.com/FreeRTOS/FreeRTOS-Plus-TCP

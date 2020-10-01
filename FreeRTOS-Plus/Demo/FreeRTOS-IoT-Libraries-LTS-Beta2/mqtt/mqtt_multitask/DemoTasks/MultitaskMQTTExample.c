@@ -879,7 +879,7 @@ static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext )
     RetryUtils_ParamsReset( &xReconnectParams );
 
     /* Attempt to connect to MQTT broker. If connection fails, retry after a
-     * timeout. Timeout value will exponentially increase until them maximum
+     * timeout. Timeout value will exponentially increase until the maximum
      * number of attempts are reached.
      */
     do
@@ -916,7 +916,7 @@ static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext )
 
         if( xRetryUtilsStatus == RetryUtilsRetriesExhausted )
         {
-            LogError( ( "Connection to the broker failed, all attempts exhausted." ) );
+            LogError( ( "Connection to the broker failed. All attempts exhausted." ) );
         }
     } while( ( xConnected != true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
 

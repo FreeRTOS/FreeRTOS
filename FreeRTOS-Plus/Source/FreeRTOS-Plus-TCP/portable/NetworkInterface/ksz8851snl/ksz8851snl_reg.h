@@ -84,12 +84,12 @@
 #define REG_MAC_ADDR_5             (0x15)       /* MARH */
 
 #define REG_BUS_CLOCK_CTRL         (0x20)       /* OBCR */
-#define   BUS_CLOCK_166               (0x0004)    /* 166 MHz on-chip bus clock (defaul is 125MHz) */
-#define   BUS_CLOCK_DIVIDEDBY_5       (0x0003)    /* Bus clock devided by 5 */
-#define   BUS_CLOCK_DIVIDEDBY_3       (0x0002)    /* Bus clock devided by 3 */
-#define   BUS_CLOCK_DIVIDEDBY_2       (0x0001)    /* Bus clock devided by 2 */
-#define   BUS_CLOCK_DIVIDEDBY_1       (0x0000)    /* Bus clock devided by 1 */
-#define   BUS_CLOCK_DIVIDED_MASK      (0x0003)    /* Bus clock devider mask */
+#define   BUS_CLOCK_166               (0x0004)    /* 166 MHz on-chip bus clock (default is 125MHz) */
+#define   BUS_CLOCK_DIVIDEDBY_5       (0x0003)    /* Bus clock divided by 5 */
+#define   BUS_CLOCK_DIVIDEDBY_3       (0x0002)    /* Bus clock divided by 3 */
+#define   BUS_CLOCK_DIVIDEDBY_2       (0x0001)    /* Bus clock divided by 2 */
+#define   BUS_CLOCK_DIVIDEDBY_1       (0x0000)    /* Bus clock divided by 1 */
+#define   BUS_CLOCK_DIVIDED_MASK      (0x0003)    /* Bus clock divider mask */
 
 #define   BUS_SPEED_166_MHZ           (0x0004)    /* Set bus speed to 166 MHz */
 #define   BUS_SPEED_125_MHZ           (0x0000)    /* Set bus speed to 125 MHz */
@@ -174,13 +174,13 @@
 #define   TX_CTRL_IP_CHECKSUM         (0x0020)    /* Enable IP frame checksum generation */
 #define   TX_CTRL_FLUSH_QUEUE         (0x0010)    /* Clear transmit queue, reset tx frame pointer */
 #define   TX_CTRL_FLOW_ENABLE         (0x0008)    /* Enable transmit flow control */
-#define   TX_CTRL_PAD_ENABLE          (0x0004)    /* Eanble adding a padding to a packet shorter than 64 bytes */
+#define   TX_CTRL_PAD_ENABLE          (0x0004)    /* Enable adding a padding to a packet shorter than 64 bytes */
 #define   TX_CTRL_CRC_ENABLE          (0x0002)    /* Enable adding a CRC to the end of transmit frame */
-#define   TX_CTRL_ENABLE              (0x0001)    /* Enable tranmsit */
+#define   TX_CTRL_ENABLE              (0x0001)    /* Enable transmit */
 
 #define REG_TX_STATUS              (0x72)       /* TXSR */
-#define   TX_STAT_LATE_COL            (0x2000)    /* Tranmsit late collision occurs */
-#define   TX_STAT_MAX_COL             (0x1000)    /* Tranmsit maximum collision is reached */
+#define   TX_STAT_LATE_COL            (0x2000)    /* Transmit late collision occurs */
+#define   TX_STAT_MAX_COL             (0x1000)    /* Transmit maximum collision is reached */
 #define   TX_FRAME_ID_MASK            (0x003F)    /* Transmit frame ID mask */
 #define   TX_STAT_ERRORS             ( TX_STAT_MAX_COL | TX_STAT_LATE_COL )
 
@@ -191,7 +191,7 @@
 #define   RX_CTRL_IP_CHECKSUM         (0x1000)    /* Enable IP frame checksum verification */
 #define   RX_CTRL_MAC_FILTER          (0x0800)    /* Receive with address that pass MAC address filtering */
 #define   RX_CTRL_FLOW_ENABLE         (0x0400)    /* Enable receive flow control */
-#define   RX_CTRL_BAD_PACKET          (0x0200)    /* Eanble receive CRC error frames */
+#define   RX_CTRL_BAD_PACKET          (0x0200)    /* Enable receive CRC error frames */
 #define   RX_CTRL_MULTICAST           (0x0100)    /* Receive multicast frames that pass the CRC hash filtering */
 #define   RX_CTRL_BROADCAST           (0x0080)    /* Receive all the broadcast frames */
 #define   RX_CTRL_ALL_MULTICAST       (0x0040)    /* Receive all the multicast frames (including broadcast frames) */
@@ -232,7 +232,7 @@
 #define   RX_PHY_ERROR                (0x0010)    /* Received frame has runt error */
 #define   RX_FRAME_ETHER              (0x0008)    /* Received frame is an Ethernet-type frame */
 #define   RX_TOO_LONG                 (0x0004)    /* Received frame length exceeds max size 0f 2048 bytes */
-#define   RX_RUNT_ERROR               (0x0002)    /* Received frame was demaged by a collision */
+#define   RX_RUNT_ERROR               (0x0002)    /* Received frame was damaged by a collision */
 #define   RX_BAD_CRC                  (0x0001)    /* Received frame has a CRC error */
 #define   RX_ERRORS                   ( RX_BAD_CRC | RX_TOO_LONG | RX_RUNT_ERROR | RX_PHY_ERROR | \
                                         RX_ICMP_ERROR | RX_IP_ERROR | RX_TCP_ERROR | RX_UDP_ERROR )
@@ -246,9 +246,9 @@
 #define   TXQ_ENQUEUE                 (0x0001)    /* Enable enqueue tx frames one frame at a time */
 
 #define REG_RXQ_CMD                (0x82)       /* RXQCR */
-#define   RXQ_STAT_TIME_INT           (0x1000)    /* RX interrupt is occured by timer duration */
-#define   RXQ_STAT_BYTE_CNT_INT       (0x0800)    /* RX interrupt is occured by byte count threshold */
-#define   RXQ_STAT_FRAME_CNT_INT      (0x0400)    /* RX interrupt is occured by frame count threshold */
+#define   RXQ_STAT_TIME_INT           (0x1000)    /* RX interrupt is occurred by timer duration */
+#define   RXQ_STAT_BYTE_CNT_INT       (0x0800)    /* RX interrupt is occurred by byte count threshold */
+#define   RXQ_STAT_FRAME_CNT_INT      (0x0400)    /* RX interrupt is occurred by frame count threshold */
 #define   RXQ_TWOBYTE_OFFSET          (0x0200)    /* Enable adding 2-byte before frame header for IP aligned with DWORD */
 #define   RXQ_TIME_INT                (0x0080)    /* Enable RX interrupt by timer duration */
 #define   RXQ_BYTE_CNT_INT            (0x0040)    /* Enable RX interrupt by byte count threshold */
@@ -373,7 +373,7 @@
 #define   POWER_STATE_MASK            (0x0003)    /* Power management mode mask */
 
 #define REG_WAKEUP_TIME            (0xD6)       /* GSWUTR */
-#define   WAKEUP_TIME                 (0xFF00)    /* Min time (sec) wake-uo after detected energy */
+#define   WAKEUP_TIME                 (0xFF00)    /* Min time (sec) wake-up after detected energy */
 #define   GOSLEEP_TIME                (0x00FF)    /* Min time (sec) before goto sleep when in energy mode */
 
 /*
@@ -457,7 +457,7 @@
 #define REG_PORT_STATUS            (0xF8)       /* P1SR */
 #define   PORT_HP_MDIX                (0x8000)     /* Set PHY in HP auto MDI-X mode */
 #define   PORT_REVERSED_POLARITY      (0x2000)     /* Polarity is reversed */
-#define   PORT_RX_FLOW_CTRL           (0x1000)     /* Reeive flow control feature is active */
+#define   PORT_RX_FLOW_CTRL           (0x1000)     /* Receive flow control feature is active */
 #define   PORT_TX_FLOW_CTRL           (0x0800)     /* Transmit flow control feature is active */
 #define   PORT_STAT_SPEED_100MBIT     (0x0400)     /* Link is 100Mbps */
 #define   PORT_STAT_FULL_DUPLEX       (0x0200)     /* Link is full duplex mode */

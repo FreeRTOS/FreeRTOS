@@ -1223,7 +1223,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *        #define ETHERNET_CONF_ETHADDR4                        0xA0
  *        #define ETHERNET_CONF_ETHADDR5                        0x02
  *   \endcode
- * -# Define the IP address configration used in the application. When DHCP
+ * -# Define the IP address configuration used in the application. When DHCP
  *  is enabled, this configuration is not effected.
  *   - \code
  *        #define ETHERNET_CONF_IPADDR0                         192

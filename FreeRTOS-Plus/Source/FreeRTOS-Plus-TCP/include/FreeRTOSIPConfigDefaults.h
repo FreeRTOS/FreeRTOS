@@ -129,7 +129,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifdef ipconfigDHCP_USES_USER_HOOK
-	#error ipconfigDHCP_USES_USER_HOOK and its associated callback have been superceeded - see http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_IP_Configuration.html#ipconfigUSE_DHCP_HOOK
+	#error ipconfigDHCP_USES_USER_HOOK and its associated callback have been superceded - see http://www.FreeRTOS.org/FreeRTOS-Plus/FreeRTOS_Plus_TCP/TCP_IP_Configuration.html#ipconfigUSE_DHCP_HOOK
 #endif
 
 #ifndef ipconfigUSE_TCP
@@ -155,7 +155,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 /*
- * For debuging/logging: check if the port number is used for telnet
+ * For debugging/logging: check if the port number is used for telnet
  * Some events will not be logged for telnet connections
  * because it would produce logging about the transmission of the logging...
  * This macro will only be used if FreeRTOS_debug_printf() is defined for logging
@@ -262,7 +262,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
  * - DHCP:    For creating a DHCP transaction number
  * - TCP:     Set the Initial Sequence Number: this is the value of the first outgoing
  *            sequence number being used when connecting to a peer.
- *            Having a well randomised ISN is important to avoid spoofing
+ *            Having a well randomized ISN is important to avoid spoofing
  * - UDP/TCP: for setting the first port number to be used, in case a socket
  *            uses a 'random' or anonymous port number
  */
@@ -353,7 +353,7 @@ from the FreeRTOSIPConfig.h configuration header file. */
 #endif
 
 #ifndef ipconfigUDP_MAX_RX_PACKETS
-	/* Make postive to define the maximum number of packets which will be buffered
+	/* Make positive to define the maximum number of packets which will be buffered
 	 * for each UDP socket.
 	 * Can be overridden with the socket option FREERTOS_SO_UDP_MAX_RX_PACKETS
 	 */

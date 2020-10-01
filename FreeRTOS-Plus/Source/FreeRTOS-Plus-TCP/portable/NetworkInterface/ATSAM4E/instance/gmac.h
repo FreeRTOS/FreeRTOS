@@ -1242,7 +1242,7 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *        #define ETHERNET_CONF_NET_MASK2                       255
  *        #define ETHERNET_CONF_NET_MASK3                       0
  *   \endcode
- * -# Configure the PHY maintainance interface.
+ * -# Configure the PHY maintenance interface.
  *   - \code
  *        #define ETH_PHY_MODE                                  GMAC_PHY_MII
  *   \endcode

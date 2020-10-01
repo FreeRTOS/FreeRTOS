@@ -274,7 +274,7 @@
                 iptraceNETWORK_INTERFACE_TRANSMIT();
             }
 
-            /* else same error occurred; this normally should not happen! But the buffer is left in there so it shold be freed! */
+            /* else same error occurred; this normally should not happen! But the buffer is left in there so it should be freed! */
 
             /* The buffer has been sent so can be released. */
             if( xReleaseAfterSend != pdFALSE )
@@ -767,7 +767,7 @@
         }
 
         if( !pktSuccess )
-        { /* smth went wrong; nothing sent to the */
+        { /* something went wrong; nothing sent to the */
             if( pxBufferDescriptor != 0 )
             {
                 pxBufferDescriptor->pucEthernetBuffer = 0;

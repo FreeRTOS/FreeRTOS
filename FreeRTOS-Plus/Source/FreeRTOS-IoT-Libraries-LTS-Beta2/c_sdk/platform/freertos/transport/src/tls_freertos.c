@@ -107,8 +107,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 /**
  * @brief Initialize mbedTLS.
  *
- * @param[in,out] entropyContext mbed TLS entropy context for generation of random numbers.
- * @param[in,out] ctrDrgbContext mbed TLS CTR DRBG context for generation of random numbers.
+ * @param[out] entropyContext mbed TLS entropy context for generation of random numbers.
+ * @param[out] ctrDrgbContext mbed TLS CTR DRBG context for generation of random numbers.
  *
  * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_INTERNAL_ERROR.
  */

@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve FreeRTOS. This should only be used for confirmed
-  bugs, if you suspect something it is best to first discuss it on the FreeRTOS community
+  bugs. If you suspect something it is best to first discuss it on the FreeRTOS community
   support forums linked below.
 title: "[BUG] "
 labels: bug

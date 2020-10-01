@@ -112,8 +112,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
  *
  * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_INTERNAL_ERROR.
  */
-static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context entropyContext,
-                                         mbedtls_ctr_drbg_context ctrDrgbContext );
+static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyContext,
+                                         mbedtls_ctr_drbg_context * pCtrDrgbContext );
 
 /*-----------------------------------------------------------*/
 
@@ -357,8 +357,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context entropyContext,
-                                         mbedtls_ctr_drbg_context ctrDrgbContext )
+static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyContext,
+                                         mbedtls_ctr_drbg_context * pCtrDrgbContext )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     int mbedtlsError = 0;
@@ -370,11 +370,11 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context entropyContext,
                                mbedtls_platform_mutex_unlock );
 
     /* Initialize contexts for random number generation. */
-    mbedtls_entropy_init( &entropyContext );
-    mbedtls_ctr_drbg_init( &ctrDrgbContext );
+    mbedtls_entropy_init( pEntropyContext );
+    mbedtls_ctr_drbg_init( pCtrDrgbContext );
 
     /* Add a strong entropy source. At least one is required. */
-    mbedtlsError = mbedtls_entropy_add_source( &entropyContext,
+    mbedtlsError = mbedtls_entropy_add_source( pEntropyContext,
                                                mbedtls_platform_entropy_poll,
                                                NULL,
                                                32,
@@ -391,9 +391,9 @@ static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context entropyContext,
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Seed the random number generator. */
-        mbedtlsError = mbedtls_ctr_drbg_seed( &ctrDrgbContext,
+        mbedtlsError = mbedtls_ctr_drbg_seed( pCtrDrgbContext,
                                               mbedtls_entropy_func,
-                                              &entropyContext,
+                                              pEntropyContext,
                                               NULL,
                                               0 );
 
@@ -464,8 +464,8 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Initialize mbedtls. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
-        returnStatus = initMbedtls( pNetworkContext->sslContext.entropyContext,
-                                    pNetworkContext->sslContext.ctrDrgbContext );
+        returnStatus = initMbedtls( &( pNetworkContext->sslContext.entropyContext ),
+                                    &( pNetworkContext->sslContext.ctrDrgbContext ) );
     }
 
     /* Perform TLS handshake. */

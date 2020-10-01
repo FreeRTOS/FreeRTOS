@@ -37,20 +37,24 @@ void harness()
     /* pucPtr points into a buffer */
     size_t buffer_size;
     uint8_t * pucPtr = malloc( buffer_size );
+    __CPROVER_assume(pucPtr != NULL);
 
     /* uxIndex in an index into the buffer */
     size_t uxIndex;
 
     /* pxSocket can be any socket with some initialized values */
     FreeRTOS_Socket_t * pxSocket = malloc( sizeof( FreeRTOS_Socket_t ) );
+    __CPROVER_assume(pxSocket != NULL);
 
     pxSocket->u.xTCP.txStream = malloc( sizeof( StreamBuffer_t ) );
+    __CPROVER_assume(pxSocket->u.xTCP.txStream != NULL);
 
     vListInitialise( &pxSocket->u.xTCP.xTCPWindow.xWaitQueue );
 
     if( nondet_bool() )
     {
         TCPSegment_t * segment = malloc( sizeof( TCPSegment_t ) );
+        __CPROVER_assume(segment != NULL);
         listSET_LIST_ITEM_OWNER( &segment->xQueueItem, ( void * ) segment );
         vListInsertEnd( &pxSocket->u.xTCP.xTCPWindow.xWaitQueue, &segment->xQueueItem );
     }
@@ -60,6 +64,7 @@ void harness()
     if( nondet_bool() )
     {
         TCPSegment_t * segment = malloc( sizeof( TCPSegment_t ) );
+        __CPROVER_assume(segment != NULL);
         vListInitialiseItem( &segment->xSegmentItem );
         listSET_LIST_ITEM_OWNER( &segment->xQueueItem, ( void * ) segment );
         vListInsertEnd( &pxSocket->u.xTCP.xTCPWindow.xTxSegments, &segment->xQueueItem );

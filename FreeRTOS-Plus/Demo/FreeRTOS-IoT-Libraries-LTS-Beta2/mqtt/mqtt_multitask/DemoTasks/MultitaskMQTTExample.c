@@ -382,18 +382,18 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
  *
  * @param[in] pxNetworkContext Network context.
  *
- * @return `true` if connection succeeds, else `false`.
+ * @return `pdPASS` if connection succeeds, else `pdFAIL`.
  */
-static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext );
+static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Disconnect a TCP connection.
  *
  * @param[in] pxNetworkContext Network context.
  *
- * @return `true` if disconnect succeeds, else `false`.
+ * @return `pdPASS` if disconnect succeeds, else `pdFAIL`.
  */
-static bool prvDisconnectNetwork( NetworkContext_t * pxNetworkContext );
+static BaseType_t prvDisconnectNetwork( NetworkContext_t * pxNetworkContext );
 
 /**
  * @brief Initialize context for a command.
@@ -842,6 +842,7 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
             xResubscribeContext.pxResponseQueue = NULL;
             xResubscribeContext.xTaskToNotify = NULL;
             xCommandCreated = prvCreateCommand( SUBSCRIBE, &xResubscribeContext, prvCommandCallback, &xNewCommand );
+            configASSERT( xCommandCreated == true );
             /* Send to the front of the queue so we will resubscribe as soon as possible. */
             xCommandAdded = xQueueSendToFront( xCommandQueue, &xNewCommand, mqttexampleDEMO_TICKS_TO_WAIT );
             configASSERT( xCommandAdded == pdTRUE );
@@ -853,14 +854,14 @@ static MQTTStatus_t prvMQTTConnect( MQTTContext_t * pxMQTTContext,
 
 /*-----------------------------------------------------------*/
 
-static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext )
+static BaseType_t prvConnectNetwork( NetworkContext_t * pxNetworkContext )
 {
     bool xConnected = false;
     RetryUtilsStatus_t xRetryUtilsStatus = RetryUtilsSuccess;
     RetryUtilsParams_t xReconnectParams;
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
-        TlsTransportStatus_t xNetworkStatus;
+        TlsTransportStatus_t xNetworkStatus = TLS_TRANSPORT_CONNECT_FAILURE;
         NetworkCredentials_t xNetworkCredentials = { 0 };
 
         /* Set the credentials for establishing a TLS connection. */
@@ -871,7 +872,7 @@ static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext )
         xNetworkCredentials.pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
         xNetworkCredentials.privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #else /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
-        PlaintextTransportStatus_t xNetworkStatus;
+        PlaintextTransportStatus_t xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
     #endif /* if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 ) */
 
     /* Initialize reconnect attempts and interval. */
@@ -920,22 +921,22 @@ static bool prvConnectNetwork( NetworkContext_t * pxNetworkContext )
         }
     } while( ( xConnected != true ) && ( xRetryUtilsStatus == RetryUtilsSuccess ) );
 
-    return xConnected;
+    return ( xConnected ) ? pdPASS : pdFAIL;
 }
 
 /*-----------------------------------------------------------*/
 
-static bool prvDisconnectNetwork( NetworkContext_t * pxNetworkContext )
+static BaseType_t prvDisconnectNetwork( NetworkContext_t * pxNetworkContext )
 {
-    bool xDisconnected = false;
+    BaseType_t xDisconnected = pdFAIL;
 
     #if defined( democonfigUSE_TLS ) && ( democonfigUSE_TLS == 1 )
         TLS_FreeRTOS_Disconnect( pxNetworkContext );
-        xDisconnected = true;
+        xDisconnected = pdPASS;
     #else
-        PlaintextTransportStatus_t xNetworkStatus;
+        PlaintextTransportStatus_t xNetworkStatus = PLAINTEXT_TRANSPORT_CONNECT_FAILURE;
         xNetworkStatus = Plaintext_FreeRTOS_Disconnect( pxNetworkContext );
-        xDisconnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
+        xDisconnected = ( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS ) ? pdPASS : pdFAIL;
     #endif
     return xDisconnected;
 }
@@ -1134,7 +1135,8 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
 {
     MQTTStatus_t xStatus = MQTTSuccess;
     uint16_t usPacketId = MQTT_PACKET_ID_INVALID;
-    bool xAddAckToList = false, xAckAdded = false, xNetworkResult;
+    bool xAddAckToList = false, xAckAdded = false;
+    BaseType_t xNetworkResult = pdFAIL;
     MQTTPublishInfo_t * pxPublishInfo;
     MQTTSubscribeInfo_t * pxSubscribeInfo;
 
@@ -1216,9 +1218,9 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
         case RECONNECT:
             /* Reconnect TCP. */
             xNetworkResult = prvDisconnectNetwork( globalMqttContext.transportInterface.pNetworkContext );
-            configASSERT( xNetworkResult == true );
+            configASSERT( xNetworkResult == pdPASS );
             xNetworkResult = prvConnectNetwork( globalMqttContext.transportInterface.pNetworkContext );
-            configASSERT( xNetworkResult == true );
+            configASSERT( xNetworkResult == pdPASS );
             /* MQTT Connect with a persistent session. */
             xStatus = prvMQTTConnect( &globalMqttContext, globalMqttContext.transportInterface.pNetworkContext, false );
             break;
@@ -1762,8 +1764,8 @@ void prvSubscribeTask( void * pvParameters )
 static void prvMQTTDemoTask( void * pvParameters )
 {
     NetworkContext_t xNetworkContext = { 0 };
-    bool xNetworkStatus;
-    BaseType_t xResult;
+    BaseType_t xNetworkStatus = pdFAIL;
+    BaseType_t xResult = pdFALSE;
     uint32_t ulNotification = 0;
     Command_t xCommand;
     MQTTStatus_t xMQTTStatus;
@@ -1791,7 +1793,7 @@ static void prvMQTTDemoTask( void * pvParameters )
      * network suddenly disconnects. */
     LogInfo( ( "Creating a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
     xNetworkStatus = prvConnectNetwork( &xNetworkContext );
-    configASSERT( xNetworkStatus == true );
+    configASSERT( xNetworkStatus == pdPASS );
     LogInfo( ( "Clearing broker state." ) );
     xMQTTStatus = prvMQTTConnect( &globalMqttContext, &xNetworkContext, true );
     configASSERT( xMQTTStatus == MQTTSuccess );
@@ -1801,7 +1803,7 @@ static void prvMQTTDemoTask( void * pvParameters )
     configASSERT( xMQTTStatus == MQTTSuccess );
     LogInfo( ( "Disconnecting TCP connection." ) );
     xNetworkStatus = prvDisconnectNetwork( &xNetworkContext );
-    configASSERT( xNetworkStatus == true );
+    configASSERT( xNetworkStatus == pdPASS );
 
     for( ; ; )
     {
@@ -1817,7 +1819,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         LogInfo( ( "Creating a TCP connection to %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
         /* Connect to the broker. */
         xNetworkStatus = prvConnectNetwork( &xNetworkContext );
-        configASSERT( xNetworkStatus == true );
+        configASSERT( xNetworkStatus == pdPASS );
         /* Form an MQTT connection with a persistent session. */
         xMQTTStatus = prvMQTTConnect( &globalMqttContext, &xNetworkContext, false );
         configASSERT( xMQTTStatus == MQTTSuccess );
@@ -1863,7 +1865,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         LogInfo( ( "Disconnecting TCP connection." ) );
         xNetworkStatus = prvDisconnectNetwork( &xNetworkContext );
-        configASSERT( xNetworkStatus == true );
+        configASSERT( xNetworkStatus == pdPASS );
 
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );

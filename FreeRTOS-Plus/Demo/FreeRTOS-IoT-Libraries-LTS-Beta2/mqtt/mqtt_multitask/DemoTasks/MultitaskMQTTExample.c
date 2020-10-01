@@ -165,7 +165,7 @@
 /**
  * @brief Transport timeout in milliseconds for transport send and receive.
  */
-#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 20 )
+#define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS    ( 200 )
 
 /**
  * @brief Milliseconds per second.
@@ -282,7 +282,7 @@ typedef enum CommandType
     UNSUBSCRIBE, /**< @brief Call MQTT_Unsubscribe(). */
     PING,        /**< @brief Call MQTT_Ping(). */
     DISCONNECT,  /**< @brief Call MQTT_Disconnect(). */
-    CONNECT,     /**< @brief Placeholder command for reconnecting a broken connection. */
+    RECONNECT,   /**< @brief Reconnect a broken connection. */
     TERMINATE    /**< @brief Exit the command loop and stop processing commands. */
 } CommandType_t;
 
@@ -1213,7 +1213,7 @@ static MQTTStatus_t prvProcessCommand( Command_t * pxCommand )
 
             break;
 
-        case CONNECT:
+        case RECONNECT:
             /* Reconnect TCP. */
             xNetworkResult = prvDisconnectNetwork( globalMqttContext.transportInterface.pNetworkContext );
             configASSERT( xNetworkResult == true );
@@ -1472,7 +1472,7 @@ static void prvCommandLoop()
         {
             LogError( ( "MQTT operation failed with status %s",
                         MQTT_Status_strerror( xStatus ) ) );
-            prvCreateCommand( CONNECT, NULL, NULL, &xNewCommand );
+            prvCreateCommand( RECONNECT, NULL, NULL, &xNewCommand );
             xCommandAdded = xQueueSendToFront( xCommandQueue, &xNewCommand, mqttexampleDEMO_TICKS_TO_WAIT );
             /* Ensure the command was added to the queue. */
             configASSERT( xCommandAdded == pdTRUE );
@@ -1488,6 +1488,15 @@ static void prvCommandLoop()
             /* Ensure the command was re-added. */
             configASSERT( xCommandAdded == pdTRUE );
             lNumProcessed--;
+        }
+
+        /* Delay after sending a subscribe. This is to so that the broker
+         * creates a subscription for us before processing our next publish,
+         * which should be immediately after this. */
+        if( pxCommand->xCommandType == SUBSCRIBE )
+        {
+            LogDebug( ( "Sleeping for %d ms after sending SUBSCRIBE packet.", mqttexampleSUBSCRIBE_TASK_DELAY_MS ) );
+            vTaskDelay( mqttexampleSUBSCRIBE_TASK_DELAY_MS );
         }
 
         /* Terminate the loop if we receive the termination command. */

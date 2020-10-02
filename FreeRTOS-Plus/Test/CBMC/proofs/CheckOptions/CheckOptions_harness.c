@@ -81,6 +81,7 @@ void harness()
     /* pxNetworkBuffer can be any buffer descriptor with any buffer */
     NetworkBufferDescriptor_t pxNetworkBuffer;
     pxNetworkBuffer.pucEthernetBuffer = malloc( buffer_size );
+    __CPROVER_assume(pxNetworkBuffer.pucEthernetBuffer != NULL);
     pxNetworkBuffer.xDataLength = buffer_size;
 
     /****************************************************************

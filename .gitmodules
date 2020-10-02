@@ -13,6 +13,6 @@
 [submodule "FreeRTOS-Plus/Source/Application-Protocols/coreMQTT"]
 	path = FreeRTOS-Plus/Source/Application-Protocols/coreMQTT
 	url = https://github.com/FreeRTOS/coreMQTT
-[submodule "FreeRTOS-Plus/Source/Application-Protocols/coreJSON"]
+[submodule "FreeRTOS-Plus/Source/coreJSON"]
 	path = FreeRTOS-Plus/Source/coreJSON
 	url = https://github.com/FreeRTOS/coreJSON

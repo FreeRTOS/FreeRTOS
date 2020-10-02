@@ -63,46 +63,17 @@
 
 
 /**
- * @brief MQTT broker end point to connect to.
+ * @brief Endpoint of the MQTT broker to connect to.
  *
- * @note For running this demo an MQTT broker, which can be run locally on
- * the same host is recommended. Any MQTT broker, which can be run on a Windows
- * host can be used for this demo. However, the instructions below are for
- * setting up a local Mosquitto broker on a Windows host.
- * 1. Download Mosquitto from https://mosquitto.org/download/
- * 2. Install Mosquitto as a Windows service by running the installer.
- * More details about installing as a Windows service can be found at
- * https://github.com/eclipse/mosquitto/blob/master/readme-windows.txt and
- * https://github.com/eclipse/mosquitto/blob/master/readme.md
- * 3. Verify that Mosquitto server is running locally and listening on port
- * 1883 by following the steps below.
- *     a. Open Power Shell.
- *     b. Type in command `netstat -a -p TCP | grep 1883` to check if there
- *        is an active connection listening on port 1883.
- *     c. Verify that there is an output as shown below
- *        `TCP    0.0.0.0:1883           <HOST-NAME>:0       LISTENING`
- *     d. If there is no output on step c,go through the Mosquitto documentation
- *        listed above to check if the installation was successful.
- * 4. Make sure the Mosquitto broker is allowed to communicate through
- * Windows Firewall. The instructions for allowing an application on Windows 10
- * Defender Firewall can be found at the link below.
- * https://support.microsoft.com/en-us/help/4558235/windows-10-allow-an-app-through-microsoft-defender-firewall
- * After running this MQTT example, consider disabling the Mosquitto broker to
- * communicate through Windows Firewall for avoiding unwanted network traffic
- * to your machine.
- * 5. After verifying that a Mosquitto broker is running successfully, update
- * the config democonfigMQTT_BROKER_ENDPOINT to the local IP address of the
- * Windows host machine. Please note that "localhost" or address "127.0.0.1"
- * will not work as this example is running on a Windows Simulator and not on
- * Windows host natively. Also note that, if the Windows host is using a
- * Virtual Private Network(VPN), connection to the Mosquitto broker may not
- * work.
+ * This demo application can be run with any MQTT broker, although it is
+ * recommended to use one that supports mutual authentication. If mutual
+ * authentication is not used, then #democonfigUSE_TLS should be set to 0.
  *
- * As an alternative option, a publicly hosted Mosquitto broker can also be
- * used as an MQTT broker end point. This can be done by updating the config
- * democonfigMQTT_BROKER_ENDPOINT to "test.mosquitto.org". However, this is not
- * recommended due the possible downtimes of the broker as indicated by the
- * documentation in https://test.mosquitto.org/.
+ * For AWS IoT MQTT broker, this is the Thing's REST API Endpoint.
+ *
+ * @note Your AWS IoT Core endpoint can be found in the AWS IoT console under
+ * Settings/Custom Endpoint, or using the describe-endpoint REST API (with
+ * AWS CLI command line tool).
  *
  * #define democonfigMQTT_BROKER_ENDPOINT				"insert here."
  */
@@ -111,8 +82,72 @@
 /**
  * @brief The port to use for the demo.
  *
- * #define democonfigMQTT_BROKER_PORT					( insert here. )
+ * In general, port 8883 is for secured MQTT connections, and port 1883 if not
+ * using TLS.
+ *
+ * @note Port 443 requires use of the ALPN TLS extension with the ALPN protocol
+ * name. When using port 8883, ALPN is not required.
+ *
+ * #define democonfigMQTT_BROKER_PORT    ( insert here. )
  */
+
+/**
+ * @brief Server's root CA certificate.
+ *
+ * For AWS IoT MQTT broker, this certificate is used to identify the AWS IoT
+ * server and is publicly available. Refer to the AWS documentation available
+ * in the link below.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/server-authentication.html#server-authentication-certs
+ *
+ * @note This certificate should be PEM-encoded.
+ *
+ * Must include the PEM header and footer:
+ * "-----BEGIN CERTIFICATE-----\n"\
+ * "...base64 data...\n"\
+ * "-----END CERTIFICATE-----\n"
+ *
+ * #define democonfigROOT_CA_PEM    "...insert here..."
+ */
+
+/**
+ * @brief Client certificate.
+ *
+ * For AWS IoT MQTT broker, refer to the AWS documentation below for details
+ * regarding client authentication.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
+ *
+ * @note This certificate should be PEM-encoded.
+ *
+ * Must include the PEM header and footer:
+ * "-----BEGIN CERTIFICATE-----\n"\
+ * "...base64 data...\n"\
+ * "-----END CERTIFICATE-----\n"
+ *
+ * #define democonfigCLIENT_CERTIFICATE_PEM    "...insert here..."
+ */
+
+/**
+ * @brief Client's private key.
+ *
+ * For AWS IoT MQTT broker, refer to the AWS documentation below for details
+ * regarding clientauthentication.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/client-authentication.html
+ *
+ * @note This private key should be PEM-encoded.
+ *
+ * Must include the PEM header and footer:
+ * "-----BEGIN RSA PRIVATE KEY-----\n"\
+ * "...base64 data...\n"\
+ * "-----END RSA PRIVATE KEY-----\n"
+ *
+ * #define democonfigCLIENT_PRIVATE_KEY_PEM    "...insert here..."
+ */
+
+/**
+ * @brief Whether to use mutual authentication. If this macro is not set to 1
+ * or not defined, then plaintext TCP will be used instead of TLS over TCP.
+ */
+#define democonfigUSE_TLS    1
 
 
 /**

@@ -481,7 +481,7 @@ const uint32_t ulHz_Per_MHz = 1000000UL;
 
 		if( ( xEndTime - xStartTime ) > xMaxTime )
 		{
-			/* Wated more than xMaxTime, return. */
+			/* Waited more than xMaxTime, return. */
 			xReturn = pdFALSE;
 			break;
 		}

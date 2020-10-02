@@ -117,7 +117,7 @@ int32_t FreeRTOS_recvfrom( Socket_t xSocket,
 
 {
     /****************************************************************
-     * "If the zero copy calling semantics are used (the ulFlasg
+     * "If the zero copy calling semantics are used (the ulFlags
      * parameter does not have the FREERTOS_ZERO_COPY bit set) then
      * pvBuffer does not point to a buffer and xBufferLength is not
      * used."  This is from the documentation.

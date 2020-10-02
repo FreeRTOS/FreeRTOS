@@ -221,15 +221,15 @@ DMA TX descriptors. */
 static SemaphoreHandle_t xTXDescriptorSemaphore = NULL;
 
 /*
- * Note: it is adviced to define both
+ * Note: it is advised to define both
  *
  *     #define  ipconfigZERO_COPY_RX_DRIVER   1
  *     #define  ipconfigZERO_COPY_TX_DRIVER   1
  *
- * The method using memcpy is slower and probaly uses more RAM memory.
+ * The method using memcpy is slower and probably uses more RAM memory.
  * The possibility is left in the code just for comparison.
  *
- * It is adviced to define ETH_TXBUFNB at least 4. Note that no
+ * It is advised to define ETH_TXBUFNB at least 4. Note that no
  * TX buffers are allocated in a zero-copy driver.
  */
 /* MAC buffers: ---------------------------------------------------------*/
@@ -848,7 +848,7 @@ IPStackEvent_t xRxEvent;
 	if( xSendEventStructToIPTask( &xRxEvent, ( TickType_t ) 1000 ) != pdPASS )
 	{
 		/* The buffer could not be sent to the stack so	must be released again.
-		This is a deferred handler taskr, not a real interrupt, so it is ok to
+		This is a deferred handler task, not a real interrupt, so it is ok to
 		use the task level function here. */
 		#if( ipconfigUSE_LINKED_RX_MESSAGES != 0 )
 		{
@@ -891,7 +891,7 @@ uint8_t *pucBuffer;
 	while( ( pxDMARxDescriptor->Status & ETH_DMARXDESC_OWN ) == 0u )
 	{
 	BaseType_t xAccepted = pdTRUE;
-		/* Get the Frame Length of the received packet: substruct 4 bytes of the CRC */
+		/* Get the Frame Length of the received packet: subtract 4 bytes of the CRC */
 		xReceivedLength = ( ( pxDMARxDescriptor->Status & ETH_DMARXDESC_FL ) >> ETH_DMARXDESC_FRAMELENGTHSHIFT ) - 4;
 
 		pucBuffer = (uint8_t *) pxDMARxDescriptor->Buffer1Addr;
@@ -909,7 +909,7 @@ uint8_t *pucBuffer;
 
 		if( ( pxDMARxDescriptor->Status & ( ETH_DMARXDESC_CE | ETH_DMARXDESC_IPV4HCE | ETH_DMARXDESC_FT ) ) != ETH_DMARXDESC_FT )
 		{
-			/* Not an Ethernet frame-type or a checmsum error. */
+			/* Not an Ethernet frame-type or a checksum error. */
 			xAccepted = pdFALSE;
 		}
 		else
@@ -920,7 +920,7 @@ uint8_t *pucBuffer;
 
 		if( xAccepted != pdFALSE )
 		{
-			/* The packet wil be accepted, but check first if a new Network Buffer can
+			/* The packet will be accepted, but check first if a new Network Buffer can
 			be obtained. If not, the packet will still be dropped. */
 			pxNewDescriptor = pxGetNetworkBufferWithDescriptor( ETH_RX_BUF_SIZE, xDescriptorWaitTime );
 
@@ -942,8 +942,8 @@ uint8_t *pucBuffer;
 			pxCurDescriptor = pxNewDescriptor;
 			if( pxNewDescriptor != NULL )
 			{
-				/* The packet is acepted and a new Network Buffer was created,
-				copy data to the Network Bufffer. */
+				/* The packet is accepted and a new Network Buffer was created,
+				copy data to the Network Buffer. */
 				memcpy( pxNewDescriptor->pucEthernetBuffer, pucBuffer, xReceivedLength );
 			}
 		}

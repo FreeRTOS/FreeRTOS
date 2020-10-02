@@ -302,7 +302,7 @@ static BaseType_t xNetworkUp = pdFALSE;
 A timer for each of the following processes, all of which need attention on a
 regular basis:
 	1. ARP, to check its table entries
-	2. DPHC, to send requests and to renew a reservation
+	2. DHCP, to send requests and to renew a reservation
 	3. TCP, to check for timeouts, resends
 	4. DNS, to check for timeouts when looking-up a domain.
  */
@@ -1599,7 +1599,7 @@ eFrameProcessingResult_t eReturn = eProcessBuffer;
 			}
 			else
 			{
-				/* Packet is not fragemented, destination is this device. */
+				/* Packet is not fragmented, destination is this device. */
 			}
 	}
 	#endif /* ipconfigETHERNET_DRIVER_FILTERS_PACKETS */
@@ -2396,7 +2396,7 @@ DEBUG_DECLARE_TRACE_VARIABLE( BaseType_t, xLocation, 0 );
 
 /**
  * This method generates a checksum for a given IPv4 header, per RFC791 (page 14).
- * The checksum algorithm is decribed as:
+ * The checksum algorithm is described as:
  *   "[T]he 16 bit one's complement of the one's complement sum of all 16 bit words in the
  *   header.  For purposes of computing the checksum, the value of the checksum field is zero."
  *
@@ -2833,7 +2833,7 @@ BaseType_t FreeRTOS_IsNetworkUp( void )
 #endif
 /*-----------------------------------------------------------*/
 /* Utility function: Convert error number to a human readable
- * string. Decalartion in FreeRTOS_errno_TCP.h. */
+ * string. Declaration in FreeRTOS_errno_TCP.h. */
 const char *FreeRTOS_strerror_r( BaseType_t xErrnum, char *pcBuffer, size_t uxLength )
 {
 const char *pcName;

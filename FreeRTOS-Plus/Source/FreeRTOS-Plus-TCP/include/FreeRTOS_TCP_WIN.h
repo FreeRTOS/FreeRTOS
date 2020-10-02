@@ -188,7 +188,7 @@ BaseType_t xTCPWindowTxHasData( TCPWindow_t const * pxWindow, uint32_t ulWindowS
 BaseType_t xTCPWindowTxDone( const TCPWindow_t *pxWindow );
 
 /* Fetches data to be sent.
- * apPos will point to a location with the circular data buffer: txStream */
+ * plPosition will point to a location with the circular data buffer: txStream */
 uint32_t ulTCPWindowTxGet( TCPWindow_t *pxWindow, uint32_t ulWindowSize, int32_t *plPosition );
 
 /* Receive a normal ACK */

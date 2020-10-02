@@ -376,7 +376,7 @@ const TickType_t xShortTime = pdMS_TO_TICKS( 100UL );
 
 		if( ( xEndTime - xStartTime ) > xMaxTime )
 		{
-			/* Wated more than xMaxTime, return. */
+			/* Waited more than xMaxTime, return. */
 			xReturn = pdFALSE;
 			break;
 		}

@@ -22,7 +22,6 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef DEMO_CONFIG_H
@@ -86,7 +85,9 @@
  * using TLS.
  *
  * @note Port 443 requires use of the ALPN TLS extension with the ALPN protocol
- * name. When using port 8883, ALPN is not required.
+ * name. Using ALPN with this demo would require additional changes, including
+ * setting the `pAlpnProtos` member of the `NetworkCredentials_t` struct before
+ * forming the TLS connection. When using port 8883, ALPN is not required.
  *
  * #define democonfigMQTT_BROKER_PORT    ( insert here. )
  */

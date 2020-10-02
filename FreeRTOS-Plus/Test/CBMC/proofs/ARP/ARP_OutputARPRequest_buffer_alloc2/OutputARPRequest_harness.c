@@ -18,18 +18,20 @@
 #include "FreeRTOS_UDP_IP.h"
 #include "FreeRTOS_DHCP.h"
 #if( ipconfigUSE_LLMNR == 1 )
-	#include "FreeRTOS_DNS.h"
+        #include "FreeRTOS_DNS.h"
 #endif /* ipconfigUSE_LLMNR */
 #include "NetworkInterface.h"
 #include "NetworkBufferManagement.h"
 
 void *pvPortMalloc( size_t xWantedSize ){
-	return malloc(xWantedSize);
+        void *ptr = malloc(xWantedSize);
+        __CPROVER_assume(ptr != NULL);
+        return ptr;
 }
 
 
 void vPortFree( void *pv ){
-	free(pv);
+        free(pv);
 }
 
 /*
@@ -37,18 +39,17 @@ void vPortFree( void *pv ){
  * out here, and assume it has no side effects relevant to memory safety.
  */
 BaseType_t xNetworkInterfaceOutput( NetworkBufferDescriptor_t * const pxDescriptor, BaseType_t bReleaseAfterSend ){
-	if( bReleaseAfterSend != pdFALSE )
-	{
-		vReleaseNetworkBufferAndDescriptor( pxDescriptor );
-	}
+        if( bReleaseAfterSend != pdFALSE )
+        {
+                vReleaseNetworkBufferAndDescriptor( pxDescriptor );
+        }
 }
 
 void harness()
 {
-	BaseType_t xRes = xNetworkBuffersInitialise();
-	if(xRes == pdPASS){
-		uint32_t ulIPAddress;
-		FreeRTOS_OutputARPRequest( ulIPAddress );
-	}
+        BaseType_t xRes = xNetworkBuffersInitialise();
+        if(xRes == pdPASS){
+                uint32_t ulIPAddress;
+                FreeRTOS_OutputARPRequest( ulIPAddress );
+        }
 }
-

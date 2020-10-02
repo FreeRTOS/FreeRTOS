@@ -72,8 +72,10 @@ void harness()
     buffer_size = buf_size;
 
     uint8_t * pucPtr = malloc( buffer_size );
+    __CPROVER_assume(pucPtr != NULL);
     size_t uxTotalLength;
     FreeRTOS_Socket_t * pxSocket = malloc( sizeof( FreeRTOS_Socket_t ) );
+    __CPROVER_assume(pxSocket != NULL);
     BaseType_t xHasSYNFlag;
 
     /****************************************************************

@@ -406,7 +406,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Send an MQTT Disconnect packet over the already connected TCP socket.
          * There is no corresponding response for the disconnect packet. After
          * sending disconnect, client must close the network connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", 
+        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n",
                    democonfigMQTT_BROKER_ENDPOINT ) );
         xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
         configASSERT( xMQTTStatus == MQTTSuccess );
@@ -424,7 +424,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Wait for some time between two iterations to ensure that we do not
          * bombard the broker. */
         LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. "
-                   "Total free heap is %u.\r\n", 
+                   "Total free heap is %u.\r\n",
                    xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );

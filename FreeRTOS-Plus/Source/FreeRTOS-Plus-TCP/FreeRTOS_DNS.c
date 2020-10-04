@@ -1333,7 +1333,7 @@ const size_t uxAddressLength = ipSIZE_OF_IPv4_ADDRESS;
 							 */
 							pvCopySource = &pucByte[ sizeof( DNSAnswerRecord_t ) ];
 							pvCopyDest = &ulIPAddress;
-							( void ) memcpy( pvCopyDest, pvCopySource, sizeof( uint32_t ) );
+							( void ) memcpy( pvCopyDest, pvCopySource, uxAddressLength );
 
 							#if( ipconfigDNS_USE_CALLBACKS == 1 )
 							{

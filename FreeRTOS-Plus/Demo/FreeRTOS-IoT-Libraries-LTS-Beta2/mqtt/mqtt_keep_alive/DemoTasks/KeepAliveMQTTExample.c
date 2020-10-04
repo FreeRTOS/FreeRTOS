@@ -431,7 +431,8 @@ static void prvMQTTDemoTask( void * pvParameters )
 
     ulGlobalEntryTimeMs = prvGetTimeMs();
 
-    /* Serialize a PINGREQ packet to send upon invoking the keep-alive timer callback. */
+    /* Serialize a PINGREQ packet to send upon invoking the keep-alive timer
+     * callback. */
     xMQTTStatus = MQTT_SerializePingreq( &xPingReqBuffer );
     configASSERT( xMQTTStatus == MQTTSuccess );
 
@@ -442,8 +443,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Attempt to connect to the MQTT broker. If connection fails, retry after
          * a timeout. Timeout value will be exponentially increased until the maximum
          * number of attempts are reached or the maximum timeout value is reached.
-         * The function returns a failure status if the TCP connection cannot be established
-         * to the broker after the configured number of attempts. */
+         * The function returns a failure status if the TCP connection cannot be
+         * established to the broker after the configured number of attempts. */
         xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkContext );
         configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
@@ -467,20 +468,21 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Subscribe. ******************************/
 
-        /* If server rejected the subscription request, attempt to resubscribe to topic.
-         * Attempts are made according to the exponential backoff retry strategy
-         * implemented in retryUtils. */
+        /* If server rejected the subscription request, attempt to resubscribe to
+         * topic. Attempts are made according to the exponential backoff retry
+         * strategy implemented in retryUtils. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
-        /**************************** Publish and Receive Loop. ******************************/
+        /********************* Publish and Receive Loop. **********************/
         /* Publish messages with QOS0, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
         {
             LogInfo( ( "Publish to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
             prvMQTTPublishToTopic( &xMQTTContext );
 
-            /* Process incoming publish echo, since application subscribed to the same
-             * topic the broker will send publish message back to the application. */
+            /* Process incoming publish echo, since application subscribed to the
+             * same topic the broker will send publish message back to the
+             * application. */
             LogInfo( ( "Attempt to receive publish message from broker.\r\n" ) );
             xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, mqttexampleRECEIVE_LOOP_TIMEOUT_MS );
             configASSERT( xMQTTStatus == MQTTSuccess );
@@ -490,7 +492,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             vTaskDelay( mqttexampleDELAY_BETWEEN_PUBLISHES );
         }
 
-        /************************ Unsubscribe from the topic. **************************/
+        /******************** Unsubscribe from the topic. *********************/
         LogInfo( ( "Unsubscribe from the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         prvMQTTUnsubscribeFromTopic( &xMQTTContext );
 
@@ -498,13 +500,15 @@ static void prvMQTTDemoTask( void * pvParameters )
         xMQTTStatus = MQTT_ReceiveLoop( &xMQTTContext, mqttexampleRECEIVE_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
-        /**************************** Disconnect. ******************************/
+        /**************************** Disconnect. *****************************/
 
         /* Send an MQTT Disconnect packet over the already connected TCP socket.
-         * There is no corresponding response for the disconnect packet. After sending
-         * disconnect, client must close the network connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        MQTT_Disconnect( &xMQTTContext );
+         * There is no corresponding response for the disconnect packet. After
+         * sending disconnect, client must close the network connection. */
+        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", 
+                   democonfigMQTT_BROKER_ENDPOINT ) );
+        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
+        configASSERT( xMQTTStatus == MQTTSuccess );
 
         /* Stop the keep-alive timer for the next iteration. */
         xTimerStatus = xTimerStop( xKeepAliveTimer, 0 );
@@ -514,15 +518,18 @@ static void prvMQTTDemoTask( void * pvParameters )
         xNetworkStatus = Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
         configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
-        /* Reset SUBACK status for each topic filter after completion of subscription request cycle. */
+        /* Reset SUBACK status for each topic filter after completion of subscription
+         * request cycle. */
         for( ulTopicCount = 0; ulTopicCount < mqttexampleTOPIC_COUNT; ulTopicCount++ )
         {
             xTopicFilterContext[ ulTopicCount ].xSubAckStatus = MQTTSubAckFailure;
         }
 
         /* Wait for some time between two iterations to ensure that we do not
-         * bombard the public test mosquitto broker. */
-        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
+         * bombard the broker. */
+        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. "
+                   "Total free heap is %u.\r\n",
+                   xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );

@@ -341,8 +341,8 @@ static void prvMQTTDemoTask( void * pvParameters )
     {
         /****************************** Connect. ******************************/
 
-        /* Establish a TLS connection with the MQTT broker. This example connects to
-         * the MQTT broker as specified by democonfigMQTT_BROKER_ENDPOINT and
+        /* Establish a TLS connection with the MQTT broker. This example connects
+         * to the MQTT broker as specified by democonfigMQTT_BROKER_ENDPOINT and
          * democonfigMQTT_BROKER_PORT in the demo_config.h file. */
         LogInfo( ( "Creating a TLS connection to %s:%u.\r\n",
                    democonfigMQTT_BROKER_ENDPOINT,
@@ -378,15 +378,15 @@ static void prvMQTTDemoTask( void * pvParameters )
         xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
-        /**************************** Publish and Keep Alive Loop. ******************************/
+        /******************* Publish and Keep Alive Loop. *********************/
         /* Publish messages with QoS1, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
         {
             LogInfo( ( "Publish to the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
             prvMQTTPublishToTopic( &xMQTTContext );
 
-            /* Process incoming publish echo, since application subscribed to the same
-             * topic, the broker will send publish message back to the application. */
+            /* Process incoming publish echo, since application subscribed to the
+             * same topic, the broker will send publish message back to the application. */
             LogInfo( ( "Attempt to receive publish message from broker.\r\n" ) );
             xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
             configASSERT( xMQTTStatus == MQTTSuccess );
@@ -396,7 +396,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             vTaskDelay( mqttexampleDELAY_BETWEEN_PUBLISHES_TICKS );
         }
 
-        /************************ Unsubscribe from the topic. **************************/
+        /******************** Unsubscribe from the topic. *********************/
         LogInfo( ( "Unsubscribe from the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         prvMQTTUnsubscribeFromTopic( &xMQTTContext );
 
@@ -406,18 +406,22 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Disconnect. ******************************/
 
-        /* Send an MQTT Disconnect packet over the already connected TLS over TCP connection.
-         * There is no corresponding response for the disconnect packet. After sending
-         * disconnect, client must close the network connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        MQTT_Disconnect( &xMQTTContext );
+        /* Send an MQTT Disconnect packet over the already connected TLS over TCP
+         * connection. There is no corresponding response for the disconnect packet.
+         * After sending disconnect, client must close the network connection. */
+        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", 
+                   democonfigMQTT_BROKER_ENDPOINT ) );
+        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
+        configASSERT( xMQTTStatus == MQTTSuccess );
 
         /* Close the network connection.  */
         TLS_FreeRTOS_Disconnect( &xNetworkContext );
 
         /* Wait for some time between two iterations to ensure that we do not
-         * the broker. */
-        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
+         * bombard the broker. */
+        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. "
+                   "Total free heap is %u.\r\n",
+                   xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS_TICKS );

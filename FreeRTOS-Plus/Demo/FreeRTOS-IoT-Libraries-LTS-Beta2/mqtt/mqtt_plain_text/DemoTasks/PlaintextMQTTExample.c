@@ -354,8 +354,8 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Attempt to connect to the MQTT broker. If connection fails, retry after
          * a timeout. Timeout value will be exponentially increased until the maximum
          * number of attempts are reached or the maximum timeout value is reached.
-         * The function returns a failure status if the TCP connection cannot be established
-         * to the broker after the configured number of attempts. */
+         * The function returns a failure status if the TCP connection cannot be
+         * established to the broker after the configured number of attempts. */
         xNetworkStatus = prvConnectToServerWithBackoffRetries( &xNetworkContext );
         configASSERT( xNetworkStatus == PLAINTEXT_TRANSPORT_SUCCESS );
 
@@ -366,12 +366,12 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /**************************** Subscribe. ******************************/
 
-        /* If server rejected the subscription request, attempt to resubscribe to topic.
-         * Attempts are made according to the exponential backoff retry strategy
-         * implemented in retryUtils. */
+        /* If server rejected the subscription request, attempt to resubscribe to
+         * topic. Attempts are made according to the exponential backoff retry
+         * strategy implemented in retryUtils. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
-        /**************************** Publish and Keep Alive Loop. ******************************/
+        /******************* Publish and Keep Alive Loop. *********************/
         /* Publish messages with QoS0, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )
         {
@@ -389,7 +389,7 @@ static void prvMQTTDemoTask( void * pvParameters )
             vTaskDelay( mqttexampleDELAY_BETWEEN_PUBLISHES );
         }
 
-        /************************ Unsubscribe from the topic. **************************/
+        /******************** Unsubscribe from the topic. *********************/
         LogInfo( ( "Unsubscribe from the MQTT topic %s.\r\n", mqttexampleTOPIC ) );
         prvMQTTUnsubscribeFromTopic( &xMQTTContext );
 
@@ -397,13 +397,15 @@ static void prvMQTTDemoTask( void * pvParameters )
         xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
-        /**************************** Disconnect. ******************************/
+        /**************************** Disconnect. *****************************/
 
         /* Send an MQTT Disconnect packet over the already connected TCP socket.
-         * There is no corresponding response for the disconnect packet. After sending
-         * disconnect, client must close the network connection. */
-        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", democonfigMQTT_BROKER_ENDPOINT ) );
-        MQTT_Disconnect( &xMQTTContext );
+         * There is no corresponding response for the disconnect packet. After
+         * sending disconnect, client must close the network connection. */
+        LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n",
+                   democonfigMQTT_BROKER_ENDPOINT ) );
+        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
+        configASSERT( xMQTTStatus == MQTTSuccess );
 
         /* Close the network connection.  */
         xNetworkStatus = Plaintext_FreeRTOS_Disconnect( &xNetworkContext );
@@ -416,8 +418,10 @@ static void prvMQTTDemoTask( void * pvParameters )
         }
 
         /* Wait for some time between two iterations to ensure that we do not
-         * bombard the public test mosquitto broker. */
-        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. Total free heap is %u.\r\n", xPortGetFreeHeapSize() ) );
+         * bombard the broker. */
+        LogInfo( ( "prvMQTTDemoTask() completed an iteration successfully. "
+                   "Total free heap is %u.\r\n",
+                   xPortGetFreeHeapSize() ) );
         LogInfo( ( "Demo completed successfully.\r\n" ) );
         LogInfo( ( "Short delay before starting the next iteration.... \r\n\r\n" ) );
         vTaskDelay( mqttexampleDELAY_BETWEEN_DEMO_ITERATIONS );

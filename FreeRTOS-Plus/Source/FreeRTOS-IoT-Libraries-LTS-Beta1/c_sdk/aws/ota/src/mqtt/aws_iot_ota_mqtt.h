@@ -96,7 +96,7 @@ OTA_Err_t prvDecodeFileBlock_Mqtt( uint8_t * pucMessageBuffer,
                                    size_t * pxPayloadSize );
 
 /**
- * @brief Cleanup related to OTA over MQTT.
+ * @brief Cleanup related to OTA control plane over MQTT.
  *
  * This function perfroms cleanup by unsubscribing from any topics that were
  * subscribed for performing OTA over MQTT.
@@ -106,7 +106,20 @@ OTA_Err_t prvDecodeFileBlock_Mqtt( uint8_t * pucMessageBuffer,
  * @return The OTA error code. See OTA Agent error codes information in aws_iot_ota_agent.h.
  */
 
-OTA_Err_t prvCleanup_Mqtt( OTA_AgentContext_t * pxAgentCtx );
+OTA_Err_t prvCleanupControl_Mqtt( OTA_AgentContext_t * pxAgentCtx );
+
+/**
+ * @brief Cleanup related to OTA data plane over MQTT.
+ *
+ * This function perfroms cleanup by unsubscribing from any topics that were
+ * subscribed for performing OTA over MQTT.
+ *
+ * @param[in] pxAgentCtx The OTA agent context.
+ *
+ * @return The OTA error code. See OTA Agent error codes information in aws_iot_ota_agent.h.
+ */
+
+OTA_Err_t prvCleanupData_Mqtt( OTA_AgentContext_t * pxAgentCtx );
 
 /**
  * @brief Update job status over MQTT.

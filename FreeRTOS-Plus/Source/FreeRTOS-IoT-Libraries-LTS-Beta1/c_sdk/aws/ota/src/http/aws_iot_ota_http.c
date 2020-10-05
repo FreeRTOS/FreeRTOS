@@ -1170,9 +1170,9 @@ OTA_Err_t _AwsIotOTA_DecodeFileBlock_HTTP( uint8_t * pMessageBuffer,
 }
 
 
-OTA_Err_t _AwsIotOTA_Cleanup_HTTP( OTA_AgentContext_t * pAgentCtx )
+OTA_Err_t _AwsIotOTA_CleanupData_HTTP( OTA_AgentContext_t * pAgentCtx )
 {
-    IotLogDebug( "Invoking _AwsIotOTA_Cleanup_HTTP" );
+    IotLogDebug( "Invoking _AwsIotOTA_CleanupData_HTTP" );
 
     /* Unused parameters. */
     ( void ) pAgentCtx;

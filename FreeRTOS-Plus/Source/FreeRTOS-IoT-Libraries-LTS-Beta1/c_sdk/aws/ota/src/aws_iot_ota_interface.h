@@ -54,6 +54,7 @@ typedef struct
                                         OTA_JobStatus_t eStatus,
                                         int32_t lReason,
                                         int32_t lSubReason );
+    OTA_Err_t ( * prvCleanup )( OTA_AgentContext_t * pAgentCtx );
 } OTA_ControlInterface_t;
 
 /**

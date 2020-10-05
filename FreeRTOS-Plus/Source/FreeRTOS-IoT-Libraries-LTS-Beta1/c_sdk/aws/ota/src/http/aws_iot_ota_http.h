@@ -43,6 +43,6 @@ OTA_Err_t _AwsIotOTA_DecodeFileBlock_HTTP( uint8_t * pMessageBuffer,
                                            uint8_t ** pPayload,
                                            size_t * pPayloadSize );
 
-OTA_Err_t _AwsIotOTA_Cleanup_HTTP( OTA_AgentContext_t * pxAgentCtx );
+OTA_Err_t _AwsIotOTA_CleanupData_HTTP( OTA_AgentContext_t * pxAgentCtx );
 
 #endif /* ifndef __AWS_OTA_HTTP__H__ */

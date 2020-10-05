@@ -224,12 +224,14 @@ static bool prvUnSubscribeFromDataStream( const OTA_AgentContext_t * pxAgentCtx 
 
     IotMqttSubscription_t xUnSub;
 
+    xUnSub.qos = IOT_MQTT_QOS_0;
+
     bool bResult = false;
     char pcOTA_RxStreamTopic[ OTA_MAX_TOPIC_LEN ];
 
-    xUnSub.qos = IOT_MQTT_QOS_0;
+    const OTA_FileContext_t * pFileContext = &( pxAgentCtx->pxOTA_Files[ pxAgentCtx->ulFileIndex ] );
 
-    if( pxAgentCtx != NULL )
+    if( ( pFileContext != NULL ) && ( pFileContext->pucStreamName != NULL ) )
     {
         /* Try to build the dynamic data stream topic and un-subscribe from it. */
 
@@ -237,7 +239,7 @@ static bool prvUnSubscribeFromDataStream( const OTA_AgentContext_t * pxAgentCtx 
                                                           sizeof( pcOTA_RxStreamTopic ),
                                                           pcOTA_StreamData_TopicTemplate,
                                                           pxAgentCtx->pcThingName,
-                                                          ( const char * ) pxAgentCtx->pxOTA_Files[ 0 ].pucStreamName );
+                                                          ( const char * ) pFileContext->pucStreamName );
 
         if( ( xUnSub.topicFilterLength > 0U ) && ( xUnSub.topicFilterLength < sizeof( pcOTA_RxStreamTopic ) ) )
         {
@@ -759,6 +761,7 @@ OTA_Err_t prvInitFileTransfer_Mqtt( OTA_AgentContext_t * pxAgentCtx )
     OTA_Err_t xResult = kOTA_Err_PublishFailed;
     char pcOTA_RxStreamTopic[ OTA_MAX_TOPIC_LEN ];
     IotMqttSubscription_t xOTAUpdateDataSubscription;
+    const OTA_FileContext_t * pFileContext = &( pxAgentCtx->pxOTA_Files[ pxAgentCtx->ulFileIndex ] );
 
     memset( &xOTAUpdateDataSubscription, 0, sizeof( xOTAUpdateDataSubscription ) );
     xOTAUpdateDataSubscription.qos = IOT_MQTT_QOS_0;
@@ -769,7 +772,7 @@ OTA_Err_t prvInitFileTransfer_Mqtt( OTA_AgentContext_t * pxAgentCtx )
                                                                           sizeof( pcOTA_RxStreamTopic ),
                                                                           pcOTA_StreamData_TopicTemplate,
                                                                           pxAgentCtx->pcThingName,
-                                                                          ( const char * ) pxAgentCtx->pxOTA_Files->pucStreamName );
+                                                                          ( const char * ) pFileContext->pucStreamName );
 
     if( ( xOTAUpdateDataSubscription.topicFilterLength > 0U ) && ( xOTAUpdateDataSubscription.topicFilterLength < sizeof( pcOTA_RxStreamTopic ) ) )
     {
@@ -935,15 +938,24 @@ OTA_Err_t prvDecodeFileBlock_Mqtt( uint8_t * pucMessageBuffer,
 }
 
 /*
- * Perform any cleanup operations required like unsubscribing from
- * job topics.
+ * Perform any cleanup operations required for control plane.
  */
-OTA_Err_t prvCleanup_Mqtt( OTA_AgentContext_t * pxAgentCtx )
+OTA_Err_t prvCleanupControl_Mqtt( OTA_AgentContext_t * pxAgentCtx )
 {
-    DEFINE_OTA_METHOD_NAME( "prvCleanup_Mqtt" );
+    DEFINE_OTA_METHOD_NAME( "prvCleanupControl_Mqtt" );
 
     /* Unsubscribe from job notification topics. */
     prvUnSubscribeFromJobNotificationTopic( pxAgentCtx );
+
+    return kOTA_Err_None;
+}
+
+/*
+ * Perform any cleanup operations required for data plane.
+ */
+OTA_Err_t prvCleanupData_Mqtt( OTA_AgentContext_t * pxAgentCtx )
+{
+    DEFINE_OTA_METHOD_NAME( "prvCleanupData_Mqtt" );
 
     /* Unsubscribe from data stream topics. */
     prvUnSubscribeFromDataStream( pxAgentCtx );

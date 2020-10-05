@@ -74,6 +74,7 @@ void prvSetControlInterface( OTA_ControlInterface_t * pxControlInterface )
     #if ( configENABLED_CONTROL_PROTOCOL == OTA_CONTROL_OVER_MQTT )
         pxControlInterface->prvRequestJob = prvRequestJob_Mqtt;
         pxControlInterface->prvUpdateJobStatus = prvUpdateJobStatus_Mqtt;
+        pxControlInterface->prvCleanup = prvCleanupControl_Mqtt;
     #else
     #error "Enable MQTT control as control operations are only supported over MQTT."
     #endif
@@ -97,7 +98,7 @@ OTA_Err_t prvSetDataInterface( OTA_DataInterface_t * pxDataInterface,
                     pxDataInterface->prvInitFileTransfer = prvInitFileTransfer_Mqtt;
                     pxDataInterface->prvRequestFileBlock = prvRequestFileBlock_Mqtt;
                     pxDataInterface->prvDecodeFileBlock = prvDecodeFileBlock_Mqtt;
-                    pxDataInterface->prvCleanup = prvCleanup_Mqtt;
+                    pxDataInterface->prvCleanup = prvCleanupData_Mqtt;
 
                     OTA_LOG_L1( "[%s] Data interface is set to MQTT.\r\n", OTA_METHOD_NAME );
 
@@ -112,7 +113,7 @@ OTA_Err_t prvSetDataInterface( OTA_DataInterface_t * pxDataInterface,
                     pxDataInterface->prvInitFileTransfer = _AwsIotOTA_InitFileTransfer_HTTP;
                     pxDataInterface->prvRequestFileBlock = _AwsIotOTA_RequestDataBlock_HTTP;
                     pxDataInterface->prvDecodeFileBlock = _AwsIotOTA_DecodeFileBlock_HTTP;
-                    pxDataInterface->prvCleanup = _AwsIotOTA_Cleanup_HTTP;
+                    pxDataInterface->prvCleanup = _AwsIotOTA_CleanupData_HTTP;
 
                     OTA_LOG_L1( "[%s] Data interface is set to HTTP.\r\n", OTA_METHOD_NAME );
 

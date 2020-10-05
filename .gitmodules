@@ -16,3 +16,6 @@
 [submodule "FreeRTOS-Plus/Source/coreJSON"]
 	path = FreeRTOS-Plus/Source/coreJSON
 	url = https://github.com/FreeRTOS/coreJSON
+[submodule "FreeRTOS-Plus/Test/CMock"]
+	path = FreeRTOS-Plus/Test/CMock
+	url = https://github.com/ThrowTheSwitch/CMock

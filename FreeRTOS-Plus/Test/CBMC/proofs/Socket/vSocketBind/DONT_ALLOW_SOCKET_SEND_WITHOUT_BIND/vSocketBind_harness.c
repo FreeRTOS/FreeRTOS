@@ -15,14 +15,14 @@
 
 uint16_t prvGetPrivatePortNumber( BaseType_t xProtocol )
 {
-	uint16_t usResult;
-	return usResult;
+        uint16_t usResult;
+        return usResult;
 }
 
 BaseType_t xIPIsNetworkTaskReady( void )
 {
-	/* Return true saying that the task is ready. */
-	return pdTRUE;
+        /* Return true saying that the task is ready. */
+        return pdTRUE;
 }
 
 
@@ -46,21 +46,22 @@ BaseType_t xApplicationGetRandomNumber( uint32_t *pulNumber )
 
 void harness()
 {
-	FreeRTOS_Socket_t *pxSocket = ensure_FreeRTOS_Socket_t_is_allocated();
+        FreeRTOS_Socket_t *pxSocket = ensure_FreeRTOS_Socket_t_is_allocated();
 
-	__CPROVER_assume( pxSocket != NULL );
-	__CPROVER_assume( pxSocket != FREERTOS_INVALID_SOCKET );
+        __CPROVER_assume( pxSocket != NULL );
+        __CPROVER_assume( pxSocket != FREERTOS_INVALID_SOCKET );
 
-	/* malloc instead of safeMalloc since we do not allow socket without binding. */
-	struct freertos_sockaddr * pxBindAddress = malloc( sizeof( struct freertos_sockaddr ) );
+        /* malloc instead of safeMalloc since we do not allow socket without binding. */
+        struct freertos_sockaddr * pxBindAddress = malloc( sizeof( struct freertos_sockaddr ) );
+        __CPROVER_assume(pxBindAddress != NULL);
 
-	/* uxAddressLength is not used in this implementation. */
-	size_t uxAddressLength;
+        /* uxAddressLength is not used in this implementation. */
+        size_t uxAddressLength;
 
-	BaseType_t xInternal;
+        BaseType_t xInternal;
 
-	/* Call to init the socket list. */
-	vNetworkSocketsInit();
+        /* Call to init the socket list. */
+        vNetworkSocketsInit();
 
-	vSocketBind( pxSocket, pxBindAddress, uxAddressLength, xInternal );
+        vSocketBind( pxSocket, pxBindAddress, uxAddressLength, xInternal );
 }

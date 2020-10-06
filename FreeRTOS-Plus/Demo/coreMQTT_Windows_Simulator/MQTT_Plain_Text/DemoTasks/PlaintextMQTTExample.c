@@ -406,7 +406,7 @@ static void prvMQTTDemoTask( void * pvParameters )
          * sending the disconnect, the client must close the network connection. */
         LogInfo( ( "Disconnecting the MQTT connection with %s.\r\n", 
                    democonfigMQTT_BROKER_ENDPOINT ) );
-        MQTT_Disconnect( &xMQTTContext );
+        xMQTTStatus = MQTT_Disconnect( &xMQTTContext );
         configASSERT( xMQTTStatus == MQTTSuccess );
 
         /* Close the network connection. */

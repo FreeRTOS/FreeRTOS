@@ -111,6 +111,17 @@ int main( void )
 }
 /*-----------------------------------------------------------*/
 
+void vLoggingPrintf( const char *pcFormat,
+					 ... )
+{
+va_list arg;
+
+	va_start( arg, pcFormat );
+	vprintf( pcFormat, arg );
+	va_end( arg );
+}
+/*-----------------------------------------------------------*/
+
 void vAssertCalled( const char * pcFile,
                     uint32_t ulLine )
 {

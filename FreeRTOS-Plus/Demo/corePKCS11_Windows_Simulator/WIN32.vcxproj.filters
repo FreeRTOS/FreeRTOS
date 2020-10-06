@@ -32,9 +32,6 @@
     <Filter Include="3rdparty\mbedtls_utils">
       <UniqueIdentifier>{dc5729ea-7c04-484d-babd-d3537c27b7a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logging">
-      <UniqueIdentifier>{30af02a1-fc2d-4142-b173-508ece3f033d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="corePKCS11">
       <UniqueIdentifier>{e88d4eab-3fad-4755-a5a4-41c6e4f59089}</UniqueIdentifier>
     </Filter>
@@ -43,6 +40,9 @@
     </Filter>
     <Filter Include="corePKCS11\source">
       <UniqueIdentifier>{8ffa2635-7ef9-4c6b-b392-96e0cc935ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{30af02a1-fc2d-4142-b173-508ece3f033d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -403,12 +403,6 @@
     <ClInclude Include="..\..\Source\Application-Protocols/corePKCS11\3rdparty\pkcs11\pkcs11t.h">
       <Filter>3rdparty\pkcs11</Filter>
     </ClInclude>
-    <ClInclude Include="logging\logging_levels.h">
-      <Filter>logging</Filter>
-    </ClInclude>
-    <ClInclude Include="logging\logging_stack.h">
-      <Filter>logging</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Application-Protocols/corePKCS11\3rdparty\mbedtls_utils\mbedtls_error.h">
       <Filter>3rdparty\mbedtls_utils</Filter>
     </ClInclude>
@@ -645,6 +639,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\Application-Protocols/corePKCS11\3rdparty\mbedtls\include\mbedtls\xtea.h">
       <Filter>3rdparty\mbedtls\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Logging\logging_levels.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Logging\logging_stack.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

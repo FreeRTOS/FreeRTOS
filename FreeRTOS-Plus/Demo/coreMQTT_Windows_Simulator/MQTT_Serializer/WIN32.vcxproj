@@ -161,7 +161,7 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\Common\demo_logging.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\LightWeightMQTTExample.c" />
+    <ClCompile Include="DemoTasks\SerializerMQTTExample.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\FreeRTOS\Source\include\event_groups.h" />

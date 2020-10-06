@@ -108,13 +108,13 @@
     </ClCompile>
     <ClCompile Include="..\Common\demo_logging.c" />
     <ClCompile Include="..\Common\main.c" />
-    <ClCompile Include="DemoTasks\LightWeightMQTTExample.c">
+    <ClCompile Include="DemoTasks\SerializerMQTTExample.c">
       <Filter>DemoTasks</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\src\mqtt_lightweight.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\platform\freertos\retry_utils\retry_utils_freertos.c">
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,7 +191,7 @@
       <Filter>FreeRTOS\Source\include</Filter>
     </ClInclude>
     <ClInclude Include="demo_config.h" />
-    <ClInclude Include="..\..\..\..\Source\FreeRTOS-IoT-Libraries-LTS-Beta2\c_sdk\standard\mqtt\include\mqtt_lightweight.h">
+    <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\standard\coreMQTT\include</Filter>
     </ClInclude>
     <ClInclude Include="core_mqtt_config.h" />

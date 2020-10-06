@@ -1,9 +1,0 @@
-{ "expected-missing-functions":
-  [
-    "vLoggingPrintf",
-    "xApplicationGetRandomNumber",
-    "xTaskGetTickCount"
-  ],
-  "proof-name": "DNSgetHostByName",
-  "proof-root": "tools/cbmc/proofs"
-}

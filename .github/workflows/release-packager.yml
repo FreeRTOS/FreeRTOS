@@ -3,10 +3,10 @@ name: FreeRTOS-Release-Packager
 on:
   workflow_dispatch:
     inputs:
-      verbosity:
-        description: 'Verbose'
+      commit_id:
+        description: 'Commit ID (Defaults to master@HEAD)'
         required: true
-        default: '1'
+        default: 'HEAD'
       version_number:
         description: 'Version Number (Ex. 10.4.1)'
         required: true
@@ -35,8 +35,8 @@ jobs:
       
       # Packaging     
       - name: Packaging 
-        #run: python tools/.github/scripts/freertos_zipper.py --zip-version ${{ github.event.inputs.version_number }} 
-        run: echo hello > FreeRTOSv${{ github.event.inputs.version_number }}.zip
+        run: python tools/.github/scripts/freertos_zipper.py --freertos-commit ${{ github.event.inputs.commit_id }} --zip-version ${{ github.event.inputs.version_number }} 
+        #run: echo hello > FreeRTOSv${{ github.event.inputs.version_number }}.zip
         
       # Create release endpoint
       - name: Create Release
@@ -49,6 +49,7 @@ jobs:
             release_name: FreeRTOS Release V${{ github.event.inputs.version_number }} 
             draft:        false
             prerelease:   false
+            commitish:    ${{ github.event.inputs.commit_id }}
            
       # Upload release assets the recently created endpoint
       - name: Upload Release
@@ -60,31 +61,4 @@ jobs:
             asset_path: ./FreeRTOSv${{ github.event.inputs.version_number }}.zip
             asset_name: FreeRTOSv${{ github.event.inputs.version_number }}.zip
             asset_content_type: application/zip
-      
-      # Create release endpoint
-      - name: Create Release
-        id:   create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            tag_name:     V${{ github.event.inputs.version_number }} 
-            release_name: FreeRTOS Release V${{ github.event.inputs.version_number }} 
-            draft:        false
-            prerelease:   false
-           
-      # Upload release assets the recently created endpoint
-      - name: Upload Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./FreeRTOSv${{ github.event.inputs.version_number }}.zip
-            asset_name: FreeRTOSv${{ github.event.inputs.version_number }}.zip
-            asset_content_type: application/zip
-      
-      # Sanity check
-      - name: Test
-        run: echo ${{ github.event.inputs.version_number }}
 

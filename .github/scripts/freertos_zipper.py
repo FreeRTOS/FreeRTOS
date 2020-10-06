@@ -100,13 +100,15 @@ def unzip_baseline_zip(path_inzip, path_outdir):
 
     return os.path.join(path_outdir, str(os.path.basename(path_inzip)).replace('.zip', ''))
 
-def download_git_tree(git_link, root_dir, dir_name, ref='master'):
+def download_git_tree(git_link, root_dir, dir_name, ref='master', commit_id='HEAD'):
     '''
     Download HEAD from Git Master. Place into working files dir
     '''
-    subprocess.run(['git', '-C', root_dir, 'clone', '--recurse-submodules','-b', ref, git_link, dir_name])
+    rc = subprocess.run(['git', '-C', root_dir, 'clone', '--recurse-submodules','-b', ref, git_link, dir_name]).returncode
+    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'checkout', '-f', commit_id]).returncode    
+    rc += subprocess.run(['git', '-C', os.path.join(root_dir, dir_name), 'clean', '-fd']).returncode    
 
-    return os.path.join(root_dir, dir_name)
+    return os.path.join(root_dir, dir_name) if rc == 0 else None
 
 def setup_intermediate_files(scratch_dir, intree_dir, outtree_dir):
     cleanup_intermediate_files(scratch_dir)
@@ -114,7 +116,7 @@ def setup_intermediate_files(scratch_dir, intree_dir, outtree_dir):
     os.mkdir(intree_dir)
     os.mkdir(outtree_dir)
 
-def create_file_trees(intree_dir, baseline_zip, outtree_dir, git_link, outtree_name, git_ref='master'):
+def create_file_trees(intree_dir, baseline_zip, outtree_dir, git_link, outtree_name, git_ref='master', commit_id='HEAD'):
     path_in_tree = None
     path_out_tree = None
 
@@ -125,7 +127,7 @@ def create_file_trees(intree_dir, baseline_zip, outtree_dir, git_link, outtree_n
         print('Done.')
 
     # Output file tree to be pruned and packaged
-    path_out_tree = download_git_tree(git_link, outtree_dir, outtree_name, ref=git_ref)
+    path_out_tree = download_git_tree(git_link, outtree_dir, outtree_name, commit_id=commit_id)
 
     return (path_in_tree, path_out_tree)
 
@@ -200,6 +202,12 @@ def configure_argparser():
                         default = None,
                         help = 'Version number to be suffixed to FreeRTOS and FreeRTOS-Labs zips')
 
+    parser.add_argument('--freertos-commit',
+                        metavar = 'FREERTOS_COMMIT_ID',
+                        type = str,
+                        default = 'HEAD',
+                        help = 'Commit ID of FreeRTOS repo to package')
+    
     return parser
 
 def sanitize_cmd_args(args):
@@ -241,15 +249,25 @@ def main():
                                                                 DIR_OUTPUT_TREES,
                                                                 FREERTOS_GIT_LINK,
                                                                 core_package_name,
-                                                                git_ref = 'V%s' % args.zip_version)
+                                                                commit_id=args.freertos_commit)
+    
+    if path_core_out_tree == None:
+        print('Failed to prepare repo for zipping')
+        exit(1);
+    
     core_outzip = create_package(path_core_out_tree, core_package_name, RELATIVE_FILE_EXCLUDES)
-
+    
+    # Create FreeRTOS-Labs package
     labs_package_name = 'FreeRTOS-Labs'
     (path_labs_in_tree, path_labs_out_tree) = create_file_trees(DIR_INPUT_TREES,
                                                                 args.labs_input_zip,
                                                                 DIR_OUTPUT_TREES,
                                                                 LABS_GIT_LINK,
                                                                 labs_package_name)
+    if path_labs_out_tree == None:
+        print('Failed to prepare repo for zipping')
+        exit(1);
+    
     labs_outzip = create_package(path_labs_out_tree, labs_package_name, LABS_RELATIVE_EXCLUDE_FILES)
 
     # Package summaries

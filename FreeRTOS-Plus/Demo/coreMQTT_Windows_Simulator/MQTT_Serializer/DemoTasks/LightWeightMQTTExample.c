@@ -58,7 +58,7 @@
 #include "FreeRTOS_Sockets.h"
 
 /* MQTT library includes. */
-#include "mqtt_lightweight.h"
+#include "core_mqtt_lightweight.h"
 
 /* Retry utilities include. */
 #include "retry_utils.h"

@@ -1,5 +1,0 @@
-cbmc.txt
-property.xml
-coverage.xml
-*.goto
-**/html/*

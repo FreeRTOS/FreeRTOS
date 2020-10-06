@@ -43,7 +43,7 @@
 
 /* Logging configuration for the Demo. */
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "MQTTLWDemo"
+    #define LIBRARY_LOG_NAME    "MQTTSerializerDemo"
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL

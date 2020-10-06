@@ -25,8 +25,8 @@
  */
 
 /*
- * Demo for showing use of the MQTT light weight serializer API.
- * The Light weight serializer API lets user to serialize and
+ * Demo for showing use of the MQTT serializer API.
+ * The MQTT serializer API lets user to serialize and
  * deserialize MQTT messages into a user provided buffer.
  * This API allows use of a statically allocated buffer.
  *
@@ -114,7 +114,7 @@
 /**
  * @brief The MQTT message published in this example.
  */
-#define mqttexampleMESSAGE                          "Hello Light Weight MQTT World!"
+#define mqttexampleMESSAGE                          "Hello World!"
 
 /**
  * @brief Dimensions a file scope buffer currently used to send and receive MQTT data
@@ -155,7 +155,7 @@
 /*-----------------------------------------------------------*/
 
 /**
- * @brief The task used to demonstrate the light weight MQTT API.
+ * @brief The task used to demonstrate the serializer MQTT API.
  *
  * @param[in] pvParameters Parameters as passed at the time of task creation. Not
  * used in this example.
@@ -376,7 +376,7 @@ struct NetworkContext
 /*-----------------------------------------------------------*/
 
 /*
- * @brief Create the task that demonstrates the Light Weight MQTT API Demo.
+ * @brief Create the task that demonstrates the Serializer MQTT API Demo.
  * This is the entry function of this demo.
  */
 void vStartSimpleMQTTDemo( void )
@@ -385,7 +385,7 @@ void vStartSimpleMQTTDemo( void )
      * connect, subscribe, publish, unsubscribe and disconnect from the MQTT
      * broker. */
     xTaskCreate( prvMQTTDemoTask,          /* Function that implements the task. */
-                 "MQTTLWDemo",             /* Text name for the task - only used for debugging. */
+                 "MQTTSerializerDemo",     /* Text name for the task - only used for debugging. */
                  democonfigDEMO_STACKSIZE, /* Size of stack (in words, not bytes) to allocate for the task. */
                  NULL,                     /* Task parameter - not used in this case. */
                  tskIDLE_PRIORITY,         /* Task priority, must be between 0 and configMAX_PRIORITIES - 1. */

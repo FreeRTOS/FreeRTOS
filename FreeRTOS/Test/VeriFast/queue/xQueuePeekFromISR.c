@@ -53,10 +53,10 @@ BaseType_t xQueuePeekFromISR( QueueHandle_t xQueue,
      * assigned a priority above the configured maximum system call priority.
      * Only FreeRTOS functions that end in FromISR can be called from interrupts
      * that have been assigned a priority at or (logically) below the maximum
-     * system call	interrupt priority.  FreeRTOS maintains a separate interrupt
+     * system call interrupt priority.  FreeRTOS maintains a separate interrupt
      * safe API to ensure interrupt entry is as fast and as simple as possible.
      * More information (albeit Cortex-M specific) is provided on the following
-     * link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+     * link: https://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
     portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
     uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();

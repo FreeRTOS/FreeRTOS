@@ -375,8 +375,8 @@ struct NetworkContext
 };
 /*-----------------------------------------------------------*/
 
-/*
- * @brief Create the task that demonstrates the Serializer MQTT API Demo.
+/**
+ * @brief Create the task that demonstrates the Serializer MQTT API.
  * This is the entry function of this demo.
  */
 void vStartSimpleMQTTDemo( void )

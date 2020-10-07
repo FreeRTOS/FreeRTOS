@@ -6,7 +6,10 @@
 
 #if ( configCPU_CLOCK_HZ == 20000000 )
 
-    #define CLK_init()  ccp_write_io((void *)&(CLKCTRL.MCLKCTRLA), CLKCTRL_CLKSEL_OSC20M_gc);
+    #define CLK_init()  { \
+                        _PROTECTED_WRITE(CLKCTRL.MCLKCTRLA, CLKCTRL_CLKSEL_OSC20M_gc); \
+                        _PROTECTED_WRITE(CLKCTRL.MCLKCTRLB, 0); \
+                        }
 
 #elif ( configCPU_CLOCK_HZ == 10000000 )
 

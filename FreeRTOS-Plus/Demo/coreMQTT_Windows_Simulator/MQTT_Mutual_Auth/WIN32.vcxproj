@@ -417,6 +417,10 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_msg.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_srv.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -426,6 +430,10 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_tls.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ThirdParty\mbedtls\library\ssl_tls13_keys.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
@@ -585,6 +593,7 @@
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_cookie.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_internal.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_ticket.h" />
+    <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\ssl_tls13_keys.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\threading.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\timing.h" />
     <ClInclude Include="..\..\..\ThirdParty\mbedtls\include\mbedtls\version.h" />

@@ -393,14 +393,14 @@
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\mbedtls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\tls_freertos.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\freertos_sockets_wrapper.c">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -733,16 +733,16 @@
       <Filter>FreeRTOS+\mbedtls\include</Filter>
     </ClInclude>
     <ClInclude Include="mbedtls_config.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\threading_alt.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\mbedtls</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\tls_freertos.h">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\mbedtls</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\threading_alt.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\mbedtls</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\freertos_sockets_wrapper.h">
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\tls_freertos.h">
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\include</Filter>
     </ClInclude>
   </ItemGroup>

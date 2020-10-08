@@ -1823,7 +1823,7 @@ static void prvMQTTDemoTask( void * pvParameters )
         /* Form an MQTT connection with a persistent session. */
         xMQTTStatus = prvMQTTConnect( &globalMqttContext, &xNetworkContext, false );
         configASSERT( xMQTTStatus == MQTTSuccess );
-        configASSERT( globalMqttContext.connectStatus = MQTTConnected );
+        configASSERT( globalMqttContext.connectStatus == MQTTConnected );
 
         /* Give subscriber task higher priority so the subscribe will be processed before the first publish.
          * This must be less than or equal to the priority of the main task. */

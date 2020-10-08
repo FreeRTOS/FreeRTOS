@@ -52,7 +52,7 @@
 #include "demo_config.h"
 
 /* MQTT library includes. */
-#include "mqtt.h"
+#include "core_mqtt.h"
 
 /* Retry utilities include. */
 #include "retry_utils.h"

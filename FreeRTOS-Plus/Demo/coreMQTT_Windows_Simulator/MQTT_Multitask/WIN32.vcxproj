@@ -517,7 +517,7 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\threading_alt.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\freertos_sockets_wrapper.h" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\plaintext_freertos.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\plaintext_freertos.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\tls_freertos.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\retry_utils.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\transport_interface.h" />

@@ -20,5 +20,5 @@
 	path = FreeRTOS-Plus/Test/CMock
 	url = https://github.com/ThrowTheSwitch/CMock
 [submodule "FreeRTOS-Plus/Source/Application-Protocols/corePKCS11"]
-	path = FreeRTOS-Plus/Source/Application-Protocols/corePKCS11
+	path = FreeRTOS-Plus/Source/corePKCS11
 	url = https://github.com/FreeRTOS/corePKCS11.git

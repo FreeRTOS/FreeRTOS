@@ -159,9 +159,10 @@
     <ClCompile Include="..\..\..\..\FreeRTOS-Plus\Source\FreeRTOS-Plus-TCP\portable\NetworkInterface\WinPCap\NetworkInterface.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_freertos_port.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\freertos_sockets_wrapper.c" />
-    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\tls_freertos.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\freertos_sockets_wrapper.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\plaintext_freertos.c" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\src\tls_freertos.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_serializer.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt_state.c" />
     <ClCompile Include="..\..\..\Source\Application-Protocols\coreMQTT\source\core_mqtt.c" />
@@ -516,9 +517,10 @@
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\mbedtls_error.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\mbedtls\threading_alt.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\freertos_sockets_wrapper.h" />
+    <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\plaintext_freertos.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\freertos\transport\include\tls_freertos.h" />
-    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\retry_utils.h" />
+    <ClInclude Include="..\..\..\Source\Application-Protocols\platform\include\transport_interface.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_serializer.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt_state.h" />
     <ClInclude Include="..\..\..\Source\Application-Protocols\coreMQTT\source\include\core_mqtt.h" />

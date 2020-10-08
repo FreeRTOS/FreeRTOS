@@ -88,7 +88,7 @@
  * setting the `pAlpnProtos` member of the `NetworkCredentials_t` struct before
  * forming the TLS connection. When using port 8883, ALPN is not required.
  *
- * #define democonfigMQTT_BROKER_PORT    "...insert here..."
+ * #define democonfigMQTT_BROKER_PORT    ( insert here. )
  */
 
 /**

@@ -62,8 +62,8 @@
 #include "demo_config.h"
 
 /* MQTT library includes. */
-#include "mqtt.h"
-#include "mqtt_state.h"
+#include "core_mqtt.h"
+#include "core_mqtt_state.h"
 
 /* Retry utilities include. */
 #include "retry_utils.h"

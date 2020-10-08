@@ -22,8 +22,8 @@
  * http://www.FreeRTOS.org
  * http://aws.amazon.com/freertos
  */
-#ifndef MQTT_CONFIG_H_
-#define MQTT_CONFIG_H_
+#ifndef CORE_MQTT_CONFIG_H
+#define CORE_MQTT_CONFIG_H
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -62,4 +62,4 @@
  */
 #define MQTT_STATE_ARRAY_MAX_COUNT    10U
 
-#endif /* ifndef MQTT_CONFIG_H_ */
+#endif /* ifndef CORE_MQTT_CONFIG_H */

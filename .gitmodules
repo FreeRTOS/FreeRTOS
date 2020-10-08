@@ -22,3 +22,6 @@
 [submodule "FreeRTOS-Plus/ThirdParty/mbedtls"]
 	path = FreeRTOS-Plus/ThirdParty/mbedtls
 	url = https://github.com/ARMmbed/mbedtls
+[submodule "FreeRTOS-Plus/Source/Application-Protocols/corePKCS11"]
+	path = FreeRTOS-Plus/Source/corePKCS11
+	url = https://github.com/FreeRTOS/corePKCS11.git

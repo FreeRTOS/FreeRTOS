@@ -400,7 +400,7 @@
       <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos\transport\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Source\Application-Protocols\platform\freertos\retry_utils\retry_utils_freertos.c">
-      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform</Filter>
+      <Filter>FreeRTOS+\FreeRTOS IoT Libraries\platform\freertos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

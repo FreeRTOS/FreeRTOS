@@ -415,16 +415,6 @@ static void prvMQTTDemoTask( void * pvParameters )
          * strategy implemented in retryUtils. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
-        /* Process incoming packet from the broker. After sending the subscribe, the
-         * client may receive a publish before it receives a subscribe ack. Therefore,
-         * call generic incoming packet processing function. Since this demo is
-         * subscribing to the topic to which no one is publishing, probability of
-         * receiving Publish message before subscribe ack is zero; but application
-         * must be ready to receive any packet.  This demo uses the generic packet
-         * processing function everywhere to highlight this fact. */
-        xMQTTStatus = MQTT_ProcessLoop( &xMQTTContext, mqttexamplePROCESS_LOOP_TIMEOUT_MS );
-        configASSERT( xMQTTStatus == MQTTSuccess );
-
         /****************** Publish and Keep Alive Loop. **********************/
         /* Publish messages with QoS1, send and process Keep alive messages. */
         for( ulPublishCount = 0; ulPublishCount < ulMaxPublishCount; ulPublishCount++ )

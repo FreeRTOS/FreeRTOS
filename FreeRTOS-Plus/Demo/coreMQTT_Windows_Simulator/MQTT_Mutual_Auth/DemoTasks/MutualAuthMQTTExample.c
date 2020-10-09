@@ -70,8 +70,7 @@
     #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
 
-/* The AWS IoT message broker requires either a set of client certificate/private key
- * or username/password to authenticate the client. */
+/* If no username is defined, then a client certificate/key is required. */
 #ifndef democonfigCLIENT_USERNAME
     #ifndef democonfigCLIENT_CERTIFICATE_PEM
         #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."

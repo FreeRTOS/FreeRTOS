@@ -144,6 +144,20 @@
  */
 
 /**
+ * @brief The username value for authenticating client to the MQTT broker when
+ * username/password based client authentication is used.
+ *
+ * #define democonfigCLIENT_USERNAME    "...insert here..."
+ */
+
+/**
+ * @brief The password value for authenticating client to the MQTT broker when
+ * username/password based client authentication is used.
+ *
+ * #define democonfigCLIENT_PASSWORD    "...insert here..."
+ */
+
+/**
  * @brief Set the stack size of the main demo task.
  *
  * In the Windows port, this stack only holds a structure. The actual

@@ -69,12 +69,25 @@
 #ifndef democonfigROOT_CA_PEM
     #error "Please define Root CA certificate of the MQTT broker(democonfigROOT_CA_PEM) in demo_config.h."
 #endif
-#ifndef democonfigCLIENT_CERTIFICATE_PEM
-    #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
-#endif
-#ifndef democonfigCLIENT_PRIVATE_KEY_PEM
-    #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
-#endif
+
+/* The AWS IoT message broker requires either a set of client certificate/private key
+ * or username/password to authenticate the client. */
+#ifndef democonfigCLIENT_USERNAME
+    #ifndef democonfigCLIENT_CERTIFICATE_PEM
+        #error "Please define client certificate(democonfigCLIENT_CERTIFICATE_PEM) in demo_config.h."
+    #endif
+    #ifndef democonfigCLIENT_PRIVATE_KEY_PEM
+        #error "Please define client private key(democonfigCLIENT_PRIVATE_KEY_PEM) in demo_config.h."
+    #endif
+#else
+
+/* If a username is defined, a client password also would need to be defined for
+ * client authentication. */
+    #ifndef democonfigCLIENT_PASSWORD
+        #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
+    #endif
+
+#endif /* ifndef democonfigCLIENT_USERNAME */
 
 /*-----------------------------------------------------------*/
 
@@ -485,10 +498,14 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
-    pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
-    pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-    pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
-    pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+    #ifdef democonfigCLIENT_CERTIFICATE_PEM
+        pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
+        pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
+    #endif
+    #ifdef democonfigCLIENT_PRIVATE_KEY_PEM
+        pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
+        pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
+    #endif
 
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
@@ -571,6 +588,14 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     /* Set MQTT keep-alive period. If the application does not send packets at an interval less than
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
+
+    /* Use the username and password for authentication if they are defined. */
+    #ifdef democonfigCLIENT_USERNAME
+        xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
+        xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
+        xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+        xConnectInfo.passwordLength = ( uint16_t ) strlen( CLIENT_PASSWORD );
+    #endif /* ifdef CLIENT_USERNAME */
 
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
      * is passed as NULL. */

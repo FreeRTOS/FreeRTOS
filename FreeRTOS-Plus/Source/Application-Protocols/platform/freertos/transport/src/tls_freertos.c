@@ -260,9 +260,9 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                 }
                 else
                 {
-                    mbedtls_ssl_conf_own_cert( &( pNetworkContext->sslContext.config ),
-                                               &( pNetworkContext->sslContext.clientCert ),
-                                               &( pNetworkContext->sslContext.privKey ) );
+                    ( void ) mbedtls_ssl_conf_own_cert( &( pNetworkContext->sslContext.config ),
+                                                        &( pNetworkContext->sslContext.clientCert ),
+                                                        &( pNetworkContext->sslContext.privKey ) );
                 }
             }
         }
@@ -273,7 +273,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Include an application protocol list in the TLS ClientHello
          * message. */
         mbedtlsError = mbedtls_ssl_conf_alpn_protocols( &( pNetworkContext->sslContext.config ),
-                                                        ( const char ** ) &( pNetworkCredentials->pAlpnProtos ) );
+                                                        &( pNetworkCredentials->pAlpnProtos ) );
 
         if( mbedtlsError != 0 )
         {
@@ -303,7 +303,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         {
             /* Set the underlying IO for the TLS connection. */
             mbedtls_ssl_set_bio( &( pNetworkContext->sslContext.context ),
-                                 pNetworkContext->tcpSocket,
+                                 ( void * ) pNetworkContext->tcpSocket,
                                  mbedtls_platform_send,
                                  mbedtls_platform_recv,
                                  NULL );
@@ -447,6 +447,10 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
         LogError( ( "pRootCa cannot be NULL." ) );
         returnStatus = TLS_TRANSPORT_INVALID_PARAMETER;
     }
+    else
+    {
+        /* Empty else for MISRA 15.7 compliance. */
+    }
 
     /* Establish a TCP connection with the server. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
@@ -482,9 +486,9 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
         if( ( pNetworkContext != NULL ) &&
-            ( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET ) )
+            ( pNetworkContext->tcpSocket != ( Socket_t ) FREERTOS_INVALID_SOCKET ) )
         {
-            FreeRTOS_closesocket( pNetworkContext->tcpSocket );
+            ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
         }
     }
     else
@@ -549,7 +553,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 /*-----------------------------------------------------------*/
 
 int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
-                           void * pBuffer,
+                           uint8_t * pBuffer,
                            size_t bytesToRecv )
 {
     int32_t tlsStatus = 0;
@@ -588,7 +592,7 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 /*-----------------------------------------------------------*/
 
 int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
-                           const void * pBuffer,
+                           const uint8_t * pBuffer,
                            size_t bytesToSend )
 {
     int32_t tlsStatus = 0;

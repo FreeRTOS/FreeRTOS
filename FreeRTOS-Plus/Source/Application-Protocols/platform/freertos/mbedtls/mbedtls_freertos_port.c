@@ -54,7 +54,7 @@ void * mbedtls_platform_calloc( size_t nmemb,
     if( totalSize > 0 )
     {
         /* Overflow check. */
-        if( totalSize / size == nmemb )
+        if( ( totalSize / size ) == nmemb )
         {
             pBuffer = pvPortMalloc( totalSize );
 

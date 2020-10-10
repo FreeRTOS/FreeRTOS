@@ -800,7 +800,8 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Clean up on failure. */
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
-        if( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET )
+        if( ( pNetworkContext != NULL ) &&
+            ( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET ) )
         {
             FreeRTOS_closesocket( pNetworkContext->tcpSocket );
         }

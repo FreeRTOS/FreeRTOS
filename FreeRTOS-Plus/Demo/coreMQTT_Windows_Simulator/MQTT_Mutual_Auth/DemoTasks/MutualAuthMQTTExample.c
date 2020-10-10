@@ -594,7 +594,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
         xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
         xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
         xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-    #endif /* ifdef CLIENT_USERNAME */
+    #endif /* ifdef democonfigCLIENT_USERNAME */
 
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
      * is passed as NULL. */

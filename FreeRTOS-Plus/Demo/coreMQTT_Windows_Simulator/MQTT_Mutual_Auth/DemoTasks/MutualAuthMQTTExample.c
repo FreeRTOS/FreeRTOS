@@ -500,8 +500,6 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     #ifdef democonfigCLIENT_CERTIFICATE_PEM
         pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
         pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
-    #endif
-    #ifdef democonfigCLIENT_PRIVATE_KEY_PEM
         pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
         pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #endif

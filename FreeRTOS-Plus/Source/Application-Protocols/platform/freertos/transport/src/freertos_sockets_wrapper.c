@@ -74,7 +74,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
         serverAddress.sin_len = ( uint8_t ) sizeof( serverAddress );
 
         /* Check for errors from DNS lookup. */
-        if( serverAddress.sin_addr == 0 )
+        if( serverAddress.sin_addr == 0U )
         {
             LogError( ( "Failed to connect to server: DNS resolution failed: Hostname=%s.",
                         pHostName ) );

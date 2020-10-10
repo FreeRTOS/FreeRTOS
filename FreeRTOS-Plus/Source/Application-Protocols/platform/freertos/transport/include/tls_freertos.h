@@ -109,16 +109,12 @@ typedef struct NetworkCredentials
      */
     BaseType_t disableSni;
 
-    const unsigned char * pRootCa;     /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;                 /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
-    const unsigned char * pClientCert; /**< @brief String representing the client certificate. */
-    size_t clientCertSize;             /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
-    const unsigned char * pPrivateKey; /**< @brief String representing the client certificate's private key. */
-    size_t privateKeySize;             /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
-    const unsigned char * pUserName;   /**< @brief String representing the username for MQTT. */
-    size_t userNameSize;               /**< @brief Size associated with #IotNetworkCredentials.pUserName. */
-    const unsigned char * pPassword;   /**< @brief String representing the password for MQTT. */
-    size_t passwordSize;               /**< @brief Size associated with #IotNetworkCredentials.pPassword. */
+    const uint8_t * pRootCa;     /**< @brief String representing a trusted server root certificate. */
+    size_t rootCaSize;           /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    const uint8_t * pClientCert; /**< @brief String representing the client certificate. */
+    size_t clientCertSize;       /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
+    const uint8_t * pPrivateKey; /**< @brief String representing the client certificate's private key. */
+    size_t privateKeySize;       /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
 } NetworkCredentials_t;
 
 /**

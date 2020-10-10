@@ -91,9 +91,9 @@ void mbedtls_platform_free( void * ptr )
  *
  * @return Number of bytes sent on success; else a negative value.
  */
-int mbedtls_platform_send( void * ctx,
-                           const unsigned char * buf,
-                           size_t len )
+int32_t mbedtls_platform_send( void * ctx,
+                               const unsigned char * buf,
+                               size_t len )
 {
     Socket_t socket;
 
@@ -102,7 +102,7 @@ int mbedtls_platform_send( void * ctx,
 
     socket = ( Socket_t ) ctx;
 
-    return ( int ) FreeRTOS_send( socket, buf, len, 0 );
+    return ( int32_t ) FreeRTOS_send( socket, buf, len, 0 );
 }
 
 /*-----------------------------------------------------------*/
@@ -116,9 +116,9 @@ int mbedtls_platform_send( void * ctx,
  *
  * @return Number of bytes received if successful; Negative value on error.
  */
-int mbedtls_platform_recv( void * ctx,
-                           unsigned char * buf,
-                           size_t len )
+int32_t mbedtls_platform_recv( void * ctx,
+                               unsigned char * buf,
+                               size_t len )
 {
     Socket_t socket;
 
@@ -127,7 +127,7 @@ int mbedtls_platform_recv( void * ctx,
 
     socket = ( Socket_t ) ctx;
 
-    return ( int ) FreeRTOS_recv( socket, buf, len, 0 );
+    return ( int32_t ) FreeRTOS_recv( socket, buf, len, 0 );
 }
 
 /*-----------------------------------------------------------*/
@@ -172,7 +172,7 @@ void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex )
  *
  * @return 0 (success) is always returned as any other failure is asserted.
  */
-int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
+int32_t mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
 {
     BaseType_t mutexStatus = 0;
 
@@ -197,7 +197,7 @@ int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex )
  *
  * @return 0 is always returned as any other failure is asserted.
  */
-int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
+int32_t mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
 {
     BaseType_t mutexStatus = 0;
 
@@ -225,12 +225,12 @@ int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex )
  * @return 0 if no critical failures occurred,
  * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
  */
-int mbedtls_platform_entropy_poll( void * data,
-                                   unsigned char * output,
-                                   size_t len,
-                                   size_t * olen )
+int32_t mbedtls_platform_entropy_poll( void * data,
+                                       unsigned char * output,
+                                       size_t len,
+                                       size_t * olen )
 {
-    int status = 0;
+    int32_t status = 0;
     NTSTATUS rngStatus = 0;
 
     configASSERT( output != NULL );
@@ -275,10 +275,10 @@ int mbedtls_platform_entropy_poll( void * data,
  * @return 0 if no critical failures occurred,
  * MBEDTLS_ERR_ENTROPY_SOURCE_FAILED otherwise.
  */
-int mbedtls_hardware_poll( void * data,
-                           unsigned char * output,
-                           size_t len,
-                           size_t * olen )
+int32_t mbedtls_hardware_poll( void * data,
+                               unsigned char * output,
+                               size_t len,
+                               size_t * olen )
 {
     return mbedtls_platform_entropy_poll( data, output, len, olen );
 }

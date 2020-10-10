@@ -155,7 +155,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                       const NetworkCredentials_t * pNetworkCredentials )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-    int mbedtlsError = 0;
+    int32_t mbedtlsError = 0;
 
     configASSERT( pNetworkContext != NULL );
     configASSERT( pHostName != NULL );
@@ -366,7 +366,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 static TlsTransportStatus_t initMbedtls( void )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
-    int mbedtlsError = 0;
+    int32_t mbedtlsError = 0;
 
     /* Set the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_set_alt( mbedtls_platform_mutex_init,

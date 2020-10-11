@@ -367,7 +367,7 @@ static void prvMQTTDemoTask( void * pvParameters )
 
         /* If server rejected the subscription request, attempt to resubscribe to 
          * the topic. Attempts are made according to the exponential backoff retry
-         * strategy defined in retry_utils.h. */
+         * strategy declared in retry_utils.h. */
         prvMQTTSubscribeWithBackoffRetries( &xMQTTContext );
 
         /******************* Publish and Keep Alive Loop. *********************/

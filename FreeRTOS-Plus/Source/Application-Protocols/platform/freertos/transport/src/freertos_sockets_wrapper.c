@@ -29,7 +29,6 @@
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
-#include "FreeRTOS_DNS.h"
 
 #include "freertos_sockets_wrapper.h"
 

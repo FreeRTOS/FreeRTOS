@@ -24,8 +24,8 @@
  *
  * 1 tab == 4 spaces!
  */
-#ifndef MQTT_CONFIG_H_
-#define MQTT_CONFIG_H_
+#ifndef CORE_MQTT_CONFIG_H_
+#define CORE_MQTT_CONFIG_H_
 
 /**************************************************/
 /******* DO NOT CHANGE the following order ********/
@@ -64,4 +64,4 @@
  */
 #define MQTT_STATE_ARRAY_MAX_COUNT    10U
 
-#endif /* ifndef MQTT_CONFIG_H_ */
+#endif /* ifndef CORE_MQTT_CONFIG_H_ */

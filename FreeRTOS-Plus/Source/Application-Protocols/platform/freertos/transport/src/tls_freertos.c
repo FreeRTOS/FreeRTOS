@@ -193,7 +193,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                    MBEDTLS_SSL_VERIFY_REQUIRED );
         mbedtls_ssl_conf_rng( &( pNetworkContext->sslContext.config ),
                               mbedtls_ctr_drbg_random,
-                              &( pNetworkContext->sslContext.ctrDrgbContext );
+                              &( pNetworkContext->sslContext.ctrDrgbContext ) );
         mbedtls_ssl_conf_cert_profile( &( pNetworkContext->sslContext.config ),
                                        &( pNetworkContext->sslContext.certProfile ) );
 

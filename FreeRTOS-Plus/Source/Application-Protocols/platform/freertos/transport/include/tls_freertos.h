@@ -70,12 +70,14 @@
  */
 typedef struct SSLContext
 {
-    mbedtls_ssl_config config;            /**< @brief SSL connection configuration. */
-    mbedtls_ssl_context context;          /**< @brief SSL connection context */
-    mbedtls_x509_crt_profile certProfile; /**< @brief Certificate security profile for this connection. */
-    mbedtls_x509_crt rootCa;              /**< @brief Root CA certificate context. */
-    mbedtls_x509_crt clientCert;          /**< @brief Client certificate context. */
-    mbedtls_pk_context privKey;           /**< @brief Client private key context. */
+    mbedtls_ssl_config config;               /**< @brief SSL connection configuration. */
+    mbedtls_ssl_context context;             /**< @brief SSL connection context */
+    mbedtls_x509_crt_profile certProfile;    /**< @brief Certificate security profile for this connection. */
+    mbedtls_x509_crt rootCa;                 /**< @brief Root CA certificate context. */
+    mbedtls_x509_crt clientCert;             /**< @brief Client certificate context. */
+    mbedtls_pk_context privKey;              /**< @brief Client private key context. */
+    mbedtls_entropy_context entropyContext;  /**< @brief Entropy context for random number generation. */
+    mbedtls_ctr_drbg_context ctrDrgbContext; /**< @brief CTR DRBG context for random number generation. */
 } SSLContext_t;
 
 /**

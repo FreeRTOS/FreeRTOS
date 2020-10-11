@@ -77,18 +77,6 @@ static const char * pNoLowLevelMbedTlsCodeStr = "<No-Low-Level-Code>";
 /*-----------------------------------------------------------*/
 
 /**
- * @brief mbed TLS entropy context for generation of random numbers.
- */
-static mbedtls_entropy_context entropyContext;
-
-/**
- * @brief mbed TLS CTR DRBG context for generation of random numbers.
- */
-static mbedtls_ctr_drbg_context ctrDrgbContext;
-
-/*-----------------------------------------------------------*/
-
-/**
  * @brief Initialize the mbed TLS structures in a network connection.
  *
  * @param[in] pSslContext The SSL context to initialize.
@@ -119,9 +107,13 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 /**
  * @brief Initialize mbedTLS.
  *
+ * @param[out] entropyContext mbed TLS entropy context for generation of random numbers.
+ * @param[out] ctrDrgbContext mbed TLS CTR DRBG context for generation of random numbers.
+ *
  * @return #TLS_TRANSPORT_SUCCESS, or #TLS_TRANSPORT_INTERNAL_ERROR.
  */
-static TlsTransportStatus_t initMbedtls( void );
+static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyContext,
+                                         mbedtls_ctr_drbg_context * pCtrDrgbContext );
 
 /*-----------------------------------------------------------*/
 
@@ -145,6 +137,8 @@ static void sslContextFree( SSLContext_t * pSslContext )
     mbedtls_x509_crt_free( &( pSslContext->rootCa ) );
     mbedtls_x509_crt_free( &( pSslContext->clientCert ) );
     mbedtls_pk_free( &( pSslContext->privKey ) );
+    mbedtls_entropy_free( &( pSslContext->entropyContext ) );
+    mbedtls_ctr_drbg_free( &( pSslContext->ctrDrgbContext ) );
     mbedtls_ssl_config_free( &( pSslContext->config ) );
 }
 
@@ -199,7 +193,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
                                    MBEDTLS_SSL_VERIFY_REQUIRED );
         mbedtls_ssl_conf_rng( &( pNetworkContext->sslContext.config ),
                               mbedtls_ctr_drbg_random,
-                              &ctrDrgbContext );
+                              &( pNetworkContext->sslContext.ctrDrgbContext );
         mbedtls_ssl_conf_cert_profile( &( pNetworkContext->sslContext.config ),
                                        &( pNetworkContext->sslContext.certProfile ) );
 
@@ -363,7 +357,8 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
 
 /*-----------------------------------------------------------*/
 
-static TlsTransportStatus_t initMbedtls( void )
+static TlsTransportStatus_t initMbedtls( mbedtls_entropy_context * pEntropyContext,
+                                         mbedtls_ctr_drbg_context * pCtrDrgbContext )
 {
     TlsTransportStatus_t returnStatus = TLS_TRANSPORT_SUCCESS;
     int32_t mbedtlsError = 0;
@@ -375,11 +370,11 @@ static TlsTransportStatus_t initMbedtls( void )
                                mbedtls_platform_mutex_unlock );
 
     /* Initialize contexts for random number generation. */
-    mbedtls_entropy_init( &entropyContext );
-    mbedtls_ctr_drbg_init( &ctrDrgbContext );
+    mbedtls_entropy_init( pEntropyContext );
+    mbedtls_ctr_drbg_init( pCtrDrgbContext );
 
     /* Add a strong entropy source. At least one is required. */
-    mbedtlsError = mbedtls_entropy_add_source( &entropyContext,
+    mbedtlsError = mbedtls_entropy_add_source( pEntropyContext,
                                                mbedtls_platform_entropy_poll,
                                                NULL,
                                                32,
@@ -396,9 +391,9 @@ static TlsTransportStatus_t initMbedtls( void )
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
         /* Seed the random number generator. */
-        mbedtlsError = mbedtls_ctr_drbg_seed( &ctrDrgbContext,
+        mbedtlsError = mbedtls_ctr_drbg_seed( pCtrDrgbContext,
                                               mbedtls_entropy_func,
-                                              &entropyContext,
+                                              pEntropyContext,
                                               NULL,
                                               0 );
 
@@ -473,7 +468,8 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     /* Initialize mbedtls. */
     if( returnStatus == TLS_TRANSPORT_SUCCESS )
     {
-        returnStatus = initMbedtls();
+        returnStatus = initMbedtls( &( pNetworkContext->sslContext.entropyContext ),
+                                    &( pNetworkContext->sslContext.ctrDrgbContext ) );
     }
 
     /* Perform TLS handshake. */
@@ -541,10 +537,6 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 
     /* Free mbed TLS contexts. */
     sslContextFree( &( pNetworkContext->sslContext ) );
-
-    /* Free the contexts for random number generation. */
-    mbedtls_ctr_drbg_free( &ctrDrgbContext );
-    mbedtls_entropy_free( &entropyContext );
 
     /* Clear the mutex functions for mbed TLS thread safety. */
     mbedtls_threading_free_alt();

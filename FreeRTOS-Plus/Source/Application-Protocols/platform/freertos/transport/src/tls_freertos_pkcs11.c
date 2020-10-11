@@ -331,7 +331,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Include an application protocol list in the TLS ClientHello
          * message. */
         mbedtlsError = mbedtls_ssl_conf_alpn_protocols( &( pNetworkContext->sslContext.config ),
-                                                        &( pNetworkCredentials->pAlpnProtos ) );
+                                                        pNetworkCredentials->pAlpnProtos );
 
         if( mbedtlsError != 0 )
         {

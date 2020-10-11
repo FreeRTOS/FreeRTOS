@@ -96,15 +96,14 @@ struct NetworkContext
 typedef struct NetworkCredentials
 {
     /**
-     * @brief Set this to a non-NULL value to use ALPN.
-     *
-     * This string must be NULL-terminated.
+     * @brief Set this to a NULL-terminated list of supported protocols,
+     * in decreasing preference order to use ALPN.
      *
      * See [this link]
      * (https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/)
      * for more information.
      */
-    const char * pAlpnProtos;
+    const char ** pAlpnProtos;
 
     /**
      * @brief Disable server name indication (SNI) for a TLS session.

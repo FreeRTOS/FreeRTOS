@@ -205,10 +205,18 @@
 const char * mbedtls_strerror_highlevel( int32_t errnum )
 {
     const char * rc = NULL;
-    uint32_t use_ret = ( uint32_t ) -errnum;
+    uint32_t use_ret = 0;
 
-    /* Only the first seven lowest significant bits are used for the error code. */
-    use_ret &= 0x007F;
+    if( errnum < 0 )
+    {
+        use_ret = ( uint32_t ) -errnum;
+    }
+    else
+    {
+        use_ret = ( uint32_t ) errnum;
+    }
+
+    use_ret &= 0xFF80;
 
     /* High level error codes */
     switch( use_ret )
@@ -854,10 +862,18 @@ const char * mbedtls_strerror_highlevel( int32_t errnum )
 const char * mbedtls_strerror_lowlevel( int32_t errnum )
 {
     const char * rc = NULL;
-    uint32_t use_ret = ( uint32_t ) -errnum;
+    uint32_t use_ret = 0;
 
-    /* Only the first seven lowest significant bits are used for the error code. */
-    use_ret &= 0x007F;
+    if( errnum < 0 )
+    {
+        use_ret = ( uint32_t ) -errnum;
+    }
+    else
+    {
+        use_ret = ( uint32_t ) errnum;
+    }
+
+    use_ret &= 0xFF80;
 
     /* Low level error codes */
     /* */

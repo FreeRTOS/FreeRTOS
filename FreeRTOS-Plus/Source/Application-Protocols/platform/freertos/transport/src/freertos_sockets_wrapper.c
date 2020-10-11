@@ -50,7 +50,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
                             uint32_t receiveTimeoutMs,
                             uint32_t sendTimeoutMs )
 {
-    Socket_t tcpSocket = ( Socket_t ) FREERTOS_INVALID_SOCKET;
+    Socket_t tcpSocket = FREERTOS_INVALID_SOCKET;
     BaseType_t socketStatus = 0;
     struct freertos_sockaddr serverAddress = { 0 };
     TickType_t transportTimeout = 0;
@@ -58,7 +58,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     /* Create a new TCP socket. */
     tcpSocket = FreeRTOS_socket( FREERTOS_AF_INET, FREERTOS_SOCK_STREAM, FREERTOS_IPPROTO_TCP );
 
-    if( tcpSocket == ( Socket_t ) FREERTOS_INVALID_SOCKET )
+    if( tcpSocket == FREERTOS_INVALID_SOCKET )
     {
         LogError( ( "Failed to create new socket." ) );
         socketStatus = FREERTOS_SOCKETS_WRAPPER_NETWORK_ERROR;
@@ -122,7 +122,7 @@ BaseType_t Sockets_Connect( Socket_t * pTcpSocket,
     /* Clean up on failure. */
     if( socketStatus != 0 )
     {
-        if( tcpSocket != ( Socket_t ) FREERTOS_INVALID_SOCKET )
+        if( tcpSocket != FREERTOS_INVALID_SOCKET )
         {
             ( void ) FreeRTOS_closesocket( tcpSocket );
         }
@@ -144,7 +144,7 @@ void Sockets_Disconnect( Socket_t tcpSocket )
     BaseType_t waitForShutdownLoopCount = 0;
     uint8_t pDummyBuffer[ 2 ];
 
-    if( tcpSocket != ( Socket_t ) FREERTOS_INVALID_SOCKET )
+    if( tcpSocket != FREERTOS_INVALID_SOCKET )
     {
         /* Initiate graceful shutdown. */
         ( void ) FreeRTOS_shutdown( tcpSocket, FREERTOS_SHUT_RDWR );

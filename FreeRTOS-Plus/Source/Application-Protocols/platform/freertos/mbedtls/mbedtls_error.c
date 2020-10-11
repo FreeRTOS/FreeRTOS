@@ -208,7 +208,7 @@ const char * mbedtls_strerror_highlevel( int32_t errnum )
     uint32_t use_ret = ( uint32_t ) -errnum;
 
     /* Only the first seven lowest significant bits are used for the error code. */
-    use_ret = errnum & ~0xFF80;
+    use_ret &= 0x007F;
 
     /* High level error codes */
     switch( use_ret )
@@ -856,13 +856,8 @@ const char * mbedtls_strerror_lowlevel( int32_t errnum )
     const char * rc = NULL;
     uint32_t use_ret = ( uint32_t ) -errnum;
 
-    if( errnum < 0 )
-    {
-        errnum = -errnum;
-    }
-
     /* Only the first seven lowest significant bits are used for the error code. */
-    use_ret = errnum & ~0xFF80;
+    use_ret &= 0x007F;
 
     /* Low level error codes */
     /* */

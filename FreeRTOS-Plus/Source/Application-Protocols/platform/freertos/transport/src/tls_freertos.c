@@ -226,7 +226,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
             mbedtlsError = mbedtls_pk_parse_key( &( pNetworkContext->sslContext.privKey ),
                                                  pNetworkCredentials->pPrivateKey,
                                                  pNetworkCredentials->privateKeySize,
-                                                 0,
+                                                 NULL,
                                                  0 );
 
             if( mbedtlsError != 0 )
@@ -267,7 +267,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         /* Include an application protocol list in the TLS ClientHello
          * message. */
         mbedtlsError = mbedtls_ssl_conf_alpn_protocols( &( pNetworkContext->sslContext.config ),
-                                                        &( pNetworkCredentials->pAlpnProtos ) );
+                                                        pNetworkCredentials->pAlpnProtos[ 0 ] );
 
         if( mbedtlsError != 0 )
         {
@@ -297,7 +297,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         {
             /* Set the underlying IO for the TLS connection. */
             mbedtls_ssl_set_bio( &( pNetworkContext->sslContext.context ),
-                                 ( void * ) pNetworkContext->tcpSocket,
+                                 pNetworkContext->tcpSocket,
                                  mbedtls_platform_send,
                                  mbedtls_platform_recv,
                                  NULL );
@@ -482,7 +482,7 @@ TlsTransportStatus_t TLS_FreeRTOS_Connect( NetworkContext_t * pNetworkContext,
     if( returnStatus != TLS_TRANSPORT_SUCCESS )
     {
         if( ( pNetworkContext != NULL ) &&
-            ( pNetworkContext->tcpSocket != ( Socket_t ) FREERTOS_INVALID_SOCKET ) )
+            ( pNetworkContext->tcpSocket != FREERTOS_INVALID_SOCKET ) )
         {
             ( void ) FreeRTOS_closesocket( pNetworkContext->tcpSocket );
         }

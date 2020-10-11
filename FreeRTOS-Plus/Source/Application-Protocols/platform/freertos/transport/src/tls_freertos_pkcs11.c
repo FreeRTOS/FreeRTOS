@@ -361,7 +361,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         {
             /* Set the underlying IO for the TLS connection. */
             mbedtls_ssl_set_bio( &( pNetworkContext->sslContext.context ),
-                                 ( void * ) pNetworkContext->tcpSocket,
+                                 pNetworkContext->tcpSocket,
                                  mbedtls_platform_send,
                                  mbedtls_platform_recv,
                                  NULL );

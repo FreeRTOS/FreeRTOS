@@ -40,8 +40,17 @@
 #include <stdint.h>
 
 /* Metadata information to prepend to every log message. */
+
+/* Macro to extract only the file name from file path to use for metadata in
+ * log messages. */
+#ifdef _MSC_VER
+    #define FILENAME           ( strrchr( __FILE__, '\\' ) ? strrchr( __FILE__, '\\' ) + 1 : __FILE__ )
+#else
+    #define FILENAME           ( strrchr( __FILE__, '/' ) ? strrchr( __FILE__, '/' ) + 1 : __FILE__ )
+#endif
+
 #define LOG_METADATA_FORMAT    "[%s:%d] "
-#define LOG_METADATA_ARGS      __FUNCTION__, __LINE__
+#define LOG_METADATA_ARGS      FILENAME, __LINE__
 
 /* Common macro for all logging interface macros. */
 #if !defined( DISABLE_LOGGING )

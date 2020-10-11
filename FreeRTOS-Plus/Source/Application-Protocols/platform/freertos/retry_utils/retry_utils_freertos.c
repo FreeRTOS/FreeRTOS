@@ -33,7 +33,7 @@
 
 #include "retry_utils.h"
 
-#define _MILLISECONDS_PER_SECOND    ( 1000U )                                                         /**< @brief Milliseconds per second. */
+#define MILLISECONDS_PER_SECOND    ( 1000U )                                                         /**< @brief Milliseconds per second. */
 
 extern UBaseType_t uxRand( void );
 
@@ -52,7 +52,7 @@ RetryUtilsStatus_t RetryUtils_BackoffAndSleep( RetryUtilsParams_t * pRetryParams
         backOffDelayMs = uxRand() % pRetryParams->nextJitterMax;
 
         /*  Wait for backoff time to expire for the next retry. */
-        vTaskDelay( pdMS_TO_TICKS( backOffDelayMs * _MILLISECONDS_PER_SECOND ) );
+        vTaskDelay( pdMS_TO_TICKS( backOffDelayMs * MILLISECONDS_PER_SECOND ) );
 
         /* Increment backoff counts. */
         pRetryParams->attemptsDone++;

@@ -50,6 +50,9 @@
 /* Transport interface include. */
 #include "transport_interface.h"
 
+/* FreeRTOS+TCP includes. */
+#include "FreeRTOS_Sockets.h"
+
 /**
  * @brief Network context definition for FreeRTOS sockets.
  */

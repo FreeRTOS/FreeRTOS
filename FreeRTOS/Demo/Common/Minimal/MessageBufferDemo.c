@@ -193,6 +193,17 @@ UBaseType_t uxOriginalPriority;
 	( void ) xExpectedSpace;
 	( void ) xNextLength;
 
+	/* Try sending more bytes than possible, first using the FromISR version, then
+	with an infinite block time to ensure this task does not lock up. */
+	xReturned = xMessageBufferSendFromISR( xMessageBuffer, ( void * ) pucData, mbMESSAGE_BUFFER_LENGTH_BYTES + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), NULL );
+	configASSERT( xReturned == ( size_t ) 0 );
+	/* In case configASSERT() is not defined. */
+	( void ) xReturned;
+	xReturned = xMessageBufferSend( xMessageBuffer, ( void * ) pucData, mbMESSAGE_BUFFER_LENGTH_BYTES + sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ), portMAX_DELAY );
+	configASSERT( xReturned == ( size_t ) 0 );
+	/* In case configASSERT() is not defined. */
+	( void ) xReturned;
+
 	/* The buffer is 50 bytes long.  When an item is added to the buffer an
 	additional 4 bytes are added to hold the item's size.  That means adding
 	6 bytes to the buffer will actually add 10 bytes to the buffer.  Therefore,

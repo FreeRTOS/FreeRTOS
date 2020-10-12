@@ -89,7 +89,7 @@
 /* AWS IoT MQTT broker port needs to be 443 for client authentication based on
  * username/password. */
     #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
-        #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password."
+        #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password in AWS IoT Core."
     #endif
 #endif /* ifndef democonfigCLIENT_USERNAME */
 
@@ -183,7 +183,7 @@
 /**
  * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
  *
- * This will be used if the AWS_MQTT_PORT is configured as 443 for AWS IoT MQTT broker.
+ * This will be used if democonfigMQTT_BROKER_PORT is configured as 443 for the AWS IoT MQTT broker.
  * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
  * in the link below.
  * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/

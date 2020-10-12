@@ -188,7 +188,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext );
  * negative value on error.
  */
 int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
-                           void * pBuffer,
+                           uint8_t * pBuffer,
                            size_t bytesToRecv );
 
 /**
@@ -206,7 +206,7 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
  * else a negative value to represent error.
  */
 int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
-                           const void * pBuffer,
+                           const uint8_t * pBuffer,
                            size_t bytesToSend );
 
 #endif /* ifndef TLS_FREERTOS_H_ */

@@ -100,7 +100,7 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t
 }
 
 int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
-                                 void * pBuffer,
+                                 uint8_t * pBuffer,
                                  size_t bytesToRecv )
 {
     int32_t socketStatus = 0;
@@ -111,7 +111,7 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 }
 
 int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
-                                 const void * pBuffer,
+                                 const uint8_t * pBuffer,
                                  size_t bytesToSend )
 {
     int32_t socketStatus = 0;

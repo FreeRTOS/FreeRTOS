@@ -111,11 +111,11 @@ typedef struct NetworkCredentials
     BaseType_t disableSni;
 
     const uint8_t * pRootCa;     /**< @brief String representing a trusted server root certificate. */
-    size_t rootCaSize;           /**< @brief Size associated with #IotNetworkCredentials.pRootCa. */
+    size_t rootCaSize;           /**< @brief Size associated with #NetworkCredentials.pRootCa. */
     const uint8_t * pClientCert; /**< @brief String representing the client certificate. */
-    size_t clientCertSize;       /**< @brief Size associated with #IotNetworkCredentials.pClientCert. */
+    size_t clientCertSize;       /**< @brief Size associated with #NetworkCredentials.pClientCert. */
     const uint8_t * pPrivateKey; /**< @brief String representing the client certificate's private key. */
-    size_t privateKeySize;       /**< @brief Size associated with #IotNetworkCredentials.pPrivateKey. */
+    size_t privateKeySize;       /**< @brief Size associated with #NetworkCredentials.pPrivateKey. */
 } NetworkCredentials_t;
 
 /**

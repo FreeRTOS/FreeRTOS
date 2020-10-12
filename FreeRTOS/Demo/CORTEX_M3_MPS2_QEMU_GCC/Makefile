@@ -22,14 +22,17 @@ OBJ_FILES := $(SOURCE_FILES:%.c=$(BUILD_DIR)/%.o)
 
 DEFINES := -DprojCOVERAGE_TEST -DQEMU_SOC_MPS2
 
-CFLAGS =
-LDFLAGS = -T ./scripts/mps2_m3.ld
+CFLAGS = 
+LDFLAGS = -T ./scripts/mps2_m3.ld -specs=nano.specs -specs=nosys.specs #-l:libc_nano.a 
 
-ifdef DEBUG
+# --gc-sections -Map=$(@:.elf=.map)
+
+ifeq ($(DEBUG), 1)
     CFLAGS += -ggdb -O0
 endif
 
-CFLAGS += -mthumb -mcpu=cortex-m3 -mfloat-abi=soft -std=gnu99 -Wno-builtin-declaration-mismatch -Werror
+CFLAGS += -mthumb -mcpu=cortex-m3 -Wno-builtin-declaration-mismatch -Werror 
+# -mfloat-abi=soft 
 
 
 INCLUDE_DIRS := -I.
@@ -53,7 +56,7 @@ ${BUILD_DIR}/%.o : %.c Makefile
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 $(BUILD_DIR)/$(BIN) : $(OBJ_FILES)
-	$(CC)  -nostdlib  -ffunction-sections -fdata-sections  $(CFLAGS) $(LDFLAGS)   $+ -o $(@)
+	$(CC)  -ffunction-sections -fdata-sections  $(CFLAGS) $(LDFLAGS)   $+ -o $(@)
 
 
 

@@ -69,7 +69,7 @@ const uint32_t ulValueToSend = 100UL;
 }
 
 volatile uint32_t ulRxEvents = 0;
-
+#include <stdio.h>
 static void prvQueueReceiveTask( void *pvParameters )
 {
 uint32_t ulReceivedValue;
@@ -90,6 +90,9 @@ const uint32_t ulExpectedValue = 100UL;
 		if( ulReceivedValue == ulExpectedValue )
 		{
 			//vParTestToggleLED( mainTASK_LED );
+			printf("blinking\n");
+		putchar('3');
+
 			ulReceivedValue = 0U;
 			ulRxEvents++;
 		}

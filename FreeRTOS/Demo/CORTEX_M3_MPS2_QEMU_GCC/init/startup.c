@@ -6,6 +6,22 @@
 
 extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;
 
+/*
+static void serial_init(void) {
+  struct usart_config usart_conf;
+
+  usart_get_config_defaults(&usart_conf);
+  usart_conf.mux_setting = USART_RX_3_TX_2_XCK_3;
+  usart_conf.pinmux_pad0 = PINMUX_UNUSED;
+  usart_conf.pinmux_pad1 = PINMUX_UNUSED;
+  usart_conf.pinmux_pad2 = PINMUX_PB22D_SERCOM5_PAD2;
+  usart_conf.pinmux_pad3 = PINMUX_PB23D_SERCOM5_PAD3;
+
+  usart_serial_init(&stdio_uart_module, SERCOM5, &usart_conf);
+  usart_enable(&stdio_uart_module);
+}
+*/
+
 void* memset(uint32_t *dst, int num, size_t len)
 {
     while ( len > 0 )
@@ -45,30 +61,72 @@ void Default_Handler(void) {
     for (;;) {
     }
 }
+void Default_Handler1(void) {
+    for (;;) {
+    }
+}
+void Default_Handler2(void) {
+    for (;;) {
+    }
+}
+void Default_Handler3(void) {
+    for (;;) {
+    }
+}
+void Default_Handler4(void) {
+    for (;;) {
+    }
+}
+
+void Default_Handler5(void) {
+}
+
+void Default_Handler6(void) {
+    for (;;) {
+    }
+}
+void Default_Handler7(void) {
+    for (;;) {
+    }
+}
+void Default_Handler8(void) {
+    for (;;) {
+    }
+}
+extern void vPortSVCHandler( void );
+extern void xPortPendSVHandler( void );
+extern void xPortSysTickHandler( void );
 
 const uint32_t isr_vector[] __attribute__((section(".isr_vector"))) = {
     (uint32_t)&_estack,
     (uint32_t)&Reset_Handler,
     (uint32_t)&Default_Handler, // NMI_Handler
-    (uint32_t)&Default_Handler, // HardFault_Handler
-    (uint32_t)&Default_Handler, // MemManage_Handler
-    (uint32_t)&Default_Handler, // BusFault_Handler
-    (uint32_t)&Default_Handler, // UsageFault_Handler
+    (uint32_t)&Default_Handler1, // HardFault_Handler
+    (uint32_t)&Default_Handler2, // MemManage_Handler
+    (uint32_t)&Default_Handler3, // BusFault_Handler
+    (uint32_t)&Default_Handler4, // UsageFault_Handler
     0,
     0,
     0,
     0,
-    (uint32_t)&Default_Handler, // SVC_Handler
-    (uint32_t)&Default_Handler, // DebugMon_Handler
+    (uint32_t)&vPortSVCHandler, // SVC_Handler
+    (uint32_t)&Default_Handler6, // DebugMon_Handler
     0,
-    (uint32_t)&Default_Handler, // PendSV_Handler
-    (uint32_t)&Default_Handler, // SysTick_Handler
+    (uint32_t)&xPortPendSVHandler, // PendSV handler
+    (uint32_t)&xPortSysTickHandler, // SysTick_Handler
 };
+extern int Main();
+int main()
+{
+	Main();
+	return 0;
+}
 
-void _start(void) {
+void _start2(void) {
     // Enable the UART
     //uart_init();
 
+    //__libc_init_array();
     // Now that we have a basic system up and running we can call main
     extern int Main();
     Main(0, 0);

@@ -338,21 +338,21 @@ static int32_t setCredentials( SSLContext_t * pSslContext,
     if( ( pNetworkCredentials->pClientCert != NULL ) &&
         ( pNetworkCredentials->pPrivateKey != NULL ) )
     {
-        if( mbedtlsError != 0 )
+        if( mbedtlsError == 0 )
         {
             mbedtlsError = setClientCertificate( pSslContext,
                                                  pNetworkCredentials->pClientCert,
                                                  pNetworkCredentials->clientCertSize );
         }
 
-        if( mbedtlsError != 0 )
+        if( mbedtlsError == 0 )
         {
             mbedtlsError = setPrivateKey( pSslContext,
                                           pNetworkCredentials->pPrivateKey,
                                           pNetworkCredentials->privateKeySize );
         }
 
-        if( mbedtlsError != 0 )
+        if( mbedtlsError == 0 )
         {
             mbedtlsError = mbedtls_ssl_conf_own_cert( &( pSslContext->config ),
                                                       &( pSslContext->clientCert ),
@@ -415,6 +415,7 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
     configASSERT( pNetworkContext != NULL );
     configASSERT( pHostName != NULL );
     configASSERT( pNetworkCredentials != NULL );
+    configASSERT( pNetworkCredentials->pRootCa != NULL );
 
     /* Initialize the mbed TLS context structures. */
     sslContextInit( &( pNetworkContext->sslContext ) );

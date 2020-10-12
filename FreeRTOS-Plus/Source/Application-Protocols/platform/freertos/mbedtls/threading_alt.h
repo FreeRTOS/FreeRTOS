@@ -48,7 +48,7 @@ typedef struct mbedtls_threading_mutex
 /* mbed TLS mutex functions. */
 void mbedtls_platform_mutex_init( mbedtls_threading_mutex_t * pMutex );
 void mbedtls_platform_mutex_free( mbedtls_threading_mutex_t * pMutex );
-int32_t mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex );
-int32_t mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex );
+int mbedtls_platform_mutex_lock( mbedtls_threading_mutex_t * pMutex );
+int mbedtls_platform_mutex_unlock( mbedtls_threading_mutex_t * pMutex );
 
 #endif /* ifndef MBEDTLS_THREADING_ALT_H_ */

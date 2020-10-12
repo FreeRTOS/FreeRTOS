@@ -144,10 +144,14 @@
  */
 
 /**
- * @brief For AWS IoT MQTT broker, the appropriate ALPN and SNI configurations
- *  are passed to the demo when this macro is defined.
+ * @brief Configuration that indicates if the demo connection is made to the AWS IoT Core MQTT broker.
  *
- * #define democonfigUSE_AWS_IOT_CORE_BROKER
+ * If username/password based authentication is used, the demo will use appropriate TLS ALPN and
+ * SNI configurations as required for the Custom Authentication feature of AWS IoT.
+ * For more information, refer to the following documentation:
+ * https://docs.aws.amazon.com/iot/latest/developerguide/custom-auth.html#custom-auth-mqtt
+ *
+ * #define democonfigUSE_AWS_IOT_CORE_BROKER    ( 1 )
  */
 
 /**

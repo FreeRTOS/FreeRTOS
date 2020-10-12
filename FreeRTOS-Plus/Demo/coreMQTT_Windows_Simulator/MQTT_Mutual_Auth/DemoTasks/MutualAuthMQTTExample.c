@@ -199,12 +199,12 @@
  * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
  * required by AWS IoT for password-based authentication using TCP port 443.
  */
-#define AWS_IOT_PASSWORD_ALPN                             "\x04mqtt"
+#define AWS_IOT_CUSTOM_AUTH_ALPN                          "\x04mqtt"
 
 /**
  * @brief Length of password ALPN.
  */
-#define AWS_IOT_PASSWORD_ALPN_LENGTH                      ( ( uint16_t ) ( sizeof( AWS_IOT_PASSWORD_ALPN ) - 1 ) )
+#define AWS_IOT_CUSTOM_AUTH_ALPN_LENGTH                   ( ( uint16_t ) ( sizeof( AWS_IOT_CUSTOM_AUTH_ALPN ) - 1 ) )
 
 /**
  * @brief Milliseconds per second.
@@ -538,8 +538,8 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->disableSni = pdFALSE;
         /* The ALPN string changes depending on whether username/password authentication is used. */
         #ifdef CLIENT_USERNAME
-            pxNetworkCredentials->pAlpnProtos = AWS_IOT_PASSWORD_ALPN;
-            pxNetworkCredentials->alpnProtosLen = AWS_IOT_PASSWORD_ALPN_LENGTH;
+            pxNetworkCredentials->pAlpnProtos = AWS_IOT_CUSTOM_AUTH_ALPN;
+            pxNetworkCredentials->alpnProtosLen = AWS_IOT_CUSTOM_AUTH_ALPN_LENGTH;
         #else
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
             pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;

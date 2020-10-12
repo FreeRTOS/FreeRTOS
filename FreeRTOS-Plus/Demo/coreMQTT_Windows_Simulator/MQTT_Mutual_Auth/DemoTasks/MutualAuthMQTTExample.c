@@ -545,8 +545,11 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
             pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;
         #endif
     #else
-        /* SNI needs to be disabled for an MQTT broker that has no hostname. */
-        pxNetworkCredentials->disableSni = pdTRUE;
+
+        /* SNI needs to be disabled for an MQTT broker that has no hostname:
+         *
+         * pxNetworkCredentials->disableSni = pdTRUE;
+         */
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );

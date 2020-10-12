@@ -360,8 +360,14 @@ static TlsTransportStatus_t tlsSetup( NetworkContext_t * pNetworkContext,
         else
         {
             /* Set the underlying IO for the TLS connection. */
+
+            /* MISRA Rule 11.2 flags the following line for casting the second
+             * parameter to void *. This rule is suppressed because
+             * #mbedtls_ssl_set_bio requires the second parameter as void *.
+             */
+            /* coverity[misra_c_2012_rule_11_2_violation] */
             mbedtls_ssl_set_bio( &( pNetworkContext->sslContext.context ),
-                                 pNetworkContext->tcpSocket,
+                                 ( void * ) pNetworkContext->tcpSocket,
                                  mbedtls_platform_send,
                                  mbedtls_platform_recv,
                                  NULL );

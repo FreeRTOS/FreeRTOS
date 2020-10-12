@@ -44,9 +44,9 @@
 /* Macro to extract only the file name from file path to use for metadata in
  * log messages. */
 #ifdef _MSC_VER
-    #define FILENAME           ( strrchr( __FILE__, '\\' ) ? strrchr( __FILE__, '\\' ) + 1 : __FILE__ )
+    #define FILENAME           ( strrchr( __FILE__, '\\' ) ? ( strrchr( __FILE__, '\\' ) + 1 ) : __FILE__ )
 #else
-    #define FILENAME           ( strrchr( __FILE__, '/' ) ? strrchr( __FILE__, '/' ) + 1 : __FILE__ )
+    #define FILENAME           ( strrchr( __FILE__, '/' ) ? ( strrchr( __FILE__, '/' ) + 1 ) : __FILE__ )
 #endif
 
 #define LOG_METADATA_FORMAT    "[%s:%d] "

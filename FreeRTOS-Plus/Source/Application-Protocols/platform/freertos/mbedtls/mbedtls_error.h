@@ -41,7 +41,7 @@
  *
  * @warning The string returned by this function must never be modified.
  */
-    const char * mbedtls_strerror_highlevel( int errnum );
+    const char * mbedtls_strerror_highlevel( int32_t errnum );
 
 /**
  * @brief Translate an mbed TLS low level code into its string representation,
@@ -52,7 +52,7 @@
  *
  * @warning The string returned by this function must never be modified.
  */
-    const char * mbedtls_strerror_lowlevel( int errnum );
+    const char * mbedtls_strerror_lowlevel( int32_t errnum );
 
     #ifdef __cplusplus
 }

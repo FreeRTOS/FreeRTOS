@@ -528,8 +528,6 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
-    /* SNI needs to be disabled for a local Mosquitto server. */
-    pxNetworkCredentials->disableSni = pdTRUE;
     #ifdef democonfigCLIENT_CERTIFICATE_PEM
         pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
         pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
@@ -546,6 +544,9 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
             pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;
         #endif
+    #else
+        /* SNI needs to be disabled for an MQTT broker that has no hostname. */
+        pxNetworkCredentials->disableSni = pdTRUE;
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );

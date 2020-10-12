@@ -86,6 +86,11 @@
         #error "Please define client password(democonfigCLIENT_PASSWORD) in demo_config.h for client authentication based on username/password."
     #endif
 
+/* AWS IoT MQTT broker port needs to be 443 for client authentication based on
+ * username/password. */
+    #if defined( democonfigUSE_AWS_IOT_CORE_BROKER ) && democonfigMQTT_BROKER_PORT != 443
+        #error "Broker port(democonfigMQTT_BROKER_PORT) should be defined as 443 in demo_config.h for client authentication based on username/password."
+    #endif
 #endif /* ifndef democonfigCLIENT_USERNAME */
 
 /*-----------------------------------------------------------*/
@@ -176,14 +181,40 @@
 #define mqttexampleTRANSPORT_SEND_RECV_TIMEOUT_MS         ( 200U )
 
 /**
+ * @brief ALPN (Application-Layer Protocol Negotiation) protocol name for AWS IoT MQTT.
+ *
+ * This will be used if the AWS_MQTT_PORT is configured as 443 for AWS IoT MQTT broker.
+ * Please see more details about the ALPN protocol for AWS IoT MQTT endpoint
+ * in the link below.
+ * https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/
+ */
+#define AWS_IOT_MQTT_ALPN                                 "\x0ex-amzn-mqtt-ca"
+
+/**
+ * @brief Length of ALPN protocol name.
+ */
+#define AWS_IOT_MQTT_ALPN_LENGTH                          ( ( uint16_t ) ( sizeof( AWS_IOT_MQTT_ALPN ) - 1 ) )
+
+/**
+ * @brief This is the ALPN (Application-Layer Protocol Negotiation) string
+ * required by AWS IoT for password-based authentication using TCP port 443.
+ */
+#define AWS_IOT_PASSWORD_ALPN                             "\x04mqtt"
+
+/**
+ * @brief Length of password ALPN.
+ */
+#define AWS_IOT_PASSWORD_ALPN_LENGTH                      ( ( uint16_t ) ( sizeof( AWS_IOT_PASSWORD_ALPN ) - 1 ) )
+
+/**
  * @brief Milliseconds per second.
  */
-#define _MILLISECONDS_PER_SECOND                          ( 1000U )
+#define MILLISECONDS_PER_SECOND                           ( 1000U )
 
 /**
  * @brief Milliseconds per FreeRTOS tick.
  */
-#define _MILLISECONDS_PER_TICK                            ( _MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK                             ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /*-----------------------------------------------------------*/
 
@@ -497,13 +528,24 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
     /* Set the credentials for establishing a TLS connection. */
     pxNetworkCredentials->pRootCa = ( const unsigned char * ) democonfigROOT_CA_PEM;
     pxNetworkCredentials->rootCaSize = sizeof( democonfigROOT_CA_PEM );
+    /* SNI needs to be disabled for a local Mosquitto server. */
+    pxNetworkCredentials->disableSni = pdTRUE;
     #ifdef democonfigCLIENT_CERTIFICATE_PEM
         pxNetworkCredentials->pClientCert = ( const unsigned char * ) democonfigCLIENT_CERTIFICATE_PEM;
         pxNetworkCredentials->clientCertSize = sizeof( democonfigCLIENT_CERTIFICATE_PEM );
         pxNetworkCredentials->pPrivateKey = ( const unsigned char * ) democonfigCLIENT_PRIVATE_KEY_PEM;
         pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #endif
-
+    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+        pxNetworkCredentials->disableSni = pdFALSE;
+        #ifdef CLIENT_USERNAME
+            pxNetworkCredentials->pAlpnProtos = AWS_IOT_PASSWORD_ALPN;
+            pxNetworkCredentials->alpnProtosLen = AWS_IOT_PASSWORD_ALPN_LENGTH;
+        #else
+            pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
+            pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;
+        #endif
+    #endif
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
     xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;
@@ -586,7 +628,7 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
      * the keep-alive period, the MQTT library will send PINGREQ packets. */
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
-    /* Use the username and password for authentication if they are defined. */
+    /* Use the username and password for authentication, if they are defined. */
     #ifdef democonfigCLIENT_USERNAME
         xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
         xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
@@ -873,7 +915,7 @@ static uint32_t prvGetTimeMs( void )
     xTickCount = xTaskGetTickCount();
 
     /* Convert the ticks to milliseconds. */
-    ulTimeMs = ( uint32_t ) xTickCount * _MILLISECONDS_PER_TICK;
+    ulTimeMs = ( uint32_t ) xTickCount * MILLISECONDS_PER_TICK;
 
     /* Reduce ulGlobalEntryTimeMs from obtained time so as to always return the
      * elapsed time in the application. */

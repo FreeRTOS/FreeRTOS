@@ -144,6 +144,13 @@
  */
 
 /**
+ * @brief For AWS IoT MQTT broker, the appropriate ALPN and SNI configurations
+ *  are passed to the demo when this macro is defined.
+ *
+ * #define democonfigUSE_AWS_IOT_CORE_BROKER
+ */
+
+/**
  * @brief The username value for authenticating client to the MQTT broker when
  * username/password based client authentication is used.
  *

@@ -147,12 +147,24 @@
  * @brief The username value for authenticating client to the MQTT broker when
  * username/password based client authentication is used.
  *
+ * For AWS IoT MQTT broker, refer to the AWS IoT documentation below for
+ * details regarding client authentication with a username and password.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+ * An authorizer setup needs to be done, as mentioned in the above link, to use
+ * username/password based client authentication.
+ *
  * #define democonfigCLIENT_USERNAME    "...insert here..."
  */
 
 /**
  * @brief The password value for authenticating client to the MQTT broker when
  * username/password based client authentication is used.
+ *
+ * For AWS IoT MQTT broker, refer to the AWS IoT documentation below for
+ * details regarding client authentication with a username and password.
+ * https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html
+ * An authorizer setup needs to be done, as mentioned in the above link, to use
+ * username/password based client authentication.
  *
  * #define democonfigCLIENT_PASSWORD    "...insert here..."
  */

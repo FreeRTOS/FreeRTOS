@@ -537,8 +537,8 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #endif
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
-        /* SNI and ALPN need to be enabled for AWS IoT. */
         pxNetworkCredentials->disableSni = pdFALSE;
+        /* The ALPN string changes depending on whether username/password authentication is used. */
         #ifdef CLIENT_USERNAME
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_PASSWORD_ALPN;
             pxNetworkCredentials->alpnProtosLen = AWS_IOT_PASSWORD_ALPN_LENGTH;
@@ -546,7 +546,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_MQTT_ALPN;
             pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;
         #endif
-    #endif
+    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
     /* Initialize reconnect attempts and interval. */
     RetryUtils_ParamsReset( &xReconnectParams );
     xReconnectParams.maxRetryAttempts = MAX_RETRY_ATTEMPTS;

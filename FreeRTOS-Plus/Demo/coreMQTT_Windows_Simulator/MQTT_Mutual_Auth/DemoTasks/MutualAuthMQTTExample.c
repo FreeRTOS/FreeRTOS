@@ -545,7 +545,10 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
             pxNetworkCredentials->alpnProtosLen = AWS_IOT_MQTT_ALPN_LENGTH;
         #endif
     #else
-        /* SNI needs to be disabled for an MQTT broker that has no hostname. */
+
+        /* When using a local Mosquitto server setup, SNI needs to be disabled for
+         * an MQTT broker that only has an IP address but no hostname. However,
+         * SNI should be enabled whenever possible. */
         pxNetworkCredentials->disableSni = pdTRUE;
     #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
     /* Initialize reconnect attempts and interval. */

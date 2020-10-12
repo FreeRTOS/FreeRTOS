@@ -537,6 +537,7 @@ static TlsTransportStatus_t prvConnectToServerWithBackoffRetries( NetworkCredent
         pxNetworkCredentials->privateKeySize = sizeof( democonfigCLIENT_PRIVATE_KEY_PEM );
     #endif
     #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+        /* SNI and ALPN need to be enabled for AWS IoT. */
         pxNetworkCredentials->disableSni = pdFALSE;
         #ifdef CLIENT_USERNAME
             pxNetworkCredentials->pAlpnProtos = AWS_IOT_PASSWORD_ALPN;

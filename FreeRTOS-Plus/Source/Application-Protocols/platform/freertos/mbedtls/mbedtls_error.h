@@ -28,6 +28,8 @@
 #ifndef MBEDTLS_ERROR_H_
     #define MBEDTLS_ERROR_H_
 
+    #include <stdint.h>
+
     #ifdef __cplusplus
         extern "C" {
     #endif

@@ -110,7 +110,7 @@ PlaintextTransportStatus_t Plaintext_FreeRTOS_Disconnect( const NetworkContext_t
  * Negative value on error.
  */
 int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
-                                 uint8_t * pBuffer,
+                                 void * pBuffer,
                                  size_t bytesToRecv );
 
 /**
@@ -124,7 +124,7 @@ int32_t Plaintext_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
  * @return Number of bytes sent on success; else a negative value.
  */
 int32_t Plaintext_FreeRTOS_send( NetworkContext_t * pNetworkContext,
-                                 const uint8_t * pBuffer,
+                                 const void * pBuffer,
                                  size_t bytesToSend );
 
 #endif /* ifndef TRANSPORT_INTERFACE_FREERTOS_H_ */

@@ -715,7 +715,7 @@ void TLS_FreeRTOS_Disconnect( NetworkContext_t * pNetworkContext )
 /*-----------------------------------------------------------*/
 
 int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
-                           uint8_t * pBuffer,
+                           void * pBuffer,
                            size_t bytesToRecv )
 {
     int32_t tlsStatus = 0;
@@ -753,7 +753,7 @@ int32_t TLS_FreeRTOS_recv( NetworkContext_t * pNetworkContext,
 /*-----------------------------------------------------------*/
 
 int32_t TLS_FreeRTOS_send( NetworkContext_t * pNetworkContext,
-                           const uint8_t * pBuffer,
+                           const void * pBuffer,
                            size_t bytesToSend )
 {
     int32_t tlsStatus = 0;

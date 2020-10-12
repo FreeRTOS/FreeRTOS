@@ -109,8 +109,8 @@ struct NetworkContext
 typedef struct NetworkCredentials
 {
     /**
-     * @brief Set this to a NULL-terminated list of supported protocols,
-     * in decreasing preference order to use ALPN.
+     * @brief To use ALPN, set this to a NULL-terminated list of supported
+     * protocols in decreasing order of preference.
      *
      * See [this link]
      * (https://aws.amazon.com/blogs/iot/mqtt-with-tls-client-authentication-on-port-443-why-it-is-useful-and-how-it-works/)

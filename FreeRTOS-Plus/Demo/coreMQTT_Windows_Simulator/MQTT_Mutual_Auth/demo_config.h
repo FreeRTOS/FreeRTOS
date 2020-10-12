@@ -181,16 +181,43 @@
  */
 
 /**
+ * @brief The name of the operating system that the application is running on.
+ * The current value is given as an example. Please update for your specific
+ * operating system.
+ */
+#define democonfigOS_NAME                   "Windows"
+
+/**
+ * @brief The version of the operating system that the application is running
+ * on. The current value is given as an example. Please update for your specific
+ * operating system version.
+ */
+#define democonfigOS_VERSION                "10"
+
+/**
+ * @brief The name of the hardware platform the application is running on. The
+ * current value is given as an example. Please update for your specific
+ * hardware platform.
+ */
+#define democonfigHARDWARE_PLATFORM_NAME    "PC"
+
+/**
+ * @brief The name of the MQTT library used and its version, following an "@"
+ * symbol.
+ */
+#define democonfigMQTT_LIB                  "core-mqtt@1.0.0"
+
+/**
  * @brief Set the stack size of the main demo task.
  *
  * In the Windows port, this stack only holds a structure. The actual
  * stack is created by an operating system thread.
  */
-#define democonfigDEMO_STACKSIZE         configMINIMAL_STACK_SIZE
+#define democonfigDEMO_STACKSIZE            configMINIMAL_STACK_SIZE
 
 /**
  * @brief Size of the network buffer for MQTT packets.
  */
-#define democonfigNETWORK_BUFFER_SIZE    ( 1024U )
+#define democonfigNETWORK_BUFFER_SIZE       ( 1024U )
 
 #endif /* DEMO_CONFIG_H */

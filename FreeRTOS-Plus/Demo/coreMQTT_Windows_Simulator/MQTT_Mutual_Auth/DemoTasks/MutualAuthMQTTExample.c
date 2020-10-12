@@ -207,14 +207,56 @@
 #define AWS_IOT_CUSTOM_AUTH_ALPN_LENGTH                   ( ( uint16_t ) ( sizeof( AWS_IOT_CUSTOM_AUTH_ALPN ) - 1 ) )
 
 /**
+ * Provide default values for undefined configuration settings.
+ */
+#ifndef democonfigOS_NAME
+    #define democonfigOS_NAME    "Windows"
+#endif
+
+#ifndef democonfigOS_VERSION
+    #define democonfigOS_VERSION    "10"
+#endif
+
+#ifndef democonfigHARDWARE_PLATFORM_NAME
+    #define democonfigHARDWARE_PLATFORM_NAME    "PC"
+#endif
+
+#ifndef democonfigMQTT_LIB
+    #define democonfigMQTT_LIB    "core-mqtt@1.0.0"
+#endif
+
+/**
+ * @brief The MQTT metrics string expected by AWS IoT.
+ */
+#define AWS_IOT_METRICS_STRING                                 \
+    "?SDK=" democonfigOS_NAME "&Version=" democonfigOS_VERSION \
+    "&Platform=" democonfigHARDWARE_PLATFORM_NAME "&MQTTLib=" democonfigMQTT_LIB
+
+/**
+ * @brief The length of the MQTT metrics string expected by AWS IoT.
+ */
+#define AWS_IOT_METRICS_STRING_LENGTH    ( ( uint16_t ) ( sizeof( AWS_IOT_METRICS_STRING ) - 1 ) )
+
+#ifdef democonfigCLIENT_USERNAME
+
+/**
+ * @brief Append the username with the metrics string if #CLIENT_USERNAME is defined.
+ *
+ * This is to support both metrics reporting and username/password based client
+ * authentication by AWS IoT.
+ */
+    #define CLIENT_USERNAME_WITH_METRICS    democonfigCLIENT_USERNAME AWS_IOT_METRICS_STRING
+#endif
+
+/**
  * @brief Milliseconds per second.
  */
-#define MILLISECONDS_PER_SECOND                           ( 1000U )
+#define MILLISECONDS_PER_SECOND    ( 1000U )
 
 /**
  * @brief Milliseconds per FreeRTOS tick.
  */
-#define MILLISECONDS_PER_TICK                             ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
+#define MILLISECONDS_PER_TICK      ( MILLISECONDS_PER_SECOND / configTICK_RATE_HZ )
 
 /*-----------------------------------------------------------*/
 
@@ -634,12 +676,27 @@ static void prvCreateMQTTConnectionWithBroker( MQTTContext_t * pxMQTTContext,
     xConnectInfo.keepAliveSeconds = mqttexampleKEEP_ALIVE_TIMEOUT_SECONDS;
 
     /* Use the username and password for authentication, if they are defined. */
-    #ifdef democonfigCLIENT_USERNAME
-        xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
-        xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
-        xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
-        xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
-    #endif /* ifdef democonfigCLIENT_USERNAME */
+    #ifdef democonfigUSE_AWS_IOT_CORE_BROKER
+        #ifdef democonfigCLIENT_USERNAME
+            xConnectInfo.pUserName = CLIENT_USERNAME_WITH_METRICS;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( CLIENT_USERNAME_WITH_METRICS );
+            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
+        #else
+            connectInfo.pUserName = AWS_IOT_METRICS_STRING;
+            connectInfo.userNameLength = AWS_IOT_METRICS_STRING_LENGTH;
+            /* Password for authentication is not used. */
+            connectInfo.pPassword = NULL;
+            connectInfo.passwordLength = 0U;
+        #endif /* ifdef democonfigCLIENT_USERNAME */
+    #else /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
+        #ifdef democonfigCLIENT_USERNAME
+            xConnectInfo.pUserName = democonfigCLIENT_USERNAME;
+            xConnectInfo.userNameLength = ( uint16_t ) strlen( democonfigCLIENT_USERNAME );
+            xConnectInfo.pPassword = democonfigCLIENT_PASSWORD;
+            xConnectInfo.passwordLength = ( uint16_t ) strlen( democonfigCLIENT_PASSWORD );
+        #endif /* ifdef democonfigCLIENT_USERNAME */
+    #endif /* ifdef democonfigUSE_AWS_IOT_CORE_BROKER */
 
     /* Send MQTT CONNECT packet to broker. LWT is not used in this demo, so it
      * is passed as NULL. */

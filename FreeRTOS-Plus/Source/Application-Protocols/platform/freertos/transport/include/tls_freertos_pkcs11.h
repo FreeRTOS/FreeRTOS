@@ -71,7 +71,7 @@
 #include "mbedtls/pk_internal.h"
 
 /* PKCS #11 includes. */
-#include "iot_pkcs11.h"
+#include "core_pkcs11.h"
 
 /**
  * @brief Secured connection context.

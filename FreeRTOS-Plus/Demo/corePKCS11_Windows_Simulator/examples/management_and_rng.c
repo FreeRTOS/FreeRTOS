@@ -30,8 +30,8 @@
 #include "stdio.h"
 
 /* PKCS #11 includes. */
-#include "iot_pkcs11_config.h"
-#include "iot_pkcs11.h"
+#include "core_pkcs11_config.h"
+#include "core_pkcs11.h"
 #include "pkcs11.h"
 
 /* Demo include. */
